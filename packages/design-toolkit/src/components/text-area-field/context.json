@@ -1,0 +1,278 @@
+[
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "1/4",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/text-area-field/context.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.967Z",
+    "bundleHash": "uifb:1d8226e2de2d26b391eb844b",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/text-area-field/context.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/text-area-field/context.tsx",
+            "description": "context - Presentational component",
+            "version": {
+              "variables": ["TextAreaFieldContext"],
+              "hooks": [],
+              "components": ["TextAreaFieldContext.Provider"],
+              "functions": ["TextAreaFieldProvider"],
+              "imports": [
+                "./types",
+                "@/lib/types",
+                "client-only",
+                "react",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": {
+              "named": ["TextAreaFieldContext", "TextAreaFieldProvider"]
+            },
+            "semanticHash": "uif:61807bdc929879ba42844535",
+            "fileHash": "uif:891d147facee5ef673ca3527"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\n'use client';\n\nimport 'client-only';\nimport { createContext } from 'react';\nimport type { ContextValue } from 'react-aria-components';\nimport type { ProviderProps } from '@/lib/types';\nimport type { TextAreaFieldProps } from './types';\n\n/**\n * Context for TextAreaField component\n *\n * Provides context for TextAreaField component to share props\n */\nexport const TextAreaFieldContext =\n  createContext<ContextValue<TextAreaFieldProps, HTMLDivElement>>(null);\n\n/**\n * Provider for TextAreaField component\n *\n * Allows setting default props for all TextAreaField components within\n */\nexport function TextAreaFieldProvider({\n  children,\n  ...props\n}: ProviderProps<TextAreaFieldProps>) {\n  return (\n    <TextAreaFieldContext.Provider value={props}>\n      {children}\n    </TextAreaFieldContext.Provider>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "TextAreaFieldContext.Provider",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/text-area-field/context.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "2/4",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/text-area-field/index.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.979Z",
+    "bundleHash": "uifb:a62d96026b016af94ce6b236",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/text-area-field/index.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/text-area-field/index.tsx",
+            "description": "index - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": ["useContextProps"],
+              "components": [
+                "FieldError",
+                "Label",
+                "Text",
+                "TextArea",
+                "TextField"
+              ],
+              "functions": ["TextAreaField"],
+              "imports": [
+                "../label",
+                "./context",
+                "./styles.module.css",
+                "./types",
+                "@accelint/design-foundation/lib/utils",
+                "client-only",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [".description", ".error", ".field", ".input"],
+                  "properties": []
+                }
+              }
+            },
+            "semanticHash": "uif:eeb50c986e09c231a04c9782",
+            "fileHash": "uif:81a3324f86fd73bd0178388b"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\n'use client';\n\nimport 'client-only';\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport {\n  composeRenderProps,\n  FieldError,\n  Text,\n  TextArea,\n  TextField,\n  useContextProps,\n} from 'react-aria-components';\nimport { Label } from '../label';\nimport { TextAreaFieldContext } from './context';\nimport styles from './styles.module.css';\nimport type { TextAreaFieldProps } from './types';\n\n/**\n * TextAreaField - A multi-line text input component with label and validation\n *\n * Provides a complete form field experience for longer text content with integrated\n * label, description, and error message components. Handles validation states and\n * accessibility automatically while supporting resizable text areas.\n *\n * @example\n * // Basic text area field\n * <TextAreaField label=\"Comments\" />\n *\n * @example\n * // Text area with validation\n * <TextAreaField\n *   isInvalid={true}\n *   errorMessage='Message is required'\n *   label='Foo'\n *   isRequired\n *   />\n */\nexport function TextAreaField({ ref, ...props }: TextAreaFieldProps) {\n  [props, ref] = useContextProps(props, ref ?? null, TextAreaFieldContext);\n\n  const {\n    classNames,\n    description: descriptionProp,\n    errorMessage: errorMessageProp,\n    label: labelProp,\n    inputProps,\n    size = 'medium',\n    isInvalid: isInvalidProp,\n    ...rest\n  } = props;\n  const errorMessage = errorMessageProp || null; // Protect against empty string\n  const isSmall = size === 'small';\n\n  return (\n    <TextField\n      {...rest}\n      aria-label={labelProp}\n      ref={ref}\n      className={composeRenderProps(classNames?.field, (className) =>\n        clsx('group/text-area-field', styles.field, className),\n      )}\n      isInvalid={isInvalidProp || (errorMessage ? true : undefined)} // Leave uncontrolled if possible to fallback to validation state\n      data-size={size}\n    >\n      {(\n        { isDisabled, isInvalid, isRequired }, // Rely on internal state, not props, since state could differ from props\n      ) => (\n        <>\n          {!!labelProp && !isSmall && (\n            <Label\n              className={clsx(styles.label, classNames?.label)}\n              isDisabled={isDisabled}\n              isRequired={isRequired}\n            >\n              {labelProp}\n            </Label>\n          )}\n          <TextArea\n            {...inputProps}\n            className={composeRenderProps(classNames?.input, (className) =>\n              clsx(styles.input, className),\n            )}\n          />\n          {!!descriptionProp && !(isSmall || isInvalid) && (\n            <Text\n              slot='description'\n              className={clsx(styles.description, classNames?.description)}\n            >\n              {descriptionProp}\n            </Text>\n          )}\n          <FieldError\n            className={composeRenderProps(classNames?.error, (className) =>\n              clsx(styles.error, className),\n            )}\n          >\n            {errorMessage}\n          </FieldError>\n        </>\n      )}\n    </TextField>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "FieldError",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/text-area-field/index.tsx"
+        },
+        {
+          "name": "Label",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/text-area-field/index.tsx"
+        },
+        {
+          "name": "Text",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/text-area-field/index.tsx"
+        },
+        {
+          "name": "TextArea",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/text-area-field/index.tsx"
+        },
+        {
+          "name": "TextField",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/text-area-field/index.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "3/4",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/text-area-field/text-area-field.stories.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.979Z",
+    "bundleHash": "uifb:3c8c0d36a5d8ad1079ddf403",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/text-area-field/text-area-field.stories.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/text-area-field/text-area-field.stories.tsx",
+            "description": "text-area-field.stories - TypeScript module",
+            "version": {
+              "variables": ["Default", "meta"],
+              "hooks": [],
+              "components": [],
+              "functions": [],
+              "imports": ["./", "@storybook/react-vite"]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "semanticHash": "uif:2dc175d6c6f4e97a00b75a10",
+            "fileHash": "uif:8e7c8e457f99ca9181185fd5"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport { TextAreaField } from './';\nimport type { Meta, StoryObj } from '@storybook/react-vite';\n\nconst meta = {\n  title: 'Components/TextAreaField',\n  component: TextAreaField,\n  args: {\n    label: 'Label',\n    description: 'Helper text',\n    errorMessage: '',\n    size: 'medium',\n    isDisabled: false,\n    isInvalid: false,\n    isRequired: true,\n    inputProps: {\n      placeholder: 'Placeholder',\n    },\n  },\n  argTypes: {\n    size: {\n      control: 'select',\n      options: ['medium', 'small'],\n    },\n    isInvalid: {\n      control: 'boolean',\n    },\n    inputProps: {\n      placeholder: {\n        control: 'text',\n      },\n    },\n  },\n} satisfies Meta<typeof TextAreaField>;\n\nexport default meta;\ntype Story = StoryObj<typeof meta>;\n\nexport const Default: Story = {\n  render: TextAreaField,\n};\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "4/4",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/text-area-field/types.ts",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.979Z",
+    "bundleHash": "uifb:2ae316ee81c45109e46ed1a1",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/text-area-field/types.ts",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/text-area-field/types.ts",
+            "description": "types - Type definitions",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": [],
+              "functions": [],
+              "imports": ["react", "react-aria-components"]
+            },
+            "logicSignature": {
+              "props": {
+                "ref": {
+                  "type": "React.Ref<HTMLDivElement>",
+                  "optional": true
+                },
+                "key": {
+                  "type": "React.Key",
+                  "optional": true
+                },
+                "classNames": {
+                  "type": "{ field?: TextFieldProps; label?: string; input?: TextAreaProps; description?: string; error?: FieldErrorProps; }",
+                  "optional": true
+                },
+                "label": {
+                  "type": "string",
+                  "optional": true
+                },
+                "inputProps": {
+                  "type": "Omit<TextAreaProps, \"className\"> & React.RefAttributes<HTMLTextAreaElement>",
+                  "optional": true
+                },
+                "description": {
+                  "type": "string",
+                  "optional": true
+                },
+                "errorMessage": {
+                  "type": "FieldErrorProps",
+                  "optional": true
+                },
+                "size": {
+                  "type": "literal-union",
+                  "literals": ["medium", "small"],
+                  "optional": true
+                }
+              },
+              "emits": {}
+            },
+            "semanticHash": "uif:4113a6b4252c05a8932649ef",
+            "fileHash": "uif:0bab840527a88ae67e80888b"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport type { RefAttributes } from 'react';\nimport type {\n  FieldErrorProps,\n  TextAreaProps,\n  TextFieldProps,\n} from 'react-aria-components';\n\nexport type TextAreaFieldProps = Omit<\n  TextFieldProps,\n  'children' | 'className'\n> &\n  RefAttributes<HTMLDivElement> & {\n    classNames?: {\n      field?: TextFieldProps['className'];\n      label?: string;\n      input?: TextAreaProps['className'];\n      description?: string;\n      error?: FieldErrorProps['className'];\n    };\n    label?: string;\n    inputProps?: Omit<TextAreaProps, 'className'> &\n      RefAttributes<HTMLTextAreaElement>;\n    description?: string;\n    errorMessage?: FieldErrorProps['children'];\n    size?: 'medium' | 'small';\n  };\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  }
+]

@@ -1,0 +1,437 @@
+[
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "1/4",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/combobox-field/combobox-field.stories.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:42.707Z",
+    "bundleHash": "uifb:21c852cd5f970c5948295bc5",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/combobox-field/combobox-field.stories.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/combobox-field/combobox-field.stories.tsx",
+            "description": "combobox-field.stories - Form input field",
+            "version": {
+              "variables": [
+                "Default",
+                "WithCustomValue",
+                "WithDynamicSections",
+                "WithManyItems",
+                "WithStaticSections",
+                "items",
+                "itemsWithSections",
+                "manyItems",
+                "meta"
+              ],
+              "hooks": ["useState"],
+              "components": [
+                "ComboBoxField",
+                "Icon",
+                "OptionsItem",
+                "OptionsItemContent",
+                "OptionsItemDescription",
+                "OptionsItemLabel",
+                "OptionsSection",
+                "Placeholder"
+              ],
+              "functions": [],
+              "imports": [
+                "../icon",
+                "../options/item",
+                "../options/item-content",
+                "../options/item-description",
+                "../options/item-label",
+                "../options/section",
+                "./",
+                "@accelint/icons/placeholder",
+                "@storybook/react-vite",
+                "react"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {
+                "onInputChange": {
+                  "type": "function",
+                  "signature": "(value) => void"
+                }
+              },
+              "state": {
+                "customValue": "string"
+              }
+            },
+            "exports": {
+              "named": [
+                "Default",
+                "WithCustomValue",
+                "WithDynamicSections",
+                "WithManyItems",
+                "WithStaticSections"
+              ]
+            },
+            "style": {
+              "styleSources": {
+                "tailwind": {
+                  "categories": {
+                    "spacing": ["space-y-l", "space-y-s"],
+                    "typography": ["text-body-s"],
+                    "other": ["fg-primary-muted"]
+                  },
+                  "classCount": 4
+                }
+              },
+              "visual": {
+                "colors": ["text-body-s"],
+                "typography": ["text-body-s"]
+              }
+            },
+            "semanticHash": "uif:30e0b11097c891dbb7244520",
+            "fileHash": "uif:926c7e3cec765709ffbd86dc"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport Placeholder from '@accelint/icons/placeholder';\nimport { type ReactNode, useState } from 'react';\nimport { Icon } from '../icon';\nimport { OptionsItem } from '../options/item';\nimport { OptionsItemContent } from '../options/item-content';\nimport { OptionsItemDescription } from '../options/item-description';\nimport { OptionsItemLabel } from '../options/item-label';\nimport { OptionsSection } from '../options/section';\nimport { ComboBoxField } from './';\nimport type { Meta, StoryObj } from '@storybook/react-vite';\n\nconst meta = {\n  title: 'Components/ComboBoxField',\n  component: ComboBoxField,\n  args: {\n    description: 'Helper text',\n    errorMessage: '',\n    label: 'Label',\n    inputProps: {\n      placeholder: 'Placeholder',\n    },\n    size: 'medium',\n    layoutOptions: {\n      estimatedRowHeight: 46,\n    },\n    isDisabled: false,\n    isInvalid: false,\n    isRequired: true,\n    allowsCustomValue: false,\n  },\n  argTypes: {\n    size: {\n      control: 'select',\n      options: ['medium', 'small'],\n    },\n  },\n} satisfies Meta<typeof ComboBoxField>;\n\nexport default meta;\ntype Story = StoryObj<typeof meta>;\n\ninterface CustomOptionsItem {\n  id: number | string;\n  name: string;\n  description?: string;\n  isDisabled?: boolean;\n  prefixIcon?: ReactNode;\n  suffixIcon?: ReactNode;\n  children?: CustomOptionsItem[];\n}\n\nconst items: CustomOptionsItem[] = [\n  {\n    id: 1,\n    prefixIcon: <Placeholder />,\n    name: 'Red Panda',\n    description: 'Tree-dwelling mammal',\n  },\n  {\n    id: 2,\n    prefixIcon: <Placeholder />,\n    name: 'Cat',\n    description: 'Furry house pet',\n    isDisabled: true,\n  },\n  {\n    id: 3,\n    prefixIcon: <Placeholder />,\n    name: 'Dog',\n    description: 'Loyal companion',\n  },\n  {\n    id: 4,\n    prefixIcon: <Placeholder />,\n    name: 'Aardvark',\n    description: 'Ant-eating nocturnal',\n  },\n  {\n    id: 5,\n    name: 'Kangaroo',\n    description: 'Pouch-bearing jumper',\n  },\n  {\n    id: 6,\n    prefixIcon: <Placeholder />,\n    name: 'Snake',\n    description: 'Slithering reptile',\n  },\n];\n\nconst itemsWithSections: CustomOptionsItem[] = [\n  {\n    id: 1,\n    prefixIcon: <Placeholder />,\n    name: 'North American Birds',\n    children: [\n      {\n        id: 2,\n        prefixIcon: <Placeholder />,\n        name: 'Blue jay',\n      },\n      {\n        id: 3,\n        prefixIcon: <Placeholder />,\n        name: 'Gray catbird',\n      },\n      {\n        id: 4,\n        prefixIcon: <Placeholder />,\n        name: 'Black-capped chickadee',\n      },\n      {\n        id: 5,\n        prefixIcon: <Placeholder />,\n        name: 'Song sparrow',\n      },\n    ],\n  },\n  {\n    id: 6,\n    prefixIcon: <Placeholder />,\n    name: 'African Birds',\n    children: [\n      {\n        id: 6,\n        prefixIcon: <Placeholder />,\n        name: 'Lilac-breasted roller',\n      },\n      {\n        id: 7,\n        prefixIcon: <Placeholder />,\n        name: 'Hornbill',\n      },\n    ],\n  },\n];\n\nexport const Default: Story = {\n  render: ({ children, ...args }) => (\n    <ComboBoxField<CustomOptionsItem> {...args} defaultItems={items}>\n      {(item) => (\n        <OptionsItem\n          key={item.id}\n          textValue={item.name}\n          isDisabled={item.isDisabled}\n        >\n          {item.prefixIcon && <Icon>{item.prefixIcon}</Icon>}\n          <OptionsItemContent>\n            <OptionsItemLabel>{item.name}</OptionsItemLabel>\n            {item.description && (\n              <OptionsItemDescription>\n                {item.description}\n              </OptionsItemDescription>\n            )}\n          </OptionsItemContent>\n        </OptionsItem>\n      )}\n    </ComboBoxField>\n  ),\n};\n\nexport const WithDynamicSections: Story = {\n  args: {\n    ...Default.args,\n    layoutOptions: {\n      rowHeight: 32,\n    },\n  },\n  render: ({ children, ...args }) => (\n    <ComboBoxField<CustomOptionsItem>\n      {...args}\n      defaultItems={itemsWithSections}\n    >\n      {(section) => (\n        <OptionsSection header={section.name} items={section.children}>\n          {(item) => (\n            <OptionsItem key={item.id} textValue={item.name}>\n              {item.prefixIcon && <Icon>{item.prefixIcon}</Icon>}\n              <OptionsItemContent>\n                <OptionsItemLabel>{item.name}</OptionsItemLabel>\n                {item.description && (\n                  <OptionsItemDescription>\n                    {item.description}\n                  </OptionsItemDescription>\n                )}\n              </OptionsItemContent>\n            </OptionsItem>\n          )}\n        </OptionsSection>\n      )}\n    </ComboBoxField>\n  ),\n};\n\nexport const WithStaticSections: Story = {\n  args: {\n    ...Default.args,\n    layoutOptions: {\n      rowHeight: 32,\n    },\n  },\n  render: ({ children, ...args }) => (\n    <ComboBoxField {...args}>\n      <OptionsSection header='North American Birds'>\n        <OptionsItem textValue='Blue Jay'>\n          <Icon>\n            <Placeholder />\n          </Icon>\n          <OptionsItemLabel>Blue Jay</OptionsItemLabel>\n        </OptionsItem>\n        <OptionsItem textValue='Gray catbird'>\n          <Icon>\n            <Placeholder />\n          </Icon>\n          <OptionsItemLabel>Gray catbird</OptionsItemLabel>\n        </OptionsItem>\n        <OptionsItem textValue='Black-capped chickadee'>\n          <Icon>\n            <Placeholder />\n          </Icon>\n          <OptionsItemLabel>Black-capped chickadee</OptionsItemLabel>\n        </OptionsItem>\n        <OptionsItem textValue='Song Sparrow'>\n          <Icon>\n            <Placeholder />\n          </Icon>\n          <OptionsItemLabel>Song Sparrow</OptionsItemLabel>\n        </OptionsItem>\n      </OptionsSection>\n      <OptionsSection header='African Birds'>\n        <OptionsItem textValue='Lilac-breasted roller'>\n          <Icon>\n            <Placeholder />\n          </Icon>\n          <OptionsItemLabel>Lilac-breasted roller</OptionsItemLabel>\n        </OptionsItem>\n        <OptionsItem textValue='Hornbill'>\n          <Icon>\n            <Placeholder />\n          </Icon>\n          <OptionsItemLabel>Hornbill</OptionsItemLabel>\n        </OptionsItem>\n      </OptionsSection>\n    </ComboBoxField>\n  ),\n};\n\nconst manyItems: { id: number; name: string; prefixIcon: ReactNode }[] = [];\nfor (let i = 0; i < 5000; i++) {\n  manyItems.push({ id: i, name: `Item ${i}`, prefixIcon: <Placeholder /> });\n}\n\nexport const WithManyItems: Story = {\n  args: {\n    ...Default.args,\n    layoutOptions: {\n      rowHeight: 32,\n    },\n  },\n  render: ({ children, ...args }) => (\n    <ComboBoxField {...args}>\n      {manyItems.map((item) => (\n        <OptionsItem key={item.id} textValue={item.name}>\n          {item.prefixIcon && <Icon>{item.prefixIcon}</Icon>}\n          <OptionsItemLabel>{item.name}</OptionsItemLabel>\n        </OptionsItem>\n      ))}\n    </ComboBoxField>\n  ),\n};\n\nexport const WithCustomValue: Story = {\n  args: {\n    allowsCustomValue: true,\n  },\n  render: ({ children, ...args }) => {\n    const [customValue, setCustomValue] = useState('');\n    return (\n      <div className='space-y-l'>\n        <ComboBoxField<CustomOptionsItem>\n          {...args}\n          defaultItems={items}\n          onInputChange={(value) => setCustomValue(value)}\n        >\n          {(item) => (\n            <OptionsItem\n              key={item.id}\n              textValue={item.name}\n              isDisabled={item.isDisabled}\n            >\n              {item.prefixIcon && <Icon>{item.prefixIcon}</Icon>}\n              <OptionsItemContent>\n                <OptionsItemLabel>{item.name}</OptionsItemLabel>\n                {item.description && (\n                  <OptionsItemDescription>\n                    {item.description}\n                  </OptionsItemDescription>\n                )}\n              </OptionsItemContent>\n            </OptionsItem>\n          )}\n        </ComboBoxField>\n        <div className='space-y-s text-body-s'>\n          <div className='fg-primary-muted'>\n            Setting 'allowsCustomValue' to true enables you to capture a custom\n            value that will persist on blur\n          </div>\n          <div>customValue: {customValue}</div>\n        </div>\n      </div>\n    );\n  },\n};\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "ComboBoxField",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/combobox-field/combobox-field.stories.tsx"
+        },
+        {
+          "name": "Icon",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/combobox-field/combobox-field.stories.tsx"
+        },
+        {
+          "name": "OptionsItem",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/combobox-field/combobox-field.stories.tsx"
+        },
+        {
+          "name": "OptionsItemContent",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/combobox-field/combobox-field.stories.tsx"
+        },
+        {
+          "name": "OptionsItemDescription",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/combobox-field/combobox-field.stories.tsx"
+        },
+        {
+          "name": "OptionsItemLabel",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/combobox-field/combobox-field.stories.tsx"
+        },
+        {
+          "name": "OptionsSection",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/combobox-field/combobox-field.stories.tsx"
+        },
+        {
+          "name": "Placeholder",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/combobox-field/combobox-field.stories.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "2/4",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/combobox-field/context.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:42.710Z",
+    "bundleHash": "uifb:298aeb78745821cce084b73f",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/combobox-field/context.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/combobox-field/context.tsx",
+            "description": "context - Presentational component",
+            "version": {
+              "variables": ["ComboBoxFieldContext"],
+              "hooks": [],
+              "components": ["ComboBoxFieldContext.Provider"],
+              "functions": ["ComboBoxFieldProvider"],
+              "imports": [
+                "../options/types",
+                "./types",
+                "@/lib/types",
+                "client-only",
+                "react",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": {
+              "named": ["ComboBoxFieldContext", "ComboBoxFieldProvider"]
+            },
+            "semanticHash": "uif:78e3d50164442335840f5eb4",
+            "fileHash": "uif:69c9e8d1cada4f1738ee041d"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport 'client-only';\nimport { createContext } from 'react';\nimport type { ContextValue } from 'react-aria-components';\nimport type { ProviderProps } from '@/lib/types';\nimport type { OptionsDataItem } from '../options/types';\nimport type { ComboBoxFieldProps } from './types';\n\nexport const ComboBoxFieldContext =\n  // biome-ignore lint/suspicious/noExplicitAny: Setting a type would restrict it beyond what the component allows to extend to\n  createContext<ContextValue<ComboBoxFieldProps<any>, HTMLDivElement>>(null);\n\nexport function ComboBoxFieldProvider<T extends OptionsDataItem>({\n  children,\n  ...props\n}: ProviderProps<ComboBoxFieldProps<T>>) {\n  return (\n    <ComboBoxFieldContext.Provider value={props}>\n      {children}\n    </ComboBoxFieldContext.Provider>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "ComboBoxFieldContext.Provider",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/combobox-field/context.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "3/4",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/combobox-field/index.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:42.737Z",
+    "bundleHash": "uifb:d4b7b36369996b9e2a8aafd3",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/combobox-field/index.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/combobox-field/index.tsx",
+            "description": "index - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": ["useContextProps"],
+              "components": [
+                "Button",
+                "ChevronDown",
+                "ComboBox",
+                "FieldError",
+                "Icon",
+                "Input",
+                "Label",
+                "Options",
+                "Popover",
+                "Text",
+                "Virtualizer"
+              ],
+              "functions": ["ComboBoxField"],
+              "imports": [
+                "../icon",
+                "../label",
+                "../options",
+                "../options/types",
+                "./context",
+                "./styles.module.css",
+                "./types",
+                "@accelint/design-foundation/lib/utils",
+                "@accelint/icons",
+                "client-only",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".control",
+                    ".description",
+                    ".error",
+                    ".field",
+                    ".input",
+                    ".popover",
+                    ".trigger"
+                  ],
+                  "properties": ["min-width"]
+                }
+              }
+            },
+            "semanticHash": "uif:30bed09e9fde663d3a9fcf20",
+            "fileHash": "uif:92565d1316bcd1a4432e6f95"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport { ChevronDown } from '@accelint/icons';\nimport 'client-only';\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport {\n  Button,\n  ComboBox,\n  composeRenderProps,\n  FieldError,\n  Input,\n  ListLayout,\n  Popover,\n  Text,\n  useContextProps,\n  Virtualizer,\n} from 'react-aria-components';\nimport { Icon } from '../icon';\nimport { Label } from '../label';\nimport { Options } from '../options';\nimport { ComboBoxFieldContext } from './context';\nimport styles from './styles.module.css';\nimport type { OptionsDataItem } from '../options/types';\nimport type { ComboBoxFieldProps } from './types';\n\n/**\n * ComboBoxField - Accessible searchable combobox with dropdown options\n *\n * A combobox field that provides a searchable input with virtualized dropdown\n * options and support for sections, icons, and rich content.\n *\n * @example\n * <ComboBoxField defaultItems={items}>\n *   {(item) => <OptionsItem key={item.id} textValue={item.name}>{item.name}</OptionsItem>}\n * </ComboBoxField>\n */\nexport function ComboBoxField<T extends OptionsDataItem>({\n  ref,\n  ...props\n}: ComboBoxFieldProps<T>) {\n  [props, ref] = useContextProps(props, ref ?? null, ComboBoxFieldContext);\n\n  const {\n    children,\n    classNames,\n    description: descriptionProp,\n    errorMessage: errorMessageProp,\n    inputProps,\n    label: labelProp,\n    layoutOptions,\n    menuTrigger = 'focus',\n    size = 'medium',\n    isInvalid: isInvalidProp,\n    ...rest\n  } = props;\n  const errorMessage = errorMessageProp || null; // Protect against empty string\n  const isSmall = size === 'small';\n\n  return (\n    <ComboBox<T>\n      {...rest}\n      ref={ref}\n      className={composeRenderProps(classNames?.field, (className) =>\n        clsx('group/combobox-field', styles.field, className),\n      )}\n      menuTrigger={menuTrigger}\n      isInvalid={isInvalidProp || (errorMessage ? true : undefined)} // Leave uncontrolled if possible to fallback to validation state\n      data-size={size}\n    >\n      {(\n        { isDisabled, isInvalid, isRequired }, // Rely on internal state, not props, since state could differ from props\n      ) => (\n        <>\n          {!!labelProp && !isSmall && (\n            <Label\n              className={clsx(styles.label, classNames?.label)}\n              isDisabled={isDisabled}\n              isRequired={isRequired}\n            >\n              {labelProp}\n            </Label>\n          )}\n          <div className={clsx(styles.control, classNames?.control)}>\n            <Input\n              {...inputProps}\n              className={composeRenderProps(classNames?.input, (className) =>\n                clsx(styles.input, className),\n              )}\n            />\n            <Button\n              className={composeRenderProps(classNames?.trigger, (className) =>\n                clsx(styles.trigger, className),\n              )}\n            >\n              <Icon size='small'>\n                <ChevronDown />\n              </Icon>\n            </Button>\n          </div>\n          {!!descriptionProp && !(isSmall || isInvalid) && (\n            <Text\n              className={clsx(styles.description, classNames?.description)}\n              slot='description'\n            >\n              {descriptionProp}\n            </Text>\n          )}\n          <FieldError\n            className={composeRenderProps(classNames?.error, (className) =>\n              clsx(styles.error, className),\n            )}\n          >\n            {errorMessage}\n          </FieldError>\n          <Popover\n            className={composeRenderProps(classNames?.popover, (className) =>\n              clsx(styles.popover, className),\n            )}\n          >\n            <Virtualizer layout={ListLayout} layoutOptions={layoutOptions}>\n              <Options>{children}</Options>\n            </Virtualizer>\n          </Popover>\n        </>\n      )}\n    </ComboBox>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "Button",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/combobox-field/index.tsx"
+        },
+        {
+          "name": "ChevronDown",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/combobox-field/index.tsx"
+        },
+        {
+          "name": "ComboBox",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/combobox-field/index.tsx"
+        },
+        {
+          "name": "FieldError",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/combobox-field/index.tsx"
+        },
+        {
+          "name": "Icon",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/combobox-field/index.tsx"
+        },
+        {
+          "name": "Input",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/combobox-field/index.tsx"
+        },
+        {
+          "name": "Label",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/combobox-field/index.tsx"
+        },
+        {
+          "name": "Options",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/combobox-field/index.tsx"
+        },
+        {
+          "name": "Popover",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/combobox-field/index.tsx"
+        },
+        {
+          "name": "Text",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/combobox-field/index.tsx"
+        },
+        {
+          "name": "Virtualizer",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/combobox-field/index.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "4/4",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/combobox-field/types.ts",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:42.738Z",
+    "bundleHash": "uifb:ffd4f73a307177b526f8fef6",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/combobox-field/types.ts",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/combobox-field/types.ts",
+            "description": "types - Type definitions",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": [],
+              "functions": [],
+              "imports": [
+                "../button/types",
+                "../options/types",
+                "react",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {
+                "layoutOptions": "VirtualizerProps<ListLayoutOptions>",
+                "children": "ListBoxProps<T>",
+                "ref": {
+                  "type": "React.Ref<HTMLDivElement>",
+                  "optional": true
+                },
+                "key": {
+                  "type": "React.Key",
+                  "optional": true
+                },
+                "classNames": {
+                  "type": "{ field?: ComboBoxProps<T>; label?: LabelProps; control?: string; input?: InputProps; trigger?: any; description?: string; error?: FieldErrorProps; popover?: PopoverProps; }",
+                  "optional": true
+                },
+                "label": {
+                  "type": "string",
+                  "optional": true
+                },
+                "inputProps": {
+                  "type": "Omit<InputProps, \"className\">",
+                  "optional": true
+                },
+                "description": {
+                  "type": "string",
+                  "optional": true
+                },
+                "errorMessage": {
+                  "type": "string",
+                  "optional": true
+                },
+                "size": {
+                  "type": "literal-union",
+                  "literals": ["small", "medium"],
+                  "optional": true
+                }
+              },
+              "emits": {}
+            },
+            "semanticHash": "uif:9c4164bdfffd5e3c66946c90",
+            "fileHash": "uif:f71586e3241c58e7cec9ffbb"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport type { RefAttributes } from 'react';\nimport type {\n  ComboBoxProps,\n  FieldErrorProps,\n  InputProps,\n  LabelProps,\n  ListLayoutOptions,\n  PopoverProps,\n  VirtualizerProps,\n} from 'react-aria-components';\nimport type { ButtonProps } from '../button/types';\nimport type { OptionsDataItem, OptionsProps } from '../options/types';\n\nexport type ComboBoxFieldProps<T extends OptionsDataItem> = Omit<\n  ComboBoxProps<T>,\n  'children' | 'className'\n> &\n  Pick<VirtualizerProps<ListLayoutOptions>, 'layoutOptions'> &\n  Pick<OptionsProps<T>, 'children'> &\n  RefAttributes<HTMLDivElement> & {\n    classNames?: {\n      field?: ComboBoxProps<T>['className'];\n      label?: LabelProps['className'];\n      control?: string;\n      input?: InputProps['className'];\n      trigger?: ButtonProps['className'];\n      description?: string;\n      error?: FieldErrorProps['className'];\n      popover?: PopoverProps['className'];\n    };\n    label?: string;\n    inputProps?: Omit<InputProps, 'className'>;\n    description?: string;\n    errorMessage?: string;\n    size?: 'small' | 'medium';\n  };\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  }
+]

@@ -1,0 +1,390 @@
+[
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "1/4",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/select-field/context.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.648Z",
+    "bundleHash": "uifb:79109987d4aa7868a45ddb84",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/select-field/context.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/select-field/context.tsx",
+            "description": "context - Presentational component",
+            "version": {
+              "variables": ["SelectFieldContext"],
+              "hooks": [],
+              "components": ["SelectFieldContext.Provider"],
+              "functions": ["SelectFieldProvider"],
+              "imports": [
+                "./types",
+                "@/lib/types",
+                "client-only",
+                "react",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": {
+              "named": ["SelectFieldContext", "SelectFieldProvider"]
+            },
+            "semanticHash": "uif:4859c4cb56a6a15d4dc738c5",
+            "fileHash": "uif:a490809e11a8f5ca17c482d0"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport type { ProviderProps } from '@/lib/types';\nimport 'client-only';\nimport { createContext } from 'react';\nimport type { ContextValue } from 'react-aria-components';\nimport type { SelectFieldProps } from './types';\n\nexport const SelectFieldContext =\n  createContext<ContextValue<SelectFieldProps, HTMLDivElement>>(null);\n\nexport function SelectFieldProvider({\n  children,\n  ...props\n}: ProviderProps<SelectFieldProps>) {\n  return (\n    <SelectFieldContext.Provider value={props}>\n      {children}\n    </SelectFieldContext.Provider>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "SelectFieldContext.Provider",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/select-field/context.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "2/4",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/select-field/index.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.674Z",
+    "bundleHash": "uifb:2f558fa6c2e157ecdfa74fa9",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/select-field/index.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/select-field/index.tsx",
+            "description": "index - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": ["useContextProps"],
+              "components": [
+                "AriaSelect",
+                "Button",
+                "ChevronDown",
+                "FieldError",
+                "Icon",
+                "Label",
+                "Options",
+                "Popover",
+                "SelectValue",
+                "Text",
+                "Virtualizer"
+              ],
+              "functions": ["SelectField"],
+              "imports": [
+                "../button",
+                "../icon",
+                "../label",
+                "../options",
+                "./context",
+                "./styles.module.css",
+                "./types",
+                "@accelint/design-foundation/lib/utils",
+                "@accelint/icons/chevron-down",
+                "client-only",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".description",
+                    ".error",
+                    ".popover",
+                    ".trigger",
+                    ".value"
+                  ],
+                  "properties": []
+                }
+              }
+            },
+            "semanticHash": "uif:e16c60d3f63d30ae9e1f4372",
+            "fileHash": "uif:162b675e582a8b172715f71e"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport 'client-only';\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport ChevronDown from '@accelint/icons/chevron-down';\nimport {\n  Select as AriaSelect,\n  composeRenderProps,\n  FieldError,\n  ListLayout,\n  Popover,\n  SelectValue,\n  Text,\n  useContextProps,\n  Virtualizer,\n} from 'react-aria-components';\nimport { Button } from '../button';\nimport { Icon } from '../icon';\nimport { Label } from '../label';\nimport { Options } from '../options';\nimport { SelectFieldContext } from './context';\nimport styles from './styles.module.css';\nimport type { SelectFieldProps } from './types';\n\n/**\n * SelectField - A dropdown selection component with comprehensive form field features\n *\n * Provides an accessible and feature-rich select dropdown with built-in validation,\n * multiple sizing options, virtualization support for large datasets, and seamless\n * integration with form libraries. Includes label, description, and error messaging\n * capabilities with customizable styling through className props.\n *\n * @example\n * // Basic select field\n * <SelectField label='Country' placeholder='Select a country'>\n *   <OptionsItem textValue='us'>United States</OptionsItem>\n *   <OptionsItem textValue='ca'>Canada</OptionsItem>\n *   <OptionsItem textValue='uk'>United Kingdom</OptionsItem>\n * </SelectField>\n *\n * @example\n * // Select field with validation and description\n * <SelectField\n *   label=\"Priority Level\"\n *   description=\"Choose the urgency level for this task\"\n *   errorMessage={errors.priority}\n *   isRequired\n *   isInvalid={!!errors.priority}\n * >\n *   <OptionsItem textValue=\"low\">Low</OptionsItem>\n *   <OptionsItem textValue=\"medium\">Medium</OptionsItem>\n *   <OptionsItem textValue=\"high\">High</OptionsItem>\n * </SelectField>\n *\n * @example\n * // Small size select field with custom styling\n * <SelectField\n *   size=\"small\"\n *   placeholder=\"Quick select\"\n *   classNames={{\n *     field: \"custom-field-styles\",\n *     trigger: \"custom-trigger-styles\"\n *   }}\n * >\n *   <OptionsItem textValue=\"option1\">Option 1</OptionsItem>\n *   <OptionsItem textValue=\"option2\">Option 2</OptionsItem>\n * </SelectField>\n */\nexport function SelectField({ ref, ...props }: SelectFieldProps) {\n  [props, ref] = useContextProps(props, ref ?? null, SelectFieldContext);\n\n  const {\n    size = 'medium',\n    children,\n    classNames,\n    description: descriptionProp,\n    errorMessage: errorMessageProp,\n    label: labelProp,\n    layoutOptions,\n    isInvalid: isInvalidProp,\n    ...rest\n  } = props;\n\n  const errorMessage = errorMessageProp?.trim() ?? null;\n  const hasError = !!errorMessage;\n  const isInvalid = isInvalidProp ?? hasError;\n  const isSmall = size === 'small';\n  const showLabel = !isSmall && !!labelProp;\n\n  return (\n    <AriaSelect\n      {...rest}\n      ref={ref}\n      className={composeRenderProps(classNames?.field, (className) =>\n        clsx('group/select-field', styles.field, className),\n      )}\n      isInvalid={isInvalid}\n      data-size={size}\n    >\n      {composeRenderProps(\n        children,\n        (children, { isRequired, isDisabled, isInvalid }) => (\n          <>\n            {showLabel && (\n              <Label\n                className={clsx(styles.label, classNames?.label)}\n                isRequired={isRequired}\n                isDisabled={isDisabled}\n              >\n                {labelProp}\n              </Label>\n            )}\n            <Button\n              className={composeRenderProps(classNames?.trigger, (className) =>\n                clsx(styles.trigger, className),\n              )}\n              size={size}\n              variant='outline'\n            >\n              <SelectValue className={clsx(styles.value, classNames?.value)} />\n              <Icon>\n                <ChevronDown className='transform group-open/select-field:rotate-180' />\n              </Icon>\n            </Button>\n            {!!descriptionProp && !(isSmall || isInvalid) && (\n              <Text\n                slot='description'\n                className={clsx(styles.description, classNames?.description)}\n              >\n                {descriptionProp}\n              </Text>\n            )}\n            <FieldError\n              className={composeRenderProps(classNames?.error, (className) =>\n                clsx(styles.error, className),\n              )}\n            >\n              {errorMessage}\n            </FieldError>\n            <Popover\n              className={composeRenderProps(classNames?.popover, (className) =>\n                clsx(styles.popover, className),\n              )}\n            >\n              <Virtualizer layout={ListLayout} layoutOptions={layoutOptions}>\n                <Options>{children}</Options>\n              </Virtualizer>\n            </Popover>\n          </>\n        ),\n      )}\n    </AriaSelect>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "AriaSelect",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/select-field/index.tsx"
+        },
+        {
+          "name": "Button",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/select-field/index.tsx"
+        },
+        {
+          "name": "ChevronDown",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/select-field/index.tsx"
+        },
+        {
+          "name": "FieldError",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/select-field/index.tsx"
+        },
+        {
+          "name": "Icon",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/select-field/index.tsx"
+        },
+        {
+          "name": "Label",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/select-field/index.tsx"
+        },
+        {
+          "name": "Options",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/select-field/index.tsx"
+        },
+        {
+          "name": "Popover",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/select-field/index.tsx"
+        },
+        {
+          "name": "SelectValue",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/select-field/index.tsx"
+        },
+        {
+          "name": "Text",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/select-field/index.tsx"
+        },
+        {
+          "name": "Virtualizer",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/select-field/index.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "3/4",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/select-field/select-field.stories.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.689Z",
+    "bundleHash": "uifb:cf5c52de0c2b0fba42bb2d03",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/select-field/select-field.stories.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/select-field/select-field.stories.tsx",
+            "description": "select-field.stories - Form input field",
+            "version": {
+              "variables": [
+                "ControlledSelection",
+                "Default",
+                "WithManyItems",
+                "manyItems",
+                "meta"
+              ],
+              "hooks": ["useId", "useState"],
+              "components": [
+                "Icon",
+                "OptionsItem",
+                "OptionsItemLabel",
+                "OptionsSection",
+                "Placeholder",
+                "SelectField"
+              ],
+              "functions": [],
+              "imports": [
+                "../icon",
+                "../options/item",
+                "../options/item-label",
+                "../options/section",
+                "./index",
+                "@accelint/icons/placeholder",
+                "@react-types/shared",
+                "@storybook/react-vite",
+                "react"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {
+                "onChange": {
+                  "type": "function",
+                  "signature": "() => void"
+                }
+              },
+              "state": {
+                "value": "Key"
+              }
+            },
+            "exports": {
+              "named": ["ControlledSelection", "Default", "WithManyItems"]
+            },
+            "semanticHash": "uif:2def06fc195e6f9c03bf9376",
+            "fileHash": "uif:4d8407b8c5f38d9b605a720b"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport Placeholder from '@accelint/icons/placeholder';\nimport { type ReactNode, useId, useState } from 'react';\nimport { Icon } from '../icon';\nimport { OptionsItem } from '../options/item';\nimport { OptionsItemLabel } from '../options/item-label';\nimport { OptionsSection } from '../options/section';\nimport { SelectField } from './index';\nimport type { Key } from '@react-types/shared';\nimport type { Meta, StoryObj } from '@storybook/react-vite';\n\nconst meta = {\n  title: 'Components/SelectField',\n  component: SelectField,\n  args: {\n    label: 'Label',\n    description: 'Helper text',\n    errorMessage: '',\n    size: 'medium',\n    isDisabled: false,\n    isInvalid: false,\n    isRequired: true,\n    autoFocus: true,\n    placeholder: 'Select...',\n    layoutOptions: {\n      estimatedRowHeight: 46,\n    },\n  },\n  argTypes: {\n    size: {\n      control: 'select',\n      options: ['medium', 'small'],\n    },\n  },\n} satisfies Meta<typeof SelectField>;\n\nexport default meta;\ntype Story = StoryObj<typeof meta>;\n\nexport const Default: Story = {\n  render: (args) => {\n    return (\n      <SelectField {...args}>\n        <OptionsSection header='North American Birds'>\n          <OptionsItem textValue='Blue Jay'>\n            <Icon>\n              <Placeholder />\n            </Icon>\n            <OptionsItemLabel>Blue Jay</OptionsItemLabel>\n          </OptionsItem>\n          <OptionsItem textValue='Gray catbird' color='serious'>\n            <Icon>\n              <Placeholder />\n            </Icon>\n            <OptionsItemLabel>Gray catbird</OptionsItemLabel>\n          </OptionsItem>\n          <OptionsItem textValue='Black-capped chickadee' color='critical'>\n            <Icon>\n              <Placeholder />\n            </Icon>\n            <OptionsItemLabel>Black-capped chickadee</OptionsItemLabel>\n          </OptionsItem>\n          <OptionsItem textValue='Song Sparrow'>\n            <Icon>\n              <Placeholder />\n            </Icon>\n            <OptionsItemLabel>Song Sparrow</OptionsItemLabel>\n          </OptionsItem>\n        </OptionsSection>\n        <OptionsSection header='African Birds'>\n          <OptionsItem textValue='Lilac-breasted roller'>\n            <Icon>\n              <Placeholder />\n            </Icon>\n            <OptionsItemLabel>Lilac-breasted roller</OptionsItemLabel>\n          </OptionsItem>\n          <OptionsItem textValue='Hornbill'>\n            <Icon>\n              <Placeholder />\n            </Icon>\n            <OptionsItemLabel>Hornbill</OptionsItemLabel>\n          </OptionsItem>\n        </OptionsSection>\n      </SelectField>\n    );\n  },\n};\n\nexport const ControlledSelection: Story = {\n  render: (args) => {\n    const koalaId = useId();\n    const kangarooId = useId();\n    const platypusId = useId();\n    const bisonId = useId();\n    const [value, setValue] = useState<Key>(bisonId);\n\n    const handleSelection = (key: Key | null) => {\n      if (key) {\n        setValue(key);\n      }\n    };\n\n    return (\n      <SelectField {...args} value={value} onChange={handleSelection}>\n        <OptionsItem id={koalaId} textValue='Koala'>\n          <Icon>\n            <Placeholder />\n          </Icon>\n          <OptionsItemLabel>Koala</OptionsItemLabel>\n        </OptionsItem>\n        <OptionsItem id={kangarooId} textValue='Kangaroo'>\n          <Icon>\n            <Placeholder />\n          </Icon>\n          <OptionsItemLabel>Kangaroo</OptionsItemLabel>\n        </OptionsItem>\n        <OptionsItem id={platypusId} textValue='Platypus'>\n          <Icon>\n            <Placeholder />\n          </Icon>\n          <OptionsItemLabel>Platypus</OptionsItemLabel>\n        </OptionsItem>\n        <OptionsItem id={bisonId} textValue='Bison'>\n          <Icon>\n            <Placeholder />\n          </Icon>\n          <OptionsItemLabel>Bison</OptionsItemLabel>\n        </OptionsItem>\n      </SelectField>\n    );\n  },\n};\n\nconst manyItems: { id: number; name: string; prefixIcon: ReactNode }[] = [];\nfor (let i = 0; i < 5000; i++) {\n  manyItems.push({ id: i, name: `Item ${i}`, prefixIcon: <Placeholder /> });\n}\n\nexport const WithManyItems: Story = {\n  render: (args) => (\n    <SelectField {...args}>\n      {manyItems.map((item) => (\n        <OptionsItem key={item.id} textValue={item.name}>\n          {item.prefixIcon && <Icon>{item.prefixIcon}</Icon>}\n          <OptionsItemLabel>{item.name}</OptionsItemLabel>\n        </OptionsItem>\n      ))}\n    </SelectField>\n  ),\n};\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "Icon",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/select-field/select-field.stories.tsx"
+        },
+        {
+          "name": "OptionsItem",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/select-field/select-field.stories.tsx"
+        },
+        {
+          "name": "OptionsItemLabel",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/select-field/select-field.stories.tsx"
+        },
+        {
+          "name": "OptionsSection",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/select-field/select-field.stories.tsx"
+        },
+        {
+          "name": "Placeholder",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/select-field/select-field.stories.tsx"
+        },
+        {
+          "name": "SelectField",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/select-field/select-field.stories.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "4/4",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/select-field/types.ts",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.690Z",
+    "bundleHash": "uifb:bcd2979b08cf49b2989bf280",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/select-field/types.ts",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/select-field/types.ts",
+            "description": "types - Type definitions",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": [],
+              "functions": [],
+              "imports": [
+                "../button/types",
+                "../label/types",
+                "react",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {
+                "layoutOptions": "AriaVirtualizerProps<AriaListLayoutOptions>",
+                "ref": {
+                  "type": "React.Ref<HTMLDivElement>",
+                  "optional": true
+                },
+                "key": {
+                  "type": "React.Key",
+                  "optional": true
+                },
+                "classNames": {
+                  "type": "{ description?: string; error?: FieldErrorProps; field?: string; label?: any; trigger?: any; value?: string; popover?: PopoverProps; }",
+                  "optional": true
+                },
+                "label": {
+                  "type": "string",
+                  "optional": true
+                },
+                "description": {
+                  "type": "string",
+                  "optional": true
+                },
+                "errorMessage": {
+                  "type": "string",
+                  "optional": true
+                },
+                "size": {
+                  "type": "literal-union",
+                  "literals": ["medium", "small"],
+                  "optional": true
+                }
+              },
+              "emits": {}
+            },
+            "semanticHash": "uif:b31f0c1a2be2830df59abc4f",
+            "fileHash": "uif:840eb5af2eec6ea4dfb7153e"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport type { RefAttributes } from 'react';\nimport type {\n  ListLayoutOptions as AriaListLayoutOptions,\n  SelectProps as AriaSelectProps,\n  VirtualizerProps as AriaVirtualizerProps,\n  FieldErrorProps,\n  PopoverProps,\n} from 'react-aria-components';\nimport type { ButtonProps } from '../button/types';\nimport type { LabelProps } from '../label/types';\n\nexport type SelectFieldProps = Omit<AriaSelectProps, 'className'> &\n  Pick<AriaVirtualizerProps<AriaListLayoutOptions>, 'layoutOptions'> &\n  RefAttributes<HTMLDivElement> & {\n    classNames?: {\n      description?: string;\n      error?: FieldErrorProps['className'];\n      field?: string;\n      label?: LabelProps['className'];\n      trigger?: ButtonProps['className'];\n      value?: string;\n      popover?: PopoverProps['className'];\n    };\n    label?: string;\n    description?: string;\n    errorMessage?: string;\n    size?: 'medium' | 'small';\n  };\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  }
+]

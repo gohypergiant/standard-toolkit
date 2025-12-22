@@ -1,0 +1,1394 @@
+[
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "1/4",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/icon/context.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.103Z",
+    "bundleHash": "uifb:b3995ea99b0dbe27a4522531",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/icon/context.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/icon/context.tsx",
+            "description": "context - Presentational component",
+            "version": {
+              "variables": ["IconContext"],
+              "hooks": [],
+              "components": ["IconContext.Provider"],
+              "functions": ["IconProvider"],
+              "imports": [
+                "./types",
+                "@/lib/types",
+                "client-only",
+                "react",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": {
+              "named": ["IconContext", "IconProvider"]
+            },
+            "semanticHash": "uif:1ee7b18cde6fbbb83bcec17c",
+            "fileHash": "uif:f80f5363b9f91010e3c6ce1e"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport type { ProviderProps } from '@/lib/types';\nimport 'client-only';\nimport { createContext } from 'react';\nimport type { ContextValue } from 'react-aria-components';\nimport type { IconProps } from './types';\n\nexport const IconContext =\n  createContext<ContextValue<IconProps, HTMLSpanElement>>(null);\n\nexport function IconProvider({ children, ...props }: ProviderProps<IconProps>) {\n  return <IconContext.Provider value={props}>{children}</IconContext.Provider>;\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "IconContext.Provider",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/icon/context.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "2/4",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/icon/icon.stories.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.110Z",
+    "bundleHash": "uifb:746f5d1a5d890f2c80347c3b",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/icon/icon.stories.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/icon/icon.stories.tsx",
+            "description": "icon.stories - Presentational component",
+            "version": {
+              "variables": ["Default", "Provider", "meta"],
+              "hooks": [],
+              "components": ["Add", "Icon", "IconProvider"],
+              "functions": [],
+              "imports": [
+                "./",
+                "./context",
+                "@accelint/icons",
+                "@storybook/react-vite"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": {
+              "named": ["Default", "Provider"]
+            },
+            "semanticHash": "uif:27b57767d2f94c34e861c7a3",
+            "fileHash": "uif:5270a95a74b8cc710343c333"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport { Add } from '@accelint/icons';\nimport { Icon } from './';\nimport { IconProvider } from './context';\nimport type { Meta, StoryObj } from '@storybook/react-vite';\n\nconst meta = {\n  title: 'Components/Icon',\n  component: Icon,\n  args: {\n    className: 'fg-primary-bold',\n  },\n  argTypes: {\n    className: {\n      type: 'string',\n    },\n    size: {\n      control: 'select',\n      options: ['large', 'medium', 'small', 'xsmall'],\n    },\n  },\n} satisfies Meta<typeof Icon>;\n\nexport default meta;\ntype Story = StoryObj<typeof meta>;\n\nexport const Default: Story = {\n  render: (args) => (\n    <Icon {...args}>\n      <Add />\n    </Icon>\n  ),\n};\n\nexport const Provider: Story = {\n  render: ({ className, size }) => (\n    <IconProvider size={size}>\n      <div className={className}>\n        <Icon>\n          <Add />\n        </Icon>\n        <Icon>\n          <Add />\n        </Icon>\n        <Icon>\n          <Add />\n        </Icon>\n      </div>\n    </IconProvider>\n  ),\n};\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "Add",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/icon/icon.stories.tsx"
+        },
+        {
+          "name": "Icon",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/icon/icon.stories.tsx"
+        },
+        {
+          "name": "IconProvider",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/icon/icon.stories.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "3/4",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/icon/index.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.111Z",
+    "bundleHash": "uifb:6fc8755c636561356c6a38f4",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/icon/index.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/icon/index.tsx",
+            "description": "index - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": ["useContextProps"],
+              "components": [],
+              "functions": ["Icon"],
+              "imports": [
+                "./context",
+                "./styles.module.css",
+                "./types",
+                "@accelint/design-foundation/lib/utils",
+                "client-only",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [".icon"],
+                  "properties": ["color", "height", "width"]
+                }
+              }
+            },
+            "semanticHash": "uif:5f5930d2c916b5995345ecd3",
+            "fileHash": "uif:8819dc861762f031c8a5d1af"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport 'client-only';\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport { useContextProps } from 'react-aria-components';\nimport { IconContext } from './context';\nimport styles from './styles.module.css';\nimport type { IconProps } from './types';\n\n/**\n * Icon - A wrapper component for displaying SVG icons with consistent sizing\n *\n * Provides a standardized container for SVG icons with built-in size variants and\n * proper accessibility support. Works seamlessly with the Accelint icon library\n * and supports custom SVG elements with consistent styling and alignment.\n *\n * @example\n * // Basic icon usage\n * <Icon>\n *   <Settings />\n * </Icon>\n *\n * @example\n * // Icon with different sizes\n * <Icon size=\"small\">\n *   <User />\n * </Icon>\n * <Icon size=\"large\">\n *   <Dashboard />\n * </Icon>\n *\n * @example\n * // Icon in button context (automatically inherits sizing)\n * <Button>\n *   <Icon><Plus /></Icon>\n *   Add Item\n * </Button>\n */\nexport function Icon({ ref, ...props }: IconProps) {\n  [props, ref] = useContextProps(props, ref ?? null, IconContext);\n\n  const { children, className, size = 'medium', ...rest } = props;\n\n  return (\n    <span\n      {...rest}\n      ref={ref}\n      className={clsx(styles.icon, className)}\n      data-size={size}\n    >\n      {children}\n    </span>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "4/4",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/icon/types.ts",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.112Z",
+    "bundleHash": "uifb:7aaefafe70ee4e2fabd9a4fd",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/icon/types.ts",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/icon/types.ts",
+            "description": "types - Type definitions",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": [],
+              "functions": [],
+              "imports": ["react"]
+            },
+            "logicSignature": {
+              "props": {
+                "ref": {
+                  "type": "React.Ref<HTMLSpanElement>",
+                  "optional": true
+                },
+                "key": {
+                  "type": "React.Key",
+                  "optional": true
+                },
+                "defaultChecked": {
+                  "type": "boolean",
+                  "optional": true
+                },
+                "defaultValue": {
+                  "type": "string | number | readonly string[]",
+                  "optional": true
+                },
+                "suppressContentEditableWarning": {
+                  "type": "boolean",
+                  "optional": true
+                },
+                "suppressHydrationWarning": {
+                  "type": "boolean",
+                  "optional": true
+                },
+                "accessKey": {
+                  "type": "string",
+                  "optional": true
+                },
+                "autoCapitalize": {
+                  "type": "\"off\" | \"none\" | \"on\" | \"sentences\" | \"words\" | \"characters\" | (string & {})",
+                  "optional": true
+                },
+                "autoFocus": {
+                  "type": "boolean",
+                  "optional": true
+                },
+                "className": {
+                  "type": "string",
+                  "optional": true
+                },
+                "contentEditable": {
+                  "type": "Booleanish | \"inherit\" | \"plaintext-only\"",
+                  "optional": true
+                },
+                "contextMenu": {
+                  "type": "string",
+                  "optional": true
+                },
+                "dir": {
+                  "type": "string",
+                  "optional": true
+                },
+                "draggable": {
+                  "type": "Booleanish",
+                  "optional": true
+                },
+                "enterKeyHint": {
+                  "type": "literal-union",
+                  "literals": [
+                    "search",
+                    "enter",
+                    "done",
+                    "go",
+                    "next",
+                    "previous",
+                    "send"
+                  ],
+                  "optional": true
+                },
+                "hidden": {
+                  "type": "boolean",
+                  "optional": true
+                },
+                "id": {
+                  "type": "string",
+                  "optional": true
+                },
+                "lang": {
+                  "type": "string",
+                  "optional": true
+                },
+                "nonce": {
+                  "type": "string",
+                  "optional": true
+                },
+                "slot": {
+                  "type": "string",
+                  "optional": true
+                },
+                "spellCheck": {
+                  "type": "Booleanish",
+                  "optional": true
+                },
+                "style": {
+                  "type": "React.CSSProperties",
+                  "optional": true
+                },
+                "tabIndex": {
+                  "type": "number",
+                  "optional": true
+                },
+                "title": {
+                  "type": "string",
+                  "optional": true
+                },
+                "translate": {
+                  "type": "literal-union",
+                  "literals": ["yes", "no"],
+                  "optional": true
+                },
+                "radioGroup": {
+                  "type": "string",
+                  "optional": true
+                },
+                "role": {
+                  "type": "React.AriaRole",
+                  "optional": true
+                },
+                "about": {
+                  "type": "string",
+                  "optional": true
+                },
+                "content": {
+                  "type": "string",
+                  "optional": true
+                },
+                "datatype": {
+                  "type": "string",
+                  "optional": true
+                },
+                "inlist": {
+                  "type": "any",
+                  "optional": true
+                },
+                "prefix": {
+                  "type": "string",
+                  "optional": true
+                },
+                "property": {
+                  "type": "string",
+                  "optional": true
+                },
+                "rel": {
+                  "type": "string",
+                  "optional": true
+                },
+                "resource": {
+                  "type": "string",
+                  "optional": true
+                },
+                "rev": {
+                  "type": "string",
+                  "optional": true
+                },
+                "typeof": {
+                  "type": "string",
+                  "optional": true
+                },
+                "vocab": {
+                  "type": "string",
+                  "optional": true
+                },
+                "autoCorrect": {
+                  "type": "string",
+                  "optional": true
+                },
+                "autoSave": {
+                  "type": "string",
+                  "optional": true
+                },
+                "color": {
+                  "type": "string",
+                  "optional": true
+                },
+                "itemProp": {
+                  "type": "string",
+                  "optional": true
+                },
+                "itemScope": {
+                  "type": "boolean",
+                  "optional": true
+                },
+                "itemType": {
+                  "type": "string",
+                  "optional": true
+                },
+                "itemID": {
+                  "type": "string",
+                  "optional": true
+                },
+                "itemRef": {
+                  "type": "string",
+                  "optional": true
+                },
+                "results": {
+                  "type": "number",
+                  "optional": true
+                },
+                "security": {
+                  "type": "string",
+                  "optional": true
+                },
+                "unselectable": {
+                  "type": "literal-union",
+                  "literals": ["off", "on"],
+                  "optional": true
+                },
+                "popover": {
+                  "type": "\"\" | \"auto\" | \"manual\" | \"hint\"",
+                  "optional": true
+                },
+                "popoverTargetAction": {
+                  "type": "literal-union",
+                  "literals": ["toggle", "show", "hide"],
+                  "optional": true
+                },
+                "popoverTarget": {
+                  "type": "string",
+                  "optional": true
+                },
+                "inert": {
+                  "type": "boolean",
+                  "optional": true
+                },
+                "inputMode": {
+                  "type": "literal-union",
+                  "literals": [
+                    "search",
+                    "text",
+                    "none",
+                    "tel",
+                    "url",
+                    "email",
+                    "numeric",
+                    "decimal"
+                  ],
+                  "optional": true
+                },
+                "is": {
+                  "type": "string",
+                  "optional": true
+                },
+                "exportparts": {
+                  "type": "string",
+                  "optional": true
+                },
+                "part": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-activedescendant": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-atomic": {
+                  "type": "Booleanish",
+                  "optional": true
+                },
+                "aria-autocomplete": {
+                  "type": "literal-union",
+                  "literals": ["none", "list", "inline", "both"],
+                  "optional": true
+                },
+                "aria-braillelabel": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-brailleroledescription": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-busy": {
+                  "type": "Booleanish",
+                  "optional": true
+                },
+                "aria-checked": {
+                  "type": "boolean | \"true\" | \"false\" | \"mixed\"",
+                  "optional": true
+                },
+                "aria-colcount": {
+                  "type": "number",
+                  "optional": true
+                },
+                "aria-colindex": {
+                  "type": "number",
+                  "optional": true
+                },
+                "aria-colindextext": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-colspan": {
+                  "type": "number",
+                  "optional": true
+                },
+                "aria-controls": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-current": {
+                  "type": "boolean | \"time\" | \"true\" | \"false\" | \"page\" | \"step\" | \"location\" | \"date\"",
+                  "optional": true
+                },
+                "aria-describedby": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-description": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-details": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-disabled": {
+                  "type": "Booleanish",
+                  "optional": true
+                },
+                "aria-dropeffect": {
+                  "type": "literal-union",
+                  "literals": [
+                    "link",
+                    "none",
+                    "copy",
+                    "execute",
+                    "move",
+                    "popup"
+                  ],
+                  "optional": true
+                },
+                "aria-errormessage": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-expanded": {
+                  "type": "Booleanish",
+                  "optional": true
+                },
+                "aria-flowto": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-grabbed": {
+                  "type": "Booleanish",
+                  "optional": true
+                },
+                "aria-haspopup": {
+                  "type": "boolean | \"dialog\" | \"menu\" | \"true\" | \"false\" | \"grid\" | \"listbox\" | \"tree\"",
+                  "optional": true
+                },
+                "aria-hidden": {
+                  "type": "Booleanish",
+                  "optional": true
+                },
+                "aria-invalid": {
+                  "type": "boolean | \"true\" | \"false\" | \"grammar\" | \"spelling\"",
+                  "optional": true
+                },
+                "aria-keyshortcuts": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-label": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-labelledby": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-level": {
+                  "type": "number",
+                  "optional": true
+                },
+                "aria-live": {
+                  "type": "literal-union",
+                  "literals": ["off", "assertive", "polite"],
+                  "optional": true
+                },
+                "aria-modal": {
+                  "type": "Booleanish",
+                  "optional": true
+                },
+                "aria-multiline": {
+                  "type": "Booleanish",
+                  "optional": true
+                },
+                "aria-multiselectable": {
+                  "type": "Booleanish",
+                  "optional": true
+                },
+                "aria-orientation": {
+                  "type": "literal-union",
+                  "literals": ["horizontal", "vertical"],
+                  "optional": true
+                },
+                "aria-owns": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-placeholder": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-posinset": {
+                  "type": "number",
+                  "optional": true
+                },
+                "aria-pressed": {
+                  "type": "boolean | \"true\" | \"false\" | \"mixed\"",
+                  "optional": true
+                },
+                "aria-readonly": {
+                  "type": "Booleanish",
+                  "optional": true
+                },
+                "aria-relevant": {
+                  "type": "\"text\" | \"additions\" | \"additions removals\" | \"additions text\" | \"all\" | \"removals\" | \"removals additions\" | \"removals text\" | \"text additions\" | \"text removals\"",
+                  "optional": true
+                },
+                "aria-required": {
+                  "type": "Booleanish",
+                  "optional": true
+                },
+                "aria-roledescription": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-rowcount": {
+                  "type": "number",
+                  "optional": true
+                },
+                "aria-rowindex": {
+                  "type": "number",
+                  "optional": true
+                },
+                "aria-rowindextext": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-rowspan": {
+                  "type": "number",
+                  "optional": true
+                },
+                "aria-selected": {
+                  "type": "Booleanish",
+                  "optional": true
+                },
+                "aria-setsize": {
+                  "type": "number",
+                  "optional": true
+                },
+                "aria-sort": {
+                  "type": "literal-union",
+                  "literals": ["none", "ascending", "descending", "other"],
+                  "optional": true
+                },
+                "aria-valuemax": {
+                  "type": "number",
+                  "optional": true
+                },
+                "aria-valuemin": {
+                  "type": "number",
+                  "optional": true
+                },
+                "aria-valuenow": {
+                  "type": "number",
+                  "optional": true
+                },
+                "aria-valuetext": {
+                  "type": "string",
+                  "optional": true
+                },
+                "children": {
+                  "type": "React.ReactNode",
+                  "optional": true
+                },
+                "dangerouslySetInnerHTML": {
+                  "type": "{ __html: string | TrustedHTML; }",
+                  "optional": true
+                },
+                "onCopy": {
+                  "type": "React.ClipboardEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onCopyCapture": {
+                  "type": "React.ClipboardEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onCut": {
+                  "type": "React.ClipboardEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onCutCapture": {
+                  "type": "React.ClipboardEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onPaste": {
+                  "type": "React.ClipboardEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onPasteCapture": {
+                  "type": "React.ClipboardEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onCompositionEnd": {
+                  "type": "React.CompositionEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onCompositionEndCapture": {
+                  "type": "React.CompositionEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onCompositionStart": {
+                  "type": "React.CompositionEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onCompositionStartCapture": {
+                  "type": "React.CompositionEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onCompositionUpdate": {
+                  "type": "React.CompositionEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onCompositionUpdateCapture": {
+                  "type": "React.CompositionEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onFocus": {
+                  "type": "React.FocusEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onFocusCapture": {
+                  "type": "React.FocusEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onBlur": {
+                  "type": "React.FocusEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onBlurCapture": {
+                  "type": "React.FocusEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onChange": {
+                  "type": "React.FormEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onChangeCapture": {
+                  "type": "React.FormEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onBeforeInput": {
+                  "type": "React.InputEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onBeforeInputCapture": {
+                  "type": "React.FormEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onInput": {
+                  "type": "React.FormEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onInputCapture": {
+                  "type": "React.FormEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onReset": {
+                  "type": "React.FormEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onResetCapture": {
+                  "type": "React.FormEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onSubmit": {
+                  "type": "React.FormEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onSubmitCapture": {
+                  "type": "React.FormEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onInvalid": {
+                  "type": "React.FormEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onInvalidCapture": {
+                  "type": "React.FormEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onLoad": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onLoadCapture": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onError": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onErrorCapture": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onKeyDown": {
+                  "type": "React.KeyboardEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onKeyDownCapture": {
+                  "type": "React.KeyboardEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onKeyPress": {
+                  "type": "React.KeyboardEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onKeyPressCapture": {
+                  "type": "React.KeyboardEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onKeyUp": {
+                  "type": "React.KeyboardEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onKeyUpCapture": {
+                  "type": "React.KeyboardEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onAbort": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onAbortCapture": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onCanPlay": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onCanPlayCapture": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onCanPlayThrough": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onCanPlayThroughCapture": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onDurationChange": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onDurationChangeCapture": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onEmptied": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onEmptiedCapture": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onEncrypted": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onEncryptedCapture": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onEnded": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onEndedCapture": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onLoadedData": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onLoadedDataCapture": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onLoadedMetadata": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onLoadedMetadataCapture": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onLoadStart": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onLoadStartCapture": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onPause": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onPauseCapture": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onPlay": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onPlayCapture": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onPlaying": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onPlayingCapture": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onProgress": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onProgressCapture": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onRateChange": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onRateChangeCapture": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onSeeked": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onSeekedCapture": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onSeeking": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onSeekingCapture": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onStalled": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onStalledCapture": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onSuspend": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onSuspendCapture": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onTimeUpdate": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onTimeUpdateCapture": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onVolumeChange": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onVolumeChangeCapture": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onWaiting": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onWaitingCapture": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onAuxClick": {
+                  "type": "React.MouseEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onAuxClickCapture": {
+                  "type": "React.MouseEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onClick": {
+                  "type": "React.MouseEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onClickCapture": {
+                  "type": "React.MouseEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onContextMenu": {
+                  "type": "React.MouseEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onContextMenuCapture": {
+                  "type": "React.MouseEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onDoubleClick": {
+                  "type": "React.MouseEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onDoubleClickCapture": {
+                  "type": "React.MouseEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onDrag": {
+                  "type": "React.DragEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onDragCapture": {
+                  "type": "React.DragEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onDragEnd": {
+                  "type": "React.DragEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onDragEndCapture": {
+                  "type": "React.DragEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onDragEnter": {
+                  "type": "React.DragEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onDragEnterCapture": {
+                  "type": "React.DragEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onDragExit": {
+                  "type": "React.DragEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onDragExitCapture": {
+                  "type": "React.DragEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onDragLeave": {
+                  "type": "React.DragEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onDragLeaveCapture": {
+                  "type": "React.DragEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onDragOver": {
+                  "type": "React.DragEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onDragOverCapture": {
+                  "type": "React.DragEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onDragStart": {
+                  "type": "React.DragEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onDragStartCapture": {
+                  "type": "React.DragEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onDrop": {
+                  "type": "React.DragEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onDropCapture": {
+                  "type": "React.DragEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onMouseDown": {
+                  "type": "React.MouseEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onMouseDownCapture": {
+                  "type": "React.MouseEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onMouseEnter": {
+                  "type": "React.MouseEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onMouseLeave": {
+                  "type": "React.MouseEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onMouseMove": {
+                  "type": "React.MouseEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onMouseMoveCapture": {
+                  "type": "React.MouseEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onMouseOut": {
+                  "type": "React.MouseEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onMouseOutCapture": {
+                  "type": "React.MouseEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onMouseOver": {
+                  "type": "React.MouseEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onMouseOverCapture": {
+                  "type": "React.MouseEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onMouseUp": {
+                  "type": "React.MouseEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onMouseUpCapture": {
+                  "type": "React.MouseEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onSelect": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onSelectCapture": {
+                  "type": "React.ReactEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onTouchCancel": {
+                  "type": "React.TouchEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onTouchCancelCapture": {
+                  "type": "React.TouchEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onTouchEnd": {
+                  "type": "React.TouchEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onTouchEndCapture": {
+                  "type": "React.TouchEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onTouchMove": {
+                  "type": "React.TouchEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onTouchMoveCapture": {
+                  "type": "React.TouchEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onTouchStart": {
+                  "type": "React.TouchEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onTouchStartCapture": {
+                  "type": "React.TouchEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onPointerDown": {
+                  "type": "React.PointerEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onPointerDownCapture": {
+                  "type": "React.PointerEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onPointerMove": {
+                  "type": "React.PointerEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onPointerMoveCapture": {
+                  "type": "React.PointerEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onPointerUp": {
+                  "type": "React.PointerEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onPointerUpCapture": {
+                  "type": "React.PointerEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onPointerCancel": {
+                  "type": "React.PointerEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onPointerCancelCapture": {
+                  "type": "React.PointerEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onPointerEnter": {
+                  "type": "React.PointerEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onPointerLeave": {
+                  "type": "React.PointerEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onPointerOver": {
+                  "type": "React.PointerEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onPointerOverCapture": {
+                  "type": "React.PointerEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onPointerOut": {
+                  "type": "React.PointerEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onPointerOutCapture": {
+                  "type": "React.PointerEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onGotPointerCapture": {
+                  "type": "React.PointerEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onGotPointerCaptureCapture": {
+                  "type": "React.PointerEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onLostPointerCapture": {
+                  "type": "React.PointerEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onLostPointerCaptureCapture": {
+                  "type": "React.PointerEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onScroll": {
+                  "type": "React.UIEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onScrollCapture": {
+                  "type": "React.UIEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onScrollEnd": {
+                  "type": "React.UIEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onScrollEndCapture": {
+                  "type": "React.UIEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onWheel": {
+                  "type": "React.WheelEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onWheelCapture": {
+                  "type": "React.WheelEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onAnimationStart": {
+                  "type": "React.AnimationEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onAnimationStartCapture": {
+                  "type": "React.AnimationEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onAnimationEnd": {
+                  "type": "React.AnimationEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onAnimationEndCapture": {
+                  "type": "React.AnimationEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onAnimationIteration": {
+                  "type": "React.AnimationEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onAnimationIterationCapture": {
+                  "type": "React.AnimationEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onToggle": {
+                  "type": "React.ToggleEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onBeforeToggle": {
+                  "type": "React.ToggleEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onTransitionCancel": {
+                  "type": "React.TransitionEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onTransitionCancelCapture": {
+                  "type": "React.TransitionEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onTransitionEnd": {
+                  "type": "React.TransitionEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onTransitionEndCapture": {
+                  "type": "React.TransitionEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onTransitionRun": {
+                  "type": "React.TransitionEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onTransitionRunCapture": {
+                  "type": "React.TransitionEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onTransitionStart": {
+                  "type": "React.TransitionEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "onTransitionStartCapture": {
+                  "type": "React.TransitionEventHandler<HTMLSpanElement>",
+                  "optional": true
+                },
+                "size": {
+                  "type": "literal-union",
+                  "literals": ["small", "large", "medium", "xsmall"],
+                  "optional": true
+                }
+              },
+              "emits": {}
+            },
+            "semanticHash": "uif:af2e9d807202d4ba2aa831de",
+            "fileHash": "uif:60f495512b9bb18540ca5693"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport type { ComponentPropsWithRef } from 'react';\n\nexport type IconProps = ComponentPropsWithRef<'span'> & {\n  size?: 'large' | 'medium' | 'small' | 'xsmall';\n};\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  }
+]

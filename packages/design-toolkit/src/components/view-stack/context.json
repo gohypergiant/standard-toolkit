@@ -1,0 +1,487 @@
+[
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "1/7",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/view-stack/context.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:44.119Z",
+    "bundleHash": "uifb:76bfc76b79a7a5810d42d016",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/view-stack/context.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:hook",
+            "entryId": "components/view-stack/context.tsx",
+            "description": "context - Custom React hook",
+            "version": {
+              "variables": [
+                "ViewStackContext",
+                "ViewStackEventHandlers",
+                "bus"
+              ],
+              "hooks": ["useEmit"],
+              "components": [],
+              "functions": ["useViewStackEmit"],
+              "imports": [
+                "./events",
+                "./types",
+                "@accelint/bus",
+                "@accelint/bus/react",
+                "@accelint/core",
+                "client-only",
+                "react"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": {
+              "named": [
+                "ViewStackContext",
+                "ViewStackEventHandlers",
+                "useViewStackEmit"
+              ]
+            },
+            "semanticHash": "uif:c89650c368585d0fb604b9d6",
+            "fileHash": "uif:355c4e23db18d4be9fe8e02b"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport { Broadcast } from '@accelint/bus';\nimport { useEmit } from '@accelint/bus/react';\nimport type { UniqueId } from '@accelint/core';\nimport 'client-only';\nimport { createContext } from 'react';\nimport { ViewStackEventTypes } from './events';\nimport type { ViewStackContextValue, ViewStackEvent } from './types';\n\nconst bus = Broadcast.getInstance<ViewStackEvent>();\n\n/**\n * Context for ViewStack component\n */\nexport const ViewStackContext = createContext<ViewStackContextValue>({\n  parent: null,\n  stack: [],\n  view: null,\n  register: () => undefined,\n  unregister: () => undefined,\n});\n\n/**\n * Event handlers for ViewStack events\n */\nexport const ViewStackEventHandlers = {\n  back: (stack: UniqueId) => bus.emit(ViewStackEventTypes.back, { stack }),\n  clear: (stack: UniqueId) => bus.emit(ViewStackEventTypes.clear, { stack }),\n  push: (view: UniqueId) => bus.emit(ViewStackEventTypes.push, { view }),\n  reset: (stack: UniqueId) => bus.emit(ViewStackEventTypes.reset, { stack }),\n} as const;\n\n/**\n * Hook for emitting ViewStack events\n */\nexport function useViewStackEmit() {\n  const emitBack = useEmit<ViewStackEvent>(ViewStackEventTypes.back);\n  const emitClear = useEmit<ViewStackEvent>(ViewStackEventTypes.clear);\n  const emitPush = useEmit<ViewStackEvent>(ViewStackEventTypes.push);\n  const emitReset = useEmit<ViewStackEvent>(ViewStackEventTypes.reset);\n\n  return {\n    back: (stack: UniqueId) => emitBack({ stack }),\n    clear: (stack: UniqueId) => emitClear({ stack }),\n    push: (view: UniqueId) => emitPush({ view }),\n    reset: (stack: UniqueId) => emitReset({ stack }),\n  } as const;\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "2/7",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/view-stack/events.ts",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:44.119Z",
+    "bundleHash": "uifb:43f18c7723fa62c7b466aed9",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/view-stack/events.ts",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/view-stack/events.ts",
+            "description": "events - TypeScript module",
+            "version": {
+              "variables": ["ViewStackEventNamespace", "ViewStackEventTypes"],
+              "hooks": [],
+              "components": [],
+              "functions": [],
+              "imports": []
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": {
+              "named": ["ViewStackEventNamespace", "ViewStackEventTypes"]
+            },
+            "semanticHash": "uif:f6561f2983574fc504390b1e",
+            "fileHash": "uif:6050dcd1a3e61533df4c2b2a"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nexport const ViewStackEventNamespace = 'ViewStack';\n\nexport const ViewStackEventTypes = {\n  back: `${ViewStackEventNamespace}:back`,\n  clear: `${ViewStackEventNamespace}:clear`,\n  reset: `${ViewStackEventNamespace}:reset`,\n  push: `${ViewStackEventNamespace}:push`,\n} as const;\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "3/7",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/view-stack/index.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:44.122Z",
+    "bundleHash": "uifb:a65c9f458f74aad67f610273",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/view-stack/index.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/view-stack/index.tsx",
+            "description": "index - Stateful component",
+            "version": {
+              "variables": [],
+              "hooks": ["useCallback", "useOn", "useRef", "useState"],
+              "components": ["ViewStackContext.Provider"],
+              "functions": ["ViewStack"],
+              "imports": [
+                "./context",
+                "./events",
+                "./types",
+                "@accelint/bus/react",
+                "@accelint/core",
+                "client-only",
+                "react"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {},
+              "state": {
+                "stack": "UniqueId[]"
+              }
+            },
+            "exports": "named",
+            "prediction": [
+              "Uses memoization for performance optimization",
+              "Uses refs for DOM access or mutable values"
+            ],
+            "semanticHash": "uif:983fc65dd7edd38efe09c958",
+            "fileHash": "uif:c9c1170dacd8b61ce9549549"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport { useOn } from '@accelint/bus/react';\nimport { isUUID, type UniqueId } from '@accelint/core';\nimport 'client-only';\nimport { useCallback, useRef, useState } from 'react';\nimport { ViewStackContext } from './context';\nimport { ViewStackEventTypes } from './events';\nimport type {\n  ViewStackBackEvent,\n  ViewStackClearEvent,\n  ViewStackProps,\n  ViewStackPushEvent,\n  ViewStackResetEvent,\n} from './types';\n\n/**\n * ViewStack - Stack-based view manager for pushing/popping views\n *\n * Manages a stack of views that can be pushed, popped, or reset programmatically\n * and is intended for building nested or stacked UIs such as Drawer views.\n *\n * @example\n * const ids = {\n *   stack: uuid(),\n *   a: uuid(),\n *   b: uuid(),\n * };\n *\n * <ViewStack id={ids.stack} defaultView={ids.a}>\n *   <ViewStackView id={ids.a}>\n *     <ViewStackTrigger for={ids.b}>\n *       <Button>\n *         Push View B\n *       </Button>\n *     </ViewStackTrigger>\n *     <h1>View A</h1>\n *   </ViewStackView>\n *   <ViewStackView id={ids.b}>\n *     <ViewStackTrigger for='back'>\n *       <Button variant='icon'>\n *         <Icon>\n *           <ChevronLeft />\n *         </Icon>\n *       </Button>\n *     </ViewStackTrigger>\n *     <h1>View B</h1>\n *   </ViewStackView>\n * </ViewStack>\n */\nexport function ViewStack({\n  id,\n  children,\n  defaultView,\n  onChange,\n}: ViewStackProps) {\n  if (!isUUID(id)) {\n    throw new Error(`ViewStack's id must be a UniqueId`);\n  }\n\n  const views = useRef(new Set<UniqueId>());\n  const [stack, setStack] = useState<UniqueId[]>(\n    defaultView ? [defaultView] : [],\n  );\n  const view = stack.at(-1) ?? null;\n\n  const handleBack = useCallback(\n    (data: ViewStackBackEvent) => {\n      if (id === data?.payload?.stack) {\n        const next = stack.slice(0, -1);\n\n        if (!next.length && defaultView) {\n          next.push(defaultView);\n        }\n\n        setStack(next);\n        onChange?.(next.at(-1) ?? null);\n      }\n    },\n    [id, defaultView, onChange, stack],\n  );\n\n  const handleClear = useCallback(\n    (data: ViewStackClearEvent) => {\n      if (id === data?.payload?.stack) {\n        setStack([]);\n        onChange?.(null);\n      }\n    },\n    [id, onChange],\n  );\n\n  const handlePush = useCallback(\n    (data: ViewStackPushEvent) => {\n      if (views.current.has(data?.payload?.view)) {\n        setStack((prev) => [...prev, data?.payload?.view]);\n        onChange?.(data?.payload?.view);\n      }\n    },\n    [onChange],\n  );\n\n  const handleReset = useCallback(\n    (data: ViewStackResetEvent) => {\n      if (id === data?.payload?.stack) {\n        setStack(defaultView ? [defaultView] : []);\n        onChange?.(defaultView ?? null);\n      }\n    },\n    [id, defaultView, onChange],\n  );\n  useOn(ViewStackEventTypes.back, handleBack);\n  useOn(ViewStackEventTypes.clear, handleClear);\n  useOn(ViewStackEventTypes.push, handlePush);\n  useOn(ViewStackEventTypes.reset, handleReset);\n\n  return (\n    <ViewStackContext.Provider\n      value={{\n        parent: id,\n        stack,\n        view,\n        register: (view: UniqueId) => views.current.add(view),\n        unregister: (view: UniqueId) => views.current.delete(view),\n      }}\n    >\n      {children}\n    </ViewStackContext.Provider>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "ViewStackContext.Provider",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/view-stack/index.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "4/7",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/view-stack/trigger.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:44.124Z",
+    "bundleHash": "uifb:ea36f46ef0875f3f1343444a",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/view-stack/trigger.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/view-stack/trigger.tsx",
+            "description": "trigger - Interactive component",
+            "version": {
+              "variables": [],
+              "hooks": ["useContext", "useViewStackEmit"],
+              "components": ["Pressable"],
+              "functions": ["ViewStackTrigger"],
+              "imports": [
+                "./context",
+                "./types",
+                "@accelint/core",
+                "client-only",
+                "react",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {
+                "onPress": {
+                  "type": "function",
+                  "signature": "() => void"
+                }
+              }
+            },
+            "exports": "named",
+            "prediction": ["Consumes React Context for shared state"],
+            "semanticHash": "uif:82b5190111e07d8204da006d",
+            "fileHash": "uif:0d62865deb3fef4f0cd144bf"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport 'client-only';\nimport { isUUID, type UniqueId } from '@accelint/core';\nimport { useContext } from 'react';\nimport { Pressable } from 'react-aria-components';\nimport { useViewStackEmit, ViewStackContext } from './context';\nimport type { ViewStackTriggerProps } from './types';\n\n/**\n * ViewStackTrigger - Trigger for ViewStack actions\n *\n * Provides a pressable element that triggers ViewStack actions\n */\nexport function ViewStackTrigger({\n  children,\n  for: types,\n}: ViewStackTriggerProps) {\n  const { parent } = useContext(ViewStackContext);\n  const viewStackEmit = useViewStackEmit();\n\n  function handlePress() {\n    for (const type of Array.isArray(types) ? types : [types]) {\n      let [event, id] = (isUUID(type) ? ['push', type] : type.split(':')) as [\n        'back' | 'clear' | 'reset' | 'push',\n        UniqueId | undefined | null,\n      ];\n\n      id ??= parent;\n\n      if (!id) {\n        continue;\n      }\n\n      viewStackEmit[event](id);\n    }\n  }\n\n  return <Pressable onPress={handlePress}>{children}</Pressable>;\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "Pressable",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/view-stack/trigger.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "5/7",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/view-stack/types.ts",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:44.124Z",
+    "bundleHash": "uifb:88c4535a37dc7b6dbab57d46",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/view-stack/types.ts",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/view-stack/types.ts",
+            "description": "types - Type definitions",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": [],
+              "functions": [],
+              "imports": [
+                "./events",
+                "@accelint/bus",
+                "@accelint/core",
+                "react",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {
+                "ref": {
+                  "type": "React.Ref<HTMLDivElement>",
+                  "optional": true
+                },
+                "key": {
+                  "type": "React.Key",
+                  "optional": true
+                },
+                "id": "UniqueId",
+                "defaultView": {
+                  "type": "UniqueId",
+                  "optional": true
+                },
+                "onChange": {
+                  "type": "function",
+                  "signature": "(view: any) => void",
+                  "optional": true
+                },
+                "children": "any",
+                "for": "any"
+              },
+              "emits": {}
+            },
+            "semanticHash": "uif:e0cda5d5ed4f8d70b3224588",
+            "fileHash": "uif:fd2cf46d24996a1701e0e317"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport type { Payload } from '@accelint/bus';\nimport type { UniqueId } from '@accelint/core';\nimport type { ComponentProps, PropsWithChildren, RefAttributes } from 'react';\nimport type { Pressable } from 'react-aria-components';\nimport type { ViewStackEventTypes } from './events';\n\nexport type ViewStackProps = RefAttributes<HTMLDivElement> &\n  PropsWithChildren<{\n    id: UniqueId;\n    defaultView?: UniqueId;\n    onChange?: (view: UniqueId | null) => void;\n  }>;\n\nexport type ViewStackViewProps = RefAttributes<HTMLDivElement> &\n  PropsWithChildren<{\n    id: UniqueId;\n  }>;\n\nexport type ViewStackBackEvent = Payload<\n  typeof ViewStackEventTypes.back,\n  { stack: UniqueId }\n>;\n\nexport type ViewStackClearEvent = Payload<\n  typeof ViewStackEventTypes.clear,\n  { stack: UniqueId }\n>;\n\nexport type ViewStackResetEvent = Payload<\n  typeof ViewStackEventTypes.reset,\n  { stack: UniqueId }\n>;\n\nexport type ViewStackPushEvent = Payload<\n  typeof ViewStackEventTypes.push,\n  { view: UniqueId }\n>;\n\nexport type ViewStackEvent =\n  | ViewStackBackEvent\n  | ViewStackClearEvent\n  | ViewStackResetEvent\n  | ViewStackPushEvent;\n\ntype SimpleEvents = 'back' | 'clear' | 'reset' | UniqueId;\n\ntype TargetedEvents =\n  | `back:${UniqueId}`\n  | `clear:${UniqueId}`\n  | `reset:${UniqueId}`;\n\ntype ChainedEvents = (SimpleEvents | TargetedEvents)[];\n\nexport type ViewStackTriggerProps = {\n  children: ComponentProps<typeof Pressable>['children'];\n  /**\n   * __SimpleEvents__ allow the easiest implementation of events, but come with some restrictions:\n   * - The literal commands `back | clear | reset` will only work inside of the context of a ViewStack\n   * - When passing a view's UniqueId the behavior is always to push that id onto it's parent's stack\n   *\n   * __TargetedEvents__ allow for external control of a ViewStack, the UniqueId of a Stack is passed to know which stack to affect\n   *\n   * __ChainedEvents__ allow a list of events from a single control to enable multiple behaviors\n   *\n   * @example\n   * // Clear a stack and then push a view on:\n   * ['clear', myViewId]\n   *\n   * // Reset multiple stacks:\n   * [`reset:${stackOneId}`, `reset:${stackTwoId}`]\n   *\n   * // Hydrate a stack with multiple views:\n   * [viewOneId, viewTwoId, viewThreeId]\n   */\n  for: SimpleEvents | TargetedEvents | ChainedEvents;\n};\n\nexport type ViewStackContextValue = {\n  parent: UniqueId | null;\n  stack: string[];\n  view: UniqueId | null;\n  register: (view: UniqueId) => void;\n  unregister: (view: UniqueId) => void;\n};\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "6/7",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/view-stack/view-stack.stories.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:44.138Z",
+    "bundleHash": "uifb:f30095e7a160998a6ca837ce",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/view-stack/view-stack.stories.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/view-stack/view-stack.stories.tsx",
+            "description": "view-stack.stories - Presentational component",
+            "version": {
+              "variables": ["Default", "ids", "meta"],
+              "hooks": [],
+              "components": [
+                "Button",
+                "ChevronLeft",
+                "Icon",
+                "ViewStack",
+                "ViewStackTrigger",
+                "ViewStackView"
+              ],
+              "functions": [],
+              "imports": [
+                "../button",
+                "../icon",
+                "./index",
+                "./trigger",
+                "./view",
+                "@accelint/core",
+                "@accelint/icons",
+                "@storybook/react-vite"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "tailwind": {
+                  "categories": {
+                    "other": ["fg-primary-bold"],
+                    "sizing": ["h-oversized"],
+                    "typography": ["text-center"],
+                    "layout": ["flex"],
+                    "spacing": ["gap-s"]
+                  },
+                  "classCount": 5
+                }
+              },
+              "layout": {
+                "type": "flex"
+              },
+              "visual": {
+                "colors": ["text-center"],
+                "typography": ["text-center"]
+              }
+            },
+            "semanticHash": "uif:615dd28c782d9a877f1096c0",
+            "fileHash": "uif:7ba1ad92647ab6b660aa7b01"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport { uuid } from '@accelint/core';\nimport { ChevronLeft } from '@accelint/icons';\nimport { Button } from '../button';\nimport { Icon } from '../icon';\nimport { ViewStack } from './index';\nimport { ViewStackTrigger } from './trigger';\nimport { ViewStackView } from './view';\nimport type { Meta, StoryObj } from '@storybook/react-vite';\n\nconst ids = {\n  stack: uuid(),\n  a: uuid(),\n  b: uuid(),\n  c: uuid(),\n};\n\nconst meta = {\n  title: 'Components/ViewStack',\n  component: ViewStack,\n  args: {\n    id: ids.stack,\n    defaultView: ids.a,\n  },\n  parameters: {\n    docs: {\n      description: {\n        component: `\n          The ViewStack component allows you to manage a stack of views. Think of it as similar to the\n          functionality of tabs, but the triggers can be anywhere, even programmatic. The ViewStack\n          component provides a way to push and pop views from the stack as well as clear all or reset back\n          to the original view.\n        `,\n      },\n    },\n  },\n} satisfies Meta<typeof ViewStack>;\n\nexport default meta;\ntype Story = StoryObj<typeof meta>;\n\nexport const Default: Story = {\n  render: () => (\n    <>\n      <ViewStack id={ids.stack} defaultView={ids.a}>\n        <ViewStackView id={ids.a}>\n          <ViewStackTrigger for={ids.b}>\n            <Button size='small' variant='flat'>\n              Push View B\n            </Button>\n          </ViewStackTrigger>\n          <h1 className='fg-primary-bold h-oversized text-center'>View A</h1>\n        </ViewStackView>\n        <ViewStackView id={ids.b}>\n          <div className='flex'>\n            <ViewStackTrigger for='back'>\n              <Button variant='icon'>\n                <Icon>\n                  <ChevronLeft />\n                </Icon>\n              </Button>\n            </ViewStackTrigger>\n            <ViewStackTrigger for={ids.c}>\n              <Button size='small' variant='flat'>\n                Push View C\n              </Button>\n            </ViewStackTrigger>\n          </div>\n          <h1 className='fg-primary-bold h-oversized text-center'>View B</h1>\n        </ViewStackView>\n        <ViewStackView id={ids.c}>\n          <ViewStackTrigger for='back'>\n            <Button variant='icon'>\n              <Icon>\n                <ChevronLeft />\n              </Icon>\n            </Button>\n          </ViewStackTrigger>\n          <h1 className='fg-primary-bold h-oversized text-center'>View C</h1>\n        </ViewStackView>\n      </ViewStack>\n      <div className='flex gap-s'>\n        <ViewStackTrigger for={[`clear:${ids.stack}`, ids.a]}>\n          <Button variant='flat'>Goto View A</Button>\n        </ViewStackTrigger>\n        <ViewStackTrigger for={[`clear:${ids.stack}`, ids.b]}>\n          <Button variant='flat'>Goto View B</Button>\n        </ViewStackTrigger>\n        <ViewStackTrigger for={[`clear:${ids.stack}`, ids.c]}>\n          <Button variant='flat'>Goto View C</Button>\n        </ViewStackTrigger>\n      </div>\n    </>\n  ),\n};\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "Button",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/view-stack/view-stack.stories.tsx"
+        },
+        {
+          "name": "ChevronLeft",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/view-stack/view-stack.stories.tsx"
+        },
+        {
+          "name": "Icon",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/view-stack/view-stack.stories.tsx"
+        },
+        {
+          "name": "ViewStack",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/view-stack/view-stack.stories.tsx"
+        },
+        {
+          "name": "ViewStackTrigger",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/view-stack/view-stack.stories.tsx"
+        },
+        {
+          "name": "ViewStackView",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/view-stack/view-stack.stories.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "7/7",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/view-stack/view.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:44.141Z",
+    "bundleHash": "uifb:2b0a6f6771267bfb2bd3f23e",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/view-stack/view.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/view-stack/view.tsx",
+            "description": "view - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": ["useContext", "useEffect"],
+              "components": ["Fragment"],
+              "functions": ["ViewStackView"],
+              "imports": [
+                "./context",
+                "./types",
+                "@accelint/core",
+                "client-only",
+                "react"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "prediction": [
+              "Has side effects managed by useEffect",
+              "Consumes React Context for shared state"
+            ],
+            "semanticHash": "uif:9c2af8c52597f12b2ffa84f4",
+            "fileHash": "uif:053004abfb763af21bff82b8"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport { isUUID } from '@accelint/core';\nimport 'client-only';\nimport { Fragment, useContext, useEffect } from 'react';\nimport { ViewStackContext } from './context';\nimport type { ViewStackViewProps } from './types';\n\n/**\n * ViewStackView - Individual view in a ViewStack\n *\n * Represents a single view that can be pushed onto the ViewStack\n */\nexport function ViewStackView({ id, children }: ViewStackViewProps) {\n  const { parent, view, register, unregister } = useContext(ViewStackContext);\n\n  if (!parent) {\n    throw new Error('ViewStackView must be implemented within a ViewStack');\n  }\n\n  if (!isUUID(id)) {\n    throw new Error(`ViewStackView's id must be a UniqueId`);\n  }\n\n  useEffect(() => {\n    register(id);\n\n    return () => unregister(id);\n  }, [register, unregister, id]);\n\n  return view === id ? <Fragment key={id}>{children}</Fragment> : null;\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "Fragment",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/view-stack/view.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  }
+]

@@ -1,0 +1,468 @@
+[
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "1/6",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/button/button.stories.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:42.569Z",
+    "bundleHash": "uifb:3e990c09739449d3421a24e6",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/button/button.stories.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/button/button.stories.tsx",
+            "description": "button.stories - Interactive button component",
+            "version": {
+              "variables": [
+                "Default",
+                "Link",
+                "Toggle",
+                "meta",
+                "metaForLink",
+                "metaForToggle"
+              ],
+              "hooks": [],
+              "components": [
+                "Button",
+                "Icon",
+                "LinkButton",
+                "Placeholder",
+                "ToggleButton"
+              ],
+              "functions": [],
+              "imports": [
+                "../icon",
+                "./",
+                "./link",
+                "./toggle",
+                "@accelint/icons",
+                "@storybook/react-vite",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": {
+              "named": ["Default", "Link", "Toggle"]
+            },
+            "semanticHash": "uif:000973e80a76fb0557211ef7",
+            "fileHash": "uif:9ff36a6b78246b13764960be"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport { Placeholder } from '@accelint/icons';\nimport { composeRenderProps } from 'react-aria-components';\nimport { Icon } from '../icon';\nimport { Button } from './';\nimport { LinkButton } from './link';\nimport { ToggleButton } from './toggle';\nimport type { Meta, StoryObj } from '@storybook/react-vite';\n\nconst meta = {\n  title: 'Components/Button',\n  component: Button,\n  args: {\n    children: 'Button',\n    color: 'mono-muted',\n    size: 'medium',\n    variant: 'filled',\n    isDisabled: false,\n  },\n  argTypes: {\n    color: {\n      control: 'select',\n      options: ['mono-muted', 'mono-bold', 'accent', 'serious', 'critical'],\n    },\n    size: {\n      control: 'select',\n      options: ['large', 'medium', 'small', 'xsmall'],\n    },\n    variant: {\n      control: 'select',\n      options: ['filled', 'outline', 'flat', 'icon'],\n    },\n  },\n  parameters: {\n    controls: {\n      exclude: [\n        'form',\n        'formAction',\n        'formEncType',\n        'formMethod',\n        'formNoValidate',\n        'formTarget',\n        'name',\n        'value',\n      ],\n    },\n  },\n} satisfies Meta<typeof Button>;\n\nexport default meta;\n\nexport const Default: StoryObj<typeof meta> = {\n  render: ({ children, ...props }) => (\n    <Button {...props}>\n      {composeRenderProps(children, (children) =>\n        props.variant === 'icon' ? (\n          <Icon>\n            <Placeholder />\n          </Icon>\n        ) : (\n          children\n        ),\n      )}\n    </Button>\n  ),\n};\n\nconst metaForLink = {\n  ...meta,\n  component: LinkButton,\n} satisfies Meta<typeof LinkButton>;\n\nexport const Link: StoryObj<typeof metaForLink> = {\n  render: ({ children, ...props }) => (\n    <LinkButton {...props} href='/'>\n      {composeRenderProps(children, (children) =>\n        props.variant === 'icon' ? (\n          <Icon>\n            <Placeholder />\n          </Icon>\n        ) : (\n          children\n        ),\n      )}\n    </LinkButton>\n  ),\n};\n\nconst metaForToggle = {\n  ...meta,\n  component: ToggleButton,\n  args: {\n    variant: 'flat',\n  },\n} satisfies Meta<typeof ToggleButton>;\n\nexport const Toggle: StoryObj<typeof metaForToggle> = {\n  args: {\n    variant: 'flat',\n  },\n  argTypes: {\n    variant: {\n      control: 'select',\n      options: ['outline', 'flat', 'icon'],\n    },\n  },\n  render: ({ children, ...props }) => (\n    <ToggleButton {...props}>\n      {composeRenderProps(children, (children) =>\n        props.variant === 'icon' ? (\n          <Icon>\n            <Placeholder />\n          </Icon>\n        ) : (\n          children\n        ),\n      )}\n    </ToggleButton>\n  ),\n};\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "Button",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/button/button.stories.tsx"
+        },
+        {
+          "name": "Icon",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/button/button.stories.tsx"
+        },
+        {
+          "name": "LinkButton",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/button/button.stories.tsx"
+        },
+        {
+          "name": "Placeholder",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/button/button.stories.tsx"
+        },
+        {
+          "name": "ToggleButton",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/button/button.stories.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "2/6",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/button/context.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:42.576Z",
+    "bundleHash": "uifb:e6c419c76a401b63ec85a12a",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/button/context.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/button/context.tsx",
+            "description": "context - Presentational component",
+            "version": {
+              "variables": [
+                "ButtonContext",
+                "LinkButtonContext",
+                "ToggleButtonContext"
+              ],
+              "hooks": [],
+              "components": [
+                "ButtonContext.Provider",
+                "LinkButtonContext.Provider",
+                "ToggleButtonContext.Provider"
+              ],
+              "functions": [
+                "ButtonProvider",
+                "LinkButtonProvider",
+                "ToggleButtonProvider"
+              ],
+              "imports": [
+                "./types",
+                "@/lib/types",
+                "client-only",
+                "react",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": {
+              "named": [
+                "ButtonContext",
+                "ButtonProvider",
+                "LinkButtonContext",
+                "LinkButtonProvider",
+                "ToggleButtonContext",
+                "ToggleButtonProvider"
+              ]
+            },
+            "semanticHash": "uif:6006367b7d8cc2f717507dab",
+            "fileHash": "uif:1a240f23b18d854e766358a5"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport type { ProviderProps } from '@/lib/types';\nimport 'client-only';\nimport { createContext } from 'react';\nimport type { ContextValue } from 'react-aria-components';\nimport type { ButtonProps, LinkButtonProps, ToggleButtonProps } from './types';\n\nexport const ButtonContext =\n  createContext<ContextValue<ButtonProps, HTMLButtonElement>>(null);\n\nexport function ButtonProvider({\n  children,\n  ...props\n}: ProviderProps<ButtonProps>) {\n  return (\n    <ButtonContext.Provider value={props}>{children}</ButtonContext.Provider>\n  );\n}\n\nexport const LinkButtonContext =\n  createContext<ContextValue<LinkButtonProps, HTMLAnchorElement>>(null);\n\nexport function LinkButtonProvider({\n  children,\n  ...props\n}: ProviderProps<LinkButtonProps>) {\n  return (\n    <LinkButtonContext.Provider value={props}>\n      {children}\n    </LinkButtonContext.Provider>\n  );\n}\n\nexport const ToggleButtonContext =\n  createContext<ContextValue<ToggleButtonProps, HTMLButtonElement>>(null);\n\nexport function ToggleButtonProvider({\n  children,\n  ...props\n}: ProviderProps<ToggleButtonProps>) {\n  return (\n    <ToggleButtonContext.Provider value={props}>\n      {children}\n    </ToggleButtonContext.Provider>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "ButtonContext.Provider",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/button/context.tsx"
+        },
+        {
+          "name": "LinkButtonContext.Provider",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/button/context.tsx"
+        },
+        {
+          "name": "ToggleButtonContext.Provider",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/button/context.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "3/6",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/button/index.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:42.581Z",
+    "bundleHash": "uifb:a62171216facdfacac14600d",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/button/index.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/button/index.tsx",
+            "description": "index - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": ["useContextProps"],
+              "components": ["AriaButton", "IconProvider"],
+              "functions": ["Button"],
+              "imports": [
+                "../icon/context",
+                "./context",
+                "./styles.module.css",
+                "./types",
+                "@accelint/design-foundation/lib/utils",
+                "client-only",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".button",
+                    ".filled",
+                    ".flat",
+                    ".icon",
+                    ".outline",
+                    ".toggle"
+                  ],
+                  "properties": []
+                }
+              }
+            },
+            "semanticHash": "uif:500d751c8f9176436650e19c",
+            "fileHash": "uif:f676db2e0b727b6d06c1bda7"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport 'client-only';\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport {\n  Button as AriaButton,\n  composeRenderProps,\n  useContextProps,\n} from 'react-aria-components';\nimport { IconProvider } from '../icon/context';\nimport { ButtonContext } from './context';\nimport styles from './styles.module.css';\nimport type { ButtonProps } from './types';\n\n/**\n * Button - A versatile interactive button component with multiple variants\n *\n * Provides accessible button functionality with support for different visual styles,\n * sizes, and interactive states. Includes icon support and integrates with React Aria\n * for keyboard navigation and accessibility features.\n *\n * @example\n * // Basic button\n * <Button>Click me</Button>\n *\n * @example\n * // Primary button with different sizes\n * <Button variant=\"filled\" size=\"large\">Large Filled</Button>\n * <Button variant=\"outline\" size=\"small\">Small Outline</Button>\n *\n * @example\n * // Button with icon\n * <Button variant=\"flat\">\n *   <Icon><Plus /></Icon>\n *   Add Item\n * </Button>\n *\n * @example\n * // Icon-only button\n * <Button variant=\"icon\">\n *   <Icon><Settings /></Icon>\n * </Button>\n *\n * @example\n * // Button with different colors\n * <Button color=\"critical\">Critical Button</Button>\n * <Button color=\"serious\">Delete</Button>\n */\nexport function Button({ ref, ...props }: ButtonProps) {\n  [props, ref] = useContextProps(props, ref ?? null, ButtonContext);\n\n  const {\n    children,\n    className,\n    color = 'mono-muted',\n    size = 'medium',\n    variant = 'filled',\n    ...rest\n  } = props;\n\n  return (\n    <IconProvider size={size}>\n      <AriaButton\n        {...rest}\n        ref={ref}\n        className={composeRenderProps(className, (className) =>\n          clsx('group/button', styles.button, styles[variant], className),\n        )}\n        data-color={color}\n        data-size={size}\n      >\n        {children}\n      </AriaButton>\n    </IconProvider>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "AriaButton",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/button/index.tsx"
+        },
+        {
+          "name": "IconProvider",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/button/index.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "4/6",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/button/link.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:42.587Z",
+    "bundleHash": "uifb:549275f51788d437f240658b",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/button/link.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/button/link.tsx",
+            "description": "link - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": ["useContextProps"],
+              "components": ["IconProvider", "Link"],
+              "functions": ["LinkButton"],
+              "imports": [
+                "../icon/context",
+                "./context",
+                "./styles.module.css",
+                "./types",
+                "@accelint/design-foundation/lib/utils",
+                "client-only",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".button",
+                    ".filled",
+                    ".flat",
+                    ".icon",
+                    ".outline",
+                    ".toggle"
+                  ],
+                  "properties": []
+                }
+              }
+            },
+            "semanticHash": "uif:57c5c3494e25ec6090dd4012",
+            "fileHash": "uif:12cf7f369a958ee2e7c77dcf"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport 'client-only';\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport {\n  composeRenderProps,\n  Link,\n  useContextProps,\n} from 'react-aria-components';\nimport { IconProvider } from '../icon/context';\nimport { LinkButtonContext } from './context';\nimport styles from './styles.module.css';\nimport type { LinkButtonProps } from './types';\n\n/**\n * LinkButton - A button component that renders as a link element\n *\n * Provides accessible link functionality with button-like styling and visual feedback.\n * Perfect for navigation actions that should look like buttons but behave as links.\n * Includes icon support and integrates with React Aria for keyboard navigation and accessibility.\n *\n * @example\n * // Basic link button\n * <LinkButton href=\"/dashboard\">Go to Dashboard</LinkButton>\n *\n * @example\n * // Link button with different variants and sizes\n * <LinkButton variant=\"filled\" size=\"large\" href=\"/create\">Create New</LinkButton>\n * <LinkButton variant=\"outline\" size=\"small\" href=\"/settings\">Settings</LinkButton>\n *\n * @example\n * // Link button with icon\n * <LinkButton variant=\"flat\" href=\"/profile\">\n *   <Icon><User /></Icon>\n *   View Profile\n * </LinkButton>\n *\n * @example\n * // Icon-only link button\n * <LinkButton variant=\"icon\" href=\"/help\">\n *   <Icon><HelpCircle /></Icon>\n * </LinkButton>\n *\n * @example\n * // Link button with different colors\n * <LinkButton color=\"critical\" href=\"/delete\">Delete Account</LinkButton>\n * <LinkButton color=\"serious\" href=\"/reset\">Reset Data</LinkButton>\n */\nexport function LinkButton({ ref, ...props }: LinkButtonProps) {\n  [props, ref] = useContextProps(props, ref ?? null, LinkButtonContext);\n\n  const {\n    children,\n    className,\n    color = 'mono-muted',\n    size = 'medium',\n    variant = 'filled',\n    ...rest\n  } = props;\n\n  return (\n    <IconProvider size={size}>\n      <Link\n        {...rest}\n        ref={ref}\n        className={composeRenderProps(className, (className) =>\n          clsx('group/button', styles.button, styles[variant], className),\n        )}\n        data-color={color}\n        data-size={size}\n      >\n        {children}\n      </Link>\n    </IconProvider>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "IconProvider",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/button/link.tsx"
+        },
+        {
+          "name": "Link",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/button/link.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "5/6",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/button/toggle.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:42.592Z",
+    "bundleHash": "uifb:1495258216a9712fab72c1d5",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/button/toggle.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/button/toggle.tsx",
+            "description": "toggle - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": ["useContextProps"],
+              "components": ["AriaToggleButton", "IconProvider"],
+              "functions": ["ToggleButton"],
+              "imports": [
+                "../icon/context",
+                "./context",
+                "./styles.module.css",
+                "./types",
+                "@accelint/design-foundation/lib/utils",
+                "client-only",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".button",
+                    ".filled",
+                    ".flat",
+                    ".icon",
+                    ".outline",
+                    ".toggle"
+                  ],
+                  "properties": []
+                }
+              }
+            },
+            "semanticHash": "uif:fc0c0fed356b7569c2336def",
+            "fileHash": "uif:e6dcc130281e045feb13c5da"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport 'client-only';\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport {\n  ToggleButton as AriaToggleButton,\n  composeRenderProps,\n  useContextProps,\n} from 'react-aria-components';\nimport { IconProvider } from '../icon/context';\nimport { ToggleButtonContext } from './context';\nimport styles from './styles.module.css';\nimport type { ToggleButtonProps } from './types';\n\n/**\n * ToggleButton - A button component that maintains pressed/unpressed state\n *\n * Provides accessible toggle functionality with visual feedback for the current state.\n * Perfect for features like favorites, bookmarks, switches, or any binary state controls.\n * Includes icon support and integrates with React Aria for keyboard navigation and accessibility.\n *\n * @example\n * // Basic toggle button\n * <ToggleButton>Toggle Feature</ToggleButton>\n *\n * @example\n * // Controlled toggle button with different variants\n * <ToggleButton variant=\"flat\" isSelected={isEnabled} onChange={setIsEnabled}>\n *   Enable Notifications\n * </ToggleButton>\n *\n * @example\n * // Toggle button with icon and state\n * <ToggleButton variant=\"outline\" isSelected={isFavorite} onChange={setIsFavorite}>\n *   <Icon><Heart /></Icon>\n *   {isFavorite ? 'Favorite' : 'Add to Favorites'}\n * </ToggleButton>\n *\n * @example\n * // Icon-only toggle button\n * <ToggleButton variant=\"icon\" isSelected={isBookmarked} onChange={setIsBookmarked}>\n *   <Icon><Bookmark /></Icon>\n * </ToggleButton>\n *\n * @example\n * // Toggle button with different colors and sizes\n * <ToggleButton color=\"critical\" size=\"small\" isSelected={isEnabled}>\n *   Critical Toggle\n * </ToggleButton>\n */\nexport function ToggleButton({ ref, ...props }: ToggleButtonProps) {\n  [props, ref] = useContextProps(props, ref ?? null, ToggleButtonContext);\n\n  const {\n    children,\n    className,\n    color = 'mono-muted',\n    size = 'medium',\n    variant = 'filled',\n    ...rest\n  } = props;\n\n  return (\n    <IconProvider size={size}>\n      <AriaToggleButton\n        {...rest}\n        ref={ref}\n        className={composeRenderProps(className, (className) =>\n          clsx(\n            'group/button',\n            styles.button,\n            styles.toggle,\n            styles[variant],\n            className,\n          ),\n        )}\n        data-color={color}\n        data-size={size}\n      >\n        {children}\n      </AriaToggleButton>\n    </IconProvider>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "AriaToggleButton",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/button/toggle.tsx"
+        },
+        {
+          "name": "IconProvider",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/button/toggle.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "6/6",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/button/types.ts",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:42.593Z",
+    "bundleHash": "uifb:bab64a6147d77af142886f7a",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/button/types.ts",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/button/types.ts",
+            "description": "types - Type definitions",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": [],
+              "functions": [],
+              "imports": ["@/lib/types", "react-aria-components"]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "semanticHash": "uif:8a8b765d9f1fc02101eb79f8",
+            "fileHash": "uif:eeccf034d66aef18a413a8f1"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport type {\n  ButtonProps as AriaButtonProps,\n  ToggleButtonProps as AriaToggleButtonProps,\n  LinkProps,\n} from 'react-aria-components';\nimport type { AriaAttributesWithRef } from '@/lib/types';\n\ntype Variants = 'filled' | 'flat' | 'icon' | 'outline';\n\nexport type ButtonStyleVariants = {\n  size?: 'large' | 'medium' | 'small' | 'xsmall';\n  color?: 'mono-muted' | 'mono-bold' | 'accent' | 'serious' | 'critical';\n  variant?: Variants;\n};\n\nexport type ToggleButtonStyleVariants = Omit<ButtonStyleVariants, 'variant'> & {\n  variant?: Exclude<Variants, 'filled'>;\n};\n\nexport type ButtonProps = AriaButtonProps &\n  ButtonStyleVariants &\n  AriaAttributesWithRef<HTMLButtonElement>;\n\nexport type LinkButtonProps = LinkProps &\n  ButtonStyleVariants &\n  AriaAttributesWithRef<HTMLAnchorElement>;\n\nexport type ToggleButtonProps = AriaToggleButtonProps &\n  ToggleButtonStyleVariants &\n  AriaAttributesWithRef<HTMLButtonElement>;\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  }
+]

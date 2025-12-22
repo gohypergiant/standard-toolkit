@@ -1,0 +1,187 @@
+[
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "1/3",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/color-picker/color-picker.stories.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:42.679Z",
+    "bundleHash": "uifb:c7e33cce725902ed1227d60b",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/color-picker/color-picker.stories.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/color-picker/color-picker.stories.tsx",
+            "description": "color-picker.stories - TypeScript module",
+            "version": {
+              "variables": ["Controlled", "Default", "meta"],
+              "hooks": [],
+              "components": [],
+              "functions": [],
+              "imports": ["./", "@storybook/react-vite"]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": {
+              "named": ["Controlled", "Default"]
+            },
+            "semanticHash": "uif:d39437597bc8d3a090ca02f1",
+            "fileHash": "uif:6d85382ad02e6d83b8529bb3"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport { ColorPicker } from './';\nimport type { Meta, StoryObj } from '@storybook/react-vite';\n\nconst meta = {\n  title: 'Components/ColorPicker',\n  component: ColorPicker,\n  args: {\n    items: ['#ECECE6', '#898989', '#62a6ff', '#30D27E', '#FCA400', '#D4231D'],\n  },\n  argTypes: {\n    className: { type: 'string' },\n    value: {\n      control: {\n        type: 'color',\n        presetColors: [\n          '#ECECE6',\n          '#898989',\n          '#62a6ff',\n          '#30D27E',\n          '#FCA400',\n          '#D4231D',\n        ],\n      },\n      description: 'The currently selected color.',\n    },\n    onChange: {\n      action: 'changed',\n      description: 'Callback function when the color is changed.',\n    },\n    items: {\n      description: 'Array of color options to choose from.',\n    },\n  },\n} satisfies Meta<typeof ColorPicker>;\n\nexport default meta;\ntype Story = StoryObj<typeof meta>;\n\nexport const Default: Story = {\n  render: ColorPicker,\n};\n\nexport const Controlled: Story = {\n  args: {\n    value: '#30D27E',\n  },\n  render: ColorPicker,\n};\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "2/3",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/color-picker/index.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:42.686Z",
+    "bundleHash": "uifb:0448b676436cbcd55c60049a",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/color-picker/index.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/color-picker/index.tsx",
+            "description": "index - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": [
+                "ColorSwatch",
+                "ColorSwatchPicker",
+                "ColorSwatchPickerItem"
+              ],
+              "functions": ["ColorPicker"],
+              "imports": [
+                "./styles.module.css",
+                "./types",
+                "@accelint/design-foundation/lib/utils",
+                "client-only",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [".item", ".picker", ".swatch"],
+                  "properties": []
+                }
+              }
+            },
+            "semanticHash": "uif:1c99247bf8a696fc0a98e72f",
+            "fileHash": "uif:cb816d22bd42f0c44af3dce0"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport 'client-only';\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport {\n  ColorSwatch,\n  ColorSwatchPicker,\n  ColorSwatchPickerItem,\n  composeRenderProps,\n} from 'react-aria-components';\nimport styles from './styles.module.css';\nimport type { ColorPickerProps } from './types';\n\n/**\n * A color picker component that renders a grid of color swatches for selection.\n *\n * This component provides a simple interface for users to select from a predefined\n * set of colors. It renders each color as an interactive swatch that can be clicked\n * to select that color. The component supports keyboard navigation, accessibility\n * features, and fine-grained styling control through the classNames prop.\n *\n * @param items - Array of color values to display as selectable swatches\n * @param classNames - Object containing CSS class names for fine-grained styling control\n * @param classNames.picker - CSS class name for the main picker container\n * @param classNames.item - CSS class name for individual swatch items\n * @param classNames.swatch - CSS class name for the color swatch elements\n *\n * @example\n * ```tsx\n * const colors = [\n *   '#ff0000',\n *   '#00ff00',\n *   '#0000ff',\n * ];\n *\n * <ColorPicker\n *   options={colors}\n *   value={'#ff0000'}\n *   onChange={(color) => console.log('Selected:', color)}\n *   classNames={{\n *     picker: 'gap-4',\n *     item: 'rounded-lg',\n *     swatch: 'w-8 h-8'\n *   }}\n * />\n * ```\n *\n * @remarks\n * - Colors can be provided as Color objects or color strings\n * - The component automatically handles color parsing and validation\n * - Supports all accessibility features from react-aria-components\n * - Uses a grid layout by default but can be customized via the layout prop\n */\nexport function ColorPicker({ classNames, items, ...rest }: ColorPickerProps) {\n  return (\n    <ColorSwatchPicker\n      {...rest}\n      className={composeRenderProps(classNames?.picker, (className) =>\n        clsx(styles.picker, className),\n      )}\n    >\n      {items.map((color) => (\n        <ColorSwatchPickerItem\n          key={color.toString('hexa')}\n          className={composeRenderProps(classNames?.item, (className) =>\n            clsx(styles.item, className),\n          )}\n          color={color}\n        >\n          <ColorSwatch\n            className={composeRenderProps(classNames?.swatch, (className) =>\n              clsx(styles.swatch, className),\n            )}\n          />\n        </ColorSwatchPickerItem>\n      ))}\n    </ColorSwatchPicker>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "ColorSwatch",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/color-picker/index.tsx"
+        },
+        {
+          "name": "ColorSwatchPicker",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/color-picker/index.tsx"
+        },
+        {
+          "name": "ColorSwatchPickerItem",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/color-picker/index.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "3/3",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/color-picker/types.ts",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:42.687Z",
+    "bundleHash": "uifb:2b3f1aed39dbbccd8322c17c",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/color-picker/types.ts",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/color-picker/types.ts",
+            "description": "types - Type definitions",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": [],
+              "functions": [],
+              "imports": ["react", "react-aria-components"]
+            },
+            "logicSignature": {
+              "props": {
+                "ref": {
+                  "type": "React.Ref<HTMLDivElement>",
+                  "optional": true
+                },
+                "key": {
+                  "type": "React.Key",
+                  "optional": true
+                },
+                "classNames": {
+                  "type": "{ picker?: ColorSwatchPickerProps; item?: ColorSwatchPickerItemProps; swatch?: ColorSwatchProps; }",
+                  "optional": true
+                },
+                "items": "ColorSwatchPickerItemProps[]"
+              },
+              "emits": {}
+            },
+            "semanticHash": "uif:df09907bc94d46cbf9638ef6",
+            "fileHash": "uif:69beec06e3a8dd75cf9b1631"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\nimport type { RefAttributes } from 'react';\nimport type {\n  ColorSwatchPickerItemProps,\n  ColorSwatchPickerProps,\n  ColorSwatchProps,\n} from 'react-aria-components';\n\nexport type ColorPickerProps = Omit<\n  ColorSwatchPickerProps,\n  'children' | 'layout'\n> &\n  RefAttributes<HTMLDivElement> & {\n    classNames?: {\n      picker?: ColorSwatchPickerProps['className'];\n      item?: ColorSwatchPickerItemProps['className'];\n      swatch?: ColorSwatchProps['className'];\n    };\n    items: ColorSwatchPickerItemProps['color'][];\n  };\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  }
+]

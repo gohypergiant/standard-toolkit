@@ -1,0 +1,248 @@
+[
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "1/4",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/link/context.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.243Z",
+    "bundleHash": "uifb:07c9d27c6c309809eb47b8a9",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/link/context.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/link/context.tsx",
+            "description": "context - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": ["LinkContext.Provider"],
+              "functions": ["LinkProvider"],
+              "imports": [
+                "./types",
+                "@/lib/types",
+                "client-only",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "semanticHash": "uif:9b8c6b8b68732b56d921ae5b",
+            "fileHash": "uif:8f00fac4bf73878f8efeeea0"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport 'client-only';\nimport { LinkContext } from 'react-aria-components';\nimport type { ProviderProps } from '@/lib/types';\nimport type { LinkProps } from './types';\n\nexport function LinkProvider({ children, ...props }: ProviderProps<LinkProps>) {\n  return <LinkContext.Provider value={props}>{children}</LinkContext.Provider>;\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "LinkContext.Provider",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/link/context.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "2/4",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/link/index.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.245Z",
+    "bundleHash": "uifb:5d57fe076a8673a08b52696e",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/link/index.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/link/index.tsx",
+            "description": "index - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": ["useContextProps"],
+              "components": ["AriaLink"],
+              "functions": ["Link"],
+              "imports": [
+                "./styles.module.css",
+                "./types",
+                "@accelint/design-foundation/lib/utils",
+                "client-only",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [".link"],
+                  "properties": ["gap", "padding-inline"]
+                }
+              }
+            },
+            "semanticHash": "uif:bb47c0c5e9147b7c802a9536",
+            "fileHash": "uif:3687955d9637b9e191d0463c"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport 'client-only';\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport {\n  Link as AriaLink,\n  composeRenderProps,\n  LinkContext,\n  useContextProps,\n} from 'react-aria-components';\nimport styles from './styles.module.css';\nimport type { LinkProps } from './types';\n\n/**\n * Link - Accessible anchor/link component with optional visited state\n *\n * A flexible link component that handles visited state, external anchors, and\n * icon integration while providing ARIA-compatible behavior.\n *\n * @example\n * <Link href=\"/dashboard\">Go to Dashboard</Link>\n */\nexport function Link({ ref, ...props }: LinkProps) {\n  [props, ref] = useContextProps(props, ref ?? null, LinkContext);\n\n  const {\n    allowsVisited = false,\n    className,\n    isVisited = false,\n    ...rest\n  } = props;\n\n  return (\n    <AriaLink\n      {...rest}\n      ref={ref}\n      className={composeRenderProps(className, (className) =>\n        clsx(styles.link, className),\n      )}\n      data-visited={(allowsVisited && isVisited) || null}\n    />\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "AriaLink",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/link/index.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "3/4",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/link/link.stories.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.255Z",
+    "bundleHash": "uifb:121f39a29c760f1fd93fa942",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/link/link.stories.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/link/link.stories.tsx",
+            "description": "link.stories - Presentational component",
+            "version": {
+              "variables": [
+                "CustomVisitedStyles",
+                "Default",
+                "Multiple",
+                "meta"
+              ],
+              "hooks": [],
+              "components": ["Icon", "Link", "LinkProvider", "Placeholder"],
+              "functions": [],
+              "imports": [
+                "../icon",
+                "./",
+                "./context",
+                "@accelint/icons",
+                "@storybook/react-vite",
+                "react"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": {
+              "named": ["CustomVisitedStyles", "Default", "Multiple"]
+            },
+            "semanticHash": "uif:6faae41e1a1514d6118274b1",
+            "fileHash": "uif:c533a0a5b99f87b000fc5cd5"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport { Placeholder } from '@accelint/icons';\nimport { Icon } from '../icon';\nimport { Link } from './';\nimport { LinkProvider } from './context';\nimport type { Meta, StoryObj } from '@storybook/react-vite';\nimport type { ReactNode } from 'react';\n\nconst meta = {\n  title: 'Components/Link',\n  component: Link,\n  args: {\n    allowsVisited: false,\n    children: 'Text',\n    isDisabled: false,\n    isVisited: false,\n  },\n  argTypes: {\n    allowsVisited: {\n      control: 'boolean',\n    },\n    isDisabled: {\n      control: 'boolean',\n    },\n  },\n} satisfies Meta<typeof Link>;\n\nexport default meta;\ntype Story = StoryObj<typeof meta>;\n\nexport const Default: Story = {\n  render: Link,\n};\n\nexport const CustomVisitedStyles: Story = {\n  args: {\n    allowsVisited: true,\n  },\n  render: ({ children, ...args }) => (\n    <LinkProvider\n      {...args}\n      className='enabled:visited:fg-accent-primary-pressed enabled:visited:underline'\n    >\n      <Link isVisited>{children}</Link>\n    </LinkProvider>\n  ),\n};\n\nexport const Multiple: Story = {\n  render: ({ children, ...args }) => (\n    <>\n      <p className='fg-primary-bold'>\n        Some example text with a\n        <Link {...args}>\n          <Icon size='small'>\n            <Placeholder />\n          </Icon>\n          {children as ReactNode}\n        </Link>\n        injected into it. There can be multiple\n        <Link {...args}>\n          <Icon size='small'>\n            <Placeholder />\n          </Icon>\n          {children as ReactNode}\n        </Link>\n        here.\n      </p>\n    </>\n  ),\n};\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "Icon",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/link/link.stories.tsx"
+        },
+        {
+          "name": "Link",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/link/link.stories.tsx"
+        },
+        {
+          "name": "LinkProvider",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/link/link.stories.tsx"
+        },
+        {
+          "name": "Placeholder",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/link/link.stories.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "4/4",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/link/types.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.255Z",
+    "bundleHash": "uifb:ac3bbb7c24cbc114e146f695",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/link/types.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/link/types.tsx",
+            "description": "types - Type definitions",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": [],
+              "functions": [],
+              "imports": ["react", "react-aria-components"]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "semanticHash": "uif:8a8b765d9f1fc02101eb79f8",
+            "fileHash": "uif:f98013ffb31ab8d1d568c390"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport type { RefAttributes } from 'react';\nimport type { LinkProps as AriaLinkProps } from 'react-aria-components';\n\nexport type LinkProps = AriaLinkProps &\n  RefAttributes<HTMLAnchorElement> & {\n    allowsVisited?: boolean;\n    isVisited?: boolean;\n  };\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  }
+]

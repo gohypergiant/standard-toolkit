@@ -1,0 +1,1005 @@
+[
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "1/11",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/menu/context.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.256Z",
+    "bundleHash": "uifb:6edf6010c6989bdb5f52befd",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/menu/context.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/menu/context.tsx",
+            "description": "context - TypeScript module",
+            "version": {
+              "variables": ["MenuContext"],
+              "hooks": [],
+              "components": [],
+              "functions": [],
+              "imports": [
+                "./types",
+                "client-only",
+                "react",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "semanticHash": "uif:d9720c0c8ca4a94f3a0d038a",
+            "fileHash": "uif:e434d53051dc9af5231273ad"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\n'use client';\n\nimport 'client-only';\nimport { createContext } from 'react';\nimport type { ContextValue } from 'react-aria-components';\nimport type { MenuProps } from './types';\n\nexport const MenuContext =\n  createContext<ContextValue<MenuProps<unknown>, HTMLDivElement>>(null);\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "2/11",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/menu/index.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.264Z",
+    "bundleHash": "uifb:1b086007525927cc93c419b8",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/menu/index.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/menu/index.tsx",
+            "description": "index - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": ["useContextProps"],
+              "components": ["AriaMenu", "MenuContext.Provider", "Popover"],
+              "functions": ["Menu"],
+              "imports": [
+                "./context",
+                "./styles.module.css",
+                "./types",
+                "@accelint/design-foundation/lib/utils",
+                "client-only",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".compact",
+                    ".cozy",
+                    ".description",
+                    ".header",
+                    ".hotkey",
+                    ".icon",
+                    ".item",
+                    ".label",
+                    ".menu",
+                    ".more",
+                    ".popover",
+                    ".separator"
+                  ],
+                  "properties": [
+                    "content",
+                    "grid-area",
+                    "grid-template-areas",
+                    "grid-template-columns"
+                  ]
+                }
+              }
+            },
+            "semanticHash": "uif:1855c5e1ed7acf74ace852bf",
+            "fileHash": "uif:3822c32d96cc25f91196ad44"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\n'use client';\n\nimport 'client-only';\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport {\n  Menu as AriaMenu,\n  composeRenderProps,\n  Popover,\n  useContextProps,\n} from 'react-aria-components';\nimport { MenuContext } from './context';\nimport styles from './styles.module.css';\nimport type { MenuProps } from './types';\n\n/**\n * Menu - A dropdown menu component with keyboard navigation and selection\n *\n * Provides accessible dropdown menu functionality with support for single and\n * multiple selection modes. Includes sections, separators, and submenu support\n * with comprehensive keyboard navigation and ARIA compliance.\n *\n * IMPORTANT: Menu includes its own internal Popover. Do NOT wrap Menu in a\n * Popover component. Use the `popoverProps` prop to configure placement and\n * other popover settings.\n *\n * @example\n * // Basic menu with trigger\n * <MenuTrigger>\n *   <Button>Open Menu</Button>\n *   <Menu>\n *     <MenuItem>Edit</MenuItem>\n *     <MenuItem>Copy</MenuItem>\n *     <MenuItem>Delete</MenuItem>\n *   </Menu>\n * </MenuTrigger>\n *\n * @example\n * // Menu with custom placement\n * <MenuTrigger>\n *   <Button>Open Menu</Button>\n *   <Menu popoverProps={{ placement: 'top end' }}>\n *     <MenuItem>Edit</MenuItem>\n *     <MenuItem>Copy</MenuItem>\n *   </Menu>\n * </MenuTrigger>\n *\n * @example\n * // Menu with action handler\n * <MenuTrigger>\n *   <Button>Actions</Button>\n *   <Menu onAction={(key) => console.log(key)}>\n *     <MenuItem id=\"edit\">Edit</MenuItem>\n *     <MenuItem id=\"delete\">Delete</MenuItem>\n *   </Menu>\n * </MenuTrigger>\n *\n * @example\n * // Menu with sections and separators\n * <MenuTrigger>\n *   <Button>Open</Button>\n *   <Menu>\n *     <MenuSection>\n *       <MenuItem>New File</MenuItem>\n *       <MenuItem>Open File</MenuItem>\n *     </MenuSection>\n *\n *     <MenuSeparator />\n *\n *     <MenuItem>Settings</MenuItem>\n *   </Menu>\n * </MenuTrigger>\n *\n * @example\n * // Menu with selection\n * <MenuTrigger>\n *   <Button>Group</Button>\n *   <Menu selectionMode='multiple'>\n *     <MenuItem>Option 1</MenuItem>\n *     <MenuItem>Option 2</MenuItem>\n *   </Menu>\n * </MenuTrigger>\n *\n * @example\n * // Menu with submenu\n * <MenuTrigger>\n *   <Button>Actions</Button>\n *   <Menu>\n *     <MenuItem>New File</MenuItem>\n *     <MenuSubmenu>\n *       <MenuItem>Export</MenuItem>\n *       <Menu>\n *         <MenuItem>Export as PDF</MenuItem>\n *         <MenuItem>Export as CSV</MenuItem>\n *         <MenuItem>Export as JSON</MenuItem>\n *       </Menu>\n *     </MenuSubmenu>\n *     <MenuItem>Delete</MenuItem>\n *   </Menu>\n * </MenuTrigger>\n */\nexport function Menu<T extends object>({ ref, ...props }: MenuProps<T>) {\n  [props, ref] = useContextProps(props, ref ?? null, MenuContext);\n\n  const {\n    children,\n    classNames,\n    popoverProps,\n    selectionMode = 'single',\n    variant = 'cozy',\n    ...rest\n  } = props;\n\n  return (\n    <Popover\n      {...popoverProps}\n      className={composeRenderProps(classNames?.popover, (className) =>\n        clsx(styles.popover, className),\n      )}\n    >\n      <MenuContext.Provider value={{ variant }}>\n        <AriaMenu\n          {...rest}\n          ref={ref}\n          className={composeRenderProps(classNames?.menu, (className) =>\n            clsx('group/menu', styles.menu, styles[variant], className),\n          )}\n          selectionMode={selectionMode}\n        >\n          {children}\n        </AriaMenu>\n      </MenuContext.Provider>\n    </Popover>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "AriaMenu",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/menu/index.tsx"
+        },
+        {
+          "name": "MenuContext.Provider",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/menu/index.tsx"
+        },
+        {
+          "name": "Popover",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/menu/index.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "3/11",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/menu/item-description.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.267Z",
+    "bundleHash": "uifb:90c1aeb5fb3629de70d0652b",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/menu/item-description.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/menu/item-description.tsx",
+            "description": "item-description - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": ["Text"],
+              "functions": ["MenuItemDescription"],
+              "imports": [
+                "./styles.module.css",
+                "@accelint/design-foundation/lib/utils",
+                "client-only",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".compact",
+                    ".cozy",
+                    ".description",
+                    ".header",
+                    ".hotkey",
+                    ".icon",
+                    ".item",
+                    ".label",
+                    ".menu",
+                    ".more",
+                    ".popover",
+                    ".separator"
+                  ],
+                  "properties": [
+                    "content",
+                    "grid-area",
+                    "grid-template-areas",
+                    "grid-template-columns"
+                  ]
+                }
+              }
+            },
+            "semanticHash": "uif:c4d6f15ccb13027608c860e6",
+            "fileHash": "uif:653b76c870cecd823e54b2f3"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\n'use client';\n\nimport 'client-only';\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport { Text, type TextProps } from 'react-aria-components';\nimport styles from './styles.module.css';\n\nexport function MenuItemDescription({\n  children,\n  className,\n  ...rest\n}: TextProps) {\n  return (\n    <Text\n      {...rest}\n      slot='description'\n      className={clsx(styles.description, className)}\n    >\n      {children}\n    </Text>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "Text",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/menu/item-description.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "4/11",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/menu/item-label.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.269Z",
+    "bundleHash": "uifb:d559eee6dfdf08c5097ece91",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/menu/item-label.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/menu/item-label.tsx",
+            "description": "item-label - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": ["Text"],
+              "functions": ["MenuItemLabel"],
+              "imports": [
+                "./styles.module.css",
+                "@accelint/design-foundation/lib/utils",
+                "client-only",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".compact",
+                    ".cozy",
+                    ".description",
+                    ".header",
+                    ".hotkey",
+                    ".icon",
+                    ".item",
+                    ".label",
+                    ".menu",
+                    ".more",
+                    ".popover",
+                    ".separator"
+                  ],
+                  "properties": [
+                    "content",
+                    "grid-area",
+                    "grid-template-areas",
+                    "grid-template-columns"
+                  ]
+                }
+              }
+            },
+            "semanticHash": "uif:2d87ab55a0c7694dcbc30fac",
+            "fileHash": "uif:74c3a7228d5fe9dff0b4bca5"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\n'use client';\n\nimport 'client-only';\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport { Text, type TextProps } from 'react-aria-components';\nimport styles from './styles.module.css';\n\nexport function MenuItemLabel({ children, className, ...rest }: TextProps) {\n  return (\n    <Text {...rest} slot='label' className={clsx(styles.label, className)}>\n      {children}\n    </Text>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "Text",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/menu/item-label.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "5/11",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/menu/item.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.282Z",
+    "bundleHash": "uifb:a276ca3644eff55e344b6ec2",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/menu/item.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/menu/item.tsx",
+            "description": "item - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": ["useContext"],
+              "components": [
+                "AriaMenuItem",
+                "ChevronRight",
+                "Icon",
+                "Provider",
+                "Text"
+              ],
+              "functions": ["MenuItem"],
+              "imports": [
+                "../../lib/utils",
+                "../icon",
+                "../icon/context",
+                "./context",
+                "./styles.module.css",
+                "./types",
+                "@accelint/design-foundation/lib/utils",
+                "@accelint/icons/chevron-right",
+                "client-only",
+                "react",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "prediction": ["Consumes React Context for shared state"],
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".compact",
+                    ".cozy",
+                    ".description",
+                    ".header",
+                    ".hotkey",
+                    ".icon",
+                    ".item",
+                    ".label",
+                    ".menu",
+                    ".more",
+                    ".popover",
+                    ".separator"
+                  ],
+                  "properties": [
+                    "content",
+                    "grid-area",
+                    "grid-template-areas",
+                    "grid-template-columns"
+                  ]
+                }
+              }
+            },
+            "semanticHash": "uif:4e9d8c3b577889acd6c07936",
+            "fileHash": "uif:b6e8a68dcb1a9333d0f3ef7f"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\n'use client';\n\nimport ChevronRight from '@accelint/icons/chevron-right';\nimport 'client-only';\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport { useContext } from 'react';\nimport {\n  MenuItem as AriaMenuItem,\n  composeRenderProps,\n  DEFAULT_SLOT,\n  KeyboardContext,\n  Provider,\n  Text,\n} from 'react-aria-components';\nimport { isSlottedContextValue } from '../../lib/utils';\nimport { Icon } from '../icon';\nimport { IconContext } from '../icon/context';\nimport { MenuContext } from './context';\nimport styles from './styles.module.css';\nimport type { MenuItemProps } from './types';\n\nexport function MenuItem({\n  children,\n  classNames,\n  color = 'info',\n  ...rest\n}: MenuItemProps) {\n  const context = useContext(MenuContext);\n  const variant =\n    (isSlottedContextValue(context) ? undefined : context?.variant) ?? 'cozy';\n\n  return (\n    <AriaMenuItem\n      {...rest}\n      className={composeRenderProps(classNames?.item, (className) =>\n        clsx('group/menu-item', styles.item, styles[variant], className),\n      )}\n      data-color={color}\n    >\n      {composeRenderProps(children, (children, { hasSubmenu }) => (\n        <Provider\n          values={[\n            [\n              KeyboardContext,\n              { className: clsx(styles.hotkey, classNames?.hotkey) },\n            ],\n            [\n              IconContext,\n              {\n                slots: {\n                  [DEFAULT_SLOT]: {\n                    className: clsx(styles.icon, classNames?.icon),\n                  },\n                  submenu: { className: clsx(styles.more, classNames?.more) },\n                },\n              },\n            ],\n          ]}\n        >\n          {typeof children === 'string' ? (\n            <Text slot='label' className={classNames?.text}>\n              {children}\n            </Text>\n          ) : (\n            children\n          )}\n          {hasSubmenu && (\n            <Icon slot='submenu'>\n              <ChevronRight />\n            </Icon>\n          )}\n        </Provider>\n      ))}\n    </AriaMenuItem>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "AriaMenuItem",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/menu/item.tsx"
+        },
+        {
+          "name": "ChevronRight",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/menu/item.tsx"
+        },
+        {
+          "name": "Icon",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/menu/item.tsx"
+        },
+        {
+          "name": "Provider",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/menu/item.tsx"
+        },
+        {
+          "name": "Text",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/menu/item.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "6/11",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/menu/menu.stories.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.318Z",
+    "bundleHash": "uifb:cceeb50a9455678ecc368620",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/menu/menu.stories.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/menu/menu.stories.tsx",
+            "description": "menu.stories - Navigation component",
+            "version": {
+              "variables": [
+                "Basic",
+                "ColorVariants",
+                "ContextMenu",
+                "CustomPlacement",
+                "DisabledItems",
+                "Dynamic",
+                "DynamicMenuHeader",
+                "MultipleSelection",
+                "SimpleMenu",
+                "SingleSelection",
+                "WithActionHandler",
+                "WithOffset",
+                "menuItems",
+                "meta"
+              ],
+              "hooks": ["useRef", "useState"],
+              "components": [
+                "Button",
+                "Hotkey",
+                "Icon",
+                "Kebab",
+                "Menu",
+                "MenuItem",
+                "MenuItemDescription",
+                "MenuItemLabel",
+                "MenuSection",
+                "MenuSeparator",
+                "MenuSubmenu",
+                "MenuTrigger",
+                "Placeholder",
+                "SectionHeader"
+              ],
+              "functions": [],
+              "imports": [
+                "../button",
+                "../hotkey",
+                "../icon",
+                "./",
+                "./item",
+                "./item-description",
+                "./item-label",
+                "./section",
+                "./separator",
+                "./submenu",
+                "./trigger",
+                "./types",
+                "@accelint/icons/kebab",
+                "@accelint/icons/placeholder",
+                "@storybook/react-vite",
+                "react"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {
+                "onContextMenu": {
+                  "type": "function",
+                  "signature": "(e) => void"
+                },
+                "onClose": {
+                  "type": "function",
+                  "signature": "() => void"
+                },
+                "onAction": {
+                  "type": "function",
+                  "signature": "(key) => void"
+                },
+                "onSelectionChange": {
+                  "type": "function",
+                  "signature": "(keys) => void"
+                }
+              },
+              "state": {
+                "menuPosition": "{\n      x: number;\n      y: number;\n    } | null",
+                "lastAction": "string | null",
+                "selectedKeys": "Set<string",
+                "selectedKey": "Set<string"
+              }
+            },
+            "exports": {
+              "named": [
+                "Basic",
+                "ColorVariants",
+                "ContextMenu",
+                "CustomPlacement",
+                "DisabledItems",
+                "Dynamic",
+                "DynamicMenuHeader",
+                "MultipleSelection",
+                "SimpleMenu",
+                "SingleSelection",
+                "WithActionHandler",
+                "WithOffset"
+              ]
+            },
+            "prediction": ["Uses refs for DOM access or mutable values"],
+            "style": {
+              "styleSources": {
+                "tailwind": {
+                  "categories": {
+                    "other": [
+                      "fg-primary-bold",
+                      "items-center",
+                      "items-end",
+                      "justify-center",
+                      "rounded"
+                    ],
+                    "spacing": ["gap-m", "gap-xl", "m-xl", "p-xl", "p-xs"],
+                    "layout": ["flex", "flex-col"],
+                    "sizing": ["h-[300px]", "h-dvh", "w-dvh"],
+                    "colors": ["bg-surface-raised"],
+                    "typography": ["text-body-m", "text-body-xs"]
+                  },
+                  "classCount": 18
+                },
+                "inlineStyles": true
+              },
+              "layout": {
+                "type": "flex"
+              },
+              "visual": {
+                "colors": ["bg-surface-raised", "text-body-m", "text-body-xs"],
+                "spacing": ["m-xl", "p-xl", "p-xs"],
+                "radius": "default",
+                "typography": ["text-body-m", "text-body-xs"]
+              }
+            },
+            "semanticHash": "uif:b38085af92b262ba7bd85db2",
+            "fileHash": "uif:4253607b36cf9ee34b74a22b"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport Kebab from '@accelint/icons/kebab';\nimport Placeholder from '@accelint/icons/placeholder';\nimport { type ReactNode, useRef, useState } from 'react';\nimport { Button } from '../button';\nimport { Hotkey } from '../hotkey';\nimport { Icon } from '../icon';\nimport { Menu } from './';\nimport { MenuItem } from './item';\nimport { MenuItemDescription } from './item-description';\nimport { MenuItemLabel } from './item-label';\nimport { MenuSection } from './section';\nimport { MenuSeparator } from './separator';\nimport { MenuSubmenu } from './submenu';\nimport { MenuTrigger } from './trigger';\nimport type { Meta, StoryObj } from '@storybook/react-vite';\nimport type { MenuItemProps } from './types';\n\nconst meta = {\n  title: 'Components/Menu',\n  component: Menu,\n  args: {\n    variant: 'cozy',\n    selectionMode: 'single',\n  },\n  argTypes: {\n    variant: {\n      control: 'select',\n      options: ['cozy', 'compact'],\n    },\n    selectionMode: {\n      control: 'select',\n      options: ['single', 'multiple', 'none'],\n    },\n  },\n} satisfies Meta<typeof Menu>;\n\nexport default meta;\ntype Story = StoryObj<typeof meta>;\n\ntype MenuItemType = {\n  id: number;\n  name: string;\n  description?: string;\n  prefixIcon?: ReactNode;\n  children?: MenuItemType[];\n  isDisabled?: boolean;\n  hotkey?: string;\n  color?: MenuItemProps['color'];\n};\n\nconst menuItems: MenuItemType[] = [\n  {\n    id: 1,\n    prefixIcon: <Placeholder />,\n    name: 'North American Birds',\n    children: [\n      {\n        id: 2,\n        prefixIcon: <Placeholder />,\n        name: 'Blue jay',\n        description: 'Cyanocitta cristata',\n        color: 'serious',\n      },\n      {\n        id: 3,\n        prefixIcon: <Placeholder />,\n        name: 'Gray catbird',\n        description: 'Dumetella carolinensis',\n        isDisabled: true,\n        hotkey: '⌘V',\n      },\n      {\n        id: 4,\n        prefixIcon: <Placeholder />,\n        name: 'Black-capped chickadee',\n        description: 'Poecile atricapillus',\n        color: 'critical',\n      },\n      {\n        id: 5,\n        prefixIcon: <Placeholder />,\n        name: 'Song sparrow',\n        description: 'Melospiza melodia',\n      },\n    ],\n  },\n  {\n    id: 6,\n    prefixIcon: <Placeholder />,\n    name: 'African Birds',\n    children: [\n      {\n        id: 6,\n        prefixIcon: <Placeholder />,\n        name: 'Lilac-breasted roller',\n        description: 'Coracias caudatus',\n      },\n      {\n        id: 7,\n        prefixIcon: <Placeholder />,\n        name: 'Hornbill',\n        description: 'Bucerotidae',\n      },\n    ],\n  },\n];\n\nexport const Basic: Story = {\n  render: (args) => (\n    <MenuTrigger>\n      <Button variant='icon' aria-label='Menu'>\n        <Icon>\n          <Kebab />\n        </Icon>\n      </Button>\n      <Menu {...args}>\n        <MenuItem>\n          <Icon>\n            <Placeholder />\n          </Icon>\n          <MenuItemLabel>Songbirds</MenuItemLabel>\n          <Hotkey variant='flat'>⌘A</Hotkey>\n        </MenuItem>\n        <MenuSeparator />\n        <MenuSubmenu>\n          <MenuItem>\n            <MenuItemLabel>North American Birds</MenuItemLabel>\n          </MenuItem>\n          <Menu\n            selectedKeys={new Set(['selected-1', 'selected-2', 'selected-3'])}\n          >\n            <MenuItem>\n              <Icon>\n                <Placeholder />\n              </Icon>\n              <MenuItemLabel>Blue Jay</MenuItemLabel>\n              <MenuItemDescription>Cyanocitta cristata</MenuItemDescription>\n            </MenuItem>\n            <MenuItem isDisabled>\n              <Icon>\n                <Placeholder />\n              </Icon>\n              <MenuItemLabel>Gray catbird</MenuItemLabel>\n              <MenuItemDescription>Dumetella carolinensis</MenuItemDescription>\n            </MenuItem>\n            <MenuItem id='selected-1' color='serious'>\n              <Icon>\n                <Placeholder />\n              </Icon>\n              <MenuItemLabel>Mallard</MenuItemLabel>\n              <MenuItemDescription>Anas platyrhynchos</MenuItemDescription>\n              <Hotkey variant='flat'>⌘V</Hotkey>\n            </MenuItem>\n            <MenuItem id='selected-2' color='critical'>\n              <Icon>\n                <Placeholder />\n              </Icon>\n              <MenuItemLabel>Chimney swift</MenuItemLabel>\n              <MenuItemDescription>Chaetura pelagica</MenuItemDescription>\n            </MenuItem>\n            <MenuItem id='selected-3'>\n              <Icon>\n                <Placeholder />\n              </Icon>\n              <MenuItemLabel>Brünnich's guillemot</MenuItemLabel>\n              <MenuItemDescription>Dumetella carolinensis</MenuItemDescription>\n              <Hotkey variant='flat'>⌘X</Hotkey>\n            </MenuItem>\n          </Menu>\n        </MenuSubmenu>\n        <MenuSeparator />\n        <MenuSection title='Additional Notable Species'>\n          <MenuItem color='serious'>\n            <Icon>\n              <Placeholder />\n            </Icon>\n            <MenuItemLabel>Mallard</MenuItemLabel>\n            <MenuItemDescription>Anas platyrhynchos</MenuItemDescription>\n            <Hotkey variant='flat'>⌘V</Hotkey>\n          </MenuItem>\n          <MenuItem color='critical'>\n            <Icon>\n              <Placeholder />\n            </Icon>\n            <MenuItemLabel>Chimney swift</MenuItemLabel>\n            <MenuItemDescription>Chaetura pelagica</MenuItemDescription>\n          </MenuItem>\n          <MenuItem>\n            <Icon>\n              <Placeholder />\n            </Icon>\n            <MenuItemLabel>Brünnich's guillemot</MenuItemLabel>\n            <MenuItemDescription>Dumetella carolinensis</MenuItemDescription>\n            <Hotkey variant='flat'>⌘X</Hotkey>\n          </MenuItem>\n        </MenuSection>\n      </Menu>\n    </MenuTrigger>\n  ),\n};\n\nexport const Dynamic: Story = {\n  render: (args) => (\n    <MenuTrigger>\n      <Button variant='icon' aria-label='Menu'>\n        <Icon>\n          <Kebab />\n        </Icon>\n      </Button>\n      <Menu<MenuItemType> {...args} items={menuItems}>\n        {function render(item) {\n          if (item.children) {\n            return (\n              <MenuSubmenu>\n                <MenuItem\n                  key={item.id}\n                  isDisabled={item.isDisabled}\n                  color={item.color}\n                >\n                  <Icon>{item.prefixIcon}</Icon>\n                  <MenuItemLabel>{item.name}</MenuItemLabel>\n                  {item.description && (\n                    <MenuItemDescription>\n                      {item.description}\n                    </MenuItemDescription>\n                  )}\n                  {item.hotkey && <Hotkey variant='flat'>{item.hotkey}</Hotkey>}\n                </MenuItem>\n                <Menu items={item.children}>{(item) => render(item)}</Menu>\n              </MenuSubmenu>\n            );\n          }\n          return (\n            <MenuItem\n              key={item.id}\n              isDisabled={item.isDisabled}\n              color={item.color}\n            >\n              <Icon>{item.prefixIcon}</Icon>\n              <MenuItemLabel>{item.name}</MenuItemLabel>\n              {item.description && (\n                <MenuItemDescription>{item.description}</MenuItemDescription>\n              )}\n              {item.hotkey && <Hotkey variant='flat'>{item.hotkey}</Hotkey>}\n            </MenuItem>\n          );\n        }}\n      </Menu>\n    </MenuTrigger>\n  ),\n};\n\nexport const ContextMenu: Story = {\n  render: () => {\n    const [menuPosition, setMenuPosition] = useState<{\n      x: number;\n      y: number;\n    } | null>(null);\n    const menuPositionRef = useRef<HTMLDivElement>(null);\n\n    return (\n      <div\n        role='menu'\n        className='fg-primary-bold m-xl flex h-dvh w-dvh items-center justify-center bg-surface-raised'\n        onContextMenu={(e) => {\n          e.preventDefault();\n          setMenuPosition({ x: e.clientX, y: e.clientY });\n        }}\n      >\n        right-click for context menu\n        <div\n          ref={menuPositionRef}\n          style={{\n            position: 'fixed',\n            top: menuPosition?.y,\n            left: menuPosition?.x,\n          }}\n          data-pressed={!!menuPosition || undefined}\n        >\n          <Menu<MenuItemType>\n            popoverProps={{\n              placement: 'bottom left',\n              offset: 0,\n              isOpen: !!menuPosition,\n              triggerRef: menuPositionRef,\n              onOpenChange: (isOpen) => {\n                if (!isOpen) {\n                  setMenuPosition(null);\n                }\n              },\n            }}\n            onClose={() => setMenuPosition(null)}\n            items={menuItems}\n          >\n            {function render(item) {\n              if (item.children) {\n                return (\n                  <MenuSubmenu>\n                    <MenuItem\n                      key={item.id}\n                      isDisabled={item.isDisabled}\n                      color={item.color}\n                    >\n                      <MenuItemLabel>{item.name}</MenuItemLabel>\n                      {item.hotkey && (\n                        <Hotkey variant='flat'>{item.hotkey}</Hotkey>\n                      )}\n                    </MenuItem>\n                    <Menu items={item.children}>{(item) => render(item)}</Menu>\n                  </MenuSubmenu>\n                );\n              }\n              return (\n                <MenuItem\n                  key={item.id}\n                  isDisabled={item.isDisabled}\n                  color={item.color}\n                >\n                  <MenuItemLabel>{item.name}</MenuItemLabel>\n                  {item.hotkey && <Hotkey variant='flat'>{item.hotkey}</Hotkey>}\n                </MenuItem>\n              );\n            }}\n          </Menu>\n        </div>\n      </div>\n    );\n  },\n};\n\nexport const DynamicMenuHeader: Story = {\n  render: (args) => {\n    const SectionHeader = () => (\n      <div>\n        <div className='text-body-m'>Additional Notable Species</div>\n        <div className='text-body-xs'>These birds sound made up.</div>\n      </div>\n    );\n\n    return (\n      <MenuTrigger>\n        <Button variant='icon' aria-label='Menu'>\n          <Icon>\n            <Kebab />\n          </Icon>\n        </Button>\n        <Menu {...args}>\n          <MenuItem>\n            <Icon>\n              <Placeholder />\n            </Icon>\n            <MenuItemLabel>Songbirds</MenuItemLabel>\n            <Hotkey variant='flat'>⌘A</Hotkey>\n          </MenuItem>\n          <MenuSeparator />\n          <MenuSubmenu>\n            <MenuItem>\n              <MenuItemLabel>North American Birds</MenuItemLabel>\n            </MenuItem>\n            <Menu\n              selectedKeys={new Set(['selected-1', 'selected-2', 'selected-3'])}\n            >\n              <MenuItem>\n                <Icon>\n                  <Placeholder />\n                </Icon>\n                <MenuItemLabel>Blue Jay</MenuItemLabel>\n                <MenuItemDescription>Cyanocitta cristata</MenuItemDescription>\n              </MenuItem>\n              <MenuItem isDisabled>\n                <Icon>\n                  <Placeholder />\n                </Icon>\n                <MenuItemLabel>Gray catbird</MenuItemLabel>\n                <MenuItemDescription>\n                  Dumetella carolinensis\n                </MenuItemDescription>\n              </MenuItem>\n              <MenuItem id='selected-1' color='serious'>\n                <Icon>\n                  <Placeholder />\n                </Icon>\n                <MenuItemLabel>Mallard</MenuItemLabel>\n                <MenuItemDescription>Anas platyrhynchos</MenuItemDescription>\n                <Hotkey variant='flat'>⌘V</Hotkey>\n              </MenuItem>\n              <MenuItem id='selected-2' color='critical'>\n                <Icon>\n                  <Placeholder />\n                </Icon>\n                <MenuItemLabel>Chimney swift</MenuItemLabel>\n                <MenuItemDescription>Chaetura pelagica</MenuItemDescription>\n              </MenuItem>\n              <MenuItem id='selected-3'>\n                <Icon>\n                  <Placeholder />\n                </Icon>\n                <MenuItemLabel>Brünnich's guillemot</MenuItemLabel>\n                <MenuItemDescription>\n                  Dumetella carolinensis\n                </MenuItemDescription>\n                <Hotkey variant='flat'>⌘X</Hotkey>\n              </MenuItem>\n            </Menu>\n          </MenuSubmenu>\n          <MenuSeparator />\n          <MenuSection title={<SectionHeader />}>\n            <MenuItem color='serious'>\n              <Icon>\n                <Placeholder />\n              </Icon>\n              <MenuItemLabel>Mallard</MenuItemLabel>\n              <MenuItemDescription>Anas platyrhynchos</MenuItemDescription>\n              <Hotkey variant='flat'>⌘V</Hotkey>\n            </MenuItem>\n            <MenuItem color='critical'>\n              <Icon>\n                <Placeholder />\n              </Icon>\n              <MenuItemLabel>Chimney swift</MenuItemLabel>\n              <MenuItemDescription>Chaetura pelagica</MenuItemDescription>\n            </MenuItem>\n            <MenuItem>\n              <Icon>\n                <Placeholder />\n              </Icon>\n              <MenuItemLabel>Brünnich's guillemot</MenuItemLabel>\n              <MenuItemDescription>Dumetella carolinensis</MenuItemDescription>\n              <Hotkey variant='flat'>⌘X</Hotkey>\n            </MenuItem>\n          </MenuSection>\n        </Menu>\n      </MenuTrigger>\n    );\n  },\n};\n\n/**\n * Demonstrates using `popoverProps` to customize menu placement.\n * The menu will appear above the trigger button instead of below.\n */\nexport const CustomPlacement: Story = {\n  render: (args) => (\n    <div className='flex h-[300px] items-end gap-xl p-xl'>\n      <MenuTrigger>\n        <Button>Top Start</Button>\n        <Menu {...args} popoverProps={{ placement: 'top start' }}>\n          <MenuItem id='edit'>\n            <MenuItemLabel>Edit</MenuItemLabel>\n          </MenuItem>\n          <MenuItem id='copy'>\n            <MenuItemLabel>Copy</MenuItemLabel>\n          </MenuItem>\n          <MenuItem id='delete'>\n            <MenuItemLabel>Delete</MenuItemLabel>\n          </MenuItem>\n        </Menu>\n      </MenuTrigger>\n\n      <MenuTrigger>\n        <Button>Top End</Button>\n        <Menu {...args} popoverProps={{ placement: 'top end' }}>\n          <MenuItem id='edit'>\n            <MenuItemLabel>Edit</MenuItemLabel>\n          </MenuItem>\n          <MenuItem id='copy'>\n            <MenuItemLabel>Copy</MenuItemLabel>\n          </MenuItem>\n          <MenuItem id='delete'>\n            <MenuItemLabel>Delete</MenuItemLabel>\n          </MenuItem>\n        </Menu>\n      </MenuTrigger>\n\n      <MenuTrigger>\n        <Button>Bottom Start</Button>\n        <Menu {...args} popoverProps={{ placement: 'bottom start' }}>\n          <MenuItem id='edit'>\n            <MenuItemLabel>Edit</MenuItemLabel>\n          </MenuItem>\n          <MenuItem id='copy'>\n            <MenuItemLabel>Copy</MenuItemLabel>\n          </MenuItem>\n          <MenuItem id='delete'>\n            <MenuItemLabel>Delete</MenuItemLabel>\n          </MenuItem>\n        </Menu>\n      </MenuTrigger>\n\n      <MenuTrigger>\n        <Button>Bottom End</Button>\n        <Menu {...args} popoverProps={{ placement: 'bottom end' }}>\n          <MenuItem id='edit'>\n            <MenuItemLabel>Edit</MenuItemLabel>\n          </MenuItem>\n          <MenuItem id='copy'>\n            <MenuItemLabel>Copy</MenuItemLabel>\n          </MenuItem>\n          <MenuItem id='delete'>\n            <MenuItemLabel>Delete</MenuItemLabel>\n          </MenuItem>\n        </Menu>\n      </MenuTrigger>\n    </div>\n  ),\n};\n\n/**\n * Demonstrates using `onAction` to handle menu item selection.\n * Open the browser console to see the selected item key logged.\n */\nexport const WithActionHandler: Story = {\n  render: (args) => {\n    const [lastAction, setLastAction] = useState<string | null>(null);\n\n    return (\n      <div className='flex flex-col gap-m'>\n        <MenuTrigger>\n          <Button>Actions Menu</Button>\n          <Menu\n            {...args}\n            onAction={(key) => {\n              console.log('Selected:', key);\n              setLastAction(String(key));\n            }}\n          >\n            <MenuItem id='new-file'>\n              <Icon>\n                <Placeholder />\n              </Icon>\n              <MenuItemLabel>New File</MenuItemLabel>\n              <Hotkey variant='flat'>⌘N</Hotkey>\n            </MenuItem>\n            <MenuItem id='open-file'>\n              <Icon>\n                <Placeholder />\n              </Icon>\n              <MenuItemLabel>Open File</MenuItemLabel>\n              <Hotkey variant='flat'>⌘O</Hotkey>\n            </MenuItem>\n            <MenuSeparator />\n            <MenuItem id='save'>\n              <Icon>\n                <Placeholder />\n              </Icon>\n              <MenuItemLabel>Save</MenuItemLabel>\n              <Hotkey variant='flat'>⌘S</Hotkey>\n            </MenuItem>\n            <MenuItem id='save-as'>\n              <Icon>\n                <Placeholder />\n              </Icon>\n              <MenuItemLabel>Save As...</MenuItemLabel>\n              <Hotkey variant='flat'>⇧⌘S</Hotkey>\n            </MenuItem>\n            <MenuSeparator />\n            <MenuItem id='delete' color='critical'>\n              <Icon>\n                <Placeholder />\n              </Icon>\n              <MenuItemLabel>Delete</MenuItemLabel>\n              <Hotkey variant='flat'>⌘⌫</Hotkey>\n            </MenuItem>\n          </Menu>\n        </MenuTrigger>\n\n        {lastAction && (\n          <div className='fg-primary-bold text-body-m'>\n            Last action:{' '}\n            <code className='rounded bg-surface-raised p-xs'>{lastAction}</code>\n          </div>\n        )}\n      </div>\n    );\n  },\n};\n\n/**\n * Demonstrates multi-select functionality with `selectionMode='multiple'`.\n */\nexport const MultipleSelection: Story = {\n  render: () => {\n    const [selectedKeys, setSelectedKeys] = useState<Set<string>>(\n      new Set(['bold']),\n    );\n\n    return (\n      <div className='flex flex-col gap-m'>\n        <MenuTrigger>\n          <Button>Text Formatting</Button>\n          <Menu\n            selectionMode='multiple'\n            selectedKeys={selectedKeys}\n            onSelectionChange={(keys) => setSelectedKeys(keys as Set<string>)}\n          >\n            <MenuItem id='bold'>\n              <MenuItemLabel>Bold</MenuItemLabel>\n              <Hotkey variant='flat'>⌘B</Hotkey>\n            </MenuItem>\n            <MenuItem id='italic'>\n              <MenuItemLabel>Italic</MenuItemLabel>\n              <Hotkey variant='flat'>⌘I</Hotkey>\n            </MenuItem>\n            <MenuItem id='underline'>\n              <MenuItemLabel>Underline</MenuItemLabel>\n              <Hotkey variant='flat'>⌘U</Hotkey>\n            </MenuItem>\n            <MenuItem id='strikethrough'>\n              <MenuItemLabel>Strikethrough</MenuItemLabel>\n              <Hotkey variant='flat'>⇧⌘X</Hotkey>\n            </MenuItem>\n          </Menu>\n        </MenuTrigger>\n\n        <div className='fg-primary-bold text-body-m'>\n          Selected:{' '}\n          <code className='rounded bg-surface-raised p-xs'>\n            {Array.from(selectedKeys).join(', ') || 'none'}\n          </code>\n        </div>\n      </div>\n    );\n  },\n};\n\n/**\n * Demonstrates single-select functionality with `selectionMode='single'`.\n */\nexport const SingleSelection: Story = {\n  render: () => {\n    const [selectedKey, setSelectedKey] = useState<Set<string>>(\n      new Set(['medium']),\n    );\n\n    return (\n      <div className='flex flex-col gap-m'>\n        <MenuTrigger>\n          <Button>Font Size</Button>\n          <Menu\n            selectionMode='single'\n            selectedKeys={selectedKey}\n            onSelectionChange={(keys) => setSelectedKey(keys as Set<string>)}\n          >\n            <MenuItem id='small'>\n              <MenuItemLabel>Small</MenuItemLabel>\n            </MenuItem>\n            <MenuItem id='medium'>\n              <MenuItemLabel>Medium</MenuItemLabel>\n            </MenuItem>\n            <MenuItem id='large'>\n              <MenuItemLabel>Large</MenuItemLabel>\n            </MenuItem>\n            <MenuItem id='extra-large'>\n              <MenuItemLabel>Extra Large</MenuItemLabel>\n            </MenuItem>\n          </Menu>\n        </MenuTrigger>\n\n        <div className='fg-primary-bold text-body-m'>\n          Selected:{' '}\n          <code className='rounded bg-surface-raised p-xs'>\n            {Array.from(selectedKey)[0] || 'none'}\n          </code>\n        </div>\n      </div>\n    );\n  },\n};\n\n/**\n * Demonstrates disabled menu items.\n */\nexport const DisabledItems: Story = {\n  render: (args) => (\n    <MenuTrigger>\n      <Button>Menu with Disabled Items</Button>\n      <Menu {...args}>\n        <MenuItem id='available'>\n          <MenuItemLabel>Available Action</MenuItemLabel>\n        </MenuItem>\n        <MenuItem id='disabled-1' isDisabled>\n          <MenuItemLabel>Disabled Action</MenuItemLabel>\n          <MenuItemDescription>\n            This action is not available\n          </MenuItemDescription>\n        </MenuItem>\n        <MenuItem id='another-available'>\n          <MenuItemLabel>Another Available Action</MenuItemLabel>\n        </MenuItem>\n        <MenuSeparator />\n        <MenuItem id='disabled-2' isDisabled>\n          <MenuItemLabel>Also Disabled</MenuItemLabel>\n        </MenuItem>\n        <MenuItem id='delete' color='critical'>\n          <MenuItemLabel>Delete (Available)</MenuItemLabel>\n        </MenuItem>\n      </Menu>\n    </MenuTrigger>\n  ),\n};\n\n/**\n * Demonstrates all color variants for menu items.\n */\nexport const ColorVariants: Story = {\n  render: (args) => (\n    <MenuTrigger>\n      <Button>Color Variants</Button>\n      <Menu {...args}>\n        <MenuItem id='info' color='info'>\n          <Icon>\n            <Placeholder />\n          </Icon>\n          <MenuItemLabel>Info (Default)</MenuItemLabel>\n          <MenuItemDescription>Standard menu item</MenuItemDescription>\n        </MenuItem>\n        <MenuItem id='serious' color='serious'>\n          <Icon>\n            <Placeholder />\n          </Icon>\n          <MenuItemLabel>Serious</MenuItemLabel>\n          <MenuItemDescription>Warning or important action</MenuItemDescription>\n        </MenuItem>\n        <MenuItem id='critical' color='critical'>\n          <Icon>\n            <Placeholder />\n          </Icon>\n          <MenuItemLabel>Critical</MenuItemLabel>\n          <MenuItemDescription>\n            Destructive or dangerous action\n          </MenuItemDescription>\n        </MenuItem>\n      </Menu>\n    </MenuTrigger>\n  ),\n};\n\n/**\n * Demonstrates a simple menu without icons or descriptions.\n */\nexport const SimpleMenu: Story = {\n  render: (args) => (\n    <MenuTrigger>\n      <Button>Simple Menu</Button>\n      <Menu {...args}>\n        <MenuItem id='cut'>\n          <MenuItemLabel>Cut</MenuItemLabel>\n        </MenuItem>\n        <MenuItem id='copy'>\n          <MenuItemLabel>Copy</MenuItemLabel>\n        </MenuItem>\n        <MenuItem id='paste'>\n          <MenuItemLabel>Paste</MenuItemLabel>\n        </MenuItem>\n      </Menu>\n    </MenuTrigger>\n  ),\n};\n\n/**\n * Demonstrates using popoverProps with offset to add spacing between trigger and menu.\n */\nexport const WithOffset: Story = {\n  render: (args) => (\n    <div className='flex gap-xl'>\n      <MenuTrigger>\n        <Button>No Offset</Button>\n        <Menu {...args} popoverProps={{ placement: 'bottom', offset: 0 }}>\n          <MenuItem id='item-1'>\n            <MenuItemLabel>Menu Item 1</MenuItemLabel>\n          </MenuItem>\n          <MenuItem id='item-2'>\n            <MenuItemLabel>Menu Item 2</MenuItemLabel>\n          </MenuItem>\n        </Menu>\n      </MenuTrigger>\n\n      <MenuTrigger>\n        <Button>8px Offset</Button>\n        <Menu {...args} popoverProps={{ placement: 'bottom', offset: 8 }}>\n          <MenuItem id='item-1'>\n            <MenuItemLabel>Menu Item 1</MenuItemLabel>\n          </MenuItem>\n          <MenuItem id='item-2'>\n            <MenuItemLabel>Menu Item 2</MenuItemLabel>\n          </MenuItem>\n        </Menu>\n      </MenuTrigger>\n\n      <MenuTrigger>\n        <Button>16px Offset</Button>\n        <Menu {...args} popoverProps={{ placement: 'bottom', offset: 16 }}>\n          <MenuItem id='item-1'>\n            <MenuItemLabel>Menu Item 1</MenuItemLabel>\n          </MenuItem>\n          <MenuItem id='item-2'>\n            <MenuItemLabel>Menu Item 2</MenuItemLabel>\n          </MenuItem>\n        </Menu>\n      </MenuTrigger>\n    </div>\n  ),\n};\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "Button",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/menu/menu.stories.tsx"
+        },
+        {
+          "name": "Hotkey",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/menu/menu.stories.tsx"
+        },
+        {
+          "name": "Icon",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/menu/menu.stories.tsx"
+        },
+        {
+          "name": "Kebab",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/menu/menu.stories.tsx"
+        },
+        {
+          "name": "Menu",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/menu/menu.stories.tsx"
+        },
+        {
+          "name": "MenuItem",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/menu/menu.stories.tsx"
+        },
+        {
+          "name": "MenuItemDescription",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/menu/menu.stories.tsx"
+        },
+        {
+          "name": "MenuItemLabel",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/menu/menu.stories.tsx"
+        },
+        {
+          "name": "MenuSection",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/menu/menu.stories.tsx"
+        },
+        {
+          "name": "MenuSeparator",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/menu/menu.stories.tsx"
+        },
+        {
+          "name": "MenuSubmenu",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/menu/menu.stories.tsx"
+        },
+        {
+          "name": "MenuTrigger",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/menu/menu.stories.tsx"
+        },
+        {
+          "name": "Placeholder",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/menu/menu.stories.tsx"
+        },
+        {
+          "name": "SectionHeader",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/menu/menu.stories.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "7/11",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/menu/section.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.326Z",
+    "bundleHash": "uifb:26842acdda9da95525725c2a",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/menu/section.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/menu/section.tsx",
+            "description": "section - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": ["AriaMenuSection", "Collection", "Header"],
+              "functions": ["MenuSection"],
+              "imports": [
+                "./styles.module.css",
+                "./types",
+                "@accelint/design-foundation/lib/utils",
+                "client-only",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".compact",
+                    ".cozy",
+                    ".description",
+                    ".header",
+                    ".hotkey",
+                    ".icon",
+                    ".item",
+                    ".label",
+                    ".menu",
+                    ".more",
+                    ".popover",
+                    ".separator"
+                  ],
+                  "properties": [
+                    "content",
+                    "grid-area",
+                    "grid-template-areas",
+                    "grid-template-columns"
+                  ]
+                }
+              }
+            },
+            "semanticHash": "uif:7e16017c2261e14946746029",
+            "fileHash": "uif:5ddf69c3db1863614f003634"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\n'use client';\n\nimport 'client-only';\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport {\n  MenuSection as AriaMenuSection,\n  Collection,\n  Header,\n} from 'react-aria-components';\nimport styles from './styles.module.css';\nimport type { MenuSectionProps } from './types';\n\nexport function MenuSection<T extends object>({\n  children,\n  classNames,\n  items,\n  title,\n  ...rest\n}: MenuSectionProps<T>) {\n  return (\n    <AriaMenuSection {...rest} className={classNames?.section}>\n      {title && (\n        <Header className={clsx(styles.header, classNames?.header)}>\n          {title}\n        </Header>\n      )}\n      <Collection items={items}>{children}</Collection>\n    </AriaMenuSection>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "AriaMenuSection",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/menu/section.tsx"
+        },
+        {
+          "name": "Collection",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/menu/section.tsx"
+        },
+        {
+          "name": "Header",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/menu/section.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "8/11",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/menu/separator.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.329Z",
+    "bundleHash": "uifb:e499519943f3858187d22431",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/menu/separator.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/menu/separator.tsx",
+            "description": "separator - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": ["Separator"],
+              "functions": ["MenuSeparator"],
+              "imports": [
+                "./styles.module.css",
+                "@accelint/design-foundation/lib/utils",
+                "client-only",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".compact",
+                    ".cozy",
+                    ".description",
+                    ".header",
+                    ".hotkey",
+                    ".icon",
+                    ".item",
+                    ".label",
+                    ".menu",
+                    ".more",
+                    ".popover",
+                    ".separator"
+                  ],
+                  "properties": [
+                    "content",
+                    "grid-area",
+                    "grid-template-areas",
+                    "grid-template-columns"
+                  ]
+                }
+              }
+            },
+            "semanticHash": "uif:bec444ad3b92971a53da1bf4",
+            "fileHash": "uif:7bd40af89adf47e57878f87c"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\n'use client';\n\nimport 'client-only';\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport { Separator, type SeparatorProps } from 'react-aria-components';\nimport styles from './styles.module.css';\n\nexport function MenuSeparator({ className, ...rest }: SeparatorProps) {\n  return <Separator {...rest} className={clsx(styles.separator, className)} />;\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "Separator",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/menu/separator.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "9/11",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/menu/submenu.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.329Z",
+    "bundleHash": "uifb:8a09b2f84c4ff28df5e89204",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/menu/submenu.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/menu/submenu.tsx",
+            "description": "submenu - TypeScript module",
+            "version": {
+              "variables": ["MenuSubmenu"],
+              "hooks": [],
+              "components": [],
+              "functions": [],
+              "imports": ["client-only", "react-aria-components"]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "semanticHash": "uif:dc61c84efdd245fa74f36ba6",
+            "fileHash": "uif:d739141ca01b708f6fdf19a5"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\n'use client';\n\nimport 'client-only';\nimport { SubmenuTrigger } from 'react-aria-components';\n\nexport const MenuSubmenu = SubmenuTrigger;\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "10/11",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/menu/trigger.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.329Z",
+    "bundleHash": "uifb:ec2e6bce17f906cafc267323",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/menu/trigger.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/menu/trigger.tsx",
+            "description": "trigger - TypeScript module",
+            "version": {
+              "variables": ["MenuTrigger"],
+              "hooks": [],
+              "components": [],
+              "functions": [],
+              "imports": ["client-only", "react-aria-components"]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "semanticHash": "uif:5ccd714a71fd840e93df349f",
+            "fileHash": "uif:034edf31a8262adad69da206"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\n'use client';\n\nimport 'client-only';\nimport { MenuTrigger as AriaMenuTrigger } from 'react-aria-components';\n\nexport const MenuTrigger = AriaMenuTrigger;\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "11/11",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/menu/types.ts",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.330Z",
+    "bundleHash": "uifb:9240cfa50c4326626bef851a",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/menu/types.ts",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/menu/types.ts",
+            "description": "types - Type definitions",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": [],
+              "functions": [],
+              "imports": ["../icon/types", "react", "react-aria-components"]
+            },
+            "logicSignature": {
+              "props": {
+                "ref": {
+                  "type": "React.Ref<HTMLDivElement>",
+                  "optional": true
+                },
+                "key": {
+                  "type": "React.Key",
+                  "optional": true
+                },
+                "classNames": {
+                  "type": "{ section?: AriaMenuSectionProps<T>; header?: string; }",
+                  "optional": true
+                },
+                "popoverProps": {
+                  "type": "Omit<AriaPopoverProps, \"className\" | \"children\">",
+                  "optional": true
+                },
+                "variant": {
+                  "type": "literal-union",
+                  "literals": ["compact", "cozy"],
+                  "optional": true
+                },
+                "color": {
+                  "type": "literal-union",
+                  "literals": ["info", "serious", "critical"],
+                  "optional": true
+                },
+                "title": {
+                  "type": "string | React.ReactElement<unknown, string | React.JSXElementConstructor<any>>",
+                  "optional": true
+                }
+              },
+              "emits": {}
+            },
+            "semanticHash": "uif:da6cf9c03972c6b214ee0363",
+            "fileHash": "uif:d4f4dbabd9ef0248d9a09950"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport type { ReactElement, RefAttributes } from 'react';\nimport type {\n  MenuItemProps as AriaMenuItemProps,\n  MenuProps as AriaMenuProps,\n  MenuSectionProps as AriaMenuSectionProps,\n  PopoverProps as AriaPopoverProps,\n  TextProps as AriaTextProps,\n  PopoverProps,\n} from 'react-aria-components';\nimport type { IconProps } from '../icon/types';\n\nexport type MenuProps<T> = Omit<AriaMenuProps<T>, 'className'> &\n  RefAttributes<HTMLDivElement> & {\n    classNames?: {\n      menu?: AriaMenuProps<T>['className'];\n      popover?: PopoverProps['className'];\n    };\n    popoverProps?: Omit<AriaPopoverProps, 'children' | 'className'>;\n    variant?: 'compact' | 'cozy';\n  };\n\nexport type MenuItemProps = Omit<AriaMenuItemProps, 'className'> & {\n  classNames?: {\n    item?: AriaMenuItemProps['className'];\n    text?: AriaTextProps['className'];\n    more?: IconProps['className'];\n    icon?: IconProps['className'];\n    hotkey?: string;\n  };\n  color?: 'info' | 'serious' | 'critical';\n};\n\nexport type MenuSectionProps<T> = Omit<AriaMenuSectionProps<T>, 'className'> & {\n  classNames?: {\n    section?: AriaMenuSectionProps<T>['className'];\n    header?: string;\n  };\n  title?: string | ReactElement;\n};\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  }
+]

@@ -1,0 +1,113 @@
+[
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "1/2",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "hooks/use-tree/state/index.ts",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:44.143Z",
+    "bundleHash": "uifb:2c7be21c9ac6f7e6d5e0a07e",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "hooks/use-tree/state/index.ts",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:hook",
+            "entryId": "hooks/use-tree/state/index.ts",
+            "description": "index - Custom React hook",
+            "version": {
+              "variables": [],
+              "hooks": ["useState", "useTreeActions"],
+              "components": [],
+              "functions": ["useTreeState"],
+              "imports": [
+                "../actions",
+                "../types",
+                "./utils",
+                "@react-types/shared",
+                "client-only",
+                "react"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {},
+              "state": {
+                "nodes": "unknown"
+              }
+            },
+            "exports": "named",
+            "semanticHash": "uif:151de61e7d7889d4d36563cf",
+            "fileHash": "uif:f6710e04f1da5661f56c079e"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport 'client-only';\nimport { useState } from 'react';\nimport { useTreeActions } from '../actions';\nimport { processDroppedItems } from './utils';\nimport type {\n  DragItem,\n  DroppableCollectionInsertDropEvent,\n  DroppableCollectionOnItemDropEvent,\n  DroppableCollectionReorderEvent,\n  DroppableCollectionRootDropEvent,\n  Key,\n  Selection,\n} from '@react-types/shared';\nimport type {\n  DragAndDropConfig,\n  UseTreeState,\n  UseTreeStateOptions,\n} from '../types';\n\nexport function useTreeState<T>({\n  items,\n}: UseTreeStateOptions<T>): UseTreeState<T> {\n  const [nodes, setNodes] = useState(items);\n  const actions = useTreeActions<T>({ nodes });\n\n  const dragAndDropConfig: DragAndDropConfig = {\n    getItems: (keys: Set<Key>): DragItem[] =>\n      [...keys].map((key) => {\n        const node = actions.getNode(key);\n\n        return {\n          key: `${key}`,\n          'text/plain': JSON.stringify(node),\n        };\n      }),\n    onReorder: (e: DroppableCollectionReorderEvent) => {\n      if (e.target.dropPosition === 'before') {\n        setNodes(actions.moveBefore(e.target.key, e.keys));\n      } else {\n        setNodes(actions.moveAfter(e.target.key, e.keys));\n      }\n    },\n    onInsert: ({ items, target }: DroppableCollectionInsertDropEvent) => {\n      (async () => {\n        const processedItems = await processDroppedItems(\n          items,\n          dragAndDropConfig.acceptedDragTypes ?? [],\n        );\n\n        setNodes(\n          actions.remove(new Set(processedItems.map((item) => item.id))),\n        );\n\n        if (target.dropPosition === 'before') {\n          setNodes(actions.insertBefore(target.key, processedItems));\n        } else if (target.dropPosition === 'after') {\n          setNodes(actions.insertAfter(target.key, processedItems));\n        }\n      })();\n    },\n    onItemDrop: ({ target, items }: DroppableCollectionOnItemDropEvent) => {\n      (async () => {\n        const targetNode = actions.getNode(target.key);\n        const [item] = items;\n\n        if (\n          target.dropPosition === 'on' &&\n          targetNode &&\n          item &&\n          item.kind !== 'directory'\n        ) {\n          const key = await item.getText('key');\n\n          if (key) {\n            setNodes(actions.moveInto(target.key, new Set([key])));\n          }\n        }\n      })();\n    },\n    onRootDrop: ({ items }: DroppableCollectionRootDropEvent) => {\n      (async () => {\n        const processedItems = await processDroppedItems(\n          items,\n          dragAndDropConfig.acceptedDragTypes ?? [],\n        );\n\n        setNodes(\n          actions.remove(new Set(processedItems.map((item) => item.key))),\n        );\n        setNodes(actions.insertAfter(null, processedItems));\n      })();\n    },\n  };\n\n  function collapseAll() {\n    setNodes(actions.collapseAll());\n  }\n\n  function expandAll() {\n    setNodes(actions.expandAll());\n  }\n\n  function onExpandedChange(keys: Set<Key>) {\n    setNodes(actions.onExpandedChange(keys));\n  }\n\n  function selectAll() {\n    setNodes(actions.selectAll());\n  }\n\n  function unselectAll() {\n    setNodes(actions.unselectAll());\n  }\n\n  function onSelectionChange(keys: Selection) {\n    if (keys === 'all') {\n      return selectAll();\n    }\n\n    setNodes(actions.onSelectionChange(keys));\n  }\n\n  function hideAll() {\n    setNodes(actions.hideAll());\n  }\n\n  function revealAll() {\n    setNodes(actions.revealAll());\n  }\n\n  function onVisibilityChange(keys: Set<Key>) {\n    setNodes(actions.onVisibilityChange(keys));\n  }\n\n  return {\n    nodes,\n    actions: {\n      // Expansion\n      collapseAll,\n      expandAll,\n      onExpandedChange,\n\n      // Selection\n      selectAll,\n      unselectAll,\n      onSelectionChange,\n\n      // Visibility\n      hideAll,\n      revealAll,\n      onVisibilityChange,\n    },\n    dragAndDropConfig,\n  };\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "2/2",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "hooks/use-tree/state/utils.ts",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:44.143Z",
+    "bundleHash": "uifb:3a3a6ef7adc5cda8ade9e1ce",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "hooks/use-tree/state/utils.ts",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "hooks/use-tree/state/utils.ts",
+            "description": "utils - Utility module",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": [],
+              "functions": [
+                "getDroppedItemPayload",
+                "processDroppedItem",
+                "processDroppedItems"
+              ],
+              "imports": ["@react-aria/dnd", "@react-types/shared"]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": {
+              "named": [
+                "getDroppedItemPayload",
+                "processDroppedItem",
+                "processDroppedItems"
+              ]
+            },
+            "prediction": ["Fetches or mutates external data"],
+            "semanticHash": "uif:2824f65e824faa7a6d2340a3",
+            "fileHash": "uif:589b21b16e324948d6ded66d"
+          },
+          "codeHeader": null,
+          "code": "// __private-exports\n/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport { isTextDropItem } from '@react-aria/dnd';\nimport type { DropItem, TextDropItem } from '@react-types/shared';\n\nexport async function processDroppedItems(\n  items: DropItem[],\n  acceptedDragTypes: string[],\n) {\n  return await Promise.all(\n    items\n      .filter(isTextDropItem)\n      .map((item) => processDroppedItem(item, acceptedDragTypes)),\n  );\n}\n\nexport async function processDroppedItem(\n  item: TextDropItem,\n  acceptedDragTypes: string[],\n) {\n  const payload = await getDroppedItemPayload(item, acceptedDragTypes);\n\n  return payload\n    ? JSON.parse(payload)\n    : Promise.reject(new Error('No supported type payload'));\n}\n\nexport async function getDroppedItemPayload(\n  item: TextDropItem,\n  acceptedDragTypes: string[],\n) {\n  return await Promise.any(\n    acceptedDragTypes.map(\n      async (type) =>\n        (await item.getText(type)) ??\n        Promise.reject(new Error('Unsupported type')),\n    ),\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  }
+]

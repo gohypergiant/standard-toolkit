@@ -1,0 +1,405 @@
+[
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "1/7",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "hooks/coordinate-field/index.ts",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:44.141Z",
+    "bundleHash": "uifb:b00e1af24d80893bfa228843",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "hooks/coordinate-field/index.ts",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "hooks/coordinate-field/index.ts",
+            "description": "index - TypeScript module",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": [],
+              "functions": [],
+              "imports": []
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": {
+              "named": [
+                "UseCoordinateCopyOptions",
+                "UseCoordinateCopyResult",
+                "UseCoordinateFieldResult",
+                "UseCoordinateFieldStateOptions",
+                "UseCoordinateFieldStateResult",
+                "UseCoordinateFocusOptions",
+                "UseCoordinateFocusResult",
+                "UseCoordinatePasteOptions",
+                "UseCoordinatePasteResult",
+                "UseTimeoutCleanupResult",
+                "useCoordinateCopy",
+                "useCoordinateField",
+                "useCoordinateFieldState",
+                "useCoordinateFocus",
+                "useCoordinatePaste",
+                "useTimeoutCleanup"
+              ]
+            },
+            "semanticHash": "uif:8a8b765d9f1fc02101eb79f8",
+            "fileHash": "uif:ef6d895c3bef4c8dc64ddcb3"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nexport { useCoordinateCopy } from './use-coordinate-copy';\nexport { useCoordinateField } from './use-coordinate-field';\nexport { useCoordinateFieldState } from './use-coordinate-field-state';\nexport { useCoordinateFocus } from './use-coordinate-focus';\nexport { useCoordinatePaste } from './use-coordinate-paste';\nexport { useTimeoutCleanup } from './use-timeout-cleanup';\nexport type {\n  UseCoordinateCopyOptions,\n  UseCoordinateCopyResult,\n} from './use-coordinate-copy';\nexport type { UseCoordinateFieldResult } from './use-coordinate-field';\nexport type {\n  UseCoordinateFieldStateOptions,\n  UseCoordinateFieldStateResult,\n} from './use-coordinate-field-state';\nexport type {\n  UseCoordinateFocusOptions,\n  UseCoordinateFocusResult,\n} from './use-coordinate-focus';\nexport type {\n  UseCoordinatePasteOptions,\n  UseCoordinatePasteResult,\n} from './use-coordinate-paste';\nexport type { UseTimeoutCleanupResult } from './use-timeout-cleanup';\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "2/7",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "hooks/coordinate-field/use-coordinate-copy.ts",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:44.141Z",
+    "bundleHash": "uifb:c6c3a0954dc8061c2b07aa80",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "hooks/coordinate-field/use-coordinate-copy.ts",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:hook",
+            "entryId": "hooks/coordinate-field/use-coordinate-copy.ts",
+            "description": "use-coordinate-copy - Custom React hook",
+            "version": {
+              "variables": ["COPY_FEEDBACK_DURATION_MS", "logger"],
+              "hooks": ["useState"],
+              "components": [],
+              "functions": ["useCoordinateCopy"],
+              "imports": [
+                "../../components/coordinate-field/coordinate-utils",
+                "../../components/coordinate-field/types",
+                "./use-timeout-cleanup",
+                "@accelint/logger",
+                "react"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {},
+              "state": {
+                "copiedFormat": "CoordinateSystem | null"
+              }
+            },
+            "exports": "named",
+            "semanticHash": "uif:49fe6981b71c4e0958954e0a",
+            "fileHash": "uif:048ccd689d40e7cb9d4911d6"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport { getLogger } from '@accelint/logger';\nimport { useState } from 'react';\n\nconst logger = getLogger({\n  enabled: process.env.NODE_ENV !== 'production',\n  level: 'debug',\n  prefix: '[CoordinateField]',\n  pretty: true,\n});\n\nimport { getAllCoordinateFormats } from '../../components/coordinate-field/coordinate-utils';\nimport type {\n  CoordinateSystem,\n  CoordinateValue,\n} from '../../components/coordinate-field/types';\nimport type { UseTimeoutCleanupResult } from './use-timeout-cleanup';\n\nconst COPY_FEEDBACK_DURATION_MS = 2000;\n\nexport interface UseCoordinateCopyOptions {\n  currentValue: CoordinateValue | null;\n  validationErrors: string[];\n  isDisabled: boolean;\n  registerTimeout: UseTimeoutCleanupResult['registerTimeout'];\n}\n\nexport interface UseCoordinateCopyResult {\n  copiedFormat: CoordinateSystem | null;\n  handleCopyFormat: (formatToCopy: CoordinateSystem) => Promise<void>;\n  isFormatButtonEnabled: boolean;\n}\n\nexport function useCoordinateCopy({\n  currentValue,\n  validationErrors,\n  isDisabled,\n  registerTimeout,\n}: UseCoordinateCopyOptions): UseCoordinateCopyResult {\n  const [copiedFormat, setCopiedFormat] = useState<CoordinateSystem | null>(\n    null,\n  );\n\n  /**\n   * Fallback clipboard copy for browsers that don't support navigator.clipboard API.\n   * Creates a temporary textarea, copies text using document.execCommand('copy'),\n   * and provides visual feedback by setting copiedFormat state for 2 seconds.\n   *\n   * @param text - The coordinate string to copy to clipboard\n   * @param formatToCopy - The coordinate format being copied (for UI feedback)\n   */\n  const fallbackCopyToClipboard = (\n    text: string,\n    formatToCopy: CoordinateSystem,\n  ) => {\n    // Create temporary textarea for copy operation\n    const textArea = document.createElement('textarea');\n    textArea.value = text;\n    // Position off-screen so it's not visible to user\n    textArea.style.position = 'fixed';\n    textArea.style.left = '-999999px';\n    textArea.style.top = '-999999px';\n    document.body.appendChild(textArea);\n    textArea.focus();\n    textArea.select();\n\n    try {\n      document.execCommand('copy');\n\n      // Set copied format to show Check icon in UI\n      setCopiedFormat(formatToCopy);\n\n      // Reset to null after 2 seconds to return to Copy icon\n      registerTimeout(\n        setTimeout(() => {\n          setCopiedFormat(null);\n        }, COPY_FEEDBACK_DURATION_MS),\n      );\n    } catch (err) {\n      logger.withError(err).warn('Fallback copy to clipboard failed');\n    }\n\n    // Clean up temporary textarea\n    document.body.removeChild(textArea);\n  };\n\n  /**\n   * Handles copying a coordinate in the specified format to the clipboard.\n   * Uses modern clipboard API (navigator.clipboard.writeText) with fallback\n   * to document.execCommand for older browsers.\n   *\n   * Sets copiedFormat state to show visual feedback (Check icon) for 2 seconds.\n   *\n   * @param formatToCopy - The coordinate format to copy (dd, ddm, dms, mgrs, utm)\n   */\n  const handleCopyFormat = async (formatToCopy: CoordinateSystem) => {\n    if (!currentValue) {\n      return;\n    }\n\n    const allFormats = getAllCoordinateFormats(currentValue);\n    const formatResult = allFormats[formatToCopy];\n\n    if (!formatResult.isValid) {\n      return;\n    }\n\n    try {\n      // Modern clipboard API - copy and show feedback\n      await navigator.clipboard.writeText(formatResult.value);\n\n      // Set copied format to show Check icon in UI\n      setCopiedFormat(formatToCopy);\n\n      // Reset to null after 2 seconds to return to Copy icon\n      registerTimeout(\n        setTimeout(() => {\n          setCopiedFormat(null);\n        }, COPY_FEEDBACK_DURATION_MS),\n      );\n    } catch (_err) {\n      // Fall back to document.execCommand for older browsers\n      fallbackCopyToClipboard(formatResult.value, formatToCopy);\n    }\n  };\n\n  const isFormatButtonEnabled =\n    currentValue !== null && validationErrors.length === 0 && !isDisabled;\n\n  return {\n    copiedFormat,\n    handleCopyFormat,\n    isFormatButtonEnabled,\n  };\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "3/7",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "hooks/coordinate-field/use-coordinate-field-state.ts",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:44.141Z",
+    "bundleHash": "uifb:b0043c7ad81343dbabd390a6",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "hooks/coordinate-field/use-coordinate-field-state.ts",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:hook",
+            "entryId": "hooks/coordinate-field/use-coordinate-field-state.ts",
+            "description": "use-coordinate-field-state - Custom React hook",
+            "version": {
+              "variables": [],
+              "hooks": [
+                "useCallback",
+                "useEffect",
+                "useMemo",
+                "useRef",
+                "useState"
+              ],
+              "components": [],
+              "functions": ["useCoordinateFieldState"],
+              "imports": [
+                "../../components/coordinate-field/coordinate-utils",
+                "../../components/coordinate-field/segment-configs",
+                "../../components/coordinate-field/types",
+                "react"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {},
+              "state": {
+                "internalValue": "CoordinateValue | null",
+                "validationErrors": "string[]",
+                "segmentValues": "string[]"
+              }
+            },
+            "exports": "named",
+            "prediction": [
+              "Has side effects managed by useEffect",
+              "Uses memoization for performance optimization",
+              "Uses refs for DOM access or mutable values"
+            ],
+            "semanticHash": "uif:5c8a1904516ff25bebb58087",
+            "fileHash": "uif:f031c68475bd58cc354c2dc9"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport {\n  type Dispatch,\n  type SetStateAction,\n  useCallback,\n  useEffect,\n  useMemo,\n  useRef,\n  useState,\n} from 'react';\nimport {\n  areAllSegmentsFilled,\n  convertDDToDisplaySegments,\n  convertDisplaySegmentsToDD,\n  validateCoordinateSegments,\n} from '../../components/coordinate-field/coordinate-utils';\nimport { getSegmentConfigs } from '../../components/coordinate-field/segment-configs';\nimport type {\n  CoordinateSystem,\n  CoordinateValue,\n  SegmentConfig,\n} from '../../components/coordinate-field/types';\n\nexport interface UseCoordinateFieldStateOptions {\n  value?: CoordinateValue | null;\n  defaultValue?: CoordinateValue;\n  format: CoordinateSystem;\n  onChange?:\n    | Dispatch<SetStateAction<CoordinateValue | null>>\n    | ((value: CoordinateValue | null) => void);\n  onError?: (message: string, context?: Record<string, unknown>) => void;\n  registerTimeout?: (timeoutId: NodeJS.Timeout) => void;\n}\n\nexport interface UseCoordinateFieldStateResult {\n  currentValue: CoordinateValue | null;\n  segmentValues: string[];\n  validationErrors: string[];\n  segmentConfigs: SegmentConfig[];\n  editableSegmentConfigs: SegmentConfig[];\n  handleSegmentChange: (index: number, newValue: string) => void;\n  setSegmentValues: (values: string[]) => void;\n  setValidationErrors: (errors: string[]) => void;\n  effectiveErrorMessage: string | null;\n  applyPastedCoordinate: (pastedValue: CoordinateValue) => void;\n  flushPendingValidation: () => void;\n}\n\nexport function useCoordinateFieldState({\n  value,\n  defaultValue,\n  format,\n  onChange,\n  onError,\n  registerTimeout,\n}: UseCoordinateFieldStateOptions): UseCoordinateFieldStateResult {\n  const [internalValue, setInternalValue] = useState<CoordinateValue | null>(\n    defaultValue || null,\n  );\n  const [validationErrors, setValidationErrors] = useState<string[]>([]);\n  const validationTimeoutRef = useRef<NodeJS.Timeout | null>(null);\n\n  const currentValue = value !== undefined ? value : internalValue;\n\n  const clearValidationTimeout = () => {\n    if (validationTimeoutRef.current) {\n      clearTimeout(validationTimeoutRef.current);\n      validationTimeoutRef.current = null;\n    }\n  };\n\n  const handleChange = (newValue: CoordinateValue | null) => {\n    if (value === undefined) {\n      setInternalValue(newValue);\n    }\n    onChange?.(newValue);\n  };\n\n  const segmentConfigs = useMemo(() => getSegmentConfigs(format), [format]);\n\n  const editableSegmentConfigs = useMemo(\n    () => segmentConfigs.flat().filter((config) => config.type !== 'literal'),\n    [segmentConfigs],\n  );\n\n  const [segmentValues, setSegmentValues] = useState<string[]>(() => {\n    const initialValue = value !== undefined ? value : defaultValue;\n    if (!initialValue) {\n      return new Array(editableSegmentConfigs.length).fill('');\n    }\n\n    const segments = convertDDToDisplaySegments(initialValue, format);\n    if (!segments) {\n      return new Array(editableSegmentConfigs.length).fill('');\n    }\n\n    return segments;\n  });\n\n  const convertValueToSegmentsOrClear = useCallback(\n    (valueToConvert: CoordinateValue | null) => {\n      // Clear any pending validation when value changes\n      clearValidationTimeout();\n\n      const segments = valueToConvert\n        ? convertDDToDisplaySegments(valueToConvert, format)\n        : null;\n\n      setSegmentValues(\n        segments || new Array(editableSegmentConfigs.length).fill(''),\n      );\n      setValidationErrors([]);\n    },\n    [format, editableSegmentConfigs.length],\n  );\n\n  const prevFormatRef = useRef(format);\n\n  useEffect(() => {\n    if (prevFormatRef.current !== format) {\n      prevFormatRef.current = format;\n      const valueToConvert = value !== undefined ? value : internalValue;\n      convertValueToSegmentsOrClear(valueToConvert);\n    }\n  }, [format, value, internalValue, convertValueToSegmentsOrClear]);\n\n  useEffect(() => {\n    if (value !== undefined) {\n      convertValueToSegmentsOrClear(value);\n    }\n  }, [value, convertValueToSegmentsOrClear]);\n\n  /**\n   * Validates segment values and updates the coordinate state\n   *\n   * When validation fails, calls onError with \"Invalid coordinate value\" message\n   * and context containing the detailed validation errors from @accelint/geo.\n   *\n   * @param updatedValues - Array of segment values to validate\n   */\n  const validateAndUpdateCoordinate = (updatedValues: string[]) => {\n    const errors = validateCoordinateSegments(updatedValues, format);\n\n    if (errors.length > 0) {\n      setValidationErrors(errors);\n      onError?.('Invalid coordinate value', {\n        errors,\n        format,\n        segments: updatedValues,\n      });\n      handleChange(null);\n      return;\n    }\n\n    const ddValue = convertDisplaySegmentsToDD(updatedValues, format);\n    if (!ddValue) {\n      const errorMsg = 'Invalid coordinate value';\n      setValidationErrors([errorMsg]);\n      onError?.(errorMsg, { format, segments: updatedValues });\n      handleChange(null);\n      return;\n    }\n\n    setValidationErrors([]);\n    handleChange(ddValue);\n  };\n\n  const handleSegmentChange = (index: number, newValue: string) => {\n    const updatedValues = [...segmentValues];\n    updatedValues[index] = newValue;\n    setSegmentValues(updatedValues);\n\n    if (areAllSegmentsFilled(updatedValues)) {\n      // Clear any pending validation timeout\n      clearValidationTimeout();\n\n      // Debounce validation by 400ms when all segments are full\n      const timeoutId = setTimeout(() => {\n        validateAndUpdateCoordinate(updatedValues);\n        validationTimeoutRef.current = null;\n      }, 400);\n\n      validationTimeoutRef.current = timeoutId;\n      registerTimeout?.(timeoutId);\n    } else {\n      // Clear any pending validation when segments become incomplete\n      clearValidationTimeout();\n      setValidationErrors([]);\n      if (currentValue !== null) {\n        handleChange(null);\n      }\n    }\n  };\n\n  const applyPastedCoordinate = (pastedValue: CoordinateValue) => {\n    // Clear any pending validation when applying pasted coordinate\n    clearValidationTimeout();\n\n    const segments = convertDDToDisplaySegments(pastedValue, format);\n\n    if (segments) {\n      setSegmentValues(segments);\n      setValidationErrors([]);\n      handleChange(pastedValue);\n    }\n  };\n\n  const flushPendingValidation = () => {\n    if (validationTimeoutRef.current) {\n      clearValidationTimeout();\n\n      // Immediately validate if all segments are filled\n      if (areAllSegmentsFilled(segmentValues)) {\n        validateAndUpdateCoordinate(segmentValues);\n      }\n    }\n  };\n\n  const effectiveErrorMessage = useMemo(\n    () => validationErrors[0] || null,\n    [validationErrors],\n  );\n\n  return {\n    currentValue,\n    segmentValues,\n    validationErrors,\n    segmentConfigs,\n    editableSegmentConfigs,\n    handleSegmentChange,\n    setSegmentValues,\n    setValidationErrors,\n    effectiveErrorMessage,\n    applyPastedCoordinate,\n    flushPendingValidation,\n  };\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "4/7",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "hooks/coordinate-field/use-coordinate-field.ts",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:44.142Z",
+    "bundleHash": "uifb:9b426d4fb9c4e00771380814",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "hooks/coordinate-field/use-coordinate-field.ts",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:hook",
+            "entryId": "hooks/coordinate-field/use-coordinate-field.ts",
+            "description": "use-coordinate-field - Custom React hook",
+            "version": {
+              "variables": ["FOCUS_DELAY_MS"],
+              "hooks": [
+                "useCoordinateCopy",
+                "useCoordinateFieldState",
+                "useCoordinateFocus",
+                "useCoordinatePaste",
+                "useId",
+                "useMemo",
+                "useTimeoutCleanup"
+              ],
+              "components": [],
+              "functions": ["useCoordinateField"],
+              "imports": [
+                "../../components/coordinate-field/types",
+                "./use-coordinate-copy",
+                "./use-coordinate-field-state",
+                "./use-coordinate-focus",
+                "./use-coordinate-paste",
+                "./use-timeout-cleanup",
+                "@react-aria/utils",
+                "react",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "prediction": ["Uses memoization for performance optimization"],
+            "semanticHash": "uif:559d06e07c3841affef94022",
+            "fileHash": "uif:ea457d52091479d97e9abd08"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport { useId } from '@react-aria/utils';\nimport { useMemo } from 'react';\nimport { useCoordinateCopy } from './use-coordinate-copy';\nimport { useCoordinateFieldState } from './use-coordinate-field-state';\nimport { useCoordinateFocus } from './use-coordinate-focus';\nimport { useCoordinatePaste } from './use-coordinate-paste';\nimport { useTimeoutCleanup } from './use-timeout-cleanup';\nimport type { ValidationResult } from 'react-aria-components';\nimport type {\n  CoordinateFieldProps,\n  CoordinateSystem,\n  CoordinateValue,\n} from '../../components/coordinate-field/types';\n\nconst FOCUS_DELAY_MS = 0;\n\nexport interface UseCoordinateFieldResult {\n  state: ReturnType<typeof useCoordinateFieldState>;\n  focus: ReturnType<typeof useCoordinateFocus>;\n  paste: ReturnType<typeof useCoordinatePaste>;\n  copy: ReturnType<typeof useCoordinateCopy>;\n  registerTimeout: (timeoutId: NodeJS.Timeout) => void;\n  fieldProps: {\n    id: string;\n    role: 'group';\n    'aria-labelledby': string | undefined;\n    'aria-describedby': string | undefined;\n    'aria-label': string | undefined;\n    'aria-details': string | undefined;\n    'aria-invalid': boolean | undefined;\n    'aria-required': boolean | undefined;\n    'aria-disabled': boolean | undefined;\n  };\n  labelProps: {\n    id: string;\n    htmlFor: string;\n  };\n  descriptionProps: {\n    id: string;\n  };\n  errorProps: {\n    id: string;\n  };\n  validation: ValidationResult;\n  ids: {\n    fieldId: string;\n    labelId: string;\n    descriptionId: string;\n    errorId: string;\n  };\n  effectiveErrorMessage: string | null;\n  isInvalid: boolean;\n}\n\nexport function useCoordinateField(\n  props: CoordinateFieldProps,\n  customAriaLabel?: string,\n  customAriaDescribedby?: string,\n  customAriaDetails?: string,\n): UseCoordinateFieldResult {\n  const {\n    description,\n    errorMessage: errorMessageProp,\n    format = 'dd' as CoordinateSystem,\n    value,\n    defaultValue,\n    onChange,\n    onError,\n    isDisabled = false,\n    isInvalid: isInvalidProp = false,\n    isRequired = false,\n    id: idProp,\n  } = props;\n\n  const fieldId = useId(idProp);\n  const labelId = useId();\n  const descriptionId = useId();\n  const errorId = useId();\n\n  const { registerTimeout } = useTimeoutCleanup();\n\n  const state = useCoordinateFieldState({\n    value,\n    defaultValue,\n    format,\n    onChange,\n    onError,\n    registerTimeout,\n  });\n\n  const focus = useCoordinateFocus({\n    editableSegmentConfigs: state.editableSegmentConfigs,\n  });\n\n  const handlePasteValueApplied = (pastedValue: CoordinateValue) => {\n    state.applyPastedCoordinate(pastedValue);\n\n    // Defer focus until after React commits state updates to the DOM.\n    // applyPastedCoordinate triggers setSegmentValues which updates the input\n    // elements, and we need those updates to complete before focusing.\n    registerTimeout(\n      setTimeout(() => {\n        focus.focusFirstSegment();\n      }, FOCUS_DELAY_MS),\n    );\n  };\n\n  const paste = useCoordinatePaste({\n    onValueApplied: handlePasteValueApplied,\n    onError,\n  });\n\n  const copy = useCoordinateCopy({\n    currentValue: state.currentValue,\n    validationErrors: state.validationErrors,\n    isDisabled,\n    registerTimeout,\n  });\n\n  const effectiveErrorMessage = useMemo(\n    () => errorMessageProp || state.effectiveErrorMessage,\n    [errorMessageProp, state.effectiveErrorMessage],\n  );\n\n  const isInvalid = isInvalidProp || effectiveErrorMessage !== null;\n\n  const describedByIds = [\n    description && descriptionId,\n    effectiveErrorMessage && errorId,\n    customAriaDescribedby,\n  ].filter(Boolean);\n  const describedBy =\n    describedByIds.length > 0 ? describedByIds.join(' ') : undefined;\n\n  const labelProps = {\n    id: labelId,\n    htmlFor: fieldId,\n  };\n\n  // Only use aria-labelledby when we have a visible label (not using aria-label)\n  // When aria-label is provided (e.g., in small size), it takes precedence\n  const ariaLabelledBy = customAriaLabel ? undefined : labelId;\n\n  const fieldProps = {\n    id: fieldId,\n    role: 'group' as const,\n    'aria-labelledby': ariaLabelledBy,\n    'aria-describedby': describedBy,\n    'aria-label': customAriaLabel || undefined,\n    'aria-details': customAriaDetails || undefined,\n    'aria-invalid': isInvalid || undefined,\n    'aria-required': isRequired || undefined,\n    'aria-disabled': isDisabled || undefined,\n  };\n\n  const descriptionProps = {\n    id: descriptionId,\n  };\n\n  const errorProps = {\n    id: errorId,\n  };\n\n  const validation: ValidationResult = useMemo(\n    () => ({\n      isInvalid,\n      validationErrors: effectiveErrorMessage ? [effectiveErrorMessage] : [],\n      validationDetails: {} as ValidityState,\n    }),\n    [isInvalid, effectiveErrorMessage],\n  );\n\n  return {\n    state,\n    focus,\n    paste,\n    copy,\n    registerTimeout,\n    fieldProps,\n    labelProps,\n    descriptionProps,\n    errorProps,\n    validation,\n    ids: {\n      fieldId,\n      labelId,\n      descriptionId,\n      errorId,\n    },\n    effectiveErrorMessage,\n    isInvalid,\n  };\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "5/7",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "hooks/coordinate-field/use-coordinate-focus.ts",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:44.142Z",
+    "bundleHash": "uifb:1735287b922cbfced143ab71",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "hooks/coordinate-field/use-coordinate-focus.ts",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:hook",
+            "entryId": "hooks/coordinate-field/use-coordinate-focus.ts",
+            "description": "use-coordinate-focus - Custom React hook",
+            "version": {
+              "variables": [],
+              "hooks": ["useEffect", "useRef", "useState"],
+              "components": [],
+              "functions": ["useCoordinateFocus"],
+              "imports": ["../../components/coordinate-field/types", "react"]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {},
+              "state": {
+                "focusedSegmentIndex": "number"
+              }
+            },
+            "exports": "named",
+            "prediction": [
+              "Has side effects managed by useEffect",
+              "Uses refs for DOM access or mutable values"
+            ],
+            "semanticHash": "uif:2d06cdff8fc369af910a49a3",
+            "fileHash": "uif:abbfdd6c7641db1d864696c9"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport {\n  createRef,\n  type KeyboardEvent,\n  useEffect,\n  useRef,\n  useState,\n} from 'react';\nimport type { SegmentConfig } from '../../components/coordinate-field/types';\n\nexport interface UseCoordinateFocusOptions {\n  editableSegmentConfigs: SegmentConfig[];\n}\n\nexport interface UseCoordinateFocusResult {\n  segmentRefs: React.RefObject<HTMLInputElement>[];\n  focusedSegmentIndex: number;\n  focusSegment: (index: number) => void;\n  focusNextSegment: (currentIndex: number) => void;\n  focusPreviousSegment: (currentIndex: number) => void;\n  focusFirstSegment: () => void;\n  focusLastSegment: () => void;\n  handleSegmentKeyDown: (\n    index: number,\n    e: KeyboardEvent<HTMLInputElement>,\n  ) => void;\n  setFocusedSegmentIndex: (index: number) => void;\n}\n\nexport function useCoordinateFocus({\n  editableSegmentConfigs,\n}: UseCoordinateFocusOptions): UseCoordinateFocusResult {\n  const segmentRefsInternal = useRef<React.RefObject<HTMLInputElement>[]>([]);\n  const [focusedSegmentIndex, setFocusedSegmentIndex] = useState<number>(-1);\n\n  useEffect(() => {\n    segmentRefsInternal.current = editableSegmentConfigs.map((_, i) => {\n      const existingRef = segmentRefsInternal.current[i];\n      if (existingRef) {\n        return existingRef;\n      }\n      return createRef<HTMLInputElement>() as React.RefObject<HTMLInputElement>;\n    });\n  }, [editableSegmentConfigs]);\n\n  const focusSegment = (index: number) => {\n    if (index >= 0 && index < segmentRefsInternal.current.length) {\n      segmentRefsInternal.current[index]?.current?.focus();\n    }\n  };\n\n  const focusNextSegment = (currentIndex: number) => {\n    focusSegment(currentIndex + 1);\n  };\n\n  const focusPreviousSegment = (currentIndex: number) => {\n    focusSegment(currentIndex - 1);\n  };\n\n  const focusFirstSegment = () => {\n    focusSegment(0);\n  };\n\n  const focusLastSegment = () => {\n    focusSegment(segmentRefsInternal.current.length - 1);\n  };\n\n  const handleSegmentKeyDown = (\n    _index: number,\n    e: KeyboardEvent<HTMLInputElement>,\n  ) => {\n    if (e.key === 'Home') {\n      e.preventDefault();\n      focusFirstSegment();\n    } else if (e.key === 'End') {\n      e.preventDefault();\n      focusLastSegment();\n    }\n  };\n\n  return {\n    segmentRefs: segmentRefsInternal.current,\n    focusedSegmentIndex,\n    focusSegment,\n    focusNextSegment,\n    focusPreviousSegment,\n    focusFirstSegment,\n    focusLastSegment,\n    handleSegmentKeyDown,\n    setFocusedSegmentIndex,\n  };\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "6/7",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "hooks/coordinate-field/use-coordinate-paste.ts",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:44.142Z",
+    "bundleHash": "uifb:e693596fc5bb2e9bd7357d58",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "hooks/coordinate-field/use-coordinate-paste.ts",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:hook",
+            "entryId": "hooks/coordinate-field/use-coordinate-paste.ts",
+            "description": "use-coordinate-paste - Custom React hook",
+            "version": {
+              "variables": [],
+              "hooks": ["useState"],
+              "components": [],
+              "functions": ["useCoordinatePaste"],
+              "imports": [
+                "../../components/coordinate-field/coordinate-utils",
+                "../../components/coordinate-field/types",
+                "react"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {},
+              "state": {
+                "disambiguationMatches": "\n    ParsedCoordinateMatch[]\n  ",
+                "showDisambiguationModal": "boolean",
+                "selectedDisambiguationFormat": "CoordinateSystem | null"
+              }
+            },
+            "exports": "named",
+            "semanticHash": "uif:63b7c3cacd234662d95ebebe",
+            "fileHash": "uif:9fc0c6510cedfa3e9e4e6aee"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport { useState } from 'react';\nimport {\n  deduplicateMatchesByLocation,\n  isCompleteCoordinate,\n  parseCoordinatePaste,\n} from '../../components/coordinate-field/coordinate-utils';\nimport type {\n  CoordinateSystem,\n  CoordinateValue,\n  ParsedCoordinateMatch,\n} from '../../components/coordinate-field/types';\n\nexport interface UseCoordinatePasteOptions {\n  onValueApplied: (value: CoordinateValue) => void;\n  onError?: (message: string, context?: Record<string, unknown>) => void;\n}\n\nexport interface UseCoordinatePasteResult {\n  disambiguationMatches: ParsedCoordinateMatch[];\n  showDisambiguationModal: boolean;\n  selectedDisambiguationFormat: CoordinateSystem | null;\n  handleInputPaste: (e: React.ClipboardEvent<HTMLDivElement>) => void;\n  handleDisambiguationSelect: () => void;\n  setShowDisambiguationModal: (show: boolean) => void;\n  setSelectedDisambiguationFormat: (format: CoordinateSystem | null) => void;\n  cleanupDisambiguationModal: () => void;\n}\n\nexport function useCoordinatePaste({\n  onValueApplied,\n  onError,\n}: UseCoordinatePasteOptions): UseCoordinatePasteResult {\n  const [disambiguationMatches, setDisambiguationMatches] = useState<\n    ParsedCoordinateMatch[]\n  >([]);\n  const [showDisambiguationModal, setShowDisambiguationModal] = useState(false);\n  const [selectedDisambiguationFormat, setSelectedDisambiguationFormat] =\n    useState<CoordinateSystem | null>(null);\n\n  /**\n   * Handles paste failure when no coordinate formats match\n   * Calls onError with \"Invalid coordinate format\" message\n   */\n  const handlePasteNoMatches = (pastedText: string) => {\n    const errorMsg = 'Invalid coordinate format';\n    onError?.(errorMsg, { pastedText });\n  };\n\n  const handlePasteSingleMatch = (match: ParsedCoordinateMatch | undefined) => {\n    if (match) {\n      onValueApplied(match.value);\n    }\n  };\n\n  const handlePasteMultipleMatches = (matches: ParsedCoordinateMatch[]) => {\n    setDisambiguationMatches(matches);\n    const firstMatch = matches[0];\n    if (firstMatch) {\n      setSelectedDisambiguationFormat(firstMatch.format);\n    }\n    setShowDisambiguationModal(true);\n  };\n\n  const handleCoordinatePaste = (pastedText: string) => {\n    const allMatches = parseCoordinatePaste(pastedText);\n\n    if (allMatches.length === 0) {\n      handlePasteNoMatches(pastedText);\n      return;\n    }\n\n    // Deduplicate matches by location - only show modal for different locations\n    const matches = deduplicateMatchesByLocation(allMatches);\n\n    if (matches.length === 1) {\n      handlePasteSingleMatch(matches[0]);\n    } else {\n      handlePasteMultipleMatches(matches);\n    }\n  };\n\n  const handleInputPaste = (e: React.ClipboardEvent<HTMLDivElement>) => {\n    const pastedText = e.clipboardData?.getData('text/plain');\n    if (pastedText && isCompleteCoordinate(pastedText)) {\n      e.preventDefault();\n      handleCoordinatePaste(pastedText);\n    }\n  };\n\n  const cleanupDisambiguationModal = () => {\n    setShowDisambiguationModal(false);\n    setDisambiguationMatches([]);\n    setSelectedDisambiguationFormat(null);\n  };\n\n  const handleDisambiguationSelect = () => {\n    if (selectedDisambiguationFormat) {\n      const match = disambiguationMatches.find(\n        (m) => m.format === selectedDisambiguationFormat,\n      );\n      if (match) {\n        onValueApplied(match.value);\n      }\n    }\n    cleanupDisambiguationModal();\n  };\n\n  return {\n    disambiguationMatches,\n    showDisambiguationModal,\n    selectedDisambiguationFormat,\n    handleInputPaste,\n    handleDisambiguationSelect,\n    setShowDisambiguationModal,\n    setSelectedDisambiguationFormat,\n    cleanupDisambiguationModal,\n  };\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "7/7",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "hooks/coordinate-field/use-timeout-cleanup.ts",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:44.142Z",
+    "bundleHash": "uifb:f305c99b7f7108dddeb3dec7",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "hooks/coordinate-field/use-timeout-cleanup.ts",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:hook",
+            "entryId": "hooks/coordinate-field/use-timeout-cleanup.ts",
+            "description": "use-timeout-cleanup - Custom React hook",
+            "version": {
+              "variables": [],
+              "hooks": ["useEffect", "useRef"],
+              "components": [],
+              "functions": ["useTimeoutCleanup"],
+              "imports": ["react"]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "prediction": [
+              "Has side effects managed by useEffect",
+              "Uses refs for DOM access or mutable values"
+            ],
+            "semanticHash": "uif:79892a9a9fb6298ebb2f9740",
+            "fileHash": "uif:791d9e5396d7770ef10a71f6"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport { useEffect, useRef } from 'react';\n\nexport interface UseTimeoutCleanupResult {\n  registerTimeout: (timeoutId: NodeJS.Timeout) => void;\n}\n\nexport function useTimeoutCleanup(): UseTimeoutCleanupResult {\n  const timeoutIdsRef = useRef<Set<NodeJS.Timeout>>(new Set());\n\n  const registerTimeout = (timeoutId: NodeJS.Timeout) => {\n    timeoutIdsRef.current.add(timeoutId);\n  };\n\n  useEffect(() => {\n    return () => {\n      timeoutIdsRef.current.forEach(clearTimeout);\n      timeoutIdsRef.current.clear();\n    };\n  }, []);\n\n  return { registerTimeout };\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  }
+]

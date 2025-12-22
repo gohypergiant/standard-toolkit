@@ -1,0 +1,241 @@
+[
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "1/4",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/switch/context.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.847Z",
+    "bundleHash": "uifb:7b8f6674f5d7ae57f157a99d",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/switch/context.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/switch/context.tsx",
+            "description": "context - Presentational component",
+            "version": {
+              "variables": ["SwitchContext"],
+              "hooks": [],
+              "components": ["SwitchContext.Provider"],
+              "functions": ["SwitchProvider"],
+              "imports": [
+                "./types",
+                "@/lib/types",
+                "client-only",
+                "react",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": {
+              "named": ["SwitchContext", "SwitchProvider"]
+            },
+            "semanticHash": "uif:41c246f292370cb43afb5a52",
+            "fileHash": "uif:ec57450a4ffaa1845b5bdd07"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport 'client-only';\nimport { createContext } from 'react';\nimport type { ContextValue } from 'react-aria-components';\nimport type { ProviderProps } from '@/lib/types';\nimport type { SwitchProps } from './types';\n\n/**\n * Context for Switch component\n *\n * Provides context for Switch component to share props\n */\nexport const SwitchContext =\n  createContext<ContextValue<SwitchProps, HTMLLabelElement>>(null);\n\n/**\n * Provider for Switch component\n *\n * Allows setting default props for all Switch components within\n */\nexport function SwitchProvider({\n  children,\n  ...props\n}: ProviderProps<SwitchProps>) {\n  return (\n    <SwitchContext.Provider value={props}>{children}</SwitchContext.Provider>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "SwitchContext.Provider",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/switch/context.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "2/4",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/switch/index.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.850Z",
+    "bundleHash": "uifb:a3ca540abf4777f5bda0ae34",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/switch/index.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/switch/index.tsx",
+            "description": "index - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": ["useContextProps"],
+              "components": ["AriaSwitch"],
+              "functions": ["Switch"],
+              "imports": [
+                "./context",
+                "./styles.module.css",
+                "./types",
+                "@accelint/design-foundation/lib/utils",
+                "client-only",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".control",
+                    ".end",
+                    ".label",
+                    ".start",
+                    ".switch"
+                  ],
+                  "properties": ["content"]
+                }
+              }
+            },
+            "semanticHash": "uif:dd776d4f8aadc1d36330f197",
+            "fileHash": "uif:d6666c18560ac85cba0723b3"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport 'client-only';\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport {\n  Switch as AriaSwitch,\n  composeRenderProps,\n  useContextProps,\n} from 'react-aria-components';\nimport { SwitchContext } from './context';\nimport styles from './styles.module.css';\nimport type { SwitchProps } from './types';\n\n/**\n * Switch - A toggle control for binary state changes\n *\n * Provides an accessible toggle switch component for enabling/disabling features\n * or settings. Offers clear visual feedback for on/off states with smooth transitions\n * and proper keyboard and screen reader support.\n *\n * @example\n * // Basic switch\n * <Switch>Enable notifications</Switch>\n *\n * @example\n * // Controlled switch\n * <Switch\n *   isSelected={isEnabled}\n *   onChange={setIsEnabled}\n * >\n *   Dark mode\n * </Switch>\n *\n * @example\n * // Switch with default state\n * <Switch defaultSelected>\n *   Auto-save documents\n * </Switch>\n *\n * @example\n * // Disabled switch\n * <Switch isDisabled>\n *   Premium feature (upgrade required)\n * </Switch>\n *\n * @example\n * // Switch without label (icon-only)\n * <Switch aria-label=\"Toggle sidebar\" />\n */\nexport function Switch({ ref, ...props }: SwitchProps) {\n  [props, ref] = useContextProps(props, ref ?? null, SwitchContext);\n\n  const { children, classNames, labelPosition = 'end', ...rest } = props;\n\n  return (\n    <AriaSwitch\n      {...rest}\n      ref={ref}\n      className={composeRenderProps(classNames?.switch, (className) =>\n        clsx('group/switch', styles.switch, styles[labelPosition], className),\n      )}\n    >\n      {composeRenderProps(children, (children) => (\n        <>\n          <span className={clsx(styles.control, classNames?.control)} />\n          {children != null && (\n            <span className={clsx(styles.label, classNames?.label)}>\n              {children}\n            </span>\n          )}\n        </>\n      ))}\n    </AriaSwitch>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "AriaSwitch",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/switch/index.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "3/4",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/switch/switch.stories.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.850Z",
+    "bundleHash": "uifb:6ed1a07278a6ee76630e5439",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/switch/switch.stories.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/switch/switch.stories.tsx",
+            "description": "switch.stories - TypeScript module",
+            "version": {
+              "variables": ["Default", "meta"],
+              "hooks": [],
+              "components": [],
+              "functions": [],
+              "imports": ["./", "@storybook/react-vite"]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "semanticHash": "uif:2dc175d6c6f4e97a00b75a10",
+            "fileHash": "uif:faeee5785cfcb596a689d012"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport { Switch } from './';\nimport type { Meta, StoryObj } from '@storybook/react-vite';\n\nconst meta = {\n  title: 'Components/Switch',\n  component: Switch,\n  args: {\n    children: 'Label',\n    isDisabled: false,\n    labelPosition: 'end',\n  },\n} satisfies Meta<typeof Switch>;\n\nexport default meta;\ntype Story = StoryObj<typeof meta>;\n\nexport const Default: Story = {\n  render: Switch,\n};\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "4/4",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/switch/types.ts",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.850Z",
+    "bundleHash": "uifb:ea8f18d1e85276b4d3123b0c",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/switch/types.ts",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/switch/types.ts",
+            "description": "types - Type definitions",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": [],
+              "functions": [],
+              "imports": ["react", "react-aria-components"]
+            },
+            "logicSignature": {
+              "props": {
+                "ref": {
+                  "type": "React.Ref<HTMLLabelElement>",
+                  "optional": true
+                },
+                "key": {
+                  "type": "React.Key",
+                  "optional": true
+                },
+                "classNames": {
+                  "type": "{ switch?: AriaSwitchProps; control?: string; label?: string; }",
+                  "optional": true
+                },
+                "labelPosition": {
+                  "type": "literal-union",
+                  "literals": ["start", "end"],
+                  "optional": true
+                }
+              },
+              "emits": {}
+            },
+            "semanticHash": "uif:2c119c011a90fdd92b02e8f6",
+            "fileHash": "uif:13efbcff4004a07e4cf2959a"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport type { RefAttributes } from 'react';\nimport type { SwitchProps as AriaSwitchProps } from 'react-aria-components';\n\nexport type SwitchProps = Omit<AriaSwitchProps, 'className'> &\n  RefAttributes<HTMLLabelElement> & {\n    classNames?: {\n      switch?: AriaSwitchProps['className'];\n      control?: string;\n      label?: string;\n    };\n    labelPosition?: 'start' | 'end';\n  };\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  }
+]

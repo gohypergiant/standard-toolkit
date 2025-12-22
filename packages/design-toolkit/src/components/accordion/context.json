@@ -1,0 +1,1956 @@
+[
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "1/9",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/accordion/accordion.stories.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:42.427Z",
+    "bundleHash": "uifb:e6db57d5a126420cc3c366de",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/accordion/accordion.stories.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/accordion/accordion.stories.tsx",
+            "description": "accordion.stories - Presentational component",
+            "version": {
+              "variables": ["Default", "WithMenu", "meta"],
+              "hooks": [],
+              "components": [
+                "Accordion",
+                "AccordionHeader",
+                "AccordionPanel",
+                "AccordionTrigger",
+                "Button",
+                "Icon",
+                "Menu",
+                "MenuItem",
+                "MenuTrigger",
+                "Placeholder"
+              ],
+              "functions": [],
+              "imports": [
+                "../button",
+                "../icon",
+                "../menu",
+                "../menu/item",
+                "../menu/trigger",
+                "./",
+                "./header",
+                "./panel",
+                "./trigger",
+                "@accelint/icons",
+                "@storybook/react-vite"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": {
+              "named": ["Default", "WithMenu"]
+            },
+            "style": {
+              "styleSources": {
+                "tailwind": {
+                  "categories": {
+                    "sizing": ["w-[280px]"],
+                    "other": ["fg-primary-muted"],
+                    "typography": ["text-body-s"]
+                  },
+                  "classCount": 3
+                }
+              },
+              "visual": {
+                "colors": ["text-body-s"],
+                "typography": ["text-body-s"]
+              }
+            },
+            "semanticHash": "uif:3bfb6d8adb16866cdc9854d2",
+            "fileHash": "uif:1d3b79cf23ffae7c9b61dae4"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport { Placeholder } from '@accelint/icons';\nimport { Button } from '../button';\nimport { Icon } from '../icon';\nimport { Menu } from '../menu';\nimport { MenuItem } from '../menu/item';\nimport { MenuTrigger } from '../menu/trigger';\nimport { Accordion } from './';\nimport { AccordionHeader } from './header';\nimport { AccordionPanel } from './panel';\nimport { AccordionTrigger } from './trigger';\nimport type { Meta, StoryObj } from '@storybook/react-vite';\n\n/**\n * The accordion will stretch to fill the entire width of its parent container.\n */\nconst meta = {\n  title: 'Components/Accordion',\n  component: Accordion,\n  args: {\n    isDisabled: false,\n    variant: 'cozy',\n  },\n  argTypes: {\n    variant: {\n      control: 'select',\n      options: ['cozy', 'compact'],\n    },\n  },\n  parameters: {\n    docs: {\n      subtitle: 'Content that can expand and collapse.',\n    },\n  },\n} satisfies Meta<typeof Accordion>;\n\nexport default meta;\ntype Story = StoryObj<typeof meta>;\n\nexport const Default: Story = {\n  render: ({ children, ...args }) => (\n    <div className='w-[280px]'>\n      <Accordion {...args}>\n        <AccordionHeader>\n          <AccordionTrigger>\n            <Icon>\n              <Placeholder />\n            </Icon>\n            Accordion title\n          </AccordionTrigger>\n        </AccordionHeader>\n        <AccordionPanel>\n          <p className='fg-primary-muted text-body-s'>\n            This is a placeholder content for an accordion. Please replace with\n            an actual content instance.\n          </p>\n        </AccordionPanel>\n      </Accordion>\n    </div>\n  ),\n};\n\nexport const WithMenu: Story = {\n  render: ({ children, ...args }) => (\n    <div className='w-[280px]'>\n      <Accordion {...args}>\n        <AccordionHeader>\n          <AccordionTrigger>\n            <Icon>\n              <Placeholder />\n            </Icon>\n            Accordion title\n          </AccordionTrigger>\n          <MenuTrigger>\n            <Button />\n            <Menu>\n              <MenuItem>Foo</MenuItem>\n              <MenuItem>Bar</MenuItem>\n            </Menu>\n          </MenuTrigger>\n        </AccordionHeader>\n        <AccordionPanel>\n          <p className='fg-primary-muted text-body-s'>\n            This is a placeholder content for an accordion. Please replace with\n            an actual content instance.\n          </p>\n        </AccordionPanel>\n      </Accordion>\n    </div>\n  ),\n};\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "Accordion",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/accordion/accordion.stories.tsx"
+        },
+        {
+          "name": "AccordionHeader",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/accordion/accordion.stories.tsx"
+        },
+        {
+          "name": "AccordionPanel",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/accordion/accordion.stories.tsx"
+        },
+        {
+          "name": "AccordionTrigger",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/accordion/accordion.stories.tsx"
+        },
+        {
+          "name": "Button",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/accordion/accordion.stories.tsx"
+        },
+        {
+          "name": "Icon",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/accordion/accordion.stories.tsx"
+        },
+        {
+          "name": "Menu",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/accordion/accordion.stories.tsx"
+        },
+        {
+          "name": "MenuItem",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/accordion/accordion.stories.tsx"
+        },
+        {
+          "name": "MenuTrigger",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/accordion/accordion.stories.tsx"
+        },
+        {
+          "name": "Placeholder",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/accordion/accordion.stories.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "2/9",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/accordion/context.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:42.428Z",
+    "bundleHash": "uifb:e0b43cce117fcdf8d2093b37",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/accordion/context.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/accordion/context.tsx",
+            "description": "context - TypeScript module",
+            "version": {
+              "variables": ["AccordionContext"],
+              "hooks": [],
+              "components": [],
+              "functions": [],
+              "imports": [
+                "./types",
+                "client-only",
+                "react",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "semanticHash": "uif:9f1aa39ea9075718fab7c7d1",
+            "fileHash": "uif:836fa823e341c358023887f4"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport 'client-only';\nimport { createContext } from 'react';\nimport type { ContextValue } from 'react-aria-components';\nimport type { AccordionProps } from './types';\n\nexport const AccordionContext =\n  createContext<ContextValue<AccordionProps, HTMLDivElement>>(null);\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "3/9",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/accordion/group.stories.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:42.445Z",
+    "bundleHash": "uifb:dcebff10ad9b95ca2541aea8",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/accordion/group.stories.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/accordion/group.stories.tsx",
+            "description": "group.stories - Presentational component",
+            "version": {
+              "variables": ["Default", "meta"],
+              "hooks": [],
+              "components": [
+                "Accordion",
+                "AccordionGroup",
+                "AccordionHeader",
+                "AccordionPanel",
+                "AccordionTrigger",
+                "Icon",
+                "Placeholder"
+              ],
+              "functions": [],
+              "imports": [
+                "../icon",
+                "./",
+                "./group",
+                "./header",
+                "./panel",
+                "./trigger",
+                "./types",
+                "@accelint/icons",
+                "@storybook/react-vite"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "tailwind": {
+                  "categories": {
+                    "sizing": ["w-[280px]"],
+                    "other": ["fg-primary-muted"],
+                    "typography": ["text-body-s"]
+                  },
+                  "classCount": 3
+                }
+              },
+              "visual": {
+                "colors": ["text-body-s"],
+                "typography": ["text-body-s"]
+              }
+            },
+            "semanticHash": "uif:c42e6fe8d1aa726fd83d33c8",
+            "fileHash": "uif:ce58d6124d19a4f257f3b758"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport { Placeholder } from '@accelint/icons';\nimport { Icon } from '../icon';\nimport { Accordion } from './';\nimport { AccordionGroup } from './group';\nimport { AccordionHeader } from './header';\nimport { AccordionPanel } from './panel';\nimport { AccordionTrigger } from './trigger';\nimport type { Meta, StoryObj } from '@storybook/react-vite';\nimport type { AccordionGroupProps } from './types';\n\n/**\n * The accordion group will stretch to fill the entire width of its parent container.\n */\nconst meta = {\n  title: 'Components/AccordionGroup',\n  component: AccordionGroup,\n  args: {\n    allowsMultipleExpanded: false,\n    variant: 'cozy',\n    isDisabled: false,\n  },\n  argTypes: {\n    variant: {\n      control: 'select',\n      options: ['cozy', 'compact'],\n    },\n  },\n  parameters: {\n    docs: {\n      subtitle: 'Group together multiple <Accordion> components.',\n    },\n  },\n} satisfies Meta<AccordionGroupProps>;\n\nexport default meta;\n\nexport const Default: StoryObj<typeof meta> = {\n  render: ({ children, ...args }) => (\n    <div className='w-[280px]'>\n      <AccordionGroup {...args}>\n        <Accordion>\n          <AccordionHeader>\n            <AccordionTrigger>\n              <Icon>\n                <Placeholder />\n              </Icon>\n              Accordion one\n            </AccordionTrigger>\n          </AccordionHeader>\n          <AccordionPanel>\n            <p className='fg-primary-muted text-body-s'>\n              This is a placeholder content for an accordion. Please replace\n              with an actual content instance.\n            </p>\n          </AccordionPanel>\n        </Accordion>\n        <Accordion>\n          <AccordionHeader>\n            <AccordionTrigger>\n              <Icon>\n                <Placeholder />\n              </Icon>\n              Accordion two\n            </AccordionTrigger>\n          </AccordionHeader>\n          <AccordionPanel>\n            <p className='fg-primary-muted text-body-s'>\n              This is a placeholder content for an accordion. Please replace\n              with an actual content instance.\n            </p>\n          </AccordionPanel>\n        </Accordion>\n        <Accordion>\n          <AccordionHeader>\n            <AccordionTrigger>\n              <Icon>\n                <Placeholder />\n              </Icon>\n              Accordion three\n            </AccordionTrigger>\n          </AccordionHeader>\n          <AccordionPanel>\n            <p className='fg-primary-muted text-body-s'>\n              This is a placeholder content for an accordion. Please replace\n              with an actual content instance.\n            </p>\n          </AccordionPanel>\n        </Accordion>\n      </AccordionGroup>\n    </div>\n  ),\n};\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "Accordion",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/accordion/group.stories.tsx"
+        },
+        {
+          "name": "AccordionGroup",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/accordion/group.stories.tsx"
+        },
+        {
+          "name": "AccordionHeader",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/accordion/group.stories.tsx"
+        },
+        {
+          "name": "AccordionPanel",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/accordion/group.stories.tsx"
+        },
+        {
+          "name": "AccordionTrigger",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/accordion/group.stories.tsx"
+        },
+        {
+          "name": "Icon",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/accordion/group.stories.tsx"
+        },
+        {
+          "name": "Placeholder",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/accordion/group.stories.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "4/9",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/accordion/group.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:42.451Z",
+    "bundleHash": "uifb:b55225924217ffc2d7fc5bf8",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/accordion/group.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/accordion/group.tsx",
+            "description": "group - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": ["AccordionContext.Provider", "DisclosureGroup"],
+              "functions": ["AccordionGroup"],
+              "imports": [
+                "./context",
+                "./styles.module.css",
+                "./types",
+                "@accelint/design-foundation/lib/utils",
+                "client-only",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".accordion",
+                    ".compact",
+                    ".cozy",
+                    ".group",
+                    ".header",
+                    ".heading",
+                    ".panel",
+                    ".trigger",
+                    ".triggerChevron"
+                  ],
+                  "properties": []
+                }
+              }
+            },
+            "semanticHash": "uif:b11fd7ffce95135bef4501a7",
+            "fileHash": "uif:47b21ff1d9e7f1ac238bca67"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport 'client-only';\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport { composeRenderProps, DisclosureGroup } from 'react-aria-components';\nimport { AccordionContext } from './context';\nimport styles from './styles.module.css';\nimport type { AccordionGroupProps } from './types';\n\nexport function AccordionGroup({\n  ref,\n  children,\n  className,\n  variant = 'cozy',\n  isDisabled,\n  ...rest\n}: AccordionGroupProps) {\n  return (\n    <AccordionContext.Provider value={{ variant, isDisabled }}>\n      <DisclosureGroup\n        {...rest}\n        ref={ref}\n        className={composeRenderProps(className, (className) =>\n          clsx('group/accordion-group', styles.group, className),\n        )}\n      >\n        {children}\n      </DisclosureGroup>\n    </AccordionContext.Provider>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "AccordionContext.Provider",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/accordion/group.tsx"
+        },
+        {
+          "name": "DisclosureGroup",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/accordion/group.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "5/9",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/accordion/header.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:42.461Z",
+    "bundleHash": "uifb:519c57534bba8fffa397aa8f",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/accordion/header.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/accordion/header.tsx",
+            "description": "header - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": ["useContext"],
+              "components": ["Header", "Icon", "Kebab", "Provider"],
+              "functions": ["AccordionHeader"],
+              "imports": [
+                "../../lib/utils",
+                "../button/context",
+                "../icon",
+                "../icon/context",
+                "./context",
+                "./styles.module.css",
+                "./types",
+                "@accelint/design-foundation/lib/utils",
+                "@accelint/icons",
+                "client-only",
+                "react",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "prediction": ["Consumes React Context for shared state"],
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".accordion",
+                    ".compact",
+                    ".cozy",
+                    ".group",
+                    ".header",
+                    ".heading",
+                    ".panel",
+                    ".trigger",
+                    ".triggerChevron"
+                  ],
+                  "properties": []
+                }
+              }
+            },
+            "semanticHash": "uif:326f7412d9aa734bb9b2214f",
+            "fileHash": "uif:e7e3eaf6df1c95773d195861"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport 'client-only';\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport { Kebab } from '@accelint/icons';\nimport { useContext } from 'react';\nimport { Header, Provider } from 'react-aria-components';\nimport { isSlottedContextValue } from '../../lib/utils';\nimport { ButtonContext } from '../button/context';\nimport { Icon } from '../icon';\nimport { IconContext } from '../icon/context';\nimport { AccordionContext } from './context';\nimport styles from './styles.module.css';\nimport type { AccordionHeaderProps } from './types';\n\nexport function AccordionHeader({\n  ref,\n  children,\n  className,\n}: AccordionHeaderProps) {\n  const context = useContext(AccordionContext);\n  const variant =\n    (isSlottedContextValue(context) ? undefined : context?.variant) ?? 'cozy';\n  const isDisabled =\n    (isSlottedContextValue(context) ? undefined : context?.isDisabled) ?? false;\n\n  return (\n    <Provider\n      values={[\n        [IconContext, { size: variant === 'compact' ? 'small' : 'large' }],\n        [\n          ButtonContext,\n          {\n            children: (\n              <Icon>\n                <Kebab />\n              </Icon>\n            ),\n            variant: 'icon',\n            isDisabled,\n          },\n        ],\n      ]}\n    >\n      <Header ref={ref} className={clsx(styles.header, className)}>\n        {children}\n      </Header>\n    </Provider>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "Header",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/accordion/header.tsx"
+        },
+        {
+          "name": "Icon",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/accordion/header.tsx"
+        },
+        {
+          "name": "Kebab",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/accordion/header.tsx"
+        },
+        {
+          "name": "Provider",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/accordion/header.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "6/9",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/accordion/index.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:42.466Z",
+    "bundleHash": "uifb:96ed38be0d44010d5151df46",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/accordion/index.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/accordion/index.tsx",
+            "description": "index - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": ["useContextProps"],
+              "components": ["AccordionContext.Provider", "Disclosure"],
+              "functions": ["Accordion"],
+              "imports": [
+                "./context",
+                "./styles.module.css",
+                "./types",
+                "@accelint/design-foundation/lib/utils",
+                "client-only",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".accordion",
+                    ".compact",
+                    ".cozy",
+                    ".group",
+                    ".header",
+                    ".heading",
+                    ".panel",
+                    ".trigger",
+                    ".triggerChevron"
+                  ],
+                  "properties": []
+                }
+              }
+            },
+            "semanticHash": "uif:c837b1d54ee701155b0e21a5",
+            "fileHash": "uif:2a2297f4192a4a292e3ef485"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport 'client-only';\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport {\n  composeRenderProps,\n  Disclosure,\n  useContextProps,\n} from 'react-aria-components';\nimport { AccordionContext } from './context';\nimport styles from './styles.module.css';\nimport type { AccordionProps } from './types';\n\n/**\n * Accordion - A collapsible content component with expandable sections\n *\n * Provides an accessible accordion interface for organizing content into\n * collapsible sections. Supports both compact and full variants with\n * integrated controls for expanding/collapsing content areas.\n *\n * @example\n * // Basic accordion\n * <Accordion>\n *   <AccordionHeader>\n *     <AccordionTrigger>Section Title</AccordionTrigger>\n *   </AccordionHeader>\n *   <AccordionPanel>Content goes here</AccordionPanel>\n * </Accordion>\n *\n * @example\n * // Compact variant\n * <Accordion variant=\"compact\">\n *   <AccordionHeader>\n *     <AccordionTrigger>Compact Section</AccordionTrigger>\n *   </AccordionHeader>\n *   <AccordionPanel>Compact content</AccordionPanel>\n * </Accordion>\n *\n * @example\n * // Multiple accordions in a group\n * <AccordionGroup>\n *   <Accordion>\n *     <AccordionHeader>\n *       <AccordionTrigger>First Section</AccordionTrigger>\n *     </AccordionHeader>\n *     <AccordionPanel>First content</AccordionPanel>\n *   </Accordion>\n *   <Accordion>\n *     <AccordionHeader>\n *       <AccordionTrigger>Second Section</AccordionTrigger>\n *     </AccordionHeader>\n *     <AccordionPanel>Second content</AccordionPanel>\n *   </Accordion>\n * </AccordionGroup>\n */\nexport function Accordion({ ref, ...props }: AccordionProps) {\n  [props, ref] = useContextProps(props, ref ?? null, AccordionContext);\n\n  const { children, className, variant = 'cozy', isDisabled, ...rest } = props;\n\n  return (\n    <AccordionContext.Provider\n      value={{\n        variant,\n        isDisabled,\n      }}\n    >\n      <Disclosure\n        {...rest}\n        className={composeRenderProps(className, (className) =>\n          clsx('group/accordion', styles.accordion, className),\n        )}\n        isDisabled={isDisabled}\n      >\n        {children}\n      </Disclosure>\n    </AccordionContext.Provider>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "AccordionContext.Provider",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/accordion/index.tsx"
+        },
+        {
+          "name": "Disclosure",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/accordion/index.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "7/9",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/accordion/panel.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:42.469Z",
+    "bundleHash": "uifb:bf99a0f3aaf497646c141cf3",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/accordion/panel.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/accordion/panel.tsx",
+            "description": "panel - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": ["DisclosurePanel"],
+              "functions": ["AccordionPanel"],
+              "imports": [
+                "./styles.module.css",
+                "./types",
+                "@accelint/design-foundation/lib/utils",
+                "client-only",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".accordion",
+                    ".compact",
+                    ".cozy",
+                    ".group",
+                    ".header",
+                    ".heading",
+                    ".panel",
+                    ".trigger",
+                    ".triggerChevron"
+                  ],
+                  "properties": []
+                }
+              }
+            },
+            "semanticHash": "uif:dc0fbd5432db2db2a7e57c33",
+            "fileHash": "uif:e226677b095448e68281a008"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport 'client-only';\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport { composeRenderProps, DisclosurePanel } from 'react-aria-components';\nimport styles from './styles.module.css';\nimport type { AccordionPanelProps } from './types';\n\nexport function AccordionPanel({\n  ref,\n  children,\n  className,\n  ...rest\n}: AccordionPanelProps) {\n  return (\n    <DisclosurePanel\n      {...rest}\n      ref={ref}\n      className={composeRenderProps(className, (className) =>\n        clsx(styles.panel, className),\n      )}\n    >\n      {children}\n    </DisclosurePanel>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "DisclosurePanel",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/accordion/panel.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "8/9",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/accordion/trigger.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:42.482Z",
+    "bundleHash": "uifb:d477165ffcaa2aab2912b85c",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/accordion/trigger.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/accordion/trigger.tsx",
+            "description": "trigger - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": ["useContext"],
+              "components": [
+                "Button",
+                "ChevronDown",
+                "Heading",
+                "Icon",
+                "IconContext.Provider"
+              ],
+              "functions": ["AccordionTrigger"],
+              "imports": [
+                "../../lib/utils",
+                "../button",
+                "../icon",
+                "../icon/context",
+                "./context",
+                "./styles.module.css",
+                "./types",
+                "@accelint/design-foundation/lib/utils",
+                "@accelint/icons",
+                "client-only",
+                "react",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "prediction": ["Consumes React Context for shared state"],
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".accordion",
+                    ".compact",
+                    ".cozy",
+                    ".group",
+                    ".header",
+                    ".heading",
+                    ".panel",
+                    ".trigger",
+                    ".triggerChevron"
+                  ],
+                  "properties": []
+                }
+              }
+            },
+            "semanticHash": "uif:71d6da552b305492bf4bbfc1",
+            "fileHash": "uif:96e295bf0d64b3f7956ea643"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport 'client-only';\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport { ChevronDown } from '@accelint/icons';\nimport { useContext } from 'react';\nimport { composeRenderProps, Heading } from 'react-aria-components';\nimport { isSlottedContextValue } from '../../lib/utils';\nimport { Button } from '../button';\nimport { Icon } from '../icon';\nimport { IconContext } from '../icon/context';\nimport { AccordionContext } from './context';\nimport styles from './styles.module.css';\nimport type { AccordionTriggerProps } from './types';\n\nexport function AccordionTrigger({\n  ref,\n  children,\n  classNames,\n}: AccordionTriggerProps) {\n  const context = useContext(AccordionContext);\n  const variant =\n    (isSlottedContextValue(context) ? undefined : context?.variant) ?? 'cozy';\n\n  return (\n    <Heading ref={ref} className={clsx(styles.heading, classNames?.heading)}>\n      <Button\n        slot='trigger'\n        className={composeRenderProps(classNames?.trigger, (className) =>\n          clsx(styles.trigger, styles[variant], className),\n        )}\n        variant='flat'\n      >\n        <IconContext.Provider\n          value={{ size: variant === 'compact' ? 'small' : 'medium' }}\n        >\n          <Icon>\n            <ChevronDown className={styles.triggerChevron} />\n          </Icon>\n          {children}\n        </IconContext.Provider>\n      </Button>\n    </Heading>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "Button",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/accordion/trigger.tsx"
+        },
+        {
+          "name": "ChevronDown",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/accordion/trigger.tsx"
+        },
+        {
+          "name": "Heading",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/accordion/trigger.tsx"
+        },
+        {
+          "name": "Icon",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/accordion/trigger.tsx"
+        },
+        {
+          "name": "IconContext.Provider",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/accordion/trigger.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "9/9",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/accordion/types.ts",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:42.483Z",
+    "bundleHash": "uifb:fb6e39c248592a5bb80c9998",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/accordion/types.ts",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/accordion/types.ts",
+            "description": "types - Type definitions",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": [],
+              "functions": [],
+              "imports": ["@/lib/types", "react", "react-aria-components"]
+            },
+            "logicSignature": {
+              "props": {
+                "ref": {
+                  "type": "React.Ref<HTMLElement>",
+                  "optional": true
+                },
+                "key": {
+                  "type": "React.Key",
+                  "optional": true
+                },
+                "defaultChecked": {
+                  "type": "boolean",
+                  "optional": true
+                },
+                "defaultValue": {
+                  "type": "string | number | readonly string[]",
+                  "optional": true
+                },
+                "suppressContentEditableWarning": {
+                  "type": "boolean",
+                  "optional": true
+                },
+                "suppressHydrationWarning": {
+                  "type": "boolean",
+                  "optional": true
+                },
+                "accessKey": {
+                  "type": "string",
+                  "optional": true
+                },
+                "autoCapitalize": {
+                  "type": "\"off\" | \"none\" | \"on\" | \"sentences\" | \"words\" | \"characters\" | (string & {})",
+                  "optional": true
+                },
+                "autoFocus": {
+                  "type": "boolean",
+                  "optional": true
+                },
+                "className": {
+                  "type": "string",
+                  "optional": true
+                },
+                "contentEditable": {
+                  "type": "Booleanish | \"inherit\" | \"plaintext-only\"",
+                  "optional": true
+                },
+                "contextMenu": {
+                  "type": "string",
+                  "optional": true
+                },
+                "dir": {
+                  "type": "string",
+                  "optional": true
+                },
+                "draggable": {
+                  "type": "Booleanish",
+                  "optional": true
+                },
+                "enterKeyHint": {
+                  "type": "literal-union",
+                  "literals": [
+                    "search",
+                    "enter",
+                    "done",
+                    "go",
+                    "next",
+                    "previous",
+                    "send"
+                  ],
+                  "optional": true
+                },
+                "hidden": {
+                  "type": "boolean",
+                  "optional": true
+                },
+                "id": {
+                  "type": "string",
+                  "optional": true
+                },
+                "lang": {
+                  "type": "string",
+                  "optional": true
+                },
+                "nonce": {
+                  "type": "string",
+                  "optional": true
+                },
+                "slot": {
+                  "type": "string",
+                  "optional": true
+                },
+                "spellCheck": {
+                  "type": "Booleanish",
+                  "optional": true
+                },
+                "style": {
+                  "type": "React.CSSProperties",
+                  "optional": true
+                },
+                "tabIndex": {
+                  "type": "number",
+                  "optional": true
+                },
+                "title": {
+                  "type": "string",
+                  "optional": true
+                },
+                "translate": {
+                  "type": "literal-union",
+                  "literals": ["yes", "no"],
+                  "optional": true
+                },
+                "radioGroup": {
+                  "type": "string",
+                  "optional": true
+                },
+                "role": {
+                  "type": "React.AriaRole",
+                  "optional": true
+                },
+                "about": {
+                  "type": "string",
+                  "optional": true
+                },
+                "content": {
+                  "type": "string",
+                  "optional": true
+                },
+                "datatype": {
+                  "type": "string",
+                  "optional": true
+                },
+                "inlist": {
+                  "type": "any",
+                  "optional": true
+                },
+                "prefix": {
+                  "type": "string",
+                  "optional": true
+                },
+                "property": {
+                  "type": "string",
+                  "optional": true
+                },
+                "rel": {
+                  "type": "string",
+                  "optional": true
+                },
+                "resource": {
+                  "type": "string",
+                  "optional": true
+                },
+                "rev": {
+                  "type": "string",
+                  "optional": true
+                },
+                "typeof": {
+                  "type": "string",
+                  "optional": true
+                },
+                "vocab": {
+                  "type": "string",
+                  "optional": true
+                },
+                "autoCorrect": {
+                  "type": "string",
+                  "optional": true
+                },
+                "autoSave": {
+                  "type": "string",
+                  "optional": true
+                },
+                "color": {
+                  "type": "string",
+                  "optional": true
+                },
+                "itemProp": {
+                  "type": "string",
+                  "optional": true
+                },
+                "itemScope": {
+                  "type": "boolean",
+                  "optional": true
+                },
+                "itemType": {
+                  "type": "string",
+                  "optional": true
+                },
+                "itemID": {
+                  "type": "string",
+                  "optional": true
+                },
+                "itemRef": {
+                  "type": "string",
+                  "optional": true
+                },
+                "results": {
+                  "type": "number",
+                  "optional": true
+                },
+                "security": {
+                  "type": "string",
+                  "optional": true
+                },
+                "unselectable": {
+                  "type": "literal-union",
+                  "literals": ["off", "on"],
+                  "optional": true
+                },
+                "popover": {
+                  "type": "\"\" | \"auto\" | \"manual\" | \"hint\"",
+                  "optional": true
+                },
+                "popoverTargetAction": {
+                  "type": "literal-union",
+                  "literals": ["toggle", "show", "hide"],
+                  "optional": true
+                },
+                "popoverTarget": {
+                  "type": "string",
+                  "optional": true
+                },
+                "inert": {
+                  "type": "boolean",
+                  "optional": true
+                },
+                "inputMode": {
+                  "type": "literal-union",
+                  "literals": [
+                    "search",
+                    "text",
+                    "none",
+                    "tel",
+                    "url",
+                    "email",
+                    "numeric",
+                    "decimal"
+                  ],
+                  "optional": true
+                },
+                "is": {
+                  "type": "string",
+                  "optional": true
+                },
+                "exportparts": {
+                  "type": "string",
+                  "optional": true
+                },
+                "part": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-activedescendant": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-atomic": {
+                  "type": "Booleanish",
+                  "optional": true
+                },
+                "aria-autocomplete": {
+                  "type": "literal-union",
+                  "literals": ["none", "list", "inline", "both"],
+                  "optional": true
+                },
+                "aria-braillelabel": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-brailleroledescription": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-busy": {
+                  "type": "Booleanish",
+                  "optional": true
+                },
+                "aria-checked": {
+                  "type": "boolean | \"true\" | \"false\" | \"mixed\"",
+                  "optional": true
+                },
+                "aria-colcount": {
+                  "type": "number",
+                  "optional": true
+                },
+                "aria-colindex": {
+                  "type": "number",
+                  "optional": true
+                },
+                "aria-colindextext": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-colspan": {
+                  "type": "number",
+                  "optional": true
+                },
+                "aria-controls": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-current": {
+                  "type": "boolean | \"time\" | \"true\" | \"false\" | \"page\" | \"step\" | \"location\" | \"date\"",
+                  "optional": true
+                },
+                "aria-describedby": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-description": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-details": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-disabled": {
+                  "type": "Booleanish",
+                  "optional": true
+                },
+                "aria-dropeffect": {
+                  "type": "literal-union",
+                  "literals": [
+                    "link",
+                    "none",
+                    "copy",
+                    "execute",
+                    "move",
+                    "popup"
+                  ],
+                  "optional": true
+                },
+                "aria-errormessage": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-expanded": {
+                  "type": "Booleanish",
+                  "optional": true
+                },
+                "aria-flowto": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-grabbed": {
+                  "type": "Booleanish",
+                  "optional": true
+                },
+                "aria-haspopup": {
+                  "type": "boolean | \"dialog\" | \"menu\" | \"true\" | \"false\" | \"grid\" | \"listbox\" | \"tree\"",
+                  "optional": true
+                },
+                "aria-hidden": {
+                  "type": "Booleanish",
+                  "optional": true
+                },
+                "aria-invalid": {
+                  "type": "boolean | \"true\" | \"false\" | \"grammar\" | \"spelling\"",
+                  "optional": true
+                },
+                "aria-keyshortcuts": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-label": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-labelledby": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-level": {
+                  "type": "number",
+                  "optional": true
+                },
+                "aria-live": {
+                  "type": "literal-union",
+                  "literals": ["off", "assertive", "polite"],
+                  "optional": true
+                },
+                "aria-modal": {
+                  "type": "Booleanish",
+                  "optional": true
+                },
+                "aria-multiline": {
+                  "type": "Booleanish",
+                  "optional": true
+                },
+                "aria-multiselectable": {
+                  "type": "Booleanish",
+                  "optional": true
+                },
+                "aria-orientation": {
+                  "type": "literal-union",
+                  "literals": ["horizontal", "vertical"],
+                  "optional": true
+                },
+                "aria-owns": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-placeholder": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-posinset": {
+                  "type": "number",
+                  "optional": true
+                },
+                "aria-pressed": {
+                  "type": "boolean | \"true\" | \"false\" | \"mixed\"",
+                  "optional": true
+                },
+                "aria-readonly": {
+                  "type": "Booleanish",
+                  "optional": true
+                },
+                "aria-relevant": {
+                  "type": "\"text\" | \"additions\" | \"additions removals\" | \"additions text\" | \"all\" | \"removals\" | \"removals additions\" | \"removals text\" | \"text additions\" | \"text removals\"",
+                  "optional": true
+                },
+                "aria-required": {
+                  "type": "Booleanish",
+                  "optional": true
+                },
+                "aria-roledescription": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-rowcount": {
+                  "type": "number",
+                  "optional": true
+                },
+                "aria-rowindex": {
+                  "type": "number",
+                  "optional": true
+                },
+                "aria-rowindextext": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-rowspan": {
+                  "type": "number",
+                  "optional": true
+                },
+                "aria-selected": {
+                  "type": "Booleanish",
+                  "optional": true
+                },
+                "aria-setsize": {
+                  "type": "number",
+                  "optional": true
+                },
+                "aria-sort": {
+                  "type": "literal-union",
+                  "literals": ["none", "ascending", "descending", "other"],
+                  "optional": true
+                },
+                "aria-valuemax": {
+                  "type": "number",
+                  "optional": true
+                },
+                "aria-valuemin": {
+                  "type": "number",
+                  "optional": true
+                },
+                "aria-valuenow": {
+                  "type": "number",
+                  "optional": true
+                },
+                "aria-valuetext": {
+                  "type": "string",
+                  "optional": true
+                },
+                "children": {
+                  "type": "React.ReactNode",
+                  "optional": true
+                },
+                "dangerouslySetInnerHTML": {
+                  "type": "{ __html: string | TrustedHTML; }",
+                  "optional": true
+                },
+                "onCopy": {
+                  "type": "React.ClipboardEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onCopyCapture": {
+                  "type": "React.ClipboardEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onCut": {
+                  "type": "React.ClipboardEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onCutCapture": {
+                  "type": "React.ClipboardEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onPaste": {
+                  "type": "React.ClipboardEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onPasteCapture": {
+                  "type": "React.ClipboardEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onCompositionEnd": {
+                  "type": "React.CompositionEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onCompositionEndCapture": {
+                  "type": "React.CompositionEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onCompositionStart": {
+                  "type": "React.CompositionEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onCompositionStartCapture": {
+                  "type": "React.CompositionEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onCompositionUpdate": {
+                  "type": "React.CompositionEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onCompositionUpdateCapture": {
+                  "type": "React.CompositionEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onFocus": {
+                  "type": "React.FocusEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onFocusCapture": {
+                  "type": "React.FocusEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onBlur": {
+                  "type": "React.FocusEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onBlurCapture": {
+                  "type": "React.FocusEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onChange": {
+                  "type": "React.FormEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onChangeCapture": {
+                  "type": "React.FormEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onBeforeInput": {
+                  "type": "React.InputEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onBeforeInputCapture": {
+                  "type": "React.FormEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onInput": {
+                  "type": "React.FormEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onInputCapture": {
+                  "type": "React.FormEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onReset": {
+                  "type": "React.FormEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onResetCapture": {
+                  "type": "React.FormEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onSubmit": {
+                  "type": "React.FormEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onSubmitCapture": {
+                  "type": "React.FormEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onInvalid": {
+                  "type": "React.FormEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onInvalidCapture": {
+                  "type": "React.FormEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onLoad": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onLoadCapture": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onError": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onErrorCapture": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onKeyDown": {
+                  "type": "React.KeyboardEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onKeyDownCapture": {
+                  "type": "React.KeyboardEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onKeyPress": {
+                  "type": "React.KeyboardEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onKeyPressCapture": {
+                  "type": "React.KeyboardEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onKeyUp": {
+                  "type": "React.KeyboardEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onKeyUpCapture": {
+                  "type": "React.KeyboardEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onAbort": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onAbortCapture": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onCanPlay": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onCanPlayCapture": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onCanPlayThrough": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onCanPlayThroughCapture": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onDurationChange": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onDurationChangeCapture": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onEmptied": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onEmptiedCapture": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onEncrypted": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onEncryptedCapture": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onEnded": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onEndedCapture": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onLoadedData": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onLoadedDataCapture": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onLoadedMetadata": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onLoadedMetadataCapture": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onLoadStart": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onLoadStartCapture": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onPause": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onPauseCapture": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onPlay": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onPlayCapture": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onPlaying": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onPlayingCapture": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onProgress": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onProgressCapture": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onRateChange": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onRateChangeCapture": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onSeeked": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onSeekedCapture": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onSeeking": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onSeekingCapture": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onStalled": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onStalledCapture": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onSuspend": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onSuspendCapture": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onTimeUpdate": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onTimeUpdateCapture": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onVolumeChange": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onVolumeChangeCapture": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onWaiting": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onWaitingCapture": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onAuxClick": {
+                  "type": "React.MouseEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onAuxClickCapture": {
+                  "type": "React.MouseEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onClick": {
+                  "type": "React.MouseEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onClickCapture": {
+                  "type": "React.MouseEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onContextMenu": {
+                  "type": "React.MouseEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onContextMenuCapture": {
+                  "type": "React.MouseEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onDoubleClick": {
+                  "type": "React.MouseEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onDoubleClickCapture": {
+                  "type": "React.MouseEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onDrag": {
+                  "type": "React.DragEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onDragCapture": {
+                  "type": "React.DragEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onDragEnd": {
+                  "type": "React.DragEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onDragEndCapture": {
+                  "type": "React.DragEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onDragEnter": {
+                  "type": "React.DragEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onDragEnterCapture": {
+                  "type": "React.DragEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onDragExit": {
+                  "type": "React.DragEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onDragExitCapture": {
+                  "type": "React.DragEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onDragLeave": {
+                  "type": "React.DragEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onDragLeaveCapture": {
+                  "type": "React.DragEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onDragOver": {
+                  "type": "React.DragEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onDragOverCapture": {
+                  "type": "React.DragEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onDragStart": {
+                  "type": "React.DragEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onDragStartCapture": {
+                  "type": "React.DragEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onDrop": {
+                  "type": "React.DragEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onDropCapture": {
+                  "type": "React.DragEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onMouseDown": {
+                  "type": "React.MouseEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onMouseDownCapture": {
+                  "type": "React.MouseEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onMouseEnter": {
+                  "type": "React.MouseEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onMouseLeave": {
+                  "type": "React.MouseEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onMouseMove": {
+                  "type": "React.MouseEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onMouseMoveCapture": {
+                  "type": "React.MouseEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onMouseOut": {
+                  "type": "React.MouseEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onMouseOutCapture": {
+                  "type": "React.MouseEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onMouseOver": {
+                  "type": "React.MouseEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onMouseOverCapture": {
+                  "type": "React.MouseEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onMouseUp": {
+                  "type": "React.MouseEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onMouseUpCapture": {
+                  "type": "React.MouseEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onSelect": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onSelectCapture": {
+                  "type": "React.ReactEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onTouchCancel": {
+                  "type": "React.TouchEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onTouchCancelCapture": {
+                  "type": "React.TouchEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onTouchEnd": {
+                  "type": "React.TouchEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onTouchEndCapture": {
+                  "type": "React.TouchEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onTouchMove": {
+                  "type": "React.TouchEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onTouchMoveCapture": {
+                  "type": "React.TouchEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onTouchStart": {
+                  "type": "React.TouchEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onTouchStartCapture": {
+                  "type": "React.TouchEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onPointerDown": {
+                  "type": "React.PointerEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onPointerDownCapture": {
+                  "type": "React.PointerEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onPointerMove": {
+                  "type": "React.PointerEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onPointerMoveCapture": {
+                  "type": "React.PointerEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onPointerUp": {
+                  "type": "React.PointerEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onPointerUpCapture": {
+                  "type": "React.PointerEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onPointerCancel": {
+                  "type": "React.PointerEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onPointerCancelCapture": {
+                  "type": "React.PointerEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onPointerEnter": {
+                  "type": "React.PointerEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onPointerLeave": {
+                  "type": "React.PointerEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onPointerOver": {
+                  "type": "React.PointerEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onPointerOverCapture": {
+                  "type": "React.PointerEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onPointerOut": {
+                  "type": "React.PointerEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onPointerOutCapture": {
+                  "type": "React.PointerEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onGotPointerCapture": {
+                  "type": "React.PointerEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onGotPointerCaptureCapture": {
+                  "type": "React.PointerEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onLostPointerCapture": {
+                  "type": "React.PointerEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onLostPointerCaptureCapture": {
+                  "type": "React.PointerEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onScroll": {
+                  "type": "React.UIEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onScrollCapture": {
+                  "type": "React.UIEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onScrollEnd": {
+                  "type": "React.UIEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onScrollEndCapture": {
+                  "type": "React.UIEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onWheel": {
+                  "type": "React.WheelEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onWheelCapture": {
+                  "type": "React.WheelEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onAnimationStart": {
+                  "type": "React.AnimationEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onAnimationStartCapture": {
+                  "type": "React.AnimationEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onAnimationEnd": {
+                  "type": "React.AnimationEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onAnimationEndCapture": {
+                  "type": "React.AnimationEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onAnimationIteration": {
+                  "type": "React.AnimationEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onAnimationIterationCapture": {
+                  "type": "React.AnimationEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onToggle": {
+                  "type": "React.ToggleEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onBeforeToggle": {
+                  "type": "React.ToggleEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onTransitionCancel": {
+                  "type": "React.TransitionEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onTransitionCancelCapture": {
+                  "type": "React.TransitionEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onTransitionEnd": {
+                  "type": "React.TransitionEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onTransitionEndCapture": {
+                  "type": "React.TransitionEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onTransitionRun": {
+                  "type": "React.TransitionEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onTransitionRunCapture": {
+                  "type": "React.TransitionEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onTransitionStart": {
+                  "type": "React.TransitionEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "onTransitionStartCapture": {
+                  "type": "React.TransitionEventHandler<HTMLElement>",
+                  "optional": true
+                },
+                "classNames": {
+                  "type": "{ heading?: string; trigger?: RenderPropsClassName<ButtonRenderProps>; }",
+                  "optional": true
+                }
+              },
+              "emits": {}
+            },
+            "semanticHash": "uif:c6ddcd72758a80c4cdd3bc28",
+            "fileHash": "uif:a0808c9a0d31b93c62ca4adf"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport type { ComponentPropsWithRef, RefAttributes } from 'react';\nimport type {\n  ButtonRenderProps,\n  DisclosureGroupProps,\n  DisclosurePanelProps,\n  DisclosureProps,\n  Heading,\n} from 'react-aria-components';\nimport type { RenderPropsClassName } from '@/lib/types';\n\nexport type AccordionStyleVariants = {\n  variant?: 'compact' | 'cozy';\n};\n\nexport type AccordionGroupProps = DisclosureGroupProps &\n  AccordionStyleVariants &\n  RefAttributes<HTMLDivElement>;\n\nexport type AccordionProps = DisclosureProps &\n  AccordionStyleVariants &\n  RefAttributes<HTMLDivElement>;\n\nexport type AccordionHeaderProps = ComponentPropsWithRef<'header'>;\n\nexport type AccordionTriggerProps = Omit<\n  ComponentPropsWithRef<typeof Heading>,\n  'className'\n> & {\n  classNames?: {\n    heading?: string;\n    trigger?: RenderPropsClassName<ButtonRenderProps>;\n  };\n};\n\nexport type AccordionPanelProps = DisclosurePanelProps &\n  RefAttributes<HTMLDivElement>;\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  }
+]

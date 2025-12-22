@@ -1,0 +1,297 @@
+[
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "1/4",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/text-field/context.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.981Z",
+    "bundleHash": "uifb:2d9e758f0febc86d7cf046a0",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/text-field/context.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/text-field/context.tsx",
+            "description": "context - Presentational component",
+            "version": {
+              "variables": ["TextFieldContext"],
+              "hooks": [],
+              "components": ["TextFieldContext.Provider"],
+              "functions": ["TextFieldProvider"],
+              "imports": [
+                "./types",
+                "@/lib/types",
+                "client-only",
+                "react",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": {
+              "named": ["TextFieldContext", "TextFieldProvider"]
+            },
+            "semanticHash": "uif:2b5a8819f0ece4797cba41b2",
+            "fileHash": "uif:789833c8c64fd5704f1801e4"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport type { ProviderProps } from '@/lib/types';\nimport 'client-only';\nimport { createContext } from 'react';\nimport type { ContextValue } from 'react-aria-components';\nimport type { TextFieldProps } from './types';\n\nexport const TextFieldContext =\n  createContext<ContextValue<TextFieldProps, HTMLDivElement>>(null);\n\nexport function TextFieldProvider({\n  children,\n  ...props\n}: ProviderProps<TextFieldProps>) {\n  return (\n    <TextFieldContext.Provider value={props}>\n      {children}\n    </TextFieldContext.Provider>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "TextFieldContext.Provider",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/text-field/context.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "2/4",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/text-field/index.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.994Z",
+    "bundleHash": "uifb:eb6b63207653c06c0546d2fd",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/text-field/index.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/text-field/index.tsx",
+            "description": "index - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": ["useContextProps"],
+              "components": [
+                "AriaTextField",
+                "FieldError",
+                "Input",
+                "Label",
+                "Text"
+              ],
+              "functions": ["TextField"],
+              "imports": [
+                "../input",
+                "../label",
+                "./context",
+                "./styles.module.css",
+                "./types",
+                "@accelint/design-foundation/lib/utils",
+                "client-only",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [".description", ".error", ".field", ".input"],
+                  "properties": []
+                }
+              }
+            },
+            "semanticHash": "uif:b0ce3255128f8590ebd35f50",
+            "fileHash": "uif:5446e27c5207daf8bc6b39df"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport 'client-only';\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport {\n  TextField as AriaTextField,\n  composeRenderProps,\n  FieldError,\n  Text,\n  useContextProps,\n} from 'react-aria-components';\nimport { Input } from '../input';\nimport { Label } from '../label';\nimport { TextFieldContext } from './context';\nimport styles from './styles.module.css';\nimport type { TextFieldProps } from './types';\n\n/**\n * TextField - A complete form field component with label, input, and validation\n *\n * Provides a comprehensive form field experience combining label, input, description,\n * and error message components. Handles validation states and accessibility\n * automatically while supporting extensive customization through styling props.\n *\n * @example\n * // Basic text field with label and required validation\n * <TextField label='Full Name' isRequired defaultValue='John Doe' />\n *\n * @example\n * // Text field with placeholder and description\n * <TextField\n *   label='Email Address'\n *   inputProps={{ placeholder: 'Enter your email address', type: 'email' }}\n *   description='We will never share your email with third parties'\n * />\n *\n * @example\n * // Text field with prefix for currency\n * <TextField\n *   label='Price'\n *   inputProps={{ placeholder: '0.00', type: 'number', prefix: '$' }}\n *   description='Enter the price in dollars'\n * />\n *\n * @example\n * // Text field with suffix for units\n * <TextField\n *   label='Weight'\n *   inputProps={{ placeholder: '0', type: 'number', suffix: 'kg' }}\n *   description='Enter the weight in kilograms'\n * />\n *\n * @example\n * // Text field with both prefix and suffix\n * <TextField\n *   label='Temperature'\n *   inputProps={{ placeholder: '0', type: 'number', prefix: '~', suffix: '°C' }}\n *   description='Approximate temperature in Celsius'\n * />\n *\n * @example\n * // Text field with error state\n * <TextField\n *   label='Username'\n *   isInvalid\n *   errorMessage='Username must be at least 3 characters long'\n *   inputProps={{ placeholder: 'Enter username' }}\n * />\n *\n * @example\n * // Small size text field with clearable input\n * <TextField\n *   label='Search'\n *   size='small'\n *   inputProps={{\n *     placeholder: 'Type to search...',\n *     isClearable: true,\n *     type: 'search'\n *   }}\n * />\n *\n * @example\n * // Disabled text field\n * <TextField\n *   label='Status'\n *   isDisabled\n *   defaultValue='Inactive'\n *   description='This field cannot be edited'\n * />\n *\n * @example\n * // Password field with validation\n * <TextField\n *   label='Password'\n *   isRequired\n *   inputProps={{\n *     type: 'password',\n *     placeholder: 'Enter a secure password',\n *     minLength: 8\n *   }}\n *   description='Password must be at least 8 characters'\n * />\n */\nexport function TextField({ ref, ...props }: TextFieldProps) {\n  [props, ref] = useContextProps(props, ref ?? null, TextFieldContext);\n\n  const {\n    classNames,\n    description: descriptionProp,\n    errorMessage: errorMessageProp,\n    inputProps,\n    label: labelProp,\n    size = 'medium',\n    isInvalid: isInvalidProp,\n    ...rest\n  } = props;\n  const errorMessage = errorMessageProp || null; // Protect against empty string\n  const isSmall = size === 'small';\n\n  return (\n    <AriaTextField\n      {...rest}\n      aria-label={labelProp}\n      ref={ref}\n      className={composeRenderProps(classNames?.field, (className) =>\n        clsx('group/text-field', styles.field, className),\n      )}\n      isInvalid={isInvalidProp || (errorMessage ? true : undefined)} // Leave uncontrolled if possible to fallback to validation state\n      data-size={size}\n    >\n      {(\n        { isDisabled, isInvalid, isRequired }, // Rely on internal state, not props, since state could differ from props\n      ) => (\n        <>\n          {!!labelProp && !isSmall && (\n            <Label\n              className={clsx(styles.label, classNames?.label)}\n              isDisabled={isDisabled}\n              isRequired={isRequired}\n            >\n              {labelProp}\n            </Label>\n          )}\n          <Input\n            {...inputProps}\n            classNames={{\n              ...classNames?.input,\n              sizer: clsx(styles.input, classNames?.input?.sizer),\n            }}\n            disabled={isDisabled}\n            required={isRequired}\n            size={size}\n            isInvalid={isInvalid}\n          />\n          {!!descriptionProp && !(isSmall || isInvalid) && (\n            <Text\n              slot='description'\n              className={clsx(styles.description, classNames?.description)}\n            >\n              {descriptionProp}\n            </Text>\n          )}\n          <FieldError\n            className={composeRenderProps(classNames?.error, (className) =>\n              clsx(styles.error, className),\n            )}\n          >\n            {errorMessage}\n          </FieldError>\n        </>\n      )}\n    </AriaTextField>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "AriaTextField",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/text-field/index.tsx"
+        },
+        {
+          "name": "FieldError",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/text-field/index.tsx"
+        },
+        {
+          "name": "Input",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/text-field/index.tsx"
+        },
+        {
+          "name": "Label",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/text-field/index.tsx"
+        },
+        {
+          "name": "Text",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/text-field/index.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "3/4",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/text-field/text-field.stories.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.994Z",
+    "bundleHash": "uifb:c97f9ef56813478be22774a6",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/text-field/text-field.stories.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/text-field/text-field.stories.tsx",
+            "description": "text-field.stories - TypeScript module",
+            "version": {
+              "variables": [
+                "Default",
+                "WithPrefix",
+                "WithPrefixAndSuffix",
+                "WithSuffix",
+                "meta"
+              ],
+              "hooks": [],
+              "components": [],
+              "functions": [],
+              "imports": ["./", "@storybook/react-vite"]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": {
+              "named": [
+                "Default",
+                "WithPrefix",
+                "WithPrefixAndSuffix",
+                "WithSuffix"
+              ]
+            },
+            "semanticHash": "uif:c33bd0a384747859214d4f10",
+            "fileHash": "uif:2429a923c39a4f7884314c0f"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport { TextField } from './';\nimport type { Meta, StoryObj } from '@storybook/react-vite';\n\nconst meta = {\n  title: 'Components/TextField',\n  component: TextField,\n  args: {\n    label: 'Label',\n    inputProps: {\n      placeholder: 'Placeholder',\n      type: 'text',\n      isClearable: true,\n    },\n    description: 'Helper text',\n    errorMessage: '',\n    size: 'medium',\n    isDisabled: false,\n    isInvalid: false,\n    isRequired: true,\n  },\n  argTypes: {\n    size: {\n      control: 'select',\n      options: ['medium', 'small'],\n    },\n  },\n} satisfies Meta<typeof TextField>;\n\nexport default meta;\ntype Story = StoryObj<typeof meta>;\n\nexport const Default: Story = {\n  render: TextField,\n};\n\nexport const WithPrefix: Story = {\n  args: {\n    label: 'Price',\n    inputProps: {\n      placeholder: '0.00',\n      type: 'number',\n      prefix: '$',\n    },\n    description: 'Enter the price in dollars',\n  },\n};\n\nexport const WithSuffix: Story = {\n  args: {\n    label: 'Weight',\n    inputProps: {\n      placeholder: '0',\n      type: 'number',\n      suffix: 'kg',\n    },\n    description: 'Enter the weight in kilograms',\n  },\n};\n\nexport const WithPrefixAndSuffix: Story = {\n  args: {\n    label: 'Temperature Range',\n    inputProps: {\n      placeholder: '0',\n      type: 'number',\n      prefix: '~',\n      suffix: '°C',\n    },\n    description: 'Approximate temperature in Celsius',\n  },\n};\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "4/4",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/text-field/types.ts",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.994Z",
+    "bundleHash": "uifb:6d163bff4a43d352e1a839b7",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/text-field/types.ts",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/text-field/types.ts",
+            "description": "types - Type definitions",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": [],
+              "functions": [],
+              "imports": [
+                "../input/types",
+                "../label/types",
+                "react",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {
+                "ref": {
+                  "type": "React.Ref<HTMLDivElement>",
+                  "optional": true
+                },
+                "key": {
+                  "type": "React.Key",
+                  "optional": true
+                },
+                "classNames": {
+                  "type": "{ field?: AriaTextFieldProps; label?: any; input?: { container?: string; sizer?: string; input?: AriaInputProps; clear?: any; prefix?: string; suffix?: string; }; description?: string; error?: FieldErrorProps; }",
+                  "optional": true
+                },
+                "label": {
+                  "type": "string",
+                  "optional": true
+                },
+                "inputProps": {
+                  "type": "import(\"/Users/brandonpierce/Projects/standard-toolkit/packages/design-toolkit/src/components/input/types\").InputProps",
+                  "optional": true
+                },
+                "description": {
+                  "type": "string",
+                  "optional": true
+                },
+                "errorMessage": {
+                  "type": "string",
+                  "optional": true
+                },
+                "size": {
+                  "type": "literal-union",
+                  "literals": ["medium", "small"],
+                  "optional": true
+                }
+              },
+              "emits": {}
+            },
+            "semanticHash": "uif:f2ca1fdac198192fb5d9eacf",
+            "fileHash": "uif:739839c804a268edcb8b2de4"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport type { RefAttributes } from 'react';\nimport type {\n  TextFieldProps as AriaTextFieldProps,\n  FieldErrorProps,\n} from 'react-aria-components';\nimport type { InputProps } from '../input/types';\nimport type { LabelProps } from '../label/types';\n\nexport type TextFieldProps = Omit<\n  AriaTextFieldProps,\n  'children' | 'className' | 'type' | 'pattern'\n> &\n  RefAttributes<HTMLDivElement> & {\n    classNames?: {\n      field?: AriaTextFieldProps['className'];\n      label?: LabelProps['className'];\n      input?: InputProps['classNames'];\n      description?: string;\n      error?: FieldErrorProps['className'];\n    };\n    label?: string;\n    inputProps?: InputProps;\n    description?: string;\n    errorMessage?: string;\n    size?: 'medium' | 'small';\n  };\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  }
+]
