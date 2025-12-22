@@ -28,12 +28,11 @@ import { BASE_MAP_STYLE, DEFAULT_VIEW_STATE, PARAMETERS } from './constants';
 import { MapControls } from './controls';
 import { MapEvents } from './events';
 import { MapProvider } from './provider';
-import type { UniqueId } from '@accelint/core';
 import type { PickingInfo, ViewStateChangeParameters } from '@deck.gl/core';
-import type { DeckglProps } from '@deckgl-fiber-renderer/types';
 import type { IControl } from 'maplibre-gl';
 import type { MjolnirGestureEvent, MjolnirPointerEvent } from 'mjolnir.js';
 import type {
+  BaseMapProps,
   MapClickEvent,
   MapHoverEvent,
   MapViewportEvent,
@@ -106,35 +105,6 @@ function serializeMjolnirEvent(
 
   return rest;
 }
-
-/**
- * Props for the BaseMap component.
- * Extends all Deck.gl props and adds additional map-specific properties.
- */
-export type BaseMapProps = DeckglProps & {
-  /** Optional CSS class name to apply to the map container element */
-  className?: string;
-  /**
-   * Whether to enable listening for map control events (pan/zoom enable/disable).
-   * When true, the map will respond to control events emitted via the event bus.
-   * @default true
-   */
-  enableControlEvents?: boolean;
-  /**
-   * Unique identifier for this map instance (required).
-   *
-   * Used to isolate map mode state between multiple map instances (e.g., main map vs minimap).
-   * This should be a UUID generated using `uuid()` from `@accelint/core`.
-   *
-   * The same id should be passed to `useMapMode()` when accessing map mode state
-   * from components rendered outside of the BaseMap's children (i.e., as siblings).
-   */
-  id: UniqueId;
-  /**
-   * Default view for the map: '2D', '2.5D', or '3D'. Defaults to '2D'.
-   */
-  defaultView?: '2D' | '2.5D' | '3D';
-};
 
 function AddDeckglControl() {
   const deckglInstance = useDeckgl();
@@ -227,7 +197,7 @@ export function BaseMap({
   useDevicePixels = false,
   widgets: widgetsProp = [],
   defaultView = '2D',
-  initialViewState,
+  viewState: viewStateProps,
   onClick,
   onHover,
   onViewStateChange,
@@ -241,9 +211,9 @@ export function BaseMap({
     instanceId: id,
     initialCameraState: {
       view: defaultView,
-      zoom: initialViewState?.zoom ?? DEFAULT_VIEW_STATE.zoom,
-      latitude: initialViewState?.latitude ?? DEFAULT_VIEW_STATE.latitude,
-      longitude: initialViewState?.longitude ?? DEFAULT_VIEW_STATE.longitude,
+      zoom: viewStateProps?.zoom ?? DEFAULT_VIEW_STATE.zoom,
+      latitude: viewStateProps?.latitude ?? DEFAULT_VIEW_STATE.latitude,
+      longitude: viewStateProps?.longitude ?? DEFAULT_VIEW_STATE.longitude,
     },
   });
 
@@ -375,7 +345,6 @@ export function BaseMap({
         >
           <Deckgl
             {...rest}
-            initialViewState={initialViewState}
             interleaved={interleaved}
             getCursor={handleGetCursor}
             useDevicePixels={useDevicePixels}
