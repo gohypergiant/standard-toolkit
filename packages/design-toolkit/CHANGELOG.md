@@ -1,5 +1,15 @@
 # @accelint/design-toolkit
 
+## 9.1.0
+### Minor Changes
+
+- 4199d27: Added the stacked and inline variants to the CoordinateField component. It defaults to the inline variant.
+- 1ddcadf: Ensure proper resolution of RAC dependencies for library and consumers.
+
+### Patch Changes
+
+- f99db0b: Fixed an issue with SearchField where the container stretches vertically within a flex parent container
+
 ## 9.0.0
 ### Major Changes
 
