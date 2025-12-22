@@ -12,15 +12,20 @@
 
 'use client';
 
-import 'client-only';
+import type { UniqueId } from '@accelint/core';
 import { Cancel } from '@accelint/icons';
+import 'client-only';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { DrawerTrigger } from './trigger';
 
-export function DrawerClose() {
+export type DrawerCloseProps = {
+  id: UniqueId;
+};
+
+export function DrawerClose({ id }: DrawerCloseProps) {
   return (
-    <DrawerTrigger for='close'>
+    <DrawerTrigger for={`close:${id}`}>
       <Button variant='icon'>
         <Icon>
           <Cancel />

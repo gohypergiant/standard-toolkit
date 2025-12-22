@@ -10,6 +10,8 @@
  * governing permissions and limitations under the License.
  */
 import { uuid } from '@accelint/core';
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { ComponentProps } from 'react';
 import { Button } from '../button';
 import { Drawer } from './';
 import { DrawerClose } from './close';
@@ -23,10 +25,8 @@ import { DrawerMenu } from './menu';
 import { DrawerMenuItem } from './menu-item';
 import { DrawerPanel } from './panel';
 import { DrawerTrigger } from './trigger';
-import { DrawerView } from './view';
-import type { Meta, StoryObj } from '@storybook/react-vite';
-import type { ComponentProps } from 'react';
 import type { DrawerMenuProps, DrawerProps } from './types';
+import { DrawerView } from './view';
 
 // TODO: more work is needed to clean up the types for easier adoption of Storybook patterns
 // this story has a mix of controls from different components
@@ -95,7 +95,8 @@ export const StaticHeaderFooter: Story = {
             <DrawerPanel>
               <DrawerHeader>
                 <DrawerHeaderTitle>Title</DrawerHeaderTitle>
-                <DrawerClose />
+                {/* TODO: We need to account for static.. */}
+                <DrawerClose id={ids.a} />
               </DrawerHeader>
               <DrawerContent>
                 <DrawerView id={ids.a}>View A</DrawerView>
@@ -180,7 +181,7 @@ export const OpenCloseTrigger: Story = {
               <DrawerView id={ids.a}>
                 <DrawerHeader>
                   <DrawerHeaderTitle>Title A</DrawerHeaderTitle>
-                  <DrawerClose />
+                  <DrawerClose id={ids.a} />
                 </DrawerHeader>
                 <DrawerContent>Content A</DrawerContent>
                 <DrawerFooter>Footer A</DrawerFooter>

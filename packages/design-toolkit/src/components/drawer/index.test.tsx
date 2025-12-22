@@ -13,6 +13,7 @@
 import { uuid } from '@accelint/core';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import type { ReactNode } from 'react';
 import { describe, expect, it } from 'vitest';
 import { Button } from '../button';
 import { Drawer } from './';
@@ -24,9 +25,8 @@ import { DrawerMenu } from './menu';
 import { DrawerMenuItem } from './menu-item';
 import { DrawerPanel } from './panel';
 import { DrawerTrigger } from './trigger';
-import { DrawerView } from './view';
-import type { ReactNode } from 'react';
 import type { DrawerProps } from './types';
+import { DrawerView } from './view';
 
 const ids = {
   drawer: uuid(),
@@ -92,7 +92,7 @@ function setup(
         <DrawerPanel>
           <DrawerHeader>
             <DrawerHeaderTitle>Title</DrawerHeaderTitle>
-            <DrawerTrigger for='close'>
+            <DrawerTrigger for={`close:${ids.a}`}>
               <Button>Close</Button>
             </DrawerTrigger>
           </DrawerHeader>

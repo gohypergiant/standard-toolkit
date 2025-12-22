@@ -11,9 +11,9 @@
  */
 'use client';
 
-import 'client-only';
 import { isUUID, type UniqueId } from '@accelint/core';
 import { Pressable } from '@react-aria/interactions';
+import 'client-only';
 import { useContext } from 'react';
 import { ViewStackContext } from '../view-stack/context';
 import { useDrawerEmit } from './context';
@@ -22,7 +22,7 @@ import type { DrawerTriggerProps } from './types';
 export function DrawerTrigger({ for: events, ...rest }: DrawerTriggerProps) {
   const { parent } = useContext(ViewStackContext);
   const drawerEmit = useDrawerEmit();
-
+  console.log(events);
   function handlePress() {
     for (const type of Array.isArray(events) ? events : [events]) {
       let [event, id] = (isUUID(type) ? ['push', type] : type.split(':')) as [
