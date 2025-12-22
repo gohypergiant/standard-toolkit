@@ -15,7 +15,7 @@
 @layer components.l1 {
   .container {
     --length: attr(data-length type(<number>), 0);
-    @apply gap-m rounded-medium px-s py-xs font-display outline-interactive grid items-center outline;
+    @apply gap-s rounded-medium px-s py-xs font-display outline-interactive grid items-center outline;
     grid-template-areas: 'input clear';
     grid-template-columns: 1fr min-content;
 
