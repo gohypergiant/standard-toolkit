@@ -47,6 +47,36 @@ Stop and validate at these moments:
 - When something feels wrong
 - Before declaring "done"
 
+## Conversation Style
+
+- Answer questions directly without editing code
+- Criticize ideas constructively; ask clarifying questions
+- No compliments, apologies, or filler phrases ("You're right", "Let me explain")
+- Get to the point immediately
+
+## Working Memory
+
+When context gets long:
+
+1. Re-read this AGENTS.md file
+2. Summarize progress in PROGRESS.md
+3. Document current state before major changes
+
+Maintain TODO.md structure:
+
+```markdown
+## Current Task
+<what you're working on>
+
+## Completed
+- [x] Task 1
+- [x] Task 2
+
+## Next Steps
+- [ ] Task 3
+- [ ] Task 4
+```
+
 ## Git Instructions
 
 - Commits should follow the conventional commit format: https://www.conventionalcommits.org/en/v1.0.0/#specification
