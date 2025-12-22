@@ -44,7 +44,9 @@
       "cache": false,
       "dependsOn": ["license"]
     },
-    "context": {},
+    "context": {
+      "dependsOn": ["index"]
+    },
     "bench": {
       "dependsOn": ["^build"]
     }
