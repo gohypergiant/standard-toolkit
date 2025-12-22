@@ -21,7 +21,7 @@ import type { DeckglProps } from '@deckgl-fiber-renderer/types';
  * Props for the BaseMap component.
  * Extends all Deck.gl props and adds additional map-specific properties.
  */
-export type BaseMapProps = Omit<DeckglProps, 'initialViewState'> & {
+export type BaseMapProps = DeckglProps & {
   /** Optional CSS class name to apply to the map container element */
   className?: string;
   /**

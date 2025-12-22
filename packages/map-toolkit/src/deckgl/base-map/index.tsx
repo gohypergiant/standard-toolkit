@@ -197,7 +197,7 @@ export function BaseMap({
   useDevicePixels = false,
   widgets: widgetsProp = [],
   defaultView = '2D',
-  viewState: viewStateProps,
+  initialViewState,
   onClick,
   onHover,
   onViewStateChange,
@@ -211,9 +211,9 @@ export function BaseMap({
     instanceId: id,
     initialCameraState: {
       view: defaultView,
-      zoom: viewStateProps?.zoom ?? DEFAULT_VIEW_STATE.zoom,
-      latitude: viewStateProps?.latitude ?? DEFAULT_VIEW_STATE.latitude,
-      longitude: viewStateProps?.longitude ?? DEFAULT_VIEW_STATE.longitude,
+      zoom: initialViewState?.zoom ?? DEFAULT_VIEW_STATE.zoom,
+      latitude: initialViewState?.latitude ?? DEFAULT_VIEW_STATE.latitude,
+      longitude: initialViewState?.longitude ?? DEFAULT_VIEW_STATE.longitude,
     },
   });
 
