@@ -95,8 +95,7 @@ export const StaticHeaderFooter: Story = {
             <DrawerPanel>
               <DrawerHeader>
                 <DrawerHeaderTitle>Title</DrawerHeaderTitle>
-                {/* TODO: We need to account for static.. */}
-                <DrawerClose id={ids.a} />
+                <DrawerClose />
               </DrawerHeader>
               <DrawerContent>
                 <DrawerView id={ids.a}>View A</DrawerView>

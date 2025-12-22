@@ -17,7 +17,10 @@ import {
   ChevronUp,
   Placeholder,
 } from '@accelint/icons';
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { CSSProperties } from 'react';
 import { Drawer } from './';
+import { DrawerClose } from './close';
 import { DrawerContent } from './content';
 import { DrawerHeader } from './header';
 import { DrawerHeaderTitle } from './header-title';
@@ -26,10 +29,8 @@ import { DrawerLayoutMain } from './layout-main';
 import { DrawerMenu } from './menu';
 import { DrawerMenuItem } from './menu-item';
 import { DrawerPanel } from './panel';
-import { DrawerView } from './view';
-import type { Meta, StoryObj } from '@storybook/react-vite';
-import type { CSSProperties } from 'react';
 import type { DrawerLayoutProps } from './types';
+import { DrawerView } from './view';
 
 const ids = {
   top: {
@@ -149,6 +150,7 @@ export const Default: StoryObj<typeof meta> = {
           <DrawerPanel>
             <DrawerHeader>
               <DrawerHeaderTitle>Top</DrawerHeaderTitle>
+              <DrawerClose />
             </DrawerHeader>
             <DrawerContent>
               {Object.entries(ids.top.views).map(([_, id]) => (
@@ -181,6 +183,7 @@ export const Default: StoryObj<typeof meta> = {
           <DrawerPanel>
             <DrawerHeader>
               <DrawerHeaderTitle>Bottom</DrawerHeaderTitle>
+              <DrawerClose />
             </DrawerHeader>
             <DrawerContent>
               {Object.entries(ids.bottom.views).map(([_, id]) => (
@@ -213,6 +216,7 @@ export const Default: StoryObj<typeof meta> = {
           <DrawerPanel>
             <DrawerHeader>
               <DrawerHeaderTitle>Left</DrawerHeaderTitle>
+              <DrawerClose />
             </DrawerHeader>
             <DrawerContent>
               {Object.entries(ids.left.views).map(([_, id]) => (
@@ -245,6 +249,7 @@ export const Default: StoryObj<typeof meta> = {
           <DrawerPanel>
             <DrawerHeader>
               <DrawerHeaderTitle>Right</DrawerHeaderTitle>
+              <DrawerClose />
             </DrawerHeader>
             <DrawerContent>
               {Object.entries(ids.right.views).map(([_, id]) => (

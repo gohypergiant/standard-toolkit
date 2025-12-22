@@ -22,7 +22,7 @@ import type { DrawerTriggerProps } from './types';
 export function DrawerTrigger({ for: events, ...rest }: DrawerTriggerProps) {
   const { parent } = useContext(ViewStackContext);
   const drawerEmit = useDrawerEmit();
-  console.log(events);
+
   function handlePress() {
     for (const type of Array.isArray(events) ? events : [events]) {
       let [event, id] = (isUUID(type) ? ['push', type] : type.split(':')) as [
