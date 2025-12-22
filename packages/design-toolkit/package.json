@@ -413,7 +413,7 @@
     "format:biome": "pnpm biome format . --write --verbose",
     "format:biome:check": "pnpm biome format . --verbose",
     "format:check": "pnpm format:biome:check && pnpm format:prettier:check",
-    "format:prettier": "pnpm prettier --write './**/*.css'",
+    "format:prettier": "pnpm prettier --write ./**/*.css",
     "format:prettier:check": "pnpm prettier --check './**/*.css'",
     "index": "pnpm zx ../../scripts/indexer.mjs packages/design-toolkit",
     "license": "pnpm zx ../../scripts/license.mjs",
