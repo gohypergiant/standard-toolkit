@@ -1,25 +1,57 @@
 # Agent Guidelines
 
-## When using Design Toolkit
+Build production-quality, safety-critical code. This document defines the coding philosophy, workflow, and standards for this repository. When in doubt, use the documented patterns and follow the rules strictly.
 
-1. Read the [AI Assistant Guide](./0.outline.md) and linked pages first.
-2. Build production-quality, safety-critical code. This repository prioritizes **safety, performance, and developer experience**—in that order.
-3. Only use icons from `@accelint/icons`.
-4. Prefer deep path imports e.g. `import { Button } from '@accelint/components/button';`. You can find these in the `package.json` `exports` field in every workspace package.
-5. Check component props via typescript definitions (`package.json#types`) and examples via Storybook (`**/**.docs.mdx`) documentation before using.
+Read the [AI Assistant Guide](./0.outline.md) and all linked pages before proceeding.
 
-## Git instructions
+## Philosophy
+
+**HyperStyle** prioritizes **safety, performance, and developer experience**—in that order. We build software for critical systems where correctness is non-negotiable. Zero technical debt: do it right the first time.
+
+> Simplicity is the prerequisite for reliability.  
+> — Edsger W. Dijkstra
+
+## Conversation Style
+
+- Answer questions directly without editing code
+- Criticize ideas constructively; ask clarifying questions
+- No compliments, apologies, or filler phrases ("You're right", "Let me explain")
+- Get to the point immediately
+
+## Workflow: Research → Plan → Implement
+
+Follow this sequence for every task:
+
+1. **Research**: Explore the codebase, understand existing patterns
+2. **Plan**: Create a detailed implementation plan; verify with the user
+3. **Implement**: Execute with validation checkpoints
+
+Say: "Let me research the codebase and create a plan before implementing."
+
+For complex architectural decisions, use **ultrathink**: "Let me ultrathink about this architecture before proposing a solution."
+
+### When Stuck
+
+1. **Stop** — Don't spiral into complex solutions
+2. **Delegate** — Spawn agents for parallel investigation
+3. **Ultrathink** — Engage maximum reasoning capacity
+4. **Simplify** — The simple solution is usually correct
+5. **Ask** — "I see two approaches: [A] vs [B]. Which do you prefer?"
+
+### Reality Checkpoints
+
+Stop and validate at these moments:
+
+- After implementing a complete feature
+- Before starting a new major component
+- When something feels wrong
+- Before declaring "done"
+
+## Git Instructions
 
 - Commits should follow the conventional commit format: https://www.conventionalcommits.org/en/v1.0.0/#specification
 
-## PR instructions
+## Pull Request Instructions
 
 - Title format: <fix|feat|build|chore|ci|docs|style|refactor|perf|test>: <short description>
 - Always run `pnpm run build`, `pnpm run test`, `pnpm run lint`, and `pnpm run format` before committing.
-
----
-
-Use this quote as a guiding principle for design:
-
-> Simplicity is the prerequisite for reliability.
-> — Edsger W. Dijkstra
