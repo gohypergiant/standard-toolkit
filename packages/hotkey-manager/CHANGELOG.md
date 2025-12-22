@@ -1,5 +1,11 @@
 # @accelint/hotkey-manager
 
+## 0.1.3
+
+### Patch Changes
+
+- 62da9ee: Export additional helper functions
+
 ## 0.1.2
 
 ### Patch Changes

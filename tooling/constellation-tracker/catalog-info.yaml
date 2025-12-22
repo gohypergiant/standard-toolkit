@@ -11,7 +11,7 @@ metadata:
 
     Dependencies:
 
-    accelint_typescript-config@0.1.4, accelint_vitest-config@0.1.5
+    accelint_typescript-config@0.1.4, accelint_vitest-config@0.1.6
   annotations:
     backstage.io/edit-url: https://github.com/gohypergiant/standard-toolkit/blob/main/tooling/constellation-tracker/catalog-info.yaml
     backstage.io/techdocs-ref: dir:.

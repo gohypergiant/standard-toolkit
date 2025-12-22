@@ -10,7 +10,7 @@ metadata:
 
     Dependencies:
 
-    accelint_core@0.5.1, accelint_typescript-config@0.1.4,
+    accelint_core@0.5.2, accelint_typescript-config@0.1.4,
     accelint_vitest-config@0.1.6
   annotations:
     backstage.io/edit-url: https://github.com/gohypergiant/standard-toolkit/blob/main/packages/predicates/catalog-info.yaml

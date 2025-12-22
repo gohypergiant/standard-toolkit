@@ -1,7 +1,7 @@
 {
   "name": "@accelint/map-toolkit",
   "description": "A collection of components and utilities to simplify visualizing and working with geospatial data.",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "devDependencies": {
@@ -11,6 +11,7 @@
     "@accelint/design-foundation": "workspace:*",
     "@accelint/design-toolkit": "workspace:*",
     "@accelint/geo": "workspace:*",
+    "@accelint/postcss-tailwind-css-modules": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
     "@deck.gl/core": "~9.1",
@@ -55,6 +56,10 @@
     "pnpm": ">=10"
   },
   "exports": {
+    "./camera": "./dist/camera/index.js",
+    "./camera/events": "./dist/camera/events.js",
+    "./camera/types": "./dist/camera/types.js",
+    "./camera/use-camera-state": "./dist/camera/use-camera-state.js",
     "./cursor-coordinates": "./dist/cursor-coordinates/index.js",
     "./cursor-coordinates/use-cursor-coordinates": "./dist/cursor-coordinates/use-cursor-coordinates.js",
     "./deckgl": "./dist/deckgl/index.js",
@@ -120,9 +125,11 @@
     "@deckgl-fiber-renderer/dom": "1.4.0",
     "@deckgl-fiber-renderer/shared": "^1.4.0",
     "@deckgl-fiber-renderer/types": "^1.4.0",
+    "@math.gl/web-mercator": "^4.1.0",
     "maplibre-gl": "^5.7.1",
     "milsymbol": "3.0.2",
-    "mjolnir.js": "^3.0.0"
+    "mjolnir.js": "^3.0.0",
+    "react-map-gl": "^8.1.0"
   },
   "owner": "default/pathfinder",
   "peerDependencies": {

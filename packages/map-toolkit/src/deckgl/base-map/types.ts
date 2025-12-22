@@ -15,6 +15,36 @@ import type { UniqueId } from '@accelint/core';
 import type { PickingInfo } from '@deck.gl/core';
 import type { MjolnirGestureEvent, MjolnirPointerEvent } from 'mjolnir.js';
 import type { MapEvents } from './events';
+import type { DeckglProps } from '@deckgl-fiber-renderer/types';
+
+/**
+ * Props for the BaseMap component.
+ * Extends all Deck.gl props and adds additional map-specific properties.
+ */
+export type BaseMapProps = DeckglProps & {
+  /** Optional CSS class name to apply to the map container element */
+  className?: string;
+  /**
+   * Whether to enable listening for map control events (pan/zoom enable/disable).
+   * When true, the map will respond to control events emitted via the event bus.
+   * @default true
+   */
+  enableControlEvents?: boolean;
+  /**
+   * Unique identifier for this map instance (required).
+   *
+   * Used to isolate map mode state between multiple map instances (e.g., main map vs minimap).
+   * This should be a UUID generated using `uuid()` from `@accelint/core`.
+   *
+   * The same id should be passed to `useMapMode()` when accessing map mode state
+   * from components rendered outside of the BaseMap's children (i.e., as siblings).
+   */
+  id: UniqueId;
+  /**
+   * Default view for the map: '2D', '2.5D', or '3D'. Defaults to '2D'.
+   */
+  defaultView?: '2D' | '2.5D' | '3D';
+};
 
 /**
  * PickingInfo modified for serialization through the event bus.

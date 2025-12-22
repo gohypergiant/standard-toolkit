@@ -19,8 +19,8 @@ import {
   utmSegmentConfigs,
 } from './segment-configs';
 import {
+  calculateMinControlWidth,
   CONTAINER_PADDING_WIDTH,
-  calculateMaxControlWidth,
   FORMAT_BUTTON_WIDTH,
   INPUT_BUTTON_GAP,
   SEGMENT_GAP_WIDTH,
@@ -36,14 +36,14 @@ describe('width-utils', () => {
     });
   });
 
-  describe('calculateMaxControlWidth', () => {
+  describe('calculateMinControlWidth', () => {
     describe('DD format', () => {
       const editableConfigs = ddSegmentConfigs.filter(
         (c) => c.type !== 'literal',
       );
 
       it('calculates width without format button', () => {
-        const width = calculateMaxControlWidth(
+        const width = calculateMinControlWidth(
           editableConfigs,
           ddSegmentConfigs,
           false,
@@ -78,7 +78,7 @@ describe('width-utils', () => {
       });
 
       it('calculates width with format button', () => {
-        const width = calculateMaxControlWidth(
+        const width = calculateMinControlWidth(
           editableConfigs,
           ddSegmentConfigs,
           true,
@@ -98,7 +98,7 @@ describe('width-utils', () => {
       );
 
       it('calculates width for DDM format', () => {
-        const width = calculateMaxControlWidth(
+        const width = calculateMinControlWidth(
           editableConfigs,
           ddmSegmentConfigs,
           true,
@@ -122,7 +122,7 @@ describe('width-utils', () => {
       );
 
       it('calculates width for DMS format', () => {
-        const width = calculateMaxControlWidth(
+        const width = calculateMinControlWidth(
           editableConfigs,
           dmsSegmentConfigs,
           true,
@@ -146,7 +146,7 @@ describe('width-utils', () => {
       );
 
       it('calculates width for MGRS format', () => {
-        const width = calculateMaxControlWidth(
+        const width = calculateMinControlWidth(
           editableConfigs,
           mgrsSegmentConfigs,
           true,
@@ -165,7 +165,7 @@ describe('width-utils', () => {
       );
 
       it('calculates width for UTM format', () => {
-        const width = calculateMaxControlWidth(
+        const width = calculateMinControlWidth(
           editableConfigs,
           utmSegmentConfigs,
           true,
@@ -180,7 +180,7 @@ describe('width-utils', () => {
 
     describe('edge cases', () => {
       it('handles empty segment configurations', () => {
-        const width = calculateMaxControlWidth([], [], false);
+        const width = calculateMinControlWidth([], [], false);
 
         // Only container padding should remain
         expect(width).toBe(`${CONTAINER_PADDING_WIDTH}ch`);
@@ -192,7 +192,7 @@ describe('width-utils', () => {
           { type: 'numeric' as const, maxLength: 5, pad: 0.5 },
         ];
 
-        const width = calculateMaxControlWidth(
+        const width = calculateMinControlWidth(
           singleSegment,
           singleSegment,
           false,
@@ -209,7 +209,7 @@ describe('width-utils', () => {
       it('handles segment without padding specified', () => {
         const segmentNoPad = [{ type: 'numeric' as const, maxLength: 5 }];
 
-        const width = calculateMaxControlWidth(
+        const width = calculateMinControlWidth(
           segmentNoPad,
           segmentNoPad,
           false,
@@ -227,7 +227,7 @@ describe('width-utils', () => {
           { type: 'numeric' as const, maxLength: 0, pad: 0.5 },
         ];
 
-        const width = calculateMaxControlWidth(
+        const width = calculateMinControlWidth(
           zeroLengthSegment,
           zeroLengthSegment,
           false,
@@ -248,7 +248,7 @@ describe('width-utils', () => {
 
         const editableConfigs = configs.filter((c) => c.type !== 'literal');
 
-        const width = calculateMaxControlWidth(editableConfigs, configs, false);
+        const width = calculateMinControlWidth(editableConfigs, configs, false);
 
         // Segments: (5 + 0.5) + (5 + 0.5) = 11ch
         // Literals: 0ch (empty string)
@@ -269,7 +269,7 @@ describe('width-utils', () => {
 
         const editableConfigs = configs.filter((c) => c.type !== 'literal');
 
-        const width = calculateMaxControlWidth(editableConfigs, configs, false);
+        const width = calculateMinControlWidth(editableConfigs, configs, false);
 
         // 5 total segments → 4 gaps
         const gapWidth = 4 * SEGMENT_GAP_WIDTH; // 2ch
@@ -289,12 +289,12 @@ describe('width-utils', () => {
       );
 
       it('adds button width when showFormatButton is true', () => {
-        const withoutButton = calculateMaxControlWidth(
+        const withoutButton = calculateMinControlWidth(
           editableConfigs,
           ddSegmentConfigs,
           false,
         );
-        const withButton = calculateMaxControlWidth(
+        const withButton = calculateMinControlWidth(
           editableConfigs,
           ddSegmentConfigs,
           true,
@@ -309,7 +309,7 @@ describe('width-utils', () => {
       });
 
       it('excludes button width when showFormatButton is false', () => {
-        const width = calculateMaxControlWidth(
+        const width = calculateMinControlWidth(
           editableConfigs,
           ddSegmentConfigs,
           false,
@@ -323,7 +323,7 @@ describe('width-utils', () => {
 
     describe('return format', () => {
       it('always returns string ending with "ch"', () => {
-        const width = calculateMaxControlWidth(
+        const width = calculateMinControlWidth(
           ddSegmentConfigs.filter((c) => c.type !== 'literal'),
           ddSegmentConfigs,
           true,
@@ -334,7 +334,7 @@ describe('width-utils', () => {
       });
 
       it('returns valid CSS width value', () => {
-        const width = calculateMaxControlWidth(
+        const width = calculateMinControlWidth(
           ddSegmentConfigs.filter((c) => c.type !== 'literal'),
           ddSegmentConfigs,
           true,
