@@ -10,8 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-'use client';
-
 // Display Shape Layer exports
 export { DisplayShapeLayer } from './display-shape-layer/index';
 export { useShapeSelection } from './display-shape-layer/use-shape-selection';

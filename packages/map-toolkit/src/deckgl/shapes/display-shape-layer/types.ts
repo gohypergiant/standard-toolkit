@@ -80,12 +80,6 @@ export interface DisplayShapeLayerProps extends CompositeLayerProps {
   onShapeHover?: (shape: EditableShape | null) => void;
 
   /**
-   * Whether shapes are pickable (clickable/hoverable)
-   * @default true
-   */
-  pickable?: boolean;
-
-  /**
    * Whether to show labels on shapes
    * Labels use the shape's `label` property, or `name` if label is not set
    * @default true

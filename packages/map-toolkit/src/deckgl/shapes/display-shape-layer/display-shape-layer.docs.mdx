@@ -98,29 +98,28 @@ function MapWithShapes() {
 }
 ```
 
-### Manual Event Handling
+### Listening to Selection Events
 
-If you need more control over selection behavior, you can handle events manually.
-
-> **Note**: The `useShapeSelection` hook is recommended over manual event handling because it uses a store pattern that properly handles listener cleanup during development (HMR). If you use `useOn` directly, you may encounter duplicate events during hot reloads.
+While `useShapeSelection` manages selection state automatically, you can also listen to selection events for side effects like logging, analytics, or coordinating with other UI:
 
 ```tsx
 import { BaseMap } from '@accelint/map-toolkit/deckgl/base-map';
 import '@accelint/map-toolkit/deckgl/shapes/display-shape-layer/fiber';
+import { useShapeSelection } from '@accelint/map-toolkit/deckgl/shapes';
 import { useOn } from '@accelint/bus/react';
 import { ShapeEvents } from '@accelint/map-toolkit/deckgl/shapes/shared/events';
 import { uuid } from '@accelint/core';
-import { useState } from 'react';
 
 const MAP_ID = uuid();
 
 function MapWithShapes() {
-  const [selectedId, setSelectedId] = useState<string>();
+  // useShapeSelection handles selection state and click-away deselection
+  const { selectedId } = useShapeSelection(MAP_ID);
 
-  // Listen to shape selection events from the event bus
+  // Listen to events for side effects (logging, analytics, etc.)
   useOn(ShapeEvents.selected, (event) => {
     if (event.payload.mapId !== MAP_ID) return;
-    setSelectedId(event.payload.shapeId);
+    console.log('Shape selected:', event.payload.shapeId);
   });
 
   return (
@@ -136,7 +135,9 @@ function MapWithShapes() {
 }
 ```
 
-### Direct Layer Usage
+> **Note**: Avoid using `useOn` with `useState` to manage selection state directly. The `useShapeSelection` hook uses a store pattern that ensures only one bus listener per map instance and proper cleanup. Using `useOn` directly can create N listeners for N components and may accumulate listeners during HMR.
+
+### Direct Layer Usage (without BaseMap)
 
 ```tsx
 import { Deck } from '@deck.gl/core';

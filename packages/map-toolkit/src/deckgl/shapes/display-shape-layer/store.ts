@@ -25,9 +25,11 @@
  *
  * ## Why This Pattern?
  *
- * The `useOn` hook from `@accelint/bus` can accumulate listeners during HMR
- * (Hot Module Replacement) because the `Broadcast` singleton persists while
- * React components are recreated. This store pattern ensures proper cleanup.
+ * Without this pattern, using `useOn` directly in each React component would
+ * create N bus listeners for N components subscribing to the same events.
+ * The fan-out pattern ensures exactly 1 bus listener per mapId, regardless
+ * of how many React components need the state. This also provides proper
+ * cleanup semantics that prevent listener accumulation during HMR.
  *
  * ## Usage
  *

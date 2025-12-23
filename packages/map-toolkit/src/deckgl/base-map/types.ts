@@ -13,9 +13,9 @@
 import type { Payload } from '@accelint/bus';
 import type { UniqueId } from '@accelint/core';
 import type { PickingInfo } from '@deck.gl/core';
+import type { DeckglProps } from '@deckgl-fiber-renderer/types';
 import type { MjolnirGestureEvent, MjolnirPointerEvent } from 'mjolnir.js';
 import type { MapEvents } from './events';
-import type { DeckglProps } from '@deckgl-fiber-renderer/types';
 
 /**
  * Props for the BaseMap component.
@@ -40,12 +40,6 @@ export type BaseMapProps = DeckglProps & {
    * from components rendered outside of the BaseMap's children (i.e., as siblings).
    */
   id: UniqueId;
-  /**
-   * Picking radius in pixels (default: 5).
-   * Creates a detection radius around the pointer for pickable objects.
-   * Higher values make thin lines and small shapes easier to hover.
-   */
-  pickingRadius?: number;
   /**
    * Default view for the map: '2D', '2.5D', or '3D'. Defaults to '2D'.
    */
