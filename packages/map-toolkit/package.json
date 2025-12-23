@@ -41,6 +41,7 @@
     "node-fetch": "^2.6.7",
     "react": "^19",
     "react-dom": "^19",
+    "remark-gfm": "^4.0.1",
     "storybook": "^9.1.16",
     "tailwindcss": "^4.1.18",
     "tsdown": "^0.18.0",
