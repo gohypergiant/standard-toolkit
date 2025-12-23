@@ -15,8 +15,6 @@
 import { TextLayer } from '@deck.gl/layers';
 import { SHAPE_LAYER_IDS } from '../shared/constants';
 import {
-  getLabelBorderColor,
-  getLabelFillColor,
   getLabelPosition2d,
   getLabelText,
   type LabelPosition2d,
@@ -31,16 +29,30 @@ import type { EditableShape } from '../shared/types';
 function createCachedPositionGetter(
   labelOptions: LabelPositionOptions | undefined,
 ) {
-  const cache = new WeakMap<EditableShape, LabelPosition2d>();
+  const cache = new WeakMap<EditableShape, LabelPosition2d | null>();
 
-  return (shape: EditableShape): LabelPosition2d => {
-    let position = cache.get(shape);
+  // Returns nullable position for filtering
+  const getNullable = (shape: EditableShape): LabelPosition2d | null => {
+    if (cache.has(shape)) {
+      return cache.get(shape) ?? null;
+    }
+    const position = getLabelPosition2d(shape, labelOptions);
+    cache.set(shape, position);
+    return position;
+  };
+
+  // Returns position, throwing if null (use only after filtering)
+  const getRequired = (shape: EditableShape): LabelPosition2d => {
+    const position = getNullable(shape);
     if (!position) {
-      position = getLabelPosition2d(shape, labelOptions);
-      cache.set(shape, position);
+      throw new Error(
+        'Shape has no valid position - should have been filtered',
+      );
     }
     return position;
   };
+
+  return { getRequired, getNullable };
 }
 
 /**
@@ -66,7 +78,7 @@ export interface ShapeLabelLayerProps {
  * - **Three-tier priority system**: Per-shape properties > labelOptions > defaults
  * - **Coordinate anchoring**: Position labels at start/middle/end (or edge positions for circles)
  * - **Pixel-based offsets**: Consistent label placement at all zoom levels
- * - **Styled backgrounds**: Color-matched backgrounds with borders using shape colors
+ * - **Text-only styling**: White uppercase text with black outline for legibility
  * - **Position caching**: Label positions are computed once per shape using a WeakMap cache
  *
  * ## Label Positioning Priority
@@ -95,35 +107,37 @@ export function createShapeLabelLayer(
   const { id = SHAPE_LAYER_IDS.DISPLAY_LABELS, data, labelOptions } = props;
 
   // Create cached position getter to avoid computing position 4x per shape
-  const getCachedPosition = createCachedPositionGetter(labelOptions);
+  const { getRequired, getNullable } = createCachedPositionGetter(labelOptions);
+
+  // Filter out shapes with invalid positions (null coordinates)
+  const validData = data.filter((shape) => getNullable(shape) !== null);
 
   return new TextLayer<EditableShape>({
     id,
-    data,
+    data: validData,
 
-    // Text content
+    // Text content - uppercase
     getText: getLabelText,
 
     // Position - use cached getter for all position-related properties
-    getPosition: (d: EditableShape) => getCachedPosition(d).coordinates,
-    getPixelOffset: (d: EditableShape) => getCachedPosition(d).pixelOffset,
-    getTextAnchor: (d: EditableShape) => getCachedPosition(d).textAnchor,
+    // getRequired is safe because we filtered out null positions above
+    getPosition: (d: EditableShape) => getRequired(d).coordinates,
+    getPixelOffset: (d: EditableShape) => getRequired(d).pixelOffset,
+    getTextAnchor: (d: EditableShape) => getRequired(d).textAnchor,
     getAlignmentBaseline: (d: EditableShape) =>
-      getCachedPosition(d).alignmentBaseline,
+      getRequired(d).alignmentBaseline,
 
-    // Styling
-    getColor: [0, 0, 0, 255], // Black text
+    // Styling - white text with black outline, no background
+    getColor: [255, 255, 255, 255], // White text
     getSize: 10,
     getAngle: 0,
 
-    // Background
-    background: true,
-    backgroundPadding: [8, 8, 8, 8],
-    getBackgroundColor: getLabelFillColor,
+    // Text outline for legibility (black stroke around white text)
+    outlineWidth: 2,
+    outlineColor: [0, 0, 0, 255], // Black outline
 
-    // Border
-    getBorderColor: getLabelBorderColor,
-    getBorderWidth: 2,
+    // No background or border
+    background: false,
 
     // Font
     fontFamily: 'Roboto MonoVariable, monospace',

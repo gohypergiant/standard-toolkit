@@ -326,9 +326,13 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       return null;
     }
 
-    // Skip highlight layer for Point geometries - they use coffin corners instead
+    // Skip highlight layer for Point geometries with icons - they use coffin corners instead
+    // Points without icons should still show the highlight layer
     if (selectedFeature.geometry.type === 'Point') {
-      return null;
+      const hasIcon = !!selectedFeature.properties?.styleProperties?.icon;
+      if (hasIcon) {
+        return null;
+      }
     }
 
     return new GeoJsonLayer({
@@ -416,6 +420,13 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
         height: 76,
         mask: false,
       },
+      [COFFIN_CORNERS.SELECTED_HOVER_ICON]: {
+        x: 152,
+        y: 0,
+        width: 76,
+        height: 76,
+        mask: false,
+      },
     };
 
     return new IconLayer({
@@ -426,9 +437,17 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       getIcon: (d: EditableShape['feature']) => {
         const shapeId = d.properties?.shapeId;
         const isSelected = shapeId === selectedShapeId;
-        return isSelected
-          ? COFFIN_CORNERS.SELECTED_ICON
-          : COFFIN_CORNERS.HOVER_ICON;
+        const isHovered =
+          this.state?.hoverIndex !== undefined &&
+          features.indexOf(d) === this.state.hoverIndex;
+
+        if (isSelected && isHovered) {
+          return COFFIN_CORNERS.SELECTED_HOVER_ICON;
+        }
+        if (isSelected) {
+          return COFFIN_CORNERS.SELECTED_ICON;
+        }
+        return COFFIN_CORNERS.HOVER_ICON;
       },
       getSize: COFFIN_CORNERS.SIZE,
       getPosition: (d: EditableShape['feature']) => {

@@ -35,10 +35,12 @@ export const SELECTION_HIGHLIGHT = {
  * Coffin corners are bracket-like corners that appear around points
  */
 export const COFFIN_CORNERS = {
-  /** Icon name for hover state (white fill with black stroke) */
+  /** Icon name for hover state (white corners with background fill) */
   HOVER_ICON: 'coffin-corners-hover',
-  /** Icon name for selected state (blue fill with black stroke) */
+  /** Icon name for selected state (blue corners, no fill) */
   SELECTED_ICON: 'coffin-corners-selected',
+  /** Icon name for selected+hover state (blue corners with background fill) */
+  SELECTED_HOVER_ICON: 'coffin-corners-selected-hover',
   /** Size of the coffin corners icon */
   SIZE: 38,
 } as const;

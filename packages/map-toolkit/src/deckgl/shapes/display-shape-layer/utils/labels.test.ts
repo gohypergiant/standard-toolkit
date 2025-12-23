@@ -191,7 +191,7 @@ describe('Label Positioning Utilities', () => {
         },
       };
 
-      expect(getLabelText(shape)).toBe('Label');
+      expect(getLabelText(shape)).toBe('LABEL');
     });
 
     it('falls back to name when label is not provided', () => {
@@ -207,7 +207,7 @@ describe('Label Positioning Utilities', () => {
         },
       };
 
-      expect(getLabelText(shape)).toBe('Full Name');
+      expect(getLabelText(shape)).toBe('FULL NAME');
     });
 
     it('prefers label over name when both provided', () => {
@@ -224,7 +224,7 @@ describe('Label Positioning Utilities', () => {
         },
       };
 
-      expect(getLabelText(shape)).toBe('Short');
+      expect(getLabelText(shape)).toBe('SHORT');
     });
   });
 
@@ -379,11 +379,12 @@ describe('Label Positioning Utilities', () => {
 
         const result = getLabelPosition2d(shape);
 
+        // Default: label below point with 10px offset
         expect(result).toEqual({
           coordinates: [-122.4, 37.8],
           textAnchor: 'middle',
-          alignmentBaseline: 'bottom',
-          pixelOffset: [0, -13],
+          alignmentBaseline: 'top',
+          pixelOffset: [0, 10],
         });
       });
 
@@ -453,7 +454,7 @@ describe('Label Positioning Utilities', () => {
     });
 
     describe('LineString geometry', () => {
-      it('uses default positioning at start', () => {
+      it('uses default positioning at bottom edge', () => {
         const shape: EditableShape = {
           id: '1',
           name: 'Test',
@@ -465,9 +466,9 @@ describe('Label Positioning Utilities', () => {
             geometry: {
               type: 'LineString',
               coordinates: [
-                [-122.4, 37.8],
+                [-122.4, 37.8], // min latitude (bottom)
                 [-122.3, 37.9],
-                [-122.2, 38.0],
+                [-122.2, 38.0], // max latitude (top)
               ],
             },
           },
@@ -475,15 +476,106 @@ describe('Label Positioning Utilities', () => {
 
         const result = getLabelPosition2d(shape);
 
+        // Default is bottom edge (min latitude)
         expect(result).toEqual({
           coordinates: [-122.4, 37.8],
-          textAnchor: 'start',
-          alignmentBaseline: 'center',
-          pixelOffset: [7, -15],
+          textAnchor: 'middle',
+          alignmentBaseline: 'top',
+          pixelOffset: [0, 10],
         });
       });
 
-      it('positions at middle when coordinateAnchor is middle', () => {
+      it('positions at top edge when coordinateAnchor is top', () => {
+        const shape: EditableShape = {
+          id: '1',
+          name: 'Test',
+          shapeType: 'LineString',
+          locked: false,
+          feature: {
+            type: 'Feature',
+            properties: { styleProperties: {} },
+            geometry: {
+              type: 'LineString',
+              coordinates: [
+                [0, 0], // bottom-left
+                [100, 50], // right
+                [50, 100], // top
+              ],
+            },
+          },
+        };
+
+        const options: LabelPositionOptions = {
+          lineStringLabelCoordinateAnchor: 'top',
+        };
+
+        const result = getLabelPosition2d(shape, options);
+
+        // Should find the point with max latitude (y=100)
+        expect(result.coordinates).toEqual([50, 100]);
+      });
+
+      it('positions at right edge when coordinateAnchor is right', () => {
+        const shape: EditableShape = {
+          id: '1',
+          name: 'Test',
+          shapeType: 'LineString',
+          locked: false,
+          feature: {
+            type: 'Feature',
+            properties: { styleProperties: {} },
+            geometry: {
+              type: 'LineString',
+              coordinates: [
+                [0, 0], // left
+                [100, 50], // right (max longitude)
+                [50, 100],
+              ],
+            },
+          },
+        };
+
+        const options: LabelPositionOptions = {
+          lineStringLabelCoordinateAnchor: 'right',
+        };
+
+        const result = getLabelPosition2d(shape, options);
+
+        // Should find the point with max longitude (x=100)
+        expect(result.coordinates).toEqual([100, 50]);
+      });
+
+      it('positions at left edge when coordinateAnchor is left', () => {
+        const shape: EditableShape = {
+          id: '1',
+          name: 'Test',
+          shapeType: 'LineString',
+          locked: false,
+          feature: {
+            type: 'Feature',
+            properties: { styleProperties: {} },
+            geometry: {
+              type: 'LineString',
+              coordinates: [
+                [0, 50], // left (min longitude)
+                [100, 0],
+                [50, 100],
+              ],
+            },
+          },
+        };
+
+        const options: LabelPositionOptions = {
+          lineStringLabelCoordinateAnchor: 'left',
+        };
+
+        const result = getLabelPosition2d(shape, options);
+
+        // Should find the point with min longitude (x=0)
+        expect(result.coordinates).toEqual([0, 50]);
+      });
+
+      it('positions at center (centroid) when coordinateAnchor is center', () => {
         const shape: EditableShape = {
           id: '1',
           name: 'Test',
@@ -497,52 +589,26 @@ describe('Label Positioning Utilities', () => {
               coordinates: [
                 [0, 0],
                 [100, 0],
+                [100, 100],
               ],
             },
           },
         };
 
         const options: LabelPositionOptions = {
-          lineStringLabelCoordinateAnchor: 'middle',
+          lineStringLabelCoordinateAnchor: 'center',
         };
 
         const result = getLabelPosition2d(shape, options);
 
-        expect(result.coordinates).toEqual([50, 0]);
-      });
-
-      it('positions at end when coordinateAnchor is end', () => {
-        const shape: EditableShape = {
-          id: '1',
-          name: 'Test',
-          shapeType: 'LineString',
-          locked: false,
-          feature: {
-            type: 'Feature',
-            properties: { styleProperties: {} },
-            geometry: {
-              type: 'LineString',
-              coordinates: [
-                [-122.4, 37.8],
-                [-122.3, 37.9],
-                [-122.2, 38.0],
-              ],
-            },
-          },
-        };
-
-        const options: LabelPositionOptions = {
-          lineStringLabelCoordinateAnchor: 'end',
-        };
-
-        const result = getLabelPosition2d(shape, options);
-
-        expect(result.coordinates).toEqual([-122.2, 38.0]);
+        // Centroid of [0,0], [100,0], [100,100] = average = [66.67, 33.33]
+        expect(result.coordinates[0]).toBeCloseTo(66.67, 1);
+        expect(result.coordinates[1]).toBeCloseTo(33.33, 1);
       });
     });
 
     describe('Polygon geometry', () => {
-      it('uses default positioning at start of outer ring', () => {
+      it('uses default positioning at bottom edge', () => {
         const shape: EditableShape = {
           id: '1',
           name: 'Test',
@@ -555,11 +621,11 @@ describe('Label Positioning Utilities', () => {
               type: 'Polygon',
               coordinates: [
                 [
-                  [0, 0],
-                  [100, 0],
-                  [100, 100],
-                  [0, 100],
-                  [0, 0],
+                  [0, 0], // bottom-left (min latitude)
+                  [100, 0], // bottom-right (min latitude)
+                  [100, 100], // top-right
+                  [0, 100], // top-left
+                  [0, 0], // close
                 ],
               ],
             },
@@ -568,15 +634,16 @@ describe('Label Positioning Utilities', () => {
 
         const result = getLabelPosition2d(shape);
 
+        // Default is bottom edge (min latitude) - first vertex with y=0
         expect(result).toEqual({
           coordinates: [0, 0],
-          textAnchor: 'start',
-          alignmentBaseline: 'center',
-          pixelOffset: [7, -15],
+          textAnchor: 'middle',
+          alignmentBaseline: 'top',
+          pixelOffset: [0, 10],
         });
       });
 
-      it('positions at middle when coordinateAnchor is middle', () => {
+      it('positions at top edge when coordinateAnchor is top', () => {
         const shape: EditableShape = {
           id: '1',
           name: 'Test',
@@ -591,8 +658,8 @@ describe('Label Positioning Utilities', () => {
                 [
                   [0, 0],
                   [100, 0],
-                  [100, 100],
-                  [0, 100],
+                  [100, 100], // top-right (max latitude)
+                  [0, 100], // top-left (max latitude)
                   [0, 0],
                 ],
               ],
@@ -601,15 +668,84 @@ describe('Label Positioning Utilities', () => {
         };
 
         const options: LabelPositionOptions = {
-          polygonLabelCoordinateAnchor: 'middle',
+          polygonLabelCoordinateAnchor: 'top',
         };
 
         const result = getLabelPosition2d(shape, options);
 
+        // Should find vertex with max latitude (y=100)
         expect(result.coordinates).toEqual([100, 100]);
       });
 
-      it('positions at end (second-to-last vertex) when coordinateAnchor is end', () => {
+      it('positions at right edge when coordinateAnchor is right', () => {
+        const shape: EditableShape = {
+          id: '1',
+          name: 'Test',
+          shapeType: 'Polygon',
+          locked: false,
+          feature: {
+            type: 'Feature',
+            properties: { styleProperties: {} },
+            geometry: {
+              type: 'Polygon',
+              coordinates: [
+                [
+                  [0, 0],
+                  [100, 0], // right (max longitude)
+                  [100, 100], // right (max longitude)
+                  [0, 100],
+                  [0, 0],
+                ],
+              ],
+            },
+          },
+        };
+
+        const options: LabelPositionOptions = {
+          polygonLabelCoordinateAnchor: 'right',
+        };
+
+        const result = getLabelPosition2d(shape, options);
+
+        // Should find vertex with max longitude (x=100)
+        expect(result.coordinates).toEqual([100, 0]);
+      });
+
+      it('positions at left edge when coordinateAnchor is left', () => {
+        const shape: EditableShape = {
+          id: '1',
+          name: 'Test',
+          shapeType: 'Polygon',
+          locked: false,
+          feature: {
+            type: 'Feature',
+            properties: { styleProperties: {} },
+            geometry: {
+              type: 'Polygon',
+              coordinates: [
+                [
+                  [0, 0], // left (min longitude)
+                  [100, 0],
+                  [100, 100],
+                  [0, 100], // left (min longitude)
+                  [0, 0],
+                ],
+              ],
+            },
+          },
+        };
+
+        const options: LabelPositionOptions = {
+          polygonLabelCoordinateAnchor: 'left',
+        };
+
+        const result = getLabelPosition2d(shape, options);
+
+        // Should find vertex with min longitude (x=0)
+        expect(result.coordinates).toEqual([0, 0]);
+      });
+
+      it('positions at center (centroid) when coordinateAnchor is center', () => {
         const shape: EditableShape = {
           id: '1',
           name: 'Test',
@@ -626,7 +762,7 @@ describe('Label Positioning Utilities', () => {
                   [100, 0],
                   [100, 100],
                   [0, 100],
-                  [0, 0],
+                  [0, 0], // closing vertex
                 ],
               ],
             },
@@ -634,18 +770,19 @@ describe('Label Positioning Utilities', () => {
         };
 
         const options: LabelPositionOptions = {
-          polygonLabelCoordinateAnchor: 'end',
+          polygonLabelCoordinateAnchor: 'center',
         };
 
         const result = getLabelPosition2d(shape, options);
 
-        // Second-to-last vertex (last is same as first in closed polygon)
-        expect(result.coordinates).toEqual([0, 100]);
+        // Centroid of square [0,0], [100,0], [100,100], [0,100], [0,0] = [40, 40]
+        // (5 vertices including closing, sum = 200/5 = 40)
+        expect(result.coordinates).toEqual([40, 40]);
       });
     });
 
     describe('Circle geometry', () => {
-      it('positions at top edge by default', () => {
+      it('positions at bottom edge by default', () => {
         const shape: EditableShape = {
           id: '1',
           name: 'Test',
@@ -658,10 +795,10 @@ describe('Label Positioning Utilities', () => {
               type: 'Polygon',
               coordinates: [
                 [
-                  [0, 100], // right
-                  [50, 150], // top-right
-                  [100, 100], // top
-                  [50, 50], // top-left
+                  [0, 100], // left
+                  [50, 150], // top
+                  [100, 100], // right
+                  [50, 50], // bottom (min latitude)
                   [0, 100], // back to start
                 ],
               ],
@@ -671,9 +808,43 @@ describe('Label Positioning Utilities', () => {
 
         const result = getLabelPosition2d(shape);
 
+        // Default is bottom edge (min latitude y=50)
+        expect(result.coordinates).toEqual([50, 50]);
+        expect(result.pixelOffset).toEqual([0, 10]);
+      });
+
+      it('positions at top edge', () => {
+        const shape: EditableShape = {
+          id: '1',
+          name: 'Test',
+          shapeType: 'Circle',
+          locked: false,
+          feature: {
+            type: 'Feature',
+            properties: { styleProperties: {} },
+            geometry: {
+              type: 'Polygon',
+              coordinates: [
+                [
+                  [0, 100],
+                  [50, 150], // top (max latitude)
+                  [100, 100],
+                  [50, 50],
+                  [0, 100],
+                ],
+              ],
+            },
+          },
+        };
+
+        const options: LabelPositionOptions = {
+          circleLabelCoordinateAnchor: 'top',
+        };
+
+        const result = getLabelPosition2d(shape, options);
+
         // Should find the vertex with max latitude (y=150)
         expect(result.coordinates).toEqual([50, 150]);
-        expect(result.pixelOffset).toEqual([0, -17]);
       });
 
       it('positions at right edge', () => {
@@ -821,7 +992,7 @@ describe('Label Positioning Utilities', () => {
     });
 
     describe('Unknown geometry fallback', () => {
-      it('returns default position for unknown geometry type', () => {
+      it('returns null for unknown geometry type', () => {
         const shape = {
           id: '1',
           name: 'Test',
@@ -836,12 +1007,7 @@ describe('Label Positioning Utilities', () => {
 
         const result = getLabelPosition2d(shape);
 
-        expect(result).toEqual({
-          coordinates: [0, 0],
-          textAnchor: 'middle',
-          alignmentBaseline: 'center',
-          pixelOffset: [0, 0],
-        });
+        expect(result).toBeNull();
       });
     });
   });

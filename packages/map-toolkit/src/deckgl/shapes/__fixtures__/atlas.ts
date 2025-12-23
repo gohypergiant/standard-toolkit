@@ -17,4 +17,6 @@
 
 export const COFFIN_CORNERS_HOVER = 'coffin-corners-hover';
 export const COFFIN_CORNERS_SELECTED = 'coffin-corners-selected';
+export const COFFIN_CORNERS_SELECTED_HOVER = 'coffin-corners-selected-hover';
 export const MARKER = 'marker';
+export const MARKER_SERIOUS = 'marker-serious';
