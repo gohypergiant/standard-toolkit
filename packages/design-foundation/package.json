@@ -83,7 +83,7 @@
     "format:biome": "pnpm biome format . --write --verbose",
     "format:biome:check": "pnpm biome format . --verbose",
     "format:check": "pnpm format:biome:check && pnpm format:prettier:check",
-    "format:prettier": "pnpm prettier --write './**/*.css'",
+    "format:prettier": "pnpm prettier --write ./**/*.css",
     "format:prettier:check": "pnpm prettier --check './**/*.css'",
     "gen:tokens": "pnpm zx scripts/generate-tokens.mjs",
     "gen:variants": "node scripts/generate-variants.mjs",
