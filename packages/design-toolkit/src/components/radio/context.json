@@ -1,0 +1,313 @@
+[
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "1/5",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/radio/context.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.607Z",
+    "bundleHash": "uifb:67a486977d242d4b6f7e440b",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/radio/context.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/radio/context.tsx",
+            "description": "context - TypeScript module",
+            "version": {
+              "variables": ["RadioContext"],
+              "hooks": [],
+              "components": [],
+              "functions": [],
+              "imports": [
+                "./types",
+                "client-only",
+                "react",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "semanticHash": "uif:4629810df7ebb481099d6c44",
+            "fileHash": "uif:10707e240049c14744dba69e"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport 'client-only';\nimport { createContext } from 'react';\nimport type { ContextValue } from 'react-aria-components';\nimport type { RadioGroupProps } from './types';\n\n/**\n * Context for RadioGroup component\n *\n * Provides context for RadioGroup component to share state with Radio components\n */\nexport const RadioContext =\n  createContext<ContextValue<RadioGroupProps, HTMLDivElement>>(null);\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "2/5",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/radio/group.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.612Z",
+    "bundleHash": "uifb:22f1becbb1848369a090fcdb",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/radio/group.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/radio/group.tsx",
+            "description": "group - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": ["useContextProps"],
+              "components": ["AriaRadioGroup", "Label"],
+              "functions": ["RadioGroup"],
+              "imports": [
+                "../label",
+                "./context",
+                "./styles.module.css",
+                "./types",
+                "@accelint/design-foundation/lib/utils",
+                "client-only",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [".control", ".group", ".radio"],
+                  "properties": ["content"]
+                }
+              }
+            },
+            "semanticHash": "uif:3aa6fefaea1e1568922e409e",
+            "fileHash": "uif:18898b6495962782d2df1ce1"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport 'client-only';\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport {\n  RadioGroup as AriaRadioGroup,\n  composeRenderProps,\n  useContextProps,\n} from 'react-aria-components';\nimport { Label } from '../label';\nimport { RadioContext } from './context';\nimport styles from './styles.module.css';\nimport type { RadioGroupProps } from './types';\n\n/**\n * RadioGroup - Container component for Radio buttons\n *\n * Groups related Radio components and manages their selection state.\n * Only one Radio can be selected at a time within a RadioGroup.\n */\nexport function RadioGroup({ ref, ...props }: RadioGroupProps) {\n  [props, ref] = useContextProps(props, ref ?? null, RadioContext);\n\n  const { children, classNames, label, ...rest } = props;\n\n  return (\n    <AriaRadioGroup\n      {...rest}\n      ref={ref}\n      className={composeRenderProps(classNames?.group, (className) =>\n        clsx('group/radio-group', styles.group, className),\n      )}\n    >\n      {composeRenderProps(children, (children, { isDisabled, isRequired }) => (\n        <>\n          {label && (\n            <Label\n              className={clsx(styles.label, classNames?.label)}\n              isDisabled={isDisabled}\n              isRequired={isRequired}\n            >\n              {label}\n            </Label>\n          )}\n          {children}\n        </>\n      ))}\n    </AriaRadioGroup>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "AriaRadioGroup",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/radio/group.tsx"
+        },
+        {
+          "name": "Label",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/radio/group.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "3/5",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/radio/index.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.615Z",
+    "bundleHash": "uifb:01966c3b19e42f54ff9cce26",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/radio/index.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/radio/index.tsx",
+            "description": "index - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": ["AriaRadio"],
+              "functions": ["Radio"],
+              "imports": [
+                "./styles.module.css",
+                "./types",
+                "@accelint/design-foundation/lib/utils",
+                "client-only",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [".control", ".group", ".radio"],
+                  "properties": ["content"]
+                }
+              }
+            },
+            "semanticHash": "uif:7bb4cebb3165013a767be37d",
+            "fileHash": "uif:b34a82c763e0ec27a90e30a9"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport 'client-only';\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport { Radio as AriaRadio, composeRenderProps } from 'react-aria-components';\nimport styles from './styles.module.css';\nimport type { RadioProps } from './types';\n\n/**\n * Radio - A form control for exclusive selection within a group of options\n *\n * Provides accessible radio button functionality where only one option can be\n * selected at a time within a group. Includes proper labeling, keyboard navigation,\n * and visual feedback for selection states.\n *\n * @example\n * // Basic radio group\n * <RadioGroup label=\"Choose size\">\n *   <Radio value=\"small\">Small</Radio>\n *   <Radio value=\"medium\">Medium</Radio>\n *   <Radio value=\"large\">Large</Radio>\n * </RadioGroup>\n *\n * @example\n * // Radio group with default selection\n * <RadioGroup defaultValue=\"medium\" label=\"Size preference\">\n *   <Radio value=\"small\">Small (S)</Radio>\n *   <Radio value=\"medium\">Medium (M)</Radio>\n *   <Radio value=\"large\">Large (L)</Radio>\n * </RadioGroup>\n *\n * @example\n * // Disabled radio options\n * <RadioGroup label=\"Shipping options\">\n *   <Radio value=\"standard\">Standard shipping</Radio>\n *   <Radio value=\"express\">Express shipping</Radio>\n *   <Radio value=\"overnight\" isDisabled>Overnight (unavailable)</Radio>\n * </RadioGroup>\n */\nexport function Radio({ classNames, children, ...rest }: RadioProps) {\n  return (\n    <AriaRadio\n      {...rest}\n      className={composeRenderProps(classNames?.radio, (className) =>\n        clsx('group/radio', styles.radio, className),\n      )}\n    >\n      {composeRenderProps(children, (children) => (\n        <>\n          <span className={clsx(styles.control, classNames?.control)} />\n          <span className={clsx(styles.label, classNames?.label)}>\n            {children}\n          </span>\n        </>\n      ))}\n    </AriaRadio>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "AriaRadio",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/radio/index.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "4/5",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/radio/radio.stories.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.620Z",
+    "bundleHash": "uifb:ee31cb1152c209fa9540fbb5",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/radio/radio.stories.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/radio/radio.stories.tsx",
+            "description": "radio.stories - Presentational component",
+            "version": {
+              "variables": ["Default", "meta"],
+              "hooks": [],
+              "components": ["Radio", "RadioGroup"],
+              "functions": [],
+              "imports": [
+                "./group",
+                "./index",
+                "./types",
+                "@storybook/react-vite"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "semanticHash": "uif:005cb5925da286bac527eed8",
+            "fileHash": "uif:057842e72e293eddfc46d887"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport { RadioGroup } from './group';\nimport { Radio } from './index';\nimport type { Meta, StoryObj } from '@storybook/react-vite';\nimport type { RadioGroupProps } from './types';\n\nconst meta = {\n  title: 'Components/Radio',\n  component: RadioGroup,\n  args: {\n    orientation: 'vertical',\n    isDisabled: false,\n    isRequired: false,\n    label: 'Header',\n  },\n  argTypes: {\n    orientation: {\n      control: 'select',\n      options: ['horizontal', 'vertical'],\n    },\n  },\n  parameters: {\n    controls: {\n      exclude: ['children', 'validationBehavior'],\n    },\n  },\n} satisfies Meta<RadioGroupProps>;\n\nexport default meta;\n\nexport const Default: StoryObj<typeof meta> = {\n  render: ({ children, label, ...args }) => (\n    <RadioGroup label={label} {...args}>\n      <Radio value='1'>Radio text</Radio>\n      <Radio value='2'>Radio text</Radio>\n      <Radio value='3'>Radio text</Radio>\n    </RadioGroup>\n  ),\n};\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "Radio",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/radio/radio.stories.tsx"
+        },
+        {
+          "name": "RadioGroup",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/radio/radio.stories.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "5/5",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/radio/types.ts",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.620Z",
+    "bundleHash": "uifb:2a64a3051e91e4819effd8a9",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/radio/types.ts",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/radio/types.ts",
+            "description": "types - Type definitions",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": [],
+              "functions": [],
+              "imports": ["../label/types", "react", "react-aria-components"]
+            },
+            "logicSignature": {
+              "props": {
+                "ref": {
+                  "type": "React.Ref<HTMLLabelElement>",
+                  "optional": true
+                },
+                "key": {
+                  "type": "React.Key",
+                  "optional": true
+                },
+                "classNames": {
+                  "type": "{ radio?: AriaRadioProps; control?: string; label?: string; }",
+                  "optional": true
+                },
+                "label": {
+                  "type": "string",
+                  "optional": true
+                }
+              },
+              "emits": {}
+            },
+            "semanticHash": "uif:cffb7121cdf28f3a1a342895",
+            "fileHash": "uif:0c86682461a415364af607f3"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport type { RefAttributes } from 'react';\nimport type {\n  RadioGroupProps as AriaRadioGroupProps,\n  RadioProps as AriaRadioProps,\n} from 'react-aria-components';\nimport type { LabelProps } from '../label/types';\n\nexport type RadioGroupProps = Omit<AriaRadioGroupProps, 'className'> &\n  RefAttributes<HTMLDivElement> & {\n    classNames?: {\n      group?: AriaRadioGroupProps['className'];\n      label?: LabelProps['className'];\n    };\n    label?: string;\n  };\n\nexport type RadioProps = Omit<AriaRadioProps, 'className'> &\n  RefAttributes<HTMLLabelElement> & {\n    classNames?: {\n      radio?: AriaRadioProps['className'];\n      control?: string;\n      label?: string;\n    };\n  };\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  }
+]

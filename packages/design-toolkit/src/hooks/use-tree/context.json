@@ -1,0 +1,50 @@
+[
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "1/1",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "hooks/use-tree/types.ts",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:44.143Z",
+    "bundleHash": "uifb:48bbe98d463cb2cb04b5ab05",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "hooks/use-tree/types.ts",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "hooks/use-tree/types.ts",
+            "description": "types - Type definitions",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": [],
+              "functions": [],
+              "imports": [
+                "@react-types/shared",
+                "react",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "semanticHash": "uif:8a8b765d9f1fc02101eb79f8",
+            "fileHash": "uif:395dbeca4ffad58fb2e89c19"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport type {\n  DragItem,\n  DroppableCollectionInsertDropEvent,\n  DroppableCollectionOnItemDropEvent,\n  DroppableCollectionReorderEvent,\n  DroppableCollectionRootDropEvent,\n  Key,\n} from '@react-types/shared';\nimport type { ReactElement } from 'react';\nimport type { DropTarget, Selection } from 'react-aria-components';\n\nexport type DragAndDropConfig = {\n  getItems: (key: Set<Key>) => DragItem[];\n  /**\n   * Handler that is called when external items are dropped on the droppable collection's root.\n   */\n  onRootDrop?: (e: DroppableCollectionRootDropEvent) => void;\n  /**\n   * Handler that is called when items are reordered within the collection.\n   * This handler only allows dropping between items, not on items.\n   * It does not allow moving items to a different parent item within a tree.\n   */\n  onReorder?: (e: DroppableCollectionReorderEvent) => void;\n  /**\n   * Handler that is called when items are moved within the source collection.\n   * This handler allows dropping both on or between items, and items may be\n   * moved to a different parent item within a tree.\n   */\n  onMove?: (e: DroppableCollectionReorderEvent) => void;\n  renderDragPreview?: (items: DragItem[]) => ReactElement;\n  renderDropIndicator?: (target: DropTarget) => ReactElement;\n  acceptedDragTypes?: string[];\n  /**\n   * Handler that is called when external items are dropped \"between\" items.\n   */\n  onInsert?: (e: DroppableCollectionInsertDropEvent) => void;\n  /**\n   * Handler that is called when items are dropped \"on\" an item.\n   */\n  onItemDrop?: (e: DroppableCollectionOnItemDropEvent) => void;\n};\n\nexport type UseTreeStateOptions<T> = {\n  /** Initial root items in the tree. If omitted, will return an empty tree. */\n  items: TreeNode<T>[];\n};\n\nexport type UseTreeState<T> = {\n  nodes: TreeNode<T>[];\n  dragAndDropConfig: DragAndDropConfig;\n  actions: {\n    collapseAll: () => void;\n    expandAll: () => void;\n    onExpandedChange: (keys: Set<Key>) => void;\n\n    selectAll: () => void;\n    unselectAll: () => void;\n    onSelectionChange: (keys: Selection) => void;\n\n    hideAll: () => void;\n    revealAll: () => void;\n    onVisibilityChange: (keys: Set<Key>) => void;\n  };\n};\n\nexport type TreeData<T> = TreeNode<T>[];\n\n/**\n * The TreeNode is a wrapper that describes the relationship of this node\n * to other nodes in the tree.\n * TreeNode properties describe the metadata - state and position of the node.\n * The item property represents the action tree item data.\n */\nexport type TreeNodeBase<T> = {\n  /** A unique key for the tree node. */\n  key: Key;\n\n  /** Label string **/\n  label: string;\n\n  /** Application specific values in node **/\n  values?: T;\n\n  /** Whether node has interactive capability **/\n  isDisabled?: boolean;\n\n  /** Whether node children are rendered **/\n  isExpanded?: boolean;\n\n  /** Node selection marker **/\n  isSelected?: boolean;\n\n  /** Whether node visibility is marked on or off **/\n  isVisible?: boolean;\n\n  /** Computed actual visibility based on ancestors and self visibility **/\n  isVisibleComputed?: boolean; //\n};\n\nexport type TreeNode<T> = TreeNodeBase<T> & {\n  /** The key of the parent node. */\n  parentKey?: Key | null;\n\n  /** Children of the tree node. */\n  children?: TreeNode<T>[];\n};\n\nexport type UseTreeActionsOptions<T> = {\n  nodes: TreeNode<T>[];\n};\n\n/**\n * Stateless collection of transform actions to simplify tree operations\n */\nexport type TreeActions<T> = {\n  /**\n   * Retrieves a specific tree node by key\n   * If not found, throws error\n   */\n  getNode: (key: Key) => TreeNode<T>;\n\n  /**\n   * Inserts nodes as children of the target node\n   */\n  insertInto: (target: Key | null, nodes: TreeNode<T>[]) => TreeData<T>;\n\n  /**\n   * Inserts nodes before the target node\n   */\n  insertBefore: (target: Key | null, nodes: TreeNode<T>[]) => TreeData<T>;\n\n  /**\n   * Inserts nodes after the target node\n   */\n  insertAfter: (target: Key | null, nodes: TreeNode<T>[]) => TreeData<T>;\n\n  /**\n   * Removes one or more nodes from the tree by their keys.\n   * Does nothing if the key is not found.\n   */\n  remove: (keys: Set<Key>) => TreeData<T>;\n\n  /**\n   * Updates a specific node using a callback function\n   */\n  updateNode: (\n    key: Key,\n    callback: (node: TreeNode<T>) => TreeNode<T>,\n  ) => TreeData<T>;\n\n  /**\n   * Moves nodes as children of the target node\n   */\n  moveInto: (target: Key | null, nodes: Set<Key>) => TreeData<T>;\n\n  /**\n   * Moves nodes before the target node\n   */\n  moveBefore: (target: Key | null, nodes: Set<Key>) => TreeData<T>;\n\n  /**\n   * Moves nodes after the target node\n   */\n  moveAfter: (target: Key | null, nodes: Set<Key>) => TreeData<T>;\n\n  /**\n   * Updates the expansion state of nodes. If a key is not\n   * in the set, it is collapsed.\n   */\n  onExpandedChange: (keys: Set<Key>) => TreeData<T>;\n\n  /**\n   * Expands all nodes in the tree\n   */\n  expandAll: () => TreeData<T>;\n\n  /**\n   * Collapses all nodes in the tree\n   */\n  collapseAll: () => TreeData<T>;\n\n  /**\n   * Updates the selection state of nodes. If a key is\n   * not in the Set, it is unselected.\n   */\n  onSelectionChange: (keys: Set<Key>) => TreeData<T>;\n\n  /**\n   * Selects all nodes in the tree\n   */\n  selectAll: () => TreeData<T>;\n\n  /**\n   * Unselects all nodes in the tree\n   */\n  unselectAll: () => TreeData<T>;\n\n  /**\n   * Changes visibility of nodes. Updates both isVisible and isViewable properties.\n   * If a key is not in the Set, it will be hidden.\n   */\n  onVisibilityChange: (keys: Set<Key>) => TreeData<T>;\n\n  /**\n   * Makes all nodes visible in the tree\n   */\n  revealAll: () => TreeData<T>;\n\n  /**\n   * Hides all nodes in the tree\n   */\n  hideAll: () => TreeData<T>;\n};\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  }
+]

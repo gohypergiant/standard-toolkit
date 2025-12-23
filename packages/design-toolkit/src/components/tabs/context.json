@@ -1,0 +1,485 @@
+[
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "1/7",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/tabs/context.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.935Z",
+    "bundleHash": "uifb:21a4827282d1f55b56e8a630",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/tabs/context.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/tabs/context.tsx",
+            "description": "context - Presentational component",
+            "version": {
+              "variables": ["TabsContext"],
+              "hooks": [],
+              "components": ["TabsContext.Provider"],
+              "functions": ["TabsProvider"],
+              "imports": [
+                "./types",
+                "@/lib/types",
+                "client-only",
+                "react",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": {
+              "named": ["TabsContext", "TabsProvider"]
+            },
+            "semanticHash": "uif:01b40159bdc42097ec8f6ee0",
+            "fileHash": "uif:add68edfc39d8502e7de9bc8"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\n'use client';\n\nimport 'client-only';\nimport { createContext } from 'react';\nimport type { ContextValue } from 'react-aria-components';\nimport type { ProviderProps } from '@/lib/types';\nimport type { TabsProps } from './types';\n\n/**\n * Context for Tabs component\n *\n * Provides context for Tabs component to share props\n */\nexport const TabsContext =\n  createContext<ContextValue<TabsProps, HTMLDivElement>>(null);\n\n/**\n * Provider for Tabs component\n *\n * Allows setting default props for all Tabs components within\n */\nexport function TabsProvider({ children, ...props }: ProviderProps<TabsProps>) {\n  return <TabsContext.Provider value={props}>{children}</TabsContext.Provider>;\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "TabsContext.Provider",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tabs/context.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "2/7",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/tabs/index.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.937Z",
+    "bundleHash": "uifb:1533ac4a57d3b91db7439c4b",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/tabs/index.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/tabs/index.tsx",
+            "description": "index - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": ["useContextProps"],
+              "components": ["AriaTabs"],
+              "functions": ["Tabs"],
+              "imports": [
+                "./context",
+                "./styles.module.css",
+                "./types",
+                "@accelint/design-foundation/lib/utils",
+                "client-only",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [".list", ".panel", ".tab", ".tabs"],
+                  "properties": ["content"]
+                }
+              }
+            },
+            "semanticHash": "uif:d040d61074b986d41c567dee",
+            "fileHash": "uif:211d2d657a6e434c56616923"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\n'use client';\n\nimport 'client-only';\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport {\n  Tabs as AriaTabs,\n  composeRenderProps,\n  useContextProps,\n} from 'react-aria-components';\nimport { TabsContext } from './context';\nimport styles from './styles.module.css';\nimport type { TabsProps } from './types';\n\n/**\n * Tabs - A tab navigation component for organizing content into sections\n *\n * Provides accessible tab navigation with keyboard support and proper ARIA implementation.\n * Supports both horizontal and vertical orientations with icon and text variants.\n * Perfect for organizing related content into separate, focusable sections.\n *\n * @example\n * // Basic horizontal tabs\n * <Tabs>\n *   <TabsList>\n *     <TabsListTab id=\"overview\">Overview</TabsListTab>\n *     <TabsListTab id=\"details\">Details</TabsListTab>\n *     <TabsListTab id=\"settings\">Settings</TabsListTab>\n *   </TabsList>\n *   <TabsPanel id=\"overview\">Overview content</TabsPanel>\n *   <TabsPanel id=\"details\">Details content</TabsPanel>\n *   <TabsPanel id=\"settings\">Settings content</TabsPanel>\n * </Tabs>\n *\n * @example\n * // Vertical tabs\n * <Tabs orientation=\"vertical\">\n *   <TabsList>\n *     <TabsListTab id=\"profile\">Profile</TabsListTab>\n *     <TabsListTab id=\"account\">Account</TabsListTab>\n *   </TabsList>\n *   <TabsPanel id=\"profile\">Profile settings</TabsPanel>\n *   <TabsPanel id=\"account\">Account settings</TabsPanel>\n * </Tabs>\n *\n * @example\n * // Icon tabs\n * <Tabs>\n *   <TabsList variant=\"icons\">\n *     <TabsListTab id=\"home\">\n *       <Icon><Home /></Icon>\n *     </TabsListTab>\n *     <TabsListTab id=\"search\">\n *       <Icon><Search /></Icon>\n *     </TabsListTab>\n *   </TabsList>\n *   <TabsPanel id=\"home\">Home content</TabsPanel>\n *   <TabsPanel id=\"search\">Search content</TabsPanel>\n * </Tabs>\n */\nexport function Tabs({ ref, ...props }: TabsProps) {\n  [props, ref] = useContextProps(props, ref ?? null, TabsContext);\n\n  const { children, className, ...rest } = props;\n\n  return (\n    <AriaTabs\n      {...rest}\n      ref={ref}\n      className={composeRenderProps(className, (className) =>\n        clsx('group/tabs', styles.tabs, className),\n      )}\n    >\n      {children}\n    </AriaTabs>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "AriaTabs",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tabs/index.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "3/7",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/tabs/list.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.940Z",
+    "bundleHash": "uifb:7cb983bfe2fc0f7f46def905",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/tabs/list.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/tabs/list.tsx",
+            "description": "list - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": ["AriaTabList"],
+              "functions": ["TabList"],
+              "imports": [
+                "./styles.module.css",
+                "@accelint/design-foundation/lib/utils",
+                "client-only",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [".list", ".panel", ".tab", ".tabs"],
+                  "properties": ["content"]
+                }
+              }
+            },
+            "semanticHash": "uif:02d0ef8fd693096d35f4bc5d",
+            "fileHash": "uif:93d98aceba430c84a7241c1a"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\n'use client';\n\nimport 'client-only';\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport {\n  TabList as AriaTabList,\n  composeRenderProps,\n  type TabListProps,\n} from 'react-aria-components';\nimport styles from './styles.module.css';\n\n/**\n * TabList - Container for tabs\n *\n * Contains and manages a group of Tab components\n */\nexport function TabList<T extends object>({\n  children,\n  className,\n  ...rest\n}: TabListProps<T>) {\n  return (\n    <AriaTabList<T>\n      {...rest}\n      className={composeRenderProps(className, (className) =>\n        clsx(styles.list, className),\n      )}\n    >\n      {children}\n    </AriaTabList>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "AriaTabList",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tabs/list.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "4/7",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/tabs/panel.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.943Z",
+    "bundleHash": "uifb:50c32dfe27277690d7972412",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/tabs/panel.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/tabs/panel.tsx",
+            "description": "panel - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": ["AriaTabPanel"],
+              "functions": ["TabPanel"],
+              "imports": [
+                "./styles.module.css",
+                "@accelint/design-foundation/lib/utils",
+                "client-only",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [".list", ".panel", ".tab", ".tabs"],
+                  "properties": ["content"]
+                }
+              }
+            },
+            "semanticHash": "uif:de77947227c56fbba325ec4b",
+            "fileHash": "uif:9a55a1809709ee8b67f80f86"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\n'use client';\n\nimport 'client-only';\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport {\n  TabPanel as AriaTabPanel,\n  composeRenderProps,\n  type TabPanelProps,\n} from 'react-aria-components';\nimport styles from './styles.module.css';\n\n/**\n * TabPanel - Content panel for tabs\n *\n * Container for content associated with a specific tab\n */\nexport function TabPanel({ children, className, ...rest }: TabPanelProps) {\n  return (\n    <AriaTabPanel\n      {...rest}\n      className={composeRenderProps(className, (className) =>\n        clsx(styles.panel, className),\n      )}\n    >\n      {children}\n    </AriaTabPanel>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "AriaTabPanel",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tabs/panel.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "5/7",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/tabs/tab.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.945Z",
+    "bundleHash": "uifb:68f9c964d7a6fa73cea35ae0",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/tabs/tab.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/tabs/tab.tsx",
+            "description": "tab - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": ["AriaTab"],
+              "functions": ["Tab"],
+              "imports": [
+                "./styles.module.css",
+                "@accelint/design-foundation/lib/utils",
+                "client-only",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [".list", ".panel", ".tab", ".tabs"],
+                  "properties": ["content"]
+                }
+              }
+            },
+            "semanticHash": "uif:70cf5b7285433181dafe1a58",
+            "fileHash": "uif:db6a7f553798a36be5c63f10"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\n'use client';\n\nimport 'client-only';\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport {\n  Tab as AriaTab,\n  composeRenderProps,\n  type TabProps,\n} from 'react-aria-components';\nimport styles from './styles.module.css';\n\n/**\n * Tab - Individual tab component\n *\n * Represents a selectable tab within a TabList\n */\nexport function Tab({ children, className, ...rest }: TabProps) {\n  return (\n    <AriaTab\n      {...rest}\n      className={composeRenderProps(className, (className) =>\n        clsx(styles.tab, className),\n      )}\n    >\n      {children}\n    </AriaTab>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "AriaTab",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tabs/tab.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "6/7",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/tabs/tabs.stories.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.964Z",
+    "bundleHash": "uifb:c33812a5848a6fd8554b2289",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/tabs/tabs.stories.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/tabs/tabs.stories.tsx",
+            "description": "tabs.stories - Presentational component",
+            "version": {
+              "variables": ["Default", "meta"],
+              "hooks": [],
+              "components": [
+                "Add",
+                "Check",
+                "Group",
+                "Icon",
+                "Tab",
+                "TabList",
+                "TabPanel",
+                "Tabs"
+              ],
+              "functions": [],
+              "imports": [
+                "./list",
+                "./panel",
+                "./tab",
+                "@/components/icon",
+                "@/components/tabs/index",
+                "@accelint/icons",
+                "@storybook/react-vite"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "tailwind": {
+                  "categories": {
+                    "layout": ["flex", "flex-row", "flex-wrap"],
+                    "sizing": ["w-[300px]", "w-full"],
+                    "spacing": ["gap-m"]
+                  },
+                  "classCount": 6
+                }
+              },
+              "layout": {
+                "type": "flex"
+              }
+            },
+            "semanticHash": "uif:eb1123fb1dd71b78a5fb998b",
+            "fileHash": "uif:56a837f7f4a34bbbcac3e8c0"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n/** biome-ignore-all lint/correctness/useUniqueElementIds: ids are unique for these stories */\n\nimport { Add, Check, Group } from '@accelint/icons';\nimport { Icon } from '@/components/icon';\nimport { Tabs } from '@/components/tabs/index';\nimport { TabList } from './list';\nimport { TabPanel } from './panel';\nimport { Tab } from './tab';\nimport type { Meta, StoryObj } from '@storybook/react-vite';\n\n/**\n * The `<Tabs>` component is a direct wrapper around the `Tabs` component from\n * `react-aria-components`.\n *\n * Please see the documentation for that component <a href=\"https://react-spectrum.adobe.com/react-aria/Tabs.html\">here</a>.\n *\n * ## Composition Requirements\n *\n * Error boundaries for incorrect usage of this component:\n *\n * - `Tabs` must include a `TabList`\n */\nconst meta = {\n  title: 'Components/Tabs',\n  component: Tabs,\n  args: {\n    orientation: 'horizontal',\n    isDisabled: false,\n  },\n  argTypes: {\n    orientation: {\n      control: 'select',\n      options: ['horizontal', 'vertical'],\n    },\n  },\n} satisfies Meta<typeof Tabs>;\n\nexport default meta;\ntype Story = StoryObj<typeof meta>;\n\nexport const Default: Story = {\n  render: ({ ...args }) => (\n    <div className='flex w-full flex-row flex-wrap gap-m'>\n      <div className='w-[300px]'>\n        <Tabs {...args}>\n          <TabList>\n            <Tab id='Storybook-Tab-1'>Tab 1</Tab>\n            <Tab id='Storybook-Tab-2'>Tab 2</Tab>\n            <Tab id='Storybook-Tab-3'>Tab 3</Tab>\n          </TabList>\n          <TabPanel id='Storybook-Tab-1'>Panel 1</TabPanel>\n          <TabPanel id='Storybook-Tab-2'>Panel 2</TabPanel>\n          <TabPanel id='Storybook-Tab-3'>Panel 3</TabPanel>\n        </Tabs>\n      </div>\n      <div className='w-[300px]'>\n        <Tabs {...args}>\n          <TabList>\n            <Tab id='Storybook-Tab-1'>\n              <Icon>\n                <Add />\n              </Icon>\n            </Tab>\n            <Tab id='Storybook-Tab-2'>\n              <Icon>\n                <Check />\n              </Icon>\n            </Tab>\n            <Tab id='Storybook-Tab-3'>\n              <Icon>\n                <Group />\n              </Icon>\n            </Tab>\n          </TabList>\n          <TabPanel id='Storybook-Tab-1'>Panel 1</TabPanel>\n          <TabPanel id='Storybook-Tab-2'>Panel 2</TabPanel>\n          <TabPanel id='Storybook-Tab-3'>Panel 3</TabPanel>\n        </Tabs>\n      </div>\n    </div>\n  ),\n};\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "Add",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tabs/tabs.stories.tsx"
+        },
+        {
+          "name": "Check",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tabs/tabs.stories.tsx"
+        },
+        {
+          "name": "Group",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tabs/tabs.stories.tsx"
+        },
+        {
+          "name": "Icon",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tabs/tabs.stories.tsx"
+        },
+        {
+          "name": "Tab",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tabs/tabs.stories.tsx"
+        },
+        {
+          "name": "TabList",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tabs/tabs.stories.tsx"
+        },
+        {
+          "name": "TabPanel",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tabs/tabs.stories.tsx"
+        },
+        {
+          "name": "Tabs",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tabs/tabs.stories.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "7/7",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/tabs/types.ts",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.964Z",
+    "bundleHash": "uifb:6aacf14279bcb46267e161d3",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/tabs/types.ts",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/tabs/types.ts",
+            "description": "types - Type definitions",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": [],
+              "functions": [],
+              "imports": ["react", "react-aria-components"]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "semanticHash": "uif:8a8b765d9f1fc02101eb79f8",
+            "fileHash": "uif:769b1a27f083a49eb10a064f"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport type { RefAttributes } from 'react';\nimport type { TabsProps as AriaTabsProps } from 'react-aria-components';\n\nexport type TabsProps = AriaTabsProps & RefAttributes<HTMLDivElement>;\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  }
+]

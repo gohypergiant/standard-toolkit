@@ -1,0 +1,1104 @@
+[
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "1/8",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/coordinate-field/context.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:42.743Z",
+    "bundleHash": "uifb:31ed5dd68a2d30ca6f11b63a",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/coordinate-field/context.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/coordinate-field/context.tsx",
+            "description": "context - Presentational component",
+            "version": {
+              "variables": [
+                "CoordinateFieldContext",
+                "CoordinateFieldStateContext",
+                "useCoordinateFieldStateContext"
+              ],
+              "hooks": ["useContext"],
+              "components": [
+                "CoordinateFieldContext.Provider",
+                "CoordinateFieldStateContext.Provider"
+              ],
+              "functions": [
+                "CoordinateFieldProvider",
+                "CoordinateFieldStateProvider",
+                "useCoordinateFieldStateContext"
+              ],
+              "imports": [
+                "./types",
+                "@/lib/types",
+                "react",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": {
+              "named": [
+                "CoordinateFieldContext",
+                "CoordinateFieldProvider",
+                "CoordinateFieldStateContext",
+                "CoordinateFieldStateProvider",
+                "useCoordinateFieldStateContext"
+              ]
+            },
+            "prediction": ["Consumes React Context for shared state"],
+            "semanticHash": "uif:6933b93dc1575bd67d6a5177",
+            "fileHash": "uif:82477bf833cd934dc58f2830"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\n'use client';\n\nimport { createContext, useContext } from 'react';\nimport type { ContextValue } from 'react-aria-components';\nimport type { ProviderProps } from '@/lib/types';\nimport type { CoordinateFieldProps, CoordinateFieldState } from './types';\n\n/**\n * CoordinateField Context Architecture\n *\n * This file defines two separate contexts following the React Aria component pattern:\n *\n * 1. CoordinateFieldContext (Props Context):\n *    - Contains user-provided props for the component\n *    - Used for React Aria's context-based prop merging\n *    - Part of the public composition API\n *\n * 2. CoordinateFieldStateContext (State Context):\n *    - Contains derived/computed runtime state\n *    - Used to share state with child components (e.g., CoordinateSegment)\n *    - Primarily for internal use\n\n * Separation keeps the public API (props) distinct from internal\n * implementation details (state), improving maintainability and composition.\n */\n\n/**\n * Props Context for CoordinateField component.\n *\n * Contains user-provided props (label, format, size, value, onChange, etc.)\n * and is used by React Aria's useContextProps hook for context-based prop merging.\n * This enables parent components to provide default props to nested CoordinateField\n * components, supporting composition patterns.\n *\n * Part of the public API - external consumers can use this for component composition.\n *\n * @see CoordinateFieldStateContext for internal runtime state\n */\nexport const CoordinateFieldContext =\n  createContext<ContextValue<CoordinateFieldProps, HTMLDivElement>>(null);\n\n/**\n * State Context for CoordinateField component.\n *\n * Contains derived/computed runtime state (segmentValues, currentValue,\n * validationErrors, registerTimeout, etc.) that is shared with child components\n * like CoordinateSegment. This avoids prop drilling for deeply nested children.\n *\n * This follows the React Aria pattern of separating props context (public API)\n * from state context (internal implementation). While exported for composition\n * scenarios and testing, this is primarily for internal use.\n *\n * @see CoordinateFieldContext for user-provided props\n * @example\n * // Used internally by child components\n * const state = useCoordinateFieldStateContext();\n * const { segmentValues, isDisabled, registerTimeout } = state;\n */\nexport const CoordinateFieldStateContext =\n  createContext<CoordinateFieldState | null>(null);\n\n/**\n * Provider component for CoordinateField context\n * Wraps children with CoordinateFieldContext\n */\nexport function CoordinateFieldProvider({\n  children,\n  ...props\n}: ProviderProps<CoordinateFieldProps>) {\n  return (\n    <CoordinateFieldContext.Provider value={props}>\n      {children}\n    </CoordinateFieldContext.Provider>\n  );\n}\n\n/**\n * Provider component for CoordinateField state context\n * Wraps children with CoordinateFieldStateContext\n */\nexport function CoordinateFieldStateProvider({\n  children,\n  value,\n}: {\n  children: React.ReactNode;\n  value: CoordinateFieldState;\n}) {\n  return (\n    <CoordinateFieldStateContext.Provider value={value}>\n      {children}\n    </CoordinateFieldStateContext.Provider>\n  );\n}\n\n/**\n * Hook to access CoordinateField state context\n * Must be used within a CoordinateField component\n * @throws {Error} If used outside of CoordinateField\n * @returns {CoordinateFieldState} The coordinate field state\n */\nexport const useCoordinateFieldStateContext = () => {\n  const context = useContext(CoordinateFieldStateContext);\n  if (!context) {\n    throw new Error(\n      'useCoordinateFieldStateContext must be used within CoordinateField',\n    );\n  }\n  return context;\n};\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "CoordinateFieldContext.Provider",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/coordinate-field/context.tsx"
+        },
+        {
+          "name": "CoordinateFieldStateContext.Provider",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/coordinate-field/context.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "2/8",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/coordinate-field/coordinate-field.stories.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:42.758Z",
+    "bundleHash": "uifb:2f4980964f450a5e73f81992",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/coordinate-field/coordinate-field.stories.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/coordinate-field/coordinate-field.stories.tsx",
+            "description": "coordinate-field.stories - Form input field",
+            "version": {
+              "variables": [
+                "AccessibilityDemo",
+                "AllFormats",
+                "Controlled",
+                "DecimalDegrees",
+                "Default",
+                "DegreesDecimalMinutes",
+                "DegreesMinutesSeconds",
+                "Disabled",
+                "FormIntegration",
+                "FormatConversionDemo",
+                "FormatPopoverDemo",
+                "MGRS",
+                "PasteHandling",
+                "RealWorldLocations",
+                "Required",
+                "SmallSize",
+                "StackedVariant",
+                "UTM",
+                "ValidationDemo",
+                "WithError",
+                "WithInitialValue",
+                "WithoutFormatButton",
+                "meta"
+              ],
+              "hooks": ["useState"],
+              "components": [
+                "Button",
+                "CoordinateField",
+                "Label",
+                "OptionsItem",
+                "OptionsItemLabel",
+                "SelectField"
+              ],
+              "functions": [],
+              "imports": [
+                "../button",
+                "../label",
+                "../options/item",
+                "../options/item-label",
+                "../select-field",
+                "./index",
+                "./types",
+                "@react-types/shared",
+                "@storybook/react-vite",
+                "react"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {
+                "onChange": {
+                  "type": "function",
+                  "signature": "(e) => void"
+                },
+                "onError": {
+                  "type": "function",
+                  "signature": "() => void"
+                },
+                "onSubmit": {
+                  "type": "function",
+                  "signature": "() => void"
+                }
+              },
+              "state": {
+                "value": "{ lat: number; lon: number } | null",
+                "validationError": "string",
+                "format": "'dd' | 'ddm' | 'dms' | 'mgrs' | 'utm'",
+                "pasteError": "string",
+                "formData": "unknown",
+                "submitted": "boolean"
+              }
+            },
+            "exports": {
+              "named": [
+                "AccessibilityDemo",
+                "AllFormats",
+                "Controlled",
+                "DecimalDegrees",
+                "Default",
+                "DegreesDecimalMinutes",
+                "DegreesMinutesSeconds",
+                "Disabled",
+                "FormIntegration",
+                "FormatConversionDemo",
+                "FormatPopoverDemo",
+                "MGRS",
+                "PasteHandling",
+                "RealWorldLocations",
+                "Required",
+                "SmallSize",
+                "StackedVariant",
+                "UTM",
+                "ValidationDemo",
+                "WithError",
+                "WithInitialValue",
+                "WithoutFormatButton"
+              ]
+            },
+            "style": {
+              "styleSources": {
+                "tailwind": {
+                  "categories": {
+                    "layout": ["flex", "flex-col"],
+                    "spacing": [
+                      "gap-m",
+                      "gap-s",
+                      "gap-xs",
+                      "mb-2xs",
+                      "mb-m",
+                      "mb-xs",
+                      "mt-0",
+                      "mt-xs",
+                      "p-m",
+                      "p-s",
+                      "p-xs",
+                      "space-y-2xs"
+                    ],
+                    "other": [
+                      "border",
+                      "fg-negative",
+                      "fg-positive",
+                      "fg-primary",
+                      "fg-primary-muted",
+                      "list-decimal",
+                      "list-disc",
+                      "list-inside",
+                      "rounded"
+                    ],
+                    "borders": [
+                      "border-outline-negative",
+                      "border-outline-neutral",
+                      "border-outline-positive"
+                    ],
+                    "colors": [
+                      "bg-surface-negative",
+                      "bg-surface-positive",
+                      "bg-surface-primary",
+                      "bg-surface-subtle"
+                    ],
+                    "typography": [
+                      "font-bold",
+                      "font-mono",
+                      "font-semibold",
+                      "text-body-s",
+                      "text-body-xs",
+                      "text-heading-s"
+                    ],
+                    "sizing": ["max-w-2xl", "w-[60px]", "w-[80px]"]
+                  },
+                  "classCount": 39
+                },
+                "inlineStyles": true
+              },
+              "layout": {
+                "type": "flex"
+              },
+              "visual": {
+                "colors": [
+                  "bg-surface-negative",
+                  "bg-surface-positive",
+                  "bg-surface-primary",
+                  "bg-surface-subtle",
+                  "border-outline-negative",
+                  "border-outline-neutral",
+                  "border-outline-positive",
+                  "text-body-s",
+                  "text-body-xs",
+                  "text-heading-s"
+                ],
+                "spacing": [
+                  "mb-2xs",
+                  "mb-m",
+                  "mb-xs",
+                  "mt-0",
+                  "mt-xs",
+                  "p-m",
+                  "p-s",
+                  "p-xs"
+                ],
+                "radius": "default",
+                "typography": [
+                  "font-bold",
+                  "font-mono",
+                  "font-semibold",
+                  "text-body-s",
+                  "text-body-xs",
+                  "text-heading-s"
+                ]
+              }
+            },
+            "semanticHash": "uif:4a15cdb775f8fab796b27d3b",
+            "fileHash": "uif:634ab90bb28362b3081984e2"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport type { Key } from '@react-types/shared';\nimport type { Meta, StoryObj } from '@storybook/react-vite';\nimport { useState } from 'react';\nimport { Button } from '../button';\nimport { Label } from '../label';\nimport { OptionsItem } from '../options/item';\nimport { OptionsItemLabel } from '../options/item-label';\nimport { SelectField } from '../select-field';\nimport { CoordinateField } from './index';\nimport {\n  COORDINATE_SYSTEMS,\n  type CoordinateSystem,\n  type CoordinateValue,\n} from './types';\n\n/**\n * CoordinateField Storybook Stories\n *\n * Comprehensive documentation and interactive examples for the CoordinateField component.\n *\n * Features:\n * - Basic component structure with segmented input\n * - Keyboard navigation between segments\n * - All coordinate system formats (DD, DDM, DMS, MGRS, UTM)\n * - Value conversion and validation with @accelint/geo\n * - Error handling via onError callback with error messages\n * - Format conversion popover with copy functionality\n * - Paste handling with parser disambiguation\n * - Comprehensive test coverage\n * - Complete Storybook documentation\n */\nconst meta = {\n  title: 'Components/CoordinateField',\n  component: CoordinateField,\n  parameters: {\n    layout: 'centered',\n    docs: {\n      description: {\n        component:\n          'A comprehensive coordinate input field supporting multiple coordinate systems (DD, DDM, DMS, MGRS, UTM) with validation, format conversion, and intelligent paste handling. All values are normalized to Decimal Degrees internally for consistency.',\n      },\n    },\n  },\n  tags: ['autodocs'],\n  args: {\n    label: 'Coordinates',\n    description: 'Enter location coordinates',\n    errorMessage: '',\n    format: 'dd',\n    size: 'medium',\n    variant: 'inline',\n    isDisabled: false,\n    isInvalid: false,\n    isReadOnly: false,\n    isRequired: false,\n  },\n  argTypes: {\n    format: {\n      control: 'select',\n      options: [...COORDINATE_SYSTEMS],\n      description: 'The coordinate system format for display and input',\n      table: {\n        type: { summary: 'CoordinateSystem' },\n        defaultValue: { summary: 'dd' },\n      },\n    },\n    size: {\n      control: 'radio',\n      options: ['small', 'medium'],\n      description: 'The size variant of the field',\n      table: {\n        type: { summary: 'small | medium' },\n        defaultValue: { summary: 'medium' },\n      },\n    },\n    variant: {\n      control: 'radio',\n      options: ['inline', 'stacked'],\n      description: 'The variant of the field',\n      table: {\n        type: { summary: 'inline | stacked' },\n        defaultValue: { summary: 'inline' },\n      },\n    },\n    showFormatButton: {\n      control: 'boolean',\n      description:\n        'Whether to show the format button for copying coordinates in different formats',\n      table: {\n        type: { summary: 'boolean' },\n        defaultValue: { summary: 'true' },\n      },\n    },\n    label: {\n      control: 'text',\n      description: 'Label text displayed above the field (medium size only)',\n      table: {\n        type: { summary: 'string' },\n      },\n    },\n    description: {\n      control: 'text',\n      description: 'Helper text displayed below the field',\n      table: {\n        type: { summary: 'string' },\n      },\n    },\n    errorMessage: {\n      control: 'text',\n      description: 'Error message to display when field is invalid',\n      table: {\n        type: { summary: 'string' },\n      },\n    },\n    isDisabled: {\n      control: 'boolean',\n      description: 'Whether the field is disabled',\n      table: {\n        type: { summary: 'boolean' },\n        defaultValue: { summary: 'false' },\n      },\n    },\n    isRequired: {\n      control: 'boolean',\n      description: 'Whether the field is required',\n      table: {\n        type: { summary: 'boolean' },\n        defaultValue: { summary: 'false' },\n      },\n    },\n    isReadOnly: {\n      control: 'boolean',\n      description: 'Whether the field is read-only',\n      table: {\n        type: { summary: 'boolean' },\n        defaultValue: { summary: 'false' },\n      },\n    },\n    isInvalid: {\n      control: 'boolean',\n      description: 'Whether the field is in an invalid state',\n      table: {\n        type: { summary: 'boolean' },\n        defaultValue: { summary: 'false' },\n      },\n    },\n    value: {\n      control: 'object',\n      description:\n        'Controlled value in Decimal Degrees format { lat: number, lon: number }',\n      table: {\n        type: { summary: 'CoordinateValue' },\n      },\n    },\n    defaultValue: {\n      control: 'object',\n      description: 'Default uncontrolled value in Decimal Degrees format',\n      table: {\n        type: { summary: 'CoordinateValue' },\n      },\n    },\n    onChange: {\n      action: 'onChange',\n      description:\n        'Callback when coordinate value changes (receives DD format or null)',\n      table: {\n        type: { summary: '(value: CoordinateValue | null) => void' },\n      },\n    },\n  },\n} satisfies Meta<typeof CoordinateField>;\n\nexport default meta;\ntype Story = StoryObj<typeof meta>;\n\n/**\n * Default story - Basic usage with Decimal Degrees format\n *\n * Demonstrates the most common use case: a simple coordinate field with\n * label, description, and DD format input.\n */\nexport const Default: Story = {\n  args: {\n    label: 'Location',\n    description: 'Enter a coordinate in Decimal Degrees format',\n    format: 'dd',\n    size: 'medium',\n  },\n  parameters: {\n    docs: {\n      description: {\n        story:\n          'The default configuration provides a labeled field with DD format. This is the recommended starting point for most use cases.',\n      },\n    },\n  },\n};\n\n/**\n * Small size variant\n * Label is hidden in small size\n */\nexport const SmallSize: Story = {\n  args: {\n    size: 'small',\n  },\n  render: (args) => <CoordinateField {...args} />,\n};\n\n/**\n * Stacked Variant\n *\n * Demonstrates the stacked layout variant where coordinate segments are split\n * into separate rows with latitude on the first row and longitude on the second.\n * This is useful when vertical space is available and you want to clearly separate\n * latitude and longitude components, or when working with longer coordinate formats.\n */\nexport const StackedVariant: Story = {\n  render: () => {\n    const newYorkCity = { lat: 40.7128, lon: -74.006 };\n\n    return (\n      <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>\n        <CoordinateField\n          label='Stacked DD Format'\n          description='Decimal Degrees in stacked layout'\n          format='dd'\n          variant='stacked'\n          defaultValue={newYorkCity}\n        />\n        <CoordinateField\n          label='Stacked DDM Format'\n          description='Degrees Decimal Minutes in stacked layout'\n          format='ddm'\n          variant='stacked'\n          defaultValue={newYorkCity}\n        />\n        <CoordinateField\n          label='Stacked DMS Format'\n          description='Degrees Minutes Seconds in stacked layout'\n          format='dms'\n          variant='stacked'\n          defaultValue={newYorkCity}\n        />\n      </div>\n    );\n  },\n\n  parameters: {\n    controls: { disable: true },\n    docs: {\n      description: {\n        story:\n          'The stacked variant displays latitude and longitude on separate rows, providing better readability for longer coordinate formats and clearer separation of components. Particularly useful in narrow containers or mobile layouts.',\n      },\n    },\n  },\n  tags: ['!dev'],\n};\n\n/**\n * With Copy Button Disabled\n *\n * The copy button can be hidden by setting showFormatButton to false.\n * This works for both medium and small sizes.\n */\nexport const WithoutFormatButton: Story = {\n  args: {\n    showFormatButton: false,\n    value: { lat: 40.7128, lon: -74.006 },\n  },\n  render: (args) => (\n    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>\n      <CoordinateField {...args} label='Medium without copy' size='medium' />\n      <CoordinateField {...args} label='Small without copy' size='small' />\n    </div>\n  ),\n};\n\n/**\n * Decimal Degrees format (default)\n *\n * Format: [lat], [lon]\n * Example: 40.7128, -74.0060 (New York City)\n *\n * Segments:\n * - Latitude: -90 to 90 (decimal degrees)\n * - Longitude: -180 to 180 (decimal degrees)\n *\n * Total: 2 editable segments\n */\nexport const DecimalDegrees: Story = {\n  args: {\n    format: 'dd',\n    description: 'Example: 40.7128, -74.0060 (New York City)',\n  },\n  render: (args) => <CoordinateField {...args} />,\n};\n\n/**\n * Degrees Decimal Minutes format\n *\n * Format: [lat_deg]° [lat_min]' [lat_dir], [lon_deg]° [lon_min]' [lon_dir]\n * Example: 40° 42.768' N, 74° 0.360' W (New York City)\n *\n * Segments:\n * - Latitude degrees: 0-90 (whole number)\n * - Latitude minutes: 0-59.9999 (decimal allowed)\n * - Latitude direction: N or S\n * - Longitude degrees: 0-180 (whole number)\n * - Longitude minutes: 0-59.9999 (decimal allowed)\n * - Longitude direction: E or W\n *\n * Total: 6 editable segments\n */\nexport const DegreesDecimalMinutes: Story = {\n  args: {\n    format: 'ddm',\n    description: \"Example: 40° 42.768' N, 74° 0.360' W (New York City)\",\n  },\n  render: (args) => <CoordinateField {...args} />,\n};\n\n/**\n * Degrees Minutes Seconds format\n *\n * Format: [lat_deg]° [lat_min]' [lat_sec]\" [lat_dir], [lon_deg]° [lon_min]' [lon_sec]\" [lon_dir]\n * Example: 40° 42' 46.08\" N, 74° 0' 21.60\" W (New York City)\n *\n * Segments:\n * - Latitude degrees: 0-90 (whole number)\n * - Latitude minutes: 0-59 (whole number)\n * - Latitude seconds: 0-59.99 (decimal allowed)\n * - Latitude direction: N or S\n * - Longitude degrees: 0-180 (whole number)\n * - Longitude minutes: 0-59 (whole number)\n * - Longitude seconds: 0-59.99 (decimal allowed)\n * - Longitude direction: E or W\n *\n * Total: 8 editable segments\n */\nexport const DegreesMinutesSeconds: Story = {\n  args: {\n    format: 'dms',\n    description: 'Example: 40° 42\\' 46.08\" N, 74° 0\\' 21.60\" W (New York City)',\n  },\n  render: (args) => <CoordinateField {...args} />,\n};\n\n/**\n * MGRS (Military Grid Reference System) format\n *\n * Format: [zone][band] [grid_100km] [easting] [northing]\n * Example: 18T WL 80654 06346 (New York City)\n *\n * Segments:\n * - Zone: 1-60 (2 digits)\n * - Band: C-X, excluding I and O (1 letter)\n * - Grid 100km: 2 letters (A-Z, excluding I and O)\n * - Easting: 5 digits (can be 1-5 based on precision)\n * - Northing: 5 digits (can be 1-5 based on precision)\n *\n * Total: 5 editable segments\n */\nexport const MGRS: Story = {\n  args: {\n    format: 'mgrs',\n    description: 'Example: 18T WL 80654 06346 (New York City)',\n  },\n  render: (args) => <CoordinateField {...args} />,\n};\n\n/**\n * UTM (Universal Transverse Mercator) format\n *\n * Format: [zone][hemisphere] [easting] [northing]\n * Example: 18N 585628 4511644 (New York City)\n *\n * Segments:\n * - Zone: 1-60 (2 digits)\n * - Hemisphere: N or S (1 letter)\n * - Easting: 6-7 digits\n * - Northing: 7 digits\n *\n * Total: 4 editable segments\n */\nexport const UTM: Story = {\n  args: {\n    format: 'utm',\n    description: 'Example: 18N 585628 4511644 (New York City)',\n  },\n  render: (args) => <CoordinateField {...args} />,\n};\n\n/**\n * Field with error state\n */\nexport const WithError: Story = {\n  args: {\n    isInvalid: true,\n    errorMessage: 'Invalid coordinate format',\n    description: undefined, // Description is hidden when error is shown\n  },\n  render: (args) => <CoordinateField {...args} />,\n};\n\n/**\n * Disabled field\n */\nexport const Disabled: Story = {\n  args: {\n    isDisabled: true,\n    description: 'This field is disabled',\n  },\n  render: (args) => <CoordinateField {...args} />,\n};\n\n/**\n * Required field\n */\nexport const Required: Story = {\n  args: {\n    isRequired: true,\n    description: 'This field is required',\n  },\n  render: (args) => <CoordinateField {...args} />,\n};\n\n/**\n * Controlled component example\n * Demonstrates controlled component with external state and validation\n */\nexport const Controlled: Story = {\n  render: () => {\n    const [value, setValue] = useState<{ lat: number; lon: number } | null>(\n      null,\n    );\n\n    return (\n      <div className='flex flex-col gap-m'>\n        <CoordinateField\n          label='Controlled Coordinates'\n          description='Enter valid coordinates to see the value update'\n          value={value || undefined}\n          onChange={setValue}\n        />\n        <div className='fg-primary-muted rounded border border-outline-neutral bg-surface-primary p-s text-body-s'>\n          <div className='mb-2xs font-semibold'>Current Value:</div>\n          {value ? (\n            <>\n              <div>Latitude: {value.lat.toFixed(6)}</div>\n              <div>Longitude: {value.lon.toFixed(6)}</div>\n            </>\n          ) : (\n            <div>\n              No value yet - enter coordinates to see validation in action\n            </div>\n          )}\n        </div>\n      </div>\n    );\n  },\n  parameters: {\n    controls: { disable: true },\n  },\n};\n\n/**\n * Validation Demo\n *\n * Demonstrates real-time validation using @accelint/geo with the onError callback.\n *\n * Try entering invalid coordinates to see validation errors:\n * - Latitude > 90 or < -90 → \"Invalid coordinate value\"\n * - Longitude > 180 or < -180 → \"Invalid coordinate value\"\n * - Minutes > 59 (for DDM/DMS) → \"Invalid coordinate value\"\n * - Seconds > 59 (for DMS) → \"Invalid coordinate value\"\n *\n * Error handling uses the onError callback with isInvalid/errorMessage props\n * for implementor-controlled display.\n */\nexport const ValidationDemo: Story = {\n  render: () => {\n    const [value, setValue] = useState<{ lat: number; lon: number } | null>(\n      null,\n    );\n    const [validationError, setValidationError] = useState<string>('');\n\n    const handleError = (\n      message: string,\n      context?: Record<string, unknown>,\n    ) => {\n      setValidationError(message);\n      console.error('Validation error:', message, context);\n    };\n\n    const handleChange = (newValue: { lat: number; lon: number } | null) => {\n      setValue(newValue);\n      setValidationError('');\n    };\n\n    return (\n      <CoordinateField\n        label='Test Validation'\n        description='Try entering 181, 91'\n        format='dd'\n        value={value || undefined}\n        onChange={handleChange}\n        onError={handleError}\n        isInvalid={!!validationError}\n        errorMessage={validationError}\n      />\n    );\n  },\n  parameters: {\n    controls: { disable: true },\n  },\n};\n\n/**\n * Pre-filled Value Demo\n *\n * Demonstrates initializing the component with a value prop.\n * The coordinate is automatically converted to the display format.\n *\n * New York City coordinates: { lat: 40.7128, lon: -74.006 }\n */\nexport const WithInitialValue: Story = {\n  render: () => {\n    const newYorkCity = { lat: 40.7128, lon: -74.006 };\n    const [value, setValue] = useState<{ lat: number; lon: number } | null>(\n      newYorkCity,\n    );\n\n    return (\n      <div className='flex flex-col gap-m'>\n        <CoordinateField\n          label='New York City'\n          description='Pre-filled with NYC coordinates'\n          format='dd'\n          value={value}\n          onChange={setValue}\n        />\n        <div className='fg-primary-muted text-body-s'>\n          {value\n            ? `Lat: ${value.lat.toFixed(6)}, Lon: ${value.lon.toFixed(6)}`\n            : 'No value'}\n        </div>\n      </div>\n    );\n  },\n  parameters: {\n    controls: { disable: true },\n  },\n};\n\n/**\n * Format Conversion Demo\n *\n * Demonstrates automatic conversion between formats while preserving the coordinate value.\n * The internal DD value is maintained and converted to the selected display format.\n *\n * Try switching formats - the coordinate value is preserved!\n */\nexport const FormatConversionDemo: Story = {\n  render: () => {\n    const newYorkCity = { lat: 40.7128, lon: -74.006 };\n    const [value, setValue] = useState<{ lat: number; lon: number } | null>(\n      newYorkCity,\n    );\n    const [format, setFormat] = useState<'dd' | 'ddm' | 'dms' | 'mgrs' | 'utm'>(\n      'dd',\n    );\n\n    const handleFormatChange = (key: Key | null) => {\n      if (key) {\n        setFormat(key as CoordinateSystem);\n      }\n    };\n\n    return (\n      <div className='flex flex-col gap-m'>\n        <div className='flex gap-s'>\n          <SelectField\n            label='Select Format'\n            value={format}\n            onChange={handleFormatChange}\n            size='small'\n          >\n            <OptionsItem id='dd' textValue='Decimal Degrees (DD)'>\n              <OptionsItemLabel>Decimal Degrees (DD)</OptionsItemLabel>\n            </OptionsItem>\n            <OptionsItem id='ddm' textValue='Degrees Decimal Minutes (DDM)'>\n              <OptionsItemLabel>Degrees Decimal Minutes (DDM)</OptionsItemLabel>\n            </OptionsItem>\n            <OptionsItem id='dms' textValue='Degrees Minutes Seconds (DMS)'>\n              <OptionsItemLabel>Degrees Minutes Seconds (DMS)</OptionsItemLabel>\n            </OptionsItem>\n            <OptionsItem id='mgrs' textValue='MGRS'>\n              <OptionsItemLabel>MGRS</OptionsItemLabel>\n            </OptionsItem>\n            <OptionsItem id='utm' textValue='UTM'>\n              <OptionsItemLabel>UTM</OptionsItemLabel>\n            </OptionsItem>\n          </SelectField>\n        </div>\n\n        <CoordinateField\n          label='New York City Coordinates'\n          description='Same coordinate displayed in different formats'\n          format={format}\n          value={value}\n          onChange={setValue}\n        />\n\n        <div className='fg-primary-muted rounded border border-outline-neutral bg-surface-primary p-s text-body-s'>\n          <div className='mb-2xs font-semibold'>Internal Value (DD):</div>\n          {value ? (\n            <>\n              <div>Latitude: {value.lat.toFixed(6)}</div>\n              <div>Longitude: {value.lon.toFixed(6)}</div>\n            </>\n          ) : (\n            <div>No value</div>\n          )}\n        </div>\n      </div>\n    );\n  },\n  parameters: {\n    controls: { disable: true },\n  },\n};\n\n/**\n * Format Popover Demo\n *\n * Demonstrates the format conversion popover that shows all coordinate formats.\n * Click the globe icon button to see the coordinate in all 5 formats.\n * Each format has a copy button to copy the value to the clipboard.\n *\n * Features:\n * - Shows current coordinate in DD, DDM, DMS, MGRS, and UTM formats\n * - Copy to clipboard functionality for each format\n * - Visual feedback when a format is copied (checkmark icon)\n * - Only available for medium size (small size doesn't show the button)\n * - Button disabled when no valid coordinate is entered\n *\n * Try it:\n * 1. Enter a valid coordinate (e.g., 40.7128, -74.006)\n * 2. Click the globe icon button to open the popover\n * 3. Click any copy button to copy that format to clipboard\n * 4. See the checkmark appear for 2 seconds as confirmation\n */\nexport const FormatPopoverDemo: Story = {\n  render: () => {\n    const newYorkCity = { lat: 40.7128, lon: -74.006 };\n    const [value, setValue] = useState<{ lat: number; lon: number } | null>(\n      newYorkCity,\n    );\n\n    return (\n      <div className='flex flex-col gap-m'>\n        <CoordinateField\n          label='Coordinate with Format Popover'\n          description='Click the globe icon to see all format conversions'\n          format='dd'\n          value={value}\n          onChange={setValue}\n        />\n\n        <div className='fg-primary-muted rounded border border-outline-neutral bg-surface-primary p-s text-body-s'>\n          <div className='mb-2xs font-semibold'>Instructions:</div>\n          <ul className='list-inside list-disc space-y-2xs'>\n            <li>Click the globe icon to open the format conversion popover</li>\n            <li>All 5 coordinate formats are displayed</li>\n            <li>Click the copy icon next to any format to copy it</li>\n            <li>The icon changes to a checkmark for 2 seconds after copying</li>\n            <li>The button is disabled when no valid coordinate is entered</li>\n          </ul>\n        </div>\n      </div>\n    );\n  },\n  parameters: {\n    controls: { disable: true },\n  },\n};\n\n/**\n * Paste Handling Demo\n *\n * Demonstrates all paste-related functionality including automatic format detection,\n * parsing, conversion, disambiguation, and error handling.\n *\n * Features:\n * - Auto-detection of complete coordinates vs. single values\n * - Parsing of all 5 coordinate formats (DD, DDM, DMS, MGRS, UTM)\n * - Automatic application when only one format matches\n * - Disambiguation modal when multiple formats match\n * - Error handling with onError callback (\"Invalid coordinate format\" for paste errors)\n * - Format conversion to selected display format\n * - Implementor-controlled error display\n *\n * This story combines all paste functionality into a single interactive demo,\n * allowing you to test both successful parsing and error handling in one place.\n */\nexport const PasteHandling: Story = {\n  render: () => {\n    const [value, setValue] = useState<{ lat: number; lon: number } | null>(\n      null,\n    );\n    const [format, setFormat] = useState<'dd' | 'ddm' | 'dms' | 'mgrs' | 'utm'>(\n      'dd',\n    );\n    const [pasteError, setPasteError] = useState<string>('');\n\n    const handleFormatChange = (key: Key | null) => {\n      if (key) {\n        setFormat(key as 'dd' | 'ddm' | 'dms' | 'mgrs' | 'utm');\n      }\n    };\n\n    const handleChange = (newValue: { lat: number; lon: number } | null) => {\n      setValue(newValue);\n      // Clear paste error when valid value is entered\n      if (newValue && pasteError) {\n        setPasteError('');\n      }\n    };\n\n    const handleError = (\n      message: string,\n      context?: Record<string, unknown>,\n    ) => {\n      setPasteError(message);\n      // eslint-disable-next-line no-console\n      console.error('Paste error:', message, context);\n    };\n\n    return (\n      <div className='flex max-w-2xl flex-col gap-m'>\n        <SelectField\n          label='Display Format'\n          value={format}\n          onChange={handleFormatChange}\n          size='small'\n        >\n          <OptionsItem id='dd' textValue='Decimal Degrees (DD)'>\n            <OptionsItemLabel>Decimal Degrees (DD)</OptionsItemLabel>\n          </OptionsItem>\n          <OptionsItem id='ddm' textValue='Degrees Decimal Minutes (DDM)'>\n            <OptionsItemLabel>Degrees Decimal Minutes (DDM)</OptionsItemLabel>\n          </OptionsItem>\n          <OptionsItem id='dms' textValue='Degrees Minutes Seconds (DMS)'>\n            <OptionsItemLabel>Degrees Minutes Seconds (DMS)</OptionsItemLabel>\n          </OptionsItem>\n          <OptionsItem id='mgrs' textValue='MGRS'>\n            <OptionsItemLabel>MGRS</OptionsItemLabel>\n          </OptionsItem>\n          <OptionsItem id='utm' textValue='UTM'>\n            <OptionsItemLabel>UTM</OptionsItemLabel>\n          </OptionsItem>\n        </SelectField>\n\n        <CoordinateField\n          label='Paste Coordinates Here'\n          description='Paste any coordinate format to see parsing, conversion, and error handling'\n          format={format}\n          value={value || undefined}\n          onChange={handleChange}\n          onError={handleError}\n          isInvalid={!!pasteError}\n          errorMessage={pasteError}\n        />\n\n        <div className='fg-primary-muted rounded border border-outline-neutral bg-surface-primary p-s text-body-s'>\n          <div className='mb-xs font-semibold'>How Paste Handling Works:</div>\n          <ol className='mb-m list-inside list-decimal space-y-2xs'>\n            <li>Click in the coordinate field above</li>\n            <li>Paste one of the example coordinates below</li>\n            <li>The field automatically detects and parses the format</li>\n            <li>\n              If multiple formats match, a modal lets you choose the correct one\n            </li>\n            <li>The coordinate converts to the selected display format</li>\n            <li>If parsing fails, the onError callback displays an error</li>\n          </ol>\n\n          <div className='mb-xs font-semibold'>Valid Coordinates to Paste:</div>\n          <div className='mb-m space-y-2xs rounded bg-surface-subtle p-xs font-mono text-body-xs'>\n            <div className='flex gap-xs'>\n              <span className='w-[60px] font-bold'>DD:</span>\n              <span>40.7128, -74.006</span>\n            </div>\n            <div className='flex gap-xs'>\n              <span className='w-[60px] font-bold'>DDM:</span>\n              <span>40° 42.768' N, 74° 0.360' W</span>\n            </div>\n            <div className='flex gap-xs'>\n              <span className='w-[60px] font-bold'>DMS:</span>\n              <span>40° 42' 46.08\" N, 74° 0' 21.60\" W</span>\n            </div>\n            <div className='flex gap-xs'>\n              <span className='w-[60px] font-bold'>MGRS:</span>\n              <span>18T WL 80654 06346</span>\n            </div>\n            <div className='flex gap-xs'>\n              <span className='w-[60px] font-bold'>UTM:</span>\n              <span>18N 585628 4511644</span>\n            </div>\n          </div>\n\n          <div className='mb-xs font-semibold'>Error Testing Examples:</div>\n          <div className='space-y-2xs rounded bg-surface-subtle p-xs font-mono text-body-xs'>\n            <div className='flex gap-xs'>\n              <span className='w-[80px] font-bold'>Invalid:</span>\n              <span>9999, 9999</span>\n            </div>\n          </div>\n        </div>\n\n        {pasteError && (\n          <div className='rounded border border-outline-negative bg-surface-negative p-s text-body-s'>\n            <div className='fg-negative mb-xs font-semibold'>Paste Error:</div>\n            <div>{pasteError}</div>\n            <div className='fg-primary-muted mt-xs text-body-xs'>\n              The onError callback captured this error. Error display is\n              controlled by the implementor.\n            </div>\n          </div>\n        )}\n\n        {value && !pasteError && (\n          <div className='rounded border border-outline-positive bg-surface-positive p-s text-body-s'>\n            <div className='fg-positive mb-xs font-semibold'>\n              Successfully Parsed (DD):\n            </div>\n            <div>Latitude: {value.lat.toFixed(6)}°</div>\n            <div>Longitude: {value.lon.toFixed(6)}°</div>\n          </div>\n        )}\n      </div>\n    );\n  },\n  parameters: {\n    controls: { disable: true },\n    docs: {\n      description: {\n        story:\n          'Comprehensive demonstration of paste handling including automatic format detection, disambiguation, format conversion, and error handling with the onError callback. Test both successful parsing and error cases in a single interactive demo.',\n      },\n    },\n  },\n};\n\n/**\n * All Coordinate Formats - Side-by-side comparison\n *\n * Shows all 5 supported coordinate systems displaying the same location\n * (New York City) to illustrate how different formats represent the same point.\n *\n * This story helps users understand:\n * - The visual differences between formats\n * - Segment count and structure variations\n * - How the same coordinate looks in each system\n */\nexport const AllFormats: Story = {\n  render: () => {\n    const newYorkCity = { lat: 40.7128, lon: -74.006 };\n\n    return (\n      <div\n        style={{\n          display: 'flex',\n          flexDirection: 'column',\n          gap: '24px',\n          width: '600px',\n        }}\n      >\n        <CoordinateField\n          label='Decimal Degrees (DD)'\n          description='Format: lat, lon - Example: 40.7128, -74.0060'\n          format='dd'\n          defaultValue={newYorkCity}\n        />\n        <CoordinateField\n          label='Degrees Decimal Minutes (DDM)'\n          description=\"Format: deg° min' dir - Example: 40° 42.768' N, 74° 0.360' W\"\n          format='ddm'\n          defaultValue={newYorkCity}\n        />\n        <CoordinateField\n          label='Degrees Minutes Seconds (DMS)'\n          description={`Format: deg° min' sec\" dir - Example: 40° 42' 46.08\" N`}\n          format='dms'\n          defaultValue={newYorkCity}\n        />\n        <CoordinateField\n          label='Military Grid Reference System (MGRS)'\n          description='Format: zone band grid easting northing - Example: 18T WL 80654 06346'\n          format='mgrs'\n          defaultValue={newYorkCity}\n        />\n        <CoordinateField\n          label='Universal Transverse Mercator (UTM)'\n          description='Format: zone hemisphere easting northing - Example: 18N 585628 4511644'\n          format='utm'\n          defaultValue={newYorkCity}\n        />\n      </div>\n    );\n  },\n  parameters: {\n    controls: { disable: true },\n    docs: {\n      description: {\n        story:\n          'Compare all coordinate formats side-by-side. All fields show New York City coordinates (40.7128, -74.006) in their respective formats.',\n      },\n    },\n  },\n};\n\n/**\n * Accessibility Demo - Keyboard navigation and screen reader support\n *\n * Demonstrates the comprehensive keyboard accessibility features:\n * - Tab / Shift+Tab: Navigate between segments\n * - Arrow Left/Right: Move between segments at boundaries\n * - Home: Jump to first segment\n * - End: Jump to last segment\n * - Backspace: Delete character or jump to previous segment when empty\n * - Auto-advance: Automatically move to next segment when current is full\n *\n * The component includes proper ARIA labels, descriptions, and error announcements\n * for screen reader users.\n */\nexport const AccessibilityDemo: Story = {\n  render: () => {\n    return (\n      <div className='flex max-w-2xl flex-col gap-m'>\n        <CoordinateField\n          label='Try Keyboard Navigation'\n          description='Use the keyboard shortcuts above to navigate between segments'\n          format='dd'\n          size='medium'\n        />\n        <div className='rounded border border-outline-neutral bg-surface-primary p-m'>\n          <h3 className='fg-primary mt-0 mb-m font-semibold text-heading-s'>\n            Keyboard Navigation\n          </h3>\n          <div className='flex flex-col gap-xs text-body-s'>\n            <div>Tab: to next segment</div>\n            <div>Shift+Tab: to previous segment</div>\n            <div>\n              Arrow Left/Right: Move between segments at field boundaries\n            </div>\n            <div>Home: Jump to first segment</div>\n            <div>End: Jump to last segment</div>\n            <div>\n              Backspace: Delete character or jump to previous segment when empty\n            </div>\n          </div>\n        </div>\n      </div>\n    );\n  },\n  parameters: {\n    controls: { disable: true },\n    docs: {\n      description: {\n        story:\n          'The CoordinateField is fully keyboard accessible with intuitive navigation between segments. ARIA labels and descriptions ensure screen reader compatibility.',\n      },\n    },\n  },\n};\n\n/**\n * Form Integration - Complete form example\n *\n * Demonstrates integration with a standard HTML form, including:\n * - Form submission handling\n * - Validation on submit\n * - Combining with other form fields\n * - Required field validation\n */\nexport const FormIntegration: Story = {\n  render: () => {\n    const [formData, setFormData] = useState({\n      locationName: '',\n      coordinates: null as CoordinateValue | null,\n      notes: '',\n    });\n    const [submitted, setSubmitted] = useState(false);\n\n    const handleCoordinateChange = (value: CoordinateValue | null) => {\n      setFormData((prev) => ({ ...prev, coordinates: value }));\n    };\n\n    const handleSubmit = (e: React.FormEvent) => {\n      e.preventDefault();\n      setSubmitted(true);\n    };\n\n    return (\n      <div style={{ maxWidth: '500px' }}>\n        <form\n          onSubmit={handleSubmit}\n          style={{\n            display: 'flex',\n            flexDirection: 'column',\n            gap: '20px',\n          }}\n        >\n          <div>\n            <Label\n              htmlFor='location-name'\n              style={{ display: 'block', marginBottom: '8px', fontWeight: 500 }}\n            >\n              Location Name\n            </Label>\n            <input\n              id='location-name'\n              type='text'\n              value={formData.locationName}\n              onChange={(e) =>\n                setFormData({ ...formData, locationName: e.target.value })\n              }\n              style={{\n                width: '100%',\n                padding: '8px',\n                border: '1px solid #ccc',\n                borderRadius: '4px',\n              }}\n              required\n            />\n          </div>\n\n          <CoordinateField\n            label='Location Coordinates'\n            description='Enter the coordinates for this location'\n            format='dd'\n            isRequired\n            onChange={handleCoordinateChange}\n          />\n\n          <div>\n            <Label\n              htmlFor='notes'\n              style={{ display: 'block', marginBottom: '8px', fontWeight: 500 }}\n            >\n              Notes (Optional)\n            </Label>\n            <textarea\n              id='notes'\n              value={formData.notes}\n              onChange={(e) =>\n                setFormData({ ...formData, notes: e.target.value })\n              }\n              style={{\n                width: '100%',\n                padding: '8px',\n                border: '1px solid #ccc',\n                borderRadius: '4px',\n                minHeight: '80px',\n              }}\n            />\n          </div>\n\n          <Button type='submit'>Submit Form</Button>\n        </form>\n\n        {submitted && (\n          <div\n            style={{\n              marginTop: '24px',\n              padding: '16px',\n              background: '#e8f5e9',\n              border: '1px solid #4caf50',\n              borderRadius: '4px',\n            }}\n          >\n            <strong>Form Submitted!</strong>\n            <pre style={{ marginTop: '8px', fontSize: '13px' }}>\n              {JSON.stringify(formData, null, 2)}\n            </pre>\n          </div>\n        )}\n      </div>\n    );\n  },\n  parameters: {\n    controls: { disable: true },\n    docs: {\n      description: {\n        story:\n          'Example of CoordinateField integrated in a form with other inputs. Values are in DD format for easy storage and processing.',\n      },\n    },\n  },\n};\n\n/**\n * Real World Locations - Pre-filled examples\n *\n * Demonstrates the field with real-world coordinates from famous locations.\n * Useful for testing and showing how different locations look in different formats.\n */\nexport const RealWorldLocations: Story = {\n  render: () => {\n    const locations = {\n      nyc: { lat: 40.7128, lon: -74.006 },\n      london: { lat: 51.5074, lon: -0.1278 },\n      tokyo: { lat: 35.6762, lon: 139.6503 },\n      sydney: { lat: -33.8688, lon: 151.2093 },\n      paris: { lat: 48.8566, lon: 2.3522 },\n    };\n\n    return (\n      <div\n        style={{\n          display: 'flex',\n          flexDirection: 'column',\n          gap: '24px',\n          maxWidth: '500px',\n        }}\n      >\n        <CoordinateField\n          label='New York City, USA'\n          description='Times Square area'\n          format='dd'\n          defaultValue={locations.nyc}\n        />\n        <CoordinateField\n          label='London, United Kingdom'\n          description='Near Westminster'\n          format='ddm'\n          defaultValue={locations.london}\n        />\n        <CoordinateField\n          label='Tokyo, Japan'\n          description='Shibuya district'\n          format='dms'\n          defaultValue={locations.tokyo}\n        />\n        <CoordinateField\n          label='Sydney, Australia'\n          description='Opera House area'\n          format='utm'\n          defaultValue={locations.sydney}\n        />\n        <CoordinateField\n          label='Paris, France'\n          description='Eiffel Tower vicinity'\n          format='mgrs'\n          defaultValue={locations.paris}\n        />\n      </div>\n    );\n  },\n  parameters: {\n    controls: { disable: true },\n    docs: {\n      description: {\n        story:\n          'Real-world coordinates from major cities, each shown in a different format. Notice how southern hemisphere coordinates (Sydney) use negative latitude.',\n      },\n    },\n  },\n};\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "Button",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/coordinate-field/coordinate-field.stories.tsx"
+        },
+        {
+          "name": "CoordinateField",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/coordinate-field/coordinate-field.stories.tsx"
+        },
+        {
+          "name": "Label",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/coordinate-field/coordinate-field.stories.tsx"
+        },
+        {
+          "name": "OptionsItem",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/coordinate-field/coordinate-field.stories.tsx"
+        },
+        {
+          "name": "OptionsItemLabel",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/coordinate-field/coordinate-field.stories.tsx"
+        },
+        {
+          "name": "SelectField",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/coordinate-field/coordinate-field.stories.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "3/8",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/coordinate-field/coordinate-utils.ts",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:42.759Z",
+    "bundleHash": "uifb:6c3f3ec8c88bcadb13d4b271",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/coordinate-field/coordinate-utils.ts",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/coordinate-field/coordinate-utils.ts",
+            "description": "coordinate-utils - Utility module",
+            "version": {
+              "variables": [
+                "COORDINATE_EPSILON",
+                "COORDINATE_ERROR_MESSAGES",
+                "logger"
+              ],
+              "hooks": [],
+              "components": [],
+              "functions": [
+                "areAllSegmentsFilled",
+                "areCoordinatesEqual",
+                "convertDDToDisplaySegments",
+                "convertDisplaySegmentsToDD",
+                "convertToFormat",
+                "createInvalidResult",
+                "deduplicateMatchesByLocation",
+                "formatDDMSegments",
+                "formatDDSegments",
+                "formatDMSSegments",
+                "formatMGRSSegments",
+                "formatSegmentsToCoordinateString",
+                "formatUTMSegments",
+                "getAllCoordinateFormats",
+                "hasAnySegmentValue",
+                "isCompleteCoordinate",
+                "isGeographicLimitationError",
+                "isValidCoordinateValue",
+                "parseCoordinatePaste",
+                "parseCoordinateStringToSegments",
+                "parseDDCoordinateString",
+                "parseDDMCoordinateString",
+                "parseDMSCoordinateString",
+                "parseMGRSCoordinateString",
+                "parseUTMCoordinateString",
+                "validateCoordinateSegments"
+              ],
+              "imports": ["./types", "@accelint/geo", "@accelint/logger"]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": {
+              "named": [
+                "COORDINATE_EPSILON",
+                "COORDINATE_ERROR_MESSAGES",
+                "areAllSegmentsFilled",
+                "areCoordinatesEqual",
+                "convertDDToDisplaySegments",
+                "convertDisplaySegmentsToDD",
+                "deduplicateMatchesByLocation",
+                "formatSegmentsToCoordinateString",
+                "getAllCoordinateFormats",
+                "hasAnySegmentValue",
+                "isCompleteCoordinate",
+                "parseCoordinatePaste",
+                "parseCoordinateStringToSegments",
+                "validateCoordinateSegments"
+              ]
+            },
+            "prediction": ["Includes form validation logic"],
+            "semanticHash": "uif:755a8e36292480be784ef16b",
+            "fileHash": "uif:6ec6e2c3b74de209f61d4362"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport { getLogger } from '@accelint/logger';\n\nconst logger = getLogger({\n  enabled: process.env.NODE_ENV !== 'production',\n  level: 'debug',\n  prefix: '[CoordinateField]',\n  pretty: true,\n});\n\n/**\n * Coordinate Conversion Utilities\n *\n * This module provides utilities for converting between:\n * 1. Segment values (user input) → Coordinate strings (for @accelint/geo parsing)\n * 2. Coordinate strings (from @accelint/geo output) → Segment values (for display)\n * 3. Decimal Degrees (internal format) ↔ Display format segment values\n *\n * All conversions use the local @accelint/geo package for accurate coordinate parsing\n * and conversion between coordinate systems.\n *\n * ## Architecture: Bridge Layer Between UI and Geo Package\n *\n * This module serves as a bridge layer to handle the impedance mismatch between:\n * - **UI Requirements**: Individual segment fields (e.g., degrees, minutes, seconds, direction)\n * - **Geo Package API**: Complete coordinate strings (e.g., \"40° 42' 46\" N / 74° 0' 22\" W\")\n *\n * ### Why This Bridge Layer Exists\n *\n * The @accelint/geo package provides excellent coordinate parsing, validation, and conversion,\n * but its API is designed around complete coordinate strings:\n *\n * ```typescript\n * // What geo provides:\n * const coord = createCoordinate(coordinateSystems.ddm, 'LATLON')('40 42.768 N / 74 0.36 W');\n * coord.dd()   // Returns: \"40.7128 N / 74.006 W\"  (formatted string)\n * coord.ddm()  // Returns: \"40 42.768 N / 74 0.36 W\" (formatted string)\n * coord.raw    // Returns: { LAT: 40.7128, LON: -74.006 } (only DD numbers)\n * ```\n *\n * The coordinate-field component needs segment-level data for individual input fields:\n * - DDM: ['40', '42.768', 'N', '74', '0.36', 'W'] ← Not provided by geo\n * - DMS: ['40', '42', '46.08', 'N', '74', '0', '21.6', 'W'] ← Not provided by geo\n *\n * ### Current Limitations and Duplication\n *\n * Because the geo package only exposes:\n * 1. **Formatters** that return complete strings (coord.ddm(), coord.dms(), etc.)\n * 2. **Raw values** in Decimal Degrees only (coord.raw)\n *\n * This module must:\n * 1. Build coordinate strings from segments → Pass to geo for parsing\n * 2. Parse geo's formatted output strings → Extract segments using regex\n *\n * This creates a circular conversion flow for DD → Display Segments:\n * ```\n * DD value → String → Geo parse → Geo format → String → Regex parse → Segments\n * ```\n *\n * **Note on Duplication**: The regex parsing in this module duplicates work that the\n * geo package parsers already do internally. However, since geo doesn't expose the\n * parsed segment components (only formatted strings and raw DD values), we must\n * re-parse its output to extract the individual segments for the UI.\n *\n * ### What Would Eliminate This Duplication\n *\n * If the geo package exported component-level converters like:\n * ```typescript\n * // Hypothetical API that would eliminate the bridge layer:\n * export function ddToDdmComponents(dd: number): {\n *   degrees: number;\n *   minutes: number;\n *   direction: 'N' | 'S' | 'E' | 'W';\n * }\n * ```\n *\n * Then this bridge layer could be significantly simplified. The math for these conversions\n * exists in the geo package's formatters (e.g., formatDegreesDecimalMinutes), but it's\n * wrapped in string formatting logic rather than exposed as standalone utilities.\n *\n * ### Conversion Efficiency\n *\n * - **Efficient Path** (Display Segments → DD): Segments → String → Geo parse → DD\n *   - Uses geo package for all parsing and validation ✓\n *\n * - **Inefficient Path** (DD → Display Segments): DD → String → Geo parse → Geo format → Regex parse → Segments\n *   - Circular conversion with redundant string parsing/formatting ✗\n *   - Necessary given current geo API limitations\n */\n\nimport { coordinateSystems, createCoordinate } from '@accelint/geo';\nimport {\n  COORDINATE_SYSTEMS,\n  type CoordinateSystem,\n  type CoordinateValue,\n  type ParsedCoordinateMatch,\n} from './types';\n\n/** Epsilon for coordinate equality comparison (≈11cm precision at equator) */\nexport const COORDINATE_EPSILON = 0.000001;\n\n/**\n * Error message constants for coordinate format conversion\n * @internal\n */\nexport const COORDINATE_ERROR_MESSAGES = {\n  INVALID: 'Invalid coordinate',\n  CONVERSION_FAILED: 'Conversion failed',\n  NOT_AVAILABLE_AT_POLES: 'Not available at poles',\n} as const;\n\n/**\n * Result of coordinate format conversion\n */\nexport interface CoordinateFormatResult {\n  /** The formatted coordinate string or error message */\n  value: string;\n  /** Whether the coordinate format is valid and can be used/copied */\n  isValid: boolean;\n}\n\n/**\n * Format DD (Decimal Degrees) segments to coordinate string\n *\n * Bridge function that builds a coordinate string from UI segment values\n * for passing to the geo package parser. Part of the Segments → String → Geo Parse flow.\n *\n * @internal\n */\nfunction formatDDSegments(segments: string[]): string | null {\n  if (segments.length < 2) {\n    return null;\n  }\n  const latNum = Number.parseFloat(segments[0] as string);\n  const lonNum = Number.parseFloat(segments[1] as string);\n\n  if (Number.isNaN(latNum) || Number.isNaN(lonNum)) {\n    return null;\n  }\n\n  const latDir = latNum >= 0 ? 'N' : 'S';\n  const lonDir = lonNum >= 0 ? 'E' : 'W';\n\n  return `${Math.abs(latNum)} ${latDir} / ${Math.abs(lonNum)} ${lonDir}`;\n}\n\n/**\n * Format DDM (Degrees Decimal Minutes) segments to coordinate string\n *\n * Bridge function that builds a coordinate string from UI segment values\n * for passing to the geo package parser. Part of the Segments → String → Geo Parse flow.\n *\n * @internal\n */\nfunction formatDDMSegments(segments: string[]): string | null {\n  if (segments.length < 6) {\n    return null;\n  }\n  return `${segments[0]}° ${segments[1]}' ${segments[2]}, ${segments[3]}° ${segments[4]}' ${segments[5]}`;\n}\n\n/**\n * Format DMS (Degrees Minutes Seconds) segments to coordinate string\n *\n * Bridge function that builds a coordinate string from UI segment values\n * for passing to the geo package parser. Part of the Segments → String → Geo Parse flow.\n *\n * @internal\n */\nfunction formatDMSSegments(segments: string[]): string | null {\n  if (segments.length < 8) {\n    return null;\n  }\n  return `${segments[0]}° ${segments[1]}' ${segments[2]}\" ${segments[3]}, ${segments[4]}° ${segments[5]}' ${segments[6]}\" ${segments[7]}`;\n}\n\n/**\n * Format MGRS (Military Grid Reference System) segments to coordinate string\n *\n * Bridge function that builds a coordinate string from UI segment values\n * for passing to the geo package parser. Part of the Segments → String → Geo Parse flow.\n *\n * @internal\n */\nfunction formatMGRSSegments(segments: string[]): string | null {\n  if (segments.length < 5) {\n    return null;\n  }\n  return `${segments[0]}${segments[1]} ${segments[2]} ${segments[3]} ${segments[4]}`;\n}\n\n/**\n * Format UTM (Universal Transverse Mercator) segments to coordinate string\n *\n * Bridge function that builds a coordinate string from UI segment values\n * for passing to the geo package parser. Part of the Segments → String → Geo Parse flow.\n *\n * @internal\n */\nfunction formatUTMSegments(segments: string[]): string | null {\n  if (segments.length < 4) {\n    return null;\n  }\n  return `${segments[0]}${segments[1]} ${segments[2]} ${segments[3]}`;\n}\n\n/**\n * Format segment values into a coordinate string suitable for @accelint/geo parsing\n *\n * Converts an array of segment values into a string format that the geo package\n * parsers can understand. Each format has different requirements:\n *\n * DD: [lat, lon] → \"lat, lon\"\n * DDM: [latDeg, latMin, latDir, lonDeg, lonMin, lonDir] → \"latDeg° latMin' latDir, lonDeg° lonMin' lonDir\"\n * DMS: [latDeg, latMin, latSec, latDir, lonDeg, lonMin, lonSec, lonDir] → \"latDeg° latMin' latSec\\\" latDir, lonDeg° lonMin' lonSec\\\" lonDir\"\n * MGRS: [zone, band, grid, easting, northing] → \"zone+band grid easting northing\"\n * UTM: [zone, hemisphere, easting, northing] → \"zone+hemisphere easting northing\"\n *\n * @param segments - Array of segment values from user input\n * @param format - The coordinate system format\n * @returns Formatted coordinate string, or null if segments are invalid\n */\nexport function formatSegmentsToCoordinateString(\n  segments: string[],\n  format: CoordinateSystem,\n): string | null {\n  if (segments.some((seg) => seg === '' || seg === undefined)) {\n    return null;\n  }\n\n  try {\n    switch (format) {\n      case 'dd':\n        return formatDDSegments(segments);\n      case 'ddm':\n        return formatDDMSegments(segments);\n      case 'dms':\n        return formatDMSSegments(segments);\n      case 'mgrs':\n        return formatMGRSSegments(segments);\n      case 'utm':\n        return formatUTMSegments(segments);\n      default:\n        return null;\n    }\n  } catch (_error) {\n    return null;\n  }\n}\n\n/**\n * Parse DD coordinate string to segments\n *\n * Extracts segment values from a formatted DD coordinate string. This duplicates\n * parsing logic from @accelint/geo's parseDecimalDegrees, but is necessary because\n * geo doesn't expose the parsed components - only formatted strings and raw DD numbers.\n *\n * Part of the Geo Format → String → Regex Parse → Segments flow (circular conversion).\n *\n * @internal\n */\nfunction parseDDCoordinateString(coordString: string): string[] | null {\n  // DD formats from @accelint/geo (no degree symbols):\n  // \"40.7128 N / -74.006 W\" or \"0 N / 180 W\"\n  // Also handle user input with symbols:\n  // \"89.765432° N / 123.456789° W\" or \"89.765432, -123.456789\"\n\n  // Match DD format with optional degree symbols and optional direction letters\n  const match = coordString.match(\n    /([-]?\\d+\\.?\\d*)°?\\s*([NS])?\\s*[,/\\s]+\\s*([-]?\\d+\\.?\\d*)°?\\s*([EW])?/i,\n  );\n  if (!match) {\n    return null;\n  }\n\n  let lat = match[1];\n  let lon = match[3];\n\n  if (!(lat && lon)) {\n    return null;\n  }\n\n  if (match[2]?.toUpperCase() === 'S' && !lat.startsWith('-')) {\n    lat = `-${lat}`;\n  }\n  if (match[4]?.toUpperCase() === 'W' && !lon.startsWith('-')) {\n    lon = `-${lon}`;\n  }\n\n  return [lat, lon];\n}\n\n/**\n * Parse DDM coordinate string to segments\n *\n * Extracts segment values from a formatted DDM coordinate string. This duplicates\n * parsing logic from @accelint/geo's parseDegreesDecimalMinutes, but is necessary because\n * geo doesn't expose the parsed components - only formatted strings and raw DD numbers.\n *\n * Part of the Geo Format → String → Regex Parse → Segments flow (circular conversion).\n *\n * @internal\n */\nfunction parseDDMCoordinateString(coordString: string): string[] | null {\n  // DDM formats from @accelint/geo (no symbols):\n  // \"40 42.768 N / 74 0.36 W\"\n  // Also handle user input with symbols:\n  // \"89° 45.9259' N / 123° 27.4073' W\"\n\n  // Match DDM format with optional degree and minute symbols\n  const match = coordString.match(\n    /(\\d+)°?\\s+([\\d.]+)'?\\s+([NS])\\s*[,/]\\s*(\\d+)°?\\s+([\\d.]+)'?\\s+([EW])/i,\n  );\n  if (!match) {\n    return null;\n  }\n  return [\n    match[1] as string,\n    match[2] as string,\n    match[3] as string,\n    match[4] as string,\n    match[5] as string,\n    match[6] as string,\n  ];\n}\n\n/**\n * Parse DMS coordinate string to segments\n *\n * Extracts segment values from a formatted DMS coordinate string. This duplicates\n * parsing logic from @accelint/geo's parseDegreesMinutesSeconds, but is necessary because\n * geo doesn't expose the parsed components - only formatted strings and raw DD numbers.\n *\n * Part of the Geo Format → String → Regex Parse → Segments flow (circular conversion).\n *\n * @internal\n */\nfunction parseDMSCoordinateString(coordString: string): string[] | null {\n  // DMS formats from @accelint/geo (no symbols):\n  // \"40 42 46.08 N / 74 0 21.60 W\"\n  // Also handle user input with symbols:\n  // \"89° 45' 55.56\" N / 123° 27' 24.44\" W\"\n\n  // Match DMS format with optional degree, minute, and second symbols\n  const match = coordString.match(\n    /(\\d+)°?\\s+(\\d+)'?\\s+([\\d.]+)\"?\\s+([NS])\\s*[,/]\\s*(\\d+)°?\\s+(\\d+)'?\\s+([\\d.]+)\"?\\s+([EW])/i,\n  );\n  if (!match) {\n    return null;\n  }\n  return [\n    match[1] as string,\n    match[2] as string,\n    match[3] as string,\n    match[4] as string,\n    match[5] as string,\n    match[6] as string,\n    match[7] as string,\n    match[8] as string,\n  ];\n}\n\n/**\n * Parse MGRS coordinate string to segments\n *\n * Extracts segment values from a formatted MGRS coordinate string. This duplicates\n * parsing logic from @accelint/geo's parseMGRS, but is necessary because\n * geo doesn't expose the parsed components - only formatted strings and raw DD numbers.\n *\n * Part of the Geo Format → String → Regex Parse → Segments flow (circular conversion).\n *\n * @internal\n */\nfunction parseMGRSCoordinateString(coordString: string): string[] | null {\n  // MGRS: \"18T WM 12345 67890\"\n  const match = coordString.match(/(\\d+)([A-Z])\\s+([A-Z]{2})\\s+(\\d+)\\s+(\\d+)/i);\n  if (!match) {\n    return null;\n  }\n  return [\n    match[1] as string,\n    match[2] as string,\n    match[3] as string,\n    match[4] as string,\n    match[5] as string,\n  ];\n}\n\n/**\n * Parse UTM coordinate string to segments\n *\n * Extracts segment values from a formatted UTM coordinate string. This duplicates\n * parsing logic from @accelint/geo's parseUTM, but is necessary because\n * geo doesn't expose the parsed components - only formatted strings and raw DD numbers.\n *\n * Part of the Geo Format → String → Regex Parse → Segments flow (circular conversion).\n *\n * @internal\n */\nfunction parseUTMCoordinateString(coordString: string): string[] | null {\n  // UTM: \"18N 585628 4511644\" or \"18 N 585628 4511644\" (with optional space)\n  const match = coordString.match(/(\\d+)\\s*([NS])\\s+(\\d+)\\s+(\\d+)/i);\n  if (!match) {\n    return null;\n  }\n  return [\n    match[1] as string,\n    match[2] as string,\n    match[3] as string,\n    match[4] as string,\n  ];\n}\n\n/**\n * Parse a coordinate string into segment values\n *\n * Converts a formatted coordinate string (from @accelint/geo output or user input)\n * back into individual segment values for display.\n *\n * This is the inverse of formatSegmentsToCoordinateString.\n *\n * **Note on Duplication**: This function and its helpers (parseDDCoordinateString,\n * parseDDMCoordinateString, etc.) duplicate parsing logic that already exists in\n * the @accelint/geo package parsers:\n *\n * - Geo parsers: parseDecimalDegrees, parseDegreesDecimalMinutes, etc.\n * - These functions: parseDDCoordinateString, parseDDMCoordinateString, etc.\n *\n * Both use regex patterns to extract coordinate components from strings. The duplication\n * exists because:\n *\n * 1. **Geo parsers** extract components, validate them, convert to DD, then format back to strings\n * 2. **This function** extracts components from those formatted strings for the UI\n *\n * We're essentially undoing the formatting that geo just did. This is the second half\n * of the circular conversion described in convertDDToDisplaySegments.\n *\n * **Why we can't use geo parsers directly**: The geo parsers return coord objects with\n * only `coord.raw` (DD numbers) and formatting methods. They don't expose the parsed\n * segment components we need for the UI (e.g., the degrees, minutes, and direction values).\n *\n * **Parsing Order**:\n * - **convertDisplaySegmentsToDD**: Segments → String → **Geo parse** → DD ✓ (efficient)\n * - **convertDDToDisplaySegments**: DD → String → Geo parse → Geo format → **This parse** → Segments ✗ (circular)\n *\n * @param coordString - Formatted coordinate string\n * @param format - The coordinate system format\n * @returns Array of segment values, or null if parsing fails\n */\nexport function parseCoordinateStringToSegments(\n  coordString: string,\n  format: CoordinateSystem,\n): string[] | null {\n  if (!coordString) {\n    return null;\n  }\n\n  try {\n    switch (format) {\n      case 'dd':\n        return parseDDCoordinateString(coordString);\n      case 'ddm':\n        return parseDDMCoordinateString(coordString);\n      case 'dms':\n        return parseDMSCoordinateString(coordString);\n      case 'mgrs':\n        return parseMGRSCoordinateString(coordString);\n      case 'utm':\n        return parseUTMCoordinateString(coordString);\n      default:\n        return null;\n    }\n  } catch (_error) {\n    return null;\n  }\n}\n\n/**\n * Convert DD (internal format) to display format segment values\n *\n * Takes a CoordinateValue in Decimal Degrees format and converts it to the\n * segment values needed for the specified display format.\n *\n * Uses @accelint/geo to ensure accurate conversion between coordinate systems.\n *\n * **Note on Circular Conversion**: This function demonstrates the circular conversion\n * pattern discussed in the module documentation. The flow is:\n *\n * 1. Start with DD value: `{ lat: 40.7128, lon: -74.0060 }`\n * 2. Convert to coordinate string: `\"40.7128 / -74.006\"`\n * 3. Parse with geo package (creates coord object with internal parsed state)\n * 4. Format to target system using geo: `coord.ddm()` → `\"40 42.768 N / 74 0.36 W\"`\n * 5. Parse the formatted string AGAIN with regex to extract segments: `['40', '42.768', 'N', ...]`\n *\n * This is inefficient because:\n * - The geo package already has the component values (degrees, minutes, direction) internally\n * - We format them into a string, then immediately parse the string back apart\n * - The regex parsing duplicates work the geo parsers already did\n *\n * However, this approach is necessary because:\n * - The geo package only exposes `coord.raw` (DD numbers) and formatted strings\n * - It doesn't expose the intermediate component values we need for the UI segments\n * - We need individual segment values for separate input fields\n *\n * **Future Improvement**: If geo package exported component extractors like:\n * ```typescript\n * coord.components.ddm // { latDeg: 40, latMin: 42.768, latDir: 'N', ... }\n * ```\n * Then we could eliminate the format→parse cycle entirely.\n *\n * @param value - Coordinate value in DD format `{ lat: number, lon: number }`\n * @param format - Target display format\n * @returns Array of segment values for display, or null if conversion fails\n *\n * @example\n * const segments = convertDDToDisplaySegments({ lat: 40.7128, lon: -74.0060 }, 'ddm');\n * // Returns: ['40', '42.7680', 'N', '74', '0.3600', 'W']\n */\nexport function convertDDToDisplaySegments(\n  value: CoordinateValue,\n  format: CoordinateSystem,\n): string[] | null {\n  if (\n    !value ||\n    typeof value.lat !== 'number' ||\n    typeof value.lon !== 'number'\n  ) {\n    return null;\n  }\n\n  try {\n    const create = createCoordinate(coordinateSystems.dd, 'LATLON');\n\n    // Round to 5 decimal places to prevent precision issues with geo package\n    // Use signed numbers (not cardinal directions) for reliable conversions to all formats\n    const lat = Number(value.lat.toFixed(5));\n    const lon = Number(value.lon.toFixed(5));\n    const inputCoordString = `${lat} / ${lon}`;\n\n    const coord = create(inputCoordString);\n\n    if (!coord.valid) {\n      return null;\n    }\n\n    // Format the coordinate using geo package formatters\n    // These return complete coordinate strings (e.g., \"40 42.768 N / 74 0.36 W\")\n    let coordString: string;\n    switch (format) {\n      case 'dd':\n        coordString = coord.dd();\n        break;\n      case 'ddm':\n        coordString = coord.ddm();\n        break;\n      case 'dms':\n        coordString = coord.dms();\n        break;\n      case 'mgrs':\n        coordString = coord.mgrs();\n        break;\n      case 'utm':\n        coordString = coord.utm();\n        break;\n      default:\n        return null;\n    }\n\n    // Parse the formatted string to extract individual segment values\n    // This is the circular part: geo formatted it, now we parse it back apart\n    // Necessary because geo doesn't expose the components directly\n    const segments = parseCoordinateStringToSegments(coordString, format);\n    return segments;\n  } catch (error) {\n    logger\n      .withContext({\n        value: String(value),\n        format: String(format),\n      })\n      .withError(error)\n      .error('Failed to convert DD to display');\n    return null;\n  }\n}\n\n/**\n * Convert display format segment values to DD (internal format)\n *\n * Takes segment values from user input and converts them to a CoordinateValue\n * in Decimal Degrees format using @accelint/geo for validation and conversion.\n *\n * **Note on Efficiency**: This function demonstrates the EFFICIENT conversion direction.\n * The flow is:\n *\n * 1. Start with UI segments: `['40', '42.768', 'N', '74', '0.36', 'W']`\n * 2. Build coordinate string: `\"40° 42.768' N, 74° 0.36' W\"`\n * 3. Parse with geo package (validates and converts internally)\n * 4. Extract DD from coord.raw: `{ lat: 40.7128, lon: -74.0060 }`\n *\n * This is efficient because:\n * - We let geo do what it's designed for: parsing and validating coordinate strings\n * - We extract the DD values directly from `coord.raw` (no string parsing needed)\n * - Single direction: Segments → String → Geo Parse → DD (no circular conversion)\n *\n * Contrast with `convertDDToDisplaySegments` which has the circular pattern:\n * DD → String → Geo Parse → Geo Format → String → Regex Parse → Segments\n *\n * @param segments - Array of segment values from user input\n * @param format - The coordinate system format of the segments\n * @returns CoordinateValue in DD format, or null if invalid\n *\n * @example\n * const coord = convertDisplaySegmentsToDD(['40', '42.7680', 'N', '74', '0.3600', 'W'], 'ddm');\n * // Returns: { lat: 40.7128, lon: -74.0060 }\n */\nexport function convertDisplaySegmentsToDD(\n  segments: string[],\n  format: CoordinateSystem,\n): CoordinateValue | null {\n  // Build coordinate string from segments for geo parsing\n  const coordString = formatSegmentsToCoordinateString(segments, format);\n  if (!coordString) {\n    return null;\n  }\n\n  try {\n    // Parse and validate with geo package\n    const create = createCoordinate(coordinateSystems[format], 'LATLON');\n    const coord = create(coordString);\n\n    if (!coord.valid) {\n      // Return null for invalid coordinates (errors will be handled separately)\n      return null;\n    }\n\n    // Extract DD values directly from coord.raw (no string parsing needed)\n    const { LAT, LON } = coord.raw;\n\n    return {\n      lat: LAT,\n      lon: LON,\n    };\n  } catch (error) {\n    logger\n      .withContext({\n        segments: JSON.stringify(segments),\n        format: String(format),\n      })\n      .withError(error)\n      .error('Failed to convert display to DD');\n    return null;\n  }\n}\n\n/**\n * Validate coordinate segments and return errors\n *\n * Uses @accelint/geo to validate the segments and returns any validation errors.\n * Only validates when all required segments are filled.\n *\n * @param segments - Array of segment values from user input\n * @param format - The coordinate system format\n * @returns Array of error messages, empty if valid or incomplete\n *\n * @example\n * const errors = validateCoordinateSegments(['91', '0', 'N', '0', '0', 'E'], 'ddm');\n * // Returns: ['Invalid coordinate value']\n */\nexport function validateCoordinateSegments(\n  segments: string[],\n  format: CoordinateSystem,\n): string[] {\n  if (segments.some((seg) => seg === '' || seg === undefined)) {\n    return [];\n  }\n\n  const coordString = formatSegmentsToCoordinateString(segments, format);\n  if (!coordString) {\n    return ['Invalid coordinate value'];\n  }\n\n  try {\n    const create = createCoordinate(coordinateSystems[format], 'LATLON');\n    const coord = create(coordString);\n\n    if (!coord.valid) {\n      return ['Invalid coordinate value'];\n    }\n\n    return [];\n  } catch (_error) {\n    return ['Invalid coordinate value'];\n  }\n}\n\n/**\n * Check if all segments are filled\n *\n * Helper to determine if the user has completed entering all segment values.\n * Used to determine when to trigger validation.\n *\n * @param segments - Array of segment values\n * @returns True if all segments have values, false otherwise\n */\nexport function areAllSegmentsFilled(segments: string[]): boolean {\n  return segments.every((seg) => seg !== '' && seg !== undefined);\n}\n\n/**\n * Check if any segments have values\n *\n * Helper to determine if the user has started entering coordinate values.\n *\n * @param segments - Array of segment values\n * @returns True if any segment has a value, false if all empty\n */\nexport function hasAnySegmentValue(segments: string[]): boolean {\n  return segments.some((seg) => seg !== '' && seg !== undefined);\n}\n\n/**\n * Create an invalid result object for all coordinate systems\n * @internal\n */\nfunction createInvalidResult(): Record<\n  CoordinateSystem,\n  CoordinateFormatResult\n> {\n  return {\n    dd: { value: COORDINATE_ERROR_MESSAGES.INVALID, isValid: false },\n    ddm: { value: COORDINATE_ERROR_MESSAGES.INVALID, isValid: false },\n    dms: { value: COORDINATE_ERROR_MESSAGES.INVALID, isValid: false },\n    mgrs: { value: COORDINATE_ERROR_MESSAGES.INVALID, isValid: false },\n    utm: { value: COORDINATE_ERROR_MESSAGES.INVALID, isValid: false },\n  };\n}\n\n/**\n * Validate coordinate value\n * @internal\n */\nfunction isValidCoordinateValue(value: CoordinateValue | null): boolean {\n  return (\n    value !== null &&\n    typeof value.lat === 'number' &&\n    typeof value.lon === 'number'\n  );\n}\n\n/**\n * Check if error is due to geographic limitation (poles)\n * @internal\n */\nfunction isGeographicLimitationError(error: unknown): boolean {\n  const errorMessage = error instanceof Error ? error.message : String(error);\n  return (\n    errorMessage.includes('outside UTM limits') ||\n    errorMessage.includes('invalid UTM zone')\n  );\n}\n\n/**\n * Convert coordinate to a specific format with error handling\n * @internal\n */\nfunction convertToFormat(\n  coord: {\n    dd: () => string;\n    ddm: () => string;\n    dms: () => string;\n    mgrs: () => string;\n    utm: () => string;\n  },\n  format: CoordinateSystem,\n  value: CoordinateValue,\n): CoordinateFormatResult {\n  try {\n    let formattedValue: string;\n    switch (format) {\n      case 'dd':\n        formattedValue = coord.dd();\n        break;\n      case 'ddm':\n        formattedValue = coord.ddm();\n        break;\n      case 'dms':\n        formattedValue = coord.dms();\n        break;\n      case 'mgrs':\n        formattedValue = coord.mgrs();\n        break;\n      case 'utm':\n        formattedValue = coord.utm();\n        break;\n      default:\n        return { value: COORDINATE_ERROR_MESSAGES.INVALID, isValid: false };\n    }\n    return { value: formattedValue, isValid: true };\n  } catch (error) {\n    // Handle geographic limitations for MGRS/UTM\n    if (\n      (format === 'mgrs' || format === 'utm') &&\n      isGeographicLimitationError(error)\n    ) {\n      return {\n        value: COORDINATE_ERROR_MESSAGES.NOT_AVAILABLE_AT_POLES,\n        isValid: false,\n      };\n    }\n\n    // Log other errors in development\n    logger\n      .withContext({\n        value: JSON.stringify(value),\n      })\n      .withError(error)\n      .error(`Failed to convert to ${format}`);\n    return {\n      value: COORDINATE_ERROR_MESSAGES.CONVERSION_FAILED,\n      isValid: false,\n    };\n  }\n}\n\n/**\n * Get all coordinate formats for a given DD value\n *\n * Converts a Decimal Degrees coordinate to all 5 supported coordinate systems\n * for display in the format conversion popover.\n *\n * Each format is tried independently - if one fails (e.g., UTM/MGRS at poles),\n * the others can still succeed.\n *\n * @param value - Coordinate value in DD format `{ lat: number, lon: number }`\n * @returns Object containing formatted strings and validity status for all coordinate systems\n *\n * @example\n * const formats = getAllCoordinateFormats({ lat: 40.7128, lon: -74.0060 });\n * // Returns: {\n * //   dd: { value: \"40.7128 N / 74.006 W\", isValid: true },\n * //   ddm: { value: \"40 42.768 N / 74 0.36 W\", isValid: true },\n * //   dms: { value: \"40 42 46.08 N / 74 0 21.6 W\", isValid: true },\n * //   mgrs: { value: \"18T WL 80654 06346\", isValid: true },\n * //   utm: { value: \"18N 585628 4511644\", isValid: true }\n * // }\n *\n * @example\n * const formats = getAllCoordinateFormats({ lat: 90, lon: 0 });\n * // Returns: {\n * //   dd: { value: \"90 N / 0 E\", isValid: true },\n * //   ddm: { value: \"90 0 N / 0 0 E\", isValid: true },\n * //   dms: { value: \"90 0 0 N / 0 0 0 E\", isValid: true },\n * //   mgrs: { value: \"Not available at poles\", isValid: false },\n * //   utm: { value: \"Not available at poles\", isValid: false }\n * // }\n */\nexport function getAllCoordinateFormats(\n  value: CoordinateValue | null,\n): Record<CoordinateSystem, CoordinateFormatResult> {\n  const invalidResult = createInvalidResult();\n\n  if (!isValidCoordinateValue(value)) {\n    return invalidResult;\n  }\n\n  const validValue = value as CoordinateValue;\n\n  try {\n    const create = createCoordinate(coordinateSystems.dd, 'LATLON');\n    const coord = create(\n      `${validValue.lat.toFixed(6)} / ${validValue.lon.toFixed(6)}`,\n    );\n\n    if (!coord.valid) {\n      return invalidResult;\n    }\n\n    const result = {} as Record<CoordinateSystem, CoordinateFormatResult>;\n\n    for (const format of COORDINATE_SYSTEMS) {\n      result[format] = convertToFormat(coord, format, validValue);\n    }\n\n    return result;\n  } catch (error) {\n    logger\n      .withContext({\n        value: JSON.stringify(validValue),\n      })\n      .withError(error)\n      .error('Failed to get all coordinate formats');\n    return invalidResult;\n  }\n}\n\n/**\n * Check if pasted text looks like a complete coordinate string\n *\n * Uses heuristics to detect if the pasted text contains a full coordinate\n * rather than just a single segment value. This prevents intercepting\n * single-segment pastes.\n *\n * Indicators of a complete coordinate:\n * - Contains separators: comma, slash, or multiple consecutive spaces\n * - Contains coordinate symbols: °, ′, ″, ', \"\n * - Multiple numbers separated by whitespace\n *\n * @param text - The pasted text to check\n * @returns True if it looks like a complete coordinate string\n *\n * @example\n * isCompleteCoordinate(\"40.7128, -74.0060\") // true - contains comma\n * isCompleteCoordinate(\"40° 42' 46\\\" N / 74° 0' 22\\\" W\") // true - contains symbols\n * isCompleteCoordinate(\"18T WM 12345 67890\") // true - multiple parts\n * isCompleteCoordinate(\"42\") // false - single number\n * isCompleteCoordinate(\"N\") // false - single letter\n */\nexport function isCompleteCoordinate(text: string): boolean {\n  if (!text || text.trim() === '') {\n    return false;\n  }\n\n  const hasSeparators = /[,/]|°|′|″|['\"]|\\s{2,}/.test(text);\n  const numbers = text.match(/\\d+/g) || [];\n  const hasMultipleNumbers = numbers.length >= 2;\n\n  // Explicitly detect MGRS format: <zone><band> <grid> <easting> <northing>\n  // Example: \"18T WL 80654 06346\"\n  const isMGRS = /^\\d{1,2}[A-Z]\\s+[A-Z]{2}\\s+\\d+\\s+\\d+$/i.test(text.trim());\n\n  // Explicitly detect UTM format: <zone><hemisphere> <easting> <northing>\n  // Example: \"18N 585628 4511644\"\n  const isUTM = /^\\d{1,2}[NS]\\s+\\d+\\s+\\d+$/i.test(text.trim());\n\n  return hasSeparators || hasMultipleNumbers || isMGRS || isUTM;\n}\n\n/**\n * Attempt to parse pasted text as all coordinate formats\n *\n * Tries to parse the pasted text using each of the 5 coordinate system parsers.\n * Returns all formats that successfully parse the text.\n *\n * This enables automatic detection of coordinate format and disambiguation\n * when multiple formats match the same input string.\n *\n * @param pastedText - The raw text from clipboard\n * @returns Array of successfully parsed coordinate matches (may be empty)\n *\n * @example\n * const matches = parseCoordinatePaste(\"40.7128, -74.0060\");\n * // Returns: [{ format: 'dd', value: { lat: 40.7128, lon: -74.0060 }, displayString: \"...\" }]\n *\n * @example\n * const matches = parseCoordinatePaste(\"18T WM 12345 67890\");\n * // Returns: [{ format: 'mgrs', value: { lat: ..., lon: ... }, displayString: \"...\" }]\n *\n * @example\n * const matches = parseCoordinatePaste(\"invalid text\");\n * // Returns: []\n */\nexport function parseCoordinatePaste(\n  pastedText: string,\n): ParsedCoordinateMatch[] {\n  if (!pastedText || pastedText.trim() === '') {\n    return [];\n  }\n\n  const matches: ParsedCoordinateMatch[] = [];\n\n  for (const format of COORDINATE_SYSTEMS) {\n    try {\n      const create = createCoordinate(coordinateSystems[format], 'LATLON');\n      const coord = create(pastedText.trim());\n\n      if (coord.valid) {\n        const { LAT, LON } = coord.raw;\n\n        let displayString: string;\n        switch (format) {\n          case 'dd':\n            displayString = coord.dd();\n            break;\n          case 'ddm':\n            displayString = coord.ddm();\n            break;\n          case 'dms':\n            displayString = coord.dms();\n            break;\n          case 'mgrs':\n            displayString = coord.mgrs();\n            break;\n          case 'utm':\n            displayString = coord.utm();\n            break;\n          default:\n            displayString = '';\n        }\n\n        matches.push({\n          format,\n          value: { lat: LAT, lon: LON },\n          displayString,\n        });\n      }\n    } catch (error) {\n      // Log parsing errors in development for debugging\n      logger\n        .withContext({\n          pastedText: pastedText.trim(),\n          format: String(format),\n        })\n        .withError(error)\n        .warn(`Failed to parse as ${format}`);\n      // Continue trying other parsers\n    }\n  }\n\n  return matches;\n}\n\n/**\n * Check if two coordinates are equal within epsilon tolerance\n */\nexport function areCoordinatesEqual(\n  coord1: { lat: number; lon: number },\n  coord2: { lat: number; lon: number },\n  epsilon = COORDINATE_EPSILON,\n): boolean {\n  return (\n    Math.abs(coord1.lat - coord2.lat) < epsilon &&\n    Math.abs(coord1.lon - coord2.lon) < epsilon\n  );\n}\n\n/**\n * Deduplicate coordinate matches by location, keeping first match for each unique location\n */\nexport function deduplicateMatchesByLocation(\n  matches: ParsedCoordinateMatch[],\n): ParsedCoordinateMatch[] {\n  const uniqueMatches: ParsedCoordinateMatch[] = [];\n\n  for (const match of matches) {\n    const isDuplicate = uniqueMatches.some((existing) =>\n      areCoordinatesEqual(existing.value, match.value),\n    );\n\n    if (!isDuplicate) {\n      uniqueMatches.push(match);\n    }\n  }\n\n  return uniqueMatches;\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "4/8",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/coordinate-field/index.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:42.810Z",
+    "bundleHash": "uifb:1a42e5024c1a161cbd45b78d",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/coordinate-field/index.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/coordinate-field/index.tsx",
+            "description": "index - Interactive component with internal state",
+            "version": {
+              "variables": [],
+              "hooks": [
+                "useCallback",
+                "useContextProps",
+                "useCoordinateField",
+                "useMemo",
+                "useState"
+              ],
+              "components": [
+                "AriaText",
+                "Button",
+                "Check",
+                "CoordinateSegment",
+                "CopyToClipboard",
+                "Dialog",
+                "DialogContent",
+                "DialogFooter",
+                "DialogTitle",
+                "DialogTrigger",
+                "FieldError",
+                "GlobalShare",
+                "Icon",
+                "Label",
+                "Popover",
+                "PopoverContent",
+                "PopoverTitle",
+                "PopoverTrigger",
+                "Provider",
+                "Radio",
+                "RadioGroup"
+              ],
+              "functions": ["CoordinateField"],
+              "imports": [
+                "../../hooks/coordinate-field",
+                "../button",
+                "../dialog",
+                "../dialog/content",
+                "../dialog/footer",
+                "../dialog/title",
+                "../dialog/trigger",
+                "../icon",
+                "../label",
+                "../popover",
+                "../popover/content",
+                "../popover/title",
+                "../popover/trigger",
+                "../radio",
+                "../radio/group",
+                "./context",
+                "./coordinate-utils",
+                "./segment",
+                "./segment-configs",
+                "./styles.module.css",
+                "./types",
+                "./width-utils",
+                "@accelint/design-foundation/lib/utils",
+                "@accelint/icons/check",
+                "@accelint/icons/copy-to-clipboard",
+                "@accelint/icons/global-share",
+                "@react-aria/utils",
+                "client-only",
+                "react",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {
+                "onPasteCapture": {
+                  "type": "function",
+                  "signature": "() => void"
+                },
+                "onChange": {
+                  "type": "function",
+                  "signature": "(value) => void"
+                },
+                "onFocus": {
+                  "type": "function",
+                  "signature": "() => void"
+                },
+                "onBlur": {
+                  "type": "function",
+                  "signature": "() => void"
+                },
+                "onKeyDown": {
+                  "type": "function",
+                  "signature": "(e) => void"
+                },
+                "onAutoAdvance": {
+                  "type": "function",
+                  "signature": "() => void"
+                },
+                "onAutoRetreat": {
+                  "type": "function",
+                  "signature": "() => void"
+                },
+                "onOpenChange": {
+                  "type": "function",
+                  "signature": "() => void"
+                },
+                "onClick": {
+                  "type": "function",
+                  "signature": "() => void"
+                },
+                "onPress": {
+                  "type": "function",
+                  "signature": "() => void"
+                }
+              },
+              "state": {
+                "allCoordinateFormats": "Record<\n    CoordinateSystem,\n    CoordinateFormatResult\n  "
+              }
+            },
+            "exports": "named",
+            "prediction": ["Uses memoization for performance optimization"],
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".control",
+                    ".description",
+                    ".error",
+                    ".field",
+                    ".formatLabel",
+                    ".formatLabels",
+                    ".formatOptionContent",
+                    ".formatOptionLabel",
+                    ".formatOptionValue",
+                    ".formatOptions",
+                    ".formatRow",
+                    ".formatValue",
+                    ".inline",
+                    ".input",
+                    ".literal",
+                    ".modalActions",
+                    ".modalDescription",
+                    ".modalTitle",
+                    ".popover",
+                    ".popoverTitle"
+                  ],
+                  "properties": ["min-height", "min-width"]
+                },
+                "inlineStyles": true
+              }
+            },
+            "semanticHash": "uif:07217cb8c6e1d52f7d61640b",
+            "fileHash": "uif:99a9e55e44de84c79d6ba5a5"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\n'use client';\n\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport Check from '@accelint/icons/check';\nimport CopyToClipboard from '@accelint/icons/copy-to-clipboard';\nimport GlobalShare from '@accelint/icons/global-share';\nimport { filterDOMProps } from '@react-aria/utils';\nimport 'client-only';\nimport {\n  type CSSProperties,\n  type ReactNode,\n  useCallback,\n  useMemo,\n  useState,\n} from 'react';\nimport {\n  Text as AriaText,\n  composeRenderProps,\n  FieldError,\n  FieldErrorContext,\n  GroupContext,\n  LabelContext,\n  Provider,\n  TextContext,\n  useContextProps,\n} from 'react-aria-components';\nimport { useCoordinateField } from '../../hooks/coordinate-field';\nimport { Button } from '../button';\nimport { Dialog } from '../dialog';\nimport { DialogContent } from '../dialog/content';\nimport { DialogFooter } from '../dialog/footer';\nimport { DialogTitle } from '../dialog/title';\nimport { DialogTrigger } from '../dialog/trigger';\nimport { Icon } from '../icon';\nimport { Label } from '../label';\nimport { Popover } from '../popover';\nimport { PopoverContent } from '../popover/content';\nimport { PopoverTitle } from '../popover/title';\nimport { PopoverTrigger } from '../popover/trigger';\nimport { Radio } from '../radio';\nimport { RadioGroup } from '../radio/group';\nimport { CoordinateFieldContext, CoordinateFieldStateContext } from './context';\nimport {\n  type CoordinateFormatResult,\n  getAllCoordinateFormats,\n} from './coordinate-utils';\nimport { CoordinateSegment } from './segment';\nimport { getSegmentLabel, GROUP_SEPARATOR } from './segment-configs';\nimport styles from './styles.module.css';\nimport type { CoordinateFieldProps } from './types';\nimport {\n  COORDINATE_FORMAT_LABELS,\n  COORDINATE_FORMAT_NAMES,\n  COORDINATE_SYSTEMS,\n  type CoordinateSystem,\n} from './types';\nimport { calculateMinControlWidth } from './width-utils';\n\n/**\n * CoordinateField - A comprehensive coordinate input component with multiple format support\n *\n * Provides accessible coordinate input functionality with support for multiple coordinate\n * systems (DD, DDM, DMS, MGRS, UTM). All values are normalized to Decimal Degrees internally\n * for consistency.\n *\n * @example\n * // Basic coordinate field\n * <CoordinateField label=\"Location\" />\n *\n * @example\n * // Coordinate field with validation\n * <CoordinateField\n *   label=\"Target Coordinates\"\n *   isRequired\n *   isInvalid={hasError}\n *   errorMessage=\"Please enter a valid coordinate\"\n * />\n *\n * @example\n * // Coordinate field with specific format\n * <CoordinateField\n *   label=\"Position\"\n *   format=\"dms\"\n *   description=\"Enter coordinates in Degrees Minutes Seconds format\"\n * />\n *\n * @example\n * // Compact coordinate field\n * <CoordinateField\n *   label=\"Coordinates\"\n *   size=\"small\"\n *   format=\"dd\"\n * />\n *\n * @example\n * // Controlled coordinate field\n * <CoordinateField\n *   label=\"Selected Location\"\n *   value={coordinates}\n *   onChange={setCoordinates}\n * />\n *\n * @example\n * // Coordinate field with error handling\n * <CoordinateField\n *   label=\"Target Coordinates\"\n *   onError={(message, context) => {\n *     // message will be \"Invalid coordinate value\" for validation errors\n *     // or \"Invalid coordinate format\" for paste errors\n *     setErrorMessage(message);\n *     console.error(message, context);\n *   }}\n *   isInvalid={!!errorMessage}\n *   errorMessage={errorMessage}\n * />\n */\nexport function CoordinateField({ ref, ...props }: CoordinateFieldProps) {\n  [props, ref] = useContextProps(props, ref, CoordinateFieldContext);\n\n  const {\n    classNames,\n    description: descriptionProp,\n    label: labelProp,\n    format = 'dd',\n    size = 'medium',\n    variant = 'inline',\n    showFormatButton = true,\n    isDisabled = false,\n    isInvalid: isInvalidProp = false,\n    isRequired = false,\n    ...rest\n  } = props;\n\n  const isSmall = size === 'small';\n\n  const DOMProps = filterDOMProps(rest, { global: true });\n\n  // When size is small and label is hidden, use aria-label instead of aria-labelledby\n  // to ensure screen readers have an accessible name\n  const ariaLabelForSmallSize =\n    isSmall && labelProp ? labelProp : rest['aria-label'];\n\n  const {\n    state,\n    focus,\n    paste,\n    copy,\n    registerTimeout,\n    fieldProps,\n    labelProps,\n    descriptionProps,\n    errorProps,\n    validation,\n    effectiveErrorMessage,\n    isInvalid,\n  } = useCoordinateField(\n    props,\n    ariaLabelForSmallSize,\n    rest['aria-describedby'],\n    rest['aria-details'],\n  );\n\n  const componentState = {\n    segmentValues: state.segmentValues,\n    format,\n    currentValue: state.currentValue,\n    validationErrors: state.validationErrors,\n    isDisabled,\n    isInvalid,\n    isRequired,\n    size,\n    variant,\n    registerTimeout,\n  };\n\n  // Store all coordinate formats, calculated only when popover opens\n  const [allCoordinateFormats, setAllCoordinateFormats] = useState<Record<\n    CoordinateSystem,\n    CoordinateFormatResult\n  > | null>(null);\n\n  const handlePopoverOpenChange = useCallback(\n    (isOpen: boolean) => {\n      if (isOpen) {\n        setAllCoordinateFormats(getAllCoordinateFormats(state.currentValue));\n      }\n    },\n    [state.currentValue],\n  );\n\n  // Calculate the minimum width needed for the control container\n  // This keeps the outlined container at a fixed width while segments animate\n  const minControlWidth = useMemo(\n    () =>\n      calculateMinControlWidth(\n        state.editableSegmentConfigs,\n        state.segmentConfigs,\n        showFormatButton,\n      ),\n    [state.editableSegmentConfigs, state.segmentConfigs, showFormatButton],\n  );\n\n  return (\n    <Provider\n      values={[\n        [CoordinateFieldContext, props],\n        [CoordinateFieldStateContext, componentState],\n        [GroupContext, fieldProps],\n        [LabelContext, labelProps],\n        [\n          TextContext,\n          {\n            slots: {\n              description: descriptionProps,\n              errorMessage: errorProps,\n            },\n          },\n        ],\n        [FieldErrorContext, validation],\n      ]}\n    >\n      <div\n        {...DOMProps}\n        {...fieldProps}\n        ref={ref}\n        className={clsx(\n          'group/coordinate-field',\n          styles.field,\n          classNames?.field,\n        )}\n        data-size={size}\n        data-disabled={isDisabled || null}\n        data-invalid={isInvalid || null}\n      >\n        {!isSmall && labelProp && (\n          <Label\n            className={classNames?.label}\n            isDisabled={isDisabled}\n            isRequired={isRequired}\n          >\n            {labelProp}\n          </Label>\n        )}\n\n        <div\n          style={\n            {\n              '--min-width': variant === 'stacked' ? 'unset' : minControlWidth,\n            } as CSSProperties\n          }\n          className={clsx(styles.control, classNames?.control)}\n        >\n          <div\n            className={clsx(styles.input, styles[variant], classNames?.input)}\n            onPasteCapture={paste.handleInputPaste}\n            data-input-container\n          >\n            {state.segmentConfigs\n              .reduce<ReactNode[][]>(\n                (acc, config, configIndex) => {\n                  const currentGroupIndex = acc.length - 1;\n\n                  if (\n                    config.value === GROUP_SEPARATOR &&\n                    variant === 'stacked'\n                  ) {\n                    acc.push([]);\n\n                    return acc;\n                  }\n\n                  if (config.type === 'literal') {\n                    acc[currentGroupIndex]?.push(\n                      <span\n                        key={`${format}-literal-${configIndex}-${config.value}`}\n                        className={styles.literal}\n                      >\n                        {config.value}\n                      </span>,\n                    );\n\n                    return acc;\n                  }\n\n                  const editableIndex = state.segmentConfigs\n                    .slice(0, configIndex)\n                    .filter((c) => c.type !== 'literal').length;\n\n                  acc[currentGroupIndex]?.push(\n                    <CoordinateSegment\n                      key={`${format}-segment-${editableIndex}`}\n                      value={state.segmentValues[editableIndex] || ''}\n                      onChange={(newValue) =>\n                        state.handleSegmentChange(editableIndex, newValue)\n                      }\n                      onFocus={() =>\n                        focus.setFocusedSegmentIndex(editableIndex)\n                      }\n                      onBlur={() => {\n                        focus.setFocusedSegmentIndex(-1);\n                        state.flushPendingValidation();\n                      }}\n                      onKeyDown={(e) =>\n                        focus.handleSegmentKeyDown(editableIndex, e)\n                      }\n                      onAutoAdvance={() =>\n                        focus.focusNextSegment(editableIndex)\n                      }\n                      onAutoRetreat={() =>\n                        focus.focusPreviousSegment(editableIndex)\n                      }\n                      placeholder={config.placeholder}\n                      maxLength={config.maxLength}\n                      pad={config.pad}\n                      className={clsx(styles.segment, classNames?.segment)}\n                      isDisabled={isDisabled}\n                      allowedChars={config.allowedChars}\n                      segmentRef={focus.segmentRefs[editableIndex]}\n                      segmentIndex={editableIndex}\n                      totalSegments={state.editableSegmentConfigs.length}\n                      ariaLabel={getSegmentLabel(format, editableIndex)}\n                    />,\n                  );\n\n                  return acc;\n                },\n                [[]],\n              )\n              .map((group, groupIndex) => (\n                <div\n                  className={clsx(styles.segmentGroup, styles[variant])}\n                  key={`${format}-group-${\n                    // biome-ignore lint/suspicious/noArrayIndexKey: intentional\n                    groupIndex\n                  }`}\n                >\n                  {group}\n                </div>\n              ))}\n          </div>\n\n          {showFormatButton && (\n            <PopoverTrigger onOpenChange={handlePopoverOpenChange}>\n              <Button\n                variant='icon'\n                size={size}\n                color='mono-bold'\n                className={classNames?.formatButton}\n                aria-label='View coordinate in all formats'\n                isDisabled={!copy.isFormatButtonEnabled}\n              >\n                <Icon>\n                  <GlobalShare />\n                </Icon>\n              </Button>\n              <Popover classNames={{ popover: styles.popover }}>\n                <PopoverTitle className={styles.popoverTitle}>\n                  Copy Coordinates\n                </PopoverTitle>\n                <PopoverContent>\n                  {allCoordinateFormats &&\n                    COORDINATE_SYSTEMS.map((formatKey) => {\n                      const formatResult = allCoordinateFormats[formatKey];\n                      const isCopied = copy.copiedFormat === formatKey;\n\n                      return (\n                        <div key={formatKey} className={styles.formatRow}>\n                          <div className={styles.formatLabels}>\n                            <span className={styles.formatLabel}>\n                              {COORDINATE_FORMAT_LABELS[formatKey]}\n                            </span>\n                            <span\n                              className={styles.formatValue}\n                              title={formatResult.value}\n                            >\n                              {formatResult.value}\n                            </span>\n                          </div>\n                          <Button\n                            variant='icon'\n                            color='mono-bold'\n                            aria-label={`Copy ${COORDINATE_FORMAT_LABELS[formatKey]} format`}\n                            onClick={() => copy.handleCopyFormat(formatKey)}\n                            isDisabled={!formatResult.isValid}\n                          >\n                            <Icon>\n                              {isCopied ? <Check /> : <CopyToClipboard />}\n                            </Icon>\n                          </Button>\n                        </div>\n                      );\n                    })}\n                </PopoverContent>\n              </Popover>\n            </PopoverTrigger>\n          )}\n        </div>\n\n        {/* Description is hidden when field is invalid (unless disabled) to make room for error message */}\n        {descriptionProp && !isSmall && (!isInvalid || isDisabled) && (\n          <AriaText\n            className={clsx(styles.description, classNames?.description)}\n            slot='description'\n          >\n            {descriptionProp}\n          </AriaText>\n        )}\n\n        <FieldError\n          className={composeRenderProps(classNames?.error, (className) =>\n            clsx(styles.error, className),\n          )}\n        >\n          {effectiveErrorMessage}\n        </FieldError>\n\n        <DialogTrigger\n          isOpen={paste.showDisambiguationModal}\n          onOpenChange={paste.setShowDisambiguationModal}\n        >\n          <Button className='hidden'>Hidden Trigger</Button>\n          <Dialog size='small'>\n            <DialogTitle className={styles.modalTitle}>\n              Select Coordinate Format\n            </DialogTitle>\n            <DialogContent>\n              <p className={styles.modalDescription}>\n                The pasted value matches multiple coordinate formats. Please\n                select the correct interpretation:\n              </p>\n\n              <RadioGroup\n                classNames={{ group: styles.formatOptions }}\n                value={paste.selectedDisambiguationFormat}\n                onChange={(value) =>\n                  paste.setSelectedDisambiguationFormat(\n                    value as CoordinateSystem,\n                  )\n                }\n              >\n                {paste.disambiguationMatches.map((match) => (\n                  <Radio key={match.format} value={match.format}>\n                    <div className={styles.modalOptionContent}>\n                      <span className={styles.formatOptionLabel}>\n                        {COORDINATE_FORMAT_NAMES[match.format]}\n                      </span>\n                      <span className={styles.formatOptionValue}>\n                        {match.displayString}\n                      </span>\n                    </div>\n                  </Radio>\n                ))}\n              </RadioGroup>\n            </DialogContent>\n            <DialogFooter className={styles.modalActions}>\n              <Button\n                variant='flat'\n                onPress={() => paste.setShowDisambiguationModal(false)}\n              >\n                Cancel\n              </Button>\n              <Button onPress={paste.handleDisambiguationSelect}>\n                Apply Selected\n              </Button>\n            </DialogFooter>\n          </Dialog>\n        </DialogTrigger>\n      </div>\n    </Provider>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "AriaText",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/coordinate-field/index.tsx"
+        },
+        {
+          "name": "Button",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/coordinate-field/index.tsx"
+        },
+        {
+          "name": "Check",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/coordinate-field/index.tsx"
+        },
+        {
+          "name": "CoordinateSegment",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/coordinate-field/index.tsx"
+        },
+        {
+          "name": "CopyToClipboard",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/coordinate-field/index.tsx"
+        },
+        {
+          "name": "Dialog",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/coordinate-field/index.tsx"
+        },
+        {
+          "name": "DialogContent",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/coordinate-field/index.tsx"
+        },
+        {
+          "name": "DialogFooter",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/coordinate-field/index.tsx"
+        },
+        {
+          "name": "DialogTitle",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/coordinate-field/index.tsx"
+        },
+        {
+          "name": "DialogTrigger",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/coordinate-field/index.tsx"
+        },
+        {
+          "name": "FieldError",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/coordinate-field/index.tsx"
+        },
+        {
+          "name": "GlobalShare",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/coordinate-field/index.tsx"
+        },
+        {
+          "name": "Icon",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/coordinate-field/index.tsx"
+        },
+        {
+          "name": "Label",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/coordinate-field/index.tsx"
+        },
+        {
+          "name": "Popover",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/coordinate-field/index.tsx"
+        },
+        {
+          "name": "PopoverContent",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/coordinate-field/index.tsx"
+        },
+        {
+          "name": "PopoverTitle",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/coordinate-field/index.tsx"
+        },
+        {
+          "name": "PopoverTrigger",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/coordinate-field/index.tsx"
+        },
+        {
+          "name": "Provider",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/coordinate-field/index.tsx"
+        },
+        {
+          "name": "Radio",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/coordinate-field/index.tsx"
+        },
+        {
+          "name": "RadioGroup",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/coordinate-field/index.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "5/8",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/coordinate-field/segment-configs.ts",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:42.811Z",
+    "bundleHash": "uifb:7f1741e0a19f3a4e666981ca",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/coordinate-field/segment-configs.ts",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/coordinate-field/segment-configs.ts",
+            "description": "segment-configs - Configuration module",
+            "version": {
+              "variables": [
+                "EXPECTED_SEGMENT_COUNTS",
+                "GROUP_SEPARATOR",
+                "LAST_PAD",
+                "NUMERIC_PAD",
+                "ddSegmentConfigs",
+                "ddmSegmentConfigs",
+                "dmsSegmentConfigs",
+                "mgrsSegmentConfigs",
+                "utmSegmentConfigs"
+              ],
+              "hooks": [],
+              "components": [],
+              "functions": [
+                "getEditableSegmentCount",
+                "getFormatDescription",
+                "getSegmentConfigs",
+                "getSegmentLabel"
+              ],
+              "imports": ["./types"]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": {
+              "named": [
+                "EXPECTED_SEGMENT_COUNTS",
+                "GROUP_SEPARATOR",
+                "ddSegmentConfigs",
+                "ddmSegmentConfigs",
+                "dmsSegmentConfigs",
+                "getEditableSegmentCount",
+                "getFormatDescription",
+                "getSegmentConfigs",
+                "getSegmentLabel",
+                "mgrsSegmentConfigs",
+                "utmSegmentConfigs"
+              ]
+            },
+            "semanticHash": "uif:fe2e874fd52f2ca95aff99ca",
+            "fileHash": "uif:2a313059236e3a55b3be81ff"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\n/**\n * Coordinate Field Segment Configurations\n *\n * This file defines the segment layouts for each supported coordinate system format.\n * Each configuration specifies the editable segments and literal separators that make up\n * the coordinate input for that format.\n *\n * Supported formats:\n * - DD (Decimal Degrees) - 2 editable segments\n * - DDM (Degrees Decimal Minutes) - 6 editable segments\n * - DMS (Degrees Minutes Seconds) - 8 editable segments\n * - MGRS (Military Grid Reference System) - 5 editable segments\n * - UTM (Universal Transverse Mercator) - 4 editable segments\n *\n * References:\n * - DD parser: /packages/geo/src/coordinates/latlon/decimal-degrees/parser.ts\n * - DDM parser: /packages/geo/src/coordinates/latlon/degrees-decimal-minutes/parser.ts\n * - DMS parser: /packages/geo/src/coordinates/latlon/degrees-minutes-seconds/parser.ts\n * - MGRS parser: /packages/geo/src/coordinates/mgrs/parser.ts\n * - UTM parser: /packages/geo/src/coordinates/utm/parser.ts\n */\n\nimport type { CoordinateSystem, SegmentConfig } from './types';\n\n/** Padding for numeric segments (0.25ch ≈ quarter character width for visual spacing) */\nconst NUMERIC_PAD = 0.25;\n\n/** Larger padding for final segment to account for container edge (0.5ch ≈ half character) */\nconst LAST_PAD = 0.5;\n\n/** The separator used for the logical field groups. */\nexport const GROUP_SEPARATOR = ', ';\n\n/**\n * DD (Decimal Degrees) Segment Configuration\n *\n * Format: [lat_deg], [lon_deg]\n * Example: 89.765432, -123.456789\n *\n * Segments:\n * - Latitude degrees: -90 to 90, allows negative sign, decimals, 0-9\n * - Longitude degrees: -180 to 180, allows negative sign, decimals, 0-9\n *\n * Total segments: 2 editable\n */\nexport const ddSegmentConfigs: SegmentConfig[] = [\n  {\n    type: 'numeric',\n    placeholder: '00.000000',\n    allowedChars: '[0-9\\\\-\\\\.]',\n    maxLength: 10, // Max: -90.123456\n    pad: NUMERIC_PAD,\n  },\n  {\n    type: 'literal',\n    value: GROUP_SEPARATOR,\n  },\n  {\n    type: 'numeric',\n    placeholder: '-000.000000',\n    allowedChars: '[0-9\\\\-\\\\.]',\n    maxLength: 11, // Max: -180.123456\n    pad: LAST_PAD,\n  },\n];\n\n/**\n * DDM (Degrees Decimal Minutes) Segment Configuration\n *\n * Format: [lat_deg]° [lat_min]' [lat_dir], [lon_deg]° [lon_min]' [lon_dir]\n * Example: 89° 45.9259' N, 123° 27.4073' W\n *\n * Segments:\n * - Latitude degrees: 0-90, whole number only (no decimals)\n * - Latitude minutes: 0-59.9999, decimals allowed\n * - Latitude direction: N or S\n * - Longitude degrees: 0-180, whole number only (no decimals)\n * - Longitude minutes: 0-59.9999, decimals allowed\n * - Longitude direction: E or W\n *\n * Total segments: 6 editable\n */\nexport const ddmSegmentConfigs: SegmentConfig[] = [\n  // Latitude degrees\n  {\n    type: 'numeric',\n    placeholder: '00',\n    allowedChars: '[0-9]',\n    maxLength: 2, // Max: 90\n    pad: NUMERIC_PAD,\n  },\n  {\n    type: 'literal',\n    value: '°',\n  },\n  // Latitude minutes (decimal minutes)\n  {\n    type: 'numeric',\n    placeholder: '00.0000',\n    allowedChars: '[0-9\\\\.]',\n    maxLength: 7, // Max: 59.9999\n    pad: NUMERIC_PAD,\n  },\n  {\n    type: 'literal',\n    value: \"'\",\n  },\n  // Latitude direction\n  {\n    type: 'directional',\n    placeholder: 'N',\n    allowedChars: '[NS]',\n    maxLength: 1,\n    pad: 0,\n  },\n  {\n    type: 'literal',\n    value: GROUP_SEPARATOR,\n  },\n  // Longitude degrees\n  {\n    type: 'numeric',\n    placeholder: '000',\n    allowedChars: '[0-9]',\n    maxLength: 3, // Max: 180\n    pad: NUMERIC_PAD,\n  },\n  {\n    type: 'literal',\n    value: '°',\n  },\n  // Longitude minutes (decimal minutes)\n  {\n    type: 'numeric',\n    placeholder: '00.0000',\n    allowedChars: '[0-9\\\\.]',\n    maxLength: 7, // Max: 59.9999\n    pad: LAST_PAD,\n  },\n  {\n    type: 'literal',\n    value: \"'\",\n  },\n  // Longitude direction\n  {\n    type: 'directional',\n    placeholder: 'W',\n    allowedChars: '[EW]',\n    maxLength: 1,\n    pad: 0,\n  },\n];\n\n/**\n * DMS (Degrees Minutes Seconds) Segment Configuration\n *\n * Format: [lat_deg]° [lat_min]' [lat_sec]\" [lat_dir], [lon_deg]° [lon_min]' [lon_sec]\" [lon_dir]\n * Example: 89° 45' 55.56\" N, 123° 27' 24.44\" W\n *\n * Segments:\n * - Latitude degrees: 0-90, whole number only (no decimals)\n * - Latitude minutes: 0-59, whole number only (no decimals)\n * - Latitude seconds: 0-59.999, decimals allowed\n * - Latitude direction: N or S\n * - Longitude degrees: 0-180, whole number only (no decimals)\n * - Longitude minutes: 0-59, whole number only (no decimals)\n * - Longitude seconds: 0-59.999, decimals allowed\n * - Longitude direction: E or W\n *\n * Total segments: 8 editable\n */\nexport const dmsSegmentConfigs: SegmentConfig[] = [\n  // Latitude degrees\n  {\n    type: 'numeric',\n    placeholder: '00',\n    allowedChars: '[0-9]',\n    maxLength: 2, // Max: 90\n    pad: NUMERIC_PAD,\n  },\n  {\n    type: 'literal',\n    value: '°',\n  },\n  // Latitude minutes (whole number)\n  {\n    type: 'numeric',\n    placeholder: '00',\n    allowedChars: '[0-9]',\n    maxLength: 2, // Max: 59\n    pad: NUMERIC_PAD,\n  },\n  {\n    type: 'literal',\n    value: \"'\",\n  },\n  // Latitude seconds (decimal seconds)\n  {\n    type: 'numeric',\n    placeholder: '00.00',\n    allowedChars: '[0-9\\\\.]',\n    maxLength: 5, // Max: 59.99\n    pad: NUMERIC_PAD,\n  },\n  {\n    type: 'literal',\n    value: '\"',\n  },\n  // Latitude direction\n  {\n    type: 'directional',\n    placeholder: 'N',\n    allowedChars: '[NS]',\n    maxLength: 1,\n    pad: 0,\n  },\n  {\n    type: 'literal',\n    value: GROUP_SEPARATOR,\n  },\n  // Longitude degrees\n  {\n    type: 'numeric',\n    placeholder: '000',\n    allowedChars: '[0-9]',\n    maxLength: 3, // Max: 180\n    pad: NUMERIC_PAD,\n  },\n  {\n    type: 'literal',\n    value: '°',\n  },\n  // Longitude minutes (whole number)\n  {\n    type: 'numeric',\n    placeholder: '00',\n    allowedChars: '[0-9]',\n    maxLength: 2, // Max: 59\n    pad: NUMERIC_PAD,\n  },\n  {\n    type: 'literal',\n    value: \"'\",\n  },\n  // Longitude seconds (decimal seconds)\n  {\n    type: 'numeric',\n    placeholder: '00.00',\n    allowedChars: '[0-9\\\\.]',\n    maxLength: 5, // Max: 59.99\n    pad: NUMERIC_PAD,\n  },\n  {\n    type: 'literal',\n    value: '\"',\n  },\n  // Longitude direction\n  {\n    type: 'directional',\n    placeholder: 'W',\n    allowedChars: '[EW]',\n    maxLength: 1,\n    pad: 0,\n  },\n];\n\n/**\n * MGRS (Military Grid Reference System) Segment Configuration\n *\n * Format: [zone][band] [grid_100km] [easting] [northing]\n * Example: 18T WM 12345 67890\n *\n * Segments:\n * - Zone: 1-60, 2 digits\n * - Band: C-X (excluding I and O), 1 letter\n * - Grid 100km: 2 letters (A-Z excluding I and O)\n * - Easting: 5 digits (can be 1-5 based on precision)\n * - Northing: 5 digits (can be 1-5 based on precision)\n *\n * Total segments: 5 editable\n *\n * Reference: /packages/geo/src/coordinates/mgrs/parser.ts\n * Pattern: /^((?:..?)?)(\\w?)\\s*((?:\\w{2})?)\\s*(?:(\\d+(?:\\.\\d*)?)?)\\s*(?:(\\d+(?:\\.\\d*)?)?)$/i\n */\nexport const mgrsSegmentConfigs: SegmentConfig[] = [\n  // Zone (1-60)\n  {\n    type: 'numeric',\n    placeholder: '00',\n    allowedChars: '[0-9]',\n    maxLength: 2, // Max: 60\n    pad: NUMERIC_PAD,\n  },\n  // Band (C-X, excluding I and O)\n  {\n    type: 'alphanumeric',\n    placeholder: 'T',\n    allowedChars: '[C-HJ-NP-X]', // Excludes I and O\n    maxLength: 1,\n    pad: 0,\n  },\n  {\n    type: 'literal',\n    value: ' ',\n  },\n  // Grid 100km identifier (2 letters, A-Z excluding I and O)\n  {\n    type: 'alphanumeric',\n    placeholder: 'WM',\n    allowedChars: '[A-HJ-NP-Z]', // Excludes I and O\n    maxLength: 2,\n    pad: 0,\n  },\n  {\n    type: 'literal',\n    value: ' ',\n  },\n  // Easting (5 digits, can be 1-5 based on precision)\n  {\n    type: 'numeric',\n    placeholder: '00000',\n    allowedChars: '[0-9]',\n    maxLength: 5,\n    pad: NUMERIC_PAD,\n  },\n  {\n    type: 'literal',\n    value: ' ',\n  },\n  // Northing (5 digits, can be 1-5 based on precision)\n  {\n    type: 'numeric',\n    placeholder: '00000',\n    allowedChars: '[0-9]',\n    maxLength: 5,\n    pad: LAST_PAD,\n  },\n];\n\n/**\n * UTM (Universal Transverse Mercator) Segment Configuration\n *\n * Format: [zone][hemisphere] [easting] [northing]\n * Example: 18N 585628 4511644\n *\n * Segments:\n * - Zone: 1-60, 2 digits\n * - Hemisphere: N or S, 1 letter\n * - Easting: 6-7 digits\n * - Northing: 7 digits\n *\n * Total segments: 4 editable\n *\n * Reference: /packages/geo/src/coordinates/utm/parser.ts\n * Pattern: /^((?:..)?)\\s*(\\w?)\\s*(?:(\\d+(?:\\.\\d*)?)?)\\s*(?:(\\d+(?:\\.\\d*)?)?)$/i\n */\nexport const utmSegmentConfigs: SegmentConfig[] = [\n  // Zone (1-60)\n  {\n    type: 'numeric',\n    placeholder: '00',\n    allowedChars: '[0-9]',\n    maxLength: 2, // Max: 60\n    pad: NUMERIC_PAD,\n  },\n  // Hemisphere (N or S)\n  {\n    type: 'directional',\n    placeholder: 'N',\n    allowedChars: '[NS]',\n    maxLength: 1,\n    pad: 0,\n  },\n  {\n    type: 'literal',\n    value: ' ',\n  },\n  // Easting (6-7 digits)\n  {\n    type: 'numeric',\n    placeholder: '000000',\n    allowedChars: '[0-9]',\n    maxLength: 7,\n    pad: NUMERIC_PAD,\n  },\n  {\n    type: 'literal',\n    value: ' ',\n  },\n  // Northing (7 digits)\n  {\n    type: 'numeric',\n    placeholder: '0000000',\n    allowedChars: '[0-9]',\n    maxLength: 7,\n    pad: LAST_PAD,\n  },\n];\n\n/**\n * Get segment configurations for a specific coordinate system\n *\n * @param format - The coordinate system format\n * @returns Array of segment configurations for the specified format\n */\nexport function getSegmentConfigs(format: CoordinateSystem): SegmentConfig[] {\n  switch (format) {\n    case 'dd':\n      return ddSegmentConfigs;\n    case 'ddm':\n      return ddmSegmentConfigs;\n    case 'dms':\n      return dmsSegmentConfigs;\n    case 'mgrs':\n      return mgrsSegmentConfigs;\n    case 'utm':\n      return utmSegmentConfigs;\n    default:\n      // Default to DD format if unknown format provided\n      return ddSegmentConfigs;\n  }\n}\n\n/**\n * Get format description with example\n *\n * Provides a user-friendly description of the coordinate format with an example value.\n * These descriptions can be used as helper text to guide users on the expected format.\n *\n * @param format - The coordinate system format\n * @returns Description string with format example\n */\nexport function getFormatDescription(format: CoordinateSystem): string {\n  switch (format) {\n    case 'dd':\n      return 'Example: 40.7128, -74.0060 (New York City)';\n    case 'ddm':\n      return \"Example: 40° 42.768' N, 74° 0.360' W (New York City)\";\n    case 'dms':\n      return 'Example: 40° 42\\' 46.08\" N, 74° 0\\' 21.60\" W (New York City)';\n    case 'mgrs':\n      return 'Example: 18T WL 80654 06346 (New York City)';\n    case 'utm':\n      return 'Example: 18N 585628 4511644 (New York City)';\n    default:\n      return '';\n  }\n}\n\n/**\n * Get editable segment count for a format\n *\n * Returns the number of editable segments (excluding literal separators) for each format.\n * This is useful for initializing segment values and validation.\n *\n * @param format - The coordinate system format\n * @returns Number of editable segments\n */\nexport function getEditableSegmentCount(format: CoordinateSystem): number {\n  const configs = getSegmentConfigs(format);\n  return configs.filter((config) => config.type !== 'literal').length;\n}\n\n/**\n * Validate segment count for each format\n *\n * Expected editable segment counts:\n * - DD: 2 segments (lat, lon)\n * - DDM: 6 segments (lat_deg, lat_min, lat_dir, lon_deg, lon_min, lon_dir)\n * - DMS: 8 segments (lat_deg, lat_min, lat_sec, lat_dir, lon_deg, lon_min, lon_sec, lon_dir)\n * - MGRS: 5 segments (zone, band, grid, easting, northing)\n * - UTM: 4 segments (zone, hemisphere, easting, northing)\n */\nexport const EXPECTED_SEGMENT_COUNTS: Record<CoordinateSystem, number> = {\n  dd: 2,\n  ddm: 6,\n  dms: 8,\n  mgrs: 5,\n  utm: 4,\n};\n\n/**\n * Get semantic accessibility label for a segment based on format and editable index\n *\n * Provides descriptive labels for screen readers (e.g., \"Latitude degrees\", \"Longitude minutes\")\n * to improve accessibility beyond generic \"Coordinate segment 1\" announcements.\n *\n * @param format - The coordinate system format\n * @param editableIndex - The index of the editable segment (0-based, excluding literals)\n * @returns Semantic label string for the segment\n */\nexport function getSegmentLabel(\n  format: CoordinateSystem,\n  editableIndex: number,\n): string {\n  switch (format) {\n    case 'dd':\n      // DD: [lat, lon]\n      return editableIndex === 0 ? 'Latitude' : 'Longitude';\n\n    case 'ddm':\n      // DDM: [lat_deg, lat_min, lat_dir, lon_deg, lon_min, lon_dir]\n      switch (editableIndex) {\n        case 0:\n          return 'Latitude degrees';\n        case 1:\n          return 'Latitude minutes';\n        case 2:\n          return 'Latitude direction';\n        case 3:\n          return 'Longitude degrees';\n        case 4:\n          return 'Longitude minutes';\n        case 5:\n          return 'Longitude direction';\n        default:\n          return `Coordinate segment ${editableIndex + 1}`;\n      }\n\n    case 'dms':\n      // DMS: [lat_deg, lat_min, lat_sec, lat_dir, lon_deg, lon_min, lon_sec, lon_dir]\n      switch (editableIndex) {\n        case 0:\n          return 'Latitude degrees';\n        case 1:\n          return 'Latitude minutes';\n        case 2:\n          return 'Latitude seconds';\n        case 3:\n          return 'Latitude direction';\n        case 4:\n          return 'Longitude degrees';\n        case 5:\n          return 'Longitude minutes';\n        case 6:\n          return 'Longitude seconds';\n        case 7:\n          return 'Longitude direction';\n        default:\n          return `Coordinate segment ${editableIndex + 1}`;\n      }\n\n    case 'mgrs':\n      // MGRS: [zone, band, grid, easting, northing]\n      switch (editableIndex) {\n        case 0:\n          return 'MGRS zone';\n        case 1:\n          return 'MGRS band';\n        case 2:\n          return 'MGRS grid square';\n        case 3:\n          return 'MGRS easting';\n        case 4:\n          return 'MGRS northing';\n        default:\n          return `Coordinate segment ${editableIndex + 1}`;\n      }\n\n    case 'utm':\n      // UTM: [zone, hemisphere, easting, northing]\n      switch (editableIndex) {\n        case 0:\n          return 'UTM zone';\n        case 1:\n          return 'UTM hemisphere';\n        case 2:\n          return 'UTM easting';\n        case 3:\n          return 'UTM northing';\n        default:\n          return `Coordinate segment ${editableIndex + 1}`;\n      }\n\n    default:\n      return `Coordinate segment ${editableIndex + 1}`;\n  }\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "6/8",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/coordinate-field/segment.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:42.811Z",
+    "bundleHash": "uifb:38fc2ab94a860fb0b55c441d",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/coordinate-field/segment.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/coordinate-field/segment.tsx",
+            "description": "segment - Interactive component",
+            "version": {
+              "variables": [],
+              "hooks": ["useCoordinateFieldStateContext", "useMemo"],
+              "components": [],
+              "functions": ["CoordinateSegment"],
+              "imports": ["./context", "./types", "client-only", "react"]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {
+                "onChange": {
+                  "type": "function",
+                  "signature": "() => void"
+                },
+                "onPaste": {
+                  "type": "function",
+                  "signature": "() => void"
+                },
+                "onKeyDown": {
+                  "type": "function",
+                  "signature": "() => void"
+                },
+                "onFocus": {
+                  "type": "function",
+                  "signature": "() => void"
+                },
+                "onBlur": {
+                  "type": "function",
+                  "signature": "() => void"
+                }
+              }
+            },
+            "exports": "named",
+            "prediction": ["Uses memoization for performance optimization"],
+            "style": {
+              "styleSources": {
+                "inlineStyles": true
+              }
+            },
+            "semanticHash": "uif:ad5d62341f9d459084fec7c4",
+            "fileHash": "uif:2c0442756d1095cf37a84a92"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\n'use client';\n\nimport 'client-only';\nimport { useMemo } from 'react';\nimport { useCoordinateFieldStateContext } from './context';\nimport type { ChangeEvent, FocusEvent, KeyboardEvent } from 'react';\nimport type { CoordinateSegmentProps } from './types';\n\n/**\n * CoordinateSegment - A controlled input component for a single coordinate segment\n *\n * This component represents one editable part of a coordinate (e.g., degrees, minutes, direction).\n * It handles character filtering, focus management, and keyboard navigation.\n *\n * Segment Types (determined by allowedChars):\n * - Numeric: \"[0-9\\\\-\\\\.]\" - for DD degrees, DDM/DMS degrees/minutes/seconds\n * - Directional: \"[NSEW]\" - for DDM/DMS direction indicators\n * - Alphanumeric: \"[0-9A-Z]\" - for MGRS/UTM zone identifiers\n *\n * @example\n * // Numeric segment (latitude degrees)\n * <CoordinateSegment\n *   value={latDegrees}\n *   onChange={setLatDegrees}\n *   allowedChars=\"[0-9\\\\-\\\\.]\"\n *   maxLength={10}\n *   placeholder=\"00.00000\"\n * />\n *\n * @example\n * // Directional segment (latitude direction)\n * <CoordinateSegment\n *   value={latDir}\n *   onChange={setLatDir}\n *   allowedChars=\"[NS]\"\n *   maxLength={1}\n *   placeholder=\"N\"\n * />\n */\nexport function CoordinateSegment({\n  value,\n  onChange,\n  onFocus,\n  onBlur,\n  onKeyDown,\n  placeholder,\n  maxLength,\n  className,\n  isDisabled,\n  allowedChars,\n  segmentRef,\n  segmentIndex,\n  totalSegments: _totalSegments,\n  onAutoAdvance,\n  onAutoRetreat,\n  pad,\n  ariaLabel,\n}: CoordinateSegmentProps) {\n  const contextState = useCoordinateFieldStateContext();\n\n  const effectiveIsDisabled = contextState.isDisabled ?? isDisabled;\n\n  // Calculate dynamic width based on focus state\n  const dynamicWidth = useMemo(() => {\n    if (maxLength === undefined) {\n      return undefined;\n    }\n\n    // Default padding to 0.5 if not specified\n    const padding = pad ?? 0.5;\n\n    // When blurred, use value length (or maxLength if empty) + padding\n    const contentLength = value.length > 0 ? value.length : maxLength;\n    return contentLength + padding;\n  }, [maxLength, pad, value.length]);\n\n  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {\n    const newValue = e.target.value;\n\n    if (allowedChars) {\n      const regex = new RegExp(`^${allowedChars}*$`);\n      if (!regex.test(newValue)) {\n        return;\n      }\n    }\n\n    if (maxLength && newValue.length > maxLength) {\n      return;\n    }\n\n    onChange(newValue);\n\n    if (maxLength && newValue.length === maxLength && onAutoAdvance) {\n      const timeoutId = setTimeout(() => {\n        onAutoAdvance();\n      }, 0);\n      contextState.registerTimeout(timeoutId);\n    }\n  };\n\n  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {\n    const pastedText = e.clipboardData.getData('text');\n\n    if (allowedChars) {\n      const regex = new RegExp(`^${allowedChars}*$`);\n      if (!regex.test(pastedText)) {\n        e.preventDefault();\n        return;\n      }\n    }\n\n    if (maxLength && pastedText.length > maxLength) {\n      e.preventDefault();\n      onChange(pastedText.slice(0, maxLength));\n      return;\n    }\n  };\n\n  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {\n    const input = e.currentTarget;\n    const cursorAtStart = input.selectionStart === 0;\n    const cursorAtEnd = input.selectionStart === value.length;\n    const isEmpty = value.length === 0;\n\n    if (e.key === 'Backspace' && isEmpty && onAutoRetreat) {\n      e.preventDefault();\n      onAutoRetreat();\n      return;\n    }\n\n    if (e.key === 'ArrowLeft' && cursorAtStart && onAutoRetreat) {\n      e.preventDefault();\n      onAutoRetreat();\n      return;\n    }\n\n    if (e.key === 'ArrowRight' && cursorAtEnd && onAutoAdvance) {\n      e.preventDefault();\n      onAutoAdvance();\n      return;\n    }\n\n    onKeyDown?.(e);\n  };\n\n  const handleFocus = (e: FocusEvent<HTMLInputElement>) => {\n    e.target.select();\n    onFocus?.();\n  };\n\n  const handleBlur = () => {\n    onBlur?.();\n  };\n\n  return (\n    <input\n      ref={segmentRef}\n      type='text'\n      value={value}\n      onChange={handleChange}\n      onPaste={handlePaste}\n      onKeyDown={handleKeyDown}\n      onFocus={handleFocus}\n      onBlur={handleBlur}\n      placeholder={placeholder}\n      maxLength={maxLength}\n      className={className}\n      disabled={effectiveIsDisabled}\n      style={dynamicWidth ? { width: `${dynamicWidth}ch` } : undefined}\n      aria-label={\n        ariaLabel ||\n        `Coordinate segment ${segmentIndex !== undefined ? segmentIndex + 1 : ''}`\n      }\n      aria-disabled={effectiveIsDisabled}\n      autoComplete='off'\n      inputMode={\n        allowedChars?.includes('0-9')\n          ? allowedChars.includes('\\\\-\\\\.')\n            ? 'decimal'\n            : 'numeric'\n          : 'text'\n      }\n    />\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "7/8",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/coordinate-field/types.ts",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:42.811Z",
+    "bundleHash": "uifb:b930ff2cd9611f66985f21b0",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/coordinate-field/types.ts",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/coordinate-field/types.ts",
+            "description": "types - Type definitions",
+            "version": {
+              "variables": [
+                "COORDINATE_FORMAT_LABELS",
+                "COORDINATE_FORMAT_NAMES",
+                "COORDINATE_SYSTEMS"
+              ],
+              "hooks": [],
+              "components": [],
+              "functions": [],
+              "imports": ["react", "react-aria-components"]
+            },
+            "logicSignature": {
+              "props": {
+                "value": {
+                  "type": "import(\"/Users/brandonpierce/Projects/standard-toolkit/packages/design-toolkit/src/components/coordinate-field/types\").CoordinateValue",
+                  "optional": true
+                },
+                "onChange": {
+                  "type": "function",
+                  "signature": "React.Dispatch<React.SetStateAction<import(\"/Users/brandonpierce/Projects/standard-toolkit/packages/design-toolkit/src/components/coordinate-field/types\").CoordinateValue>> | ((value: import(\"/Users/brandonpierce/Projects/standard-toolkit/packages/design-toolkit/src/components/coordinate-field/types\").CoordinateValue) => void)",
+                  "optional": true
+                },
+                "onFocus": {
+                  "type": "function",
+                  "signature": "() => void",
+                  "optional": true
+                },
+                "onBlur": {
+                  "type": "function",
+                  "signature": "() => void",
+                  "optional": true
+                },
+                "onKeyDown": {
+                  "type": "function",
+                  "signature": "(e: React.KeyboardEvent<HTMLInputElement>) => void",
+                  "optional": true
+                },
+                "placeholder": {
+                  "type": "string",
+                  "optional": true
+                },
+                "maxLength": {
+                  "type": "number",
+                  "optional": true
+                },
+                "className": {
+                  "type": "string",
+                  "optional": true
+                },
+                "isDisabled": {
+                  "type": "boolean",
+                  "optional": true
+                },
+                "allowedChars": {
+                  "type": "string",
+                  "optional": true
+                },
+                "segmentRef": {
+                  "type": "React.RefObject<HTMLInputElement>",
+                  "optional": true
+                },
+                "segmentIndex": {
+                  "type": "number",
+                  "optional": true
+                },
+                "totalSegments": {
+                  "type": "number",
+                  "optional": true
+                },
+                "onAutoAdvance": {
+                  "type": "function",
+                  "signature": "() => void",
+                  "optional": true
+                },
+                "onAutoRetreat": {
+                  "type": "function",
+                  "signature": "() => void",
+                  "optional": true
+                },
+                "pad": {
+                  "type": "number",
+                  "optional": true
+                },
+                "ariaLabel": {
+                  "type": "string",
+                  "optional": true
+                },
+                "ref": {
+                  "type": "React.Ref<HTMLDivElement>",
+                  "optional": true
+                },
+                "key": {
+                  "type": "React.Key",
+                  "optional": true
+                },
+                "classNames": {
+                  "type": "{ field?: string; label?: LabelProps; control?: string; input?: string; segment?: string; description?: string; error?: FieldErrorProps; formatButton?: string; }",
+                  "optional": true
+                },
+                "label": {
+                  "type": "string",
+                  "optional": true
+                },
+                "description": {
+                  "type": "string",
+                  "optional": true
+                },
+                "errorMessage": {
+                  "type": "string",
+                  "optional": true
+                },
+                "format": {
+                  "type": "import(\"/Users/brandonpierce/Projects/standard-toolkit/packages/design-toolkit/src/components/coordinate-field/types\").CoordinateSystem",
+                  "optional": true
+                },
+                "size": {
+                  "type": "literal-union",
+                  "literals": ["small", "medium"],
+                  "optional": true
+                },
+                "showFormatButton": {
+                  "type": "boolean",
+                  "optional": true
+                },
+                "variant": {
+                  "type": "literal-union",
+                  "literals": ["inline", "stacked"],
+                  "optional": true
+                },
+                "defaultValue": {
+                  "type": "import(\"/Users/brandonpierce/Projects/standard-toolkit/packages/design-toolkit/src/components/coordinate-field/types\").CoordinateValue",
+                  "optional": true
+                },
+                "onError": {
+                  "type": "function",
+                  "signature": "(message: string, context?: Record<string, unknown>) => void",
+                  "optional": true
+                }
+              },
+              "emits": {}
+            },
+            "exports": {
+              "named": [
+                "COORDINATE_FORMAT_LABELS",
+                "COORDINATE_FORMAT_NAMES",
+                "COORDINATE_SYSTEMS"
+              ]
+            },
+            "semanticHash": "uif:61b06802267a3d693b4b178a",
+            "fileHash": "uif:e03be87d15243871ae63fa27"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport type {\n  Dispatch,\n  KeyboardEvent,\n  RefAttributes,\n  SetStateAction,\n} from 'react';\nimport type {\n  TextFieldProps as AriaTextFieldProps,\n  FieldErrorProps,\n  LabelProps,\n} from 'react-aria-components';\n\n/**\n * Supported coordinate systems for display and input\n */\nexport type CoordinateSystem = 'dd' | 'ddm' | 'dms' | 'mgrs' | 'utm';\n\n/**\n * Short labels for coordinate formats (used in popover)\n */\nexport const COORDINATE_FORMAT_LABELS: Record<CoordinateSystem, string> = {\n  dd: 'DD',\n  ddm: 'DDM',\n  dms: 'DMS',\n  mgrs: 'MGRS',\n  utm: 'UTM',\n};\n\n/**\n * Full names for coordinate formats (used in popover titles/descriptions)\n */\nexport const COORDINATE_FORMAT_NAMES: Record<CoordinateSystem, string> = {\n  dd: 'Decimal Degrees',\n  ddm: 'Degrees Decimal Minutes',\n  dms: 'Degrees Minutes Seconds',\n  mgrs: 'Military Grid Reference System',\n  utm: 'Universal Transverse Mercator',\n};\n\n/**\n * All supported coordinate systems\n * Use this constant instead of hardcoding the array in multiple places\n */\nexport const COORDINATE_SYSTEMS: readonly CoordinateSystem[] = [\n  'dd',\n  'dms',\n  'ddm',\n  'mgrs',\n  'utm',\n] as const;\n\n/**\n * Coordinate value in Decimal Degrees format (internal representation)\n * All coordinate values are normalized to this format internally\n */\nexport type CoordinateValue = {\n  lat: number; // Latitude in decimal degrees (-90 to 90)\n  lon: number; // Longitude in decimal degrees (-180 to 180)\n};\n\n/**\n * Types of segments in a coordinate input\n */\nexport type SegmentType =\n  | 'numeric'\n  | 'directional'\n  | 'literal'\n  | 'alphanumeric';\n\n/**\n * Configuration for a single coordinate segment\n */\nexport type SegmentConfig = {\n  type: SegmentType;\n  /** Placeholder text shown when segment is empty */\n  placeholder?: string;\n  /** Maximum character length for the segment */\n  maxLength?: number;\n  /** Regex pattern for allowed characters */\n  allowedChars?: string;\n  /** Fixed value for literal segments (e.g., \", \" or \"º\") */\n  value?: string;\n  /** Padding in CSS 'ch' units to add to the segment width (defaults to 0.5 if not specified) */\n  pad?: number;\n};\n\n/**\n * Result of parsing a pasted coordinate string\n */\nexport type ParsedCoordinateMatch = {\n  /** The coordinate system format that matched */\n  format: CoordinateSystem;\n  /** The coordinate value in DD format */\n  value: CoordinateValue;\n  /** Display string in the matched format */\n  displayString: string;\n};\n\n/**\n * State shared with child components through context\n */\nexport type CoordinateFieldState = {\n  segmentValues: string[];\n  format: CoordinateFieldProps['format'];\n  /**\n   * Current coordinate value in DD format\n   * - undefined: uncontrolled mode with no default value\n   * - null: controlled mode with empty/invalid value\n   * - CoordinateValue: valid coordinate\n   */\n  currentValue?: CoordinateValue | null;\n  /** Validation errors from @accelint/geo */\n  validationErrors: string[];\n  isDisabled: boolean;\n  isInvalid: boolean;\n  isRequired: boolean;\n  /** Size variant of the field */\n  size: CoordinateFieldProps['size'];\n  /** Whether or not the logical coordinate fields are inlined or stacked */\n  variant: CoordinateFieldProps['variant'];\n  /** Function to register timeouts for cleanup on unmount */\n  registerTimeout: (timeoutId: NodeJS.Timeout) => void;\n};\n\n/**\n * Props for the CoordinateSegment component\n */\nexport type CoordinateSegmentProps = {\n  /** Current value of the segment */\n  value: string;\n  /** Callback when the segment value changes */\n  onChange: (value: string) => void;\n  /** Callback when the segment receives focus */\n  onFocus?: () => void;\n  /** Callback when the segment loses focus */\n  onBlur?: () => void;\n  /** Callback for keyboard events (used for navigation between segments) */\n  onKeyDown?: (e: KeyboardEvent<HTMLInputElement>) => void;\n  /** Placeholder text to display when segment is empty */\n  placeholder?: string;\n  /** Maximum character length for the segment */\n  maxLength?: number;\n  /** Custom className for styling */\n  className?: string;\n  /** Whether the segment is disabled */\n  isDisabled?: boolean;\n  /** Regex pattern for allowed characters (e.g., \"[0-9\\\\-\\\\.]\" for numeric, \"[NSEW]\" for directional) */\n  allowedChars?: string;\n  /** Ref to the input element for programmatic focus management */\n  segmentRef?: React.RefObject<HTMLInputElement>;\n  /** Index of this segment in the parent field (for accessibility) */\n  segmentIndex?: number;\n  /** Total number of segments (for accessibility) */\n  totalSegments?: number;\n  /** Callback to trigger auto-advance to next segment */\n  onAutoAdvance?: () => void;\n  /** Callback to trigger auto-retreat to previous segment */\n  onAutoRetreat?: () => void;\n  /** Padding in CSS 'ch' units to add to the segment width (defaults to 0.5 if not specified) */\n  pad?: number;\n  /** Semantic accessibility label for the segment (e.g., \"Latitude degrees\") */\n  ariaLabel?: string;\n};\n\n/**\n * Props for the CoordinateField component\n *\n * Extends AriaTextFieldProps to inherit standard form field props (id, isDisabled, isRequired, etc.)\n */\nexport type CoordinateFieldProps = Omit<\n  AriaTextFieldProps,\n  | 'children'\n  | 'className'\n  | 'placeholder'\n  | 'type'\n  | 'pattern'\n  | 'value'\n  | 'defaultValue'\n  | 'onChange'\n  | 'name' // Not applicable to multi-segment fields\n> &\n  RefAttributes<HTMLDivElement> & {\n    /**\n     * Custom class names for component slots\n     */\n    classNames?: {\n      field?: string;\n      label?: LabelProps['className'];\n      control?: string;\n      input?: string;\n      segment?: string;\n      description?: string;\n      error?: FieldErrorProps['className'];\n      formatButton?: string;\n    };\n\n    /**\n     * Label text displayed above the input (medium size only)\n     */\n    label?: string;\n\n    /**\n     * Helper text displayed below the input\n     */\n    description?: string;\n\n    /**\n     * Error message to display when the field is invalid\n     */\n    errorMessage?: string;\n\n    /**\n     * Display format for coordinate input\n     * @default 'dd' (Decimal Degrees)\n     */\n    format?: CoordinateSystem;\n\n    /**\n     * Size variant of the field\n     * @default 'medium'\n     */\n    size?: 'small' | 'medium';\n\n    /**\n     * Whether to show the format button for copying coordinates in different formats\n     * @default true\n     */\n    showFormatButton?: boolean;\n\n    /**\n     * Controlled value in Decimal Degrees format\n     * - undefined: uncontrolled mode\n     * - null: controlled mode with no/invalid value\n     * - CoordinateValue: controlled mode with valid value\n     */\n    value?: CoordinateValue | null;\n\n    /**\n     * Whether or not the input is stacked or inline\n     * @default 'inline'\n     */\n    variant?: 'inline' | 'stacked';\n\n    /**\n     * Default uncontrolled value in Decimal Degrees format\n     */\n    defaultValue?: CoordinateValue;\n\n    /**\n     * Callback fired when the coordinate value changes\n     * @param value - The new coordinate value in DD format, or null if invalid\n     */\n    onChange?:\n      | Dispatch<SetStateAction<CoordinateValue | null>>\n      | ((value: CoordinateValue | null) => void);\n\n    /**\n     * Callback fired when validation or paste errors occur\n     * @param message - Error message (\"Invalid coordinate value\" for validation errors, \"Invalid coordinate format\" for paste errors)\n     * @param context - Additional context about the error:\n     *   - Validation errors: `{ errors: string[], format: string, segments: string[] }`\n     *   - Paste errors: `{ pastedText: string }`\n     */\n    onError?: (message: string, context?: Record<string, unknown>) => void;\n  };\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "8/8",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/coordinate-field/width-utils.ts",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:42.812Z",
+    "bundleHash": "uifb:ad9316f4254224fcf931c95a",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/coordinate-field/width-utils.ts",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/coordinate-field/width-utils.ts",
+            "description": "width-utils - Utility module",
+            "version": {
+              "variables": [
+                "CONTAINER_PADDING_WIDTH",
+                "FORMAT_BUTTON_WIDTH",
+                "INPUT_BUTTON_GAP",
+                "SEGMENT_GAP_WIDTH"
+              ],
+              "hooks": [],
+              "components": [],
+              "functions": ["calculateMinControlWidth"],
+              "imports": ["./types"]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": {
+              "named": [
+                "CONTAINER_PADDING_WIDTH",
+                "FORMAT_BUTTON_WIDTH",
+                "INPUT_BUTTON_GAP",
+                "SEGMENT_GAP_WIDTH",
+                "calculateMinControlWidth"
+              ]
+            },
+            "semanticHash": "uif:050ff7687300d98b5ed9d3bc",
+            "fileHash": "uif:568331004e397b87f06cc960"
+          },
+          "codeHeader": null,
+          "code": "// __private-exports\n/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport type { SegmentConfig } from './types';\n\n/**\n * Layout spacing constants for coordinate field width calculations.\n * All values are in character widths (ch units) to ensure consistent sizing\n * with monospace coordinate values.\n */\n\n/** Gap spacing between segments (0.5rem = ~0.5ch per gap) */\nexport const SEGMENT_GAP_WIDTH = 0.5;\n\n/** Container padding (px-s = 0.5rem on each side = ~1ch total) */\nexport const CONTAINER_PADDING_WIDTH = 2;\n\n/** Format button width (icon button is roughly 2.5-3ch) */\nexport const FORMAT_BUTTON_WIDTH = 3.5;\n\n/** Gap between input and button (gap-m = 1rem = ~1ch) */\nexport const INPUT_BUTTON_GAP = 1.5;\n\n/**\n * Calculates the minimum width needed for the coordinate field control container.\n * This keeps the outlined container at a fixed width while segments animate.\n *\n * @private\n * @param editableSegmentConfigs - Array of editable segment configurations\n * @param segmentConfigs - Array of all segment configurations (including literals)\n * @param showFormatButton - Whether the format button is displayed\n * @returns The calculated width as a CSS string (e.g., \"25ch\")\n */\nexport function calculateMinControlWidth(\n  editableSegmentConfigs: SegmentConfig[],\n  segmentConfigs: SegmentConfig[],\n  showFormatButton: boolean,\n): string {\n  // Sum all editable segment max widths with their padding\n  const segmentWidth = editableSegmentConfigs.reduce((sum, config) => {\n    const maxLen = config.maxLength || 0;\n    const padding = config.pad ?? 0.5;\n    return sum + maxLen + padding;\n  }, 0);\n\n  // Calculate width of literal characters (colons, spaces, etc.)\n  const literalWidth = segmentConfigs\n    .filter((c) => c.type === 'literal')\n    .reduce((sum, c) => sum + (c.value?.length || 0), 0);\n\n  // Add gap spacing between segments\n  // Number of gaps = number of segments - 1 (minimum 0)\n  const gapCount = Math.max(0, segmentConfigs.length - 1);\n  const gapWidth = gapCount * SEGMENT_GAP_WIDTH;\n\n  // Add container padding\n  const paddingWidth = CONTAINER_PADDING_WIDTH;\n\n  // Add format button width if shown\n  const buttonWidth = showFormatButton ? FORMAT_BUTTON_WIDTH : 0;\n\n  // Add gap between input and button if button is shown\n  const inputButtonGap = showFormatButton ? INPUT_BUTTON_GAP : 0;\n\n  return `${segmentWidth + literalWidth + gapWidth + paddingWidth + buttonWidth + inputButtonGap}ch`;\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  }
+]

@@ -1,0 +1,503 @@
+[
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "1/7",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/popover/content.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.462Z",
+    "bundleHash": "uifb:abed72fb256f792ba98effbe",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/popover/content.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/popover/content.tsx",
+            "description": "content - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": [],
+              "functions": ["PopoverContent"],
+              "imports": [
+                "./styles.module.css",
+                "@accelint/design-foundation/lib/utils",
+                "client-only",
+                "react"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [".content", ".footer", ".popover", ".title"],
+                  "properties": ["max-width"]
+                }
+              }
+            },
+            "semanticHash": "uif:53b50ccf49cf75643316d54d",
+            "fileHash": "uif:88ceef02dfa8323855db6269"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\n'use client';\n\nimport 'client-only';\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport styles from './styles.module.css';\nimport type { ComponentPropsWithRef } from 'react';\n\nexport function PopoverContent({\n  className,\n  ...rest\n}: ComponentPropsWithRef<'div'>) {\n  return <div {...rest} className={clsx(styles.content, className)} />;\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "2/7",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/popover/footer.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.462Z",
+    "bundleHash": "uifb:ed99cbed4beebf5c5a934a8d",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/popover/footer.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/popover/footer.tsx",
+            "description": "footer - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": [],
+              "functions": ["PopoverFooter"],
+              "imports": [
+                "./styles.module.css",
+                "@accelint/design-foundation/lib/utils",
+                "client-only",
+                "react"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [".content", ".footer", ".popover", ".title"],
+                  "properties": ["max-width"]
+                }
+              }
+            },
+            "semanticHash": "uif:5a65f867f32a6b19102d71fb",
+            "fileHash": "uif:5a4df2d33db9d250cde028d9"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\n'use client';\n\nimport 'client-only';\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport styles from './styles.module.css';\nimport type { ComponentPropsWithRef } from 'react';\n\nexport function PopoverFooter({\n  children,\n  className,\n}: ComponentPropsWithRef<'footer'>) {\n  return <footer className={clsx(styles.footer, className)}>{children}</footer>;\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "3/7",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/popover/index.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.467Z",
+    "bundleHash": "uifb:92b3af5f46aed619412ad21a",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/popover/index.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/popover/index.tsx",
+            "description": "index - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": ["AriaPopover", "Dialog"],
+              "functions": ["Popover"],
+              "imports": [
+                "./styles.module.css",
+                "./types",
+                "@accelint/design-foundation/lib/utils",
+                "client-only",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [".content", ".footer", ".popover", ".title"],
+                  "properties": ["max-width"]
+                }
+              }
+            },
+            "semanticHash": "uif:38adf0a70578ceecd4f2f428",
+            "fileHash": "uif:a32e614b1c50f24a26970ebb"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\n'use client';\n\nimport 'client-only';\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport { Popover as AriaPopover, Dialog } from 'react-aria-components';\nimport styles from './styles.module.css';\nimport type { PopoverProps } from './types';\n\n/**\n * Popover - A floating content container positioned relative to a trigger element\n *\n * Provides accessible popover functionality with flexible positioning and content\n * organization. Perfect for contextual information, menus, or supplementary content\n * that appears on demand without interrupting the user's workflow.\n *\n * @example\n * // Basic popover\n * <PopoverTrigger>\n *   <Button>Show Info</Button>\n *   <Popover>\n *     <PopoverContent>\n *       <p>Additional information appears here</p>\n *     </PopoverContent>\n *   </Popover>\n * </PopoverTrigger>\n *\n * @example\n * // Popover with title and actions\n * <PopoverTrigger>\n *   <Button>Options</Button>\n *   <Popover placement=\"top\">\n *     <PopoverTitle>Quick Actions</PopoverTitle>\n *     <PopoverContent>\n *       <Button>Edit</Button>\n *       <Button>Delete</Button>\n *     </PopoverContent>\n *   </Popover>\n * </PopoverTrigger>\n */\nexport function Popover({ children, classNames, ...rest }: PopoverProps) {\n  return (\n    <AriaPopover\n      {...rest}\n      className={clsx(styles.popover, classNames?.popover)}\n    >\n      <Dialog className={clsx(styles.dialog, classNames?.dialog)}>\n        {children}\n      </Dialog>\n    </AriaPopover>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "AriaPopover",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/popover/index.tsx"
+        },
+        {
+          "name": "Dialog",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/popover/index.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "4/7",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/popover/popover.stories.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.492Z",
+    "bundleHash": "uifb:65cea04ddd1ab97fc0d70a7d",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/popover/popover.stories.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/popover/popover.stories.tsx",
+            "description": "popover.stories - Interactive component",
+            "version": {
+              "variables": [
+                "CustomComposition",
+                "Simple",
+                "WithActions",
+                "meta"
+              ],
+              "hooks": [],
+              "components": [
+                "Button",
+                "Checkbox",
+                "Delete",
+                "Icon",
+                "Information",
+                "Popover",
+                "PopoverContent",
+                "PopoverFooter",
+                "PopoverTitle",
+                "PopoverTrigger"
+              ],
+              "functions": [],
+              "imports": [
+                "../checkbox",
+                "../icon",
+                "./",
+                "./content",
+                "./footer",
+                "./title",
+                "./trigger",
+                "@/components/button",
+                "@accelint/icons",
+                "@storybook/react-vite"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {
+                "onPress": {
+                  "type": "function",
+                  "signature": "() => void"
+                }
+              }
+            },
+            "exports": {
+              "named": ["CustomComposition", "Simple", "WithActions"]
+            },
+            "semanticHash": "uif:e6a2c09f52a121f75843583c",
+            "fileHash": "uif:1e5c1f77f6d5ab974e8708b0"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport { Delete, Information } from '@accelint/icons';\nimport { Button } from '@/components/button';\nimport { Checkbox } from '../checkbox';\nimport { Icon } from '../icon';\nimport { Popover } from './';\nimport { PopoverContent } from './content';\nimport { PopoverFooter } from './footer';\nimport { PopoverTitle } from './title';\nimport { PopoverTrigger } from './trigger';\nimport type { Meta, StoryObj } from '@storybook/react-vite';\n\n/**\n * The `<Popover>` component is a direct wrapper around the `Popover` component from\n * `react-aria-components`.\n *\n * Please see the documentation for that component <a href=\"https://react-spectrum.adobe.com/react-aria/Popover.html\">here</a>.\n */\n\nconst meta = {\n  title: 'Components/Popover',\n  component: Popover,\n  args: {\n    placement: 'bottom',\n  },\n  argTypes: {\n    placement: {\n      control: 'select',\n      options: ['left', 'right', 'top', 'bottom'],\n      table: { defaultValue: { summary: 'bottom' } },\n    },\n  },\n} satisfies Meta<typeof Popover>;\n\nexport default meta;\n\nexport const Simple: StoryObj<typeof meta> = {\n  render: ({ ...args }) => (\n    <PopoverTrigger>\n      <Icon className='fg-primary-bold'>\n        <Information />\n      </Icon>\n      <Popover {...args}>\n        <PopoverTitle>Popover Title</PopoverTitle>\n        <PopoverContent>\n          Lorum Ipsum text for the dialog shall go here.\n        </PopoverContent>\n      </Popover>\n    </PopoverTrigger>\n  ),\n};\n\nexport const WithActions: StoryObj<typeof meta> = {\n  render: () => (\n    <PopoverTrigger>\n      <Button variant='icon'>\n        <Icon>\n          <Delete />\n        </Icon>\n      </Button>\n      <Popover>\n        {({ close }) => (\n          <>\n            <PopoverTitle>Delete Item</PopoverTitle>\n            <PopoverContent>\n              Are you sure you want to delete this item?\n            </PopoverContent>\n            <PopoverFooter>\n              <Button variant='flat' onPress={close}>\n                Cancel\n              </Button>\n              <Button variant='filled' onPress={close}>\n                CTA\n              </Button>\n            </PopoverFooter>\n          </>\n        )}\n      </Popover>\n    </PopoverTrigger>\n  ),\n};\n\nexport const CustomComposition: StoryObj<typeof meta> = {\n  render: () => {\n    return (\n      <PopoverTrigger>\n        <span className='fg-primary-bold'>Settings</span>\n        <Popover classNames={{ popover: 'min-w-sm' }}>\n          {() => (\n            <>\n              <PopoverTitle>Notification Settings</PopoverTitle>\n              <PopoverContent className='space-y-s'>\n                <Checkbox>Email Notifications</Checkbox>\n                <Checkbox>Push Notifications</Checkbox>\n                <Checkbox>SMS Notifications</Checkbox>\n              </PopoverContent>\n            </>\n          )}\n        </Popover>\n      </PopoverTrigger>\n    );\n  },\n};\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "Button",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/popover/popover.stories.tsx"
+        },
+        {
+          "name": "Checkbox",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/popover/popover.stories.tsx"
+        },
+        {
+          "name": "Delete",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/popover/popover.stories.tsx"
+        },
+        {
+          "name": "Icon",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/popover/popover.stories.tsx"
+        },
+        {
+          "name": "Information",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/popover/popover.stories.tsx"
+        },
+        {
+          "name": "Popover",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/popover/popover.stories.tsx"
+        },
+        {
+          "name": "PopoverContent",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/popover/popover.stories.tsx"
+        },
+        {
+          "name": "PopoverFooter",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/popover/popover.stories.tsx"
+        },
+        {
+          "name": "PopoverTitle",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/popover/popover.stories.tsx"
+        },
+        {
+          "name": "PopoverTrigger",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/popover/popover.stories.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "5/7",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/popover/title.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.495Z",
+    "bundleHash": "uifb:2e46cf6929c4c2754049172e",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/popover/title.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/popover/title.tsx",
+            "description": "title - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": ["AriaHeading"],
+              "functions": ["PopoverTitle"],
+              "imports": [
+                "./styles.module.css",
+                "@accelint/design-foundation/lib/utils",
+                "client-only",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [".content", ".footer", ".popover", ".title"],
+                  "properties": ["max-width"]
+                }
+              }
+            },
+            "semanticHash": "uif:57e5f1538440a7c8f4f17f80",
+            "fileHash": "uif:4bba4a63c984d3df5f25af3b"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\n'use client';\n\nimport 'client-only';\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport {\n  Heading as AriaHeading,\n  type HeadingProps,\n} from 'react-aria-components';\nimport styles from './styles.module.css';\n\nexport function PopoverTitle({ className, ...rest }: HeadingProps) {\n  return (\n    <AriaHeading\n      {...rest}\n      slot='title'\n      className={clsx(styles.title, className)}\n    />\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "AriaHeading",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/popover/title.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "6/7",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/popover/trigger.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.500Z",
+    "bundleHash": "uifb:c0b89adcf252accebcb8422f",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/popover/trigger.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/popover/trigger.tsx",
+            "description": "trigger - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": ["DialogTrigger", "Pressable"],
+              "functions": ["PopoverTrigger"],
+              "imports": [
+                "./types",
+                "@react-aria/interactions",
+                "@react-types/shared",
+                "client-only",
+                "react",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "semanticHash": "uif:2d24599100ace880b8470f77",
+            "fileHash": "uif:0f54edc642e72b72b3daf326"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\n'use client';\n\nimport 'client-only';\nimport { Pressable } from '@react-aria/interactions';\nimport {\n  Children,\n  type DOMAttributes,\n  type ReactElement,\n  type ReactNode,\n} from 'react';\nimport { DialogTrigger } from 'react-aria-components';\nimport type { FocusableElement } from '@react-types/shared';\nimport type { PopoverTriggerProps } from './types';\n\nexport function PopoverTrigger({\n  ref,\n  children,\n  ...rest\n}: PopoverTriggerProps) {\n  const [trigger, popover] = Children.toArray(children) as [\n    ReactElement<DOMAttributes<FocusableElement>, string>,\n    ReactNode,\n  ];\n\n  return (\n    <DialogTrigger {...rest}>\n      <Pressable ref={ref}>{trigger}</Pressable>\n      {popover}\n    </DialogTrigger>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "DialogTrigger",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/popover/trigger.tsx"
+        },
+        {
+          "name": "Pressable",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/popover/trigger.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "7/7",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/popover/types.ts",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.501Z",
+    "bundleHash": "uifb:42c4e5a6546e7c190e47ed56",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/popover/types.ts",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/popover/types.ts",
+            "description": "types - Type definitions",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": [],
+              "functions": [],
+              "imports": ["react", "react-aria-components"]
+            },
+            "logicSignature": {
+              "props": {
+                "children": "DialogProps",
+                "classNames": {
+                  "type": "{ popover?: AriaPopoverProps; dialog?: DialogProps; }",
+                  "optional": true
+                },
+                "dialogProps": {
+                  "type": "Omit<DialogProps, \"children\" | \"className\">",
+                  "optional": true
+                }
+              },
+              "emits": {}
+            },
+            "semanticHash": "uif:f96dc6c2903a22b8b5e78f5d",
+            "fileHash": "uif:3d2e7b29b0f8c9588057ae09"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport type { ComponentPropsWithRef } from 'react';\nimport type {\n  PopoverProps as AriaPopoverProps,\n  DialogProps,\n  DialogTriggerProps,\n} from 'react-aria-components';\n\nexport type PopoverTriggerProps = ComponentPropsWithRef<'div'> &\n  DialogTriggerProps;\n\nexport type PopoverProps = Omit<AriaPopoverProps, 'children' | 'className'> &\n  Pick<DialogProps, 'children'> & {\n    classNames?: {\n      popover?: AriaPopoverProps['className'];\n      dialog?: DialogProps['className'];\n    };\n    dialogProps?: Omit<DialogProps, 'children' | 'className'>;\n  };\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  }
+]
