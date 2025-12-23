@@ -172,6 +172,9 @@
     "test:watch": "pnpm vitest --dir=src --watch"
   },
   "sideEffects": [
+    "./src/deckgl/shapes/display-shape-layer/fiber.ts",
+    "./src/deckgl/symbol-layer/fiber.ts",
+    "./src/deckgl/text-layer/fiber.ts",
     "./dist/deckgl/shapes/display-shape-layer/fiber.js",
     "./dist/deckgl/symbol-layer/fiber.js",
     "./dist/deckgl/text-layer/fiber.js"
