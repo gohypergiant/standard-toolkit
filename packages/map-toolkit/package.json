@@ -170,7 +170,11 @@
     "test": "pnpm vitest --dir=src",
     "test:watch": "pnpm vitest --dir=src --watch"
   },
-  "sideEffects": false,
+  "sideEffects": [
+    "./dist/deckgl/shapes/display-shape-layer/fiber.js",
+    "./dist/deckgl/symbol-layer/fiber.js",
+    "./dist/deckgl/text-layer/fiber.js"
+  ],
   "subPath": "packages/map-toolkit",
   "title": "Accelint Map Toolkit",
   "type": "module"
