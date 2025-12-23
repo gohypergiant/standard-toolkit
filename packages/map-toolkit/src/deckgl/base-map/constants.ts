@@ -14,6 +14,13 @@
 export const BASE_MAP_STYLE =
   'https://tiles.basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
 
+/**
+ * Default picking radius in pixels
+ * Creates a 5-pixel detection radius around the pointer for pickable objects
+ * Makes thin lines and small shapes easier to hover
+ */
+export const PICKING_RADIUS = 5;
+
 export const PARAMETERS = {
   depthWriteEnabled: true,
   depthCompare: 'always',

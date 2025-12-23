@@ -24,11 +24,7 @@ export default defineConfig({
   external: [
     '@deck.gl/core',
     '@deck.gl/extensions',
-    '@deck.gl/geo-layers',
     '@deck.gl/layers',
-    '@deck.gl/mapbox',
-    '@deck.gl/mesh-layers',
-    '@deck.gl/widgets',
     '@deckgl-fiber-renderer/dom',
     '@deckgl-fiber-renderer/shared',
     '@deckgl-fiber-renderer/types',

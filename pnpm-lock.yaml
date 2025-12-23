@@ -897,6 +897,9 @@ importers:
       '@accelint/postcss-tailwind-css-modules':
         specifier: workspace:*
         version: link:../postcss-tailwind-css-modules
+      '@accelint/smeegl':
+        specifier: workspace:*
+        version: link:../../tooling/smeegl
       '@accelint/typescript-config':
         specifier: workspace:*
         version: link:../../tooling/typescript-config
@@ -930,6 +933,9 @@ importers:
       '@testing-library/user-event':
         specifier: ^14.6.1
         version: 14.6.1(@testing-library/dom@10.4.1)
+      '@types/geojson':
+        specifier: ^7946.0.14
+        version: 7946.0.16
       '@types/node':
         specifier: ^22
         version: 22.19.3
@@ -977,28 +983,16 @@ importers:
         specifier: workspace:*
         version: link:../hotkey-manager
       '@deck.gl/core':
-        specifier: 9.1.14
+        specifier: ~9.1
         version: 9.1.14
       '@deck.gl/extensions':
-        specifier: 9.1.14
+        specifier: ~9.1
         version: 9.1.14(@deck.gl/core@9.1.14)(@luma.gl/core@9.1.10)(@luma.gl/engine@9.1.10(@luma.gl/core@9.1.10)(@luma.gl/shadertools@9.1.10(@luma.gl/core@9.1.10)))
-      '@deck.gl/geo-layers':
-        specifier: 9.1.14
-        version: 9.1.14(@deck.gl/core@9.1.14)(@deck.gl/extensions@9.1.14(@deck.gl/core@9.1.14)(@luma.gl/core@9.1.10)(@luma.gl/engine@9.1.10(@luma.gl/core@9.1.10)(@luma.gl/shadertools@9.1.10(@luma.gl/core@9.1.10))))(@deck.gl/layers@9.1.14(@deck.gl/core@9.1.14)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.1.10)(@luma.gl/engine@9.1.10(@luma.gl/core@9.1.10)(@luma.gl/shadertools@9.1.10(@luma.gl/core@9.1.10))))(@deck.gl/mesh-layers@9.1.14(@deck.gl/core@9.1.14)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.1.10)(@luma.gl/engine@9.1.10(@luma.gl/core@9.1.10)(@luma.gl/shadertools@9.1.10(@luma.gl/core@9.1.10))))(@loaders.gl/core@4.3.4)(@luma.gl/core@9.1.10)(@luma.gl/engine@9.1.10(@luma.gl/core@9.1.10)(@luma.gl/shadertools@9.1.10(@luma.gl/core@9.1.10)))
       '@deck.gl/layers':
-        specifier: 9.1.14
+        specifier: ~9.1
         version: 9.1.14(@deck.gl/core@9.1.14)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.1.10)(@luma.gl/engine@9.1.10(@luma.gl/core@9.1.10)(@luma.gl/shadertools@9.1.10(@luma.gl/core@9.1.10)))
-      '@deck.gl/mapbox':
-        specifier: 9.1.14
-        version: 9.1.14(@deck.gl/core@9.1.14)(@luma.gl/core@9.1.10)
-      '@deck.gl/mesh-layers':
-        specifier: 9.1.14
-        version: 9.1.14(@deck.gl/core@9.1.14)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.1.10)(@luma.gl/engine@9.1.10(@luma.gl/core@9.1.10)(@luma.gl/shadertools@9.1.10(@luma.gl/core@9.1.10)))
-      '@deck.gl/widgets':
-        specifier: 9.1.14
-        version: 9.1.14(@deck.gl/core@9.1.14)
       '@deckgl-fiber-renderer/dom':
-        specifier: 1.4.0
+        specifier: ^1.4.0
         version: 1.4.0(82c6e27a9d8ba726733c2f73ee66f20e)
       '@deckgl-fiber-renderer/shared':
         specifier: ^1.4.0
@@ -1013,7 +1007,7 @@ importers:
         specifier: ^5.7.1
         version: 5.15.0
       milsymbol:
-        specifier: 3.0.2
+        specifier: ^3.0.2
         version: 3.0.2
       mjolnir.js:
         specifier: ^3.0.0
@@ -1598,11 +1592,6 @@ packages:
       '@deck.gl/core': ^9.1.0
       '@luma.gl/core': ~9.1.9
       '@luma.gl/engine': ~9.1.9
-
-  '@deck.gl/widgets@9.1.14':
-    resolution: {integrity: sha512-hEyvvrqxEr7ujqTyTbdm5VTwY4oMYKNsLyXKjxWerHCIyfT971UYyV4cbILqvYf+L8spE146NFqwx0jj1bBqWw==}
-    peerDependencies:
-      '@deck.gl/core': ^9.1.0
 
   '@deckgl-fiber-renderer/dom@1.4.0':
     resolution: {integrity: sha512-t3bkgCo7d91O5Y+mo/Fdvsnnz9A1I/Iij+Dfu0capLrXioa7MxjUOmmfZiia/MrPM308aM8eE3ODQE4JWQjZkw==}
@@ -6268,9 +6257,6 @@ packages:
   potpack@2.1.0:
     resolution: {integrity: sha512-pcaShQc1Shq0y+E7GqJqvZj8DTthWV1KeHGdi0Z6IAin2Oi3JnLCOfwnCo84qc+HAp52wT9nK9H7FAJp5a44GQ==}
 
-  preact@10.28.0:
-    resolution: {integrity: sha512-rytDAoiXr3+t6OIP3WGlDd0ouCUG1iCWzkcY3++Nreuoi17y6T5i/zRhe6uYfoVcxq6YU+sBtJouuRDsq8vvqA==}
-
   prettier-plugin-tailwindcss@0.7.2:
     resolution: {integrity: sha512-LkphyK3Fw+q2HdMOoiEHWf93fNtYJwfamoKPl7UwtjFQdei/iIBoX11G6j706FzN3ymX9mPVi97qIY8328vdnA==}
     engines: {node: '>=20.19'}
@@ -7970,12 +7956,6 @@ snapshots:
       '@luma.gl/shadertools': 9.1.10(@luma.gl/core@9.1.10)
     transitivePeerDependencies:
       - '@loaders.gl/core'
-    optional: true
-
-  '@deck.gl/widgets@9.1.14(@deck.gl/core@9.1.14)':
-    dependencies:
-      '@deck.gl/core': 9.1.14
-      preact: 10.28.0
     optional: true
 
   '@deckgl-fiber-renderer/dom@1.4.0(82c6e27a9d8ba726733c2f73ee66f20e)':
@@ -10933,8 +10913,7 @@ snapshots:
       '@types/geojson': 7946.0.16
     optional: true
 
-  '@types/geojson@7946.0.16':
-    optional: true
+  '@types/geojson@7946.0.16': {}
 
   '@types/glob@7.2.0':
     dependencies:
@@ -13248,9 +13227,6 @@ snapshots:
       source-map-js: 1.2.1
 
   potpack@2.1.0:
-    optional: true
-
-  preact@10.28.0:
     optional: true
 
   prettier-plugin-tailwindcss@0.7.2(prettier@3.7.4):
