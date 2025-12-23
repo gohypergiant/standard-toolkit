@@ -158,7 +158,7 @@
     "bench": "pnpm vitest bench --run --dir src",
     "build": "pnpm tsdown",
     "build-storybook": "pnpm storybook build",
-    "build:icons": "smeegl '.storybook/icons/marker.svg' 'src/deckgl/shapes/__fixtures__/atlas'",
+    "build:icons": "smeegl --in '.storybook/icons' --out 'src/deckgl/shapes/__fixtures__/atlas'",
     "constellation-tracker": "pnpm exec constellation-tracker",
     "dev": "pnpm tsc --watch",
     "format": "pnpm biome format . --write --verbose",

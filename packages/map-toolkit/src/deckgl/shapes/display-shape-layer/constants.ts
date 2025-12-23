@@ -31,6 +31,19 @@ export const SELECTION_HIGHLIGHT = {
 } as const;
 
 /**
+ * Coffin corners configuration for Point selection/hover feedback
+ * Coffin corners are bracket-like corners that appear around points
+ */
+export const COFFIN_CORNERS = {
+  /** Icon name for hover state (white fill with black stroke) */
+  HOVER_ICON: 'coffin-corners-hover',
+  /** Icon name for selected state (blue fill with black stroke) */
+  SELECTED_ICON: 'coffin-corners-selected',
+  /** Size of the coffin corners icon */
+  SIZE: 38,
+} as const;
+
+/**
  * Default props for DisplayShapeLayer
  */
 export const DEFAULT_DISPLAY_PROPS = {

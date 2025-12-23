@@ -13,7 +13,7 @@ A read-only deck.gl composite layer for displaying geographic shapes with intera
 - **Multiple geometry types**: Point, LineString, Polygon, and Circle
 - **Icon support**: Custom icons for Point geometries via icon atlases
 - **Interactive selection**: Click handling with visual highlight feedback
-- **Hover effects**: Line width increases on hover for better UX
+- **Hover effects**: Line width increases on hover; Point shapes show coffin corners
 - **Customizable labels**: Flexible label positioning with per-shape or global options
 - **Style properties**: Full control over colors, stroke patterns, and opacity
 - **Event bus integration**: Automatically emits shape events via @accelint/bus
@@ -373,13 +373,13 @@ Each geometry type has sensible defaults:
 
 ### Visual Feedback
 
-When a shape is selected via `selectedShapeId`, the layer provides two visual indicators:
+When a shape is selected via `selectedShapeId`, the layer provides visual indicators:
 
 1. **Dotted border**: The selected shape's stroke pattern changes to dotted (`[2, 4]` dash array)
-2. **Highlight** (optional): A highlight layer underneath with:
+2. **Coffin corners** (Point shapes): Bracket-like corners appear around selected Point icons with a blue fill (#39B7FA)
+3. **Highlight** (optional, non-Point shapes): A highlight layer underneath with:
    - Increased line width (+5 pixels)
    - Custom highlight color (default: turquoise at ~39% opacity)
-   - Icon size increase (+8 pixels for Point geometries with icons)
 
 ### Controlling the Highlight Effect when Selecting Shapes
 
@@ -418,8 +418,8 @@ The highlight effect can be toggled with the `showHighlight` prop:
 
 When `pickable={true}`, shapes show hover feedback:
 
-- Line width increases by 2 pixels
-- Icon size increases by 5 pixels (for Point geometries with icons)
+- **Non-Point shapes**: Line width increases by 2 pixels
+- **Point shapes with icons**: Coffin corners appear with a white fill and black stroke
 
 ## Event Bus Integration
 
