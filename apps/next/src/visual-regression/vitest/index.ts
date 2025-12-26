@@ -28,6 +28,8 @@ export {
   DEFAULT_TEST_STATES,
   INTERACTION_STATES,
 } from '../lib/interactive-states';
+// Theme mode utilities
+export { insertModeInFilename, THEME_MODES } from '../lib/theme-modes';
 // Interactive visual test builders
 export {
   createInteractiveVisualTests,
@@ -44,6 +46,8 @@ export type {
   // Interactive test types
   InteractiveState,
   InteractiveVisualTestConfig,
+  // Theme mode types
+  ThemeMode,
   // Static test types
   VisualTestConfig,
   VisualTestScenario,

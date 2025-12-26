@@ -15,6 +15,7 @@ import { dash } from 'radashi';
 import { describe, expect, test } from 'vitest';
 import { page } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
+import { insertModeInFilename, THEME_MODES } from '../lib/theme-modes';
 import type { VisualTestConfig, VisualTestScenario } from '../lib/types';
 
 /**
@@ -44,25 +45,29 @@ export function createVisualTests(config: VisualTestConfig): void {
     waitMs = 100,
   } = config;
 
-  const filename = screenshotName ?? `${dash(componentName)}-variants.png`;
+  const baseFilename = screenshotName ?? `${dash(componentName)}-variants.png`;
 
   describe(`${componentName} Visual Regression`, () => {
-    test('all variants', async () => {
-      const { container } = render(
-        <ThemeProvider>
-          <VariantsComponent />
-        </ThemeProvider>,
-      );
+    for (const mode of THEME_MODES) {
+      const filename = insertModeInFilename(baseFilename, mode);
 
-      // Force container to fill viewport for consistent screenshots across environments
-      container.style.width = '100vw';
-      container.style.height = '100vh';
+      test(`all variants (${mode} mode)`, async () => {
+        const { container } = render(
+          <ThemeProvider defaultMode={mode}>
+            <VariantsComponent />
+          </ThemeProvider>,
+        );
 
-      // Wait for styles/animations to settle
-      await new Promise((resolve) => setTimeout(resolve, waitMs));
+        // Force container to fill viewport for consistent screenshots across environments
+        container.style.width = '100vw';
+        container.style.height = '100vh';
 
-      await expect.element(container).toMatchScreenshot(filename);
-    });
+        // Wait for styles/animations to settle
+        await new Promise((resolve) => setTimeout(resolve, waitMs));
+
+        await expect.element(container).toMatchScreenshot(filename);
+      });
+    }
   });
 }
 
@@ -113,31 +118,33 @@ export function createVisualTestScenarios(
 ): void {
   describe(`${componentName} Visual Regression`, () => {
     for (const scenario of scenarios) {
-      test(scenario.name, async () => {
-        const { container } = render(
-          <ThemeProvider>{scenario.render()}</ThemeProvider>,
-        );
+      for (const mode of THEME_MODES) {
+        const filename = insertModeInFilename(scenario.screenshotName, mode);
 
-        // Wait for rendering/animations
-        await new Promise((resolve) =>
-          setTimeout(resolve, scenario.waitMs ?? 100),
-        );
+        test(`${scenario.name} (${mode} mode)`, async () => {
+          const { container } = render(
+            <ThemeProvider defaultMode={mode}>
+              {scenario.render()}
+            </ThemeProvider>,
+          );
 
-        // Use selector if provided, otherwise screenshot container
-        const target = scenario.selector
-          ? getTargetFromSelector(scenario.selector)
-          : null;
+          // Wait for rendering/animations
+          await new Promise((resolve) =>
+            setTimeout(resolve, scenario.waitMs ?? 100),
+          );
 
-        if (target) {
-          await expect
-            .element(target)
-            .toMatchScreenshot(scenario.screenshotName);
-        } else {
-          await expect
-            .element(container)
-            .toMatchScreenshot(scenario.screenshotName);
-        }
-      });
+          // Use selector if provided, otherwise screenshot container
+          const target = scenario.selector
+            ? getTargetFromSelector(scenario.selector)
+            : null;
+
+          if (target) {
+            await expect.element(target).toMatchScreenshot(filename);
+          } else {
+            await expect.element(container).toMatchScreenshot(filename);
+          }
+        });
+      }
     }
   });
 }

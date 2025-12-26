@@ -14,6 +14,15 @@ import type { ComponentType, ReactNode } from 'react';
 import type { Locator } from 'vitest/browser';
 
 // =============================================================================
+// Theme Mode Types
+// =============================================================================
+
+/**
+ * Theme modes that can be visually tested
+ */
+export type ThemeMode = 'dark' | 'light';
+
+// =============================================================================
 // Interactive State Types
 // =============================================================================
 
