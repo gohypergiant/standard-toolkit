@@ -1,5 +1,15 @@
 # @accelint/map-toolkit
 
+## 0.6.0
+
+### Minor Changes
+
+- 7c62ee3: Add display shapes layer to map-toolkit
+
+### Patch Changes
+
+- a7d3a1e: Fix bad build by updating configs
+
 ## 0.5.0
 
 ### Minor Changes
