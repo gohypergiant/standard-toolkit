@@ -13,6 +13,21 @@
 # testing
 /coverage
 
+# Playwright test outputs (keep __screenshots__ for baselines)
+/e2e/.results/
+/e2e/.report/
+/playwright-report/
+/test-results/
+
+# Vitest test attachments (runtime artifacts, not baselines)
+.vitest-attachments/
+
+# Visual regression - ignore non-CI platform screenshots (baselines are Linux-only)
+**/__screenshots__/*-chromium-darwin.png
+**/__screenshots__/*-chromium-win32.png
+# Ignore vitest failure screenshots (auto-generated with PascalCase test names)
+**/__screenshots__/*-Visual-Regression-*.png
+
 # next.js
 /.next/
 /out/

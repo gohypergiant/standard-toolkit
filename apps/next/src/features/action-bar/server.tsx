@@ -12,32 +12,42 @@
 
 import 'server-only';
 import { ActionBar } from '@accelint/design-toolkit/components/action-bar';
+import { Button } from '@accelint/design-toolkit/components/button';
 import { Icon } from '@accelint/design-toolkit/components/icon';
 import PlaceholderIcon from '@accelint/icons/placeholder';
 import { BentoItem } from '~/components/bento';
+import { PROP_COMBOS } from './variants';
 
-function Example1() {
-  return (
-    <BentoItem>
-      <ActionBar>
-        <Icon>
-          <PlaceholderIcon />
-        </Icon>
-        <Icon>
-          <PlaceholderIcon />
-        </Icon>
-        <Icon>
-          <PlaceholderIcon />
-        </Icon>
-      </ActionBar>
-    </BentoItem>
-  );
+function PropCombos() {
+  return PROP_COMBOS.map((props) => {
+    return (
+      <BentoItem key={props.size}>
+        <ActionBar {...props}>
+          <Button>
+            <Icon>
+              <PlaceholderIcon />
+            </Icon>
+          </Button>
+          <Button>
+            <Icon>
+              <PlaceholderIcon />
+            </Icon>
+          </Button>
+          <Button>
+            <Icon>
+              <PlaceholderIcon />
+            </Icon>
+          </Button>
+        </ActionBar>
+      </BentoItem>
+    );
+  });
 }
 
 export function ActionBarExampleServer() {
   return (
     <>
-      <Example1 />
+      <PropCombos />
     </>
   );
 }

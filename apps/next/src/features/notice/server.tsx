@@ -12,23 +12,21 @@
 
 import 'server-only';
 import { Notice } from '@accelint/design-toolkit/components/notice';
-import { BentoItem } from '~/components/bento';
-import { PROP_COMBOS } from './variants';
-
-function PropCombos() {
-  return PROP_COMBOS.map((props, k) => {
-    return (
-      <BentoItem key={k}>
-        <Notice message='This is a notice message' {...props} />
-      </BentoItem>
-    );
-  });
-}
+import { MEDIUM_VARIANTS, SMALL_VARIANTS } from './variants';
 
 export function NoticeExampleServer() {
   return (
     <>
-      <PropCombos />
+      <div className='flex flex-row flex-wrap gap-m'>
+        {MEDIUM_VARIANTS.map((props, k) => (
+          <Notice key={k} message='This is a notice message' {...props} />
+        ))}
+      </div>
+      <div className='flex flex-row flex-wrap gap-m'>
+        {SMALL_VARIANTS.map((props, k) => (
+          <Notice key={k} message='This is a notice message' {...props} />
+        ))}
+      </div>
     </>
   );
 }
