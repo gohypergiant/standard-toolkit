@@ -1,5 +1,10 @@
 # @accelint/design-toolkit
 
+## 9.1.1
+### Patch Changes
+
+- 8ab9bfd: Fixed spacing of visual elements (prefix, suffix, clear button) in Input
+
 ## 9.1.0
 ### Minor Changes
 
