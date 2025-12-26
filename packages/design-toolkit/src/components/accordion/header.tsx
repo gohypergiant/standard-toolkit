@@ -49,6 +49,7 @@ export function AccordionHeader({
             ),
             variant: 'icon',
             isDisabled,
+            className: styles.menu,
           },
         ],
       ]}
