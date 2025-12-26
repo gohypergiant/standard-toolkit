@@ -10,19 +10,66 @@
  * governing permissions and limitations under the License.
  */
 
-import { BentoGroup } from '~/components/bento';
-import { createVisualTests } from '~/visual-regression/vitest';
-import { AccordionExampleServer } from './server';
+import { Accordion } from '@accelint/design-toolkit/components/accordion';
+import { AccordionHeader } from '@accelint/design-toolkit/components/accordion/header';
+import { AccordionPanel } from '@accelint/design-toolkit/components/accordion/panel';
+import { AccordionTrigger } from '@accelint/design-toolkit/components/accordion/trigger';
+import { Icon } from '@accelint/design-toolkit/components/icon';
+import PlaceholderIcon from '@accelint/icons/placeholder';
+import {
+  createInteractiveVisualTests,
+  generateVariantMatrix,
+} from '~/visual-regression/vitest';
+import type { AccordionProps } from '@accelint/design-toolkit/components/accordion/types';
 
-function AccordionVariants() {
-  return (
-    <BentoGroup>
-      <AccordionExampleServer />
-    </BentoGroup>
-  );
-}
+// Generate variant matrix for collapsed accordion states
+const collapsedVariants = generateVariantMatrix<AccordionProps>({
+  dimensions: {
+    variant: ['cozy', 'compact'],
+  },
+});
 
-createVisualTests({
+// Generate variant matrix for expanded accordion states
+const expandedVariants = generateVariantMatrix<AccordionProps>({
+  dimensions: {
+    variant: ['cozy', 'compact'],
+  },
+  baseProps: {
+    isExpanded: true,
+  },
+});
+
+// Render function for accordion
+const renderAccordion = (props: AccordionProps) => (
+  <Accordion {...props}>
+    <AccordionHeader>
+      <AccordionTrigger>
+        <Icon>
+          <PlaceholderIcon />
+        </Icon>
+        Title
+      </AccordionTrigger>
+    </AccordionHeader>
+    <AccordionPanel>
+      <p>Details</p>
+    </AccordionPanel>
+  </Accordion>
+);
+
+// Test collapsed accordion variants with all interactive states
+createInteractiveVisualTests({
   componentName: 'Accordion',
-  variantsComponent: AccordionVariants,
+  renderComponent: renderAccordion,
+  testId: 'test-accordion',
+  variants: collapsedVariants,
+  states: ['default', 'hover', 'focus', 'pressed', 'disabled'],
+});
+
+// Test expanded accordion variants with all interactive states
+createInteractiveVisualTests({
+  componentName: 'AccordionExpanded',
+  renderComponent: renderAccordion,
+  testId: 'test-accordion',
+  variants: expandedVariants,
+  states: ['default', 'hover', 'focus', 'pressed', 'disabled'],
 });
