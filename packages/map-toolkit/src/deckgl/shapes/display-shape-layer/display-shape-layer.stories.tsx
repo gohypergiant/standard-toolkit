@@ -238,28 +238,28 @@ const LABEL_POSITIONS_MAP_ID = uuid();
 export const LabelPositioning: Story = {
   args: {
     // Point controls
-    pointLabelVerticalAnchor: 'bottom',
+    pointLabelVerticalAnchor: 'top',
     pointLabelHorizontalAnchor: 'center',
     pointLabelOffsetX: 0,
-    pointLabelOffsetY: -13,
+    pointLabelOffsetY: 10,
     // LineString controls
-    lineStringLabelCoordinateAnchor: 'start',
-    lineStringLabelVerticalAnchor: 'middle',
-    lineStringLabelHorizontalAnchor: 'left',
-    lineStringLabelOffsetX: 7,
-    lineStringLabelOffsetY: -15,
+    lineStringLabelCoordinateAnchor: 'bottom',
+    lineStringLabelVerticalAnchor: 'top',
+    lineStringLabelHorizontalAnchor: 'center',
+    lineStringLabelOffsetX: 0,
+    lineStringLabelOffsetY: 10,
     // Polygon controls
-    polygonLabelCoordinateAnchor: 'start',
-    polygonLabelVerticalAnchor: 'middle',
-    polygonLabelHorizontalAnchor: 'left',
-    polygonLabelOffsetX: 7,
-    polygonLabelOffsetY: -15,
+    polygonLabelCoordinateAnchor: 'bottom',
+    polygonLabelVerticalAnchor: 'top',
+    polygonLabelHorizontalAnchor: 'center',
+    polygonLabelOffsetX: 0,
+    polygonLabelOffsetY: 10,
     // Circle controls
-    circleLabelCoordinateAnchor: 'top',
-    circleLabelVerticalAnchor: 'middle',
+    circleLabelCoordinateAnchor: 'bottom',
+    circleLabelVerticalAnchor: 'top',
     circleLabelHorizontalAnchor: 'center',
     circleLabelOffsetX: 0,
-    circleLabelOffsetY: -17,
+    circleLabelOffsetY: 10,
   },
   argTypes: {
     // Point controls
@@ -284,8 +284,8 @@ export const LabelPositioning: Story = {
     // LineString controls
     lineStringLabelCoordinateAnchor: {
       control: { type: 'select' },
-      options: ['start', 'middle', 'end'],
-      description: 'Position along LineString (start/middle/end)',
+      options: ['center', 'top', 'right', 'bottom', 'left'],
+      description: 'Position on LineString (center or edge)',
     },
     lineStringLabelVerticalAnchor: {
       control: { type: 'select' },
@@ -309,8 +309,8 @@ export const LabelPositioning: Story = {
     // Polygon controls
     polygonLabelCoordinateAnchor: {
       control: { type: 'select' },
-      options: ['start', 'middle', 'end'],
-      description: 'Position along Polygon outer ring (start/middle/end)',
+      options: ['center', 'top', 'right', 'bottom', 'left'],
+      description: 'Position on Polygon (center or edge)',
     },
     polygonLabelVerticalAnchor: {
       control: { type: 'select' },
@@ -333,8 +333,8 @@ export const LabelPositioning: Story = {
     // Circle controls
     circleLabelCoordinateAnchor: {
       control: { type: 'select' },
-      options: ['top', 'right', 'bottom', 'left'],
-      description: 'Position on Circle perimeter (top/right/bottom/left)',
+      options: ['center', 'top', 'right', 'bottom', 'left'],
+      description: 'Position on Circle (center or perimeter)',
     },
     circleLabelVerticalAnchor: {
       control: { type: 'select' },

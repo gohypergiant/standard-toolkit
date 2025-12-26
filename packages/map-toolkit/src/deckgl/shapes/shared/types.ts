@@ -78,6 +78,7 @@ export interface StyleProperties {
   labelHorizontalAnchor?: 'left' | 'center' | 'right';
   /** Optional custom label coordinate anchor (position along geometry) */
   labelCoordinateAnchor?:
+    | 'center'
     | 'start'
     | 'middle'
     | 'end'

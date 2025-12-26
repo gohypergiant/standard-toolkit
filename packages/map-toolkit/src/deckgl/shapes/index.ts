@@ -33,8 +33,7 @@ export type {
 } from './display-shape-layer/types';
 export type { UseShapeSelectionReturn } from './display-shape-layer/use-shape-selection';
 export type {
-  CircleLabelCoordinateAnchor,
-  LabelCoordinateAnchor,
+  CardinalLabelCoordinateAnchor,
   LabelHorizontalPosition,
   LabelPosition2d,
   LabelPositionOptions,

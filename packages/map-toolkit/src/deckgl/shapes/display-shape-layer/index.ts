@@ -15,13 +15,13 @@
 import { Broadcast } from '@accelint/bus';
 import { CompositeLayer } from '@deck.gl/core';
 import { PathStyleExtension } from '@deck.gl/extensions';
-import { GeoJsonLayer } from '@deck.gl/layers';
+import { GeoJsonLayer, IconLayer } from '@deck.gl/layers';
 import { DASH_ARRAYS, SHAPE_LAYER_IDS } from '../shared/constants';
 import { type ShapeEvent, ShapeEvents } from '../shared/events';
 import {
+  COFFIN_CORNERS,
   DEFAULT_DISPLAY_PROPS,
   MAP_INTERACTION,
-  SELECTION_HIGHLIGHT,
 } from './constants';
 import { createShapeLabelLayer } from './shape-label-layer';
 import {
@@ -86,10 +86,11 @@ interface FeaturesCache {
  * - An optional highlight renders underneath (controlled by `showHighlight` prop)
  *
  * ## Layer Structure
- * Renders up to three sublayers (in order):
- * 1. **Highlight layer**: Selection highlight effect (if showHighlight=true, rendered below main layer)
- * 2. **Main GeoJsonLayer**: Shape geometries with styling and interaction
- * 3. **Label layer**: Text labels (if showLabels enabled)
+ * Renders up to four sublayers (in order, bottom to top):
+ * 1. **Highlight layer**: Selection highlight effect for non-icon-Point shapes (if showHighlight=true)
+ * 2. **Coffin corners layer**: Selection/hover feedback for Point shapes with icons
+ * 3. **Main GeoJsonLayer**: Shape geometries with styling and interaction
+ * 4. **Label layer**: Text labels (if showLabels enabled)
  *
  * ## Icon Atlas Constraint
  * When using icons for Point geometries, all shapes in a single layer must share the
@@ -306,6 +307,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
 
   /**
    * Render highlight sublayer (underneath main layer)
+   * Note: Points with icons use coffin corners instead of highlight layer
    */
   private renderHighlightLayer(
     features: EditableShape['feature'][],
@@ -324,11 +326,14 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       return null;
     }
 
-    // Check if selected feature has icon
-    const hasIcon = !!selectedFeature.properties?.styleProperties?.icon;
-    const iconAtlas = selectedFeature.properties?.styleProperties?.icon?.atlas;
-    const iconMapping =
-      selectedFeature.properties?.styleProperties?.icon?.mapping;
+    // Skip highlight layer for Point geometries with icons - they use coffin corners instead
+    // Points without icons should still show the highlight layer
+    if (selectedFeature.geometry.type === 'Point') {
+      const hasIcon = !!selectedFeature.properties?.styleProperties?.icon;
+      if (hasIcon) {
+        return null;
+      }
+    }
 
     return new GeoJsonLayer({
       id: `${this.props.id}-${SHAPE_LAYER_IDS.DISPLAY_HIGHLIGHT}`,
@@ -344,44 +349,124 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       getLineColor: () => highlightColor || getHighlightColor(),
       getLineWidth: getHighlightLineWidth,
 
-      // Icon configuration for highlight layer
-      pointType: hasIcon ? 'icon' : 'circle',
-      ...(hasIcon && iconAtlas ? { iconAtlas } : {}),
-      ...(hasIcon && iconMapping ? { iconMapping } : {}),
-      ...(hasIcon
-        ? {
-            getIcon: (d: EditableShape['feature']) =>
-              d.properties?.styleProperties?.icon?.name ?? 'marker',
-            getIconSize: (d: EditableShape['feature']) => {
-              const iconSize =
-                d.properties?.styleProperties?.icon?.size ??
-                MAP_INTERACTION.ICON_SIZE;
-              return iconSize + SELECTION_HIGHLIGHT.ICON_SIZE_INCREASE;
-            },
-            getIconColor: () => highlightColor || getHighlightColor(),
-            getIconPixelOffset: (d: EditableShape['feature']) => {
-              const iconSize =
-                d.properties?.styleProperties?.icon?.size ??
-                MAP_INTERACTION.ICON_SIZE;
-              const highlightSize =
-                iconSize + SELECTION_HIGHLIGHT.ICON_SIZE_INCREASE;
-              return [-1, -highlightSize / 2];
-            },
-            iconBillboard: false,
-          }
-        : {}),
-
       // Behavior
       pickable: false,
       updateTriggers: {
         getLineColor: [highlightColor],
         getLineWidth: [selectedShapeId, features],
-        ...(hasIcon
-          ? {
-              getIconSize: [selectedShapeId, features],
-              getIconColor: [highlightColor],
-            }
-          : {}),
+      },
+    });
+  }
+
+  /**
+   * Render coffin corners layer for Point geometries that have icons on hover/select
+   * Coffin corners provide visual feedback for points instead of highlight layer
+   */
+  private renderCoffinCornersLayer(
+    features: EditableShape['feature'][],
+  ): IconLayer | null {
+    const { selectedShapeId } = this.props;
+
+    // Find point features that need coffin corners (hovered or selected)
+    const pointFeatures = features.filter((f) => {
+      if (f.geometry.type !== 'Point') {
+        return false;
+      }
+      const hasIcon = !!f.properties?.styleProperties?.icon;
+      if (!hasIcon) {
+        return false;
+      }
+
+      const shapeId = f.properties?.shapeId;
+      const isSelected = shapeId === selectedShapeId;
+      const isHovered =
+        this.state?.hoverIndex !== undefined &&
+        features.indexOf(f) === this.state.hoverIndex;
+
+      return isSelected || isHovered;
+    });
+
+    if (pointFeatures.length === 0) {
+      return null;
+    }
+
+    // Get icon atlas from first point feature (all should share the same atlas)
+    const firstPointIcon = pointFeatures[0]?.properties?.styleProperties?.icon;
+    const iconAtlas = firstPointIcon?.atlas;
+    const iconMapping = firstPointIcon?.mapping;
+
+    if (!iconAtlas) {
+      return null;
+    }
+
+    if (!iconMapping) {
+      return null;
+    }
+
+    // Add coffin corners icons to the mapping
+    const extendedMapping = {
+      ...iconMapping,
+      [COFFIN_CORNERS.HOVER_ICON]: {
+        x: 0,
+        y: 0,
+        width: 76,
+        height: 76,
+        mask: false,
+      },
+      [COFFIN_CORNERS.SELECTED_ICON]: {
+        x: 76,
+        y: 0,
+        width: 76,
+        height: 76,
+        mask: false,
+      },
+      [COFFIN_CORNERS.SELECTED_HOVER_ICON]: {
+        x: 152,
+        y: 0,
+        width: 76,
+        height: 76,
+        mask: false,
+      },
+    };
+
+    return new IconLayer({
+      id: `${this.props.id}-${SHAPE_LAYER_IDS.DISPLAY}-coffin-corners`,
+      data: pointFeatures,
+      iconAtlas,
+      iconMapping: extendedMapping,
+      getIcon: (d: EditableShape['feature']) => {
+        const shapeId = d.properties?.shapeId;
+        const isSelected = shapeId === selectedShapeId;
+        const isHovered =
+          this.state?.hoverIndex !== undefined &&
+          features.indexOf(d) === this.state.hoverIndex;
+
+        if (isSelected && isHovered) {
+          return COFFIN_CORNERS.SELECTED_HOVER_ICON;
+        }
+        if (isSelected) {
+          return COFFIN_CORNERS.SELECTED_ICON;
+        }
+        return COFFIN_CORNERS.HOVER_ICON;
+      },
+      getSize: COFFIN_CORNERS.SIZE,
+      getPosition: (d: EditableShape['feature']) => {
+        const coords =
+          d.geometry.type === 'Point' ? d.geometry.coordinates : [0, 0];
+        return coords as [number, number];
+      },
+      getPixelOffset: (d: EditableShape['feature']) => {
+        const iconSize =
+          d.properties?.styleProperties?.icon?.size ??
+          MAP_INTERACTION.ICON_SIZE;
+        // Center the coffin corners on the point icon
+        return [-1, -iconSize / 2];
+      },
+      billboard: false,
+      pickable: false,
+      updateTriggers: {
+        getIcon: [selectedShapeId, this.state?.hoverIndex],
+        data: [features, selectedShapeId, this.state?.hoverIndex],
       },
     });
   }
@@ -459,17 +544,11 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
         ? {
             getIcon: (d: EditableShape['feature']) =>
               d.properties?.styleProperties?.icon?.name ?? 'marker',
-            getIconSize: (
-              d: EditableShape['feature'],
-              { index }: { index: number },
-            ) => {
-              const iconSize =
+            getIconSize: (d: EditableShape['feature']) => {
+              return (
                 d.properties?.styleProperties?.icon?.size ??
-                MAP_INTERACTION.ICON_SIZE;
-              const isHovered = index === this.state?.hoverIndex;
-              return isHovered
-                ? iconSize + MAP_INTERACTION.ICON_HOVER_SIZE_INCREASE
-                : iconSize;
+                MAP_INTERACTION.ICON_SIZE
+              );
             },
             getIconColor: getStrokeColor,
             getIconPixelOffset: (d: EditableShape['feature']) => {
@@ -507,7 +586,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
         ...(hasIcons
           ? {
               getIcon: [features],
-              getIconSize: [features, this.state?.hoverIndex],
+              getIconSize: [features],
               getIconColor: [features],
               getIconPixelOffset: [features],
             }
@@ -542,6 +621,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
 
     return [
       this.renderHighlightLayer(features),
+      this.renderCoffinCornersLayer(features),
       this.renderMainLayer(features),
       this.renderLabelsLayer(),
     ].filter(Boolean) as Layer[];
