@@ -19,10 +19,12 @@ import {
   DEFAULT_TEST_STATES,
   INTERACTION_STATES,
 } from '../lib/interactive-states';
+import { insertModeInFilename, THEME_MODES } from '../lib/theme-modes';
 import type {
   ComponentVariantConfig,
   InteractiveState,
   InteractiveVisualTestConfig,
+  ThemeMode,
 } from '../lib/types';
 
 /**
@@ -82,6 +84,7 @@ interface StateTestContext<TProps> {
   renderComponent: (props: TProps) => React.ReactNode;
   variant: ComponentVariantConfig<TProps>;
   state: InteractiveState;
+  mode: ThemeMode;
   testId?: string;
   waitMs: number;
   beforeEach?: () => Promise<void> | void;
@@ -106,8 +109,9 @@ function defaultScreenshotName(
   componentName: string,
   variant: string,
   state: InteractiveState,
+  mode: ThemeMode,
 ): string {
-  return `${dash(componentName)}-${dash(variant)}-${state}.png`;
+  return `${dash(componentName)}-${dash(variant)}-${state}-${mode}.png`;
 }
 
 /**
@@ -128,7 +132,7 @@ async function runStateTest<TProps>(
   const testIdValue = ctx.testId ?? `test-${dash(ctx.componentName)}`;
 
   const { container } = render(
-    <ThemeProvider>
+    <ThemeProvider defaultMode={ctx.mode}>
       <div data-testid={testIdValue} className='inline-block'>
         {ctx.renderComponent(props)}
       </div>
@@ -147,8 +151,16 @@ async function runStateTest<TProps>(
   await new Promise((resolve) => setTimeout(resolve, 50));
 
   const filename = ctx.screenshotName
-    ? ctx.screenshotName(ctx.variant.id, ctx.state)
-    : defaultScreenshotName(ctx.componentName, ctx.variant.id, ctx.state);
+    ? insertModeInFilename(
+        ctx.screenshotName(ctx.variant.id, ctx.state),
+        ctx.mode,
+      )
+    : defaultScreenshotName(
+        ctx.componentName,
+        ctx.variant.id,
+        ctx.state,
+        ctx.mode,
+      );
 
   await expect.element(locator).toMatchScreenshot(filename);
 
@@ -190,30 +202,35 @@ export function createInteractiveVisualTests<TProps>(
   } = config;
 
   describe(`${componentName} Interactive States`, () => {
-    for (const variant of variants) {
-      if (variant.skip) {
-        continue;
-      }
-
-      const variantStates = variant.states ?? states;
-
-      describe(variant.name, () => {
-        for (const state of variantStates) {
-          if (shouldSkipState(variant, state)) {
+    for (const mode of THEME_MODES) {
+      describe(`${mode} mode`, () => {
+        for (const variant of variants) {
+          if (variant.skip) {
             continue;
           }
 
-          test(`${state} state`, () =>
-            runStateTest({
-              componentName,
-              renderComponent,
-              variant,
-              state,
-              testId,
-              waitMs,
-              beforeEach: customBeforeEach,
-              screenshotName,
-            }));
+          const variantStates = variant.states ?? states;
+
+          describe(variant.name, () => {
+            for (const state of variantStates) {
+              if (shouldSkipState(variant, state)) {
+                continue;
+              }
+
+              test(`${state} state`, () =>
+                runStateTest({
+                  componentName,
+                  renderComponent,
+                  variant,
+                  state,
+                  mode,
+                  testId,
+                  waitMs,
+                  beforeEach: customBeforeEach,
+                  screenshotName,
+                }));
+            }
+          });
         }
       });
     }
