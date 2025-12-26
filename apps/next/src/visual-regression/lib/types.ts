@@ -68,8 +68,6 @@ export interface InteractiveVisualTestConfig<TProps = Record<string, unknown>> {
   testId?: string;
   /** Role for locating component (alternative to testId) */
   role?: string;
-  /** Wait time before screenshot (defaults to 100ms) */
-  waitMs?: number;
   /** Additional setup before each test */
   beforeEach?: () => Promise<void> | void;
   /** Custom screenshot naming function */
@@ -120,8 +118,6 @@ export interface VisualTestConfig {
   variantsComponent: ComponentType;
   /** Custom screenshot filename (defaults to `{componentName}-variants.png`) */
   screenshotName?: string;
-  /** Wait time in ms before taking screenshot (defaults to 100) */
-  waitMs?: number;
 }
 
 /**
@@ -135,8 +131,6 @@ export interface VisualTestScenario {
   render: () => ReactNode;
   /** Screenshot filename */
   screenshotName: string;
-  /** Wait time in ms before taking screenshot (defaults to 100) */
-  waitMs?: number;
   /** Optional selector to target specific element for screenshot */
   selector?: string;
 }

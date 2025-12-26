@@ -42,7 +42,6 @@ export function createVisualTests(config: VisualTestConfig): void {
     componentName,
     variantsComponent: VariantsComponent,
     screenshotName,
-    waitMs = 100,
   } = config;
 
   const baseFilename = screenshotName ?? `${dash(componentName)}-variants.png`;
@@ -61,9 +60,6 @@ export function createVisualTests(config: VisualTestConfig): void {
         // Force container to fill viewport for consistent screenshots across environments
         container.style.width = '100vw';
         container.style.height = '100vh';
-
-        // Wait for styles/animations to settle
-        await new Promise((resolve) => setTimeout(resolve, waitMs));
 
         await expect.element(container).toMatchScreenshot(filename);
       });
@@ -126,11 +122,6 @@ export function createVisualTestScenarios(
             <ThemeProvider defaultMode={mode}>
               {scenario.render()}
             </ThemeProvider>,
-          );
-
-          // Wait for rendering/animations
-          await new Promise((resolve) =>
-            setTimeout(resolve, scenario.waitMs ?? 100),
           );
 
           // Use selector if provided, otherwise screenshot container
