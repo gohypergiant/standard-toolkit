@@ -61,10 +61,6 @@ async function triggerState(
       const focusTarget = findFocusableElement(element);
       if (focusTarget) {
         focusTarget.focus();
-        // Dispatch keyboard event to ensure focus-visible styling
-        focusTarget.dispatchEvent(
-          new KeyboardEvent('keydown', { key: 'Tab', bubbles: true }),
-        );
       }
       break;
     }
@@ -107,7 +103,6 @@ interface StateTestContext<TProps> {
   state: InteractiveState;
   mode: ThemeMode;
   testId?: string;
-  waitMs: number;
   beforeEach?: () => Promise<void> | void;
   screenshotName?: (variantId: string, state: InteractiveState) => string;
 }
@@ -162,14 +157,10 @@ async function runStateTest<TProps>(
 
   container.style.padding = '24px';
 
-  await new Promise((resolve) => setTimeout(resolve, ctx.waitMs));
-
   const locator = page.getByTestId(testIdValue);
   const element = locator.element();
 
   await triggerState(element, ctx.state);
-
-  await new Promise((resolve) => setTimeout(resolve, 50));
 
   const filename = ctx.screenshotName
     ? insertModeInFilename(
@@ -217,7 +208,6 @@ export function createInteractiveVisualTests<TProps>(
     variants,
     states = DEFAULT_TEST_STATES,
     testId,
-    waitMs = 100,
     beforeEach: customBeforeEach,
     screenshotName,
   } = config;
@@ -246,7 +236,6 @@ export function createInteractiveVisualTests<TProps>(
                   state,
                   mode,
                   testId,
-                  waitMs,
                   beforeEach: customBeforeEach,
                   screenshotName,
                 }));
