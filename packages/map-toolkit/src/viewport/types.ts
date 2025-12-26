@@ -11,9 +11,9 @@
  */
 
 import type { Bounds } from '../deckgl/base-map/types';
-import type { UNIT_MAP } from './constants';
+import type { DistanceUnitAbbreviation } from '../shared/units';
 
-export type SupportedDistanceUnit = keyof typeof UNIT_MAP;
+export type SupportedDistanceUnit = DistanceUnitAbbreviation;
 
 export type GetViewportSizeArgs = {
   /** Geographic bounds, undefined if viewport not yet initialized */

@@ -13,6 +13,10 @@
 // Display Shape Layer exports
 export { DisplayShapeLayer } from './display-shape-layer/index';
 export { useShapeSelection } from './display-shape-layer/use-shape-selection';
+export { DrawShapeEvents } from './draw-shape-layer/events';
+// Draw Shape Layer exports
+export { DrawShapeLayer } from './draw-shape-layer/index';
+export { useDrawShapes } from './draw-shape-layer/use-draw-shapes';
 // Constant exports
 export {
   BASE_FILL_OPACITY,

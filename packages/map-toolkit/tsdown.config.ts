@@ -30,6 +30,7 @@ export default defineConfig({
     'react',
     // optionalDependencies
     '@accelint/hotkey-manager',
+    '@deck.gl-community/editable-layers',
     '@deck.gl/core',
     '@deck.gl/extensions',
     '@deck.gl/layers',
@@ -37,6 +38,8 @@ export default defineConfig({
     '@deckgl-fiber-renderer/shared',
     '@deckgl-fiber-renderer/types',
     '@math.gl/web-mercator',
+    '@turf/helpers',
+    '@turf/turf',
     'maplibre-gl',
     'milsymbol',
     'mjolnir.js',

@@ -1,0 +1,390 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+import { Broadcast } from '@accelint/bus';
+import { uuid } from '@accelint/core';
+import { act, renderHook, waitFor } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { ShapeFeatureType } from '../shared/types';
+import { DrawShapeEvents } from './events';
+import { clearDrawingState } from './store';
+import { useDrawShapes } from './use-draw-shapes';
+import type { UniqueId } from '@accelint/core';
+import type {
+  DrawShapeEvent,
+  ShapeCancelledEvent,
+  ShapeDrawnEvent,
+} from './events';
+
+describe('useDrawShapes', () => {
+  let mapId: UniqueId;
+  let bus: ReturnType<typeof Broadcast.getInstance<DrawShapeEvent>>;
+
+  beforeEach(() => {
+    mapId = uuid();
+    bus = Broadcast.getInstance();
+    // Clear any existing state for this mapId
+    clearDrawingState(mapId);
+  });
+
+  describe('initial state', () => {
+    it('returns null for activeShapeType when not drawing', () => {
+      const { result } = renderHook(() => useDrawShapes(mapId));
+
+      expect(result.current.activeShapeType).toBeNull();
+      expect(result.current.isDrawing).toBe(false);
+    });
+
+    it('provides draw and cancel functions', () => {
+      const { result } = renderHook(() => useDrawShapes(mapId));
+
+      expect(typeof result.current.draw).toBe('function');
+      expect(typeof result.current.cancel).toBe('function');
+    });
+
+    it('throws when used without mapId and outside MapProvider', () => {
+      expect(() => {
+        renderHook(() => useDrawShapes());
+      }).toThrow(
+        'useDrawShapes requires either a mapId parameter or to be used within a MapProvider',
+      );
+    });
+  });
+
+  describe('draw function', () => {
+    it('starts drawing and updates isDrawing state', async () => {
+      const { result } = renderHook(() => useDrawShapes(mapId));
+
+      act(() => {
+        result.current.draw(ShapeFeatureType.Polygon);
+      });
+
+      await waitFor(() => {
+        expect(result.current.isDrawing).toBe(true);
+        expect(result.current.activeShapeType).toBe(ShapeFeatureType.Polygon);
+      });
+    });
+
+    it('emits shapes:drawing event when starting', async () => {
+      const drawingSpy = vi.fn();
+      bus.on(DrawShapeEvents.drawing, drawingSpy);
+
+      const { result } = renderHook(() => useDrawShapes(mapId));
+
+      act(() => {
+        result.current.draw(ShapeFeatureType.Point);
+      });
+
+      await waitFor(() => {
+        expect(drawingSpy).toHaveBeenCalledWith(
+          expect.objectContaining({
+            payload: {
+              shapeType: ShapeFeatureType.Point,
+              mapId,
+            },
+          }),
+        );
+      });
+
+      bus.off(DrawShapeEvents.drawing, drawingSpy);
+    });
+
+    it('supports all shape types', async () => {
+      const shapeTypes = [
+        ShapeFeatureType.Point,
+        ShapeFeatureType.LineString,
+        ShapeFeatureType.Polygon,
+        ShapeFeatureType.Rectangle,
+        ShapeFeatureType.Circle,
+      ];
+
+      for (const shapeType of shapeTypes) {
+        const testMapId = uuid();
+        const { result, unmount } = renderHook(() => useDrawShapes(testMapId));
+
+        act(() => {
+          result.current.draw(shapeType);
+        });
+
+        await waitFor(() => {
+          expect(result.current.activeShapeType).toBe(shapeType);
+        });
+
+        // Unmount the hook before cleaning up state
+        unmount();
+
+        // Clean up
+        clearDrawingState(testMapId);
+      }
+    });
+  });
+
+  describe('cancel function', () => {
+    it('cancels drawing and updates state', async () => {
+      const { result } = renderHook(() => useDrawShapes(mapId));
+
+      // Start drawing first
+      act(() => {
+        result.current.draw(ShapeFeatureType.Polygon);
+      });
+
+      await waitFor(() => {
+        expect(result.current.isDrawing).toBe(true);
+      });
+
+      // Then cancel
+      act(() => {
+        result.current.cancel();
+      });
+
+      await waitFor(() => {
+        expect(result.current.isDrawing).toBe(false);
+        expect(result.current.activeShapeType).toBeNull();
+      });
+    });
+
+    it('emits shapes:cancelled event when cancelling', async () => {
+      const cancelledSpy = vi.fn();
+      const cancelledBus = Broadcast.getInstance<ShapeCancelledEvent>();
+      cancelledBus.on(DrawShapeEvents.cancelled, cancelledSpy);
+
+      const { result } = renderHook(() => useDrawShapes(mapId));
+
+      // Start drawing first
+      act(() => {
+        result.current.draw(ShapeFeatureType.LineString);
+      });
+
+      await waitFor(() => {
+        expect(result.current.isDrawing).toBe(true);
+      });
+
+      // Then cancel
+      act(() => {
+        result.current.cancel();
+      });
+
+      await waitFor(() => {
+        expect(cancelledSpy).toHaveBeenCalledWith(
+          expect.objectContaining({
+            payload: {
+              shapeType: ShapeFeatureType.LineString,
+              mapId,
+            },
+          }),
+        );
+      });
+
+      cancelledBus.off(DrawShapeEvents.cancelled, cancelledSpy);
+    });
+
+    it('does nothing when not actively drawing', () => {
+      const cancelledSpy = vi.fn();
+      const cancelledBus = Broadcast.getInstance<ShapeCancelledEvent>();
+      cancelledBus.on(DrawShapeEvents.cancelled, cancelledSpy);
+
+      const { result } = renderHook(() => useDrawShapes(mapId));
+
+      // Try to cancel without starting
+      act(() => {
+        result.current.cancel();
+      });
+
+      expect(cancelledSpy).not.toHaveBeenCalled();
+
+      cancelledBus.off(DrawShapeEvents.cancelled, cancelledSpy);
+    });
+  });
+
+  describe('callbacks', () => {
+    it('calls onCreate callback when shape is drawn', async () => {
+      const onCreateSpy = vi.fn();
+      const drawnBus = Broadcast.getInstance<ShapeDrawnEvent>();
+
+      renderHook(() =>
+        useDrawShapes(mapId, {
+          onCreate: onCreateSpy,
+        }),
+      );
+
+      // Simulate shape drawn event
+      const mockShape = {
+        id: uuid(),
+        name: 'Test Shape',
+        shapeType: ShapeFeatureType.Polygon,
+        feature: {
+          type: 'Feature' as const,
+          geometry: {
+            type: 'Polygon' as const,
+            coordinates: [
+              [
+                [0, 0],
+                [1, 0],
+                [1, 1],
+                [0, 1],
+                [0, 0],
+              ],
+            ],
+          },
+          properties: {
+            styleProperties: {
+              fillColor: [255, 0, 0, 255],
+              strokeColor: [0, 0, 0, 255],
+              strokeWidth: 2,
+              strokePattern: 'solid',
+            },
+          },
+        },
+        lastUpdated: Date.now(),
+      };
+
+      act(() => {
+        // biome-ignore lint/suspicious/noExplicitAny: Test workaround for bus type
+        (drawnBus as any).emit(DrawShapeEvents.drawn, {
+          shape: mockShape,
+          mapId,
+        });
+      });
+
+      await waitFor(() => {
+        expect(onCreateSpy).toHaveBeenCalledWith(mockShape);
+      });
+    });
+
+    it('does not call onCreate for different mapId', async () => {
+      const onCreateSpy = vi.fn();
+      const drawnBus = Broadcast.getInstance<ShapeDrawnEvent>();
+      const otherMapId = uuid();
+
+      renderHook(() =>
+        useDrawShapes(mapId, {
+          onCreate: onCreateSpy,
+        }),
+      );
+
+      // Simulate shape drawn event for different map
+      act(() => {
+        // biome-ignore lint/suspicious/noExplicitAny: Test workaround for bus type
+        (drawnBus as any).emit(DrawShapeEvents.drawn, {
+          shape: { id: uuid() },
+          mapId: otherMapId,
+        });
+      });
+
+      // Wait a tick
+      await new Promise((resolve) => setTimeout(resolve, 10));
+
+      expect(onCreateSpy).not.toHaveBeenCalled();
+    });
+
+    it('calls onCancel callback when drawing is cancelled', async () => {
+      const onCancelSpy = vi.fn();
+
+      const { result } = renderHook(() =>
+        useDrawShapes(mapId, {
+          onCancel: onCancelSpy,
+        }),
+      );
+
+      // Start drawing
+      act(() => {
+        result.current.draw(ShapeFeatureType.Circle);
+      });
+
+      await waitFor(() => {
+        expect(result.current.isDrawing).toBe(true);
+      });
+
+      // Cancel
+      act(() => {
+        result.current.cancel();
+      });
+
+      await waitFor(() => {
+        expect(onCancelSpy).toHaveBeenCalledWith(ShapeFeatureType.Circle);
+      });
+    });
+
+    it('does not call onCancel for different mapId', async () => {
+      const onCancelSpy = vi.fn();
+      const cancelledBus = Broadcast.getInstance<ShapeCancelledEvent>();
+      const otherMapId = uuid();
+
+      renderHook(() =>
+        useDrawShapes(mapId, {
+          onCancel: onCancelSpy,
+        }),
+      );
+
+      // Simulate cancelled event for different map
+      act(() => {
+        cancelledBus.emit(DrawShapeEvents.cancelled, {
+          shapeType: ShapeFeatureType.Polygon,
+          mapId: otherMapId,
+        });
+      });
+
+      // Wait a tick
+      await new Promise((resolve) => setTimeout(resolve, 10));
+
+      expect(onCancelSpy).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('multiple map instances', () => {
+    it('isolates state between different mapIds', async () => {
+      const mapId1 = uuid();
+      const mapId2 = uuid();
+
+      // Test map1 in isolation first
+      const { result: result1, unmount: unmount1 } = renderHook(() =>
+        useDrawShapes(mapId1),
+      );
+
+      act(() => {
+        result1.current.draw(ShapeFeatureType.Polygon);
+      });
+
+      await waitFor(() => {
+        expect(result1.current.isDrawing).toBe(true);
+        expect(result1.current.activeShapeType).toBe(ShapeFeatureType.Polygon);
+      });
+
+      // Cleanup map1
+      unmount1();
+      clearDrawingState(mapId1);
+
+      // Now test map2 - should start fresh
+      const { result: result2, unmount: unmount2 } = renderHook(() =>
+        useDrawShapes(mapId2),
+      );
+
+      // Map2 should be idle (not affected by map1's state)
+      expect(result2.current.isDrawing).toBe(false);
+      expect(result2.current.activeShapeType).toBeNull();
+
+      // Map2 can draw independently
+      act(() => {
+        result2.current.draw(ShapeFeatureType.Circle);
+      });
+
+      await waitFor(() => {
+        expect(result2.current.isDrawing).toBe(true);
+        expect(result2.current.activeShapeType).toBe(ShapeFeatureType.Circle);
+      });
+
+      // Clean up
+      unmount2();
+      clearDrawingState(mapId2);
+    });
+  });
+});

@@ -15,6 +15,7 @@
 import type { UniqueId } from '@accelint/core';
 import type { Color } from '@deck.gl/core';
 import type { Feature, LineString, Point, Polygon } from 'geojson';
+import type { DistanceUnit } from '../../../shared/units';
 
 /**
  * Supported shape types
@@ -22,6 +23,7 @@ import type { Feature, LineString, Point, Polygon } from 'geojson';
 export const ShapeFeatureType = {
   Circle: 'Circle',
   Polygon: 'Polygon',
+  Rectangle: 'Rectangle',
   LineString: 'LineString',
   Point: 'Point',
 } as const;
@@ -99,8 +101,8 @@ export interface CircleProperties {
   radius: {
     /** Radius value */
     value: number;
-    /** Units (hardcoded to kilometers for v1) */
-    units: 'kilometers';
+    /** Units for the radius measurement */
+    units: DistanceUnit;
   };
 }
 
