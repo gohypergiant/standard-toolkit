@@ -27,6 +27,24 @@ import type {
   ThemeMode,
 } from '../lib/types';
 
+const FOCUSABLE_SELECTOR =
+  'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+
+/**
+ * Find the first focusable element within a container
+ */
+function findFocusableElement(container: Element): HTMLElement | null {
+  // Check if container itself is focusable
+  if (
+    container.matches(FOCUSABLE_SELECTOR) &&
+    container instanceof HTMLElement
+  ) {
+    return container;
+  }
+  // Otherwise find first focusable descendant
+  return container.querySelector<HTMLElement>(FOCUSABLE_SELECTOR);
+}
+
 /**
  * Trigger an interactive state on an element
  */
@@ -38,15 +56,18 @@ async function triggerState(
     case 'hover':
       await userEvent.hover(element);
       break;
-    case 'focus':
-      if (element instanceof HTMLElement) {
-        element.focus();
+    case 'focus': {
+      // Find the actual focusable element within the container
+      const focusTarget = findFocusableElement(element);
+      if (focusTarget) {
+        focusTarget.focus();
         // Dispatch keyboard event to ensure focus-visible styling
-        element.dispatchEvent(
+        focusTarget.dispatchEvent(
           new KeyboardEvent('keydown', { key: 'Tab', bubbles: true }),
         );
       }
       break;
+    }
     case 'pressed':
       // Dispatch mousedown to trigger :active state
       element.dispatchEvent(
