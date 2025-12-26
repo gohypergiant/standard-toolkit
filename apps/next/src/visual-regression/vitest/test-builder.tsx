@@ -44,8 +44,7 @@ export function createVisualTests(config: VisualTestConfig): void {
     waitMs = 100,
   } = config;
 
-  const filename =
-    screenshotName ?? `${dash(componentName)}-variants.png`;
+  const filename = screenshotName ?? `${dash(componentName)}-variants.png`;
 
   describe(`${componentName} Visual Regression`, () => {
     test('all variants', async () => {

@@ -10,5 +10,41 @@
  * governing permissions and limitations under the License.
  */
 
+// Component objects
+export {
+  BaseComponentObject,
+  ButtonObject,
+  type ButtonObjectConfig,
+  type ComponentObjectConfig,
+} from '../component-objects';
+// Fixtures
+export {
+  type ComponentFixtureOptions,
+  createComponentFixture,
+  defaultFixture,
+} from '../fixtures';
+// Interactive state utilities
+export {
+  DEFAULT_TEST_STATES,
+  INTERACTION_STATES,
+} from '../lib/interactive-states';
+// Interactive visual test builders
+export {
+  createInteractiveVisualTests,
+  generateVariantMatrix,
+  type VariantMatrixOptions,
+} from './interactive-test-builder';
+// Static visual test builders
 export { createVisualTestScenarios, createVisualTests } from './test-builder';
-export type { VisualTestConfig, VisualTestScenario } from '../lib/types';
+// Types
+export type {
+  ComponentVariantConfig,
+  FixtureContext,
+  InteractiveComponentObject,
+  // Interactive test types
+  InteractiveState,
+  InteractiveVisualTestConfig,
+  // Static test types
+  VisualTestConfig,
+  VisualTestScenario,
+} from '../lib/types';

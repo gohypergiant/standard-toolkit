@@ -10,19 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { BentoGroup } from '~/components/bento';
-import { createVisualTests } from '~/visual-regression/vitest';
-import { ButtonExampleServer } from './server';
-
-function ButtonVariants() {
-  return (
-    <BentoGroup>
-      <ButtonExampleServer />
-    </BentoGroup>
-  );
-}
-
-createVisualTests({
-  componentName: 'Button',
-  variantsComponent: ButtonVariants,
-});
+export {
+  BaseComponentObject,
+  type ComponentObjectConfig,
+} from './base-component-object';
+export { ButtonObject, type ButtonObjectConfig } from './button-object';
