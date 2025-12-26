@@ -16,7 +16,6 @@ import { Broadcast } from '@accelint/bus';
 import { MapCursorEvents } from '../../../map-cursor/events';
 import { getOrCreateClearCursor } from '../../../map-cursor/store';
 import { MapModeEvents } from '../../../map-mode/events';
-import { MapEvents } from '../../base-map/events';
 import {
   DRAW_CURSOR_MAP,
   DRAW_SHAPE_LAYER_ID,
@@ -28,10 +27,6 @@ import type { UniqueId } from '@accelint/core';
 import type { Feature } from 'geojson';
 import type { MapCursorEventType } from '../../../map-cursor/types';
 import type { MapModeEventType } from '../../../map-mode/types';
-import type {
-  MapDisablePanEvent,
-  MapEnablePanEvent,
-} from '../../base-map/types';
 import type { DisplayShape, ShapeFeatureType } from '../shared/types';
 import type { DrawShapeEvent } from './events';
 import type {
@@ -47,9 +42,6 @@ import type {
 const drawShapeBus = Broadcast.getInstance<DrawShapeEvent>();
 const mapModeBus = Broadcast.getInstance<MapModeEventType>();
 const mapCursorBus = Broadcast.getInstance<MapCursorEventType>();
-const mapControlBus = Broadcast.getInstance<
-  MapEnablePanEvent | MapDisablePanEvent
->();
 
 /**
  * Default drawing state
@@ -179,9 +171,6 @@ function startDrawing(
     id: mapId,
   });
 
-  // Disable panning during drawing to prevent interference with double-click
-  mapControlBus.emit(MapEvents.disablePan, { id: mapId });
-
   // Emit drawing started event
   drawShapeBus.emit(DrawShapeEvents.drawing, {
     shapeType,
@@ -225,9 +214,6 @@ function completeDrawing(mapId: UniqueId, feature: Feature): DisplayShape {
   // Clear cursor using the store function directly
   getOrCreateClearCursor(mapId)(DRAW_SHAPE_LAYER_ID);
 
-  // Re-enable panning after drawing completes
-  mapControlBus.emit(MapEvents.enablePan, { id: mapId });
-
   // Emit shape drawn event
   // Type assertion needed because DisplayShape contains GeoJSON Feature
   // which is structurally cloneable but lacks TS index signature
@@ -269,11 +255,8 @@ function cancelDrawing(mapId: UniqueId): void {
   // Clear cursor using the store function directly
   getOrCreateClearCursor(mapId)(DRAW_SHAPE_LAYER_ID);
 
-  // Re-enable panning after drawing is cancelled
-  mapControlBus.emit(MapEvents.enablePan, { id: mapId });
-
-  // Emit cancelled event
-  drawShapeBus.emit(DrawShapeEvents.cancelled, {
+  // Emit canceled event
+  drawShapeBus.emit(DrawShapeEvents.canceled, {
     shapeType,
     mapId,
   });

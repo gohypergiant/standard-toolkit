@@ -80,8 +80,8 @@ export const BasicDrawing: Story = {
           setEventLog((log) => [
             ...log.slice(-9),
             {
-              id: `${Date.now()}-cancelled`,
-              message: `Cancelled: ${shapeType}`,
+              id: `${Date.now()}-canceled`,
+              message: `Canceled: ${shapeType}`,
             },
           ]);
         },

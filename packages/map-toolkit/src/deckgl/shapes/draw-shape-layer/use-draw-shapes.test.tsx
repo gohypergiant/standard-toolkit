@@ -21,7 +21,7 @@ import { useDrawShapes } from './use-draw-shapes';
 import type { UniqueId } from '@accelint/core';
 import type {
   DrawShapeEvent,
-  ShapeCancelledEvent,
+  ShapeCanceledEvent,
   ShapeDrawnEvent,
 } from './events';
 
@@ -152,10 +152,10 @@ describe('useDrawShapes', () => {
       });
     });
 
-    it('emits shapes:cancelled event when cancelling', async () => {
-      const cancelledSpy = vi.fn();
-      const cancelledBus = Broadcast.getInstance<ShapeCancelledEvent>();
-      cancelledBus.on(DrawShapeEvents.cancelled, cancelledSpy);
+    it('emits shapes:canceled event when canceling', async () => {
+      const canceledSpy = vi.fn();
+      const canceledBus = Broadcast.getInstance<ShapeCanceledEvent>();
+      canceledBus.on(DrawShapeEvents.canceled, canceledSpy);
 
       const { result } = renderHook(() => useDrawShapes(mapId));
 
@@ -174,7 +174,7 @@ describe('useDrawShapes', () => {
       });
 
       await waitFor(() => {
-        expect(cancelledSpy).toHaveBeenCalledWith(
+        expect(canceledSpy).toHaveBeenCalledWith(
           expect.objectContaining({
             payload: {
               shapeType: ShapeFeatureType.LineString,
@@ -184,13 +184,13 @@ describe('useDrawShapes', () => {
         );
       });
 
-      cancelledBus.off(DrawShapeEvents.cancelled, cancelledSpy);
+      canceledBus.off(DrawShapeEvents.canceled, canceledSpy);
     });
 
     it('does nothing when not actively drawing', () => {
-      const cancelledSpy = vi.fn();
-      const cancelledBus = Broadcast.getInstance<ShapeCancelledEvent>();
-      cancelledBus.on(DrawShapeEvents.cancelled, cancelledSpy);
+      const canceledSpy = vi.fn();
+      const canceledBus = Broadcast.getInstance<ShapeCanceledEvent>();
+      canceledBus.on(DrawShapeEvents.canceled, canceledSpy);
 
       const { result } = renderHook(() => useDrawShapes(mapId));
 
@@ -199,9 +199,9 @@ describe('useDrawShapes', () => {
         result.current.cancel();
       });
 
-      expect(cancelledSpy).not.toHaveBeenCalled();
+      expect(canceledSpy).not.toHaveBeenCalled();
 
-      cancelledBus.off(DrawShapeEvents.cancelled, cancelledSpy);
+      canceledBus.off(DrawShapeEvents.canceled, canceledSpy);
     });
   });
 
@@ -286,7 +286,7 @@ describe('useDrawShapes', () => {
       expect(onCreateSpy).not.toHaveBeenCalled();
     });
 
-    it('calls onCancel callback when drawing is cancelled', async () => {
+    it('calls onCancel callback when drawing is canceled', async () => {
       const onCancelSpy = vi.fn();
 
       const { result } = renderHook(() =>
@@ -316,7 +316,7 @@ describe('useDrawShapes', () => {
 
     it('does not call onCancel for different mapId', async () => {
       const onCancelSpy = vi.fn();
-      const cancelledBus = Broadcast.getInstance<ShapeCancelledEvent>();
+      const canceledBus = Broadcast.getInstance<ShapeCanceledEvent>();
       const otherMapId = uuid();
 
       renderHook(() =>
@@ -325,9 +325,9 @@ describe('useDrawShapes', () => {
         }),
       );
 
-      // Simulate cancelled event for different map
+      // Simulate canceled event for different map
       act(() => {
-        cancelledBus.emit(DrawShapeEvents.cancelled, {
+        canceledBus.emit(DrawShapeEvents.canceled, {
           shapeType: ShapeFeatureType.Polygon,
           mapId: otherMapId,
         });

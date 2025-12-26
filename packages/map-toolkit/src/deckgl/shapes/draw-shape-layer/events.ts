@@ -24,8 +24,8 @@ export const DrawShapeEvents = {
   drawing: 'shapes:drawing',
   /** Shape has been successfully drawn/created */
   drawn: 'shapes:drawn',
-  /** Drawing was cancelled */
-  cancelled: 'shapes:cancelled',
+  /** Drawing was canceled */
+  canceled: 'shapes:canceled',
 } as const;
 
 export type DrawShapeEventType =
@@ -70,11 +70,11 @@ export type ShapeDrawnEvent = {
 };
 
 /**
- * Event payload for shapes:cancelled
- * Emitted when drawing is cancelled
+ * Event payload for shapes:canceled
+ * Emitted when drawing is canceled
  */
-export type ShapeCancelledEvent = Payload<
-  'shapes:cancelled',
+export type ShapeCanceledEvent = Payload<
+  'shapes:canceled',
   {
     /** The shape type that was being drawn */
     shapeType: ShapeFeatureType;
@@ -89,4 +89,4 @@ export type ShapeCancelledEvent = Payload<
 export type DrawShapeEvent =
   | ShapeDrawingEvent
   | ShapeDrawnEvent
-  | ShapeCancelledEvent;
+  | ShapeCanceledEvent;

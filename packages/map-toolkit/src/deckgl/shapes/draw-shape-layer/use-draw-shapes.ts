@@ -50,7 +50,7 @@ import type { UseDrawShapesOptions, UseDrawShapesReturn } from './types';
  *       setShapes(prev => [...prev, shape]);
  *     },
  *     onCancel: (shapeType) => {
- *       console.log('Drawing cancelled:', shapeType);
+ *       console.log('Drawing canceled:', shapeType);
  *     },
  *   });
  *
@@ -122,7 +122,7 @@ export function useDrawShapes(
     }
   });
 
-  useOn(DrawShapeEvents.cancelled, (event) => {
+  useOn(DrawShapeEvents.canceled, (event) => {
     if (event.payload.mapId === actualId && onCancel) {
       onCancel(event.payload.shapeType);
     }

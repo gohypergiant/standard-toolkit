@@ -13,9 +13,13 @@
 'use client';
 
 import { useContext, useEffect, useSyncExternalStore } from 'react';
-import { DEFAULT_DISTANCE_UNITS } from '../../../shared/units';
+import {
+  DEFAULT_DISTANCE_UNITS,
+  getDistanceUnitFromAbbreviation,
+} from '../../../shared/units';
 import { MapContext } from '../../base-map/provider';
 import {
+  DEFAULT_EDIT_HANDLE_COLOR,
   DEFAULT_TENTATIVE_FILL_COLOR,
   DEFAULT_TENTATIVE_LINE_COLOR,
   DRAW_SHAPE_LAYER_ID,
@@ -67,6 +71,7 @@ import type { DrawShapeLayerProps } from './types';
 export function DrawShapeLayer({
   id = DRAW_SHAPE_LAYER_ID,
   mapId,
+  unit,
 }: DrawShapeLayerProps) {
   // Get mapId from context if not provided
   const contextId = useContext(MapContext);
@@ -152,8 +157,12 @@ export function DrawShapeLayer({
       onEdit={handleEdit}
       getTentativeFillColor={fillColor}
       getTentativeLineColor={lineColor}
+      getEditHandlePointColor={DEFAULT_EDIT_HANDLE_COLOR}
+      getEditHandlePointOutlineColor={DEFAULT_EDIT_HANDLE_COLOR}
       modeConfig={{
-        distanceUnits: DEFAULT_DISTANCE_UNITS,
+        distanceUnits: unit
+          ? (getDistanceUnitFromAbbreviation(unit) ?? DEFAULT_DISTANCE_UNITS)
+          : DEFAULT_DISTANCE_UNITS,
       }}
       _subLayerProps={TOOLTIP_SUBLAYER_PROPS}
     />

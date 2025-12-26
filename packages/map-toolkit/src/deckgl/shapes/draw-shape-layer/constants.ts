@@ -51,14 +51,20 @@ export const DRAW_CURSOR_MAP: Record<ShapeFeatureType, CSSCursorType> = {
 };
 
 /**
- * Default tentative fill color (turquoise with low opacity)
+ * Default tentative fill color (white at 8% opacity - rgba(255, 255, 255, 0.08))
+ * 0.08 * 255 ≈ 20
  */
-export const DEFAULT_TENTATIVE_FILL_COLOR: Color = [40, 245, 190, 20];
+export const DEFAULT_TENTATIVE_FILL_COLOR: Color = [255, 255, 255, 20];
 
 /**
- * Default tentative line color (turquoise with high opacity)
+ * Default tentative line color (outline-interactive-hover: #888a8f)
  */
-export const DEFAULT_TENTATIVE_LINE_COLOR: Color = [40, 245, 190, 200];
+export const DEFAULT_TENTATIVE_LINE_COLOR: Color = [136, 138, 143, 255];
+
+/**
+ * Default edit handle color (white)
+ */
+export const DEFAULT_EDIT_HANDLE_COLOR: Color = [255, 255, 255, 255];
 
 /**
  * Empty feature collection for initializing the editable layer
@@ -84,9 +90,8 @@ for (let i = 32; i <= 128; i++) {
 }
 
 /**
- * Sublayer props for EditableGeoJsonLayer's internal TextLayer (tooltips).
- * This configures the character set to support special characters like ² for area units,
- * and provides readable text styling with white text and black outline.
+ * Sublayer props for EditableGeoJsonLayer's internal layers.
+ * Configures tooltips, edit handles, and guide lines for drawing/editing shapes.
  */
 export const TOOLTIP_SUBLAYER_PROPS = {
   tooltips: {
@@ -105,5 +110,14 @@ export const TOOLTIP_SUBLAYER_PROPS = {
     getTextAnchor: 'start',
     getAlignmentBaseline: 'bottom',
     getPixelOffset: [8, 0],
+  },
+  // Edit handle styling (vertex points)
+  editHandlePointOutline: {
+    getFillColor: DEFAULT_EDIT_HANDLE_COLOR,
+    getRadius: 6,
+  },
+  editHandlePoint: {
+    getFillColor: DEFAULT_EDIT_HANDLE_COLOR,
+    getRadius: 4,
   },
 };

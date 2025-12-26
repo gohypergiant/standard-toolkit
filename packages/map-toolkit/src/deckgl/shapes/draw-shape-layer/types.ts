@@ -14,6 +14,7 @@
 
 import type { UniqueId } from '@accelint/core';
 import type { Feature } from 'geojson';
+import type { DistanceUnitAbbreviation } from '../../../shared/units';
 import type {
   CircleProperties,
   DisplayShape,
@@ -51,7 +52,7 @@ export interface DrawShapeOptions {
 export interface UseDrawShapesOptions {
   /** Callback when a shape is successfully drawn */
   onCreate?: (shape: DisplayShape) => void;
-  /** Callback when drawing is cancelled */
+  /** Callback when drawing is canceled */
   onCancel?: (shapeType: ShapeFeatureType) => void;
 }
 
@@ -79,6 +80,8 @@ export interface DrawShapeLayerProps {
   id?: string;
   /** Map instance ID for multi-map isolation */
   mapId: UniqueId;
+  /** Distance unit for tooltip measurements (defaults to 'km') */
+  unit?: DistanceUnitAbbreviation;
 }
 
 /**

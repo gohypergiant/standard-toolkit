@@ -1,0 +1,320 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+import * as DrawShapeLayerStories from './draw-shape-layer.stories';
+
+<Meta of={DrawShapeLayerStories} />
+
+# Draw Shape Layer
+
+A deck.gl layer for interactively drawing geographic shapes on a map. Integrates with `@deck.gl-community/editable-layers` and provides real-time tooltips showing distance and area measurements during drawing.
+
+## Features
+
+- **Multiple geometry types**: Point, LineString, Polygon, Rectangle, and Circle
+- **Real-time tooltips**: Distance/area measurements displayed while drawing
+- **Protected drawing mode**: Drawing cannot be interrupted by other map mode requests
+- **Double-click to finish**: Polygons and lines can be completed with double-click
+- **Shift-to-square**: Hold Shift while drawing rectangles to constrain to a square
+- **Custom styling**: Pass style defaults (fill/stroke colors) when initiating drawing
+- **Event bus integration**: Emits events via `@accelint/bus` for drawing lifecycle
+- **Multi-map support**: Events include map instance ID for isolation
+- **Cursor integration**: Automatically changes cursor to crosshair during drawing
+
+## Dependencies
+
+DrawShapeLayer requires the following dependencies:
+
+**Required:**
+- [`@accelint/bus`](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/bus) - Event bus for drawing lifecycle events
+- [`@accelint/core`](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/core) - Core utilities including UUID generation
+- [`@deck.gl/core`](https://deck.gl/) - Deck.gl core library for WebGL visualization
+- [`@deck.gl-community/editable-layers`](https://github.com/visgl/deck.gl-community) - Editable geometry layers
+- [`@deckgl-fiber-renderer/dom`](https://github.com/deckgl-fiber-renderer/fiber.gl) - React renderer for Deck.gl (for fiber usage)
+- [`@turf/turf`](https://turfjs.org/) - Geographic calculations for tooltips
+- `react` - React 19.0.0 or higher
+
+**Installation:**
+
+```bash
+npm install @accelint/map-toolkit @accelint/bus @accelint/core @deck.gl/core @deck.gl-community/editable-layers @deckgl-fiber-renderer/dom @turf/turf react
+# or
+pnpm add @accelint/map-toolkit @accelint/bus @accelint/core @deck.gl/core @deck.gl-community/editable-layers @deckgl-fiber-renderer/dom @turf/turf react
+```
+
+## Basic Usage
+
+### With useDrawShapes Hook (Recommended)
+
+The easiest way to use DrawShapeLayer is with the `useDrawShapes` hook, which manages drawing state and provides callbacks:
+
+```tsx
+import { BaseMap } from '@accelint/map-toolkit/deckgl/base-map';
+import '@accelint/map-toolkit/deckgl/shapes/draw-shape-layer/fiber';
+import '@accelint/map-toolkit/deckgl/shapes/display-shape-layer/fiber';
+import { DrawShapeLayer } from '@accelint/map-toolkit/deckgl/shapes/draw-shape-layer';
+import { useDrawShapes } from '@accelint/map-toolkit/deckgl/shapes/draw-shape-layer/use-draw-shapes';
+import { useMapCursor } from '@accelint/map-toolkit/map-cursor';
+import { ShapeFeatureType } from '@accelint/map-toolkit/deckgl/shapes/shared/types';
+import { uuid } from '@accelint/core';
+import { useState } from 'react';
+
+const MAP_ID = uuid();
+
+function MapWithDrawing() {
+  const [shapes, setShapes] = useState([]);
+
+  // Required: subscribe to cursor store to enable cursor changes
+  useMapCursor(MAP_ID);
+
+  const { draw, cancel, isDrawing, activeShapeType } = useDrawShapes(MAP_ID, {
+    onCreate: (shape) => {
+      setShapes((prev) => [...prev, shape]);
+      console.log('Shape created:', shape);
+    },
+    onCancel: (shapeType) => {
+      console.log('Drawing canceled:', shapeType);
+    },
+  });
+
+  return (
+    <div className="relative h-screen w-screen">
+      <BaseMap id={MAP_ID}>
+        {/* Display previously drawn shapes */}
+        <displayShapeLayer
+          id="shapes"
+          mapId={MAP_ID}
+          data={shapes}
+          showLabels
+          pickable={false}
+        />
+        {/* Drawing layer - only renders when actively drawing */}
+        <DrawShapeLayer mapId={MAP_ID} />
+      </BaseMap>
+
+      {/* Drawing controls */}
+      <div className="absolute top-4 left-4">
+        <button onClick={() => draw(ShapeFeatureType.Polygon)} disabled={isDrawing}>
+          Draw Polygon
+        </button>
+        <button onClick={() => draw(ShapeFeatureType.Circle)} disabled={isDrawing}>
+          Draw Circle
+        </button>
+        {isDrawing && (
+          <button onClick={cancel}>Cancel</button>
+        )}
+      </div>
+    </div>
+  );
+}
+```
+
+## Drawing Instructions
+
+Each shape type has specific drawing instructions:
+
+| Shape Type | How to Draw | How to Complete |
+|------------|-------------|-----------------|
+| **Point** | Single click | Completes immediately |
+| **LineString** | Click to add points | Double-click to finish |
+| **Polygon** | Click to add vertices | Double-click or click starting point to close |
+| **Rectangle** | Click first corner | Click opposite corner |
+| **Circle** | Click center point | Click to set radius |
+
+### Keyboard Shortcuts
+
+- **ESC**: Cancel current drawing
+- **Shift** (Rectangle only): Constrain to square with equal sides
+
+## Custom Style Defaults
+
+Pass style defaults when initiating drawing to customize the shape's appearance:
+
+```tsx
+const { draw } = useDrawShapes(MAP_ID, { onCreate: handleCreate });
+
+// Draw with custom colors
+draw(ShapeFeatureType.Polygon, {
+  styleDefaults: {
+    fillColor: [255, 100, 100, 180],   // RGBA: red fill
+    strokeColor: [200, 0, 0, 255],      // RGBA: dark red stroke
+    strokeWidth: 2,
+    strokePattern: 'solid',
+  },
+});
+```
+
+The tentative shape (while drawing) and the final created shape will both use these colors.
+
+## Tooltips
+
+DrawShapeLayer displays real-time tooltips during drawing:
+
+| Shape Type | Tooltip Content |
+|------------|-----------------|
+| **LineString** | Total distance (e.g., "12.5 km") |
+| **Polygon** | Area (e.g., "45.2 km²") |
+| **Rectangle** | Dimensions and area (e.g., "5.2 km x 3.1 km\n16.12 km²") |
+| **Circle** | Area (e.g., "78.5 km²") |
+
+Distance units default to kilometers (`'km'`) but can be configured via the `unit` prop:
+
+```tsx
+<DrawShapeLayer mapId={MAP_ID} unit="nm" />  // nautical miles
+<DrawShapeLayer mapId={MAP_ID} unit="mi" />  // miles
+```
+
+## Event Bus Integration
+
+The layer emits events via `@accelint/bus` for the drawing lifecycle:
+
+### shapes:drawing
+
+Emitted when drawing starts:
+
+```tsx
+import { useOn } from '@accelint/bus/react';
+import { DrawShapeEvents } from '@accelint/map-toolkit/deckgl/shapes/draw-shape-layer/events';
+
+useOn(DrawShapeEvents.drawing, (event) => {
+  if (event.payload.mapId !== MAP_ID) return;
+  console.log('Started drawing:', event.payload.shapeType);
+});
+```
+
+### shapes:drawn
+
+Emitted when a shape is successfully created:
+
+```tsx
+import { useOn } from '@accelint/bus/react';
+import { DrawShapeEvents, type ShapeDrawnEvent } from '@accelint/map-toolkit/deckgl/shapes/draw-shape-layer/events';
+
+useOn<ShapeDrawnEvent>(DrawShapeEvents.drawn, (event) => {
+  if (event.payload.mapId !== MAP_ID) return;
+  console.log('Shape created:', event.payload.shape);
+});
+```
+
+### shapes:canceled
+
+Emitted when drawing is canceled (ESC key or programmatic cancel):
+
+```tsx
+import { useOn } from '@accelint/bus/react';
+import { DrawShapeEvents } from '@accelint/map-toolkit/deckgl/shapes/draw-shape-layer/events';
+
+useOn(DrawShapeEvents.canceled, (event) => {
+  if (event.payload.mapId !== MAP_ID) return;
+  console.log('Drawing canceled:', event.payload.shapeType);
+});
+```
+
+## Map Mode Integration
+
+DrawShapeLayer uses a **protected mode** pattern. When drawing starts:
+
+1. The layer requests a mode change to `'draw-shape'`
+2. The layer registers as a "protector" of this mode
+3. Other components cannot change the map mode while drawing is active
+4. When drawing completes or is canceled, protection is released
+
+This prevents accidental mode changes (e.g., from clicking UI elements) from interrupting a drawing operation.
+
+## Cursor Integration
+
+When drawing is active, the cursor automatically changes to `crosshair`. This integrates with the `map-cursor` system:
+
+```tsx
+// Required: subscribe to cursor store to enable cursor changes
+const { cursor } = useMapCursor(MAP_ID);
+
+// The cursor will be 'crosshair' during drawing
+console.log('Current cursor:', cursor);
+```
+
+## API Reference
+
+### DrawShapeLayerProps
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `id` | `string` | `'draw-shape-layer'` | Unique layer ID |
+| `mapId` | `UniqueId` | *required* | Map instance ID for multi-map isolation |
+| `unit` | `'km' \| 'm' \| 'nm' \| 'mi' \| 'ft'` | `'km'` | Distance unit for tooltip measurements |
+
+### useDrawShapes Hook
+
+```tsx
+import { useDrawShapes } from '@accelint/map-toolkit/deckgl/shapes/draw-shape-layer/use-draw-shapes';
+
+const {
+  draw,
+  cancel,
+  isDrawing,
+  activeShapeType,
+  drawingState,
+} = useDrawShapes(mapId, options);
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `mapId` | `UniqueId` | Map instance ID |
+| `options` | `UseDrawShapesOptions` | Optional callbacks |
+
+#### Options
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `onCreate` | `(shape: DisplayShape) => void` | Called when shape is successfully created |
+| `onCancel` | `(shapeType: ShapeFeatureType) => void` | Called when drawing is canceled |
+
+#### Return Values
+
+| Value | Type | Description |
+|-------|------|-------------|
+| `draw` | `(shapeType: ShapeFeatureType, options?: DrawShapeOptions) => void` | Start drawing a shape |
+| `cancel` | `() => void` | Cancel current drawing |
+| `isDrawing` | `boolean` | Whether currently drawing |
+| `activeShapeType` | `ShapeFeatureType \| null` | Current shape type being drawn |
+| `drawingState` | `DrawingState \| null` | Full drawing state object |
+
+### DrawShapeOptions
+
+Options passed to the `draw()` function:
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `styleDefaults` | `Partial<StyleProperties>` | Default colors/stroke for the shape |
+| `circleDefaults` | `Partial<CircleProperties>` | Circle-specific defaults |
+
+### DrawShapeEvents
+
+Event constants for bus subscriptions:
+
+| Event | Value | Description |
+|-------|-------|-------------|
+| `drawing` | `'shapes:drawing'` | Drawing has started |
+| `drawn` | `'shapes:drawn'` | Shape successfully created |
+| `canceled` | `'shapes:canceled'` | Drawing was canceled |
+
+## Styling
+
+The layer uses the following default colors during drawing:
+
+| Element | Color | Description |
+|---------|-------|-------------|
+| Line/Stroke | `#888a8f` | `--outline-interactive-hover` gray |
+| Fill | `rgba(255, 255, 255, 0.08)` | White at 8% opacity |
+| Edit Handles | `#ffffff` | White |
+
+These can be overridden by passing `styleDefaults` when calling `draw()`.
+
+## Examples
+
+See the Storybook stories for interactive examples:
+
+- **BasicDrawing**: All shape types with event logging
+- **CustomStyleDefaults**: Drawing with custom colors
+- **CombinedDisplayAndDraw**: Drawing alongside existing shapes
