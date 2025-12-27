@@ -134,7 +134,7 @@ export function useDrawShapes(
       drawingState,
       draw: getOrCreateDraw(actualId),
       cancel: getOrCreateCancel(actualId),
-      isDrawing: drawingState?.activeShapeType !== null,
+      isDrawing: drawingState?.activeShapeType != null,
       activeShapeType: drawingState?.activeShapeType ?? null,
     }),
     [drawingState, actualId],

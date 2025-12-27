@@ -273,7 +273,7 @@ export const BasicDrawing: Story = {
               <li>Point: Single click</li>
               <li>Line: Click points, double-click to finish</li>
               <li>Polygon: Click points, close loop to finish</li>
-              <li>Rectangle: Click two corners</li>
+              <li>Rectangle: Click two corners (Shift for square)</li>
               <li>Circle: Click center, then click to set radius</li>
             </ul>
           </div>
@@ -487,6 +487,22 @@ export const CombinedDisplayAndDraw: Story = {
               isDisabled={isDrawing}
             >
               + Polygon
+            </Button>
+            <Button
+              size='small'
+              variant='outline'
+              onPress={() => draw(ShapeFeatureType.Rectangle)}
+              isDisabled={isDrawing}
+            >
+              + Rectangle
+            </Button>
+            <Button
+              size='small'
+              variant='outline'
+              onPress={() => draw(ShapeFeatureType.Circle)}
+              isDisabled={isDrawing}
+            >
+              + Circle
             </Button>
           </div>
 

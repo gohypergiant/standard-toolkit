@@ -28,7 +28,7 @@ import type { Feature } from 'geojson';
 import type { MapCursorEventType } from '../../../map-cursor/types';
 import type { MapModeEventType } from '../../../map-mode/types';
 import type { DisplayShape, ShapeFeatureType } from '../shared/types';
-import type { DrawShapeEvent } from './events';
+import type { DrawShapeEvent, ShapeDrawnEvent } from './events';
 import type {
   DrawFunction,
   DrawingState,
@@ -215,10 +215,14 @@ function completeDrawing(mapId: UniqueId, feature: Feature): DisplayShape {
   getOrCreateClearCursor(mapId)(DRAW_SHAPE_LAYER_ID);
 
   // Emit shape drawn event
-  // Type assertion needed because DisplayShape contains GeoJSON Feature
-  // which is structurally cloneable but lacks TS index signature
-  // biome-ignore lint/suspicious/noExplicitAny: Bus type constraint workaround for GeoJSON Feature
-  (drawShapeBus as any).emit(DrawShapeEvents.drawn, { shape, mapId });
+  // DisplayShape contains GeoJSON Feature which is structurally cloneable
+  // but lacks the index signature TypeScript requires for StructuredCloneable.
+  // Cast payload to ShapeDrawnPayload to maintain type safety for the structure,
+  // then use unknown to satisfy the bus constraint.
+  drawShapeBus.emit(DrawShapeEvents.drawn, {
+    shape,
+    mapId,
+  } as unknown as ShapeDrawnEvent['payload']);
 
   notifySubscribers(mapId);
 
