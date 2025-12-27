@@ -136,7 +136,7 @@ export function useEditShape(
       edit: getOrCreateEdit(actualId),
       save: getOrCreateSave(actualId),
       cancel: getOrCreateCancel(actualId),
-      isEditing: editingState?.editingShape !== null,
+      isEditing: !!editingState?.editingShape,
       editingShape: editingState?.editingShape ?? null,
     }),
     [editingState, actualId],

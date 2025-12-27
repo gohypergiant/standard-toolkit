@@ -30,7 +30,12 @@ import type { MapCursorEventType } from '../../../map-cursor/types';
 import type { MapModeEventType } from '../../../map-mode/types';
 import type { MapEventType } from '../../base-map/types';
 import type { DisplayShape } from '../shared/types';
-import type { EditShapeEvent } from './events';
+import type {
+  EditShapeEvent,
+  ShapeEditCanceledEvent,
+  ShapeEditingEvent,
+  ShapeUpdatedEvent,
+} from './events';
 import type {
   EditFunction,
   EditingState,
@@ -195,11 +200,12 @@ function startEditing(
   mapEventBus.emit(MapEvents.disablePan, { id: mapId });
 
   // Emit editing started event
-  // biome-ignore lint/suspicious/noExplicitAny: Bus type constraint workaround for GeoJSON Feature
-  (editShapeBus as any).emit(EditShapeEvents.editing, {
+  // DisplayShape contains GeoJSON Feature which is structurally cloneable
+  // but lacks the index signature TypeScript requires for StructuredCloneable.
+  editShapeBus.emit(EditShapeEvents.editing, {
     shape,
     mapId,
-  });
+  } as unknown as ShapeEditingEvent['payload']);
 
   notifySubscribers(mapId);
 }
@@ -259,11 +265,12 @@ function saveEditing(mapId: UniqueId): DisplayShape | null {
   mapEventBus.emit(MapEvents.enablePan, { id: mapId });
 
   // Emit shape updated event
-  // biome-ignore lint/suspicious/noExplicitAny: Bus type constraint workaround for GeoJSON Feature
-  (editShapeBus as any).emit(EditShapeEvents.updated, {
+  // DisplayShape contains GeoJSON Feature which is structurally cloneable
+  // but lacks the index signature TypeScript requires for StructuredCloneable.
+  editShapeBus.emit(EditShapeEvents.updated, {
     shape: updatedShape,
     mapId,
-  });
+  } as unknown as ShapeUpdatedEvent['payload']);
 
   notifySubscribers(mapId);
 
@@ -303,11 +310,12 @@ function cancelEditing(mapId: UniqueId): void {
   mapEventBus.emit(MapEvents.enablePan, { id: mapId });
 
   // Emit canceled event with original shape
-  // biome-ignore lint/suspicious/noExplicitAny: Bus type constraint workaround for GeoJSON Feature
-  (editShapeBus as any).emit(EditShapeEvents.canceled, {
+  // DisplayShape contains GeoJSON Feature which is structurally cloneable
+  // but lacks the index signature TypeScript requires for StructuredCloneable.
+  editShapeBus.emit(EditShapeEvents.canceled, {
     shape: originalShape,
     mapId,
-  });
+  } as unknown as ShapeEditCanceledEvent['payload']);
 
   notifySubscribers(mapId);
 }
