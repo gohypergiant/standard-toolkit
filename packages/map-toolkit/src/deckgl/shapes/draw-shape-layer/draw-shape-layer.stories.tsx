@@ -488,6 +488,22 @@ export const CombinedDisplayAndDraw: Story = {
             >
               + Polygon
             </Button>
+            <Button
+              size='small'
+              variant='outline'
+              onPress={() => draw(ShapeFeatureType.Rectangle)}
+              isDisabled={isDrawing}
+            >
+              + Rectangle
+            </Button>
+            <Button
+              size='small'
+              variant='outline'
+              onPress={() => draw(ShapeFeatureType.Circle)}
+              isDisabled={isDrawing}
+            >
+              + Circle
+            </Button>
           </div>
 
           {isDrawing && (
