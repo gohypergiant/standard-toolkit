@@ -10,7 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import { UNIT_MAP } from './constants';
+import {
+  type DistanceUnit,
+  getDistanceUnitFromAbbreviation,
+} from '../shared/units';
 import type { GetViewportSizeArgs } from './types';
 
 const numberFormatter = Intl.NumberFormat('en-US');
@@ -97,7 +100,7 @@ export function getViewportSize({
   const heightMeters = pixelHeight * metersPerPixel;
 
   // Convert to requested unit
-  const unitKey = UNIT_MAP[unit] as keyof typeof METERS_TO_UNIT;
+  const unitKey = getDistanceUnitFromAbbreviation(unit) as DistanceUnit;
   const conversionFactor = METERS_TO_UNIT[unitKey];
 
   const widthDistance = Math.round(widthMeters * conversionFactor);

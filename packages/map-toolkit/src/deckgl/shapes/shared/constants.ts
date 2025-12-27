@@ -97,3 +97,90 @@ export const DASH_ARRAYS: Record<
   dashed: [8, 4],
   dotted: [2, 4],
 };
+
+/**
+ * Default edit handle color (white) - used by both draw and edit layers
+ */
+export const DEFAULT_EDIT_HANDLE_COLOR: Color = [255, 255, 255, 255];
+
+/**
+ * Edit handle outline color (dark for contrast)
+ */
+export const DEFAULT_EDIT_HANDLE_OUTLINE_COLOR: Color = [0, 0, 0, 200];
+
+/**
+ * Empty feature collection for initializing editable layers
+ */
+export const EMPTY_FEATURE_COLLECTION: import('geojson').FeatureCollection = {
+  type: 'FeatureCollection',
+  features: [],
+};
+
+/**
+ * Vertical offset in pixels for tooltip positioning below the cursor.
+ * Used by draw and edit mode tooltips.
+ */
+export const TOOLTIP_Y_OFFSET = 60;
+
+/**
+ * Custom character set for deck.gl TextLayer used by tooltip rendering.
+ *
+ * deck.gl's TextLayer uses SDF (Signed Distance Field) font rendering which
+ * by default only supports basic ASCII characters (32-128). Special characters
+ * like degree symbol (°) and superscript 2 (²) must be explicitly included
+ * for tooltip text like "100.5 km²" to render correctly.
+ */
+export const TOOLTIP_CHARACTER_SET: string[] = ['°', '²'];
+
+// Add standard ASCII characters (space through tilde + DEL)
+for (let i = 32; i <= 128; i++) {
+  TOOLTIP_CHARACTER_SET.push(String.fromCharCode(i));
+}
+
+/**
+ * Sublayer props for tooltip text rendering.
+ * Used by both draw-shape-layer and edit-shape-layer for area/distance tooltips.
+ */
+export const TOOLTIP_SUBLAYER_PROPS = {
+  tooltips: {
+    getSize: 12,
+    getColor: [255, 255, 255],
+    outlineWidth: 7,
+    outlineColor: [0, 0, 0],
+    fontFamily: 'Roboto MonoVariable, monospace',
+    fontWeight: 'bold',
+    fontSettings: {
+      sdf: true,
+      fontSize: 32,
+      cutoff: 0.22,
+    },
+    characterSet: TOOLTIP_CHARACTER_SET,
+    getTextAnchor: 'start',
+    getAlignmentBaseline: 'bottom',
+    getPixelOffset: [8, 0],
+  },
+};
+
+/**
+ * Shared edit handle sublayer props for EditableGeoJsonLayer.
+ * Used by both draw-shape-layer and edit-shape-layer.
+ */
+export const EDIT_HANDLE_SUBLAYER_PROPS = {
+  editHandlePointOutline: {
+    getFillColor: DEFAULT_EDIT_HANDLE_COLOR,
+    getRadius: 6,
+  },
+  editHandlePoint: {
+    getFillColor: DEFAULT_EDIT_HANDLE_COLOR,
+    getRadius: 4,
+  },
+};
+
+/**
+ * Combined sublayer props for EditableGeoJsonLayer with tooltips and edit handles.
+ * Used by both draw-shape-layer and edit-shape-layer.
+ */
+export const EDITABLE_LAYER_SUBLAYER_PROPS = {
+  ...TOOLTIP_SUBLAYER_PROPS,
+  ...EDIT_HANDLE_SUBLAYER_PROPS,
+};

@@ -238,4 +238,36 @@ export const mockShapes: DisplayShape[] = [
     },
     lastUpdated: 1761946937125,
   },
+  // Rectangle shape
+  {
+    id: uuid(),
+    name: 'New Rectangle',
+    label: 'Rectangle',
+    shapeType: 'Rectangle',
+    feature: {
+      type: 'Feature',
+      properties: {
+        styleProperties: {
+          fillColor: [255, 255, 255, 255],
+          strokeColor: [136, 138, 143, 255],
+          strokeWidth: 2,
+          strokePattern: 'solid',
+        },
+        shapeId: uuid(),
+      },
+      geometry: {
+        type: 'Polygon',
+        coordinates: [
+          [
+            [-83.70972104492216, 33.51420787988216],
+            [-83.70972104492216, 32.304692621362456],
+            [-81.45340390624996, 32.304692621362456],
+            [-81.45340390624996, 33.51420787988216],
+            [-83.70972104492216, 33.51420787988216],
+          ],
+        ],
+      },
+    },
+    lastUpdated: 1766815821472,
+  },
 ];
