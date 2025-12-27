@@ -40,6 +40,12 @@ function formatDistance(value: number): string {
  * Extends ModifyMode to support Shift-constrained square editing for rectangles
  * and displays dimension/area tooltips during rectangle editing.
  *
+ * Features:
+ * - Hold Shift while dragging a rectangle corner to constrain to a square
+ * - Live dimension/area tooltip during rectangle editing
+ * - Uses turf.js for accurate geographic distance calculations
+ * - Single-pass getGuides filter to prevent TypeError from sublayer picks
+ *
  * When editing a rectangle with Shift held, the rectangle is constrained to a square
  * using real-world distances to account for lat/lon distortion.
  *
@@ -171,18 +177,21 @@ export class ModifyModeWithSquareConstraint extends ModifyMode {
   ): GuideFeatureCollection {
     const picks = props.lastPointerMoveEvent?.picks;
 
-    // Only filter if there are picks that might cause issues
+    // Only filter if there are picks - single pass filter (no separate some() check)
     if (picks && picks.length > 0) {
-      // Check if any pick needs filtering (optimization: avoid array operations if not needed)
-      const needsFiltering = picks.some(
-        (pick) => !pick.isGuide && pick.object?.geometry?.type === undefined,
-      );
+      // Single-pass: filter and check if we removed anything
+      const filteredPicks: typeof picks = [];
+      let didFilter = false;
 
-      if (needsFiltering) {
-        const filteredPicks = picks.filter(
-          (pick) => pick.isGuide || pick.object?.geometry?.type !== undefined,
-        );
+      for (const pick of picks) {
+        if (pick.isGuide || pick.object?.geometry?.type !== undefined) {
+          filteredPicks.push(pick);
+        } else {
+          didFilter = true;
+        }
+      }
 
+      if (didFilter) {
         // Create a modified props with filtered picks
         const filteredProps: ModeProps<FeatureCollection> = {
           ...props,
@@ -320,22 +329,15 @@ export class ModifyModeWithSquareConstraint extends ModifyMode {
     const distanceUnits =
       props.modeConfig?.distanceUnits ?? DEFAULT_DISTANCE_UNITS;
 
-    // Convert side length from kilometers to the configured units
-    // sideDistanceKm is already in kilometers from the calculation
-    let sideLength: number;
-    if (distanceUnits === 'kilometers') {
-      sideLength = sideDistanceKm;
-    } else if (distanceUnits === 'miles') {
-      sideLength = sideDistanceKm * 0.621371;
-    } else if (distanceUnits === 'meters') {
-      sideLength = sideDistanceKm * 1000;
-    } else if (distanceUnits === 'feet') {
-      sideLength = sideDistanceKm * 3280.84;
-    } else if (distanceUnits === 'nauticalmiles') {
-      sideLength = sideDistanceKm * 0.539957;
-    } else {
-      sideLength = sideDistanceKm;
-    }
+    // Convert side length from kilometers to the configured units using turf
+    // We create two points sideDistanceKm apart and measure with target units
+    const originPoint = point([0, 0]);
+    const destPoint = destination(originPoint, sideDistanceKm, 90, {
+      units: 'kilometers',
+    });
+    const sideLength = distance(originPoint, destPoint, {
+      units: distanceUnits,
+    });
 
     // For a square, area = side²
     const squareArea = sideLength * sideLength;
@@ -378,9 +380,6 @@ export class ModifyModeWithSquareConstraint extends ModifyMode {
   /**
    * Update the tooltip with rectangle dimensions and area.
    * Called during rectangle dragging to show live measurements.
-   *
-   * PERFORMANCE: Uses simple width × height for area instead of turf.area()
-   * to reduce computational overhead during high-frequency drag events.
    */
   private updateRectangleTooltip(
     event: DraggingEvent,
@@ -413,11 +412,11 @@ export class ModifyModeWithSquareConstraint extends ModifyMode {
     }
 
     // Get the four corners of the rectangle
-    const corner0 = coords[0] as Position;
-    const corner1 = coords[1] as Position;
-    const corner2 = coords[2] as Position;
+    const corner0 = coords[0] as [number, number];
+    const corner1 = coords[1] as [number, number];
+    const corner2 = coords[2] as [number, number];
 
-    // Calculate width and height using turf distance
+    // Calculate width and height using turf
     const width = distance(point(corner0), point(corner1), {
       units: distanceUnits,
     });
@@ -425,7 +424,7 @@ export class ModifyModeWithSquareConstraint extends ModifyMode {
       units: distanceUnits,
     });
 
-    // For rectangles, area = width × height (faster than turf.area + convertArea)
+    // For rectangles, area = width × height
     const rectArea = width * height;
     const unitAbbrev = getDistanceUnitAbbreviation(distanceUnits);
 

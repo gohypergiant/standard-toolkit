@@ -13,6 +13,7 @@
 import {
   type DraggingEvent,
   type FeatureCollection,
+  type GuideFeatureCollection,
   type ModeProps,
   ResizeCircleMode,
   type Tooltip,
@@ -28,6 +29,11 @@ import type { Feature, Polygon } from 'geojson';
 
 /**
  * Extends ResizeCircleMode to display area tooltip during resize.
+ *
+ * Features:
+ * - Live area tooltip during circle resize
+ * - Uses turf.js for accurate geographic distance calculations
+ * - Single-pass getGuides filter to prevent TypeError from sublayer picks
  *
  * Shows the area of the circle being resized based on the current radius.
  */
@@ -97,5 +103,52 @@ export class ResizeCircleModeWithTooltip extends ResizeCircleMode {
 
   override getTooltips(): Tooltip[] {
     return this.tooltip ? [this.tooltip] : [];
+  }
+
+  /**
+   * Override getGuides to filter out picks without valid geometry.
+   *
+   * The parent ResizeCircleMode.getGuides accesses `featureAsPick.object.geometry.type`
+   * which can throw if a pick's object doesn't have a geometry property.
+   * This can happen when picks include sublayer elements (like tooltip text)
+   * that aren't GeoJSON features.
+   *
+   * We filter the lastPointerMoveEvent.picks to only include picks with valid
+   * geometry before calling the parent implementation.
+   */
+  override getGuides(
+    props: ModeProps<FeatureCollection>,
+  ): GuideFeatureCollection {
+    const picks = props.lastPointerMoveEvent?.picks;
+
+    // Only filter if there are picks - single pass filter (no separate some() check)
+    if (picks && picks.length > 0) {
+      // Single-pass: filter and check if we removed anything
+      const filteredPicks: typeof picks = [];
+      let didFilter = false;
+
+      for (const pick of picks) {
+        if (pick.isGuide || pick.object?.geometry?.type !== undefined) {
+          filteredPicks.push(pick);
+        } else {
+          didFilter = true;
+        }
+      }
+
+      if (didFilter) {
+        // Create a modified props with filtered picks
+        const filteredProps: ModeProps<FeatureCollection> = {
+          ...props,
+          lastPointerMoveEvent: {
+            ...props.lastPointerMoveEvent,
+            picks: filteredPicks,
+          },
+        };
+
+        return super.getGuides(filteredProps);
+      }
+    }
+
+    return super.getGuides(props);
   }
 }

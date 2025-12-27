@@ -18,6 +18,7 @@ import { useMapCursor } from '../../../map-cursor';
 import { BaseMap } from '../../base-map/index';
 import { mockShapes } from '../__fixtures__/mock-shapes';
 import '../draw-shape-layer/fiber';
+import { useShapeSelection } from '../display-shape-layer/use-shape-selection';
 import { DrawShapeLayer } from '../draw-shape-layer/index';
 import { useDrawShapes } from '../draw-shape-layer/use-draw-shapes';
 import { ShapeEvents } from '../shared/events';
@@ -68,9 +69,6 @@ const EDIT_MAP_ID = uuid();
 export const BasicEditing: Story = {
   render: () => {
     const [shapes, setShapes] = useState<DisplayShape[]>(createSampleShapes);
-    const [selectedShape, setSelectedShape] = useState<DisplayShape | null>(
-      null,
-    );
     const [eventLog, setEventLog] = useState<
       Array<{ id: string; message: string }>
     >([]);
@@ -79,6 +77,10 @@ export const BasicEditing: Story = {
     const { cursor, requestCursorChange, clearCursor } =
       useMapCursor(EDIT_MAP_ID);
 
+    // useShapeSelection handles selection state and auto-deselection on map clicks
+    const { selectedId } = useShapeSelection(EDIT_MAP_ID);
+    const selectedShape = shapes.find((s) => s.id === selectedId) ?? null;
+
     const { edit, save, cancel, isEditing, editingShape } = useEditShape(
       EDIT_MAP_ID,
       {
@@ -86,7 +88,6 @@ export const BasicEditing: Story = {
           setShapes((prev) =>
             prev.map((s) => (s.id === updatedShape.id ? updatedShape : s)),
           );
-          setSelectedShape(updatedShape);
           setEventLog((log) => [
             ...log.slice(-9),
             {
@@ -107,18 +108,17 @@ export const BasicEditing: Story = {
       },
     );
 
-    // Handle shape selection events
+    // Log shape selection events (selection is handled by useShapeSelection)
     useOn<ShapeSelectedEvent>(ShapeEvents.selected, (event) => {
       if (event.payload.mapId !== EDIT_MAP_ID) {
         return;
       }
       if (isEditing) {
-        return; // Don't select while editing
+        return; // Don't log while editing
       }
 
       const shape = shapes.find((s) => s.id === event.payload.shapeId);
       if (shape) {
-        setSelectedShape(shape);
         setEventLog((log) => [
           ...log.slice(-9),
           {
@@ -156,10 +156,6 @@ export const BasicEditing: Story = {
           },
         ]);
       }
-    };
-
-    const handleDeselect = () => {
-      setSelectedShape(null);
     };
 
     return (
@@ -200,22 +196,13 @@ export const BasicEditing: Story = {
           {/* Action buttons */}
           <div className='flex flex-col gap-s'>
             {!isEditing && selectedShape && (
-              <>
-                <Button
-                  variant='filled'
-                  color='accent'
-                  onPress={handleStartEditing}
-                >
-                  Edit "{selectedShape.name}"
-                </Button>
-                <Button
-                  variant='outline'
-                  color='mono-muted'
-                  onPress={handleDeselect}
-                >
-                  Deselect
-                </Button>
-              </>
+              <Button
+                variant='filled'
+                color='accent'
+                onPress={handleStartEditing}
+              >
+                Edit "{selectedShape.name}"
+              </Button>
             )}
 
             {isEditing && (
@@ -279,6 +266,7 @@ export const BasicEditing: Story = {
               <li>Click a shape to select it</li>
               <li>Click "Edit" to start editing</li>
               <li>Drag vertices to modify geometry</li>
+              <li>Rectangles: hold Shift for square</li>
               <li>Circles: drag the edge to resize</li>
               <li>Press ESC to cancel</li>
             </ul>
@@ -300,11 +288,12 @@ const COMBINED_MAP_ID = uuid();
 export const CombinedDrawAndEdit: Story = {
   render: () => {
     const [shapes, setShapes] = useState<DisplayShape[]>(createSampleShapes);
-    const [selectedShape, setSelectedShape] = useState<DisplayShape | null>(
-      null,
-    );
 
     useMapCursor(COMBINED_MAP_ID);
+
+    // useShapeSelection handles selection state and auto-deselection on map clicks
+    const { selectedId, clearSelection } = useShapeSelection(COMBINED_MAP_ID);
+    const selectedShape = shapes.find((s) => s.id === selectedId) ?? null;
 
     const { draw, isDrawing } = useDrawShapes(COMBINED_MAP_ID, {
       onCreate: (shape) => {
@@ -319,33 +308,18 @@ export const CombinedDrawAndEdit: Story = {
           setShapes((prev) =>
             prev.map((s) => (s.id === updatedShape.id ? updatedShape : s)),
           );
-          setSelectedShape(null);
+          clearSelection();
         },
         onCancel: () => {
-          setSelectedShape(null);
+          clearSelection();
         },
       },
     );
 
-    // Handle shape selection
-    useOn<ShapeSelectedEvent>(ShapeEvents.selected, (event) => {
-      if (event.payload.mapId !== COMBINED_MAP_ID) {
-        return;
-      }
-      if (isEditing || isDrawing) {
-        return;
-      }
-
-      const shape = shapes.find((s) => s.id === event.payload.shapeId);
-      if (shape) {
-        setSelectedShape(shape);
-      }
-    });
-
     const handleDelete = () => {
       if (selectedShape) {
         setShapes((prev) => prev.filter((s) => s.id !== selectedShape.id));
-        setSelectedShape(null);
+        clearSelection();
       }
     };
 
@@ -408,23 +382,16 @@ export const CombinedDrawAndEdit: Story = {
 
           {/* Selection actions */}
           {selectedShape && !isEditing && (
-            <div className='flex flex-col gap-s'>
+            <div className='flex gap-s'>
+              <Button variant='outline' color='critical' onPress={handleDelete}>
+                Delete
+              </Button>
               <Button
                 variant='filled'
                 color='accent'
                 onPress={() => edit(selectedShape)}
               >
                 Edit
-              </Button>
-              <Button variant='outline' color='critical' onPress={handleDelete}>
-                Delete
-              </Button>
-              <Button
-                variant='flat'
-                color='mono-muted'
-                onPress={() => setSelectedShape(null)}
-              >
-                Deselect
               </Button>
             </div>
           )}

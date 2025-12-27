@@ -18,6 +18,7 @@ A deck.gl layer for interactively editing existing geographic shapes on a map. I
 - **Multi-map support**: Events include map instance ID for isolation
 - **Cursor integration**: Automatically changes cursor based on edit mode
 - **ESC to cancel**: Press ESC key to cancel editing and restore original shape
+- **Live measurements**: Tooltip shows dimensions and area during editing
 
 ## Edit Modes
 
@@ -167,6 +168,21 @@ function MapWithEditing() {
 - **ESC**: Cancel current editing and restore original shape
 - **Shift** (hold while dragging): Constrain rectangle to square
 
+## Live Measurements
+
+During editing, a tooltip displays live measurements by the cursor:
+
+| Shape Type | Tooltip Content |
+|------------|-----------------|
+| **Rectangle** | Width × Height and Area (e.g., `10.50 km x 5.25 km` / `55.13 km²`) |
+| **Circle** | Area (e.g., `78.54 km²`) |
+
+The measurements use the configured distance unit (default: kilometers). Pass the `unit` prop to change:
+
+```tsx
+<EditShapeLayer mapId={MAP_ID} unit="mi" />
+```
+
 ## Visual Reference
 
 When editing, both the DisplayShapeLayer and EditShapeLayer render:
@@ -260,7 +276,7 @@ console.log('Current cursor:', cursor);
 |------|------|---------|-------------|
 | `id` | `string` | `'edit-shape-layer'` | Unique layer ID |
 | `mapId` | `UniqueId` | Context ID | Map instance ID for multi-map isolation |
-| `unit` | `DistanceUnitAbbreviation` | `'km'` | Distance unit for tooltip measurements during circle resize |
+| `unit` | `DistanceUnitAbbreviation` | `'km'` | Distance unit for tooltip measurements (supports `'km'`, `'mi'`, `'m'`, `'ft'`, `'nm'`) |
 
 ### useEditShape Hook
 

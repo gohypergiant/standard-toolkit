@@ -12,10 +12,6 @@
 
 'use client';
 
-import {
-  EDIT_HANDLE_SUBLAYER_PROPS,
-  TOOLTIP_SUBLAYER_PROPS,
-} from '../shared/constants';
 import type { CSSCursorType } from '../../../map-cursor/types';
 import type { EditMode } from './types';
 
@@ -37,23 +33,4 @@ export const EDIT_CURSOR_MAP: Record<EditMode, CSSCursorType> = {
   view: 'default',
   modify: 'crosshair',
   'resize-circle': 'ew-resize',
-};
-
-/**
- * Sublayer props for EditableGeoJsonLayer when editing shapes.
- * Configures tooltips, edit handles, and guide lines.
- */
-export const EDIT_SUBLAYER_PROPS = {
-  ...TOOLTIP_SUBLAYER_PROPS,
-  ...EDIT_HANDLE_SUBLAYER_PROPS,
-};
-
-/**
- * Circle-specific sublayer props.
- * Includes tooltip props for area display during resize and
- * edit handles that must be pickable for resizing to work.
- */
-export const CIRCLE_SUBLAYER_PROPS = {
-  ...TOOLTIP_SUBLAYER_PROPS,
-  ...EDIT_SUBLAYER_PROPS,
 };

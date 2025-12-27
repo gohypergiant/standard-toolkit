@@ -24,13 +24,12 @@ import {
   getFillColor,
   getStrokeColor,
 } from '../display-shape-layer/utils/display-style';
-import { DEFAULT_EDIT_HANDLE_COLOR } from '../shared/constants';
-import { ShapeFeatureType, type ShapeFeatureTypeValues } from '../shared/types';
 import {
-  CIRCLE_SUBLAYER_PROPS,
-  EDIT_SHAPE_LAYER_ID,
-  EDIT_SUBLAYER_PROPS,
-} from './constants';
+  DEFAULT_EDIT_HANDLE_COLOR,
+  EDITABLE_LAYER_SUBLAYER_PROPS,
+} from '../shared/constants';
+import { ShapeFeatureType, type ShapeFeatureTypeValues } from '../shared/types';
+import { EDIT_SHAPE_LAYER_ID } from './constants';
 import { getEditModeInstance } from './modes';
 import {
   cancelEditingFromLayer,
@@ -104,6 +103,8 @@ function toFeatureCollection(
  * - Protected editing mode (rejects mode change requests while editing)
  * - Circles use ResizeCircleMode with tooltip, other shapes use ModifyMode
  * - Fill colors rendered at 20% opacity, edit handles are white
+ * - Live dimension/area tooltips during editing
+ * - requestAnimationFrame() batching for smooth drag performance
  *
  * @example
  * ```tsx
@@ -155,6 +156,21 @@ export function EditShapeLayer({
 
   const isEditingRectangle =
     editingState?.editingShape?.shapeType === ShapeFeatureType.Rectangle;
+
+  // RAF batching for movePosition events to reduce React updates during drag
+  const pendingUpdateRef = useRef<{
+    feature: Feature;
+    rafId: number;
+  } | null>(null);
+
+  // Cleanup RAF on unmount
+  useEffect(() => {
+    return () => {
+      if (pendingUpdateRef.current) {
+        cancelAnimationFrame(pendingUpdateRef.current.rafId);
+      }
+    };
+  }, []);
 
   // Disable scroll zoom when shift is held during rectangle editing
   // This prevents shift+scroll zoom from interfering with shift-to-square constraint
@@ -213,47 +229,65 @@ export function EditShapeLayer({
   // Get the cached mode instance
   const mode = getEditModeInstance(editMode);
 
-  // Check shape type for mode-specific behavior
+  // Get shape type for feature collection conversion
   const shapeType = editingShape.shapeType;
-  const isCircle = shapeType === ShapeFeatureType.Circle;
 
   // Use the live feature being edited, or fall back to original shape
   const featureToRender = featureBeingEdited ?? editingShape.feature;
   const data = toFeatureCollection(featureToRender, shapeType);
 
+  // Helper to cancel any pending RAF update
+  const cancelPendingUpdate = () => {
+    if (pendingUpdateRef.current) {
+      cancelAnimationFrame(pendingUpdateRef.current.rafId);
+      pendingUpdateRef.current = null;
+    }
+  };
+
   // Handle edit events from EditableGeoJsonLayer
+  // ModifyMode: movePosition (continuous), finishMovePosition, addPosition, removePosition
+  // ResizeCircleMode: unionGeometry (continuous during resize)
   const handleEdit = ({
     updatedData,
     editType,
   }: EditAction<FeatureCollection>) => {
-    // Handle geometry updates during editing
-    // ModifyMode events:
-    // - movePosition: fires continuously during vertex drag
-    // - finishMovePosition: fires when vertex drag ends
-    // - addPosition: fires when a new vertex is added
-    // - removePosition: fires when a vertex is removed
-    // ResizeCircleMode events:
-    // - unionGeometry: fires during circle resize (replaces entire geometry)
+    const feature = updatedData.features[0];
+
+    // Batch continuous updates with RAF to reduce React state updates
+    // - movePosition: fires during vertex drag (ModifyMode)
+    // - unionGeometry: fires during circle resize (ResizeCircleMode)
     if (
-      editType === 'movePosition' ||
+      (editType === 'movePosition' || editType === 'unionGeometry') &&
+      feature
+    ) {
+      cancelPendingUpdate();
+      const rafId = requestAnimationFrame(() => {
+        updateFeatureFromLayer(actualMapId, feature as Feature);
+        pendingUpdateRef.current = null;
+      });
+      pendingUpdateRef.current = { feature: feature as Feature, rafId };
+      return;
+    }
+
+    // Completion events: update immediately
+    if (
       editType === 'finishMovePosition' ||
       editType === 'addPosition' ||
-      editType === 'removePosition' ||
-      editType === 'unionGeometry'
+      editType === 'removePosition'
     ) {
-      const feature = updatedData.features[0];
+      cancelPendingUpdate();
       if (feature) {
         updateFeatureFromLayer(actualMapId, feature as Feature);
       }
-    } else if (editType === 'cancelFeature') {
-      // Handle ESC key cancellation
+      return;
+    }
+
+    // ESC key cancellation
+    if (editType === 'cancelFeature') {
+      cancelPendingUpdate();
       cancelEditingFromLayer(actualMapId);
     }
-    // Ignore other edit types (updateTentativeFeature, etc.)
   };
-
-  // Use circle-specific sublayer props for circles
-  const subLayerProps = isCircle ? CIRCLE_SUBLAYER_PROPS : EDIT_SUBLAYER_PROPS;
 
   // Get colors from the shape's existing style properties with base opacity applied
   const fillColor = getFillColor(editingShape.feature, true);
@@ -268,6 +302,8 @@ export function EditShapeLayer({
       onEdit={handleEdit}
       getFillColor={fillColor}
       getLineColor={lineColor}
+      getTentativeFillColor={fillColor}
+      getTentativeLineColor={lineColor}
       getEditHandlePointColor={DEFAULT_EDIT_HANDLE_COLOR}
       getEditHandlePointOutlineColor={DEFAULT_EDIT_HANDLE_COLOR}
       modeConfig={{
@@ -276,7 +312,7 @@ export function EditShapeLayer({
           : DEFAULT_DISTANCE_UNITS,
         lockRectangles: true,
       }}
-      _subLayerProps={subLayerProps}
+      _subLayerProps={EDITABLE_LAYER_SUBLAYER_PROPS}
     />
   );
 }

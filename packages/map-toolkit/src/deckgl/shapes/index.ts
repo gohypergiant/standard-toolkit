@@ -17,6 +17,10 @@ export { useShapeSelection } from './display-shape-layer/use-shape-selection';
 export { DrawShapeEvents } from './draw-shape-layer/events';
 export { DrawShapeLayer } from './draw-shape-layer/index';
 export { useDrawShapes } from './draw-shape-layer/use-draw-shapes';
+// Edit Shape Layer exports
+export { EditShapeEvents } from './edit-shape-layer/events';
+export { EditShapeLayer } from './edit-shape-layer/index';
+export { useEditShape } from './edit-shape-layer/use-edit-shape';
 // Constant exports
 export {
   BASE_FILL_OPACITY,
@@ -54,6 +58,21 @@ export type {
   ShapeDrawingEvent,
   ShapeDrawnEvent,
 } from './draw-shape-layer/events';
+export type {
+  EditShapeEvent,
+  EditShapeEventType,
+  ShapeEditCanceledEvent,
+  ShapeEditingEvent,
+  ShapeUpdatedEvent,
+} from './edit-shape-layer/events';
+export type {
+  EditingState,
+  EditMode,
+  EditShapeLayerProps,
+  EditShapeOptions,
+  UseEditShapeOptions,
+  UseEditShapeReturn,
+} from './edit-shape-layer/types';
 export type {
   ShapeEventHandler,
   ShapeEventPayload,
