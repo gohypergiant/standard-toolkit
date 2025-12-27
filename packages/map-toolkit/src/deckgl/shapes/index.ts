@@ -13,8 +13,8 @@
 // Display Shape Layer exports
 export { DisplayShapeLayer } from './display-shape-layer/index';
 export { useShapeSelection } from './display-shape-layer/use-shape-selection';
-export { DrawShapeEvents } from './draw-shape-layer/events';
 // Draw Shape Layer exports
+export { DrawShapeEvents } from './draw-shape-layer/events';
 export { DrawShapeLayer } from './draw-shape-layer/index';
 export { useDrawShapes } from './draw-shape-layer/use-draw-shapes';
 // Constant exports
@@ -22,7 +22,11 @@ export {
   BASE_FILL_OPACITY,
   DASH_ARRAYS,
   DEFAULT_COLORS,
+  DEFAULT_EDIT_HANDLE_COLOR,
+  DEFAULT_EDIT_HANDLE_OUTLINE_COLOR,
   DEFAULT_STYLE_PROPERTIES,
+  EDIT_HANDLE_SUBLAYER_PROPS,
+  EMPTY_FEATURE_COLLECTION,
   SHAPE_LAYER_IDS,
   STROKE_PATTERNS,
   STROKE_WIDTHS,
@@ -44,6 +48,13 @@ export type {
   LabelVerticalPosition,
 } from './display-shape-layer/utils/labels';
 export type {
+  DrawShapeEvent,
+  DrawShapeEventType,
+  ShapeDrawCanceledEvent,
+  ShapeDrawingEvent,
+  ShapeDrawnEvent,
+} from './draw-shape-layer/events';
+export type {
   ShapeEventHandler,
   ShapeEventPayload,
   ShapeEventType,
@@ -59,4 +70,5 @@ export type {
   ShapeFeatureTypeValues,
   ShapeId,
   StyleProperties,
+  Subscription,
 } from './shared/types';

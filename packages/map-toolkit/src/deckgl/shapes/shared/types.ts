@@ -177,3 +177,9 @@ export type CircleRadius = CircleProperties['radius'];
  * Coordinate as [longitude, latitude]
  */
 export type Coordinate = [number, number];
+
+/**
+ * Function type for subscription (useSyncExternalStore pattern).
+ * Used by draw-shape-layer and edit-shape-layer stores.
+ */
+export type Subscription = (onStoreChange: () => void) => () => void;

@@ -22,7 +22,7 @@ import {
   DEFAULT_DISTANCE_UNITS,
   getDistanceUnitAbbreviation,
 } from '../../../../shared/units';
-import { TOOLTIP_Y_OFFSET } from '../constants';
+import { TOOLTIP_Y_OFFSET } from '../../shared/constants';
 import type { Viewport } from '@deck.gl/core';
 
 /**
