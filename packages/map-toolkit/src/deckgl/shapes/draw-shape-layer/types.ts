@@ -20,7 +20,10 @@ import type {
   DisplayShape,
   ShapeFeatureType,
   StyleProperties,
+  Subscription,
 } from '../shared/types';
+
+export type { Subscription };
 
 /**
  * State for the drawing store
@@ -91,8 +94,3 @@ export type DrawFunction = (
   shapeType: ShapeFeatureType,
   options?: DrawShapeOptions,
 ) => void;
-
-/**
- * Function type for subscription (useSyncExternalStore pattern)
- */
-export type Subscription = (onStoreChange: () => void) => () => void;

@@ -12,19 +12,23 @@
 
 'use client';
 
-import { useContext, useEffect, useSyncExternalStore } from 'react';
+import { useEmit } from '@accelint/bus/react';
+import { useContext, useEffect, useRef, useSyncExternalStore } from 'react';
 import {
   DEFAULT_DISTANCE_UNITS,
   getDistanceUnitFromAbbreviation,
 } from '../../../shared/units';
+import { MapEvents } from '../../base-map/events';
 import { MapContext } from '../../base-map/provider';
 import {
   DEFAULT_EDIT_HANDLE_COLOR,
+  EDITABLE_LAYER_SUBLAYER_PROPS,
+  EMPTY_FEATURE_COLLECTION,
+} from '../shared/constants';
+import {
   DEFAULT_TENTATIVE_FILL_COLOR,
   DEFAULT_TENTATIVE_LINE_COLOR,
   DRAW_SHAPE_LAYER_ID,
-  EMPTY_FEATURE_COLLECTION,
-  TOOLTIP_SUBLAYER_PROPS,
 } from './constants';
 import { getModeInstance, triggerDoubleClickFinish } from './modes';
 import {
@@ -38,6 +42,10 @@ import type {
   EditAction,
   FeatureCollection,
 } from '@deck.gl-community/editable-layers';
+import type {
+  MapDisableZoomEvent,
+  MapEnableZoomEvent,
+} from '../../base-map/types';
 import type { DrawShapeLayerProps } from './types';
 
 /**
@@ -92,6 +100,10 @@ export function DrawShapeLayer({
 
   const activeShapeType = drawingState?.activeShapeType ?? null;
 
+  const emitDisableZoom = useEmit<MapDisableZoomEvent>(MapEvents.disableZoom);
+  const emitEnableZoom = useEmit<MapEnableZoomEvent>(MapEvents.enableZoom);
+  const isZoomDisabledRef = useRef(false);
+
   // Set up dblclick listener as workaround for deck.gl-community/editable-layers ~9.1
   // which doesn't register 'dblclick' in EVENT_TYPES
   // @see https://github.com/visgl/deck.gl-community/pull/225
@@ -111,6 +123,53 @@ export function DrawShapeLayer({
       document.removeEventListener('dblclick', handleDblClick);
     };
   }, [activeShapeType]);
+
+  // Disable scroll zoom when shift is held during rectangle drawing
+  // This prevents shift+scroll zoom from interfering with shift-to-square constraint
+  useEffect(() => {
+    // Only apply for rectangle drawing
+    if (activeShapeType !== 'Rectangle') {
+      return;
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Shift' && !isZoomDisabledRef.current) {
+        isZoomDisabledRef.current = true;
+        emitDisableZoom({ id: actualMapId });
+      }
+    };
+
+    const handleKeyUp = (event: KeyboardEvent) => {
+      if (event.key === 'Shift' && isZoomDisabledRef.current) {
+        isZoomDisabledRef.current = false;
+        emitEnableZoom({ id: actualMapId });
+      }
+    };
+
+    // Also re-enable zoom if the window loses focus while shift is held
+    const handleBlur = () => {
+      if (isZoomDisabledRef.current) {
+        isZoomDisabledRef.current = false;
+        emitEnableZoom({ id: actualMapId });
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('keyup', handleKeyUp);
+    window.addEventListener('blur', handleBlur);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('keyup', handleKeyUp);
+      window.removeEventListener('blur', handleBlur);
+
+      // Ensure zoom is re-enabled when unmounting
+      if (isZoomDisabledRef.current) {
+        isZoomDisabledRef.current = false;
+        emitEnableZoom({ id: actualMapId });
+      }
+    };
+  }, [activeShapeType, actualMapId, emitDisableZoom, emitEnableZoom]);
 
   // If not drawing, return null (don't render the editable layer)
   if (!activeShapeType) {
@@ -164,7 +223,7 @@ export function DrawShapeLayer({
           ? (getDistanceUnitFromAbbreviation(unit) ?? DEFAULT_DISTANCE_UNITS)
           : DEFAULT_DISTANCE_UNITS,
       }}
-      _subLayerProps={TOOLTIP_SUBLAYER_PROPS}
+      _subLayerProps={EDITABLE_LAYER_SUBLAYER_PROPS}
     />
   );
 }

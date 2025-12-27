@@ -21,7 +21,7 @@ import { useDrawShapes } from './use-draw-shapes';
 import type { UniqueId } from '@accelint/core';
 import type {
   DrawShapeEvent,
-  ShapeCanceledEvent,
+  ShapeDrawCanceledEvent,
   ShapeDrawnEvent,
 } from './events';
 
@@ -152,9 +152,9 @@ describe('useDrawShapes', () => {
       });
     });
 
-    it('emits shapes:canceled event when canceling', async () => {
+    it('emits shapes:draw-canceled event when canceling', async () => {
       const canceledSpy = vi.fn();
-      const canceledBus = Broadcast.getInstance<ShapeCanceledEvent>();
+      const canceledBus = Broadcast.getInstance<ShapeDrawCanceledEvent>();
       canceledBus.on(DrawShapeEvents.canceled, canceledSpy);
 
       const { result } = renderHook(() => useDrawShapes(mapId));
@@ -189,7 +189,7 @@ describe('useDrawShapes', () => {
 
     it('does nothing when not actively drawing', () => {
       const canceledSpy = vi.fn();
-      const canceledBus = Broadcast.getInstance<ShapeCanceledEvent>();
+      const canceledBus = Broadcast.getInstance<ShapeDrawCanceledEvent>();
       canceledBus.on(DrawShapeEvents.canceled, canceledSpy);
 
       const { result } = renderHook(() => useDrawShapes(mapId));
@@ -316,7 +316,7 @@ describe('useDrawShapes', () => {
 
     it('does not call onCancel for different mapId', async () => {
       const onCancelSpy = vi.fn();
-      const canceledBus = Broadcast.getInstance<ShapeCanceledEvent>();
+      const canceledBus = Broadcast.getInstance<ShapeDrawCanceledEvent>();
       const otherMapId = uuid();
 
       renderHook(() =>

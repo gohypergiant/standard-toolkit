@@ -16,6 +16,8 @@ import { Button } from '@accelint/design-toolkit';
 import { useState } from 'react';
 import { useMapCursor } from '../../../map-cursor';
 import { BaseMap } from '../../base-map/index';
+import { mockShapes } from '../__fixtures__/mock-shapes';
+import { useShapeSelection } from '../display-shape-layer/use-shape-selection';
 import { ShapeEvents } from '../shared/events';
 import { ShapeFeatureType } from '../shared/types';
 import type { ShapeHoveredEvent } from '../shared/events';
@@ -32,6 +34,15 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+// Use fixture shapes with unique IDs for each story render
+function createSampleShapes(): DisplayShape[] {
+  return mockShapes.map((shape) => ({
+    ...shape,
+    id: uuid(),
+    lastUpdated: Date.now(),
+  }));
+}
 
 // Stable ID for Storybook
 const DRAW_MAP_ID = uuid();
@@ -399,41 +410,12 @@ const COMBINED_MAP_ID = uuid();
 
 export const CombinedDisplayAndDraw: Story = {
   render: () => {
-    // Start with some pre-existing shapes
-    const [shapes, setShapes] = useState<DisplayShape[]>([
-      {
-        id: uuid(),
-        name: 'Existing Polygon',
-        shapeType: ShapeFeatureType.Polygon,
-        feature: {
-          type: 'Feature',
-          geometry: {
-            type: 'Polygon',
-            coordinates: [
-              [
-                [-122.45, 37.78],
-                [-122.43, 37.78],
-                [-122.43, 37.76],
-                [-122.45, 37.76],
-                [-122.45, 37.78],
-              ],
-            ],
-          },
-          properties: {
-            styleProperties: {
-              fillColor: [100, 150, 200, 180],
-              strokeColor: [50, 100, 150, 255],
-              strokeWidth: 2,
-              strokePattern: 'solid',
-            },
-          },
-        },
-        lastUpdated: Date.now(),
-      },
-    ]);
+    // Start with pre-existing shapes from fixtures
+    const [shapes, setShapes] = useState<DisplayShape[]>(createSampleShapes);
 
-    // Subscribe to cursor store to enable cursor change requests
+    // Subscribe to cursor store and shape selection
     const { requestCursorChange, clearCursor } = useMapCursor(COMBINED_MAP_ID);
+    const { selectedId } = useShapeSelection(COMBINED_MAP_ID);
 
     const { draw, cancel, isDrawing, activeShapeType } = useDrawShapes(
       COMBINED_MAP_ID,
@@ -449,6 +431,9 @@ export const CombinedDisplayAndDraw: Story = {
       if (event.payload.mapId !== COMBINED_MAP_ID) {
         return;
       }
+      if (isDrawing) {
+        return; // Don't change cursor while drawing
+      }
 
       if (event.payload.shapeId) {
         requestCursorChange('pointer', 'display-shapes');
@@ -459,21 +444,14 @@ export const CombinedDisplayAndDraw: Story = {
 
     return (
       <div className='relative h-dvh w-dvw'>
-        <BaseMap
-          className='absolute inset-0'
-          id={COMBINED_MAP_ID}
-          initialViewState={{
-            longitude: -122.44,
-            latitude: 37.77,
-            zoom: 13,
-          }}
-        >
+        <BaseMap className='absolute inset-0' id={COMBINED_MAP_ID}>
           <displayShapeLayer
             id='all-shapes'
             mapId={COMBINED_MAP_ID}
             data={shapes}
             showLabels
-            pickable
+            pickable={!isDrawing}
+            selectedShapeId={selectedId}
           />
           <DrawShapeLayer mapId={COMBINED_MAP_ID} />
         </BaseMap>
