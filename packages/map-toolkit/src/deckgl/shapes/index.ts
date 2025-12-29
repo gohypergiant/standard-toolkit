@@ -10,51 +10,50 @@
  * governing permissions and limitations under the License.
  */
 
-export { BaseMap } from './base-map';
-export { BASE_MAP_STYLE, PARAMETERS } from './base-map/constants';
-export { MapEvents, MapEventsNamespace } from './base-map/events';
-export { createSavedViewport } from './saved-viewports';
+// Display Shape Layer exports
+export { DisplayShapeLayer } from './display-shape-layer/index';
+export { useShapeSelection } from './display-shape-layer/use-shape-selection';
+// Constant exports
 export {
+  BASE_FILL_OPACITY,
   DASH_ARRAYS,
   DEFAULT_COLORS,
   DEFAULT_STYLE_PROPERTIES,
-  DisplayShapeLayer,
-  SHAPE_EVENTS,
   SHAPE_LAYER_IDS,
-  ShapeEvents,
-  ShapeFeatureType,
   STROKE_PATTERNS,
   STROKE_WIDTHS,
-} from './shapes';
-export { SymbolLayer, type SymbolLayerProps } from './symbol-layer';
+} from './shared/constants';
+// Event exports
+export { SHAPE_EVENTS, ShapeEvents } from './shared/events';
+export { ShapeFeatureType } from './shared/types';
 export type {
-  BaseMapProps,
-  MapClickEvent,
-  MapClickPayload,
-  MapControlPayload,
-  MapDisablePanEvent,
-  MapDisableZoomEvent,
-  MapEnablePanEvent,
-  MapEnableZoomEvent,
-  MapEventType,
-  MapHoverEvent,
-  MapHoverPayload,
-} from './base-map/types';
-export type { SavedViewportOptions } from './saved-viewports';
+  DisplayShapeLayerProps,
+  StyledFeature,
+  StyledFeatureProperties,
+} from './display-shape-layer/types';
+export type { UseShapeSelectionReturn } from './display-shape-layer/use-shape-selection';
+export type {
+  CircleLabelCoordinateAnchor,
+  LabelCoordinateAnchor,
+  LabelHorizontalPosition,
+  LabelPosition2d,
+  LabelPositionOptions,
+  LabelVerticalPosition,
+} from './display-shape-layer/utils/labels';
+export type {
+  ShapeEventHandler,
+  ShapeEventPayload,
+  ShapeEventType,
+} from './shared/events';
+// Shared type exports
 export type {
   CircleProperties,
   CircleRadius,
   DisplayShape,
-  DisplayShapeLayerProps,
   EditableShape,
-  ShapeEventHandler,
-  ShapeEventPayload,
-  ShapeEventType,
   ShapeFeature,
   ShapeFeatureProperties,
   ShapeFeatureTypeValues,
   ShapeId,
-  StyledFeature,
-  StyledFeatureProperties,
   StyleProperties,
-} from './shapes';
+} from './shared/types';

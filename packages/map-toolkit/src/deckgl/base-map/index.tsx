@@ -24,7 +24,12 @@ import {
 } from 'react-map-gl/maplibre';
 import { useCameraState } from '../../camera';
 import { getCursor } from '../../map-cursor/store';
-import { BASE_MAP_STYLE, DEFAULT_VIEW_STATE, PARAMETERS } from './constants';
+import {
+  BASE_MAP_STYLE,
+  DEFAULT_VIEW_STATE,
+  PARAMETERS,
+  PICKING_RADIUS,
+} from './constants';
 import { MapControls } from './controls';
 import { MapEvents } from './events';
 import { MapProvider } from './provider';
@@ -201,6 +206,7 @@ export function BaseMap({
   onClick,
   onHover,
   onViewStateChange,
+  pickingRadius,
   ...rest
 }: BaseMapProps) {
   const deckglInstance = useDeckgl();
@@ -247,8 +253,6 @@ export function BaseMap({
     }),
     [viewState, container, cameraState.projection, cameraState.view],
   );
-
-  // Use the custom hook to handle MapLibre
 
   const emitClick = useEmit<MapClickEvent>(MapEvents.click);
   const emitHover = useEmit<MapHoverEvent>(MapEvents.hover);
@@ -349,6 +353,7 @@ export function BaseMap({
             getCursor={handleGetCursor}
             useDevicePixels={useDevicePixels}
             onClick={handleClick}
+            pickingRadius={pickingRadius ?? PICKING_RADIUS}
             onHover={handleHover}
             onLoad={handleLoad}
             onViewStateChange={handleViewStateChange}

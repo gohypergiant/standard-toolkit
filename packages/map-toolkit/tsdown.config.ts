@@ -20,22 +20,30 @@ export default defineConfig({
     '!src/**/*.{d,stories,test,test-d,bench}.{ts,tsx}',
     '!**/__fixtures__',
   ],
-  // NOTE: this is accounting for optionalDependencies
+  // NOTE: must include all optionalDependencies, peerDependencies, and their subpath exports
+  // to prevent tsdown from bundling them with hardcoded pnpm paths
   external: [
+    // peerDependencies
+    '@accelint/bus',
+    '@accelint/core',
+    '@accelint/geo',
+    'react',
+    // optionalDependencies
+    '@accelint/hotkey-manager',
     '@deck.gl/core',
     '@deck.gl/extensions',
-    '@deck.gl/geo-layers',
     '@deck.gl/layers',
-    '@deck.gl/mapbox',
-    '@deck.gl/mesh-layers',
-    '@deck.gl/widgets',
     '@deckgl-fiber-renderer/dom',
     '@deckgl-fiber-renderer/shared',
     '@deckgl-fiber-renderer/types',
+    '@math.gl/web-mercator',
     'maplibre-gl',
     'milsymbol',
     'mjolnir.js',
-    'react',
+    'react-map-gl',
+    // subpath exports used in source
+    'react-map-gl/maplibre',
+    '@vis.gl/react-maplibre',
   ],
   clean: true,
   dts: true,

@@ -13,9 +13,9 @@
 import type { Payload } from '@accelint/bus';
 import type { UniqueId } from '@accelint/core';
 import type { PickingInfo } from '@deck.gl/core';
+import type { DeckglProps } from '@deckgl-fiber-renderer/types';
 import type { MjolnirGestureEvent, MjolnirPointerEvent } from 'mjolnir.js';
 import type { MapEvents } from './events';
-import type { DeckglProps } from '@deckgl-fiber-renderer/types';
 
 /**
  * Props for the BaseMap component.

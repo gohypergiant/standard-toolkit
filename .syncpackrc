@@ -23,6 +23,7 @@
     {
       "dependencies": [
         "@deck.gl/**",
+        "@deck.gl-community/**",
         "react-querybuilder",
         "@react-aria/**",
         "@react-stately/**",
@@ -62,7 +63,7 @@
       "pinVersion": "^19"
     },
     {
-      "dependencies": ["@deck.gl/**"],
+      "dependencies": ["@deck.gl/**", "@deck.gl-community/**"],
       "label": "Ensure Deck.gl packages are within the same range across project",
       "pinVersion": "~9.1"
     },
