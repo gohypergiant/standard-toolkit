@@ -76,12 +76,12 @@ jobs:
       - name: Run Visual Regression Tests
         id: visual-tests
         run: |
-          pnpm visual 2>&1 | tee test-output.txt
-          TEST_EXIT_CODE=${PIPESTATUS[0]}
+          pnpm visual --reporter=default --reporter=json --outputFile=test-results.json || TEST_EXIT_CODE=$?
+          TEST_EXIT_CODE=${TEST_EXIT_CODE:-0}
 
-          # Count passed/failed tests from output
-          PASSED=$(grep -oE '[0-9]+ passed' test-output.txt | tail -1 | grep -oE '[0-9]+' || echo "0")
-          FAILED=$(grep -oE '[0-9]+ failed' test-output.txt | tail -1 | grep -oE '[0-9]+' || echo "0")
+          # Parse test counts from JSON output
+          PASSED=$(jq -r '.numPassedTests // 0' test-results.json)
+          FAILED=$(jq -r '.numFailedTests // 0' test-results.json)
 
           echo "passed=$PASSED" >> $GITHUB_OUTPUT
           echo "failed=$FAILED" >> $GITHUB_OUTPUT
