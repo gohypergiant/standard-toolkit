@@ -16,10 +16,10 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
     paths:
-      - 'packages/design-toolkit/**'
-      - 'packages/design-foundation/**'
-      - 'apps/next/**'
-      - '.github/workflows/visual-regression.yml'
+      - "packages/design-toolkit/**"
+      - "packages/design-foundation/**"
+      - "apps/next/**"
+      - ".github/workflows/visual-regression.yml"
 
 permissions:
   contents: read
@@ -60,8 +60,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          cache: 'pnpm'
-          node-version-file: 'package.json'
+          cache: "pnpm"
+          node-version-file: "package.json"
 
       - name: Install dependencies
         run: pnpm install
@@ -80,8 +80,8 @@ jobs:
           TEST_EXIT_CODE=${PIPESTATUS[0]}
 
           # Count passed/failed tests from output
-          PASSED=$(grep -oP '\d+(?= passed)' test-output.txt | tail -1 || echo "0")
-          FAILED=$(grep -oP '\d+(?= failed)' test-output.txt | tail -1 || echo "0")
+          PASSED=$(grep -oE '[0-9]+ passed' test-output.txt | tail -1 | grep -oE '[0-9]+' || echo "0")
+          FAILED=$(grep -oE '[0-9]+ failed' test-output.txt | tail -1 | grep -oE '[0-9]+' || echo "0")
 
           echo "passed=$PASSED" >> $GITHUB_OUTPUT
           echo "failed=$FAILED" >> $GITHUB_OUTPUT

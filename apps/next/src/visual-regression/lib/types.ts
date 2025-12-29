@@ -11,7 +11,6 @@
  */
 
 import type { ComponentType, ReactNode } from 'react';
-import type { Locator } from 'vitest/browser';
 
 // =============================================================================
 // Theme Mode Types
@@ -66,32 +65,10 @@ export interface InteractiveVisualTestConfig<TProps = Record<string, unknown>> {
   states?: InteractiveState[];
   /** Test ID attribute on the component for targeting interactions */
   testId?: string;
-  /** Role for locating component (alternative to testId) */
-  role?: string;
   /** Additional setup before each test */
   beforeEach?: () => Promise<void> | void;
   /** Custom screenshot naming function */
   screenshotName?: (variant: string, state: InteractiveState) => string;
-}
-
-/**
- * Component Object interface for interactive components
- */
-export interface InteractiveComponentObject {
-  /** Get the root element locator */
-  getRoot(): Locator;
-  /** Trigger hover state */
-  hover(): Promise<void>;
-  /** Trigger focus state */
-  focus(): Promise<void>;
-  /** Trigger pressed state (mouse down without release) */
-  press(): Promise<void>;
-  /** Release pressed state */
-  release(): Promise<void>;
-  /** Reset to default state */
-  reset(): Promise<void>;
-  /** Take screenshot of current state */
-  screenshot(filename: string): Promise<void>;
 }
 
 /**

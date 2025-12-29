@@ -27,5 +27,4 @@ function TooltipVariants() {
 createVisualTests({
   componentName: 'Tooltip',
   variantsComponent: TooltipVariants,
-  waitMs: 200,
 });

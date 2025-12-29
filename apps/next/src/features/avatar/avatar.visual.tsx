@@ -25,5 +25,4 @@ function AvatarVariants() {
 createVisualTests({
   componentName: 'Avatar',
   variantsComponent: AvatarVariants,
-  waitMs: 500, // Wait for images to load
 });
