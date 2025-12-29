@@ -11,6 +11,7 @@
  */
 
 import { ThemeProvider } from '@accelint/design-toolkit';
+import { getLogger } from '@accelint/logger';
 import { dash } from 'radashi';
 import { describe, expect, test } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
@@ -26,6 +27,13 @@ import type {
   InteractiveVisualTestConfig,
   ThemeMode,
 } from '../../lib/types';
+
+const logger = getLogger({
+  enabled: process.env.NODE_ENV !== 'production',
+  level: 'debug',
+  prefix: '[VRT:Interactive]',
+  pretty: true,
+});
 
 const FOCUSABLE_SELECTOR =
   'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
@@ -54,22 +62,41 @@ async function triggerState(
 ): Promise<void> {
   switch (state) {
     case 'hover':
-      await userEvent.hover(element);
+      try {
+        await userEvent.hover(element);
+      } catch {
+        logger.warn(
+          `Failed to hover element: ${element.tagName}${element.id ? `#${element.id}` : ''}`,
+        );
+      }
       break;
     case 'focus': {
       // Find the actual focusable element within the container
       const focusTarget = findFocusableElement(element);
       if (focusTarget) {
         focusTarget.focus();
+      } else {
+        logger.warn(
+          `No focusable element found for focus state. Element: ${element.tagName}${element.id ? `#${element.id}` : ''}`,
+        );
       }
       break;
     }
-    case 'pressed':
+    case 'pressed': {
       // Dispatch mousedown to trigger :active state
+      const isInteractive = element.matches(
+        'button, a, input, [role="button"], [tabindex]',
+      );
+      if (!isInteractive) {
+        logger.warn(
+          `Pressed state triggered on potentially non-interactive element: ${element.tagName}${element.id ? `#${element.id}` : ''}`,
+        );
+      }
       element.dispatchEvent(
         new MouseEvent('mousedown', { bubbles: true, cancelable: true }),
       );
       break;
+    }
     case 'default':
     case 'disabled':
       // No interaction needed - these are prop-controlled
