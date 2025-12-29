@@ -12,16 +12,12 @@
 
 'use client';
 
-import type { UniqueId } from '@accelint/core';
 import { Cancel } from '@accelint/icons';
 import 'client-only';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { DrawerTrigger } from './trigger';
-
-export type DrawerCloseProps = {
-  id?: UniqueId;
-};
+import type { DrawerCloseProps } from './types';
 
 export function DrawerClose({ id }: DrawerCloseProps) {
   // Only emit onClose event if we have a specified ID.

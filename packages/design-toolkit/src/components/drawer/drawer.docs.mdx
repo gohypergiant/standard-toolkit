@@ -18,7 +18,7 @@ It is composed of the following components:
 - **DrawerView** – Content region for a specific view, mapped to a unique id
 - **DrawerHeader** – Header region, typically for titles or actions. Supports a `title` prop for automatic header layout with back/close buttons
 - **DrawerHeaderTitle** – Heading element, supports semantic levels and styling
-- **DrawerClose** – Heading element, closes currently open tab
+- **DrawerClose** – Heading element, closes drawer/view
 - **DrawerContent** – Main content area within a view
 - **DrawerFooter** – Footer region for actions or supplementary info
 - **DrawerTrigger** – Programmatic trigger for drawer/view actions
@@ -136,7 +136,7 @@ For more control over the header content, you can use a compositional approach:
 
 ### DrawerClose
 
-Allows uses to pass an ID for a given tab, which will then emit a `DrawerClose` event via bus.
+Allows uses to pass an ID for a given drawer/view, which will then emit a `DrawerClose` event via bus.
 - **`id`** - Unique identifier for the tab to be closed. If not provided, bus will emit a `reset` event.
 
 ## DrawerMenuItem

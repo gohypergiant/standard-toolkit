@@ -266,3 +266,7 @@ export type DrawerContextValue = {
   unregister: (view: UniqueId) => void;
   placement: XAxisUnion | YAxisUnion;
 };
+
+export type DrawerCloseProps = {
+  id?: UniqueId;
+};
