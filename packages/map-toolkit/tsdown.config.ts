@@ -21,6 +21,8 @@ export default defineConfig({
     '!src/decorators',
     '!**/__fixtures__',
   ],
+  // NOTE: optionalDependencies must be included here
+  // SEE: https://tsdown.dev/options/dependencies#default-behavior
   external: [
     '@accelint/hotkey-manager',
     '@deck.gl/core',
