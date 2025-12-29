@@ -75,18 +75,6 @@ createVisualTestScenarios('Dialog', [
 
 ## Patterns
 
-### Component Objects
-
-Component Objects encapsulate locators and interaction methods for visual regression testing. This pattern is adapted from Playwright's Page Object Model (POM).
-
-**Why use this pattern?**
-- **Encapsulation**: Locator strategies and interaction methods are co-located
-- **Reusability**: Component objects can be reused across multiple test files
-- **Maintainability**: When a component's structure changes, updates are made in one place
-- **Readability**: Tests read as high-level interactions rather than low-level selectors
-
-See: https://playwright.dev/docs/pom
-
 ### Fixtures
 
 Fixtures provide a consistent, isolated environment for mounting components during visual regression tests. They handle common setup like theme providers and ensure each test starts with a clean slate.

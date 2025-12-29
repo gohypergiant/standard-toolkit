@@ -10,13 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-// Component objects
-export {
-  BaseComponentObject,
-  ButtonObject,
-  type ButtonObjectConfig,
-  type ComponentObjectConfig,
-} from '../component-objects';
 // Fixtures
 export {
   type ComponentFixtureOptions,
@@ -42,7 +35,6 @@ export { createVisualTestScenarios, createVisualTests } from './test-builder';
 export type {
   ComponentVariantConfig,
   FixtureContext,
-  InteractiveComponentObject,
   // Interactive test types
   InteractiveState,
   InteractiveVisualTestConfig,
