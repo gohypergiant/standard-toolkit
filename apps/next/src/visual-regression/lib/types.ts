@@ -71,16 +71,6 @@ export interface InteractiveVisualTestConfig<TProps = Record<string, unknown>> {
   screenshotName?: (variant: string, state: InteractiveState) => string;
 }
 
-/**
- * Fixture context passed to tests
- */
-export interface FixtureContext {
-  /** The rendered container element */
-  container: HTMLElement;
-  /** Cleanup function */
-  cleanup: () => void;
-}
-
 // =============================================================================
 // Static Visual Test Types (existing)
 // =============================================================================
