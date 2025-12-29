@@ -105,6 +105,18 @@ async function triggerState(
 }
 
 /**
+ * Wait for browser to complete the next paint cycle.
+ * Ensures CSS transitions and visual state changes are rendered.
+ */
+async function waitForPaint(): Promise<void> {
+  await new Promise<void>((resolve) => {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => resolve());
+    });
+  });
+}
+
+/**
  * Reset element to neutral state
  */
 async function resetState(): Promise<void> {
@@ -118,6 +130,8 @@ async function resetState(): Promise<void> {
   if (document.activeElement instanceof HTMLElement) {
     document.activeElement.blur();
   }
+  // Wait for browser to paint cleared state
+  await waitForPaint();
 }
 
 /**
