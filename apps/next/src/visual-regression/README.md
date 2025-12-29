@@ -73,19 +73,6 @@ createVisualTestScenarios('Dialog', [
 ]);
 ```
 
-## Patterns
-
-### Fixtures
-
-Fixtures provide a consistent, isolated environment for mounting components during visual regression tests. They handle common setup like theme providers and ensure each test starts with a clean slate.
-
-**Benefits:**
-- Encapsulation of setup/teardown logic
-- Reusable test configuration
-- Consistent component mounting across tests
-
-See: https://playwright.dev/docs/test-fixtures
-
 ## Configuration
 
 Visual test configuration is in `vitest.config.js` under the `visual` project:
