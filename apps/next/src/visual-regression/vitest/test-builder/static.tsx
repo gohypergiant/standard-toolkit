@@ -15,8 +15,8 @@ import { dash } from 'radashi';
 import { describe, expect, test } from 'vitest';
 import { page } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { insertModeInFilename, THEME_MODES } from '../lib/theme-modes';
-import type { VisualTestConfig, VisualTestScenario } from '../lib/types';
+import { insertModeInFilename, THEME_MODES } from '../../lib/theme-modes';
+import type { VisualTestConfig, VisualTestScenario } from '../../lib/types';
 
 /**
  * Create a visual regression test for a component using a declarative configuration.

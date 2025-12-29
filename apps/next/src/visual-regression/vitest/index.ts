@@ -17,14 +17,16 @@ export {
 } from '../lib/interactive-states';
 // Theme mode utilities
 export { insertModeInFilename, THEME_MODES } from '../lib/theme-modes';
-// Interactive visual test builders
+// Test builders
 export {
   createInteractiveVisualTests,
   generateVariantMatrix,
   type VariantMatrixOptions,
-} from './interactive-test-builder';
-// Static visual test builders
-export { createVisualTestScenarios, createVisualTests } from './test-builder';
+} from './test-builder/interactive';
+export {
+  createVisualTestScenarios,
+  createVisualTests,
+} from './test-builder/static';
 // Types
 export type {
   ComponentVariantConfig,
