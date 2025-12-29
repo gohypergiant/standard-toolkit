@@ -18,14 +18,14 @@ import { render } from 'vitest-browser-react';
 import {
   DEFAULT_TEST_STATES,
   INTERACTION_STATES,
-} from '../lib/interactive-states';
-import { insertModeInFilename, THEME_MODES } from '../lib/theme-modes';
+} from '../../lib/interactive-states';
+import { insertModeInFilename, THEME_MODES } from '../../lib/theme-modes';
 import type {
   ComponentVariantConfig,
   InteractiveState,
   InteractiveVisualTestConfig,
   ThemeMode,
-} from '../lib/types';
+} from '../../lib/types';
 
 const FOCUSABLE_SELECTOR =
   'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
