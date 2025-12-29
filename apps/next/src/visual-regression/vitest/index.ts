@@ -10,12 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-// Fixtures
-export {
-  type ComponentFixtureOptions,
-  createComponentFixture,
-  defaultFixture,
-} from '../fixtures';
 // Interactive state utilities
 export {
   DEFAULT_TEST_STATES,
@@ -34,7 +28,6 @@ export { createVisualTestScenarios, createVisualTests } from './test-builder';
 // Types
 export type {
   ComponentVariantConfig,
-  FixtureContext,
   // Interactive test types
   InteractiveState,
   InteractiveVisualTestConfig,
