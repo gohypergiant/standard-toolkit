@@ -87,7 +87,7 @@ interface FeaturesCache {
  *
  * ## Layer Structure
  * Renders up to four sublayers (in order, bottom to top):
- * 1. **Highlight layer**: Selection highlight effect for non-Point shapes (if showHighlight=true)
+ * 1. **Highlight layer**: Selection highlight effect for non-icon-Point shapes (if showHighlight=true)
  * 2. **Coffin corners layer**: Selection/hover feedback for Point shapes with icons
  * 3. **Main GeoJsonLayer**: Shape geometries with styling and interaction
  * 4. **Label layer**: Text labels (if showLabels enabled)
@@ -359,7 +359,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
   }
 
   /**
-   * Render coffin corners layer for Point geometries on hover/select
+   * Render coffin corners layer for Point geometries that have icons on hover/select
    * Coffin corners provide visual feedback for points instead of highlight layer
    */
   private renderCoffinCornersLayer(
@@ -545,7 +545,6 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
             getIcon: (d: EditableShape['feature']) =>
               d.properties?.styleProperties?.icon?.name ?? 'marker',
             getIconSize: (d: EditableShape['feature']) => {
-              // Points no longer enlarge on hover - coffin corners provide hover feedback instead
               return (
                 d.properties?.styleProperties?.icon?.size ??
                 MAP_INTERACTION.ICON_SIZE
