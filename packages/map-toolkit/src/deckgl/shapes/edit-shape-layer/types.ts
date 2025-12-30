@@ -15,7 +15,7 @@
 import type { UniqueId } from '@accelint/core';
 import type { Feature } from 'geojson';
 import type { DistanceUnitAbbreviation } from '../../../shared/units';
-import type { DisplayShape, Subscription } from '../shared/types';
+import type { Shape, Subscription } from '../shared/types';
 
 export type { Subscription };
 
@@ -24,15 +24,16 @@ export type { Subscription };
  * - 'view': Not editing, shape is viewable only
  * - 'modify': Drag vertices to modify shape geometry (polygons, lines, rectangles, points)
  * - 'resize-circle': Drag edge to resize circle radius from center
+ * - 'transform': Scale, rotate, and translate the shape (used for ellipses)
  */
-export type EditMode = 'view' | 'modify' | 'resize-circle';
+export type EditMode = 'view' | 'modify' | 'resize-circle' | 'transform';
 
 /**
  * State for the editing store
  */
 export interface EditingState {
   /** Shape currently being edited */
-  editingShape: DisplayShape | null;
+  editingShape: Shape | null;
   /** Current edit mode */
   editMode: EditMode;
   /** Live feature being edited (updates in real-time during drag) */
@@ -44,7 +45,7 @@ export interface EditingState {
  */
 export interface EditShapeOptions {
   /** Override the default edit mode (auto-detected from shape type by default) */
-  mode?: 'modify' | 'resize-circle';
+  mode?: 'modify' | 'resize-circle' | 'transform';
 }
 
 /**
@@ -52,9 +53,9 @@ export interface EditShapeOptions {
  */
 export interface UseEditShapeOptions {
   /** Callback when a shape edit is saved */
-  onUpdate?: (shape: DisplayShape) => void;
+  onUpdate?: (shape: Shape) => void;
   /** Callback when editing is canceled */
-  onCancel?: (shape: DisplayShape) => void;
+  onCancel?: (shape: Shape) => void;
 }
 
 /**
@@ -64,7 +65,7 @@ export interface UseEditShapeReturn {
   /** Current editing state (null when not editing) */
   editingState: EditingState | null;
   /** Start editing a shape with optional mode override */
-  edit: (shape: DisplayShape, options?: EditShapeOptions) => void;
+  edit: (shape: Shape, options?: EditShapeOptions) => void;
   /** Save the current edits and emit updated event */
   save: () => void;
   /** Cancel editing and revert to original shape */
@@ -72,7 +73,7 @@ export interface UseEditShapeReturn {
   /** Whether currently in editing mode */
   isEditing: boolean;
   /** The shape currently being edited (null if not editing) */
-  editingShape: DisplayShape | null;
+  editingShape: Shape | null;
 }
 
 /**
@@ -90,7 +91,4 @@ export interface EditShapeLayerProps {
 /**
  * Function type for the edit action
  */
-export type EditFunction = (
-  shape: DisplayShape,
-  options?: EditShapeOptions,
-) => void;
+export type EditFunction = (shape: Shape, options?: EditShapeOptions) => void;

@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { ViewMode } from '@deck.gl-community/editable-layers';
+import { TransformMode, ViewMode } from '@deck.gl-community/editable-layers';
 import { ModifyModeWithSquareConstraint } from './modify-mode-with-square-constraint';
 import { ResizeCircleModeWithTooltip } from './resize-circle-mode-with-tooltip';
 import type { EditMode } from '../types';
@@ -24,11 +24,15 @@ import type { EditMode } from '../types';
  *
  * ModifyModeWithSquareConstraint extends ModifyMode with Shift-to-square
  * constraint support for rectangles.
+ *
+ * TransformMode combines TranslateMode, ScaleMode, and RotateMode for
+ * ellipses, allowing users to move, resize uniformly, and rotate the shape.
  */
 const EDIT_MODE_INSTANCES = {
   view: new ViewMode(),
   modify: new ModifyModeWithSquareConstraint(),
   'resize-circle': new ResizeCircleModeWithTooltip(),
+  transform: new TransformMode(),
 } as const;
 
 /**

@@ -76,7 +76,7 @@ import type { UseEditShapeOptions, UseEditShapeReturn } from './types';
  * @example
  * ```tsx
  * // Outside MapProvider - pass mapId directly
- * function ExternalEditControl({ mapId, shape }: { mapId: UniqueId; shape: DisplayShape }) {
+ * function ExternalEditControl({ mapId, shape }: { mapId: UniqueId; shape: Shape }) {
  *   const { edit, isEditing } = useEditShape(mapId);
  *
  *   return (

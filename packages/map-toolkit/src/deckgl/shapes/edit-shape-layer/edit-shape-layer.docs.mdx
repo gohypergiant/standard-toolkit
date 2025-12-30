@@ -6,11 +6,11 @@ import * as EditShapeLayerStories from './edit-shape-layer.stories';
 
 # Edit Shape Layer
 
-A deck.gl layer for interactively editing existing geographic shapes on a map. Integrates with `@deck.gl-community/editable-layers` to provide vertex-based polygon editing and resize-based circle editing.
+A deck.gl layer for interactively editing existing geographic shapes on a map. Integrates with `@deck.gl-community/editable-layers` to provide vertex-based polygon editing, resize-based circle editing, and transform-based ellipse editing.
 
 ## Features
 
-- **Multiple geometry types**: Edit Point, LineString, Polygon, Rectangle, and Circle shapes
+- **Multiple geometry types**: Edit Point, LineString, Polygon, Rectangle, Circle, and Ellipse shapes
 - **Smart mode selection**: Automatically selects the appropriate edit mode based on shape type
 - **Protected editing mode**: Editing cannot be interrupted by other map mode requests
 - **Visual reference**: Edit layer renders on top of display layer so users can see original position
@@ -31,6 +31,7 @@ The layer automatically selects the appropriate edit mode based on shape type:
 | **Polygon** | `modify` | Drag vertices to reshape |
 | **Rectangle** | `modify` | Drag corners to resize (locked to rectangle shape). Hold Shift to constrain to square. |
 | **Circle** | `resize-circle` | Drag edge to resize from center |
+| **Ellipse** | `transform` | Drag to move, corner handles to scale uniformly, top handle to rotate |
 
 ## Dependencies
 
@@ -163,6 +164,15 @@ function MapWithEditing() {
 3. Drag the edge of the circle to resize (resizes from center)
 4. Click "Save" to confirm changes or "Cancel" (or press ESC) to discard
 
+### Ellipse
+
+1. Click on an ellipse to select it
+2. Click "Edit" to enter edit mode
+3. **Move**: Drag anywhere on the ellipse to reposition
+4. **Scale**: Drag the corner handles to resize uniformly (maintains aspect ratio)
+5. **Rotate**: Drag the top handle to rotate around the center
+6. Click "Save" to confirm changes or "Cancel" (or press ESC) to discard
+
 ### Keyboard Shortcuts
 
 - **ESC**: Cancel current editing and restore original shape
@@ -256,6 +266,7 @@ When editing is active, the cursor automatically changes based on the edit mode:
 |-----------|--------|
 | `modify` | `crosshair` |
 | `resize-circle` | `ew-resize` |
+| `transform` | `move` |
 | `view` | `default` |
 
 This integrates with the `map-cursor` system:
@@ -304,19 +315,21 @@ const {
 
 | Option | Type | Description |
 |--------|------|-------------|
-| `onUpdate` | `(shape: DisplayShape) => void` | Called when shape edit is saved |
-| `onCancel` | `(shape: DisplayShape) => void` | Called when editing is canceled |
+| `onUpdate` | `(shape: Shape) => void` | Called when shape edit is saved |
+| `onCancel` | `(shape: Shape) => void` | Called when editing is canceled |
 
 #### Return Values
 
 | Value | Type | Description |
 |-------|------|-------------|
-| `edit` | `(shape: DisplayShape, options?: EditShapeOptions) => void` | Start editing a shape |
+| `edit` | `(shape: Shape, options?: EditShapeOptions) => void` | Start editing a shape (no-op if shape is locked) |
 | `save` | `() => void` | Save current edits |
 | `cancel` | `() => void` | Cancel editing and restore original |
 | `isEditing` | `boolean` | Whether currently editing |
-| `editingShape` | `DisplayShape \| null` | Shape currently being edited |
+| `editingShape` | `Shape \| null` | Shape currently being edited |
 | `editingState` | `EditingState \| null` | Full editing state object |
+
+**Note:** Locked shapes (`shape.locked === true`) cannot be edited. Calling `edit()` on a locked shape will be silently ignored (with a warning logged in development).
 
 ### EditShapeOptions
 
@@ -324,7 +337,7 @@ Options passed to the `edit()` function:
 
 | Option | Type | Description |
 |--------|------|-------------|
-| `mode` | `'modify' \| 'resize-circle'` | Override the automatic mode selection |
+| `mode` | `'modify' \| 'resize-circle' \| 'transform'` | Override the automatic mode selection |
 
 ### EditShapeEvents
 
@@ -354,5 +367,5 @@ Edit handles (vertices) are displayed as:
 See the Storybook stories for interactive examples:
 
 - **BasicEditing**: Edit polygon, rectangle, and line shapes
-- **CircleEditing**: Edit circle shapes with resize mode
 - **CombinedDrawAndEdit**: Drawing new shapes and editing existing ones
+- **LockedShapes**: Demonstrates locked shape behavior with lock/unlock toggle

@@ -20,7 +20,7 @@ import { EditShapeEvents } from './events';
 import { clearEditingState } from './store';
 import { useEditShape } from './use-edit-shape';
 import type { UniqueId } from '@accelint/core';
-import type { DisplayShape } from '../shared/types';
+import type { Shape } from '../shared/types';
 import type {
   EditShapeEvent,
   ShapeEditCanceledEvent,
@@ -30,6 +30,7 @@ import type {
 // Get fixture shapes by type
 const mockCircle = mockShapes.find((s) => s.shapeType === 'Circle');
 const mockPolygon = mockShapes.find((s) => s.shapeType === 'Polygon');
+const mockEllipse = mockShapes.find((s) => s.shapeType === 'Ellipse');
 
 if (!mockCircle) {
   throw new Error('Missing Circle fixture shape');
@@ -39,10 +40,14 @@ if (!mockPolygon) {
   throw new Error('Missing Polygon fixture shape');
 }
 
+if (!mockEllipse) {
+  throw new Error('Missing Ellipse fixture shape');
+}
+
 /**
- * Create a mock DisplayShape for testing with a unique ID
+ * Create a mock Shape for testing with a unique ID
  */
-function createMockShape(overrides?: Partial<DisplayShape>): DisplayShape {
+function createMockShape(overrides?: Partial<Shape>): Shape {
   return {
     id: uuid(),
     name: mockPolygon.name,
@@ -50,15 +55,13 @@ function createMockShape(overrides?: Partial<DisplayShape>): DisplayShape {
     feature: mockPolygon.feature,
     lastUpdated: Date.now(),
     ...overrides,
-  } as DisplayShape;
+  } as Shape;
 }
 
 /**
- * Create a mock circle DisplayShape for testing ResizeCircleMode
+ * Create a mock circle Shape for testing ResizeCircleMode
  */
-function createMockCircleShape(
-  overrides?: Partial<DisplayShape>,
-): DisplayShape {
+function createMockCircleShape(overrides?: Partial<Shape>): Shape {
   return {
     id: uuid(),
     name: mockCircle.name,
@@ -66,7 +69,24 @@ function createMockCircleShape(
     feature: mockCircle.feature,
     lastUpdated: Date.now(),
     ...overrides,
-  } as DisplayShape;
+  } as Shape;
+}
+
+/**
+ * Create a mock ellipse Shape for testing TransformMode
+ */
+function createMockEllipseShape(overrides?: Partial<Shape>): Shape {
+  return {
+    id: uuid(),
+    // biome-ignore lint/style/noNonNullAssertion: Existence verified above with throw
+    name: mockEllipse!.name,
+    // biome-ignore lint/style/noNonNullAssertion: Existence verified above with throw
+    shapeType: mockEllipse!.shapeType,
+    // biome-ignore lint/style/noNonNullAssertion: Existence verified above with throw
+    feature: mockEllipse!.feature,
+    lastUpdated: Date.now(),
+    ...overrides,
+  } as Shape;
 }
 
 describe('useEditShape', () => {
@@ -171,6 +191,19 @@ describe('useEditShape', () => {
       });
     });
 
+    it('sets transform mode for ellipses', async () => {
+      const { result } = renderHook(() => useEditShape(mapId));
+      const shape = createMockEllipseShape();
+
+      act(() => {
+        result.current.edit(shape);
+      });
+
+      await waitFor(() => {
+        expect(result.current.editingState?.editMode).toBe('transform');
+      });
+    });
+
     it('allows mode override via options', async () => {
       const { result } = renderHook(() => useEditShape(mapId));
       const shape = createMockShape({ shapeType: ShapeFeatureType.Polygon });
@@ -181,6 +214,43 @@ describe('useEditShape', () => {
 
       await waitFor(() => {
         expect(result.current.editingState?.editMode).toBe('resize-circle');
+      });
+    });
+
+    it('does not allow editing locked shapes', async () => {
+      const editingSpy = vi.fn();
+      bus.on(EditShapeEvents.editing, editingSpy);
+
+      const { result } = renderHook(() => useEditShape(mapId));
+      const lockedShape = createMockShape({ locked: true });
+
+      act(() => {
+        result.current.edit(lockedShape);
+      });
+
+      // Wait a tick to ensure no async updates
+      await new Promise((resolve) => setTimeout(resolve, 10));
+
+      // Should not enter editing state
+      expect(result.current.isEditing).toBe(false);
+      expect(result.current.editingShape).toBeNull();
+      // Should not emit editing event
+      expect(editingSpy).not.toHaveBeenCalled();
+
+      bus.off(EditShapeEvents.editing, editingSpy);
+    });
+
+    it('allows editing unlocked shapes', async () => {
+      const { result } = renderHook(() => useEditShape(mapId));
+      const unlockedShape = createMockShape({ locked: false });
+
+      act(() => {
+        result.current.edit(unlockedShape);
+      });
+
+      await waitFor(() => {
+        expect(result.current.isEditing).toBe(true);
+        expect(result.current.editingShape).toEqual(unlockedShape);
       });
     });
   });
@@ -521,6 +591,7 @@ describe('useEditShape', () => {
         ShapeFeatureType.Polygon,
         ShapeFeatureType.Rectangle,
         ShapeFeatureType.Circle,
+        ShapeFeatureType.Ellipse,
       ];
 
       for (const shapeType of shapeTypes) {

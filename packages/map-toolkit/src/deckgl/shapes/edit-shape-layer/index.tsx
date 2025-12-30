@@ -247,6 +247,7 @@ export function EditShapeLayer({
   // Handle edit events from EditableGeoJsonLayer
   // ModifyMode: movePosition (continuous), finishMovePosition, addPosition, removePosition
   // ResizeCircleMode: unionGeometry (continuous during resize)
+  // TransformMode: scaling/scaled, rotating/rotated, translating/translated
   const handleEdit = ({
     updatedData,
     editType,
@@ -256,8 +257,15 @@ export function EditShapeLayer({
     // Batch continuous updates with RAF to reduce React state updates
     // - movePosition: fires during vertex drag (ModifyMode)
     // - unionGeometry: fires during circle resize (ResizeCircleMode)
+    // - scaling: fires during scale drag (TransformMode)
+    // - rotating: fires during rotation drag (TransformMode)
+    // - translating: fires during translate drag (TransformMode)
     if (
-      (editType === 'movePosition' || editType === 'unionGeometry') &&
+      (editType === 'movePosition' ||
+        editType === 'unionGeometry' ||
+        editType === 'scaling' ||
+        editType === 'rotating' ||
+        editType === 'translating') &&
       feature
     ) {
       cancelPendingUpdate();
@@ -270,10 +278,15 @@ export function EditShapeLayer({
     }
 
     // Completion events: update immediately
+    // - finishMovePosition, addPosition, removePosition: ModifyMode
+    // - scaled, rotated, translated: TransformMode
     if (
       editType === 'finishMovePosition' ||
       editType === 'addPosition' ||
-      editType === 'removePosition'
+      editType === 'removePosition' ||
+      editType === 'scaled' ||
+      editType === 'rotated' ||
+      editType === 'translated'
     ) {
       cancelPendingUpdate();
       if (feature) {

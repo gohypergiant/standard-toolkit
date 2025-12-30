@@ -13,6 +13,7 @@
 'use client';
 
 import { Broadcast } from '@accelint/bus';
+import { getLogger } from '@accelint/logger';
 import { MapCursorEvents } from '../../../map-cursor/events';
 import { getOrCreateClearCursor } from '../../../map-cursor/store';
 import { MapModeEvents } from '../../../map-mode/events';
@@ -29,7 +30,7 @@ import type { Feature } from 'geojson';
 import type { MapCursorEventType } from '../../../map-cursor/types';
 import type { MapModeEventType } from '../../../map-mode/types';
 import type { MapEventType } from '../../base-map/types';
-import type { DisplayShape } from '../shared/types';
+import type { Shape } from '../shared/types';
 import type {
   EditShapeEvent,
   ShapeEditCanceledEvent,
@@ -43,6 +44,13 @@ import type {
   EditShapeOptions,
   Subscription,
 } from './types';
+
+const logger = getLogger({
+  enabled: process.env.NODE_ENV !== 'production',
+  level: 'warn',
+  prefix: '[EditShapeLayer]',
+  pretty: true,
+});
 
 /**
  * Typed event bus instances
@@ -149,9 +157,12 @@ function notifySubscribers(mapId: UniqueId): void {
 /**
  * Determine the appropriate edit mode for a shape type
  */
-function getEditModeForShape(shape: DisplayShape): EditMode {
+function getEditModeForShape(shape: Shape): EditMode {
   if (shape.shapeType === ShapeFeatureType.Circle) {
     return 'resize-circle';
+  }
+  if (shape.shapeType === ShapeFeatureType.Ellipse) {
+    return 'transform';
   }
   return 'modify';
 }
@@ -161,9 +172,15 @@ function getEditModeForShape(shape: DisplayShape): EditMode {
  */
 function startEditing(
   mapId: UniqueId,
-  shape: DisplayShape,
+  shape: Shape,
   options?: EditShapeOptions,
 ): void {
+  // Prevent editing locked shapes
+  if (shape.locked) {
+    logger.warn(`Cannot edit locked shape: "${shape.name}"`);
+    return;
+  }
+
   const state = getOrCreateState(mapId);
 
   // Already editing - cancel first
@@ -200,7 +217,7 @@ function startEditing(
   mapEventBus.emit(MapEvents.disablePan, { id: mapId });
 
   // Emit editing started event
-  // DisplayShape contains GeoJSON Feature which is structurally cloneable
+  // Shape contains GeoJSON Feature which is structurally cloneable
   // but lacks the index signature TypeScript requires for StructuredCloneable.
   editShapeBus.emit(EditShapeEvents.editing, {
     shape,
@@ -221,7 +238,7 @@ function updateFeature(mapId: UniqueId, feature: Feature): void {
 /**
  * Save editing and create updated shape
  */
-function saveEditing(mapId: UniqueId): DisplayShape | null {
+function saveEditing(mapId: UniqueId): Shape | null {
   const state = getOrCreateState(mapId);
 
   if (!(state.editingShape && state.featureBeingEdited)) {
@@ -232,7 +249,7 @@ function saveEditing(mapId: UniqueId): DisplayShape | null {
   const updatedFeature = state.featureBeingEdited;
 
   // Create updated shape with new geometry
-  const updatedShape: DisplayShape = {
+  const updatedShape: Shape = {
     ...originalShape,
     feature: {
       ...updatedFeature,
@@ -265,7 +282,7 @@ function saveEditing(mapId: UniqueId): DisplayShape | null {
   mapEventBus.emit(MapEvents.enablePan, { id: mapId });
 
   // Emit shape updated event
-  // DisplayShape contains GeoJSON Feature which is structurally cloneable
+  // Shape contains GeoJSON Feature which is structurally cloneable
   // but lacks the index signature TypeScript requires for StructuredCloneable.
   editShapeBus.emit(EditShapeEvents.updated, {
     shape: updatedShape,
@@ -310,7 +327,7 @@ function cancelEditing(mapId: UniqueId): void {
   mapEventBus.emit(MapEvents.enablePan, { id: mapId });
 
   // Emit canceled event with original shape
-  // DisplayShape contains GeoJSON Feature which is structurally cloneable
+  // Shape contains GeoJSON Feature which is structurally cloneable
   // but lacks the index signature TypeScript requires for StructuredCloneable.
   editShapeBus.emit(EditShapeEvents.canceled, {
     shape: originalShape,
@@ -475,7 +492,7 @@ export function getOrCreateServerSnapshot(
 export function getOrCreateEdit(mapId: UniqueId): EditFunction {
   const edit =
     editCache.get(mapId) ??
-    ((shape: DisplayShape, options?: EditShapeOptions) => {
+    ((shape: Shape, options?: EditShapeOptions) => {
       startEditing(mapId, shape, options);
     });
 

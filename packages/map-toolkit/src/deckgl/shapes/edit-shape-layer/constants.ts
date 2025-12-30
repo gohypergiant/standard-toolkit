@@ -33,4 +33,5 @@ export const EDIT_CURSOR_MAP: Record<EditMode, CSSCursorType> = {
   view: 'default',
   modify: 'crosshair',
   'resize-circle': 'ew-resize',
+  transform: 'move',
 };

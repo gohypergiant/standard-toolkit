@@ -13,7 +13,7 @@
 'use client';
 
 import type { UniqueId } from '@accelint/core';
-import type { DisplayShape } from '../shared/types';
+import type { Shape } from '../shared/types';
 
 /**
  * Edit shape lifecycle events
@@ -32,13 +32,13 @@ export type EditShapeEventType =
 
 /**
  * Payload for shapes:editing event.
- * Note: DisplayShape contains GeoJSON Feature which is structurally cloneable
+ * Note: Shape contains GeoJSON Feature which is structurally cloneable
  * but lacks the index signature TypeScript requires. We define the payload
  * separately and use type assertions when emitting.
  */
 export type ShapeEditingPayload = {
   /** The shape being edited */
-  shape: DisplayShape;
+  shape: Shape;
   /** Map instance ID for multi-map event isolation */
   mapId: UniqueId;
 };
@@ -56,13 +56,13 @@ export type ShapeEditingEvent = {
 
 /**
  * Payload for shapes:updated event.
- * Note: DisplayShape contains GeoJSON Feature which is structurally cloneable
+ * Note: Shape contains GeoJSON Feature which is structurally cloneable
  * but lacks the index signature TypeScript requires. We define the payload
  * separately and use type assertions when emitting.
  */
 export type ShapeUpdatedPayload = {
   /** The updated shape with new geometry */
-  shape: DisplayShape;
+  shape: Shape;
   /** Map instance ID for multi-map event isolation */
   mapId: UniqueId;
 };
@@ -83,7 +83,7 @@ export type ShapeUpdatedEvent = {
  */
 export type ShapeEditCanceledPayload = {
   /** The shape that was being edited (original, unchanged) */
-  shape: DisplayShape;
+  shape: Shape;
   /** Map instance ID for multi-map event isolation */
   mapId: UniqueId;
 };

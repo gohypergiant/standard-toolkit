@@ -24,7 +24,7 @@ import { useDrawShapes } from '../draw-shape-layer/use-draw-shapes';
 import { ShapeEvents } from '../shared/events';
 import { ShapeFeatureType } from '../shared/types';
 import type { ShapeHoveredEvent, ShapeSelectedEvent } from '../shared/events';
-import type { DisplayShape } from '../shared/types';
+import type { Shape } from '../shared/types';
 import '../display-shape-layer/fiber';
 import './fiber';
 import { EditShapeLayer } from './index';
@@ -39,7 +39,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 // Use fixture shapes with unique IDs for each story render
-function createSampleShapes(): DisplayShape[] {
+function createSampleShapes(): Shape[] {
   return mockShapes.map((shape) => ({
     ...shape,
     id: uuid(),
@@ -68,7 +68,7 @@ const EDIT_MAP_ID = uuid();
  */
 export const BasicEditing: Story = {
   render: () => {
-    const [shapes, setShapes] = useState<DisplayShape[]>(createSampleShapes);
+    const [shapes, setShapes] = useState<Shape[]>(createSampleShapes);
     const [eventLog, setEventLog] = useState<
       Array<{ id: string; message: string }>
     >([]);
@@ -287,7 +287,7 @@ const COMBINED_MAP_ID = uuid();
 
 export const CombinedDrawAndEdit: Story = {
   render: () => {
-    const [shapes, setShapes] = useState<DisplayShape[]>(createSampleShapes);
+    const [shapes, setShapes] = useState<Shape[]>(createSampleShapes);
 
     useMapCursor(COMBINED_MAP_ID);
 
@@ -411,6 +411,180 @@ export const CombinedDrawAndEdit: Story = {
           <p className='text-body-xs text-content-secondary'>
             {shapes.length} shape{shapes.length !== 1 ? 's' : ''} on map
           </p>
+        </div>
+      </div>
+    );
+  },
+};
+
+/**
+ * Locked Shapes
+ *
+ * Demonstrates the locked shape behavior:
+ * - Locked shapes cannot be edited (Edit button is disabled)
+ * - Shapes can be locked/unlocked via a toggle button
+ * - Useful for protecting imported data or finalized shapes
+ *
+ * Instructions:
+ * 1. Click on a shape to select it
+ * 2. Use "Lock" / "Unlock" to toggle the lock state
+ * 3. Try to edit a locked shape - the Edit button will be disabled
+ */
+const LOCKED_MAP_ID = uuid();
+
+// Create shapes with some pre-locked
+function createShapesWithLocked(): Shape[] {
+  return mockShapes.map((shape, index) => ({
+    ...shape,
+    id: uuid(),
+    lastUpdated: Date.now(),
+    // Lock every other shape to demonstrate the feature
+    locked: index % 2 === 1,
+  }));
+}
+
+export const LockedShapes: Story = {
+  render: () => {
+    const [shapes, setShapes] = useState<Shape[]>(createShapesWithLocked);
+
+    useMapCursor(LOCKED_MAP_ID);
+
+    const { selectedId, clearSelection } = useShapeSelection(LOCKED_MAP_ID);
+    const selectedShape = shapes.find((s) => s.id === selectedId) ?? null;
+
+    const { edit, save, cancel, isEditing, editingShape } = useEditShape(
+      LOCKED_MAP_ID,
+      {
+        onUpdate: (updatedShape) => {
+          setShapes((prev) =>
+            prev.map((s) => (s.id === updatedShape.id ? updatedShape : s)),
+          );
+          clearSelection();
+        },
+        onCancel: () => {
+          clearSelection();
+        },
+      },
+    );
+
+    const handleToggleLock = () => {
+      if (selectedShape) {
+        setShapes((prev) =>
+          prev.map((s) =>
+            s.id === selectedShape.id ? { ...s, locked: !s.locked } : s,
+          ),
+        );
+      }
+    };
+
+    return (
+      <div className='relative h-dvh w-dvw'>
+        <BaseMap className='absolute inset-0' id={LOCKED_MAP_ID}>
+          <displayShapeLayer
+            id='shapes'
+            mapId={LOCKED_MAP_ID}
+            data={shapes}
+            showLabels
+            pickable={!isEditing}
+            selectedShapeId={selectedShape?.id ?? editingShape?.id}
+          />
+          <EditShapeLayer mapId={LOCKED_MAP_ID} />
+        </BaseMap>
+
+        <div className='absolute top-l left-l z-10 flex w-[320px] flex-col gap-m rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
+          <p className='font-bold text-header-l'>Locked Shapes</p>
+
+          {/* Status indicator */}
+          <div className='rounded-lg bg-info-muted p-s'>
+            <code className='text-body-s'>
+              {isEditing
+                ? `Editing: ${editingShape?.name}`
+                : selectedShape
+                  ? `Selected: ${selectedShape.name}${selectedShape.locked ? ' 🔒' : ''}`
+                  : 'Click a shape to select'}
+            </code>
+          </div>
+
+          {/* Selection actions */}
+          {selectedShape && !isEditing && (
+            <div className='flex flex-col gap-s'>
+              <div className='flex gap-s'>
+                <Button
+                  variant='outline'
+                  onPress={handleToggleLock}
+                  size='small'
+                >
+                  {selectedShape.locked ? '🔓 Unlock' : '🔒 Lock'}
+                </Button>
+                <Button
+                  variant='filled'
+                  color='accent'
+                  onPress={() => edit(selectedShape)}
+                  isDisabled={selectedShape.locked}
+                  size='small'
+                >
+                  Edit
+                </Button>
+              </div>
+              {selectedShape.locked && (
+                <p className='text-body-xs text-warning-default'>
+                  This shape is locked and cannot be edited.
+                </p>
+              )}
+            </div>
+          )}
+
+          {/* Edit actions */}
+          {isEditing && (
+            <div className='flex gap-s'>
+              <Button variant='filled' color='serious' onPress={save}>
+                Save
+              </Button>
+              <Button variant='outline' color='critical' onPress={cancel}>
+                Cancel
+              </Button>
+            </div>
+          )}
+
+          {/* Shape list with lock indicators */}
+          <div className='flex min-h-0 flex-1 flex-col'>
+            <p className='mb-s font-semibold text-body-s'>
+              Shapes ({shapes.filter((s) => !s.locked).length} editable,{' '}
+              {shapes.filter((s) => s.locked).length} locked)
+            </p>
+            <div className='flex flex-col gap-xs'>
+              {shapes.map((shape) => (
+                <div
+                  key={shape.id}
+                  className={`flex items-center justify-between rounded p-s text-body-xs ${
+                    selectedShape?.id === shape.id
+                      ? 'bg-accent-muted'
+                      : 'bg-surface-subtle'
+                  }`}
+                >
+                  <span>
+                    <span className='font-medium'>{shape.name}</span>
+                    <span className='ml-s text-content-secondary'>
+                      ({shape.shapeType})
+                    </span>
+                  </span>
+                  {shape.locked && <span title='Locked'>🔒</span>}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Instructions */}
+          <div className='rounded-lg bg-surface-contrast-subtle p-s'>
+            <p className='mb-xs font-semibold text-body-xs'>
+              About Locked Shapes:
+            </p>
+            <ul className='list-inside list-disc space-y-xs text-body-xs text-content-secondary'>
+              <li>Locked shapes cannot be edited</li>
+              <li>Toggle lock state with the Lock/Unlock button</li>
+              <li>Useful for protecting imported or finalized data</li>
+            </ul>
+          </div>
         </div>
       </div>
     );
