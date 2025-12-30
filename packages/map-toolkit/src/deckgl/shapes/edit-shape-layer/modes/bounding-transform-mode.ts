@@ -22,35 +22,35 @@ import {
   TranslateMode,
 } from '@deck.gl-community/editable-layers';
 import { featureCollection } from '@turf/helpers';
-import { ScaleModeWithFreeTransform } from './scale-mode-with-free-transform';
+import { ScaleModeWithTooltip } from './scale-mode-with-tooltip';
 
-type ActiveMode =
-  | ScaleModeWithFreeTransform
-  | RotateMode
-  | TranslateMode
-  | null;
+type ActiveMode = ScaleModeWithTooltip | RotateMode | TranslateMode | null;
 
 /**
- * Transform mode for ellipses with non-uniform scaling support.
+ * Transform mode for shapes that use bounding box manipulation (no vertex editing).
+ *
+ * Use this mode for shapes like ellipses and rectangles where individual vertex
+ * editing is not meaningful or desired. Instead, shapes are manipulated via their
+ * bounding box handles.
  *
  * This composite mode provides:
- * - **Translation** (TranslateMode): Drag the ellipse body to move it
- * - **Scaling** (ScaleModeWithFreeTransform): Drag corner handles to resize
+ * - **Translation** (TranslateMode): Drag the shape body to move it
+ * - **Scaling** (ScaleModeWithTooltip): Drag corner handles to resize
  *   - Default: Non-uniform scaling (can stretch/squish)
  *   - With Shift: Uniform scaling (maintains aspect ratio)
+ *   - Live tooltip showing dimensions and area
  * - **Rotation** (RotateMode): Drag top handle to rotate
  *
- * Unlike ModifyTransformMode, this mode does NOT include vertex editing,
- * which is appropriate for ellipses that don't have meaningful vertices.
+ * Unlike VertexTransformMode, this mode does NOT include vertex editing handles.
  *
  * Priority logic:
  * - If hovering over a scale handle, scaling takes priority
  * - If hovering over the rotate handle, rotation takes priority
- * - Otherwise, dragging the ellipse body translates it
+ * - Otherwise, dragging the shape body translates it
  */
-export class EllipseTransformMode extends CompositeMode {
+export class BoundingTransformMode extends CompositeMode {
   private translateMode: TranslateMode;
-  private scaleMode: ScaleModeWithFreeTransform;
+  private scaleMode: ScaleModeWithTooltip;
   private rotateMode: RotateMode;
 
   /** Track which mode is currently handling the drag operation */
@@ -61,7 +61,7 @@ export class EllipseTransformMode extends CompositeMode {
 
   constructor() {
     const translateMode = new TranslateMode();
-    const scaleMode = new ScaleModeWithFreeTransform();
+    const scaleMode = new ScaleModeWithTooltip();
     const rotateMode = new RotateMode();
 
     // Order: scale and rotate first so their handles take priority over translate
@@ -117,7 +117,7 @@ export class EllipseTransformMode extends CompositeMode {
     } else if (isRotateHandle) {
       this.activeDragMode = this.rotateMode;
     } else {
-      // Default to translate for dragging the ellipse body
+      // Default to translate for dragging the shape body
       this.activeDragMode = this.translateMode;
     }
 
@@ -201,5 +201,10 @@ export class EllipseTransformMode extends CompositeMode {
 
     // biome-ignore lint/suspicious/noExplicitAny: turf types mismatch with editable-layers GeoJSON types
     return featureCollection(nonEnvelopeGuides as any) as any;
+  }
+
+  override getTooltips() {
+    // Get tooltips from ScaleMode (for shape dimensions)
+    return this.scaleMode.getTooltips();
   }
 }

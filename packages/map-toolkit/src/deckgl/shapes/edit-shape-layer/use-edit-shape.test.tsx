@@ -171,7 +171,7 @@ describe('useEditShape', () => {
       bus.off(EditShapeEvents.editing, editingSpy);
     });
 
-    it('sets modify-transform mode for polygons', async () => {
+    it('sets vertex-transform mode for polygons', async () => {
       const { result } = renderHook(() => useEditShape(mapId));
       const shape = createMockShape({ shapeType: ShapeFeatureType.Polygon });
 
@@ -180,11 +180,11 @@ describe('useEditShape', () => {
       });
 
       await waitFor(() => {
-        expect(result.current.editingState?.editMode).toBe('modify-transform');
+        expect(result.current.editingState?.editMode).toBe('vertex-transform');
       });
     });
 
-    it('sets modify-transform mode for lines', async () => {
+    it('sets vertex-transform mode for lines', async () => {
       const { result } = renderHook(() => useEditShape(mapId));
       const shape = createMockShape({ shapeType: ShapeFeatureType.LineString });
 
@@ -193,11 +193,11 @@ describe('useEditShape', () => {
       });
 
       await waitFor(() => {
-        expect(result.current.editingState?.editMode).toBe('modify-transform');
+        expect(result.current.editingState?.editMode).toBe('vertex-transform');
       });
     });
 
-    it('sets modify-transform mode for rectangles', async () => {
+    it('sets bounding-transform mode for rectangles', async () => {
       const { result } = renderHook(() => useEditShape(mapId));
       const shape = createMockShape({ shapeType: ShapeFeatureType.Rectangle });
 
@@ -206,7 +206,9 @@ describe('useEditShape', () => {
       });
 
       await waitFor(() => {
-        expect(result.current.editingState?.editMode).toBe('modify-transform');
+        expect(result.current.editingState?.editMode).toBe(
+          'bounding-transform',
+        );
       });
     });
 
@@ -236,7 +238,7 @@ describe('useEditShape', () => {
       });
     });
 
-    it('sets ellipse-transform mode for ellipses', async () => {
+    it('sets bounding-transform mode for ellipses', async () => {
       const { result } = renderHook(() => useEditShape(mapId));
       const shape = createMockEllipseShape();
 
@@ -245,7 +247,9 @@ describe('useEditShape', () => {
       });
 
       await waitFor(() => {
-        expect(result.current.editingState?.editMode).toBe('ellipse-transform');
+        expect(result.current.editingState?.editMode).toBe(
+          'bounding-transform',
+        );
       });
     });
 

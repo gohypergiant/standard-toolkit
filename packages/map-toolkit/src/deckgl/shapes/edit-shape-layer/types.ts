@@ -22,15 +22,15 @@ export type { Subscription };
 /**
  * Edit mode for shape editing
  * - 'view': Not editing, shape is viewable only
- * - 'ellipse-transform': Scale (non-uniform), rotate, translate (ellipses)
- * - 'modify-transform': Drag vertices OR scale/rotate/translate (polygons, rectangles, lines)
+ * - 'bounding-transform': Scale/rotate/translate via bounding box handles (ellipses, rectangles)
+ * - 'vertex-transform': Drag vertices OR scale/rotate/translate (polygons, lines)
  * - 'resize-circle': Drag edge to resize, drag body to translate (circles)
  * - 'translate': Drag to move the shape (points)
  */
 export type EditMode =
   | 'view'
-  | 'ellipse-transform'
-  | 'modify-transform'
+  | 'bounding-transform'
+  | 'vertex-transform'
   | 'resize-circle'
   | 'translate';
 
@@ -52,8 +52,8 @@ export interface EditingState {
 export interface EditShapeOptions {
   /** Override the default edit mode (auto-detected from shape type by default) */
   mode?:
-    | 'ellipse-transform'
-    | 'modify-transform'
+    | 'bounding-transform'
+    | 'vertex-transform'
     | 'resize-circle'
     | 'translate';
 }

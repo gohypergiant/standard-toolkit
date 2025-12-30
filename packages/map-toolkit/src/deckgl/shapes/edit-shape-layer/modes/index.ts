@@ -11,9 +11,9 @@
  */
 
 import { TranslateMode, ViewMode } from '@deck.gl-community/editable-layers';
-import { EllipseTransformMode } from './ellipse-transform-mode';
-import { ModifyTransformMode } from './modify-transform-mode';
+import { BoundingTransformMode } from './bounding-transform-mode';
 import { ResizeCircleTranslateMode } from './resize-circle-translate-mode';
+import { VertexTransformMode } from './vertex-transform-mode';
 import type { EditMode } from '../types';
 
 /**
@@ -23,11 +23,13 @@ import type { EditMode } from '../types';
  * deck.gl assertion failures. Creating new mode instances on each render
  * causes the EditableGeoJsonLayer to fail with assertion errors.
  *
- * EllipseTransformMode combines ScaleModeWithFreeTransform, RotateMode, and
- * TranslateMode for ellipses, allowing non-uniform scaling plus rotate/translate.
+ * BoundingTransformMode combines ScaleModeWithTooltip, RotateMode, and
+ * TranslateMode for shapes without vertex editing (ellipses, rectangles),
+ * allowing non-uniform scaling plus rotate/translate via bounding box handles.
  *
- * ModifyTransformMode combines ModifyMode with TransformMode for polygons,
- * rectangles, and lines, allowing vertex editing plus scale/rotate/translate.
+ * VertexTransformMode combines ModifyMode with TransformMode for shapes
+ * that support vertex editing (polygons, lines), allowing vertex manipulation
+ * plus scale/rotate/translate.
  *
  * ResizeCircleTranslateMode combines ResizeCircleMode with TranslateMode
  * for circles, allowing resize from edge plus drag to translate.
@@ -36,8 +38,8 @@ import type { EditMode } from '../types';
  */
 const EDIT_MODE_INSTANCES = {
   view: new ViewMode(),
-  'ellipse-transform': new EllipseTransformMode(),
-  'modify-transform': new ModifyTransformMode(),
+  'bounding-transform': new BoundingTransformMode(),
+  'vertex-transform': new VertexTransformMode(),
   'resize-circle': new ResizeCircleTranslateMode(),
   translate: new TranslateMode(),
 } as const;

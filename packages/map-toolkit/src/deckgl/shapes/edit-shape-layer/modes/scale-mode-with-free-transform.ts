@@ -150,6 +150,7 @@ export class ScaleModeWithFreeTransform extends ScaleMode {
 
   /**
    * Calculate separate X and Y scale factors based on cursor movement.
+   * Scale factors are clamped to prevent negative values (no shape inversion).
    */
   private calculateScaleFactors(
     event: DraggingEvent | StopDraggingEvent,
@@ -164,12 +165,18 @@ export class ScaleModeWithFreeTransform extends ScaleMode {
     const currentDeltaY = (currentPoint[1] ?? 0) - (origin[1] ?? 0);
 
     const epsilon = 0.0000001;
+    // Minimum scale to prevent shape from collapsing or inverting
+    const minScale = 0.01;
 
     // Calculate scale factors - ratio of current to start distance from origin
-    const scaleX =
+    // Clamp to minScale to prevent negative values (shape inversion)
+    const rawScaleX =
       Math.abs(startDeltaX) > epsilon ? currentDeltaX / startDeltaX : 1;
-    const scaleY =
+    const rawScaleY =
       Math.abs(startDeltaY) > epsilon ? currentDeltaY / startDeltaY : 1;
+
+    const scaleX = Math.max(rawScaleX, minScale);
+    const scaleY = Math.max(rawScaleY, minScale);
 
     return { scaleX, scaleY };
   }
@@ -178,6 +185,7 @@ export class ScaleModeWithFreeTransform extends ScaleMode {
    * Calculate a uniform scale factor for aspect-ratio-preserving scaling.
    * Uses distance ratio along the drag direction so the corner follows
    * the cursor's projection onto the original drag line.
+   * Clamped to prevent negative values (no shape inversion).
    */
   private calculateUniformScaleFactor(
     event: DraggingEvent | StopDraggingEvent,
@@ -208,7 +216,10 @@ export class ScaleModeWithFreeTransform extends ScaleMode {
     const projectedDist = dotProduct / startDist;
 
     // Scale factor is the ratio of projected distance to original distance
-    return projectedDist / startDist;
+    // Clamp to minScale to prevent negative values (shape inversion)
+    const minScale = 0.01;
+    const rawScale = projectedDist / startDist;
+    return Math.max(rawScale, minScale);
   }
 
   /**

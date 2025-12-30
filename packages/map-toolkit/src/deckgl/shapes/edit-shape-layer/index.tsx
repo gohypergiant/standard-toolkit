@@ -127,7 +127,7 @@ function toFeatureCollection(
  * - Renders only when actively editing (returns null otherwise)
  * - Uses cached mode instances to prevent deck.gl assertion errors
  * - Integrates with the editing store for state management
- * - Protected editing mode (rejects mode change requests while editing)
+ * - Neutral mode authorization (lets UI decide how to handle mode conflicts)
  * - Circles use ResizeCircleMode with tooltip, other shapes use ModifyMode
  * - Fill colors rendered at 20% opacity, edit handles are white
  * - Live dimension/area tooltips during editing

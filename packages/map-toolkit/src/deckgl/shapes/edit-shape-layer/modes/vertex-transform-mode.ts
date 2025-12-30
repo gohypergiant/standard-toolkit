@@ -22,37 +22,43 @@ import {
   TranslateMode,
 } from '@deck.gl-community/editable-layers';
 import { featureCollection } from '@turf/helpers';
-import { ModifyModeWithSquareConstraint } from './modify-mode-with-square-constraint';
-import { ScaleModeWithFreeTransform } from './scale-mode-with-free-transform';
+import { ModifyModeWithTooltip } from './modify-mode-with-tooltip';
+import { ScaleModeWithTooltip } from './scale-mode-with-tooltip';
 
 type ActiveMode =
-  | ModifyModeWithSquareConstraint
-  | ScaleModeWithFreeTransform
+  | ModifyModeWithTooltip
+  | ScaleModeWithTooltip
   | RotateMode
   | TranslateMode
   | null;
 
 /**
- * Combines ModifyMode with TransformMode capabilities for polygons and lines.
+ * Transform mode for shapes that support vertex editing (polygons and lines).
+ *
+ * Use this mode for shapes where individual vertices can be dragged to reshape
+ * the geometry. This provides the most flexibility for freeform shape editing.
  *
  * This composite mode provides:
  * - **Vertex editing** (ModifyMode): Drag vertices to reshape the geometry
  * - **Translation** (TranslateMode): Drag the shape to move it
- * - **Scaling** (ScaleMode): Drag corner handles to resize uniformly
+ * - **Scaling** (ScaleMode): Drag corner handles to resize
  * - **Rotation** (RotateMode): Drag top handle to rotate
  *
- * Priority logic (from TransformMode):
+ * Priority logic:
  * - If hovering over a scale handle, scaling takes priority
  * - If hovering over the rotate handle, rotation takes priority
  * - If hovering over a vertex (edit handle from ModifyMode), vertex editing takes priority
  * - Otherwise, dragging the shape translates it
  *
  * The guides from all modes are combined, showing both vertex handles and transform handles.
+ *
+ * Note: For shapes like rectangles where vertex editing is filtered out (to preserve
+ * rotation), consider using BoundingTransformMode instead.
  */
-export class ModifyTransformMode extends CompositeMode {
-  private modifyMode: ModifyModeWithSquareConstraint;
+export class VertexTransformMode extends CompositeMode {
+  private modifyMode: ModifyModeWithTooltip;
   private translateMode: TranslateMode;
-  private scaleMode: ScaleModeWithFreeTransform;
+  private scaleMode: ScaleModeWithTooltip;
   private rotateMode: RotateMode;
 
   /** Track which mode is currently handling the drag operation */
@@ -62,9 +68,9 @@ export class ModifyTransformMode extends CompositeMode {
   private isShiftHeld = false;
 
   constructor() {
-    const modifyMode = new ModifyModeWithSquareConstraint();
+    const modifyMode = new ModifyModeWithTooltip();
     const translateMode = new TranslateMode();
-    const scaleMode = new ScaleModeWithFreeTransform();
+    const scaleMode = new ScaleModeWithTooltip();
     const rotateMode = new RotateMode();
 
     // Order matters: first mode to handle the event wins
@@ -242,7 +248,12 @@ export class ModifyTransformMode extends CompositeMode {
   }
 
   override getTooltips() {
-    // Get tooltips from ModifyMode (for rectangle dimensions)
+    // Get tooltips from ScaleMode (for rectangle/polygon scaling)
+    // or ModifyMode (for polygon vertex editing)
+    const scaleTooltips = this.scaleMode.getTooltips();
+    if (scaleTooltips.length > 0) {
+      return scaleTooltips;
+    }
     return this.modifyMode.getTooltips();
   }
 }

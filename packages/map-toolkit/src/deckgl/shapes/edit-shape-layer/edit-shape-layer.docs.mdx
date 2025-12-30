@@ -27,11 +27,11 @@ The layer automatically selects the appropriate edit mode based on shape type:
 | Shape Type | Edit Mode | Behavior |
 |------------|-----------|----------|
 | **Point** | `translate` | Drag to reposition |
-| **LineString** | `modify-transform` | Drag vertices to reshape, OR scale/rotate/translate the entire shape |
-| **Polygon** | `modify-transform` | Drag vertices to reshape, OR scale/rotate/translate the entire shape |
-| **Rectangle** | `modify-transform` | Drag corner handles to resize, drag body to move, or rotate via handle. Hold Shift for uniform scaling. |
+| **LineString** | `vertex-transform` | Drag vertices to reshape, OR scale/rotate/translate the entire shape |
+| **Polygon** | `vertex-transform` | Drag vertices to reshape, OR scale/rotate/translate the entire shape |
+| **Rectangle** | `bounding-transform` | Drag corner handles to resize, drag body to move, or rotate via handle. Hold Shift for uniform scaling. |
 | **Circle** | `resize-circle` | Drag body to move, drag edge to resize from center |
-| **Ellipse** | `ellipse-transform` | Drag to move, corner handles to scale freely, top handle to rotate. Hold Shift for uniform scaling. |
+| **Ellipse** | `bounding-transform` | Drag to move, corner handles to scale freely, top handle to rotate. Hold Shift for uniform scaling. |
 
 ## Dependencies
 
@@ -157,10 +157,10 @@ function MapWithEditing() {
 
 1. Click on a rectangle to select it
 2. Click "Edit" to enter edit mode
-3. **Resize**: Drag corners to resize (rectangle shape is maintained)
-4. **Move**: Drag anywhere on the rectangle body to reposition
-5. **Rotate**: Drag the top handle to rotate around the center
-6. Hold **Shift** while dragging corners to constrain to a square
+3. **Scale**: Drag corner handles to resize freely (non-uniform)
+4. **Scale uniformly**: Hold **Shift** while dragging corner handles to maintain aspect ratio
+5. **Move**: Drag anywhere on the rectangle body to reposition
+6. **Rotate**: Drag the top handle to rotate around the center
 7. Click "Save" to confirm changes or "Cancel" (or press ESC) to discard
 
 ### Circle
@@ -184,8 +184,7 @@ function MapWithEditing() {
 ### Keyboard Shortcuts
 
 - **ESC**: Cancel current editing and restore original shape
-- **Shift** (hold while resizing rectangle): Constrain to square
-- **Shift** (hold while scaling polygon/line/ellipse): Maintain aspect ratio (uniform scaling)
+- **Shift** (hold while scaling): Maintain aspect ratio (uniform scaling)
 
 ## Live Measurements
 
@@ -195,6 +194,7 @@ During editing, a tooltip displays live measurements by the cursor:
 |------------|-----------------|
 | **Rectangle** | Width × Height and Area (e.g., `10.50 km x 5.25 km` / `55.13 km²`) |
 | **Circle** | Diameter and Area (e.g., `d: 10.00 km` / `78.54 km²`) |
+| **Ellipse** | Major × Minor Axis and Area (e.g., `12.00 km x 8.00 km` / `75.40 km²`) |
 
 The measurements use the configured distance unit (default: kilometers). Pass the `unit` prop to change:
 
@@ -258,14 +258,15 @@ useOn(EditShapeEvents.canceled, (event) => {
 
 ## Map Mode Integration
 
-EditShapeLayer uses a **protected mode** pattern. When editing starts:
+EditShapeLayer is **neutral** regarding mode change authorization. When editing starts:
 
 1. The layer requests a mode change to `'edit-shape'`
-2. The layer registers as a "protector" of this mode
-3. Other components cannot change the map mode while editing is active
-4. When editing completes or is canceled, protection is released
+2. If another component requests a different mode, the authorization event propagates to UI components
+3. The edit layer does NOT auto-cancel or reject - your UI decides how to handle the conflict
 
-This prevents accidental mode changes (e.g., from clicking UI elements) from interrupting an editing operation.
+This allows application-level UI to prompt the user (e.g., "You have unsaved changes. Switch to draw mode?") rather than automatically canceling the edit.
+
+**Note:** If no UI component handles the authorization, the mode change will remain pending until the user saves or cancels the edit (which returns to default mode and auto-processes pending requests).
 
 ## Cursor Integration
 
@@ -273,8 +274,8 @@ When editing is active, the cursor automatically changes based on the edit mode:
 
 | Edit Mode | Cursor |
 |-----------|--------|
-| `ellipse-transform` | `crosshair` |
-| `modify-transform` | `crosshair` |
+| `bounding-transform` | `crosshair` |
+| `vertex-transform` | `crosshair` |
 | `resize-circle` | `crosshair` |
 | `translate` | `crosshair` |
 | `view` | `default` |
@@ -347,7 +348,7 @@ Options passed to the `edit()` function:
 
 | Option | Type | Description |
 |--------|------|-------------|
-| `mode` | `'ellipse-transform' \| 'modify-transform' \| 'resize-circle' \| 'translate'` | Override the automatic mode selection |
+| `mode` | `'bounding-transform' \| 'vertex-transform' \| 'resize-circle' \| 'translate'` | Override the automatic mode selection |
 
 ### EditShapeEvents
 

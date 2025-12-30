@@ -81,13 +81,6 @@ const editingStore = new Map<UniqueId, EditingState>();
 const componentSubscribers = new Map<UniqueId, Set<() => void>>();
 
 /**
- * Cache of bus unsubscribe functions (1 per mapId).
- * This ensures we only have one bus listener per map instance, regardless of
- * how many React components subscribe to it.
- */
-const busUnsubscribers = new Map<UniqueId, () => void>();
-
-/**
  * Cache of subscription functions per mapId to avoid recreating on every render
  */
 const subscriptionCache = new Map<UniqueId, Subscription>();
@@ -164,14 +157,18 @@ function getEditModeForShape(shape: Shape): EditMode {
   if (shape.shapeType === ShapeFeatureType.Circle) {
     return 'resize-circle';
   }
-  if (shape.shapeType === ShapeFeatureType.Ellipse) {
-    return 'ellipse-transform';
+  if (
+    shape.shapeType === ShapeFeatureType.Ellipse ||
+    shape.shapeType === ShapeFeatureType.Rectangle
+  ) {
+    // Ellipses and rectangles use bounding-transform (no vertex editing)
+    // for scale/rotate/translate via bounding box handles
+    return 'bounding-transform';
   }
-  // Rectangles, Polygons, and LineStrings get modify-transform for combined
-  // vertex editing + scale/rotate/translate. ScaleMode preserves rotation
-  // for rotated rectangles, and provides consistent behavior for all shapes.
+  // Polygons and LineStrings get vertex-transform for combined
+  // vertex editing + scale/rotate/translate
   // This is also the fallback for any unknown shape types.
-  return 'modify-transform';
+  return 'vertex-transform';
 }
 
 /**
@@ -345,63 +342,20 @@ function cancelEditing(mapId: UniqueId): void {
 }
 
 /**
- * Ensures a single bus listener exists for the given mapId.
- * All React subscribers will be notified via fan-out when the bus events fire.
- * This prevents creating N bus listeners for N React components.
+ * Cleans up state if no React subscribers remain.
+ *
+ * Note: EditShapeLayer is "neutral" regarding mode change authorization.
+ * It doesn't auto-cancel or reject mode changes - those decisions are
+ * left to UI components that can prompt the user (e.g., "You have unsaved
+ * changes. Switch to draw mode?"). The edit layer still EMITS mode change
+ * requests (when starting/ending edit), but doesn't LISTEN for authorization
+ * requests from other components.
  */
-function ensureBusListener(mapId: UniqueId): void {
-  if (busUnsubscribers.has(mapId)) {
-    return; // Already listening
-  }
-
-  // Listen for mode authorization requests - REJECT when editing (protected mode)
-  const unsubAuth = mapModeBus.on(
-    MapModeEvents.changeAuthorization,
-    (event) => {
-      const { authId, id } = event.payload;
-
-      // Filter: only handle if targeted at this map
-      if (id !== mapId) {
-        return;
-      }
-
-      // Get current state at event time (not registration time)
-      const currentState = editingStore.get(mapId);
-
-      // If we're actively editing, reject the mode change request
-      if (currentState?.editingShape) {
-        mapModeBus.emit(MapModeEvents.changeDecision, {
-          authId,
-          approved: false,
-          owner: EDIT_SHAPE_LAYER_ID,
-          reason: 'Editing in progress - save or cancel editing first',
-          id: mapId,
-        });
-      }
-    },
-  );
-
-  // Store composite cleanup function
-  busUnsubscribers.set(mapId, () => {
-    unsubAuth();
-  });
-}
-
-/**
- * Cleans up the bus listener if no React subscribers remain.
- */
-function cleanupBusListenerIfNeeded(mapId: UniqueId): void {
+function cleanupIfNoSubscribers(mapId: UniqueId): void {
   const subscribers = componentSubscribers.get(mapId);
 
   if (!subscribers || subscribers.size === 0) {
-    // No more React subscribers - clean up bus listener
-    const unsub = busUnsubscribers.get(mapId);
-    if (unsub) {
-      unsub();
-      busUnsubscribers.delete(mapId);
-    }
-
-    // Clean up all state
+    // No more React subscribers - clean up all state
     editingStore.delete(mapId);
     componentSubscribers.delete(mapId);
     subscriptionCache.delete(mapId);
@@ -415,7 +369,6 @@ function cleanupBusListenerIfNeeded(mapId: UniqueId): void {
 
 /**
  * Creates or retrieves a cached subscription function for a given mapId.
- * Uses a fan-out pattern: 1 bus listener -> N React subscribers.
  * Automatically cleans up editing state when the last subscriber unsubscribes.
  */
 export function getOrCreateSubscription(mapId: UniqueId): Subscription {
@@ -427,9 +380,6 @@ export function getOrCreateSubscription(mapId: UniqueId): Subscription {
   const subscription =
     subscriptionCache.get(mapId) ??
     ((onStoreChange: () => void) => {
-      // Ensure single bus listener exists for this mapId
-      ensureBusListener(mapId);
-
       // Get or create the subscriber set for this map instance, then add this component's callback
       let subscriberSet = componentSubscribers.get(mapId);
       if (!subscriberSet) {
@@ -445,8 +395,8 @@ export function getOrCreateSubscription(mapId: UniqueId): Subscription {
           currentSubscriberSet.delete(onStoreChange);
         }
 
-        // Clean up bus listener if this was the last React subscriber
-        cleanupBusListenerIfNeeded(mapId);
+        // Clean up state if this was the last React subscriber
+        cleanupIfNoSubscribers(mapId);
       };
     });
 
@@ -566,13 +516,6 @@ export function clearEditingState(mapId: UniqueId): void {
   const state = editingStore.get(mapId);
   if (state?.editingShape) {
     cancelEditing(mapId);
-  }
-
-  // Unsubscribe from bus if listening
-  const unsub = busUnsubscribers.get(mapId);
-  if (unsub) {
-    unsub();
-    busUnsubscribers.delete(mapId);
   }
 
   // Clear all state
