@@ -20,7 +20,7 @@ import {
   type LabelPosition2d,
   type LabelPositionOptions,
 } from './utils/labels';
-import type { EditableShape } from '../shared/types';
+import type { Shape } from '../shared/types';
 
 /**
  * Creates a cached label position getter to avoid computing position multiple times per shape.
@@ -29,10 +29,10 @@ import type { EditableShape } from '../shared/types';
 function createCachedPositionGetter(
   labelOptions: LabelPositionOptions | undefined,
 ) {
-  const cache = new WeakMap<EditableShape, LabelPosition2d | null>();
+  const cache = new WeakMap<Shape, LabelPosition2d | null>();
 
   // Returns nullable position for filtering
-  const getNullable = (shape: EditableShape): LabelPosition2d | null => {
+  const getNullable = (shape: Shape): LabelPosition2d | null => {
     if (cache.has(shape)) {
       return cache.get(shape) ?? null;
     }
@@ -42,7 +42,7 @@ function createCachedPositionGetter(
   };
 
   // Returns position, throwing if null (use only after filtering)
-  const getRequired = (shape: EditableShape): LabelPosition2d => {
+  const getRequired = (shape: Shape): LabelPosition2d => {
     const position = getNullable(shape);
     if (!position) {
       throw new Error(
@@ -62,7 +62,7 @@ export interface ShapeLabelLayerProps {
   /** Layer ID (defaults to DISPLAY_LABELS constant) */
   id?: string;
   /** Array of shapes to label */
-  data: EditableShape[];
+  data: Shape[];
   /**
    * Global label positioning options
    * Per-shape properties in styleProperties take precedence
@@ -103,7 +103,7 @@ export interface ShapeLabelLayerProps {
  */
 export function createShapeLabelLayer(
   props: ShapeLabelLayerProps,
-): TextLayer<EditableShape> {
+): TextLayer<Shape> {
   const { id = SHAPE_LAYER_IDS.DISPLAY_LABELS, data, labelOptions } = props;
 
   // Create cached position getter to avoid computing position 4x per shape
@@ -112,7 +112,7 @@ export function createShapeLabelLayer(
   // Filter out shapes with invalid positions (null coordinates)
   const validData = data.filter((shape) => getNullable(shape) !== null);
 
-  return new TextLayer<EditableShape>({
+  return new TextLayer<Shape>({
     id,
     data: validData,
 
@@ -121,11 +121,10 @@ export function createShapeLabelLayer(
 
     // Position - use cached getter for all position-related properties
     // getRequired is safe because we filtered out null positions above
-    getPosition: (d: EditableShape) => getRequired(d).coordinates,
-    getPixelOffset: (d: EditableShape) => getRequired(d).pixelOffset,
-    getTextAnchor: (d: EditableShape) => getRequired(d).textAnchor,
-    getAlignmentBaseline: (d: EditableShape) =>
-      getRequired(d).alignmentBaseline,
+    getPosition: (d: Shape) => getRequired(d).coordinates,
+    getPixelOffset: (d: Shape) => getRequired(d).pixelOffset,
+    getTextAnchor: (d: Shape) => getRequired(d).textAnchor,
+    getAlignmentBaseline: (d: Shape) => getRequired(d).alignmentBaseline,
 
     // Styling - white text with black outline, no background
     getColor: [255, 255, 255, 255], // White text

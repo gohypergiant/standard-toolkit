@@ -17,7 +17,7 @@ import type { Feature } from 'geojson';
 import type { DistanceUnitAbbreviation } from '../../../shared/units';
 import type {
   CircleProperties,
-  DisplayShape,
+  Shape,
   ShapeFeatureType,
   StyleProperties,
   Subscription,
@@ -54,7 +54,7 @@ export interface DrawShapeOptions {
  */
 export interface UseDrawShapesOptions {
   /** Callback when a shape is successfully drawn */
-  onCreate?: (shape: DisplayShape) => void;
+  onCreate?: (shape: Shape) => void;
   /** Callback when drawing is canceled */
   onCancel?: (shapeType: ShapeFeatureType) => void;
 }

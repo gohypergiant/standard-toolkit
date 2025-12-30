@@ -11,13 +11,13 @@
  */
 
 import { uuid } from '@accelint/core';
-import type { DisplayShape } from '../shared/types';
+import type { Shape } from '../shared/types';
 
 /**
  * Mock shapes for Storybook examples
  * Centered around the East Coast of the United States for better visibility
  */
-export const mockShapes: DisplayShape[] = [
+export const mockShapes: Shape[] = [
   // Circle shape
   {
     id: uuid(),

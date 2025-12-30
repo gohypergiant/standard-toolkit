@@ -22,12 +22,12 @@ import {
   DRAW_SHAPE_MODE,
 } from './constants';
 import { DrawShapeEvents } from './events';
-import { convertFeatureToDisplayShape } from './utils/feature-conversion';
+import { convertFeatureToShape } from './utils/feature-conversion';
 import type { UniqueId } from '@accelint/core';
 import type { Feature } from 'geojson';
 import type { MapCursorEventType } from '../../../map-cursor/types';
 import type { MapModeEventType } from '../../../map-mode/types';
-import type { DisplayShape, ShapeFeatureType } from '../shared/types';
+import type { Shape, ShapeFeatureType } from '../shared/types';
 import type { DrawShapeEvent, ShapeDrawnEvent } from './events';
 import type {
   DrawFunction,
@@ -183,7 +183,7 @@ function startDrawing(
 /**
  * Complete drawing and create a shape
  */
-function completeDrawing(mapId: UniqueId, feature: Feature): DisplayShape {
+function completeDrawing(mapId: UniqueId, feature: Feature): Shape {
   const state = getOrCreateState(mapId);
 
   if (!state.activeShapeType) {
@@ -193,8 +193,8 @@ function completeDrawing(mapId: UniqueId, feature: Feature): DisplayShape {
   const shapeType = state.activeShapeType;
   const styleDefaults = state.styleDefaults;
 
-  // Convert feature to DisplayShape
-  const shape = convertFeatureToDisplayShape(feature, shapeType, styleDefaults);
+  // Convert feature to Shape
+  const shape = convertFeatureToShape(feature, shapeType, styleDefaults);
 
   // Reset state with new object reference
   updateState(mapId, {
@@ -215,7 +215,7 @@ function completeDrawing(mapId: UniqueId, feature: Feature): DisplayShape {
   getOrCreateClearCursor(mapId)(DRAW_SHAPE_LAYER_ID);
 
   // Emit shape drawn event
-  // DisplayShape contains GeoJSON Feature which is structurally cloneable
+  // Shape contains GeoJSON Feature which is structurally cloneable
   // but lacks the index signature TypeScript requires for StructuredCloneable.
   // Cast payload to ShapeDrawnPayload to maintain type safety for the structure,
   // then use unknown to satisfy the bus constraint.
@@ -460,7 +460,7 @@ export function getOrCreateCancel(mapId: UniqueId): () => void {
 export function completeDrawingFromLayer(
   mapId: UniqueId,
   feature: Feature,
-): DisplayShape {
+): Shape {
   return completeDrawing(mapId, feature);
 }
 

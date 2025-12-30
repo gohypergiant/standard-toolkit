@@ -14,13 +14,13 @@
 
 import { uuid } from '@accelint/core';
 import { centroid, distance } from '@turf/turf';
-import { DEFAULT_STYLE_PROPERTIES } from '../../shared/constants';
 import { DEFAULT_DISTANCE_UNITS } from '../../../../shared/units';
+import { DEFAULT_STYLE_PROPERTIES } from '../../shared/constants';
 import { ShapeFeatureType as ShapeFeatureTypeEnum } from '../../shared/types';
 import type { Feature, Polygon, Position } from 'geojson';
 import type {
   CircleProperties,
-  DisplayShape,
+  Shape,
   ShapeFeature,
   ShapeFeatureType,
   StyleProperties,
@@ -71,18 +71,18 @@ function computeCircleProperties(
 }
 
 /**
- * Convert a raw GeoJSON Feature from EditableGeoJsonLayer to a DisplayShape
+ * Convert a raw GeoJSON Feature from EditableGeoJsonLayer to a Shape
  *
  * @param feature - The raw GeoJSON feature from the editable layer
  * @param shapeType - The type of shape being created
  * @param styleDefaults - Optional style overrides
- * @returns A complete DisplayShape ready for use
+ * @returns A complete Shape ready for use
  */
-export function convertFeatureToDisplayShape(
+export function convertFeatureToShape(
   feature: Feature,
   shapeType: ShapeFeatureType,
   styleDefaults?: Partial<StyleProperties> | null,
-): DisplayShape {
+): Shape {
   const id = uuid();
   const name = generateShapeName(shapeType);
 

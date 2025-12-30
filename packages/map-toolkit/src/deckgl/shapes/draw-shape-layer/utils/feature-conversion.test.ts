@@ -13,12 +13,12 @@
 import { describe, expect, it } from 'vitest';
 import { DEFAULT_STYLE_PROPERTIES } from '../../shared/constants';
 import { ShapeFeatureType } from '../../shared/types';
-import { convertFeatureToDisplayShape } from './feature-conversion';
+import { convertFeatureToShape } from './feature-conversion';
 import type { Feature, LineString, Point, Polygon } from 'geojson';
 
-describe('convertFeatureToDisplayShape', () => {
+describe('convertFeatureToShape', () => {
   describe('Point conversion', () => {
-    it('converts a Point feature to DisplayShape', () => {
+    it('converts a Point feature to Shape', () => {
       const pointFeature: Feature<Point> = {
         type: 'Feature',
         geometry: {
@@ -28,7 +28,7 @@ describe('convertFeatureToDisplayShape', () => {
         properties: {},
       };
 
-      const result = convertFeatureToDisplayShape(
+      const result = convertFeatureToShape(
         pointFeature,
         ShapeFeatureType.Point,
       );
@@ -58,7 +58,7 @@ describe('convertFeatureToDisplayShape', () => {
         strokeColor: [0, 0, 255, 255] as [number, number, number, number],
       };
 
-      const result = convertFeatureToDisplayShape(
+      const result = convertFeatureToShape(
         pointFeature,
         ShapeFeatureType.Point,
         customStyles,
@@ -74,7 +74,7 @@ describe('convertFeatureToDisplayShape', () => {
   });
 
   describe('LineString conversion', () => {
-    it('converts a LineString feature to DisplayShape', () => {
+    it('converts a LineString feature to Shape', () => {
       const lineFeature: Feature<LineString> = {
         type: 'Feature',
         geometry: {
@@ -88,7 +88,7 @@ describe('convertFeatureToDisplayShape', () => {
         properties: {},
       };
 
-      const result = convertFeatureToDisplayShape(
+      const result = convertFeatureToShape(
         lineFeature,
         ShapeFeatureType.LineString,
       );
@@ -100,7 +100,7 @@ describe('convertFeatureToDisplayShape', () => {
   });
 
   describe('Polygon conversion', () => {
-    it('converts a Polygon feature to DisplayShape', () => {
+    it('converts a Polygon feature to Shape', () => {
       const polygonFeature: Feature<Polygon> = {
         type: 'Feature',
         geometry: {
@@ -118,7 +118,7 @@ describe('convertFeatureToDisplayShape', () => {
         properties: {},
       };
 
-      const result = convertFeatureToDisplayShape(
+      const result = convertFeatureToShape(
         polygonFeature,
         ShapeFeatureType.Polygon,
       );
@@ -130,7 +130,7 @@ describe('convertFeatureToDisplayShape', () => {
   });
 
   describe('Rectangle conversion', () => {
-    it('converts a Rectangle (Polygon) feature to DisplayShape', () => {
+    it('converts a Rectangle (Polygon) feature to Shape', () => {
       const rectangleFeature: Feature<Polygon> = {
         type: 'Feature',
         geometry: {
@@ -148,7 +148,7 @@ describe('convertFeatureToDisplayShape', () => {
         properties: {},
       };
 
-      const result = convertFeatureToDisplayShape(
+      const result = convertFeatureToShape(
         rectangleFeature,
         ShapeFeatureType.Rectangle,
       );
@@ -182,7 +182,7 @@ describe('convertFeatureToDisplayShape', () => {
         properties: {},
       };
 
-      const result = convertFeatureToDisplayShape(
+      const result = convertFeatureToShape(
         circleFeature,
         ShapeFeatureType.Circle,
       );
@@ -219,7 +219,7 @@ describe('convertFeatureToDisplayShape', () => {
         properties: {},
       };
 
-      const result = convertFeatureToDisplayShape(
+      const result = convertFeatureToShape(
         circleFeature,
         ShapeFeatureType.Circle,
       );
@@ -242,14 +242,8 @@ describe('convertFeatureToDisplayShape', () => {
         properties: {},
       };
 
-      const result1 = convertFeatureToDisplayShape(
-        feature,
-        ShapeFeatureType.Point,
-      );
-      const result2 = convertFeatureToDisplayShape(
-        feature,
-        ShapeFeatureType.Point,
-      );
+      const result1 = convertFeatureToShape(feature, ShapeFeatureType.Point);
+      const result2 = convertFeatureToShape(feature, ShapeFeatureType.Point);
 
       expect(result1.id).not.toBe(result2.id);
     });
@@ -261,10 +255,7 @@ describe('convertFeatureToDisplayShape', () => {
         properties: {},
       };
 
-      const result = convertFeatureToDisplayShape(
-        feature,
-        ShapeFeatureType.Point,
-      );
+      const result = convertFeatureToShape(feature, ShapeFeatureType.Point);
 
       expect(result.feature.properties.shapeId).toBe(result.id);
     });
@@ -277,10 +268,7 @@ describe('convertFeatureToDisplayShape', () => {
         properties: {},
       };
 
-      const result = convertFeatureToDisplayShape(
-        feature,
-        ShapeFeatureType.Point,
-      );
+      const result = convertFeatureToShape(feature, ShapeFeatureType.Point);
       const after = Date.now();
 
       expect(result.lastUpdated).toBeGreaterThanOrEqual(before);
@@ -296,10 +284,7 @@ describe('convertFeatureToDisplayShape', () => {
         properties: {},
       };
 
-      const result = convertFeatureToDisplayShape(
-        feature,
-        ShapeFeatureType.Point,
-      );
+      const result = convertFeatureToShape(feature, ShapeFeatureType.Point);
 
       expect(result.feature.properties.styleProperties).toEqual(
         DEFAULT_STYLE_PROPERTIES,
@@ -317,7 +302,7 @@ describe('convertFeatureToDisplayShape', () => {
         strokeWidth: 4 as const,
       };
 
-      const result = convertFeatureToDisplayShape(
+      const result = convertFeatureToShape(
         feature,
         ShapeFeatureType.Point,
         partialStyles,
@@ -337,7 +322,7 @@ describe('convertFeatureToDisplayShape', () => {
         properties: {},
       };
 
-      const result = convertFeatureToDisplayShape(
+      const result = convertFeatureToShape(
         feature,
         ShapeFeatureType.Point,
         null,

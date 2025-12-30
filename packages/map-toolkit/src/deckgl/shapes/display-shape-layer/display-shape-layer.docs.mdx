@@ -170,10 +170,10 @@ new Deck({
 
 ## Shape Data Structure
 
-Each shape must follow the `EditableShape` interface:
+Each shape must follow the `Shape` interface:
 
 ```typescript
-interface EditableShape {
+interface Shape {
   /** Unique identifier (use uuid() from @accelint/core) */
   id: UniqueId;
   /** Full shape name used internally and in UI */
@@ -550,10 +550,10 @@ When using icons for Point geometries, **all shapes in a single DisplayShapeLaye
 |------|------|---------|-------------|
 | `id` | `string` | *required* | Unique layer ID |
 | `mapId` | `UniqueId` | *required* | Map instance ID for event bus isolation in multi-map scenarios |
-| `data` | `EditableShape[]` | *required* | Array of shapes to display |
+| `data` | `Shape[]` | *required* | Array of shapes to display |
 | `selectedShapeId` | `ShapeId` | `undefined` | Currently selected shape ID for highlighting |
-| `onShapeClick` | `(shape: EditableShape) => void` | `undefined` | Callback when shape is clicked |
-| `onShapeHover` | `(shape: EditableShape \| null) => void` | `undefined` | Callback when shape is hovered |
+| `onShapeClick` | `(shape: Shape) => void` | `undefined` | Callback when shape is clicked |
+| `onShapeHover` | `(shape: Shape \| null) => void` | `undefined` | Callback when shape is hovered |
 | `pickable` | `boolean` | `true` | Whether shapes are clickable/hoverable |
 | `showLabels` | `boolean` | `true` | Whether to show labels |
 | `showHighlight` | `boolean` | `false` | Whether to show highlight around selected shapes (dotted border always shows) |

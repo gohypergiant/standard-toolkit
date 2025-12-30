@@ -21,7 +21,7 @@ import { useShapeSelection } from '../display-shape-layer/use-shape-selection';
 import { ShapeEvents } from '../shared/events';
 import { ShapeFeatureType } from '../shared/types';
 import type { ShapeHoveredEvent } from '../shared/events';
-import type { DisplayShape } from '../shared/types';
+import type { Shape } from '../shared/types';
 import '../display-shape-layer/fiber';
 import './fiber';
 import { DrawShapeLayer } from './index';
@@ -36,7 +36,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 // Use fixture shapes with unique IDs for each story render
-function createSampleShapes(): DisplayShape[] {
+function createSampleShapes(): Shape[] {
   return mockShapes.map((shape) => ({
     ...shape,
     id: uuid(),
@@ -66,7 +66,7 @@ const DRAW_MAP_ID = uuid();
  */
 export const BasicDrawing: Story = {
   render: () => {
-    const [shapes, setShapes] = useState<DisplayShape[]>([]);
+    const [shapes, setShapes] = useState<Shape[]>([]);
     const [eventLog, setEventLog] = useState<
       Array<{ id: string; message: string }>
     >([]);
@@ -293,7 +293,7 @@ const CUSTOM_STYLES_MAP_ID = uuid();
 
 export const CustomStyleDefaults: Story = {
   render: () => {
-    const [shapes, setShapes] = useState<DisplayShape[]>([]);
+    const [shapes, setShapes] = useState<Shape[]>([]);
     const [selectedColor, setSelectedColor] = useState<
       'red' | 'blue' | 'green'
     >('red');
@@ -411,7 +411,7 @@ const COMBINED_MAP_ID = uuid();
 export const CombinedDisplayAndDraw: Story = {
   render: () => {
     // Start with pre-existing shapes from fixtures
-    const [shapes, setShapes] = useState<DisplayShape[]>(createSampleShapes);
+    const [shapes, setShapes] = useState<Shape[]>(createSampleShapes);
 
     // Subscribe to cursor store and shape selection
     const { requestCursorChange, clearCursor } = useMapCursor(COMBINED_MAP_ID);

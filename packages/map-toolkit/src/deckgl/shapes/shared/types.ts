@@ -126,9 +126,9 @@ export interface StyledFeature extends Feature {
 }
 
 /**
- * Shape data structure for DisplayShapeLayer
+ * Shape data structure used by display, draw, and edit layers
  */
-export interface DisplayShape {
+export interface Shape {
   /** Unique identifier */
   id: ShapeId;
   /** Full shape name used internally and in UI */
@@ -146,12 +146,6 @@ export interface DisplayShape {
   /** UTC timestamp (only set when saved) */
   lastUpdated?: number;
 }
-
-/**
- * Alias for backward compatibility
- * @deprecated Use DisplayShape instead
- */
-export type EditableShape = DisplayShape;
 
 /**
  * Alias for ShapeFeatureType values

@@ -13,7 +13,7 @@
 import type { UniqueId } from '@accelint/core';
 import type { CompositeLayerProps } from '@deck.gl/core';
 import type {
-  EditableShape,
+  Shape,
   ShapeId,
   StyledFeature as SharedStyledFeature,
 } from '../shared/types';
@@ -57,7 +57,7 @@ export interface DisplayShapeLayerProps extends CompositeLayerProps {
    * Array of shapes to display
    * Each shape must have a GeoJSON feature with styleProperties
    */
-  data: EditableShape[];
+  data: Shape[];
 
   /**
    * Currently selected shape ID (for highlighting)
@@ -70,14 +70,14 @@ export interface DisplayShapeLayerProps extends CompositeLayerProps {
    * Also triggers a shapes:selected event on the event bus
    * @param shape - The clicked shape with full properties
    */
-  onShapeClick?: (shape: EditableShape) => void;
+  onShapeClick?: (shape: Shape) => void;
 
   /**
    * Callback when a shape is hovered
    * Called with null when hover ends
    * @param shape - The hovered shape, or null when hover ends
    */
-  onShapeHover?: (shape: EditableShape | null) => void;
+  onShapeHover?: (shape: Shape | null) => void;
 
   /**
    * Whether to show labels on shapes
