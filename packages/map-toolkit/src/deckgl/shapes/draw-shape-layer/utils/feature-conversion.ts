@@ -120,13 +120,3 @@ export function convertFeatureToShape(
     lastUpdated: Date.now(),
   };
 }
-
-/**
- * Create an empty FeatureCollection for initializing the editable layer
- */
-export function createEmptyFeatureCollection(): GeoJSON.FeatureCollection {
-  return {
-    type: 'FeatureCollection',
-    features: [],
-  };
-}
