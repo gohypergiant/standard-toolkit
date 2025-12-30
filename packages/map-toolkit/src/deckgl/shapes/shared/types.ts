@@ -173,6 +173,11 @@ export interface Shape {
   feature: ShapeFeature;
   /** UTC timestamp (only set when saved) */
   lastUpdated?: number;
+  /**
+   * Whether the shape is locked for editing
+   * Locked shapes cannot be modified due to data restrictions or user preference
+   */
+  locked?: boolean;
 }
 
 /**

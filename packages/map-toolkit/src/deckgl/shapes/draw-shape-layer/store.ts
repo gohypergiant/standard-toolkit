@@ -269,17 +269,6 @@ function cancelDrawing(mapId: UniqueId): void {
 }
 
 /**
- * Update the tentative feature during drawing
- */
-function updateTentativeFeature(
-  mapId: UniqueId,
-  feature: Feature | null,
-): void {
-  updateState(mapId, { tentativeFeature: feature });
-  notifySubscribers(mapId);
-}
-
-/**
  * Ensures a single bus listener exists for the given mapId.
  * All React subscribers will be notified via fan-out when the bus events fire.
  * This prevents creating N bus listeners for N React components.
@@ -358,9 +347,9 @@ export function getOrCreateSubscription(mapId: UniqueId): Subscription {
   // must return the same value before and after subscription is registered.
   getOrCreateState(mapId);
 
-  const subscription =
-    subscriptionCache.get(mapId) ??
-    ((onStoreChange: () => void) => {
+  let subscription = subscriptionCache.get(mapId);
+  if (!subscription) {
+    subscription = (onStoreChange: () => void) => {
       // Ensure single bus listener exists for this mapId
       ensureBusListener(mapId);
 
@@ -382,9 +371,10 @@ export function getOrCreateSubscription(mapId: UniqueId): Subscription {
         // Clean up bus listener if this was the last React subscriber
         cleanupBusListenerIfNeeded(mapId);
       };
-    });
+    };
 
-  subscriptionCache.set(mapId, subscription);
+    subscriptionCache.set(mapId, subscription);
+  }
 
   return subscription;
 }
@@ -396,17 +386,11 @@ export function getOrCreateSubscription(mapId: UniqueId): Subscription {
 export function getOrCreateSnapshot(
   mapId: UniqueId,
 ): () => DrawingState | null {
-  const snapshot =
-    snapshotCache.get(mapId) ??
-    (() => {
-      const state = drawingStore.get(mapId);
-      if (!state) {
-        return null;
-      }
-      return state;
-    });
-
-  snapshotCache.set(mapId, snapshot);
+  let snapshot = snapshotCache.get(mapId);
+  if (!snapshot) {
+    snapshot = () => drawingStore.get(mapId) ?? null;
+    snapshotCache.set(mapId, snapshot);
+  }
 
   return snapshot;
 }
@@ -419,9 +403,11 @@ export function getOrCreateSnapshot(
 export function getOrCreateServerSnapshot(
   mapId: UniqueId,
 ): () => DrawingState | null {
-  const serverSnapshot = serverSnapshotCache.get(mapId) ?? (() => null);
-
-  serverSnapshotCache.set(mapId, serverSnapshot);
+  let serverSnapshot = serverSnapshotCache.get(mapId);
+  if (!serverSnapshot) {
+    serverSnapshot = () => null;
+    serverSnapshotCache.set(mapId, serverSnapshot);
+  }
 
   return serverSnapshot;
 }
@@ -431,13 +417,13 @@ export function getOrCreateServerSnapshot(
  * This maintains referential stability for the function reference.
  */
 export function getOrCreateDraw(mapId: UniqueId): DrawFunction {
-  const draw =
-    drawCache.get(mapId) ??
-    ((shapeType: ShapeFeatureType, options?: DrawShapeOptions) => {
+  let draw = drawCache.get(mapId);
+  if (!draw) {
+    draw = (shapeType: ShapeFeatureType, options?: DrawShapeOptions) => {
       startDrawing(mapId, shapeType, options);
-    });
-
-  drawCache.set(mapId, draw);
+    };
+    drawCache.set(mapId, draw);
+  }
 
   return draw;
 }
@@ -447,9 +433,11 @@ export function getOrCreateDraw(mapId: UniqueId): DrawFunction {
  * This maintains referential stability for the function reference.
  */
 export function getOrCreateCancel(mapId: UniqueId): () => void {
-  const cancel = cancelCache.get(mapId) ?? (() => cancelDrawing(mapId));
-
-  cancelCache.set(mapId, cancel);
+  let cancel = cancelCache.get(mapId);
+  if (!cancel) {
+    cancel = () => cancelDrawing(mapId);
+    cancelCache.set(mapId, cancel);
+  }
 
   return cancel;
 }
@@ -469,16 +457,6 @@ export function completeDrawingFromLayer(
  */
 export function cancelDrawingFromLayer(mapId: UniqueId): void {
   cancelDrawing(mapId);
-}
-
-/**
- * Update tentative feature (called by the layer component)
- */
-export function updateTentativeFeatureFromLayer(
-  mapId: UniqueId,
-  feature: Feature | null,
-): void {
-  updateTentativeFeature(mapId, feature);
 }
 
 /**

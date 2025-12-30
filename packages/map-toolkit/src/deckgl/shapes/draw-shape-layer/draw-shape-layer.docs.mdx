@@ -313,6 +313,23 @@ The layer uses the following default colors during drawing:
 
 These can be overridden by passing `styleDefaults` when calling `draw()`.
 
+## Created Shape Structure
+
+When a shape is successfully drawn, the `onCreate` callback receives a `Shape` object with the following structure:
+
+```typescript
+{
+  id: UniqueId;           // Auto-generated UUID
+  name: string;           // Auto-generated name (e.g., "New Polygon (2:30:45 PM)")
+  shapeType: ShapeFeatureType;  // The drawn shape type
+  feature: ShapeFeature;  // GeoJSON feature with geometry and style properties
+  lastUpdated: number;    // UTC timestamp when created
+  locked: false;          // Newly drawn shapes are always unlocked
+}
+```
+
+The `locked` property is explicitly set to `false` for all newly created shapes, indicating they are editable.
+
 ## Examples
 
 See the Storybook stories for interactive examples:

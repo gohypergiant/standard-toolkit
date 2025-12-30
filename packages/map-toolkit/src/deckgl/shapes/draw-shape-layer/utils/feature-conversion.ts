@@ -116,6 +116,14 @@ function computeEllipseProperties(
 /**
  * Convert a raw GeoJSON Feature from EditableGeoJsonLayer to a Shape
  *
+ * The returned Shape includes:
+ * - Auto-generated UUID
+ * - Auto-generated name with timestamp (e.g., "New Polygon (2:30:45 PM)")
+ * - Merged style properties (defaults + overrides)
+ * - Circle/ellipse properties computed from geometry if applicable
+ * - `lastUpdated` timestamp
+ * - `locked: false` (newly created shapes are always unlocked)
+ *
  * @param feature - The raw GeoJSON feature from the editable layer
  * @param shapeType - The type of shape being created
  * @param styleDefaults - Optional style overrides
@@ -171,5 +179,6 @@ export function convertFeatureToShape(
     shapeType,
     feature: styledFeature,
     lastUpdated: Date.now(),
+    locked: false,
   };
 }

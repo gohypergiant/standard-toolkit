@@ -55,10 +55,6 @@
 
 'use client';
 
-import {
-  LABEL_BACKGROUND_OPACITY,
-  LABEL_BORDER_OPACITY,
-} from '../../shared/constants';
 import type { LineString, Point, Polygon } from 'geojson';
 import type { Shape } from '../../shared/types';
 
@@ -770,38 +766,4 @@ export function getLabelPosition2d(
  */
 export function getLabelText(shape: Shape): string {
   return (shape.label || shape.name).toUpperCase();
-}
-
-/**
- * Get label background color (uses RGB from shape fill color with fixed label opacity)
- */
-export function getLabelFillColor(
-  shape: Shape,
-): [number, number, number, number] {
-  const styleProps = shape.feature.properties?.styleProperties;
-  const fillColor = styleProps?.fillColor ?? [98, 166, 255, 255];
-
-  // Extract RGB, use fixed opacity for label background
-  const r = fillColor[0] ?? 98;
-  const g = fillColor[1] ?? 166;
-  const b = fillColor[2] ?? 255;
-
-  return [r, g, b, LABEL_BACKGROUND_OPACITY];
-}
-
-/**
- * Get label border color (uses RGB from shape stroke color with full opacity)
- */
-export function getLabelBorderColor(
-  shape: Shape,
-): [number, number, number, number] {
-  const styleProps = shape.feature.properties?.styleProperties;
-  const strokeColor = styleProps?.strokeColor ?? [98, 166, 255, 255];
-
-  // Extract RGB, use full opacity for border
-  const r = strokeColor[0] ?? 98;
-  const g = strokeColor[1] ?? 166;
-  const b = strokeColor[2] ?? 255;
-
-  return [r, g, b, LABEL_BORDER_OPACITY];
 }

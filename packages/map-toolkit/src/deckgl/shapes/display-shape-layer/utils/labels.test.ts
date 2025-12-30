@@ -12,8 +12,6 @@
 
 import { describe, expect, it } from 'vitest';
 import {
-  getLabelBorderColor,
-  getLabelFillColor,
   getLabelPosition2d,
   getLabelText,
   getLineStringEndpoint,
@@ -22,7 +20,6 @@ import {
   interpolatePoint,
   type LabelPositionOptions,
 } from './labels';
-import type { Color } from '@deck.gl/core';
 import type { Shape } from '../../shared/types';
 
 describe('Label Positioning Utilities', () => {
@@ -225,140 +222,6 @@ describe('Label Positioning Utilities', () => {
       };
 
       expect(getLabelText(shape)).toBe('SHORT');
-    });
-  });
-
-  describe('getLabelFillColor', () => {
-    it('extracts RGB from RGBA and applies fixed label opacity', () => {
-      const shape: Shape = {
-        id: '1',
-        name: 'Test',
-        shapeType: 'Point',
-        locked: false,
-        feature: {
-          type: 'Feature',
-          properties: {
-            styleProperties: {
-              fillColor: [98, 166, 255, 150] as Color,
-              strokeColor: [0, 0, 0, 255] as Color,
-              strokeWidth: 2,
-              strokePattern: 'solid',
-            },
-          },
-          geometry: { type: 'Point', coordinates: [0, 0] },
-        },
-      };
-
-      const result = getLabelFillColor(shape);
-
-      // RGB from fillColor with fixed label opacity (200)
-      expect(result).toEqual([98, 166, 255, 200]);
-    });
-
-    it('uses default color when fillColor is not provided', () => {
-      const shape: Shape = {
-        id: '1',
-        name: 'Test',
-        shapeType: 'Point',
-        locked: false,
-        feature: {
-          type: 'Feature',
-          properties: {
-            styleProperties: {
-              fillColor: undefined as unknown as Color,
-              strokeColor: [0, 0, 0, 255] as Color,
-              strokeWidth: 2,
-              strokePattern: 'solid',
-            },
-          },
-          geometry: { type: 'Point', coordinates: [0, 0] },
-        },
-      };
-
-      const result = getLabelFillColor(shape);
-
-      // Default: [98, 166, 255] with label opacity 200
-      expect(result).toEqual([98, 166, 255, 200]);
-    });
-
-    it('handles different RGBA colors correctly', () => {
-      const shape: Shape = {
-        id: '1',
-        name: 'Test',
-        shapeType: 'Point',
-        locked: false,
-        feature: {
-          type: 'Feature',
-          properties: {
-            styleProperties: {
-              fillColor: [255, 0, 0, 100] as Color,
-              strokeColor: [0, 0, 0, 255] as Color,
-              strokeWidth: 2,
-              strokePattern: 'solid',
-            },
-          },
-          geometry: { type: 'Point', coordinates: [0, 0] },
-        },
-      };
-
-      const result = getLabelFillColor(shape);
-
-      // RGB extracted, fixed label opacity applied (200)
-      expect(result).toEqual([255, 0, 0, 200]);
-    });
-  });
-
-  describe('getLabelBorderColor', () => {
-    it('extracts RGB from RGBA and applies full opacity', () => {
-      const shape: Shape = {
-        id: '1',
-        name: 'Test',
-        shapeType: 'Point',
-        locked: false,
-        feature: {
-          type: 'Feature',
-          properties: {
-            styleProperties: {
-              fillColor: [0, 0, 0, 255] as Color,
-              strokeColor: [98, 166, 255, 150] as Color,
-              strokeWidth: 2,
-              strokePattern: 'solid',
-            },
-          },
-          geometry: { type: 'Point', coordinates: [0, 0] },
-        },
-      };
-
-      const result = getLabelBorderColor(shape);
-
-      // RGB from strokeColor with full opacity (255)
-      expect(result).toEqual([98, 166, 255, 255]);
-    });
-
-    it('uses default color when strokeColor is not provided', () => {
-      const shape: Shape = {
-        id: '1',
-        name: 'Test',
-        shapeType: 'Point',
-        locked: false,
-        feature: {
-          type: 'Feature',
-          properties: {
-            styleProperties: {
-              fillColor: [0, 0, 0, 255] as Color,
-              strokeColor: undefined as unknown as Color,
-              strokeWidth: 2,
-              strokePattern: 'solid',
-            },
-          },
-          geometry: { type: 'Point', coordinates: [0, 0] },
-        },
-      };
-
-      const result = getLabelBorderColor(shape);
-
-      // Default: [98, 166, 255] with full opacity 255
-      expect(result).toEqual([98, 166, 255, 255]);
     });
   });
 

@@ -366,6 +366,16 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
     features: Shape['feature'][],
   ): IconLayer | null {
     const { selectedShapeId } = this.props;
+    const hoverIndex = this.state?.hoverIndex;
+
+    // Build a map of shapeId -> index for O(1) lookup instead of O(n) indexOf calls if done inside the filter below
+    const shapeIdToIndex = new Map<ShapeId, number>();
+    for (let i = 0; i < features.length; i++) {
+      const shapeId = features[i]?.properties?.shapeId;
+      if (shapeId) {
+        shapeIdToIndex.set(shapeId, i);
+      }
+    }
 
     // Find point features that need coffin corners (hovered or selected)
     const pointFeatures = features.filter((f) => {
@@ -379,9 +389,8 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
 
       const shapeId = f.properties?.shapeId;
       const isSelected = shapeId === selectedShapeId;
-      const isHovered =
-        this.state?.hoverIndex !== undefined &&
-        features.indexOf(f) === this.state.hoverIndex;
+      const featureIndex = shapeId ? shapeIdToIndex.get(shapeId) : undefined;
+      const isHovered = hoverIndex !== undefined && featureIndex === hoverIndex;
 
       return isSelected || isHovered;
     });
@@ -437,9 +446,9 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       getIcon: (d: Shape['feature']) => {
         const shapeId = d.properties?.shapeId;
         const isSelected = shapeId === selectedShapeId;
+        const featureIndex = shapeId ? shapeIdToIndex.get(shapeId) : undefined;
         const isHovered =
-          this.state?.hoverIndex !== undefined &&
-          features.indexOf(d) === this.state.hoverIndex;
+          hoverIndex !== undefined && featureIndex === hoverIndex;
 
         if (isSelected && isHovered) {
           return COFFIN_CORNERS.SELECTED_HOVER_ICON;
