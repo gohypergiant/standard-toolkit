@@ -18,18 +18,17 @@
  *
  * ## Label Styling
  *
- * Labels are automatically styled to match their shapes:
- * - **Background fill**: Uses the shape's `fillColor` RGB with fixed label opacity (200)
- * - **Border**: Uses the shape's `strokeColor` RGB at full opacity with 2px width
- * - **Padding**: 8px on all sides (top, right, bottom, left)
- * - **Text**: Black (rgba(0, 0, 0, 255)) with bold Roboto Mono font at 10px
+ * Labels use a text-only style for legibility across different map backgrounds:
+ * - **Text**: White uppercase with bold Roboto Mono font at 10px
+ * - **Outline**: Black 2px outline around text for contrast
+ * - **No background or border**: Clean text-only appearance
  *
  * ### Calculating Offsets
  *
- * When positioning labels, account for the 8px padding around the text.
+ * When positioning labels, the text height is approximately 10px.
  * For example, to position a label exactly 5px above a point:
- * - Label height ≈ text height (10px) + padding (16px) = 26px
- * - Offset needed: [0, -(26 + 5)] = [0, -31]
+ * - Label height ≈ text height (10px)
+ * - Offset needed: [0, -(10 + 5)] = [0, -15]
  *
  * @example Position label at the middle of a LineString
  * ```typescript
@@ -219,15 +218,18 @@ export type LabelVerticalPosition = 'top' | 'middle' | 'bottom';
 export type LabelHorizontalPosition = 'left' | 'center' | 'right';
 
 /**
- * Coordinate anchor position along geometry (where on the shape to place the label)
+ * Cardinal direction anchor for positioning labels on geometry edges
+ * Uses edge positions relative to the geometry's bounding box
+ * Works for LineString, Polygon, and Circle geometries
+ * - 'center': centroid/midpoint of the geometry
+ * - 'top'/'right'/'bottom'/'left': edge positions
  */
-export type LabelCoordinateAnchor = 'start' | 'middle' | 'end';
-
-/**
- * Circle coordinate anchor for positioning labels on the perimeter
- * Uses edge positions relative to the circle's bounding box
- */
-export type CircleLabelCoordinateAnchor = 'top' | 'right' | 'bottom' | 'left';
+export type CardinalLabelCoordinateAnchor =
+  | 'center'
+  | 'top'
+  | 'right'
+  | 'bottom'
+  | 'left';
 
 /**
  * Global label positioning options for DisplayShapeLayer
@@ -240,13 +242,12 @@ export type CircleLabelCoordinateAnchor = 'top' | 'right' | 'bottom' | 'left';
  *
  * ## Label Appearance
  *
- * Labels automatically inherit styling from their shapes:
- * - **Background**: Shape's `fillColor` RGB with fixed label opacity (200)
- * - **Border**: Shape's `strokeColor` RGB at full opacity (2px width)
- * - **Padding**: 8px on all sides
- * - **Text**: Black, bold, Roboto Mono, 10px
+ * Labels use a clean text-only style:
+ * - **Text**: White uppercase, bold Roboto Mono, 10px
+ * - **Outline**: Black 2px outline for contrast
+ * - **No background or border**
  *
- * Total label box height ≈ 26px (10px text + 16px padding)
+ * Text height ≈ 10px
  *
  * ## Positioning Concepts
  *
@@ -265,14 +266,13 @@ export type CircleLabelCoordinateAnchor = 'top' | 'right' | 'bottom' | 'left';
  * Fine-tune label position with [x, y] pixel offsets:
  * - Positive x moves right, negative moves left
  * - Positive y moves down, negative moves up
- * - Account for 8px padding when calculating precise offsets
  *
  * @example Position circle labels at the top with 5px clearance
  * ```tsx
  * const labelOptions: LabelPositionOptions = {
  *   circleLabelCoordinateAnchor: 'top',
  *   circleLabelVerticalAnchor: 'bottom', // Label above the top point
- *   circleLabelOffset: [0, -31], // -(26px label height + 5px clearance)
+ *   circleLabelOffset: [0, -15], // -(10px text height + 5px clearance)
  * };
  * ```
  *
@@ -287,41 +287,41 @@ export type CircleLabelCoordinateAnchor = 'top' | 'right' | 'bottom' | 'left';
  */
 export interface LabelPositionOptions {
   // Point geometry options
-  /** Vertical anchor for Point labels @default 'bottom' */
+  /** Vertical anchor for Point labels @default 'top' */
   pointLabelVerticalAnchor?: LabelVerticalPosition;
   /** Horizontal anchor for Point labels @default 'center' */
   pointLabelHorizontalAnchor?: LabelHorizontalPosition;
-  /** Pixel offset for Point labels [x, y] @default [0, -13] */
+  /** Pixel offset for Point labels [x, y] @default [0, 10] */
   pointLabelOffset?: [number, number];
 
   // LineString geometry options
-  /** Position along LineString (start/middle/end) @default 'start' */
-  lineStringLabelCoordinateAnchor?: LabelCoordinateAnchor;
-  /** Vertical anchor for LineString labels @default 'middle' */
+  /** Position on LineString edge (top/right/bottom/left) @default 'bottom' */
+  lineStringLabelCoordinateAnchor?: CardinalLabelCoordinateAnchor;
+  /** Vertical anchor for LineString labels @default 'top' */
   lineStringLabelVerticalAnchor?: LabelVerticalPosition;
-  /** Horizontal anchor for LineString labels @default 'left' */
+  /** Horizontal anchor for LineString labels @default 'center' */
   lineStringLabelHorizontalAnchor?: LabelHorizontalPosition;
-  /** Pixel offset for LineString labels [x, y] @default [7, -15] */
+  /** Pixel offset for LineString labels [x, y] @default [0, 10] */
   lineStringLabelOffset?: [number, number];
 
   // Polygon geometry options
-  /** Position along Polygon outer ring (start/middle/end) @default 'start' */
-  polygonLabelCoordinateAnchor?: LabelCoordinateAnchor;
-  /** Vertical anchor for Polygon labels @default 'middle' */
+  /** Position on Polygon edge (top/right/bottom/left) @default 'bottom' */
+  polygonLabelCoordinateAnchor?: CardinalLabelCoordinateAnchor;
+  /** Vertical anchor for Polygon labels @default 'top' */
   polygonLabelVerticalAnchor?: LabelVerticalPosition;
-  /** Horizontal anchor for Polygon labels @default 'left' */
+  /** Horizontal anchor for Polygon labels @default 'center' */
   polygonLabelHorizontalAnchor?: LabelHorizontalPosition;
-  /** Pixel offset for Polygon labels [x, y] @default [7, -15] */
+  /** Pixel offset for Polygon labels [x, y] @default [0, 10] */
   polygonLabelOffset?: [number, number];
 
   // Circle geometry options
-  /** Position on Circle perimeter (top/right/bottom/left) @default 'top' */
-  circleLabelCoordinateAnchor?: CircleLabelCoordinateAnchor;
-  /** Vertical anchor for Circle labels @default 'middle' */
+  /** Position on Circle perimeter (top/right/bottom/left) @default 'bottom' */
+  circleLabelCoordinateAnchor?: CardinalLabelCoordinateAnchor;
+  /** Vertical anchor for Circle labels @default 'top' */
   circleLabelVerticalAnchor?: LabelVerticalPosition;
   /** Horizontal anchor for Circle labels @default 'center' */
   circleLabelHorizontalAnchor?: LabelHorizontalPosition;
-  /** Pixel offset for Circle labels [x, y] @default [0, -17] */
+  /** Pixel offset for Circle labels [x, y] @default [0, 10] */
   circleLabelOffset?: [number, number];
 }
 
@@ -401,8 +401,8 @@ function getPointPosition(
   shapeHorizontal: string | undefined,
   options?: LabelPositionOptions,
 ): LabelPosition2d {
-  const defaultOffset: [number, number] = [0, -13];
-  const defaultVertical: LabelVerticalPosition = 'bottom';
+  const defaultOffset: [number, number] = [0, 10];
+  const defaultVertical: LabelVerticalPosition = 'top';
   const defaultHorizontal: LabelHorizontalPosition = 'center';
 
   const resolved = resolveLabelProperties(
@@ -428,6 +428,7 @@ function getPointPosition(
 
 /**
  * Get position for LineString geometry
+ * Uses cardinal direction positioning to find the edge point
  */
 function getLineStringPosition(
   geometry: LineString,
@@ -436,11 +437,11 @@ function getLineStringPosition(
   shapeHorizontal: string | undefined,
   shapeCoordinateAnchor: string | undefined,
   options?: LabelPositionOptions,
-): LabelPosition2d {
-  const defaultOffset: [number, number] = [7, -15];
-  const defaultVertical: LabelVerticalPosition = 'middle';
-  const defaultHorizontal: LabelHorizontalPosition = 'left';
-  const defaultCoordinateAnchor: LabelCoordinateAnchor = 'start';
+): LabelPosition2d | null {
+  const defaultOffset: [number, number] = [0, 10];
+  const defaultVertical: LabelVerticalPosition = 'top';
+  const defaultHorizontal: LabelHorizontalPosition = 'center';
+  const defaultCoordinateAnchor: CardinalLabelCoordinateAnchor = 'bottom';
 
   const resolved = resolveLabelProperties(
     shapeOffset,
@@ -457,26 +458,16 @@ function getLineStringPosition(
   // Determine coordinate anchor (priority: shape > options > default)
   const coordinateAnchor = (shapeCoordinateAnchor ??
     options?.lineStringLabelCoordinateAnchor ??
-    defaultCoordinateAnchor) as LabelCoordinateAnchor;
+    defaultCoordinateAnchor) as CardinalLabelCoordinateAnchor;
 
-  // Calculate position based on coordinate anchor
-  let coordinates: [number, number];
-  switch (coordinateAnchor) {
-    case 'start':
-      coordinates = (geometry.coordinates[0] ?? [0, 0]) as [number, number];
-      break;
-    case 'middle':
-      coordinates = getLineStringMidpoint(
-        geometry.coordinates as [number, number][],
-      );
-      break;
-    case 'end':
-      coordinates = getLineStringEndpoint(
-        geometry.coordinates as [number, number][],
-      );
-      break;
-    default:
-      coordinates = (geometry.coordinates[0] ?? [0, 0]) as [number, number];
+  // Calculate position based on cardinal direction
+  const coordinates = findEdgePoint(
+    geometry.coordinates as number[][],
+    coordinateAnchor,
+  );
+
+  if (!coordinates) {
+    return null;
   }
 
   return {
@@ -488,8 +479,13 @@ function getLineStringPosition(
 /**
  * Get vertex coordinate from ring
  */
-function getVertexCoordinate(vertex: number[] | undefined): [number, number] {
-  return vertex ? [vertex[0] ?? 0, vertex[1] ?? 0] : [0, 0];
+function getVertexCoordinate(
+  vertex: number[] | undefined,
+): [number, number] | null {
+  if (!vertex || vertex[0] === undefined || vertex[1] === undefined) {
+    return null;
+  }
+  return [vertex[0], vertex[1]];
 }
 
 /**
@@ -498,7 +494,7 @@ function getVertexCoordinate(vertex: number[] | undefined): [number, number] {
 function shouldUpdateEdgeVertex(
   vertexValue: number,
   targetValue: number,
-  position: CircleLabelCoordinateAnchor,
+  position: CardinalLabelCoordinateAnchor,
 ): boolean {
   // For top and right, find maximum value
   // For bottom and left, find minimum value
@@ -511,30 +507,65 @@ function shouldUpdateEdgeVertex(
  * Get the coordinate index based on edge position (0 for x/longitude, 1 for y/latitude)
  */
 function getCoordinateIndexForEdgePosition(
-  position: CircleLabelCoordinateAnchor,
+  position: CardinalLabelCoordinateAnchor,
 ): number {
   return position === 'top' || position === 'bottom' ? 1 : 0;
 }
 
 /**
- * Find the point on a circle's perimeter at the specified edge position
- * @param ring - Circle's polygon ring coordinates
- * @param position - Edge position (top/right/bottom/left) relative to bounding box
- * @returns Coordinate at the specified edge position
+ * Calculate the centroid (center point) of a set of coordinates
+ * For polygons, this calculates the geometric center
+ * For lines, this calculates the midpoint of the bounding box
+ * Returns null if no valid coordinates exist
  */
-function findCircleEdgePoint(
-  ring: number[][] | undefined,
-  position: CircleLabelCoordinateAnchor,
-): [number, number] {
-  if (!ring || ring.length === 0) {
-    return [0, 0];
+function calculateCentroid(coordinates: number[][]): [number, number] | null {
+  if (coordinates.length === 0) {
+    return null;
+  }
+
+  let sumX = 0;
+  let sumY = 0;
+  let count = 0;
+
+  for (const coord of coordinates) {
+    if (coord && coord[0] !== undefined && coord[1] !== undefined) {
+      sumX += coord[0];
+      sumY += coord[1];
+      count++;
+    }
+  }
+
+  if (count === 0) {
+    return null;
+  }
+
+  return [sumX / count, sumY / count];
+}
+
+/**
+ * Find the point on a geometry's perimeter at the specified edge position
+ * @param coordinates - Array of coordinates (ring or line)
+ * @param position - Edge position (center/top/right/bottom/left) relative to bounding box
+ * @returns Coordinate at the specified edge position, or null if no valid coordinates
+ */
+function findEdgePoint(
+  coordinates: number[][] | undefined,
+  position: CardinalLabelCoordinateAnchor,
+): [number, number] | null {
+  if (!coordinates || coordinates.length === 0) {
+    return null;
+  }
+
+  // Handle center positioning
+  if (position === 'center') {
+    return calculateCentroid(coordinates);
   }
 
   // Find the vertex with max/min latitude or longitude
-  let targetVertex = ring[0];
+  let targetVertex = coordinates[0];
   const coordinateIndex = getCoordinateIndexForEdgePosition(position);
 
-  for (const vertex of ring) {
+  for (const vertex of coordinates) {
     if (!vertex) {
       continue;
     }
@@ -558,35 +589,6 @@ function findCircleEdgePoint(
 }
 
 /**
- * Calculate coordinates for polygon based on coordinate anchor
- */
-function calculatePolygonCoordinates(
-  ring: number[][] | undefined,
-  coordinateAnchor: LabelCoordinateAnchor,
-  geometry: Polygon,
-): [number, number] {
-  if (!ring || ring.length === 0) {
-    return [0, 0];
-  }
-
-  if (coordinateAnchor === 'start') {
-    return getVertexCoordinate(ring[0]);
-  }
-
-  if (coordinateAnchor === 'middle') {
-    return getPolygonMidpoint(geometry.coordinates as [number, number][][]);
-  }
-
-  if (coordinateAnchor === 'end') {
-    // Use second-to-last vertex (last vertex is typically same as first in closed polygons)
-    const lastIndex = ring.length > 1 ? ring.length - 2 : ring.length - 1;
-    return getVertexCoordinate(ring[lastIndex]);
-  }
-
-  return getVertexCoordinate(ring[0]);
-}
-
-/**
  * Get position for Circle geometry (special case of Polygon)
  */
 function getCirclePosition(
@@ -596,11 +598,11 @@ function getCirclePosition(
   shapeHorizontal: string | undefined,
   shapeCoordinateAnchor: string | undefined,
   options?: LabelPositionOptions,
-): LabelPosition2d {
-  const defaultOffset: [number, number] = [0, -17];
-  const defaultVertical: LabelVerticalPosition = 'middle';
+): LabelPosition2d | null {
+  const defaultOffset: [number, number] = [0, 10];
+  const defaultVertical: LabelVerticalPosition = 'top';
   const defaultHorizontal: LabelHorizontalPosition = 'center';
-  const defaultCoordinateAnchor: CircleLabelCoordinateAnchor = 'top';
+  const defaultCoordinateAnchor: CardinalLabelCoordinateAnchor = 'bottom';
 
   const resolved = resolveLabelProperties(
     shapeOffset,
@@ -617,10 +619,14 @@ function getCirclePosition(
   // Determine coordinate anchor (priority: shape > options > default)
   const coordinateAnchor = (shapeCoordinateAnchor ??
     options?.circleLabelCoordinateAnchor ??
-    defaultCoordinateAnchor) as CircleLabelCoordinateAnchor;
+    defaultCoordinateAnchor) as CardinalLabelCoordinateAnchor;
 
   // Calculate position based on coordinate anchor
-  const coordinates = findCircleEdgePoint(ring, coordinateAnchor);
+  const coordinates = findEdgePoint(ring, coordinateAnchor);
+
+  if (!coordinates) {
+    return null;
+  }
 
   return {
     coordinates,
@@ -630,6 +636,7 @@ function getCirclePosition(
 
 /**
  * Get position for Polygon geometry
+ * Uses cardinal direction positioning to find the edge point
  */
 function getPolygonPosition(
   geometry: Polygon,
@@ -639,10 +646,10 @@ function getPolygonPosition(
   shapeHorizontal: string | undefined,
   shapeCoordinateAnchor: string | undefined,
   options?: LabelPositionOptions,
-): LabelPosition2d {
+): LabelPosition2d | null {
   const ring = geometry.coordinates[0];
 
-  // Circle shapes override: use cardinal direction positioning
+  // Circle shapes use circle-specific options
   if (shape.shapeType === 'Circle') {
     return getCirclePosition(
       ring,
@@ -654,11 +661,11 @@ function getPolygonPosition(
     );
   }
 
-  // Regular polygons use coordinate anchor to determine position along outer ring
-  const defaultOffset: [number, number] = [7, -15];
-  const defaultVertical: LabelVerticalPosition = 'middle';
-  const defaultHorizontal: LabelHorizontalPosition = 'left';
-  const defaultCoordinateAnchor: LabelCoordinateAnchor = 'start';
+  // Regular polygons use cardinal direction positioning
+  const defaultOffset: [number, number] = [0, 10];
+  const defaultVertical: LabelVerticalPosition = 'top';
+  const defaultHorizontal: LabelHorizontalPosition = 'center';
+  const defaultCoordinateAnchor: CardinalLabelCoordinateAnchor = 'bottom';
 
   const resolved = resolveLabelProperties(
     shapeOffset,
@@ -675,14 +682,14 @@ function getPolygonPosition(
   // Determine coordinate anchor (priority: shape > options > default)
   const coordinateAnchor = (shapeCoordinateAnchor ??
     options?.polygonLabelCoordinateAnchor ??
-    defaultCoordinateAnchor) as LabelCoordinateAnchor;
+    defaultCoordinateAnchor) as CardinalLabelCoordinateAnchor;
 
-  // Calculate position based on coordinate anchor
-  const coordinates = calculatePolygonCoordinates(
-    ring,
-    coordinateAnchor,
-    geometry,
-  );
+  // Calculate position based on cardinal direction
+  const coordinates = findEdgePoint(ring, coordinateAnchor);
+
+  if (!coordinates) {
+    return null;
+  }
 
   return {
     coordinates,
@@ -698,11 +705,13 @@ function getPolygonPosition(
  * 1. Per-shape properties in styleProperties (highest)
  * 2. Global labelOptions from layer props
  * 3. Default values (fallback)
+ *
+ * Returns null if no valid coordinates can be determined
  */
 export function getLabelPosition2d(
   shape: EditableShape,
   options?: LabelPositionOptions,
-): LabelPosition2d {
+): LabelPosition2d | null {
   const { geometry } = shape.feature;
   const styleProps = shape.feature.properties?.styleProperties;
 
@@ -744,27 +753,23 @@ export function getLabelPosition2d(
       );
 
     default:
-      // Fallback
-      return {
-        coordinates: [0, 0],
-        textAnchor: 'middle',
-        alignmentBaseline: 'center',
-        pixelOffset: [0, 0],
-      };
+      // Unknown geometry type - return null
+      return null;
   }
 }
 
 /**
  * Get label text for a shape
  *
- * Returns the display label for the shape on the map.
+ * Returns the display label for the shape on the map in uppercase.
  * - `label`: Optional short display name shown on the map (e.g., "NYC")
  * - `name`: Full shape name used internally (e.g., "New York City Office")
  *
  * If `label` is not provided, falls back to using `name`.
+ * Text is automatically converted to uppercase for display.
  */
 export function getLabelText(shape: EditableShape): string {
-  return shape.label || shape.name;
+  return (shape.label || shape.name).toUpperCase();
 }
 
 /**

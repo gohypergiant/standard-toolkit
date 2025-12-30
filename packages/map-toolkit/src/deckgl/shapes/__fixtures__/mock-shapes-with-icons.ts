@@ -12,7 +12,7 @@
 
 import { uuid } from '@accelint/core';
 import { MAP_INTERACTION } from '../display-shape-layer/constants';
-import { MARKER } from './atlas';
+import { MARKER, MARKER_SERIOUS } from './atlas';
 import ATLAS_JSON from './atlas.json';
 import ATLAS_PNG from './atlas.png';
 import type { DisplayShape } from '../shared/types';
@@ -42,9 +42,9 @@ export const mockShapesWithIcons: DisplayShape[] = [
             name: MARKER,
             size: MAP_INTERACTION.ICON_SIZE,
           },
-          // Position label above icon
-          labelOffset: [0, -43],
-          labelVerticalAnchor: 'bottom',
+          // Position label below icon
+          labelOffset: [0, 10],
+          labelVerticalAnchor: 'top',
           labelHorizontalAnchor: 'center',
         },
         shapeId: uuid(),
@@ -56,29 +56,29 @@ export const mockShapesWithIcons: DisplayShape[] = [
     },
     lastUpdated: Date.now(),
   },
-  // Another Point with icon
+  // Another Point with icon (serious/warning variant)
   {
     id: uuid(),
-    name: 'Second Marker',
-    label: 'Marker 2',
+    name: 'Serious Marker',
+    label: 'Serious',
     shapeType: 'Point',
     feature: {
       type: 'Feature',
       properties: {
         styleProperties: {
-          fillColor: [255, 255, 255, 255],
-          strokeColor: [136, 138, 143, 255],
+          fillColor: [230, 150, 0, 255],
+          strokeColor: [230, 150, 0, 255],
           strokeWidth: 2,
           strokePattern: 'solid',
           icon: {
             atlas: ATLAS_PNG,
             mapping: ATLAS_JSON,
-            name: MARKER,
+            name: MARKER_SERIOUS,
             size: MAP_INTERACTION.ICON_SIZE,
           },
-          // Position label above icon
-          labelOffset: [0, -43],
-          labelVerticalAnchor: 'bottom',
+          // Position label below icon
+          labelOffset: [0, 10],
+          labelVerticalAnchor: 'top',
           labelHorizontalAnchor: 'center',
         },
         shapeId: uuid(),
@@ -104,11 +104,8 @@ export const mockShapesWithIcons: DisplayShape[] = [
           strokeColor: [136, 138, 143, 255],
           strokeWidth: 2,
           strokePattern: 'dashed',
-          // Custom label positioning to avoid collision with the line
-          labelVerticalAnchor: 'bottom',
-          labelHorizontalAnchor: 'right',
-          labelCoordinateAnchor: 'middle',
-          labelOffset: [0, -25],
+          // Position label at center of line to avoid overlap with point icons
+          labelCoordinateAnchor: 'center',
         },
         shapeId: uuid(),
       },
