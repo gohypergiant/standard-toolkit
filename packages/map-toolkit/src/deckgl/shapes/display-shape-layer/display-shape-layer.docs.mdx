@@ -13,8 +13,8 @@ A read-only deck.gl composite layer for displaying geographic shapes with intera
 - **Multiple geometry types**: Point, LineString, Polygon, and Circle
 - **Icon support**: Custom icons for Point geometries via icon atlases
 - **Interactive selection**: Click handling with visual highlight feedback
-- **Hover effects**: Line width increases on hover for better UX
-- **Customizable labels**: Flexible label positioning with per-shape or global options
+- **Hover effects**: Line width increases on hover; Points with icons show coffin corners
+- **Customizable labels**: White uppercase text with black outline, flexible positioning
 - **Style properties**: Full control over colors, stroke patterns, and opacity
 - **Event bus integration**: Automatically emits shape events via @accelint/bus
 - **Multi-map support**: Events include map instance ID for isolation
@@ -224,7 +224,7 @@ interface StyleProperties {
   labelOffset?: [number, number];
   labelVerticalAnchor?: 'top' | 'middle' | 'bottom';
   labelHorizontalAnchor?: 'left' | 'center' | 'right';
-  labelCoordinateAnchor?: 'start' | 'middle' | 'end' | 'top' | 'right' | 'bottom' | 'left';
+  labelCoordinateAnchor?: 'center' | 'start' | 'middle' | 'end' | 'top' | 'right' | 'bottom' | 'left';
 }
 ```
 
@@ -269,6 +269,8 @@ const pointWithIcon = {
 
 ## Label Positioning
 
+Labels are displayed as white uppercase text with a black outline for legibility across different map backgrounds.
+
 The layer provides flexible label positioning with a three-tier priority system:
 
 1. **Per-shape properties** in `styleProperties` (highest priority)
@@ -290,8 +292,8 @@ Apply positioning to all shapes of a given type:
     circleLabelVerticalAnchor: 'bottom',
     circleLabelOffset: [0, -10],
 
-    // LineString labels at the middle
-    lineStringLabelCoordinateAnchor: 'middle',
+    // LineString labels at the center
+    lineStringLabelCoordinateAnchor: 'center',
     lineStringLabelVerticalAnchor: 'top',
     lineStringLabelHorizontalAnchor: 'center',
     lineStringLabelOffset: [0, -15],
@@ -315,8 +317,8 @@ const shape = {
     properties: {
       styleProperties: {
         // ... style properties
-        // Position this specific label
-        labelCoordinateAnchor: 'middle',
+        // Position this specific label at the center
+        labelCoordinateAnchor: 'center',
         labelVerticalAnchor: 'bottom',
         labelHorizontalAnchor: 'right',
         labelOffset: [10, -20],
@@ -334,8 +336,8 @@ const shape = {
 Determines *where* on the geometry to place the label:
 
 - **Point**: Label is always at the point coordinate (no anchor needed)
-- **LineString/Polygon**: `'start'`, `'middle'`, or `'end'` along the geometry
-- **Circle**: `'top'`, `'right'`, `'bottom'`, or `'left'` on the perimeter
+- **LineString/Polygon**: `'center'` (centroid), or cardinal edges `'top'`, `'right'`, `'bottom'`, `'left'`
+- **Circle**: `'center'` (center point), or perimeter positions `'top'`, `'right'`, `'bottom'`, `'left'`
 
 #### Vertical/Horizontal Anchor
 
@@ -362,24 +364,24 @@ Fine-tune label position with `[x, y]` pixel offsets:
 
 ### Default Label Positions
 
-Each geometry type has sensible defaults:
+Each geometry type has sensible defaults (labels appear below shapes):
 
-- **Point**: Above the point, centered `[0, -27]`
-- **LineString**: At start, middle-left aligned `[7, -15]`
-- **Polygon**: At start of outer ring, middle-left aligned `[7, -15]`
-- **Circle**: At top of perimeter, centered `[0, -17]`
+- **Point**: Below the point, centered horizontally, offset `[0, 10]`
+- **LineString**: At bottom edge, top-aligned text, centered horizontally, offset `[0, 10]`
+- **Polygon**: At bottom edge, top-aligned text, centered horizontally, offset `[0, 10]`
+- **Circle**: At bottom of perimeter, top-aligned text, centered horizontally, offset `[0, 10]`
 
 ## Selection and Highlighting
 
 ### Visual Feedback
 
-When a shape is selected via `selectedShapeId`, the layer provides two visual indicators:
+When a shape is selected via `selectedShapeId`, the layer provides visual indicators:
 
 1. **Dotted border**: The selected shape's stroke pattern changes to dotted (`[2, 4]` dash array)
-2. **Highlight** (optional): A highlight layer underneath with:
+2. **Coffin corners** (Point shapes with icons): Bracket-like corners appear around selected Point icons with a blue fill. These are not currently customizable.
+3. **Highlight** (optional, non-icon-Point shapes): A highlight layer underneath with:
    - Increased line width (+5 pixels)
    - Custom highlight color (default: turquoise at ~39% opacity)
-   - Icon size increase (+8 pixels for Point geometries with icons)
 
 ### Controlling the Highlight Effect when Selecting Shapes
 
@@ -418,8 +420,8 @@ The highlight effect can be toggled with the `showHighlight` prop:
 
 When `pickable={true}`, shapes show hover feedback:
 
-- Line width increases by 2 pixels
-- Icon size increases by 5 pixels (for Point geometries with icons)
+- **All shapes (except Points with icons)**: Line width increases by 2 pixels
+- **Point shapes with icons**: Coffin corners appear with a white fill and black stroke
 
 ## Event Bus Integration
 

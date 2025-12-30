@@ -1,1 +1,31 @@
-{ "marker": { "height": 66, "pixelRatio": 2, "width": 66, "x": 0, "y": 0 } }
+{
+  "coffin-corners-hover": {
+    "height": 76,
+    "pixelRatio": 2,
+    "width": 76,
+    "x": 0,
+    "y": 0
+  },
+  "coffin-corners-selected": {
+    "height": 76,
+    "pixelRatio": 2,
+    "width": 76,
+    "x": 76,
+    "y": 0
+  },
+  "coffin-corners-selected-hover": {
+    "height": 76,
+    "pixelRatio": 2,
+    "width": 76,
+    "x": 152,
+    "y": 0
+  },
+  "marker": { "height": 64, "pixelRatio": 2, "width": 64, "x": 0, "y": 76 },
+  "marker-serious": {
+    "height": 64,
+    "pixelRatio": 2,
+    "width": 64,
+    "x": 0,
+    "y": 140
+  }
+}
