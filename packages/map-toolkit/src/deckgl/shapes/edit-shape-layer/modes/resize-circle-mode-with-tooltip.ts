@@ -28,14 +28,21 @@ import type { Viewport } from '@deck.gl/core';
 import type { Feature, Polygon } from 'geojson';
 
 /**
- * Extends ResizeCircleMode to display area tooltip during resize.
+ * Format a distance value for display
+ */
+function formatDistance(value: number): string {
+  return value.toFixed(2);
+}
+
+/**
+ * Extends ResizeCircleMode to display diameter and area tooltip during resize.
  *
  * Features:
- * - Live area tooltip during circle resize
+ * - Live diameter and area tooltip during circle resize
  * - Uses turf.js for accurate geographic distance calculations
  * - Single-pass getGuides filter to prevent TypeError from sublayer picks
  *
- * Shows the area of the circle being resized based on the current radius.
+ * Shows the diameter and area of the circle being resized.
  */
 export class ResizeCircleModeWithTooltip extends ResizeCircleMode {
   private tooltip: Tooltip | null = null;
@@ -78,6 +85,7 @@ export class ResizeCircleModeWithTooltip extends ResizeCircleMode {
     const center = centerFeature.geometry.coordinates as [number, number];
     const firstPoint = coordinates[0] as [number, number];
     const radius = distance(center, firstPoint, { units: distanceUnits });
+    const diameter = radius * 2;
     const circleArea = Math.PI * radius ** 2;
     const unitAbbrev = getDistanceUnitAbbreviation(distanceUnits);
 
@@ -88,7 +96,7 @@ export class ResizeCircleModeWithTooltip extends ResizeCircleMode {
           screenCoords[0],
           screenCoords[1] + TOOLTIP_Y_OFFSET,
         ]) ?? event.mapCoords,
-      text: `${circleArea.toFixed(2)} ${unitAbbrev}²`,
+      text: `d: ${formatDistance(diameter)} ${unitAbbrev}\n${formatDistance(circleArea)} ${unitAbbrev}²`,
     };
   }
 

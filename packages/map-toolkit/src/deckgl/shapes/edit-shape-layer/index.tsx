@@ -49,6 +49,33 @@ import type {
 } from '../../base-map/types';
 import type { EditShapeLayerProps } from './types';
 
+/** Continuous edit event types that fire during dragging */
+const CONTINUOUS_EDIT_TYPES = new Set([
+  'movePosition',
+  'unionGeometry',
+  'scaling',
+  'rotating',
+  'translating',
+]);
+
+/** Completion edit event types that fire when dragging ends */
+const COMPLETION_EDIT_TYPES = new Set([
+  'finishMovePosition',
+  'addPosition',
+  'removePosition',
+  'scaled',
+  'rotated',
+  'translated',
+]);
+
+function isContinuousEditType(editType: string): boolean {
+  return CONTINUOUS_EDIT_TYPES.has(editType);
+}
+
+function isCompletionEditType(editType: string): boolean {
+  return COMPLETION_EDIT_TYPES.has(editType);
+}
+
 /**
  * Convert a GeoJSON Feature to a FeatureCollection for EditableGeoJsonLayer.
  * The editable-layers library accepts standard GeoJSON FeatureCollection at runtime,
@@ -150,12 +177,11 @@ export function EditShapeLayer({
     getOrCreateServerSnapshot(actualMapId),
   );
 
+  const isEditing = editingState?.editingShape != null;
+
   const emitDisableZoom = useEmit<MapDisableZoomEvent>(MapEvents.disableZoom);
   const emitEnableZoom = useEmit<MapEnableZoomEvent>(MapEvents.enableZoom);
   const isZoomDisabledRef = useRef(false);
-
-  const isEditingRectangle =
-    editingState?.editingShape?.shapeType === ShapeFeatureType.Rectangle;
 
   // RAF batching for movePosition events to reduce React updates during drag
   const pendingUpdateRef = useRef<{
@@ -172,11 +198,11 @@ export function EditShapeLayer({
     };
   }, []);
 
-  // Disable scroll zoom when shift is held during rectangle editing
-  // This prevents shift+scroll zoom from interfering with shift-to-square constraint
+  // Disable zoom while Shift is held during editing
+  // This prevents boxZoom (Shift+drag) from interfering with Shift modifier constraints
+  // (e.g., Shift for square constraint on rectangles, Shift for uniform scaling)
   useEffect(() => {
-    // Only apply for rectangle editing
-    if (!isEditingRectangle) {
+    if (!isEditing) {
       return;
     }
 
@@ -194,7 +220,7 @@ export function EditShapeLayer({
       }
     };
 
-    // Also re-enable zoom if the window loses focus while shift is held
+    // Re-enable zoom if the window loses focus while Shift is held
     const handleBlur = () => {
       if (isZoomDisabledRef.current) {
         isZoomDisabledRef.current = false;
@@ -217,7 +243,7 @@ export function EditShapeLayer({
         emitEnableZoom({ id: actualMapId });
       }
     };
-  }, [isEditingRectangle, actualMapId, emitDisableZoom, emitEnableZoom]);
+  }, [isEditing, actualMapId, emitDisableZoom, emitEnableZoom]);
 
   // If not editing, return null (don't render the editable layer)
   if (!editingState?.editingShape) {
@@ -245,29 +271,14 @@ export function EditShapeLayer({
   };
 
   // Handle edit events from EditableGeoJsonLayer
-  // ModifyMode: movePosition (continuous), finishMovePosition, addPosition, removePosition
-  // ResizeCircleMode: unionGeometry (continuous during resize)
-  // TransformMode: scaling/scaled, rotating/rotated, translating/translated
   const handleEdit = ({
     updatedData,
     editType,
   }: EditAction<FeatureCollection>) => {
     const feature = updatedData.features[0];
 
-    // Batch continuous updates with RAF to reduce React state updates
-    // - movePosition: fires during vertex drag (ModifyMode)
-    // - unionGeometry: fires during circle resize (ResizeCircleMode)
-    // - scaling: fires during scale drag (TransformMode)
-    // - rotating: fires during rotation drag (TransformMode)
-    // - translating: fires during translate drag (TransformMode)
-    if (
-      (editType === 'movePosition' ||
-        editType === 'unionGeometry' ||
-        editType === 'scaling' ||
-        editType === 'rotating' ||
-        editType === 'translating') &&
-      feature
-    ) {
+    // Continuous events (during drag): batch with RAF for smooth performance
+    if (isContinuousEditType(editType) && feature) {
       cancelPendingUpdate();
       const rafId = requestAnimationFrame(() => {
         updateFeatureFromLayer(actualMapId, feature as Feature);
@@ -277,17 +288,8 @@ export function EditShapeLayer({
       return;
     }
 
-    // Completion events: update immediately
-    // - finishMovePosition, addPosition, removePosition: ModifyMode
-    // - scaled, rotated, translated: TransformMode
-    if (
-      editType === 'finishMovePosition' ||
-      editType === 'addPosition' ||
-      editType === 'removePosition' ||
-      editType === 'scaled' ||
-      editType === 'rotated' ||
-      editType === 'translated'
-    ) {
+    // Completion events (drag end): update immediately
+    if (isCompletionEditType(editType)) {
       cancelPendingUpdate();
       if (feature) {
         updateFeatureFromLayer(actualMapId, feature as Feature);
@@ -323,7 +325,6 @@ export function EditShapeLayer({
         distanceUnits: unit
           ? (getDistanceUnitFromAbbreviation(unit) ?? DEFAULT_DISTANCE_UNITS)
           : DEFAULT_DISTANCE_UNITS,
-        lockRectangles: true,
       }}
       _subLayerProps={EDITABLE_LAYER_SUBLAYER_PROPS}
     />

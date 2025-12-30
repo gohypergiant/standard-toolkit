@@ -10,9 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import { TransformMode, ViewMode } from '@deck.gl-community/editable-layers';
-import { ModifyModeWithSquareConstraint } from './modify-mode-with-square-constraint';
-import { ResizeCircleModeWithTooltip } from './resize-circle-mode-with-tooltip';
+import { TranslateMode, ViewMode } from '@deck.gl-community/editable-layers';
+import { EllipseTransformMode } from './ellipse-transform-mode';
+import { ModifyTransformMode } from './modify-transform-mode';
+import { ResizeCircleTranslateMode } from './resize-circle-translate-mode';
 import type { EditMode } from '../types';
 
 /**
@@ -22,17 +23,23 @@ import type { EditMode } from '../types';
  * deck.gl assertion failures. Creating new mode instances on each render
  * causes the EditableGeoJsonLayer to fail with assertion errors.
  *
- * ModifyModeWithSquareConstraint extends ModifyMode with Shift-to-square
- * constraint support for rectangles.
+ * EllipseTransformMode combines ScaleModeWithFreeTransform, RotateMode, and
+ * TranslateMode for ellipses, allowing non-uniform scaling plus rotate/translate.
  *
- * TransformMode combines TranslateMode, ScaleMode, and RotateMode for
- * ellipses, allowing users to move, resize uniformly, and rotate the shape.
+ * ModifyTransformMode combines ModifyMode with TransformMode for polygons,
+ * rectangles, and lines, allowing vertex editing plus scale/rotate/translate.
+ *
+ * ResizeCircleTranslateMode combines ResizeCircleMode with TranslateMode
+ * for circles, allowing resize from edge plus drag to translate.
+ *
+ * TranslateMode allows dragging to move the shape (used for points).
  */
 const EDIT_MODE_INSTANCES = {
   view: new ViewMode(),
-  modify: new ModifyModeWithSquareConstraint(),
-  'resize-circle': new ResizeCircleModeWithTooltip(),
-  transform: new TransformMode(),
+  'ellipse-transform': new EllipseTransformMode(),
+  'modify-transform': new ModifyTransformMode(),
+  'resize-circle': new ResizeCircleTranslateMode(),
+  translate: new TranslateMode(),
 } as const;
 
 /**

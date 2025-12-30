@@ -31,7 +31,8 @@ export const EDIT_SHAPE_LAYER_ID = 'edit-shape-layer';
  */
 export const EDIT_CURSOR_MAP: Record<EditMode, CSSCursorType> = {
   view: 'default',
-  modify: 'crosshair',
-  'resize-circle': 'ew-resize',
-  transform: 'move',
+  'ellipse-transform': 'crosshair',
+  'modify-transform': 'crosshair',
+  'resize-circle': 'crosshair',
+  translate: 'crosshair',
 };

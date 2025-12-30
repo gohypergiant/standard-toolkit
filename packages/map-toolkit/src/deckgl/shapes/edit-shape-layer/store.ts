@@ -158,13 +158,20 @@ function notifySubscribers(mapId: UniqueId): void {
  * Determine the appropriate edit mode for a shape type
  */
 function getEditModeForShape(shape: Shape): EditMode {
+  if (shape.shapeType === ShapeFeatureType.Point) {
+    return 'translate';
+  }
   if (shape.shapeType === ShapeFeatureType.Circle) {
     return 'resize-circle';
   }
   if (shape.shapeType === ShapeFeatureType.Ellipse) {
-    return 'transform';
+    return 'ellipse-transform';
   }
-  return 'modify';
+  // Rectangles, Polygons, and LineStrings get modify-transform for combined
+  // vertex editing + scale/rotate/translate. ScaleMode preserves rotation
+  // for rotated rectangles, and provides consistent behavior for all shapes.
+  // This is also the fallback for any unknown shape types.
+  return 'modify-transform';
 }
 
 /**

@@ -26,12 +26,12 @@ The layer automatically selects the appropriate edit mode based on shape type:
 
 | Shape Type | Edit Mode | Behavior |
 |------------|-----------|----------|
-| **Point** | `modify` | Drag to reposition |
-| **LineString** | `modify` | Drag vertices to reshape |
-| **Polygon** | `modify` | Drag vertices to reshape |
-| **Rectangle** | `modify` | Drag corners to resize (locked to rectangle shape). Hold Shift to constrain to square. |
-| **Circle** | `resize-circle` | Drag edge to resize from center |
-| **Ellipse** | `transform` | Drag to move, corner handles to scale uniformly, top handle to rotate |
+| **Point** | `translate` | Drag to reposition |
+| **LineString** | `modify-transform` | Drag vertices to reshape, OR scale/rotate/translate the entire shape |
+| **Polygon** | `modify-transform` | Drag vertices to reshape, OR scale/rotate/translate the entire shape |
+| **Rectangle** | `modify-transform` | Drag corner handles to resize, drag body to move, or rotate via handle. Hold Shift for uniform scaling. |
+| **Circle** | `resize-circle` | Drag body to move, drag edge to resize from center |
+| **Ellipse** | `ellipse-transform` | Drag to move, corner handles to scale freely, top handle to rotate. Hold Shift for uniform scaling. |
 
 ## Dependencies
 
@@ -146,37 +146,46 @@ function MapWithEditing() {
 
 1. Click on a shape to select it
 2. Click "Edit" to enter edit mode
-3. Drag vertices (white circles) to reshape
-4. Click "Save" to confirm changes or "Cancel" (or press ESC) to discard
+3. **Vertex editing**: Drag vertices (white circles) to reshape
+4. **Move**: Drag anywhere on the shape body to reposition
+5. **Scale**: Drag corner handles (outside the vertices) to resize freely (non-uniform)
+6. **Scale uniformly**: Hold **Shift** while dragging corner handles to maintain aspect ratio
+7. **Rotate**: Drag the top handle to rotate around the center
+8. Click "Save" to confirm changes or "Cancel" (or press ESC) to discard
 
 ### Rectangle
 
 1. Click on a rectangle to select it
 2. Click "Edit" to enter edit mode
-3. Drag corners to resize (shape remains a rectangle)
-4. Hold **Shift** while dragging to constrain to a square
-5. Click "Save" to confirm changes or "Cancel" (or press ESC) to discard
+3. **Resize**: Drag corners to resize (rectangle shape is maintained)
+4. **Move**: Drag anywhere on the rectangle body to reposition
+5. **Rotate**: Drag the top handle to rotate around the center
+6. Hold **Shift** while dragging corners to constrain to a square
+7. Click "Save" to confirm changes or "Cancel" (or press ESC) to discard
 
 ### Circle
 
 1. Click on a circle to select it
 2. Click "Edit" to enter edit mode
-3. Drag the edge of the circle to resize (resizes from center)
-4. Click "Save" to confirm changes or "Cancel" (or press ESC) to discard
+3. **Move**: Drag anywhere on the circle body to reposition
+4. **Resize**: Drag the edge of the circle to resize (resizes from center)
+5. Click "Save" to confirm changes or "Cancel" (or press ESC) to discard
 
 ### Ellipse
 
 1. Click on an ellipse to select it
 2. Click "Edit" to enter edit mode
 3. **Move**: Drag anywhere on the ellipse to reposition
-4. **Scale**: Drag the corner handles to resize uniformly (maintains aspect ratio)
-5. **Rotate**: Drag the top handle to rotate around the center
-6. Click "Save" to confirm changes or "Cancel" (or press ESC) to discard
+4. **Scale**: Drag the corner handles to resize freely (non-uniform)
+5. **Scale uniformly**: Hold **Shift** while dragging corner handles to maintain aspect ratio
+6. **Rotate**: Drag the top handle to rotate around the center
+7. Click "Save" to confirm changes or "Cancel" (or press ESC) to discard
 
 ### Keyboard Shortcuts
 
 - **ESC**: Cancel current editing and restore original shape
-- **Shift** (hold while dragging): Constrain rectangle to square
+- **Shift** (hold while resizing rectangle): Constrain to square
+- **Shift** (hold while scaling polygon/line/ellipse): Maintain aspect ratio (uniform scaling)
 
 ## Live Measurements
 
@@ -185,7 +194,7 @@ During editing, a tooltip displays live measurements by the cursor:
 | Shape Type | Tooltip Content |
 |------------|-----------------|
 | **Rectangle** | Width × Height and Area (e.g., `10.50 km x 5.25 km` / `55.13 km²`) |
-| **Circle** | Area (e.g., `78.54 km²`) |
+| **Circle** | Diameter and Area (e.g., `d: 10.00 km` / `78.54 km²`) |
 
 The measurements use the configured distance unit (default: kilometers). Pass the `unit` prop to change:
 
@@ -264,9 +273,10 @@ When editing is active, the cursor automatically changes based on the edit mode:
 
 | Edit Mode | Cursor |
 |-----------|--------|
-| `modify` | `crosshair` |
-| `resize-circle` | `ew-resize` |
-| `transform` | `move` |
+| `ellipse-transform` | `crosshair` |
+| `modify-transform` | `crosshair` |
+| `resize-circle` | `crosshair` |
+| `translate` | `crosshair` |
 | `view` | `default` |
 
 This integrates with the `map-cursor` system:
@@ -337,7 +347,7 @@ Options passed to the `edit()` function:
 
 | Option | Type | Description |
 |--------|------|-------------|
-| `mode` | `'modify' \| 'resize-circle' \| 'transform'` | Override the automatic mode selection |
+| `mode` | `'ellipse-transform' \| 'modify-transform' \| 'resize-circle' \| 'translate'` | Override the automatic mode selection |
 
 ### EditShapeEvents
 

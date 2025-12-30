@@ -50,9 +50,12 @@ if (!mockEllipse) {
 function createMockShape(overrides?: Partial<Shape>): Shape {
   return {
     id: uuid(),
-    name: mockPolygon.name,
-    shapeType: mockPolygon.shapeType,
-    feature: mockPolygon.feature,
+    // biome-ignore lint/style/noNonNullAssertion: Existence verified above with throw
+    name: mockPolygon!.name,
+    // biome-ignore lint/style/noNonNullAssertion: Existence verified above with throw
+    shapeType: mockPolygon!.shapeType,
+    // biome-ignore lint/style/noNonNullAssertion: Existence verified above with throw
+    feature: mockPolygon!.feature,
     lastUpdated: Date.now(),
     ...overrides,
   } as Shape;
@@ -64,9 +67,12 @@ function createMockShape(overrides?: Partial<Shape>): Shape {
 function createMockCircleShape(overrides?: Partial<Shape>): Shape {
   return {
     id: uuid(),
-    name: mockCircle.name,
-    shapeType: mockCircle.shapeType,
-    feature: mockCircle.feature,
+    // biome-ignore lint/style/noNonNullAssertion: Existence verified above with throw
+    name: mockCircle!.name,
+    // biome-ignore lint/style/noNonNullAssertion: Existence verified above with throw
+    shapeType: mockCircle!.shapeType,
+    // biome-ignore lint/style/noNonNullAssertion: Existence verified above with throw
+    feature: mockCircle!.feature,
     lastUpdated: Date.now(),
     ...overrides,
   } as Shape;
@@ -165,7 +171,7 @@ describe('useEditShape', () => {
       bus.off(EditShapeEvents.editing, editingSpy);
     });
 
-    it('sets modify mode for polygons', async () => {
+    it('sets modify-transform mode for polygons', async () => {
       const { result } = renderHook(() => useEditShape(mapId));
       const shape = createMockShape({ shapeType: ShapeFeatureType.Polygon });
 
@@ -174,7 +180,46 @@ describe('useEditShape', () => {
       });
 
       await waitFor(() => {
-        expect(result.current.editingState?.editMode).toBe('modify');
+        expect(result.current.editingState?.editMode).toBe('modify-transform');
+      });
+    });
+
+    it('sets modify-transform mode for lines', async () => {
+      const { result } = renderHook(() => useEditShape(mapId));
+      const shape = createMockShape({ shapeType: ShapeFeatureType.LineString });
+
+      act(() => {
+        result.current.edit(shape);
+      });
+
+      await waitFor(() => {
+        expect(result.current.editingState?.editMode).toBe('modify-transform');
+      });
+    });
+
+    it('sets modify-transform mode for rectangles', async () => {
+      const { result } = renderHook(() => useEditShape(mapId));
+      const shape = createMockShape({ shapeType: ShapeFeatureType.Rectangle });
+
+      act(() => {
+        result.current.edit(shape);
+      });
+
+      await waitFor(() => {
+        expect(result.current.editingState?.editMode).toBe('modify-transform');
+      });
+    });
+
+    it('sets translate mode for points', async () => {
+      const { result } = renderHook(() => useEditShape(mapId));
+      const shape = createMockShape({ shapeType: ShapeFeatureType.Point });
+
+      act(() => {
+        result.current.edit(shape);
+      });
+
+      await waitFor(() => {
+        expect(result.current.editingState?.editMode).toBe('translate');
       });
     });
 
@@ -191,7 +236,7 @@ describe('useEditShape', () => {
       });
     });
 
-    it('sets transform mode for ellipses', async () => {
+    it('sets ellipse-transform mode for ellipses', async () => {
       const { result } = renderHook(() => useEditShape(mapId));
       const shape = createMockEllipseShape();
 
@@ -200,7 +245,7 @@ describe('useEditShape', () => {
       });
 
       await waitFor(() => {
-        expect(result.current.editingState?.editMode).toBe('transform');
+        expect(result.current.editingState?.editMode).toBe('ellipse-transform');
       });
     });
 
