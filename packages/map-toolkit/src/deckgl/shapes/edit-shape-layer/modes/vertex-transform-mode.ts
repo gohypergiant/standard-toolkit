@@ -14,7 +14,9 @@ import {
   CompositeMode,
   type DraggingEvent,
   type FeatureCollection,
+  type GuideFeatureCollection,
   type ModeProps,
+  ModifyMode,
   type PointerMoveEvent,
   RotateMode,
   type StartDraggingEvent,
@@ -22,12 +24,11 @@ import {
   TranslateMode,
 } from '@deck.gl-community/editable-layers';
 import { featureCollection } from '@turf/helpers';
-import { ModifyModeWithTooltip } from './modify-mode-with-tooltip';
-import { ScaleModeWithTooltip } from './scale-mode-with-tooltip';
+import { ScaleModeWithFreeTransform } from './scale-mode-with-free-transform';
 
 type ActiveMode =
-  | ModifyModeWithTooltip
-  | ScaleModeWithTooltip
+  | ModifyMode
+  | ScaleModeWithFreeTransform
   | RotateMode
   | TranslateMode
   | null;
@@ -41,7 +42,9 @@ type ActiveMode =
  * This composite mode provides:
  * - **Vertex editing** (ModifyMode): Drag vertices to reshape the geometry
  * - **Translation** (TranslateMode): Drag the shape to move it
- * - **Scaling** (ScaleMode): Drag corner handles to resize
+ * - **Scaling** (ScaleModeWithFreeTransform): Drag corner handles to resize
+ *   - Default: Non-uniform scaling (can stretch/squish)
+ *   - With Shift: Uniform scaling (maintains aspect ratio)
  * - **Rotation** (RotateMode): Drag top handle to rotate
  *
  * Priority logic:
@@ -54,11 +57,15 @@ type ActiveMode =
  *
  * Note: For shapes like rectangles where vertex editing is filtered out (to preserve
  * rotation), consider using BoundingTransformMode instead.
+ *
+ * Note: This mode does not show tooltips during editing because arbitrary polygons
+ * don't have meaningful dimensions to display. Use BoundingTransformMode for shapes
+ * like rectangles and ellipses where dimension tooltips are useful.
  */
 export class VertexTransformMode extends CompositeMode {
-  private modifyMode: ModifyModeWithTooltip;
+  private modifyMode: ModifyMode;
   private translateMode: TranslateMode;
-  private scaleMode: ScaleModeWithTooltip;
+  private scaleMode: ScaleModeWithFreeTransform;
   private rotateMode: RotateMode;
 
   /** Track which mode is currently handling the drag operation */
@@ -68,9 +75,9 @@ export class VertexTransformMode extends CompositeMode {
   private isShiftHeld = false;
 
   constructor() {
-    const modifyMode = new ModifyModeWithTooltip();
+    const modifyMode = new ModifyMode();
     const translateMode = new TranslateMode();
-    const scaleMode = new ScaleModeWithTooltip();
+    const scaleMode = new ScaleModeWithFreeTransform();
     const rotateMode = new RotateMode();
 
     // Order matters: first mode to handle the event wins
@@ -204,9 +211,49 @@ export class VertexTransformMode extends CompositeMode {
     }
   }
 
-  override getGuides(props: ModeProps<FeatureCollection>) {
+  /**
+   * Override getGuides to filter out picks without valid geometry.
+   *
+   * The parent ModifyMode.getGuides accesses `featureAsPick.object.geometry.type`
+   * which can throw if a pick's object doesn't have a geometry property.
+   * This can happen when picks include sublayer elements (like tooltip text)
+   * that aren't GeoJSON features.
+   *
+   * We filter the lastPointerMoveEvent.picks to only include picks with valid
+   * geometry before calling the parent implementation.
+   */
+  override getGuides(
+    props: ModeProps<FeatureCollection>,
+  ): GuideFeatureCollection {
+    const picks = props.lastPointerMoveEvent?.picks;
+
+    // Filter picks to prevent TypeError from sublayer elements
+    let filteredProps = props;
+    if (picks && picks.length > 0) {
+      const filteredPicks: typeof picks = [];
+      let didFilter = false;
+
+      for (const pick of picks) {
+        if (pick.isGuide || pick.object?.geometry?.type !== undefined) {
+          filteredPicks.push(pick);
+        } else {
+          didFilter = true;
+        }
+      }
+
+      if (didFilter) {
+        filteredProps = {
+          ...props,
+          lastPointerMoveEvent: {
+            ...props.lastPointerMoveEvent,
+            picks: filteredPicks,
+          },
+        };
+      }
+    }
+
     // Get guides from all modes
-    const allGuides = super.getGuides(props);
+    const allGuides = super.getGuides(filteredProps);
 
     // Check if we're editing a rectangle - rectangles have shape: 'Rectangle' property
     const isRectangle =
@@ -245,15 +292,5 @@ export class VertexTransformMode extends CompositeMode {
 
     // biome-ignore lint/suspicious/noExplicitAny: turf types mismatch with editable-layers GeoJSON types
     return featureCollection(filteredGuides as any) as any;
-  }
-
-  override getTooltips() {
-    // Get tooltips from ScaleMode (for rectangle/polygon scaling)
-    // or ModifyMode (for polygon vertex editing)
-    const scaleTooltips = this.scaleMode.getTooltips();
-    if (scaleTooltips.length > 0) {
-      return scaleTooltips;
-    }
-    return this.modifyMode.getTooltips();
   }
 }

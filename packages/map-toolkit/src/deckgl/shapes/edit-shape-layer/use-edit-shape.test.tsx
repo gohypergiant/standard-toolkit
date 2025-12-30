@@ -225,7 +225,7 @@ describe('useEditShape', () => {
       });
     });
 
-    it('sets resize-circle mode for circles', async () => {
+    it('sets circle-transform mode for circles', async () => {
       const { result } = renderHook(() => useEditShape(mapId));
       const shape = createMockCircleShape();
 
@@ -234,7 +234,7 @@ describe('useEditShape', () => {
       });
 
       await waitFor(() => {
-        expect(result.current.editingState?.editMode).toBe('resize-circle');
+        expect(result.current.editingState?.editMode).toBe('circle-transform');
       });
     });
 
@@ -258,11 +258,11 @@ describe('useEditShape', () => {
       const shape = createMockShape({ shapeType: ShapeFeatureType.Polygon });
 
       act(() => {
-        result.current.edit(shape, { mode: 'resize-circle' });
+        result.current.edit(shape, { mode: 'circle-transform' });
       });
 
       await waitFor(() => {
-        expect(result.current.editingState?.editMode).toBe('resize-circle');
+        expect(result.current.editingState?.editMode).toBe('circle-transform');
       });
     });
 

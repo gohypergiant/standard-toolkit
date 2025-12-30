@@ -12,7 +12,7 @@ A deck.gl layer for interactively editing existing geographic shapes on a map. I
 
 - **Multiple geometry types**: Edit Point, LineString, Polygon, Rectangle, Circle, and Ellipse shapes
 - **Smart mode selection**: Automatically selects the appropriate edit mode based on shape type
-- **Protected editing mode**: Editing cannot be interrupted by other map mode requests
+- **Neutral mode handling**: Lets UI components decide how to handle mode change conflicts
 - **Visual reference**: Edit layer renders on top of display layer so users can see original position
 - **Event bus integration**: Emits events via `@accelint/bus` for editing lifecycle
 - **Multi-map support**: Events include map instance ID for isolation
@@ -30,7 +30,7 @@ The layer automatically selects the appropriate edit mode based on shape type:
 | **LineString** | `vertex-transform` | Drag vertices to reshape, OR scale/rotate/translate the entire shape |
 | **Polygon** | `vertex-transform` | Drag vertices to reshape, OR scale/rotate/translate the entire shape |
 | **Rectangle** | `bounding-transform` | Drag corner handles to resize, drag body to move, or rotate via handle. Hold Shift for uniform scaling. |
-| **Circle** | `resize-circle` | Drag body to move, drag edge to resize from center |
+| **Circle** | `circle-transform` | Drag body to move, drag edge to resize from center |
 | **Ellipse** | `bounding-transform` | Drag to move, corner handles to scale freely, top handle to rotate. Hold Shift for uniform scaling. |
 
 ## Dependencies
@@ -276,7 +276,7 @@ When editing is active, the cursor automatically changes based on the edit mode:
 |-----------|--------|
 | `bounding-transform` | `crosshair` |
 | `vertex-transform` | `crosshair` |
-| `resize-circle` | `crosshair` |
+| `circle-transform` | `crosshair` |
 | `translate` | `crosshair` |
 | `view` | `default` |
 
@@ -348,7 +348,7 @@ Options passed to the `edit()` function:
 
 | Option | Type | Description |
 |--------|------|-------------|
-| `mode` | `'bounding-transform' \| 'vertex-transform' \| 'resize-circle' \| 'translate'` | Override the automatic mode selection |
+| `mode` | `'bounding-transform' \| 'vertex-transform' \| 'circle-transform' \| 'translate'` | Override the automatic mode selection |
 
 ### EditShapeEvents
 

@@ -155,7 +155,7 @@ function getEditModeForShape(shape: Shape): EditMode {
     return 'translate';
   }
   if (shape.shapeType === ShapeFeatureType.Circle) {
-    return 'resize-circle';
+    return 'circle-transform';
   }
   if (
     shape.shapeType === ShapeFeatureType.Ellipse ||

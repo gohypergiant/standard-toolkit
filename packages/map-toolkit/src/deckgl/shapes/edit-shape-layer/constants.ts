@@ -33,6 +33,6 @@ export const EDIT_CURSOR_MAP: Record<EditMode, CSSCursorType> = {
   view: 'default',
   'bounding-transform': 'crosshair',
   'vertex-transform': 'crosshair',
-  'resize-circle': 'crosshair',
+  'circle-transform': 'crosshair',
   translate: 'crosshair',
 };

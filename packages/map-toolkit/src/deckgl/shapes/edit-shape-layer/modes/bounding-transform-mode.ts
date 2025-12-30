@@ -19,12 +19,32 @@ import {
   RotateMode,
   type StartDraggingEvent,
   type StopDraggingEvent,
+  type Tooltip,
   TranslateMode,
 } from '@deck.gl-community/editable-layers';
 import { featureCollection } from '@turf/helpers';
-import { ScaleModeWithTooltip } from './scale-mode-with-tooltip';
+import { distance, point } from '@turf/turf';
+import {
+  DEFAULT_DISTANCE_UNITS,
+  getDistanceUnitAbbreviation,
+} from '../../../../shared/units';
+import { TOOLTIP_Y_OFFSET } from '../../shared/constants';
+import { ScaleModeWithFreeTransform } from './scale-mode-with-free-transform';
+import type { Viewport } from '@deck.gl/core';
+import type { Feature, Polygon, Position } from 'geojson';
 
-type ActiveMode = ScaleModeWithTooltip | RotateMode | TranslateMode | null;
+/**
+ * Format a distance value for display
+ */
+function formatDistance(value: number): string {
+  return value.toFixed(2);
+}
+
+type ActiveMode =
+  | ScaleModeWithFreeTransform
+  | RotateMode
+  | TranslateMode
+  | null;
 
 /**
  * Transform mode for shapes that use bounding box manipulation (no vertex editing).
@@ -35,11 +55,11 @@ type ActiveMode = ScaleModeWithTooltip | RotateMode | TranslateMode | null;
  *
  * This composite mode provides:
  * - **Translation** (TranslateMode): Drag the shape body to move it
- * - **Scaling** (ScaleModeWithTooltip): Drag corner handles to resize
+ * - **Scaling** (ScaleModeWithFreeTransform): Drag corner handles to resize
  *   - Default: Non-uniform scaling (can stretch/squish)
  *   - With Shift: Uniform scaling (maintains aspect ratio)
- *   - Live tooltip showing dimensions and area
  * - **Rotation** (RotateMode): Drag top handle to rotate
+ * - **Live tooltip**: Shows dimensions and area during scaling
  *
  * Unlike VertexTransformMode, this mode does NOT include vertex editing handles.
  *
@@ -50,7 +70,7 @@ type ActiveMode = ScaleModeWithTooltip | RotateMode | TranslateMode | null;
  */
 export class BoundingTransformMode extends CompositeMode {
   private translateMode: TranslateMode;
-  private scaleMode: ScaleModeWithTooltip;
+  private scaleMode: ScaleModeWithFreeTransform;
   private rotateMode: RotateMode;
 
   /** Track which mode is currently handling the drag operation */
@@ -59,9 +79,12 @@ export class BoundingTransformMode extends CompositeMode {
   /** Track current Shift state for dynamic uniform/free scaling toggle */
   private isShiftHeld = false;
 
+  /** Tooltip for scale operations */
+  private tooltip: Tooltip | null = null;
+
   constructor() {
     const translateMode = new TranslateMode();
-    const scaleMode = new ScaleModeWithTooltip();
+    const scaleMode = new ScaleModeWithFreeTransform();
     const rotateMode = new RotateMode();
 
     // Order: scale and rotate first so their handles take priority over translate
@@ -146,6 +169,9 @@ export class BoundingTransformMode extends CompositeMode {
         };
 
         this.activeDragMode.handleDragging(event, propsWithScaleConfig);
+
+        // Update tooltip with shape dimensions
+        this.updateShapeTooltip(event, props);
       } else {
         this.activeDragMode.handleDragging(event, props);
       }
@@ -173,6 +199,7 @@ export class BoundingTransformMode extends CompositeMode {
       }
       this.activeDragMode = null;
       this.isShiftHeld = false;
+      this.tooltip = null;
     }
   }
 
@@ -203,8 +230,145 @@ export class BoundingTransformMode extends CompositeMode {
     return featureCollection(nonEnvelopeGuides as any) as any;
   }
 
-  override getTooltips() {
-    // Get tooltips from ScaleMode (for shape dimensions)
-    return this.scaleMode.getTooltips();
+  override getTooltips(): Tooltip[] {
+    return this.tooltip ? [this.tooltip] : [];
+  }
+
+  /**
+   * Update the tooltip with shape dimensions and area.
+   * Called during scaling to show live measurements.
+   * Handles both rectangles (5 points) and ellipses (many points).
+   */
+  private updateShapeTooltip(
+    event: DraggingEvent,
+    props: ModeProps<FeatureCollection>,
+  ) {
+    const { screenCoords } = event;
+    const viewport: Viewport | undefined = props.modeConfig?.viewport;
+    const distanceUnits =
+      props.modeConfig?.distanceUnits ?? DEFAULT_DISTANCE_UNITS;
+
+    // Get the selected feature
+    const selectedIndexes = props.selectedIndexes;
+    const selectedIndex = selectedIndexes?.[0];
+    if (selectedIndex === undefined) {
+      this.tooltip = null;
+      return;
+    }
+
+    const feature = props.data.features[selectedIndex] as
+      | Feature<Polygon>
+      | undefined;
+    if (!feature || feature.geometry.type !== 'Polygon') {
+      this.tooltip = null;
+      return;
+    }
+
+    const coordinates = feature.geometry.coordinates[0];
+    if (!coordinates || coordinates.length < 4) {
+      this.tooltip = null;
+      return;
+    }
+
+    // Check if this is a rectangle (has shape: 'Rectangle' property)
+    const isRectangle = feature.properties?.shape === 'Rectangle';
+
+    let text: string;
+    const unitAbbrev = getDistanceUnitAbbreviation(distanceUnits);
+
+    if (isRectangle) {
+      // Rectangle: calculate width and height from corners
+      const corner0 = coordinates[0] as [number, number];
+      const corner1 = coordinates[1] as [number, number];
+      const corner2 = coordinates[2] as [number, number];
+
+      const width = distance(point(corner0), point(corner1), {
+        units: distanceUnits,
+      });
+      const height = distance(point(corner1), point(corner2), {
+        units: distanceUnits,
+      });
+      const rectArea = width * height;
+
+      text = `${formatDistance(width)} ${unitAbbrev} x ${formatDistance(height)} ${unitAbbrev}\n${formatDistance(rectArea)} ${unitAbbrev}²`;
+    } else {
+      // Ellipse: calculate major/minor axes
+      const { majorAxis, minorAxis } = this.calculateEllipseAxes(
+        coordinates as Position[],
+        distanceUnits,
+      );
+
+      // Ellipse area = π × a × b (where a and b are semi-axes)
+      const semiMajor = majorAxis / 2;
+      const semiMinor = minorAxis / 2;
+      const ellipseArea = Math.PI * semiMajor * semiMinor;
+
+      text = `${formatDistance(majorAxis)} ${unitAbbrev} x ${formatDistance(minorAxis)} ${unitAbbrev}\n${formatDistance(ellipseArea)} ${unitAbbrev}²`;
+    }
+
+    // Position tooltip below the cursor
+    this.tooltip = {
+      position:
+        viewport?.unproject([
+          screenCoords[0],
+          screenCoords[1] + TOOLTIP_Y_OFFSET,
+        ]) ?? event.mapCoords,
+      text,
+    };
+  }
+
+  /**
+   * Calculate the major and minor axes of an ellipse from its polygon coordinates.
+   *
+   * For an ellipse approximated as a polygon, we find the longest and shortest
+   * diameters by measuring distances between opposite points on the perimeter.
+   */
+  private calculateEllipseAxes(
+    coordinates: Position[],
+    distanceUnits: string,
+  ): { majorAxis: number; minorAxis: number } {
+    // Remove the closing point if it duplicates the first
+    const points =
+      coordinates[0]?.[0] === coordinates[coordinates.length - 1]?.[0] &&
+      coordinates[0]?.[1] === coordinates[coordinates.length - 1]?.[1]
+        ? coordinates.slice(0, -1)
+        : coordinates;
+
+    if (points.length < 4) {
+      return { majorAxis: 0, minorAxis: 0 };
+    }
+
+    // For an ellipse polygon, opposite points are at index i and i + n/2
+    const halfLen = Math.floor(points.length / 2);
+    let maxDist = 0;
+    let minDist = Number.POSITIVE_INFINITY;
+
+    // Sample several diameter measurements
+    for (let i = 0; i < halfLen; i++) {
+      const p1 = points[i];
+      const p2 = points[i + halfLen];
+      if (!(p1 && p2)) {
+        continue;
+      }
+
+      const dist = distance(
+        [p1[0] as number, p1[1] as number],
+        [p2[0] as number, p2[1] as number],
+        // biome-ignore lint/suspicious/noExplicitAny: turf units type mismatch
+        { units: distanceUnits as any },
+      );
+
+      if (dist > maxDist) {
+        maxDist = dist;
+      }
+      if (dist < minDist) {
+        minDist = dist;
+      }
+    }
+
+    return {
+      majorAxis: maxDist,
+      minorAxis: minDist === Number.POSITIVE_INFINITY ? maxDist : minDist,
+    };
   }
 }

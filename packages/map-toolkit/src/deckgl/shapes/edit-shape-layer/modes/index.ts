@@ -12,7 +12,7 @@
 
 import { TranslateMode, ViewMode } from '@deck.gl-community/editable-layers';
 import { BoundingTransformMode } from './bounding-transform-mode';
-import { ResizeCircleTranslateMode } from './resize-circle-translate-mode';
+import { CircleTransformMode } from './circle-transform-mode';
 import { VertexTransformMode } from './vertex-transform-mode';
 import type { EditMode } from '../types';
 
@@ -23,16 +23,18 @@ import type { EditMode } from '../types';
  * deck.gl assertion failures. Creating new mode instances on each render
  * causes the EditableGeoJsonLayer to fail with assertion errors.
  *
- * BoundingTransformMode combines ScaleModeWithTooltip, RotateMode, and
+ * BoundingTransformMode combines ScaleModeWithFreeTransform, RotateMode, and
  * TranslateMode for shapes without vertex editing (ellipses, rectangles),
  * allowing non-uniform scaling plus rotate/translate via bounding box handles.
+ * Shows live dimension tooltips during scaling.
  *
- * VertexTransformMode combines ModifyMode with TransformMode for shapes
- * that support vertex editing (polygons, lines), allowing vertex manipulation
- * plus scale/rotate/translate.
+ * VertexTransformMode combines ModifyMode with ScaleModeWithFreeTransform,
+ * RotateMode, and TranslateMode for shapes that support vertex editing
+ * (polygons, lines), allowing vertex manipulation plus scale/rotate/translate.
  *
- * ResizeCircleTranslateMode combines ResizeCircleMode with TranslateMode
+ * CircleTransformMode combines ResizeCircleMode with TranslateMode
  * for circles, allowing resize from edge plus drag to translate.
+ * Shows live diameter/area tooltips during resize.
  *
  * TranslateMode allows dragging to move the shape (used for points).
  */
@@ -40,7 +42,7 @@ const EDIT_MODE_INSTANCES = {
   view: new ViewMode(),
   'bounding-transform': new BoundingTransformMode(),
   'vertex-transform': new VertexTransformMode(),
-  'resize-circle': new ResizeCircleTranslateMode(),
+  'circle-transform': new CircleTransformMode(),
   translate: new TranslateMode(),
 } as const;
 
