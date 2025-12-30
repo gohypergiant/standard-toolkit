@@ -13,7 +13,7 @@ A read-only deck.gl composite layer for displaying geographic shapes with intera
 - **Multiple geometry types**: Point, LineString, Polygon, and Circle
 - **Icon support**: Custom icons for Point geometries via icon atlases
 - **Interactive selection**: Click handling with visual highlight feedback
-- **Hover effects**: Line width increases on hover; Point shapes show coffin corners
+- **Hover effects**: Line width increases on hover; Points with icons show coffin corners
 - **Customizable labels**: White uppercase text with black outline, flexible positioning
 - **Style properties**: Full control over colors, stroke patterns, and opacity
 - **Event bus integration**: Automatically emits shape events via @accelint/bus
@@ -170,10 +170,10 @@ new Deck({
 
 ## Shape Data Structure
 
-Each shape must follow the `EditableShape` interface:
+Each shape must follow the `Shape` interface:
 
 ```typescript
-interface EditableShape {
+interface Shape {
   /** Unique identifier (use uuid() from @accelint/core) */
   id: UniqueId;
   /** Full shape name used internally and in UI */
@@ -228,7 +228,7 @@ interface StyleProperties {
 }
 ```
 
-**Note**: By default, fill colors have a 60% opacity multiplier applied for the standard semi-transparent look. Set `applyBaseOpacity={false}` to render colors exactly as specified.
+**Note**: By default, fill colors have a 20% opacity multiplier applied for the standard semi-transparent look. Set `applyBaseOpacity={false}` to render colors exactly as specified.
 
 ## Custom Icons for Points
 
@@ -550,16 +550,16 @@ When using icons for Point geometries, **all shapes in a single DisplayShapeLaye
 |------|------|---------|-------------|
 | `id` | `string` | *required* | Unique layer ID |
 | `mapId` | `UniqueId` | *required* | Map instance ID for event bus isolation in multi-map scenarios |
-| `data` | `EditableShape[]` | *required* | Array of shapes to display |
+| `data` | `Shape[]` | *required* | Array of shapes to display |
 | `selectedShapeId` | `ShapeId` | `undefined` | Currently selected shape ID for highlighting |
-| `onShapeClick` | `(shape: EditableShape) => void` | `undefined` | Callback when shape is clicked |
-| `onShapeHover` | `(shape: EditableShape \| null) => void` | `undefined` | Callback when shape is hovered |
+| `onShapeClick` | `(shape: Shape) => void` | `undefined` | Callback when shape is clicked |
+| `onShapeHover` | `(shape: Shape \| null) => void` | `undefined` | Callback when shape is hovered |
 | `pickable` | `boolean` | `true` | Whether shapes are clickable/hoverable |
 | `showLabels` | `boolean` | `true` | Whether to show labels |
 | `showHighlight` | `boolean` | `false` | Whether to show highlight around selected shapes (dotted border always shows) |
 | `labelOptions` | `LabelPositionOptions` | `undefined` | Global label positioning options |
 | `highlightColor` | `[number, number, number, number]` | `[40, 245, 190, 100]` | Highlight color RGBA (0-255) |
-| `applyBaseOpacity` | `boolean` | `true` | Apply 60% opacity multiplier to fill colors for semi-transparent look |
+| `applyBaseOpacity` | `boolean` | `true` | Apply 20% opacity multiplier to fill colors for semi-transparent look |
 
 ### LabelPositionOptions
 

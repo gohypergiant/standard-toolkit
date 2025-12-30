@@ -14,7 +14,7 @@
 
 import type { Payload } from '@accelint/bus';
 import type { UniqueId } from '@accelint/core';
-import type { DisplayShape, ShapeFeatureType } from '../shared/types';
+import type { Shape, ShapeFeatureType } from '../shared/types';
 
 /**
  * Drawing lifecycle events
@@ -47,13 +47,13 @@ export type ShapeDrawingEvent = Payload<
 
 /**
  * Payload for shapes:drawn event.
- * Note: DisplayShape contains GeoJSON Feature which is structurally cloneable
+ * Note: Shape contains GeoJSON Feature which is structurally cloneable
  * but lacks the index signature TypeScript requires. We define the payload
  * separately and use type assertions when emitting.
  */
 export type ShapeDrawnPayload = {
   /** The completed shape */
-  shape: DisplayShape;
+  shape: Shape;
   /** Map instance ID for multi-map event isolation */
   mapId: UniqueId;
 };

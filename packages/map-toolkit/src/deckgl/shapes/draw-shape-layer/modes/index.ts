@@ -13,11 +13,13 @@
 import { DrawPointMode, ViewMode } from '@deck.gl-community/editable-layers';
 import { ShapeFeatureType } from '../../shared/types';
 import { DrawCircleModeWithTooltip } from './draw-circle-mode-with-tooltip';
+import { DrawEllipseModeWithTooltip } from './draw-ellipse-mode-with-tooltip';
 import { DrawLineStringModeWithTooltip } from './draw-line-string-mode-with-tooltip';
 import { DrawPolygonModeWithTooltip } from './draw-polygon-mode-with-tooltip';
 import { DrawRectangleModeWithTooltip } from './draw-rectangle-mode-with-tooltip';
 
 export { DrawCircleModeWithTooltip } from './draw-circle-mode-with-tooltip';
+export { DrawEllipseModeWithTooltip } from './draw-ellipse-mode-with-tooltip';
 export { DrawLineStringModeWithTooltip } from './draw-line-string-mode-with-tooltip';
 export { DrawPolygonModeWithTooltip } from './draw-polygon-mode-with-tooltip';
 export { DrawRectangleModeWithTooltip } from './draw-rectangle-mode-with-tooltip';
@@ -35,6 +37,7 @@ const MODE_INSTANCES = {
   [ShapeFeatureType.Polygon]: new DrawPolygonModeWithTooltip(),
   [ShapeFeatureType.Rectangle]: new DrawRectangleModeWithTooltip(),
   [ShapeFeatureType.Circle]: new DrawCircleModeWithTooltip(),
+  [ShapeFeatureType.Ellipse]: new DrawEllipseModeWithTooltip(),
   view: new ViewMode(),
 } as const;
 

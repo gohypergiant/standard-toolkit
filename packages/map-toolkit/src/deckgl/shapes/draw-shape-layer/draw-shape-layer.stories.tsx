@@ -21,7 +21,7 @@ import { useShapeSelection } from '../display-shape-layer/use-shape-selection';
 import { ShapeEvents } from '../shared/events';
 import { ShapeFeatureType } from '../shared/types';
 import type { ShapeHoveredEvent } from '../shared/events';
-import type { DisplayShape } from '../shared/types';
+import type { Shape } from '../shared/types';
 import '../display-shape-layer/fiber';
 import './fiber';
 import { DrawShapeLayer } from './index';
@@ -36,7 +36,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 // Use fixture shapes with unique IDs for each story render
-function createSampleShapes(): DisplayShape[] {
+function createSampleShapes(): Shape[] {
   return mockShapes.map((shape) => ({
     ...shape,
     id: uuid(),
@@ -51,7 +51,7 @@ const DRAW_MAP_ID = uuid();
  * Basic shape drawing demonstration
  *
  * This story demonstrates:
- * - Drawing all 5 shape types (Point, LineString, Polygon, Rectangle, Circle)
+ * - Drawing all 6 shape types (Point, LineString, Polygon, Rectangle, Circle, Ellipse)
  * - Real-time distance/area tooltips during drawing
  * - Protected drawing mode (drawing cannot be interrupted by other mode requests)
  * - Displaying drawn shapes with DisplayShapeLayer
@@ -62,11 +62,12 @@ const DRAW_MAP_ID = uuid();
  * 3. For polygons/rectangles: double-click or click the starting point to complete
  * 4. For lines: double-click to complete
  * 5. For circles: click center, then click to set radius
- * 6. Press ESC or click Cancel to abort drawing
+ * 6. For ellipses: click two points for major axis, then click for minor axis
+ * 7. Press ESC or click Cancel to abort drawing
  */
 export const BasicDrawing: Story = {
   render: () => {
-    const [shapes, setShapes] = useState<DisplayShape[]>([]);
+    const [shapes, setShapes] = useState<Shape[]>([]);
     const [eventLog, setEventLog] = useState<
       Array<{ id: string; message: string }>
     >([]);
@@ -221,6 +222,22 @@ export const BasicDrawing: Story = {
               >
                 Circle
               </Button>
+              <Button
+                variant={
+                  activeShapeType === ShapeFeatureType.Ellipse
+                    ? 'filled'
+                    : 'outline'
+                }
+                color={
+                  activeShapeType === ShapeFeatureType.Ellipse
+                    ? 'accent'
+                    : 'mono-muted'
+                }
+                onPress={() => draw(ShapeFeatureType.Ellipse)}
+                isDisabled={isDrawing}
+              >
+                Ellipse
+              </Button>
             </div>
           </div>
 
@@ -275,6 +292,7 @@ export const BasicDrawing: Story = {
               <li>Polygon: Click points, close loop to finish</li>
               <li>Rectangle: Click two corners (Shift for square)</li>
               <li>Circle: Click center, then click to set radius</li>
+              <li>Ellipse: Click two points for axis, then set width</li>
             </ul>
           </div>
         </div>
@@ -293,7 +311,7 @@ const CUSTOM_STYLES_MAP_ID = uuid();
 
 export const CustomStyleDefaults: Story = {
   render: () => {
-    const [shapes, setShapes] = useState<DisplayShape[]>([]);
+    const [shapes, setShapes] = useState<Shape[]>([]);
     const [selectedColor, setSelectedColor] = useState<
       'red' | 'blue' | 'green'
     >('red');
@@ -411,7 +429,7 @@ const COMBINED_MAP_ID = uuid();
 export const CombinedDisplayAndDraw: Story = {
   render: () => {
     // Start with pre-existing shapes from fixtures
-    const [shapes, setShapes] = useState<DisplayShape[]>(createSampleShapes);
+    const [shapes, setShapes] = useState<Shape[]>(createSampleShapes);
 
     // Subscribe to cursor store and shape selection
     const { requestCursorChange, clearCursor } = useMapCursor(COMBINED_MAP_ID);
@@ -422,6 +440,8 @@ export const CombinedDisplayAndDraw: Story = {
       {
         onCreate: (shape) => {
           setShapes((prev) => [...prev, shape]);
+          // Log shape for fixture capture
+          console.log('Shape created:', JSON.stringify(shape, null, 2));
         },
       },
     );
@@ -503,6 +523,14 @@ export const CombinedDisplayAndDraw: Story = {
               isDisabled={isDrawing}
             >
               + Circle
+            </Button>
+            <Button
+              size='small'
+              variant='outline'
+              onPress={() => draw(ShapeFeatureType.Ellipse)}
+              isDisabled={isDrawing}
+            >
+              + Ellipse
             </Button>
           </div>
 

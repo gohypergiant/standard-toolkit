@@ -14,13 +14,14 @@
 
 import { uuid } from '@accelint/core';
 import { centroid, distance } from '@turf/turf';
-import { DEFAULT_STYLE_PROPERTIES } from '../../shared/constants';
 import { DEFAULT_DISTANCE_UNITS } from '../../../../shared/units';
+import { DEFAULT_STYLE_PROPERTIES } from '../../shared/constants';
 import { ShapeFeatureType as ShapeFeatureTypeEnum } from '../../shared/types';
 import type { Feature, Polygon, Position } from 'geojson';
 import type {
   CircleProperties,
-  DisplayShape,
+  EllipseProperties,
+  Shape,
   ShapeFeature,
   ShapeFeatureType,
   StyleProperties,
@@ -71,18 +72,68 @@ function computeCircleProperties(
 }
 
 /**
- * Convert a raw GeoJSON Feature from EditableGeoJsonLayer to a DisplayShape
+ * Edit properties attached by DrawEllipseUsingThreePointsMode
+ */
+interface EllipseEditProperties {
+  shape: 'Ellipse';
+  xSemiAxis: { value: number; unit: string };
+  ySemiAxis: { value: number; unit: string };
+  angle: number;
+  center: [number, number];
+}
+
+/**
+ * Compute ellipse properties from a feature's editProperties
+ *
+ * The DrawEllipseUsingThreePointsMode attaches ellipse metadata to the feature's
+ * properties.editProperties. This function extracts and normalizes that data.
+ */
+function computeEllipseProperties(
+  feature: Feature,
+): EllipseProperties | undefined {
+  const editProps = (
+    feature.properties as { editProperties?: EllipseEditProperties } | null
+  )?.editProperties;
+
+  if (!editProps || editProps.shape !== 'Ellipse') {
+    return undefined;
+  }
+
+  return {
+    center: editProps.center,
+    xSemiAxis: {
+      value: editProps.xSemiAxis.value,
+      units: DEFAULT_DISTANCE_UNITS,
+    },
+    ySemiAxis: {
+      value: editProps.ySemiAxis.value,
+      units: DEFAULT_DISTANCE_UNITS,
+    },
+    angle: editProps.angle,
+  };
+}
+
+/**
+ * Convert a raw GeoJSON Feature from EditableGeoJsonLayer to a Shape
+ *
+ * The returned Shape includes:
+ * - Auto-generated UUID
+ * - Auto-generated name with timestamp (e.g., "New Polygon (2:30:45 PM)")
+ * - Merged style properties (defaults + overrides)
+ * - Circle/ellipse properties computed from geometry if applicable
+ * - `lastUpdated` timestamp
+ * - `locked: false` (newly created shapes are always unlocked)
  *
  * @param feature - The raw GeoJSON feature from the editable layer
  * @param shapeType - The type of shape being created
  * @param styleDefaults - Optional style overrides
- * @returns A complete DisplayShape ready for use
+ * @returns A complete Shape ready for use
  */
-export function convertFeatureToDisplayShape(
+export function convertFeatureToShape(
   feature: Feature,
   shapeType: ShapeFeatureType,
   styleDefaults?: Partial<StyleProperties> | null,
-): DisplayShape {
+): Shape {
   const id = uuid();
   const name = generateShapeName(shapeType);
 
@@ -101,6 +152,15 @@ export function convertFeatureToDisplayShape(
     circleProperties = computeCircleProperties(feature.geometry as Polygon);
   }
 
+  // Compute ellipse properties if this is an ellipse
+  let ellipseProperties: EllipseProperties | undefined;
+  if (
+    shapeType === ShapeFeatureTypeEnum.Ellipse &&
+    feature.geometry.type === 'Polygon'
+  ) {
+    ellipseProperties = computeEllipseProperties(feature);
+  }
+
   // Create the styled feature
   const styledFeature: ShapeFeature = {
     type: 'Feature',
@@ -108,6 +168,7 @@ export function convertFeatureToDisplayShape(
     properties: {
       styleProperties,
       circleProperties,
+      ellipseProperties,
       shapeId: id,
     },
   };
@@ -118,15 +179,6 @@ export function convertFeatureToDisplayShape(
     shapeType,
     feature: styledFeature,
     lastUpdated: Date.now(),
-  };
-}
-
-/**
- * Create an empty FeatureCollection for initializing the editable layer
- */
-export function createEmptyFeatureCollection(): GeoJSON.FeatureCollection {
-  return {
-    type: 'FeatureCollection',
-    features: [],
+    locked: false,
   };
 }

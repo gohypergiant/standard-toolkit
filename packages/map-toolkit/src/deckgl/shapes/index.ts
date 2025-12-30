@@ -82,8 +82,8 @@ export type {
 export type {
   CircleProperties,
   CircleRadius,
-  DisplayShape,
-  EditableShape,
+  EllipseProperties,
+  Shape,
   ShapeFeature,
   ShapeFeatureProperties,
   ShapeFeatureTypeValues,
