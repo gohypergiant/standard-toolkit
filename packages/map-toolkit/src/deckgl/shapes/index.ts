@@ -63,6 +63,7 @@ export type {
 export type {
   CircleProperties,
   CircleRadius,
+  EllipseProperties,
   Shape,
   ShapeFeature,
   ShapeFeatureProperties,

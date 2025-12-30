@@ -20,6 +20,7 @@ import { ShapeFeatureType as ShapeFeatureTypeEnum } from '../../shared/types';
 import type { Feature, Polygon, Position } from 'geojson';
 import type {
   CircleProperties,
+  EllipseProperties,
   Shape,
   ShapeFeature,
   ShapeFeatureType,
@@ -71,6 +72,48 @@ function computeCircleProperties(
 }
 
 /**
+ * Edit properties attached by DrawEllipseUsingThreePointsMode
+ */
+interface EllipseEditProperties {
+  shape: 'Ellipse';
+  xSemiAxis: { value: number; unit: string };
+  ySemiAxis: { value: number; unit: string };
+  angle: number;
+  center: [number, number];
+}
+
+/**
+ * Compute ellipse properties from a feature's editProperties
+ *
+ * The DrawEllipseUsingThreePointsMode attaches ellipse metadata to the feature's
+ * properties.editProperties. This function extracts and normalizes that data.
+ */
+function computeEllipseProperties(
+  feature: Feature,
+): EllipseProperties | undefined {
+  const editProps = (
+    feature.properties as { editProperties?: EllipseEditProperties } | null
+  )?.editProperties;
+
+  if (!editProps || editProps.shape !== 'Ellipse') {
+    return undefined;
+  }
+
+  return {
+    center: editProps.center,
+    xSemiAxis: {
+      value: editProps.xSemiAxis.value,
+      units: DEFAULT_DISTANCE_UNITS,
+    },
+    ySemiAxis: {
+      value: editProps.ySemiAxis.value,
+      units: DEFAULT_DISTANCE_UNITS,
+    },
+    angle: editProps.angle,
+  };
+}
+
+/**
  * Convert a raw GeoJSON Feature from EditableGeoJsonLayer to a Shape
  *
  * @param feature - The raw GeoJSON feature from the editable layer
@@ -101,6 +144,15 @@ export function convertFeatureToShape(
     circleProperties = computeCircleProperties(feature.geometry as Polygon);
   }
 
+  // Compute ellipse properties if this is an ellipse
+  let ellipseProperties: EllipseProperties | undefined;
+  if (
+    shapeType === ShapeFeatureTypeEnum.Ellipse &&
+    feature.geometry.type === 'Polygon'
+  ) {
+    ellipseProperties = computeEllipseProperties(feature);
+  }
+
   // Create the styled feature
   const styledFeature: ShapeFeature = {
     type: 'Feature',
@@ -108,6 +160,7 @@ export function convertFeatureToShape(
     properties: {
       styleProperties,
       circleProperties,
+      ellipseProperties,
       shapeId: id,
     },
   };

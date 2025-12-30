@@ -22,6 +22,7 @@ import type { DistanceUnit } from '../../../shared/units';
  */
 export const ShapeFeatureType = {
   Circle: 'Circle',
+  Ellipse: 'Ellipse',
   Polygon: 'Polygon',
   Rectangle: 'Rectangle',
   LineString: 'LineString',
@@ -107,6 +108,31 @@ export interface CircleProperties {
 }
 
 /**
+ * Ellipse-specific properties for precise rendering
+ * Stored alongside the polygon approximation
+ */
+export interface EllipseProperties {
+  /** Center point as [longitude, latitude] */
+  center: [number, number];
+  /** X semi-axis (horizontal radius) with value and units */
+  xSemiAxis: {
+    /** X semi-axis value */
+    value: number;
+    /** Units for the measurement */
+    units: DistanceUnit;
+  };
+  /** Y semi-axis (vertical radius) with value and units */
+  ySemiAxis: {
+    /** Y semi-axis value */
+    value: number;
+    /** Units for the measurement */
+    units: DistanceUnit;
+  };
+  /** Rotation angle in degrees */
+  angle: number;
+}
+
+/**
  * Custom geometry types supported
  */
 export type CustomGeometry = Point | LineString | Polygon;
@@ -120,6 +146,8 @@ export interface StyledFeature extends Feature {
     styleProperties: StyleProperties;
     /** Circle properties (only for Circle type shapes) */
     circleProperties?: CircleProperties;
+    /** Ellipse properties (only for Ellipse type shapes) */
+    ellipseProperties?: EllipseProperties;
     /** Shape ID for correlation */
     shapeId?: ShapeId;
   };

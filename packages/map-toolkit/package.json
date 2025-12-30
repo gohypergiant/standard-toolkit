@@ -89,6 +89,7 @@
     "./deckgl/shapes/draw-shape-layer/fiber": "./dist/deckgl/shapes/draw-shape-layer/fiber.js",
     "./deckgl/shapes/draw-shape-layer/modes": "./dist/deckgl/shapes/draw-shape-layer/modes/index.js",
     "./deckgl/shapes/draw-shape-layer/modes/draw-circle-mode-with-tooltip": "./dist/deckgl/shapes/draw-shape-layer/modes/draw-circle-mode-with-tooltip.js",
+    "./deckgl/shapes/draw-shape-layer/modes/draw-ellipse-mode-with-tooltip": "./dist/deckgl/shapes/draw-shape-layer/modes/draw-ellipse-mode-with-tooltip.js",
     "./deckgl/shapes/draw-shape-layer/modes/draw-line-string-mode-with-tooltip": "./dist/deckgl/shapes/draw-shape-layer/modes/draw-line-string-mode-with-tooltip.js",
     "./deckgl/shapes/draw-shape-layer/modes/draw-polygon-mode-with-tooltip": "./dist/deckgl/shapes/draw-shape-layer/modes/draw-polygon-mode-with-tooltip.js",
     "./deckgl/shapes/draw-shape-layer/modes/draw-rectangle-mode-with-tooltip": "./dist/deckgl/shapes/draw-shape-layer/modes/draw-rectangle-mode-with-tooltip.js",

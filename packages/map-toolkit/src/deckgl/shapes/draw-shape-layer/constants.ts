@@ -41,6 +41,7 @@ export const DRAW_CURSOR_MAP: Record<ShapeFeatureType, CSSCursorType> = {
   [ShapeFeatureType.Polygon]: DRAW_CURSOR,
   [ShapeFeatureType.Rectangle]: DRAW_CURSOR,
   [ShapeFeatureType.Circle]: DRAW_CURSOR,
+  [ShapeFeatureType.Ellipse]: DRAW_CURSOR,
 };
 
 /**
