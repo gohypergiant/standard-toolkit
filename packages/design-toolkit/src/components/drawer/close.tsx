@@ -19,11 +19,11 @@ import { Icon } from '../icon';
 import { DrawerTrigger } from './trigger';
 import type { DrawerCloseProps } from './types';
 
-export function DrawerClose({ id }: DrawerCloseProps) {
+export function DrawerClose({ for: forId }: DrawerCloseProps) {
   // Only emit onClose event if we have a specified ID.
   // Otherwise, we reset the view stack.
   return (
-    <DrawerTrigger for={id ? `close:${id}` : 'clear'}>
+    <DrawerTrigger for={forId ? `close:${forId}` : 'clear'}>
       <Button variant='icon'>
         <Icon>
           <Cancel />

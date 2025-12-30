@@ -268,5 +268,5 @@ export type DrawerContextValue = {
 };
 
 export type DrawerCloseProps = {
-  id?: UniqueId;
+  for?: UniqueId;
 };

@@ -186,7 +186,6 @@ export { Divider } from './components/divider';
 export type { DividerProps } from './components/divider/types';
 export { DrawerBack } from './components/drawer/back';
 export { DrawerClose } from './components/drawer/close';
-export type { DrawerCloseProps } from './components/drawer/close';
 export { DrawerContent } from './components/drawer/content';
 export {
   DrawerContext,
@@ -210,6 +209,7 @@ export { DrawerPanel } from './components/drawer/panel';
 export { DrawerTrigger } from './components/drawer/trigger';
 export type {
   DrawerCloseEvent,
+  DrawerCloseProps,
   DrawerContextValue,
   DrawerEvent,
   DrawerLayoutProps,
