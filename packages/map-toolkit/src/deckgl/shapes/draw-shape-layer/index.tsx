@@ -12,24 +12,21 @@
 
 'use client';
 
-import { useEmit } from '@accelint/bus/react';
-import { useContext, useEffect, useRef, useSyncExternalStore } from 'react';
+import { useContext, useEffect, useSyncExternalStore } from 'react';
 import {
   DEFAULT_DISTANCE_UNITS,
   getDistanceUnitFromAbbreviation,
 } from '../../../shared/units';
-import { MapEvents } from '../../base-map/events';
 import { MapContext } from '../../base-map/provider';
 import {
   DEFAULT_EDIT_HANDLE_COLOR,
+  DEFAULT_TENTATIVE_FILL_COLOR,
+  DEFAULT_TENTATIVE_LINE_COLOR,
   EDITABLE_LAYER_SUBLAYER_PROPS,
   EMPTY_FEATURE_COLLECTION,
 } from '../shared/constants';
-import {
-  DEFAULT_TENTATIVE_FILL_COLOR,
-  DEFAULT_TENTATIVE_LINE_COLOR,
-  DRAW_SHAPE_LAYER_ID,
-} from './constants';
+import { useShiftZoomDisable } from '../shared/hooks';
+import { DRAW_SHAPE_LAYER_ID } from './constants';
 import { getModeInstance, triggerDoubleClickFinish } from './modes';
 import {
   cancelDrawingFromLayer,
@@ -42,10 +39,6 @@ import type {
   EditAction,
   FeatureCollection,
 } from '@deck.gl-community/editable-layers';
-import type {
-  MapDisableZoomEvent,
-  MapEnableZoomEvent,
-} from '../../base-map/types';
 import type { DrawShapeLayerProps } from './types';
 
 /**
@@ -100,9 +93,9 @@ export function DrawShapeLayer({
 
   const activeShapeType = drawingState?.activeShapeType ?? null;
 
-  const emitDisableZoom = useEmit<MapDisableZoomEvent>(MapEvents.disableZoom);
-  const emitEnableZoom = useEmit<MapEnableZoomEvent>(MapEvents.enableZoom);
-  const isZoomDisabledRef = useRef(false);
+  // Disable zoom while Shift is held during rectangle drawing
+  // This prevents boxZoom (Shift+drag) from interfering with Shift-to-square constraint
+  useShiftZoomDisable(actualMapId, activeShapeType === 'Rectangle');
 
   // Set up dblclick listener as workaround for deck.gl-community/editable-layers ~9.1
   // which doesn't register 'dblclick' in EVENT_TYPES
@@ -123,71 +116,6 @@ export function DrawShapeLayer({
       document.removeEventListener('dblclick', handleDblClick);
     };
   }, [activeShapeType]);
-
-  // Disable zoom while Shift is held during rectangle drawing
-  // This prevents boxZoom (Shift+drag) from interfering with Shift-to-square constraint
-  useEffect(() => {
-    // Only apply for rectangle drawing
-    if (activeShapeType !== 'Rectangle') {
-      return;
-    }
-
-    const disableZoom = () => {
-      if (!isZoomDisabledRef.current) {
-        isZoomDisabledRef.current = true;
-        emitDisableZoom({ id: actualMapId });
-      }
-    };
-
-    const enableZoom = () => {
-      if (isZoomDisabledRef.current) {
-        isZoomDisabledRef.current = false;
-        emitEnableZoom({ id: actualMapId });
-      }
-    };
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Shift') {
-        disableZoom();
-      }
-    };
-
-    const handleKeyUp = (event: KeyboardEvent) => {
-      if (event.key === 'Shift') {
-        enableZoom();
-      }
-    };
-
-    // Also catch Shift state on mousedown to handle edge cases where
-    // keydown might have been missed (e.g., focus issues)
-    const handleMouseDown = (event: MouseEvent) => {
-      if (event.shiftKey) {
-        disableZoom();
-      }
-    };
-
-    // Re-enable zoom if the window loses focus while Shift is held
-    const handleBlur = () => {
-      enableZoom();
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-    document.addEventListener('keyup', handleKeyUp);
-    document.addEventListener('mousedown', handleMouseDown, { capture: true });
-    window.addEventListener('blur', handleBlur);
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      document.removeEventListener('keyup', handleKeyUp);
-      document.removeEventListener('mousedown', handleMouseDown, {
-        capture: true,
-      });
-      window.removeEventListener('blur', handleBlur);
-
-      // Ensure zoom is re-enabled when unmounting
-      enableZoom();
-    };
-  }, [activeShapeType, actualMapId, emitDisableZoom, emitEnableZoom]);
 
   // If not drawing, return null (don't render the editable layer)
   if (!activeShapeType) {

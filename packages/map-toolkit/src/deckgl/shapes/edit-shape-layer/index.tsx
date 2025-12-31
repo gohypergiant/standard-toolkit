@@ -12,13 +12,11 @@
 
 'use client';
 
-import { useEmit } from '@accelint/bus/react';
 import { useContext, useEffect, useRef, useSyncExternalStore } from 'react';
 import {
   DEFAULT_DISTANCE_UNITS,
   getDistanceUnitFromAbbreviation,
 } from '../../../shared/units';
-import { MapEvents } from '../../base-map/events';
 import { MapContext } from '../../base-map/provider';
 import {
   getFillColor,
@@ -28,6 +26,7 @@ import {
   DEFAULT_EDIT_HANDLE_COLOR,
   EDITABLE_LAYER_SUBLAYER_PROPS,
 } from '../shared/constants';
+import { useShiftZoomDisable } from '../shared/hooks';
 import { ShapeFeatureType, type ShapeFeatureTypeValues } from '../shared/types';
 import { EDIT_SHAPE_LAYER_ID } from './constants';
 import { getEditModeInstance } from './modes';
@@ -43,10 +42,6 @@ import type {
   FeatureCollection,
 } from '@deck.gl-community/editable-layers';
 import type { Feature } from 'geojson';
-import type {
-  MapDisableZoomEvent,
-  MapEnableZoomEvent,
-} from '../../base-map/types';
 import type { EditShapeLayerProps } from './types';
 
 /** Continuous edit event types that fire during dragging */
@@ -179,9 +174,10 @@ export function EditShapeLayer({
 
   const isEditing = editingState?.editingShape != null;
 
-  const emitDisableZoom = useEmit<MapDisableZoomEvent>(MapEvents.disableZoom);
-  const emitEnableZoom = useEmit<MapEnableZoomEvent>(MapEvents.enableZoom);
-  const isZoomDisabledRef = useRef(false);
+  // Disable zoom while Shift is held during editing
+  // This prevents boxZoom (Shift+drag) from interfering with Shift modifier constraints
+  // (e.g., Shift for uniform scaling, Shift for rotation snap)
+  useShiftZoomDisable(actualMapId, isEditing);
 
   // RAF batching for movePosition events to reduce React updates during drag
   const pendingUpdateRef = useRef<{
@@ -197,71 +193,6 @@ export function EditShapeLayer({
       }
     };
   }, []);
-
-  // Disable zoom while Shift is held during editing
-  // This prevents boxZoom (Shift+drag) from interfering with Shift modifier constraints
-  // (e.g., Shift for uniform scaling, Shift for rotation snap)
-  useEffect(() => {
-    if (!isEditing) {
-      return;
-    }
-
-    const disableZoom = () => {
-      if (!isZoomDisabledRef.current) {
-        isZoomDisabledRef.current = true;
-        emitDisableZoom({ id: actualMapId });
-      }
-    };
-
-    const enableZoom = () => {
-      if (isZoomDisabledRef.current) {
-        isZoomDisabledRef.current = false;
-        emitEnableZoom({ id: actualMapId });
-      }
-    };
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Shift') {
-        disableZoom();
-      }
-    };
-
-    const handleKeyUp = (event: KeyboardEvent) => {
-      if (event.key === 'Shift') {
-        enableZoom();
-      }
-    };
-
-    // Also catch Shift state on mousedown to handle edge cases where
-    // keydown might have been missed (e.g., focus issues)
-    const handleMouseDown = (event: MouseEvent) => {
-      if (event.shiftKey) {
-        disableZoom();
-      }
-    };
-
-    // Re-enable zoom if the window loses focus while Shift is held
-    const handleBlur = () => {
-      enableZoom();
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-    document.addEventListener('keyup', handleKeyUp);
-    document.addEventListener('mousedown', handleMouseDown, { capture: true });
-    window.addEventListener('blur', handleBlur);
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      document.removeEventListener('keyup', handleKeyUp);
-      document.removeEventListener('mousedown', handleMouseDown, {
-        capture: true,
-      });
-      window.removeEventListener('blur', handleBlur);
-
-      // Ensure zoom is re-enabled when unmounting
-      enableZoom();
-    };
-  }, [isEditing, actualMapId, emitDisableZoom, emitEnableZoom]);
 
   // If not editing, return null (don't render the editable layer)
   if (!editingState?.editingShape) {

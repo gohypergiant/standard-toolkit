@@ -100,6 +100,19 @@ export const DASH_ARRAYS: Record<
 };
 
 /**
+ * Default tentative fill color (white at 8% opacity - rgba(255, 255, 255, 0.08))
+ * Used when drawing new shapes before they're completed.
+ * 0.08 * 255 ≈ 20
+ */
+export const DEFAULT_TENTATIVE_FILL_COLOR: Color = [255, 255, 255, 20];
+
+/**
+ * Default tentative line color (outline-interactive-hover: #888a8f)
+ * Used when drawing new shapes before they're completed.
+ */
+export const DEFAULT_TENTATIVE_LINE_COLOR: Color = [136, 138, 143, 255];
+
+/**
  * Default edit handle color (white) - used by both draw and edit layers
  */
 export const DEFAULT_EDIT_HANDLE_COLOR: Color = [255, 255, 255, 255];

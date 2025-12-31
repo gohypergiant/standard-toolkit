@@ -13,7 +13,6 @@
 'use client';
 
 import { ShapeFeatureType } from '../shared/types';
-import type { Color } from '@deck.gl/core';
 import type { CSSCursorType } from '../../../map-cursor/types';
 
 /**
@@ -43,14 +42,3 @@ export const DRAW_CURSOR_MAP: Record<ShapeFeatureType, CSSCursorType> = {
   [ShapeFeatureType.Circle]: DRAW_CURSOR,
   [ShapeFeatureType.Ellipse]: DRAW_CURSOR,
 };
-
-/**
- * Default tentative fill color (white at 8% opacity - rgba(255, 255, 255, 0.08))
- * 0.08 * 255 ≈ 20
- */
-export const DEFAULT_TENTATIVE_FILL_COLOR: Color = [255, 255, 255, 20];
-
-/**
- * Default tentative line color (outline-interactive-hover: #888a8f)
- */
-export const DEFAULT_TENTATIVE_LINE_COLOR: Color = [136, 138, 143, 255];
