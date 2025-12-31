@@ -18,18 +18,18 @@ import {
   type ModeProps,
   ModifyMode,
   type PointerMoveEvent,
-  RotateMode,
   type StartDraggingEvent,
   type StopDraggingEvent,
   TranslateMode,
 } from '@deck.gl-community/editable-layers';
 import { featureCollection } from '@turf/helpers';
+import { RotateModeWithSnap } from './rotate-mode-with-snap';
 import { ScaleModeWithFreeTransform } from './scale-mode-with-free-transform';
 
 type ActiveMode =
   | ModifyMode
   | ScaleModeWithFreeTransform
-  | RotateMode
+  | RotateModeWithSnap
   | TranslateMode
   | null;
 
@@ -66,7 +66,7 @@ export class VertexTransformMode extends CompositeMode {
   private modifyMode: ModifyMode;
   private translateMode: TranslateMode;
   private scaleMode: ScaleModeWithFreeTransform;
-  private rotateMode: RotateMode;
+  private rotateMode: RotateModeWithSnap;
 
   /** Track which mode is currently handling the drag operation */
   private activeDragMode: ActiveMode = null;
@@ -78,7 +78,7 @@ export class VertexTransformMode extends CompositeMode {
     const modifyMode = new ModifyMode();
     const translateMode = new TranslateMode();
     const scaleMode = new ScaleModeWithFreeTransform();
-    const rotateMode = new RotateMode();
+    const rotateMode = new RotateModeWithSnap();
 
     // Order matters: first mode to handle the event wins
     // We put modify first so vertex handles take priority over translate
@@ -164,13 +164,13 @@ export class VertexTransformMode extends CompositeMode {
     // Only call the active mode's handleDragging to prevent errors
     // from modes that weren't initialized for this drag operation
     if (this.activeDragMode) {
+      const sourceEvent = event.sourceEvent as KeyboardEvent | undefined;
+      this.isShiftHeld = sourceEvent?.shiftKey ?? false;
+
       // For ScaleMode, read current Shift state to allow dynamic toggling
       // Shift held = uniform scaling (lock aspect ratio)
       // No shift = free scaling (can squish/stretch)
       if (this.activeDragMode === this.scaleMode) {
-        const sourceEvent = event.sourceEvent as KeyboardEvent | undefined;
-        this.isShiftHeld = sourceEvent?.shiftKey ?? false;
-
         const propsWithScaleConfig: ModeProps<FeatureCollection> = {
           ...props,
           modeConfig: {
@@ -180,6 +180,17 @@ export class VertexTransformMode extends CompositeMode {
         };
 
         this.activeDragMode.handleDragging(event, propsWithScaleConfig);
+      } else if (this.activeDragMode === this.rotateMode) {
+        // For RotateMode, Shift held = snap to 45° intervals
+        const propsWithRotateConfig: ModeProps<FeatureCollection> = {
+          ...props,
+          modeConfig: {
+            ...props.modeConfig,
+            snapRotation: this.isShiftHeld,
+          },
+        };
+
+        this.activeDragMode.handleDragging(event, propsWithRotateConfig);
       } else {
         this.activeDragMode.handleDragging(event, props);
       }
@@ -203,6 +214,16 @@ export class VertexTransformMode extends CompositeMode {
           },
         };
         this.activeDragMode.handleStopDragging(event, propsWithScaleConfig);
+      } else if (this.activeDragMode === this.rotateMode) {
+        // For RotateMode, use the last known Shift state for snap calculation
+        const propsWithRotateConfig: ModeProps<FeatureCollection> = {
+          ...props,
+          modeConfig: {
+            ...props.modeConfig,
+            snapRotation: this.isShiftHeld,
+          },
+        };
+        this.activeDragMode.handleStopDragging(event, propsWithRotateConfig);
       } else {
         this.activeDragMode.handleStopDragging(event, props);
       }

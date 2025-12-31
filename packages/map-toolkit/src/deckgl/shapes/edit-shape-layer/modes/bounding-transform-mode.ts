@@ -16,7 +16,6 @@ import {
   type FeatureCollection,
   type ModeProps,
   type PointerMoveEvent,
-  RotateMode,
   type StartDraggingEvent,
   type StopDraggingEvent,
   type Tooltip,
@@ -29,6 +28,7 @@ import {
   getDistanceUnitAbbreviation,
 } from '../../../../shared/units';
 import { TOOLTIP_Y_OFFSET } from '../../shared/constants';
+import { RotateModeWithSnap } from './rotate-mode-with-snap';
 import { ScaleModeWithFreeTransform } from './scale-mode-with-free-transform';
 import type { Viewport } from '@deck.gl/core';
 import type { Feature, Polygon, Position } from 'geojson';
@@ -42,7 +42,7 @@ function formatDistance(value: number): string {
 
 type ActiveMode =
   | ScaleModeWithFreeTransform
-  | RotateMode
+  | RotateModeWithSnap
   | TranslateMode
   | null;
 
@@ -71,7 +71,7 @@ type ActiveMode =
 export class BoundingTransformMode extends CompositeMode {
   private translateMode: TranslateMode;
   private scaleMode: ScaleModeWithFreeTransform;
-  private rotateMode: RotateMode;
+  private rotateMode: RotateModeWithSnap;
 
   /** Track which mode is currently handling the drag operation */
   private activeDragMode: ActiveMode = null;
@@ -85,7 +85,7 @@ export class BoundingTransformMode extends CompositeMode {
   constructor() {
     const translateMode = new TranslateMode();
     const scaleMode = new ScaleModeWithFreeTransform();
-    const rotateMode = new RotateMode();
+    const rotateMode = new RotateModeWithSnap();
 
     // Order: scale and rotate first so their handles take priority over translate
     super([scaleMode, rotateMode, translateMode]);
@@ -153,13 +153,13 @@ export class BoundingTransformMode extends CompositeMode {
     props: ModeProps<FeatureCollection>,
   ) {
     if (this.activeDragMode) {
+      const sourceEvent = event.sourceEvent as KeyboardEvent | undefined;
+      this.isShiftHeld = sourceEvent?.shiftKey ?? false;
+
       // For ScaleMode, read current Shift state to allow dynamic toggling
       // Shift held = uniform scaling (lock aspect ratio)
       // No shift = free scaling (can squish/stretch)
       if (this.activeDragMode === this.scaleMode) {
-        const sourceEvent = event.sourceEvent as KeyboardEvent | undefined;
-        this.isShiftHeld = sourceEvent?.shiftKey ?? false;
-
         const propsWithScaleConfig: ModeProps<FeatureCollection> = {
           ...props,
           modeConfig: {
@@ -172,6 +172,17 @@ export class BoundingTransformMode extends CompositeMode {
 
         // Update tooltip with shape dimensions
         this.updateShapeTooltip(event, props);
+      } else if (this.activeDragMode === this.rotateMode) {
+        // For RotateMode, Shift held = snap to 45° intervals
+        const propsWithRotateConfig: ModeProps<FeatureCollection> = {
+          ...props,
+          modeConfig: {
+            ...props.modeConfig,
+            snapRotation: this.isShiftHeld,
+          },
+        };
+
+        this.activeDragMode.handleDragging(event, propsWithRotateConfig);
       } else {
         this.activeDragMode.handleDragging(event, props);
       }
@@ -194,6 +205,16 @@ export class BoundingTransformMode extends CompositeMode {
           },
         };
         this.activeDragMode.handleStopDragging(event, propsWithScaleConfig);
+      } else if (this.activeDragMode === this.rotateMode) {
+        // For RotateMode, use the last known Shift state for snap calculation
+        const propsWithRotateConfig: ModeProps<FeatureCollection> = {
+          ...props,
+          modeConfig: {
+            ...props.modeConfig,
+            snapRotation: this.isShiftHeld,
+          },
+        };
+        this.activeDragMode.handleStopDragging(event, propsWithRotateConfig);
       } else {
         this.activeDragMode.handleStopDragging(event, props);
       }
