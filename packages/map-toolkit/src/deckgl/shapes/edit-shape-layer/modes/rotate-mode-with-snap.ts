@@ -13,6 +13,7 @@
 import {
   type DraggingEvent,
   type FeatureCollection,
+  ImmutableFeatureCollection,
   type ModeProps,
   RotateMode,
   type StopDraggingEvent,
@@ -24,17 +25,20 @@ import type { Position } from 'geojson';
 const SNAP_INTERVAL_DEGREES = 45;
 
 /**
- * Calculate the angle between two points relative to a center point.
+ * Calculate the angle between two points relative to a centroid.
  * Uses turfBearing for geographic bearing convention (matches parent RotateMode).
  * Returns angle in degrees.
+ *
+ * Note: centroid must be a turf Point Feature (not just coordinates) to match
+ * the parent RotateMode's behavior exactly.
  */
 function getRotationAngle(
-  center: Position,
+  centroidFeature: ReturnType<typeof centroid>,
   startPoint: Position,
   endPoint: Position,
 ): number {
-  const bearing1 = bearing(center, startPoint);
-  const bearing2 = bearing(center, endPoint);
+  const bearing1 = bearing(centroidFeature, startPoint);
+  const bearing2 = bearing(centroidFeature, endPoint);
   return bearing2 - bearing1;
 }
 
@@ -58,11 +62,20 @@ export class RotateModeWithSnap extends RotateMode {
   /**
    * Override handleDragging to support snapped rotation.
    * When snapRotation is true, rotates to nearest 45° interval.
+   * When snapRotation is false, delegates to parent for standard rotation.
    */
   override handleDragging(
     event: DraggingEvent,
     props: ModeProps<FeatureCollection>,
   ) {
+    const snapRotation = props.modeConfig?.snapRotation ?? false;
+
+    // If not snapping, use parent's rotation logic
+    if (!snapRotation) {
+      super.handleDragging(event, props);
+      return;
+    }
+
     // biome-ignore lint/suspicious/noExplicitAny: Accessing private properties from parent class
     const self = this as any;
 
@@ -86,11 +99,20 @@ export class RotateModeWithSnap extends RotateMode {
 
   /**
    * Override handleStopDragging to emit the final rotated geometry with snap.
+   * When snapRotation is false, delegates to parent for standard rotation.
    */
   override handleStopDragging(
     event: StopDraggingEvent,
     props: ModeProps<FeatureCollection>,
   ) {
+    const snapRotation = props.modeConfig?.snapRotation ?? false;
+
+    // If not snapping, use parent's rotation logic
+    if (!snapRotation) {
+      super.handleStopDragging(event, props);
+      return;
+    }
+
     // biome-ignore lint/suspicious/noExplicitAny: Accessing private properties from parent class
     const self = this as any;
 
@@ -132,10 +154,9 @@ export class RotateModeWithSnap extends RotateMode {
     const geometry = self._geometryBeingRotated as FeatureCollection;
     // @ts-expect-error turf types differ from editable-layers types
     const centerFeature = centroid(geometry);
-    const center = centerFeature.geometry.coordinates;
 
-    // Calculate the rotation angle
-    let angle = getRotationAngle(center, startDragPoint, currentPoint);
+    // Calculate the rotation angle (pass centroid Feature to match parent RotateMode)
+    let angle = getRotationAngle(centerFeature, startDragPoint, currentPoint);
 
     // Snap to 45° intervals if enabled
     const snapRotation = props.modeConfig?.snapRotation ?? false;
@@ -143,37 +164,34 @@ export class RotateModeWithSnap extends RotateMode {
       angle = snapAngle(angle, SNAP_INTERVAL_DEGREES);
     }
 
-    // Apply the rotation using turf
+    // Apply the rotation using turf (use centroid Feature as pivot to match parent)
     // @ts-expect-error turf types differ from editable-layers types
     const rotatedFeatures: FeatureCollection = transformRotate(
       // @ts-expect-error turf types differ from editable-layers types
       geometry,
       angle,
       {
-        pivot: center,
+        pivot: centerFeature,
       },
     );
 
-    // Build the updated data
+    // Build the updated data using ImmutableFeatureCollection (matches parent RotateMode)
     const selectedIndexes = props.selectedIndexes;
-    const updatedFeatures = [...props.data.features];
+    let updatedData = new ImmutableFeatureCollection(props.data);
 
     for (let i = 0; i < selectedIndexes.length; i++) {
       const selectedIndex = selectedIndexes[i];
       const movedFeature = rotatedFeatures.features[i];
       if (selectedIndex !== undefined && movedFeature) {
-        const existingFeature = updatedFeatures[selectedIndex];
-        if (existingFeature) {
-          existingFeature.geometry = movedFeature.geometry;
-        }
+        updatedData = updatedData.replaceGeometry(
+          selectedIndex,
+          movedFeature.geometry,
+        );
       }
     }
 
     return {
-      updatedData: {
-        type: 'FeatureCollection' as const,
-        features: updatedFeatures,
-      },
+      updatedData: updatedData.getObject(),
       editType,
       editContext: {
         featureIndexes: selectedIndexes,
