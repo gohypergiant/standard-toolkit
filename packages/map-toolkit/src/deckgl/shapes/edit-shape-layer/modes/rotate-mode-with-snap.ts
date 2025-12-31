@@ -146,6 +146,7 @@ export class RotateModeWithSnap extends RotateMode {
     // Apply the rotation using turf
     // @ts-expect-error turf types differ from editable-layers types
     const rotatedFeatures: FeatureCollection = transformRotate(
+      // @ts-expect-error turf types differ from editable-layers types
       geometry,
       angle,
       {
