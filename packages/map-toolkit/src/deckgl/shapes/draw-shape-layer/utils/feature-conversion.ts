@@ -149,7 +149,7 @@ export function convertFeatureToShape(
     shapeType === ShapeFeatureTypeEnum.Circle &&
     feature.geometry.type === 'Polygon'
   ) {
-    circleProperties = computeCircleProperties(feature.geometry as Polygon);
+    circleProperties = computeCircleProperties(feature.geometry);
   }
 
   // Compute ellipse properties if this is an ellipse

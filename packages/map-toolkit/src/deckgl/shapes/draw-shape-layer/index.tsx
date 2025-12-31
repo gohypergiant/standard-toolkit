@@ -124,50 +124,68 @@ export function DrawShapeLayer({
     };
   }, [activeShapeType]);
 
-  // Disable scroll zoom when shift is held during rectangle drawing
-  // This prevents shift+scroll zoom from interfering with shift-to-square constraint
+  // Disable zoom while Shift is held during rectangle drawing
+  // This prevents boxZoom (Shift+drag) from interfering with Shift-to-square constraint
   useEffect(() => {
     // Only apply for rectangle drawing
     if (activeShapeType !== 'Rectangle') {
       return;
     }
 
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Shift' && !isZoomDisabledRef.current) {
+    const disableZoom = () => {
+      if (!isZoomDisabledRef.current) {
         isZoomDisabledRef.current = true;
         emitDisableZoom({ id: actualMapId });
       }
     };
 
-    const handleKeyUp = (event: KeyboardEvent) => {
-      if (event.key === 'Shift' && isZoomDisabledRef.current) {
-        isZoomDisabledRef.current = false;
-        emitEnableZoom({ id: actualMapId });
-      }
-    };
-
-    // Also re-enable zoom if the window loses focus while shift is held
-    const handleBlur = () => {
+    const enableZoom = () => {
       if (isZoomDisabledRef.current) {
         isZoomDisabledRef.current = false;
         emitEnableZoom({ id: actualMapId });
       }
     };
 
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Shift') {
+        disableZoom();
+      }
+    };
+
+    const handleKeyUp = (event: KeyboardEvent) => {
+      if (event.key === 'Shift') {
+        enableZoom();
+      }
+    };
+
+    // Also catch Shift state on mousedown to handle edge cases where
+    // keydown might have been missed (e.g., focus issues)
+    const handleMouseDown = (event: MouseEvent) => {
+      if (event.shiftKey) {
+        disableZoom();
+      }
+    };
+
+    // Re-enable zoom if the window loses focus while Shift is held
+    const handleBlur = () => {
+      enableZoom();
+    };
+
     document.addEventListener('keydown', handleKeyDown);
     document.addEventListener('keyup', handleKeyUp);
+    document.addEventListener('mousedown', handleMouseDown, { capture: true });
     window.addEventListener('blur', handleBlur);
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
       document.removeEventListener('keyup', handleKeyUp);
+      document.removeEventListener('mousedown', handleMouseDown, {
+        capture: true,
+      });
       window.removeEventListener('blur', handleBlur);
 
       // Ensure zoom is re-enabled when unmounting
-      if (isZoomDisabledRef.current) {
-        isZoomDisabledRef.current = false;
-        emitEnableZoom({ id: actualMapId });
-      }
+      enableZoom();
     };
   }, [activeShapeType, actualMapId, emitDisableZoom, emitEnableZoom]);
 

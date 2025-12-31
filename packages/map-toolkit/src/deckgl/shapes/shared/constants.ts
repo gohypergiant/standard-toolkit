@@ -12,6 +12,7 @@
 
 'use client';
 
+import { DEFAULT_TEXT_STYLE } from '../../text-settings';
 import type { Color } from '@deck.gl/core';
 import type { StyleProperties } from './types';
 
@@ -143,17 +144,8 @@ for (let i = 32; i <= 128; i++) {
  */
 export const TOOLTIP_SUBLAYER_PROPS = {
   tooltips: {
-    getSize: 12,
-    getColor: [255, 255, 255],
-    outlineWidth: 7,
-    outlineColor: [0, 0, 0],
+    ...DEFAULT_TEXT_STYLE,
     fontFamily: 'Roboto MonoVariable, monospace',
-    fontWeight: 'bold',
-    fontSettings: {
-      sdf: true,
-      fontSize: 32,
-      cutoff: 0.22,
-    },
     characterSet: TOOLTIP_CHARACTER_SET,
     getTextAnchor: 'start',
     getAlignmentBaseline: 'bottom',

@@ -13,6 +13,7 @@
 'use client';
 
 import { TextLayer } from '@deck.gl/layers';
+import { DEFAULT_TEXT_STYLE } from '../../text-settings';
 import { SHAPE_LAYER_IDS } from '../shared/constants';
 import {
   getLabelPosition2d,
@@ -126,24 +127,15 @@ export function createShapeLabelLayer(
     getTextAnchor: (d: Shape) => getRequired(d).textAnchor,
     getAlignmentBaseline: (d: Shape) => getRequired(d).alignmentBaseline,
 
-    // Styling - white text with black outline, no background
-    getColor: [255, 255, 255, 255], // White text
-    getSize: 10,
+    // Cross-platform text styling (SDF font settings for legibility on Windows)
+    ...DEFAULT_TEXT_STYLE,
     getAngle: 0,
-
-    // Text outline for legibility (black stroke around white text)
-    outlineWidth: 2,
-    outlineColor: [0, 0, 0, 255], // Black outline
 
     // No background or border
     background: false,
 
-    // Font
+    // Font overrides
     fontFamily: 'Roboto MonoVariable, monospace',
-    fontWeight: 'bold',
-    fontSettings: {
-      sdf: true,
-    },
 
     // Update triggers - tell deck.gl to recalculate when labelOptions change
     updateTriggers: {
