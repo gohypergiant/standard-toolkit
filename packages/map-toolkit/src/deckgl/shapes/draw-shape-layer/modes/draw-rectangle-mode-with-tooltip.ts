@@ -111,7 +111,7 @@ export class DrawRectangleModeWithTooltip extends DrawRectangleMode {
         },
       );
 
-      finalCoord2 = cornerPoint.geometry.coordinates as Position;
+      finalCoord2 = cornerPoint.geometry.coordinates;
     }
 
     // Call parent implementation with potentially adjusted coordinates

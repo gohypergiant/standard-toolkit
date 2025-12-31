@@ -39,7 +39,7 @@ const MODE_INSTANCES = {
   [ShapeFeatureType.Circle]: new DrawCircleModeWithTooltip(),
   [ShapeFeatureType.Ellipse]: new DrawEllipseModeWithTooltip(),
   view: new ViewMode(),
-} as const;
+};
 
 /**
  * Get the cached mode instance for a shape type.
