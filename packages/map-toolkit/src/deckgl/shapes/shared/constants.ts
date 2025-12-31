@@ -26,7 +26,8 @@ export const SHAPE_LAYER_IDS = {
 } as const;
 
 /**
- * Base fill opacity multiplier (20%) for standard semi-transparent look
+ * Base fill opacity multiplier for standard semi-transparent look.
+ * Multiplies alpha by 0.2 (reduces to 20% of original opacity).
  */
 export const BASE_FILL_OPACITY = 0.2;
 

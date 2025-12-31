@@ -76,7 +76,7 @@ describe('Display Style Utilities', () => {
 
       const result = getFillColor(feature, true);
 
-      // Red with alpha multiplied by BASE_FILL_OPACITY (0.6)
+      // Red with alpha multiplied by BASE_FILL_OPACITY (0.2)
       const expectedOpacity = Math.round(255 * BASE_FILL_OPACITY);
       expect(result).toEqual([255, 0, 0, expectedOpacity]);
     });

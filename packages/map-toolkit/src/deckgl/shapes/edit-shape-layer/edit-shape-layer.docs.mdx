@@ -82,7 +82,8 @@ function MapWithEditing() {
   useMapCursor(MAP_ID);
 
   // Track selected shape
-  const { selectedShape, select, deselect } = useShapeSelection();
+  const { selectedId, setSelectedId, clearSelection } = useShapeSelection(MAP_ID);
+  const selectedShape = shapes.find((s) => s.id === selectedId);
 
   // Edit shape hook with callbacks
   const { edit, save, cancel, isEditing, editingShape } = useEditShape(MAP_ID, {
@@ -91,7 +92,7 @@ function MapWithEditing() {
       setShapes((prev) =>
         prev.map((s) => (s.id === updatedShape.id ? updatedShape : s))
       );
-      deselect();
+      clearSelection();
     },
     onCancel: (shape) => {
       console.log('Edit canceled for:', shape.name);
@@ -100,7 +101,7 @@ function MapWithEditing() {
 
   const handleShapeClick = (shape) => {
     if (!isEditing) {
-      select(shape);
+      setSelectedId(shape.id);
     }
   };
 
