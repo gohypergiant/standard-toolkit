@@ -167,7 +167,14 @@ function getEditModeForShape(shape: Shape): EditMode {
   }
   // Polygons and LineStrings get vertex-transform for combined
   // vertex editing + scale/rotate/translate
-  // This is also the fallback for any unknown shape types.
+  if (
+    shape.shapeType !== ShapeFeatureType.Polygon &&
+    shape.shapeType !== ShapeFeatureType.LineString
+  ) {
+    logger.warn(
+      `Unknown shape type "${shape.shapeType}", falling back to vertex-transform mode`,
+    );
+  }
   return 'vertex-transform';
 }
 

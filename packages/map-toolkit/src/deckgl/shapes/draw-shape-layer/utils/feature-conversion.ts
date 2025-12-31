@@ -13,19 +13,27 @@
 'use client';
 
 import { uuid } from '@accelint/core';
+import { getLogger } from '@accelint/logger';
 import { centroid, distance } from '@turf/turf';
 import { DEFAULT_DISTANCE_UNITS } from '../../../../shared/units';
 import { DEFAULT_STYLE_PROPERTIES } from '../../shared/constants';
-import { ShapeFeatureType as ShapeFeatureTypeEnum } from '../../shared/types';
-import type { Feature, Polygon, Position } from 'geojson';
-import type {
-  CircleProperties,
-  EllipseProperties,
-  Shape,
-  ShapeFeature,
-  ShapeFeatureType,
-  StyleProperties,
+import {
+  type CircleProperties,
+  type EllipseProperties,
+  type Shape,
+  type ShapeFeature,
+  type ShapeFeatureType,
+  ShapeFeatureType as ShapeFeatureTypeEnum,
+  type StyleProperties,
 } from '../../shared/types';
+import type { Feature, Polygon, Position } from 'geojson';
+
+const logger = getLogger({
+  enabled: process.env.NODE_ENV !== 'production',
+  level: 'warn',
+  prefix: '[FeatureConversion]',
+  pretty: true,
+});
 
 /**
  * Generate a default name for a shape based on its type
@@ -46,6 +54,9 @@ function computeCircleProperties(
 ): CircleProperties | undefined {
   const coordinates = geometry.coordinates[0];
   if (!coordinates || coordinates.length < 3) {
+    logger.warn(
+      'Cannot compute circle properties: polygon has insufficient coordinates',
+    );
     return undefined;
   }
 
@@ -96,6 +107,9 @@ function computeEllipseProperties(
   )?.editProperties;
 
   if (!editProps || editProps.shape !== 'Ellipse') {
+    logger.warn(
+      'Cannot compute ellipse properties: feature missing editProperties or not an ellipse',
+    );
     return undefined;
   }
 
