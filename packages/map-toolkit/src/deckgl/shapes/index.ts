@@ -32,8 +32,8 @@ export {
   EDIT_HANDLE_SUBLAYER_PROPS,
   EMPTY_FEATURE_COLLECTION,
   SHAPE_LAYER_IDS,
-  STROKE_PATTERNS,
-  STROKE_WIDTHS,
+  LINE_PATTERNS,
+  LINE_WIDTHS,
 } from './shared/constants';
 // Event exports
 export { SHAPE_EVENTS, ShapeEvents } from './shared/events';

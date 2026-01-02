@@ -319,15 +319,15 @@ export const CustomStyleDefaults: Story = {
     const colorStyles = {
       red: {
         fillColor: [255, 100, 100, 180] as [number, number, number, number],
-        strokeColor: [200, 0, 0, 255] as [number, number, number, number],
+        lineColor: [200, 0, 0, 255] as [number, number, number, number],
       },
       blue: {
         fillColor: [100, 100, 255, 180] as [number, number, number, number],
-        strokeColor: [0, 0, 200, 255] as [number, number, number, number],
+        lineColor: [0, 0, 200, 255] as [number, number, number, number],
       },
       green: {
         fillColor: [100, 255, 100, 180] as [number, number, number, number],
-        strokeColor: [0, 200, 0, 255] as [number, number, number, number],
+        lineColor: [0, 200, 0, 255] as [number, number, number, number],
       },
     };
 

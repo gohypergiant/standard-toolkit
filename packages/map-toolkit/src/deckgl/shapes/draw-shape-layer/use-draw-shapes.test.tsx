@@ -238,9 +238,9 @@ describe('useDrawShapes', () => {
           properties: {
             styleProperties: {
               fillColor: [255, 0, 0, 255],
-              strokeColor: [0, 0, 0, 255],
-              strokeWidth: 2,
-              strokePattern: 'solid',
+              lineColor: [0, 0, 0, 255],
+              lineWidth: 2,
+              linePattern: 'solid',
             },
           },
         },

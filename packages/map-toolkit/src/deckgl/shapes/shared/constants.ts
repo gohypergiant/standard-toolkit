@@ -32,17 +32,17 @@ export const SHAPE_LAYER_IDS = {
 export const BASE_FILL_OPACITY = 0.2;
 
 /**
- * Default stroke width in pixels when not specified in styleProperties
+ * Default border/outline width in pixels when not specified in styleProperties
  */
-export const DEFAULT_STROKE_WIDTH = 2;
+export const DEFAULT_LINE_WIDTH = 2;
 
 /**
- * Additional pixels added to stroke width on hover
+ * Additional pixels added to border/outline width on hover
  */
 export const HOVER_WIDTH_INCREASE = 2;
 
 /**
- * Additional pixels added to stroke width for selection highlight
+ * Additional pixels added to border/outline width for selection highlight
  */
 export const HIGHLIGHT_WIDTH_INCREASE = 5;
 
@@ -65,8 +65,8 @@ export const LABEL_BORDER_OPACITY = 255;
 export const DEFAULT_COLORS = {
   /** Default fill color (white at full alpha) */
   fill: [255, 255, 255, 255] as Color,
-  /** Default stroke color (outline-interactive-hover: #888a8f) */
-  stroke: [136, 138, 143, 255] as Color,
+  /** Default border/outline color (outline-interactive-hover: #888a8f) */
+  line: [136, 138, 143, 255] as Color,
   /** Highlight/selection color (turquoise at ~39% alpha) */
   highlight: [40, 245, 190, 100] as Color,
 } as const;
@@ -76,13 +76,13 @@ export const DEFAULT_COLORS = {
  *
  * These colors are used for the shape preview while drawing.
  * Fill is semi-transparent (8% opacity) to not obscure underlying features.
- * Stroke uses the same color as saved shapes for consistency.
+ * Border/outline uses the same color as saved shapes for consistency.
  */
 export const DEFAULT_TENTATIVE_COLORS = {
   /** Tentative fill color (white at 8% opacity: 0.08 * 255 ≈ 20) */
   fill: [255, 255, 255, 20] as Color,
-  /** Tentative stroke color (same as saved shapes for consistency) */
-  stroke: DEFAULT_COLORS.stroke,
+  /** Tentative border/outline color (same as saved shapes for consistency) */
+  line: DEFAULT_COLORS.line,
 } as const;
 
 /**
@@ -93,23 +93,23 @@ export const DEFAULT_TENTATIVE_COLORS = {
  */
 export const DEFAULT_STYLE_PROPERTIES: StyleProperties = {
   fillColor: DEFAULT_COLORS.fill,
-  strokeColor: DEFAULT_COLORS.stroke,
-  strokeWidth: 2,
-  strokePattern: 'solid',
+  lineColor: DEFAULT_COLORS.line,
+  lineWidth: 2,
+  linePattern: 'solid',
 };
 
 /**
- * Stroke width options
+ * Border/outline width options (in pixels)
  */
-export const STROKE_WIDTHS = [1, 2, 4, 8] as const;
+export const LINE_WIDTHS = [1, 2, 4, 8] as const;
 
 /**
- * Stroke pattern options
+ * Border/outline pattern options
  */
-export const STROKE_PATTERNS = ['solid', 'dashed', 'dotted'] as const;
+export const LINE_PATTERNS = ['solid', 'dashed', 'dotted'] as const;
 
 /**
- * Dash array patterns for stroke rendering
+ * Dash array patterns for border/outline rendering
  */
 export const DASH_ARRAYS: Record<
   'solid' | 'dashed' | 'dotted',
@@ -128,7 +128,7 @@ export const DASH_ARRAYS: Record<
 export const DEFAULT_TENTATIVE_FILL_COLOR: Color = [255, 255, 255, 20];
 
 /**
- * Default tentative line color (outline-interactive-hover: #888a8f)
+ * Default tentative border/outline color (outline-interactive-hover: #888a8f)
  * Used when drawing new shapes before they're completed.
  */
 export const DEFAULT_TENTATIVE_LINE_COLOR: Color = [136, 138, 143, 255];

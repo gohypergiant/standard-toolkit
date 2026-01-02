@@ -151,8 +151,7 @@ export function DrawShapeLayer({
 
   // Get colors from style defaults or use tentative defaults
   const fillColor = styleDefaults?.fillColor ?? DEFAULT_TENTATIVE_COLORS.fill;
-  const lineColor =
-    styleDefaults?.strokeColor ?? DEFAULT_TENTATIVE_COLORS.stroke;
+  const lineColor = styleDefaults?.lineColor ?? DEFAULT_TENTATIVE_COLORS.line;
 
   return (
     <editableGeoJsonLayer

@@ -38,14 +38,16 @@ export type ShapeFeatureType =
 export type ShapeId = UniqueId;
 
 /**
- * Stroke width options (in pixels)
+ * Border/outline width options (in pixels).
+ * Controls the width of shape outlines.
  */
-export type StrokeWidth = 1 | 2 | 4 | 8;
+export type LineWidth = 1 | 2 | 4 | 8;
 
 /**
- * Stroke pattern options
+ * Border/outline pattern options.
+ * Controls how shape outlines are rendered.
  */
-export type StrokePattern = 'solid' | 'dashed' | 'dotted';
+export type LinePattern = 'solid' | 'dashed' | 'dotted';
 
 /**
  * Style properties for rendering shapes
@@ -53,12 +55,12 @@ export type StrokePattern = 'solid' | 'dashed' | 'dotted';
 export interface StyleProperties {
   /** Fill color as RGBA array [r, g, b, a] where each value is 0-255 */
   fillColor: Color;
-  /** Stroke color as RGBA array [r, g, b, a] where each value is 0-255 */
-  strokeColor: Color;
-  /** Stroke width in pixels */
-  strokeWidth: StrokeWidth;
-  /** Stroke pattern */
-  strokePattern: StrokePattern;
+  /** Border/outline color as RGBA array [r, g, b, a] where each value is 0-255 */
+  lineColor: Color;
+  /** Border/outline width in pixels */
+  lineWidth: LineWidth;
+  /** Border/outline pattern (solid, dashed, or dotted) */
+  linePattern: LinePattern;
   /** Optional icon properties for Point geometries */
   icon?: {
     /** Icon atlas URL or data */

@@ -41,9 +41,9 @@ function createMockShape(overrides?: Partial<Shape>): Shape {
       properties: {
         styleProperties: {
           fillColor: [98, 166, 255, 255] as Color,
-          strokeColor: [98, 166, 255, 255] as Color,
-          strokeWidth: 4,
-          strokePattern: 'solid',
+          lineColor: [98, 166, 255, 255] as Color,
+          lineWidth: 4,
+          linePattern: 'solid',
         },
       },
       geometry: {
@@ -79,9 +79,9 @@ function createMockPointShape(overrides?: Partial<Shape>): Shape {
       properties: {
         styleProperties: {
           fillColor: [98, 166, 255, 255] as Color,
-          strokeColor: [98, 166, 255, 255] as Color,
-          strokeWidth: 4,
-          strokePattern: 'solid',
+          lineColor: [98, 166, 255, 255] as Color,
+          lineWidth: 4,
+          linePattern: 'solid',
         },
       },
       geometry: {
@@ -676,9 +676,9 @@ describe('DisplayShapeLayer', () => {
           properties: {
             styleProperties: {
               fillColor: [98, 166, 255, 255] as Color,
-              strokeColor: [98, 166, 255, 255] as Color,
-              strokeWidth: 4,
-              strokePattern: 'solid',
+              lineColor: [98, 166, 255, 255] as Color,
+              lineWidth: 4,
+              linePattern: 'solid',
               icon: {
                 atlas: iconAtlas,
                 mapping: iconMapping,

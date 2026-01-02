@@ -27,8 +27,8 @@ export {
   SHAPE_LAYER_IDS,
   ShapeEvents,
   ShapeFeatureType,
-  STROKE_PATTERNS,
-  STROKE_WIDTHS,
+  LINE_PATTERNS,
+  LINE_WIDTHS,
 } from './shapes';
 export { SymbolLayer, type SymbolLayerProps } from './symbol-layer';
 export type {

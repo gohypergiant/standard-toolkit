@@ -19,15 +19,12 @@ import {
 } from '../../../shared/units';
 import { MapContext } from '../../base-map/provider';
 import {
-  getFillColor,
-  getStrokeColor,
-} from '../display-shape-layer/utils/display-style';
-import {
   DEFAULT_EDIT_HANDLE_COLOR,
   EDITABLE_LAYER_SUBLAYER_PROPS,
 } from '../shared/constants';
 import { useShiftZoomDisable } from '../shared/hooks';
 import { ShapeFeatureType, type ShapeFeatureTypeValues } from '../shared/types';
+import { getFillColor, getLineColor } from '../shared/utils/style-utils';
 import {
   COMPLETION_EDIT_TYPES,
   CONTINUOUS_EDIT_TYPES,
@@ -240,7 +237,7 @@ export function EditShapeLayer({
 
   // Get colors from the shape's existing style properties with base opacity applied
   const fillColor = getFillColor(editingShape.feature, true);
-  const lineColor = getStrokeColor(editingShape.feature);
+  const lineColor = getLineColor(editingShape.feature);
 
   return (
     <editableGeoJsonLayer

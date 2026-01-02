@@ -96,6 +96,7 @@
     "./deckgl/shapes/shared/hooks": "./dist/deckgl/shapes/shared/hooks/index.js",
     "./deckgl/shapes/shared/hooks/use-shift-zoom-disable": "./dist/deckgl/shapes/shared/hooks/use-shift-zoom-disable.js",
     "./deckgl/shapes/shared/types": "./dist/deckgl/shapes/shared/types.js",
+    "./deckgl/shapes/shared/utils/style-utils": "./dist/deckgl/shapes/shared/utils/style-utils.js",
     "./deckgl/symbol-layer": "./dist/deckgl/symbol-layer/index.js",
     "./deckgl/symbol-layer/fiber": "./dist/deckgl/symbol-layer/fiber.js",
     "./deckgl/text-layer": "./dist/deckgl/text-layer/index.js",

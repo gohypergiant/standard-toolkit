@@ -15,12 +15,13 @@ import { BASE_FILL_OPACITY } from '../../shared/constants';
 import {
   getDashArray,
   getFillColor,
+  getLineColor,
+  getLineWidth,
+} from '../../shared/utils/style-utils';
+import {
   getHighlightColor,
   getHighlightLineWidth,
   getHoverLineWidth,
-  getLineWidth,
-  getStrokeColor,
-  getStrokeWidth,
 } from './display-style';
 import type { Color } from '@deck.gl/core';
 import type { StyledFeature } from '../../shared/types';
@@ -46,9 +47,9 @@ describe('Display Style Utilities', () => {
         properties: {
           styleProperties: {
             fillColor: [255, 0, 0, 200] as Color,
-            strokeColor: [0, 0, 0, 255] as Color,
-            strokeWidth: 2,
-            strokePattern: 'solid',
+            lineColor: [0, 0, 0, 255] as Color,
+            lineWidth: 2,
+            linePattern: 'solid',
           },
         },
         geometry: { type: 'Point', coordinates: [0, 0] },
@@ -66,9 +67,9 @@ describe('Display Style Utilities', () => {
         properties: {
           styleProperties: {
             fillColor: [255, 0, 0, 255] as Color,
-            strokeColor: [0, 0, 0, 255] as Color,
-            strokeWidth: 2,
-            strokePattern: 'solid',
+            lineColor: [0, 0, 0, 255] as Color,
+            lineWidth: 2,
+            linePattern: 'solid',
           },
         },
         geometry: { type: 'Point', coordinates: [0, 0] },
@@ -87,9 +88,9 @@ describe('Display Style Utilities', () => {
         properties: {
           styleProperties: {
             fillColor: [0, 255, 0, 200] as Color,
-            strokeColor: [0, 0, 0, 255] as Color,
-            strokeWidth: 2,
-            strokePattern: 'solid',
+            lineColor: [0, 0, 0, 255] as Color,
+            lineWidth: 2,
+            linePattern: 'solid',
           },
         },
         geometry: { type: 'Point', coordinates: [0, 0] },
@@ -108,9 +109,9 @@ describe('Display Style Utilities', () => {
         properties: {
           styleProperties: {
             fillColor: [0, 0, 255] as Color,
-            strokeColor: [0, 0, 0, 255] as Color,
-            strokeWidth: 2,
-            strokePattern: 'solid',
+            lineColor: [0, 0, 0, 255] as Color,
+            lineWidth: 2,
+            linePattern: 'solid',
           },
         },
         geometry: { type: 'Point', coordinates: [0, 0] },
@@ -128,9 +129,9 @@ describe('Display Style Utilities', () => {
         properties: {
           styleProperties: {
             fillColor: [255, 255, 255, 0] as Color,
-            strokeColor: [0, 0, 0, 255] as Color,
-            strokeWidth: 2,
-            strokePattern: 'solid',
+            lineColor: [0, 0, 0, 255] as Color,
+            lineWidth: 2,
+            linePattern: 'solid',
           },
         },
         geometry: { type: 'Point', coordinates: [0, 0] },
@@ -142,7 +143,7 @@ describe('Display Style Utilities', () => {
     });
   });
 
-  describe('getStrokeColor', () => {
+  describe('getLineColor', () => {
     it('uses default color when no style properties provided', () => {
       const feature: StyledFeature = {
         type: 'Feature',
@@ -150,9 +151,9 @@ describe('Display Style Utilities', () => {
         geometry: { type: 'Point', coordinates: [0, 0] },
       };
 
-      const result = getStrokeColor(feature);
+      const result = getLineColor(feature);
 
-      // Default stroke: DEFAULT_COLORS.stroke passed through (gray)
+      // Default line: DEFAULT_COLORS.line passed through (gray)
       expect(result).toEqual([136, 138, 143, 255]);
     });
 
@@ -162,15 +163,15 @@ describe('Display Style Utilities', () => {
         properties: {
           styleProperties: {
             fillColor: [0, 0, 0, 255] as Color,
-            strokeColor: [255, 0, 0, 200] as Color,
-            strokeWidth: 2,
-            strokePattern: 'solid',
+            lineColor: [255, 0, 0, 200] as Color,
+            lineWidth: 2,
+            linePattern: 'solid',
           },
         },
         geometry: { type: 'Point', coordinates: [0, 0] },
       };
 
-      const result = getStrokeColor(feature);
+      const result = getLineColor(feature);
 
       // Color passed through exactly as provided
       expect(result).toEqual([255, 0, 0, 200]);
@@ -182,15 +183,15 @@ describe('Display Style Utilities', () => {
         properties: {
           styleProperties: {
             fillColor: [0, 0, 0, 255] as Color,
-            strokeColor: [0, 255, 0] as Color,
-            strokeWidth: 2,
-            strokePattern: 'solid',
+            lineColor: [0, 255, 0] as Color,
+            lineWidth: 2,
+            linePattern: 'solid',
           },
         },
         geometry: { type: 'Point', coordinates: [0, 0] },
       };
 
-      const result = getStrokeColor(feature);
+      const result = getLineColor(feature);
 
       // Green with default alpha 255
       expect(result).toEqual([0, 255, 0, 255]);
@@ -207,19 +208,19 @@ describe('Display Style Utilities', () => {
 
       const result = getLineWidth(feature);
 
-      // DEFAULT_STROKE_WIDTH is 2
+      // DEFAULT_LINE_WIDTH is 2
       expect(result).toBe(2);
     });
 
-    it('returns strokeWidth from style properties', () => {
+    it('returns lineWidth from style properties', () => {
       const feature: StyledFeature = {
         type: 'Feature',
         properties: {
           styleProperties: {
             fillColor: [0, 0, 0, 255] as Color,
-            strokeColor: [0, 0, 0, 255] as Color,
-            strokeWidth: 8,
-            strokePattern: 'solid',
+            lineColor: [0, 0, 0, 255] as Color,
+            lineWidth: 8,
+            linePattern: 'solid',
           },
         },
         geometry: { type: 'Point', coordinates: [0, 0] },
@@ -230,7 +231,7 @@ describe('Display Style Utilities', () => {
       expect(result).toBe(8);
     });
 
-    it('handles different stroke widths', () => {
+    it('handles different line widths', () => {
       const widths = [1, 2, 4, 8] as const;
 
       for (const width of widths) {
@@ -239,9 +240,9 @@ describe('Display Style Utilities', () => {
           properties: {
             styleProperties: {
               fillColor: [0, 0, 0, 255] as Color,
-              strokeColor: [0, 0, 0, 255] as Color,
-              strokeWidth: width,
-              strokePattern: 'solid',
+              lineColor: [0, 0, 0, 255] as Color,
+              lineWidth: width,
+              linePattern: 'solid',
             },
           },
           geometry: { type: 'Point', coordinates: [0, 0] },
@@ -252,25 +253,6 @@ describe('Display Style Utilities', () => {
     });
   });
 
-  describe('getStrokeWidth', () => {
-    it('is an alias for getLineWidth', () => {
-      const feature: StyledFeature = {
-        type: 'Feature',
-        properties: {
-          styleProperties: {
-            fillColor: [0, 0, 0, 255] as Color,
-            strokeColor: [0, 0, 0, 255] as Color,
-            strokeWidth: 8,
-            strokePattern: 'solid',
-          },
-        },
-        geometry: { type: 'Point', coordinates: [0, 0] },
-      };
-
-      expect(getStrokeWidth(feature)).toBe(getLineWidth(feature));
-    });
-  });
-
   describe('getDashArray', () => {
     it('returns null for solid pattern', () => {
       const feature: StyledFeature = {
@@ -278,9 +260,9 @@ describe('Display Style Utilities', () => {
         properties: {
           styleProperties: {
             fillColor: [0, 0, 0, 255] as Color,
-            strokeColor: [0, 0, 0, 255] as Color,
-            strokeWidth: 2,
-            strokePattern: 'solid',
+            lineColor: [0, 0, 0, 255] as Color,
+            lineWidth: 2,
+            linePattern: 'solid',
           },
         },
         geometry: { type: 'Point', coordinates: [0, 0] },
@@ -297,9 +279,9 @@ describe('Display Style Utilities', () => {
         properties: {
           styleProperties: {
             fillColor: [0, 0, 0, 255] as Color,
-            strokeColor: [0, 0, 0, 255] as Color,
-            strokeWidth: 2,
-            strokePattern: 'dashed',
+            lineColor: [0, 0, 0, 255] as Color,
+            lineWidth: 2,
+            linePattern: 'dashed',
           },
         },
         geometry: { type: 'Point', coordinates: [0, 0] },
@@ -316,9 +298,9 @@ describe('Display Style Utilities', () => {
         properties: {
           styleProperties: {
             fillColor: [0, 0, 0, 255] as Color,
-            strokeColor: [0, 0, 0, 255] as Color,
-            strokeWidth: 2,
-            strokePattern: 'dotted',
+            lineColor: [0, 0, 0, 255] as Color,
+            lineWidth: 2,
+            linePattern: 'dotted',
           },
         },
         geometry: { type: 'Point', coordinates: [0, 0] },
@@ -347,10 +329,10 @@ describe('Display Style Utilities', () => {
         properties: {
           styleProperties: {
             fillColor: [0, 0, 0, 255] as Color,
-            strokeColor: [0, 0, 0, 255] as Color,
-            strokeWidth: 2,
+            lineColor: [0, 0, 0, 255] as Color,
+            lineWidth: 2,
             // biome-ignore lint/suspicious/noExplicitAny: testing invalid input
-            strokePattern: 'unknown' as any,
+            linePattern: 'unknown' as any,
           },
         },
         geometry: { type: 'Point', coordinates: [0, 0] },
@@ -369,9 +351,9 @@ describe('Display Style Utilities', () => {
         properties: {
           styleProperties: {
             fillColor: [0, 0, 0, 255] as Color,
-            strokeColor: [0, 0, 0, 255] as Color,
-            strokeWidth: 4,
-            strokePattern: 'solid',
+            lineColor: [0, 0, 0, 255] as Color,
+            lineWidth: 4,
+            linePattern: 'solid',
           },
         },
         geometry: { type: 'Point', coordinates: [0, 0] },
@@ -388,9 +370,9 @@ describe('Display Style Utilities', () => {
         properties: {
           styleProperties: {
             fillColor: [0, 0, 0, 255] as Color,
-            strokeColor: [0, 0, 0, 255] as Color,
-            strokeWidth: 4,
-            strokePattern: 'solid',
+            lineColor: [0, 0, 0, 255] as Color,
+            lineWidth: 4,
+            linePattern: 'solid',
           },
         },
         geometry: { type: 'Point', coordinates: [0, 0] },
@@ -410,9 +392,9 @@ describe('Display Style Utilities', () => {
           properties: {
             styleProperties: {
               fillColor: [0, 0, 0, 255] as Color,
-              strokeColor: [0, 0, 0, 255] as Color,
-              strokeWidth: width,
-              strokePattern: 'solid',
+              lineColor: [0, 0, 0, 255] as Color,
+              lineWidth: width,
+              linePattern: 'solid',
             },
           },
           geometry: { type: 'Point', coordinates: [0, 0] },
@@ -459,9 +441,9 @@ describe('Display Style Utilities', () => {
         properties: {
           styleProperties: {
             fillColor: [0, 0, 0, 255] as Color,
-            strokeColor: [0, 0, 0, 255] as Color,
-            strokeWidth: 4,
-            strokePattern: 'solid',
+            lineColor: [0, 0, 0, 255] as Color,
+            lineWidth: 4,
+            linePattern: 'solid',
           },
         },
         geometry: { type: 'Point', coordinates: [0, 0] },
@@ -469,7 +451,7 @@ describe('Display Style Utilities', () => {
 
       const result = getHighlightLineWidth(feature);
 
-      // strokeWidth (4) + HIGHLIGHT_WIDTH_INCREASE (5) = 9
+      // lineWidth (4) + HIGHLIGHT_WIDTH_INCREASE (5) = 9
       expect(result).toBe(9);
     });
 
@@ -482,9 +464,9 @@ describe('Display Style Utilities', () => {
           properties: {
             styleProperties: {
               fillColor: [0, 0, 0, 255] as Color,
-              strokeColor: [0, 0, 0, 255] as Color,
-              strokeWidth: width,
-              strokePattern: 'solid',
+              lineColor: [0, 0, 0, 255] as Color,
+              lineWidth: width,
+              linePattern: 'solid',
             },
           },
           geometry: { type: 'Point', coordinates: [0, 0] },
@@ -504,7 +486,7 @@ describe('Display Style Utilities', () => {
 
       const result = getHighlightLineWidth(feature);
 
-      // DEFAULT_STROKE_WIDTH (2) + HIGHLIGHT_WIDTH_INCREASE (5) = 7
+      // DEFAULT_LINE_WIDTH (2) + HIGHLIGHT_WIDTH_INCREASE (5) = 7
       expect(result).toBe(7);
     });
   });

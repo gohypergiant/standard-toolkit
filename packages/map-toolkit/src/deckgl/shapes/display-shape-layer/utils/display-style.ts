@@ -13,99 +13,15 @@
 'use client';
 
 import {
-  BASE_FILL_OPACITY,
-  DASH_ARRAYS,
   DEFAULT_COLORS,
-  DEFAULT_STROKE_WIDTH,
   HIGHLIGHT_WIDTH_INCREASE,
   HOVER_WIDTH_INCREASE,
 } from '../../shared/constants';
-import type { Color } from '@deck.gl/core';
+import { getLineWidth, normalizeColor } from '../../shared/utils/style-utils';
 import type { StyledFeature } from '../../shared/types';
 
 /**
- * Get fill color for a feature
- * Colors are passed through as-is unless applyBaseOpacity is true
- *
- * @param feature - The styled feature
- * @param applyBaseOpacity - When true, multiplies alpha by BASE_FILL_OPACITY (0.2)
- * @returns RGBA color array
- */
-export function getFillColor(
-  feature: StyledFeature,
-  applyBaseOpacity = false,
-): Color {
-  const styleProps = feature.properties?.styleProperties;
-  const color = styleProps?.fillColor ?? DEFAULT_COLORS.fill;
-
-  // Normalize to 4-element array
-  const rgba = normalizeColor(color);
-
-  if (applyBaseOpacity) {
-    // Apply base opacity multiplier to alpha channel
-    return [rgba[0], rgba[1], rgba[2], Math.round(rgba[3] * BASE_FILL_OPACITY)];
-  }
-
-  return rgba;
-}
-
-/**
- * Get stroke color for a feature
- * Strokes are always rendered at their literal alpha value
- *
- * @param feature - The styled feature
- * @returns RGBA color array
- */
-export function getStrokeColor(feature: StyledFeature): Color {
-  const styleProps = feature.properties?.styleProperties;
-  const color = styleProps?.strokeColor ?? DEFAULT_COLORS.stroke;
-
-  return normalizeColor(color);
-}
-
-/**
- * Normalize a Color to a 4-element RGBA array
- * Handles RGB arrays (adds alpha 255), RGBA arrays, and typed arrays
- */
-function normalizeColor(color: Color): [number, number, number, number] {
-  if (color instanceof Uint8Array || color instanceof Uint8ClampedArray) {
-    return [color[0] ?? 0, color[1] ?? 0, color[2] ?? 0, color[3] ?? 255];
-  }
-
-  // Handle RGB (3-element) or RGBA (4-element) arrays
-  // Validate array has at least 3 elements for RGB
-  if (!Array.isArray(color) || color.length < 3) {
-    return [0, 0, 0, 255]; // Fallback to opaque black
-  }
-  return [color[0] ?? 0, color[1] ?? 0, color[2] ?? 0, color[3] ?? 255];
-}
-
-/**
- * Get line width for a feature
- */
-export function getLineWidth(feature: StyledFeature): number {
-  const styleProps = feature.properties?.styleProperties;
-  return styleProps?.strokeWidth ?? DEFAULT_STROKE_WIDTH;
-}
-
-/**
- * Alias for getLineWidth
- * Both names are exported for flexibility - use whichever fits your naming convention.
- */
-export const getStrokeWidth = getLineWidth;
-
-/**
- * Get dash array for stroke pattern
- */
-export function getDashArray(feature: StyledFeature): [number, number] | null {
-  const styleProps = feature.properties?.styleProperties;
-  const pattern = styleProps?.strokePattern ?? 'solid';
-
-  return DASH_ARRAYS[pattern] || null;
-}
-
-/**
- * Get hover-enhanced line width
+ * Get hover-enhanced border/outline width
  */
 export function getHoverLineWidth(
   feature: StyledFeature,
@@ -132,7 +48,7 @@ export function getHighlightColor(
 }
 
 /**
- * Get highlight line width (base width + increase)
+ * Get highlight border/outline width (base width + increase)
  */
 export function getHighlightLineWidth(feature: StyledFeature): number {
   const baseWidth = getLineWidth(feature);
