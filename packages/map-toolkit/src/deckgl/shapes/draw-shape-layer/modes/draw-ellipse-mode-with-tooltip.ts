@@ -22,8 +22,6 @@ import {
   DEFAULT_DISTANCE_UNITS,
   getDistanceUnitAbbreviation,
 } from '../../../../shared/units';
-import { TOOLTIP_Y_OFFSET } from '../../shared/constants';
-import type { Viewport } from '@deck.gl/core';
 
 /**
  * Extends DrawEllipseUsingThreePointsMode to display contextual tooltips.
@@ -54,11 +52,11 @@ export class DrawEllipseModeWithTooltip extends DrawEllipseUsingThreePointsMode 
       return;
     }
 
-    const { mapCoords, screenCoords } = event;
-    const viewport: Viewport | undefined = props.modeConfig?.viewport;
+    const { mapCoords } = event;
     const distanceUnits =
       props.modeConfig?.distanceUnits ?? DEFAULT_DISTANCE_UNITS;
     const unitAbbrev = getDistanceUnitAbbreviation(distanceUnits);
+    const tooltipPosition = mapCoords;
 
     if (clickSequence.length === 1) {
       // First segment: show distance from first click to cursor (like line/polygon)
@@ -68,11 +66,7 @@ export class DrawEllipseModeWithTooltip extends DrawEllipseUsingThreePointsMode 
       const dist = distance(firstPoint, currentPoint, { units: distanceUnits });
 
       this.tooltip = {
-        position:
-          viewport?.unproject([
-            screenCoords[0],
-            screenCoords[1] + TOOLTIP_Y_OFFSET,
-          ]) ?? mapCoords,
+        position: tooltipPosition,
         text: `${dist.toFixed(2)} ${unitAbbrev}`,
       };
     } else if (clickSequence.length === 2) {
@@ -99,11 +93,7 @@ export class DrawEllipseModeWithTooltip extends DrawEllipseUsingThreePointsMode 
       const ellipseArea = Math.PI * xSemiAxis * ySemiAxis;
 
       this.tooltip = {
-        position:
-          viewport?.unproject([
-            screenCoords[0],
-            screenCoords[1] + TOOLTIP_Y_OFFSET,
-          ]) ?? mapCoords,
+        position: tooltipPosition,
         text: `${ellipseArea.toFixed(2)} ${unitAbbrev}²`,
       };
     }

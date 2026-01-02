@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -22,8 +22,6 @@ import {
   DEFAULT_DISTANCE_UNITS,
   getDistanceUnitAbbreviation,
 } from '../../../../shared/units';
-import { TOOLTIP_Y_OFFSET } from '../../shared/constants';
-import type { Viewport } from '@deck.gl/core';
 
 /**
  * Extends DrawCircleFromCenterMode to display area tooltip.
@@ -46,8 +44,7 @@ export class DrawCircleModeWithTooltip extends DrawCircleFromCenterMode {
       return;
     }
 
-    const { mapCoords, screenCoords } = event;
-    const viewport: Viewport | undefined = props.modeConfig?.viewport;
+    const { mapCoords } = event;
     const distanceUnits =
       props.modeConfig?.distanceUnits ?? DEFAULT_DISTANCE_UNITS;
 
@@ -62,11 +59,7 @@ export class DrawCircleModeWithTooltip extends DrawCircleFromCenterMode {
     const unitAbbrev = getDistanceUnitAbbreviation(distanceUnits);
 
     this.tooltip = {
-      position:
-        viewport?.unproject([
-          screenCoords[0],
-          screenCoords[1] + TOOLTIP_Y_OFFSET,
-        ]) ?? mapCoords,
+      position: mapCoords,
       text: `${circleArea.toFixed(2)} ${unitAbbrev}²`,
     };
   }
