@@ -100,6 +100,7 @@ export function DrawShapeLayer({
   // Set up dblclick listener as workaround for deck.gl-community/editable-layers ~9.1
   // which doesn't register 'dblclick' in EVENT_TYPES
   // @see https://github.com/visgl/deck.gl-community/pull/225
+  // TODO: Remove this workaround when @deck.gl-community/editable-layers 9.2.0 is released
   useEffect(() => {
     if (!activeShapeType) {
       return;

@@ -28,7 +28,11 @@ import {
 } from '../shared/constants';
 import { useShiftZoomDisable } from '../shared/hooks';
 import { ShapeFeatureType, type ShapeFeatureTypeValues } from '../shared/types';
-import { EDIT_SHAPE_LAYER_ID } from './constants';
+import {
+  COMPLETION_EDIT_TYPES,
+  CONTINUOUS_EDIT_TYPES,
+  EDIT_SHAPE_LAYER_ID,
+} from './constants';
 import { getEditModeInstance } from './modes';
 import {
   cancelEditingFromLayer,
@@ -43,25 +47,6 @@ import type {
 } from '@deck.gl-community/editable-layers';
 import type { Feature } from 'geojson';
 import type { EditShapeLayerProps } from './types';
-
-/** Continuous edit event types that fire during dragging */
-const CONTINUOUS_EDIT_TYPES = new Set([
-  'movePosition',
-  'unionGeometry',
-  'scaling',
-  'rotating',
-  'translating',
-]);
-
-/** Completion edit event types that fire when dragging ends */
-const COMPLETION_EDIT_TYPES = new Set([
-  'finishMovePosition',
-  'addPosition',
-  'removePosition',
-  'scaled',
-  'rotated',
-  'translated',
-]);
 
 function isContinuousEditType(editType: string): boolean {
   return CONTINUOUS_EDIT_TYPES.has(editType);

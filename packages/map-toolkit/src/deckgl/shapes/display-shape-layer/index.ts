@@ -13,6 +13,7 @@
 'use client';
 
 import { Broadcast } from '@accelint/bus';
+import { getLogger } from '@accelint/logger';
 import { CompositeLayer } from '@deck.gl/core';
 import { PathStyleExtension } from '@deck.gl/extensions';
 import { GeoJsonLayer, IconLayer } from '@deck.gl/layers';
@@ -35,6 +36,13 @@ import {
 import type { Layer, PickingInfo } from '@deck.gl/core';
 import type { Shape, ShapeId } from '../shared/types';
 import type { DisplayShapeLayerProps } from './types';
+
+const logger = getLogger({
+  enabled: process.env.NODE_ENV !== 'production',
+  level: 'warn',
+  prefix: '[DisplayShapeLayer]',
+  pretty: true,
+});
 
 /**
  * Typed event bus instance for shape events.
@@ -404,11 +412,10 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
     const iconAtlas = firstPointIcon?.atlas;
     const iconMapping = firstPointIcon?.mapping;
 
-    if (!iconAtlas) {
-      return null;
-    }
-
-    if (!iconMapping) {
+    if (!(iconAtlas && iconMapping)) {
+      logger.warn(
+        'Point shape has icon style but missing iconAtlas or iconMapping - coffin corners will not render',
+      );
       return null;
     }
 

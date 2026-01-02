@@ -28,7 +28,7 @@ import type { StyledFeature } from '../../shared/types';
  * Colors are passed through as-is unless applyBaseOpacity is true
  *
  * @param feature - The styled feature
- * @param applyBaseOpacity - When true, multiplies alpha by BASE_FILL_OPACITY (0.6)
+ * @param applyBaseOpacity - When true, multiplies alpha by BASE_FILL_OPACITY (0.2)
  * @returns RGBA color array
  */
 export function getFillColor(
@@ -73,7 +73,11 @@ function normalizeColor(color: Color): [number, number, number, number] {
   }
 
   // Handle RGB (3-element) or RGBA (4-element) arrays
-  return [color[0], color[1], color[2], color[3] ?? 255];
+  // Validate array has at least 3 elements for RGB
+  if (!Array.isArray(color) || color.length < 3) {
+    return [0, 0, 0, 255]; // Fallback to opaque black
+  }
+  return [color[0] ?? 0, color[1] ?? 0, color[2] ?? 0, color[3] ?? 255];
 }
 
 /**
@@ -85,7 +89,8 @@ export function getLineWidth(feature: StyledFeature): number {
 }
 
 /**
- * Alias for getLineWidth (for compatibility)
+ * Alias for getLineWidth
+ * Both names are exported for flexibility - use whichever fits your naming convention.
  */
 export const getStrokeWidth = getLineWidth;
 

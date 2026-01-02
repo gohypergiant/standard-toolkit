@@ -67,11 +67,38 @@ function computeCircleProperties(
   });
   const center = centerFeature.geometry.coordinates as [number, number];
 
+  // Validate center coordinates are valid numbers
+  const isCenterValid =
+    Number.isFinite(center[0]) && Number.isFinite(center[1]);
+  if (!isCenterValid) {
+    logger.warn('Cannot compute circle properties: invalid center coordinates');
+    return undefined;
+  }
+
   // Calculate radius as distance from center to first point
   const firstPoint = coordinates[0] as Position;
+
+  // Validate first point coordinates
+  const isFirstPointValid =
+    firstPoint &&
+    Number.isFinite(firstPoint[0]) &&
+    Number.isFinite(firstPoint[1]);
+  if (!isFirstPointValid) {
+    logger.warn(
+      'Cannot compute circle properties: invalid edge point coordinates',
+    );
+    return undefined;
+  }
+
   const radius = distance(center, firstPoint, {
     units: DEFAULT_DISTANCE_UNITS,
   });
+
+  // Validate computed radius
+  if (!Number.isFinite(radius) || radius <= 0) {
+    logger.warn('Cannot compute circle properties: invalid radius computed');
+    return undefined;
+  }
 
   return {
     center,
