@@ -27,18 +27,13 @@ import {
   DEFAULT_DISTANCE_UNITS,
   getDistanceUnitAbbreviation,
 } from '../../../../shared/units';
-import { TOOLTIP_Y_OFFSET } from '../../shared/constants';
+import {
+  formatEllipseTooltip,
+  formatRectangleTooltip,
+} from '../../shared/constants';
 import { RotateModeWithSnap } from './rotate-mode-with-snap';
 import { ScaleModeWithFreeTransform } from './scale-mode-with-free-transform';
-import type { Viewport } from '@deck.gl/core';
 import type { Feature, Polygon, Position } from 'geojson';
-
-/**
- * Format a distance value for display
- */
-function formatDistance(value: number): string {
-  return value.toFixed(2);
-}
 
 type ActiveMode =
   | ScaleModeWithFreeTransform
@@ -264,8 +259,7 @@ export class BoundingTransformMode extends CompositeMode {
     event: DraggingEvent,
     props: ModeProps<FeatureCollection>,
   ) {
-    const { screenCoords } = event;
-    const viewport: Viewport | undefined = props.modeConfig?.viewport;
+    const { mapCoords } = event;
     const distanceUnits =
       props.modeConfig?.distanceUnits ?? DEFAULT_DISTANCE_UNITS;
 
@@ -311,7 +305,7 @@ export class BoundingTransformMode extends CompositeMode {
       });
       const rectArea = width * height;
 
-      text = `${formatDistance(width)} ${unitAbbrev} x ${formatDistance(height)} ${unitAbbrev}\n${formatDistance(rectArea)} ${unitAbbrev}²`;
+      text = formatRectangleTooltip(width, height, rectArea, unitAbbrev);
     } else {
       // Ellipse: calculate major/minor axes
       const { majorAxis, minorAxis } = this.calculateEllipseAxes(
@@ -324,16 +318,17 @@ export class BoundingTransformMode extends CompositeMode {
       const semiMinor = minorAxis / 2;
       const ellipseArea = Math.PI * semiMajor * semiMinor;
 
-      text = `${formatDistance(majorAxis)} ${unitAbbrev} x ${formatDistance(minorAxis)} ${unitAbbrev}\n${formatDistance(ellipseArea)} ${unitAbbrev}²`;
+      text = formatEllipseTooltip(
+        majorAxis,
+        minorAxis,
+        ellipseArea,
+        unitAbbrev,
+      );
     }
 
-    // Position tooltip below the cursor
+    // Position tooltip at cursor - offset is applied via getPixelOffset in sublayer props
     this.tooltip = {
-      position:
-        viewport?.unproject([
-          screenCoords[0],
-          screenCoords[1] + TOOLTIP_Y_OFFSET,
-        ]) ?? event.mapCoords,
+      position: mapCoords,
       text,
     };
   }

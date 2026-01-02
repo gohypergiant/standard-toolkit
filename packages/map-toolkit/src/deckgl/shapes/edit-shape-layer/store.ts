@@ -18,7 +18,12 @@ import { MapCursorEvents } from '../../../map-cursor/events';
 import { getOrCreateClearCursor } from '../../../map-cursor/store';
 import { MapModeEvents } from '../../../map-mode/events';
 import { MapEvents } from '../../base-map/events';
-import { ShapeFeatureType } from '../shared/types';
+import {
+  isCircleShape,
+  isEllipseShape,
+  isPointShape,
+  isRectangleShape,
+} from '../shared/types';
 import {
   EDIT_CURSOR_MAP,
   EDIT_SHAPE_LAYER_ID,
@@ -151,30 +156,19 @@ function notifySubscribers(mapId: UniqueId): void {
  * Determine the appropriate edit mode for a shape type
  */
 function getEditModeForShape(shape: Shape): EditMode {
-  if (shape.shapeType === ShapeFeatureType.Point) {
+  if (isPointShape(shape)) {
     return 'translate';
   }
-  if (shape.shapeType === ShapeFeatureType.Circle) {
+  if (isCircleShape(shape)) {
     return 'circle-transform';
   }
-  if (
-    shape.shapeType === ShapeFeatureType.Ellipse ||
-    shape.shapeType === ShapeFeatureType.Rectangle
-  ) {
+  if (isEllipseShape(shape) || isRectangleShape(shape)) {
     // Ellipses and rectangles use bounding-transform (no vertex editing)
     // for scale/rotate/translate via bounding box handles
     return 'bounding-transform';
   }
   // Polygons and LineStrings get vertex-transform for combined
   // vertex editing + scale/rotate/translate
-  if (
-    shape.shapeType !== ShapeFeatureType.Polygon &&
-    shape.shapeType !== ShapeFeatureType.LineString
-  ) {
-    logger.warn(
-      `Unknown shape type "${shape.shapeType}", falling back to vertex-transform mode`,
-    );
-  }
   return 'vertex-transform';
 }
 
@@ -259,8 +253,11 @@ function saveEditing(mapId: UniqueId): Shape | null {
   const originalShape = state.editingShape;
   const updatedFeature = state.featureBeingEdited;
 
-  // Create updated shape with new geometry
-  const updatedShape: Shape = {
+  // Create updated shape with new geometry.
+  // Type assertion needed because TypeScript can't preserve the discriminated
+  // union type through the spread. The shapeType from originalShape is preserved
+  // at runtime, maintaining the correct shape variant.
+  const updatedShape = {
     ...originalShape,
     feature: {
       ...updatedFeature,
@@ -270,7 +267,7 @@ function saveEditing(mapId: UniqueId): Shape | null {
       },
     },
     lastUpdated: Date.now(),
-  };
+  } as Shape;
 
   // Reset state with new object reference
   updateState(mapId, {

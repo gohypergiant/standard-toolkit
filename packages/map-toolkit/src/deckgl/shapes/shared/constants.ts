@@ -204,3 +204,85 @@ export const EDITABLE_LAYER_SUBLAYER_PROPS = {
   ...TOOLTIP_SUBLAYER_PROPS,
   ...EDIT_HANDLE_SUBLAYER_PROPS,
 };
+
+/**
+ * Format a distance value for tooltip display.
+ * Used by draw and edit mode tooltips for consistent formatting.
+ *
+ * @param value - The distance value to format
+ * @returns The formatted string with 2 decimal places
+ */
+export function formatDistance(value: number): string {
+  return value.toFixed(2);
+}
+
+// =============================================================================
+// Tooltip Text Formatters
+// =============================================================================
+// These functions generate consistent tooltip text for both draw and edit modes.
+
+/**
+ * Format circle tooltip text showing diameter and area.
+ *
+ * @param diameter - Circle diameter in the specified units
+ * @param area - Circle area in the specified units squared
+ * @param unitAbbrev - Unit abbreviation (e.g., 'km', 'mi')
+ * @returns Formatted tooltip text: "d: {diameter} {unit}\n{area} {unit}²"
+ */
+export function formatCircleTooltip(
+  diameter: number,
+  area: number,
+  unitAbbrev: string,
+): string {
+  return `d: ${formatDistance(diameter)} ${unitAbbrev}\n${formatDistance(area)} ${unitAbbrev}²`;
+}
+
+/**
+ * Format rectangle tooltip text showing dimensions and area.
+ *
+ * @param width - Rectangle width in the specified units
+ * @param height - Rectangle height in the specified units
+ * @param area - Rectangle area in the specified units squared
+ * @param unitAbbrev - Unit abbreviation (e.g., 'km', 'mi')
+ * @returns Formatted tooltip text: "{width} {unit} x {height} {unit}\n{area} {unit}²"
+ */
+export function formatRectangleTooltip(
+  width: number,
+  height: number,
+  area: number,
+  unitAbbrev: string,
+): string {
+  return `${formatDistance(width)} ${unitAbbrev} x ${formatDistance(height)} ${unitAbbrev}\n${formatDistance(area)} ${unitAbbrev}²`;
+}
+
+/**
+ * Format ellipse tooltip text showing axes and area.
+ *
+ * @param majorAxis - Ellipse major axis (full length) in the specified units
+ * @param minorAxis - Ellipse minor axis (full length) in the specified units
+ * @param area - Ellipse area in the specified units squared
+ * @param unitAbbrev - Unit abbreviation (e.g., 'km', 'mi')
+ * @returns Formatted tooltip text: "{major} {unit} x {minor} {unit}\n{area} {unit}²"
+ */
+export function formatEllipseTooltip(
+  majorAxis: number,
+  minorAxis: number,
+  area: number,
+  unitAbbrev: string,
+): string {
+  return `${formatDistance(majorAxis)} ${unitAbbrev} x ${formatDistance(minorAxis)} ${unitAbbrev}\n${formatDistance(area)} ${unitAbbrev}²`;
+}
+
+/**
+ * Format simple distance tooltip text.
+ *
+ * @param distance - Distance value in the specified units
+ * @param unitAbbrev - Unit abbreviation (e.g., 'km', 'mi')
+ * @returns Formatted tooltip text: "{distance} {unit}"
+ */
+export function formatDistanceTooltip(
+  distance: number,
+  unitAbbrev: string,
+): string {
+  return `${formatDistance(distance)} ${unitAbbrev}`;
+}

@@ -93,6 +93,8 @@
     "./deckgl/shapes/edit-shape-layer/use-edit-shape": "./dist/deckgl/shapes/edit-shape-layer/use-edit-shape.js",
     "./deckgl/shapes/shared/constants": "./dist/deckgl/shapes/shared/constants.js",
     "./deckgl/shapes/shared/events": "./dist/deckgl/shapes/shared/events.js",
+    "./deckgl/shapes/shared/hooks": "./dist/deckgl/shapes/shared/hooks/index.js",
+    "./deckgl/shapes/shared/hooks/use-shift-zoom-disable": "./dist/deckgl/shapes/shared/hooks/use-shift-zoom-disable.js",
     "./deckgl/shapes/shared/types": "./dist/deckgl/shapes/shared/types.js",
     "./deckgl/symbol-layer": "./dist/deckgl/symbol-layer/index.js",
     "./deckgl/symbol-layer/fiber": "./dist/deckgl/symbol-layer/fiber.js",

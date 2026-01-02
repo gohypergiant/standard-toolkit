@@ -22,11 +22,12 @@ import {
   DEFAULT_DISTANCE_UNITS,
   getDistanceUnitAbbreviation,
 } from '../../../../shared/units';
+import { formatCircleTooltip } from '../../shared/constants';
 
 /**
- * Extends DrawCircleFromCenterMode to display area tooltip.
+ * Extends DrawCircleFromCenterMode to display diameter and area tooltip.
  *
- * Shows the area of the circle being drawn based on the radius
+ * Shows the diameter and area of the circle being drawn based on the radius
  * from center point to cursor position.
  */
 export class DrawCircleModeWithTooltip extends DrawCircleFromCenterMode {
@@ -55,12 +56,13 @@ export class DrawCircleModeWithTooltip extends DrawCircleFromCenterMode {
     const edgePoint = mapCoords as [number, number];
 
     const radius = distance(centerPoint, edgePoint, { units: distanceUnits });
+    const diameter = radius * 2;
     const circleArea = Math.PI * radius ** 2;
     const unitAbbrev = getDistanceUnitAbbreviation(distanceUnits);
 
     this.tooltip = {
       position: mapCoords,
-      text: `${circleArea.toFixed(2)} ${unitAbbrev}²`,
+      text: formatCircleTooltip(diameter, circleArea, unitAbbrev),
     };
   }
 

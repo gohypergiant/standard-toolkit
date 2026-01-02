@@ -23,6 +23,7 @@ import {
   DEFAULT_DISTANCE_UNITS,
   getDistanceUnitAbbreviation,
 } from '../../../../shared/units';
+import { formatDistanceTooltip } from '../../shared/constants';
 
 /**
  * Extends DrawLineStringMode to display distance tooltip between points.
@@ -110,7 +111,7 @@ export class DrawLineStringModeWithTooltip extends DrawLineStringMode {
 
     this.tooltip = {
       position: mapCoords,
-      text: `${dist.toFixed(2)} ${unitAbbrev}`,
+      text: formatDistanceTooltip(dist, unitAbbrev),
     };
   }
 

@@ -28,16 +28,8 @@ import {
   DEFAULT_DISTANCE_UNITS,
   getDistanceUnitAbbreviation,
 } from '../../../../shared/units';
-import { TOOLTIP_Y_OFFSET } from '../../shared/constants';
-import type { Viewport } from '@deck.gl/core';
+import { formatCircleTooltip } from '../../shared/constants';
 import type { Feature, Polygon } from 'geojson';
-
-/**
- * Format a distance value for display
- */
-function formatDistance(value: number): string {
-  return value.toFixed(2);
-}
 
 type ActiveMode = ResizeCircleMode | TranslateMode | null;
 
@@ -205,8 +197,7 @@ export class CircleTransformMode extends CompositeMode {
     event: DraggingEvent,
     props: ModeProps<FeatureCollection>,
   ) {
-    const { screenCoords } = event;
-    const viewport: Viewport | undefined = props.modeConfig?.viewport;
+    const { mapCoords } = event;
     const distanceUnits =
       props.modeConfig?.distanceUnits ?? DEFAULT_DISTANCE_UNITS;
 
@@ -241,14 +232,10 @@ export class CircleTransformMode extends CompositeMode {
     const circleArea = Math.PI * radius ** 2;
     const unitAbbrev = getDistanceUnitAbbreviation(distanceUnits);
 
-    // Position tooltip below the cursor
+    // Position tooltip at cursor - offset is applied via getPixelOffset in sublayer props
     this.tooltip = {
-      position:
-        viewport?.unproject([
-          screenCoords[0],
-          screenCoords[1] + TOOLTIP_Y_OFFSET,
-        ]) ?? event.mapCoords,
-      text: `d: ${formatDistance(diameter)} ${unitAbbrev}\n${formatDistance(circleArea)} ${unitAbbrev}²`,
+      position: mapCoords,
+      text: formatCircleTooltip(diameter, circleArea, unitAbbrev),
     };
   }
 }

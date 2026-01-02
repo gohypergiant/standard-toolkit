@@ -30,14 +30,8 @@ import {
   DEFAULT_DISTANCE_UNITS,
   getDistanceUnitAbbreviation,
 } from '../../../../shared/units';
+import { formatRectangleTooltip } from '../../shared/constants';
 import type { Position } from 'geojson';
-
-/**
- * Format a distance value for display
- */
-function formatDistance(value: number): string {
-  return value.toFixed(2);
-}
 
 /**
  * Extends DrawRectangleMode to display dimensions and area tooltip.
@@ -161,7 +155,12 @@ export class DrawRectangleModeWithTooltip extends DrawRectangleMode {
 
     this.tooltip = {
       position: mapCoords,
-      text: `${formatDistance(dimension1)} ${unitAbbrev} x ${formatDistance(dimension2)} ${unitAbbrev}\n${formatDistance(convertedArea)} ${unitAbbrev}²`,
+      text: formatRectangleTooltip(
+        dimension1,
+        dimension2,
+        convertedArea,
+        unitAbbrev,
+      ),
     };
   }
 
