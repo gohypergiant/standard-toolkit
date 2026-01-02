@@ -12,8 +12,6 @@
 
 import { describe, expect, it } from 'vitest';
 import {
-  getLabelBorderColor,
-  getLabelFillColor,
   getLabelPosition2d,
   getLabelText,
   getLineStringEndpoint,
@@ -22,8 +20,7 @@ import {
   interpolatePoint,
   type LabelPositionOptions,
 } from './labels';
-import type { Color } from '@deck.gl/core';
-import type { EditableShape } from '../../shared/types';
+import type { Shape } from '../../shared/types';
 
 describe('Label Positioning Utilities', () => {
   describe('interpolatePoint', () => {
@@ -178,7 +175,7 @@ describe('Label Positioning Utilities', () => {
 
   describe('getLabelText', () => {
     it('returns label when provided', () => {
-      const shape: EditableShape = {
+      const shape: Shape = {
         id: '1',
         name: 'Full Name',
         label: 'Label',
@@ -195,7 +192,7 @@ describe('Label Positioning Utilities', () => {
     });
 
     it('falls back to name when label is not provided', () => {
-      const shape: EditableShape = {
+      const shape: Shape = {
         id: '1',
         name: 'Full Name',
         shapeType: 'Point',
@@ -211,7 +208,7 @@ describe('Label Positioning Utilities', () => {
     });
 
     it('prefers label over name when both provided', () => {
-      const shape: EditableShape = {
+      const shape: Shape = {
         id: '1',
         name: 'Full Name',
         label: 'Short',
@@ -228,144 +225,10 @@ describe('Label Positioning Utilities', () => {
     });
   });
 
-  describe('getLabelFillColor', () => {
-    it('extracts RGB from RGBA and applies fixed label opacity', () => {
-      const shape: EditableShape = {
-        id: '1',
-        name: 'Test',
-        shapeType: 'Point',
-        locked: false,
-        feature: {
-          type: 'Feature',
-          properties: {
-            styleProperties: {
-              fillColor: [98, 166, 255, 150] as Color,
-              strokeColor: [0, 0, 0, 255] as Color,
-              strokeWidth: 2,
-              strokePattern: 'solid',
-            },
-          },
-          geometry: { type: 'Point', coordinates: [0, 0] },
-        },
-      };
-
-      const result = getLabelFillColor(shape);
-
-      // RGB from fillColor with fixed label opacity (200)
-      expect(result).toEqual([98, 166, 255, 200]);
-    });
-
-    it('uses default color when fillColor is not provided', () => {
-      const shape: EditableShape = {
-        id: '1',
-        name: 'Test',
-        shapeType: 'Point',
-        locked: false,
-        feature: {
-          type: 'Feature',
-          properties: {
-            styleProperties: {
-              fillColor: undefined as unknown as Color,
-              strokeColor: [0, 0, 0, 255] as Color,
-              strokeWidth: 2,
-              strokePattern: 'solid',
-            },
-          },
-          geometry: { type: 'Point', coordinates: [0, 0] },
-        },
-      };
-
-      const result = getLabelFillColor(shape);
-
-      // Default: [98, 166, 255] with label opacity 200
-      expect(result).toEqual([98, 166, 255, 200]);
-    });
-
-    it('handles different RGBA colors correctly', () => {
-      const shape: EditableShape = {
-        id: '1',
-        name: 'Test',
-        shapeType: 'Point',
-        locked: false,
-        feature: {
-          type: 'Feature',
-          properties: {
-            styleProperties: {
-              fillColor: [255, 0, 0, 100] as Color,
-              strokeColor: [0, 0, 0, 255] as Color,
-              strokeWidth: 2,
-              strokePattern: 'solid',
-            },
-          },
-          geometry: { type: 'Point', coordinates: [0, 0] },
-        },
-      };
-
-      const result = getLabelFillColor(shape);
-
-      // RGB extracted, fixed label opacity applied (200)
-      expect(result).toEqual([255, 0, 0, 200]);
-    });
-  });
-
-  describe('getLabelBorderColor', () => {
-    it('extracts RGB from RGBA and applies full opacity', () => {
-      const shape: EditableShape = {
-        id: '1',
-        name: 'Test',
-        shapeType: 'Point',
-        locked: false,
-        feature: {
-          type: 'Feature',
-          properties: {
-            styleProperties: {
-              fillColor: [0, 0, 0, 255] as Color,
-              strokeColor: [98, 166, 255, 150] as Color,
-              strokeWidth: 2,
-              strokePattern: 'solid',
-            },
-          },
-          geometry: { type: 'Point', coordinates: [0, 0] },
-        },
-      };
-
-      const result = getLabelBorderColor(shape);
-
-      // RGB from strokeColor with full opacity (255)
-      expect(result).toEqual([98, 166, 255, 255]);
-    });
-
-    it('uses default color when strokeColor is not provided', () => {
-      const shape: EditableShape = {
-        id: '1',
-        name: 'Test',
-        shapeType: 'Point',
-        locked: false,
-        feature: {
-          type: 'Feature',
-          properties: {
-            styleProperties: {
-              fillColor: [0, 0, 0, 255] as Color,
-              strokeColor: undefined as unknown as Color,
-              strokeWidth: 2,
-              strokePattern: 'solid',
-            },
-          },
-          geometry: { type: 'Point', coordinates: [0, 0] },
-        },
-      };
-
-      const result = getLabelBorderColor(shape);
-
-      // Default: [98, 166, 255] with full opacity 255
-      expect(result).toEqual([98, 166, 255, 255]);
-    });
-  });
-
   describe('getLabelPosition2d', () => {
     describe('Point geometry', () => {
       it('uses default positioning when no options provided', () => {
-        const shape: EditableShape = {
+        const shape: Shape = {
           id: '1',
           name: 'Test',
           shapeType: 'Point',
@@ -389,7 +252,7 @@ describe('Label Positioning Utilities', () => {
       });
 
       it('uses global label options', () => {
-        const shape: EditableShape = {
+        const shape: Shape = {
           id: '1',
           name: 'Test',
           shapeType: 'Point',
@@ -418,7 +281,7 @@ describe('Label Positioning Utilities', () => {
       });
 
       it('prioritizes per-shape properties over global options', () => {
-        const shape: EditableShape = {
+        const shape: Shape = {
           id: '1',
           name: 'Test',
           shapeType: 'Point',
@@ -455,7 +318,7 @@ describe('Label Positioning Utilities', () => {
 
     describe('LineString geometry', () => {
       it('uses default positioning at bottom edge', () => {
-        const shape: EditableShape = {
+        const shape: Shape = {
           id: '1',
           name: 'Test',
           shapeType: 'LineString',
@@ -486,7 +349,7 @@ describe('Label Positioning Utilities', () => {
       });
 
       it('positions at top edge when coordinateAnchor is top', () => {
-        const shape: EditableShape = {
+        const shape: Shape = {
           id: '1',
           name: 'Test',
           shapeType: 'LineString',
@@ -516,7 +379,7 @@ describe('Label Positioning Utilities', () => {
       });
 
       it('positions at right edge when coordinateAnchor is right', () => {
-        const shape: EditableShape = {
+        const shape: Shape = {
           id: '1',
           name: 'Test',
           shapeType: 'LineString',
@@ -546,7 +409,7 @@ describe('Label Positioning Utilities', () => {
       });
 
       it('positions at left edge when coordinateAnchor is left', () => {
-        const shape: EditableShape = {
+        const shape: Shape = {
           id: '1',
           name: 'Test',
           shapeType: 'LineString',
@@ -576,7 +439,7 @@ describe('Label Positioning Utilities', () => {
       });
 
       it('positions at center (centroid) when coordinateAnchor is center', () => {
-        const shape: EditableShape = {
+        const shape: Shape = {
           id: '1',
           name: 'Test',
           shapeType: 'LineString',
@@ -609,7 +472,7 @@ describe('Label Positioning Utilities', () => {
 
     describe('Polygon geometry', () => {
       it('uses default positioning at bottom edge', () => {
-        const shape: EditableShape = {
+        const shape: Shape = {
           id: '1',
           name: 'Test',
           shapeType: 'Polygon',
@@ -644,7 +507,7 @@ describe('Label Positioning Utilities', () => {
       });
 
       it('positions at top edge when coordinateAnchor is top', () => {
-        const shape: EditableShape = {
+        const shape: Shape = {
           id: '1',
           name: 'Test',
           shapeType: 'Polygon',
@@ -678,7 +541,7 @@ describe('Label Positioning Utilities', () => {
       });
 
       it('positions at right edge when coordinateAnchor is right', () => {
-        const shape: EditableShape = {
+        const shape: Shape = {
           id: '1',
           name: 'Test',
           shapeType: 'Polygon',
@@ -712,7 +575,7 @@ describe('Label Positioning Utilities', () => {
       });
 
       it('positions at left edge when coordinateAnchor is left', () => {
-        const shape: EditableShape = {
+        const shape: Shape = {
           id: '1',
           name: 'Test',
           shapeType: 'Polygon',
@@ -746,7 +609,7 @@ describe('Label Positioning Utilities', () => {
       });
 
       it('positions at center (centroid) when coordinateAnchor is center', () => {
-        const shape: EditableShape = {
+        const shape: Shape = {
           id: '1',
           name: 'Test',
           shapeType: 'Polygon',
@@ -783,7 +646,7 @@ describe('Label Positioning Utilities', () => {
 
     describe('Circle geometry', () => {
       it('positions at bottom edge by default', () => {
-        const shape: EditableShape = {
+        const shape: Shape = {
           id: '1',
           name: 'Test',
           shapeType: 'Circle',
@@ -814,7 +677,7 @@ describe('Label Positioning Utilities', () => {
       });
 
       it('positions at top edge', () => {
-        const shape: EditableShape = {
+        const shape: Shape = {
           id: '1',
           name: 'Test',
           shapeType: 'Circle',
@@ -848,7 +711,7 @@ describe('Label Positioning Utilities', () => {
       });
 
       it('positions at right edge', () => {
-        const shape: EditableShape = {
+        const shape: Shape = {
           id: '1',
           name: 'Test',
           shapeType: 'Circle',
@@ -882,7 +745,7 @@ describe('Label Positioning Utilities', () => {
       });
 
       it('positions at bottom edge', () => {
-        const shape: EditableShape = {
+        const shape: Shape = {
           id: '1',
           name: 'Test',
           shapeType: 'Circle',
@@ -916,7 +779,7 @@ describe('Label Positioning Utilities', () => {
       });
 
       it('positions at left edge', () => {
-        const shape: EditableShape = {
+        const shape: Shape = {
           id: '1',
           name: 'Test',
           shapeType: 'Circle',
@@ -950,7 +813,7 @@ describe('Label Positioning Utilities', () => {
       });
 
       it('uses custom per-shape label positioning', () => {
-        const shape: EditableShape = {
+        const shape: Shape = {
           id: '1',
           name: 'Test',
           shapeType: 'Circle',
@@ -1003,7 +866,7 @@ describe('Label Positioning Utilities', () => {
             properties: { styleProperties: {} },
             geometry: { type: 'Unknown', coordinates: [] },
           },
-        } as unknown as EditableShape;
+        } as unknown as Shape;
 
         const result = getLabelPosition2d(shape);
 

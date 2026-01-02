@@ -15,13 +15,16 @@
 import type { UniqueId } from '@accelint/core';
 import type { Color } from '@deck.gl/core';
 import type { Feature, LineString, Point, Polygon } from 'geojson';
+import type { DistanceUnit } from '../../../shared/units';
 
 /**
  * Supported shape types
  */
 export const ShapeFeatureType = {
   Circle: 'Circle',
+  Ellipse: 'Ellipse',
   Polygon: 'Polygon',
+  Rectangle: 'Rectangle',
   LineString: 'LineString',
   Point: 'Point',
 } as const;
@@ -99,9 +102,34 @@ export interface CircleProperties {
   radius: {
     /** Radius value */
     value: number;
-    /** Units (hardcoded to kilometers for v1) */
-    units: 'kilometers';
+    /** Units for the radius measurement */
+    units: DistanceUnit;
   };
+}
+
+/**
+ * Ellipse-specific properties for precise rendering
+ * Stored alongside the polygon approximation
+ */
+export interface EllipseProperties {
+  /** Center point as [longitude, latitude] */
+  center: [number, number];
+  /** X semi-axis (horizontal radius) with value and units */
+  xSemiAxis: {
+    /** X semi-axis value */
+    value: number;
+    /** Units for the measurement */
+    units: DistanceUnit;
+  };
+  /** Y semi-axis (vertical radius) with value and units */
+  ySemiAxis: {
+    /** Y semi-axis value */
+    value: number;
+    /** Units for the measurement */
+    units: DistanceUnit;
+  };
+  /** Rotation angle in degrees */
+  angle: number;
 }
 
 /**
@@ -110,23 +138,52 @@ export interface CircleProperties {
 export type CustomGeometry = Point | LineString | Polygon;
 
 /**
- * GeoJSON Feature with style properties
+ * Properties for styled features.
+ *
+ * Note: circleProperties and ellipseProperties are optional at the type level
+ * but are guaranteed to be present for their respective shape types.
+ * Use the type guards (isCircleShape, isEllipseShape) for type narrowing.
  */
-export interface StyledFeature extends Feature {
-  properties: {
-    /** Style properties for rendering */
-    styleProperties: StyleProperties;
-    /** Circle properties (only for Circle type shapes) */
-    circleProperties?: CircleProperties;
-    /** Shape ID for correlation */
-    shapeId?: ShapeId;
-  };
+export interface StyledFeatureProperties {
+  /** Style properties for rendering */
+  styleProperties: StyleProperties;
+  /** Shape ID for correlation */
+  shapeId?: ShapeId;
+  /** Circle properties (present for Circle shapes) */
+  circleProperties?: CircleProperties;
+  /** Ellipse properties (present for Ellipse shapes) */
+  ellipseProperties?: EllipseProperties;
 }
 
 /**
- * Shape data structure for DisplayShapeLayer
+ * Feature properties for Circle shapes (circleProperties required).
+ * Used by CircleShape for better type narrowing.
  */
-export interface DisplayShape {
+export interface CircleFeatureProperties extends StyledFeatureProperties {
+  /** Circle properties (required for Circle shapes) */
+  circleProperties: CircleProperties;
+}
+
+/**
+ * Feature properties for Ellipse shapes (ellipseProperties required).
+ * Used by EllipseShape for better type narrowing.
+ */
+export interface EllipseFeatureProperties extends StyledFeatureProperties {
+  /** Ellipse properties (required for Ellipse shapes) */
+  ellipseProperties: EllipseProperties;
+}
+
+/**
+ * GeoJSON Feature with style properties
+ */
+export interface StyledFeature extends Feature {
+  properties: StyledFeatureProperties;
+}
+
+/**
+ * Base shape properties shared by all shapes
+ */
+interface BaseShape {
   /** Unique identifier */
   id: ShapeId;
   /** Full shape name used internally and in UI */
@@ -137,19 +194,86 @@ export interface DisplayShape {
    * Useful for showing abbreviated text on the map (e.g., "NYC" vs "New York City Office")
    */
   label?: string;
-  /** Shape type */
-  shapeType: ShapeFeatureTypeValues;
   /** GeoJSON feature with geometry and style properties */
   feature: ShapeFeature;
   /** UTC timestamp (only set when saved) */
   lastUpdated?: number;
+  /**
+   * Whether the shape is locked for editing
+   * Locked shapes cannot be modified due to data restrictions or user preference
+   */
+  locked?: boolean;
 }
 
 /**
- * Alias for backward compatibility
- * @deprecated Use DisplayShape instead
+ * Circle shape with required circleProperties
  */
-export type EditableShape = DisplayShape;
+export interface CircleShape extends BaseShape {
+  shapeType: typeof ShapeFeatureType.Circle;
+  feature: StyledFeature & { properties: CircleFeatureProperties };
+}
+
+/**
+ * Ellipse shape with required ellipseProperties
+ */
+export interface EllipseShape extends BaseShape {
+  shapeType: typeof ShapeFeatureType.Ellipse;
+  feature: StyledFeature & { properties: EllipseFeatureProperties };
+}
+
+/**
+ * Polygon shape
+ */
+export interface PolygonShape extends BaseShape {
+  shapeType: typeof ShapeFeatureType.Polygon;
+  feature: StyledFeature;
+}
+
+/**
+ * Rectangle shape
+ */
+export interface RectangleShape extends BaseShape {
+  shapeType: typeof ShapeFeatureType.Rectangle;
+  feature: StyledFeature;
+}
+
+/**
+ * LineString shape
+ */
+export interface LineStringShape extends BaseShape {
+  shapeType: typeof ShapeFeatureType.LineString;
+  feature: StyledFeature;
+}
+
+/**
+ * Point shape
+ */
+export interface PointShape extends BaseShape {
+  shapeType: typeof ShapeFeatureType.Point;
+  feature: StyledFeature;
+}
+
+/**
+ * Discriminated union of all shape types.
+ *
+ * Use this for type narrowing based on shapeType:
+ * @example
+ * ```ts
+ * function handleShape(shape: Shape) {
+ *   if (shape.shapeType === 'Circle') {
+ *     // TypeScript knows shape.feature.properties.circleProperties exists
+ *     const { center, radius } = shape.feature.properties.circleProperties;
+ *   }
+ * }
+ * ```
+ */
+export type Shape =
+  | CircleShape
+  | EllipseShape
+  | PolygonShape
+  | RectangleShape
+  | LineStringShape
+  | PointShape;
 
 /**
  * Alias for ShapeFeatureType values
@@ -175,3 +299,71 @@ export type CircleRadius = CircleProperties['radius'];
  * Coordinate as [longitude, latitude]
  */
 export type Coordinate = [number, number];
+
+/**
+ * Function type for subscription (useSyncExternalStore pattern).
+ * Used by draw-shape-layer and edit-shape-layer stores.
+ */
+export type Subscription = (onStoreChange: () => void) => () => void;
+
+// =============================================================================
+// Type Guards
+// =============================================================================
+
+/**
+ * Type guard for Circle shapes.
+ *
+ * @example
+ * ```ts
+ * if (isCircleShape(shape)) {
+ *   // shape.feature.properties.circleProperties is available
+ *   const { center, radius } = shape.feature.properties.circleProperties;
+ * }
+ * ```
+ */
+export function isCircleShape(shape: Shape): shape is CircleShape {
+  return shape.shapeType === ShapeFeatureType.Circle;
+}
+
+/**
+ * Type guard for Ellipse shapes.
+ *
+ * @example
+ * ```ts
+ * if (isEllipseShape(shape)) {
+ *   // shape.feature.properties.ellipseProperties is available
+ *   const { center, xSemiAxis, ySemiAxis } = shape.feature.properties.ellipseProperties;
+ * }
+ * ```
+ */
+export function isEllipseShape(shape: Shape): shape is EllipseShape {
+  return shape.shapeType === ShapeFeatureType.Ellipse;
+}
+
+/**
+ * Type guard for Polygon shapes.
+ */
+export function isPolygonShape(shape: Shape): shape is PolygonShape {
+  return shape.shapeType === ShapeFeatureType.Polygon;
+}
+
+/**
+ * Type guard for Rectangle shapes.
+ */
+export function isRectangleShape(shape: Shape): shape is RectangleShape {
+  return shape.shapeType === ShapeFeatureType.Rectangle;
+}
+
+/**
+ * Type guard for LineString shapes.
+ */
+export function isLineStringShape(shape: Shape): shape is LineStringShape {
+  return shape.shapeType === ShapeFeatureType.LineString;
+}
+
+/**
+ * Type guard for Point shapes.
+ */
+export function isPointShape(shape: Shape): shape is PointShape {
+  return shape.shapeType === ShapeFeatureType.Point;
+}

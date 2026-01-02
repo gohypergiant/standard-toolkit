@@ -82,10 +82,11 @@ import { ViewportSize } from '@accelint/map-toolkit/viewport';
 
 Unique identifier for the map instance. Must match the `id` prop passed to `BaseMap`.
 
-##### `unit?: 'km' | 'm' | 'nm' | 'mi' | 'ft'`
+##### `unit?: SupportedDistanceUnit`
 
 Unit of measurement for dimensions. Defaults to `'nm'` (nautical miles).
 
+Available units (from `@accelint/map-toolkit/shared/units`):
 - `'km'` - Kilometers
 - `'m'` - Meters
 - `'nm'` - Nautical miles (default)
@@ -424,6 +425,10 @@ import type {
   SupportedDistanceUnit,
   UseViewportStateProps,
 } from '@accelint/map-toolkit/viewport';
+import type {
+  DistanceUnit,
+  DistanceUnitAbbreviation,
+} from '@accelint/map-toolkit/shared/units';
 
 // Bounds type
 type Bounds = [
@@ -436,8 +441,11 @@ type Bounds = [
 // Geographic coordinate
 type GeoCoordinate = [longitude: number, latitude: number];
 
-// Supported units
-type SupportedDistanceUnit = 'km' | 'm' | 'nm' | 'mi' | 'ft';
+// Supported units (derived from shared/units)
+type SupportedDistanceUnit = DistanceUnitAbbreviation; // 'km' | 'm' | 'nm' | 'mi' | 'ft'
+
+// Full Turf.js unit names (for use with Turf functions)
+type DistanceUnit = 'kilometers' | 'meters' | 'nauticalmiles' | 'miles' | 'feet';
 
 // Viewport payload
 type MapViewportPayload = {
@@ -449,6 +457,30 @@ type MapViewportPayload = {
   width: number;   // Viewport width in pixels
   height: number;  // Viewport height in pixels
 };
+```
+
+### Shared Units Module
+
+The `@accelint/map-toolkit/shared/units` module provides unit conversion utilities used across map-toolkit:
+
+```tsx
+import {
+  DISTANCE_UNIT_ABBREVIATIONS,
+  DEFAULT_DISTANCE_UNITS,
+  getDistanceUnitFromAbbreviation,
+  getDistanceUnitAbbreviation,
+} from '@accelint/map-toolkit/shared/units';
+
+// Convert abbreviation to Turf.js unit name
+getDistanceUnitFromAbbreviation('nm'); // 'nauticalmiles'
+getDistanceUnitFromAbbreviation('km'); // 'kilometers'
+
+// Convert Turf.js unit name to abbreviation
+getDistanceUnitAbbreviation('nauticalmiles'); // 'nm'
+getDistanceUnitAbbreviation('kilometers');    // 'km'
+
+// Default units for measurements
+DEFAULT_DISTANCE_UNITS; // 'kilometers'
 ```
 
 ## Troubleshooting

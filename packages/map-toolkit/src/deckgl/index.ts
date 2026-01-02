@@ -48,9 +48,9 @@ export type { SavedViewportOptions } from './saved-viewports';
 export type {
   CircleProperties,
   CircleRadius,
-  DisplayShape,
   DisplayShapeLayerProps,
-  EditableShape,
+  EllipseProperties,
+  Shape,
   ShapeEventHandler,
   ShapeEventPayload,
   ShapeEventType,

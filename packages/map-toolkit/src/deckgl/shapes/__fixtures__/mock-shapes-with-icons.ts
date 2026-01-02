@@ -15,13 +15,13 @@ import { MAP_INTERACTION } from '../display-shape-layer/constants';
 import { MARKER, MARKER_SERIOUS } from './atlas';
 import ATLAS_JSON from './atlas.json';
 import ATLAS_PNG from './atlas.png';
-import type { DisplayShape } from '../shared/types';
+import type { Shape } from '../shared/types';
 
 /**
  * Mock shapes with icon configuration for Storybook examples
  * Demonstrates how to use icon atlases for Point geometries
  */
-export const mockShapesWithIcons: DisplayShape[] = [
+export const mockShapesWithIcons: Shape[] = [
   // Point with icon
   {
     id: uuid(),
