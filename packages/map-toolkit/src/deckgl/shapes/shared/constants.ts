@@ -118,12 +118,6 @@ export const EMPTY_FEATURE_COLLECTION: import('geojson').FeatureCollection = {
 };
 
 /**
- * Vertical offset in pixels for tooltip positioning below the cursor.
- * Used by draw and edit mode tooltips.
- */
-export const TOOLTIP_Y_OFFSET = 60;
-
-/**
  * Custom character set for deck.gl TextLayer used by tooltip rendering.
  *
  * deck.gl's TextLayer uses SDF (Signed Distance Field) font rendering which
