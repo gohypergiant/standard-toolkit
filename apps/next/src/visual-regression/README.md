@@ -9,13 +9,17 @@ Visual regression tests capture screenshots of components and compare them again
 ```
 src/visual-regression/
 ├── lib/
+│   ├── interactive-states.ts # Interactive state constants
+│   ├── theme-modes.ts        # Theme mode utilities
 │   └── types.ts              # TypeScript interfaces
 ├── mocks/
 │   └── server-only.ts        # Mock for server components
 └── vitest/
+    ├── index.ts              # Barrel exports
     ├── setup.ts              # Style imports
-    ├── test-builder.tsx      # Declarative test builders
-    └── index.ts              # Barrel exports
+    └── test-builder/
+        ├── interactive.tsx   # Interactive state test builder
+        └── static.tsx        # Static variant test builder
 
 src/features/{component}/
 ├── {component}.visual.tsx    # Visual test file
@@ -63,14 +67,39 @@ createVisualTestScenarios('Dialog', [
     render: () => <DialogVariant size="small" />,
     screenshotName: 'dialog-small.png',
     selector: '[role="dialog"]',
+    waitMs: 300, // Wait for animations before screenshot
   },
   {
     name: 'large variant',
     render: () => <DialogVariant size="large" />,
     screenshotName: 'dialog-large.png',
     selector: '[role="dialog"]',
+    waitMs: 300,
   },
 ]);
+```
+
+### Interactive States (hover, focus, pressed, disabled)
+
+```typescript
+import { createInteractiveVisualTests, generateVariantMatrix } from '~/visual-regression/vitest';
+import type { ButtonProps } from '@accelint/design-toolkit/components/button/types';
+
+const variants = generateVariantMatrix<ButtonProps>({
+  dimensions: {
+    variant: ['filled', 'outline'],
+    color: ['accent', 'critical'],
+    size: ['medium'],
+  },
+});
+
+createInteractiveVisualTests({
+  componentName: 'Button',
+  renderComponent: (props) => <Button {...props}>Click me</Button>,
+  testId: 'test-button',
+  variants,
+  states: ['default', 'hover', 'focus', 'pressed', 'disabled'],
+});
 ```
 
 ## Configuration

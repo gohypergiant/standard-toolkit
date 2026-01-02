@@ -100,4 +100,6 @@ export interface VisualTestScenario {
   screenshotName: string;
   /** Optional selector to target specific element for screenshot */
   selector?: string;
+  /** Optional delay in ms before taking screenshot (for animations/transitions) */
+  waitMs?: number;
 }
