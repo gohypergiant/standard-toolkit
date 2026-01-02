@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -11,7 +11,11 @@
  */
 
 export { BaseMap } from './base-map';
-export { BASE_MAP_STYLE, PARAMETERS } from './base-map/constants';
+export {
+  DARK_BASE_MAP_STYLE,
+  LIGHT_BASE_MAP_STYLE,
+  PARAMETERS,
+} from './base-map/constants';
 export { MapEvents, MapEventsNamespace } from './base-map/events';
 export { createSavedViewport } from './saved-viewports';
 export {

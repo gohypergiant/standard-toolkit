@@ -205,6 +205,24 @@ function MapView() {
 
 Optional CSS class name to apply to the map container element.
 
+#### `styleUrl?: string`
+
+MapLibre style URL for the base map tiles. Defaults to `DARK_BASE_MAP_STYLE` (Carto Dark Matter).
+
+```tsx
+import { BaseMap, LIGHT_BASE_MAP_STYLE } from '@accelint/map-toolkit/deckgl';
+
+// Use the light theme
+<BaseMap id={mapId} styleUrl={LIGHT_BASE_MAP_STYLE}>
+  <View id="main" controller />
+</BaseMap>
+
+// Or provide a custom style URL
+<BaseMap id={mapId} styleUrl="https://your-custom-style.json">
+  <View id="main" controller />
+</BaseMap>
+```
+
 #### `enableControlEvents?: boolean`
 
 Whether to enable listening for map control events (pan/zoom enable/disable). When `true`, the map will respond to control events emitted via the event bus. Defaults to `true`.
@@ -230,6 +248,24 @@ Callback function triggered when hovering over the map. Receives the full pickin
 WebGL parameters to customize rendering. These will be merged with the default parameters.
 
 ### Exported Constants
+
+#### `DARK_BASE_MAP_STYLE`
+
+URL for the Carto Dark Matter base map style. This is the default style used by BaseMap.
+
+```typescript
+import { DARK_BASE_MAP_STYLE } from '@accelint/map-toolkit/deckgl';
+// 'https://tiles.basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json'
+```
+
+#### `LIGHT_BASE_MAP_STYLE`
+
+URL for the Carto Voyager base map style (light theme with colors).
+
+```typescript
+import { LIGHT_BASE_MAP_STYLE } from '@accelint/map-toolkit/deckgl';
+// 'https://tiles.basemaps.cartocdn.com/gl/voyager-gl-style/style.json'
+```
 
 #### `bus`
 
