@@ -106,6 +106,7 @@
     "./deckgl/text-layer/character-sets": "./dist/deckgl/text-layer/character-sets.js",
     "./deckgl/text-layer/default-settings": "./dist/deckgl/text-layer/default-settings.js",
     "./deckgl/text-layer/fiber": "./dist/deckgl/text-layer/fiber.js",
+    "./deckgl/text-settings": "./dist/deckgl/text-settings.js",
     "./map-cursor": "./dist/map-cursor/index.js",
     "./map-cursor/events": "./dist/map-cursor/events.js",
     "./map-cursor/store": "./dist/map-cursor/store.js",
