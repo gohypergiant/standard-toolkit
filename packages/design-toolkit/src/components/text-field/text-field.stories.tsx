@@ -29,11 +29,25 @@ const meta = {
     isDisabled: false,
     isInvalid: false,
     isRequired: true,
+    isReadOnly: false,
   },
   argTypes: {
     size: {
       control: 'select',
       options: ['medium', 'small'],
+    },
+    inputProps: {
+      control: 'object',
+    },
+    isReadOnly: {
+      control: 'boolean',
+      table: { defaultValue: { summary: 'false' } },
+    },
+    minLength: {
+      control: 'number',
+    },
+    maxLength: {
+      control: 'number',
     },
   },
 } satisfies Meta<typeof TextField>;
