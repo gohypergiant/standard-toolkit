@@ -56,6 +56,7 @@
 'use client';
 
 import type { LineString, Point, Polygon } from 'geojson';
+import { isCircleShape } from '../../shared/types';
 import type { Shape } from '../../shared/types';
 
 /**
@@ -646,7 +647,7 @@ function getPolygonPosition(
   const ring = geometry.coordinates[0];
 
   // Circle shapes use circle-specific options
-  if (shape.shapeType === 'Circle') {
+  if (isCircleShape(shape)) {
     return getCirclePosition(
       ring,
       shapeOffset,

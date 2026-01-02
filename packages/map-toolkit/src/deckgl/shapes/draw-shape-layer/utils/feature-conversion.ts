@@ -173,6 +173,9 @@ export function convertFeatureToShape(
     },
   };
 
+  // Type assertion needed because TypeScript can't narrow the return type
+  // based on the runtime shapeType value. The constructed object satisfies
+  // the Shape union at runtime based on which shapeType was passed in.
   return {
     id,
     name,
@@ -180,5 +183,5 @@ export function convertFeatureToShape(
     feature: styledFeature,
     lastUpdated: Date.now(),
     locked: false,
-  };
+  } as Shape;
 }

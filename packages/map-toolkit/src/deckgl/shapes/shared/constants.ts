@@ -56,19 +56,39 @@ export const LABEL_BACKGROUND_OPACITY = 200;
 export const LABEL_BORDER_OPACITY = 255;
 
 /**
- * Default colors as RGBA arrays for DeckGL layers
+ * Default colors as RGBA arrays for DeckGL layers.
+ *
+ * These are the canonical color values used throughout the shapes system.
+ * All other color constants should derive from these to maintain consistency.
  */
 export const DEFAULT_COLORS = {
-  /** Default fill color (background-surface-muted gray at full alpha) */
+  /** Default fill color (white at full alpha) */
   fill: [255, 255, 255, 255] as Color,
-  /** Default stroke color (outline-interactive-hover gray at full alpha) */
+  /** Default stroke color (outline-interactive-hover: #888a8f) */
   stroke: [136, 138, 143, 255] as Color,
   /** Highlight/selection color (turquoise at ~39% alpha) */
   highlight: [40, 245, 190, 100] as Color,
 } as const;
 
 /**
- * Default style properties for new shapes
+ * Tentative (during-drawing) colors.
+ *
+ * These colors are used for the shape preview while drawing.
+ * Fill is semi-transparent (8% opacity) to not obscure underlying features.
+ * Stroke uses the same color as saved shapes for consistency.
+ */
+export const DEFAULT_TENTATIVE_COLORS = {
+  /** Tentative fill color (white at 8% opacity: 0.08 * 255 ≈ 20) */
+  fill: [255, 255, 255, 20] as Color,
+  /** Tentative stroke color (same as saved shapes for consistency) */
+  stroke: DEFAULT_COLORS.stroke,
+} as const;
+
+/**
+ * Default style properties for saved shapes.
+ *
+ * These are applied when a shape is completed/saved.
+ * Can be overridden via styleDefaults in draw options.
  */
 export const DEFAULT_STYLE_PROPERTIES: StyleProperties = {
   fillColor: DEFAULT_COLORS.fill,
