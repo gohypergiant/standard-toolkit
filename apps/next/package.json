@@ -82,8 +82,7 @@
     "start": "NODE_ENV=production next start",
     "test": "pnpm vitest --project=unit",
     "visual": "vitest --project=visual --run --no-coverage",
-    "visual:update": "vitest --project=visual --run --update --no-coverage",
-    "visual:watch": "vitest --project=visual --no-coverage"
+    "visual:update": "vitest --project=visual --run --update --no-coverage"
   },
   "type": "module"
 }
