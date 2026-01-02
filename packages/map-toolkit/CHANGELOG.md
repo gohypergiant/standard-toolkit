@@ -1,5 +1,17 @@
 # @accelint/map-toolkit
 
+## 0.6.0
+
+### Minor Changes
+
+- 7c62ee3: Add display shapes layer to map-toolkit
+- cebdbe7: Expose styleUrl in BaseMap props, update BASE_MAP_STYLE constant to DARK_BASE_MAP_STYLE and provide LIGHT_BASE_MAP_STYLE constant
+
+### Patch Changes
+
+- a7d3a1e: Fix bad build by updating configs
+- aa296da: Update the shape labels and point icon behavior to match designs
+
 ## 0.5.0
 
 ### Minor Changes
