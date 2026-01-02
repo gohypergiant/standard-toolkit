@@ -11,12 +11,20 @@
  */
 
 import { ThemeProvider } from '@accelint/design-toolkit';
+import { getLogger } from '@accelint/logger';
 import { dash } from 'radashi';
 import { describe, expect, test } from 'vitest';
 import { page } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 import { insertModeInFilename, THEME_MODES } from '../../lib/theme-modes';
 import type { VisualTestConfig, VisualTestScenario } from '../../lib/types';
+
+const logger = getLogger({
+  enabled: process.env.NODE_ENV !== 'production',
+  level: 'warn',
+  prefix: '[VRT:Static]',
+  pretty: true,
+});
 
 /**
  * Create a visual regression test for a component using a declarative configuration.
@@ -90,13 +98,16 @@ export function createVisualTests(config: VisualTestConfig): void {
  * ```
  */
 /**
- * Parse a selector string and return a vitest page locator
+ * Parse a selector string and return a vitest page locator.
+ * Supports [role="..."] and [data-testid="..."] selectors.
  */
 function getTargetFromSelector(selector: string) {
   // Extract role from selector like '[role="dialog"]'
   const roleMatch = selector.match(/\[role="([^"]+)"\]/);
   if (roleMatch?.[1]) {
-    return page.getByRole(roleMatch[1] as 'dialog');
+    return page.getByRole(
+      roleMatch[1] as Parameters<typeof page.getByRole>[0],
+    );
   }
 
   // Fall back to getByTestId for data-testid selectors
@@ -104,6 +115,12 @@ function getTargetFromSelector(selector: string) {
   if (testIdMatch?.[1]) {
     return page.getByTestId(testIdMatch[1]);
   }
+
+  logger.warn(
+    `Unsupported selector format: "${selector}". ` +
+      `Only [role="..."] and [data-testid="..."] are supported. ` +
+      `Falling back to container screenshot.`,
+  );
 
   return null;
 }
@@ -123,6 +140,13 @@ export function createVisualTestScenarios(
               {scenario.render()}
             </ThemeProvider>,
           );
+
+          // Wait for animations/transitions if specified
+          if (scenario.waitMs) {
+            await new Promise((resolve) =>
+              setTimeout(resolve, scenario.waitMs),
+            );
+          }
 
           // Use selector if provided, otherwise screenshot container
           const target = scenario.selector
