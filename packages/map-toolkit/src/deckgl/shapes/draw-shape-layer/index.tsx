@@ -20,8 +20,7 @@ import {
 import { MapContext } from '../../base-map/provider';
 import {
   DEFAULT_EDIT_HANDLE_COLOR,
-  DEFAULT_TENTATIVE_FILL_COLOR,
-  DEFAULT_TENTATIVE_LINE_COLOR,
+  DEFAULT_TENTATIVE_COLORS,
   EDITABLE_LAYER_SUBLAYER_PROPS,
   EMPTY_FEATURE_COLLECTION,
 } from '../shared/constants';
@@ -150,9 +149,10 @@ export function DrawShapeLayer({
     // Ignore other edit types during drawing (tentative updates, etc.)
   };
 
-  // Get colors from style defaults or use defaults
-  const fillColor = styleDefaults?.fillColor ?? DEFAULT_TENTATIVE_FILL_COLOR;
-  const lineColor = styleDefaults?.strokeColor ?? DEFAULT_TENTATIVE_LINE_COLOR;
+  // Get colors from style defaults or use tentative defaults
+  const fillColor = styleDefaults?.fillColor ?? DEFAULT_TENTATIVE_COLORS.fill;
+  const lineColor =
+    styleDefaults?.strokeColor ?? DEFAULT_TENTATIVE_COLORS.stroke;
 
   return (
     <editableGeoJsonLayer

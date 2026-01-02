@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -14,6 +14,7 @@ import { useEmit, useOn } from '@accelint/bus/react';
 import { type UniqueId, uuid } from '@accelint/core';
 import { Button } from '@accelint/design-toolkit/components/button';
 import { useState } from 'react';
+import { DARK_BASE_MAP_STYLE, LIGHT_BASE_MAP_STYLE } from './constants';
 import { MapEvents } from './events';
 import { BaseMap as BaseMapComponent } from './index';
 import type { Meta, StoryObj } from '@storybook/react-vite';
@@ -26,18 +27,32 @@ import type {
   MapHoverEvent,
 } from '../base-map/types';
 
-const meta: Meta = {
+const meta: Meta<typeof BaseMapComponent> = {
   title: 'DeckGL/Base Map',
+  component: BaseMapComponent,
+  argTypes: {
+    styleUrl: {
+      control: 'select',
+      options: [DARK_BASE_MAP_STYLE, LIGHT_BASE_MAP_STYLE],
+      labels: {
+        [DARK_BASE_MAP_STYLE]: 'Dark Matter',
+        [LIGHT_BASE_MAP_STYLE]: 'Voyager (Light)',
+      },
+    },
+  },
+  args: {
+    styleUrl: DARK_BASE_MAP_STYLE,
+  },
 };
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof BaseMapComponent>;
 
 // Stable id for Storybook story
 const BASE_MAP_STORY_ID = uuid();
 
 export const BaseMap: Story = {
-  render: () => {
+  render: (args) => {
     useOn<MapClickEvent>(MapEvents.click, (data: MapClickEvent) => {
       console.log('click:', data.payload);
     });
@@ -46,7 +61,13 @@ export const BaseMap: Story = {
       console.log('hover:', data.payload);
     });
 
-    return <BaseMapComponent className='h-dvh w-dvw' id={BASE_MAP_STORY_ID} />;
+    return (
+      <BaseMapComponent
+        className='h-dvh w-dvw'
+        id={BASE_MAP_STORY_ID}
+        styleUrl={args.styleUrl}
+      />
+    );
   },
 };
 
@@ -105,10 +126,14 @@ function ControlsToolbar({ mapId }: { mapId: UniqueId }) {
 }
 
 export const WithControls: Story = {
-  render: () => {
+  render: (args) => {
     return (
       <div className='relative h-dvh w-dvw'>
-        <BaseMapComponent className='h-full w-full' id={CONTROLS_STORY_ID} />
+        <BaseMapComponent
+          className='h-full w-full'
+          id={CONTROLS_STORY_ID}
+          styleUrl={args.styleUrl}
+        />
         <ControlsToolbar mapId={CONTROLS_STORY_ID} />
       </div>
     );

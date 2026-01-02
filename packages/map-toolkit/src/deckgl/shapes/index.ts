@@ -37,7 +37,15 @@ export {
 } from './shared/constants';
 // Event exports
 export { SHAPE_EVENTS, ShapeEvents } from './shared/events';
-export { ShapeFeatureType } from './shared/types';
+export {
+  isCircleShape,
+  isEllipseShape,
+  isLineStringShape,
+  isPointShape,
+  isPolygonShape,
+  isRectangleShape,
+  ShapeFeatureType,
+} from './shared/types';
 export type {
   DisplayShapeLayerProps,
   StyledFeature,
@@ -80,9 +88,17 @@ export type {
 } from './shared/events';
 // Shared type exports
 export type {
+  CircleFeatureProperties,
   CircleProperties,
   CircleRadius,
+  CircleShape,
+  EllipseFeatureProperties,
   EllipseProperties,
+  EllipseShape,
+  LineStringShape,
+  PointShape,
+  PolygonShape,
+  RectangleShape,
   Shape,
   ShapeFeature,
   ShapeFeatureProperties,

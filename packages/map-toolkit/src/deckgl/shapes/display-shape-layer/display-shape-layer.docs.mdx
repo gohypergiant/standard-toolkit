@@ -170,30 +170,102 @@ new Deck({
 
 ## Shape Data Structure
 
-Each shape must follow the `Shape` interface:
+`Shape` is a discriminated union of specific shape types (`CircleShape`, `EllipseShape`, `PolygonShape`, `RectangleShape`, `LineStringShape`, `PointShape`). Each shape includes:
 
 ```typescript
-interface Shape {
+interface BaseShape {
   /** Unique identifier (use uuid() from @accelint/core) */
   id: UniqueId;
   /** Full shape name used internally and in UI */
   name: string;
   /** Optional short display label shown on the map */
   label?: string;
-  /** Shape type: 'Point' | 'LineString' | 'Polygon' | 'Circle' */
-  shapeType: string;
-  /** Whether shape is locked from editing */
-  locked: boolean;
+  /** Shape type discriminator */
+  shapeType: 'Point' | 'LineString' | 'Polygon' | 'Rectangle' | 'Circle' | 'Ellipse';
   /** GeoJSON feature with geometry and style properties */
-  feature: {
-    type: 'Feature';
-    properties: {
-      styleProperties: StyleProperties;
-    };
-    geometry: Point | LineString | Polygon;
-  };
+  feature: StyledFeature;
+  /** Whether shape is locked from editing */
+  locked?: boolean;
   /** UTC timestamp (optional) */
   lastUpdated?: number;
+}
+```
+
+### Type Guards
+
+Use the provided type guards to narrow shape types and access type-specific properties:
+
+```typescript
+import {
+  isCircleShape,
+  isEllipseShape,
+  isPolygonShape,
+  isRectangleShape,
+  isLineStringShape,
+  isPointShape,
+} from '@accelint/map-toolkit/deckgl/shapes';
+
+function handleShape(shape: Shape) {
+  if (isCircleShape(shape)) {
+    // TypeScript knows shape is CircleShape
+    // shape.feature.properties.circleProperties is available
+    const { center, radius } = shape.feature.properties.circleProperties;
+    console.log(`Circle at ${center} with radius ${radius.value} ${radius.units}`);
+  }
+
+  if (isEllipseShape(shape)) {
+    // shape.feature.properties.ellipseProperties is available
+    const { center, xSemiAxis, ySemiAxis, angle } = shape.feature.properties.ellipseProperties;
+    console.log(`Ellipse at ${center}, rotated ${angle}°`);
+  }
+}
+```
+
+### Individual Shape Types
+
+You can also import specific shape types for type annotations:
+
+```typescript
+import type {
+  CircleShape,
+  EllipseShape,
+  PolygonShape,
+  RectangleShape,
+  LineStringShape,
+  PointShape,
+  Shape,
+} from '@accelint/map-toolkit/deckgl/shapes';
+
+function processCircle(circle: CircleShape) {
+  // circle.feature.properties.circleProperties is guaranteed to exist
+  const { center, radius } = circle.feature.properties.circleProperties;
+}
+```
+
+### Circle and Ellipse Properties
+
+Circles and ellipses store their defining parameters alongside the polygon approximation used for rendering:
+
+```typescript
+interface CircleProperties {
+  /** Center point as [longitude, latitude] */
+  center: [number, number];
+  /** Radius with value and units */
+  radius: {
+    value: number;
+    units: DistanceUnit; // 'meters' | 'kilometers' | 'miles' | 'nauticalmiles' | 'feet'
+  };
+}
+
+interface EllipseProperties {
+  /** Center point as [longitude, latitude] */
+  center: [number, number];
+  /** X semi-axis (horizontal radius) */
+  xSemiAxis: { value: number; units: DistanceUnit };
+  /** Y semi-axis (vertical radius) */
+  ySemiAxis: { value: number; units: DistanceUnit };
+  /** Rotation angle in degrees */
+  angle: number;
 }
 ```
 
