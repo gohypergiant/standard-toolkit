@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -44,6 +44,11 @@ export type BaseMapProps = DeckglProps & {
    * Default view for the map: '2D', '2.5D', or '3D'. Defaults to '2D'.
    */
   defaultView?: '2D' | '2.5D' | '3D';
+  /**
+   * MapLibre style URL for the base map tiles.
+   * @default DARK_BASE_MAP_STYLE ('https://tiles.basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json')
+   */
+  styleUrl?: string;
 };
 
 /**
