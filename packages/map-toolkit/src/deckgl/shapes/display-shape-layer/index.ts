@@ -13,11 +13,17 @@
 'use client';
 
 import { Broadcast } from '@accelint/bus';
+import { getLogger } from '@accelint/logger';
 import { CompositeLayer } from '@deck.gl/core';
 import { PathStyleExtension } from '@deck.gl/extensions';
 import { GeoJsonLayer, IconLayer } from '@deck.gl/layers';
 import { DASH_ARRAYS, SHAPE_LAYER_IDS } from '../shared/constants';
 import { type ShapeEvent, ShapeEvents } from '../shared/events';
+import {
+  getDashArray,
+  getFillColor,
+  getLineColor,
+} from '../shared/utils/style-utils';
 import {
   COFFIN_CORNERS,
   DEFAULT_DISPLAY_PROPS,
@@ -25,16 +31,20 @@ import {
 } from './constants';
 import { createShapeLabelLayer } from './shape-label-layer';
 import {
-  getDashArray,
-  getFillColor,
   getHighlightColor,
   getHighlightLineWidth,
   getHoverLineWidth,
-  getStrokeColor,
 } from './utils/display-style';
 import type { Layer, PickingInfo } from '@deck.gl/core';
 import type { Shape, ShapeId } from '../shared/types';
 import type { DisplayShapeLayerProps } from './types';
+
+const logger = getLogger({
+  enabled: process.env.NODE_ENV !== 'production',
+  level: 'warn',
+  prefix: '[DisplayShapeLayer]',
+  pretty: true,
+});
 
 /**
  * Typed event bus instance for shape events.
@@ -74,15 +84,15 @@ interface FeaturesCache {
  * - **Multiple geometry types**: Point, LineString, Polygon, and Circle
  * - **Icon support**: Custom icons for Point geometries via icon atlases
  * - **Interactive selection**: Click handling with dotted border and optional highlight
- * - **Hover effects**: Line width increases on hover for better UX
+ * - **Hover effects**: Border/outline width increases on hover for better UX
  * - **Customizable labels**: Flexible label positioning with per-shape or global options
- * - **Style properties**: Full control over colors, stroke patterns, and opacity
+ * - **Style properties**: Full control over colors, border/outline patterns, and opacity
  * - **Event bus integration**: Automatically emits shape events via @accelint/bus
  * - **Multi-map support**: Events include map instance ID for isolation
  *
  * ## Selection Visual Feedback
  * When a shape is selected via `selectedShapeId`:
- * - The shape's stroke pattern changes to dotted
+ * - The shape's border/outline pattern changes to dotted
  * - An optional highlight renders underneath (controlled by `showHighlight` prop)
  *
  * ## Layer Structure
@@ -404,11 +414,10 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
     const iconAtlas = firstPointIcon?.atlas;
     const iconMapping = firstPointIcon?.mapping;
 
-    if (!iconAtlas) {
-      return null;
-    }
-
-    if (!iconMapping) {
+    if (!(iconAtlas && iconMapping)) {
+      logger.warn(
+        'Point shape has icon style but missing iconAtlas or iconMapping - coffin corners will not render',
+      );
       return null;
     }
 
@@ -528,7 +537,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       filled: true,
       stroked: true,
       getFillColor: (d: Shape['feature']) => getFillColor(d, applyBaseOpacity),
-      getLineColor: getStrokeColor,
+      getLineColor,
       getLineWidth: (d, info) => {
         const isHovered = info?.index === this.state?.hoverIndex;
         return getHoverLineWidth(d, isHovered);
@@ -558,7 +567,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
                 MAP_INTERACTION.ICON_SIZE
               );
             },
-            getIconColor: getStrokeColor,
+            getIconColor: getLineColor,
             getIconPixelOffset: (d: Shape['feature']) => {
               const iconSize =
                 d.properties?.styleProperties?.icon?.size ??

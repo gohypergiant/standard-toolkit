@@ -15,7 +15,7 @@ A deck.gl layer for interactively drawing geographic shapes on a map. Integrates
 - **Protected drawing mode**: Drawing cannot be interrupted by other map mode requests
 - **Double-click to finish**: Polygons and lines can be completed with double-click
 - **Shift-to-square**: Hold Shift while drawing rectangles to constrain to a square
-- **Custom styling**: Pass style defaults (fill/stroke colors) when initiating drawing
+- **Custom styling**: Pass style defaults (fill/line colors) when initiating drawing
 - **Event bus integration**: Emits events via `@accelint/bus` for drawing lifecycle
 - **Multi-map support**: Events include map instance ID for isolation
 - **Cursor integration**: Automatically changes cursor to crosshair during drawing
@@ -137,9 +137,9 @@ const { draw } = useDrawShapes(MAP_ID, { onCreate: handleCreate });
 draw(ShapeFeatureType.Polygon, {
   styleDefaults: {
     fillColor: [255, 100, 100, 180],   // RGBA: red fill
-    strokeColor: [200, 0, 0, 255],      // RGBA: dark red stroke
-    strokeWidth: 2,
-    strokePattern: 'solid',
+    lineColor: [200, 0, 0, 255],        // RGBA: dark red line
+    lineWidth: 2,
+    linePattern: 'solid',
   },
 });
 ```
@@ -288,7 +288,7 @@ Options passed to the `draw()` function:
 
 | Option | Type | Description |
 |--------|------|-------------|
-| `styleDefaults` | `Partial<StyleProperties>` | Default colors/stroke for the shape |
+| `styleDefaults` | `Partial<StyleProperties>` | Default colors/line style for the shape |
 | `circleDefaults` | `Partial<CircleProperties>` | Circle-specific defaults |
 
 ### DrawShapeEvents
@@ -307,7 +307,7 @@ The layer uses the following default colors during drawing:
 
 | Element | Color | Description |
 |---------|-------|-------------|
-| Line/Stroke | `#888a8f` | `--outline-interactive-hover` gray |
+| Line | `#888a8f` | `--outline-interactive-hover` gray |
 | Fill | `rgba(255, 255, 255, 0.08)` | White at 8% opacity |
 | Edit Handles | `#ffffff` | White |
 

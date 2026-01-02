@@ -20,6 +20,22 @@ export default defineConfig({
     '!src/**/*.{d,stories,test,test-d,bench}.{ts,tsx}',
     '!src/decorators',
     '!**/__fixtures__',
+    // Exclude internal implementation details from public API
+    '!src/deckgl/shapes/draw-shape-layer/modes/draw-*.ts',
+    '!src/deckgl/shapes/edit-shape-layer/modes/bounding-transform-mode.ts',
+    '!src/deckgl/shapes/edit-shape-layer/modes/circle-transform-mode.ts',
+    '!src/deckgl/shapes/edit-shape-layer/modes/rotate-mode-with-snap.ts',
+    '!src/deckgl/shapes/edit-shape-layer/modes/scale-mode-with-free-transform.ts',
+    '!src/deckgl/shapes/edit-shape-layer/modes/vertex-transform-mode.ts',
+    '!src/deckgl/shapes/draw-shape-layer/store.ts',
+    '!src/deckgl/shapes/edit-shape-layer/store.ts',
+    '!src/deckgl/shapes/display-shape-layer/store.ts',
+    '!src/deckgl/shapes/draw-shape-layer/utils/**',
+    '!src/deckgl/shapes/display-shape-layer/utils/**',
+    '!src/deckgl/shapes/display-shape-layer/shape-label-layer.ts',
+    '!src/deckgl/shapes/draw-shape-layer/constants.ts',
+    '!src/deckgl/shapes/edit-shape-layer/constants.ts',
+    '!src/deckgl/shapes/display-shape-layer/constants.ts',
   ],
   // NOTE: optionalDependencies must be included here
   // SEE: https://tsdown.dev/options/dependencies#default-behavior

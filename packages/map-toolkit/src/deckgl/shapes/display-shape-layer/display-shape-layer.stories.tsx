@@ -70,7 +70,7 @@ export const BasicDisplayAndEvents: Story = {
     applyBaseOpacity: {
       control: { type: 'boolean' },
       description:
-        'Apply 60% opacity multiplier to fill colors for semi-transparent look',
+        'Multiply fill alpha by 0.2 (20% of original) for semi-transparent look',
     },
     showHighlight: {
       control: { type: 'boolean' },

@@ -897,6 +897,9 @@ importers:
       '@accelint/geo':
         specifier: workspace:*
         version: link:../geo
+      '@accelint/logger':
+        specifier: workspace:*
+        version: link:../logger
       '@accelint/postcss-tailwind-css-modules':
         specifier: workspace:*
         version: link:../postcss-tailwind-css-modules

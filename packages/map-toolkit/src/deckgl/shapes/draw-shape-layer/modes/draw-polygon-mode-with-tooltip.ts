@@ -23,6 +23,7 @@ import {
   DEFAULT_DISTANCE_UNITS,
   getDistanceUnitAbbreviation,
 } from '../../../../shared/units';
+import { formatDistanceTooltip } from '../../shared/constants';
 
 /**
  * Extends DrawPolygonMode to display distance tooltip between points.
@@ -114,7 +115,7 @@ export class DrawPolygonModeWithTooltip extends DrawPolygonMode {
 
     this.tooltip = {
       position: mapCoords,
-      text: `${dist.toFixed(2)} ${unitAbbrev}`,
+      text: formatDistanceTooltip(dist, unitAbbrev),
     };
   }
 

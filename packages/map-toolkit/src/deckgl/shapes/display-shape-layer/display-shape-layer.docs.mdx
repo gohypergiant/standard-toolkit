@@ -13,9 +13,9 @@ A read-only deck.gl composite layer for displaying geographic shapes with intera
 - **Multiple geometry types**: Point, LineString, Polygon, and Circle
 - **Icon support**: Custom icons for Point geometries via icon atlases
 - **Interactive selection**: Click handling with visual highlight feedback
-- **Hover effects**: Line width increases on hover; Points with icons show coffin corners
+- **Hover effects**: Border/outline width increases on hover; Points with icons show coffin corners
 - **Customizable labels**: White uppercase text with black outline, flexible positioning
-- **Style properties**: Full control over colors, stroke patterns, and opacity
+- **Style properties**: Full control over colors, border/outline patterns, and opacity
 - **Event bus integration**: Automatically emits shape events via @accelint/bus
 - **Multi-map support**: Events include map instance ID for isolation
 - **Cursor integration**: Works with map-cursor for hover cursor changes
@@ -70,9 +70,9 @@ function MapWithShapes() {
         properties: {
           styleProperties: {
             fillColor: [98, 166, 255, 150], // RGBA: blue at ~60% opacity
-            strokeColor: [98, 166, 255, 255], // RGBA: blue at full opacity
-            strokeWidth: 4,
-            strokePattern: 'solid',
+            lineColor: [98, 166, 255, 255], // RGBA: blue at full opacity
+            lineWidth: 4,
+            linePattern: 'solid',
           },
         },
         geometry: {
@@ -279,12 +279,12 @@ import type { Color } from '@deck.gl/core';
 interface StyleProperties {
   /** Fill color as RGBA array [r, g, b, a] where each value is 0-255 */
   fillColor: Color;
-  /** Stroke color as RGBA array [r, g, b, a] where each value is 0-255 */
-  strokeColor: Color;
-  /** Stroke width in pixels (1 | 2 | 4 | 8) */
-  strokeWidth: StrokeWidth;
-  /** Stroke pattern: 'solid' | 'dashed' | 'dotted' */
-  strokePattern: StrokePattern;
+  /** Border/outline color as RGBA array [r, g, b, a] where each value is 0-255 */
+  lineColor: Color;
+  /** Border/outline width in pixels (1 | 2 | 4 | 8) */
+  lineWidth: LineWidth;
+  /** Border/outline pattern: 'solid' | 'dashed' | 'dotted' */
+  linePattern: LinePattern;
   /** Optional icon properties for Point geometries */
   icon?: {
     atlas: string;
@@ -320,9 +320,9 @@ const pointWithIcon = {
     properties: {
       styleProperties: {
         fillColor: [98, 166, 255, 255], // RGBA
-        strokeColor: [98, 166, 255, 255], // RGBA
-        strokeWidth: 4,
-        strokePattern: 'solid',
+        lineColor: [98, 166, 255, 255], // RGBA
+        lineWidth: 4,
+        linePattern: 'solid',
         icon: {
           atlas: ATLAS_PNG,
           mapping: ATLAS_JSON,
@@ -449,10 +449,10 @@ Each geometry type has sensible defaults (labels appear below shapes):
 
 When a shape is selected via `selectedShapeId`, the layer provides visual indicators:
 
-1. **Dotted border**: The selected shape's stroke pattern changes to dotted (`[2, 4]` dash array)
+1. **Dotted border**: The selected shape's border/outline pattern changes to dotted (`[2, 4]` dash array)
 2. **Coffin corners** (Point shapes with icons): Bracket-like corners appear around selected Point icons with a blue fill. These are not currently customizable.
 3. **Highlight** (optional, non-icon-Point shapes): A highlight layer underneath with:
-   - Increased line width (+5 pixels)
+   - Increased border/outline width (+5 pixels)
    - Custom highlight color (default: turquoise at ~39% opacity)
 
 ### Controlling the Highlight Effect when Selecting Shapes
@@ -492,8 +492,8 @@ The highlight effect can be toggled with the `showHighlight` prop:
 
 When `pickable={true}`, shapes show hover feedback:
 
-- **All shapes (except Points with icons)**: Line width increases by 2 pixels
-- **Point shapes with icons**: Coffin corners appear with a white fill and black stroke
+- **All shapes (except Points with icons)**: Border/outline width increases by 2 pixels
+- **Point shapes with icons**: Coffin corners appear with a white fill and black outline
 
 ## Event Bus Integration
 

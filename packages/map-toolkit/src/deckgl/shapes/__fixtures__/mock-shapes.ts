@@ -36,9 +36,9 @@ export const mockShapes: Shape[] = [
         },
         styleProperties: {
           fillColor: [255, 255, 255, 255],
-          strokeColor: [136, 138, 143, 255],
-          strokeWidth: 2,
-          strokePattern: 'solid',
+          lineColor: [136, 138, 143, 255],
+          lineWidth: 2,
+          linePattern: 'solid',
         },
         shapeId: uuid(),
       },
@@ -162,9 +162,9 @@ export const mockShapes: Shape[] = [
       properties: {
         styleProperties: {
           fillColor: [255, 255, 255, 255],
-          strokeColor: [136, 138, 143, 255],
-          strokeWidth: 2,
-          strokePattern: 'solid',
+          lineColor: [136, 138, 143, 255],
+          lineWidth: 2,
+          linePattern: 'solid',
         },
         shapeId: uuid(),
       },
@@ -192,9 +192,9 @@ export const mockShapes: Shape[] = [
       properties: {
         styleProperties: {
           fillColor: [255, 255, 255, 255],
-          strokeColor: [136, 138, 143, 255],
-          strokeWidth: 2,
-          strokePattern: 'solid',
+          lineColor: [136, 138, 143, 255],
+          lineWidth: 2,
+          linePattern: 'solid',
         },
         shapeId: uuid(),
       },
@@ -216,9 +216,9 @@ export const mockShapes: Shape[] = [
       properties: {
         styleProperties: {
           fillColor: [255, 255, 255, 255],
-          strokeColor: [136, 138, 143, 255],
-          strokeWidth: 2,
-          strokePattern: 'solid',
+          lineColor: [136, 138, 143, 255],
+          lineWidth: 2,
+          linePattern: 'solid',
         },
         shapeId: uuid(),
       },
@@ -249,9 +249,9 @@ export const mockShapes: Shape[] = [
       properties: {
         styleProperties: {
           fillColor: [255, 255, 255, 255],
-          strokeColor: [136, 138, 143, 255],
-          strokeWidth: 2,
-          strokePattern: 'solid',
+          lineColor: [136, 138, 143, 255],
+          lineWidth: 2,
+          linePattern: 'solid',
         },
         shapeId: uuid(),
       },
@@ -281,9 +281,9 @@ export const mockShapes: Shape[] = [
       properties: {
         styleProperties: {
           fillColor: [255, 255, 255, 255],
-          strokeColor: [136, 138, 143, 255],
-          strokeWidth: 2,
-          strokePattern: 'solid',
+          lineColor: [136, 138, 143, 255],
+          lineWidth: 2,
+          linePattern: 'solid',
         },
         ellipseProperties: {
           center: [-84.53249402465865, 36.093725788749154],
