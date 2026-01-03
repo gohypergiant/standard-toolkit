@@ -43,16 +43,16 @@ pnpm add @accelint/map-toolkit @accelint/bus @accelint/core @deck.gl/core @deck.
 
 ## Basic Usage
 
-### With useDrawShapes Hook (Recommended)
+### With useDrawShape Hook (Recommended)
 
-The easiest way to use DrawShapeLayer is with the `useDrawShapes` hook, which manages drawing state and provides callbacks:
+The easiest way to use DrawShapeLayer is with the `useDrawShape` hook, which manages drawing state and provides callbacks:
 
 ```tsx
 import { BaseMap } from '@accelint/map-toolkit/deckgl/base-map';
 import '@accelint/map-toolkit/deckgl/shapes/draw-shape-layer/fiber';
 import '@accelint/map-toolkit/deckgl/shapes/display-shape-layer/fiber';
 import { DrawShapeLayer } from '@accelint/map-toolkit/deckgl/shapes/draw-shape-layer';
-import { useDrawShapes } from '@accelint/map-toolkit/deckgl/shapes/draw-shape-layer/use-draw-shapes';
+import { useDrawShape } from '@accelint/map-toolkit/deckgl/shapes/draw-shape-layer/use-draw-shape';
 import { useMapCursor } from '@accelint/map-toolkit/map-cursor';
 import { ShapeFeatureType } from '@accelint/map-toolkit/deckgl/shapes/shared/types';
 import { uuid } from '@accelint/core';
@@ -66,7 +66,7 @@ function MapWithDrawing() {
   // Required: subscribe to cursor store to enable cursor changes
   useMapCursor(MAP_ID);
 
-  const { draw, cancel, isDrawing, activeShapeType } = useDrawShapes(MAP_ID, {
+  const { draw, cancel, isDrawing, activeShapeType } = useDrawShape(MAP_ID, {
     onCreate: (shape) => {
       setShapes((prev) => [...prev, shape]);
       console.log('Shape created:', shape);
@@ -131,7 +131,7 @@ Each shape type has specific drawing instructions:
 Pass style defaults when initiating drawing to customize the shape's appearance:
 
 ```tsx
-const { draw } = useDrawShapes(MAP_ID, { onCreate: handleCreate });
+const { draw } = useDrawShape(MAP_ID, { onCreate: handleCreate });
 
 // Draw with custom colors
 draw(ShapeFeatureType.Polygon, {
@@ -244,10 +244,10 @@ console.log('Current cursor:', cursor);
 | `mapId` | `UniqueId` | *required* | Map instance ID for multi-map isolation |
 | `unit` | `'km' \| 'm' \| 'nm' \| 'mi' \| 'ft'` | `'km'` | Distance unit for tooltip measurements |
 
-### useDrawShapes Hook
+### useDrawShape Hook
 
 ```tsx
-import { useDrawShapes } from '@accelint/map-toolkit/deckgl/shapes/draw-shape-layer/use-draw-shapes';
+import { useDrawShape } from '@accelint/map-toolkit/deckgl/shapes/draw-shape-layer/use-draw-shape';
 
 const {
   draw,
@@ -255,7 +255,7 @@ const {
   isDrawing,
   activeShapeType,
   drawingState,
-} = useDrawShapes(mapId, options);
+} = useDrawShape(mapId, options);
 ```
 
 #### Parameters
@@ -263,7 +263,7 @@ const {
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `mapId` | `UniqueId` | Map instance ID |
-| `options` | `UseDrawShapesOptions` | Optional callbacks |
+| `options` | `UseDrawShapeOptions` | Optional callbacks |
 
 #### Options
 

@@ -20,7 +20,7 @@ import { mockShapes } from '../__fixtures__/mock-shapes';
 import '../draw-shape-layer/fiber';
 import { useShapeSelection } from '../display-shape-layer/use-shape-selection';
 import { DrawShapeLayer } from '../draw-shape-layer/index';
-import { useDrawShapes } from '../draw-shape-layer/use-draw-shapes';
+import { useDrawShape } from '../draw-shape-layer/use-draw-shape';
 import { ShapeEvents } from '../shared/events';
 import { ShapeFeatureType } from '../shared/types';
 import type { ShapeHoveredEvent, ShapeSelectedEvent } from '../shared/events';
@@ -295,7 +295,7 @@ export const CombinedDrawAndEdit: Story = {
     const { selectedId, clearSelection } = useShapeSelection(COMBINED_MAP_ID);
     const selectedShape = shapes.find((s) => s.id === selectedId) ?? null;
 
-    const { draw, isDrawing } = useDrawShapes(COMBINED_MAP_ID, {
+    const { draw, isDrawing } = useDrawShape(COMBINED_MAP_ID, {
       onCreate: (shape) => {
         setShapes((prev) => [...prev, shape]);
       },

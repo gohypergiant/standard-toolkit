@@ -26,7 +26,7 @@ import {
 } from './store';
 import type { UniqueId } from '@accelint/core';
 import type { DrawShapeEvent } from './events';
-import type { UseDrawShapesOptions, UseDrawShapesReturn } from './types';
+import type { UseDrawShapeOptions, UseDrawShapeReturn } from './types';
 
 /**
  * Hook to access the shape drawing state and actions.
@@ -44,7 +44,7 @@ import type { UseDrawShapesOptions, UseDrawShapesReturn } from './types';
  * ```tsx
  * // Inside MapProvider (within BaseMap children) - uses context
  * function DrawingToolbar() {
- *   const { draw, cancel, isDrawing, activeShapeType } = useDrawShapes(undefined, {
+ *   const { draw, cancel, isDrawing, activeShapeType } = useDrawShape(undefined, {
  *     onCreate: (shape) => {
  *       console.log('Shape created:', shape);
  *       setShapes(prev => [...prev, shape]);
@@ -76,7 +76,7 @@ import type { UseDrawShapesOptions, UseDrawShapesReturn } from './types';
  * ```tsx
  * // Outside MapProvider - pass mapId directly
  * function ExternalDrawingControl({ mapId }: { mapId: UniqueId }) {
- *   const { draw, isDrawing } = useDrawShapes(mapId);
+ *   const { draw, isDrawing } = useDrawShape(mapId);
  *
  *   return (
  *     <button
@@ -89,16 +89,16 @@ import type { UseDrawShapesOptions, UseDrawShapesReturn } from './types';
  * }
  * ```
  */
-export function useDrawShapes(
+export function useDrawShape(
   mapId?: UniqueId,
-  options?: UseDrawShapesOptions,
-): UseDrawShapesReturn {
+  options?: UseDrawShapeOptions,
+): UseDrawShapeReturn {
   const contextId = useContext(MapContext);
   const actualId = mapId ?? contextId;
 
   if (!actualId) {
     throw new Error(
-      'useDrawShapes requires either a mapId parameter or to be used within a MapProvider',
+      'useDrawShape requires either a mapId parameter or to be used within a MapProvider',
     );
   }
 

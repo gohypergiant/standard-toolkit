@@ -16,24 +16,20 @@ export { useShapeSelection } from './display-shape-layer/use-shape-selection';
 // Draw Shape Layer exports
 export { DrawShapeEvents } from './draw-shape-layer/events';
 export { DrawShapeLayer } from './draw-shape-layer/index';
-export { useDrawShapes } from './draw-shape-layer/use-draw-shapes';
+export { useDrawShape } from './draw-shape-layer/use-draw-shape';
 // Edit Shape Layer exports
 export { EditShapeEvents } from './edit-shape-layer/events';
 export { EditShapeLayer } from './edit-shape-layer/index';
 export { useEditShape } from './edit-shape-layer/use-edit-shape';
-// Constant exports
+// Constant exports (public API only)
 export {
   BASE_FILL_OPACITY,
   DASH_ARRAYS,
   DEFAULT_COLORS,
-  DEFAULT_EDIT_HANDLE_COLOR,
-  DEFAULT_EDIT_HANDLE_OUTLINE_COLOR,
   DEFAULT_STYLE_PROPERTIES,
-  EDIT_HANDLE_SUBLAYER_PROPS,
-  EMPTY_FEATURE_COLLECTION,
-  SHAPE_LAYER_IDS,
   LINE_PATTERNS,
   LINE_WIDTHS,
+  SHAPE_LAYER_IDS,
 } from './shared/constants';
 // Event exports
 export { SHAPE_EVENTS, ShapeEvents } from './shared/events';

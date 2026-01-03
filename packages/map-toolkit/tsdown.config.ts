@@ -36,6 +36,13 @@ export default defineConfig({
     '!src/deckgl/shapes/draw-shape-layer/constants.ts',
     '!src/deckgl/shapes/edit-shape-layer/constants.ts',
     '!src/deckgl/shapes/display-shape-layer/constants.ts',
+    // Shared internal utilities (not part of public API)
+    '!src/deckgl/shapes/shared/utils/geometry-measurements.ts',
+    '!src/deckgl/shapes/shared/utils/mode-utils.ts',
+    '!src/deckgl/shapes/shared/utils/pick-filtering.ts',
+    '!src/deckgl/shapes/shared/utils/layer-config.ts',
+    // Shared internal hooks (used by draw/edit layers, not public API)
+    '!src/deckgl/shapes/shared/hooks/**',
   ],
   // NOTE: optionalDependencies must be included here
   // SEE: https://tsdown.dev/options/dependencies#default-behavior
