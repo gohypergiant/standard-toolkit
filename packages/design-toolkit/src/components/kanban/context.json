@@ -1,0 +1,2001 @@
+[
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "1/23",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/kanban/card-body.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.125Z",
+    "bundleHash": "uifb:bc946394dccc9d5ebe5d1ff2",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/kanban/card-body.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/kanban/card-body.tsx",
+            "description": "card-body - TypeScript module",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": [],
+              "functions": ["KanbanCardBody"],
+              "imports": [
+                "./styles.module.css",
+                "./types",
+                "@accelint/design-foundation/lib/utils",
+                "client-only"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".card",
+                    ".cardActions",
+                    ".cardBody",
+                    ".cardContainerOuter",
+                    ".cardHeader",
+                    ".cardTitle",
+                    ".column",
+                    ".columnContent",
+                    ".columnContentActions",
+                    ".columnHeader",
+                    ".columnHeaderActions",
+                    ".columnItems",
+                    ".columnTitle",
+                    ".divider",
+                    ".header",
+                    ".headerActions",
+                    ".headerTitle",
+                    ".kanban"
+                  ],
+                  "properties": ["min-height", "min-width"]
+                }
+              }
+            },
+            "semanticHash": "uif:15100fc20215b5e7bfa5913e",
+            "fileHash": "uif:eeff50091f8388bf7c2c14f4"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\nimport 'client-only';\n\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport styles from './styles.module.css';\nimport type { KanbanComponentProps } from './types';\n\nexport function KanbanCardBody({\n  children,\n  className,\n  ...rest\n}: KanbanComponentProps) {\n  return (\n    <div {...rest} className={clsx(styles.cardBody, className)}>\n      {children}\n    </div>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "2/23",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/kanban/card-header-actions.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.126Z",
+    "bundleHash": "uifb:ae35cd7cd01e1a1f33eec0ed",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/kanban/card-header-actions.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/kanban/card-header-actions.tsx",
+            "description": "card-header-actions - TypeScript module",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": [],
+              "functions": ["KanbanCardHeaderActions"],
+              "imports": [
+                "./styles.module.css",
+                "./types",
+                "@accelint/design-foundation/lib/utils",
+                "client-only"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".card",
+                    ".cardActions",
+                    ".cardBody",
+                    ".cardContainerOuter",
+                    ".cardHeader",
+                    ".cardTitle",
+                    ".column",
+                    ".columnContent",
+                    ".columnContentActions",
+                    ".columnHeader",
+                    ".columnHeaderActions",
+                    ".columnItems",
+                    ".columnTitle",
+                    ".divider",
+                    ".header",
+                    ".headerActions",
+                    ".headerTitle",
+                    ".kanban"
+                  ],
+                  "properties": ["min-height", "min-width"]
+                }
+              }
+            },
+            "semanticHash": "uif:97f4d179cdfb7eeef8dc68b0",
+            "fileHash": "uif:c40e8be6362fd40f5c9bf99f"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\nimport 'client-only';\n\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport styles from './styles.module.css';\nimport type { KanbanComponentProps } from './types';\n\nexport function KanbanCardHeaderActions({\n  children,\n  className,\n  ...rest\n}: KanbanComponentProps) {\n  return (\n    <div {...rest} className={clsx(styles.cardHeaderActions, className)}>\n      {children}\n    </div>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "3/23",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/kanban/card-header-title.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.126Z",
+    "bundleHash": "uifb:adc350105099f961aa4bb978",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/kanban/card-header-title.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/kanban/card-header-title.tsx",
+            "description": "card-header-title - TypeScript module",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": [],
+              "functions": ["KanbanCardHeaderTitle"],
+              "imports": [
+                "./styles.module.css",
+                "./types",
+                "@accelint/design-foundation/lib/utils",
+                "client-only"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".card",
+                    ".cardActions",
+                    ".cardBody",
+                    ".cardContainerOuter",
+                    ".cardHeader",
+                    ".cardTitle",
+                    ".column",
+                    ".columnContent",
+                    ".columnContentActions",
+                    ".columnHeader",
+                    ".columnHeaderActions",
+                    ".columnItems",
+                    ".columnTitle",
+                    ".divider",
+                    ".header",
+                    ".headerActions",
+                    ".headerTitle",
+                    ".kanban"
+                  ],
+                  "properties": ["min-height", "min-width"]
+                }
+              }
+            },
+            "semanticHash": "uif:875405e44cf3650a1a725f31",
+            "fileHash": "uif:8b942348979bfed58d4ffc24"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\nimport 'client-only';\n\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport styles from './styles.module.css';\nimport type { KanbanComponentProps } from './types';\n\nexport function KanbanCardHeaderTitle({\n  className,\n  children,\n  ...rest\n}: KanbanComponentProps) {\n  return (\n    <span {...rest} className={clsx(styles.cardTitle, className)}>\n      {children}\n    </span>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "4/23",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/kanban/card-header.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.128Z",
+    "bundleHash": "uifb:6f2b82d65ef26b633af2763b",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/kanban/card-header.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/kanban/card-header.tsx",
+            "description": "card-header - Card display component",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": ["KanbanHeader"],
+              "functions": ["KanbanCardHeader"],
+              "imports": [
+                "./header",
+                "./styles.module.css",
+                "./types",
+                "@accelint/design-foundation/lib/utils",
+                "client-only"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".card",
+                    ".cardActions",
+                    ".cardBody",
+                    ".cardContainerOuter",
+                    ".cardHeader",
+                    ".cardTitle",
+                    ".column",
+                    ".columnContent",
+                    ".columnContentActions",
+                    ".columnHeader",
+                    ".columnHeaderActions",
+                    ".columnItems",
+                    ".columnTitle",
+                    ".divider",
+                    ".header",
+                    ".headerActions",
+                    ".headerTitle",
+                    ".kanban"
+                  ],
+                  "properties": ["min-height", "min-width"]
+                }
+              }
+            },
+            "semanticHash": "uif:5048de3704a1992070c1b704",
+            "fileHash": "uif:ec0c60454a95fc4676b8625d"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\nimport 'client-only';\n\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport { KanbanHeader } from './header';\nimport styles from './styles.module.css';\nimport type { KanbanComponentProps } from './types';\n\nexport function KanbanCardHeader({\n  className,\n  children,\n  ...rest\n}: KanbanComponentProps) {\n  return (\n    <KanbanHeader {...rest} className={clsx(styles.cardHeader, className)}>\n      {children}\n    </KanbanHeader>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "KanbanHeader",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/kanban/card-header.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "5/23",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/kanban/card.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.131Z",
+    "bundleHash": "uifb:91e13e386bc1243b41e16441",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/kanban/card.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/kanban/card.tsx",
+            "description": "card - Card display component",
+            "version": {
+              "variables": [],
+              "hooks": ["useCardInteractions", "useDragContext"],
+              "components": ["Divider"],
+              "functions": ["KanbanCard"],
+              "imports": [
+                "../../hooks/kanban",
+                "../divider",
+                "./kanban",
+                "./styles.module.css",
+                "./types",
+                "@accelint/design-foundation/lib/utils",
+                "client-only"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".card",
+                    ".cardActions",
+                    ".cardBody",
+                    ".cardContainerOuter",
+                    ".cardHeader",
+                    ".cardTitle",
+                    ".column",
+                    ".columnContent",
+                    ".columnContentActions",
+                    ".columnHeader",
+                    ".columnHeaderActions",
+                    ".columnItems",
+                    ".columnTitle",
+                    ".divider",
+                    ".header",
+                    ".headerActions",
+                    ".headerTitle",
+                    ".kanban"
+                  ],
+                  "properties": ["min-height", "min-width"]
+                },
+                "inlineStyles": true
+              }
+            },
+            "semanticHash": "uif:213ebd82e1e8a4a7b4e2a1c6",
+            "fileHash": "uif:bda3037012ca1ed8dfbf1954"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\nimport 'client-only';\n\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport { useCardInteractions } from '../../hooks/kanban';\nimport { Divider } from '../divider';\nimport { useDragContext } from './kanban';\nimport styles from './styles.module.css';\nimport type { KanbanCardProps } from './types';\n\nexport function KanbanCard({\n  className,\n  children,\n  card,\n  isActive,\n  ...rest\n}: KanbanCardProps) {\n  const { isDragging, closestEdge, ref, style, attributes, listeners } =\n    useCardInteractions(card);\n  const { activeId } = useDragContext();\n\n  // Check if we should show the drop placeholder\n  const showPlaceholder = activeId && activeId !== card.id && closestEdge;\n\n  return (\n    <li className={styles.cardContainerOuter} ref={ref} style={style}>\n      {showPlaceholder && closestEdge === 'top' && (\n        <Divider className={styles.divider} />\n      )}\n\n      <div\n        data-dragging={isDragging || undefined}\n        data-current={isActive || undefined}\n        className={clsx(styles.card, className)}\n        {...attributes}\n        {...listeners}\n        {...rest}\n      >\n        {children}\n      </div>\n\n      {showPlaceholder && closestEdge === 'bottom' && (\n        <Divider className={styles.divider} />\n      )}\n    </li>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "Divider",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/kanban/card.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "6/23",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/kanban/column-actions.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.139Z",
+    "bundleHash": "uifb:cdc78663c4950c433aec6e15",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/kanban/column-actions.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/kanban/column-actions.tsx",
+            "description": "column-actions - Interactive component",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": ["Add", "Button", "Icon"],
+              "functions": ["KanbanColumnActions"],
+              "imports": [
+                "../button",
+                "../icon",
+                "./styles.module.css",
+                "./types",
+                "@accelint/design-foundation/lib/utils",
+                "@accelint/icons",
+                "client-only"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {
+                "onPress": {
+                  "type": "function",
+                  "signature": "() => void"
+                }
+              }
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".card",
+                    ".cardActions",
+                    ".cardBody",
+                    ".cardContainerOuter",
+                    ".cardHeader",
+                    ".cardTitle",
+                    ".column",
+                    ".columnContent",
+                    ".columnContentActions",
+                    ".columnHeader",
+                    ".columnHeaderActions",
+                    ".columnItems",
+                    ".columnTitle",
+                    ".divider",
+                    ".header",
+                    ".headerActions",
+                    ".headerTitle",
+                    ".kanban"
+                  ],
+                  "properties": ["min-height", "min-width"]
+                }
+              }
+            },
+            "semanticHash": "uif:d5e723c632baec989f4a2271",
+            "fileHash": "uif:f62e603428417594fe5baf87"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\nimport 'client-only';\n\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport { Add } from '@accelint/icons';\nimport { Button } from '../button';\nimport { Icon } from '../icon';\nimport styles from './styles.module.css';\nimport type { KanbanColContentActionProps } from './types';\n\nexport function KanbanColumnActions({\n  className,\n  onAddCard,\n  ...rest\n}: KanbanColContentActionProps) {\n  return (\n    <div {...rest} className={clsx(styles.columnHeader, className)}>\n      <Button variant='flat' onPress={onAddCard} {...rest}>\n        <Icon>\n          <Add />\n        </Icon>\n        Add Card\n      </Button>\n    </div>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "Add",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/kanban/column-actions.tsx"
+        },
+        {
+          "name": "Button",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/kanban/column-actions.tsx"
+        },
+        {
+          "name": "Icon",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/kanban/column-actions.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "7/23",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/kanban/column-container.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.139Z",
+    "bundleHash": "uifb:472cae04091db96fa1010a16",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/kanban/column-container.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/kanban/column-container.tsx",
+            "description": "column-container - TypeScript module",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": [],
+              "functions": ["KanbanColumnContainer"],
+              "imports": [
+                "./styles.module.css",
+                "./types",
+                "@accelint/design-foundation/lib/utils",
+                "client-only"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".card",
+                    ".cardActions",
+                    ".cardBody",
+                    ".cardContainerOuter",
+                    ".cardHeader",
+                    ".cardTitle",
+                    ".column",
+                    ".columnContent",
+                    ".columnContentActions",
+                    ".columnHeader",
+                    ".columnHeaderActions",
+                    ".columnItems",
+                    ".columnTitle",
+                    ".divider",
+                    ".header",
+                    ".headerActions",
+                    ".headerTitle",
+                    ".kanban"
+                  ],
+                  "properties": ["min-height", "min-width"]
+                }
+              }
+            },
+            "semanticHash": "uif:22c7907dc2d3c7cf234a33aa",
+            "fileHash": "uif:56e36b94842fc5f3f876b7c6"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\nimport 'client-only';\n\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport styles from './styles.module.css';\nimport type { KanbanComponentProps } from './types';\n\nexport function KanbanColumnContainer({\n  children,\n  className,\n  ...rest\n}: KanbanComponentProps) {\n  return (\n    <div {...rest} className={clsx(styles.columnItems, className)}>\n      {children}\n    </div>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "8/23",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/kanban/column-content.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.143Z",
+    "bundleHash": "uifb:8b93942293b52e215676ff28",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/kanban/column-content.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/kanban/column-content.tsx",
+            "description": "column-content - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": ["SortableContext"],
+              "functions": ["KanbanColumnContent"],
+              "imports": [
+                "./styles.module.css",
+                "./types",
+                "@accelint/design-foundation/lib/utils",
+                "@dnd-kit/sortable",
+                "client-only"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".card",
+                    ".cardActions",
+                    ".cardBody",
+                    ".cardContainerOuter",
+                    ".cardHeader",
+                    ".cardTitle",
+                    ".column",
+                    ".columnContent",
+                    ".columnContentActions",
+                    ".columnHeader",
+                    ".columnHeaderActions",
+                    ".columnItems",
+                    ".columnTitle",
+                    ".divider",
+                    ".header",
+                    ".headerActions",
+                    ".headerTitle",
+                    ".kanban"
+                  ],
+                  "properties": ["min-height", "min-width"]
+                }
+              }
+            },
+            "semanticHash": "uif:e96177aefdaba5c4e93e8367",
+            "fileHash": "uif:7bfee960e75a74c2ed890ad9"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\nimport 'client-only';\n\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport {\n  SortableContext,\n  verticalListSortingStrategy,\n} from '@dnd-kit/sortable';\nimport styles from './styles.module.css';\nimport type { KanbanColContentProps } from './types';\n\nexport function KanbanColumnContent({\n  children,\n  className,\n  column,\n  ...rest\n}: KanbanColContentProps) {\n  const cardIds = column.cards.map((card) => card.id);\n\n  return (\n    <SortableContext items={cardIds} strategy={verticalListSortingStrategy}>\n      <div {...rest} className={clsx(styles.columnContent, className)}>\n        {children}\n      </div>\n    </SortableContext>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "SortableContext",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/kanban/column-content.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "9/23",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/kanban/column-header-actions.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.145Z",
+    "bundleHash": "uifb:7d8fc7f343168bf0f9446c52",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/kanban/column-header-actions.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/kanban/column-header-actions.tsx",
+            "description": "column-header-actions - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": ["Badge"],
+              "functions": ["KanbanColumnHeaderActions"],
+              "imports": [
+                "../badge",
+                "./styles.module.css",
+                "./types",
+                "@accelint/design-foundation/lib/utils",
+                "client-only"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".card",
+                    ".cardActions",
+                    ".cardBody",
+                    ".cardContainerOuter",
+                    ".cardHeader",
+                    ".cardTitle",
+                    ".column",
+                    ".columnContent",
+                    ".columnContentActions",
+                    ".columnHeader",
+                    ".columnHeaderActions",
+                    ".columnItems",
+                    ".columnTitle",
+                    ".divider",
+                    ".header",
+                    ".headerActions",
+                    ".headerTitle",
+                    ".kanban"
+                  ],
+                  "properties": ["min-height", "min-width"]
+                }
+              }
+            },
+            "semanticHash": "uif:e667c425a3f8f73ecc774923",
+            "fileHash": "uif:a82218d824b49766ea54bcc8"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\nimport 'client-only';\n\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport { Badge } from '../badge';\nimport styles from './styles.module.css';\nimport type { KanbanMenuProps } from './types';\n\nexport function KanbanColumnHeaderActions({\n  className,\n  cardCount,\n  children,\n  ...rest\n}: KanbanMenuProps) {\n  return (\n    <div {...rest} className={clsx(styles.colHeaderActions, className)}>\n      <Badge>{cardCount ?? 0}</Badge>\n      {children}\n    </div>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "Badge",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/kanban/column-header-actions.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "10/23",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/kanban/column-header-drag-handle.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.151Z",
+    "bundleHash": "uifb:e318f2dced14049528490eae",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/kanban/column-header-drag-handle.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/kanban/column-header-drag-handle.tsx",
+            "description": "column-header-drag-handle - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": ["DragVert", "Icon"],
+              "functions": ["KanbanColumnHeaderDragHandle"],
+              "imports": ["../icon", "@accelint/icons", "client-only"]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "semanticHash": "uif:569b985e9e3baa416216505a",
+            "fileHash": "uif:58b0c9664655bc84d2c4e2f5"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\nimport 'client-only';\n\nimport { DragVert } from '@accelint/icons';\nimport { Icon } from '../icon';\n\nexport function KanbanColumnHeaderDragHandle() {\n  return (\n    <Icon size='small' aria-label='Drag column'>\n      <DragVert />\n    </Icon>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "DragVert",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/kanban/column-header-drag-handle.tsx"
+        },
+        {
+          "name": "Icon",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/kanban/column-header-drag-handle.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "11/23",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/kanban/column-header-title.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.151Z",
+    "bundleHash": "uifb:6d8c0085c093cda77dd28127",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/kanban/column-header-title.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/kanban/column-header-title.tsx",
+            "description": "column-header-title - TypeScript module",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": [],
+              "functions": ["KanbanColumnHeaderTitle"],
+              "imports": [
+                "./styles.module.css",
+                "./types",
+                "@accelint/design-foundation/lib/utils",
+                "client-only"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".card",
+                    ".cardActions",
+                    ".cardBody",
+                    ".cardContainerOuter",
+                    ".cardHeader",
+                    ".cardTitle",
+                    ".column",
+                    ".columnContent",
+                    ".columnContentActions",
+                    ".columnHeader",
+                    ".columnHeaderActions",
+                    ".columnItems",
+                    ".columnTitle",
+                    ".divider",
+                    ".header",
+                    ".headerActions",
+                    ".headerTitle",
+                    ".kanban"
+                  ],
+                  "properties": ["min-height", "min-width"]
+                }
+              }
+            },
+            "semanticHash": "uif:c6f1f3ddd995fbf3ada72b6b",
+            "fileHash": "uif:ff1ab6d02201a6a678a6856b"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\nimport 'client-only';\n\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport styles from './styles.module.css';\nimport type { KanbanComponentProps } from './types';\n\nexport function KanbanColumnHeaderTitle({\n  children,\n  className,\n  ...rest\n}: KanbanComponentProps) {\n  return (\n    <span {...rest} className={clsx(styles.columnTitle, className)}>\n      {children}\n    </span>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "12/23",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/kanban/column-header.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.152Z",
+    "bundleHash": "uifb:398d14bc7b41175dd08d338f",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/kanban/column-header.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/kanban/column-header.tsx",
+            "description": "column-header - TypeScript module",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": [],
+              "functions": ["KanbanColumnHeader"],
+              "imports": [
+                "./styles.module.css",
+                "./types",
+                "@accelint/design-foundation/lib/utils",
+                "client-only"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".card",
+                    ".cardActions",
+                    ".cardBody",
+                    ".cardContainerOuter",
+                    ".cardHeader",
+                    ".cardTitle",
+                    ".column",
+                    ".columnContent",
+                    ".columnContentActions",
+                    ".columnHeader",
+                    ".columnHeaderActions",
+                    ".columnItems",
+                    ".columnTitle",
+                    ".divider",
+                    ".header",
+                    ".headerActions",
+                    ".headerTitle",
+                    ".kanban"
+                  ],
+                  "properties": ["min-height", "min-width"]
+                }
+              }
+            },
+            "semanticHash": "uif:360f1f528dff76acdab0f482",
+            "fileHash": "uif:f2e3f0436fdb8b63d4e3e66c"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\nimport 'client-only';\n\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport styles from './styles.module.css';\nimport type { KanbanComponentProps } from './types';\n\nexport function KanbanColumnHeader({\n  children,\n  className,\n  ...rest\n}: KanbanComponentProps) {\n  return (\n    <div {...rest} className={clsx(styles.columnHeader, className)}>\n      {children}\n    </div>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "13/23",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/kanban/column.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.152Z",
+    "bundleHash": "uifb:ea8e47ed5211843fccaa729f",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/kanban/column.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/kanban/column.tsx",
+            "description": "column - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": ["useColumnInteractions"],
+              "components": [],
+              "functions": ["KanbanColumn"],
+              "imports": [
+                "../../hooks/kanban",
+                "./styles.module.css",
+                "./types",
+                "@accelint/design-foundation/lib/utils",
+                "client-only"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".card",
+                    ".cardActions",
+                    ".cardBody",
+                    ".cardContainerOuter",
+                    ".cardHeader",
+                    ".cardTitle",
+                    ".column",
+                    ".columnContent",
+                    ".columnContentActions",
+                    ".columnHeader",
+                    ".columnHeaderActions",
+                    ".columnItems",
+                    ".columnTitle",
+                    ".divider",
+                    ".header",
+                    ".headerActions",
+                    ".headerTitle",
+                    ".kanban"
+                  ],
+                  "properties": ["min-height", "min-width"]
+                }
+              }
+            },
+            "semanticHash": "uif:0b90a1af7e92c8a09fe730d5",
+            "fileHash": "uif:9af45c2ec33651fcf0569d1b"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\nimport 'client-only';\n\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport { useColumnInteractions } from '../../hooks/kanban';\nimport styles from './styles.module.css';\nimport type { KanbanColProps } from './types';\n\nexport function KanbanColumn({\n  children,\n  className,\n  column,\n  ...rest\n}: KanbanColProps) {\n  const { ref, isActive, isHighlighted } = useColumnInteractions(column);\n\n  return (\n    <ol\n      {...rest}\n      data-focus-visible={isHighlighted || undefined}\n      data-drop-target={isActive || undefined}\n      className={clsx(styles.column, className)}\n      ref={ref}\n    >\n      {children}\n    </ol>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "14/23",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/kanban/context.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.155Z",
+    "bundleHash": "uifb:973da5b907aa27a2ab383358",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/kanban/context.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/kanban/context.tsx",
+            "description": "context - Presentational component",
+            "version": {
+              "variables": [
+                "KanbanContext",
+                "KanbanProvider",
+                "getInsertIndex",
+                "updatePositions",
+                "useKanban"
+              ],
+              "hooks": ["useCallback", "useContext", "useMemo"],
+              "components": ["KanbanContext.Provider"],
+              "functions": [
+                "KanbanProvider",
+                "calculateClosestEdge",
+                "getInsertIndex",
+                "parseDropTarget",
+                "updatePositions",
+                "useKanban",
+                "validateMoveCard"
+              ],
+              "imports": ["./types", "@dnd-kit/core", "react"]
+            },
+            "logicSignature": {
+              "props": {
+                "columns": "import(\"/Users/brandonpierce/Projects/standard-toolkit/packages/design-toolkit/src/components/kanban/types\").KanbanColumnData[]",
+                "updateColumnState": {
+                  "type": "function",
+                  "signature": "(columns: import(\"/Users/brandonpierce/Projects/standard-toolkit/packages/design-toolkit/src/components/kanban/types\").KanbanColumnData[]) => void"
+                },
+                "children": "React.ReactNode"
+              },
+              "emits": {}
+            },
+            "exports": {
+              "named": [
+                "KanbanProvider",
+                "calculateClosestEdge",
+                "getInsertIndex",
+                "parseDropTarget",
+                "useKanban",
+                "validateMoveCard"
+              ]
+            },
+            "prediction": [
+              "Includes form validation logic",
+              "Uses memoization for performance optimization",
+              "Consumes React Context for shared state"
+            ],
+            "semanticHash": "uif:daecf51d3b396cadefcd268e",
+            "fileHash": "uif:59a2667b0a55ac1d8ac3d3f4"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport {\n  createContext,\n  type ReactNode,\n  useCallback,\n  useContext,\n  useMemo,\n} from 'react';\nimport type { DragEndEvent } from '@dnd-kit/core';\nimport type { KanbanCardData, KanbanColumnData } from './types';\n\nexport type MoveCard = (\n  cardId: string,\n  targetColumnId: string,\n  targetPosition: number,\n  closestEdge?: 'top' | 'bottom',\n) => void;\nexport interface KanbanContextData {\n  columns: KanbanColumnData[];\n  updateColumnState: (columns: KanbanColumnData[]) => void;\n  moveCard: MoveCard;\n  getColumnById: (id: string) => KanbanColumnData | undefined;\n  cardMap: Map<\n    string,\n    { column: KanbanColumnData; card: KanbanCardData; index: number }\n  >;\n}\n\nexport interface KanbanProviderProps {\n  columns: KanbanColumnData[];\n  updateColumnState: (columns: KanbanColumnData[]) => void;\n  children: ReactNode;\n}\n\n/**\n * Result of parsing a drop target from a drag event\n */\nexport interface DropTargetInfo {\n  /** The ID of the column where the card should be dropped */\n  columnId: string;\n  /** The position/index within the column */\n  position: number;\n  /** The edge to drop relative to (undefined when dropping on empty column) */\n  edge: 'top' | 'bottom' | undefined;\n}\n\n/**\n * Parameters for validating a card move operation\n */\nexport interface MoveCardValidationParams {\n  cardId: string;\n  targetColumnId: string;\n  targetPosition: number;\n  columns: KanbanColumnData[];\n  cardMap: Map<\n    string,\n    { column: KanbanColumnData; card: KanbanCardData; index: number }\n  >;\n}\n\n/**\n * Result of validating a card move operation\n * Uses discriminated union to ensure type safety based on success/failure\n */\nexport type MoveCardValidationResult =\n  | {\n      /** Validation succeeded */\n      success: true;\n      /** Adjusted target position (clamped to valid bounds) */\n      adjustedPosition: number;\n      /** Source card information */\n      sourceInfo: {\n        column: KanbanColumnData;\n        card: KanbanCardData;\n        index: number;\n      };\n      /** Target column */\n      targetColumn: KanbanColumnData;\n      /** Empty error array for success case */\n      errors: [];\n    }\n  | {\n      /** Validation failed */\n      success: false;\n      /** List of error messages describing validation failures */\n      errors: string[];\n    };\n\n/**\n * Calculates which edge of a drop target is closest to the dragged item\n * @param over - The drop target from dnd-kit\n * @param active - The active dragged item from dnd-kit\n * @returns 'top' if the dragged item's center is above the midpoint, 'bottom' otherwise\n */\nexport function calculateClosestEdge(\n  over: DragEndEvent['over'],\n  active: DragEndEvent['active'],\n): 'top' | 'bottom' {\n  if (!over?.rect) {\n    return 'bottom';\n  }\n\n  const translated = active?.rect?.current?.translated;\n  if (!translated) {\n    return 'bottom';\n  }\n\n  const overRect = over.rect;\n  const midpoint = overRect.top + overRect.height / 2;\n  const draggedItemCenter = translated.top + translated.height / 2;\n\n  return draggedItemCenter < midpoint ? 'top' : 'bottom';\n}\n\n/**\n * Parses a drag event to determine where a card should be dropped\n * @param event - The drag end event from dnd-kit\n * @returns Normalized drop target information or null if invalid drop\n */\nexport function parseDropTarget(event: DragEndEvent): DropTargetInfo | null {\n  const { active, over } = event;\n\n  if (!over) {\n    return null;\n  }\n\n  const overData = over.data.current;\n\n  if (!overData) {\n    return null;\n  }\n\n  // Dropping on a column (empty space or column container)\n  if (Array.isArray(overData.cards)) {\n    return {\n      columnId: overData.id,\n      position: overData.cards.length,\n      edge: undefined,\n    };\n  }\n\n  // Dropping on a card position\n  const edge = calculateClosestEdge(over, active);\n  return {\n    columnId: overData.columnId,\n    position: overData.position,\n    edge,\n  };\n}\n\nconst updatePositions = (column: KanbanColumnData) => {\n  column.cards.forEach((c, index) => {\n    c.position = index;\n  });\n};\n\nexport const getInsertIndex = (\n  targetPosition: number,\n  closestEdge?: 'top' | 'bottom',\n) => {\n  // If no edge is specified, use the target position as-is\n  if (!closestEdge) {\n    return targetPosition;\n  }\n\n  // If dropping on top edge, insert at the target position (before the card)\n  // If dropping on bottom edge, insert after the target position (position + 1)\n  return closestEdge === 'top' ? targetPosition : targetPosition + 1;\n};\n\n/**\n * Validates all parameters for a card move operation\n * @param params - Validation parameters\n * @returns Validation result with success flag, adjusted values, and errors\n */\nexport function validateMoveCard({\n  cardId,\n  targetColumnId,\n  targetPosition,\n  columns,\n  cardMap,\n}: MoveCardValidationParams): MoveCardValidationResult {\n  const errors: string[] = [];\n  let adjustedPosition = targetPosition;\n\n  // 1. Type validation\n  if (typeof cardId !== 'string' || !cardId.trim()) {\n    errors.push('[Kanban] moveCard: cardId must be a non-empty string');\n  }\n\n  if (typeof targetColumnId !== 'string' || !targetColumnId.trim()) {\n    errors.push('[Kanban] moveCard: targetColumnId must be a non-empty string');\n  }\n\n  if (typeof targetPosition !== 'number' || !Number.isFinite(targetPosition)) {\n    errors.push('[Kanban] moveCard: targetPosition must be a finite number');\n  }\n\n  // Early return if type validation fails\n  if (errors.length > 0) {\n    return { success: false, errors };\n  }\n\n  // 2. Card existence validation\n  const sourceInfo = cardMap.get(cardId);\n  if (!sourceInfo) {\n    errors.push(`[Kanban] moveCard: Card \"${cardId}\" not found in any column`);\n    return { success: false, errors };\n  }\n\n  // 3. Target column existence validation\n  const targetColumn = columns.find((col) => col.id === targetColumnId);\n  if (!targetColumn) {\n    errors.push(\n      `[Kanban] moveCard: Target column \"${targetColumnId}\" not found`,\n    );\n    return { success: false, errors };\n  }\n\n  // 4. Position bounds validation (with adjustment)\n  if (adjustedPosition < 0) {\n    console.warn(\n      `[Kanban] moveCard: targetPosition (${adjustedPosition}) cannot be negative. Using 0 instead.`,\n    );\n    adjustedPosition = 0;\n  }\n\n  const maxPosition = targetColumn.cards.length;\n  if (adjustedPosition > maxPosition) {\n    console.warn(\n      `[Kanban] moveCard: targetPosition (${adjustedPosition}) exceeds maximum (${maxPosition}). ` +\n        `Using ${maxPosition} instead.`,\n    );\n    adjustedPosition = maxPosition;\n  }\n\n  // 5. canDrop validation\n  if (targetColumn.canDrop === false) {\n    errors.push(\n      `[Kanban] moveCard: Column \"${targetColumnId}\" does not accept drops`,\n    );\n    return { success: false, errors };\n  }\n\n  // All validations passed\n  return {\n    success: true,\n    adjustedPosition,\n    sourceInfo,\n    targetColumn,\n    errors: [],\n  };\n}\n\nconst KanbanContext = createContext<KanbanContextData>({\n  columns: [],\n  updateColumnState: () => null,\n  moveCard: () => null,\n  getColumnById: () => undefined,\n  cardMap: new Map(),\n});\n\nexport const KanbanProvider = ({\n  children,\n  columns,\n  updateColumnState,\n}: KanbanProviderProps) => {\n  // Create a lookup map for O(1) card access\n  const cardMap = useMemo(() => {\n    const map = new Map<\n      string,\n      { column: KanbanColumnData; card: KanbanCardData; index: number }\n    >();\n\n    columns.forEach((column) => {\n      column.cards.forEach((card, index) => {\n        map.set(card.id, { column, card, index });\n      });\n    });\n\n    return map;\n  }, [columns]);\n\n  const moveCard = useCallback(\n    (\n      cardId: string,\n      targetColumnId: string,\n      targetPosition: number,\n      closestEdge?: 'top' | 'bottom',\n    ) => {\n      // Validate all inputs\n      const validation = validateMoveCard({\n        cardId,\n        targetColumnId,\n        targetPosition,\n        columns,\n        cardMap,\n      });\n\n      // Handle validation failure\n      if (!validation.success) {\n        validation.errors.forEach((error) => {\n          console.error(error);\n        });\n        return false;\n      }\n\n      // Extract validated data - TypeScript knows these are defined after success check\n      const { adjustedPosition, sourceInfo: source, targetColumn } = validation;\n\n      const newColumns = [...columns];\n      const isSameColumn = source.column.id === targetColumn.id;\n\n      // Remove card from source column\n      const newSourceColumn = {\n        ...source.column,\n        cards: source.column.cards.filter((_, i) => i !== source.index),\n      };\n\n      // Calculate insert index using adjusted position\n      let index = getInsertIndex(adjustedPosition, closestEdge);\n\n      // If moving within the same column and moving down, adjust index\n      if (isSameColumn && source.index < index) {\n        index -= 1;\n      }\n\n      // Insert card into target column\n      const newTargetColumn = isSameColumn\n        ? newSourceColumn\n        : { ...targetColumn, cards: [...targetColumn.cards] };\n\n      newTargetColumn.cards.splice(index, 0, {\n        ...source.card,\n        columnId: targetColumnId,\n      });\n\n      // Update positions\n      updatePositions(newTargetColumn);\n      if (!isSameColumn) {\n        updatePositions(newSourceColumn);\n      }\n\n      // Update the columns array with the modified columns\n      const updatedColumns = newColumns.map((col) => {\n        if (col.id === source.column.id) {\n          return newSourceColumn;\n        }\n        if (col.id === targetColumn.id) {\n          return newTargetColumn;\n        }\n        return col;\n      });\n\n      updateColumnState(updatedColumns);\n    },\n    [columns, updateColumnState, cardMap],\n  );\n\n  const getColumnById = useCallback(\n    (id: string) => columns.find((c) => c.id === id),\n    [columns],\n  );\n\n  return (\n    <KanbanContext.Provider\n      value={{ columns, updateColumnState, moveCard, getColumnById, cardMap }}\n    >\n      {children}\n    </KanbanContext.Provider>\n  );\n};\n\nexport const useKanban = () => {\n  const context = useContext(KanbanContext);\n  if (!context) {\n    throw new Error('useKanban must be used within KanbanProvider');\n  }\n  return context;\n};\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "KanbanContext.Provider",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/kanban/context.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "15/23",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/kanban/header-actions.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.155Z",
+    "bundleHash": "uifb:f132e3a11fa84e998359bb74",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/kanban/header-actions.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/kanban/header-actions.tsx",
+            "description": "header-actions - TypeScript module",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": [],
+              "functions": ["KanbanHeaderActions"],
+              "imports": [
+                "./styles.module.css",
+                "./types",
+                "@accelint/design-foundation/lib/utils",
+                "client-only"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".card",
+                    ".cardActions",
+                    ".cardBody",
+                    ".cardContainerOuter",
+                    ".cardHeader",
+                    ".cardTitle",
+                    ".column",
+                    ".columnContent",
+                    ".columnContentActions",
+                    ".columnHeader",
+                    ".columnHeaderActions",
+                    ".columnItems",
+                    ".columnTitle",
+                    ".divider",
+                    ".header",
+                    ".headerActions",
+                    ".headerTitle",
+                    ".kanban"
+                  ],
+                  "properties": ["min-height", "min-width"]
+                }
+              }
+            },
+            "semanticHash": "uif:6d21309cbe1ef53a4c5ecba8",
+            "fileHash": "uif:e10ef80be3e3095034019e7a"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\nimport 'client-only';\n\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport styles from './styles.module.css';\nimport type { KanbanComponentProps } from './types';\n\nexport function KanbanHeaderActions({\n  children,\n  className,\n  ...rest\n}: KanbanComponentProps) {\n  return (\n    <div {...rest} className={clsx(styles.headerActions, className)}>\n      {children}\n    </div>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "16/23",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/kanban/header-search.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.158Z",
+    "bundleHash": "uifb:a4ecfe234a728b335bbbf669",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/kanban/header-search.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/kanban/header-search.tsx",
+            "description": "header-search - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": ["SearchField"],
+              "functions": ["KanbanHeaderSearch"],
+              "imports": ["../search-field", "./types", "client-only"]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "semanticHash": "uif:18a9f7fadd054a88a4d731da",
+            "fileHash": "uif:2106848833188a937c6efb8e"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\nimport 'client-only';\n\nimport { SearchField } from '../search-field';\nimport type { KanbanSearchProps } from './types';\n\nexport function KanbanHeaderSearch({ classNames, ...rest }: KanbanSearchProps) {\n  return (\n    <SearchField\n      {...rest}\n      variant='outline'\n      classNames={classNames}\n      aria-label='Search'\n    />\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "SearchField",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/kanban/header-search.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "17/23",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/kanban/header-title.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.160Z",
+    "bundleHash": "uifb:e7b642e153863b9ed73db704",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/kanban/header-title.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/kanban/header-title.tsx",
+            "description": "header-title - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": ["Heading"],
+              "functions": ["KanbanHeaderTitle"],
+              "imports": [
+                "./styles.module.css",
+                "./types",
+                "@accelint/design-foundation/lib/utils",
+                "client-only",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".card",
+                    ".cardActions",
+                    ".cardBody",
+                    ".cardContainerOuter",
+                    ".cardHeader",
+                    ".cardTitle",
+                    ".column",
+                    ".columnContent",
+                    ".columnContentActions",
+                    ".columnHeader",
+                    ".columnHeaderActions",
+                    ".columnItems",
+                    ".columnTitle",
+                    ".divider",
+                    ".header",
+                    ".headerActions",
+                    ".headerTitle",
+                    ".kanban"
+                  ],
+                  "properties": ["min-height", "min-width"]
+                }
+              }
+            },
+            "semanticHash": "uif:4ae317fa14f961d104d01f2d",
+            "fileHash": "uif:47655f1677ff24a005d0d477"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\nimport 'client-only';\n\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport { Heading } from 'react-aria-components';\nimport styles from './styles.module.css';\nimport type { KanbanComponentProps } from './types';\n\nexport function KanbanHeaderTitle({\n  children,\n  className,\n  ...rest\n}: KanbanComponentProps) {\n  return (\n    <Heading {...rest} className={clsx(styles.headerTitle, className)}>\n      {children}\n    </Heading>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "Heading",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/kanban/header-title.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "18/23",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/kanban/header.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.161Z",
+    "bundleHash": "uifb:b766d00ee5cdb9301d614169",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/kanban/header.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/kanban/header.tsx",
+            "description": "header - TypeScript module",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": [],
+              "functions": ["KanbanHeader"],
+              "imports": [
+                "./styles.module.css",
+                "./types",
+                "@accelint/design-foundation/lib/utils",
+                "client-only"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".card",
+                    ".cardActions",
+                    ".cardBody",
+                    ".cardContainerOuter",
+                    ".cardHeader",
+                    ".cardTitle",
+                    ".column",
+                    ".columnContent",
+                    ".columnContentActions",
+                    ".columnHeader",
+                    ".columnHeaderActions",
+                    ".columnItems",
+                    ".columnTitle",
+                    ".divider",
+                    ".header",
+                    ".headerActions",
+                    ".headerTitle",
+                    ".kanban"
+                  ],
+                  "properties": ["min-height", "min-width"]
+                }
+              }
+            },
+            "semanticHash": "uif:def8c98b676ad7637bac8f0c",
+            "fileHash": "uif:762bb7a5aeff900546d1024f"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\nimport 'client-only';\n\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport styles from './styles.module.css';\nimport type { KanbanComponentProps } from './types';\n\nexport function KanbanHeader({\n  children,\n  className,\n  ...rest\n}: KanbanComponentProps) {\n  return (\n    <div {...rest} className={clsx(styles.header, className)}>\n      {children}\n    </div>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "19/23",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/kanban/index.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.161Z",
+    "bundleHash": "uifb:502f0b2db69301c09ed2d7c6",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/kanban/index.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/kanban/index.tsx",
+            "description": "index - TypeScript module",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": [],
+              "functions": [],
+              "imports": []
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": {
+              "named": [
+                "Kanban",
+                "KanbanCardProps",
+                "KanbanColContentActionProps",
+                "KanbanColContentProps",
+                "KanbanColProps",
+                "KanbanComponentProps",
+                "KanbanMenuProps",
+                "KanbanProps",
+                "KanbanSearchProps"
+              ]
+            },
+            "semanticHash": "uif:8a8b765d9f1fc02101eb79f8",
+            "fileHash": "uif:46be5c625920a03eeb9f1137"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nexport { Kanban } from './kanban';\nexport type {\n  KanbanCardProps,\n  KanbanColContentActionProps,\n  KanbanColContentProps,\n  KanbanColProps,\n  KanbanComponentProps,\n  KanbanMenuProps,\n  KanbanProps,\n  KanbanSearchProps,\n} from './types';\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "20/23",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/kanban/kanban.stories.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.225Z",
+    "bundleHash": "uifb:b0f12275dcd17b9fb0f59896",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/kanban/kanban.stories.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/kanban/kanban.stories.tsx",
+            "description": "kanban.stories - Interactive component with internal state",
+            "version": {
+              "variables": ["CompleteExample", "Default", "meta"],
+              "hooks": ["useState"],
+              "components": [
+                "Add",
+                "Button",
+                "Icon",
+                "Kanban",
+                "KanbanCard",
+                "KanbanCardBody",
+                "KanbanCardHeader",
+                "KanbanCardHeaderActions",
+                "KanbanCardHeaderTitle",
+                "KanbanColumn",
+                "KanbanColumnActions",
+                "KanbanColumnContainer",
+                "KanbanColumnContent",
+                "KanbanColumnHeader",
+                "KanbanColumnHeaderActions",
+                "KanbanColumnHeaderTitle",
+                "KanbanHeader",
+                "KanbanHeaderActions",
+                "KanbanHeaderSearch",
+                "KanbanHeaderTitle",
+                "KanbanProvider",
+                "Kebab",
+                "Menu",
+                "MenuItem",
+                "MenuItemLabel",
+                "MenuTrigger"
+              ],
+              "functions": [],
+              "imports": [
+                ".",
+                "../button",
+                "../icon",
+                "../menu",
+                "../menu/item",
+                "../menu/item-label",
+                "../menu/trigger",
+                "./card",
+                "./card-body",
+                "./card-header",
+                "./card-header-actions",
+                "./card-header-title",
+                "./column",
+                "./column-actions",
+                "./column-container",
+                "./column-content",
+                "./column-header",
+                "./column-header-actions",
+                "./column-header-title",
+                "./context",
+                "./header",
+                "./header-actions",
+                "./header-search",
+                "./header-title",
+                "./mock-data",
+                "./types",
+                "@accelint/core",
+                "@accelint/icons",
+                "@storybook/react-vite",
+                "react"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {
+                "onInput": {
+                  "type": "function",
+                  "signature": "(e) => void"
+                },
+                "onPress": {
+                  "type": "function",
+                  "signature": "() => void"
+                },
+                "onAction": {
+                  "type": "function",
+                  "signature": "() => void"
+                },
+                "onAddCard": {
+                  "type": "function",
+                  "signature": "() => void"
+                }
+              },
+              "state": {
+                "columns": "KanbanColumnData[]",
+                "searchTerm": "string"
+              }
+            },
+            "exports": {
+              "named": ["CompleteExample", "Default"]
+            },
+            "style": {
+              "styleSources": {
+                "tailwind": {
+                  "categories": {
+                    "sizing": ["h-screen"],
+                    "spacing": ["space-x-s"]
+                  },
+                  "classCount": 2
+                }
+              }
+            },
+            "semanticHash": "uif:18a3a923075fd39a826bd313",
+            "fileHash": "uif:5759b5f8446cdc1ea5f31bd2"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport { uuid } from '@accelint/core';\nimport { Add, Kebab } from '@accelint/icons';\nimport { useState } from 'react';\nimport { Button } from '../button';\nimport { Icon } from '../icon';\nimport { Menu } from '../menu';\nimport { MenuItem } from '../menu/item';\nimport { MenuItemLabel } from '../menu/item-label';\nimport { MenuTrigger } from '../menu/trigger';\nimport { Kanban } from '.';\nimport { KanbanCard } from './card';\nimport { KanbanCardBody } from './card-body';\nimport { KanbanCardHeader } from './card-header';\nimport { KanbanCardHeaderActions } from './card-header-actions';\nimport { KanbanCardHeaderTitle } from './card-header-title';\nimport { KanbanColumn } from './column';\nimport { KanbanColumnActions } from './column-actions';\nimport { KanbanColumnContainer } from './column-container';\nimport { KanbanColumnContent } from './column-content';\nimport { KanbanColumnHeader } from './column-header';\nimport { KanbanColumnHeaderActions } from './column-header-actions';\nimport { KanbanColumnHeaderTitle } from './column-header-title';\nimport { KanbanProvider } from './context';\nimport { KanbanHeader } from './header';\nimport { KanbanHeaderActions } from './header-actions';\nimport { KanbanHeaderSearch } from './header-search';\nimport { KanbanHeaderTitle } from './header-title';\nimport { columnData } from './mock-data';\nimport type { Meta, StoryObj } from '@storybook/react-vite';\nimport type { KanbanCardData, KanbanColumnData } from './types';\n\nconst meta = {\n  title: 'Components/Kanban',\n  component: Kanban,\n  parameters: {\n    layout: 'fullscreen',\n  },\n} satisfies Meta<typeof Kanban>;\n\nexport default meta;\ntype Story = StoryObj<typeof meta>;\n\nexport const Default: Story = {\n  render: () => {\n    const [columns, setColumns] = useState<KanbanColumnData[]>(columnData);\n\n    return (\n      <div className='h-screen'>\n        <KanbanProvider columns={columns} updateColumnState={setColumns}>\n          <Kanban>\n            <KanbanHeader>\n              <KanbanHeaderTitle>Project Board</KanbanHeaderTitle>\n            </KanbanHeader>\n\n            <KanbanColumnContainer>\n              {columns.map((column) => (\n                <KanbanColumn key={column.id} column={column}>\n                  <KanbanColumnHeader>\n                    <KanbanColumnHeaderTitle>\n                      {column.title}\n                    </KanbanColumnHeaderTitle>\n                    <KanbanColumnHeaderActions\n                      cardCount={column.cards.length}\n                    />\n                  </KanbanColumnHeader>\n\n                  <KanbanColumnContent column={column}>\n                    {column.cards.map((card) => (\n                      <KanbanCard key={card.id} card={card}>\n                        <KanbanCardHeader>\n                          <KanbanCardHeaderTitle>\n                            {card.title}\n                          </KanbanCardHeaderTitle>\n                        </KanbanCardHeader>\n                        <KanbanCardBody>{card.body}</KanbanCardBody>\n                      </KanbanCard>\n                    ))}\n                  </KanbanColumnContent>\n                </KanbanColumn>\n              ))}\n            </KanbanColumnContainer>\n          </Kanban>\n        </KanbanProvider>\n      </div>\n    );\n  },\n};\n\nexport const CompleteExample: Story = {\n  render: () => {\n    const [columns, setColumns] = useState<KanbanColumnData[]>(columnData);\n    const [searchTerm, setSearchTerm] = useState('');\n\n    const filteredColumns = columns.map((column) => ({\n      ...column,\n      cards: column.cards.filter(\n        (card) =>\n          card.title.toLowerCase().includes(searchTerm.toLowerCase()) ||\n          (typeof card.body === 'string' &&\n            card.body.toLowerCase().includes(searchTerm.toLowerCase())),\n      ),\n    }));\n\n    const handleAddCard = (columnId: string) => {\n      const newCard: KanbanCardData = {\n        id: uuid(),\n        title: `New Task ${Date.now()}`,\n        body: 'Card description',\n        columnId,\n        position: columns.find((c) => c.id === columnId)?.cards.length || 0,\n      };\n\n      setColumns(\n        columns.map((col) =>\n          col.id === columnId\n            ? { ...col, cards: [...col.cards, newCard] }\n            : col,\n        ),\n      );\n    };\n\n    const handleDeleteCard = (cardId: string) => {\n      setColumns(\n        columns.map((col) => ({\n          ...col,\n          cards: col.cards.filter((card) => card.id !== cardId),\n        })),\n      );\n    };\n\n    const handleAddColumn = () => {\n      const newColumn: KanbanColumnData = {\n        id: uuid(),\n        title: `New Column ${columns.length + 1}`,\n        cards: [],\n      };\n      setColumns([...columns, newColumn]);\n    };\n\n    const handleEditCard = (cardId: string) => {\n      const newTitle = prompt('Enter new title:');\n      if (newTitle) {\n        setColumns(\n          columns.map((col) => ({\n            ...col,\n            cards: col.cards.map((card) =>\n              card.id === cardId ? { ...card, title: newTitle } : card,\n            ),\n          })),\n        );\n      }\n    };\n\n    return (\n      <div className='h-screen'>\n        <KanbanProvider columns={columns} updateColumnState={setColumns}>\n          <Kanban>\n            <KanbanHeader>\n              <KanbanHeaderTitle>Complete Kanban Board</KanbanHeaderTitle>\n              <KanbanHeaderActions className='space-x-s'>\n                <KanbanHeaderSearch\n                  onInput={(e) => setSearchTerm(e.currentTarget.value)}\n                  inputProps={{\n                    placeholder: 'Search',\n                  }}\n                />\n                <Button onPress={handleAddColumn}>\n                  <Icon>\n                    <Add />\n                  </Icon>\n                  Add Column\n                </Button>\n              </KanbanHeaderActions>\n            </KanbanHeader>\n\n            <KanbanColumnContainer>\n              {filteredColumns.map((column) => (\n                <KanbanColumn key={column.id} column={column}>\n                  <KanbanColumnHeader>\n                    <KanbanColumnHeaderTitle>\n                      {column.title}\n                    </KanbanColumnHeaderTitle>\n                    <KanbanColumnHeaderActions\n                      cardCount={column.cards.length}\n                    />\n                  </KanbanColumnHeader>\n\n                  <KanbanColumnContent column={column}>\n                    {column.cards.map((card) => (\n                      <KanbanCard key={card.id} card={card}>\n                        <KanbanCardHeader>\n                          <KanbanCardHeaderTitle>\n                            {card.title}\n                          </KanbanCardHeaderTitle>\n                          <KanbanCardHeaderActions>\n                            <MenuTrigger>\n                              <Button variant='icon'>\n                                <Icon size='small'>\n                                  <Kebab />\n                                </Icon>\n                              </Button>\n                              <Menu>\n                                <MenuItem\n                                  onAction={() => handleEditCard(card.id)}\n                                >\n                                  <MenuItemLabel>Edit</MenuItemLabel>\n                                </MenuItem>\n                                <MenuItem\n                                  onAction={() => handleDeleteCard(card.id)}\n                                >\n                                  <MenuItemLabel>Delete</MenuItemLabel>\n                                </MenuItem>\n                              </Menu>\n                            </MenuTrigger>\n                          </KanbanCardHeaderActions>\n                        </KanbanCardHeader>\n                        <KanbanCardBody>{card.body}</KanbanCardBody>\n                      </KanbanCard>\n                    ))}\n                  </KanbanColumnContent>\n                  <KanbanColumnActions\n                    onAddCard={() => handleAddCard(column.id)}\n                  />\n                </KanbanColumn>\n              ))}\n            </KanbanColumnContainer>\n          </Kanban>\n        </KanbanProvider>\n      </div>\n    );\n  },\n};\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "Add",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/kanban/kanban.stories.tsx"
+        },
+        {
+          "name": "Button",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/kanban/kanban.stories.tsx"
+        },
+        {
+          "name": "Icon",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/kanban/kanban.stories.tsx"
+        },
+        {
+          "name": "Kanban",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/kanban/kanban.stories.tsx"
+        },
+        {
+          "name": "KanbanCard",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/kanban/kanban.stories.tsx"
+        },
+        {
+          "name": "KanbanCardBody",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/kanban/kanban.stories.tsx"
+        },
+        {
+          "name": "KanbanCardHeader",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/kanban/kanban.stories.tsx"
+        },
+        {
+          "name": "KanbanCardHeaderActions",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/kanban/kanban.stories.tsx"
+        },
+        {
+          "name": "KanbanCardHeaderTitle",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/kanban/kanban.stories.tsx"
+        },
+        {
+          "name": "KanbanColumn",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/kanban/kanban.stories.tsx"
+        },
+        {
+          "name": "KanbanColumnActions",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/kanban/kanban.stories.tsx"
+        },
+        {
+          "name": "KanbanColumnContainer",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/kanban/kanban.stories.tsx"
+        },
+        {
+          "name": "KanbanColumnContent",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/kanban/kanban.stories.tsx"
+        },
+        {
+          "name": "KanbanColumnHeader",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/kanban/kanban.stories.tsx"
+        },
+        {
+          "name": "KanbanColumnHeaderActions",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/kanban/kanban.stories.tsx"
+        },
+        {
+          "name": "KanbanColumnHeaderTitle",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/kanban/kanban.stories.tsx"
+        },
+        {
+          "name": "KanbanHeader",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/kanban/kanban.stories.tsx"
+        },
+        {
+          "name": "KanbanHeaderActions",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/kanban/kanban.stories.tsx"
+        },
+        {
+          "name": "KanbanHeaderSearch",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/kanban/kanban.stories.tsx"
+        },
+        {
+          "name": "KanbanHeaderTitle",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/kanban/kanban.stories.tsx"
+        },
+        {
+          "name": "KanbanProvider",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/kanban/kanban.stories.tsx"
+        },
+        {
+          "name": "Kebab",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/kanban/kanban.stories.tsx"
+        },
+        {
+          "name": "Menu",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/kanban/kanban.stories.tsx"
+        },
+        {
+          "name": "MenuItem",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/kanban/kanban.stories.tsx"
+        },
+        {
+          "name": "MenuItemLabel",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/kanban/kanban.stories.tsx"
+        },
+        {
+          "name": "MenuTrigger",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/kanban/kanban.stories.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "21/23",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/kanban/kanban.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.233Z",
+    "bundleHash": "uifb:c865f9798d4d4d31e3c4cebe",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/kanban/kanban.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/kanban/kanban.tsx",
+            "description": "kanban - Interactive component with internal state",
+            "version": {
+              "variables": [
+                "ACTIVATION_DISTANCE",
+                "DragContext",
+                "useDragContext"
+              ],
+              "hooks": [
+                "useContext",
+                "useKanban",
+                "useSensor",
+                "useSensors",
+                "useState"
+              ],
+              "components": [
+                "DndContext",
+                "DragContext.Provider",
+                "DragOverlay"
+              ],
+              "functions": ["Kanban", "useDragContext"],
+              "imports": [
+                "./styles.module.css",
+                "./types",
+                "@/components/kanban/context",
+                "@accelint/design-foundation/lib/utils",
+                "@dnd-kit/core",
+                "client-only",
+                "react"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {
+                "onDragStart": {
+                  "type": "function",
+                  "signature": "() => void"
+                },
+                "onDragEnd": {
+                  "type": "function",
+                  "signature": "() => void"
+                }
+              },
+              "state": {
+                "activeId": "string | null"
+              }
+            },
+            "exports": {
+              "named": ["DragContext", "Kanban", "useDragContext"]
+            },
+            "prediction": ["Consumes React Context for shared state"],
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".card",
+                    ".cardActions",
+                    ".cardBody",
+                    ".cardContainerOuter",
+                    ".cardHeader",
+                    ".cardTitle",
+                    ".column",
+                    ".columnContent",
+                    ".columnContentActions",
+                    ".columnHeader",
+                    ".columnHeaderActions",
+                    ".columnItems",
+                    ".columnTitle",
+                    ".divider",
+                    ".header",
+                    ".headerActions",
+                    ".headerTitle",
+                    ".kanban"
+                  ],
+                  "properties": ["min-height", "min-width"]
+                }
+              }
+            },
+            "semanticHash": "uif:504364977b62e5d0cfbb4121",
+            "fileHash": "uif:fcdfc559b49105c70a24bd04"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\nimport 'client-only';\n\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport {\n  type CollisionDetection,\n  closestCenter,\n  DndContext,\n  type DragEndEvent,\n  DragOverlay,\n  type DragStartEvent,\n  PointerSensor,\n  pointerWithin,\n  rectIntersection,\n  useSensor,\n  useSensors,\n} from '@dnd-kit/core';\nimport { createContext, useContext, useState } from 'react';\nimport { parseDropTarget, useKanban } from '@/components/kanban/context';\nimport styles from './styles.module.css';\nimport type { KanbanProps } from './types';\n\n// Context for sharing active drag state\n\nexport const DragContext = createContext<{ activeId: string | null } | null>(\n  null,\n);\n\nexport const useDragContext = () => {\n  const context = useContext(DragContext);\n  if (!context) {\n    throw new Error('useDragContext must be used within Kanban component');\n  }\n  return context;\n};\n\nconst ACTIVATION_DISTANCE = 8;\n\nexport function Kanban({ children, className, ...rest }: KanbanProps) {\n  const { moveCard, cardMap } = useKanban();\n  const [activeId, setActiveId] = useState<string | null>(null);\n\n  const sensors = useSensors(\n    useSensor(PointerSensor, {\n      activationConstraint: {\n        distance: ACTIVATION_DISTANCE,\n      },\n    }),\n  );\n\n  const collisionDetectionStrategy: CollisionDetection = (args) => {\n    // First, try pointer within for direct pointer detection\n    const pointerCollisions = pointerWithin(args);\n    if (pointerCollisions.length > 0) {\n      return pointerCollisions;\n    }\n\n    // Then try rectangle intersection for better coverage\n    const rectCollisions = rectIntersection(args);\n    if (rectCollisions.length > 0) {\n      return rectCollisions;\n    }\n\n    // Fall back to closest center\n    return closestCenter(args);\n  };\n\n  const handleDragStart = (event: DragStartEvent) => {\n    setActiveId(event.active.id as string);\n  };\n\n  const handleDragEnd = (event: DragEndEvent) => {\n    setActiveId(null);\n\n    const dropTarget = parseDropTarget(event);\n    if (!dropTarget) {\n      return;\n    }\n\n    moveCard(\n      event.active.id as string,\n      dropTarget.columnId,\n      dropTarget.position,\n      dropTarget.edge,\n    );\n  };\n\n  // Find the active card for the drag overlay\n  const activeCard = activeId ? cardMap.get(activeId)?.card : null;\n\n  return (\n    <DragContext.Provider value={{ activeId }}>\n      <DndContext\n        sensors={sensors}\n        collisionDetection={collisionDetectionStrategy}\n        onDragStart={handleDragStart}\n        onDragEnd={handleDragEnd}\n      >\n        <div className={clsx(styles.kanban, className)} {...rest}>\n          {children}\n        </div>\n        <DragOverlay>\n          {activeCard ? (\n            <div data-current className={clsx(styles.card)}>\n              <div className={styles.cardHeader}>\n                <span className={styles.cardTitle}>{activeCard.title}</span>\n              </div>\n              <div className={styles.cardBody}>{activeCard.body}</div>\n            </div>\n          ) : null}\n        </DragOverlay>\n      </DndContext>\n    </DragContext.Provider>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "DndContext",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/kanban/kanban.tsx"
+        },
+        {
+          "name": "DragContext.Provider",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/kanban/kanban.tsx"
+        },
+        {
+          "name": "DragOverlay",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/kanban/kanban.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "22/23",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/kanban/mock-data.ts",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.233Z",
+    "bundleHash": "uifb:fecff18636d65db1f29400b9",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/kanban/mock-data.ts",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/kanban/mock-data.ts",
+            "description": "mock-data - TypeScript module",
+            "version": {
+              "variables": ["columnData"],
+              "hooks": [],
+              "components": [],
+              "functions": [],
+              "imports": []
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "semanticHash": "uif:6f078dd72fa8846a8f41709d",
+            "fileHash": "uif:f9f861a714b828e6e313d3ab"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\nexport const columnData = [\n  {\n    title: 'To Do',\n    id: 'todo',\n    headerActions: [],\n    cards: [\n      {\n        title: 'Drag and Drop Columns',\n        body: 'Reorganize the columns for drag and drop.',\n        id: 'id-1',\n        columnId: 'todo',\n        position: 0,\n      },\n      {\n        title: 'Drag and Drop Cards',\n        body: 'Arrange cards for drag and drop.',\n        id: 'id-2',\n        columnId: 'todo',\n        position: 1,\n      },\n      {\n        title: 'Cross post cards to other columns',\n        body: 'Extend the functionality of card drag and drop to allow for dragging to other columns.',\n        id: 'id-3',\n        columnId: 'todo',\n        position: 2,\n      },\n    ],\n  },\n  {\n    title: 'In Progress',\n    id: 'inProgress',\n    headerActions: [],\n    cards: [\n      {\n        title: 'Base Implementation of Drag and Drop',\n        body: 'Initial setup for @atlaskit/pragmatic-drag-and-drop',\n        id: 'id-4',\n        columnId: 'inProgress',\n        position: 0,\n      },\n      {\n        title: 'Refactor styling.',\n        body: 'Update kanban board component styling to reflect proposed new standards.',\n        id: 'id-5',\n        columnId: 'inProgress',\n        position: 1,\n      },\n    ],\n  },\n  {\n    title: 'In Review',\n    headerActions: [],\n    cards: [],\n    id: 'inReview',\n  },\n  {\n    title: 'Done',\n    headerActions: [],\n    id: 'done',\n    cards: [\n      {\n        title: 'Kanban Board',\n        body: 'Base component for the kanban board.',\n        id: 'id-6',\n        columnId: 'done',\n        position: 0,\n      },\n      {\n        title: 'Kanban Card',\n        body: 'Base components for kanban cards.',\n        id: 'id-7',\n        columnId: 'done',\n        position: 1,\n      },\n    ],\n  },\n];\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "23/23",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/kanban/types.ts",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.233Z",
+    "bundleHash": "uifb:aac37953e3fa119b2de55d58",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/kanban/types.ts",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/kanban/types.ts",
+            "description": "types - Type definitions",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": [],
+              "functions": [],
+              "imports": ["../search-field/types", "react"]
+            },
+            "logicSignature": {
+              "props": {
+                "className": {
+                  "type": "string",
+                  "optional": true
+                },
+                "column": "import(\"/Users/brandonpierce/Projects/standard-toolkit/packages/design-toolkit/src/components/kanban/types\").KanbanColumnData",
+                "columns": {
+                  "type": "React.ReactNode[]",
+                  "optional": true
+                },
+                "cardCount": {
+                  "type": "number",
+                  "optional": true
+                },
+                "onInput": {
+                  "type": "function",
+                  "signature": "(e: React.FormEvent<HTMLInputElement>) => void",
+                  "optional": true
+                },
+                "onAddCard": {
+                  "type": "function",
+                  "signature": "() => void",
+                  "optional": true
+                },
+                "children": {
+                  "type": "React.ReactNode | React.ReactNode[]",
+                  "optional": true
+                },
+                "isActive": {
+                  "type": "boolean",
+                  "optional": true
+                },
+                "card": "import(\"/Users/brandonpierce/Projects/standard-toolkit/packages/design-toolkit/src/components/kanban/types\").KanbanCardData"
+              },
+              "emits": {}
+            },
+            "semanticHash": "uif:b37690009861232967a93aca",
+            "fileHash": "uif:34fad6fd11fb1a97e5a9ab08"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\nimport type { FormEvent, PropsWithChildren, ReactNode } from 'react';\nimport type { SearchFieldProps } from '../search-field/types';\n\nexport type KanbanColumnData = {\n  title: string;\n  id: string;\n  cards: KanbanCardData[];\n  canDrop?: boolean;\n};\n\nexport interface KanbanComponentProps extends PropsWithChildren {\n  className?: string;\n}\n\nexport interface KanbanColProps extends KanbanComponentProps {\n  column: KanbanColumnData;\n}\n\nexport interface KanbanProps extends KanbanComponentProps {\n  columns?: ReactNode[];\n}\n\nexport interface KanbanMenuProps extends KanbanComponentProps {\n  cardCount?: number;\n}\n\nexport interface KanbanSearchProps extends SearchFieldProps {\n  onInput?: (e: FormEvent<HTMLInputElement>) => void;\n}\n\nexport interface KanbanColContentActionProps extends KanbanComponentProps {\n  onAddCard?: () => void;\n}\n\nexport interface KanbanColContentProps {\n  children?: ReactNode | ReactNode[];\n  className?: string;\n  column: KanbanColumnData;\n}\n\nexport type KanbanCardData = {\n  body: ReactNode | string;\n  title: string;\n  isActive?: boolean;\n  id: string;\n  columnId: string;\n  position: number;\n};\n\nexport interface KanbanCardProps extends KanbanComponentProps {\n  isActive?: boolean;\n  card: KanbanCardData;\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  }
+]

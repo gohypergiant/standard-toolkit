@@ -1,0 +1,1169 @@
+[
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "1/11",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/tree/context.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:44.035Z",
+    "bundleHash": "uifb:0d41c6737eee60e6f8003839",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/tree/context.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/tree/context.tsx",
+            "description": "context - TypeScript module",
+            "version": {
+              "variables": ["TreeContext", "TreeItemContext"],
+              "hooks": [],
+              "components": [],
+              "functions": [],
+              "imports": ["./types", "client-only", "react"]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": {
+              "named": ["TreeContext", "TreeItemContext"]
+            },
+            "semanticHash": "uif:5c46b02293320df80e90d154",
+            "fileHash": "uif:79334c19a211bcd41749fa23"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport 'client-only';\nimport { createContext } from 'react';\nimport type { TreeContextValue, TreeItemContextValue } from './types';\n\n/**\n * Context for Tree component\n */\nexport const TreeContext = createContext<TreeContextValue>({\n  visibilityComputedKeys: new Set(),\n  showRuleLines: true,\n  showVisibility: false,\n  variant: 'cozy',\n  isStatic: true,\n  onVisibilityChange: () => undefined,\n});\n\n/**\n * Context for TreeItem component\n */\nexport const TreeItemContext = createContext<TreeItemContextValue>({\n  isVisible: true,\n  isViewable: true,\n  ancestors: [],\n});\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "2/11",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/tree/index.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:44.042Z",
+    "bundleHash": "uifb:dad8fb07805ee2bbeef48b5e",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/tree/index.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/tree/index.tsx",
+            "description": "index - Interactive component",
+            "version": {
+              "variables": ["defaultRenderDropIndicator"],
+              "hooks": ["useDragAndDrop", "useMemo"],
+              "components": [
+                "AriaTree",
+                "DropIndicator",
+                "TreeContext.Provider"
+              ],
+              "functions": ["Tree", "defaultRenderDropIndicator"],
+              "imports": [
+                "./context",
+                "./styles.module.css",
+                "./types",
+                "@/hooks/use-tree/actions/cache",
+                "@accelint/design-foundation/lib/utils",
+                "@react-types/shared",
+                "client-only",
+                "react",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {
+                "onSelectionChange": {
+                  "type": "function",
+                  "signature": "() => void"
+                }
+              }
+            },
+            "exports": "named",
+            "prediction": ["Uses memoization for performance optimization"],
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".actions",
+                    ".compact",
+                    ".content",
+                    ".cozy",
+                    ".crammed",
+                    ".description",
+                    ".display",
+                    ".drag",
+                    ".dropIndicator",
+                    ".expansion",
+                    ".icon",
+                    ".item",
+                    ".label",
+                    ".spacing",
+                    ".tree",
+                    ".visibility"
+                  ],
+                  "properties": [
+                    "grid-area",
+                    "grid-template-areas",
+                    "grid-template-columns",
+                    "min-height",
+                    "width"
+                  ]
+                }
+              }
+            },
+            "semanticHash": "uif:9525424315f15f6d4eb7c1da",
+            "fileHash": "uif:c2c1b897783b84a2b1a77130"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport { Cache } from '@/hooks/use-tree/actions/cache';\nimport type { Key, Selection } from '@react-types/shared';\nimport 'client-only';\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport { useMemo } from 'react';\nimport {\n  Tree as AriaTree,\n  composeRenderProps,\n  DropIndicator,\n  type DropTarget,\n  useDragAndDrop,\n} from 'react-aria-components';\nimport { TreeContext } from './context';\nimport styles from './styles.module.css';\nimport type { TreeProps } from './types';\n\nconst defaultRenderDropIndicator = (target: DropTarget) => (\n  <DropIndicator target={target} className={styles.dropIndicator} />\n);\n\n/**\n * Tree - Hierarchical tree view with optional drag-and-drop and visibility\n *\n * Renders a selectable tree with support for nested items, drag-and-drop,\n * selection modes, and visibility controls. Use TreeItem to define nodes.\n *\n * @example\n * <Tree items={items} expandedKeys={expandedKeys}>\n *   {(node) => <Node key={node.key} node={node} />}\n * </Tree>\n *\n * @example\n * <Tree>\n *   <TreeItem id='one' textValue='one'>\n *     <TreeItemContent>One</TreeItemContent>\n *     <TreeItem id='two' textValue='two'>\n *       <TreeItemContent>Two</TreeItemContent>\n *     </TreeItem>\n *   </TreeItem>\n * </Tree>\n */\nexport function Tree<T>({\n  children,\n  className,\n  disabledKeys: disabledKeysProp,\n  dragAndDropConfig,\n  expandedKeys: expandedKeysProp,\n  items,\n  selectedKeys: selectedKeysProp,\n  showRuleLines = true,\n  showVisibility = true,\n  selectionMode = 'multiple',\n  variant = 'cozy',\n  visibleKeys: visibleKeysProp,\n  onVisibilityChange,\n  onSelectionChange,\n  ...rest\n}: TreeProps<T>) {\n  /**\n   * A static collection is hard-coded. Dynamic is data-driven from an external source.\n   * https://react-spectrum.adobe.com/react-aria/Tree.html#content\n   *\n   * Controlled state should only be used on a static tree.\n   */\n  if (\n    items &&\n    (disabledKeysProp ||\n      expandedKeysProp ||\n      selectedKeysProp ||\n      visibleKeysProp)\n  ) {\n    throw new Error(\n      'Tree should only be controlled with state from either `items` or keys props, not both',\n    );\n  }\n\n  /**\n   * A static tree won't support the node iterator pattern.\n   */\n  if (!!items !== (typeof children === 'function')) {\n    throw new Error(\n      'Tree `items` and node iterator `children` must be used together',\n    );\n  }\n\n  const { dragAndDropHooks } = useDragAndDrop({\n    renderDropIndicator: defaultRenderDropIndicator,\n    getAllowedDropOperations: () => ['move'],\n    getDropOperation: () => 'move',\n    ...dragAndDropConfig,\n  });\n  const cache = useMemo(() => (items ? new Cache([...items]) : null), [items]);\n  const nodes = useMemo(() => cache?.getAllNodes(), [cache]);\n  const {\n    disabledKeys,\n    expandedKeys,\n    selectedKeys,\n    visibleKeys,\n    visibilityComputedKeys,\n  } = useMemo(() => {\n    const acc = {\n      disabledKeys: nodes ? new Set<Key>() : disabledKeysProp,\n      expandedKeys: nodes ? new Set<Key>() : expandedKeysProp,\n      selectedKeys: nodes ? new Set<Key>() : selectedKeysProp,\n      visibleKeys: nodes ? new Set<Key>() : visibleKeysProp,\n      visibilityComputedKeys: new Set<Key>(),\n    };\n\n    if (!nodes) {\n      return acc;\n    }\n\n    return nodes.reduce(\n      (\n        acc,\n        {\n          key,\n          isDisabled,\n          isExpanded,\n          isSelected,\n          isVisible,\n          isVisibleComputed,\n        },\n      ) => {\n        if (isDisabled) {\n          acc.disabledKeys?.add(key);\n        }\n        if (isExpanded) {\n          acc.expandedKeys?.add(key);\n        }\n        if (isSelected) {\n          acc.selectedKeys?.add(key);\n        }\n        if (isVisible) {\n          acc.visibleKeys?.add(key);\n        }\n        if (isVisibleComputed) {\n          acc.visibilityComputedKeys.add(key);\n        }\n        return acc;\n      },\n      acc,\n    );\n  }, [\n    nodes,\n    disabledKeysProp,\n    expandedKeysProp,\n    selectedKeysProp,\n    visibleKeysProp,\n  ]);\n\n  const handleSelectionChange = selectedKeys\n    ? (selection: Selection) => {\n        if (selection !== 'all') {\n          onSelectionChange?.(selection);\n        }\n      }\n    : undefined;\n\n  return (\n    <TreeContext.Provider\n      value={{\n        disabledKeys,\n        expandedKeys,\n        selectedKeys,\n        showRuleLines,\n        showVisibility,\n        variant,\n        visibleKeys,\n        visibilityComputedKeys,\n        isStatic: typeof children !== 'function',\n        onVisibilityChange: onVisibilityChange ?? (() => undefined), // TODO: improve\n      }}\n    >\n      <AriaTree\n        {...rest}\n        className={composeRenderProps(className, (className) =>\n          clsx(styles.tree, className),\n        )}\n        disabledKeys={disabledKeys}\n        dragAndDropHooks={dragAndDropHooks}\n        expandedKeys={expandedKeys}\n        items={items}\n        selectedKeys={selectedKeys}\n        onSelectionChange={handleSelectionChange}\n        selectionMode={selectionMode}\n      >\n        {children}\n      </AriaTree>\n    </TreeContext.Provider>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "AriaTree",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tree/index.tsx"
+        },
+        {
+          "name": "DropIndicator",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tree/index.tsx"
+        },
+        {
+          "name": "TreeContext.Provider",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tree/index.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "3/11",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/tree/item-actions.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:44.042Z",
+    "bundleHash": "uifb:5d4f9182e1398844900e5a95",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/tree/item-actions.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/tree/item-actions.tsx",
+            "description": "item-actions - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": ["useContext"],
+              "components": [],
+              "functions": ["TreeItemActions"],
+              "imports": [
+                "./context",
+                "./styles.module.css",
+                "@accelint/design-foundation/lib/utils",
+                "react"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "prediction": ["Consumes React Context for shared state"],
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".actions",
+                    ".compact",
+                    ".content",
+                    ".cozy",
+                    ".crammed",
+                    ".description",
+                    ".display",
+                    ".drag",
+                    ".dropIndicator",
+                    ".expansion",
+                    ".icon",
+                    ".item",
+                    ".label",
+                    ".spacing",
+                    ".tree",
+                    ".visibility"
+                  ],
+                  "properties": [
+                    "grid-area",
+                    "grid-template-areas",
+                    "grid-template-columns",
+                    "min-height",
+                    "width"
+                  ]
+                }
+              }
+            },
+            "semanticHash": "uif:38da61862bfe26d7ddfc52a2",
+            "fileHash": "uif:a65e5af82475b471b504da00"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport { type PropsWithChildren, useContext } from 'react';\nimport { TreeContext } from './context';\nimport styles from './styles.module.css';\n\n/**\n * ItemActions - Action buttons for a tree item\n *\n * Container for action buttons in a tree item\n */\nexport function TreeItemActions({\n  children,\n  className,\n}: PropsWithChildren & { className?: string }) {\n  const { variant } = useContext(TreeContext);\n  return (\n    <div className={clsx(styles.actions, styles[variant], className)}>\n      {children}\n    </div>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "4/11",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/tree/item-content.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:44.069Z",
+    "bundleHash": "uifb:7eabdf0ac2f54ca2f1f0e0eb",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/tree/item-content.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/tree/item-content.tsx",
+            "description": "item-content - Interactive component",
+            "version": {
+              "variables": [],
+              "hooks": ["useContext"],
+              "components": [
+                "AriaTreeItemContent",
+                "Button",
+                "Checkbox",
+                "ChevronDown",
+                "ChevronUp",
+                "DragVert",
+                "Hide",
+                "Icon",
+                "IconProvider",
+                "Show",
+                "TreeLines"
+              ],
+              "functions": ["TreeItemContent"],
+              "imports": [
+                "../button",
+                "../checkbox",
+                "../icon",
+                "../icon/context",
+                "./context",
+                "./lines",
+                "./styles.module.css",
+                "./types",
+                "@accelint/design-foundation/lib/utils",
+                "@accelint/icons",
+                "@react-types/shared",
+                "react",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {
+                "onPress": {
+                  "type": "function",
+                  "signature": "() => void"
+                }
+              }
+            },
+            "exports": "named",
+            "prediction": ["Consumes React Context for shared state"],
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".actions",
+                    ".compact",
+                    ".content",
+                    ".cozy",
+                    ".crammed",
+                    ".description",
+                    ".display",
+                    ".drag",
+                    ".dropIndicator",
+                    ".expansion",
+                    ".icon",
+                    ".item",
+                    ".label",
+                    ".spacing",
+                    ".tree",
+                    ".visibility"
+                  ],
+                  "properties": [
+                    "grid-area",
+                    "grid-template-areas",
+                    "grid-template-columns",
+                    "min-height",
+                    "width"
+                  ]
+                }
+              }
+            },
+            "semanticHash": "uif:b512914e4f2ba22e3da7d6d6",
+            "fileHash": "uif:90c0e10f04a91bc6e5fa710a"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport { ChevronDown, ChevronUp, DragVert, Hide, Show } from '@accelint/icons';\nimport { useContext } from 'react';\nimport { TreeItemContent as AriaTreeItemContent } from 'react-aria-components';\nimport { Button } from '../button';\nimport { Checkbox } from '../checkbox';\nimport { Icon } from '../icon';\nimport { IconProvider } from '../icon/context';\nimport { TreeContext, TreeItemContext } from './context';\nimport { TreeLines } from './lines';\nimport styles from './styles.module.css';\nimport type { Key } from '@react-types/shared';\nimport type { TreeItemContentProps } from './types';\n\n/**\n * ItemContent - Content of a tree item\n *\n * Renders the content of a tree item with proper styling\n */\nexport function TreeItemContent({ children }: TreeItemContentProps) {\n  const { showVisibility, variant, visibleKeys, onVisibilityChange } =\n    useContext(TreeContext);\n  const { isVisible, isViewable } = useContext(TreeItemContext);\n  const size = variant === 'cozy' ? 'medium' : 'small';\n\n  return (\n    <AriaTreeItemContent>\n      {(renderProps) => {\n        const {\n          id,\n          allowsDragging,\n          hasChildItems,\n          level,\n          selectionBehavior,\n          selectionMode,\n          state,\n          isDisabled,\n          isExpanded,\n          isSelected,\n        } = renderProps;\n\n        const isLastOfSet = !(\n          state.collection.getItem(id)?.nextKey || hasChildItems\n        );\n        const shouldShowSelection =\n          selectionBehavior === 'toggle' && selectionMode !== 'none';\n\n        const handlePress = () => {\n          const keys = new Set<Key>(visibleKeys);\n          visibleKeys?.has(id) ? keys.delete(id) : keys.add(id);\n          onVisibilityChange?.(keys);\n        };\n\n        return (\n          <IconProvider size={size}>\n            <div\n              className={clsx('group', styles.content, styles[variant])}\n              data-last-of-set={isLastOfSet}\n            >\n              {showVisibility && (\n                <Button\n                  variant='icon'\n                  color='mono-bold'\n                  size={size}\n                  onPress={handlePress}\n                  isDisabled={isDisabled}\n                  className={styles.visibility}\n                >\n                  <Icon>{isVisible ? <Show /> : <Hide />}</Icon>\n                </Button>\n              )}\n              {level > 1 && (\n                <TreeLines level={level} isLastOfSet={isLastOfSet} />\n              )}\n              {hasChildItems ? (\n                <Button\n                  slot='chevron'\n                  variant='icon'\n                  size={size}\n                  className={styles.expansion}\n                >\n                  <Icon>{isExpanded ? <ChevronDown /> : <ChevronUp />}</Icon>\n                </Button>\n              ) : (\n                <div className={clsx(styles.spacing, styles[variant])} />\n              )}\n              <div className={clsx(styles.display, styles[variant])}>\n                {typeof children === 'function'\n                  ? children({\n                      ...renderProps,\n                      variant,\n                      isVisible,\n                      isViewable: isViewable,\n                      defaultChildren: null,\n                    })\n                  : children}\n              </div>\n              {shouldShowSelection && (\n                <Checkbox\n                  slot='selection'\n                  isSelected={isSelected}\n                  isDisabled={isDisabled}\n                />\n              )}\n              {allowsDragging && (\n                <Button\n                  slot='drag'\n                  variant='icon'\n                  size={size}\n                  isDisabled={isDisabled}\n                  className={styles.drag}\n                >\n                  <Icon>\n                    <DragVert />\n                  </Icon>\n                </Button>\n              )}\n            </div>\n          </IconProvider>\n        );\n      }}\n    </AriaTreeItemContent>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "AriaTreeItemContent",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tree/item-content.tsx"
+        },
+        {
+          "name": "Button",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tree/item-content.tsx"
+        },
+        {
+          "name": "Checkbox",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tree/item-content.tsx"
+        },
+        {
+          "name": "ChevronDown",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tree/item-content.tsx"
+        },
+        {
+          "name": "ChevronUp",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tree/item-content.tsx"
+        },
+        {
+          "name": "DragVert",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tree/item-content.tsx"
+        },
+        {
+          "name": "Hide",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tree/item-content.tsx"
+        },
+        {
+          "name": "Icon",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tree/item-content.tsx"
+        },
+        {
+          "name": "IconProvider",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tree/item-content.tsx"
+        },
+        {
+          "name": "Show",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tree/item-content.tsx"
+        },
+        {
+          "name": "TreeLines",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tree/item-content.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "5/11",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/tree/item-description.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:44.071Z",
+    "bundleHash": "uifb:f385c6669918a3777e3233bf",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/tree/item-description.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/tree/item-description.tsx",
+            "description": "item-description - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": ["useContext"],
+              "components": ["Text"],
+              "functions": ["TreeItemDescription"],
+              "imports": [
+                "./context",
+                "./styles.module.css",
+                "@accelint/design-foundation/lib/utils",
+                "react",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "prediction": ["Consumes React Context for shared state"],
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".actions",
+                    ".compact",
+                    ".content",
+                    ".cozy",
+                    ".crammed",
+                    ".description",
+                    ".display",
+                    ".drag",
+                    ".dropIndicator",
+                    ".expansion",
+                    ".icon",
+                    ".item",
+                    ".label",
+                    ".spacing",
+                    ".tree",
+                    ".visibility"
+                  ],
+                  "properties": [
+                    "grid-area",
+                    "grid-template-areas",
+                    "grid-template-columns",
+                    "min-height",
+                    "width"
+                  ]
+                }
+              }
+            },
+            "semanticHash": "uif:c7995261fdc4bc01721c3dad",
+            "fileHash": "uif:24cb13670b7d3b65622af095"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport { useContext } from 'react';\nimport { Text, type TextProps } from 'react-aria-components';\nimport { TreeContext } from './context';\nimport styles from './styles.module.css';\n\n/**\n * ItemDescription - Description for a tree item\n *\n * Renders secondary descriptive text for a tree item\n */\nexport function TreeItemDescription({ children, className }: TextProps) {\n  const { variant } = useContext(TreeContext);\n\n  return variant !== 'crammed' ? (\n    <Text\n      data-slot='description'\n      className={clsx(styles.description, className)}\n    >\n      {children}\n    </Text>\n  ) : null;\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "Text",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tree/item-description.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "6/11",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/tree/item-label.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:44.073Z",
+    "bundleHash": "uifb:2a4da47d315879ebb0bcde92",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/tree/item-label.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/tree/item-label.tsx",
+            "description": "item-label - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": ["Text"],
+              "functions": ["TreeItemLabel"],
+              "imports": [
+                "./styles.module.css",
+                "@accelint/design-foundation/lib/utils",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".actions",
+                    ".compact",
+                    ".content",
+                    ".cozy",
+                    ".crammed",
+                    ".description",
+                    ".display",
+                    ".drag",
+                    ".dropIndicator",
+                    ".expansion",
+                    ".icon",
+                    ".item",
+                    ".label",
+                    ".spacing",
+                    ".tree",
+                    ".visibility"
+                  ],
+                  "properties": [
+                    "grid-area",
+                    "grid-template-areas",
+                    "grid-template-columns",
+                    "min-height",
+                    "width"
+                  ]
+                }
+              }
+            },
+            "semanticHash": "uif:3f2829b20777fdbbb941cf15",
+            "fileHash": "uif:274377092755567c51c72147"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport { Text, type TextProps } from 'react-aria-components';\nimport styles from './styles.module.css';\n\n/**\n * ItemLabel - Label for a tree item\n *\n * Renders the primary text label for a tree item\n */\nexport function TreeItemLabel({ children, className }: TextProps) {\n  return <Text className={clsx(styles.label, className)}>{children}</Text>;\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "Text",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tree/item-label.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "7/11",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/tree/item-prefix-icon.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:44.076Z",
+    "bundleHash": "uifb:e1aadc3a804756b36d187042",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/tree/item-prefix-icon.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/tree/item-prefix-icon.tsx",
+            "description": "item-prefix-icon - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": ["Icon"],
+              "functions": ["TreeItemPrefixIcon"],
+              "imports": [
+                "../icon",
+                "../icon/types",
+                "./styles.module.css",
+                "@accelint/design-foundation/lib/utils"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".actions",
+                    ".compact",
+                    ".content",
+                    ".cozy",
+                    ".crammed",
+                    ".description",
+                    ".display",
+                    ".drag",
+                    ".dropIndicator",
+                    ".expansion",
+                    ".icon",
+                    ".item",
+                    ".label",
+                    ".spacing",
+                    ".tree",
+                    ".visibility"
+                  ],
+                  "properties": [
+                    "grid-area",
+                    "grid-template-areas",
+                    "grid-template-columns",
+                    "min-height",
+                    "width"
+                  ]
+                }
+              }
+            },
+            "semanticHash": "uif:78c1dc49ba91b4da861a76d2",
+            "fileHash": "uif:3d7d0550828210f97837bb75"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport { Icon } from '../icon';\nimport styles from './styles.module.css';\nimport type { IconProps } from '../icon/types';\n\n/**\n * ItemIcon - Icon for a tree item\n *\n * Renders an icon for a tree item\n */\nexport function TreeItemPrefixIcon({ children, className }: IconProps) {\n  return <Icon className={clsx(styles.icon, className)}>{children}</Icon>;\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "Icon",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tree/item-prefix-icon.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "8/11",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/tree/item.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:44.081Z",
+    "bundleHash": "uifb:1b5857e332db932126ca5929",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/tree/item.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/tree/item.tsx",
+            "description": "item - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": ["useContext"],
+              "components": ["AriaTreeItem", "TreeItemContext.Provider"],
+              "functions": ["TreeItem"],
+              "imports": [
+                "./context",
+                "./styles.module.css",
+                "./types",
+                "@accelint/design-foundation/lib/utils",
+                "client-only",
+                "react",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "prediction": ["Consumes React Context for shared state"],
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".actions",
+                    ".compact",
+                    ".content",
+                    ".cozy",
+                    ".crammed",
+                    ".description",
+                    ".display",
+                    ".drag",
+                    ".dropIndicator",
+                    ".expansion",
+                    ".icon",
+                    ".item",
+                    ".label",
+                    ".spacing",
+                    ".tree",
+                    ".visibility"
+                  ],
+                  "properties": [
+                    "grid-area",
+                    "grid-template-areas",
+                    "grid-template-columns",
+                    "min-height",
+                    "width"
+                  ]
+                }
+              }
+            },
+            "semanticHash": "uif:da918bd169ef18563e88d88c",
+            "fileHash": "uif:426d8e4560bf121bccad2347"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport 'client-only';\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport { useContext } from 'react';\nimport {\n  TreeItem as AriaTreeItem,\n  composeRenderProps,\n} from 'react-aria-components';\nimport { TreeContext, TreeItemContext } from './context';\nimport styles from './styles.module.css';\nimport type { TreeItemProps } from './types';\n\n/**\n * TreeItem - Individual node in a tree\n *\n * Represents a single item in the tree structure\n */\nexport function TreeItem({ className, id, ...rest }: TreeItemProps) {\n  const { visibilityComputedKeys, visibleKeys, isStatic } =\n    useContext(TreeContext);\n  const { ancestors } = useContext(TreeItemContext);\n  const isViewable =\n    visibilityComputedKeys?.has(id) ||\n    (isStatic && ancestors.every((key) => visibleKeys?.has(key)));\n  const isVisible = visibleKeys?.has(id);\n\n  return (\n    <TreeItemContext.Provider\n      value={{\n        isVisible,\n        isViewable,\n        ancestors: [...ancestors, id],\n      }}\n    >\n      <AriaTreeItem\n        {...rest}\n        id={id}\n        className={composeRenderProps(className, (className) =>\n          clsx('group/tree-item', styles.item, className),\n        )}\n        data-viewable={isViewable || null}\n        data-visible={isVisible || null}\n      />\n    </TreeItemContext.Provider>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "AriaTreeItem",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tree/item.tsx"
+        },
+        {
+          "name": "TreeItemContext.Provider",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tree/item.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "9/11",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/tree/lines.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:44.083Z",
+    "bundleHash": "uifb:66abc8e091146ef0d312344e",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/tree/lines.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/tree/lines.tsx",
+            "description": "lines - Presentational component",
+            "version": {
+              "variables": ["TreeLines"],
+              "hooks": ["useContext"],
+              "components": ["Lines"],
+              "functions": [],
+              "imports": [
+                "../lines",
+                "./context",
+                "./styles.module.css",
+                "@accelint/design-foundation/lib/utils",
+                "react"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "prediction": ["Consumes React Context for shared state"],
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".actions",
+                    ".compact",
+                    ".content",
+                    ".cozy",
+                    ".crammed",
+                    ".description",
+                    ".display",
+                    ".drag",
+                    ".dropIndicator",
+                    ".expansion",
+                    ".icon",
+                    ".item",
+                    ".label",
+                    ".spacing",
+                    ".tree",
+                    ".visibility"
+                  ],
+                  "properties": [
+                    "grid-area",
+                    "grid-template-areas",
+                    "grid-template-columns",
+                    "min-height",
+                    "width"
+                  ]
+                }
+              }
+            },
+            "semanticHash": "uif:758ac02072e2aef2202c3d6b",
+            "fileHash": "uif:278848dc4d51e04e71c57422"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport { memo, useContext } from 'react';\nimport { Lines } from '../lines';\nimport { TreeContext } from './context';\nimport styles from './styles.module.css';\n\nexport const TreeLines = memo(function TreeLines({\n  level,\n  isLastOfSet,\n}: {\n  level: number;\n  isLastOfSet: boolean;\n}) {\n  const { showRuleLines, variant } = useContext(TreeContext);\n\n  return Array.from({ length: level }).map((_, i) => {\n    const type = i === level - 1 ? 'branch' : 'vert';\n    const line = isLastOfSet && i > 0 ? 'last' : type;\n    const size = variant === 'crammed' ? 'medium' : 'large';\n\n    return (\n      <Lines\n        // biome-ignore lint/suspicious/noArrayIndexKey: index should be the key, only count matters\n        key={i}\n        variant={line}\n        size={size}\n        isVisible={showRuleLines}\n        className={clsx(styles.spacing, styles[variant])}\n      />\n    );\n  });\n});\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "Lines",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tree/lines.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "10/11",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/tree/tree.stories.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:44.119Z",
+    "bundleHash": "uifb:3edfa85f53b0168e380944c8",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/tree/tree.stories.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/tree/tree.stories.tsx",
+            "description": "tree.stories - Interactive component with internal state",
+            "version": {
+              "variables": [
+                "DragAndDrop",
+                "Stateless",
+                "StaticCollection",
+                "items",
+                "meta"
+              ],
+              "hooks": ["useState", "useTreeActions", "useTreeState"],
+              "components": [
+                "Button",
+                "CenterOn",
+                "CollapseAll",
+                "ExpandAll",
+                "Icon",
+                "LockFill",
+                "Node",
+                "Placeholder",
+                "Tree",
+                "TreeItem",
+                "TreeItemActions",
+                "TreeItemContent",
+                "TreeItemDescription",
+                "TreeItemLabel",
+                "TreeItemPrefixIcon",
+                "Warning"
+              ],
+              "functions": ["Node"],
+              "imports": [
+                "../button",
+                "../icon",
+                "./index",
+                "./item",
+                "./item-actions",
+                "./item-content",
+                "./item-description",
+                "./item-label",
+                "./item-prefix-icon",
+                "@/hooks/use-tree/actions",
+                "@/hooks/use-tree/state",
+                "@/hooks/use-tree/types",
+                "@accelint/icons",
+                "@accelint/icons/warning",
+                "@react-types/shared",
+                "@storybook/react-vite",
+                "react"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {
+                "onPress": {
+                  "type": "function",
+                  "signature": "() => void"
+                },
+                "onExpandedChange": {
+                  "type": "function",
+                  "signature": "() => void"
+                },
+                "onSelectionChange": {
+                  "type": "function",
+                  "signature": "() => void"
+                },
+                "onVisibilityChange": {
+                  "type": "function",
+                  "signature": "() => void"
+                }
+              },
+              "state": {
+                "db": "unknown",
+                "expanded": "Set<Key",
+                "selected": "Set<Key",
+                "visibility": "Set<Key"
+              }
+            },
+            "exports": {
+              "named": ["DragAndDrop", "Stateless", "StaticCollection"]
+            },
+            "style": {
+              "styleSources": {
+                "tailwind": {
+                  "categories": {
+                    "other": [
+                      "fg-default-dark",
+                      "fg-serious-bold",
+                      "items-center"
+                    ],
+                    "layout": ["aspect-square", "flex"],
+                    "borders": ["rounded-full"],
+                    "colors": ["bg-interactive-hover-dark"],
+                    "spacing": ["gap-m", "p-xs"]
+                  },
+                  "classCount": 9
+                },
+                "inlineStyles": true
+              },
+              "layout": {
+                "type": "flex"
+              },
+              "visual": {
+                "colors": ["bg-interactive-hover-dark"],
+                "spacing": ["p-xs"],
+                "radius": "full"
+              }
+            },
+            "semanticHash": "uif:5d60957dae70848372bb8522",
+            "fileHash": "uif:3c7dea60e355a0ed0bb24228"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n/** biome-ignore-all lint/correctness/useUniqueElementIds: ids are unique for these stories */\n\nimport {\n  CenterOn,\n  CollapseAll,\n  ExpandAll,\n  LockFill,\n  Placeholder,\n} from '@accelint/icons';\nimport Warning from '@accelint/icons/warning';\nimport { type ReactNode, useState } from 'react';\nimport { useTreeActions } from '@/hooks/use-tree/actions';\nimport { useTreeState } from '@/hooks/use-tree/state';\nimport { Button } from '../button';\nimport { Icon } from '../icon';\nimport { Tree } from './index';\nimport { TreeItem } from './item';\nimport { TreeItemActions } from './item-actions';\nimport { TreeItemContent } from './item-content';\nimport { TreeItemDescription } from './item-description';\nimport { TreeItemLabel } from './item-label';\nimport { TreeItemPrefixIcon } from './item-prefix-icon';\nimport type { Key, Selection } from '@react-types/shared';\nimport type { Meta, StoryObj } from '@storybook/react-vite';\nimport type { TreeNode } from '@/hooks/use-tree/types';\n\nconst meta = {\n  title: 'Components/Tree',\n  component: Tree,\n  args: {\n    variant: 'cozy',\n    showRuleLines: true,\n    selectionMode: 'multiple',\n    showVisibility: true,\n  },\n  argTypes: {\n    variant: {\n      control: 'select',\n      options: ['cozy', 'compact', 'crammed'],\n    },\n    selectionMode: {\n      control: 'select',\n      options: ['none', 'multiple', 'single'],\n    },\n  },\n  parameters: {\n    controls: {\n      include: ['showRuleLines', 'showVisibility', 'variant', 'selectionMode'],\n    },\n    docs: {\n      subtitle:\n        'Tree component that provides users with a way to navigate nested hierarchical information, with support for keyboard navigation and selection.',\n    },\n  },\n} satisfies Meta<typeof Tree>;\n\nexport default meta;\ntype Story = StoryObj<typeof meta>;\n\n/**\n * This type is for customizing and using application-specific values.\n * These values will be available in component `Node` that you build.\n */\ntype ItemValues = {\n  iconPrefix?: ReactNode;\n  description?: string;\n  hasWarning?: boolean;\n};\n\n/**\n * TreeNode are all the properties that are intrinsic to the tree itself\n * Values are the things that we are using in tree items.\n */\nconst items: TreeNode<ItemValues>[] = [\n  {\n    key: 'european-birds',\n    label: 'European Birds',\n    values: {\n      iconPrefix: <Placeholder />,\n    },\n  },\n  {\n    key: 'north-american-birds',\n    label: 'North American Birds',\n    isExpanded: true,\n    isVisible: true,\n    values: {\n      iconPrefix: <Placeholder />,\n    },\n    children: [\n      {\n        key: 'blue-jay',\n        parentKey: 'north-american-birds',\n        label: 'Blue jay',\n        isVisible: true,\n        values: {\n          description: 'cyanocitta cristata',\n          iconPrefix: <Placeholder />,\n          hasWarning: true,\n        },\n      },\n      {\n        key: 'gray-catbird',\n        parentKey: 'north-american-birds',\n        label: 'Gray catbird',\n        isVisible: true,\n        values: {\n          description: 'dumetella carolinensis',\n          iconPrefix: <Placeholder />,\n        },\n      },\n      {\n        key: 'black-capped-chickadee',\n        parentKey: 'north-american-birds',\n        label: 'Black-capped chickadee',\n        isDisabled: true,\n        isVisible: false,\n        values: {\n          description: 'Poecile atricapillus',\n          iconPrefix: <Placeholder />,\n        },\n        children: [\n          {\n            key: 'northern-cardinal',\n            parentKey: 'black-capped-chickadee',\n            label: 'Northern Cardinal',\n            values: {\n              description: 'Cardinalis cardinalis',\n              iconPrefix: <Placeholder />,\n              hasWarning: true,\n            },\n          },\n        ],\n      },\n    ],\n  },\n  {\n    key: 'african-birds',\n    label: 'African Birds',\n    values: {\n      iconPrefix: <Placeholder />,\n    },\n    children: [\n      {\n        key: 'lilac-breasted-roller',\n        parentKey: 'african-birds',\n        label: 'Lilac-breasted roller',\n        values: {\n          iconPrefix: <Placeholder />,\n        },\n      },\n    ],\n  },\n];\n\nfunction Node({ node }: { node: TreeNode<ItemValues> }) {\n  const { values, isDisabled } = node;\n\n  return (\n    <TreeItem\n      id={node.key}\n      key={node.key}\n      textValue={node.label}\n      isDisabled={isDisabled}\n    >\n      <TreeItemContent>\n        {({ variant, isViewable, isVisible }) => {\n          const size = variant === 'cozy' ? 'medium' : 'small';\n          return (\n            <>\n              {values?.iconPrefix && (\n                <TreeItemPrefixIcon>{values?.iconPrefix}</TreeItemPrefixIcon>\n              )}\n              <TreeItemLabel>{node.label}</TreeItemLabel>\n              {values?.description && (\n                <TreeItemDescription>{values?.description}</TreeItemDescription>\n              )}\n              <TreeItemActions>\n                {isDisabled && (\n                  <Icon\n                    className='fg-default-dark aspect-square rounded-full bg-interactive-hover-dark p-xs'\n                    size={size}\n                  >\n                    <LockFill />\n                  </Icon>\n                )}\n                {values?.hasWarning && (\n                  <Icon className='fg-serious-bold'>\n                    <Warning />\n                  </Icon>\n                )}\n                <Button\n                  size={size}\n                  variant='icon'\n                  isDisabled={!(isViewable && isVisible)}\n                >\n                  <Icon>\n                    <CenterOn />\n                  </Icon>\n                </Button>\n              </TreeItemActions>\n            </>\n          );\n        }}\n      </TreeItemContent>\n      {node.children?.map((child) => (\n        <Node key={child.key} node={child} />\n      ))}\n    </TreeItem>\n  );\n}\n\n/**\n * This story is using the optional useTreeState hook, which returns\n * which is a convenience helper that will control state for the tree.\n * The useTreeState hook also provides drag and drop hooks.\n */\nexport const DragAndDrop: Story = {\n  render: (args) => {\n    const { nodes, dragAndDropConfig, actions } = useTreeState({ items });\n\n    return (\n      <>\n        <div className='flex items-center gap-m'>\n          <Button size='small' variant='flat' onPress={actions.selectAll}>\n            Select All\n          </Button>\n          <Button size='small' variant='flat' onPress={actions.unselectAll}>\n            Unselect All\n          </Button>\n          <Button size='small' variant='icon' onPress={actions.expandAll}>\n            <Icon>\n              <ExpandAll />\n            </Icon>\n          </Button>\n          <Button size='small' variant='icon' onPress={actions.collapseAll}>\n            <Icon>\n              <CollapseAll />\n            </Icon>\n          </Button>\n        </div>\n\n        <Tree\n          {...args}\n          dragAndDropConfig={dragAndDropConfig}\n          items={nodes}\n          style={{ width: '500px' }}\n          onExpandedChange={actions.onExpandedChange}\n          onSelectionChange={actions.onSelectionChange}\n          onVisibilityChange={actions.onVisibilityChange}\n          aria-label='Drag and Drop example'\n        >\n          {(node) => <Node key={node.key} node={node} />}\n        </Tree>\n      </>\n    );\n  },\n};\n\n/**\n * A Stateless tree uses data from a remote source to drive tree display\n * and operations. An optional useTreeActions hook will provide basic tree\n * data operations.\n */\nexport const Stateless: Story = {\n  render: (args) => {\n    /**\n     *  IMPORTANT: This useState is just a cheap way to represent\n     *  a database in Storybook, NOT component state. In your application,\n     *  this would be your remote persistence database or localStorage,\n     *  i.e. using fetch or mutate(updateTree).\n     *\n     *  Critically, It is the fetched data from the server that is driving the\n     *  Tree, not component state.\n     *\n     */\n    const [db, setDB] = useState(items);\n    const actions = useTreeActions({ nodes: db });\n\n    const handleSelection = (keys: Selection) => {\n      if (keys === 'all') {\n        return handleSelectAll();\n      }\n\n      setDB(actions.onSelectionChange(keys));\n    };\n\n    const handleExpansion = (keys: Set<Key>) => {\n      setDB(actions.onExpandedChange(keys));\n    };\n\n    const handleExpandAll = () => {\n      setDB(actions.expandAll());\n    };\n\n    const handleCollapseAll = () => {\n      setDB(actions.collapseAll());\n    };\n\n    const handleSelectAll = () => {\n      setDB(actions.selectAll());\n    };\n\n    const handleUnselectAll = () => {\n      setDB(actions.unselectAll());\n    };\n\n    const handleVisibility = (keys: Set<Key>) => {\n      setDB(actions.onVisibilityChange(keys));\n    };\n\n    return (\n      <>\n        <div className='flex items-center gap-m'>\n          <Button size='small' variant='flat' onPress={handleSelectAll}>\n            Select All\n          </Button>\n          <Button size='small' variant='flat' onPress={handleUnselectAll}>\n            Unselect All\n          </Button>\n          <Button size='small' variant='icon' onPress={handleExpandAll}>\n            <Icon>\n              <ExpandAll />\n            </Icon>\n          </Button>\n          <Button size='small' variant='icon' onPress={handleCollapseAll}>\n            <Icon>\n              <CollapseAll />\n            </Icon>\n          </Button>\n        </div>\n        <Tree\n          {...args}\n          items={db}\n          style={{ width: '500px' }}\n          onExpandedChange={handleExpansion}\n          onSelectionChange={handleSelection}\n          onVisibilityChange={handleVisibility}\n          aria-label='Stateless Example'\n        >\n          {(node) => <Node key={node.key} node={node} />}\n        </Tree>\n      </>\n    );\n  },\n};\n\n/**\n * Static collections can use the Tree components directly, for simple use cases.\n */\nexport const StaticCollection: Story = {\n  render: (args) => {\n    const [expanded, setExpanded] = useState<Set<Key>>(new Set(['fruit']));\n    const [selected, setSelected] = useState<Set<Key>>(new Set());\n    const [visibility, setVisibility] = useState<Set<Key>>(\n      new Set(['fruit', 'apples', 'red']),\n    );\n\n    return (\n      <Tree\n        {...args}\n        style={{ width: '500px' }}\n        aria-label='Basic Static Example'\n        expandedKeys={expanded}\n        onExpandedChange={setExpanded}\n        selectedKeys={selected}\n        onSelectionChange={setSelected}\n        visibleKeys={visibility}\n        onVisibilityChange={setVisibility}\n      >\n        <TreeItem id='fruit' textValue='fruit'>\n          <TreeItemContent>Fruit</TreeItemContent>\n          <TreeItem id='apples' textValue='apples'>\n            <TreeItemContent>Apples</TreeItemContent>\n            <TreeItem id='green' textValue='green-apple'>\n              <TreeItemContent>Green Apple</TreeItemContent>\n            </TreeItem>\n            <TreeItem id='red' textValue='red-apple'>\n              <TreeItemContent>Red Apple</TreeItemContent>\n            </TreeItem>\n            <TreeItem id='yellow' textValue='yellow-apple'>\n              <TreeItemContent>Yellow Apple</TreeItemContent>\n            </TreeItem>\n          </TreeItem>\n        </TreeItem>\n        <TreeItem id='vegetables' textValue='vegetables'>\n          <TreeItemContent>Vegetables</TreeItemContent>\n          <TreeItem id='carrot' textValue='carrot'>\n            <TreeItemContent>Carrot</TreeItemContent>\n          </TreeItem>\n          <TreeItem id='kale' textValue='kale'>\n            <TreeItemContent>Kale</TreeItemContent>\n          </TreeItem>\n        </TreeItem>\n      </Tree>\n    );\n  },\n};\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "Button",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tree/tree.stories.tsx"
+        },
+        {
+          "name": "CenterOn",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tree/tree.stories.tsx"
+        },
+        {
+          "name": "CollapseAll",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tree/tree.stories.tsx"
+        },
+        {
+          "name": "ExpandAll",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tree/tree.stories.tsx"
+        },
+        {
+          "name": "Icon",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tree/tree.stories.tsx"
+        },
+        {
+          "name": "LockFill",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tree/tree.stories.tsx"
+        },
+        {
+          "name": "Placeholder",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tree/tree.stories.tsx"
+        },
+        {
+          "name": "Tree",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tree/tree.stories.tsx"
+        },
+        {
+          "name": "TreeItem",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tree/tree.stories.tsx"
+        },
+        {
+          "name": "TreeItemActions",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tree/tree.stories.tsx"
+        },
+        {
+          "name": "TreeItemContent",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tree/tree.stories.tsx"
+        },
+        {
+          "name": "TreeItemDescription",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tree/tree.stories.tsx"
+        },
+        {
+          "name": "TreeItemLabel",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tree/tree.stories.tsx"
+        },
+        {
+          "name": "TreeItemPrefixIcon",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tree/tree.stories.tsx"
+        },
+        {
+          "name": "Warning",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/tree/tree.stories.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "11/11",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/tree/types.ts",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:44.119Z",
+    "bundleHash": "uifb:ff174cfb731c7dd934c50254",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/tree/types.ts",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/tree/types.ts",
+            "description": "types - Type definitions",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": [],
+              "functions": [],
+              "imports": [
+                "@/hooks/use-tree/types",
+                "@react-types/shared",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {
+                "disabledKeys": {
+                  "type": "Set<Key>",
+                  "optional": true
+                },
+                "dragAndDropConfig": {
+                  "type": "DragAndDropConfig",
+                  "optional": true
+                },
+                "expandedKeys": {
+                  "type": "Set<Key>",
+                  "optional": true
+                },
+                "selectedKeys": {
+                  "type": "Set<Key>",
+                  "optional": true
+                },
+                "visibleKeys": {
+                  "type": "Set<Key>",
+                  "optional": true
+                },
+                "showRuleLines": {
+                  "type": "boolean",
+                  "optional": true
+                },
+                "showVisibility": {
+                  "type": "boolean",
+                  "optional": true
+                },
+                "onVisibilityChange": {
+                  "type": "function",
+                  "signature": "(keys: Set<Key>) => void",
+                  "optional": true
+                },
+                "onSelectionChange": {
+                  "type": "function",
+                  "signature": "(keys: Set<Key>) => void",
+                  "optional": true
+                },
+                "variant": {
+                  "type": "import(\"/Users/brandonpierce/Projects/standard-toolkit/packages/design-toolkit/src/components/tree/types\").TreeStyleVariant",
+                  "optional": true
+                },
+                "id": "Key",
+                "children": "RenderProps<any>"
+              },
+              "emits": {}
+            },
+            "semanticHash": "uif:ef53dbef8a4b50da631e275a",
+            "fileHash": "uif:b4501df1e37e33177e598db6"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport type { Key } from '@react-types/shared';\nimport type {\n  TreeItemContentRenderProps as AriaTreeItemContentRenderProps,\n  TreeItemProps as AriaTreeItemProps,\n  TreeProps as AriaTreeProps,\n  RenderProps,\n} from 'react-aria-components';\nimport type { DragAndDropConfig, TreeNode } from '@/hooks/use-tree/types';\n\nexport type TreeStyleVariant = 'cozy' | 'compact' | 'crammed';\n\nexport type TreeProps<T> = Omit<\n  AriaTreeProps<TreeNode<T>>,\n  | 'defaultExpandedKeys'\n  | 'defaultSelectedKeys'\n  | 'disabledKeys'\n  | 'expandedKeys'\n  | 'selectedKeys'\n  | 'onSelectionChange'\n> & {\n  disabledKeys?: Set<Key>;\n  dragAndDropConfig?: DragAndDropConfig;\n  expandedKeys?: Set<Key>;\n  selectedKeys?: Set<Key>;\n  visibleKeys?: Set<Key>;\n  showRuleLines?: boolean;\n  showVisibility?: boolean;\n  onVisibilityChange?: (keys: Set<Key>) => void;\n  onSelectionChange?: (keys: Set<Key>) => void;\n  variant?: TreeStyleVariant;\n};\n\nexport type TreeItemProps = Omit<AriaTreeItemProps, 'id'> & {\n  id: Key;\n};\n\nexport type TreeItemContentProps = Pick<\n  RenderProps<TreeItemContentRenderProps>,\n  'children'\n>;\n\nexport type TreeItemContentRenderProps = AriaTreeItemContentRenderProps & {\n  isViewable?: boolean;\n  isVisible?: boolean;\n  variant?: TreeStyleVariant;\n};\n\nexport type TreeContextValue = Required<\n  Pick<\n    TreeProps<unknown>,\n    'showRuleLines' | 'showVisibility' | 'variant' | 'onVisibilityChange'\n  >\n> & {\n  disabledKeys?: Set<Key>;\n  expandedKeys?: Set<Key>;\n  selectedKeys?: Set<Key>;\n  visibleKeys?: Set<Key>;\n  visibilityComputedKeys?: Set<Key>;\n  isStatic: boolean;\n};\n\nexport type TreeItemContextValue = {\n  isVisible?: boolean;\n  isViewable?: boolean;\n  ancestors: Key[];\n};\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  }
+]

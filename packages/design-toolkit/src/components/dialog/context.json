@@ -1,0 +1,621 @@
+[
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "1/8",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/dialog/content.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:42.852Z",
+    "bundleHash": "uifb:9826986cc329c89ca0dc9733",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/dialog/content.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/dialog/content.tsx",
+            "description": "content - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": [],
+              "functions": ["DialogContent"],
+              "imports": [
+                "./styles.module.css",
+                "@accelint/design-foundation/lib/utils",
+                "client-only",
+                "react"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".content",
+                    ".dialog",
+                    ".footer",
+                    ".modal",
+                    ".overlay",
+                    ".title"
+                  ],
+                  "properties": []
+                }
+              }
+            },
+            "semanticHash": "uif:383cd5e21d521c6b1e13dde9",
+            "fileHash": "uif:75e9285943d952fabb5fb073"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport 'client-only';\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport styles from './styles.module.css';\nimport type { ComponentProps } from 'react';\n\nexport function DialogContent({ children, className }: ComponentProps<'div'>) {\n  return <div className={clsx(styles.content, className)}>{children}</div>;\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "2/8",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/dialog/context.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:42.853Z",
+    "bundleHash": "uifb:45dc6562b12296e580caa212",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/dialog/context.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/dialog/context.tsx",
+            "description": "context - TypeScript module",
+            "version": {
+              "variables": ["DialogContext"],
+              "hooks": [],
+              "components": [],
+              "functions": [],
+              "imports": [
+                "./types",
+                "client-only",
+                "react",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "semanticHash": "uif:18daf82de731e36070a9d834",
+            "fileHash": "uif:f235c13438ea329fab5e1d01"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport 'client-only';\nimport { createContext } from 'react';\nimport type { ContextValue } from 'react-aria-components';\nimport type { DialogProps } from './types';\n\nexport const DialogContext =\n  createContext<ContextValue<DialogProps, HTMLDivElement>>(null);\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "3/8",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/dialog/dialog.stories.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:42.868Z",
+    "bundleHash": "uifb:60c34a5b94817d8abe462515",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/dialog/dialog.stories.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/dialog/dialog.stories.tsx",
+            "description": "dialog.stories - Modal/dialog component",
+            "version": {
+              "variables": ["Controlled", "Default", "LocalPortal", "meta"],
+              "hooks": ["useCallback", "useRef", "useState"],
+              "components": [
+                "Button",
+                "Dialog",
+                "DialogContent",
+                "DialogFooter",
+                "DialogTitle",
+                "DialogTrigger"
+              ],
+              "functions": [],
+              "imports": [
+                "../button",
+                "./content",
+                "./footer",
+                "./index",
+                "./title",
+                "./trigger",
+                "@storybook/react-vite",
+                "react"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {
+                "onOpenChange": {
+                  "type": "function",
+                  "signature": "() => void"
+                },
+                "onPress": {
+                  "type": "function",
+                  "signature": "() => void"
+                }
+              },
+              "state": {
+                "open": "boolean"
+              }
+            },
+            "exports": {
+              "named": ["Controlled", "Default", "LocalPortal"]
+            },
+            "prediction": [
+              "Uses memoization for performance optimization",
+              "Uses refs for DOM access or mutable values"
+            ],
+            "style": {
+              "styleSources": {
+                "tailwind": {
+                  "categories": {
+                    "positioning": ["relative"],
+                    "sizing": [
+                      "h-[600px]",
+                      "h-[800px]",
+                      "h-full",
+                      "w-[500px]",
+                      "w-[600px]",
+                      "w-[960px]",
+                      "w-full"
+                    ],
+                    "spacing": ["p-l"],
+                    "other": ["outline"],
+                    "borders": ["outline-info-bold"],
+                    "layout": ["flex"],
+                    "colors": ["bg-info-bold"]
+                  },
+                  "classCount": 13
+                }
+              },
+              "layout": {
+                "type": "flex"
+              },
+              "visual": {
+                "colors": ["bg-info-bold"],
+                "spacing": ["p-l"]
+              }
+            },
+            "semanticHash": "uif:9e248add967271277c1e5b31",
+            "fileHash": "uif:7c1d42457cd4050d8cc505e2"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport { useCallback, useRef, useState } from 'react';\nimport { Button } from '../button';\nimport { DialogContent } from './content';\nimport { DialogFooter } from './footer';\nimport { Dialog } from './index';\nimport { DialogTitle } from './title';\nimport { DialogTrigger } from './trigger';\nimport type { Meta, StoryObj } from '@storybook/react-vite';\n\nconst meta = {\n  title: 'Components/Dialog',\n  component: Dialog,\n  args: {\n    size: 'small',\n    isDismissable: true,\n    isKeyboardDismissDisabled: false,\n  },\n  argTypes: {\n    size: {\n      control: 'select',\n      options: ['small', 'large'],\n    },\n    isDismissable: {\n      control: 'boolean',\n    },\n    isKeyboardDismissDisabled: {\n      control: 'boolean',\n    },\n  },\n} satisfies Meta<typeof Dialog>;\n\nexport default meta;\ntype Story = StoryObj<typeof meta>;\n\nexport const Default: Story = {\n  render: ({ children, ...args }) => {\n    // NOTE: the ref here is only for Storybook -- you can omit that in your application code\n    const ref = useRef(null);\n    return (\n      <div\n        className='relative h-[800px] w-[600px] p-l outline outline-info-bold'\n        ref={ref}\n      >\n        <DialogTrigger>\n          <Button>Press Me</Button>\n          <Dialog {...args} parentRef={ref}>\n            <DialogTitle>Dialog Title</DialogTitle>\n            <DialogContent>\n              Lorum Ipsum text for the dialog shall go here.\n            </DialogContent>\n            <DialogFooter>\n              <Button variant='flat'>Action 2</Button>\n              <Button>Action 1</Button>\n            </DialogFooter>\n          </Dialog>\n        </DialogTrigger>\n      </div>\n    );\n  },\n};\n\nexport const LocalPortal: Story = {\n  render: () => {\n    const parentRef = useRef(null);\n\n    return (\n      <div className='flex h-[600px] w-[960px] outline outline-info-bold'>\n        <div className='w-full p-l'>\n          <DialogTrigger>\n            <Button>Press Me</Button>\n            <Dialog parentRef={parentRef}>\n              <DialogTitle>Dialog Title</DialogTitle>\n              <DialogContent>\n                Lorum Ipsum text for the dialog shall go here.\n              </DialogContent>\n              <DialogFooter>\n                <Button variant='flat'>Action 2</Button>\n                <Button>Action 1</Button>\n              </DialogFooter>\n            </Dialog>\n          </DialogTrigger>\n        </div>\n        <div\n          ref={parentRef}\n          className='relative h-full w-[500px] bg-info-bold'\n        />\n      </div>\n    );\n  },\n};\n\nexport const Controlled: Story = {\n  render: () => {\n    const [open, setOpen] = useState(false);\n    const handleOpenChange = (isOpen: boolean) => setOpen(isOpen);\n    const handleOpenPress = useCallback(() => setOpen(true), []);\n\n    return (\n      <div className='h-[800px] w-[600px] p-l outline outline-info-bold'>\n        <DialogTrigger isOpen={open} onOpenChange={handleOpenChange}>\n          <Button isDisabled>Disabled</Button>\n          <Dialog>\n            <DialogTitle>Dialog Title</DialogTitle>\n            <DialogContent>\n              Lorum Ipsum text for the dialog shall go here.\n            </DialogContent>\n            <DialogFooter>\n              <Button variant='flat'>Action 2</Button>\n              <Button>Action 1</Button>\n            </DialogFooter>\n          </Dialog>\n        </DialogTrigger>\n        <Button onPress={handleOpenPress}>Press Me</Button>\n      </div>\n    );\n  },\n};\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "Button",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/dialog/dialog.stories.tsx"
+        },
+        {
+          "name": "Dialog",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/dialog/dialog.stories.tsx"
+        },
+        {
+          "name": "DialogContent",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/dialog/dialog.stories.tsx"
+        },
+        {
+          "name": "DialogFooter",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/dialog/dialog.stories.tsx"
+        },
+        {
+          "name": "DialogTitle",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/dialog/dialog.stories.tsx"
+        },
+        {
+          "name": "DialogTrigger",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/dialog/dialog.stories.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "4/8",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/dialog/footer.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:42.870Z",
+    "bundleHash": "uifb:a152da49667bc91a2a4c1f3b",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/dialog/footer.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/dialog/footer.tsx",
+            "description": "footer - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": ["useContext"],
+              "components": ["ButtonContext.Provider"],
+              "functions": ["DialogFooter"],
+              "imports": [
+                "../../lib/utils",
+                "../button/context",
+                "./context",
+                "./styles.module.css",
+                "@accelint/design-foundation/lib/utils",
+                "client-only",
+                "react",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "prediction": ["Consumes React Context for shared state"],
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".content",
+                    ".dialog",
+                    ".footer",
+                    ".modal",
+                    ".overlay",
+                    ".title"
+                  ],
+                  "properties": []
+                }
+              }
+            },
+            "semanticHash": "uif:4d290d0e45da66efdc706423",
+            "fileHash": "uif:2e6167ce10c4738fa35eaa19"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport 'client-only';\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport { type ComponentProps, useContext } from 'react';\nimport { OverlayTriggerStateContext } from 'react-aria-components';\nimport { isSlottedContextValue } from '../../lib/utils';\nimport { ButtonContext } from '../button/context';\nimport { DialogContext } from './context';\nimport styles from './styles.module.css';\n\nexport function DialogFooter({\n  children,\n  className,\n}: ComponentProps<'footer'>) {\n  const context = useContext(DialogContext);\n  const size =\n    (isSlottedContextValue(context) ? null : context?.size) ?? 'small';\n  const state = useContext(OverlayTriggerStateContext);\n\n  return (\n    <footer className={clsx(styles.footer, className)}>\n      <ButtonContext.Provider\n        value={{\n          size,\n          onPress: state?.close ?? undefined,\n        }}\n      >\n        {children}\n      </ButtonContext.Provider>\n    </footer>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "ButtonContext.Provider",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/dialog/footer.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "5/8",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/dialog/index.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:42.883Z",
+    "bundleHash": "uifb:67e24a7beb2bec32ac337589",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/dialog/index.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/dialog/index.tsx",
+            "description": "index - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": ["useContextProps"],
+              "components": [
+                "AriaDialog",
+                "DialogContext.Provider",
+                "Modal",
+                "ModalOverlay",
+                "PortalProvider"
+              ],
+              "functions": ["Dialog"],
+              "imports": [
+                "./context",
+                "./styles.module.css",
+                "./types",
+                "@/providers/portal",
+                "@accelint/design-foundation/lib/utils",
+                "client-only",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".content",
+                    ".dialog",
+                    ".footer",
+                    ".modal",
+                    ".overlay",
+                    ".title"
+                  ],
+                  "properties": []
+                }
+              }
+            },
+            "semanticHash": "uif:bbe9c0138ecdac058da15855",
+            "fileHash": "uif:06ca540d5337582fe7bce893"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport 'client-only';\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport {\n  Dialog as AriaDialog,\n  composeRenderProps,\n  Modal,\n  ModalOverlay,\n  useContextProps,\n} from 'react-aria-components';\nimport { PortalProvider } from '@/providers/portal';\nimport { DialogContext } from './context';\nimport styles from './styles.module.css';\nimport type { DialogProps } from './types';\n\n/**\n * Dialog - A modal dialog component for important content and interactions\n *\n * Provides accessible modal functionality with focus management, backdrop handling,\n * and keyboard navigation. Supports multiple sizes and customizable dismissal behavior.\n * Perfect for confirmations, forms, or any content requiring user focus.\n *\n * @example\n * // Basic dialog with trigger\n * <DialogTrigger>\n *   <Button>Open Dialog</Button>\n *   <Dialog>\n *     {({ close }) => (\n *       <>\n *         <DialogTitle>Confirm Action</DialogTitle>\n *         <p>Are you sure you want to continue?</p>\n *         <DialogFooter>\n *           <Button onPress={close}>Confirm</Button>\n *         </DialogFooter>\n *       </>\n *     )}\n *   </Dialog>\n * </DialogTrigger>\n */\nexport function Dialog({ ref, ...props }: DialogProps) {\n  [props, ref] = useContextProps(props, ref ?? null, DialogContext);\n\n  const { children, classNames, parentRef, size = 'small', ...rest } = props;\n\n  return (\n    <DialogContext.Provider value={props}>\n      <PortalProvider parentRef={parentRef}>\n        <ModalOverlay\n          {...rest}\n          ref={ref}\n          className={composeRenderProps(classNames?.overlay, (className) =>\n            clsx('group/dialog', styles.overlay, className),\n          )}\n          data-size={size}\n        >\n          <Modal\n            className={composeRenderProps(classNames?.modal, (className) =>\n              clsx(styles.modal, className),\n            )}\n          >\n            <AriaDialog className={clsx(styles.dialog, classNames?.dialog)}>\n              {children}\n            </AriaDialog>\n          </Modal>\n        </ModalOverlay>\n      </PortalProvider>\n    </DialogContext.Provider>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "AriaDialog",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/dialog/index.tsx"
+        },
+        {
+          "name": "DialogContext.Provider",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/dialog/index.tsx"
+        },
+        {
+          "name": "Modal",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/dialog/index.tsx"
+        },
+        {
+          "name": "ModalOverlay",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/dialog/index.tsx"
+        },
+        {
+          "name": "PortalProvider",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/dialog/index.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "6/8",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/dialog/title.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:42.886Z",
+    "bundleHash": "uifb:25510c12d4a67d9d48bd2db1",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/dialog/title.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/dialog/title.tsx",
+            "description": "title - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": ["Heading"],
+              "functions": ["DialogTitle"],
+              "imports": [
+                "./styles.module.css",
+                "@accelint/design-foundation/lib/utils",
+                "client-only",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".content",
+                    ".dialog",
+                    ".footer",
+                    ".modal",
+                    ".overlay",
+                    ".title"
+                  ],
+                  "properties": []
+                }
+              }
+            },
+            "semanticHash": "uif:606692815d5288a6fb0feacf",
+            "fileHash": "uif:7f9dc08358c629e811ca1b7b"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport 'client-only';\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport { Heading, type HeadingProps } from 'react-aria-components';\nimport styles from './styles.module.css';\n\nexport function DialogTitle({ children, className }: HeadingProps) {\n  return (\n    <Heading slot='title' className={clsx(styles.title, className)}>\n      {children}\n    </Heading>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "Heading",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/dialog/title.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "7/8",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/dialog/trigger.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:42.886Z",
+    "bundleHash": "uifb:f158b5fffd99e5a83f6a95f4",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/dialog/trigger.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/dialog/trigger.tsx",
+            "description": "trigger - TypeScript module",
+            "version": {
+              "variables": ["DialogTrigger"],
+              "hooks": [],
+              "components": [],
+              "functions": [],
+              "imports": ["client-only", "react-aria-components"]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "semanticHash": "uif:f42c6f488461b9f63218b340",
+            "fileHash": "uif:15fc3646510d144ce0c4e454"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport 'client-only';\nimport { DialogTrigger as AriaDialogTrigger } from 'react-aria-components';\n\nexport const DialogTrigger = AriaDialogTrigger;\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "8/8",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/dialog/types.ts",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:42.887Z",
+    "bundleHash": "uifb:ffe3c79be35cebb412560aab",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/dialog/types.ts",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/dialog/types.ts",
+            "description": "types - Type definitions",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": [],
+              "functions": [],
+              "imports": ["react", "react-aria-components"]
+            },
+            "logicSignature": {
+              "props": {
+                "children": "AriaDialogProps",
+                "ref": {
+                  "type": "React.Ref<HTMLDivElement>",
+                  "optional": true
+                },
+                "key": {
+                  "type": "React.Key",
+                  "optional": true
+                },
+                "classNames": {
+                  "type": "{ overlay?: ModalOverlayProps; modal?: ModalOverlayProps; dialog?: AriaDialogProps; }",
+                  "optional": true
+                },
+                "parentRef": {
+                  "type": "React.RefObject<HTMLElement>",
+                  "optional": true
+                },
+                "size": {
+                  "type": "literal-union",
+                  "literals": ["small", "large"],
+                  "optional": true
+                }
+              },
+              "emits": {}
+            },
+            "semanticHash": "uif:085434b91e6f7a872ff956c5",
+            "fileHash": "uif:3f69407f91028615549d315a"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport type { RefAttributes, RefObject } from 'react';\nimport type {\n  DialogProps as AriaDialogProps,\n  DialogTriggerProps as AriaDialogTriggerProps,\n  ModalOverlayProps,\n} from 'react-aria-components';\n\nexport type DialogProps = Omit<ModalOverlayProps, 'children' | 'className'> &\n  Pick<AriaDialogProps, 'children'> &\n  RefAttributes<HTMLDivElement> & {\n    classNames?: {\n      overlay?: ModalOverlayProps['className'];\n      modal?: ModalOverlayProps['className'];\n      dialog?: AriaDialogProps['className'];\n    };\n    parentRef?: RefObject<HTMLElement | null>;\n    size?: 'small' | 'large';\n  };\n\nexport type DialogTriggerProps = AriaDialogTriggerProps;\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  }
+]

@@ -1,0 +1,1024 @@
+[
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "1/12",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/query-builder/action-element.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.504Z",
+    "bundleHash": "uifb:e2e2253ab61801b43325b402",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/query-builder/action-element.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/query-builder/action-element.tsx",
+            "description": "action-element - Interactive component",
+            "version": {
+              "variables": [],
+              "hooks": ["useMemo"],
+              "components": ["Button"],
+              "functions": ["ActionElement"],
+              "imports": [
+                "../button",
+                "client-only",
+                "react",
+                "react-querybuilder"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {
+                "onPress": {
+                  "type": "function",
+                  "signature": "() => void"
+                }
+              }
+            },
+            "exports": "named",
+            "prediction": ["Uses memoization for performance optimization"],
+            "semanticHash": "uif:447cfc32aa0aff655d7a3af4",
+            "fileHash": "uif:d4d7f2f9507c0f70e23b4eb0"
+          },
+          "codeHeader": null,
+          "code": "// __private-exports\n/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport 'client-only';\nimport { useMemo } from 'react';\nimport { Button } from '../button';\nimport type { ActionProps } from 'react-querybuilder';\n\nexport function ActionElement({\n  disabled,\n  disabledTranslation,\n  title: titleProp,\n  handleOnClick,\n}: ActionProps) {\n  const title = useMemo(\n    () =>\n      disabledTranslation?.title && disabled\n        ? disabledTranslation.title\n        : titleProp,\n    [disabledTranslation?.title, disabled, titleProp],\n  );\n\n  return (\n    <Button\n      isDisabled={disabled && !disabledTranslation}\n      onPress={() => handleOnClick()}\n      size='small'\n      variant='outline'\n    >\n      {title}\n    </Button>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "Button",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/query-builder/action-element.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "2/12",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/query-builder/actions.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.517Z",
+    "bundleHash": "uifb:0e1225e2c72a293c407ea1ac",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/query-builder/actions.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/query-builder/actions.tsx",
+            "description": "actions - Interactive component",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": [
+                "Button",
+                "Delete",
+                "Duplicate",
+                "Icon",
+                "LockFill"
+              ],
+              "functions": ["CloneAction", "LockAction", "RemoveRuleAction"],
+              "imports": [
+                "../button",
+                "../icon",
+                "@accelint/icons",
+                "client-only",
+                "react-querybuilder"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {
+                "onPress": {
+                  "type": "function",
+                  "signature": "() => void"
+                }
+              }
+            },
+            "exports": {
+              "named": ["CloneAction", "LockAction", "RemoveRuleAction"]
+            },
+            "semanticHash": "uif:afdd7ab610237736525c2b69",
+            "fileHash": "uif:d1577a3d961578301c3c3649"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport 'client-only';\nimport { Delete, Duplicate, LockFill } from '@accelint/icons';\nimport { Button } from '../button';\nimport { Icon } from '../icon';\nimport type { ActionProps } from 'react-querybuilder';\n\nexport function RemoveRuleAction({\n  handleOnClick,\n  className,\n  ...rest\n}: ActionProps) {\n  return (\n    <Button\n      size='small'\n      variant='icon'\n      onPress={() => handleOnClick()}\n      className={className}\n      {...rest}\n    >\n      <Icon>\n        <Delete />\n      </Icon>\n    </Button>\n  );\n}\n\nexport function LockAction({ handleOnClick, className, ...rest }: ActionProps) {\n  return (\n    <Button\n      size='small'\n      variant='icon'\n      onPress={() => handleOnClick()}\n      className={className}\n      {...rest}\n    >\n      <Icon>\n        <LockFill />\n      </Icon>\n    </Button>\n  );\n}\n\nexport function CloneAction({\n  handleOnClick,\n  className,\n  ...rest\n}: ActionProps) {\n  return (\n    <Button\n      size='small'\n      variant='icon'\n      onPress={() => handleOnClick()}\n      className={className}\n      {...rest}\n    >\n      <Icon>\n        <Duplicate />\n      </Icon>\n    </Button>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "Button",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/query-builder/actions.tsx"
+        },
+        {
+          "name": "Delete",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/query-builder/actions.tsx"
+        },
+        {
+          "name": "Duplicate",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/query-builder/actions.tsx"
+        },
+        {
+          "name": "Icon",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/query-builder/actions.tsx"
+        },
+        {
+          "name": "LockFill",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/query-builder/actions.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "3/12",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/query-builder/combinator-selector.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.529Z",
+    "bundleHash": "uifb:bedc6addcd650d77500aaa3e",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/query-builder/combinator-selector.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/query-builder/combinator-selector.tsx",
+            "description": "combinator-selector - Interactive component",
+            "version": {
+              "variables": ["operatorDescriptions"],
+              "hooks": [],
+              "components": [
+                "Label",
+                "Radio",
+                "RadioGroup",
+                "Tooltip",
+                "TooltipTrigger"
+              ],
+              "functions": ["CombinatorSelector"],
+              "imports": [
+                "../label",
+                "../radio",
+                "../radio/group",
+                "../tooltip",
+                "../tooltip/trigger",
+                "client-only",
+                "react-querybuilder"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {
+                "onChange": {
+                  "type": "function",
+                  "signature": "() => void"
+                }
+              }
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "inlineStyles": true
+              }
+            },
+            "semanticHash": "uif:41320bc7451d14fa43935502",
+            "fileHash": "uif:f6178f4ae5250aaf2bd22b49"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport 'client-only';\nimport { Label } from '../label';\nimport { Radio } from '../radio';\nimport { RadioGroup } from '../radio/group';\nimport { Tooltip } from '../tooltip';\nimport { TooltipTrigger } from '../tooltip/trigger';\nimport type { CombinatorSelectorProps } from 'react-querybuilder';\n\nconst operatorDescriptions: Record<string, string> = {\n  AND: 'All rules below must be true for a match',\n  OR: 'One of the rules below must be true for a match',\n};\n\nexport function CombinatorSelector({\n  options,\n  value,\n  handleOnChange,\n}: CombinatorSelectorProps) {\n  return (\n    <RadioGroup\n      value={value}\n      onChange={handleOnChange}\n      orientation='horizontal'\n      style={{ flexWrap: 'nowrap' }}\n    >\n      <Label>Combinator</Label>\n      {options.map((option) => (\n        <Radio key={option.label} value={option.label}>\n          <TooltipTrigger>\n            <button type='button'>{option.label}</button>\n            <Tooltip placement='top'>\n              {operatorDescriptions[option.label]}\n            </Tooltip>\n          </TooltipTrigger>\n        </Radio>\n      ))}\n    </RadioGroup>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "Label",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/query-builder/combinator-selector.tsx"
+        },
+        {
+          "name": "Radio",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/query-builder/combinator-selector.tsx"
+        },
+        {
+          "name": "RadioGroup",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/query-builder/combinator-selector.tsx"
+        },
+        {
+          "name": "Tooltip",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/query-builder/combinator-selector.tsx"
+        },
+        {
+          "name": "TooltipTrigger",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/query-builder/combinator-selector.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "4/12",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/query-builder/constants.ts",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.529Z",
+    "bundleHash": "uifb:794407321c6035ce59ab780f",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/query-builder/constants.ts",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/query-builder/constants.ts",
+            "description": "constants - TypeScript module",
+            "version": {
+              "variables": ["multiValueOperators"],
+              "hooks": [],
+              "components": [],
+              "functions": [],
+              "imports": []
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "semanticHash": "uif:501b8f396dba6f6929e021ea",
+            "fileHash": "uif:6692ec966a3e4fe9955ad834"
+          },
+          "codeHeader": null,
+          "code": "// __private-exports\n/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nexport const multiValueOperators = [\n  'between',\n  'notBetween',\n  'during',\n  'overlapped',\n  'overlaps',\n];\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "5/12",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/query-builder/index.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.532Z",
+    "bundleHash": "uifb:4c865ca973adf34292c19ec4",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/query-builder/index.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/query-builder/index.tsx",
+            "description": "index - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": ["useMemo"],
+              "components": ["RQBBuilder"],
+              "functions": ["QueryBuilder"],
+              "imports": [
+                "./action-element",
+                "./actions",
+                "./combinator-selector",
+                "./rule",
+                "./rule-group",
+                "./styles.module.css",
+                "./types",
+                "./value-editor",
+                "./value-selector",
+                "@accelint/design-foundation/lib/utils",
+                "client-only",
+                "react",
+                "react-querybuilder"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "prediction": ["Uses memoization for performance optimization"],
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".body",
+                    ".cloneGroup",
+                    ".cloneRule",
+                    ".combinators",
+                    ".fields",
+                    ".header",
+                    ".hideRuleLines",
+                    ".horizontal",
+                    ".lockGroup",
+                    ".lockRule",
+                    ".queryBuilder",
+                    ".rule",
+                    ".ruleGroup",
+                    ".ruleLines",
+                    ".showRuleLines",
+                    ".textInput",
+                    ".value",
+                    ".vertical"
+                  ],
+                  "properties": ["grid-template-columns", "min-height", "width"]
+                }
+              }
+            },
+            "semanticHash": "uif:005f0133b1730223c15a5f6e",
+            "fileHash": "uif:b857153332f73f7d0e74b5e4"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport 'client-only';\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport { createContext, useMemo } from 'react';\nimport { QueryBuilder as RQBBuilder } from 'react-querybuilder';\nimport { ActionElement } from './action-element';\nimport { CloneAction, LockAction, RemoveRuleAction } from './actions';\nimport { CombinatorSelector } from './combinator-selector';\nimport { Rule } from './rule';\nimport { RuleGroup } from './rule-group';\nimport styles from './styles.module.css';\nimport { ValueEditor } from './value-editor';\nimport { ValueSelector } from './value-selector';\nimport type { QueryBuilderContextType, QueryBuilderProps } from './types';\n\n/**\n * QueryBuilder - A visual interface for building complex database queries\n *\n * Provides an intuitive drag-and-drop interface for constructing database queries\n * with support for multiple conditions, operators, and logical grouping. Enables\n * users to build complex filters without writing SQL or code.\n *\n * @example\n * // Basic query builder\n * <QueryBuilder\n *   fields={[\n *     // { name, label, type, inputType, operators },\n *   ]}\n *   query={\n *     // { combinator, rules }\n *   }\n *   onQueryChange={handleQueryChange}\n *   controlElements={{\n *     addRuleAction: CustomAddButton,\n *     removeRuleAction: CustomRemoveButton\n *   }}\n *   orientation=\"vertical\"\n * />\n */\nexport function QueryBuilder({\n  controlClassnames,\n  controlElements,\n  orientation = 'horizontal',\n  showRuleLines = true,\n  ...rest\n}: QueryBuilderProps) {\n  /**\n   * Represents the list of available controls that the component can use as a custom\n   * component override.Passed in as a map of our custom defaults, but can be\n   * overridden by using the controlElements prop\n   */\n  const mergedElements = useMemo(\n    () => ({\n      combinatorSelector: CombinatorSelector,\n      cloneGroupAction: CloneAction,\n      cloneRuleAction: CloneAction,\n      removeRuleAction: RemoveRuleAction,\n      lockGroupAction: LockAction,\n      lockRuleAction: LockAction,\n      ruleGroup: RuleGroup,\n      rule: Rule,\n      actionElement: ActionElement,\n      valueSelector: ValueSelector,\n      valueEditor: ValueEditor,\n      ...controlElements,\n    }),\n    [controlElements],\n  );\n\n  /**\n   * Represents the list of available classnames that the component will recognize.\n   * Passed in as a map as all the default styling, but can be overridden by using the\n   * controlClassnames prop\n   */\n  const mergedClassnames = useMemo(() => {\n    return {\n      queryBuilder: styles.queryBuilder,\n      ruleGroup: clsx('group', styles.ruleGroup),\n      header: styles.header,\n      combinators: styles.combinators,\n      fields: styles.fields,\n      operators: '',\n      value: styles.value,\n      valueListItem: '',\n      valueSource: '',\n      cloneGroup: styles.cloneGroup,\n      cloneRule: styles.cloneRule,\n      lockGroup: styles.lockGroup,\n      lockRule: styles.lockRule,\n      disabled: '',\n      valid: '',\n      invalid: '',\n      removeRule: '',\n      addRule: '',\n      addGroup: '',\n      removeGroup: '',\n      rule: clsx(styles.rule, styles[orientation]),\n      body: clsx(\n        'group',\n        styles.body,\n        showRuleLines && styles.showRuleLines,\n        !showRuleLines && styles.hideRuleLines,\n      ),\n      ...controlClassnames,\n    };\n  }, [controlClassnames, showRuleLines, orientation]);\n\n  const QueryBuilderContext = createContext<QueryBuilderContextType>({\n    orientation,\n    showRuleLines,\n  });\n\n  return (\n    <RQBBuilder\n      showNotToggle={false}\n      showShiftActions={false}\n      enableDragAndDrop={false}\n      controlClassnames={mergedClassnames}\n      controlElements={mergedElements}\n      context={QueryBuilderContext}\n      listsAsArrays\n      {...rest}\n    />\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "RQBBuilder",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/query-builder/index.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "6/12",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/query-builder/query-builder.stories.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.534Z",
+    "bundleHash": "uifb:bdc29ef6d68a61bcfe29f1d5",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/query-builder/query-builder.stories.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/query-builder/query-builder.stories.tsx",
+            "description": "query-builder.stories - Interactive component with internal state",
+            "version": {
+              "variables": ["Default", "meta"],
+              "hooks": ["useState"],
+              "components": ["QueryBuilder"],
+              "functions": [],
+              "imports": [
+                "./",
+                "./__fixtures__/example-configuration",
+                "./types",
+                "@storybook/react-vite",
+                "react"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {
+                "onQueryChange": {
+                  "type": "function",
+                  "signature": "() => void"
+                }
+              },
+              "state": {
+                "query": "RuleGroupType"
+              }
+            },
+            "exports": "named",
+            "semanticHash": "uif:3f921599c1d686dc7e2b1229",
+            "fileHash": "uif:eafe8e09a4c9bcb2258e534b"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport { useState } from 'react';\nimport { QueryBuilder } from './';\nimport { defaultQuery, fields } from './__fixtures__/example-configuration';\nimport type { Meta, StoryObj } from '@storybook/react-vite';\nimport type { RuleGroupType } from './types';\n\n/**\n * A custom port of the React QueryBuilder component: https://react-querybuilder.js.org/\n */\nconst meta = {\n  title: 'Components/QueryBuilder',\n  component: QueryBuilder,\n  args: {\n    orientation: 'horizontal',\n    disabled: false,\n    showCloneButtons: false,\n    showLockButtons: false,\n    showRuleLines: true,\n  },\n  argTypes: {\n    orientation: { options: ['horizontal', 'vertical'] },\n    disabled: {\n      control: {\n        type: 'boolean',\n      },\n    },\n  },\n  parameters: {\n    controls: {\n      include: [\n        'disabled',\n        'orientation',\n        'showCloneButtons',\n        'showLockButtons',\n        'showRuleLines',\n      ],\n    },\n    docs: {\n      subtitle: 'Builds a complex formatted query for filtering a dataset',\n    },\n  },\n} satisfies Meta<typeof QueryBuilder>;\n\nexport default meta;\ntype Story = StoryObj<typeof meta>;\n\nexport const Default: Story = {\n  render: (args) => {\n    const [query, setQuery] = useState<RuleGroupType>(defaultQuery);\n\n    return (\n      <QueryBuilder\n        fields={fields}\n        query={query}\n        onQueryChange={setQuery}\n        {...args}\n      />\n    );\n  },\n};\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "QueryBuilder",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/query-builder/query-builder.stories.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "7/12",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/query-builder/rule-group.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.557Z",
+    "bundleHash": "uifb:6a28a01e0969fcc846ed5862",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/query-builder/rule-group.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/query-builder/rule-group.tsx",
+            "description": "rule-group - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": ["useMemo", "useRuleGroup", "useStopEventPropagation"],
+              "components": [
+                "AddGroupActionControlElement",
+                "AddRuleActionControlElement",
+                "CloneGroupActionControlElement",
+                "CombinatorSelectorControlElement",
+                "LockGroupActionControlElement",
+                "RemoveGroupActionControlElement",
+                "RuleGroupBodyElements",
+                "RuleGroupFooterComponent",
+                "RuleGroupHeaderComponent"
+              ],
+              "functions": [
+                "RuleGroup",
+                "RuleGroupFooterComponent",
+                "RuleGroupHeaderComponent"
+              ],
+              "imports": [
+                "@accelint/design-foundation/lib/utils",
+                "client-only",
+                "react",
+                "react-querybuilder"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": {
+              "named": [
+                "RuleGroup",
+                "RuleGroupFooterComponent",
+                "RuleGroupHeaderComponent"
+              ]
+            },
+            "prediction": ["Uses memoization for performance optimization"],
+            "semanticHash": "uif:570c795c6229ee884004fac7",
+            "fileHash": "uif:5303f1468b4e29f5a4703a63"
+          },
+          "codeHeader": null,
+          "code": "// __private-exports\n/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport 'client-only';\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport { useMemo } from 'react';\nimport {\n  type RuleGroupProps,\n  TestID,\n  useRuleGroup,\n  useStopEventPropagation,\n} from 'react-querybuilder';\n\nexport function RuleGroup(props: RuleGroupProps) {\n  const group = useRuleGroup(props);\n\n  const {\n    schema: {\n      controls: { ruleGroupBodyElements: RuleGroupBodyElements },\n    },\n  } = group;\n\n  const {\n    schema: { classNames },\n  } = props;\n\n  const addRule = useStopEventPropagation(group.addRule);\n  const addGroup = useStopEventPropagation(group.addGroup);\n  const cloneGroup = useStopEventPropagation(group.cloneGroup);\n  const toggleLockGroup = useStopEventPropagation(group.toggleLockGroup);\n  const removeGroup = useStopEventPropagation(group.removeGroup);\n\n  const elementProps = useMemo(\n    () => ({\n      ...group,\n      addGroup,\n      addRule,\n      cloneGroup,\n      removeGroup,\n      toggleLockGroup,\n    }),\n    [addGroup, addRule, cloneGroup, group, removeGroup, toggleLockGroup],\n  );\n\n  return (\n    <div className={clsx(classNames.ruleGroup)}>\n      <div className={clsx(classNames.header)}>\n        <RuleGroupHeaderComponent {...elementProps} />\n      </div>\n      <div className={clsx(classNames.body)}>\n        <RuleGroupBodyElements {...elementProps} />\n      </div>\n      <div className={clsx(classNames.header)}>\n        <RuleGroupFooterComponent {...elementProps} />\n      </div>\n    </div>\n  );\n}\n\nexport function RuleGroupHeaderComponent(\n  ruleGroup: RuleGroupProps & ReturnType<typeof useRuleGroup>,\n) {\n  const shouldShowLock = ruleGroup.schema.showLockButtons;\n  const isNotRoot = ruleGroup.path.length > 0;\n  const shouldShowClone = ruleGroup.schema.showCloneButtons && isNotRoot;\n\n  const {\n    schema: {\n      controls: {\n        combinatorSelector: CombinatorSelectorControlElement,\n        cloneGroupAction: CloneGroupActionControlElement,\n        lockGroupAction: LockGroupActionControlElement,\n        removeGroupAction: RemoveGroupActionControlElement,\n      },\n    },\n  } = ruleGroup;\n\n  return (\n    <>\n      <CombinatorSelectorControlElement\n        key={TestID.combinators}\n        testID={TestID.combinators}\n        options={ruleGroup.schema.combinators}\n        ruleGroup={ruleGroup.ruleGroup}\n        value={ruleGroup.combinator}\n        title={ruleGroup.translations.combinators.title}\n        className={ruleGroup.classNames.combinators}\n        handleOnChange={ruleGroup.onCombinatorChange}\n        rules={ruleGroup.ruleGroup.rules}\n        level={ruleGroup.path.length}\n        path={ruleGroup.path}\n        disabled={ruleGroup.disabled}\n        context={ruleGroup.context}\n        validation={ruleGroup.validationResult}\n        schema={ruleGroup.schema}\n      />\n      {shouldShowClone && (\n        <div>\n          <CloneGroupActionControlElement\n            key={TestID.cloneGroup}\n            testID={TestID.cloneGroup}\n            label={ruleGroup.translations.cloneRuleGroup.label}\n            title={ruleGroup.translations.cloneRuleGroup.title}\n            className={ruleGroup.classNames.cloneGroup}\n            handleOnClick={ruleGroup.cloneGroup}\n            rules={ruleGroup.ruleGroup.rules}\n            level={ruleGroup.path.length}\n            path={ruleGroup.path}\n            disabled={ruleGroup.disabled}\n            context={ruleGroup.context}\n            validation={ruleGroup.validationResult}\n            ruleOrGroup={ruleGroup.ruleGroup}\n            schema={ruleGroup.schema}\n          />\n        </div>\n      )}\n      {shouldShowLock && (\n        <div>\n          <LockGroupActionControlElement\n            key={TestID.lockGroup}\n            testID={TestID.lockGroup}\n            label={ruleGroup.translations.lockGroup.label}\n            title={ruleGroup.translations.lockGroup.title}\n            className={ruleGroup.classNames.lockGroup}\n            handleOnClick={ruleGroup.toggleLockGroup}\n            rules={ruleGroup.ruleGroup.rules}\n            level={ruleGroup.path.length}\n            path={ruleGroup.path}\n            disabled={ruleGroup.disabled}\n            disabledTranslation={\n              ruleGroup.parentDisabled\n                ? undefined\n                : ruleGroup.translations.lockGroupDisabled\n            }\n            context={ruleGroup.context}\n            validation={ruleGroup.validationResult}\n            ruleOrGroup={ruleGroup.ruleGroup}\n            schema={ruleGroup.schema}\n          />\n        </div>\n      )}\n      {isNotRoot && (\n        <div>\n          <RemoveGroupActionControlElement\n            key={TestID.removeGroup}\n            testID={TestID.removeGroup}\n            label={ruleGroup.translations.removeGroup.label}\n            title={ruleGroup.translations.removeGroup.title}\n            className={ruleGroup.classNames.removeGroup}\n            handleOnClick={ruleGroup.removeGroup}\n            rules={ruleGroup.ruleGroup.rules}\n            level={ruleGroup.path.length}\n            path={ruleGroup.path}\n            disabled={ruleGroup.disabled}\n            context={ruleGroup.context}\n            validation={ruleGroup.validationResult}\n            ruleOrGroup={ruleGroup.ruleGroup}\n            schema={ruleGroup.schema}\n          />\n        </div>\n      )}\n    </>\n  );\n}\n\nexport function RuleGroupFooterComponent(\n  ruleGroup: RuleGroupProps & ReturnType<typeof useRuleGroup>,\n) {\n  const {\n    schema: {\n      controls: {\n        addGroupAction: AddGroupActionControlElement,\n        addRuleAction: AddRuleActionControlElement,\n      },\n    },\n  } = ruleGroup;\n\n  return (\n    <>\n      <AddRuleActionControlElement\n        key={TestID.addRule}\n        testID={TestID.addRule}\n        label={ruleGroup.translations.addRule.label}\n        title={ruleGroup.translations.addRule.title}\n        className={ruleGroup.classNames.addRule}\n        handleOnClick={ruleGroup.addRule}\n        rules={ruleGroup.ruleGroup.rules}\n        level={ruleGroup.path.length}\n        path={ruleGroup.path}\n        disabled={ruleGroup.disabled}\n        context={ruleGroup.context}\n        validation={ruleGroup.validationResult}\n        ruleOrGroup={ruleGroup.ruleGroup}\n        schema={ruleGroup.schema}\n      />\n      <AddGroupActionControlElement\n        key={TestID.addGroup}\n        testID={TestID.addGroup}\n        label={ruleGroup.translations.addGroup.label}\n        title={ruleGroup.translations.addGroup.title}\n        className={ruleGroup.classNames.addGroup}\n        handleOnClick={ruleGroup.addGroup}\n        rules={ruleGroup.ruleGroup.rules}\n        level={ruleGroup.path.length}\n        path={ruleGroup.path}\n        disabled={ruleGroup.disabled}\n        context={ruleGroup.context}\n        validation={ruleGroup.validationResult}\n        ruleOrGroup={ruleGroup.ruleGroup}\n        schema={ruleGroup.schema}\n      />\n    </>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "AddGroupActionControlElement",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/query-builder/rule-group.tsx"
+        },
+        {
+          "name": "AddRuleActionControlElement",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/query-builder/rule-group.tsx"
+        },
+        {
+          "name": "CloneGroupActionControlElement",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/query-builder/rule-group.tsx"
+        },
+        {
+          "name": "CombinatorSelectorControlElement",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/query-builder/rule-group.tsx"
+        },
+        {
+          "name": "LockGroupActionControlElement",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/query-builder/rule-group.tsx"
+        },
+        {
+          "name": "RemoveGroupActionControlElement",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/query-builder/rule-group.tsx"
+        },
+        {
+          "name": "RuleGroupBodyElements",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/query-builder/rule-group.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "8/12",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/query-builder/rule.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.579Z",
+    "bundleHash": "uifb:2bb5c1095588c5c1f8b1d971",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/query-builder/rule.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/query-builder/rule.tsx",
+            "description": "rule - Presentational component",
+            "version": {
+              "variables": ["QueryBuilderLines"],
+              "hooks": ["useContext", "useRule", "useStopEventPropagation"],
+              "components": [
+                "CloneRuleActionControlElement",
+                "FieldSelectorControlElement",
+                "Lines",
+                "LockRuleActionControlElement",
+                "OperatorSelectorControlElement",
+                "QueryBuilderLines",
+                "RemoveRuleActionControlElement",
+                "ValueEditorControlElement",
+                "ValueSourceSelectorControlElement"
+              ],
+              "functions": ["Rule"],
+              "imports": [
+                "../lines",
+                "./styles.module.css",
+                "./types",
+                "client-only",
+                "react",
+                "react-querybuilder"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "prediction": ["Consumes React Context for shared state"],
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".body",
+                    ".cloneGroup",
+                    ".cloneRule",
+                    ".combinators",
+                    ".fields",
+                    ".header",
+                    ".hideRuleLines",
+                    ".horizontal",
+                    ".lockGroup",
+                    ".lockRule",
+                    ".queryBuilder",
+                    ".rule",
+                    ".ruleGroup",
+                    ".ruleLines",
+                    ".showRuleLines",
+                    ".textInput",
+                    ".value",
+                    ".vertical"
+                  ],
+                  "properties": ["grid-template-columns", "min-height", "width"]
+                }
+              }
+            },
+            "semanticHash": "uif:b939c7bc1395a23df95f4cb7",
+            "fileHash": "uif:7254315d623e836c62808d35"
+          },
+          "codeHeader": null,
+          "code": "// __private-exports\n/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport 'client-only';\nimport { memo, useContext } from 'react';\nimport {\n  type Path,\n  type RuleProps,\n  TestID,\n  useRule,\n  useStopEventPropagation,\n} from 'react-querybuilder';\nimport { Lines } from '../lines';\nimport styles from './styles.module.css';\nimport type { QueryBuilderContextType } from './types';\n\nconst QueryBuilderLines = memo(function QueryBuilderLines({\n  path,\n  props,\n  context,\n}: {\n  path: Path;\n  props: RuleProps;\n  context: QueryBuilderContextType;\n}) {\n  const isLastRule = path[0] === props.schema.getQuery()?.rules.length - 1;\n  const line = isLastRule ? 'last' : 'branch';\n\n  return (\n    <Lines\n      variant={line}\n      size='small'\n      isVisible={context.showRuleLines}\n      className={styles.ruleLines}\n    />\n  );\n});\n\nexport function Rule(props: RuleProps) {\n  const rule = useRule(props);\n  const context: QueryBuilderContextType = useContext(props.context);\n\n  const {\n    classNames,\n    disabled,\n    operators,\n    outerClassName,\n    rule: { field, operator, value, valueSource },\n    schema: {\n      controls: {\n        fieldSelector: FieldSelectorControlElement,\n        operatorSelector: OperatorSelectorControlElement,\n        valueSourceSelector: ValueSourceSelectorControlElement,\n        valueEditor: ValueEditorControlElement,\n        cloneRuleAction: CloneRuleActionControlElement,\n        lockRuleAction: LockRuleActionControlElement,\n        removeRuleAction: RemoveRuleActionControlElement,\n      },\n      fields,\n      listsAsArrays,\n      parseNumbers,\n      showCloneButtons,\n      showLockButtons,\n    },\n    fieldData,\n    generateOnChangeHandler,\n    inputType,\n    parentDisabled,\n    path,\n    translations,\n    valueEditorType,\n    valueEditorSeparator,\n    values,\n    valueSources,\n    valueSourceOptions,\n    validationResult,\n  } = rule;\n\n  const cloneRule = useStopEventPropagation(rule.cloneRule);\n  const toggleLockRule = useStopEventPropagation(rule.toggleLockRule);\n  const removeRule = useStopEventPropagation(rule.removeRule);\n\n  const coreRuleProps = {\n    context,\n    disabled,\n    level: path.length,\n    path,\n    schema: rule.schema,\n    validation: validationResult,\n  };\n  const renderValueSources =\n    !['null', 'notNull'].includes(operator) && valueSources.length > 1;\n\n  return (\n    <>\n      {context.showRuleLines && (\n        <QueryBuilderLines path={path} props={props} context={context} />\n      )}\n      <div className={outerClassName}>\n        <FieldSelectorControlElement\n          testID={TestID.fields}\n          options={fields}\n          title={translations.fields.title}\n          value={field}\n          operator={operator}\n          className={classNames.fields}\n          handleOnChange={generateOnChangeHandler('field')}\n          rule={rule.rule}\n          {...coreRuleProps}\n        />\n        <OperatorSelectorControlElement\n          testID={TestID.operators}\n          field={field}\n          fieldData={rule.fieldData}\n          title={rule.translations.operators.title}\n          options={operators}\n          value={operator}\n          className={rule.classNames.operators}\n          handleOnChange={rule.generateOnChangeHandler('operator')}\n          rule={rule.rule}\n          {...coreRuleProps}\n        />\n        <ValueEditorControlElement\n          testID={TestID.valueEditor}\n          field={field}\n          fieldData={fieldData}\n          title={translations.value.title}\n          operator={operator}\n          value={value}\n          valueSource={valueSource ?? 'value'}\n          type={valueEditorType}\n          inputType={inputType}\n          values={values}\n          listsAsArrays={listsAsArrays}\n          parseNumbers={parseNumbers}\n          separator={valueEditorSeparator}\n          className={rule.classNames.value}\n          handleOnChange={generateOnChangeHandler('value')}\n          rule={rule.rule}\n          {...coreRuleProps}\n        />\n        {renderValueSources && (\n          <ValueSourceSelectorControlElement\n            testID={TestID.valueSourceSelector}\n            field={field}\n            fieldData={fieldData}\n            title={translations.valueSourceSelector.title}\n            options={valueSourceOptions}\n            value={valueSource ?? 'value'}\n            className={classNames.valueSource}\n            handleOnChange={generateOnChangeHandler('valueSource')}\n            rule={rule.rule}\n            {...coreRuleProps}\n          />\n        )}\n      </div>\n      <div className={outerClassName}>\n        <RemoveRuleActionControlElement\n          testID={TestID.removeRule}\n          label={translations.removeRule.label ?? 'remove'}\n          title={translations.removeRule.title ?? 'remove'}\n          className={classNames.removeRule}\n          handleOnClick={removeRule}\n          ruleOrGroup={rule.rule}\n          {...coreRuleProps}\n        />\n        {showCloneButtons && (\n          <CloneRuleActionControlElement\n            testID={TestID.cloneRule}\n            label={translations.cloneRule.label ?? 'clone'}\n            title={translations.cloneRule.title ?? 'clone'}\n            className={classNames.cloneRule}\n            handleOnClick={cloneRule}\n            ruleOrGroup={rule.rule}\n            {...coreRuleProps}\n          />\n        )}\n        {showLockButtons && (\n          <LockRuleActionControlElement\n            testID={TestID.lockRule}\n            label={translations.lockRule.label ?? 'lock'}\n            title={translations.lockRule.title ?? 'lock'}\n            className={classNames.lockRule}\n            handleOnClick={toggleLockRule}\n            disabledTranslation={\n              parentDisabled ? undefined : translations.lockRuleDisabled\n            }\n            ruleOrGroup={rule.rule}\n            {...coreRuleProps}\n          />\n        )}\n      </div>\n    </>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "CloneRuleActionControlElement",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/query-builder/rule.tsx"
+        },
+        {
+          "name": "FieldSelectorControlElement",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/query-builder/rule.tsx"
+        },
+        {
+          "name": "Lines",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/query-builder/rule.tsx"
+        },
+        {
+          "name": "LockRuleActionControlElement",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/query-builder/rule.tsx"
+        },
+        {
+          "name": "OperatorSelectorControlElement",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/query-builder/rule.tsx"
+        },
+        {
+          "name": "QueryBuilderLines",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/query-builder/rule.tsx"
+        },
+        {
+          "name": "RemoveRuleActionControlElement",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/query-builder/rule.tsx"
+        },
+        {
+          "name": "ValueEditorControlElement",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/query-builder/rule.tsx"
+        },
+        {
+          "name": "ValueSourceSelectorControlElement",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/query-builder/rule.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "9/12",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/query-builder/types.ts",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.580Z",
+    "bundleHash": "uifb:a4d4f7208cbf5f4157ae4d59",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/query-builder/types.ts",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/query-builder/types.ts",
+            "description": "types - Type definitions",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": [],
+              "functions": [],
+              "imports": ["react", "react-querybuilder", "type-fest"]
+            },
+            "logicSignature": {
+              "props": {
+                "orientation": {
+                  "type": "literal-union",
+                  "literals": ["horizontal", "vertical"],
+                  "optional": true
+                },
+                "showRuleLines": {
+                  "type": "boolean",
+                  "optional": true
+                }
+              },
+              "emits": {}
+            },
+            "semanticHash": "uif:3e887e3ca9c0f64af77cf283",
+            "fileHash": "uif:2a7e4244d702fb8a20cc7fc8"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport type { ReactElement } from 'react';\nimport type {\n  FullCombinator,\n  FullField,\n  FullOperator,\n  Classnames as RQBClassnames,\n  Field as RQBField,\n  QueryBuilderProps as RQBProps,\n  RuleGroupType as RQBRuleGroupType,\n  ValueEditorProps,\n} from 'react-querybuilder';\nimport type { LiteralUnion } from 'type-fest';\n\nexport type RuleGroupType = RQBRuleGroupType;\nexport type Field = RQBField;\n\nexport type DefaultRQBProps = RQBProps<\n  RuleGroupType,\n  FullField,\n  FullOperator,\n  FullCombinator\n>;\n\n// TODO: need to add multiselect back in when we have a compatible component\nexport type QueryBuilderValueEditors = Record<\n  LiteralUnion<\n    Exclude<ValueEditorProps['type'], null | undefined | 'multiselect'>,\n    string\n  >,\n  (props: ValueEditorProps) => ReactElement\n>;\n\n/**\n * Omitted props are currently unsupported functionality\n */\nexport type QueryBuilderProps = Partial<\n  Omit<\n    DefaultRQBProps,\n    | 'showCombinatorsBetweenRules'\n    | 'independentCombinators'\n    | 'listsAsArrays'\n    | 'enableDragAndDrop'\n    | 'showNotToggle'\n    | 'showShiftActions'\n  > & {\n    orientation?: 'horizontal' | 'vertical';\n    showRuleLines?: boolean;\n  }\n>;\n\n/**\n * Omitted classnames are for unsupported features\n */\nexport type ClassNames = Omit<\n  RQBClassnames,\n  | 'betweenRules'\n  | 'branches'\n  | 'dndDragging'\n  | 'dndOver'\n  | 'dndCopy'\n  | 'dndGroup'\n  | 'dragHandle'\n  | 'shiftActions'\n  | 'notToggle'\n>;\n\nexport type QueryBuilderContextType = Pick<\n  QueryBuilderProps,\n  'showRuleLines' | 'orientation'\n>;\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "10/12",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/query-builder/utils.ts",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.580Z",
+    "bundleHash": "uifb:7c674256a4526aa456e8f968",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/query-builder/utils.ts",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/query-builder/utils.ts",
+            "description": "utils - Utility module",
+            "version": {
+              "variables": ["getValidationResult"],
+              "hooks": [],
+              "components": [],
+              "functions": ["getValidationResult"],
+              "imports": ["react-querybuilder"]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "semanticHash": "uif:eb7b453b3945437780360f01",
+            "fileHash": "uif:3aa72e32e54553ec225db8e7"
+          },
+          "codeHeader": null,
+          "code": "// __private-exports\n/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport type {\n  RuleType,\n  RuleValidator,\n  ValidationResult,\n} from 'react-querybuilder';\n\nexport const getValidationResult = (\n  rule: RuleType,\n  validator?: RuleValidator,\n): ValidationResult => {\n  if (!validator) {\n    return { valid: true };\n  }\n\n  const result = validator(rule);\n\n  if (typeof result === 'boolean') {\n    return { valid: result };\n  }\n\n  return {\n    valid: result.valid,\n    reasons: result.valid ? [] : result.reasons,\n  };\n};\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "11/12",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/query-builder/value-editor.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.599Z",
+    "bundleHash": "uifb:919397e9c9b0fbad5298a061",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/query-builder/value-editor.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/query-builder/value-editor.tsx",
+            "description": "value-editor - Interactive component",
+            "version": {
+              "variables": ["defaultOptions", "valueEditors"],
+              "hooks": ["useCallback", "useValueEditor"],
+              "components": [
+                "Checkbox",
+                "Editor",
+                "Radio",
+                "RadioGroup",
+                "Switch",
+                "TextAreaField",
+                "TextField",
+                "ValueSelector"
+              ],
+              "functions": [
+                "CheckboxValueEditor",
+                "RadioGroupValueEditor",
+                "SelectValueEditor",
+                "SwitchValueEditor",
+                "TextValueEditor",
+                "TextareaValueEditor",
+                "ValueEditor"
+              ],
+              "imports": [
+                "../checkbox",
+                "../input/types",
+                "../radio",
+                "../radio/group",
+                "../switch",
+                "../text-area-field",
+                "../text-field",
+                "./constants",
+                "./styles.module.css",
+                "./types",
+                "./utils",
+                "./value-selector",
+                "client-only",
+                "react",
+                "react-querybuilder"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {
+                "onChange": {
+                  "type": "function",
+                  "signature": "() => void"
+                }
+              }
+            },
+            "exports": "named",
+            "prediction": ["Uses memoization for performance optimization"],
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".body",
+                    ".cloneGroup",
+                    ".cloneRule",
+                    ".combinators",
+                    ".fields",
+                    ".header",
+                    ".hideRuleLines",
+                    ".horizontal",
+                    ".lockGroup",
+                    ".lockRule",
+                    ".queryBuilder",
+                    ".rule",
+                    ".ruleGroup",
+                    ".ruleLines",
+                    ".showRuleLines",
+                    ".textInput",
+                    ".value",
+                    ".vertical"
+                  ],
+                  "properties": ["grid-template-columns", "min-height", "width"]
+                }
+              }
+            },
+            "semanticHash": "uif:117772f3d050ced9db28427e",
+            "fileHash": "uif:e0c4ce86175776532198ad05"
+          },
+          "codeHeader": null,
+          "code": "// __private-exports\n/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport 'client-only';\nimport { useCallback } from 'react';\nimport { useValueEditor, type ValueEditorProps } from 'react-querybuilder';\nimport { Checkbox } from '../checkbox';\nimport { Radio } from '../radio';\nimport { RadioGroup } from '../radio/group';\nimport { Switch } from '../switch';\nimport { TextAreaField } from '../text-area-field';\nimport { TextField } from '../text-field';\nimport { multiValueOperators } from './constants';\nimport styles from './styles.module.css';\nimport { getValidationResult } from './utils';\nimport { ValueSelector } from './value-selector';\nimport type { InputProps } from '../input/types';\nimport type { QueryBuilderValueEditors } from './types';\n\nfunction CheckboxValueEditor({\n  className,\n  disabled,\n  fieldData: { name, validator },\n  handleOnChange,\n  rule,\n  value,\n}: ValueEditorProps) {\n  const { valid } = getValidationResult(rule, validator);\n\n  return (\n    <Checkbox\n      classNames={{ checkbox: className }}\n      isDisabled={disabled}\n      isSelected={value}\n      onChange={handleOnChange}\n      aria-invalid={!valid}\n      aria-label={name}\n    />\n  );\n}\n\nfunction RadioGroupValueEditor({\n  className,\n  disabled,\n  fieldData: { name, validator },\n  handleOnChange,\n  rule,\n  value,\n  values,\n}: ValueEditorProps) {\n  const { valid } = getValidationResult(rule, validator);\n\n  return (\n    <RadioGroup\n      classNames={{ group: className }}\n      value={value}\n      isDisabled={disabled}\n      onChange={handleOnChange}\n      aria-invalid={!valid}\n      aria-label={name}\n      aria-labelledby={name}\n    >\n      {values?.map((option) => (\n        <Radio key={option.name} value={option.value}>\n          {option.label}\n        </Radio>\n      ))}\n    </RadioGroup>\n  );\n}\n\nconst defaultOptions: unknown[] = [];\n\nfunction SelectValueEditor({\n  className,\n  disabled,\n  fieldData: { name, validator },\n  handleOnChange,\n  rule,\n  type,\n  value,\n  values = defaultOptions,\n  ...rest\n}: ValueEditorProps) {\n  const { valid } = getValidationResult(rule, validator);\n\n  return (\n    <ValueSelector\n      {...rest}\n      className={className}\n      disabled={disabled}\n      multiple={type === 'multiselect'}\n      options={values}\n      title={name}\n      validation={!valid}\n      value={value}\n      handleOnChange={handleOnChange}\n      aria-labelledby={name}\n    />\n  );\n}\n\nfunction SwitchValueEditor({\n  className,\n  disabled,\n  fieldData: { name, validator },\n  handleOnChange,\n  rule,\n  value,\n}: ValueEditorProps) {\n  const { valid } = getValidationResult(rule, validator);\n\n  return (\n    <Switch\n      classNames={{ switch: className }}\n      isDisabled={disabled}\n      isSelected={Boolean(value)}\n      onChange={handleOnChange}\n      aria-invalid={!valid}\n      aria-label={name}\n      aria-labelledby={name}\n    />\n  );\n}\n\nfunction TextValueEditor({\n  disabled,\n  fieldData: { name, placeholder, validator },\n  handleOnChange,\n  inputType,\n  rule,\n  value,\n  className,\n}: ValueEditorProps) {\n  const { valid, reasons } = getValidationResult(rule, validator);\n\n  return (\n    <TextField\n      inputProps={{\n        placeholder,\n        type: (inputType as InputProps['type']) ?? 'text',\n      }}\n      size='small'\n      value={value}\n      classNames={{ field: className, input: { container: styles.textInput } }}\n      isDisabled={disabled}\n      isInvalid={!valid}\n      onChange={handleOnChange}\n      aria-invalid={!valid}\n      aria-label={name}\n      aria-labelledby={name}\n      errorMessage={reasons?.join('/n')}\n    />\n  );\n}\n\nfunction TextareaValueEditor({\n  className,\n  disabled,\n  fieldData: { name, placeholder, validator },\n  handleOnChange,\n  rule,\n  value,\n}: ValueEditorProps) {\n  const { valid, reasons } = getValidationResult(rule, validator);\n\n  return (\n    <TextAreaField\n      classNames={{ field: className }}\n      size='small'\n      errorMessage={reasons?.join('/n')}\n      inputProps={{ placeholder }}\n      value={value}\n      isDisabled={disabled}\n      isInvalid={!valid}\n      onChange={handleOnChange}\n      aria-label={name}\n      aria-invalid={!valid}\n      aria-labelledby={name}\n    />\n  );\n}\n\nconst valueEditors: QueryBuilderValueEditors = {\n  checkbox: CheckboxValueEditor,\n  radio: RadioGroupValueEditor,\n  select: SelectValueEditor,\n  switch: SwitchValueEditor,\n  text: TextValueEditor,\n  textarea: TextareaValueEditor,\n};\n\nexport function ValueEditor(props: ValueEditorProps) {\n  const {\n    fieldData: { name, valueEditorType },\n    operator,\n    rule: ruleProp,\n  } = props;\n\n  const { valueAsArray, multiValueHandler } = useValueEditor({\n    ...props,\n    skipHook: true,\n  });\n\n  const rule = useCallback(\n    (index: number) => ({\n      ...ruleProp,\n      value: valueAsArray[index],\n    }),\n    [ruleProp, valueAsArray],\n  );\n\n  const handleRangeStartChange = useCallback(\n    (value: string) => multiValueHandler(value, 0),\n    [multiValueHandler],\n  );\n\n  const handleRangeEndChange = useCallback(\n    (value: string) => multiValueHandler(value, 1),\n    [multiValueHandler],\n  );\n\n  const type =\n    (typeof valueEditorType === 'function'\n      ? valueEditorType(operator)\n      : valueEditorType) ?? 'text';\n\n  const Editor = valueEditors?.[type];\n\n  if (operator === 'null' || operator === 'notNull' || !Editor) {\n    return null;\n  }\n\n  if (multiValueOperators.includes(operator)) {\n    return (\n      <>\n        {['start', 'end'].map((term, index) => (\n          <div key={`${name}-${term}`}>\n            <Editor\n              {...props}\n              rule={rule(index)}\n              value={valueAsArray[index]}\n              handleOnChange={\n                index ? handleRangeEndChange : handleRangeStartChange\n              }\n            />\n          </div>\n        ))}\n      </>\n    );\n  }\n\n  return (\n    <div>\n      <Editor {...props} />\n    </div>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "Checkbox",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/query-builder/value-editor.tsx"
+        },
+        {
+          "name": "Editor",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/query-builder/value-editor.tsx"
+        },
+        {
+          "name": "Radio",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/query-builder/value-editor.tsx"
+        },
+        {
+          "name": "RadioGroup",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/query-builder/value-editor.tsx"
+        },
+        {
+          "name": "Switch",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/query-builder/value-editor.tsx"
+        },
+        {
+          "name": "TextAreaField",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/query-builder/value-editor.tsx"
+        },
+        {
+          "name": "TextField",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/query-builder/value-editor.tsx"
+        },
+        {
+          "name": "ValueSelector",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/query-builder/value-editor.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "12/12",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/query-builder/value-selector.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:43.607Z",
+    "bundleHash": "uifb:e6d2b49b6dcbcf8513b5466c",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/query-builder/value-selector.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/query-builder/value-selector.tsx",
+            "description": "value-selector - Interactive component",
+            "version": {
+              "variables": [],
+              "hooks": ["useCallback", "useMemo", "useValueSelector"],
+              "components": ["ComboBoxField", "OptionsItem", "OptionsSection"],
+              "functions": ["ValueSelector"],
+              "imports": [
+                "../combobox-field",
+                "../options/item",
+                "../options/section",
+                "@react-types/shared",
+                "client-only",
+                "react",
+                "react-querybuilder"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {
+                "onSelectionChange": {
+                  "type": "function",
+                  "signature": "() => void"
+                }
+              }
+            },
+            "exports": "named",
+            "prediction": ["Uses memoization for performance optimization"],
+            "semanticHash": "uif:564e12448e63b09fa119dcfa",
+            "fileHash": "uif:dda72910787787db95b1644b"
+          },
+          "codeHeader": null,
+          "code": "// __private-exports\n/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport type { Key } from '@react-types/shared';\nimport 'client-only';\nimport { useCallback, useMemo } from 'react';\nimport {\n  isOptionGroupArray,\n  useValueSelector,\n  type ValueSelectorProps,\n} from 'react-querybuilder';\nimport { ComboBoxField } from '../combobox-field';\nimport { OptionsItem } from '../options/item';\nimport { OptionsSection } from '../options/section';\n\nexport function ValueSelector(props: ValueSelectorProps) {\n  const {\n    handleOnChange,\n    disabled,\n    listsAsArrays,\n    options: optionsProp,\n    multiple,\n    title,\n    validation,\n    value,\n    ...rest\n  } = props;\n\n  const { onChange, val } = useValueSelector({\n    handleOnChange,\n    listsAsArrays,\n    multiple,\n    value,\n  });\n\n  const handleSelectionChange = useCallback(\n    (selection: Key | null) => {\n      if (selection) {\n        onChange(`${selection}`);\n      }\n    },\n    [onChange],\n  );\n\n  const options = useMemo(\n    () =>\n      isOptionGroupArray(optionsProp)\n        ? optionsProp.map((section) => (\n            <OptionsSection key={section.label} header={section.label}>\n              {section.options.map((option) => (\n                <OptionsItem id={option.name} key={option.name}>\n                  {option.label}\n                </OptionsItem>\n              ))}\n            </OptionsSection>\n          ))\n        : optionsProp.map((option) => (\n            <OptionsItem\n              textValue={option.label}\n              id={option.name}\n              key={option.name}\n            >\n              {option.label}\n            </OptionsItem>\n          )),\n    [optionsProp],\n  );\n\n  return (\n    <ComboBoxField\n      size='small'\n      isDisabled={disabled}\n      {...rest}\n      selectedKey={Array.isArray(val) ? val[0] : val}\n      aria-labelledby={title}\n      onSelectionChange={handleSelectionChange}\n    >\n      {options}\n    </ComboBoxField>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "ComboBoxField",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/query-builder/value-selector.tsx"
+        },
+        {
+          "name": "OptionsItem",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/query-builder/value-selector.tsx"
+        },
+        {
+          "name": "OptionsSection",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/query-builder/value-selector.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  }
+]

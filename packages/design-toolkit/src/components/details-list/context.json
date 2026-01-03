@@ -1,0 +1,1506 @@
+[
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "1/6",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/details-list/context.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:42.835Z",
+    "bundleHash": "uifb:8d628e305082b3c199b4882b",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/details-list/context.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/details-list/context.tsx",
+            "description": "context - Presentational component",
+            "version": {
+              "variables": ["DetailsListContext"],
+              "hooks": [],
+              "components": ["DetailsListContext.Provider"],
+              "functions": ["DetailsListProvider"],
+              "imports": [
+                "./types",
+                "@/lib/types",
+                "client-only",
+                "react",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": {
+              "named": ["DetailsListContext", "DetailsListProvider"]
+            },
+            "semanticHash": "uif:16b683ee2e805cea17b74e9e",
+            "fileHash": "uif:39781947909ae7a1f1c18836"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport 'client-only';\nimport { createContext } from 'react';\nimport type { ContextValue } from 'react-aria-components';\nimport type { ProviderProps } from '@/lib/types';\nimport type { DetailsListProps } from './types';\n\nexport const DetailsListContext =\n  createContext<ContextValue<DetailsListProps, HTMLDListElement>>(null);\n\nexport function DetailsListProvider({\n  children,\n  ...props\n}: ProviderProps<DetailsListProps>) {\n  return (\n    <DetailsListContext.Provider value={props}>\n      {children}\n    </DetailsListContext.Provider>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "DetailsListContext.Provider",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/details-list/context.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "2/6",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/details-list/details-list.stories.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:42.843Z",
+    "bundleHash": "uifb:7661402438df82a1aa8e6c42",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/details-list/details-list.stories.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/details-list/details-list.stories.tsx",
+            "description": "details-list.stories - Presentational component",
+            "version": {
+              "variables": ["Default", "meta"],
+              "hooks": [],
+              "components": [
+                "DetailsList",
+                "DetailsListLabel",
+                "DetailsListValue"
+              ],
+              "functions": [],
+              "imports": ["./", "./label", "./value", "@storybook/react-vite"]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "semanticHash": "uif:7bfba8a29e95c86c2a1e25c4",
+            "fileHash": "uif:50dea27ba43df23807e7d24a"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport { DetailsList } from './';\nimport { DetailsListLabel } from './label';\nimport { DetailsListValue } from './value';\nimport type { Meta, StoryObj } from '@storybook/react-vite';\n\nconst meta = {\n  title: 'Components/DetailsList',\n  component: DetailsList,\n  args: {\n    align: 'justify',\n  },\n  argTypes: {\n    align: {\n      control: 'select',\n      options: ['left', 'justify', 'center'],\n    },\n  },\n  parameters: {\n    layout: 'padded',\n    docs: {\n      description: {\n        component:\n          'A semantic details list component for displaying metadata in key-value pairs. Perfect for map object details, user profiles, or any structured information displayed in sidebars or detail panels.',\n      },\n    },\n  },\n  tags: ['autodocs'],\n} satisfies Meta<typeof DetailsList>;\n\nexport default meta;\ntype Story = StoryObj<typeof meta>;\n\nexport const Default: Story = {\n  render: (args) => (\n    <DetailsList {...args}>\n      <DetailsListLabel>Key</DetailsListLabel>\n      <DetailsListValue>Value</DetailsListValue>\n\n      <DetailsListLabel>Ships</DetailsListLabel>\n      <DetailsListValue>Millennium Falcon</DetailsListValue>\n      <DetailsListValue>USS Enterprise NCC-1701</DetailsListValue>\n      <DetailsListValue>Serenity</DetailsListValue>\n\n      <DetailsListLabel>Coordinates</DetailsListLabel>\n      <DetailsListValue>\n        <div>Great Pyramid of Giza: 29°58'44\" N 31°08'02\" E</div>\n        <div>Machu Picchu: 13°09'47\" S 72°32'41\" W</div>\n        <div>Nazca Lines: 14.7390° S, 75.1300° W</div>\n        <div>Colosseum: 41°53'24\" N 12°29'32\" E</div>\n        <div>Taj Mahal: 27°10'30\" N 78°02'31\" E</div>\n      </DetailsListValue>\n    </DetailsList>\n  ),\n};\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "DetailsList",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/details-list/details-list.stories.tsx"
+        },
+        {
+          "name": "DetailsListLabel",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/details-list/details-list.stories.tsx"
+        },
+        {
+          "name": "DetailsListValue",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/details-list/details-list.stories.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "3/6",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/details-list/index.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:42.846Z",
+    "bundleHash": "uifb:81292999cd24e952bab9caac",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/details-list/index.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/details-list/index.tsx",
+            "description": "index - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": ["useContextProps"],
+              "components": ["TextContext"],
+              "functions": ["DetailsList"],
+              "imports": [
+                "./context",
+                "./styles.module.css",
+                "./types",
+                "@accelint/design-foundation/lib/utils",
+                "client-only",
+                "react-aria-components"
+              ]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "style": {
+              "styleSources": {
+                "cssModule": "./styles.module.css",
+                "cssDetails": {
+                  "selectors": [
+                    ".center",
+                    ".justify",
+                    ".label",
+                    ".left",
+                    ".list",
+                    ".value"
+                  ],
+                  "properties": ["grid-template-columns"]
+                }
+              }
+            },
+            "semanticHash": "uif:f19eed92264400df78a345fd",
+            "fileHash": "uif:98b92c19f954eb939bcace12"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport 'client-only';\nimport { clsx } from '@accelint/design-foundation/lib/utils';\nimport {\n  DEFAULT_SLOT,\n  TextContext,\n  useContextProps,\n} from 'react-aria-components';\nimport { DetailsListContext } from './context';\nimport styles from './styles.module.css';\nimport type { DetailsListProps } from './types';\n\n/**\n * A semantic details list component for displaying metadata in key-value pairs.\n * Uses CSS Grid layout with labels in the first column and values in the second column.\n * Perfect for map object details, user profiles, or any structured information.\n *\n * @example\n * ```tsx\n * <DetailsList align=\"left\">\n *   <DetailsListLabel>Key</DetailsListLabel>\n *   <DetailsListValue>Value</DetailsListValue>\n *\n *   <DetailsListLabel>Ships</DetailsListLabel>\n *   <DetailsListValue>Millennium Falcon</DetailsListValue>\n *   <DetailsListValue>USS Enterprise NCC-1701</DetailsListValue>\n *   <DetailsListValue>Serenity</DetailsListValue>\n *\n *   <DetailsListLabel>Coordinates</DetailsListLabel>\n *   <DetailsListValue>\n *     <div>Great Pyramid of Giza: 29°58'44\" N 31°08'02\" E</div>\n *     <div>Machu Picchu: 13°09'47\" S 72°32'41\" W</div>\n *     <div>Colosseum: 41°53'24\" N 12°29'32\" E</div>\n *     <div>Taj Mahal: 27°10'30\" N 78°02'31\" E</div>\n *   </DetailsListValue>\n * </DetailsList>\n * ```\n * ## Child Component Behavior\n * - **DetailsListLabel**: Minimum of 1\n * - **DetailsListValue**: Minimum of 1\n */\nexport function DetailsList({ ref, ...props }: DetailsListProps) {\n  [props, ref] = useContextProps(props, ref ?? null, DetailsListContext);\n\n  const { children, classNames, align = 'justify', ...rest } = props;\n\n  return (\n    <TextContext\n      value={{\n        slots: {\n          [DEFAULT_SLOT]: {},\n          label: {\n            className: clsx(styles.label, styles[align], classNames?.label),\n          },\n          value: {\n            className: clsx(styles.value, styles[align], classNames?.value),\n          },\n        },\n      }}\n    >\n      <dl {...rest} className={clsx(styles.list, classNames?.list)}>\n        {children}\n      </dl>\n    </TextContext>\n  );\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "TextContext",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/details-list/index.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "4/6",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/details-list/label.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:42.849Z",
+    "bundleHash": "uifb:08b2656daaee0cf1b8ce6258",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/details-list/label.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/details-list/label.tsx",
+            "description": "label - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": ["Text"],
+              "functions": ["DetailsListLabel"],
+              "imports": ["./types", "client-only", "react-aria-components"]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "semanticHash": "uif:932da7e354dd66555aa8e565",
+            "fileHash": "uif:bb79ed471bd6c9effcb19420"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport 'client-only';\nimport { Text } from 'react-aria-components';\nimport type { DetailsListLabelProps } from './types';\n\nexport function DetailsListLabel(props: DetailsListLabelProps) {\n  return <Text {...props} elementType='dt' slot='label' />;\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "Text",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/details-list/label.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "5/6",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/details-list/types.ts",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:42.849Z",
+    "bundleHash": "uifb:3429dcfb9a4d985d10af67d2",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/details-list/types.ts",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "ts:module",
+            "entryId": "components/details-list/types.ts",
+            "description": "types - Type definitions",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": [],
+              "functions": [],
+              "imports": ["react", "react-aria-components"]
+            },
+            "logicSignature": {
+              "props": {
+                "slot": {
+                  "type": "string",
+                  "optional": true
+                },
+                "style": {
+                  "type": "React.CSSProperties",
+                  "optional": true
+                },
+                "title": {
+                  "type": "string",
+                  "optional": true
+                },
+                "ref": {
+                  "type": "React.Ref<HTMLElement>",
+                  "optional": true
+                },
+                "key": {
+                  "type": "React.Key",
+                  "optional": true
+                },
+                "defaultChecked": {
+                  "type": "boolean",
+                  "optional": true
+                },
+                "defaultValue": {
+                  "type": "string | number | readonly string[]",
+                  "optional": true
+                },
+                "suppressContentEditableWarning": {
+                  "type": "boolean",
+                  "optional": true
+                },
+                "suppressHydrationWarning": {
+                  "type": "boolean",
+                  "optional": true
+                },
+                "accessKey": {
+                  "type": "string",
+                  "optional": true
+                },
+                "autoCapitalize": {
+                  "type": "\"off\" | \"none\" | \"on\" | \"sentences\" | \"words\" | \"characters\" | (string & {})",
+                  "optional": true
+                },
+                "autoFocus": {
+                  "type": "boolean",
+                  "optional": true
+                },
+                "contentEditable": {
+                  "type": "Booleanish | \"inherit\" | \"plaintext-only\"",
+                  "optional": true
+                },
+                "contextMenu": {
+                  "type": "string",
+                  "optional": true
+                },
+                "dir": {
+                  "type": "string",
+                  "optional": true
+                },
+                "draggable": {
+                  "type": "Booleanish",
+                  "optional": true
+                },
+                "enterKeyHint": {
+                  "type": "literal-union",
+                  "literals": [
+                    "search",
+                    "enter",
+                    "done",
+                    "go",
+                    "next",
+                    "previous",
+                    "send"
+                  ],
+                  "optional": true
+                },
+                "hidden": {
+                  "type": "boolean",
+                  "optional": true
+                },
+                "id": {
+                  "type": "string",
+                  "optional": true
+                },
+                "lang": {
+                  "type": "string",
+                  "optional": true
+                },
+                "nonce": {
+                  "type": "string",
+                  "optional": true
+                },
+                "spellCheck": {
+                  "type": "Booleanish",
+                  "optional": true
+                },
+                "tabIndex": {
+                  "type": "number",
+                  "optional": true
+                },
+                "translate": {
+                  "type": "literal-union",
+                  "literals": ["yes", "no"],
+                  "optional": true
+                },
+                "radioGroup": {
+                  "type": "string",
+                  "optional": true
+                },
+                "role": {
+                  "type": "React.AriaRole",
+                  "optional": true
+                },
+                "about": {
+                  "type": "string",
+                  "optional": true
+                },
+                "content": {
+                  "type": "string",
+                  "optional": true
+                },
+                "datatype": {
+                  "type": "string",
+                  "optional": true
+                },
+                "inlist": {
+                  "type": "any",
+                  "optional": true
+                },
+                "prefix": {
+                  "type": "string",
+                  "optional": true
+                },
+                "property": {
+                  "type": "string",
+                  "optional": true
+                },
+                "rel": {
+                  "type": "string",
+                  "optional": true
+                },
+                "resource": {
+                  "type": "string",
+                  "optional": true
+                },
+                "rev": {
+                  "type": "string",
+                  "optional": true
+                },
+                "typeof": {
+                  "type": "string",
+                  "optional": true
+                },
+                "vocab": {
+                  "type": "string",
+                  "optional": true
+                },
+                "autoCorrect": {
+                  "type": "string",
+                  "optional": true
+                },
+                "autoSave": {
+                  "type": "string",
+                  "optional": true
+                },
+                "color": {
+                  "type": "string",
+                  "optional": true
+                },
+                "itemProp": {
+                  "type": "string",
+                  "optional": true
+                },
+                "itemScope": {
+                  "type": "boolean",
+                  "optional": true
+                },
+                "itemType": {
+                  "type": "string",
+                  "optional": true
+                },
+                "itemID": {
+                  "type": "string",
+                  "optional": true
+                },
+                "itemRef": {
+                  "type": "string",
+                  "optional": true
+                },
+                "results": {
+                  "type": "number",
+                  "optional": true
+                },
+                "security": {
+                  "type": "string",
+                  "optional": true
+                },
+                "unselectable": {
+                  "type": "literal-union",
+                  "literals": ["off", "on"],
+                  "optional": true
+                },
+                "popover": {
+                  "type": "\"\" | \"auto\" | \"manual\" | \"hint\"",
+                  "optional": true
+                },
+                "popoverTargetAction": {
+                  "type": "literal-union",
+                  "literals": ["toggle", "show", "hide"],
+                  "optional": true
+                },
+                "popoverTarget": {
+                  "type": "string",
+                  "optional": true
+                },
+                "inert": {
+                  "type": "boolean",
+                  "optional": true
+                },
+                "inputMode": {
+                  "type": "literal-union",
+                  "literals": [
+                    "search",
+                    "text",
+                    "none",
+                    "tel",
+                    "url",
+                    "email",
+                    "numeric",
+                    "decimal"
+                  ],
+                  "optional": true
+                },
+                "is": {
+                  "type": "string",
+                  "optional": true
+                },
+                "exportparts": {
+                  "type": "string",
+                  "optional": true
+                },
+                "part": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-activedescendant": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-atomic": {
+                  "type": "Booleanish",
+                  "optional": true
+                },
+                "aria-autocomplete": {
+                  "type": "literal-union",
+                  "literals": ["none", "list", "inline", "both"],
+                  "optional": true
+                },
+                "aria-braillelabel": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-brailleroledescription": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-busy": {
+                  "type": "Booleanish",
+                  "optional": true
+                },
+                "aria-checked": {
+                  "type": "boolean | \"true\" | \"false\" | \"mixed\"",
+                  "optional": true
+                },
+                "aria-colcount": {
+                  "type": "number",
+                  "optional": true
+                },
+                "aria-colindex": {
+                  "type": "number",
+                  "optional": true
+                },
+                "aria-colindextext": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-colspan": {
+                  "type": "number",
+                  "optional": true
+                },
+                "aria-controls": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-current": {
+                  "type": "boolean | \"time\" | \"true\" | \"false\" | \"page\" | \"step\" | \"location\" | \"date\"",
+                  "optional": true
+                },
+                "aria-describedby": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-description": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-details": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-disabled": {
+                  "type": "Booleanish",
+                  "optional": true
+                },
+                "aria-dropeffect": {
+                  "type": "literal-union",
+                  "literals": [
+                    "link",
+                    "none",
+                    "copy",
+                    "execute",
+                    "move",
+                    "popup"
+                  ],
+                  "optional": true
+                },
+                "aria-errormessage": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-expanded": {
+                  "type": "Booleanish",
+                  "optional": true
+                },
+                "aria-flowto": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-grabbed": {
+                  "type": "Booleanish",
+                  "optional": true
+                },
+                "aria-haspopup": {
+                  "type": "boolean | \"dialog\" | \"menu\" | \"true\" | \"false\" | \"grid\" | \"listbox\" | \"tree\"",
+                  "optional": true
+                },
+                "aria-hidden": {
+                  "type": "Booleanish",
+                  "optional": true
+                },
+                "aria-invalid": {
+                  "type": "boolean | \"true\" | \"false\" | \"grammar\" | \"spelling\"",
+                  "optional": true
+                },
+                "aria-keyshortcuts": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-label": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-labelledby": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-level": {
+                  "type": "number",
+                  "optional": true
+                },
+                "aria-live": {
+                  "type": "literal-union",
+                  "literals": ["off", "assertive", "polite"],
+                  "optional": true
+                },
+                "aria-modal": {
+                  "type": "Booleanish",
+                  "optional": true
+                },
+                "aria-multiline": {
+                  "type": "Booleanish",
+                  "optional": true
+                },
+                "aria-multiselectable": {
+                  "type": "Booleanish",
+                  "optional": true
+                },
+                "aria-orientation": {
+                  "type": "literal-union",
+                  "literals": ["horizontal", "vertical"],
+                  "optional": true
+                },
+                "aria-owns": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-placeholder": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-posinset": {
+                  "type": "number",
+                  "optional": true
+                },
+                "aria-pressed": {
+                  "type": "boolean | \"true\" | \"false\" | \"mixed\"",
+                  "optional": true
+                },
+                "aria-readonly": {
+                  "type": "Booleanish",
+                  "optional": true
+                },
+                "aria-relevant": {
+                  "type": "\"text\" | \"additions\" | \"additions removals\" | \"additions text\" | \"all\" | \"removals\" | \"removals additions\" | \"removals text\" | \"text additions\" | \"text removals\"",
+                  "optional": true
+                },
+                "aria-required": {
+                  "type": "Booleanish",
+                  "optional": true
+                },
+                "aria-roledescription": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-rowcount": {
+                  "type": "number",
+                  "optional": true
+                },
+                "aria-rowindex": {
+                  "type": "number",
+                  "optional": true
+                },
+                "aria-rowindextext": {
+                  "type": "string",
+                  "optional": true
+                },
+                "aria-rowspan": {
+                  "type": "number",
+                  "optional": true
+                },
+                "aria-selected": {
+                  "type": "Booleanish",
+                  "optional": true
+                },
+                "aria-setsize": {
+                  "type": "number",
+                  "optional": true
+                },
+                "aria-sort": {
+                  "type": "literal-union",
+                  "literals": ["none", "ascending", "descending", "other"],
+                  "optional": true
+                },
+                "aria-valuemax": {
+                  "type": "number",
+                  "optional": true
+                },
+                "aria-valuemin": {
+                  "type": "number",
+                  "optional": true
+                },
+                "aria-valuenow": {
+                  "type": "number",
+                  "optional": true
+                },
+                "aria-valuetext": {
+                  "type": "string",
+                  "optional": true
+                },
+                "children": {
+                  "type": "React.ReactNode",
+                  "optional": true
+                },
+                "dangerouslySetInnerHTML": {
+                  "type": "{ __html: string | TrustedHTML; }",
+                  "optional": true
+                },
+                "onCopy": {
+                  "type": "React.ClipboardEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onCopyCapture": {
+                  "type": "React.ClipboardEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onCut": {
+                  "type": "React.ClipboardEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onCutCapture": {
+                  "type": "React.ClipboardEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onPaste": {
+                  "type": "React.ClipboardEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onPasteCapture": {
+                  "type": "React.ClipboardEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onCompositionEnd": {
+                  "type": "React.CompositionEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onCompositionEndCapture": {
+                  "type": "React.CompositionEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onCompositionStart": {
+                  "type": "React.CompositionEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onCompositionStartCapture": {
+                  "type": "React.CompositionEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onCompositionUpdate": {
+                  "type": "React.CompositionEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onCompositionUpdateCapture": {
+                  "type": "React.CompositionEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onFocus": {
+                  "type": "React.FocusEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onFocusCapture": {
+                  "type": "React.FocusEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onBlur": {
+                  "type": "React.FocusEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onBlurCapture": {
+                  "type": "React.FocusEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onChange": {
+                  "type": "React.FormEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onChangeCapture": {
+                  "type": "React.FormEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onBeforeInput": {
+                  "type": "React.InputEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onBeforeInputCapture": {
+                  "type": "React.FormEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onInput": {
+                  "type": "React.FormEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onInputCapture": {
+                  "type": "React.FormEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onReset": {
+                  "type": "React.FormEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onResetCapture": {
+                  "type": "React.FormEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onSubmit": {
+                  "type": "React.FormEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onSubmitCapture": {
+                  "type": "React.FormEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onInvalid": {
+                  "type": "React.FormEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onInvalidCapture": {
+                  "type": "React.FormEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onLoad": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onLoadCapture": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onError": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onErrorCapture": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onKeyDown": {
+                  "type": "React.KeyboardEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onKeyDownCapture": {
+                  "type": "React.KeyboardEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onKeyPress": {
+                  "type": "React.KeyboardEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onKeyPressCapture": {
+                  "type": "React.KeyboardEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onKeyUp": {
+                  "type": "React.KeyboardEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onKeyUpCapture": {
+                  "type": "React.KeyboardEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onAbort": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onAbortCapture": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onCanPlay": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onCanPlayCapture": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onCanPlayThrough": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onCanPlayThroughCapture": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onDurationChange": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onDurationChangeCapture": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onEmptied": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onEmptiedCapture": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onEncrypted": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onEncryptedCapture": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onEnded": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onEndedCapture": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onLoadedData": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onLoadedDataCapture": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onLoadedMetadata": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onLoadedMetadataCapture": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onLoadStart": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onLoadStartCapture": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onPause": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onPauseCapture": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onPlay": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onPlayCapture": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onPlaying": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onPlayingCapture": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onProgress": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onProgressCapture": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onRateChange": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onRateChangeCapture": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onSeeked": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onSeekedCapture": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onSeeking": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onSeekingCapture": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onStalled": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onStalledCapture": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onSuspend": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onSuspendCapture": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onTimeUpdate": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onTimeUpdateCapture": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onVolumeChange": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onVolumeChangeCapture": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onWaiting": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onWaitingCapture": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onAuxClick": {
+                  "type": "React.MouseEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onAuxClickCapture": {
+                  "type": "React.MouseEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onClick": {
+                  "type": "React.MouseEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onClickCapture": {
+                  "type": "React.MouseEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onContextMenu": {
+                  "type": "React.MouseEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onContextMenuCapture": {
+                  "type": "React.MouseEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onDoubleClick": {
+                  "type": "React.MouseEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onDoubleClickCapture": {
+                  "type": "React.MouseEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onDrag": {
+                  "type": "React.DragEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onDragCapture": {
+                  "type": "React.DragEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onDragEnd": {
+                  "type": "React.DragEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onDragEndCapture": {
+                  "type": "React.DragEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onDragEnter": {
+                  "type": "React.DragEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onDragEnterCapture": {
+                  "type": "React.DragEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onDragExit": {
+                  "type": "React.DragEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onDragExitCapture": {
+                  "type": "React.DragEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onDragLeave": {
+                  "type": "React.DragEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onDragLeaveCapture": {
+                  "type": "React.DragEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onDragOver": {
+                  "type": "React.DragEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onDragOverCapture": {
+                  "type": "React.DragEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onDragStart": {
+                  "type": "React.DragEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onDragStartCapture": {
+                  "type": "React.DragEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onDrop": {
+                  "type": "React.DragEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onDropCapture": {
+                  "type": "React.DragEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onMouseDown": {
+                  "type": "React.MouseEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onMouseDownCapture": {
+                  "type": "React.MouseEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onMouseEnter": {
+                  "type": "React.MouseEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onMouseLeave": {
+                  "type": "React.MouseEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onMouseMove": {
+                  "type": "React.MouseEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onMouseMoveCapture": {
+                  "type": "React.MouseEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onMouseOut": {
+                  "type": "React.MouseEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onMouseOutCapture": {
+                  "type": "React.MouseEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onMouseOver": {
+                  "type": "React.MouseEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onMouseOverCapture": {
+                  "type": "React.MouseEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onMouseUp": {
+                  "type": "React.MouseEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onMouseUpCapture": {
+                  "type": "React.MouseEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onSelect": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onSelectCapture": {
+                  "type": "React.ReactEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onTouchCancel": {
+                  "type": "React.TouchEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onTouchCancelCapture": {
+                  "type": "React.TouchEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onTouchEnd": {
+                  "type": "React.TouchEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onTouchEndCapture": {
+                  "type": "React.TouchEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onTouchMove": {
+                  "type": "React.TouchEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onTouchMoveCapture": {
+                  "type": "React.TouchEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onTouchStart": {
+                  "type": "React.TouchEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onTouchStartCapture": {
+                  "type": "React.TouchEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onPointerDown": {
+                  "type": "React.PointerEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onPointerDownCapture": {
+                  "type": "React.PointerEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onPointerMove": {
+                  "type": "React.PointerEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onPointerMoveCapture": {
+                  "type": "React.PointerEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onPointerUp": {
+                  "type": "React.PointerEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onPointerUpCapture": {
+                  "type": "React.PointerEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onPointerCancel": {
+                  "type": "React.PointerEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onPointerCancelCapture": {
+                  "type": "React.PointerEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onPointerEnter": {
+                  "type": "React.PointerEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onPointerLeave": {
+                  "type": "React.PointerEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onPointerOver": {
+                  "type": "React.PointerEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onPointerOverCapture": {
+                  "type": "React.PointerEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onPointerOut": {
+                  "type": "React.PointerEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onPointerOutCapture": {
+                  "type": "React.PointerEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onGotPointerCapture": {
+                  "type": "React.PointerEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onGotPointerCaptureCapture": {
+                  "type": "React.PointerEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onLostPointerCapture": {
+                  "type": "React.PointerEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onLostPointerCaptureCapture": {
+                  "type": "React.PointerEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onScroll": {
+                  "type": "React.UIEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onScrollCapture": {
+                  "type": "React.UIEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onScrollEnd": {
+                  "type": "React.UIEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onScrollEndCapture": {
+                  "type": "React.UIEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onWheel": {
+                  "type": "React.WheelEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onWheelCapture": {
+                  "type": "React.WheelEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onAnimationStart": {
+                  "type": "React.AnimationEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onAnimationStartCapture": {
+                  "type": "React.AnimationEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onAnimationEnd": {
+                  "type": "React.AnimationEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onAnimationEndCapture": {
+                  "type": "React.AnimationEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onAnimationIteration": {
+                  "type": "React.AnimationEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onAnimationIterationCapture": {
+                  "type": "React.AnimationEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onToggle": {
+                  "type": "React.ToggleEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onBeforeToggle": {
+                  "type": "React.ToggleEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onTransitionCancel": {
+                  "type": "React.TransitionEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onTransitionCancelCapture": {
+                  "type": "React.TransitionEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onTransitionEnd": {
+                  "type": "React.TransitionEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onTransitionEndCapture": {
+                  "type": "React.TransitionEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onTransitionRun": {
+                  "type": "React.TransitionEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onTransitionRunCapture": {
+                  "type": "React.TransitionEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onTransitionStart": {
+                  "type": "React.TransitionEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "onTransitionStartCapture": {
+                  "type": "React.TransitionEventHandler<HTMLDListElement>",
+                  "optional": true
+                },
+                "classNames": {
+                  "type": "{ list?: string; label?: string; value?: string; }",
+                  "optional": true
+                },
+                "align": {
+                  "type": "literal-union",
+                  "literals": ["center", "justify", "left"],
+                  "optional": true
+                }
+              },
+              "emits": {}
+            },
+            "semanticHash": "uif:f6a0898d73c5ffa2ed6c2849",
+            "fileHash": "uif:ecb90214053792b02e4a8b66"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n\nimport type { ComponentPropsWithRef, RefAttributes } from 'react';\nimport type { TextProps } from 'react-aria-components';\n\nexport type DetailsListProps = Omit<\n  ComponentPropsWithRef<'dl'>,\n  'className'\n> & {\n  classNames?: {\n    list?: string;\n    label?: string;\n    value?: string;\n  };\n  align?: 'center' | 'justify' | 'left';\n};\n\nexport type DetailsListLabelProps = Omit<TextProps, 'elementType'> &\n  RefAttributes<HTMLElement>;\n\nexport type DetailsListValueProps = Omit<TextProps, 'elementType'> &\n  RefAttributes<HTMLElement>;\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [],
+      "source": "logicstamp-context@0.3.2"
+    }
+  },
+  {
+    "$schema": "https://logicstamp.dev/schemas/context/v0.1.json",
+    "position": "6/6",
+    "type": "LogicStampBundle",
+    "schemaVersion": "0.1",
+    "entryId": "components/details-list/value.tsx",
+    "depth": 2,
+    "createdAt": "2025-12-22T18:06:42.852Z",
+    "bundleHash": "uifb:fde5d5e68d8772bab0c4201a",
+    "graph": {
+      "nodes": [
+        {
+          "entryId": "components/details-list/value.tsx",
+          "contract": {
+            "type": "UIFContract",
+            "schemaVersion": "0.3",
+            "kind": "react:component",
+            "entryId": "components/details-list/value.tsx",
+            "description": "value - Presentational component",
+            "version": {
+              "variables": [],
+              "hooks": [],
+              "components": ["Text"],
+              "functions": ["DetailsListValue"],
+              "imports": ["./types", "client-only", "react-aria-components"]
+            },
+            "logicSignature": {
+              "props": {},
+              "emits": {}
+            },
+            "exports": "named",
+            "semanticHash": "uif:be530eb65231e719e8a0ba4a",
+            "fileHash": "uif:55a1a24872d04d347e747bfc"
+          },
+          "codeHeader": null,
+          "code": "/*\n * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.\n * This file is licensed to you under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License. You may obtain a copy\n * of the License at https://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software distributed under\n * the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS\n * OF ANY KIND, either express or implied. See the License for the specific language\n * governing permissions and limitations under the License.\n */\n'use client';\n\nimport 'client-only';\nimport { Text } from 'react-aria-components';\nimport type { DetailsListValueProps } from './types';\n\nexport function DetailsListValue(props: DetailsListValueProps) {\n  return <Text {...props} elementType='dd' slot='value' />;\n}\n"
+        }
+      ],
+      "edges": []
+    },
+    "meta": {
+      "missing": [
+        {
+          "name": "Text",
+          "reason": "No contract found (third-party or not scanned)",
+          "referencedBy": "components/details-list/value.tsx"
+        }
+      ],
+      "source": "logicstamp-context@0.3.2"
+    }
+  }
+]
