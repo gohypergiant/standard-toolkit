@@ -17,12 +17,12 @@ import {
   type PointerMoveEvent,
   type Tooltip,
 } from '@deck.gl-community/editable-layers';
-import { distance } from '@turf/turf';
 import {
   DEFAULT_DISTANCE_UNITS,
   getDistanceUnitAbbreviation,
 } from '../../../../shared/units';
 import { formatCircleTooltip } from '../../shared/constants';
+import { computeCircleMeasurements } from '../../shared/utils/geometry-measurements';
 
 /**
  * Extends DrawCircleFromCenterMode to display diameter and area tooltip.
@@ -55,14 +55,16 @@ export class DrawCircleModeWithTooltip extends DrawCircleFromCenterMode {
     ];
     const edgePoint = mapCoords as [number, number];
 
-    const radius = distance(centerPoint, edgePoint, { units: distanceUnits });
-    const diameter = radius * 2;
-    const circleArea = Math.PI * radius ** 2;
+    const { diameter, area } = computeCircleMeasurements(
+      centerPoint,
+      edgePoint,
+      distanceUnits,
+    );
     const unitAbbrev = getDistanceUnitAbbreviation(distanceUnits);
 
     this.tooltip = {
       position: mapCoords,
-      text: formatCircleTooltip(diameter, circleArea, unitAbbrev),
+      text: formatCircleTooltip(diameter, area, unitAbbrev),
     };
   }
 

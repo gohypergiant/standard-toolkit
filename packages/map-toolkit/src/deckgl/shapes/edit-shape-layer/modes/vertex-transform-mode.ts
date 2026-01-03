@@ -23,6 +23,7 @@ import {
   TranslateMode,
 } from '@deck.gl-community/editable-layers';
 import { featureCollection } from '@turf/helpers';
+import { filterGeometryAwarePicks } from '../../shared/utils/pick-filtering';
 import { RotateModeWithSnap } from './rotate-mode-with-snap';
 import { ScaleModeWithFreeTransform } from './scale-mode-with-free-transform';
 
@@ -251,16 +252,7 @@ export class VertexTransformMode extends CompositeMode {
     // Filter picks to prevent TypeError from sublayer elements
     let filteredProps = props;
     if (picks && picks.length > 0) {
-      const filteredPicks: typeof picks = [];
-      let didFilter = false;
-
-      for (const pick of picks) {
-        if (pick.isGuide || pick.object?.geometry?.type !== undefined) {
-          filteredPicks.push(pick);
-        } else {
-          didFilter = true;
-        }
-      }
+      const { filteredPicks, didFilter } = filterGeometryAwarePicks(picks);
 
       if (didFilter) {
         filteredProps = {

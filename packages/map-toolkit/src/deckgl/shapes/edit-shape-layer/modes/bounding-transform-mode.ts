@@ -22,7 +22,7 @@ import {
   TranslateMode,
 } from '@deck.gl-community/editable-layers';
 import { featureCollection } from '@turf/helpers';
-import { distance, point } from '@turf/turf';
+import { distance } from '@turf/turf';
 import {
   DEFAULT_DISTANCE_UNITS,
   getDistanceUnitAbbreviation,
@@ -31,6 +31,7 @@ import {
   formatEllipseTooltip,
   formatRectangleTooltip,
 } from '../../shared/constants';
+import { computeRectangleMeasurementsFromCorners } from '../../shared/utils/geometry-measurements';
 import { RotateModeWithSnap } from './rotate-mode-with-snap';
 import { ScaleModeWithFreeTransform } from './scale-mode-with-free-transform';
 import type { Feature, Polygon, Position } from 'geojson';
@@ -297,15 +298,14 @@ export class BoundingTransformMode extends CompositeMode {
       const corner1 = coordinates[1] as [number, number];
       const corner2 = coordinates[2] as [number, number];
 
-      const width = distance(point(corner0), point(corner1), {
-        units: distanceUnits,
-      });
-      const height = distance(point(corner1), point(corner2), {
-        units: distanceUnits,
-      });
-      const rectArea = width * height;
+      const { width, height, area } = computeRectangleMeasurementsFromCorners(
+        corner0,
+        corner1,
+        corner2,
+        distanceUnits,
+      );
 
-      text = formatRectangleTooltip(width, height, rectArea, unitAbbrev);
+      text = formatRectangleTooltip(width, height, area, unitAbbrev);
     } else {
       // Ellipse: calculate major/minor axes
       const { majorAxis, minorAxis } = this.calculateEllipseAxes(

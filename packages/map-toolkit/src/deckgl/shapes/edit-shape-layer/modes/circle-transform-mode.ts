@@ -23,12 +23,14 @@ import {
   type Tooltip,
   TranslateMode,
 } from '@deck.gl-community/editable-layers';
-import { centroid, distance } from '@turf/turf';
+import { centroid } from '@turf/turf';
 import {
   DEFAULT_DISTANCE_UNITS,
   getDistanceUnitAbbreviation,
 } from '../../../../shared/units';
 import { formatCircleTooltip } from '../../shared/constants';
+import { computeCircleMeasurements } from '../../shared/utils/geometry-measurements';
+import { filterGeometryAwarePicks } from '../../shared/utils/pick-filtering';
 import type { Feature, Polygon } from 'geojson';
 
 type ActiveMode = ResizeCircleMode | TranslateMode | null;
@@ -158,19 +160,9 @@ export class CircleTransformMode extends CompositeMode {
   ): GuideFeatureCollection {
     const picks = props.lastPointerMoveEvent?.picks;
 
-    // Only filter if there are picks - single pass filter (no separate some() check)
+    // Filter picks to prevent TypeError from sublayer elements
     if (picks && picks.length > 0) {
-      // Single-pass: filter and check if we removed anything
-      const filteredPicks: typeof picks = [];
-      let didFilter = false;
-
-      for (const pick of picks) {
-        if (pick.isGuide || pick.object?.geometry?.type !== undefined) {
-          filteredPicks.push(pick);
-        } else {
-          didFilter = true;
-        }
-      }
+      const { filteredPicks, didFilter } = filterGeometryAwarePicks(picks);
 
       if (didFilter) {
         // Create a modified props with filtered picks
@@ -227,15 +219,17 @@ export class CircleTransformMode extends CompositeMode {
     const centerFeature = centroid(feature);
     const center = centerFeature.geometry.coordinates as [number, number];
     const firstPoint = coordinates[0] as [number, number];
-    const radius = distance(center, firstPoint, { units: distanceUnits });
-    const diameter = radius * 2;
-    const circleArea = Math.PI * radius ** 2;
+    const { diameter, area } = computeCircleMeasurements(
+      center,
+      firstPoint,
+      distanceUnits,
+    );
     const unitAbbrev = getDistanceUnitAbbreviation(distanceUnits);
 
     // Position tooltip at cursor - offset is applied via getPixelOffset in sublayer props
     this.tooltip = {
       position: mapCoords,
-      text: formatCircleTooltip(diameter, circleArea, unitAbbrev),
+      text: formatCircleTooltip(diameter, area, unitAbbrev),
     };
   }
 }

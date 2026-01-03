@@ -286,3 +286,32 @@ export function formatDistanceTooltip(
 ): string {
   return `${formatDistance(distance)} ${unitAbbrev}`;
 }
+
+// =============================================================================
+// Edit Event Type Classification
+// =============================================================================
+
+/**
+ * Continuous edit event types that fire during dragging.
+ * These are emitted repeatedly while the user drags during an edit operation.
+ */
+export const CONTINUOUS_EDIT_TYPES = new Set([
+  'movePosition',
+  'unionGeometry',
+  'scaling',
+  'rotating',
+  'translating',
+]);
+
+/**
+ * Completion edit event types that fire when dragging ends.
+ * These are emitted once when the user finishes an edit action.
+ */
+export const COMPLETION_EDIT_TYPES = new Set([
+  'finishMovePosition',
+  'addPosition',
+  'removePosition',
+  'scaled',
+  'rotated',
+  'translated',
+]);

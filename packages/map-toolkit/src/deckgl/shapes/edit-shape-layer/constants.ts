@@ -15,6 +15,12 @@
 import type { CSSCursorType } from '../../../map-cursor/types';
 import type { EditMode } from './types';
 
+// Re-export edit event type sets from shared constants
+export {
+  COMPLETION_EDIT_TYPES,
+  CONTINUOUS_EDIT_TYPES,
+} from '../shared/constants';
+
 /**
  * Mode name for the map-mode integration
  */
@@ -36,28 +42,3 @@ export const EDIT_CURSOR_MAP: Record<EditMode, CSSCursorType> = {
   'circle-transform': 'crosshair',
   translate: 'crosshair',
 };
-
-/**
- * Continuous edit event types that fire during dragging.
- * These are emitted repeatedly while the user drags.
- */
-export const CONTINUOUS_EDIT_TYPES = new Set([
-  'movePosition',
-  'unionGeometry',
-  'scaling',
-  'rotating',
-  'translating',
-]);
-
-/**
- * Completion edit event types that fire when dragging ends.
- * These are emitted once when the user finishes an edit action.
- */
-export const COMPLETION_EDIT_TYPES = new Set([
-  'finishMovePosition',
-  'addPosition',
-  'removePosition',
-  'scaled',
-  'rotated',
-  'translated',
-]);

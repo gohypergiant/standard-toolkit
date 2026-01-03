@@ -13,17 +13,10 @@
 'use client';
 
 import { useContext, useEffect, useRef, useSyncExternalStore } from 'react';
-import {
-  DEFAULT_DISTANCE_UNITS,
-  getDistanceUnitFromAbbreviation,
-} from '../../../shared/units';
 import { MapContext } from '../../base-map/provider';
-import {
-  DEFAULT_EDIT_HANDLE_COLOR,
-  EDITABLE_LAYER_SUBLAYER_PROPS,
-} from '../shared/constants';
 import { useShiftZoomDisable } from '../shared/hooks';
 import { ShapeFeatureType, type ShapeFeatureTypeValues } from '../shared/types';
+import { getDefaultEditableLayerProps } from '../shared/utils/layer-config';
 import { getFillColor, getLineColor } from '../shared/utils/style-utils';
 import {
   COMPLETION_EDIT_TYPES,
@@ -250,14 +243,7 @@ export function EditShapeLayer({
       getLineColor={lineColor}
       getTentativeFillColor={fillColor}
       getTentativeLineColor={lineColor}
-      getEditHandlePointColor={DEFAULT_EDIT_HANDLE_COLOR}
-      getEditHandlePointOutlineColor={DEFAULT_EDIT_HANDLE_COLOR}
-      modeConfig={{
-        distanceUnits: unit
-          ? (getDistanceUnitFromAbbreviation(unit) ?? DEFAULT_DISTANCE_UNITS)
-          : DEFAULT_DISTANCE_UNITS,
-      }}
-      _subLayerProps={EDITABLE_LAYER_SUBLAYER_PROPS}
+      {...getDefaultEditableLayerProps(unit)}
     />
   );
 }

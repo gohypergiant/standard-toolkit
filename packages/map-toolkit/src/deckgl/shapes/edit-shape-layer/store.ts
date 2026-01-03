@@ -14,9 +14,6 @@
 
 import { Broadcast } from '@accelint/bus';
 import { getLogger } from '@accelint/logger';
-import { MapCursorEvents } from '../../../map-cursor/events';
-import { getOrCreateClearCursor } from '../../../map-cursor/store';
-import { MapModeEvents } from '../../../map-mode/events';
 import { MapEvents } from '../../base-map/events';
 import {
   isCircleShape,
@@ -25,6 +22,11 @@ import {
   isRectangleShape,
 } from '../shared/types';
 import {
+  releaseModeAndCursor,
+  requestCursorChange,
+  requestModeChange,
+} from '../shared/utils/mode-utils';
+import {
   EDIT_CURSOR_MAP,
   EDIT_SHAPE_LAYER_ID,
   EDIT_SHAPE_MODE,
@@ -32,8 +34,6 @@ import {
 import { EditShapeEvents } from './events';
 import type { UniqueId } from '@accelint/core';
 import type { Feature } from 'geojson';
-import type { MapCursorEventType } from '../../../map-cursor/types';
-import type { MapModeEventType } from '../../../map-mode/types';
 import type { MapEventType } from '../../base-map/types';
 import type { Shape } from '../shared/types';
 import type {
@@ -61,8 +61,6 @@ const logger = getLogger({
  * Typed event bus instances
  */
 const editShapeBus = Broadcast.getInstance<EditShapeEvent>();
-const mapModeBus = Broadcast.getInstance<MapModeEventType>();
-const mapCursorBus = Broadcast.getInstance<MapCursorEventType>();
 const mapEventBus = Broadcast.getInstance<MapEventType>();
 
 /**
@@ -115,6 +113,30 @@ const saveCache = new Map<UniqueId, () => void>();
  * Cache of cancel functions per mapId to maintain referential stability
  */
 const cancelCache = new Map<UniqueId, () => void>();
+
+/**
+ * All state caches that need cleanup when a mapId is removed.
+ * Using a const array enables consistent cleanup across all functions.
+ */
+const stateCaches = [
+  editingStore,
+  componentSubscribers,
+  subscriptionCache,
+  snapshotCache,
+  serverSnapshotCache,
+  editCache,
+  saveCache,
+  cancelCache,
+] as const;
+
+/**
+ * Clear all cached state for a given mapId
+ */
+function clearAllCaches(mapId: UniqueId): void {
+  for (const cache of stateCaches) {
+    cache.delete(mapId);
+  }
+}
 
 /**
  * Get or create editing state for a given mapId
@@ -203,20 +225,10 @@ function startEditing(
     featureBeingEdited: shape.feature,
   });
 
-  // Request map mode
-  mapModeBus.emit(MapModeEvents.changeRequest, {
-    desiredMode: EDIT_SHAPE_MODE,
-    owner: EDIT_SHAPE_LAYER_ID,
-    id: mapId,
-  });
-
-  // Request cursor
+  // Request map mode and cursor
+  requestModeChange(mapId, EDIT_SHAPE_MODE, EDIT_SHAPE_LAYER_ID);
   const cursor = EDIT_CURSOR_MAP[editMode];
-  mapCursorBus.emit(MapCursorEvents.changeRequest, {
-    cursor,
-    owner: EDIT_SHAPE_LAYER_ID,
-    id: mapId,
-  });
+  requestCursorChange(mapId, cursor, EDIT_SHAPE_LAYER_ID);
 
   // Disable map panning during editing to prevent accidental map movement
   mapEventBus.emit(MapEvents.disablePan, { id: mapId });
@@ -276,15 +288,8 @@ function saveEditing(mapId: UniqueId): Shape | null {
     featureBeingEdited: null,
   });
 
-  // Return to default mode
-  mapModeBus.emit(MapModeEvents.changeRequest, {
-    desiredMode: 'default',
-    owner: EDIT_SHAPE_LAYER_ID,
-    id: mapId,
-  });
-
-  // Clear cursor using the store function directly
-  getOrCreateClearCursor(mapId)(EDIT_SHAPE_LAYER_ID);
+  // Return to default mode and cursor
+  releaseModeAndCursor(mapId, EDIT_SHAPE_LAYER_ID);
 
   // Re-enable map panning after editing is complete
   mapEventBus.emit(MapEvents.enablePan, { id: mapId });
@@ -321,15 +326,8 @@ function cancelEditing(mapId: UniqueId): void {
     featureBeingEdited: null,
   });
 
-  // Return to default mode
-  mapModeBus.emit(MapModeEvents.changeRequest, {
-    desiredMode: 'default',
-    owner: EDIT_SHAPE_LAYER_ID,
-    id: mapId,
-  });
-
-  // Clear cursor using the store function directly
-  getOrCreateClearCursor(mapId)(EDIT_SHAPE_LAYER_ID);
+  // Return to default mode and cursor
+  releaseModeAndCursor(mapId, EDIT_SHAPE_LAYER_ID);
 
   // Re-enable map panning after editing is canceled
   mapEventBus.emit(MapEvents.enablePan, { id: mapId });
@@ -359,15 +357,8 @@ function cleanupIfNoSubscribers(mapId: UniqueId): void {
   const subscribers = componentSubscribers.get(mapId);
 
   if (!subscribers || subscribers.size === 0) {
-    // No more React subscribers - clean up all state
-    editingStore.delete(mapId);
-    componentSubscribers.delete(mapId);
-    subscriptionCache.delete(mapId);
-    snapshotCache.delete(mapId);
-    serverSnapshotCache.delete(mapId);
-    editCache.delete(mapId);
-    saveCache.delete(mapId);
-    cancelCache.delete(mapId);
+    // No more React subscribers - clean up all state caches
+    clearAllCaches(mapId);
   }
 }
 
@@ -522,13 +513,6 @@ export function clearEditingState(mapId: UniqueId): void {
     cancelEditing(mapId);
   }
 
-  // Clear all state
-  editingStore.delete(mapId);
-  componentSubscribers.delete(mapId);
-  subscriptionCache.delete(mapId);
-  snapshotCache.delete(mapId);
-  serverSnapshotCache.delete(mapId);
-  editCache.delete(mapId);
-  saveCache.delete(mapId);
-  cancelCache.delete(mapId);
+  // Clear all state caches
+  clearAllCaches(mapId);
 }

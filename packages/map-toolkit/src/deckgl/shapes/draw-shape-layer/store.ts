@@ -13,9 +13,12 @@
 'use client';
 
 import { Broadcast } from '@accelint/bus';
-import { MapCursorEvents } from '../../../map-cursor/events';
-import { getOrCreateClearCursor } from '../../../map-cursor/store';
 import { MapModeEvents } from '../../../map-mode/events';
+import {
+  releaseModeAndCursor,
+  requestCursorChange,
+  requestModeChange,
+} from '../shared/utils/mode-utils';
 import {
   DRAW_CURSOR_MAP,
   DRAW_SHAPE_LAYER_ID,
@@ -25,7 +28,6 @@ import { DrawShapeEvents } from './events';
 import { convertFeatureToShape } from './utils/feature-conversion';
 import type { UniqueId } from '@accelint/core';
 import type { Feature } from 'geojson';
-import type { MapCursorEventType } from '../../../map-cursor/types';
 import type { MapModeEventType } from '../../../map-mode/types';
 import type { Shape, ShapeFeatureType } from '../shared/types';
 import type { DrawShapeEvent, ShapeDrawnEvent } from './events';
@@ -41,7 +43,6 @@ import type {
  */
 const drawShapeBus = Broadcast.getInstance<DrawShapeEvent>();
 const mapModeBus = Broadcast.getInstance<MapModeEventType>();
-const mapCursorBus = Broadcast.getInstance<MapCursorEventType>();
 
 /**
  * Default drawing state
@@ -96,6 +97,30 @@ const drawCache = new Map<UniqueId, DrawFunction>();
  * Cache of cancel functions per mapId to maintain referential stability
  */
 const cancelCache = new Map<UniqueId, () => void>();
+
+/**
+ * All state caches that need cleanup when a mapId is removed.
+ * Using a const array enables consistent cleanup across all functions.
+ */
+const stateCaches = [
+  drawingStore,
+  componentSubscribers,
+  busUnsubscribers,
+  subscriptionCache,
+  snapshotCache,
+  serverSnapshotCache,
+  drawCache,
+  cancelCache,
+] as const;
+
+/**
+ * Clear all cached state for a given mapId
+ */
+function clearAllCaches(mapId: UniqueId): void {
+  for (const cache of stateCaches) {
+    cache.delete(mapId);
+  }
+}
 
 /**
  * Get or create drawing state for a given mapId
@@ -156,20 +181,10 @@ function startDrawing(
     circleDefaults: options?.circleDefaults ?? null,
   });
 
-  // Request map mode
-  mapModeBus.emit(MapModeEvents.changeRequest, {
-    desiredMode: DRAW_SHAPE_MODE,
-    owner: DRAW_SHAPE_LAYER_ID,
-    id: mapId,
-  });
-
-  // Request cursor
+  // Request map mode and cursor
+  requestModeChange(mapId, DRAW_SHAPE_MODE, DRAW_SHAPE_LAYER_ID);
   const cursor = DRAW_CURSOR_MAP[shapeType];
-  mapCursorBus.emit(MapCursorEvents.changeRequest, {
-    cursor,
-    owner: DRAW_SHAPE_LAYER_ID,
-    id: mapId,
-  });
+  requestCursorChange(mapId, cursor, DRAW_SHAPE_LAYER_ID);
 
   // Emit drawing started event
   drawShapeBus.emit(DrawShapeEvents.drawing, {
@@ -204,15 +219,8 @@ function completeDrawing(mapId: UniqueId, feature: Feature): Shape {
     circleDefaults: null,
   });
 
-  // Return to default mode
-  mapModeBus.emit(MapModeEvents.changeRequest, {
-    desiredMode: 'default',
-    owner: DRAW_SHAPE_LAYER_ID,
-    id: mapId,
-  });
-
-  // Clear cursor using the store function directly
-  getOrCreateClearCursor(mapId)(DRAW_SHAPE_LAYER_ID);
+  // Return to default mode and cursor
+  releaseModeAndCursor(mapId, DRAW_SHAPE_LAYER_ID);
 
   // Emit shape drawn event
   // Shape contains GeoJSON Feature which is structurally cloneable
@@ -249,15 +257,8 @@ function cancelDrawing(mapId: UniqueId): void {
     circleDefaults: null,
   });
 
-  // Return to default mode
-  mapModeBus.emit(MapModeEvents.changeRequest, {
-    desiredMode: 'default',
-    owner: DRAW_SHAPE_LAYER_ID,
-    id: mapId,
-  });
-
-  // Clear cursor using the store function directly
-  getOrCreateClearCursor(mapId)(DRAW_SHAPE_LAYER_ID);
+  // Return to default mode and cursor
+  releaseModeAndCursor(mapId, DRAW_SHAPE_LAYER_ID);
 
   // Emit canceled event
   drawShapeBus.emit(DrawShapeEvents.canceled, {
@@ -322,17 +323,10 @@ function cleanupBusListenerIfNeeded(mapId: UniqueId): void {
     const unsub = busUnsubscribers.get(mapId);
     if (unsub) {
       unsub();
-      busUnsubscribers.delete(mapId);
     }
 
-    // Clean up all state
-    drawingStore.delete(mapId);
-    componentSubscribers.delete(mapId);
-    subscriptionCache.delete(mapId);
-    snapshotCache.delete(mapId);
-    serverSnapshotCache.delete(mapId);
-    drawCache.delete(mapId);
-    cancelCache.delete(mapId);
+    // Clean up all state caches
+    clearAllCaches(mapId);
   }
 }
 
@@ -482,15 +476,8 @@ export function clearDrawingState(mapId: UniqueId): void {
   const unsub = busUnsubscribers.get(mapId);
   if (unsub) {
     unsub();
-    busUnsubscribers.delete(mapId);
   }
 
-  // Clear all state
-  drawingStore.delete(mapId);
-  componentSubscribers.delete(mapId);
-  subscriptionCache.delete(mapId);
-  snapshotCache.delete(mapId);
-  serverSnapshotCache.delete(mapId);
-  drawCache.delete(mapId);
-  cancelCache.delete(mapId);
+  // Clear all state caches
+  clearAllCaches(mapId);
 }
