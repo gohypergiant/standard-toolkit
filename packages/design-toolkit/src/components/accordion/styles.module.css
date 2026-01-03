@@ -63,6 +63,12 @@
 }
 
 @layer components.l2 {
+  .menu {
+    @variant focus-visible {
+      @apply outline-mono-bold-pressed;
+    }
+  }
+
   .trigger {
     @apply w-full justify-start px-0;
 
