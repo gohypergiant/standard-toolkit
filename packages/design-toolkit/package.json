@@ -409,7 +409,7 @@
     "build": "pnpm tsdown",
     "build-storybook": "pnpm storybook build",
     "constellation-tracker": "pnpm exec constellation-tracker",
-    "context": "LOGICSTAMP_DEBUG=1 pnpm stamp context src --include-code full --depth 2 --out src --include-style --predict-behavior",
+    "context": "pnpm stamp context src --include-code full --depth 2 --out dist --include-style --predict-behavior -f toon",
     "dev": "pnpm tsc --watch",
     "format": "pnpm format:biome && pnpm format:prettier",
     "format:biome": "pnpm biome format . --write --verbose",

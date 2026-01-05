@@ -40,3 +40,9 @@ apps/next/test-results/
 logicstamp.manifest.json
 .logicstamp/
 stamp_security_report.json
+
+# LogicStamp context & security files
+context.json
+context_*.json
+context.toon
+context_*.toon
