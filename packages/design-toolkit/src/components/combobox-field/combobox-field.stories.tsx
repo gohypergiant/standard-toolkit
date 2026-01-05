@@ -38,6 +38,7 @@ const meta = {
     isDisabled: false,
     isInvalid: false,
     isRequired: true,
+    isReadOnly: false,
     allowsCustomValue: false,
   },
   argTypes: {
@@ -322,4 +323,35 @@ export const WithCustomValue: Story = {
       </div>
     );
   },
+};
+
+export const Readonly: Story = {
+  render: ({ children, ...args }) => (
+    <ComboBoxField<CustomOptionsItem>
+      {...args}
+      defaultItems={items}
+      inputProps={{
+        value: 'some display value looooooooooooooooooooooooooong string',
+      }}
+      isReadOnly
+    >
+      {(item) => (
+        <OptionsItem
+          key={item.id}
+          textValue={item.name}
+          isDisabled={item.isDisabled}
+        >
+          {item.prefixIcon && <Icon>{item.prefixIcon}</Icon>}
+          <OptionsItemContent>
+            <OptionsItemLabel>{item.name}</OptionsItemLabel>
+            {item.description && (
+              <OptionsItemDescription>
+                {item.description}
+              </OptionsItemDescription>
+            )}
+          </OptionsItemContent>
+        </OptionsItem>
+      )}
+    </ComboBoxField>
+  ),
 };
