@@ -51,11 +51,11 @@ Stop and validate at these moments:
 
 When context gets long:
 
-1. Re-read this AGENTS.md file
-2. Summarize progress in PROGRESS.md
-3. Document current state before major changes
+1. Re-read this AGENTS.md file.
+2. Summarize progress in PROGRESS.md (create this file if it does not exist).
+3. Document current state before major changes.
 
-Maintain TODO.md structure:
+Maintain the following structure in a TODO.md file (create this file if it does not exist):
 
 ```markdown
 ## Current Task
