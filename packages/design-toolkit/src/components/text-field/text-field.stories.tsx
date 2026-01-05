@@ -11,6 +11,7 @@
  */
 
 import { TextField } from './';
+import type { InputProps } from '../input/types';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
@@ -41,7 +42,6 @@ const meta = {
     },
     isReadOnly: {
       control: 'boolean',
-      table: { defaultValue: { summary: 'false' } },
     },
     minLength: {
       control: 'number',
@@ -94,4 +94,73 @@ export const WithPrefixAndSuffix: Story = {
     },
     description: 'Approximate temperature in Celsius',
   },
+};
+
+export const WithInputProps: StoryObj<InputProps> = {
+  parameters: {
+    controls: {
+      expanded: true,
+      include: [
+        'placeholder',
+        'type',
+        'isClearable',
+        'autoSize',
+        'prefix',
+        'suffix',
+        'pattern',
+      ],
+    },
+  },
+  args: {
+    placeholder: 'Enter text...',
+    type: 'text',
+    isClearable: true,
+    autoSize: false,
+    prefix: '',
+    suffix: '',
+    pattern: '',
+  },
+  argTypes: {
+    isClearable: {
+      control: 'boolean',
+    },
+    autoSize: {
+      control: 'boolean',
+    },
+    type: {
+      control: 'select',
+      options: ['text', 'email', 'password', 'search', 'tel', 'url', 'number'],
+    },
+    placeholder: { control: 'text' },
+    prefix: { control: 'text' },
+    suffix: { control: 'text' },
+    pattern: {
+      control: 'text',
+      description:
+        'Regex pattern for validation. Examples: `[A-Za-z]+` (letters only), `[0-9]{5}` (5 digits)',
+    },
+  },
+  render: ({
+    isClearable,
+    autoSize,
+    type,
+    placeholder,
+    prefix,
+    suffix,
+    pattern,
+  }) => (
+    <TextField
+      label='TextField with InputProps'
+      description='Demonstrates inputProps passed to the underlying Input component'
+      inputProps={{
+        isClearable,
+        autoSize,
+        type,
+        placeholder,
+        prefix,
+        suffix,
+        pattern,
+      }}
+    />
+  ),
 };
