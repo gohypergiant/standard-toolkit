@@ -260,6 +260,26 @@ export function formatSegmentsToCoordinateString(
 }
 
 /**
+ * Format a decimal string to specified precision for display
+ *
+ * This is used to ensure consistent decimal precision when displaying
+ * coordinate segments, regardless of the precision returned by the geo package.
+ *
+ * @param value - The decimal string to format
+ * @param decimals - Number of decimal places to display
+ * @returns Formatted string with specified precision
+ * @internal
+ */
+function formatDecimalPrecision(value: string, decimals: number): string {
+  const num = Number.parseFloat(value);
+  if (Number.isNaN(num)) {
+    return value;
+  }
+  // Round to specified decimals, then remove trailing zeros
+  return Number.parseFloat(num.toFixed(decimals)).toString();
+}
+
+/**
  * Parse DD coordinate string to segments
  *
  * Extracts segment values from a formatted DD coordinate string. This duplicates
@@ -325,12 +345,13 @@ function parseDDMCoordinateString(coordString: string): string[] | null {
   if (!match) {
     return null;
   }
+  // Round minutes to 4 decimal places for display (CJCSI 3900.01E compliance)
   return [
     match[1] as string,
-    match[2] as string,
+    formatDecimalPrecision(match[2] as string, 4),
     match[3] as string,
     match[4] as string,
-    match[5] as string,
+    formatDecimalPrecision(match[5] as string, 4),
     match[6] as string,
   ];
 }
@@ -359,14 +380,15 @@ function parseDMSCoordinateString(coordString: string): string[] | null {
   if (!match) {
     return null;
   }
+  // Round seconds to 2 decimal places for display
   return [
     match[1] as string,
     match[2] as string,
-    match[3] as string,
+    formatDecimalPrecision(match[3] as string, 2),
     match[4] as string,
     match[5] as string,
     match[6] as string,
-    match[7] as string,
+    formatDecimalPrecision(match[7] as string, 2),
     match[8] as string,
   ];
 }
@@ -644,7 +666,8 @@ export function convertDisplaySegmentsToDD(
       return null;
     }
 
-    // Extract DD values directly from coord.raw (no string parsing needed)
+    // Extract DD values directly from coord.raw and round to 6 decimals
+    // This ensures consistency with convertDDToDisplaySegments and getAllCoordinateFormats
     const { LAT, LON } = coord.raw;
 
     return {
@@ -791,12 +814,24 @@ function convertToFormat(
       case 'dd':
         formattedValue = coord.dd();
         break;
-      case 'ddm':
-        formattedValue = coord.ddm();
+      case 'ddm': {
+        const raw = coord.ddm();
+        const s = parseDDMCoordinateString(raw);
+        // parseDDMCoordinateString already applies 4 decimal precision to minutes
+        formattedValue = s
+          ? `${s[0]} ${s[1]} ${s[2]} / ${s[3]} ${s[4]} ${s[5]}`
+          : raw;
         break;
-      case 'dms':
-        formattedValue = coord.dms();
+      }
+      case 'dms': {
+        const raw = coord.dms();
+        const s = parseDMSCoordinateString(raw);
+        // parseDMSCoordinateString already applies 2 decimal precision to seconds
+        formattedValue = s
+          ? `${s[0]} ${s[1]} ${s[2]} ${s[3]} / ${s[4]} ${s[5]} ${s[6]} ${s[7]}`
+          : raw;
         break;
+      }
       case 'mgrs':
         formattedValue = coord.mgrs();
         break;

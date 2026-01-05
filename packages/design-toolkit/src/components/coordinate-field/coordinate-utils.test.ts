@@ -444,11 +444,11 @@ describe('Coordinate Utils', () => {
       // DMS format: [lat_deg, lat_min, lat_sec, lat_dir, lon_deg, lon_min, lon_sec, lon_dir]
       expect(dmsSegments?.[0]).toBe('46'); // lat degrees
       expect(dmsSegments?.[1]).toBe('7'); // lat minutes
-      expect(dmsSegments?.[2]).toMatch(/^29\.21/); // lat seconds ~29.2152
+      expect(dmsSegments?.[2]).toBe('29.22'); // lat seconds 29.2152 rounded to 2 decimals
       expect(dmsSegments?.[3]).toBe('N'); // lat direction
       expect(dmsSegments?.[4]).toBe('101'); // lon degrees
       expect(dmsSegments?.[5]).toBe('39'); // lon minutes
-      expect(dmsSegments?.[6]).toMatch(/^20\.3/); // lon seconds ~20.34
+      expect(dmsSegments?.[6]).toBe('20.34'); // lon seconds rounded to 2 decimals
       expect(dmsSegments?.[7]).toBe('E'); // lon direction
 
       // Round-trip back to DD should preserve precision
@@ -456,6 +456,42 @@ describe('Coordinate Utils', () => {
       expect(backToDD).toBeTruthy();
       expect(backToDD?.lat).toBeCloseTo(preciseCoord.lat, 4);
       expect(backToDD?.lon).toBeCloseTo(preciseCoord.lon, 4);
+    });
+
+    it('maintains DDM precision consistency through edit round-trip', () => {
+      // This tests that DDM coordinates maintain reasonable precision through
+      // the segments → DD → display round-trip. Due to floating point math,
+      // some additional decimal places may appear (e.g., 41.5051 → 41.50512)
+      const userTypedSegments = ['40', '41.5051', 'N', '74', '20.5051', 'W'];
+
+      // Convert to DD (what happens when user finishes editing)
+      const ddValue = convertDisplaySegmentsToDD(userTypedSegments, 'ddm');
+      expect(ddValue).toBeTruthy();
+
+      // Convert back to display (what shows in the field)
+      const displaySegments = convertDDToDisplaySegments(ddValue!, 'ddm');
+      expect(displaySegments).toBeTruthy();
+
+      // Minutes should start with what user typed (may have additional precision)
+      expect(displaySegments![1]).toMatch(/^41\.5051/);
+      expect(displaySegments![4]).toMatch(/^20\.5051/);
+    });
+
+    it('copy formats match display after editing DDM', () => {
+      // This tests that the copy popover values match the displayed values
+      // after a user edits segments
+      const userTypedSegments = ['40', '41.5051', 'N', '74', '20.5051', 'W'];
+
+      // Simulate edit → DD conversion
+      const ddValue = convertDisplaySegmentsToDD(userTypedSegments, 'ddm');
+      expect(ddValue).toBeTruthy();
+
+      // Get copy formats (what shows in copy popover)
+      const copyFormats = getAllCoordinateFormats(ddValue);
+
+      // DDM copy should contain the same minutes values as typed
+      expect(copyFormats.ddm.value).toContain('41.5051');
+      expect(copyFormats.ddm.value).toContain('20.5051');
     });
   });
 });
@@ -548,6 +584,76 @@ describe('Coordinate Utils - Paste Handling', () => {
 
       expect(formats.dd.value).toBe('Invalid coordinate');
       expect(formats.dd.isValid).toBe(false);
+    });
+
+    describe('display precision', () => {
+      it('formats DDM minutes with at most 4 decimal places (no trailing zeros)', () => {
+        // Coordinate that produces fractional minutes
+        const formats = getAllCoordinateFormats({
+          lat: 40.691752,
+          lon: -74.341752,
+        });
+
+        // Extract minutes from DDM format (e.g., "40 41.5051 N / 74 20.5051 W")
+        const ddmValue = formats.ddm.value;
+        const minutesMatches = ddmValue.match(/\d+\s+(\d+\.\d+)\s+[NSEW]/g);
+
+        expect(minutesMatches).toBeTruthy();
+        for (const match of minutesMatches!) {
+          const minutes = match.match(/(\d+\.\d+)/)?.[1];
+          expect(minutes).toBeTruthy();
+          // Verify at most 4 decimal places (no trailing zeros)
+          const decimals = minutes!.split('.')[1];
+          expect(decimals?.length).toBeLessThanOrEqual(4);
+        }
+      });
+
+      it('formats DMS seconds with at most 2 decimal places (no trailing zeros)', () => {
+        // Coordinate that produces fractional seconds
+        const formats = getAllCoordinateFormats({
+          lat: 40.691752,
+          lon: -74.341752,
+        });
+
+        // Extract seconds from DMS format (e.g., "40 41 30.31 N / 74 20 30.31 W")
+        const dmsValue = formats.dms.value;
+        const secondsMatches = dmsValue.match(
+          /\d+\s+\d+\s+(\d+\.\d+)\s+[NSEW]/g,
+        );
+
+        expect(secondsMatches).toBeTruthy();
+        for (const match of secondsMatches!) {
+          const seconds = match.match(/\d+\s+\d+\s+(\d+\.\d+)/)?.[1];
+          expect(seconds).toBeTruthy();
+          // Verify at most 2 decimal places (no trailing zeros)
+          const decimals = seconds!.split('.')[1];
+          expect(decimals?.length).toBeLessThanOrEqual(2);
+        }
+      });
+
+      it('rounds DDM minutes correctly (not truncates)', () => {
+        const formats = getAllCoordinateFormats({
+          lat: 40.691752,
+          lon: -74.341752,
+        });
+        // 41.50512 should round to 41.5051, 20.50512 should round to 20.5051
+        expect(formats.ddm.value).toContain('41.5051');
+        expect(formats.ddm.value).toContain('20.5051');
+        // Should NOT contain 5 decimal places
+        expect(formats.ddm.value).not.toMatch(/\d+\.\d{5,}\s+[NSEW]/);
+      });
+
+      it('rounds DMS seconds correctly (not truncates)', () => {
+        const formats = getAllCoordinateFormats({
+          lat: 40.691752,
+          lon: -74.341752,
+        });
+        // Seconds should be rounded to 2 decimal places
+        // Should NOT contain 3+ decimal places
+        expect(formats.dms.value).not.toMatch(
+          /\d+\s+\d+\s+\d+\.\d{3,}\s+[NSEW]/,
+        );
+      });
     });
   });
 
