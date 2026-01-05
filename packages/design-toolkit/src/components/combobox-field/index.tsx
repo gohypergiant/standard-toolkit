@@ -62,6 +62,7 @@ export function ComboBoxField<T extends OptionsDataItem>({
     menuTrigger = 'focus',
     size = 'medium',
     isInvalid: isInvalidProp,
+    isReadOnly = false,
     ...rest
   } = props;
   const errorMessage = errorMessageProp || null; // Protect against empty string
@@ -76,6 +77,7 @@ export function ComboBoxField<T extends OptionsDataItem>({
       )}
       menuTrigger={menuTrigger}
       isInvalid={isInvalidProp || (errorMessage ? true : undefined)} // Leave uncontrolled if possible to fallback to validation state
+      isReadOnly={isReadOnly}
       data-size={size}
     >
       {(
@@ -91,24 +93,45 @@ export function ComboBoxField<T extends OptionsDataItem>({
               {labelProp}
             </Label>
           )}
-          <div className={clsx(styles.control, classNames?.control)}>
-            <Input
-              {...inputProps}
-              className={composeRenderProps(classNames?.input, (className) =>
-                clsx(styles.input, className),
-              )}
-            />
-            <Button
-              className={composeRenderProps(classNames?.trigger, (className) =>
-                clsx(styles.trigger, className),
-              )}
-            >
-              <Icon size='small'>
-                <ChevronDown />
-              </Icon>
-            </Button>
+
+          <div
+            className={clsx(
+              styles.control,
+              !isReadOnly && styles.interactive,
+              classNames?.control,
+            )}
+          >
+            {isReadOnly ? (
+              <Input
+                {...inputProps}
+                tabIndex={-1}
+                className={composeRenderProps(classNames?.input, (className) =>
+                  clsx(styles.input, className),
+                )}
+              />
+            ) : (
+              <>
+                <Input
+                  {...inputProps}
+                  className={composeRenderProps(
+                    classNames?.input,
+                    (className) => clsx(styles.input, className),
+                  )}
+                />
+                <Button
+                  className={composeRenderProps(
+                    classNames?.trigger,
+                    (className) => clsx(styles.trigger, className),
+                  )}
+                >
+                  <Icon size='small'>
+                    <ChevronDown />
+                  </Icon>
+                </Button>
+              </>
+            )}
           </div>
-          {!!descriptionProp && !(isSmall || isInvalid) && (
+          {!isReadOnly && !!descriptionProp && !(isSmall || isInvalid) && (
             <Text
               className={clsx(styles.description, classNames?.description)}
               slot='description'
