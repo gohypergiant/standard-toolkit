@@ -426,6 +426,37 @@ describe('Coordinate Utils', () => {
       expect(backToDD?.lat).toBeCloseTo(preciseCoord.lat, 4);
       expect(backToDD?.lon).toBeCloseTo(preciseCoord.lon, 4);
     });
+
+    it('preserves DMS 4-decimal seconds precision through round-trip', () => {
+      // This tests that DMS coordinates maintain precision through round-trips
+      // DMS format displays seconds with up to 4 decimal places
+      //
+      // 46° 7' 29.2152" N = 46 + 7/60 + 29.2152/3600 = 46.124782°
+      // 101° 39' 20.34" E = 101 + 39/60 + 20.34/3600 = 101.65565°
+      const preciseCoord: CoordinateValue = {
+        lat: 46.124782,
+        lon: 101.65565,
+      };
+
+      const dmsSegments = convertDDToDisplaySegments(preciseCoord, 'dms');
+      expect(dmsSegments).toBeTruthy();
+
+      // DMS format: [lat_deg, lat_min, lat_sec, lat_dir, lon_deg, lon_min, lon_sec, lon_dir]
+      expect(dmsSegments?.[0]).toBe('46'); // lat degrees
+      expect(dmsSegments?.[1]).toBe('7'); // lat minutes
+      expect(dmsSegments?.[2]).toMatch(/^29\.21/); // lat seconds ~29.2152
+      expect(dmsSegments?.[3]).toBe('N'); // lat direction
+      expect(dmsSegments?.[4]).toBe('101'); // lon degrees
+      expect(dmsSegments?.[5]).toBe('39'); // lon minutes
+      expect(dmsSegments?.[6]).toMatch(/^20\.3/); // lon seconds ~20.34
+      expect(dmsSegments?.[7]).toBe('E'); // lon direction
+
+      // Round-trip back to DD should preserve precision
+      const backToDD = convertDisplaySegmentsToDD(dmsSegments!, 'dms');
+      expect(backToDD).toBeTruthy();
+      expect(backToDD?.lat).toBeCloseTo(preciseCoord.lat, 4);
+      expect(backToDD?.lon).toBeCloseTo(preciseCoord.lon, 4);
+    });
   });
 });
 
