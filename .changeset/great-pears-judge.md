@@ -2,5 +2,4 @@
 "@accelint/map-toolkit": minor
 ---
 
-Add saved viewports library
-  
+Add display shapes layer to map-toolkit

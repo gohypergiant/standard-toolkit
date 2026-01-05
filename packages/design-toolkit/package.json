@@ -1,7 +1,7 @@
 {
   "name": "@accelint/design-toolkit",
   "description": "An open-source component library to serve as part of the entire ecosystem of UX for Accelint.",
-  "version": "9.0.0",
+  "version": "9.1.0",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "devDependencies": {
@@ -59,6 +59,7 @@
     "react-aria-components": "~1.12.1",
     "react-dom": "^19",
     "react-querybuilder": "~8.10.0",
+    "remark-gfm": "^4.0.1",
     "rollup-plugin-copy": "^3.5.0",
     "storybook": "^9.1.16",
     "tinyglobby": "^0.2.15",

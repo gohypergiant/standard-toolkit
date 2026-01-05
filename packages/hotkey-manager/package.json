@@ -1,6 +1,6 @@
 {
   "name": "@accelint/hotkey-manager",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "dependencies": {

@@ -384,6 +384,7 @@ function cleanupBusListenerIfNeeded(instanceId: UniqueId): void {
  * Automatically cleans up camera state when the last subscriber unsubscribes.
  *
  * @param instanceId - The unique identifier for the camera
+ * @param initialCameraState - Optional initial camera state to set when creating the listener
  * @returns A subscription function for useSyncExternalStore
  */
 function getOrCreateSubscription(
@@ -426,17 +427,21 @@ function getOrCreateSubscription(
  * The object returned gets equality checked, so it needs to be stable or React re-renders unnecessarily.
  *
  * @param instanceId - The unique identifier for the camera
+ * @param initialCameraState - Initialize the snapshot with camera view information
  * @returns A snapshot function for useSyncExternalStore
  */
-function getOrCreateSnapshot(instanceId: UniqueId): () => CameraState {
+function getOrCreateSnapshot(
+  instanceId: UniqueId,
+  initialCameraState?: Partial<CameraState>,
+): () => CameraState {
   // Get or create stable fallback reference for this instanceId
   const fallback =
     fallbackCache.get(instanceId) ??
     (() => {
       const newFallback: CameraState = {
-        latitude: 0,
-        longitude: 0,
-        zoom: 0,
+        latitude: initialCameraState?.latitude ?? 0,
+        longitude: initialCameraState?.longitude ?? 0,
+        zoom: initialCameraState?.zoom ?? 0,
         pitch: 0,
         rotation: 0,
         projection: 'mercator',
@@ -493,6 +498,7 @@ function setCameraState(
  * A thin wrapper around [useSyncExternalStore](https://react.dev/reference/react/useSyncExternalStore).
  *
  * @param instanceId - Unique identifier for the camera to track
+ * @param initialCameraState - Optional initial camera state to set
  * @param subscribe - Optional custom subscription function
  * @param getSnapshot - Optional custom snapshot getter
  * @param getServerSnapshot - Optional server-side snapshot getter
@@ -546,7 +552,7 @@ export function useCameraState({
 }: UseCameraStateProps) {
   const cameraState = useSyncExternalStore<CameraState>(
     subscribe ?? getOrCreateSubscription(instanceId, initialCameraState),
-    getSnapshot ?? getOrCreateSnapshot(instanceId),
+    getSnapshot ?? getOrCreateSnapshot(instanceId, initialCameraState),
     getServerSnapshot,
   );
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -128,7 +128,7 @@ async function postComment(comment) {
   const { data: comments } = await octokit.rest.issues.listComments({
     owner,
     repo,
-    ['issue_number']: prNumber,
+    issue_number: prNumber,
   });
 
   const botComment = comments.find(
@@ -139,7 +139,7 @@ async function postComment(comment) {
     await octokit.rest.issues.updateComment({
       owner,
       repo,
-      ['comment_id']: botComment.id,
+      comment_id: botComment.id,
       body: comment,
     });
     console.log('📝 Updated existing coverage comment');
@@ -147,7 +147,7 @@ async function postComment(comment) {
     await octokit.rest.issues.createComment({
       owner,
       repo,
-      ['issue_number']: prNumber,
+      issue_number: prNumber,
       body: comment,
     });
     console.log('💬 Created new coverage comment');

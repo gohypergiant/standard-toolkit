@@ -31,7 +31,6 @@ describe('useMapCursor', () => {
   afterEach(() => {
     // Clean up the store after each test
     destroyStore(testid);
-    vi.restoreAllMocks();
   });
 
   describe('Hook Behavior', () => {
@@ -103,7 +102,6 @@ describe('useMapCursorEffect', () => {
   afterEach(() => {
     // Clean up the store after each test
     destroyStore(testid);
-    vi.restoreAllMocks();
   });
 
   it('sets cursor on mount', () => {

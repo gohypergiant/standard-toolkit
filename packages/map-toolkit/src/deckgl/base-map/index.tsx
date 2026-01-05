@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -24,16 +24,20 @@ import {
 } from 'react-map-gl/maplibre';
 import { useCameraState } from '../../camera';
 import { getCursor } from '../../map-cursor/store';
-import { BASE_MAP_STYLE, PARAMETERS } from './constants';
+import {
+  DARK_BASE_MAP_STYLE,
+  DEFAULT_VIEW_STATE,
+  PARAMETERS,
+  PICKING_RADIUS,
+} from './constants';
 import { MapControls } from './controls';
 import { MapEvents } from './events';
 import { MapProvider } from './provider';
-import type { UniqueId } from '@accelint/core';
 import type { PickingInfo, ViewStateChangeParameters } from '@deck.gl/core';
-import type { DeckglProps } from '@deckgl-fiber-renderer/types';
 import type { IControl } from 'maplibre-gl';
 import type { MjolnirGestureEvent, MjolnirPointerEvent } from 'mjolnir.js';
 import type {
+  BaseMapProps,
   MapClickEvent,
   MapHoverEvent,
   MapViewportEvent,
@@ -106,35 +110,6 @@ function serializeMjolnirEvent(
 
   return rest;
 }
-
-/**
- * Props for the BaseMap component.
- * Extends all Deck.gl props and adds additional map-specific properties.
- */
-export type BaseMapProps = DeckglProps & {
-  /** Optional CSS class name to apply to the map container element */
-  className?: string;
-  /**
-   * Whether to enable listening for map control events (pan/zoom enable/disable).
-   * When true, the map will respond to control events emitted via the event bus.
-   * @default true
-   */
-  enableControlEvents?: boolean;
-  /**
-   * Unique identifier for this map instance (required).
-   *
-   * Used to isolate map mode state between multiple map instances (e.g., main map vs minimap).
-   * This should be a UUID generated using `uuid()` from `@accelint/core`.
-   *
-   * The same id should be passed to `useMapMode()` when accessing map mode state
-   * from components rendered outside of the BaseMap's children (i.e., as siblings).
-   */
-  id: UniqueId;
-  /**
-   * Default view for the map: '2D', '2.5D', or '3D'. Defaults to '2D'.
-   */
-  defaultView?: '2D' | '2.5D' | '3D';
-};
 
 function AddDeckglControl() {
   const deckglInstance = useDeckgl();
@@ -224,12 +199,15 @@ export function BaseMap({
   enableControlEvents = true,
   interleaved = true,
   parameters = {},
+  styleUrl = DARK_BASE_MAP_STYLE,
   useDevicePixels = false,
   widgets: widgetsProp = [],
   defaultView = '2D',
+  initialViewState,
   onClick,
   onHover,
   onViewStateChange,
+  pickingRadius,
   ...rest
 }: BaseMapProps) {
   const deckglInstance = useDeckgl();
@@ -238,7 +216,12 @@ export function BaseMap({
 
   const { cameraState, setCameraState } = useCameraState({
     instanceId: id,
-    initialCameraState: { view: defaultView },
+    initialCameraState: {
+      view: defaultView,
+      zoom: initialViewState?.zoom ?? DEFAULT_VIEW_STATE.zoom,
+      latitude: initialViewState?.latitude ?? DEFAULT_VIEW_STATE.latitude,
+      longitude: initialViewState?.longitude ?? DEFAULT_VIEW_STATE.longitude,
+    },
   });
 
   const viewState = useMemo<ViewState>(
@@ -271,8 +254,6 @@ export function BaseMap({
     }),
     [viewState, container, cameraState.projection, cameraState.view],
   );
-
-  // Use the custom hook to handle MapLibre
 
   const emitClick = useEmit<MapClickEvent>(MapEvents.click);
   const emitHover = useEmit<MapHoverEvent>(MapEvents.hover);
@@ -363,7 +344,7 @@ export function BaseMap({
       <MapProvider id={id}>
         <MapLibre
           onMove={(evt) => setCameraState(id, evt.viewState)}
-          mapStyle={BASE_MAP_STYLE}
+          mapStyle={styleUrl}
           ref={mapRef}
           {...mapOptions}
         >
@@ -373,6 +354,7 @@ export function BaseMap({
             getCursor={handleGetCursor}
             useDevicePixels={useDevicePixels}
             onClick={handleClick}
+            pickingRadius={pickingRadius ?? PICKING_RADIUS}
             onHover={handleHover}
             onLoad={handleLoad}
             onViewStateChange={handleViewStateChange}
