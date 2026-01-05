@@ -399,6 +399,33 @@ describe('Coordinate Utils', () => {
       expect(backToDD?.lat).toBeCloseTo(newYorkCity.lat, 4);
       expect(backToDD?.lon).toBeCloseTo(newYorkCity.lon, 4);
     });
+
+    it('preserves DDM 4-decimal minute precision through round-trip', () => {
+      // This tests the fix for the rounding bug where 7.4869 was becoming 7.4868
+      // The bug was caused by rounding to 5 decimal places (toFixed(5)) which
+      // lost precision in the DD → DDM → DD round-trip
+      //
+      // With 5 decimals: 46.12478 → 7.4868 minutes (wrong)
+      // With 6 decimals: 46.124782 → 7.4869 minutes (correct)
+      const preciseCoord: CoordinateValue = {
+        lat: 46.1247816666,
+        lon: 101.6556516666,
+      };
+
+      const ddmSegments = convertDDToDisplaySegments(preciseCoord, 'ddm');
+      expect(ddmSegments).toBeTruthy();
+
+      // Verify the minutes start with the correct 4-digit prefix (not 7.4868)
+      // DDM format: [lat_deg, lat_min, lat_dir, lon_deg, lon_min, lon_dir]
+      expect(ddmSegments?.[1]).toMatch(/^7\.4869/); // Should be 7.4869x, not 7.4868x
+      expect(ddmSegments?.[4]).toMatch(/^39\.339/); // lon minutes
+
+      // Round-trip back to DD should preserve precision to at least 4 decimal places
+      const backToDD = convertDisplaySegmentsToDD(ddmSegments!, 'ddm');
+      expect(backToDD).toBeTruthy();
+      expect(backToDD?.lat).toBeCloseTo(preciseCoord.lat, 4);
+      expect(backToDD?.lon).toBeCloseTo(preciseCoord.lon, 4);
+    });
   });
 });
 

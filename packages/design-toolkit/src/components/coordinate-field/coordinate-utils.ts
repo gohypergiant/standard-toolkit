@@ -542,10 +542,10 @@ export function convertDDToDisplaySegments(
   try {
     const create = createCoordinate(coordinateSystems.dd, 'LATLON');
 
-    // Round to 5 decimal places to prevent precision issues with geo package
+    // Round to 6 decimal places to preserve DDM 4-decimal minute precision through round-trips
     // Use signed numbers (not cardinal directions) for reliable conversions to all formats
-    const lat = Number(value.lat.toFixed(5));
-    const lon = Number(value.lon.toFixed(5));
+    const lat = Number(value.lat.toFixed(6));
+    const lon = Number(value.lon.toFixed(6));
     const inputCoordString = `${lat} / ${lon}`;
 
     const coord = create(inputCoordString);
