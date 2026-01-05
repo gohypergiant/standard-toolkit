@@ -564,10 +564,10 @@ export function convertDDToDisplaySegments(
   try {
     const create = createCoordinate(coordinateSystems.dd, 'LATLON');
 
-    // Round to 6 decimal places to preserve DDM 4-decimal minute precision through round-trips
+    // Round to 10 decimal places to match geo package internal precision
     // Use signed numbers (not cardinal directions) for reliable conversions to all formats
-    const lat = Number(value.lat.toFixed(6));
-    const lon = Number(value.lon.toFixed(6));
+    const lat = Number(value.lat.toFixed(10));
+    const lon = Number(value.lon.toFixed(10));
     const inputCoordString = `${lat} / ${lon}`;
 
     const coord = create(inputCoordString);
@@ -914,7 +914,7 @@ export function getAllCoordinateFormats(
   try {
     const create = createCoordinate(coordinateSystems.dd, 'LATLON');
     const coord = create(
-      `${validValue.lat.toFixed(6)} / ${validValue.lon.toFixed(6)}`,
+      `${validValue.lat.toFixed(10)} / ${validValue.lon.toFixed(10)}`,
     );
 
     if (!coord.valid) {
