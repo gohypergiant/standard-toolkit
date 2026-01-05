@@ -6,7 +6,7 @@
     "schemaVersion": "0.1",
     "entryId": "icons/catalog.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:44.692Z",
+    "createdAt": "2026-01-05T14:24:26.705Z",
     "bundleHash": "uifb:e647737c67a748a481472e7d",
     "graph": {
       "nodes": [
@@ -1398,7 +1398,7 @@
           "referencedBy": "icons/catalog.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   }
 ]

@@ -6,7 +6,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/options/context.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.382Z",
+    "createdAt": "2026-01-05T14:24:25.485Z",
     "bundleHash": "uifb:6d598f5a391822e2f9f0e7b1",
     "graph": {
       "nodes": [
@@ -46,7 +46,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -56,7 +56,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/options/index.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.385Z",
+    "createdAt": "2026-01-05T14:24:25.488Z",
     "bundleHash": "uifb:0cdac025eb2256cf0236d5ff",
     "graph": {
       "nodes": [
@@ -122,7 +122,7 @@
           "referencedBy": "components/options/index.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -132,7 +132,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/options/item-content.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.385Z",
+    "createdAt": "2026-01-05T14:24:25.488Z",
     "bundleHash": "uifb:52d05a0b824aa8bee656b3cf",
     "graph": {
       "nodes": [
@@ -189,7 +189,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -199,7 +199,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/options/item-description.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.388Z",
+    "createdAt": "2026-01-05T14:24:25.490Z",
     "bundleHash": "uifb:7221e270774c0d5bb2073cf0",
     "graph": {
       "nodes": [
@@ -262,7 +262,7 @@
           "referencedBy": "components/options/item-description.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -272,7 +272,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/options/item-label.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.391Z",
+    "createdAt": "2026-01-05T14:24:25.493Z",
     "bundleHash": "uifb:3ce062532c30a394a16254c7",
     "graph": {
       "nodes": [
@@ -335,7 +335,7 @@
           "referencedBy": "components/options/item-label.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -345,7 +345,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/options/item.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.399Z",
+    "createdAt": "2026-01-05T14:24:25.500Z",
     "bundleHash": "uifb:e077fb970e0fa8e84c6fc3a9",
     "graph": {
       "nodes": [
@@ -422,7 +422,7 @@
           "referencedBy": "components/options/item.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -432,7 +432,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/options/options.stories.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.421Z",
+    "createdAt": "2026-01-05T14:24:25.520Z",
     "bundleHash": "uifb:bce23e5d67b1a9498dc1df28",
     "graph": {
       "nodes": [
@@ -562,7 +562,7 @@
           "referencedBy": "components/options/options.stories.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -572,7 +572,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/options/section.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.429Z",
+    "createdAt": "2026-01-05T14:24:25.528Z",
     "bundleHash": "uifb:e5905e1c2f6a79051f4872f7",
     "graph": {
       "nodes": [
@@ -646,7 +646,7 @@
           "referencedBy": "components/options/section.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -656,7 +656,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/options/types.ts",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.429Z",
+    "createdAt": "2026-01-05T14:24:25.528Z",
     "bundleHash": "uifb:2329d95a7be6216877cf5b38",
     "graph": {
       "nodes": [
@@ -717,7 +717,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   }
 ]

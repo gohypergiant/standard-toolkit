@@ -6,7 +6,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/sidenav/avatar.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.692Z",
+    "createdAt": "2026-01-05T14:24:25.767Z",
     "bundleHash": "uifb:89f002b713ce26e2612e076c",
     "graph": {
       "nodes": [
@@ -81,7 +81,7 @@
           "referencedBy": "components/sidenav/avatar.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -91,7 +91,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/sidenav/content.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.695Z",
+    "createdAt": "2026-01-05T14:24:25.769Z",
     "bundleHash": "uifb:e1254423fdc65fed509c9696",
     "graph": {
       "nodes": [
@@ -165,7 +165,7 @@
           "referencedBy": "components/sidenav/content.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -175,7 +175,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/sidenav/context.ts",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.695Z",
+    "createdAt": "2026-01-05T14:24:25.769Z",
     "bundleHash": "uifb:2817213a3201ceac7c03a0da",
     "graph": {
       "nodes": [
@@ -210,7 +210,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -220,7 +220,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/sidenav/events.ts",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.695Z",
+    "createdAt": "2026-01-05T14:24:25.770Z",
     "bundleHash": "uifb:d1eaa213443f1c8d469f6467",
     "graph": {
       "nodes": [
@@ -257,7 +257,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -267,7 +267,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/sidenav/footer.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.696Z",
+    "createdAt": "2026-01-05T14:24:25.770Z",
     "bundleHash": "uifb:fb1ab268113d687d719981c5",
     "graph": {
       "nodes": [
@@ -302,7 +302,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -312,7 +312,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/sidenav/header.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.707Z",
+    "createdAt": "2026-01-05T14:24:25.779Z",
     "bundleHash": "uifb:1aa91b8c767a05eb8f5a6765",
     "graph": {
       "nodes": [
@@ -412,7 +412,7 @@
           "referencedBy": "components/sidenav/header.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -422,7 +422,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/sidenav/index.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.709Z",
+    "createdAt": "2026-01-05T14:24:25.782Z",
     "bundleHash": "uifb:9037d4941c63e95eeb0882a3",
     "graph": {
       "nodes": [
@@ -502,7 +502,7 @@
           "referencedBy": "components/sidenav/index.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -512,7 +512,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/sidenav/item.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.719Z",
+    "createdAt": "2026-01-05T14:24:25.791Z",
     "bundleHash": "uifb:52579b837a8139176a842128",
     "graph": {
       "nodes": [
@@ -614,7 +614,7 @@
           "referencedBy": "components/sidenav/item.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -624,7 +624,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/sidenav/link.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.733Z",
+    "createdAt": "2026-01-05T14:24:25.805Z",
     "bundleHash": "uifb:b144c57bd9b4679d1544bf6d",
     "graph": {
       "nodes": [
@@ -739,7 +739,7 @@
           "referencedBy": "components/sidenav/link.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -749,7 +749,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/sidenav/menu-item.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.736Z",
+    "createdAt": "2026-01-05T14:24:25.808Z",
     "bundleHash": "uifb:095d427b9f35750197cd388f",
     "graph": {
       "nodes": [
@@ -821,7 +821,7 @@
           "referencedBy": "components/sidenav/menu-item.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -831,7 +831,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/sidenav/menu.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.761Z",
+    "createdAt": "2026-01-05T14:24:25.830Z",
     "bundleHash": "uifb:d75d2b22c74ac66dbf45ba40",
     "graph": {
       "nodes": [
@@ -970,7 +970,7 @@
           "referencedBy": "components/sidenav/menu.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -980,7 +980,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/sidenav/sidenav.stories.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.812Z",
+    "createdAt": "2026-01-05T14:24:25.877Z",
     "bundleHash": "uifb:f919b18b793f8b4f4bce4363",
     "graph": {
       "nodes": [
@@ -1200,7 +1200,7 @@
           "referencedBy": "components/sidenav/sidenav.stories.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -1210,7 +1210,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/sidenav/trigger.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.814Z",
+    "createdAt": "2026-01-05T14:24:25.880Z",
     "bundleHash": "uifb:353d989254bf84dfa9e53c0e",
     "graph": {
       "nodes": [
@@ -1263,7 +1263,7 @@
           "referencedBy": "components/sidenav/trigger.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -1273,7 +1273,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/sidenav/types.ts",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.815Z",
+    "createdAt": "2026-01-05T14:24:25.880Z",
     "bundleHash": "uifb:4cb52d8678310cbcb6b4c7ac",
     "graph": {
       "nodes": [
@@ -2474,7 +2474,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   }
 ]

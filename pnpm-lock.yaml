@@ -59,8 +59,8 @@ importers:
         specifier: ^2.0.11
         version: 2.0.12
       logicstamp-context:
-        specifier: ^0.3.2
-        version: 0.3.2
+        specifier: ^0.3.4
+        version: 0.3.4
       publint:
         specifier: ^0.3.16
         version: 0.3.16
@@ -4034,6 +4034,9 @@ packages:
     peerDependencies:
       '@testing-library/dom': '>=7.21.4'
 
+  '@toon-format/toon@1.4.0':
+    resolution: {integrity: sha512-bjdhhIPjnX2oVk+pKy/nD3bwuESDLX/5fwW0TxwpV7Q4PVNkiRSv1S0sPeuy9TI4PfAlulow1HShdmMTnYvoLg==}
+
   '@tootallnate/quickjs-emscripten@0.23.0':
     resolution: {integrity: sha512-C5Mc6rdnsaJDjO3UpGW/CQTHtCKaYlScZTly4JIu97Jxo/odCiH0ITnDXSJPTOrEKk/ycSZ0AOgTmkDtkOsvIA==}
 
@@ -5314,11 +5317,6 @@ packages:
     resolution: {integrity: sha512-DfXN8DfhJ7NH3Oe7cFmu3NCu1wKbkReJ8TorzSAFbSKrlNaQSKfIzqYqVY8zlbs2NLBbWpRiU52GX2PbaBVNkg==}
     hasBin: true
 
-  glob@11.1.0:
-    resolution: {integrity: sha512-vuNwKSaKiqm7g0THUBu2x7ckSs3XJLXE+2ssL7/MfTGPLLcrJQ/4Uq1CjPTtO5cCIiRxqvN6Twy1qOwhL0Xjcw==}
-    engines: {node: 20 || >=22}
-    hasBin: true
-
   glob@13.0.0:
     resolution: {integrity: sha512-tvZgpqk6fz4BaNZ66ZsRaZnbHvP/jG3uKJvAZOwEVUL4RTA5nJeeLYfyN9/VA8NX/V3IBG+hkeuGpKjvELkVhA==}
     engines: {node: 20 || >=22}
@@ -5693,10 +5691,6 @@ packages:
   jackspeak@3.4.3:
     resolution: {integrity: sha512-OGlZQpz2yfahA/Rd1Y8Cd9SIEsqvXkLVoSw/cgwhnhFMDbsQFeZYoJJ7bIZBS9BcamUW96asq/npPWugM+RQBw==}
 
-  jackspeak@4.1.1:
-    resolution: {integrity: sha512-zptv57P3GpL+O0I7VdMJNBZCu+BPHVQUk55Ft8/QCJjTVxrnJHuVuX/0Bl2A6/+2oyR/ZMEuFKwmzqqZ/U5nPQ==}
-    engines: {node: 20 || >=22}
-
   jest-worker@27.5.1:
     resolution: {integrity: sha512-7vuh85V5cdDofPyxn58nrPjBktZo0u9x1g8WtjQol+jZDaE+fhN+cIvTj11GndBnMnyfrUOG1sZQxCdjKh+DKg==}
     engines: {node: '>= 10.13.0'}
@@ -5915,9 +5909,9 @@ packages:
     resolution: {integrity: sha512-i24m8rpwhmPIS4zscNzK6MSEhk0DUWa/8iYQWxhffV8jkI4Phvs3F+quL5xvS0gdQR0FyTCMMH33Y78dDTzzIw==}
     engines: {node: '>=18'}
 
-  logicstamp-context@0.3.2:
-    resolution: {integrity: sha512-90XjH/oZoOfbhxIWg8WdiCDPOzwTy6kEey4ap6K47j4SR/4UlOziABFnYs9hTq9V5WIMNgHDxeLC75kZ/f2D2A==}
-    engines: {node: '>=18.0.0'}
+  logicstamp-context@0.3.4:
+    resolution: {integrity: sha512-B/hmHAbUKM9R3eLXE8BzvIRUfiQ/DNrk4qe3cYJQWqC0zte+nVL8kmnlVy/q1fVChm5IZpAkiSngkNJCKZzd3g==}
+    engines: {node: '>=18.18.0'}
     hasBin: true
 
   loglayer@6.10.0:
@@ -11061,6 +11055,8 @@ snapshots:
     dependencies:
       '@testing-library/dom': 10.4.1
 
+  '@toon-format/toon@1.4.0': {}
+
   '@tootallnate/quickjs-emscripten@0.23.0': {}
 
   '@trysound/sax@0.2.0': {}
@@ -12524,15 +12520,6 @@ snapshots:
       package-json-from-dist: 1.0.1
       path-scurry: 1.11.1
 
-  glob@11.1.0:
-    dependencies:
-      foreground-child: 3.3.1
-      jackspeak: 4.1.1
-      minimatch: 10.1.1
-      minipass: 7.1.2
-      package-json-from-dist: 1.0.1
-      path-scurry: 2.0.1
-
   glob@13.0.0:
     dependencies:
       minimatch: 10.1.1
@@ -12928,10 +12915,6 @@ snapshots:
     optionalDependencies:
       '@pkgjs/parseargs': 0.11.0
 
-  jackspeak@4.1.1:
-    dependencies:
-      '@isaacs/cliui': 8.0.2
-
   jest-worker@27.5.1:
     dependencies:
       '@types/node': 22.19.3
@@ -13134,10 +13117,11 @@ snapshots:
       chalk: 5.6.2
       is-unicode-supported: 1.3.0
 
-  logicstamp-context@0.3.2:
+  logicstamp-context@0.3.4:
     dependencies:
+      '@toon-format/toon': 1.4.0
       css-tree: 3.1.0
-      glob: 11.1.0
+      glob: 10.5.0
       ts-morph: 21.0.1
     optionalDependencies:
       '@anthropic-ai/tokenizer': 0.0.4

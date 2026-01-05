@@ -6,7 +6,7 @@
     "schemaVersion": "0.1",
     "entryId": "hooks/use-tree/actions/cache.ts",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:44.142Z",
+    "createdAt": "2026-01-05T14:24:26.192Z",
     "bundleHash": "uifb:db00a8e1894ad84a22adab12",
     "graph": {
       "nodes": [
@@ -66,7 +66,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -76,7 +76,7 @@
     "schemaVersion": "0.1",
     "entryId": "hooks/use-tree/actions/index.ts",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:44.142Z",
+    "createdAt": "2026-01-05T14:24:26.192Z",
     "bundleHash": "uifb:ebc35443a5954223c03dfafe",
     "graph": {
       "nodes": [
@@ -119,7 +119,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   }
 ]

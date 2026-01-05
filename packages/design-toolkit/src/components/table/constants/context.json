@@ -6,7 +6,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/table/constants/table.ts",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.854Z",
+    "createdAt": "2026-01-05T14:24:25.915Z",
     "bundleHash": "uifb:d9644f77a5d5b7e4f415bdce",
     "graph": {
       "nodes": [
@@ -53,7 +53,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   }
 ]

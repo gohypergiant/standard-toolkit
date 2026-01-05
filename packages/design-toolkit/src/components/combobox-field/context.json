@@ -6,7 +6,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/combobox-field/combobox-field.stories.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:42.707Z",
+    "createdAt": "2026-01-05T14:24:24.892Z",
     "bundleHash": "uifb:21c852cd5f970c5948295bc5",
     "graph": {
       "nodes": [
@@ -144,7 +144,7 @@
           "referencedBy": "components/combobox-field/combobox-field.stories.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -154,7 +154,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/combobox-field/context.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:42.710Z",
+    "createdAt": "2026-01-05T14:24:24.894Z",
     "bundleHash": "uifb:298aeb78745821cce084b73f",
     "graph": {
       "nodes": [
@@ -204,7 +204,7 @@
           "referencedBy": "components/combobox-field/context.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -214,7 +214,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/combobox-field/index.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:42.737Z",
+    "createdAt": "2026-01-05T14:24:24.919Z",
     "bundleHash": "uifb:d4b7b36369996b9e2a8aafd3",
     "graph": {
       "nodes": [
@@ -346,7 +346,7 @@
           "referencedBy": "components/combobox-field/index.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -356,7 +356,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/combobox-field/types.ts",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:42.738Z",
+    "createdAt": "2026-01-05T14:24:24.919Z",
     "bundleHash": "uifb:ffd4f73a307177b526f8fef6",
     "graph": {
       "nodes": [
@@ -431,7 +431,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   }
 ]

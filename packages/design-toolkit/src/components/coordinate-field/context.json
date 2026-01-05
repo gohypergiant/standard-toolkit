@@ -6,7 +6,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/coordinate-field/context.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:42.743Z",
+    "createdAt": "2026-01-05T14:24:24.923Z",
     "bundleHash": "uifb:31ed5dd68a2d30ca6f11b63a",
     "graph": {
       "nodes": [
@@ -77,7 +77,7 @@
           "referencedBy": "components/coordinate-field/context.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -87,7 +87,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/coordinate-field/coordinate-field.stories.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:42.758Z",
+    "createdAt": "2026-01-05T14:24:24.937Z",
     "bundleHash": "uifb:2f4980964f450a5e73f81992",
     "graph": {
       "nodes": [
@@ -333,7 +333,7 @@
           "referencedBy": "components/coordinate-field/coordinate-field.stories.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -343,7 +343,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/coordinate-field/coordinate-utils.ts",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:42.759Z",
+    "createdAt": "2026-01-05T14:24:24.938Z",
     "bundleHash": "uifb:6c3f3ec8c88bcadb13d4b271",
     "graph": {
       "nodes": [
@@ -427,7 +427,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -437,7 +437,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/coordinate-field/index.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:42.810Z",
+    "createdAt": "2026-01-05T14:24:24.984Z",
     "bundleHash": "uifb:1a42e5024c1a161cbd45b78d",
     "graph": {
       "nodes": [
@@ -713,7 +713,7 @@
           "referencedBy": "components/coordinate-field/index.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -723,7 +723,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/coordinate-field/segment-configs.ts",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:42.811Z",
+    "createdAt": "2026-01-05T14:24:24.984Z",
     "bundleHash": "uifb:7f1741e0a19f3a4e666981ca",
     "graph": {
       "nodes": [
@@ -787,7 +787,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -797,7 +797,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/coordinate-field/segment.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:42.811Z",
+    "createdAt": "2026-01-05T14:24:24.984Z",
     "bundleHash": "uifb:38fc2ab94a860fb0b55c441d",
     "graph": {
       "nodes": [
@@ -859,7 +859,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -869,7 +869,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/coordinate-field/types.ts",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:42.811Z",
+    "createdAt": "2026-01-05T14:24:24.984Z",
     "bundleHash": "uifb:b930ff2cd9611f66985f21b0",
     "graph": {
       "nodes": [
@@ -1040,7 +1040,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -1050,7 +1050,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/coordinate-field/width-utils.ts",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:42.812Z",
+    "createdAt": "2026-01-05T14:24:24.984Z",
     "bundleHash": "uifb:ad9316f4254224fcf931c95a",
     "graph": {
       "nodes": [
@@ -1098,7 +1098,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   }
 ]

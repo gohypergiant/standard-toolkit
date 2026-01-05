@@ -6,7 +6,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/icon/context.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.103Z",
+    "createdAt": "2026-01-05T14:24:25.236Z",
     "bundleHash": "uifb:b3995ea99b0dbe27a4522531",
     "graph": {
       "nodes": [
@@ -55,7 +55,7 @@
           "referencedBy": "components/icon/context.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -65,7 +65,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/icon/icon.stories.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.110Z",
+    "createdAt": "2026-01-05T14:24:25.242Z",
     "bundleHash": "uifb:746f5d1a5d890f2c80347c3b",
     "graph": {
       "nodes": [
@@ -123,7 +123,7 @@
           "referencedBy": "components/icon/icon.stories.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -133,7 +133,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/icon/index.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.111Z",
+    "createdAt": "2026-01-05T14:24:25.242Z",
     "bundleHash": "uifb:6fc8755c636561356c6a38f4",
     "graph": {
       "nodes": [
@@ -184,7 +184,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -194,7 +194,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/icon/types.ts",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.112Z",
+    "createdAt": "2026-01-05T14:24:25.243Z",
     "bundleHash": "uifb:7aaefafe70ee4e2fabd9a4fd",
     "graph": {
       "nodes": [
@@ -1388,7 +1388,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   }
 ]

@@ -6,7 +6,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/popover/content.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.462Z",
+    "createdAt": "2026-01-05T14:24:25.556Z",
     "bundleHash": "uifb:abed72fb256f792ba98effbe",
     "graph": {
       "nodes": [
@@ -55,7 +55,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -65,7 +65,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/popover/footer.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.462Z",
+    "createdAt": "2026-01-05T14:24:25.557Z",
     "bundleHash": "uifb:ed99cbed4beebf5c5a934a8d",
     "graph": {
       "nodes": [
@@ -114,7 +114,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -124,7 +124,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/popover/index.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.467Z",
+    "createdAt": "2026-01-05T14:24:25.561Z",
     "bundleHash": "uifb:92b3af5f46aed619412ad21a",
     "graph": {
       "nodes": [
@@ -185,7 +185,7 @@
           "referencedBy": "components/popover/index.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -195,7 +195,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/popover/popover.stories.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.492Z",
+    "createdAt": "2026-01-05T14:24:25.584Z",
     "bundleHash": "uifb:65cea04ddd1ab97fc0d70a7d",
     "graph": {
       "nodes": [
@@ -315,7 +315,7 @@
           "referencedBy": "components/popover/popover.stories.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -325,7 +325,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/popover/title.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.495Z",
+    "createdAt": "2026-01-05T14:24:25.586Z",
     "bundleHash": "uifb:2e46cf6929c4c2754049172e",
     "graph": {
       "nodes": [
@@ -380,7 +380,7 @@
           "referencedBy": "components/popover/title.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -390,7 +390,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/popover/trigger.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.500Z",
+    "createdAt": "2026-01-05T14:24:25.591Z",
     "bundleHash": "uifb:c0b89adcf252accebcb8422f",
     "graph": {
       "nodes": [
@@ -443,7 +443,7 @@
           "referencedBy": "components/popover/trigger.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -453,7 +453,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/popover/types.ts",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.501Z",
+    "createdAt": "2026-01-05T14:24:25.591Z",
     "bundleHash": "uifb:42c4e5a6546e7c190e47ed56",
     "graph": {
       "nodes": [
@@ -497,7 +497,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   }
 ]

@@ -6,7 +6,7 @@
     "schemaVersion": "0.1",
     "entryId": "lib/types.ts",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:44.692Z",
+    "createdAt": "2026-01-05T14:24:26.705Z",
     "bundleHash": "uifb:12b0ef2be1f8a9861e180e5e",
     "graph": {
       "nodes": [
@@ -69,7 +69,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -79,7 +79,7 @@
     "schemaVersion": "0.1",
     "entryId": "lib/utils.ts",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:44.693Z",
+    "createdAt": "2026-01-05T14:24:26.705Z",
     "bundleHash": "uifb:4b2d5ef862b4dc731e190754",
     "graph": {
       "nodes": [
@@ -114,7 +114,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   }
 ]

@@ -6,7 +6,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/tooltip/context.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:44.013Z",
+    "createdAt": "2026-01-05T14:24:26.067Z",
     "bundleHash": "uifb:3bc2a48816dfff5581acafa1",
     "graph": {
       "nodes": [
@@ -46,7 +46,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -56,7 +56,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/tooltip/index.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:44.018Z",
+    "createdAt": "2026-01-05T14:24:26.072Z",
     "bundleHash": "uifb:db7801198c945bec1a96dac8",
     "graph": {
       "nodes": [
@@ -121,7 +121,7 @@
           "referencedBy": "components/tooltip/index.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -131,7 +131,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/tooltip/tooltip.stories.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:44.030Z",
+    "createdAt": "2026-01-05T14:24:26.083Z",
     "bundleHash": "uifb:c91ea780d797d05519f938b7",
     "graph": {
       "nodes": [
@@ -233,7 +233,7 @@
           "referencedBy": "components/tooltip/tooltip.stories.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -243,7 +243,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/tooltip/trigger.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:44.035Z",
+    "createdAt": "2026-01-05T14:24:26.088Z",
     "bundleHash": "uifb:029052b1ed4610dc1956ed5d",
     "graph": {
       "nodes": [
@@ -293,7 +293,7 @@
           "referencedBy": "components/tooltip/trigger.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -303,7 +303,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/tooltip/types.ts",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:44.035Z",
+    "createdAt": "2026-01-05T14:24:26.088Z",
     "bundleHash": "uifb:f85473c3d64b5dda7f7c4dda",
     "graph": {
       "nodes": [
@@ -337,7 +337,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   }
 ]

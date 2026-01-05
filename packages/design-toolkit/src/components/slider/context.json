@@ -6,7 +6,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/slider/index.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.842Z",
+    "createdAt": "2026-01-05T14:24:25.905Z",
     "bundleHash": "uifb:f08704e4b7e5a00b336ede67",
     "graph": {
       "nodes": [
@@ -171,7 +171,7 @@
           "referencedBy": "components/slider/index.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -181,7 +181,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/slider/slider.stories.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.844Z",
+    "createdAt": "2026-01-05T14:24:25.908Z",
     "bundleHash": "uifb:3bbf28e41f7bdf9d040fb48e",
     "graph": {
       "nodes": [
@@ -267,7 +267,7 @@
           "referencedBy": "components/slider/slider.stories.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -277,7 +277,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/slider/types.ts",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.845Z",
+    "createdAt": "2026-01-05T14:24:25.908Z",
     "bundleHash": "uifb:02eaafa018e505325575fd92",
     "graph": {
       "nodes": [
@@ -346,7 +346,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   }
 ]

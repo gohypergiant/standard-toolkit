@@ -6,7 +6,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/kanban/card-body.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.125Z",
+    "createdAt": "2026-01-05T14:24:25.255Z",
     "bundleHash": "uifb:bc946394dccc9d5ebe5d1ff2",
     "graph": {
       "nodes": [
@@ -74,7 +74,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -84,7 +84,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/kanban/card-header-actions.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.126Z",
+    "createdAt": "2026-01-05T14:24:25.255Z",
     "bundleHash": "uifb:ae35cd7cd01e1a1f33eec0ed",
     "graph": {
       "nodes": [
@@ -152,7 +152,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -162,7 +162,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/kanban/card-header-title.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.126Z",
+    "createdAt": "2026-01-05T14:24:25.255Z",
     "bundleHash": "uifb:adc350105099f961aa4bb978",
     "graph": {
       "nodes": [
@@ -230,7 +230,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -240,7 +240,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/kanban/card-header.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.128Z",
+    "createdAt": "2026-01-05T14:24:25.257Z",
     "bundleHash": "uifb:6f2b82d65ef26b633af2763b",
     "graph": {
       "nodes": [
@@ -315,7 +315,7 @@
           "referencedBy": "components/kanban/card-header.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -325,7 +325,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/kanban/card.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.131Z",
+    "createdAt": "2026-01-05T14:24:25.259Z",
     "bundleHash": "uifb:91e13e386bc1243b41e16441",
     "graph": {
       "nodes": [
@@ -403,7 +403,7 @@
           "referencedBy": "components/kanban/card.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -413,7 +413,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/kanban/column-actions.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.139Z",
+    "createdAt": "2026-01-05T14:24:25.266Z",
     "bundleHash": "uifb:cdc78663c4950c433aec6e15",
     "graph": {
       "nodes": [
@@ -505,7 +505,7 @@
           "referencedBy": "components/kanban/column-actions.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -515,7 +515,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/kanban/column-container.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.139Z",
+    "createdAt": "2026-01-05T14:24:25.267Z",
     "bundleHash": "uifb:472cae04091db96fa1010a16",
     "graph": {
       "nodes": [
@@ -583,7 +583,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -593,7 +593,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/kanban/column-content.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.143Z",
+    "createdAt": "2026-01-05T14:24:25.269Z",
     "bundleHash": "uifb:8b93942293b52e215676ff28",
     "graph": {
       "nodes": [
@@ -668,7 +668,7 @@
           "referencedBy": "components/kanban/column-content.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -678,7 +678,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/kanban/column-header-actions.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.145Z",
+    "createdAt": "2026-01-05T14:24:25.271Z",
     "bundleHash": "uifb:7d8fc7f343168bf0f9446c52",
     "graph": {
       "nodes": [
@@ -753,7 +753,7 @@
           "referencedBy": "components/kanban/column-header-actions.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -763,7 +763,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/kanban/column-header-drag-handle.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.151Z",
+    "createdAt": "2026-01-05T14:24:25.276Z",
     "bundleHash": "uifb:e318f2dced14049528490eae",
     "graph": {
       "nodes": [
@@ -809,7 +809,7 @@
           "referencedBy": "components/kanban/column-header-drag-handle.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -819,7 +819,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/kanban/column-header-title.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.151Z",
+    "createdAt": "2026-01-05T14:24:25.276Z",
     "bundleHash": "uifb:6d8c0085c093cda77dd28127",
     "graph": {
       "nodes": [
@@ -887,7 +887,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -897,7 +897,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/kanban/column-header.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.152Z",
+    "createdAt": "2026-01-05T14:24:25.276Z",
     "bundleHash": "uifb:398d14bc7b41175dd08d338f",
     "graph": {
       "nodes": [
@@ -965,7 +965,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -975,7 +975,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/kanban/column.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.152Z",
+    "createdAt": "2026-01-05T14:24:25.276Z",
     "bundleHash": "uifb:ea8e47ed5211843fccaa729f",
     "graph": {
       "nodes": [
@@ -1044,7 +1044,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -1054,7 +1054,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/kanban/context.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.155Z",
+    "createdAt": "2026-01-05T14:24:25.278Z",
     "bundleHash": "uifb:973da5b907aa27a2ab383358",
     "graph": {
       "nodes": [
@@ -1130,7 +1130,7 @@
           "referencedBy": "components/kanban/context.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -1140,7 +1140,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/kanban/header-actions.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.155Z",
+    "createdAt": "2026-01-05T14:24:25.279Z",
     "bundleHash": "uifb:f132e3a11fa84e998359bb74",
     "graph": {
       "nodes": [
@@ -1208,7 +1208,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -1218,7 +1218,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/kanban/header-search.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.158Z",
+    "createdAt": "2026-01-05T14:24:25.281Z",
     "bundleHash": "uifb:a4ecfe234a728b335bbbf669",
     "graph": {
       "nodes": [
@@ -1259,7 +1259,7 @@
           "referencedBy": "components/kanban/header-search.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -1269,7 +1269,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/kanban/header-title.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.160Z",
+    "createdAt": "2026-01-05T14:24:25.283Z",
     "bundleHash": "uifb:e7b642e153863b9ed73db704",
     "graph": {
       "nodes": [
@@ -1344,7 +1344,7 @@
           "referencedBy": "components/kanban/header-title.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -1354,7 +1354,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/kanban/header.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.161Z",
+    "createdAt": "2026-01-05T14:24:25.283Z",
     "bundleHash": "uifb:b766d00ee5cdb9301d614169",
     "graph": {
       "nodes": [
@@ -1422,7 +1422,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -1432,7 +1432,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/kanban/index.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.161Z",
+    "createdAt": "2026-01-05T14:24:25.283Z",
     "bundleHash": "uifb:502f0b2db69301c09ed2d7c6",
     "graph": {
       "nodes": [
@@ -1479,7 +1479,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -1489,7 +1489,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/kanban/kanban.stories.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.225Z",
+    "createdAt": "2026-01-05T14:24:25.344Z",
     "bundleHash": "uifb:b0f12275dcd17b9fb0f59896",
     "graph": {
       "nodes": [
@@ -1747,7 +1747,7 @@
           "referencedBy": "components/kanban/kanban.stories.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -1757,7 +1757,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/kanban/kanban.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.233Z",
+    "createdAt": "2026-01-05T14:24:25.351Z",
     "bundleHash": "uifb:c865f9798d4d4d31e3c4cebe",
     "graph": {
       "nodes": [
@@ -1873,7 +1873,7 @@
           "referencedBy": "components/kanban/kanban.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -1883,7 +1883,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/kanban/mock-data.ts",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.233Z",
+    "createdAt": "2026-01-05T14:24:25.351Z",
     "bundleHash": "uifb:fecff18636d65db1f29400b9",
     "graph": {
       "nodes": [
@@ -1918,7 +1918,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -1928,7 +1928,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/kanban/types.ts",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.233Z",
+    "createdAt": "2026-01-05T14:24:25.352Z",
     "bundleHash": "uifb:aac37953e3fa119b2de55d58",
     "graph": {
       "nodes": [
@@ -1995,7 +1995,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   }
 ]

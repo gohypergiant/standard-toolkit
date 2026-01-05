@@ -6,7 +6,7 @@
     "schemaVersion": "0.1",
     "entryId": "hooks/use-tree/actions/__fixtures__/cache.ts",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:44.142Z",
+    "createdAt": "2026-01-05T14:24:26.192Z",
     "bundleHash": "uifb:45ea352c205738a482a0adb8",
     "graph": {
       "nodes": [
@@ -43,7 +43,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   }
 ]

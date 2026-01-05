@@ -6,7 +6,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/chip/chip.stories.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:42.636Z",
+    "createdAt": "2026-01-05T14:24:24.831Z",
     "bundleHash": "uifb:b41ac19208197c6f9db3fdc9",
     "graph": {
       "nodes": [
@@ -126,7 +126,7 @@
           "referencedBy": "components/chip/chip.stories.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -136,7 +136,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/chip/context.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:42.639Z",
+    "createdAt": "2026-01-05T14:24:24.833Z",
     "bundleHash": "uifb:ba08578e373e46790b2be17c",
     "graph": {
       "nodes": [
@@ -185,7 +185,7 @@
           "referencedBy": "components/chip/context.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -195,7 +195,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/chip/deletable.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:42.649Z",
+    "createdAt": "2026-01-05T14:24:24.842Z",
     "bundleHash": "uifb:0c02369147d0e21e71a69e1d",
     "graph": {
       "nodes": [
@@ -276,7 +276,7 @@
           "referencedBy": "components/chip/deletable.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -286,7 +286,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/chip/index.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:42.655Z",
+    "createdAt": "2026-01-05T14:24:24.847Z",
     "bundleHash": "uifb:d0e6358cf917649ffca7cb75",
     "graph": {
       "nodes": [
@@ -358,7 +358,7 @@
           "referencedBy": "components/chip/index.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -368,7 +368,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/chip/list.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:42.665Z",
+    "createdAt": "2026-01-05T14:24:24.856Z",
     "bundleHash": "uifb:2faf1e31a762e19738a447b4",
     "graph": {
       "nodes": [
@@ -454,7 +454,7 @@
           "referencedBy": "components/chip/list.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -464,7 +464,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/chip/selectable.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:42.668Z",
+    "createdAt": "2026-01-05T14:24:24.858Z",
     "bundleHash": "uifb:fb07a3c6e8f8561e3c076ba3",
     "graph": {
       "nodes": [
@@ -527,7 +527,7 @@
           "referencedBy": "components/chip/selectable.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -537,7 +537,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/chip/types.ts",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:42.668Z",
+    "createdAt": "2026-01-05T14:24:24.858Z",
     "bundleHash": "uifb:ff50f5b4e3f9082f3c8ef728",
     "graph": {
       "nodes": [
@@ -1741,7 +1741,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   }
 ]

@@ -6,7 +6,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/clock/clock.stories.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:42.678Z",
+    "createdAt": "2026-01-05T14:24:24.866Z",
     "bundleHash": "uifb:00a940c8b828fc70bddddc7f",
     "graph": {
       "nodes": [
@@ -55,7 +55,7 @@
           "referencedBy": "components/clock/clock.stories.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -65,7 +65,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/clock/index.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:42.678Z",
+    "createdAt": "2026-01-05T14:24:24.867Z",
     "bundleHash": "uifb:9f0de08b89b87d42842b698e",
     "graph": {
       "nodes": [
@@ -112,7 +112,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -122,7 +122,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/clock/types.ts",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:42.678Z",
+    "createdAt": "2026-01-05T14:24:24.867Z",
     "bundleHash": "uifb:84f422354817f6022f6811bc",
     "graph": {
       "nodes": [
@@ -1319,7 +1319,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   }
 ]

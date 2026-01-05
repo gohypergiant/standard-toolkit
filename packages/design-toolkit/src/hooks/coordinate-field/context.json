@@ -6,7 +6,7 @@
     "schemaVersion": "0.1",
     "entryId": "hooks/coordinate-field/index.ts",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:44.141Z",
+    "createdAt": "2026-01-05T14:24:26.191Z",
     "bundleHash": "uifb:b00e1af24d80893bfa228843",
     "graph": {
       "nodes": [
@@ -60,7 +60,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -70,7 +70,7 @@
     "schemaVersion": "0.1",
     "entryId": "hooks/coordinate-field/use-coordinate-copy.ts",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:44.141Z",
+    "createdAt": "2026-01-05T14:24:26.191Z",
     "bundleHash": "uifb:c6c3a0954dc8061c2b07aa80",
     "graph": {
       "nodes": [
@@ -114,7 +114,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -124,7 +124,7 @@
     "schemaVersion": "0.1",
     "entryId": "hooks/coordinate-field/use-coordinate-field-state.ts",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:44.141Z",
+    "createdAt": "2026-01-05T14:24:26.191Z",
     "bundleHash": "uifb:b0043c7ad81343dbabd390a6",
     "graph": {
       "nodes": [
@@ -180,7 +180,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -190,7 +190,7 @@
     "schemaVersion": "0.1",
     "entryId": "hooks/coordinate-field/use-coordinate-field.ts",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:44.142Z",
+    "createdAt": "2026-01-05T14:24:26.191Z",
     "bundleHash": "uifb:9b426d4fb9c4e00771380814",
     "graph": {
       "nodes": [
@@ -244,7 +244,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -254,7 +254,7 @@
     "schemaVersion": "0.1",
     "entryId": "hooks/coordinate-field/use-coordinate-focus.ts",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:44.142Z",
+    "createdAt": "2026-01-05T14:24:26.191Z",
     "bundleHash": "uifb:1735287b922cbfced143ab71",
     "graph": {
       "nodes": [
@@ -296,7 +296,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -306,7 +306,7 @@
     "schemaVersion": "0.1",
     "entryId": "hooks/coordinate-field/use-coordinate-paste.ts",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:44.142Z",
+    "createdAt": "2026-01-05T14:24:26.191Z",
     "bundleHash": "uifb:e693596fc5bb2e9bd7357d58",
     "graph": {
       "nodes": [
@@ -350,7 +350,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -360,7 +360,7 @@
     "schemaVersion": "0.1",
     "entryId": "hooks/coordinate-field/use-timeout-cleanup.ts",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:44.142Z",
+    "createdAt": "2026-01-05T14:24:26.192Z",
     "bundleHash": "uifb:f305c99b7f7108dddeb3dec7",
     "graph": {
       "nodes": [
@@ -399,7 +399,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   }
 ]

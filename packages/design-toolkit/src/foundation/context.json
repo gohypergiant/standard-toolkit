@@ -6,7 +6,7 @@
     "schemaVersion": "0.1",
     "entryId": "foundation/token-data.ts",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:44.141Z",
+    "createdAt": "2026-01-05T14:24:26.191Z",
     "bundleHash": "uifb:48d6810fbc3989517abfae3d",
     "graph": {
       "nodes": [
@@ -41,7 +41,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   }
 ]

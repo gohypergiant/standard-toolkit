@@ -6,7 +6,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/hero/context.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.063Z",
+    "createdAt": "2026-01-05T14:24:25.201Z",
     "bundleHash": "uifb:27f2609a5bf375d520697ca8",
     "graph": {
       "nodes": [
@@ -46,7 +46,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -56,7 +56,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/hero/hero.stories.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.075Z",
+    "createdAt": "2026-01-05T14:24:25.212Z",
     "bundleHash": "uifb:7fc4b157015f9f2ade607cf3",
     "graph": {
       "nodes": [
@@ -140,7 +140,7 @@
           "referencedBy": "components/hero/hero.stories.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -150,7 +150,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/hero/index.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.080Z",
+    "createdAt": "2026-01-05T14:24:25.216Z",
     "bundleHash": "uifb:1c390e66c1273961cbf439a8",
     "graph": {
       "nodes": [
@@ -213,7 +213,7 @@
           "referencedBy": "components/hero/index.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -223,7 +223,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/hero/subtitle.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.081Z",
+    "createdAt": "2026-01-05T14:24:25.216Z",
     "bundleHash": "uifb:f47e8149d9100a997b99120f",
     "graph": {
       "nodes": [
@@ -258,7 +258,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -268,7 +268,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/hero/title.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.081Z",
+    "createdAt": "2026-01-05T14:24:25.217Z",
     "bundleHash": "uifb:90676bf212444716ed4289a7",
     "graph": {
       "nodes": [
@@ -303,7 +303,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -313,7 +313,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/hero/types.ts",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.082Z",
+    "createdAt": "2026-01-05T14:24:25.217Z",
     "bundleHash": "uifb:c76d3f7b294085695cbc3677",
     "graph": {
       "nodes": [
@@ -1506,7 +1506,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   }
 ]

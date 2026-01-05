@@ -6,7 +6,7 @@
     "schemaVersion": "0.1",
     "entryId": "providers/portal.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:44.695Z",
+    "createdAt": "2026-01-05T14:24:26.708Z",
     "bundleHash": "uifb:98a6b82ac951277ea6e90ea6",
     "graph": {
       "nodes": [
@@ -51,7 +51,7 @@
           "referencedBy": "providers/portal.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -61,7 +61,7 @@
     "schemaVersion": "0.1",
     "entryId": "providers/theme-provider.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:44.698Z",
+    "createdAt": "2026-01-05T14:24:26.710Z",
     "bundleHash": "uifb:4c0b64e6725fb908de02eafe",
     "graph": {
       "nodes": [
@@ -137,7 +137,7 @@
           "referencedBy": "providers/theme-provider.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   }
 ]

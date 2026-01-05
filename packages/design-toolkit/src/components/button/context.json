@@ -6,7 +6,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/button/button.stories.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:42.569Z",
+    "createdAt": "2026-01-05T14:24:24.768Z",
     "bundleHash": "uifb:3e990c09739449d3421a24e6",
     "graph": {
       "nodes": [
@@ -90,7 +90,7 @@
           "referencedBy": "components/button/button.stories.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -100,7 +100,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/button/context.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:42.576Z",
+    "createdAt": "2026-01-05T14:24:24.776Z",
     "bundleHash": "uifb:e6c419c76a401b63ec85a12a",
     "graph": {
       "nodes": [
@@ -178,7 +178,7 @@
           "referencedBy": "components/button/context.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -188,7 +188,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/button/index.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:42.581Z",
+    "createdAt": "2026-01-05T14:24:24.781Z",
     "bundleHash": "uifb:a62171216facdfacac14600d",
     "graph": {
       "nodes": [
@@ -258,7 +258,7 @@
           "referencedBy": "components/button/index.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -268,7 +268,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/button/link.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:42.587Z",
+    "createdAt": "2026-01-05T14:24:24.786Z",
     "bundleHash": "uifb:549275f51788d437f240658b",
     "graph": {
       "nodes": [
@@ -338,7 +338,7 @@
           "referencedBy": "components/button/link.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -348,7 +348,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/button/toggle.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:42.592Z",
+    "createdAt": "2026-01-05T14:24:24.791Z",
     "bundleHash": "uifb:1495258216a9712fab72c1d5",
     "graph": {
       "nodes": [
@@ -418,7 +418,7 @@
           "referencedBy": "components/button/toggle.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -428,7 +428,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/button/types.ts",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:42.593Z",
+    "createdAt": "2026-01-05T14:24:24.791Z",
     "bundleHash": "uifb:bab64a6147d77af142886f7a",
     "graph": {
       "nodes": [
@@ -462,7 +462,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   }
 ]

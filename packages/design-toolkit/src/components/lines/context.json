@@ -6,7 +6,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/lines/index.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.239Z",
+    "createdAt": "2026-01-05T14:24:25.357Z",
     "bundleHash": "uifb:9d5726bd896bfdb235aff93c",
     "graph": {
       "nodes": [
@@ -59,7 +59,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -69,7 +69,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/lines/types.ts",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.239Z",
+    "createdAt": "2026-01-05T14:24:25.357Z",
     "bundleHash": "uifb:4d3486bdeb6d5c3617782f1e",
     "graph": {
       "nodes": [
@@ -1272,7 +1272,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   }
 ]

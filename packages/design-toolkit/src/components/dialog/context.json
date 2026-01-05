@@ -6,7 +6,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/dialog/content.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:42.852Z",
+    "createdAt": "2026-01-05T14:24:25.019Z",
     "bundleHash": "uifb:9826986cc329c89ca0dc9733",
     "graph": {
       "nodes": [
@@ -62,7 +62,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -72,7 +72,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/dialog/context.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:42.853Z",
+    "createdAt": "2026-01-05T14:24:25.019Z",
     "bundleHash": "uifb:45dc6562b12296e580caa212",
     "graph": {
       "nodes": [
@@ -112,7 +112,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -122,7 +122,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/dialog/dialog.stories.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:42.868Z",
+    "createdAt": "2026-01-05T14:24:25.033Z",
     "bundleHash": "uifb:60c34a5b94817d8abe462515",
     "graph": {
       "nodes": [
@@ -253,7 +253,7 @@
           "referencedBy": "components/dialog/dialog.stories.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -263,7 +263,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/dialog/footer.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:42.870Z",
+    "createdAt": "2026-01-05T14:24:25.035Z",
     "bundleHash": "uifb:a152da49667bc91a2a4c1f3b",
     "graph": {
       "nodes": [
@@ -330,7 +330,7 @@
           "referencedBy": "components/dialog/footer.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -340,7 +340,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/dialog/index.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:42.883Z",
+    "createdAt": "2026-01-05T14:24:25.046Z",
     "bundleHash": "uifb:67e24a7beb2bec32ac337589",
     "graph": {
       "nodes": [
@@ -431,7 +431,7 @@
           "referencedBy": "components/dialog/index.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -441,7 +441,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/dialog/title.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:42.886Z",
+    "createdAt": "2026-01-05T14:24:25.048Z",
     "bundleHash": "uifb:25510c12d4a67d9d48bd2db1",
     "graph": {
       "nodes": [
@@ -503,7 +503,7 @@
           "referencedBy": "components/dialog/title.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -513,7 +513,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/dialog/trigger.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:42.886Z",
+    "createdAt": "2026-01-05T14:24:25.049Z",
     "bundleHash": "uifb:f158b5fffd99e5a83f6a95f4",
     "graph": {
       "nodes": [
@@ -548,7 +548,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -558,7 +558,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/dialog/types.ts",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:42.887Z",
+    "createdAt": "2026-01-05T14:24:25.049Z",
     "bundleHash": "uifb:ffe3c79be35cebb412560aab",
     "graph": {
       "nodes": [
@@ -615,7 +615,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   }
 ]

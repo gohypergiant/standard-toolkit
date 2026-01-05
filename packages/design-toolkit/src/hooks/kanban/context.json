@@ -6,7 +6,7 @@
     "schemaVersion": "0.1",
     "entryId": "hooks/kanban/index.ts",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:44.142Z",
+    "createdAt": "2026-01-05T14:24:26.192Z",
     "bundleHash": "uifb:9b11d01595beab59de6a4e2a",
     "graph": {
       "nodes": [
@@ -49,7 +49,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   }
 ]

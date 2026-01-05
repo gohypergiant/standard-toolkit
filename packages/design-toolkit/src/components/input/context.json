@@ -6,7 +6,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/input/context.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.112Z",
+    "createdAt": "2026-01-05T14:24:25.243Z",
     "bundleHash": "uifb:6ec6cc8b823de624525037fb",
     "graph": {
       "nodes": [
@@ -46,7 +46,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -56,7 +56,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/input/index.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.124Z",
+    "createdAt": "2026-01-05T14:24:25.254Z",
     "bundleHash": "uifb:f4fdaee7bad4445133ca92f6",
     "graph": {
       "nodes": [
@@ -132,6 +132,7 @@
                     "appearance",
                     "grid-area",
                     "grid-template-areas",
+                    "grid-template-columns",
                     "max-width",
                     "min-width",
                     "width"
@@ -176,7 +177,7 @@
           "referencedBy": "components/input/index.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -186,7 +187,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/input/input.stories.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.125Z",
+    "createdAt": "2026-01-05T14:24:25.254Z",
     "bundleHash": "uifb:b6d1183ff78ddcb4c85f84a3",
     "graph": {
       "nodes": [
@@ -234,7 +235,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -244,7 +245,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/input/types.ts",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.125Z",
+    "createdAt": "2026-01-05T14:24:25.254Z",
     "bundleHash": "uifb:44edfe887c6e004f51a15a30",
     "graph": {
       "nodes": [
@@ -316,7 +317,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   }
 ]

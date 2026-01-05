@@ -6,7 +6,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/checkbox/checkbox.stories.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:42.596Z",
+    "createdAt": "2026-01-05T14:24:24.794Z",
     "bundleHash": "uifb:92feb3d1baefa302d7ad0827",
     "graph": {
       "nodes": [
@@ -47,7 +47,7 @@
           "referencedBy": "components/checkbox/checkbox.stories.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -57,7 +57,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/checkbox/context.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:42.596Z",
+    "createdAt": "2026-01-05T14:24:24.794Z",
     "bundleHash": "uifb:2ae3ba677d4947049e7bff06",
     "graph": {
       "nodes": [
@@ -99,7 +99,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -109,7 +109,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/checkbox/group.stories.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:42.601Z",
+    "createdAt": "2026-01-05T14:24:24.799Z",
     "bundleHash": "uifb:104e0068fb664938fd81da24",
     "graph": {
       "nodes": [
@@ -160,7 +160,7 @@
           "referencedBy": "components/checkbox/group.stories.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -170,7 +170,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/checkbox/group.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:42.607Z",
+    "createdAt": "2026-01-05T14:24:24.804Z",
     "bundleHash": "uifb:0e023f4a2a74acb1083e893f",
     "graph": {
       "nodes": [
@@ -233,7 +233,7 @@
           "referencedBy": "components/checkbox/group.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -243,7 +243,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/checkbox/index.tsx",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:42.617Z",
+    "createdAt": "2026-01-05T14:24:24.814Z",
     "bundleHash": "uifb:c22eba49e82129837eb58a2f",
     "graph": {
       "nodes": [
@@ -317,7 +317,7 @@
           "referencedBy": "components/checkbox/index.tsx"
         }
       ],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   },
   {
@@ -327,7 +327,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/checkbox/types.ts",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:42.618Z",
+    "createdAt": "2026-01-05T14:24:24.814Z",
     "bundleHash": "uifb:a7627f940bed885f06bae92e",
     "graph": {
       "nodes": [
@@ -387,7 +387,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   }
 ]

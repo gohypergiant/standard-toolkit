@@ -6,7 +6,7 @@
     "schemaVersion": "0.1",
     "entryId": "components/query-builder/__fixtures__/example-configuration.ts",
     "depth": 2,
-    "createdAt": "2025-12-22T18:06:43.501Z",
+    "createdAt": "2026-01-05T14:24:25.591Z",
     "bundleHash": "uifb:4995a418dbcdb5793ce9b47a",
     "graph": {
       "nodes": [
@@ -43,7 +43,7 @@
     },
     "meta": {
       "missing": [],
-      "source": "logicstamp-context@0.3.2"
+      "source": "logicstamp-context@0.3.4"
     }
   }
 ]

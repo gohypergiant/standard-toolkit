@@ -2,12 +2,12 @@
   "type": "LogicStampIndex",
   "schemaVersion": "0.2",
   "projectRoot": ".",
-  "createdAt": "2025-12-22T18:06:46.203Z",
+  "createdAt": "2026-01-05T14:24:28.156Z",
   "summary": {
     "totalComponents": 331,
     "totalBundles": 331,
     "totalFolders": 63,
-    "totalTokenEstimate": 627313
+    "totalTokenEstimate": 627318
   },
   "folders": [
     {
@@ -17,7 +17,7 @@
       "components": ["index.ts"],
       "isRoot": true,
       "rootLabel": "Project Root",
-      "tokenEstimate": 8965
+      "tokenEstimate": 8964
     },
     {
       "path": "components/accordion",
@@ -344,7 +344,7 @@
         "types.ts"
       ],
       "isRoot": false,
-      "tokenEstimate": 4869
+      "tokenEstimate": 4875
     },
     {
       "path": "components/kanban",
@@ -846,6 +846,6 @@
     }
   ],
   "meta": {
-    "source": "logicstamp-context@0.3.2"
+    "source": "logicstamp-context@0.3.4"
   }
 }
