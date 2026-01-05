@@ -10,19 +10,30 @@
  * governing permissions and limitations under the License.
  */
 
-/**
- * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
- */
+const registeredFunctions = new Map();
 
-// biome-ignore-all assist/source/organizeImports: This comment is used to prevent the biome tool from altering the import statements in this file.
+export function register(fnName: string, callback: any) {
+  registeredFunctions.set(fnName, callback);
+}
 
-export { WorkerPool } from './pool';
-export { onMessage, register } from './runtime';
-export {
-  isBrowserContext,
-  isWorkerContext,
-  uuid,
-  withResolvers,
-} from './utils';
-export { create, expose } from './worker-old';
-export type { Action } from './worker-old';
+export function onMessage(e: MessageEvent) {
+  const message = e.data;
+
+  if (message.type === 'execute') {
+    const functionToCall = registeredFunctions.get(message.payload.fn);
+
+    if (functionToCall) {
+      Promise.resolve(functionToCall(message.payload.args)).then((result) => {
+        self.postMessage({
+          id: message.id,
+          type: 'result',
+          payload: {
+            data: result,
+          },
+        });
+      });
+    }
+  }
+}
+
+self.postMessage({ type: 'ready' });

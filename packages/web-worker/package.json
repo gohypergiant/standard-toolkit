@@ -20,7 +20,10 @@
   },
   "exports": {
     ".": "./dist/index.js",
-    "./worker": "./dist/worker/index.js",
+    "./pool": "./dist/pool/index.js",
+    "./runtime": "./dist/runtime/index.js",
+    "./utils": "./dist/utils/index.js",
+    "./worker-old": "./dist/worker-old/index.js",
     "./package.json": "./package.json"
   },
   "files": [
