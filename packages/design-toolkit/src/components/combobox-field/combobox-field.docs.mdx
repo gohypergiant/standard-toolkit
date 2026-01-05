@@ -167,6 +167,35 @@ Allow a custom value to be entered:
 </ComboBoxField>
 ```
 
+### Readonly value
+Allowing the field to be readonly:
+```tsx
+    <ComboBoxField<CustomOptionsItem>
+      {...args}
+      defaultItems={items}
+      inputProps={{ value: 'some display value' }}
+      isReadOnly
+    >
+      {(item) => (
+        <OptionsItem
+          key={item.id}
+          textValue={item.name}
+          isDisabled={item.isDisabled}
+        >
+          {item.prefixIcon && <Icon>{item.prefixIcon}</Icon>}
+          <OptionsItemContent>
+            <OptionsItemLabel>{item.name}</OptionsItemLabel>
+            {item.description && (
+              <OptionsItemDescription>
+                {item.description}
+              </OptionsItemDescription>
+            )}
+          </OptionsItemContent>
+        </OptionsItem>
+      )}
+    </ComboBoxField>
+```
+
 ## Implementation Notes
 
 The `ComboBoxField` component is built using React Aria Components and provides a comprehensive, accessible combobox interface with flexible content organization.
