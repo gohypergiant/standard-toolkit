@@ -326,12 +326,16 @@ export const WithCustomValue: Story = {
 };
 
 export const Readonly: Story = {
+  args: {
+    ...Default.args,
+    inputProps: { value: 'test string' },
+  },
   render: ({ children, ...args }) => (
     <ComboBoxField<CustomOptionsItem>
       {...args}
       defaultItems={items}
       inputProps={{
-        value: 'some display value looooooooooooooooooooooooooong string',
+        value: args.inputProps?.value,
       }}
       isReadOnly
     >
