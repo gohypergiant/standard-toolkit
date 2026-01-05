@@ -18,22 +18,10 @@
   }
 
   .control {
-    @apply rounded-medium px-s py-xs fg-primary-bold outline-interactive flex items-center outline;
+    @apply rounded-medium py-xs fg-primary-bold flex items-center;
 
     @variant placeholder {
       @apply fg-primary-muted;
-    }
-
-    @variant hover {
-      @apply outline-interactive-hover;
-    }
-
-    @variant focus-visible {
-      @apply outline-interactive-hover;
-    }
-
-    @variant focus-within {
-      @apply outline-accent-primary-bold;
     }
 
     @variant pressed {
@@ -54,6 +42,22 @@
 
     @variant group-disabled/combobox-field {
       @apply fg-disabled outline-interactive-disabled;
+    }
+  }
+
+  .interactive {
+    @apply px-s outline-interactive outline;
+
+    @variant hover {
+      @apply outline-interactive-hover;
+    }
+
+    @variant focus-visible {
+      @apply outline-interactive-hover;
+    }
+
+    @variant focus-within {
+      @apply outline-accent-primary-bold;
     }
   }
 
