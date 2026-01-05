@@ -59,14 +59,6 @@
     @variant pressed {
       @apply outline-interactive-pressed;
     }
-
-    @variant group-size-medium/combobox-field {
-      @apply max-w-[400px] min-w-[160px];
-    }
-
-    @variant group-size-small/combobox-field {
-      @apply max-w-[200px] min-w-[80px];
-    }
   }
 
   .input {
