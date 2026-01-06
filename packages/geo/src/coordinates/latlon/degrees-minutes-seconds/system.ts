@@ -51,7 +51,7 @@ export const systemDegreesMinutesSeconds: CoordinateSystem = {
         const deg = Math.floor(abs);
         const rem = (abs - deg) * 60;
         const min = Math.floor(rem);
-        const sec = Number.parseFloat(((rem - min) * 60).toFixed(9));
+        const sec = Number.parseFloat(((rem - min) * 60).toFixed(10));
 
         return `${deg} ${min} ${sec} ${BEARINGS[format][index as 0 | 1][+(num < 0)]}`;
       })

@@ -42,7 +42,7 @@ export const systemDegreesDecimalMinutes: CoordinateSystem = {
       .map((num, index) => {
         const abs = Math.abs(num);
         const deg = Math.floor(abs);
-        const min = Number.parseFloat(((abs - deg) * 60).toFixed(9));
+        const min = Number.parseFloat(((abs - deg) * 60).toFixed(10));
 
         return `${deg} ${min} ${BEARINGS[format][index as 0 | 1][+(num < 0)]}`;
       })
