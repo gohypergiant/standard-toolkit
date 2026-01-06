@@ -11,6 +11,7 @@ Add EditShapeLayer for interactive shape editing
 - Support for all shape types: Point, LineString, Polygon, Rectangle, Circle, and Ellipse
 - Live measurement tooltips during editing (dimensions and area)
 - Shift key modifiers: hold for uniform scaling or 45° rotation snapping
+- ESC key to cancel editing
 - Locked shape support (`shape.locked` prevents editing)
 
 **Bug fixes:**
