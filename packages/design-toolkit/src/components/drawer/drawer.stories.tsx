@@ -180,7 +180,7 @@ export const OpenCloseTrigger: Story = {
               <DrawerView id={ids.a}>
                 <DrawerHeader>
                   <DrawerHeaderTitle>Title A</DrawerHeaderTitle>
-                  <DrawerClose id={ids.a} />
+                  <DrawerClose for={ids.a} />
                 </DrawerHeader>
                 <DrawerContent>Content A</DrawerContent>
                 <DrawerFooter>Footer A</DrawerFooter>
