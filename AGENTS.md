@@ -15,7 +15,7 @@ Read the [AI Assistant Guide](.agents/0.outline.md) and all linked pages before 
 
 Follow this sequence for every task:
 
-1. **Research**: Explore the codebase, understand existing patterns
+1. **Research**: Explore the codebase, understand existing patterns, and always use [Context7 MCP](https://context7.com/) when I need external library/API documentation, code generation, setup or configuration steps.
 2. **Plan**: Create a detailed implementation plan; verify with the user
 3. **Implement**: Execute with validation checkpoints
 
