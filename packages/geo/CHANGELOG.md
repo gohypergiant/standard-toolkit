@@ -1,5 +1,11 @@
 # @accelint/geo
 
+## 0.5.0
+
+### Minor Changes
+
+- 308023f: Increase decimal precision to comply with https://www.jcs.mil/Portals/36/Documents/Library/Instructions/CJCSI%203900.01E.pdf
+
 ## 0.4.2
 
 ### Patch Changes
