@@ -124,7 +124,7 @@ export const BasicDrawing: Story = {
         </BaseMap>
 
         {/* Drawing toolbar */}
-        <div className='absolute top-l left-l z-10 flex max-h-[calc(100vh-2rem)] w-[320px] flex-col gap-l rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
+        <div className='absolute top-l left-l z-10 flex max-h-[calc(100%-2rem)] w-[320px] flex-col gap-l overflow-y-auto rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
           <p className='font-bold text-header-l'>Draw Shapes</p>
 
           {/* Status indicator */}
@@ -264,11 +264,11 @@ export const BasicDrawing: Story = {
           </div>
 
           {/* Event log */}
-          <div className='flex min-h-0 flex-1 flex-col'>
+          <div className='flex flex-col'>
             <p className='mb-s font-semibold text-body-s'>
               Event Log ({shapes.length} shapes)
             </p>
-            <div className='max-h-[200px] min-h-0 flex-1 overflow-y-auto rounded-lg border border-border-default bg-surface-subtle p-s'>
+            <div className='h-[100px] overflow-y-auto rounded-lg border border-border-default bg-surface-subtle p-s'>
               {eventLog.length === 0 ? (
                 <p className='text-body-xs text-content-disabled'>
                   Click a shape type to start drawing...
