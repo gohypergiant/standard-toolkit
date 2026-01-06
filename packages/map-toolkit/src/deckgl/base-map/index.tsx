@@ -350,6 +350,7 @@ export function BaseMap({
         >
           <Deckgl
             {...rest}
+            controller={controller}
             interleaved={interleaved}
             getCursor={handleGetCursor}
             useDevicePixels={useDevicePixels}
