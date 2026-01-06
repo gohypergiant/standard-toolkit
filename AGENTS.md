@@ -1,15 +1,25 @@
 # Agent Guidelines
 
-Build production-quality, safety-critical code. This document defines the coding philosophy, workflow, and standards for this repository. When in doubt, use the documented patterns and follow the rules strictly.
+Build production-quality, safety-critical code. This document defines the coding philosophy, workflow, and standards for this repository.
 
 Read the [AI Assistant Guide](.agents/0.outline.md) and all linked pages before proceeding.
 
-## Philosophy
+## About This Repository
 
-**HyperStyle** prioritizes **safety, performance, and developer experience**—in that order. We build software for critical systems where correctness is non-negotiable. Zero technical debt: do it right the first time.
+This codebase follows **HyperStyle**—our internal style guide prioritizing **safety, performance, and developer experience** in that order. We build software for critical systems where correctness is non-negotiable.
 
-> Simplicity is the prerequisite for reliability.  
+> Simplicity is the prerequisite for reliability.
 > — Edsger W. Dijkstra
+
+**Zero technical debt**: Do it right the first time.
+
+## Agent Capabilities
+
+These guidelines assume you can:
+- Explore and modify the codebase
+- Spawn parallel agents for independent tasks (if supported)
+- Use extended thinking for complex architectural decisions
+- Perform file system and git operations
 
 ## Workflow: Research → Plan → Implement
 
@@ -21,20 +31,19 @@ Follow this sequence for every task:
 
 Say: "Let me research the codebase and create a plan before implementing."
 
-For complex architectural decisions, use **ultrathink**: "Let me ultrathink about this architecture before proposing a solution."
+For complex architectural decisions, say: "Let me think through this architecture before proposing a solution" (then engage extended thinking).
 
 ### When Stuck
 
 1. **Stop** — Don't spiral into complex solutions
-2. **Delegate** — Spawn agents for parallel investigation
-3. **Ultrathink** — Engage maximum reasoning capacity
+2. **Delegate** — Spawn agents for parallel investigation (if supported)
+3. **Think deeply** — Use extended thinking for architectural problems
 4. **Simplify** — The simple solution is usually correct
 5. **Ask** — "I see two approaches: [A] vs [B]. Which do you prefer?"
 
-### Reality Checkpoints
+### Validation Checkpoints
 
 Stop and validate at these moments:
-
 - After implementing a complete feature
 - Before starting a new major component
 - When something feels wrong
@@ -51,11 +60,11 @@ Stop and validate at these moments:
 
 When context gets long:
 
-1. Re-read this AGENTS.md file.
-2. Summarize progress in PROGRESS.md (create this file if it does not exist).
-3. Document current state before major changes.
+1. Re-read this AGENTS.md file
+2. Summarize progress in PROGRESS.md (create if needed)
+3. Document current state before major changes
 
-Maintain the following structure in a TODO.md file (create this file if it does not exist):
+Maintain TODO.md with this structure (create if needed):
 
 ```markdown
 ## Current Task
@@ -70,11 +79,17 @@ Maintain the following structure in a TODO.md file (create this file if it does 
 - [ ] Task 4
 ```
 
-## Git Instructions
+## Git & Pull Requests
 
-- Commits should follow the conventional commit format: https://www.conventionalcommits.org/en/v1.0.0/#specification
+**Commits**: Follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/#specification)
 
-## Pull Request Instructions
+**PR Title**: `<type>: <short description>`
+- Types: fix, feat, build, chore, ci, docs, style, refactor, perf, test
 
-- Title format: <fix|feat|build|chore|ci|docs|style|refactor|perf|test>: <short description>
-- Always run `pnpm run build`, `pnpm run test`, `pnpm run lint`, and `pnpm run format` before committing.
+**Before committing**, always run:
+```bash
+pnpm run build
+pnpm run test
+pnpm run lint
+pnpm run format
+```
