@@ -293,13 +293,13 @@ export const Virtualized: Story = {
         layout={AriaListLayout}
         layoutOptions={{ rowHeight: 32 }}
       >
-        <Options {...args}>
-          {manyItems.map((item) => (
+        <Options {...args} items={manyItems}>
+          {(item) => (
             <OptionsItem key={item.id} id={item.id} textValue={item.name}>
               {item.icon && <Icon>{item.icon}</Icon>}
               <OptionsItemLabel>{item.name}</OptionsItemLabel>
             </OptionsItem>
-          ))}
+          )}
         </Options>
       </AriaVirtualizer>
     </div>
