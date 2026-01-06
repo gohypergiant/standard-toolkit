@@ -53,7 +53,7 @@ export const COFFIN_CORNERS = {
  */
 export const DEFAULT_DISPLAY_PROPS = {
   pickable: true,
-  showLabels: true,
+  showLabels: 'always' as const,
   showHighlight: false,
   applyBaseOpacity: true,
   highlightColor: SELECTION_HIGHLIGHT.COLOR,

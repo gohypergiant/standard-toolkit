@@ -49,7 +49,7 @@ const WITH_ICONS_MAP_ID = uuid();
  */
 export const BasicDisplayAndEvents: Story = {
   args: {
-    showLabels: true,
+    showLabels: 'always',
     pickable: true,
     applyBaseOpacity: true,
     showHighlight: false,
@@ -60,8 +60,10 @@ export const BasicDisplayAndEvents: Story = {
   },
   argTypes: {
     showLabels: {
-      control: { type: 'boolean' },
-      description: 'Show/hide labels on shapes',
+      control: { type: 'select' },
+      options: ['always', 'hover', 'never'],
+      description:
+        'Label display mode: always (all shapes), hover (hovered shape only), or never (no labels)',
     },
     pickable: {
       control: { type: 'boolean' },
@@ -436,7 +438,7 @@ export const LabelPositioning: Story = {
             mapId={LABEL_POSITIONS_MAP_ID}
             data={mockShapes}
             selectedShapeId={selectedId}
-            showLabels={true}
+            showLabels='always'
             pickable={true}
             applyBaseOpacity={true}
             labelOptions={labelOptions}
@@ -493,7 +495,7 @@ export const WithPointIcons: Story = {
             mapId={WITH_ICONS_MAP_ID}
             data={mockShapesWithIcons}
             selectedShapeId={selectedId}
-            showLabels={true}
+            showLabels='always'
             pickable={true}
             applyBaseOpacity={true}
           />

@@ -54,6 +54,7 @@ export {
 } from './shared/types';
 export type {
   DisplayShapeLayerProps,
+  ShowLabelsMode,
   StyledFeature,
   StyledFeatureProperties,
 } from './display-shape-layer/types';

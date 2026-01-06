@@ -20,6 +20,14 @@ import type {
 import type { LabelPositionOptions } from './utils/labels';
 
 /**
+ * Label display mode for shapes
+ * - `'always'`: Show labels for all shapes
+ * - `'hover'`: Show label only for the currently hovered shape
+ * - `'never'`: Never show labels
+ */
+export type ShowLabelsMode = 'always' | 'hover' | 'never';
+
+/**
  * Re-export StyledFeature from shared types
  */
 export type StyledFeature = SharedStyledFeature;
@@ -80,11 +88,15 @@ export interface DisplayShapeLayerProps extends CompositeLayerProps {
   onShapeHover?: (shape: Shape | null) => void;
 
   /**
-   * Whether to show labels on shapes
+   * Label display mode for shapes
+   * - `'always'`: Show labels for all shapes
+   * - `'hover'`: Show label only for the currently hovered shape (requires `pickable={true}`, the default)
+   * - `'never'`: Never show labels
+   *
    * Labels use the shape's `label` property, or `name` if label is not set
-   * @default true
+   * @default 'always'
    */
-  showLabels?: boolean;
+  showLabels?: ShowLabelsMode;
 
   /**
    * Global label positioning options

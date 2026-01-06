@@ -135,7 +135,7 @@ type FeaturesCache = {
  *         mapId={MAP_ID}
  *         data={shapes}
  *         selectedShapeId={selectedId}
- *         showLabels={true}
+ *         showLabels="always"
  *         pickable={true}
  *       />
  *     </BaseMap>
@@ -148,7 +148,7 @@ type FeaturesCache = {
  * <displayShapeLayer
  *   id="my-shapes"
  *   data={shapes}
- *   showLabels={true}
+ *   showLabels="always"
  *   labelOptions={{
  *     // Position circle labels at the top
  *     circleLabelCoordinateAnchor: 'top',
@@ -619,17 +619,37 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
 
   /**
    * Render labels layer
+   * Supports three modes:
+   * - 'always': Show labels for all shapes
+   * - 'hover': Show label only for the currently hovered shape
+   * - 'never': No labels
    */
   private renderLabelsLayer(): ReturnType<typeof createShapeLabelLayer> | null {
     const { showLabels, data, labelOptions } = this.props;
 
-    if (!showLabels) {
+    // No labels if disabled
+    if (showLabels === 'never') {
+      return null;
+    }
+
+    // Determine which shapes to show labels for
+    let labelData = data;
+    if (showLabels === 'hover') {
+      const hoverIndex = this.state?.hoverIndex;
+      if (hoverIndex === undefined) {
+        return null; // No shape hovered, no label to show
+      }
+      const hoveredShape = data[hoverIndex];
+      labelData = hoveredShape ? [hoveredShape] : [];
+    }
+
+    if (labelData.length === 0) {
       return null;
     }
 
     return createShapeLabelLayer({
       id: `${this.props.id}-${SHAPE_LAYER_IDS.DISPLAY_LABELS}`,
-      data,
+      data: labelData,
       labelOptions,
     });
   }

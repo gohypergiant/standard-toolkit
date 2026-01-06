@@ -7,6 +7,7 @@ Add EditShapeLayer for interactive shape editing
 **New features:**
 
 - `EditShapeLayer` component for editing existing shapes on the map
+- `showLabels` prop in `DisplayShapeLayer` now supports `'always' | 'hover' | 'never'` modes for flexible label display (hover mode shows labels only on shape hover)
 - `useEditShape` hook for managing edit state with `edit()`, `save()`, and `cancel()` controls
 - Support for all shape types: Point, LineString, Polygon, Rectangle, Circle, and Ellipse
 - Live measurement tooltips during editing (dimensions and area)

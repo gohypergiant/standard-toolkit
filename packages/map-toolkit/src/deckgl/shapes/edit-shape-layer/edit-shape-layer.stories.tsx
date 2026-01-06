@@ -166,7 +166,7 @@ export const BasicEditing: Story = {
             id='shapes'
             mapId={EDIT_MAP_ID}
             data={shapes}
-            showLabels
+            showLabels='always'
             pickable={!isEditing}
             selectedShapeId={selectedShape?.id ?? editingShape?.id}
           />
@@ -306,7 +306,7 @@ export const CombinedDrawAndEdit: Story = {
             id='shapes'
             mapId={COMBINED_MAP_ID}
             data={shapes}
-            showLabels
+            showLabels='always'
             pickable={!(isEditing || isDrawing)}
             selectedShapeId={selectedShape?.id ?? editingShape?.id}
           />
@@ -460,7 +460,7 @@ export const LockedShapes: Story = {
             id='shapes'
             mapId={LOCKED_MAP_ID}
             data={shapes}
-            showLabels
+            showLabels='always'
             pickable={!isEditing}
             selectedShapeId={selectedShape?.id ?? editingShape?.id}
           />

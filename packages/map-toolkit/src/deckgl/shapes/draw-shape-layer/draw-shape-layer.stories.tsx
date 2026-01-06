@@ -116,7 +116,7 @@ export const BasicDrawing: Story = {
             id='drawn-shapes'
             mapId={DRAW_MAP_ID}
             data={shapes}
-            showLabels
+            showLabels='always'
             pickable={false}
           />
           {/* Drawing layer - renders only when actively drawing */}
@@ -313,7 +313,7 @@ export const CustomStyleDefaults: Story = {
   render: () => {
     const [shapes, setShapes] = useState<Shape[]>([]);
     const [selectedColor, setSelectedColor] = useState<
-      'red' | 'blue' | 'green'
+      'red' | 'blue' | 'yellow'
     >('red');
 
     const colorStyles = {
@@ -325,9 +325,9 @@ export const CustomStyleDefaults: Story = {
         fillColor: [100, 100, 255, 180] as [number, number, number, number],
         strokeColor: [0, 0, 200, 255] as [number, number, number, number],
       },
-      green: {
-        fillColor: [100, 255, 100, 180] as [number, number, number, number],
-        strokeColor: [0, 200, 0, 255] as [number, number, number, number],
+      yellow: {
+        fillColor: [255, 255, 100, 180] as [number, number, number, number],
+        strokeColor: [200, 200, 0, 255] as [number, number, number, number],
       },
     };
 
@@ -351,7 +351,7 @@ export const CustomStyleDefaults: Story = {
             id='colored-shapes'
             mapId={CUSTOM_STYLES_MAP_ID}
             data={shapes}
-            showLabels
+            showLabels='always'
             pickable={false}
           />
           <DrawShapeLayer mapId={CUSTOM_STYLES_MAP_ID} />
@@ -377,11 +377,11 @@ export const CustomStyleDefaults: Story = {
               Blue
             </Button>
             <Button
-              variant={selectedColor === 'green' ? 'filled' : 'outline'}
-              color={selectedColor === 'green' ? 'serious' : 'mono-muted'}
-              onPress={() => setSelectedColor('green')}
+              variant={selectedColor === 'yellow' ? 'filled' : 'outline'}
+              color={selectedColor === 'yellow' ? 'serious' : 'mono-muted'}
+              onPress={() => setSelectedColor('yellow')}
             >
-              Green
+              Yellow
             </Button>
           </div>
 
@@ -469,7 +469,7 @@ export const CombinedDisplayAndDraw: Story = {
             id='all-shapes'
             mapId={COMBINED_MAP_ID}
             data={shapes}
-            showLabels
+            showLabels='always'
             pickable={!isDrawing}
             selectedShapeId={selectedId}
           />
