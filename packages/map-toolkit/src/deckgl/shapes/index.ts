@@ -33,6 +33,14 @@ export {
   LINE_WIDTHS,
   SHAPE_LAYER_IDS,
 } from './shared/constants';
+// Style utility exports
+export {
+  getDashArray,
+  getFillColor,
+  getLineColor,
+  getLineWidth,
+  normalizeColor,
+} from './shared/utils/style-utils';
 // Event exports
 export { ShapeEvents } from './shared/events';
 export {

@@ -42,6 +42,8 @@ export default defineConfig({
     '!src/deckgl/shapes/shared/utils/mode-utils.ts',
     '!src/deckgl/shapes/shared/utils/pick-filtering.ts',
     '!src/deckgl/shapes/shared/utils/layer-config.ts',
+    // style-utils is re-exported from shapes/index.ts, so exclude direct entry
+    '!src/deckgl/shapes/shared/utils/style-utils.ts',
     // Shared internal hooks (used by draw/edit layers, not public API)
     '!src/deckgl/shapes/shared/hooks/**',
   ],

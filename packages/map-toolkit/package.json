@@ -94,7 +94,6 @@
     "./deckgl/shapes/shared/constants": "./dist/deckgl/shapes/shared/constants.js",
     "./deckgl/shapes/shared/events": "./dist/deckgl/shapes/shared/events.js",
     "./deckgl/shapes/shared/types": "./dist/deckgl/shapes/shared/types.js",
-    "./deckgl/shapes/shared/utils/style-utils": "./dist/deckgl/shapes/shared/utils/style-utils.js",
     "./deckgl/symbol-layer": "./dist/deckgl/symbol-layer/index.js",
     "./deckgl/symbol-layer/fiber": "./dist/deckgl/symbol-layer/fiber.js",
     "./deckgl/text-layer": "./dist/deckgl/text-layer/index.js",

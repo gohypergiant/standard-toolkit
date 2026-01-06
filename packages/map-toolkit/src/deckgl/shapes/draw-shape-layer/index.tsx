@@ -18,7 +18,7 @@ import {
   DEFAULT_TENTATIVE_COLORS,
   EMPTY_FEATURE_COLLECTION,
 } from '../shared/constants';
-import { useShiftZoomDisable } from '../shared/hooks';
+import { useShiftZoomDisable } from '../shared/hooks/use-shift-zoom-disable';
 import { getDefaultEditableLayerProps } from '../shared/utils/layer-config';
 import { DRAW_SHAPE_LAYER_ID } from './constants';
 import { getModeInstance, triggerDoubleClickFinish } from './modes';

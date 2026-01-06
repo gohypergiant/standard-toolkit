@@ -14,7 +14,7 @@
 
 import { useContext, useEffect, useRef, useSyncExternalStore } from 'react';
 import { MapContext } from '../../base-map/provider';
-import { useShiftZoomDisable } from '../shared/hooks';
+import { useShiftZoomDisable } from '../shared/hooks/use-shift-zoom-disable';
 import { ShapeFeatureType, type ShapeFeatureTypeValues } from '../shared/types';
 import { getDefaultEditableLayerProps } from '../shared/utils/layer-config';
 import { getFillColor, getLineColor } from '../shared/utils/style-utils';
