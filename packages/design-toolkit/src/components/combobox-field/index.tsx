@@ -101,34 +101,24 @@ export function ComboBoxField<T extends OptionsDataItem>({
               classNames?.control,
             )}
           >
-            {isReadOnly ? (
-              <Input
-                {...inputProps}
-                tabIndex={-1}
-                className={composeRenderProps(classNames?.input, (className) =>
-                  clsx(styles.input, className),
+            <Input
+              {...inputProps}
+              tabIndex={isReadOnly ? -1 : 0}
+              className={composeRenderProps(classNames?.input, (className) =>
+                clsx(styles.input, className),
+              )}
+            />
+            {!isReadOnly && (
+              <Button
+                className={composeRenderProps(
+                  classNames?.trigger,
+                  (className) => clsx(styles.trigger, className),
                 )}
-              />
-            ) : (
-              <>
-                <Input
-                  {...inputProps}
-                  className={composeRenderProps(
-                    classNames?.input,
-                    (className) => clsx(styles.input, className),
-                  )}
-                />
-                <Button
-                  className={composeRenderProps(
-                    classNames?.trigger,
-                    (className) => clsx(styles.trigger, className),
-                  )}
-                >
-                  <Icon size='small'>
-                    <ChevronDown />
-                  </Icon>
-                </Button>
-              </>
+              >
+                <Icon size='small'>
+                  <ChevronDown />
+                </Icon>
+              </Button>
             )}
           </div>
           {!isReadOnly && !!descriptionProp && !(isSmall || isInvalid) && (
