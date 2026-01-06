@@ -10,25 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Color } from '@deck.gl/core';
+import { DEFAULT_TEXT_STYLE } from '../text-settings';
 import type { TextLayerProps as DglTextLayerProps } from '@deck.gl/layers';
 
 export const defaultSettings: Partial<DglTextLayerProps> = {
+  ...DEFAULT_TEXT_STYLE,
   fontFamily: 'system-ui, sans-serif',
-  fontSettings: {
-    fontSize: 22,
-    sdf: true,
-    buffer: 10,
-    cutoff: 0.19,
-    radius: 10,
-    smoothing: 0.1,
-  },
-  fontWeight: 500,
   getAlignmentBaseline: 'center',
-  getColor: [255, 255, 255, 255] as Color,
-  getSize: 12,
   getTextAnchor: 'middle',
   lineHeight: 1,
-  outlineColor: [0, 0, 0, 255] as Color,
-  outlineWidth: 2,
 } as const;

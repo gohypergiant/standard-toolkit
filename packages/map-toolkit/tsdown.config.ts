@@ -25,6 +25,7 @@ export default defineConfig({
   // SEE: https://tsdown.dev/options/dependencies#default-behavior
   external: [
     '@accelint/hotkey-manager',
+    '@deck.gl-community/editable-layers',
     '@deck.gl/core',
     '@deck.gl/extensions',
     '@deck.gl/layers',
@@ -32,6 +33,8 @@ export default defineConfig({
     '@deckgl-fiber-renderer/shared',
     '@deckgl-fiber-renderer/types',
     '@math.gl/web-mercator',
+    '@turf/helpers',
+    '@turf/turf',
     '@vis.gl/react-maplibre',
     'maplibre-gl',
     'milsymbol',

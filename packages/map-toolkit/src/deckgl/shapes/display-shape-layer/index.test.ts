@@ -23,12 +23,12 @@ import {
 import { DisplayShapeLayer } from './index';
 import type { UniqueId } from '@accelint/core';
 import type { Color } from '@deck.gl/core';
-import type { EditableShape } from '../shared/types';
+import type { Shape } from '../shared/types';
 
 /**
  * Create a minimal mock shape for testing
  */
-function createMockShape(overrides?: Partial<EditableShape>): EditableShape {
+function createMockShape(overrides?: Partial<Shape>): Shape {
   const id = uuid();
   return {
     id,
@@ -66,9 +66,7 @@ function createMockShape(overrides?: Partial<EditableShape>): EditableShape {
 /**
  * Create a mock Point shape for testing
  */
-function createMockPointShape(
-  overrides?: Partial<EditableShape>,
-): EditableShape {
+function createMockPointShape(overrides?: Partial<Shape>): Shape {
   const id = uuid();
   return {
     id,
