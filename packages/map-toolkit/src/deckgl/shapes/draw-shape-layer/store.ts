@@ -27,14 +27,9 @@ import type { UniqueId } from '@accelint/core';
 import type { Feature } from 'geojson';
 import type { MapCursorEventType } from '../../../map-cursor/types';
 import type { MapModeEventType } from '../../../map-mode/types';
-import type { Shape, ShapeFeatureType } from '../shared/types';
+import type { Shape, ShapeFeatureType, Subscription } from '../shared/types';
 import type { DrawShapeEvent, ShapeDrawnEvent } from './events';
-import type {
-  DrawFunction,
-  DrawingState,
-  DrawShapeOptions,
-  Subscription,
-} from './types';
+import type { DrawFunction, DrawingState, DrawShapeOptions } from './types';
 
 /**
  * Typed event bus instances

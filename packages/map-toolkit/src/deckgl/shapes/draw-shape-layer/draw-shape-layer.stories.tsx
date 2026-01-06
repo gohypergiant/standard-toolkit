@@ -25,7 +25,7 @@ import type { Shape } from '../shared/types';
 import '../display-shape-layer/fiber';
 import './fiber';
 import { DrawShapeLayer } from './index';
-import { useDrawShapes } from './use-draw-shapes';
+import { useDrawShape } from './use-draw-shape';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta = {
@@ -75,7 +75,7 @@ export const BasicDrawing: Story = {
     // Subscribe to cursor store to enable cursor change requests
     const { cursor } = useMapCursor(DRAW_MAP_ID);
 
-    const { draw, cancel, isDrawing, activeShapeType } = useDrawShapes(
+    const { draw, cancel, isDrawing, activeShapeType } = useDrawShape(
       DRAW_MAP_ID,
       {
         onCreate: (shape) => {
@@ -334,7 +334,7 @@ export const CustomStyleDefaults: Story = {
     // Subscribe to cursor store to enable cursor change requests
     useMapCursor(CUSTOM_STYLES_MAP_ID);
 
-    const { draw, cancel, isDrawing } = useDrawShapes(CUSTOM_STYLES_MAP_ID, {
+    const { draw, cancel, isDrawing } = useDrawShape(CUSTOM_STYLES_MAP_ID, {
       onCreate: (shape) => {
         setShapes((prev) => [...prev, shape]);
       },
@@ -435,7 +435,7 @@ export const CombinedDisplayAndDraw: Story = {
     const { requestCursorChange, clearCursor } = useMapCursor(COMBINED_MAP_ID);
     const { selectedId } = useShapeSelection(COMBINED_MAP_ID);
 
-    const { draw, cancel, isDrawing, activeShapeType } = useDrawShapes(
+    const { draw, cancel, isDrawing, activeShapeType } = useDrawShape(
       COMBINED_MAP_ID,
       {
         onCreate: (shape) => {

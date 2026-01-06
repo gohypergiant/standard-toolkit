@@ -35,7 +35,7 @@ import { EditShapeEvents } from './events';
 import type { UniqueId } from '@accelint/core';
 import type { Feature } from 'geojson';
 import type { MapEventType } from '../../base-map/types';
-import type { Shape } from '../shared/types';
+import type { Shape, Subscription } from '../shared/types';
 import type {
   EditShapeEvent,
   ShapeEditCanceledEvent,
@@ -47,7 +47,6 @@ import type {
   EditingState,
   EditMode,
   EditShapeOptions,
-  Subscription,
 } from './types';
 
 const logger = getLogger({

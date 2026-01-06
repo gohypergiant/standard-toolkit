@@ -19,16 +19,16 @@ import {
 } from '@deck.gl-community/editable-layers';
 import type { Position } from 'geojson';
 
-interface ScaleFactors {
+type ScaleFactors = {
   scaleX: number;
   scaleY: number;
-}
+};
 
-interface ScaleContext {
+type ScaleContext = {
   origin: Position;
   scaleFactors: ScaleFactors;
   geometry: FeatureCollection;
-}
+};
 
 /**
  * Extends ScaleMode to support non-uniform (free) scaling.

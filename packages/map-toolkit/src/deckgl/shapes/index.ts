@@ -34,7 +34,7 @@ export {
   SHAPE_LAYER_IDS,
 } from './shared/constants';
 // Event exports
-export { SHAPE_EVENTS, ShapeEvents } from './shared/events';
+export { ShapeEvents } from './shared/events';
 export {
   isCircleShape,
   isEllipseShape,
@@ -65,6 +65,13 @@ export type {
   ShapeDrawnEvent,
 } from './draw-shape-layer/events';
 export type {
+  DrawingState,
+  DrawShapeLayerProps,
+  DrawShapeOptions,
+  UseDrawShapeOptions,
+  UseDrawShapeReturn,
+} from './draw-shape-layer/types';
+export type {
   EditShapeEvent,
   EditShapeEventType,
   ShapeEditCanceledEvent,
@@ -79,11 +86,7 @@ export type {
   UseEditShapeOptions,
   UseEditShapeReturn,
 } from './edit-shape-layer/types';
-export type {
-  ShapeEventHandler,
-  ShapeEventPayload,
-  ShapeEventType,
-} from './shared/events';
+export type { ShapeEventType } from './shared/events';
 // Shared type exports
 export type {
   CircleFeatureProperties,

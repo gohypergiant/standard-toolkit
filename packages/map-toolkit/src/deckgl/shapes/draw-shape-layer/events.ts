@@ -12,7 +12,6 @@
 
 'use client';
 
-import type { Payload } from '@accelint/bus';
 import type { UniqueId } from '@accelint/core';
 import type { Shape, ShapeFeatureType } from '../shared/types';
 
@@ -32,18 +31,25 @@ export type DrawShapeEventType =
   (typeof DrawShapeEvents)[keyof typeof DrawShapeEvents];
 
 /**
+ * Payload for shapes:drawing event.
+ */
+export type ShapeDrawingPayload = {
+  /** The shape type being drawn */
+  shapeType: ShapeFeatureType;
+  /** Map instance ID for multi-map event isolation */
+  mapId: UniqueId;
+};
+
+/**
  * Event payload for shapes:drawing
  * Emitted when drawing starts
  */
-export type ShapeDrawingEvent = Payload<
-  'shapes:drawing',
-  {
-    /** The shape type being drawn */
-    shapeType: ShapeFeatureType;
-    /** Map instance ID for multi-map event isolation */
-    mapId: UniqueId;
-  }
->;
+export type ShapeDrawingEvent = {
+  type: 'shapes:drawing';
+  payload: ShapeDrawingPayload;
+  source: UniqueId;
+  target?: UniqueId;
+};
 
 /**
  * Payload for shapes:drawn event.
@@ -62,21 +68,33 @@ export type ShapeDrawnPayload = {
  * Event payload for shapes:drawn
  * Emitted when a shape is successfully created
  */
-export type ShapeDrawnEvent = Payload<'shapes:drawn', ShapeDrawnPayload>;
+export type ShapeDrawnEvent = {
+  type: 'shapes:drawn';
+  payload: ShapeDrawnPayload;
+  source: UniqueId;
+  target?: UniqueId;
+};
+
+/**
+ * Payload for shapes:draw-canceled event.
+ */
+export type ShapeDrawCanceledPayload = {
+  /** The shape type that was being drawn */
+  shapeType: ShapeFeatureType;
+  /** Map instance ID for multi-map event isolation */
+  mapId: UniqueId;
+};
 
 /**
  * Event payload for shapes:draw-canceled
  * Emitted when drawing is canceled
  */
-export type ShapeDrawCanceledEvent = Payload<
-  'shapes:draw-canceled',
-  {
-    /** The shape type that was being drawn */
-    shapeType: ShapeFeatureType;
-    /** Map instance ID for multi-map event isolation */
-    mapId: UniqueId;
-  }
->;
+export type ShapeDrawCanceledEvent = {
+  type: 'shapes:draw-canceled';
+  payload: ShapeDrawCanceledPayload;
+  source: UniqueId;
+  target?: UniqueId;
+};
 
 /**
  * Union of all draw shape event types

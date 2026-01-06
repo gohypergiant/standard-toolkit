@@ -15,9 +15,7 @@
 import type { UniqueId } from '@accelint/core';
 import type { Feature } from 'geojson';
 import type { DistanceUnitAbbreviation } from '../../../shared/units';
-import type { Shape, Subscription } from '../shared/types';
-
-export type { Subscription };
+import type { Shape } from '../shared/types';
 
 /**
  * Edit mode for shape editing
@@ -37,41 +35,41 @@ export type EditMode =
 /**
  * State for the editing store
  */
-export interface EditingState {
+export type EditingState = {
   /** Shape currently being edited */
   editingShape: Shape | null;
   /** Current edit mode */
   editMode: EditMode;
   /** Live feature being edited (updates in real-time during drag) */
   featureBeingEdited: Feature | null;
-}
+};
 
 /**
  * Options for starting an edit operation
  */
-export interface EditShapeOptions {
+export type EditShapeOptions = {
   /** Override the default edit mode (auto-detected from shape type by default) */
   mode?:
     | 'bounding-transform'
     | 'vertex-transform'
     | 'circle-transform'
     | 'translate';
-}
+};
 
 /**
  * Options for the useEditShape hook
  */
-export interface UseEditShapeOptions {
+export type UseEditShapeOptions = {
   /** Callback when a shape edit is saved */
   onUpdate?: (shape: Shape) => void;
   /** Callback when editing is canceled */
   onCancel?: (shape: Shape) => void;
-}
+};
 
 /**
  * Return type for the useEditShape hook
  */
-export interface UseEditShapeReturn {
+export type UseEditShapeReturn = {
   /** Current editing state (null when not editing) */
   editingState: EditingState | null;
   /** Start editing a shape with optional mode override */
@@ -84,19 +82,19 @@ export interface UseEditShapeReturn {
   isEditing: boolean;
   /** The shape currently being edited (null if not editing) */
   editingShape: Shape | null;
-}
+};
 
 /**
  * Props for the EditShapeLayer component
  */
-export interface EditShapeLayerProps {
+export type EditShapeLayerProps = {
   /** Layer ID (defaults to 'edit-shape-layer') */
   id?: string;
   /** Map instance ID for multi-map isolation */
   mapId?: UniqueId;
   /** Distance unit for tooltip measurements (defaults to 'km') */
   unit?: DistanceUnitAbbreviation;
-}
+};
 
 /**
  * Function type for the edit action
