@@ -38,12 +38,14 @@ const mockLineString = mockShapes.find((s) => s.shapeType === 'LineString');
 const mockPoint = mockShapes.find((s) => s.shapeType === 'Point');
 
 if (
-  !mockCircle ||
-  !mockPolygon ||
-  !mockEllipse ||
-  !mockRectangle ||
-  !mockLineString ||
-  !mockPoint
+  ![
+    mockCircle,
+    mockPolygon,
+    mockEllipse,
+    mockRectangle,
+    mockLineString,
+    mockPoint,
+  ].every(Boolean)
 ) {
   throw new Error('Missing fixture shapes');
 }
@@ -307,9 +309,9 @@ describe('edit-shape-layer store', () => {
       const edit = getOrCreateEdit(mapId);
       const snapshot = getOrCreateSnapshot(mapId);
 
-      // biome-ignore lint/style/noNonNullAssertion: Existence verified above
       const shape = createMockShape({
         shapeType: ShapeFeatureType.LineString,
+        // biome-ignore lint/style/noNonNullAssertion: mockLineString is verified in beforeAll
         feature: mockLineString!.feature,
       });
       edit(shape);
@@ -344,9 +346,9 @@ describe('edit-shape-layer store', () => {
       const edit = getOrCreateEdit(mapId);
       const snapshot = getOrCreateSnapshot(mapId);
 
-      // biome-ignore lint/style/noNonNullAssertion: Existence verified above
       const shape = createMockShape({
         shapeType: ShapeFeatureType.Rectangle,
+        // biome-ignore lint/style/noNonNullAssertion: mockRectangle is verified in beforeAll
         feature: mockRectangle!.feature,
       });
       edit(shape);

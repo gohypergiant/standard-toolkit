@@ -13,7 +13,6 @@
 import {
   CompositeMode,
   type DraggingEvent,
-  type EditAction,
   type FeatureCollection,
   type GeoJsonEditMode,
   type GuideFeatureCollection,
