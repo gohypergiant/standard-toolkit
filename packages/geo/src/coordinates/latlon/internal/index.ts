@@ -83,9 +83,9 @@ const decimalSecAndMin = (symbol: RegExp) =>
     // avoiding partial matches within larger numbers.
     /(?<!\d)/,
 
-    // 0-59 including 9 decimal places and leading zeros or no number before
-    // acceptable values: 0, 0.123456789, .987654321, 001, 59.999999999
-    /([-+]?0*(?:[0-5]?\d|\.\d{1,9})(?:\.\d{1,9})?)/,
+    // 0-59 including 10 decimal places and leading zeros or no number before
+    // acceptable values: 0, 0.1234567890, .9876543210, 001, 59.9999999999
+    /([-+]?0*(?:[0-5]?\d|\.\d{1,10})(?:\.\d{1,10})?)/,
 
     Patterning.optional(symbol),
 
@@ -103,17 +103,17 @@ export const PARTIAL_PATTERNS = {
 
   degLatDec: Patterning.merge(
     Patterning.capture(
-      /0*(?:90(?:\.0{1,9})?)/, // 90[.0]
+      /0*(?:90(?:\.0{1,10})?)/, // 90[.0]
       /|/,
-      /(?:0?[0-8]?\d(?:\.\d{1,9})?)/, // [0]0[.0]-89[.9]
+      /(?:0?[0-8]?\d(?:\.\d{1,10})?)/, // [0]0[.0]-89[.9]
     ),
     Patterning.optional(SYMBOL_PATTERNS.DEGREES),
   ),
   degLonDec: Patterning.merge(
     Patterning.capture(
-      /(?:180(?:\.0{1,9})?)/, // 180[.0]
+      /(?:180(?:\.0{1,10})?)/, // 180[.0]
       /|/,
-      /(?:0*(?:\d{1,2}|1[0-7]\d)(?:\.\d{1,9})?)/, // [00]0[.0]-179[.9]
+      /(?:0*(?:\d{1,2}|1[0-7]\d)(?:\.\d{1,10})?)/, // [00]0[.0]-179[.9]
     ),
     Patterning.optional(SYMBOL_PATTERNS.DEGREES),
   ),
