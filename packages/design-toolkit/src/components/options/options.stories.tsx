@@ -11,6 +11,7 @@
  */
 
 import Placeholder from '@accelint/icons/placeholder';
+import { useState } from 'react';
 import {
   ListLayout as AriaListLayout,
   Virtualizer as AriaVirtualizer,
@@ -24,6 +25,7 @@ import { OptionsItemLabel } from './item-label';
 import { OptionsSection } from './section';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ReactNode } from 'react';
+import type { Selection } from 'react-aria-components';
 import type { OptionsItemProps } from './types';
 
 const meta = {
@@ -31,10 +33,15 @@ const meta = {
   component: Options,
   args: {
     size: 'large',
+    selectionMode: 'none',
   },
   argTypes: {
     size: {
       control: 'select',
+    },
+    selectionMode: {
+      control: 'select',
+      options: ['none', 'single', 'multiple'],
     },
   },
 } satisfies Meta<typeof Options>;
@@ -297,4 +304,121 @@ export const Virtualized: Story = {
       </AriaVirtualizer>
     </div>
   ),
+};
+
+export const WithSelectionState: Story = {
+  args: {
+    selectionMode: 'multiple',
+  },
+  render: ({ children, ...args }) => {
+    const [selectedKeys, setSelectedKeys] = useState<Selection>(
+      new Set([
+        'selected-info',
+        'selected-serious',
+        'selected-critical',
+        'disabled-selected',
+      ]),
+    );
+    return (
+      <Options
+        {...args}
+        selectedKeys={selectedKeys}
+        onSelectionChange={setSelectedKeys}
+      >
+        {/* Unselected - default state */}
+        <OptionsItem id='unselected' textValue='Unselected Item'>
+          <Icon>
+            <Placeholder />
+          </Icon>
+          <OptionsItemContent>
+            <OptionsItemLabel>Unselected Item</OptionsItemLabel>
+            <OptionsItemDescription>
+              Default unselected state
+            </OptionsItemDescription>
+          </OptionsItemContent>
+        </OptionsItem>
+
+        {/* Selected - info color (default) */}
+        <OptionsItem id='selected-info' textValue='Selected Info'>
+          <Icon>
+            <Placeholder />
+          </Icon>
+          <OptionsItemContent>
+            <OptionsItemLabel>Selected Info</OptionsItemLabel>
+            <OptionsItemDescription>
+              Selected with info color (default)
+            </OptionsItemDescription>
+          </OptionsItemContent>
+        </OptionsItem>
+
+        {/* Selected - serious color */}
+        <OptionsItem
+          id='selected-serious'
+          textValue='Selected Serious'
+          color='serious'
+        >
+          <Icon>
+            <Placeholder />
+          </Icon>
+          <OptionsItemContent>
+            <OptionsItemLabel>Selected Serious</OptionsItemLabel>
+            <OptionsItemDescription>
+              Selected with serious color
+            </OptionsItemDescription>
+          </OptionsItemContent>
+        </OptionsItem>
+
+        {/* Selected - critical color */}
+        <OptionsItem
+          id='selected-critical'
+          textValue='Selected Critical'
+          color='critical'
+        >
+          <Icon>
+            <Placeholder />
+          </Icon>
+          <OptionsItemContent>
+            <OptionsItemLabel>Selected Critical</OptionsItemLabel>
+            <OptionsItemDescription>
+              Selected with critical color
+            </OptionsItemDescription>
+          </OptionsItemContent>
+        </OptionsItem>
+
+        {/* Disabled - unselected */}
+        <OptionsItem
+          id='disabled-unselected'
+          textValue='Disabled Unselected'
+          isDisabled
+        >
+          <Icon>
+            <Placeholder />
+          </Icon>
+          <OptionsItemContent>
+            <OptionsItemLabel>Disabled Unselected</OptionsItemLabel>
+            <OptionsItemDescription>
+              Disabled and unselected
+            </OptionsItemDescription>
+          </OptionsItemContent>
+        </OptionsItem>
+
+        {/* Disabled - selected */}
+        <OptionsItem
+          id='disabled-selected'
+          textValue='Disabled Selected'
+          isDisabled
+        >
+          <Icon>
+            <Placeholder />
+          </Icon>
+          <OptionsItemContent>
+            <OptionsItemLabel>Disabled Selected</OptionsItemLabel>
+            <OptionsItemDescription>
+              Disabled but selected
+            </OptionsItemDescription>
+          </OptionsItemContent>
+        </OptionsItem>
+      </Options>
+    );
+  },
 };
