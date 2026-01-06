@@ -33,12 +33,42 @@ type ScaleContext = {
 /**
  * Extends ScaleMode to support non-uniform (free) scaling.
  *
- * Features:
+ * ## Features
  * - Default: Free scaling - can stretch/squish in any direction
  * - With modeConfig.lockScaling = true: Uniform scaling (maintains aspect ratio)
  *
- * Non-uniform scaling works by applying separate X and Y scale factors
- * based on the cursor movement relative to the opposite corner.
+ * ## How Non-Uniform Scaling Works
+ *
+ * Non-uniform scaling applies separate X and Y scale factors based on cursor
+ * movement relative to the opposite corner (the "origin" or anchor point).
+ *
+ * ```
+ *   Origin (opposite corner)           Drag Handle (start)
+ *   ●───────────────────────────────────●
+ *   │                                   │
+ *   │     startDelta = start - origin   │
+ *   │     currentDelta = current - origin
+ *   │                                   │
+ *   │     scaleX = currentDeltaX / startDeltaX
+ *   │     scaleY = currentDeltaY / startDeltaY
+ *   │                                   │
+ *   ●───────────────────────────────────● Cursor (current)
+ * ```
+ *
+ * Each coordinate is transformed: `newCoord = origin + (oldCoord - origin) × scale`
+ *
+ * ## Why We Override Parent's Uniform Scaling
+ *
+ * The parent ScaleMode calculates uniform scale factors in screen coordinates,
+ * which can distort rotated shapes. We calculate our own uniform factor using
+ * vector projection to ensure the corner follows the cursor's projection onto
+ * the original drag line, preserving shape orientation.
+ *
+ * ## Minimum Scale Clamping
+ *
+ * All scale factors are clamped to a minimum of 0.01 to prevent:
+ * - Shape inversion (negative scale flipping the shape inside-out)
+ * - Shape collapse (scale of 0 making the shape a point/line)
  */
 export class ScaleModeWithFreeTransform extends ScaleMode {
   /**
@@ -150,7 +180,22 @@ export class ScaleModeWithFreeTransform extends ScaleMode {
 
   /**
    * Calculate separate X and Y scale factors based on cursor movement.
-   * Scale factors are clamped to prevent negative values (no shape inversion).
+   *
+   * ## Math Explanation
+   *
+   * For each axis, we compute: `scale = currentDelta / startDelta`
+   *
+   * Where:
+   * - `startDelta` = distance from origin to where drag started (the handle position)
+   * - `currentDelta` = distance from origin to current cursor position
+   *
+   * Example: If the handle started 100px from origin and cursor is now 150px from origin,
+   * scale = 150/100 = 1.5 (shape grows to 150% of original size along that axis).
+   *
+   * ## Edge Cases
+   * - If `startDelta` is near zero (handle very close to origin), we return scale=1
+   *   to avoid division by zero and prevent erratic behavior
+   * - Negative scale values are clamped to 0.01 minimum to prevent shape inversion
    */
   private calculateScaleFactors(
     event: DraggingEvent | StopDraggingEvent,
@@ -159,22 +204,25 @@ export class ScaleModeWithFreeTransform extends ScaleMode {
     const startDragPoint = event.pointerDownMapCoords;
     const currentPoint = event.mapCoords;
 
+    // Calculate deltas from the anchor point (origin) to drag positions
     const startDeltaX = (startDragPoint[0] ?? 0) - (origin[0] ?? 0);
     const startDeltaY = (startDragPoint[1] ?? 0) - (origin[1] ?? 0);
     const currentDeltaX = (currentPoint[0] ?? 0) - (origin[0] ?? 0);
     const currentDeltaY = (currentPoint[1] ?? 0) - (origin[1] ?? 0);
 
+    // Epsilon for near-zero checks to avoid division by zero
     const epsilon = 0.0000001;
     // Minimum scale to prevent shape from collapsing or inverting
     const minScale = 0.01;
 
-    // Calculate scale factors - ratio of current to start distance from origin
-    // Clamp to minScale to prevent negative values (shape inversion)
+    // Scale = ratio of (current distance from origin) / (original distance from origin)
+    // If original distance is near-zero, default to scale=1 (no change)
     const rawScaleX =
       Math.abs(startDeltaX) > epsilon ? currentDeltaX / startDeltaX : 1;
     const rawScaleY =
       Math.abs(startDeltaY) > epsilon ? currentDeltaY / startDeltaY : 1;
 
+    // Clamp to prevent negative values (which would invert/flip the shape)
     const scaleX = Math.max(rawScaleX, minScale);
     const scaleY = Math.max(rawScaleY, minScale);
 
@@ -183,9 +231,40 @@ export class ScaleModeWithFreeTransform extends ScaleMode {
 
   /**
    * Calculate a uniform scale factor for aspect-ratio-preserving scaling.
-   * Uses distance ratio along the drag direction so the corner follows
-   * the cursor's projection onto the original drag line.
-   * Clamped to prevent negative values (no shape inversion).
+   *
+   * ## Why Use Projection Instead of Simple Distance Ratio?
+   *
+   * A naive approach would be: `scale = distance(origin, cursor) / distance(origin, start)`
+   *
+   * But this fails for diagonal movements - if you drag a corner handle and move
+   * perpendicular to the diagonal, the simple distance changes even though you
+   * don't want the shape to scale.
+   *
+   * ## Vector Projection Math
+   *
+   * Instead, we project the cursor position onto the line defined by
+   * (origin → start drag point). This way, only movement along the original
+   * drag direction affects the scale.
+   *
+   * ```
+   *   Origin          Start (drag handle)
+   *   ●──────────────────●
+   *                       \
+   *                        \  Cursor moved diagonally
+   *                         ●
+   *                        /
+   *                       / Projected point (what we measure from)
+   *   ●──────────────────●
+   *   Origin          Projection
+   * ```
+   *
+   * The projection formula uses the dot product:
+   * ```
+   * projectedDist = (current · start) / |start|
+   * scale = projectedDist / |start|
+   * ```
+   *
+   * This equals: `scale = (current · start) / |start|²`
    */
   private calculateUniformScaleFactor(
     event: DraggingEvent | StopDraggingEvent,
@@ -202,20 +281,22 @@ export class ScaleModeWithFreeTransform extends ScaleMode {
     const currentDeltaX = (currentPoint[0] ?? 0) - (origin[0] ?? 0);
     const currentDeltaY = (currentPoint[1] ?? 0) - (origin[1] ?? 0);
 
-    // Distance from origin to start point
+    // Distance from origin to start point (|start|)
     const startDist = Math.sqrt(startDeltaX ** 2 + startDeltaY ** 2);
 
     if (startDist < 0.0000001) {
       return 1;
     }
 
-    // Project current point onto the line from origin through start point
-    // using dot product: projection = (current · start) / |start|²
+    // Dot product: current · start = |current| × |start| × cos(θ)
+    // This gives us the component of 'current' that lies along 'start'
     const dotProduct =
       currentDeltaX * startDeltaX + currentDeltaY * startDeltaY;
+
+    // Project current point onto start vector: projectedDist = (current · start) / |start|
     const projectedDist = dotProduct / startDist;
 
-    // Scale factor is the ratio of projected distance to original distance
+    // Scale factor = projectedDist / |start| = (current · start) / |start|²
     // Clamp to minScale to prevent negative values (shape inversion)
     const minScale = 0.01;
     const rawScale = projectedDist / startDist;
@@ -312,15 +393,28 @@ export class ScaleModeWithFreeTransform extends ScaleMode {
 
   /**
    * Scale a geometry's coordinates non-uniformly around an origin point.
+   *
+   * ## Coordinate Transformation
+   *
+   * Each coordinate is transformed using: `new = origin + (old - origin) × scale`
+   *
+   * This is equivalent to:
+   * 1. Translate so origin is at (0,0): `temp = old - origin`
+   * 2. Scale: `temp = temp × scale`
+   * 3. Translate back: `new = temp + origin`
+   *
+   * The origin (opposite corner from the drag handle) stays fixed while
+   * all other points move proportionally.
    */
   private scaleGeometry(
-    // biome-ignore lint/suspicious/noExplicitAny: GeoJSON geometry types are complex
+    // biome-ignore lint/suspicious/noExplicitAny: GeoJSON geometry types are complex - includes Point, LineString, Polygon, Multi* variants
     geometry: any,
     scaleX: number,
     scaleY: number,
     origin: Position,
-    // biome-ignore lint/suspicious/noExplicitAny: GeoJSON geometry types are complex
+    // biome-ignore lint/suspicious/noExplicitAny: GeoJSON geometry types are complex - return type varies by input
   ): any {
+    // Transform a single coordinate around the origin point
     const scaleCoord = (coord: Position): Position => {
       return [
         (origin[0] ?? 0) + ((coord[0] ?? 0) - (origin[0] ?? 0)) * scaleX,
