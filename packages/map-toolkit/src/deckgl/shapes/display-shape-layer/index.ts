@@ -53,26 +53,28 @@ const logger = getLogger({
 const shapeBus = Broadcast.getInstance<ShapeEvent>();
 
 /**
- * State interface for DisplayShapeLayer
+ * State type for DisplayShapeLayer
  */
-interface DisplayShapeLayerState {
+type DisplayShapeLayerState = {
   /** Index of currently hovered shape, undefined when not hovering */
   hoverIndex?: number;
   /** ID of the last hovered shape for event deduplication */
   lastHoveredId?: ShapeId | null;
   /** Allow additional properties from base layer state */
   [key: string]: unknown;
-}
+};
 
 /**
  * Cache for transformed features to avoid recreating objects on every render.
  */
-interface FeaturesCache {
+type FeaturesCache = {
   /** Reference to the original data array for identity comparison */
   data: Shape[];
   /** Transformed features with shapeId added to properties */
   features: Shape['feature'][];
-}
+  /** Map of shapeId to feature index for O(1) lookup */
+  shapeIdToIndex: Map<ShapeId, number>;
+};
 
 /**
  * DisplayShapeLayer - Read-only shapes visualization layer
@@ -236,16 +238,22 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       return this.featuresCache.features;
     }
 
-    // Transform features and cache the result
-    const features = data.map((shape) => ({
-      ...shape.feature,
-      properties: {
-        ...shape.feature.properties,
-        shapeId: shape.id,
-      },
-    }));
+    // Transform features and build shapeId->index map in a single pass
+    const features: Shape['feature'][] = [];
+    const shapeIdToIndex = new Map<ShapeId, number>();
 
-    this.featuresCache = { data, features };
+    for (const [i, shape] of data.entries()) {
+      features.push({
+        ...shape.feature,
+        properties: {
+          ...shape.feature.properties,
+          shapeId: shape.id,
+        },
+      });
+      shapeIdToIndex.set(shape.id, i);
+    }
+
+    this.featuresCache = { data, features, shapeIdToIndex };
     return features;
   }
 
@@ -378,13 +386,10 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
     const { selectedShapeId } = this.props;
     const hoverIndex = this.state?.hoverIndex;
 
-    // Build a map of shapeId -> index for O(1) lookup instead of O(n) indexOf calls if done inside the filter below
-    const shapeIdToIndex = new Map<ShapeId, number>();
-    for (let i = 0; i < features.length; i++) {
-      const shapeId = features[i]?.properties?.shapeId;
-      if (shapeId) {
-        shapeIdToIndex.set(shapeId, i);
-      }
+    // Use cached shapeId->index map for O(1) lookup
+    const shapeIdToIndex = this.featuresCache?.shapeIdToIndex;
+    if (!shapeIdToIndex) {
+      return null;
     }
 
     // Find point features that need coffin corners (hovered or selected)

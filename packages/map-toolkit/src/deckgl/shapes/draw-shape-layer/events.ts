@@ -62,12 +62,7 @@ export type ShapeDrawnPayload = {
  * Event payload for shapes:drawn
  * Emitted when a shape is successfully created
  */
-export type ShapeDrawnEvent = {
-  type: 'shapes:drawn';
-  payload: ShapeDrawnPayload;
-  source: UniqueId;
-  target?: UniqueId;
-};
+export type ShapeDrawnEvent = Payload<'shapes:drawn', ShapeDrawnPayload>;
 
 /**
  * Event payload for shapes:draw-canceled

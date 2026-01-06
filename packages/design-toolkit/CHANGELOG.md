@@ -1,5 +1,14 @@
 # @accelint/design-toolkit
 
+## 9.1.1
+### Patch Changes
+
+- 4124007: Added a focus outline style on the <Accordion /> header button.
+- 308023f: Increase decimal precision in coordinate field conversion
+- 8ab9bfd: Fixed spacing of visual elements (prefix, suffix, clear button) in Input
+- Updated dependencies [308023f]
+  - @accelint/geo@0.5.0
+
 ## 9.1.0
 ### Minor Changes
 

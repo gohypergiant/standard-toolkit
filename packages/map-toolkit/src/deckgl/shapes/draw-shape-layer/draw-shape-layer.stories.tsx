@@ -25,7 +25,7 @@ import type { Shape } from '../shared/types';
 import '../display-shape-layer/fiber';
 import './fiber';
 import { DrawShapeLayer } from './index';
-import { useDrawShape } from './use-draw-shape';
+import { useDrawShapes } from './use-draw-shapes';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta = {
@@ -75,7 +75,7 @@ export const BasicDrawing: Story = {
     // Subscribe to cursor store to enable cursor change requests
     const { cursor } = useMapCursor(DRAW_MAP_ID);
 
-    const { draw, cancel, isDrawing, activeShapeType } = useDrawShape(
+    const { draw, cancel, isDrawing, activeShapeType } = useDrawShapes(
       DRAW_MAP_ID,
       {
         onCreate: (shape) => {
@@ -124,7 +124,7 @@ export const BasicDrawing: Story = {
         </BaseMap>
 
         {/* Drawing toolbar */}
-        <div className='absolute top-l left-l z-10 flex max-h-[calc(100vh-2rem)] w-[320px] flex-col gap-l rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
+        <div className='absolute top-l left-l z-10 flex max-h-[calc(100%-2rem)] w-[320px] flex-col gap-l overflow-y-auto rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
           <p className='font-bold text-header-l'>Draw Shapes</p>
 
           {/* Status indicator */}
@@ -264,11 +264,11 @@ export const BasicDrawing: Story = {
           </div>
 
           {/* Event log */}
-          <div className='flex min-h-0 flex-1 flex-col'>
+          <div className='flex flex-col'>
             <p className='mb-s font-semibold text-body-s'>
               Event Log ({shapes.length} shapes)
             </p>
-            <div className='max-h-[200px] min-h-0 flex-1 overflow-y-auto rounded-lg border border-border-default bg-surface-subtle p-s'>
+            <div className='h-[100px] overflow-y-auto rounded-lg border border-border-default bg-surface-subtle p-s'>
               {eventLog.length === 0 ? (
                 <p className='text-body-xs text-content-disabled'>
                   Click a shape type to start drawing...
@@ -319,22 +319,22 @@ export const CustomStyleDefaults: Story = {
     const colorStyles = {
       red: {
         fillColor: [255, 100, 100, 180] as [number, number, number, number],
-        lineColor: [200, 0, 0, 255] as [number, number, number, number],
+        strokeColor: [200, 0, 0, 255] as [number, number, number, number],
       },
       blue: {
         fillColor: [100, 100, 255, 180] as [number, number, number, number],
-        lineColor: [0, 0, 200, 255] as [number, number, number, number],
+        strokeColor: [0, 0, 200, 255] as [number, number, number, number],
       },
       green: {
         fillColor: [100, 255, 100, 180] as [number, number, number, number],
-        lineColor: [0, 200, 0, 255] as [number, number, number, number],
+        strokeColor: [0, 200, 0, 255] as [number, number, number, number],
       },
     };
 
     // Subscribe to cursor store to enable cursor change requests
     useMapCursor(CUSTOM_STYLES_MAP_ID);
 
-    const { draw, cancel, isDrawing } = useDrawShape(CUSTOM_STYLES_MAP_ID, {
+    const { draw, cancel, isDrawing } = useDrawShapes(CUSTOM_STYLES_MAP_ID, {
       onCreate: (shape) => {
         setShapes((prev) => [...prev, shape]);
       },
@@ -435,7 +435,7 @@ export const CombinedDisplayAndDraw: Story = {
     const { requestCursorChange, clearCursor } = useMapCursor(COMBINED_MAP_ID);
     const { selectedId } = useShapeSelection(COMBINED_MAP_ID);
 
-    const { draw, cancel, isDrawing, activeShapeType } = useDrawShape(
+    const { draw, cancel, isDrawing, activeShapeType } = useDrawShapes(
       COMBINED_MAP_ID,
       {
         onCreate: (shape) => {

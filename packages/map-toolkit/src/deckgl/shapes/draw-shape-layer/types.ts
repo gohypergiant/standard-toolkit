@@ -50,9 +50,9 @@ export interface DrawShapeOptions {
 }
 
 /**
- * Options for the useDrawShape hook
+ * Options for the useDrawShapes hook
  */
-export interface UseDrawShapeOptions {
+export interface UseDrawShapesOptions {
   /** Callback when a shape is successfully drawn */
   onCreate?: (shape: Shape) => void;
   /** Callback when drawing is canceled */
@@ -60,9 +60,9 @@ export interface UseDrawShapeOptions {
 }
 
 /**
- * Return type for the useDrawShape hook
+ * Return type for the useDrawShapes hook
  */
-export interface UseDrawShapeReturn {
+export interface UseDrawShapesReturn {
   /** Current drawing state (null when not drawing) */
   drawingState: DrawingState | null;
   /** Start drawing a shape type with optional defaults */
