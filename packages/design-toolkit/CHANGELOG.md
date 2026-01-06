@@ -1,6 +1,6 @@
 # @accelint/design-toolkit
 
-## 10.0.0
+## 9.1.1
 ### Patch Changes
 
 - 4124007: Added a focus outline style on the <Accordion /> header button.

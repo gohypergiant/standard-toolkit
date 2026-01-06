@@ -1,7 +1,7 @@
 {
   "name": "@accelint/design-toolkit",
   "description": "An open-source component library to serve as part of the entire ecosystem of UX for Accelint.",
-  "version": "10.0.0",
+  "version": "9.1.1",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "devDependencies": {
