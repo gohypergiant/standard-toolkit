@@ -10,6 +10,35 @@
  * governing permissions and limitations under the License.
  */
 
+/**
+ * Edit Shape Events
+ *
+ * Note on event payload structure:
+ * These events define explicit payload types rather than using the `Payload<T, P>` helper
+ * from @accelint/bus. This is because the `Shape` type contains GeoJSON `Feature` objects
+ * from the `geojson` package, which don't satisfy TypeScript's `StructuredCloneable` type
+ * constraint used by the bus.
+ *
+ * The issue: `StructuredCloneable` (from type-fest) requires objects to have an index
+ * signature `[key: string]: StructuredCloneable`, but GeoJSON interfaces define strict
+ * property types without index signatures. At runtime, GeoJSON data IS structurally
+ * cloneable (can be passed through postMessage, stored in IndexedDB, etc.), but
+ * TypeScript can't verify this statically.
+ *
+ * Events that only contain primitive values (like ShapeId, mapId) can use the `Payload`
+ * helper directly - see shared/events.ts for examples.
+ *
+ * When emitting these events via the bus, use type assertions:
+ * @example
+ * ```ts
+ * bus.emit('shapes:updated', {
+ *   type: 'shapes:updated',
+ *   payload: { shape, mapId },
+ *   source: componentId,
+ * } as unknown as Payload);
+ * ```
+ */
+
 'use client';
 
 import type { UniqueId } from '@accelint/core';
@@ -32,9 +61,6 @@ export type EditShapeEventType =
 
 /**
  * Payload for shapes:editing event.
- * Note: Shape contains GeoJSON Feature which is structurally cloneable
- * but lacks the index signature TypeScript requires. We define the payload
- * separately and use type assertions when emitting.
  */
 export type ShapeEditingPayload = {
   /** The shape being edited */
@@ -56,9 +82,6 @@ export type ShapeEditingEvent = {
 
 /**
  * Payload for shapes:updated event.
- * Note: Shape contains GeoJSON Feature which is structurally cloneable
- * but lacks the index signature TypeScript requires. We define the payload
- * separately and use type assertions when emitting.
  */
 export type ShapeUpdatedPayload = {
   /** The updated shape with new geometry */

@@ -11,28 +11,17 @@
  */
 
 import {
-  CompositeMode,
-  type DraggingEvent,
   type FeatureCollection,
+  type GeoJsonEditMode,
   type GuideFeatureCollection,
   type ModeProps,
   ModifyMode,
-  type PointerMoveEvent,
-  type StartDraggingEvent,
-  type StopDraggingEvent,
   TranslateMode,
 } from '@deck.gl-community/editable-layers';
 import { featureCollection } from '@turf/helpers';
-import { filterGeometryAwarePicks } from '../../shared/utils/pick-filtering';
+import { BaseTransformMode, type HandleMatcher } from './base-transform-mode';
 import { RotateModeWithSnap } from './rotate-mode-with-snap';
 import { ScaleModeWithFreeTransform } from './scale-mode-with-free-transform';
-
-type ActiveMode =
-  | ModifyMode
-  | ScaleModeWithFreeTransform
-  | RotateModeWithSnap
-  | TranslateMode
-  | null;
 
 /**
  * Transform mode for shapes that support vertex editing (polygons and lines).
@@ -46,7 +35,9 @@ type ActiveMode =
  * - **Scaling** (ScaleModeWithFreeTransform): Drag corner handles to resize
  *   - Default: Non-uniform scaling (can stretch/squish)
  *   - With Shift: Uniform scaling (maintains aspect ratio)
- * - **Rotation** (RotateMode): Drag top handle to rotate
+ * - **Rotation** (RotateModeWithSnap): Drag top handle to rotate
+ *   - Default: Free rotation
+ *   - With Shift: Snap to 45° intervals
  *
  * Priority logic:
  * - If hovering over a scale handle, scaling takes priority
@@ -63,17 +54,11 @@ type ActiveMode =
  * don't have meaningful dimensions to display. Use BoundingTransformMode for shapes
  * like rectangles and ellipses where dimension tooltips are useful.
  */
-export class VertexTransformMode extends CompositeMode {
+export class VertexTransformMode extends BaseTransformMode {
   private modifyMode: ModifyMode;
   private translateMode: TranslateMode;
   private scaleMode: ScaleModeWithFreeTransform;
   private rotateMode: RotateModeWithSnap;
-
-  /** Track which mode is currently handling the drag operation */
-  private activeDragMode: ActiveMode = null;
-
-  /** Track current Shift state for dynamic uniform/free scaling toggle */
-  private isShiftHeld = false;
 
   constructor() {
     const modifyMode = new ModifyMode();
@@ -91,189 +76,65 @@ export class VertexTransformMode extends CompositeMode {
     this.rotateMode = rotateMode;
   }
 
-  override handlePointerMove(
-    event: PointerMoveEvent,
-    props: ModeProps<FeatureCollection>,
-  ) {
-    let updatedCursor: string | null | undefined = null;
-
-    // Call parent which will iterate through modes
-    super.handlePointerMove(event, {
-      ...props,
-      onUpdateCursor: (cursor: string | null | undefined) => {
-        updatedCursor = cursor || updatedCursor;
+  protected override getHandleMatchers(): HandleMatcher[] {
+    return [
+      {
+        // Vertex handle: existing point on polygon/line
+        match: (pick) =>
+          Boolean(
+            pick.isGuide &&
+              pick.object?.properties?.guideType === 'editHandle' &&
+              pick.object?.properties?.editHandleType === 'existing',
+          ),
+        mode: this.modifyMode,
+        // No shift config - vertex editing doesn't have modifiers
       },
-    });
-
-    props.onUpdateCursor(updatedCursor);
+      {
+        // Scale handle: corner handles on bounding box
+        match: (pick) =>
+          Boolean(
+            pick.isGuide && pick.object?.properties?.editHandleType === 'scale',
+          ),
+        mode: this.scaleMode,
+        shiftConfig: { configKey: 'lockScaling' },
+      },
+      {
+        // Rotate handle: top handle on bounding box
+        match: (pick) =>
+          Boolean(
+            pick.isGuide &&
+              pick.object?.properties?.editHandleType === 'rotate',
+          ),
+        mode: this.rotateMode,
+        shiftConfig: { configKey: 'snapRotation' },
+      },
+    ];
   }
 
-  override handleStartDragging(
-    event: StartDraggingEvent,
-    props: ModeProps<FeatureCollection>,
-  ) {
-    if (event.picks.length) {
-      event.cancelPan();
-    }
-
-    // Check what kind of handle is being picked
-    const picks = event.picks ?? [];
-
-    // Check if we're picking a ModifyMode edit handle (vertex)
-    const isModifyHandle = picks.some(
-      (pick) =>
-        pick.isGuide &&
-        pick.object?.properties?.guideType === 'editHandle' &&
-        pick.object?.properties?.editHandleType === 'existing',
-    );
-
-    // Check if we're picking a ScaleMode handle
-    const isScaleHandle = picks.some(
-      (pick) =>
-        pick.isGuide && pick.object?.properties?.editHandleType === 'scale',
-    );
-
-    // Check if we're picking a RotateMode handle
-    const isRotateHandle = picks.some(
-      (pick) =>
-        pick.isGuide && pick.object?.properties?.editHandleType === 'rotate',
-    );
-
-    // Determine which mode should handle this drag and track it
-    if (isModifyHandle) {
-      // Only call ModifyMode for vertex editing
-      this.activeDragMode = this.modifyMode;
-    } else if (isScaleHandle) {
-      // Only call ScaleMode
-      this.activeDragMode = this.scaleMode;
-    } else if (isRotateHandle) {
-      // Only call RotateMode
-      this.activeDragMode = this.rotateMode;
-    } else {
-      // Default to translate for dragging the shape body
-      this.activeDragMode = this.translateMode;
-    }
-
-    // Only call the active mode's handleStartDragging
-    this.activeDragMode.handleStartDragging(event, props);
-  }
-
-  override handleDragging(
-    event: DraggingEvent,
-    props: ModeProps<FeatureCollection>,
-  ) {
-    // Only call the active mode's handleDragging to prevent errors
-    // from modes that weren't initialized for this drag operation
-    if (this.activeDragMode) {
-      const sourceEvent = event.sourceEvent as KeyboardEvent | undefined;
-      this.isShiftHeld = sourceEvent?.shiftKey ?? false;
-
-      // For ScaleMode, read current Shift state to allow dynamic toggling
-      // Shift held = uniform scaling (lock aspect ratio)
-      // No shift = free scaling (can squish/stretch)
-      if (this.activeDragMode === this.scaleMode) {
-        const propsWithScaleConfig: ModeProps<FeatureCollection> = {
-          ...props,
-          modeConfig: {
-            ...props.modeConfig,
-            lockScaling: this.isShiftHeld,
-          },
-        };
-
-        this.activeDragMode.handleDragging(event, propsWithScaleConfig);
-      } else if (this.activeDragMode === this.rotateMode) {
-        // For RotateMode, Shift held = snap to 45° intervals
-        const propsWithRotateConfig: ModeProps<FeatureCollection> = {
-          ...props,
-          modeConfig: {
-            ...props.modeConfig,
-            snapRotation: this.isShiftHeld,
-          },
-        };
-
-        this.activeDragMode.handleDragging(event, propsWithRotateConfig);
-      } else {
-        this.activeDragMode.handleDragging(event, props);
-      }
-    }
-  }
-
-  override handleStopDragging(
-    event: StopDraggingEvent,
-    props: ModeProps<FeatureCollection>,
-  ) {
-    // Only call the active mode's handleStopDragging
-    if (this.activeDragMode) {
-      // For ScaleMode, use the last known Shift state from handleDragging
-      // to ensure the final geometry uses the same scale calculation
-      if (this.activeDragMode === this.scaleMode) {
-        const propsWithScaleConfig: ModeProps<FeatureCollection> = {
-          ...props,
-          modeConfig: {
-            ...props.modeConfig,
-            lockScaling: this.isShiftHeld,
-          },
-        };
-        this.activeDragMode.handleStopDragging(event, propsWithScaleConfig);
-      } else if (this.activeDragMode === this.rotateMode) {
-        // For RotateMode, use the last known Shift state for snap calculation
-        const propsWithRotateConfig: ModeProps<FeatureCollection> = {
-          ...props,
-          modeConfig: {
-            ...props.modeConfig,
-            snapRotation: this.isShiftHeld,
-          },
-        };
-        this.activeDragMode.handleStopDragging(event, propsWithRotateConfig);
-      } else {
-        this.activeDragMode.handleStopDragging(event, props);
-      }
-      this.activeDragMode = null;
-      this.isShiftHeld = false;
-    }
+  protected override getDefaultMode(): GeoJsonEditMode {
+    return this.translateMode;
   }
 
   /**
-   * Override getGuides to filter out picks without valid geometry.
+   * Override getGuides to filter duplicate envelope guides and handle rectangles.
    *
-   * The parent ModifyMode.getGuides accesses `featureAsPick.object.geometry.type`
-   * which can throw if a pick's object doesn't have a geometry property.
-   * This can happen when picks include sublayer elements (like tooltip text)
-   * that aren't GeoJSON features.
+   * Both ScaleMode and RotateMode render the same bounding box envelope.
+   * We keep scale's envelope and filter rotate's duplicate.
+   * We also hide scale handles while rotating to avoid visual clutter.
    *
-   * We filter the lastPointerMoveEvent.picks to only include picks with valid
-   * geometry before calling the parent implementation.
+   * For rectangles, we hide vertex handles because vertex editing would distort
+   * the shape or force axis-alignment. Rectangles should use scale handles only.
    */
   override getGuides(
     props: ModeProps<FeatureCollection>,
   ): GuideFeatureCollection {
-    const picks = props.lastPointerMoveEvent?.picks;
-
-    // Filter picks to prevent TypeError from sublayer elements
-    let filteredProps = props;
-    if (picks && picks.length > 0) {
-      const { filteredPicks, didFilter } = filterGeometryAwarePicks(picks);
-
-      if (didFilter) {
-        filteredProps = {
-          ...props,
-          lastPointerMoveEvent: {
-            ...props.lastPointerMoveEvent,
-            picks: filteredPicks,
-          },
-        };
-      }
-    }
-
-    // Get guides from all modes
-    const allGuides = super.getGuides(filteredProps);
+    // Get guides from all modes (base class handles pick filtering)
+    const allGuides = super.getGuides(props);
 
     // Check if we're editing a rectangle - rectangles have shape: 'Rectangle' property
     const isRectangle =
       props.data.features[0]?.properties?.shape === 'Rectangle';
 
-    // Filter out duplicate envelope guides (scale and rotate both have them)
-    // Keep scale envelope, filter rotate's duplicate
     // biome-ignore lint/suspicious/noExplicitAny: Guide properties vary by mode, safely accessing with optional chaining
     const filteredGuides = allGuides.features.filter((guide: any) => {
       const properties = guide.properties || {};

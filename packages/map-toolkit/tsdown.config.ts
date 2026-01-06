@@ -22,6 +22,7 @@ export default defineConfig({
     '!**/__fixtures__',
     // Exclude internal implementation details from public API
     '!src/deckgl/shapes/draw-shape-layer/modes/draw-*.ts',
+    '!src/deckgl/shapes/edit-shape-layer/modes/base-transform-mode.ts',
     '!src/deckgl/shapes/edit-shape-layer/modes/bounding-transform-mode.ts',
     '!src/deckgl/shapes/edit-shape-layer/modes/circle-transform-mode.ts',
     '!src/deckgl/shapes/edit-shape-layer/modes/rotate-mode-with-snap.ts',

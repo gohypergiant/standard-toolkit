@@ -11,18 +11,14 @@
  */
 
 import {
-  CompositeMode,
   type DraggingEvent,
   type FeatureCollection,
+  type GeoJsonEditMode,
+  type GuideFeatureCollection,
   type ModeProps,
-  type PointerMoveEvent,
-  type StartDraggingEvent,
-  type StopDraggingEvent,
-  type Tooltip,
   TranslateMode,
 } from '@deck.gl-community/editable-layers';
 import { featureCollection } from '@turf/helpers';
-import { distance } from '@turf/turf';
 import {
   DEFAULT_DISTANCE_UNITS,
   getDistanceUnitAbbreviation,
@@ -31,16 +27,14 @@ import {
   formatEllipseTooltip,
   formatRectangleTooltip,
 } from '../../shared/constants';
-import { computeRectangleMeasurementsFromCorners } from '../../shared/utils/geometry-measurements';
+import {
+  computeEllipseMeasurementsFromPolygon,
+  computeRectangleMeasurementsFromCorners,
+} from '../../shared/utils/geometry-measurements';
+import { BaseTransformMode, type HandleMatcher } from './base-transform-mode';
 import { RotateModeWithSnap } from './rotate-mode-with-snap';
 import { ScaleModeWithFreeTransform } from './scale-mode-with-free-transform';
-import type { Feature, Polygon, Position } from 'geojson';
-
-type ActiveMode =
-  | ScaleModeWithFreeTransform
-  | RotateModeWithSnap
-  | TranslateMode
-  | null;
+import type { Feature, Polygon } from 'geojson';
 
 /**
  * Transform mode for shapes that use bounding box manipulation (no vertex editing).
@@ -54,7 +48,9 @@ type ActiveMode =
  * - **Scaling** (ScaleModeWithFreeTransform): Drag corner handles to resize
  *   - Default: Non-uniform scaling (can stretch/squish)
  *   - With Shift: Uniform scaling (maintains aspect ratio)
- * - **Rotation** (RotateMode): Drag top handle to rotate
+ * - **Rotation** (RotateModeWithSnap): Drag top handle to rotate
+ *   - Default: Free rotation
+ *   - With Shift: Snap to 45° intervals
  * - **Live tooltip**: Shows dimensions and area during scaling
  *
  * Unlike VertexTransformMode, this mode does NOT include vertex editing handles.
@@ -64,19 +60,10 @@ type ActiveMode =
  * - If hovering over the rotate handle, rotation takes priority
  * - Otherwise, dragging the shape body translates it
  */
-export class BoundingTransformMode extends CompositeMode {
+export class BoundingTransformMode extends BaseTransformMode {
   private translateMode: TranslateMode;
   private scaleMode: ScaleModeWithFreeTransform;
   private rotateMode: RotateModeWithSnap;
-
-  /** Track which mode is currently handling the drag operation */
-  private activeDragMode: ActiveMode = null;
-
-  /** Track current Shift state for dynamic uniform/free scaling toggle */
-  private isShiftHeld = false;
-
-  /** Tooltip for scale operations */
-  private tooltip: Tooltip | null = null;
 
   constructor() {
     const translateMode = new TranslateMode();
@@ -91,143 +78,63 @@ export class BoundingTransformMode extends CompositeMode {
     this.rotateMode = rotateMode;
   }
 
-  override handlePointerMove(
-    event: PointerMoveEvent,
-    props: ModeProps<FeatureCollection>,
-  ) {
-    let updatedCursor: string | null | undefined = null;
-
-    // Call parent which will iterate through modes
-    super.handlePointerMove(event, {
-      ...props,
-      onUpdateCursor: (cursor: string | null | undefined) => {
-        updatedCursor = cursor || updatedCursor;
+  protected override getHandleMatchers(): HandleMatcher[] {
+    return [
+      {
+        // Scale handle: corner handles on bounding box
+        match: (pick) =>
+          Boolean(
+            pick.isGuide && pick.object?.properties?.editHandleType === 'scale',
+          ),
+        mode: this.scaleMode,
+        shiftConfig: { configKey: 'lockScaling' },
       },
-    });
-
-    props.onUpdateCursor(updatedCursor);
+      {
+        // Rotate handle: top handle on bounding box
+        match: (pick) =>
+          Boolean(
+            pick.isGuide &&
+              pick.object?.properties?.editHandleType === 'rotate',
+          ),
+        mode: this.rotateMode,
+        shiftConfig: { configKey: 'snapRotation' },
+      },
+    ];
   }
 
-  override handleStartDragging(
-    event: StartDraggingEvent,
-    props: ModeProps<FeatureCollection>,
-  ) {
-    if (event.picks.length) {
-      event.cancelPan();
-    }
-
-    const picks = event.picks ?? [];
-
-    // Check if we're picking a ScaleMode handle
-    const isScaleHandle = picks.some(
-      (pick) =>
-        pick.isGuide && pick.object?.properties?.editHandleType === 'scale',
-    );
-
-    // Check if we're picking a RotateMode handle
-    const isRotateHandle = picks.some(
-      (pick) =>
-        pick.isGuide && pick.object?.properties?.editHandleType === 'rotate',
-    );
-
-    // Determine which mode should handle this drag
-    if (isScaleHandle) {
-      this.activeDragMode = this.scaleMode;
-    } else if (isRotateHandle) {
-      this.activeDragMode = this.rotateMode;
-    } else {
-      // Default to translate for dragging the shape body
-      this.activeDragMode = this.translateMode;
-    }
-
-    // Only call the active mode's handleStartDragging
-    this.activeDragMode.handleStartDragging(event, props);
+  protected override getDefaultMode(): GeoJsonEditMode {
+    return this.translateMode;
   }
 
-  override handleDragging(
+  /**
+   * Update tooltip with shape dimensions during scaling.
+   */
+  protected override onDragging(
     event: DraggingEvent,
     props: ModeProps<FeatureCollection>,
-  ) {
-    if (this.activeDragMode) {
-      const sourceEvent = event.sourceEvent as KeyboardEvent | undefined;
-      this.isShiftHeld = sourceEvent?.shiftKey ?? false;
-
-      // For ScaleMode, read current Shift state to allow dynamic toggling
-      // Shift held = uniform scaling (lock aspect ratio)
-      // No shift = free scaling (can squish/stretch)
-      if (this.activeDragMode === this.scaleMode) {
-        const propsWithScaleConfig: ModeProps<FeatureCollection> = {
-          ...props,
-          modeConfig: {
-            ...props.modeConfig,
-            lockScaling: this.isShiftHeld,
-          },
-        };
-
-        this.activeDragMode.handleDragging(event, propsWithScaleConfig);
-
-        // Update tooltip with shape dimensions
-        this.updateShapeTooltip(event, props);
-      } else if (this.activeDragMode === this.rotateMode) {
-        // For RotateMode, Shift held = snap to 45° intervals
-        const propsWithRotateConfig: ModeProps<FeatureCollection> = {
-          ...props,
-          modeConfig: {
-            ...props.modeConfig,
-            snapRotation: this.isShiftHeld,
-          },
-        };
-
-        this.activeDragMode.handleDragging(event, propsWithRotateConfig);
-      } else {
-        this.activeDragMode.handleDragging(event, props);
-      }
+  ): void {
+    // Only show tooltip when scaling
+    if (this.activeDragMode !== this.scaleMode) {
+      return;
     }
+
+    this.updateShapeTooltip(event, props);
   }
 
-  override handleStopDragging(
-    event: StopDraggingEvent,
+  /**
+   * Override getGuides to filter duplicate envelope guides.
+   *
+   * Both ScaleMode and RotateMode render the same bounding box envelope.
+   * We keep scale's envelope and filter rotate's duplicate.
+   * We also hide scale handles while rotating to avoid visual clutter.
+   */
+  override getGuides(
     props: ModeProps<FeatureCollection>,
-  ) {
-    if (this.activeDragMode) {
-      // For ScaleMode, use the last known Shift state from handleDragging
-      // to ensure the final geometry uses the same scale calculation
-      if (this.activeDragMode === this.scaleMode) {
-        const propsWithScaleConfig: ModeProps<FeatureCollection> = {
-          ...props,
-          modeConfig: {
-            ...props.modeConfig,
-            lockScaling: this.isShiftHeld,
-          },
-        };
-        this.activeDragMode.handleStopDragging(event, propsWithScaleConfig);
-      } else if (this.activeDragMode === this.rotateMode) {
-        // For RotateMode, use the last known Shift state for snap calculation
-        const propsWithRotateConfig: ModeProps<FeatureCollection> = {
-          ...props,
-          modeConfig: {
-            ...props.modeConfig,
-            snapRotation: this.isShiftHeld,
-          },
-        };
-        this.activeDragMode.handleStopDragging(event, propsWithRotateConfig);
-      } else {
-        this.activeDragMode.handleStopDragging(event, props);
-      }
-      this.activeDragMode = null;
-      this.isShiftHeld = false;
-      this.tooltip = null;
-    }
-  }
-
-  override getGuides(props: ModeProps<FeatureCollection>) {
-    // Get guides from all modes
+  ): GuideFeatureCollection {
     const allGuides = super.getGuides(props);
 
-    // Filter out duplicate envelope guides (scale and rotate both have them)
-    // Keep scale envelope, filter rotate's duplicate
     // biome-ignore lint/suspicious/noExplicitAny: Guide properties vary by mode, safely accessing with optional chaining
-    const nonEnvelopeGuides = allGuides.features.filter((guide: any) => {
+    const filteredGuides = allGuides.features.filter((guide: any) => {
       const properties = guide.properties || {};
       const editHandleType = properties.editHandleType;
       const mode = properties.mode;
@@ -244,11 +151,7 @@ export class BoundingTransformMode extends CompositeMode {
     });
 
     // biome-ignore lint/suspicious/noExplicitAny: turf types mismatch with editable-layers GeoJSON types
-    return featureCollection(nonEnvelopeGuides as any) as any;
-  }
-
-  override getTooltips(): Tooltip[] {
-    return this.tooltip ? [this.tooltip] : [];
+    return featureCollection(filteredGuides as any) as any;
   }
 
   /**
@@ -307,16 +210,15 @@ export class BoundingTransformMode extends CompositeMode {
 
       text = formatRectangleTooltip(width, height, area, unitAbbrev);
     } else {
-      // Ellipse: calculate major/minor axes
-      const { majorAxis, minorAxis } = this.calculateEllipseAxes(
-        coordinates as Position[],
+      // Ellipse: calculate major/minor axes using consolidated utility
+      const {
+        majorAxis,
+        minorAxis,
+        area: ellipseArea,
+      } = computeEllipseMeasurementsFromPolygon(
+        coordinates as [number, number][],
         distanceUnits,
       );
-
-      // Ellipse area = π × a × b (where a and b are semi-axes)
-      const semiMajor = majorAxis / 2;
-      const semiMinor = minorAxis / 2;
-      const ellipseArea = Math.PI * semiMajor * semiMinor;
 
       text = formatEllipseTooltip(
         majorAxis,
@@ -330,61 +232,6 @@ export class BoundingTransformMode extends CompositeMode {
     this.tooltip = {
       position: mapCoords,
       text,
-    };
-  }
-
-  /**
-   * Calculate the major and minor axes of an ellipse from its polygon coordinates.
-   *
-   * For an ellipse approximated as a polygon, we find the longest and shortest
-   * diameters by measuring distances between opposite points on the perimeter.
-   */
-  private calculateEllipseAxes(
-    coordinates: Position[],
-    distanceUnits: string,
-  ): { majorAxis: number; minorAxis: number } {
-    // Remove the closing point if it duplicates the first
-    const points =
-      coordinates[0]?.[0] === coordinates[coordinates.length - 1]?.[0] &&
-      coordinates[0]?.[1] === coordinates[coordinates.length - 1]?.[1]
-        ? coordinates.slice(0, -1)
-        : coordinates;
-
-    if (points.length < 4) {
-      return { majorAxis: 0, minorAxis: 0 };
-    }
-
-    // For an ellipse polygon, opposite points are at index i and i + n/2
-    const halfLen = Math.floor(points.length / 2);
-    let maxDist = 0;
-    let minDist = Number.POSITIVE_INFINITY;
-
-    // Sample several diameter measurements
-    for (let i = 0; i < halfLen; i++) {
-      const p1 = points[i];
-      const p2 = points[i + halfLen];
-      if (!(p1 && p2)) {
-        continue;
-      }
-
-      const dist = distance(
-        [p1[0] as number, p1[1] as number],
-        [p2[0] as number, p2[1] as number],
-        // biome-ignore lint/suspicious/noExplicitAny: turf units type mismatch
-        { units: distanceUnits as any },
-      );
-
-      if (dist > maxDist) {
-        maxDist = dist;
-      }
-      if (dist < minDist) {
-        minDist = dist;
-      }
-    }
-
-    return {
-      majorAxis: maxDist,
-      minorAxis: minDist === Number.POSITIVE_INFINITY ? maxDist : minDist,
     };
   }
 }

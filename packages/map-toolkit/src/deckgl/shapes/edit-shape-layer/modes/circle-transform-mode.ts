@@ -11,16 +11,11 @@
  */
 
 import {
-  CompositeMode,
   type DraggingEvent,
   type FeatureCollection,
-  type GuideFeatureCollection,
+  type GeoJsonEditMode,
   type ModeProps,
-  type PointerMoveEvent,
   ResizeCircleMode,
-  type StartDraggingEvent,
-  type StopDraggingEvent,
-  type Tooltip,
   TranslateMode,
 } from '@deck.gl-community/editable-layers';
 import { centroid } from '@turf/turf';
@@ -30,10 +25,8 @@ import {
 } from '../../../../shared/units';
 import { formatCircleTooltip } from '../../shared/constants';
 import { computeCircleMeasurements } from '../../shared/utils/geometry-measurements';
-import { filterGeometryAwarePicks } from '../../shared/utils/pick-filtering';
+import { BaseTransformMode, type HandleMatcher } from './base-transform-mode';
 import type { Feature, Polygon } from 'geojson';
-
-type ActiveMode = ResizeCircleMode | TranslateMode | null;
 
 /**
  * Transform mode for circles combining resize and translate.
@@ -47,15 +40,9 @@ type ActiveMode = ResizeCircleMode | TranslateMode | null;
  * - If dragging on the edge/handle, resize takes priority
  * - If dragging on the circle body, translate takes priority
  */
-export class CircleTransformMode extends CompositeMode {
+export class CircleTransformMode extends BaseTransformMode {
   private resizeMode: ResizeCircleMode;
   private translateMode: TranslateMode;
-
-  /** Track which mode is currently handling the drag operation */
-  private activeDragMode: ActiveMode = null;
-
-  /** Tooltip for resize operations */
-  private tooltip: Tooltip | null = null;
 
   constructor() {
     const resizeMode = new ResizeCircleMode();
@@ -68,127 +55,38 @@ export class CircleTransformMode extends CompositeMode {
     this.translateMode = translateMode;
   }
 
-  override handlePointerMove(
-    event: PointerMoveEvent,
-    props: ModeProps<FeatureCollection>,
-  ) {
-    let updatedCursor: string | null | undefined = null;
-
-    // Call parent which will iterate through modes
-    super.handlePointerMove(event, {
-      ...props,
-      onUpdateCursor: (cursor: string | null | undefined) => {
-        updatedCursor = cursor || updatedCursor;
+  protected override getHandleMatchers(): HandleMatcher[] {
+    return [
+      {
+        // Resize handle: intermediate point on circle edge
+        match: (pick) =>
+          Boolean(
+            pick.isGuide &&
+              pick.object?.properties?.guideType === 'editHandle' &&
+              pick.object?.properties?.editHandleType === 'intermediate',
+          ),
+        mode: this.resizeMode,
+        // No shift config - resize doesn't have modifiers
       },
-    });
-
-    props.onUpdateCursor(updatedCursor);
+    ];
   }
 
-  override handleStartDragging(
-    event: StartDraggingEvent,
-    props: ModeProps<FeatureCollection>,
-  ) {
-    if (event.picks.length) {
-      event.cancelPan();
-    }
-
-    const picks = event.picks ?? [];
-
-    // Check if we're picking a resize handle (intermediate point on circle edge)
-    const isResizeHandle = picks.some(
-      (pick) =>
-        pick.isGuide &&
-        pick.object?.properties?.guideType === 'editHandle' &&
-        pick.object?.properties?.editHandleType === 'intermediate',
-    );
-
-    // Determine which mode should handle this drag
-    if (isResizeHandle) {
-      this.activeDragMode = this.resizeMode;
-    } else {
-      // Default to translate for dragging the circle body
-      this.activeDragMode = this.translateMode;
-    }
-
-    // Only call the active mode's handleStartDragging
-    this.activeDragMode.handleStartDragging(event, props);
-  }
-
-  override handleDragging(
-    event: DraggingEvent,
-    props: ModeProps<FeatureCollection>,
-  ) {
-    if (this.activeDragMode) {
-      this.activeDragMode.handleDragging(event, props);
-
-      // Update tooltip if resizing
-      if (this.activeDragMode === this.resizeMode) {
-        this.updateCircleTooltip(event, props);
-      }
-    }
-  }
-
-  override handleStopDragging(
-    event: StopDraggingEvent,
-    props: ModeProps<FeatureCollection>,
-  ) {
-    if (this.activeDragMode) {
-      this.activeDragMode.handleStopDragging(event, props);
-      this.activeDragMode = null;
-      this.tooltip = null;
-    }
-  }
-
-  override getTooltips(): Tooltip[] {
-    return this.tooltip ? [this.tooltip] : [];
+  protected override getDefaultMode(): GeoJsonEditMode {
+    return this.translateMode;
   }
 
   /**
-   * Override getGuides to filter out picks without valid geometry.
-   *
-   * The parent ResizeCircleMode.getGuides accesses `featureAsPick.object.geometry.type`
-   * which can throw if a pick's object doesn't have a geometry property.
-   * This can happen when picks include sublayer elements (like tooltip text)
-   * that aren't GeoJSON features.
-   *
-   * We filter the lastPointerMoveEvent.picks to only include picks with valid
-   * geometry before calling the parent implementation.
+   * Update the tooltip with circle diameter and area during resize.
    */
-  override getGuides(
-    props: ModeProps<FeatureCollection>,
-  ): GuideFeatureCollection {
-    const picks = props.lastPointerMoveEvent?.picks;
-
-    // Filter picks to prevent TypeError from sublayer elements
-    if (picks && picks.length > 0) {
-      const { filteredPicks, didFilter } = filterGeometryAwarePicks(picks);
-
-      if (didFilter) {
-        // Create a modified props with filtered picks
-        const filteredProps: ModeProps<FeatureCollection> = {
-          ...props,
-          lastPointerMoveEvent: {
-            ...props.lastPointerMoveEvent,
-            picks: filteredPicks,
-          },
-        };
-
-        return super.getGuides(filteredProps);
-      }
-    }
-
-    return super.getGuides(props);
-  }
-
-  /**
-   * Update the tooltip with circle diameter and area.
-   * Called during resize to show live measurements.
-   */
-  private updateCircleTooltip(
+  protected override onDragging(
     event: DraggingEvent,
     props: ModeProps<FeatureCollection>,
-  ) {
+  ): void {
+    // Only show tooltip when resizing
+    if (this.activeDragMode !== this.resizeMode) {
+      return;
+    }
+
     const { mapCoords } = event;
     const distanceUnits =
       props.modeConfig?.distanceUnits ?? DEFAULT_DISTANCE_UNITS;

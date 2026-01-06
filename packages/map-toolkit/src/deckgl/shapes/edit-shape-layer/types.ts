@@ -90,7 +90,11 @@ export type UseEditShapeReturn = {
 export type EditShapeLayerProps = {
   /** Layer ID (defaults to 'edit-shape-layer') */
   id?: string;
-  /** Map instance ID for multi-map isolation */
+  /**
+   * Map instance ID for multi-map isolation.
+   * Optional when used inside a MapProvider (uses context).
+   * Required when used outside a MapProvider.
+   */
   mapId?: UniqueId;
   /** Distance unit for tooltip measurements (defaults to 'km') */
   unit?: DistanceUnitAbbreviation;

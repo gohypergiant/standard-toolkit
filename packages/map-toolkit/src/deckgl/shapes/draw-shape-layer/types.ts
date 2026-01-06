@@ -78,8 +78,12 @@ export type UseDrawShapeReturn = {
 export type DrawShapeLayerProps = {
   /** Layer ID (defaults to 'draw-shape-layer') */
   id?: string;
-  /** Map instance ID for multi-map isolation */
-  mapId: UniqueId;
+  /**
+   * Map instance ID for multi-map isolation.
+   * Optional when used inside a MapProvider (uses context).
+   * Required when used outside a MapProvider.
+   */
+  mapId?: UniqueId;
   /** Distance unit for tooltip measurements (defaults to 'km') */
   unit?: DistanceUnitAbbreviation;
 };

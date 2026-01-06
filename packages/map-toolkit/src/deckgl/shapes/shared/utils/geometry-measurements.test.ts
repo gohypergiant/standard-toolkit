@@ -14,6 +14,7 @@ import { describe, expect, it } from 'vitest';
 import {
   computeCircleMeasurements,
   computeEllipseMeasurementsFromAxes,
+  computeEllipseMeasurementsFromPolygon,
   computeRectangleMeasurementsFromCorners,
 } from './geometry-measurements';
 
@@ -184,6 +185,132 @@ describe('geometry-measurements', () => {
 
       expect(result.majorAxis).toBe(2000000);
       expect(result.minorAxis).toBe(1000000);
+    });
+  });
+
+  describe('computeEllipseMeasurementsFromPolygon', () => {
+    it('computes major and minor axes from polygon coordinates', () => {
+      // Create an ellipse-like polygon with 8 points (simplified)
+      // This represents an ellipse wider than tall
+      const coordinates: [number, number][] = [
+        [0.1, 0], // right
+        [0.0707, 0.0354], // top-right
+        [0, 0.05], // top
+        [-0.0707, 0.0354], // top-left
+        [-0.1, 0], // left
+        [-0.0707, -0.0354], // bottom-left
+        [0, -0.05], // bottom
+        [0.0707, -0.0354], // bottom-right
+        [0.1, 0], // closing point (same as first)
+      ];
+
+      const result = computeEllipseMeasurementsFromPolygon(
+        coordinates,
+        'kilometers',
+      );
+
+      // Major axis should be longer than minor axis
+      expect(result.majorAxis).toBeGreaterThan(result.minorAxis);
+      expect(result.majorAxis).toBeGreaterThan(0);
+      expect(result.minorAxis).toBeGreaterThan(0);
+    });
+
+    it('handles a circular polygon (equal axes)', () => {
+      // Create a circular polygon with 8 points
+      const radius = 0.1;
+      const coordinates: [number, number][] = [];
+      for (let i = 0; i < 8; i++) {
+        const angle = (i * 2 * Math.PI) / 8;
+        coordinates.push([radius * Math.cos(angle), radius * Math.sin(angle)]);
+      }
+      // Add closing point
+      coordinates.push(coordinates[0] as [number, number]);
+
+      const result = computeEllipseMeasurementsFromPolygon(
+        coordinates,
+        'kilometers',
+      );
+
+      // For a circle, major and minor axes should be approximately equal
+      expect(result.majorAxis).toBeCloseTo(result.minorAxis, 0);
+    });
+
+    it('returns zero measurements for insufficient points', () => {
+      const coordinates: [number, number][] = [
+        [0, 0],
+        [1, 0],
+        [0, 0], // only 2 unique points
+      ];
+
+      const result = computeEllipseMeasurementsFromPolygon(
+        coordinates,
+        'kilometers',
+      );
+
+      expect(result.majorAxis).toBe(0);
+      expect(result.minorAxis).toBe(0);
+      expect(result.area).toBe(0);
+    });
+
+    it('removes duplicate closing point correctly', () => {
+      const coordinates: [number, number][] = [
+        [0.1, 0],
+        [0, 0.05],
+        [-0.1, 0],
+        [0, -0.05],
+        [0.1, 0], // closing point duplicates first
+      ];
+
+      const result = computeEllipseMeasurementsFromPolygon(
+        coordinates,
+        'kilometers',
+      );
+
+      expect(result.majorAxis).toBeGreaterThan(0);
+      expect(result.minorAxis).toBeGreaterThan(0);
+    });
+
+    it('computes area as π × semiMajor × semiMinor', () => {
+      // Simple 4-point diamond shape
+      const coordinates: [number, number][] = [
+        [0.1, 0],
+        [0, 0.05],
+        [-0.1, 0],
+        [0, -0.05],
+        [0.1, 0],
+      ];
+
+      const result = computeEllipseMeasurementsFromPolygon(
+        coordinates,
+        'kilometers',
+      );
+
+      const expectedArea =
+        Math.PI * (result.majorAxis / 2) * (result.minorAxis / 2);
+      expect(result.area).toBeCloseTo(expectedArea, 10);
+    });
+
+    it('works with different distance units', () => {
+      const coordinates: [number, number][] = [
+        [0.1, 0],
+        [0, 0.05],
+        [-0.1, 0],
+        [0, -0.05],
+        [0.1, 0],
+      ];
+
+      const kmResult = computeEllipseMeasurementsFromPolygon(
+        coordinates,
+        'kilometers',
+      );
+      const mResult = computeEllipseMeasurementsFromPolygon(
+        coordinates,
+        'meters',
+      );
+
+      // Meters should be ~1000x kilometers
+      expect(mResult.majorAxis).toBeCloseTo(kmResult.majorAxis * 1000, -1);
+      expect(mResult.minorAxis).toBeCloseTo(kmResult.minorAxis * 1000, -1);
     });
   });
 

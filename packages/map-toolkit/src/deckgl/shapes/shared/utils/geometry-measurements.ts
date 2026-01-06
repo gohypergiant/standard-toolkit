@@ -144,3 +144,75 @@ export function computeRectangleMeasurementsFromCorners(
 
   return { width, height, area };
 }
+
+/**
+ * Compute ellipse measurements from polygon coordinates.
+ *
+ * For an ellipse approximated as a polygon, calculates the major and minor axes
+ * by measuring distances between opposite points on the perimeter.
+ *
+ * @param coordinates - Polygon ring coordinates as [[lon, lat], ...]
+ * @param units - Distance units for the measurements
+ * @returns Ellipse measurements including axes and area
+ *
+ * @example
+ * ```ts
+ * const coords = polygon.geometry.coordinates[0];
+ * const { majorAxis, minorAxis, area } = computeEllipseMeasurementsFromPolygon(
+ *   coords as [number, number][],
+ *   'kilometers'
+ * );
+ * ```
+ */
+export function computeEllipseMeasurementsFromPolygon(
+  coordinates: [number, number][],
+  units: DistanceUnit,
+): { majorAxis: number; minorAxis: number; area: number } {
+  // Remove the closing point if it duplicates the first
+  const points =
+    coordinates[0]?.[0] === coordinates[coordinates.length - 1]?.[0] &&
+    coordinates[0]?.[1] === coordinates[coordinates.length - 1]?.[1]
+      ? coordinates.slice(0, -1)
+      : coordinates;
+
+  if (points.length < 4) {
+    return { majorAxis: 0, minorAxis: 0, area: 0 };
+  }
+
+  // For an ellipse polygon, opposite points are at index i and i + n/2
+  const halfLen = Math.floor(points.length / 2);
+  let maxDist = 0;
+  let minDist = Number.POSITIVE_INFINITY;
+
+  // Sample several diameter measurements
+  for (let i = 0; i < halfLen; i++) {
+    const p1 = points[i];
+    const p2 = points[i + halfLen];
+    if (!(p1 && p2)) {
+      continue;
+    }
+
+    const dist = distance(
+      [p1[0] as number, p1[1] as number],
+      [p2[0] as number, p2[1] as number],
+      { units },
+    );
+
+    if (dist > maxDist) {
+      maxDist = dist;
+    }
+    if (dist < minDist) {
+      minDist = dist;
+    }
+  }
+
+  const majorAxis = maxDist;
+  const minorAxis = minDist === Number.POSITIVE_INFINITY ? maxDist : minDist;
+
+  // Ellipse area = π × a × b (where a and b are semi-axes)
+  const semiMajor = majorAxis / 2;
+  const semiMinor = minorAxis / 2;
+  const ellipseArea = Math.PI * semiMajor * semiMinor;
+
+  return { majorAxis, minorAxis, area: ellipseArea };
+}
