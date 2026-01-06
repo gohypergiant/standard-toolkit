@@ -175,7 +175,7 @@ export const BasicEditing: Story = {
         </BaseMap>
 
         {/* Editing toolbar */}
-        <div className='absolute top-l left-l z-10 flex max-h-[calc(100vh-2rem)] w-[320px] flex-col gap-l rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
+        <div className='absolute top-l left-l z-10 flex max-h-[calc(100%-2rem)] w-[320px] flex-col gap-l overflow-y-auto rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
           <p className='font-bold text-header-l'>Edit Shapes</p>
 
           {/* Status indicator */}
@@ -217,34 +217,10 @@ export const BasicEditing: Story = {
             )}
           </div>
 
-          {/* Shape list */}
-          <div className='flex min-h-0 flex-1 flex-col'>
-            <p className='mb-s font-semibold text-body-s'>
-              Shapes ({shapes.length})
-            </p>
-            <div className='flex flex-col gap-xs'>
-              {shapes.map((shape) => (
-                <div
-                  key={shape.id}
-                  className={`rounded p-s text-body-xs ${
-                    selectedShape?.id === shape.id
-                      ? 'bg-accent-muted'
-                      : 'bg-surface-subtle'
-                  }`}
-                >
-                  <span className='font-medium'>{shape.name}</span>
-                  <span className='ml-s text-content-secondary'>
-                    ({shape.shapeType})
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-
           {/* Event log */}
-          <div className='flex min-h-0 flex-col'>
+          <div className='flex flex-col'>
             <p className='mb-s font-semibold text-body-s'>Event Log</p>
-            <div className='max-h-[150px] min-h-0 overflow-y-auto rounded-lg border border-border-default bg-surface-subtle p-s'>
+            <div className='h-[100px] overflow-y-auto rounded-lg border border-border-default bg-surface-subtle p-s'>
               {eventLog.length === 0 ? (
                 <p className='text-body-xs text-content-disabled'>
                   Click a shape to select it...
@@ -266,8 +242,8 @@ export const BasicEditing: Story = {
               <li>Click a shape to select it</li>
               <li>Click "Edit" to start editing</li>
               <li>Drag vertices to modify geometry</li>
-              <li>Rectangles: hold Shift for square</li>
-              <li>Circles: drag the edge to resize</li>
+              <li>Click and drag to move the shape</li>
+              <li>Shift: hold to scale proportionally</li>
               <li>Press ESC to cancel</li>
             </ul>
           </div>
@@ -547,16 +523,16 @@ export const LockedShapes: Story = {
           )}
 
           {/* Shape list with lock indicators */}
-          <div className='flex min-h-0 flex-1 flex-col'>
+          <div className='flex flex-col'>
             <p className='mb-s font-semibold text-body-s'>
               Shapes ({shapes.filter((s) => !s.locked).length} editable,{' '}
               {shapes.filter((s) => s.locked).length} locked)
             </p>
-            <div className='flex flex-col gap-xs'>
+            <div className='flex flex-col'>
               {shapes.map((shape) => (
                 <div
                   key={shape.id}
-                  className={`flex items-center justify-between rounded p-s text-body-xs ${
+                  className={`flex items-center justify-between p-s text-body-xs ${
                     selectedShape?.id === shape.id
                       ? 'bg-accent-muted'
                       : 'bg-surface-subtle'
