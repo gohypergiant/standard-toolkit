@@ -7,5 +7,7 @@ Persona:
 Act as yourself, an AI agent.
 
 Objective:
-I have provided a few files for your review. I would like for you do read through them and provide any changes that would help you to provide the best results. Is anything unclear to you, can we make it better? Is there anything that we can do to reduce the tokens needed but without losing context?
+I have provided a few files for your review. I would like for you to read through them and provide any changes that would help you to provide the best results. Is anything unclear to you, can we make it better? Is there anything that we can do to reduce the tokens needed but without losing context?
 ```
+
+You can either upload the markdown files or, if capable, link to them.
