@@ -28,7 +28,7 @@ Map Mode requires the following dependencies:
 - [`@accelint/core`](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/core) - Core utilities including unique ID generation
 
 **React Integration:**
-- `react` - React 19.0.0 or higher for the `useCameraState` hook
+- `react` - React 19.0.0 or higher for the `useMapCamera` hook
 
 **Installation:**
 
@@ -43,15 +43,13 @@ pnpm add @accelint/map-toolkit @accelint/bus @accelint/core react
 ### Hook Usage
 
 ```tsx
-import { useCameraState } from '@accelint/map-toolkit/camera';
+import { useMapCamera } from '@accelint/map-toolkit/camera';
 import { uuid } from '@accelint/core';
 
 const MAP_ID = uuid();
 
 function CameraInfo() {
-  const { cameraState } = useCameraState({
-    instanceId: MAP_ID,
-  });
+  const { cameraState } = useMapCamera(MAP_ID);
 
   return (
     <div className="bg-white p-2 rounded shadow">
@@ -165,17 +163,14 @@ The camera state is a discriminated union based on the view type:
 You can provide an initial camera state when using the hook:
 
 ```tsx
-const { cameraState } = useCameraState({
-  instanceId: MAP_ID,
-  initialCameraState: {
-    latitude: 38.9072,
-    longitude: -77.0369,
-    zoom: 10,
-    pitch: 45,
-    rotation: 0,
-    projection: 'mercator',
-    view: '2.5D',
-  },
+const { cameraState } = useMapCamera(MAP_ID, {
+  latitude: 38.9072,
+  longitude: -77.0369,
+  zoom: 10,
+  pitch: 45,
+  rotation: 0,
+  projection: 'mercator',
+  view: '2.5D',
 });
 ```
 
@@ -313,17 +308,27 @@ bus.emit(CameraEventTypes.reset, {
 
 ## Hook API
 
-### useCameraState
+### useMapCamera
+
+```tsx
+function useMapCamera(
+  mapId: UniqueId,
+  initialCameraState?: CameraStateInput
+): {
+  cameraState: CameraState;
+  setCameraState: (state: Partial<CameraState>) => void;
+}
+```
 
 #### Parameters
 
-##### `instanceId: UniqueId` (required)
+##### `mapId: UniqueId` (required)
 
 The unique identifier for the camera instance. Must match the `id` prop passed to your map component.
 
-##### `initialCameraState?: Partial<CameraState>`
+##### `initialCameraState?: CameraStateInput`
 
-Optional initial camera state. If not provided, defaults to:
+Optional initial camera state. Only used on first call for this mapId. If not provided, defaults to:
 ```typescript
 {
   latitude: 0,
@@ -336,24 +341,12 @@ Optional initial camera state. If not provided, defaults to:
 }
 ```
 
-##### `subscribe?: (onStoreChange: () => void) => () => void`
-
-Optional custom subscription function for `useSyncExternalStore`. Must be stable (memoized).
-
-##### `getSnapshot?: () => CameraState`
-
-Optional custom snapshot function. Must be stable (memoized).
-
-##### `getServerSnapshot?: () => CameraState`
-
-Optional server-side snapshot function for SSR.
-
 #### Return Value
 
 ```typescript
 {
   cameraState: CameraState;
-  setCameraState: (instanceId: UniqueId, state: Partial<CameraState>) => void;
+  setCameraState: (state: Partial<CameraState>) => void;
 }
 ```
 
@@ -398,8 +391,8 @@ const MAP_1_ID = uuid();
 const MAP_2_ID = uuid();
 
 function MultiMapView() {
-  const { cameraState: camera1 } = useCameraState({ instanceId: MAP_1_ID });
-  const { cameraState: camera2 } = useCameraState({ instanceId: MAP_2_ID });
+  const { cameraState: camera1 } = useMapCamera(MAP_1_ID);
+  const { cameraState: camera2 } = useMapCamera(MAP_2_ID);
 
   return (
     <div className="grid grid-cols-2">
@@ -412,37 +405,15 @@ function MultiMapView() {
 
 ## Advanced Usage
 
-### Custom Subscription
-
-For advanced use cases, you can provide custom subscription and snapshot functions:
-
-```tsx
-const customSubscribe = useCallback((onStoreChange: () => void) => {
-  // Custom subscription logic
-  const unsubscribe = myCustomEventSystem.subscribe(onStoreChange);
-  return unsubscribe;
-}, []);
-
-const customGetSnapshot = useCallback(() => {
-  return myCustomStore.getCameraState();
-}, []);
-
-const { cameraState } = useCameraState({
-  instanceId: MAP_ID,
-  subscribe: customSubscribe,
-  getSnapshot: customGetSnapshot,
-});
-```
-
 ### Manual State Updates
 
 While the event bus is the recommended approach, you can manually update camera state:
 
 ```tsx
-const { cameraState, setCameraState } = useCameraState({ instanceId: MAP_ID });
+const { cameraState, setCameraState } = useMapCamera(MAP_ID);
 
 const handleClick = () => {
-  setCameraState(MAP_ID, {
+  setCameraState({
     latitude: 51.5074,
     longitude: -0.1278,
     zoom: 10,
@@ -473,7 +444,7 @@ The hook maintains referential stability for snapshot functions and subscription
 Before the first camera event or if no initial state is provided:
 
 ```tsx
-const { cameraState } = useCameraState({ instanceId: MAP_ID });
+const { cameraState } = useMapCamera({ instanceId: MAP_ID });
 
 // Default values before initialization
 console.log(cameraState);
@@ -547,14 +518,12 @@ import type {
 ### Camera not updating
 
 **Causes:**
-1. Wrong `instanceId` (doesn't match map instance)
+1. Wrong `mapId` (doesn't match map instance)
 2. Event emitted before camera state initialized
-3. Custom subscribe/getSnapshot not stable
 
 **Solutions:**
-1. Verify `instanceId` matches across components
+1. Verify `mapId` matches across components
 2. Ensure camera state is initialized before emitting events
-3. Wrap custom functions in `useCallback`
 
 ### Pitch/Rotation not working
 
@@ -566,9 +535,9 @@ import type {
 
 ### Multiple subscribers causing issues
 
-**Cause:** Creating new subscription functions on each render.
+**Cause:** Unexpected re-renders or stale state.
 
-**Solution:** The hook handles this automatically. If using custom subscriptions, ensure they're memoized with `useCallback`.
+**Solution:** The hook handles subscription management automatically with proper caching and memoization.
 
 ## Related
 
@@ -584,16 +553,16 @@ A complete example of a camera control toolbar:
 
 ```tsx
 import { Broadcast } from '@accelint/bus';
-import { useCameraState, CameraEventTypes } from '@accelint/map-toolkit/camera';
+import { useMapCamera, CameraEventTypes } from '@accelint/map-toolkit/camera';
 import type { CameraEvent } from '@accelint/map-toolkit/camera';
 
-function CameraToolbar({ instanceId }: { instanceId: UniqueId }) {
+function CameraToolbar({ mapId }: { mapId: UniqueId }) {
   const bus = Broadcast.getInstance<CameraEvent>();
-  const { cameraState } = useCameraState({ instanceId });
+  const { cameraState } = useMapCamera(mapId);
 
   return (
     <div className="camera-toolbar">
-      <button onClick={() => bus.emit(CameraEventTypes.reset, { id: instanceId })}>
+      <button onClick={() => bus.emit(CameraEventTypes.reset, { id: mapId })}>
         Reset
       </button>
 
@@ -604,7 +573,7 @@ function CameraToolbar({ instanceId }: { instanceId: UniqueId }) {
         value={cameraState.zoom}
         onChange={(e) =>
           bus.emit(CameraEventTypes.setZoom, {
-            id: instanceId,
+            id: mapId,
             zoom: Number(e.target.value),
           })
         }
@@ -614,7 +583,7 @@ function CameraToolbar({ instanceId }: { instanceId: UniqueId }) {
         value={cameraState.view}
         onChange={(e) =>
           bus.emit(CameraEventTypes.setView, {
-            id: instanceId,
+            id: mapId,
             view: e.target.value as ViewType,
           })
         }
@@ -635,14 +604,14 @@ Keep multiple cameras in sync:
 ```tsx
 import { useEffect } from 'react';
 import { Broadcast } from '@accelint/bus';
-import { useCameraState, CameraEventTypes } from '@accelint/map-toolkit/camera';
+import { useMapCamera, CameraEventTypes } from '@accelint/map-toolkit/camera';
 
 function SyncedMaps() {
   const PRIMARY_ID = uuid();
   const SECONDARY_ID = uuid();
   const bus = Broadcast.getInstance<CameraEvent>();
 
-  const { cameraState: primaryState } = useCameraState({ instanceId: PRIMARY_ID });
+  const { cameraState: primaryState } = useMapCamera(PRIMARY_ID);
 
   // Sync secondary camera to primary
   useEffect(() => {
@@ -672,7 +641,7 @@ import { useSpring, animated } from 'react-spring';
 import { Broadcast } from '@accelint/bus';
 import { CameraEventTypes } from '@accelint/map-toolkit/camera';
 
-function AnimatedCamera({ instanceId }: { instanceId: UniqueId }) {
+function AnimatedCamera({ mapId }: { mapId: UniqueId }) {
   const bus = Broadcast.getInstance<CameraEvent>();
 
   const animatedPosition = useSpring({
@@ -684,7 +653,7 @@ function AnimatedCamera({ instanceId }: { instanceId: UniqueId }) {
   useEffect(() => {
     const unsubscribe = animatedPosition.lat.onChange((value) => {
       bus.emit(CameraEventTypes.setCenter, {
-        id: instanceId,
+        id: mapId,
         latitude: value,
         longitude: animatedPosition.lng.get(),
         zoom: animatedPosition.zoom.get(),
@@ -692,30 +661,8 @@ function AnimatedCamera({ instanceId }: { instanceId: UniqueId }) {
     });
 
     return unsubscribe;
-  }, [animatedPosition, instanceId]);
+  }, [animatedPosition, mapId]);
 
   return null;
 }
 ```
-```
-
-This comprehensive documentation covers all aspects of the camera feature including:
-
-1. **Overview and Features** - What it does and key capabilities
-2. **Installation** - How to get started
-3. **Basic Usage** - Simple examples for common use cases
-4. **Camera State** - Detailed type information and state structure
-5. **Camera Events** - Complete API reference for all event types
-6. **Hook API** - Parameter and return value documentation
-7. **View Modes** - Explanation of 2D, 2.5D, and 3D views
-8. **Multiple Instances** - How to manage multiple cameras
-9. **Advanced Usage** - Custom subscriptions and manual updates
-10. **Performance** - Optimization details and patterns
-11. **Edge Cases** - Common gotchas and how to handle them
-12. **Utilities** - Helper functions
-13. **TypeScript Types** - Available type exports
-14. **Troubleshooting** - Common issues and solutions
-15. **Related** - Links to related features
-16. **Examples** - Complete real-world usage examples
-
-The documentation follows the same style and structure as the viewport documentation you have in your codebase, ensuring consistency across your toolkit.This comprehensive documentation covers all aspects of the camera feature including:

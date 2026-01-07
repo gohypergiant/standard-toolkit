@@ -389,7 +389,7 @@ export function initializeCameraState(
  * @example
  * ```tsx
  * function MapInfo({ mapId }) {
- *   const { cameraState, setCameraState } = useCameraState(mapId);
+ *   const { cameraState, setCameraState } = useMapCamera(mapId);
  *   return (
  *     <div>
  *       Lat: {cameraState.latitude.toFixed(2)}, Lon: {cameraState.longitude.toFixed(2)}
@@ -398,7 +398,7 @@ export function initializeCameraState(
  * }
  * ```
  */
-export function useCameraState(
+export function useMapCamera(
   mapId: UniqueId,
   initialCameraState?: CameraStateInput,
 ): {

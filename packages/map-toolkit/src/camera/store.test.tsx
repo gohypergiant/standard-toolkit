@@ -15,10 +15,10 @@ import { type UniqueId, uuid } from '@accelint/core/utility/uuid';
 import { act, renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { CameraEventTypes } from './events';
-import { clearCameraState, useCameraState } from './store';
+import { clearCameraState, useMapCamera } from './store';
 import type { CameraEvent } from './types';
 
-describe('useCameraState', () => {
+describe('useMapCamera', () => {
   let testid: UniqueId;
   const bus = Broadcast.getInstance<CameraEvent>();
 
@@ -28,14 +28,14 @@ describe('useCameraState', () => {
     clearCameraState(testid);
   });
   it('should initialize with default values', () => {
-    const { result } = renderHook(() => useCameraState(testid));
+    const { result } = renderHook(() => useMapCamera(testid));
     expect(result.current.cameraState.latitude).toEqual(0);
     expect(result.current.cameraState.longitude).toEqual(0);
     expect(result.current.cameraState.zoom).toEqual(0);
   });
 
   it('should update position', () => {
-    const { result } = renderHook(() => useCameraState(testid));
+    const { result } = renderHook(() => useMapCamera(testid));
     act(() => {
       bus.emit(CameraEventTypes.setCenter, {
         id: testid,
@@ -48,7 +48,7 @@ describe('useCameraState', () => {
   });
 
   it('should update zoom', () => {
-    const { result } = renderHook(() => useCameraState(testid));
+    const { result } = renderHook(() => useMapCamera(testid));
     act(() => {
       bus.emit(CameraEventTypes.setZoom, {
         id: testid,
@@ -59,9 +59,7 @@ describe('useCameraState', () => {
   });
 
   it('should update pitch if view is 2.5D', () => {
-    const { result } = renderHook(() =>
-      useCameraState(testid, { view: '2.5D' }),
-    );
+    const { result } = renderHook(() => useMapCamera(testid, { view: '2.5D' }));
     act(() => {
       bus.emit(CameraEventTypes.setPitch, {
         id: testid,
@@ -72,7 +70,7 @@ describe('useCameraState', () => {
   });
 
   it('should not update pitch if view is 2D', () => {
-    const { result } = renderHook(() => useCameraState(testid, { view: '2D' }));
+    const { result } = renderHook(() => useMapCamera(testid, { view: '2D' }));
     act(() => {
       bus.emit(CameraEventTypes.setPitch, {
         id: testid,
@@ -83,7 +81,7 @@ describe('useCameraState', () => {
   });
 
   it('should update rotation', () => {
-    const { result } = renderHook(() => useCameraState(testid));
+    const { result } = renderHook(() => useMapCamera(testid));
     act(() => {
       bus.emit(CameraEventTypes.setRotation, {
         id: testid,
@@ -94,7 +92,7 @@ describe('useCameraState', () => {
   });
 
   it('should update projection', () => {
-    const { result } = renderHook(() => useCameraState(testid));
+    const { result } = renderHook(() => useMapCamera(testid));
     act(() => {
       bus.emit(CameraEventTypes.setProjection, {
         id: testid,
@@ -105,7 +103,7 @@ describe('useCameraState', () => {
   });
 
   it('should update view', () => {
-    const { result } = renderHook(() => useCameraState(testid, { view: '3D' }));
+    const { result } = renderHook(() => useMapCamera(testid, { view: '3D' }));
     act(() => {
       bus.emit(CameraEventTypes.setView, {
         id: testid,
@@ -118,7 +116,7 @@ describe('useCameraState', () => {
   });
 
   it('should fit to bounds', () => {
-    const { result } = renderHook(() => useCameraState(testid));
+    const { result } = renderHook(() => useMapCamera(testid));
     act(() => {
       bus.emit(CameraEventTypes.fitBounds, {
         id: testid,
@@ -133,7 +131,7 @@ describe('useCameraState', () => {
   });
 
   it('should reset to initial state', () => {
-    const { result } = renderHook(() => useCameraState(testid));
+    const { result } = renderHook(() => useMapCamera(testid));
     act(() => {
       bus.emit(CameraEventTypes.reset, { id: testid });
     });
@@ -144,7 +142,7 @@ describe('useCameraState', () => {
 
   it('should ignore events for other instanceIds', () => {
     const otherId = uuid();
-    const { result } = renderHook(() => useCameraState(testid));
+    const { result } = renderHook(() => useMapCamera(testid));
     act(() => {
       bus.emit(CameraEventTypes.setCenter, {
         id: otherId,
@@ -162,7 +160,7 @@ describe('useCameraState', () => {
   });
 
   it('should handle multiple updates sequentially', () => {
-    const { result } = renderHook(() => useCameraState(testid));
+    const { result } = renderHook(() => useMapCamera(testid));
     act(() => {
       bus.emit(CameraEventTypes.setCenter, {
         id: testid,
@@ -185,7 +183,7 @@ describe('useCameraState', () => {
   });
 
   it('should clear camera state when clearCameraState is called', () => {
-    const { result, unmount } = renderHook(() => useCameraState(testid));
+    const { result, unmount } = renderHook(() => useMapCamera(testid));
     act(() => {
       bus.emit(CameraEventTypes.setCenter, {
         id: testid,
@@ -207,7 +205,7 @@ describe('useCameraState', () => {
     clearCameraState(testid);
 
     // Re-mount and verify state was cleared
-    const { result: newResult } = renderHook(() => useCameraState(testid));
+    const { result: newResult } = renderHook(() => useMapCamera(testid));
     expect(newResult.current.cameraState.latitude).toEqual(0);
     expect(newResult.current.cameraState.longitude).toEqual(0);
     expect(newResult.current.cameraState.zoom).toEqual(0);

@@ -115,7 +115,7 @@ export const viewportStore = createMapStore<ViewportState, ViewportActions>({
  * @example
  * ```tsx
  * function MapInfo({ mapId }) {
- *   const viewport = useViewportState(mapId);
+ *   const viewport = useMapViewport(mapId);
  *   return (
  *     <div>
  *       Lat: {viewport.latitude?.toFixed(2)}, Lon: {viewport.longitude?.toFixed(2)}, Zoom: {viewport.zoom}
@@ -124,7 +124,7 @@ export const viewportStore = createMapStore<ViewportState, ViewportActions>({
  * }
  * ```
  */
-export function useViewportState(mapId: UniqueId): ViewportState {
+export function useMapViewport(mapId: UniqueId): ViewportState {
   return viewportStore.useSelector(mapId, (state) => {
     // Return proper default state with correct mapId if uninitialized
     if (state.id === '') {

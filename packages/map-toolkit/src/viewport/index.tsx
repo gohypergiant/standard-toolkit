@@ -18,7 +18,7 @@ export {
 } from '../shared/units';
 export {
   clearViewportState,
-  useViewportState,
+  useMapViewport,
   viewportStore,
 } from './store';
 export { getViewportSize } from './utils';

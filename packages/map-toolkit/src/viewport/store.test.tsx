@@ -15,7 +15,7 @@ import { uuid } from '@accelint/core';
 import { act, render, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { MapEvents } from '../deckgl/base-map/events';
-import { clearViewportState, useViewportState } from './store';
+import { clearViewportState, useMapViewport } from './store';
 import type {
   MapEventType,
   MapViewportPayload,
@@ -35,7 +35,7 @@ const defaultPayload = {
   height: 0,
 };
 
-describe('useViewportState', () => {
+describe('useMapViewport', () => {
   beforeEach(() => {
     // Clear any existing state before each test
     clearViewportState(instanceId);
@@ -50,7 +50,7 @@ describe('useViewportState', () => {
     let viewState: MapViewportPayload | undefined;
 
     function TestComponent() {
-      viewState = useViewportState(instanceId);
+      viewState = useMapViewport(instanceId);
       return null;
     }
 
@@ -62,7 +62,7 @@ describe('useViewportState', () => {
     let viewState: MapViewportPayload | undefined;
 
     function TestComponent() {
-      viewState = useViewportState(instanceId);
+      viewState = useMapViewport(instanceId);
       return <div data-testid='output'>{JSON.stringify(viewState)}</div>;
     }
 
@@ -91,7 +91,7 @@ describe('useViewportState', () => {
     let viewState: MapViewportPayload | undefined;
 
     function TestComponent() {
-      viewState = useViewportState(instanceId);
+      viewState = useMapViewport(instanceId);
       return null;
     }
 
@@ -137,12 +137,12 @@ describe('useViewportState', () => {
     let viewState2: MapViewportPayload | undefined;
 
     function TestComponent1() {
-      viewState1 = useViewportState(instanceId);
+      viewState1 = useMapViewport(instanceId);
       return null;
     }
 
     function TestComponent2() {
-      viewState2 = useViewportState(instanceId);
+      viewState2 = useMapViewport(instanceId);
       return null;
     }
 
@@ -197,7 +197,7 @@ describe('useViewportState', () => {
     let viewState: MapViewportPayload | undefined;
 
     function TestComponent() {
-      viewState = useViewportState(instanceId);
+      viewState = useMapViewport(instanceId);
       return null;
     }
 
@@ -247,7 +247,7 @@ describe('clearViewportState', () => {
     let viewState: MapViewportPayload | undefined;
 
     function TestComponent() {
-      viewState = useViewportState(instanceId);
+      viewState = useMapViewport(instanceId);
       return null;
     }
 

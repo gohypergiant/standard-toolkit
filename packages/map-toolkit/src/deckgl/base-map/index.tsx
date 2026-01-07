@@ -22,7 +22,7 @@ import {
   useControl,
   type ViewState,
 } from 'react-map-gl/maplibre';
-import { useCameraState } from '../../camera';
+import { useMapCamera } from '../../camera';
 import { getCursor } from '../../map-cursor/store';
 import {
   DARK_BASE_MAP_STYLE,
@@ -214,7 +214,7 @@ export function BaseMap({
   const container = useId();
   const mapRef = useRef<MapRef>(null);
 
-  const { cameraState, setCameraState } = useCameraState(id, {
+  const { cameraState, setCameraState } = useMapCamera(id, {
     view: defaultView,
     zoom: initialViewState?.zoom ?? DEFAULT_VIEW_STATE.zoom,
     latitude: initialViewState?.latitude ?? DEFAULT_VIEW_STATE.latitude,

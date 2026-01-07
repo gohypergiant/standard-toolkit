@@ -113,22 +113,20 @@ The component displays: `{width} x {height} {UNIT}`
 
 ## Hooks
 
-### useViewportState
+### useMapViewport
 
 A React hook for subscribing to viewport state changes. Returns current bounds, latitude, longitude, and zoom level.
 
 #### Basic Usage
 
 ```tsx
-import { useViewportState } from '@accelint/map-toolkit/viewport';
+import { useMapViewport } from '@accelint/map-toolkit/viewport';
 import { uuid } from '@accelint/core';
 
 const MAP_ID = uuid();
 
 function MapInfo() {
-  const { bounds, latitude, longitude, zoom } = useViewportState({
-    instanceId: MAP_ID,
-  });
+  const { bounds, latitude, longitude, zoom } = useMapViewport(MAP_ID);
 
   return (
     <div className="bg-white p-2 rounded shadow">
@@ -143,11 +141,11 @@ function MapInfo() {
 #### Monitoring Bounds
 
 ```tsx
-import { useViewportState } from '@accelint/map-toolkit/viewport';
+import { useMapViewport } from '@accelint/map-toolkit/viewport';
 import { useEffect } from 'react';
 
-function BoundsMonitor({ instanceId }: { instanceId: UniqueId }) {
-  const { bounds } = useViewportState({ instanceId });
+function BoundsMonitor({ mapId }: { mapId: UniqueId }) {
+  const { bounds } = useMapViewport(mapId);
 
   useEffect(() => {
     if (bounds && bounds.every(b => !Number.isNaN(b))) {
@@ -168,12 +166,12 @@ Multiple components can efficiently subscribe to the same viewport:
 const MAP_ID = uuid();
 
 function ZoomLevel() {
-  const { zoom } = useViewportState({ instanceId: MAP_ID });
+  const { zoom } = useMapViewport(MAP_ID);
   return <div>Zoom: {zoom.toFixed(1)}</div>;
 }
 
 function CenterCoordinates() {
-  const { latitude, longitude } = useViewportState({ instanceId: MAP_ID });
+  const { latitude, longitude } = useMapViewport(MAP_ID);
   return <div>Center: {latitude.toFixed(2)}, {longitude.toFixed(2)}</div>;
 }
 
@@ -182,21 +180,9 @@ function CenterCoordinates() {
 
 #### Parameters
 
-##### `instanceId: UniqueId` (required)
+##### `mapId: UniqueId` (required)
 
 Map instance identifier. Must match the `id` prop passed to `BaseMap`.
-
-##### `subscribe?: (onStoreChange: () => void) => () => void`
-
-Optional custom subscription function for `useSyncExternalStore`. Must be stable (memoized).
-
-##### `getSnapshot?: () => MapViewportPayload`
-
-Optional custom snapshot function. Must be stable (memoized).
-
-##### `getServerSnapshot?: () => MapViewportPayload`
-
-Optional server-side snapshot function for SSR.
 
 #### Return Value
 
@@ -296,7 +282,7 @@ Due to Mercator projection, the same pixel dimensions represent different geogra
 Before first viewport event, numeric values are `NaN` or `0`:
 
 ```tsx
-const { latitude, longitude, zoom, width, height } = useViewportState({ instanceId });
+const { latitude, longitude, zoom, width, height } = useMapViewport(mapId);
 
 if (Number.isNaN(latitude) || width === 0) {
   return <div>Loading map...</div>;
@@ -357,9 +343,9 @@ getViewportSize({
 });
 // Returns: "113 x 85 KM"
 
-// With useViewportState for dynamic updates
-function CustomViewportDisplay({ instanceId }: { instanceId: UniqueId }) {
-  const viewport = useViewportState({ instanceId });
+// With useMapViewport for dynamic updates
+function CustomViewportDisplay({ mapId }: { mapId: UniqueId }) {
+  const viewport = useMapViewport(mapId);
 
   return (
     <div className="space-y-1">
@@ -497,14 +483,14 @@ DEFAULT_DISTANCE_UNITS; // 'kilometers'
 2. Check console for warnings about invalid bounds
 3. Verify `instanceId` matches `BaseMap` `id` prop
 
-### useViewportState returns all NaN values
+### useMapViewport returns all NaN values
 
 **Cause:** Viewport event hasn't fired yet (map initializing).
 
 **Solution:** Check for `NaN` or `0` and show loading state:
 
 ```tsx
-const { latitude, width } = useViewportState({ instanceId });
+const { latitude, width } = useMapViewport(mapId);
 
 if (Number.isNaN(latitude) || width === 0) {
   return <div>Initializing map...</div>;
@@ -514,14 +500,12 @@ if (Number.isNaN(latitude) || width === 0) {
 ### State not updating
 
 **Causes:**
-1. Wrong `instanceId` (doesn't match `BaseMap` id)
+1. Wrong `mapId` (doesn't match `BaseMap` id)
 2. `BaseMap` not mounted
-3. Custom subscribe/getSnapshot not stable
 
 **Solutions:**
-1. Verify `instanceId` matches `BaseMap` `id` prop
+1. Verify `mapId` matches `BaseMap` `id` prop
 2. Ensure `BaseMap` mounted before components using hooks
-3. Wrap custom functions in `useCallback`
 
 ### Dimensions look wrong at high latitudes
 

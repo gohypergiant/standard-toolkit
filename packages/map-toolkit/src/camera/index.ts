@@ -15,7 +15,7 @@ export {
   type CameraState,
   cameraStore,
   clearCameraState,
-  useCameraState,
+  useMapCamera,
 } from './store';
 export type {
   CameraEvent,

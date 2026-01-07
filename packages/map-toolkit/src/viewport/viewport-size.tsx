@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { useViewportState } from './store';
+import { useMapViewport } from './store';
 import { getViewportSize } from './utils';
 import type { UniqueId } from '@accelint/core';
 import type { ComponentPropsWithRef } from 'react';
@@ -50,7 +50,7 @@ export function ViewportSize({
   unit = 'nm',
   ...rest
 }: ViewportSizeProps) {
-  const { bounds, zoom, width, height } = useViewportState(instanceId);
+  const { bounds, zoom, width, height } = useMapViewport(instanceId);
 
   return (
     <span {...rest}>
