@@ -12,7 +12,7 @@
 'use client';
 
 import 'client-only';
-import { useContext, useEffect, useMemo } from 'react';
+import { useContext, useEffect, useMemo, useRef } from 'react';
 import { MapContext } from '../deckgl/base-map/provider';
 import { cursorStore, useCursor } from './store';
 import type { UniqueId } from '@accelint/core';
@@ -91,17 +91,18 @@ export function useMapCursor(id?: UniqueId): UseMapCursorReturn {
   // Use the useCursor hook which computes effective cursor with priority
   const cursor = useCursor(actualId);
 
-  // Get actions from the store
-  const { requestCursorChange, clearCursor } = cursorStore.actions(actualId);
+  // Get actions from the store - cursorStore.actions returns stable references
+  // (cached per mapId), so we can memoize on actualId only
+  const actions = useMemo(() => cursorStore.actions(actualId), [actualId]);
 
   // Memoize the return value to prevent unnecessary re-renders
   return useMemo(
     () => ({
       cursor,
-      requestCursorChange,
-      clearCursor,
+      requestCursorChange: actions.requestCursorChange,
+      clearCursor: actions.clearCursor,
     }),
-    [cursor, requestCursorChange, clearCursor],
+    [cursor, actions],
   );
 }
 
@@ -111,7 +112,10 @@ export function useMapCursor(id?: UniqueId): UseMapCursorReturn {
  * This hook automatically requests a cursor when mounted and clears it when unmounted.
  * Useful for components that need to consistently show a specific cursor.
  *
- * @param cursor - The cursor to request
+ * NOTE: This hook does NOT re-render when cursor state changes. If you need to read
+ * the current cursor value, use `useMapCursor` instead.
+ *
+ * @param cursorType - The cursor to request
  * @param owner - The owner identifier
  * @param id - Optional map instance ID
  *
@@ -125,17 +129,52 @@ export function useMapCursor(id?: UniqueId): UseMapCursorReturn {
  * ```
  */
 export function useMapCursorEffect(
-  cursor: CSSCursorType,
+  cursorType: CSSCursorType,
   owner: string,
   id?: UniqueId,
 ): void {
-  const { requestCursorChange, clearCursor } = useMapCursor(id);
+  const contextId = useContext(MapContext);
+  const actualId = id ?? contextId;
 
+  if (!actualId) {
+    throw new Error(
+      'useMapCursorEffect requires either an id parameter or to be used within a MapProvider',
+    );
+  }
+
+  // Store values in refs for stable cleanup function access
+  const cursorRef = useRef(cursorType);
+  const ownerRef = useRef(owner);
+  const idRef = useRef(actualId);
+
+  // Update refs on each render
+  cursorRef.current = cursorType;
+  ownerRef.current = owner;
+  idRef.current = actualId;
+
+  // Subscribe to store (to ensure bus listeners are set up) and manage cursor
+  // Using a single effect with manual subscription to avoid re-render loops
   useEffect(() => {
-    requestCursorChange(cursor, owner);
+    const mapId = idRef.current;
+
+    // Subscribe to store to ensure bus listeners are set up
+    // The subscription callback is a no-op since we don't want to re-render
+    const unsubscribe = cursorStore.subscribe(mapId)(() => {
+      // No-op: we don't want cursor state changes to trigger re-renders
+    });
+
+    // Request the cursor
+    const actions = cursorStore.actions(mapId);
+    actions.requestCursorChange(cursorRef.current, ownerRef.current);
 
     return () => {
-      clearCursor(owner);
+      // Unsubscribe first to prevent re-render loops
+      unsubscribe();
+      // Defer cursor clear to avoid triggering state updates during React's commit phase
+      queueMicrotask(() => {
+        const cleanupActions = cursorStore.actions(idRef.current);
+        cleanupActions.clearCursor(ownerRef.current);
+      });
     };
-  }, [cursor, owner, requestCursorChange, clearCursor]);
+  }, [cursorType, owner, actualId]);
 }

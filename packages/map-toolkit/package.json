@@ -61,8 +61,8 @@
   "exports": {
     "./camera": "./dist/camera/index.js",
     "./camera/events": "./dist/camera/events.js",
+    "./camera/store": "./dist/camera/store.js",
     "./camera/types": "./dist/camera/types.js",
-    "./camera/use-camera-state": "./dist/camera/use-camera-state.js",
     "./cursor-coordinates": "./dist/cursor-coordinates/index.js",
     "./cursor-coordinates/use-cursor-coordinates": "./dist/cursor-coordinates/use-cursor-coordinates.js",
     "./deckgl": "./dist/deckgl/index.js",

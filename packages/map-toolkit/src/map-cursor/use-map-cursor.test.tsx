@@ -172,7 +172,7 @@ describe('useMapCursorEffect', () => {
     expect(() => {
       render(<TestComponent />);
     }).toThrow(
-      'useMapCursor requires either an id parameter or to be used within a MapProvider',
+      'useMapCursorEffect requires either an id parameter or to be used within a MapProvider',
     );
 
     consoleSpy.mockRestore();

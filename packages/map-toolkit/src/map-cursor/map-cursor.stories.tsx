@@ -116,6 +116,68 @@ export const BasicUsage: Story = {
 };
 
 /**
+ * Drawing mode indicator component that automatically sets crosshair cursor.
+ * Extracted outside render function to maintain stable component identity.
+ */
+function DrawingModeIndicator() {
+  // Automatically set crosshair cursor when this component is mounted
+  useMapCursorEffect('crosshair', 'drawing-mode', MULTIPLE_OWNERS_MAP_ID);
+
+  return (
+    <div className='absolute top-l left-l flex w-[300px] flex-col gap-l rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
+      <div className='flex items-center justify-between'>
+        <p className='font-bold text-header-m'>Drawing Mode Active</p>
+        <div className='h-m w-m animate-pulse rounded-full bg-status-success-default' />
+      </div>
+      <p className='text-body-s text-content-secondary'>
+        Crosshair cursor is automatically applied while this component is
+        mounted.
+      </p>
+    </div>
+  );
+}
+
+/**
+ * Control panel component for the AutomaticCursorEffect story.
+ * Extracted outside render function to maintain stable component identity.
+ */
+function AutomaticCursorEffectControlPanel({
+  showDrawingMode,
+  onToggle,
+}: {
+  showDrawingMode: boolean;
+  onToggle: () => void;
+}) {
+  const { cursor } = useMapCursor(MULTIPLE_OWNERS_MAP_ID);
+
+  return (
+    <div className='absolute bottom-l left-l flex w-[300px] flex-col gap-l rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
+      <p className='font-bold text-header-l'>useMapCursorEffect Demo</p>
+
+      <Button
+        variant={showDrawingMode ? 'filled' : 'outline'}
+        color={showDrawingMode ? 'accent' : 'mono-muted'}
+        onPress={onToggle}
+      >
+        {showDrawingMode ? 'Exit Drawing Mode' : 'Enter Drawing Mode'}
+      </Button>
+
+      <Divider />
+
+      <div className='flex flex-col gap-s text-body-s'>
+        <div className='flex items-center gap-s'>
+          <span className='text-content-secondary'>Current cursor:</span>
+          <code>{cursor}</code>
+        </div>
+        <p className='text-body-xs text-content-tertiary'>
+          Toggle drawing mode to see the cursor automatically change
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/**
  * Demonstrates using useMapCursorEffect for automatic cursor management.
  * The cursor is automatically set when the component mounts and cleared when it unmounts.
  */
@@ -123,59 +185,18 @@ export const AutomaticCursorEffect: Story = {
   render: () => {
     const [showDrawingMode, setShowDrawingMode] = useState(false);
 
-    function DrawingModeIndicator() {
-      // Automatically set crosshair cursor when this component is mounted
-      useMapCursorEffect('crosshair', 'drawing-mode', MULTIPLE_OWNERS_MAP_ID);
-
-      return (
-        <div className='absolute top-l left-l flex w-[300px] flex-col gap-l rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
-          <div className='flex items-center justify-between'>
-            <p className='font-bold text-header-m'>Drawing Mode Active</p>
-            <div className='h-m w-m animate-pulse rounded-full bg-status-success-default' />
-          </div>
-          <p className='text-body-s text-content-secondary'>
-            Crosshair cursor is automatically applied while this component is
-            mounted.
-          </p>
-        </div>
-      );
-    }
-
-    function ControlPanel() {
-      const { cursor } = useMapCursor(MULTIPLE_OWNERS_MAP_ID);
-
-      return (
-        <div className='absolute bottom-l left-l flex w-[300px] flex-col gap-l rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
-          <p className='font-bold text-header-l'>useMapCursorEffect Demo</p>
-
-          <Button
-            variant={showDrawingMode ? 'filled' : 'outline'}
-            color={showDrawingMode ? 'accent' : 'mono-muted'}
-            onPress={() => setShowDrawingMode(!showDrawingMode)}
-          >
-            {showDrawingMode ? 'Exit Drawing Mode' : 'Enter Drawing Mode'}
-          </Button>
-
-          <Divider />
-
-          <div className='flex flex-col gap-s text-body-s'>
-            <div className='flex items-center gap-s'>
-              <span className='text-content-secondary'>Current cursor:</span>
-              <code>{cursor}</code>
-            </div>
-            <p className='text-body-xs text-content-tertiary'>
-              Toggle drawing mode to see the cursor automatically change
-            </p>
-          </div>
-        </div>
-      );
-    }
+    const handleToggle = useCallback(() => {
+      setShowDrawingMode((prev) => !prev);
+    }, []);
 
     return (
       <div className='relative h-dvh w-dvw'>
         <BaseMap className='absolute inset-0' id={MULTIPLE_OWNERS_MAP_ID} />
         {showDrawingMode && <DrawingModeIndicator />}
-        <ControlPanel />
+        <AutomaticCursorEffectControlPanel
+          showDrawingMode={showDrawingMode}
+          onToggle={handleToggle}
+        />
       </div>
     );
   },
