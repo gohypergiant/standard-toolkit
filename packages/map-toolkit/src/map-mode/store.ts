@@ -36,11 +36,20 @@
 
 import { Broadcast } from '@accelint/bus';
 import { uuid } from '@accelint/core';
+import { getLogger } from '@accelint/logger';
 import { createMapStore } from '../shared/create-map-store';
 import { MapModeEvents } from './events';
 import type { UniqueId } from '@accelint/core';
 import type { StoreHelpers } from '../shared/create-map-store';
 import type { MapModeEventType, ModeChangeDecisionPayload } from './types';
+
+const logger = getLogger({
+  enabled:
+    process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test',
+  level: 'warn',
+  prefix: '[MapMode]',
+  pretty: true,
+});
 
 const DEFAULT_MODE = 'default';
 
@@ -249,8 +258,8 @@ function handleAuthorizationDecision(
   // Verify decision is from current mode's owner
   const currentModeOwner = state.modeOwners.get(state.mode);
   if (decisionOwner !== currentModeOwner) {
-    console.warn(
-      `[MapMode] Authorization decision from "${decisionOwner}" ignored - not the owner of mode "${state.mode}" (owner: ${currentModeOwner || 'none'})`,
+    logger.warn(
+      `Authorization decision from "${decisionOwner}" ignored - not the owner of mode "${state.mode}" (owner: ${currentModeOwner || 'none'})`,
     );
     return;
   }

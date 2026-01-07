@@ -24,12 +24,8 @@ import {
 } from 'react-map-gl/maplibre';
 import { useMapCamera } from '../../camera';
 import { getCursor } from '../../map-cursor/store';
-import {
-  DARK_BASE_MAP_STYLE,
-  DEFAULT_VIEW_STATE,
-  PARAMETERS,
-  PICKING_RADIUS,
-} from './constants';
+import { DEFAULT_VIEW_STATE } from '../../shared/constants';
+import { DARK_BASE_MAP_STYLE, PARAMETERS, PICKING_RADIUS } from './constants';
 import { MapControls } from './controls';
 import { MapEvents } from './events';
 import { MapProvider } from './provider';

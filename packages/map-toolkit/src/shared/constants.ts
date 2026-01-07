@@ -10,9 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
-// __private-exports
-
-export const INITIAL_VIEW_STATE = {
+/**
+ * Default view state for map initialization.
+ * Used by both BaseMap (deck.gl) and MapLibre components.
+ *
+ * Centered on Washington D.C. at zoom level 4 (continental US view).
+ */
+export const DEFAULT_VIEW_STATE = {
   longitude: -77.0369,
   latitude: 38.9072,
   zoom: 4,

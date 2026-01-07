@@ -185,5 +185,5 @@ export function useMapCursorEffect(
         cleanupActions.clearCursor(ownerRef.current);
       });
     };
-  }, [cursorType, owner, actualId]);
+  }, []);
 }

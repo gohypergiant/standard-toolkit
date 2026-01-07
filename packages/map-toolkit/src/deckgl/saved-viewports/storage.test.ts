@@ -47,16 +47,9 @@ describe('storage methods', () => {
     expect(retrieved).toEqual(obj);
   });
 
-  it('should warn and return undefined for missing id', () => {
-    const warnSpy = vi
-      .spyOn(console, 'warn')
-      .mockImplementation(() => undefined);
+  it('should return undefined for missing id', () => {
     const result = retrieve('missing-id');
     expect(result).toBeUndefined();
-    expect(warnSpy).toHaveBeenCalledWith(
-      'Object with id: missing-id does not exist',
-    );
-    warnSpy.mockRestore();
   });
 
   it('should overwrite existing object with same id', () => {

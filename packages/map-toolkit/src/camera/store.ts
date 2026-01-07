@@ -186,7 +186,7 @@ const DEFAULT_CAMERA_STATE: CameraState = {
 export const cameraStore = createMapStore<CameraState, CameraActions>({
   defaultState: DEFAULT_CAMERA_STATE,
 
-  actions: (mapId, { get, set }) => ({
+  actions: (_mapId, { get, set }) => ({
     setCameraState: (updates: Partial<CameraState>) => {
       const currentState = get();
       set({ ...currentState, ...updates } as CameraState);
@@ -195,7 +195,9 @@ export const cameraStore = createMapStore<CameraState, CameraActions>({
 
   bus: (mapId, { get, set, replace }) => {
     const unsubReset = cameraBus.on(CameraEventTypes.reset, ({ payload }) => {
-      if (payload.id !== mapId) return;
+      if (payload.id !== mapId) {
+        return;
+      }
 
       const state = get();
       const initialState = initialStateCache.get(mapId);
@@ -219,7 +221,9 @@ export const cameraStore = createMapStore<CameraState, CameraActions>({
     const unsubSetCenter = cameraBus.on(
       CameraEventTypes.setCenter,
       ({ payload }) => {
-        if (payload.id !== mapId) return;
+        if (payload.id !== mapId) {
+          return;
+        }
 
         const state = get();
         replace({
@@ -236,7 +240,9 @@ export const cameraStore = createMapStore<CameraState, CameraActions>({
     const unsubFitBounds = cameraBus.on(
       CameraEventTypes.fitBounds,
       ({ payload }) => {
-        if (payload.id !== mapId) return;
+        if (payload.id !== mapId) {
+          return;
+        }
 
         const state = get();
         const { longitude, latitude, zoom } = fitBounds({
@@ -263,7 +269,9 @@ export const cameraStore = createMapStore<CameraState, CameraActions>({
     const unsubSetProjection = cameraBus.on(
       CameraEventTypes.setProjection,
       ({ payload }) => {
-        if (payload.id !== mapId) return;
+        if (payload.id !== mapId) {
+          return;
+        }
 
         const state = get();
         const newState = { ...state };
@@ -281,7 +289,9 @@ export const cameraStore = createMapStore<CameraState, CameraActions>({
     const unsubSetView = cameraBus.on(
       CameraEventTypes.setView,
       ({ payload }) => {
-        if (payload.id !== mapId) return;
+        if (payload.id !== mapId) {
+          return;
+        }
 
         const state = get();
         const newState = { ...state };
@@ -303,7 +313,9 @@ export const cameraStore = createMapStore<CameraState, CameraActions>({
     const unsubSetZoom = cameraBus.on(
       CameraEventTypes.setZoom,
       ({ payload }) => {
-        if (payload.id !== mapId) return;
+        if (payload.id !== mapId) {
+          return;
+        }
 
         const state = get();
         replace({ ...state, zoom: payload.zoom });
@@ -313,7 +325,9 @@ export const cameraStore = createMapStore<CameraState, CameraActions>({
     const unsubSetRotation = cameraBus.on(
       CameraEventTypes.setRotation,
       ({ payload }) => {
-        if (payload.id !== mapId) return;
+        if (payload.id !== mapId) {
+          return;
+        }
 
         const state = get();
         if (state.view !== '3D') {
@@ -325,7 +339,9 @@ export const cameraStore = createMapStore<CameraState, CameraActions>({
     const unsubSetPitch = cameraBus.on(
       CameraEventTypes.setPitch,
       ({ payload }) => {
-        if (payload.id !== mapId) return;
+        if (payload.id !== mapId) {
+          return;
+        }
 
         const state = get();
         if (state.view === '2.5D') {

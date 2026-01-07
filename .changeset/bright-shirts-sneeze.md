@@ -2,4 +2,17 @@
 "@accelint/map-toolkit": major
 ---
 
-Refactor all map-toolkit components to use a store factory and similar naming conventions. Updates useViewportState and useCameraState to useMapViewport and useMapCamera aligning with other exported hook names.
+Refactor map-toolkit for v1 release:
+
+**Breaking Changes:**
+- Rename `useViewportState` → `useMapViewport`
+- Rename `useCameraState` → `useMapCamera`
+- Rename `useShapeSelection` → `useSelectShape`
+- Rename `INITIAL_VIEW_STATE` → `DEFAULT_VIEW_STATE` (in maplibre exports)
+- Remove `@accelint/map-toolkit/maplibre/constants` export
+
+**Internal Improvements:**
+- Refactor all stores to use `createMapStore` factory pattern
+- Hoist `DEFAULT_VIEW_STATE` to `shared/constants`
+- Replace `console.warn` with `@accelint/logger` for conditional logging
+- Standardize drawStore to use shared mode-utils

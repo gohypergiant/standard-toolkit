@@ -36,10 +36,12 @@
  */
 
 import { Broadcast } from '@accelint/bus';
-import { MapCursorEvents } from '../../../map-cursor/events';
-import { cursorStore } from '../../../map-cursor/store';
 import { MapModeEvents } from '../../../map-mode/events';
 import { createMapStore } from '../../../shared/create-map-store';
+import {
+  releaseModeAndCursor,
+  requestModeAndCursor,
+} from '../shared/utils/mode-utils';
 import {
   DRAW_CURSOR_MAP,
   DRAW_SHAPE_LAYER_ID,
@@ -49,7 +51,6 @@ import { DrawShapeEvents } from './events';
 import { convertFeatureToShape } from './utils/feature-conversion';
 import type { UniqueId } from '@accelint/core';
 import type { Feature } from 'geojson';
-import type { MapCursorEventType } from '../../../map-cursor/types';
 import type { MapModeEventType } from '../../../map-mode/types';
 import type { Shape, ShapeFeatureType } from '../shared/types';
 import type { DrawShapeEvent, ShapeDrawnEvent } from './events';
@@ -60,7 +61,6 @@ import type { DrawFunction, DrawingState, DrawShapeOptions } from './types';
  */
 const drawShapeBus = Broadcast.getInstance<DrawShapeEvent>();
 const mapModeBus = Broadcast.getInstance<MapModeEventType>();
-const mapCursorBus = Broadcast.getInstance<MapCursorEventType>();
 
 /**
  * Default drawing state
@@ -106,20 +106,9 @@ function startDrawing(
     circleDefaults: options?.circleDefaults ?? null,
   });
 
-  // Request map mode
-  mapModeBus.emit(MapModeEvents.changeRequest, {
-    desiredMode: DRAW_SHAPE_MODE,
-    owner: DRAW_SHAPE_LAYER_ID,
-    id: mapId,
-  });
-
-  // Request cursor
+  // Request map mode and cursor using shared utilities
   const cursor = DRAW_CURSOR_MAP[shapeType];
-  mapCursorBus.emit(MapCursorEvents.changeRequest, {
-    cursor,
-    owner: DRAW_SHAPE_LAYER_ID,
-    id: mapId,
-  });
+  requestModeAndCursor(mapId, DRAW_SHAPE_MODE, cursor, DRAW_SHAPE_LAYER_ID);
 
   // Emit drawing started event
   drawShapeBus.emit(DrawShapeEvents.drawing, {
@@ -158,15 +147,8 @@ function completeDrawingInternal(
     circleDefaults: null,
   });
 
-  // Return to default mode
-  mapModeBus.emit(MapModeEvents.changeRequest, {
-    desiredMode: 'default',
-    owner: DRAW_SHAPE_LAYER_ID,
-    id: mapId,
-  });
-
-  // Clear cursor using the store function directly
-  cursorStore.actions(mapId).clearCursor(DRAW_SHAPE_LAYER_ID);
+  // Release mode and cursor using shared utilities
+  releaseModeAndCursor(mapId, DRAW_SHAPE_LAYER_ID);
 
   // Emit shape drawn event
   drawShapeBus.emit(DrawShapeEvents.drawn, {
@@ -202,15 +184,8 @@ function cancelDrawingInternal(
     circleDefaults: null,
   });
 
-  // Return to default mode
-  mapModeBus.emit(MapModeEvents.changeRequest, {
-    desiredMode: 'default',
-    owner: DRAW_SHAPE_LAYER_ID,
-    id: mapId,
-  });
-
-  // Clear cursor using the store function directly
-  cursorStore.actions(mapId).clearCursor(DRAW_SHAPE_LAYER_ID);
+  // Release mode and cursor using shared utilities
+  releaseModeAndCursor(mapId, DRAW_SHAPE_LAYER_ID);
 
   // Emit canceled event
   drawShapeBus.emit(DrawShapeEvents.canceled, {
@@ -270,15 +245,8 @@ export const drawStore = createMapStore<DrawingState, DrawShapeActions>({
   onCleanup: (mapId, state) => {
     // Cancel any active drawing before cleanup
     if (state.activeShapeType) {
-      // Return to default mode
-      mapModeBus.emit(MapModeEvents.changeRequest, {
-        desiredMode: 'default',
-        owner: DRAW_SHAPE_LAYER_ID,
-        id: mapId,
-      });
-
-      // Clear cursor
-      cursorStore.actions(mapId).clearCursor(DRAW_SHAPE_LAYER_ID);
+      // Release mode and cursor using shared utilities
+      releaseModeAndCursor(mapId, DRAW_SHAPE_LAYER_ID);
 
       // Emit canceled event
       drawShapeBus.emit(DrawShapeEvents.canceled, {
