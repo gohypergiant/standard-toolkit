@@ -173,7 +173,7 @@ export function Input({ ref = null, ...props }: InputProps) {
             {suffixProp}
           </span>
         )}
-        {isClearable && (
+        {!readOnly && isClearable && (
           <Button
             className={composeRenderProps(classNames?.clear, (className) =>
               clsx(styles.clear, prefix, suffix, clear, className),
