@@ -40,8 +40,8 @@
     "license": "pnpm zx scripts/license.mjs",
     "lint": "turbo lint",
     "lint:fs": "pnpm ls-lint",
-    "pre-build": "echo \"Pre-build stub.\"",
     "postinstall": "pnpm run deps:postinstall",
+    "pre-build": "echo \"Pre-build stub.\"",
     "sort-imports": "pnpm biome check --formatter-enabled=false --linter-enabled=false  --write",
     "test": "turbo test"
   },
