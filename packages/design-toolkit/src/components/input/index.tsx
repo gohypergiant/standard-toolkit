@@ -127,7 +127,13 @@ export function Input({ ref = null, ...props }: InputProps) {
             {prefixProp}
           </span>
         )}
-        <div className={clsx(styles.sizer, classNames?.sizer)}>
+        <div
+          className={clsx(
+            styles.sizer,
+            classNames?.sizer,
+            autoSize && styles.autoSize,
+          )}
+        >
           <AriaInput
             {...rest}
             ref={ref}
