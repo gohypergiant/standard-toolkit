@@ -78,7 +78,7 @@
     "./deckgl/shapes/display-shape-layer": "./dist/deckgl/shapes/display-shape-layer/index.js",
     "./deckgl/shapes/display-shape-layer/fiber": "./dist/deckgl/shapes/display-shape-layer/fiber.js",
     "./deckgl/shapes/display-shape-layer/types": "./dist/deckgl/shapes/display-shape-layer/types.js",
-    "./deckgl/shapes/display-shape-layer/use-shape-selection": "./dist/deckgl/shapes/display-shape-layer/use-shape-selection.js",
+    "./deckgl/shapes/display-shape-layer/use-select-shape": "./dist/deckgl/shapes/display-shape-layer/use-select-shape.js",
     "./deckgl/shapes/draw-shape-layer": "./dist/deckgl/shapes/draw-shape-layer/index.js",
     "./deckgl/shapes/draw-shape-layer/events": "./dist/deckgl/shapes/draw-shape-layer/events.js",
     "./deckgl/shapes/draw-shape-layer/fiber": "./dist/deckgl/shapes/draw-shape-layer/fiber.js",

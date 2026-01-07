@@ -18,7 +18,7 @@ import { useMapCursor } from '../../../map-cursor';
 import { BaseMap } from '../../base-map/index';
 import { mockShapes } from '../__fixtures__/mock-shapes';
 import '../draw-shape-layer/fiber';
-import { useShapeSelection } from '../display-shape-layer/use-shape-selection';
+import { useSelectShape } from '../display-shape-layer/use-select-shape';
 import { DrawShapeLayer } from '../draw-shape-layer/index';
 import { useDrawShape } from '../draw-shape-layer/use-draw-shape';
 import { ShapeEvents } from '../shared/events';
@@ -77,8 +77,8 @@ export const BasicEditing: Story = {
     const { cursor, requestCursorChange, clearCursor } =
       useMapCursor(EDIT_MAP_ID);
 
-    // useShapeSelection handles selection state and auto-deselection on map clicks
-    const { selectedId } = useShapeSelection(EDIT_MAP_ID);
+    // useSelectShape handles selection state and auto-deselection on map clicks
+    const { selectedId } = useSelectShape(EDIT_MAP_ID);
     const selectedShape = shapes.find((s) => s.id === selectedId) ?? null;
 
     const { edit, save, cancel, isEditing, editingShape } = useEditShape(
@@ -108,7 +108,7 @@ export const BasicEditing: Story = {
       },
     );
 
-    // Log shape selection events (selection is handled by useShapeSelection)
+    // Log shape selection events (selection is handled by useSelectShape)
     useOn<ShapeSelectedEvent>(ShapeEvents.selected, (event) => {
       if (event.payload.mapId !== EDIT_MAP_ID) {
         return;
@@ -267,8 +267,8 @@ export const CombinedDrawAndEdit: Story = {
 
     useMapCursor(COMBINED_MAP_ID);
 
-    // useShapeSelection handles selection state and auto-deselection on map clicks
-    const { selectedId, clearSelection } = useShapeSelection(COMBINED_MAP_ID);
+    // useSelectShape handles selection state and auto-deselection on map clicks
+    const { selectedId, clearSelection } = useSelectShape(COMBINED_MAP_ID);
     const selectedShape = shapes.find((s) => s.id === selectedId) ?? null;
 
     const { draw, isDrawing } = useDrawShape(COMBINED_MAP_ID, {
@@ -425,7 +425,7 @@ export const LockedShapes: Story = {
 
     useMapCursor(LOCKED_MAP_ID);
 
-    const { selectedId, clearSelection } = useShapeSelection(LOCKED_MAP_ID);
+    const { selectedId, clearSelection } = useSelectShape(LOCKED_MAP_ID);
     const selectedShape = shapes.find((s) => s.id === selectedId) ?? null;
 
     const { edit, save, cancel, isEditing, editingShape } = useEditShape(

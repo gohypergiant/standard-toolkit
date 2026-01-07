@@ -12,7 +12,7 @@
 
 // Display Shape Layer exports
 export { DisplayShapeLayer } from './display-shape-layer/index';
-export { useShapeSelection } from './display-shape-layer/use-shape-selection';
+export { useSelectShape } from './display-shape-layer/use-select-shape';
 // Draw Shape Layer exports
 export { DrawShapeEvents } from './draw-shape-layer/events';
 export { DrawShapeLayer } from './draw-shape-layer/index';
@@ -33,14 +33,6 @@ export {
   LINE_WIDTHS,
   SHAPE_LAYER_IDS,
 } from './shared/constants';
-// Style utility exports
-export {
-  getDashArray,
-  getFillColor,
-  getLineColor,
-  getLineWidth,
-  normalizeColor,
-} from './shared/utils/style-utils';
 // Event exports
 export { ShapeEvents } from './shared/events';
 export {
@@ -52,13 +44,21 @@ export {
   isRectangleShape,
   ShapeFeatureType,
 } from './shared/types';
+// Style utility exports
+export {
+  getDashArray,
+  getFillColor,
+  getLineColor,
+  getLineWidth,
+  normalizeColor,
+} from './shared/utils/style-utils';
 export type {
   DisplayShapeLayerProps,
   ShowLabelsMode,
   StyledFeature,
   StyledFeatureProperties,
 } from './display-shape-layer/types';
-export type { UseShapeSelectionReturn } from './display-shape-layer/use-shape-selection';
+export type { UseSelectShapeReturn } from './display-shape-layer/use-select-shape';
 export type {
   CardinalLabelCoordinateAnchor,
   LabelHorizontalPosition,

@@ -17,9 +17,9 @@ import type { UniqueId } from '@accelint/core';
 import type { ShapeId } from '../shared/types';
 
 /**
- * Return type for useShapeSelection hook
+ * Return type for useSelectShape hook
  */
-export interface UseShapeSelectionReturn {
+export interface UseSelectShapeReturn {
   /** Currently selected shape ID, or undefined if nothing selected */
   selectedId: ShapeId | undefined;
   /** Manually set the selected shape ID (useful for programmatic selection) */
@@ -46,10 +46,10 @@ export interface UseShapeSelectionReturn {
  *
  * @example Basic usage
  * ```tsx
- * import { useShapeSelection } from '@accelint/map-toolkit/deckgl/shapes';
+ * import { useSelectShape } from '@accelint/map-toolkit/deckgl/shapes';
  *
  * function MapWithShapes() {
- *   const { selectedId } = useShapeSelection(MAP_ID);
+ *   const { selectedId } = useSelectShape(MAP_ID);
  *
  *   return (
  *     <BaseMap id={MAP_ID}>
@@ -67,7 +67,7 @@ export interface UseShapeSelectionReturn {
  * @example With programmatic selection control
  * ```tsx
  * function MapWithShapes() {
- *   const { selectedId, setSelectedId, clearSelection } = useShapeSelection(MAP_ID);
+ *   const { selectedId, setSelectedId, clearSelection } = useSelectShape(MAP_ID);
  *
  *   return (
  *     <>
@@ -86,7 +86,7 @@ export interface UseShapeSelectionReturn {
  * }
  * ```
  */
-export function useShapeSelection(mapId: UniqueId): UseShapeSelectionReturn {
+export function useSelectShape(mapId: UniqueId): UseSelectShapeReturn {
   const { state, setSelectedId, clearSelection } =
     shapeSelectionStore.use(mapId);
 

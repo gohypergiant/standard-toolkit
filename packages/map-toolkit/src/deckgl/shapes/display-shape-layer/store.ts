@@ -148,10 +148,10 @@ export const shapeSelectionStore = createMapStore<
  *
  * @example
  * ```tsx
- * const { state, setSelectedId, clearSelection } = useShapeSelection(mapId);
+ * const { state, setSelectedId, clearSelection } = useSelectShape(mapId);
  * ```
  */
-export const useShapeSelection = shapeSelectionStore.use;
+export const useSelectShape = shapeSelectionStore.use;
 
 /**
  * Hook to get just the selected ID
