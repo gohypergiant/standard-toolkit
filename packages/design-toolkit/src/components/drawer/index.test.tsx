@@ -17,6 +17,7 @@ import type { ReactNode } from 'react';
 import { describe, expect, it } from 'vitest';
 import { Button } from '../button';
 import { Drawer } from './';
+import { DrawerClose } from './close';
 import { DrawerContent } from './content';
 import { DrawerFooter } from './footer';
 import { DrawerHeader } from './header';
@@ -92,9 +93,11 @@ function setup(
         <DrawerPanel>
           <DrawerHeader>
             <DrawerHeaderTitle>Title</DrawerHeaderTitle>
-            <DrawerTrigger for={`close:${ids.a}`}>
+            <DrawerTrigger for={'clear'}>
               <Button>Close</Button>
             </DrawerTrigger>
+            <DrawerClose data-testid='close-with' for={ids.a} />
+            <DrawerClose data-testid='close-without' />
           </DrawerHeader>
           <DrawerContent>
             <DrawerView id={ids.a}>View A</DrawerView>
@@ -203,7 +206,7 @@ describe('Drawer', () => {
     expect(screen.queryByText('View C')).not.toBeInTheDocument();
   });
 
-  it('should close', async () => {
+  it('should close with trigger', async () => {
     const { container } = setup({ defaultView: ids.a });
 
     expect(screen.getByText('View A')).toBeInTheDocument();
@@ -211,6 +214,38 @@ describe('Drawer', () => {
     expect(screen.queryByText('View C')).not.toBeInTheDocument();
 
     await userEvent.click(screen.getByText('Close'));
+
+    expect(screen.queryByText('View A')).not.toBeInTheDocument();
+    expect(screen.queryByText('View B')).not.toBeInTheDocument();
+    expect(screen.queryByText('View C')).not.toBeInTheDocument();
+
+    expect(container.firstChild).not.toHaveAttribute('data-open');
+  });
+
+  it('should close with DrawerClose with specified ID', async () => {
+    const { container } = setup({ defaultView: ids.a });
+
+    expect(screen.getByText('View A')).toBeInTheDocument();
+    expect(screen.queryByText('View B')).not.toBeInTheDocument();
+    expect(screen.queryByText('View C')).not.toBeInTheDocument();
+
+    await userEvent.click(screen.getByTestId('close-with'));
+
+    expect(screen.queryByText('View A')).not.toBeInTheDocument();
+    expect(screen.queryByText('View B')).not.toBeInTheDocument();
+    expect(screen.queryByText('View C')).not.toBeInTheDocument();
+
+    expect(container.firstChild).not.toHaveAttribute('data-open');
+  });
+
+  it('should close with DrawerClose without id', async () => {
+    const { container } = setup({ defaultView: ids.a });
+
+    expect(screen.getByText('View A')).toBeInTheDocument();
+    expect(screen.queryByText('View B')).not.toBeInTheDocument();
+    expect(screen.queryByText('View C')).not.toBeInTheDocument();
+
+    await userEvent.click(screen.getByTestId('close-without'));
 
     expect(screen.queryByText('View A')).not.toBeInTheDocument();
     expect(screen.queryByText('View B')).not.toBeInTheDocument();
