@@ -20,13 +20,15 @@ import {
   keyToId,
   keyToString,
 } from '@accelint/hotkey-manager';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { CameraEventTypes } from '../../camera/events';
 import { BaseMap as BaseMapComponent } from '../base-map';
 import { MapEvents } from '../base-map/events';
 import { createSavedViewport } from '../saved-viewports';
 import { STORAGE_ID } from '../saved-viewports/storage';
 import type { MapViewState } from '@deck.gl/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { CameraEvent } from '../../camera/types';
 import type { MapViewportEvent, MapViewportPayload } from '../base-map/types';
 
 const meta: Meta = {
@@ -40,7 +42,7 @@ const SAVED_VIEWPORTS_STORY_ID = uuid();
 /* Example component that uses the saved viewports functionality */
 globalBind();
 // Track current viewport (replace with more robust state management as needed)
-const bus = Broadcast.getInstance<MapViewportEvent>();
+const cameraBus = Broadcast.getInstance<CameraEvent>();
 let currentViewport: MapViewportPayload;
 const getCurrentViewport = () => currentViewport;
 const setCurrentViewport = (newState: MapViewState) => {
@@ -48,7 +50,13 @@ const setCurrentViewport = (newState: MapViewState) => {
     ...currentViewport,
     ...newState,
   };
-  bus.emit(MapEvents.viewport, currentViewport);
+  // Emit camera event to actually move the map
+  cameraBus.emit(CameraEventTypes.setCenter, {
+    id: SAVED_VIEWPORTS_STORY_ID,
+    latitude: newState.latitude ?? currentViewport.latitude,
+    longitude: newState.longitude ?? currentViewport.longitude,
+    zoom: newState.zoom,
+  });
 };
 
 const DIGIT_KEYS: KeyCombination[] = [
@@ -180,6 +188,17 @@ function ViewportsToolbar() {
     return savedViewports[storageKey];
   };
 
+  const loadViewports = useCallback(() => {
+    const savedViewportsJson = localStorage.getItem(STORAGE_ID) ?? '{}';
+    setSavedViewports(JSON.parse(savedViewportsJson));
+  }, []);
+
+  const clearAllViewports = () => {
+    localStorage.removeItem(STORAGE_ID);
+    setSavedViewports({});
+    setActiveSlot(null);
+  };
+
   // Listen for viewport changes to clear active slot indicator
   useOn<MapViewportEvent>(MapEvents.viewport, (event) => {
     const newState = {
@@ -191,12 +210,6 @@ function ViewportsToolbar() {
   });
 
   useEffect(() => {
-    // Initial load
-    const loadViewports = () => {
-      const savedViewportsJson = localStorage.getItem(STORAGE_ID) ?? '{}';
-      setSavedViewports(JSON.parse(savedViewportsJson));
-    };
-
     loadViewports();
 
     // Listen for viewport restoration events
@@ -226,7 +239,9 @@ function ViewportsToolbar() {
       window.removeEventListener('keyup', handleKeyUp);
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
+  }, [loadViewports]);
+
+  const hasSavedViewports = Object.keys(savedViewports).length > 0;
 
   return (
     <div
@@ -303,6 +318,24 @@ function ViewportsToolbar() {
           </div>
         );
       })}
+      {hasSavedViewports && (
+        <button
+          type='button'
+          onClick={clearAllViewports}
+          style={{
+            backgroundColor: 'rgba(239, 68, 68, 0.2)',
+            border: '1px solid rgba(239, 68, 68, 0.5)',
+            borderRadius: '4px',
+            padding: '8px',
+            color: 'white',
+            fontSize: '11px',
+            cursor: 'pointer',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          Clear All
+        </button>
+      )}
     </div>
   );
 }

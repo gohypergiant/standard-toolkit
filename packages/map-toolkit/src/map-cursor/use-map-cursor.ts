@@ -152,8 +152,7 @@ export function useMapCursorEffect(
   ownerRef.current = owner;
   idRef.current = actualId;
 
-  // Subscribe to store (to ensure bus listeners are set up) and manage cursor
-  // Using a single effect with manual subscription to avoid re-render loops
+  // Subscribe to store (to ensure bus listeners are set up) on mount only
   useEffect(() => {
     const mapId = idRef.current;
 
@@ -162,10 +161,6 @@ export function useMapCursorEffect(
     const unsubscribe = cursorStore.subscribe(mapId)(() => {
       // No-op: we don't want cursor state changes to trigger re-renders
     });
-
-    // Request the cursor
-    const actions = cursorStore.actions(mapId);
-    actions.requestCursorChange(cursorRef.current, ownerRef.current);
 
     return () => {
       // Unsubscribe first to prevent re-render loops
@@ -186,4 +181,10 @@ export function useMapCursorEffect(
       });
     };
   }, []);
+
+  // Request cursor when cursorType or owner changes
+  useEffect(() => {
+    const actions = cursorStore.actions(actualId);
+    actions.requestCursorChange(cursorType, owner);
+  }, [actualId, cursorType, owner]);
 }
