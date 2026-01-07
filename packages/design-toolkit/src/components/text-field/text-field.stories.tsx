@@ -11,8 +11,8 @@
  */
 
 import { TextField } from './';
-import type { InputProps } from '../input/types';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { InputProps } from '../input/types';
 
 const meta = {
   title: 'Components/TextField',
@@ -56,7 +56,11 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  render: TextField,
+  render: (args) => (
+    <div className='max-w-[200px]'>
+      <TextField {...args} />
+    </div>
+  ),
 };
 
 export const WithPrefix: Story = {
