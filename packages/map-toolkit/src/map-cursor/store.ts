@@ -69,11 +69,36 @@ type CursorActions = {
 const cursorBus = Broadcast.getInstance<MapCursorEventType>();
 const modeBus = Broadcast.getInstance<ModeChangedEvent>();
 
-// Import dynamically to avoid circular dependency
-let getModeOwner: (mapId: UniqueId) => string | undefined;
-import('../map-mode/store').then((mod) => {
-  getModeOwner = mod.getCurrentModeOwner;
-});
+/**
+ * Lazy import to avoid circular dependency between cursor and mode stores.
+ * The mode store doesn't depend on cursor store, but importing it synchronously
+ * at module load time can cause initialization order issues.
+ *
+ * This pattern ensures the import is resolved before first use (bus listeners
+ * are set up on first subscriber, not at module load time).
+ */
+let getModeOwnerFn: ((mapId: UniqueId) => string | undefined) | null = null;
+let importPromise: Promise<void> | null = null;
+
+function ensureModeStoreImported(): void {
+  if (getModeOwnerFn !== null) {
+    return;
+  }
+  if (importPromise === null) {
+    importPromise = import('../map-mode/store').then((mod) => {
+      getModeOwnerFn = mod.getCurrentModeOwner;
+    });
+  }
+}
+
+// Start the import immediately so it's likely resolved by first use
+ensureModeStoreImported();
+
+function getModeOwner(mapId: UniqueId): string | undefined {
+  // getModeOwnerFn will be available by the time bus listeners are set up
+  // (which happens on first React subscriber, not at module load)
+  return getModeOwnerFn?.(mapId);
+}
 
 /**
  * Calculate effective cursor based on priority

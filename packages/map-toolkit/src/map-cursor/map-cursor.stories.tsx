@@ -63,10 +63,7 @@ const meta = {
 export default meta;
 type Story = StoryObj;
 
-/**
- * Cursor toolbar component for BasicUsage story.
- * Extracted outside render function to maintain stable component identity.
- */
+// Extracted for stable component identity (hooks require consistent call order)
 function BasicUsageCursorToolbar() {
   const { cursor, requestCursorChange, clearCursor } =
     useMapCursor(BASIC_USAGE_MAP_ID);
@@ -119,10 +116,7 @@ export const BasicUsage: Story = {
   },
 };
 
-/**
- * Drawing mode indicator component that automatically sets crosshair cursor.
- * Extracted outside render function to maintain stable component identity.
- */
+// Extracted for stable component identity (hooks require consistent call order)
 function DrawingModeIndicator() {
   // Automatically set crosshair cursor when this component is mounted
   useMapCursorEffect('crosshair', 'drawing-mode', MULTIPLE_OWNERS_MAP_ID);
@@ -141,10 +135,7 @@ function DrawingModeIndicator() {
   );
 }
 
-/**
- * Control panel component for the AutomaticCursorEffect story.
- * Extracted outside render function to maintain stable component identity.
- */
+// Extracted for stable component identity (hooks require consistent call order)
 function AutomaticCursorEffectControlPanel({
   showDrawingMode,
   onToggle,

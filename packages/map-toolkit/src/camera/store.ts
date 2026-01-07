@@ -95,11 +95,18 @@ type CameraActions = {
 /**
  * Storage for initial camera state per instance.
  * Used for reset operations to restore to initial values.
+ *
+ * @internal These caches live outside the store factory because reset operations
+ * need access to the original initial values. They are cleaned up via `onCleanup`
+ * hook when the store instance is destroyed, and via `clearCameraState()` for
+ * manual cleanup. Do NOT use `cameraStore.clear()` directly in tests - use
+ * `clearCameraState()` instead to ensure proper cleanup.
  */
 const initialStateCache = new Map<UniqueId, CameraStateInput>();
 
 /**
- * Track which instances have been initialized
+ * Track which instances have been initialized.
+ * @internal See note on initialStateCache about cleanup.
  */
 const initializedInstances = new Set<UniqueId>();
 

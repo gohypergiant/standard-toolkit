@@ -10,11 +10,26 @@
  * governing permissions and limitations under the License.
  */
 
-import { useSyncExternalStore } from 'react';
+import { useRef, useSyncExternalStore } from 'react';
 import type { UniqueId } from '@accelint/core';
 
 /**
- * Helper methods passed to action creators and bus setup functions
+ * Helper methods passed to action creators and bus setup functions.
+ *
+ * This type is exported for consumers building custom store extensions or
+ * helper functions that need to interact with store state.
+ *
+ * @example
+ * ```ts
+ * import type { StoreHelpers } from '@accelint/map-toolkit/shared';
+ *
+ * function createCustomAction<T>(helpers: StoreHelpers<T>) {
+ *   return () => {
+ *     const current = helpers.get();
+ *     helpers.set({ ...current, modified: true });
+ *   };
+ * }
+ * ```
  */
 export type StoreHelpers<TState> = {
   /** Get current state */
@@ -74,7 +89,23 @@ export type MapStore<TState, TActions> = {
 
   /**
    * React hook with selector for derived state.
-   * Only re-renders when selected value changes.
+   * Only re-renders when the underlying state changes.
+   *
+   * The selector result is memoized - it only recomputes when the state
+   * reference changes, not on every render. This means selectors that create
+   * new objects/arrays are safe to use without additional memoization.
+   *
+   * @example
+   * ```ts
+   * // Returns primitive
+   * const count = store.useSelector(mapId, (s) => s.count);
+   *
+   * // Returns existing reference
+   * const items = store.useSelector(mapId, (s) => s.items);
+   *
+   * // Safe: derived object is memoized internally
+   * const derived = store.useSelector(mapId, (s) => ({ doubled: s.count * 2 }));
+   * ```
    */
   useSelector: <TSelected>(
     mapId: UniqueId,
@@ -293,13 +324,24 @@ export function createMapStore<TState, TActions>(
     mapId: UniqueId,
     selector: (state: TState) => TSelected,
   ): TSelected {
+    // Cache the previous state and selected value to avoid unnecessary re-computation
+    const cache = useRef<{ state: TState; selected: TSelected } | null>(null);
+
     const state = useSyncExternalStore(
       subscribe(mapId),
       snapshot(mapId),
       serverSnapshot,
     );
 
-    return selector(state);
+    // Only recompute if state reference changed
+    if (cache.current === null || cache.current.state !== state) {
+      cache.current = {
+        state,
+        selected: selector(state),
+      };
+    }
+
+    return cache.current.selected;
   }
 
   return {

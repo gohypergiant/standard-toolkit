@@ -50,10 +50,7 @@ const meta = {
 export default meta;
 type Story = StoryObj;
 
-/**
- * Toolbar component for the BasicUsage story.
- * Extracted outside render function to maintain stable component identity.
- */
+// Extracted for stable component identity (hooks require consistent call order)
 function BasicUsageModeToolbar() {
   const { mode, requestModeChange } = useMapMode(BASIC_USAGE_MAP_ID);
 
@@ -96,10 +93,7 @@ export const BasicUsage: Story = {
   },
 };
 
-/**
- * Toolbar component for MultipleConsumers story.
- * Extracted outside render function to maintain stable component identity.
- */
+// Extracted for stable component identity (hooks require consistent call order)
 function MultipleConsumersModeToolbar() {
   const { requestModeChange } = useMapMode(MULTIPLE_CONSUMERS_MAP_ID);
 
@@ -120,10 +114,7 @@ function MultipleConsumersModeToolbar() {
   );
 }
 
-/**
- * Mode indicator component for MultipleConsumers story.
- * Extracted outside render function to maintain stable component identity.
- */
+// Extracted for stable component identity (hooks require consistent call order)
 function MultipleConsumersModeIndicator() {
   const { mode } = useMapMode(MULTIPLE_CONSUMERS_MAP_ID);
 
@@ -135,10 +126,7 @@ function MultipleConsumersModeIndicator() {
   );
 }
 
-/**
- * Instructions panel for MultipleConsumers story.
- * Extracted outside render function to maintain stable component identity.
- */
+// Extracted for stable component identity (hooks require consistent call order)
 function MultipleConsumersInstructionsPanel() {
   const { mode } = useMapMode(MULTIPLE_CONSUMERS_MAP_ID);
 

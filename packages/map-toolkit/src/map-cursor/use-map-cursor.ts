@@ -170,7 +170,16 @@ export function useMapCursorEffect(
     return () => {
       // Unsubscribe first to prevent re-render loops
       unsubscribe();
-      // Defer cursor clear to avoid triggering state updates during React's commit phase
+
+      // IMPORTANT: Defer cursor clear using queueMicrotask to avoid the React error:
+      // "Cannot update a component while rendering a different component"
+      //
+      // Effect cleanup runs during React's commit phase. If clearCursor() triggers
+      // a state update synchronously (via store.set() -> notify subscribers), it can
+      // cause React to attempt re-rendering while still committing the current tree.
+      //
+      // queueMicrotask schedules the cleanup to run after the current commit phase
+      // completes, allowing React to finish its work before the state update occurs.
       queueMicrotask(() => {
         const cleanupActions = cursorStore.actions(idRef.current);
         cleanupActions.clearCursor(ownerRef.current);
