@@ -23,6 +23,7 @@ const meta = {
     size: 'medium',
     isClearable: true,
     isInvalid: false,
+    readOnly: false,
   },
   argTypes: {
     size: {

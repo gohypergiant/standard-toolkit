@@ -47,6 +47,10 @@
       @apply fg-disabled outline-interactive-disabled cursor-not-allowed;
     }
 
+    @variant read-only {
+      @apply px-0 outline-none;
+    }
+
     &.hasPrefix {
       grid-template-areas: 'prefix input';
       grid-template-columns: min-content 1fr;
