@@ -18,7 +18,7 @@ import { SelectField } from '@accelint/design-toolkit/components/select-field';
 import { Slider } from '@accelint/design-toolkit/components/slider';
 import { BaseMap } from '../deckgl/base-map';
 import { CameraEventTypes } from './events';
-import { useCameraState } from './use-camera-state';
+import { useCameraState } from './store';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type {
   CameraResetEvent,
@@ -51,7 +51,7 @@ function CameraToolbar() {
   );
   const resetCamera = useEmit<CameraResetEvent>(CameraEventTypes.reset);
   const setView = useEmit<CameraSetViewEvent>(CameraEventTypes.setView);
-  const { cameraState } = useCameraState({ instanceId: CAMERA_STORY_ID });
+  const { cameraState } = useCameraState(CAMERA_STORY_ID);
   return (
     <div className='absolute top-l left-l flex w-[256px] flex-col gap-xl rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
       <p className='font-bold text-header-l'>Camera controls</p>

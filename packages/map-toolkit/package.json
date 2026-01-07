@@ -117,8 +117,8 @@
     "./shared/create-map-store": "./dist/shared/create-map-store.js",
     "./shared/units": "./dist/shared/units.js",
     "./viewport": "./dist/viewport/index.js",
+    "./viewport/store": "./dist/viewport/store.js",
     "./viewport/types": "./dist/viewport/types.js",
-    "./viewport/use-viewport-state": "./dist/viewport/use-viewport-state.js",
     "./viewport/utils": "./dist/viewport/utils.js",
     "./viewport/viewport-size": "./dist/viewport/viewport-size.js",
     "./package.json": "./package.json"

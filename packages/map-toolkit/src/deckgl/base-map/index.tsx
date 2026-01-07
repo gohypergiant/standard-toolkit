@@ -214,14 +214,11 @@ export function BaseMap({
   const container = useId();
   const mapRef = useRef<MapRef>(null);
 
-  const { cameraState, setCameraState } = useCameraState({
-    instanceId: id,
-    initialCameraState: {
-      view: defaultView,
-      zoom: initialViewState?.zoom ?? DEFAULT_VIEW_STATE.zoom,
-      latitude: initialViewState?.latitude ?? DEFAULT_VIEW_STATE.latitude,
-      longitude: initialViewState?.longitude ?? DEFAULT_VIEW_STATE.longitude,
-    },
+  const { cameraState, setCameraState } = useCameraState(id, {
+    view: defaultView,
+    zoom: initialViewState?.zoom ?? DEFAULT_VIEW_STATE.zoom,
+    latitude: initialViewState?.latitude ?? DEFAULT_VIEW_STATE.latitude,
+    longitude: initialViewState?.longitude ?? DEFAULT_VIEW_STATE.longitude,
   });
 
   const viewState = useMemo<ViewState>(
@@ -343,7 +340,7 @@ export function BaseMap({
       {enableControlEvents && <MapControls id={id} mapRef={mapRef} />}
       <MapProvider id={id}>
         <MapLibre
-          onMove={(evt) => setCameraState(id, evt.viewState)}
+          onMove={(evt) => setCameraState(evt.viewState)}
           mapStyle={styleUrl}
           ref={mapRef}
           {...mapOptions}
