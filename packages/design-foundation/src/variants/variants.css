@@ -70,7 +70,7 @@
 @custom-variant required (&:where([required], [data-required], :required));
 @custom-variant unavailable (&:where([data-unavailable]));
 @custom-variant invalid (&:where([invalid], [data-invalid], :invalid));
-@custom-variant read-only (&:where([readonly], [data-readonly], :read-only));
+@custom-variant read-only (&:where([readonly], [data-readonly])); /* not including :read-only because it's too broad of a definition. See https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Selectors/:read-only */
 @custom-variant outside-month (&:where([data-outside-month]));
 @custom-variant outside-visible-range (&:where([data-outside-visible-range]));
 @custom-variant pending (&:where([data-pending]));
