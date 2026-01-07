@@ -82,7 +82,7 @@
 
   "invalid": "[invalid], [data-invalid], :invalid",
 
-  "read-only": "[readonly], [data-readonly], :read-only",
+  "read-only": "[readonly], [data-readonly]",
 
   "outside-month": "[data-outside-month]",
   "outside-visible-range": "[data-outside-visible-range]",
