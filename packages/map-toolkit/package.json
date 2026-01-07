@@ -114,6 +114,7 @@
     "./maplibre": "./dist/maplibre/index.js",
     "./maplibre/constants": "./dist/maplibre/constants.js",
     "./maplibre/hooks/use-maplibre": "./dist/maplibre/hooks/use-maplibre.js",
+    "./shared/create-map-store": "./dist/shared/create-map-store.js",
     "./shared/units": "./dist/shared/units.js",
     "./viewport": "./dist/viewport/index.js",
     "./viewport/types": "./dist/viewport/types.js",
