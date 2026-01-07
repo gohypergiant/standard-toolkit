@@ -1,0 +1,83 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+
+import * as DeferredCollectionStories from './deferred-collection.stories';
+
+<Meta of={DeferredCollectionStories} />
+
+# DeferredCollection
+
+DeferredCollection solves a performance problem with React Aria's collection system. When rendering large virtualized lists, React Aria processes ALL items synchronously before virtualization begins—even if only a few items are visible. For datasets with thousands of items, this blocks the main thread and freezes the UI.
+
+This component defers the collection render by a few animation frames, allowing a skeleton placeholder to display first while the browser remains responsive.
+
+## Demo
+
+Click the button to remount the component and observe the skeleton → content transition:
+
+<Canvas of={DeferredCollectionStories.Default} />
+
+## Usage
+
+### With React Aria Collections (Recommended)
+
+When using React Aria collections with large datasets, pass children as a **function** to defer the expensive collection processing until the skeleton has rendered:
+
+```tsx
+<DeferredCollection skeleton={{ count: 10, height: 32, className: 'w-[300px]' }}>
+  {() => (
+    <Virtualizer layout={ListLayout} layoutOptions={{ rowHeight: 32 }}>
+      <ListBox items={items}>
+        {(item) => <ListBoxItem>{item.name}</ListBoxItem>}
+      </ListBox>
+    </Virtualizer>
+  )}
+</DeferredCollection>
+```
+
+### With Simple Content
+
+For simple content that doesn't involve expensive collection processing, you can pass children directly:
+
+```tsx
+<DeferredCollection skeleton={{ count: 10, height: 32 }}>
+  <div>Simple content renders here</div>
+</DeferredCollection>
+```
+
+### With Custom Fallback
+
+For custom loading states, use the `fallback` prop instead of `skeleton`:
+
+```tsx
+<DeferredCollection fallback={<MyLoadingSpinner />}>
+  {() => <VirtualizedContent />}
+</DeferredCollection>
+```
+
+## Props
+
+### DeferredCollectionProps
+
+* **`children`** - The content to render once ready: `ReactNode | (() => ReactNode)` (required). Use a function for React Aria collections to defer expensive processing.
+* **`skeleton`** - Configuration for auto-generated skeleton loading state: `SkeletonConfig` (optional)
+* **`fallback`** - Custom fallback element for loading state (takes precedence over skeleton): `ReactNode` (optional)
+* **`deferFrames`** - Number of animation frames to defer before rendering: `number` (default: 2)
+
+### SkeletonConfig
+
+* **`count`** - Number of skeleton items to display: `number` (required)
+* **`height`** - Height of each skeleton item in pixels: `number` (required)
+* **`className`** - Optional className for the skeleton container: `string` (optional)
+* **`gap`** - Gap between skeleton items in pixels: `number` (default: 4)
+
+## Implementation Notes
+
+DeferredCollection uses the `useDeferredCollection` hook internally, which:
+
+1. Starts with `isReady: false`
+2. Waits for `deferFrames` animation frames using `requestAnimationFrame`
+3. Sets `isReady: true`, triggering the actual collection render
+
+This gives the browser time to paint the skeleton placeholder before the expensive collection processing begins.
+
+[GitHub Source](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-toolkit/src/components/deferred-collection)

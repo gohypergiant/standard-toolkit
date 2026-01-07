@@ -16,6 +16,7 @@ import {
   ListLayout as AriaListLayout,
   Virtualizer as AriaVirtualizer,
 } from 'react-aria-components';
+import { DeferredCollection } from '../deferred-collection';
 import { Icon } from '../icon';
 import { Options } from './';
 import { OptionsItem } from './item';
@@ -283,26 +284,36 @@ export const WithStaticSections: Story = {
 const manyItems = Array.from({ length: 5000 }, (_, index) => ({
   id: index,
   name: `Item ${index}`,
-  icon: <Placeholder />,
+  hasIcon: true,
 }));
 
 export const Virtualized: Story = {
-  render: ({ children, ...args }) => (
-    <div className='w-[200px]'>
-      <AriaVirtualizer
-        layout={AriaListLayout}
-        layoutOptions={{ rowHeight: 32 }}
-      >
-        <Options {...args} items={manyItems}>
-          {(item) => (
-            <OptionsItem key={item.id} id={item.id} textValue={item.name}>
-              {item.icon && <Icon>{item.icon}</Icon>}
-              <OptionsItemLabel>{item.name}</OptionsItemLabel>
-            </OptionsItem>
-          )}
-        </Options>
-      </AriaVirtualizer>
-    </div>
+  render: (args) => (
+    <DeferredCollection
+      skeleton={{ count: 10, height: 32, className: 'w-[200px]' }}
+    >
+      {() => (
+        <div className='w-[200px]'>
+          <AriaVirtualizer
+            layout={AriaListLayout}
+            layoutOptions={{ rowHeight: 32 }}
+          >
+            <Options {...args} items={manyItems}>
+              {(item: (typeof manyItems)[number]) => (
+                <OptionsItem key={item.id} id={item.id} textValue={item.name}>
+                  {item.hasIcon && (
+                    <Icon>
+                      <Placeholder />
+                    </Icon>
+                  )}
+                  <OptionsItemLabel>{item.name}</OptionsItemLabel>
+                </OptionsItem>
+              )}
+            </Options>
+          </AriaVirtualizer>
+        </div>
+      )}
+    </DeferredCollection>
   ),
 };
 
