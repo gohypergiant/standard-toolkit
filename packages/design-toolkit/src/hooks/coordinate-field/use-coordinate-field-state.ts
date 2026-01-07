@@ -90,7 +90,7 @@ export function useCoordinateFieldState({
   const segmentConfigs = useMemo(() => getSegmentConfigs(format), [format]);
 
   const editableSegmentConfigs = useMemo(
-    () => segmentConfigs.filter((config) => config.type !== 'literal'),
+    () => segmentConfigs.flat().filter((config) => config.type !== 'literal'),
     [segmentConfigs],
   );
 

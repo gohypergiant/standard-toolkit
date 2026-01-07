@@ -60,8 +60,10 @@ const meta = {
     errorMessage: '',
     format: 'dd',
     size: 'medium',
+    variant: 'inline',
     isDisabled: false,
     isInvalid: false,
+    isReadOnly: false,
     isRequired: false,
   },
   argTypes: {
@@ -81,6 +83,15 @@ const meta = {
       table: {
         type: { summary: 'small | medium' },
         defaultValue: { summary: 'medium' },
+      },
+    },
+    variant: {
+      control: 'radio',
+      options: ['inline', 'stacked'],
+      description: 'The variant of the field',
+      table: {
+        type: { summary: 'inline | stacked' },
+        defaultValue: { summary: 'inline' },
       },
     },
     showFormatButton: {
@@ -124,6 +135,14 @@ const meta = {
     isRequired: {
       control: 'boolean',
       description: 'Whether the field is required',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+      },
+    },
+    isReadOnly: {
+      control: 'boolean',
+      description: 'Whether the field is read-only',
       table: {
         type: { summary: 'boolean' },
         defaultValue: { summary: 'false' },
@@ -198,6 +217,57 @@ export const SmallSize: Story = {
     size: 'small',
   },
   render: (args) => <CoordinateField {...args} />,
+};
+
+/**
+ * Stacked Variant
+ *
+ * Demonstrates the stacked layout variant where coordinate segments are split
+ * into separate rows with latitude on the first row and longitude on the second.
+ * This is useful when vertical space is available and you want to clearly separate
+ * latitude and longitude components, or when working with longer coordinate formats.
+ */
+export const StackedVariant: Story = {
+  render: () => {
+    const newYorkCity = { lat: 40.7128, lon: -74.006 };
+
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+        <CoordinateField
+          label='Stacked DD Format'
+          description='Decimal Degrees in stacked layout'
+          format='dd'
+          variant='stacked'
+          defaultValue={newYorkCity}
+        />
+        <CoordinateField
+          label='Stacked DDM Format'
+          description='Degrees Decimal Minutes in stacked layout'
+          format='ddm'
+          variant='stacked'
+          defaultValue={newYorkCity}
+        />
+        <CoordinateField
+          label='Stacked DMS Format'
+          description='Degrees Minutes Seconds in stacked layout'
+          format='dms'
+          variant='stacked'
+          defaultValue={newYorkCity}
+        />
+      </div>
+    );
+  },
+
+  parameters: {
+    controls: { disable: true },
+    docs: {
+      description: {
+        story:
+          'The stacked variant displays latitude and longitude on separate rows, providing better readability for longer coordinate formats and clearer separation of components. Particularly useful in narrow containers or mobile layouts.',
+      },
+    },
+  },
+  tags: ['!dev'],
 };
 
 /**

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -130,6 +130,7 @@ export type { CoordinateFormatResult } from './components/coordinate-field/coord
 export { CoordinateField } from './components/coordinate-field';
 export {
   EXPECTED_SEGMENT_COUNTS,
+  GROUP_SEPARATOR,
   ddSegmentConfigs,
   ddmSegmentConfigs,
   dmsSegmentConfigs,
@@ -156,13 +157,6 @@ export type {
   SegmentConfig,
   SegmentType,
 } from './components/coordinate-field/types';
-export {
-  CONTAINER_PADDING_WIDTH,
-  FORMAT_BUTTON_WIDTH,
-  INPUT_BUTTON_GAP,
-  SEGMENT_GAP_WIDTH,
-  calculateMaxControlWidth,
-} from './components/coordinate-field/width-utils';
 export { DateField } from './components/date-field';
 export type { DateFieldProps } from './components/date-field/types';
 export {

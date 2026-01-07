@@ -169,6 +169,17 @@ The **medium** size is recommended for most use cases as it provides the full fe
 
 <Canvas of={CoordinateFieldStories.Default} />
 
+## Layout Variants
+
+The CoordinateField component supports two layout variants:
+
+* **inline** - All coordinate segments are displayed in a single horizontal row (default)
+* **stacked** - Coordinate segments are split into separate rows, with latitude on the first row and longitude on the second row
+
+The **inline** variant is recommended for most use cases as it provides a compact, single-line layout. Use the **stacked** variant when vertical space is available and you want to clearly separate latitude and longitude components, or when working with longer coordinate formats like DMS or DDM where horizontal space is limited.
+
+<Canvas of={CoordinateFieldStories.StackedVariant} />
+
 ## Core Features
 
 ### Segmented Input
@@ -318,6 +329,7 @@ Full keyboard accessibility for efficient data entry:
 ### Size & Appearance
 
 - **`size`** - Size variant: `'small'` | `'medium'` (default: `'medium'`)
+- **`variant`** - Layout variant: `'inline'` | `'stacked'` (default: `'inline'`). Controls whether coordinate segments are displayed in a single row (inline) or split across multiple rows (stacked) with latitude and longitude separated.
 - **`showFormatButton`** - Whether to show the format button for copying coordinates in different formats (default: `true`). When enabled, shows a button that opens a popover with all coordinate formats and copy functionality.
 
 ### Styling
@@ -356,6 +368,7 @@ type CoordinateFieldProps = {
   errorMessage?: string;
   format?: CoordinateSystem;
   size?: 'small' | 'medium';
+  variant?: 'inline' | 'stacked';  // Layout variant (default: 'inline')
   showFormatButton?: boolean;  // Whether to show the format button (default: true)
   value?: CoordinateValue;
   defaultValue?: CoordinateValue;
@@ -642,6 +655,12 @@ Always handle the `null` case in your `onChange` callback for invalid or incompl
 - Use **medium** size when the field is a primary input with full context and features
 - Use **small** size in compact layouts, data tables, or repeated forms
 - Note: Medium size includes the format popover button; small size does not
+
+### Layout Variant Selection
+
+- Use **inline** variant for compact, single-line layouts and when horizontal space is available
+- Use **stacked** variant when vertical space is preferred, to clearly separate latitude and longitude, or when working with longer coordinate formats (DDM, DMS) where horizontal space is constrained
+- The stacked variant is particularly useful in narrow containers or mobile layouts
 
 ### Performance Considerations
 
