@@ -1,5 +1,10 @@
 # @accelint/design-toolkit
 
+## 8.1.4
+### Patch Changes
+
+- Fixed dependency versions.
+
 ## 8.1.3
 ### Patch Changes
 
