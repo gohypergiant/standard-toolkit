@@ -64,52 +64,56 @@ export default meta;
 type Story = StoryObj;
 
 /**
+ * Cursor toolbar component for BasicUsage story.
+ * Extracted outside render function to maintain stable component identity.
+ */
+function BasicUsageCursorToolbar() {
+  const { cursor, requestCursorChange, clearCursor } =
+    useMapCursor(BASIC_USAGE_MAP_ID);
+  const ownerId = useRef('cursor-toolbar');
+
+  return (
+    <div className='absolute top-l left-l flex w-[256px] flex-col gap-xl rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
+      <p className='font-bold text-header-l'>Map Cursor</p>
+      <div className='grid grid-cols-2 gap-s'>
+        {EXAMPLE_CURSORS.map((cursorType) => (
+          <Button
+            key={cursorType}
+            variant={cursor === cursorType ? 'filled' : 'outline'}
+            color={cursor === cursorType ? 'accent' : 'mono-muted'}
+            onPress={() => requestCursorChange(cursorType, ownerId.current)}
+            className='w-full'
+          >
+            {cursorType}
+          </Button>
+        ))}
+      </div>
+      <Button
+        variant='outline'
+        color='mono-muted'
+        onPress={() => clearCursor(ownerId.current)}
+      >
+        Clear My Cursor
+      </Button>
+      <Divider />
+      <div className='flex items-center gap-s'>
+        <p className='text-body-m'>Current cursor:</p>
+        <code className='text-body-m'>{cursor}</code>
+      </div>
+    </div>
+  );
+}
+
+/**
  * Basic usage example showing how to control map cursor.
  * This demonstrates requesting cursor changes from a toolbar component.
  */
 export const BasicUsage: Story = {
   render: () => {
-    function CursorToolbar() {
-      const { cursor, requestCursorChange, clearCursor } =
-        useMapCursor(BASIC_USAGE_MAP_ID);
-      const ownerId = useRef('cursor-toolbar');
-
-      return (
-        <div className='absolute top-l left-l flex w-[256px] flex-col gap-xl rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
-          <p className='font-bold text-header-l'>Map Cursor</p>
-          <div className='grid grid-cols-2 gap-s'>
-            {EXAMPLE_CURSORS.map((cursorType) => (
-              <Button
-                key={cursorType}
-                variant={cursor === cursorType ? 'filled' : 'outline'}
-                color={cursor === cursorType ? 'accent' : 'mono-muted'}
-                onPress={() => requestCursorChange(cursorType, ownerId.current)}
-                className='w-full'
-              >
-                {cursorType}
-              </Button>
-            ))}
-          </div>
-          <Button
-            variant='outline'
-            color='mono-muted'
-            onPress={() => clearCursor(ownerId.current)}
-          >
-            Clear My Cursor
-          </Button>
-          <Divider />
-          <div className='flex items-center gap-s'>
-            <p className='text-body-m'>Current cursor:</p>
-            <code className='text-body-m'>{cursor}</code>
-          </div>
-        </div>
-      );
-    }
-
     return (
       <div className='relative h-dvh w-dvw'>
         <BaseMap className='absolute inset-0' id={BASIC_USAGE_MAP_ID} />
-        <CursorToolbar />
+        <BasicUsageCursorToolbar />
       </div>
     );
   },

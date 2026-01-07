@@ -51,47 +51,111 @@ export default meta;
 type Story = StoryObj;
 
 /**
+ * Toolbar component for the BasicUsage story.
+ * Extracted outside render function to maintain stable component identity.
+ */
+function BasicUsageModeToolbar() {
+  const { mode, requestModeChange } = useMapMode(BASIC_USAGE_MAP_ID);
+
+  return (
+    <div className='absolute top-l left-l flex w-[256px] flex-col gap-xl rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
+      <p className='font-bold text-header-l'>Map Modes</p>
+      <div className='flex flex-col gap-s'>
+        {EXAMPLE_MAP_MODES.map((modeName) => (
+          <Button
+            key={modeName}
+            variant={mode === modeName ? 'filled' : 'outline'}
+            color={mode === modeName ? 'accent' : 'mono-muted'}
+            onPress={() => requestModeChange(modeName, 'toolbar')}
+            className='w-full'
+          >
+            {modeName}
+          </Button>
+        ))}
+      </div>
+      <div className='flex items-center gap-s'>
+        <p className='text-body-m'>Current mode:</p>
+        <code className='text-body-m'>{mode}</code>
+      </div>
+    </div>
+  );
+}
+
+/**
  * Basic usage example showing how to consume and change map modes.
  * This demonstrates the core API: wrapping with MapModeProvider and using the useMapMode hook.
  */
 export const BasicUsage: Story = {
   render: () => {
-    // A simple toolbar that changes modes
-    function ModeToolbar() {
-      const { mode, requestModeChange } = useMapMode(BASIC_USAGE_MAP_ID);
-
-      return (
-        <div className='absolute top-l left-l flex w-[256px] flex-col gap-xl rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
-          <p className='font-bold text-header-l'>Map Modes</p>
-          <div className='flex flex-col gap-s'>
-            {EXAMPLE_MAP_MODES.map((modeName) => (
-              <Button
-                key={modeName}
-                variant={mode === modeName ? 'filled' : 'outline'}
-                color={mode === modeName ? 'accent' : 'mono-muted'}
-                onPress={() => requestModeChange(modeName, 'toolbar')}
-                className='w-full'
-              >
-                {modeName}
-              </Button>
-            ))}
-          </div>
-          <div className='flex items-center gap-s'>
-            <p className='text-body-m'>Current mode:</p>
-            <code className='text-body-m'>{mode}</code>
-          </div>
-        </div>
-      );
-    }
-
     return (
       <div className='relative h-dvh w-dvw'>
         <BaseMap className='absolute inset-0' id={BASIC_USAGE_MAP_ID} />
-        <ModeToolbar />
+        <BasicUsageModeToolbar />
       </div>
     );
   },
 };
+
+/**
+ * Toolbar component for MultipleConsumers story.
+ * Extracted outside render function to maintain stable component identity.
+ */
+function MultipleConsumersModeToolbar() {
+  const { requestModeChange } = useMapMode(MULTIPLE_CONSUMERS_MAP_ID);
+
+  return (
+    <div className='absolute top-l left-l flex gap-s'>
+      {EXAMPLE_MAP_MODES.map((modeName) => (
+        <Button
+          key={modeName}
+          variant='filled'
+          size='medium'
+          color='mono-bold'
+          onPress={() => requestModeChange(modeName, 'toolbar')}
+        >
+          {modeName}
+        </Button>
+      ))}
+    </div>
+  );
+}
+
+/**
+ * Mode indicator component for MultipleConsumers story.
+ * Extracted outside render function to maintain stable component identity.
+ */
+function MultipleConsumersModeIndicator() {
+  const { mode } = useMapMode(MULTIPLE_CONSUMERS_MAP_ID);
+
+  return (
+    <div className='absolute top-l right-l flex flex-col items-center gap-xs rounded-lg bg-surface-default p-m shadow-elevation-raised'>
+      <p className='text-body-s'>Current Mode</p>
+      <code className='text-header-l'>{mode}</code>
+    </div>
+  );
+}
+
+/**
+ * Instructions panel for MultipleConsumers story.
+ * Extracted outside render function to maintain stable component identity.
+ */
+function MultipleConsumersInstructionsPanel() {
+  const { mode } = useMapMode(MULTIPLE_CONSUMERS_MAP_ID);
+
+  const instructions: Record<string, string> = {
+    default: 'Pan and zoom the map',
+    drawing: 'Click to add points to draw on the map',
+    measuring: 'Click to measure distances',
+    editing: 'Select features to edit them',
+    'multi-select': 'Draw a lasso to select multiple features',
+  };
+
+  return (
+    <div className='absolute bottom-l left-l rounded-lg bg-surface-default p-m text-m shadow-elevation-raised'>
+      {instructions[mode] || 'Unknown mode'}
+    </div>
+  );
+}
 
 /**
  * Multiple components consuming the same mode context.
@@ -99,64 +163,12 @@ export const BasicUsage: Story = {
  */
 export const MultipleConsumers: Story = {
   render: () => {
-    // Toolbar component that changes modes
-    function ModeToolbar() {
-      const { requestModeChange } = useMapMode(MULTIPLE_CONSUMERS_MAP_ID);
-
-      return (
-        <div className='absolute top-l left-l flex gap-s'>
-          {EXAMPLE_MAP_MODES.map((modeName) => (
-            <Button
-              key={modeName}
-              variant='filled'
-              size='medium'
-              color='mono-bold'
-              onPress={() => requestModeChange(modeName, 'toolbar')}
-            >
-              {modeName}
-            </Button>
-          ))}
-        </div>
-      );
-    }
-
-    // Status indicator component
-    function ModeIndicator() {
-      const { mode } = useMapMode(MULTIPLE_CONSUMERS_MAP_ID);
-
-      return (
-        <div className='absolute top-l right-l flex flex-col items-center gap-xs rounded-lg bg-surface-default p-m shadow-elevation-raised'>
-          <p className='text-body-s'>Current Mode</p>
-          <code className='text-header-l'>{mode}</code>
-        </div>
-      );
-    }
-
-    // Instructions panel that changes based on mode
-    function InstructionsPanel() {
-      const { mode } = useMapMode(MULTIPLE_CONSUMERS_MAP_ID);
-
-      const instructions: Record<string, string> = {
-        default: 'Pan and zoom the map',
-        drawing: 'Click to add points to draw on the map',
-        measuring: 'Click to measure distances',
-        editing: 'Select features to edit them',
-        'multi-select': 'Draw a lasso to select multiple features',
-      };
-
-      return (
-        <div className='absolute bottom-l left-l rounded-lg bg-surface-default p-m text-m shadow-elevation-raised'>
-          {instructions[mode] || 'Unknown mode'}
-        </div>
-      );
-    }
-
     return (
       <div className='relative h-dvh w-dvw'>
         <BaseMap className='absolute inset-0' id={MULTIPLE_CONSUMERS_MAP_ID} />
-        <ModeToolbar />
-        <ModeIndicator />
-        <InstructionsPanel />
+        <MultipleConsumersModeToolbar />
+        <MultipleConsumersModeIndicator />
+        <MultipleConsumersInstructionsPanel />
       </div>
     );
   },

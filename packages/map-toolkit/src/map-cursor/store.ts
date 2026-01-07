@@ -203,8 +203,8 @@ export const cursorStore = createMapStore<CursorState, CursorActions>({
             set(newState);
           }
         } else {
-          // Reject: stored but not applied (still need immutable update)
-          set({ cursorOwners: newCursorOwners });
+          // Reject: do NOT store the cursor, so the request can be retried
+          // when conditions change (e.g., mode becomes unowned)
           cursorBus.emit(MapCursorEvents.rejected, {
             rejectedCursor: cursor,
             rejectedOwner: requestOwner,
