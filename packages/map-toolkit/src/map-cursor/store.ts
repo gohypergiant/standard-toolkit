@@ -297,7 +297,15 @@ export function getCursor(mapId: UniqueId): CSSCursorType {
 }
 
 /**
- * Hook for effective cursor value
+ * Hook for effective cursor value.
+ *
+ * **Internal use only** - not exported from the public API.
+ * Use `useMapCursor` instead, which provides:
+ * - MapContext integration (auto-resolves mapId inside MapProvider)
+ * - Actions (requestCursorChange, clearCursor)
+ * - Better ergonomics for consumers
+ *
+ * This hook exists for internal composition (used by useMapCursor).
  */
 export function useCursor(mapId: UniqueId): CSSCursorType {
   return cursorStore.useSelector(mapId, (state) =>

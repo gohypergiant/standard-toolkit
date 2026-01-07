@@ -358,16 +358,8 @@ export function createMapStore<TState, TActions>(
     clear: (mapId) => {
       const instance = instances.get(mapId);
       if (instance) {
-        if (onCleanup) {
-          onCleanup(mapId, instance.state);
-        }
-        if (instance.busCleanup) {
-          instance.busCleanup();
-        }
+        cleanupInstance(mapId, instance);
       }
-      instances.delete(mapId);
-      subscriptionCache.delete(mapId);
-      snapshotCache.delete(mapId);
     },
     subscribe,
     snapshot,
