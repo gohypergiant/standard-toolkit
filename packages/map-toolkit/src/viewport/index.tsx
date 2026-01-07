@@ -18,9 +18,9 @@ export {
 } from '../shared/units';
 export {
   clearViewportState,
-  type UseViewportStateProps,
   useViewportState,
-} from './use-viewport-state';
+  viewportStore,
+} from './store';
 export { getViewportSize } from './utils';
 export { ViewportSize, type ViewportSizeProps } from './viewport-size';
 export type {

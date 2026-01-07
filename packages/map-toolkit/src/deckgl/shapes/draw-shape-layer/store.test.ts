@@ -18,12 +18,8 @@ import { ShapeFeatureType } from '../shared/types';
 import {
   clearDrawingState,
   completeDrawingFromLayer,
+  drawStore,
   getDrawingState,
-  getOrCreateCancel,
-  getOrCreateDraw,
-  getOrCreateServerSnapshot,
-  getOrCreateSnapshot,
-  getOrCreateSubscription,
 } from './store';
 import type { UniqueId } from '@accelint/core';
 import type { MapModeEventType } from '../../../map-mode/types';
@@ -39,32 +35,32 @@ describe('draw-shape-layer store', () => {
     clearDrawingState(mapId);
   });
 
-  describe('getOrCreateSubscription', () => {
+  describe('drawStore.subscribe', () => {
     it('creates a subscription function for a mapId', () => {
-      const subscription = getOrCreateSubscription(mapId);
+      const subscription = drawStore.subscribe(mapId);
       expect(typeof subscription).toBe('function');
     });
 
     it('returns the same subscription function for the same mapId', () => {
-      const subscription1 = getOrCreateSubscription(mapId);
-      const subscription2 = getOrCreateSubscription(mapId);
+      const subscription1 = drawStore.subscribe(mapId);
+      const subscription2 = drawStore.subscribe(mapId);
       expect(subscription1).toBe(subscription2);
     });
 
     it('returns different subscription functions for different mapIds', () => {
       const mapId2 = uuid();
-      const subscription1 = getOrCreateSubscription(mapId);
-      const subscription2 = getOrCreateSubscription(mapId2);
+      const subscription1 = drawStore.subscribe(mapId);
+      const subscription2 = drawStore.subscribe(mapId2);
       expect(subscription1).not.toBe(subscription2);
       clearDrawingState(mapId2);
     });
 
     it('subscription notifies callback on store changes', () => {
-      const subscription = getOrCreateSubscription(mapId);
+      const subscription = drawStore.subscribe(mapId);
       const callback = vi.fn();
 
       const unsubscribe = subscription(callback);
-      const draw = getOrCreateDraw(mapId);
+      const { draw } = drawStore.actions(mapId);
 
       // Start drawing should notify
       draw(ShapeFeatureType.Polygon);
@@ -75,7 +71,7 @@ describe('draw-shape-layer store', () => {
     });
 
     it('unsubscribe removes callback from notifications', () => {
-      const subscription = getOrCreateSubscription(mapId);
+      const subscription = drawStore.subscribe(mapId);
       const callback = vi.fn();
 
       const unsubscribe = subscription(callback);
@@ -84,7 +80,7 @@ describe('draw-shape-layer store', () => {
       // Clear and reset
       callback.mockClear();
 
-      const draw = getOrCreateDraw(mapId);
+      const { draw } = drawStore.actions(mapId);
       draw(ShapeFeatureType.Polygon);
 
       // Should not be called after unsubscribe
@@ -92,86 +88,57 @@ describe('draw-shape-layer store', () => {
     });
   });
 
-  describe('getOrCreateSnapshot', () => {
+  describe('drawStore.snapshot', () => {
     it('creates a snapshot function for a mapId', () => {
-      const snapshot = getOrCreateSnapshot(mapId);
+      const snapshot = drawStore.snapshot(mapId);
       expect(typeof snapshot).toBe('function');
     });
 
     it('returns the same snapshot function for the same mapId', () => {
-      const snapshot1 = getOrCreateSnapshot(mapId);
-      const snapshot2 = getOrCreateSnapshot(mapId);
+      const snapshot1 = drawStore.snapshot(mapId);
+      const snapshot2 = drawStore.snapshot(mapId);
       expect(snapshot1).toBe(snapshot2);
     });
 
-    it('snapshot returns null when no state exists', () => {
-      const snapshot = getOrCreateSnapshot(mapId);
-      expect(snapshot()).toBeNull();
-    });
-
-    it('snapshot returns state after subscription initializes it', () => {
-      // Subscription initializes state
-      getOrCreateSubscription(mapId);
-      const snapshot = getOrCreateSnapshot(mapId);
-
+    it('snapshot returns state (lazy initialization)', () => {
+      const snapshot = drawStore.snapshot(mapId);
       const state = snapshot();
       expect(state).not.toBeNull();
       expect(state?.activeShapeType).toBeNull();
-      expect(state?.tentativeFeature).toBeNull();
     });
   });
 
-  describe('getOrCreateServerSnapshot', () => {
-    it('creates a server snapshot function for a mapId', () => {
-      const serverSnapshot = getOrCreateServerSnapshot(mapId);
-      expect(typeof serverSnapshot).toBe('function');
-    });
-
-    it('returns the same server snapshot function for the same mapId', () => {
-      const serverSnapshot1 = getOrCreateServerSnapshot(mapId);
-      const serverSnapshot2 = getOrCreateServerSnapshot(mapId);
-      expect(serverSnapshot1).toBe(serverSnapshot2);
-    });
-
-    it('server snapshot always returns null (client-only state)', () => {
-      const serverSnapshot = getOrCreateServerSnapshot(mapId);
-
-      // Even after initializing state
-      getOrCreateSubscription(mapId);
-      const draw = getOrCreateDraw(mapId);
-      draw(ShapeFeatureType.Circle);
-
-      expect(serverSnapshot()).toBeNull();
+  describe('drawStore.serverSnapshot', () => {
+    it('server snapshot returns default state', () => {
+      const serverSnapshot = drawStore.serverSnapshot();
+      expect(serverSnapshot.activeShapeType).toBeNull();
+      expect(serverSnapshot.tentativeFeature).toBeNull();
     });
   });
 
-  describe('getOrCreateDraw', () => {
+  describe('drawStore.actions().draw', () => {
     it('creates a draw function for a mapId', () => {
-      const draw = getOrCreateDraw(mapId);
+      const { draw } = drawStore.actions(mapId);
       expect(typeof draw).toBe('function');
     });
 
-    it('returns the same draw function for the same mapId', () => {
-      const draw1 = getOrCreateDraw(mapId);
-      const draw2 = getOrCreateDraw(mapId);
-      expect(draw1).toBe(draw2);
+    it('returns the same actions for the same mapId', () => {
+      const actions1 = drawStore.actions(mapId);
+      const actions2 = drawStore.actions(mapId);
+      expect(actions1.draw).toBe(actions2.draw);
     });
 
     it('draw starts drawing and updates state', () => {
-      getOrCreateSubscription(mapId);
-      const draw = getOrCreateDraw(mapId);
-      const snapshot = getOrCreateSnapshot(mapId);
+      const { draw } = drawStore.actions(mapId);
 
       draw(ShapeFeatureType.Polygon);
 
-      const state = snapshot();
+      const state = drawStore.get(mapId);
       expect(state?.activeShapeType).toBe(ShapeFeatureType.Polygon);
     });
 
     it('draw accepts style defaults', () => {
-      getOrCreateSubscription(mapId);
-      const draw = getOrCreateDraw(mapId);
-      const snapshot = getOrCreateSnapshot(mapId);
+      const { draw } = drawStore.actions(mapId);
 
       const styleDefaults = {
         fillColor: [255, 0, 0, 255] as [number, number, number, number],
@@ -182,14 +149,12 @@ describe('draw-shape-layer store', () => {
 
       draw(ShapeFeatureType.Circle, { styleDefaults });
 
-      const state = snapshot();
+      const state = drawStore.get(mapId);
       expect(state?.styleDefaults).toEqual(styleDefaults);
     });
 
     it('draw accepts circle defaults', () => {
-      getOrCreateSubscription(mapId);
-      const draw = getOrCreateDraw(mapId);
-      const snapshot = getOrCreateSnapshot(mapId);
+      const { draw } = drawStore.actions(mapId);
 
       const circleDefaults = {
         radius: { value: 100, units: 'kilometers' as const },
@@ -197,62 +162,62 @@ describe('draw-shape-layer store', () => {
 
       draw(ShapeFeatureType.Circle, { circleDefaults });
 
-      const state = snapshot();
+      const state = drawStore.get(mapId);
       expect(state?.circleDefaults).toEqual(circleDefaults);
     });
 
     it('draw cancels existing drawing before starting new one', () => {
-      getOrCreateSubscription(mapId);
-      const draw = getOrCreateDraw(mapId);
-      const snapshot = getOrCreateSnapshot(mapId);
+      const { draw } = drawStore.actions(mapId);
 
       draw(ShapeFeatureType.Polygon);
-      expect(snapshot()?.activeShapeType).toBe(ShapeFeatureType.Polygon);
+      expect(drawStore.get(mapId)?.activeShapeType).toBe(
+        ShapeFeatureType.Polygon,
+      );
 
       draw(ShapeFeatureType.Circle);
-      expect(snapshot()?.activeShapeType).toBe(ShapeFeatureType.Circle);
+      expect(drawStore.get(mapId)?.activeShapeType).toBe(
+        ShapeFeatureType.Circle,
+      );
     });
   });
 
-  describe('getOrCreateCancel', () => {
+  describe('drawStore.actions().cancel', () => {
     it('creates a cancel function for a mapId', () => {
-      const cancel = getOrCreateCancel(mapId);
+      const { cancel } = drawStore.actions(mapId);
       expect(typeof cancel).toBe('function');
     });
 
     it('returns the same cancel function for the same mapId', () => {
-      const cancel1 = getOrCreateCancel(mapId);
-      const cancel2 = getOrCreateCancel(mapId);
-      expect(cancel1).toBe(cancel2);
+      const actions1 = drawStore.actions(mapId);
+      const actions2 = drawStore.actions(mapId);
+      expect(actions1.cancel).toBe(actions2.cancel);
     });
 
     it('cancel stops drawing and resets state', () => {
-      getOrCreateSubscription(mapId);
-      const draw = getOrCreateDraw(mapId);
-      const cancel = getOrCreateCancel(mapId);
-      const snapshot = getOrCreateSnapshot(mapId);
+      const { draw, cancel } = drawStore.actions(mapId);
 
       draw(ShapeFeatureType.Rectangle);
-      expect(snapshot()?.activeShapeType).toBe(ShapeFeatureType.Rectangle);
+      expect(drawStore.get(mapId)?.activeShapeType).toBe(
+        ShapeFeatureType.Rectangle,
+      );
 
       cancel();
-      expect(snapshot()?.activeShapeType).toBeNull();
+      expect(drawStore.get(mapId)?.activeShapeType).toBeNull();
     });
 
     it('cancel does nothing when not drawing', () => {
-      getOrCreateSubscription(mapId);
-      const cancel = getOrCreateCancel(mapId);
-      const snapshot = getOrCreateSnapshot(mapId);
+      const { cancel } = drawStore.actions(mapId);
 
       // Should not throw
       cancel();
-      expect(snapshot()?.activeShapeType).toBeNull();
+      expect(drawStore.get(mapId)?.activeShapeType).toBeNull();
     });
   });
 
   describe('completeDrawingFromLayer', () => {
     it('throws when not currently drawing', () => {
-      getOrCreateSubscription(mapId);
+      // Initialize store
+      drawStore.get(mapId);
 
       const mockFeature = {
         type: 'Feature' as const,
@@ -277,9 +242,7 @@ describe('draw-shape-layer store', () => {
     });
 
     it('completes drawing and returns shape', () => {
-      getOrCreateSubscription(mapId);
-      const draw = getOrCreateDraw(mapId);
-      const snapshot = getOrCreateSnapshot(mapId);
+      const { draw } = drawStore.actions(mapId);
 
       draw(ShapeFeatureType.Polygon);
 
@@ -306,7 +269,7 @@ describe('draw-shape-layer store', () => {
       expect(shape.shapeType).toBe(ShapeFeatureType.Polygon);
       expect(shape.id).toBeDefined();
       expect(shape.name).toBeDefined();
-      expect(snapshot()?.activeShapeType).toBeNull();
+      expect(drawStore.get(mapId)?.activeShapeType).toBeNull();
     });
   });
 
@@ -316,7 +279,8 @@ describe('draw-shape-layer store', () => {
     });
 
     it('returns state after initialization', () => {
-      getOrCreateSubscription(mapId);
+      // Initialize by getting actions
+      drawStore.actions(mapId);
       const state = getDrawingState(mapId);
       expect(state).not.toBeNull();
       expect(state?.activeShapeType).toBeNull();
@@ -325,8 +289,7 @@ describe('draw-shape-layer store', () => {
 
   describe('clearDrawingState', () => {
     it('clears all state for a mapId', () => {
-      getOrCreateSubscription(mapId);
-      const draw = getOrCreateDraw(mapId);
+      const { draw } = drawStore.actions(mapId);
       draw(ShapeFeatureType.Polygon);
 
       expect(getDrawingState(mapId)).not.toBeNull();
@@ -337,8 +300,7 @@ describe('draw-shape-layer store', () => {
     });
 
     it('cancels active drawing before clearing', () => {
-      getOrCreateSubscription(mapId);
-      const draw = getOrCreateDraw(mapId);
+      const { draw } = drawStore.actions(mapId);
       draw(ShapeFeatureType.Circle);
 
       // Should not throw
@@ -356,12 +318,12 @@ describe('draw-shape-layer store', () => {
       mapModeBus.on(MapModeEvents.changeDecision, decisionSpy);
 
       // Start subscription to set up bus listener
-      const subscription = getOrCreateSubscription(mapId);
+      const subscription = drawStore.subscribe(mapId);
       const callback = vi.fn();
       subscription(callback);
 
       // Start drawing
-      const draw = getOrCreateDraw(mapId);
+      const { draw } = drawStore.actions(mapId);
       draw(ShapeFeatureType.Polygon);
 
       // Simulate mode change authorization request
@@ -392,12 +354,12 @@ describe('draw-shape-layer store', () => {
       mapModeBus.on(MapModeEvents.changeDecision, decisionSpy);
 
       // Start subscription to set up bus listener
-      const subscription = getOrCreateSubscription(mapId);
+      const subscription = drawStore.subscribe(mapId);
       const callback = vi.fn();
       subscription(callback);
 
       // Start drawing
-      const draw = getOrCreateDraw(mapId);
+      const { draw } = drawStore.actions(mapId);
       draw(ShapeFeatureType.Polygon);
 
       // Simulate mode change authorization request for a different map
@@ -416,8 +378,8 @@ describe('draw-shape-layer store', () => {
   });
 
   describe('cleanup behavior', () => {
-    it('cleans up bus listener when last subscriber unsubscribes', () => {
-      const subscription = getOrCreateSubscription(mapId);
+    it('cleans up state when last subscriber unsubscribes', () => {
+      const subscription = drawStore.subscribe(mapId);
       const callback = vi.fn();
 
       const unsubscribe = subscription(callback);
@@ -429,8 +391,8 @@ describe('draw-shape-layer store', () => {
       expect(getDrawingState(mapId)).toBeNull();
     });
 
-    it('maintains bus listener while subscribers exist', () => {
-      const subscription = getOrCreateSubscription(mapId);
+    it('maintains state while subscribers exist', () => {
+      const subscription = drawStore.subscribe(mapId);
       const callback1 = vi.fn();
       const callback2 = vi.fn();
 

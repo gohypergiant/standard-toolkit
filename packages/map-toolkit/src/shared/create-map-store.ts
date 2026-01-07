@@ -10,200 +10,170 @@
  * governing permissions and limitations under the License.
  */
 
+import { useSyncExternalStore } from 'react';
 import type { UniqueId } from '@accelint/core';
 
 /**
- * Subscription function type for useSyncExternalStore
+ * Helper methods passed to action creators and bus setup functions
  */
-export type Subscription = (onStoreChange: () => void) => () => void;
-
-/**
- * Instance data for a single map instance within a store.
- * Contains state, subscribers, and cached functions - all in one object.
- */
-export type MapStoreInstance<
-  TState,
-  TActions extends Record<string, unknown>,
-> = {
-  /** The actual state for this instance */
-  state: TState;
-  /** React component subscribers (onStoreChange callbacks) */
-  subscribers: Set<() => void>;
-  /** Bus unsubscribe function (if applicable) */
-  busUnsubscribe?: () => void;
-  /** Cached subscription function for useSyncExternalStore */
-  subscription?: Subscription;
-  /** Cached snapshot function for useSyncExternalStore */
-  snapshot?: () => TState;
-  /** Cached server snapshot function for useSyncExternalStore */
-  serverSnapshot?: () => TState;
-  /** Cached action functions (keyed by action name) */
-  actions: Partial<TActions>;
+export type StoreHelpers<TState> = {
+  /** Get current state */
+  get: () => TState;
+  /** Update state (partial merge) and notify subscribers */
+  set: (updates: Partial<TState>) => void;
+  /** Replace entire state and notify subscribers */
+  replace: (state: TState) => void;
+  /** Notify subscribers without changing state */
+  notify: () => void;
 };
 
 /**
  * Configuration for creating a map store
  */
-export type MapStoreConfig<TState, TActions extends Record<string, unknown>> = {
-  /** Function to create the default state for a new instance */
-  createDefaultState: () => TState;
-  /** Default state to return for server snapshots (SSR) */
-  serverDefault: TState;
+export type MapStoreConfig<TState, TActions> = {
+  /** Default state for new instances and SSR */
+  defaultState: TState;
+
   /**
-   * Optional function to set up bus listeners for an instance.
-   * Called when the first subscriber subscribes.
-   * Should return a cleanup function.
+   * Action creators - receives mapId and helpers, returns action methods.
+   * Actions are cached per mapId for referential stability.
    */
-  setupBusListeners?: (
-    mapId: UniqueId,
-    instance: MapStoreInstance<TState, TActions>,
-    notify: () => void,
-  ) => () => void;
+  actions: (mapId: UniqueId, helpers: StoreHelpers<TState>) => TActions;
+
   /**
-   * Optional function called when an instance is cleaned up.
-   * Use this to perform additional cleanup (e.g., cancel active operations).
+   * Optional bus listener setup. Called when first subscriber mounts.
+   * Return cleanup function to unsubscribe.
+   */
+  bus?: (mapId: UniqueId, helpers: StoreHelpers<TState>) => () => void;
+
+  /**
+   * Optional cleanup when instance is destroyed (last subscriber unmounts).
    */
   onCleanup?: (mapId: UniqueId, state: TState) => void;
 };
 
 /**
- * A map store manages state for multiple map instances.
- * Each map instance is identified by a UniqueId (mapId/instanceId).
+ * Instance data for a single map
  */
-export type MapStore<TState, TActions extends Record<string, unknown>> = {
+type Instance<TState, TActions> = {
+  state: TState;
+  actions?: TActions;
+  subscribers: Set<() => void>;
+  busCleanup?: () => void;
+};
+
+/**
+ * The store object returned by createMapStore
+ */
+export type MapStore<TState, TActions> = {
   /**
-   * Get or create an instance for the given mapId.
-   * This is the primary way to access instance data.
+   * React hook - the primary way to use the store.
+   * Returns state and actions with proper memoization.
    */
-  getInstance: (mapId: UniqueId) => MapStoreInstance<TState, TActions>;
+  use: (mapId: UniqueId) => { state: TState } & TActions;
 
   /**
-   * Get a subscription function for useSyncExternalStore.
-   * Cached per mapId for referential stability.
+   * React hook with selector for derived state.
+   * Only re-renders when selected value changes.
    */
-  getSubscription: (mapId: UniqueId) => Subscription;
+  useSelector: <TSelected>(
+    mapId: UniqueId,
+    selector: (state: TState) => TSelected,
+  ) => TSelected;
 
   /**
-   * Get a snapshot function for useSyncExternalStore.
-   * Cached per mapId for referential stability.
+   * Get actions without subscribing to state changes.
+   * Useful for event handlers or effects.
    */
-  getSnapshot: (mapId: UniqueId) => () => TState;
+  actions: (mapId: UniqueId) => TActions;
 
   /**
-   * Get a server snapshot function for useSyncExternalStore.
-   * Cached per mapId for referential stability.
+   * Get current state (non-reactive, for imperative code).
    */
-  getServerSnapshot: (mapId: UniqueId) => () => TState;
+  get: (mapId: UniqueId) => TState;
 
   /**
-   * Notify all subscribers for a mapId that state has changed.
+   * Update state directly (usually prefer actions).
    */
-  notify: (mapId: UniqueId) => void;
+  set: (mapId: UniqueId, updates: Partial<TState>) => void;
 
   /**
-   * Update state for a mapId and notify subscribers.
-   * Creates a new state object to trigger React re-renders.
-   */
-  setState: (mapId: UniqueId, updates: Partial<TState>) => void;
-
-  /**
-   * Get current state for a mapId (non-reactive, for imperative code).
-   */
-  getState: (mapId: UniqueId) => TState;
-
-  /**
-   * Clear all state for a mapId.
-   * Typically only needed for manual cleanup in tests.
-   */
-  clear: (mapId: UniqueId) => void;
-
-  /**
-   * Check if an instance exists for a mapId.
-   * Useful for checking if state has been initialized.
+   * Check if instance exists (has been initialized).
    */
   exists: (mapId: UniqueId) => boolean;
 
   /**
-   * Get or create a cached action function for referential stability.
+   * Clear instance state (for tests or manual cleanup).
    */
-  getAction: <K extends keyof TActions>(
-    mapId: UniqueId,
-    actionName: K,
-    createAction: () => TActions[K],
-  ) => TActions[K];
+  clear: (mapId: UniqueId) => void;
+
+  /**
+   * Low-level access for custom hooks or useSyncExternalStore.
+   */
+  subscribe: (mapId: UniqueId) => (callback: () => void) => () => void;
+  snapshot: (mapId: UniqueId) => () => TState;
+  serverSnapshot: () => TState;
 };
 
 /**
- * Creates a new map store for managing state across multiple map instances.
- *
- * This factory provides:
- * - Unified storage (one Map instead of many)
- * - Automatic subscriber management
- * - Referential stability for hooks
- * - Automatic cleanup when last subscriber unmounts
+ * Creates a store for managing state across multiple map instances.
  *
  * @example
  * ```ts
- * type CursorState = { cursor: string };
- * type CursorActions = {
- *   setCursor: (cursor: string) => void;
- *   clearCursor: () => void;
- * };
+ * const cursorStore = createMapStore({
+ *   defaultState: { cursor: 'default', owner: null },
  *
- * const cursorStore = createMapStore<CursorState, CursorActions>({
- *   name: 'cursor',
- *   createDefaultState: () => ({ cursor: 'default' }),
- *   serverDefault: { cursor: 'default' },
+ *   actions: (mapId, { get, set }) => ({
+ *     setCursor: (cursor: string, owner: string) => {
+ *       set({ cursor, owner });
+ *     },
+ *     clearCursor: () => {
+ *       set({ cursor: 'default', owner: null });
+ *     },
+ *   }),
+ *
+ *   bus: (mapId, { set }) => {
+ *     return cursorBus.on(CursorEvents.change, (e) => {
+ *       if (e.payload.id === mapId) {
+ *         set({ cursor: e.payload.cursor });
+ *       }
+ *     });
+ *   },
  * });
  *
- * // In a hook:
- * function useCursor(mapId: UniqueId) {
- *   const cursor = useSyncExternalStore(
- *     cursorStore.getSubscription(mapId),
- *     cursorStore.getSnapshot(mapId),
- *     cursorStore.getServerSnapshot(mapId),
- *   );
- *
- *   const setCursor = cursorStore.getAction(mapId, 'setCursor', () => (cursor: string) => {
- *     cursorStore.setState(mapId, { cursor });
- *   });
- *
- *   return { cursor, setCursor };
+ * // In component:
+ * function CursorDisplay({ mapId }) {
+ *   const { state, setCursor } = cursorStore.use(mapId);
+ *   return <div style={{ cursor: state.cursor }} />;
  * }
  * ```
  */
-export function createMapStore<
-  TState,
-  TActions extends Record<string, unknown> = Record<string, never>,
->(config: MapStoreConfig<TState, TActions>): MapStore<TState, TActions> {
-  const { createDefaultState, serverDefault, setupBusListeners, onCleanup } =
-    config;
+export function createMapStore<TState, TActions>(
+  config: MapStoreConfig<TState, TActions>,
+): MapStore<TState, TActions> {
+  const { defaultState, actions: createActions, bus, onCleanup } = config;
 
-  /**
-   * Single Map storing all instance data.
-   * This replaces the pattern of having 6+ separate Maps.
-   */
-  const instances = new Map<UniqueId, MapStoreInstance<TState, TActions>>();
+  const instances = new Map<UniqueId, Instance<TState, TActions>>();
 
-  /**
-   * Get or create an instance for the given mapId
-   */
-  function getInstance(mapId: UniqueId): MapStoreInstance<TState, TActions> {
+  // Cached functions for referential stability
+  const subscriptionCache = new Map<
+    UniqueId,
+    (callback: () => void) => () => void
+  >();
+  const snapshotCache = new Map<UniqueId, () => TState>();
+
+  function getInstance(mapId: UniqueId): Instance<TState, TActions> {
     let instance = instances.get(mapId);
     if (!instance) {
       instance = {
-        state: createDefaultState(),
+        state: { ...defaultState },
         subscribers: new Set(),
-        actions: {},
       };
       instances.set(mapId, instance);
     }
     return instance;
   }
 
-  /**
-   * Notify all subscribers for a mapId
-   */
   function notify(mapId: UniqueId): void {
     const instance = instances.get(mapId);
     if (instance) {
@@ -213,154 +183,152 @@ export function createMapStore<
     }
   }
 
-  /**
-   * Update state and notify subscribers
-   */
-  function setState(mapId: UniqueId, updates: Partial<TState>): void {
+  function getHelpers(mapId: UniqueId): StoreHelpers<TState> {
+    return {
+      get: () => getInstance(mapId).state,
+      set: (updates) => {
+        const instance = getInstance(mapId);
+        instance.state = { ...instance.state, ...updates };
+        notify(mapId);
+      },
+      replace: (state) => {
+        const instance = getInstance(mapId);
+        instance.state = state;
+        notify(mapId);
+      },
+      notify: () => notify(mapId),
+    };
+  }
+
+  function getActions(mapId: UniqueId): TActions {
     const instance = getInstance(mapId);
-    instance.state = { ...instance.state, ...updates };
-    notify(mapId);
-  }
-
-  /**
-   * Get current state (non-reactive)
-   */
-  function getState(mapId: UniqueId): TState {
-    const instance = instances.get(mapId);
-    return instance?.state ?? createDefaultState();
-  }
-
-  /**
-   * Clean up an instance when no subscribers remain
-   */
-  function cleanupIfEmpty(mapId: UniqueId): void {
-    const instance = instances.get(mapId);
-    if (!instance || instance.subscribers.size > 0) {
-      return;
+    if (!instance.actions) {
+      instance.actions = createActions(mapId, getHelpers(mapId));
     }
+    return instance.actions;
+  }
 
-    // Call custom cleanup if provided
+  /**
+   * Clean up instance when last subscriber unmounts
+   */
+  function cleanupInstance(
+    mapId: UniqueId,
+    instance: Instance<TState, TActions>,
+  ): void {
     if (onCleanup) {
       onCleanup(mapId, instance.state);
     }
-
-    // Unsubscribe from bus
-    if (instance.busUnsubscribe) {
-      instance.busUnsubscribe();
+    if (instance.busCleanup) {
+      instance.busCleanup();
     }
-
-    // Remove instance entirely
     instances.delete(mapId);
+    subscriptionCache.delete(mapId);
+    snapshotCache.delete(mapId);
   }
 
-  /**
-   * Get subscription function for useSyncExternalStore
-   */
-  function getSubscription(mapId: UniqueId): Subscription {
-    const instance = getInstance(mapId);
+  function subscribe(mapId: UniqueId): (callback: () => void) => () => void {
+    let cached = subscriptionCache.get(mapId);
+    if (!cached) {
+      cached = (callback: () => void) => {
+        const instance = getInstance(mapId);
 
-    if (!instance.subscription) {
-      instance.subscription = (onStoreChange: () => void) => {
-        // Set up bus listeners on first subscription
-        if (instance.subscribers.size === 0 && setupBusListeners) {
-          instance.busUnsubscribe = setupBusListeners(mapId, instance, () =>
-            notify(mapId),
-          );
+        // Setup bus on first subscriber
+        if (instance.subscribers.size === 0 && bus) {
+          instance.busCleanup = bus(mapId, getHelpers(mapId));
         }
 
-        // Add subscriber
-        instance.subscribers.add(onStoreChange);
+        instance.subscribers.add(callback);
 
-        // Return cleanup function
         return () => {
-          instance.subscribers.delete(onStoreChange);
-          cleanupIfEmpty(mapId);
+          instance.subscribers.delete(callback);
+
+          // Cleanup when last subscriber unmounts
+          if (instance.subscribers.size === 0) {
+            cleanupInstance(mapId, instance);
+          }
         };
       };
+      subscriptionCache.set(mapId, cached);
     }
-
-    return instance.subscription;
+    return cached;
   }
 
-  /**
-   * Get snapshot function for useSyncExternalStore
-   */
-  function getSnapshot(mapId: UniqueId): () => TState {
-    const instance = getInstance(mapId);
-
-    if (!instance.snapshot) {
-      instance.snapshot = () => {
-        const current = instances.get(mapId);
-        return current?.state ?? createDefaultState();
+  function snapshot(mapId: UniqueId): () => TState {
+    let cached = snapshotCache.get(mapId);
+    if (!cached) {
+      cached = () => {
+        // State is already a new object reference when updated via set()
+        // which creates { ...instance.state, ...updates }
+        return getInstance(mapId).state;
       };
+      snapshotCache.set(mapId, cached);
     }
+    return cached;
+  }
 
-    return instance.snapshot;
+  function serverSnapshot(): TState {
+    return defaultState;
   }
 
   /**
-   * Get server snapshot function for useSyncExternalStore
+   * Main hook - returns state and actions
    */
-  function getServerSnapshot(mapId: UniqueId): () => TState {
-    const instance = getInstance(mapId);
+  function use(mapId: UniqueId): { state: TState } & TActions {
+    const state = useSyncExternalStore(
+      subscribe(mapId),
+      snapshot(mapId),
+      serverSnapshot,
+    );
 
-    if (!instance.serverSnapshot) {
-      instance.serverSnapshot = () => serverDefault;
-    }
+    const actions = getActions(mapId);
 
-    return instance.serverSnapshot;
+    // Return merged object with state wrapper for clarity
+    return { state, ...actions };
   }
 
   /**
-   * Get or create a cached action
+   * Selector hook - only re-renders when selected value changes
    */
-  function getAction<K extends keyof TActions>(
+  function useSelector<TSelected>(
     mapId: UniqueId,
-    actionName: K,
-    createAction: () => TActions[K],
-  ): TActions[K] {
-    const instance = getInstance(mapId);
+    selector: (state: TState) => TSelected,
+  ): TSelected {
+    const state = useSyncExternalStore(
+      subscribe(mapId),
+      snapshot(mapId),
+      serverSnapshot,
+    );
 
-    if (!(actionName in instance.actions)) {
-      instance.actions[actionName] = createAction();
-    }
-
-    return instance.actions[actionName] as TActions[K];
-  }
-
-  /**
-   * Clear all state for a mapId (manual cleanup)
-   */
-  function clear(mapId: UniqueId): void {
-    const instance = instances.get(mapId);
-    if (instance) {
-      if (onCleanup) {
-        onCleanup(mapId, instance.state);
-      }
-      if (instance.busUnsubscribe) {
-        instance.busUnsubscribe();
-      }
-    }
-    instances.delete(mapId);
-  }
-
-  /**
-   * Check if an instance exists for a mapId
-   */
-  function exists(mapId: UniqueId): boolean {
-    return instances.has(mapId);
+    return selector(state);
   }
 
   return {
-    getInstance,
-    getSubscription,
-    getSnapshot,
-    getServerSnapshot,
-    notify,
-    setState,
-    getState,
-    clear,
-    exists,
-    getAction,
+    use,
+    useSelector,
+    actions: getActions,
+    get: (mapId) => getInstance(mapId).state,
+    set: (mapId, updates) => {
+      const instance = getInstance(mapId);
+      instance.state = { ...instance.state, ...updates };
+      notify(mapId);
+    },
+    exists: (mapId) => instances.has(mapId),
+    clear: (mapId) => {
+      const instance = instances.get(mapId);
+      if (instance) {
+        if (onCleanup) {
+          onCleanup(mapId, instance.state);
+        }
+        if (instance.busCleanup) {
+          instance.busCleanup();
+        }
+      }
+      instances.delete(mapId);
+      subscriptionCache.delete(mapId);
+      snapshotCache.delete(mapId);
+    },
+    subscribe,
+    snapshot,
+    serverSnapshot,
   };
 }

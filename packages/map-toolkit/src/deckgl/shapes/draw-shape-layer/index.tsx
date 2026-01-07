@@ -12,7 +12,7 @@
 
 'use client';
 
-import { useContext, useEffect, useSyncExternalStore } from 'react';
+import { useContext, useEffect } from 'react';
 import { MapContext } from '../../base-map/provider';
 import {
   DEFAULT_TENTATIVE_COLORS,
@@ -25,9 +25,7 @@ import { getModeInstance, triggerDoubleClickFinish } from './modes';
 import {
   cancelDrawingFromLayer,
   completeDrawingFromLayer,
-  getOrCreateServerSnapshot,
-  getOrCreateSnapshot,
-  getOrCreateSubscription,
+  drawStore,
 } from './store';
 import type {
   EditAction,
@@ -78,12 +76,8 @@ export function DrawShapeLayer({
     );
   }
 
-  // Subscribe to drawing state
-  const drawingState = useSyncExternalStore(
-    getOrCreateSubscription(actualMapId),
-    getOrCreateSnapshot(actualMapId),
-    getOrCreateServerSnapshot(actualMapId),
-  );
+  // Subscribe to drawing state using the v2 store API
+  const { state: drawingState } = drawStore.use(actualMapId);
 
   const activeShapeType = drawingState?.activeShapeType ?? null;
 

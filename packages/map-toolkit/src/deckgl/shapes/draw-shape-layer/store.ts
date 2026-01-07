@@ -12,11 +12,34 @@
 
 'use client';
 
+/**
+ * Draw Shape Store
+ *
+ * Manages drawing state for shape creation.
+ *
+ * @example
+ * ```tsx
+ * import { drawStore } from '@accelint/map-toolkit/deckgl/shapes';
+ *
+ * function DrawControls({ mapId }) {
+ *   const { state, draw, cancel } = drawStore.use(mapId);
+ *
+ *   return (
+ *     <div>
+ *       <p>Drawing: {state.activeShapeType ?? 'none'}</p>
+ *       <button onClick={() => draw('Polygon')}>Draw Polygon</button>
+ *       <button onClick={cancel}>Cancel</button>
+ *     </div>
+ *   );
+ * }
+ * ```
+ */
+
 import { Broadcast } from '@accelint/bus';
-import { createMapStore } from '../../../shared/create-map-store';
 import { MapCursorEvents } from '../../../map-cursor/events';
-import { getOrCreateClearCursor } from '../../../map-cursor/store';
+import { cursorStore } from '../../../map-cursor/store';
 import { MapModeEvents } from '../../../map-mode/events';
+import { createMapStore } from '../../../shared/create-map-store';
 import {
   DRAW_CURSOR_MAP,
   DRAW_SHAPE_LAYER_ID,
@@ -53,11 +76,10 @@ const DEFAULT_DRAWING_STATE: DrawingState = {
  * Actions for draw shape store
  */
 type DrawShapeActions = {
+  /** Start drawing a shape of the specified type */
   draw: DrawFunction;
+  /** Cancel the current drawing operation */
   cancel: () => void;
-  // Internal cached functions
-  snapshot: () => DrawingState | null;
-  serverSnapshot: () => DrawingState | null;
 };
 
 /**
@@ -144,13 +166,9 @@ function completeDrawingInternal(
   });
 
   // Clear cursor using the store function directly
-  getOrCreateClearCursor(mapId)(DRAW_SHAPE_LAYER_ID);
+  cursorStore.actions(mapId).clearCursor(DRAW_SHAPE_LAYER_ID);
 
   // Emit shape drawn event
-  // Shape contains GeoJSON Feature which is structurally cloneable
-  // but lacks the index signature TypeScript requires for StructuredCloneable.
-  // Cast payload to ShapeDrawnPayload to maintain type safety for the structure,
-  // then use unknown to satisfy the bus constraint.
   drawShapeBus.emit(DrawShapeEvents.drawn, {
     shape,
     mapId,
@@ -192,7 +210,7 @@ function cancelDrawingInternal(
   });
 
   // Clear cursor using the store function directly
-  getOrCreateClearCursor(mapId)(DRAW_SHAPE_LAYER_ID);
+  cursorStore.actions(mapId).clearCursor(DRAW_SHAPE_LAYER_ID);
 
   // Emit canceled event
   drawShapeBus.emit(DrawShapeEvents.canceled, {
@@ -204,19 +222,22 @@ function cancelDrawingInternal(
 }
 
 /**
- * Local cache for snapshot functions (to avoid creating instance on snapshot call)
+ * Draw shape store
  */
-const snapshotFnCache = new Map<UniqueId, () => DrawingState | null>();
-const serverSnapshotFnCache = new Map<UniqueId, () => DrawingState | null>();
+export const drawStore = createMapStore<DrawingState, DrawShapeActions>({
+  defaultState: { ...DEFAULT_DRAWING_STATE },
 
-/**
- * Draw shape store using the map store factory
- */
-const store = createMapStore<DrawingState, DrawShapeActions>({
-  createDefaultState: () => ({ ...DEFAULT_DRAWING_STATE }),
-  serverDefault: { ...DEFAULT_DRAWING_STATE },
+  actions: (mapId, { get, set, notify }) => ({
+    draw: (shapeType: ShapeFeatureType, options?: DrawShapeOptions) => {
+      startDrawing(mapId, get(), shapeType, options, notify, set);
+    },
 
-  setupBusListeners: (mapId, instance, _notify) => {
+    cancel: () => {
+      cancelDrawingInternal(mapId, get(), notify, set);
+    },
+  }),
+
+  bus: (mapId, { get }) => {
     // Listen for mode authorization requests - REJECT when drawing (protected mode)
     const unsubAuth = mapModeBus.on(
       MapModeEvents.changeAuthorization,
@@ -229,7 +250,7 @@ const store = createMapStore<DrawingState, DrawShapeActions>({
         }
 
         // If we're actively drawing, reject the mode change request
-        if (instance.state.activeShapeType) {
+        if (get().activeShapeType) {
           mapModeBus.emit(MapModeEvents.changeDecision, {
             authId,
             approved: false,
@@ -257,7 +278,7 @@ const store = createMapStore<DrawingState, DrawShapeActions>({
       });
 
       // Clear cursor
-      getOrCreateClearCursor(mapId)(DRAW_SHAPE_LAYER_ID);
+      cursorStore.actions(mapId).clearCursor(DRAW_SHAPE_LAYER_ID);
 
       // Emit canceled event
       drawShapeBus.emit(DrawShapeEvents.canceled, {
@@ -265,101 +286,38 @@ const store = createMapStore<DrawingState, DrawShapeActions>({
         mapId,
       });
     }
-
-    // Clear local caches
-    snapshotFnCache.delete(mapId);
-    serverSnapshotFnCache.delete(mapId);
   },
 });
 
 // =============================================================================
-// Public API (maintains backward compatibility with existing hook)
+// Convenience exports
 // =============================================================================
 
 /**
- * Creates or retrieves a cached subscription function for a given mapId.
- * Uses a fan-out pattern: 1 bus listener -> N React subscribers.
- * Automatically cleans up drawing state when the last subscriber unsubscribes.
+ * Get the current drawing state for a mapId
+ * Returns null if no store instance exists
  */
-export function getOrCreateSubscription(
-  mapId: UniqueId,
-): (onStoreChange: () => void) => () => void {
-  return store.getSubscription(mapId);
-}
-
-/**
- * Creates or retrieves a cached snapshot function for a given mapId.
- * Returns the current drawing state or null if no state exists.
- * Uses local cache to avoid creating instance on snapshot access.
- */
-export function getOrCreateSnapshot(
-  mapId: UniqueId,
-): () => DrawingState | null {
-  let snapshotFn = snapshotFnCache.get(mapId);
-  if (!snapshotFn) {
-    snapshotFn = () => {
-      if (!store.exists(mapId)) {
-        return null;
-      }
-      return store.getState(mapId);
-    };
-    snapshotFnCache.set(mapId, snapshotFn);
+export function getDrawingState(mapId: UniqueId): DrawingState | null {
+  if (!drawStore.exists(mapId)) {
+    return null;
   }
-  return snapshotFn;
+  return drawStore.get(mapId);
 }
 
 /**
- * Creates or retrieves a cached server snapshot function for a given mapId.
- * Server snapshots always return null since drawing state is client-only.
- * Required for SSR/RSC compatibility with useSyncExternalStore.
+ * Hook for drawing state
  */
-export function getOrCreateServerSnapshot(
+export function useDrawingState(
   mapId: UniqueId,
-): () => DrawingState | null {
-  let serverSnapshotFn = serverSnapshotFnCache.get(mapId);
-  if (!serverSnapshotFn) {
-    serverSnapshotFn = () => null;
-    serverSnapshotFnCache.set(mapId, serverSnapshotFn);
-  }
-  return serverSnapshotFn;
+): { state: DrawingState } & DrawShapeActions {
+  return drawStore.use(mapId);
 }
 
 /**
- * Creates or retrieves a cached draw function for a given mapId.
- * This maintains referential stability for the function reference.
+ * Manually clear drawing state for a specific mapId.
  */
-export function getOrCreateDraw(mapId: UniqueId): DrawFunction {
-  return store.getAction(mapId, 'draw', () => {
-    return (shapeType: ShapeFeatureType, options?: DrawShapeOptions) => {
-      const state = store.getState(mapId);
-      startDrawing(
-        mapId,
-        state,
-        shapeType,
-        options,
-        () => store.notify(mapId),
-        (updates) => store.setState(mapId, updates),
-      );
-    };
-  });
-}
-
-/**
- * Creates or retrieves a cached cancel function for a given mapId.
- * This maintains referential stability for the function reference.
- */
-export function getOrCreateCancel(mapId: UniqueId): () => void {
-  return store.getAction(mapId, 'cancel', () => {
-    return () => {
-      const state = store.getState(mapId);
-      cancelDrawingInternal(
-        mapId,
-        state,
-        () => store.notify(mapId),
-        (updates) => store.setState(mapId, updates),
-      );
-    };
-  });
+export function clearDrawingState(mapId: UniqueId): void {
+  drawStore.clear(mapId);
 }
 
 /**
@@ -369,13 +327,15 @@ export function completeDrawingFromLayer(
   mapId: UniqueId,
   feature: Feature,
 ): Shape {
-  const state = store.getState(mapId);
+  const state = drawStore.get(mapId);
   return completeDrawingInternal(
     mapId,
     state,
     feature,
-    () => store.notify(mapId),
-    (updates) => store.setState(mapId, updates),
+    () => {
+      /* notify handled by set */
+    },
+    (updates) => drawStore.set(mapId, updates),
   );
 }
 
@@ -383,30 +343,5 @@ export function completeDrawingFromLayer(
  * Cancel drawing (called by the layer component)
  */
 export function cancelDrawingFromLayer(mapId: UniqueId): void {
-  const state = store.getState(mapId);
-  cancelDrawingInternal(
-    mapId,
-    state,
-    () => store.notify(mapId),
-    (updates) => store.setState(mapId, updates),
-  );
-}
-
-/**
- * Get the current drawing state for a mapId
- */
-export function getDrawingState(mapId: UniqueId): DrawingState | null {
-  if (!store.exists(mapId)) {
-    return null;
-  }
-  return store.getState(mapId);
-}
-
-/**
- * Manually clear drawing state for a specific mapId.
- * This is typically not needed as cleanup happens automatically when all subscribers unmount.
- * Use this only in advanced scenarios where manual cleanup is required.
- */
-export function clearDrawingState(mapId: UniqueId): void {
-  store.clear(mapId);
+  drawStore.actions(mapId).cancel();
 }

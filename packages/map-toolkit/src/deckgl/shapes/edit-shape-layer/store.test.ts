@@ -17,13 +17,8 @@ import { ShapeFeatureType } from '../shared/types';
 import {
   cancelEditingFromLayer,
   clearEditingState,
+  editStore,
   getEditingState,
-  getOrCreateCancel,
-  getOrCreateEdit,
-  getOrCreateSave,
-  getOrCreateServerSnapshot,
-  getOrCreateSnapshot,
-  getOrCreateSubscription,
   updateFeatureFromLayer,
 } from './store';
 import type { UniqueId } from '@accelint/core';
@@ -126,32 +121,32 @@ describe('edit-shape-layer store', () => {
     clearEditingState(mapId);
   });
 
-  describe('getOrCreateSubscription', () => {
+  describe('editStore.subscribe', () => {
     it('creates a subscription function for a mapId', () => {
-      const subscription = getOrCreateSubscription(mapId);
+      const subscription = editStore.subscribe(mapId);
       expect(typeof subscription).toBe('function');
     });
 
     it('returns the same subscription function for the same mapId', () => {
-      const subscription1 = getOrCreateSubscription(mapId);
-      const subscription2 = getOrCreateSubscription(mapId);
+      const subscription1 = editStore.subscribe(mapId);
+      const subscription2 = editStore.subscribe(mapId);
       expect(subscription1).toBe(subscription2);
     });
 
     it('returns different subscription functions for different mapIds', () => {
       const mapId2 = uuid();
-      const subscription1 = getOrCreateSubscription(mapId);
-      const subscription2 = getOrCreateSubscription(mapId2);
+      const subscription1 = editStore.subscribe(mapId);
+      const subscription2 = editStore.subscribe(mapId2);
       expect(subscription1).not.toBe(subscription2);
       clearEditingState(mapId2);
     });
 
     it('subscription notifies callback on store changes', () => {
-      const subscription = getOrCreateSubscription(mapId);
+      const subscription = editStore.subscribe(mapId);
       const callback = vi.fn();
 
       const unsubscribe = subscription(callback);
-      const edit = getOrCreateEdit(mapId);
+      const { edit } = editStore.actions(mapId);
 
       const shape = createMockShape();
       edit(shape);
@@ -162,7 +157,7 @@ describe('edit-shape-layer store', () => {
     });
 
     it('unsubscribe removes callback from notifications', () => {
-      const subscription = getOrCreateSubscription(mapId);
+      const subscription = editStore.subscribe(mapId);
       const callback = vi.fn();
 
       const unsubscribe = subscription(callback);
@@ -170,34 +165,27 @@ describe('edit-shape-layer store', () => {
 
       callback.mockClear();
 
-      const edit = getOrCreateEdit(mapId);
+      const { edit } = editStore.actions(mapId);
       edit(createMockShape());
 
       expect(callback).not.toHaveBeenCalled();
     });
   });
 
-  describe('getOrCreateSnapshot', () => {
+  describe('editStore.snapshot', () => {
     it('creates a snapshot function for a mapId', () => {
-      const snapshot = getOrCreateSnapshot(mapId);
+      const snapshot = editStore.snapshot(mapId);
       expect(typeof snapshot).toBe('function');
     });
 
     it('returns the same snapshot function for the same mapId', () => {
-      const snapshot1 = getOrCreateSnapshot(mapId);
-      const snapshot2 = getOrCreateSnapshot(mapId);
+      const snapshot1 = editStore.snapshot(mapId);
+      const snapshot2 = editStore.snapshot(mapId);
       expect(snapshot1).toBe(snapshot2);
     });
 
-    it('snapshot returns null when no state exists', () => {
-      const snapshot = getOrCreateSnapshot(mapId);
-      expect(snapshot()).toBeNull();
-    });
-
-    it('snapshot returns state after subscription initializes it', () => {
-      getOrCreateSubscription(mapId);
-      const snapshot = getOrCreateSnapshot(mapId);
-
+    it('snapshot returns state (lazy initialization)', () => {
+      const snapshot = editStore.snapshot(mapId);
       const state = snapshot();
       expect(state).not.toBeNull();
       expect(state?.editingShape).toBeNull();
@@ -206,108 +194,81 @@ describe('edit-shape-layer store', () => {
     });
   });
 
-  describe('getOrCreateServerSnapshot', () => {
-    it('creates a server snapshot function for a mapId', () => {
-      const serverSnapshot = getOrCreateServerSnapshot(mapId);
-      expect(typeof serverSnapshot).toBe('function');
-    });
-
-    it('returns the same server snapshot function for the same mapId', () => {
-      const serverSnapshot1 = getOrCreateServerSnapshot(mapId);
-      const serverSnapshot2 = getOrCreateServerSnapshot(mapId);
-      expect(serverSnapshot1).toBe(serverSnapshot2);
-    });
-
-    it('server snapshot always returns null (client-only state)', () => {
-      const serverSnapshot = getOrCreateServerSnapshot(mapId);
-
-      getOrCreateSubscription(mapId);
-      const edit = getOrCreateEdit(mapId);
-      edit(createMockShape());
-
-      expect(serverSnapshot()).toBeNull();
+  describe('editStore.serverSnapshot', () => {
+    it('server snapshot returns default state', () => {
+      const serverSnapshot = editStore.serverSnapshot();
+      expect(serverSnapshot.editingShape).toBeNull();
+      expect(serverSnapshot.editMode).toBe('view');
     });
   });
 
-  describe('getOrCreateEdit', () => {
+  describe('editStore.actions().edit', () => {
     it('creates an edit function for a mapId', () => {
-      const edit = getOrCreateEdit(mapId);
+      const { edit } = editStore.actions(mapId);
       expect(typeof edit).toBe('function');
     });
 
-    it('returns the same edit function for the same mapId', () => {
-      const edit1 = getOrCreateEdit(mapId);
-      const edit2 = getOrCreateEdit(mapId);
-      expect(edit1).toBe(edit2);
+    it('returns the same actions for the same mapId', () => {
+      const actions1 = editStore.actions(mapId);
+      const actions2 = editStore.actions(mapId);
+      expect(actions1.edit).toBe(actions2.edit);
     });
 
     it('edit starts editing and updates state', () => {
-      getOrCreateSubscription(mapId);
-      const edit = getOrCreateEdit(mapId);
-      const snapshot = getOrCreateSnapshot(mapId);
+      const { edit } = editStore.actions(mapId);
 
       const shape = createMockShape();
       edit(shape);
 
-      const state = snapshot();
+      const state = editStore.get(mapId);
       expect(state?.editingShape).toEqual(shape);
       expect(state?.featureBeingEdited).toEqual(shape.feature);
     });
 
     it('edit cancels existing editing before starting new one', () => {
-      getOrCreateSubscription(mapId);
-      const edit = getOrCreateEdit(mapId);
-      const snapshot = getOrCreateSnapshot(mapId);
+      const { edit } = editStore.actions(mapId);
 
       const shape1 = createMockShape({ name: 'Shape 1' });
       const shape2 = createMockShape({ name: 'Shape 2' });
 
       edit(shape1);
-      expect(snapshot()?.editingShape?.name).toBe('Shape 1');
+      expect(editStore.get(mapId)?.editingShape?.name).toBe('Shape 1');
 
       edit(shape2);
-      expect(snapshot()?.editingShape?.name).toBe('Shape 2');
+      expect(editStore.get(mapId)?.editingShape?.name).toBe('Shape 2');
     });
 
     it('edit does not allow editing locked shapes', () => {
-      getOrCreateSubscription(mapId);
-      const edit = getOrCreateEdit(mapId);
-      const snapshot = getOrCreateSnapshot(mapId);
+      const { edit } = editStore.actions(mapId);
 
       const lockedShape = createMockShape({ locked: true });
       edit(lockedShape);
 
-      expect(snapshot()?.editingShape).toBeNull();
+      expect(editStore.get(mapId)?.editingShape).toBeNull();
     });
 
     it('edit allows editing unlocked shapes', () => {
-      getOrCreateSubscription(mapId);
-      const edit = getOrCreateEdit(mapId);
-      const snapshot = getOrCreateSnapshot(mapId);
+      const { edit } = editStore.actions(mapId);
 
       const unlockedShape = createMockShape({ locked: false });
       edit(unlockedShape);
 
-      expect(snapshot()?.editingShape).toEqual(unlockedShape);
+      expect(editStore.get(mapId)?.editingShape).toEqual(unlockedShape);
     });
   });
 
   describe('Edit mode selection', () => {
     it('sets vertex-transform mode for polygons', () => {
-      getOrCreateSubscription(mapId);
-      const edit = getOrCreateEdit(mapId);
-      const snapshot = getOrCreateSnapshot(mapId);
+      const { edit } = editStore.actions(mapId);
 
       const shape = createMockShape({ shapeType: ShapeFeatureType.Polygon });
       edit(shape);
 
-      expect(snapshot()?.editMode).toBe('vertex-transform');
+      expect(editStore.get(mapId)?.editMode).toBe('vertex-transform');
     });
 
     it('sets vertex-transform mode for linestrings', () => {
-      getOrCreateSubscription(mapId);
-      const edit = getOrCreateEdit(mapId);
-      const snapshot = getOrCreateSnapshot(mapId);
+      const { edit } = editStore.actions(mapId);
 
       const shape = createMockShape({
         shapeType: ShapeFeatureType.LineString,
@@ -316,35 +277,29 @@ describe('edit-shape-layer store', () => {
       });
       edit(shape);
 
-      expect(snapshot()?.editMode).toBe('vertex-transform');
+      expect(editStore.get(mapId)?.editMode).toBe('vertex-transform');
     });
 
     it('sets circle-transform mode for circles', () => {
-      getOrCreateSubscription(mapId);
-      const edit = getOrCreateEdit(mapId);
-      const snapshot = getOrCreateSnapshot(mapId);
+      const { edit } = editStore.actions(mapId);
 
       const shape = createMockCircleShape();
       edit(shape);
 
-      expect(snapshot()?.editMode).toBe('circle-transform');
+      expect(editStore.get(mapId)?.editMode).toBe('circle-transform');
     });
 
     it('sets bounding-transform mode for ellipses', () => {
-      getOrCreateSubscription(mapId);
-      const edit = getOrCreateEdit(mapId);
-      const snapshot = getOrCreateSnapshot(mapId);
+      const { edit } = editStore.actions(mapId);
 
       const shape = createMockEllipseShape();
       edit(shape);
 
-      expect(snapshot()?.editMode).toBe('bounding-transform');
+      expect(editStore.get(mapId)?.editMode).toBe('bounding-transform');
     });
 
     it('sets bounding-transform mode for rectangles', () => {
-      getOrCreateSubscription(mapId);
-      const edit = getOrCreateEdit(mapId);
-      const snapshot = getOrCreateSnapshot(mapId);
+      const { edit } = editStore.actions(mapId);
 
       const shape = createMockShape({
         shapeType: ShapeFeatureType.Rectangle,
@@ -353,113 +308,97 @@ describe('edit-shape-layer store', () => {
       });
       edit(shape);
 
-      expect(snapshot()?.editMode).toBe('bounding-transform');
+      expect(editStore.get(mapId)?.editMode).toBe('bounding-transform');
     });
 
     it('sets translate mode for points', () => {
-      getOrCreateSubscription(mapId);
-      const edit = getOrCreateEdit(mapId);
-      const snapshot = getOrCreateSnapshot(mapId);
+      const { edit } = editStore.actions(mapId);
 
       const shape = createMockPointShape();
       edit(shape);
 
-      expect(snapshot()?.editMode).toBe('translate');
+      expect(editStore.get(mapId)?.editMode).toBe('translate');
     });
 
     it('allows mode override via options', () => {
-      getOrCreateSubscription(mapId);
-      const edit = getOrCreateEdit(mapId);
-      const snapshot = getOrCreateSnapshot(mapId);
+      const { edit } = editStore.actions(mapId);
 
       const shape = createMockShape({ shapeType: ShapeFeatureType.Polygon });
       edit(shape, { mode: 'circle-transform' });
 
-      expect(snapshot()?.editMode).toBe('circle-transform');
+      expect(editStore.get(mapId)?.editMode).toBe('circle-transform');
     });
   });
 
-  describe('getOrCreateSave', () => {
+  describe('editStore.actions().save', () => {
     it('creates a save function for a mapId', () => {
-      const save = getOrCreateSave(mapId);
+      const { save } = editStore.actions(mapId);
       expect(typeof save).toBe('function');
     });
 
     it('returns the same save function for the same mapId', () => {
-      const save1 = getOrCreateSave(mapId);
-      const save2 = getOrCreateSave(mapId);
-      expect(save1).toBe(save2);
+      const actions1 = editStore.actions(mapId);
+      const actions2 = editStore.actions(mapId);
+      expect(actions1.save).toBe(actions2.save);
     });
 
     it('save stops editing and resets state', () => {
-      getOrCreateSubscription(mapId);
-      const edit = getOrCreateEdit(mapId);
-      const save = getOrCreateSave(mapId);
-      const snapshot = getOrCreateSnapshot(mapId);
+      const { edit, save } = editStore.actions(mapId);
 
       const shape = createMockShape();
       edit(shape);
-      expect(snapshot()?.editingShape).not.toBeNull();
+      expect(editStore.get(mapId)?.editingShape).not.toBeNull();
 
       save();
-      expect(snapshot()?.editingShape).toBeNull();
-      expect(snapshot()?.editMode).toBe('view');
+      expect(editStore.get(mapId)?.editingShape).toBeNull();
+      expect(editStore.get(mapId)?.editMode).toBe('view');
     });
 
     it('save does nothing when not editing', () => {
-      getOrCreateSubscription(mapId);
-      const save = getOrCreateSave(mapId);
-      const snapshot = getOrCreateSnapshot(mapId);
+      const { save } = editStore.actions(mapId);
 
       // Should not throw
       save();
-      expect(snapshot()?.editingShape).toBeNull();
+      expect(editStore.get(mapId)?.editingShape).toBeNull();
     });
   });
 
-  describe('getOrCreateCancel', () => {
+  describe('editStore.actions().cancel', () => {
     it('creates a cancel function for a mapId', () => {
-      const cancel = getOrCreateCancel(mapId);
+      const { cancel } = editStore.actions(mapId);
       expect(typeof cancel).toBe('function');
     });
 
     it('returns the same cancel function for the same mapId', () => {
-      const cancel1 = getOrCreateCancel(mapId);
-      const cancel2 = getOrCreateCancel(mapId);
-      expect(cancel1).toBe(cancel2);
+      const actions1 = editStore.actions(mapId);
+      const actions2 = editStore.actions(mapId);
+      expect(actions1.cancel).toBe(actions2.cancel);
     });
 
     it('cancel stops editing and resets state', () => {
-      getOrCreateSubscription(mapId);
-      const edit = getOrCreateEdit(mapId);
-      const cancel = getOrCreateCancel(mapId);
-      const snapshot = getOrCreateSnapshot(mapId);
+      const { edit, cancel } = editStore.actions(mapId);
 
       const shape = createMockShape();
       edit(shape);
-      expect(snapshot()?.editingShape).not.toBeNull();
+      expect(editStore.get(mapId)?.editingShape).not.toBeNull();
 
       cancel();
-      expect(snapshot()?.editingShape).toBeNull();
-      expect(snapshot()?.editMode).toBe('view');
+      expect(editStore.get(mapId)?.editingShape).toBeNull();
+      expect(editStore.get(mapId)?.editMode).toBe('view');
     });
 
     it('cancel does nothing when not editing', () => {
-      getOrCreateSubscription(mapId);
-      const cancel = getOrCreateCancel(mapId);
-      const snapshot = getOrCreateSnapshot(mapId);
+      const { cancel } = editStore.actions(mapId);
 
       // Should not throw
       cancel();
-      expect(snapshot()?.editingShape).toBeNull();
+      expect(editStore.get(mapId)?.editingShape).toBeNull();
     });
   });
 
   describe('updateFeatureFromLayer', () => {
     it('updates the feature being edited', () => {
-      getOrCreateSubscription(mapId);
-      const edit = getOrCreateEdit(mapId);
-      const snapshot = getOrCreateSnapshot(mapId);
+      const { edit } = editStore.actions(mapId);
 
       const shape = createMockShape();
       edit(shape);
@@ -482,23 +421,21 @@ describe('edit-shape-layer store', () => {
 
       updateFeatureFromLayer(mapId, updatedFeature);
 
-      expect(snapshot()?.featureBeingEdited).toEqual(updatedFeature);
+      expect(editStore.get(mapId)?.featureBeingEdited).toEqual(updatedFeature);
     });
   });
 
   describe('cancelEditingFromLayer', () => {
     it('cancels editing from the layer component', () => {
-      getOrCreateSubscription(mapId);
-      const edit = getOrCreateEdit(mapId);
-      const snapshot = getOrCreateSnapshot(mapId);
+      const { edit } = editStore.actions(mapId);
 
       const shape = createMockShape();
       edit(shape);
-      expect(snapshot()?.editingShape).not.toBeNull();
+      expect(editStore.get(mapId)?.editingShape).not.toBeNull();
 
       cancelEditingFromLayer(mapId);
 
-      expect(snapshot()?.editingShape).toBeNull();
+      expect(editStore.get(mapId)?.editingShape).toBeNull();
     });
   });
 
@@ -508,7 +445,8 @@ describe('edit-shape-layer store', () => {
     });
 
     it('returns state after initialization', () => {
-      getOrCreateSubscription(mapId);
+      // Initialize by getting actions
+      editStore.actions(mapId);
       const state = getEditingState(mapId);
       expect(state).not.toBeNull();
       expect(state?.editingShape).toBeNull();
@@ -517,8 +455,7 @@ describe('edit-shape-layer store', () => {
 
   describe('clearEditingState', () => {
     it('clears all state for a mapId', () => {
-      getOrCreateSubscription(mapId);
-      const edit = getOrCreateEdit(mapId);
+      const { edit } = editStore.actions(mapId);
       edit(createMockShape());
 
       expect(getEditingState(mapId)).not.toBeNull();
@@ -529,8 +466,7 @@ describe('edit-shape-layer store', () => {
     });
 
     it('cancels active editing before clearing', () => {
-      getOrCreateSubscription(mapId);
-      const edit = getOrCreateEdit(mapId);
+      const { edit } = editStore.actions(mapId);
       edit(createMockShape());
 
       // Should not throw
@@ -542,7 +478,7 @@ describe('edit-shape-layer store', () => {
 
   describe('cleanup behavior', () => {
     it('cleans up state when last subscriber unsubscribes', () => {
-      const subscription = getOrCreateSubscription(mapId);
+      const subscription = editStore.subscribe(mapId);
       const callback = vi.fn();
 
       const unsubscribe = subscription(callback);
@@ -555,7 +491,7 @@ describe('edit-shape-layer store', () => {
     });
 
     it('maintains state while subscribers exist', () => {
-      const subscription = getOrCreateSubscription(mapId);
+      const subscription = editStore.subscribe(mapId);
       const callback1 = vi.fn();
       const callback2 = vi.fn();
 

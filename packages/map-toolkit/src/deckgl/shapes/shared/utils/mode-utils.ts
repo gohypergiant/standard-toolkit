@@ -14,7 +14,7 @@
 
 import { Broadcast } from '@accelint/bus';
 import { MapCursorEvents } from '../../../../map-cursor/events';
-import { getOrCreateClearCursor } from '../../../../map-cursor/store';
+import { cursorStore } from '../../../../map-cursor/store';
 import { MapModeEvents } from '../../../../map-mode/events';
 import type { UniqueId } from '@accelint/core';
 import type {
@@ -93,7 +93,7 @@ export function requestCursorChange(
  * @param owner - The identifier of the component releasing the cursor
  */
 export function releaseCursor(mapId: UniqueId, owner: string): void {
-  getOrCreateClearCursor(mapId)(owner);
+  cursorStore.actions(mapId).clearCursor(owner);
 }
 
 /**

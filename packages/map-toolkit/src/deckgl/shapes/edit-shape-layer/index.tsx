@@ -12,7 +12,7 @@
 
 'use client';
 
-import { useContext, useEffect, useRef, useSyncExternalStore } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { MapContext } from '../../base-map/provider';
 import { useShiftZoomDisable } from '../shared/hooks/use-shift-zoom-disable';
 import { ShapeFeatureType, type ShapeFeatureTypeValues } from '../shared/types';
@@ -26,9 +26,7 @@ import {
 import { getEditModeInstance } from './modes';
 import {
   cancelEditingFromLayer,
-  getOrCreateServerSnapshot,
-  getOrCreateSnapshot,
-  getOrCreateSubscription,
+  editStore,
   updateFeatureFromLayer,
 } from './store';
 import type {
@@ -140,12 +138,8 @@ export function EditShapeLayer({
     );
   }
 
-  // Subscribe to editing state
-  const editingState = useSyncExternalStore(
-    getOrCreateSubscription(actualMapId),
-    getOrCreateSnapshot(actualMapId),
-    getOrCreateServerSnapshot(actualMapId),
-  );
+  // Subscribe to editing state using the v2 store API
+  const { state: editingState } = editStore.use(actualMapId);
 
   const isEditing = editingState?.editingShape != null;
 

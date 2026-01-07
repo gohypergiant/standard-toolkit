@@ -12,15 +12,9 @@
 'use client';
 
 import 'client-only';
-import { useContext, useEffect, useMemo, useSyncExternalStore } from 'react';
+import { useContext, useEffect, useMemo } from 'react';
 import { MapContext } from '../deckgl/base-map/provider';
-import {
-  getOrCreateClearCursor,
-  getOrCreateRequestCursorChange,
-  getOrCreateServerSnapshot,
-  getOrCreateSnapshot,
-  getOrCreateSubscription,
-} from './store';
+import { cursorStore, useCursor } from './store';
 import type { UniqueId } from '@accelint/core';
 import type { CSSCursorType } from './types';
 
@@ -94,22 +88,20 @@ export function useMapCursor(id?: UniqueId): UseMapCursorReturn {
     );
   }
 
-  // Subscribe to store using useSyncExternalStore with fan-out pattern
-  // Third parameter provides server snapshot for SSR/RSC compatibility
-  const cursor = useSyncExternalStore(
-    getOrCreateSubscription(actualId),
-    getOrCreateSnapshot(actualId),
-    getOrCreateServerSnapshot(actualId),
-  );
+  // Use the useCursor hook which computes effective cursor with priority
+  const cursor = useCursor(actualId);
+
+  // Get actions from the store
+  const { requestCursorChange, clearCursor } = cursorStore.actions(actualId);
 
   // Memoize the return value to prevent unnecessary re-renders
   return useMemo(
     () => ({
       cursor,
-      requestCursorChange: getOrCreateRequestCursorChange(actualId),
-      clearCursor: getOrCreateClearCursor(actualId),
+      requestCursorChange,
+      clearCursor,
     }),
-    [cursor, actualId],
+    [cursor, requestCursorChange, clearCursor],
   );
 }
 

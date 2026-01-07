@@ -12,14 +12,7 @@
 
 'use client';
 
-import { useSyncExternalStore } from 'react';
-import {
-  getOrCreateClearSelection,
-  getOrCreateServerSnapshot,
-  getOrCreateSetSelectedId,
-  getOrCreateSnapshot,
-  getOrCreateSubscription,
-} from './store';
+import { shapeSelectionStore } from './store';
 import type { UniqueId } from '@accelint/core';
 import type { ShapeId } from '../shared/types';
 
@@ -94,24 +87,11 @@ export interface UseShapeSelectionReturn {
  * ```
  */
 export function useShapeSelection(mapId: UniqueId): UseShapeSelectionReturn {
-  // Get cached functions for this mapId (maintains referential stability)
-  const subscribe = getOrCreateSubscription(mapId);
-  const getSnapshot = getOrCreateSnapshot(mapId);
-  const getServerSnapshot = getOrCreateServerSnapshot(mapId);
-
-  // Subscribe to store changes using React's built-in external store hook
-  const selectedId = useSyncExternalStore(
-    subscribe,
-    getSnapshot,
-    getServerSnapshot,
-  );
-
-  // Get cached action functions (maintains referential stability)
-  const setSelectedId = getOrCreateSetSelectedId(mapId);
-  const clearSelection = getOrCreateClearSelection(mapId);
+  const { state, setSelectedId, clearSelection } =
+    shapeSelectionStore.use(mapId);
 
   return {
-    selectedId,
+    selectedId: state.selectedId,
     setSelectedId,
     clearSelection,
   };

@@ -14,16 +14,10 @@
 
 import 'client-only';
 import { useBus } from '@accelint/bus/react';
-import { useContext, useMemo, useSyncExternalStore } from 'react';
+import { useContext, useMemo } from 'react';
 import { MapContext } from '../../base-map/provider';
 import { DrawShapeEvents } from './events';
-import {
-  getOrCreateCancel,
-  getOrCreateDraw,
-  getOrCreateServerSnapshot,
-  getOrCreateSnapshot,
-  getOrCreateSubscription,
-} from './store';
+import { drawStore } from './store';
 import type { UniqueId } from '@accelint/core';
 import type { DrawShapeEvent } from './events';
 import type { UseDrawShapeOptions, UseDrawShapeReturn } from './types';
@@ -104,13 +98,8 @@ export function useDrawShape(
 
   const { onCreate, onCancel } = options ?? {};
 
-  // Subscribe to store using useSyncExternalStore with fan-out pattern
-  // Third parameter provides server snapshot for SSR/RSC compatibility
-  const drawingState = useSyncExternalStore(
-    getOrCreateSubscription(actualId),
-    getOrCreateSnapshot(actualId),
-    getOrCreateServerSnapshot(actualId),
-  );
+  // Use the v2 store API directly
+  const { state: drawingState, draw, cancel } = drawStore.use(actualId);
 
   // Listen for completion/cancellation events to trigger callbacks
   // useOn handles cleanup automatically and uses useEffectEvent for stable callbacks
@@ -132,11 +121,11 @@ export function useDrawShape(
   return useMemo(
     () => ({
       drawingState,
-      draw: getOrCreateDraw(actualId),
-      cancel: getOrCreateCancel(actualId),
+      draw,
+      cancel,
       isDrawing: !!drawingState?.activeShapeType,
       activeShapeType: drawingState?.activeShapeType ?? null,
     }),
-    [drawingState, actualId],
+    [drawingState, draw, cancel],
   );
 }

@@ -10,24 +10,47 @@
  * governing permissions and limitations under the License.
  */
 
+/**
+ * Map Mode Store
+ *
+ * Manages mode state with ownership-based authorization.
+ *
+ * @example
+ * ```tsx
+ * import { modeStore } from '@accelint/map-toolkit/map-mode';
+ *
+ * function MapControls({ mapId }) {
+ *   const { state, requestModeChange } = modeStore.use(mapId);
+ *
+ *   return (
+ *     <div>
+ *       <p>Current mode: {state.mode}</p>
+ *       <button onClick={() => requestModeChange('draw', 'draw-layer')}>
+ *         Draw Mode
+ *       </button>
+ *     </div>
+ *   );
+ * }
+ * ```
+ */
+
 import { Broadcast } from '@accelint/bus';
 import { uuid } from '@accelint/core';
 import { createMapStore } from '../shared/create-map-store';
 import { MapModeEvents } from './events';
 import type { UniqueId } from '@accelint/core';
+import type { StoreHelpers } from '../shared/create-map-store';
 import type { MapModeEventType, ModeChangeDecisionPayload } from './types';
 
 const DEFAULT_MODE = 'default';
 
 /**
  * Typed event bus instance for map mode events.
- * Provides type-safe event emission and listening for all map mode state changes.
  */
 const mapModeBus = Broadcast.getInstance<MapModeEventType>();
 
 /**
  * Internal type for tracking pending authorization requests.
- * @internal
  */
 type PendingRequest = {
   authId: string;
@@ -37,7 +60,7 @@ type PendingRequest = {
 };
 
 /**
- * Type representing the state for a single map mode instance
+ * State shape for map mode
  */
 type MapModeState = {
   mode: string;
@@ -49,10 +72,8 @@ type MapModeState = {
  * Actions for map mode
  */
 type MapModeActions = {
+  /** Request a mode change */
   requestModeChange: (desiredMode: string, requestOwner: string) => void;
-  // Internal cached functions
-  snapshot: () => string;
-  serverSnapshot: () => string;
 };
 
 /**
@@ -90,28 +111,7 @@ function shouldAutoAcceptRequest(
 }
 
 /**
- * Set mode and emit change event
- */
-function setMode(
-  instanceId: UniqueId,
-  state: MapModeState,
-  newMode: string,
-  notify: () => void,
-): void {
-  const previousMode = state.mode;
-  state.mode = newMode;
-
-  mapModeBus.emit(MapModeEvents.changed, {
-    previousMode,
-    currentMode: newMode,
-    id: instanceId,
-  });
-
-  notify();
-}
-
-/**
- * Approve a request and reject all others
+ * Approve a request and reject all others (immutable update)
  */
 function approveRequestAndRejectOthers(
   instanceId: UniqueId,
@@ -121,7 +121,7 @@ function approveRequestAndRejectOthers(
   decisionOwner: string,
   reason: string,
   emitApproval: boolean,
-  notify: () => void,
+  set: StoreHelpers<MapModeState>['set'],
 ): void {
   // Collect all other pending requests to emit rejections for
   const requestsToReject: PendingRequest[] = [];
@@ -131,19 +131,31 @@ function approveRequestAndRejectOthers(
     }
   }
 
-  // Clear all pending requests BEFORE changing mode
-  state.pendingRequests.clear();
-
-  // Change mode
-  setMode(instanceId, state, approvedRequest.desiredMode, notify);
+  // Create new Maps for immutable update
+  const newPendingRequests = new Map<string, PendingRequest>();
+  const newModeOwners = new Map(state.modeOwners);
 
   // Store the new mode's owner (unless it's default mode)
   if (approvedRequest.desiredMode !== DEFAULT_MODE) {
-    state.modeOwners.set(
+    newModeOwners.set(
       approvedRequest.desiredMode,
       approvedRequest.requestOwner,
     );
   }
+
+  // Immutable update: clear pending requests, update owners, change mode
+  set({
+    mode: approvedRequest.desiredMode,
+    pendingRequests: newPendingRequests,
+    modeOwners: newModeOwners,
+  });
+
+  // Emit mode changed event
+  mapModeBus.emit(MapModeEvents.changed, {
+    previousMode: state.mode,
+    currentMode: approvedRequest.desiredMode,
+    id: instanceId,
+  });
 
   // Emit approval decision if requested
   if (emitApproval) {
@@ -169,13 +181,13 @@ function approveRequestAndRejectOthers(
 }
 
 /**
- * Handle pending requests when returning to default mode
+ * Handle pending requests when returning to default mode (immutable update)
  */
 function handlePendingRequestsOnDefaultMode(
   instanceId: UniqueId,
   state: MapModeState,
   previousMode: string,
-  notify: () => void,
+  set: StoreHelpers<MapModeState>['set'],
 ): void {
   const firstEntry = Array.from(state.pendingRequests.values())[0];
   if (!firstEntry) {
@@ -191,7 +203,9 @@ function handlePendingRequestsOnDefaultMode(
   // If the first pending request is for default mode, reject all requests
   if (firstEntry.desiredMode === DEFAULT_MODE) {
     const allRequests = Array.from(state.pendingRequests.values());
-    state.pendingRequests.clear();
+
+    // Immutable update: clear pending requests
+    set({ pendingRequests: new Map<string, PendingRequest>() });
 
     for (const request of allRequests) {
       mapModeBus.emit(MapModeEvents.changeDecision, {
@@ -212,17 +226,13 @@ function handlePendingRequestsOnDefaultMode(
       previousModeOwner,
       'Auto-accepted when mode owner returned to default',
       true,
-      notify,
+      set,
     );
   }
 }
 
 /**
- * Handle authorization decision
- *
- * Processes approval/rejection decisions from mode owners. Only the current mode's owner
- * can make authorization decisions. If a decision comes from a non-owner, a warning is
- * logged and the decision is ignored to prevent unauthorized mode changes.
+ * Handle authorization decision (immutable update)
  */
 function handleAuthorizationDecision(
   instanceId: UniqueId,
@@ -232,12 +242,11 @@ function handleAuthorizationDecision(
     authId: string;
     owner: string;
   },
-  notify: () => void,
+  set: StoreHelpers<MapModeState>['set'],
 ): void {
   const { approved, authId, owner: decisionOwner } = payload;
 
   // Verify decision is from current mode's owner
-  // Logs a warning if unauthorized component attempts to make decisions
   const currentModeOwner = state.modeOwners.get(state.mode);
   if (decisionOwner !== currentModeOwner) {
     console.warn(
@@ -271,48 +280,73 @@ function handleAuthorizationDecision(
       decisionOwner,
       '',
       false,
-      notify,
+      set,
     );
   } else {
-    state.pendingRequests.delete(matchingRequestOwner);
+    // Immutable update: remove the rejected request
+    const newPendingRequests = new Map(state.pendingRequests);
+    newPendingRequests.delete(matchingRequestOwner);
+    set({ pendingRequests: newPendingRequests });
   }
 }
 
 /**
- * Handle mode change request logic
+ * Handle mode change request logic (immutable update)
  */
 function handleModeChangeRequest(
   instanceId: UniqueId,
   state: MapModeState,
   desiredMode: string,
   requestOwner: string,
-  notify: () => void,
+  set: StoreHelpers<MapModeState>['set'],
 ): void {
   const desiredModeOwner = state.modeOwners.get(desiredMode);
 
   // Check if this request should be auto-accepted
   if (shouldAutoAcceptRequest(state, desiredMode, requestOwner)) {
-    setMode(instanceId, state, desiredMode, notify);
+    // Build immutable updates
+    const newModeOwners = new Map(state.modeOwners);
+    const newPendingRequests = new Map(state.pendingRequests);
 
     // Store the desired mode's owner unless it's default
     if (desiredMode !== DEFAULT_MODE && !desiredModeOwner) {
-      state.modeOwners.set(desiredMode, requestOwner);
+      newModeOwners.set(desiredMode, requestOwner);
     }
 
     // Clear requester's pending request since mode changed successfully
-    state.pendingRequests.delete(requestOwner);
+    newPendingRequests.delete(requestOwner);
+
+    const previousMode = state.mode;
+
+    // Immutable update
+    set({
+      mode: desiredMode,
+      modeOwners: newModeOwners,
+      pendingRequests: newPendingRequests,
+    });
+
+    mapModeBus.emit(MapModeEvents.changed, {
+      previousMode,
+      currentMode: desiredMode,
+      id: instanceId,
+    });
+
     return;
   }
 
   // Otherwise, send authorization request
   const authId = uuid();
 
-  state.pendingRequests.set(requestOwner, {
+  // Immutable update: add pending request
+  const newPendingRequests = new Map(state.pendingRequests);
+  newPendingRequests.set(requestOwner, {
     authId,
     desiredMode,
     currentMode: state.mode,
     requestOwner,
   });
+
+  set({ pendingRequests: newPendingRequests });
 
   mapModeBus.emit(MapModeEvents.changeAuthorization, {
     authId,
@@ -323,36 +357,52 @@ function handleModeChangeRequest(
 }
 
 /**
- * Map mode store using the map store factory
+ * Map mode store
  */
-const store = createMapStore<MapModeState, MapModeActions>({
-  createDefaultState: () => ({
-    mode: DEFAULT_MODE,
-    modeOwners: new Map(),
-    pendingRequests: new Map(),
-  }),
-  serverDefault: {
+export const modeStore = createMapStore<MapModeState, MapModeActions>({
+  defaultState: {
     mode: DEFAULT_MODE,
     modeOwners: new Map(),
     pendingRequests: new Map(),
   },
 
-  setupBusListeners: (instanceId, instance, notify) => {
+  actions: (instanceId) => ({
+    requestModeChange: (desiredMode: string, requestOwner: string) => {
+      const trimmedDesiredMode = desiredMode.trim();
+      const trimmedRequestOwner = requestOwner.trim();
+
+      if (!trimmedDesiredMode) {
+        throw new Error('requestModeChange requires non-empty desiredMode');
+      }
+      if (!trimmedRequestOwner) {
+        throw new Error('requestModeChange requires non-empty requestOwner');
+      }
+
+      mapModeBus.emit(MapModeEvents.changeRequest, {
+        desiredMode: trimmedDesiredMode,
+        owner: trimmedRequestOwner,
+        id: instanceId,
+      });
+    },
+  }),
+
+  bus: (instanceId, { get, set }) => {
     // Listen for mode change requests
     const unsubRequest = mapModeBus.on(MapModeEvents.changeRequest, (event) => {
       const { desiredMode, owner: requestOwner, id } = event.payload;
 
+      const state = get();
       // Filter: only handle if targeted at this map
-      if (id !== instanceId || desiredMode === instance.state.mode) {
+      if (id !== instanceId || desiredMode === state.mode) {
         return;
       }
 
       handleModeChangeRequest(
         instanceId,
-        instance.state,
+        state,
         desiredMode,
         requestOwner,
-        notify,
+        set,
       );
     });
 
@@ -369,9 +419,9 @@ const store = createMapStore<MapModeState, MapModeActions>({
 
         handleAuthorizationDecision(
           instanceId,
-          instance.state,
+          get(),
           { approved, authId, owner },
-          notify,
+          set,
         );
       },
     );
@@ -385,16 +435,14 @@ const store = createMapStore<MapModeState, MapModeActions>({
         return;
       }
 
+      const state = get();
       // When mode owner changes to default mode, handle pending requests
-      if (
-        currentMode === DEFAULT_MODE &&
-        instance.state.pendingRequests.size > 0
-      ) {
+      if (currentMode === DEFAULT_MODE && state.pendingRequests.size > 0) {
         handlePendingRequestsOnDefaultMode(
           instanceId,
-          instance.state,
+          state,
           previousMode,
-          notify,
+          set,
         );
       }
     });
@@ -408,67 +456,21 @@ const store = createMapStore<MapModeState, MapModeActions>({
 });
 
 // =============================================================================
-// Public API (maintains backward compatibility with existing hook)
+// Convenience exports
 // =============================================================================
 
 /**
- * Creates or retrieves a cached subscription function for a given instanceId.
- * Uses a fan-out pattern: 1 bus listener -> N React subscribers.
- * Automatically cleans up map mode state when the last subscriber unsubscribes.
+ * Get the current mode for a map instance
  */
-export function getOrCreateSubscription(
-  instanceId: UniqueId,
-): (onStoreChange: () => void) => () => void {
-  return store.getSubscription(instanceId);
+export function getMode(mapId: UniqueId): string {
+  return modeStore.get(mapId).mode;
 }
 
 /**
- * Creates or retrieves a cached snapshot function for a given instanceId.
- * The string returned gets equality checked, so it needs to be stable or React re-renders unnecessarily.
+ * Hook for current mode value
  */
-export function getOrCreateSnapshot(instanceId: UniqueId): () => string {
-  return store.getAction(instanceId, 'snapshot', () => {
-    return () => store.getState(instanceId).mode;
-  });
-}
-
-/**
- * Creates or retrieves a cached server snapshot function for a given instanceId.
- * Server snapshots always return the default mode since mode state is client-only.
- * Required for SSR/RSC compatibility with useSyncExternalStore.
- */
-export function getOrCreateServerSnapshot(instanceId: UniqueId): () => string {
-  return store.getAction(instanceId, 'serverSnapshot', () => {
-    return () => DEFAULT_MODE;
-  });
-}
-
-/**
- * Creates or retrieves a cached requestModeChange function for a given instanceId.
- * This maintains referential stability for the function reference.
- */
-export function getOrCreateRequestModeChange(
-  instanceId: UniqueId,
-): (desiredMode: string, requestOwner: string) => void {
-  return store.getAction(instanceId, 'requestModeChange', () => {
-    return (desiredMode: string, requestOwner: string) => {
-      const trimmedDesiredMode = desiredMode.trim();
-      const trimmedRequestOwner = requestOwner.trim();
-
-      if (!trimmedDesiredMode) {
-        throw new Error('requestModeChange requires non-empty desiredMode');
-      }
-      if (!trimmedRequestOwner) {
-        throw new Error('requestModeChange requires non-empty requestOwner');
-      }
-
-      mapModeBus.emit(MapModeEvents.changeRequest, {
-        desiredMode: trimmedDesiredMode,
-        owner: trimmedRequestOwner,
-        id: instanceId,
-      });
-    };
-  });
+export function useMode(mapId: UniqueId): string {
+  return modeStore.useSelector(mapId, (state) => state.mode);
 }
 
 /**
@@ -476,15 +478,13 @@ export function getOrCreateRequestModeChange(
  * @internal - For internal map-toolkit use only
  */
 export function getCurrentModeOwner(instanceId: UniqueId): string | undefined {
-  const state = store.getState(instanceId);
+  const state = modeStore.get(instanceId);
   return state.modeOwners.get(state.mode);
 }
 
 /**
  * Manually clear map mode state for a specific instanceId.
- * This is typically not needed as cleanup happens automatically when all subscribers unmount.
- * Use this only in advanced scenarios where manual cleanup is required.
  */
 export function clearMapModeState(instanceId: UniqueId): void {
-  store.clear(instanceId);
+  modeStore.clear(instanceId);
 }

@@ -11,7 +11,7 @@
  */
 
 export { MapCursorEvents } from './events';
-export { destroyStore, getOrCreateStore } from './store';
+export { clearCursorState, cursorStore, getCursor } from './store';
 export { useMapCursor, useMapCursorEffect } from './use-map-cursor';
 export type {
   CSSCursorType,
