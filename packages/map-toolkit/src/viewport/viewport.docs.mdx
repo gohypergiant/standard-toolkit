@@ -404,13 +404,14 @@ clearViewportState(MAP_ID);
 ```tsx
 import type { UniqueId } from '@accelint/core';
 import type {
-  Bounds,
   GeoCoordinate,
   GetViewportSizeArgs,
-  MapViewportPayload,
   SupportedDistanceUnit,
-  UseViewportStateProps,
 } from '@accelint/map-toolkit/viewport';
+import type {
+  Bounds,
+  MapViewportPayload,
+} from '@accelint/map-toolkit/deckgl/base-map';
 import type {
   DistanceUnit,
   DistanceUnitAbbreviation,

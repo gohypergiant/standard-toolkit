@@ -444,7 +444,7 @@ The hook maintains referential stability for snapshot functions and subscription
 Before the first camera event or if no initial state is provided:
 
 ```tsx
-const { cameraState } = useMapCamera({ instanceId: MAP_ID });
+const { cameraState } = useMapCamera(MAP_ID);
 
 // Default values before initialization
 console.log(cameraState);
