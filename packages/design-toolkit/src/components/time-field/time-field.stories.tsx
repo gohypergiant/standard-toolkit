@@ -25,6 +25,7 @@ const meta = {
     isDisabled: false,
     isInvalid: false,
     isRequired: true,
+    isReadOnly: false,
     defaultValue: parseTime('20:03'),
   },
   argTypes: {
@@ -43,4 +44,8 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: TimeField,
+};
+
+export const Readonly: Story = {
+  render: ({ ...args }) => <TimeField {...args} isReadOnly />,
 };
