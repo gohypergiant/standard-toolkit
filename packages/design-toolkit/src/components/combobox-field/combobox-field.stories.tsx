@@ -38,7 +38,6 @@ const meta = {
     isDisabled: false,
     isInvalid: false,
     isRequired: true,
-    isReadOnly: false,
     allowsCustomValue: false,
   },
   argTypes: {
@@ -328,7 +327,10 @@ export const WithCustomValue: Story = {
 export const Readonly: Story = {
   args: {
     ...Default.args,
-    inputProps: { value: 'test string' },
+    inputProps: {
+      value:
+        'test string long long long long long long long long long long long string',
+    },
   },
   render: ({ children, ...args }) => (
     <ComboBoxField<CustomOptionsItem>
