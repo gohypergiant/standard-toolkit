@@ -14,6 +14,7 @@ import { defineConfig } from 'tsdown';
 
 export default defineConfig({
   plugins: [],
+  tsconfig: 'tsconfig.dist.json',
   entry: [
     'src/**/*.{ts,tsx}',
     '!src/test',
