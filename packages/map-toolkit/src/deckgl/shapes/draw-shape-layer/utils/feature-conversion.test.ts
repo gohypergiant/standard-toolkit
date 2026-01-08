@@ -33,7 +33,7 @@ describe('convertFeatureToShape', () => {
         ShapeFeatureType.Point,
       );
 
-      expect(result.shapeType).toBe(ShapeFeatureType.Point);
+      expect(result.shape).toBe(ShapeFeatureType.Point);
       // Name includes timestamp, so just check it starts with "New Point"
       expect(result.name).toMatch(/^New Point/);
       expect(result.id).toBeDefined();
@@ -93,7 +93,7 @@ describe('convertFeatureToShape', () => {
         ShapeFeatureType.LineString,
       );
 
-      expect(result.shapeType).toBe(ShapeFeatureType.LineString);
+      expect(result.shape).toBe(ShapeFeatureType.LineString);
       expect(result.name).toMatch(/^New LineString/);
       expect(result.feature.geometry).toEqual(lineFeature.geometry);
     });
@@ -123,7 +123,7 @@ describe('convertFeatureToShape', () => {
         ShapeFeatureType.Polygon,
       );
 
-      expect(result.shapeType).toBe(ShapeFeatureType.Polygon);
+      expect(result.shape).toBe(ShapeFeatureType.Polygon);
       expect(result.name).toMatch(/^New Polygon/);
       expect(result.feature.geometry).toEqual(polygonFeature.geometry);
     });
@@ -153,7 +153,7 @@ describe('convertFeatureToShape', () => {
         ShapeFeatureType.Rectangle,
       );
 
-      expect(result.shapeType).toBe(ShapeFeatureType.Rectangle);
+      expect(result.shape).toBe(ShapeFeatureType.Rectangle);
       expect(result.name).toMatch(/^New Rectangle/);
     });
   });
@@ -187,7 +187,7 @@ describe('convertFeatureToShape', () => {
         ShapeFeatureType.Circle,
       );
 
-      expect(result.shapeType).toBe(ShapeFeatureType.Circle);
+      expect(result.shape).toBe(ShapeFeatureType.Circle);
       expect(result.name).toMatch(/^New Circle/);
       expect(result.feature.properties.circleProperties).toBeDefined();
       expect(result.feature.properties.circleProperties?.center).toBeDefined();

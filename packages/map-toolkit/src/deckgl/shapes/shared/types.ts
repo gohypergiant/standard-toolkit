@@ -211,7 +211,7 @@ interface BaseShape {
  * Circle shape with required circleProperties
  */
 export interface CircleShape extends BaseShape {
-  shapeType: typeof ShapeFeatureType.Circle;
+  shape: typeof ShapeFeatureType.Circle;
   feature: StyledFeature & { properties: CircleFeatureProperties };
 }
 
@@ -219,7 +219,7 @@ export interface CircleShape extends BaseShape {
  * Ellipse shape with required ellipseProperties
  */
 export interface EllipseShape extends BaseShape {
-  shapeType: typeof ShapeFeatureType.Ellipse;
+  shape: typeof ShapeFeatureType.Ellipse;
   feature: StyledFeature & { properties: EllipseFeatureProperties };
 }
 
@@ -227,7 +227,7 @@ export interface EllipseShape extends BaseShape {
  * Polygon shape
  */
 export interface PolygonShape extends BaseShape {
-  shapeType: typeof ShapeFeatureType.Polygon;
+  shape: typeof ShapeFeatureType.Polygon;
   feature: StyledFeature;
 }
 
@@ -235,7 +235,7 @@ export interface PolygonShape extends BaseShape {
  * Rectangle shape
  */
 export interface RectangleShape extends BaseShape {
-  shapeType: typeof ShapeFeatureType.Rectangle;
+  shape: typeof ShapeFeatureType.Rectangle;
   feature: StyledFeature;
 }
 
@@ -243,7 +243,7 @@ export interface RectangleShape extends BaseShape {
  * LineString shape
  */
 export interface LineStringShape extends BaseShape {
-  shapeType: typeof ShapeFeatureType.LineString;
+  shape: typeof ShapeFeatureType.LineString;
   feature: StyledFeature;
 }
 
@@ -251,18 +251,18 @@ export interface LineStringShape extends BaseShape {
  * Point shape
  */
 export interface PointShape extends BaseShape {
-  shapeType: typeof ShapeFeatureType.Point;
+  shape: typeof ShapeFeatureType.Point;
   feature: StyledFeature;
 }
 
 /**
  * Discriminated union of all shape types.
  *
- * Use this for type narrowing based on shapeType:
+ * Use this for type narrowing based on shape:
  * @example
  * ```ts
  * function handleShape(shape: Shape) {
- *   if (shape.shapeType === 'Circle') {
+ *   if (shape.shape === 'Circle') {
  *     // TypeScript knows shape.feature.properties.circleProperties exists
  *     const { center, radius } = shape.feature.properties.circleProperties;
  *   }
@@ -324,7 +324,7 @@ export type Subscription = (onStoreChange: () => void) => () => void;
  * ```
  */
 export function isCircleShape(shape: Shape): shape is CircleShape {
-  return shape.shapeType === ShapeFeatureType.Circle;
+  return shape.shape === ShapeFeatureType.Circle;
 }
 
 /**
@@ -339,33 +339,33 @@ export function isCircleShape(shape: Shape): shape is CircleShape {
  * ```
  */
 export function isEllipseShape(shape: Shape): shape is EllipseShape {
-  return shape.shapeType === ShapeFeatureType.Ellipse;
+  return shape.shape === ShapeFeatureType.Ellipse;
 }
 
 /**
  * Type guard for Polygon shapes.
  */
 export function isPolygonShape(shape: Shape): shape is PolygonShape {
-  return shape.shapeType === ShapeFeatureType.Polygon;
+  return shape.shape === ShapeFeatureType.Polygon;
 }
 
 /**
  * Type guard for Rectangle shapes.
  */
 export function isRectangleShape(shape: Shape): shape is RectangleShape {
-  return shape.shapeType === ShapeFeatureType.Rectangle;
+  return shape.shape === ShapeFeatureType.Rectangle;
 }
 
 /**
  * Type guard for LineString shapes.
  */
 export function isLineStringShape(shape: Shape): shape is LineStringShape {
-  return shape.shapeType === ShapeFeatureType.LineString;
+  return shape.shape === ShapeFeatureType.LineString;
 }
 
 /**
  * Type guard for Point shapes.
  */
 export function isPointShape(shape: Shape): shape is PointShape {
-  return shape.shapeType === ShapeFeatureType.Point;
+  return shape.shape === ShapeFeatureType.Point;
 }

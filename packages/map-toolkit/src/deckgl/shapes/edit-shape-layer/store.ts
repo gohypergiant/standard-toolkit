@@ -266,7 +266,7 @@ function saveEditing(mapId: UniqueId): Shape | null {
 
   // Create updated shape with new geometry.
   // Type assertion needed because TypeScript can't preserve the discriminated
-  // union type through the spread. The shapeType from originalShape is preserved
+  // union type through the spread. The shape from originalShape is preserved
   // at runtime, maintaining the correct shape variant.
   const updatedShape = {
     ...originalShape,

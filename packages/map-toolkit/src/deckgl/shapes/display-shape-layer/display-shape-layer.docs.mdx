@@ -63,7 +63,7 @@ function MapWithShapes() {
     {
       id: '1',
       name: 'My Location',
-      shapeType: 'Point',
+      shape: 'Point',
       locked: false,
       feature: {
         type: 'Feature',
@@ -181,7 +181,7 @@ interface BaseShape {
   /** Optional short display label shown on the map */
   label?: string;
   /** Shape type discriminator */
-  shapeType: 'Point' | 'LineString' | 'Polygon' | 'Rectangle' | 'Circle' | 'Ellipse';
+  shape: 'Point' | 'LineString' | 'Polygon' | 'Rectangle' | 'Circle' | 'Ellipse';
   /** GeoJSON feature with geometry and style properties */
   feature: StyledFeature;
   /** Whether shape is locked from editing */
@@ -313,7 +313,7 @@ import ATLAS_JSON from './assets/atlas.json';
 const pointWithIcon = {
   id: '1',
   name: 'Location Marker',
-  shapeType: 'Point',
+  shape: 'Point',
   locked: false,
   feature: {
     type: 'Feature',

@@ -303,7 +303,7 @@ describe('draw-shape-layer store', () => {
       const shape = completeDrawingFromLayer(mapId, mockFeature);
 
       expect(shape).toBeDefined();
-      expect(shape.shapeType).toBe(ShapeFeatureType.Polygon);
+      expect(shape.shape).toBe(ShapeFeatureType.Polygon);
       expect(shape.id).toBeDefined();
       expect(shape.name).toBeDefined();
       expect(snapshot()?.activeShapeType).toBeNull();

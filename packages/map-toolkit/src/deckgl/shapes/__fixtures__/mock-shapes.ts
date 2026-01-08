@@ -23,7 +23,7 @@ export const mockShapes: Shape[] = [
     id: uuid(),
     name: 'New Circle',
     label: 'Circle',
-    shapeType: 'Circle',
+    shape: 'Circle',
     feature: {
       type: 'Feature',
       properties: {
@@ -156,7 +156,7 @@ export const mockShapes: Shape[] = [
     id: uuid(),
     name: 'New LineString',
     label: 'LineString',
-    shapeType: 'LineString',
+    shape: 'LineString',
     feature: {
       type: 'Feature',
       properties: {
@@ -186,7 +186,7 @@ export const mockShapes: Shape[] = [
     id: uuid(),
     name: 'New Point',
     label: 'Point',
-    shapeType: 'Point',
+    shape: 'Point',
     feature: {
       type: 'Feature',
       properties: {
@@ -210,7 +210,7 @@ export const mockShapes: Shape[] = [
     id: uuid(),
     name: 'New Polygon',
     label: 'Polygon',
-    shapeType: 'Polygon',
+    shape: 'Polygon',
     feature: {
       type: 'Feature',
       properties: {
@@ -243,7 +243,7 @@ export const mockShapes: Shape[] = [
     id: uuid(),
     name: 'New Rectangle',
     label: 'Rectangle',
-    shapeType: 'Rectangle',
+    shape: 'Rectangle',
     feature: {
       type: 'Feature',
       properties: {
@@ -275,7 +275,7 @@ export const mockShapes: Shape[] = [
     id: uuid(),
     name: 'New Ellipse',
     label: 'Ellipse',
-    shapeType: 'Ellipse',
+    shape: 'Ellipse',
     feature: {
       type: 'Feature',
       properties: {

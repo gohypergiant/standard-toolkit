@@ -35,7 +35,7 @@ function createMockShape(overrides?: Partial<Shape>): Shape {
     name: 'Test Shape',
     label: 'Test',
     locked: false,
-    shapeType: 'Polygon',
+    shape: 'Polygon',
     feature: {
       type: 'Feature',
       properties: {
@@ -73,7 +73,7 @@ function createMockPointShape(overrides?: Partial<Shape>): Shape {
     name: 'Test Point',
     label: 'Point',
     locked: false,
-    shapeType: 'Point',
+    shape: 'Point',
     feature: {
       type: 'Feature',
       properties: {

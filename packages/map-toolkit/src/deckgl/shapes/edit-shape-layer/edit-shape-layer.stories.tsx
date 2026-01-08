@@ -541,7 +541,7 @@ export const LockedShapes: Story = {
                   <span>
                     <span className='font-medium'>{shape.name}</span>
                     <span className='ml-s text-content-secondary'>
-                      ({shape.shapeType})
+                      ({shape.shape})
                     </span>
                   </span>
                   {shape.locked && <span title='Locked'>🔒</span>}
