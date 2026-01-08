@@ -11,3 +11,16 @@
  */
 
 import '@accelint/design-foundation/styles';
+
+// Disable all animations and transitions for visual regression tests
+// https://vitest.dev/guide/browser/visual-regression-testing.html#disable-animations
+const style = document.createElement('style');
+style.innerHTML = `
+*, *::before, *::after {
+  animation-duration: 0s !important;
+  animation-delay: 0s !important;
+  transition-duration: 0s !important;
+  transition-delay: 0s !important;
+}
+`;
+document.head.appendChild(style);
