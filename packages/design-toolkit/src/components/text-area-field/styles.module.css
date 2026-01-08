@@ -51,6 +51,10 @@
     @variant disabled {
       @apply fg-disabled outline-interactive-disabled;
     }
+
+    @variant read-only {
+      @apply px-0 outline-none;
+    }
   }
 
   .description {
