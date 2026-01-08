@@ -308,6 +308,20 @@ export type { LinesProps } from './components/lines/types';
 export { LinkProvider } from './components/link/context';
 export { Link } from './components/link';
 export type { LinkProps } from './components/link/types';
+export { ListContext, useListItemVariant } from './components/list/context';
+export { List } from './components/list';
+export { ListItemContent } from './components/list/item-content';
+export { ListItemDescription } from './components/list/item-description';
+export { ListItemTitle } from './components/list/item-title';
+export { ListItem } from './components/list/item';
+export type {
+  ListItemContentProps,
+  ListItemDescriptionProps,
+  ListItemProps,
+  ListItemTitleProps,
+  ListItemVariant,
+  ListProps,
+} from './components/list/types';
 export { MenuContext } from './components/menu/context';
 export { Menu } from './components/menu';
 export { MenuItemDescription } from './components/menu/item-description';
