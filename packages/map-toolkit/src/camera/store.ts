@@ -139,7 +139,7 @@ function buildCameraState(partial?: CameraStateInput): CameraState {
 
   if (is3D) {
     // 3D view: globe projection, no pitch, no rotation
-    const state: CameraState3D = {
+    return {
       latitude,
       longitude,
       zoom,
@@ -147,13 +147,12 @@ function buildCameraState(partial?: CameraStateInput): CameraState {
       rotation: 0,
       projection: 'globe',
       view: '3D',
-    };
-    return state;
+    } satisfies CameraState3D;
   }
 
   if (is2Point5D) {
     // 2.5D view: mercator projection, variable pitch
-    const state: CameraState2Point5D = {
+    return {
       latitude,
       longitude,
       zoom,
@@ -161,12 +160,11 @@ function buildCameraState(partial?: CameraStateInput): CameraState {
       rotation,
       projection: 'mercator',
       view: '2.5D',
-    };
-    return state;
+    } satisfies CameraState2Point5D;
   }
 
   // Default: 2D view, mercator projection, no pitch
-  const state: CameraState2D = {
+  return {
     latitude,
     longitude,
     zoom,
@@ -174,8 +172,7 @@ function buildCameraState(partial?: CameraStateInput): CameraState {
     rotation,
     projection: 'mercator',
     view: '2D',
-  };
-  return state;
+  } satisfies CameraState2D;
 }
 
 /**
@@ -205,7 +202,7 @@ export const cameraStore = createMapStore<CameraState, CameraActions>({
     },
   }),
 
-  bus: (mapId, { get, set, replace }) => {
+  bus: (mapId, { get, replace }) => {
     const unsubReset = cameraBus.on(CameraEventTypes.reset, ({ payload }) => {
       if (payload.id !== mapId) {
         return;
