@@ -14,7 +14,7 @@ import { useOn } from '@accelint/bus/react';
 import { uuid } from '@accelint/core';
 import { Button } from '@accelint/design-toolkit';
 import { useState } from 'react';
-import { useMapCursor } from '../../../map-cursor';
+import { useMapCursor } from '@/map-cursor';
 import { BaseMap } from '../../base-map/index';
 import { mockShapes } from '../__fixtures__/mock-shapes';
 import { useShapeSelection } from '../display-shape-layer/use-shape-selection';

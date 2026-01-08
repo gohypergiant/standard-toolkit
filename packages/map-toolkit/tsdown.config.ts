@@ -20,32 +20,14 @@ export default defineConfig({
     '!src/**/*.{d,stories,test,test-d,bench}.{ts,tsx}',
     '!src/decorators',
     '!**/__fixtures__',
-    // Exclude internal implementation details from public API
-    '!src/deckgl/shapes/draw-shape-layer/modes/draw-*.ts',
-    '!src/deckgl/shapes/edit-shape-layer/modes/base-transform-mode.ts',
-    '!src/deckgl/shapes/edit-shape-layer/modes/bounding-transform-mode.ts',
-    '!src/deckgl/shapes/edit-shape-layer/modes/circle-transform-mode.ts',
-    '!src/deckgl/shapes/edit-shape-layer/modes/rotate-mode-with-snap.ts',
-    '!src/deckgl/shapes/edit-shape-layer/modes/scale-mode-with-free-transform.ts',
-    '!src/deckgl/shapes/edit-shape-layer/modes/vertex-transform-mode.ts',
-    '!src/deckgl/shapes/draw-shape-layer/store.ts',
-    '!src/deckgl/shapes/edit-shape-layer/store.ts',
-    '!src/deckgl/shapes/display-shape-layer/store.ts',
-    '!src/deckgl/shapes/draw-shape-layer/utils/**',
-    '!src/deckgl/shapes/display-shape-layer/utils/**',
+    // Exclude internal implementation details from shapes (not part of public API)
+    '!src/deckgl/shapes/**/modes/**',
+    '!src/deckgl/shapes/**/store.ts',
+    '!src/deckgl/shapes/**/constants.ts',
+    '!src/deckgl/shapes/**/utils/**',
+    '!src/deckgl/shapes/**/hooks/**',
+    // Additional internal files
     '!src/deckgl/shapes/display-shape-layer/shape-label-layer.ts',
-    '!src/deckgl/shapes/draw-shape-layer/constants.ts',
-    '!src/deckgl/shapes/edit-shape-layer/constants.ts',
-    '!src/deckgl/shapes/display-shape-layer/constants.ts',
-    // Shared internal utilities (not part of public API)
-    '!src/deckgl/shapes/shared/utils/geometry-measurements.ts',
-    '!src/deckgl/shapes/shared/utils/mode-utils.ts',
-    '!src/deckgl/shapes/shared/utils/pick-filtering.ts',
-    '!src/deckgl/shapes/shared/utils/layer-config.ts',
-    // style-utils is re-exported from shapes/index.ts, so exclude direct entry
-    '!src/deckgl/shapes/shared/utils/style-utils.ts',
-    // Shared internal hooks (used by draw/edit layers, not public API)
-    '!src/deckgl/shapes/shared/hooks/**',
   ],
   // NOTE: optionalDependencies must be included here
   // SEE: https://tsdown.dev/options/dependencies#default-behavior

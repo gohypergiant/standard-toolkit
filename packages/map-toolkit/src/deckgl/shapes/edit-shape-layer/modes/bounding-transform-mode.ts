@@ -22,7 +22,7 @@ import { featureCollection } from '@turf/helpers';
 import {
   DEFAULT_DISTANCE_UNITS,
   getDistanceUnitAbbreviation,
-} from '../../../../shared/units';
+} from '@/shared/units';
 import {
   formatEllipseTooltip,
   formatRectangleTooltip,

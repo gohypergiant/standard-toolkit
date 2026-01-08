@@ -13,7 +13,7 @@
 import { useOn } from '@accelint/bus/react';
 import { uuid } from '@accelint/core';
 import { useMemo, useState } from 'react';
-import { useMapCursor } from '../../../map-cursor/use-map-cursor';
+import { useMapCursor } from '@/map-cursor/use-map-cursor';
 import { BaseMap } from '../../base-map/index';
 import { mockShapes } from '../__fixtures__/mock-shapes';
 import { mockShapesWithIcons } from '../__fixtures__/mock-shapes-with-icons';

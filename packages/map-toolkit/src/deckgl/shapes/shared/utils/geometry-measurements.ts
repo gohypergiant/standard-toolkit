@@ -13,7 +13,7 @@
 'use client';
 
 import { distance, point } from '@turf/turf';
-import type { DistanceUnit } from '../../../../shared/units';
+import type { DistanceUnit } from '@/shared/units';
 
 /**
  * Circle measurement result containing radius, diameter, and area.

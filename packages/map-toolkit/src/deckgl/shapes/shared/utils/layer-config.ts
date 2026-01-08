@@ -15,13 +15,13 @@
 import {
   DEFAULT_DISTANCE_UNITS,
   getDistanceUnitFromAbbreviation,
-} from '../../../../shared/units';
+} from '@/shared/units';
 import {
   DEFAULT_EDIT_HANDLE_COLOR,
   EDITABLE_LAYER_SUBLAYER_PROPS,
 } from '../constants';
 import type { Color } from '@deck.gl/core';
-import type { DistanceUnit } from '../../../../shared/units';
+import type { DistanceUnit } from '@/shared/units';
 
 /**
  * Props returned by getDefaultEditableLayerProps.

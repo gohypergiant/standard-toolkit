@@ -13,15 +13,12 @@
 'use client';
 
 import { Broadcast } from '@accelint/bus';
-import { MapCursorEvents } from '../../../../map-cursor/events';
-import { getOrCreateClearCursor } from '../../../../map-cursor/store';
-import { MapModeEvents } from '../../../../map-mode/events';
+import { MapCursorEvents } from '@/map-cursor/events';
+import { getOrCreateClearCursor } from '@/map-cursor/store';
+import { MapModeEvents } from '@/map-mode/events';
 import type { UniqueId } from '@accelint/core';
-import type {
-  CSSCursorType,
-  MapCursorEventType,
-} from '../../../../map-cursor/types';
-import type { MapModeEventType } from '../../../../map-mode/types';
+import type { CSSCursorType, MapCursorEventType } from '@/map-cursor/types';
+import type { MapModeEventType } from '@/map-mode/types';
 
 /**
  * Typed event bus instances for mode and cursor communication.

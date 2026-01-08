@@ -15,7 +15,7 @@
 import type { UniqueId } from '@accelint/core';
 import type { Color } from '@deck.gl/core';
 import type { Feature, LineString, Point, Polygon } from 'geojson';
-import type { DistanceUnit } from '../../../shared/units';
+import type { DistanceUnit } from '@/shared/units';
 
 /**
  * Supported shape types

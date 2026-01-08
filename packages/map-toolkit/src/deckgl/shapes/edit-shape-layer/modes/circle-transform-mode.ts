@@ -22,7 +22,7 @@ import { centroid } from '@turf/turf';
 import {
   DEFAULT_DISTANCE_UNITS,
   getDistanceUnitAbbreviation,
-} from '../../../../shared/units';
+} from '@/shared/units';
 import { formatCircleTooltip } from '../../shared/constants';
 import { computeCircleMeasurements } from '../../shared/utils/geometry-measurements';
 import { BaseTransformMode, type HandleMatcher } from './base-transform-mode';
