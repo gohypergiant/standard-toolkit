@@ -137,7 +137,7 @@
   }
 
   .input {
-    @apply w-full outline-none;
+    @apply w-full overflow-hidden text-ellipsis whitespace-nowrap outline-none;
 
     &[type='number'] {
       appearance: textfield;
