@@ -140,6 +140,7 @@ export function Input({ ref = null, ...props }: InputProps) {
             className={composeRenderProps(classNames?.input, (className) =>
               clsx(styles.input, className),
             )}
+            title={value ? String(value) : ''}
             disabled={disabled}
             placeholder={placeholder}
             readOnly={readOnly}
