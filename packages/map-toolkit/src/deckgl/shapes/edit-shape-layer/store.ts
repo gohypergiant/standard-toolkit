@@ -37,7 +37,7 @@
 
 import { Broadcast } from '@accelint/bus';
 import { getLogger } from '@accelint/logger';
-import { createMapStore } from '../../../shared/create-map-store';
+import { createMapStore } from '@/shared/create-map-store';
 import { MapEvents } from '../../base-map/events';
 import {
   isCircleShape,

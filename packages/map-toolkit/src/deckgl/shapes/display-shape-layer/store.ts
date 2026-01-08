@@ -43,7 +43,7 @@
  */
 
 import { Broadcast } from '@accelint/bus';
-import { createMapStore } from '../../../shared/create-map-store';
+import { createMapStore } from '@/shared/create-map-store';
 import { MapEvents } from '../../base-map/events';
 import { ShapeEvents } from '../shared/events';
 import type { UniqueId } from '@accelint/core';

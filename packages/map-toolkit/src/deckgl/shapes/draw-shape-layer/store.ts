@@ -36,8 +36,8 @@
  */
 
 import { Broadcast } from '@accelint/bus';
-import { MapModeEvents } from '../../../map-mode/events';
-import { createMapStore } from '../../../shared/create-map-store';
+import { MapModeEvents } from '@/map-mode/events';
+import { createMapStore } from '@/shared/create-map-store';
 import {
   releaseModeAndCursor,
   requestModeAndCursor,
@@ -51,7 +51,7 @@ import { DrawShapeEvents } from './events';
 import { convertFeatureToShape } from './utils/feature-conversion';
 import type { UniqueId } from '@accelint/core';
 import type { Feature } from 'geojson';
-import type { MapModeEventType } from '../../../map-mode/types';
+import type { MapModeEventType } from '@/map-mode/types';
 import type { Shape, ShapeFeatureType } from '../shared/types';
 import type { DrawShapeEvent, ShapeDrawnEvent } from './events';
 import type { DrawFunction, DrawingState, DrawShapeOptions } from './types';
