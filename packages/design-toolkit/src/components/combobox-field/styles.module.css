@@ -62,7 +62,7 @@
   }
 
   .input {
-    @apply font-display grow outline-none;
+    @apply font-display grow overflow-hidden text-ellipsis whitespace-nowrap outline-none;
 
     @variant group-size-medium/combobox-field {
       @apply text-body-s;
