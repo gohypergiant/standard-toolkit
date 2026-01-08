@@ -14,7 +14,7 @@
 
 import type { UniqueId } from '@accelint/core';
 import type { Feature } from 'geojson';
-import type { DistanceUnitAbbreviation } from '../../../shared/units';
+import type { DistanceUnitAbbreviation } from '@/shared/units';
 import type {
   CircleProperties,
   Shape,

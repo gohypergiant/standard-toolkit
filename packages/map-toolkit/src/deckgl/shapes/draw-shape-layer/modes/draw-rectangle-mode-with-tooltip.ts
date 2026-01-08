@@ -29,7 +29,7 @@ import {
 import {
   DEFAULT_DISTANCE_UNITS,
   getDistanceUnitAbbreviation,
-} from '../../../../shared/units';
+} from '@/shared/units';
 import { formatRectangleTooltip } from '../../shared/constants';
 import type { Position } from 'geojson';
 

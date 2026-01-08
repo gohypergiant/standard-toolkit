@@ -13,7 +13,7 @@
 'use client';
 
 import { ShapeFeatureType } from '../shared/types';
-import type { CSSCursorType } from '../../../map-cursor/types';
+import type { CSSCursorType } from '@/map-cursor/types';
 
 /**
  * Mode name for the map-mode integration

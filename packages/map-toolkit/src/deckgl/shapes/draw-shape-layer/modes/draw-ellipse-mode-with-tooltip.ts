@@ -21,7 +21,7 @@ import { type Coord, distance } from '@turf/turf';
 import {
   DEFAULT_DISTANCE_UNITS,
   getDistanceUnitAbbreviation,
-} from '../../../../shared/units';
+} from '@/shared/units';
 import {
   formatDistanceTooltip,
   formatEllipseTooltip,

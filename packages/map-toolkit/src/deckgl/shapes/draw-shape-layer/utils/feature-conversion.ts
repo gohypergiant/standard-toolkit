@@ -15,7 +15,7 @@
 import { uuid } from '@accelint/core';
 import { getLogger } from '@accelint/logger';
 import { centroid, distance } from '@turf/turf';
-import { DEFAULT_DISTANCE_UNITS } from '../../../../shared/units';
+import { DEFAULT_DISTANCE_UNITS } from '@/shared/units';
 import { DEFAULT_STYLE_PROPERTIES } from '../../shared/constants';
 import {
   type CircleProperties,

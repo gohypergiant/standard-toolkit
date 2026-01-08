@@ -13,7 +13,7 @@
 import { Broadcast } from '@accelint/bus';
 import { uuid } from '@accelint/core';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { MapModeEvents } from '../../../map-mode/events';
+import { MapModeEvents } from '@/map-mode/events';
 import { ShapeFeatureType } from '../shared/types';
 import {
   clearDrawingState,
@@ -22,7 +22,7 @@ import {
   getDrawingState,
 } from './store';
 import type { UniqueId } from '@accelint/core';
-import type { MapModeEventType } from '../../../map-mode/types';
+import type { MapModeEventType } from '@/map-mode/types';
 
 describe('draw-shape-layer store', () => {
   let mapId: UniqueId;

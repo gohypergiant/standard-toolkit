@@ -12,7 +12,7 @@
 
 'use client';
 
-import type { CSSCursorType } from '../../../map-cursor/types';
+import type { CSSCursorType } from '@/map-cursor/types';
 import type { EditMode } from './types';
 
 // Re-export edit event type sets from shared constants

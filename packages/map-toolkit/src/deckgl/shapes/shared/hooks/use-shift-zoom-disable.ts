@@ -14,12 +14,12 @@
 
 import { useEmit } from '@accelint/bus/react';
 import { useEffect, useRef } from 'react';
-import { MapEvents } from '../../../base-map/events';
+import { MapEvents } from '@/deckgl/base-map/events';
 import type { UniqueId } from '@accelint/core';
 import type {
   MapDisableZoomEvent,
   MapEnableZoomEvent,
-} from '../../../base-map/types';
+} from '@/deckgl/base-map/types';
 
 /**
  * Hook to disable map zoom while Shift key is held during shape operations.
