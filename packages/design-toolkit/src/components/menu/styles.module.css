@@ -310,7 +310,7 @@
   }
 
   .separator {
-    @apply my-xs h-px;
+    @apply h-px;
     background-color: var(--outline-static);
   }
 
