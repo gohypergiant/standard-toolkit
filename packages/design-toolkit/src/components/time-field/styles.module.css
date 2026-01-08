@@ -18,7 +18,7 @@
   }
 
   .control {
-    @apply gap-xs rounded-medium px-s py-xs font-display outline-interactive fg-primary-bold flex w-full items-center outline;
+    @apply gap-xs rounded-medium px-s py-xs font-display fg-primary-bold outline-interactive flex w-full items-center outline;
 
     @variant group-size-medium/time-field {
       @apply text-body-s;
@@ -28,20 +28,20 @@
       @apply text-body-xs;
     }
 
-    @variant hover {
-      @apply outline-interactive-hover;
-    }
-
-    @variant focus-visible-within {
-      @apply outline-accent-primary-bold;
-    }
-
     @variant group-invalid/time-field {
       @apply outline-serious-bold;
     }
 
     @variant group-disabled/time-field {
       @apply fg-disabled outline-interactive-disabled;
+    }
+
+    @variant hover {
+      @apply outline-interactive-hover;
+    }
+
+    @variant focus-visible-within {
+      @apply outline-accent-primary-bold;
     }
   }
 
@@ -71,5 +71,9 @@
 
   .error {
     @apply fg-serious-bold text-body-xs;
+  }
+
+  .readonly {
+    @apply px-0 outline-none;
   }
 }
