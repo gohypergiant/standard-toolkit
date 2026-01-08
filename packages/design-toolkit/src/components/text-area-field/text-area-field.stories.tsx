@@ -24,6 +24,7 @@ const meta = {
     isDisabled: false,
     isInvalid: false,
     isRequired: true,
+    isReadOnly: false,
     inputProps: {
       placeholder: 'Placeholder',
     },
@@ -49,4 +50,14 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: TextAreaField,
+};
+
+export const Readonly: Story = {
+  args: {
+    isReadOnly: true,
+    inputProps: {
+      value:
+        'text area long blob text area long blob text area long blob text area long blob text area long blob text area long blob text area long blob text area long blob',
+    },
+  },
 };
