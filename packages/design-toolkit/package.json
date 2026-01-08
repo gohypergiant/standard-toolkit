@@ -213,8 +213,6 @@
     "./components/list/item": "./dist/components/list/item.js",
     "./components/list/item-content": "./dist/components/list/item-content.js",
     "./components/list/item-description": "./dist/components/list/item-description.js",
-    "./components/list/item-icon": "./dist/components/list/item-icon.js",
-    "./components/list/item-indicator": "./dist/components/list/item-indicator.js",
     "./components/list/item-title": "./dist/components/list/item-title.js",
     "./components/list/types": "./dist/components/list/types.js",
     "./components/menu": "./dist/components/menu/index.js",
