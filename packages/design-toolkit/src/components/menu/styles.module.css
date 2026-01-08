@@ -27,6 +27,14 @@
       content: '';
     }
 
+    &:after {
+      content: '';
+      @apply pointer-events-none absolute right-0 left-0 -z-1;
+      top: 0;
+      bottom: 0;
+      background: inherit;
+    }
+
     &.cozy {
       @apply pt-s pb-s;
     }
@@ -37,19 +45,39 @@
 
     @variant color-info {
       @variant focus-visible {
-        @apply bg-accent-primary-muted;
+        @apply bg-accent-primary-muted z-1;
+
+        &:after {
+          top: -1px;
+          bottom: -1px;
+        }
       }
 
       @variant hover {
-        @apply bg-accent-primary-muted;
+        @apply bg-accent-primary-muted z-1;
+
+        &:after {
+          top: -1px;
+          bottom: -1px;
+        }
       }
 
       @variant open {
-        @apply bg-accent-primary-muted;
+        @apply bg-accent-primary-muted z-1;
+
+        &:after {
+          top: -1px;
+          bottom: -1px;
+        }
       }
 
       @variant pressed {
-        @apply fg-accent-primary-bold bg-accent-primary-pressed;
+        @apply fg-accent-primary-bold bg-accent-primary-pressed z-1;
+
+        &:after {
+          top: -1px;
+          bottom: -1px;
+        }
       }
 
       @variant selected {
@@ -89,19 +117,39 @@
       @apply fg-serious-bold;
 
       @variant focus-visible {
-        @apply fg-primary-bold bg-serious-muted;
+        @apply fg-primary-bold bg-serious-muted z-1;
+
+        &:after {
+          top: -1px;
+          bottom: -1px;
+        }
       }
 
       @variant hover {
-        @apply fg-primary-bold bg-serious-muted;
+        @apply fg-primary-bold bg-serious-muted z-1;
+
+        &:after {
+          top: -1px;
+          bottom: -1px;
+        }
       }
 
       @variant open {
-        @apply bg-serious-muted;
+        @apply bg-serious-muted z-1;
+
+        &:after {
+          top: -1px;
+          bottom: -1px;
+        }
       }
 
       @variant pressed {
-        @apply fg-serious-bold bg-serious-pressed;
+        @apply fg-serious-bold bg-serious-pressed z-1;
+
+        &:after {
+          top: -1px;
+          bottom: -1px;
+        }
       }
 
       @variant selected {
@@ -140,19 +188,39 @@
       @apply fg-critical-bold;
 
       @variant focus-visible {
-        @apply fg-primary-bold bg-critical-muted;
+        @apply fg-primary-bold bg-critical-muted z-1;
+
+        &:after {
+          top: -1px;
+          bottom: -1px;
+        }
       }
 
       @variant hover {
-        @apply fg-primary-bold bg-critical-muted;
+        @apply fg-primary-bold bg-critical-muted z-1;
+
+        &:after {
+          top: -1px;
+          bottom: -1px;
+        }
       }
 
       @variant open {
-        @apply bg-critical-muted;
+        @apply bg-critical-muted z-1;
+
+        &:after {
+          top: -1px;
+          bottom: -1px;
+        }
       }
 
       @variant pressed {
-        @apply fg-critical-bold bg-critical-pressed;
+        @apply fg-critical-bold bg-critical-pressed z-1;
+
+        &:after {
+          top: -1px;
+          bottom: -1px;
+        }
       }
 
       @variant selected {
