@@ -93,7 +93,6 @@ export function ComboBoxField<T extends OptionsDataItem>({
               {labelProp}
             </Label>
           )}
-
           <div
             className={clsx(
               styles.control,
@@ -107,6 +106,7 @@ export function ComboBoxField<T extends OptionsDataItem>({
               className={composeRenderProps(classNames?.input, (className) =>
                 clsx(styles.input, className),
               )}
+              title={inputProps?.value ? String(inputProps?.value) : ''}
             />
             {!isReadOnly && (
               <Button
