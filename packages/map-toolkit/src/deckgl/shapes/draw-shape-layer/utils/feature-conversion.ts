@@ -38,9 +38,9 @@ const logger = getLogger({
 /**
  * Generate a default name for a shape based on its type
  */
-function generateShapeName(shapeType: ShapeFeatureType): string {
+function generateShapeName(shape: ShapeFeatureType): string {
   const timestamp = new Date().toLocaleTimeString();
-  return `New ${shapeType} (${timestamp})`;
+  return `New ${shape} (${timestamp})`;
 }
 
 /**
@@ -166,17 +166,17 @@ function computeEllipseProperties(
  * - `locked: false` (newly created shapes are always unlocked)
  *
  * @param feature - The raw GeoJSON feature from the editable layer
- * @param shapeType - The type of shape being created
+ * @param shape - The type of shape being created
  * @param styleDefaults - Optional style overrides
  * @returns A complete Shape ready for use
  */
 export function convertFeatureToShape(
   feature: Feature,
-  shapeType: ShapeFeatureType,
+  shape: ShapeFeatureType,
   styleDefaults?: Partial<StyleProperties> | null,
 ): Shape {
   const id = uuid();
-  const name = generateShapeName(shapeType);
+  const name = generateShapeName(shape);
 
   // Merge default styles with any provided defaults
   const styleProperties: StyleProperties = {
@@ -187,7 +187,7 @@ export function convertFeatureToShape(
   // Compute circle properties if this is a circle
   let circleProperties: CircleProperties | undefined;
   if (
-    shapeType === ShapeFeatureTypeEnum.Circle &&
+    shape === ShapeFeatureTypeEnum.Circle &&
     feature.geometry.type === 'Polygon'
   ) {
     circleProperties = computeCircleProperties(feature.geometry);
@@ -196,7 +196,7 @@ export function convertFeatureToShape(
   // Compute ellipse properties if this is an ellipse
   let ellipseProperties: EllipseProperties | undefined;
   if (
-    shapeType === ShapeFeatureTypeEnum.Ellipse &&
+    shape === ShapeFeatureTypeEnum.Ellipse &&
     feature.geometry.type === 'Polygon'
   ) {
     ellipseProperties = computeEllipseProperties(feature);
@@ -215,12 +215,12 @@ export function convertFeatureToShape(
   };
 
   // Type assertion needed because TypeScript can't narrow the return type
-  // based on the runtime shapeType value. The constructed object satisfies
-  // the Shape union at runtime based on which shapeType was passed in.
+  // based on the runtime shape value. The constructed object satisfies
+  // the Shape union at runtime based on which shape was passed in.
   return {
     id,
     name,
-    shapeType,
+    shape,
     feature: styledFeature,
     lastUpdated: Date.now(),
     locked: false,

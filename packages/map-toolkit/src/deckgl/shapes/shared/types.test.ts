@@ -67,7 +67,7 @@ function createCircleShape(): CircleShape {
   return {
     id: uuid(),
     name: 'Test Circle',
-    shapeType: ShapeFeatureType.Circle,
+    shape: ShapeFeatureType.Circle,
     feature: {
       ...createBaseFeature(),
       properties: {
@@ -96,7 +96,7 @@ function createEllipseShape(): EllipseShape {
   return {
     id: uuid(),
     name: 'Test Ellipse',
-    shapeType: ShapeFeatureType.Ellipse,
+    shape: ShapeFeatureType.Ellipse,
     feature: {
       ...createBaseFeature(),
       properties: {
@@ -130,7 +130,7 @@ function createPolygonShape(): PolygonShape {
   return {
     id: uuid(),
     name: 'Test Polygon',
-    shapeType: ShapeFeatureType.Polygon,
+    shape: ShapeFeatureType.Polygon,
     feature: createBaseFeature(),
   };
 }
@@ -142,7 +142,7 @@ function createRectangleShape(): RectangleShape {
   return {
     id: uuid(),
     name: 'Test Rectangle',
-    shapeType: ShapeFeatureType.Rectangle,
+    shape: ShapeFeatureType.Rectangle,
     feature: createBaseFeature(),
   };
 }
@@ -154,7 +154,7 @@ function createLineStringShape(): LineStringShape {
   return {
     id: uuid(),
     name: 'Test LineString',
-    shapeType: ShapeFeatureType.LineString,
+    shape: ShapeFeatureType.LineString,
     feature: {
       ...createBaseFeature(),
       geometry: {
@@ -176,7 +176,7 @@ function createPointShape(): PointShape {
   return {
     id: uuid(),
     name: 'Test Point',
-    shapeType: ShapeFeatureType.Point,
+    shape: ShapeFeatureType.Point,
     feature: {
       ...createBaseFeature(),
       geometry: {
@@ -287,7 +287,7 @@ describe('Type Guards', () => {
 
       if (isPolygonShape(shape)) {
         // TypeScript should narrow to PolygonShape
-        expect(shape.shapeType).toBe(ShapeFeatureType.Polygon);
+        expect(shape.shape).toBe(ShapeFeatureType.Polygon);
       }
     });
   });
@@ -317,7 +317,7 @@ describe('Type Guards', () => {
 
       if (isRectangleShape(shape)) {
         // TypeScript should narrow to RectangleShape
-        expect(shape.shapeType).toBe(ShapeFeatureType.Rectangle);
+        expect(shape.shape).toBe(ShapeFeatureType.Rectangle);
       }
     });
   });
@@ -347,7 +347,7 @@ describe('Type Guards', () => {
 
       if (isLineStringShape(shape)) {
         // TypeScript should narrow to LineStringShape
-        expect(shape.shapeType).toBe(ShapeFeatureType.LineString);
+        expect(shape.shape).toBe(ShapeFeatureType.LineString);
       }
     });
   });
@@ -377,7 +377,7 @@ describe('Type Guards', () => {
 
       if (isPointShape(shape)) {
         // TypeScript should narrow to PointShape
-        expect(shape.shapeType).toBe(ShapeFeatureType.Point);
+        expect(shape.shape).toBe(ShapeFeatureType.Point);
       }
     });
   });

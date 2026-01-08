@@ -27,7 +27,7 @@ export const mockShapesWithIcons: Shape[] = [
     id: uuid(),
     name: 'Location Marker',
     label: 'Marker 1',
-    shapeType: 'Point',
+    shape: 'Point',
     feature: {
       type: 'Feature',
       properties: {
@@ -61,7 +61,7 @@ export const mockShapesWithIcons: Shape[] = [
     id: uuid(),
     name: 'Serious Marker',
     label: 'Serious',
-    shapeType: 'Point',
+    shape: 'Point',
     feature: {
       type: 'Feature',
       properties: {
@@ -95,7 +95,7 @@ export const mockShapesWithIcons: Shape[] = [
     id: uuid(),
     name: 'Connection Line',
     label: 'Route',
-    shapeType: 'LineString',
+    shape: 'LineString',
     feature: {
       type: 'Feature',
       properties: {

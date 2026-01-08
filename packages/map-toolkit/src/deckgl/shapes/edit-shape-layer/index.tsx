@@ -57,15 +57,15 @@ function isCompletionEditType(editType: string): boolean {
  */
 function toFeatureCollection(
   feature: Feature,
-  shapeType: ShapeFeatureTypeValues,
+  shape: ShapeFeatureTypeValues,
 ): import('geojson').FeatureCollection {
   // Add shape property for modes that require it
   // - ResizeCircleMode requires shape: 'Circle'
   // - ModifyMode lockRectangles requires shape: 'Rectangle'
   let shapeProperty: string | undefined;
-  if (shapeType === ShapeFeatureType.Circle) {
+  if (shape === ShapeFeatureType.Circle) {
     shapeProperty = 'Circle';
-  } else if (shapeType === ShapeFeatureType.Rectangle) {
+  } else if (shape === ShapeFeatureType.Rectangle) {
     shapeProperty = 'Rectangle';
   }
 
@@ -173,12 +173,9 @@ export function EditShapeLayer({
   // Get the cached mode instance
   const mode = getEditModeInstance(editMode);
 
-  // Get shape type for feature collection conversion
-  const shapeType = editingShape.shapeType;
-
   // Use the live feature being edited, or fall back to original shape
   const featureToRender = featureBeingEdited ?? editingShape.feature;
-  const data = toFeatureCollection(featureToRender, shapeType);
+  const data = toFeatureCollection(featureToRender, editingShape.shape);
 
   // Helper to cancel any pending RAF update
   const cancelPendingUpdate = () => {

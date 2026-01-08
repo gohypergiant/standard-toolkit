@@ -28,9 +28,9 @@ import type {
 } from './events';
 
 // Get fixture shapes by type
-const mockCircle = mockShapes.find((s) => s.shapeType === 'Circle');
-const mockPolygon = mockShapes.find((s) => s.shapeType === 'Polygon');
-const mockEllipse = mockShapes.find((s) => s.shapeType === 'Ellipse');
+const mockCircle = mockShapes.find((s) => s.shape === 'Circle');
+const mockPolygon = mockShapes.find((s) => s.shape === 'Polygon');
+const mockEllipse = mockShapes.find((s) => s.shape === 'Ellipse');
 
 if (!mockCircle) {
   throw new Error('Missing Circle fixture shape');
@@ -53,7 +53,7 @@ function createMockShape(overrides?: Partial<Shape>): Shape {
     // biome-ignore lint/style/noNonNullAssertion: Existence verified above with throw
     name: mockPolygon!.name,
     // biome-ignore lint/style/noNonNullAssertion: Existence verified above with throw
-    shapeType: mockPolygon!.shapeType,
+    shape: mockPolygon!.shape,
     // biome-ignore lint/style/noNonNullAssertion: Existence verified above with throw
     feature: mockPolygon!.feature,
     lastUpdated: Date.now(),
@@ -70,7 +70,7 @@ function createMockCircleShape(overrides?: Partial<Shape>): Shape {
     // biome-ignore lint/style/noNonNullAssertion: Existence verified above with throw
     name: mockCircle!.name,
     // biome-ignore lint/style/noNonNullAssertion: Existence verified above with throw
-    shapeType: mockCircle!.shapeType,
+    shape: mockCircle!.shape,
     // biome-ignore lint/style/noNonNullAssertion: Existence verified above with throw
     feature: mockCircle!.feature,
     lastUpdated: Date.now(),
@@ -87,7 +87,7 @@ function createMockEllipseShape(overrides?: Partial<Shape>): Shape {
     // biome-ignore lint/style/noNonNullAssertion: Existence verified above with throw
     name: mockEllipse!.name,
     // biome-ignore lint/style/noNonNullAssertion: Existence verified above with throw
-    shapeType: mockEllipse!.shapeType,
+    shape: mockEllipse!.shape,
     // biome-ignore lint/style/noNonNullAssertion: Existence verified above with throw
     feature: mockEllipse!.feature,
     lastUpdated: Date.now(),
@@ -173,7 +173,7 @@ describe('useEditShape', () => {
 
     it('sets vertex-transform mode for polygons', async () => {
       const { result } = renderHook(() => useEditShape(mapId));
-      const shape = createMockShape({ shapeType: ShapeFeatureType.Polygon });
+      const shape = createMockShape({ shape: ShapeFeatureType.Polygon });
 
       act(() => {
         result.current.edit(shape);
@@ -186,7 +186,7 @@ describe('useEditShape', () => {
 
     it('sets vertex-transform mode for lines', async () => {
       const { result } = renderHook(() => useEditShape(mapId));
-      const shape = createMockShape({ shapeType: ShapeFeatureType.LineString });
+      const shape = createMockShape({ shape: ShapeFeatureType.LineString });
 
       act(() => {
         result.current.edit(shape);
@@ -199,7 +199,7 @@ describe('useEditShape', () => {
 
     it('sets bounding-transform mode for rectangles', async () => {
       const { result } = renderHook(() => useEditShape(mapId));
-      const shape = createMockShape({ shapeType: ShapeFeatureType.Rectangle });
+      const shape = createMockShape({ shape: ShapeFeatureType.Rectangle });
 
       act(() => {
         result.current.edit(shape);
@@ -214,7 +214,7 @@ describe('useEditShape', () => {
 
     it('sets translate mode for points', async () => {
       const { result } = renderHook(() => useEditShape(mapId));
-      const shape = createMockShape({ shapeType: ShapeFeatureType.Point });
+      const shape = createMockShape({ shape: ShapeFeatureType.Point });
 
       act(() => {
         result.current.edit(shape);
@@ -255,7 +255,7 @@ describe('useEditShape', () => {
 
     it('allows mode override via options', async () => {
       const { result } = renderHook(() => useEditShape(mapId));
-      const shape = createMockShape({ shapeType: ShapeFeatureType.Polygon });
+      const shape = createMockShape({ shape: ShapeFeatureType.Polygon });
 
       act(() => {
         result.current.edit(shape, { mode: 'circle-transform' });
@@ -645,7 +645,7 @@ describe('useEditShape', () => {
 
       for (const shapeType of shapeTypes) {
         const testMapId = uuid();
-        const shape = createMockShape({ shapeType });
+        const shape = createMockShape({ shape: shapeType });
         const { result, unmount } = renderHook(() => useEditShape(testMapId));
 
         act(() => {
@@ -653,7 +653,7 @@ describe('useEditShape', () => {
         });
 
         await waitFor(() => {
-          expect(result.current.editingShape?.shapeType).toBe(shapeType);
+          expect(result.current.editingShape?.shape).toBe(shapeType);
         });
 
         // Unmount the hook before cleaning up state

@@ -84,7 +84,7 @@ export const BasicDrawing: Story = {
             ...log.slice(-9),
             {
               id: `${Date.now()}-created`,
-              message: `Created: ${shape.shapeType} "${shape.name}"`,
+              message: `Created: ${shape.shape} "${shape.name}"`,
             },
           ]);
         },

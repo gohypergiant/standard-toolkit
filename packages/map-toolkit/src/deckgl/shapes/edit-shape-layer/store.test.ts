@@ -25,12 +25,12 @@ import type { UniqueId } from '@accelint/core';
 import type { Shape } from '../shared/types';
 
 // Get fixture shapes by type
-const mockCircle = mockShapes.find((s) => s.shapeType === 'Circle');
-const mockPolygon = mockShapes.find((s) => s.shapeType === 'Polygon');
-const mockEllipse = mockShapes.find((s) => s.shapeType === 'Ellipse');
-const mockRectangle = mockShapes.find((s) => s.shapeType === 'Rectangle');
-const mockLineString = mockShapes.find((s) => s.shapeType === 'LineString');
-const mockPoint = mockShapes.find((s) => s.shapeType === 'Point');
+const mockCircle = mockShapes.find((s) => s.shape === 'Circle');
+const mockPolygon = mockShapes.find((s) => s.shape === 'Polygon');
+const mockEllipse = mockShapes.find((s) => s.shape === 'Ellipse');
+const mockRectangle = mockShapes.find((s) => s.shape === 'Rectangle');
+const mockLineString = mockShapes.find((s) => s.shape === 'LineString');
+const mockPoint = mockShapes.find((s) => s.shape === 'Point');
 
 if (
   ![
@@ -54,7 +54,7 @@ function createMockShape(overrides?: Partial<Shape>): Shape {
     // biome-ignore lint/style/noNonNullAssertion: Existence verified above with throw
     name: mockPolygon!.name,
     // biome-ignore lint/style/noNonNullAssertion: Existence verified above with throw
-    shapeType: mockPolygon!.shapeType,
+    shape: mockPolygon!.shape,
     // biome-ignore lint/style/noNonNullAssertion: Existence verified above with throw
     feature: mockPolygon!.feature,
     lastUpdated: Date.now(),
@@ -71,7 +71,7 @@ function createMockCircleShape(): Shape {
     // biome-ignore lint/style/noNonNullAssertion: Existence verified above with throw
     name: mockCircle!.name,
     // biome-ignore lint/style/noNonNullAssertion: Existence verified above with throw
-    shapeType: mockCircle!.shapeType,
+    shape: mockCircle!.shape,
     // biome-ignore lint/style/noNonNullAssertion: Existence verified above with throw
     feature: mockCircle!.feature,
     lastUpdated: Date.now(),
@@ -87,7 +87,7 @@ function createMockEllipseShape(): Shape {
     // biome-ignore lint/style/noNonNullAssertion: Existence verified above with throw
     name: mockEllipse!.name,
     // biome-ignore lint/style/noNonNullAssertion: Existence verified above with throw
-    shapeType: mockEllipse!.shapeType,
+    shape: mockEllipse!.shape,
     // biome-ignore lint/style/noNonNullAssertion: Existence verified above with throw
     feature: mockEllipse!.feature,
     lastUpdated: Date.now(),
@@ -103,7 +103,7 @@ function createMockPointShape(): Shape {
     // biome-ignore lint/style/noNonNullAssertion: Existence verified above with throw
     name: mockPoint!.name,
     // biome-ignore lint/style/noNonNullAssertion: Existence verified above with throw
-    shapeType: mockPoint!.shapeType,
+    shape: mockPoint!.shape,
     // biome-ignore lint/style/noNonNullAssertion: Existence verified above with throw
     feature: mockPoint!.feature,
     lastUpdated: Date.now(),
@@ -261,7 +261,7 @@ describe('edit-shape-layer store', () => {
     it('sets vertex-transform mode for polygons', () => {
       const { edit } = editStore.actions(mapId);
 
-      const shape = createMockShape({ shapeType: ShapeFeatureType.Polygon });
+      const shape = createMockShape({ shape: ShapeFeatureType.Polygon });
       edit(shape);
 
       expect(editStore.get(mapId)?.editMode).toBe('vertex-transform');
@@ -271,7 +271,7 @@ describe('edit-shape-layer store', () => {
       const { edit } = editStore.actions(mapId);
 
       const shape = createMockShape({
-        shapeType: ShapeFeatureType.LineString,
+        shape: ShapeFeatureType.LineString,
         // biome-ignore lint/style/noNonNullAssertion: mockLineString is verified in beforeAll
         feature: mockLineString!.feature,
       });
@@ -302,7 +302,7 @@ describe('edit-shape-layer store', () => {
       const { edit } = editStore.actions(mapId);
 
       const shape = createMockShape({
-        shapeType: ShapeFeatureType.Rectangle,
+        shape: ShapeFeatureType.Rectangle,
         // biome-ignore lint/style/noNonNullAssertion: mockRectangle is verified in beforeAll
         feature: mockRectangle!.feature,
       });
@@ -323,7 +323,7 @@ describe('edit-shape-layer store', () => {
     it('allows mode override via options', () => {
       const { edit } = editStore.actions(mapId);
 
-      const shape = createMockShape({ shapeType: ShapeFeatureType.Polygon });
+      const shape = createMockShape({ shape: ShapeFeatureType.Polygon });
       edit(shape, { mode: 'circle-transform' });
 
       expect(editStore.get(mapId)?.editMode).toBe('circle-transform');

@@ -179,7 +179,7 @@ describe('Label Positioning Utilities', () => {
         id: '1',
         name: 'Full Name',
         label: 'Label',
-        shapeType: 'Point',
+        shape: 'Point',
         locked: false,
         feature: {
           type: 'Feature',
@@ -195,7 +195,7 @@ describe('Label Positioning Utilities', () => {
       const shape: Shape = {
         id: '1',
         name: 'Full Name',
-        shapeType: 'Point',
+        shape: 'Point',
         locked: false,
         feature: {
           type: 'Feature',
@@ -212,7 +212,7 @@ describe('Label Positioning Utilities', () => {
         id: '1',
         name: 'Full Name',
         label: 'Short',
-        shapeType: 'Point',
+        shape: 'Point',
         locked: false,
         feature: {
           type: 'Feature',
@@ -231,7 +231,7 @@ describe('Label Positioning Utilities', () => {
         const shape: Shape = {
           id: '1',
           name: 'Test',
-          shapeType: 'Point',
+          shape: 'Point',
           locked: false,
           feature: {
             type: 'Feature',
@@ -255,7 +255,7 @@ describe('Label Positioning Utilities', () => {
         const shape: Shape = {
           id: '1',
           name: 'Test',
-          shapeType: 'Point',
+          shape: 'Point',
           locked: false,
           feature: {
             type: 'Feature',
@@ -284,7 +284,7 @@ describe('Label Positioning Utilities', () => {
         const shape: Shape = {
           id: '1',
           name: 'Test',
-          shapeType: 'Point',
+          shape: 'Point',
           locked: false,
           feature: {
             type: 'Feature',
@@ -321,7 +321,7 @@ describe('Label Positioning Utilities', () => {
         const shape: Shape = {
           id: '1',
           name: 'Test',
-          shapeType: 'LineString',
+          shape: 'LineString',
           locked: false,
           feature: {
             type: 'Feature',
@@ -352,7 +352,7 @@ describe('Label Positioning Utilities', () => {
         const shape: Shape = {
           id: '1',
           name: 'Test',
-          shapeType: 'LineString',
+          shape: 'LineString',
           locked: false,
           feature: {
             type: 'Feature',
@@ -382,7 +382,7 @@ describe('Label Positioning Utilities', () => {
         const shape: Shape = {
           id: '1',
           name: 'Test',
-          shapeType: 'LineString',
+          shape: 'LineString',
           locked: false,
           feature: {
             type: 'Feature',
@@ -412,7 +412,7 @@ describe('Label Positioning Utilities', () => {
         const shape: Shape = {
           id: '1',
           name: 'Test',
-          shapeType: 'LineString',
+          shape: 'LineString',
           locked: false,
           feature: {
             type: 'Feature',
@@ -442,7 +442,7 @@ describe('Label Positioning Utilities', () => {
         const shape: Shape = {
           id: '1',
           name: 'Test',
-          shapeType: 'LineString',
+          shape: 'LineString',
           locked: false,
           feature: {
             type: 'Feature',
@@ -475,7 +475,7 @@ describe('Label Positioning Utilities', () => {
         const shape: Shape = {
           id: '1',
           name: 'Test',
-          shapeType: 'Polygon',
+          shape: 'Polygon',
           locked: false,
           feature: {
             type: 'Feature',
@@ -510,7 +510,7 @@ describe('Label Positioning Utilities', () => {
         const shape: Shape = {
           id: '1',
           name: 'Test',
-          shapeType: 'Polygon',
+          shape: 'Polygon',
           locked: false,
           feature: {
             type: 'Feature',
@@ -544,7 +544,7 @@ describe('Label Positioning Utilities', () => {
         const shape: Shape = {
           id: '1',
           name: 'Test',
-          shapeType: 'Polygon',
+          shape: 'Polygon',
           locked: false,
           feature: {
             type: 'Feature',
@@ -578,7 +578,7 @@ describe('Label Positioning Utilities', () => {
         const shape: Shape = {
           id: '1',
           name: 'Test',
-          shapeType: 'Polygon',
+          shape: 'Polygon',
           locked: false,
           feature: {
             type: 'Feature',
@@ -612,7 +612,7 @@ describe('Label Positioning Utilities', () => {
         const shape: Shape = {
           id: '1',
           name: 'Test',
-          shapeType: 'Polygon',
+          shape: 'Polygon',
           locked: false,
           feature: {
             type: 'Feature',
@@ -649,7 +649,7 @@ describe('Label Positioning Utilities', () => {
         const shape: Shape = {
           id: '1',
           name: 'Test',
-          shapeType: 'Circle',
+          shape: 'Circle',
           locked: false,
           feature: {
             type: 'Feature',
@@ -680,7 +680,7 @@ describe('Label Positioning Utilities', () => {
         const shape: Shape = {
           id: '1',
           name: 'Test',
-          shapeType: 'Circle',
+          shape: 'Circle',
           locked: false,
           feature: {
             type: 'Feature',
@@ -714,7 +714,7 @@ describe('Label Positioning Utilities', () => {
         const shape: Shape = {
           id: '1',
           name: 'Test',
-          shapeType: 'Circle',
+          shape: 'Circle',
           locked: false,
           feature: {
             type: 'Feature',
@@ -748,7 +748,7 @@ describe('Label Positioning Utilities', () => {
         const shape: Shape = {
           id: '1',
           name: 'Test',
-          shapeType: 'Circle',
+          shape: 'Circle',
           locked: false,
           feature: {
             type: 'Feature',
@@ -782,7 +782,7 @@ describe('Label Positioning Utilities', () => {
         const shape: Shape = {
           id: '1',
           name: 'Test',
-          shapeType: 'Circle',
+          shape: 'Circle',
           locked: false,
           feature: {
             type: 'Feature',
@@ -816,7 +816,7 @@ describe('Label Positioning Utilities', () => {
         const shape: Shape = {
           id: '1',
           name: 'Test',
-          shapeType: 'Circle',
+          shape: 'Circle',
           locked: false,
           feature: {
             type: 'Feature',
@@ -859,7 +859,7 @@ describe('Label Positioning Utilities', () => {
         const shape = {
           id: '1',
           name: 'Test',
-          shapeType: 'Unknown',
+          shape: 'Unknown',
           locked: false,
           feature: {
             type: 'Feature',
