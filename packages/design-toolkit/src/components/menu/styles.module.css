@@ -310,7 +310,8 @@
   }
 
   .separator {
-    @apply outline-static mx-m my-xs outline;
+    @apply my-xs h-px;
+    background-color: var(--outline-static);
   }
 
   .hotkey {
