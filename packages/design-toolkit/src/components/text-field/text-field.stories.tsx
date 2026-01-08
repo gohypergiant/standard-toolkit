@@ -29,6 +29,7 @@ const meta = {
     isDisabled: false,
     isInvalid: false,
     isRequired: true,
+    isReadOnly: false,
   },
   argTypes: {
     size: {
@@ -79,5 +80,15 @@ export const WithPrefixAndSuffix: Story = {
       suffix: '°C',
     },
     description: 'Approximate temperature in Celsius',
+  },
+};
+
+export const Readonly: Story = {
+  args: {
+    label: 'Readonly',
+    isReadOnly: true,
+    inputProps: {
+      value: 'long long long long long long long long string',
+    },
   },
 };
