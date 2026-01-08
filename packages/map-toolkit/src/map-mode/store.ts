@@ -37,7 +37,12 @@
 import { Broadcast } from '@accelint/bus';
 import { uuid } from '@accelint/core';
 import { getLogger } from '@accelint/logger';
-import { createMapStore } from '../shared/create-map-store';
+import {
+  createMapStore,
+  mapClear,
+  mapDelete,
+  mapSet,
+} from '../shared/create-map-store';
 import { MapModeEvents } from './events';
 import type { UniqueId } from '@accelint/core';
 import type { StoreHelpers } from '../shared/create-map-store';
@@ -140,22 +145,20 @@ function approveRequestAndRejectOthers(
     }
   }
 
-  // Create new Maps for immutable update
-  const newPendingRequests = new Map<string, PendingRequest>();
-  const newModeOwners = new Map(state.modeOwners);
-
-  // Store the new mode's owner (unless it's default mode)
-  if (approvedRequest.desiredMode !== DEFAULT_MODE) {
-    newModeOwners.set(
-      approvedRequest.desiredMode,
-      approvedRequest.requestOwner,
-    );
-  }
+  // Build immutable updates: clear pending requests, update owners
+  const newModeOwners =
+    approvedRequest.desiredMode !== DEFAULT_MODE
+      ? mapSet(
+          state.modeOwners,
+          approvedRequest.desiredMode,
+          approvedRequest.requestOwner,
+        )
+      : state.modeOwners;
 
   // Immutable update: clear pending requests, update owners, change mode
   set({
     mode: approvedRequest.desiredMode,
-    pendingRequests: newPendingRequests,
+    pendingRequests: mapClear<string, PendingRequest>(),
     modeOwners: newModeOwners,
   });
 
@@ -214,7 +217,7 @@ function handlePendingRequestsOnDefaultMode(
     const allRequests = Array.from(state.pendingRequests.values());
 
     // Immutable update: clear pending requests
-    set({ pendingRequests: new Map<string, PendingRequest>() });
+    set({ pendingRequests: mapClear<string, PendingRequest>() });
 
     for (const request of allRequests) {
       mapModeBus.emit(MapModeEvents.changeDecision, {
@@ -293,9 +296,9 @@ function handleAuthorizationDecision(
     );
   } else {
     // Immutable update: remove the rejected request
-    const newPendingRequests = new Map(state.pendingRequests);
-    newPendingRequests.delete(matchingRequestOwner);
-    set({ pendingRequests: newPendingRequests });
+    set({
+      pendingRequests: mapDelete(state.pendingRequests, matchingRequestOwner),
+    });
   }
 }
 
@@ -314,16 +317,13 @@ function handleModeChangeRequest(
   // Check if this request should be auto-accepted
   if (shouldAutoAcceptRequest(state, desiredMode, requestOwner)) {
     // Build immutable updates
-    const newModeOwners = new Map(state.modeOwners);
-    const newPendingRequests = new Map(state.pendingRequests);
-
-    // Store the desired mode's owner unless it's default
-    if (desiredMode !== DEFAULT_MODE && !desiredModeOwner) {
-      newModeOwners.set(desiredMode, requestOwner);
-    }
+    const newModeOwners =
+      desiredMode !== DEFAULT_MODE && !desiredModeOwner
+        ? mapSet(state.modeOwners, desiredMode, requestOwner)
+        : state.modeOwners;
 
     // Clear requester's pending request since mode changed successfully
-    newPendingRequests.delete(requestOwner);
+    const newPendingRequests = mapDelete(state.pendingRequests, requestOwner);
 
     const previousMode = state.mode;
 
@@ -347,15 +347,14 @@ function handleModeChangeRequest(
   const authId = uuid();
 
   // Immutable update: add pending request
-  const newPendingRequests = new Map(state.pendingRequests);
-  newPendingRequests.set(requestOwner, {
-    authId,
-    desiredMode,
-    currentMode: state.mode,
-    requestOwner,
+  set({
+    pendingRequests: mapSet(state.pendingRequests, requestOwner, {
+      authId,
+      desiredMode,
+      currentMode: state.mode,
+      requestOwner,
+    }),
   });
-
-  set({ pendingRequests: newPendingRequests });
 
   mapModeBus.emit(MapModeEvents.changeAuthorization, {
     authId,
@@ -489,6 +488,32 @@ export function useMode(mapId: UniqueId): string {
 export function getCurrentModeOwner(instanceId: UniqueId): string | undefined {
   const state = modeStore.get(instanceId);
   return state.modeOwners.get(state.mode);
+}
+
+/**
+ * Check if a given owner is registered as the owner of any mode.
+ * This includes both active mode owners and pending mode requests.
+ * @internal - For internal map-toolkit use only
+ */
+export function isRegisteredModeOwner(
+  instanceId: UniqueId,
+  owner: string,
+): boolean {
+  const state = modeStore.get(instanceId);
+
+  // Check active mode owners
+  for (const modeOwner of state.modeOwners.values()) {
+    if (modeOwner === owner) {
+      return true;
+    }
+  }
+
+  // Check pending mode requests (owner is the key in pendingRequests map)
+  if (state.pendingRequests.has(owner)) {
+    return true;
+  }
+
+  return false;
 }
 
 /**

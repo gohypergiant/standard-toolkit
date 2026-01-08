@@ -124,47 +124,58 @@ type CameraStateInput = {
 };
 
 /**
- * Build a complete camera state from partial input
+ * Build a complete camera state from partial input.
+ * Returns the appropriate discriminated union variant based on view/projection.
  */
 function buildCameraState(partial?: CameraStateInput): CameraState {
-  if (!partial) {
-    return {
-      latitude: 0,
-      longitude: 0,
-      zoom: 0,
-      pitch: 0,
-      rotation: 0,
-      projection: 'mercator',
-      view: '2D',
-    };
-  }
+  const latitude = partial?.latitude ?? 0;
+  const longitude = partial?.longitude ?? 0;
+  const zoom = partial?.zoom ?? 0;
+  const rotation = partial?.rotation ?? 0;
 
-  const is2Point5D = partial.view === '2.5D';
-  const is3D = partial.view === '3D' || partial.projection === 'globe';
-
-  let projection: ProjectionType;
-  let view: ViewType;
+  // Determine which variant to build based on view/projection
+  const is3D = partial?.view === '3D' || partial?.projection === 'globe';
+  const is2Point5D = partial?.view === '2.5D';
 
   if (is3D) {
-    projection = 'globe';
-    view = '3D';
-  } else if (is2Point5D) {
-    projection = 'mercator';
-    view = '2.5D';
-  } else {
-    projection = partial.projection ?? 'mercator';
-    view = partial.view ?? '2D';
+    // 3D view: globe projection, no pitch, no rotation
+    const state: CameraState3D = {
+      latitude,
+      longitude,
+      zoom,
+      pitch: 0,
+      rotation: 0,
+      projection: 'globe',
+      view: '3D',
+    };
+    return state;
   }
 
-  return {
-    latitude: partial.latitude ?? 0,
-    longitude: partial.longitude ?? 0,
-    zoom: partial.zoom ?? 0,
-    pitch: is2Point5D ? (partial.pitch ?? 45) : 0,
-    rotation: is3D ? 0 : (partial.rotation ?? 0),
-    projection,
-    view,
-  } as CameraState;
+  if (is2Point5D) {
+    // 2.5D view: mercator projection, variable pitch
+    const state: CameraState2Point5D = {
+      latitude,
+      longitude,
+      zoom,
+      pitch: partial?.pitch ?? 45,
+      rotation,
+      projection: 'mercator',
+      view: '2.5D',
+    };
+    return state;
+  }
+
+  // Default: 2D view, mercator projection, no pitch
+  const state: CameraState2D = {
+    latitude,
+    longitude,
+    zoom,
+    pitch: 0,
+    rotation,
+    projection: 'mercator',
+    view: '2D',
+  };
+  return state;
 }
 
 /**
@@ -186,10 +197,11 @@ const DEFAULT_CAMERA_STATE: CameraState = {
 export const cameraStore = createMapStore<CameraState, CameraActions>({
   defaultState: DEFAULT_CAMERA_STATE,
 
-  actions: (_mapId, { get, set }) => ({
+  actions: (_mapId, { get, replace }) => ({
     setCameraState: (updates: Partial<CameraState>) => {
       const currentState = get();
-      set({ ...currentState, ...updates } as CameraState);
+      // Use buildCameraState to ensure proper discriminated union type
+      replace(buildCameraState({ ...currentState, ...updates }));
     },
   }),
 
@@ -226,14 +238,16 @@ export const cameraStore = createMapStore<CameraState, CameraActions>({
         }
 
         const state = get();
-        replace({
-          ...state,
-          latitude: payload.latitude,
-          longitude: payload.longitude,
-          zoom: payload.zoom ?? state.zoom,
-          rotation: payload.heading ?? state.rotation,
-          pitch: payload.pitch ?? state.pitch,
-        } as CameraState);
+        replace(
+          buildCameraState({
+            ...state,
+            latitude: payload.latitude,
+            longitude: payload.longitude,
+            zoom: payload.zoom ?? state.zoom,
+            rotation: payload.heading ?? state.rotation,
+            pitch: payload.pitch ?? state.pitch,
+          }),
+        );
       },
     );
 
@@ -255,14 +269,16 @@ export const cameraStore = createMapStore<CameraState, CameraActions>({
           padding: payload.padding,
         });
 
-        replace({
-          ...state,
-          latitude,
-          longitude,
-          zoom,
-          rotation: payload.heading ?? state.rotation,
-          pitch: payload.pitch ?? state.pitch,
-        } as CameraState);
+        replace(
+          buildCameraState({
+            ...state,
+            latitude,
+            longitude,
+            zoom,
+            rotation: payload.heading ?? state.rotation,
+            pitch: payload.pitch ?? state.pitch,
+          }),
+        );
       },
     );
 

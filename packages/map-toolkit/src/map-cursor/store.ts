@@ -36,7 +36,7 @@
 
 import { Broadcast } from '@accelint/bus';
 import { MapModeEvents } from '../map-mode/events';
-import { createMapStore } from '../shared/create-map-store';
+import { createMapStore, mapDelete, mapSet } from '../shared/create-map-store';
 import { MapCursorEvents } from './events';
 import type { UniqueId } from '@accelint/core';
 import type { ModeChangedEvent } from '../map-mode/types';
@@ -78,16 +78,29 @@ const modeBus = Broadcast.getInstance<ModeChangedEvent>();
  * are set up on first subscriber, not at module load time).
  */
 let getModeOwnerFn: ((mapId: UniqueId) => string | undefined) | null = null;
+let isRegisteredModeOwnerFn:
+  | ((mapId: UniqueId, owner: string) => boolean)
+  | null = null;
 let importPromise: Promise<void> | null = null;
+let importFailed = false;
 
 function ensureModeStoreImported(): void {
-  if (getModeOwnerFn !== null) {
+  if (getModeOwnerFn !== null || importFailed) {
     return;
   }
   if (importPromise === null) {
-    importPromise = import('../map-mode/store').then((mod) => {
-      getModeOwnerFn = mod.getCurrentModeOwner;
-    });
+    importPromise = import('../map-mode/store')
+      .then((mod) => {
+        getModeOwnerFn = mod.getCurrentModeOwner;
+        isRegisteredModeOwnerFn = mod.isRegisteredModeOwner;
+      })
+      .catch((error) => {
+        importFailed = true;
+        // Log error in development only - in production this is a silent fallback
+        if (process.env.NODE_ENV !== 'production') {
+          console.error('[MapCursor] Failed to import mode store:', error);
+        }
+      });
   }
 }
 
@@ -98,6 +111,10 @@ function getModeOwner(mapId: UniqueId): string | undefined {
   // getModeOwnerFn will be available by the time bus listeners are set up
   // (which happens on first React subscriber, not at module load)
   return getModeOwnerFn?.(mapId);
+}
+
+function isRegisteredOwner(mapId: UniqueId, owner: string): boolean {
+  return isRegisteredModeOwnerFn?.(mapId, owner) ?? false;
 }
 
 /**
@@ -161,12 +178,10 @@ export const cursorStore = createMapStore<CursorState, CursorActions>({
       const hadCursor = state.cursorOwners.has(owner);
 
       if (hadCursor) {
-        // Create new Map for immutable update
-        const newCursorOwners = new Map(state.cursorOwners);
-        newCursorOwners.delete(owner);
-
         // Clear current tracking if this was the owner
-        const updates: Partial<CursorState> = { cursorOwners: newCursorOwners };
+        const updates: Partial<CursorState> = {
+          cursorOwners: mapDelete(state.cursorOwners, owner),
+        };
         if (state.currentOwner === owner) {
           updates.currentCursor = null;
           updates.currentOwner = null;
@@ -196,15 +211,19 @@ export const cursorStore = createMapStore<CursorState, CursorActions>({
         }
 
         // Create new Map for immutable update
-        const newCursorOwners = new Map(state.cursorOwners);
-        newCursorOwners.set(requestOwner, cursor);
+        const newCursorOwners = mapSet(
+          state.cursorOwners,
+          requestOwner,
+          cursor,
+        );
 
         // Check ownership
-        const modeOwner = getModeOwner?.(mapId);
-        const isOwnerless = !modeOwner;
-        const isRequestOwnerModeOwner = requestOwner === modeOwner;
+        const currentModeOwner = getModeOwner?.(mapId);
+        const isOwnerless = !currentModeOwner;
+        const isCurrentModeOwner = requestOwner === currentModeOwner;
+        const isAnyModeOwner = isRegisteredOwner(mapId, requestOwner);
 
-        if (isOwnerless || isRequestOwnerModeOwner) {
+        if (isOwnerless || isCurrentModeOwner) {
           // Accept: apply cursor with immutable update
           const newState: CursorState = {
             cursorOwners: newCursorOwners,
@@ -227,13 +246,24 @@ export const cursorStore = createMapStore<CursorState, CursorActions>({
             // Still need to update state even if cursor didn't change visually
             set(newState);
           }
-        } else {
-          // Reject: do NOT store the cursor, so the request can be retried
-          // when conditions change (e.g., mode becomes unowned)
+        } else if (isAnyModeOwner) {
+          // Store but don't apply: requester owns a different mode (pending or not current).
+          // When their mode becomes active, getEffectiveCursor will find their cursor.
+          set({ cursorOwners: newCursorOwners });
+
           cursorBus.emit(MapCursorEvents.rejected, {
             rejectedCursor: cursor,
             rejectedOwner: requestOwner,
-            currentOwner: state.currentOwner || modeOwner || 'unknown',
+            currentOwner: state.currentOwner || currentModeOwner || 'unknown',
+            reason: 'not-current-owner',
+            id: mapId,
+          });
+        } else {
+          // Reject: don't store. Non-owners should only set cursor in default mode.
+          cursorBus.emit(MapCursorEvents.rejected, {
+            rejectedCursor: cursor,
+            rejectedOwner: requestOwner,
+            currentOwner: state.currentOwner || currentModeOwner || 'unknown',
             reason: 'not-owner',
             id: mapId,
           });

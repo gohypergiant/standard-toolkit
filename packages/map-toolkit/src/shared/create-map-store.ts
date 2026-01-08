@@ -13,6 +13,52 @@
 import { useRef, useSyncExternalStore } from 'react';
 import type { UniqueId } from '@accelint/core';
 
+// =============================================================================
+// Immutable Map Helpers
+// =============================================================================
+
+/**
+ * Create a new Map with an entry added or updated (immutable).
+ *
+ * @example
+ * ```ts
+ * const newMap = mapSet(state.cursorOwners, 'draw-layer', 'crosshair');
+ * set({ cursorOwners: newMap });
+ * ```
+ */
+export function mapSet<K, V>(map: Map<K, V>, key: K, value: V): Map<K, V> {
+  const newMap = new Map(map);
+  newMap.set(key, value);
+  return newMap;
+}
+
+/**
+ * Create a new Map with an entry removed (immutable).
+ *
+ * @example
+ * ```ts
+ * const newMap = mapDelete(state.cursorOwners, 'draw-layer');
+ * set({ cursorOwners: newMap });
+ * ```
+ */
+export function mapDelete<K, V>(map: Map<K, V>, key: K): Map<K, V> {
+  const newMap = new Map(map);
+  newMap.delete(key);
+  return newMap;
+}
+
+/**
+ * Create a new empty Map (immutable replacement for Map.clear()).
+ *
+ * @example
+ * ```ts
+ * set({ pendingRequests: mapClear<string, PendingRequest>() });
+ * ```
+ */
+export function mapClear<K, V>(): Map<K, V> {
+  return new Map<K, V>();
+}
+
 /**
  * Helper methods passed to action creators and bus setup functions.
  *
@@ -91,20 +137,32 @@ export type MapStore<TState, TActions> = {
    * React hook with selector for derived state.
    * Only re-renders when the underlying state changes.
    *
-   * The selector result is memoized - it only recomputes when the state
-   * reference changes, not on every render. This means selectors that create
-   * new objects/arrays are safe to use without additional memoization.
+   * The selector result is memoized - it only recomputes when the **state reference**
+   * changes, not on every render or when the selector function changes. This means:
+   *
+   * - Selectors that create new objects/arrays are safe without additional memoization
+   * - Changing the selector function does NOT trigger recomputation (by design)
+   * - This prevents infinite re-render loops when using inline arrow functions
+   *
+   * **Important**: The selector function is intentionally NOT tracked as a dependency.
+   * If you need the selector to change dynamically, extract the changing value as a
+   * separate dependency and use it within a stable selector, or use the `use()` hook
+   * with your own `useMemo` for derived state.
    *
    * @example
    * ```ts
-   * // Returns primitive
+   * // Returns primitive - recomputes when state.count changes
    * const count = store.useSelector(mapId, (s) => s.count);
    *
-   * // Returns existing reference
+   * // Returns existing reference - recomputes when state.items ref changes
    * const items = store.useSelector(mapId, (s) => s.items);
    *
-   * // Safe: derived object is memoized internally
+   * // Safe: derived object is memoized internally, no infinite loops
    * const derived = store.useSelector(mapId, (s) => ({ doubled: s.count * 2 }));
+   *
+   * // If you need dynamic selector behavior, use the base hook instead:
+   * const { state } = store.use(mapId);
+   * const filtered = useMemo(() => filterFn(state.items), [state.items, filterFn]);
    * ```
    */
   useSelector: <TSelected>(
@@ -318,13 +376,19 @@ export function createMapStore<TState, TActions>(
   }
 
   /**
-   * Selector hook - only re-renders when selected value changes
+   * Selector hook - only re-renders when selected value changes.
+   *
+   * Note: The selector function is intentionally NOT tracked as a dependency.
+   * This prevents infinite re-render loops when using inline arrow functions.
+   * If you need dynamic selector behavior, use the `use()` hook with `useMemo`.
    */
   function useSelector<TSelected>(
     mapId: UniqueId,
     selector: (state: TState) => TSelected,
   ): TSelected {
-    // Cache the previous state and selected value to avoid unnecessary re-computation
+    // Cache the previous state and selected value to avoid unnecessary re-computation.
+    // We intentionally do NOT track selector changes - only state changes trigger
+    // recomputation. This prevents infinite loops with inline selectors.
     const cache = useRef<{ state: TState; selected: TSelected } | null>(null);
 
     const state = useSyncExternalStore(
@@ -333,7 +397,7 @@ export function createMapStore<TState, TActions>(
       serverSnapshot,
     );
 
-    // Only recompute if state reference changed
+    // Only recompute if state reference changed (selector changes are ignored)
     if (cache.current === null || cache.current.state !== state) {
       cache.current = {
         state,

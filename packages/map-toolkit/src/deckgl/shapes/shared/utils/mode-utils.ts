@@ -99,7 +99,9 @@ export function releaseCursor(mapId: UniqueId, owner: string): void {
 /**
  * Request both mode and cursor changes together.
  *
- * Common pattern when starting an operation that needs both mode and cursor.
+ * The cursor is stored for registered mode owners even if the mode change
+ * requires authorization. When the mode change is approved, the cursor
+ * will be automatically applied via getEffectiveCursor.
  *
  * @param mapId - The map instance ID
  * @param desiredMode - The mode to switch to
