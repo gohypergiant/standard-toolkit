@@ -27,15 +27,15 @@ export const mockShapesWithIcons: Shape[] = [
     id: uuid(),
     name: 'Location Marker',
     label: 'Marker 1',
-    shapeType: 'Point',
+    shape: 'Point',
     feature: {
       type: 'Feature',
       properties: {
         styleProperties: {
           fillColor: [255, 255, 255, 255],
-          strokeColor: [136, 138, 143, 255],
-          strokeWidth: 2,
-          strokePattern: 'solid',
+          lineColor: [136, 138, 143, 255],
+          lineWidth: 2,
+          linePattern: 'solid',
           icon: {
             atlas: ATLAS_PNG,
             mapping: ATLAS_JSON,
@@ -61,15 +61,15 @@ export const mockShapesWithIcons: Shape[] = [
     id: uuid(),
     name: 'Serious Marker',
     label: 'Serious',
-    shapeType: 'Point',
+    shape: 'Point',
     feature: {
       type: 'Feature',
       properties: {
         styleProperties: {
           fillColor: [230, 150, 0, 255],
-          strokeColor: [230, 150, 0, 255],
-          strokeWidth: 2,
-          strokePattern: 'solid',
+          lineColor: [230, 150, 0, 255],
+          lineWidth: 2,
+          linePattern: 'solid',
           icon: {
             atlas: ATLAS_PNG,
             mapping: ATLAS_JSON,
@@ -95,15 +95,15 @@ export const mockShapesWithIcons: Shape[] = [
     id: uuid(),
     name: 'Connection Line',
     label: 'Route',
-    shapeType: 'LineString',
+    shape: 'LineString',
     feature: {
       type: 'Feature',
       properties: {
         styleProperties: {
           fillColor: [255, 255, 255, 255],
-          strokeColor: [136, 138, 143, 255],
-          strokeWidth: 2,
-          strokePattern: 'dashed',
+          lineColor: [136, 138, 143, 255],
+          lineWidth: 2,
+          linePattern: 'dashed',
           // Position label at center of line to avoid overlap with point icons
           labelCoordinateAnchor: 'center',
         },

@@ -49,7 +49,7 @@ import { MapEvents } from '../../base-map/events';
 import { type ShapeEvent, ShapeEvents } from '../shared/events';
 import type { UniqueId } from '@accelint/core';
 import type { MapClickEvent, MapEventType } from '../../base-map/types';
-import type { ShapeId } from '../shared/types';
+import type { ShapeId, Subscription } from '../shared/types';
 
 /**
  * Typed event bus instances for shape and map events
@@ -83,7 +83,6 @@ const componentSubscribers = new Map<UniqueId, Set<() => void>>();
  */
 const busUnsubscribers = new Map<UniqueId, () => void>();
 
-type Subscription = (onStoreChange: () => void) => () => void;
 /**
  * Cache of subscription functions per mapId to avoid recreating on every render
  */

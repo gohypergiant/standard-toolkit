@@ -12,6 +12,8 @@
 
 'use client';
 
+import { DEFAULT_COLORS } from '../shared/constants';
+
 /**
  * Map interaction constants
  * Values derived from ngc2 for consistency
@@ -26,7 +28,8 @@ export const MAP_INTERACTION = {
  * Selection highlight configuration
  */
 export const SELECTION_HIGHLIGHT = {
-  COLOR: [40, 245, 190, 100] as [number, number, number, number], // Turquoise/cyan at ~39% opacity
+  /** Uses DEFAULT_COLORS.highlight from shared constants */
+  COLOR: DEFAULT_COLORS.highlight,
   ICON_SIZE_INCREASE: 8, // Additional pixels for highlight icon
 } as const;
 
@@ -50,7 +53,7 @@ export const COFFIN_CORNERS = {
  */
 export const DEFAULT_DISPLAY_PROPS = {
   pickable: true,
-  showLabels: true,
+  showLabels: 'always' as const,
   showHighlight: false,
   applyBaseOpacity: true,
   highlightColor: SELECTION_HIGHLIGHT.COLOR,

@@ -14,12 +14,21 @@ import { defineConfig } from 'tsdown';
 
 export default defineConfig({
   plugins: [],
+  tsconfig: 'tsconfig.dist.json',
   entry: [
     'src/**/*.{ts,tsx}',
     '!src/test',
     '!src/**/*.{d,stories,test,test-d,bench}.{ts,tsx}',
     '!src/decorators',
     '!**/__fixtures__',
+    // Exclude internal implementation details from shapes (not part of public API)
+    '!src/deckgl/shapes/**/modes/**',
+    '!src/deckgl/shapes/**/store.ts',
+    '!src/deckgl/shapes/**/constants.ts',
+    '!src/deckgl/shapes/**/utils/**',
+    '!src/deckgl/shapes/**/hooks/**',
+    // Additional internal files
+    '!src/deckgl/shapes/display-shape-layer/shape-label-layer.ts',
   ],
   // NOTE: optionalDependencies must be included here
   // SEE: https://tsdown.dev/options/dependencies#default-behavior

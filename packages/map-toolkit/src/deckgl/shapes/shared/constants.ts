@@ -26,22 +26,23 @@ export const SHAPE_LAYER_IDS = {
 } as const;
 
 /**
- * Base fill opacity multiplier (20%) for standard semi-transparent look
+ * Base fill opacity multiplier for standard semi-transparent look.
+ * Multiplies alpha by 0.2 (reduces to 20% of original opacity).
  */
 export const BASE_FILL_OPACITY = 0.2;
 
 /**
- * Default stroke width in pixels when not specified in styleProperties
+ * Default border/outline width in pixels when not specified in styleProperties
  */
-export const DEFAULT_STROKE_WIDTH = 2;
+export const DEFAULT_LINE_WIDTH = 2;
 
 /**
- * Additional pixels added to stroke width on hover
+ * Additional pixels added to border/outline width on hover
  */
 export const HOVER_WIDTH_INCREASE = 2;
 
 /**
- * Additional pixels added to stroke width for selection highlight
+ * Additional pixels added to border/outline width for selection highlight
  */
 export const HIGHLIGHT_WIDTH_INCREASE = 5;
 
@@ -64,8 +65,8 @@ export const LABEL_BORDER_OPACITY = 255;
 export const DEFAULT_COLORS = {
   /** Default fill color (white at full alpha) */
   fill: [255, 255, 255, 255] as Color,
-  /** Default stroke color (outline-interactive-hover: #888a8f) */
-  stroke: [136, 138, 143, 255] as Color,
+  /** Default border/outline color (outline-interactive-hover: #888a8f) */
+  line: [136, 138, 143, 255] as Color,
   /** Highlight/selection color (turquoise at ~39% alpha) */
   highlight: [40, 245, 190, 100] as Color,
 } as const;
@@ -75,13 +76,13 @@ export const DEFAULT_COLORS = {
  *
  * These colors are used for the shape preview while drawing.
  * Fill is semi-transparent (8% opacity) to not obscure underlying features.
- * Stroke uses the same color as saved shapes for consistency.
+ * Border/outline uses the same color as saved shapes for consistency.
  */
 export const DEFAULT_TENTATIVE_COLORS = {
   /** Tentative fill color (white at 8% opacity: 0.08 * 255 ≈ 20) */
   fill: [255, 255, 255, 20] as Color,
-  /** Tentative stroke color (same as saved shapes for consistency) */
-  stroke: DEFAULT_COLORS.stroke,
+  /** Tentative border/outline color (same as saved shapes for consistency) */
+  line: DEFAULT_COLORS.line,
 } as const;
 
 /**
@@ -92,23 +93,23 @@ export const DEFAULT_TENTATIVE_COLORS = {
  */
 export const DEFAULT_STYLE_PROPERTIES: StyleProperties = {
   fillColor: DEFAULT_COLORS.fill,
-  strokeColor: DEFAULT_COLORS.stroke,
-  strokeWidth: 2,
-  strokePattern: 'solid',
+  lineColor: DEFAULT_COLORS.line,
+  lineWidth: 2,
+  linePattern: 'solid',
 };
 
 /**
- * Stroke width options
+ * Border/outline width options (in pixels)
  */
-export const STROKE_WIDTHS = [1, 2, 4, 8] as const;
+export const LINE_WIDTHS = [1, 2, 4, 8] as const;
 
 /**
- * Stroke pattern options
+ * Border/outline pattern options
  */
-export const STROKE_PATTERNS = ['solid', 'dashed', 'dotted'] as const;
+export const LINE_PATTERNS = ['solid', 'dashed', 'dotted'] as const;
 
 /**
- * Dash array patterns for stroke rendering
+ * Dash array patterns for border/outline rendering
  */
 export const DASH_ARRAYS: Record<
   'solid' | 'dashed' | 'dotted',
@@ -118,6 +119,19 @@ export const DASH_ARRAYS: Record<
   dashed: [8, 4],
   dotted: [2, 4],
 };
+
+/**
+ * Default tentative fill color (white at 8% opacity - rgba(255, 255, 255, 0.08))
+ * Used when drawing new shapes before they're completed.
+ * 0.08 * 255 ≈ 20
+ */
+export const DEFAULT_TENTATIVE_FILL_COLOR: Color = [255, 255, 255, 20];
+
+/**
+ * Default tentative border/outline color (outline-interactive-hover: #888a8f)
+ * Used when drawing new shapes before they're completed.
+ */
+export const DEFAULT_TENTATIVE_LINE_COLOR: Color = [136, 138, 143, 255];
 
 /**
  * Default edit handle color (white) - used by both draw and edit layers
@@ -190,3 +204,114 @@ export const EDITABLE_LAYER_SUBLAYER_PROPS = {
   ...TOOLTIP_SUBLAYER_PROPS,
   ...EDIT_HANDLE_SUBLAYER_PROPS,
 };
+
+/**
+ * Format a distance value for tooltip display.
+ * Used by draw and edit mode tooltips for consistent formatting.
+ *
+ * @param value - The distance value to format
+ * @returns The formatted string with 2 decimal places
+ */
+export function formatDistance(value: number): string {
+  return value.toFixed(2);
+}
+
+// =============================================================================
+// Tooltip Text Formatters
+// =============================================================================
+// These functions generate consistent tooltip text for both draw and edit modes.
+
+/**
+ * Format circle tooltip text showing diameter and area.
+ *
+ * @param diameter - Circle diameter in the specified units
+ * @param area - Circle area in the specified units squared
+ * @param unitAbbrev - Unit abbreviation (e.g., 'km', 'mi')
+ * @returns Formatted tooltip text: "d: {diameter} {unit}\n{area} {unit}²"
+ */
+export function formatCircleTooltip(
+  diameter: number,
+  area: number,
+  unitAbbrev: string,
+): string {
+  return `d: ${formatDistance(diameter)} ${unitAbbrev}\n${formatDistance(area)} ${unitAbbrev}²`;
+}
+
+/**
+ * Format rectangle tooltip text showing dimensions and area.
+ *
+ * @param width - Rectangle width in the specified units
+ * @param height - Rectangle height in the specified units
+ * @param area - Rectangle area in the specified units squared
+ * @param unitAbbrev - Unit abbreviation (e.g., 'km', 'mi')
+ * @returns Formatted tooltip text: "{width} {unit} x {height} {unit}\n{area} {unit}²"
+ */
+export function formatRectangleTooltip(
+  width: number,
+  height: number,
+  area: number,
+  unitAbbrev: string,
+): string {
+  return `${formatDistance(width)} ${unitAbbrev} x ${formatDistance(height)} ${unitAbbrev}\n${formatDistance(area)} ${unitAbbrev}²`;
+}
+
+/**
+ * Format ellipse tooltip text showing axes and area.
+ *
+ * @param majorAxis - Ellipse major axis (full length) in the specified units
+ * @param minorAxis - Ellipse minor axis (full length) in the specified units
+ * @param area - Ellipse area in the specified units squared
+ * @param unitAbbrev - Unit abbreviation (e.g., 'km', 'mi')
+ * @returns Formatted tooltip text: "{major} {unit} x {minor} {unit}\n{area} {unit}²"
+ */
+export function formatEllipseTooltip(
+  majorAxis: number,
+  minorAxis: number,
+  area: number,
+  unitAbbrev: string,
+): string {
+  return `${formatDistance(majorAxis)} ${unitAbbrev} x ${formatDistance(minorAxis)} ${unitAbbrev}\n${formatDistance(area)} ${unitAbbrev}²`;
+}
+
+/**
+ * Format simple distance tooltip text.
+ *
+ * @param distance - Distance value in the specified units
+ * @param unitAbbrev - Unit abbreviation (e.g., 'km', 'mi')
+ * @returns Formatted tooltip text: "{distance} {unit}"
+ */
+export function formatDistanceTooltip(
+  distance: number,
+  unitAbbrev: string,
+): string {
+  return `${formatDistance(distance)} ${unitAbbrev}`;
+}
+
+// =============================================================================
+// Edit Event Type Classification
+// =============================================================================
+
+/**
+ * Continuous edit event types that fire during dragging.
+ * These are emitted repeatedly while the user drags during an edit operation.
+ */
+export const CONTINUOUS_EDIT_TYPES = new Set([
+  'movePosition',
+  'unionGeometry',
+  'scaling',
+  'rotating',
+  'translating',
+]);
+
+/**
+ * Completion edit event types that fire when dragging ends.
+ * These are emitted once when the user finishes an edit action.
+ */
+export const COMPLETION_EDIT_TYPES = new Set([
+  'finishMovePosition',
+  'addPosition',
+  'removePosition',
+  'scaled',
+  'rotated',
+  'translated',
+]);

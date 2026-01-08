@@ -14,7 +14,7 @@ import { useOn } from '@accelint/bus/react';
 import { uuid } from '@accelint/core';
 import { Button } from '@accelint/design-toolkit';
 import { useState } from 'react';
-import { useMapCursor } from '../../../map-cursor';
+import { useMapCursor } from '@/map-cursor';
 import { BaseMap } from '../../base-map/index';
 import { mockShapes } from '../__fixtures__/mock-shapes';
 import { useShapeSelection } from '../display-shape-layer/use-shape-selection';
@@ -25,7 +25,7 @@ import type { Shape } from '../shared/types';
 import '../display-shape-layer/fiber';
 import './fiber';
 import { DrawShapeLayer } from './index';
-import { useDrawShapes } from './use-draw-shapes';
+import { useDrawShape } from './use-draw-shape';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta = {
@@ -75,7 +75,7 @@ export const BasicDrawing: Story = {
     // Subscribe to cursor store to enable cursor change requests
     const { cursor } = useMapCursor(DRAW_MAP_ID);
 
-    const { draw, cancel, isDrawing, activeShapeType } = useDrawShapes(
+    const { draw, cancel, isDrawing, activeShapeType } = useDrawShape(
       DRAW_MAP_ID,
       {
         onCreate: (shape) => {
@@ -84,7 +84,7 @@ export const BasicDrawing: Story = {
             ...log.slice(-9),
             {
               id: `${Date.now()}-created`,
-              message: `Created: ${shape.shapeType} "${shape.name}"`,
+              message: `Created: ${shape.shape} "${shape.name}"`,
             },
           ]);
         },
@@ -116,7 +116,7 @@ export const BasicDrawing: Story = {
             id='drawn-shapes'
             mapId={DRAW_MAP_ID}
             data={shapes}
-            showLabels
+            showLabels='always'
             pickable={false}
           />
           {/* Drawing layer - renders only when actively drawing */}
@@ -313,7 +313,7 @@ export const CustomStyleDefaults: Story = {
   render: () => {
     const [shapes, setShapes] = useState<Shape[]>([]);
     const [selectedColor, setSelectedColor] = useState<
-      'red' | 'blue' | 'green'
+      'red' | 'blue' | 'yellow'
     >('red');
 
     const colorStyles = {
@@ -325,16 +325,16 @@ export const CustomStyleDefaults: Story = {
         fillColor: [100, 100, 255, 180] as [number, number, number, number],
         strokeColor: [0, 0, 200, 255] as [number, number, number, number],
       },
-      green: {
-        fillColor: [100, 255, 100, 180] as [number, number, number, number],
-        strokeColor: [0, 200, 0, 255] as [number, number, number, number],
+      yellow: {
+        fillColor: [255, 255, 100, 180] as [number, number, number, number],
+        strokeColor: [200, 200, 0, 255] as [number, number, number, number],
       },
     };
 
     // Subscribe to cursor store to enable cursor change requests
     useMapCursor(CUSTOM_STYLES_MAP_ID);
 
-    const { draw, cancel, isDrawing } = useDrawShapes(CUSTOM_STYLES_MAP_ID, {
+    const { draw, cancel, isDrawing } = useDrawShape(CUSTOM_STYLES_MAP_ID, {
       onCreate: (shape) => {
         setShapes((prev) => [...prev, shape]);
       },
@@ -351,7 +351,7 @@ export const CustomStyleDefaults: Story = {
             id='colored-shapes'
             mapId={CUSTOM_STYLES_MAP_ID}
             data={shapes}
-            showLabels
+            showLabels='always'
             pickable={false}
           />
           <DrawShapeLayer mapId={CUSTOM_STYLES_MAP_ID} />
@@ -377,11 +377,11 @@ export const CustomStyleDefaults: Story = {
               Blue
             </Button>
             <Button
-              variant={selectedColor === 'green' ? 'filled' : 'outline'}
-              color={selectedColor === 'green' ? 'serious' : 'mono-muted'}
-              onPress={() => setSelectedColor('green')}
+              variant={selectedColor === 'yellow' ? 'filled' : 'outline'}
+              color={selectedColor === 'yellow' ? 'serious' : 'mono-muted'}
+              onPress={() => setSelectedColor('yellow')}
             >
-              Green
+              Yellow
             </Button>
           </div>
 
@@ -435,7 +435,7 @@ export const CombinedDisplayAndDraw: Story = {
     const { requestCursorChange, clearCursor } = useMapCursor(COMBINED_MAP_ID);
     const { selectedId } = useShapeSelection(COMBINED_MAP_ID);
 
-    const { draw, cancel, isDrawing, activeShapeType } = useDrawShapes(
+    const { draw, cancel, isDrawing, activeShapeType } = useDrawShape(
       COMBINED_MAP_ID,
       {
         onCreate: (shape) => {
@@ -469,7 +469,7 @@ export const CombinedDisplayAndDraw: Story = {
             id='all-shapes'
             mapId={COMBINED_MAP_ID}
             data={shapes}
-            showLabels
+            showLabels='always'
             pickable={!isDrawing}
             selectedShapeId={selectedId}
           />

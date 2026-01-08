@@ -21,7 +21,11 @@ import { type Coord, distance } from '@turf/turf';
 import {
   DEFAULT_DISTANCE_UNITS,
   getDistanceUnitAbbreviation,
-} from '../../../../shared/units';
+} from '@/shared/units';
+import {
+  formatDistanceTooltip,
+  formatEllipseTooltip,
+} from '../../shared/constants';
 
 /**
  * Extends DrawEllipseUsingThreePointsMode to display contextual tooltips.
@@ -67,10 +71,10 @@ export class DrawEllipseModeWithTooltip extends DrawEllipseUsingThreePointsMode 
 
       this.tooltip = {
         position: tooltipPosition,
-        text: `${dist.toFixed(2)} ${unitAbbrev}`,
+        text: formatDistanceTooltip(dist, unitAbbrev),
       };
     } else if (clickSequence.length === 2) {
-      // Second segment: show area (like circle)
+      // Second segment: show dimensions and area (like rectangle)
       // The ellipse will have:
       // - center at midpoint of click1 and click2
       // - ySemiAxis = distance(click1, click2) / 2
@@ -89,12 +93,21 @@ export class DrawEllipseModeWithTooltip extends DrawEllipseUsingThreePointsMode 
       const ySemiAxis = distance(click1, click2, { units: distanceUnits }) / 2;
       const xSemiAxis = distance(center, cursorPos, { units: distanceUnits });
 
+      // Full axes (diameter equivalent)
+      const majorAxis = Math.max(xSemiAxis, ySemiAxis) * 2;
+      const minorAxis = Math.min(xSemiAxis, ySemiAxis) * 2;
+
       // Ellipse area = π × a × b
       const ellipseArea = Math.PI * xSemiAxis * ySemiAxis;
 
       this.tooltip = {
         position: tooltipPosition,
-        text: `${ellipseArea.toFixed(2)} ${unitAbbrev}²`,
+        text: formatEllipseTooltip(
+          majorAxis,
+          minorAxis,
+          ellipseArea,
+          unitAbbrev,
+        ),
       };
     }
   }

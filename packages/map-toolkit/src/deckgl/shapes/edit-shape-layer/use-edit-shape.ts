@@ -16,56 +16,57 @@ import 'client-only';
 import { useBus } from '@accelint/bus/react';
 import { useContext, useMemo, useSyncExternalStore } from 'react';
 import { MapContext } from '../../base-map/provider';
-import { DrawShapeEvents } from './events';
+import { EditShapeEvents } from './events';
 import {
   getOrCreateCancel,
-  getOrCreateDraw,
+  getOrCreateEdit,
+  getOrCreateSave,
   getOrCreateServerSnapshot,
   getOrCreateSnapshot,
   getOrCreateSubscription,
 } from './store';
 import type { UniqueId } from '@accelint/core';
-import type { DrawShapeEvent } from './events';
-import type { UseDrawShapesOptions, UseDrawShapesReturn } from './types';
+import type { EditShapeEvent } from './events';
+import type { UseEditShapeOptions, UseEditShapeReturn } from './types';
 
 /**
- * Hook to access the shape drawing state and actions.
+ * Hook to access the shape editing state and actions.
  *
- * This hook uses `useSyncExternalStore` to subscribe to drawing state changes,
+ * This hook uses `useSyncExternalStore` to subscribe to editing state changes,
  * providing concurrent-safe state updates. Uses a fan-out pattern where
  * a single bus listener per map instance notifies N React component subscribers.
  *
  * @param mapId - Optional map instance ID. If not provided, will use the ID from `MapContext`.
- * @param options - Optional callbacks for onCreate and onCancel events
- * @returns Drawing state, draw function, cancel function, and convenience flags
+ * @param options - Optional callbacks for onUpdate and onCancel events
+ * @returns Editing state, edit/save/cancel functions, and convenience flags
  * @throws Error if no `mapId` is provided and hook is used outside of `MapProvider`
  *
  * @example
  * ```tsx
  * // Inside MapProvider (within BaseMap children) - uses context
- * function DrawingToolbar() {
- *   const { draw, cancel, isDrawing, activeShapeType } = useDrawShapes(undefined, {
- *     onCreate: (shape) => {
- *       console.log('Shape created:', shape);
- *       setShapes(prev => [...prev, shape]);
+ * function ShapeEditor() {
+ *   const { edit, save, cancel, isEditing, editingShape } = useEditShape(undefined, {
+ *     onUpdate: (shape) => {
+ *       console.log('Shape updated:', shape);
+ *       setShapes(prev => prev.map(s => s.id === shape.id ? shape : s));
  *     },
- *     onCancel: (shapeType) => {
- *       console.log('Drawing canceled:', shapeType);
+ *     onCancel: (shape) => {
+ *       console.log('Editing canceled:', shape.name);
  *     },
  *   });
  *
  *   return (
  *     <div>
- *       <button onClick={() => draw(ShapeFeatureType.Polygon)}>
- *         Draw Polygon
- *       </button>
- *       <button onClick={() => draw(ShapeFeatureType.Circle)}>
- *         Draw Circle
- *       </button>
- *       {isDrawing && (
- *         <button onClick={cancel}>
- *           Cancel ({activeShapeType})
+ *       {selectedShape && !isEditing && (
+ *         <button onClick={() => edit(selectedShape)}>
+ *           Edit Shape
  *         </button>
+ *       )}
+ *       {isEditing && (
+ *         <>
+ *           <button onClick={save}>Save</button>
+ *           <button onClick={cancel}>Cancel</button>
+ *         </>
  *       )}
  *     </div>
  *   );
@@ -75,38 +76,38 @@ import type { UseDrawShapesOptions, UseDrawShapesReturn } from './types';
  * @example
  * ```tsx
  * // Outside MapProvider - pass mapId directly
- * function ExternalDrawingControl({ mapId }: { mapId: UniqueId }) {
- *   const { draw, isDrawing } = useDrawShapes(mapId);
+ * function ExternalEditControl({ mapId, shape }: { mapId: UniqueId; shape: Shape }) {
+ *   const { edit, isEditing } = useEditShape(mapId);
  *
  *   return (
  *     <button
- *       onClick={() => draw(ShapeFeatureType.Point)}
- *       disabled={isDrawing}
+ *       onClick={() => edit(shape)}
+ *       disabled={isEditing}
  *     >
- *       Add Point
+ *       Edit
  *     </button>
  *   );
  * }
  * ```
  */
-export function useDrawShapes(
+export function useEditShape(
   mapId?: UniqueId,
-  options?: UseDrawShapesOptions,
-): UseDrawShapesReturn {
+  options?: UseEditShapeOptions,
+): UseEditShapeReturn {
   const contextId = useContext(MapContext);
   const actualId = mapId ?? contextId;
 
   if (!actualId) {
     throw new Error(
-      'useDrawShapes requires either a mapId parameter or to be used within a MapProvider',
+      'useEditShape requires either a mapId parameter or to be used within a MapProvider',
     );
   }
 
-  const { onCreate, onCancel } = options ?? {};
+  const { onUpdate, onCancel } = options ?? {};
 
   // Subscribe to store using useSyncExternalStore with fan-out pattern
   // Third parameter provides server snapshot for SSR/RSC compatibility
-  const drawingState = useSyncExternalStore(
+  const editingState = useSyncExternalStore(
     getOrCreateSubscription(actualId),
     getOrCreateSnapshot(actualId),
     getOrCreateServerSnapshot(actualId),
@@ -114,29 +115,30 @@ export function useDrawShapes(
 
   // Listen for completion/cancellation events to trigger callbacks
   // useOn handles cleanup automatically and uses useEffectEvent for stable callbacks
-  const { useOn } = useBus<DrawShapeEvent>();
+  const { useOn } = useBus<EditShapeEvent>();
 
-  useOn(DrawShapeEvents.drawn, (event) => {
-    if (event.payload.mapId === actualId && onCreate) {
-      onCreate(event.payload.shape);
+  useOn(EditShapeEvents.updated, (event) => {
+    if (event.payload.mapId === actualId && onUpdate) {
+      onUpdate(event.payload.shape);
     }
   });
 
-  useOn(DrawShapeEvents.canceled, (event) => {
+  useOn(EditShapeEvents.canceled, (event) => {
     if (event.payload.mapId === actualId && onCancel) {
-      onCancel(event.payload.shapeType);
+      onCancel(event.payload.shape);
     }
   });
 
   // Memoize the return value to prevent unnecessary re-renders
   return useMemo(
     () => ({
-      drawingState,
-      draw: getOrCreateDraw(actualId),
+      editingState,
+      edit: getOrCreateEdit(actualId),
+      save: getOrCreateSave(actualId),
       cancel: getOrCreateCancel(actualId),
-      isDrawing: !!drawingState?.activeShapeType,
-      activeShapeType: drawingState?.activeShapeType ?? null,
+      isEditing: !!editingState?.editingShape,
+      editingShape: editingState?.editingShape ?? null,
     }),
-    [drawingState, actualId],
+    [editingState, actualId],
   );
 }

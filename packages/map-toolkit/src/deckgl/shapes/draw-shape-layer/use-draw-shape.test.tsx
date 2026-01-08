@@ -17,7 +17,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ShapeFeatureType } from '../shared/types';
 import { DrawShapeEvents } from './events';
 import { clearDrawingState } from './store';
-import { useDrawShapes } from './use-draw-shapes';
+import { useDrawShape } from './use-draw-shape';
 import type { UniqueId } from '@accelint/core';
 import type {
   DrawShapeEvent,
@@ -25,7 +25,7 @@ import type {
   ShapeDrawnEvent,
 } from './events';
 
-describe('useDrawShapes', () => {
+describe('useDrawShape', () => {
   let mapId: UniqueId;
   let bus: ReturnType<typeof Broadcast.getInstance<DrawShapeEvent>>;
 
@@ -38,14 +38,14 @@ describe('useDrawShapes', () => {
 
   describe('initial state', () => {
     it('returns null for activeShapeType when not drawing', () => {
-      const { result } = renderHook(() => useDrawShapes(mapId));
+      const { result } = renderHook(() => useDrawShape(mapId));
 
       expect(result.current.activeShapeType).toBeNull();
       expect(result.current.isDrawing).toBe(false);
     });
 
     it('provides draw and cancel functions', () => {
-      const { result } = renderHook(() => useDrawShapes(mapId));
+      const { result } = renderHook(() => useDrawShape(mapId));
 
       expect(typeof result.current.draw).toBe('function');
       expect(typeof result.current.cancel).toBe('function');
@@ -53,16 +53,16 @@ describe('useDrawShapes', () => {
 
     it('throws when used without mapId and outside MapProvider', () => {
       expect(() => {
-        renderHook(() => useDrawShapes());
+        renderHook(() => useDrawShape());
       }).toThrow(
-        'useDrawShapes requires either a mapId parameter or to be used within a MapProvider',
+        'useDrawShape requires either a mapId parameter or to be used within a MapProvider',
       );
     });
   });
 
   describe('draw function', () => {
     it('starts drawing and updates isDrawing state', async () => {
-      const { result } = renderHook(() => useDrawShapes(mapId));
+      const { result } = renderHook(() => useDrawShape(mapId));
 
       act(() => {
         result.current.draw(ShapeFeatureType.Polygon);
@@ -78,7 +78,7 @@ describe('useDrawShapes', () => {
       const drawingSpy = vi.fn();
       bus.on(DrawShapeEvents.drawing, drawingSpy);
 
-      const { result } = renderHook(() => useDrawShapes(mapId));
+      const { result } = renderHook(() => useDrawShape(mapId));
 
       act(() => {
         result.current.draw(ShapeFeatureType.Point);
@@ -109,7 +109,7 @@ describe('useDrawShapes', () => {
 
       for (const shapeType of shapeTypes) {
         const testMapId = uuid();
-        const { result, unmount } = renderHook(() => useDrawShapes(testMapId));
+        const { result, unmount } = renderHook(() => useDrawShape(testMapId));
 
         act(() => {
           result.current.draw(shapeType);
@@ -130,7 +130,7 @@ describe('useDrawShapes', () => {
 
   describe('cancel function', () => {
     it('cancels drawing and updates state', async () => {
-      const { result } = renderHook(() => useDrawShapes(mapId));
+      const { result } = renderHook(() => useDrawShape(mapId));
 
       // Start drawing first
       act(() => {
@@ -157,7 +157,7 @@ describe('useDrawShapes', () => {
       const canceledBus = Broadcast.getInstance<ShapeDrawCanceledEvent>();
       canceledBus.on(DrawShapeEvents.canceled, canceledSpy);
 
-      const { result } = renderHook(() => useDrawShapes(mapId));
+      const { result } = renderHook(() => useDrawShape(mapId));
 
       // Start drawing first
       act(() => {
@@ -192,7 +192,7 @@ describe('useDrawShapes', () => {
       const canceledBus = Broadcast.getInstance<ShapeDrawCanceledEvent>();
       canceledBus.on(DrawShapeEvents.canceled, canceledSpy);
 
-      const { result } = renderHook(() => useDrawShapes(mapId));
+      const { result } = renderHook(() => useDrawShape(mapId));
 
       // Try to cancel without starting
       act(() => {
@@ -211,7 +211,7 @@ describe('useDrawShapes', () => {
       const drawnBus = Broadcast.getInstance<ShapeDrawnEvent>();
 
       renderHook(() =>
-        useDrawShapes(mapId, {
+        useDrawShape(mapId, {
           onCreate: onCreateSpy,
         }),
       );
@@ -238,9 +238,9 @@ describe('useDrawShapes', () => {
           properties: {
             styleProperties: {
               fillColor: [255, 0, 0, 255],
-              strokeColor: [0, 0, 0, 255],
-              strokeWidth: 2,
-              strokePattern: 'solid',
+              lineColor: [0, 0, 0, 255],
+              lineWidth: 2,
+              linePattern: 'solid',
             },
           },
         },
@@ -266,7 +266,7 @@ describe('useDrawShapes', () => {
       const otherMapId = uuid();
 
       renderHook(() =>
-        useDrawShapes(mapId, {
+        useDrawShape(mapId, {
           onCreate: onCreateSpy,
         }),
       );
@@ -290,7 +290,7 @@ describe('useDrawShapes', () => {
       const onCancelSpy = vi.fn();
 
       const { result } = renderHook(() =>
-        useDrawShapes(mapId, {
+        useDrawShape(mapId, {
           onCancel: onCancelSpy,
         }),
       );
@@ -320,7 +320,7 @@ describe('useDrawShapes', () => {
       const otherMapId = uuid();
 
       renderHook(() =>
-        useDrawShapes(mapId, {
+        useDrawShape(mapId, {
           onCancel: onCancelSpy,
         }),
       );
@@ -347,7 +347,7 @@ describe('useDrawShapes', () => {
 
       // Test map1 in isolation first
       const { result: result1, unmount: unmount1 } = renderHook(() =>
-        useDrawShapes(mapId1),
+        useDrawShape(mapId1),
       );
 
       act(() => {
@@ -365,7 +365,7 @@ describe('useDrawShapes', () => {
 
       // Now test map2 - should start fresh
       const { result: result2, unmount: unmount2 } = renderHook(() =>
-        useDrawShapes(mapId2),
+        useDrawShape(mapId2),
       );
 
       // Map2 should be idle (not affected by map1's state)

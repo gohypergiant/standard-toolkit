@@ -53,6 +53,7 @@ export function MapControls({ id, mapRef }: MapControlsProps) {
     if (event.payload.id === id) {
       mapRef.current?.getMap().scrollZoom.enable();
       mapRef.current?.getMap().doubleClickZoom.enable();
+      mapRef.current?.getMap().boxZoom.enable();
     }
   });
 
@@ -60,6 +61,7 @@ export function MapControls({ id, mapRef }: MapControlsProps) {
     if (event.payload.id === id) {
       mapRef.current?.getMap().scrollZoom.disable();
       mapRef.current?.getMap().doubleClickZoom.disable();
+      mapRef.current?.getMap().boxZoom.disable();
     }
   });
 

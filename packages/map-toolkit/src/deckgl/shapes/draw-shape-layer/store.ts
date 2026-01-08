@@ -13,9 +13,9 @@
 'use client';
 
 import { Broadcast } from '@accelint/bus';
-import { MapCursorEvents } from '../../../map-cursor/events';
-import { getOrCreateClearCursor } from '../../../map-cursor/store';
-import { MapModeEvents } from '../../../map-mode/events';
+import { MapCursorEvents } from '@/map-cursor/events';
+import { getOrCreateClearCursor } from '@/map-cursor/store';
+import { MapModeEvents } from '@/map-mode/events';
 import {
   DRAW_CURSOR_MAP,
   DRAW_SHAPE_LAYER_ID,
@@ -25,16 +25,11 @@ import { DrawShapeEvents } from './events';
 import { convertFeatureToShape } from './utils/feature-conversion';
 import type { UniqueId } from '@accelint/core';
 import type { Feature } from 'geojson';
-import type { MapCursorEventType } from '../../../map-cursor/types';
-import type { MapModeEventType } from '../../../map-mode/types';
-import type { Shape, ShapeFeatureType } from '../shared/types';
+import type { MapCursorEventType } from '@/map-cursor/types';
+import type { MapModeEventType } from '@/map-mode/types';
+import type { Shape, ShapeFeatureType, Subscription } from '../shared/types';
 import type { DrawShapeEvent, ShapeDrawnEvent } from './events';
-import type {
-  DrawFunction,
-  DrawingState,
-  DrawShapeOptions,
-  Subscription,
-} from './types';
+import type { DrawFunction, DrawingState, DrawShapeOptions } from './types';
 
 /**
  * Typed event bus instances
