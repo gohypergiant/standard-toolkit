@@ -387,8 +387,13 @@
   }
 
   .separator {
-    @apply h-px;
-    background-color: var(--outline-static);
+    /*
+     * Use border-top instead of background-color + height for the 1px line.
+     * Border rendering is more consistent across platforms (Linux/Windows/Mac)
+     * and display scaling settings than background-color with sub-pixel heights.
+     */
+    @apply h-0 border-t;
+    border-color: var(--outline-static);
   }
 
   .hotkey {
