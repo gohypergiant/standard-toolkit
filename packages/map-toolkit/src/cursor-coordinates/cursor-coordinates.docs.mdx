@@ -10,7 +10,7 @@ A hook that retrieves the coordinates of the mouse's current hovered position on
 ## Features
 
 - **Multiple Coordinate Formats**: Supports DD (Decimal Degrees), DDM (Degrees Decimal Minutes), DMS (Degrees Minutes Seconds), MGRS, and UTM formats
-- **Raw Coordinate Access**: Direct access to longitude, latitude, and tuple values for custom processing
+- **Raw Coordinate Access**: Direct access to longitude and latitude values for custom processing
 - **Custom Formatters**: Supply your own formatting function for complete control over output
 - **Hybrid Architecture**: React integration uses `useSyncExternalStore` for concurrent-safe updates
 - **SSR/RSC Compatible**: Full support for server-side rendering and React Server Components
@@ -103,7 +103,6 @@ function RawCoordinateDisplay() {
     <div>
       <div>Longitude: {rawCoord.longitude}</div>
       <div>Latitude: {rawCoord.latitude}</div>
-      <div>Tuple: [{rawCoord.tuple[0]}, {rawCoord.tuple[1]}]</div>
       <div>Current Format: {currentFormat}</div>
     </div>
   );
@@ -149,7 +148,6 @@ Optional configuration object:
 {
   longitude: number;           // Longitude in degrees (-180 to 180, normalized)
   latitude: number;            // Latitude in degrees (-90 to 90)
-  tuple: [number, number];     // [longitude, latitude] tuple
 } | null
 ```
 

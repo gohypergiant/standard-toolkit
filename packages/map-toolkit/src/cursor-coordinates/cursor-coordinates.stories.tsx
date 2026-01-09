@@ -93,9 +93,6 @@ const CursorCoordinateDisplay = (props: Props) => {
                 longitude: {rawCoord.longitude}
               </code>
               <code className='text-body-m'>latitude: {rawCoord.latitude}</code>
-              <code className='text-body-m'>
-                tuple: [{rawCoord.tuple[0]}, {rawCoord.tuple[1]}]
-              </code>
             </div>
           ) : (
             <code className='text-body-m text-content-disabled'>null</code>

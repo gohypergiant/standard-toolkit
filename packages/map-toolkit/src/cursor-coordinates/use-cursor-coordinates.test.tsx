@@ -381,7 +381,7 @@ describe('useCursorCoordinates', () => {
       expect(result.current.rawCoord).toBeNull();
     });
 
-    it('returns rawCoord with longitude, latitude, and tuple when coordinate is set', async () => {
+    it('returns rawCoord with longitude and latitude when coordinate is set', async () => {
       const { result } = renderHook(() => useCursorCoordinates(id));
 
       act(() => {
@@ -394,10 +394,6 @@ describe('useCursorCoordinates', () => {
 
       expect(result.current.rawCoord?.longitude).toBeCloseTo(-122.4194, 4);
       expect(result.current.rawCoord?.latitude).toBeCloseTo(37.7749, 4);
-      expect(result.current.rawCoord?.tuple).toEqual([
-        expect.closeTo(-122.4194, 4),
-        expect.closeTo(37.7749, 4),
-      ]);
     });
 
     it('normalizes longitude in rawCoord', async () => {

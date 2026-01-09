@@ -74,7 +74,6 @@ function buildRawCoordinate(coord: [number, number] | null): RawCoordinate {
   return {
     longitude: normalizedLon,
     latitude: coord[1],
-    tuple: [normalizedLon, coord[1]],
   };
 }
 

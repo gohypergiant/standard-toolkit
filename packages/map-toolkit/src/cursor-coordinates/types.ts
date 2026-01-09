@@ -35,8 +35,6 @@ export type RawCoordinate = {
   longitude: number;
   /** Latitude value in degrees (-90 to 90) */
   latitude: number;
-  /** Original tuple in [longitude, latitude] order (matches map event format) */
-  tuple: [number, number];
 } | null;
 
 /**
