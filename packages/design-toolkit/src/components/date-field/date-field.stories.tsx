@@ -67,3 +67,14 @@ export const DateTime: Story = {
   },
   render: DateField,
 };
+
+export const Readonly: Story = {
+  args: {
+    ...Default.args,
+    granularity: 'second',
+    description: 'Format: MMM dd yyyy hh:mm:ss a ZZZZ',
+    defaultValue: parseAbsoluteToLocal('2021-04-07T18:45:22Z'),
+    isReadOnly: true,
+  },
+  render: DateField,
+};
