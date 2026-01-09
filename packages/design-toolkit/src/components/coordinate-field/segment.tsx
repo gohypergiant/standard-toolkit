@@ -169,6 +169,7 @@ export function CoordinateSegment({
     <input
       readOnly={isReadOnly}
       ref={segmentRef}
+      tabIndex={isReadOnly ? -1 : 0}
       type='text'
       value={value}
       onChange={handleChange}
