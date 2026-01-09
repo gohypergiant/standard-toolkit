@@ -383,7 +383,7 @@
   }
 
   .header {
-    @apply fg-primary-muted px-s py-xs text-header-xs;
+    @apply fg-primary-muted px-xs py-s text-header-xs;
   }
 
   .separator {
