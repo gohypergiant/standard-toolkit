@@ -57,9 +57,8 @@ import {
   getAllCoordinateFormats,
 } from './coordinate-utils';
 import { CoordinateSegment } from './segment';
-import { getSegmentLabel, GROUP_SEPARATOR } from './segment-configs';
+import { GROUP_SEPARATOR, getSegmentLabel } from './segment-configs';
 import styles from './styles.module.css';
-import type { CoordinateFieldProps } from './types';
 import {
   COORDINATE_FORMAT_LABELS,
   COORDINATE_FORMAT_NAMES,
@@ -67,6 +66,7 @@ import {
   type CoordinateSystem,
 } from './types';
 import { calculateMinControlWidth } from './width-utils';
+import type { CoordinateFieldProps } from './types';
 
 /**
  * CoordinateField - A comprehensive coordinate input component with multiple format support
@@ -140,6 +140,7 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
     isDisabled = false,
     isInvalid: isInvalidProp = false,
     isRequired = false,
+    isReadOnly = false,
     ...rest
   } = props;
 
@@ -326,6 +327,7 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
                       pad={config.pad}
                       className={clsx(styles.segment, classNames?.segment)}
                       isDisabled={isDisabled}
+                      isReadOnly={isReadOnly}
                       allowedChars={config.allowedChars}
                       segmentRef={focus.segmentRefs[editableIndex]}
                       segmentIndex={editableIndex}
