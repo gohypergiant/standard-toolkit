@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -13,13 +13,13 @@
 import { uuid } from '@accelint/core';
 import { describe, expect, it } from 'vitest';
 import {
-  ShapeFeatureType,
   isCircleShape,
   isEllipseShape,
   isLineStringShape,
   isPointShape,
   isPolygonShape,
   isRectangleShape,
+  ShapeFeatureType,
 } from './types';
 import type {
   CircleShape,

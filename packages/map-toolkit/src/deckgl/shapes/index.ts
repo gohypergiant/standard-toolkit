@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -33,14 +33,6 @@ export {
   LINE_WIDTHS,
   SHAPE_LAYER_IDS,
 } from './shared/constants';
-// Style utility exports
-export {
-  getDashArray,
-  getFillColor,
-  getLineColor,
-  getLineWidth,
-  normalizeColor,
-} from './shared/utils/style-utils';
 // Event exports
 export { ShapeEvents } from './shared/events';
 export {
@@ -53,11 +45,17 @@ export {
   ShapeFeatureType,
 } from './shared/types';
 // Style utility exports
+// Style utility exports
 export {
   getDashArray,
+  getDashArray,
+  getFillColor,
   getFillColor,
   getLineColor,
+  getLineColor,
   getLineWidth,
+  getLineWidth,
+  normalizeColor,
   normalizeColor,
 } from './shared/utils/style-utils';
 export type {
