@@ -20,13 +20,14 @@ const meta = {
   args: {
     label: 'Label',
     defaultValue: parseDate('2020-01-23'),
-    description: 'Format: d MMM yyyy',
+    description: 'Format: MMM dd yyyy',
     errorMessage: '',
     granularity: 'day',
     size: 'medium',
     isDisabled: false,
     isInvalid: false,
     isRequired: true,
+    isReadOnly: false,
   },
   argTypes: {
     size: {
@@ -52,7 +53,7 @@ export const WithoutShortMonth: Story = {
     ...Default.args,
     granularity: 'day',
     shortMonth: false,
-    description: 'Format: d MM yyyy',
+    description: 'Format: mm dd yyyy',
     defaultValue: parseDate('2020-01-23'),
   },
   render: DateField,
@@ -62,7 +63,7 @@ export const DateTime: Story = {
   args: {
     ...Default.args,
     granularity: 'second',
-    description: 'Format: d MMM yyyy hh:mm:ss a ZZZZ',
+    description: 'Format: MMM dd yyyy hh:mm:ss a ZZZZ',
     defaultValue: parseAbsoluteToLocal('2021-04-07T18:45:22Z'),
   },
   render: DateField,
