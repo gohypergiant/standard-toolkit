@@ -156,6 +156,8 @@ export type CoordinateSegmentProps = {
   className?: string;
   /** Whether the segment is disabled */
   isDisabled?: boolean;
+  /** Whether the segment is read-only */
+  isReadOnly?: boolean;
   /** Regex pattern for allowed characters (e.g., "[0-9\\-\\.]" for numeric, "[NSEW]" for directional) */
   allowedChars?: string;
   /** Ref to the input element for programmatic focus management */
