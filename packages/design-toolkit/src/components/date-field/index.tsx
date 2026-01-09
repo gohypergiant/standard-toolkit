@@ -100,6 +100,7 @@ export function DateField<T extends DateValue>({
   isDisabled,
   isInvalid: isInvalidProp,
   isRequired,
+  isReadOnly = false,
   ...rest
 }: DateFieldProps<T>) {
   const errorMessage = errorMessageProp || null; // Protect against empty string
@@ -115,6 +116,7 @@ export function DateField<T extends DateValue>({
       isDisabled={isDisabled}
       isInvalid={isInvalidProp || (errorMessage ? true : undefined)} // Leave uncontrolled if possible to fallback to validation state
       isRequired={isRequired}
+      isReadOnly={isReadOnly}
       aria-label={labelProp}
       data-size={size}
     >
@@ -131,8 +133,14 @@ export function DateField<T extends DateValue>({
               {labelProp}
             </Label>
           )}
-          <div className={clsx(styles.control, classNames?.control)}>
-            {size === 'medium' && (
+          <div
+            className={clsx(
+              styles.control,
+              isReadOnly && styles.readonly,
+              classNames?.control,
+            )}
+          >
+            {!isReadOnly && size === 'medium' && (
               <Icon>
                 <Calendar />
               </Icon>
