@@ -1,5 +1,17 @@
 # @accelint/design-toolkit
 
+## 9.2.0
+### Minor Changes
+
+- 7e80a87: Add list component
+
+### Patch Changes
+
+- 9a31d4f: Add a story to highlight inputProps for the TextField component
+- 8a013b7: Add a story to demonstrate selection state for options
+  - @accelint/design-foundation@2.0.0
+  - @accelint/icons@2.1.2
+
 ## 9.1.1
 ### Patch Changes
 

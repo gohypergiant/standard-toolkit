@@ -1,5 +1,73 @@
 # @accelint/map-toolkit
 
+## 1.0.0
+
+### Major Changes
+
+- 4e614fb: Refactor map-toolkit for v1 release:
+
+  **Breaking Changes:**
+  - Rename `useViewportState` → `useMapViewport`
+  - Rename `useCameraState` → `useMapCamera`
+  - Rename `useShapeSelection` → `useSelectShape`
+  - Rename `INITIAL_VIEW_STATE` → `DEFAULT_VIEW_STATE` (in maplibre exports)
+  - Remove `@accelint/map-toolkit/maplibre/constants` export
+
+  **Bug Fixes:**
+  - Fix `useMapCursorEffect` not updating cursor when props change
+  - Fix saved viewports not restoring map position (now uses `CameraEventTypes.setCenter`)
+
+  **Internal Improvements:**
+  - Refactor all stores to use `createMapStore` factory pattern
+  - Hoist `DEFAULT_VIEW_STATE` to `shared/constants`
+  - Replace `console.warn` with `@accelint/logger` for conditional logging
+  - Standardize drawStore to use shared mode-utils
+  - Update saved viewports docs and story to use camera events correctly
+
+### Minor Changes
+
+- fd26776: Add EditShapeLayer for interactive shape editing
+
+  **New features:**
+  - `EditShapeLayer` component for editing existing shapes on the map
+  - `showLabels` prop in `DisplayShapeLayer` now supports `'always' | 'hover' | 'never'` modes for flexible label display (hover mode shows labels only on shape hover)
+  - `useEditShape` hook for managing edit state with `edit()`, `save()`, and `cancel()` controls
+  - Support for all shape types: Point, LineString, Polygon, Rectangle, Circle, and Ellipse
+  - Live measurement tooltips during editing (dimensions and area)
+  - Shift key modifiers: hold for uniform scaling or 45° rotation snapping
+  - ESC key to cancel editing
+  - Locked shape support (`shape.locked` prevents editing)
+
+  **Bug fixes:**
+  - Add `boxZoom` to disabled controls list when Shift key is used for shape operations (prevents map zoom interference)
+
+  **Internal improvements:**
+  - Consolidate tooltip calculation logic into shared geometry measurement utilities
+  - Standardize `mapId` optionality across hooks (optional with context fallback)
+  - Add documentation for modes architecture (README.md in modes directory)
+  - Rename `strokeColor` to `lineColor` and `strokeWidth` to `lineWidth` in style properties to align with deck.gl conventions
+  - Rename `shapeType` to `shape` in Shape type for consistency with deck.gl
+
+- fb3fe97: Add DrawShapeLayer for interactive shape drawing
+
+  **New features:**
+  - `DrawShapeLayer` component for drawing shapes on the map
+  - `useDrawShape` hook for managing drawing state with `draw()` and `cancel()` controls
+  - Support for multiple geometry types: Point, LineString, Polygon, Rectangle, Circle, and Ellipse
+  - Real-time tooltips showing distance/area measurements during drawing
+  - Protected drawing mode (cannot be interrupted by other map mode requests)
+  - Double-click to finish polygons and lines
+  - Shift-to-square constraint when drawing rectangles
+  - Custom styling support (fill/line colors) when initiating drawing
+  - ESC key to cancel drawing
+
+  **Internal improvements:**
+  - Refactor viewport to use shared unit abbreviation map from `shared/units.ts`
+
+### Patch Changes
+
+- 2e6389a: Fixes a regression in viewport size where viewport changes weren't updating
+
 ## 0.6.0
 
 ### Minor Changes
