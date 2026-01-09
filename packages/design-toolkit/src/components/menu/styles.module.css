@@ -326,8 +326,7 @@
      * Border rendering is more consistent across platforms (Linux/Windows/Mac)
      * and display scaling settings than background-color with sub-pixel heights.
      */
-    @apply h-0 border-t;
-    border-color: var(--outline-static);
+    @apply h-0 border-t border-(--outline-static);
   }
 
   .hotkey {
