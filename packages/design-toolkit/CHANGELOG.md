@@ -1,5 +1,11 @@
 # @accelint/design-toolkit
 
+## 9.2.1
+### Patch Changes
+
+- Updated dependencies [45275c4]
+  - @accelint/geo@0.5.1
+
 ## 9.2.0
 ### Minor Changes
 
