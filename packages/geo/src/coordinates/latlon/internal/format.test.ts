@@ -59,7 +59,7 @@ describe('formatDecimalDegrees', () => {
       [-12.345678, -23.456789],
       withOrdinal(),
     );
-    expect(result).toBe('-12.345678° S, -23.456789° W');
+    expect(result).toBe('12.345678° S, 23.456789° W');
   });
 
   it('should use custom prefix, suffix, and separator', () => {
@@ -76,7 +76,7 @@ describe('formatDecimalDegrees', () => {
     expect(result).toBe('180.000000° N, 90.000000° E');
 
     const result2 = formatDecimalDegrees([-180, -90], withOrdinal());
-    expect(result2).toBe('-180.000000° S, -90.000000° W');
+    expect(result2).toBe('180.000000° S, 90.000000° W');
   });
 });
 

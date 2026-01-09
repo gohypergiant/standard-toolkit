@@ -12,8 +12,9 @@
 
 import { createFormatter } from '../internal/format';
 
-const toDecimalDegrees = (num: number): string => {
-  return `${num.toFixed(6)}°`;
+const toDecimalDegrees = (num: number, withOrdinal?: boolean): string => {
+  const value = withOrdinal ? Math.abs(num) : num;
+  return `${value.toFixed(6)}°`;
 };
 
 export const formatDecimalDegrees = createFormatter(toDecimalDegrees);
