@@ -14,7 +14,7 @@
 
 @layer components.l1 {
   .menu {
-    @apply rounded-medium bg-surface-overlay shadow-elevation-overlay outline-static overflow-x-clip overflow-y-auto py-px outline;
+    @apply rounded-medium bg-surface-overlay shadow-elevation-overlay outline-static overflow-x-clip overflow-y-auto p-px outline;
   }
 
   .item {
@@ -33,6 +33,15 @@
       top: 0;
       bottom: 0;
       background: inherit;
+    }
+
+    /* Don't extend ::after at menu boundaries */
+    &:first-child:after {
+      top: 0 !important;
+    }
+
+    &:last-child:after {
+      bottom: 0 !important;
     }
 
     &.cozy {
