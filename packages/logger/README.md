@@ -87,6 +87,30 @@ const logger = getLogger({ enabled: true, pretty: true });
 const logger = getLogger({ enabled: true, pretty: false });
 ```
 
+### Fluent API
+
+Use the fluent API to chain context and error information:
+
+```ts
+// Add contextual data with withContext()
+logger
+  .withContext({ userId: 123, action: 'checkout' })
+  .info('Processing order');
+
+// Attach errors with withError()
+logger
+  .withError(new Error('Connection timeout'))
+  .error('Database operation failed');
+
+// Chain both together
+function onError(err: Error, info: ErrorInfo) {
+  logger
+    .withContext({ componentStack: info.componentStack })
+    .withError(err)
+    .error('Error boundary caught error');
+}
+```
+
 ### Error Serialization
 
 Errors are automatically serialized with full stack traces:
