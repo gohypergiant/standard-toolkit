@@ -45,17 +45,11 @@ export {
   ShapeFeatureType,
 } from './shared/types';
 // Style utility exports
-// Style utility exports
 export {
   getDashArray,
-  getDashArray,
-  getFillColor,
   getFillColor,
   getLineColor,
-  getLineColor,
   getLineWidth,
-  getLineWidth,
-  normalizeColor,
   normalizeColor,
 } from './shared/utils/style-utils';
 export type {
