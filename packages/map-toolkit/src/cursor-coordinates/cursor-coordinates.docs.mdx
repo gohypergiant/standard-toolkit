@@ -10,6 +10,8 @@ A hook that retrieves the coordinates of the mouse's current hovered position on
 ## Features
 
 - **Multiple Coordinate Formats**: Supports DD (Decimal Degrees), DDM (Degrees Decimal Minutes), DMS (Degrees Minutes Seconds), MGRS, and UTM formats
+- **Raw Coordinate Access**: Direct access to longitude, latitude, and tuple values for custom processing
+- **Custom Formatters**: Supply your own formatting function for complete control over output
 - **Hybrid Architecture**: React integration uses `useSyncExternalStore` for concurrent-safe updates
 - **SSR/RSC Compatible**: Full support for server-side rendering and React Server Components
 - **Instance Isolation**: Support for multiple independent map instances
@@ -37,6 +39,8 @@ pnpm add @accelint/map-toolkit @accelint/bus @accelint/core @accelint/geo react
 ```
 
 ## Example usage
+
+### Basic Usage
 ```tsx
 import { uuid } from '@accelint/core';
 import { BaseMap } from '@accelint/map-toolkit/deckgl';
@@ -70,9 +74,45 @@ export function App() {
 }
 ```
 
+### With Custom Formatter
+```tsx
+import { useCursorCoordinates } from '@accelint/map-toolkit/cursor-coordinates';
+
+function CustomCoordinateDisplay() {
+  const { formattedCoord } = useCursorCoordinates(MAIN_MAP_ID, {
+    formatter: (coord) =>
+      `Lat: ${coord.latitude.toFixed(6)}° Lng: ${coord.longitude.toFixed(6)}°`,
+  });
+
+  return <div>{formattedCoord}</div>;
+}
+```
+
+### Accessing Raw Coordinates
+```tsx
+import { useCursorCoordinates } from '@accelint/map-toolkit/cursor-coordinates';
+
+function RawCoordinateDisplay() {
+  const { rawCoord, currentFormat } = useCursorCoordinates(MAIN_MAP_ID);
+
+  if (!rawCoord) {
+    return <div>Move cursor over map</div>;
+  }
+
+  return (
+    <div>
+      <div>Longitude: {rawCoord.longitude}</div>
+      <div>Latitude: {rawCoord.latitude}</div>
+      <div>Tuple: [{rawCoord.tuple[0]}, {rawCoord.tuple[1]}]</div>
+      <div>Current Format: {currentFormat}</div>
+    </div>
+  );
+}
+```
+
 ## React API Reference
 
-### `useCursorCoordinates(id?)`
+### `useCursorCoordinates(id?, options?)`
 
 Hook to access hovered coordinate of a map instance.
 
@@ -82,14 +122,54 @@ Hook to access hovered coordinate of a map instance.
 
 The map ID to access. **Recommended**: Always pass this parameter for UI components that are siblings to `BaseMap`.
 
+##### `options?: UseCursorCoordinatesOptions`
+
+Optional configuration object:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `formatter` | `CoordinateFormatter` | Custom formatter function. Takes precedence over built-in format for `formattedCoord`. |
+
 #### Returns
 
 ```tsx
 {
-  setFormat: (format: CoordinateFormatTypes) => void;  // Set the desired coordinate system format
-  formattedCoord: string;                               // The formatted coordinate string in the current format
+  formattedCoord: string;                               // Formatted coordinate string (using current format or custom formatter)
+  setFormat: (format: CoordinateFormatTypes) => void;  // Set the coordinate format system
+  rawCoord: RawCoordinate;                              // Raw coordinate data (null when cursor not over map)
+  currentFormat: CoordinateFormatTypes;                 // Current active format type
 }
 ```
+
+#### Types
+
+##### `RawCoordinate`
+
+```tsx
+{
+  longitude: number;           // Longitude in degrees (-180 to 180, normalized)
+  latitude: number;            // Latitude in degrees (-90 to 90)
+  tuple: [number, number];     // [longitude, latitude] tuple
+} | null
+```
+
+##### `CoordinateFormatter`
+
+```tsx
+(coordinate: NonNullable<RawCoordinate>) => string
+```
+
+##### `CoordinateFormatTypes`
+
+`'dd'` | `'ddm'` | `'dms'` | `'mgrs'` | `'utm'`
+
+| Format | Description | Example |
+|--------|-------------|---------|
+| `dd` | Decimal Degrees | `40.712775° N / 74.005973° W` |
+| `ddm` | Degrees Decimal Minutes | `40° 42.7665' N / 74° 0.3584' W` |
+| `dms` | Degrees Minutes Seconds | `40° 42' 45.99″ N / 74° 0' 21.50″ W` |
+| `mgrs` | Military Grid Reference System | `18T WL 83959 07350` |
+| `utm` | Universal Transverse Mercator | `18N 583959 4507351` |
 
 #### Throws
 

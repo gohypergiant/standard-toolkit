@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -12,326 +12,134 @@
 'use client';
 
 import 'client-only';
-import { Broadcast } from '@accelint/bus';
-import { coordinateSystems, createCoordinate } from '@accelint/geo';
-import { useContext, useMemo, useSyncExternalStore } from 'react';
-import { MapEvents } from '../deckgl/base-map/events';
+import {
+  coordinateSystems,
+  createCoordinate,
+  formatDecimalDegrees,
+  formatDegreesDecimalMinutes,
+  formatDegreesMinutesSeconds,
+} from '@accelint/geo';
+import { getLogger } from '@accelint/logger';
+import { useContext, useMemo } from 'react';
 import { MapContext } from '../deckgl/base-map/provider';
+import { cursorCoordinateStore } from './store';
 import type { UniqueId } from '@accelint/core';
-import type { MapEventType, MapHoverEvent } from '../deckgl/base-map/types';
+import type {
+  CoordinateFormatTypes,
+  RawCoordinate,
+  UseCursorCoordinatesOptions,
+  UseCursorCoordinatesReturn,
+} from './types';
 
-/**
- * Supported coordinate format types for displaying map coordinates.
- *
- * @typedef {'dd' | 'ddm' | 'dms' | 'mgrs' | 'utm'} CoordinateFormatTypes
- * @property dd - Decimal Degrees (e.g., "45.50000000 E / 30.25000000 N")
- * @property ddm - Degrees Decimal Minutes (e.g., "45° 30' E / 30° 15' N")
- * @property dms - Degrees Minutes Seconds (e.g., "45° 30' 0\" E / 30° 15' 0\" N")
- * @property mgrs - Military Grid Reference System (e.g., "31U DQ 48251 11932")
- * @property utm - Universal Transverse Mercator (e.g., "31N 448251 5411932")
- */
-export type CoordinateFormatTypes = keyof typeof coordinateSystems;
-
-const bus = Broadcast.getInstance<MapEventType>();
-const create = createCoordinate(coordinateSystems.dd, 'LONLAT');
+const logger = getLogger({
+  enabled:
+    process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test',
+  level: 'warn',
+  prefix: '[CursorCoordinates]',
+  pretty: true,
+});
 
 const MAX_LONGITUDE = 180;
 const LONGITUDE_RANGE = 360;
-const COORDINATE_PRECISION = 8;
 const DEFAULT_COORDINATE = '--, --';
 
 /**
- * Prepares coordinates for display by normalizing longitude and formatting with cardinal directions.
- * Normalizes longitude to -180 to 180 range and formats both longitude and latitude with
- * compass directions (E/W for longitude, N/S for latitude).
+ * Normalizes longitude to -180 to 180 range.
+ * Handles wraparound including multi-revolution values.
  *
- * @param coord - Tuple of [longitude, latitude] coordinates
- * @returns Formatted string in the format "LON.NNNNNNNN E/W / LAT.NNNNNNNN N/S"
+ * @param lon - Longitude value in degrees
+ * @returns Normalized longitude between -180 and 180
  */
-const prepareCoord = (coord: [number, number]) => {
-  // Normalize longitude to -180 to 180 range (handles wraparound including multi-revolution values)
-  let lon = coord[0];
-  lon =
+function normalizeLongitude(lon: number): number {
+  return (
     ((((lon + MAX_LONGITUDE) % LONGITUDE_RANGE) + LONGITUDE_RANGE) %
       LONGITUDE_RANGE) -
-    MAX_LONGITUDE;
-
-  const lat = coord[1];
-  const lonStr = `${Math.abs(lon).toFixed(COORDINATE_PRECISION)} ${lon < 0 ? 'W' : 'E'}`;
-  const latStr = `${Math.abs(lat).toFixed(COORDINATE_PRECISION)} ${lat < 0 ? 'S' : 'N'}`;
-
-  return `${lonStr} / ${latStr}`;
-};
-
-/**
- * Type guard to validate that a value is a proper coordinate tuple.
- * Checks that the value is an array with exactly two finite numbers.
- *
- * @param value - Value to validate as a coordinate
- * @returns True if value is a valid [longitude, latitude] tuple
- */
-function isValidCoordinate(value?: number[]): value is [number, number] {
-  return (
-    Array.isArray(value) && value.length === 2 && value.every(Number.isFinite)
+    MAX_LONGITUDE
   );
 }
 
 /**
- * State stored for each map instance's cursor coordinates
- */
-type CursorCoordinateState = {
-  coordinate: [number, number] | null;
-  format: CoordinateFormatTypes;
-};
-
-/**
- * Store for cursor coordinate state keyed by instanceId
- */
-const coordinateStore = new Map<UniqueId, CursorCoordinateState>();
-
-/**
- * Track React component subscribers per instanceId (for fan-out notifications).
- * Each Set contains onStoreChange callbacks from useSyncExternalStore.
- */
-const componentSubscribers = new Map<UniqueId, Set<() => void>>();
-
-/**
- * Cache of bus unsubscribe functions (1 per instanceId).
- * This ensures we only have one bus listener per map, regardless of
- * how many React components subscribe to it.
- */
-const busUnsubscribers = new Map<UniqueId, () => void>();
-
-type Subscription = (onStoreChange: () => void) => () => void;
-/**
- * Cache of subscription functions per instanceId to avoid recreating on every render
- */
-const subscriptionCache = new Map<UniqueId, Subscription>();
-
-/**
- * Cache of snapshot functions per instanceId to maintain referential stability
- */
-const snapshotCache = new Map<UniqueId, () => string>();
-
-/**
- * Cache of server snapshot functions per instanceId to maintain referential stability.
- * Server snapshots always return default coordinate since coordinate state is client-only.
- */
-const serverSnapshotCache = new Map<UniqueId, () => string>();
-
-/**
- * Ensures a single bus listener exists for the given instanceId.
- * All React subscribers will be notified via fan-out when the bus event fires.
- * This prevents creating N bus listeners for N React components.
+ * Builds a RawCoordinate object from a coordinate tuple.
  *
- * @param instanceId - The unique identifier for the map
+ * @param coord - Coordinate tuple [longitude, latitude] or null
+ * @returns RawCoordinate object or null
  */
-function ensureBusListener(instanceId: UniqueId): void {
-  if (busUnsubscribers.has(instanceId)) {
-    return; // Already listening
+function buildRawCoordinate(coord: [number, number] | null): RawCoordinate {
+  if (!coord) {
+    return null;
   }
 
-  const unsub = bus.on(MapEvents.hover, (data: MapHoverEvent) => {
-    const eventId = data.payload.id;
+  const normalizedLon = normalizeLongitude(coord[0]);
 
-    // Ignore hover events from other possible map instances
-    if (instanceId !== eventId) {
-      return;
-    }
-
-    const coords = data.payload.info.coordinate;
-    const state = coordinateStore.get(instanceId);
-
-    // Update coordinate if valid, or clear if invalid
-    if (state) {
-      if (isValidCoordinate(coords)) {
-        state.coordinate = coords as [number, number];
-      } else {
-        state.coordinate = null;
-      }
-
-      // Fan-out: notify all React subscribers
-      const subscribers = componentSubscribers.get(instanceId);
-      if (subscribers) {
-        for (const onStoreChange of subscribers) {
-          onStoreChange();
-        }
-      }
-    }
-  });
-
-  busUnsubscribers.set(instanceId, unsub);
+  return {
+    longitude: normalizedLon,
+    latitude: coord[1],
+    tuple: [normalizedLon, coord[1]],
+  };
 }
 
 /**
- * Cleans up the bus listener if no React subscribers remain.
+ * Formats a coordinate using the specified format.
+ * Uses @accelint/geo formatters which match CoordinateField precision:
+ * - DD: 6 decimal places
+ * - DDM: 4 decimal places for minutes
+ * - DMS: 2 decimal places for seconds
  *
- * @param instanceId - The unique identifier for the map
+ * @param coord - Coordinate tuple [longitude, latitude]
+ * @param format - Coordinate format type
+ * @returns Formatted coordinate string
  */
-function cleanupBusListenerIfNeeded(instanceId: UniqueId): void {
-  const subscribers = componentSubscribers.get(instanceId);
-
-  if (!subscribers || subscribers.size === 0) {
-    // No more React subscribers - clean up bus listener
-    const unsub = busUnsubscribers.get(instanceId);
-    if (unsub) {
-      unsub();
-      busUnsubscribers.delete(instanceId);
-    }
-
-    // Clean up all state
-    coordinateStore.delete(instanceId);
-    componentSubscribers.delete(instanceId);
-    subscriptionCache.delete(instanceId);
-    snapshotCache.delete(instanceId);
-    serverSnapshotCache.delete(instanceId);
-  }
-}
-
-/**
- * Creates or retrieves a cached subscription function for a given instanceId.
- * Uses a fan-out pattern: 1 bus listener -> N React subscribers.
- * Automatically cleans up coordinate state when the last subscriber unsubscribes.
- *
- * @param instanceId - The unique identifier for the map
- * @returns A subscription function for useSyncExternalStore
- */
-function getOrCreateSubscription(
-  instanceId: UniqueId,
-): (onStoreChange: () => void) => () => void {
-  const subscription =
-    subscriptionCache.get(instanceId) ??
-    ((onStoreChange: () => void) => {
-      // Ensure single bus listener exists for this instanceId
-      ensureBusListener(instanceId);
-
-      // Get or create the subscriber set for this map instance, then add this component's callback
-      let subscriberSet = componentSubscribers.get(instanceId);
-      if (!subscriberSet) {
-        subscriberSet = new Set();
-        componentSubscribers.set(instanceId, subscriberSet);
-      }
-      subscriberSet.add(onStoreChange);
-
-      // Return cleanup function to remove this component's subscription
-      return () => {
-        const currentSubscriberSet = componentSubscribers.get(instanceId);
-        if (currentSubscriberSet) {
-          currentSubscriberSet.delete(onStoreChange);
-        }
-
-        // Clean up bus listener if this was the last React subscriber
-        cleanupBusListenerIfNeeded(instanceId);
-      };
-    });
-
-  subscriptionCache.set(instanceId, subscription);
-
-  return subscription;
-}
-
-/**
- * Creates or retrieves a cached snapshot function for a given instanceId.
- * The function must read from the store on every call to get current state.
- *
- * @param instanceId - The unique identifier for the map
- * @returns A snapshot function for useSyncExternalStore that returns formatted coordinate string
- */
-function getOrCreateSnapshot(instanceId: UniqueId): () => string {
-  let cached = snapshotCache.get(instanceId);
-
-  if (!cached) {
-    // Create a snapshot function that always reads current state from the store
-    cached = () => {
-      const state = coordinateStore.get(instanceId);
-
-      if (!state) {
-        return DEFAULT_COORDINATE;
-      }
-
-      if (!state.coordinate) {
-        return DEFAULT_COORDINATE;
-      }
-
-      const coord = create(prepareCoord(state.coordinate));
-      return coord[state.format]();
-    };
-
-    snapshotCache.set(instanceId, cached);
-  }
-
-  return cached;
-}
-
-/**
- * Creates or retrieves a cached server snapshot function for a given instanceId.
- * Server snapshots always return the default coordinate since coordinate state is client-only.
- * Required for SSR/RSC compatibility with useSyncExternalStore.
- *
- * @param instanceId - The unique identifier for the map
- * @returns A server snapshot function for useSyncExternalStore
- */
-function getOrCreateServerSnapshot(instanceId: UniqueId): () => string {
-  const serverSnapshot =
-    serverSnapshotCache.get(instanceId) ?? (() => DEFAULT_COORDINATE);
-
-  serverSnapshotCache.set(instanceId, serverSnapshot);
-
-  return serverSnapshot;
-}
-
-/**
- * Updates the format for a given map instance and notifies subscribers.
- *
- * @param instanceId - The unique identifier for the map
- * @param format - The new coordinate format to use
- */
-function setFormatForInstance(
-  instanceId: UniqueId,
+function formatCoordinate(
+  coord: [number, number],
   format: CoordinateFormatTypes,
-): void {
-  const state = coordinateStore.get(instanceId);
-  if (state) {
-    state.format = format;
+): string {
+  // Normalize longitude and convert to [lat, lon] for geo formatters
+  const normalizedLon = normalizeLongitude(coord[0]);
+  const latLon: [number, number] = [coord[1], normalizedLon];
 
-    // Notify all subscribers of the format change
-    // The coordinate remains unchanged; only the display format changes
-    const subscribers = componentSubscribers.get(instanceId);
-    if (subscribers) {
-      for (const onStoreChange of subscribers) {
-        onStoreChange();
-      }
+  switch (format) {
+    case 'dd':
+      return formatDecimalDegrees(latLon, {
+        withOrdinal: true,
+        separator: ' / ',
+        prefix: '',
+        suffix: '',
+      });
+    case 'ddm':
+      return formatDegreesDecimalMinutes(latLon, {
+        withOrdinal: true,
+        separator: ' / ',
+        prefix: '',
+        suffix: '',
+      });
+    case 'dms':
+      return formatDegreesMinutesSeconds(latLon, {
+        withOrdinal: true,
+        separator: ' / ',
+        prefix: '',
+        suffix: '',
+      });
+    case 'mgrs':
+    case 'utm': {
+      // Use createCoordinate for grid-based formats
+      // Input format: "lon E / lat N" for LONLAT (matching geo package DD tests)
+      // Limit to 10 decimal places (geo parser max) and avoid floating point precision issues
+      const lat = latLon[0];
+      const lon = latLon[1];
+      const latOrdinal = lat >= 0 ? 'N' : 'S';
+      const lonOrdinal = lon >= 0 ? 'E' : 'W';
+      // Use LONLAT format: longitude first, then latitude
+      // toFixed(10) ensures we stay within the parser's regex limits
+      const formattedInput = `${Math.abs(lon).toFixed(10)} ${lonOrdinal} / ${Math.abs(lat).toFixed(10)} ${latOrdinal}`;
+
+      const geoCoord = createCoordinate(
+        coordinateSystems.dd,
+        'LONLAT',
+      )(formattedInput);
+
+      return geoCoord[format]();
     }
   }
-}
-
-/**
- * Manually clear cursor coordinate state for a specific instanceId.
- * This is typically not needed as cleanup happens automatically when all subscribers unmount.
- * Use this only in advanced scenarios where manual cleanup is required.
- *
- * @param instanceId - The unique identifier for the map to clear
- *
- * @example
- * ```tsx
- * // Manual cleanup (rarely needed)
- * clearCursorCoordinateState('my-map-instance');
- * ```
- */
-export function clearCursorCoordinateState(instanceId: UniqueId): void {
-  // Unsubscribe from bus if listening
-  const unsub = busUnsubscribers.get(instanceId);
-  if (unsub) {
-    unsub();
-    busUnsubscribers.delete(instanceId);
-  }
-
-  // Clear all state
-  coordinateStore.delete(instanceId);
-  componentSubscribers.delete(instanceId);
-  subscriptionCache.delete(instanceId);
-  snapshotCache.delete(instanceId);
-  serverSnapshotCache.delete(instanceId);
 }
 
 /**
@@ -341,17 +149,15 @@ export function clearCursorCoordinateState(instanceId: UniqueId): void {
  * geographic formats (Decimal Degrees, DMS, MGRS, UTM, etc.). The hook automatically
  * filters events to only process those from the specified map instance.
  *
- * Uses `useSyncExternalStore` for concurrent-safe updates and efficient fan-out pattern
- * where multiple components can subscribe to the same map's coordinates with a single
- * bus listener.
+ * Uses the shared store factory for efficient state management and automatic cleanup.
  *
  * @param id - Optional map instance ID. If not provided, attempts to use the ID from MapProvider context.
- * @returns Object containing the formatted coordinate string and format setter function
- * @property formattedCoord - The formatted coordinate string (defaults to "--, --" when no position)
- * @property setFormat - Function to change the coordinate format system
+ * @param options - Optional configuration options
+ * @returns Object containing the formatted coordinate string, raw coordinate, format setter, and current format
  * @throws {Error} When no id is provided and hook is used outside MapProvider context
  *
  * @example
+ * Basic usage:
  * ```tsx
  * import { uuid } from '@accelint/core';
  * import { useCursorCoordinates } from '@accelint/map-toolkit/cursor-coordinates';
@@ -375,8 +181,44 @@ export function clearCursorCoordinateState(instanceId: UniqueId): void {
  *   );
  * }
  * ```
+ *
+ * @example
+ * With custom formatter:
+ * ```tsx
+ * function CustomCoordinateDisplay() {
+ *   const { formattedCoord, rawCoord } = useCursorCoordinates(MAP_ID, {
+ *     formatter: (coord) =>
+ *       `Lat: ${coord.latitude.toFixed(6)}° Lng: ${coord.longitude.toFixed(6)}°`,
+ *   });
+ *
+ *   return <div>{formattedCoord}</div>;
+ * }
+ * ```
+ *
+ * @example
+ * Accessing raw coordinates:
+ * ```tsx
+ * function RawCoordinateDisplay() {
+ *   const { rawCoord, currentFormat } = useCursorCoordinates(MAP_ID);
+ *
+ *   if (!rawCoord) {
+ *     return <div>Move cursor over map</div>;
+ *   }
+ *
+ *   return (
+ *     <div>
+ *       <div>Longitude: {rawCoord.longitude}</div>
+ *       <div>Latitude: {rawCoord.latitude}</div>
+ *       <div>Format: {currentFormat}</div>
+ *     </div>
+ *   );
+ * }
+ * ```
  */
-export function useCursorCoordinates(id?: UniqueId) {
+export function useCursorCoordinates(
+  id?: UniqueId,
+  options?: UseCursorCoordinatesOptions,
+): UseCursorCoordinatesReturn {
   const contextId = useContext(MapContext);
   const actualId = id ?? contextId;
 
@@ -386,31 +228,47 @@ export function useCursorCoordinates(id?: UniqueId) {
     );
   }
 
-  // Initialize state for this map instance BEFORE subscribing
-  // This ensures the bus listener has a store to write to
-  if (!coordinateStore.has(actualId)) {
-    coordinateStore.set(actualId, {
-      coordinate: null,
-      format: 'dd',
-    });
-  }
+  const customFormatter = options?.formatter;
 
-  // Subscribe to coordinate changes using useSyncExternalStore
-  // This must happen after store initialization
-  // Third parameter provides server snapshot for SSR/RSC compatibility
-  const formattedCoord = useSyncExternalStore<string>(
-    getOrCreateSubscription(actualId),
-    getOrCreateSnapshot(actualId),
-    getOrCreateServerSnapshot(actualId),
+  // Use the store hook to get state and actions
+  const { state, setFormat } = cursorCoordinateStore.use(actualId);
+
+  // Build raw coordinate object
+  const rawCoord = useMemo(
+    () => buildRawCoordinate(state.coordinate),
+    [state.coordinate],
   );
+
+  // Compute formatted coordinate string
+  const formattedCoord = useMemo(() => {
+    if (!rawCoord) {
+      return DEFAULT_COORDINATE;
+    }
+
+    // Use custom formatter if provided
+    if (customFormatter) {
+      try {
+        return customFormatter(rawCoord);
+      } catch (error) {
+        logger.error(
+          `Custom formatter failed: ${error instanceof Error ? error.message : String(error)}`,
+        );
+        return DEFAULT_COORDINATE;
+      }
+    }
+
+    // Use built-in formatter
+    return formatCoordinate(state.coordinate!, state.format);
+  }, [rawCoord, customFormatter, state.format, state.coordinate]);
 
   // Memoize the return value to prevent unnecessary re-renders
   return useMemo(
     () => ({
       formattedCoord,
-      setFormat: (format: CoordinateFormatTypes) =>
-        setFormatForInstance(actualId, format),
+      setFormat,
+      rawCoord,
+      currentFormat: state.format,
     }),
-    [formattedCoord, actualId],
+    [formattedCoord, setFormat, rawCoord, state.format],
   );
 }

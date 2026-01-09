@@ -64,6 +64,8 @@
     "./camera/store": "./dist/camera/store.js",
     "./camera/types": "./dist/camera/types.js",
     "./cursor-coordinates": "./dist/cursor-coordinates/index.js",
+    "./cursor-coordinates/store": "./dist/cursor-coordinates/store.js",
+    "./cursor-coordinates/types": "./dist/cursor-coordinates/types.js",
     "./cursor-coordinates/use-cursor-coordinates": "./dist/cursor-coordinates/use-cursor-coordinates.js",
     "./deckgl": "./dist/deckgl/index.js",
     "./deckgl/base-map": "./dist/deckgl/base-map/index.js",
