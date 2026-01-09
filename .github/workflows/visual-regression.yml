@@ -99,6 +99,14 @@ jobs:
           path: apps/next/src/features/**/__screenshots__/
           retention-days: 30
 
+      - name: Generate VRT Coverage Report
+        id: vrt-coverage
+        run: |
+          COVERAGE_JSON=$(node .github/scripts/vrt-coverage.mjs)
+          echo "json<<EOF" >> $GITHUB_OUTPUT
+          echo "$COVERAGE_JSON" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
       - name: Post PR Comment
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
@@ -110,11 +118,45 @@ jobs:
             const exitCode = '${{ steps.visual-tests.outputs.exit_code }}';
             const total = passed + failed;
 
+            // Parse VRT coverage data
+            const coverageJson = `${{ steps.vrt-coverage.outputs.json }}`;
+            let coverage = null;
+            try {
+              coverage = JSON.parse(coverageJson);
+            } catch (e) {
+              console.log('Failed to parse coverage JSON:', e);
+            }
+
             const status = exitCode === '0'
               ? '✅ All tests passed'
               : failed > 0
                 ? '❌ Some tests failed'
                 : '⚠️ Tests did not complete';
+
+            // Build coverage section
+            let coverageSection = '';
+            if (coverage) {
+              const missingList = coverage.missingComponents.length > 0
+                ? coverage.missingComponents.map(c => `- ${c}`).join('\n')
+                : 'None';
+
+              coverageSection = [
+                '',
+                '### Component Coverage',
+                '',
+                `**${coverage.covered} / ${coverage.total}** design-toolkit components have VRT tests (${coverage.percentage}%)`,
+                '',
+                `<details><summary>Missing VRT tests (${coverage.missing} components)</summary>`,
+                '',
+                missingList,
+                '',
+                '</details>',
+                '',
+                coverage.excludedComponents.length > 0
+                  ? `> ${coverage.excluded} components excluded: ${coverage.excludedComponents.join(', ')}`
+                  : '',
+              ].filter(Boolean).join('\n');
+            }
 
             const body = [
               '## 🖼️ Visual Regression Test Results',
@@ -126,6 +168,7 @@ jobs:
               `| ✅ Passed | ${passed} |`,
               `| ❌ Failed | ${failed} |`,
               `| **Total** | ${total} |`,
+              coverageSection,
               '',
               '<details><summary>📋 Details</summary>',
               '',
