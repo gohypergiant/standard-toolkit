@@ -218,3 +218,8 @@ import { getLogger } from '@accelint/logger/default';
 import { callsitePlugin } from '@accelint/logger/plugins/callsite';
 import { environmentPlugin } from '@accelint/logger/plugins/environment';
 ```
+
+## Additional Resources
+
+- [Full Documentation](https://docs.accelint.dev/doc/logger-Kcw0PAfzeY)
+- [LogLayer Documentation](https://loglayer.dev/)
