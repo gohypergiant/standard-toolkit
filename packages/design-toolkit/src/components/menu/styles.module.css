@@ -52,41 +52,50 @@
       @apply pt-xs pb-xs;
     }
 
+    /* Extend ::after to cover separator on interactive states */
+    @variant focus-visible {
+      &:after {
+        top: -1px;
+        bottom: -1px;
+      }
+    }
+
+    @variant hover {
+      &:after {
+        top: -1px;
+        bottom: -1px;
+      }
+    }
+
+    @variant open {
+      &:after {
+        top: -1px;
+        bottom: -1px;
+      }
+    }
+
+    @variant pressed {
+      &:after {
+        top: -1px;
+        bottom: -1px;
+      }
+    }
+
     @variant color-info {
       @variant focus-visible {
         @apply bg-accent-primary-muted z-1;
-
-        &:after {
-          top: -1px;
-          bottom: -1px;
-        }
       }
 
       @variant hover {
         @apply bg-accent-primary-muted z-1;
-
-        &:after {
-          top: -1px;
-          bottom: -1px;
-        }
       }
 
       @variant open {
         @apply bg-accent-primary-muted z-1;
-
-        &:after {
-          top: -1px;
-          bottom: -1px;
-        }
       }
 
       @variant pressed {
         @apply fg-accent-primary-bold bg-accent-primary-pressed z-1;
-
-        &:after {
-          top: -1px;
-          bottom: -1px;
-        }
       }
 
       @variant selected {
@@ -111,38 +120,18 @@
 
       @variant focus-visible {
         @apply fg-primary-bold bg-serious-muted z-1;
-
-        &:after {
-          top: -1px;
-          bottom: -1px;
-        }
       }
 
       @variant hover {
         @apply fg-primary-bold bg-serious-muted z-1;
-
-        &:after {
-          top: -1px;
-          bottom: -1px;
-        }
       }
 
       @variant open {
         @apply bg-serious-muted z-1;
-
-        &:after {
-          top: -1px;
-          bottom: -1px;
-        }
       }
 
       @variant pressed {
         @apply fg-serious-bold bg-serious-pressed z-1;
-
-        &:after {
-          top: -1px;
-          bottom: -1px;
-        }
       }
 
       @variant selected {
@@ -167,38 +156,18 @@
 
       @variant focus-visible {
         @apply fg-primary-bold bg-critical-muted z-1;
-
-        &:after {
-          top: -1px;
-          bottom: -1px;
-        }
       }
 
       @variant hover {
         @apply fg-primary-bold bg-critical-muted z-1;
-
-        &:after {
-          top: -1px;
-          bottom: -1px;
-        }
       }
 
       @variant open {
         @apply bg-critical-muted z-1;
-
-        &:after {
-          top: -1px;
-          bottom: -1px;
-        }
       }
 
       @variant pressed {
         @apply fg-critical-bold bg-critical-pressed z-1;
-
-        &:after {
-          top: -1px;
-          bottom: -1px;
-        }
       }
 
       @variant selected {
