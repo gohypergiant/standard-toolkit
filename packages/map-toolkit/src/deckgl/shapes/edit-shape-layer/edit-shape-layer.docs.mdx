@@ -67,7 +67,7 @@ import {
   DisplayShapeLayer,
   EditShapeLayer,
   useEditShape,
-  useShapeSelection,
+  useSelectShape,
 } from '@accelint/map-toolkit/deckgl/shapes';
 import { useMapCursor } from '@accelint/map-toolkit/map-cursor';
 import { uuid } from '@accelint/core';
@@ -82,7 +82,7 @@ function MapWithEditing() {
   useMapCursor(MAP_ID);
 
   // Track selected shape
-  const { selectedId, setSelectedId, clearSelection } = useShapeSelection(MAP_ID);
+  const { selectedId, setSelectedId, clearSelection } = useSelectShape(MAP_ID);
   const selectedShape = shapes.find((s) => s.id === selectedId);
 
   // Edit shape hook with callbacks

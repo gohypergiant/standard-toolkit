@@ -24,7 +24,7 @@ import {
   type ShapeSelectedEvent,
 } from '../shared/events';
 import './fiber';
-import { useShapeSelection } from './use-shape-selection';
+import { useSelectShape } from './use-select-shape';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta = {
@@ -97,8 +97,8 @@ export const BasicDisplayAndEvents: Story = {
     },
   },
   render: (args) => {
-    // useShapeSelection handles selection, deselection, and click-away deselection
-    const { selectedId } = useShapeSelection(DISPLAY_MAP_ID);
+    // useSelectShape handles selection, deselection, and click-away deselection
+    const { selectedId } = useSelectShape(DISPLAY_MAP_ID);
     const [eventLog, setEventLog] = useState<
       Array<{ id: string; message: string }>
     >([]);
@@ -358,8 +358,8 @@ export const LabelPositioning: Story = {
     },
   },
   render: (args) => {
-    // useShapeSelection handles selection, deselection, and click-away deselection
-    const { selectedId } = useShapeSelection(LABEL_POSITIONS_MAP_ID);
+    // useSelectShape handles selection, deselection, and click-away deselection
+    const { selectedId } = useSelectShape(LABEL_POSITIONS_MAP_ID);
     const { requestCursorChange, clearCursor } = useMapCursor(
       LABEL_POSITIONS_MAP_ID,
     );
@@ -470,8 +470,8 @@ export const LabelPositioning: Story = {
  */
 export const WithPointIcons: Story = {
   render: () => {
-    // useShapeSelection handles selection, deselection, and click-away deselection
-    const { selectedId } = useShapeSelection(WITH_ICONS_MAP_ID);
+    // useSelectShape handles selection, deselection, and click-away deselection
+    const { selectedId } = useSelectShape(WITH_ICONS_MAP_ID);
     const { requestCursorChange, clearCursor } =
       useMapCursor(WITH_ICONS_MAP_ID);
 

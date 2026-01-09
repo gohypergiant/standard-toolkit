@@ -1,4 +1,3 @@
-// __private-exports
 /*
  * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -36,10 +35,4 @@ export const PARAMETERS = {
   blendAlphaDstFactor: 'one-minus-src-alpha',
   blendColorOperation: 'add',
   blendAlphaOperation: 'add',
-};
-
-export const DEFAULT_VIEW_STATE = {
-  longitude: -77.0369,
-  latitude: 38.9072,
-  zoom: 4,
 };

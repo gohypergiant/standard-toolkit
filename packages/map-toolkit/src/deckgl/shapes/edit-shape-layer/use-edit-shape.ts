@@ -14,17 +14,10 @@
 
 import 'client-only';
 import { useBus } from '@accelint/bus/react';
-import { useContext, useMemo, useSyncExternalStore } from 'react';
+import { useContext, useMemo } from 'react';
 import { MapContext } from '../../base-map/provider';
 import { EditShapeEvents } from './events';
-import {
-  getOrCreateCancel,
-  getOrCreateEdit,
-  getOrCreateSave,
-  getOrCreateServerSnapshot,
-  getOrCreateSnapshot,
-  getOrCreateSubscription,
-} from './store';
+import { editStore } from './store';
 import type { UniqueId } from '@accelint/core';
 import type { EditShapeEvent } from './events';
 import type { UseEditShapeOptions, UseEditShapeReturn } from './types';
@@ -105,13 +98,8 @@ export function useEditShape(
 
   const { onUpdate, onCancel } = options ?? {};
 
-  // Subscribe to store using useSyncExternalStore with fan-out pattern
-  // Third parameter provides server snapshot for SSR/RSC compatibility
-  const editingState = useSyncExternalStore(
-    getOrCreateSubscription(actualId),
-    getOrCreateSnapshot(actualId),
-    getOrCreateServerSnapshot(actualId),
-  );
+  // Use the v2 store API directly
+  const { state: editingState, edit, save, cancel } = editStore.use(actualId);
 
   // Listen for completion/cancellation events to trigger callbacks
   // useOn handles cleanup automatically and uses useEffectEvent for stable callbacks
@@ -133,12 +121,12 @@ export function useEditShape(
   return useMemo(
     () => ({
       editingState,
-      edit: getOrCreateEdit(actualId),
-      save: getOrCreateSave(actualId),
-      cancel: getOrCreateCancel(actualId),
+      edit,
+      save,
+      cancel,
       isEditing: !!editingState?.editingShape,
       editingShape: editingState?.editingShape ?? null,
     }),
-    [editingState, actualId],
+    [editingState, edit, save, cancel],
   );
 }

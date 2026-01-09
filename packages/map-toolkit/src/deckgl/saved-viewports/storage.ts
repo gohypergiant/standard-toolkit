@@ -10,7 +10,16 @@
  * governing permissions and limitations under the License.
  */
 
+import { getLogger } from '@accelint/logger';
 import type { MapViewState } from '@deck.gl/core';
+
+const logger = getLogger({
+  enabled:
+    process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test',
+  level: 'warn',
+  prefix: '[SavedViewports]',
+  pretty: true,
+});
 
 export const STORAGE_ID = 'deckgl-saved-viewports';
 
@@ -21,7 +30,7 @@ const getContainer = (containerKey: string) => {
   try {
     return JSON.parse(localStorage.getItem(containerKey) ?? '{}');
   } catch {
-    console.warn(
+    logger.warn(
       `Failed to parse storage container for key: ${containerKey}, returning empty container.`,
     );
     return {};
@@ -44,7 +53,7 @@ export const retrieve = (id: string, uniqueIdentifier?: string) => {
   const container = getContainer(containerKey);
   const obj = container[id];
   if (!obj) {
-    console.warn(`Object with id: ${id} does not exist`);
+    logger.warn(`Object with id: ${id} does not exist`);
   }
   return obj;
 };

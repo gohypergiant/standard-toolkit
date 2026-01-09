@@ -12,14 +12,9 @@
 'use client';
 
 import 'client-only';
-import { useContext, useMemo, useSyncExternalStore } from 'react';
+import { useContext, useMemo } from 'react';
 import { MapContext } from '../deckgl/base-map/provider';
-import {
-  getOrCreateRequestModeChange,
-  getOrCreateServerSnapshot,
-  getOrCreateSnapshot,
-  getOrCreateSubscription,
-} from './store';
+import { modeStore } from './store';
 import type { UniqueId } from '@accelint/core';
 
 /**
@@ -80,20 +75,18 @@ export function useMapMode(id?: UniqueId): UseMapModeReturn {
     );
   }
 
-  // Subscribe to store using useSyncExternalStore with fan-out pattern
-  // Third parameter provides server snapshot for SSR/RSC compatibility
-  const mode = useSyncExternalStore(
-    getOrCreateSubscription(actualId),
-    getOrCreateSnapshot(actualId),
-    getOrCreateServerSnapshot(actualId),
-  );
+  // Use selector to get just the mode string (primitive comparison works with useSyncExternalStore)
+  const mode = modeStore.useSelector(actualId, (state) => state.mode);
+
+  // Get actions separately (stable reference)
+  const { requestModeChange } = modeStore.actions(actualId);
 
   // Memoize the return value to prevent unnecessary re-renders
   return useMemo(
     () => ({
       mode,
-      requestModeChange: getOrCreateRequestModeChange(actualId),
+      requestModeChange,
     }),
-    [mode, actualId],
+    [mode, requestModeChange],
   );
 }

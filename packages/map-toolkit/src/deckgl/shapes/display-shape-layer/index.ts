@@ -114,19 +114,19 @@ type FeaturesCache = {
  * - `shapes:selected` - Emitted when a shape is clicked (includes mapId)
  * - `shapes:hovered` - Emitted when the hovered shape changes (deduplicated, includes mapId)
  *
- * For selection with auto-deselection, use the companion `useShapeSelection` hook which handles
+ * For selection with auto-deselection, use the companion `useSelectShape` hook which handles
  * all the event wiring automatically. See the example below.
  *
- * @example Basic usage with useShapeSelection hook (recommended)
+ * @example Basic usage with useSelectShape hook (recommended)
  * ```tsx
  * import '@accelint/map-toolkit/deckgl/shapes/display-shape-layer/fiber';
- * import { useShapeSelection } from '@accelint/map-toolkit/deckgl/shapes';
+ * import { useSelectShape } from '@accelint/map-toolkit/deckgl/shapes';
  * import { uuid } from '@accelint/core';
  *
  * const MAP_ID = uuid();
  *
  * function MapWithShapes() {
- *   const { selectedId } = useShapeSelection(MAP_ID);
+ *   const { selectedId } = useSelectShape(MAP_ID);
  *
  *   return (
  *     <BaseMap id={MAP_ID}>

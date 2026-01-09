@@ -17,7 +17,7 @@ import { useState } from 'react';
 import { useMapCursor } from '@/map-cursor';
 import { BaseMap } from '../../base-map/index';
 import { mockShapes } from '../__fixtures__/mock-shapes';
-import { useShapeSelection } from '../display-shape-layer/use-shape-selection';
+import { useSelectShape } from '../display-shape-layer/use-select-shape';
 import { ShapeEvents } from '../shared/events';
 import { ShapeFeatureType } from '../shared/types';
 import type { ShapeHoveredEvent } from '../shared/events';
@@ -319,15 +319,15 @@ export const CustomStyleDefaults: Story = {
     const colorStyles = {
       red: {
         fillColor: [255, 100, 100, 180] as [number, number, number, number],
-        strokeColor: [200, 0, 0, 255] as [number, number, number, number],
+        lineColor: [200, 0, 0, 255] as [number, number, number, number],
       },
       blue: {
         fillColor: [100, 100, 255, 180] as [number, number, number, number],
-        strokeColor: [0, 0, 200, 255] as [number, number, number, number],
+        lineColor: [0, 0, 200, 255] as [number, number, number, number],
       },
       yellow: {
         fillColor: [255, 255, 100, 180] as [number, number, number, number],
-        strokeColor: [200, 200, 0, 255] as [number, number, number, number],
+        lineColor: [200, 200, 0, 255] as [number, number, number, number],
       },
     };
 
@@ -433,7 +433,7 @@ export const CombinedDisplayAndDraw: Story = {
 
     // Subscribe to cursor store and shape selection
     const { requestCursorChange, clearCursor } = useMapCursor(COMBINED_MAP_ID);
-    const { selectedId } = useShapeSelection(COMBINED_MAP_ID);
+    const { selectedId } = useSelectShape(COMBINED_MAP_ID);
 
     const { draw, cancel, isDrawing, activeShapeType } = useDrawShape(
       COMBINED_MAP_ID,

@@ -12,8 +12,32 @@
 
 'use client';
 
+/**
+ * Edit Shape Store
+ *
+ * Manages editing state for shape modification.
+ *
+ * @example
+ * ```tsx
+ * import { editStore } from '@accelint/map-toolkit/deckgl/shapes';
+ *
+ * function EditControls({ mapId }) {
+ *   const { state, edit, save, cancel } = editStore.use(mapId);
+ *
+ *   return (
+ *     <div>
+ *       <p>Editing: {state.editingShape?.name ?? 'none'}</p>
+ *       <button onClick={save}>Save</button>
+ *       <button onClick={cancel}>Cancel</button>
+ *     </div>
+ *   );
+ * }
+ * ```
+ */
+
 import { Broadcast } from '@accelint/bus';
 import { getLogger } from '@accelint/logger';
+import { createMapStore } from '@/shared/create-map-store';
 import { MapEvents } from '../../base-map/events';
 import {
   isCircleShape,
@@ -35,7 +59,7 @@ import { EditShapeEvents } from './events';
 import type { UniqueId } from '@accelint/core';
 import type { Feature } from 'geojson';
 import type { MapEventType } from '../../base-map/types';
-import type { Shape, Subscription } from '../shared/types';
+import type { Shape } from '../shared/types';
 import type {
   EditShapeEvent,
   ShapeEditCanceledEvent,
@@ -50,7 +74,8 @@ import type {
 } from './types';
 
 const logger = getLogger({
-  enabled: process.env.NODE_ENV !== 'production',
+  enabled:
+    process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test',
   level: 'warn',
   prefix: '[EditShapeLayer]',
   pretty: true,
@@ -72,106 +97,16 @@ const DEFAULT_EDITING_STATE: EditingState = {
 };
 
 /**
- * Store for editing state keyed by mapId
+ * Actions for edit shape store
  */
-const editingStore = new Map<UniqueId, EditingState>();
-
-/**
- * Track React component subscribers per mapId (for fan-out notifications).
- * Each Set contains onStoreChange callbacks from useSyncExternalStore.
- */
-const componentSubscribers = new Map<UniqueId, Set<() => void>>();
-
-/**
- * Cache of subscription functions per mapId to avoid recreating on every render
- */
-const subscriptionCache = new Map<UniqueId, Subscription>();
-
-/**
- * Cache of snapshot functions per mapId to maintain referential stability
- */
-const snapshotCache = new Map<UniqueId, () => EditingState | null>();
-
-/**
- * Cache of server snapshot functions per mapId to maintain referential stability.
- * Server snapshots always return null since editing state is client-only.
- */
-const serverSnapshotCache = new Map<UniqueId, () => EditingState | null>();
-
-/**
- * Cache of edit functions per mapId to maintain referential stability
- */
-const editCache = new Map<UniqueId, EditFunction>();
-
-/**
- * Cache of save functions per mapId to maintain referential stability
- */
-const saveCache = new Map<UniqueId, () => void>();
-
-/**
- * Cache of cancel functions per mapId to maintain referential stability
- */
-const cancelCache = new Map<UniqueId, () => void>();
-
-/**
- * All state caches that need cleanup when a mapId is removed.
- * Using a const array enables consistent cleanup across all functions.
- */
-const stateCaches = [
-  editingStore,
-  componentSubscribers,
-  subscriptionCache,
-  snapshotCache,
-  serverSnapshotCache,
-  editCache,
-  saveCache,
-  cancelCache,
-] as const;
-
-/**
- * Clear all cached state for a given mapId
- */
-function clearAllCaches(mapId: UniqueId): void {
-  for (const cache of stateCaches) {
-    cache.delete(mapId);
-  }
-}
-
-/**
- * Get or create editing state for a given mapId
- */
-function getOrCreateState(mapId: UniqueId): EditingState {
-  if (!editingStore.has(mapId)) {
-    editingStore.set(mapId, { ...DEFAULT_EDITING_STATE });
-  }
-  // biome-ignore lint/style/noNonNullAssertion: State guaranteed to exist after has() check above
-  return editingStore.get(mapId)!;
-}
-
-/**
- * Update state with a new object reference for useSyncExternalStore
- * This ensures React detects changes via Object.is comparison
- */
-function updateState(mapId: UniqueId, updates: Partial<EditingState>): void {
-  const currentState = getOrCreateState(mapId);
-  const newState: EditingState = {
-    ...currentState,
-    ...updates,
-  };
-  editingStore.set(mapId, newState);
-}
-
-/**
- * Notify all React subscribers for a given mapId
- */
-function notifySubscribers(mapId: UniqueId): void {
-  const subscribers = componentSubscribers.get(mapId);
-  if (subscribers) {
-    for (const onStoreChange of subscribers) {
-      onStoreChange();
-    }
-  }
-}
+type EditShapeActions = {
+  /** Start editing a shape */
+  edit: EditFunction;
+  /** Save the current edits */
+  save: () => void;
+  /** Cancel editing */
+  cancel: () => void;
+};
 
 /**
  * Determine the appropriate edit mode for a shape type
@@ -184,12 +119,8 @@ function getEditModeForShape(shape: Shape): EditMode {
     return 'circle-transform';
   }
   if (isEllipseShape(shape) || isRectangleShape(shape)) {
-    // Ellipses and rectangles use bounding-transform (no vertex editing)
-    // for scale/rotate/translate via bounding box handles
     return 'bounding-transform';
   }
-  // Polygons and LineStrings get vertex-transform for combined
-  // vertex editing + scale/rotate/translate
   return 'vertex-transform';
 }
 
@@ -198,8 +129,11 @@ function getEditModeForShape(shape: Shape): EditMode {
  */
 function startEditing(
   mapId: UniqueId,
+  state: EditingState,
   shape: Shape,
-  options?: EditShapeOptions,
+  options: EditShapeOptions | undefined,
+  notify: () => void,
+  setState: (updates: Partial<EditingState>) => void,
 ): void {
   // Prevent editing locked shapes
   if (shape.locked) {
@@ -207,18 +141,16 @@ function startEditing(
     return;
   }
 
-  const state = getOrCreateState(mapId);
-
   // Already editing - cancel first
   if (state.editingShape) {
-    cancelEditing(mapId);
+    cancelEditingInternal(mapId, state, notify, setState);
   }
 
   // Determine edit mode (can be overridden via options)
   const editMode = options?.mode ?? getEditModeForShape(shape);
 
   // Update state with new object reference
-  updateState(mapId, {
+  setState({
     editingShape: shape,
     editMode,
     featureBeingEdited: shape.feature,
@@ -229,34 +161,27 @@ function startEditing(
   const cursor = EDIT_CURSOR_MAP[editMode];
   requestCursorChange(mapId, cursor, EDIT_SHAPE_LAYER_ID);
 
-  // Disable map panning during editing to prevent accidental map movement
+  // Disable map panning during editing
   mapEventBus.emit(MapEvents.disablePan, { id: mapId });
 
   // Emit editing started event
-  // Shape contains GeoJSON Feature which is structurally cloneable
-  // but lacks the index signature TypeScript requires for StructuredCloneable.
   editShapeBus.emit(EditShapeEvents.editing, {
     shape,
     mapId,
   } as unknown as ShapeEditingEvent['payload']);
 
-  notifySubscribers(mapId);
-}
-
-/**
- * Update the feature being edited (called during drag operations)
- */
-function updateFeature(mapId: UniqueId, feature: Feature): void {
-  updateState(mapId, { featureBeingEdited: feature });
-  notifySubscribers(mapId);
+  notify();
 }
 
 /**
  * Save editing and create updated shape
  */
-function saveEditing(mapId: UniqueId): Shape | null {
-  const state = getOrCreateState(mapId);
-
+function saveEditingInternal(
+  mapId: UniqueId,
+  state: EditingState,
+  notify: () => void,
+  setState: (updates: Partial<EditingState>) => void,
+): Shape | null {
   if (!(state.editingShape && state.featureBeingEdited)) {
     return null;
   }
@@ -264,10 +189,7 @@ function saveEditing(mapId: UniqueId): Shape | null {
   const originalShape = state.editingShape;
   const updatedFeature = state.featureBeingEdited;
 
-  // Create updated shape with new geometry.
-  // Type assertion needed because TypeScript can't preserve the discriminated
-  // union type through the spread. The shape from originalShape is preserved
-  // at runtime, maintaining the correct shape variant.
+  // Create updated shape with new geometry
   const updatedShape = {
     ...originalShape,
     feature: {
@@ -280,8 +202,8 @@ function saveEditing(mapId: UniqueId): Shape | null {
     lastUpdated: Date.now(),
   } as Shape;
 
-  // Reset state with new object reference
-  updateState(mapId, {
+  // Reset state
+  setState({
     editingShape: null,
     editMode: 'view',
     featureBeingEdited: null,
@@ -290,18 +212,16 @@ function saveEditing(mapId: UniqueId): Shape | null {
   // Return to default mode and cursor
   releaseModeAndCursor(mapId, EDIT_SHAPE_LAYER_ID);
 
-  // Re-enable map panning after editing is complete
+  // Re-enable map panning
   mapEventBus.emit(MapEvents.enablePan, { id: mapId });
 
   // Emit shape updated event
-  // Shape contains GeoJSON Feature which is structurally cloneable
-  // but lacks the index signature TypeScript requires for StructuredCloneable.
   editShapeBus.emit(EditShapeEvents.updated, {
     shape: updatedShape,
     mapId,
   } as unknown as ShapeUpdatedEvent['payload']);
 
-  notifySubscribers(mapId);
+  notify();
 
   return updatedShape;
 }
@@ -309,17 +229,20 @@ function saveEditing(mapId: UniqueId): Shape | null {
 /**
  * Cancel the current editing operation
  */
-function cancelEditing(mapId: UniqueId): void {
-  const state = getOrCreateState(mapId);
-
+function cancelEditingInternal(
+  mapId: UniqueId,
+  state: EditingState,
+  notify: () => void,
+  setState: (updates: Partial<EditingState>) => void,
+): void {
   if (!state.editingShape) {
     return; // Nothing to cancel
   }
 
   const originalShape = state.editingShape;
 
-  // Reset state with new object reference
-  updateState(mapId, {
+  // Reset state
+  setState({
     editingShape: null,
     editMode: 'view',
     featureBeingEdited: null,
@@ -328,190 +251,104 @@ function cancelEditing(mapId: UniqueId): void {
   // Return to default mode and cursor
   releaseModeAndCursor(mapId, EDIT_SHAPE_LAYER_ID);
 
-  // Re-enable map panning after editing is canceled
+  // Re-enable map panning
   mapEventBus.emit(MapEvents.enablePan, { id: mapId });
 
-  // Emit canceled event with original shape
-  // Shape contains GeoJSON Feature which is structurally cloneable
-  // but lacks the index signature TypeScript requires for StructuredCloneable.
+  // Emit canceled event
   editShapeBus.emit(EditShapeEvents.canceled, {
     shape: originalShape,
     mapId,
   } as unknown as ShapeEditCanceledEvent['payload']);
 
-  notifySubscribers(mapId);
+  notify();
 }
 
 /**
- * Cleans up state if no React subscribers remain.
- *
- * Note: EditShapeLayer is "neutral" regarding mode change authorization.
- * It doesn't auto-cancel or reject mode changes - those decisions are
- * left to UI components that can prompt the user (e.g., "You have unsaved
- * changes. Switch to draw mode?"). The edit layer still EMITS mode change
- * requests (when starting/ending edit), but doesn't LISTEN for authorization
- * requests from other components.
+ * Edit shape store
  */
-function cleanupIfNoSubscribers(mapId: UniqueId): void {
-  const subscribers = componentSubscribers.get(mapId);
+export const editStore = createMapStore<EditingState, EditShapeActions>({
+  defaultState: { ...DEFAULT_EDITING_STATE },
 
-  if (!subscribers || subscribers.size === 0) {
-    // No more React subscribers - clean up all state caches
-    clearAllCaches(mapId);
+  actions: (mapId, { get, set, notify }) => ({
+    edit: (shape: Shape, options?: EditShapeOptions) => {
+      startEditing(mapId, get(), shape, options, notify, set);
+    },
+
+    save: () => {
+      saveEditingInternal(mapId, get(), notify, set);
+    },
+
+    cancel: () => {
+      cancelEditingInternal(mapId, get(), notify, set);
+    },
+  }),
+
+  // Note: EditShapeLayer is "neutral" regarding mode change authorization.
+  // It doesn't auto-cancel or reject mode changes - those decisions are
+  // left to UI components that can prompt the user.
+
+  onCleanup: (mapId, state) => {
+    // Cancel any active editing before cleanup
+    if (state.editingShape) {
+      // Return to default mode and cursor
+      releaseModeAndCursor(mapId, EDIT_SHAPE_LAYER_ID);
+
+      // Re-enable map panning
+      mapEventBus.emit(MapEvents.enablePan, { id: mapId });
+
+      // Emit canceled event
+      editShapeBus.emit(EditShapeEvents.canceled, {
+        shape: state.editingShape,
+        mapId,
+      } as unknown as ShapeEditCanceledEvent['payload']);
+    }
+  },
+});
+
+// =============================================================================
+// Convenience exports
+// =============================================================================
+
+/**
+ * Get the current editing state for a mapId
+ * Returns null if no store instance exists
+ */
+export function getEditingState(mapId: UniqueId): EditingState | null {
+  if (!editStore.exists(mapId)) {
+    return null;
   }
+  return editStore.get(mapId);
 }
 
 /**
- * Creates or retrieves a cached subscription function for a given mapId.
- * Automatically cleans up editing state when the last subscriber unsubscribes.
+ * Hook for editing state
  */
-export function getOrCreateSubscription(mapId: UniqueId): Subscription {
-  // Ensure state exists BEFORE creating subscription.
-  // This is critical for useSyncExternalStore consistency - the snapshot
-  // must return the same value before and after subscription is registered.
-  getOrCreateState(mapId);
-
-  const subscription =
-    subscriptionCache.get(mapId) ??
-    ((onStoreChange: () => void) => {
-      // Get or create the subscriber set for this map instance, then add this component's callback
-      let subscriberSet = componentSubscribers.get(mapId);
-      if (!subscriberSet) {
-        subscriberSet = new Set();
-        componentSubscribers.set(mapId, subscriberSet);
-      }
-      subscriberSet.add(onStoreChange);
-
-      // Return cleanup function to remove this component's subscription
-      return () => {
-        const currentSubscriberSet = componentSubscribers.get(mapId);
-        if (currentSubscriberSet) {
-          currentSubscriberSet.delete(onStoreChange);
-        }
-
-        // Clean up state if this was the last React subscriber
-        cleanupIfNoSubscribers(mapId);
-      };
-    });
-
-  subscriptionCache.set(mapId, subscription);
-
-  return subscription;
-}
-
-/**
- * Creates or retrieves a cached snapshot function for a given mapId.
- * Returns the current editing state or null if no state exists.
- */
-export function getOrCreateSnapshot(
+export function useEditingState(
   mapId: UniqueId,
-): () => EditingState | null {
-  const snapshot =
-    snapshotCache.get(mapId) ??
-    (() => {
-      const state = editingStore.get(mapId);
-      if (!state) {
-        return null;
-      }
-      return state;
-    });
-
-  snapshotCache.set(mapId, snapshot);
-
-  return snapshot;
+): { state: EditingState } & EditShapeActions {
+  return editStore.use(mapId);
 }
 
 /**
- * Creates or retrieves a cached server snapshot function for a given mapId.
- * Server snapshots always return null since editing state is client-only.
- * Required for SSR/RSC compatibility with useSyncExternalStore.
+ * Manually clear editing state for a specific mapId.
  */
-export function getOrCreateServerSnapshot(
-  mapId: UniqueId,
-): () => EditingState | null {
-  const serverSnapshot = serverSnapshotCache.get(mapId) ?? (() => null);
-
-  serverSnapshotCache.set(mapId, serverSnapshot);
-
-  return serverSnapshot;
+export function clearEditingState(mapId: UniqueId): void {
+  editStore.clear(mapId);
 }
 
 /**
- * Creates or retrieves a cached edit function for a given mapId.
- * This maintains referential stability for the function reference.
- */
-export function getOrCreateEdit(mapId: UniqueId): EditFunction {
-  const edit =
-    editCache.get(mapId) ??
-    ((shape: Shape, options?: EditShapeOptions) => {
-      startEditing(mapId, shape, options);
-    });
-
-  editCache.set(mapId, edit);
-
-  return edit;
-}
-
-/**
- * Creates or retrieves a cached save function for a given mapId.
- * This maintains referential stability for the function reference.
- */
-export function getOrCreateSave(mapId: UniqueId): () => void {
-  const save = saveCache.get(mapId) ?? (() => saveEditing(mapId));
-
-  saveCache.set(mapId, save);
-
-  return save;
-}
-
-/**
- * Creates or retrieves a cached cancel function for a given mapId.
- * This maintains referential stability for the function reference.
- */
-export function getOrCreateCancel(mapId: UniqueId): () => void {
-  const cancel = cancelCache.get(mapId) ?? (() => cancelEditing(mapId));
-
-  cancelCache.set(mapId, cancel);
-
-  return cancel;
-}
-
-/**
- * Update feature from the layer component (called during edit operations)
+ * Update feature from the layer component (called during drag operations)
  */
 export function updateFeatureFromLayer(
   mapId: UniqueId,
   feature: Feature,
 ): void {
-  updateFeature(mapId, feature);
+  editStore.set(mapId, { featureBeingEdited: feature });
 }
 
 /**
  * Cancel editing (called by the layer component on ESC)
  */
 export function cancelEditingFromLayer(mapId: UniqueId): void {
-  cancelEditing(mapId);
-}
-
-/**
- * Get the current editing state for a mapId
- */
-export function getEditingState(mapId: UniqueId): EditingState | null {
-  return editingStore.get(mapId) ?? null;
-}
-
-/**
- * Manually clear editing state for a specific mapId.
- * This is typically not needed as cleanup happens automatically when all subscribers unmount.
- * Use this only in advanced scenarios where manual cleanup is required.
- */
-export function clearEditingState(mapId: UniqueId): void {
-  // Cancel any active editing first
-  const state = editingStore.get(mapId);
-  if (state?.editingShape) {
-    cancelEditing(mapId);
-  }
-
-  // Clear all state caches
-  clearAllCaches(mapId);
+  editStore.actions(mapId).cancel();
 }

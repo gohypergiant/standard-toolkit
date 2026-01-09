@@ -14,7 +14,7 @@ import { uuid } from '@accelint/core';
 import { render, renderHook, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { destroyStore, getOrCreateStore, getStore } from './store';
+import { clearCursorState, getCursor } from './store';
 import { useMapCursor, useMapCursorEffect } from './use-map-cursor';
 import type { UniqueId } from '@accelint/core';
 import type { CSSCursorType } from './types';
@@ -23,14 +23,13 @@ describe('useMapCursor', () => {
   let testid: UniqueId;
 
   beforeEach(() => {
-    // Create a stable id and store for each test
+    // Create a stable id for each test
     testid = uuid();
-    getOrCreateStore(testid);
   });
 
   afterEach(() => {
     // Clean up the store after each test
-    destroyStore(testid);
+    clearCursorState(testid);
   });
 
   describe('Hook Behavior', () => {
@@ -53,8 +52,6 @@ describe('useMapCursor', () => {
         'useMapCursor requires either an id parameter or to be used within a MapProvider',
       );
     });
-
-    // Removed: Module pattern doesn't track store "existence" - stores are lazy-initialized
 
     it('updates when cursor changes via subscription', async () => {
       const user = userEvent.setup();
@@ -94,14 +91,13 @@ describe('useMapCursorEffect', () => {
   let testid: UniqueId;
 
   beforeEach(() => {
-    // Create a stable id and store for each test
+    // Create a stable id for each test
     testid = uuid();
-    getOrCreateStore(testid);
   });
 
   afterEach(() => {
     // Clean up the store after each test
-    destroyStore(testid);
+    clearCursorState(testid);
   });
 
   it('sets cursor on mount', () => {
@@ -112,8 +108,7 @@ describe('useMapCursorEffect', () => {
 
     render(<TestComponent />);
 
-    const store = getStore(testid);
-    expect(store?.getSnapshot()).toBe('crosshair');
+    expect(getCursor(testid)).toBe('crosshair');
   });
 
   it('clears cursor on unmount', () => {
@@ -124,13 +119,12 @@ describe('useMapCursorEffect', () => {
 
     const { unmount } = render(<TestComponent />);
 
-    const store = getStore(testid);
-    expect(store?.getSnapshot()).toBe('crosshair');
+    expect(getCursor(testid)).toBe('crosshair');
 
     unmount();
 
     // Cursor should be cleared after unmount
-    expect(store?.getSnapshot()).toBe('default');
+    expect(getCursor(testid)).toBe('default');
   });
 
   it('updates cursor when cursor prop changes', () => {
@@ -141,12 +135,11 @@ describe('useMapCursorEffect', () => {
 
     const { rerender } = render(<TestComponent cursor='crosshair' />);
 
-    const store = getStore(testid);
-    expect(store?.getSnapshot()).toBe('crosshair');
+    expect(getCursor(testid)).toBe('crosshair');
 
     rerender(<TestComponent cursor='zoom-in' />);
 
-    expect(store?.getSnapshot()).toBe('zoom-in');
+    expect(getCursor(testid)).toBe('zoom-in');
   });
 
   it('does not clear cursor if owner changes but cursor remains', () => {
@@ -157,13 +150,12 @@ describe('useMapCursorEffect', () => {
 
     const { rerender } = render(<TestComponent owner='owner1' />);
 
-    const store = getStore(testid);
-    expect(store?.getSnapshot()).toBe('crosshair');
+    expect(getCursor(testid)).toBe('crosshair');
 
     // Change owner - cursor should update but stay as crosshair
     rerender(<TestComponent owner='owner2' />);
 
-    expect(store?.getSnapshot()).toBe('crosshair');
+    expect(getCursor(testid)).toBe('crosshair');
   });
 
   it('throws error when used without id or MapProvider', () => {
@@ -180,7 +172,7 @@ describe('useMapCursorEffect', () => {
     expect(() => {
       render(<TestComponent />);
     }).toThrow(
-      'useMapCursor requires either an id parameter or to be used within a MapProvider',
+      'useMapCursorEffect requires either an id parameter or to be used within a MapProvider',
     );
 
     consoleSpy.mockRestore();

@@ -261,39 +261,26 @@ function MultiMapView() {
 
 ## Framework-Agnostic Usage
 
-While the examples above use React, the core map-mode state management works with any framework or vanilla JavaScript. The module-level functions implement the [**subscribe/notify pattern**](https://react.dev/reference/react/useSyncExternalStore#subscribing-to-an-external-store) (also known as the Observer pattern) and can be used directly:
+While the examples above use React, the core map-mode state management works with any framework or vanilla JavaScript. You can use the store directly or interact via the event bus.
+
+### Using the Store Directly
 
 ```typescript
-import {
-  getOrCreateSubscription,
-  getOrCreateSnapshot,
-  getOrCreateRequestModeChange,
-  clearMapModeState
-} from '@accelint/map-toolkit/map-mode';
+import { modeStore, getMode, clearMapModeState } from '@accelint/map-toolkit/map-mode';
 import { uuid } from '@accelint/core';
 
 // Create a map ID
 const id = uuid();
 
-// Get the subscription function for this instance
-const subscribe = getOrCreateSubscription(id);
-const getSnapshot = getOrCreateSnapshot(id);
-const requestModeChange = getOrCreateRequestModeChange(id);
+// Get current mode
+const currentMode = getMode(id);
+console.log('Current mode:', currentMode);
 
-// Subscribe to mode changes
-const unsubscribe = subscribe(() => {
-  const currentMode = getSnapshot();
-  console.log('Mode changed to:', currentMode);
-
-  // Update your UI, trigger side effects, etc.
-  updateUI(currentMode);
-});
-
-// Request a mode change
-requestModeChange('drawing', 'my-component-id');
+// Access the store for more control
+const state = modeStore.get(id);
+console.log('Full state:', state);
 
 // Clean up when done
-unsubscribe();
 clearMapModeState(id);
 ```
 

@@ -10,5 +10,5 @@
  * governing permissions and limitations under the License.
  */
 
-export { INITIAL_VIEW_STATE } from './constants';
+export { DEFAULT_VIEW_STATE } from '../shared/constants';
 export { useMapLibre } from './hooks/use-maplibre';
