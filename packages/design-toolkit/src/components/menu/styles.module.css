@@ -29,17 +29,7 @@
 
     &:after {
       content: '';
-      @apply pointer-events-none absolute inset-0 -z-1;
-      background: inherit;
-    }
-
-    /* Don't extend ::after at menu boundaries */
-    &:first-child:after {
-      top: 0 !important;
-    }
-
-    &:last-child:after {
-      bottom: 0 !important;
+      @apply pointer-events-none absolute inset-0 -z-1 bg-inherit;
     }
 
     &.cozy {
@@ -54,36 +44,48 @@
     @variant focus-visible {
       @apply z-1;
 
-      &:after {
-        top: -1px;
-        bottom: -1px;
+      &:not(:first-child):after {
+        @apply -top-px;
+      }
+
+      &:not(:last-child):after {
+        @apply -bottom-px;
       }
     }
 
     @variant hover {
       @apply z-1;
 
-      &:after {
-        top: -1px;
-        bottom: -1px;
+      &:not(:first-child):after {
+        @apply -top-px;
+      }
+
+      &:not(:last-child):after {
+        @apply -bottom-px;
       }
     }
 
     @variant open {
       @apply z-1;
 
-      &:after {
-        top: -1px;
-        bottom: -1px;
+      &:not(:first-child):after {
+        @apply -top-px;
+      }
+
+      &:not(:last-child):after {
+        @apply -bottom-px;
       }
     }
 
     @variant pressed {
       @apply z-1;
 
-      &:after {
-        top: -1px;
-        bottom: -1px;
+      &:not(:first-child):after {
+        @apply -top-px;
+      }
+
+      &:not(:last-child):after {
+        @apply -bottom-px;
       }
     }
 
