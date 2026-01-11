@@ -13,15 +13,20 @@
 
 import { useOn } from '@accelint/bus/react';
 import type { UniqueId } from '@accelint/core';
-import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
+import 'client-only';
 import { useCallback, useRef, useState } from 'react';
 import { ViewStack } from '../view-stack';
 import { useViewStackEmit } from '../view-stack/context';
 import { DrawerContext } from './context';
 import { DrawerEventTypes } from './events';
 import styles from './styles.module.css';
-import type { DrawerOpenEvent, DrawerProps, DrawerToggleEvent } from './types';
+import type {
+  DrawerCloseEvent,
+  DrawerOpenEvent,
+  DrawerProps,
+  DrawerToggleEvent,
+} from './types';
 
 /**
  * Drawer - Slide-in panel for navigation or contextual content
@@ -66,6 +71,14 @@ export function Drawer({
 
   const viewStackEmit = useViewStackEmit();
 
+  const handleClose = useCallback(
+    (data: DrawerCloseEvent) => {
+      if (views.current.has(data?.payload?.view)) {
+        viewStackEmit.clear(id);
+      }
+    },
+    [viewStackEmit.clear, id],
+  );
   const handleOpen = useCallback(
     (data: DrawerOpenEvent) => {
       if (views.current.has(data?.payload?.view)) {
@@ -87,6 +100,7 @@ export function Drawer({
     [id, activeView, viewStackEmit.clear, viewStackEmit.push],
   );
 
+  useOn(DrawerEventTypes.close, handleClose);
   useOn(DrawerEventTypes.open, handleOpen);
   useOn(DrawerEventTypes.toggle, handleToggle);
 
