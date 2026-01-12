@@ -16,23 +16,9 @@
 @import '@accelint/design-foundation/styles';
 
 @layer base {
-  /* Reset layout when deck.gl map is present to prevent scroll/zoom issues */
-  html:has(.deckgl-map),
-  html:has(.deckgl-map) body {
+  /* Hide overflow when deck.gl map is present to prevent scroll/zoom issues */
+  html:has(.deckgl-map) {
     overflow: hidden;
-    padding: 0 !important;
-    top: 0 !important;
-  }
-
-  /* Position map below nav and size to remaining viewport */
-  .deckgl-map {
-    position: fixed !important;
-    top: var(--spacing-xxl) !important;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: auto !important;
-    width: auto !important;
   }
 }
 

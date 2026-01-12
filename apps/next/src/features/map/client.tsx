@@ -21,7 +21,7 @@ const MAP_ID = uuid();
 export function MapClient() {
   return (
     <BaseMap
-      className='h-dvh w-dvw deckgl-map'
+      className='fixed top-xxl left-0 right-0 bottom-0 deckgl-map'
       id={MAP_ID}
       initialViewState={DEFAULT_VIEW_STATE}
     />
