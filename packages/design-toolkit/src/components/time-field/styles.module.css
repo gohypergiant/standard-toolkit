@@ -28,20 +28,19 @@
       @apply text-body-xs;
     }
 
-    @variant group-invalid/time-field {
-      @apply outline-serious-bold;
-    }
-
-    @variant group-disabled/time-field {
-      @apply fg-disabled outline-interactive-disabled;
-    }
-
     @variant hover {
       @apply outline-interactive-hover;
     }
 
     @variant focus-visible-within {
       @apply outline-accent-primary-bold;
+    }
+    @variant group-invalid/time-field {
+      @apply outline-serious-bold;
+    }
+
+    @variant group-disabled/time-field {
+      @apply fg-disabled outline-interactive-disabled;
     }
   }
 
