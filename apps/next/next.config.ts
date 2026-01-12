@@ -14,7 +14,7 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
-  reactStrictMode: false, // TODO: deck.gl/maplibre has issues with strict mode double-mounting
+  reactStrictMode: true,
   typescript: {
     ignoreBuildErrors: true,
   },
