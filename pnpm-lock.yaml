@@ -113,7 +113,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/temporal
       '@deck.gl/core':
-        specifier: 9.1.14
+        specifier: ~9.1
         version: 9.1.14
       '@deckgl-fiber-renderer/dom':
         specifier: ^1.4.0
