@@ -25,4 +25,22 @@ A container component that displays a collection of actions, typically represent
 ```
 <Canvas of={ActionBarStories.Default} />
 
+## Props
 
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `showElevation` | `boolean` | `true` | Controls visibility of the elevation shadow |
+| `size` | `'medium' \| 'small'` | `'medium'` | Size variant for the action bar and its buttons |
+
+## Without elevation
+Use `showElevation={false}` when the ActionBar is embedded in a context that already has its own visual boundaries, such as entity detail panels.
+
+```tsx
+<ActionBar showElevation={false}>
+  <Button>
+    <Icon>
+      <Copy />
+    </Icon>
+  </Button>
+</ActionBar>
+```

@@ -23,9 +23,13 @@ const meta = {
     layout: 'fullscreen',
   },
   args: {
+    showElevation: true,
     size: 'medium',
   },
   argTypes: {
+    showElevation: {
+      control: 'boolean',
+    },
     size: {
       control: 'select',
       options: ['medium', 'small'],

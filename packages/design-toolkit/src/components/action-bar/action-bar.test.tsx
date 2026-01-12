@@ -41,4 +41,22 @@ describe('ActionBar', () => {
 
     expect(screen.getByRole('button')).toBeInTheDocument();
   });
+
+  it('should show elevation by default', () => {
+    setup();
+
+    expect(screen.getByRole('navigation')).toHaveAttribute(
+      'data-elevation',
+      'true',
+    );
+  });
+
+  it('should hide elevation when showElevation is false', () => {
+    setup({ showElevation: false });
+
+    expect(screen.getByRole('navigation')).toHaveAttribute(
+      'data-elevation',
+      'false',
+    );
+  });
 });

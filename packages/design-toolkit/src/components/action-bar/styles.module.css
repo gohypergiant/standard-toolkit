@@ -14,7 +14,11 @@
 
 @layer components.l1 {
   .bar {
-    @apply rounded-medium bg-surface-default shadow-elevation-overlay flex w-fit;
+    @apply rounded-medium bg-surface-default flex w-fit;
+
+    @variant data-[elevation=true] {
+      @apply shadow-elevation-overlay;
+    }
 
     @variant size-medium {
       @apply gap-s px-m py-s;
