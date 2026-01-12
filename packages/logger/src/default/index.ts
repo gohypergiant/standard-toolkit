@@ -25,13 +25,44 @@ import type { LogLayerTransport } from '@loglayer/transport';
 
 let logInstance: ILogLayer;
 
-type LoggerOptions = {
+/**
+ * Configuration options for the logger.
+ */
+export type LoggerOptions = {
+  /**
+   * Whether logging is enabled. When false, all log calls are no-ops.
+   */
   enabled: boolean;
+  /**
+   * Additional LogLayer plugins to apply.
+   * These are applied after the default callsite and environment plugins.
+   */
   plugins?: LogLayerPlugin[];
+  /**
+   * Additional log transports for custom log destinations.
+   * These are applied alongside the default console transport.
+   */
   transports?: LogLayerTransport[];
+  /**
+   * Minimum log level to output.
+   * @default 'debug'
+   */
   level?: `${LogLevel}`;
+  /**
+   * Whether to use pretty-printed console output.
+   * When false, outputs structured JSON.
+   * @default true
+   */
   pretty?: boolean;
+  /**
+   * Prefix string prepended to all log messages.
+   * @default ''
+   */
   prefix?: string;
+  /**
+   * Environment context for the logger.
+   * @default 'development'
+   */
   env?: 'production' | 'development' | 'test';
 };
 
@@ -86,7 +117,32 @@ function bootstrap({
   return instance;
 }
 
-export function getLogger(opts: LoggerOptions) {
+/**
+ * Returns a singleton LogLayer logger instance.
+ *
+ * The first call creates and configures the logger with the provided options.
+ * Subsequent calls return the same instance, ignoring any new options.
+ *
+ * The logger is automatically configured with:
+ * - Callsite tracking plugin (adds source location to log data)
+ * - Environment plugin (adds server/browser context to log data)
+ * - Error serialization via serialize-error
+ *
+ * @param opts - Configuration options for the logger
+ * @returns A configured LogLayer instance
+ *
+ * @example
+ * ```ts
+ * const logger = getLogger({
+ *   enabled: process.env.NODE_ENV !== 'test',
+ *   level: 'warn',
+ *   prefix: '[MyApp]',
+ * });
+ *
+ * logger.info('User logged in', { userId: 123 });
+ * ```
+ */
+export function getLogger(opts: LoggerOptions): ILogLayer {
   if (logInstance) {
     return logInstance;
   }
