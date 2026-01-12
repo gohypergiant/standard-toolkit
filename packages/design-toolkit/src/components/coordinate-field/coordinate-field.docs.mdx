@@ -617,6 +617,17 @@ Use the small size variant for compact layouts:
 
 <Canvas of={CoordinateFieldStories.Required} />
 
+### Readonly value
+Allowing the field to be readonly:
+```tsx
+<CoordinateField
+  isReadOnly
+  value={{ lat: 23.2425, lon: 12.16112 }}
+/>
+```
+
+<Canvas of={CoordinateFieldStories.Readonly} />
+
 ## Best Practices
 
 ### Choosing a Format
