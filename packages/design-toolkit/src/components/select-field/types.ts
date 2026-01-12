@@ -36,5 +36,6 @@ export type SelectFieldProps = Omit<AriaSelectProps, 'className'> &
     label?: string;
     description?: string;
     errorMessage?: string;
+    isReadOnly?: boolean;
     size?: 'medium' | 'small';
   };

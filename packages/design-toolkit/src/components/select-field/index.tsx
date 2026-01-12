@@ -15,6 +15,7 @@ import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import ChevronDown from '@accelint/icons/chevron-down';
 import {
+  Button as AriaButton,
   Select as AriaSelect,
   composeRenderProps,
   FieldError,
@@ -89,6 +90,7 @@ export function SelectField({ ref, ...props }: SelectFieldProps) {
     label: labelProp,
     layoutOptions,
     isInvalid: isInvalidProp,
+    isReadOnly = false,
     ...rest
   } = props;
 
@@ -107,6 +109,7 @@ export function SelectField({ ref, ...props }: SelectFieldProps) {
       )}
       isInvalid={isInvalid}
       data-size={size}
+      data-readonly={isReadOnly}
     >
       {composeRenderProps(
         children,
@@ -121,19 +124,31 @@ export function SelectField({ ref, ...props }: SelectFieldProps) {
                 {labelProp}
               </Label>
             )}
-            <Button
-              className={composeRenderProps(classNames?.trigger, (className) =>
-                clsx(styles.trigger, className),
-              )}
-              size={size}
-              variant='outline'
-            >
-              <SelectValue className={clsx(styles.value, classNames?.value)} />
-              <Icon>
-                <ChevronDown className='transform group-open/select-field:rotate-180' />
-              </Icon>
-            </Button>
-            {!!descriptionProp && !(isSmall || isInvalid) && (
+            {isReadOnly ? (
+              // Using the native RAC disabled button component to prevent a context error
+              <AriaButton isDisabled className='block'>
+                <SelectValue className={clsx(styles.value, classNames?.value)}>
+                  {({ selectedText }) => <span>{selectedText}</span>}
+                </SelectValue>
+              </AriaButton>
+            ) : (
+              <Button
+                className={composeRenderProps(
+                  classNames?.trigger,
+                  (className) => clsx(styles.trigger, className),
+                )}
+                size={size}
+                variant='outline'
+              >
+                <SelectValue
+                  className={clsx(styles.value, classNames?.value)}
+                />
+                <Icon>
+                  <ChevronDown className='transform group-open/select-field:rotate-180' />
+                </Icon>
+              </Button>
+            )}
+            {!isReadOnly && !!descriptionProp && !(isSmall || isInvalid) && (
               <Text
                 slot='description'
                 className={clsx(styles.description, classNames?.description)}
