@@ -1,0 +1,335 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+
+import * as ListStories from './list.stories';
+
+<Meta of={ListStories} />
+
+# List
+A flexible and accessible grid list component designed for displaying selectable items with rich content. Built on React Aria Components, List provides comprehensive support for selection, and complex item layouts including icons, descriptions, indicators, and actions. Ideal for file managers, data lists, or any interface requiring structured, interactive item displays.
+
+It is composed of the following components:
+
+- **List** - Main list container with variant options
+- **ListItem** - Individual list item with full interaction support
+- **ListItemContent** - Container for title and description content
+- **ListItemTitle** - Primary text content for list items
+- **ListItemDescription** - Secondary text content for additional context
+
+Icons and other content can be added directly as children of `ListItem` using the `Icon` component or any other React elements.
+
+## Example usage
+```tsx
+// Basic list view
+<List aria-label="Items list" className="h-[400px]">
+  <ListItem textValue="Item 1">
+    <Icon><Placeholder /></Icon>
+    <ListItemContent>
+      <ListItemTitle>Item 1</ListItemTitle>
+      <ListItemDescription>Description text</ListItemDescription>
+    </ListItemContent>
+  </ListItem>
+</List>
+
+// Dynamic list with actions
+<List items={dataItems} aria-label="Dynamic list">
+  {(item) => (
+    <ListItem key={item.id} textValue={item.title}>
+      <Icon>{item.icon}</Icon>
+      <ListItemContent>
+        <ListItemTitle>{item.title}</ListItemTitle>
+        <ListItemDescription>{item.description}</ListItemDescription>
+      </ListItemContent>
+      <MenuTrigger>
+        <Button variant="icon" aria-label="Actions">
+          <Icon><Kebab /></Icon>
+        </Button>
+        <Menu>
+          <MenuItem><MenuItemLabel>Edit</MenuItemLabel></MenuItem>
+          <MenuItem><MenuItemLabel>Delete</MenuItemLabel></MenuItem>
+        </Menu>
+      </MenuTrigger>
+    </ListItem>
+  )}
+</List>
+
+// With selection
+<List
+  selectionMode="multiple"
+  selectedKeys={new Set(['item-1', 'item-2'])}
+  aria-label="Selectable list"
+>
+  <ListItem id="item-1" textValue="Item 1">
+    <ListItemContent>
+      <ListItemTitle>Item 1</ListItemTitle>
+    </ListItemContent>
+  </ListItem>
+</List>
+```
+
+## Variants
+
+* **cozy** - Standard spacing with comfortable padding for most use cases (default)
+* **compact** - Reduced spacing for dense layouts and space-constrained interfaces
+
+**cozy** is the default variant and provides optimal readability and touch targets, while **compact** is better suited for displaying large datasets or in dashboard contexts.
+
+<Canvas of={ListStories.Default} />
+
+## Props
+
+### List Props
+- **`variant`** - Size variant: `'cozy'` | `'compact'` (default: `'cozy'`)
+- **`items`** - Array of data items for dynamic rendering
+- **`children`** - List items or render function for dynamic content
+- **`selectionMode`** - Selection behavior: `'none'` | `'single'` | `'multiple'`
+- **`selectedKeys`** - Set of selected item keys
+- **`onSelectionChange`** - Callback fired when selection changes
+- **`aria-label`** - Accessible label for the list
+- **`className`** - Custom CSS class name for the list container
+
+### ListItem Props
+- **`id`** - Unique identifier for the item (required for selection)
+- **`textValue`** - Text value for accessibility and keyboard navigation
+- **`isDisabled`** - Whether the item is disabled
+- **`children`** - Content to render within the item
+- **`href`** - URL to navigate to when item is clicked (makes item a link)
+
+### ListItemContent Props
+- **`children`** - Title and/or description components
+
+### Adding Icons
+Icons are automatically sized based on the list variant through `IconProvider`. Simply use the `Icon` component as a child of `ListItem`:
+
+```tsx
+<ListItem textValue="Item with icon">
+  <Icon><Placeholder /></Icon>
+  <ListItemContent>
+    <ListItemTitle>Item Title</ListItemTitle>
+  </ListItemContent>
+</ListItem>
+```
+
+For cozy variant, icons are rendered at `large` size. For compact variant, icons are rendered at `small` size.
+
+### Adding Actions
+Actions like menus or buttons can be added directly as children of `ListItem`. Use `MenuTrigger` with `Button` and `Menu` components for action menus:
+
+```tsx
+<ListItem textValue="Item with actions">
+  <ListItemContent>
+    <ListItemTitle>Item Title</ListItemTitle>
+  </ListItemContent>
+  <MenuTrigger>
+    <Button variant="icon" aria-label="Actions">
+      <Icon><Kebab /></Icon>
+    </Button>
+    <Menu>
+      <MenuItem><MenuItemLabel>Edit</MenuItemLabel></MenuItem>
+      <MenuItem><MenuItemLabel>Delete</MenuItemLabel></MenuItem>
+    </Menu>
+  </MenuTrigger>
+</ListItem>
+```
+
+### HTML Attributes
+The component accepts all standard HTML attributes for grid list elements, such as:
+- **`role`** - ARIA role (automatically set to `grid`)
+- **`aria-labelledby`** - ID of element that labels the list
+- **`data-*`** - Custom data attributes
+
+## Features
+
+### Dynamic Rendering
+Support for both static and dynamic content rendering with full type safety:
+```tsx
+// Dynamic rendering with items prop
+<List items={dataItems} aria-label="Items">
+  {(item) => (
+    <ListItem key={item.id} id={item.id} textValue={item.name}>
+      <Icon>{item.icon}</Icon>
+      <ListItemContent>
+        <ListItemTitle>{item.name}</ListItemTitle>
+        <ListItemDescription>{item.description}</ListItemDescription>
+      </ListItemContent>
+    </ListItem>
+  )}
+</List>
+```
+
+### Selection Support
+Flexible selection modes with controlled or uncontrolled state:
+```tsx
+// Single selection
+<List selectionMode="single" aria-label="Single select">
+  <ListItem id="item-1">...</ListItem>
+</List>
+
+// Multiple selection
+<List
+  selectionMode="multiple"
+  selectedKeys={selectedKeys}
+  onSelectionChange={setSelectedKeys}
+  aria-label="Multi select"
+>
+  <ListItem id="item-1">...</ListItem>
+  <ListItem id="item-2">...</ListItem>
+</List>
+```
+
+### Rich Item Composition
+Build complex item layouts with provided subcomponents:
+```tsx
+<ListItem textValue="Complex Item">
+  <Icon>
+    <Avatar src={user.avatar} />
+  </Icon>
+  <ListItemContent>
+    <ListItemTitle>{user.name}</ListItemTitle>
+    <ListItemDescription>
+      Last active: {user.lastActive}
+    </ListItemDescription>
+  </ListItemContent>
+  <div className="flex items-center justify-center rounded-full bg-surface-muted p-1">
+    <Icon size="small">
+      <Badge variant="success">Online</Badge>
+    </Icon>
+  </div>
+  <MenuTrigger>
+    <Button variant="icon" aria-label="Actions">
+      <Icon><Kebab /></Icon>
+    </Button>
+    <Menu>
+      <MenuItem><MenuItemLabel>View Profile</MenuItemLabel></MenuItem>
+      <MenuItem><MenuItemLabel>Send Message</MenuItemLabel></MenuItem>
+    </Menu>
+  </MenuTrigger>
+</ListItem>
+```
+
+### Accessibility
+Comprehensive accessibility features ensure proper navigation and screen reader support:
+- **Keyboard Navigation**: Full arrow key, Home, End, and selection key support
+- **Screen Reader Support**: Proper ARIA attributes and semantic structure
+- **Focus Management**: Automatic focus handling with visible indicators
+- **Selection Announcements**: Screen readers announce selection state changes
+- **Required Labels**: `aria-label` or `aria-labelledby` required for context
+
+## Examples
+
+### Default List
+<Canvas of={ListStories.Default} />
+
+### Stateful List
+<Canvas of={ListStories.Stateful} />
+
+### Different Variants
+```tsx
+<div className="space-y-4">
+  <List variant="compact" className="h-[300px]" aria-label="Compact list">
+    <ListItem textValue="Compact Item">
+      <ListItemContent>
+        <ListItemTitle>Compact Item</ListItemTitle>
+      </ListItemContent>
+    </ListItem>
+  </List>
+
+  <List variant="cozy" className="h-[300px]" aria-label="Cozy list">
+    <ListItem textValue="Cozy Item">
+      <ListItemContent>
+        <ListItemTitle>Cozy Item</ListItemTitle>
+      </ListItemContent>
+    </ListItem>
+  </List>
+</div>
+```
+
+### With Indicators and Actions
+```tsx
+<List aria-label="List with indicators">
+  <ListItem textValue="Active User">
+    <Icon><Avatar /></Icon>
+    <ListItemContent>
+      <ListItemTitle>John Doe</ListItemTitle>
+      <ListItemDescription>Software Engineer</ListItemDescription>
+    </ListItemContent>
+    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-success-muted">
+      <Icon size="xsmall"><CheckCircle /></Icon>
+    </div>
+    <MenuTrigger>
+      <Button variant="icon" aria-label="Actions">
+        <Icon><Kebab /></Icon>
+      </Button>
+      <Menu>
+        <MenuItem><MenuItemLabel>View Profile</MenuItemLabel></MenuItem>
+        <MenuItem><MenuItemLabel>Send Message</MenuItemLabel></MenuItem>
+      </Menu>
+    </MenuTrigger>
+  </ListItem>
+</List>
+```
+
+## Data Structure
+
+The List component accepts any object type with flexible properties. When using the `items` prop for dynamic rendering, ensure each item has properties needed for your render function:
+
+```tsx
+// Example data structure
+interface Animal {
+  id: number;
+  name: string;
+  description?: string;
+  isDisabled?: boolean;
+  // Add any custom properties your items need
+}
+
+const animals: Animal[] = [
+  { id: 1, name: 'Red Panda', description: 'Tree-dwelling mammal' },
+  { id: 2, name: 'Cat', description: 'Furry house pet', isDisabled: true },
+];
+
+<List items={animals} aria-label="Animals">
+  {(item) => (
+    <ListItem key={item.id} textValue={item.name} isDisabled={item.isDisabled}>
+      <ListItemContent>
+        <ListItemTitle>{item.name}</ListItemTitle>
+        {item.description && (
+          <ListItemDescription>{item.description}</ListItemDescription>
+        )}
+      </ListItemContent>
+    </ListItem>
+  )}
+</List>
+```
+
+## Implementation Notes
+The `List` component is built using React Aria Components' GridList and provides a comprehensive, accessible list interface optimized for large datasets.
+
+[Docs](https://react-spectrum.adobe.com/react-aria/GridList.html)
+
+[Github Source](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-toolkit/src/components/list)
+
+Key features:
+- **Accessibility**: Full ARIA compliance with proper focus management and screen reader support
+- **Flexible Composition**: Rich subcomponent system for complex item layouts
+- **Selection Management**: Single and multiple selection modes with keyboard support
+- **Variant System**: Cozy and compact variants for different interface densities
+- **Type Safety**: Full TypeScript support with comprehensive prop types
+- **Icon Integration**: Seamless integration with the design system's Icon component
+- **Action Support**: Flexible layout supports inline actions using Menu, Button, and other components
+
+The underlying HTML structure creates a semantic grid list with proper accessibility:
+```html
+<div class="list" role="grid" aria-label="Items list">
+  <div class="item" role="row" aria-selected="false">
+    <div class="icon">...</div>
+    <div class="content">
+      <div class="title">Item Title</div>
+      <div class="description">Item Description</div>
+    </div>
+    <div class="indicator">...</div>
+    <!-- Actions (Menu/Button) rendered directly -->
+  </div>
+</div>
+```
+
+This provides excellent accessibility and user experience while maintaining a clean, composable API for developers. The component automatically handles keyboard navigation, focus management, and screen reader support through React Aria Components.

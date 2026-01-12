@@ -13,9 +13,9 @@ A read-only deck.gl composite layer for displaying geographic shapes with intera
 - **Multiple geometry types**: Point, LineString, Polygon, and Circle
 - **Icon support**: Custom icons for Point geometries via icon atlases
 - **Interactive selection**: Click handling with visual highlight feedback
-- **Hover effects**: Line width increases on hover; Points with icons show coffin corners
-- **Customizable labels**: White uppercase text with black outline, flexible positioning
-- **Style properties**: Full control over colors, stroke patterns, and opacity
+- **Hover effects**: Border/outline width increases on hover; Points with icons show coffin corners
+- **Customizable labels**: White uppercase text with black outline, flexible positioning, show always/hover/never modes
+- **Style properties**: Full control over colors, border/outline patterns, and opacity
 - **Event bus integration**: Automatically emits shape events via @accelint/bus
 - **Multi-map support**: Events include map instance ID for isolation
 - **Cursor integration**: Works with map-cursor for hover cursor changes
@@ -46,33 +46,33 @@ pnpm add @accelint/map-toolkit @accelint/bus @accelint/core @deck.gl/core @deck.
 
 ### With Fiber Renderer (Recommended)
 
-The easiest way to use DisplayShapeLayer is with the `useShapeSelection` hook, which handles selection state and auto-deselection when clicking empty space:
+The easiest way to use DisplayShapeLayer is with the `useSelectShape` hook, which handles selection state and auto-deselection when clicking empty space:
 
 ```tsx
 import { BaseMap } from '@accelint/map-toolkit/deckgl/base-map';
 import '@accelint/map-toolkit/deckgl/shapes/display-shape-layer/fiber';
-import { useShapeSelection } from '@accelint/map-toolkit/deckgl/shapes';
+import { useSelectShape } from '@accelint/map-toolkit/deckgl/shapes';
 import { uuid } from '@accelint/core';
 
 // Stable map ID for event isolation
 const MAP_ID = uuid();
 
 function MapWithShapes() {
-  const { selectedId } = useShapeSelection(MAP_ID);
+  const { selectedId } = useSelectShape(MAP_ID);
   const shapes = [
     {
       id: '1',
       name: 'My Location',
-      shapeType: 'Point',
+      shape: 'Point',
       locked: false,
       feature: {
         type: 'Feature',
         properties: {
           styleProperties: {
             fillColor: [98, 166, 255, 150], // RGBA: blue at ~60% opacity
-            strokeColor: [98, 166, 255, 255], // RGBA: blue at full opacity
-            strokeWidth: 4,
-            strokePattern: 'solid',
+            lineColor: [98, 166, 255, 255], // RGBA: blue at full opacity
+            lineWidth: 4,
+            linePattern: 'solid',
           },
         },
         geometry: {
@@ -90,7 +90,7 @@ function MapWithShapes() {
         mapId={MAP_ID}
         data={shapes}
         selectedShapeId={selectedId}
-        showLabels={true}
+        showLabels="always"
         pickable={true}
       />
     </BaseMap>
@@ -100,12 +100,12 @@ function MapWithShapes() {
 
 ### Listening to Selection Events
 
-While `useShapeSelection` manages selection state automatically, you can also listen to selection events for side effects like logging, analytics, or coordinating with other UI:
+While `useSelectShape` manages selection state automatically, you can also listen to selection events for side effects like logging, analytics, or coordinating with other UI:
 
 ```tsx
 import { BaseMap } from '@accelint/map-toolkit/deckgl/base-map';
 import '@accelint/map-toolkit/deckgl/shapes/display-shape-layer/fiber';
-import { useShapeSelection } from '@accelint/map-toolkit/deckgl/shapes';
+import { useSelectShape } from '@accelint/map-toolkit/deckgl/shapes';
 import { useOn } from '@accelint/bus/react';
 import { ShapeEvents } from '@accelint/map-toolkit/deckgl/shapes/shared/events';
 import { uuid } from '@accelint/core';
@@ -113,8 +113,8 @@ import { uuid } from '@accelint/core';
 const MAP_ID = uuid();
 
 function MapWithShapes() {
-  // useShapeSelection handles selection state and click-away deselection
-  const { selectedId } = useShapeSelection(MAP_ID);
+  // useSelectShape handles selection state and click-away deselection
+  const { selectedId } = useSelectShape(MAP_ID);
 
   // Listen to events for side effects (logging, analytics, etc.)
   useOn(ShapeEvents.selected, (event) => {
@@ -135,7 +135,7 @@ function MapWithShapes() {
 }
 ```
 
-> **Note**: Avoid using `useOn` with `useState` to manage selection state directly. The `useShapeSelection` hook uses a store pattern that ensures only one bus listener per map instance and proper cleanup. Using `useOn` directly can create N listeners for N components and may accumulate listeners during HMR.
+> **Note**: Avoid using `useOn` with `useState` to manage selection state directly. The `useSelectShape` hook uses a store pattern that ensures only one bus listener per map instance and proper cleanup. Using `useOn` directly can create N listeners for N components and may accumulate listeners during HMR.
 
 ### Direct Layer Usage (without BaseMap)
 
@@ -151,7 +151,7 @@ const layer = new DisplayShapeLayer({
   mapId: MAP_ID,
   data: shapes,
   pickable: true,
-  showLabels: true,
+  showLabels: 'always',
   onShapeClick: (shape) => {
     console.log('Clicked shape:', shape.name);
   },
@@ -170,30 +170,102 @@ new Deck({
 
 ## Shape Data Structure
 
-Each shape must follow the `EditableShape` interface:
+`Shape` is a discriminated union of specific shape types (`CircleShape`, `EllipseShape`, `PolygonShape`, `RectangleShape`, `LineStringShape`, `PointShape`). Each shape includes:
 
 ```typescript
-interface EditableShape {
+interface BaseShape {
   /** Unique identifier (use uuid() from @accelint/core) */
   id: UniqueId;
   /** Full shape name used internally and in UI */
   name: string;
   /** Optional short display label shown on the map */
   label?: string;
-  /** Shape type: 'Point' | 'LineString' | 'Polygon' | 'Circle' */
-  shapeType: string;
-  /** Whether shape is locked from editing */
-  locked: boolean;
+  /** Shape type discriminator */
+  shape: 'Point' | 'LineString' | 'Polygon' | 'Rectangle' | 'Circle' | 'Ellipse';
   /** GeoJSON feature with geometry and style properties */
-  feature: {
-    type: 'Feature';
-    properties: {
-      styleProperties: StyleProperties;
-    };
-    geometry: Point | LineString | Polygon;
-  };
+  feature: StyledFeature;
+  /** Whether shape is locked from editing */
+  locked?: boolean;
   /** UTC timestamp (optional) */
   lastUpdated?: number;
+}
+```
+
+### Type Guards
+
+Use the provided type guards to narrow shape types and access type-specific properties:
+
+```typescript
+import {
+  isCircleShape,
+  isEllipseShape,
+  isPolygonShape,
+  isRectangleShape,
+  isLineStringShape,
+  isPointShape,
+} from '@accelint/map-toolkit/deckgl/shapes';
+
+function handleShape(shape: Shape) {
+  if (isCircleShape(shape)) {
+    // TypeScript knows shape is CircleShape
+    // shape.feature.properties.circleProperties is available
+    const { center, radius } = shape.feature.properties.circleProperties;
+    console.log(`Circle at ${center} with radius ${radius.value} ${radius.units}`);
+  }
+
+  if (isEllipseShape(shape)) {
+    // shape.feature.properties.ellipseProperties is available
+    const { center, xSemiAxis, ySemiAxis, angle } = shape.feature.properties.ellipseProperties;
+    console.log(`Ellipse at ${center}, rotated ${angle}°`);
+  }
+}
+```
+
+### Individual Shape Types
+
+You can also import specific shape types for type annotations:
+
+```typescript
+import type {
+  CircleShape,
+  EllipseShape,
+  PolygonShape,
+  RectangleShape,
+  LineStringShape,
+  PointShape,
+  Shape,
+} from '@accelint/map-toolkit/deckgl/shapes';
+
+function processCircle(circle: CircleShape) {
+  // circle.feature.properties.circleProperties is guaranteed to exist
+  const { center, radius } = circle.feature.properties.circleProperties;
+}
+```
+
+### Circle and Ellipse Properties
+
+Circles and ellipses store their defining parameters alongside the polygon approximation used for rendering:
+
+```typescript
+interface CircleProperties {
+  /** Center point as [longitude, latitude] */
+  center: [number, number];
+  /** Radius with value and units */
+  radius: {
+    value: number;
+    units: DistanceUnit; // 'meters' | 'kilometers' | 'miles' | 'nauticalmiles' | 'feet'
+  };
+}
+
+interface EllipseProperties {
+  /** Center point as [longitude, latitude] */
+  center: [number, number];
+  /** X semi-axis (horizontal radius) */
+  xSemiAxis: { value: number; units: DistanceUnit };
+  /** Y semi-axis (vertical radius) */
+  ySemiAxis: { value: number; units: DistanceUnit };
+  /** Rotation angle in degrees */
+  angle: number;
 }
 ```
 
@@ -207,12 +279,12 @@ import type { Color } from '@deck.gl/core';
 interface StyleProperties {
   /** Fill color as RGBA array [r, g, b, a] where each value is 0-255 */
   fillColor: Color;
-  /** Stroke color as RGBA array [r, g, b, a] where each value is 0-255 */
-  strokeColor: Color;
-  /** Stroke width in pixels (1 | 2 | 4 | 8) */
-  strokeWidth: StrokeWidth;
-  /** Stroke pattern: 'solid' | 'dashed' | 'dotted' */
-  strokePattern: StrokePattern;
+  /** Border/outline color as RGBA array [r, g, b, a] where each value is 0-255 */
+  lineColor: Color;
+  /** Border/outline width in pixels (1 | 2 | 4 | 8) */
+  lineWidth: LineWidth;
+  /** Border/outline pattern: 'solid' | 'dashed' | 'dotted' */
+  linePattern: LinePattern;
   /** Optional icon properties for Point geometries */
   icon?: {
     atlas: string;
@@ -228,7 +300,7 @@ interface StyleProperties {
 }
 ```
 
-**Note**: By default, fill colors have a 60% opacity multiplier applied for the standard semi-transparent look. Set `applyBaseOpacity={false}` to render colors exactly as specified.
+**Note**: By default, fill colors have a 20% opacity multiplier applied for the standard semi-transparent look. Set `applyBaseOpacity={false}` to render colors exactly as specified.
 
 ## Custom Icons for Points
 
@@ -241,16 +313,16 @@ import ATLAS_JSON from './assets/atlas.json';
 const pointWithIcon = {
   id: '1',
   name: 'Location Marker',
-  shapeType: 'Point',
+  shape: 'Point',
   locked: false,
   feature: {
     type: 'Feature',
     properties: {
       styleProperties: {
         fillColor: [98, 166, 255, 255], // RGBA
-        strokeColor: [98, 166, 255, 255], // RGBA
-        strokeWidth: 4,
-        strokePattern: 'solid',
+        lineColor: [98, 166, 255, 255], // RGBA
+        lineWidth: 4,
+        linePattern: 'solid',
         icon: {
           atlas: ATLAS_PNG,
           mapping: ATLAS_JSON,
@@ -266,6 +338,30 @@ const pointWithIcon = {
   },
 };
 ```
+
+## Label Display Modes
+
+Control when labels are shown using the `showLabels` prop:
+
+```tsx
+// Show labels for all shapes (default)
+<displayShapeLayer data={shapes} showLabels="always" />
+
+// Show label only for the currently hovered shape
+// Note: requires pickable={true} (the default) to detect hover events
+<displayShapeLayer data={shapes} showLabels="hover" />
+
+// Never show labels
+<displayShapeLayer data={shapes} showLabels="never" />
+```
+
+| Mode | Description |
+|------|-------------|
+| `'always'` | Labels visible for all shapes (default) |
+| `'hover'` | Label appears only when hovering a shape (requires `pickable={true}`, the default) |
+| `'never'` | No labels displayed |
+
+The `'hover'` mode is useful when you have many shapes and want to reduce visual clutter while still providing label information on demand.
 
 ## Label Positioning
 
@@ -285,7 +381,7 @@ Apply positioning to all shapes of a given type:
 <displayShapeLayer
   id="shapes"
   data={shapes}
-  showLabels={true}
+  showLabels="always"
   labelOptions={{
     // Circle labels at the top of the perimeter
     circleLabelCoordinateAnchor: 'top',
@@ -377,10 +473,10 @@ Each geometry type has sensible defaults (labels appear below shapes):
 
 When a shape is selected via `selectedShapeId`, the layer provides visual indicators:
 
-1. **Dotted border**: The selected shape's stroke pattern changes to dotted (`[2, 4]` dash array)
+1. **Dotted border**: The selected shape's border/outline pattern changes to dotted (`[2, 4]` dash array)
 2. **Coffin corners** (Point shapes with icons): Bracket-like corners appear around selected Point icons with a blue fill. These are not currently customizable.
 3. **Highlight** (optional, non-icon-Point shapes): A highlight layer underneath with:
-   - Increased line width (+5 pixels)
+   - Increased border/outline width (+5 pixels)
    - Custom highlight color (default: turquoise at ~39% opacity)
 
 ### Controlling the Highlight Effect when Selecting Shapes
@@ -420,8 +516,8 @@ The highlight effect can be toggled with the `showHighlight` prop:
 
 When `pickable={true}`, shapes show hover feedback:
 
-- **All shapes (except Points with icons)**: Line width increases by 2 pixels
-- **Point shapes with icons**: Coffin corners appear with a white fill and black stroke
+- **All shapes (except Points with icons)**: Border/outline width increases by 2 pixels
+- **Point shapes with icons**: Coffin corners appear with a white fill and black outline
 
 ## Event Bus Integration
 
@@ -550,29 +646,29 @@ When using icons for Point geometries, **all shapes in a single DisplayShapeLaye
 |------|------|---------|-------------|
 | `id` | `string` | *required* | Unique layer ID |
 | `mapId` | `UniqueId` | *required* | Map instance ID for event bus isolation in multi-map scenarios |
-| `data` | `EditableShape[]` | *required* | Array of shapes to display |
+| `data` | `Shape[]` | *required* | Array of shapes to display |
 | `selectedShapeId` | `ShapeId` | `undefined` | Currently selected shape ID for highlighting |
-| `onShapeClick` | `(shape: EditableShape) => void` | `undefined` | Callback when shape is clicked |
-| `onShapeHover` | `(shape: EditableShape \| null) => void` | `undefined` | Callback when shape is hovered |
+| `onShapeClick` | `(shape: Shape) => void` | `undefined` | Callback when shape is clicked |
+| `onShapeHover` | `(shape: Shape \| null) => void` | `undefined` | Callback when shape is hovered |
 | `pickable` | `boolean` | `true` | Whether shapes are clickable/hoverable |
-| `showLabels` | `boolean` | `true` | Whether to show labels |
+| `showLabels` | `'always' \| 'hover' \| 'never'` | `'always'` | Label display mode: `'always'` shows all labels, `'hover'` shows label only for hovered shape, `'never'` hides all labels |
 | `showHighlight` | `boolean` | `false` | Whether to show highlight around selected shapes (dotted border always shows) |
 | `labelOptions` | `LabelPositionOptions` | `undefined` | Global label positioning options |
 | `highlightColor` | `[number, number, number, number]` | `[40, 245, 190, 100]` | Highlight color RGBA (0-255) |
-| `applyBaseOpacity` | `boolean` | `true` | Apply 60% opacity multiplier to fill colors for semi-transparent look |
+| `applyBaseOpacity` | `boolean` | `true` | Apply 20% opacity multiplier to fill colors for semi-transparent look |
 
 ### LabelPositionOptions
 
 See the [Label Positioning](#label-positioning) section for detailed documentation on available options for each geometry type.
 
-### useShapeSelection Hook
+### useSelectShape Hook
 
 A companion hook that manages selection state and auto-deselection using a store pattern with `useSyncExternalStore`:
 
 ```tsx
-import { useShapeSelection } from '@accelint/map-toolkit/deckgl/shapes';
+import { useSelectShape } from '@accelint/map-toolkit/deckgl/shapes';
 
-const { selectedId, setSelectedId, clearSelection } = useShapeSelection(mapId);
+const { selectedId, setSelectedId, clearSelection } = useSelectShape(mapId);
 ```
 
 | Return Value | Type | Description |

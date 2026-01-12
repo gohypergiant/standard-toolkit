@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -55,12 +55,9 @@
 
 'use client';
 
-import {
-  LABEL_BACKGROUND_OPACITY,
-  LABEL_BORDER_OPACITY,
-} from '../../shared/constants';
+import { isCircleShape } from '../../shared/types';
 import type { LineString, Point, Polygon } from 'geojson';
-import type { EditableShape } from '../../shared/types';
+import type { Shape } from '../../shared/types';
 
 /**
  * Label positioning information including coordinates and screen-space offsets
@@ -640,7 +637,7 @@ function getCirclePosition(
  */
 function getPolygonPosition(
   geometry: Polygon,
-  shape: EditableShape,
+  shape: Shape,
   shapeOffset: [number, number] | undefined,
   shapeVertical: string | undefined,
   shapeHorizontal: string | undefined,
@@ -650,7 +647,7 @@ function getPolygonPosition(
   const ring = geometry.coordinates[0];
 
   // Circle shapes use circle-specific options
-  if (shape.shapeType === 'Circle') {
+  if (isCircleShape(shape)) {
     return getCirclePosition(
       ring,
       shapeOffset,
@@ -709,7 +706,7 @@ function getPolygonPosition(
  * Returns null if no valid coordinates can be determined
  */
 export function getLabelPosition2d(
-  shape: EditableShape,
+  shape: Shape,
   options?: LabelPositionOptions,
 ): LabelPosition2d | null {
   const { geometry } = shape.feature;
@@ -768,40 +765,6 @@ export function getLabelPosition2d(
  * If `label` is not provided, falls back to using `name`.
  * Text is automatically converted to uppercase for display.
  */
-export function getLabelText(shape: EditableShape): string {
+export function getLabelText(shape: Shape): string {
   return (shape.label || shape.name).toUpperCase();
-}
-
-/**
- * Get label background color (uses RGB from shape fill color with fixed label opacity)
- */
-export function getLabelFillColor(
-  shape: EditableShape,
-): [number, number, number, number] {
-  const styleProps = shape.feature.properties?.styleProperties;
-  const fillColor = styleProps?.fillColor ?? [98, 166, 255, 255];
-
-  // Extract RGB, use fixed opacity for label background
-  const r = fillColor[0] ?? 98;
-  const g = fillColor[1] ?? 166;
-  const b = fillColor[2] ?? 255;
-
-  return [r, g, b, LABEL_BACKGROUND_OPACITY];
-}
-
-/**
- * Get label border color (uses RGB from shape stroke color with full opacity)
- */
-export function getLabelBorderColor(
-  shape: EditableShape,
-): [number, number, number, number] {
-  const styleProps = shape.feature.properties?.styleProperties;
-  const strokeColor = styleProps?.strokeColor ?? [98, 166, 255, 255];
-
-  // Extract RGB, use full opacity for border
-  const r = strokeColor[0] ?? 98;
-  const g = strokeColor[1] ?? 166;
-  const b = strokeColor[2] ?? 255;
-
-  return [r, g, b, LABEL_BORDER_OPACITY];
 }

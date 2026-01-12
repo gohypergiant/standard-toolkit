@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -13,11 +13,17 @@
 'use client';
 
 import { Broadcast } from '@accelint/bus';
+import { getLogger } from '@accelint/logger';
 import { CompositeLayer } from '@deck.gl/core';
 import { PathStyleExtension } from '@deck.gl/extensions';
 import { GeoJsonLayer, IconLayer } from '@deck.gl/layers';
 import { DASH_ARRAYS, SHAPE_LAYER_IDS } from '../shared/constants';
 import { type ShapeEvent, ShapeEvents } from '../shared/events';
+import {
+  getDashArray,
+  getFillColor,
+  getLineColor,
+} from '../shared/utils/style-utils';
 import {
   COFFIN_CORNERS,
   DEFAULT_DISPLAY_PROPS,
@@ -25,16 +31,20 @@ import {
 } from './constants';
 import { createShapeLabelLayer } from './shape-label-layer';
 import {
-  getDashArray,
-  getFillColor,
   getHighlightColor,
   getHighlightLineWidth,
   getHoverLineWidth,
-  getStrokeColor,
 } from './utils/display-style';
 import type { Layer, PickingInfo } from '@deck.gl/core';
-import type { EditableShape, ShapeId } from '../shared/types';
+import type { Shape, ShapeId } from '../shared/types';
 import type { DisplayShapeLayerProps } from './types';
+
+const logger = getLogger({
+  enabled: process.env.NODE_ENV !== 'production',
+  level: 'warn',
+  prefix: '[DisplayShapeLayer]',
+  pretty: true,
+});
 
 /**
  * Typed event bus instance for shape events.
@@ -43,26 +53,28 @@ import type { DisplayShapeLayerProps } from './types';
 const shapeBus = Broadcast.getInstance<ShapeEvent>();
 
 /**
- * State interface for DisplayShapeLayer
+ * State type for DisplayShapeLayer
  */
-interface DisplayShapeLayerState {
+type DisplayShapeLayerState = {
   /** Index of currently hovered shape, undefined when not hovering */
   hoverIndex?: number;
   /** ID of the last hovered shape for event deduplication */
   lastHoveredId?: ShapeId | null;
   /** Allow additional properties from base layer state */
   [key: string]: unknown;
-}
+};
 
 /**
  * Cache for transformed features to avoid recreating objects on every render.
  */
-interface FeaturesCache {
+type FeaturesCache = {
   /** Reference to the original data array for identity comparison */
-  data: EditableShape[];
+  data: Shape[];
   /** Transformed features with shapeId added to properties */
-  features: EditableShape['feature'][];
-}
+  features: Shape['feature'][];
+  /** Map of shapeId to feature index for O(1) lookup */
+  shapeIdToIndex: Map<ShapeId, number>;
+};
 
 /**
  * DisplayShapeLayer - Read-only shapes visualization layer
@@ -74,15 +86,15 @@ interface FeaturesCache {
  * - **Multiple geometry types**: Point, LineString, Polygon, and Circle
  * - **Icon support**: Custom icons for Point geometries via icon atlases
  * - **Interactive selection**: Click handling with dotted border and optional highlight
- * - **Hover effects**: Line width increases on hover for better UX
+ * - **Hover effects**: Border/outline width increases on hover for better UX
  * - **Customizable labels**: Flexible label positioning with per-shape or global options
- * - **Style properties**: Full control over colors, stroke patterns, and opacity
+ * - **Style properties**: Full control over colors, border/outline patterns, and opacity
  * - **Event bus integration**: Automatically emits shape events via @accelint/bus
  * - **Multi-map support**: Events include map instance ID for isolation
  *
  * ## Selection Visual Feedback
  * When a shape is selected via `selectedShapeId`:
- * - The shape's stroke pattern changes to dotted
+ * - The shape's border/outline pattern changes to dotted
  * - An optional highlight renders underneath (controlled by `showHighlight` prop)
  *
  * ## Layer Structure
@@ -102,19 +114,19 @@ interface FeaturesCache {
  * - `shapes:selected` - Emitted when a shape is clicked (includes mapId)
  * - `shapes:hovered` - Emitted when the hovered shape changes (deduplicated, includes mapId)
  *
- * For selection with auto-deselection, use the companion `useShapeSelection` hook which handles
+ * For selection with auto-deselection, use the companion `useSelectShape` hook which handles
  * all the event wiring automatically. See the example below.
  *
- * @example Basic usage with useShapeSelection hook (recommended)
+ * @example Basic usage with useSelectShape hook (recommended)
  * ```tsx
  * import '@accelint/map-toolkit/deckgl/shapes/display-shape-layer/fiber';
- * import { useShapeSelection } from '@accelint/map-toolkit/deckgl/shapes';
+ * import { useSelectShape } from '@accelint/map-toolkit/deckgl/shapes';
  * import { uuid } from '@accelint/core';
  *
  * const MAP_ID = uuid();
  *
  * function MapWithShapes() {
- *   const { selectedId } = useShapeSelection(MAP_ID);
+ *   const { selectedId } = useSelectShape(MAP_ID);
  *
  *   return (
  *     <BaseMap id={MAP_ID}>
@@ -123,7 +135,7 @@ interface FeaturesCache {
  *         mapId={MAP_ID}
  *         data={shapes}
  *         selectedShapeId={selectedId}
- *         showLabels={true}
+ *         showLabels="always"
  *         pickable={true}
  *       />
  *     </BaseMap>
@@ -136,7 +148,7 @@ interface FeaturesCache {
  * <displayShapeLayer
  *   id="my-shapes"
  *   data={shapes}
- *   showLabels={true}
+ *   showLabels="always"
  *   labelOptions={{
  *     // Position circle labels at the top
  *     circleLabelCoordinateAnchor: 'top',
@@ -218,7 +230,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
    * Convert shapes to GeoJSON features with shapeId in properties.
    * Uses caching to avoid recreating objects on every render cycle.
    */
-  private getFeaturesWithId(): EditableShape['feature'][] {
+  private getFeaturesWithId(): Shape['feature'][] {
     const { data } = this.props;
 
     // Return cached features if data hasn't changed (identity check)
@@ -226,16 +238,22 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       return this.featuresCache.features;
     }
 
-    // Transform features and cache the result
-    const features = data.map((shape) => ({
-      ...shape.feature,
-      properties: {
-        ...shape.feature.properties,
-        shapeId: shape.id,
-      },
-    }));
+    // Transform features and build shapeId->index map in a single pass
+    const features: Shape['feature'][] = [];
+    const shapeIdToIndex = new Map<ShapeId, number>();
 
-    this.featuresCache = { data, features };
+    for (const [i, shape] of data.entries()) {
+      features.push({
+        ...shape.feature,
+        properties: {
+          ...shape.feature.properties,
+          shapeId: shape.id,
+        },
+      });
+      shapeIdToIndex.set(shape.id, i);
+    }
+
+    this.featuresCache = { data, features, shapeIdToIndex };
     return features;
   }
 
@@ -243,7 +261,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
    * Look up a shape by ID from the data prop.
    * Used by event handlers to get full shape without storing in feature properties.
    */
-  private getShapeById(shapeId: ShapeId): EditableShape | undefined {
+  private getShapeById(shapeId: ShapeId): Shape | undefined {
     return this.props.data.find((shape) => shape.id === shapeId);
   }
 
@@ -310,7 +328,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
    * Note: Points with icons use coffin corners instead of highlight layer
    */
   private renderHighlightLayer(
-    features: EditableShape['feature'][],
+    features: Shape['feature'][],
   ): GeoJsonLayer | null {
     const { selectedShapeId, showHighlight, highlightColor } = this.props;
 
@@ -363,9 +381,16 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
    * Coffin corners provide visual feedback for points instead of highlight layer
    */
   private renderCoffinCornersLayer(
-    features: EditableShape['feature'][],
+    features: Shape['feature'][],
   ): IconLayer | null {
     const { selectedShapeId } = this.props;
+    const hoverIndex = this.state?.hoverIndex;
+
+    // Use cached shapeId->index map for O(1) lookup
+    const shapeIdToIndex = this.featuresCache?.shapeIdToIndex;
+    if (!shapeIdToIndex) {
+      return null;
+    }
 
     // Find point features that need coffin corners (hovered or selected)
     const pointFeatures = features.filter((f) => {
@@ -379,9 +404,8 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
 
       const shapeId = f.properties?.shapeId;
       const isSelected = shapeId === selectedShapeId;
-      const isHovered =
-        this.state?.hoverIndex !== undefined &&
-        features.indexOf(f) === this.state.hoverIndex;
+      const featureIndex = shapeId ? shapeIdToIndex.get(shapeId) : undefined;
+      const isHovered = hoverIndex !== undefined && featureIndex === hoverIndex;
 
       return isSelected || isHovered;
     });
@@ -395,11 +419,10 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
     const iconAtlas = firstPointIcon?.atlas;
     const iconMapping = firstPointIcon?.mapping;
 
-    if (!iconAtlas) {
-      return null;
-    }
-
-    if (!iconMapping) {
+    if (!(iconAtlas && iconMapping)) {
+      logger.warn(
+        'Point shape has icon style but missing iconAtlas or iconMapping - coffin corners will not render',
+      );
       return null;
     }
 
@@ -434,12 +457,12 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       data: pointFeatures,
       iconAtlas,
       iconMapping: extendedMapping,
-      getIcon: (d: EditableShape['feature']) => {
+      getIcon: (d: Shape['feature']) => {
         const shapeId = d.properties?.shapeId;
         const isSelected = shapeId === selectedShapeId;
+        const featureIndex = shapeId ? shapeIdToIndex.get(shapeId) : undefined;
         const isHovered =
-          this.state?.hoverIndex !== undefined &&
-          features.indexOf(d) === this.state.hoverIndex;
+          hoverIndex !== undefined && featureIndex === hoverIndex;
 
         if (isSelected && isHovered) {
           return COFFIN_CORNERS.SELECTED_HOVER_ICON;
@@ -450,12 +473,12 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
         return COFFIN_CORNERS.HOVER_ICON;
       },
       getSize: COFFIN_CORNERS.SIZE,
-      getPosition: (d: EditableShape['feature']) => {
+      getPosition: (d: Shape['feature']) => {
         const coords =
           d.geometry.type === 'Point' ? d.geometry.coordinates : [0, 0];
         return coords as [number, number];
       },
-      getPixelOffset: (d: EditableShape['feature']) => {
+      getPixelOffset: (d: Shape['feature']) => {
         const iconSize =
           d.properties?.styleProperties?.icon?.size ??
           MAP_INTERACTION.ICON_SIZE;
@@ -476,7 +499,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
    * Returns the first icon's atlas and mapping (all shapes share the same atlas).
    * Uses early return for O(1) best case when first feature has icons.
    */
-  private getIconConfig(features: EditableShape['feature'][]): {
+  private getIconConfig(features: Shape['feature'][]): {
     hasIcons: boolean;
     atlas?: string;
     mapping?: Record<
@@ -500,7 +523,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
   /**
    * Render main shapes layer
    */
-  private renderMainLayer(features: EditableShape['feature'][]): GeoJsonLayer {
+  private renderMainLayer(features: Shape['feature'][]): GeoJsonLayer {
     const { pickable, applyBaseOpacity, selectedShapeId } = this.props;
 
     // Single-pass icon config extraction (O(1) best case with early return)
@@ -518,9 +541,8 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       // Styling
       filled: true,
       stroked: true,
-      getFillColor: (d: EditableShape['feature']) =>
-        getFillColor(d, applyBaseOpacity),
-      getLineColor: getStrokeColor,
+      getFillColor: (d: Shape['feature']) => getFillColor(d, applyBaseOpacity),
+      getLineColor,
       getLineWidth: (d, info) => {
         const isHovered = info?.index === this.state?.hoverIndex;
         return getHoverLineWidth(d, isHovered);
@@ -542,16 +564,16 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       ...(hasIcons && iconMapping ? { iconMapping } : {}),
       ...(hasIcons
         ? {
-            getIcon: (d: EditableShape['feature']) =>
+            getIcon: (d: Shape['feature']) =>
               d.properties?.styleProperties?.icon?.name ?? 'marker',
-            getIconSize: (d: EditableShape['feature']) => {
+            getIconSize: (d: Shape['feature']) => {
               return (
                 d.properties?.styleProperties?.icon?.size ??
                 MAP_INTERACTION.ICON_SIZE
               );
             },
-            getIconColor: getStrokeColor,
-            getIconPixelOffset: (d: EditableShape['feature']) => {
+            getIconColor: getLineColor,
+            getIconPixelOffset: (d: Shape['feature']) => {
               const iconSize =
                 d.properties?.styleProperties?.icon?.size ??
                 MAP_INTERACTION.ICON_SIZE;
@@ -563,7 +585,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
 
       // Dash pattern support - selected shapes get dotted border
       extensions: [new PathStyleExtension({ dash: true })],
-      getDashArray: (d: EditableShape['feature']) => {
+      getDashArray: (d: Shape['feature']) => {
         const isSelected = d.properties?.shapeId === selectedShapeId;
         if (isSelected) {
           return DASH_ARRAYS.dotted;
@@ -597,17 +619,37 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
 
   /**
    * Render labels layer
+   * Supports three modes:
+   * - 'always': Show labels for all shapes
+   * - 'hover': Show label only for the currently hovered shape
+   * - 'never': No labels
    */
   private renderLabelsLayer(): ReturnType<typeof createShapeLabelLayer> | null {
     const { showLabels, data, labelOptions } = this.props;
 
-    if (!showLabels) {
+    // No labels if disabled
+    if (showLabels === 'never') {
+      return null;
+    }
+
+    // Determine which shapes to show labels for
+    let labelData = data;
+    if (showLabels === 'hover') {
+      const hoverIndex = this.state?.hoverIndex;
+      if (hoverIndex === undefined) {
+        return null; // No shape hovered, no label to show
+      }
+      const hoveredShape = data[hoverIndex];
+      labelData = hoveredShape ? [hoveredShape] : [];
+    }
+
+    if (labelData.length === 0) {
       return null;
     }
 
     return createShapeLabelLayer({
       id: `${this.props.id}-${SHAPE_LAYER_IDS.DISPLAY_LABELS}`,
-      data,
+      data: labelData,
       labelOptions,
     });
   }

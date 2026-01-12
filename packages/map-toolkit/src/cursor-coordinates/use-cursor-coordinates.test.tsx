@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -13,11 +13,13 @@
 import { Broadcast } from '@accelint/bus';
 import { uuid } from '@accelint/core';
 import { act, renderHook, waitFor } from '@testing-library/react';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { MapEvents } from '../deckgl/base-map/events';
+import { clearCursorCoordinateState } from './store';
 import { useCursorCoordinates } from './use-cursor-coordinates';
 import type { UniqueId } from '@accelint/core';
 import type { MapEventType, MapHoverPayload } from '../deckgl/base-map/types';
+import type { CoordinateFormatter } from './types';
 
 describe('useCursorCoordinates', () => {
   let id: UniqueId;
@@ -39,6 +41,11 @@ describe('useCursorCoordinates', () => {
 
     // Get bus instance
     bus = Broadcast.getInstance<MapEventType>();
+  });
+
+  afterEach(() => {
+    // Clean up store state after each test
+    clearCursorCoordinateState(id);
   });
 
   describe('Hook Behavior', () => {
@@ -364,6 +371,328 @@ describe('useCursorCoordinates', () => {
       // Should either handle gracefully or stay at default
       // This tests that the hook doesn't crash
       expect(result.current.formattedCoord).toBeDefined();
+    });
+  });
+
+  describe('Raw Coordinate Access', () => {
+    it('returns null rawCoord on mount', () => {
+      const { result } = renderHook(() => useCursorCoordinates(id));
+
+      expect(result.current.rawCoord).toBeNull();
+    });
+
+    it('returns rawCoord with longitude and latitude when coordinate is set', async () => {
+      const { result } = renderHook(() => useCursorCoordinates(id));
+
+      act(() => {
+        bus.emit(MapEvents.hover, createMockPayload(id, [-122.4194, 37.7749]));
+      });
+
+      await waitFor(() => {
+        expect(result.current.rawCoord).not.toBeNull();
+      });
+
+      expect(result.current.rawCoord?.longitude).toBeCloseTo(-122.4194, 4);
+      expect(result.current.rawCoord?.latitude).toBeCloseTo(37.7749, 4);
+    });
+
+    it('normalizes longitude in rawCoord', async () => {
+      const { result } = renderHook(() => useCursorCoordinates(id));
+
+      // 181° should become -179°
+      act(() => {
+        bus.emit(MapEvents.hover, createMockPayload(id, [181, 45]));
+      });
+
+      await waitFor(() => {
+        expect(result.current.rawCoord).not.toBeNull();
+      });
+
+      expect(result.current.rawCoord?.longitude).toBeCloseTo(-179, 4);
+      expect(result.current.rawCoord?.latitude).toBe(45);
+    });
+
+    it('returns null rawCoord when coordinate becomes invalid', async () => {
+      const { result } = renderHook(() => useCursorCoordinates(id));
+
+      // First set a valid coordinate
+      act(() => {
+        bus.emit(MapEvents.hover, createMockPayload(id, [10, 20]));
+      });
+
+      await waitFor(() => {
+        expect(result.current.rawCoord).not.toBeNull();
+      });
+
+      // Then set null
+      act(() => {
+        bus.emit(MapEvents.hover, createMockPayload(id, null));
+      });
+
+      await waitFor(() => {
+        expect(result.current.rawCoord).toBeNull();
+      });
+    });
+  });
+
+  describe('Current Format', () => {
+    it('returns dd as default currentFormat', () => {
+      const { result } = renderHook(() => useCursorCoordinates(id));
+
+      expect(result.current.currentFormat).toBe('dd');
+    });
+
+    it('updates currentFormat when setFormat is called', async () => {
+      const { result } = renderHook(() => useCursorCoordinates(id));
+
+      act(() => {
+        result.current.setFormat('mgrs');
+      });
+
+      await waitFor(() => {
+        expect(result.current.currentFormat).toBe('mgrs');
+      });
+    });
+
+    it('supports all format types', async () => {
+      const { result } = renderHook(() => useCursorCoordinates(id));
+
+      const formats = ['dd', 'ddm', 'dms', 'mgrs', 'utm'] as const;
+
+      for (const format of formats) {
+        act(() => {
+          result.current.setFormat(format);
+        });
+
+        await waitFor(() => {
+          expect(result.current.currentFormat).toBe(format);
+        });
+      }
+    });
+  });
+
+  describe('Custom Formatter', () => {
+    it('uses custom formatter when provided', async () => {
+      const customFormatter: CoordinateFormatter = (coord) =>
+        `Lat: ${coord.latitude.toFixed(2)}° Lng: ${coord.longitude.toFixed(2)}°`;
+
+      const { result } = renderHook(() =>
+        useCursorCoordinates(id, { formatter: customFormatter }),
+      );
+
+      act(() => {
+        bus.emit(MapEvents.hover, createMockPayload(id, [-74.006, 40.7128]));
+      });
+
+      await waitFor(() => {
+        expect(result.current.formattedCoord).toBe('Lat: 40.71° Lng: -74.01°');
+      });
+    });
+
+    it('falls back to default when custom formatter throws', async () => {
+      const throwingFormatter: CoordinateFormatter = () => {
+        throw new Error('Formatter error');
+      };
+
+      const { result } = renderHook(() =>
+        useCursorCoordinates(id, { formatter: throwingFormatter }),
+      );
+
+      act(() => {
+        bus.emit(MapEvents.hover, createMockPayload(id, [10, 20]));
+      });
+
+      // Should fall back to default placeholder
+      await waitFor(() => {
+        expect(result.current.formattedCoord).toBe('--, --');
+      });
+    });
+
+    it('custom formatter receives normalized longitude', async () => {
+      let receivedCoord: { longitude: number; latitude: number } | null = null;
+
+      const capturingFormatter: CoordinateFormatter = (coord) => {
+        receivedCoord = {
+          longitude: coord.longitude,
+          latitude: coord.latitude,
+        };
+        return 'captured';
+      };
+
+      const { result } = renderHook(() =>
+        useCursorCoordinates(id, { formatter: capturingFormatter }),
+      );
+
+      // 181° should be normalized to -179°
+      act(() => {
+        bus.emit(MapEvents.hover, createMockPayload(id, [181, 45]));
+      });
+
+      await waitFor(() => {
+        expect(result.current.formattedCoord).toBe('captured');
+      });
+
+      expect(receivedCoord?.longitude).toBeCloseTo(-179, 4);
+      expect(receivedCoord?.latitude).toBe(45);
+    });
+
+    it('setFormat still updates currentFormat when custom formatter is used', async () => {
+      const customFormatter: CoordinateFormatter = (coord) =>
+        `${coord.latitude}, ${coord.longitude}`;
+
+      const { result } = renderHook(() =>
+        useCursorCoordinates(id, { formatter: customFormatter }),
+      );
+
+      // Change format
+      act(() => {
+        result.current.setFormat('mgrs');
+      });
+
+      await waitFor(() => {
+        // currentFormat should update even with custom formatter
+        expect(result.current.currentFormat).toBe('mgrs');
+      });
+    });
+
+    it('returns default placeholder when no coordinate and custom formatter', () => {
+      const customFormatter: CoordinateFormatter = (coord) =>
+        `${coord.latitude}, ${coord.longitude}`;
+
+      const { result } = renderHook(() =>
+        useCursorCoordinates(id, { formatter: customFormatter }),
+      );
+
+      // No coordinate set, should show default
+      expect(result.current.formattedCoord).toBe('--, --');
+    });
+  });
+
+  describe('Precision - CoordinateField Compatibility', () => {
+    it('DD format uses 6 decimal places', async () => {
+      const { result } = renderHook(() => useCursorCoordinates(id));
+
+      act(() => {
+        bus.emit(
+          MapEvents.hover,
+          createMockPayload(id, [-74.005973, 40.712775]),
+        );
+      });
+
+      await waitFor(() => {
+        expect(result.current.formattedCoord).not.toBe('--, --');
+      });
+
+      // Check that the formatted output contains values with appropriate precision
+      // DD format should have 6 decimal places (geo package default)
+      const formatted = result.current.formattedCoord;
+      expect(formatted).toContain('40.712775');
+      expect(formatted).toContain('74.005973');
+    });
+
+    it('DDM format uses 4 decimal places for minutes', async () => {
+      const { result } = renderHook(() => useCursorCoordinates(id));
+
+      act(() => {
+        bus.emit(MapEvents.hover, createMockPayload(id, [-74.006, 40.7128]));
+      });
+
+      await waitFor(() => {
+        expect(result.current.formattedCoord).not.toBe('--, --');
+      });
+
+      act(() => {
+        result.current.setFormat('ddm');
+      });
+
+      await waitFor(() => {
+        expect(result.current.currentFormat).toBe('ddm');
+      });
+
+      // DDM format should have degree symbol and minute values
+      const formatted = result.current.formattedCoord;
+      expect(formatted).toContain('40°');
+      expect(formatted).toContain('74°');
+    });
+
+    it('DMS format uses 2 decimal places for seconds', async () => {
+      const { result } = renderHook(() => useCursorCoordinates(id));
+
+      act(() => {
+        bus.emit(MapEvents.hover, createMockPayload(id, [-74.006, 40.7128]));
+      });
+
+      await waitFor(() => {
+        expect(result.current.formattedCoord).not.toBe('--, --');
+      });
+
+      act(() => {
+        result.current.setFormat('dms');
+      });
+
+      await waitFor(() => {
+        expect(result.current.currentFormat).toBe('dms');
+      });
+
+      // DMS format should have degree, minute, and second symbols
+      const formatted = result.current.formattedCoord;
+      expect(formatted).toContain('40°');
+      expect(formatted).toContain('74°');
+      expect(formatted).toContain('″'); // Unicode double prime for seconds
+    });
+
+    it('MGRS format returns valid grid reference', async () => {
+      const { result } = renderHook(() => useCursorCoordinates(id));
+
+      act(() => {
+        bus.emit(MapEvents.hover, createMockPayload(id, [-74.006, 40.7128]));
+      });
+
+      await waitFor(() => {
+        expect(result.current.formattedCoord).not.toBe('--, --');
+      });
+
+      act(() => {
+        result.current.setFormat('mgrs');
+      });
+
+      await waitFor(() => {
+        expect(result.current.currentFormat).toBe('mgrs');
+      });
+
+      // MGRS format should return a grid reference like "18T WL 83959 07350"
+      const formatted = result.current.formattedCoord;
+      expect(formatted).not.toBe('');
+      expect(formatted).not.toBe('--, --');
+      // MGRS format: zone + grid square + easting/northing (e.g., "18T WL 83959 07350")
+      expect(formatted).toMatch(/^\d{1,2}[A-Z]\s[A-Z]{2}\s\d{5}\s\d{5}$/);
+    });
+
+    it('UTM format returns valid zone and coordinates', async () => {
+      const { result } = renderHook(() => useCursorCoordinates(id));
+
+      act(() => {
+        bus.emit(MapEvents.hover, createMockPayload(id, [-74.006, 40.7128]));
+      });
+
+      await waitFor(() => {
+        expect(result.current.formattedCoord).not.toBe('--, --');
+      });
+
+      act(() => {
+        result.current.setFormat('utm');
+      });
+
+      await waitFor(() => {
+        expect(result.current.currentFormat).toBe('utm');
+      });
+
+      // UTM format should return zone and coordinates (e.g., "18N 583959 4507351")
+      const formatted = result.current.formattedCoord;
+      expect(formatted).not.toBe('');
+      expect(formatted).not.toBe('--, --');
+      // UTM format: zone + hemisphere + easting + northing
+      expect(formatted).toMatch(/^\d{1,2}[NS]\s\d+\s\d+$/);
     });
   });
 });

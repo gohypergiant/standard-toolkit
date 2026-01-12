@@ -23,12 +23,11 @@ export {
   DEFAULT_COLORS,
   DEFAULT_STYLE_PROPERTIES,
   DisplayShapeLayer,
-  SHAPE_EVENTS,
+  LINE_PATTERNS,
+  LINE_WIDTHS,
   SHAPE_LAYER_IDS,
   ShapeEvents,
   ShapeFeatureType,
-  STROKE_PATTERNS,
-  STROKE_WIDTHS,
 } from './shapes';
 export { SymbolLayer, type SymbolLayerProps } from './symbol-layer';
 export type {
@@ -48,11 +47,9 @@ export type { SavedViewportOptions } from './saved-viewports';
 export type {
   CircleProperties,
   CircleRadius,
-  DisplayShape,
   DisplayShapeLayerProps,
-  EditableShape,
-  ShapeEventHandler,
-  ShapeEventPayload,
+  EllipseProperties,
+  Shape,
   ShapeEventType,
   ShapeFeature,
   ShapeFeatureProperties,

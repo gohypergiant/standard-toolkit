@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -13,9 +13,9 @@
 import { Broadcast } from '@accelint/bus';
 import { uuid } from '@accelint/core';
 import { act, render, waitFor } from '@testing-library/react';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { MapEvents } from '../deckgl/base-map/events';
-import { clearViewportState, useViewportState } from './index';
+import { clearViewportState, useMapViewport } from './store';
 import type {
   MapEventType,
   MapViewportPayload,
@@ -35,7 +35,7 @@ const defaultPayload = {
   height: 0,
 };
 
-describe('useViewportState', () => {
+describe('useMapViewport', () => {
   beforeEach(() => {
     // Clear any existing state before each test
     clearViewportState(instanceId);
@@ -50,7 +50,7 @@ describe('useViewportState', () => {
     let viewState: MapViewportPayload | undefined;
 
     function TestComponent() {
-      viewState = useViewportState({ instanceId });
+      viewState = useMapViewport(instanceId);
       return null;
     }
 
@@ -62,7 +62,7 @@ describe('useViewportState', () => {
     let viewState: MapViewportPayload | undefined;
 
     function TestComponent() {
-      viewState = useViewportState({ instanceId });
+      viewState = useMapViewport(instanceId);
       return <div data-testid='output'>{JSON.stringify(viewState)}</div>;
     }
 
@@ -91,7 +91,7 @@ describe('useViewportState', () => {
     let viewState: MapViewportPayload | undefined;
 
     function TestComponent() {
-      viewState = useViewportState({ instanceId });
+      viewState = useMapViewport(instanceId);
       return null;
     }
 
@@ -137,12 +137,12 @@ describe('useViewportState', () => {
     let viewState2: MapViewportPayload | undefined;
 
     function TestComponent1() {
-      viewState1 = useViewportState({ instanceId });
+      viewState1 = useMapViewport(instanceId);
       return null;
     }
 
     function TestComponent2() {
-      viewState2 = useViewportState({ instanceId });
+      viewState2 = useMapViewport(instanceId);
       return null;
     }
 
@@ -193,47 +193,11 @@ describe('useViewportState', () => {
     });
   });
 
-  it('supports custom subscribe and getSnapshot functions', () => {
-    const customPayload: MapViewportPayload = {
-      id: instanceIdTwo,
-      latitude: 51.5074,
-      longitude: -0.1278,
-      zoom: 8,
-      bounds: [0, 0, 0, 0],
-      width: 800,
-      height: 600,
-    };
-
-    const customSubscribe = vi.fn(() => {
-      // biome-ignore lint/suspicious/noEmptyBlockStatements: mock cleanup function
-      return () => {};
-    });
-
-    const customGetSnapshot = vi.fn(() => customPayload);
-
-    let viewState: MapViewportPayload | undefined;
-
-    function TestComponent() {
-      viewState = useViewportState({
-        instanceId: instanceIdTwo,
-        subscribe: customSubscribe,
-        getSnapshot: customGetSnapshot,
-      });
-      return null;
-    }
-
-    render(<TestComponent />);
-
-    expect(customSubscribe).toHaveBeenCalled();
-    expect(customGetSnapshot).toHaveBeenCalled();
-    expect(viewState).toEqual(customPayload);
-  });
-
   it('cleans up subscriptions when unmounted', async () => {
     let viewState: MapViewportPayload | undefined;
 
     function TestComponent() {
-      viewState = useViewportState({ instanceId });
+      viewState = useMapViewport(instanceId);
       return null;
     }
 
@@ -283,7 +247,7 @@ describe('clearViewportState', () => {
     let viewState: MapViewportPayload | undefined;
 
     function TestComponent() {
-      viewState = useViewportState({ instanceId });
+      viewState = useMapViewport(instanceId);
       return null;
     }
 

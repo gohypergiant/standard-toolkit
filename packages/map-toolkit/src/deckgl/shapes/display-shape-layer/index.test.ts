@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -23,27 +23,27 @@ import {
 import { DisplayShapeLayer } from './index';
 import type { UniqueId } from '@accelint/core';
 import type { Color } from '@deck.gl/core';
-import type { EditableShape } from '../shared/types';
+import type { Shape } from '../shared/types';
 
 /**
  * Create a minimal mock shape for testing
  */
-function createMockShape(overrides?: Partial<EditableShape>): EditableShape {
+function createMockShape(overrides?: Partial<Shape>): Shape {
   const id = uuid();
   return {
     id,
     name: 'Test Shape',
     label: 'Test',
     locked: false,
-    shapeType: 'Polygon',
+    shape: 'Polygon',
     feature: {
       type: 'Feature',
       properties: {
         styleProperties: {
           fillColor: [98, 166, 255, 255] as Color,
-          strokeColor: [98, 166, 255, 255] as Color,
-          strokeWidth: 4,
-          strokePattern: 'solid',
+          lineColor: [98, 166, 255, 255] as Color,
+          lineWidth: 4,
+          linePattern: 'solid',
         },
       },
       geometry: {
@@ -66,24 +66,22 @@ function createMockShape(overrides?: Partial<EditableShape>): EditableShape {
 /**
  * Create a mock Point shape for testing
  */
-function createMockPointShape(
-  overrides?: Partial<EditableShape>,
-): EditableShape {
+function createMockPointShape(overrides?: Partial<Shape>): Shape {
   const id = uuid();
   return {
     id,
     name: 'Test Point',
     label: 'Point',
     locked: false,
-    shapeType: 'Point',
+    shape: 'Point',
     feature: {
       type: 'Feature',
       properties: {
         styleProperties: {
           fillColor: [98, 166, 255, 255] as Color,
-          strokeColor: [98, 166, 255, 255] as Color,
-          strokeWidth: 4,
-          strokePattern: 'solid',
+          lineColor: [98, 166, 255, 255] as Color,
+          lineWidth: 4,
+          linePattern: 'solid',
         },
       },
       geometry: {
@@ -99,14 +97,20 @@ function createMockPointShape(
  * Initialize layer with proper deck.gl state
  * deck.gl requires state to be initialized before setState can be called
  */
-function initializeLayerWithState(layer: DisplayShapeLayer): void {
+function initializeLayerWithState(
+  layer: DisplayShapeLayer,
+  initialState: Record<string, unknown> = {},
+): void {
   // Initialize the layer (this sets up internal deck.gl state)
   layer.initializeState({} as never);
   // Manually initialize state object that deck.gl needs for setState to work
   // biome-ignore lint/suspicious/noExplicitAny: accessing internal state for testing
-  if (!(layer as any).state) {
+  if ((layer as any).state) {
     // biome-ignore lint/suspicious/noExplicitAny: accessing internal state for testing
-    (layer as any).state = {};
+    Object.assign((layer as any).state, initialState);
+  } else {
+    // biome-ignore lint/suspicious/noExplicitAny: accessing internal state for testing
+    (layer as any).state = { ...initialState };
   }
 }
 
@@ -120,13 +124,13 @@ describe('DisplayShapeLayer', () => {
   });
 
   describe('renderLayers', () => {
-    it('renders main layer and labels layer when showLabels is true', () => {
+    it('renders main layer and labels layer when showLabels is "always"', () => {
       const shapes = [createMockShape()];
       const layer = new DisplayShapeLayer({
         id: 'test-layer',
         mapId,
         data: shapes,
-        showLabels: true,
+        showLabels: 'always',
       });
 
       initializeLayerWithState(layer);
@@ -147,13 +151,42 @@ describe('DisplayShapeLayer', () => {
       expect(labelLayer).toBeInstanceOf(TextLayer);
     });
 
-    it('renders only main layer when showLabels is false', () => {
+    it('renders label only for hovered shape when showLabels is "hover"', () => {
+      const shapes = [createMockShape(), createMockShape()];
+      const layer = new DisplayShapeLayer({
+        id: 'test-layer',
+        mapId,
+        data: shapes,
+        showLabels: 'hover',
+      });
+
+      // Initialize without hover - should not show labels
+      initializeLayerWithState(layer, { hoverIndex: undefined });
+      let sublayers = layer.renderLayers();
+
+      // Should have only main layer, no labels
+      expect(sublayers.length).toBe(1);
+      expect(sublayers[0]).toBeInstanceOf(GeoJsonLayer);
+
+      // Now simulate hovering over first shape
+      initializeLayerWithState(layer, { hoverIndex: 0 });
+      sublayers = layer.renderLayers();
+
+      // Should have main layer + label layer
+      expect(sublayers.length).toBe(2);
+      const labelLayer = sublayers.find(
+        (l) => l.id === `test-layer-${SHAPE_LAYER_IDS.DISPLAY_LABELS}`,
+      );
+      expect(labelLayer).toBeInstanceOf(TextLayer);
+    });
+
+    it('renders only main layer when showLabels is "never"', () => {
       const shapes = [createMockShape()];
       const layer = new DisplayShapeLayer({
         id: 'test-layer',
         mapId,
         data: shapes,
-        showLabels: false,
+        showLabels: 'never',
       });
 
       initializeLayerWithState(layer);
@@ -176,7 +209,7 @@ describe('DisplayShapeLayer', () => {
         data: [shape],
         selectedShapeId: shape.id,
         showHighlight: true,
-        showLabels: false,
+        showLabels: 'never',
       });
 
       initializeLayerWithState(layer);
@@ -204,7 +237,7 @@ describe('DisplayShapeLayer', () => {
         mapId,
         data: [shape],
         selectedShapeId: 'non-existent-id',
-        showLabels: false,
+        showLabels: 'never',
       });
 
       initializeLayerWithState(layer);
@@ -222,7 +255,7 @@ describe('DisplayShapeLayer', () => {
         id: 'test-layer',
         mapId,
         data: [shape],
-        showLabels: false,
+        showLabels: 'never',
       });
 
       initializeLayerWithState(layer);
@@ -242,7 +275,7 @@ describe('DisplayShapeLayer', () => {
         id: 'test-layer',
         mapId,
         data: shapes,
-        showLabels: false,
+        showLabels: 'never',
       });
 
       initializeLayerWithState(layer);
@@ -272,7 +305,7 @@ describe('DisplayShapeLayer', () => {
         id: 'test-layer',
         mapId,
         data: [shape],
-        showLabels: false,
+        showLabels: 'never',
       });
 
       initializeLayerWithState(layer);
@@ -306,7 +339,7 @@ describe('DisplayShapeLayer', () => {
         id: 'test-layer',
         mapId,
         data: [shape],
-        showLabels: false,
+        showLabels: 'never',
         onShapeClick: clickCallback,
       });
 
@@ -334,7 +367,7 @@ describe('DisplayShapeLayer', () => {
         id: 'test-layer',
         mapId,
         data: [shape],
-        showLabels: false,
+        showLabels: 'never',
       });
 
       initializeLayerWithState(layer);
@@ -360,7 +393,7 @@ describe('DisplayShapeLayer', () => {
         id: 'test-layer',
         mapId,
         data: [shape],
-        showLabels: false,
+        showLabels: 'never',
       });
 
       initializeLayerWithState(layer);
@@ -393,7 +426,7 @@ describe('DisplayShapeLayer', () => {
         id: 'test-layer',
         mapId,
         data: [shape],
-        showLabels: false,
+        showLabels: 'never',
       });
 
       initializeLayerWithState(layer);
@@ -428,7 +461,7 @@ describe('DisplayShapeLayer', () => {
         id: 'test-layer',
         mapId,
         data: [shape],
-        showLabels: false,
+        showLabels: 'never',
       });
 
       initializeLayerWithState(layer);
@@ -470,7 +503,7 @@ describe('DisplayShapeLayer', () => {
         id: 'test-layer',
         mapId,
         data: [shape],
-        showLabels: false,
+        showLabels: 'never',
       });
 
       initializeLayerWithState(layer);
@@ -510,7 +543,7 @@ describe('DisplayShapeLayer', () => {
         id: 'test-layer',
         mapId,
         data: [shape],
-        showLabels: false,
+        showLabels: 'never',
         onShapeHover: hoverCallback,
       });
 
@@ -536,7 +569,7 @@ describe('DisplayShapeLayer', () => {
         id: 'test-layer',
         mapId,
         data: [shape],
-        showLabels: false,
+        showLabels: 'never',
       });
 
       initializeLayerWithState(layer);
@@ -577,7 +610,7 @@ describe('DisplayShapeLayer', () => {
         id: 'test-layer',
         mapId,
         data: [shape],
-        showLabels: false,
+        showLabels: 'never',
       });
 
       initializeLayerWithState(layer);
@@ -611,7 +644,7 @@ describe('DisplayShapeLayer', () => {
         id: 'test-layer',
         mapId,
         data: shapes,
-        showLabels: false,
+        showLabels: 'never',
       });
 
       initializeLayerWithState(layer);
@@ -641,7 +674,7 @@ describe('DisplayShapeLayer', () => {
 
       // Check default props
       expect(layer.props.pickable).toBe(true);
-      expect(layer.props.showLabels).toBe(true);
+      expect(layer.props.showLabels).toBe('always');
       expect(layer.props.highlightColor).toEqual([40, 245, 190, 100]);
     });
 
@@ -655,12 +688,12 @@ describe('DisplayShapeLayer', () => {
         mapId,
         data: [],
         pickable: false,
-        showLabels: false,
+        showLabels: 'never',
         highlightColor: customHighlight,
       });
 
       expect(layer.props.pickable).toBe(false);
-      expect(layer.props.showLabels).toBe(false);
+      expect(layer.props.showLabels).toBe('never');
       expect(layer.props.highlightColor).toEqual(customHighlight);
     });
   });
@@ -678,9 +711,9 @@ describe('DisplayShapeLayer', () => {
           properties: {
             styleProperties: {
               fillColor: [98, 166, 255, 255] as Color,
-              strokeColor: [98, 166, 255, 255] as Color,
-              strokeWidth: 4,
-              strokePattern: 'solid',
+              lineColor: [98, 166, 255, 255] as Color,
+              lineWidth: 4,
+              linePattern: 'solid',
               icon: {
                 atlas: iconAtlas,
                 mapping: iconMapping,
@@ -700,7 +733,7 @@ describe('DisplayShapeLayer', () => {
         id: 'test-layer',
         mapId,
         data: [pointShape],
-        showLabels: false,
+        showLabels: 'never',
       });
 
       initializeLayerWithState(layer);
@@ -723,7 +756,7 @@ describe('DisplayShapeLayer', () => {
         id: 'test-layer',
         mapId,
         data: [pointShape],
-        showLabels: false,
+        showLabels: 'never',
       });
 
       initializeLayerWithState(layer);
@@ -745,7 +778,7 @@ describe('DisplayShapeLayer', () => {
         id: 'test-layer',
         mapId,
         data: [shape],
-        showLabels: false,
+        showLabels: 'never',
         applyBaseOpacity: true,
       });
 

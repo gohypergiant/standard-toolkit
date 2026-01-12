@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -10,14 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-// __private-exports
-
-export const INITIAL_VIEW_STATE = {
-  longitude: -77.0369,
-  latitude: 38.9072,
-  zoom: 4,
-  minZoom: 1,
-  maxZoom: 22,
-  pitch: 0,
-  bearing: 0,
-};
+// Import fiber registration from draw-shape-layer for its side effects.
+// Both layers use the same EditableGeoJsonLayer from @deck.gl-community/editable-layers,
+// so we only need to register it once. Importing either fiber.ts file will work.
+import '../draw-shape-layer/fiber';

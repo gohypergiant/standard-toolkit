@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -13,7 +13,7 @@
 import { useOn } from '@accelint/bus/react';
 import { uuid } from '@accelint/core';
 import { useMemo, useState } from 'react';
-import { useMapCursor } from '../../../map-cursor/use-map-cursor';
+import { useMapCursor } from '@/map-cursor/use-map-cursor';
 import { BaseMap } from '../../base-map/index';
 import { mockShapes } from '../__fixtures__/mock-shapes';
 import { mockShapesWithIcons } from '../__fixtures__/mock-shapes-with-icons';
@@ -24,7 +24,7 @@ import {
   type ShapeSelectedEvent,
 } from '../shared/events';
 import './fiber';
-import { useShapeSelection } from './use-shape-selection';
+import { useSelectShape } from './use-select-shape';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta = {
@@ -49,7 +49,7 @@ const WITH_ICONS_MAP_ID = uuid();
  */
 export const BasicDisplayAndEvents: Story = {
   args: {
-    showLabels: true,
+    showLabels: 'always',
     pickable: true,
     applyBaseOpacity: true,
     showHighlight: false,
@@ -60,8 +60,10 @@ export const BasicDisplayAndEvents: Story = {
   },
   argTypes: {
     showLabels: {
-      control: { type: 'boolean' },
-      description: 'Show/hide labels on shapes',
+      control: { type: 'select' },
+      options: ['always', 'hover', 'never'],
+      description:
+        'Label display mode: always (all shapes), hover (hovered shape only), or never (no labels)',
     },
     pickable: {
       control: { type: 'boolean' },
@@ -70,7 +72,7 @@ export const BasicDisplayAndEvents: Story = {
     applyBaseOpacity: {
       control: { type: 'boolean' },
       description:
-        'Apply 60% opacity multiplier to fill colors for semi-transparent look',
+        'Multiply fill alpha by 0.2 (20% of original) for semi-transparent look',
     },
     showHighlight: {
       control: { type: 'boolean' },
@@ -95,8 +97,8 @@ export const BasicDisplayAndEvents: Story = {
     },
   },
   render: (args) => {
-    // useShapeSelection handles selection, deselection, and click-away deselection
-    const { selectedId } = useShapeSelection(DISPLAY_MAP_ID);
+    // useSelectShape handles selection, deselection, and click-away deselection
+    const { selectedId } = useSelectShape(DISPLAY_MAP_ID);
     const [eventLog, setEventLog] = useState<
       Array<{ id: string; message: string }>
     >([]);
@@ -356,8 +358,8 @@ export const LabelPositioning: Story = {
     },
   },
   render: (args) => {
-    // useShapeSelection handles selection, deselection, and click-away deselection
-    const { selectedId } = useShapeSelection(LABEL_POSITIONS_MAP_ID);
+    // useSelectShape handles selection, deselection, and click-away deselection
+    const { selectedId } = useSelectShape(LABEL_POSITIONS_MAP_ID);
     const { requestCursorChange, clearCursor } = useMapCursor(
       LABEL_POSITIONS_MAP_ID,
     );
@@ -436,7 +438,7 @@ export const LabelPositioning: Story = {
             mapId={LABEL_POSITIONS_MAP_ID}
             data={mockShapes}
             selectedShapeId={selectedId}
-            showLabels={true}
+            showLabels='always'
             pickable={true}
             applyBaseOpacity={true}
             labelOptions={labelOptions}
@@ -468,8 +470,8 @@ export const LabelPositioning: Story = {
  */
 export const WithPointIcons: Story = {
   render: () => {
-    // useShapeSelection handles selection, deselection, and click-away deselection
-    const { selectedId } = useShapeSelection(WITH_ICONS_MAP_ID);
+    // useSelectShape handles selection, deselection, and click-away deselection
+    const { selectedId } = useSelectShape(WITH_ICONS_MAP_ID);
     const { requestCursorChange, clearCursor } =
       useMapCursor(WITH_ICONS_MAP_ID);
 
@@ -493,7 +495,7 @@ export const WithPointIcons: Story = {
             mapId={WITH_ICONS_MAP_ID}
             data={mockShapesWithIcons}
             selectedShapeId={selectedId}
-            showLabels={true}
+            showLabels='always'
             pickable={true}
             applyBaseOpacity={true}
           />

@@ -14,7 +14,7 @@ It is composed of the following components:
 - **OptionsItemLabel** - Primary text content component for option items
 - **OptionsItemDescription** - Secondary text content for additional information
 - **OptionsItemContent** - Container for label and description content
-- **OptionsSection** - Grouping container with optinal header
+- **OptionsSection** - Grouping container with optional header
 
 ## Example usage
 ```tsx
@@ -65,12 +65,15 @@ It is composed of the following components:
 
 ### Options Props
 - **`size`** - Size variant: `'small'` | `'large'` (default: `'large'`)
+- **`selectionMode`** - Selection behavior: `'none'` | `'single'` | `'multiple'` (default: `'single'`)
+- **`selectedKeys`** - Set of selected item keys for controlled selection
+- **`onSelectionChange`** - Callback fired when selection changes
 - **`items`** - Array of data items for dynamic rendering
 - **`children`** - Option items or sections to render
 - **`className`** - Custom CSS class name for the options list
 
 ### OptionsItem Props
-- **`color`** - Color variant: `'info'` | `'serious'` (default: `'info'`)
+- **`color`** - Color variant: `'info'` | `'serious'` | `'critical'` (default: `'info'`)
 - **`textValue`** - Text value for accessibility and search
 - **`isDisabled`** - Whether the option is disabled
 - **`classNames`** - Object containing custom class names:
@@ -83,6 +86,18 @@ It is composed of the following components:
 - **`classNames`** - Object containing custom class names:
   - `section` - Section container styling
   - `header` - Header text styling
+
+### OptionsItemContent Props
+- **`children`** - Label and description components
+- **`className`** - Custom CSS class name
+
+### OptionsItemLabel Props
+- **`children`** - Label text content
+- **`className`** - Custom CSS class name
+
+### OptionsItemDescription Props
+- **`children`** - Description text content
+- **`className`** - Custom CSS class name
 
 ### HTML Attributes
 The component accepts all standard HTML attributes for `<div>` elements, such as:
@@ -124,8 +139,32 @@ Visual distinction between different types of options:
 // Info color (default) - for neutral or positive actions
 <OptionsItem color="info">...</OptionsItem>
 
-// Serious color - for warnings or destructive actions
+// Serious color - for warnings or caution actions
 <OptionsItem color="serious">...</OptionsItem>
+
+// Critical color - for urgent or dangerous actions
+<OptionsItem color="critical">...</OptionsItem>
+```
+
+### Selection Modes
+Control how users can select items:
+
+- **`none`** - Items are not selectable
+- **`single`** - Only one item can be selected at a time (default)
+- **`multiple`** - Multiple items can be selected simultaneously
+
+For controlled selection, use `selectedKeys` and `onSelectionChange`:
+```tsx
+const [selectedKeys, setSelectedKeys] = useState<Selection>(new Set(['item-1']));
+
+<Options
+  selectionMode="multiple"
+  selectedKeys={selectedKeys}
+  onSelectionChange={setSelectedKeys}
+>
+  <OptionsItem id="item-1" textValue="First Item">...</OptionsItem>
+  <OptionsItem id="item-2" textValue="Second Item">...</OptionsItem>
+</Options>
 ```
 
 ### Icon Support
@@ -154,6 +193,9 @@ Built-in accessibility features ensure proper navigation and screen reader suppo
 
 ### With Static Sections
 <Canvas of={OptionsStories.WithStaticSections} />
+
+### Multi-Selection
+<Canvas of={OptionsStories.WithSelectionState} />
 
 ### Virtualized Options
 <Canvas of={OptionsStories.Virtualized} />

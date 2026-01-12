@@ -12,6 +12,7 @@
 
 import { TextField } from './';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { InputProps } from '../input/types';
 
 const meta = {
   title: 'Components/TextField',
@@ -29,11 +30,24 @@ const meta = {
     isDisabled: false,
     isInvalid: false,
     isRequired: true,
+    isReadOnly: false,
   },
   argTypes: {
     size: {
       control: 'select',
       options: ['medium', 'small'],
+    },
+    inputProps: {
+      control: 'object',
+    },
+    isReadOnly: {
+      control: 'boolean',
+    },
+    minLength: {
+      control: 'number',
+    },
+    maxLength: {
+      control: 'number',
     },
   },
 } satisfies Meta<typeof TextField>;
@@ -42,7 +56,11 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  render: TextField,
+  render: (args) => (
+    <div className='max-w-[200px]'>
+      <TextField {...args} />
+    </div>
+  ),
 };
 
 export const WithPrefix: Story = {
@@ -80,4 +98,73 @@ export const WithPrefixAndSuffix: Story = {
     },
     description: 'Approximate temperature in Celsius',
   },
+};
+
+export const WithInputProps: StoryObj<InputProps> = {
+  parameters: {
+    controls: {
+      expanded: true,
+      include: [
+        'placeholder',
+        'type',
+        'isClearable',
+        'autoSize',
+        'prefix',
+        'suffix',
+        'pattern',
+      ],
+    },
+  },
+  args: {
+    placeholder: 'Enter text...',
+    type: 'text',
+    isClearable: true,
+    autoSize: false,
+    prefix: '',
+    suffix: '',
+    pattern: '',
+  },
+  argTypes: {
+    isClearable: {
+      control: 'boolean',
+    },
+    autoSize: {
+      control: 'boolean',
+    },
+    type: {
+      control: 'select',
+      options: ['text', 'email', 'password', 'search', 'tel', 'url', 'number'],
+    },
+    placeholder: { control: 'text' },
+    prefix: { control: 'text' },
+    suffix: { control: 'text' },
+    pattern: {
+      control: 'text',
+      description:
+        'Regex pattern for validation. Examples: `[A-Za-z]+` (letters only), `[0-9]{5}` (5 digits)',
+    },
+  },
+  render: ({
+    isClearable,
+    autoSize,
+    type,
+    placeholder,
+    prefix,
+    suffix,
+    pattern,
+  }) => (
+    <TextField
+      label='TextField with InputProps'
+      description='Demonstrates inputProps passed to the underlying Input component'
+      inputProps={{
+        isClearable,
+        autoSize,
+        type,
+        placeholder,
+        prefix,
+        suffix,
+        pattern,
+      }}
+    />
+  ),
 };

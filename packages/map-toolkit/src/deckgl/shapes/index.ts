@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -12,26 +12,53 @@
 
 // Display Shape Layer exports
 export { DisplayShapeLayer } from './display-shape-layer/index';
-export { useShapeSelection } from './display-shape-layer/use-shape-selection';
-// Constant exports
+export { useSelectShape } from './display-shape-layer/use-select-shape';
+// Draw Shape Layer exports
+export { DrawShapeEvents } from './draw-shape-layer/events';
+export { DrawShapeLayer } from './draw-shape-layer/index';
+export { useDrawShape } from './draw-shape-layer/use-draw-shape';
+// Edit Shape Layer exports
+export { EditShapeEvents } from './edit-shape-layer/events';
+export { EditShapeLayer } from './edit-shape-layer/index';
+export { useEditShape } from './edit-shape-layer/use-edit-shape';
+// Constant exports (public API only)
 export {
   BASE_FILL_OPACITY,
   DASH_ARRAYS,
   DEFAULT_COLORS,
+  DEFAULT_EDIT_HANDLE_COLOR,
+  DEFAULT_EDIT_HANDLE_OUTLINE_COLOR,
   DEFAULT_STYLE_PROPERTIES,
+  LINE_PATTERNS,
+  LINE_WIDTHS,
   SHAPE_LAYER_IDS,
-  STROKE_PATTERNS,
-  STROKE_WIDTHS,
 } from './shared/constants';
 // Event exports
-export { SHAPE_EVENTS, ShapeEvents } from './shared/events';
-export { ShapeFeatureType } from './shared/types';
+export { ShapeEvents } from './shared/events';
+export {
+  isCircleShape,
+  isEllipseShape,
+  isLineStringShape,
+  isPointShape,
+  isPolygonShape,
+  isRectangleShape,
+  ShapeFeatureType,
+} from './shared/types';
+// Style utility exports
+export {
+  getDashArray,
+  getFillColor,
+  getLineColor,
+  getLineWidth,
+  normalizeColor,
+} from './shared/utils/style-utils';
 export type {
   DisplayShapeLayerProps,
+  ShowLabelsMode,
   StyledFeature,
   StyledFeatureProperties,
 } from './display-shape-layer/types';
-export type { UseShapeSelectionReturn } from './display-shape-layer/use-shape-selection';
+export type { UseSelectShapeReturn } from './display-shape-layer/use-select-shape';
 export type {
   CardinalLabelCoordinateAnchor,
   LabelHorizontalPosition,
@@ -40,19 +67,53 @@ export type {
   LabelVerticalPosition,
 } from './display-shape-layer/utils/labels';
 export type {
-  ShapeEventHandler,
-  ShapeEventPayload,
-  ShapeEventType,
-} from './shared/events';
+  DrawShapeEvent,
+  DrawShapeEventType,
+  ShapeDrawCanceledEvent,
+  ShapeDrawingEvent,
+  ShapeDrawnEvent,
+} from './draw-shape-layer/events';
+export type {
+  DrawingState,
+  DrawShapeLayerProps,
+  DrawShapeOptions,
+  UseDrawShapeOptions,
+  UseDrawShapeReturn,
+} from './draw-shape-layer/types';
+export type {
+  EditShapeEvent,
+  EditShapeEventType,
+  ShapeEditCanceledEvent,
+  ShapeEditingEvent,
+  ShapeUpdatedEvent,
+} from './edit-shape-layer/events';
+export type {
+  EditingState,
+  EditMode,
+  EditShapeLayerProps,
+  EditShapeOptions,
+  UseEditShapeOptions,
+  UseEditShapeReturn,
+} from './edit-shape-layer/types';
+export type { ShapeEventType } from './shared/events';
 // Shared type exports
 export type {
+  CircleFeatureProperties,
   CircleProperties,
   CircleRadius,
-  DisplayShape,
-  EditableShape,
+  CircleShape,
+  EllipseFeatureProperties,
+  EllipseProperties,
+  EllipseShape,
+  LineStringShape,
+  PointShape,
+  PolygonShape,
+  RectangleShape,
+  Shape,
   ShapeFeature,
   ShapeFeatureProperties,
   ShapeFeatureTypeValues,
   ShapeId,
   StyleProperties,
+  Subscription,
 } from './shared/types';

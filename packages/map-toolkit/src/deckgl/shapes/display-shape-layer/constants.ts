@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -11,6 +11,8 @@
  */
 
 'use client';
+
+import { DEFAULT_COLORS } from '../shared/constants';
 
 /**
  * Map interaction constants
@@ -26,7 +28,8 @@ export const MAP_INTERACTION = {
  * Selection highlight configuration
  */
 export const SELECTION_HIGHLIGHT = {
-  COLOR: [40, 245, 190, 100] as [number, number, number, number], // Turquoise/cyan at ~39% opacity
+  /** Uses DEFAULT_COLORS.highlight from shared constants */
+  COLOR: DEFAULT_COLORS.highlight,
   ICON_SIZE_INCREASE: 8, // Additional pixels for highlight icon
 } as const;
 
@@ -50,7 +53,7 @@ export const COFFIN_CORNERS = {
  */
 export const DEFAULT_DISPLAY_PROPS = {
   pickable: true,
-  showLabels: true,
+  showLabels: 'always' as const,
   showHighlight: false,
   applyBaseOpacity: true,
   highlightColor: SELECTION_HIGHLIGHT.COLOR,

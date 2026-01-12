@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -20,7 +20,7 @@ import {
   ShapeEvents,
   type ShapeSelectedEvent,
 } from '../shared/events';
-import { useShapeSelection } from './use-shape-selection';
+import { useSelectShape } from './use-select-shape';
 import type { UniqueId } from '@accelint/core';
 import type { MapClickEvent, MapClickPayload } from '../../base-map/types';
 
@@ -38,7 +38,7 @@ function createMockMapClickPayload(
   } as MapClickPayload;
 }
 
-describe('useShapeSelection', () => {
+describe('useSelectShape', () => {
   let mapId: UniqueId;
   let shapeId1: UniqueId;
   let shapeId2: UniqueId;
@@ -55,19 +55,19 @@ describe('useShapeSelection', () => {
 
   describe('initial state', () => {
     it('returns undefined selectedId initially', () => {
-      const { result } = renderHook(() => useShapeSelection(mapId));
+      const { result } = renderHook(() => useSelectShape(mapId));
 
       expect(result.current.selectedId).toBeUndefined();
     });
 
     it('provides setSelectedId function', () => {
-      const { result } = renderHook(() => useShapeSelection(mapId));
+      const { result } = renderHook(() => useSelectShape(mapId));
 
       expect(typeof result.current.setSelectedId).toBe('function');
     });
 
     it('provides clearSelection function', () => {
-      const { result } = renderHook(() => useShapeSelection(mapId));
+      const { result } = renderHook(() => useSelectShape(mapId));
 
       expect(typeof result.current.clearSelection).toBe('function');
     });
@@ -75,7 +75,7 @@ describe('useShapeSelection', () => {
 
   describe('shapes:selected event handling', () => {
     it('updates selectedId when shapes:selected event is emitted', async () => {
-      const { result } = renderHook(() => useShapeSelection(mapId));
+      const { result } = renderHook(() => useSelectShape(mapId));
 
       act(() => {
         shapeBus.emit(ShapeEvents.selected, {
@@ -90,7 +90,7 @@ describe('useShapeSelection', () => {
     });
 
     it('ignores shapes:selected events for different mapId', async () => {
-      const { result } = renderHook(() => useShapeSelection(mapId));
+      const { result } = renderHook(() => useSelectShape(mapId));
       const otherMapId = uuid();
 
       act(() => {
@@ -107,7 +107,7 @@ describe('useShapeSelection', () => {
     });
 
     it('replaces selection when new shape is selected', async () => {
-      const { result } = renderHook(() => useShapeSelection(mapId));
+      const { result } = renderHook(() => useSelectShape(mapId));
 
       act(() => {
         shapeBus.emit(ShapeEvents.selected, {
@@ -135,7 +135,7 @@ describe('useShapeSelection', () => {
 
   describe('shapes:deselected event handling', () => {
     it('clears selectedId when shapes:deselected event is emitted', async () => {
-      const { result } = renderHook(() => useShapeSelection(mapId));
+      const { result } = renderHook(() => useSelectShape(mapId));
       const deselectedBus = Broadcast.getInstance<ShapeDeselectedEvent>();
 
       // First select a shape
@@ -161,7 +161,7 @@ describe('useShapeSelection', () => {
     });
 
     it('ignores shapes:deselected events for different mapId', async () => {
-      const { result } = renderHook(() => useShapeSelection(mapId));
+      const { result } = renderHook(() => useSelectShape(mapId));
       const deselectedBus = Broadcast.getInstance<ShapeDeselectedEvent>();
       const otherMapId = uuid();
 
@@ -191,7 +191,7 @@ describe('useShapeSelection', () => {
 
   describe('map click auto-deselection', () => {
     it('emits deselected when clicking empty space with selection', async () => {
-      const { result } = renderHook(() => useShapeSelection(mapId));
+      const { result } = renderHook(() => useSelectShape(mapId));
       const deselectedBus = Broadcast.getInstance<ShapeDeselectedEvent>();
       const deselectedSpy = vi.fn();
       deselectedBus.on(ShapeEvents.deselected, deselectedSpy);
@@ -226,7 +226,7 @@ describe('useShapeSelection', () => {
     });
 
     it('does not emit deselected when clicking empty space without selection', async () => {
-      renderHook(() => useShapeSelection(mapId));
+      renderHook(() => useSelectShape(mapId));
       const deselectedBus = Broadcast.getInstance<ShapeDeselectedEvent>();
       const deselectedSpy = vi.fn();
       deselectedBus.on(ShapeEvents.deselected, deselectedSpy);
@@ -245,7 +245,7 @@ describe('useShapeSelection', () => {
     });
 
     it('does not emit deselected when clicking on a shape (index >= 0)', async () => {
-      const { result } = renderHook(() => useShapeSelection(mapId));
+      const { result } = renderHook(() => useSelectShape(mapId));
       const deselectedBus = Broadcast.getInstance<ShapeDeselectedEvent>();
       const deselectedSpy = vi.fn();
       deselectedBus.on(ShapeEvents.deselected, deselectedSpy);
@@ -276,7 +276,7 @@ describe('useShapeSelection', () => {
     });
 
     it('ignores map clicks for different mapId', async () => {
-      const { result } = renderHook(() => useShapeSelection(mapId));
+      const { result } = renderHook(() => useSelectShape(mapId));
       const deselectedBus = Broadcast.getInstance<ShapeDeselectedEvent>();
       const deselectedSpy = vi.fn();
       const otherMapId = uuid();
@@ -310,7 +310,7 @@ describe('useShapeSelection', () => {
 
   describe('manual control functions', () => {
     it('setSelectedId updates selection directly', () => {
-      const { result } = renderHook(() => useShapeSelection(mapId));
+      const { result } = renderHook(() => useSelectShape(mapId));
 
       act(() => {
         result.current.setSelectedId(shapeId1);
@@ -320,7 +320,7 @@ describe('useShapeSelection', () => {
     });
 
     it('clearSelection emits deselected event', async () => {
-      const { result } = renderHook(() => useShapeSelection(mapId));
+      const { result } = renderHook(() => useSelectShape(mapId));
       const deselectedBus = Broadcast.getInstance<ShapeDeselectedEvent>();
       const deselectedSpy = vi.fn();
       deselectedBus.on(ShapeEvents.deselected, deselectedSpy);

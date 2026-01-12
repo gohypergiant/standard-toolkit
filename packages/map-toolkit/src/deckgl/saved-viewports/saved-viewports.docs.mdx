@@ -42,25 +42,31 @@ pnpm add @accelint/map-toolkit @accelint/hotkey-manager @accelint/bus @accelint/
 
 ### With Event Bus Integration
 
-The recommended pattern uses `@accelint/bus` to synchronize viewport state between the map and saved viewport system:
+The recommended pattern uses `@accelint/bus` to synchronize viewport state between the map and saved viewport system. The key is using `CameraEventTypes.setCenter` to move the map when restoring a viewport:
 
 ```typescript
 import { Broadcast } from '@accelint/bus';
 import { useOn } from '@accelint/bus/react';
+import { uuid } from '@accelint/core';
 import { BaseMap } from '@accelint/map-toolkit/deckgl';
 import { MapEvents } from '@accelint/map-toolkit/deckgl/base-map';
+import { CameraEventTypes } from '@accelint/map-toolkit/camera';
 import { createSavedViewport } from '@accelint/map-toolkit/deckgl/saved-viewports';
 import { globalBind } from '@accelint/hotkey-manager';
 import type { MapViewState } from '@deck.gl/core';
+import type { CameraEvent } from '@accelint/map-toolkit/camera';
 import type { MapViewportEvent, MapViewportPayload } from '@accelint/map-toolkit/deckgl/base-map';
 
 globalBind();
 
-const bus = Broadcast.getInstance<MapViewportEvent>();
+// Create a stable map ID at module level
+const MAP_ID = uuid();
+
+const cameraBus = Broadcast.getInstance<CameraEvent>();
 let currentViewport: MapViewportPayload;
 
 const useSavedViewportHotkey = createSavedViewport({
-  threshold: 1000,//ms
+  threshold: 1000, // ms
   getCurrentViewport: () => currentViewport,
   setCurrentViewport: (newState: MapViewState) => {
     // Merge new state with current viewport
@@ -68,26 +74,32 @@ const useSavedViewportHotkey = createSavedViewport({
       ...currentViewport,
       ...newState,
     };
-    // Emit to notify other components
-    bus.emit(MapEvents.viewport, currentViewport);
+    // Emit camera event to move the map
+    cameraBus.emit(CameraEventTypes.setCenter, {
+      id: MAP_ID,
+      latitude: newState.latitude ?? currentViewport.latitude,
+      longitude: newState.longitude ?? currentViewport.longitude,
+      zoom: newState.zoom,
+    });
   },
 });
 
 export function MapView() {
   useSavedViewportHotkey();
 
-  // Subscribe to viewport changes from BaseMap
+  // Subscribe to viewport changes from BaseMap to track current position
   useOn<MapViewportEvent>(MapEvents.viewport, (event) => {
     currentViewport = {
       ...currentViewport,
       ...event.payload,
     };
-    console.log('Viewport updated:', currentViewport);
   });
 
   return <BaseMap id={MAP_ID} className="w-full h-full" />;
 }
 ```
+
+**Important:** `MapEvents.viewport` is an *output* event emitted by `BaseMap` when the viewport changes. To *move* the map programmatically, you must emit `CameraEventTypes.setCenter` which the camera store listens to.
 
 ### Custom Storage
 
@@ -221,10 +233,10 @@ Returns a React hook function that must be called within a component to activate
 * **Hook Creation**: Create the saved viewport hook with `createSavedViewport()` at module level
 * **Hook Activation**: Call the returned hook inside a React component to activate the hotkeys
 * **State Tracking**: Use `useOn` to subscribe to `MapEvents.viewport` and update module-level viewport state
-* **Saving**: Hold a number key (0-9) for 3 seconds to save the current viewport
+* **Saving**: Hold a number key (0-9) for the configured threshold (default 1 second) to save the current viewport
 * **Restoring**: Tap the same number key to restore the saved viewport
 * **Persistence**: Viewports are saved to localStorage and persist across sessions
-* **State Sync**: Restored viewports are emitted via the event bus to update the map
+* **Camera Control**: Restored viewports emit `CameraEventTypes.setCenter` to move the map to the saved position
 
 ## Storage Format
 

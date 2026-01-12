@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -11,9 +11,9 @@
  */
 
 import type { Bounds } from '../deckgl/base-map/types';
-import type { UNIT_MAP } from './constants';
+import type { DistanceUnitAbbreviation } from '../shared/units';
 
-export type SupportedDistanceUnit = keyof typeof UNIT_MAP;
+export type SupportedDistanceUnit = DistanceUnitAbbreviation;
 
 export type GetViewportSizeArgs = {
   /** Geographic bounds, undefined if viewport not yet initialized */

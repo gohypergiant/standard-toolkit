@@ -1,0 +1,391 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+import * as EditShapeLayerStories from './edit-shape-layer.stories';
+
+<Meta of={EditShapeLayerStories} />
+
+# Edit Shape Layer
+
+A deck.gl layer for interactively editing existing geographic shapes on a map. Integrates with `@deck.gl-community/editable-layers` to provide vertex-based polygon editing, resize-based circle editing, and transform-based ellipse editing.
+
+## Features
+
+- **Multiple geometry types**: Edit Point, LineString, Polygon, Rectangle, Circle, and Ellipse shapes
+- **Smart mode selection**: Automatically selects the appropriate edit mode based on shape type
+- **Neutral mode handling**: Lets UI components decide how to handle mode change conflicts
+- **Visual reference**: Edit layer renders on top of display layer so users can see original position
+- **Event bus integration**: Emits events via `@accelint/bus` for editing lifecycle
+- **Multi-map support**: Events include map instance ID for isolation
+- **Cursor integration**: Automatically changes cursor based on edit mode
+- **ESC to cancel**: Press ESC key to cancel editing and restore original shape
+- **Live measurements**: Tooltip shows dimensions and area during editing
+
+## Edit Modes
+
+The layer automatically selects the appropriate edit mode based on shape type:
+
+| Shape Type | Edit Mode | Behavior |
+|------------|-----------|----------|
+| **Point** | `translate` | Drag to reposition |
+| **LineString** | `vertex-transform` | Drag vertices to reshape, OR scale/rotate/translate the entire shape |
+| **Polygon** | `vertex-transform` | Drag vertices to reshape, OR scale/rotate/translate the entire shape |
+| **Rectangle** | `bounding-transform` | Drag corner handles to resize, drag body to move, or rotate via handle. Hold Shift for uniform scaling. |
+| **Circle** | `circle-transform` | Drag body to move, drag edge to resize from center |
+| **Ellipse** | `bounding-transform` | Drag to move, corner handles to scale freely, top handle to rotate. Hold Shift for uniform scaling. |
+
+## Dependencies
+
+EditShapeLayer requires the following dependencies:
+
+**Required:**
+- [`@accelint/bus`](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/bus) - Event bus for editing lifecycle events
+- [`@accelint/core`](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/core) - Core utilities including UUID generation
+- [`@deck.gl/core`](https://deck.gl/) - Deck.gl core library for WebGL visualization
+- [`@deck.gl-community/editable-layers`](https://github.com/visgl/deck.gl-community) - Editable geometry layers
+- [`@deckgl-fiber-renderer/dom`](https://github.com/deckgl-fiber-renderer/fiber.gl) - React renderer for Deck.gl (for fiber usage)
+- `react` - React 19.0.0 or higher
+
+**Installation:**
+
+```bash
+npm install @accelint/map-toolkit @accelint/bus @accelint/core @deck.gl/core @deck.gl-community/editable-layers @deckgl-fiber-renderer/dom react
+# or
+pnpm add @accelint/map-toolkit @accelint/bus @accelint/core @deck.gl/core @deck.gl-community/editable-layers @deckgl-fiber-renderer/dom react
+```
+
+## Basic Usage
+
+### With useEditShape Hook (Recommended)
+
+The easiest way to use EditShapeLayer is with the `useEditShape` hook, which manages editing state and provides callbacks:
+
+```tsx
+import { BaseMap } from '@accelint/map-toolkit/deckgl/base-map';
+import '@accelint/map-toolkit/deckgl/shapes/edit-shape-layer/fiber';
+import '@accelint/map-toolkit/deckgl/shapes/display-shape-layer/fiber';
+import {
+  DisplayShapeLayer,
+  EditShapeLayer,
+  useEditShape,
+  useSelectShape,
+} from '@accelint/map-toolkit/deckgl/shapes';
+import { useMapCursor } from '@accelint/map-toolkit/map-cursor';
+import { uuid } from '@accelint/core';
+import { useState } from 'react';
+
+const MAP_ID = uuid();
+
+function MapWithEditing() {
+  const [shapes, setShapes] = useState(initialShapes);
+
+  // Required: subscribe to cursor store to enable cursor changes
+  useMapCursor(MAP_ID);
+
+  // Track selected shape
+  const { selectedId, setSelectedId, clearSelection } = useSelectShape(MAP_ID);
+  const selectedShape = shapes.find((s) => s.id === selectedId);
+
+  // Edit shape hook with callbacks
+  const { edit, save, cancel, isEditing, editingShape } = useEditShape(MAP_ID, {
+    onUpdate: (updatedShape) => {
+      // Replace shape in state with updated geometry
+      setShapes((prev) =>
+        prev.map((s) => (s.id === updatedShape.id ? updatedShape : s))
+      );
+      clearSelection();
+    },
+    onCancel: (shape) => {
+      console.log('Edit canceled for:', shape.name);
+    },
+  });
+
+  const handleShapeClick = (shape) => {
+    if (!isEditing) {
+      setSelectedId(shape.id);
+    }
+  };
+
+  return (
+    <div className="relative h-screen w-screen">
+      <BaseMap id={MAP_ID}>
+        {/* Display layer shows all shapes with selection styling */}
+        <displayShapeLayer
+          id="shapes"
+          mapId={MAP_ID}
+          data={shapes}
+          showLabels
+          pickable={!isEditing}
+          selectedShapeId={selectedShape?.id ?? editingShape?.id}
+          onShapeClick={handleShapeClick}
+        />
+        {/* Edit layer renders on top when editing */}
+        <EditShapeLayer mapId={MAP_ID} />
+      </BaseMap>
+
+      {/* Edit controls */}
+      <div className="absolute top-4 left-4">
+        {selectedShape && !isEditing && (
+          <button onClick={() => edit(selectedShape)}>
+            Edit Shape
+          </button>
+        )}
+        {isEditing && (
+          <>
+            <button onClick={save}>Save Changes</button>
+            <button onClick={cancel}>Cancel</button>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+```
+
+## Editing Instructions
+
+### Polygon, LineString
+
+1. Click on a shape to select it
+2. Click "Edit" to enter edit mode
+3. **Vertex editing**: Drag vertices (white circles) to reshape
+4. **Move**: Drag anywhere on the shape body to reposition
+5. **Scale**: Drag corner handles (outside the vertices) to resize freely (non-uniform)
+6. **Scale uniformly**: Hold **Shift** while dragging corner handles to maintain aspect ratio
+7. **Rotate**: Drag the top handle to rotate around the center
+8. **Rotate with snap**: Hold **Shift** while rotating to snap to 45° intervals
+9. Click "Save" to confirm changes or "Cancel" (or press ESC) to discard
+
+### Rectangle
+
+1. Click on a rectangle to select it
+2. Click "Edit" to enter edit mode
+3. **Scale**: Drag corner handles to resize freely (non-uniform)
+4. **Scale uniformly**: Hold **Shift** while dragging corner handles to maintain aspect ratio
+5. **Move**: Drag anywhere on the rectangle body to reposition
+6. **Rotate**: Drag the top handle to rotate around the center
+7. **Rotate with snap**: Hold **Shift** while rotating to snap to 45° intervals
+8. Click "Save" to confirm changes or "Cancel" (or press ESC) to discard
+
+### Circle
+
+1. Click on a circle to select it
+2. Click "Edit" to enter edit mode
+3. **Move**: Drag anywhere on the circle body to reposition
+4. **Resize**: Drag the edge of the circle to resize (resizes from center)
+5. Click "Save" to confirm changes or "Cancel" (or press ESC) to discard
+
+### Ellipse
+
+1. Click on an ellipse to select it
+2. Click "Edit" to enter edit mode
+3. **Move**: Drag anywhere on the ellipse to reposition
+4. **Scale**: Drag the corner handles to resize freely (non-uniform)
+5. **Scale uniformly**: Hold **Shift** while dragging corner handles to maintain aspect ratio
+6. **Rotate**: Drag the top handle to rotate around the center
+7. **Rotate with snap**: Hold **Shift** while rotating to snap to 45° intervals
+8. Click "Save" to confirm changes or "Cancel" (or press ESC) to discard
+
+### Keyboard Shortcuts
+
+- **ESC**: Cancel current editing and restore original shape
+- **Shift** (hold while scaling): Maintain aspect ratio (uniform scaling)
+- **Shift** (hold while rotating): Snap to 45° intervals (0°, 45°, 90°, 135°, 180°, etc.)
+
+## Live Measurements
+
+During editing, a tooltip displays live measurements by the cursor:
+
+| Shape Type | Tooltip Content |
+|------------|-----------------|
+| **Rectangle** | Width × Height and Area (e.g., `10.50 km x 5.25 km` / `55.13 km²`) |
+| **Circle** | Diameter and Area (e.g., `d: 10.00 km` / `78.54 km²`) |
+| **Ellipse** | Major × Minor Axis and Area (e.g., `12.00 km x 8.00 km` / `75.40 km²`) |
+
+The measurements use the configured distance unit (default: kilometers). Pass the `unit` prop to change:
+
+```tsx
+<EditShapeLayer mapId={MAP_ID} unit="mi" />
+```
+
+## Visual Reference
+
+When editing, both the DisplayShapeLayer and EditShapeLayer render:
+- The display layer shows the shape with selection styling (dotted border)
+- The edit layer shows the shape being modified with draggable edit handles
+
+Pass `selectedShapeId={editingShape?.id}` to the display layer to show selection styling during editing.
+
+## Event Bus Integration
+
+The layer emits events via `@accelint/bus` for the editing lifecycle:
+
+### shapes:editing
+
+Emitted when editing starts:
+
+```tsx
+import { useOn } from '@accelint/bus/react';
+import { EditShapeEvents } from '@accelint/map-toolkit/deckgl/shapes';
+
+useOn(EditShapeEvents.editing, (event) => {
+  if (event.payload.mapId !== MAP_ID) return;
+  console.log('Started editing:', event.payload.shape.name);
+});
+```
+
+### shapes:updated
+
+Emitted when a shape edit is saved:
+
+```tsx
+import { useOn } from '@accelint/bus/react';
+import { EditShapeEvents, type ShapeUpdatedEvent } from '@accelint/map-toolkit/deckgl/shapes';
+
+useOn<ShapeUpdatedEvent>(EditShapeEvents.updated, (event) => {
+  if (event.payload.mapId !== MAP_ID) return;
+  console.log('Shape updated:', event.payload.shape);
+});
+```
+
+### shapes:edit-canceled
+
+Emitted when editing is canceled (ESC key or programmatic cancel):
+
+```tsx
+import { useOn } from '@accelint/bus/react';
+import { EditShapeEvents } from '@accelint/map-toolkit/deckgl/shapes';
+
+useOn(EditShapeEvents.canceled, (event) => {
+  if (event.payload.mapId !== MAP_ID) return;
+  console.log('Edit canceled for:', event.payload.shape.name);
+});
+```
+
+## Map Mode Integration
+
+EditShapeLayer is **neutral** regarding mode change authorization. When editing starts:
+
+1. The layer requests a mode change to `'edit-shape'`
+2. If another component requests a different mode, the authorization event propagates to UI components
+3. The edit layer does NOT auto-cancel or reject - your UI decides how to handle the conflict
+
+This allows application-level UI to prompt the user (e.g., "You have unsaved changes. Switch to draw mode?") rather than automatically canceling the edit.
+
+**Note:** If no UI component handles the authorization, the mode change will remain pending until the user saves or cancels the edit (which returns to default mode and auto-processes pending requests).
+
+## Cursor Integration
+
+When editing is active, the cursor automatically changes based on the edit mode:
+
+| Edit Mode | Cursor |
+|-----------|--------|
+| `bounding-transform` | `crosshair` |
+| `vertex-transform` | `crosshair` |
+| `circle-transform` | `crosshair` |
+| `translate` | `crosshair` |
+| `view` | `default` |
+
+This integrates with the `map-cursor` system:
+
+```tsx
+// Required: subscribe to cursor store to enable cursor changes
+const { cursor } = useMapCursor(MAP_ID);
+
+// The cursor will change based on edit mode
+console.log('Current cursor:', cursor);
+```
+
+## API Reference
+
+### EditShapeLayerProps
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `id` | `string` | `'edit-shape-layer'` | Unique layer ID |
+| `mapId` | `UniqueId` | Context ID | Map instance ID for multi-map isolation |
+| `unit` | `DistanceUnitAbbreviation` | `'km'` | Distance unit for tooltip measurements (supports `'km'`, `'mi'`, `'m'`, `'ft'`, `'nm'`) |
+
+### useEditShape Hook
+
+```tsx
+import { useEditShape } from '@accelint/map-toolkit/deckgl/shapes';
+
+const {
+  edit,
+  save,
+  cancel,
+  isEditing,
+  editingShape,
+  editingState,
+} = useEditShape(mapId, options);
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `mapId` | `UniqueId` | Optional map instance ID. Uses context if not provided. |
+| `options` | `UseEditShapeOptions` | Optional callbacks |
+
+#### Options
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `onUpdate` | `(shape: Shape) => void` | Called when shape edit is saved |
+| `onCancel` | `(shape: Shape) => void` | Called when editing is canceled |
+
+#### Return Values
+
+| Value | Type | Description |
+|-------|------|-------------|
+| `edit` | `(shape: Shape, options?: EditShapeOptions) => void` | Start editing a shape (no-op if shape is locked) |
+| `save` | `() => void` | Save current edits |
+| `cancel` | `() => void` | Cancel editing and restore original |
+| `isEditing` | `boolean` | Whether currently editing |
+| `editingShape` | `Shape \| null` | Shape currently being edited |
+| `editingState` | `EditingState \| null` | Full editing state object |
+
+**Note:** Locked shapes (`shape.locked === true`) cannot be edited. Calling `edit()` on a locked shape will be silently ignored (with a warning logged in development).
+
+### EditShapeOptions
+
+Options passed to the `edit()` function:
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `mode` | `'bounding-transform' \| 'vertex-transform' \| 'circle-transform' \| 'translate'` | Override the automatic mode selection |
+
+### EditShapeEvents
+
+Event constants for bus subscriptions:
+
+| Event | Value | Description |
+|-------|-------|-------------|
+| `editing` | `'shapes:editing'` | Editing has started |
+| `updated` | `'shapes:updated'` | Shape edit was saved |
+| `canceled` | `'shapes:edit-canceled'` | Editing was canceled |
+
+## Styling
+
+During editing, the layer uses the shape's existing style properties with adjustments for edit mode:
+
+| Property | Source | Notes |
+|----------|--------|-------|
+| Fill Color | `shape.feature.properties.styleProperties.fillColor` | Rendered at 20% opacity for translucent appearance |
+| Line Color | `shape.feature.properties.styleProperties.lineColor` | Full opacity |
+
+Edit handles (vertices) are displayed as:
+- White filled circles
+- White outline for visibility against various backgrounds
+
+## Examples
+
+See the Storybook stories for interactive examples:
+
+- **BasicEditing**: Edit polygon, rectangle, and line shapes
+- **CombinedDrawAndEdit**: Drawing new shapes and editing existing ones
+- **LockedShapes**: Demonstrates locked shape behavior with lock/unlock toggle
+
+## For Developers
+
+For implementation details on the edit modes (class hierarchy, HandleMatcher pattern, Shift key modifiers), see the [modes README](./modes/README.md).

@@ -9,11 +9,29 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+'use client';
 
-export const UNIT_MAP = {
-  km: 'kilometers',
-  m: 'meters',
-  nm: 'nauticalmiles',
-  mi: 'miles',
-  ft: 'feet',
+import 'client-only';
+import { createContext, useContext } from 'react';
+import type { ContextValue } from 'react-aria-components';
+import type { ListProps } from './types';
+
+const ListStylesDefaults = {
+  variant: 'cozy',
 } as const;
+
+export const ListContext = createContext<
+  ContextValue<ListProps<object>, HTMLDivElement>
+>({ variant: ListStylesDefaults.variant });
+
+export const useListItemVariant = () => {
+  const context = useContext(ListContext);
+
+  if (typeof context === 'object' && context !== null) {
+    if ('variant' in context && context.variant) {
+      return context.variant;
+    }
+  }
+
+  return ListStylesDefaults.variant;
+};
