@@ -33,6 +33,7 @@ A form input component for entering and editing date and time values. The DateFi
 - **`description`** - Helper text displayed below the input field
 - **`errorMessage`** - Error message displayed when validation fails
 - **`placeholder`** - Placeholder text shown when no value is entered
+- **`isReadOnly`** - Whether the field is readonly
 - **`isRequired`** - Whether the field is required (adds required indicator to label)
 - **`isDisabled`** - Whether the field is disabled
 - **`isInvalid`** - Whether to show the field in an invalid state
@@ -70,6 +71,9 @@ A form input component for entering and editing date and time values. The DateFi
 
 ### Date and Time
 <Canvas of={DateFieldStories.DateTime} />
+
+### Date and Time Readonly
+<Canvas of={DateFieldStories.Readonly} />
 
 ## Implementation Notes
 The `DateField` component is built on top of React Aria Components, specifically wrapping the `DateField` and `DateInput` components.
