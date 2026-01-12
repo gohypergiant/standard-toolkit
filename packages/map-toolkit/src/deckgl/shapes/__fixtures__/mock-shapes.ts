@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -23,7 +23,7 @@ export const mockShapes: Shape[] = [
     id: uuid(),
     name: 'New Circle',
     label: 'Circle',
-    shapeType: 'Circle',
+    shape: 'Circle',
     feature: {
       type: 'Feature',
       properties: {
@@ -36,9 +36,9 @@ export const mockShapes: Shape[] = [
         },
         styleProperties: {
           fillColor: [255, 255, 255, 255],
-          strokeColor: [136, 138, 143, 255],
-          strokeWidth: 2,
-          strokePattern: 'solid',
+          lineColor: [136, 138, 143, 255],
+          lineWidth: 2,
+          linePattern: 'solid',
         },
         shapeId: uuid(),
       },
@@ -156,15 +156,15 @@ export const mockShapes: Shape[] = [
     id: uuid(),
     name: 'New LineString',
     label: 'LineString',
-    shapeType: 'LineString',
+    shape: 'LineString',
     feature: {
       type: 'Feature',
       properties: {
         styleProperties: {
           fillColor: [255, 255, 255, 255],
-          strokeColor: [136, 138, 143, 255],
-          strokeWidth: 2,
-          strokePattern: 'solid',
+          lineColor: [136, 138, 143, 255],
+          lineWidth: 2,
+          linePattern: 'solid',
         },
         shapeId: uuid(),
       },
@@ -186,15 +186,15 @@ export const mockShapes: Shape[] = [
     id: uuid(),
     name: 'New Point',
     label: 'Point',
-    shapeType: 'Point',
+    shape: 'Point',
     feature: {
       type: 'Feature',
       properties: {
         styleProperties: {
           fillColor: [255, 255, 255, 255],
-          strokeColor: [136, 138, 143, 255],
-          strokeWidth: 2,
-          strokePattern: 'solid',
+          lineColor: [136, 138, 143, 255],
+          lineWidth: 2,
+          linePattern: 'solid',
         },
         shapeId: uuid(),
       },
@@ -210,15 +210,15 @@ export const mockShapes: Shape[] = [
     id: uuid(),
     name: 'New Polygon',
     label: 'Polygon',
-    shapeType: 'Polygon',
+    shape: 'Polygon',
     feature: {
       type: 'Feature',
       properties: {
         styleProperties: {
           fillColor: [255, 255, 255, 255],
-          strokeColor: [136, 138, 143, 255],
-          strokeWidth: 2,
-          strokePattern: 'solid',
+          lineColor: [136, 138, 143, 255],
+          lineWidth: 2,
+          linePattern: 'solid',
         },
         shapeId: uuid(),
       },
@@ -243,15 +243,15 @@ export const mockShapes: Shape[] = [
     id: uuid(),
     name: 'New Rectangle',
     label: 'Rectangle',
-    shapeType: 'Rectangle',
+    shape: 'Rectangle',
     feature: {
       type: 'Feature',
       properties: {
         styleProperties: {
           fillColor: [255, 255, 255, 255],
-          strokeColor: [136, 138, 143, 255],
-          strokeWidth: 2,
-          strokePattern: 'solid',
+          lineColor: [136, 138, 143, 255],
+          lineWidth: 2,
+          linePattern: 'solid',
         },
         shapeId: uuid(),
       },
@@ -275,15 +275,15 @@ export const mockShapes: Shape[] = [
     id: uuid(),
     name: 'New Ellipse',
     label: 'Ellipse',
-    shapeType: 'Ellipse',
+    shape: 'Ellipse',
     feature: {
       type: 'Feature',
       properties: {
         styleProperties: {
           fillColor: [255, 255, 255, 255],
-          strokeColor: [136, 138, 143, 255],
-          strokeWidth: 2,
-          strokePattern: 'solid',
+          lineColor: [136, 138, 143, 255],
+          lineWidth: 2,
+          linePattern: 'solid',
         },
         ellipseProperties: {
           center: [-84.53249402465865, 36.093725788749154],

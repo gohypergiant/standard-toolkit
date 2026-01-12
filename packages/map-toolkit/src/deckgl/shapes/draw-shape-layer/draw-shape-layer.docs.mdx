@@ -15,7 +15,7 @@ A deck.gl layer for interactively drawing geographic shapes on a map. Integrates
 - **Protected drawing mode**: Drawing cannot be interrupted by other map mode requests
 - **Double-click to finish**: Polygons and lines can be completed with double-click
 - **Shift-to-square**: Hold Shift while drawing rectangles to constrain to a square
-- **Custom styling**: Pass style defaults (fill/stroke colors) when initiating drawing
+- **Custom styling**: Pass style defaults (fill/line colors) when initiating drawing
 - **Event bus integration**: Emits events via `@accelint/bus` for drawing lifecycle
 - **Multi-map support**: Events include map instance ID for isolation
 - **Cursor integration**: Automatically changes cursor to crosshair during drawing
@@ -43,16 +43,16 @@ pnpm add @accelint/map-toolkit @accelint/bus @accelint/core @deck.gl/core @deck.
 
 ## Basic Usage
 
-### With useDrawShapes Hook (Recommended)
+### With useDrawShape Hook (Recommended)
 
-The easiest way to use DrawShapeLayer is with the `useDrawShapes` hook, which manages drawing state and provides callbacks:
+The easiest way to use DrawShapeLayer is with the `useDrawShape` hook, which manages drawing state and provides callbacks:
 
 ```tsx
 import { BaseMap } from '@accelint/map-toolkit/deckgl/base-map';
 import '@accelint/map-toolkit/deckgl/shapes/draw-shape-layer/fiber';
 import '@accelint/map-toolkit/deckgl/shapes/display-shape-layer/fiber';
 import { DrawShapeLayer } from '@accelint/map-toolkit/deckgl/shapes/draw-shape-layer';
-import { useDrawShapes } from '@accelint/map-toolkit/deckgl/shapes/draw-shape-layer/use-draw-shapes';
+import { useDrawShape } from '@accelint/map-toolkit/deckgl/shapes/draw-shape-layer/use-draw-shape';
 import { useMapCursor } from '@accelint/map-toolkit/map-cursor';
 import { ShapeFeatureType } from '@accelint/map-toolkit/deckgl/shapes/shared/types';
 import { uuid } from '@accelint/core';
@@ -66,7 +66,7 @@ function MapWithDrawing() {
   // Required: subscribe to cursor store to enable cursor changes
   useMapCursor(MAP_ID);
 
-  const { draw, cancel, isDrawing, activeShapeType } = useDrawShapes(MAP_ID, {
+  const { draw, cancel, isDrawing, activeShapeType } = useDrawShape(MAP_ID, {
     onCreate: (shape) => {
       setShapes((prev) => [...prev, shape]);
       console.log('Shape created:', shape);
@@ -131,15 +131,15 @@ Each shape type has specific drawing instructions:
 Pass style defaults when initiating drawing to customize the shape's appearance:
 
 ```tsx
-const { draw } = useDrawShapes(MAP_ID, { onCreate: handleCreate });
+const { draw } = useDrawShape(MAP_ID, { onCreate: handleCreate });
 
 // Draw with custom colors
 draw(ShapeFeatureType.Polygon, {
   styleDefaults: {
     fillColor: [255, 100, 100, 180],   // RGBA: red fill
-    strokeColor: [200, 0, 0, 255],      // RGBA: dark red stroke
-    strokeWidth: 2,
-    strokePattern: 'solid',
+    lineColor: [200, 0, 0, 255],        // RGBA: dark red line
+    lineWidth: 2,
+    linePattern: 'solid',
   },
 });
 ```
@@ -244,10 +244,10 @@ console.log('Current cursor:', cursor);
 | `mapId` | `UniqueId` | *required* | Map instance ID for multi-map isolation |
 | `unit` | `'km' \| 'm' \| 'nm' \| 'mi' \| 'ft'` | `'km'` | Distance unit for tooltip measurements |
 
-### useDrawShapes Hook
+### useDrawShape Hook
 
 ```tsx
-import { useDrawShapes } from '@accelint/map-toolkit/deckgl/shapes/draw-shape-layer/use-draw-shapes';
+import { useDrawShape } from '@accelint/map-toolkit/deckgl/shapes/draw-shape-layer/use-draw-shape';
 
 const {
   draw,
@@ -255,7 +255,7 @@ const {
   isDrawing,
   activeShapeType,
   drawingState,
-} = useDrawShapes(mapId, options);
+} = useDrawShape(mapId, options);
 ```
 
 #### Parameters
@@ -263,7 +263,7 @@ const {
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `mapId` | `UniqueId` | Map instance ID |
-| `options` | `UseDrawShapesOptions` | Optional callbacks |
+| `options` | `UseDrawShapeOptions` | Optional callbacks |
 
 #### Options
 
@@ -288,7 +288,7 @@ Options passed to the `draw()` function:
 
 | Option | Type | Description |
 |--------|------|-------------|
-| `styleDefaults` | `Partial<StyleProperties>` | Default colors/stroke for the shape |
+| `styleDefaults` | `Partial<StyleProperties>` | Default colors/line style for the shape |
 | `circleDefaults` | `Partial<CircleProperties>` | Circle-specific defaults |
 
 ### DrawShapeEvents
@@ -307,7 +307,7 @@ The layer uses the following default colors during drawing:
 
 | Element | Color | Description |
 |---------|-------|-------------|
-| Line/Stroke | `#888a8f` | `--outline-interactive-hover` gray |
+| Line | `#888a8f` | `--outline-interactive-hover` gray |
 | Fill | `rgba(255, 255, 255, 0.08)` | White at 8% opacity |
 | Edit Handles | `#ffffff` | White |
 

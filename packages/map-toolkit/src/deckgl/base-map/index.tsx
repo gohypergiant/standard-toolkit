@@ -22,14 +22,10 @@ import {
   useControl,
   type ViewState,
 } from 'react-map-gl/maplibre';
-import { useCameraState } from '../../camera';
+import { useMapCamera } from '../../camera';
 import { getCursor } from '../../map-cursor/store';
-import {
-  DARK_BASE_MAP_STYLE,
-  DEFAULT_VIEW_STATE,
-  PARAMETERS,
-  PICKING_RADIUS,
-} from './constants';
+import { DEFAULT_VIEW_STATE } from '../../shared/constants';
+import { DARK_BASE_MAP_STYLE, PARAMETERS, PICKING_RADIUS } from './constants';
 import { MapControls } from './controls';
 import { MapEvents } from './events';
 import { MapProvider } from './provider';
@@ -214,14 +210,11 @@ export function BaseMap({
   const container = useId();
   const mapRef = useRef<MapRef>(null);
 
-  const { cameraState, setCameraState } = useCameraState({
-    instanceId: id,
-    initialCameraState: {
-      view: defaultView,
-      zoom: initialViewState?.zoom ?? DEFAULT_VIEW_STATE.zoom,
-      latitude: initialViewState?.latitude ?? DEFAULT_VIEW_STATE.latitude,
-      longitude: initialViewState?.longitude ?? DEFAULT_VIEW_STATE.longitude,
-    },
+  const { cameraState, setCameraState } = useMapCamera(id, {
+    view: defaultView,
+    zoom: initialViewState?.zoom ?? DEFAULT_VIEW_STATE.zoom,
+    latitude: initialViewState?.latitude ?? DEFAULT_VIEW_STATE.latitude,
+    longitude: initialViewState?.longitude ?? DEFAULT_VIEW_STATE.longitude,
   });
 
   const viewState = useMemo<ViewState>(
@@ -343,7 +336,7 @@ export function BaseMap({
       {enableControlEvents && <MapControls id={id} mapRef={mapRef} />}
       <MapProvider id={id}>
         <MapLibre
-          onMove={(evt) => setCameraState(id, evt.viewState)}
+          onMove={(evt) => setCameraState(evt.viewState)}
           mapStyle={styleUrl}
           ref={mapRef}
           {...mapOptions}

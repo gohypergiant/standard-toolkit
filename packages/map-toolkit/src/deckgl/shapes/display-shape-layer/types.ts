@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -18,6 +18,14 @@ import type {
   StyledFeature as SharedStyledFeature,
 } from '../shared/types';
 import type { LabelPositionOptions } from './utils/labels';
+
+/**
+ * Label display mode for shapes
+ * - `'always'`: Show labels for all shapes
+ * - `'hover'`: Show label only for the currently hovered shape
+ * - `'never'`: Never show labels
+ */
+export type ShowLabelsMode = 'always' | 'hover' | 'never';
 
 /**
  * Re-export StyledFeature from shared types
@@ -80,11 +88,15 @@ export interface DisplayShapeLayerProps extends CompositeLayerProps {
   onShapeHover?: (shape: Shape | null) => void;
 
   /**
-   * Whether to show labels on shapes
+   * Label display mode for shapes
+   * - `'always'`: Show labels for all shapes
+   * - `'hover'`: Show label only for the currently hovered shape (requires `pickable={true}`, the default)
+   * - `'never'`: Never show labels
+   *
    * Labels use the shape's `label` property, or `name` if label is not set
-   * @default true
+   * @default 'always'
    */
-  showLabels?: boolean;
+  showLabels?: ShowLabelsMode;
 
   /**
    * Global label positioning options
@@ -113,14 +125,14 @@ export interface DisplayShapeLayerProps extends CompositeLayerProps {
   highlightColor?: [number, number, number, number];
 
   /**
-   * When true (default), applies 60% opacity multiplier to fill colors for standard semi-transparent look.
-   * This is a convenience prop for achieving the standard map shape appearance.
+   * When true (default), multiplies fill color alpha by 0.2 (reducing to 20% of original opacity)
+   * for a standard semi-transparent look.
    * When false, colors are rendered exactly as specified in styleProperties.
    * @default true
    * @example Standard semi-transparent fills
    * ```tsx
    * <DisplayShapeLayer data={shapes} applyBaseOpacity />
-   * // Shape with fillColor [98, 166, 255, 255] renders at alpha 153
+   * // Shape with fillColor [98, 166, 255, 255] renders at alpha 51 (255 × 0.2)
    * ```
    */
   applyBaseOpacity?: boolean;

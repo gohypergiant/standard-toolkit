@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -14,21 +14,18 @@
 
 import type { UniqueId } from '@accelint/core';
 import type { Feature } from 'geojson';
-import type { DistanceUnitAbbreviation } from '../../../shared/units';
+import type { DistanceUnitAbbreviation } from '@/shared/units';
 import type {
   CircleProperties,
   Shape,
   ShapeFeatureType,
   StyleProperties,
-  Subscription,
 } from '../shared/types';
-
-export type { Subscription };
 
 /**
  * State for the drawing store
  */
-export interface DrawingState {
+export type DrawingState = {
   /** Current shape type being drawn, null when not drawing */
   activeShapeType: ShapeFeatureType | null;
   /** Tentative feature being drawn (updates in real-time) */
@@ -37,32 +34,32 @@ export interface DrawingState {
   styleDefaults: Partial<StyleProperties> | null;
   /** Default circle properties (for Circle shapes) */
   circleDefaults: Partial<CircleProperties> | null;
-}
+};
 
 /**
  * Options for starting a drawing operation
  */
-export interface DrawShapeOptions {
+export type DrawShapeOptions = {
   /** Default style properties for the drawn shape */
   styleDefaults?: Partial<StyleProperties>;
   /** Circle-specific defaults (only used for Circle shapes) */
   circleDefaults?: Partial<CircleProperties>;
-}
+};
 
 /**
- * Options for the useDrawShapes hook
+ * Options for the useDrawShape hook
  */
-export interface UseDrawShapesOptions {
+export type UseDrawShapeOptions = {
   /** Callback when a shape is successfully drawn */
   onCreate?: (shape: Shape) => void;
   /** Callback when drawing is canceled */
   onCancel?: (shapeType: ShapeFeatureType) => void;
-}
+};
 
 /**
- * Return type for the useDrawShapes hook
+ * Return type for the useDrawShape hook
  */
-export interface UseDrawShapesReturn {
+export type UseDrawShapeReturn = {
   /** Current drawing state (null when not drawing) */
   drawingState: DrawingState | null;
   /** Start drawing a shape type with optional defaults */
@@ -73,19 +70,23 @@ export interface UseDrawShapesReturn {
   isDrawing: boolean;
   /** The shape type currently being drawn (null if not drawing) */
   activeShapeType: ShapeFeatureType | null;
-}
+};
 
 /**
  * Props for the DrawShapeLayer component
  */
-export interface DrawShapeLayerProps {
+export type DrawShapeLayerProps = {
   /** Layer ID (defaults to 'draw-shape-layer') */
   id?: string;
-  /** Map instance ID for multi-map isolation */
-  mapId: UniqueId;
+  /**
+   * Map instance ID for multi-map isolation.
+   * Optional when used inside a MapProvider (uses context).
+   * Required when used outside a MapProvider.
+   */
+  mapId?: UniqueId;
   /** Distance unit for tooltip measurements (defaults to 'km') */
   unit?: DistanceUnitAbbreviation;
-}
+};
 
 /**
  * Function type for the draw action

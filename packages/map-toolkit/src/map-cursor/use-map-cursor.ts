@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -12,15 +12,9 @@
 'use client';
 
 import 'client-only';
-import { useContext, useEffect, useMemo, useSyncExternalStore } from 'react';
+import { useContext, useEffect, useMemo, useRef } from 'react';
 import { MapContext } from '../deckgl/base-map/provider';
-import {
-  getOrCreateClearCursor,
-  getOrCreateRequestCursorChange,
-  getOrCreateServerSnapshot,
-  getOrCreateSnapshot,
-  getOrCreateSubscription,
-} from './store';
+import { cursorStore, useCursor } from './store';
 import type { UniqueId } from '@accelint/core';
 import type { CSSCursorType } from './types';
 
@@ -94,22 +88,21 @@ export function useMapCursor(id?: UniqueId): UseMapCursorReturn {
     );
   }
 
-  // Subscribe to store using useSyncExternalStore with fan-out pattern
-  // Third parameter provides server snapshot for SSR/RSC compatibility
-  const cursor = useSyncExternalStore(
-    getOrCreateSubscription(actualId),
-    getOrCreateSnapshot(actualId),
-    getOrCreateServerSnapshot(actualId),
-  );
+  // Use the useCursor hook which computes effective cursor with priority
+  const cursor = useCursor(actualId);
+
+  // Get actions from the store - cursorStore.actions returns stable references
+  // (cached per mapId), so we can memoize on actualId only
+  const actions = useMemo(() => cursorStore.actions(actualId), [actualId]);
 
   // Memoize the return value to prevent unnecessary re-renders
   return useMemo(
     () => ({
       cursor,
-      requestCursorChange: getOrCreateRequestCursorChange(actualId),
-      clearCursor: getOrCreateClearCursor(actualId),
+      requestCursorChange: actions.requestCursorChange,
+      clearCursor: actions.clearCursor,
     }),
-    [cursor, actualId],
+    [cursor, actions],
   );
 }
 
@@ -119,7 +112,10 @@ export function useMapCursor(id?: UniqueId): UseMapCursorReturn {
  * This hook automatically requests a cursor when mounted and clears it when unmounted.
  * Useful for components that need to consistently show a specific cursor.
  *
- * @param cursor - The cursor to request
+ * NOTE: This hook does NOT re-render when cursor state changes. If you need to read
+ * the current cursor value, use `useMapCursor` instead.
+ *
+ * @param cursorType - The cursor to request
  * @param owner - The owner identifier
  * @param id - Optional map instance ID
  *
@@ -133,17 +129,62 @@ export function useMapCursor(id?: UniqueId): UseMapCursorReturn {
  * ```
  */
 export function useMapCursorEffect(
-  cursor: CSSCursorType,
+  cursorType: CSSCursorType,
   owner: string,
   id?: UniqueId,
 ): void {
-  const { requestCursorChange, clearCursor } = useMapCursor(id);
+  const contextId = useContext(MapContext);
+  const actualId = id ?? contextId;
 
+  if (!actualId) {
+    throw new Error(
+      'useMapCursorEffect requires either an id parameter or to be used within a MapProvider',
+    );
+  }
+
+  // Store values in refs for stable cleanup function access
+  const cursorRef = useRef(cursorType);
+  const ownerRef = useRef(owner);
+  const idRef = useRef(actualId);
+
+  // Update refs on each render
+  cursorRef.current = cursorType;
+  ownerRef.current = owner;
+  idRef.current = actualId;
+
+  // Subscribe to store (to ensure bus listeners are set up) on mount only
   useEffect(() => {
-    requestCursorChange(cursor, owner);
+    const mapId = idRef.current;
+
+    // Subscribe to store to ensure bus listeners are set up
+    // The subscription callback is a no-op since we don't want to re-render
+    const unsubscribe = cursorStore.subscribe(mapId)(() => {
+      // No-op: we don't want cursor state changes to trigger re-renders
+    });
 
     return () => {
-      clearCursor(owner);
+      // Unsubscribe first to prevent re-render loops
+      unsubscribe();
+
+      // IMPORTANT: Defer cursor clear using queueMicrotask to avoid the React error:
+      // "Cannot update a component while rendering a different component"
+      //
+      // Effect cleanup runs during React's commit phase. If clearCursor() triggers
+      // a state update synchronously (via store.set() -> notify subscribers), it can
+      // cause React to attempt re-rendering while still committing the current tree.
+      //
+      // queueMicrotask schedules the cleanup to run after the current commit phase
+      // completes, allowing React to finish its work before the state update occurs.
+      queueMicrotask(() => {
+        const cleanupActions = cursorStore.actions(idRef.current);
+        cleanupActions.clearCursor(ownerRef.current);
+      });
     };
-  }, [cursor, owner, requestCursorChange, clearCursor]);
+  }, []);
+
+  // Request cursor when cursorType or owner changes
+  useEffect(() => {
+    const actions = cursorStore.actions(actualId);
+    actions.requestCursorChange(cursorType, owner);
+  }, [actualId, cursorType, owner]);
 }

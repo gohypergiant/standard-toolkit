@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -14,19 +14,13 @@
 
 import 'client-only';
 import { useBus } from '@accelint/bus/react';
-import { useContext, useMemo, useSyncExternalStore } from 'react';
+import { useContext, useMemo } from 'react';
 import { MapContext } from '../../base-map/provider';
 import { DrawShapeEvents } from './events';
-import {
-  getOrCreateCancel,
-  getOrCreateDraw,
-  getOrCreateServerSnapshot,
-  getOrCreateSnapshot,
-  getOrCreateSubscription,
-} from './store';
+import { drawStore } from './store';
 import type { UniqueId } from '@accelint/core';
 import type { DrawShapeEvent } from './events';
-import type { UseDrawShapesOptions, UseDrawShapesReturn } from './types';
+import type { UseDrawShapeOptions, UseDrawShapeReturn } from './types';
 
 /**
  * Hook to access the shape drawing state and actions.
@@ -44,7 +38,7 @@ import type { UseDrawShapesOptions, UseDrawShapesReturn } from './types';
  * ```tsx
  * // Inside MapProvider (within BaseMap children) - uses context
  * function DrawingToolbar() {
- *   const { draw, cancel, isDrawing, activeShapeType } = useDrawShapes(undefined, {
+ *   const { draw, cancel, isDrawing, activeShapeType } = useDrawShape(undefined, {
  *     onCreate: (shape) => {
  *       console.log('Shape created:', shape);
  *       setShapes(prev => [...prev, shape]);
@@ -76,7 +70,7 @@ import type { UseDrawShapesOptions, UseDrawShapesReturn } from './types';
  * ```tsx
  * // Outside MapProvider - pass mapId directly
  * function ExternalDrawingControl({ mapId }: { mapId: UniqueId }) {
- *   const { draw, isDrawing } = useDrawShapes(mapId);
+ *   const { draw, isDrawing } = useDrawShape(mapId);
  *
  *   return (
  *     <button
@@ -89,28 +83,23 @@ import type { UseDrawShapesOptions, UseDrawShapesReturn } from './types';
  * }
  * ```
  */
-export function useDrawShapes(
+export function useDrawShape(
   mapId?: UniqueId,
-  options?: UseDrawShapesOptions,
-): UseDrawShapesReturn {
+  options?: UseDrawShapeOptions,
+): UseDrawShapeReturn {
   const contextId = useContext(MapContext);
   const actualId = mapId ?? contextId;
 
   if (!actualId) {
     throw new Error(
-      'useDrawShapes requires either a mapId parameter or to be used within a MapProvider',
+      'useDrawShape requires either a mapId parameter or to be used within a MapProvider',
     );
   }
 
   const { onCreate, onCancel } = options ?? {};
 
-  // Subscribe to store using useSyncExternalStore with fan-out pattern
-  // Third parameter provides server snapshot for SSR/RSC compatibility
-  const drawingState = useSyncExternalStore(
-    getOrCreateSubscription(actualId),
-    getOrCreateSnapshot(actualId),
-    getOrCreateServerSnapshot(actualId),
-  );
+  // Use the v2 store API directly
+  const { state: drawingState, draw, cancel } = drawStore.use(actualId);
 
   // Listen for completion/cancellation events to trigger callbacks
   // useOn handles cleanup automatically and uses useEffectEvent for stable callbacks
@@ -132,11 +121,11 @@ export function useDrawShapes(
   return useMemo(
     () => ({
       drawingState,
-      draw: getOrCreateDraw(actualId),
-      cancel: getOrCreateCancel(actualId),
+      draw,
+      cancel,
       isDrawing: !!drawingState?.activeShapeType,
       activeShapeType: drawingState?.activeShapeType ?? null,
     }),
-    [drawingState, actualId],
+    [drawingState, draw, cancel],
   );
 }

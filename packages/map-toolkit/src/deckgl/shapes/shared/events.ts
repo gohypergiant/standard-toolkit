@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -68,40 +68,3 @@ export type ShapeEvent =
   | ShapeSelectedEvent
   | ShapeDeselectedEvent
   | ShapeHoveredEvent;
-
-/**
- * Aliases for backward compatibility
- */
-export const SHAPE_EVENTS = ShapeEvents;
-export type ShapeEventPayload = ShapeEvent;
-export type ShapeEventHandler<T extends ShapeEventType = ShapeEventType> = (
-  event: Extract<ShapeEvent, { type: T }>,
-) => void;
-
-/**
- * Shape events namespace for bus integration
- */
-export const ShapeEventsNamespace = 'shapes';
-
-/**
- * Note: These utility functions are deprecated in favor of direct bus usage.
- * Use `useEmit` and `useOn` from '@accelint/bus/react' in React components instead.
- *
- * @example
- * ```tsx
- * import { useEmit, useOn } from '@accelint/bus/react';
- * import { ShapeEvents } from '@accelint/map-toolkit/deckgl/shapes';
- *
- * function MyComponent() {
- *   const emit = useEmit();
- *
- *   // Emit shape selected event
- *   emit(ShapeEvents.selected, { shapeId: 'some-id' });
- *
- *   // Listen to shape events
- *   useOn(ShapeEvents.selected, (event) => {
- *     console.log('Shape selected:', event.data.shapeId);
- *   });
- * }
- * ```
- */

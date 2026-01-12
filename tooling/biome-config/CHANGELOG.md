@@ -1,5 +1,11 @@
 # @accelint/biome-config
 
+## 1.1.0
+
+### Minor Changes
+
+- 37b79c7: Add rule for constants that allow constant and camel case
+
 ## 1.0.2
 
 ### Patch Changes

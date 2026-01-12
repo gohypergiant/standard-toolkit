@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -33,7 +33,7 @@ describe('convertFeatureToShape', () => {
         ShapeFeatureType.Point,
       );
 
-      expect(result.shapeType).toBe(ShapeFeatureType.Point);
+      expect(result.shape).toBe(ShapeFeatureType.Point);
       // Name includes timestamp, so just check it starts with "New Point"
       expect(result.name).toMatch(/^New Point/);
       expect(result.id).toBeDefined();
@@ -55,7 +55,7 @@ describe('convertFeatureToShape', () => {
 
       const customStyles = {
         fillColor: [255, 0, 0, 255] as [number, number, number, number],
-        strokeColor: [0, 0, 255, 255] as [number, number, number, number],
+        lineColor: [0, 0, 255, 255] as [number, number, number, number],
       };
 
       const result = convertFeatureToShape(
@@ -67,8 +67,8 @@ describe('convertFeatureToShape', () => {
       expect(result.feature.properties.styleProperties.fillColor).toEqual(
         customStyles.fillColor,
       );
-      expect(result.feature.properties.styleProperties.strokeColor).toEqual(
-        customStyles.strokeColor,
+      expect(result.feature.properties.styleProperties.lineColor).toEqual(
+        customStyles.lineColor,
       );
     });
   });
@@ -93,7 +93,7 @@ describe('convertFeatureToShape', () => {
         ShapeFeatureType.LineString,
       );
 
-      expect(result.shapeType).toBe(ShapeFeatureType.LineString);
+      expect(result.shape).toBe(ShapeFeatureType.LineString);
       expect(result.name).toMatch(/^New LineString/);
       expect(result.feature.geometry).toEqual(lineFeature.geometry);
     });
@@ -123,7 +123,7 @@ describe('convertFeatureToShape', () => {
         ShapeFeatureType.Polygon,
       );
 
-      expect(result.shapeType).toBe(ShapeFeatureType.Polygon);
+      expect(result.shape).toBe(ShapeFeatureType.Polygon);
       expect(result.name).toMatch(/^New Polygon/);
       expect(result.feature.geometry).toEqual(polygonFeature.geometry);
     });
@@ -153,7 +153,7 @@ describe('convertFeatureToShape', () => {
         ShapeFeatureType.Rectangle,
       );
 
-      expect(result.shapeType).toBe(ShapeFeatureType.Rectangle);
+      expect(result.shape).toBe(ShapeFeatureType.Rectangle);
       expect(result.name).toMatch(/^New Rectangle/);
     });
   });
@@ -187,7 +187,7 @@ describe('convertFeatureToShape', () => {
         ShapeFeatureType.Circle,
       );
 
-      expect(result.shapeType).toBe(ShapeFeatureType.Circle);
+      expect(result.shape).toBe(ShapeFeatureType.Circle);
       expect(result.name).toMatch(/^New Circle/);
       expect(result.feature.properties.circleProperties).toBeDefined();
       expect(result.feature.properties.circleProperties?.center).toBeDefined();
@@ -299,7 +299,7 @@ describe('convertFeatureToShape', () => {
       };
 
       const partialStyles = {
-        strokeWidth: 4 as const,
+        lineWidth: 4 as const,
       };
 
       const result = convertFeatureToShape(
@@ -308,7 +308,7 @@ describe('convertFeatureToShape', () => {
         partialStyles,
       );
 
-      expect(result.feature.properties.styleProperties.strokeWidth).toBe(4);
+      expect(result.feature.properties.styleProperties.lineWidth).toBe(4);
       // Other properties should still have defaults
       expect(result.feature.properties.styleProperties.fillColor).toEqual(
         DEFAULT_STYLE_PROPERTIES.fillColor,

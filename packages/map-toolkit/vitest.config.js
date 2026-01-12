@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import path from 'node:path';
 import baseConfig from '@accelint/vitest-config/dom';
 import { defineConfig, mergeConfig } from 'vitest/config';
 
@@ -17,6 +18,11 @@ export default mergeConfig(
   baseConfig,
   defineConfig({
     plugins: [],
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, './src'),
+      },
+    },
     test: {
       globals: true,
       setupFiles: './src/test/setup.ts',

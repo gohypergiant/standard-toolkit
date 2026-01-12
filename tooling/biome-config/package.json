@@ -1,7 +1,7 @@
 {
   "name": "@accelint/biome-config",
   "description": "The shared Biome configuration used across Accelint projects.",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "devDependencies": {},

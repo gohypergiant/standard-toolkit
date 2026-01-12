@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -18,7 +18,7 @@ import { SelectField } from '@accelint/design-toolkit/components/select-field';
 import { Slider } from '@accelint/design-toolkit/components/slider';
 import { BaseMap } from '../deckgl/base-map';
 import { CameraEventTypes } from './events';
-import { useCameraState } from './use-camera-state';
+import { useMapCamera } from './store';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type {
   CameraResetEvent,
@@ -51,7 +51,7 @@ function CameraToolbar() {
   );
   const resetCamera = useEmit<CameraResetEvent>(CameraEventTypes.reset);
   const setView = useEmit<CameraSetViewEvent>(CameraEventTypes.setView);
-  const { cameraState } = useCameraState({ instanceId: CAMERA_STORY_ID });
+  const { cameraState } = useMapCamera(CAMERA_STORY_ID);
   return (
     <div className='absolute top-l left-l flex w-[256px] flex-col gap-xl rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
       <p className='font-bold text-header-l'>Camera controls</p>

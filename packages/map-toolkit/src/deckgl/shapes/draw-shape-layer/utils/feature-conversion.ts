@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -13,26 +13,34 @@
 'use client';
 
 import { uuid } from '@accelint/core';
+import { getLogger } from '@accelint/logger';
 import { centroid, distance } from '@turf/turf';
-import { DEFAULT_DISTANCE_UNITS } from '../../../../shared/units';
+import { DEFAULT_DISTANCE_UNITS } from '@/shared/units';
 import { DEFAULT_STYLE_PROPERTIES } from '../../shared/constants';
-import { ShapeFeatureType as ShapeFeatureTypeEnum } from '../../shared/types';
-import type { Feature, Polygon, Position } from 'geojson';
-import type {
-  CircleProperties,
-  EllipseProperties,
-  Shape,
-  ShapeFeature,
-  ShapeFeatureType,
-  StyleProperties,
+import {
+  type CircleProperties,
+  type EllipseProperties,
+  type Shape,
+  type ShapeFeature,
+  type ShapeFeatureType,
+  ShapeFeatureType as ShapeFeatureTypeEnum,
+  type StyleProperties,
 } from '../../shared/types';
+import type { Feature, Polygon, Position } from 'geojson';
+
+const logger = getLogger({
+  enabled: process.env.NODE_ENV !== 'production',
+  level: 'warn',
+  prefix: '[FeatureConversion]',
+  pretty: true,
+});
 
 /**
  * Generate a default name for a shape based on its type
  */
-function generateShapeName(shapeType: ShapeFeatureType): string {
+function generateShapeName(shape: ShapeFeatureType): string {
   const timestamp = new Date().toLocaleTimeString();
-  return `New ${shapeType} (${timestamp})`;
+  return `New ${shape} (${timestamp})`;
 }
 
 /**
@@ -46,6 +54,9 @@ function computeCircleProperties(
 ): CircleProperties | undefined {
   const coordinates = geometry.coordinates[0];
   if (!coordinates || coordinates.length < 3) {
+    logger.warn(
+      'Cannot compute circle properties: polygon has insufficient coordinates',
+    );
     return undefined;
   }
 
@@ -56,11 +67,38 @@ function computeCircleProperties(
   });
   const center = centerFeature.geometry.coordinates as [number, number];
 
+  // Validate center coordinates are valid numbers
+  const isCenterValid =
+    Number.isFinite(center[0]) && Number.isFinite(center[1]);
+  if (!isCenterValid) {
+    logger.warn('Cannot compute circle properties: invalid center coordinates');
+    return undefined;
+  }
+
   // Calculate radius as distance from center to first point
   const firstPoint = coordinates[0] as Position;
+
+  // Validate first point coordinates
+  const isFirstPointValid =
+    firstPoint &&
+    Number.isFinite(firstPoint[0]) &&
+    Number.isFinite(firstPoint[1]);
+  if (!isFirstPointValid) {
+    logger.warn(
+      'Cannot compute circle properties: invalid edge point coordinates',
+    );
+    return undefined;
+  }
+
   const radius = distance(center, firstPoint, {
     units: DEFAULT_DISTANCE_UNITS,
   });
+
+  // Validate computed radius
+  if (!Number.isFinite(radius) || radius <= 0) {
+    logger.warn('Cannot compute circle properties: invalid radius computed');
+    return undefined;
+  }
 
   return {
     center,
@@ -96,6 +134,9 @@ function computeEllipseProperties(
   )?.editProperties;
 
   if (!editProps || editProps.shape !== 'Ellipse') {
+    logger.warn(
+      'Cannot compute ellipse properties: feature missing editProperties or not an ellipse',
+    );
     return undefined;
   }
 
@@ -125,17 +166,17 @@ function computeEllipseProperties(
  * - `locked: false` (newly created shapes are always unlocked)
  *
  * @param feature - The raw GeoJSON feature from the editable layer
- * @param shapeType - The type of shape being created
+ * @param shape - The type of shape being created
  * @param styleDefaults - Optional style overrides
  * @returns A complete Shape ready for use
  */
 export function convertFeatureToShape(
   feature: Feature,
-  shapeType: ShapeFeatureType,
+  shape: ShapeFeatureType,
   styleDefaults?: Partial<StyleProperties> | null,
 ): Shape {
   const id = uuid();
-  const name = generateShapeName(shapeType);
+  const name = generateShapeName(shape);
 
   // Merge default styles with any provided defaults
   const styleProperties: StyleProperties = {
@@ -146,7 +187,7 @@ export function convertFeatureToShape(
   // Compute circle properties if this is a circle
   let circleProperties: CircleProperties | undefined;
   if (
-    shapeType === ShapeFeatureTypeEnum.Circle &&
+    shape === ShapeFeatureTypeEnum.Circle &&
     feature.geometry.type === 'Polygon'
   ) {
     circleProperties = computeCircleProperties(feature.geometry);
@@ -155,7 +196,7 @@ export function convertFeatureToShape(
   // Compute ellipse properties if this is an ellipse
   let ellipseProperties: EllipseProperties | undefined;
   if (
-    shapeType === ShapeFeatureTypeEnum.Ellipse &&
+    shape === ShapeFeatureTypeEnum.Ellipse &&
     feature.geometry.type === 'Polygon'
   ) {
     ellipseProperties = computeEllipseProperties(feature);
@@ -174,12 +215,12 @@ export function convertFeatureToShape(
   };
 
   // Type assertion needed because TypeScript can't narrow the return type
-  // based on the runtime shapeType value. The constructed object satisfies
-  // the Shape union at runtime based on which shapeType was passed in.
+  // based on the runtime shape value. The constructed object satisfies
+  // the Shape union at runtime based on which shape was passed in.
   return {
     id,
     name,
-    shapeType,
+    shape,
     feature: styledFeature,
     lastUpdated: Date.now(),
     locked: false,
