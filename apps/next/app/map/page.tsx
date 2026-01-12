@@ -10,20 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
-import type { NextConfig } from 'next';
+import { MapExample } from '~/features/map';
 
-const nextConfig: NextConfig = {
-  poweredByHeader: false,
-  reactStrictMode: false, // TODO: deck.gl/maplibre has issues with strict mode double-mounting
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  experimental: {
-    // optimizePackageImports: ['@accelint/*'],
-    // ppr: false, // enable once we are on next 16
-    // reactCompiler: false, // enable once we are on next 16
-    // cssChunking: 'strict', // triage side effects on css modules
-  },
-};
+// biome-ignore lint/style/useNamingConvention: nextjs convention
+export const experimental_ppr = true;
 
-export default nextConfig;
+export default function Page() {
+  return <MapExample />;
+}

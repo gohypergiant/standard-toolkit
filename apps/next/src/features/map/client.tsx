@@ -10,20 +10,20 @@
  * governing permissions and limitations under the License.
  */
 
-import type { NextConfig } from 'next';
+'use client';
+import 'client-only';
+import { uuid } from '@accelint/core';
+import { BaseMap } from '@accelint/map-toolkit/deckgl';
+import { DEFAULT_VIEW_STATE } from '@accelint/map-toolkit/shared/constants';
 
-const nextConfig: NextConfig = {
-  poweredByHeader: false,
-  reactStrictMode: false, // TODO: deck.gl/maplibre has issues with strict mode double-mounting
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  experimental: {
-    // optimizePackageImports: ['@accelint/*'],
-    // ppr: false, // enable once we are on next 16
-    // reactCompiler: false, // enable once we are on next 16
-    // cssChunking: 'strict', // triage side effects on css modules
-  },
-};
+const MAP_ID = uuid();
 
-export default nextConfig;
+export function MapClient() {
+  return (
+    <BaseMap
+      className='h-dvh w-dvw deckgl-map'
+      id={MAP_ID}
+      initialViewState={DEFAULT_VIEW_STATE}
+    />
+  );
+}

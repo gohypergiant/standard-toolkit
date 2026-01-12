@@ -22,14 +22,15 @@ const LINKS = [
   { path: '/button', label: 'Button' },
   { path: '/dialog/client', label: 'Dialog' },
   { path: '/drawer/client', label: 'Drawer' },
+  { path: '/map', label: 'Map' },
   { path: '/notice', label: 'Notice' },
   { path: '/tooltip', label: 'Tooltip' },
 ];
 
 export function Nav() {
   return (
-    <div className='flex flex-row gap-s fixed top-0 left-0 right-0 bg-surface-default p-xs shadow-elevation-overlay'>
-      {LINKS.map((link, k) => {
+    <div className='flex flex-row items-center gap-s pl-s fixed top-0 left-0 right-0 h-xxl bg-surface-default shadow-elevation-overlay text-body-l'>
+      {LINKS.map((link) => {
         return (
           <Link key={link.path} href={link.path}>
             {link.label}
