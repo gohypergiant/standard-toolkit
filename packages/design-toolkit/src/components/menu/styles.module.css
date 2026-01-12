@@ -14,7 +14,7 @@
 
 @layer components.l1 {
   .menu {
-    @apply rounded-medium bg-surface-overlay shadow-elevation-overlay outline-static overflow-x-clip overflow-y-auto outline;
+    @apply rounded-medium bg-surface-overlay shadow-elevation-overlay outline-static overflow-x-clip overflow-y-auto p-px outline;
   }
 
   .item {
@@ -27,12 +27,66 @@
       content: '';
     }
 
+    &:after {
+      content: '';
+      @apply pointer-events-none absolute inset-0 -z-1 bg-inherit;
+    }
+
     &.cozy {
       @apply pt-s pb-s;
     }
 
     &.compact {
       @apply pt-xs pb-xs;
+    }
+
+    /* Extend ::after to cover separator on interactive states */
+    @variant focus-visible {
+      @apply z-1;
+
+      &:not(:first-child):after {
+        @apply -top-px;
+      }
+
+      &:not(:last-child):after {
+        @apply -bottom-px;
+      }
+    }
+
+    @variant hover {
+      @apply z-1;
+
+      &:not(:first-child):after {
+        @apply -top-px;
+      }
+
+      &:not(:last-child):after {
+        @apply -bottom-px;
+      }
+    }
+
+    @variant open {
+      @apply z-1;
+
+      &:not(:first-child):after {
+        @apply -top-px;
+      }
+
+      &:not(:last-child):after {
+        @apply -bottom-px;
+      }
+    }
+
+    @variant pressed {
+      @apply z-1;
+
+      &:not(:first-child):after {
+        @apply -top-px;
+      }
+
+      &:not(:last-child):after {
+        @apply -bottom-px;
+      }
     }
 
     @variant color-info {
@@ -55,32 +109,16 @@
       @variant selected {
         @apply bg-accent-primary-muted;
 
-        &:before {
-          @apply bg-accent-primary-bold;
-        }
-
         @variant hover {
           @apply fg-a11y-on-accent bg-accent-primary-bold;
-
-          &:before {
-            @apply bg-(--outline-accent-primary-hover);
-          }
         }
 
         @variant focus-visible {
           @apply fg-a11y-on-accent bg-accent-primary-bold;
-
-          &:before {
-            @apply bg-(--outline-accent-primary-hover);
-          }
         }
 
         @variant pressed {
           @apply fg-accent-primary-bold bg-accent-primary-pressed;
-
-          &:before {
-            @apply bg-accent-primary-pressed;
-          }
         }
       }
     }
@@ -107,31 +145,16 @@
       @variant selected {
         @apply fg-primary-bold bg-serious-muted;
 
-        &:before {
-          @apply bg-serious-bold;
-        }
-
         @variant hover {
           @apply fg-a11y-on-accent bg-serious-bold;
-          &:before {
-            @apply bg-(--outline-serious-hover);
-          }
         }
 
         @variant focus-visible {
           @apply fg-a11y-on-accent bg-serious-bold;
-
-          &:before {
-            @apply bg-(--outline-serious-hover);
-          }
         }
 
         @variant pressed {
           @apply fg-serious-bold bg-serious-pressed;
-
-          &:before {
-            @apply bg-(--outline-serious-pressed);
-          }
         }
       }
     }
@@ -158,10 +181,6 @@
       @variant selected {
         @apply fg-primary-bold bg-critical-muted;
 
-        &:before {
-          @apply bg-(--outline-critical-bold);
-        }
-
         @variant hover {
           @apply bg-critical-bold fg-a11y-on-accent;
         }
@@ -172,10 +191,6 @@
 
         @variant pressed {
           @apply fg-critical-bold bg-critical-pressed;
-
-          &:before {
-            @apply bg-(--outline-critical-pressed);
-          }
         }
       }
     }
@@ -185,10 +200,6 @@
 
       @variant selected {
         @apply bg-interactive-disabled;
-
-        &:before {
-          @apply bg-(--outline-interactive);
-        }
       }
     }
   }
@@ -306,11 +317,16 @@
   }
 
   .header {
-    @apply fg-primary-muted px-s py-xs text-header-xs;
+    @apply fg-primary-muted px-xs py-s text-header-xs;
   }
 
   .separator {
-    @apply outline-static mx-m my-xs outline;
+    /*
+     * Use border-top instead of background-color + height for the 1px line.
+     * Border rendering is more consistent across platforms (Linux/Windows/Mac)
+     * and display scaling settings than background-color with sub-pixel heights.
+     */
+    @apply h-0 border-t border-(--outline-static);
   }
 
   .hotkey {
