@@ -14,12 +14,11 @@ import type { CleanupFunction } from '@/types/cleanup-function';
 import type { HotkeyConfig } from '@/types/hotkey-config';
 import type { HotkeyId } from '@/types/hotkey-id';
 
-export type HotkeyHook = {
-  /**
-   * A React hook that manages a hotkey. When mounted, it will activate the hotkey. When all instances are unmounted, it
-   * will deactivate the hotkey.
-   */
-  (): void;
+/**
+ * A framework-agnostic hotkey manager that can be used to activate and deactivate hotkeys
+ * outside of React or any other framework.
+ */
+export type HotkeyManager = {
   /**
    * The id of the hotkey
    */
@@ -29,15 +28,21 @@ export type HotkeyHook = {
    */
   config: HotkeyConfig;
   /**
-   * Force bind the hotkey. Ignores the hooks mounted state.
+   * Bind the hotkey with ref-counting. Multiple binds require multiple cleanups to fully unbind.
+   * Returns a cleanup function to unbind this specific activation.
+   */
+  bind(): CleanupFunction;
+  /**
+   * Force bind the hotkey. Ignores normal activation tracking.
+   * Any cleanup or forceUnbind() will immediately unbind.
    */
   forceBind(): CleanupFunction;
   /**
-   * Force unbind the hotkey. Ignores the hooks mounted state.
+   * Force unbind the hotkey, ignoring normal activation tracking.
    */
   forceUnbind(): void;
   /**
-   * Whether the hotkey is currently bound
+   * Whether the hotkey is currently bound (has active activations)
    */
-  isBound: boolean;
+  readonly isBound: boolean;
 };

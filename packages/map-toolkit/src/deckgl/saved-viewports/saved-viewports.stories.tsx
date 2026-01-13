@@ -20,6 +20,7 @@ import {
   keyToId,
   keyToString,
 } from '@accelint/hotkey-manager';
+import { useHotkey } from '@accelint/hotkey-manager/react';
 import { useCallback, useEffect, useState } from 'react';
 import { CameraEventTypes } from '../../camera/events';
 import { BaseMap as BaseMapComponent } from '../base-map';
@@ -154,7 +155,7 @@ const DIGIT_KEYS: KeyCombination[] = [
 
 type NonEmptyArray<T> = [T, ...T[]];
 
-const useSavedViewportHotkey = createSavedViewport({
+const savedViewportHotkey = createSavedViewport({
   threshold: 1000,
   getCurrentViewport,
   setCurrentViewport,
@@ -177,7 +178,7 @@ const getSlotIndex = (e: KeyboardEvent) => {
 };
 
 function ViewportsToolbar() {
-  useSavedViewportHotkey();
+  useHotkey(savedViewportHotkey);
   const [savedViewports, setSavedViewports] = useState<
     Record<string, MapViewState>
   >({});
