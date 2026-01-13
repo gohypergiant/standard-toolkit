@@ -31,7 +31,6 @@ import type { DrawerMenuProps } from './types';
 type DrawerStoryArgs = ComponentProps<typeof Drawer> &
   Pick<DrawerMenuProps, 'position'> & {
     toggle?: boolean;
-    defaultOpen?: boolean;
   };
 
 const meta: Meta<DrawerStoryArgs> = {
@@ -42,7 +41,6 @@ const meta: Meta<DrawerStoryArgs> = {
     size: 'medium',
     position: 'center',
     toggle: false,
-    defaultOpen: true,
   },
   argTypes: {
     size: {
@@ -77,13 +75,6 @@ const meta: Meta<DrawerStoryArgs> = {
         defaultValue: { summary: 'false' },
       },
     },
-    defaultOpen: {
-      control: 'boolean',
-      description: 'When true, the drawer starts with the first view open',
-      table: {
-        defaultValue: { summary: 'true' },
-      },
-    },
   },
   parameters: {
     layout: 'fullscreen',
@@ -101,7 +92,7 @@ const ids = {
 };
 
 export const StaticHeaderFooter: Story = {
-  render: ({ placement, size, toggle, position, defaultOpen }) => {
+  render: ({ placement, size, toggle, position }) => {
     return (
       <div className='fg-primary-bold h-screen bg-surface-muted'>
         <DrawerLayout>
@@ -109,7 +100,7 @@ export const StaticHeaderFooter: Story = {
             id={ids.drawer}
             placement={placement}
             size={size}
-            defaultView={defaultOpen ? ids.a : undefined}
+            defaultView={ids.a}
           >
             <DrawerMenu position={position}>
               <DrawerMenuItem toggle={toggle} for={ids.a} textValue='Menu A'>
@@ -142,7 +133,7 @@ export const StaticHeaderFooter: Story = {
 };
 
 export const DynamicHeaderFooter: Story = {
-  render: ({ placement, size, position, toggle, defaultOpen }) => {
+  render: ({ placement, size, position, toggle }) => {
     return (
       <div className='fg-primary-bold h-screen bg-surface-muted'>
         <DrawerLayout>
@@ -150,7 +141,7 @@ export const DynamicHeaderFooter: Story = {
             id={ids.drawer}
             placement={placement}
             size={size}
-            defaultView={defaultOpen ? ids.a : undefined}
+            defaultView={ids.a}
           >
             <DrawerMenu position={position}>
               <DrawerMenuItem toggle={toggle} for={ids.a} textValue='Menu A'>
@@ -194,10 +185,7 @@ export const DynamicHeaderFooter: Story = {
 };
 
 export const OpenCloseTrigger: Story = {
-  args: {
-    defaultOpen: false,
-  },
-  render: ({ placement, size, position, toggle, defaultOpen }) => {
+  render: ({ placement, size, position, toggle }) => {
     return (
       <div className='fg-primary-bold h-screen'>
         <DrawerLayout>
@@ -212,7 +200,7 @@ export const OpenCloseTrigger: Story = {
             id={ids.drawer}
             placement={placement}
             size={size}
-            defaultView={defaultOpen ? ids.a : undefined}
+            defaultView={undefined}
           >
             <DrawerMenu position={position}>
               <DrawerMenuItem toggle={toggle} for={ids.a} textValue='Menu A'>
@@ -237,7 +225,7 @@ export const OpenCloseTrigger: Story = {
 };
 
 export const SimpleStack: Story = {
-  render: ({ placement, size, position, toggle, defaultOpen }) => {
+  render: ({ placement, size, position, toggle }) => {
     return (
       <div className='fg-primary-bold h-screen bg-surface-muted'>
         <DrawerLayout>
@@ -245,7 +233,7 @@ export const SimpleStack: Story = {
             id={ids.drawer}
             placement={placement}
             size={size}
-            defaultView={defaultOpen ? ids.a : undefined}
+            defaultView={ids.a}
           >
             <DrawerMenu position={position}>
               <DrawerMenuItem toggle={toggle} for={ids.a} textValue='Menu A'>

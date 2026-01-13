@@ -34,10 +34,6 @@ import type { DrawerLayoutProps, DrawerMenuProps, DrawerProps } from './types';
 type DrawerLayoutStoryArgs = DrawerLayoutProps &
   Pick<DrawerProps, 'size'> & {
     toggle?: boolean;
-    topPosition?: DrawerMenuProps['position'];
-    bottomPosition?: DrawerMenuProps['position'];
-    leftPosition?: DrawerMenuProps['position'];
-    rightPosition?: DrawerMenuProps['position'];
   };
 
 const ids = {
@@ -86,10 +82,6 @@ const meta: Meta<DrawerLayoutStoryArgs> = {
     extend: 'left right',
     size: 'medium',
     toggle: true,
-    topPosition: 'center',
-    bottomPosition: 'center',
-    leftPosition: 'center',
-    rightPosition: 'center',
   },
   argTypes: {
     extend: {
@@ -126,42 +118,6 @@ const meta: Meta<DrawerLayoutStoryArgs> = {
         defaultValue: { summary: 'true' },
       },
     },
-    topPosition: {
-      control: 'select',
-      options: ['start', 'center', 'end'],
-      description:
-        'The position of the menu items within the top drawer menu bar',
-      table: {
-        defaultValue: { summary: 'center' },
-      },
-    },
-    bottomPosition: {
-      control: 'select',
-      options: ['start', 'center', 'end'],
-      description:
-        'The position of the menu items within the bottom drawer menu bar',
-      table: {
-        defaultValue: { summary: 'center' },
-      },
-    },
-    leftPosition: {
-      control: 'select',
-      options: ['start', 'center', 'end'],
-      description:
-        'The position of the menu items within the left drawer menu bar',
-      table: {
-        defaultValue: { summary: 'center' },
-      },
-    },
-    rightPosition: {
-      control: 'select',
-      options: ['start', 'center', 'end'],
-      description:
-        'The position of the menu items within the right drawer menu bar',
-      table: {
-        defaultValue: { summary: 'center' },
-      },
-    },
   },
   parameters: {
     layout: 'fullscreen',
@@ -172,16 +128,7 @@ export default meta;
 type Story = StoryObj<DrawerLayoutStoryArgs>;
 
 export const Default: Story = {
-  render: ({
-    extend,
-    push,
-    size,
-    toggle,
-    topPosition,
-    bottomPosition,
-    leftPosition,
-    rightPosition,
-  }) => (
+  render: ({ extend, push, size, toggle }) => (
     <div className='h-screen w-full'>
       <DrawerLayout
         extend={extend}
@@ -218,7 +165,7 @@ export const Default: Story = {
           placement='top'
           size={size}
         >
-          <DrawerMenu position={topPosition}>
+          <DrawerMenu position='center'>
             <DrawerMenuItem
               toggle={toggle}
               for={ids.top.views.a}
@@ -267,7 +214,7 @@ export const Default: Story = {
           placement='bottom'
           size={size}
         >
-          <DrawerMenu position={bottomPosition}>
+          <DrawerMenu position='center'>
             <DrawerMenuItem
               toggle={toggle}
               for={ids.bottom.views.a}
@@ -316,7 +263,7 @@ export const Default: Story = {
           placement='left'
           size={size}
         >
-          <DrawerMenu position={leftPosition}>
+          <DrawerMenu position='center'>
             <DrawerMenuItem
               toggle={toggle}
               for={ids.left.views.a}
@@ -365,7 +312,7 @@ export const Default: Story = {
           placement='right'
           size={size}
         >
-          <DrawerMenu position={rightPosition}>
+          <DrawerMenu position='center'>
             <DrawerMenuItem
               toggle={toggle}
               for={ids.right.views.a}
@@ -404,6 +351,81 @@ export const Default: Story = {
               {Object.entries(ids.right.views).map(([_, id]) => (
                 <DrawerView id={id} key={id} />
               ))}
+            </DrawerContent>
+          </DrawerPanel>
+        </Drawer>
+      </DrawerLayout>
+    </div>
+  ),
+};
+
+type SingleDrawerStoryArgs = DrawerLayoutStoryArgs &
+  Pick<DrawerMenuProps, 'position'>;
+
+export const SingleDrawer: StoryObj<SingleDrawerStoryArgs> = {
+  args: {
+    position: 'center',
+  },
+  argTypes: {
+    position: {
+      control: 'select',
+      options: ['start', 'center', 'end'],
+      description: 'The position of the menu items within the menu bar',
+      table: {
+        defaultValue: { summary: 'center' },
+      },
+    },
+  },
+  render: ({ extend, push, size, toggle, position }) => (
+    <div className='h-screen w-full'>
+      <DrawerLayout
+        extend={extend}
+        push={
+          (push as unknown as string[])?.join(' ') as DrawerLayoutProps['push']
+        }
+      >
+        <DrawerLayoutMain>
+          <div className='flex h-full items-center justify-center bg-surface-overlay' />
+        </DrawerLayoutMain>
+
+        <Drawer
+          id={ids.left.drawer}
+          placement='left'
+          size={size}
+          defaultView={ids.left.views.a}
+        >
+          <DrawerMenu position={position}>
+            <DrawerMenuItem
+              toggle={toggle}
+              for={ids.left.views.a}
+              textValue='Menu A'
+            >
+              <ChevronRight className='fg-primary-bold cursor-pointer group-open/drawer:rotate-180' />
+            </DrawerMenuItem>
+            <DrawerMenuItem
+              toggle={toggle}
+              for={ids.left.views.b}
+              textValue='Menu B'
+            >
+              <Placeholder />
+            </DrawerMenuItem>
+            <DrawerMenuItem
+              toggle={toggle}
+              for={ids.left.views.c}
+              textValue='Menu C'
+            >
+              <Placeholder />
+            </DrawerMenuItem>
+          </DrawerMenu>
+
+          <DrawerPanel>
+            <DrawerHeader>
+              <DrawerHeaderTitle>Left Drawer</DrawerHeaderTitle>
+            </DrawerHeader>
+            <DrawerContent>
+              <DrawerView id={ids.left.views.a}>View A</DrawerView>
+              <DrawerView id={ids.left.views.b}>View B</DrawerView>
+              <DrawerView id={ids.left.views.c}>View C</DrawerView>
             </DrawerContent>
           </DrawerPanel>
         </Drawer>
