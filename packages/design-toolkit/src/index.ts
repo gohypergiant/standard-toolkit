@@ -336,6 +336,8 @@ export type {
   MenuProps,
   MenuSectionProps,
 } from './components/menu/types';
+export { MenuButton } from './components/menu-button';
+export type { MenuButtonProps } from './components/menu-button/types';
 export {
   NoticeEventNamespace,
   NoticeEventTypes,
