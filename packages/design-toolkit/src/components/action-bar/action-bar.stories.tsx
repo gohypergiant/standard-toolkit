@@ -23,12 +23,13 @@ const meta = {
     layout: 'fullscreen',
   },
   args: {
-    showElevation: true,
+    elevation: 'overlay',
     size: 'medium',
   },
   argTypes: {
-    showElevation: {
-      control: 'boolean',
+    elevation: {
+      control: 'select',
+      options: ['default', 'overlay', 'raised'],
     },
     size: {
       control: 'select',
