@@ -133,6 +133,19 @@ jobs:
                 ? '❌ Some tests failed'
                 : '⚠️ Tests did not complete';
 
+            // Build update instructions (only shown when tests fail)
+            const updateInstructions = failed > 0 ? [
+              '',
+              '### 🔄 Update Snapshots',
+              '',
+              'If these visual changes are intentional, update the baselines:',
+              '',
+              `1. Go to **[Actions → Update Visual Regression Snapshots](${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/workflows/visual-regression-update.yml)**`,
+              `2. Click **"Run workflow"**`,
+              `3. Select branch: \`${{ github.head_ref }}\``,
+              `4. Click **"Run workflow"** to update and commit new baselines`,
+            ].join('\n') : '';
+
             // Build coverage section
             let coverageSection = '';
             if (coverage) {
@@ -168,6 +181,7 @@ jobs:
               `| ✅ Passed | ${passed} |`,
               `| ❌ Failed | ${failed} |`,
               `| **Total** | ${total} |`,
+              updateInstructions,
               coverageSection,
               '',
               '<details><summary>📋 Details</summary>',
