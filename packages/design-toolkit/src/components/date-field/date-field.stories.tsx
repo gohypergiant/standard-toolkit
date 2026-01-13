@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { parseAbsoluteToLocal, parseDate } from '@internationalized/date';
+import { parseAbsoluteToLocal, parseDateTime } from '@internationalized/date';
 import { DateField } from './index';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
@@ -19,7 +19,7 @@ const meta = {
   component: DateField,
   args: {
     label: 'Label',
-    defaultValue: parseDate('2020-01-23'),
+    defaultValue: parseDateTime('2020-01-23T00:00:00'),
     description: 'Format: d MMM yyyy',
     errorMessage: '',
     granularity: 'day',
@@ -53,7 +53,7 @@ export const WithoutShortMonth: Story = {
     granularity: 'day',
     shortMonth: false,
     description: 'Format: d MM yyyy',
-    defaultValue: parseDate('2020-01-23'),
+    defaultValue: parseDateTime('2020-01-23T00:00:00'),
   },
   render: DateField,
 };
