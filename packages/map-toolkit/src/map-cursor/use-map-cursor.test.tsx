@@ -111,7 +111,7 @@ describe('useMapCursorEffect', () => {
     expect(getCursor(testid)).toBe('crosshair');
   });
 
-  it('clears cursor on unmount', () => {
+  it('clears cursor on unmount', async () => {
     function TestComponent() {
       useMapCursorEffect('crosshair', 'test-owner', testid);
       return <div>Component</div>;
@@ -123,8 +123,10 @@ describe('useMapCursorEffect', () => {
 
     unmount();
 
-    // Cursor should be cleared after unmount
-    expect(getCursor(testid)).toBe('default');
+    // Cursor clearing is deferred via queueMicrotask, so wait for it
+    await waitFor(() => {
+      expect(getCursor(testid)).toBe('default');
+    });
   });
 
   it('updates cursor when cursor prop changes', () => {

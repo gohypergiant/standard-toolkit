@@ -378,16 +378,20 @@ describe('draw-shape-layer store', () => {
   });
 
   describe('cleanup behavior', () => {
-    it('cleans up state when last subscriber unsubscribes', () => {
+    it('preserves state after last subscriber unsubscribes (for Strict Mode support)', () => {
       const subscription = drawStore.subscribe(mapId);
       const callback = vi.fn();
 
       const unsubscribe = subscription(callback);
 
-      // Unsubscribe should trigger cleanup
+      // Unsubscribe - state is preserved for potential remount (Strict Mode)
       unsubscribe();
 
-      // State should be cleared
+      // State should still exist (preserved for Strict Mode remount)
+      expect(getDrawingState(mapId)).not.toBeNull();
+
+      // Use clearDrawingState for explicit cleanup
+      clearDrawingState(mapId);
       expect(getDrawingState(mapId)).toBeNull();
     });
 
@@ -408,7 +412,11 @@ describe('draw-shape-layer store', () => {
       // Unsubscribe second callback
       unsubscribe2();
 
-      // Now state should be cleaned up
+      // State is preserved for Strict Mode support
+      expect(getDrawingState(mapId)).not.toBeNull();
+
+      // Use clearDrawingState for explicit cleanup
+      clearDrawingState(mapId);
       expect(getDrawingState(mapId)).toBeNull();
     });
   });
