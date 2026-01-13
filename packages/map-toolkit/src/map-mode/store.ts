@@ -368,6 +368,7 @@ function handleModeChangeRequest(
  * Map mode store
  */
 export const modeStore = createMapStore<MapModeState, MapModeActions>({
+  name: 'mode',
   defaultState: {
     mode: DEFAULT_MODE,
     modeOwners: new Map(),

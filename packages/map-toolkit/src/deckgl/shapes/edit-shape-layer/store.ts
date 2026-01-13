@@ -267,6 +267,7 @@ function cancelEditingInternal(
  * Edit shape store
  */
 export const editStore = createMapStore<EditingState, EditShapeActions>({
+  name: 'editShape',
   defaultState: { ...DEFAULT_EDITING_STATE },
 
   actions: (mapId, { get, set, notify }) => ({

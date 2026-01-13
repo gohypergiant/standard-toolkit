@@ -12,7 +12,7 @@
 
 'use client';
 
-import { shapeSelectionStore } from './store';
+import { selectShapeStore } from './store';
 import type { UniqueId } from '@accelint/core';
 import type { ShapeId } from '../shared/types';
 
@@ -87,8 +87,7 @@ export interface UseSelectShapeReturn {
  * ```
  */
 export function useSelectShape(mapId: UniqueId): UseSelectShapeReturn {
-  const { state, setSelectedId, clearSelection } =
-    shapeSelectionStore.use(mapId);
+  const { state, setSelectedId, clearSelection } = selectShapeStore.use(mapId);
 
   return {
     selectedId: state.selectedId,
