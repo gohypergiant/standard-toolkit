@@ -29,7 +29,7 @@ const meta = {
   argTypes: {
     elevation: {
       control: 'select',
-      options: ['default', 'overlay', 'raised'],
+      options: ['flat', 'overlay', 'raised'],
     },
     size: {
       control: 'select',

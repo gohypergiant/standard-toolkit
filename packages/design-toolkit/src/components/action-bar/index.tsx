@@ -31,7 +31,7 @@ import type { ActionBarProps } from './types';
  *
  * @example
  * // Without elevation shadow
- * <ActionBar elevation="default">
+ * <ActionBar elevation="flat">
  *   <Button><Icon><Copy/></Icon></Button>
  * </ActionBar>
  */

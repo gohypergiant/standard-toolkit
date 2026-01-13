@@ -14,6 +14,6 @@ import type { HTMLAttributes, PropsWithChildren } from 'react';
 export type ActionBarProps = PropsWithChildren<
   HTMLAttributes<HTMLDivElement>
 > & {
-  elevation?: 'default' | 'overlay' | 'raised';
+  elevation?: 'flat' | 'overlay' | 'raised';
   size?: 'medium' | 'small';
 };

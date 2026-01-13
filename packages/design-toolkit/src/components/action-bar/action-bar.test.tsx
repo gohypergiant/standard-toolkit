@@ -60,12 +60,12 @@ describe('ActionBar', () => {
     );
   });
 
-  it('should apply default elevation (no shadow)', () => {
-    setup({ elevation: 'default' });
+  it('should apply flat elevation (no shadow)', () => {
+    setup({ elevation: 'flat' });
 
     expect(screen.getByRole('navigation')).toHaveAttribute(
       'data-elevation',
-      'default',
+      'flat',
     );
   });
 });
