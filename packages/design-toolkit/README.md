@@ -42,28 +42,23 @@ If you use Visual Studio Code, there are some helpful extensions you can install
 Also add the following to your `settings.json` file for VSCode:
 
 ```json
-    "editor.codeActionsOnSave": {
-        "quickfix.biome": "explicit"
-    },
-    "tailwindCSS.includeLanguages": {
-        "javascript": "javascript",
-        "typescript": "typescript",
-        "html": "html",
-        "typescriptreact": "html",
-        "javascriptreact": "html"
-    },
-    "tailwindCSS.experimental.classRegex": [
-        [
-            "/\\*tw\\*/ '([^']*)'"
-        ],
-        [
-            "([\"'`][^\"'`]*.*?[\"'`])",
-            "[\"'`]([^\"'`]*).*?[\"'`]"
-        ],
-    ],
-    "files.associations": {
-        "*.css": "tailwindcss"
-    }
+  "editor.codeActionsOnSave": {
+    "source.fixAll.biome": "explicit"
+  },
+  "tailwindCSS.includeLanguages": {
+    "javascript": "javascript",
+    "typescript": "typescript",
+    "html": "html",
+    "typescriptreact": "html",
+    "javascriptreact": "html"
+  },
+  "tailwindCSS.experimental.classRegex": [
+    ["/\\*tw\\*/ '([^']*)'"],
+    ["([\"'`][^\"'`]*.*?[\"'`])", "[\"'`]([^\"'`]*).*?[\"'`]"]
+  ],
+  "files.associations": {
+    "*.css": "tailwindcss"
+  }
 ```
 
 ## In Depth Documentation

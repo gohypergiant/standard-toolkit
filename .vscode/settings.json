@@ -51,8 +51,22 @@
     "spritesheets",
     "storysource"
   ],
+  "yaml.format.singleQuote": true,
   "editor.codeActionsOnSave": {
-    "source.organizeImports.biome": "explicit"
+    "source.fixAll.biome": "explicit"
   },
-  "yaml.format.singleQuote": true
+  "tailwindCSS.includeLanguages": {
+    "javascript": "javascript",
+    "typescript": "typescript",
+    "html": "html",
+    "typescriptreact": "html",
+    "javascriptreact": "html"
+  },
+  "tailwindCSS.experimental.classRegex": [
+    ["/\\*tw\\*/ '([^']*)'"],
+    ["([\"'`][^\"'`]*.*?[\"'`])", "[\"'`]([^\"'`]*).*?[\"'`]"]
+  ],
+  "files.associations": {
+    "*.css": "tailwindcss"
+  }
 }
