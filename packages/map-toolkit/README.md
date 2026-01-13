@@ -57,6 +57,26 @@ import { createSavedViewport } from '@accelint/map-toolkit/deckgl/saved-viewport
 
 For detailed examples and interactive demos, see the [Storybook documentation](https://map-toolkit.accelint.io/?path=/docs/deckgl-symbol-layer--docs).
 
+## Store Cleanup
+
+Map Toolkit uses internal stores to manage state for each map instance (camera, cursor, viewport, etc.). These stores cache data by `mapId` to support React Strict Mode's double-mount behavior.
+
+**Important:** When a map instance is permanently destroyed (e.g., navigating away from a page), call the appropriate clear function to release memory:
+
+```ts
+import { clearCameraState } from '@accelint/map-toolkit/camera';
+
+// In your cleanup logic (e.g., useEffect cleanup, route change handler)
+clearCameraState(mapId);
+```
+
+Each store domain provides its own clear function:
+
+- `clearCameraState(mapId)` - Camera store
+- `clearSelectionState(mapId)` - Shape selection store
+
+If you're only temporarily unmounting a map (e.g., tab switching), you don't need to call clear - the stores will preserve state for when the map remounts.
+
 ## Running Locally
 
 To work on Map Toolkit locally:
