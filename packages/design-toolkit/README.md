@@ -52,10 +52,8 @@ Also add the following to your `settings.json` file for VSCode:
     "typescriptreact": "html",
     "javascriptreact": "html"
   },
-  "tailwindCSS.experimental.classRegex": [
-    ["/\\*tw\\*/ '([^']*)'"],
-    ["([\"'`][^\"'`]*.*?[\"'`])", "[\"'`]([^\"'`]*).*?[\"'`]"]
-  ],
+  "tailwindCSS.classFunctions": ["clsx"],
+  "tailwindCSS.classAttributes": ["class", "className", "classNames"],
   "files.associations": {
     "*.css": "tailwindcss"
   }
