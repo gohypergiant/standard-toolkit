@@ -51,3 +51,6 @@ pnpm gen:variants
 This will create:
 
 - `src/tokens/variants.css` - Tailwind custom variants
+
+Notes:
+- For `@variant read-only`, we are not including `:read-only` because it's too broad of a definition. See https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Selectors/:read-only
