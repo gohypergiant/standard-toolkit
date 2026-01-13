@@ -31,13 +31,13 @@ import type { ActionBarProps } from './types';
  *
  * @example
  * // Without elevation shadow
- * <ActionBar showElevation={false}>
+ * <ActionBar elevation="default">
  *   <Button><Icon><Copy/></Icon></Button>
  * </ActionBar>
  */
 export function ActionBar({
   className,
-  showElevation = true,
+  elevation = 'overlay',
   size = 'medium',
   ...rest
 }: ActionBarProps) {
@@ -51,7 +51,7 @@ export function ActionBar({
       <nav
         {...rest}
         className={clsx(styles.bar, className)}
-        data-elevation={showElevation}
+        data-elevation={elevation}
         data-size={size}
       />
     </Provider>

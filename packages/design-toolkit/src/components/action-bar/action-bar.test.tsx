@@ -42,21 +42,30 @@ describe('ActionBar', () => {
     expect(screen.getByRole('button')).toBeInTheDocument();
   });
 
-  it('should show elevation by default', () => {
+  it('should use overlay elevation by default', () => {
     setup();
 
     expect(screen.getByRole('navigation')).toHaveAttribute(
       'data-elevation',
-      'true',
+      'overlay',
     );
   });
 
-  it('should hide elevation when showElevation is false', () => {
-    setup({ showElevation: false });
+  it('should apply raised elevation', () => {
+    setup({ elevation: 'raised' });
 
     expect(screen.getByRole('navigation')).toHaveAttribute(
       'data-elevation',
-      'false',
+      'raised',
+    );
+  });
+
+  it('should apply default elevation (no shadow)', () => {
+    setup({ elevation: 'default' });
+
+    expect(screen.getByRole('navigation')).toHaveAttribute(
+      'data-elevation',
+      'default',
     );
   });
 });

@@ -29,14 +29,14 @@ A container component that displays a collection of actions, typically represent
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `showElevation` | `boolean` | `true` | Controls visibility of the elevation shadow |
-| `size` | `'medium' \| 'small'` | `'medium'` | Size variant for the action bar and its buttons |
+| `elevation` | `string` | `overlay` | Elevation shadow style: `default`, `overlay`, or `raised` |
+| `size` | `string` | `medium` | Size variant: `medium` or `small` |
 
-## Without elevation
-Use `showElevation={false}` when the ActionBar is embedded in a context that already has its own visual boundaries, such as entity detail panels.
+## Elevation options
+Use `elevation="default"` when the ActionBar is embedded in a context that already has its own visual boundaries, such as entity detail panels.
 
 ```tsx
-<ActionBar showElevation={false}>
+<ActionBar elevation="default">
   <Button>
     <Icon>
       <Copy />
