@@ -90,7 +90,7 @@ export function SelectField({ ref, ...props }: SelectFieldProps) {
     label: labelProp,
     layoutOptions,
     isInvalid: isInvalidProp,
-    isReadOnly = false,
+    isReadOnly,
     ...rest
   } = props;
 
@@ -126,7 +126,7 @@ export function SelectField({ ref, ...props }: SelectFieldProps) {
             )}
             {isReadOnly ? (
               // Using the native RAC disabled button component because we don't want the DTK button styles
-              <AriaButton isDisabled className='block py-xs'>
+              <AriaButton isDisabled className={styles.readonly}>
                 <SelectValue className={clsx(styles.value, classNames?.value)}>
                   {({ selectedText }) => <span>{selectedText}</span>}
                 </SelectValue>
