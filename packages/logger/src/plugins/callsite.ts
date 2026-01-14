@@ -53,11 +53,34 @@ function getCallsite() {
   return `${fileName}:${lineNumber}:${columnNumber}`;
 }
 
+/**
+ * Options for the callsite tracking plugin.
+ */
 export interface CallsitePluginOptions extends LogLayerPluginParams {
-  // NOTE: currently not used as of right now but reserving for later
+  /**
+   * Whether the application is running in production.
+   * Reserved for future use.
+   */
   isProductionEnv: boolean;
 }
 
+/**
+ * Creates a LogLayer plugin that tracks and injects source code location into log data.
+ *
+ * This plugin automatically captures the file, line number, and column where each
+ * log call originates, adding a `callSite` property to the log data.
+ *
+ * @param options - Plugin configuration options
+ * @returns A LogLayer plugin instance
+ *
+ * @example
+ * ```ts
+ * import { callsitePlugin } from '@accelint/logger/plugins/callsite';
+ *
+ * const plugin = callsitePlugin({ isProductionEnv: false });
+ * // Log output will include: callSite: "src/services/user.ts:42:5"
+ * ```
+ */
 export function callsitePlugin(options: CallsitePluginOptions): LogLayerPlugin {
   return {
     id: options.id,
