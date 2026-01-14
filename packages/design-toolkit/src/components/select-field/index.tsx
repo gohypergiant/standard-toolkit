@@ -99,6 +99,8 @@ export function SelectField({ ref, ...props }: SelectFieldProps) {
   const isInvalid = isInvalidProp ?? hasError;
   const isSmall = size === 'small';
   const showLabel = !isSmall && !!labelProp;
+  const shouldShowDescription =
+    !isReadOnly && !!descriptionProp && !(isSmall || isInvalid);
 
   return (
     <AriaSelect
@@ -148,7 +150,7 @@ export function SelectField({ ref, ...props }: SelectFieldProps) {
                 </Icon>
               </Button>
             )}
-            {!isReadOnly && !!descriptionProp && !(isSmall || isInvalid) && (
+            {shouldShowDescription && (
               <Text
                 slot='description'
                 className={clsx(styles.description, classNames?.description)}
