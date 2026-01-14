@@ -12,7 +12,7 @@
 
 import { bootstrap } from './bootstrap';
 import type { LogLayer, LogLevel } from 'loglayer';
-import type { LoggerOptions } from './definitions';
+import type { LoggerOptions } from '../definitions';
 
 let logInstance: LogLayer;
 

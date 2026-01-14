@@ -15,9 +15,7 @@ import { ConsoleTransport, LogLayer } from 'loglayer';
 import { serializeError } from 'serialize-error';
 import { callsitePlugin } from '../plugins/callsite';
 import { environmentPlugin } from '../plugins/environment';
-import type { LogLayerPlugin } from '@loglayer/plugin';
-import type { LogLayerTransport } from '@loglayer/transport';
-import type { LoggerOptions } from './definitions';
+import type { LoggerOptions } from '../definitions';
 
 export function bootstrap({
   enabled,
@@ -31,36 +29,29 @@ export function bootstrap({
   const isProductionEnv = env === 'production';
   const isServer = typeof window === 'undefined';
 
-  const stdoutTransport = pretty
-    ? getSimplePrettyTerminal({
-        viewMode: 'message-only',
-        level,
-        // NOTE: this gives us a nice balance even on the server
-        runtime: 'browser',
-        includeDataInBrowserConsole: true,
-      })
-    : new ConsoleTransport({
-        level,
-        logger: console,
-        appendObjectData: true,
-      });
-
-  const appliedTransports: LogLayerTransport[] = [
-    stdoutTransport,
-    ...transports,
-  ].filter(Boolean);
-
-  const appliedPlugins: LogLayerPlugin[] = [
-    callsitePlugin({ isProductionEnv }),
-    environmentPlugin({ isProductionEnv, isServer }),
-
-    ...plugins,
-  ].filter(Boolean);
-
   const instance = new LogLayer({
     errorSerializer: serializeError,
-    transport: appliedTransports,
-    plugins: appliedPlugins,
+    transport: [
+      pretty
+        ? getSimplePrettyTerminal({
+            viewMode: 'message-only',
+            level,
+            // NOTE: this gives us a nice balance even on the server
+            runtime: 'browser',
+            includeDataInBrowserConsole: true,
+          })
+        : new ConsoleTransport({
+            level,
+            logger: console,
+            appendObjectData: true,
+          }),
+      ...transports,
+    ],
+    plugins: [
+      callsitePlugin({ isProductionEnv }),
+      environmentPlugin({ isProductionEnv, isServer }),
+      ...plugins,
+    ],
     enabled,
     prefix,
   });
