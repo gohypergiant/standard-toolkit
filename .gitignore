@@ -34,15 +34,3 @@ storybook-static
 */memlab/reports/html
 */memlab/reports/memlab-report.html
 apps/next/test-results/
-
-# LogicStamp config & security files
-*.uif.json
-logicstamp.manifest.json
-.logicstamp/
-stamp_security_report.json
-
-# LogicStamp context & security files
-context.json
-context_*.json
-context.toon
-context_*.toon
