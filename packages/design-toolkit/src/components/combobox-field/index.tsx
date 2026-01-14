@@ -94,11 +94,8 @@ export function ComboBoxField<T extends OptionsDataItem>({
             </Label>
           )}
           <div
-            className={clsx(
-              styles.control,
-              !isReadOnly && styles.interactive,
-              classNames?.control,
-            )}
+            className={clsx(styles.control, classNames?.control)}
+            data-readonly={isReadOnly || null}
           >
             <Input
               {...inputProps}
