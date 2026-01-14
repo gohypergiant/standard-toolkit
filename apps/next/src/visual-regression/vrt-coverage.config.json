@@ -1,0 +1,13 @@
+{
+  "_comment": "Components excluded from VRT coverage tracking",
+  "exclude": [
+    "icon",
+    "skeleton",
+    "hotkey"
+  ],
+  "_exclude_reasons": {
+    "icon": "Just renders SVGs, no interactive states",
+    "skeleton": "Loading placeholder, appearance varies",
+    "hotkey": "Non-visual keyboard utility"
+  }
+}

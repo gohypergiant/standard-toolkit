@@ -21,9 +21,9 @@ function PropCombos() {
   return PROP_COMBOS.map((props, k) => {
     return (
       <BentoItem key={k}>
-        <TooltipTrigger>
+        <TooltipTrigger isOpen delay={0}>
           <Button variant='outline'>{props.placement} tooltip</Button>
-          <Tooltip {...props}>Tooltip positioned at {props.placement}</Tooltip>
+          <Tooltip {...props}>positioned {props.placement}</Tooltip>
         </TooltipTrigger>
       </BentoItem>
     );
