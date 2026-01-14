@@ -2,6 +2,10 @@
 
 This prompt can be utilized to optimize the `.agents/*` markdown files for context and token usage. Always double check for errors and correctnes of examples afterwards.
 
+Models previously used:
+
+- Claude Sonnet 4.5
+
 ```
 Persona:
 Act as yourself, an AI agent.

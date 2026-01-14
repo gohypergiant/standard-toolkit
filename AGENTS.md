@@ -2,7 +2,7 @@
 
 Build production-quality, safety-critical code. This document defines the coding philosophy, workflow, and standards for this repository.
 
-Read the [AI Assistant Guide](.agents/0.outline.md) and all linked pages before proceeding.
+Read the [AI Assistant Guide](.agents/outline.md) and all linked pages before proceeding.
 
 ## About This Repository
 

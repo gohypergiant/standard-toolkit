@@ -1,4 +1,4 @@
-## 2. React Style and Conventions
+## React Style and Conventions
 
 React components should be focused, composition-friendly, idiomatic, and robust.
 
@@ -60,23 +60,3 @@ React components should be focused, composition-friendly, idiomatic, and robust.
 - Passing new inline callbacks/objects to memoized children without need.
 - Switching component between controlled and uncontrolled modes at runtime.
 - Overusing context (single context for many unrelated values).
-
----
-
-#### Reference Prompt
-
-Models Used:
-
-- GPT-5 Mini
-- Gemini 3 Flash
-
-```ignore
-Read the following articles and then create an instruction list that is intended to be used by an LLM to generate React components in a composition friendly manner:
-
-- https://react.dev/learn/thinking-in-react
-- https://dev.to/ricardolmsilva/composition-pattern-in-react-28mj
-- https://www.johno.com/composition-over-templates
-- https://shramko.dev/blog/react-elements-children
-- https://shramko.dev/blog/react-rerender
-- https://shramko.dev/blog/react-hooks-pitfalls
-```

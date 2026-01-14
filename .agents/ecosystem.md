@@ -1,4 +1,4 @@
-## 5. Ecosystem Guidelines
+## Ecosystem Guidelines
 
 ### Component Aliases
 

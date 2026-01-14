@@ -1,4 +1,4 @@
-## 3. Testing Style and Conventions
+## Testing Style and Conventions
 
 Use `vitest` framework. Design tests to be short, simple, flat, and instantly understandable.
 

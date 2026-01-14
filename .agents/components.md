@@ -1,4 +1,4 @@
-## 4. Component Style and Conventions
+## Component Style and Conventions
 
 These rules define how to create React components using React Aria Components. Use this guide when generating NEW components. When REFACTORING existing components, display the suggestion and await confirmation before applying changes.
 

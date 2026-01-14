@@ -1,4 +1,4 @@
-## 1. JS/TS Style and Conventions
+## JS/TS Style and Conventions
 
 ### Quick Reference
 
