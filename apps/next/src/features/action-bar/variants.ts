@@ -13,6 +13,6 @@
 import type { ActionBarProps } from '@accelint/design-toolkit/components/action-bar/types';
 
 export const PROP_COMBOS: ActionBarProps[] = [
-  { size: 'medium' },
   { size: 'small' },
+  { size: 'medium' },
 ];
