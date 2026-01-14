@@ -30,6 +30,8 @@
   "exports": {
     ".": "./dist/index.js",
     "./default": "./dist/default/index.js",
+    "./default/bootstrap": "./dist/default/bootstrap.js",
+    "./default/definitions": "./dist/default/definitions.js",
     "./plugins/callsite": "./dist/plugins/callsite.js",
     "./plugins/environment": "./dist/plugins/environment.js",
     "./package.json": "./package.json"
