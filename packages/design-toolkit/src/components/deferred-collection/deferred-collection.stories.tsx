@@ -12,6 +12,7 @@
 
 import { useState } from 'react';
 import { Button } from '../button';
+import { Skeleton } from '../skeleton';
 import { DeferredCollection } from './index';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
@@ -25,7 +26,7 @@ const meta = {
           DeferredCollection defers rendering of large collections to prevent UI freezes.
           React Aria's collection system processes ALL items synchronously before virtualization
           begins, which can block the main thread for large datasets. This component defers the
-          collection render by a few animation frames, allowing a skeleton placeholder to display first.
+          collection render by a few animation frames, allowing a fallback to display first.
         `,
       },
     },
@@ -47,11 +48,17 @@ export const Default: Story = {
         </Button>
         <DeferredCollection
           key={key}
-          skeleton={{
-            count: 10,
-            height: 32,
-            className: 'h-[300px] w-[300px] overflow-y-scroll',
-          }}
+          fallback={
+            <div className='flex h-[300px] w-[300px] flex-col gap-xs overflow-y-scroll'>
+              {Array.from({ length: 10 }, (_, i) => (
+                <Skeleton
+                  // biome-ignore lint/suspicious/noArrayIndexKey: Static demo items never reorder
+                  key={i}
+                  className='h-[32px]'
+                />
+              ))}
+            </div>
+          }
           deferFrames={15}
         >
           {() => (

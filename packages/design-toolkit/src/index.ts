@@ -160,10 +160,7 @@ export type {
 export { DateField } from './components/date-field';
 export type { DateFieldProps } from './components/date-field/types';
 export { DeferredCollection } from './components/deferred-collection';
-export type {
-  DeferredCollectionProps,
-  SkeletonConfig,
-} from './components/deferred-collection/types';
+export type { DeferredCollectionProps } from './components/deferred-collection/types';
 export {
   DetailsListContext,
   DetailsListProvider,
@@ -583,11 +580,11 @@ export type {
 export { useTimeoutCleanup } from './hooks/coordinate-field/use-timeout-cleanup';
 export type { UseTimeoutCleanupResult } from './hooks/coordinate-field/use-timeout-cleanup';
 export { useCardInteractions, useColumnInteractions } from './hooks/kanban';
-export { useDeferredCollection } from './hooks/use-deferred-collection';
+export { useFrameDelay } from './hooks/use-frame-delay';
 export type {
-  UseDeferredCollectionOptions,
-  UseDeferredCollectionResult,
-} from './hooks/use-deferred-collection';
+  UseFrameDelayOptions,
+  UseFrameDelayResult,
+} from './hooks/use-frame-delay';
 export { useTreeActions } from './hooks/use-tree/actions';
 export { useTreeState } from './hooks/use-tree/state';
 export type {

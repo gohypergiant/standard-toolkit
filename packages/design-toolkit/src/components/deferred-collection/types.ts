@@ -12,23 +12,10 @@
 
 import type { ReactNode } from 'react';
 
-export interface SkeletonConfig {
-  /** Number of skeleton items to display */
-  count: number;
-  /** Height of each skeleton item in pixels */
-  height: number;
-  /** Optional className for the skeleton container */
-  className?: string;
-  /** Gap between skeleton items in pixels (default: 4) */
-  gap?: number;
-}
-
 export interface DeferredCollectionProps {
   /** The content to render once ready - can be ReactNode or a function returning ReactNode for deferred creation */
   children: ReactNode | (() => ReactNode);
-  /** Configuration for auto-generated skeleton loading state */
-  skeleton?: SkeletonConfig;
-  /** Custom fallback element for loading state (takes precedence over skeleton) */
+  /** Fallback element to show while deferring render */
   fallback?: ReactNode;
   /** Number of animation frames to defer before rendering (default: 2) */
   deferFrames?: number;

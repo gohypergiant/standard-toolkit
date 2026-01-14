@@ -18,6 +18,7 @@ import {
 } from 'react-aria-components';
 import { DeferredCollection } from '../deferred-collection';
 import { Icon } from '../icon';
+import { Skeleton } from '../skeleton';
 import { Options } from './';
 import { OptionsItem } from './item';
 import { OptionsItemContent } from './item-content';
@@ -290,7 +291,17 @@ const manyItems = Array.from({ length: 5000 }, (_, index) => ({
 export const Virtualized: Story = {
   render: (args) => (
     <DeferredCollection
-      skeleton={{ count: 10, height: 32, className: 'w-[200px]' }}
+      fallback={
+        <div className='flex w-[200px] flex-col gap-xs'>
+          {Array.from({ length: 10 }, (_, i) => (
+            <Skeleton
+              // biome-ignore lint/suspicious/noArrayIndexKey: Static demo items never reorder
+              key={i}
+              className='h-[32px]'
+            />
+          ))}
+        </div>
+      }
     >
       {() => (
         <div className='w-[200px]'>

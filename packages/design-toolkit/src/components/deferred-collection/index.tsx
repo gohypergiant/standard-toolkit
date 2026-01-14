@@ -10,9 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { clsx } from '@accelint/design-foundation/lib/utils';
-import { useDeferredCollection } from '../../hooks/use-deferred-collection';
-import { Skeleton } from '../skeleton';
+import { useFrameDelay } from '../../hooks/use-frame-delay';
 import type { DeferredCollectionProps } from './types';
 
 /**
@@ -20,54 +18,31 @@ import type { DeferredCollectionProps } from './types';
  *
  * React Aria's collection system processes ALL items synchronously before
  * virtualization begins. This component defers the collection render by a few
- * animation frames, allowing a skeleton placeholder to display first.
+ * animation frames, allowing a fallback to display first.
  *
  * @example
- * // With skeleton config (simplest usage)
- * <DeferredCollection skeleton={{ count: 10, height: 32 }}>
- *   <Virtualizer>
- *     <ListBox items={items}>
- *       {(item) => <ListBoxItem>{item.name}</ListBoxItem>}
- *     </ListBox>
- *   </Virtualizer>
- * </DeferredCollection>
- *
- * @example
- * // With custom fallback
- * <DeferredCollection fallback={<CustomLoadingState />}>
- *   <VirtualizedContent />
+ * <DeferredCollection fallback={<LoadingState />}>
+ *   {() => (
+ *     <Virtualizer>
+ *       <ListBox items={items}>
+ *         {(item) => <ListBoxItem>{item.name}</ListBoxItem>}
+ *       </ListBox>
+ *     </Virtualizer>
+ *   )}
  * </DeferredCollection>
  */
 export function DeferredCollection({
   children,
-  skeleton,
   fallback,
-  deferFrames = 2,
+  deferFrames,
 }: DeferredCollectionProps) {
-  const { isReady } = useDeferredCollection({ deferFrames });
+  const { isReady } = useFrameDelay({ frames: deferFrames });
 
   if (isReady) {
     return <>{typeof children === 'function' ? children() : children}</>;
   }
 
-  if (fallback) {
-    return <>{fallback}</>;
-  }
-
-  if (!skeleton) {
-    return null;
-  }
-
-  const { count, height, className, gap = 4 } = skeleton;
-
-  return (
-    <div className={clsx('flex flex-col', className)} style={{ gap }}>
-      {Array.from({ length: count }, (_, i) => (
-        // biome-ignore lint/suspicious/noArrayIndexKey: Static skeleton placeholders never reorder
-        <Skeleton key={i} style={{ height }} />
-      ))}
-    </div>
-  );
+  return <>{fallback}</>;
 }
 
-export type { DeferredCollectionProps, SkeletonConfig } from './types';
+export type { DeferredCollectionProps } from './types';

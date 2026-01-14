@@ -12,46 +12,45 @@
 
 import { useEffect, useState } from 'react';
 
-export interface UseDeferredCollectionOptions {
-  /** Number of animation frames to defer before rendering (default: 2) */
-  deferFrames?: number;
+export interface UseFrameDelayOptions {
+  /** Number of animation frames to wait (default: 2) */
+  frames?: number;
+  /** Callback fired when delay completes */
+  onReady?: () => void;
 }
 
-export interface UseDeferredCollectionResult {
-  /** Whether the collection is ready to render */
+export interface UseFrameDelayResult {
+  /** Whether the delay has completed */
   isReady: boolean;
 }
 
 /**
- * Defers rendering of large collections to prevent UI freezes.
+ * Delays execution by a specified number of animation frames.
  *
- * React Aria's collection system processes ALL items synchronously before
- * virtualization begins. This hook defers the collection render by a few
- * animation frames, allowing a skeleton placeholder to display first.
+ * Useful for deferring expensive renders to allow the browser to paint
+ * a loading state first.
  *
  * @example
  * ```tsx
- * function VirtualizedList({ items }) {
- *   const { isReady } = useDeferredCollection();
+ * // Pattern 1: Reactive
+ * function DeferredContent() {
+ *   const { isReady } = useFrameDelay();
+ *   if (!isReady) return <Fallback />;
+ *   return <ExpensiveContent />;
+ * }
  *
- *   if (!isReady) {
- *     return <SkeletonList count={10} />;
- *   }
- *
- *   return (
- *     <Virtualizer>
- *       <ListBox items={items}>
- *         {(item) => <ListBoxItem>{item.name}</ListBoxItem>}
- *       </ListBox>
- *     </Virtualizer>
- *   );
+ * // Pattern 2: Callback
+ * function WithCallback() {
+ *   const [loaded, setLoaded] = useState(false);
+ *   useFrameDelay({ onReady: () => setLoaded(true) });
+ *   return loaded ? <Content /> : <Loading />;
  * }
  * ```
  */
-export function useDeferredCollection(
-  options: UseDeferredCollectionOptions = {},
-): UseDeferredCollectionResult {
-  const { deferFrames = 2 } = options;
+export function useFrameDelay(
+  options: UseFrameDelayOptions = {},
+): UseFrameDelayResult {
+  const { frames = 2, onReady } = options;
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
@@ -60,8 +59,9 @@ export function useDeferredCollection(
 
     const tick = () => {
       frameCount++;
-      if (frameCount >= deferFrames) {
+      if (frameCount >= frames) {
         setIsReady(true);
+        onReady?.();
       } else {
         animationId = requestAnimationFrame(tick);
       }
@@ -69,7 +69,7 @@ export function useDeferredCollection(
 
     animationId = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(animationId);
-  }, [deferFrames]);
+  }, [frames, onReady]);
 
   return { isReady };
 }

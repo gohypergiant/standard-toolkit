@@ -12,9 +12,9 @@
 
 import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { useDeferredCollection } from './index';
+import { useFrameDelay } from './index';
 
-describe('useDeferredCollection', () => {
+describe('useFrameDelay', () => {
   beforeEach(() => {
     vi.useFakeTimers();
   });
@@ -24,12 +24,12 @@ describe('useDeferredCollection', () => {
   });
 
   it('should start with isReady as false', () => {
-    const { result } = renderHook(() => useDeferredCollection());
+    const { result } = renderHook(() => useFrameDelay());
     expect(result.current.isReady).toBe(false);
   });
 
   it('should become ready after default 2 animation frames', () => {
-    const { result } = renderHook(() => useDeferredCollection());
+    const { result } = renderHook(() => useFrameDelay());
 
     expect(result.current.isReady).toBe(false);
 
@@ -46,10 +46,8 @@ describe('useDeferredCollection', () => {
     expect(result.current.isReady).toBe(true);
   });
 
-  it('should respect custom deferFrames option', () => {
-    const { result } = renderHook(() =>
-      useDeferredCollection({ deferFrames: 3 }),
-    );
+  it('should respect custom frames option', () => {
+    const { result } = renderHook(() => useFrameDelay({ frames: 3 }));
 
     expect(result.current.isReady).toBe(false);
 
@@ -67,9 +65,42 @@ describe('useDeferredCollection', () => {
     expect(result.current.isReady).toBe(true);
   });
 
+  it('should call onReady callback when delay completes', () => {
+    const onReady = vi.fn();
+    renderHook(() => useFrameDelay({ onReady }));
+
+    expect(onReady).not.toHaveBeenCalled();
+
+    // Advance through default 2 frames
+    act(() => {
+      vi.advanceTimersToNextFrame();
+      vi.advanceTimersToNextFrame();
+    });
+
+    expect(onReady).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call onReady callback with custom frames', () => {
+    const onReady = vi.fn();
+    renderHook(() => useFrameDelay({ frames: 3, onReady }));
+
+    // Advance 2 frames - callback not called yet
+    act(() => {
+      vi.advanceTimersToNextFrame();
+      vi.advanceTimersToNextFrame();
+    });
+    expect(onReady).not.toHaveBeenCalled();
+
+    // Third frame - callback called
+    act(() => {
+      vi.advanceTimersToNextFrame();
+    });
+    expect(onReady).toHaveBeenCalledTimes(1);
+  });
+
   it('should cleanup animation frame on unmount', () => {
     const cancelSpy = vi.spyOn(globalThis, 'cancelAnimationFrame');
-    const { unmount } = renderHook(() => useDeferredCollection());
+    const { unmount } = renderHook(() => useFrameDelay());
 
     unmount();
 
