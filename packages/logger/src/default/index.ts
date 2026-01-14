@@ -46,10 +46,9 @@ export type { LogLevel, LogLevelType };
  * ```
  */
 export function getLogger(opts: LoggerOptions): LogLayer {
-  if (logInstance) {
-    return logInstance;
+  if (!logInstance) {
+    logInstance = bootstrap(opts);
   }
 
-  logInstance = bootstrap(opts);
   return logInstance;
 }
