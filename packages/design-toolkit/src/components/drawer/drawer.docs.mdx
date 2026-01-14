@@ -130,14 +130,14 @@ For more control over the header content, you can use a compositional approach:
 ```tsx
 <DrawerHeader>
   <DrawerHeaderTitle level={2}>My Title</DrawerHeaderTitle>
-  <DrawerClose />
+  <DrawerClose for={views.idA} />
 </DrawerHeader>
 ```
 
 ### DrawerClose
 
 Allows users to pass an ID for a given drawer/view, which will then emit a `DrawerClose` event via bus.
-- **`for`** - Unique identifier for the tab to be closed. If not provided, bus will emit a `clear` event.
+- **`for`** - Unique identifier for the tab to be closed.
 
 ## DrawerMenuItem
 
