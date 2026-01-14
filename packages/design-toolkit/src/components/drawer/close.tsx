@@ -23,7 +23,7 @@ export function DrawerClose({ for: id, ...rest }: DrawerCloseProps) {
   // Only emit onClose event if we have a specified ID.
   // Otherwise, we reset the view stack.
   return (
-    <DrawerTrigger {...rest} for={id ? `close:${id}` : 'clear'}>
+    <DrawerTrigger {...rest} for={`close:${id}`}>
       <Button variant='icon'>
         <Icon>
           <Cancel />

@@ -97,7 +97,6 @@ function setup(
               <Button>Close</Button>
             </DrawerTrigger>
             <DrawerClose data-testid='close-with' for={ids.a} />
-            <DrawerClose data-testid='close-without' />
           </DrawerHeader>
           <DrawerContent>
             <DrawerView id={ids.a}>View A</DrawerView>
@@ -230,22 +229,6 @@ describe('Drawer', () => {
     expect(screen.queryByText('View C')).not.toBeInTheDocument();
 
     await userEvent.click(screen.getByTestId('close-with'));
-
-    expect(screen.queryByText('View A')).not.toBeInTheDocument();
-    expect(screen.queryByText('View B')).not.toBeInTheDocument();
-    expect(screen.queryByText('View C')).not.toBeInTheDocument();
-
-    expect(container.firstChild).not.toHaveAttribute('data-open');
-  });
-
-  it('should close with DrawerClose without id', async () => {
-    const { container } = setup({ defaultView: ids.a });
-
-    expect(screen.getByText('View A')).toBeInTheDocument();
-    expect(screen.queryByText('View B')).not.toBeInTheDocument();
-    expect(screen.queryByText('View C')).not.toBeInTheDocument();
-
-    await userEvent.click(screen.getByTestId('close-without'));
 
     expect(screen.queryByText('View A')).not.toBeInTheDocument();
     expect(screen.queryByText('View B')).not.toBeInTheDocument();

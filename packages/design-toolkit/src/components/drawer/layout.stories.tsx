@@ -150,7 +150,7 @@ export const Default: StoryObj<typeof meta> = {
           <DrawerPanel>
             <DrawerHeader>
               <DrawerHeaderTitle>Top</DrawerHeaderTitle>
-              <DrawerClose />
+              <DrawerClose for={ids.top.views.a} />
             </DrawerHeader>
             <DrawerContent>
               {Object.entries(ids.top.views).map(([_, id]) => (
@@ -183,7 +183,7 @@ export const Default: StoryObj<typeof meta> = {
           <DrawerPanel>
             <DrawerHeader>
               <DrawerHeaderTitle>Bottom</DrawerHeaderTitle>
-              <DrawerClose />
+              <DrawerClose for={ids.bottom.views.a} />
             </DrawerHeader>
             <DrawerContent>
               {Object.entries(ids.bottom.views).map(([_, id]) => (
@@ -216,7 +216,7 @@ export const Default: StoryObj<typeof meta> = {
           <DrawerPanel>
             <DrawerHeader>
               <DrawerHeaderTitle>Left</DrawerHeaderTitle>
-              <DrawerClose />
+              <DrawerClose for={ids.left.views.a} />
             </DrawerHeader>
             <DrawerContent>
               {Object.entries(ids.left.views).map(([_, id]) => (
@@ -249,7 +249,7 @@ export const Default: StoryObj<typeof meta> = {
           <DrawerPanel>
             <DrawerHeader>
               <DrawerHeaderTitle>Right</DrawerHeaderTitle>
-              <DrawerClose />
+              <DrawerClose for={ids.right.views.a} />
             </DrawerHeader>
             <DrawerContent>
               {Object.entries(ids.right.views).map(([_, id]) => (
