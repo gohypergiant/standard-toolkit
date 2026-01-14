@@ -10,7 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
-import type { LogLayerPlugin, LogLayerTransport } from 'loglayer';
+import {
+  type LogLayerPlugin,
+  type LogLayerTransport,
+  LogLevel as LogLevelEnum,
+} from 'loglayer';
 
 /**
  * Configuration options for the logger.
@@ -53,16 +57,8 @@ export type LoggerOptions = {
   env?: 'production' | 'development' | 'test';
 };
 
-export const LOG_LEVEL = {
-  error: 'error',
-  warn: 'warn',
-  info: 'info',
-  debug: 'debug',
-  trace: 'trace',
-  fatal: 'fatal',
-} as const;
-
-export type LogLevel = (typeof LOG_LEVEL)[keyof typeof LOG_LEVEL];
+export const LOG_LEVEL = LogLevelEnum;
+export type LogLevel = LogLevelEnum | `${keyof typeof LogLevelEnum}`;
 
 export const ERROR = LOG_LEVEL.error;
 export const WARN = LOG_LEVEL.warn;
