@@ -60,11 +60,11 @@ export type LoggerOptions = {
 export const LOG_LEVEL = LogLevelEnum;
 export type LogLevel = LogLevelEnum | `${keyof typeof LogLevelEnum}`;
 
-export const ERROR = LOG_LEVEL.error;
-export const WARN = LOG_LEVEL.warn;
-export const INFO = LOG_LEVEL.info;
-export const DEBUG = LOG_LEVEL.debug;
-export const TRACE = LOG_LEVEL.trace;
-export const FATAL = LOG_LEVEL.fatal;
+export const ERROR = 'error' as LogLevel;
+export const WARN = 'warn' as LogLevel;
+export const INFO = 'info' as LogLevel;
+export const DEBUG = 'debug' as LogLevel;
+export const TRACE = 'trace' as LogLevel;
+export const FATAL = 'fatal' as LogLevel;
 
 export const ALL_LOG_LEVELS = [ERROR, WARN, INFO, DEBUG, TRACE, FATAL];
