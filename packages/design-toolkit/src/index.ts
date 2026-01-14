@@ -51,8 +51,6 @@ export {
 } from './components/button/context';
 export { Button } from './components/button';
 export { LinkButton } from './components/button/link';
-export type { MenuButtonProps } from './components/button/menu-types';
-export { MenuButton } from './components/button/menu';
 export { ToggleButton } from './components/button/toggle';
 export type {
   ButtonProps,

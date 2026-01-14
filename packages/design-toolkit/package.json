@@ -95,8 +95,6 @@
     "./components/button": "./dist/components/button/index.js",
     "./components/button/context": "./dist/components/button/context.js",
     "./components/button/link": "./dist/components/button/link.js",
-    "./components/button/menu": "./dist/components/button/menu.js",
-    "./components/button/menu-types": "./dist/components/button/menu-types.js",
     "./components/button/toggle": "./dist/components/button/toggle.js",
     "./components/button/types": "./dist/components/button/types.js",
     "./components/checkbox": "./dist/components/checkbox/index.js",
