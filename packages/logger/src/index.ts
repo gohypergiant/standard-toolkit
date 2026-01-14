@@ -16,8 +16,19 @@
 
 // biome-ignore-all assist/source/organizeImports: This comment is used to prevent the biome tool from altering the import statements in this file.
 
+export { bootstrap } from './default/bootstrap';
+export {
+  ALL_LOG_LEVELS,
+  DEBUG,
+  ERROR,
+  FATAL,
+  INFO,
+  LOG_LEVEL,
+  TRACE,
+  WARN,
+} from './default/definitions';
+export type { LogLevel, LoggerOptions } from './default/definitions';
 export { getLogger } from './default';
-export type { LoggerOptions } from './default';
 export { callsitePlugin } from './plugins/callsite';
 export type { CallsitePluginOptions } from './plugins/callsite';
 export { environmentPlugin } from './plugins/environment';

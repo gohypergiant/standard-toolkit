@@ -10,111 +10,15 @@
  * governing permissions and limitations under the License.
  */
 
-import { getSimplePrettyTerminal } from '@loglayer/transport-simple-pretty-terminal';
-import { ConsoleTransport, LogLayer, type LogLevel } from 'loglayer';
-import { serializeError } from 'serialize-error';
-import { callsitePlugin } from '../plugins/callsite';
-import { environmentPlugin } from '../plugins/environment';
-import type { LogLayerPlugin } from '@loglayer/plugin';
-import type { LogLayerTransport } from '@loglayer/transport';
+import { bootstrap } from './bootstrap';
+import type { LogLayer, LogLevel } from 'loglayer';
+import type { LoggerOptions } from './definitions';
 
 let logInstance: LogLayer;
 
 type LogLevelType = LogLevel | `${LogLevel}`;
 
 export type { LogLevel, LogLevelType };
-
-/**
- * Configuration options for the logger.
- */
-export type LoggerOptions = {
-  /**
-   * Whether logging is enabled. When false, all log calls are no-ops.
-   */
-  enabled: boolean;
-  /**
-   * Additional LogLayer plugins to apply.
-   * These are applied after the default callsite and environment plugins.
-   */
-  plugins?: LogLayerPlugin[];
-  /**
-   * Additional log transports for custom log destinations.
-   * These are applied alongside the default console transport.
-   */
-  transports?: LogLayerTransport[];
-  /**
-   * Minimum log level to output.
-   * @default 'debug'
-   */
-  level?: `${LogLevel}`;
-  /**
-   * Whether to use pretty-printed console output.
-   * When false, outputs structured JSON.
-   * @default true
-   */
-  pretty?: boolean;
-  /**
-   * Prefix string prepended to all log messages.
-   * @default ''
-   */
-  prefix?: string;
-  /**
-   * Environment context for the logger.
-   * @default 'development'
-   */
-  env?: 'production' | 'development' | 'test';
-};
-
-function bootstrap({
-  enabled,
-  plugins = [],
-  transports = [],
-  level = 'debug',
-  env = 'development',
-  pretty = true,
-  prefix = '',
-}: LoggerOptions): LogLayer {
-  const isProductionEnv = env === 'production';
-  const isServer = typeof window === 'undefined';
-
-  const stdoutTransport = pretty
-    ? getSimplePrettyTerminal({
-        viewMode: 'message-only',
-        level,
-        // NOTE: this gives us a nice balance even on the server
-        runtime: 'browser',
-        includeDataInBrowserConsole: true,
-      })
-    : new ConsoleTransport({
-        level,
-        logger: console,
-        appendObjectData: true,
-      });
-
-  const appliedTransports: LogLayerTransport[] = [
-    stdoutTransport,
-    ...transports,
-  ].filter(Boolean);
-
-  const appliedPlugins: LogLayerPlugin[] = [
-    callsitePlugin({ isProductionEnv }),
-    environmentPlugin({ isProductionEnv, isServer }),
-
-    ...plugins,
-  ].filter(Boolean);
-
-  const instance = new LogLayer({
-    errorSerializer: serializeError,
-    transport: appliedTransports,
-    plugins: appliedPlugins,
-    enabled,
-    prefix,
-  });
-
-  logInstance = instance;
-
-  return instance;
-}
 
 /**
  * Returns a singleton LogLayer logger instance.
@@ -146,5 +50,6 @@ export function getLogger(opts: LoggerOptions): LogLayer {
     return logInstance;
   }
 
-  return bootstrap(opts);
+  logInstance = bootstrap(opts);
+  return logInstance;
 }
