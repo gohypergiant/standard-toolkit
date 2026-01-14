@@ -14,16 +14,15 @@
 
 import 'client-only';
 import ChevronDown from '@accelint/icons/chevron-down';
-import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useRef, useState } from 'react';
-import { Button } from '../button';
+import { Button } from './index';
 import { Icon } from '../icon';
 import { Menu } from '../menu';
 import { MenuTrigger } from '../menu/trigger';
 import { Tooltip } from '../tooltip';
 import { TooltipTrigger } from '../tooltip/trigger';
-import styles from './styles.module.css';
-import type { MenuButtonProps } from './types';
+import styles from './menu.module.css';
+import type { MenuButtonProps } from './menu-types';
 
 /**
  * MenuButton - A convenience wrapper that combines Button + MenuTrigger + Menu
@@ -34,7 +33,7 @@ import type { MenuButtonProps } from './types';
  *
  * @example
  * // Basic menu button
- * <MenuButton label="Actions">
+ * <MenuButton buttonChildren="Actions">
  *   <MenuItem>Edit</MenuItem>
  *   <MenuItem>Copy</MenuItem>
  *   <MenuItem>Delete</MenuItem>
@@ -42,97 +41,80 @@ import type { MenuButtonProps } from './types';
  *
  * @example
  * // With icon
- * <MenuButton label="Create" icon={<Plus />} variant="filled" color="accent">
+ * <MenuButton
+ *   buttonChildren={<><Icon><Plus /></Icon>Create</>}
+ *   buttonProps={{ variant: 'filled', color: 'accent' }}
+ * >
  *   <MenuItem>New File</MenuItem>
  *   <MenuItem>New Folder</MenuItem>
  * </MenuButton>
  *
  * @example
  * // Icon-only (chevron dropdown)
- * <MenuButton variant="icon" aria-label="More options">
+ * <MenuButton buttonProps={{ variant: 'icon', 'aria-label': 'More options' }}>
  *   <MenuItem>Edit</MenuItem>
  *   <MenuItem>Delete</MenuItem>
  * </MenuButton>
  *
  * @example
  * // With action handler
- * <MenuButton label="Actions" onAction={(key) => console.log(key)}>
+ * <MenuButton
+ *   buttonChildren="Actions"
+ *   menuProps={{ onAction: (key) => console.log(key) }}
+ * >
  *   <MenuItem id="edit">Edit</MenuItem>
  *   <MenuItem id="delete">Delete</MenuItem>
  * </MenuButton>
  */
 export function MenuButton({
-  label,
-  icon,
+  buttonChildren,
+  buttonProps = {},
+  menuProps = {},
   children,
   tooltip,
-  menuVariant,
-  selectionMode,
-  selectedKeys,
-  onSelectionChange,
-  onAction,
   popoverProps,
-  size = 'medium',
-  color = 'mono-muted',
-  variant = 'filled',
-  isDisabled,
-  className,
-  ...rest
 }: MenuButtonProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const isIconOnly = !label && variant === 'icon';
 
-  // Show tooltip only when hovered AND menu is closed
-  const showTooltip = tooltip && !isMenuOpen;
+  // Destructure button props with defaults
+  const {
+    variant = 'filled',
+    size = 'medium',
+    color = 'mono-muted',
+    className,
+    ...restButtonProps
+  } = buttonProps;
 
-  const buttonElement = (
-    <Button
-      ref={buttonRef}
-      variant={isIconOnly ? 'icon' : variant}
-      size={size}
-      color={color}
-      isDisabled={isDisabled}
-      className={className}
-      {...rest}
-    >
-      {icon && <Icon>{icon}</Icon>}
-      {label}
-      <Icon className={clsx(styles.chevron, isMenuOpen && styles.chevronOpen)}>
-        <ChevronDown />
-      </Icon>
-    </Button>
-  );
-
-  const menuElement = (
-    <Menu
-      variant={menuVariant}
-      selectionMode={selectionMode}
-      selectedKeys={selectedKeys}
-      onSelectionChange={onSelectionChange}
-      onAction={onAction}
-      popoverProps={popoverProps}
-    >
-      {children}
-    </Menu>
+  const menuContent = (
+    <MenuTrigger onOpenChange={setIsMenuOpen}>
+      <Button
+        {...restButtonProps}
+        ref={buttonRef}
+        variant={variant}
+        size={size}
+        color={color}
+        className={className}
+      >
+        {buttonChildren}
+        <Icon className={styles.chevron} data-open={isMenuOpen || undefined}>
+          <ChevronDown />
+        </Icon>
+      </Button>
+      <Menu {...menuProps} popoverProps={popoverProps}>
+        {children}
+      </Menu>
+    </MenuTrigger>
   );
 
   if (tooltip) {
     return (
-      <TooltipTrigger disabled={!showTooltip}>
-        <MenuTrigger onOpenChange={setIsMenuOpen}>
-          {buttonElement}
-          {menuElement}
-        </MenuTrigger>
+      <TooltipTrigger disabled={isMenuOpen}>
+        {menuContent}
         <Tooltip triggerRef={buttonRef}>{tooltip}</Tooltip>
       </TooltipTrigger>
     );
   }
 
-  return (
-    <MenuTrigger onOpenChange={setIsMenuOpen}>
-      {buttonElement}
-      {menuElement}
-    </MenuTrigger>
-  );
+  return menuContent;
 }

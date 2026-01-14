@@ -22,39 +22,22 @@ import { MenuSection } from '../menu/section';
 import { MenuSeparator } from '../menu/separator';
 import { MenuSubmenu } from '../menu/submenu';
 import { Menu } from '../menu';
-import { MenuButton } from './';
+import { MenuButton } from './menu';
 
 const meta = {
   title: 'Components/MenuButton',
   component: MenuButton,
   args: {
-    label: 'Actions',
-    size: 'medium',
-    color: 'mono-muted',
-    variant: 'filled',
+    buttonChildren: 'Actions',
+    buttonProps: {
+      size: 'medium',
+      color: 'mono-muted',
+      variant: 'filled',
+    },
   },
   argTypes: {
-    label: {
+    buttonChildren: {
       control: 'text',
-    },
-    size: {
-      control: 'select',
-      options: ['large', 'medium', 'small', 'xsmall'],
-    },
-    color: {
-      control: 'select',
-      options: ['mono-muted', 'mono-bold', 'accent', 'serious', 'critical'],
-    },
-    variant: {
-      control: 'select',
-      options: ['filled', 'flat', 'outline', 'icon'],
-    },
-    menuVariant: {
-      control: 'select',
-      options: ['cozy', 'compact'],
-    },
-    isDisabled: {
-      control: 'boolean',
     },
   },
 } satisfies Meta<typeof MenuButton>;
@@ -82,10 +65,15 @@ export const WithIcon: Story = {
   render: (args) => (
     <MenuButton
       {...args}
-      label='Create New'
-      icon={<Plus />}
-      variant='filled'
-      color='accent'
+      buttonChildren={
+        <>
+          <Icon>
+            <Plus />
+          </Icon>
+          Create New
+        </>
+      }
+      buttonProps={{ variant: 'filled', color: 'accent' }}
     >
       <MenuItem id='new-file'>
         <Icon>
@@ -111,7 +99,7 @@ export const WithIcon: Story = {
 
 export const IconOnly: Story = {
   render: () => (
-    <MenuButton variant='icon' aria-label='More options'>
+    <MenuButton buttonProps={{ variant: 'icon', 'aria-label': 'More options' }}>
       <MenuItem id='edit'>
         <MenuItemLabel>Edit</MenuItemLabel>
       </MenuItem>
@@ -129,7 +117,7 @@ export const IconOnly: Story = {
 export const Variants: Story = {
   render: () => (
     <div className='flex gap-xl'>
-      <MenuButton label='Filled' variant='filled'>
+      <MenuButton buttonChildren='Filled' buttonProps={{ variant: 'filled' }}>
         <MenuItem id='option-1'>
           <MenuItemLabel>Option 1</MenuItemLabel>
         </MenuItem>
@@ -138,7 +126,7 @@ export const Variants: Story = {
         </MenuItem>
       </MenuButton>
 
-      <MenuButton label='Flat' variant='flat'>
+      <MenuButton buttonChildren='Flat' buttonProps={{ variant: 'flat' }}>
         <MenuItem id='option-1'>
           <MenuItemLabel>Option 1</MenuItemLabel>
         </MenuItem>
@@ -147,7 +135,7 @@ export const Variants: Story = {
         </MenuItem>
       </MenuButton>
 
-      <MenuButton label='Outline' variant='outline'>
+      <MenuButton buttonChildren='Outline' buttonProps={{ variant: 'outline' }}>
         <MenuItem id='option-1'>
           <MenuItemLabel>Option 1</MenuItemLabel>
         </MenuItem>
@@ -162,7 +150,7 @@ export const Variants: Story = {
 export const Sizes: Story = {
   render: () => (
     <div className='flex items-start gap-xl'>
-      <MenuButton label='Large' size='large'>
+      <MenuButton buttonChildren='Large' buttonProps={{ size: 'large' }}>
         <MenuItem id='option-1'>
           <MenuItemLabel>Option 1</MenuItemLabel>
         </MenuItem>
@@ -171,7 +159,7 @@ export const Sizes: Story = {
         </MenuItem>
       </MenuButton>
 
-      <MenuButton label='Medium' size='medium'>
+      <MenuButton buttonChildren='Medium' buttonProps={{ size: 'medium' }}>
         <MenuItem id='option-1'>
           <MenuItemLabel>Option 1</MenuItemLabel>
         </MenuItem>
@@ -180,7 +168,7 @@ export const Sizes: Story = {
         </MenuItem>
       </MenuButton>
 
-      <MenuButton label='Small' size='small'>
+      <MenuButton buttonChildren='Small' buttonProps={{ size: 'small' }}>
         <MenuItem id='option-1'>
           <MenuItemLabel>Option 1</MenuItemLabel>
         </MenuItem>
@@ -189,7 +177,7 @@ export const Sizes: Story = {
         </MenuItem>
       </MenuButton>
 
-      <MenuButton label='XSmall' size='xsmall'>
+      <MenuButton buttonChildren='XSmall' buttonProps={{ size: 'xsmall' }}>
         <MenuItem id='option-1'>
           <MenuItemLabel>Option 1</MenuItemLabel>
         </MenuItem>
@@ -204,31 +192,37 @@ export const Sizes: Story = {
 export const Colors: Story = {
   render: () => (
     <div className='flex gap-xl'>
-      <MenuButton label='Mono Muted' color='mono-muted'>
+      <MenuButton
+        buttonChildren='Mono Muted'
+        buttonProps={{ color: 'mono-muted' }}
+      >
         <MenuItem id='option'>
           <MenuItemLabel>Option</MenuItemLabel>
         </MenuItem>
       </MenuButton>
 
-      <MenuButton label='Mono Bold' color='mono-bold'>
+      <MenuButton
+        buttonChildren='Mono Bold'
+        buttonProps={{ color: 'mono-bold' }}
+      >
         <MenuItem id='option'>
           <MenuItemLabel>Option</MenuItemLabel>
         </MenuItem>
       </MenuButton>
 
-      <MenuButton label='Accent' color='accent'>
+      <MenuButton buttonChildren='Accent' buttonProps={{ color: 'accent' }}>
         <MenuItem id='option'>
           <MenuItemLabel>Option</MenuItemLabel>
         </MenuItem>
       </MenuButton>
 
-      <MenuButton label='Serious' color='serious'>
+      <MenuButton buttonChildren='Serious' buttonProps={{ color: 'serious' }}>
         <MenuItem id='option'>
           <MenuItemLabel>Option</MenuItemLabel>
         </MenuItem>
       </MenuButton>
 
-      <MenuButton label='Critical' color='critical'>
+      <MenuButton buttonChildren='Critical' buttonProps={{ color: 'critical' }}>
         <MenuItem id='option'>
           <MenuItemLabel>Option</MenuItemLabel>
         </MenuItem>
@@ -239,7 +233,7 @@ export const Colors: Story = {
 
 export const WithSections: Story = {
   render: (args) => (
-    <MenuButton {...args} label='File'>
+    <MenuButton {...args} buttonChildren='File'>
       <MenuSection title='Create'>
         <MenuItem id='new-file'>
           <Icon>
@@ -282,7 +276,7 @@ export const WithSections: Story = {
 
 export const WithSubmenus: Story = {
   render: (args) => (
-    <MenuButton {...args} label='Export'>
+    <MenuButton {...args} buttonChildren='Export'>
       <MenuItem id='quick-export'>
         <MenuItemLabel>Quick Export</MenuItemLabel>
       </MenuItem>
@@ -314,7 +308,11 @@ export const WithSubmenus: Story = {
 
 export const Disabled: Story = {
   render: (args) => (
-    <MenuButton {...args} label='Disabled' isDisabled>
+    <MenuButton
+      {...args}
+      buttonChildren='Disabled'
+      buttonProps={{ isDisabled: true }}
+    >
       <MenuItem id='option-1'>
         <MenuItemLabel>Option 1</MenuItemLabel>
       </MenuItem>
@@ -333,8 +331,8 @@ export const WithActionHandler: Story = {
       <div className='flex flex-col gap-m'>
         <MenuButton
           {...args}
-          label='Actions'
-          onAction={(key) => setLastAction(String(key))}
+          buttonChildren='Actions'
+          menuProps={{ onAction: (key) => setLastAction(String(key)) }}
         >
           <MenuItem id='edit'>
             <Icon>
@@ -378,10 +376,12 @@ export const WithSelection: Story = {
       <div className='flex flex-col gap-m'>
         <MenuButton
           {...args}
-          label='Font Size'
-          selectionMode='single'
-          selectedKeys={selectedKey}
-          onSelectionChange={(keys) => setSelectedKey(keys as Set<string>)}
+          buttonChildren='Font Size'
+          menuProps={{
+            selectionMode: 'single',
+            selectedKeys: selectedKey,
+            onSelectionChange: (keys) => setSelectedKey(keys as Set<string>),
+          }}
         >
           <MenuItem id='small'>
             <MenuItemLabel>Small</MenuItemLabel>
@@ -410,7 +410,10 @@ export const WithSelection: Story = {
 
 export const WithTooltip: Story = {
   render: () => (
-    <MenuButton variant='icon' aria-label='More options' tooltip='More options'>
+    <MenuButton
+      buttonProps={{ variant: 'icon', 'aria-label': 'More options' }}
+      tooltip='More options'
+    >
       <MenuItem id='edit'>
         <MenuItemLabel>Edit</MenuItemLabel>
       </MenuItem>

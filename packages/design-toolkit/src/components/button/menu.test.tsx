@@ -14,16 +14,17 @@ import Placeholder from '@accelint/icons/placeholder';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
+import { Icon } from '../icon';
 import { MenuItem } from '../menu/item';
 import { MenuItemLabel } from '../menu/item-label';
 import { MenuSection } from '../menu/section';
 import { MenuSeparator } from '../menu/separator';
-import { MenuButton } from './';
-import type { MenuButtonProps } from './types';
+import { MenuButton } from './menu';
+import type { MenuButtonProps } from './menu-types';
 
 function setup(props: Partial<MenuButtonProps> = {}) {
   const defaultProps: MenuButtonProps = {
-    label: 'Actions',
+    buttonChildren: 'Actions',
     children: (
       <>
         <MenuItem id='edit'>
@@ -41,22 +42,18 @@ function setup(props: Partial<MenuButtonProps> = {}) {
   };
 
   render(<MenuButton {...defaultProps} />);
-
-  return defaultProps;
 }
 
 describe('MenuButton', () => {
   describe('Basic Rendering', () => {
-    it('should render with label', () => {
-      setup({ label: 'Actions' });
+    it('should render with buttonChildren', () => {
+      setup();
 
-      expect(
-        screen.getByRole('button', { name: /actions/i }),
-      ).toBeInTheDocument();
+      screen.getByRole('button', { name: /actions/i });
     });
 
     it('should render chevron icon', () => {
-      setup({ label: 'Actions' });
+      setup();
 
       // ChevronDown icon should be present in the button
       const button = screen.getByRole('button');
@@ -85,24 +82,31 @@ describe('MenuButton', () => {
   });
 
   describe('Icon Support', () => {
-    it('should render with icon when provided', () => {
+    it('should render with icon in buttonChildren when provided', () => {
       setup({
-        label: 'Create',
-        icon: <Placeholder data-testid='prefix-icon' />,
+        buttonChildren: (
+          <>
+            <Icon>
+              <Placeholder data-testid='prefix-icon' />
+            </Icon>
+            Create
+          </>
+        ),
       });
 
       expect(screen.getByTestId('prefix-icon')).toBeInTheDocument();
     });
 
-    it('should render icon-only mode when variant is icon and no label', () => {
+    it('should render icon-only mode when variant is icon and no buttonChildren', () => {
       setup({
-        label: undefined,
-        variant: 'icon',
-        'aria-label': 'More options',
+        buttonChildren: undefined,
+        buttonProps: {
+          variant: 'icon',
+          'aria-label': 'More options',
+        },
       });
 
-      const button = screen.getByRole('button', { name: /more options/i });
-      expect(button).toBeInTheDocument();
+      screen.getByRole('button', { name: /more options/i });
     });
   });
 
@@ -112,9 +116,11 @@ describe('MenuButton', () => {
       'flat',
       'outline',
     ] as const)('should render with variant=%s', (variant) => {
-      setup({ label: 'Actions', variant });
+      setup({
+        buttonProps: { variant },
+      });
 
-      expect(screen.getByRole('button')).toBeInTheDocument();
+      screen.getByRole('button');
     });
   });
 
@@ -125,10 +131,11 @@ describe('MenuButton', () => {
       'small',
       'xsmall',
     ] as const)('should render with size=%s', (size) => {
-      setup({ label: 'Actions', size });
+      setup({
+        buttonProps: { size },
+      });
 
-      const button = screen.getByRole('button');
-      expect(button).toHaveAttribute('data-size', size);
+      expect(screen.getByRole('button')).toHaveAttribute('data-size', size);
     });
   });
 
@@ -140,23 +147,28 @@ describe('MenuButton', () => {
       'serious',
       'critical',
     ] as const)('should render with color=%s', (color) => {
-      setup({ label: 'Actions', color });
+      setup({
+        buttonProps: { color },
+      });
 
-      const button = screen.getByRole('button');
-      expect(button).toHaveAttribute('data-color', color);
+      expect(screen.getByRole('button')).toHaveAttribute('data-color', color);
     });
   });
 
   describe('Disabled State', () => {
     it('should be disabled when isDisabled is true', () => {
-      setup({ label: 'Actions', isDisabled: true });
+      setup({
+        buttonProps: { isDisabled: true },
+      });
 
       expect(screen.getByRole('button')).toBeDisabled();
     });
 
     it('should not open menu when disabled', async () => {
       const user = userEvent.setup();
-      setup({ label: 'Actions', isDisabled: true });
+      setup({
+        buttonProps: { isDisabled: true },
+      });
 
       await user.click(screen.getByRole('button'));
 
@@ -168,7 +180,7 @@ describe('MenuButton', () => {
     it('should call onAction when menu item is clicked', async () => {
       const onAction = vi.fn();
       const user = userEvent.setup();
-      setup({ onAction });
+      setup({ menuProps: { onAction } });
 
       await user.click(screen.getByRole('button'));
       await user.click(screen.getByText('Edit'));
@@ -239,19 +251,14 @@ describe('MenuButton', () => {
     it('should not render tooltip wrapper when tooltip prop is not provided', () => {
       setup({ tooltip: undefined });
 
-      // Button should render directly without tooltip wrapper
-      const button = screen.getByRole('button');
-      expect(button).toBeInTheDocument();
-      // No tooltip element in the DOM
+      screen.getByRole('button');
       expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
     });
 
     it('should render button correctly when tooltip prop is provided', () => {
       setup({ tooltip: 'More options' });
 
-      // Button should still be accessible
-      const button = screen.getByRole('button');
-      expect(button).toBeInTheDocument();
+      screen.getByRole('button');
     });
 
     it('should hide tooltip when menu is open', async () => {

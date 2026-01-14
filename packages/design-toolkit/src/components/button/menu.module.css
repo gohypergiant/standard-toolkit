@@ -12,13 +12,13 @@
 
 @reference '@accelint/design-foundation/styles';
 
-@layer components.l1 {
+@layer components.l2 {
   /* Prevent chevron from shrinking when button label is long, ensuring the dropdown indicator remains visible */
   .chevron {
     @apply shrink-0 transition-transform;
-  }
 
-  .chevronOpen {
-    @apply rotate-180;
+    @variant data-open {
+      @apply rotate-180;
+    }
   }
 }
