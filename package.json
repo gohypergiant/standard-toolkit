@@ -33,6 +33,8 @@
   "pnpm": {
     "overrides": {
       "@internationalized/date": "~3.9.0",
+      "@loglayer/plugin": "^2.2.7",
+      "@loglayer/shared": "^3.3.0",
       "@react-aria/dnd": "~3.11.2",
       "@react-aria/interactions": "~3.25.5",
       "@react-aria/overlays": "~3.29.1",

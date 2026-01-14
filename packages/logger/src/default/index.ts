@@ -11,19 +11,18 @@
  */
 
 import { getSimplePrettyTerminal } from '@loglayer/transport-simple-pretty-terminal';
-import {
-  ConsoleTransport,
-  type ILogLayer,
-  LogLayer,
-  type LogLevel,
-} from 'loglayer';
+import { ConsoleTransport, LogLayer, type LogLevel } from 'loglayer';
 import { serializeError } from 'serialize-error';
 import { callsitePlugin } from '../plugins/callsite';
 import { environmentPlugin } from '../plugins/environment';
 import type { LogLayerPlugin } from '@loglayer/plugin';
 import type { LogLayerTransport } from '@loglayer/transport';
 
-let logInstance: ILogLayer;
+let logInstance: LogLayer;
+
+type LogLevelType = LogLevel | `${LogLevel}`;
+
+export type { LogLevel, LogLevelType };
 
 /**
  * Configuration options for the logger.
@@ -74,7 +73,7 @@ function bootstrap({
   env = 'development',
   pretty = true,
   prefix = '',
-}: LoggerOptions) {
+}: LoggerOptions): LogLayer {
   const isProductionEnv = env === 'production';
   const isServer = typeof window === 'undefined';
 
@@ -97,7 +96,7 @@ function bootstrap({
     ...transports,
   ].filter(Boolean);
 
-  const appliedPlugins = [
+  const appliedPlugins: LogLayerPlugin[] = [
     callsitePlugin({ isProductionEnv }),
     environmentPlugin({ isProductionEnv, isServer }),
 
@@ -142,7 +141,7 @@ function bootstrap({
  * logger.info('User logged in', { userId: 123 });
  * ```
  */
-export function getLogger(opts: LoggerOptions): ILogLayer {
+export function getLogger(opts: LoggerOptions): LogLayer {
   if (logInstance) {
     return logInstance;
   }

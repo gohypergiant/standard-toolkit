@@ -5,8 +5,9 @@
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "dependencies": {
-    "@loglayer/plugin": "^2.1.6",
-    "@loglayer/transport": "^2.3.4",
+    "@loglayer/plugin": "^2.2.7",
+    "@loglayer/shared": "^3.3.0",
+    "@loglayer/transport": "^2.3.13",
     "@loglayer/transport-simple-pretty-terminal": "^2.2.1",
     "callsites": "^4.2.0",
     "serialize-error": "^12.0.0"

@@ -6,6 +6,8 @@ settings:
 
 overrides:
   '@internationalized/date': ~3.9.0
+  '@loglayer/plugin': ^2.2.7
+  '@loglayer/shared': ^3.3.0
   '@react-aria/dnd': ~3.11.2
   '@react-aria/interactions': ~3.25.5
   '@react-aria/overlays': ~3.29.1
@@ -846,11 +848,14 @@ importers:
   packages/logger:
     dependencies:
       '@loglayer/plugin':
-        specifier: ^2.1.6
-        version: 2.2.6
+        specifier: ^2.2.7
+        version: 2.2.7
+      '@loglayer/shared':
+        specifier: ^3.3.0
+        version: 3.3.0
       '@loglayer/transport':
-        specifier: ^2.3.4
-        version: 2.3.12
+        specifier: ^2.3.13
+        version: 2.3.13
       '@loglayer/transport-simple-pretty-terminal':
         specifier: ^2.2.1
         version: 2.3.0
@@ -2481,20 +2486,12 @@ packages:
     resolution: {integrity: sha512-kntdCN9MtNctoMpDBMk9D1begChINbdYJNso5YLB0bbKNIy819rKfarSn7Xmtcq0aBxFUHPp04wj6XnvWseFOQ==}
     engines: {node: '>=18'}
 
-  '@loglayer/plugin@2.1.6':
-    resolution: {integrity: sha512-jZWnExpiYl+BefpiZC34/Finuu9fucxkPfz6re0xF1cUSOmZjy3fGeQtB+zVFYQz7mf6bWbN8dn5z22cH+Hdug==}
+  '@loglayer/plugin@2.2.7':
+    resolution: {integrity: sha512-k9O21Z7TxFemZUrC4YL2pJZG48QQPLCPVJQ1zg42y0kYveACuIb0a7abe40MkfrZOu9ApNHQHC5wcggQf0V7pA==}
     engines: {node: '>=18'}
 
-  '@loglayer/plugin@2.2.6':
-    resolution: {integrity: sha512-HjUpCxdlvYVMvb7nVEg5xOs+R9RSe08DQ2/Zm3O3SjhKUk7hRrUDQj00eaudeqeem1kugyLJPsUN6Q4mFaBPFA==}
-    engines: {node: '>=18'}
-
-  '@loglayer/shared@2.5.3':
-    resolution: {integrity: sha512-KT8ic1wWstCKOjZNR6Vqpk9rK7PPx/QPjGhfqePGYjo6l9R94mSHry+zdtYjIrIPvQHbnzsp/wd6lj6IvD3MvQ==}
-    engines: {node: '>=18'}
-
-  '@loglayer/shared@3.2.0':
-    resolution: {integrity: sha512-HSqb/vF1I0TteulEPbfU5qBYuv3xRTOYJlWttNBNqR4XU8sqxw/0azqDuGsfr4J8aJTD018jJz09OrkrA8xoOw==}
+  '@loglayer/shared@3.3.0':
+    resolution: {integrity: sha512-E596RsJSRthGkG7PTGAeja5OIwB0fK3FCvZYXx7nFSv+J1Bk8RJO/vb6IB5th8dB9zoaQ/ahvlZ1Jfhg0dy/Mg==}
     engines: {node: '>=18'}
 
   '@loglayer/transport-simple-pretty-terminal@2.3.0':
@@ -2502,6 +2499,10 @@ packages:
 
   '@loglayer/transport@2.3.12':
     resolution: {integrity: sha512-fnGRWGBRaO1yqhE8TXob0D42qWjihmpVCyP0nyyFYE6LibugvwScEvDW+w9xLlXunLbvCR0eYmzhdcF8ksVTYw==}
+    engines: {node: '>=18'}
+
+  '@loglayer/transport@2.3.13':
+    resolution: {integrity: sha512-sfw6xvsIOzTh4l8ZpSH7Vfj3ajH/y+PUBShclqjaLtXxurKGh8xZuciDsL3wuern+Ea/r8+iT2vzK3d2BSUyQQ==}
     engines: {node: '>=18'}
 
   '@loglayer/transport@2.3.4':
@@ -8268,6 +8269,7 @@ packages:
   whatwg-encoding@3.1.1:
     resolution: {integrity: sha512-6qN4hJdMwfYBtE3YBTTHhoeuUrDBPZmbQaxWAqSALV/MeEnR5z1xd8UKud2RAkFoPkmB+hli1TZSnyi84xz1vQ==}
     engines: {node: '>=18'}
+    deprecated: Use @exodus/bytes instead for a more spec-conformant and faster implementation
 
   whatwg-mimetype@3.0.0:
     resolution: {integrity: sha512-nt+N2dzIutVRxARx1nghPKGv1xHikU7HKdfafKkLNLindmPU/ch3U31NOCGGA/dmPcmb1VlofO0vnKAcsm0o/Q==}
@@ -9724,19 +9726,13 @@ snapshots:
 
   '@loglayer/context-manager@1.1.6':
     dependencies:
-      '@loglayer/shared': 2.5.3
+      '@loglayer/shared': 3.3.0
 
-  '@loglayer/plugin@2.1.6':
+  '@loglayer/plugin@2.2.7':
     dependencies:
-      '@loglayer/shared': 2.5.3
+      '@loglayer/shared': 3.3.0
 
-  '@loglayer/plugin@2.2.6':
-    dependencies:
-      '@loglayer/shared': 3.2.0
-
-  '@loglayer/shared@2.5.3': {}
-
-  '@loglayer/shared@3.2.0': {}
+  '@loglayer/shared@3.3.0': {}
 
   '@loglayer/transport-simple-pretty-terminal@2.3.0':
     dependencies:
@@ -9747,11 +9743,15 @@ snapshots:
 
   '@loglayer/transport@2.3.12':
     dependencies:
-      '@loglayer/shared': 3.2.0
+      '@loglayer/shared': 3.3.0
+
+  '@loglayer/transport@2.3.13':
+    dependencies:
+      '@loglayer/shared': 3.3.0
 
   '@loglayer/transport@2.3.4':
     dependencies:
-      '@loglayer/shared': 2.5.3
+      '@loglayer/shared': 3.3.0
 
   '@ls-lint/ls-lint@2.3.1': {}
 
@@ -14725,7 +14725,7 @@ snapshots:
 
   geojson-rbush@3.2.0:
     dependencies:
-      '@turf/bbox': 6.5.0
+      '@turf/bbox': 7.3.1
       '@turf/helpers': 6.5.0
       '@turf/meta': 6.5.0
       '@types/geojson': 7946.0.8
@@ -15413,8 +15413,8 @@ snapshots:
   loglayer@6.10.0:
     dependencies:
       '@loglayer/context-manager': 1.1.6
-      '@loglayer/plugin': 2.1.6
-      '@loglayer/shared': 2.5.3
+      '@loglayer/plugin': 2.2.7
+      '@loglayer/shared': 3.3.0
       '@loglayer/transport': 2.3.4
 
   long@3.2.0:
