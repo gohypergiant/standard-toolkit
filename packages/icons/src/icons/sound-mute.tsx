@@ -19,7 +19,7 @@ interface SVGRProps {
   title?: string;
   titleId?: string;
 }
-const SvgExpandLeftPanel = ({
+const SvgSoundMute = ({
   title,
   titleId,
   ...props
@@ -34,14 +34,8 @@ const SvgExpandLeftPanel = ({
     {title ? <title id={titleId}>{title}</title> : null}
     <path
       fill='currentColor'
-      fillRule='evenodd'
-      d='M5.5 20h13c1.5 0 1.5-1.5 1.5-1.5v-13S20 4 18.5 4h-13S4 4 4 5.5v13S4 20 5.5 20m3-14.5h-3v13h3zm1.5 13h8.5v-13H10z'
-      clipRule='evenodd'
-    />
-    <path
-      fill='currentColor'
-      d='M11.814 12.575h2.98l-1.182 1.182a.58.58 0 0 0 0 .819.574.574 0 0 0 .813 0l2.168-2.168a.574.574 0 0 0 0-.813l-2.168-2.169a.574.574 0 1 0-.813.813l1.182 1.183h-2.98a.58.58 0 0 0-.576.576c0 .317.26.577.576.577'
+      d='M12.83 18.667s-4.14-2.615-5-3.334c.03.028-1.674.001-2.083 0-1.246-.001-1.246-1.25-1.246-1.25-.002-1.471-.002-2.695 0-4.166 0 0 0-1.248 1.246-1.25H7.83c1.718-.041 3.564-2.239 5-3.334-.006 4.445 0 8.89 0 13.334M18.739 10.16l-1.85 1.851 1.85 1.85-.74.74-1.85-1.85-1.85 1.85-.74-.74 1.85-1.85-1.85-1.85.703-.703a237 237 0 0 0 1.887 1.813l1.85-1.85z'
     />
   </svg>
 );
-export default SvgExpandLeftPanel;
+export default SvgSoundMute;

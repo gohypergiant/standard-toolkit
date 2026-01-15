@@ -23,6 +23,9 @@ export default {
   outDir: 'src/icons',
   replaceAttrValues: {
     '#898989': 'currentColor',
+    '#fff': 'currentColor',
+    '#ffffff': 'currentColor',
+    white: 'currentColor',
   },
   prettier: false,
   svgoConfig: {
