@@ -41,6 +41,10 @@
     @variant hover {
       @apply outline-interactive-hover;
     }
+
+    @variant read-only {
+      @apply px-0 outline-none;
+    }
   }
 
   .input {

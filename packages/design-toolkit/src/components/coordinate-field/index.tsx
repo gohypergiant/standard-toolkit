@@ -262,6 +262,7 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
             } as CSSProperties
           }
           className={clsx(styles.control, classNames?.control)}
+          data-readonly={isReadOnly || null}
         >
           <div
             className={clsx(styles.input, styles[variant], classNames?.input)}
