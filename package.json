@@ -70,6 +70,7 @@
     "clean:dist": "pnpm -r exec rimraf dist",
     "clean:turbo": "pnpm -r exec rimraf .turbo && pnpm rimraf .turbo",
     "constellation-tracker": "pnpm turbo run constellation-tracker -- --regenerate",
+    "context": "pnpm turbo run context",
     "deps:version-major": "pnpm taze major -r",
     "deps:version-minor": "pnpm taze minor -r",
     "deps:version-patch": "pnpm taze patch -r",

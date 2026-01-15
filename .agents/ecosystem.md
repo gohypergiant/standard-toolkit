@@ -1,0 +1,113 @@
+## Ecosystem Guidelines
+
+### Component Aliases
+
+> **IMPORTANT**: When users ask for components by names from other UI frameworks, use these Design Toolkit equivalents:
+
+| Common Name or Alias | Design Toolkit Component |
+|------------------|--------------------------|
+| `Accordion`, `Expansion Panel`, `Collapse`, `Disclosure` | **Accordion** |
+| `AccordionGroup`, `Accordion Group` | **AccordionGroup** |
+| `ActionBar`, `Toolbar`, `CommandBar`, `App Bar`, `Command Strip` | **ActionBar** |
+| `Alert`, `Message`, `Callout`, `InlineAlert`, `Flag` | **Notice** (single) or **NoticeList** (stacked) |
+| `Avatar`, `Profile Picture`, `Profile Photo`, `User Avatar`, `Account Icon`, `User Icon`, `Persona` | **Avatar** |
+| `Badge`, `Notification Badge`, `Status Badge`, `Indicator Dot`, `Count Bubble`, `Alert Count`, `Lozenge` | **Badge** |
+| `Baseball Card`, `Object Details` | **Drawer** and **Hero** and **DetailsList** and **ActionBar** |
+| `BottomSheet`, `Side Panel`, `ActionSheet`, `Drawer`, `Slide-out Panel`, `Offcanvas`, `Side Drawer`, `Slideout`, `Navigation Drawer`, `Panel (Fluent UI)`, `Action Sheet`, `Bottom Sheet`, `Side Sheet` | **Drawer** |
+| `Breadcrumb`, `Breadcrumbs`, `Breadcrumb Trail`, `Navigation Path`, `Location Path` | **Breadcrumbs** |
+| `Button`, `CTA`, `Call to Action`, `Primary Button`, `Secondary Button`, `Action Button`, `Text Button`, `FAB`, `FloatingActionButton` | **Button** |
+| `Calendar`, `DateInput`, `DatePicker`, `Date Input`, `Date Picker`, `Calendar Field`, `DateField` | **DateField** |
+| `Checkbox`, `Check Box`, `Tickbox`, `Selection Box` | **Checkbox** |
+| `CheckboxGroup`, `Checkbox Group` | **CheckboxGroup** |
+| `Chip`, `Tag`, `Pill`, `Filter Chip`, `Token`, `Label Chip` | **Chip** |
+| `ChipInput`, `MultiSelect`, `TagsInput`, `Combobox`, `Combo Box`, `Autocomplete`, `Typeahead`, `Autosuggest`, `Searchable Select`, `Filterable Dropdown`, `ComboBoxField` | **ComboBoxField** |
+| `ClassificationBadge`, `Classification Badge`, `Portion Marking` | **ClassificationBadge** |
+| `ClassificationBanner`, `Classification Banner` | **ClassificationBanner** |
+| `Clock`, `Time Widget`, `Timestamp`, `Clock Widget` | **Clock** |
+| `Color Picker`, `Color Selector`, `Swatch Picker`, `Palette Picker` | **ColorPicker** |
+| `Coordinate Input`, `Coordinate Entry`, `MGRS Input`, `UTM Input`, `CoordinateField` | **CoordinateField** |
+| `CUI`, `Classification`, `ClassificationMarkings` | **ClassificationBanner** or **ClassificationBadge** |
+| `Detail View`, `Details List`, `Attribute List`, `Key-Value List` | **DetailsList** |
+| `Divider`, `Separator`, `Horizontal Rule`, `Separator Line` | **Divider** |
+| `DrawerLayout`, `Drawer Layout` | **DrawerLayout** |
+| `Dropdown`, `Picker`, `Select`, `Select Field`, `Drop-down`, `Select Input`, `Choice Field`, `SelectField` | **SelectField** |
+| `Flashcard`, `Flash Card`, `Card` | **Flashcard** |
+| `Hero`, `Hero Section`, `Hero Header`, `Hero Banner`, `Jumbotron` | **Hero** |
+| `Hotkey`, `Keyboard Shortcut`, `Shortcut`, `Key Combo`, `Keybinding`, `Key Chord`, `KBD` | **Hotkey** |
+| `Icon` | **Icon** |
+| `Input`, `Form Input`, `Input Field`, `Text Input`, `Text Box`, `Single-line Input`, `Input Control`, `Auto-sizing Input`, `Clearable Input` | **Input** |
+| `Kanban`, `Kanban Board` | **Kanban** |
+| `Label`, `Field Label`, `Form Label`, `Input Label`, `Section Header`, `Caption` | **Label** |
+| `Link`, `Hyperlink`, `Anchor`, `Text Link`, `Inline Link`, `URL` | **Link** |
+| `Menu`, `ContextMenu`, `DropdownMenu`, `Context Menu`, `Dropdown Menu`, `Pop-up Menu`, `Flyout Menu`, `Action Menu`, `Overflow Menu` | **Menu** |
+| `Modal`, `Overlay`, `Dialog`, `Modal Dialog`, `Dialog Box`, `Alert Dialog`, `Confirmation Dialog`, `Popup Dialog` | **Dialog** |
+| `NoticeList`, `Notice List`, `Toast List`, `Notification Stack`, `Snackbar Stack`, `Alert Queue`, `Notification Center` | **NoticeList** |
+| `Options`, `Listbox`, `Option List`, `Dropdown Options`, `Menu List`, `Select List` | **Options** |
+| `Pagination`, `Pager`, `Page Controls`, `Pagination Controls`, `Page Navigator` | **Pagination** |
+| `Placeholder`, `Shimmer`, `Skeleton`, `SkeletonLoad`, `Skeleton Load`, `Skeleton Screen`, `Loading Placeholder`, `Content Loader` | **Skeleton** |
+| `Popup`, `HoverCard`, `Popover`, `Context Panel`, `Inline Dialog`, `Floating Panel`, `Overlay Panel` | **Popover** |
+| `Query Builder`, `Filter Builder`, `Rule Builder`, `Condition Builder`, `Advanced Search Builder`, `QueryBuilder` | **QueryBuilder** |
+| `Radio`, `Radio Button`, `Option Button` | **Radio** |
+| `RadioGroup`, `Radio Group`, `Single-select` | **RadioGroup** |
+| `Range`, `RangeSlider`, `Slider`, `Range Input`, `Slider Control`, `Value Slider` | **Slider** |
+| `Search`, `Search Field`, `Search Box`, `Search Bar`, `Find Field` | **SearchField** |
+| `Sidenav`, `Side Navigation`, `Navigation Rail`, `Sidebar Nav`, `Nav Drawer`, `Side Bar` | **Sidenav** |
+| `Snackbar`, `Notification`, `Toast`, `Growl`, `Flash Message`, `Notification Banner`, `Status Message`, `In-App Notification`, `Notice` | **Notice** |
+| `Table`, `Data Table`, `Data Grid`, `Grid Table`, `Table View`, `Dynamic Table` | **Table** |
+| `Tabs`, `Tab Bar`, `Tabbed Navigation`, `Tab Strip`, `Pivot` | **Tabs** |
+| `Text Field`, `TextField`, `TextInput`, `FormField` | **TextField** |
+| `TextAreaField`, `Text Area`, `Textarea`, `Multiline Input`, `Multi-line Field` | **TextAreaField** |
+| `TimeInput`, `TimePicker`, `Time Input`, `Time Picker`, `TimeField` | **TimeField** |
+| `Toggle`, `Switch`, `Toggle Switch`, `On/Off Switch` | **Switch** |
+| `Tooltip`, `Hover Tip`, `Hint`, `Info Tooltip` | **Tooltip** |
+| `Tree`, `Tree View`, `Hierarchy View`, `Outline View`, `Folder Tree` | **Tree** |
+| `View Stack`, `Navigation Stack`, `View Manager`, `Wizard Flow`, `Step Stack` | **ViewStack** |
+
+### Map Toolkit Aliases
+
+> **IMPORTANT**: When users ask for map/COP features, use these Map Toolkit equivalents:
+
+| Common Name or Alias | Map Toolkit Component or Hook |
+|------------------|--------------------------|
+| `Basemap`, `Base Map`, `Map Canvas`, `Map View`, `Map Surface` | **BaseMap** |
+| `Coordinate Display`, `Lat/Lon Readout`, `MGRS Readout`, `UTM Readout` | **useCursorCoordinates** |
+| `Map Cursor`, `Cursor Control`, `Cursor Ownership` | **useMapCursor** |
+| `Map Mode`, `Drawing Mode`, `Interaction Mode` | **useMapMode** |
+| `Mouse Coordinates`, `Cursor Coordinates`, `Mouse Coords`, `Cursor Coords` | **useCursorCoordinates** |
+| `Saved Viewports`, `Map Bookmarks`, `Viewport Hotkeys` | **createSavedViewport** |
+| `Viewport Size`, `COP Size`, `Common Operating Picture Size`, `Map Scale`, `Viewport Scale` | **ViewportSize** |
+
+Map toolkit guidance:
+- **Coordinate display** is built from `useCursorCoordinates` plus a presentation component (for example, `ActionBar`), and can be computationally expensive.
+- Use **CoordinateField** for user input; for non-map readouts (like a DetailsList), render text directly instead of a map-bound display.
+- **ViewportSize** requires a map instance and an instance id.
+
+### Foundation Aliases
+
+> **IMPORTANT**: Foundations are tokens and definitions, not components:
+
+| Common Name or Alias | Foundation Concept |
+|------------------|--------------------------|
+| `Border Radius`, `Rounded Corners`, `Corner Rounding` | **Radius** (tokens) |
+| `Color System`, `Design Tokens (Color)`, `Theme Colors`, `Brand Colors`, `Status Colors`, `UI Palette` | **Colors** (design tokens) |
+| `Depth`, `Z-Depth`, `Shadow Tokens`, `Surface Levels`, `Layering` | **Elevation** (design tokens) |
+| `Icons`, `Glyphs`, `Pictograms`, `Iconography` | **Icons** (library) |
+| `Interaction States`, `UI States`, `Component States`, `Status States` | **States** (definitions) |
+| `ROE`, `Rules of Engagement`, `Affiliation`, `Affiliation Colors`, `Hostile`, `Friendly`, `Neutral`, `Unknown`, `Pending`, `Suspect` | **ROE/Affiliation** (tokens) |
+| `Spacing System`, `Layout Spacing`, `Spacing Tokens`, `White Space` | **Spacing** (tokens) |
+| `Type System`, `Text Styles`, `Font Scale`, `Typography Tokens` | **Typography** |
+
+### Recommended Third-Party Libraries
+
+> **IMPORTANT**: Always use [Context7 MCP](https://context7.com/) when I need library/API documentation, code generation, setup or configuration steps without me having to explicitly ask.
+
+The following libraries are deemed appropriate to import and utilize if the functionality does not exist in any `@accelint/**` packages:
+
+- [radashi](https://github.com/radashi-org/radashi): Use for low level utilities not present in `@accelint/*` packages
+- [@turfjs/**](https://github.com/Turfjs/turf): Use for geospatial functions not present in `@accelint/*` packages
+### Documentation Access (If Available)
+
+If your environment supports MCP (Model Context Protocol) servers:
+- Use [Context7 MCP](https://context7.com/) for library/API documentation, code generation, and setup instructions
+
+If MCP is not available, search web documentation or ask user for guidance on library-specific patterns.
