@@ -86,11 +86,8 @@ export function TimeField<T extends TimeValue>({
             </Label>
           )}
           <div
-            className={clsx(
-              styles.control,
-              isReadOnly && styles.readonly,
-              classNames?.control,
-            )}
+            className={clsx(styles.control, classNames?.control)}
+            data-readonly={isReadOnly || null}
           >
             {!isReadOnly && size === 'medium' && (
               <Icon>
