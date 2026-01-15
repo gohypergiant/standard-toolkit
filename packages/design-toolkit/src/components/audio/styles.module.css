@@ -1,0 +1,77 @@
+/*
+ * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+@reference '@accelint/design-foundation/styles';
+
+@layer components.l1 {
+  .container {
+    @apply bg-surface-raised rounded-medium p-s space-y-s flex w-full min-w-[270px] flex-col;
+
+    /* Media Chrome theming - maps design tokens to media-chrome CSS variables */
+    --media-primary-color: var(--fg-primary-bold);
+    --media-secondary-color: transparent;
+    --media-icon-color: var(--fg-primary-muted);
+    --media-text-color: var(--fg-accent-primary-bold);
+    --media-control-background: transparent;
+    --media-control-hover-background: transparent;
+  }
+
+  .container[data-disabled] {
+    @apply opacity-50;
+  }
+
+  .audio {
+    @apply hidden;
+  }
+
+  .titleRow {
+    @apply fg-primary-bold text-header-l text-center;
+  }
+
+  .errorMessage {
+    @apply text-body-m text-center;
+    color: var(--fg-serious-bold);
+  }
+
+  .timeRow {
+    @apply gap-s flex items-center;
+  }
+
+  .controls {
+    @apply space-y-s p-s;
+  }
+
+  .controlsRow {
+    @apply flex items-center;
+  }
+
+  .leftGroup,
+  .rightGroup {
+    @apply flex flex-1 items-center;
+  }
+
+  .leftGroup {
+    @apply justify-start;
+  }
+
+  .rightGroup {
+    @apply justify-end;
+  }
+
+  .volumeGroup {
+    @apply gap-s flex;
+  }
+
+  .playbackGroup {
+    @apply gap-xs flex items-center justify-center;
+  }
+}
