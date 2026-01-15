@@ -110,9 +110,12 @@ function setup(
     ...rest
   }: Partial<DrawerProps> = {},
   outside: ReactNode = (
-    <DrawerTrigger for={`open:${ids.a}`}>
-      <Button>Open A</Button>
-    </DrawerTrigger>
+    <>
+      <DrawerTrigger for={`open:${ids.a}`}>
+        <Button>Open A</Button>
+      </DrawerTrigger>
+      <DrawerClose for={ids.a} data-testid='outside-close' />
+    </>
   ),
 ) {
   return {
@@ -229,6 +232,22 @@ describe('Drawer', () => {
     expect(screen.queryByText('View C')).not.toBeInTheDocument();
 
     await userEvent.click(screen.getByTestId('close-with'));
+
+    expect(screen.queryByText('View A')).not.toBeInTheDocument();
+    expect(screen.queryByText('View B')).not.toBeInTheDocument();
+    expect(screen.queryByText('View C')).not.toBeInTheDocument();
+
+    expect(container.firstChild).not.toHaveAttribute('data-open');
+  });
+
+  it('should close outside with provided ID.', async () => {
+    const { container } = setup({ defaultView: ids.a });
+
+    expect(screen.getByText('View A')).toBeInTheDocument();
+    expect(screen.queryByText('View B')).not.toBeInTheDocument();
+    expect(screen.queryByText('View C')).not.toBeInTheDocument();
+
+    await userEvent.click(screen.getByTestId('outside-close'));
 
     expect(screen.queryByText('View A')).not.toBeInTheDocument();
     expect(screen.queryByText('View B')).not.toBeInTheDocument();
