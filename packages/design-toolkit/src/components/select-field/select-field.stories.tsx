@@ -31,6 +31,7 @@ const meta = {
     isDisabled: false,
     isInvalid: false,
     isRequired: true,
+    isReadOnly: false,
     autoFocus: true,
     placeholder: 'Select...',
     layoutOptions: {
@@ -158,4 +159,44 @@ export const WithManyItems: Story = {
       ))}
     </SelectField>
   ),
+};
+
+export const Readonly: Story = {
+  args: { isReadOnly: true },
+  render: (args) => {
+    const koalaId = useId();
+    const kangarooId = useId();
+    const platypusId = useId();
+    const bisonId = useId();
+    const [value] = useState<Key>(platypusId);
+
+    return (
+      <SelectField {...args} value={value} isReadOnly>
+        <OptionsItem id={koalaId} textValue='Koala'>
+          <Icon>
+            <Placeholder />
+          </Icon>
+          <OptionsItemLabel>Koala</OptionsItemLabel>
+        </OptionsItem>
+        <OptionsItem id={kangarooId} textValue='Kangaroo'>
+          <Icon>
+            <Placeholder />
+          </Icon>
+          <OptionsItemLabel>Kangaroo</OptionsItemLabel>
+        </OptionsItem>
+        <OptionsItem id={platypusId} textValue='Platypus'>
+          <Icon>
+            <Placeholder />
+          </Icon>
+          <OptionsItemLabel>Platypus</OptionsItemLabel>
+        </OptionsItem>
+        <OptionsItem id={bisonId} textValue='Bison'>
+          <Icon>
+            <Placeholder />
+          </Icon>
+          <OptionsItemLabel>Bison</OptionsItemLabel>
+        </OptionsItem>
+      </SelectField>
+    );
+  },
 };

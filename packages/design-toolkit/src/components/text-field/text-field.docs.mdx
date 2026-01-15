@@ -61,6 +61,16 @@ It is composed of the following components:
     isClearable: true
   }}
 />
+
+// Readonly
+<TextField
+  label="Username"
+  isReadOnly
+  inputProps={{
+    value: 'some string',
+    type: "text"
+  }}
+/>
 ```
 
 ## Sizes
@@ -80,6 +90,7 @@ The size can be controlled via the `size` prop or set globally using the `TextFi
 * **`size`** - Size variant: `'medium'` (default) | `'small'`
 * **`isDisabled`** - Disables the text field
 * **`isRequired`** - Marks the text field as required
+* **`isReadOnly`** - Marks the text field as readonly
 * **`isInvalid`** - Marks the text field as invalid
 * **`inputProps`** - Additional props passed to the underlying [Input](?path=/docs/components-input--playground#props) component:
   * `type` - Input type (text, email, password, search, etc.)

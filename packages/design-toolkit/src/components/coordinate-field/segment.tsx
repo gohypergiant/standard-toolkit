@@ -59,6 +59,7 @@ export function CoordinateSegment({
   maxLength,
   className,
   isDisabled,
+  isReadOnly,
   allowedChars,
   segmentRef,
   segmentIndex,
@@ -166,7 +167,9 @@ export function CoordinateSegment({
 
   return (
     <input
+      readOnly={isReadOnly}
       ref={segmentRef}
+      tabIndex={isReadOnly ? -1 : 0}
       type='text'
       value={value}
       onChange={handleChange}

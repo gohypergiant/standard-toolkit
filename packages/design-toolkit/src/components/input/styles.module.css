@@ -47,6 +47,10 @@
       @apply fg-disabled outline-interactive-disabled cursor-not-allowed;
     }
 
+    @variant read-only {
+      @apply px-0 outline-none;
+    }
+
     &.hasPrefix {
       grid-template-areas: 'prefix input';
       grid-template-columns: min-content 1fr;
@@ -133,7 +137,7 @@
   }
 
   .input {
-    @apply w-full outline-none;
+    @apply w-full overflow-hidden text-ellipsis whitespace-nowrap outline-none;
 
     &[type='number'] {
       appearance: textfield;

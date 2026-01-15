@@ -323,3 +323,41 @@ export const WithCustomValue: Story = {
     );
   },
 };
+
+export const Readonly: Story = {
+  args: {
+    ...Default.args,
+    inputProps: {
+      value:
+        'test string long long long long long long long long long long long string',
+    },
+  },
+  render: ({ children, ...args }) => (
+    <ComboBoxField<CustomOptionsItem>
+      {...args}
+      defaultItems={items}
+      inputProps={{
+        value: args.inputProps?.value,
+      }}
+      isReadOnly
+    >
+      {(item) => (
+        <OptionsItem
+          key={item.id}
+          textValue={item.name}
+          isDisabled={item.isDisabled}
+        >
+          {item.prefixIcon && <Icon>{item.prefixIcon}</Icon>}
+          <OptionsItemContent>
+            <OptionsItemLabel>{item.name}</OptionsItemLabel>
+            {item.description && (
+              <OptionsItemDescription>
+                {item.description}
+              </OptionsItemDescription>
+            )}
+          </OptionsItemContent>
+        </OptionsItem>
+      )}
+    </ComboBoxField>
+  ),
+};
