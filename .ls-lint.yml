@@ -20,7 +20,8 @@ ignore:
   - .github
   - .turbo
   - .vscode
-  - .windsurf
+  - .agents
+  - node_modules
   - '**/.next'
   - '**/.ladle'
   - '**/.storybook'
@@ -29,7 +30,5 @@ ignore:
   - '**/build'
   - '**/coverage'
   - '**/dist'
-  - '**/documentation'
   - '**/node_modules'
-  - 'apps/docs/.docusaurus'
-  - 'apps/docs/content/api'
+  - '**/.docusaurus'

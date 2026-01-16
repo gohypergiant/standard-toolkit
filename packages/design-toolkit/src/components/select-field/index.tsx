@@ -15,6 +15,7 @@ import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import ChevronDown from '@accelint/icons/chevron-down';
 import {
+  Button as AriaButton,
   Select as AriaSelect,
   composeRenderProps,
   FieldError,
@@ -89,6 +90,7 @@ export function SelectField({ ref, ...props }: SelectFieldProps) {
     label: labelProp,
     layoutOptions,
     isInvalid: isInvalidProp,
+    isReadOnly,
     ...rest
   } = props;
 
@@ -97,6 +99,8 @@ export function SelectField({ ref, ...props }: SelectFieldProps) {
   const isInvalid = isInvalidProp ?? hasError;
   const isSmall = size === 'small';
   const showLabel = !isSmall && !!labelProp;
+  const shouldShowDescription =
+    !isReadOnly && !!descriptionProp && !(isSmall || isInvalid);
 
   return (
     <AriaSelect
@@ -107,6 +111,7 @@ export function SelectField({ ref, ...props }: SelectFieldProps) {
       )}
       isInvalid={isInvalid}
       data-size={size}
+      data-readonly={isReadOnly}
     >
       {composeRenderProps(
         children,
@@ -121,19 +126,31 @@ export function SelectField({ ref, ...props }: SelectFieldProps) {
                 {labelProp}
               </Label>
             )}
-            <Button
-              className={composeRenderProps(classNames?.trigger, (className) =>
-                clsx(styles.trigger, className),
-              )}
-              size={size}
-              variant='outline'
-            >
-              <SelectValue className={clsx(styles.value, classNames?.value)} />
-              <Icon>
-                <ChevronDown className='transform group-open/select-field:rotate-180' />
-              </Icon>
-            </Button>
-            {!!descriptionProp && !(isSmall || isInvalid) && (
+            {isReadOnly ? (
+              // Using the native RAC disabled button component because we don't want the DTK button styles
+              <AriaButton isDisabled className={styles.readonly}>
+                <SelectValue
+                  className={clsx(styles.value, classNames?.value)}
+                />
+              </AriaButton>
+            ) : (
+              <Button
+                className={composeRenderProps(
+                  classNames?.trigger,
+                  (className) => clsx(styles.trigger, className),
+                )}
+                size={size}
+                variant='outline'
+              >
+                <SelectValue
+                  className={clsx(styles.value, classNames?.value)}
+                />
+                <Icon>
+                  <ChevronDown className='transform group-open/select-field:rotate-180' />
+                </Icon>
+              </Button>
+            )}
+            {shouldShowDescription && (
               <Text
                 slot='description'
                 className={clsx(styles.description, classNames?.description)}

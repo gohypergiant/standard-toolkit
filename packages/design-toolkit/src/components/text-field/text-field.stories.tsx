@@ -168,3 +168,13 @@ export const WithInputProps: StoryObj<InputProps> = {
     />
   ),
 };
+
+export const Readonly: Story = {
+  args: {
+    label: 'Readonly',
+    isReadOnly: true,
+    inputProps: {
+      value: 'long long long long long long long long string',
+    },
+  },
+};

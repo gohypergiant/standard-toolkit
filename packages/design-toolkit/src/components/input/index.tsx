@@ -127,13 +127,20 @@ export function Input({ ref = null, ...props }: InputProps) {
             {prefixProp}
           </span>
         )}
-        <div className={clsx(styles.sizer, classNames?.sizer)}>
+        <div
+          className={clsx(
+            styles.sizer,
+            classNames?.sizer,
+            autoSize && styles.autoSize,
+          )}
+        >
           <AriaInput
             {...rest}
             ref={ref}
             className={composeRenderProps(classNames?.input, (className) =>
               clsx(styles.input, className),
             )}
+            title={value ? String(value) : ''}
             disabled={disabled}
             placeholder={placeholder}
             readOnly={readOnly}
@@ -167,7 +174,7 @@ export function Input({ ref = null, ...props }: InputProps) {
             {suffixProp}
           </span>
         )}
-        {isClearable && (
+        {!readOnly && isClearable && (
           <Button
             className={composeRenderProps(classNames?.clear, (className) =>
               clsx(styles.clear, prefix, suffix, clear, className),

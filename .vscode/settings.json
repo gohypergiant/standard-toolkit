@@ -38,9 +38,15 @@
   },
   "cSpell.words": [
     "accelint",
+    "buildinfo",
+    "callsite",
+    "callsites",
+    "docblocks",
     "flother",
     "geospatial",
+    "Hypergiant",
     "latlon",
+    "loglayer",
     "LONLAT",
     "mgrs",
     "NTDS",
@@ -49,7 +55,9 @@
     "spreet",
     "spritesheet",
     "spritesheets",
-    "storysource"
+    "storysource",
+    "syncpack",
+    "taze"
   ],
   "editor.codeActionsOnSave": {
     "source.organizeImports.biome": "explicit"

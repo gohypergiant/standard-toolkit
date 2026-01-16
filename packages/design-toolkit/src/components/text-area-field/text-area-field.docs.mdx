@@ -46,6 +46,15 @@ The TextArea Field component provides a multi-line text input with integrated la
     maxLength: 500
   }}
 />
+
+// Readonly
+<TextAreaField
+  label="Readonly"
+  isReadOnly
+  inputProps={{
+    value: 'readonly text area'
+  }}
+/>
 ```
 
 ## Variants
@@ -64,6 +73,7 @@ The size can be controlled via the `size` prop or set globally using the `TextAr
 * **`errorMessage`** - Error text displayed when validation fails
 * **`size`** - Size variant: `'medium'` (default) or `'small'`
 * **`isDisabled`** - Disables the text area field
+* **`isReadOnly`** - Marks the text area field as readonly
 * **`isRequired`** - Marks the text area field as required
 * **`isInvalid`** - Marks the text area field as invalid
 * **`placeholder`** - Placeholder text displayed when the input is empty
