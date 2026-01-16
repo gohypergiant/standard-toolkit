@@ -16,11 +16,11 @@
   .bar {
     @apply rounded-medium bg-surface-default flex w-fit;
 
-    @variant data-[elevation=overlay] {
+    @variant elevation-overlay {
       @apply shadow-elevation-overlay;
     }
 
-    @variant data-[elevation=raised] {
+    @variant elevation-raised {
       @apply shadow-elevation-raised;
     }
 
