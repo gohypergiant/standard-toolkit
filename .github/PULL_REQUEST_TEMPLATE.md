@@ -24,7 +24,7 @@ Closes <!-- Github issue # here -->
 
 ## 🤖 AI Usage
 
-- [ ] No AI was used in this PR
+- [ ] No, AI was not used in this PR
 - [ ] Yes, AI was used in this PR
 
 If yes, select all that apply:
