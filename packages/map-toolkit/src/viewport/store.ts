@@ -76,6 +76,7 @@ function createDefaultState(mapId: UniqueId): ViewportState {
  * when instances are created. The actual id comes from the bus event payload.
  */
 export const viewportStore = createMapStore<ViewportState, ViewportActions>({
+  name: 'viewport',
   // Placeholder default state - actual instances get proper id from bus events
   defaultState: {
     id: '' as UniqueId,

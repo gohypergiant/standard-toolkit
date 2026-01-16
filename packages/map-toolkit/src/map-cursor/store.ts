@@ -148,6 +148,7 @@ function getEffectiveCursor(
  * Cursor store
  */
 export const cursorStore = createMapStore<CursorState, CursorActions>({
+  name: 'cursor',
   defaultState: {
     cursorOwners: new Map(),
     currentCursor: null,

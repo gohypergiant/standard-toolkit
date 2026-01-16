@@ -33,6 +33,7 @@
 
 import { Broadcast } from '@accelint/bus';
 import { fitBounds } from '@math.gl/web-mercator';
+import { useRef } from 'react';
 import { createMapStore } from '../shared/create-map-store';
 import { CameraEventTypes } from './events';
 import type { UniqueId } from '@accelint/core';
@@ -192,6 +193,7 @@ const DEFAULT_CAMERA_STATE: CameraState = {
  * Camera store instance
  */
 export const cameraStore = createMapStore<CameraState, CameraActions>({
+  name: 'camera',
   defaultState: DEFAULT_CAMERA_STATE,
 
   actions: (_mapId, { get, replace }) => ({
@@ -377,7 +379,10 @@ export const cameraStore = createMapStore<CameraState, CameraActions>({
 
   onCleanup: (mapId) => {
     initializedInstances.delete(mapId);
-    initialStateCache.delete(mapId);
+    // NOTE: Do NOT delete initialStateCache here.
+    // In React Strict Mode, cleanup from first mount can run AFTER second mount starts.
+    // If we delete the cache, the re-initialization won't have access to the initial values.
+    // The cache is small (just initial values) and keyed by mapId, so memory impact is minimal.
   },
 });
 
@@ -396,16 +401,21 @@ export function initializeCameraState(
   mapId: UniqueId,
   initialState?: CameraStateInput,
 ): void {
+  // Cache the initial state for future re-initialization (e.g., after Strict Mode cleanup)
+  if (initialState && !initialStateCache.has(mapId)) {
+    initialStateCache.set(mapId, initialState);
+  }
+
+  // Use cached initial state if available (handles Strict Mode remount after cleanup)
+  const stateToUse = initialState ?? initialStateCache.get(mapId);
+
   if (initializedInstances.has(mapId)) {
-    return; // Already initialized
+    return; // Already initialized this render cycle
   }
 
   initializedInstances.add(mapId);
-  if (initialState) {
-    initialStateCache.set(mapId, initialState);
-  }
-  const builtState = buildCameraState(initialState);
-  cameraStore.set(mapId, builtState);
+  const builtState = buildCameraState(stateToUse);
+  cameraStore.setSilent(mapId, builtState);
 }
 
 /**
@@ -434,9 +444,17 @@ export function useMapCamera(
   cameraState: CameraState;
   setCameraState: (state: Partial<CameraState>) => void;
 } {
+  // Track if this hook instance has initialized to handle Strict Mode double-mounting.
+  // We use a ref instead of the global initializedInstances set because the global set
+  // gets cleared on cleanup, but we don't want to re-initialize on Strict Mode remount.
+  const hasInitializedRef = useRef(false);
+
   // Initialize on first use if initial state provided
-  if (initialCameraState && !initializedInstances.has(mapId)) {
-    initializeCameraState(mapId, initialCameraState);
+  if (initialCameraState && !hasInitializedRef.current) {
+    hasInitializedRef.current = true;
+    if (!initializedInstances.has(mapId)) {
+      initializeCameraState(mapId, initialCameraState);
+    }
   }
 
   const { state, setCameraState } = cameraStore.use(mapId);

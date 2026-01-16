@@ -477,16 +477,20 @@ describe('edit-shape-layer store', () => {
   });
 
   describe('cleanup behavior', () => {
-    it('cleans up state when last subscriber unsubscribes', () => {
+    it('preserves state after last subscriber unsubscribes (for Strict Mode support)', () => {
       const subscription = editStore.subscribe(mapId);
       const callback = vi.fn();
 
       const unsubscribe = subscription(callback);
 
-      // Unsubscribe should trigger cleanup
+      // Unsubscribe - state is preserved for potential remount (Strict Mode)
       unsubscribe();
 
-      // State should be cleared
+      // State should still exist (preserved for Strict Mode remount)
+      expect(getEditingState(mapId)).not.toBeNull();
+
+      // Use clearEditingState for explicit cleanup
+      clearEditingState(mapId);
       expect(getEditingState(mapId)).toBeNull();
     });
 
@@ -507,7 +511,11 @@ describe('edit-shape-layer store', () => {
       // Unsubscribe second callback
       unsubscribe2();
 
-      // Now state should be cleaned up
+      // State is preserved for Strict Mode support
+      expect(getEditingState(mapId)).not.toBeNull();
+
+      // Use clearEditingState for explicit cleanup
+      clearEditingState(mapId);
       expect(getEditingState(mapId)).toBeNull();
     });
   });

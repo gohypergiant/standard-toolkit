@@ -1,6 +1,3 @@
-/* NOTE: this is not necessary but keeping here for example sake */
-/* @layer properties, theme, base, components, components.l1, components.l2, components.l3, components.l4, components.l5, utilities; */
-
 /*
  * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -13,25 +10,20 @@
  * governing permissions and limitations under the License.
  */
 
-@import '@accelint/design-foundation/styles';
+'use client';
+import 'client-only';
+import { uuid } from '@accelint/core';
+import { BaseMap } from '@accelint/map-toolkit/deckgl';
+import { DEFAULT_VIEW_STATE } from '@accelint/map-toolkit/shared/constants';
 
-@layer base {
-  /* Hide overflow when deck.gl map is present to prevent scroll/zoom issues */
-  html:has(.deckgl-map) {
-    overflow: hidden;
-  }
-}
+const MAP_ID = uuid();
 
-@layer theme {
-  :root {
-    /* overrides */
-
-    @variant light {
-      /* overrides */
-    }
-
-    @variant dark {
-      /* overrides */
-    }
-  }
+export function MapClient() {
+  return (
+    <BaseMap
+      className='fixed top-xxl left-0 right-0 bottom-0 deckgl-map'
+      id={MAP_ID}
+      initialViewState={DEFAULT_VIEW_STATE}
+    />
+  );
 }

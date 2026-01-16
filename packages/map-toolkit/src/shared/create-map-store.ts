@@ -92,6 +92,9 @@ export type StoreHelpers<TState> = {
  * Configuration for creating a map store
  */
 export type MapStoreConfig<TState, TActions> = {
+  /** Optional name for debugging */
+  name?: string;
+
   /** Default state for new instances and SSR */
   defaultState: TState;
 
@@ -187,6 +190,12 @@ export type MapStore<TState, TActions> = {
   set: (mapId: UniqueId, updates: Partial<TState>) => void;
 
   /**
+   * Update state without notifying subscribers.
+   * Use for initialization during render to avoid setState-during-render errors.
+   */
+  setSilent: (mapId: UniqueId, updates: Partial<TState>) => void;
+
+  /**
    * Check if instance exists (has been initialized).
    */
   exists: (mapId: UniqueId) => boolean;
@@ -240,7 +249,13 @@ export type MapStore<TState, TActions> = {
 export function createMapStore<TState, TActions>(
   config: MapStoreConfig<TState, TActions>,
 ): MapStore<TState, TActions> {
-  const { defaultState, actions: createActions, bus, onCleanup } = config;
+  const {
+    name: _name = 'unknown',
+    defaultState,
+    actions: createActions,
+    bus,
+    onCleanup,
+  } = config;
 
   const instances = new Map<UniqueId, Instance<TState, TActions>>();
 
@@ -298,7 +313,20 @@ export function createMapStore<TState, TActions>(
   }
 
   /**
-   * Clean up instance when last subscriber unmounts
+   * Clean up instance when last subscriber unmounts.
+   *
+   * IMPORTANT: We do NOT delete subscriptionCache or snapshotCache entries here.
+   * useSyncExternalStore holds references to these functions, and if we delete them,
+   * the next render will create NEW function references. React Strict Mode's
+   * double-mount causes this sequence:
+   *   1. Mount → subscribe with fn1
+   *   2. Unmount → cleanup deletes cache → unsubscribe
+   *   3. Remount → subscribe(mapId) returns NEW fn2 (cache was deleted)
+   *   4. useSyncExternalStore sees fn1 !== fn2 → re-subscribes
+   *   5. This triggers state updates → infinite loop
+   *
+   * By keeping the cached functions, remount reuses the same function references,
+   * and useSyncExternalStore doesn't see a "new" subscription.
    */
   function cleanupInstance(
     mapId: UniqueId,
@@ -309,37 +337,48 @@ export function createMapStore<TState, TActions>(
     }
     if (instance.busCleanup) {
       instance.busCleanup();
+      instance.busCleanup = undefined;
     }
-    instances.delete(mapId);
-    subscriptionCache.delete(mapId);
-    snapshotCache.delete(mapId);
+    // Clear subscribers but keep the instance with its state.
+    // This preserves state across React Strict Mode's double-mount cycle.
+    // The instance will be reused when the component remounts.
+    instance.subscribers.clear();
+    // NOTE: We intentionally do NOT delete the instance, subscriptionCache, or snapshotCache.
+    // - Keeping the instance preserves state across Strict Mode remounts
+    // - Keeping the caches ensures stable function references for useSyncExternalStore
   }
 
   function subscribe(mapId: UniqueId): (callback: () => void) => () => void {
-    let cached = subscriptionCache.get(mapId);
-    if (!cached) {
-      cached = (callback: () => void) => {
-        const instance = getInstance(mapId);
+    const cached = subscriptionCache.get(mapId);
+    if (cached) {
+      return cached;
+    }
 
-        // Setup bus on first subscriber
-        if (instance.subscribers.size === 0 && bus) {
-          instance.busCleanup = bus(mapId, getHelpers(mapId));
+    const newSubscribeFn = (callback: () => void) => {
+      const instance = getInstance(mapId);
+
+      // Setup bus on first subscriber
+      if (instance.subscribers.size === 0 && bus) {
+        instance.busCleanup = bus(mapId, getHelpers(mapId));
+      }
+
+      instance.subscribers.add(callback);
+
+      return () => {
+        if (!instances.has(mapId)) {
+          return;
         }
 
-        instance.subscribers.add(callback);
+        instance.subscribers.delete(callback);
 
-        return () => {
-          instance.subscribers.delete(callback);
-
-          // Cleanup when last subscriber unmounts
-          if (instance.subscribers.size === 0) {
-            cleanupInstance(mapId, instance);
-          }
-        };
+        // Cleanup when last subscriber unmounts
+        if (instance.subscribers.size === 0) {
+          cleanupInstance(mapId, instance);
+        }
       };
-      subscriptionCache.set(mapId, cached);
-    }
-    return cached;
+    };
+    subscriptionCache.set(mapId, newSubscribeFn);
+    return newSubscribeFn;
   }
 
   function snapshot(mapId: UniqueId): () => TState {
@@ -418,11 +457,19 @@ export function createMapStore<TState, TActions>(
       instance.state = { ...instance.state, ...updates };
       notify(mapId);
     },
+    setSilent: (mapId, updates) => {
+      const instance = getInstance(mapId);
+      instance.state = { ...instance.state, ...updates };
+    },
     exists: (mapId) => instances.has(mapId),
     clear: (mapId) => {
       const instance = instances.get(mapId);
       if (instance) {
+        // Full cleanup: call cleanupInstance then delete everything
         cleanupInstance(mapId, instance);
+        instances.delete(mapId);
+        subscriptionCache.delete(mapId);
+        snapshotCache.delete(mapId);
       }
     },
     subscribe,

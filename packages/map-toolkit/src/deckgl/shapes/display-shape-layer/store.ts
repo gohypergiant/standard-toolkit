@@ -11,33 +11,25 @@
  */
 
 /**
- * Shape Selection Store
+ * Select Shape Store
  *
  * Manages shape selection state per map instance.
+ * Use the `useSelectShape` hook for the public API.
  *
  * @example
  * ```tsx
- * import { shapeSelectionStore } from '@accelint/map-toolkit/deckgl/shapes';
+ * import { useSelectShape } from '@accelint/map-toolkit/deckgl/shapes';
  *
  * function ShapePanel({ mapId }) {
- *   const { state, setSelectedId, clearSelection } = shapeSelectionStore.use(mapId);
+ *   const { selectedId, setSelectedId, clearSelection } = useSelectShape(mapId);
  *
  *   return (
  *     <div>
- *       <p>Selected: {state.selectedId ?? 'none'}</p>
+ *       <p>Selected: {selectedId ?? 'none'}</p>
  *       <button onClick={() => setSelectedId('shape-1')}>Select Shape 1</button>
  *       <button onClick={clearSelection}>Clear</button>
  *     </div>
  *   );
- * }
- *
- * // Or with selector for specific values:
- * function SelectedIndicator({ mapId }) {
- *   const selectedId = shapeSelectionStore.useSelector(
- *     mapId,
- *     (s) => s.selectedId
- *   );
- *   return selectedId ? <Badge>Selected</Badge> : null;
  * }
  * ```
  */
@@ -72,12 +64,13 @@ const shapeBus = Broadcast.getInstance<ShapeEvent>();
 const mapBus = Broadcast.getInstance<MapEventType>();
 
 /**
- * Shape selection store
+ * Select shape store
  */
-export const shapeSelectionStore = createMapStore<
+export const selectShapeStore = createMapStore<
   ShapeSelectionState,
   ShapeSelectionActions
 >({
+  name: 'selectShape',
   defaultState: { selectedId: undefined },
 
   actions: (mapId, { get }) => ({
@@ -151,7 +144,7 @@ export const shapeSelectionStore = createMapStore<
  * const { state, setSelectedId, clearSelection } = useSelectShape(mapId);
  * ```
  */
-export const useSelectShape = shapeSelectionStore.use;
+export const useSelectShape = selectShapeStore.use;
 
 /**
  * Hook to get just the selected ID
@@ -162,19 +155,19 @@ export const useSelectShape = shapeSelectionStore.use;
  * ```
  */
 export function useSelectedShapeId(mapId: UniqueId): ShapeId | undefined {
-  return shapeSelectionStore.useSelector(mapId, (s) => s.selectedId);
+  return selectShapeStore.useSelector(mapId, (s) => s.selectedId);
 }
 
 /**
  * Get selected shape ID imperatively (non-reactive)
  */
 export function getSelectedShapeId(mapId: UniqueId): ShapeId | undefined {
-  return shapeSelectionStore.get(mapId).selectedId;
+  return selectShapeStore.get(mapId).selectedId;
 }
 
 /**
  * Clear selection state (for tests/cleanup)
  */
 export function clearSelectionState(mapId: UniqueId): void {
-  shapeSelectionStore.clear(mapId);
+  selectShapeStore.clear(mapId);
 }

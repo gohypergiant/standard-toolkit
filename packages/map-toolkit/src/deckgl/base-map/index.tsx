@@ -210,12 +210,19 @@ export function BaseMap({
   const container = useId();
   const mapRef = useRef<MapRef>(null);
 
-  const { cameraState, setCameraState } = useMapCamera(id, {
+  // Memoize initial camera state to prevent recreation on every render.
+  // Only the first render's values matter for initialization.
+  const initialCameraStateRef = useRef({
     view: defaultView,
     zoom: initialViewState?.zoom ?? DEFAULT_VIEW_STATE.zoom,
     latitude: initialViewState?.latitude ?? DEFAULT_VIEW_STATE.latitude,
     longitude: initialViewState?.longitude ?? DEFAULT_VIEW_STATE.longitude,
   });
+
+  const { cameraState, setCameraState } = useMapCamera(
+    id,
+    initialCameraStateRef.current,
+  );
 
   const viewState = useMemo<ViewState>(
     () => ({

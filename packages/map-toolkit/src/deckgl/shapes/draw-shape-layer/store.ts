@@ -200,6 +200,7 @@ function cancelDrawingInternal(
  * Draw shape store
  */
 export const drawStore = createMapStore<DrawingState, DrawShapeActions>({
+  name: 'drawShape',
   defaultState: { ...DEFAULT_DRAWING_STATE },
 
   actions: (mapId, { get, set, notify }) => ({

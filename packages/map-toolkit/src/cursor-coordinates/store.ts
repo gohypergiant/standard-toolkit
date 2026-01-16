@@ -71,6 +71,7 @@ export const cursorCoordinateStore = createMapStore<
   CursorCoordinateState,
   CursorCoordinateActions
 >({
+  name: 'cursorCoordinate',
   defaultState: {
     coordinate: null,
     format: 'dd',
