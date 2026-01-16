@@ -23,9 +23,14 @@ const meta = {
     layout: 'fullscreen',
   },
   args: {
+    elevation: 'overlay',
     size: 'medium',
   },
   argTypes: {
+    elevation: {
+      control: 'select',
+      options: ['flat', 'overlay', 'raised'],
+    },
     size: {
       control: 'select',
       options: ['medium', 'small'],

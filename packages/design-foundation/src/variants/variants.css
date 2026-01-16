@@ -35,6 +35,8 @@
 @custom-variant size-medium (&:where([data-size="medium"]));
 @custom-variant size-small (&:where([data-size="small"]));
 @custom-variant size-xsmall (&:where([data-size="xsmall"]));
+@custom-variant elevation-overlay (&:where([data-elevation="overlay"]));
+@custom-variant elevation-raised (&:where([data-elevation="raised"]));
 @custom-variant type-literal (&:where([data-type="literal"]));
 @custom-variant type-year (&:where([data-type="year"]));
 @custom-variant type-month (&:where([data-type="month"]));

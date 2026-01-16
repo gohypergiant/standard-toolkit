@@ -25,4 +25,22 @@ A container component that displays a collection of actions, typically represent
 ```
 <Canvas of={ActionBarStories.Default} />
 
+## Props
 
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `elevation` | `string` | `overlay` | Elevation shadow style: `flat`, `overlay`, or `raised` |
+| `size` | `string` | `medium` | Size variant: `medium` or `small` |
+
+## Elevation options
+Use `elevation="flat"` when the ActionBar is embedded in a context that already has its own visual boundaries, such as entity detail panels.
+
+```tsx
+<ActionBar elevation="flat">
+  <Button>
+    <Icon>
+      <Copy />
+    </Icon>
+  </Button>
+</ActionBar>
+```

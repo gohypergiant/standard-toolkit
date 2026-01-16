@@ -28,9 +28,16 @@ import type { ActionBarProps } from './types';
  * <ActionBar>
  *   <Button><Icon><Copy/></Icon></Button>
  * </ActionBar>
+ *
+ * @example
+ * // Without elevation shadow
+ * <ActionBar elevation="flat">
+ *   <Button><Icon><Copy/></Icon></Button>
+ * </ActionBar>
  */
 export function ActionBar({
   className,
+  elevation = 'overlay',
   size = 'medium',
   ...rest
 }: ActionBarProps) {
@@ -41,7 +48,12 @@ export function ActionBar({
         [ToggleButtonContext, { size, variant: 'icon' }],
       ]}
     >
-      <nav {...rest} className={clsx(styles.bar, className)} data-size={size} />
+      <nav
+        {...rest}
+        className={clsx(styles.bar, className)}
+        data-elevation={elevation}
+        data-size={size}
+      />
     </Provider>
   );
 }
