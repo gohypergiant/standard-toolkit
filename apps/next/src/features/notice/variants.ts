@@ -11,16 +11,51 @@
  */
 
 import { uuid } from '@accelint/core';
-import type { NoticeProps } from '@accelint/design-toolkit/components/notice/types';
+import type {
+  NoticeColor,
+  NoticeProps,
+} from '@accelint/design-toolkit/components/notice/types';
 
-export type NoticeVariant = Pick<NoticeProps, 'color' | 'size' | 'id'>;
+export type NoticeVariant = Pick<
+  NoticeProps,
+  'color' | 'size' | 'id' | 'primary' | 'secondary' | 'showClose'
+>;
 
-export const PROP_COMBOS: NoticeVariant[] = [
-  { color: 'info', size: 'medium', id: uuid() },
-  { color: 'advisory', size: 'medium', id: uuid() },
-  { color: 'normal', size: 'medium', id: uuid() },
-  { color: 'serious', size: 'medium', id: uuid() },
-  { color: 'critical', size: 'medium', id: uuid() },
-  { color: 'info', size: 'small', id: uuid() },
-  { color: 'critical', size: 'small', id: uuid() },
+export const COLORS: NoticeColor[] = [
+  'info',
+  'advisory',
+  'normal',
+  'serious',
+  'critical',
 ];
+
+function createVariantsForColor(color: NoticeColor): NoticeVariant[] {
+  return [
+    // Small variants
+    { color, size: 'small', id: uuid() },
+    { color, size: 'small', id: uuid(), showClose: true },
+    // Medium variants
+    { color, size: 'medium', id: uuid() },
+    {
+      color,
+      size: 'medium',
+      id: uuid(),
+      primary: { children: 'Action' },
+      secondary: { children: 'Cancel' },
+    },
+    { color, size: 'medium', id: uuid(), showClose: true },
+  ];
+}
+
+export const VARIANTS_BY_COLOR: Record<NoticeColor, NoticeVariant[]> =
+  Object.fromEntries(
+    COLORS.map((color) => [color, createVariantsForColor(color)]),
+  ) as Record<NoticeColor, NoticeVariant[]>;
+
+export const SMALL_VARIANTS: NoticeVariant[] = Object.values(
+  VARIANTS_BY_COLOR,
+).flatMap((variants) => variants.filter((v) => v.size === 'small'));
+
+export const MEDIUM_VARIANTS: NoticeVariant[] = Object.values(
+  VARIANTS_BY_COLOR,
+).flatMap((variants) => variants.filter((v) => v.size === 'medium'));

@@ -187,7 +187,7 @@
 
     &.end {
       @variant group-placement-top/drawer {
-        @apply right-xl;
+        @apply right-xl left-auto;
       }
 
       @variant group-placement-right/drawer {
@@ -195,7 +195,7 @@
       }
 
       @variant group-placement-bottom/drawer {
-        @apply right-xl;
+        @apply right-xl left-auto;
       }
 
       @variant group-placement-left/drawer {

@@ -33,6 +33,8 @@
   "pnpm": {
     "overrides": {
       "@internationalized/date": "~3.9.0",
+      "@loglayer/plugin": "^2.2.7",
+      "@loglayer/shared": "^3.3.0",
       "@react-aria/dnd": "~3.11.2",
       "@react-aria/interactions": "~3.25.5",
       "@react-aria/overlays": "~3.29.1",
@@ -70,6 +72,7 @@
     "clean:dist": "pnpm -r exec rimraf dist",
     "clean:turbo": "pnpm -r exec rimraf .turbo && pnpm rimraf .turbo",
     "constellation-tracker": "pnpm turbo run constellation-tracker -- --regenerate",
+    "context": "pnpm turbo run context",
     "deps:version-major": "pnpm taze major -r",
     "deps:version-minor": "pnpm taze minor -r",
     "deps:version-patch": "pnpm taze patch -r",

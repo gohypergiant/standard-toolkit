@@ -1,0 +1,447 @@
+## JS/TS Style and Conventions
+
+### Quick Reference
+
+#### Do
+- ✅ Strongly validate external data
+- ✅ Employ defensive/negative-space programming
+- ✅ Use property-based testing
+- ✅ Return identity/zero elements instead of null/undefined
+- ✅ Use `const` over `let`
+- ✅ Keep functions pure and under 50 lines
+- ✅ Use early returns
+- ✅ Consider cache locality
+- ✅ Document all exports
+
+#### Don't
+- ❌ Rely solely on compiler/linter correctness
+- ❌ Use default parameters
+- ❌ Mutate passed references
+- ❌ Use needless variable aliases
+- ❌ Use spreading unless necessary
+- ❌ Use unbounded loops
+- ❌ Mock internal code
+- ❌ Leave commented-out code
+- ❌ Use `any` or `enum` in TypeScript
+
+### General Rules
+
+- Treat all warnings as errors; use the strictest compiler/linter settings
+- Use Linux line endings (`\n`)
+- Aim for zero technical debt
+
+### TypeScript Specifics
+
+- Avoid `any` and `enum`; use explicit types and `as const` maps
+- Always provide a correct return type
+- **Prefer `type` over `interface`** for type aliases, unions, intersections, branded types, and functional patterns
+- Use `interface` only when you specifically need:
+  - Declaration merging (intentional extensibility)
+  - Class implementation contracts (`implements`)
+  - Legacy API compatibility
+
+### Naming Conventions
+
+Use descriptive, meaningful names. Stick to complete words unless abbreviation is widely recognized (ID, URL, RCS).
+
+```ts
+// ❌ Bad
+const usrNm = /**/;
+const a = /**/;
+let data;
+
+// ✅ Good
+const numberOfProducts = /**/;
+const customerList = /**/;
+const radarCrossSection = lookupCrossSection(entity.platformType);
+```
+
+**Units and qualifiers**: Append in descending order of significance.
+
+```ts
+// ❌ Bad
+const maxLatencyMs = /**/;
+
+// ✅ Good
+const latencyMsMax = /**/;
+const latencyMsMin = /**/;
+```
+
+**Booleans**: Prefix with `is` or `has`.
+
+```ts
+// ❌ Bad
+const visible = true;
+const children = false;
+
+// ✅ Good
+const isVisible = true;
+const hasChildren = false;
+```
+
+### Functions
+
+- Keep functions under 50 lines
+- Limit parameters; prefer simple return types
+- Never use default parameters—make all values explicit at call site
+- Use `function` keyword for pure functions
+- Use arrow functions only for simple cases (< 3 instructions)
+
+```ts
+// ❌ Bad - implicit defaults
+const position = getPosition();
+
+// ✅ Good - explicit values
+const position = getPosition(330);
+```
+
+### Control Flow
+
+Use simple, flat control flow. Prefer early returns over nested conditionals.
+
+```ts
+// ❌ Bad - nested structure
+if (condition1) {
+  if (condition2) {
+    if (condition3) {
+      result = /* something4 */;
+    } else {
+      result = /* something3 */;
+    }
+  } else {
+    result = /* something2 */;
+  }
+} else {
+  result = /* something1 */;
+}
+
+// ✅ Good - early returns
+if (!condition1) {
+  return /* something1 */;
+}
+
+if (!condition2) {
+  return /* something2 */;
+}
+
+if (!condition3) { 
+  return /* something3 */;
+}
+
+return /* something4 */;
+```
+
+**Return style**: Use block style for early control flow returns instead of inline.
+
+```ts
+// ❌ Bad - inline
+if (!condition1) return /* something1 */;
+if (!condition2) return /* something2 */;
+if (!condition3) return /* something3 */;
+
+// ✅ Good - block notation
+if (!condition1) {
+  return /* something1 */;
+}
+
+if (!condition2) {
+  return /* something2 */;
+}
+
+if (!condition3) { 
+  return /* something3 */;
+}
+
+return /* something4 */;
+```
+
+**Bounded iteration**: Set limits on all loops, queues, and data structures.
+
+```ts
+// ❌ Bad - unbounded
+while (true) {
+  if (someCondition) break;
+}
+
+// ✅ Good - bounded
+for (const item of items) {
+  // process item
+}
+```
+
+### State Management
+
+- Use `const` instead of `let` whenever possible. Use `let` only for valid performance reasons
+- Declare variables at smallest possible scope
+- Never mutate passed references; create copies instead
+- Centralize state manipulation in parent functions; keep leaf functions pure
+
+```ts
+// ❌ Bad - reassignment
+let color = src.substring(start + 1, end - 1);
+color = color.replace(/\s/g, '');
+
+// ✅ Good - single assignment
+const color = src.substring(start + 1, end - 1).replace(/\s/g, '');
+
+// ❌ Bad - conditional with let
+let result;
+if (validation.success) {
+  result = primary.data.options.map(addIndex);
+} else {
+  result = fallback.data.options.map(addIndex);
+}
+
+// ✅ Good - refactor to const
+const config = validation.success ? primary : fallback;
+const result = config.data.options.map(addIndex);
+```
+
+### Return Values
+
+Always return a zero value (identity element) instead of `null` or `undefined`. This eliminates downstream branching.
+
+```ts
+// ❌ Bad - requires downstream checks
+function makeList(someVar) {
+  if (!someVar) return;
+  return toList(someVar);
+}
+
+function anotherFn() {
+  const baseList = makeList(/*...*/);
+  if (!Array.isArray(baseList)) return;
+  return baseList.map((x) => {/*...*/});
+}
+
+// ✅ Good - no checks needed
+function makeList(someVar) {
+  if (!someVar) return [];
+  return toList(someVar);
+}
+
+function anotherFn() {
+  return getSomeList(/*...*/).map((x) => {/*...*/});
+}
+```
+
+## Safety
+
+### Input Validation
+
+Always validate and sanitize external data at system boundaries.
+
+```ts
+const AddressSchema = z.object({
+  street: z.string(),
+  city: z.string(),
+  zipCode: z.string().length(5),
+});
+
+type Address = z.infer<typeof AddressSchema>;
+
+const validateAddress = (userInput: Address) => {
+  return AddressSchema.safeParse(userInput);
+};
+```
+
+### Assertions
+
+Assertions detect **programmer errors**. The only appropriate response to corrupted code is to crash.
+
+```ts
+function assert(condition: boolean, message?: string): asserts condition {
+  if (!condition) {
+    throw new Error(message);
+  }
+}
+```
+
+**Split compound assertions** for clarity:
+
+```ts
+// ❌ Bad
+assert(a && b);
+
+// ✅ Good
+assert(a);
+assert(b);
+```
+
+**Include variable values in assertion messages**:
+
+```ts
+// ❌ Bad
+assert(index < items.length, 'Index error');
+
+// ✅ Good
+assert(
+  index < items.length,
+  `Index out of bounds: index=${index}, items.length=${items.length}`
+);
+```
+
+### Error Handling
+
+Handle **all errors** explicitly.
+
+### Error Messages
+
+**For users**: Clear, empathetic, actionable.
+
+```ts
+// ❌ Bad
+alert('Error 500: Internal Server Error');
+
+// ✅ Good
+alert(
+  'We\'re having trouble connecting to our server.\n' +
+  'Please check your internet connection and try again.'
+);
+```
+
+**For developers**: Specific, include values, explain assumptions.
+
+```ts
+// ❌ Bad
+assert(typeof count === 'number', 'Type error');
+
+// ✅ Good
+assert(
+  typeof count === 'number',
+  `Expected 'count' to be a number, but got type '${typeof count}'`
+);
+```
+
+## Performance
+
+Design for performance **from the start**. Optimize slowest resources first:
+
+```
+network >> disk >> memory >> CPU
+```
+
+Benchmark your assumptions before moving on.
+
+### Reduce Branching
+
+Use table lookups instead of conditionals for static values.
+
+### Reduce Looping
+
+Use `reduce` instead of chained array methods:
+
+```ts
+// ❌ Bad - two iterations
+const result = arr.filter(predicate).map(mapper);
+
+// ✅ Good - single iteration
+const result = arr.reduce((acc, curr) =>
+  predicate(curr) ? [...acc, mapper(curr)] : acc,
+  []
+);
+```
+
+Use `Set.has()` over `Array.includes()` for membership checks:
+
+```ts
+// ❌ Bad - O(n)
+const keys = Object.keys(someObj);
+if (keys.includes(id)) { /**/ }
+
+// ✅ Good - O(1)
+const keys = new Set(Object.keys(someObj));
+if (keys.has(id)) { /**/ }
+```
+
+### Memoization
+
+Use only when appropriate. Avoid memoizing trivial computations.
+
+```ts
+// ❌ Bad - trivial computation
+const ternMemo = memoize((pred) => pred ? 'Right!' : 'Wrong');
+
+// ✅ Good - direct computation
+const result = test ? 'Right!' : 'Wrong';
+```
+
+### Batching
+
+Batch operations to amortize costly processes, especially for I/O-bound operations.
+
+### Predictable Execution
+
+Write code with clear execution paths. Predictable code utilizes CPU caching and branch prediction more effectively.
+
+## Documentation
+
+All externally exposed APIs (exports) **must** have well-formed JSDoc comments.
+
+### JSDoc Example
+
+```ts
+/**
+ * Clamps a number within the specified bounds.
+ *
+ * @param min - The lower bound to clamp to.
+ * @param max - The upper bound to clamp to.
+ * @param value - The number value to clamp to the given range.
+ * @returns The clamped value.
+ *
+ * @throws {RangeError} Throws if min > max.
+ *
+ * @remarks
+ * This is a pure function with no side effects.
+ *
+ * @example
+ * ```typescript
+ * const value = clamp(5, 15, 10); // 10
+ * const value = clamp(5, 15, 2);  // 5
+ * const value = clamp(5, 15, 20); // 15
+ * ```
+ */
+export function clamp(min: number, max: number, value: number): number {
+  if (min > max) {
+    throw new RangeError(`min (${min}) > max (${max})`);
+  }
+  
+  return Math.max(min, Math.min(max, value));
+}
+```
+
+### Required Tags
+
+At minimum: `@param`, `@template` (if applicable), `@returns`, `@throws` (if applicable), `@example`.
+
+Optional: `@see`/`@link`, `@remarks`, `@deprecated`.
+
+### Comment Markers
+
+Use "better comment" markers for non-docblock comments:
+
+- `TODO:` - Future changes or unimplemented features
+- `FIXME:` - Known bugs or critical defects
+- `HACK:` - Workarounds or sub-optimal solutions
+- `NOTE:` - Important informational points
+- `REVIEW:` - Areas requiring code review or scrutiny
+- `PERF:` - Performance bottlenecks or optimizations
+- `DEBUG:` - Temporary debugging code (remove later)
+- `REMARK:` - General observations
+
+### Comments to Remove
+
+- Commented-out code
+- Edit history comments ("added", "removed", "changed")
+- Comments restating what code clearly does
+
+### Comments to Preserve
+
+- Comments with markers (TODO, FIXME, etc.)
+- Linter directives (`// eslint-disable`, `// @ts-ignore`)
+- Business logic explanations
+- Docblock comments
+
+### Comment Placement
+
+Move end-of-line comments to their own line above the code they describe.

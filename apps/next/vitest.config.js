@@ -10,17 +10,74 @@
  * governing permissions and limitations under the License.
  */
 
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import baseConfig from '@accelint/vitest-config/dom';
+import tailwindcss from '@tailwindcss/vite';
+import { playwright } from '@vitest/browser-playwright';
 import { defineConfig, mergeConfig } from 'vitest/config';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default mergeConfig(
   baseConfig,
   defineConfig({
-    plugins: [],
+    plugins: [tailwindcss()],
+    resolve: {
+      alias: {
+        '~': path.resolve(__dirname, 'src'),
+      },
+    },
     test: {
       globals: true,
       setupFiles: './src/test/setup.ts',
       environment: 'jsdom',
+      // Define separate projects for unit and browser tests
+      projects: [
+        // Unit tests (jsdom)
+        {
+          extends: true,
+          test: {
+            name: 'unit',
+            include: ['src/**/*.test.{ts,tsx}'],
+            environment: 'jsdom',
+            setupFiles: './src/test/setup.ts',
+          },
+        },
+        // Visual regression tests (browser)
+        {
+          extends: true,
+          resolve: {
+            alias: {
+              // Mock 'server-only' to allow importing server components in visual tests
+              'server-only': path.resolve(
+                __dirname,
+                'src/visual-regression/mocks/server-only.ts',
+              ),
+            },
+          },
+          test: {
+            name: 'visual',
+            include: ['src/features/**/*.visual.tsx'],
+            testTimeout: 30000,
+            coverage: {
+              enabled: false, // Coverage conflicts with browser mode
+            },
+            browser: {
+              enabled: true,
+              ui: false,
+              headless: true,
+              provider: playwright({
+                launch: { headless: true },
+                context: { deviceScaleFactor: 1 },
+              }),
+              instances: [{ browser: 'chromium' }],
+              viewport: { width: 1280, height: 720 },
+            },
+            setupFiles: ['./src/visual-regression/vitest/setup.ts'],
+          },
+        },
+      ],
     },
   }),
 );
