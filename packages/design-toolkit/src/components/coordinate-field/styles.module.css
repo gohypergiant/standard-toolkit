@@ -41,6 +41,10 @@
     @variant hover {
       @apply outline-interactive-hover;
     }
+
+    @variant read-only {
+      @apply px-0 outline-none;
+    }
   }
 
   .input {
@@ -72,6 +76,16 @@
 
     @variant selection {
       @apply fg-a11y-on-accent bg-accent-primary-bold;
+    }
+
+    @variant read-only {
+      @variant focus-visible {
+        @apply bg-surface-default;
+      }
+
+      @variant selection {
+        @apply bg-surface-default;
+      }
     }
   }
 
