@@ -13,7 +13,6 @@
 import ChevronDown from '@accelint/icons/chevron-down';
 import Placeholder from '@accelint/icons/placeholder';
 import Plus from '@accelint/icons/plus';
-import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import { Icon } from '../../icon';
 import { Menu } from '../../menu';
@@ -27,19 +26,89 @@ import { MenuTrigger } from '../../menu/trigger';
 import { Tooltip } from '../../tooltip';
 import { TooltipTrigger } from '../../tooltip/trigger';
 import { Button } from '../';
+import type { Meta, StoryObj } from '@storybook/react-vite';
+
+type StoryArgs = {
+  buttonVariant: 'filled' | 'flat' | 'icon' | 'outline';
+  buttonColor: 'mono-muted' | 'mono-bold' | 'accent' | 'serious' | 'critical';
+  buttonSize: 'large' | 'medium' | 'small' | 'xsmall';
+  menuVariant: 'compact' | 'cozy';
+  isDisabled: boolean;
+};
 
 const meta = {
   title: 'Components/Button/Composition/Menu Button',
   tags: ['!autodocs'],
-} satisfies Meta;
+  args: {
+    buttonVariant: 'filled',
+    buttonColor: 'mono-muted',
+    buttonSize: 'medium',
+    menuVariant: 'cozy',
+    isDisabled: false,
+  },
+  argTypes: {
+    buttonVariant: {
+      control: 'select',
+      options: ['filled', 'flat', 'icon', 'outline'],
+    },
+    buttonColor: {
+      control: 'select',
+      options: ['mono-muted', 'mono-bold', 'accent', 'serious', 'critical'],
+    },
+    buttonSize: {
+      control: 'select',
+      options: ['large', 'medium', 'small', 'xsmall'],
+    },
+    menuVariant: {
+      control: 'select',
+      options: ['compact', 'cozy'],
+    },
+    isDisabled: {
+      control: 'boolean',
+    },
+  },
+} satisfies Meta<StoryArgs>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<StoryArgs>;
 
 const chevronStyle = (isOpen: boolean) => ({
   transform: isOpen ? 'rotate(180deg)' : undefined,
   transition: 'transform 150ms',
 });
+
+export const Default: Story = {
+  render: (args) => {
+    const [isOpen, setIsOpen] = useState(false);
+
+    return (
+      <MenuTrigger onOpenChange={setIsOpen}>
+        <Button
+          variant={args.buttonVariant}
+          color={args.buttonColor}
+          size={args.buttonSize}
+          isDisabled={args.isDisabled}
+        >
+          {args.buttonVariant !== 'icon' && 'Menu'}
+          <Icon style={chevronStyle(isOpen)}>
+            <ChevronDown />
+          </Icon>
+        </Button>
+        <Menu variant={args.menuVariant}>
+          <MenuItem id='option-1'>
+            <MenuItemLabel>Option 1</MenuItemLabel>
+          </MenuItem>
+          <MenuItem id='option-2'>
+            <MenuItemLabel>Option 2</MenuItemLabel>
+          </MenuItem>
+          <MenuItem id='option-3'>
+            <MenuItemLabel>Option 3</MenuItemLabel>
+          </MenuItem>
+        </Menu>
+      </MenuTrigger>
+    );
+  },
+};
 
 export const WithIcon: Story = {
   render: () => {
@@ -88,6 +157,9 @@ export const IconOnly: Story = {
     return (
       <MenuTrigger onOpenChange={setIsOpen}>
         <Button variant='icon' aria-label='More options'>
+          <Icon>
+            <Placeholder />
+          </Icon>
           <Icon style={chevronStyle(isOpen)}>
             <ChevronDown />
           </Icon>
@@ -267,6 +339,9 @@ export const WithTooltip: Story = {
       <TooltipTrigger isDisabled={isOpen}>
         <MenuTrigger onOpenChange={setIsOpen}>
           <Button variant='icon' aria-label='More options'>
+            <Icon>
+              <Placeholder />
+            </Icon>
             <Icon style={chevronStyle(isOpen)}>
               <ChevronDown />
             </Icon>
