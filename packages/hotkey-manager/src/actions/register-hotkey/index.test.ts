@@ -10,7 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-import { renderHook } from '@testing-library/react';
 import { noop } from 'radashi';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { Keycode } from '@/enums/keycode';
@@ -33,104 +32,92 @@ describe('registerHotkey', () => {
   });
 
   it('should create a hotkey with default values', () => {
-    const useHotkey = registerHotkey(options);
+    const hotkey = registerHotkey(options);
 
-    expect(useHotkey.id).toBeDefined();
-    expect(useHotkey.isBound).toBe(false);
+    expect(hotkey.id).toBeDefined();
+    expect(hotkey.isBound).toBe(false);
   });
 
   it('should get config', () => {
-    const useHotkey = registerHotkey(options);
+    const hotkey = registerHotkey(options);
 
-    expect(useHotkey.config.id).toContain(options.id);
+    expect(hotkey.config.id).toContain(options.id);
+  });
+
+  describe('bind', () => {
+    it('should bind and unbind hotkey', () => {
+      const hotkey = registerHotkey(options);
+      const cleanup = hotkey.bind();
+
+      expect(hotkey.isBound).toBe(true);
+
+      cleanup();
+      expect(hotkey.isBound).toBe(false);
+    });
+
+    it('should handle multiple binds with ref-counting', () => {
+      const hotkey = registerHotkey(options);
+      const cleanup1 = hotkey.bind();
+      const cleanup2 = hotkey.bind();
+
+      expect(hotkey.isBound).toBe(true);
+
+      cleanup1();
+      // Still bound because cleanup2 is still active
+      expect(hotkey.isBound).toBe(true);
+
+      cleanup2();
+      expect(hotkey.isBound).toBe(false);
+    });
   });
 
   describe('forceBind', () => {
-    it('should activate and deactivate hotkey', () => {
-      const useHotkey = registerHotkey(options);
-      const cleanup = useHotkey.forceBind();
+    it('should forceBind and unbind hotkey', () => {
+      const hotkey = registerHotkey(options);
+      const cleanup = hotkey.forceBind();
 
-      expect(useHotkey.isBound).toBe(true);
+      expect(hotkey.isBound).toBe(true);
 
       cleanup();
-      expect(useHotkey.isBound).toBe(false);
+      expect(hotkey.isBound).toBe(false);
     });
 
-    it('should handle multiple force bindings when unbinding', () => {
-      const options = {
+    it('should handle multiple forceBinds when unbinding', () => {
+      const hotkey = registerHotkey({
         key: { code: Keycode.KeyA },
         onKeyUp: noop,
-      };
+      });
+      const cleanup1 = hotkey.forceBind();
+      const cleanup2 = hotkey.forceBind();
 
-      const useHotkey = registerHotkey(options);
-      const cleanup1 = useHotkey.forceBind();
-      const cleanup2 = useHotkey.forceBind();
-
-      expect(useHotkey.isBound).toBe(true);
+      expect(hotkey.isBound).toBe(true);
 
       cleanup1();
-      expect(useHotkey.isBound).toBe(false);
+      expect(hotkey.isBound).toBe(false);
 
       cleanup2();
-      expect(useHotkey.isBound).toBe(false);
+      expect(hotkey.isBound).toBe(false);
     });
 
     it('should unbind all when using forceUnbind', () => {
-      const useHotkey = registerHotkey(options);
-      useHotkey.forceBind();
+      const hotkey = registerHotkey(options);
+      hotkey.forceBind();
 
-      expect(useHotkey.isBound).toBe(true);
+      expect(hotkey.isBound).toBe(true);
 
-      useHotkey.forceUnbind();
-      expect(useHotkey.isBound).toBe(false);
-    });
-  });
-
-  describe('hook', () => {
-    it('should activate and deactivate hotkey', () => {
-      const useHotkey = registerHotkey(options);
-
-      // Initial state
-      expect(useHotkey.isBound).toBe(false);
-
-      // Mount the hook
-      const { unmount } = renderHook(() => useHotkey());
-
-      // Hook should be bound after mounting
-      expect(useHotkey.isBound).toBe(true);
-
-      // // Unmount the hook
-      unmount();
-
-      // Hook should be unbound after unmounting
-      expect(useHotkey.isBound).toBe(false);
+      hotkey.forceUnbind();
+      expect(hotkey.isBound).toBe(false);
     });
 
-    it('should deactivate after all hooks are unmounted', () => {
-      const useHotkey = registerHotkey(options);
-      const { unmount } = renderHook(() => useHotkey());
+    it('should forceUnbind even when using normal binds', () => {
+      const hotkey = registerHotkey(options);
+      hotkey.bind();
+      hotkey.bind();
 
-      expect(useHotkey.isBound).toBe(true);
+      expect(hotkey.isBound).toBe(true);
 
-      const { unmount: unmount2 } = renderHook(() => useHotkey());
-
-      expect(useHotkey.isBound).toBe(true);
-
-      unmount();
-      expect(useHotkey.isBound).toBe(true);
-
-      unmount2();
-      expect(useHotkey.isBound).toBe(false);
-    });
-
-    it('should still unbind when using forceUnbind', () => {
-      const useHotkey = registerHotkey(options);
-      renderHook(() => useHotkey());
-
-      expect(useHotkey.isBound).toBe(true);
-
-      useHotkey.forceUnbind();
-      expect(useHotkey.isBound).toBe(false);
+      hotkey.forceUnbind();
+      expect(hotkey.isBound).toBe(false);
     });
   });
 });
