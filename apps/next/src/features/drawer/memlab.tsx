@@ -124,7 +124,7 @@ export function DrawerExample() {
               <DrawerView id={ids.viewA}>
                 <DrawerHeader>
                   <DrawerHeaderTitle>View A</DrawerHeaderTitle>
-                  <DrawerClose data-testid='close-drawer' />
+                  <DrawerClose data-testid='close-drawer' id={ids.viewA} />
                 </DrawerHeader>
                 <DrawerContent data-testid='drawer-content'>
                   <p>This is the content for View A.</p>
@@ -142,7 +142,7 @@ export function DrawerExample() {
               <DrawerView id={ids.viewB}>
                 <DrawerHeader>
                   <DrawerHeaderTitle>View B</DrawerHeaderTitle>
-                  <DrawerClose />
+                  <DrawerClose id={ids.viewB} />
                 </DrawerHeader>
                 <DrawerContent>
                   <p>This is the content for View B.</p>
@@ -160,7 +160,7 @@ export function DrawerExample() {
               <DrawerView id={ids.viewC}>
                 <DrawerHeader>
                   <DrawerHeaderTitle>View C</DrawerHeaderTitle>
-                  <DrawerClose />
+                  <DrawerClose id={ids.viewC} />
                 </DrawerHeader>
                 <DrawerContent>
                   <p>This is the content for View C.</p>

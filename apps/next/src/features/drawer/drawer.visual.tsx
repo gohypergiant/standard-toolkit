@@ -64,7 +64,7 @@ function DrawerVariantComponent({ variant }: { variant: DrawerVariant }) {
               <DrawerHeaderTitle>
                 {variant.placement} / {variant.menuPosition}
               </DrawerHeaderTitle>
-              <DrawerClose />
+              <DrawerClose id={ids.viewA} />
             </DrawerHeader>
             <DrawerContent>
               <p className='fg-primary'>
@@ -78,7 +78,7 @@ function DrawerVariantComponent({ variant }: { variant: DrawerVariant }) {
           <DrawerView id={ids.viewB}>
             <DrawerHeader>
               <DrawerHeaderTitle>View B</DrawerHeaderTitle>
-              <DrawerClose />
+              <DrawerClose id={ids.viewB} />
             </DrawerHeader>
             <DrawerContent>
               <p className='fg-primary'>Content for View B</p>
@@ -87,7 +87,7 @@ function DrawerVariantComponent({ variant }: { variant: DrawerVariant }) {
           <DrawerView id={ids.viewC}>
             <DrawerHeader>
               <DrawerHeaderTitle>View C</DrawerHeaderTitle>
-              <DrawerClose />
+              <DrawerClose id={ids.viewC} />
             </DrawerHeader>
             <DrawerContent>
               <p className='fg-primary'>Content for View C</p>

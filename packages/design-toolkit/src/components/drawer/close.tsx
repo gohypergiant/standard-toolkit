@@ -12,15 +12,18 @@
 
 'use client';
 
-import 'client-only';
 import { Cancel } from '@accelint/icons';
+import 'client-only';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { DrawerTrigger } from './trigger';
+import type { DrawerCloseProps } from './types';
 
-export function DrawerClose() {
+export function DrawerClose({ for: id, ...rest }: DrawerCloseProps) {
+  // Only emit onClose event if we have a specified ID.
+  // Otherwise, we reset the view stack.
   return (
-    <DrawerTrigger for='close'>
+    <DrawerTrigger {...rest} for={`close:${id}`}>
       <Button variant='icon'>
         <Icon>
           <Cancel />
