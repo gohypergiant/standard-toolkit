@@ -1,6 +1,6 @@
 # @accelint/design-toolkit
 
-## 10.0.0
+## 9.3.0
 ### Minor Changes
 
 - 0872e9e: Add DeferredCollection component to lazy load large collections when virtualizing.
