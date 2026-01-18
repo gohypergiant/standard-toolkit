@@ -52,8 +52,8 @@ The DrawerLayout system consists of the following components:
 
 - `extend`
   - Type: select ('top bottom', 'left right', 'top', 'bottom', 'left', 'right')
-  - Default: ''
-  - Description: Specifies which drawers should extend over the main content
+  - Default: 'left right'
+  - Description: Specifies which drawers should extend to full container dimensions
 
 - `push`
   - Type: string
@@ -74,25 +74,42 @@ The DrawerLayout system consists of the following components:
 
 - `placement`
   - Type: select ('top', 'bottom', 'left', 'right')
-  - Required
+  - Default: 'left'
   - Description: Position of the drawer
 
 - `size`
-  - Type: select ('medium')
+  - Type: select ('small', 'medium', 'large')
   - Default: 'medium'
-  - Description: Size of the drawer
+  - Description: Size of the drawer panel
+
+- `defaultView`
+  - Type: string
+  - Optional
+  - Description: ID of the view to display when the drawer first opens
+
+### DrawerMenu Props
+
+- `position`
+  - Type: select ('start', 'center', 'end')
+  - Default: 'center'
+  - Description: The position of the menu items within the menu bar
 
 ### DrawerMenuItem Props
 
 - `toggle`
   - Type: boolean
   - Default: false
-  - Description: Whether this item toggles the drawer state
+  - Description: When true, clicking the menu item toggles the view open/closed. When false, clicking only opens.
 
 - `for`
   - Type: string
   - Required
   - Description: ID of the view this item controls
+
+- `textValue`
+  - Type: string
+  - Required
+  - Description: Text displayed in a tooltip when hovering over the menu item
 
 ### DrawerView Props
 

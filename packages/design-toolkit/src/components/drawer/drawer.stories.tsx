@@ -26,35 +26,54 @@ import { DrawerTrigger } from './trigger';
 import { DrawerView } from './view';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ComponentProps } from 'react';
-import type { DrawerMenuProps, DrawerProps } from './types';
+import type { DrawerMenuProps } from './types';
 
-// TODO: more work is needed to clean up the types for easier adoption of Storybook patterns
-// this story has a mix of controls from different components
-type DrawerWithAdditionalArgs = ComponentProps<typeof Drawer> &
+type DrawerStoryArgs = ComponentProps<typeof Drawer> &
   Pick<DrawerMenuProps, 'position'> & {
     toggle?: boolean;
   };
 
-const meta: Meta<DrawerProps & Pick<DrawerMenuProps, 'position'>> = {
+const meta: Meta<DrawerStoryArgs> = {
   title: 'Components/Drawer',
   component: Drawer,
   args: {
     placement: 'left',
     size: 'medium',
     position: 'center',
+    toggle: false,
   },
   argTypes: {
     size: {
       control: 'select',
       options: ['small', 'medium', 'large'],
+      description: 'The size of the drawer panel',
+      table: {
+        defaultValue: { summary: 'medium' },
+      },
     },
     placement: {
       control: 'select',
       options: ['top', 'bottom', 'left', 'right'],
+      description: 'The placement/position of the drawer',
+      table: {
+        defaultValue: { summary: 'left' },
+      },
     },
     position: {
       control: 'select',
       options: ['start', 'center', 'end'],
+      description: 'The position of the menu items within the menu bar',
+      table: {
+        defaultValue: { summary: 'center' },
+      },
+    },
+    toggle: {
+      control: 'boolean',
+      description:
+        'When true, clicking a menu item toggles the view open/closed. When false, clicking only opens.',
+      table: {
+        defaultValue: { summary: 'false' },
+      },
     },
   },
   parameters: {
@@ -63,7 +82,7 @@ const meta: Meta<DrawerProps & Pick<DrawerMenuProps, 'position'>> = {
 };
 
 export default meta;
-type Story = StoryObj<DrawerWithAdditionalArgs>;
+type Story = StoryObj<DrawerStoryArgs>;
 
 const ids = {
   drawer: uuid(),
@@ -73,14 +92,16 @@ const ids = {
 };
 
 export const StaticHeaderFooter: Story = {
-  args: {
-    toggle: false,
-  },
   render: ({ placement, size, toggle, position }) => {
     return (
       <div className='fg-primary-bold h-screen bg-surface-muted'>
         <DrawerLayout>
-          <Drawer id={ids.drawer} placement={placement} size={size}>
+          <Drawer
+            id={ids.drawer}
+            placement={placement}
+            size={size}
+            defaultView={ids.a}
+          >
             <DrawerMenu position={position}>
               <DrawerMenuItem toggle={toggle} for={ids.a} textValue='Menu A'>
                 A
@@ -112,19 +133,24 @@ export const StaticHeaderFooter: Story = {
 };
 
 export const DynamicHeaderFooter: Story = {
-  render: ({ placement, size, position }) => {
+  render: ({ placement, size, position, toggle }) => {
     return (
       <div className='fg-primary-bold h-screen bg-surface-muted'>
         <DrawerLayout>
-          <Drawer id={ids.drawer} placement={placement} size={size}>
+          <Drawer
+            id={ids.drawer}
+            placement={placement}
+            size={size}
+            defaultView={ids.a}
+          >
             <DrawerMenu position={position}>
-              <DrawerMenuItem toggle for={ids.a} textValue='Menu A'>
+              <DrawerMenuItem toggle={toggle} for={ids.a} textValue='Menu A'>
                 A
               </DrawerMenuItem>
-              <DrawerMenuItem toggle for={ids.b} textValue='Menu B'>
+              <DrawerMenuItem toggle={toggle} for={ids.b} textValue='Menu B'>
                 B
               </DrawerMenuItem>
-              <DrawerMenuItem toggle for={ids.c} textValue='Menu C'>
+              <DrawerMenuItem toggle={toggle} for={ids.c} textValue='Menu C'>
                 C
               </DrawerMenuItem>
             </DrawerMenu>
@@ -159,7 +185,7 @@ export const DynamicHeaderFooter: Story = {
 };
 
 export const OpenCloseTrigger: Story = {
-  render: ({ placement, size, position }) => {
+  render: ({ placement, size, position, toggle }) => {
     return (
       <div className='fg-primary-bold h-screen'>
         <DrawerLayout>
@@ -170,9 +196,14 @@ export const OpenCloseTrigger: Story = {
               </DrawerTrigger>
             </div>
           </DrawerLayoutMain>
-          <Drawer id={ids.drawer} placement={placement} size={size}>
+          <Drawer
+            id={ids.drawer}
+            placement={placement}
+            size={size}
+            defaultView={undefined}
+          >
             <DrawerMenu position={position}>
-              <DrawerMenuItem toggle for={ids.a} textValue='Menu A'>
+              <DrawerMenuItem toggle={toggle} for={ids.a} textValue='Menu A'>
                 A
               </DrawerMenuItem>
             </DrawerMenu>
@@ -194,13 +225,18 @@ export const OpenCloseTrigger: Story = {
 };
 
 export const SimpleStack: Story = {
-  render: ({ placement, size, position }) => {
+  render: ({ placement, size, position, toggle }) => {
     return (
       <div className='fg-primary-bold h-screen bg-surface-muted'>
         <DrawerLayout>
-          <Drawer id={ids.drawer} placement={placement} size={size}>
+          <Drawer
+            id={ids.drawer}
+            placement={placement}
+            size={size}
+            defaultView={ids.a}
+          >
             <DrawerMenu position={position}>
-              <DrawerMenuItem toggle for={ids.a} textValue='Menu A'>
+              <DrawerMenuItem toggle={toggle} for={ids.a} textValue='Menu A'>
                 A
               </DrawerMenuItem>
             </DrawerMenu>
