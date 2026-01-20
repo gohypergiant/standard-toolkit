@@ -1,0 +1,73 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+
+import * as DeferredCollectionStories from './deferred-collection.stories';
+
+<Meta of={DeferredCollectionStories} />
+
+# DeferredCollection
+
+DeferredCollection solves a performance problem with React Aria's collection system. When rendering large virtualized lists, React Aria processes ALL items synchronously before virtualization begins—even if only a few items are visible. For datasets with thousands of items, this blocks the main thread and freezes the UI.
+
+This component defers the collection render by a few animation frames, allowing a fallback to display first while the browser remains responsive.
+
+## Demo
+
+Click the button to remount the component and observe the fallback → content transition:
+
+<Canvas of={DeferredCollectionStories.Default} />
+
+## Usage
+
+### With React Aria Collections (Recommended)
+
+When using React Aria collections with large datasets, pass children as a **function** to defer the expensive collection processing until the fallback has rendered:
+
+```tsx
+<DeferredCollection
+  fallback={
+    <div className='flex w-[300px] flex-col gap-xs'>
+      {Array.from({ length: 10 }, (_, i) => (
+        <Skeleton key={i} style={{ height: 32 }} />
+      ))}
+    </div>
+  }
+>
+  {() => (
+    <Virtualizer layout={ListLayout} layoutOptions={{ rowHeight: 32 }}>
+      <ListBox items={items}>
+        {(item) => <ListBoxItem>{item.name}</ListBoxItem>}
+      </ListBox>
+    </Virtualizer>
+  )}
+</DeferredCollection>
+```
+
+### With Simple Content
+
+For simple content that doesn't involve expensive collection processing, you can pass children directly:
+
+```tsx
+<DeferredCollection fallback={<LoadingPlaceholder />}>
+  <div>Simple content renders here</div>
+</DeferredCollection>
+```
+
+## Props
+
+### DeferredCollectionProps
+
+* **`children`** - The content to render once ready: `ReactNode | (() => ReactNode)` (required). Use a function for React Aria collections to defer expensive processing.
+* **`fallback`** - Fallback element to show while deferring render: `ReactNode` (optional)
+* **`deferFrames`** - Number of animation frames to defer before rendering: `number` (default: 2)
+
+## Implementation Notes
+
+DeferredCollection uses the `useFrameDelay` hook internally, which:
+
+1. Starts with `isReady: false`
+2. Waits for `frames` animation frames using `requestAnimationFrame`
+3. Sets `isReady: true`, triggering the actual collection render
+
+This gives the browser time to paint the fallback before the expensive collection processing begins.
+
+[GitHub Source](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-toolkit/src/components/deferred-collection)

@@ -55,10 +55,14 @@
     @variant group-disabled/combobox-field {
       @apply fg-disabled outline-interactive-disabled;
     }
+
+    @variant read-only {
+      @apply px-0 outline-none;
+    }
   }
 
   .input {
-    @apply font-display grow outline-none;
+    @apply font-display grow overflow-hidden text-ellipsis whitespace-nowrap outline-none;
 
     @variant group-size-medium/combobox-field {
       @apply text-body-s;

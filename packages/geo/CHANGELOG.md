@@ -1,5 +1,11 @@
 # @accelint/geo
 
+## 0.5.1
+
+### Patch Changes
+
+- 45275c4: Fixes bug with Decimal Degrees formatting where ordinal degrees redundantly showed negative numbers
+
 ## 0.5.0
 
 ### Minor Changes
