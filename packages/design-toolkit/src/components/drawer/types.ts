@@ -267,6 +267,6 @@ export type DrawerContextValue = {
   placement: XAxisUnion | YAxisUnion;
 };
 
-export type DrawerCloseProps = {
+export type DrawerCloseProps = AriaAttributesWithRef<FocusableElement> & {
   for: UniqueId;
 };
