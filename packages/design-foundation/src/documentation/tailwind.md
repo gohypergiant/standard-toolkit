@@ -171,7 +171,7 @@ function Child({ children, className }: Props) {
 
 ### Inline Dynamic Classes
 
-Do not include inline logic in your component to determine which classes to add / remove. Instead rely on `clsx`.
+Use `clsx` for any dynamic class application logic.
 
 ```jsx
 function MyComponent({ className, isDisabled }: Props) {
