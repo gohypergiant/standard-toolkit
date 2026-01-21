@@ -75,6 +75,12 @@ Components:
 ### DetailsListProvider
 Context provider for setting default props across multiple DetailsList components.
 
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `align` | `'left' \| 'center' \| 'justify'` | - | Alignment for all child DetailsLists |
+| `classNames` | `object` | - | Custom classes for all child DetailsLists |
+| `children` | `ReactNode` | - | DetailsList components |
+
 ```tsx
 <DetailsListProvider align="left">
   <DetailsList>...</DetailsList>

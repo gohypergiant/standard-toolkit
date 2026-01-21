@@ -118,6 +118,11 @@ Extends [`ComboBox`](https://react-spectrum.adobe.com/react-aria/ComboBox.html#p
 ### ComboBoxFieldProvider
 Context provider for setting default props across multiple ComboBoxField components.
 
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `size` | `'medium' \| 'small'` | - | Size for all child ComboBoxFields |
+| `children` | `ReactNode` | - | ComboBoxField components |
+
 ```tsx
 <ComboBoxFieldProvider size="small">
   <ComboBoxField defaultItems={items1}>{...}</ComboBoxField>

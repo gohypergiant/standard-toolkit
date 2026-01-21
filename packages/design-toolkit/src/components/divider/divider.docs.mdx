@@ -47,6 +47,11 @@ Extends all standard HTML `<hr>` attributes.
 ### DividerProvider
 Context provider for setting default props across multiple Divider components.
 
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `orientation` | `'horizontal' \| 'vertical'` | - | Orientation for all child Dividers |
+| `children` | `ReactNode` | - | Divider components |
+
 ```tsx
 <DividerProvider orientation="vertical">
   <Divider />

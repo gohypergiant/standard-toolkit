@@ -17,9 +17,23 @@ import { createContext } from 'react';
 import type { ContextValue } from 'react-aria-components';
 import type { IconProps } from './types';
 
+/**
+ * Context for sharing Icon props across component tree.
+ */
 export const IconContext =
   createContext<ContextValue<IconProps, HTMLSpanElement>>(null);
 
+/**
+ * IconProvider - Context provider for setting default Icon props.
+ *
+ * Use this to configure shared size across multiple Icon components.
+ *
+ * @example
+ * <IconProvider size="small">
+ *   <Icon><Home /></Icon>
+ *   <Icon><Search /></Icon>
+ * </IconProvider>
+ */
 export function IconProvider({ children, ...props }: ProviderProps<IconProps>) {
   return <IconContext.Provider value={props}>{children}</IconContext.Provider>;
 }

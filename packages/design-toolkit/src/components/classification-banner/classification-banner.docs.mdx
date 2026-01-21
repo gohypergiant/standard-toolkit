@@ -56,6 +56,11 @@ Full-width banner for displaying security classification levels at the top or bo
 ### ClassificationBannerProvider
 Context provider for setting default props across multiple banners.
 
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `'missing' \| 'unclassified' \| 'cui' \| 'confidential' \| 'secret' \| 'top-secret' \| 'ts-sci'` | - | Classification level for all child banners |
+| `children` | `ReactNode` | - | ClassificationBanner components |
+
 ```tsx
 <ClassificationBannerProvider variant="secret">
   <ClassificationBanner />

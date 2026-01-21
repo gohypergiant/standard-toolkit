@@ -97,6 +97,11 @@ Extends all standard HTML `span` attributes.
 ### AvatarProvider
 Context provider for setting default props across multiple avatars.
 
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `size` | `'medium' \| 'small'` | - | Size applied to all child Avatars |
+| `children` | `ReactNode` | - | Avatar components |
+
 ```tsx
 <AvatarProvider size="small">
   <Avatar imageProps={{ alt: "User 1", src: "avatar1.jpg" }} />

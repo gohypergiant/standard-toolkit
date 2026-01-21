@@ -55,6 +55,11 @@ Container for grouping multiple Hotkey components. Extends all standard HTML `<d
 ### HotkeyProvider
 Context provider for setting default props across multiple Hotkey components.
 
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `'outline' \| 'flat' \| 'icon'` | - | Visual style for all child Hotkeys |
+| `children` | `ReactNode` | - | Hotkey components |
+
 ```tsx
 <HotkeyProvider variant="flat">
   <Hotkey>Ctrl</Hotkey>

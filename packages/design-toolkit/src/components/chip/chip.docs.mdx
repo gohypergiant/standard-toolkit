@@ -138,6 +138,12 @@ Extends [`Tag`](https://react-spectrum.adobe.com/react-aria/TagGroup.html#tag) p
 ### ChipProvider
 Context provider for setting default props across multiple chips.
 
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `color` | `'info' \| 'advisory' \| 'normal' \| 'serious' \| 'critical'` | - | Color for all child Chips |
+| `size` | `'medium' \| 'small'` | - | Size for all child Chips |
+| `children` | `ReactNode` | - | Chip components |
+
 ```tsx
 <ChipProvider size="small" color="info">
   <Chip>Chip 1</Chip>

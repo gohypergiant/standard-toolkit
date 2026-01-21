@@ -113,6 +113,13 @@ Extends all [`ToggleButton` props](https://react-spectrum.adobe.com/react-aria/T
 ### ButtonProvider
 Context provider for setting default props across multiple buttons.
 
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `'filled' \| 'outline' \| 'flat' \| 'icon'` | - | Visual style for all child Buttons |
+| `color` | `'mono-muted' \| 'mono-bold' \| 'accent' \| 'serious' \| 'critical'` | - | Color for all child Buttons |
+| `size` | `'large' \| 'medium' \| 'small' \| 'xsmall'` | - | Size for all child Buttons |
+| `children` | `ReactNode` | - | Button components |
+
 ```tsx
 <ButtonProvider size="small" variant="outline">
   <Button>Button 1</Button>
@@ -120,7 +127,25 @@ Context provider for setting default props across multiple buttons.
 </ButtonProvider>
 ```
 
-Also available: `LinkButtonProvider`, `ToggleButtonProvider`
+### LinkButtonProvider
+Context provider for setting default props across multiple LinkButton components.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `'filled' \| 'outline' \| 'flat' \| 'icon'` | - | Visual style for all child LinkButtons |
+| `color` | `'mono-muted' \| 'mono-bold' \| 'accent' \| 'serious' \| 'critical'` | - | Color for all child LinkButtons |
+| `size` | `'large' \| 'medium' \| 'small' \| 'xsmall'` | - | Size for all child LinkButtons |
+| `children` | `ReactNode` | - | LinkButton components |
+
+### ToggleButtonProvider
+Context provider for setting default props across multiple ToggleButton components.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `'outline' \| 'flat' \| 'icon'` | - | Visual style for all child ToggleButtons |
+| `color` | `'mono-muted' \| 'mono-bold' \| 'accent' \| 'serious' \| 'critical'` | - | Color for all child ToggleButtons |
+| `size` | `'large' \| 'medium' \| 'small' \| 'xsmall'` | - | Size for all child ToggleButtons |
+| `children` | `ReactNode` | - | ToggleButton components |
 
 ## Accessibility
 - Keyboard: Enter and Space to activate

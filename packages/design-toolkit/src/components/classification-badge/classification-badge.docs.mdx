@@ -57,6 +57,12 @@ Displays security classification levels for documents, data, and information sys
 ### ClassificationBadgeProvider
 Context provider for setting default props across multiple badges.
 
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `'missing' \| 'unclassified' \| 'cui' \| 'confidential' \| 'secret' \| 'top-secret' \| 'ts-sci'` | - | Classification level for all child badges |
+| `size` | `'medium' \| 'small'` | - | Size for all child badges |
+| `children` | `ReactNode` | - | ClassificationBadge components |
+
 ```tsx
 <ClassificationBadgeProvider variant="secret" size="small">
   <ClassificationBadge />
