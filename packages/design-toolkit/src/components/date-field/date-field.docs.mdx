@@ -5,88 +5,106 @@ import * as DateFieldStories from './date-field.stories';
 <Meta of={DateFieldStories} />
 
 # DateField
-A form input component for entering and editing date and time values. The DateField component provides a user-friendly interface for date selection with support for various granularities (day, hour, minute, second) and customizable formatting options.
+Form input for entering and editing date and time values. Supports various granularities (day, hour, minute, second) and customizable formatting.
 
-## Example usage
+## Example Usage
+
+```tsx
+import { parseDateTime } from '@internationalized/date';
+
+<DateField
+  label="Select Date"
+  defaultValue={parseDateTime('2020-01-23T00:00:00')}
+  granularity="day"
+  description="Format: MMM dd yyyy"
+/>
+```
+<Canvas of={DateFieldStories.Default} />
+
+### With Full Month Names
 ```tsx
 <DateField
   label="Select Date"
-  defaultValue={parseDate('2020-01-23')}
-  granularity="day"
-  description="Format: d MMM yyyy"
+  defaultValue={parseDateTime('2020-01-23T00:00:00')}
+  shortMonth={false}
 />
 ```
-
-## Sizes
-
-* **small** - Compact size with smaller text and no calendar icon, ideal for dense layouts
-* **medium** - Standard size with calendar icon and larger text, suitable for most use cases
-
-**medium** is the default size and should be used in most cases, unless space constraints require the smaller variant.
-
-<Canvas of={DateFieldStories.Default} />
-
-## Props
-
-### Core Props
-- **`label`** - Text label displayed above the input field
-- **`description`** - Helper text displayed below the input field
-- **`errorMessage`** - Error message displayed when validation fails
-- **`placeholder`** - Placeholder text shown when no value is entered
-- **`isReadOnly`** - Whether the field is readonly
-- **`isRequired`** - Whether the field is required (adds required indicator to label)
-- **`isDisabled`** - Whether the field is disabled
-- **`isInvalid`** - Whether to show the field in an invalid state
-
-### Size & Appearance
-- **`size`** - Size variant: `'small'` | `'medium'` (default: `'medium'`)
-- **`shortMonth`** - Whether to display month names in short format (e.g., "JAN" vs "01") (default: `true`)
-
-### Date Configuration
-- **`granularity`** - Date precision: `'day'` | `'hour'` | `'minute'` | `'second'` (default: `'day'`)
-- **`defaultValue`** - Initial date value
-- **`value`** - Controlled date value
-- **`onChange`** - Callback when date value changes
-
-### Styling
-- **`classNames`** - Object containing custom class names for different parts:
-  - `field` - Main container
-  - `label` - Label element
-  - `input` - Input container
-  - `description` - Description text
-  - `error` - Error message
-
-### Advanced Props
-- **`slot`** - Slot name for the field
-- **`name`** - Form field name
-- **`id`** - Unique identifier for the field
-
-## Examples
-
-### Date Only (Default)
-<Canvas of={DateFieldStories.Default} />
-
-### Date with Full Month Names
 <Canvas of={DateFieldStories.WithoutShortMonth} />
 
 ### Date and Time
+```tsx
+import { parseAbsoluteToLocal } from '@internationalized/date';
+
+<DateField
+  label="Select Date & Time"
+  defaultValue={parseAbsoluteToLocal('2021-04-07T18:45:22Z')}
+  granularity="second"
+/>
+```
 <Canvas of={DateFieldStories.DateTime} />
 
-### Date and Time Readonly
+### Readonly
+```tsx
+<DateField
+  label="Event Date"
+  defaultValue={parseAbsoluteToLocal('2021-04-07T18:45:22Z')}
+  granularity="second"
+  isReadOnly
+/>
+```
 <Canvas of={DateFieldStories.Readonly} />
 
+## Sizes
+
+| Size | Description |
+|------|-------------|
+| `medium` | Standard size with calendar icon (default) |
+| `small` | Compact size, no calendar icon |
+
+## Props
+Extends [`DateField`](https://react-spectrum.adobe.com/react-aria/DateField.html#props) props from react-aria-components.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `label` | `string` | - | Label text |
+| `description` | `string` | - | Helper text below input |
+| `errorMessage` | `string` | - | Error message when invalid |
+| `size` | `'small' \| 'medium'` | `'medium'` | Size variant |
+| `shortMonth` | `boolean` | `true` | Display 3-letter month abbreviation (e.g., "JAN" vs "01") |
+| `granularity` | `'day' \| 'hour' \| 'minute' \| 'second'` | `'day'` | Date/time precision |
+| `value` | `DateValue` | - | Controlled date value |
+| `defaultValue` | `DateValue` | - | Default date value |
+| `onChange` | `(value: DateValue) => void` | - | Called when value changes |
+| `isReadOnly` | `boolean` | `false` | Readonly state |
+| `isRequired` | `boolean` | `false` | Required field |
+| `isDisabled` | `boolean` | `false` | Disabled state |
+| `isInvalid` | `boolean` | - | Invalid state |
+| `name` | `string` | - | Form field name |
+| `classNames` | `object` | - | Custom classes (see below) |
+
+**classNames:**
+
+| Key | Description |
+|-----|-------------|
+| `field` | Main container |
+| `label` | Label element |
+| `control` | Control container |
+| `input` | Input container |
+| `segment` | Date segment |
+| `description` | Description text |
+| `error` | Error message |
+
+## Accessibility
+- Keyboard: Tab between segments, Arrow keys to adjust values, type to enter values directly
+- ARIA attributes for screen readers
+- Focus management between date segments
+
 ## Implementation Notes
-The `DateField` component is built on top of React Aria Components, specifically wrapping the `DateField` and `DateInput` components.
+- Wraps `DateField` and `DateInput` from react-aria-components
+- Uses `@internationalized/date` for robust date handling across locales
+- Supports timezone-aware dates with `parseAbsoluteToLocal`
 
-[Docs](https://react-spectrum.adobe.com/react-aria/DateField.html)
-
-[Github Source](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-toolkit/src/components/date-field)
-
-Key features:
-- **Internationalization**: Uses `@internationalized/date` for robust date handling across locales
-- **Accessibility**: Full keyboard navigation and screen reader support
-- **Validation**: Built-in error state handling and ARIA attributes
-- **Flexible Formatting**: Supports various date granularities and custom month formatting
-- **Responsive Design**: Adapts to different screen sizes with size variants
-
-The underlying HTML structure uses semantic form elements with proper ARIA labeling and error handling.
+**Related:**
+- [React Aria DateField](https://react-spectrum.adobe.com/react-aria/DateField.html)
+- [@internationalized/date](https://react-spectrum.adobe.com/internationalized/date/)
+- [Github Source](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-toolkit/src/components/date-field)
