@@ -19,6 +19,18 @@ import { Icon } from '../icon';
 import styles from './styles.module.css';
 import type { BreadcrumbItemProps } from './types';
 
+/**
+ * Individual breadcrumb item. Renders as a link when `linkProps` is provided,
+ * or as plain text for the current page.
+ *
+ * @example
+ * // Link item
+ * <BreadcrumbItem linkProps={{ href: '/home' }}>Home</BreadcrumbItem>
+ *
+ * @example
+ * // Current page (no link)
+ * <BreadcrumbItem>Current Page</BreadcrumbItem>
+ */
 export function BreadcrumbItem({
   children,
   classNames,
