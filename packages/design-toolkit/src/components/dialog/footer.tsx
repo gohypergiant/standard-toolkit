@@ -20,6 +20,22 @@ import { ButtonContext } from '../button/context';
 import { DialogContext } from './context';
 import styles from './styles.module.css';
 
+/**
+ * DialogFooter - Container for dialog action buttons.
+ *
+ * Automatically sizes child Button components based on the dialog size
+ * and wires up default close behavior on button press.
+ *
+ * @example
+ * <Dialog>
+ *   <DialogTitle>Confirm</DialogTitle>
+ *   <DialogContent>Are you sure?</DialogContent>
+ *   <DialogFooter>
+ *     <Button variant="flat">Cancel</Button>
+ *     <Button>Confirm</Button>
+ *   </DialogFooter>
+ * </Dialog>
+ */
 export function DialogFooter({
   children,
   className,

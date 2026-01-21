@@ -14,4 +14,19 @@
 import 'client-only';
 import { DialogTrigger as AriaDialogTrigger } from 'react-aria-components';
 
+/**
+ * DialogTrigger - Manages dialog open/close state and trigger behavior.
+ *
+ * Wraps a trigger element (typically a Button) and a Dialog component.
+ * Handles accessibility attributes and focus management automatically.
+ *
+ * @example
+ * <DialogTrigger>
+ *   <Button>Open Dialog</Button>
+ *   <Dialog>
+ *     <DialogTitle>Title</DialogTitle>
+ *     <DialogContent>Content</DialogContent>
+ *   </Dialog>
+ * </DialogTrigger>
+ */
 export const DialogTrigger = AriaDialogTrigger;
