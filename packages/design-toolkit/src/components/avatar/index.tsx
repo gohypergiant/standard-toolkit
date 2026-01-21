@@ -25,33 +25,25 @@ import styles from './styles.module.css';
 import type { AvatarProps } from './types';
 
 /**
- * Avatar - A user profile image component with fallback support
- *
- * Displays a user's profile image with automatic fallback to a default person icon
- * when the image fails to load. Supports multiple sizes and can include status badges.
- * Built on Radix UI Avatar for accessibility and reliability.
+ * Displays a user's profile image with automatic fallback support.
+ * Built on Radix UI Avatar.
  *
  * @example
- * // Basic avatar with image
  * <Avatar imageProps={{ src: "/user.jpg", alt: "User Name" }} />
  *
  * @example
- * // Avatar with fallback and custom size
+ * // With initials fallback
  * <Avatar
- *   size="large"
+ *   size="small"
  *   imageProps={{ src: "/user.jpg", alt: "User Name" }}
  *   fallbackProps={{ children: "UN" }}
  * />
  *
  * @example
- * // Avatar with status badge
+ * // With status badge
  * <Avatar imageProps={{ src: "/user.jpg", alt: "User Name" }}>
- *   <Badge variant="success" />
+ *   <Badge color="critical">3</Badge>
  * </Avatar>
- *
- * @example
- * // Avatar with only initials fallback
- * <Avatar fallbackProps={{ children: "JD" }} />
  */
 export function Avatar({ ref, ...props }: AvatarProps) {
   [props, ref] = useContextProps(props, ref ?? null, AvatarContext);

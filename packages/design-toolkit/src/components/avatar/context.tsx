@@ -20,6 +20,15 @@ import type { AvatarProps } from './types';
 export const AvatarContext =
   createContext<ContextValue<AvatarProps, HTMLSpanElement>>(null);
 
+/**
+ * Context provider for setting default props across multiple Avatar components.
+ *
+ * @example
+ * <AvatarProvider size="small">
+ *   <Avatar imageProps={{ alt: "User 1", src: "avatar1.jpg" }} />
+ *   <Avatar imageProps={{ alt: "User 2", src: "avatar2.jpg" }} />
+ * </AvatarProvider>
+ */
 export function AvatarProvider({
   children,
   ...props
