@@ -21,6 +21,7 @@ ignore:
   - .turbo
   - .vscode
   - .agents
+  - .claude
   - node_modules
   - '**/.next'
   - '**/.ladle'
