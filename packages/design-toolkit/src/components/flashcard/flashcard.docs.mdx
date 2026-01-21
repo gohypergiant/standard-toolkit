@@ -5,56 +5,96 @@ import * as FlashcardStories from './flashcard.stories';
 <Meta of={FlashcardStories} />
 
 # Flashcard
-A quick visual identifier for multiple points of data for a given map entity.
+A quick visual identifier for displaying multiple data points about a map entity. Shows header, subheader, additional data, and a details list with loading state support.
+
+Components:
+- **Flashcard** - Container with loading state and header/subheader props
+- **FlashcardHero** - Upper section displaying header and subheader
+- **FlashcardAdditionalData** - Secondary data below the hero
+- **FlashcardDetailsList** - Wrapper for key-value pairs
+- **FlashcardDetailsLabel** - Label for detail items
+- **FlashcardDetailsValue** - Value for detail items
 
 ## Example Usage
+
 ```tsx
-  const details = [
-    { label: 'key', value: 'value', id: 'unique-id-1' },
-    { label: 'key', value: 'value', id: 'unique-id-2' },
-    { label: 'key', value: 'value', id: 'unique-id-3' },
-    { label: 'key', value: 'value', id: 'unique-id-4' },
-    { label: 'key', value: 'value', id: 'unique-id-5' },
-    { label: 'key', value: 'value', id: 'unique-id-6' },
-    { label: 'key', value: 'value', id: 'unique-id-7' },
-  ];
+const details = [
+  { label: 'Status', value: 'Active', id: '1' },
+  { label: 'Type', value: 'Aircraft', id: '2' },
+  { label: 'Speed', value: '450 kts', id: '3' },
+];
 
-  <Flashcard isLoading={isLoading} header='Identifier' subheader='DATA'>
-    <FlashcardHero />
-    <FlashcardAdditionalData>SECONDARY_DATA_01</FlashcardAdditionalData>
-    <FlashcardAdditionalData>SECONDARY_DATA_02</FlashcardAdditionalData>
-    <FlashcardDetailsList>
-      {details.map((detail) => (
-        <Fragment key={detail.id}>
-          <FlashcardDetailsLabel>{detail.label}</FlashcardDetailsLabel>
-          <FlashcardDetailsValue>{detail.value}</FlashcardDetailsValue>
-        </Fragment>
-      ))}
-    </FlashcardDetailsList>
-  </Flashcard>
+<Flashcard isLoading={isLoading} header="Identifier" subheader="DATA">
+  <FlashcardHero />
+  <FlashcardAdditionalData>SECONDARY_DATA</FlashcardAdditionalData>
+  <FlashcardDetailsList>
+    {details.map((detail) => (
+      <Fragment key={detail.id}>
+        <FlashcardDetailsLabel>{detail.label}</FlashcardDetailsLabel>
+        <FlashcardDetailsValue>{detail.value}</FlashcardDetailsValue>
+      </Fragment>
+    ))}
+  </FlashcardDetailsList>
+</Flashcard>
 ```
-
 <Canvas of={FlashcardStories.Default} />
 
-
 ## Props
-The Flashcard component accepts all standard HTML div attributes.
 
-- **`isLoading`** - Set visual state for loading on the Flashcard component.
-- **`header`** - Wrapper for Heading component, displays top level text for Flashcard.
-- **`isLoading`** - Wrapper for Text component, displays subheading text for Flashcard.
+### Flashcard
+Extends all standard HTML `<div>` attributes.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `header` | `string` | - | Primary heading text (required) |
+| `subheader` | `string` | - | Secondary text below header (required) |
+| `isLoading` | `boolean` | `false` | Shows skeleton placeholders when loading |
+| `className` | `string` | - | Custom CSS class |
 
 ### FlashcardHero
-- Upper half of the Flashcard to provide identifier data for the object being observed.
+Displays the header and subheader from Flashcard context. Shows skeleton placeholders when loading.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `className` | `string` | - | Custom CSS class |
 
 ### FlashcardAdditionalData
-- Secondary data information that will appear below the initial header.
+Secondary data section. Hidden when loading.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `children` | `ReactNode` | - | Additional data content |
+| `className` | `string` | - | Custom CSS class |
 
 ### FlashcardDetailsList
-- A wrapper for the **`DetailsList`** component.
+Wrapper around DetailsList with `align="justify"`.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `children` | `ReactNode` | - | FlashcardDetailsLabel and FlashcardDetailsValue pairs |
+| `className` | `string` | - | Custom CSS class |
 
 ### FlashcardDetailsLabel
-- A wrapper for the **`DetailsLabel`** component. Displays a **`Skeleton`** component when **`isLoading`**
+Label for detail items. Shows skeleton when loading.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `children` | `ReactNode` | - | Label content |
+| `className` | `string` | - | Custom CSS class |
 
 ### FlashcardDetailsValue
-- A wrapper for the **`DetailsValue`** component. Displays a **`Skeleton`** component when **`isLoading`**
+Value for detail items. Shows skeleton when loading.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `children` | `ReactNode` | - | Value content |
+| `className` | `string` | - | Custom CSS class |
+
+## Implementation Notes
+- Uses FlashcardContext to share `isLoading`, `header`, and `subheader` state
+- FlashcardDetailsList wraps the DetailsList component
+- All detail components show Skeleton placeholders during loading state
+
+**Related:**
+- [DetailsList](?path=/docs/components-details-list--docs)
+- [Github Source](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-toolkit/src/components/flashcard)
