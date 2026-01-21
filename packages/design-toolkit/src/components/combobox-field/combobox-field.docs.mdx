@@ -6,17 +6,15 @@ import * as ComboBoxStories from './combobox-field.stories';
 
 # ComboBoxField
 
-A comprehensive combobox component that provides an accessible input field with dropdown options. Built on top of React Aria Components, the ComboBoxField offers a complete solution for searchable select interfaces with full accessibility compliance, virtualization support, and flexible content organization.
+Accessible searchable combobox with dropdown options. Built on React Aria Components with virtualization support and flexible content organization.
 
-Iti is composed of the following components:
+Uses the [Options](?path=/docs/components-options--playground) component system for rendering dropdown items.
 
-- **ComboBoxField** - Main combobox component with searchable dropdown functionality
-- **[Options](?path=/docs/components-options--playground)** - Main container for all option items
+## Example Usage
 
-## Example usage
+### Basic
 ```tsx
-// Basic combobox with dynamic items
-<ComboBoxField<CustomItem> defaultItems={items}>
+<ComboBoxField defaultItems={items} label="Select animal">
   {(item) => (
     <OptionsItem key={item.id} textValue={item.name}>
       <Icon>{item.prefixIcon}</Icon>
@@ -27,9 +25,12 @@ Iti is composed of the following components:
     </OptionsItem>
   )}
 </ComboBoxField>
+```
+<Canvas of={ComboBoxStories.Default} />
 
-// Combobox with sections
-<ComboBoxField<CustomItem> defaultItems={itemsWithSections}>
+### With Sections
+```tsx
+<ComboBoxField defaultItems={itemsWithSections}>
   {(section) => (
     <OptionsSection header={section.name} items={section.children}>
       {(item) => (
@@ -41,197 +42,101 @@ Iti is composed of the following components:
   )}
 </ComboBoxField>
 ```
+<Canvas of={ComboBoxStories.WithDynamicSections} />
+
+### With Many Items (Virtualized)
+```tsx
+<ComboBoxField defaultItems={manyItems} layoutOptions={{ rowHeight: 32 }}>
+  {(item) => (
+    <OptionsItem key={item.id} textValue={item.name}>
+      <OptionsItemLabel>{item.name}</OptionsItemLabel>
+    </OptionsItem>
+  )}
+</ComboBoxField>
+```
+<Canvas of={ComboBoxStories.WithManyItems} />
+
+### Custom Value
+```tsx
+<ComboBoxField defaultItems={items} allowsCustomValue onInputChange={setValue}>
+  {(item) => <OptionsItem key={item.id} textValue={item.name}>{item.name}</OptionsItem>}
+</ComboBoxField>
+```
+<Canvas of={ComboBoxStories.WithCustomValue} />
+
+### Readonly
+```tsx
+<ComboBoxField defaultItems={items} inputProps={{ value: 'Display value' }} isReadOnly>
+  {(item) => <OptionsItem key={item.id} textValue={item.name}>{item.name}</OptionsItem>}
+</ComboBoxField>
+```
+<Canvas of={ComboBoxStories.Readonly} />
 
 ## Sizes
 
-* **small** - Compact combobox with reduced padding and no visible label, suitable for dense interfaces
-* **medium** - Standard combobox with comfortable spacing and visible label (default)
-
-**medium** is the default size and should be used for most use cases, while **small** is better suited for space-constrained interfaces or when the combobox is part of a more complex form layout.
-
-<Canvas of={ComboBoxStories.Default} />
+| Size | Description |
+|------|-------------|
+| `medium` | Standard size with visible label (default) |
+| `small` | Compact size, label and description hidden |
 
 ## Props
+Extends [`ComboBox`](https://react-spectrum.adobe.com/react-aria/ComboBox.html#props) props from react-aria-components.
 
-### ComboBoxField Props
-Implements [Combobox Props](https://react-spectrum.adobe.com/react-aria/ComboBox.html#combobox-1)
-- **`label`** - Label text displayed above the input field (hidden in small size)
-- **`description`** - Helper text displayed below the input field (hidden in small size or when invalid)
-- **`errorMessage`** - Error message displayed when the field is invalid
-- **`size`** - Size variant: `'small'` | `'medium'` (default: `'medium'`)
-- **`layoutOptions`** - Configuration for virtualization (e.g., `{ estimatedRowHeight: 46 }`)
-- **`classNames`** - Object containing custom class names for styling:
-  - `field` - Main field container
-  - `label` - Label styling
-  - `control` - Input and trigger button container
-  - `input` - Input field styling
-  - `trigger` - Dropdown trigger button styling
-  - `description` - Description text styling
-  - `error` - Error message styling
-  - `popover` - Dropdown popover styling
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `label` | `string` | - | Label text (hidden in small size) |
+| `description` | `string` | - | Helper text (hidden in small size or when invalid) |
+| `errorMessage` | `string` | - | Error message when invalid |
+| `size` | `'medium' \| 'small'` | `'medium'` | Size variant |
+| `layoutOptions` | `ListLayoutOptions` | - | Virtualization config (e.g., `{ estimatedRowHeight: 46 }`) |
+| `inputProps` | `InputProps` | - | Props passed to the input element |
+| `defaultItems` | `Iterable<T>` | - | Items for dynamic rendering |
+| `items` | `Iterable<T>` | - | Controlled items |
+| `allowsCustomValue` | `boolean` | `false` | Allow values not in the list |
+| `isReadOnly` | `boolean` | `false` | Readonly state |
+| `isDisabled` | `boolean` | `false` | Disabled state |
+| `isRequired` | `boolean` | `false` | Required field |
+| `isInvalid` | `boolean` | - | Invalid state |
+| `menuTrigger` | `'focus' \| 'input' \| 'manual'` | `'focus'` | When to show dropdown |
+| `onSelectionChange` | `(key: Key) => void` | - | Called when selection changes |
+| `onInputChange` | `(value: string) => void` | - | Called when input changes |
+| `classNames` | `object` | - | Custom classes (see below) |
 
-### Data Structure
-The component works with a flexible data structure:
+**classNames:**
+
+| Key | Description |
+|-----|-------------|
+| `field` | Main field container |
+| `label` | Label styling |
+| `control` | Input and trigger container |
+| `input` | Input field |
+| `trigger` | Dropdown trigger button |
+| `description` | Description text |
+| `error` | Error message |
+| `popover` | Dropdown popover |
+
+### ComboBoxFieldProvider
+Context provider for setting default props across multiple ComboBoxField components.
 
 ```tsx
-interface CustomOptionsItem {
-  id: number | string;
-  name: string;
-  description?: string;
-  isDisabled?: boolean;
-  prefixIcon?: ReactNode;
-  suffixIcon?: ReactNode;
-  children?: CustomOptionsItem[]; // For sections
-}
+<ComboBoxFieldProvider size="small">
+  <ComboBoxField defaultItems={items1}>{...}</ComboBoxField>
+  <ComboBoxField defaultItems={items2}>{...}</ComboBoxField>
+</ComboBoxFieldProvider>
 ```
 
-### HTML Attributes
-The component accepts all standard HTML attributes for form elements, such as:
-- **`id`** - Unique identifier
-- **`aria-label`** - Accessible label
-- **`data-*`** - Custom data attributes
-
-## Features
-
-### Dynamic Rendering
-Support for both static and dynamic content rendering:
-```tsx
-// Dynamic rendering with defaultItems prop
-<ComboBoxField<CustomItem> defaultItems={items}>
-  {(item) => (
-    <OptionsItem key={item.id} textValue={item.name}>
-      <OptionsItemLabel>{item.name}</OptionsItemLabel>
-    </OptionsItem>
-  )}
-</ComboBoxField>
-```
-
-### Sectioned Content
-Organize options into logical groups with headers:
-```tsx
-<ComboBoxField<CustomItem> defaultItems={itemsWithSections}>
-  {(section) => (
-    <OptionsSection header={section.name} items={section.children}>
-      {(item) => (
-        <OptionsItem key={item.id} textValue={item.name}>
-          <OptionsItemLabel>{item.name}</OptionsItemLabel>
-        </OptionsItem>
-      )}
-    </OptionsSection>
-  )}
-</ComboBoxField>
-```
-
-### Virtualization Support
-Handle large datasets efficiently with built-in virtualization:
-```tsx
-<ComboBoxField
-  layoutOptions={{ estimatedRowHeight: 32 }}
-  defaultItems={manyItems}
->
-  {(item) => (
-    <OptionsItem key={item.id} textValue={item.name}>
-      <OptionsItemLabel>{item.name}</OptionsItemLabel>
-    </OptionsItem>
-  )}
-</ComboBoxField>
-```
-
-### Rich Content Options
-Support for icons, descriptions, and complex layouts:
-```tsx
-<ComboBoxField<CustomItem> defaultItems={items}>
-  {(item) => (
-    <OptionsItem key={item.id} textValue={item.name}>
-      {item.prefixIcon && <Icon>{item.prefixIcon}</Icon>}
-      <OptionsItemContent>
-        <OptionsItemLabel>{item.name}</OptionsItemLabel>
-        {item.description && (
-          <OptionsItemDescription>{item.description}</OptionsItemDescription>
-        )}
-      </OptionsItemContent>
-    </OptionsItem>
-  )}
-</ComboBoxField>
-```
-
-### Persist custom value
-Allow a custom value to be entered:
-```tsx
-<ComboBoxField<CustomItem> defaultItems={items} allowsCustomValue>
-  {(item) => (
-    <OptionsItem key={item.id} textValue={item.name}>
-      <OptionsItemLabel>{item.name}</OptionsItemLabel>
-    </OptionsItem>
-  )}
-</ComboBoxField>
-```
-
-### Readonly value
-Allowing the field to be readonly:
-```tsx
-    <ComboBoxField<CustomOptionsItem>
-      {...args}
-      defaultItems={items}
-      inputProps={{ value: 'some display value' }}
-      isReadOnly
-    >
-      {(item) => (
-        <OptionsItem
-          key={item.id}
-          textValue={item.name}
-          isDisabled={item.isDisabled}
-        >
-          {item.prefixIcon && <Icon>{item.prefixIcon}</Icon>}
-          <OptionsItemContent>
-            <OptionsItemLabel>{item.name}</OptionsItemLabel>
-            {item.description && (
-              <OptionsItemDescription>
-                {item.description}
-              </OptionsItemDescription>
-            )}
-          </OptionsItemContent>
-        </OptionsItem>
-      )}
-    </ComboBoxField>
-```
+## Accessibility
+- Keyboard: Arrow keys to navigate, Enter to select, Escape to close
+- Type-ahead filtering as you type
+- ARIA attributes for screen readers
+- Focus management between input and dropdown
 
 ## Implementation Notes
+- Wraps `ComboBox` from react-aria-components with `Virtualizer` for large lists
+- Uses the [Options](?path=/docs/components-options--playground) component system for dropdown content
+- Supports both static children and dynamic `defaultItems`/`items` rendering
 
-The `ComboBoxField` component is built using React Aria Components and provides a comprehensive, accessible combobox interface with flexible content organization.
-
-Key features:
-- **Accessibility**: Full ARIA compliance with proper focus management, screen reader support, and keyboard navigation
-- **Flexible Layout**: Support for both static and dynamic content rendering
-- **Sectioned Content**: Logical grouping with optional headers using the Options component system
-- **Icon Integration**: Seamless integration with the Icon component system
-- **Virtualization**: Built-in support for large datasets with React Aria Virtualizer
-- **Responsive Design**: Size variants that adapt to different interface needs
-- **Type Safety**: Full TypeScript support with comprehensive prop types
-- **Form Integration**: Proper form validation states and error handling
-
-The underlying HTML structure creates a semantic form field with proper accessibility:
-```html
-<div class="combobox-field" data-size="medium">
-  <label class="field-label">Label</label>
-  <div class="field-control">
-    <input class="field-input" placeholder="Search..." />
-    <button class="field-trigger">
-      <span class="icon"><ChevronDown /></span>
-    </button>
-  </div>
-  <div class="field-description">Helper text</div>
-  <div class="field-error">Error message</div>
-  <div class="field-popover">
-    <div class="options-list">
-      <!-- Options content -->
-    </div>
-  </div>
-</div>
-```
-
-The component wraps the `ComboBox` component from `react-aria-components`.
-
-[Docs](https://react-spectrum.adobe.com/react-aria/ComboBox.html)
-
-[Github Source](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-toolkit/src/components/combobox-field)
+**Related:**
+- [React Aria ComboBox](https://react-spectrum.adobe.com/react-aria/ComboBox.html)
+- [Options Component](?path=/docs/components-options--playground)
+- [Github Source](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-toolkit/src/components/combobox-field)

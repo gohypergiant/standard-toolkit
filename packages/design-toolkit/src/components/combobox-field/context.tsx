@@ -22,6 +22,15 @@ export const ComboBoxFieldContext =
   // biome-ignore lint/suspicious/noExplicitAny: Setting a type would restrict it beyond what the component allows to extend to
   createContext<ContextValue<ComboBoxFieldProps<any>, HTMLDivElement>>(null);
 
+/**
+ * Context provider for setting default props across multiple ComboBoxField components.
+ *
+ * @example
+ * <ComboBoxFieldProvider size="small">
+ *   <ComboBoxField defaultItems={items1}>{...}</ComboBoxField>
+ *   <ComboBoxField defaultItems={items2}>{...}</ComboBoxField>
+ * </ComboBoxFieldProvider>
+ */
 export function ComboBoxFieldProvider<T extends OptionsDataItem>({
   children,
   ...props
