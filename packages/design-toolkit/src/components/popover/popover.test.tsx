@@ -40,7 +40,7 @@ function setup({ children = 'Foo', ...rest }: Partial<PopoverProps> = {}) {
           </svg>
         </Icon>
       </Button>
-      <Popover>{children}</Popover>
+      <Popover {...rest}>{children}</Popover>
     </PopoverTrigger>,
   );
 
@@ -69,6 +69,33 @@ describe('Popover', () => {
 
     await user.click(screen.getByRole('button'));
 
+    expect(screen.getByText(title)).toBeInTheDocument();
+    expect(screen.getByText(body)).toBeInTheDocument();
+    expect(screen.getByText(footer)).toBeInTheDocument();
+  });
+
+  it('should properly pass dialogProps to the child Dialog component', async () => {
+    const user = userEvent.setup();
+    const title = 'Hello';
+    const body = 'World';
+    const footer = 'Foobar';
+
+    setup({
+      children: (
+        <>
+          <PopoverTitle>{title}</PopoverTitle>
+          <PopoverContent>{body}</PopoverContent>
+          <PopoverFooter>{footer}</PopoverFooter>
+        </>
+      ),
+      dialogProps: {
+        'aria-label': 'test dialog',
+      },
+    });
+
+    await user.click(screen.getByRole('button'));
+
+    expect(screen.getByLabelText('test dialog')).toBeInTheDocument();
     expect(screen.getByText(title)).toBeInTheDocument();
     expect(screen.getByText(body)).toBeInTheDocument();
     expect(screen.getByText(footer)).toBeInTheDocument();
