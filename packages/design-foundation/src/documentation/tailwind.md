@@ -6,7 +6,7 @@ The DesignTK heavily utilizes Tailwind (TW) as the core styling mechanism to mai
 
 ### Separate Concerns
 
-To help keep components clear and concise, its best to keep the vast majority of styles (classNames) outside of the component file, in a separate file such as `styles.ts`. This allows the component to be free of conditional className logic and configuration of variants.
+To help keep components clear and concise, its best to keep the vast majority of styles (classNames) outside of the component file, in a separate file such as `styles.module.css`. This allows the component to be free of style based clutter while remaining focused on the critical business logic.
 
 ### Reusability
 
