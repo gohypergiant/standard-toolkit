@@ -19,6 +19,26 @@ import { ViewStackContext } from '../view-stack/context';
 import { useDrawerEmit } from './context';
 import type { DrawerTriggerProps } from './types';
 
+/**
+ * DrawerTrigger - Programmatic trigger for drawer actions.
+ *
+ * The `for` prop controls the behavior:
+ * - `'open'`, `'toggle'`, `'close'`: Control drawer open state
+ * - `'back'`: Pop the current view from the stack
+ * - `UniqueId`: Push a specific view onto the stack
+ * - `'action:viewId'`: Combine action with view ID (e.g., `'open:${viewId}'`)
+ * - `Array`: Fire multiple events in sequence
+ *
+ * @example
+ * <DrawerTrigger for="close">
+ *   <Button>Close</Button>
+ * </DrawerTrigger>
+ *
+ * @example
+ * <DrawerTrigger for={`open:${viewId}`}>
+ *   <Button>Open Settings</Button>
+ * </DrawerTrigger>
+ */
 export function DrawerTrigger({ for: events, ...rest }: DrawerTriggerProps) {
   const { parent } = useContext(ViewStackContext);
   const drawerEmit = useDrawerEmit();

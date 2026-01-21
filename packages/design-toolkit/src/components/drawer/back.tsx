@@ -20,6 +20,12 @@ import { Icon } from '../icon';
 import { ViewStackContext } from '../view-stack/context';
 import { DrawerTrigger } from './trigger';
 
+/**
+ * DrawerBack - Back navigation button for nested drawer views.
+ *
+ * Only renders when the view stack has more than one view.
+ * Triggers a 'back' action to pop the current view from the stack.
+ */
 export function DrawerBack() {
   const { stack } = useContext(ViewStackContext);
 

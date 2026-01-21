@@ -18,6 +18,11 @@ import { Button } from '../button';
 import { Icon } from '../icon';
 import { DrawerTrigger } from './trigger';
 
+/**
+ * DrawerClose - Close button for the drawer.
+ *
+ * Triggers a 'close' action to close the entire drawer.
+ */
 export function DrawerClose() {
   return (
     <DrawerTrigger for='close'>

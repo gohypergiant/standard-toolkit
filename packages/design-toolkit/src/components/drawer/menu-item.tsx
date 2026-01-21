@@ -33,6 +33,18 @@ const tooltipPlacementMap = {
   bottom: 'top',
 } as const;
 
+/**
+ * DrawerMenuItem - Individual navigation item within DrawerMenu.
+ *
+ * Renders as a toggle button with an icon and tooltip.
+ * The `for` prop specifies which view to navigate to.
+ * Use `toggle` prop to toggle the view open/closed instead of just opening.
+ *
+ * @example
+ * <DrawerMenuItem for={viewId} textValue="Settings">
+ *   <SettingsIcon />
+ * </DrawerMenuItem>
+ */
 export function DrawerMenuItem({
   for: id,
   children,

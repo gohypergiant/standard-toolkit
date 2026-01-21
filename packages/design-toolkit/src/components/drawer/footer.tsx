@@ -13,6 +13,12 @@ import { clsx } from '@accelint/design-foundation/lib/utils';
 import styles from './styles.module.css';
 import type { ComponentPropsWithRef } from 'react';
 
+/**
+ * DrawerFooter - Footer region within a DrawerView.
+ *
+ * Typically used for action buttons or supplementary information.
+ * Renders as a semantic `<footer>` element.
+ */
 export function DrawerFooter({
   className,
   ...rest

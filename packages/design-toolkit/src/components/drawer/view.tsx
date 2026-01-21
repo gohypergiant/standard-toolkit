@@ -19,6 +19,20 @@ import { DrawerContext } from './context';
 import styles from './styles.module.css';
 import type { ViewStackViewProps } from '../view-stack/types';
 
+/**
+ * DrawerView - Content region for a specific drawer view.
+ *
+ * Each view is identified by a unique `id` and displayed when that
+ * view is active in the stack. Contains DrawerHeader, DrawerContent,
+ * and optionally DrawerFooter.
+ *
+ * @example
+ * <DrawerView id={viewId}>
+ *   <DrawerHeader title="Settings" />
+ *   <DrawerContent>View content here</DrawerContent>
+ *   <DrawerFooter>Footer actions</DrawerFooter>
+ * </DrawerView>
+ */
 export function DrawerView({
   id,
   children,

@@ -13,6 +13,20 @@ import { clsx } from '@accelint/design-foundation/lib/utils';
 import styles from './styles.module.css';
 import type { ComponentPropsWithRef } from 'react';
 
+/**
+ * DrawerLayoutMain - Main content area within DrawerLayout.
+ *
+ * Responds to panel open/close states, adjusting layout based on
+ * the parent DrawerLayout's `push` configuration.
+ *
+ * @example
+ * <DrawerLayout push="left">
+ *   <DrawerLayoutMain>
+ *     Main content here
+ *   </DrawerLayoutMain>
+ *   <Drawer placement="left">...</Drawer>
+ * </DrawerLayout>
+ */
 export function DrawerLayoutMain({
   className,
   ...rest

@@ -21,6 +21,27 @@ import { DrawerClose } from './close';
 import { DrawerHeaderTitle } from './header-title';
 import styles from './styles.module.css';
 
+/**
+ * DrawerHeader - Header region within a DrawerView.
+ *
+ * Supports two usage patterns:
+ * - Use `title` prop for automatic layout with back/close buttons
+ * - Use `children` for custom header content
+ *
+ * Heading level automatically adjusts based on view stack depth
+ * (h2 for root view, h4 for nested views).
+ *
+ * @example
+ * // Simplified with title prop
+ * <DrawerHeader title="Settings" />
+ *
+ * @example
+ * // Custom layout
+ * <DrawerHeader>
+ *   <DrawerHeaderTitle level={2}>Settings</DrawerHeaderTitle>
+ *   <DrawerClose />
+ * </DrawerHeader>
+ */
 export function DrawerHeader({
   className,
   title,
