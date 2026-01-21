@@ -14,4 +14,15 @@
 import 'client-only';
 import { Heading } from 'react-aria-components';
 
+/**
+ * HeroTitle - Primary heading for the Hero component.
+ *
+ * Renders as an `<h2>` element. Exactly one required per Hero.
+ *
+ * @example
+ * <Hero>
+ *   <Icon><Placeholder /></Icon>
+ *   <HeroTitle>Primary Title</HeroTitle>
+ * </Hero>
+ */
 export const HeroTitle = Heading;

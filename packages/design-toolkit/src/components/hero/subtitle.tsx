@@ -14,4 +14,17 @@
 import 'client-only';
 import { Text } from 'react-aria-components';
 
+/**
+ * HeroSubtitle - Secondary text content for the Hero component.
+ *
+ * Zero or more allowed per Hero for displaying additional metadata.
+ *
+ * @example
+ * <Hero>
+ *   <Icon><User /></Icon>
+ *   <HeroTitle>John Doe</HeroTitle>
+ *   <HeroSubtitle>Software Engineer</HeroSubtitle>
+ *   <HeroSubtitle>San Francisco, CA</HeroSubtitle>
+ * </Hero>
+ */
 export const HeroSubtitle = Text;

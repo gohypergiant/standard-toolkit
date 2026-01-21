@@ -5,23 +5,26 @@ import * as HeroStories from './hero.stories';
 <Meta of={HeroStories} />
 
 # Hero
-A versatile hero component that displays an icon alongside primary and secondary content. Automatically organizes child components by type and supports both stacked and grid layouts. Perfect for displaying object information, section headers, or prominent content areas with visual hierarchy.
+A versatile hero component that displays an icon alongside primary and secondary content. Supports both stacked and grid layouts.
 
-It is composed of the following components:
-- **Hero** - Main hero container with automatic layout and icon integration
-- **HeroTitle** - Primary heading text component (renders as `<h2>` element)
-- **HeroSubtitle**  - Secondary text content component for additional metadata
+Components:
+- **Hero** - Container with automatic layout (renders as `<header>`)
+- **HeroTitle** - Primary heading (renders as `<h2>`)
+- **HeroSubtitle** - Secondary text content
 
-## Example usage
+## Example Usage
+
 ```tsx
-// Basic hero with icon and content
 <Hero>
   <Icon><Placeholder /></Icon>
   <HeroTitle>Primary Title</HeroTitle>
   <HeroSubtitle>Secondary information</HeroSubtitle>
 </Hero>
+```
+<Canvas of={HeroStories.Default} />
 
-// Grid layout for compact display
+### Compact Layout
+```tsx
 <Hero compact>
   <Icon><Settings /></Icon>
   <HeroTitle>Settings</HeroTitle>
@@ -29,98 +32,55 @@ It is composed of the following components:
 </Hero>
 ```
 
-## Layouts
-
-* **stack** - Vertical layout with larger icon and stacked content (default)
-* **grid** - Horizontal layout with smaller icon beside content (when `compact={true}`)
-
-**Stack** is the default layout and provides a prominent, spacious display ideal for main content areas, while **Grid** offers a more compact, inline presentation suitable for secondary content or dense layouts.
-
-<Canvas of={HeroStories.Default} />
-
-## Props
-
-### Hero Props
-- **`compact`** - Whether to use the compact grid layout instead of the default stack layout (default: `false`)
-- **`classNames`** - Object containing custom class names for different parts:
-  - `hero` - Main container (`<header>` element)
-  - `icon` - Icon container with automatic sizing
-  - `title` - Title text styling
-  - `subtitle` - Subtitle text styling
-
-### HTML Attributes
-The component accepts all standard HTML attributes for `<header>` elements, such as:
-- **`id`** - Unique identifier
-- **`aria-label`** - Accessible label
-- **`data-*`** - Custom data attributes
-
-## Child Component Behavior
-- **Icon**: Exactly 1 required (automatically sized and positioned)
-- **HeroTitle**: Exactly 1 required (renders as semantic heading)
-- **HeroSubtitle**: 0 or more allowed (for additional metadata or secondary information)
-
-## Examples
-
-### Default Stack Layout
-<Canvas of={HeroStories.Default} />
-
-### Compact Grid Layout
-```tsx
-<Hero compact>
-  <Icon><Placeholder /></Icon>
-  <HeroTitle>Compact Title</HeroTitle>
-  <HeroSubtitle>Compact subtitle</HeroSubtitle>
-</Hero>
-```
-
 ### Multiple Subtitles
-The component supports multiple subtitle elements, making it perfect for displaying various pieces of metadata:
-
 ```tsx
 <Hero>
   <Icon><User /></Icon>
   <HeroTitle>John Doe</HeroTitle>
   <HeroSubtitle>Software Engineer</HeroSubtitle>
   <HeroSubtitle>San Francisco, CA</HeroSubtitle>
-  <HeroSubtitle>5 years experience</HeroSubtitle>
 </Hero>
 ```
 
-## Layout Modes
+## Layouts
 
-### Stack Layout (Default)
-- Icon appears above content with large size (48px)
-- Title and subtitles stack vertically below the icon
-- Full-width background with rounded corners and padding
-- Ideal for prominent content areas and main sections
+| Layout | Prop | Description |
+|--------|------|-------------|
+| Stack | `compact={false}` | Vertical layout with larger icon above stacked content (default) |
+| Grid | `compact={true}` | Horizontal layout with smaller icon beside content |
 
-### Grid Layout (Compact)
-- Icon appears to the left of content in a smaller size
-- Title and subtitles flow horizontally beside the icon
-- More compact presentation suitable for inline use
-- Perfect for secondary content or dense layouts
+## Props
+
+### Hero
+Extends all standard HTML `<header>` attributes.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `compact` | `boolean` | `false` | Use grid layout instead of stack |
+| `classNames` | `object` | - | Custom classes (see below) |
+
+**classNames:**
+
+| Key | Description |
+|-----|-------------|
+| `hero` | Main container (`<header>` element) |
+| `icon` | Icon container |
+| `title` | Title text |
+| `subtitle` | Subtitle text |
+
+### HeroTitle
+Renders as an `<h2>` heading element. Exactly one required per Hero.
+
+### HeroSubtitle
+Secondary text content. Zero or more allowed per Hero.
+
+## Accessibility
+- Uses semantic `<header>` element with proper heading hierarchy
+- HeroTitle renders as `<h2>` for screen reader navigation
 
 ## Implementation Notes
-The `Hero` component is built using React Aria Components and provides a semantic, accessible hero section with flexible layout options.
+- Icon is automatically sized based on layout mode
+- Uses React Aria's HeadingContext and TextContext for styling
 
-[Github Source](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-toolkit/src/components/hero)
-
-Key features:
-- **Semantic HTML**: Uses `<header>` element with proper heading hierarchy
-- **Automatic Layout**: Automatically switches between stack and grid layouts
-- **Icon Integration**: Seamlessly integrates with the Icon component system
-- **Flexible Content**: Supports multiple subtitle elements for rich metadata display
-- **Accessibility**: Proper heading levels and semantic structure
-- **Responsive Design**: Adapts layout based on the compact prop
-- **Type Safety**: Full TypeScript support with proper prop types
-
-The underlying HTML structure creates a semantic hero section:
-```html
-<header class="hero" data-layout="stack">
-  <div class="icon">...</div>
-  <h2 class="title">Primary Title</h2>
-  <div class="subtitle">Secondary content</div>
-</header>
-```
-
-This provides excellent semantic meaning for screen readers and other assistive technologies while maintaining a clean, structured visual appearance that automatically adapts to different content needs.
+**Related:**
+- [Github Source](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-toolkit/src/components/hero)
