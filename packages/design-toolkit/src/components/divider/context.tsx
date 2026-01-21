@@ -18,9 +18,23 @@ import { createContext } from 'react';
 import type { ContextValue } from 'react-aria-components';
 import type { DividerProps } from './types';
 
+/**
+ * Context for sharing Divider props across component tree.
+ */
 export const DividerContext =
   createContext<ContextValue<DividerProps, HTMLHRElement>>(null);
 
+/**
+ * DividerProvider - Context provider for setting default Divider props.
+ *
+ * Use this to configure shared orientation across multiple Divider components.
+ *
+ * @example
+ * <DividerProvider orientation="vertical">
+ *   <Divider />
+ *   <Divider />
+ * </DividerProvider>
+ */
 export function DividerProvider({
   children,
   ...props
