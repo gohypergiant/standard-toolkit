@@ -29,19 +29,22 @@ const fallbackContent = {
 } as const;
 
 /**
- * ClassificationBadge - A specialized badge for security and data classification
+ * ClassificationBadge - Displays security classification levels for documents and data.
  *
- * Provides standardized visual indicators for data classification levels such as
- * confidential, secret, or public information. Designed for compliance with
- * security standards and information governance requirements.
- *
- * @example
- * // Basic classification badge
- * <ClassificationBadge level="confidential" />
+ * Provides standardized visual indicators for classification levels such as
+ * unclassified, confidential, secret, and top-secret. Designed for compliance
+ * with security standards in government and secure environments.
  *
  * @example
- * // Classification with custom styling
- * <ClassificationBadge level="secret" />
+ * <ClassificationBadge variant="secret" />
+ *
+ * @example
+ * // With custom text
+ * <ClassificationBadge variant="top-secret">TOP SECRET//NOFORN</ClassificationBadge>
+ *
+ * @example
+ * // Different sizes
+ * <ClassificationBadge variant="confidential" size="small" />
  */
 export function ClassificationBadge({
   ref,

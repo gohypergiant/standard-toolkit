@@ -20,6 +20,15 @@ import type { ClassificationBadgeProps } from './types';
 export const ClassificationBadgeContext =
   createContext<ContextValue<ClassificationBadgeProps, HTMLSpanElement>>(null);
 
+/**
+ * Context provider for setting default props across multiple ClassificationBadge components.
+ *
+ * @example
+ * <ClassificationBadgeProvider variant="secret" size="small">
+ *   <ClassificationBadge />
+ *   <ClassificationBadge />
+ * </ClassificationBadgeProvider>
+ */
 export function ClassificationBadgeProvider({
   children,
   ...props
