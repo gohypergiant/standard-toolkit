@@ -24,6 +24,24 @@ import { AccordionContext } from './context';
 import styles from './styles.module.css';
 import type { AccordionHeaderProps } from './types';
 
+/**
+ * Container for the accordion trigger and optional elements like menus.
+ *
+ * @example
+ * <AccordionHeader>
+ *   <AccordionTrigger>Section Title</AccordionTrigger>
+ * </AccordionHeader>
+ *
+ * @example
+ * // With menu
+ * <AccordionHeader>
+ *   <AccordionTrigger>Section Title</AccordionTrigger>
+ *   <MenuTrigger>
+ *     <Button />
+ *     <Menu>...</Menu>
+ *   </MenuTrigger>
+ * </AccordionHeader>
+ */
 export function AccordionHeader({
   ref,
   children,

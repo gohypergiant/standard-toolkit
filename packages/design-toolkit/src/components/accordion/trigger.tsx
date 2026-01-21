@@ -24,6 +24,26 @@ import { AccordionContext } from './context';
 import styles from './styles.module.css';
 import type { AccordionTriggerProps } from './types';
 
+/**
+ * Button that controls the accordion expand/collapse state.
+ * Renders a heading with a trigger button containing a chevron icon.
+ *
+ * @example
+ * <AccordionTrigger>Section Title</AccordionTrigger>
+ *
+ * @example
+ * // With icon
+ * <AccordionTrigger>
+ *   <Icon><Settings /></Icon>
+ *   Settings
+ * </AccordionTrigger>
+ *
+ * @example
+ * // With custom class names
+ * <AccordionTrigger classNames={{ heading: 'custom-heading', trigger: 'custom-trigger' }}>
+ *   Section Title
+ * </AccordionTrigger>
+ */
 export function AccordionTrigger({
   ref,
   children,

@@ -18,6 +18,30 @@ import { AccordionContext } from './context';
 import styles from './styles.module.css';
 import type { AccordionGroupProps } from './types';
 
+/**
+ * Groups multiple accordions with shared configuration.
+ * Wraps react-aria-components DisclosureGroup and provides variant context.
+ *
+ * @example
+ * <AccordionGroup>
+ *   <Accordion>...</Accordion>
+ *   <Accordion>...</Accordion>
+ * </AccordionGroup>
+ *
+ * @example
+ * // Allow multiple expanded
+ * <AccordionGroup allowsMultipleExpanded>
+ *   <Accordion>...</Accordion>
+ *   <Accordion>...</Accordion>
+ * </AccordionGroup>
+ *
+ * @example
+ * // Compact variant for all children
+ * <AccordionGroup variant="compact">
+ *   <Accordion>...</Accordion>
+ *   <Accordion>...</Accordion>
+ * </AccordionGroup>
+ */
 export function AccordionGroup({
   ref,
   children,

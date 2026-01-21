@@ -34,24 +34,24 @@ It is composed of the following components:
 <Canvas of={AccordionStories.Default} />
 
 ### With Menu
-The accordion supports an optional [Menu](?path=/docs/components-menu--playground).
+The accordion header supports an optional [Menu](?path=/docs/components-menu--playground).
 ```tsx
 <Accordion>
   <AccordionHeader>
     <AccordionTrigger>
-      <Icon><Document /></Icon>
-      Document options
+      <Icon><Placeholder /></Icon>
+      Accordion title
     </AccordionTrigger>
     <MenuTrigger>
       <Button />
       <Menu>
-        <MenuItem>Edit</MenuItem>
-        <MenuItem>Delete</MenuItem>
+        <MenuItem>Foo</MenuItem>
+        <MenuItem>Bar</MenuItem>
       </Menu>
     </MenuTrigger>
   </AccordionHeader>
   <AccordionPanel>
-    <p>Document content...</p>
+    <p>Accordion content...</p>
   </AccordionPanel>
 </Accordion>
 ```
@@ -64,51 +64,78 @@ The accordion supports an optional [Menu](?path=/docs/components-menu--playgroun
 The variant can be controlled via the `variant` prop on individual accordions or set globally using the `AccordionGroup` component.
 
 ## Props
-All components and subcomponents accept either a `className` or a `classNames` prop that allow for custom style overrides. The `className` prop takes a string and `classNames` takes an object when there are multiple targets.
 
-The Accordion supports all the `Disclosure` [props and events from `react-aria-components`](https://react-spectrum.adobe.com/react-aria/Disclosure.html#disclosure-1) and
-* **`variant`** - Visual style: `'cozy'` (default) | `'compact'`
+### Accordion
+Extends all [`Disclosure` props](https://react-spectrum.adobe.com/react-aria/Disclosure.html#disclosure-1) from react-aria-components.
 
-### RenderProps Pattern
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `'cozy' \| 'compact'` | `'cozy'` | Visual style variant |
+| `isDisabled` | `boolean` | `false` | Whether the accordion is disabled |
+| `isExpanded` | `boolean` | - | Controlled expanded state |
+| `defaultExpanded` | `boolean` | - | Default expanded state (uncontrolled) |
+| `onExpandedChange` | `(isExpanded: boolean) => void` | - | Called when expanded state changes |
+| `className` | `string \| ((state) => string)` | - | CSS class name, supports render props |
+| `children` | `ReactNode \| ((state) => ReactNode)` | - | Content, supports render props |
 
-The `Accordion` component accepts `ReactNode` children or a function that returns a `ReactNode`. For details of what information is available in the renderProps object, print out the props or [review the source code](https://github.com/adobe/react-spectrum/blob/7ee8d64207cb0777cd07fa98d398e1cf7cd80d3d/packages/react-aria-components/src/Disclosure.tsx#L73C18-L73C39).
-
+#### Render Props
+The `className` and `children` props accept a function that receives state:
 ```tsx
 <Accordion>
-  {(renderProps) => {
-    console.log(renderProps);
-    return (<>...//</>);
-  }}
+  {({ isExpanded, isDisabled }) => (
+    <>...</>
+  )}
 </Accordion>
 ```
 
-### AccordionHeader Props
-* **`children`** - Must contain an `AccordionTrigger` and optionally other elements like menus
+### AccordionHeader
+Wraps the trigger and optional elements like menus.
 
-### AccordionTrigger Props
-* **`children`** - The trigger content (typically text with an icon)
-* **`classNames`** - Custom class names for styling:
-  * `heading` - Applied to the heading element
-  * `trigger` - Applied to the trigger button
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `children` | `ReactNode` | - | Must include `AccordionTrigger`, may include menus |
+| `className` | `string` | - | CSS class name |
+| `ref` | `Ref<HTMLElement>` | - | Ref to the header element |
 
-### AccordionPanel Props
-* **`children`** - The content to display when expanded
-* **`className`** - Additional CSS classes for custom styling
+### AccordionTrigger
+Button controlling expand/collapse state.
 
-## Implementation Notes
-The `Accordion` component wraps the `Disclosure` component from `react-aria-components`.
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `children` | `ReactNode` | - | Trigger content (typically icon and text) |
+| `classNames` | `object` | - | Custom class names (see below) |
+| `ref` | `Ref<HTMLHeadingElement>` | - | Ref to the heading element |
 
-[Disclosure Docs](https://react-spectrum.adobe.com/react-aria/Disclosure.html)
+**classNames object:**
+| Key | Type | Description |
+|-----|------|-------------|
+| `heading` | `string` | Applied to the heading wrapper |
+| `trigger` | `string \| ((state) => string)` | Applied to the button, supports [ButtonRenderProps](https://react-spectrum.adobe.com/react-aria/Button.html#render-props) |
 
-[Disclosure Group Docs](https://react-spectrum.adobe.com/react-aria/DisclosureGroup.html)
+### AccordionPanel
+Extends all [`DisclosurePanel` props](https://react-spectrum.adobe.com/react-aria/Disclosure.html#disclosurepanel).
 
-[Github Source](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-toolkit/src/components/accordion)
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `children` | `ReactNode \| ((state) => ReactNode)` | - | Panel content, supports render props |
+| `className` | `string \| ((state) => string)` | - | CSS class name, supports render props |
+| `ref` | `Ref<HTMLDivElement>` | - | Ref to the panel element |
 
-The component automatically handles accessibility features including:
+## Accessibility
+Built on [react-aria-components Disclosure](https://react-spectrum.adobe.com/react-aria/Disclosure.html), the component provides:
 - ARIA attributes for screen readers
-- Keyboard navigation (Enter, Space, Arrow keys)
+- Keyboard support: Enter and Space to toggle expand/collapse
 - Focus management
 - Proper heading structure
 - Expanded/collapsed state announcements
 
-The component includes smooth animations for expanding/collapsing content and provides visual feedback for hover and focus states. The chevron icon automatically rotates to indicate the current state, and the component supports both single and multiple expansion modes through the group functionality.
+When used within an [AccordionGroup](?path=/docs/components-accordion-group--playground), arrow keys navigate between accordion triggers.
+
+## Implementation Notes
+- Wraps `Disclosure` from react-aria-components
+- Chevron icon rotates to indicate expanded state
+- Use [AccordionGroup](?path=/docs/components-accordion-group--playground) for multiple accordions with shared behavior
+
+**Related:**
+- [Disclosure Docs](https://react-spectrum.adobe.com/react-aria/Disclosure.html)
+- [Github Source](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-toolkit/src/components/accordion)

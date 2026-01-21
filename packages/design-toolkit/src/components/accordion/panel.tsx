@@ -17,6 +17,23 @@ import { composeRenderProps, DisclosurePanel } from 'react-aria-components';
 import styles from './styles.module.css';
 import type { AccordionPanelProps } from './types';
 
+/**
+ * Collapsible content container that shows/hides based on accordion state.
+ * Wraps react-aria-components DisclosurePanel with consistent styling.
+ *
+ * @example
+ * <AccordionPanel>
+ *   <p>Panel content goes here</p>
+ * </AccordionPanel>
+ *
+ * @example
+ * // With render props
+ * <AccordionPanel>
+ *   {({ isExpanded }) => (
+ *     <p>{isExpanded ? 'Expanded' : 'Collapsed'}</p>
+ *   )}
+ * </AccordionPanel>
+ */
 export function AccordionPanel({
   ref,
   children,
