@@ -26,6 +26,32 @@ import type { ChipListProps } from './types';
 
 export const ChipListRenderingContext = createContext(false);
 
+/**
+ * ChipList - Container component for grouping multiple chips with shared behavior.
+ *
+ * Provides context for size and color, and enables selection and removal functionality.
+ *
+ * @example
+ * // Basic list
+ * <ChipList>
+ *   <Chip color="info">React</Chip>
+ *   <Chip color="advisory">TypeScript</Chip>
+ * </ChipList>
+ *
+ * @example
+ * // Selectable chips
+ * <ChipList selectionMode="multiple" onSelectionChange={handleChange}>
+ *   <SelectableChip id="react">React</SelectableChip>
+ *   <SelectableChip id="vue">Vue</SelectableChip>
+ * </ChipList>
+ *
+ * @example
+ * // Deletable chips
+ * <ChipList onRemove={(keys) => console.log('Removed:', keys)}>
+ *   <DeletableChip id="tag1">Tag 1</DeletableChip>
+ *   <DeletableChip id="tag2">Tag 2</DeletableChip>
+ * </ChipList>
+ */
 export function ChipList<T extends object>({
   ref,
   ...props

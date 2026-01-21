@@ -20,6 +20,15 @@ import type { ChipContextValue } from './types';
 export const ChipContext =
   createContext<ContextValue<ChipContextValue, HTMLDivElement>>(null);
 
+/**
+ * Context provider for setting default props across multiple Chip components.
+ *
+ * @example
+ * <ChipProvider size="small" color="info">
+ *   <Chip>Chip 1</Chip>
+ *   <Chip>Chip 2</Chip>
+ * </ChipProvider>
+ */
 export function ChipProvider({
   children,
   ...props

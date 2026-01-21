@@ -25,6 +25,28 @@ import { ChipContext } from './context';
 import styles from './styles.module.css';
 import type { DeletableChipProps } from './types';
 
+/**
+ * DeletableChip - Chip with built-in remove button for dynamic content management.
+ *
+ * Must be used inside a ChipList with an onRemove handler.
+ *
+ * @example
+ * <ChipList onRemove={(keys) => console.log('Removed:', keys)}>
+ *   <DeletableChip id="tag1">JavaScript</DeletableChip>
+ *   <DeletableChip id="tag2">Python</DeletableChip>
+ * </ChipList>
+ *
+ * @example
+ * // With custom classNames
+ * <ChipList onRemove={handleRemove}>
+ *   <DeletableChip
+ *     id="tag1"
+ *     classNames={{ chip: 'custom-chip', remove: 'custom-remove' }}
+ *   >
+ *     Styled Tag
+ *   </DeletableChip>
+ * </ChipList>
+ */
 export function DeletableChip({ ref, ...props }: DeletableChipProps) {
   [props, ref] = useContextProps(props, ref ?? null, ChipContext);
 

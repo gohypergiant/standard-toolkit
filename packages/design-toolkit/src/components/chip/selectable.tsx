@@ -22,6 +22,24 @@ import { ChipContext } from './context';
 import styles from './styles.module.css';
 import type { SelectableChipProps } from './types';
 
+/**
+ * SelectableChip - Interactive chip that can be selected/deselected for filtering.
+ *
+ * Must be used inside a ChipList with selectionMode set to "single" or "multiple".
+ *
+ * @example
+ * <ChipList selectionMode="multiple">
+ *   <SelectableChip id="react">React</SelectableChip>
+ *   <SelectableChip id="vue">Vue</SelectableChip>
+ * </ChipList>
+ *
+ * @example
+ * // With colors
+ * <ChipList selectionMode="single">
+ *   <SelectableChip id="up" color="normal">UP</SelectableChip>
+ *   <SelectableChip id="down" color="critical">DOWN</SelectableChip>
+ * </ChipList>
+ */
 export function SelectableChip({ ref, ...props }: SelectableChipProps) {
   [props, ref] = useContextProps(props, ref ?? null, ChipContext);
 
