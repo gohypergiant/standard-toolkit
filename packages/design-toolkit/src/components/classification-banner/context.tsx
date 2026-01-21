@@ -20,6 +20,15 @@ import type { ClassificationBannerProps } from './types';
 export const ClassificationBannerContext =
   createContext<ContextValue<ClassificationBannerProps, HTMLDivElement>>(null);
 
+/**
+ * Context provider for setting default props across multiple ClassificationBanner components.
+ *
+ * @example
+ * <ClassificationBannerProvider variant="secret">
+ *   <ClassificationBanner />
+ *   <ClassificationBanner />
+ * </ClassificationBannerProvider>
+ */
 export function ClassificationBannerProvider({
   children,
   ...props
