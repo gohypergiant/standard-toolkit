@@ -2,9 +2,6 @@
 
 ## Table of Contents
 
-1. [JS/TS Style and Conventions](./style.md)
-2. [Testing Style and Conventions](./testing.md)
-3. [Ecosystem Guidelines](./ecosystem.md)
-
-- If React is utilized, read: [React Style and Conventions](./react.md)
-- If React and React Aria Components are utilized, read: [Component Style and Conventions](./components.md)
+1. [Ecosystem Guidelines](./ecosystem.md)
+2. If React is utilized, read: [React Style and Conventions](./react.md)
+3. If React and React Aria Components are utilized, read: [Component Style and Conventions](./components.md)
