@@ -22,7 +22,18 @@ export { useEffectEvent } from './ponyfill';
 /**
  * A convenience wrapper for useEmit & useOn, to pass down types instead of having
  * to reimplement generics each time
- * @param options emit options that will be applied for all emits of all events
+ *
+ * @template P - The union of all possible event payload types.
+ * @param options - Emit options that will be applied for all emits of all events.
+ * @returns Object containing useEmit, useOn, and useOnce hooks with proper typing.
+ *
+ * @example
+ * ```typescript
+ * type Events = Payload<'click', { x: number }> | Payload<'hover', { id: string }>;
+ * const { useEmit, useOn } = useBus<Events>();
+ * const emitClick = useEmit('click');
+ * useOn('hover', (e) => console.log(e.payload.id));
+ * ```
  */
 export function useBus<
   P extends { type: string; payload?: unknown } = Payload<
@@ -57,11 +68,18 @@ export function useBus<
 
 /**
  * React hook to enable render-safe emitting of event with payload that is type safe
- * @template P union of event types
- * @template T type of event
- * @param type of type T, one of the event types
- * @param options emit options that will be applied for all emits of this event
- * @returns callback that will accept the cooresponding payload to the previously entered event type, callback will accept options as well that are not applied to all emits of this event type
+ *
+ * @template P - Union of event types.
+ * @template T - Type of event.
+ * @param type - Type of event, one of the event types.
+ * @param options - Emit options that will be applied for all emits of this event.
+ * @returns Callback that will accept the corresponding payload to the previously entered event type, callback will accept options as well that are not applied to all emits of this event type.
+ *
+ * @example
+ * ```typescript
+ * const emitClick = useEmit('click', { target: 'others' });
+ * emitClick({ x: 100, y: 200 });
+ * ```
  */
 export function useEmit<
   // biome-ignore lint/suspicious/noExplicitAny: intentional
@@ -95,8 +113,19 @@ export function useEmit<
 
 /**
  * React hook to attach event bus listener with type safe callback
- * @param type event type
- * @param callback handler that matches event type and receives cooresponding payload
+ *
+ * @template P - Union of event types.
+ * @template T - Type of event.
+ * @param type - Event type.
+ * @param callback - Handler that matches event type and receives corresponding payload.
+ * @returns void
+ *
+ * @example
+ * ```typescript
+ * useOn('click', (e) => {
+ *   console.log('Clicked at', e.payload.x, e.payload.y);
+ * });
+ * ```
  */
 export function useOn<
   P extends { type: string; payload?: unknown } = Payload<
@@ -114,8 +143,19 @@ export function useOn<
 
 /**
  * React hook to attach event bus listener with type safe callback, once
- * @param type event type
- * @param callback handler that matches event type and receives cooresponding payload
+ *
+ * @template P - Union of event types.
+ * @template T - Type of event.
+ * @param type - Event type.
+ * @param callback - Handler that matches event type and receives corresponding payload.
+ * @returns void
+ *
+ * @example
+ * ```typescript
+ * useOnce('init', (e) => {
+ *   console.log('Initialized with', e.payload);
+ * });
+ * ```
  */
 export function useOnce<
   P extends { type: string; payload?: unknown } = Payload<

@@ -50,7 +50,15 @@ export class Broadcast<
   /**
    * Get the singleton instance of Broadcaster.
    *
+   * @template T - The payload type for events.
    * @param config - Optional custom configuration.
+   * @returns The singleton Broadcast instance.
+   *
+   * @example
+   * ```typescript
+   * const bus = Broadcast.getInstance();
+   * const customBus = Broadcast.getInstance({ channelName: 'my-channel' });
+   * ```
    */
   static getInstance<
     T extends { type: string; payload?: unknown } = Payload<
@@ -151,8 +159,15 @@ export class Broadcast<
    *
    * Keep in mind that options are merged: global, event, local (lowest to highest precendence)
    *
-   * @param type event type
-   * @param options emit options
+   * @param type - Event type.
+   * @param options - Emit options (pass null to remove).
+   * @returns void
+   *
+   * @example
+   * ```typescript
+   * bus.setEventEmitOptions('click', { target: 'others' });
+   * bus.setEventEmitOptions('hover', null); // Remove options
+   * ```
    */
   setEventEmitOptions(type: P['type'], options: EmitOptions | null) {
     if (options) {
@@ -165,7 +180,17 @@ export class Broadcast<
   /**
    * Set a series of events emit options
    *
-   * @param events map of event type & options
+   * @param events - Map of event type to options.
+   * @returns void
+   *
+   * @example
+   * ```typescript
+   * const eventOptions = new Map([
+   *   ['click', { target: 'others' }],
+   *   ['hover', { target: 'self' }],
+   * ]);
+   * bus.setEventsEmitOptions(eventOptions);
+   * ```
    */
   setEventsEmitOptions(events: Map<P['type'], EmitOptions | null>) {
     for (const [type, options] of events) {
@@ -176,7 +201,14 @@ export class Broadcast<
   /**
    * Set global emit options, the lowest precedence options, to be merged with event emit options and local options
    *
-   * @param options emit options
+   * @param options - Emit options (pass null to remove).
+   * @returns void
+   *
+   * @example
+   * ```typescript
+   * bus.setGlobalEmitOptions({ target: 'all' });
+   * bus.setGlobalEmitOptions(null); // Remove global options
+   * ```
    */
   setGlobalEmitOptions(options: EmitOptions | null) {
     this.setEventEmitOptions(this.id, options);
@@ -188,13 +220,17 @@ export class Broadcast<
    * @template T - The Payload type, inferred from the event.
    * @param type - The event type.
    * @param callback - The callback function.
+   * @returns A function to unsubscribe the listener.
    *
    * @example
-   * bus.on(EVENTS.MAP_CLICK, (e) => {
+   * ```typescript
+   * const unsubscribe = bus.on(EVENTS.MAP_CLICK, (e) => {
    *   if (!e.payload.picked) {
    *     setSelected(null);
    *   }
    * });
+   * // Later: unsubscribe();
+   * ```
    */
   on<T extends P['type']>(
     type: T,
@@ -213,6 +249,14 @@ export class Broadcast<
    * @template T - The Payload type, inferred from the event.
    * @param type - The event type.
    * @param callback - The callback function.
+   * @returns A function to unsubscribe the listener.
+   *
+   * @example
+   * ```typescript
+   * const unsubscribe = bus.once(EVENTS.INIT, (e) => {
+   *   console.log('Initialized with', e.payload);
+   * });
+   * ```
    */
   once<T extends P['type']>(
     type: T,
@@ -230,6 +274,15 @@ export class Broadcast<
    *
    * @template T - The Payload type, inferred from the event.
    * @param type - The event type.
+   * @param callback - The callback function to remove.
+   * @returns void
+   *
+   * @example
+   * ```typescript
+   * const handler = (e) => console.log(e);
+   * bus.on(EVENTS.CLICK, handler);
+   * bus.off(EVENTS.CLICK, handler);
+   * ```
    */
   off<T extends P['type']>(
     type: T,
@@ -310,6 +363,12 @@ export class Broadcast<
    * Delete an event and unregister all callbacks associated with it.
    *
    * @param type - The event to delete.
+   * @returns void
+   *
+   * @example
+   * ```typescript
+   * bus.deleteEvent(EVENTS.CLICK);
+   * ```
    */
   deleteEvent(type: P['type']) {
     delete this.listeners[type];
@@ -320,6 +379,13 @@ export class Broadcast<
   /**
    * Destroy the BroadcastChannel.
    * After calling this, no further messages will be received.
+   *
+   * @returns void
+   *
+   * @example
+   * ```typescript
+   * bus.destroy();
+   * ```
    */
   destroy() {
     if (this.channel) {
