@@ -15,15 +15,18 @@
  *
  * @param min - The minimum value in the range (inclusive).
  * @param max - The maximum value in the range (inclusive).
+ * @returns A random floating-point number between min and max (inclusive).
  *
  * @throws {RangeError} Throws if min > max.
  *
  * @example
+ * ```typescript
  * const value = random(0, 10);
  * // value >= 0 && value <= 10;
  *
  * const value = random(10, 0);
  * // RangeError
+ * ```
  */
 export function random(min: number, max: number) {
   if (min > max) {
@@ -38,21 +41,30 @@ export function random(min: number, max: number) {
  *
  * @param min - The minimum value in the range (inclusive).
  * @param max - The maximum value in the range (inclusive).
+ * @returns A random integer between min and max (inclusive).
  *
  * @throws {RangeError} Throws if min > max.
  *
  * @example
+ * ```typescript
  * const value = randomInt(0, 10);
  * // value >= 0 && value <= 10;
  *
  * const value = randomInt(10, 0);
  * // RangeError
+ * ```
  */
 export function randomInt(min: number, max: number) {
   if (min > max) {
     throw new RangeError('Min exceeded max');
   }
 
+  // Fast path: both values are already integers
+  if (Number.isInteger(min) && Number.isInteger(max)) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+  }
+
+  // Slow path: handle non-integer inputs
   const minCeil = Math.ceil(min);
   const maxFloor = Math.floor(max);
 

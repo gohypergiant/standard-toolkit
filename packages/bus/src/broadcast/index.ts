@@ -21,7 +21,24 @@ import type {
   Payload,
 } from './types';
 
-/** Broadcast event class allows for emitting and listening for events */
+/**
+ * Broadcast event class allows for emitting and listening for events across browser contexts using the BroadcastChannel API.
+ *
+ * @template P - Union type of event payloads, must include `type` string property
+ *
+ * @example
+ * ```typescript
+ * type MyEvents =
+ *   | Payload<'USER_LOGIN', { userId: string }>
+ *   | Payload<'USER_LOGOUT'>;
+ *
+ * const bus = new Broadcast<MyEvents>();
+ * bus.on('USER_LOGIN', (event) => {
+ *   console.log('User logged in:', event.payload.userId);
+ * });
+ * bus.emit('USER_LOGIN', { userId: '123' });
+ * ```
+ */
 export class Broadcast<
   P extends { type: string; payload?: unknown; target?: UniqueId } = Payload<
     string,
@@ -48,9 +65,16 @@ export class Broadcast<
   }
 
   /**
-   * Get the singleton instance of Broadcaster.
+   * Get the singleton instance of Broadcast.
    *
-   * @param config - Optional custom configuration.
+   * @template T - Union type of event payloads
+   * @param config - Optional custom configuration for channel name and debug settings
+   * @returns The singleton Broadcast instance typed with the provided event union
+   *
+   * @example
+   * ```typescript
+   * const bus = Broadcast.getInstance<MyEvents>({ channelName: 'my-app' });
+   * ```
    */
   static getInstance<
     T extends { type: string; payload?: unknown } = Payload<
@@ -65,6 +89,13 @@ export class Broadcast<
 
   /**
    * Initialize the BroadcastChannel and set up event listeners.
+   * Called automatically by the constructor.
+   *
+   * @example
+   * ```typescript
+   * // Called internally by constructor
+   * protected init() { ... }
+   * ```
    */
   protected init() {
     this.channel = new BroadcastChannel(this.channelName);
@@ -73,9 +104,15 @@ export class Broadcast<
   }
 
   /**
-   * Process incoming messages.
+   * Process incoming messages from the BroadcastChannel.
    *
-   * @param event - Incoming message event.
+   * @param event - Incoming message event containing event data
+   *
+   * @example
+   * ```typescript
+   * // Called automatically by BroadcastChannel
+   * this.channel.onmessage = this.onMessage.bind(this);
+   * ```
    */
   protected onMessage(event: MessageEvent<P>) {
     this.handleListeners(event.data);
@@ -84,7 +121,13 @@ export class Broadcast<
   /**
    * Handle errors from the BroadcastChannel.
    *
-   * @param error - Error event.
+   * @param error - Error event from BroadcastChannel
+   *
+   * @example
+   * ```typescript
+   * // Called automatically by BroadcastChannel
+   * this.channel.onmessageerror = this.onError.bind(this);
+   * ```
    */
   protected onError(error: MessageEvent<Error>) {
     console.error('BroadcastChannel message error', error);
@@ -93,13 +136,19 @@ export class Broadcast<
   /**
    * Iterate through listeners for the given topic and invoke callbacks if criteria match.
    *
-   * @param data - The event payload containing `type`, optional `payload`, and optional `targetId`.
+   * @param data - The event payload containing `type`, optional `payload`, and optional `target`.
    *
    * @remarks
-   * If `targetId` is provided, delivery is scoped to a specific browser context.
+   * If `target` is provided, delivery is scoped to a specific browser context.
    * We assume exactly one bus instance per context, so events are delivered only when
-   * `target === this.uuid`. If omitted, the event is treated as a broadcast within
+   * `target === this.id`. If omitted, the event is treated as a broadcast within
    * this context (audience filtering may occur elsewhere).
+   *
+   * @example
+   * ```typescript
+   * // Called internally when messages arrive
+   * protected handleListeners(data: P) { ... }
+   * ```
    */
   protected handleListeners(data: P) {
     const handlers = this.listeners[data.type as P['type']];
@@ -125,8 +174,14 @@ export class Broadcast<
   /**
    * Removes a listener by id.
    *
-   * @param topic - The event topic.
-   * @param listenerId - id of the listener.
+   * @param type - The event type.
+   * @param id - ID of the listener to remove.
+   *
+   * @example
+   * ```typescript
+   * // Called internally or via unsubscribe callback
+   * protected removeListener(type, listenerId);
+   * ```
    */
   protected removeListener(type: P['type'], id: UniqueId) {
     if (this.listeners[type]) {
@@ -137,9 +192,16 @@ export class Broadcast<
   }
 
   /**
-   * Check for the existence of a event type and create it if missing.
+   * Add a listener for an event type, creating the listeners array if it doesn't exist.
    *
    * @param type - The event type.
+   * @param listener - The listener object to add.
+   *
+   * @example
+   * ```typescript
+   * // Called internally by on() and once()
+   * protected addListener(type, { id, callback, once });
+   * ```
    */
   protected addListener(type: P['type'], listener: Listener<P>) {
     this.listeners[type] ??= [];
@@ -147,12 +209,18 @@ export class Broadcast<
   }
 
   /**
-   * Set emit options for event by type, options will apply to all emits of this event
+   * Set emit options for event by type, options will apply to all emits of this event.
    *
-   * Keep in mind that options are merged: global, event, local (lowest to highest precendence)
+   * Keep in mind that options are merged: global, event, local (lowest to highest precedence).
    *
-   * @param type event type
-   * @param options emit options
+   * @param type - Event type
+   * @param options - Emit options to apply, or null to clear options
+   *
+   * @example
+   * ```typescript
+   * bus.setEventEmitOptions('USER_LOGIN', { target: 'self' });
+   * bus.setEventEmitOptions('USER_LOGOUT', null); // Clear options
+   * ```
    */
   setEventEmitOptions(type: P['type'], options: EmitOptions | null) {
     if (options) {
@@ -163,9 +231,18 @@ export class Broadcast<
   }
 
   /**
-   * Set a series of events emit options
+   * Set a series of events emit options.
    *
-   * @param events map of event type & options
+   * @param events - Map of event type to options
+   *
+   * @example
+   * ```typescript
+   * const options = new Map([
+   *   ['USER_LOGIN', { target: 'self' }],
+   *   ['BROADCAST_MESSAGE', { target: 'others' }]
+   * ]);
+   * bus.setEventsEmitOptions(options);
+   * ```
    */
   setEventsEmitOptions(events: Map<P['type'], EmitOptions | null>) {
     for (const [type, options] of events) {
@@ -174,9 +251,14 @@ export class Broadcast<
   }
 
   /**
-   * Set global emit options, the lowest precedence options, to be merged with event emit options and local options
+   * Set global emit options, the lowest precedence options, to be merged with event emit options and local options.
    *
-   * @param options emit options
+   * @param options - Emit options to apply globally, or null to clear
+   *
+   * @example
+   * ```typescript
+   * bus.setGlobalEmitOptions({ target: 'others' });
+   * ```
    */
   setGlobalEmitOptions(options: EmitOptions | null) {
     this.setEventEmitOptions(this.id, options);
@@ -185,16 +267,20 @@ export class Broadcast<
   /**
    * Register a callback to be executed when a message of the specified event type is received.
    *
-   * @template T - The Payload type, inferred from the event.
-   * @param type - The event type.
-   * @param callback - The callback function.
+   * @template T - The event type, must be one of P['type']
+   * @param type - The event type to listen for
+   * @param callback - The callback function to execute
+   * @returns Unsubscribe function to remove the listener
    *
    * @example
-   * bus.on(EVENTS.MAP_CLICK, (e) => {
+   * ```typescript
+   * const unsubscribe = bus.on('MAP_CLICK', (e) => {
    *   if (!e.payload.picked) {
    *     setSelected(null);
    *   }
    * });
+   * // Later: unsubscribe()
+   * ```
    */
   on<T extends P['type']>(
     type: T,
@@ -210,9 +296,18 @@ export class Broadcast<
   /**
    * Register a callback to be executed only once for a specified event type.
    *
-   * @template T - The Payload type, inferred from the event.
-   * @param type - The event type.
-   * @param callback - The callback function.
+   * @template T - The event type, must be one of P['type']
+   * @param type - The event type to listen for
+   * @param callback - The callback function to execute
+   * @returns Unsubscribe function to remove the listener
+   *
+   * @example
+   * ```typescript
+   * const unsubscribe = bus.once('USER_LOGIN', (event) => {
+   *   console.log('First login:', event.payload.userId);
+   * });
+   * // Automatically removed after first invocation
+   * ```
    */
   once<T extends P['type']>(
     type: T,
@@ -228,8 +323,16 @@ export class Broadcast<
   /**
    * Unregister callback for the specified event type.
    *
-   * @template T - The Payload type, inferred from the event.
-   * @param type - The event type.
+   * @template T - The event type, must be one of P['type']
+   * @param type - The event type to unregister from
+   * @param callback - The callback function to remove
+   *
+   * @example
+   * ```typescript
+   * const handler = (event) => console.log(event);
+   * bus.on('USER_LOGIN', handler);
+   * bus.off('USER_LOGIN', handler); // Remove specific handler
+   * ```
    */
   off<T extends P['type']>(
     type: T,
@@ -309,7 +412,12 @@ export class Broadcast<
   /**
    * Delete an event and unregister all callbacks associated with it.
    *
-   * @param type - The event to delete.
+   * @param type - The event type to delete
+   *
+   * @example
+   * ```typescript
+   * bus.deleteEvent('USER_LOGIN'); // Removes all listeners for this event
+   * ```
    */
   deleteEvent(type: P['type']) {
     delete this.listeners[type];
@@ -320,6 +428,12 @@ export class Broadcast<
   /**
    * Destroy the BroadcastChannel.
    * After calling this, no further messages will be received.
+   *
+   * @example
+   * ```typescript
+   * bus.destroy();
+   * // Bus is now closed and cannot receive messages
+   * ```
    */
   destroy() {
     if (this.channel) {

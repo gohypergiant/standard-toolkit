@@ -23,14 +23,47 @@ import React, {
   useRef,
 } from 'react';
 
+/**
+ * React context used to detect render phase in React 19+.
+ *
+ * @example
+ * ```typescript
+ * const isRendering = React.use(context);
+ * ```
+ */
 const context = createContext(true);
 
+/**
+ * Throws an error when an effect event function is called during render.
+ *
+ * @returns Never returns (always throws)
+ * @throws {Error} Always throws with message about forbidden render-phase execution
+ *
+ * @example
+ * ```typescript
+ * // This function is used internally to prevent misuse
+ * forbiddenInRender(); // throws Error
+ * ```
+ */
 function forbiddenInRender() {
   throw new Error(
     "A function wrapped in useEffectEvent can't be called during rendering.",
   );
 }
 
+/**
+ * Checks if the current execution context is invalid for event functions (i.e., during render phase).
+ * Uses React.use() hook in React 19+ to detect render phase.
+ *
+ * @returns True if the function is being called during render phase, false otherwise
+ *
+ * @example
+ * ```typescript
+ * if (isInvalidExecutionContextForEventFunction()) {
+ *   forbiddenInRender();
+ * }
+ * ```
+ */
 // We can only check if we're in a render phase, beyond initial render, in React 19, with its `React.use` hook.
 const isInvalidExecutionContextForEventFunction =
   'use' in React

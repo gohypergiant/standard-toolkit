@@ -13,7 +13,14 @@
 
 import type { BroadcastConfig } from './types';
 
-/** The default broadcast configuration. */
+/**
+ * The default broadcast configuration.
+ *
+ * @example
+ * ```typescript
+ * const bus = new Broadcast(DEFAULT_CONFIG);
+ * ```
+ */
 export const DEFAULT_CONFIG: BroadcastConfig = {
   channelName: '@accelint/bus',
   // TODO: implement logger
