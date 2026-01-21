@@ -15,6 +15,17 @@ import 'client-only';
 import { Text } from 'react-aria-components';
 import type { DetailsListLabelProps } from './types';
 
+/**
+ * DetailsListLabel - Label component for DetailsList key/term.
+ *
+ * Renders as a `<dt>` element within the DetailsList grid.
+ *
+ * @example
+ * <DetailsList>
+ *   <DetailsListLabel>Name</DetailsListLabel>
+ *   <DetailsListValue>John Doe</DetailsListValue>
+ * </DetailsList>
+ */
 export function DetailsListLabel(props: DetailsListLabelProps) {
   return <Text {...props} elementType='dt' slot='label' />;
 }

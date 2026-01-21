@@ -17,9 +17,24 @@ import type { ContextValue } from 'react-aria-components';
 import type { ProviderProps } from '@/lib/types';
 import type { DetailsListProps } from './types';
 
+/**
+ * Context for sharing DetailsList props across component tree.
+ */
 export const DetailsListContext =
   createContext<ContextValue<DetailsListProps, HTMLDListElement>>(null);
 
+/**
+ * DetailsListProvider - Context provider for setting default DetailsList props.
+ *
+ * Use this to configure shared alignment and classNames across multiple
+ * DetailsList components in your application.
+ *
+ * @example
+ * <DetailsListProvider align="left">
+ *   <DetailsList>...</DetailsList>
+ *   <DetailsList>...</DetailsList>
+ * </DetailsListProvider>
+ */
 export function DetailsListProvider({
   children,
   ...props
