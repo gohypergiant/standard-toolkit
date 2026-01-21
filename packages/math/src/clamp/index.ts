@@ -30,13 +30,5 @@ export function clamp(min: number, max: number, value: number) {
     throw new RangeError('min exceeded max');
   }
 
-  if (value < min) {
-    return min;
-  }
-
-  if (value > max) {
-    return max;
-  }
-
-  return value;
+  return Math.min(Math.max(value, min), max);
 }

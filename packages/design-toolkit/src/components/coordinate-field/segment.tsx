@@ -87,14 +87,17 @@ export function CoordinateSegment({
     return contentLength + padding;
   }, [maxLength, pad, value.length]);
 
+  // Memoize regex to avoid creating new RegExp on every change
+  const allowedCharsRegex = useMemo(
+    () => (allowedChars ? new RegExp(`^${allowedChars}*$`) : null),
+    [allowedChars],
+  );
+
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
 
-    if (allowedChars) {
-      const regex = new RegExp(`^${allowedChars}*$`);
-      if (!regex.test(newValue)) {
-        return;
-      }
+    if (allowedCharsRegex && !allowedCharsRegex.test(newValue)) {
+      return;
     }
 
     if (maxLength && newValue.length > maxLength) {
@@ -114,12 +117,9 @@ export function CoordinateSegment({
   const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
     const pastedText = e.clipboardData.getData('text');
 
-    if (allowedChars) {
-      const regex = new RegExp(`^${allowedChars}*$`);
-      if (!regex.test(pastedText)) {
-        e.preventDefault();
-        return;
-      }
+    if (allowedCharsRegex && !allowedCharsRegex.test(pastedText)) {
+      e.preventDefault();
+      return;
     }
 
     if (maxLength && pastedText.length > maxLength) {
@@ -130,24 +130,29 @@ export function CoordinateSegment({
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    const key = e.key;
     const input = e.currentTarget;
-    const cursorAtStart = input.selectionStart === 0;
-    const cursorAtEnd = input.selectionStart === value.length;
-    const isEmpty = value.length === 0;
+    const selectionStart = input.selectionStart;
+    const valueLength = value.length;
+    const isEmpty = valueLength === 0;
 
-    if (e.key === 'Backspace' && isEmpty && onAutoRetreat) {
+    if (key === 'Backspace' && isEmpty && onAutoRetreat) {
       e.preventDefault();
       onAutoRetreat();
       return;
     }
 
-    if (e.key === 'ArrowLeft' && cursorAtStart && onAutoRetreat) {
+    if (key === 'ArrowLeft' && selectionStart === 0 && onAutoRetreat) {
       e.preventDefault();
       onAutoRetreat();
       return;
     }
 
-    if (e.key === 'ArrowRight' && cursorAtEnd && onAutoAdvance) {
+    if (
+      key === 'ArrowRight' &&
+      selectionStart === valueLength &&
+      onAutoAdvance
+    ) {
       e.preventDefault();
       onAutoAdvance();
       return;

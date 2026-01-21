@@ -213,6 +213,117 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
     [state.editableSegmentConfigs, state.segmentConfigs, showFormatButton],
   );
 
+  // Memoize segment change handlers to prevent recreating on every render
+  const handleSegmentChange = useCallback(
+    (index: number, value: string) => state.handleSegmentChange(index, value),
+    [state.handleSegmentChange],
+  );
+
+  const handleSegmentFocus = useCallback(
+    (index: number) => focus.setFocusedSegmentIndex(index),
+    [focus.setFocusedSegmentIndex],
+  );
+
+  const handleSegmentBlur = useCallback(() => {
+    focus.setFocusedSegmentIndex(-1);
+    state.flushPendingValidation();
+  }, [focus.setFocusedSegmentIndex, state.flushPendingValidation]);
+
+  const handleSegmentKeyDown = useCallback(
+    (index: number, e: React.KeyboardEvent<HTMLInputElement>) =>
+      focus.handleSegmentKeyDown(index, e),
+    [focus.handleSegmentKeyDown],
+  );
+
+  const handleAutoAdvance = useCallback(
+    (index: number) => focus.focusNextSegment(index),
+    [focus.focusNextSegment],
+  );
+
+  const handleAutoRetreat = useCallback(
+    (index: number) => focus.focusPreviousSegment(index),
+    [focus.focusPreviousSegment],
+  );
+
+  // Memoize segment groups to prevent recalculation on every render
+  const segmentGroups = useMemo(
+    () =>
+      state.segmentConfigs.reduce<ReactNode[][]>(
+        (acc, config, configIndex) => {
+          const currentGroupIndex = acc.length - 1;
+
+          if (config.value === GROUP_SEPARATOR && variant === 'stacked') {
+            acc.push([]);
+
+            return acc;
+          }
+
+          if (config.type === 'literal') {
+            acc[currentGroupIndex]?.push(
+              <span
+                key={`${format}-literal-${configIndex}-${config.value}`}
+                className={styles.literal}
+              >
+                {config.value}
+              </span>,
+            );
+
+            return acc;
+          }
+
+          const editableIndex = state.segmentConfigs
+            .slice(0, configIndex)
+            .filter((c) => c.type !== 'literal').length;
+
+          acc[currentGroupIndex]?.push(
+            <CoordinateSegment
+              key={`${format}-segment-${editableIndex}`}
+              value={state.segmentValues[editableIndex] || ''}
+              onChange={(newValue) =>
+                handleSegmentChange(editableIndex, newValue)
+              }
+              onFocus={() => handleSegmentFocus(editableIndex)}
+              onBlur={handleSegmentBlur}
+              onKeyDown={(e) => handleSegmentKeyDown(editableIndex, e)}
+              onAutoAdvance={() => handleAutoAdvance(editableIndex)}
+              onAutoRetreat={() => handleAutoRetreat(editableIndex)}
+              placeholder={config.placeholder}
+              maxLength={config.maxLength}
+              pad={config.pad}
+              className={clsx(styles.segment, classNames?.segment)}
+              isDisabled={isDisabled}
+              isReadOnly={isReadOnly}
+              allowedChars={config.allowedChars}
+              segmentRef={focus.segmentRefs[editableIndex]}
+              segmentIndex={editableIndex}
+              totalSegments={state.editableSegmentConfigs.length}
+              ariaLabel={getSegmentLabel(format, editableIndex)}
+            />,
+          );
+
+          return acc;
+        },
+        [[]],
+      ),
+    [
+      state.segmentConfigs,
+      state.segmentValues,
+      format,
+      variant,
+      handleSegmentChange,
+      handleSegmentFocus,
+      handleSegmentBlur,
+      handleSegmentKeyDown,
+      handleAutoAdvance,
+      handleAutoRetreat,
+      classNames?.segment,
+      isDisabled,
+      isReadOnly,
+      focus.segmentRefs,
+      state.editableSegmentConfigs.length,
+    ],
+  );
+
   return (
     <Provider
       values={[
@@ -269,89 +380,17 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
             onPasteCapture={paste.handleInputPaste}
             data-input-container
           >
-            {state.segmentConfigs
-              .reduce<ReactNode[][]>(
-                (acc, config, configIndex) => {
-                  const currentGroupIndex = acc.length - 1;
-
-                  if (
-                    config.value === GROUP_SEPARATOR &&
-                    variant === 'stacked'
-                  ) {
-                    acc.push([]);
-
-                    return acc;
-                  }
-
-                  if (config.type === 'literal') {
-                    acc[currentGroupIndex]?.push(
-                      <span
-                        key={`${format}-literal-${configIndex}-${config.value}`}
-                        className={styles.literal}
-                      >
-                        {config.value}
-                      </span>,
-                    );
-
-                    return acc;
-                  }
-
-                  const editableIndex = state.segmentConfigs
-                    .slice(0, configIndex)
-                    .filter((c) => c.type !== 'literal').length;
-
-                  acc[currentGroupIndex]?.push(
-                    <CoordinateSegment
-                      key={`${format}-segment-${editableIndex}`}
-                      value={state.segmentValues[editableIndex] || ''}
-                      onChange={(newValue) =>
-                        state.handleSegmentChange(editableIndex, newValue)
-                      }
-                      onFocus={() =>
-                        focus.setFocusedSegmentIndex(editableIndex)
-                      }
-                      onBlur={() => {
-                        focus.setFocusedSegmentIndex(-1);
-                        state.flushPendingValidation();
-                      }}
-                      onKeyDown={(e) =>
-                        focus.handleSegmentKeyDown(editableIndex, e)
-                      }
-                      onAutoAdvance={() =>
-                        focus.focusNextSegment(editableIndex)
-                      }
-                      onAutoRetreat={() =>
-                        focus.focusPreviousSegment(editableIndex)
-                      }
-                      placeholder={config.placeholder}
-                      maxLength={config.maxLength}
-                      pad={config.pad}
-                      className={clsx(styles.segment, classNames?.segment)}
-                      isDisabled={isDisabled}
-                      isReadOnly={isReadOnly}
-                      allowedChars={config.allowedChars}
-                      segmentRef={focus.segmentRefs[editableIndex]}
-                      segmentIndex={editableIndex}
-                      totalSegments={state.editableSegmentConfigs.length}
-                      ariaLabel={getSegmentLabel(format, editableIndex)}
-                    />,
-                  );
-
-                  return acc;
-                },
-                [[]],
-              )
-              .map((group, groupIndex) => (
-                <div
-                  className={clsx(styles.segmentGroup, styles[variant])}
-                  key={`${format}-group-${
-                    // biome-ignore lint/suspicious/noArrayIndexKey: intentional
-                    groupIndex
-                  }`}
-                >
-                  {group}
-                </div>
-              ))}
+            {segmentGroups.map((group, groupIndex) => (
+              <div
+                className={clsx(styles.segmentGroup, styles[variant])}
+                key={`${format}-group-${
+                  // biome-ignore lint/suspicious/noArrayIndexKey: intentional
+                  groupIndex
+                }`}
+              >
+                {group}
+              </div>
+            ))}
           </div>
 
           {showFormatButton && (
