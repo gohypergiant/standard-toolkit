@@ -34,7 +34,7 @@ function MyComponent({ children, className, variant }: Props) {
 
 @layer components.l1 {
   .myComponent {
-    @apply p-s empty:none;
+    @apply p-s fg-primary-bold;
 
     @variant disabled {
       @apply cursor-not-allowed fg-disabled;
@@ -66,6 +66,8 @@ function MyComponent() {
   )
 }
 ```
+
+When using these variants in CSS modules (like in the example in the CSS modules section) be sure to utilize the `@variant` approach. When you use variant selectors inline you have no control over the order in which the styles apply, it's entirely up the Tailwind's build output. But if you use the `@variant` approach in CSS modules, the order of the styles written is the order they are applied, just like normal CSS. This means you have complete control over peer style precedence.
 
 ## Unsupported
 
