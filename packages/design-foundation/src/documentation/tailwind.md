@@ -23,7 +23,7 @@ Implementation of CSS Modules is the preferred solution despite the stance taken
 ```jsx
 import styles from './styles.module.css';
 
-function MyComponent({ children, className, variant }: Props) {
+export function MyReusableComponent({ children, className, variant }: Props) {
   return <div className={clsx(styles.myComponent, styles[variant], className)}>{children}</div>
 }
 ```
@@ -46,6 +46,16 @@ function MyComponent({ children, className, variant }: Props) {
 Notice the use of layer `components.l1`, this is the lowest level layer in the `components` layer group. This is the layer that should be used for first level components, which do not override any other components. If styles are being applied to a higher level component that implements a lower level component, the styles should be applied at the next level up. There are currently 5 levels within the components layer group which should provide plenty of override layers for reusable components throughout the design system as well as components within an app.
 
 When applying inline utility classes from Tailwind, those are already scoped to the `utilities` layer which has higher precedence than all of the `components` layers. So these utility classes should only be used for one off styling within an app feature implementation, never in a reusable component.
+
+```jsx
+import { MyReusableComponent } from '../components/my-reusable-component';
+
+export function MyBespokeFeature() {
+  // A bunch of custom business logic, other components, etc
+
+  return <MyReusableComponent className="empty:none">{dynamicContent}</MyReusableComponent>
+}
+```
 
 ### [RAC State Classes](https://react-spectrum.adobe.com/react-aria/styling.html#plugin)
 
