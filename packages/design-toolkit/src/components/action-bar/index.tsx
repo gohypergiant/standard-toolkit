@@ -19,20 +19,28 @@ import styles from './styles.module.css';
 import type { ActionBarProps } from './types';
 
 /**
- * ActionBar - Container for icon action buttons
+ * Container for icon action buttons with consistent spacing and alignment.
+ * Commonly used in toolbars, editors, or command interfaces.
  *
- * A container component that displays a collection of action buttons (typically icon-only)
- * and provides consistent spacing and alignment for toolbar-style actions.
+ * Renders as a `<nav>` element and provides `variant="icon"` context to child buttons.
  *
  * @example
  * <ActionBar>
- *   <Button><Icon><Copy/></Icon></Button>
+ *   <Button><Icon><Copy /></Icon></Button>
+ *   <Button><Icon><Delete /></Icon></Button>
  * </ActionBar>
  *
  * @example
- * // Without elevation shadow
+ * // With ToggleButton
+ * <ActionBar>
+ *   <ToggleButton><Icon><Bold /></Icon></ToggleButton>
+ *   <ToggleButton><Icon><Italic /></Icon></ToggleButton>
+ * </ActionBar>
+ *
+ * @example
+ * // Flat elevation for embedded contexts
  * <ActionBar elevation="flat">
- *   <Button><Icon><Copy/></Icon></Button>
+ *   <Button><Icon><Copy /></Icon></Button>
  * </ActionBar>
  */
 export function ActionBar({

@@ -7,40 +7,63 @@ import * as ActionBarStories from './action-bar.stories';
 # ActionBar
 A container component that displays a collection of actions, typically represented as buttons with icons. The ActionBar provides consistent spacing and alignment for action items, commonly used in toolbars, editors, or command interfaces.
 
+## Example Usage
 
-## Example usage
-```
+```tsx
 <ActionBar>
   <Button>
-    <Icon>
-      <Copy />
-    </Icon>
+    <Icon><Copy /></Icon>
   </Button>
   <Button>
-    <Icon>
-      <Delete />
-    </Icon>
+    <Icon><Delete /></Icon>
   </Button>
 </ActionBar>
 ```
 <Canvas of={ActionBarStories.Default} />
 
+### With ToggleButton
+ActionBar also supports [ToggleButton](?path=/docs/components-togglebutton--playground) for stateful actions.
+
+```tsx
+<ActionBar>
+  <ToggleButton>
+    <Icon><Bold /></Icon>
+  </ToggleButton>
+  <ToggleButton>
+    <Icon><Italic /></Icon>
+  </ToggleButton>
+</ActionBar>
+```
+<Canvas of={ActionBarStories.Toggle} />
+
 ## Props
+Extends all standard HTML `div` attributes.
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `elevation` | `string` | `overlay` | Elevation shadow style: `flat`, `overlay`, or `raised` |
-| `size` | `string` | `medium` | Size variant: `medium` or `small` |
+| `elevation` | `'flat' \| 'overlay' \| 'raised'` | `'overlay'` | Shadow/elevation style |
+| `size` | `'medium' \| 'small'` | `'medium'` | Size variant applied to child buttons |
+| `children` | `ReactNode` | - | Button or ToggleButton elements |
+| `className` | `string` | - | Additional CSS classes |
 
-## Elevation options
-Use `elevation="flat"` when the ActionBar is embedded in a context that already has its own visual boundaries, such as entity detail panels.
+## Elevation
+Controls the visual prominence of the ActionBar.
+
+| Value | Use Case |
+|-------|----------|
+| `flat` | Embedded in panels with existing visual boundaries |
+| `overlay` | Floating over content (default) |
+| `raised` | Higher prominence, stronger shadow |
 
 ```tsx
 <ActionBar elevation="flat">
   <Button>
-    <Icon>
-      <Copy />
-    </Icon>
+    <Icon><Copy /></Icon>
   </Button>
 </ActionBar>
 ```
+
+## Implementation Notes
+- Renders as a `<nav>` element for semantic navigation
+- Automatically provides `variant="icon"` context to child Button and ToggleButton components
+- Size prop propagates to all child buttons via context
