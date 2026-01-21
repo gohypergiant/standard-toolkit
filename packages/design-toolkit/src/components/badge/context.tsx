@@ -20,6 +20,15 @@ import type { BadgeProps } from './types';
 export const BadgeContext =
   createContext<ContextValue<BadgeProps, HTMLSpanElement>>(null);
 
+/**
+ * Context provider for setting default props across multiple Badge components.
+ *
+ * @example
+ * <BadgeProvider color="critical" placement="top right">
+ *   <Badge>1</Badge>
+ *   <Badge>2</Badge>
+ * </BadgeProvider>
+ */
 export function BadgeProvider({
   children,
   ...props
