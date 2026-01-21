@@ -19,9 +19,11 @@ import { Icon } from '../icon';
 import { DrawerTrigger } from './trigger';
 import type { DrawerCloseProps } from './types';
 
-export function DrawerClose({ for: id, ...rest }: DrawerCloseProps) {
+export function DrawerClose(props: DrawerCloseProps) {
   return (
-    <DrawerTrigger {...rest} for={`close:${id}`}>
+    // Note, not using ...rest due to possible memory leak within <Pressable />
+    // Still investigating.
+    <DrawerTrigger aria-label={props['aria-label']} for={`close:${props.for}`}>
       <Button variant='icon'>
         <Icon>
           <Cancel />
@@ -30,3 +32,4 @@ export function DrawerClose({ for: id, ...rest }: DrawerCloseProps) {
     </DrawerTrigger>
   );
 }
+DrawerClose.displayName = 'DrawerClose';

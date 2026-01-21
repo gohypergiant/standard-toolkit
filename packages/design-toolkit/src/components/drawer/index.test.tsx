@@ -96,7 +96,7 @@ function setup(
             <DrawerTrigger for={'clear'}>
               <Button>Close</Button>
             </DrawerTrigger>
-            <DrawerClose data-testid='close-with' for={ids.a} />
+            <DrawerClose aria-label='close-with' for={ids.a} />
           </DrawerHeader>
           <DrawerContent>
             <DrawerView id={ids.a}>View A</DrawerView>
@@ -114,7 +114,7 @@ function setup(
       <DrawerTrigger for={`open:${ids.a}`}>
         <Button>Open A</Button>
       </DrawerTrigger>
-      <DrawerClose for={ids.a} data-testid='outside-close' />
+      <DrawerClose for={ids.a} aria-label='outside-close' />
     </>
   ),
 ) {
@@ -231,7 +231,7 @@ describe('Drawer', () => {
     expect(screen.queryByText('View B')).not.toBeInTheDocument();
     expect(screen.queryByText('View C')).not.toBeInTheDocument();
 
-    await userEvent.click(screen.getByTestId('close-with'));
+    await userEvent.click(screen.getByLabelText('close-with'));
 
     expect(screen.queryByText('View A')).not.toBeInTheDocument();
     expect(screen.queryByText('View B')).not.toBeInTheDocument();
@@ -247,7 +247,7 @@ describe('Drawer', () => {
     expect(screen.queryByText('View B')).not.toBeInTheDocument();
     expect(screen.queryByText('View C')).not.toBeInTheDocument();
 
-    await userEvent.click(screen.getByTestId('outside-close'));
+    await userEvent.click(screen.getByLabelText('outside-close'));
 
     expect(screen.queryByText('View A')).not.toBeInTheDocument();
     expect(screen.queryByText('View B')).not.toBeInTheDocument();
