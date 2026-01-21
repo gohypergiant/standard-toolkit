@@ -67,7 +67,7 @@ export function ToggleButton({ ref, ...props }: ToggleButtonProps) {
     className,
     color = 'mono-muted',
     size = 'medium',
-    variant = 'filled',
+    variant = 'flat',
     ...rest
   } = props;
 

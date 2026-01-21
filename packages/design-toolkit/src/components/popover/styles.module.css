@@ -29,4 +29,10 @@
   .footer {
     @apply mt-s gap-s flex justify-end;
   }
+
+  .dialog {
+    @variant focus-visible {
+      @apply outline-none;
+    }
+  }
 }
