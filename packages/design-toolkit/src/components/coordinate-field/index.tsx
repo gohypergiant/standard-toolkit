@@ -48,7 +48,6 @@ import { Label } from '../label';
 import { Popover } from '../popover';
 import { PopoverContent } from '../popover/content';
 import { PopoverTitle } from '../popover/title';
-import { PopoverTrigger } from '../popover/trigger';
 import { Radio } from '../radio';
 import { RadioGroup } from '../radio/group';
 import { CoordinateFieldContext, CoordinateFieldStateContext } from './context';
@@ -355,7 +354,7 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
           </div>
 
           {showFormatButton && (
-            <PopoverTrigger onOpenChange={handlePopoverOpenChange}>
+            <DialogTrigger onOpenChange={handlePopoverOpenChange}>
               <Button
                 variant='icon'
                 size={size}
@@ -407,7 +406,7 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
                     })}
                 </PopoverContent>
               </Popover>
-            </PopoverTrigger>
+            </DialogTrigger>
           )}
         </div>
 

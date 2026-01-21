@@ -787,6 +787,21 @@ describe('CoordinateField', () => {
       });
     });
 
+    it('opens popover on keyboard Enter', async () => {
+      const user = userEvent.setup();
+      render(<CoordinateField label='Location' value={testCoordinate} />);
+      const button = screen.getByRole('button', {
+        name: /view coordinate in all formats/i,
+      });
+
+      button.focus();
+      await user.keyboard('{Enter}');
+
+      await waitFor(() => {
+        expect(screen.getByText('Copy Coordinates')).toBeInTheDocument();
+      });
+    });
+
     it('displays all 5 formats in popover', async () => {
       const user = userEvent.setup();
       render(<CoordinateField label='Location' value={testCoordinate} />);
