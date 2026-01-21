@@ -45,13 +45,13 @@ import type { ColorPickerProps } from './types';
  * ];
  *
  * <ColorPicker
- *   options={colors}
- *   value={'#ff0000'}
+ *   items={colors}
+ *   value="#ff0000"
  *   onChange={(color) => console.log('Selected:', color)}
  *   classNames={{
  *     picker: 'gap-4',
  *     item: 'rounded-lg',
- *     swatch: 'w-8 h-8'
+ *     swatch: 'w-8 h-8',
  *   }}
  * />
  * ```
