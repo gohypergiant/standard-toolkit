@@ -18,7 +18,7 @@
   }
 
   .control {
-    @apply fg-primary-bold gap-m rounded-medium px-s py-xs font-display outline-interactive flex w-full items-center outline;
+    @apply fg-primary-bold gap-m rounded-medium pl-s px-xs py-xs font-display outline-interactive flex w-full items-center outline;
 
     min-width: var(--min-width, unset);
 
