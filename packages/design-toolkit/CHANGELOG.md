@@ -1,5 +1,28 @@
 # @accelint/design-toolkit
 
+## 9.3.0
+### Minor Changes
+
+- 0872e9e: Add DeferredCollection component to lazy load large collections when virtualizing.
+- eb23d75: Modified tailwind variant definition for readonly. Also added readonly support for the following components: ComboboxField, CoordinateField, DateField, SelectField, TextAreaField, TextField, and TimeField
+- 2fb19ee: Adds `elevation-overlay` and `elevation-raised` variants to design-foundation for use with `data-elevation` attribute
+  
+  Adds `elevation` prop to the ActionBar component with options `flat`, `overlay`, and `raised` to allow configurable shadow styling
+- d06b13a: Add composition examples showing how to combine Button with Menu
+
+### Patch Changes
+
+- cf0c6f3: Fix granularity argument in the DateField story
+- 606b0ea: Fix the drawer menu 'end' placement styling
+- beedb2d: Fix menu separator visibility
+- Updated dependencies [45275c4]
+- Updated dependencies [eb23d75]
+- Updated dependencies [d328b71]
+- Updated dependencies [2fb19ee]
+  - @accelint/geo@0.5.1
+  - @accelint/design-foundation@2.1.0
+  - @accelint/logger@0.1.5
+
 ## 9.2.0
 ### Minor Changes
 

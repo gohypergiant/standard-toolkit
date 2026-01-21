@@ -10,26 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
-@reference '@accelint/design-foundation/styles';
+import type { ReactNode } from 'react';
 
-@layer components.l1 {
-  .bar {
-    @apply rounded-medium bg-surface-default flex w-fit;
-
-    @variant elevation-overlay {
-      @apply shadow-elevation-overlay;
-    }
-
-    @variant elevation-raised {
-      @apply shadow-elevation-raised;
-    }
-
-    @variant size-medium {
-      @apply gap-s px-m py-s;
-    }
-
-    @variant size-small {
-      @apply gap-xs px-s py-xs;
-    }
-  }
+export interface DeferredCollectionProps {
+  /** The content to render once ready - can be ReactNode or a function returning ReactNode for deferred creation */
+  children: ReactNode | (() => ReactNode);
+  /** Fallback element to show while deferring render */
+  fallback?: ReactNode;
+  /** Number of animation frames to defer before rendering (default: 2) */
+  deferFrames?: number;
 }

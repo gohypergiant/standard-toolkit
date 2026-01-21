@@ -29,6 +29,9 @@
   "size-small": "[data-size=\"small\"]",
   "size-xsmall": "[data-size=\"xsmall\"]",
 
+  "elevation-overlay": "[data-elevation=\"overlay\"]",
+  "elevation-raised": "[data-elevation=\"raised\"]",
+
   "type-literal": "[data-type=\"literal\"]",
   "type-year": "[data-type=\"year\"]",
   "type-month": "[data-type=\"month\"]",

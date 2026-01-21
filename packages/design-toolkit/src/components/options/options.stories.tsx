@@ -16,7 +16,9 @@ import {
   ListLayout as AriaListLayout,
   Virtualizer as AriaVirtualizer,
 } from 'react-aria-components';
+import { DeferredCollection } from '../deferred-collection';
 import { Icon } from '../icon';
+import { Skeleton } from '../skeleton';
 import { Options } from './';
 import { OptionsItem } from './item';
 import { OptionsItemContent } from './item-content';
@@ -283,26 +285,46 @@ export const WithStaticSections: Story = {
 const manyItems = Array.from({ length: 5000 }, (_, index) => ({
   id: index,
   name: `Item ${index}`,
-  icon: <Placeholder />,
+  hasIcon: true,
 }));
 
 export const Virtualized: Story = {
-  render: ({ children, ...args }) => (
-    <div className='w-[200px]'>
-      <AriaVirtualizer
-        layout={AriaListLayout}
-        layoutOptions={{ rowHeight: 32 }}
-      >
-        <Options {...args} items={manyItems}>
-          {(item) => (
-            <OptionsItem key={item.id} id={item.id} textValue={item.name}>
-              {item.icon && <Icon>{item.icon}</Icon>}
-              <OptionsItemLabel>{item.name}</OptionsItemLabel>
-            </OptionsItem>
-          )}
-        </Options>
-      </AriaVirtualizer>
-    </div>
+  render: (args) => (
+    <DeferredCollection
+      fallback={
+        <div className='flex w-[200px] flex-col gap-xs'>
+          {Array.from({ length: 10 }, (_, i) => (
+            <Skeleton
+              // biome-ignore lint/suspicious/noArrayIndexKey: Static demo items never reorder
+              key={i}
+              className='h-[32px]'
+            />
+          ))}
+        </div>
+      }
+    >
+      {() => (
+        <div className='w-[200px]'>
+          <AriaVirtualizer
+            layout={AriaListLayout}
+            layoutOptions={{ rowHeight: 32 }}
+          >
+            <Options {...args} items={manyItems}>
+              {(item: (typeof manyItems)[number]) => (
+                <OptionsItem key={item.id} id={item.id} textValue={item.name}>
+                  {item.hasIcon && (
+                    <Icon>
+                      <Placeholder />
+                    </Icon>
+                  )}
+                  <OptionsItemLabel>{item.name}</OptionsItemLabel>
+                </OptionsItem>
+              )}
+            </Options>
+          </AriaVirtualizer>
+        </div>
+      )}
+    </DeferredCollection>
   ),
 };
 
