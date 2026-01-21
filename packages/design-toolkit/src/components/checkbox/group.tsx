@@ -23,6 +23,22 @@ import { CheckboxGroupContext } from './context';
 import styles from './styles.module.css';
 import type { CheckboxGroupProps } from './types';
 
+/**
+ * Groups multiple checkboxes with shared state and configuration.
+ *
+ * @example
+ * <CheckboxGroup label="Preferences">
+ *   <Checkbox value="email">Email</Checkbox>
+ *   <Checkbox value="sms">SMS</Checkbox>
+ * </CheckboxGroup>
+ *
+ * @example
+ * // Horizontal layout
+ * <CheckboxGroup label="Features" orientation="horizontal">
+ *   <Checkbox value="a">Feature A</Checkbox>
+ *   <Checkbox value="b">Feature B</Checkbox>
+ * </CheckboxGroup>
+ */
 export function CheckboxGroup({ ref, ...props }: CheckboxGroupProps) {
   [props, ref] = useContextProps(props, ref ?? null, CheckboxGroupContext);
 
