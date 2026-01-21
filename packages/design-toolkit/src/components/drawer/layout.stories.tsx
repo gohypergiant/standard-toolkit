@@ -141,6 +141,7 @@ export const Default: Story = {
           className='bg-[#ff00008b]'
           placement='top'
           size='medium'
+          defaultView={ids.top.views.a}
         >
           <DrawerMenu position='center'>
             <DrawerMenuItem toggle for={ids.top.views.a} textValue='Menu A'>
@@ -174,6 +175,7 @@ export const Default: Story = {
           className='bg-[#0000ff8a]'
           placement='bottom'
           size='medium'
+          defaultView={ids.bottom.views.a}
         >
           <DrawerMenu position='center'>
             <DrawerMenuItem toggle for={ids.bottom.views.a} textValue='Menu A'>
@@ -207,6 +209,7 @@ export const Default: Story = {
           className='bg-[#ffd90087]'
           placement='left'
           size='medium'
+          defaultView={ids.left.views.a}
         >
           <DrawerMenu position='center'>
             <DrawerMenuItem toggle for={ids.left.views.a} textValue='Menu A'>
@@ -240,6 +243,7 @@ export const Default: Story = {
           className='bg-[#00800084]'
           placement='right'
           size='medium'
+          defaultView={ids.right.views.a}
         >
           <DrawerMenu position='center'>
             <DrawerMenuItem toggle for={ids.right.views.a} textValue='Menu A'>
