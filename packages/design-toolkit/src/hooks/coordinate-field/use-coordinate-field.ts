@@ -64,6 +64,7 @@ export interface UseCoordinateFieldResult {
   isInvalid: boolean;
 }
 
+/** Manages coordinate field state, focus, copy, paste, and accessibility props */
 export function useCoordinateField(
   props: CoordinateFieldProps,
   customAriaLabel?: string,

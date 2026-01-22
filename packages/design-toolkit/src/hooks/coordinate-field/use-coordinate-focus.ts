@@ -38,6 +38,7 @@ export interface UseCoordinateFocusResult {
   setFocusedSegmentIndex: (index: number) => void;
 }
 
+/** Manages focus navigation between coordinate input segments */
 export function useCoordinateFocus({
   editableSegmentConfigs,
 }: UseCoordinateFocusOptions): UseCoordinateFocusResult {

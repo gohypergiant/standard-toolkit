@@ -16,6 +16,7 @@ export interface UseTimeoutCleanupResult {
   registerTimeout: (timeoutId: NodeJS.Timeout) => void;
 }
 
+/** Registers timeouts for automatic cleanup on component unmount */
 export function useTimeoutCleanup(): UseTimeoutCleanupResult {
   const timeoutIdsRef = useRef<Set<NodeJS.Timeout>>(new Set());
 

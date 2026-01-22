@@ -38,6 +38,7 @@ export interface UseCoordinatePasteResult {
   cleanupDisambiguationModal: () => void;
 }
 
+/** Handles paste events with coordinate parsing and disambiguation when multiple formats match */
 export function useCoordinatePaste({
   onValueApplied,
   onError,

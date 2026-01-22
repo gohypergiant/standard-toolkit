@@ -30,6 +30,7 @@ import type {
   UseTreeStateOptions,
 } from '../types';
 
+/** Stateful tree manager with drag-and-drop, selection, expansion, and visibility controls */
 export function useTreeState<T>({
   items,
 }: UseTreeStateOptions<T>): UseTreeState<T> {

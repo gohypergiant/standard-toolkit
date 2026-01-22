@@ -57,6 +57,7 @@ export interface UseCoordinateFieldStateResult {
   flushPendingValidation: () => void;
 }
 
+/** Manages coordinate segment values, validation, and format conversion */
 export function useCoordinateFieldState({
   value,
   defaultValue,

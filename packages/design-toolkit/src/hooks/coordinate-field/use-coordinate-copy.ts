@@ -42,6 +42,7 @@ export interface UseCoordinateCopyResult {
   isFormatButtonEnabled: boolean;
 }
 
+/** Handles copying coordinates to clipboard with format conversion and visual feedback */
 export function useCoordinateCopy({
   currentValue,
   validationErrors,
