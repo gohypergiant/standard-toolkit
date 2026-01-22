@@ -30,6 +30,11 @@ import type { TextFieldProps } from './types';
  * TextField - Single-line text input with label and validation
  *
  * Provides integrated label, description, and error message with automatic accessibility.
+ *
+ * @example
+ * ```tsx
+ * <TextField label="Email" type="email" onChange={setEmail} />
+ * ```
  */
 export function TextField({ ref, ...props }: TextFieldProps) {
   [props, ref] = useContextProps(props, ref ?? null, TextFieldContext);

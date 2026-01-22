@@ -31,6 +31,15 @@ import type { TextAreaFieldProps } from './types';
  * TextAreaField - Multi-line text input with label and validation
  *
  * Provides integrated label, description, and error message with automatic accessibility.
+ *
+ * @example
+ * ```tsx
+ * <TextAreaField
+ *   label="Description"
+ *   placeholder="Enter description..."
+ *   onChange={setDescription}
+ * />
+ * ```
  */
 export function TextAreaField({ ref, ...props }: TextAreaFieldProps) {
   [props, ref] = useContextProps(props, ref ?? null, TextAreaFieldContext);

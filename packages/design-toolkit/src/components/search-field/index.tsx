@@ -31,6 +31,15 @@ import type { SearchFieldProps } from './types';
  * SearchField - Search input with integrated search icon, loading state, and clear button
  *
  * Supports outline and filled variants with automatic icon sizing.
+ *
+ * @example
+ * ```tsx
+ * <SearchField
+ *   label="Search"
+ *   placeholder="Search items..."
+ *   onChange={(value) => setQuery(value)}
+ * />
+ * ```
  */
 export function SearchField({ ref, ...props }: SearchFieldProps) {
   [props, ref] = useContextProps(props, ref ?? null, SearchFieldContext);

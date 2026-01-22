@@ -26,6 +26,13 @@ import type { SwitchProps } from './types';
  * Switch - Toggle control for binary on/off states
  *
  * Provides visual feedback with smooth transitions and accessible keyboard/screen reader support.
+ *
+ * @example
+ * ```tsx
+ * <Switch isSelected={enabled} onChange={setEnabled}>
+ *   Enable notifications
+ * </Switch>
+ * ```
  */
 export function Switch({ ref, ...props }: SwitchProps) {
   [props, ref] = useContextProps(props, ref ?? null, SwitchContext);

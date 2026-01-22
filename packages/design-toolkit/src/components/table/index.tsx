@@ -100,6 +100,11 @@ function RowActionsMenu<T>({
  * Table - Configurable data table with sorting, selection, and row actions
  *
  * Supports data-driven mode with TanStack column definitions or static mode with subcomponents.
+ *
+ * @example
+ * ```tsx
+ * <Table columns={columns} data={rows} enableSorting showCheckbox />
+ * ```
  */
 export function Table<T extends { id: Key }>({
   children,

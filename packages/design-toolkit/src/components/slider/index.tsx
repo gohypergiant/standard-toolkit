@@ -211,6 +211,17 @@ function normalizeValue(
  * Slider - Range input for numeric value selection
  *
  * Supports single values or ranges, optional input fields, markers, and snap-to-markers behavior.
+ *
+ * @example
+ * ```tsx
+ * <Slider
+ *   label="Volume"
+ *   defaultValue={50}
+ *   minValue={0}
+ *   maxValue={100}
+ *   onChange={setVolume}
+ * />
+ * ```
  */
 export function Slider({
   classNames,

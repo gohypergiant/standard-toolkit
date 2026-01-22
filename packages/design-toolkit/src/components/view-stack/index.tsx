@@ -29,6 +29,14 @@ import type {
  * ViewStack - Stack-based navigation for managing multiple views
  *
  * Supports push, pop, clear, and reset operations with global event system.
+ *
+ * @example
+ * ```tsx
+ * <ViewStack id={stackId} defaultView={mainViewId}>
+ *   <ViewStackView id={mainViewId}>Main content</ViewStackView>
+ *   <ViewStackView id={detailViewId}>Detail content</ViewStackView>
+ * </ViewStack>
+ * ```
  */
 export function ViewStack({
   id,

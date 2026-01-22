@@ -38,6 +38,14 @@ import type { SelectFieldProps } from './types';
  * SelectField - Dropdown select with form field features
  *
  * Includes label, description, error messaging, and virtualized rendering for large datasets.
+ *
+ * @example
+ * ```tsx
+ * <SelectField label="Country" onSelectionChange={setCountry}>
+ *   <Option id="us">United States</Option>
+ *   <Option id="ca">Canada</Option>
+ * </SelectField>
+ * ```
  */
 export function SelectField({ ref, ...props }: SelectFieldProps) {
   [props, ref] = useContextProps(props, ref ?? null, SelectFieldContext);

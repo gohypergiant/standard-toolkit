@@ -27,6 +27,18 @@ import type { TabsProps } from './types';
  * Tabs - Tab navigation for organizing content into multiple sections
  *
  * Supports horizontal and vertical orientations with text or icon tabs.
+ *
+ * @example
+ * ```tsx
+ * <Tabs>
+ *   <TabList>
+ *     <Tab id="overview">Overview</Tab>
+ *     <Tab id="settings">Settings</Tab>
+ *   </TabList>
+ *   <TabPanel id="overview">Overview content</TabPanel>
+ *   <TabPanel id="settings">Settings content</TabPanel>
+ * </Tabs>
+ * ```
  */
 export function Tabs({ ref, ...props }: TabsProps) {
   [props, ref] = useContextProps(props, ref ?? null, TabsContext);

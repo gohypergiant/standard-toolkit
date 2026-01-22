@@ -32,6 +32,11 @@ import type { TimeFieldProps } from './types';
  * TimeField - Form input for time values
  *
  * Provides configurable granularity, 12/24-hour format, and automatic accessibility.
+ *
+ * @example
+ * ```tsx
+ * <TimeField label="Start time" granularity="minute" onChange={setTime} />
+ * ```
  */
 export function TimeField<T extends TimeValue>({
   classNames,

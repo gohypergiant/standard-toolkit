@@ -18,6 +18,12 @@ import type { SkeletonProps } from './types';
  * Skeleton - Placeholder content for loading states
  *
  * Displays a pulsing placeholder while content is being fetched.
+ *
+ * @example
+ * ```tsx
+ * <Skeleton variant="rectangle" style={{ width: 200, height: 20 }} />
+ * <Skeleton variant="circle" style={{ width: 40, height: 40 }} />
+ * ```
  */
 export function Skeleton({
   className,

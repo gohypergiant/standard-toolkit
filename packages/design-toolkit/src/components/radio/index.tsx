@@ -21,6 +21,14 @@ import type { RadioProps } from './types';
  * Radio - Individual radio button option within a RadioGroup
  *
  * Renders a selectable radio button with label. Must be used inside a RadioGroup.
+ *
+ * @example
+ * ```tsx
+ * <RadioGroup label="Favorite color">
+ *   <Radio value="red">Red</Radio>
+ *   <Radio value="blue">Blue</Radio>
+ * </RadioGroup>
+ * ```
  */
 export function Radio({ classNames, children, ...rest }: RadioProps) {
   return (

@@ -27,6 +27,14 @@ import type { TooltipProps } from './types';
  * Tooltip - Contextual popup for additional information
  *
  * Displays on hover or focus with automatic positioning and accessibility support.
+ *
+ * @example
+ * ```tsx
+ * <TooltipTrigger>
+ *   <Button>Hover me</Button>
+ *   <Tooltip>Additional information</Tooltip>
+ * </TooltipTrigger>
+ * ```
  */
 export function Tooltip({
   children,

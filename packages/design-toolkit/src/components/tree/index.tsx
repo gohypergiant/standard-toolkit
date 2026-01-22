@@ -35,6 +35,17 @@ const defaultRenderDropIndicator = (target: DropTarget) => (
  * Tree - Hierarchical tree view with selection, visibility, and drag-and-drop
  *
  * Supports static or dynamic collections with keyboard navigation and accessibility.
+ *
+ * @example
+ * ```tsx
+ * <Tree items={nodes} selectionMode="multiple">
+ *   {(node) => (
+ *     <TreeItem key={node.key}>
+ *       <TreeItemContent>{node.label}</TreeItemContent>
+ *     </TreeItem>
+ *   )}
+ * </Tree>
+ * ```
  */
 export function Tree<T>({
   children,
