@@ -208,39 +208,9 @@ function normalizeValue(
 }
 
 /**
- * Slider - An interactive range input component for numeric value selection
+ * Slider - Range input for numeric value selection
  *
- * Provides accessible slider functionality with optional input field integration,
- * flexible layouts, and comprehensive keyboard and mouse interaction support.
- * Perfect for settings, filters, or any numeric input requiring visual feedback.
- *
- * @example
- * // Basic slider
- * <Slider label="Volume" defaultValue={50} />
- *
- * @example
- * // Slider with input field
- * <Slider label="Opacity" defaultValue={50} showInput />
- *
- * @example
- * // Slider with labeled markers
- * <Slider
- *   label="Quality"
- *   markers={[
- *     { value: 0, label: 'Low' },
- *     { value: 50, label: 'Medium' },
- *     { value: 100, label: 'High' },
- *   ]}
- *   showMarkerLabels
- * />
- *
- * @example
- * // Slider that snaps to marker values only
- * <Slider
- *   label="Rating"
- *   markers={[0, 25, 50, 75, 100]}
- *   snapToMarkers
- * />
+ * Supports single values or ranges, optional input fields, markers, and snap-to-markers behavior.
  */
 export function Slider({
   classNames,
