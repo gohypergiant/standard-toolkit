@@ -17,9 +17,11 @@ import { createContext } from 'react';
 import type { ContextValue } from 'react-aria-components';
 import type { SelectFieldProps } from './types';
 
+/** Context for SelectField component */
 export const SelectFieldContext =
   createContext<ContextValue<SelectFieldProps, HTMLDivElement>>(null);
 
+/** Provider for setting default props across multiple SelectField components */
 export function SelectFieldProvider({
   children,
   ...props
