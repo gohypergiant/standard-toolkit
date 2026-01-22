@@ -32,11 +32,11 @@ function forbiddenInRender() {
 }
 
 // We can only check if we're in a render phase, beyond initial render, in React 19, with its `React.use` hook.
+// There's no way to check if we're in a render phase from outside of React, the API used by useEffectEvent is private: https://github.com/facebook/react/blob/a00ca6f6b51e46a0ccec54a2231bfe7a1ed9ae1d/packages/react-reconciler/src/ReactFiberWorkLoop.js#L1785-L1788
+// So to emulate the same behavior, we call the use hook and if it doesn't throw, we're in a render phase.
 const isInvalidExecutionContextForEventFunction =
   'use' in React
     ? () => {
-        // There's no way to check if we're in a render phase from outside of React, the API used by useEffectEvent is private: https://github.com/facebook/react/blob/a00ca6f6b51e46a0ccec54a2231bfe7a1ed9ae1d/packages/react-reconciler/src/ReactFiberWorkLoop.js#L1785-L1788
-        // So to emulate the same behavior, we call the use hook and if it doesn't throw, we're in a render phase.
         try {
           return React.use(context);
         } catch {
@@ -49,15 +49,17 @@ const isInvalidExecutionContextForEventFunction =
  * This is a ponyfill of the upcoming `useEffectEvent` hook that'll arrive in React 19.
  * https://19.react.dev/learn/separating-events-from-effects#declaring-an-effect-event
  * To learn more about the ponyfill itself, see: https://blog.bitsrc.io/a-look-inside-the-useevent-polyfill-from-the-new-react-docs-d1c4739e8072
+ *
+ * @template T - The callback function type.
+ * @param fn - The callback function to stabilize.
+ * @returns A stable reference to the callback that can be safely used in effects.
  */
 // biome-ignore lint/suspicious/noExplicitAny: Support any type of callback with any parameters
 export function useEffectEvent<const T extends (...args: any[]) => void>(
   fn: T,
 ): T {
-  /**
-   * For both React 18 and 19 we set the ref to the forbiddenInRender function, to catch illegal calls to the function during render.
-   * Once the insertion effect runs, we set the ref to the actual function.
-   */
+  // For both React 18 and 19 we set the ref to the forbiddenInRender function, to catch illegal calls to the function during render.
+  // Once the insertion effect runs, we set the ref to the actual function.
   const ref = useRef(forbiddenInRender as T);
 
   useInsertionEffect(() => {
