@@ -15,6 +15,9 @@ import { Text } from 'react-aria-components';
 import styles from './styles.module.css';
 import type { TextProps } from 'react-aria-components';
 
+/**
+ * OptionsItemLabel - Primary text label for an options item
+ */
 export function OptionsItemLabel({ className, ...rest }: TextProps) {
   return (
     <Text {...rest} slot='label' className={clsx(styles.label, className)} />

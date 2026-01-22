@@ -19,6 +19,18 @@ import { OptionsItemLabel } from './item-label';
 import styles from './styles.module.css';
 import type { OptionsDataItem, OptionsItemProps } from './types';
 
+/**
+ * OptionsItem - Individual selectable item within an Options list
+ *
+ * Supports icons, labels, descriptions, and color variants.
+ * String children are automatically wrapped in OptionsItemLabel.
+ *
+ * @example
+ * <OptionsItem textValue="Edit">
+ *   <Icon><Edit /></Icon>
+ *   <OptionsItemLabel>Edit</OptionsItemLabel>
+ * </OptionsItem>
+ */
 export function OptionsItem<T extends OptionsDataItem>({
   children,
   classNames,

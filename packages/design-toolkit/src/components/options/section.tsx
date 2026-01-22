@@ -15,6 +15,15 @@ import { Collection, Header, ListBoxSection } from 'react-aria-components';
 import styles from './styles.module.css';
 import type { OptionsDataItem, OptionsSectionProps } from './types';
 
+/**
+ * OptionsSection - Groups related options with an optional header
+ *
+ * @example
+ * <OptionsSection header="Recent">
+ *   <OptionsItem>Item 1</OptionsItem>
+ *   <OptionsItem>Item 2</OptionsItem>
+ * </OptionsSection>
+ */
 export function OptionsSection<T extends OptionsDataItem>({
   children,
   classNames,

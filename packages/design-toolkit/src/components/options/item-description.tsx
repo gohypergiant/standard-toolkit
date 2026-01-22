@@ -15,6 +15,9 @@ import { Text } from 'react-aria-components';
 import styles from './styles.module.css';
 import type { TextProps } from 'react-aria-components';
 
+/**
+ * OptionsItemDescription - Secondary text description for an options item
+ */
 export function OptionsItemDescription({ className, ...rest }: TextProps) {
   return (
     <Text
