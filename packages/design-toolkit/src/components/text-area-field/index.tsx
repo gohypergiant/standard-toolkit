@@ -28,24 +28,9 @@ import styles from './styles.module.css';
 import type { TextAreaFieldProps } from './types';
 
 /**
- * TextAreaField - A multi-line text input component with label and validation
+ * TextAreaField - Multi-line text input with label and validation
  *
- * Provides a complete form field experience for longer text content with integrated
- * label, description, and error message components. Handles validation states and
- * accessibility automatically while supporting resizable text areas.
- *
- * @example
- * // Basic text area field
- * <TextAreaField label="Comments" />
- *
- * @example
- * // Text area with validation
- * <TextAreaField
- *   isInvalid={true}
- *   errorMessage='Message is required'
- *   label='Foo'
- *   isRequired
- *   />
+ * Provides integrated label, description, and error message with automatic accessibility.
  */
 export function TextAreaField({ ref, ...props }: TextAreaFieldProps) {
   [props, ref] = useContextProps(props, ref ?? null, TextAreaFieldContext);
