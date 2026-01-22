@@ -61,8 +61,8 @@ export function Popover({
       className={clsx(styles.popover, classNames?.popover)}
     >
       <Dialog
+        {...dialogProps}
         className={clsx(styles.dialog, classNames?.dialog)}
-        {...(dialogProps ? dialogProps : {})}
       >
         {children}
       </Dialog>
