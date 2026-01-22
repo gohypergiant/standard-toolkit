@@ -18,35 +18,9 @@ import styles from './styles.module.css';
 import type { RadioProps } from './types';
 
 /**
- * Radio - A form control for exclusive selection within a group of options
+ * Radio - Individual radio button option within a RadioGroup
  *
- * Provides accessible radio button functionality where only one option can be
- * selected at a time within a group. Includes proper labeling, keyboard navigation,
- * and visual feedback for selection states.
- *
- * @example
- * // Basic radio group
- * <RadioGroup label="Choose size">
- *   <Radio value="small">Small</Radio>
- *   <Radio value="medium">Medium</Radio>
- *   <Radio value="large">Large</Radio>
- * </RadioGroup>
- *
- * @example
- * // Radio group with default selection
- * <RadioGroup defaultValue="medium" label="Size preference">
- *   <Radio value="small">Small (S)</Radio>
- *   <Radio value="medium">Medium (M)</Radio>
- *   <Radio value="large">Large (L)</Radio>
- * </RadioGroup>
- *
- * @example
- * // Disabled radio options
- * <RadioGroup label="Shipping options">
- *   <Radio value="standard">Standard shipping</Radio>
- *   <Radio value="express">Express shipping</Radio>
- *   <Radio value="overnight" isDisabled>Overnight (unavailable)</Radio>
- * </RadioGroup>
+ * Renders a selectable radio button with label. Must be used inside a RadioGroup.
  */
 export function Radio({ classNames, children, ...rest }: RadioProps) {
   return (
