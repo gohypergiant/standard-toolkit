@@ -24,6 +24,20 @@ import { DialogTrigger } from 'react-aria-components';
 import type { FocusableElement } from '@react-types/shared';
 import type { PopoverTriggerProps } from './types';
 
+/**
+ * PopoverTrigger - Root component that manages popover state and positioning
+ *
+ * Wraps a trigger element and its associated Popover. The first child becomes
+ * the trigger, and the second child should be a Popover component.
+ *
+ * @example
+ * <PopoverTrigger>
+ *   <Button>Open</Button>
+ *   <Popover>
+ *     <PopoverContent>Content here</PopoverContent>
+ *   </Popover>
+ * </PopoverTrigger>
+ */
 export function PopoverTrigger({
   ref,
   children,

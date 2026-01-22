@@ -20,6 +20,9 @@ import {
 } from 'react-aria-components';
 import styles from './styles.module.css';
 
+/**
+ * PopoverTitle - Semantic heading for the popover
+ */
 export function PopoverTitle({ className, ...rest }: HeadingProps) {
   return (
     <AriaHeading

@@ -17,6 +17,9 @@ import { clsx } from '@accelint/design-foundation/lib/utils';
 import styles from './styles.module.css';
 import type { ComponentPropsWithRef } from 'react';
 
+/**
+ * PopoverFooter - Footer area for actions or additional content
+ */
 export function PopoverFooter({
   children,
   className,
