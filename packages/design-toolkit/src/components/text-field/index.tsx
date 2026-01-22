@@ -27,90 +27,9 @@ import styles from './styles.module.css';
 import type { TextFieldProps } from './types';
 
 /**
- * TextField - A complete form field component with label, input, and validation
+ * TextField - Single-line text input with label and validation
  *
- * Provides a comprehensive form field experience combining label, input, description,
- * and error message components. Handles validation states and accessibility
- * automatically while supporting extensive customization through styling props.
- *
- * @example
- * // Basic text field with label and required validation
- * <TextField label='Full Name' isRequired defaultValue='John Doe' />
- *
- * @example
- * // Text field with placeholder and description
- * <TextField
- *   label='Email Address'
- *   inputProps={{ placeholder: 'Enter your email address', type: 'email' }}
- *   description='We will never share your email with third parties'
- * />
- *
- * @example
- * // Text field with prefix for currency
- * <TextField
- *   label='Price'
- *   inputProps={{ placeholder: '0.00', type: 'number', prefix: '$' }}
- *   description='Enter the price in dollars'
- * />
- *
- * @example
- * // Text field with suffix for units
- * <TextField
- *   label='Weight'
- *   inputProps={{ placeholder: '0', type: 'number', suffix: 'kg' }}
- *   description='Enter the weight in kilograms'
- * />
- *
- * @example
- * // Text field with both prefix and suffix
- * <TextField
- *   label='Temperature'
- *   inputProps={{ placeholder: '0', type: 'number', prefix: '~', suffix: '°C' }}
- *   description='Approximate temperature in Celsius'
- * />
- *
- * @example
- * // Text field with error state
- * <TextField
- *   label='Username'
- *   isInvalid
- *   errorMessage='Username must be at least 3 characters long'
- *   inputProps={{ placeholder: 'Enter username' }}
- * />
- *
- * @example
- * // Small size text field with clearable input
- * <TextField
- *   label='Search'
- *   size='small'
- *   inputProps={{
- *     placeholder: 'Type to search...',
- *     isClearable: true,
- *     type: 'search'
- *   }}
- * />
- *
- * @example
- * // Disabled text field
- * <TextField
- *   label='Status'
- *   isDisabled
- *   defaultValue='Inactive'
- *   description='This field cannot be edited'
- * />
- *
- * @example
- * // Password field with validation
- * <TextField
- *   label='Password'
- *   isRequired
- *   inputProps={{
- *     type: 'password',
- *     placeholder: 'Enter a secure password',
- *     minLength: 8
- *   }}
- *   description='Password must be at least 8 characters'
- * />
+ * Provides integrated label, description, and error message with automatic accessibility.
  */
 export function TextField({ ref, ...props }: TextFieldProps) {
   [props, ref] = useContextProps(props, ref ?? null, TextFieldContext);

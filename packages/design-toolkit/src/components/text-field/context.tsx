@@ -17,9 +17,11 @@ import { createContext } from 'react';
 import type { ContextValue } from 'react-aria-components';
 import type { TextFieldProps } from './types';
 
+/** Context for sharing props across TextField components */
 export const TextFieldContext =
   createContext<ContextValue<TextFieldProps, HTMLDivElement>>(null);
 
+/** Sets default props for all TextField components within */
 export function TextFieldProvider({
   children,
   ...props
