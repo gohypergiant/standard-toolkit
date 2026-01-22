@@ -22,6 +22,17 @@ import {
 import styles from './styles.module.css';
 import type { MenuSectionProps } from './types';
 
+/**
+ * MenuSection - Groups related menu items with an optional header
+ *
+ * Use to organize menu items into logical groups with visual separation.
+ *
+ * @example
+ * <MenuSection title="File Actions">
+ *   <MenuItem>New</MenuItem>
+ *   <MenuItem>Open</MenuItem>
+ * </MenuSection>
+ */
 export function MenuSection<T extends object>({
   children,
   classNames,

@@ -17,6 +17,14 @@ import { clsx } from '@accelint/design-foundation/lib/utils';
 import { Text, type TextProps } from 'react-aria-components';
 import styles from './styles.module.css';
 
+/**
+ * MenuItemLabel - Primary text label for menu items
+ *
+ * Renders as a Text component with the 'label' slot.
+ *
+ * @example
+ * <MenuItemLabel>Edit Document</MenuItemLabel>
+ */
 export function MenuItemLabel({ children, className, ...rest }: TextProps) {
   return (
     <Text {...rest} slot='label' className={clsx(styles.label, className)}>

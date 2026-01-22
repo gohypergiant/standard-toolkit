@@ -17,6 +17,14 @@ import { clsx } from '@accelint/design-foundation/lib/utils';
 import { Separator, type SeparatorProps } from 'react-aria-components';
 import styles from './styles.module.css';
 
+/**
+ * MenuSeparator - Visual divider between menu items or sections
+ *
+ * @example
+ * <MenuItem>Copy</MenuItem>
+ * <MenuSeparator />
+ * <MenuItem>Delete</MenuItem>
+ */
 export function MenuSeparator({ className, ...rest }: SeparatorProps) {
   return <Separator {...rest} className={clsx(styles.separator, className)} />;
 }

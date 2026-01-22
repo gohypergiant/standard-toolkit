@@ -15,4 +15,18 @@
 import 'client-only';
 import { SubmenuTrigger } from 'react-aria-components';
 
+/**
+ * MenuSubmenu - Trigger for nested submenu flyouts
+ *
+ * Wraps a MenuItem and nested Menu to create hierarchical navigation.
+ *
+ * @example
+ * <MenuSubmenu>
+ *   <MenuItem>Export</MenuItem>
+ *   <Menu>
+ *     <MenuItem>Export as PDF</MenuItem>
+ *     <MenuItem>Export as CSV</MenuItem>
+ *   </Menu>
+ * </MenuSubmenu>
+ */
 export const MenuSubmenu = SubmenuTrigger;

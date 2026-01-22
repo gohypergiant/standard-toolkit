@@ -31,6 +31,18 @@ import { MenuContext } from './context';
 import styles from './styles.module.css';
 import type { MenuItemProps } from './types';
 
+/**
+ * MenuItem - Individual selectable item within a Menu
+ *
+ * Supports labels, descriptions, icons, hotkeys, and submenu indicators.
+ * String children are automatically wrapped in a Text label slot.
+ *
+ * @example
+ * <MenuItem>
+ *   <MenuItemLabel>Edit</MenuItemLabel>
+ *   <MenuItemDescription>Modify the item</MenuItemDescription>
+ * </MenuItem>
+ */
 export function MenuItem({
   children,
   classNames,

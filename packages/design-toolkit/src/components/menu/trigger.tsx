@@ -15,4 +15,17 @@
 import 'client-only';
 import { MenuTrigger as AriaMenuTrigger } from 'react-aria-components';
 
+/**
+ * MenuTrigger - Manages open/close state and anchors menu position
+ *
+ * Wraps a trigger element (typically a Button) and the Menu component.
+ *
+ * @example
+ * <MenuTrigger>
+ *   <Button>Open Menu</Button>
+ *   <Menu>
+ *     <MenuItem>Item 1</MenuItem>
+ *   </Menu>
+ * </MenuTrigger>
+ */
 export const MenuTrigger = AriaMenuTrigger;
