@@ -26,38 +26,9 @@ import type {
 } from './types';
 
 /**
- * ViewStack - Stack-based view manager for pushing/popping views
+ * ViewStack - Stack-based navigation for managing multiple views
  *
- * Manages a stack of views that can be pushed, popped, or reset programmatically
- * and is intended for building nested or stacked UIs such as Drawer views.
- *
- * @example
- * const ids = {
- *   stack: uuid(),
- *   a: uuid(),
- *   b: uuid(),
- * };
- *
- * <ViewStack id={ids.stack} defaultView={ids.a}>
- *   <ViewStackView id={ids.a}>
- *     <ViewStackTrigger for={ids.b}>
- *       <Button>
- *         Push View B
- *       </Button>
- *     </ViewStackTrigger>
- *     <h1>View A</h1>
- *   </ViewStackView>
- *   <ViewStackView id={ids.b}>
- *     <ViewStackTrigger for='back'>
- *       <Button variant='icon'>
- *         <Icon>
- *           <ChevronLeft />
- *         </Icon>
- *       </Button>
- *     </ViewStackTrigger>
- *     <h1>View B</h1>
- *   </ViewStackView>
- * </ViewStack>
+ * Supports push, pop, clear, and reset operations with global event system.
  */
 export function ViewStack({
   id,

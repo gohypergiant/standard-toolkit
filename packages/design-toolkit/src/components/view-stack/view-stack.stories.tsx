@@ -35,14 +35,7 @@ const meta = {
   },
   parameters: {
     docs: {
-      description: {
-        component: `
-          The ViewStack component allows you to manage a stack of views. Think of it as similar to the
-          functionality of tabs, but the triggers can be anywhere, even programmatic. The ViewStack
-          component provides a way to push and pop views from the stack as well as clear all or reset back
-          to the original view.
-        `,
-      },
+      subtitle: 'Stack-based navigation for managing multiple views',
     },
   },
 } satisfies Meta<typeof ViewStack>;
