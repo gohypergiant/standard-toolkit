@@ -17,6 +17,11 @@ import { useMemo } from 'react';
 import { Button } from '../button';
 import type { ActionProps } from 'react-querybuilder';
 
+/**
+ * ActionElement - Base button component for rule and group actions
+ *
+ * Renders a text-labeled button with support for disabled state translations.
+ */
 export function ActionElement({
   disabled,
   disabledTranslation,

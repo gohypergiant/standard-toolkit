@@ -22,6 +22,11 @@ import {
   useStopEventPropagation,
 } from 'react-querybuilder';
 
+/**
+ * RuleGroup - Container for organizing rules with a shared combinator
+ *
+ * Renders header with combinator selector and actions, body with rules, and footer with add actions.
+ */
 export function RuleGroup(props: RuleGroupProps) {
   const group = useRuleGroup(props);
 
@@ -68,6 +73,7 @@ export function RuleGroup(props: RuleGroupProps) {
   );
 }
 
+/** Header section with combinator selector and group actions (clone, lock, remove) */
 export function RuleGroupHeaderComponent(
   ruleGroup: RuleGroupProps & ReturnType<typeof useRuleGroup>,
 ) {
@@ -174,6 +180,7 @@ export function RuleGroupHeaderComponent(
   );
 }
 
+/** Footer section with add rule and add group actions */
 export function RuleGroupFooterComponent(
   ruleGroup: RuleGroupProps & ReturnType<typeof useRuleGroup>,
 ) {

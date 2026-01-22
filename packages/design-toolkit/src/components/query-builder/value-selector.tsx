@@ -24,6 +24,11 @@ import { ComboBoxField } from '../combobox-field';
 import { OptionsItem } from '../options/item';
 import { OptionsSection } from '../options/section';
 
+/**
+ * ValueSelector - Dropdown for selecting predefined values
+ *
+ * Renders a ComboBoxField with options, supporting grouped and flat option lists.
+ */
 export function ValueSelector(props: ValueSelectorProps) {
   const {
     handleOnChange,

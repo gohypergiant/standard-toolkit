@@ -24,6 +24,11 @@ const operatorDescriptions: Record<string, string> = {
   OR: 'One of the rules below must be true for a match',
 };
 
+/**
+ * CombinatorSelector - AND/OR toggle for rule groups
+ *
+ * Renders a radio group with tooltips explaining each combinator's behavior.
+ */
 export function CombinatorSelector({
   options,
   value,

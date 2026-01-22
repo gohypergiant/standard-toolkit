@@ -17,6 +17,10 @@ import type {
   ValidationResult,
 } from 'react-querybuilder';
 
+/**
+ * Runs the validator on a rule and normalizes the result.
+ * Returns { valid: true } if no validator is provided.
+ */
 export const getValidationResult = (
   rule: RuleType,
   validator?: RuleValidator,

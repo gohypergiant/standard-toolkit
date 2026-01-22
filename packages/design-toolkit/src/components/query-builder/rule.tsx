@@ -25,6 +25,7 @@ import { Lines } from '../lines';
 import styles from './styles.module.css';
 import type { QueryBuilderContextType } from './types';
 
+/** Renders connecting lines between rules in a query builder */
 const QueryBuilderLines = memo(function QueryBuilderLines({
   path,
   props,
@@ -47,6 +48,11 @@ const QueryBuilderLines = memo(function QueryBuilderLines({
   );
 });
 
+/**
+ * Rule - Individual rule component with field, operator, and value
+ *
+ * Renders the field selector, operator selector, value editor, and action buttons.
+ */
 export function Rule(props: RuleProps) {
   const rule = useRule(props);
   const context: QueryBuilderContextType = useContext(props.context);

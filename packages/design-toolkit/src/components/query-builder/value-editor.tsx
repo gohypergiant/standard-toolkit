@@ -201,6 +201,12 @@ const valueEditors: QueryBuilderValueEditors = {
   textarea: TextareaValueEditor,
 };
 
+/**
+ * ValueEditor - Input component for editing rule values
+ *
+ * Renders appropriate editor based on field type: text, checkbox, radio, select, switch, or textarea.
+ * Supports multi-value operators (between, notBetween) with start/end inputs.
+ */
 export function ValueEditor(props: ValueEditorProps) {
   const {
     fieldData: { name, valueEditorType },
