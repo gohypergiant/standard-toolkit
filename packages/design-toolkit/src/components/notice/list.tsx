@@ -40,6 +40,20 @@ import type {
   NoticeQueueEvent,
 } from './types';
 
+/**
+ * NoticeList - Queue manager for displaying multiple notices
+ *
+ * Manages a FIFO queue of notices with automatic timeout and dismissal.
+ * New notices push out older ones when the limit is reached.
+ * Uses event-driven communication via the bus system.
+ *
+ * @example
+ * <NoticeList
+ *   aria-label="notifications"
+ *   placement="top right"
+ *   limit={3}
+ * />
+ */
 export function NoticeList({
   id,
   classNames,

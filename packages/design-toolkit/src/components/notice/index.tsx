@@ -35,6 +35,19 @@ const ButtonColorMap: Record<NoticeColor, ButtonProps['color']> = {
   critical: 'critical',
 };
 
+/**
+ * Notice - Notification component for temporary messages and alerts
+ *
+ * Displays messages with optional action buttons and close functionality.
+ * Icons are automatically displayed based on the color variant.
+ *
+ * @example
+ * <Notice
+ *   id="notice-1"
+ *   message="Operation completed"
+ *   color="normal"
+ * />
+ */
 export function Notice({
   id,
   classNames,

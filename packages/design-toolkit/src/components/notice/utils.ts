@@ -15,6 +15,10 @@
 import 'client-only';
 import { isEqual } from 'radashi';
 
+/**
+ * Checks if a payload matches metadata on a notice.
+ * Used for filtering notices during dequeue operations.
+ */
 export function matchesMetadata(
   payload: Record<string, unknown>,
   metadata?: Record<string, unknown>,

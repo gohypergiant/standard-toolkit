@@ -17,6 +17,15 @@ import { Information, Problem, Success, Warning } from '@accelint/icons';
 import { Icon } from '../icon';
 import type { NoticeIconProps } from './types';
 
+/**
+ * NoticeIcon - Color-mapped icon for Notice components
+ *
+ * Automatically renders the appropriate icon based on color variant:
+ * - info/advisory: Information icon
+ * - normal: Success icon
+ * - serious: Warning icon
+ * - critical: Problem icon
+ */
 export function NoticeIcon({ color = 'info', size }: NoticeIconProps) {
   return (
     <Icon size={size === 'small' ? 'medium' : 'large'}>
