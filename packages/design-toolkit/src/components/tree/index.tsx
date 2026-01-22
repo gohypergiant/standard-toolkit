@@ -37,15 +37,21 @@ const defaultRenderDropIndicator = (target: DropTarget) => (
  * Supports static or dynamic collections with keyboard navigation and accessibility.
  *
  * @example
- * ```tsx
- * <Tree items={nodes} selectionMode="multiple">
- *   {(node) => (
- *     <TreeItem key={node.key}>
- *       <TreeItemContent>{node.label}</TreeItemContent>
- *     </TreeItem>
- *   )}
+ * // Dynamic collection
+ * <Tree items={items} expandedKeys={expandedKeys}>
+ *   {(node) => <TreeItem key={node.key}>{node.label}</TreeItem>}
  * </Tree>
- * ```
+ *
+ * @example
+ * // Static collection
+ * <Tree>
+ *   <TreeItem id="one" textValue="one">
+ *     <TreeItemContent>One</TreeItemContent>
+ *     <TreeItem id="two" textValue="two">
+ *       <TreeItemContent>Two</TreeItemContent>
+ *     </TreeItem>
+ *   </TreeItem>
+ * </Tree>
  */
 export function Tree<T>({
   children,

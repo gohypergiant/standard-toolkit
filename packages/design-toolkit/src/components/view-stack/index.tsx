@@ -31,12 +31,16 @@ import type {
  * Supports push, pop, clear, and reset operations with global event system.
  *
  * @example
- * ```tsx
- * <ViewStack id={stackId} defaultView={mainViewId}>
- *   <ViewStackView id={mainViewId}>Main content</ViewStackView>
- *   <ViewStackView id={detailViewId}>Detail content</ViewStackView>
+ * const ids = { stack: uuid(), a: uuid(), b: uuid() };
+ *
+ * <ViewStack id={ids.stack} defaultView={ids.a}>
+ *   <ViewStackView id={ids.a}>
+ *     <ViewStackTrigger for={ids.b}><Button>Go to B</Button></ViewStackTrigger>
+ *   </ViewStackView>
+ *   <ViewStackView id={ids.b}>
+ *     <ViewStackTrigger for="back"><Button>Back</Button></ViewStackTrigger>
+ *   </ViewStackView>
  * </ViewStack>
- * ```
  */
 export function ViewStack({
   id,
