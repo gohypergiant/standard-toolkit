@@ -63,6 +63,7 @@ function TooltipFocusable({
   );
 }
 
+/** TooltipTrigger - Wrapper that manages tooltip display on hover or focus */
 export function TooltipTrigger({ ref, ...props }: TooltipTriggerProps) {
   [props, ref] = useContextProps(props, ref ?? null, TooltipContext);
 
