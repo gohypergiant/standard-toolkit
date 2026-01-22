@@ -47,6 +47,20 @@ export const useDragContext = () => {
 
 const ACTIVATION_DISTANCE = 8;
 
+/**
+ * Kanban - Root container for the drag-and-drop kanban board
+ *
+ * Provides DnD context and manages drag state for cards and columns.
+ * Must be wrapped in a KanbanProvider.
+ *
+ * @example
+ * <KanbanProvider columns={columns} updateColumnState={setColumns}>
+ *   <Kanban>
+ *     <KanbanHeader>...</KanbanHeader>
+ *     <KanbanColumnContainer>...</KanbanColumnContainer>
+ *   </Kanban>
+ * </KanbanProvider>
+ */
 export function Kanban({ children, className, ...rest }: KanbanProps) {
   const { moveCard, cardMap } = useKanban();
   const [activeId, setActiveId] = useState<string | null>(null);

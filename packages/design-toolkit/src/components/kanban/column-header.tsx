@@ -16,6 +16,11 @@ import { clsx } from '@accelint/design-foundation/lib/utils';
 import styles from './styles.module.css';
 import type { KanbanComponentProps } from './types';
 
+/**
+ * KanbanColumnHeader - Header section of a column
+ *
+ * Contains title, drag handle, and actions.
+ */
 export function KanbanColumnHeader({
   children,
   className,

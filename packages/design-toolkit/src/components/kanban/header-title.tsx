@@ -17,6 +17,9 @@ import { Heading } from 'react-aria-components';
 import styles from './styles.module.css';
 import type { KanbanComponentProps } from './types';
 
+/**
+ * KanbanHeaderTitle - Heading element for the board title
+ */
 export function KanbanHeaderTitle({
   children,
   className,

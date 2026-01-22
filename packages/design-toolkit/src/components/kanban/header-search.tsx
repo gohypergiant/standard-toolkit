@@ -15,6 +15,9 @@ import 'client-only';
 import { SearchField } from '../search-field';
 import type { KanbanSearchProps } from './types';
 
+/**
+ * KanbanHeaderSearch - Search field for filtering cards
+ */
 export function KanbanHeaderSearch({ classNames, ...rest }: KanbanSearchProps) {
   return (
     <SearchField

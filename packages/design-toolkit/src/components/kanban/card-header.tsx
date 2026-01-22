@@ -17,6 +17,11 @@ import { KanbanHeader } from './header';
 import styles from './styles.module.css';
 import type { KanbanComponentProps } from './types';
 
+/**
+ * KanbanCardHeader - Header section of a card
+ *
+ * Contains title and actions.
+ */
 export function KanbanCardHeader({
   className,
   children,

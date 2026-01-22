@@ -16,6 +16,9 @@ import { clsx } from '@accelint/design-foundation/lib/utils';
 import styles from './styles.module.css';
 import type { KanbanComponentProps } from './types';
 
+/**
+ * KanbanCardHeaderTitle - Title of the card
+ */
 export function KanbanCardHeaderTitle({
   className,
   children,

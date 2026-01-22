@@ -271,6 +271,17 @@ const KanbanContext = createContext<KanbanContextData>({
   cardMap: new Map(),
 });
 
+/**
+ * KanbanProvider - Context provider for Kanban state management
+ *
+ * Manages column and card state, handles drag-and-drop operations,
+ * and provides the moveCard function for card movements.
+ *
+ * @example
+ * <KanbanProvider columns={columns} updateColumnState={setColumns}>
+ *   <Kanban>...</Kanban>
+ * </KanbanProvider>
+ */
 export const KanbanProvider = ({
   children,
   columns,
@@ -382,6 +393,10 @@ export const KanbanProvider = ({
   );
 };
 
+/**
+ * Hook to access Kanban context values.
+ * Must be used within a KanbanProvider.
+ */
 export const useKanban = () => {
   const context = useContext(KanbanContext);
   if (!context) {

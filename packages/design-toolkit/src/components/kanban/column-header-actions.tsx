@@ -17,6 +17,11 @@ import { Badge } from '../badge';
 import styles from './styles.module.css';
 import type { KanbanMenuProps } from './types';
 
+/**
+ * KanbanColumnHeaderActions - Container for column actions
+ *
+ * Displays card count badge and optional action buttons.
+ */
 export function KanbanColumnHeaderActions({
   className,
   cardCount,

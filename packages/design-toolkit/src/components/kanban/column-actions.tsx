@@ -19,6 +19,9 @@ import { Icon } from '../icon';
 import styles from './styles.module.css';
 import type { KanbanColContentActionProps } from './types';
 
+/**
+ * KanbanColumnActions - Action button for adding new cards
+ */
 export function KanbanColumnActions({
   className,
   onAddCard,

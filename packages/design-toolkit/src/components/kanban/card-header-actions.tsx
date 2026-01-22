@@ -16,6 +16,9 @@ import { clsx } from '@accelint/design-foundation/lib/utils';
 import styles from './styles.module.css';
 import type { KanbanComponentProps } from './types';
 
+/**
+ * KanbanCardHeaderActions - Container for card action buttons
+ */
 export function KanbanCardHeaderActions({
   children,
   className,

@@ -16,6 +16,11 @@ import { clsx } from '@accelint/design-foundation/lib/utils';
 import styles from './styles.module.css';
 import type { KanbanComponentProps } from './types';
 
+/**
+ * KanbanHeader - Header section for the kanban board
+ *
+ * Contains title, search, and action buttons.
+ */
 export function KanbanHeader({
   children,
   className,

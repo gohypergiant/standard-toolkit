@@ -20,6 +20,11 @@ import {
 import styles from './styles.module.css';
 import type { KanbanColContentProps } from './types';
 
+/**
+ * KanbanColumnContent - Container for cards within a column
+ *
+ * Provides sortable context for card drag-and-drop.
+ */
 export function KanbanColumnContent({
   children,
   className,

@@ -16,6 +16,9 @@ import { clsx } from '@accelint/design-foundation/lib/utils';
 import styles from './styles.module.css';
 import type { KanbanComponentProps } from './types';
 
+/**
+ * KanbanCardBody - Main content area of the card
+ */
 export function KanbanCardBody({
   children,
   className,
