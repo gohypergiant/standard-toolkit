@@ -17,19 +17,11 @@ import type { ContextValue } from 'react-aria-components';
 import type { ProviderProps } from '@/lib/types';
 import type { SwitchProps } from './types';
 
-/**
- * Context for Switch component
- *
- * Provides context for Switch component to share props
- */
+/** Context for sharing props across Switch components */
 export const SwitchContext =
   createContext<ContextValue<SwitchProps, HTMLLabelElement>>(null);
 
-/**
- * Provider for Switch component
- *
- * Allows setting default props for all Switch components within
- */
+/** Sets default props for all Switch components within */
 export function SwitchProvider({
   children,
   ...props
