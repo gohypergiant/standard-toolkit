@@ -33,6 +33,7 @@ const meta = {
   component: Popover,
   args: {
     placement: 'bottom',
+    dialogProps: { 'aria-label': 'test dialog' },
   },
   argTypes: {
     placement: {
@@ -62,14 +63,14 @@ export const Simple: StoryObj<typeof meta> = {
 };
 
 export const WithActions: StoryObj<typeof meta> = {
-  render: () => (
+  render: ({ ...args }) => (
     <PopoverTrigger>
       <Button variant='icon'>
         <Icon>
           <Delete />
         </Icon>
       </Button>
-      <Popover>
+      <Popover {...args}>
         {({ close }) => (
           <>
             <PopoverTitle>Delete Item</PopoverTitle>
@@ -92,11 +93,11 @@ export const WithActions: StoryObj<typeof meta> = {
 };
 
 export const CustomComposition: StoryObj<typeof meta> = {
-  render: () => {
+  render: ({ ...args }) => {
     return (
       <PopoverTrigger>
         <span className='fg-primary-bold'>Settings</span>
-        <Popover classNames={{ popover: 'min-w-sm' }}>
+        <Popover {...args} classNames={{ popover: 'min-w-sm' }}>
           {() => (
             <>
               <PopoverTitle>Notification Settings</PopoverTitle>
