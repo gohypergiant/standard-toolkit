@@ -31,11 +31,7 @@ import type { TimeFieldProps } from './types';
 /**
  * TimeField - Form input for time values
  *
- * A time input field with configurable granularity and size, built on React
- * Aria components and suitable for forms requiring time entry.
- *
- * @example
- * <TimeField label="Time" granularity="second" />
+ * Provides configurable granularity, 12/24-hour format, and automatic accessibility.
  */
 export function TimeField<T extends TimeValue>({
   classNames,
