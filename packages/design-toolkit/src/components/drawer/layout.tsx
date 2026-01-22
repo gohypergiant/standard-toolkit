@@ -13,6 +13,20 @@ import { clsx } from '@accelint/design-foundation/lib/utils';
 import styles from './styles.module.css';
 import type { DrawerLayoutProps } from './types';
 
+/**
+ * DrawerLayout - CSS Grid layout container for positioning panels
+ *
+ * A shared layout primitive used by Drawer, Sidenav, and other panel components.
+ * Controls how panels are positioned relative to the main content area.
+ *
+ * @example
+ * <DrawerLayout extend="left right" push="left">
+ *   <DrawerLayoutMain>
+ *     // Main content here
+ *   </DrawerLayoutMain>
+ *   <Drawer placement="left">...</Drawer>
+ * </DrawerLayout>
+ */
 export function DrawerLayout({
   className,
   extend = 'left right',

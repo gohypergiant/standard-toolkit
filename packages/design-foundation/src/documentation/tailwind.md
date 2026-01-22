@@ -6,7 +6,7 @@ The DesignTK heavily utilizes Tailwind (TW) as the core styling mechanism to mai
 
 ### Separate Concerns
 
-To help keep components clear and concise, its best to keep the vast majority of styles (classNames) outside of the component file, in a separate file such as `styles.ts`. This allows the component to be free of conditional className logic and configuration of variants.
+To help keep components clear and concise, its best to keep the vast majority of styles (classNames) outside of the component file, in a separate file such as `styles.module.css`. This allows the component to be free of style based clutter while remaining focused on the critical business logic.
 
 ### Reusability
 
@@ -16,52 +16,50 @@ As code approaches the edges of app implementation, reusability is less of a con
 
 ## Supported
 
-### [Tailwind Variants](https://www.tailwind-variants.org/docs/introduction)
+### [CSS Modules](https://github.com/css-modules/css-modules)
 
-The Core team has chosen Tailwind Variants (TV) to handle reusuable styles and styles for reusable components. It's ability to handle slots (multiple elements as part of a single component family), variants & compound variants, as well as TW class conflict resolution makes it the starting point for all styles.
-
-Be sure to import the local instance of `tv` and not from `tailwind-variants` so your styles are configured to merge correctly with any overrides.
+Implementation of CSS Modules is the preferred solution despite the stance taken by Tailwind. When creating styles for a reusable component, we opt to implement styles outside of React components to minimize runtime overhead. By using CSS modules we avoid class collisions with any other component or library. And by using CSS layers we guarantee styling hierarchy that allows Tailwind's utility classes to easily override styles for one off implementations.
 
 ```jsx
-// styles.ts
-import { tv } from '@accelint/design-foundation/lib/utils';
+import styles from './styles.module.css';
 
-export const MyStyles = tv({
-  slots: {
-    foo: '...',
-    bar: '...',
-  },
-  variants: {
-    size: {
-      medium: {
-        bar: '...',
-      },
-      small: {
-        bar: '...',
-      }
-    }
-  },
-});
-
-// my-component.tsx
-import { MyStyles } from './styles';
-
-const { foo, bar } = MyStyles();
-
-function MyComponent({ children, className, size }: MyComponentProps) {
-  return (
-    <Foo className={foo({ className, size })}>
-      <Bar className={bar({ size })}>{children}</Bar>
-    </Foo>
-  )
+export function MyReusableComponent({ children, className, variant }: Props) {
+  return <div className={clsx(styles.myComponent, styles[variant], className)}>{children}</div>
 }
 ```
 
-Keep in mind, when implementing variants within `tv`, you should not implement a variant that is covered by one of the state classes below. Use these state classes instead of implementing a local variant, if possible.
+```css
+// styles.module.css
+@reference '@accelint/design-foundation/styles';
+
+@layer components.l1 {
+  .myComponent {
+    @apply p-s fg-primary-bold;
+
+    @variant disabled {
+      @apply cursor-not-allowed fg-disabled;
+    }
+  }
+}
+```
+
+Notice the use of layer `components.l1`, this is the lowest level layer in the `components` layer group. This is the layer that should be used for first level components, which do not override any other components. If styles are being applied to a higher level component that implements a lower level component, the styles should be applied at the next level up. There are currently 5 levels within the components layer group which should provide plenty of override layers for reusable components throughout the design system as well as components within an app.
+
+When applying inline utility classes from Tailwind, those are already scoped to the `utilities` layer which has higher precedence than all of the `components` layers. So these utility classes should only be used for one off styling within an app feature implementation, never in a reusable component.
+
+```jsx
+import { MyReusableComponent } from '../components/my-reusable-component';
+
+export function MyBespokeFeature() {
+  // A bunch of custom business logic, other components, etc
+
+  return <MyReusableComponent className="empty:none">{dynamicContent}</MyReusableComponent>
+}
+```
 
 ### [RAC State Classes](https://react-spectrum.adobe.com/react-aria/styling.html#plugin)
 
-The Core team has chosen not to implement the RAC TW plugin directly. Instead we've implemented a modified version that follows the same patterns without being locked into RAC selectors or using a prefix that separates selector types. This means that RAC state based classes are available to utilize, they're just merged with CSS pseudo selectors and will work with any component that implements the cooresponding data attributes (when CSS pseudo selectors don't work).
+The Core team has chosen not to implement the RAC TW plugin directly. Instead we've implemented a modified version that follows the same patterns without being locked into RAC selectors or using a prefix that separates selector types. This means that RAC state based classes are available to utilize, they're just merged with CSS pseudo selectors and will work with any component that implements the corresponding data attributes (when CSS pseudo selectors don't work).
 
 Because we have a custom implementation, there may be additional variants available than what is documented in RAC. Check out [variants.css](../variants/variants.css) to see the custom variants defined and the selectors associated with each.
 
@@ -79,21 +77,7 @@ function MyComponent() {
 }
 ```
 
-### [CSS Modules](https://github.com/css-modules/css-modules)
-
-If and when it becomes necessary to create a complex style or a style override that is not possible or practical with TW, implementation of CSS Modules is the preferred solution. Due to all TW classes being assigned a CSS layer, styles written in CSS Modules should not be in a CSS layer so they are gauranteed stylistic priority over TW.
-
-Keep in mind that TW is very flexible and capable, so this should only be a last resort for extremely complex styling scenarios or when absolutely necessary due to integration of a 3rd party library where styles need to be targetted.
-
-Also, when creating reusable styles that accompany a reusable component, make sure that those styles are contained within a CSS layer named "components". This will allow app level overrides to continue to take priority over the base styles.
-
-```jsx
-import styles from './styles.css';
-
-function MyComponent({ children, className }: Props) {
-  return <div className={clsx(styles.className, className)}>{children}</div>
-}
-```
+When using these variants in CSS modules (like in the example in the CSS modules section) be sure to utilize the `@variant` approach. When you use variant selectors inline you have no control over the order in which the styles apply, it's entirely up the Tailwind's build output. But if you use the `@variant` approach in CSS modules, the order of the styles written is the order they are applied, just like normal CSS. This means you have complete control over peer style precedence.
 
 ## Unsupported
 
@@ -199,18 +183,9 @@ function Child({ children, className }: Props) {
 
 ### Inline Dynamic Classes
 
-Do not include inline logic in your component to determine which classes to add / remove. Instead rely on TV (primary) or `clsx` (fallback, mostly in conjunction with CSS Modules).
+Use `clsx` for any dynamic class application logic.
 
 ```jsx
-const styles = tv({
-  base: 'foo',
-  variants: {
-    isDisabled: {
-      true: 'bar'
-    }
-  }
-});
-
 function MyComponent({ className, isDisabled }: Props) {
   // Bad
   return <div className={`foo ${isDisabled && 'bar'} ${className}`} />
@@ -221,11 +196,8 @@ function MyComponent({ className, isDisabled }: Props) {
   // Bad
   return <div className={clsx(['foo', isDisabled && 'bar', className])} />
 
-  // Ok, if classes are not TW, but will fail to properly merge TW classes
-  return <div className={clsx('foo', { bar: isDisabled }, className)} />
-
   // Good
-  return <div className={styles({ className, isDisabled })} />
+  return <div className={clsx('foo', { bar: isDisabled }, className)} />
 }
 ```
 
