@@ -41,7 +41,7 @@ Better to be explicit/specific on topics than to wait for avoidable confusion du
         - Follow the prompts to create the changeset file for your changes.
     - Follow the conventions of [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) for the final commit of the branch.
     - Keep the branch current; i.e. click the "Update Branch" button in the GitHub UI.
-4. Open a Pull Request to the [central repository](github.com/gohypergiant/standard-toolkit) for review
+4. Open a Pull Request to the [central repository](https://github.com/gohypergiant/standard-toolkit) for review
     - Optionally, if permissions allow, link the pull request number to the issue via the "Development" section inside the issue details.
     - Optionally add "close|closed|closes|fixed|fixes #12345" to the optional footers of a commit message; e.g. the example would close issue #12345. This is also requested as part of the PR template.
 5. Merge
@@ -98,9 +98,9 @@ Approvals should focus on:
 
 - (Doing the right things) Business logic
   - The change should be addressing the need
-- (Doing things right-ly) Established modules or patterns
+- (Doing things correctly) Established modules or patterns
   - Common, or existing, conventions should be followed
-- (Doing things performant-ly) Performance
+- (Doing things efficiently) Performance
   - The solution should maintain or improve the existing performance
 
 *Differences between subjective solutions should not block approval.*

@@ -1,6 +1,6 @@
 ## Agent Optimization
 
-This prompt can be utilized to optimize the `.agents/*` markdown files for context and token usage. Always double check for errors and correctnes of examples afterwards.
+This prompt can be utilized to optimize the `.agents/*` markdown files for context and token usage. Always double check for errors and correctness of examples afterwards.
 
 Models previously used:
 
