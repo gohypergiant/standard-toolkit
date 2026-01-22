@@ -14,6 +14,7 @@
 import { TableHeaderCell } from './header-cell';
 import type { TableHeaderProps } from './types';
 
+/** TableHeader - Renders the table header section (`<thead>`) */
 export function TableHeader<T>({
   ref,
   children,

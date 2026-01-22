@@ -13,7 +13,7 @@
 import { createContext } from 'react';
 import type { TableContextValue } from './types';
 
-// Only keep values in context that are needed across multiple component levels
+/** Context for sharing table configuration across subcomponents */
 export const TableContext = createContext<TableContextValue>({
   moveColumnLeft: () => undefined,
   moveColumnRight: () => undefined,

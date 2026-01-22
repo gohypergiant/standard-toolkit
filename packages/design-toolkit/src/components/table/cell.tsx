@@ -19,6 +19,7 @@ import { TableContext } from './context';
 import styles from './styles.module.css';
 import type { TableCellProps } from './types';
 
+/** TableCell - Data cell (`<td>`) within a table row */
 export function TableCell<T>({
   children,
   ref,

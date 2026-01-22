@@ -97,13 +97,9 @@ function RowActionsMenu<T>({
 }
 
 /**
- * Table - Configurable data table with sorting and row actions
+ * Table - Configurable data table with sorting, selection, and row actions
  *
- * Standardizes table behavior (sorting, selection, row actions) and can be
- * used with column definitions from TanStack React Table.
- *
- * @example
- * <Table columns={columns} data={data} />
+ * Supports data-driven mode with TanStack column definitions or static mode with subcomponents.
  */
 export function Table<T extends { id: Key }>({
   children,

@@ -141,6 +141,7 @@ function HeaderCellMenu<T>({ header }: { header: Header<T, unknown> }) {
   );
 }
 
+/** TableHeaderCell - Individual header cell (`<th>`) with optional sorting controls */
 export function TableHeaderCell<T>({
   ref,
   children,

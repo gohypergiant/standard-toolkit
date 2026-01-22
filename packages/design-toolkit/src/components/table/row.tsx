@@ -16,6 +16,7 @@ import { TableCell } from './cell';
 import styles from './styles.module.css';
 import type { TableRowProps } from './types';
 
+/** TableRow - Table row (`<tr>`) with selection and pinning state */
 export function TableRow<T>({
   ref,
   children,

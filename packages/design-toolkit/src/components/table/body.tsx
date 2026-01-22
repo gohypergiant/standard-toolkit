@@ -15,6 +15,7 @@ import { clsx } from '@accelint/design-foundation/lib/utils';
 import { TableRow } from './row';
 import type { TableBodyProps } from './types';
 
+/** TableBody - Renders the table body section (`<tbody>`) */
 export function TableBody<T>({
   children,
   className,
