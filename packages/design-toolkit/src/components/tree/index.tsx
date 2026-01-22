@@ -32,25 +32,9 @@ const defaultRenderDropIndicator = (target: DropTarget) => (
 );
 
 /**
- * Tree - Hierarchical tree view with optional drag-and-drop and visibility
+ * Tree - Hierarchical tree view with selection, visibility, and drag-and-drop
  *
- * Renders a selectable tree with support for nested items, drag-and-drop,
- * selection modes, and visibility controls. Use TreeItem to define nodes.
- *
- * @example
- * <Tree items={items} expandedKeys={expandedKeys}>
- *   {(node) => <Node key={node.key} node={node} />}
- * </Tree>
- *
- * @example
- * <Tree>
- *   <TreeItem id='one' textValue='one'>
- *     <TreeItemContent>One</TreeItemContent>
- *     <TreeItem id='two' textValue='two'>
- *       <TreeItemContent>Two</TreeItemContent>
- *     </TreeItem>
- *   </TreeItem>
- * </Tree>
+ * Supports static or dynamic collections with keyboard navigation and accessibility.
  */
 export function Tree<T>({
   children,

@@ -14,11 +14,7 @@ import { clsx } from '@accelint/design-foundation/lib/utils';
 import { Text, type TextProps } from 'react-aria-components';
 import styles from './styles.module.css';
 
-/**
- * ItemLabel - Label for a tree item
- *
- * Renders the primary text label for a tree item
- */
+/** TreeItemLabel - Primary text label for a tree item */
 export function TreeItemLabel({ children, className }: TextProps) {
   return <Text className={clsx(styles.label, className)}>{children}</Text>;
 }

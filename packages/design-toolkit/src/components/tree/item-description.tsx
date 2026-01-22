@@ -16,11 +16,7 @@ import { Text, type TextProps } from 'react-aria-components';
 import { TreeContext } from './context';
 import styles from './styles.module.css';
 
-/**
- * ItemDescription - Description for a tree item
- *
- * Renders secondary descriptive text for a tree item
- */
+/** TreeItemDescription - Secondary descriptive text for a tree item */
 export function TreeItemDescription({ children, className }: TextProps) {
   const { variant } = useContext(TreeContext);
 

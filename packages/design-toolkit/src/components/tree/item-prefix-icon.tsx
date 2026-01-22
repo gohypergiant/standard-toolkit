@@ -15,11 +15,7 @@ import { Icon } from '../icon';
 import styles from './styles.module.css';
 import type { IconProps } from '../icon/types';
 
-/**
- * ItemIcon - Icon for a tree item
- *
- * Renders an icon for a tree item
- */
+/** TreeItemPrefixIcon - Icon displayed before the tree item label */
 export function TreeItemPrefixIcon({ children, className }: IconProps) {
   return <Icon className={clsx(styles.icon, className)}>{children}</Icon>;
 }
