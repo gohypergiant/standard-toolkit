@@ -17,12 +17,18 @@ const DEFAULT_MAX_RANGE = 5;
 const DEFAULT_MID_RANGE = 2;
 const DEFAULT_UPPER_MID = 4;
 
+/**
+ * Creates an array of numbers from start to end (inclusive).
+ */
 export function range(start: number, end: number) {
   const length = end - start + 1;
   return Array.from({ length }, (_, index) => index + start);
 }
 
-// Handles edge cases around the relationship between pageCount and currentPage.`
+/**
+ * Checks if navigation should be disabled based on page bounds.
+ * Returns true if pageCount or currentPage are invalid or out of bounds.
+ */
 export function isNavigationDisabled(
   pageCount: number,
   currentPage: number,

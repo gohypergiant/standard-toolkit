@@ -24,6 +24,9 @@ import styles from './styles.module.css';
 import { isNavigationDisabled } from './utils';
 import type { PaginationNextProps } from './types';
 
+/**
+ * PaginationNext - Next page navigation button
+ */
 export function PaginationNext({ className, onPress }: PaginationNextProps) {
   const { page, total, setPage } = useContext(PaginationContext);
 

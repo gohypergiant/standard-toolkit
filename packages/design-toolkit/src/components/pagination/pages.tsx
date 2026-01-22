@@ -22,6 +22,12 @@ import styles from './styles.module.css';
 import { getPaginationRange, range } from './utils';
 import type { PaginationPagesProps } from './types';
 
+/**
+ * PaginationPages - Page number toggle buttons
+ *
+ * Renders up to 5 page numbers, automatically adjusting the
+ * visible range based on current page position.
+ */
 export function PaginationPages({ className, onPress }: PaginationPagesProps) {
   const { page, total, isLoading, setPage } = useContext(PaginationContext);
   const { minRange, maxRange } = useMemo(

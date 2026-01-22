@@ -23,19 +23,22 @@ import styles from './styles.module.css';
 import type { PaginationProps } from './types';
 
 /**
+ * Pagination - Lightweight page navigation with prev/next controls
  *
- * Pagination - A lightweight implementation for page navigation.
+ * Displays up to 5 page numbers at a time, automatically adjusting
+ * the visible range as the user navigates.
  *
  * @example
- * <Pagination currentPage={1} pageCount={5} onChange={handleOnChange} />
+ * <Pagination value={1} total={10} onChange={setPage} />
  *
- * @param currentPage - represents currently selected page number
- * @param pageCount - total number of pages
- * @param onChange - (page: number) => void, handler for button press events
- * @param classNames - group of styling applied to components
- *    * container - <nav> container for component
- *    * controls - navigation controls, previous/next
- *    * pages - buttons for page numbers
+ * @param value - Current page number (1-indexed)
+ * @param total - Total number of pages
+ * @param onChange - Handler called when page changes
+ * @param classNames - Custom class names for styling:
+ *   - container: nav container
+ *   - prev: previous button
+ *   - pages: page number buttons
+ *   - next: next button
  */
 export function Pagination({
   children,

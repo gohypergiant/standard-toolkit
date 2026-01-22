@@ -24,6 +24,9 @@ import styles from './styles.module.css';
 import { isNavigationDisabled } from './utils';
 import type { PaginationPrevProps } from './types';
 
+/**
+ * PaginationPrev - Previous page navigation button
+ */
 export function PaginationPrev({ className, onPress }: PaginationPrevProps) {
   const { page, total, setPage } = useContext(PaginationContext);
 

@@ -5,34 +5,59 @@ import * as PaginationStories from './pagination.stories';
 <Meta of={PaginationStories} />
 
 # Pagination
-The Pagination component provides a simple way to navigate multiple pages while leveraging existing Button components.
 
-It is composed of the following components:
+A lightweight component for navigating between pages. Displays up to 5 page numbers at a time with previous/next navigation controls.
 
-- **Pagination** - A wrapper component for containing all pagination buttons. Logic is contained within this component.
+## Basic
 
-
-## Example usage
 ```tsx
-  <Pagination value={1} total={10} onChange={handleOnChange}>
+<Pagination value={1} total={10} onChange={handleChange} />
 ```
 
 <Canvas of={PaginationStories.Default} />
 
+## Controlled
+
+```tsx
+const [page, setPage] = useState(1);
+
+<Pagination value={page} total={10} onChange={setPage} />
+```
+
+## Uncontrolled
+
+```tsx
+<Pagination defaultValue={1} total={10} onChange={handleChange} />
+```
+
 ## Props
 
-### Pagination Props
-* **`value`** - Current page number to display, not zero-index.
-* **`total`** - The total number of pages.
-* **`isLoading`** - Current loading state.
-* **`onChange`** - Handler function for the onPress event of control buttons.
-* **`classNames`** - Custom class names for styling container
-  * `container` - Control wrapper container.
-  * `controls` - Previous/Next button styles.
-  * `pages` - ToggleButtons corresponding to page numbers. Defaults to 5.
+### Pagination
 
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `number` | - | Current page (controlled, 1-indexed) |
+| `defaultValue` | `number` | `1` | Initial page (uncontrolled) |
+| `total` | `number` | `0` | Total number of pages |
+| `isLoading` | `boolean` | `false` | Hides page numbers when loading |
+| `onChange` | `(page: number) => void` | - | Called when page changes |
+| `classNames` | `object` | - | Custom class names (see below) |
 
+### classNames
 
-## Implementation Notes
+| Key | Description |
+|-----|-------------|
+| `container` | The nav container |
+| `prev` | Previous button |
+| `pages` | Page number buttons |
+| `next` | Next button |
 
-[Github Source](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-toolkit/src/components/pagination)
+## Accessibility
+
+- Uses semantic `<nav>` element with `aria-label` showing current page
+- Previous/next buttons have `aria-label` descriptions
+- Current page has `aria-current="page"` attribute
+
+## Related
+
+- [GitHub Source](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-toolkit/src/components/pagination)
