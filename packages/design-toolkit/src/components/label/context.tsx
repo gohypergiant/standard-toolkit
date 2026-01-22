@@ -17,9 +17,24 @@ import { createContext } from 'react';
 import type { ContextValue } from 'react-aria-components';
 import type { LabelProps } from './types';
 
+/**
+ * Context for sharing Label props across component tree.
+ */
 export const LabelContext =
   createContext<ContextValue<LabelProps, HTMLLabelElement>>(null);
 
+/**
+ * LabelProvider - Context provider for setting default Label props.
+ *
+ * Use this to configure shared isRequired and isDisabled states
+ * across multiple Label components.
+ *
+ * @example
+ * <LabelProvider isRequired>
+ *   <Label>First Name</Label>
+ *   <Label>Last Name</Label>
+ * </LabelProvider>
+ */
 export function LabelProvider({
   children,
   ...props
