@@ -21,11 +21,7 @@ import {
 } from 'react-aria-components';
 import styles from './styles.module.css';
 
-/**
- * Tab - Individual tab component
- *
- * Represents a selectable tab within a TabList
- */
+/** Tab - Selectable tab within a TabList */
 export function Tab({ children, className, ...rest }: TabProps) {
   return (
     <AriaTab

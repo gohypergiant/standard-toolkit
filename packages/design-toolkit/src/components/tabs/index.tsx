@@ -24,50 +24,9 @@ import styles from './styles.module.css';
 import type { TabsProps } from './types';
 
 /**
- * Tabs - A tab navigation component for organizing content into sections
+ * Tabs - Tab navigation for organizing content into multiple sections
  *
- * Provides accessible tab navigation with keyboard support and proper ARIA implementation.
- * Supports both horizontal and vertical orientations with icon and text variants.
- * Perfect for organizing related content into separate, focusable sections.
- *
- * @example
- * // Basic horizontal tabs
- * <Tabs>
- *   <TabsList>
- *     <TabsListTab id="overview">Overview</TabsListTab>
- *     <TabsListTab id="details">Details</TabsListTab>
- *     <TabsListTab id="settings">Settings</TabsListTab>
- *   </TabsList>
- *   <TabsPanel id="overview">Overview content</TabsPanel>
- *   <TabsPanel id="details">Details content</TabsPanel>
- *   <TabsPanel id="settings">Settings content</TabsPanel>
- * </Tabs>
- *
- * @example
- * // Vertical tabs
- * <Tabs orientation="vertical">
- *   <TabsList>
- *     <TabsListTab id="profile">Profile</TabsListTab>
- *     <TabsListTab id="account">Account</TabsListTab>
- *   </TabsList>
- *   <TabsPanel id="profile">Profile settings</TabsPanel>
- *   <TabsPanel id="account">Account settings</TabsPanel>
- * </Tabs>
- *
- * @example
- * // Icon tabs
- * <Tabs>
- *   <TabsList variant="icons">
- *     <TabsListTab id="home">
- *       <Icon><Home /></Icon>
- *     </TabsListTab>
- *     <TabsListTab id="search">
- *       <Icon><Search /></Icon>
- *     </TabsListTab>
- *   </TabsList>
- *   <TabsPanel id="home">Home content</TabsPanel>
- *   <TabsPanel id="search">Search content</TabsPanel>
- * </Tabs>
+ * Supports horizontal and vertical orientations with text or icon tabs.
  */
 export function Tabs({ ref, ...props }: TabsProps) {
   [props, ref] = useContextProps(props, ref ?? null, TabsContext);

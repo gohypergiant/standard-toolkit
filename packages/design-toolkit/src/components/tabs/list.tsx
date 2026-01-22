@@ -21,11 +21,7 @@ import {
 } from 'react-aria-components';
 import styles from './styles.module.css';
 
-/**
- * TabList - Container for tabs
- *
- * Contains and manages a group of Tab components
- */
+/** TabList - Container for Tab components */
 export function TabList<T extends object>({
   children,
   className,
