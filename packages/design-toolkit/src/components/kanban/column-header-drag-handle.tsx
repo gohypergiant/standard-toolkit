@@ -12,7 +12,7 @@
 'use client';
 import 'client-only';
 
-import { DragVert } from '@accelint/icons';
+import DragVert from '@accelint/icons/drag-vert';
 import { Icon } from '../icon';
 
 export function KanbanColumnHeaderDragHandle() {
