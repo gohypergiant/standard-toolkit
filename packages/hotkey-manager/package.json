@@ -75,14 +75,11 @@
   "license": "Apache-2.0",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
-  "peerDependencies": {
-    "@accelint/core": "workspace:*",
+  "optionalDependencies": {
     "react": "^19"
   },
-  "peerDependenciesMeta": {
-    "react": {
-      "optional": true
-    }
+  "peerDependencies": {
+    "@accelint/core": "workspace:*"
   },
   "private": false,
   "publishConfig": {
