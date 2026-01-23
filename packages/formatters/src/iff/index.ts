@@ -25,7 +25,7 @@ const FOUR_DIGIT_DEFAULT = '----';
  * This mode is only used by the military.
  *
  * @param value - The value to format.
- * @returns A 2-digit zero-padded string, or '--' if value is null/undefined.
+ * @returns A 2-digit zero-padded string, or '--' if value is null/undefined/empty string.
  *
  * @example
  * ```typescript
@@ -35,9 +35,11 @@ const FOUR_DIGIT_DEFAULT = '----';
  * ```
  */
 export function formatM1(value?: string | number): string {
-  return value !== undefined && value !== null
-    ? `${value}`.padStart(2, '0')
-    : TWO_DIGIT_DEFAULT;
+  if (value) {
+    return `${value}`.padStart(2, '0');
+  }
+
+  return TWO_DIGIT_DEFAULT;
 }
 
 /**
@@ -45,7 +47,7 @@ export function formatM1(value?: string | number): string {
  * This mode is only used by the military.
  *
  * @param value - The value to format.
- * @returns A 4-digit zero-padded string, or '----' if value is null/undefined.
+ * @returns A 4-digit zero-padded string, or '----' if value is null/undefined/empty string.
  *
  * @example
  * ```typescript
@@ -55,9 +57,11 @@ export function formatM1(value?: string | number): string {
  * ```
  */
 export function formatM2(value?: string | number): string {
-  return value !== undefined && value !== null
-    ? `${value}`.padStart(4, '0')
-    : FOUR_DIGIT_DEFAULT;
+  if (value) {
+    return `${value}`.padStart(4, '0');
+  }
+
+  return FOUR_DIGIT_DEFAULT;
 }
 
 /**
@@ -66,7 +70,7 @@ export function formatM2(value?: string | number): string {
  * assign these codes.
  *
  * @param value - The value to format.
- * @returns A 4-digit zero-padded string, or '----' if value is null/undefined.
+ * @returns A 4-digit zero-padded string, or '----' if value is null/undefined/empty string.
  *
  * @example
  * ```typescript
@@ -76,9 +80,11 @@ export function formatM2(value?: string | number): string {
  * ```
  */
 export function formatM3A(value?: string | number): string {
-  return value !== undefined && value !== null
-    ? `${value}`.padStart(4, '0')
-    : FOUR_DIGIT_DEFAULT;
+  if (value) {
+    return `${value}`.padStart(4, '0');
+  }
+
+  return FOUR_DIGIT_DEFAULT;
 }
 
 /**
@@ -88,7 +94,7 @@ export function formatM3A(value?: string | number): string {
  * TODO: Verify the correct format for M4
  *
  * @param value - The value to format.
- * @returns A 4-digit zero-padded string.
+ * @returns A 4-digit zero-padded string, or '----' if value is empty string.
  *
  * @example
  * ```typescript
@@ -97,7 +103,12 @@ export function formatM3A(value?: string | number): string {
  * ```
  */
 export function formatM4(value: string | number): string {
-  return `${value}`.padStart(4, '0');
+  // If not empty string
+  if (value) {
+    return `${value}`.padStart(4, '0');
+  }
+
+  return FOUR_DIGIT_DEFAULT;
 }
 
 /**
@@ -107,7 +118,7 @@ export function formatM4(value: string | number): string {
  * TODO: Verify the correct format for M5
  *
  * @param value - The value to format.
- * @returns A 4-digit zero-padded string.
+ * @returns A 4-digit zero-padded string, or '----' if value is empty string.
  *
  * @example
  * ```typescript
@@ -116,5 +127,10 @@ export function formatM4(value: string | number): string {
  * ```
  */
 export function formatM5(value: string | number): string {
-  return `${value}`.padStart(4, '0');
+  // If not empty string
+  if (value) {
+    return `${value}`.padStart(4, '0');
+  }
+
+  return FOUR_DIGIT_DEFAULT;
 }
