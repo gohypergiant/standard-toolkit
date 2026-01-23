@@ -63,7 +63,7 @@ export const Simple: StoryObj<typeof meta> = {
 };
 
 export const WithActions: StoryObj<typeof meta> = {
-  render: ({ ...args }) => (
+  render: (args) => (
     <PopoverTrigger>
       <Button variant='icon'>
         <Icon>
