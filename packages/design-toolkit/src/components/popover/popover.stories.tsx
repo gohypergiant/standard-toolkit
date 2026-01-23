@@ -11,7 +11,7 @@
  */
 
 import { Delete, Information } from '@accelint/icons';
-import { Button } from '@/components/button';
+import { Button } from '../button';
 import { Checkbox } from '../checkbox';
 import { Icon } from '../icon';
 import { Popover } from './';
@@ -47,7 +47,7 @@ const meta = {
 export default meta;
 
 export const Simple: StoryObj<typeof meta> = {
-  render: ({ ...args }) => (
+  render: (args) => (
     <PopoverTrigger>
       <Icon className='fg-primary-bold'>
         <Information />
@@ -63,7 +63,7 @@ export const Simple: StoryObj<typeof meta> = {
 };
 
 export const WithActions: StoryObj<typeof meta> = {
-  render: ({ ...args }) => (
+  render: (args) => (
     <PopoverTrigger>
       <Button variant='icon'>
         <Icon>
@@ -93,7 +93,7 @@ export const WithActions: StoryObj<typeof meta> = {
 };
 
 export const CustomComposition: StoryObj<typeof meta> = {
-  render: ({ ...args }) => {
+  render: (args) => {
     return (
       <PopoverTrigger>
         <span className='fg-primary-bold'>Settings</span>
