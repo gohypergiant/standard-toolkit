@@ -432,7 +432,7 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
           isOpen={paste.showDisambiguationModal}
           onOpenChange={paste.setShowDisambiguationModal}
         >
-          <Button className='hidden'>Hidden Trigger</Button>
+          <Button className={styles.hiddenTrigger}>Hidden Trigger</Button>
           <Dialog size='small'>
             <DialogTitle className={styles.modalTitle}>
               Select Coordinate Format
