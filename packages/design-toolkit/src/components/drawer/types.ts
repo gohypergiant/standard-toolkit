@@ -220,9 +220,9 @@ export type DrawerEvent =
   | DrawerToggleEvent
   | ViewStackEvent;
 
-type SimpleEvents = 'back' | 'clear' | 'close' | 'reset' | UniqueId;
+export type SimpleEvents = 'back' | 'clear' | 'close' | 'reset' | UniqueId;
 
-type TargetedEvents =
+export type TargetedEvents =
   | `back:${UniqueId}`
   | `clear:${UniqueId}`
   | `close:${UniqueId}`
@@ -230,7 +230,7 @@ type TargetedEvents =
   | `toggle:${UniqueId}`
   | `reset:${UniqueId}`;
 
-type ChainedEvents = (SimpleEvents | TargetedEvents)[];
+export type ChainedEvents = (SimpleEvents | TargetedEvents)[];
 
 export type DrawerTriggerProps = RefAttributes<FocusableElement> & {
   children: ReactElement<DOMAttributes<FocusableElement>, string>;
@@ -268,5 +268,5 @@ export type DrawerContextValue = {
 };
 
 export type DrawerCloseProps = AriaAttributesWithRef<FocusableElement> & {
-  for: UniqueId;
+  for?: UniqueId;
 };

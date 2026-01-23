@@ -73,7 +73,11 @@ export function Drawer({
 
   const handleClose = useCallback(
     (data: DrawerCloseEvent) => {
-      if (views.current.has(data?.payload?.view)) {
+      if (
+        views.current.has(data?.payload?.view) ||
+        data?.payload?.view === id
+      ) {
+        console.log('getting here');
         viewStackEmit.clear(id);
       }
     },
