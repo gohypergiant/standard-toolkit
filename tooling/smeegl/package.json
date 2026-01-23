@@ -13,15 +13,14 @@
     "crc32-universal": "^1.0.1",
     "globby": "^14.1.0",
     "inquirer": "^12.6.1",
-    "lodash": "^4.17.21",
     "ora": "^8.2.0",
+    "radashi": "^12.6.2",
     "true-myth": "^9.0.1",
     "typescript": "^5.9.3"
   },
   "devDependencies": {
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
-    "@types/lodash": "^4.17.20",
     "@types/node": "^22",
     "tsdown": "^0.18.0",
     "vitest": "^4.0.15"
