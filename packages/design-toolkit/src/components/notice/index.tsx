@@ -11,10 +11,9 @@
  */
 
 'use client';
-
-import { Cancel } from '@accelint/icons';
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
+import Cancel from '@accelint/icons/cancel';
 import {
   Text,
   UNSTABLE_Toast as Toast,

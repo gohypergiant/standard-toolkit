@@ -11,7 +11,11 @@
  */
 
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { ChevronDown, ChevronUp, DragVert, Hide, Show } from '@accelint/icons';
+import ChevronDown from '@accelint/icons/chevron-down';
+import ChevronUp from '@accelint/icons/chevron-up';
+import DragVert from '@accelint/icons/drag-vert';
+import Hide from '@accelint/icons/hide';
+import Show from '@accelint/icons/show';
 import { useContext } from 'react';
 import { TreeItemContent as AriaTreeItemContent } from 'react-aria-components';
 import { Button } from '../button';
