@@ -49,13 +49,21 @@ import type { PopoverProps } from './types';
  *   </Popover>
  * </PopoverTrigger>
  */
-export function Popover({ children, classNames, ...rest }: PopoverProps) {
+export function Popover({
+  children,
+  classNames,
+  dialogProps,
+  ...rest
+}: PopoverProps) {
   return (
     <AriaPopover
       {...rest}
       className={clsx(styles.popover, classNames?.popover)}
     >
-      <Dialog className={clsx(styles.dialog, classNames?.dialog)}>
+      <Dialog
+        {...dialogProps}
+        className={clsx(styles.dialog, classNames?.dialog)}
+      >
         {children}
       </Dialog>
     </AriaPopover>
