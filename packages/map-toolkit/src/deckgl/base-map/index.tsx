@@ -303,18 +303,14 @@ export function BaseMap({
         return;
       }
 
-      const bounds = viewport.getBounds();
-      const width = viewport.width;
-      const height = viewport.height;
-
       emitViewport({
         id,
-        bounds,
+        bounds: viewport?.getBounds(),
         latitude,
         longitude,
         zoom,
-        width,
-        height,
+        width: viewport?.width ?? 0,
+        height: viewport?.height ?? 0,
       });
     },
   );
