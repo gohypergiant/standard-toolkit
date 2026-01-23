@@ -14,7 +14,7 @@
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import { designTokens } from '@accelint/design-foundation/tokens';
-import { Person } from '@accelint/icons';
+import Person from '@accelint/icons/person';
 import { Fallback, Image, Root } from '@radix-ui/react-avatar';
 import { useContextProps } from 'react-aria-components';
 import { BadgeProvider } from '../badge/context';

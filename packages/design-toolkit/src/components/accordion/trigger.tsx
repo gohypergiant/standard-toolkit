@@ -13,7 +13,7 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { ChevronDown } from '@accelint/icons';
+import ChevronDown from '@accelint/icons/chevron-down';
 import { useContext } from 'react';
 import { composeRenderProps, Heading } from 'react-aria-components';
 import { isSlottedContextValue } from '../../lib/utils';

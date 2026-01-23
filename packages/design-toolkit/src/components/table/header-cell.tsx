@@ -12,7 +12,9 @@
  */
 
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { ArrowDown, ArrowUp, Kebab } from '@accelint/icons';
+import ArrowDown from '@accelint/icons/arrow-down';
+import ArrowUp from '@accelint/icons/arrow-up';
+import Kebab from '@accelint/icons/kebab';
 import { flexRender, type Header } from '@tanstack/react-table';
 import { useContext, useState } from 'react';
 import { Button } from '../button';
