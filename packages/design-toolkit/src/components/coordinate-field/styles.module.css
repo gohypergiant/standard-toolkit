@@ -162,4 +162,8 @@
   .popoverTitle {
     @apply fg-primary-muted text-header-s;
   }
+
+  .hiddenTrigger {
+    @apply hidden;
+  }
 }
