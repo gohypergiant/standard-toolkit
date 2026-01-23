@@ -210,6 +210,7 @@ export { DrawerMenu } from './components/drawer/menu';
 export { DrawerPanel } from './components/drawer/panel';
 export { DrawerTrigger } from './components/drawer/trigger';
 export type {
+  ChainedEvents,
   DrawerCloseEvent,
   DrawerCloseProps,
   DrawerContextValue,
@@ -222,6 +223,8 @@ export type {
   DrawerTitleProps,
   DrawerToggleEvent,
   DrawerTriggerProps,
+  SimpleEvents,
+  TargetedEvents,
 } from './components/drawer/types';
 export { DrawerView } from './components/drawer/view';
 export {
