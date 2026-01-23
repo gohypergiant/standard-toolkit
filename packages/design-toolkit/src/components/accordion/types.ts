@@ -20,29 +20,62 @@ import type {
 } from 'react-aria-components';
 import type { RenderPropsClassName } from '@/lib/types';
 
+/**
+ * Style variant options for accordion components.
+ */
 export type AccordionStyleVariants = {
+  /** Visual density variant: 'compact' for dense layouts, 'cozy' for spacious layouts. */
   variant?: 'compact' | 'cozy';
 };
 
+/**
+ * Props for the AccordionGroup component.
+ *
+ * Extends DisclosureGroup props with accordion-specific styling options.
+ */
 export type AccordionGroupProps = DisclosureGroupProps &
   AccordionStyleVariants &
   RefAttributes<HTMLDivElement>;
 
+/**
+ * Props for the Accordion component.
+ *
+ * Extends Disclosure props with accordion-specific styling options.
+ */
 export type AccordionProps = DisclosureProps &
   AccordionStyleVariants &
   RefAttributes<HTMLDivElement>;
 
+/**
+ * Props for the AccordionHeader component.
+ *
+ * Standard HTML header element props with ref support.
+ */
 export type AccordionHeaderProps = ComponentPropsWithRef<'header'>;
 
+/**
+ * Props for the AccordionTrigger component.
+ *
+ * Extends Heading component props with custom className support for
+ * both the heading wrapper and the trigger button.
+ */
 export type AccordionTriggerProps = Omit<
   ComponentPropsWithRef<typeof Heading>,
   'className'
 > & {
+  /** Custom class names for sub-elements. */
   classNames?: {
+    /** Class name for the heading wrapper element. */
     heading?: string;
+    /** Class name or render props function for the trigger button. */
     trigger?: RenderPropsClassName<ButtonRenderProps>;
   };
 };
 
+/**
+ * Props for the AccordionPanel component.
+ *
+ * Extends DisclosurePanel props with ref support for the panel element.
+ */
 export type AccordionPanelProps = DisclosurePanelProps &
   RefAttributes<HTMLDivElement>;
