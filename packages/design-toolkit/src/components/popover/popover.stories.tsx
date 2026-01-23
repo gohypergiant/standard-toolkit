@@ -11,7 +11,7 @@
  */
 
 import { Delete, Information } from '@accelint/icons';
-import { Button } from '@/components/button';
+import { Button } from '../button';
 import { Checkbox } from '../checkbox';
 import { Icon } from '../icon';
 import { Popover } from './';
