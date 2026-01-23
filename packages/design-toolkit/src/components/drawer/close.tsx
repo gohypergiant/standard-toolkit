@@ -12,7 +12,7 @@
 
 'use client';
 
-import { Cancel } from '@accelint/icons';
+import Cancel from '@accelint/icons/cancel';
 import 'client-only';
 import { Button } from '../button';
 import { Icon } from '../icon';

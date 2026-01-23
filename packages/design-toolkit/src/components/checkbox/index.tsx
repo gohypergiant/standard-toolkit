@@ -10,10 +10,10 @@
  * governing permissions and limitations under the License.
  */
 'use client';
-
-import { Check, Remove } from '@accelint/icons';
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
+import Check from '@accelint/icons/check';
+import Remove from '@accelint/icons/remove';
 import {
   Checkbox as AriaCheckbox,
   composeRenderProps,

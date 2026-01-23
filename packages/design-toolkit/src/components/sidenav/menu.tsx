@@ -13,7 +13,7 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { ChevronDown } from '@accelint/icons';
+import ChevronDown from '@accelint/icons/chevron-down';
 import { useContext, useRef } from 'react';
 import {
   Button,

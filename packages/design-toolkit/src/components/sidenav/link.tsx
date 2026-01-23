@@ -10,10 +10,9 @@
  * governing permissions and limitations under the License.
  */
 'use client';
-
-import { ArrowNortheast } from '@accelint/icons';
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
+import ArrowNortheast from '@accelint/icons/arrow-northeast';
 import { useContext, useRef } from 'react';
 import {
   composeRenderProps,
