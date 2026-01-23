@@ -93,7 +93,7 @@ export const WithActions: StoryObj<typeof meta> = {
 };
 
 export const CustomComposition: StoryObj<typeof meta> = {
-  render: ({ ...args }) => {
+  render: (args) => {
     return (
       <PopoverTrigger>
         <span className='fg-primary-bold'>Settings</span>
