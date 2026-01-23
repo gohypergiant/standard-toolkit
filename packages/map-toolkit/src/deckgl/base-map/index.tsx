@@ -12,9 +12,12 @@
 
 'use client';
 
-import 'client-only';
 import { useEffectEvent, useEmit } from '@accelint/bus/react';
+import type { PickingInfo, ViewStateChangeParameters } from '@deck.gl/core';
 import { Deckgl, useDeckgl } from '@deckgl-fiber-renderer/dom';
+import 'client-only';
+import type { IControl } from 'maplibre-gl';
+import type { MjolnirGestureEvent, MjolnirPointerEvent } from 'mjolnir.js';
 import { useCallback, useId, useMemo, useRef } from 'react';
 import {
   Map as MapLibre,
@@ -29,9 +32,6 @@ import { DARK_BASE_MAP_STYLE, PARAMETERS, PICKING_RADIUS } from './constants';
 import { MapControls } from './controls';
 import { MapEvents } from './events';
 import { MapProvider } from './provider';
-import type { PickingInfo, ViewStateChangeParameters } from '@deck.gl/core';
-import type { IControl } from 'maplibre-gl';
-import type { MjolnirGestureEvent, MjolnirPointerEvent } from 'mjolnir.js';
 import type {
   BaseMapProps,
   MapClickEvent,
@@ -299,17 +299,44 @@ export function BaseMap({
         // @ts-expect-error squirrelly deckglInstance typing
         ?.find((vp) => vp.id === viewId);
 
+      if (!viewport) {
+        return;
+      }
+
+      const bounds = viewport.getBounds();
+      const width = viewport.width;
+      const height = viewport.height;
+
       emitViewport({
         id,
-        bounds: viewport?.getBounds(),
+        bounds,
         latitude,
         longitude,
         zoom,
-        width: viewport?.width ?? 0,
-        height: viewport?.height ?? 0,
+        width,
+        height,
       });
     },
   );
+
+  const handleResize = useEffectEvent((params) => {
+    // @ts-expect-error squirrelly deckglInstance typing
+    const viewports = deckglInstance._deck.getViewports() ?? [];
+    for (const vp of viewports) {
+      handleViewStateChange({
+        viewId: vp.id,
+        viewState: {
+          latitude: vp.latitude,
+          longitude: vp.longitude,
+          zoom: vp.zoom,
+          id: vp.id,
+          bounds: vp.getBounds(),
+          width: params.width,
+          height: params.height,
+        },
+      } as ViewStateChangeParameters);
+    }
+  });
 
   const handleLoad = useEffectEvent(() => {
     //--- force update viewport state once all viewports initialized ---
@@ -351,6 +378,7 @@ export function BaseMap({
             pickingRadius={pickingRadius ?? PICKING_RADIUS}
             onHover={handleHover}
             onLoad={handleLoad}
+            onResize={handleResize}
             onViewStateChange={handleViewStateChange}
             // @ts-expect-error - DeckglProps parameters type is overly strict for WebGL parameter spreading.
             // The merged object is valid at runtime but TypeScript cannot verify all possible parameter combinations.
