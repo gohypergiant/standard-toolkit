@@ -112,6 +112,13 @@ All must pass. No exceptions.
 - Describe user-facing changes clearly
 - Choose appropriate semver bump (major/minor/patch)
 
+A changeset is only required if internal source code is changed (usually within a `src/` directory). Examples of when NOT to create a changeset:
+- Adding/modifying code comments
+- Adding/modifying markdown documentation
+- Adding/modifying Storybook code
+- Adding/modifying tests
+
+
 ## Important Reminders
 
 - NO time estimates or predictions
