@@ -16,14 +16,17 @@
  * @param min - The lower bound to clamp to.
  * @param max - The upper bound to clamp to.
  * @param value - The number value to clamp to the given range.
+ * @returns The clamped value.
  *
  * @throws {RangeError} Throws if min > max.
  *
  * @example
+ * ```typescript
  * const value = clamp(5, 15, 10); // 10
  * const value = clamp(5, 15, 2); // 5
  * const value = clamp(5, 15, 20); // 15
  * const value = clamp(15, 5, 10); // RangeError
+ * ```
  */
 export function clamp(min: number, max: number, value: number) {
   if (min > max) {
