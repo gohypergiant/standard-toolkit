@@ -13,7 +13,7 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { Kebab } from '@accelint/icons';
+import Kebab from '@accelint/icons/kebab';
 import { useContext } from 'react';
 import { Header, Provider } from 'react-aria-components';
 import { isSlottedContextValue } from '../../lib/utils';

@@ -146,7 +146,7 @@ export function SelectField({ ref, ...props }: SelectFieldProps) {
                   className={clsx(styles.value, classNames?.value)}
                 />
                 <Icon>
-                  <ChevronDown className='transform group-open/select-field:rotate-180' />
+                  <ChevronDown className={styles.chevron} />
                 </Icon>
               </Button>
             )}
