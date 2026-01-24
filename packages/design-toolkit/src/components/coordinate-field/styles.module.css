@@ -23,11 +23,11 @@
     min-width: var(--min-width, unset);
 
     @variant group-size-medium/coordinate-field {
-      @apply text-body-m;
+      @apply text-body-s;
     }
 
     @variant group-size-small/coordinate-field {
-      @apply text-body-s;
+      @apply text-body-xs;
     }
 
     @variant group-disabled/coordinate-field {
@@ -143,6 +143,10 @@
 }
 
 @layer components.l2 {
+  .formatButton {
+    @apply py-0;
+  }
+
   .formatOptions {
     @apply mb-m gap-xs flex flex-col;
   }
