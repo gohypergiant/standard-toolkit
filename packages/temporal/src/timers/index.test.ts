@@ -49,4 +49,33 @@ describe('timers', () => {
     expect(callback).toHaveBeenCalled();
     expect(cleanup).toBeTypeOf('function');
   });
+
+  describe('setClockInterval', () => {
+    beforeEach(() => {
+      vi.useFakeTimers();
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+      vi.restoreAllMocks();
+    });
+
+    it('cleanup prevents the initial next-second scheduled callback', () => {
+      // Suppose "now" is 12.900s => next second in 100ms
+      vi.spyOn(Date, 'now').mockReturnValue(12_900);
+
+      const cb = vi.fn();
+
+      const cleanup = setClockInterval(cb, 1000);
+
+      // Immediately cleanup before the next-second boundary occurs
+      cleanup();
+
+      // Cross the boundary
+      vi.advanceTimersByTime(200);
+
+      // If callNextSecond can't be cancelled, this will be 1 (leak)
+      expect(cb).not.toHaveBeenCalled();
+    });
+  });
 });

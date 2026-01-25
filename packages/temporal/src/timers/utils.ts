@@ -23,6 +23,7 @@ export function callNextSecond(callback: () => void) {
 
   const timeout = setTimeout(() => {
     callback();
-    clearTimeout(timeout);
   }, nextTick);
+
+  return () => clearTimeout(timeout);
 }
