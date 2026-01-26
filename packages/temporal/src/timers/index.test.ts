@@ -24,7 +24,7 @@ afterEach(() => {
 describe('timers', () => {
   const ms = 1000;
 
-  it('should execute callback repeatedly at specified interval', () => {
+  it('should execute callback repeatedly at specified interval starting at next clock second', () => {
     // Arrange
     const callback = vi.fn();
 
@@ -276,7 +276,7 @@ describe('timers', () => {
     expect(callback).toHaveBeenCalledTimes(1);
   });
 
-  it('should execute callback once after specified delay', () => {
+  it('should execute callback once after specified delay starting at next clock second', () => {
     // Arrange
     const callback = vi.fn();
 

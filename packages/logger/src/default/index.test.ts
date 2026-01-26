@@ -180,7 +180,14 @@ describe('getLogger', () => {
   });
 
   describe('Logger instance properties', () => {
-    test('should return logger with info method', async () => {
+    test.each([
+      { method: 'info', description: 'info method' },
+      { method: 'warn', description: 'warn method' },
+      { method: 'error', description: 'error method' },
+      { method: 'debug', description: 'debug method' },
+      { method: 'trace', description: 'trace method' },
+      { method: 'fatal', description: 'fatal method' },
+    ])('should return logger with $description', async ({ method }) => {
       // Arrange
       const { getLogger } = await import('./index');
       const options: LoggerOptions = { enabled: true };
@@ -189,73 +196,8 @@ describe('getLogger', () => {
       const logger = getLogger(options);
 
       // Assert
-      expect(logger.info).toBeDefined();
-      expect(logger.info).toBeTypeOf('function');
-    });
-
-    test('should return logger with warn method', async () => {
-      // Arrange
-      const { getLogger } = await import('./index');
-      const options: LoggerOptions = { enabled: true };
-
-      // Act
-      const logger = getLogger(options);
-
-      // Assert
-      expect(logger.warn).toBeDefined();
-      expect(logger.warn).toBeTypeOf('function');
-    });
-
-    test('should return logger with error method', async () => {
-      // Arrange
-      const { getLogger } = await import('./index');
-      const options: LoggerOptions = { enabled: true };
-
-      // Act
-      const logger = getLogger(options);
-
-      // Assert
-      expect(logger.error).toBeDefined();
-      expect(logger.error).toBeTypeOf('function');
-    });
-
-    test('should return logger with debug method', async () => {
-      // Arrange
-      const { getLogger } = await import('./index');
-      const options: LoggerOptions = { enabled: true };
-
-      // Act
-      const logger = getLogger(options);
-
-      // Assert
-      expect(logger.debug).toBeDefined();
-      expect(logger.debug).toBeTypeOf('function');
-    });
-
-    test('should return logger with trace method', async () => {
-      // Arrange
-      const { getLogger } = await import('./index');
-      const options: LoggerOptions = { enabled: true };
-
-      // Act
-      const logger = getLogger(options);
-
-      // Assert
-      expect(logger.trace).toBeDefined();
-      expect(logger.trace).toBeTypeOf('function');
-    });
-
-    test('should return logger with fatal method', async () => {
-      // Arrange
-      const { getLogger } = await import('./index');
-      const options: LoggerOptions = { enabled: true };
-
-      // Act
-      const logger = getLogger(options);
-
-      // Assert
-      expect(logger.fatal).toBeDefined();
-      expect(logger.fatal).toBeTypeOf('function');
+      expect(logger[method as keyof typeof logger]).toBeDefined();
+      expect(logger[method as keyof typeof logger]).toBeTypeOf('function');
     });
   });
 

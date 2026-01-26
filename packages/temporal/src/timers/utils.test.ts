@@ -13,15 +13,15 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { callNextSecond, remainder } from './utils';
 
+beforeEach(() => {
+  vi.useFakeTimers();
+});
+
+afterEach(() => {
+  vi.useRealTimers();
+});
+
 describe('remainder', () => {
-  beforeEach(() => {
-    vi.useFakeTimers();
-  });
-
-  afterEach(() => {
-    vi.useRealTimers();
-  });
-
   it('should return correct remainder for valid interval', () => {
     // Arrange
     const now = 1234567890;
@@ -148,20 +148,13 @@ describe('remainder', () => {
 });
 
 describe('callNextSecond', () => {
-  beforeEach(() => {
-    vi.useFakeTimers();
-  });
-
-  afterEach(() => {
-    vi.useRealTimers();
-  });
+  // biome-ignore lint/style/useNamingConvention: We need to change rule, this is valid
+  const SECOND = 1000;
 
   it('should execute callback at next clock second', () => {
     // Arrange
     const callback = vi.fn();
     const now = 1234567890;
-    // biome-ignore lint/style/useNamingConvention: We need to change rule, this is valid
-    const SECOND = 1000;
     vi.setSystemTime(now);
     const expectedDelay = SECOND - (now % SECOND);
 
@@ -180,8 +173,6 @@ describe('callNextSecond', () => {
     // Arrange
     const callback = vi.fn();
     const now = 1500; // 1500 % 1000 = 500
-    // biome-ignore lint/style/useNamingConvention: We need to change rule, this is valid
-    const SECOND = 1000;
     vi.setSystemTime(now);
     const expectedDelay = SECOND - (now % SECOND); // 500
 
@@ -201,8 +192,6 @@ describe('callNextSecond', () => {
     // Arrange
     const callback = vi.fn();
     const now = 1234567890;
-    // biome-ignore lint/style/useNamingConvention: We need to change rule, this is valid
-    const SECOND = 1000;
     vi.setSystemTime(now);
     const expectedDelay = SECOND - (now % SECOND);
 
@@ -222,8 +211,6 @@ describe('callNextSecond', () => {
     // Arrange
     const callback = vi.fn();
     const now = 5000; // Exactly on second boundary (5000 % 1000 = 0)
-    // biome-ignore lint/style/useNamingConvention: We need to change rule, this is valid
-    const SECOND = 1000;
     vi.setSystemTime(now);
 
     // Act
@@ -240,8 +227,6 @@ describe('callNextSecond', () => {
       throw new Error('Callback execution error');
     });
     const now = 1234567890;
-    // biome-ignore lint/style/useNamingConvention: We need to change rule, this is valid
-    const SECOND = 1000;
     vi.setSystemTime(now);
     const expectedDelay = SECOND - (now % SECOND);
 

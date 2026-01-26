@@ -14,12 +14,90 @@ import { describe, expect, test, vi, beforeEach, afterEach } from 'vitest';
 import { bootstrap } from './bootstrap';
 import type { LoggerOptions } from '../definitions';
 
+// Mock dependencies
+vi.mock('loglayer', () => ({
+  LogLayer: vi.fn(function (this: any, config: any) {
+    this.config = config;
+    this.info = vi.fn();
+    this.warn = vi.fn();
+    this.error = vi.fn();
+    this.debug = vi.fn();
+    this.trace = vi.fn();
+    this.fatal = vi.fn();
+    return this;
+  }),
+  ConsoleTransport: vi.fn(function (this: any, config: any) {
+    this.type = 'console';
+    this.config = config;
+    return this;
+  }),
+  LogLevel: {
+    trace: 'trace',
+    debug: 'debug',
+    info: 'info',
+    warn: 'warn',
+    error: 'error',
+    fatal: 'fatal',
+  },
+}));
+
+vi.mock('@loglayer/transport-simple-pretty-terminal', () => ({
+  getSimplePrettyTerminal: vi.fn((config: any) => ({
+    type: 'pretty',
+    config,
+  })),
+}));
+
+vi.mock('serialize-error', () => ({
+  serializeError: vi.fn((error: Error) => error),
+}));
+
+vi.mock('../plugins/callsite', () => ({
+  callsitePlugin: vi.fn((options: any) => ({
+    id: 'callsite',
+    pluginOptions: options,
+  })),
+}));
+
+vi.mock('../plugins/environment', () => ({
+  environmentPlugin: vi.fn((options: any) => ({
+    id: 'environment',
+    pluginOptions: options,
+  })),
+}));
+
 describe('bootstrap', () => {
   let windowSpy: typeof globalThis.window | undefined;
+  let LogLayerMock: any;
+  let getSimplePrettyTerminalMock: any;
+  let ConsoleTransportMock: any;
+  let callsitePluginMock: any;
+  let environmentPluginMock: any;
+  let serializeErrorMock: any;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     // Store original window value
     windowSpy = globalThis.window;
+
+    // Get mocked functions
+    const loglayerModule = await import('loglayer');
+    const prettyTerminalModule = await import(
+      '@loglayer/transport-simple-pretty-terminal'
+    );
+    const serializeErrorModule = await import('serialize-error');
+    const callsiteModule = await import('../plugins/callsite');
+    const environmentModule = await import('../plugins/environment');
+
+    LogLayerMock = loglayerModule.LogLayer as any;
+    getSimplePrettyTerminalMock =
+      prettyTerminalModule.getSimplePrettyTerminal as any;
+    ConsoleTransportMock = loglayerModule.ConsoleTransport as any;
+    callsitePluginMock = callsiteModule.callsitePlugin as any;
+    environmentPluginMock = environmentModule.environmentPlugin as any;
+    serializeErrorMock = serializeErrorModule.serializeError as any;
+
+    // Clear mock call history
+    vi.clearAllMocks();
   });
 
   afterEach(() => {
@@ -47,6 +125,7 @@ describe('bootstrap', () => {
       expect(logger.warn).toBeTypeOf('function');
       expect(logger.error).toBeTypeOf('function');
       expect(logger.debug).toBeTypeOf('function');
+      expect(LogLayerMock).toHaveBeenCalledTimes(1);
     });
 
     test('should use debug level when level option is not provided', () => {
@@ -58,7 +137,9 @@ describe('bootstrap', () => {
 
       // Assert
       expect(logger).toBeDefined();
-      // TODO: verify level configuration via logger internal state or spy
+      expect(getSimplePrettyTerminalMock).toHaveBeenCalledWith(
+        expect.objectContaining({ level: 'debug' }),
+      );
     });
 
     test('should use development environment when env option is not provided', () => {
@@ -70,7 +151,12 @@ describe('bootstrap', () => {
 
       // Assert
       expect(logger).toBeDefined();
-      // TODO: verify isProductionEnv=false via plugin configuration
+      expect(callsitePluginMock).toHaveBeenCalledWith(
+        expect.objectContaining({ isProductionEnv: false }),
+      );
+      expect(environmentPluginMock).toHaveBeenCalledWith(
+        expect.objectContaining({ isProductionEnv: false }),
+      );
     });
 
     test('should enable pretty printing when pretty option is not provided', () => {
@@ -82,7 +168,8 @@ describe('bootstrap', () => {
 
       // Assert
       expect(logger).toBeDefined();
-      // TODO: verify pretty transport is used
+      expect(getSimplePrettyTerminalMock).toHaveBeenCalled();
+      expect(ConsoleTransportMock).not.toHaveBeenCalled();
     });
 
     test('should use empty prefix when prefix option is not provided', () => {
@@ -94,7 +181,9 @@ describe('bootstrap', () => {
 
       // Assert
       expect(logger).toBeDefined();
-      // TODO: verify prefix configuration
+      expect(LogLayerMock).toHaveBeenCalledWith(
+        expect.objectContaining({ prefix: '' }),
+      );
     });
   });
 
@@ -117,7 +206,9 @@ describe('bootstrap', () => {
 
       // Assert
       expect(logger).toBeDefined();
-      // TODO: verify level is correctly set in transport configuration
+      expect(getSimplePrettyTerminalMock).toHaveBeenCalledWith(
+        expect.objectContaining({ level }),
+      );
     });
   });
 
@@ -131,7 +222,12 @@ describe('bootstrap', () => {
 
       // Assert
       expect(logger).toBeDefined();
-      // TODO: verify isProductionEnv=true is passed to plugins
+      expect(callsitePluginMock).toHaveBeenCalledWith(
+        expect.objectContaining({ isProductionEnv: true }),
+      );
+      expect(environmentPluginMock).toHaveBeenCalledWith(
+        expect.objectContaining({ isProductionEnv: true }),
+      );
     });
 
     test('should set isProductionEnv to false when env is development', () => {
@@ -143,7 +239,12 @@ describe('bootstrap', () => {
 
       // Assert
       expect(logger).toBeDefined();
-      // TODO: verify isProductionEnv=false is passed to plugins
+      expect(callsitePluginMock).toHaveBeenCalledWith(
+        expect.objectContaining({ isProductionEnv: false }),
+      );
+      expect(environmentPluginMock).toHaveBeenCalledWith(
+        expect.objectContaining({ isProductionEnv: false }),
+      );
     });
 
     test('should set isProductionEnv to false when env is test', () => {
@@ -155,7 +256,12 @@ describe('bootstrap', () => {
 
       // Assert
       expect(logger).toBeDefined();
-      // TODO: verify isProductionEnv=false is passed to plugins
+      expect(callsitePluginMock).toHaveBeenCalledWith(
+        expect.objectContaining({ isProductionEnv: false }),
+      );
+      expect(environmentPluginMock).toHaveBeenCalledWith(
+        expect.objectContaining({ isProductionEnv: false }),
+      );
     });
 
     test('should set isServer to true when window is undefined', () => {
@@ -169,7 +275,9 @@ describe('bootstrap', () => {
 
       // Assert
       expect(logger).toBeDefined();
-      // TODO: verify isServer=true is passed to environmentPlugin
+      expect(environmentPluginMock).toHaveBeenCalledWith(
+        expect.objectContaining({ isServer: true }),
+      );
     });
 
     test('should set isServer to false when window is defined', () => {
@@ -182,7 +290,9 @@ describe('bootstrap', () => {
 
       // Assert
       expect(logger).toBeDefined();
-      // TODO: verify isServer=false is passed to environmentPlugin
+      expect(environmentPluginMock).toHaveBeenCalledWith(
+        expect.objectContaining({ isServer: false }),
+      );
     });
   });
 
@@ -196,7 +306,8 @@ describe('bootstrap', () => {
 
       // Assert
       expect(logger).toBeDefined();
-      // TODO: verify getSimplePrettyTerminal is used
+      expect(getSimplePrettyTerminalMock).toHaveBeenCalled();
+      expect(ConsoleTransportMock).not.toHaveBeenCalled();
     });
 
     test('should use console transport when pretty is false', () => {
@@ -208,7 +319,8 @@ describe('bootstrap', () => {
 
       // Assert
       expect(logger).toBeDefined();
-      // TODO: verify ConsoleTransport is used
+      expect(ConsoleTransportMock).toHaveBeenCalled();
+      expect(getSimplePrettyTerminalMock).not.toHaveBeenCalled();
     });
 
     test('should include custom transports after default transport', () => {
@@ -226,7 +338,11 @@ describe('bootstrap', () => {
 
       // Assert
       expect(logger).toBeDefined();
-      // TODO: verify custom transport is appended to transport array
+      expect(LogLayerMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          transport: expect.arrayContaining([customTransport]),
+        }),
+      );
     });
 
     test('should handle empty transports array', () => {
@@ -238,6 +354,11 @@ describe('bootstrap', () => {
 
       // Assert
       expect(logger).toBeDefined();
+      expect(LogLayerMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          transport: expect.any(Array),
+        }),
+      );
     });
 
     test('should handle multiple custom transports', () => {
@@ -254,7 +375,11 @@ describe('bootstrap', () => {
 
       // Assert
       expect(logger).toBeDefined();
-      // TODO: verify both transports are included
+      expect(LogLayerMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          transport: expect.arrayContaining([transport1, transport2]),
+        }),
+      );
     });
   });
 
@@ -268,7 +393,8 @@ describe('bootstrap', () => {
 
       // Assert
       expect(logger).toBeDefined();
-      // TODO: verify both default plugins are registered
+      expect(callsitePluginMock).toHaveBeenCalled();
+      expect(environmentPluginMock).toHaveBeenCalled();
     });
 
     test('should append custom plugins after default plugins', () => {
@@ -287,7 +413,11 @@ describe('bootstrap', () => {
 
       // Assert
       expect(logger).toBeDefined();
-      // TODO: verify custom plugin is appended after default plugins
+      expect(LogLayerMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          plugins: expect.arrayContaining([customPlugin]),
+        }),
+      );
     });
 
     test('should handle empty plugins array', () => {
@@ -299,6 +429,11 @@ describe('bootstrap', () => {
 
       // Assert
       expect(logger).toBeDefined();
+      expect(LogLayerMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          plugins: expect.any(Array),
+        }),
+      );
     });
 
     test('should handle multiple custom plugins', () => {
@@ -321,7 +456,11 @@ describe('bootstrap', () => {
 
       // Assert
       expect(logger).toBeDefined();
-      // TODO: verify both custom plugins are included
+      expect(LogLayerMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          plugins: expect.arrayContaining([plugin1, plugin2]),
+        }),
+      );
     });
   });
 
@@ -335,7 +474,9 @@ describe('bootstrap', () => {
 
       // Assert
       expect(logger).toBeDefined();
-      // TODO: verify prefix is set on LogLayer instance
+      expect(LogLayerMock).toHaveBeenCalledWith(
+        expect.objectContaining({ prefix: '[MyApp]' }),
+      );
     });
 
     test('should handle empty string prefix', () => {
@@ -347,6 +488,9 @@ describe('bootstrap', () => {
 
       // Assert
       expect(logger).toBeDefined();
+      expect(LogLayerMock).toHaveBeenCalledWith(
+        expect.objectContaining({ prefix: '' }),
+      );
     });
   });
 
@@ -360,7 +504,9 @@ describe('bootstrap', () => {
 
       // Assert
       expect(logger).toBeDefined();
-      // TODO: verify enabled flag is passed to LogLayer
+      expect(LogLayerMock).toHaveBeenCalledWith(
+        expect.objectContaining({ enabled: true }),
+      );
     });
 
     test('should create logger with enabled=false', () => {
@@ -372,7 +518,9 @@ describe('bootstrap', () => {
 
       // Assert
       expect(logger).toBeDefined();
-      // TODO: verify enabled=false disables logging
+      expect(LogLayerMock).toHaveBeenCalledWith(
+        expect.objectContaining({ enabled: false }),
+      );
     });
   });
 
@@ -386,7 +534,9 @@ describe('bootstrap', () => {
 
       // Assert
       expect(logger).toBeDefined();
-      // TODO: verify serializeError is used for error serialization
+      expect(LogLayerMock).toHaveBeenCalledWith(
+        expect.objectContaining({ errorSerializer: serializeErrorMock }),
+      );
     });
   });
 
@@ -400,7 +550,9 @@ describe('bootstrap', () => {
 
       // Assert
       expect(logger).toBeDefined();
-      // TODO: verify viewMode is set to 'message-only'
+      expect(getSimplePrettyTerminalMock).toHaveBeenCalledWith(
+        expect.objectContaining({ viewMode: 'message-only' }),
+      );
     });
 
     test('should configure runtime as browser for pretty transport', () => {
@@ -412,7 +564,9 @@ describe('bootstrap', () => {
 
       // Assert
       expect(logger).toBeDefined();
-      // TODO: verify runtime is set to 'browser'
+      expect(getSimplePrettyTerminalMock).toHaveBeenCalledWith(
+        expect.objectContaining({ runtime: 'browser' }),
+      );
     });
 
     test('should set includeDataInBrowserConsole to true for pretty transport', () => {
@@ -424,7 +578,9 @@ describe('bootstrap', () => {
 
       // Assert
       expect(logger).toBeDefined();
-      // TODO: verify includeDataInBrowserConsole is true
+      expect(getSimplePrettyTerminalMock).toHaveBeenCalledWith(
+        expect.objectContaining({ includeDataInBrowserConsole: true }),
+      );
     });
   });
 
@@ -438,7 +594,9 @@ describe('bootstrap', () => {
 
       // Assert
       expect(logger).toBeDefined();
-      // TODO: verify appendObjectData is set to true
+      expect(ConsoleTransportMock).toHaveBeenCalledWith(
+        expect.objectContaining({ appendObjectData: true }),
+      );
     });
 
     test('should use console as logger for console transport', () => {
@@ -450,7 +608,9 @@ describe('bootstrap', () => {
 
       // Assert
       expect(logger).toBeDefined();
-      // TODO: verify console is used as logger
+      expect(ConsoleTransportMock).toHaveBeenCalledWith(
+        expect.objectContaining({ logger: console }),
+      );
     });
   });
 });
