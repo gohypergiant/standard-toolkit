@@ -30,8 +30,6 @@ export function DrawerClose(props: DrawerCloseProps) {
     ? (`close:${id}` as TargetedEvents)
     : ('close' as SimpleEvents);
 
-  console.log(event);
-
   return (
     // Note, not using ...rest due to possible memory leak within <Pressable />
     // Still investigating.
