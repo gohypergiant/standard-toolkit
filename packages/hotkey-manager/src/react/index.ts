@@ -9,18 +9,5 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-'use client';
 
-import 'client-only';
-import { createContext } from 'react';
-import type { ContextValue } from 'react-aria-components';
-import type { AccordionProps } from './types';
-
-/**
- * React context for sharing accordion configuration across components.
- *
- * Provides variant and disabled state to nested accordion components
- * (header, trigger, panel) without explicit prop drilling.
- */
-export const AccordionContext =
-  createContext<ContextValue<AccordionProps, HTMLDivElement>>(null);
+export { createUseHotkey, useHotkey } from './use-hotkey';
