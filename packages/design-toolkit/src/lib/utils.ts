@@ -24,6 +24,9 @@ interface SlottedValue<T> {
 
 /**
  * A helper to narrow the type of Context Value
+ *
+ * @param context - The context value to check.
+ * @returns True if the context contains slot definitions.
  */
 export function isSlottedContextValue<T, E>(
   context: ContextValue<T, E>,

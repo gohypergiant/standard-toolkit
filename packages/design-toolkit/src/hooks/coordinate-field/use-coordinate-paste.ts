@@ -22,23 +22,42 @@ import type {
   ParsedCoordinateMatch,
 } from '../../components/coordinate-field/types';
 
+/** Options for the useCoordinatePaste hook */
 export interface UseCoordinatePasteOptions {
+  /** Callback when a coordinate value is successfully parsed and applied */
   onValueApplied: (value: CoordinateValue) => void;
+  /** Optional error callback for invalid paste attempts */
   onError?: (message: string, context?: Record<string, unknown>) => void;
 }
 
+/** Return value from the useCoordinatePaste hook */
 export interface UseCoordinatePasteResult {
+  /** Array of parsed coordinate matches for disambiguation */
   disambiguationMatches: ParsedCoordinateMatch[];
+  /** Whether the disambiguation modal is visible */
   showDisambiguationModal: boolean;
+  /** Currently selected format in disambiguation modal */
   selectedDisambiguationFormat: CoordinateSystem | null;
+  /** Paste event handler for coordinate input */
   handleInputPaste: (e: React.ClipboardEvent<HTMLDivElement>) => void;
+  /** Confirm selection in disambiguation modal */
   handleDisambiguationSelect: () => void;
+  /** Control disambiguation modal visibility */
   setShowDisambiguationModal: (show: boolean) => void;
+  /** Set the selected format in disambiguation modal */
   setSelectedDisambiguationFormat: (format: CoordinateSystem | null) => void;
+  /** Reset disambiguation modal state */
   cleanupDisambiguationModal: () => void;
 }
 
-/** Handles paste events with coordinate parsing and disambiguation when multiple formats match */
+/**
+ * Handles paste events with coordinate parsing and disambiguation when multiple formats match
+ *
+ * @param options - {@link UseCoordinatePasteOptions}
+ * @param options.onValueApplied - Callback when a coordinate value is successfully parsed and applied.
+ * @param options.onError - Optional error callback for invalid paste attempts.
+ * @returns {@link UseCoordinatePasteResult} Paste handling utilities and disambiguation state.
+ */
 export function useCoordinatePaste({
   onValueApplied,
   onError,

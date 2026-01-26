@@ -19,6 +19,15 @@ import {
   useState,
 } from 'react';
 
+/**
+ * Provides a portal container for rendering overlays and modals
+ *
+ * @param props - Component props.
+ * @param props.parentRef - Optional ref to parent element for portal attachment.
+ * @param props.inject - Optional element to inject as portal container.
+ * @param props.children - Content to render within the portal context.
+ * @returns The portal provider wrapping children.
+ */
 export function PortalProvider({
   parentRef,
   inject,

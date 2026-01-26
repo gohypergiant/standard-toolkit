@@ -21,7 +21,9 @@ import type {
 import type { ReactElement } from 'react';
 import type { DropTarget, Selection } from 'react-aria-components';
 
+/** Configuration for tree drag-and-drop behavior */
 export type DragAndDropConfig = {
+  /** Returns drag items for the given keys */
   getItems: (key: Set<Key>) => DragItem[];
   /**
    * Handler that is called when external items are dropped on the droppable collection's root.
@@ -39,8 +41,11 @@ export type DragAndDropConfig = {
    * moved to a different parent item within a tree.
    */
   onMove?: (e: DroppableCollectionReorderEvent) => void;
+  /** Custom drag preview renderer */
   renderDragPreview?: (items: DragItem[]) => ReactElement;
+  /** Custom drop indicator renderer */
   renderDropIndicator?: (target: DropTarget) => ReactElement;
+  /** Accepted MIME types for drops */
   acceptedDragTypes?: string[];
   /**
    * Handler that is called when external items are dropped "between" items.
@@ -52,29 +57,44 @@ export type DragAndDropConfig = {
   onItemDrop?: (e: DroppableCollectionOnItemDropEvent) => void;
 };
 
+/** Options for the useTreeState hook */
 export type UseTreeStateOptions<T> = {
   /** Initial root items in the tree. If omitted, will return an empty tree. */
   items: TreeNode<T>[];
 };
 
+/** Return value from the useTreeState hook */
 export type UseTreeState<T> = {
+  /** Current tree nodes */
   nodes: TreeNode<T>[];
+  /** Drag-and-drop configuration for the tree */
   dragAndDropConfig: DragAndDropConfig;
+  /** Tree manipulation actions */
   actions: {
+    /** Collapse all nodes */
     collapseAll: () => void;
+    /** Expand all nodes */
     expandAll: () => void;
+    /** Handle expansion state changes */
     onExpandedChange: (keys: Set<Key>) => void;
 
+    /** Select all nodes */
     selectAll: () => void;
+    /** Unselect all nodes */
     unselectAll: () => void;
+    /** Handle selection state changes */
     onSelectionChange: (keys: Selection) => void;
 
+    /** Hide all nodes */
     hideAll: () => void;
+    /** Reveal all nodes */
     revealAll: () => void;
+    /** Handle visibility state changes */
     onVisibilityChange: (keys: Set<Key>) => void;
   };
 };
 
+/** Array of tree nodes representing tree data */
 export type TreeData<T> = TreeNode<T>[];
 
 /**
@@ -117,7 +137,9 @@ export type TreeNode<T> = TreeNodeBase<T> & {
   children?: TreeNode<T>[];
 };
 
+/** Options for the useTreeActions hook */
 export type UseTreeActionsOptions<T> = {
+  /** Current tree nodes to operate on */
   nodes: TreeNode<T>[];
 };
 

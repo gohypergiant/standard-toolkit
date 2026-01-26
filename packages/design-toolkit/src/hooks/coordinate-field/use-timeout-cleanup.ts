@@ -12,11 +12,17 @@
 
 import { useEffect, useRef } from 'react';
 
+/** Return value from the useTimeoutCleanup hook */
 export interface UseTimeoutCleanupResult {
+  /** Register a timeout for automatic cleanup on unmount */
   registerTimeout: (timeoutId: NodeJS.Timeout) => void;
 }
 
-/** Registers timeouts for automatic cleanup on component unmount */
+/**
+ * Registers timeouts for automatic cleanup on component unmount
+ *
+ * @returns {@link UseTimeoutCleanupResult} Timeout registration function.
+ */
 export function useTimeoutCleanup(): UseTimeoutCleanupResult {
   const timeoutIdsRef = useRef<Set<NodeJS.Timeout>>(new Set());
 
