@@ -27,6 +27,11 @@ import type { PaginationPagesProps } from './types';
  *
  * Renders up to 5 page numbers, automatically adjusting the
  * visible range based on current page position.
+ *
+ * @param props - {@link PaginationPagesProps}
+ * @param props.className - Optional CSS class name.
+ * @param props.onPress - Handler called when a page button is pressed.
+ * @returns The rendered PaginationPages component, or null if invalid state.
  */
 export function PaginationPages({ className, onPress }: PaginationPagesProps) {
   const { page, total, isLoading, setPage } = useContext(PaginationContext);

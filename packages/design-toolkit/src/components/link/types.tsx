@@ -13,8 +13,13 @@
 import type { RefAttributes } from 'react';
 import type { LinkProps as AriaLinkProps } from 'react-aria-components';
 
+/**
+ * Props for the Link component.
+ */
 export type LinkProps = AriaLinkProps &
   RefAttributes<HTMLAnchorElement> & {
+    /** Whether the link shows visited styling when visited. */
     allowsVisited?: boolean;
+    /** Whether the link is in a visited state. */
     isVisited?: boolean;
   };

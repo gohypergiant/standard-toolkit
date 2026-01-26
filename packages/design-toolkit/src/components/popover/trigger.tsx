@@ -37,6 +37,11 @@ import type { PopoverTriggerProps } from './types';
  *     <PopoverContent>Content here</PopoverContent>
  *   </Popover>
  * </PopoverTrigger>
+ *
+ * @param props - {@link PopoverTriggerProps}
+ * @param props.ref - Forwarded ref to the trigger element.
+ * @param props.children - Trigger element and Popover component.
+ * @returns The rendered PopoverTrigger component.
  */
 export function PopoverTrigger({
   ref,

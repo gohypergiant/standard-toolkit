@@ -31,14 +31,15 @@ import type { PaginationProps } from './types';
  * @example
  * <Pagination value={1} total={10} onChange={setPage} />
  *
- * @param value - Current page number (1-indexed)
- * @param total - Total number of pages
- * @param onChange - Handler called when page changes
- * @param classNames - Custom class names for styling:
- *   - container: nav container
- *   - prev: previous button
- *   - pages: page number buttons
- *   - next: next button
+ * @param props - {@link PaginationProps}
+ * @param props.children - Custom pagination content (overrides default layout).
+ * @param props.classNames - CSS class names for pagination elements.
+ * @param props.defaultValue - Default page number for uncontrolled mode.
+ * @param props.total - Total number of pages.
+ * @param props.value - Current page number for controlled mode (1-indexed).
+ * @param props.isLoading - Whether the pagination is in a loading state.
+ * @param props.onChange - Handler called when the page changes.
+ * @returns The rendered Pagination component.
  */
 export function Pagination({
   children,

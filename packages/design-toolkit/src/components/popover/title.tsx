@@ -22,6 +22,10 @@ import styles from './styles.module.css';
 
 /**
  * PopoverTitle - Semantic heading for the popover
+ *
+ * @param props - HeadingProps from react-aria-components.
+ * @param props.className - Optional CSS class name.
+ * @returns The rendered PopoverTitle component.
  */
 export function PopoverTitle({ className, ...rest }: HeadingProps) {
   return (

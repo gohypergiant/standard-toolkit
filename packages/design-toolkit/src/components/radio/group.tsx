@@ -28,6 +28,13 @@ import type { RadioGroupProps } from './types';
  *
  * Groups related Radio components and manages their selection state.
  * Only one Radio can be selected at a time within a RadioGroup.
+ *
+ * @param props - {@link RadioGroupProps}
+ * @param props.ref - Forwarded ref for the group container.
+ * @param props.classNames - Custom CSS class names for group and label.
+ * @param props.label - Optional text label for the group.
+ * @param props.children - Radio components to render inside the group.
+ * @returns The rendered RadioGroup component.
  */
 export function RadioGroup({ ref, ...props }: RadioGroupProps) {
   [props, ref] = useContextProps(props, ref ?? null, RadioContext);

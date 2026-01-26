@@ -30,6 +30,8 @@ export const ListContext = createContext<
 /**
  * Hook to get the current list item variant from context.
  * Used internally by ListItemTitle and ListItemDescription for sizing.
+ *
+ * @returns The current list item variant from context, or 'cozy' as the default.
  */
 export const useListItemVariant = () => {
   const context = useContext(ListContext);

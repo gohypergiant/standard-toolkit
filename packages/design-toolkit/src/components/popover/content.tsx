@@ -19,6 +19,10 @@ import type { ComponentPropsWithRef } from 'react';
 
 /**
  * PopoverContent - Main content area for the popover body
+ *
+ * @param props - ComponentPropsWithRef<'div'>
+ * @param props.className - Optional CSS class name.
+ * @returns The rendered PopoverContent component.
  */
 export function PopoverContent({
   className,

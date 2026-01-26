@@ -23,6 +23,13 @@ import type { OptionsDataItem, OptionsSectionProps } from './types';
  *   <OptionsItem>Item 1</OptionsItem>
  *   <OptionsItem>Item 2</OptionsItem>
  * </OptionsSection>
+ *
+ * @param props - {@link OptionsSectionProps}
+ * @param props.children - Options items to render in the section.
+ * @param props.classNames - CSS class names for section elements.
+ * @param props.header - Header text for the section.
+ * @param props.items - Collection of items for dynamic rendering.
+ * @returns The rendered OptionsSection component.
  */
 export function OptionsSection<T extends OptionsDataItem>({
   children,

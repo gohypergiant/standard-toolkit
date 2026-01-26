@@ -19,6 +19,10 @@ const DEFAULT_UPPER_MID = 4;
 
 /**
  * Creates an array of numbers from start to end (inclusive).
+ *
+ * @param start - The starting number of the range.
+ * @param end - The ending number of the range (inclusive).
+ * @returns An array of sequential numbers from start to end.
  */
 export function range(start: number, end: number) {
   const length = end - start + 1;
@@ -27,7 +31,10 @@ export function range(start: number, end: number) {
 
 /**
  * Checks if navigation should be disabled based on page bounds.
- * Returns true if pageCount or currentPage are invalid or out of bounds.
+ *
+ * @param pageCount - Total number of pages.
+ * @param currentPage - Current page number.
+ * @returns True if pageCount or currentPage are invalid or out of bounds.
  */
 export function isNavigationDisabled(
   pageCount: number,

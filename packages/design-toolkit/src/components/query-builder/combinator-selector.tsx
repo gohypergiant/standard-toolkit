@@ -28,6 +28,9 @@ const operatorDescriptions: Record<string, string> = {
  * CombinatorSelector - AND/OR toggle for rule groups
  *
  * Renders a radio group with tooltips explaining each combinator's behavior.
+ *
+ * @param props - CombinatorSelectorProps from react-querybuilder.
+ * @returns The rendered CombinatorSelector component.
  */
 export function CombinatorSelector({
   options,

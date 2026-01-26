@@ -26,6 +26,9 @@ import {
  * RuleGroup - Container for organizing rules with a shared combinator
  *
  * Renders header with combinator selector and actions, body with rules, and footer with add actions.
+ *
+ * @param props - RuleGroupProps from react-querybuilder.
+ * @returns The rendered RuleGroup component.
  */
 export function RuleGroup(props: RuleGroupProps) {
   const group = useRuleGroup(props);
@@ -73,7 +76,12 @@ export function RuleGroup(props: RuleGroupProps) {
   );
 }
 
-/** Header section with combinator selector and group actions (clone, lock, remove) */
+/**
+ * Header section with combinator selector and group actions (clone, lock, remove)
+ *
+ * @param ruleGroup - Combined RuleGroupProps and useRuleGroup return value.
+ * @returns The rendered header with combinator and action controls.
+ */
 export function RuleGroupHeaderComponent(
   ruleGroup: RuleGroupProps & ReturnType<typeof useRuleGroup>,
 ) {
@@ -180,7 +188,12 @@ export function RuleGroupHeaderComponent(
   );
 }
 
-/** Footer section with add rule and add group actions */
+/**
+ * Footer section with add rule and add group actions
+ *
+ * @param ruleGroup - Combined RuleGroupProps and useRuleGroup return value.
+ * @returns The rendered footer with add rule and add group buttons.
+ */
 export function RuleGroupFooterComponent(
   ruleGroup: RuleGroupProps & ReturnType<typeof useRuleGroup>,
 ) {

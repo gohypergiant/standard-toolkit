@@ -24,6 +24,10 @@ import styles from './styles.module.css';
  * <MenuItem>Copy</MenuItem>
  * <MenuSeparator />
  * <MenuItem>Delete</MenuItem>
+ *
+ * @param props - SeparatorProps from react-aria-components.
+ * @param props.className - Optional CSS class name.
+ * @returns The rendered MenuSeparator component.
  */
 export function MenuSeparator({ className, ...rest }: SeparatorProps) {
   return <Separator {...rest} className={clsx(styles.separator, className)} />;

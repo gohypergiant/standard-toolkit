@@ -41,6 +41,13 @@ import type { ListProps } from './types';
  *     </ListItem>
  *   </List>
  * </div>
+ *
+ * @param props - {@link ListProps}
+ * @param props.ref - Forwarded ref to the underlying GridList element.
+ * @param props.children - List item elements to render.
+ * @param props.className - Optional CSS class name.
+ * @param props.variant - Visual density variant for list items.
+ * @returns The rendered List component.
  */
 export function List<T extends object>({ ref, ...props }: ListProps<T>) {
   [props, ref] = useContextProps(props, ref ?? null, ListContext);

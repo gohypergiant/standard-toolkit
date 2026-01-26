@@ -42,6 +42,12 @@ import type { MenuItemProps } from './types';
  *   <MenuItemLabel>Edit</MenuItemLabel>
  *   <MenuItemDescription>Modify the item</MenuItemDescription>
  * </MenuItem>
+ *
+ * @param props - {@link MenuItemProps}
+ * @param props.children - Content to render inside the menu item.
+ * @param props.classNames - CSS class names for menu item elements.
+ * @param props.color - Color variant for the menu item.
+ * @returns The rendered MenuItem component.
  */
 export function MenuItem({
   children,

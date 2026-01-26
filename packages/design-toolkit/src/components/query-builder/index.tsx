@@ -32,6 +32,13 @@ import type { QueryBuilderContextType, QueryBuilderProps } from './types';
  * with support for multiple conditions, operators, and logical grouping. Enables
  * users to build complex filters without writing SQL or code.
  *
+ * @param props - {@link QueryBuilderProps}
+ * @param props.controlClassnames - Custom CSS class names for control elements.
+ * @param props.controlElements - Custom component overrides for controls.
+ * @param props.orientation - Layout orientation ('horizontal' or 'vertical').
+ * @param props.showRuleLines - Whether to show connecting lines between rules.
+ * @returns The rendered QueryBuilder component.
+ *
  * @example
  * // Basic query builder
  * <QueryBuilder

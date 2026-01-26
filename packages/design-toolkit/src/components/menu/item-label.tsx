@@ -24,6 +24,11 @@ import styles from './styles.module.css';
  *
  * @example
  * <MenuItemLabel>Edit Document</MenuItemLabel>
+ *
+ * @param props - TextProps from react-aria-components.
+ * @param props.children - Label text content.
+ * @param props.className - Optional CSS class name.
+ * @returns The rendered MenuItemLabel component.
  */
 export function MenuItemLabel({ children, className, ...rest }: TextProps) {
   return (

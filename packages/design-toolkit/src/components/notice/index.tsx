@@ -46,6 +46,22 @@ const ButtonColorMap: Record<NoticeColor, ButtonProps['color']> = {
  *   message="Operation completed"
  *   color="normal"
  * />
+ *
+ * @param props - {@link NoticeProps}
+ * @param props.id - Unique identifier for the notice.
+ * @param props.classNames - CSS class names for notice elements.
+ * @param props.color - Color variant indicating severity.
+ * @param props.message - Message text to display.
+ * @param props.primary - Primary action button configuration.
+ * @param props.secondary - Secondary action button configuration.
+ * @param props.hideIcon - Whether to hide the status icon.
+ * @param props.showClose - Whether to show the close button.
+ * @param props.shouldCloseOnAction - Whether to close the notice when an action button is pressed.
+ * @param props.size - Size variant for the notice.
+ * @param props.onPrimaryAction - Callback when primary action button is pressed.
+ * @param props.onSecondaryAction - Callback when secondary action button is pressed.
+ * @param props.onClose - Callback when the notice is closed.
+ * @returns The rendered Notice component.
  */
 export function Notice({
   id,

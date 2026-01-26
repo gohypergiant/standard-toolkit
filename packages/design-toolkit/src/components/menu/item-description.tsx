@@ -24,6 +24,11 @@ import styles from './styles.module.css';
  *
  * @example
  * <MenuItemDescription>Open the document for editing</MenuItemDescription>
+ *
+ * @param props - TextProps from react-aria-components.
+ * @param props.children - Description text content.
+ * @param props.className - Optional CSS class name.
+ * @returns The rendered MenuItemDescription component.
  */
 export function MenuItemDescription({
   children,

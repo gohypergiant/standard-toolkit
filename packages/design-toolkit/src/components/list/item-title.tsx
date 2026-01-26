@@ -25,6 +25,11 @@ import type { ListItemTitleProps } from './types';
  *
  * @example
  * <ListItemTitle>John Doe</ListItemTitle>
+ *
+ * @param props - {@link ListItemTitleProps}
+ * @param props.children - Title text content.
+ * @param props.className - Optional CSS class name.
+ * @returns The rendered ListItemTitle component.
  */
 export function ListItemTitle({
   children,

@@ -28,6 +28,9 @@ import { OptionsSection } from '../options/section';
  * ValueSelector - Dropdown for selecting predefined values
  *
  * Renders a ComboBoxField with options, supporting grouped and flat option lists.
+ *
+ * @param props - ValueSelectorProps from react-querybuilder.
+ * @returns The rendered ValueSelector dropdown.
  */
 export function ValueSelector(props: ValueSelectorProps) {
   const {

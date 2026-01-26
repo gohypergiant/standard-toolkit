@@ -26,6 +26,11 @@ import type { PaginationPrevProps } from './types';
 
 /**
  * PaginationPrev - Previous page navigation button
+ *
+ * @param props - {@link PaginationPrevProps}
+ * @param props.className - Optional CSS class name.
+ * @param props.onPress - Handler called when the previous button is pressed.
+ * @returns The rendered PaginationPrev component.
  */
 export function PaginationPrev({ className, onPress }: PaginationPrevProps) {
   const { page, total, setPage } = useContext(PaginationContext);

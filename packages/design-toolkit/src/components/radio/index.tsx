@@ -22,6 +22,11 @@ import type { RadioProps } from './types';
  *
  * Renders a selectable radio button with label. Must be used inside a RadioGroup.
  *
+ * @param props - {@link RadioProps}
+ * @param props.classNames - Custom CSS class names for radio, control, and label.
+ * @param props.children - Label content for the radio button.
+ * @returns The rendered Radio component.
+ *
  * @example
  * ```tsx
  * <RadioGroup label="Favorite color">

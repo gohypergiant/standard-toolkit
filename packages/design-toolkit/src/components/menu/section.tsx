@@ -32,6 +32,13 @@ import type { MenuSectionProps } from './types';
  *   <MenuItem>New</MenuItem>
  *   <MenuItem>Open</MenuItem>
  * </MenuSection>
+ *
+ * @param props - {@link MenuSectionProps}
+ * @param props.children - Menu items to render in the section.
+ * @param props.classNames - CSS class names for section elements.
+ * @param props.items - Collection of items for dynamic rendering.
+ * @param props.title - Title displayed in the section header.
+ * @returns The rendered MenuSection component.
  */
 export function MenuSection<T extends object>({
   children,

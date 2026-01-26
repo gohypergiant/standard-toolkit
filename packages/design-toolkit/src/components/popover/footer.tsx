@@ -19,6 +19,11 @@ import type { ComponentPropsWithRef } from 'react';
 
 /**
  * PopoverFooter - Footer area for actions or additional content
+ *
+ * @param props - ComponentPropsWithRef<'footer'>
+ * @param props.children - Footer content to render.
+ * @param props.className - Optional CSS class name.
+ * @returns The rendered PopoverFooter component.
  */
 export function PopoverFooter({
   children,

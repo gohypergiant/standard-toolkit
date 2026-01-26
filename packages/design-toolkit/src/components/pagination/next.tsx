@@ -26,6 +26,11 @@ import type { PaginationNextProps } from './types';
 
 /**
  * PaginationNext - Next page navigation button
+ *
+ * @param props - {@link PaginationNextProps}
+ * @param props.className - Optional CSS class name.
+ * @param props.onPress - Handler called when the next button is pressed.
+ * @returns The rendered PaginationNext component.
  */
 export function PaginationNext({ className, onPress }: PaginationNextProps) {
   const { page, total, setPage } = useContext(PaginationContext);

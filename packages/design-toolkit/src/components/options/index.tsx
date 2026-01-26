@@ -62,6 +62,13 @@ import type { OptionsDataItem, OptionsProps } from './types';
  *     <OptionsItem>All Items 1</OptionsItem>
  *   </OptionsSection>
  * </Options>
+ *
+ * @param props - {@link OptionsProps}
+ * @param props.ref - Forwarded ref to the underlying ListBox element.
+ * @param props.children - Options items and sections to render.
+ * @param props.className - Optional CSS class name.
+ * @param props.size - Size variant for the options list.
+ * @returns The rendered Options component.
  */
 export function Options<T extends OptionsDataItem>({
   ref,

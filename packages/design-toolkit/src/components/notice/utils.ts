@@ -18,6 +18,10 @@ import { isEqual } from 'radashi';
 /**
  * Checks if a payload matches metadata on a notice.
  * Used for filtering notices during dequeue operations.
+ *
+ * @param payload - Object with key-value pairs to match against.
+ * @param metadata - Metadata object from a notice to check.
+ * @returns True if all payload entries match corresponding metadata entries.
  */
 export function matchesMetadata(
   payload: Record<string, unknown>,

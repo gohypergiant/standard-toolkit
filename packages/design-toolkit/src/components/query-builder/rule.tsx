@@ -52,6 +52,9 @@ const QueryBuilderLines = memo(function QueryBuilderLines({
  * Rule - Individual rule component with field, operator, and value
  *
  * Renders the field selector, operator selector, value editor, and action buttons.
+ *
+ * @param props - RuleProps from react-querybuilder.
+ * @returns The rendered Rule component with all selectors and actions.
  */
 export function Rule(props: RuleProps) {
   const rule = useRule(props);

@@ -22,6 +22,10 @@ import type { LinkProps } from './types';
  * Use this to configure shared allowsVisited and className across
  * multiple Link components.
  *
+ * @param props - ProviderProps<LinkProps>
+ * @param props.children - Child components to receive context.
+ * @returns The rendered LinkProvider component.
+ *
  * @example
  * <LinkProvider allowsVisited className="visited:underline">
  *   <Link href="/link1">Link One</Link>

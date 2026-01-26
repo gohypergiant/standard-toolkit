@@ -27,6 +27,10 @@ import type { ListItemContentProps } from './types';
  *   <ListItemTitle>Item Title</ListItemTitle>
  *   <ListItemDescription>Optional description text</ListItemDescription>
  * </ListItemContent>
+ *
+ * @param props - {@link ListItemContentProps}
+ * @param props.className - Optional CSS class name.
+ * @returns The rendered ListItemContent component.
  */
 export function ListItemContent({ className, ...rest }: ListItemContentProps) {
   return <div {...rest} className={clsx(styles.content, className)} />;

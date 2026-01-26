@@ -206,6 +206,9 @@ const valueEditors: QueryBuilderValueEditors = {
  *
  * Renders appropriate editor based on field type: text, checkbox, radio, select, switch, or textarea.
  * Supports multi-value operators (between, notBetween) with start/end inputs.
+ *
+ * @param props - ValueEditorProps from react-querybuilder.
+ * @returns The rendered value editor, or null for null/notNull operators.
  */
 export function ValueEditor(props: ValueEditorProps) {
   const {

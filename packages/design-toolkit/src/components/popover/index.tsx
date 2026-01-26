@@ -48,6 +48,12 @@ import type { PopoverProps } from './types';
  *     </PopoverContent>
  *   </Popover>
  * </PopoverTrigger>
+ *
+ * @param props - {@link PopoverProps}
+ * @param props.children - Content to render inside the popover dialog.
+ * @param props.classNames - CSS class names for popover elements.
+ * @param props.dialogProps - Additional props passed to the Dialog component.
+ * @returns The rendered Popover component.
  */
 export function Popover({
   children,
