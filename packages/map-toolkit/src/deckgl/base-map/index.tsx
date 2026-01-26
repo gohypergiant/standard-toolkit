@@ -252,6 +252,8 @@ export function BaseMap({
   const emitHover = useEmit<MapHoverEvent>(MapEvents.hover);
   const emitViewport = useEmit<MapViewportEvent>(MapEvents.viewport);
 
+  const resizeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   const handleClick = useCallback(
     (info: PickingInfo, event: MjolnirGestureEvent) => {
       // send full pickingInfo and event to user-defined onClick
@@ -316,22 +318,30 @@ export function BaseMap({
   );
 
   const handleResize = useEffectEvent((params) => {
-    // @ts-expect-error squirrelly deckglInstance typing
-    const viewports = deckglInstance._deck.getViewports() ?? [];
-    for (const vp of viewports) {
-      handleViewStateChange({
-        viewId: vp.id,
-        viewState: {
-          latitude: vp.latitude,
-          longitude: vp.longitude,
-          zoom: vp.zoom,
-          id: vp.id,
-          bounds: vp.getBounds(),
-          width: params.width,
-          height: params.height,
-        },
-      } as ViewStateChangeParameters);
+    // Clear existing timeout
+    if (resizeTimeoutRef.current) {
+      clearTimeout(resizeTimeoutRef.current);
     }
+
+    // Debounce
+    resizeTimeoutRef.current = setTimeout(() => {
+      // @ts-expect-error squirrelly deckglInstance typing
+      const viewports = deckglInstance._deck.getViewports() ?? [];
+      for (const vp of viewports) {
+        handleViewStateChange({
+          viewId: vp.id,
+          viewState: {
+            latitude: vp.latitude,
+            longitude: vp.longitude,
+            zoom: vp.zoom,
+            id: vp.id,
+            bounds: vp.getBounds(),
+            width: params.width,
+            height: params.height,
+          },
+        } as ViewStateChangeParameters);
+      }
+    }, 500);
   });
 
   const handleLoad = useEffectEvent(() => {
