@@ -51,6 +51,21 @@ const months = [
  * month, and year. Includes calendar icon, validation states, and international
  * date format support with keyboard navigation between segments.
  *
+ * @param props - The date field props.
+ * @param props.classNames - Custom class names for sub-elements.
+ * @param props.description - Helper text displayed below the field.
+ * @param props.errorMessage - Error message displayed when invalid.
+ * @param props.inputProps - Additional props for the date input element.
+ * @param props.label - Label text displayed above the field.
+ * @param props.size - Size variant of the field.
+ * @param props.shortMonth - When true, displays 3-letter month abbreviation when not editing.
+ * @param props.shouldForceLeadingZeros - Whether to force leading zeros in segments.
+ * @param props.isDisabled - Whether the field is disabled.
+ * @param props.isInvalid - Whether the field is in an invalid state.
+ * @param props.isRequired - Whether the field is required.
+ * @param props.isReadOnly - Whether the field is read-only.
+ * @returns The date field component.
+ *
  * @example
  * // Basic date field
  * <DateField label="Birth Date" />

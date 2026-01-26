@@ -20,6 +20,9 @@ import type { DetailsListLabelProps } from './types';
  *
  * Renders as a `<dt>` element within the DetailsList grid.
  *
+ * @param props - The details list label props.
+ * @returns The details list label component.
+ *
  * @example
  * <DetailsList>
  *   <DetailsListLabel>Name</DetailsListLabel>

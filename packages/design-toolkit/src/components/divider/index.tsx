@@ -26,6 +26,12 @@ import type { DividerProps } from './types';
  * Provides a visual separator between content sections with support for both
  * horizontal and vertical orientations.
  *
+ * @param props - The divider props.
+ * @param props.ref - Reference to the hr element.
+ * @param props.className - Additional CSS class name.
+ * @param props.orientation - Orientation of the divider (horizontal or vertical).
+ * @returns The divider component.
+ *
  * @example
  * // Basic horizontal divider
  * <Divider />

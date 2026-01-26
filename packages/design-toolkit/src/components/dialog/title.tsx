@@ -21,6 +21,11 @@ import styles from './styles.module.css';
  *
  * Renders as an `<h2>` element with the `title` slot for accessibility.
  *
+ * @param props - The dialog title props.
+ * @param props.children - Title text content.
+ * @param props.className - Additional CSS class name.
+ * @returns The dialog title component.
+ *
  * @example
  * <Dialog>
  *   <DialogTitle>Confirm Action</DialogTitle>

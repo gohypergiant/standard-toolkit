@@ -35,6 +35,14 @@ const fallbackContent = {
  * unclassified, confidential, secret, and top-secret. Designed for compliance
  * with security standards in government and secure environments.
  *
+ * @param props - The classification badge props.
+ * @param props.ref - Reference to the badge element.
+ * @param props.children - Custom text content (defaults to variant label).
+ * @param props.className - Additional CSS class names for styling.
+ * @param props.size - Size of the badge.
+ * @param props.variant - Classification level variant.
+ * @returns The classification badge component.
+ *
  * @example
  * <ClassificationBadge variant="secret" />
  *

@@ -30,6 +30,15 @@ import type { DeletableChipProps } from './types';
  *
  * Must be used inside a ChipList with an onRemove handler.
  *
+ * @param props - The deletable chip props.
+ * @param props.ref - Reference to the chip element.
+ * @param props.id - Unique identifier for removal tracking.
+ * @param props.children - Chip content.
+ * @param props.classNames - Custom class names for sub-elements.
+ * @param props.size - Size of the chip.
+ * @param props.textValue - Accessible text value for the chip.
+ * @returns The deletable chip component.
+ *
  * @example
  * <ChipList onRemove={(keys) => console.log('Removed:', keys)}>
  *   <DeletableChip id="tag1">JavaScript</DeletableChip>

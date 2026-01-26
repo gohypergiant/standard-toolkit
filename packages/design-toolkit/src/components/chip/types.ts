@@ -23,6 +23,11 @@ type BaseChipProps = {
   size?: 'medium' | 'small';
 };
 
+/**
+ * Props for the ChipList component.
+ *
+ * Extends React Aria TagGroup with chip styling and list rendering options.
+ */
 export type ChipListProps<T> = Omit<TagGroupProps, 'children'> &
   Pick<
     TagListProps<T>,
@@ -31,24 +36,46 @@ export type ChipListProps<T> = Omit<TagGroupProps, 'children'> &
   RefAttributes<HTMLDivElement> &
   BaseChipProps;
 
+/**
+ * Props for the Chip component.
+ *
+ * Basic chip with color and size variants, can be used standalone or in a ChipList.
+ */
 export type ChipProps = Omit<ComponentPropsWithRef<'div'>, 'size' | 'onClick'> &
   BaseChipProps & {
+    /** Additional CSS class name for styling. */
     className?: string;
   };
 
+/**
+ * Props for the SelectableChip component.
+ *
+ * Extends Tag props for use in single or multiple selection chip lists.
+ */
 export type SelectableChipProps = TagProps &
   RefAttributes<HTMLDivElement> &
   BaseChipProps;
 
+/**
+ * Props for the DeletableChip component.
+ *
+ * Extends Tag props with remove button styling options.
+ */
 export type DeletableChipProps = Omit<TagProps, 'className'> &
   RefAttributes<HTMLDivElement> &
   BaseChipProps & {
+    /** Custom class names for chip sub-elements. */
     classNames?: {
+      /** Class name for the chip wrapper. */
       chip?: TagProps['className'];
+      /** Class name for the remove button. */
       remove?: ButtonProps['className'];
     };
   };
 
+/**
+ * Combined context value type for all chip variants.
+ */
 export type ChipContextValue = ChipProps &
   SelectableChipProps &
   DeletableChipProps;

@@ -21,6 +21,11 @@ import type { ComponentProps } from 'react';
  *
  * Provides appropriate spacing and styling for dialog body content.
  *
+ * @param props - The dialog content props.
+ * @param props.children - Content to display in the dialog body.
+ * @param props.className - Additional CSS class name.
+ * @returns The dialog content component.
+ *
  * @example
  * <Dialog>
  *   <DialogTitle>Title</DialogTitle>

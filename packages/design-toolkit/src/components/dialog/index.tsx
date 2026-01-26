@@ -32,6 +32,14 @@ import type { DialogProps } from './types';
  * and keyboard navigation. Supports multiple sizes and customizable dismissal behavior.
  * Perfect for confirmations, forms, or any content requiring user focus.
  *
+ * @param props - The dialog props.
+ * @param props.ref - Reference to the dialog element.
+ * @param props.children - Dialog content (can be a render function with close callback).
+ * @param props.classNames - Custom class names for sub-elements.
+ * @param props.parentRef - Reference to parent element for portal rendering.
+ * @param props.size - Size variant of the dialog.
+ * @returns The dialog component.
+ *
  * @example
  * // Basic dialog with trigger
  * <DialogTrigger>

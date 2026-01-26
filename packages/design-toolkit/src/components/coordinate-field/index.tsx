@@ -74,6 +74,21 @@ import type { CoordinateFieldProps } from './types';
  * systems (DD, DDM, DMS, MGRS, UTM). All values are normalized to Decimal Degrees internally
  * for consistency.
  *
+ * @param props - The coordinate field props.
+ * @param props.ref - Reference to the coordinate field element.
+ * @param props.classNames - Custom class names for sub-elements.
+ * @param props.description - Description text displayed below the field.
+ * @param props.label - Label text for the coordinate field.
+ * @param props.format - Coordinate format to use (dd, ddm, dms, mgrs, utm).
+ * @param props.size - Size variant of the field.
+ * @param props.variant - Layout variant (inline or stacked).
+ * @param props.showFormatButton - Whether to show the format conversion button.
+ * @param props.isDisabled - Whether the field is disabled.
+ * @param props.isInvalid - Whether the field is in an invalid state.
+ * @param props.isRequired - Whether the field is required.
+ * @param props.isReadOnly - Whether the field is read-only.
+ * @returns The coordinate field component.
+ *
  * @example
  * // Basic coordinate field
  * <CoordinateField label="Location" />

@@ -24,12 +24,25 @@ import { ChipContext, ChipProvider } from './context';
 import styles from './styles.module.css';
 import type { ChipListProps } from './types';
 
+/**
+ * React context indicating whether chips are being rendered inside a ChipList.
+ */
 export const ChipListRenderingContext = createContext(false);
 
 /**
  * ChipList - Container component for grouping multiple chips with shared behavior.
  *
  * Provides context for size and color, and enables selection and removal functionality.
+ *
+ * @param props - The chip list props.
+ * @param props.ref - Reference to the list container element.
+ * @param props.children - Chip components to render in the list.
+ * @param props.className - Additional CSS class names for styling.
+ * @param props.color - Default color for all chips in the list.
+ * @param props.size - Default size for all chips in the list.
+ * @param props.selectionMode - Enable single or multiple selection.
+ * @param props.onRemove - Callback when chips are removed.
+ * @returns The chip list component.
  *
  * @example
  * // Basic list

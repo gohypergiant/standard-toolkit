@@ -30,6 +30,10 @@ const DEFAULT_FORMATTER = new Intl.DateTimeFormat('en-US', {
  *
  * NOTE: This component comes **unstyled by default**.
  *
+ * @param props - The clock props.
+ * @param props.formatter - Custom DateTimeFormat for time display.
+ * @returns The clock component displaying current time.
+ *
  * @example
  * // Standard Clock
  * <Clock /> // <time>15:54:14 UTC</time>

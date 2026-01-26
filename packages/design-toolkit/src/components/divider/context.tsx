@@ -29,6 +29,10 @@ export const DividerContext =
  *
  * Use this to configure shared orientation across multiple Divider components.
  *
+ * @param props - The provider props.
+ * @param props.children - Child components that will receive the divider context.
+ * @returns The divider context provider wrapping children.
+ *
  * @example
  * <DividerProvider orientation="vertical">
  *   <Divider />

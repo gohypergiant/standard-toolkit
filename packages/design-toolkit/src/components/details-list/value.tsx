@@ -21,6 +21,9 @@ import type { DetailsListValueProps } from './types';
  * Renders as a `<dd>` element within the DetailsList grid.
  * Supports complex React nodes as children for rich value content.
  *
+ * @param props - The details list value props.
+ * @returns The details list value component.
+ *
  * @example
  * <DetailsList>
  *   <DetailsListLabel>Name</DetailsListLabel>

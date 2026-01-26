@@ -35,6 +35,13 @@ const fallbackContent = {
  * information at the top or bottom of pages. Essential for applications handling
  * classified or sensitive information requiring clear visual indicators.
  *
+ * @param props - The classification banner props.
+ * @param props.ref - Reference to the banner element.
+ * @param props.children - Custom text content (defaults to variant label).
+ * @param props.className - Additional CSS class names for styling.
+ * @param props.variant - Classification level variant.
+ * @returns The classification banner component.
+ *
  * @example
  * // Top classification banner
  * <ClassificationBanner variant="confidential" />

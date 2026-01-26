@@ -1067,6 +1067,11 @@ export function parseCoordinatePaste(
 
 /**
  * Check if two coordinates are equal within epsilon tolerance
+ *
+ * @param coord1 - First coordinate to compare.
+ * @param coord2 - Second coordinate to compare.
+ * @param epsilon - Tolerance for comparison (defaults to COORDINATE_EPSILON).
+ * @returns True if coordinates are equal within tolerance.
  */
 export function areCoordinatesEqual(
   coord1: { lat: number; lon: number },
@@ -1081,6 +1086,9 @@ export function areCoordinatesEqual(
 
 /**
  * Deduplicate coordinate matches by location, keeping first match for each unique location
+ *
+ * @param matches - Array of parsed coordinate matches to deduplicate.
+ * @returns Array of unique matches based on coordinate location.
  */
 export function deduplicateMatchesByLocation(
   matches: ParsedCoordinateMatch[],

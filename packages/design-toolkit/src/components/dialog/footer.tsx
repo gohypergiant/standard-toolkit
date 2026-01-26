@@ -26,6 +26,11 @@ import styles from './styles.module.css';
  * Automatically sizes child Button components based on the dialog size
  * and wires up default close behavior on button press.
  *
+ * @param props - The dialog footer props.
+ * @param props.children - Action buttons to display in the footer.
+ * @param props.className - Additional CSS class name.
+ * @returns The dialog footer component.
+ *
  * @example
  * <Dialog>
  *   <DialogTitle>Confirm</DialogTitle>

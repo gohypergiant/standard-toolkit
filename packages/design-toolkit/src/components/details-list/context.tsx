@@ -29,6 +29,10 @@ export const DetailsListContext =
  * Use this to configure shared alignment and classNames across multiple
  * DetailsList components in your application.
  *
+ * @param props - The provider props.
+ * @param props.children - Child components that will receive the details list context.
+ * @returns The details list context provider wrapping children.
+ *
  * @example
  * <DetailsListProvider align="left">
  *   <DetailsList>...</DetailsList>

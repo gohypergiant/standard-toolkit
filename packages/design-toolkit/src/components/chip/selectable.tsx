@@ -27,6 +27,15 @@ import type { SelectableChipProps } from './types';
  *
  * Must be used inside a ChipList with selectionMode set to "single" or "multiple".
  *
+ * @param props - The selectable chip props.
+ * @param props.ref - Reference to the chip element.
+ * @param props.id - Unique identifier for selection tracking.
+ * @param props.className - Additional CSS class names for styling.
+ * @param props.color - Semantic color variant.
+ * @param props.size - Size of the chip.
+ * @param props.children - Chip content.
+ * @returns The selectable chip component.
+ *
  * @example
  * <ChipList selectionMode="multiple">
  *   <SelectableChip id="react">React</SelectableChip>

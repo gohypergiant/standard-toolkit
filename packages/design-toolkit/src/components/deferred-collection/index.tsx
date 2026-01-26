@@ -20,6 +20,12 @@ import type { DeferredCollectionProps } from './types';
  * virtualization begins. This component defers the collection render by a few
  * animation frames, allowing a fallback to display first.
  *
+ * @param props - The deferred collection props.
+ * @param props.children - Content to render once ready (ReactNode or function returning ReactNode).
+ * @param props.fallback - Fallback element to show while deferring render.
+ * @param props.deferFrames - Number of animation frames to defer before rendering.
+ * @returns The deferred collection component with fallback or children.
+ *
  * @example
  * <DeferredCollection fallback={<LoadingState />}>
  *   {() => (

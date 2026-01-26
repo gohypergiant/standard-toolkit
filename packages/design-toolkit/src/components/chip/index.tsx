@@ -28,6 +28,14 @@ import type { ChipProps } from './types';
  * Includes variants for deletable and selectable chips with keyboard navigation and
  * accessibility features. Perfect for tags, filters, or multi-selection interfaces.
  *
+ * @param props - The chip props.
+ * @param props.ref - Reference to the chip element.
+ * @param props.className - Additional CSS class names for styling.
+ * @param props.color - Semantic color variant.
+ * @param props.size - Size of the chip.
+ * @param props.children - Chip content (text, icons, or both).
+ * @returns The chip component.
+ *
  * @example
  * // Basic chip
  * <Chip>JavaScript</Chip>
