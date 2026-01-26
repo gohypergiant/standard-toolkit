@@ -1,15 +1,13 @@
-@import '@accelint/design-foundation/styles';
-
 /*
  * tw utility classes should not be used in DTK components
  * when tw utility classes are used in DTK components they aren't included in app css unless we explicitly tell tailwind to scan the design-toolkit code
- * to mimic this in storybook, we explicitly tell tailwind to NOT scan our components for utilities here.
+ * to mimic this in storybook, we explicitly tell tailwind to NOT scan for utilities here with `source(none)`.
  * this will help prevent discrepancies between storybook and apps that use DTK.
  */
-@source not '../src/components';
+@import '@accelint/design-foundation/styles' source(none);
 
 /*
  * tw utility classes can and should be leveraged in storybook stories, for things like layout, component override examples, etc
  * we explicitly scan those files for tw utility classes to include in the storybook css
  */
-@source '../src/**/*.stories.tsx';
+@source '../src/**/**.stories.tsx';
