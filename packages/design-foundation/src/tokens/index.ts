@@ -11,6 +11,7 @@
  */
 
 import type { ThemeTokens } from './types';
+/** Design system tokens for dark/light themes, static colors, typography, spacing, radius, and shadows */
 export const designTokens = {
   dark: {
     bg: {
