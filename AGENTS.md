@@ -84,17 +84,56 @@ Maintain TODO.md with this structure (create if needed):
 - [ ] Task 4
 ```
 
-## Git & Pull Requests
+## Quality Requirements
 
-**Commits**: Follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/#specification)
+IMPORTANT: Before ANY commit, run these commands in order:
 
-**PR Title**: `<type>: <short description>`
-- Types: fix, feat, build, chore, ci, docs, style, refactor, perf, test
-
-**Before committing**, always run:
 ```bash
 pnpm run build
 pnpm run test
 pnpm run lint
 pnpm run format
 ```
+
+All must pass. No exceptions.
+
+## Git & Versioning
+
+**Commits**: Follow [Conventional Commits](https://www.conventionalcommits.org/)
+- `feat:` New features
+- `fix:` Bug fixes
+- `refactor:` Code refactoring
+- `test:` Test additions/changes
+- `docs:` Documentation
+- `chore:` Maintenance tasks
+
+**Changesets**: Required for version bumps
+- Run `pnpm changeset` to document changes
+- Describe user-facing changes clearly
+- Choose appropriate semver bump (major/minor/patch)
+
+A changeset is only required if internal source code is changed (usually within a `src/` directory). Examples of when NOT to create a changeset:
+- Adding/modifying code comments
+- Adding/modifying markdown documentation
+- Adding/modifying Storybook code
+- Adding/modifying tests
+
+
+## Important Reminders
+
+- NO time estimates or predictions
+- NO unnecessary comments/docstrings on unchanged code
+- NO backwards-compatibility hacks for unused code
+- NO feature flags or premature configurability
+- Delete unused code completely, don't comment it out
+
+## Common Patterns
+
+**Finding code**:
+- Use Explore agent for codebase orientation
+- Check existing patterns before implementing new ones
+- Look for similar functionality in other packages
+
+**Package dependencies**:
+- Internal packages use `workspace:*` protocol
+- Run `pnpm run lint:deps` to verify correct semver ranges
