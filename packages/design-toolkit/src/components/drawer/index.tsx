@@ -77,7 +77,6 @@ export function Drawer({
         views.current.has(data?.payload?.view) ||
         data?.payload?.view === id
       ) {
-        console.log('getting here');
         viewStackEmit.clear(id);
       }
     },
