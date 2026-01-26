@@ -21,6 +21,7 @@ import { identity } from '../../combinators/identity';
  * @template C - The string template of property name of A.
  * @param obj - The table lookup object.
  * @param def - The function used to handle the default value if the lookup returns `undefined`.
+ * @returns A function that performs the lookup on the provided object.
  *
  * @remarks
  * pure function

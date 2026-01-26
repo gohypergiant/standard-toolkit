@@ -18,6 +18,7 @@ import type { Predicate } from '@/types';
  * @template T - The type of array elements.
  * @param predicate - A predicate function to apply to each element of the array.
  * @param arr - The array to filter on based on the predicate.
+ * @returns A new array containing only elements that satisfy the predicate.
  *
  * @remarks
  * pure function

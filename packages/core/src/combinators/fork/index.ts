@@ -21,6 +21,7 @@
  * @param b - The first function to pass the value to.
  * @param c - The second function to pass the value to.
  * @param d - The value to pass to `b` and `c`.
+ * @returns The result of a(b(d))(c(d)).
  *
  * @remarks
  * Phi combinator

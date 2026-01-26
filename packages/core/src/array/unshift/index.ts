@@ -16,6 +16,7 @@
  * @template T - The type of array elements.
  * @param arr - The array to add an item to.
  * @param x - The value to add to the start of the array.
+ * @returns A new array with the value added to the start.
  *
  * @remarks
  * pure function

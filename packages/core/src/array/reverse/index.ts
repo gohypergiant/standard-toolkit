@@ -15,6 +15,7 @@
  *
  * @template T - The type of array elements.
  * @param arr - The array to reverse the order of.
+ * @returns A new array with elements in reversed order.
  *
  * @remarks
  * pure function

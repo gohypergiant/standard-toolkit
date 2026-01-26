@@ -18,6 +18,7 @@
  * @param start - The index to start at (inclusive).
  * @param end - The index to end on (exclusive).
  * @param arr - The array to get a slice from.
+ * @returns A new array with elements between start and end.
  *
  * @remarks
  * pure function

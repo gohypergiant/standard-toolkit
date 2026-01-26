@@ -27,6 +27,7 @@ export type Curried<T extends unknown[], R> = <P extends Partial<T>>(
  *
  * @template T - The function type to curry.
  * @param fn - The function to convert to a curried version of.
+ * @returns A curried version of the input function.
  *
  * @remark
  * pure function

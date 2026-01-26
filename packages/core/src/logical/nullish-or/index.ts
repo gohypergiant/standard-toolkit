@@ -17,6 +17,7 @@
  * @template B - The type of the second input value.
  * @param a - The possible null value.
  * @param b - The value to fallback to.
+ * @returns The first value if not nullish, otherwise the second value.
  *
  * @remark
  * pure function
@@ -39,6 +40,7 @@ export const nullishOr =
  * @param a - The function to get the, possibly null, return of.
  * @param b - The function to get the fallback return of.
  * @param c - The value to pass to both `a` and `b`.
+ * @returns The first function result if not nullish, otherwise the second.
  *
  * @remark
  * pure function
@@ -60,6 +62,7 @@ export const nullishOrFn =
  * @template B - The type of the second input value.
  * @param a - The value to fallback to.
  * @param b - The possible null value.
+ * @returns The second value if not nullish, otherwise the first value.
  *
  * @remark
  * pure function
@@ -82,6 +85,7 @@ export const swappedNullishOr =
  * @param a - The function to get the fallback return of.
  * @param b - The function to get the, possibly null, return of.
  * @param c - The value to pass to both `a` and `b`.
+ * @returns The second function result if not nullish, otherwise the first.
  *
  * @remark
  * pure function

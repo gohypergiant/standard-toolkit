@@ -20,6 +20,7 @@ import type { MapFn } from '@/types';
  * @template R - The return type of the mapping function.
  * @param map - The mapping function to apply to each element of the array.
  * @param arr - The array to map over.
+ * @returns A new array with the results of the mapping function.
  *
  * @remarks
  * pure function

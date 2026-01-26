@@ -127,6 +127,7 @@ type Composable<Fn extends CompositionArray> = Fn extends readonly [
  * @template Fns - The list of unary functions.
  * @param fns - The functions to compose.
  * @param args - The arguments to give to the first function in the composition.
+ * @returns A composed function that executes right-to-left.
  *
  * @remarks
  * The implementation follows right-to-left composition semantics:

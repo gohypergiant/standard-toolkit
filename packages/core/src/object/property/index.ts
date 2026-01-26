@@ -17,6 +17,7 @@
  * @template K - The string template of property name of T.
  * @param obj - The object to get the value from.
  * @param prop - The property to get the value of.
+ * @returns The value of the specified property.
  *
  * @remarks
  * pure function
@@ -47,6 +48,7 @@ export const prop = property;
  * @template K - The string template of property name of T.
  * @param obj - The object to get the value from.
  * @param prop - The property to get the value of.
+ * @returns The value of the specified property, or undefined if not found.
  *
  * @remarks
  * pure function

@@ -17,6 +17,19 @@ type IteratorCallback<T> = () => IteratorResult<T>;
  *
  * @template T - The type of IteratorCallback.
  * @param iterCb - The `next` callback for an Iterator.
+ * @returns An iterable iterator object.
+ *
+ * @example
+ * import { createIterable } from '@accelint/core';
+ *
+ * let count = 0;
+ * const counter = createIterable(() =>
+ *   count < 3 ? { value: count++, done: false } : { value: undefined, done: true }
+ * );
+ *
+ * for (const num of counter) {
+ *   console.log(num); // 0, 1, 2
+ * }
  */
 export function createIterable<T>(
   iterCb: IteratorCallback<T>,

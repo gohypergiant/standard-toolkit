@@ -10,6 +10,20 @@
  * governing permissions and limitations under the License.
  */
 
-/** A no operation function */
+/**
+ * A no-operation function that does nothing and returns nothing.
+ *
+ * @param _x - Optional parameter that is ignored.
+ * @returns void
+ *
+ * @example
+ * import { noop } from '@accelint/core';
+ *
+ * noop();
+ * // Does nothing
+ *
+ * noop('ignored');
+ * // Still does nothing
+ */
 // biome-ignore lint/suspicious/noEmptyBlockStatements: It is intentional
 export const noop = (_x?: unknown) => {};

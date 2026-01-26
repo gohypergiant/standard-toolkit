@@ -18,6 +18,7 @@
  * @template B - The type of the second input value.
  * @param a - The value to return.
  * @param b - The value to ignore.
+ * @returns The first argument.
  *
  * @remarks
  * K combinator

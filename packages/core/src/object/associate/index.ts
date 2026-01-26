@@ -18,6 +18,7 @@
  * @param obj - The object to set the value on.
  * @param prop - The property to set the value to.
  * @param val - The new value.
+ * @returns A new shallow copy of the object with the updated property.
  *
  * @example
  * associate(personStore)('address')({
@@ -48,6 +49,7 @@ export const assoc = associate;
  * @param obj - The object to set the value on.
  * @param prop - The property to set the value to.
  * @param val - The new value.
+ * @returns A new deep copy of the object with the updated property.
  *
  * @remarks
  * pure function

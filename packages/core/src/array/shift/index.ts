@@ -16,6 +16,7 @@
  *
  * @template T - The type of array elements.
  * @param arr - The element to get the `head`/`tail` of.
+ * @returns A tuple of [head, tail].
  *
  * @remarks
  * pure function

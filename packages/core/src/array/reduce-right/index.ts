@@ -20,6 +20,7 @@ import type { Accumulator } from '@/types';
  * @param fn - The accumulator function to apply to each element of the array.
  * @param initVal - The initial value of the reduction.
  * @param arr - The array to fold over.
+ * @returns The accumulated result.
  *
  * @remarks
  * pure function

@@ -16,6 +16,7 @@
  *
  * @template A - The type of the input value.
  * @param x - The value to return.
+ * @returns The input value unchanged.
  *
  * @remarks
  * I combinator

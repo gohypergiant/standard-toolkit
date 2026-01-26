@@ -17,6 +17,7 @@ import { createIterable } from '../create-iterable';
  *
  * @param start - The start of the number range (inclusive)
  * @param end - The end of the number range (inclusive)
+ * @returns An iterable iterator over the number range.
  *
  * @example
  * for (const n of range(1, 10)) {

@@ -19,6 +19,7 @@
  * @param f - The second function in the composition.
  * @param g - The first function in the composition.
  * @param x - The value to pass to `g`.
+ * @returns The result of f(g(x)).
  *
  * @remarks
  * B combinator

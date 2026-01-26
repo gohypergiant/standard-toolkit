@@ -16,6 +16,7 @@
  * @template T - The type of array elements.
  * @param x - The value to find in the array.
  * @param arr - The array to search for the element in.
+ * @returns true if the array includes the element, false otherwise.
  *
  * @remarks
  * pure function

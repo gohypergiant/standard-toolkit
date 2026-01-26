@@ -19,6 +19,7 @@ type SomeFunction = (...args: any[]) => any;
  *
  * @template T - The type of the function to call once.
  * @param fn - The function to call once.
+ * @returns A wrapped function that executes only on the first call.
  *
  * @example
  * let globalVal = 10;

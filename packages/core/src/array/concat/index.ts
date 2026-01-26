@@ -16,6 +16,7 @@
  * @template T - The type of array elements.
  * @param concatable - The second array to add to the end of the first.
  * @param newValue - The first array to append to.
+ * @returns A new array with elements from both arrays.
  *
  * @remarks
  * pure function

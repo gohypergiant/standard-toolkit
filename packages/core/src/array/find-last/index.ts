@@ -19,6 +19,7 @@ import type { Predicate } from '@/types';
  * @template T - The type of array elements.
  * @param predicate - A predicate function to apply to each element of the array.
  * @param arr - The array to find against based on the predicate.
+ * @returns The last element that satisfies the predicate, or null if not found.
  *
  * @remarks
  * pure function
