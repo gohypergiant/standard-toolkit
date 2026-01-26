@@ -32,6 +32,33 @@ describe('random', () => {
     expect(randomInt(1, 1)).toEqual(1);
   });
 
+  it('handles floating point boundaries correctly', () => {
+    // Arrange
+    const min = 0.5;
+    const max = 10.5;
+
+    // Act
+    const value = randomInt(min, max);
+
+    // Assert
+    expect(Number.isInteger(value)).toBe(true);
+    expect(value).toBeGreaterThanOrEqual(Math.ceil(min)); // 1
+    expect(value).toBeLessThanOrEqual(Math.floor(max)); // 10
+  });
+
+  it('generates random numbers in negative ranges', () => {
+    // Arrange
+    const min = -10;
+    const max = -5;
+
+    // Act
+    const value = random(min, max);
+
+    // Assert
+    expect(value).toBeGreaterThanOrEqual(min);
+    expect(value).toBeLessThanOrEqual(max);
+  });
+
   it('throws when min is greater than max', () => {
     expect(() => random(1, 0)).toThrow(RangeError);
     expect(() => randomInt(1, 0)).toThrow(RangeError);
