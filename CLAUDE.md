@@ -6,6 +6,8 @@
 
 ## Essential Commands
 
+**All available commands are defined in the root `package.json` under the `scripts` field.** Key commands include:
+
 ```bash
 # Development
 pnpm build                 # Build all packages
@@ -32,6 +34,8 @@ pnpm run lint:fs           # Lint file system with ls-lint
 pnpm run lint:package.     # Lint package.json with syncpack
 pnpm run lint:rac          # Lint react-aria-components and @react-aria/* package versions
 ```
+
+For the complete list of available commands, refer to the `scripts` section in `./package.json`.
 
 ## Repository Structure
 
@@ -67,8 +71,14 @@ tooling/
 
 ## Tech Stack
 
-- **Package Manager**: pnpm@10+ (required)
-- **Node**: >=22 (required)
+**For exact versions and dependencies, refer to `./package.json` in the following fields:**
+- `engines` - Node and pnpm version requirements
+- `devDependencies` - Build tools, linters, testing frameworks
+- `packageManager` - Package manager specification
+
+Key technologies:
+- **Package Manager**: pnpm (see `packageManager` field)
+- **Node**: See `engines.node` field
 - **Build Tool**: Turbo (monorepo orchestration)
 - **Linter/Formatter**: Biome
 - **Testing**: Vitest
