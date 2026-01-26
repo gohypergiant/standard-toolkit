@@ -10,4 +10,4 @@
  * tw utility classes can and should be leveraged in storybook stories, for things like layout, component override examples, etc
  * we explicitly scan those files for tw utility classes to include in the storybook css
  */
-@source '../src/**/**.stories.tsx';
+@source '../src/**/*.stories.tsx';
