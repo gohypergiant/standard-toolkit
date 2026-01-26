@@ -9,7 +9,7 @@ The Accordion component provides a collapsible content section that can expand a
 
 It is composed of the following components:
 
-- **[AccordionGroup](?path=/docs/components-accordion-group--playground)** - Container component that groups multiple accordions together and provides shared configuration like variant and multiple expansion behavior.
+- **[AccordionGroup](?path=/docs/components-accordiongroup--playground)** - Container component that groups multiple accordions together and provides shared configuration like variant and multiple expansion behavior.
 - **Accordion** - Main accordion component that manages the expand/collapse state and renders the header and panel.
 - **AccordionHeader** - Container for the accordion trigger and any additional header elements like menus or action buttons.
 - **AccordionTrigger** - Button that controls the expand/collapse state.
@@ -82,9 +82,10 @@ Extends all [`Disclosure` props](https://react-spectrum.adobe.com/react-aria/Dis
 The `className` and `children` props accept a function that receives state:
 ```tsx
 <Accordion>
-  {({ isExpanded, isDisabled }) => (
-    <>...</>
-  )}
+  {(renderProps) => {}
+    console.log(renderProps);
+    return (<>...//</>);
+  }
 </Accordion>
 ```
 
@@ -129,12 +130,12 @@ Built on [react-aria-components Disclosure](https://react-spectrum.adobe.com/rea
 - Proper heading structure
 - Expanded/collapsed state announcements
 
-When used within an [AccordionGroup](?path=/docs/components-accordion-group--playground), arrow keys navigate between accordion triggers.
+When used within an [AccordionGroup](?path=/docs/components-accordiongroup--playground), arrow keys navigate between accordion triggers.
 
 ## Implementation Notes
 - Wraps `Disclosure` from react-aria-components
 - Chevron icon rotates to indicate expanded state
-- Use [AccordionGroup](?path=/docs/components-accordion-group--playground) for multiple accordions with shared behavior
+- Use [AccordionGroup](?path=/docs/components-accordiongroup--playground) for multiple accordions with shared behavior
 
 **Related:**
 - [Disclosure Docs](https://react-spectrum.adobe.com/react-aria/Disclosure.html)

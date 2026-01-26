@@ -1,6 +1,7 @@
 import { Canvas, Meta } from '@storybook/addon-docs/blocks';
 
 import * as ButtonStories from './button.stories';
+import * as MenuButtonStories from './composition/menu-button.stories';
 
 <Meta of={ButtonStories} />
 
@@ -44,6 +45,11 @@ Button with pressed/unpressed state. Note: `filled` variant is not available for
 </ToggleButton>
 ```
 <Canvas of={ButtonStories.Toggle} />
+
+### Composite Menu Button
+Examples of using a button in a very common compositional pattern
+<Canvas of={MenuButtonStories.Default} />
+<Canvas of={MenuButtonStories.WithTooltip} />
 
 ## Variants
 
