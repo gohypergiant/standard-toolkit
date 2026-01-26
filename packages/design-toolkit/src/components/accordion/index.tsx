@@ -23,13 +23,22 @@ import styles from './styles.module.css';
 import type { AccordionProps } from './types';
 
 /**
- * Accordion - A collapsible content component with expandable sections
+ * Accordion - A collapsible content component with expandable sections.
  *
  * Provides an accessible accordion interface for organizing content into
- * collapsible sections. Supports both compact and full variants with
+ * collapsible sections. Supports both compact and cozy variants with
  * integrated controls for expanding/collapsing content areas.
  *
+ * @param props - The accordion props.
+ * @param props.ref - Reference to the root div element.
+ * @param props.children - Content to render within the accordion, typically AccordionHeader and AccordionPanel.
+ * @param props.className - Additional CSS class names for styling.
+ * @param props.variant - Visual variant of the accordion ('compact' or 'cozy').
+ * @param props.isDisabled - Whether the accordion is disabled.
+ * @returns The accordion component.
+ *
  * @example
+ * ```tsx
  * // Basic accordion
  * <Accordion>
  *   <AccordionHeader>
@@ -37,8 +46,10 @@ import type { AccordionProps } from './types';
  *   </AccordionHeader>
  *   <AccordionPanel>Content goes here</AccordionPanel>
  * </Accordion>
+ * ```
  *
  * @example
+ * ```tsx
  * // Compact variant
  * <Accordion variant="compact">
  *   <AccordionHeader>
@@ -46,8 +57,10 @@ import type { AccordionProps } from './types';
  *   </AccordionHeader>
  *   <AccordionPanel>Compact content</AccordionPanel>
  * </Accordion>
+ * ```
  *
  * @example
+ * ```tsx
  * // Multiple accordions in a group
  * <AccordionGroup>
  *   <Accordion>
@@ -63,6 +76,7 @@ import type { AccordionProps } from './types';
  *     <AccordionPanel>Second content</AccordionPanel>
  *   </Accordion>
  * </AccordionGroup>
+ * ```
  */
 export function Accordion({ ref, ...props }: AccordionProps) {
   [props, ref] = useContextProps(props, ref ?? null, AccordionContext);

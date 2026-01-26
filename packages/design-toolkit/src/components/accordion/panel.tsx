@@ -17,6 +17,30 @@ import { composeRenderProps, DisclosurePanel } from 'react-aria-components';
 import styles from './styles.module.css';
 import type { AccordionPanelProps } from './types';
 
+/**
+ * Content panel component for accordion sections.
+ *
+ * Wraps collapsible content that is shown or hidden when the
+ * corresponding accordion trigger is activated.
+ *
+ * @param props - The accordion panel props.
+ * @param props.ref - Reference to the panel div element.
+ * @param props.children - Content to display within the panel.
+ * @param props.className - Additional CSS class names for styling.
+ * @returns The accordion panel component.
+ *
+ * @example
+ * ```tsx
+ * <Accordion>
+ *   <AccordionHeader>
+ *     <AccordionTrigger>Details</AccordionTrigger>
+ *   </AccordionHeader>
+ *   <AccordionPanel>
+ *     <p>This content is collapsible.</p>
+ *   </AccordionPanel>
+ * </Accordion>
+ * ```
+ */
 export function AccordionPanel({
   ref,
   children,

@@ -13,9 +13,11 @@
 import { uuid } from '@accelint/core';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import type { ReactNode } from 'react';
 import { describe, expect, it } from 'vitest';
 import { Button } from '../button';
 import { Drawer } from './';
+import { DrawerClose } from './close';
 import { DrawerContent } from './content';
 import { DrawerFooter } from './footer';
 import { DrawerHeader } from './header';
@@ -24,9 +26,8 @@ import { DrawerMenu } from './menu';
 import { DrawerMenuItem } from './menu-item';
 import { DrawerPanel } from './panel';
 import { DrawerTrigger } from './trigger';
-import { DrawerView } from './view';
-import type { ReactNode } from 'react';
 import type { DrawerProps } from './types';
+import { DrawerView } from './view';
 
 const ids = {
   drawer: uuid(),
@@ -92,9 +93,10 @@ function setup(
         <DrawerPanel>
           <DrawerHeader>
             <DrawerHeaderTitle>Title</DrawerHeaderTitle>
-            <DrawerTrigger for='close'>
+            <DrawerTrigger for={'clear'}>
               <Button>Close</Button>
             </DrawerTrigger>
+            <DrawerClose aria-label='close-with' for={ids.a} />
           </DrawerHeader>
           <DrawerContent>
             <DrawerView id={ids.a}>View A</DrawerView>
@@ -108,9 +110,12 @@ function setup(
     ...rest
   }: Partial<DrawerProps> = {},
   outside: ReactNode = (
-    <DrawerTrigger for={`open:${ids.a}`}>
-      <Button>Open A</Button>
-    </DrawerTrigger>
+    <>
+      <DrawerTrigger for={`open:${ids.a}`}>
+        <Button>Open A</Button>
+      </DrawerTrigger>
+      <DrawerClose for={ids.a} aria-label='outside-close' />
+    </>
   ),
 ) {
   return {
@@ -203,7 +208,7 @@ describe('Drawer', () => {
     expect(screen.queryByText('View C')).not.toBeInTheDocument();
   });
 
-  it('should close', async () => {
+  it('should close with trigger', async () => {
     const { container } = setup({ defaultView: ids.a });
 
     expect(screen.getByText('View A')).toBeInTheDocument();
@@ -211,6 +216,38 @@ describe('Drawer', () => {
     expect(screen.queryByText('View C')).not.toBeInTheDocument();
 
     await userEvent.click(screen.getByText('Close'));
+
+    expect(screen.queryByText('View A')).not.toBeInTheDocument();
+    expect(screen.queryByText('View B')).not.toBeInTheDocument();
+    expect(screen.queryByText('View C')).not.toBeInTheDocument();
+
+    expect(container.firstChild).not.toHaveAttribute('data-open');
+  });
+
+  it('should close with DrawerClose with specified ID', async () => {
+    const { container } = setup({ defaultView: ids.a });
+
+    expect(screen.getByText('View A')).toBeInTheDocument();
+    expect(screen.queryByText('View B')).not.toBeInTheDocument();
+    expect(screen.queryByText('View C')).not.toBeInTheDocument();
+
+    await userEvent.click(screen.getByLabelText('close-with'));
+
+    expect(screen.queryByText('View A')).not.toBeInTheDocument();
+    expect(screen.queryByText('View B')).not.toBeInTheDocument();
+    expect(screen.queryByText('View C')).not.toBeInTheDocument();
+
+    expect(container.firstChild).not.toHaveAttribute('data-open');
+  });
+
+  it('should close outside with provided ID.', async () => {
+    const { container } = setup({ defaultView: ids.a });
+
+    expect(screen.getByText('View A')).toBeInTheDocument();
+    expect(screen.queryByText('View B')).not.toBeInTheDocument();
+    expect(screen.queryByText('View C')).not.toBeInTheDocument();
+
+    await userEvent.click(screen.getByLabelText('outside-close'));
 
     expect(screen.queryByText('View A')).not.toBeInTheDocument();
     expect(screen.queryByText('View B')).not.toBeInTheDocument();

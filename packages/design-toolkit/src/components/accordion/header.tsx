@@ -24,6 +24,30 @@ import { AccordionContext } from './context';
 import styles from './styles.module.css';
 import type { AccordionHeaderProps } from './types';
 
+/**
+ * Header component for accordion sections.
+ *
+ * Provides context and styling for the accordion trigger button and
+ * optional menu actions. Automatically adjusts icon sizes based on
+ * the accordion variant.
+ *
+ * @param props - The accordion header props.
+ * @param props.ref - Reference to the header element.
+ * @param props.children - Content to display in the header, typically an AccordionTrigger.
+ * @param props.className - Additional CSS class names for styling.
+ * @returns The accordion header component.
+ *
+ * @example
+ * ```tsx
+ * <Accordion>
+ *   <AccordionHeader>
+ *     <AccordionTrigger>Section Title</AccordionTrigger>
+ *     <Button>Action</Button>
+ *   </AccordionHeader>
+ *   <AccordionPanel>Content</AccordionPanel>
+ * </Accordion>
+ * ```
+ */
 export function AccordionHeader({
   ref,
   children,

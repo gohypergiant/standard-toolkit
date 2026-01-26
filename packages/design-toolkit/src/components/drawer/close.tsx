@@ -12,15 +12,28 @@
 
 'use client';
 
-import 'client-only';
+import type { UniqueId } from '@accelint/core';
 import Cancel from '@accelint/icons/cancel';
+import 'client-only';
+import { useContext } from 'react';
 import { Button } from '../button';
 import { Icon } from '../icon';
+import { ViewStackContext } from '../view-stack/context';
 import { DrawerTrigger } from './trigger';
+import type { DrawerCloseProps, SimpleEvents, TargetedEvents } from './types';
 
-export function DrawerClose() {
+export function DrawerClose(props: DrawerCloseProps) {
+  const context = useContext(ViewStackContext);
+  const id: UniqueId | null = props.for ?? context.parent ?? null;
+
+  const event = id
+    ? (`close:${id}` as TargetedEvents)
+    : ('close' as SimpleEvents);
+
   return (
-    <DrawerTrigger for='close'>
+    // Note, not using ...rest due to possible memory leak within <Pressable />
+    // Still investigating.
+    <DrawerTrigger aria-label={props['aria-label']} for={event}>
       <Button variant='icon'>
         <Icon>
           <Cancel />
@@ -29,3 +42,4 @@ export function DrawerClose() {
     </DrawerTrigger>
   );
 }
+DrawerClose.displayName = 'DrawerClose';
