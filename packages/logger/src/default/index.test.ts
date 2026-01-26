@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { describe, expect, test, vi, beforeEach, afterEach } from 'vitest';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import type { LoggerOptions } from '../definitions';
 
 // Mock the bootstrap module
@@ -22,6 +22,7 @@ vi.mock('./bootstrap', () => ({
     debug: vi.fn(),
     trace: vi.fn(),
     fatal: vi.fn(),
+    // biome-ignore lint/style/useNamingConvention: This is for testing
     _testOptions: opts, // For test verification
   })),
 }));
