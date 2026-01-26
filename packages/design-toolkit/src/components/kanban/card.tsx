@@ -25,6 +25,13 @@ import type { KanbanCardProps } from './types';
  * Provides drag-and-drop functionality with visual feedback
  * including drop position indicators.
  *
+ * @param props - {@link KanbanCardProps}
+ * @param props.className - Optional CSS class name.
+ * @param props.children - Card content (header, body).
+ * @param props.card - Card data.
+ * @param props.isActive - Whether this card is currently active/selected.
+ * @returns The rendered KanbanCard component.
+ *
  * @example
  * <KanbanCard card={cardData}>
  *   <KanbanCardHeader>

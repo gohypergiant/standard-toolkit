@@ -18,6 +18,11 @@ import type { KanbanComponentProps } from './types';
 
 /**
  * KanbanColumnContainer - Container that holds all columns
+ *
+ * @param props - {@link KanbanComponentProps}
+ * @param props.children - Column elements.
+ * @param props.className - Optional CSS class name.
+ * @returns The rendered KanbanColumnContainer component.
  */
 export function KanbanColumnContainer({
   children,

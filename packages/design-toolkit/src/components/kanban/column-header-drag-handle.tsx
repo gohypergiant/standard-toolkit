@@ -17,6 +17,8 @@ import { Icon } from '../icon';
 
 /**
  * KanbanColumnHeaderDragHandle - Visual indicator for column dragging
+ *
+ * @returns The rendered KanbanColumnHeaderDragHandle component.
  */
 export function KanbanColumnHeaderDragHandle() {
   return (

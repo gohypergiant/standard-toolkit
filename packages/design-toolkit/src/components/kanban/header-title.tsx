@@ -19,6 +19,11 @@ import type { KanbanComponentProps } from './types';
 
 /**
  * KanbanHeaderTitle - Heading element for the board title
+ *
+ * @param props - {@link KanbanComponentProps}
+ * @param props.children - Title text content.
+ * @param props.className - Optional CSS class name.
+ * @returns The rendered KanbanHeaderTitle component.
  */
 export function KanbanHeaderTitle({
   children,

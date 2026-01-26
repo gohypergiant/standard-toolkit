@@ -20,6 +20,11 @@ import type { KanbanComponentProps } from './types';
  * KanbanColumnHeader - Header section of a column
  *
  * Contains title, drag handle, and actions.
+ *
+ * @param props - {@link KanbanComponentProps}
+ * @param props.children - Header content (title, actions, drag handle).
+ * @param props.className - Optional CSS class name.
+ * @returns The rendered KanbanColumnHeader component.
  */
 export function KanbanColumnHeader({
   children,

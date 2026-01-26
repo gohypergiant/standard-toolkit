@@ -24,6 +24,12 @@ import type { KanbanColContentProps } from './types';
  * KanbanColumnContent - Container for cards within a column
  *
  * Provides sortable context for card drag-and-drop.
+ *
+ * @param props - {@link KanbanColContentProps}
+ * @param props.children - Card elements.
+ * @param props.className - Optional CSS class name.
+ * @param props.column - Column data for sortable context.
+ * @returns The rendered KanbanColumnContent component.
  */
 export function KanbanColumnContent({
   children,

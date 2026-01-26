@@ -18,6 +18,11 @@ import type { KanbanComponentProps } from './types';
 
 /**
  * KanbanCardHeaderActions - Container for card action buttons
+ *
+ * @param props - {@link KanbanComponentProps}
+ * @param props.children - Action button elements.
+ * @param props.className - Optional CSS class name.
+ * @returns The rendered KanbanCardHeaderActions component.
  */
 export function KanbanCardHeaderActions({
   children,

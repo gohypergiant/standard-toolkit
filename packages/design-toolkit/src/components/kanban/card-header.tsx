@@ -21,6 +21,11 @@ import type { KanbanComponentProps } from './types';
  * KanbanCardHeader - Header section of a card
  *
  * Contains title and actions.
+ *
+ * @param props - {@link KanbanComponentProps}
+ * @param props.className - Optional CSS class name.
+ * @param props.children - Header content (title, actions).
+ * @returns The rendered KanbanCardHeader component.
  */
 export function KanbanCardHeader({
   className,

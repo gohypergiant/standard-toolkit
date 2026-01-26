@@ -29,6 +29,10 @@ export const LabelContext =
  * Use this to configure shared isRequired and isDisabled states
  * across multiple Label components.
  *
+ * @param props - ProviderProps<LabelProps>
+ * @param props.children - Child components to receive context.
+ * @returns The rendered LabelProvider component.
+ *
  * @example
  * <LabelProvider isRequired>
  *   <Label>First Name</Label>

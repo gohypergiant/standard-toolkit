@@ -20,6 +20,11 @@ import type { KanbanComponentProps } from './types';
  * KanbanHeader - Header section for the kanban board
  *
  * Contains title, search, and action buttons.
+ *
+ * @param props - {@link KanbanComponentProps}
+ * @param props.children - Header content (title, search, actions).
+ * @param props.className - Optional CSS class name.
+ * @returns The rendered KanbanHeader component.
  */
 export function KanbanHeader({
   children,

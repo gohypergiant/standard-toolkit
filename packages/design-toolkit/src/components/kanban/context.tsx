@@ -20,26 +20,44 @@ import {
 import type { DragEndEvent } from '@dnd-kit/core';
 import type { KanbanCardData, KanbanColumnData } from './types';
 
+/**
+ * Function signature for moving a card between columns or positions.
+ */
 export type MoveCard = (
   cardId: string,
   targetColumnId: string,
   targetPosition: number,
   closestEdge?: 'top' | 'bottom',
 ) => void;
+
+/**
+ * Context data for Kanban state and operations.
+ */
 export interface KanbanContextData {
+  /** Array of all columns. */
   columns: KanbanColumnData[];
+  /** Callback to update column state. */
   updateColumnState: (columns: KanbanColumnData[]) => void;
+  /** Function to move a card. */
   moveCard: MoveCard;
+  /** Get a column by its ID. */
   getColumnById: (id: string) => KanbanColumnData | undefined;
+  /** Map of card IDs to their location info. */
   cardMap: Map<
     string,
     { column: KanbanColumnData; card: KanbanCardData; index: number }
   >;
 }
 
+/**
+ * Props for KanbanProvider component.
+ */
 export interface KanbanProviderProps {
+  /** Array of column data. */
   columns: KanbanColumnData[];
+  /** Callback to update column state. */
   updateColumnState: (columns: KanbanColumnData[]) => void;
+  /** Child components. */
   children: ReactNode;
 }
 
@@ -165,6 +183,12 @@ const updatePositions = (column: KanbanColumnData) => {
   });
 };
 
+/**
+ * Calculates the insert index based on target position and drop edge.
+ * @param targetPosition - The target position index.
+ * @param closestEdge - The edge to drop relative to.
+ * @returns The calculated insert index.
+ */
 export const getInsertIndex = (
   targetPosition: number,
   closestEdge?: 'top' | 'bottom',
@@ -276,6 +300,12 @@ const KanbanContext = createContext<KanbanContextData>({
  *
  * Manages column and card state, handles drag-and-drop operations,
  * and provides the moveCard function for card movements.
+ *
+ * @param props - {@link KanbanProviderProps}
+ * @param props.children - Child components.
+ * @param props.columns - Array of column data.
+ * @param props.updateColumnState - Callback to update column state.
+ * @returns The rendered KanbanProvider component.
  *
  * @example
  * <KanbanProvider columns={columns} updateColumnState={setColumns}>
@@ -396,6 +426,7 @@ export const KanbanProvider = ({
 /**
  * Hook to access Kanban context values.
  * Must be used within a KanbanProvider.
+ * @returns The Kanban context data.
  */
 export const useKanban = () => {
   const context = useContext(KanbanContext);

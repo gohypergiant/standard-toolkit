@@ -42,6 +42,17 @@ const clearInputEvent = {
  * and integrated validation states. Supports various styling options and integrates
  * seamlessly with form field components for comprehensive form experiences.
  *
+ * @param props - {@link InputProps}
+ * @param props.ref - Ref to the input element.
+ * @param props.classNames - CSS class names for input subcomponents.
+ * @param props.autoSize - Whether the input should auto-size to its content.
+ * @param props.prefix - Content to display before the input.
+ * @param props.size - Size variant for the input.
+ * @param props.suffix - Content to display after the input.
+ * @param props.isClearable - Whether the input shows a clear button.
+ * @param props.isInvalid - Whether the input is in an invalid state.
+ * @returns The rendered Input component.
+ *
  * @example
  * // Basic input
  * <Input placeholder="Enter text..." />
