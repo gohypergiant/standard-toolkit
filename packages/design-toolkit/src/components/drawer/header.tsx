@@ -11,15 +11,18 @@
  */
 'use client';
 
-import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
+import { Cancel } from '@accelint/icons';
+import 'client-only';
 import { type ComponentPropsWithRef, useContext } from 'react';
 import { Header } from 'react-aria-components';
+import { Button } from '../button';
+import { Icon } from '../icon';
 import { ViewStackContext } from '../view-stack/context';
 import { DrawerBack } from './back';
-import { DrawerClose } from './close';
 import { DrawerHeaderTitle } from './header-title';
 import styles from './styles.module.css';
+import { DrawerTrigger } from './trigger';
 
 /**
  * DrawerHeader - Header region within a DrawerView.
@@ -63,7 +66,13 @@ export function DrawerHeader({
         <>
           <DrawerBack />
           <DrawerHeaderTitle level={level}>{title}</DrawerHeaderTitle>
-          <DrawerClose />
+          <DrawerTrigger for='clear'>
+            <Button variant='icon'>
+              <Icon>
+                <Cancel />
+              </Icon>
+            </Button>
+          </DrawerTrigger>
         </>
       ) : (
         children

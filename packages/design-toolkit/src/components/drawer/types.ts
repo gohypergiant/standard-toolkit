@@ -9,6 +9,8 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+
+import type { AriaAttributesWithRef } from '@/lib/types';
 import type { Payload } from '@accelint/bus';
 import type { UniqueId } from '@accelint/core';
 import type { FocusableElement } from '@react-types/shared';
@@ -19,7 +21,6 @@ import type {
   RefAttributes,
 } from 'react';
 import type { HeadingProps } from 'react-aria-components';
-import type { AriaAttributesWithRef } from '@/lib/types';
 import type { ToggleButtonProps } from '../button/types';
 import type { ViewStackEvent } from '../view-stack/types';
 import type { DrawerEventTypes } from './events';
@@ -213,6 +214,13 @@ export type DrawerOpenEvent = Payload<
   }
 >;
 
+export type DrawerCloseEvent = Payload<
+  typeof DrawerEventTypes.close,
+  {
+    view: UniqueId;
+  }
+>;
+
 export type DrawerToggleEvent = Payload<
   typeof DrawerEventTypes.toggle,
   {
@@ -220,11 +228,15 @@ export type DrawerToggleEvent = Payload<
   }
 >;
 
-export type DrawerEvent = DrawerOpenEvent | DrawerToggleEvent | ViewStackEvent;
+export type DrawerEvent =
+  | DrawerOpenEvent
+  | DrawerCloseEvent
+  | DrawerToggleEvent
+  | ViewStackEvent;
 
-type SimpleEvents = 'back' | 'clear' | 'close' | 'reset' | UniqueId;
+export type SimpleEvents = 'back' | 'clear' | 'close' | 'reset' | UniqueId;
 
-type TargetedEvents =
+export type TargetedEvents =
   | `back:${UniqueId}`
   | `clear:${UniqueId}`
   | `close:${UniqueId}`
@@ -232,7 +244,7 @@ type TargetedEvents =
   | `toggle:${UniqueId}`
   | `reset:${UniqueId}`;
 
-type ChainedEvents = (SimpleEvents | TargetedEvents)[];
+export type ChainedEvents = (SimpleEvents | TargetedEvents)[];
 
 export type DrawerTriggerProps = RefAttributes<FocusableElement> & {
   children: ReactElement<DOMAttributes<FocusableElement>, string>;
@@ -273,4 +285,8 @@ export type DrawerContextValue = {
   unregister: (view: UniqueId) => void;
   /** The placement of the drawer relative to the viewport. */
   placement: XAxisUnion | YAxisUnion;
+};
+
+export type DrawerCloseProps = AriaAttributesWithRef<FocusableElement> & {
+  for?: UniqueId;
 };

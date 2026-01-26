@@ -16,6 +16,7 @@ Components:
 - **DrawerView** - Content region for a specific view
 - **DrawerHeader** - Header with optional title prop for automatic layout
 - **DrawerHeaderTitle** - Semantic heading element
+- **DrawerClose** - Heading element, closes drawer/view
 - **DrawerContent** - Main content area
 - **DrawerFooter** - Footer region for actions
 - **DrawerTrigger** - Programmatic trigger for drawer/view actions
@@ -49,7 +50,7 @@ const ids = { drawer: uuid(), a: uuid(), b: uuid() };
 ```tsx
 <DrawerHeader>
   <DrawerHeaderTitle level={2}>Custom Title</DrawerHeaderTitle>
-  <DrawerClose />
+  <DrawerClose for={views.idA} />
 </DrawerHeader>
 ```
 
@@ -105,6 +106,14 @@ When using `title`, the component automatically adds back navigation (for nested
 |------|------|---------|-------------|
 | `level` | `1-6` | - | Semantic heading level |
 | `children` | `ReactNode` | - | Title text |
+
+
+### DrawerClose
+
+Allows users to pass an ID for a given drawer/view, which will then emit a `DrawerClose` event via bus.
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `for` | `'open' \| 'toggle' \| 'close' \| UniqueId \| Array` | - | Unique identifier for the tab to be closed |
 
 ### DrawerTrigger
 Controls drawer state or navigates to views.
