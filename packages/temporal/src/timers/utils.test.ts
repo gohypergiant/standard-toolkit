@@ -160,6 +160,7 @@ describe('callNextSecond', () => {
     // Arrange
     const callback = vi.fn();
     const now = 1234567890;
+    // biome-ignore lint/style/useNamingConvention: We need to change rule, this is valid
     const SECOND = 1000;
     vi.setSystemTime(now);
     const expectedDelay = SECOND - (now % SECOND);
@@ -179,6 +180,7 @@ describe('callNextSecond', () => {
     // Arrange
     const callback = vi.fn();
     const now = 1500; // 1500 % 1000 = 500
+    // biome-ignore lint/style/useNamingConvention: We need to change rule, this is valid
     const SECOND = 1000;
     vi.setSystemTime(now);
     const expectedDelay = SECOND - (now % SECOND); // 500
@@ -199,6 +201,7 @@ describe('callNextSecond', () => {
     // Arrange
     const callback = vi.fn();
     const now = 1234567890;
+    // biome-ignore lint/style/useNamingConvention: We need to change rule, this is valid
     const SECOND = 1000;
     vi.setSystemTime(now);
     const expectedDelay = SECOND - (now % SECOND);
@@ -219,6 +222,7 @@ describe('callNextSecond', () => {
     // Arrange
     const callback = vi.fn();
     const now = 5000; // Exactly on second boundary (5000 % 1000 = 0)
+    // biome-ignore lint/style/useNamingConvention: We need to change rule, this is valid
     const SECOND = 1000;
     vi.setSystemTime(now);
 
@@ -236,6 +240,7 @@ describe('callNextSecond', () => {
       throw new Error('Callback execution error');
     });
     const now = 1234567890;
+    // biome-ignore lint/style/useNamingConvention: We need to change rule, this is valid
     const SECOND = 1000;
     vi.setSystemTime(now);
     const expectedDelay = SECOND - (now % SECOND);
