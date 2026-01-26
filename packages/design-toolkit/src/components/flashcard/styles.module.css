@@ -14,7 +14,7 @@
 
 @layer components.l1 {
   .container {
-    @apply rounded-medium font-display outline-interactive-hover outline;
+    @apply rounded-medium font-display outline-interactive-hover bg-surface-default outline;
 
     min-width: 128px;
   }
