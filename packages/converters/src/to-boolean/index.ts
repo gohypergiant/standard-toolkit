@@ -14,6 +14,7 @@
  * Returns true for any value not found to be a "false" value.
  *
  * @param val - The value to convert to a boolean.
+ * @returns true if the value is truthy, false otherwise.
  *
  * **"false" values**
  *   - inherently false values: '' (empty string), 0, false, undefined, null, NaN

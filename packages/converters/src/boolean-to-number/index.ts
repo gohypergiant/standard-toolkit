@@ -11,9 +11,10 @@
  */
 
 /**
- * Convert a boolean to an integer
+ * Convert a boolean to an integer.
  *
  * @param val - The boolean value to convert to a number.
+ * @returns 1 if true, 0 if false.
  *
  * @remarks
  * pure function

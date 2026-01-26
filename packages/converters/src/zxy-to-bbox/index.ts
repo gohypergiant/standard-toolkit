@@ -36,7 +36,8 @@ function tileToLat(y: number, z: number) {
 /**
  * Converts a Tile (z, x, y) to a Bounding Box (west, south, east, north).
  *
- * @param tile A tuple containing an [z, x, y] value.
+ * @param tile - A tuple containing a [z, x, y] value.
+ * @returns A bounding box tuple [west, south, east, north].
  *
  * @remarks
  * pure function
