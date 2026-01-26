@@ -24,6 +24,13 @@ import type { ActionBarProps } from './types';
  *
  * Renders as a `<nav>` element and provides `variant="icon"` context to child buttons.
  *
+ * @param props - The action bar props.
+ * @param props.className - Additional CSS class names for styling.
+ * @param props.elevation - Visual elevation style ('flat', 'overlay', or 'raised').
+ * @param props.size - Size of action buttons within the bar ('medium' or 'small').
+ * @param props.children - Action buttons to render within the bar.
+ * @returns The action bar navigation element.
+ *
  * @example
  * <ActionBar>
  *   <Button><Icon><Copy /></Icon></Button>

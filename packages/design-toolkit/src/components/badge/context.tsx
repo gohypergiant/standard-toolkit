@@ -17,11 +17,18 @@ import { createContext } from 'react';
 import type { ContextValue } from 'react-aria-components';
 import type { BadgeProps } from './types';
 
+/**
+ * React context for sharing badge configuration across components.
+ */
 export const BadgeContext =
   createContext<ContextValue<BadgeProps, HTMLSpanElement>>(null);
 
 /**
  * Context provider for setting default props across multiple Badge components.
+ *
+ * @param props - The provider props.
+ * @param props.children - Child components that will receive the badge context.
+ * @returns The badge context provider wrapping children.
  *
  * @example
  * <BadgeProvider color="critical" placement="top right">

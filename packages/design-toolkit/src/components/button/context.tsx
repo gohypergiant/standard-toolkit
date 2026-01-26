@@ -17,11 +17,18 @@ import { createContext } from 'react';
 import type { ContextValue } from 'react-aria-components';
 import type { ButtonProps, LinkButtonProps, ToggleButtonProps } from './types';
 
+/**
+ * React context for sharing Button configuration across components.
+ */
 export const ButtonContext =
   createContext<ContextValue<ButtonProps, HTMLButtonElement>>(null);
 
 /**
  * Context provider for setting default props across multiple Button components.
+ *
+ * @param props - The provider props.
+ * @param props.children - Child components that will receive the button context.
+ * @returns The button context provider wrapping children.
  *
  * @example
  * <ButtonProvider size="small" variant="outline">
@@ -38,11 +45,18 @@ export function ButtonProvider({
   );
 }
 
+/**
+ * React context for sharing LinkButton configuration across components.
+ */
 export const LinkButtonContext =
   createContext<ContextValue<LinkButtonProps, HTMLAnchorElement>>(null);
 
 /**
  * Context provider for setting default props across multiple LinkButton components.
+ *
+ * @param props - The provider props.
+ * @param props.children - Child components that will receive the link button context.
+ * @returns The link button context provider wrapping children.
  *
  * @example
  * <LinkButtonProvider size="small" variant="outline">
@@ -61,11 +75,18 @@ export function LinkButtonProvider({
   );
 }
 
+/**
+ * React context for sharing ToggleButton configuration across components.
+ */
 export const ToggleButtonContext =
   createContext<ContextValue<ToggleButtonProps, HTMLButtonElement>>(null);
 
 /**
  * Context provider for setting default props across multiple ToggleButton components.
+ *
+ * @param props - The provider props.
+ * @param props.children - Child components that will receive the toggle button context.
+ * @returns The toggle button context provider wrapping children.
  *
  * @example
  * <ToggleButtonProvider size="small" variant="flat">

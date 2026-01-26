@@ -26,6 +26,14 @@ import type { CheckboxGroupProps } from './types';
 /**
  * Groups multiple checkboxes with shared state and configuration.
  *
+ * @param props - The checkbox group props.
+ * @param props.ref - Reference to the group container element.
+ * @param props.children - Checkbox components to render within the group.
+ * @param props.classNames - Custom class names for sub-elements.
+ * @param props.label - Label text displayed above the group.
+ * @param props.orientation - Layout orientation ('vertical' or 'horizontal').
+ * @returns The checkbox group component.
+ *
  * @example
  * <CheckboxGroup label="Preferences">
  *   <Checkbox value="email">Email</Checkbox>

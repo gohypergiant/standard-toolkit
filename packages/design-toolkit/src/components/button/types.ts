@@ -19,24 +19,50 @@ import type { AriaAttributesWithRef } from '@/lib/types';
 
 type Variants = 'filled' | 'flat' | 'icon' | 'outline';
 
+/**
+ * Style variant options for Button and LinkButton components.
+ */
 export type ButtonStyleVariants = {
+  /** Size of the button. */
   size?: 'large' | 'medium' | 'small' | 'xsmall';
+  /** Semantic color variant. */
   color?: 'mono-muted' | 'mono-bold' | 'accent' | 'serious' | 'critical';
+  /** Visual style variant. */
   variant?: Variants;
 };
 
+/**
+ * Style variant options for ToggleButton components.
+ * Excludes 'filled' variant which is not supported for toggle buttons.
+ */
 export type ToggleButtonStyleVariants = Omit<ButtonStyleVariants, 'variant'> & {
+  /** Visual style variant (filled not available for toggle). */
   variant?: Exclude<Variants, 'filled'>;
 };
 
+/**
+ * Props for the Button component.
+ *
+ * Extends React Aria Button with style variants and ref support.
+ */
 export type ButtonProps = AriaButtonProps &
   ButtonStyleVariants &
   AriaAttributesWithRef<HTMLButtonElement>;
 
+/**
+ * Props for the LinkButton component.
+ *
+ * Extends React Aria Link with button style variants and ref support.
+ */
 export type LinkButtonProps = LinkProps &
   ButtonStyleVariants &
   AriaAttributesWithRef<HTMLAnchorElement>;
 
+/**
+ * Props for the ToggleButton component.
+ *
+ * Extends React Aria ToggleButton with style variants and ref support.
+ */
 export type ToggleButtonProps = AriaToggleButtonProps &
   ToggleButtonStyleVariants &
   AriaAttributesWithRef<HTMLButtonElement>;

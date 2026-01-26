@@ -23,6 +23,12 @@ import type { BreadcrumbItemProps } from './types';
  * Individual breadcrumb item. Renders as a link when `linkProps` is provided,
  * or as plain text for the current page.
  *
+ * @param props - The breadcrumb item props.
+ * @param props.children - Content to display in the breadcrumb.
+ * @param props.classNames - Custom class names for sub-elements.
+ * @param props.linkProps - Props for the Link component (omit for current page).
+ * @returns The breadcrumb item component.
+ *
  * @example
  * // Link item
  * <BreadcrumbItem linkProps={{ href: '/home' }}>Home</BreadcrumbItem>

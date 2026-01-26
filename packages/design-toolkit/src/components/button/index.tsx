@@ -30,6 +30,15 @@ import type { ButtonProps } from './types';
  * sizes, and interactive states. Includes icon support and integrates with React Aria
  * for keyboard navigation and accessibility features.
  *
+ * @param props - The button props.
+ * @param props.ref - Reference to the button element.
+ * @param props.children - Button content (text, icons, or both).
+ * @param props.className - Additional CSS class names for styling.
+ * @param props.color - Semantic color variant.
+ * @param props.size - Size of the button.
+ * @param props.variant - Visual style variant.
+ * @returns The button component.
+ *
  * @example
  * // Basic button
  * <Button>Click me</Button>

@@ -18,21 +18,40 @@ import type {
 } from 'react-aria-components';
 import type { LabelProps } from '../label/types';
 
+/**
+ * Props for the CheckboxGroup component.
+ *
+ * Extends React Aria CheckboxGroup with label, orientation, and custom class names.
+ */
 export type CheckboxGroupProps = Omit<AriaCheckboxGroupProps, 'className'> &
   RefAttributes<HTMLDivElement> & {
+    /** Custom class names for checkbox group sub-elements. */
     classNames?: {
+      /** Class name for the group container. */
       group?: AriaCheckboxGroupProps['className'];
+      /** Class name for the group label. */
       label?: LabelProps['className'];
     };
+    /** Label text displayed above the checkbox group. */
     label?: string;
+    /** Layout orientation for the checkboxes. */
     orientation?: Orientation;
   };
 
+/**
+ * Props for the Checkbox component.
+ *
+ * Extends React Aria Checkbox with custom class names for sub-elements.
+ */
 export type CheckboxProps = Omit<AriaCheckboxProps, 'className'> &
   RefAttributes<HTMLLabelElement> & {
+    /** Custom class names for checkbox sub-elements. */
     classNames?: {
+      /** Class name for the checkbox wrapper. */
       checkbox?: AriaCheckboxProps['className'];
+      /** Class name for the checkbox control indicator. */
       control?: string;
+      /** Class name for the label text. */
       label?: string;
     };
   };

@@ -22,6 +22,15 @@ import type { BadgeProps } from './types';
  * Small status indicator for labels, counts, and notifications.
  * Empty badges render as dot indicators.
  *
+ * @param props - The badge props.
+ * @param props.ref - Reference to the span element.
+ * @param props.className - Additional CSS class names for styling.
+ * @param props.color - Semantic color variant.
+ * @param props.offset - Offset from positioned edge in pixels.
+ * @param props.placement - Position relative to container.
+ * @param props.children - Badge content (text, number, or empty for dot).
+ * @returns The badge span element.
+ *
  * @example
  * <Badge>New</Badge>
  *

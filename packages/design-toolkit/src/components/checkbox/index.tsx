@@ -31,6 +31,15 @@ import type { CheckboxProps } from './types';
  * or grouped selections. Includes visual feedback for checked, indeterminate, and
  * disabled states with integrated labeling and validation support.
  *
+ * @param props - The checkbox props.
+ * @param props.ref - Reference to the label element.
+ * @param props.classNames - Custom class names for sub-elements.
+ * @param props.children - Label content for the checkbox.
+ * @param props.isSelected - Whether the checkbox is checked.
+ * @param props.isIndeterminate - Whether the checkbox is in indeterminate state.
+ * @param props.isDisabled - Whether the checkbox is disabled.
+ * @returns The checkbox component.
+ *
  * @example
  * // Basic checkbox
  * <Checkbox>

@@ -30,6 +30,16 @@ import type { LinkButtonProps } from './types';
  * Perfect for navigation actions that should look like buttons but behave as links.
  * Includes icon support and integrates with React Aria for keyboard navigation and accessibility.
  *
+ * @param props - The link button props.
+ * @param props.ref - Reference to the anchor element.
+ * @param props.children - Link button content (text, icons, or both).
+ * @param props.className - Additional CSS class names for styling.
+ * @param props.color - Semantic color variant.
+ * @param props.size - Size of the link button.
+ * @param props.variant - Visual style variant.
+ * @param props.href - Navigation destination URL.
+ * @returns The link button component.
+ *
  * @example
  * // Basic link button
  * <LinkButton href="/dashboard">Go to Dashboard</LinkButton>

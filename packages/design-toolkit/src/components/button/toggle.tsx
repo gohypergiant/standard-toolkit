@@ -30,6 +30,17 @@ import type { ToggleButtonProps } from './types';
  * Perfect for features like favorites, bookmarks, switches, or any binary state controls.
  * Includes icon support and integrates with React Aria for keyboard navigation and accessibility.
  *
+ * @param props - The toggle button props.
+ * @param props.ref - Reference to the button element.
+ * @param props.children - Toggle button content (text, icons, or both).
+ * @param props.className - Additional CSS class names for styling.
+ * @param props.color - Semantic color variant.
+ * @param props.size - Size of the toggle button.
+ * @param props.variant - Visual style variant (filled not available).
+ * @param props.isSelected - Whether the toggle is currently selected.
+ * @param props.onChange - Callback when the toggle state changes.
+ * @returns The toggle button component.
+ *
  * @example
  * // Basic toggle button
  * <ToggleButton>Toggle Feature</ToggleButton>
