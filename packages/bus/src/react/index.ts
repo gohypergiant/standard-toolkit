@@ -21,8 +21,19 @@ export { useEffectEvent } from './ponyfill';
 
 /**
  * A convenience wrapper for useEmit & useOn, to pass down types instead of having
- * to reimplement generics each time
- * @param options emit options that will be applied for all emits of all events
+ * to reimplement generics each time.
+ *
+ * @template P - The union of all payload types for the bus.
+ * @param options - Emit options that will be applied for all emits of all events.
+ * @returns An object containing type-safe useEmit, useOn, and useOnce hooks.
+ *
+ * @example
+ * ```typescript
+ * type MyEvents = Payload<'user:login', { userId: string }> | Payload<'user:logout'>;
+ * const { useEmit, useOn } = useBus<MyEvents>();
+ * const emitLogin = useEmit('user:login');
+ * useOn('user:logout', (event) => console.log('User logged out'));
+ * ```
  */
 export function useBus<
   P extends { type: string; payload?: unknown } = Payload<
@@ -38,7 +49,7 @@ export function useBus<
     }
   }, [options]);
 
-  // casting here because we lose inference on the type parameter
+  // Casting here because we lose inference on the type parameter
   return {
     useEmit: useEmit as <T extends P['type']>(
       type: T,
@@ -56,12 +67,19 @@ export function useBus<
 }
 
 /**
- * React hook to enable render-safe emitting of event with payload that is type safe
- * @template P union of event types
- * @template T type of event
- * @param type of type T, one of the event types
- * @param options emit options that will be applied for all emits of this event
- * @returns callback that will accept the cooresponding payload to the previously entered event type, callback will accept options as well that are not applied to all emits of this event type
+ * React hook to enable render-safe emitting of event with payload that is type safe.
+ *
+ * @template P - Union of event types.
+ * @template T - Type of event.
+ * @param type - Event type, one of the event types in the union.
+ * @param options - Emit options that will be applied for all emits of this event.
+ * @returns Callback that will accept the corresponding payload to the previously entered event type; callback will accept options as well that are not applied to all emits of this event type.
+ *
+ * @example
+ * ```typescript
+ * const emitLogin = useEmit<MyEvents, 'user:login'>('user:login');
+ * emitLogin({ userId: '123' });
+ * ```
  */
 export function useEmit<
   // biome-ignore lint/suspicious/noExplicitAny: intentional
@@ -94,9 +112,19 @@ export function useEmit<
 }
 
 /**
- * React hook to attach event bus listener with type safe callback
- * @param type event type
- * @param callback handler that matches event type and receives cooresponding payload
+ * React hook to attach event bus listener with type safe callback.
+ *
+ * @template P - Union of event types.
+ * @template T - Type of event.
+ * @param type - Event type.
+ * @param callback - Handler that matches event type and receives corresponding payload.
+ *
+ * @example
+ * ```typescript
+ * useOn<MyEvents, 'user:login'>('user:login', (event) => {
+ *   console.log('User logged in:', event.payload.userId);
+ * });
+ * ```
  */
 export function useOn<
   P extends { type: string; payload?: unknown } = Payload<
@@ -113,9 +141,19 @@ export function useOn<
 }
 
 /**
- * React hook to attach event bus listener with type safe callback, once
- * @param type event type
- * @param callback handler that matches event type and receives cooresponding payload
+ * React hook to attach event bus listener with type safe callback that executes only once.
+ *
+ * @template P - Union of event types.
+ * @template T - Type of event.
+ * @param type - Event type.
+ * @param callback - Handler that matches event type and receives corresponding payload.
+ *
+ * @example
+ * ```typescript
+ * useOnce<MyEvents, 'user:login'>('user:login', (event) => {
+ *   console.log('First login detected:', event.payload.userId);
+ * });
+ * ```
  */
 export function useOnce<
   P extends { type: string; payload?: unknown } = Payload<

@@ -11,8 +11,10 @@
  */
 
 'use client';
-
-import { Kebab, Pin } from '@accelint/icons';
+import 'client-only';
+import { clsx } from '@accelint/design-foundation/lib/utils';
+import Kebab from '@accelint/icons/kebab';
+import Pin from '@accelint/icons/pin';
 import { useListData } from '@react-stately/data';
 import {
   getCoreRowModel,
@@ -22,9 +24,6 @@ import {
   type RowSelectionState,
   useReactTable,
 } from '@tanstack/react-table';
-import type { Key } from '@react-types/shared';
-import 'client-only';
-import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useCallback, useContext, useMemo, useState } from 'react';
 import { Button } from '../button';
 import { Checkbox } from '../checkbox';
@@ -37,6 +36,7 @@ import { TableBody } from './body';
 import { TableContext } from './context';
 import { TableHeader } from './header';
 import styles from './styles.module.css';
+import type { Key } from '@react-types/shared';
 import type { TableProps } from './types';
 
 // This width is for columns in the table that provide features:

@@ -91,6 +91,15 @@ jobs:
         working-directory: apps/next
         continue-on-error: true
 
+      - name: Parse VRT Failures
+        id: parse-failures
+        if: steps.visual-tests.outputs.exit_code != '0'
+        run: |
+          FAILURES_JSON=$(node .github/scripts/parse-vrt-failures.mjs apps/next/test-results.json)
+          echo "json<<EOF" >> $GITHUB_OUTPUT
+          echo "$FAILURES_JSON" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
       - name: Upload Screenshot Diffs
         uses: actions/upload-artifact@v4
         if: steps.visual-tests.outputs.exit_code != '0'
@@ -110,6 +119,9 @@ jobs:
       - name: Post PR Comment
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
+        env:
+          COVERAGE_JSON: ${{ steps.vrt-coverage.outputs.json }}
+          FAILURES_JSON: ${{ steps.parse-failures.outputs.json }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -119,12 +131,25 @@ jobs:
             const total = passed + failed;
 
             // Parse VRT coverage data
-            const coverageJson = `${{ steps.vrt-coverage.outputs.json }}`;
+            const coverageJson = process.env.COVERAGE_JSON || '';
             let coverage = null;
             try {
-              coverage = JSON.parse(coverageJson);
+              if (coverageJson) {
+                coverage = JSON.parse(coverageJson);
+              }
             } catch (e) {
               console.log('Failed to parse coverage JSON:', e);
+            }
+
+            // Parse VRT failures data
+            const failuresJson = process.env.FAILURES_JSON || '';
+            let failuresData = null;
+            try {
+              if (failuresJson) {
+                failuresData = JSON.parse(failuresJson);
+              }
+            } catch (e) {
+              console.log('Failed to parse failures JSON:', e);
             }
 
             const status = exitCode === '0'
@@ -132,6 +157,77 @@ jobs:
               : failed > 0
                 ? '❌ Some tests failed'
                 : '⚠️ Tests did not complete';
+
+            // Get the current job's URL for direct linking to test output
+            const { data: jobs } = await github.rest.actions.listJobsForWorkflowRun({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: parseInt(process.env.GITHUB_RUN_ID),
+            });
+            const currentJob = jobs.jobs.find(job => job.name === 'Visual Regression');
+            const testStep = currentJob?.steps?.find(step => step.name === 'Run Visual Regression Tests');
+            const stepAnchor = testStep ? `#step:${testStep.number}:1` : '';
+            const jobUrl = (currentJob?.html_url || `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`) + stepAnchor;
+
+            // Get artifact download URL (only when tests fail)
+            let artifactUrl = '';
+            let artifactError = false;
+            if (failed > 0) {
+              try {
+                const { data: artifacts } = await github.rest.actions.listWorkflowRunArtifacts({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  run_id: parseInt(process.env.GITHUB_RUN_ID),
+                });
+                const screenshotArtifact = artifacts.artifacts.find(a => a.name === 'screenshot-diffs');
+                if (screenshotArtifact) {
+                  artifactUrl = `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}/artifacts/${screenshotArtifact.id}`;
+                }
+              } catch (e) {
+                console.log('Failed to get artifact URL:', e);
+                artifactError = true;
+              }
+            }
+
+            // Build download link with fallback for errors
+            let downloadLink = '';
+            if (artifactUrl) {
+              downloadLink = ` | **[Download screenshots](${artifactUrl})**`;
+            } else if (artifactError) {
+              downloadLink = ' | _Screenshot artifacts uploaded (link unavailable)_';
+            }
+
+            // Build failed tests section
+            let failedTestsSection = '';
+            if (failuresData && failuresData.failures && failuresData.failures.length > 0) {
+              // Build simple list of all failing test names
+              const testNames = failuresData.failures.map(f => `- ${f.fullName}`).join('\n');
+              const count = failuresData.failures.length;
+
+              failedTestsSection = [
+                '',
+                '### ❌ Failed Tests',
+                '',
+                `**[View full test output](${jobUrl})**${downloadLink}`,
+                '',
+                '<details>',
+                `<summary>${count} failing test${count === 1 ? '' : 's'}</summary>`,
+                '',
+                testNames,
+                '',
+                '</details>',
+              ].join('\n');
+            } else if (failed > 0) {
+              // Fallback when parsing failed but we know tests failed
+              failedTestsSection = [
+                '',
+                '### ❌ Failed Tests',
+                '',
+                `**[View full test output](${jobUrl})**${downloadLink}`,
+                '',
+                '> ⚠️ Failed to parse test details. Check the workflow logs for specifics.',
+              ].join('\n');
+            }
 
             // Build update instructions (only shown when tests fail)
             const updateInstructions = failed > 0 ? [
@@ -181,15 +277,9 @@ jobs:
               `| ✅ Passed | ${passed} |`,
               `| ❌ Failed | ${failed} |`,
               `| **Total** | ${total} |`,
+              failedTestsSection,
               updateInstructions,
               coverageSection,
-              '',
-              '<details><summary>📋 Details</summary>',
-              '',
-              `- **Workflow run:** [View details](${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID})`,
-              failed > 0 ? '- **Screenshot diffs:** Available in workflow artifacts' : '',
-              '',
-              '</details>',
               '',
               '---',
               '<sub>🤖 Generated by Vitest Browser + Playwright</sub>',
@@ -227,4 +317,14 @@ jobs:
 
       - name: Fail if tests failed
         if: steps.visual-tests.outputs.exit_code != '0'
-        run: exit 1
+        env:
+          FAILURES_JSON: ${{ steps.parse-failures.outputs.json }}
+        run: |
+          echo "❌ Visual regression tests failed"
+          echo ""
+          echo "Failing tests:"
+          echo "$FAILURES_JSON" | jq -r '.failures[].fullName' | while read -r name; do
+            echo "  - $name"
+          done
+          echo ""
+          exit 1

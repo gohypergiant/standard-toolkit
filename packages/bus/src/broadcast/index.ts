@@ -21,7 +21,18 @@ import type {
   Payload,
 } from './types';
 
-/** Broadcast event class allows for emitting and listening for events */
+/**
+ * Broadcast event class allows for emitting and listening for events across browser contexts.
+ *
+ * @template P - The payload type union for all events handled by this broadcast instance.
+ *
+ * @example
+ * ```typescript
+ * const bus = new Broadcast({ channelName: 'my-app' });
+ * bus.on('user:login', (event) => console.log(event.payload));
+ * bus.emit('user:login', { userId: '123' });
+ * ```
+ */
 export class Broadcast<
   P extends { type: string; payload?: unknown; target?: UniqueId } = Payload<
     string,
@@ -38,7 +49,11 @@ export class Broadcast<
   // biome-ignore lint/suspicious/noExplicitAny: Can't use generics in static properties
   private static instance: Broadcast<any> | null = null;
 
-  /** Broadcast class constructor. */
+  /**
+   * Broadcast class constructor.
+   *
+   * @param config - Optional broadcast configuration.
+   */
   constructor(config?: BroadcastConfig) {
     if (config?.channelName) {
       this.channelName = config.channelName;
@@ -50,7 +65,15 @@ export class Broadcast<
   /**
    * Get the singleton instance of Broadcaster.
    *
+   * @template T - The payload type union for all events handled by this broadcast instance.
    * @param config - Optional custom configuration.
+   * @returns The singleton Broadcast instance.
+   *
+   * @example
+   * ```typescript
+   * const bus = Broadcast.getInstance<MyEvents>();
+   * bus.emit('custom:event', { data: 'value' });
+   * ```
    */
   static getInstance<
     T extends { type: string; payload?: unknown } = Payload<
@@ -104,9 +127,7 @@ export class Broadcast<
   protected handleListeners(data: P) {
     const handlers = this.listeners[data.type as P['type']];
 
-    /**
-     * If no handler exists or if event targets a specific instance of Broadcast that isn't this instance, do nothing
-     */
+    // If no handler exists or if event targets a specific instance of Broadcast that isn't this instance, do nothing
     if (!handlers?.length || (data.target && data.target !== this.id)) {
       return;
     }
@@ -149,7 +170,7 @@ export class Broadcast<
   /**
    * Set emit options for event by type, options will apply to all emits of this event
    *
-   * Keep in mind that options are merged: global, event, local (lowest to highest precendence)
+   * Keep in mind that options are merged: global, event, local (lowest to highest precedence)
    *
    * @param type event type
    * @param options emit options
@@ -188,13 +209,17 @@ export class Broadcast<
    * @template T - The Payload type, inferred from the event.
    * @param type - The event type.
    * @param callback - The callback function.
+   * @returns Unsubscribe function to remove the listener.
    *
    * @example
-   * bus.on(EVENTS.MAP_CLICK, (e) => {
+   * ```typescript
+   * const unsubscribe = bus.on(EVENTS.MAP_CLICK, (e) => {
    *   if (!e.payload.picked) {
    *     setSelected(null);
    *   }
    * });
+   * // Later: unsubscribe();
+   * ```
    */
   on<T extends P['type']>(
     type: T,
@@ -213,6 +238,7 @@ export class Broadcast<
    * @template T - The Payload type, inferred from the event.
    * @param type - The event type.
    * @param callback - The callback function.
+   * @returns Unsubscribe function to remove the listener.
    */
   once<T extends P['type']>(
     type: T,
@@ -251,6 +277,7 @@ export class Broadcast<
    * @param options - Emit options to control delivery.
    *
    * @example
+   * ```typescript
    * bus.emit(
    *   EVENTS.LAYER_CLICK,
    *   {
@@ -260,6 +287,7 @@ export class Broadcast<
    *     object: pickInfo.object,
    *   },
    * );
+   * ```
    */
   emit<T extends P['type']>(
     type: T,

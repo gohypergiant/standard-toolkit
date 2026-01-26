@@ -15,15 +15,18 @@
  *
  * @param min - The minimum value in the range (inclusive).
  * @param max - The maximum value in the range (inclusive).
+ * @returns A random number between min and max (inclusive).
  *
  * @throws {RangeError} Throws if min > max.
  *
  * @example
+ * ```typescript
  * const value = random(0, 10);
  * // value >= 0 && value <= 10;
  *
  * const value = random(10, 0);
  * // RangeError
+ * ```
  */
 export function random(min: number, max: number) {
   if (min > max) {
@@ -38,15 +41,18 @@ export function random(min: number, max: number) {
  *
  * @param min - The minimum value in the range (inclusive).
  * @param max - The maximum value in the range (inclusive).
+ * @returns A random integer between min and max (inclusive).
  *
  * @throws {RangeError} Throws if min > max.
  *
  * @example
+ * ```typescript
  * const value = randomInt(0, 10);
  * // value >= 0 && value <= 10;
  *
  * const value = randomInt(10, 0);
  * // RangeError
+ * ```
  */
 export function randomInt(min: number, max: number) {
   if (min > max) {

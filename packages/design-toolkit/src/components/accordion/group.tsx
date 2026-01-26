@@ -19,28 +19,38 @@ import styles from './styles.module.css';
 import type { AccordionGroupProps } from './types';
 
 /**
- * Groups multiple accordions with shared configuration.
+ * Container component for grouping multiple accordions with shared configuration.
+ *
+ * Provides coordinated behavior for multiple accordions, controlling
+ * whether multiple sections can be expanded simultaneously.
+ *
  * Wraps react-aria-components DisclosureGroup and provides variant context.
  *
- * @example
- * <AccordionGroup>
- *   <Accordion>...</Accordion>
- *   <Accordion>...</Accordion>
- * </AccordionGroup>
+ * @param props - The accordion group props.
+ * @param props.ref - Reference to the root div element.
+ * @param props.children - Accordion components to render within the group.
+ * @param props.className - Additional CSS class names for styling.
+ * @param props.variant - Visual variant of the accordions ('compact' or 'cozy').
+ * @param props.isDisabled - Whether all accordions in the group are disabled.
+ * @returns The accordion group component.
  *
  * @example
- * // Allow multiple expanded
- * <AccordionGroup allowsMultipleExpanded>
- *   <Accordion>...</Accordion>
- *   <Accordion>...</Accordion>
- * </AccordionGroup>
- *
- * @example
- * // Compact variant for all children
+ * ```tsx
  * <AccordionGroup variant="compact">
- *   <Accordion>...</Accordion>
- *   <Accordion>...</Accordion>
+ *   <Accordion>
+ *     <AccordionHeader>
+ *       <AccordionTrigger>Section 1</AccordionTrigger>
+ *     </AccordionHeader>
+ *     <AccordionPanel>Content 1</AccordionPanel>
+ *   </Accordion>
+ *   <Accordion>
+ *     <AccordionHeader>
+ *       <AccordionTrigger>Section 2</AccordionTrigger>
+ *     </AccordionHeader>
+ *     <AccordionPanel>Content 2</AccordionPanel>
+ *   </Accordion>
  * </AccordionGroup>
+ * ```
  */
 export function AccordionGroup({
   ref,

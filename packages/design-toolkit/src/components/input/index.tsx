@@ -14,7 +14,7 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { CancelFill } from '@accelint/icons';
+import CancelFill from '@accelint/icons/cancel-fill';
 import { useControlledState } from '@react-stately/utils';
 import {
   Input as AriaInput,

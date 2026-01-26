@@ -12,7 +12,10 @@
 'use client';
 
 import 'client-only';
-import { Delete, Duplicate, LockFill } from '@accelint/icons';
+
+import Delete from '@accelint/icons/delete';
+import Duplicate from '@accelint/icons/duplicate';
+import LockFill from '@accelint/icons/lock-fill';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import type { ActionProps } from 'react-querybuilder';

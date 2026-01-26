@@ -13,7 +13,7 @@
 'use client';
 
 import 'client-only';
-import { ChevronLeft } from '@accelint/icons';
+import ChevronLeft from '@accelint/icons/chevron-left';
 import { useContext } from 'react';
 import { Button } from '../button';
 import { Icon } from '../icon';

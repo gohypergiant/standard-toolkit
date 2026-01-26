@@ -13,7 +13,7 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { Kebab } from '@accelint/icons';
+import Kebab from '@accelint/icons/kebab';
 import { useContext } from 'react';
 import { Header, Provider } from 'react-aria-components';
 import { isSlottedContextValue } from '../../lib/utils';
@@ -25,22 +25,28 @@ import styles from './styles.module.css';
 import type { AccordionHeaderProps } from './types';
 
 /**
- * Container for the accordion trigger and optional elements like menus.
+ * Header component for accordion sections.
+ *
+ * Provides context and styling for the accordion trigger button and
+ * optional menu actions. Automatically adjusts icon sizes based on
+ * the accordion variant.
+ *
+ * @param props - The accordion header props.
+ * @param props.ref - Reference to the header element.
+ * @param props.children - Content to display in the header, typically an AccordionTrigger.
+ * @param props.className - Additional CSS class names for styling.
+ * @returns The accordion header component.
  *
  * @example
- * <AccordionHeader>
- *   <AccordionTrigger>Section Title</AccordionTrigger>
- * </AccordionHeader>
- *
- * @example
- * // With menu
- * <AccordionHeader>
- *   <AccordionTrigger>Section Title</AccordionTrigger>
- *   <MenuTrigger>
- *     <Button />
- *     <Menu>...</Menu>
- *   </MenuTrigger>
- * </AccordionHeader>
+ * ```tsx
+ * <Accordion>
+ *   <AccordionHeader>
+ *     <AccordionTrigger>Section Title</AccordionTrigger>
+ *     <Button>Action</Button>
+ *   </AccordionHeader>
+ *   <AccordionPanel>Content</AccordionPanel>
+ * </Accordion>
+ * ```
  */
 export function AccordionHeader({
   ref,

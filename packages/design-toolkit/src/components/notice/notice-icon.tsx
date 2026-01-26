@@ -13,7 +13,11 @@
 'use client';
 
 import 'client-only';
-import { Information, Problem, Success, Warning } from '@accelint/icons';
+
+import Information from '@accelint/icons/information';
+import Problem from '@accelint/icons/problem';
+import Success from '@accelint/icons/success';
+import Warning from '@accelint/icons/warning';
 import { Icon } from '../icon';
 import type { NoticeIconProps } from './types';
 

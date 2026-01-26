@@ -11,9 +11,11 @@
  */
 'use client';
 
-import { CancelFill, Loop, Search } from '@accelint/icons';
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
+import CancelFill from '@accelint/icons/cancel-fill';
+import Loop from '@accelint/icons/loop';
+import Search from '@accelint/icons/search';
 import {
   SearchField as AriaSearchField,
   Button,

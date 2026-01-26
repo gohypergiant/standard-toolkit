@@ -13,7 +13,7 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { Time } from '@accelint/icons';
+import Time from '@accelint/icons/time';
 import {
   DateInput as AriaDateInput,
   Text as AriaText,
