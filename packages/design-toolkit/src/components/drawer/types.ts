@@ -33,6 +33,9 @@ type Left = 'left';
 type XAxisUnion = Right | Left;
 type XAxisIntersection = `${Right} ${Left}` | `${Left} ${Right}`;
 
+/**
+ * Props for the DrawerLayout component.
+ */
 export type DrawerLayoutProps = ComponentPropsWithRef<'div'> & {
   /**
    * Which drawers should extend to full container dimensions.
@@ -123,8 +126,13 @@ export type DrawerLayoutProps = ComponentPropsWithRef<'div'> & {
     | `${YAxisIntersection} ${XAxisIntersection}`;
 };
 
+/**
+ * Props for the Drawer component.
+ */
 export type DrawerProps = Omit<ComponentPropsWithRef<'div'>, 'onChange'> & {
+  /** Unique identifier for the drawer. */
   id: UniqueId;
+  /** ID of the view to display initially. */
   defaultView?: UniqueId;
   /**
    * The placement of the drawer.
@@ -139,6 +147,9 @@ export type DrawerProps = Omit<ComponentPropsWithRef<'div'>, 'onChange'> & {
   onChange?: (view: UniqueId | null) => void;
 };
 
+/**
+ * Props for the DrawerMenu component.
+ */
 export type DrawerMenuProps = ComponentPropsWithRef<'nav'> & {
   /**
    * The position of the menu.
@@ -187,6 +198,9 @@ export type DrawerMenuItemProps = Omit<
   };
 };
 
+/**
+ * Props for the DrawerHeaderTitle component.
+ */
 export type DrawerTitleProps = Omit<HeadingProps, 'level'> &
   AriaAttributesWithRef<HTMLHeadingElement> & {
     level?: 1 | 2 | 3 | 4 | 5 | 6;
@@ -249,8 +263,14 @@ export type DrawerTriggerProps = RefAttributes<FocusableElement> & {
   for: SimpleEvents | TargetedEvents | ChainedEvents;
 };
 
+/**
+ * Context value for sharing Drawer state across child components.
+ */
 export type DrawerContextValue = {
+  /** Registers a view ID with the drawer. */
   register: (view: UniqueId) => void;
+  /** Unregisters a view ID from the drawer. */
   unregister: (view: UniqueId) => void;
+  /** The placement of the drawer relative to the viewport. */
   placement: XAxisUnion | YAxisUnion;
 };

@@ -17,6 +17,10 @@ import type { ComponentPropsWithRef } from 'react';
  * DrawerContent - Main content area within a DrawerView.
  *
  * Scrollable container for the view's primary content.
+ *
+ * @param props - ComponentPropsWithRef<'div'>
+ * @param props.className - Optional CSS class name.
+ * @returns The rendered DrawerContent component.
  */
 export function DrawerContent({
   className,

@@ -29,6 +29,16 @@ import type { DrawerOpenEvent, DrawerProps, DrawerToggleEvent } from './types';
  * A flexible panel that slides in from the viewport edge and supports
  * stacked views, headers, footers, and programmatic triggers.
  *
+ * @param props - {@link DrawerProps}
+ * @param props.id - Unique identifier for the drawer.
+ * @param props.children - Content to render inside the drawer.
+ * @param props.className - Optional CSS class name.
+ * @param props.defaultView - ID of the view to display initially.
+ * @param props.placement - Edge of the viewport the drawer slides from.
+ * @param props.size - Size of the drawer panel.
+ * @param props.onChange - Callback when the active view changes.
+ * @returns The rendered Drawer component.
+ *
  * @example
  * const ids = { drawer: uuid(), a: uuid() };
  *

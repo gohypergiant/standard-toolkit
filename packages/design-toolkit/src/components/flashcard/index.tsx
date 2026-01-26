@@ -41,6 +41,14 @@ export const FlashcardContext = createContext<FlashcardProps>({
  * Container component that provides loading state and header/subheader
  * to child components via context.
  *
+ * @param props - {@link FlashcardProps}
+ * @param props.isLoading - Whether the flashcard is in a loading state.
+ * @param props.header - Primary header text.
+ * @param props.subheader - Secondary text below the header.
+ * @param props.children - Child components to render.
+ * @param props.className - Optional CSS class name.
+ * @returns The rendered Flashcard component.
+ *
  * @example
  * <Flashcard isLoading={false} header="Identifier" subheader="DATA">
  *   <FlashcardHero />
@@ -69,6 +77,11 @@ Flashcard.displayName = 'Flashcard';
  *
  * Reads header and subheader from Flashcard context. Shows skeleton
  * placeholders when the parent Flashcard has isLoading=true.
+ *
+ * @param props - {@link FlashcardComponentProps}
+ * @param props.children - Optional child content.
+ * @param props.className - Optional CSS class name.
+ * @returns The rendered FlashcardHero component.
  */
 export function FlashcardHero(props: FlashcardComponentProps) {
   const { children, className, ...rest } = props;
@@ -101,6 +114,11 @@ const FlashcardSubheader = Text;
  * FlashcardAdditionalData - Secondary data section below the hero.
  *
  * Hidden when the parent Flashcard has isLoading=true.
+ *
+ * @param props - {@link FlashcardComponentProps}
+ * @param props.children - Content to display in the section.
+ * @param props.className - Optional CSS class name.
+ * @returns The rendered FlashcardAdditionalData component, or null if loading.
  */
 export function FlashcardAdditionalData(props: FlashcardComponentProps) {
   const { children, className, ...rest } = props;
@@ -123,6 +141,11 @@ FlashcardAdditionalData.displayName = 'FlashcardAdditionalData';
  * FlashcardDetailsList - Wrapper for key-value detail pairs.
  *
  * Wraps DetailsList with justify alignment for flashcard styling.
+ *
+ * @param props - {@link FlashcardDetailsListProps}
+ * @param props.children - FlashcardDetailsLabel and FlashcardDetailsValue pairs.
+ * @param props.className - Optional CSS class name.
+ * @returns The rendered FlashcardDetailsList component.
  */
 export function FlashcardDetailsList(props: FlashcardDetailsListProps) {
   const { children, className, ...rest } = props;
@@ -142,6 +165,11 @@ FlashcardDetailsList.displayName = 'FlashcardDetailsList';
  * FlashcardDetailsLabel - Label for detail items.
  *
  * Shows skeleton placeholder when the parent Flashcard has isLoading=true.
+ *
+ * @param props - {@link FlashcardComponentProps}
+ * @param props.children - Label text content.
+ * @param props.className - Optional CSS class name.
+ * @returns The rendered FlashcardDetailsLabel component.
  */
 export function FlashcardDetailsLabel(props: FlashcardComponentProps) {
   const { isLoading } = useContext(FlashcardContext);
@@ -165,6 +193,11 @@ FlashcardDetailsLabel.displayName = 'FlashcardDetailsLabel';
  * FlashcardDetailsValue - Value for detail items.
  *
  * Shows skeleton placeholder when the parent Flashcard has isLoading=true.
+ *
+ * @param props - {@link FlashcardComponentProps}
+ * @param props.children - Value text content.
+ * @param props.className - Optional CSS class name.
+ * @returns The rendered FlashcardDetailsValue component.
  */
 export function FlashcardDetailsValue(props: FlashcardComponentProps) {
   const { isLoading } = useContext(FlashcardContext);

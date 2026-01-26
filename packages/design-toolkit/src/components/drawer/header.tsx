@@ -31,6 +31,12 @@ import styles from './styles.module.css';
  * Heading level automatically adjusts based on view stack depth
  * (h2 for root view, h4 for nested views).
  *
+ * @param props - ComponentPropsWithRef<'header'>
+ * @param props.className - Optional CSS class name.
+ * @param props.title - Title text for the header.
+ * @param props.children - Custom header content (overrides title).
+ * @returns The rendered DrawerHeader component.
+ *
  * @example
  * // Simplified with title prop
  * <DrawerHeader title="Settings" />

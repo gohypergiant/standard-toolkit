@@ -23,6 +23,10 @@ import type { ComponentPropsWithRef } from 'react';
  *
  * Automatically sizes icons via IconProvider.
  *
+ * @param props - ComponentPropsWithRef<'div'>
+ * @param props.className - Optional CSS class name.
+ * @returns The rendered HotkeySet component.
+ *
  * @example
  * <HotkeySet>
  *   <Hotkey>CMD</Hotkey>

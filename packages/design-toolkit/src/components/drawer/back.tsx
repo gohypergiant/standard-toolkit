@@ -25,6 +25,8 @@ import { DrawerTrigger } from './trigger';
  *
  * Only renders when the view stack has more than one view.
  * Triggers a 'back' action to pop the current view from the stack.
+ *
+ * @returns The rendered DrawerBack button, or null if at root view.
  */
 export function DrawerBack() {
   const { stack } = useContext(ViewStackContext);

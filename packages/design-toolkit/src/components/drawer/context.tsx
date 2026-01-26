@@ -47,6 +47,8 @@ export const DrawerEventHandlers = {
 /**
  * Hook for emitting drawer events (open, close, toggle, push, pop, clear).
  *
+ * @returns Object with methods to emit drawer events.
+ *
  * @example
  * const emit = useDrawerEmit();
  * emit.open(viewId);

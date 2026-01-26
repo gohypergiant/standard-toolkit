@@ -22,6 +22,11 @@ import type { DrawerTitleProps } from './types';
  * - Levels 1-3: Large text size (renders as h1-h3)
  * - Levels 4-6: Medium text size (renders as h4-h6)
  *
+ * @param props - {@link DrawerTitleProps}
+ * @param props.className - Optional CSS class name.
+ * @param props.level - Heading level (1-6).
+ * @returns The rendered DrawerHeaderTitle component.
+ *
  * @default level 2
  */
 export function DrawerHeaderTitle({

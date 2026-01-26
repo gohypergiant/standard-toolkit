@@ -29,6 +29,10 @@ import type { DrawerTriggerProps } from './types';
  * - `'action:viewId'`: Combine action with view ID (e.g., `'open:${viewId}'`)
  * - `Array`: Fire multiple events in sequence
  *
+ * @param props - {@link DrawerTriggerProps}
+ * @param props.for - The event(s) to fire when the trigger is pressed.
+ * @returns The rendered DrawerTrigger component.
+ *
  * @example
  * <DrawerTrigger for="close">
  *   <Button>Close</Button>

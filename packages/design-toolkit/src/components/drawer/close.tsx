@@ -22,6 +22,8 @@ import { DrawerTrigger } from './trigger';
  * DrawerClose - Close button for the drawer.
  *
  * Triggers a 'close' action to close the entire drawer.
+ *
+ * @returns The rendered DrawerClose button.
  */
 export function DrawerClose() {
   return (

@@ -17,6 +17,10 @@ import type { ComponentPropsWithRef } from 'react';
  * DrawerPanel - Main panel container for drawer content.
  *
  * Contains DrawerView components. Only one DrawerPanel allowed per Drawer.
+ *
+ * @param props - ComponentPropsWithRef<'div'>
+ * @param props.className - Optional CSS class name.
+ * @returns The rendered DrawerPanel component.
  */
 export function DrawerPanel({
   className,

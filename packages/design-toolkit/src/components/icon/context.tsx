@@ -28,6 +28,10 @@ export const IconContext =
  *
  * Use this to configure shared size across multiple Icon components.
  *
+ * @param props - ProviderProps<IconProps>
+ * @param props.children - Child components to receive context.
+ * @returns The rendered IconProvider component.
+ *
  * @example
  * <IconProvider size="small">
  *   <Icon><Home /></Icon>

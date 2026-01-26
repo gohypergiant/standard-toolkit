@@ -18,6 +18,10 @@ import type { ComponentPropsWithRef } from 'react';
  *
  * Typically used for action buttons or supplementary information.
  * Renders as a semantic `<footer>` element.
+ *
+ * @param props - ComponentPropsWithRef<'footer'>
+ * @param props.className - Optional CSS class name.
+ * @returns The rendered DrawerFooter component.
  */
 export function DrawerFooter({
   className,

@@ -25,6 +25,13 @@ import type { IconProps } from './types';
  * proper accessibility support. Works seamlessly with the Accelint icon library
  * and supports custom SVG elements with consistent styling and alignment.
  *
+ * @param props - {@link IconProps}
+ * @param props.ref - Ref to the span element.
+ * @param props.children - SVG icon element to display.
+ * @param props.className - Optional CSS class name.
+ * @param props.size - Size variant for the icon.
+ * @returns The rendered Icon component.
+ *
  * @example
  * // Basic icon usage
  * <Icon>

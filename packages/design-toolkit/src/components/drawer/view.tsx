@@ -26,6 +26,12 @@ import type { ViewStackViewProps } from '../view-stack/types';
  * view is active in the stack. Contains DrawerHeader, DrawerContent,
  * and optionally DrawerFooter.
  *
+ * @param props - ViewStackViewProps & ComponentPropsWithRef<'div'>
+ * @param props.id - Unique identifier for the view.
+ * @param props.children - Content to render inside the view.
+ * @param props.className - Optional CSS class name.
+ * @returns The rendered DrawerView component.
+ *
  * @example
  * <DrawerView id={viewId}>
  *   <DrawerHeader title="Settings" />

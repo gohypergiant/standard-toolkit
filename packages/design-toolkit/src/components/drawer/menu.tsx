@@ -18,6 +18,12 @@ import type { DrawerMenuProps } from './types';
  *
  * Contains DrawerMenuItem components. Renders as a semantic `<nav>` element.
  *
+ * @param props - {@link DrawerMenuProps}
+ * @param props.className - Optional CSS class name.
+ * @param props.position - Position of the menu within the layout.
+ * @param props.children - DrawerMenuItem components to render.
+ * @returns The rendered DrawerMenu component.
+ *
  * @example
  * <DrawerMenu position="center">
  *   <DrawerMenuItem for={viewA}>View A</DrawerMenuItem>

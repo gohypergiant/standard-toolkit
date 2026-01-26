@@ -29,6 +29,10 @@ export const HotkeyContext =
  *
  * Use this to configure shared variant across multiple Hotkey components.
  *
+ * @param props - ProviderProps<HotkeyProps>
+ * @param props.children - Child components to receive context.
+ * @returns The rendered HotkeyProvider component.
+ *
  * @example
  * <HotkeyProvider variant="flat">
  *   <Hotkey>Ctrl</Hotkey>

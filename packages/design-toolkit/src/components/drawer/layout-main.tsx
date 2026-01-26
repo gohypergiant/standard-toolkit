@@ -19,6 +19,10 @@ import type { ComponentPropsWithRef } from 'react';
  * Responds to panel open/close states, adjusting layout based on
  * the parent DrawerLayout's `push` configuration.
  *
+ * @param props - ComponentPropsWithRef<'main'>
+ * @param props.className - Optional CSS class name.
+ * @returns The rendered DrawerLayoutMain component.
+ *
  * @example
  * <DrawerLayout push="left">
  *   <DrawerLayoutMain>
