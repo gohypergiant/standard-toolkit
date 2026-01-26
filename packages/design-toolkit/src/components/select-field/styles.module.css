@@ -36,6 +36,18 @@
   .error {
     @apply fg-serious-bold text-body-xs;
   }
+
+  .readonly {
+    @apply py-xs block;
+  }
+
+  .chevron {
+    @apply transform;
+
+    @variant group-open/select-field {
+      @apply rotate-180;
+    }
+  }
 }
 
 @layer components.l2 {

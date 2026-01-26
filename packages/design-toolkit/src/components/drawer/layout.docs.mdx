@@ -5,140 +5,89 @@ import * as DrawerLayoutStories from './layout.stories';
 
 # DrawerLayout
 
-A flexible layout system for managing multiple drawers that can be positioned on any side of the main content area. Supports pushing and extending behaviors with configurable sizes and placements.
+A flexible CSS Grid-based layout system for positioning panels on any side of the main content area. DrawerLayout is a shared layout primitive used by both [Drawer](?path=/docs/components-drawer--docs) and [Sidenav](?path=/docs/components-sidenav--docs) components.
+
+It supports:
+- **extend**: Control which drawers span the full container dimension
+- **push**: Control whether drawers push content aside or overlay it
 
 <Canvas of={DrawerLayoutStories.Default} />
 
 ## Structure
 
-The DrawerLayout system consists of the following components:
-
 ```tsx
-<DrawerLayout>
+<DrawerLayout extend="left right" push="left">
   <DrawerLayoutMain>
     {/* Main content area */}
   </DrawerLayoutMain>
 
-  <Drawer>
-    <DrawerMenu>
-      <DrawerMenuItem />
-    </DrawerMenu>
-    <DrawerPanel>
-      <DrawerHeader>
-        <DrawerHeaderTitle />
-      </DrawerHeader>
-      <DrawerContent>
-        <DrawerView />
-      </DrawerContent>
-    </DrawerPanel>
-  </Drawer>
+  {/* Drawer, Sidenav, or other panel components */}
 </DrawerLayout>
 ```
 
-- **DrawerLayout**: Container that manages drawer interactions and layout
-- **DrawerLayoutMain**: Main content area that responds to drawer states
-- **Drawer**: Individual drawer container with configurable placement
-- **DrawerMenu**: Navigation menu for controlling drawer views
-- **DrawerMenuItem**: Interactive item for toggling drawer states
-- **DrawerPanel**: Content container for the drawer
-- **DrawerHeader**: Header section of the drawer
-- **DrawerHeaderTitle**: Title component for the drawer
-- **DrawerContent**: Main content area within the drawer
-- **DrawerView**: Individual view container within the drawer
+- **DrawerLayout**: CSS Grid container that manages layout structure via `extend` and `push` props
+- **DrawerLayoutMain**: Main content area that responds to panel states
 
 ## Props
 
 ### DrawerLayout Props
 
 - `extend`
-  - Type: select ('top bottom', 'left right', 'top', 'bottom', 'left', 'right')
-  - Default: ''
-  - Description: Specifies which drawers should extend over the main content
+  - Type: `'top bottom' | 'left right' | 'top' | 'bottom' | 'left' | 'right'`
+  - Default: `'left right'`
+  - Description: Determines which panels extend to full container dimensions. With `'left right'`, side panels span the full height while top/bottom only span the middle. With `'top bottom'`, top/bottom panels span full width.
 
 - `push`
-  - Type: string
-  - Default: ''
-  - Description: Specifies which drawers should push the main content
+  - Type: `'top' | 'bottom' | 'left' | 'right'` (can combine, e.g., `'left right'`)
+  - Default: `undefined`
+  - Description: Determines which panels push the main content aside rather than overlaying it. When undefined, panels float over the content.
 
 - `children`
   - Type: ReactNode
   - Required
-  - Description: Content to render within the layout
+  - Description: Content to render within the layout (DrawerLayoutMain and panel components)
 
-### Drawer Props
+### DrawerLayoutMain Props
 
-- `id`
+- `className`
   - Type: string
-  - Required
-  - Description: Unique identifier for the drawer
+  - Optional
+  - Description: Additional CSS classes for the main content area
 
-- `placement`
-  - Type: select ('top', 'bottom', 'left', 'right')
-  - Required
-  - Description: Position of the drawer
+## How `extend` Works
 
-- `size`
-  - Type: select ('medium')
-  - Default: 'medium'
-  - Description: Size of the drawer
+```
+extend: 'left right' (default)        extend: 'top bottom'
+┌──────┬──────────┬───────┐           ┌─────────────────────────┐
+│      │   top    │       │           │          top            │
+│      ├──────────┤       │           ├──────┬──────────┬───────┤
+│ left │   main   │ right │           │ left │   main   │ right │
+│      ├──────────┤       │           ├──────┴──────────┴───────┤
+│      │  bottom  │       │           │         bottom          │
+└──────┴──────────┴───────┘           └─────────────────────────┘
+```
 
-### DrawerMenuItem Props
+## How `push` Works
 
-- `toggle`
-  - Type: boolean
-  - Default: false
-  - Description: Whether this item toggles the drawer state
-
-- `for`
-  - Type: string
-  - Required
-  - Description: ID of the view this item controls
-
-### DrawerView Props
-
-- `id`
-  - Type: string
-  - Required
-  - Description: Unique identifier for the view
+- **`push={undefined}`**: Panels float over main content (overlay behavior)
+- **`push="left"`**: Left panel pushes content to the right
+- **`push="left right"`**: Both side panels push content, making it narrower
+- **`push="top bottom left right"`**: All panels push content from all sides
 
 ## Implementation Notes
 
 - Built with TailwindCSS for styling
 - Uses CSS Grid for layout management
-- Handles transitions and animations automatically
-- **Props use camelCase** (e.g., `placement`, `size`)
-- **Component names use PascalCase** (e.g., `DrawerLayout`)
-- **Descriptions begin with uppercase letters**
+- Layout responds automatically to panel open/close states
 
 ## Usage Requirements
 
 - Must include exactly one `DrawerLayoutMain` component
-- Each `Drawer` must have a unique `id`
-- Each `DrawerView` must have a unique `id`
-- `placement` must be one of: 'top', 'bottom', 'left', 'right'
-- Menu items must reference valid view IDs
+- Panel components (Drawer, Sidenav) should be siblings of DrawerLayoutMain
 
-## Accessibility
+## See Also
 
-- Keyboard navigation support for drawer controls
-- ARIA attributes for drawer states and controls
-- Focus management between drawers
-- Support for reduced motion preferences
-- Screen reader announcements for drawer state changes
-
-## Contextual Use Cases
-
-- Application navigation systems
-- Tool panels and sidebars
-- Property inspectors
-- Configuration panels
-- Multi-panel dashboards
-- Complex form layouts
-- Responsive mobile navigation
-
-## References
-
-- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
-- [Standard Toolkit Icon Component](/docs/components-icon--docs)
+- [Drawer](?path=/docs/components-drawer--docs) - Panel component with views and menu
+- [Sidenav](?path=/docs/components-sidenav--docs) - Collapsible side navigation panel
 
 <Controls of={DrawerLayoutStories.Default} />

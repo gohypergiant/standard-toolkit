@@ -10,10 +10,9 @@
  * governing permissions and limitations under the License.
  */
 'use client';
-
-import { ChevronDown } from '@accelint/icons';
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
+import ChevronDown from '@accelint/icons/chevron-down';
 import {
   Button,
   ComboBox,
@@ -62,6 +61,7 @@ export function ComboBoxField<T extends OptionsDataItem>({
     menuTrigger = 'focus',
     size = 'medium',
     isInvalid: isInvalidProp,
+    isReadOnly = false,
     ...rest
   } = props;
   const errorMessage = errorMessageProp || null; // Protect against empty string
@@ -76,64 +76,78 @@ export function ComboBoxField<T extends OptionsDataItem>({
       )}
       menuTrigger={menuTrigger}
       isInvalid={isInvalidProp || (errorMessage ? true : undefined)} // Leave uncontrolled if possible to fallback to validation state
+      isReadOnly={isReadOnly}
       data-size={size}
     >
       {(
         { isDisabled, isInvalid, isRequired }, // Rely on internal state, not props, since state could differ from props
-      ) => (
-        <>
-          {!!labelProp && !isSmall && (
-            <Label
-              className={clsx(styles.label, classNames?.label)}
-              isDisabled={isDisabled}
-              isRequired={isRequired}
-            >
-              {labelProp}
-            </Label>
-          )}
-          <div className={clsx(styles.control, classNames?.control)}>
-            <Input
-              {...inputProps}
-              className={composeRenderProps(classNames?.input, (className) =>
-                clsx(styles.input, className),
-              )}
-            />
-            <Button
-              className={composeRenderProps(classNames?.trigger, (className) =>
-                clsx(styles.trigger, className),
-              )}
-            >
-              <Icon size='small'>
-                <ChevronDown />
-              </Icon>
-            </Button>
-          </div>
-          {!!descriptionProp && !(isSmall || isInvalid) && (
-            <Text
-              className={clsx(styles.description, classNames?.description)}
-              slot='description'
-            >
-              {descriptionProp}
-            </Text>
-          )}
-          <FieldError
-            className={composeRenderProps(classNames?.error, (className) =>
-              clsx(styles.error, className),
+      ) => {
+        const shouldShowDescription =
+          !isReadOnly && !!descriptionProp && !(isSmall || isInvalid);
+
+        return (
+          <>
+            {!!labelProp && !isSmall && (
+              <Label
+                className={clsx(styles.label, classNames?.label)}
+                isDisabled={isDisabled}
+                isRequired={isRequired}
+              >
+                {labelProp}
+              </Label>
             )}
-          >
-            {errorMessage}
-          </FieldError>
-          <Popover
-            className={composeRenderProps(classNames?.popover, (className) =>
-              clsx(styles.popover, className),
+            <div
+              className={clsx(styles.control, classNames?.control)}
+              data-readonly={isReadOnly || null}
+            >
+              <Input
+                {...inputProps}
+                tabIndex={isReadOnly ? -1 : 0}
+                className={composeRenderProps(classNames?.input, (className) =>
+                  clsx(styles.input, className),
+                )}
+                title={inputProps?.value ? String(inputProps?.value) : ''}
+              />
+              {!isReadOnly && (
+                <Button
+                  className={composeRenderProps(
+                    classNames?.trigger,
+                    (className) => clsx(styles.trigger, className),
+                  )}
+                >
+                  <Icon size='small'>
+                    <ChevronDown />
+                  </Icon>
+                </Button>
+              )}
+            </div>
+            {shouldShowDescription && (
+              <Text
+                className={clsx(styles.description, classNames?.description)}
+                slot='description'
+              >
+                {descriptionProp}
+              </Text>
             )}
-          >
-            <Virtualizer layout={ListLayout} layoutOptions={layoutOptions}>
-              <Options>{children}</Options>
-            </Virtualizer>
-          </Popover>
-        </>
-      )}
+            <FieldError
+              className={composeRenderProps(classNames?.error, (className) =>
+                clsx(styles.error, className),
+              )}
+            >
+              {errorMessage}
+            </FieldError>
+            <Popover
+              className={composeRenderProps(classNames?.popover, (className) =>
+                clsx(styles.popover, className),
+              )}
+            >
+              <Virtualizer layout={ListLayout} layoutOptions={layoutOptions}>
+                <Options>{children}</Options>
+              </Virtualizer>
+            </Popover>
+          </>
+        );
+      }}
     </ComboBox>
   );
 }

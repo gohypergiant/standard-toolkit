@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import _ from 'lodash';
+import { camel } from 'radashi';
 
 export const pascalCase = (str: string) =>
-  _.camelCase(str).replace(/^\w/, (c) => c.toUpperCase());
+  camel(str).replace(/^\w/, (c) => c.toUpperCase());

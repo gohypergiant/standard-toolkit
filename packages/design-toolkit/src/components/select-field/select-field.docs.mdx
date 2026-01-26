@@ -56,6 +56,10 @@ The size can be controlled via the `size` prop or set globally using the `Select
 Setting a selected option is supported via the `selectedKey` and `onSelectionChange` prop. The selected key corresponds to the id prop of an item, so note that the items in your option list must have an `id` property. When Select is used with a dynamic collection (an `items` prop on `Options`), the id of each item is derived from the data.
 <Canvas of={SelectFieldStories.ControlledSelection} />
 
+## Readonly
+Set `isReadOnly` on the component and supply the `value`. If `value` is not provided, it will render an empty space.
+<Canvas of={SelectFieldStories.Readonly} />
+
 ## Props
 All the props from the `Select` headless component are available in the `SelectField` component (except `className` which is expanded to `classNames`). [Details can be found in the docs](https://react-spectrum.adobe.com/react-aria/Select.html#props).
 
@@ -63,6 +67,7 @@ There are additional props that are specific to our implementation of `SelectFie
 * **`label`** - Text label displayed above the select field
 * **`description`** - Helper text displayed below the select field
 * **`errorMessage`** - Error text displayed when validation fails
+* **`isReadOnly`** - Whether the component is read-only
 * **`size`** - Size variant: `'medium'` (default) or `'small'`
 * **`layoutOptions`** - Configuration for virtualized rendering of large option lists ([more details here](https://react-spectrum.adobe.com/react-aria/Virtualizer.html#listlayout))
 * **`classNames`** - Custom class names for styling:

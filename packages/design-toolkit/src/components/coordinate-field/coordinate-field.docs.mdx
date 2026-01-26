@@ -313,6 +313,7 @@ Full keyboard accessibility for efficient data entry:
 - **`label`** - Text label displayed above the input field (medium size only)
 - **`description`** - Helper text displayed below the input field. Note: Hidden when field is in small size or invalid state (unless disabled)
 - **`errorMessage`** - Error message displayed when validation fails
+- **`isReadOnly`** - Whether the field is read-only
 - **`isRequired`** - Whether the field is required (adds required indicator to label)
 - **`isDisabled`** - Whether the field is disabled
 - **`isInvalid`** - Whether to show the field in an invalid state
@@ -616,6 +617,17 @@ Use the small size variant for compact layouts:
 ```
 
 <Canvas of={CoordinateFieldStories.Required} />
+
+### Readonly value
+Allowing the field to be readonly:
+```tsx
+<CoordinateField
+  isReadOnly
+  value={{ lat: 23.2425, lon: 12.16112 }}
+/>
+```
+
+<Canvas of={CoordinateFieldStories.Readonly} />
 
 ## Best Practices
 

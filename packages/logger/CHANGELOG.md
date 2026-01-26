@@ -1,5 +1,12 @@
 # @accelint/logger
 
+## 0.1.5
+
+### Patch Changes
+
+- d328b71: Moved definitions from JERIC2O to here for additional usability and added additional exports.
+  Updated related packages as well.
+
 ## 0.1.4
 
 ### Patch Changes

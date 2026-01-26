@@ -48,7 +48,6 @@ import { Label } from '../label';
 import { Popover } from '../popover';
 import { PopoverContent } from '../popover/content';
 import { PopoverTitle } from '../popover/title';
-import { PopoverTrigger } from '../popover/trigger';
 import { Radio } from '../radio';
 import { RadioGroup } from '../radio/group';
 import { CoordinateFieldContext, CoordinateFieldStateContext } from './context';
@@ -57,9 +56,8 @@ import {
   getAllCoordinateFormats,
 } from './coordinate-utils';
 import { CoordinateSegment } from './segment';
-import { getSegmentLabel, GROUP_SEPARATOR } from './segment-configs';
+import { GROUP_SEPARATOR, getSegmentLabel } from './segment-configs';
 import styles from './styles.module.css';
-import type { CoordinateFieldProps } from './types';
 import {
   COORDINATE_FORMAT_LABELS,
   COORDINATE_FORMAT_NAMES,
@@ -67,6 +65,7 @@ import {
   type CoordinateSystem,
 } from './types';
 import { calculateMinControlWidth } from './width-utils';
+import type { CoordinateFieldProps } from './types';
 
 /**
  * CoordinateField - A comprehensive coordinate input component with multiple format support
@@ -140,6 +139,7 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
     isDisabled = false,
     isInvalid: isInvalidProp = false,
     isRequired = false,
+    isReadOnly = false,
     ...rest
   } = props;
 
@@ -261,6 +261,7 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
             } as CSSProperties
           }
           className={clsx(styles.control, classNames?.control)}
+          data-readonly={isReadOnly || null}
         >
           <div
             className={clsx(styles.input, styles[variant], classNames?.input)}
@@ -326,6 +327,7 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
                       pad={config.pad}
                       className={clsx(styles.segment, classNames?.segment)}
                       isDisabled={isDisabled}
+                      isReadOnly={isReadOnly}
                       allowedChars={config.allowedChars}
                       segmentRef={focus.segmentRefs[editableIndex]}
                       segmentIndex={editableIndex}
@@ -352,7 +354,7 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
           </div>
 
           {showFormatButton && (
-            <PopoverTrigger onOpenChange={handlePopoverOpenChange}>
+            <DialogTrigger onOpenChange={handlePopoverOpenChange}>
               <Button
                 variant='icon'
                 size={size}
@@ -404,7 +406,7 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
                     })}
                 </PopoverContent>
               </Popover>
-            </PopoverTrigger>
+            </DialogTrigger>
           )}
         </div>
 
@@ -430,7 +432,7 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
           isOpen={paste.showDisambiguationModal}
           onOpenChange={paste.setShowDisambiguationModal}
         >
-          <Button className='hidden'>Hidden Trigger</Button>
+          <Button className={styles.hiddenTrigger}>Hidden Trigger</Button>
           <Dialog size='small'>
             <DialogTitle className={styles.modalTitle}>
               Select Coordinate Format

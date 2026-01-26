@@ -41,7 +41,7 @@
     }
 
     @variant pressed {
-      @apply outline-accent-primary-pressed;
+      @apply outline-interactive-pressed;
     }
 
     @variant group-invalid/text-area-field {
@@ -50,6 +50,10 @@
 
     @variant disabled {
       @apply fg-disabled outline-interactive-disabled;
+    }
+
+    @variant read-only {
+      @apply px-0 outline-none;
     }
   }
 

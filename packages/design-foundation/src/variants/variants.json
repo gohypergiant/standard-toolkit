@@ -29,6 +29,9 @@
   "size-small": "[data-size=\"small\"]",
   "size-xsmall": "[data-size=\"xsmall\"]",
 
+  "elevation-overlay": "[data-elevation=\"overlay\"]",
+  "elevation-raised": "[data-elevation=\"raised\"]",
+
   "type-literal": "[data-type=\"literal\"]",
   "type-year": "[data-type=\"year\"]",
   "type-month": "[data-type=\"month\"]",
@@ -82,7 +85,7 @@
 
   "invalid": "[invalid], [data-invalid], :invalid",
 
-  "read-only": "[readonly], [data-readonly], :read-only",
+  "read-only": "[readonly], [data-readonly]",
 
   "outside-month": "[data-outside-month]",
   "outside-visible-range": "[data-outside-visible-range]",

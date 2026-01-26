@@ -43,6 +43,10 @@
     @variant group-disabled/date-field {
       @apply fg-disabled outline-interactive-disabled;
     }
+
+    @variant read-only {
+      @apply px-0 outline-none;
+    }
   }
 
   .input {

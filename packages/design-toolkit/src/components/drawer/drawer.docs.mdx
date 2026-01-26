@@ -11,7 +11,7 @@ The Drawer component provides a flexible, accessible UI pattern for displaying c
 It is composed of the following components:
 
 - **Drawer** – Root component that manages the drawer state and view stack
-- **DrawerLayout** – Container for layout structure, supports extending specific drawer's layout and drawer's push/overlay behavior
+- **[DrawerLayout](?path=/docs/components-drawerlayout--docs)** – Shared layout container (also used by Sidenav) for managing panel positioning with `extend` and `push` behavior
 - **DrawerMenu** – Navigation menu for switching between views
 - **DrawerMenuItem** – Individual menu item, can trigger open/toggle for a drawer as well as show a specific view. Supports tooltips for better accessibility and user experience.
 - **DrawerPanel** – Main panel container for drawer content
@@ -105,6 +105,18 @@ const ids = {
 
 <Canvas of={DrawerStories.StaticHeaderFooter} />
 
+## Drawer Props
+
+- **`id`** (required) - Unique identifier for the drawer
+- **`placement`** - Position of the drawer: `'top'`, `'bottom'`, `'left'`, `'right'` (default: `'left'`)
+- **`size`** - Size of the drawer panel: `'small'`, `'medium'`, `'large'` (default: `'medium'`)
+- **`defaultView`** - ID of the view to display when the drawer first opens
+- **`onChange`** - Callback fired when the active view changes
+
+## DrawerMenu Props
+
+- **`position`** - Position of menu items within the menu bar: `'start'`, `'center'`, `'end'` (default: `'center'`)
+
 ## DrawerHeader
 
 The DrawerHeader component provides two ways to create headers:
@@ -136,9 +148,9 @@ For more control over the header content, you can use a compositional approach:
 
 The DrawerMenuItem component represents individual navigation items within the drawer menu.
 
-- **`for`** - The unique identifier fo the view this item should navigate to
-- **`toggle`** - When `true`, the menu item will toggle the visibility of the associated view instead of just opening it
-- **`textValue`** - Text that will be displayed in a tooltip when hovering over the menu item
+- **`for`** (required) - The unique identifier of the view this item should navigate to
+- **`toggle`** - When `true`, clicking toggles the view open/closed. When `false`, clicking only opens. (default: `false`)
+- **`textValue`** (required) - Text displayed in a tooltip when hovering over the menu item
 - **`classNames`** - Optional class names for custom styling of the item and tooltip
   - `item` - Class name applied to the menu item
   - `tooltip` - Class name applied to the tooltip

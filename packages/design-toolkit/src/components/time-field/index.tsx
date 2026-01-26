@@ -13,7 +13,7 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { Time } from '@accelint/icons';
+import Time from '@accelint/icons/time';
 import {
   DateInput as AriaDateInput,
   Text as AriaText,
@@ -50,6 +50,7 @@ export function TimeField<T extends TimeValue>({
   isDisabled,
   isInvalid: isInvalidProp,
   isRequired,
+  isReadOnly = false,
   ...rest
 }: TimeFieldProps<T>) {
   const errorMessage = errorMessageProp || null; // Protect against empty string
@@ -67,6 +68,7 @@ export function TimeField<T extends TimeValue>({
       isDisabled={isDisabled}
       isInvalid={isInvalidProp || (errorMessage ? true : undefined)} // Leave uncontrolled if possible to fallback to validation state
       isRequired={isRequired}
+      isReadOnly={isReadOnly}
       aria-label={labelProp}
       data-size={size}
     >
@@ -83,8 +85,11 @@ export function TimeField<T extends TimeValue>({
               {labelProp}
             </Label>
           )}
-          <div className={clsx(styles.control, classNames?.control)}>
-            {size === 'medium' && (
+          <div
+            className={clsx(styles.control, classNames?.control)}
+            data-readonly={isReadOnly || null}
+          >
+            {!isReadOnly && size === 'medium' && (
               <Icon>
                 <Time />
               </Icon>

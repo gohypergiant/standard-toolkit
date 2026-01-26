@@ -1,5 +1,18 @@
 # @accelint/map-toolkit
 
+## 1.1.0
+
+### Minor Changes
+
+- 0175dd1: Update useCursorCoordinates to accept a custom formatter and return more information about the raw coordinate.
+
+### Patch Changes
+
+- Updated dependencies [45275c4]
+- Updated dependencies [d328b71]
+  - @accelint/geo@0.5.1
+  - @accelint/logger@0.1.5
+
 ## 1.0.0
 
 ### Major Changes

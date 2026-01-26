@@ -10,8 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Key } from '@react-types/shared';
-import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import { Button } from '../button';
 import { Label } from '../label';
@@ -24,6 +22,8 @@ import {
   type CoordinateSystem,
   type CoordinateValue,
 } from './types';
+import type { Key } from '@react-types/shared';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 /**
  * CoordinateField Storybook Stories
@@ -197,6 +197,7 @@ export const Default: Story = {
     description: 'Enter a coordinate in Decimal Degrees format',
     format: 'dd',
     size: 'medium',
+    isReadOnly: false,
   },
   parameters: {
     docs: {
@@ -1180,5 +1181,12 @@ export const RealWorldLocations: Story = {
           'Real-world coordinates from major cities, each shown in a different format. Notice how southern hemisphere coordinates (Sydney) use negative latitude.',
       },
     },
+  },
+};
+
+export const Readonly: Story = {
+  args: {
+    isReadOnly: true,
+    value: { lat: 23.2425, lon: 12.16112 },
   },
 };
