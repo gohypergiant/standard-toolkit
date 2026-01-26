@@ -27,7 +27,16 @@ import type { DrawerCloseProps, SimpleEvents, TargetedEvents } from './types';
  *
  * Triggers a 'close' action to close the entire drawer.
  *
+ * @param props - {@link DrawerCloseProps}
+ * @param props.for - Optional drawer ID to close. Defaults to current drawer.
+ * @param props.aria-label - Optional accessible label for the button.
  * @returns The rendered DrawerClose button.
+ *
+ * @example
+ * <DrawerHeader>
+ *   <DrawerHeaderTitle>Settings</DrawerHeaderTitle>
+ *   <DrawerClose />
+ * </DrawerHeader>
  */
 export function DrawerClose(props: DrawerCloseProps) {
   const context = useContext(ViewStackContext);

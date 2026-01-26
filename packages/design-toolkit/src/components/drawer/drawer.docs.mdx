@@ -16,7 +16,7 @@ Components:
 - **DrawerView** - Content region for a specific view
 - **DrawerHeader** - Header with optional title prop for automatic layout
 - **DrawerHeaderTitle** - Semantic heading element
-- **DrawerClose** - Heading element, closes drawer/view
+- **DrawerClose** - Close button for the drawer
 - **DrawerContent** - Main content area
 - **DrawerFooter** - Footer region for actions
 - **DrawerTrigger** - Programmatic trigger for drawer/view actions
@@ -110,10 +110,12 @@ When using `title`, the component automatically adds back navigation (for nested
 
 ### DrawerClose
 
-Allows users to pass an ID for a given drawer/view, which will then emit a `DrawerClose` event via bus.
+Close button that triggers a 'close' action to close the entire drawer.
+
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `for` | `'open' \| 'toggle' \| 'close' \| UniqueId \| Array` | - | Unique identifier for the tab to be closed |
+| `for` | `UniqueId` | - | Optional drawer ID to close. Defaults to current drawer |
+| `aria-label` | `string` | - | Optional accessible label for the button |
 
 ### DrawerTrigger
 Controls drawer state or navigates to views.

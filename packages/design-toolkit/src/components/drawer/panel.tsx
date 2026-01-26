@@ -21,6 +21,13 @@ import type { ComponentPropsWithRef } from 'react';
  * @param props - ComponentPropsWithRef<'div'>
  * @param props.className - Optional CSS class name.
  * @returns The rendered DrawerPanel component.
+ *
+ * @example
+ * <Drawer id={drawerId} defaultView={viewId}>
+ *   <DrawerPanel>
+ *     <DrawerView id={viewId}>...</DrawerView>
+ *   </DrawerPanel>
+ * </Drawer>
  */
 export function DrawerPanel({
   className,

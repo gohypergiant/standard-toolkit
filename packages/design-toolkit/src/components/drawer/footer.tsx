@@ -22,6 +22,15 @@ import type { ComponentPropsWithRef } from 'react';
  * @param props - ComponentPropsWithRef<'footer'>
  * @param props.className - Optional CSS class name.
  * @returns The rendered DrawerFooter component.
+ *
+ * @example
+ * <DrawerView id={viewId}>
+ *   <DrawerHeader title="Settings" />
+ *   <DrawerContent>Content here</DrawerContent>
+ *   <DrawerFooter>
+ *     <Button>Save</Button>
+ *   </DrawerFooter>
+ * </DrawerView>
  */
 export function DrawerFooter({
   className,

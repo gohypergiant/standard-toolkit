@@ -27,6 +27,14 @@ import { DrawerTrigger } from './trigger';
  * Triggers a 'back' action to pop the current view from the stack.
  *
  * @returns The rendered DrawerBack button, or null if at root view.
+ *
+ * @example
+ * <DrawerView id={nestedViewId}>
+ *   <DrawerHeader>
+ *     <DrawerBack />
+ *     <DrawerHeaderTitle>Nested View</DrawerHeaderTitle>
+ *   </DrawerHeader>
+ * </DrawerView>
  */
 export function DrawerBack() {
   const { stack } = useContext(ViewStackContext);

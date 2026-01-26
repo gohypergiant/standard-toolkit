@@ -207,6 +207,15 @@ export type DrawerTitleProps = Omit<HeadingProps, 'level'> &
     level?: 1 | 2 | 3 | 4 | 5 | 6;
   };
 
+/**
+ * Event payload for opening a drawer view.
+ *
+ * @example
+ * const event: DrawerOpenEvent = {
+ *   type: 'Drawer:open',
+ *   payload: { view: viewId }
+ * };
+ */
 export type DrawerOpenEvent = Payload<
   typeof DrawerEventTypes.open,
   {
@@ -214,6 +223,15 @@ export type DrawerOpenEvent = Payload<
   }
 >;
 
+/**
+ * Event payload for closing a drawer view.
+ *
+ * @example
+ * const event: DrawerCloseEvent = {
+ *   type: 'Drawer:close',
+ *   payload: { view: viewId }
+ * };
+ */
 export type DrawerCloseEvent = Payload<
   typeof DrawerEventTypes.close,
   {
@@ -221,6 +239,15 @@ export type DrawerCloseEvent = Payload<
   }
 >;
 
+/**
+ * Event payload for toggling a drawer view's visibility.
+ *
+ * @example
+ * const event: DrawerToggleEvent = {
+ *   type: 'Drawer:toggle',
+ *   payload: { view: viewId }
+ * };
+ */
 export type DrawerToggleEvent = Payload<
   typeof DrawerEventTypes.toggle,
   {
@@ -228,14 +255,56 @@ export type DrawerToggleEvent = Payload<
   }
 >;
 
+/**
+ * Union type of all possible drawer and view stack events.
+ *
+ * @example
+ * import type { DrawerEvent } from './types';
+ *
+ * function handleEvent(event: DrawerEvent) {
+ *   if (event.type === 'Drawer:open') {
+ *     console.log('Opening view:', event.payload.view);
+ *   }
+ * }
+ */
 export type DrawerEvent =
   | DrawerOpenEvent
   | DrawerCloseEvent
   | DrawerToggleEvent
   | ViewStackEvent;
 
+/**
+ * Simple event types for drawer actions within a drawer context.
+ *
+ * @example
+ * // Trigger back navigation
+ * <DrawerTrigger for="back">
+ *   <Button>Back</Button>
+ * </DrawerTrigger>
+ *
+ * @example
+ * // Push a specific view by ID
+ * <DrawerTrigger for={viewId}>
+ *   <Button>Open View</Button>
+ * </DrawerTrigger>
+ */
 export type SimpleEvents = 'back' | 'clear' | 'close' | 'reset' | UniqueId;
 
+/**
+ * Targeted event types for controlling specific drawers from outside their context.
+ *
+ * @example
+ * // Open a specific drawer view
+ * <DrawerTrigger for={`open:${viewId}`}>
+ *   <Button>Open Settings</Button>
+ * </DrawerTrigger>
+ *
+ * @example
+ * // Close a specific drawer
+ * <DrawerTrigger for={`close:${drawerId}`}>
+ *   <Button>Close</Button>
+ * </DrawerTrigger>
+ */
 export type TargetedEvents =
   | `back:${UniqueId}`
   | `clear:${UniqueId}`
@@ -244,6 +313,21 @@ export type TargetedEvents =
   | `toggle:${UniqueId}`
   | `reset:${UniqueId}`;
 
+/**
+ * Array of events to trigger sequentially from a single interaction.
+ *
+ * @example
+ * // Reset and then open a view
+ * <DrawerTrigger for={['reset', viewId]}>
+ *   <Button>Reset & Open</Button>
+ * </DrawerTrigger>
+ *
+ * @example
+ * // Open multiple drawers
+ * <DrawerTrigger for={[`open:${drawerA}`, `open:${drawerB}`]}>
+ *   <Button>Open Both</Button>
+ * </DrawerTrigger>
+ */
 export type ChainedEvents = (SimpleEvents | TargetedEvents)[];
 
 export type DrawerTriggerProps = RefAttributes<FocusableElement> & {
@@ -287,6 +371,17 @@ export type DrawerContextValue = {
   placement: XAxisUnion | YAxisUnion;
 };
 
+/**
+ * Props for the DrawerClose component.
+ *
+ * @example
+ * // Close current drawer
+ * <DrawerClose />
+ *
+ * @example
+ * // Close specific drawer
+ * <DrawerClose for={drawerId} aria-label="Close settings" />
+ */
 export type DrawerCloseProps = AriaAttributesWithRef<FocusableElement> & {
   for?: UniqueId;
 };

@@ -28,6 +28,12 @@ import type { DrawerTitleProps } from './types';
  * @returns The rendered DrawerHeaderTitle component.
  *
  * @default level 2
+ *
+ * @example
+ * <DrawerHeader>
+ *   <DrawerHeaderTitle level={2}>Settings</DrawerHeaderTitle>
+ *   <DrawerClose />
+ * </DrawerHeader>
  */
 export function DrawerHeaderTitle({
   className,
