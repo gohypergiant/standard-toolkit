@@ -5,7 +5,7 @@ import * as IconPickerStories from './icon-picker.stories';
 <Meta of={IconPickerStories} />
 
 # IconPicker
-The IconPicker component provides a grid of interactive icon swatches for selecting from a predefined set of icons. It's built on React Aria Components and provides excellent accessibility out of the box. Icon pickers are commonly used in design tools, form builders, customization interfaces, and anywhere users need to select icons from a predefined palette.
+The IconPicker component provides a grid of interactive icon swatches for selecting from a predefined set of icons. It's built on React Aria Components and provides excellent accessibility out of the box. Icon pickers are commonly used in design tools, form builders, customization interfaces, and anywhere users need to select an icon from a predefined palette.
 
 ## Example usage
 ```tsx
@@ -45,19 +45,10 @@ const [selectedIcon, setSelectedIcon] = useState(new Set(['settings']));
   }}
 />
 
-// Icon picker with accessibility features
+// Icon picker with accessibility label
 <IconPicker
   items={icons}
   aria-label="Choose an icon for the button"
-  isDisabled={false}
-/>
-
-// Icon picker with multiple selection
-<IconPicker
-  items={icons}
-  selectionMode="multiple"
-  selectedKeys={['add', 'edit']}
-  onSelectionChange={(keys) => console.log('Selected:', [...keys])}
 />
 ```
 
@@ -66,7 +57,7 @@ const [selectedIcon, setSelectedIcon] = useState(new Set(['settings']));
 * **Grid Layout** - Icons are displayed in a flexible grid layout that wraps based on container width
 * **Interactive Swatches** - Each icon is displayed as a clickable swatch with hover and focus states
 * **Keyboard Navigation** - Full keyboard support for accessibility (Arrow keys, Enter, Space)
-* **Single or Multiple Selection** - Supports both single and multiple selection modes
+* **Single Selection** - Click to select an icon, click again to deselect
 * **Custom Icons** - Works with any icon components from @accelint/icons
 * **Custom Styling** - Granular control over styling through classNames prop
 
@@ -78,18 +69,11 @@ const [selectedIcon, setSelectedIcon] = useState(new Set(['settings']));
   * Each item must have an `id` (string), `icon` (component), and optional `label` (string)
   * Icons should be components from @accelint/icons
 * **`selectedKeys`** - Set of currently selected icon IDs
-* **`defaultSelectedKeys`** - Initial selected icon IDs
 * **`onSelectionChange`** - Callback when selection changes
-* **`selectionMode`** - Selection behavior: `'single'` (default) | `'multiple'` | `'none'`
-* **`isDisabled`** - Disables the entire icon picker
 * **`classNames`** - Custom class names for styling:
   * `picker` - Applied to the main picker container (grid layout)
   * `item` - Applied to individual icon items
   * `icon` - Applied to the icon wrapper elements
-* **`aria-label`** - Accessible label for screen readers
-* **`aria-describedby`** - ID of element that describes the icon picker
-
-The component accepts all standard GridList props from react-aria-components.
 
 ## Implementation Notes
 The `IconPicker` component wraps the `GridList` component from `react-aria-components` and uses the `Icon` component from the design toolkit for consistent icon sizing.
@@ -115,5 +99,3 @@ The component automatically handles accessibility features including:
 The icon picker automatically adapts its layout based on the container width, with icons arranged in a flexible grid that wraps as needed. Each icon provides clear visual feedback for hover, focus, and selected states, with appropriate outline colors that maintain accessibility standards.
 
 The component integrates seamlessly with React Aria's selection system and provides consistent behavior across different browsers and platforms. The flexible styling system allows for easy customization while maintaining the core functionality and accessibility features.
-
-The icon picker is particularly useful in design applications, form builders, and any interface where users need to select from a predefined set of icons. The grid layout makes it easy to scan and select icons quickly, while the keyboard navigation ensures it's accessible to all users.

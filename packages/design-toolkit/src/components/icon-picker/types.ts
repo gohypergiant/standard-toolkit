@@ -28,7 +28,13 @@ export type IconPickerItem = {
 
 export type IconPickerProps = Omit<
   GridListProps<IconPickerItem>,
-  'children' | 'layout' | 'orientation'
+  | 'children'
+  | 'dragAndDropHooks'
+  | 'keyboardNavigationBehavior'
+  | 'layout'
+  | 'orientation'
+  | 'selectionBehavior'
+  | 'selectionMode'
 > &
   RefAttributes<HTMLDivElement> & {
     classNames?: {

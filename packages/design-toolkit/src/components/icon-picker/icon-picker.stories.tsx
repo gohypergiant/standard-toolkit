@@ -36,7 +36,12 @@ const meta = {
     items,
   },
   argTypes: {
-    className: { type: 'string' },
+    items: {
+      description: 'Array of icon items to choose from.',
+    },
+    classNames: {
+      description: 'Custom class names for picker, item, and icon elements.',
+    },
     selectedKeys: {
       control: {
         type: 'select',
@@ -48,8 +53,10 @@ const meta = {
       action: 'changed',
       description: 'Callback function when the selection changes.',
     },
-    items: {
-      description: 'Array of icon items to choose from.',
+  },
+  parameters: {
+    controls: {
+      include: ['items', 'classNames', 'selectedKeys', 'onSelectionChange'],
     },
   },
 } satisfies Meta<typeof IconPicker>;

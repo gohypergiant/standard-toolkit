@@ -71,7 +71,8 @@ export function IconPicker({ classNames, items, ...rest }: IconPickerProps) {
       {...rest}
       items={items}
       aria-label={rest['aria-label'] ?? 'Icon picker'}
-      selectionMode={rest.selectionMode ?? 'single'}
+      selectionMode='single'
+      disallowTypeAhead
       className={composeRenderProps(classNames?.picker, (className) =>
         clsx(styles.picker, className),
       )}
