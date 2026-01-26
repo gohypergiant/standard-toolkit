@@ -175,6 +175,8 @@
     "./components/hotkey/set": "./dist/components/hotkey/set.js",
     "./components/hotkey/types": "./dist/components/hotkey/types.js",
     "./components/icon": "./dist/components/icon/index.js",
+    "./components/icon-picker": "./dist/components/icon-picker/index.js",
+    "./components/icon-picker/types": "./dist/components/icon-picker/types.js",
     "./components/icon/context": "./dist/components/icon/context.js",
     "./components/icon/types": "./dist/components/icon/types.js",
     "./components/input": "./dist/components/input/index.js",

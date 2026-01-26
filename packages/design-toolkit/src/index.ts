@@ -248,6 +248,12 @@ export type { HotkeyProps } from './components/hotkey/types';
 export { IconContext, IconProvider } from './components/icon/context';
 export { Icon } from './components/icon';
 export type { IconProps } from './components/icon/types';
+export { IconPicker } from './components/icon-picker';
+export type {
+  IconComponent,
+  IconPickerItem,
+  IconPickerProps,
+} from './components/icon-picker/types';
 export { InputContext } from './components/input/context';
 export { Input } from './components/input';
 export type { InputProps } from './components/input/types';
