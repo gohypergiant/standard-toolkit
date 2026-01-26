@@ -17,11 +17,19 @@ import type { Tokens } from '../lexer';
  * Create a simplified pattern string - numbers = 'N', bearings = 'B' - to
  * allow for simpler pattern matching.
  *
- * @remarks
- * pure function
+ * @param tokens - Array of coordinate tokens to simplify.
+ * @returns Simplified pattern string where 'N' = number and 'B' = bearing.
  *
  * @example
- * simplify(tokens); // 'NNNBNNNB' or similar
+ * simpler(['45', '30', 'N', '/', '122', '15', 'W']);
+ * // 'NNBNNNB'
+ *
+ * @example
+ * simpler(['45', 'N']);
+ * // 'NB'
+ *
+ * @remarks
+ * pure function
  */
 export const simpler = (tokens: Tokens) =>
   tokens.map((t) => (/\d/.test(t) ? 'N' : 'B')).join('');

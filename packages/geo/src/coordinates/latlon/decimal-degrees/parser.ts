@@ -56,6 +56,20 @@ const formats = {
   ),
 };
 
+/**
+ * Creates an error identification function for decimal degrees coordinates.
+ *
+ * Validates that degree values are within acceptable ranges and that
+ * minutes/seconds indicators are not present in decimal degrees notation.
+ *
+ * @param format - The coordinate format (LATLON or LONLAT).
+ * @returns Function that validates coordinate components and returns parse results.
+ *
+ * @example
+ * const validator = identifyErrors('LATLON');
+ * const result = validator({ deg: '91', bear: 'N' }, 0);
+ * // [[], ['Degrees value (91) exceeds max value (90).']]
+ */
 function identifyErrors(format: Format) {
   return (arg: DecimalDegrees | undefined, i: number) => {
     if (!arg) {
@@ -85,6 +99,22 @@ function identifyErrors(format: Format) {
   };
 }
 
+/**
+ * Identifies and organizes coordinate components from parsed tokens.
+ *
+ * Separates bearing indicators (N/S/E/W) from degree values in a coordinate half.
+ *
+ * @param half - Array of tokens representing one coordinate component.
+ * @returns Object with `bear` and `deg` properties, or undefined if invalid.
+ *
+ * @example
+ * identifyPieces(['45.5', 'N']);
+ * // { bear: 'N', deg: '45.5' }
+ *
+ * @example
+ * identifyPieces(['122.4', 'W']);
+ * // { bear: 'W', deg: '122.4' }
+ */
 function identifyPieces(half: string[]) {
   if (half.length > 2 || half.length < 1) {
     return;
@@ -103,7 +133,24 @@ function identifyPieces(half: string[]) {
   }, places);
 }
 
-/** Parse a Decimal Degrees coordinate. */
+/**
+ * Parses a Decimal Degrees coordinate string.
+ *
+ * Accepts coordinates in decimal degrees format with optional bearing indicators.
+ * Validates ranges and ensures no minutes/seconds indicators are present.
+ *
+ * @param input - Raw coordinate string to parse.
+ * @param format - Expected format (LATLON or LONLAT).
+ * @returns Parsed coordinate values or errors.
+ *
+ * @example
+ * parseDecimalDegrees('37.7749° N / 122.4194° W', 'LATLON');
+ * // [[37.7749, -122.4194], []]
+ *
+ * @example
+ * parseDecimalDegrees('45.5 N, 122.6 W');
+ * // [[45.5, -122.6], []]
+ */
 export const parseDecimalDegrees = createParser<DecimalDegrees>({
   formats,
   identifyErrors,

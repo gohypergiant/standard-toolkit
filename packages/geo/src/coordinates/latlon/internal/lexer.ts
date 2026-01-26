@@ -60,7 +60,24 @@ const TOKENS = new RegExp(
   'gi',
 );
 
-// remove trailing zeros '?.0' and ensure leading zero '0.?' in numbers
+/**
+ * Remove trailing zeros '?.0' and ensure leading zero '0.?' in numbers.
+ *
+ * @param t - Token string to normalize.
+ * @returns Normalized token with cleaned numeric formatting.
+ *
+ * @example
+ * fixLeadingAndTrailing('45.0°');
+ * // '45°'
+ *
+ * @example
+ * fixLeadingAndTrailing('.5'');
+ * // '0.5''
+ *
+ * @example
+ * fixLeadingAndTrailing('-122.00');
+ * // '-122'
+ */
 function fixLeadingAndTrailing(t: string) {
   const [sign, num, pos] = (FLOATS.exec(t) ?? []).slice(1);
 

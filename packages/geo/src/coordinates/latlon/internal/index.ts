@@ -76,6 +76,24 @@ export const SYMBOL_PATTERNS = {
   // },
 } as const;
 
+/**
+ * Creates a regex pattern for matching decimal minutes or seconds values.
+ *
+ * Generates a pattern that matches numeric values in the range 0-59.999... with optional
+ * leading zeros, decimal points, and symbol indicators, using lookbehind and lookahead
+ * to prevent partial matches within larger numbers.
+ *
+ * @param symbol - Regular expression for the symbol (minutes ' or seconds " indicator).
+ * @returns Combined regex pattern with precise boundary matching.
+ *
+ * @example
+ * const minutesPattern = decimalSecAndMin(SYMBOL_PATTERNS.MINUTES);
+ * // Matches: "30.5'", "59.999999999", ".5'", "001'", etc.
+ *
+ * @example
+ * const secondsPattern = decimalSecAndMin(SYMBOL_PATTERNS.SECONDS);
+ * // Matches: '45.23"', '0.5', '59.9999999999"', etc.
+ */
 const decimalSecAndMin = (symbol: RegExp) =>
   Patterning.optional(
     // Negative lookbehind

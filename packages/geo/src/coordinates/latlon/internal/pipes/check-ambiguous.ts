@@ -19,6 +19,18 @@ import type { Tokens } from '../lexer';
 /**
  * Look for groupings of numbers that are ambiguous; no indicators, or no
  * dividers and not possibility of deducing where a divider should be inserted.
+ *
+ * @param tokens - Array of parsed coordinate tokens.
+ * @param _format - Optional coordinate format (LATLON or LONLAT), currently unused.
+ * @returns Pipe result with tokens and error status (true if ambiguous, false otherwise).
+ *
+ * @example
+ * checkAmbiguousGrouping(['45', '30', '15', 'N'], 'LATLON');
+ * // Returns tokens with error=true if grouping is ambiguous
+ *
+ * @example
+ * checkAmbiguousGrouping(['45', '30', 'N', '/', '122', '15', 'W'], 'LATLON');
+ * // Returns tokens with error=false (divider present, not ambiguous)
  */
 export function checkAmbiguousGrouping(tokens: Tokens, _format?: Format) {
   if (tokens.includes(SYMBOLS.DIVIDER)) {

@@ -21,6 +21,14 @@ const GENOME_PATTERN =
  * Get the position (index) of where to insert a divider into the token list;
  * basically, the count of numeric components (left-of-divider position) plus
  * 1 if there is a bearing identifier (left-of-divider).
+ *
+ * @param _full - Full regex match string (unused).
+ * @param args - Regex capture groups: [bearing1, number1, bearing2, number2].
+ * @returns String representation of the divider index position.
+ *
+ * @example
+ * dividerIndexer('BDNBDNB', 'B', 'DN', 'B', 'DN');
+ * // '3' (bearing + 2 numeric components)
  */
 function dividerIndexer(_full: string, ...args: string[]) {
   const [bearing1 = '', number1, bearing2 = '', number2] = args;
@@ -42,6 +50,18 @@ function dividerIndexer(_full: string, ...args: string[]) {
  *   - S = seconds (number with seconds character following)
  *   - N = number (no identifying character following)
  *   - X = for unmatched token types
+ *
+ * @param acc - Accumulated genome sequence string.
+ * @param t - Current token to classify.
+ * @returns Updated genome sequence with new character appended.
+ *
+ * @example
+ * genomeSequencer('', '45°');
+ * // 'D'
+ *
+ * @example
+ * genomeSequencer('D', 'N');
+ * // 'DB'
  */
 function genomeSequencer(acc: string, t: string) {
   if (t.includes(SYMBOLS.DEGREES)) {
@@ -70,6 +90,17 @@ function genomeSequencer(acc: string, t: string) {
 /**
  * Use the "genome" sequence of the token list to find the index for inserting
  * a missing divider token.
+ *
+ * @param tokens - Array of coordinate tokens to analyze.
+ * @returns Index position where divider should be inserted, or 0 if pattern doesn't match.
+ *
+ * @example
+ * getGenomeIndex(['45°', '30'', 'N', '122°', '15'', 'W']);
+ * // 3 (insert divider after latitude components)
+ *
+ * @example
+ * getGenomeIndex(['45', '30', '15']);
+ * // 0 (pattern doesn't match genome sequence)
  */
 export function getGenomeIndex(tokens: Tokens) {
   const seq = tokens.reduce(genomeSequencer, '');

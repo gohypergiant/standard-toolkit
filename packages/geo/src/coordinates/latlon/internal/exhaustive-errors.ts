@@ -65,6 +65,17 @@ const systems = [
 /**
  * A collection of input strings each with exactly one error in a unique
  * position for each format (LATLON and LONLAT) in each system (DD, DDM, DMS).
+ *
+ * Used for comprehensive error validation testing. Each entry contains coordinate
+ * strings with systematic errors across different notation systems.
+ *
+ * @example
+ * EXHAUSTIVE_ERRORS.DD.LATLON;
+ * // Array of decimal degrees strings with errors like '91 N / 179 E'
+ *
+ * @example
+ * EXHAUSTIVE_ERRORS.DMS.LONLAT;
+ * // Array of degrees-minutes-seconds strings with errors
  */
 export const EXHAUSTIVE_ERRORS = Object.fromEntries(
   systems.map(({ designation, ...system }) => {
@@ -87,6 +98,17 @@ export const EXHAUSTIVE_ERRORS = Object.fromEntries(
   }),
 );
 
+/**
+ * Fills a coordinate template with test values, generating variations with errors.
+ *
+ * @param template - Template string with placeholders like 'DLAT MM BLAT / DLON MM BLON'.
+ * @param values - Object containing valid and invalid test values for each placeholder.
+ * @returns Array of coordinate strings with systematic errors injected.
+ *
+ * @example
+ * fillTemplate('DLAT MM BLAT / DLON MM BLON', values);
+ * // ['91 30 N / 179 30 E', 'nope 30 N / 179 30 E', ...]
+ */
 function fillTemplate(template: string, values: Values) {
   return template
     .split(' ')

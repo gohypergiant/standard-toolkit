@@ -19,12 +19,39 @@ type Match = [string, string, string, string, string];
 const PATTERN_PARTS =
   /^((?:..?)?)(\w?)\s*((?:\w{2})?)\s*(?:(\d+(?:\.\d*)?)?)\s*(?:(\d+(?:\.\d*)?)?)$/i;
 
+/**
+ * Creates a parse error result with a formatted error message.
+ *
+ * @param message - The error message describing what went wrong.
+ * @returns Parse results tuple with empty data array and error message array.
+ *
+ * @example
+ * error('Invalid UTM zone');
+ * // [[], ['Invalid UTM zone; expected format DDZ AA DDD DDD.']]
+ */
 const error = (message: string) =>
   [
     [],
     [`${violation(message)}; expected format DDZ AA DDD DDD.`],
   ] as ParseResults;
 
+/**
+ * Validates MGRS coordinate input and returns detailed error messages for invalid formats.
+ *
+ * Checks UTM zone number, latitude band letter, 100K meter square identification, and
+ * numerical location components. Returns specific error messages for each validation failure.
+ *
+ * @param input - The MGRS coordinate string to validate.
+ * @returns Parse results with detailed error messages for validation failures.
+ *
+ * @example
+ * detailedErrors('99Z AA 12345 67890');
+ * // [[], ['Invalid UTM zone number (99) found in grid zone designation; expected format DDZ AA DDD DDD.']]
+ *
+ * @example
+ * detailedErrors('31U BF 12345 67890');
+ * // Valid format, parsed successfully
+ */
 function detailedErrors(input: string) {
   if (!input) {
     return error('No input provided');
@@ -57,6 +84,25 @@ function detailedErrors(input: string) {
   return error('Uncaught error condition.');
 }
 
+/**
+ * Parses a Military Grid Reference System (MGRS) coordinate string into latitude/longitude values.
+ *
+ * Converts MGRS coordinates to UTM, then to latitude/longitude decimal degrees. Returns
+ * detailed error messages for invalid MGRS formats including zone numbers, band letters,
+ * square identification, and numerical locations.
+ *
+ * @param _format - Format parameter (unused, MGRS has fixed format).
+ * @param input - The MGRS coordinate string to parse (e.g., '31U BF 12345 67890').
+ * @returns Parse results with coordinate values or detailed error messages.
+ *
+ * @example
+ * parseMGRS(null, '31U BF 12345 67890');
+ * // [[['48.123456', 'N'], ['11.234567', 'E']], []]
+ *
+ * @example
+ * parseMGRS(null, 'invalid');
+ * // [[], ['Invalid UTM zone number found...']]
+ */
 // biome-ignore lint/suspicious/noExplicitAny: Format is unused
 export function parseMGRS(_format: any, input: string) {
   try {

@@ -29,11 +29,45 @@ type FormatParserConfig<T> = {
 const axisTypeTest = (k: keyof typeof SYMBOL_PATTERNS, t: string) =>
   SYMBOL_PATTERNS[k].test(t) && k;
 
+/**
+ * Creates a coordinate parser function from a format parser configuration.
+ *
+ * @param config - Parser configuration with format patterns, error identification, and piece identification.
+ * @returns Parser function that takes format and input string, returns ParseResults.
+ *
+ * @example
+ * const parseDD = createParser({
+ *   formats: { LATLON: /pattern/, LONLAT: /pattern/ },
+ *   identifyErrors: (format) => (arg, i) => [tokens, errors],
+ *   identifyPieces: (half) => ({ deg, bear })
+ * });
+ *
+ * @example
+ * const parser = createParser(config);
+ * parser('LATLON', '37.7749° N / 122.4194° W');
+ * // [[37.7749, -122.4194], []]
+ */
 export const createParser =
   <T>(config: FormatParserConfig<T | undefined>) =>
   (format: Format, input: string) =>
     parseWithConfig(config, format, input);
 
+/**
+ * Parses a coordinate string using the provided configuration.
+ *
+ * @param config - Parser configuration with format patterns and validation functions.
+ * @param format - Expected coordinate format (LATLON or LONLAT).
+ * @param input - Raw coordinate string to parse.
+ * @returns Parse results with coordinate values or error messages.
+ *
+ * @example
+ * parseWithConfig(config, 'LATLON', '37° N / 122° W');
+ * // [['37', 'N', '122', 'W'], []]
+ *
+ * @example
+ * parseWithConfig(config, 'LATLON', '91° N / 122° W');
+ * // [[], ['[ERROR] Degrees value (91) exceeds max value (90).']]
+ */
 function parseWithConfig<T>(
   config: FormatParserConfig<T>,
   format: Format,

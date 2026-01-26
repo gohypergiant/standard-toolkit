@@ -22,7 +22,19 @@ const DIVIDER = ` ${SYMBOLS.DIVIDER} `;
  * conversions are only ever done once and only "one-direction-ally". The
  * "one-direction" concept is to avoid the problem of encountering rounding
  * errors when converting between multiple formats.
- * */
+ *
+ * @param format - The coordinate format (LATLON or LONLAT) for the provided value.
+ * @param value - The formatted coordinate string to cache.
+ * @returns Cache object with both LATLON and LONLAT format strings.
+ *
+ * @example
+ * createCache('LATLON', '37.7749 N / 122.4194 W');
+ * // { LATLON: '37.7749 N / 122.4194 W', LONLAT: '122.4194 W / 37.7749 N' }
+ *
+ * @example
+ * createCache('LONLAT', '122° W / 37° N');
+ * // { LONLAT: '122° W / 37° N', LATLON: '37° N / 122° W' }
+ */
 export function createCache(format: Format, value: string) {
   const [alternate] = FORMATS.filter((o) => o !== format) as [Format];
 

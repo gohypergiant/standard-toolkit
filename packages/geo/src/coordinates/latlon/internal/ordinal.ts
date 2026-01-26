@@ -12,6 +12,25 @@
 
 // __private-exports
 
+/**
+ * Gets the ordinal direction (N/S/E/W) for a coordinate value.
+ *
+ * @param num - The coordinate value (positive or negative).
+ * @param isLatitude - Whether this is a latitude coordinate (true) or longitude (false).
+ * @returns Ordinal direction character: 'N', 'S', 'E', or 'W'.
+ *
+ * @example
+ * getOrdinal(37.7749, true);
+ * // 'N'
+ *
+ * @example
+ * getOrdinal(-122.4194, false);
+ * // 'W'
+ *
+ * @example
+ * getOrdinal(-45, true);
+ * // 'S'
+ */
 export const getOrdinal = (num: number, isLatitude: boolean): string => {
   if (isLatitude) {
     return num >= 0 ? 'N' : 'S';

@@ -26,6 +26,17 @@ const SIMPLER_PATTERNS = {
   BNN: 2,
 };
 
+/**
+ * Inserts a divider token at the specified index in the tokens array.
+ *
+ * @param tokens - Array of coordinate tokens without a divider.
+ * @param index - Position where the divider should be inserted.
+ * @returns Pipe result with divider inserted and error=false.
+ *
+ * @example
+ * insertDivider(['45', '30', 'N', '122', '15', 'W'], 3);
+ * // [['45', '30', 'N', '/', '122', '15', 'W'], false]
+ */
 const insertDivider = (tokens: Tokens, index: number): PipeResult => [
   [...tokens.slice(0, index), SYMBOLS.DIVIDER, ...tokens.slice(index)],
   false,
@@ -35,6 +46,18 @@ const insertDivider = (tokens: Tokens, index: number): PipeResult => [
  * For tokens lists without a divider, `fixDivider` attempts to determine the
  * __safe__ location to add a divider based on the existing formatting of the
  * coordinate: numbers, number positions, and number indicators.
+ *
+ * @param original - Array of coordinate tokens without a divider.
+ * @param _format - Optional coordinate format (LATLON or LONLAT), currently unused.
+ * @returns Pipe result with divider inserted, or error=true if no safe location found.
+ *
+ * @example
+ * fixDivider(['45°', '30'', 'N', '122°', '15'', 'W']);
+ * // Returns tokens with divider inserted between latitude and longitude
+ *
+ * @example
+ * fixDivider(['45', '30', 'N']);
+ * // Returns error=true (cannot safely determine divider position)
  *
  * @remarks
  * pure function

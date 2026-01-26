@@ -16,6 +16,30 @@ import { type Compass, type Format, SYMBOL_PATTERNS } from '../latlon/internal';
 import { parseMGRS } from './parser';
 import type { CoordinateSystem } from '../latlon/internal/coordinate-system';
 
+/**
+ * Military Grid Reference System (MGRS) coordinate system implementation.
+ *
+ * Provides parsing, conversion, and formatting for MGRS coordinates. MGRS is a geocoordinate
+ * standard used by NATO militaries for locating points on Earth, based on the UTM coordinate
+ * system. Format: Grid Zone Designation + 100km Square ID + Numerical Location (e.g., '31U BF 12345 67890').
+ *
+ * @property name - Human-readable name: 'Military Grid Reference System'.
+ * @property parse - Parses MGRS coordinate strings into latitude/longitude values.
+ * @property toFloat - Converts coordinate component with bearing to signed float value.
+ * @property toFormat - Formats latitude/longitude pair back to MGRS coordinate string.
+ *
+ * @example
+ * systemMGRS.parse(null, '31U BF 12345 67890');
+ * // [[['48.123456', 'N'], ['11.234567', 'E']], []]
+ *
+ * @example
+ * systemMGRS.toFormat('LATLON', [48.123456, 11.234567]);
+ * // '31U BF 12345 67890'
+ *
+ * @example
+ * systemMGRS.toFloat(['48.123456', 'N']);
+ * // 48.123456
+ */
 export const systemMGRS: CoordinateSystem = {
   name: 'Military Grid Reference System',
 
