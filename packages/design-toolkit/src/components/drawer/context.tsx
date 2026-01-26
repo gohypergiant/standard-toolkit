@@ -33,19 +33,20 @@ export const bus = Broadcast.getInstance<DrawerEvent>();
 
 export const DrawerEventHandlers = {
   ...ViewStackEventHandlers,
-  close: ViewStackEventHandlers.clear,
+  close: (view: UniqueId) => bus.emit(DrawerEventTypes.close, { view }),
   open: (view: UniqueId) => bus.emit(DrawerEventTypes.open, { view }),
   toggle: (view: UniqueId) => bus.emit(DrawerEventTypes.toggle, { view }),
 } as const;
 
 export function useDrawerEmit() {
   const viewStackEmit = useViewStackEmit();
+  const emitClose = useEmit<DrawerEvent>(DrawerEventTypes.close);
   const emitOpen = useEmit<DrawerEvent>(DrawerEventTypes.open);
   const emitToggle = useEmit<DrawerEvent>(DrawerEventTypes.toggle);
 
   return {
     ...viewStackEmit,
-    close: viewStackEmit.clear,
+    close: (view: UniqueId) => emitClose({ view }),
     open: (view: UniqueId) => emitOpen({ view }),
     toggle: (view: UniqueId) => emitToggle({ view }),
   } as const;
