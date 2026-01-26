@@ -19,7 +19,16 @@ import { TableContext } from './context';
 import styles from './styles.module.css';
 import type { TableCellProps } from './types';
 
-/** TableCell - Data cell (`<td>`) within a table row */
+/**
+ * TableCell - Data cell (`<td>`) within a table row.
+ *
+ * @param props - {@link TableCellProps}
+ * @param props.children - Custom children content.
+ * @param props.ref - Ref to the td element.
+ * @param props.className - CSS class for the td element.
+ * @param props.cell - TanStack table cell object.
+ * @returns The rendered TableCell component.
+ */
 export function TableCell<T>({
   children,
   ref,

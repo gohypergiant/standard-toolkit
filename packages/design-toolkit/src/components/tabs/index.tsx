@@ -28,6 +28,12 @@ import type { TabsProps } from './types';
  *
  * Supports horizontal and vertical orientations with text or icon tabs.
  *
+ * @param props - {@link TabsProps}
+ * @param props.ref - Ref to the tabs container element.
+ * @param props.children - TabList and TabPanel components.
+ * @param props.className - CSS class for the tabs container.
+ * @returns The rendered Tabs component.
+ *
  * @example
  * ```tsx
  * <Tabs>

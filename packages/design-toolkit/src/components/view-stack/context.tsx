@@ -38,7 +38,11 @@ export const ViewStackEventHandlers = {
   reset: (stack: UniqueId) => bus.emit(ViewStackEventTypes.reset, { stack }),
 } as const;
 
-/** Hook for programmatic ViewStack control from anywhere in the application */
+/**
+ * Hook for programmatic ViewStack control from anywhere in the application
+ *
+ * @returns Object with emit functions for back, clear, push, and reset actions.
+ */
 export function useViewStackEmit() {
   const emitBack = useEmit<ViewStackEvent>(ViewStackEventTypes.back);
   const emitClear = useEmit<ViewStackEvent>(ViewStackEventTypes.clear);

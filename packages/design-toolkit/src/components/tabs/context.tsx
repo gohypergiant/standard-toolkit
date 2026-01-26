@@ -22,7 +22,13 @@ import type { TabsProps } from './types';
 export const TabsContext =
   createContext<ContextValue<TabsProps, HTMLDivElement>>(null);
 
-/** Sets default props for all Tabs components within */
+/**
+ * Sets default props for all Tabs components within.
+ *
+ * @param props - ProviderProps with TabsProps.
+ * @param props.children - Child components that receive the context.
+ * @returns The TabsContext provider wrapping children.
+ */
 export function TabsProvider({ children, ...props }: ProviderProps<TabsProps>) {
   return <TabsContext.Provider value={props}>{children}</TabsContext.Provider>;
 }

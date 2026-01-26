@@ -22,7 +22,14 @@ import { TreeContext, TreeItemContext } from './context';
 import styles from './styles.module.css';
 import type { TreeItemProps } from './types';
 
-/** TreeItem - Individual node in the tree hierarchy */
+/**
+ * TreeItem - Individual node in the tree hierarchy
+ *
+ * @param props - {@link TreeItemProps}
+ * @param props.className - CSS class for the tree item.
+ * @param props.id - Unique identifier for the tree item.
+ * @returns The rendered TreeItem component.
+ */
 export function TreeItem({ className, id, ...rest }: TreeItemProps) {
   const { visibilityComputedKeys, visibleKeys, isStatic } =
     useContext(TreeContext);

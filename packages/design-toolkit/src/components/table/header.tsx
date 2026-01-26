@@ -14,7 +14,17 @@
 import { TableHeaderCell } from './header-cell';
 import type { TableHeaderProps } from './types';
 
-/** TableHeader - Renders the table header section (`<thead>`) */
+/**
+ * TableHeader - Renders the table header section (`<thead>`).
+ *
+ * @param props - {@link TableHeaderProps}
+ * @param props.ref - Ref to the thead element.
+ * @param props.children - Custom children content.
+ * @param props.className - CSS class for the thead element.
+ * @param props.headerGroups - Array of TanStack header groups.
+ * @param props.columnSelection - Currently selected column ID.
+ * @returns The rendered TableHeader component.
+ */
 export function TableHeader<T>({
   ref,
   children,

@@ -28,6 +28,14 @@ import type { TooltipProps } from './types';
  *
  * Displays on hover or focus with automatic positioning and accessibility support.
  *
+ * @param props - {@link TooltipProps}
+ * @param props.children - Tooltip content.
+ * @param props.parentRef - Ref to the parent element for portal positioning.
+ * @param props.className - CSS class for the tooltip.
+ * @param props.offset - Distance from the trigger element.
+ * @param props.placement - Position relative to the trigger.
+ * @returns The rendered Tooltip component.
+ *
  * @example
  * ```tsx
  * <TooltipTrigger>

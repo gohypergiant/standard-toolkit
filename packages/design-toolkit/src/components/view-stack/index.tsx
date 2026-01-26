@@ -30,6 +30,13 @@ import type {
  *
  * Supports push, pop, clear, and reset operations with global event system.
  *
+ * @param props - {@link ViewStackProps}
+ * @param props.id - Unique identifier for the stack.
+ * @param props.children - ViewStackView components.
+ * @param props.defaultView - Default view to display when the stack is initialized.
+ * @param props.onChange - Callback when the active view changes.
+ * @returns The rendered ViewStack component.
+ *
  * @example
  * const ids = { stack: uuid(), a: uuid(), b: uuid() };
  *

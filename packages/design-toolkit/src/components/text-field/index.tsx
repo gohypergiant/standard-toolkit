@@ -31,6 +31,17 @@ import type { TextFieldProps } from './types';
  *
  * Provides integrated label, description, and error message with automatic accessibility.
  *
+ * @param props - {@link TextFieldProps}
+ * @param props.ref - Ref to the field container element.
+ * @param props.classNames - Custom CSS class names for field elements.
+ * @param props.description - Helper text displayed below the input.
+ * @param props.errorMessage - Error message displayed when validation fails.
+ * @param props.inputProps - Props passed to the underlying Input element.
+ * @param props.label - Label text for the field.
+ * @param props.size - Size variant of the field.
+ * @param props.isInvalid - Whether the field is in an invalid state.
+ * @returns The rendered TextField component.
+ *
  * @example
  * ```tsx
  * <TextField label="Email" type="email" onChange={setEmail} />

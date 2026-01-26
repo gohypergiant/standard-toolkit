@@ -27,6 +27,13 @@ import type { SwitchProps } from './types';
  *
  * Provides visual feedback with smooth transitions and accessible keyboard/screen reader support.
  *
+ * @param props - {@link SwitchProps}
+ * @param props.ref - Ref to the switch label element.
+ * @param props.children - Label content for the switch.
+ * @param props.classNames - Custom CSS class names for switch elements.
+ * @param props.labelPosition - Position of the label relative to the switch control.
+ * @returns The rendered Switch component.
+ *
  * @example
  * ```tsx
  * <Switch isSelected={enabled} onChange={setEnabled}>

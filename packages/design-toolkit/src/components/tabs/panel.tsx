@@ -21,7 +21,14 @@ import {
 } from 'react-aria-components';
 import styles from './styles.module.css';
 
-/** TabPanel - Content panel displayed when its corresponding Tab is selected */
+/**
+ * TabPanel - Content panel displayed when its corresponding Tab is selected.
+ *
+ * @param props - TabPanelProps from react-aria-components.
+ * @param props.children - Panel content.
+ * @param props.className - CSS class for the panel.
+ * @returns The rendered TabPanel component.
+ */
 export function TabPanel({ children, className, ...rest }: TabPanelProps) {
   return (
     <AriaTabPanel

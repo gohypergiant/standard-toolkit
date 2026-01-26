@@ -12,19 +12,27 @@
 
 import { getSafeEnumValues, type SafeEnum } from '@accelint/core';
 
+/** Sort direction options for table columns. */
 export const SortDirection = Object.freeze({
   ASC: 'asc',
   DESC: 'desc',
 } as const);
 
+/** Special header column action types. */
 export const HeaderColumnAction = Object.freeze({
   NUMERAL: 'numeral',
   KEBAB: 'kebab',
   SELECTION: 'selection',
 } as const);
 
+/** Type representing a valid sort direction value. */
 export type SortDirectionState = SafeEnum<typeof SortDirection>;
+
+/** Array of valid sort direction values. */
 export const sortDirectionValues = getSafeEnumValues(SortDirection);
 
+/** Type representing a valid header column action key. */
 export type HeaderColumnActionKey = SafeEnum<typeof HeaderColumnAction>;
+
+/** Array of valid header column action values. */
 export const headerColumnActionValues = getSafeEnumValues(HeaderColumnAction);

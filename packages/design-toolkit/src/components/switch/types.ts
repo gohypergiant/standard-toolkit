@@ -13,12 +13,17 @@
 import type { RefAttributes } from 'react';
 import type { SwitchProps as AriaSwitchProps } from 'react-aria-components';
 
+/**
+ * Props for the Switch component.
+ */
 export type SwitchProps = Omit<AriaSwitchProps, 'className'> &
   RefAttributes<HTMLLabelElement> & {
+    /** Custom CSS class names for switch elements. */
     classNames?: {
       switch?: AriaSwitchProps['className'];
       control?: string;
       label?: string;
     };
+    /** Position of the label relative to the switch control. */
     labelPosition?: 'start' | 'end';
   };

@@ -21,7 +21,13 @@ import type { SwitchProps } from './types';
 export const SwitchContext =
   createContext<ContextValue<SwitchProps, HTMLLabelElement>>(null);
 
-/** Sets default props for all Switch components within */
+/**
+ * Sets default props for all Switch components within.
+ *
+ * @param props - ProviderProps with SwitchProps.
+ * @param props.children - Child components that receive the context.
+ * @returns The SwitchContext provider wrapping children.
+ */
 export function SwitchProvider({
   children,
   ...props

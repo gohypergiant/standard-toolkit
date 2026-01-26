@@ -16,6 +16,14 @@ import { Lines } from '../lines';
 import { TreeContext } from './context';
 import styles from './styles.module.css';
 
+/**
+ * TreeLines - Renders connecting lines for tree hierarchy visualization.
+ *
+ * @param props - Component props.
+ * @param props.level - The nesting level of the tree item.
+ * @param props.isLastOfSet - Whether this item is the last in its sibling group.
+ * @returns An array of Line components representing the tree structure.
+ */
 export const TreeLines = memo(function TreeLines({
   level,
   isLastOfSet,

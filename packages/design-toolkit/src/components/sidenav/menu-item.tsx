@@ -18,6 +18,11 @@ import type { SidenavMenuItemProps } from './types';
  * SidenavMenuItem - Menu item component for sidenav
  *
  * Provides a selectable item within a sidenav menu
+ *
+ * @param props - {@link SidenavMenuItemProps}
+ * @param props.className - CSS class for the menu item.
+ * @param props.children - Menu item content.
+ * @returns The rendered SidenavMenuItem component.
  */
 export function SidenavMenuItem({
   className,

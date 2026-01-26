@@ -22,6 +22,11 @@ import type { SidenavContentProps } from './types';
  * SidenavContent - Container for sidenav content
  *
  * Provides a container for sidenav content with proper styling
+ *
+ * @param props - {@link SidenavContentProps}
+ * @param props.className - CSS class for the content container.
+ * @param props.children - Content items (items, menus, dividers).
+ * @returns The rendered SidenavContent component.
  */
 export function SidenavContent({
   className,

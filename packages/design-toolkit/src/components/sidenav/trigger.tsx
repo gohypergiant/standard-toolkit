@@ -22,6 +22,11 @@ import type { SidenavEvent, SidenavTriggerProps } from './types';
  * SidenavTrigger - Trigger component for sidenav
  *
  * Provides a trigger button to control the sidenav state
+ *
+ * @param props - {@link SidenavTriggerProps}
+ * @param props.children - Trigger content (typically a Button with icon).
+ * @param props.for - Target sidenav ID or targeted event string.
+ * @returns The rendered SidenavTrigger component.
  */
 export function SidenavTrigger({
   children,

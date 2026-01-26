@@ -15,7 +15,14 @@ import { type PropsWithChildren, useContext } from 'react';
 import { TreeContext } from './context';
 import styles from './styles.module.css';
 
-/** TreeItemActions - Container for action buttons in a tree item */
+/**
+ * TreeItemActions - Container for action buttons in a tree item
+ *
+ * @param props - Component props.
+ * @param props.children - Action buttons to render.
+ * @param props.className - CSS class for the actions container.
+ * @returns The rendered TreeItemActions component.
+ */
 export function TreeItemActions({
   children,
   className,

@@ -22,7 +22,13 @@ import type { TextAreaFieldProps } from './types';
 export const TextAreaFieldContext =
   createContext<ContextValue<TextAreaFieldProps, HTMLDivElement>>(null);
 
-/** Sets default props for all TextAreaField components within */
+/**
+ * Sets default props for all TextAreaField components within.
+ *
+ * @param props - ProviderProps with TextAreaFieldProps.
+ * @param props.children - Child components that receive the context.
+ * @returns The TextAreaFieldContext provider wrapping children.
+ */
 export function TextAreaFieldProvider({
   children,
   ...props

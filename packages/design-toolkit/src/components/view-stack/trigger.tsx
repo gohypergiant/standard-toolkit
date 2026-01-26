@@ -18,7 +18,14 @@ import { Pressable } from 'react-aria-components';
 import { useViewStackEmit, ViewStackContext } from './context';
 import type { ViewStackTriggerProps } from './types';
 
-/** ViewStackTrigger - Pressable element that triggers ViewStack navigation actions */
+/**
+ * ViewStackTrigger - Pressable element that triggers ViewStack navigation actions
+ *
+ * @param props - {@link ViewStackTriggerProps}
+ * @param props.children - Pressable children content.
+ * @param props.for - Navigation action(s) to trigger on press.
+ * @returns The rendered ViewStackTrigger component.
+ */
 export function ViewStackTrigger({
   children,
   for: types,

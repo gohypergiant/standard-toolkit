@@ -36,6 +36,23 @@ const defaultRenderDropIndicator = (target: DropTarget) => (
  *
  * Supports static or dynamic collections with keyboard navigation and accessibility.
  *
+ * @param props - {@link TreeProps}
+ * @param props.children - Tree items or render function for dynamic collections.
+ * @param props.className - CSS class for the tree container.
+ * @param props.disabledKeys - Set of disabled item keys.
+ * @param props.dragAndDropConfig - Configuration for drag and drop behavior.
+ * @param props.expandedKeys - Set of expanded item keys.
+ * @param props.items - Data source for dynamic collections.
+ * @param props.selectedKeys - Set of selected item keys.
+ * @param props.showRuleLines - Whether to show connecting lines between items.
+ * @param props.showVisibility - Whether to show visibility toggle buttons.
+ * @param props.selectionMode - Selection mode for the tree.
+ * @param props.variant - Visual density variant.
+ * @param props.visibleKeys - Set of visible item keys.
+ * @param props.onVisibilityChange - Callback when item visibility changes.
+ * @param props.onSelectionChange - Callback when selection changes.
+ * @returns The rendered Tree component.
+ *
  * @example
  * // Dynamic collection
  * <Tree items={items} expandedKeys={expandedKeys}>

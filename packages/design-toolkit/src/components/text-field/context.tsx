@@ -21,7 +21,13 @@ import type { TextFieldProps } from './types';
 export const TextFieldContext =
   createContext<ContextValue<TextFieldProps, HTMLDivElement>>(null);
 
-/** Sets default props for all TextField components within */
+/**
+ * Sets default props for all TextField components within.
+ *
+ * @param props - ProviderProps with TextFieldProps.
+ * @param props.children - Child components that receive the context.
+ * @returns The TextFieldContext provider wrapping children.
+ */
 export function TextFieldProvider({
   children,
   ...props

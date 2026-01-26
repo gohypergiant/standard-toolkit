@@ -32,6 +32,13 @@ import type {
  * Provides a hierarchical collapsible side navigation intended to be used
  * inside a DrawerLayout. Supports headers, avatars, nested menus, and items.
  *
+ * @param props - {@link SidenavProps}
+ * @param props.id - Unique identifier for the sidenav.
+ * @param props.className - CSS class for the nav element.
+ * @param props.isHiddenWhenClosed - Whether to hide the sidenav when closed.
+ * @param props.children - Sidenav content (header, content, footer).
+ * @returns The rendered Sidenav component.
+ *
  * @example
  * <DrawerLayout push="left">
  *   <DrawerLayoutMain className="col-start-2">

@@ -21,7 +21,12 @@ import type { SelectFieldProps } from './types';
 export const SelectFieldContext =
   createContext<ContextValue<SelectFieldProps, HTMLDivElement>>(null);
 
-/** Provider for setting default props across multiple SelectField components */
+/**
+ * Provider for setting default props across multiple SelectField components
+ *
+ * @param props - Provider props including children and default SelectFieldProps.
+ * @returns The provider component wrapping children with context.
+ */
 export function SelectFieldProvider({
   children,
   ...props

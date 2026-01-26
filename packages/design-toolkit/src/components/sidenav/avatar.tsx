@@ -23,6 +23,11 @@ import type { SidenavAvatarProps } from './types';
  * SidenavAvatar - Avatar component for sidenav
  *
  * Provides an avatar container with proper styling for the sidenav
+ *
+ * @param props - {@link SidenavAvatarProps}
+ * @param props.children - Avatar content (icon, heading, text).
+ * @param props.className - CSS class for the avatar container.
+ * @returns The rendered SidenavAvatar component.
  */
 export function SidenavAvatar({
   children,

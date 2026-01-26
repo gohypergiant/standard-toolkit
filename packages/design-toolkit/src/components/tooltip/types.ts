@@ -15,12 +15,19 @@ import type {
   TooltipTriggerComponentProps,
 } from 'react-aria-components';
 
+/**
+ * Props for the TooltipTrigger component.
+ */
 export type TooltipTriggerProps = Omit<
   ComponentPropsWithRef<'div'>,
   'className'
 > &
   TooltipTriggerComponentProps;
 
+/**
+ * Props for the Tooltip component.
+ */
 export type TooltipProps = AriaTooltipProps & {
+  /** Ref to the parent element for portal positioning. */
   parentRef?: React.RefObject<HTMLElement | null>;
 };

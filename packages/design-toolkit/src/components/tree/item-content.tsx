@@ -28,7 +28,13 @@ import styles from './styles.module.css';
 import type { Key } from '@react-types/shared';
 import type { TreeItemContentProps } from './types';
 
-/** TreeItemContent - Renders the display content of a tree node */
+/**
+ * TreeItemContent - Renders the display content of a tree node
+ *
+ * @param props - {@link TreeItemContentProps}
+ * @param props.children - Content to render, or a render function receiving TreeItemContentRenderProps.
+ * @returns The rendered TreeItemContent component.
+ */
 export function TreeItemContent({ children }: TreeItemContentProps) {
   const { showVisibility, variant, visibleKeys, onVisibilityChange } =
     useContext(TreeContext);

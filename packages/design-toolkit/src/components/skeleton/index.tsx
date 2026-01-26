@@ -19,6 +19,11 @@ import type { SkeletonProps } from './types';
  *
  * Displays a pulsing placeholder while content is being fetched.
  *
+ * @param props - {@link SkeletonProps}
+ * @param props.className - CSS class for the skeleton element.
+ * @param props.variant - Shape variant of the skeleton.
+ * @returns The rendered Skeleton component.
+ *
  * @example
  * ```tsx
  * <Skeleton variant="rectangle" style={{ width: 200, height: 20 }} />

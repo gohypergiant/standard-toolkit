@@ -19,10 +19,14 @@ import type {
   TimeValue,
 } from 'react-aria-components';
 
+/**
+ * Props for the TimeField component.
+ */
 export type TimeFieldProps<T extends TimeValue> = Omit<
   AriaTimeFieldProps<T>,
   'children' | 'className' | 'placeholder'
 > & {
+  /** Custom CSS class names for field elements. */
   classNames?: {
     field?: AriaTimeFieldProps<T>['className'];
     label?: LabelProps['className'];
@@ -32,9 +36,14 @@ export type TimeFieldProps<T extends TimeValue> = Omit<
     description?: string;
     error?: FieldErrorProps['className'];
   };
+  /** Label text for the field. */
   label?: string;
+  /** Props passed to the underlying DateInput element. */
   inputProps?: Omit<DateInputProps, 'children' | 'className'>;
+  /** Helper text displayed below the input. */
   description?: string;
+  /** Error message displayed when validation fails. */
   errorMessage?: string;
+  /** Size variant of the field. */
   size?: 'small' | 'medium';
 };

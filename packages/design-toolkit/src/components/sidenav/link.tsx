@@ -31,6 +31,12 @@ import type { SidenavLinkProps } from './types';
  * SidenavLink - Link component for sidenav
  *
  * Provides a link with tooltip for the sidenav
+ *
+ * @param props - {@link SidenavLinkProps}
+ * @param props.children - Link content (icon and text).
+ * @param props.classNames - Custom CSS class names for link elements.
+ * @param props.textValue - Text displayed in tooltip when collapsed.
+ * @returns The rendered SidenavLink component.
  */
 export function SidenavLink({
   children,

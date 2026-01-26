@@ -34,6 +34,14 @@ import type { SearchFieldProps } from './types';
  *
  * Supports outline and filled variants with automatic icon sizing.
  *
+ * @param props - {@link SearchFieldProps}
+ * @param props.ref - Forwarded ref for the field container.
+ * @param props.classNames - Custom CSS class names for field elements.
+ * @param props.inputProps - Additional props for the input element.
+ * @param props.isLoading - Whether to show loading spinner instead of clear button.
+ * @param props.variant - Visual variant ('outline' or 'filled').
+ * @returns The rendered SearchField component.
+ *
  * @example
  * ```tsx
  * <SearchField

@@ -10,8 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
+/** Namespace prefix for ViewStack events. */
 export const ViewStackEventNamespace = 'ViewStack';
 
+/** Event type constants for ViewStack navigation actions. */
 export const ViewStackEventTypes = {
   back: `${ViewStackEventNamespace}:back`,
   clear: `${ViewStackEventNamespace}:clear`,

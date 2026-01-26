@@ -18,11 +18,15 @@ import type {
 import type { InputProps } from '../input/types';
 import type { LabelProps } from '../label/types';
 
+/**
+ * Props for the TextField component.
+ */
 export type TextFieldProps = Omit<
   AriaTextFieldProps,
   'children' | 'className' | 'type' | 'pattern'
 > &
   RefAttributes<HTMLDivElement> & {
+    /** Custom CSS class names for field elements. */
     classNames?: {
       field?: AriaTextFieldProps['className'];
       label?: LabelProps['className'];
@@ -30,9 +34,14 @@ export type TextFieldProps = Omit<
       description?: string;
       error?: FieldErrorProps['className'];
     };
+    /** Label text for the field. */
     label?: string;
+    /** Props passed to the underlying Input element. */
     inputProps?: InputProps;
+    /** Helper text displayed below the input. */
     description?: string;
+    /** Error message displayed when validation fails. */
     errorMessage?: string;
+    /** Size variant of the field. */
     size?: 'medium' | 'small';
   };

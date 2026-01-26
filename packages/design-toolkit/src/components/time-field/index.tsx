@@ -33,6 +33,22 @@ import type { TimeFieldProps } from './types';
  *
  * Provides configurable granularity, 12/24-hour format, and automatic accessibility.
  *
+ * @param props - {@link TimeFieldProps}
+ * @param props.classNames - Custom CSS class names for field elements.
+ * @param props.description - Helper text displayed below the input.
+ * @param props.errorMessage - Error message displayed when validation fails.
+ * @param props.granularity - The granularity of the time value (hour, minute, second).
+ * @param props.hourCycle - Whether to use 12 or 24 hour time format.
+ * @param props.inputProps - Props passed to the underlying DateInput element.
+ * @param props.label - Label text for the field.
+ * @param props.shouldForceLeadingZeros - Whether to force leading zeros in time segments.
+ * @param props.size - Size variant of the field.
+ * @param props.isDisabled - Whether the field is disabled.
+ * @param props.isInvalid - Whether the field is in an invalid state.
+ * @param props.isRequired - Whether the field is required.
+ * @param props.isReadOnly - Whether the field is read-only.
+ * @returns The rendered TimeField component.
+ *
  * @example
  * ```tsx
  * <TimeField label="Start time" granularity="minute" onChange={setTime} />

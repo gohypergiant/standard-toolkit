@@ -16,7 +16,16 @@ import { TableCell } from './cell';
 import styles from './styles.module.css';
 import type { TableRowProps } from './types';
 
-/** TableRow - Table row (`<tr>`) with selection and pinning state */
+/**
+ * TableRow - Table row (`<tr>`) with selection and pinning state.
+ *
+ * @param props - {@link TableRowProps}
+ * @param props.ref - Ref to the tr element.
+ * @param props.children - Custom children content.
+ * @param props.className - CSS class for the tr element.
+ * @param props.row - TanStack table row object.
+ * @returns The rendered TableRow component.
+ */
 export function TableRow<T>({
   ref,
   children,

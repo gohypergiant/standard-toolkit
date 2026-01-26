@@ -39,6 +39,17 @@ import type { SelectFieldProps } from './types';
  *
  * Includes label, description, error messaging, and virtualized rendering for large datasets.
  *
+ * @param props - {@link SelectFieldProps}
+ * @param props.ref - Forwarded ref for the field container.
+ * @param props.size - Field size ('medium' or 'small').
+ * @param props.classNames - Custom CSS class names for field elements.
+ * @param props.label - Label text for the field.
+ * @param props.description - Helper text below the field.
+ * @param props.errorMessage - Error message displayed when invalid.
+ * @param props.isReadOnly - Displays value without dropdown interaction.
+ * @param props.layoutOptions - Virtualizer layout options for large lists.
+ * @returns The rendered SelectField component.
+ *
  * @example
  * ```tsx
  * <SelectField label="Country" onSelectionChange={setCountry}>
