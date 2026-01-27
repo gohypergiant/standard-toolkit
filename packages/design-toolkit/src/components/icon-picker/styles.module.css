@@ -36,8 +36,4 @@
       @apply outline-accent-primary-bold cursor-default;
     }
   }
-
-  .icon {
-    @apply size-l;
-  }
 }

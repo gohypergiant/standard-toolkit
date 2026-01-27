@@ -18,12 +18,12 @@ type SVGRProps = {
   titleId?: string;
 };
 
-export type IconComponent = ComponentType<SVGProps<SVGSVGElement> & SVGRProps>;
+export type IconPickerIcon = ComponentType<SVGProps<SVGSVGElement> & SVGRProps>;
 
 export type IconPickerItem = {
   id: string;
-  icon: IconComponent;
-  label?: string;
+  icon: IconPickerIcon;
+  label: string;
 };
 
 export type IconPickerProps = Omit<

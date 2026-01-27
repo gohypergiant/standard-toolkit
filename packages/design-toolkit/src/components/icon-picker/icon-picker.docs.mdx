@@ -57,6 +57,7 @@ const [selectedIcon, setSelectedIcon] = useState(new Set(['settings']));
 * **Grid Layout** - Icons are displayed in a flexible grid layout that wraps based on container width
 * **Interactive Swatches** - Each icon is displayed as a clickable swatch with hover and focus states
 * **Keyboard Navigation** - Full keyboard support for accessibility (Arrow keys, Enter, Space)
+* **Typeahead** - Type to jump to icons by label (e.g., type "s" to jump to "Settings")
 * **Single Selection** - Click to select an icon, click again to deselect
 * **Custom Icons** - Works with any icon components from @accelint/icons
 * **Custom Styling** - Granular control over styling through classNames prop
@@ -66,7 +67,7 @@ const [selectedIcon, setSelectedIcon] = useState(new Set(['settings']));
 ## Props
 
 * **`items`** - Array of icon items to display as selectable swatches (required)
-  * Each item must have an `id` (string), `icon` (component), and optional `label` (string)
+  * Each item must have an `id` (string), `icon` (component), and `label` (string for accessibility)
   * Icons should be components from @accelint/icons
 * **`selectedKeys`** - Set of currently selected icon IDs
 * **`onSelectionChange`** - Callback when selection changes

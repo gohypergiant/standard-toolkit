@@ -250,7 +250,7 @@ export { Icon } from './components/icon';
 export type { IconProps } from './components/icon/types';
 export { IconPicker } from './components/icon-picker';
 export type {
-  IconComponent,
+  IconPickerIcon,
   IconPickerItem,
   IconPickerProps,
 } from './components/icon-picker/types';

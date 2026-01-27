@@ -72,7 +72,6 @@ export function IconPicker({ classNames, items, ...rest }: IconPickerProps) {
       items={items}
       aria-label={rest['aria-label'] ?? 'Icon picker'}
       selectionMode='single'
-      disallowTypeAhead
       className={composeRenderProps(classNames?.picker, (className) =>
         clsx(styles.picker, className),
       )}
@@ -80,12 +79,12 @@ export function IconPicker({ classNames, items, ...rest }: IconPickerProps) {
       {(item) => (
         <GridListItem
           id={item.id}
-          textValue={item.label ?? item.id}
+          textValue={item.label}
           className={composeRenderProps(classNames?.item, (className) =>
             clsx(styles.item, className),
           )}
         >
-          <Icon className={clsx(styles.icon, classNames?.icon)}>
+          <Icon className={classNames?.icon}>
             <item.icon aria-hidden='true' />
           </Icon>
         </GridListItem>
