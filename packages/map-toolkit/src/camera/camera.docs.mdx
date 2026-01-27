@@ -151,8 +151,8 @@ The camera state is a discriminated union based on the view type:
   latitude: number;
   longitude: number;
   zoom: number;
-  pitch: number;         // Always 0 in 3D
-  rotation: number;           // 0-360 degrees
+  pitch: 0;              // Always 0 in 3D
+  rotation: number;      // Always 0 in 3D
   projection: 'globe';
   view: '3D';
 }
@@ -273,12 +273,12 @@ bus.emit(CameraEventTypes.setRotation, {
 
 ### setPitch
 
-Set the pitch (tilt) angle. Only works with Mercator projection (2D/2.5D modes).
+Set the pitch (tilt) angle. Only works in 2.5D mode with Mercator projection.
 
 ```tsx
 bus.emit(CameraEventTypes.setPitch, {
   id: instanceId,
-  pitch: 45, // 0-65 degrees
+  pitch: 45, // 0-85 degrees (typically 0-65 for best UX)
 });
 ```
 
@@ -469,9 +469,9 @@ When changing views or projections, certain properties are automatically adjuste
 - **Setting Globe Projection**: View automatically set to '3D'
 - **Setting Mercator Projection**: View automatically set to '2D', pitch reset to 0°
 
-### Pitch Constraints
+### Pitch and Rotation Constraints
 
-Pitch can only be set when using Mercator projection. Attempting to set pitch in globe projection mode will be ignored:
+Pitch can only be set in 2.5D mode. Rotation can only be set in 2D and 2.5D modes. Both are ignored in 3D mode:
 
 ```tsx
 // This works (2.5D view with Mercator projection)
@@ -480,8 +480,13 @@ bus.emit(CameraEventTypes.setPitch, {
   pitch: 45,
 });
 
-// This is ignored (3D view with Globe projection)
-// Globe projection doesn't support custom pitch
+// This works (2D/2.5D view)
+bus.emit(CameraEventTypes.setRotation, {
+  id: instanceId,
+  rotation: 90,
+});
+
+// Both are ignored in 3D view with Globe projection
 ```
 
 ## Utilities
@@ -530,7 +535,7 @@ import type {
 **Cause:** View/projection constraints preventing the change.
 
 **Solution:** Check the current view mode:
-- Pitch only works with Mercator projection (2D/2.5D)
+- Pitch only works in 2.5D mode (not 2D or 3D)
 - Rotation only works in 2D/2.5D modes (not 3D/globe)
 
 ### Multiple subscribers causing issues
