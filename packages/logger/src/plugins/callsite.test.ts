@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { describe, expect, test, vi, beforeEach, afterEach } from 'vitest';
+import { describe, expect, test, vi, beforeEach } from 'vitest';
 import { callsitePlugin } from './callsite';
 import type { CallSite } from 'callsites';
 
@@ -26,10 +26,6 @@ describe('callsitePlugin', () => {
     // Get the mocked callsites function
     const callsitesModule = await import('callsites');
     callsitesMock = callsitesModule.default as ReturnType<typeof vi.fn>;
-  });
-
-  afterEach(() => {
-    vi.clearAllMocks();
   });
 
   describe('Plugin creation', () => {

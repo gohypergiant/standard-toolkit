@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 import type { LoggerOptions } from '../definitions';
 
 // Mock the bootstrap module
@@ -37,10 +37,6 @@ describe('getLogger', () => {
     // Get fresh mock
     const bootstrapModule = await import('./bootstrap');
     bootstrapMock = bootstrapModule.bootstrap as ReturnType<typeof vi.fn>;
-  });
-
-  afterEach(() => {
-    vi.clearAllMocks();
   });
 
   describe('Initial logger creation', () => {

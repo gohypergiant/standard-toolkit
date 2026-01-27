@@ -9,6 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+/** biome-ignore-all lint/suspicious/noExplicitAny: For testing */
 
 import { describe, expect, test, vi, beforeEach, afterEach } from 'vitest';
 import { bootstrap } from './bootstrap';
@@ -95,9 +96,6 @@ describe('bootstrap', () => {
     callsitePluginMock = callsiteModule.callsitePlugin as any;
     environmentPluginMock = environmentModule.environmentPlugin as any;
     serializeErrorMock = serializeErrorModule.serializeError as any;
-
-    // Clear mock call history
-    vi.clearAllMocks();
   });
 
   afterEach(() => {
@@ -108,7 +106,6 @@ describe('bootstrap', () => {
     } else {
       globalThis.window = windowSpy;
     }
-    vi.restoreAllMocks();
   });
 
   describe('Default configuration', () => {
