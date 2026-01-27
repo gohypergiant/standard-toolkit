@@ -21,6 +21,7 @@ import { DialogTrigger as AriaDialogTrigger } from 'react-aria-components';
  * Handles accessibility attributes and focus management automatically.
  *
  * @example
+ * ```tsx
  * <DialogTrigger>
  *   <Button>Open Dialog</Button>
  *   <Dialog>
@@ -28,5 +29,6 @@ import { DialogTrigger as AriaDialogTrigger } from 'react-aria-components';
  *     <DialogContent>Content</DialogContent>
  *   </Dialog>
  * </DialogTrigger>
+ * ```
  */
 export const DialogTrigger = AriaDialogTrigger;

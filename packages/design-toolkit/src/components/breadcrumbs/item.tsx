@@ -30,12 +30,16 @@ import type { BreadcrumbItemProps } from './types';
  * @returns The breadcrumb item component.
  *
  * @example
+ * ```tsx
  * // Link item
  * <BreadcrumbItem linkProps={{ href: '/home' }}>Home</BreadcrumbItem>
+ * ```
  *
  * @example
+ * ```tsx
  * // Current page (no link)
  * <BreadcrumbItem>Current Page</BreadcrumbItem>
+ * ```
  */
 export function BreadcrumbItem({
   children,

@@ -48,11 +48,13 @@ import type {
  * Uses event-driven communication via the bus system.
  *
  * @example
+ * ```tsx
  * <NoticeList
  *   aria-label="notifications"
  *   placement="top right"
  *   limit={3}
  * />
+ * ```
  *
  * @param props - {@link NoticeListProps}
  * @param props.id - Unique identifier for targeting notices to this list.

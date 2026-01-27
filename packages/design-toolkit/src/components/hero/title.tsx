@@ -20,9 +20,11 @@ import { Heading } from 'react-aria-components';
  * Renders as an `<h2>` element. Exactly one required per Hero.
  *
  * @example
+ * ```tsx
  * <Hero>
  *   <Icon><Placeholder /></Icon>
  *   <HeroTitle>Primary Title</HeroTitle>
  * </Hero>
+ * ```
  */
 export const HeroTitle = Heading;

@@ -67,10 +67,13 @@ const months = [
  * @returns The date field component.
  *
  * @example
+ * ```tsx
  * // Basic date field
  * <DateField label="Birth Date" />
+ * ```
  *
  * @example
+ * ```tsx
  * // Date field with validation
  * <DateField
  *   label="Event Date"
@@ -78,30 +81,37 @@ const months = [
  *   isInvalid={hasError}
  *   errorMessage="Please select a valid date"
  * />
+ * ```
  *
  * @example
+ * ```tsx
  * // Date field with custom formatting
  * <DateField
  *   label="Meeting Date"
  *   shortMonth={false}
  *   placeholder="Select meeting date"
  * />
+ * ```
  *
  * @example
+ * ```tsx
  * // Compact date field
  * <DateField
  *   label="Due Date"
  *   size="small"
  *   description="When is this task due?"
  * />
+ * ```
  *
  * @example
+ * ```tsx
  * // Controlled date field
  * <DateField
  *   label="Selected Date"
  *   value={selectedDate}
  *   onChange={setSelectedDate}
  * />
+ * ```
  */
 export function DateField<T extends DateValue>({
   classNames,

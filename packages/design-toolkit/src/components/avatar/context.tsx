@@ -31,10 +31,12 @@ export const AvatarContext =
  * @returns The avatar context provider wrapping children.
  *
  * @example
+ * ```tsx
  * <AvatarProvider size="small">
  *   <Avatar imageProps={{ alt: "User 1", src: "avatar1.jpg" }} />
  *   <Avatar imageProps={{ alt: "User 2", src: "avatar2.jpg" }} />
  * </AvatarProvider>
+ * ```
  */
 export function AvatarProvider({
   children,

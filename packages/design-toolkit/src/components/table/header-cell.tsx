@@ -146,6 +146,17 @@ function HeaderCellMenu<T>({ header }: { header: Header<T, unknown> }) {
 /**
  * TableHeaderCell - Individual header cell (`<th>`) with optional sorting controls.
  *
+ * @example
+ * ```tsx
+ * <TableHeader headerGroups={headerGroups}>
+ *   <tr>
+ *     {headerGroup.headers.map(header => (
+ *       <TableHeaderCell key={header.id} header={header} />
+ *     ))}
+ *   </tr>
+ * </TableHeader>
+ * ```
+ *
  * @param props - {@link TableHeaderCellProps}
  * @param props.ref - Ref to the th element.
  * @param props.children - Custom children content.

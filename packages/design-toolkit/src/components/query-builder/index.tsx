@@ -40,6 +40,7 @@ import type { QueryBuilderContextType, QueryBuilderProps } from './types';
  * @returns The rendered QueryBuilder component.
  *
  * @example
+ * ```tsx
  * // Basic query builder
  * <QueryBuilder
  *   fields={[
@@ -55,6 +56,7 @@ import type { QueryBuilderContextType, QueryBuilderProps } from './types';
  *   }}
  *   orientation="vertical"
  * />
+ * ```
  */
 export function QueryBuilder({
   controlClassnames,

@@ -53,6 +53,49 @@ export interface UseCoordinatePasteResult {
 /**
  * Handles paste events with coordinate parsing and disambiguation when multiple formats match
  *
+ * @example
+ * ```tsx
+ * function CoordinateFieldWithPaste() {
+ *   const [value, setValue] = useState<CoordinateValue | null>(null);
+ *
+ *   const {
+ *     disambiguationMatches,
+ *     showDisambiguationModal,
+ *     selectedDisambiguationFormat,
+ *     handleInputPaste,
+ *     handleDisambiguationSelect,
+ *     setShowDisambiguationModal,
+ *     setSelectedDisambiguationFormat,
+ *   } = useCoordinatePaste({
+ *     onValueApplied: setValue,
+ *     onError: (msg) => console.error(msg),
+ *   });
+ *
+ *   return (
+ *     <>
+ *       <div onPaste={handleInputPaste}>
+ *         // ...Coordinate input segments
+ *       </div>
+ *       {showDisambiguationModal && (
+ *         <Dialog onClose={() => setShowDisambiguationModal(false)}>
+ *           {disambiguationMatches.map((match) => (
+ *             <Radio
+ *               key={match.format}
+ *               value={match.format}
+ *               isSelected={selectedDisambiguationFormat === match.format}
+ *               onChange={() => setSelectedDisambiguationFormat(match.format)}
+ *             >
+ *               {match.format}: {match.matched}
+ *             </Radio>
+ *           ))}
+ *           <Button onPress={handleDisambiguationSelect}>Confirm</Button>
+ *         </Dialog>
+ *       )}
+ *     </>
+ *   );
+ * }
+ * ```
+ *
  * @param options - {@link UseCoordinatePasteOptions}
  * @param options.onValueApplied - Callback when a coordinate value is successfully parsed and applied.
  * @param options.onError - Optional error callback for invalid paste attempts.

@@ -24,6 +24,17 @@ import type { SidenavAvatarProps } from './types';
  *
  * Provides an avatar container with proper styling for the sidenav
  *
+ * @example
+ * ```tsx
+ * <SidenavHeader>
+ *   <SidenavAvatar>
+ *     <Avatar>JD</Avatar>
+ *     <Heading>John Doe</Heading>
+ *     <Text>Administrator</Text>
+ *   </SidenavAvatar>
+ * </SidenavHeader>
+ * ```
+ *
  * @param props - {@link SidenavAvatarProps}
  * @param props.children - Avatar content (icon, heading, text).
  * @param props.className - CSS class for the avatar container.

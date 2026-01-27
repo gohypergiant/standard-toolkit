@@ -21,6 +21,13 @@ import type {
  * Runs the validator on a rule and normalizes the result.
  * Returns { valid: true } if no validator is provided.
  *
+ * @example
+ * ```tsx
+ * const rule = { field: 'age', operator: 'greaterThan', value: 18 };
+ * const validator = (r) => r.value > 0;
+ * const result = getValidationResult(rule, validator); // { valid: true }
+ * ```
+ *
  * @param rule - The rule to validate.
  * @param validator - Optional validator function for the rule.
  * @returns Normalized validation result with valid flag and optional reasons.

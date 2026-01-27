@@ -43,8 +43,10 @@ const fallbackContent = {
  * @returns The classification banner component.
  *
  * @example
+ * ```tsx
  * // Top classification banner
  * <ClassificationBanner variant="confidential" />
+ * ```
  */
 export function ClassificationBanner({
   ref,

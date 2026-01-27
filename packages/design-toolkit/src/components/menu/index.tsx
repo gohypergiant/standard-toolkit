@@ -36,6 +36,7 @@ import type { MenuProps } from './types';
  * other popover settings.
  *
  * @example
+ * ```tsx
  * // Basic menu with trigger
  * <MenuTrigger>
  *   <Button>Open Menu</Button>
@@ -45,8 +46,10 @@ import type { MenuProps } from './types';
  *     <MenuItem>Delete</MenuItem>
  *   </Menu>
  * </MenuTrigger>
- *
+ * ```
+
  * @example
+ * ```tsx
  * // Menu with custom placement
  * <MenuTrigger>
  *   <Button>Open Menu</Button>
@@ -55,8 +58,10 @@ import type { MenuProps } from './types';
  *     <MenuItem>Copy</MenuItem>
  *   </Menu>
  * </MenuTrigger>
+ * ```
  *
  * @example
+ * ```tsx
  * // Menu with action handler
  * <MenuTrigger>
  *   <Button>Actions</Button>
@@ -65,8 +70,10 @@ import type { MenuProps } from './types';
  *     <MenuItem id="delete">Delete</MenuItem>
  *   </Menu>
  * </MenuTrigger>
+ * ```
  *
  * @example
+ * ```tsx
  * // Menu with sections and separators
  * <MenuTrigger>
  *   <Button>Open</Button>
@@ -81,8 +88,10 @@ import type { MenuProps } from './types';
  *     <MenuItem>Settings</MenuItem>
  *   </Menu>
  * </MenuTrigger>
+ * ```
  *
  * @example
+ * ```tsx
  * // Menu with selection
  * <MenuTrigger>
  *   <Button>Group</Button>
@@ -91,8 +100,10 @@ import type { MenuProps } from './types';
  *     <MenuItem>Option 2</MenuItem>
  *   </Menu>
  * </MenuTrigger>
+ * ```
  *
  * @example
+ * ```tsx
  * // Menu with submenu
  * <MenuTrigger>
  *   <Button>Actions</Button>
@@ -109,6 +120,7 @@ import type { MenuProps } from './types';
  *     <MenuItem>Delete</MenuItem>
  *   </Menu>
  * </MenuTrigger>
+ * ```
  *
  * @param props - {@link MenuProps}
  * @param props.ref - Forwarded ref to the underlying Menu element.

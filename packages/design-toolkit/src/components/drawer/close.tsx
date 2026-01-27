@@ -12,8 +12,8 @@
 
 'use client';
 
-import type { UniqueId } from '@accelint/core';
 import Cancel from '@accelint/icons/cancel';
+import type { UniqueId } from '@accelint/core';
 import 'client-only';
 import { useContext } from 'react';
 import { Button } from '../button';
@@ -33,10 +33,12 @@ import type { DrawerCloseProps, SimpleEvents, TargetedEvents } from './types';
  * @returns The rendered DrawerClose button.
  *
  * @example
+ * ```tsx
  * <DrawerHeader>
  *   <DrawerHeaderTitle>Settings</DrawerHeaderTitle>
  *   <DrawerClose />
  * </DrawerHeader>
+ * ```
  */
 export function DrawerClose(props: DrawerCloseProps) {
   const context = useContext(ViewStackContext);

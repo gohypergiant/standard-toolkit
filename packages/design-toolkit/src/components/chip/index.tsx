@@ -37,49 +37,63 @@ import type { ChipProps } from './types';
  * @returns The chip component.
  *
  * @example
+ * ```tsx
  * // Basic chip
  * <Chip>JavaScript</Chip>
+ * ```
  *
  * @example
+ * ```tsx
  * // Chip with color variants
  * <Chip color="info">Information</Chip>
  * <Chip color="advisory">Warning</Chip>
  * <Chip color="normal">Success</Chip>
  * <Chip color="serious">Caution</Chip>
  * <Chip color="critical">Error</Chip>
+ * ```
  *
  * @example
+ * ```tsx
  * // Chip with icon
  * <Chip color="info">
  *   <Icon><Placeholder /></Icon>
  *   With Icon
  * </Chip>
+ * ```
  *
  * @example
+ * ```tsx
  * // Chip with size variants
  * <Chip size="medium">Medium Chip</Chip>
  * <Chip size="small">Small Chip</Chip>
+ * ```
  *
  * @example
+ * ```tsx
  * // Chip list with multiple items
  * <ChipList>
  *   <Chip color="info">React</Chip>
  *   <Chip color="advisory">TypeScript</Chip>
  *   <Chip color="normal">Node.js</Chip>
  * </ChipList>
+ * ```
  *
  * @example
+ * ```tsx
  * // Deletable chips
  * <ChipList onRemove={(keys) => console.log('removed', keys)}>
  *   <DeletableChip id="tag1">Removable Tag</DeletableChip>
  * </ChipList>
+ * ```
  *
  * @example
+ * ```tsx
  * // Selectable chips with color
  * <ChipList selectionMode="single">
  *   <SelectableChip id="up" color="normal">UP</SelectableChip>
  *   <SelectableChip id="down" color="critical">DOWN</SelectableChip>
  * </ChipList>
+ * ```
  */
 export function Chip({ ref, ...props }: ChipProps) {
   [props, ref] = useContextProps(props, ref ?? null, ChipContext);

@@ -41,31 +41,41 @@ import type { LinkButtonProps } from './types';
  * @returns The link button component.
  *
  * @example
+ * ```tsx
  * // Basic link button
  * <LinkButton href="/dashboard">Go to Dashboard</LinkButton>
+ * ```
  *
  * @example
+ * ```tsx
  * // Link button with different variants and sizes
  * <LinkButton variant="filled" size="large" href="/create">Create New</LinkButton>
  * <LinkButton variant="outline" size="small" href="/settings">Settings</LinkButton>
+ * ```
  *
  * @example
+ * ```tsx
  * // Link button with icon
  * <LinkButton variant="flat" href="/profile">
  *   <Icon><User /></Icon>
  *   View Profile
  * </LinkButton>
+ * ```
  *
  * @example
+ * ```tsx
  * // Icon-only link button
  * <LinkButton variant="icon" href="/help">
  *   <Icon><HelpCircle /></Icon>
  * </LinkButton>
+ * ```
  *
  * @example
+ * ```tsx
  * // Link button with different colors
  * <LinkButton color="critical" href="/delete">Delete Account</LinkButton>
  * <LinkButton color="serious" href="/reset">Reset Data</LinkButton>
+ * ```
  */
 export function LinkButton({ ref, ...props }: LinkButtonProps) {
   [props, ref] = useContextProps(props, ref ?? null, LinkButtonContext);

@@ -24,6 +24,18 @@ import styles from './styles.module.css';
 /**
  * TabList - Container for Tab components.
  *
+ * @example
+ * ```tsx
+ * <Tabs>
+ *   <TabList>
+ *     <Tab id="profile">Profile</Tab>
+ *     <Tab id="settings">Settings</Tab>
+ *   </TabList>
+ *   <TabPanel id="profile">Profile content</TabPanel>
+ *   <TabPanel id="settings">Settings content</TabPanel>
+ * </Tabs>
+ * ```
+ *
  * @param props - TabListProps from react-aria-components.
  * @param props.children - Tab components to render.
  * @param props.className - CSS class for the tab list.

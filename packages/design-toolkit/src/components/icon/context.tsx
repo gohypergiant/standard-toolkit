@@ -33,10 +33,12 @@ export const IconContext =
  * @returns The rendered IconProvider component.
  *
  * @example
+ * ```tsx
  * <IconProvider size="small">
  *   <Icon><Home /></Icon>
  *   <Icon><Search /></Icon>
  * </IconProvider>
+ * ```
  */
 export function IconProvider({ children, ...props }: ProviderProps<IconProps>) {
   return <IconContext.Provider value={props}>{children}</IconContext.Provider>;

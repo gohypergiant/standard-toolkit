@@ -23,6 +23,14 @@ import styles from './styles.module.css';
 /**
  * PopoverTitle - Semantic heading for the popover
  *
+ * @example
+ * ```tsx
+ * <Popover>
+ *   <PopoverTitle>User Settings</PopoverTitle>
+ *   <PopoverContent>Settings content</PopoverContent>
+ * </Popover>
+ * ```
+ *
  * @param props - HeadingProps from react-aria-components.
  * @param props.className - Optional CSS class name.
  * @returns The rendered PopoverTitle component.

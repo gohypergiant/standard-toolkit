@@ -17,6 +17,14 @@ import styles from './styles.module.css';
 /**
  * TreeItemLabel - Primary text label for a tree item
  *
+ * @example
+ * ```tsx
+ * <TreeItemContent>
+ *   <TreeItemLabel>Documents</TreeItemLabel>
+ *   <TreeItemDescription>Folder</TreeItemDescription>
+ * </TreeItemContent>
+ * ```
+ *
  * @param props - TextProps from react-aria-components.
  * @param props.children - Label text content.
  * @param props.className - CSS class for the label.

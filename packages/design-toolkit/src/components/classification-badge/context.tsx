@@ -29,10 +29,12 @@ export const ClassificationBadgeContext =
  * @returns The classification badge context provider wrapping children.
  *
  * @example
+ * ```tsx
  * <ClassificationBadgeProvider variant="secret" size="small">
  *   <ClassificationBadge />
  *   <ClassificationBadge />
  * </ClassificationBadgeProvider>
+ * ```
  */
 export function ClassificationBadgeProvider({
   children,

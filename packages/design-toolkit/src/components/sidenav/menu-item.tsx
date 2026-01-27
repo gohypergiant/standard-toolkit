@@ -19,6 +19,14 @@ import type { SidenavMenuItemProps } from './types';
  *
  * Provides a selectable item within a sidenav menu
  *
+ * @example
+ * ```tsx
+ * <SidenavMenu icon={<Settings />} title="Settings">
+ *   <SidenavMenuItem isSelected={true}>Profile</SidenavMenuItem>
+ *   <SidenavMenuItem>Preferences</SidenavMenuItem>
+ * </SidenavMenu>
+ * ```
+ *
  * @param props - {@link SidenavMenuItemProps}
  * @param props.className - CSS class for the menu item.
  * @param props.children - Menu item content.

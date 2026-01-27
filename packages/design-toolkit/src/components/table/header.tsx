@@ -17,6 +17,14 @@ import type { TableHeaderProps } from './types';
 /**
  * TableHeader - Renders the table header section (`<thead>`).
  *
+ * @example
+ * ```tsx
+ * <Table>
+ *   <TableHeader headerGroups={table.getHeaderGroups()} />
+ *   <TableBody rows={table.getRowModel().rows} />
+ * </Table>
+ * ```
+ *
  * @param props - {@link TableHeaderProps}
  * @param props.ref - Ref to the thead element.
  * @param props.children - Custom children content.

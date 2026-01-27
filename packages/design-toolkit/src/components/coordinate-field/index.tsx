@@ -90,10 +90,13 @@ import type { CoordinateFieldProps } from './types';
  * @returns The coordinate field component.
  *
  * @example
+ * ```tsx
  * // Basic coordinate field
  * <CoordinateField label="Location" />
+ * ```
  *
  * @example
+ * ```tsx
  * // Coordinate field with validation
  * <CoordinateField
  *   label="Target Coordinates"
@@ -101,32 +104,40 @@ import type { CoordinateFieldProps } from './types';
  *   isInvalid={hasError}
  *   errorMessage="Please enter a valid coordinate"
  * />
+ * ```
  *
  * @example
+ * ```tsx
  * // Coordinate field with specific format
  * <CoordinateField
  *   label="Position"
  *   format="dms"
  *   description="Enter coordinates in Degrees Minutes Seconds format"
  * />
+ * ```
  *
  * @example
+ * ```tsx
  * // Compact coordinate field
  * <CoordinateField
  *   label="Coordinates"
  *   size="small"
  *   format="dd"
  * />
+ * ```
  *
  * @example
+ * ```tsx
  * // Controlled coordinate field
  * <CoordinateField
  *   label="Selected Location"
  *   value={coordinates}
  *   onChange={setCoordinates}
  * />
+ * ```
  *
  * @example
+ * ```tsx
  * // Coordinate field with error handling
  * <CoordinateField
  *   label="Target Coordinates"
@@ -139,6 +150,7 @@ import type { CoordinateFieldProps } from './types';
  *   isInvalid={!!errorMessage}
  *   errorMessage={errorMessage}
  * />
+ * ```
  */
 export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
   [props, ref] = useContextProps(props, ref, CoordinateFieldContext);

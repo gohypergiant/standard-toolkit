@@ -33,12 +33,16 @@ import type { DividerProps } from './types';
  * @returns The divider component.
  *
  * @example
+ * ```tsx
  * // Basic horizontal divider
  * <Divider />
+ * ```
  *
  * @example
+ * ```tsx
  * // Vertical divider
  * <Divider orientation="vertical" />
+ * ```
  */
 export function Divider({ ref, ...props }: DividerProps) {
   [props, ref] = useContextProps(props, ref ?? null, DividerContext);

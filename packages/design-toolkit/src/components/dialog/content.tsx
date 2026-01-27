@@ -27,12 +27,14 @@ import type { ComponentProps } from 'react';
  * @returns The dialog content component.
  *
  * @example
+ * ```tsx
  * <Dialog>
  *   <DialogTitle>Title</DialogTitle>
  *   <DialogContent>
  *     <p>Your content goes here...</p>
  *   </DialogContent>
  * </Dialog>
+ * ```
  */
 export function DialogContent({ children, className }: ComponentProps<'div'>) {
   return <div className={clsx(styles.content, className)}>{children}</div>;

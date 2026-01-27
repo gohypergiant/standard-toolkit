@@ -34,10 +34,12 @@ export const DividerContext =
  * @returns The divider context provider wrapping children.
  *
  * @example
+ * ```tsx
  * <DividerProvider orientation="vertical">
  *   <Divider />
  *   <Divider />
  * </DividerProvider>
+ * ```
  */
 export function DividerProvider({
   children,

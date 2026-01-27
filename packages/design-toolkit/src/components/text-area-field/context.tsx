@@ -25,6 +25,18 @@ export const TextAreaFieldContext =
 /**
  * Sets default props for all TextAreaField components within.
  *
+ * @example
+ * ```tsx
+ * <TextAreaFieldProvider isRequired>
+ *   <TextAreaField label="Bio">
+ *     <TextArea placeholder="Tell us about yourself" />
+ *   </TextAreaField>
+ *   <TextAreaField label="Comments">
+ *     <TextArea placeholder="Additional comments" />
+ *   </TextAreaField>
+ * </TextAreaFieldProvider>
+ * ```
+ *
  * @param props - ProviderProps with TextAreaFieldProps.
  * @param props.children - Child components that receive the context.
  * @returns The TextAreaFieldContext provider wrapping children.

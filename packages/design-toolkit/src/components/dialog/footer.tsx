@@ -32,6 +32,7 @@ import styles from './styles.module.css';
  * @returns The dialog footer component.
  *
  * @example
+ * ```tsx
  * <Dialog>
  *   <DialogTitle>Confirm</DialogTitle>
  *   <DialogContent>Are you sure?</DialogContent>
@@ -40,6 +41,7 @@ import styles from './styles.module.css';
  *     <Button>Confirm</Button>
  *   </DialogFooter>
  * </Dialog>
+ * ```
  */
 export function DialogFooter({
   children,

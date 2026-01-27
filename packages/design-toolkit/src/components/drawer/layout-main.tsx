@@ -24,12 +24,14 @@ import type { ComponentPropsWithRef } from 'react';
  * @returns The rendered DrawerLayoutMain component.
  *
  * @example
+ * ```tsx
  * <DrawerLayout push="left">
  *   <DrawerLayoutMain>
  *     Main content here
  *   </DrawerLayoutMain>
  *   <Drawer placement="left">...</Drawer>
  * </DrawerLayout>
+ * ```
  */
 export function DrawerLayoutMain({
   className,

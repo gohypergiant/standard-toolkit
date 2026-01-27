@@ -55,11 +55,14 @@ const defaultRenderDropIndicator = (target: DropTarget) => (
  *
  * @example
  * // Dynamic collection
+ * ```tsx
  * <Tree items={items} expandedKeys={expandedKeys}>
  *   {(node) => <TreeItem key={node.key}>{node.label}</TreeItem>}
  * </Tree>
+ * ```
  *
  * @example
+ * ```tsx
  * // Static collection
  * <Tree>
  *   <TreeItem id="one" textValue="one">
@@ -69,6 +72,7 @@ const defaultRenderDropIndicator = (target: DropTarget) => (
  *     </TreeItem>
  *   </TreeItem>
  * </Tree>
+ * ```
  */
 export function Tree<T>({
   children,

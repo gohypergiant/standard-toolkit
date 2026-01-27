@@ -33,12 +33,14 @@ import type { KanbanCardProps } from './types';
  * @returns The rendered KanbanCard component.
  *
  * @example
+ * ```tsx
  * <KanbanCard card={cardData}>
  *   <KanbanCardHeader>
  *     <KanbanCardHeaderTitle>{card.title}</KanbanCardHeaderTitle>
  *   </KanbanCardHeader>
  *   <KanbanCardBody>{card.body}</KanbanCardBody>
  * </KanbanCard>
+ * ```
  */
 export function KanbanCard({
   className,

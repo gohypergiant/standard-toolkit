@@ -21,11 +21,13 @@ import { MenuTrigger as AriaMenuTrigger } from 'react-aria-components';
  * Wraps a trigger element (typically a Button) and the Menu component.
  *
  * @example
+ * ```tsx
  * <MenuTrigger>
  *   <Button>Open Menu</Button>
  *   <Menu>
  *     <MenuItem>Item 1</MenuItem>
  *   </Menu>
  * </MenuTrigger>
+ * ```
  */
 export const MenuTrigger = AriaMenuTrigger;

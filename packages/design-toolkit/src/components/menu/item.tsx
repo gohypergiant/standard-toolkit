@@ -38,10 +38,12 @@ import type { MenuItemProps } from './types';
  * String children are automatically wrapped in a Text label slot.
  *
  * @example
+ * ```tsx
  * <MenuItem>
  *   <MenuItemLabel>Edit</MenuItemLabel>
  *   <MenuItemDescription>Modify the item</MenuItemDescription>
  * </MenuItem>
+ * ```
  *
  * @param props - {@link MenuItemProps}
  * @param props.children - Content to render inside the menu item.

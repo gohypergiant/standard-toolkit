@@ -31,10 +31,12 @@ export const BadgeContext =
  * @returns The badge context provider wrapping children.
  *
  * @example
+ * ```tsx
  * <BadgeProvider color="critical" placement="top right">
  *   <Badge>1</Badge>
  *   <Badge>2</Badge>
  * </BadgeProvider>
+ * ```
  */
 export function BadgeProvider({
   children,

@@ -24,6 +24,18 @@ export const TextFieldContext =
 /**
  * Sets default props for all TextField components within.
  *
+ * @example
+ * ```tsx
+ * <TextFieldProvider isRequired>
+ *   <TextField label="First Name">
+ *     <Input placeholder="Enter first name" />
+ *   </TextField>
+ *   <TextField label="Last Name">
+ *     <Input placeholder="Enter last name" />
+ *   </TextField>
+ * </TextFieldProvider>
+ * ```
+ *
  * @param props - ProviderProps with TextFieldProps.
  * @param props.children - Child components that receive the context.
  * @returns The TextFieldContext provider wrapping children.

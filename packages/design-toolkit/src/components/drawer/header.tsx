@@ -41,15 +41,19 @@ import { DrawerTrigger } from './trigger';
  * @returns The rendered DrawerHeader component.
  *
  * @example
+ * ```tsx
  * // Simplified with title prop
  * <DrawerHeader title="Settings" />
+ * ```
  *
  * @example
+ * ```tsx
  * // Custom layout
  * <DrawerHeader>
  *   <DrawerHeaderTitle level={2}>Settings</DrawerHeaderTitle>
  *   <DrawerClose />
  * </DrawerHeader>
+ *```
  */
 export function DrawerHeader({
   className,

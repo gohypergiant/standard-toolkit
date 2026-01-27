@@ -29,7 +29,9 @@ import type { PaginationProps } from './types';
  * the visible range as the user navigates.
  *
  * @example
+ * ```tsx
  * <Pagination value={1} total={10} onChange={setPage} />
+ * ```
  *
  * @param props - {@link PaginationProps}
  * @param props.children - Custom pagination content (overrides default layout).

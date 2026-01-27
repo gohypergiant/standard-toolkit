@@ -19,6 +19,19 @@ import type { TableRowProps } from './types';
 /**
  * TableRow - Table row (`<tr>`) with selection and pinning state.
  *
+ * @example
+ * ```tsx
+ * <TableBody rows={rows}>
+ *   {rows.map(row => (
+ *     <TableRow key={row.id} row={row}>
+ *       {row.getAllCells().map(cell => (
+ *         <TableCell key={cell.id} cell={cell} />
+ *       ))}
+ *     </TableRow>
+ *   ))}
+ * </TableBody>
+ * ```
+ *
  * @param props - {@link TableRowProps}
  * @param props.ref - Ref to the tr element.
  * @param props.children - Custom children content.

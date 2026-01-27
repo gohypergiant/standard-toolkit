@@ -23,7 +23,9 @@ import styles from './styles.module.css';
  * Renders as a Text component with the 'label' slot.
  *
  * @example
+ * ```tsx
  * <MenuItemLabel>Edit Document</MenuItemLabel>
+ * ```
  *
  * @param props - TextProps from react-aria-components.
  * @param props.children - Label text content.

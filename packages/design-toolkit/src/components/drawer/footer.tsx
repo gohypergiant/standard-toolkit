@@ -24,6 +24,7 @@ import type { ComponentPropsWithRef } from 'react';
  * @returns The rendered DrawerFooter component.
  *
  * @example
+ * ```tsx
  * <DrawerView id={viewId}>
  *   <DrawerHeader title="Settings" />
  *   <DrawerContent>Content here</DrawerContent>
@@ -31,6 +32,7 @@ import type { ComponentPropsWithRef } from 'react';
  *     <Button>Save</Button>
  *   </DrawerFooter>
  * </DrawerView>
+ * ```
  */
 export function DrawerFooter({
   className,

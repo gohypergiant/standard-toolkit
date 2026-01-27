@@ -33,11 +33,13 @@ import type { ViewStackViewProps } from '../view-stack/types';
  * @returns The rendered DrawerView component.
  *
  * @example
+ * ```tsx
  * <DrawerView id={viewId}>
  *   <DrawerHeader title="Settings" />
  *   <DrawerContent>View content here</DrawerContent>
  *   <DrawerFooter>Footer actions</DrawerFooter>
  * </DrawerView>
+ * ```
  */
 export function DrawerView({
   id,

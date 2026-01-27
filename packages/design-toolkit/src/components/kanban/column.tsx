@@ -29,10 +29,12 @@ import type { KanbanColProps } from './types';
  * @returns The rendered KanbanColumn component.
  *
  * @example
+ * ```tsx
  * <KanbanColumn column={columnData}>
  *   <KanbanColumnHeader>...</KanbanColumnHeader>
  *   <KanbanColumnContent column={columnData}>...</KanbanColumnContent>
  * </KanbanColumn>
+ * ```
  */
 export function KanbanColumn({
   children,

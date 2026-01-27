@@ -49,9 +49,11 @@ const tooltipPlacementMap = {
  * @returns The rendered DrawerMenuItem component, or null if outside a Drawer.
  *
  * @example
+ * ```tsx
  * <DrawerMenuItem for={viewId} textValue="Settings">
  *   <SettingsIcon />
  * </DrawerMenuItem>
+ * ```
  */
 export function DrawerMenuItem({
   for: id,

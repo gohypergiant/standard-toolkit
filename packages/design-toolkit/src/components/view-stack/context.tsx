@@ -41,6 +41,19 @@ export const ViewStackEventHandlers = {
 /**
  * Hook for programmatic ViewStack control from anywhere in the application
  *
+ * @example
+ * ```tsx
+ * function MyComponent() {
+ *   const viewStack = useViewStackEmit();
+ *
+ *   return (
+ *     <Button onPress={() => viewStack.push('view-id')}>
+ *       Navigate to View
+ *     </Button>
+ *   );
+ * }
+ * ```
+ *
  * @returns Object with emit functions for back, clear, push, and reset actions.
  */
 export function useViewStackEmit() {

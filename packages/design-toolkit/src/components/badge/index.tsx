@@ -32,21 +32,29 @@ import type { BadgeProps } from './types';
  * @returns The badge span element.
  *
  * @example
+ * ```tsx
  * <Badge>New</Badge>
+ * ```
  *
  * @example
+ * ```tsx
  * // Color variants
  * <Badge color="normal">Active</Badge>
  * <Badge color="advisory">Pending</Badge>
  * <Badge color="critical">Error</Badge>
+ * ```
  *
  * @example
+ * ```tsx
  * // Dot indicator (no children)
  * <Badge color="normal" />
+ * ```
  *
  * @example
+ * ```tsx
  * // Positioned badge
  * <Badge placement="top right" offset={designTokens.spacing.xs}>3</Badge>
+ * ```
  */
 export function Badge({ ref, ...props }: BadgeProps) {
   [props, ref] = useContextProps(props, ref ?? null, BadgeContext);

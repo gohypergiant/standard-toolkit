@@ -65,12 +65,14 @@ const ACTIVATION_DISTANCE = 8;
  * @returns The rendered Kanban component.
  *
  * @example
+ * ```tsx
  * <KanbanProvider columns={columns} updateColumnState={setColumns}>
  *   <Kanban>
  *     <KanbanHeader>...</KanbanHeader>
  *     <KanbanColumnContainer>...</KanbanColumnContainer>
  *   </Kanban>
  * </KanbanProvider>
+ * ```
  */
 export function Kanban({ children, className, ...rest }: KanbanProps) {
   const { moveCard, cardMap } = useKanban();

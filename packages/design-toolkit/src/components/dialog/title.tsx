@@ -27,10 +27,12 @@ import styles from './styles.module.css';
  * @returns The dialog title component.
  *
  * @example
+ * ```tsx
  * <Dialog>
  *   <DialogTitle>Confirm Action</DialogTitle>
  *   <DialogContent>...</DialogContent>
  * </Dialog>
+ * ```
  */
 export function DialogTitle({ children, className }: HeadingProps) {
   return (

@@ -50,6 +50,7 @@ export const FlashcardContext = createContext<FlashcardProps>({
  * @returns The rendered Flashcard component.
  *
  * @example
+ * ```tsx
  * <Flashcard isLoading={false} header="Identifier" subheader="DATA">
  *   <FlashcardHero />
  *   <FlashcardAdditionalData>Secondary info</FlashcardAdditionalData>
@@ -58,6 +59,7 @@ export const FlashcardContext = createContext<FlashcardProps>({
  *     <FlashcardDetailsValue>Active</FlashcardDetailsValue>
  *   </FlashcardDetailsList>
  * </Flashcard>
+ * ```
  */
 export function Flashcard(props: FlashcardProps) {
   const { isLoading, header, subheader, children, className, ...rest } = props;
@@ -82,6 +84,13 @@ Flashcard.displayName = 'Flashcard';
  * @param props.children - Optional child content.
  * @param props.className - Optional CSS class name.
  * @returns The rendered FlashcardHero component.
+ *
+ * @example
+ * ```tsx
+ * <Flashcard header="Entity Name" subheader="Type">
+ *   <FlashcardHero />
+ * </Flashcard>
+ * ```
  */
 export function FlashcardHero(props: FlashcardComponentProps) {
   const { children, className, ...rest } = props;
@@ -119,6 +128,16 @@ const FlashcardSubheader = Text;
  * @param props.children - Content to display in the section.
  * @param props.className - Optional CSS class name.
  * @returns The rendered FlashcardAdditionalData component, or null if loading.
+ *
+ * @example
+ * ```tsx
+ * <Flashcard header="Entity" subheader="Data">
+ *   <FlashcardHero />
+ *   <FlashcardAdditionalData>
+ *     Last updated: 2024-01-15
+ *   </FlashcardAdditionalData>
+ * </Flashcard>
+ * ```
  */
 export function FlashcardAdditionalData(props: FlashcardComponentProps) {
   const { children, className, ...rest } = props;
@@ -146,6 +165,19 @@ FlashcardAdditionalData.displayName = 'FlashcardAdditionalData';
  * @param props.children - FlashcardDetailsLabel and FlashcardDetailsValue pairs.
  * @param props.className - Optional CSS class name.
  * @returns The rendered FlashcardDetailsList component.
+ *
+ * @example
+ * ```tsx
+ * <Flashcard header="Aircraft" subheader="Entity">
+ *   <FlashcardHero />
+ *   <FlashcardDetailsList>
+ *     <FlashcardDetailsLabel>Status</FlashcardDetailsLabel>
+ *     <FlashcardDetailsValue>Active</FlashcardDetailsValue>
+ *     <FlashcardDetailsLabel>Speed</FlashcardDetailsLabel>
+ *     <FlashcardDetailsValue>450 kts</FlashcardDetailsValue>
+ *   </FlashcardDetailsList>
+ * </Flashcard>
+ * ```
  */
 export function FlashcardDetailsList(props: FlashcardDetailsListProps) {
   const { children, className, ...rest } = props;
@@ -170,6 +202,14 @@ FlashcardDetailsList.displayName = 'FlashcardDetailsList';
  * @param props.children - Label text content.
  * @param props.className - Optional CSS class name.
  * @returns The rendered FlashcardDetailsLabel component.
+ *
+ * @example
+ * ```tsx
+ * <FlashcardDetailsList>
+ *   <FlashcardDetailsLabel>Status</FlashcardDetailsLabel>
+ *   <FlashcardDetailsValue>Active</FlashcardDetailsValue>
+ * </FlashcardDetailsList>
+ * ```
  */
 export function FlashcardDetailsLabel(props: FlashcardComponentProps) {
   const { isLoading } = useContext(FlashcardContext);
@@ -198,6 +238,14 @@ FlashcardDetailsLabel.displayName = 'FlashcardDetailsLabel';
  * @param props.children - Value text content.
  * @param props.className - Optional CSS class name.
  * @returns The rendered FlashcardDetailsValue component.
+ *
+ * @example
+ * ```tsx
+ * <FlashcardDetailsList>
+ *   <FlashcardDetailsLabel>Type</FlashcardDetailsLabel>
+ *   <FlashcardDetailsValue>Aircraft</FlashcardDetailsValue>
+ * </FlashcardDetailsList>
+ * ```
  */
 export function FlashcardDetailsValue(props: FlashcardComponentProps) {
   const { isLoading } = useContext(FlashcardContext);

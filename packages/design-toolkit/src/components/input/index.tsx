@@ -54,15 +54,19 @@ const clearInputEvent = {
  * @returns The rendered Input component.
  *
  * @example
+ * ```tsx
  * // Basic input
  * <Input placeholder="Enter text..." />
+ * ```
  *
  * @example
+ * ```tsx
  * // Input with clear button
  * <Input
  *   defaultValue="Clearable text"
  *   classNames={{ clear: "hover:bg-info-bold" }}
  * />
+ * ```
  */
 
 // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: just a little bit over, not worth refactoring

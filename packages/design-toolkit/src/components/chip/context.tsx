@@ -31,10 +31,12 @@ export const ChipContext =
  * @returns The chip context provider wrapping children.
  *
  * @example
+ * ```tsx
  * <ChipProvider size="small" color="info">
  *   <Chip>Chip 1</Chip>
  *   <Chip>Chip 2</Chip>
  * </ChipProvider>
+ * ```
  */
 export function ChipProvider({
   children,

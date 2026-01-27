@@ -23,6 +23,21 @@ import type { SidenavContentProps } from './types';
  *
  * Provides a container for sidenav content with proper styling
  *
+ * @example
+ * ```tsx
+ * <Sidenav>
+ *   <SidenavContent>
+ *     <SidenavItem textValue="Dashboard">
+ *       <Icon><Home /></Icon>
+ *       <Text>Dashboard</Text>
+ *     </SidenavItem>
+ *     <SidenavMenu icon={<Settings />} title="Settings">
+ *       <SidenavMenuItem>Profile</SidenavMenuItem>
+ *     </SidenavMenu>
+ *   </SidenavContent>
+ * </Sidenav>
+ * ```
+ *
  * @param props - {@link SidenavContentProps}
  * @param props.className - CSS class for the content container.
  * @param props.children - Content items (items, menus, dividers).

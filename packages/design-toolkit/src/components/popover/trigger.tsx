@@ -31,12 +31,14 @@ import type { PopoverTriggerProps } from './types';
  * the trigger, and the second child should be a Popover component.
  *
  * @example
+ * ```tsx
  * <PopoverTrigger>
  *   <Button>Open</Button>
  *   <Popover>
  *     <PopoverContent>Content here</PopoverContent>
  *   </Popover>
  * </PopoverTrigger>
+ * ```
  *
  * @param props - {@link PopoverTriggerProps}
  * @param props.ref - Forwarded ref to the trigger element.

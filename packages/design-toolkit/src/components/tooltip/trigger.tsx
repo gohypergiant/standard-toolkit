@@ -66,6 +66,16 @@ function TooltipFocusable({
 /**
  * TooltipTrigger - Wrapper that manages tooltip display on hover or focus
  *
+ * @example
+ * ```tsx
+ * <TooltipTrigger delay={500}>
+ *   <Button>
+ *     <Icon><Info /></Icon>
+ *   </Button>
+ *   <Tooltip>Additional information about this action</Tooltip>
+ * </TooltipTrigger>
+ * ```
+ *
  * @param props - {@link TooltipTriggerProps}
  * @param props.ref - Ref to the focusable trigger element.
  * @param props.children - Trigger element and Tooltip content.

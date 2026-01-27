@@ -29,6 +29,18 @@ import { OptionsSection } from '../options/section';
  *
  * Renders a ComboBoxField with options, supporting grouped and flat option lists.
  *
+ * @example
+ * ```tsx
+ * <ValueSelector
+ *   options={[
+ *     { name: 'option1', label: 'Option 1' },
+ *     { name: 'option2', label: 'Option 2' }
+ *   ]}
+ *   value="option1"
+ *   handleOnChange={(value) => console.log(value)}
+ * />
+ * ```
+ *
  * @param props - ValueSelectorProps from react-querybuilder.
  * @returns The rendered ValueSelector dropdown.
  */

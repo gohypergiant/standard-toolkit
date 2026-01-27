@@ -34,14 +34,18 @@ import type { DrawerTriggerProps } from './types';
  * @returns The rendered DrawerTrigger component.
  *
  * @example
+ * ```tsx
  * <DrawerTrigger for="close">
  *   <Button>Close</Button>
  * </DrawerTrigger>
- *
+ * ```
+
  * @example
+ * ```tsx
  * <DrawerTrigger for={`open:${viewId}`}>
  *   <Button>Open Settings</Button>
  * </DrawerTrigger>
+ * ```
  */
 export function DrawerTrigger({ for: events, ...rest }: DrawerTriggerProps) {
   const { parent } = useContext(ViewStackContext);

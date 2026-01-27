@@ -12,8 +12,8 @@
 'use client';
 
 import { useOn } from '@accelint/bus/react';
-import type { UniqueId } from '@accelint/core';
 import { clsx } from '@accelint/design-foundation/lib/utils';
+import type { UniqueId } from '@accelint/core';
 import 'client-only';
 import { useCallback, useRef, useState } from 'react';
 import { ViewStack } from '../view-stack';
@@ -45,6 +45,7 @@ import type {
  * @returns The rendered Drawer component.
  *
  * @example
+ * ```tsx
  * const ids = { drawer: uuid(), a: uuid() };
  *
  * <DrawerLayout push="left">
@@ -63,6 +64,7 @@ import type {
  *     </DrawerPanel>
  *   </Drawer>
  * </DrawerLayout>
+ * ```
  */
 export function Drawer({
   id,

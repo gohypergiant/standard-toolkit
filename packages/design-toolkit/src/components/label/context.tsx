@@ -34,10 +34,12 @@ export const LabelContext =
  * @returns The rendered LabelProvider component.
  *
  * @example
+ * ```tsx
  * <LabelProvider isRequired>
  *   <Label>First Name</Label>
  *   <Label>Last Name</Label>
  * </LabelProvider>
+ * ```
  */
 export function LabelProvider({
   children,

@@ -19,6 +19,14 @@ import styles from './styles.module.css';
 /**
  * TreeItemDescription - Secondary descriptive text for a tree item
  *
+ * @example
+ * ```tsx
+ * <TreeItemContent>
+ *   <TreeItemLabel>Project Files</TreeItemLabel>
+ *   <TreeItemDescription>Last modified 2 hours ago</TreeItemDescription>
+ * </TreeItemContent>
+ * ```
+ *
  * @param props - TextProps from react-aria-components.
  * @param props.children - Description text content.
  * @param props.className - CSS class for the description.

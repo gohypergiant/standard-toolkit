@@ -23,6 +23,15 @@ import type { SidenavEvent, SidenavTriggerProps } from './types';
  *
  * Provides a trigger button to control the sidenav state
  *
+ * @example
+ * ```tsx
+ * <SidenavTrigger for="toggle:sidenav-id">
+ *   <Button variant="icon">
+ *     <Icon><Menu /></Icon>
+ *   </Button>
+ * </SidenavTrigger>
+ * ```
+ *
  * @param props - {@link SidenavTriggerProps}
  * @param props.children - Trigger content (typically a Button with icon).
  * @param props.for - Target sidenav ID or targeted event string.

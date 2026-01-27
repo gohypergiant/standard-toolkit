@@ -21,6 +21,7 @@ import { SubmenuTrigger } from 'react-aria-components';
  * Wraps a MenuItem and nested Menu to create hierarchical navigation.
  *
  * @example
+ * ```tsx
  * <MenuSubmenu>
  *   <MenuItem>Export</MenuItem>
  *   <Menu>
@@ -28,5 +29,6 @@ import { SubmenuTrigger } from 'react-aria-components';
  *     <MenuItem>Export as CSV</MenuItem>
  *   </Menu>
  * </MenuSubmenu>
+ * ```
  */
 export const MenuSubmenu = SubmenuTrigger;

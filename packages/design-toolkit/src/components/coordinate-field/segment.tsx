@@ -51,6 +51,7 @@ import type { CoordinateSegmentProps } from './types';
  * @returns The coordinate segment input component.
  *
  * @example
+ * ```tsx
  * // Numeric segment (latitude degrees)
  * <CoordinateSegment
  *   value={latDegrees}
@@ -59,8 +60,10 @@ import type { CoordinateSegmentProps } from './types';
  *   maxLength={10}
  *   placeholder="00.00000"
  * />
+ * ```
  *
  * @example
+ * ```tsx
  * // Directional segment (latitude direction)
  * <CoordinateSegment
  *   value={latDir}
@@ -69,6 +72,7 @@ import type { CoordinateSegmentProps } from './types';
  *   maxLength={1}
  *   placeholder="N"
  * />
+ * ```
  */
 export function CoordinateSegment({
   value,

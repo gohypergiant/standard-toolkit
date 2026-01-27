@@ -18,6 +18,14 @@ import type { TableBodyProps } from './types';
 /**
  * TableBody - Renders the table body section (`<tbody>`).
  *
+ * @example
+ * ```tsx
+ * <Table>
+ *   <TableHeader headerGroups={table.getHeaderGroups()} />
+ *   <TableBody rows={table.getRowModel().rows} />
+ * </Table>
+ * ```
+ *
  * @param props - {@link TableBodyProps}
  * @param props.children - Custom children content.
  * @param props.className - CSS class for the tbody element.

@@ -19,10 +19,12 @@ import type { OptionsDataItem, OptionsSectionProps } from './types';
  * OptionsSection - Groups related options with an optional header
  *
  * @example
+ * ```tsx
  * <OptionsSection header="Recent">
  *   <OptionsItem>Item 1</OptionsItem>
  *   <OptionsItem>Item 2</OptionsItem>
  * </OptionsSection>
+ * ```
  *
  * @param props - {@link OptionsSectionProps}
  * @param props.children - Options items to render in the section.

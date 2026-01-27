@@ -38,6 +38,7 @@ import type {
  * @returns The rendered ViewStack component.
  *
  * @example
+ * ```tsx
  * const ids = { stack: uuid(), a: uuid(), b: uuid() };
  *
  * <ViewStack id={ids.stack} defaultView={ids.a}>
@@ -48,6 +49,7 @@ import type {
  *     <ViewStackTrigger for="back"><Button>Back</Button></ViewStackTrigger>
  *   </ViewStackView>
  * </ViewStack>
+ * ```
  */
 export function ViewStack({
   id,

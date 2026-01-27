@@ -30,6 +30,7 @@ import type { OptionsDataItem, OptionsProps } from './types';
  * dropdown lists, menu items, or any selectable list interface.
  *
  * @example
+ * ```tsx
  * // Basic options list
  * <Options>
  *   <OptionsItem>
@@ -39,8 +40,10 @@ import type { OptionsDataItem, OptionsProps } from './types';
  *     <OptionsItemLabel>Option 2</OptionsItemLabel>
  *   </OptionsItem>
  * </Options>
+ * ```
  *
  * @example
+ * ```tsx
  * // Options with descriptions and icons
  * <Options>
  *   <OptionsItem>
@@ -51,8 +54,10 @@ import type { OptionsDataItem, OptionsProps } from './types';
  *     </OptionsItemContent>
  *   </OptionsItem>
  * </Options>
+ * ```
  *
  * @example
+ * ```tsx
  * // Sectioned options
  * <Options>
  *   <OptionsSection header="Recent">
@@ -62,6 +67,7 @@ import type { OptionsDataItem, OptionsProps } from './types';
  *     <OptionsItem>All Items 1</OptionsItem>
  *   </OptionsSection>
  * </Options>
+ * ```
  *
  * @param props - {@link OptionsProps}
  * @param props.ref - Forwarded ref to the underlying ListBox element.

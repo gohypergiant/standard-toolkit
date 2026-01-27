@@ -21,6 +21,24 @@ import type { ViewStackTriggerProps } from './types';
 /**
  * ViewStackTrigger - Pressable element that triggers ViewStack navigation actions
  *
+ * @example
+ * ```tsx
+ * <ViewStack id="main-stack">
+ *   <ViewStackView id="home">
+ *     <h1>Home</h1>
+ *     <ViewStackTrigger for="settings-view-id">
+ *       <Button>Go to Settings</Button>
+ *     </ViewStackTrigger>
+ *   </ViewStackView>
+ *   <ViewStackView id="settings-view-id">
+ *     <h1>Settings</h1>
+ *     <ViewStackTrigger for="back:main-stack">
+ *       <Button>Back</Button>
+ *     </ViewStackTrigger>
+ *   </ViewStackView>
+ * </ViewStack>
+ * ```
+ *
  * @param props - {@link ViewStackTriggerProps}
  * @param props.children - Pressable children content.
  * @param props.for - Navigation action(s) to trigger on press.

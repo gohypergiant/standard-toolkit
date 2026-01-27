@@ -30,10 +30,12 @@ import type { DrawerTitleProps } from './types';
  * @default level 2
  *
  * @example
+ * ```tsx
  * <DrawerHeader>
  *   <DrawerHeaderTitle level={2}>Settings</DrawerHeaderTitle>
  *   <DrawerClose />
  * </DrawerHeader>
+ * ```
  */
 export function DrawerHeaderTitle({
   className,

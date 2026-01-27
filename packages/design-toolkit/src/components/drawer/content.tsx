@@ -23,12 +23,14 @@ import type { ComponentPropsWithRef } from 'react';
  * @returns The rendered DrawerContent component.
  *
  * @example
+ * ```tsx
  * <DrawerView id={viewId}>
  *   <DrawerHeader title="Settings" />
  *   <DrawerContent>
  *     <p>Your content here</p>
  *   </DrawerContent>
  * </DrawerView>
+ * ```
  */
 export function DrawerContent({
   className,

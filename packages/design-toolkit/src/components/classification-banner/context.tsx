@@ -29,10 +29,12 @@ export const ClassificationBannerContext =
  * @returns The classification banner context provider wrapping children.
  *
  * @example
+ * ```tsx
  * <ClassificationBannerProvider variant="secret">
  *   <ClassificationBanner />
  *   <ClassificationBanner />
  * </ClassificationBannerProvider>
+ * ```
  */
 export function ClassificationBannerProvider({
   children,

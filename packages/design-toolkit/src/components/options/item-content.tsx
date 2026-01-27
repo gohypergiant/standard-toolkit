@@ -18,6 +18,16 @@ import type { TextProps } from 'react-aria-components';
  *
  * Use when an item needs both a label and description.
  *
+ * @example
+ * ```tsx
+ * <OptionsItem>
+ *   <OptionsItemContent>
+ *     <OptionsItemLabel>Option Name</OptionsItemLabel>
+ *     <OptionsItemDescription>Description text</OptionsItemDescription>
+ *   </OptionsItemContent>
+ * </OptionsItem>
+ * ```
+ *
  * @param props - TextProps from react-aria-components.
  * @param props.className - Optional CSS class name.
  * @returns The rendered OptionsItemContent component.

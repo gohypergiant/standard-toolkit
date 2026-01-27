@@ -22,6 +22,15 @@ import type { TableCellProps } from './types';
 /**
  * TableCell - Data cell (`<td>`) within a table row.
  *
+ * @example
+ * ```tsx
+ * <TableRow row={row}>
+ *   {row.getAllCells().map(cell => (
+ *     <TableCell key={cell.id} cell={cell} />
+ *   ))}
+ * </TableRow>
+ * ```
+ *
  * @param props - {@link TableCellProps}
  * @param props.children - Custom children content.
  * @param props.ref - Ref to the td element.

@@ -53,6 +53,15 @@ const QueryBuilderLines = memo(function QueryBuilderLines({
  *
  * Renders the field selector, operator selector, value editor, and action buttons.
  *
+ * @example
+ * ```tsx
+ * <Rule
+ *   rule={{ field: 'name', operator: 'equals', value: 'John' }}
+ *   path={[0]}
+ *   schema={queryBuilderSchema}
+ * />
+ * ```
+ *
  * @param props - RuleProps from react-querybuilder.
  * @returns The rendered Rule component with all selectors and actions.
  */

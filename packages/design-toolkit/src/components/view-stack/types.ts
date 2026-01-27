@@ -94,6 +94,7 @@ export type ViewStackTriggerProps = {
    * __ChainedEvents__ allow a list of events from a single control to enable multiple behaviors
    *
    * @example
+   * ```ts
    * // Clear a stack and then push a view on:
    * ['clear', myViewId]
    *
@@ -102,6 +103,7 @@ export type ViewStackTriggerProps = {
    *
    * // Hydrate a stack with multiple views:
    * [viewOneId, viewTwoId, viewThreeId]
+   * ```
    */
   for: SimpleEvents | TargetedEvents | ChainedEvents;
 };

@@ -30,6 +30,11 @@ import type { NoticeIconProps } from './types';
  * - serious: Warning icon
  * - critical: Problem icon
  *
+ * @example
+ * ```tsx
+ * <NoticeIcon color="serious" size="small" />
+ * ```
+ *
  * @param props - {@link NoticeIconProps}
  * @param props.color - Color variant determining which icon to display.
  * @param props.size - Size of the icon.

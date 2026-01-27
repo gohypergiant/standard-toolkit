@@ -29,6 +29,15 @@ import type { RadioGroupProps } from './types';
  * Groups related Radio components and manages their selection state.
  * Only one Radio can be selected at a time within a RadioGroup.
  *
+ * @example
+ * ```tsx
+ * <RadioGroup label="Size" value="medium" onChange={setValue}>
+ *   <Radio value="small">Small</Radio>
+ *   <Radio value="medium">Medium</Radio>
+ *   <Radio value="large">Large</Radio>
+ * </RadioGroup>
+ * ```
+ *
  * @param props - {@link RadioGroupProps}
  * @param props.ref - Forwarded ref for the group container.
  * @param props.classNames - Custom CSS class names for group and label.

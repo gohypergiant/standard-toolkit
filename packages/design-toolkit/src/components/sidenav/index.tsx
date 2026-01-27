@@ -40,6 +40,7 @@ import type {
  * @returns The rendered Sidenav component.
  *
  * @example
+ * ```tsx
  * <DrawerLayout push="left">
  *   <DrawerLayoutMain className="col-start-2">
  *     <SidenavTrigger>
@@ -88,6 +89,7 @@ import type {
  *     </SidenavFooter>
  *   </Sidenav>
  * </DrawerLayout>
+ * ```
  */
 export function Sidenav({
   id,

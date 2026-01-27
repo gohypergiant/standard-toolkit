@@ -36,7 +36,9 @@ import type { LinkProps } from './types';
  * @returns The rendered Link component.
  *
  * @example
+ * ```tsx
  * <Link href="/dashboard">Go to Dashboard</Link>
+ * ```
  */
 export function Link({ ref, ...props }: LinkProps) {
   [props, ref] = useContextProps(props, ref ?? null, LinkContext);

@@ -29,12 +29,14 @@ import { DrawerTrigger } from './trigger';
  * @returns The rendered DrawerBack button, or null if at root view.
  *
  * @example
+ * ```tsx
  * <DrawerView id={nestedViewId}>
  *   <DrawerHeader>
  *     <DrawerBack />
  *     <DrawerHeaderTitle>Nested View</DrawerHeaderTitle>
  *   </DrawerHeader>
  * </DrawerView>
+ * ```
  */
 export function DrawerBack() {
   const { stack } = useContext(ViewStackContext);

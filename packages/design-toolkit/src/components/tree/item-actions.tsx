@@ -18,6 +18,17 @@ import styles from './styles.module.css';
 /**
  * TreeItemActions - Container for action buttons in a tree item
  *
+ * @example
+ * ```tsx
+ * <TreeItemContent>
+ *   <TreeItemLabel>Document</TreeItemLabel>
+ *   <TreeItemActions>
+ *     <Button variant="icon"><Icon><Edit /></Icon></Button>
+ *     <Button variant="icon"><Icon><Delete /></Icon></Button>
+ *   </TreeItemActions>
+ * </TreeItemContent>
+ * ```
+ *
  * @param props - Component props.
  * @param props.children - Action buttons to render.
  * @param props.className - CSS class for the actions container.

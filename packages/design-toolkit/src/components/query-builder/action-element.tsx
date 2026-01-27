@@ -22,6 +22,15 @@ import type { ActionProps } from 'react-querybuilder';
  *
  * Renders a text-labeled button with support for disabled state translations.
  *
+ * @example
+ * ```tsx
+ * <ActionElement
+ *   title="Add Rule"
+ *   handleOnClick={() => console.log('clicked')}
+ *   disabled={false}
+ * />
+ * ```
+ *
  * @param props - ActionProps from react-querybuilder.
  * @returns The rendered ActionElement button.
  */

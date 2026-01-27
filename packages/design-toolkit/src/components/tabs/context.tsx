@@ -25,6 +25,18 @@ export const TabsContext =
 /**
  * Sets default props for all Tabs components within.
  *
+ * @example
+ * ```tsx
+ * <TabsProvider orientation="vertical">
+ *   <Tabs>
+ *     <TabList>
+ *       <Tab>Profile</Tab>
+ *       <Tab>Settings</Tab>
+ *     </TabList>
+ *   </Tabs>
+ * </TabsProvider>
+ * ```
+ *
  * @param props - ProviderProps with TabsProps.
  * @param props.children - Child components that receive the context.
  * @returns The TabsContext provider wrapping children.

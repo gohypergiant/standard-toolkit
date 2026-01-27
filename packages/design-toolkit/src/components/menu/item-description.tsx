@@ -23,7 +23,9 @@ import styles from './styles.module.css';
  * Renders as a Text component with the 'description' slot.
  *
  * @example
+ * ```tsx
  * <MenuItemDescription>Open the document for editing</MenuItemDescription>
+ * ```
  *
  * @param props - TextProps from react-aria-components.
  * @param props.children - Description text content.

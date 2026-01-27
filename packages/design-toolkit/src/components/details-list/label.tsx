@@ -24,10 +24,12 @@ import type { DetailsListLabelProps } from './types';
  * @returns The details list label component.
  *
  * @example
+ * ```tsx
  * <DetailsList>
  *   <DetailsListLabel>Name</DetailsListLabel>
  *   <DetailsListValue>John Doe</DetailsListValue>
  * </DetailsList>
+ * ```
  */
 export function DetailsListLabel(props: DetailsListLabelProps) {
   return <Text {...props} elementType='dt' slot='label' />;

@@ -27,7 +27,9 @@ import type { DrawerContextValue, DrawerEvent } from './types';
  * Context for sharing Drawer state across child components.
  *
  * @example
+ * ```tsx
  * const { register, unregister, placement } = useContext(DrawerContext);
+ * ```
  */
 export const DrawerContext = createContext<DrawerContextValue>({
   register: () => undefined,
@@ -39,8 +41,10 @@ export const DrawerContext = createContext<DrawerContextValue>({
  * Event bus instance for drawer-related events.
  *
  * @example
+ * ```tsx
  * import { bus } from './context';
  * bus.on('Drawer:open', (event) => console.log(event));
+ * ```
  */
 export const bus = Broadcast.getInstance<DrawerEvent>();
 
@@ -48,11 +52,13 @@ export const bus = Broadcast.getInstance<DrawerEvent>();
  * Event handlers for controlling drawer state programmatically.
  *
  * @example
+ * ```tsx
  * import { DrawerEventHandlers } from './context';
  *
  * DrawerEventHandlers.open(viewId);
  * DrawerEventHandlers.toggle(viewId);
  * DrawerEventHandlers.close(viewId);
+ * ```
  */
 export const DrawerEventHandlers = {
   ...ViewStackEventHandlers,
@@ -67,10 +73,12 @@ export const DrawerEventHandlers = {
  * @returns Object with methods to emit drawer events.
  *
  * @example
+ * ```tsx
  * const emit = useDrawerEmit();
  * emit.open(viewId);
  * emit.toggle(viewId);
  * emit.close();
+ * ```
  */
 export function useDrawerEmit() {
   const viewStackEmit = useViewStackEmit();

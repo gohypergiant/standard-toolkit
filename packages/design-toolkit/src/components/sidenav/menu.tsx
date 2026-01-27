@@ -36,6 +36,15 @@ import type { SidenavMenuProps } from './types';
  *
  * Provides a collapsible menu with items for the sidenav
  *
+ * @example
+ * ```tsx
+ * <SidenavMenu icon={<Icon><Settings /></Icon>} title="Settings">
+ *   <SidenavMenuItem>Profile</SidenavMenuItem>
+ *   <SidenavMenuItem>Preferences</SidenavMenuItem>
+ *   <SidenavMenuItem>Security</SidenavMenuItem>
+ * </SidenavMenu>
+ * ```
+ *
  * @param props - {@link SidenavMenuProps}
  * @param props.icon - Icon displayed before the menu title.
  * @param props.title - Menu title text.

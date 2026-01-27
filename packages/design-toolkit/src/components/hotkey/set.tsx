@@ -28,11 +28,13 @@ import type { ComponentPropsWithRef } from 'react';
  * @returns The rendered HotkeySet component.
  *
  * @example
+ * ```tsx
  * <HotkeySet>
  *   <Hotkey>CMD</Hotkey>
  *   <span>+</span>
  *   <Hotkey>K</Hotkey>
  * </HotkeySet>
+ * ```
  */
 export function HotkeySet({
   className,

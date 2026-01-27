@@ -42,33 +42,43 @@ import type { ToggleButtonProps } from './types';
  * @returns The toggle button component.
  *
  * @example
+ * ```tsx
  * // Basic toggle button
  * <ToggleButton>Toggle Feature</ToggleButton>
+ * ```
  *
  * @example
+ * ```tsx
  * // Controlled toggle button with different variants
  * <ToggleButton variant="flat" isSelected={isEnabled} onChange={setIsEnabled}>
  *   Enable Notifications
  * </ToggleButton>
+ * ```
  *
  * @example
+ * ```tsx
  * // Toggle button with icon and state
  * <ToggleButton variant="outline" isSelected={isFavorite} onChange={setIsFavorite}>
  *   <Icon><Heart /></Icon>
  *   {isFavorite ? 'Favorite' : 'Add to Favorites'}
  * </ToggleButton>
+ * ```
  *
  * @example
+ * ```tsx
  * // Icon-only toggle button
  * <ToggleButton variant="icon" isSelected={isBookmarked} onChange={setIsBookmarked}>
  *   <Icon><Bookmark /></Icon>
  * </ToggleButton>
+ * ```
  *
  * @example
+ * ```tsx
  * // Toggle button with different colors and sizes
  * <ToggleButton color="critical" size="small" isSelected={isEnabled}>
  *   Critical Toggle
  * </ToggleButton>
+ * ```
  */
 export function ToggleButton({ ref, ...props }: ToggleButtonProps) {
   [props, ref] = useContextProps(props, ref ?? null, ToggleButtonContext);

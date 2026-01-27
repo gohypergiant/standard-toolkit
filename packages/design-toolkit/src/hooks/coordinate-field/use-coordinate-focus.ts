@@ -53,6 +53,38 @@ export interface UseCoordinateFocusResult {
 /**
  * Manages focus navigation between coordinate input segments
  *
+ * @example
+ * ```tsx
+ * function CoordinateSegments({ configs }: { configs: SegmentConfig[] }) {
+ *   const {
+ *     segmentRefs,
+ *     focusedSegmentIndex,
+ *     focusNextSegment,
+ *     focusPreviousSegment,
+ *     handleSegmentKeyDown,
+ *     setFocusedSegmentIndex,
+ *   } = useCoordinateFocus({ editableSegmentConfigs: configs });
+ *
+ *   return (
+ *     <div>
+ *       {configs.map((config, i) => (
+ *         <input
+ *           key={i}
+ *           ref={segmentRefs[i]}
+ *           onFocus={() => setFocusedSegmentIndex(i)}
+ *           onKeyDown={(e) => {
+ *             handleSegmentKeyDown(i, e);
+ *             if (e.key === 'ArrowRight') focusNextSegment(i);
+ *             if (e.key === 'ArrowLeft') focusPreviousSegment(i);
+ *           }}
+ *           aria-current={focusedSegmentIndex === i || undefined}
+ *         />
+ *       ))}
+ *     </div>
+ *   );
+ * }
+ * ```
+ *
  * @param options - {@link UseCoordinateFocusOptions}
  * @param options.editableSegmentConfigs - Array of editable segment configurations.
  * @returns {@link UseCoordinateFocusResult} Focus management utilities and state.

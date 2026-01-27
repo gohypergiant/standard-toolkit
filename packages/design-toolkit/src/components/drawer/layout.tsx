@@ -26,12 +26,14 @@ import type { DrawerLayoutProps } from './types';
  * @returns The rendered DrawerLayout component.
  *
  * @example
+ * ```tsx
  * <DrawerLayout extend="left right" push="left">
  *   <DrawerLayoutMain>
  *     // Main content here
  *   </DrawerLayoutMain>
  *   <Drawer placement="left">...</Drawer>
  * </DrawerLayout>
+ * ```
  */
 export function DrawerLayout({
   className,

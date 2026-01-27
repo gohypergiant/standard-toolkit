@@ -32,10 +32,12 @@ import styles from './styles.module.css';
  * @returns The breadcrumbs navigation component.
  *
  * @example
+ * ```tsx
  * <Breadcrumbs>
  *   <BreadcrumbItem linkProps={{ href: '/' }}>Home</BreadcrumbItem>
  *   <BreadcrumbItem>Current</BreadcrumbItem>
  * </Breadcrumbs>
+ * ```
  */
 export function Breadcrumbs({
   children,

@@ -41,11 +41,13 @@ const ButtonColorMap: Record<NoticeColor, ButtonProps['color']> = {
  * Icons are automatically displayed based on the color variant.
  *
  * @example
+ * ```tsx
  * <Notice
  *   id="notice-1"
  *   message="Operation completed"
  *   color="normal"
  * />
+ * ```
  *
  * @param props - {@link NoticeProps}
  * @param props.id - Unique identifier for the notice.

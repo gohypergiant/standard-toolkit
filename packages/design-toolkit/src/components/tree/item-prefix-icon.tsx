@@ -18,6 +18,14 @@ import type { IconProps } from '../icon/types';
 /**
  * TreeItemPrefixIcon - Icon displayed before the tree item label
  *
+ * @example
+ * ```tsx
+ * <TreeItemContent>
+ *   <TreeItemPrefixIcon><Folder /></TreeItemPrefixIcon>
+ *   <TreeItemLabel>My Documents</TreeItemLabel>
+ * </TreeItemContent>
+ * ```
+ *
  * @param props - {@link IconProps}
  * @param props.children - Icon element to render.
  * @param props.className - CSS class for the icon container.

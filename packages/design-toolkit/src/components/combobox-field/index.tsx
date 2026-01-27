@@ -50,9 +50,11 @@ import type { ComboBoxFieldProps } from './types';
  * @returns The combobox field component.
  *
  * @example
+ * ```tsx
  * <ComboBoxField defaultItems={items}>
  *   {(item) => <OptionsItem key={item.id} textValue={item.name}>{item.name}</OptionsItem>}
  * </ComboBoxField>
+ * ```
  */
 export function ComboBoxField<T extends OptionsDataItem>({
   ref,

@@ -28,7 +28,9 @@ import type { LinesProps } from './types';
  * @returns The rendered Lines component.
  *
  * @example
+ * ```tsx
  * <Lines variant="branch" />
+ * ```
  */
 export function Lines({
   className,

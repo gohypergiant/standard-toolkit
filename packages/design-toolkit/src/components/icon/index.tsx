@@ -33,12 +33,15 @@ import type { IconProps } from './types';
  * @returns The rendered Icon component.
  *
  * @example
+ * ```tsx
  * // Basic icon usage
  * <Icon>
  *   <Settings />
  * </Icon>
+ * ```
  *
  * @example
+ * ```tsx
  * // Icon with different sizes
  * <Icon size="small">
  *   <User />
@@ -46,13 +49,16 @@ import type { IconProps } from './types';
  * <Icon size="large">
  *   <Dashboard />
  * </Icon>
+ * ```
  *
  * @example
+ * ```tsx
  * // Icon in button context (automatically inherits sizing)
  * <Button>
  *   <Icon><Plus /></Icon>
  *   Add Item
  * </Button>
+ * ```
  */
 export function Icon({ ref, ...props }: IconProps) {
   [props, ref] = useContextProps(props, ref ?? null, IconContext);

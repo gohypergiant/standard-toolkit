@@ -27,10 +27,12 @@ import type { LinkProps } from './types';
  * @returns The rendered LinkProvider component.
  *
  * @example
+ * ```tsx
  * <LinkProvider allowsVisited className="visited:underline">
  *   <Link href="/link1">Link One</Link>
  *   <Link href="/link2">Link Two</Link>
  * </LinkProvider>
+ * ```
  */
 export function LinkProvider({ children, ...props }: ProviderProps<LinkProps>) {
   return <LinkContext.Provider value={props}>{children}</LinkContext.Provider>;

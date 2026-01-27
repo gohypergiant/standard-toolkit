@@ -21,6 +21,31 @@ export interface UseTimeoutCleanupResult {
 /**
  * Registers timeouts for automatic cleanup on component unmount
  *
+ * @example
+ * ```tsx
+ * function ComponentWithTimeouts() {
+ *   const { registerTimeout } = useTimeoutCleanup();
+ *   const [message, setMessage] = useState('');
+ *
+ *   const handleClick = () => {
+ *     setMessage('Saving...');
+ *
+ *     registerTimeout(
+ *       setTimeout(() => {
+ *         setMessage('Saved!');
+ *       }, 1000)
+ *     );
+ *   };
+ *
+ *   return (
+ *     <div>
+ *       <Button onPress={handleClick}>Save</Button>
+ *       <span>{message}</span>
+ *     </div>
+ *   );
+ * }
+ * ```
+ *
  * @returns {@link UseTimeoutCleanupResult} Timeout registration function.
  */
 export function useTimeoutCleanup(): UseTimeoutCleanupResult {

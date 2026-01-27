@@ -20,6 +20,12 @@ const DEFAULT_UPPER_MID = 4;
 /**
  * Creates an array of numbers from start to end (inclusive).
  *
+ * @example
+ * ```tsx
+ * range(1, 5) // [1, 2, 3, 4, 5]
+ * range(3, 7) // [3, 4, 5, 6, 7]
+ * ```
+ *
  * @param start - The starting number of the range.
  * @param end - The ending number of the range (inclusive).
  * @returns An array of sequential numbers from start to end.
@@ -31,6 +37,13 @@ export function range(start: number, end: number) {
 
 /**
  * Checks if navigation should be disabled based on page bounds.
+ *
+ * @example
+ * ```tsx
+ * isNavigationDisabled(10, 5) // false - valid navigation
+ * isNavigationDisabled(0, 1)  // true - no pages
+ * isNavigationDisabled(5, 10) // true - current page exceeds total
+ * ```
  *
  * @param pageCount - Total number of pages.
  * @param currentPage - Current page number.
@@ -48,6 +61,14 @@ export function isNavigationDisabled(
 /**
  * Return min max range for visible pages. As per our design, we limit
  * the range of numbers to a spread of 5 maximum, getting the lower and upper bounds.
+ *
+ * @example
+ * ```tsx
+ * getPaginationRange(10, 1)  // { minRange: 1, maxRange: 5 }
+ * getPaginationRange(10, 5)  // { minRange: 3, maxRange: 7 }
+ * getPaginationRange(10, 10) // { minRange: 6, maxRange: 10 }
+ * getPaginationRange(3, 2)   // { minRange: 1, maxRange: 3 }
+ * ```
  *
  * @param pageCount - total page count
  * @param currentPage - current page

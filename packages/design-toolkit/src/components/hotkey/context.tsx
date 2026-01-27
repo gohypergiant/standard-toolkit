@@ -34,10 +34,12 @@ export const HotkeyContext =
  * @returns The rendered HotkeyProvider component.
  *
  * @example
+ * ```tsx
  * <HotkeyProvider variant="flat">
  *   <Hotkey>Ctrl</Hotkey>
  *   <Hotkey>C</Hotkey>
  * </HotkeyProvider>
+ * ```
  */
 export function HotkeyProvider({
   children,

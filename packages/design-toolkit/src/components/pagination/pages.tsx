@@ -28,6 +28,13 @@ import type { PaginationPagesProps } from './types';
  * Renders up to 5 page numbers, automatically adjusting the
  * visible range based on current page position.
  *
+ * @example
+ * ```tsx
+ * <Pagination page={3} total={20}>
+ *   <PaginationPages onPress={(page) => console.log('Go to page:', page)} />
+ * </Pagination>
+ * ```
+ *
  * @param props - {@link PaginationPagesProps}
  * @param props.className - Optional CSS class name.
  * @param props.onPress - Handler called when a page button is pressed.

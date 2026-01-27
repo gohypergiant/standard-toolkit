@@ -54,6 +54,31 @@ export interface UseCoordinateCopyResult {
 /**
  * Handles copying coordinates to clipboard with format conversion and visual feedback
  *
+ * @example
+ * ```tsx
+ * function CoordinateField() {
+ *   const { registerTimeout } = useTimeoutCleanup();
+ *   const [value, setValue] = useState<CoordinateValue | null>(null);
+ *   const [errors, setErrors] = useState<string[]>([]);
+ *
+ *   const { copiedFormat, handleCopyFormat, isFormatButtonEnabled } = useCoordinateCopy({
+ *     currentValue: value,
+ *     validationErrors: errors,
+ *     isDisabled: false,
+ *     registerTimeout,
+ *   });
+ *
+ *   return (
+ *     <Button
+ *       onPress={() => handleCopyFormat('dd')}
+ *       isDisabled={!isFormatButtonEnabled}
+ *     >
+ *       {copiedFormat === 'dd' ? <Check /> : <Copy />}
+ *     </Button>
+ *   );
+ * }
+ * ```
+ *
  * @param options - {@link UseCoordinateCopyOptions}
  * @param options.currentValue - Current coordinate value to copy (null if empty).
  * @param options.validationErrors - Array of validation error messages.

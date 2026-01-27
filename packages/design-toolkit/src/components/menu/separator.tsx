@@ -21,9 +21,11 @@ import styles from './styles.module.css';
  * MenuSeparator - Visual divider between menu items or sections
  *
  * @example
+ * ```tsx
  * <MenuItem>Copy</MenuItem>
  * <MenuSeparator />
  * <MenuItem>Delete</MenuItem>
+ * ```
  *
  * @param props - SeparatorProps from react-aria-components.
  * @param props.className - Optional CSS class name.

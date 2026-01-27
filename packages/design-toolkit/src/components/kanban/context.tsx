@@ -308,9 +308,11 @@ const KanbanContext = createContext<KanbanContextData>({
  * @returns The rendered KanbanProvider component.
  *
  * @example
+ * ```tsx
  * <KanbanProvider columns={columns} updateColumnState={setColumns}>
  *   <Kanban>...</Kanban>
  * </KanbanProvider>
+ * ```
  */
 export const KanbanProvider = ({
   children,

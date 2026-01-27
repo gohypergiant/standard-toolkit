@@ -40,12 +40,15 @@ import type { DeletableChipProps } from './types';
  * @returns The deletable chip component.
  *
  * @example
+ * ```tsx
  * <ChipList onRemove={(keys) => console.log('Removed:', keys)}>
  *   <DeletableChip id="tag1">JavaScript</DeletableChip>
  *   <DeletableChip id="tag2">Python</DeletableChip>
  * </ChipList>
+ * ```
  *
  * @example
+ * ```tsx
  * // With custom classNames
  * <ChipList onRemove={handleRemove}>
  *   <DeletableChip
@@ -55,6 +58,7 @@ import type { DeletableChipProps } from './types';
  *     Styled Tag
  *   </DeletableChip>
  * </ChipList>
+ * ```
  */
 export function DeletableChip({ ref, ...props }: DeletableChipProps) {
   [props, ref] = useContextProps(props, ref ?? null, ChipContext);

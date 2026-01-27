@@ -24,7 +24,9 @@ import type { ListItemTitleProps } from './types';
  * Automatically adjusts font size for cozy (header-m) and compact (header-s) variants.
  *
  * @example
+ * ```tsx
  * <ListItemTitle>John Doe</ListItemTitle>
+ * ```
  *
  * @param props - {@link ListItemTitleProps}
  * @param props.children - Title text content.

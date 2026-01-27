@@ -34,10 +34,12 @@ export const DetailsListContext =
  * @returns The details list context provider wrapping children.
  *
  * @example
+ * ```tsx
  * <DetailsListProvider align="left">
  *   <DetailsList>...</DetailsList>
  *   <DetailsList>...</DetailsList>
  * </DetailsListProvider>
+ * ```
  */
 export function DetailsListProvider({
   children,

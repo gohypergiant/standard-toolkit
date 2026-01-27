@@ -40,31 +40,41 @@ import type { ButtonProps } from './types';
  * @returns The button component.
  *
  * @example
+ * ```tsx
  * // Basic button
  * <Button>Click me</Button>
+ * ```
  *
  * @example
+ * ```tsx
  * // Primary button with different sizes
  * <Button variant="filled" size="large">Large Filled</Button>
  * <Button variant="outline" size="small">Small Outline</Button>
+ * ```
  *
  * @example
+ * ```tsx
  * // Button with icon
  * <Button variant="flat">
  *   <Icon><Plus /></Icon>
  *   Add Item
  * </Button>
+ * ```
  *
  * @example
+ * ```tsx
  * // Icon-only button
  * <Button variant="icon">
  *   <Icon><Settings /></Icon>
  * </Button>
+ * ```
  *
  * @example
+ * ```tsx
  * // Button with different colors
  * <Button color="critical">Critical Button</Button>
  * <Button color="serious">Delete</Button>
+ * ```
  */
 export function Button({ ref, ...props }: ButtonProps) {
   [props, ref] = useContextProps(props, ref ?? null, ButtonContext);

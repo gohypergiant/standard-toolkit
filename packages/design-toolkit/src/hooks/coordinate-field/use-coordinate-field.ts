@@ -81,6 +81,44 @@ export interface UseCoordinateFieldResult {
 /**
  * Manages coordinate field state, focus, copy, paste, and accessibility props
  *
+ * @example
+ * ```tsx
+ * function CoordinateFieldComponent() {
+ *   const [value, setValue] = useState<CoordinateValue | null>(null);
+ *
+ *   const {
+ *     state,
+ *     focus,
+ *     paste,
+ *     copy,
+ *     fieldProps,
+ *     labelProps,
+ *     isInvalid,
+ *     effectiveErrorMessage,
+ *   } = useCoordinateField({
+ *     value,
+ *     onChange: setValue,
+ *     format: 'dd',
+ *     label: 'Location',
+ *   });
+ *
+ *   return (
+ *     <div {...fieldProps}>
+ *       <label {...labelProps}>Location</label>
+ *       {state.editableSegmentConfigs.map((config, index) => (
+ *         <input
+ *           key={index}
+ *           ref={focus.segmentRefs[index]}
+ *           value={state.segmentValues[index]}
+ *           onChange={(e) => state.handleSegmentChange(index, e.target.value)}
+ *         />
+ *       ))}
+ *       {isInvalid && <span>{effectiveErrorMessage}</span>}
+ *     </div>
+ *   );
+ * }
+ * ```
+ *
  * @param props - {@link CoordinateFieldProps}
  * @param customAriaLabel - Custom aria-label for the field.
  * @param customAriaDescribedby - Custom aria-describedby IDs.

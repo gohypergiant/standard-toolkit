@@ -31,6 +31,17 @@ import type { TreeItemContentProps } from './types';
 /**
  * TreeItemContent - Renders the display content of a tree node
  *
+ * @example
+ * ```tsx
+ * <TreeItem id="node" textValue="Node">
+ *   <TreeItemContent>
+ *     <TreeItemPrefixIcon><Folder /></TreeItemPrefixIcon>
+ *     <TreeItemLabel>Folder Name</TreeItemLabel>
+ *     <TreeItemDescription>Contains 5 items</TreeItemDescription>
+ *   </TreeItemContent>
+ * </TreeItem>
+ * ```
+ *
  * @param props - {@link TreeItemContentProps}
  * @param props.children - Content to render, or a render function receiving TreeItemContentRenderProps.
  * @returns The rendered TreeItemContent component.

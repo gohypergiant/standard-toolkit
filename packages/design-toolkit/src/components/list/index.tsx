@@ -31,6 +31,7 @@ import type { ListProps } from './types';
  * data tables, file lists, or any selectable grid interface.
  *
  * @example
+ * ```tsx
  * // Basic list view with sizing
  * <div className='h-[400px] w-[300px]'>
  *   <List className='h-full' aria-label='Items'>
@@ -41,6 +42,7 @@ import type { ListProps } from './types';
  *     </ListItem>
  *   </List>
  * </div>
+ * ```
  *
  * @param props - {@link ListProps}
  * @param props.ref - Forwarded ref to the underlying GridList element.

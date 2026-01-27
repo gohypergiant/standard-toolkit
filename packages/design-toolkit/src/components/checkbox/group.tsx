@@ -35,17 +35,21 @@ import type { CheckboxGroupProps } from './types';
  * @returns The checkbox group component.
  *
  * @example
+ * ```tsx
  * <CheckboxGroup label="Preferences">
  *   <Checkbox value="email">Email</Checkbox>
  *   <Checkbox value="sms">SMS</Checkbox>
  * </CheckboxGroup>
+ * ```
  *
  * @example
+ * ```tsx
  * // Horizontal layout
  * <CheckboxGroup label="Features" orientation="horizontal">
  *   <Checkbox value="a">Feature A</Checkbox>
  *   <Checkbox value="b">Feature B</Checkbox>
  * </CheckboxGroup>
+ * ```
  */
 export function CheckboxGroup({ ref, ...props }: CheckboxGroupProps) {
   [props, ref] = useContextProps(props, ref ?? null, CheckboxGroupContext);

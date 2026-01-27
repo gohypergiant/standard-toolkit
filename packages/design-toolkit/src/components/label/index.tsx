@@ -34,16 +34,22 @@ import type { LabelProps } from './types';
  * @returns The rendered Label component.
  *
  * @example
+ * ```tsx
  * // Basic label
  * <Label>Username</Label>
+ * ```
  *
  * @example
+ * ```tsx
  * // Required field label
  * <Label isRequired>Email Address</Label>
+ * ```
  *
  * @example
+ * ```tsx
  * // Disabled label
  * <Label isDisabled>Inactive Field</Label>
+ * ```
  */
 export function Label({ ref, ...props }: LabelProps) {
   [props, ref] = useContextProps(props, ref ?? null, LabelContext);

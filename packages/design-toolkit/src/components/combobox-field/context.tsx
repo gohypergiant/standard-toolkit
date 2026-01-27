@@ -31,10 +31,12 @@ export const ComboBoxFieldContext =
  * @returns The combobox field context provider wrapping children.
  *
  * @example
+ * ```tsx
  * <ComboBoxFieldProvider size="small">
  *   <ComboBoxField defaultItems={items1}>{...}</ComboBoxField>
  *   <ComboBoxField defaultItems={items2}>{...}</ComboBoxField>
  * </ComboBoxFieldProvider>
+ * ```
  */
 export function ComboBoxFieldProvider<T extends OptionsDataItem>({
   children,

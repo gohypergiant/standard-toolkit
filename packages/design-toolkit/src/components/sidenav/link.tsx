@@ -32,6 +32,14 @@ import type { SidenavLinkProps } from './types';
  *
  * Provides a link with tooltip for the sidenav
  *
+ * @example
+ * ```tsx
+ * <SidenavLink href="https://example.com" textValue="External Link">
+ *   <Icon><Link /></Icon>
+ *   <Text>External Link</Text>
+ * </SidenavLink>
+ * ```
+ *
  * @param props - {@link SidenavLinkProps}
  * @param props.children - Link content (icon and text).
  * @param props.classNames - Custom CSS class names for link elements.

@@ -41,30 +41,38 @@ import type { CheckboxProps } from './types';
  * @returns The checkbox component.
  *
  * @example
+ * ```tsx
  * // Basic checkbox
  * <Checkbox>
  *   Accept terms and conditions
  * </Checkbox>
+ * ```
  *
  * @example
+ * ```tsx
  * // Checkbox group with multiple options
  * <CheckboxGroup label="Select preferences">
  *   <Checkbox value="notifications">Email notifications</Checkbox>
  *   <Checkbox value="marketing">Marketing emails</Checkbox>
  *   <Checkbox value="updates">Product updates</Checkbox>
  * </CheckboxGroup>
+ * ```
  *
  * @example
+ * ```tsx
  * // Disabled checkbox
  * <Checkbox isDisabled>
  *   Unavailable option
  * </Checkbox>
+ * ```
  *
  * @example
+ * ```tsx
  * // Indeterminate checkbox (partial selection)
  * <Checkbox isIndeterminate>
  *   Select all items
  * </Checkbox>
+ * ```
  */
 export function Checkbox({ ref, ...props }: CheckboxProps) {
   [props, ref] = useContextProps(props, ref ?? null, CheckboxContext);

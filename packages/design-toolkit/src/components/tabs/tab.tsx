@@ -24,6 +24,15 @@ import styles from './styles.module.css';
 /**
  * Tab - Selectable tab within a TabList.
  *
+ * @example
+ * ```tsx
+ * <TabList>
+ *   <Tab id="profile">Profile</Tab>
+ *   <Tab id="settings">Settings</Tab>
+ *   <Tab id="notifications" isDisabled>Notifications</Tab>
+ * </TabList>
+ * ```
+ *
  * @param props - TabProps from react-aria-components.
  * @param props.children - Tab label content.
  * @param props.className - CSS class for the tab.

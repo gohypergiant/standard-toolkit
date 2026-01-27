@@ -41,6 +41,7 @@ import type { DialogProps } from './types';
  * @returns The dialog component.
  *
  * @example
+ * ```tsx
  * // Basic dialog with trigger
  * <DialogTrigger>
  *   <Button>Open Dialog</Button>
@@ -56,6 +57,7 @@ import type { DialogProps } from './types';
  *     )}
  *   </Dialog>
  * </DialogTrigger>
+ * ```
  */
 export function Dialog({ ref, ...props }: DialogProps) {
   [props, ref] = useContextProps(props, ref ?? null, DialogContext);

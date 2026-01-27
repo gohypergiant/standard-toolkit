@@ -31,10 +31,12 @@ export const ButtonContext =
  * @returns The button context provider wrapping children.
  *
  * @example
+ * ```tsx
  * <ButtonProvider size="small" variant="outline">
  *   <Button>Button 1</Button>
  *   <Button>Button 2</Button>
  * </ButtonProvider>
+ * ```
  */
 export function ButtonProvider({
   children,
@@ -59,10 +61,12 @@ export const LinkButtonContext =
  * @returns The link button context provider wrapping children.
  *
  * @example
+ * ```tsx
  * <LinkButtonProvider size="small" variant="outline">
  *   <LinkButton href="/page1">Link 1</LinkButton>
  *   <LinkButton href="/page2">Link 2</LinkButton>
  * </LinkButtonProvider>
+ * ```
  */
 export function LinkButtonProvider({
   children,
@@ -89,10 +93,12 @@ export const ToggleButtonContext =
  * @returns The toggle button context provider wrapping children.
  *
  * @example
+ * ```tsx
  * <ToggleButtonProvider size="small" variant="flat">
  *   <ToggleButton>Toggle 1</ToggleButton>
  *   <ToggleButton>Toggle 2</ToggleButton>
  * </ToggleButtonProvider>
+ * ```
  */
 export function ToggleButtonProvider({
   children,

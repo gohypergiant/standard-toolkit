@@ -25,10 +25,12 @@ import type { DrawerMenuProps } from './types';
  * @returns The rendered DrawerMenu component.
  *
  * @example
+ * ```tsx
  * <DrawerMenu position="center">
  *   <DrawerMenuItem for={viewA}>View A</DrawerMenuItem>
  *   <DrawerMenuItem for={viewB}>View B</DrawerMenuItem>
  * </DrawerMenu>
+ * ```
  */
 export function DrawerMenu({
   className,

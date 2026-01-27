@@ -23,11 +23,13 @@ import type { ComponentPropsWithRef } from 'react';
  * @returns The rendered DrawerPanel component.
  *
  * @example
+ * ```tsx
  * <Drawer id={drawerId} defaultView={viewId}>
  *   <DrawerPanel>
  *     <DrawerView id={viewId}>...</DrawerView>
  *   </DrawerPanel>
  * </Drawer>
+ * ```
  */
 export function DrawerPanel({
   className,

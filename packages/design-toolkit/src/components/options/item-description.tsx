@@ -18,6 +18,11 @@ import type { TextProps } from 'react-aria-components';
 /**
  * OptionsItemDescription - Secondary text description for an options item
  *
+ * @example
+ * ```tsx
+ * <OptionsItemDescription>Additional details about this option</OptionsItemDescription>
+ * ```
+ *
  * @param props - TextProps from react-aria-components.
  * @param props.className - Optional CSS class name.
  * @returns The rendered OptionsItemDescription component.

@@ -35,14 +35,19 @@ const DEFAULT_FORMATTER = new Intl.DateTimeFormat('en-US', {
  * @returns The clock component displaying current time.
  *
  * @example
+ * ```tsx
  * // Standard Clock
  * <Clock /> // <time>15:54:14 UTC</time>
+ * ```
  *
  * @example
+ * ```tsx
  * // Styled
  * <Clock className="fg-accent-primary-bold" />
+ * ```
  *
  * @example
+ * ```tsx
  * // Custom Format
  * const formatter = new Intl.DateTimeFormat('en-US', {
  *   dateStyle: "short",
@@ -52,6 +57,7 @@ const DEFAULT_FORMATTER = new Intl.DateTimeFormat('en-US', {
  * });
  *
  * <Clock formatter={formatter} /> // <time>9/30/25, 15:54:14 UTC</time>
+ * ```
  *
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat| DateTimeFormat MDN}
  */

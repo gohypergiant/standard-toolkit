@@ -23,10 +23,12 @@ import type { ListItemContentProps } from './types';
  * Should contain ListItemTitle and optionally ListItemDescription components.
  *
  * @example
+ * ```tsx
  * <ListItemContent>
  *   <ListItemTitle>Item Title</ListItemTitle>
  *   <ListItemDescription>Optional description text</ListItemDescription>
  * </ListItemContent>
+ * ```
  *
  * @param props - {@link ListItemContentProps}
  * @param props.className - Optional CSS class name.

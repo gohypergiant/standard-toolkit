@@ -18,6 +18,11 @@ import type { TextProps } from 'react-aria-components';
 /**
  * OptionsItemLabel - Primary text label for an options item
  *
+ * @example
+ * ```tsx
+ * <OptionsItemLabel>Option Name</OptionsItemLabel>
+ * ```
+ *
  * @param props - TextProps from react-aria-components.
  * @param props.className - Optional CSS class name.
  * @returns The rendered OptionsItemLabel component.

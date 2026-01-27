@@ -24,6 +24,14 @@ export const SwitchContext =
 /**
  * Sets default props for all Switch components within.
  *
+ * @example
+ * ```tsx
+ * <SwitchProvider isDisabled={true}>
+ *   <Switch>Option 1</Switch>
+ *   <Switch>Option 2</Switch>
+ * </SwitchProvider>
+ * ```
+ *
  * @param props - ProviderProps with SwitchProps.
  * @param props.children - Child components that receive the context.
  * @returns The SwitchContext provider wrapping children.

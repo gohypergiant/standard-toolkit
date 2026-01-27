@@ -44,15 +44,21 @@ const fallbackContent = {
  * @returns The classification badge component.
  *
  * @example
+ * ```tsx
  * <ClassificationBadge variant="secret" />
+ * ```
  *
  * @example
+ * ```tsx
  * // With custom text
  * <ClassificationBadge variant="top-secret">TOP SECRET//NOFORN</ClassificationBadge>
+ * ```
  *
  * @example
+ * ```tsx
  * // Different sizes
  * <ClassificationBadge variant="confidential" size="small" />
+ * ```
  */
 export function ClassificationBadge({
   ref,

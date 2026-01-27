@@ -28,10 +28,12 @@ import type { MenuSectionProps } from './types';
  * Use to organize menu items into logical groups with visual separation.
  *
  * @example
+ * ```tsx
  * <MenuSection title="File Actions">
  *   <MenuItem>New</MenuItem>
  *   <MenuItem>Open</MenuItem>
  * </MenuSection>
+ * ```
  *
  * @param props - {@link MenuSectionProps}
  * @param props.children - Menu items to render in the section.

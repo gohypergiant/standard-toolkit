@@ -37,17 +37,21 @@ import type { SelectableChipProps } from './types';
  * @returns The selectable chip component.
  *
  * @example
+ * ```tsx
  * <ChipList selectionMode="multiple">
  *   <SelectableChip id="react">React</SelectableChip>
  *   <SelectableChip id="vue">Vue</SelectableChip>
  * </ChipList>
+ * ```
  *
  * @example
+ * ```tsx
  * // With colors
  * <ChipList selectionMode="single">
  *   <SelectableChip id="up" color="normal">UP</SelectableChip>
  *   <SelectableChip id="down" color="critical">DOWN</SelectableChip>
  * </ChipList>
+ * ```
  */
 export function SelectableChip({ ref, ...props }: SelectableChipProps) {
   [props, ref] = useContextProps(props, ref ?? null, ChipContext);

@@ -26,10 +26,12 @@ import type { OptionsDataItem, OptionsItemProps } from './types';
  * String children are automatically wrapped in OptionsItemLabel.
  *
  * @example
+ * ```tsx
  * <OptionsItem textValue="Edit">
  *   <Icon><Edit /></Icon>
  *   <OptionsItemLabel>Edit</OptionsItemLabel>
  * </OptionsItem>
+ * ```
  *
  * @param props - {@link OptionsItemProps}
  * @param props.children - Content to render inside the item.

@@ -25,10 +25,12 @@ import type { DetailsListValueProps } from './types';
  * @returns The details list value component.
  *
  * @example
+ * ```tsx
  * <DetailsList>
  *   <DetailsListLabel>Name</DetailsListLabel>
  *   <DetailsListValue>John Doe</DetailsListValue>
  * </DetailsList>
+ * ```
  */
 export function DetailsListValue(props: DetailsListValueProps) {
   return <Text {...props} elementType='dd' slot='value' />;

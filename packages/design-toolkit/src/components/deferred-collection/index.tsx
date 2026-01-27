@@ -27,6 +27,7 @@ import type { DeferredCollectionProps } from './types';
  * @returns The deferred collection component with fallback or children.
  *
  * @example
+ * ```tsx
  * <DeferredCollection fallback={<LoadingState />}>
  *   {() => (
  *     <Virtualizer>
@@ -36,6 +37,7 @@ import type { DeferredCollectionProps } from './types';
  *     </Virtualizer>
  *   )}
  * </DeferredCollection>
+ * ```
  */
 export function DeferredCollection({
   children,

@@ -28,6 +28,18 @@ import type { SidenavHeaderProps, SidenavToggleEvent } from './types';
  *
  * Provides a header with toggle button for the sidenav
  *
+ * @example
+ * ```tsx
+ * <Sidenav>
+ *   <SidenavHeader>
+ *     <SidenavAvatar>
+ *       <Avatar>JD</Avatar>
+ *       <Heading>John Doe</Heading>
+ *     </SidenavAvatar>
+ *   </SidenavHeader>
+ * </Sidenav>
+ * ```
+ *
  * @param props - {@link SidenavHeaderProps}
  * @param props.children - Header content (typically SidenavAvatar).
  * @param props.classNames - Custom CSS class names for header elements.

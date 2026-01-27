@@ -32,23 +32,29 @@ import type { ActionBarProps } from './types';
  * @returns The action bar navigation element.
  *
  * @example
+ * ```tsx
  * <ActionBar>
  *   <Button><Icon><Copy /></Icon></Button>
  *   <Button><Icon><Delete /></Icon></Button>
  * </ActionBar>
+ * ```
  *
  * @example
+ * ```tsx
  * // With ToggleButton
  * <ActionBar>
  *   <ToggleButton><Icon><Bold /></Icon></ToggleButton>
  *   <ToggleButton><Icon><Italic /></Icon></ToggleButton>
  * </ActionBar>
+ * ```
  *
  * @example
+ * ```tsx
  * // Flat elevation for embedded contexts
  * <ActionBar elevation="flat">
  *   <Button><Icon><Copy /></Icon></Button>
  * </ActionBar>
+ * ```
  */
 export function ActionBar({
   className,

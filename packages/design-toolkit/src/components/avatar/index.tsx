@@ -38,21 +38,27 @@ import type { AvatarProps } from './types';
  * @returns The avatar component.
  *
  * @example
+ * ```tsx
  * <Avatar imageProps={{ src: "/user.jpg", alt: "User Name" }} />
+ * ```
  *
  * @example
+ * ```tsx
  * // With initials fallback
  * <Avatar
  *   size="small"
  *   imageProps={{ src: "/user.jpg", alt: "User Name" }}
  *   fallbackProps={{ children: "UN" }}
  * />
+ * ```
  *
  * @example
+ * ```tsx
  * // With status badge
  * <Avatar imageProps={{ src: "/user.jpg", alt: "User Name" }}>
  *   <Badge color="critical">3</Badge>
  * </Avatar>
+ * ```
  */
 export function Avatar({ ref, ...props }: AvatarProps) {
   [props, ref] = useContextProps(props, ref ?? null, AvatarContext);

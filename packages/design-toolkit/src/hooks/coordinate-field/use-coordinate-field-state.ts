@@ -79,6 +79,44 @@ export interface UseCoordinateFieldStateResult {
 /**
  * Manages coordinate segment values, validation, and format conversion
  *
+ * @example
+ * ```tsx
+ * function CoordinateInputs() {
+ *   const [value, setValue] = useState<CoordinateValue | null>(null);
+ *   const { registerTimeout } = useTimeoutCleanup();
+ *
+ *   const {
+ *     currentValue,
+ *     segmentValues,
+ *     validationErrors,
+ *     editableSegmentConfigs,
+ *     handleSegmentChange,
+ *   } = useCoordinateFieldState({
+ *     value,
+ *     format: 'ddm',
+ *     onChange: setValue,
+ *     onError: (msg) => console.error(msg),
+ *     registerTimeout,
+ *   });
+ *
+ *   return (
+ *     <div>
+ *       {editableSegmentConfigs.map((config, i) => (
+ *         <input
+ *           key={i}
+ *           value={segmentValues[i]}
+ *           onChange={(e) => handleSegmentChange(i, e.target.value)}
+ *           placeholder={config.placeholder}
+ *         />
+ *       ))}
+ *       {validationErrors.map((error, i) => (
+ *         <span key={i}>{error}</span>
+ *       ))}
+ *     </div>
+ *   );
+ * }
+ * ```
+ *
  * @param options - {@link UseCoordinateFieldStateOptions}
  * @param options.value - Controlled coordinate value.
  * @param options.defaultValue - Default value for uncontrolled mode.

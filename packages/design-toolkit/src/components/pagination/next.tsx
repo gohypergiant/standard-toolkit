@@ -27,6 +27,13 @@ import type { PaginationNextProps } from './types';
 /**
  * PaginationNext - Next page navigation button
  *
+ * @example
+ * ```tsx
+ * <Pagination page={1} total={10}>
+ *   <PaginationNext onPress={(page) => console.log('Next page:', page)} />
+ * </Pagination>
+ * ```
+ *
  * @param props - {@link PaginationNextProps}
  * @param props.className - Optional CSS class name.
  * @param props.onPress - Handler called when the next button is pressed.

@@ -27,6 +27,7 @@ import type { ListItemProps } from './types';
  * wrapped in a ListItemTitle.
  *
  * @example
+ * ```tsx
  * <ListItem textValue="User item">
  *   <Icon><Avatar /></Icon>
  *   <ListItemContent>
@@ -34,6 +35,7 @@ import type { ListItemProps } from './types';
  *     <ListItemDescription>Software Engineer</ListItemDescription>
  *   </ListItemContent>
  * </ListItem>
+ * ```
  *
  * @param props - {@link ListItemProps}
  * @param props.children - Content to render inside the list item.

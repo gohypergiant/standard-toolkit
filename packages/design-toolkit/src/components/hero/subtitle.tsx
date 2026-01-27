@@ -20,11 +20,13 @@ import { Text } from 'react-aria-components';
  * Zero or more allowed per Hero for displaying additional metadata.
  *
  * @example
+ * ```tsx
  * <Hero>
  *   <Icon><User /></Icon>
  *   <HeroTitle>John Doe</HeroTitle>
  *   <HeroSubtitle>Software Engineer</HeroSubtitle>
  *   <HeroSubtitle>San Francisco, CA</HeroSubtitle>
  * </Hero>
+ * ```
  */
 export const HeroSubtitle = Text;
