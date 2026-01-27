@@ -14,26 +14,71 @@ import { describe, expect, it } from 'vitest';
 import { random, randomInt } from './';
 
 describe('random', () => {
-  it('generates random numbers', () => {
-    const value = random(0, 1);
+  describe('random', () => {
+    it('should generate number within specified range', () => {
+      const value = random(0, 1);
 
-    expect(value).toBeGreaterThanOrEqual(0);
-    expect(value).toBeLessThanOrEqual(1);
-    expect(random(0, 0)).toBeCloseTo(0);
-    expect(random(1, 1)).toBeCloseTo(1);
+      expect(value).toBeGreaterThanOrEqual(0);
+      expect(value).toBeLessThanOrEqual(1);
+    });
+
+    it.each`
+      min   | max   | scenario
+      ${0}  | ${0}  | ${'min equals max at zero'}
+      ${1}  | ${1}  | ${'min equals max at one'}
+      ${-5} | ${-5} | ${'min equals max at negative value'}
+    `('should return approximately $min when $scenario', ({ min, max }) => {
+      const value = random(min, max);
+
+      expect(value).toBeCloseTo(min);
+    });
+
+    it('should generate number within negative range', () => {
+      const min = -10;
+      const max = -5;
+
+      const value = random(min, max);
+
+      expect(value).toBeGreaterThanOrEqual(min);
+      expect(value).toBeLessThanOrEqual(max);
+    });
+
+    it('should throw RangeError when min exceeds max', () => {
+      expect(() => random(1, 0)).toThrow('Min exceeded max');
+    });
   });
 
-  it('generates random integers', () => {
-    const value = randomInt(0, 1);
+  describe('randomInt', () => {
+    it('should generate integer within specified range', () => {
+      const value = randomInt(0, 1);
 
-    expect(value).toBeGreaterThanOrEqual(0);
-    expect(value).toBeLessThanOrEqual(1);
-    expect(randomInt(0, 0)).toEqual(0);
-    expect(randomInt(1, 1)).toEqual(1);
-  });
+      expect(value).toBeGreaterThanOrEqual(0);
+      expect(value).toBeLessThanOrEqual(1);
+    });
 
-  it('throws when min is greater than max', () => {
-    expect(() => random(1, 0)).toThrow(RangeError);
-    expect(() => randomInt(1, 0)).toThrow(RangeError);
+    it.each`
+      min  | max  | expected | scenario
+      ${0} | ${0} | ${0}     | ${'min equals max at zero'}
+      ${1} | ${1} | ${1}     | ${'min equals max at one'}
+    `('should return $expected when $scenario', ({ min, max, expected }) => {
+      const value = randomInt(min, max);
+
+      expect(value).toEqual(expected);
+    });
+
+    it('should handle floating point boundaries correctly', () => {
+      const min = 0.5;
+      const max = 10.5;
+
+      const value = randomInt(min, max);
+
+      expect(Number.isInteger(value)).toBe(true);
+      expect(value).toBeGreaterThanOrEqual(Math.ceil(min));
+      expect(value).toBeLessThanOrEqual(Math.floor(max));
+    });
+
+    it('should throw RangeError when min exceeds max', () => {
+      expect(() => randomInt(1, 0)).toThrow('Min exceeded max');
+    });
   });
 });

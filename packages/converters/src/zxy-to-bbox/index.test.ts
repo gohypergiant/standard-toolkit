@@ -52,4 +52,39 @@ describe('tile-to-bbox', () => {
 
     expect(bbox).toStrictEqual(expected);
   });
+
+  describe('edge cases', () => {
+    it('should handle minimum tile values (x=0, y=0, z=0)', () => {
+      const bbox = zxyToBbox([0, 0, 0]);
+
+      expect(bbox[0]).toEqual(-180);
+      expect(bbox[1]).toBeCloseTo(-85.051, 3);
+      expect(bbox[2]).toEqual(180);
+      expect(bbox[3]).toBeCloseTo(85.051, 3);
+    });
+
+    it('should handle tiles at world boundaries', () => {
+      const bbox = zxyToBbox([0, 0, 1]);
+
+      expect(bbox[0]).toEqual(-180);
+      expect(bbox[2]).toEqual(0);
+      expect(bbox[3]).toBeCloseTo(85.051, 3);
+    });
+
+    it('should handle high zoom level tiles', () => {
+      const bbox = zxyToBbox([512, 512, 10]);
+
+      expect(bbox).toBeDefined();
+      expect(bbox).toHaveLength(4);
+      expect(bbox[2]).toBeGreaterThan(bbox[0]);
+    });
+
+    it('should handle tiles crossing hemispheres', () => {
+      const bbox = zxyToBbox([1, 0, 1]);
+
+      expect(bbox[0]).toEqual(0);
+      expect(bbox[2]).toEqual(180);
+      expect(bbox[3]).toBeCloseTo(85.051, 3);
+    });
+  });
 });

@@ -51,11 +51,11 @@ const truthy = [
 ];
 
 describe('toBoolean', () => {
-  it.each(falsy)('%s', (val) => {
+  it.each(falsy)('should return false for %s', (val) => {
     expect(toBoolean(val)).toBe(false);
   });
 
-  it.each(truthy)('%s', (val) => {
+  it.each(truthy)('should return true for %s', (val) => {
     expect(toBoolean(val)).toBe(true);
   });
 });
