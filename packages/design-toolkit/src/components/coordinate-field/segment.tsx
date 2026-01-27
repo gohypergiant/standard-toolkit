@@ -98,6 +98,11 @@ export function CoordinateSegment({
 
   const effectiveIsDisabled = contextState.isDisabled ?? isDisabled;
 
+  const allowedCharsRegex = useMemo(() => {
+    if (!allowedChars) return null;
+    return new RegExp(`^${allowedChars}*$`, 'i');
+  }, [allowedChars]);
+
   // Calculate dynamic width based on focus state
   const dynamicWidth = useMemo(() => {
     if (maxLength === undefined) {
@@ -115,11 +120,8 @@ export function CoordinateSegment({
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
 
-    if (allowedChars) {
-      const regex = new RegExp(`^${allowedChars}*$`, 'i');
-      if (!regex.test(newValue)) {
-        return;
-      }
+    if (allowedCharsRegex && !allowedCharsRegex.test(newValue)) {
+      return;
     }
 
     if (maxLength && newValue.length > maxLength) {
@@ -139,12 +141,9 @@ export function CoordinateSegment({
   const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
     const pastedText = e.clipboardData.getData('text');
 
-    if (allowedChars) {
-      const regex = new RegExp(`^${allowedChars}*$`);
-      if (!regex.test(pastedText)) {
-        e.preventDefault();
-        return;
-      }
+    if (allowedCharsRegex && !allowedCharsRegex.test(pastedText)) {
+      e.preventDefault();
+      return;
     }
 
     if (maxLength && pastedText.length > maxLength) {
