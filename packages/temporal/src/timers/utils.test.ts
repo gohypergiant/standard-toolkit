@@ -59,9 +59,10 @@ describe('remainder', () => {
   });
 
   describe('edge cases', () => {
-    it('should return NaN for zero interval', () => {
-      const interval = 0;
-
+    it.each([
+      { interval: 0, description: 'zero' },
+      { interval: Number.NaN, description: 'NaN' },
+    ])('should return NaN for $description interval', ({ interval }) => {
       const result = remainder(interval);
 
       expect(result).toBeNaN();
@@ -90,32 +91,27 @@ describe('remainder', () => {
       expect(result).toBeLessThanOrEqual(interval);
     });
 
-    it('should return positive Infinity for positive Infinity interval', () => {
+    it.each([
+      {
+        interval: Number.POSITIVE_INFINITY,
+        expected: Number.POSITIVE_INFINITY,
+        description: 'positive Infinity',
+      },
+      {
+        interval: Number.NEGATIVE_INFINITY,
+        expected: Number.NEGATIVE_INFINITY,
+        description: 'negative Infinity',
+      },
+    ])('should return $description for $description interval', ({
+      interval,
+      expected,
+    }) => {
       const now = 1234567890;
-      const interval = Number.POSITIVE_INFINITY;
       vi.setSystemTime(now);
 
       const result = remainder(interval);
 
-      expect(result).toBe(Number.POSITIVE_INFINITY);
-    });
-
-    it('should return negative Infinity for negative Infinity interval', () => {
-      const now = 1234567890;
-      const interval = Number.NEGATIVE_INFINITY;
-      vi.setSystemTime(now);
-
-      const result = remainder(interval);
-
-      expect(result).toBe(Number.NEGATIVE_INFINITY);
-    });
-
-    it('should return NaN for NaN interval', () => {
-      const interval = Number.NaN;
-
-      const result = remainder(interval);
-
-      expect(result).toBeNaN();
+      expect(result).toBe(expected);
     });
   });
 });

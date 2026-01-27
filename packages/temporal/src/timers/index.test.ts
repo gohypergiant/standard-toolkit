@@ -94,7 +94,7 @@ describe('setClockInterval', () => {
       vi.advanceTimersByTime(ms);
       vi.advanceTimersByTime(interval);
       const callCountBeforeCleanup = callback.mock.calls.length;
-      expect(callCountBeforeCleanup).toBeGreaterThan(0);
+      expect(callCountBeforeCleanup).toBeGreaterThanOrEqual(1);
 
       cleanup();
 
@@ -123,7 +123,7 @@ describe('setClockInterval', () => {
   });
 
   describe('edge cases', () => {
-    it('should treat zero interval as immediate execution', () => {
+    it('should handle zero interval', () => {
       const callback = vi.fn();
       const interval = 0;
 
@@ -131,8 +131,8 @@ describe('setClockInterval', () => {
 
       vi.advanceTimersByTime(ms);
 
-      expect(typeof cleanup).toBe('function');
       expect(callback).toHaveBeenCalled();
+      expect(typeof cleanup).toBe('function');
 
       cleanup();
     });
@@ -145,6 +145,7 @@ describe('setClockInterval', () => {
 
       vi.advanceTimersByTime(ms);
 
+      expect(callback).toHaveBeenCalled();
       expect(typeof cleanup).toBe('function');
 
       cleanup();
@@ -157,6 +158,7 @@ describe('setClockInterval', () => {
       const cleanup = setClockInterval(callback, interval);
 
       vi.advanceTimersByTime(ms);
+
       expect(callback).toHaveBeenCalledTimes(1);
       expect(typeof cleanup).toBe('function');
 
@@ -303,23 +305,13 @@ describe('setClockTimeout', () => {
   });
 
   describe('edge cases', () => {
-    it('should treat zero timeout as immediate execution', () => {
+    it.each([
+      { timeout: 0, description: 'zero' },
+      { timeout: -1000, description: 'negative' },
+    ])('should treat $description timeout as immediate execution', ({
+      timeout,
+    }) => {
       const callback = vi.fn();
-      const timeout = 0;
-
-      const cleanup = setClockTimeout(callback, timeout);
-
-      vi.advanceTimersByTime(ms);
-
-      expect(callback).toHaveBeenCalledTimes(1);
-      expect(typeof cleanup).toBe('function');
-
-      cleanup();
-    });
-
-    it('should treat negative timeout as immediate execution', () => {
-      const callback = vi.fn();
-      const timeout = -1000;
 
       const cleanup = setClockTimeout(callback, timeout);
 
