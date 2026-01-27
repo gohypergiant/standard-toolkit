@@ -5,7 +5,7 @@ compatibility: Requires vitest testing framework
 license: Apache-2.0
 metadata:
   author: gohypergiant
-  version: "2.2"
+  version: "2.3"
 ---
 
 # Vitest Best Practices
@@ -101,8 +101,4 @@ Each reference file contains:
 
 ## Quick Example
 
-<<<<<<< HEAD
 See [quick-start.md](references/quick-start.md) for a complete before/after example showing how this skill transforms unclear tests into clear, maintainable ones.
-=======
-See [quick-start.md](references/quick-start.md) for a complete before/after example showing how this skill transforms unclear tests into clear, maintainable ones.
->>>>>>> 744a3be6498a4869e820268422061e2a791013ac
