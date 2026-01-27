@@ -66,9 +66,11 @@ const formats = {
  * @returns Function that validates coordinate components and returns parse results.
  *
  * @example
+ * ```typescript
  * const validator = identifyErrors('LATLON');
  * const result = validator({ deg: '91', bear: 'N' }, 0);
  * // [[], ['Degrees value (91) exceeds max value (90).']]
+ * ```
  */
 function identifyErrors(format: Format) {
   return (arg: DecimalDegrees | undefined, i: number) => {
@@ -108,12 +110,16 @@ function identifyErrors(format: Format) {
  * @returns Object with `bear` and `deg` properties, or undefined if invalid.
  *
  * @example
+ * ```typescript
  * identifyPieces(['45.5', 'N']);
  * // { bear: 'N', deg: '45.5' }
+ * ```
  *
  * @example
+ * ```typescript
  * identifyPieces(['122.4', 'W']);
  * // { bear: 'W', deg: '122.4' }
+ * ```
  */
 function identifyPieces(half: string[]) {
   if (half.length > 2 || half.length < 1) {
@@ -144,12 +150,16 @@ function identifyPieces(half: string[]) {
  * @returns Parsed coordinate values or errors.
  *
  * @example
+ * ```typescript
  * parseDecimalDegrees('37.7749° N / 122.4194° W', 'LATLON');
  * // [[37.7749, -122.4194], []]
+ * ```
  *
  * @example
+ * ```typescript
  * parseDecimalDegrees('45.5 N, 122.6 W');
  * // [[45.5, -122.6], []]
+ * ```
  */
 export const parseDecimalDegrees = createParser<DecimalDegrees>({
   formats,

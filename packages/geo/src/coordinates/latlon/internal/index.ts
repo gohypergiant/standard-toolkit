@@ -87,12 +87,16 @@ export const SYMBOL_PATTERNS = {
  * @returns Combined regex pattern with precise boundary matching.
  *
  * @example
+ * ```typescript
  * const minutesPattern = decimalSecAndMin(SYMBOL_PATTERNS.MINUTES);
  * // Matches: "30.5'", "59.999999999", ".5'", "001'", etc.
+ * ```
  *
  * @example
+ * ```typescript
  * const secondsPattern = decimalSecAndMin(SYMBOL_PATTERNS.SECONDS);
  * // Matches: '45.23"', '0.5', '59.9999999999"', etc.
+ * ```
  */
 const decimalSecAndMin = (symbol: RegExp) =>
   Patterning.optional(

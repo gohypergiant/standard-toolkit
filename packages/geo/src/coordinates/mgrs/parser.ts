@@ -26,8 +26,10 @@ const PATTERN_PARTS =
  * @returns Parse results tuple with empty data array and error message array.
  *
  * @example
+ * ```typescript
  * error('Invalid UTM zone');
  * // [[], ['Invalid UTM zone; expected format DDZ AA DDD DDD.']]
+ * ```
  */
 const error = (message: string) =>
   [
@@ -45,12 +47,16 @@ const error = (message: string) =>
  * @returns Parse results with detailed error messages for validation failures.
  *
  * @example
+ * ```typescript
  * detailedErrors('99Z AA 12345 67890');
  * // [[], ['Invalid UTM zone number (99) found in grid zone designation; expected format DDZ AA DDD DDD.']]
+ * ```
  *
  * @example
+ * ```typescript
  * detailedErrors('31U BF 12345 67890');
  * // Valid format, parsed successfully
+ * ```
  */
 function detailedErrors(input: string) {
   if (!input) {
@@ -96,12 +102,16 @@ function detailedErrors(input: string) {
  * @returns Parse results with coordinate values or detailed error messages.
  *
  * @example
+ * ```typescript
  * parseMGRS(null, '31U BF 12345 67890');
  * // [[['48.123456', 'N'], ['11.234567', 'E']], []]
+ * ```
  *
  * @example
+ * ```typescript
  * parseMGRS(null, 'invalid');
  * // [[], ['Invalid UTM zone number found...']]
+ * ```
  */
 // biome-ignore lint/suspicious/noExplicitAny: Format is unused
 export function parseMGRS(_format: any, input: string) {

@@ -28,14 +28,18 @@ export interface FormatOptions {
  * @returns Formatter function that takes coordinate pair and optional config.
  *
  * @example
+ * ```typescript
  * const formatDD = createFormatter((num) => `${num.toFixed(6)}°`);
  * formatDD([37.7749, -122.4194]);
  * // '37.774900° N, 122.419400° W'
+ * ```
  *
  * @example
+ * ```typescript
  * const formatDMS = createFormatter(toDegreesMinutesSeconds);
  * formatDMS([37.7749, -122.4194], { separator: ' / ', withOrdinal: true });
  * // '37° 46' 29.64″ N / 122° 25' 9.84″ W'
+ * ```
  */
 export const createFormatter =
   (fn: (coord: number, withOrdinal?: boolean) => string) =>

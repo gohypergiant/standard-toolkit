@@ -33,18 +33,24 @@ import type { CoordinateSystem } from '../internal/coordinate-system';
  * @property toFormat - Formats numeric coordinates back to decimal degrees string.
  *
  * @example
+ * ```ts
  * // Parse a coordinate string
  * const [coords, errors] = systemDecimalDegrees.parse('37.7749° N / 122.4194° W', 'LATLON');
+ * ```
  *
  * @example
+ * ```ts
  * // Convert to float
  * const lat = systemDecimalDegrees.toFloat(['37.7749', 'N']);
  * // 37.7749
+ * ```
  *
  * @example
+ * ```ts
  * // Format to string
  * const formatted = systemDecimalDegrees.toFormat('LATLON', [37.7749, -122.4194]);
  * // '37.7749 N / 122.4194 W'
+ * ```
  */
 export const systemDecimalDegrees: CoordinateSystem = {
   name: 'Decimal Degrees',

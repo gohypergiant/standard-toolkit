@@ -36,16 +36,20 @@ const axisTypeTest = (k: keyof typeof SYMBOL_PATTERNS, t: string) =>
  * @returns Parser function that takes format and input string, returns ParseResults.
  *
  * @example
+ * ```typescript
  * const parseDD = createParser({
  *   formats: { LATLON: /pattern/, LONLAT: /pattern/ },
  *   identifyErrors: (format) => (arg, i) => [tokens, errors],
  *   identifyPieces: (half) => ({ deg, bear })
  * });
+ * ```
  *
  * @example
+ * ```typescript
  * const parser = createParser(config);
  * parser('LATLON', '37.7749° N / 122.4194° W');
  * // [[37.7749, -122.4194], []]
+ * ```
  */
 export const createParser =
   <T>(config: FormatParserConfig<T | undefined>) =>
@@ -61,12 +65,16 @@ export const createParser =
  * @returns Parse results with coordinate values or error messages.
  *
  * @example
+ * ```typescript
  * parseWithConfig(config, 'LATLON', '37° N / 122° W');
  * // [['37', 'N', '122', 'W'], []]
+ * ```
  *
  * @example
+ * ```typescript
  * parseWithConfig(config, 'LATLON', '91° N / 122° W');
  * // [[], ['[ERROR] Degrees value (91) exceeds max value (90).']]
+ * ```
  */
 function parseWithConfig<T>(
   config: FormatParserConfig<T>,

@@ -44,12 +44,16 @@ const conflict = ([a, b]: Tokens) =>
  * @returns Pipe result with normalized tokens and error status.
  *
  * @example
+ * ```typescript
  * fixBearings(['45', 'N', '/', '122', 'W'], 'LATLON');
  * // Returns ['45', 'N', '/', '122', 'W'] with error=false
+ * ```
  *
  * @example
+ * ```typescript
  * fixBearings(['-45', '/', '122'], 'LATLON');
  * // Returns ['45', 'S', '/', '122', 'E'] with error=false
+ * ```
  */
 export function fixBearings(tokens: Tokens, format?: Format): PipeResult {
   const [left, right] = [
@@ -117,12 +121,16 @@ export function fixBearings(tokens: Tokens, format?: Format): PipeResult {
  * @returns New array with bearing moved to first position.
  *
  * @example
+ * ```typescript
  * moveBearingsToHead(['45', '30', 'N']);
  * // ['N', '45', '30']
+ * ```
  *
  * @example
+ * ```typescript
  * moveBearingsToHead(['122', '15']);
  * // ['122', '15']
+ * ```
  */
 function moveBearingsToHead(coord: Tokens) {
   return coord.reduce((acc, t) => {

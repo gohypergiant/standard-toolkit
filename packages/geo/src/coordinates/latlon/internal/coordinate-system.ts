@@ -28,12 +28,14 @@ import type { ParseResults } from './parse';
  * @property toFormat - Formats numeric coordinate pair back to string representation.
  *
  * @example
+ * ```typescript
  * const system: CoordinateSystem = {
  *   name: 'Decimal Degrees',
  *   parse: (format, input) => parseDecimalDegrees(input, format),
  *   toFloat: ([deg, bear]) => Number.parseFloat(deg) * (bear === 'S' || bear === 'W' ? -1 : 1),
  *   toFormat: (format, [lat, lon]) => `${Math.abs(lat)}° ${lat >= 0 ? 'N' : 'S'} / ${Math.abs(lon)}° ${lon >= 0 ? 'E' : 'W'}`
  * };
+ * ```
  */
 export type CoordinateSystem = {
   name: string;

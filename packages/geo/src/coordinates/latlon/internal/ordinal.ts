@@ -20,16 +20,22 @@
  * @returns Ordinal direction character: 'N', 'S', 'E', or 'W'.
  *
  * @example
+ * ```typescript
  * getOrdinal(37.7749, true);
  * // 'N'
+ * ```
  *
  * @example
+ * ```typescript
  * getOrdinal(-122.4194, false);
  * // 'W'
+ * ```
  *
  * @example
+ * ```typescript
  * getOrdinal(-45, true);
  * // 'S'
+ * ```
  */
 export const getOrdinal = (num: number, isLatitude: boolean): string => {
   if (isLatitude) {

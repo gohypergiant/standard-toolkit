@@ -19,12 +19,16 @@ import { createFormatter } from '../internal/format';
  * @returns Formatted coordinate string with degrees and decimal minutes (e.g., "45° 30.1234'").
  *
  * @example
+ * ```typescript
  * toDegreesDecimalMinutes(45.5);
  * // '45° 30.0000''
+ * ```
  *
  * @example
+ * ```typescript
  * toDegreesDecimalMinutes(-122.4194);
  * // '122° 25.1640''
+ * ```
  */
 const toDegreesDecimalMinutes = (num: number): string => {
   const degrees = Math.floor(Math.abs(num));
@@ -41,12 +45,16 @@ const toDegreesDecimalMinutes = (num: number): string => {
  * @returns Formatted coordinate string in degrees decimal minutes format.
  *
  * @example
+ * ```typescript
  * formatDegreesDecimalMinutes([37.7749, -122.4194]);
  * // '37° 46.4940' N, 122° 25.1640' W'
+ * ```
  *
  * @example
+ * ```typescript
  * formatDegreesDecimalMinutes([37.7749, -122.4194], { separator: ' / ' });
  * // '37° 46.4940' N / 122° 25.1640' W'
+ * ```
  */
 export const formatDegreesDecimalMinutes = createFormatter(
   toDegreesDecimalMinutes,

@@ -34,8 +34,10 @@ const SIMPLER_PATTERNS = {
  * @returns Pipe result with divider inserted and error=false.
  *
  * @example
+ * ```typescript
  * insertDivider(['45', '30', 'N', '122', '15', 'W'], 3);
  * // [['45', '30', 'N', '/', '122', '15', 'W'], false]
+ * ```
  */
 const insertDivider = (tokens: Tokens, index: number): PipeResult => [
   [...tokens.slice(0, index), SYMBOLS.DIVIDER, ...tokens.slice(index)],
@@ -52,12 +54,16 @@ const insertDivider = (tokens: Tokens, index: number): PipeResult => [
  * @returns Pipe result with divider inserted, or error=true if no safe location found.
  *
  * @example
+ * ```typescript
  * fixDivider(['45°', '30'', 'N', '122°', '15'', 'W']);
  * // Returns tokens with divider inserted between latitude and longitude
+ * ```
  *
  * @example
+ * ```typescript
  * fixDivider(['45', '30', 'N']);
  * // Returns error=true (cannot safely determine divider position)
+ * ```
  *
  * @remarks
  * pure function

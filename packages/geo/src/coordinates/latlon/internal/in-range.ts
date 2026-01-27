@@ -21,16 +21,22 @@
  * @returns Error message string if out of range, undefined if valid.
  *
  * @example
+ * ```typescript
  * inRange('Minutes', '45', 59);
  * // undefined (valid)
+ * ```
  *
  * @example
+ * ```typescript
  * inRange('Minutes', '61', 59);
  * // 'Minutes value (61) exceeds max value (59).'
+ * ```
  *
  * @example
+ * ```typescript
  * inRange('Seconds', '-5', 59);
  * // 'Seconds value (-5) must be positive.'
+ * ```
  */
 export const inRange = (label: string, value: string, limit: number) => {
   const num = Number.parseFloat(value);

@@ -25,16 +25,22 @@ import type { Tokens } from '../lexer';
  * @returns Pipe result with tokens and error message (or false if valid).
  *
  * @example
+ * ```typescript
  * checkNumberValues(['45', '30']);
  * // Returns tokens with error=false (valid number count)
+ * ```
  *
  * @example
+ * ```typescript
  * checkNumberValues(['45']);
  * // Returns error: 'Too few numbers.'
+ * ```
  *
  * @example
+ * ```typescript
  * checkNumberValues(['1', '2', '3', '4', '5', '6', '7']);
  * // Returns error: 'Too many numbers.'
+ * ```
  */
 export function checkNumberValues(tokens: Tokens) {
   const simple = simpler(tokens);

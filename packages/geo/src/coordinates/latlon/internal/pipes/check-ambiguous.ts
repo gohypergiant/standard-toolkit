@@ -25,12 +25,16 @@ import type { Tokens } from '../lexer';
  * @returns Pipe result with tokens and error status (true if ambiguous, false otherwise).
  *
  * @example
+ * ```typescript
  * checkAmbiguousGrouping(['45', '30', '15', 'N'], 'LATLON');
  * // Returns tokens with error=true if grouping is ambiguous
+ * ```
  *
  * @example
+ * ```typescript
  * checkAmbiguousGrouping(['45', '30', 'N', '/', '122', '15', 'W'], 'LATLON');
  * // Returns tokens with error=false (divider present, not ambiguous)
+ * ```
  */
 export function checkAmbiguousGrouping(tokens: Tokens, _format?: Format) {
   if (tokens.includes(SYMBOLS.DIVIDER)) {

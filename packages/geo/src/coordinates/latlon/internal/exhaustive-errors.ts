@@ -70,12 +70,16 @@ const systems = [
  * strings with systematic errors across different notation systems.
  *
  * @example
+ * ```typescript
  * EXHAUSTIVE_ERRORS.DD.LATLON;
  * // Array of decimal degrees strings with errors like '91 N / 179 E'
+ * ```
  *
  * @example
+ * ```typescript
  * EXHAUSTIVE_ERRORS.DMS.LONLAT;
  * // Array of degrees-minutes-seconds strings with errors
+ * ```
  */
 export const EXHAUSTIVE_ERRORS = Object.fromEntries(
   systems.map(({ designation, ...system }) => {
@@ -106,8 +110,10 @@ export const EXHAUSTIVE_ERRORS = Object.fromEntries(
  * @returns Array of coordinate strings with systematic errors injected.
  *
  * @example
+ * ```typescript
  * fillTemplate('DLAT MM BLAT / DLON MM BLON', values);
  * // ['91 30 N / 179 30 E', 'nope 30 N / 179 30 E', ...]
+ * ```
  */
 function fillTemplate(template: string, values: Values) {
   return template

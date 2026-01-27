@@ -20,12 +20,16 @@ import { createFormatter } from '../internal/format';
  * @returns Formatted coordinate string with degree symbol and 6 decimal places.
  *
  * @example
+ * ```typescript
  * toDecimalDegrees(45.123456);
  * // '45.123456°'
+ * ```
  *
  * @example
+ * ```typescript
  * toDecimalDegrees(-122.4194, true);
  * // '122.419400°'
+ * ```
  */
 const toDecimalDegrees = (num: number, withOrdinal?: boolean): string => {
   const value = withOrdinal ? Math.abs(num) : num;
@@ -40,11 +44,15 @@ const toDecimalDegrees = (num: number, withOrdinal?: boolean): string => {
  * @returns Formatted coordinate string in decimal degrees format.
  *
  * @example
+ * ```typescript
  * formatDecimalDegrees([37.7749, -122.4194]);
  * // '37.774900° N, 122.419400° W'
+ * ```
  *
  * @example
+ * ```typescript
  * formatDecimalDegrees([37.7749, -122.4194], { separator: ' / ' });
  * // '37.774900° N / 122.419400° W'
+ * ```
  */
 export const formatDecimalDegrees = createFormatter(toDecimalDegrees);

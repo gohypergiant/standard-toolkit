@@ -21,12 +21,16 @@ import type { Tokens } from '../lexer';
  * @returns Simplified pattern string where 'N' = number and 'B' = bearing.
  *
  * @example
+ * ```typescript
  * simpler(['45', '30', 'N', '/', '122', '15', 'W']);
  * // 'NNBNNNB'
+ * ```
  *
  * @example
+ * ```typescript
  * simpler(['45', 'N']);
  * // 'NB'
+ * ```
  *
  * @remarks
  * pure function

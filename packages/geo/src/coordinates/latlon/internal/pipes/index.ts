@@ -29,8 +29,10 @@ export type PipeResult = ReturnType<Pipe>;
  * @returns New global RegExp based on the pattern.
  *
  * @example
+ * ```typescript
  * makeGlobal('NSEW');
  * // /[NSEW]/g
+ * ```
  */
 const makeGlobal = (k: keyof typeof SYMBOL_PATTERNS) =>
   new RegExp(SYMBOL_PATTERNS[k], 'g');
@@ -44,12 +46,16 @@ const makeGlobal = (k: keyof typeof SYMBOL_PATTERNS) =>
  * @returns Pipe result tuple with tokens (empty if error) and error status.
  *
  * @example
+ * ```typescript
  * pipesResult(['45', 'N', '/', '122', 'W'], false);
  * // [['45', 'N', '/', '122', 'W'], false]
+ * ```
  *
  * @example
+ * ```typescript
  * pipesResult(['45'], 'Too few numbers.');
  * // [[], 'Too few numbers.']
+ * ```
  *
  * @remarks
  * pure function
@@ -67,9 +73,11 @@ export const pipesResult = (t: Tokens, e: boolean | string): PipeResult => [
  * @returns Function that takes tokens and returns pipe result with error if >2 matches found.
  *
  * @example
+ * ```typescript
  * const checkBearings = tooMany(/[NSEW]/g);
  * checkBearings(['N', 'S', 'E', 'W']);
  * // Returns error=true (more than 2 bearings)
+ * ```
  */
 const tooMany = (p: RegExp) => (t: Tokens) =>
   pipesResult(t, (t.join('').match(p) ?? []).length > 2);
@@ -100,12 +108,16 @@ const pipes: [string, Pipe][] = [
  * @returns Tuple of [processed tokens, array of error messages].
  *
  * @example
+ * ```typescript
  * pipesRunner(['45', 'N', '/', '122', 'W'], 'LATLON');
  * // [['45', 'N', '/', '122', 'W'], []]
+ * ```
  *
  * @example
+ * ```typescript
  * pipesRunner(['45'], 'LATLON');
  * // [[], ['Too few numbers.']]
+ * ```
  */
 export function pipesRunner(
   tokens: Tokens,

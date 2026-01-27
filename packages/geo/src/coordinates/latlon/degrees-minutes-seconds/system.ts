@@ -33,18 +33,24 @@ import type { CoordinateSystem } from '../internal/coordinate-system';
  * @property toFormat - Formats numeric coordinates back to degrees minutes seconds string.
  *
  * @example
+ * ```typescript
  * // Parse a coordinate string
  * const [coords, errors] = systemDegreesMinutesSeconds.parse('37° 46' 29.64″ N / 122° 25' 9.84″ W', 'LATLON');
+ * ```
  *
  * @example
+ * ```typescript
  * // Convert to float
  * const lat = systemDegreesMinutesSeconds.toFloat(['37', '46', '29.64', 'N']);
  * // 37.7749
+ * ```
  *
  * @example
+ * ```typescript
  * // Format to string
  * const formatted = systemDegreesMinutesSeconds.toFormat('LATLON', [37.7749, -122.4194]);
  * // '37 46 29.64 N / 122 25 9.84 W'
+ * ```
  */
 export const systemDegreesMinutesSeconds: CoordinateSystem = {
   name: 'Degrees Minutes Seconds',

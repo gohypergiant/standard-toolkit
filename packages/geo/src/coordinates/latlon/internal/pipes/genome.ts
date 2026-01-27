@@ -27,8 +27,10 @@ const GENOME_PATTERN =
  * @returns String representation of the divider index position.
  *
  * @example
+ * ```typescript
  * dividerIndexer('BDNBDNB', 'B', 'DN', 'B', 'DN');
  * // '3' (bearing + 2 numeric components)
+ * ```
  */
 function dividerIndexer(_full: string, ...args: string[]) {
   const [bearing1 = '', number1, bearing2 = '', number2] = args;
@@ -56,12 +58,16 @@ function dividerIndexer(_full: string, ...args: string[]) {
  * @returns Updated genome sequence with new character appended.
  *
  * @example
+ * ```typescript
  * genomeSequencer('', '45°');
  * // 'D'
+ * ```
  *
  * @example
+ * ```typescript
  * genomeSequencer('D', 'N');
  * // 'DB'
+ * ```
  */
 function genomeSequencer(acc: string, t: string) {
   if (t.includes(SYMBOLS.DEGREES)) {
@@ -95,12 +101,16 @@ function genomeSequencer(acc: string, t: string) {
  * @returns Index position where divider should be inserted, or 0 if pattern doesn't match.
  *
  * @example
+ * ```typescript
  * getGenomeIndex(['45°', '30'', 'N', '122°', '15'', 'W']);
  * // 3 (insert divider after latitude components)
+ * ```
  *
  * @example
+ * ```typescript
  * getGenomeIndex(['45', '30', '15']);
  * // 0 (pattern doesn't match genome sequence)
+ * ```
  */
 export function getGenomeIndex(tokens: Tokens) {
   const seq = tokens.reduce(genomeSequencer, '');

@@ -29,16 +29,22 @@ import type { CoordinateSystem } from '../latlon/internal/coordinate-system';
  * @property toFormat - Formats latitude/longitude pair back to MGRS coordinate string.
  *
  * @example
+ * ```typescript
  * systemMGRS.parse(null, '31U BF 12345 67890');
  * // [[['48.123456', 'N'], ['11.234567', 'E']], []]
+ * ```
  *
  * @example
+ * ```typescript
  * systemMGRS.toFormat('LATLON', [48.123456, 11.234567]);
  * // '31U BF 12345 67890'
+ * ```
  *
  * @example
+ * ```typescript
  * systemMGRS.toFloat(['48.123456', 'N']);
  * // 48.123456
+ * ```
  */
 export const systemMGRS: CoordinateSystem = {
   name: 'Military Grid Reference System',

@@ -67,16 +67,22 @@ const TOKENS = new RegExp(
  * @returns Normalized token with cleaned numeric formatting.
  *
  * @example
+ * ```typescript
  * fixLeadingAndTrailing('45.0°');
  * // '45°'
+ * ```
  *
  * @example
+ * ```typescript
  * fixLeadingAndTrailing('.5'');
  * // '0.5''
+ * ```
  *
  * @example
+ * ```typescript
  * fixLeadingAndTrailing('-122.00');
  * // '-122'
+ * ```
  */
 function fixLeadingAndTrailing(t: string) {
   const [sign, num, pos] = (FLOATS.exec(t) ?? []).slice(1);
@@ -101,8 +107,10 @@ function fixLeadingAndTrailing(t: string) {
  * pure function
  *
  * @example
+ * ```typescript
  * lexer('N 55,E 44') === ['N' '55', '/', 'E', '44']
  * lexer(` + 89  ° 59   59.999 " N, 179° 59 59.999"  `) === ['89', '59', '59.999', 'N', '/', '179', '59', '59.999', 'E']
+ * ```
  */
 export function lexer(input: string) {
   const tokens =

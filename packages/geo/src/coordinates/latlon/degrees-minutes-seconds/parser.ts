@@ -65,9 +65,11 @@ const formats = {
  * @returns Function that validates coordinate components and returns parse results.
  *
  * @example
+ * ```typescript
  * const validator = identifyErrors('LATLON');
  * const result = validator({ deg: '91', min: '0', sec: '0', bear: 'N' }, 0);
  * // [[], ['Degrees value (91) exceeds max value (90).']]
+ * ```
  */
 function identifyErrors(format: Format) {
   return (arg: DegreesMinutesSeconds | undefined, i: number) => {
@@ -113,12 +115,16 @@ function identifyErrors(format: Format) {
  * @returns Object with `bear`, `deg`, `min`, and `sec` properties, or undefined if invalid.
  *
  * @example
+ * ```typescript
  * identifyPieces(['45', '30', '15.23', 'N']);
  * // { bear: 'N', deg: '45', min: '30', sec: '15.23' }
+ * ```
  *
  * @example
+ * ```typescript
  * identifyPieces(['122°', '25'', '9.84″', 'W']);
  * // { bear: 'W', deg: '122', min: '25', sec: '9.84' }
+ * ```
  */
 function identifyPieces(half: string[]) {
   if (half.length < 1 || half.length > 4) {
@@ -162,12 +168,16 @@ function identifyPieces(half: string[]) {
  * @returns Parsed coordinate values or errors.
  *
  * @example
+ * ```typescript
  * parseDegreesMinutesSeconds('37° 46' 29.64″ N / 122° 25' 9.84″ W', 'LATLON');
  * // [[37.7749, -122.4194], []]
+ * ```
  *
  * @example
+ * ```typescript
  * parseDegreesMinutesSeconds('45 30 15.23 N, 122 25 9.84 W');
  * // [[45.504231, -122.419400], []]
+ * ```
  */
 export const parseDegreesMinutesSeconds = createParser<DegreesMinutesSeconds>({
   formats,
