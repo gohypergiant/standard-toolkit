@@ -26,11 +26,11 @@ globalBind();
 
 ```typescript
 // 2. Register your hotkey and define what it does
-// src/hooks/use-toggle-grid.ts
+// src/hotkeys/toggle-grid.ts
 import { registerHotkey, Keycode } from '@accelint/hotkey-manager';
 import { gridStore } from '../stores/grid';
 
-export const useToggleGrid = registerHotkey({
+export const toggleGridManager = registerHotkey({
   id: 'toggle-grid',
   key: {
     code: Keycode.KeyG
@@ -41,14 +41,15 @@ export const useToggleGrid = registerHotkey({
 ```
 
 ```tsx
-// 3. Then use the hook in your component
+// 3. Then use the hotkey in your component
 // src/layers/grid-layer.tsx
-import { useToggleGrid } from '../hooks/use-toggle-grid';
+import { useHotkey } from '@accelint/hotkey-manager';
+import { toggleGridManager } from '../hotkeys/toggle-grid';
 
 export function GridLayer() {
   // This activates the hotkey when the component mounts
   // and deactivates it when unmounted
-  useToggleGrid();
+  useHotkey(toggleGridManager);
 
   // Rest of component code...
 }
@@ -60,7 +61,7 @@ export function GridLayer() {
 
 An important feature of this library is that it maintains a single instance of each hotkey, even when multiple components use it. For example:
 
-- If `ComponentA` and `ComponentB` both use the same hotkey (like `useToggleGrid`)
+- If `ComponentA` and `ComponentB` both use the same hotkey manager (like `toggleGridManager`)
 - The hotkey is bound when the first component mounts
 - It remains active even if one component unmounts
 - It's only fully unbound when all components using it unmount
@@ -69,12 +70,12 @@ This reference-counting system ensures efficient hotkey management and prevents 
 
 ### Step 1: Register Your Hotkey
 
-Use `registerHotkey` to create a reusable hook for your hotkey:
+Use `registerHotkey` to create a reusable hotkey manager:
 
 ```typescript
 import { registerHotkey, Keycode } from '@accelint/hotkey-manager';
 
-export const useToggleTags = registerHotkey({
+export const toggleTagsManager = registerHotkey({
   id: 'toggle-tags',  // An identifier for this hotkey
   key: {
     code: Keycode.KeyT,  // The 'T' key
@@ -84,15 +85,18 @@ export const useToggleTags = registerHotkey({
 });
 ```
 
-### Step 2: Use the Hook in Components
+### Step 2: Use the Hotkey in Components
 
-The hook automatically handles binding and unbinding:
+Use `useHotkey` with your manager to automatically handle binding and unbinding:
 
 ```tsx
+import { useHotkey } from '@accelint/hotkey-manager';
+import { toggleTagsManager } from '../hotkeys/toggle-tags';
+
 function TextLabelLayer() {
   // This activates the Alt+T hotkey
-  useToggleTags();
-  
+  useHotkey(toggleTagsManager);
+
   return (
     // DeckGL Layer...
   );
@@ -101,21 +105,24 @@ function TextLabelLayer() {
 
 ### Manual Control
 
-For more control, use the hook's methods:
+For more control, `useHotkey` returns the manager with methods for manual binding:
 
 ```tsx
+import { useHotkey } from '@accelint/hotkey-manager';
+import { toggleTagsManager } from '../hotkeys/toggle-tags';
+
 function ConditionalHotkeyComponent() {
-  const toggleTags = useToggleTags();
+  const manager = useHotkey(toggleTagsManager);
   const [isEnabled, setIsEnabled] = useState(false);
-  
+
   useEffect(() => {
     if (isEnabled) {
-      toggleTags.forceBind();
+      manager.forceBind();
     } else {
-      toggleTags.forceUnbind();
+      manager.forceUnbind();
     }
-  }, [isEnabled]);
-  
+  }, [isEnabled, manager]);
+
   return (
     <div>
       <button onClick={() => setIsEnabled(!isEnabled)}>
@@ -224,7 +231,8 @@ For more control over platform differences:
 ```typescript
 import { registerHotkey, Keycode, isMac } from '@accelint/hotkey-manager';
 
-export const usePlatformHotkey = registerHotkey({
+export const platformSaveManager = registerHotkey({
+  id: 'platform-save',
   key: isMac
     ? { code: Keycode.KeyS, meta: true, autoMacStyle: false }  // Cmd+S on macOS
     : { code: Keycode.KeyS, ctrl: true, autoMacStyle: false }, // Ctrl+S on other platforms
@@ -247,22 +255,20 @@ You can define up to three types of actions for each hotkey:
 ### Example with All Actions
 
 ```typescript
-registerHotkey({
+export const zoomManager = registerHotkey({
   id: 'zoom',
   key: { code: Keycode.KeyZ },
-  
   // Triggered on initial press
   onKeyDown: () => startZoom(),
-  
+
   // Triggered after holding for 1 second (default)
   onKeyHeld: () => activateContinuousZoom(),
-  
+
   // Triggered on release (unless onKeyHeld fired)
   onKeyUp: () => finishZoom(),
-  
+
   // Configure hold detection time (in milliseconds)
   heldThresholdMs: 500,
-  
   // Also trigger onKeyUp even if onKeyHeld was triggered
   alwaysTriggerKeyUp: true
 })
