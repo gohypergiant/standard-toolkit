@@ -1,6 +1,5 @@
 /*
  * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
-
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -22,9 +21,7 @@ import type { HotkeyManager } from '@/types/hotkey-manager';
  * @param id - The hotkey id.
  * @returns void
  *
-
  * @example
-
  * ```typescript
  * import { unregisterHotkey } from '@accelint/hotkey-manager';
  *
@@ -40,7 +37,6 @@ export function unregisterHotkey(id: HotkeyId): void;
  * @returns void
  *
  * @example
-
  * ```typescript
  * import { unregisterHotkey } from '@accelint/hotkey-manager';
  *
@@ -58,7 +54,6 @@ export function unregisterHotkey(config: HotkeyConfig): void;
  *
  * @example
  * ```typescript
-
  * import { unregisterHotkey } from '@accelint/hotkey-manager';
  *
  * const manager = registerHotkey({ key: { code: 'KeyA' } });

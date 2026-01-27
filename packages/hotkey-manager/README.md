@@ -5,7 +5,6 @@ A React-focused global hotkey system that prevents conflicts and manages keyboar
 ## Features
 
 - **Singleton Management:** Each hotkey is bound only once, regardless of how many components use it
-
 - **Automatic Cleanup:** Hotkeys are automatically removed when components unmount
 - **Conflict Prevention:** Ensures each keyboard shortcut triggers only one action
 - **Cross-Platform Support:** Adapts to both Windows and macOS keyboard conventions
@@ -25,9 +24,7 @@ import { globalBind } from '@accelint/hotkey-manager';
 globalBind();
 ```
 
-
 ```typescript
-
 // 2. Register your hotkey and define what it does
 // src/hotkeys/toggle-grid.ts
 import { registerHotkey, Keycode } from '@accelint/hotkey-manager';
@@ -37,16 +34,13 @@ export const toggleGridManager = registerHotkey({
   id: 'toggle-grid',
   key: {
     code: Keycode.KeyG
-
   },
-
   // Using onKeyUp is recommended for most simple actions
   onKeyUp: () => gridStore().toggleVisibility(),
 });
 ```
 
 ```tsx
-
 // 3. Then use the hotkey in your component
 // src/layers/grid-layer.tsx
 import { useHotkey } from '@accelint/hotkey-manager';
@@ -54,22 +48,18 @@ import { toggleGridManager } from '../hotkeys/toggle-grid';
 
 export function GridLayer() {
   // This activates the hotkey when the component mounts
-
   // and deactivates it when unmounted
   useHotkey(toggleGridManager);
-
 
   // Rest of component code...
 }
 ```
-
 
 ## How to Use
 
 ### Key Concept: Shared Hotkey Instances
 
 An important feature of this library is that it maintains a single instance of each hotkey, even when multiple components use it. For example:
-
 
 - If `ComponentA` and `ComponentB` both use the same hotkey manager (like `toggleGridManager`)
 - The hotkey is bound when the first component mounts
@@ -88,7 +78,6 @@ import { registerHotkey, Keycode } from '@accelint/hotkey-manager';
 export const toggleTagsManager = registerHotkey({
   id: 'toggle-tags',  // An identifier for this hotkey
   key: {
-
     code: Keycode.KeyT,  // The 'T' key
     alt: true           // Must press Alt+T
   },
@@ -103,7 +92,6 @@ Use `useHotkey` with your manager to automatically handle binding and unbinding:
 ```tsx
 import { useHotkey } from '@accelint/hotkey-manager';
 import { toggleTagsManager } from '../hotkeys/toggle-tags';
-
 
 function TextLabelLayer() {
   // This activates the Alt+T hotkey
@@ -127,7 +115,6 @@ function ConditionalHotkeyComponent() {
   const manager = useHotkey(toggleTagsManager);
   const [isEnabled, setIsEnabled] = useState(false);
 
-
   useEffect(() => {
     if (isEnabled) {
       manager.forceBind();
@@ -137,7 +124,6 @@ function ConditionalHotkeyComponent() {
   }, [isEnabled, manager]);
 
   return (
-
     <div>
       <button onClick={() => setIsEnabled(!isEnabled)}>
         {isEnabled ? 'Disable' : 'Enable'} Hotkey
@@ -146,7 +132,6 @@ function ConditionalHotkeyComponent() {
   );
 }
 ```
-
 
 ## Key Combinations
 
@@ -159,26 +144,20 @@ The `key` property defines what keyboard input triggers your hotkey. The `code` 
 key: {
   code: Keycode.KeyT
 }
-
 ```
 
 Using `code` instead of character values ensures consistency across keyboard layouts and languages.
-
 
 ### Modifier Keys
 
 Add modifiers to create key combinations:
 
-
 ```typescript
-
 // Define Shift+T
-
 key: {
   code: Keycode.KeyT,
   shift: true
 }
-
 
 // Define Alt+T
 key: {
@@ -194,11 +173,9 @@ key: {
 }
 ```
 
-
 Available modifiers:
 - `shift`: The Shift key
 - `alt`: The Alt key (Option on macOS)
-
 - `ctrl`: The Control key
 - `meta`: The Windows key or Command (⌘) key on macOS
 
@@ -211,7 +188,6 @@ key: [
   { code: Keycode.KeyS, ctrl: true },  // Ctrl+S
   { code: Keycode.F12 }                // F12
 ]
-
 ```
 
 Your action receives information about which key triggered it:
@@ -219,10 +195,8 @@ Your action receives information about which key triggered it:
 ```typescript
 onKeyDown: (event, key) => {
   if (key.code === Keycode.KeyS) {
-
     // Ctrl+S was pressed
   } else if (key.code === Keycode.F12) {
-
     // F12 was pressed
   }
 }
@@ -245,7 +219,6 @@ To disable this behavior for a specific hotkey:
 ```typescript
 key: {
   code: Keycode.KeyS,
-
   ctrl: true,
   autoMacStyle: false  // Keep as Ctrl+S on all platforms
 }
@@ -255,9 +228,7 @@ key: {
 
 For more control over platform differences:
 
-
 ```typescript
-
 import { registerHotkey, Keycode, isMac } from '@accelint/hotkey-manager';
 
 export const platformSaveManager = registerHotkey({
@@ -274,7 +245,6 @@ export const platformSaveManager = registerHotkey({
 You can define up to three types of actions for each hotkey:
 
 1. `onKeyDown`: Triggered immediately when the key is pressed
-
 2. `onKeyHeld`: Triggered when the key is held down for a certain time
 3. `onKeyUp`: Triggered when the key is released
 
@@ -286,10 +256,8 @@ You can define up to three types of actions for each hotkey:
 
 ```typescript
 export const zoomManager = registerHotkey({
-
   id: 'zoom',
   key: { code: Keycode.KeyZ },
-
   // Triggered on initial press
   onKeyDown: () => startZoom(),
 
@@ -301,8 +269,6 @@ export const zoomManager = registerHotkey({
 
   // Configure hold detection time (in milliseconds)
   heldThresholdMs: 500,
-
-
   // Also trigger onKeyUp even if onKeyHeld was triggered
   alwaysTriggerKeyUp: true
 })
