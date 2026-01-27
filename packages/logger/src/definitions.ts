@@ -57,12 +57,100 @@ export type LoggerOptions = {
   env?: 'production' | 'development' | 'test';
 };
 
+/**
+ * Enum of valid log levels from LogLayer.
+ *
+ * Provides access to all available log levels for configuration and filtering.
+ */
 export const LOG_LEVEL = LogLevelEnum;
+
+/**
+ * Union type representing all valid log level values.
+ *
+ * Accepts either the LogLevelEnum or string literals of log level names.
+ */
 export type LogLevel = LogLevelEnum | `${keyof typeof LogLevelEnum}`;
 
+/**
+ * Log level constant for error messages.
+ *
+ * Use for critical errors that require immediate attention.
+ *
+ * @example
+ * ```typescript
+ * import { getLogger, ERROR } from '@accelint/logger';
+ *
+ * const logger = getLogger({ level: ERROR, enabled: true });
+ * ```
+ */
 export const ERROR: LogLevel = 'error';
+
+/**
+ * Log level constant for warning messages.
+ *
+ * Use for potentially harmful situations that don't prevent execution.
+ *
+ * @example
+ * ```typescript
+ * import { getLogger, WARN } from '@accelint/logger';
+ *
+ * const logger = getLogger({ level: WARN, enabled: true });
+ * ```
+ */
 export const WARN: LogLevel = 'warn';
+
+/**
+ * Log level constant for informational messages.
+ *
+ * Use for general informational messages about application progress.
+ *
+ * @example
+ * ```typescript
+ * import { getLogger, INFO } from '@accelint/logger';
+ *
+ * const logger = getLogger({ level: INFO, enabled: true });
+ * ```
+ */
 export const INFO: LogLevel = 'info';
+
+/**
+ * Log level constant for debug messages.
+ *
+ * Use for detailed diagnostic information useful during development.
+ *
+ * @example
+ * ```typescript
+ * import { getLogger, DEBUG } from '@accelint/logger';
+ *
+ * const logger = getLogger({ level: DEBUG, enabled: true });
+ * ```
+ */
 export const DEBUG: LogLevel = 'debug';
+
+/**
+ * Log level constant for trace messages.
+ *
+ * Use for fine-grained debugging information, more verbose than debug.
+ *
+ * @example
+ * ```typescript
+ * import { getLogger, TRACE } from '@accelint/logger';
+ *
+ * const logger = getLogger({ level: TRACE, enabled: true });
+ * ```
+ */
 export const TRACE: LogLevel = 'trace';
+
+/**
+ * Log level constant for fatal error messages.
+ *
+ * Use for severe errors that may cause the application to terminate.
+ *
+ * @example
+ * ```typescript
+ * import { getLogger, FATAL } from '@accelint/logger';
+ *
+ * const logger = getLogger({ level: FATAL, enabled: true });
+ * ```
+ */
 export const FATAL: LogLevel = 'fatal';
