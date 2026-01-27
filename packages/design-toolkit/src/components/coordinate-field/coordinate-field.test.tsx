@@ -321,6 +321,25 @@ describe('CoordinateField', () => {
         expect(longitude.value).toBe('e');
       });
 
+      it('allows case insensitive paste in direction segments', async () => {
+        const user = userEvent.setup();
+        render(<CoordinateField label='Location' format='ddm' />);
+        const latitude = screen.getByLabelText(
+          'Latitude direction',
+        ) as HTMLInputElement;
+        const longitude = screen.getByLabelText(
+          'Longitude direction',
+        ) as HTMLInputElement;
+
+        await user.click(latitude);
+        await user.paste('s');
+        await user.click(longitude);
+        await user.paste('w');
+
+        expect(latitude.value).toBe('s');
+        expect(longitude.value).toBe('w');
+      });
+
       it('respects maxLength constraints', async () => {
         const user = userEvent.setup();
         render(<CoordinateField label='Location' format='ddm' />);
