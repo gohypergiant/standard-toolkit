@@ -43,6 +43,9 @@ const meta = {
     controls: {
       exclude: ['children', 'slot', 'validationBehavior'],
     },
+    docs: {
+      subtitle: 'Search input with integrated icons and clear button',
+    },
   },
 } satisfies Meta<typeof SearchField>;
 

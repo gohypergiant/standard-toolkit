@@ -17,6 +17,14 @@ import type {
 } from 'react-aria-components';
 import type { LabelProps } from '../label/types';
 
+/**
+ * Props for RadioGroup component.
+ *
+ * Extends AriaRadioGroupProps with custom classNames and label support.
+ * - `classNames.group` - CSS class for the radio group container.
+ * - `classNames.label` - CSS class for the group label.
+ * - `label` - Optional text label for the group.
+ */
 export type RadioGroupProps = Omit<AriaRadioGroupProps, 'className'> &
   RefAttributes<HTMLDivElement> & {
     classNames?: {
@@ -26,6 +34,14 @@ export type RadioGroupProps = Omit<AriaRadioGroupProps, 'className'> &
     label?: string;
   };
 
+/**
+ * Props for Radio component.
+ *
+ * Extends AriaRadioProps with custom classNames support.
+ * - `classNames.radio` - CSS class for the radio label wrapper.
+ * - `classNames.control` - CSS class for the radio button control.
+ * - `classNames.label` - CSS class for the radio label text.
+ */
 export type RadioProps = Omit<AriaRadioProps, 'className'> &
   RefAttributes<HTMLLabelElement> & {
     classNames?: {

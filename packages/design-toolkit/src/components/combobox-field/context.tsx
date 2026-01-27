@@ -18,10 +18,26 @@ import type { ProviderProps } from '@/lib/types';
 import type { OptionsDataItem } from '../options/types';
 import type { ComboBoxFieldProps } from './types';
 
+/** React context for sharing ComboBoxField configuration across components. */
 export const ComboBoxFieldContext =
   // biome-ignore lint/suspicious/noExplicitAny: Setting a type would restrict it beyond what the component allows to extend to
   createContext<ContextValue<ComboBoxFieldProps<any>, HTMLDivElement>>(null);
 
+/**
+ * Context provider for setting default props across multiple ComboBoxField components.
+ *
+ * @param props - The provider props.
+ * @param props.children - Child components that will receive the combobox field context.
+ * @returns The combobox field context provider wrapping children.
+ *
+ * @example
+ * ```tsx
+ * <ComboBoxFieldProvider size="small">
+ *   <ComboBoxField defaultItems={items1}>{...}</ComboBoxField>
+ *   <ComboBoxField defaultItems={items2}>{...}</ComboBoxField>
+ * </ComboBoxFieldProvider>
+ * ```
+ */
 export function ComboBoxFieldProvider<T extends OptionsDataItem>({
   children,
   ...props

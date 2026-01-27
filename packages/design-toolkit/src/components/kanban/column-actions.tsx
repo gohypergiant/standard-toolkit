@@ -19,6 +19,14 @@ import { Icon } from '../icon';
 import styles from './styles.module.css';
 import type { KanbanColContentActionProps } from './types';
 
+/**
+ * KanbanColumnActions - Action button for adding new cards
+ *
+ * @param props - {@link KanbanColContentActionProps}
+ * @param props.className - Optional CSS class name.
+ * @param props.onAddCard - Callback when add card button is pressed.
+ * @returns The rendered KanbanColumnActions component.
+ */
 export function KanbanColumnActions({
   className,
   onAddCard,

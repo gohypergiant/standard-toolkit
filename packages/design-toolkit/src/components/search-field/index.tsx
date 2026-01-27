@@ -30,35 +30,26 @@ import styles from './styles.module.css';
 import type { SearchFieldProps } from './types';
 
 /**
- * SearchField - A customizable search input component built on React Aria Components
+ * SearchField - Search input with integrated search icon, loading state, and clear button
  *
- * Provides a search input with integrated search icon, loading state, and clear functionality.
- * Supports two visual variants (filled/outlined), and granular styling control.
+ * Supports outline and filled variants with automatic icon sizing.
+ *
+ * @param props - {@link SearchFieldProps}
+ * @param props.ref - Forwarded ref for the field container.
+ * @param props.classNames - Custom CSS class names for field elements.
+ * @param props.inputProps - Additional props for the input element.
+ * @param props.isLoading - Whether to show loading spinner instead of clear button.
+ * @param props.variant - Visual variant ('outline' or 'filled').
+ * @returns The rendered SearchField component.
  *
  * @example
- * // Basic search field
- * <SearchField inputProps={{ placeholder: 'Search...' }} />
- *
- * @example
- * // Filled variant with custom styling
+ * ```tsx
  * <SearchField
- *   variant="filled"
- *   inputProps={{ placeholder: 'Search...' }}
- *   classNames={{
- *     input: "bg-info-bold",
- *     searchIcon: "fg-accent-primary-bold"
- *   }}
- * />
- *
- * @example
- * // With event handlers
- * <SearchField
- *   inputProps: {
- *     placeholder: 'Search...',
- *   },
- *   onSubmit={(value) => console.log('Search:', value)}
+ *   label="Search"
+ *   placeholder="Search items..."
  *   onChange={(value) => setQuery(value)}
  * />
+ * ```
  */
 export function SearchField({ ref, ...props }: SearchFieldProps) {
   [props, ref] = useContextProps(props, ref ?? null, SearchFieldContext);

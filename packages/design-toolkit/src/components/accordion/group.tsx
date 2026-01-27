@@ -24,6 +24,8 @@ import type { AccordionGroupProps } from './types';
  * Provides coordinated behavior for multiple accordions, controlling
  * whether multiple sections can be expanded simultaneously.
  *
+ * Wraps react-aria-components DisclosureGroup and provides variant context.
+ *
  * @param props - The accordion group props.
  * @param props.ref - Reference to the root div element.
  * @param props.children - Accordion components to render within the group.

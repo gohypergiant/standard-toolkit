@@ -16,17 +16,29 @@ import type {
   SliderTrackProps,
 } from 'react-aria-components';
 
+/**
+ * Marker configuration for a single slider marker.
+ */
 export type SliderMarker = {
+  /** Numeric value where the marker is placed. */
   value: number;
+  /** Optional label displayed at the marker position. */
   label?: string;
 };
 
-export type SliderMarkersConfig =
-  | number // Number of evenly spaced markers (includes min/max)
-  | SliderMarker[] // Explicit marker positions with optional labels
-  | number[]; // Array of values without labels
+/**
+ * Configuration for slider markers.
+ *
+ * Can be a number (evenly spaced markers including min/max),
+ * an array of SliderMarker objects, or an array of numeric values.
+ */
+export type SliderMarkersConfig = number | SliderMarker[] | number[];
 
+/**
+ * Props for the Slider component.
+ */
 export type SliderProps = Omit<AriaSliderProps, 'children' | 'className'> & {
+  /** Custom CSS class names for slider elements. */
   classNames?: {
     slider?: AriaSliderProps['className'];
     label?: LabelProps['className'];
@@ -43,7 +55,9 @@ export type SliderProps = Omit<AriaSliderProps, 'children' | 'className'> & {
     markerDot?: string;
     markerLabel?: string;
   };
+  /** Label text for the slider. */
   label: string;
+  /** Layout variant for the slider. */
   layout?: 'grid' | 'stack';
   /**
    * Configure discrete marker points on the slider track.
@@ -56,6 +70,7 @@ export type SliderProps = Omit<AriaSliderProps, 'children' | 'className'> & {
    * Whether to display numeric input fields for direct value entry
    */
   showInput?: boolean;
+  /** Whether to display the label. */
   showLabel?: boolean;
   /**
    * Whether to show labels on markers (only applies when markers have labels)

@@ -31,6 +31,20 @@ import type { SidenavItemProps } from './types';
  * SidenavItem - Item component for sidenav
  *
  * Provides a selectable item with tooltip for the sidenav
+ *
+ * @example
+ * ```tsx
+ * <SidenavItem textValue="Dashboard" isSelected={true}>
+ *   <Icon><Home /></Icon>
+ *   <Text>Dashboard</Text>
+ * </SidenavItem>
+ * ```
+ *
+ * @param props - {@link SidenavItemProps}
+ * @param props.children - Item content (icon and text).
+ * @param props.classNames - Custom CSS class names for item elements.
+ * @param props.textValue - Text displayed in tooltip when collapsed.
+ * @returns The rendered SidenavItem component.
  */
 export function SidenavItem({
   children,

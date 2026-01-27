@@ -10,8 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
+/** Namespace for drawer-related events. */
 export const DrawerEventNamespace = 'Drawer';
 
+/** Event type constants for drawer actions. */
 export const DrawerEventTypes = {
   close: `${DrawerEventNamespace}:close`,
   open: `${DrawerEventNamespace}:open`,

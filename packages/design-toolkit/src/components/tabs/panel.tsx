@@ -22,9 +22,25 @@ import {
 import styles from './styles.module.css';
 
 /**
- * TabPanel - Content panel for tabs
+ * TabPanel - Content panel displayed when its corresponding Tab is selected.
  *
- * Container for content associated with a specific tab
+ * @example
+ * ```tsx
+ * <Tabs>
+ *   <TabList>
+ *     <Tab id="profile">Profile</Tab>
+ *   </TabList>
+ *   <TabPanel id="profile">
+ *     <h2>Profile Information</h2>
+ *     <p>User profile content</p>
+ *   </TabPanel>
+ * </Tabs>
+ * ```
+ *
+ * @param props - TabPanelProps from react-aria-components.
+ * @param props.children - Panel content.
+ * @param props.className - CSS class for the panel.
+ * @returns The rendered TabPanel component.
  */
 export function TabPanel({ children, className, ...rest }: TabPanelProps) {
   return (

@@ -12,26 +12,43 @@
 
 import type { BreadcrumbProps, LinkProps } from 'react-aria-components';
 
+/**
+ * Props for the BreadcrumbItem component.
+ *
+ * Discriminated union: when `linkProps` is provided, renders as a navigable link;
+ * otherwise renders as plain text representing the current page.
+ */
 export type BreadcrumbItemProps = Omit<
   BreadcrumbProps,
   'children' | 'className'
 > &
   (
     | {
+        /** Custom class names for breadcrumb sub-elements. */
         classNames?: {
+          /** Class name for the breadcrumb item wrapper. */
           item?: BreadcrumbProps['className'];
+          /** Class name for the link element. */
           link?: LinkProps['className'];
+          /** Class name for the separator icon. */
           separator?: string;
         };
+        /** Props for the Link component. When provided, item renders as a link. */
         linkProps: Omit<LinkProps, 'className'>;
+        /** Content to display in the link. */
         children?: LinkProps['children'];
       }
     | {
+        /** Custom class names for breadcrumb sub-elements. */
         classNames?: {
+          /** Class name for the breadcrumb item wrapper. */
           item?: BreadcrumbProps['className'];
+          /** Class name for the separator icon. */
           separator?: string;
         };
+        /** Must be omitted for current page items. */
         linkProps?: never;
+        /** Content to display for the current page. */
         children?: BreadcrumbProps['children'];
       }
   );

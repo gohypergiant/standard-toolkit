@@ -17,9 +17,25 @@ import { createContext } from 'react';
 import type { ContextValue } from 'react-aria-components';
 import type { ClassificationBannerProps } from './types';
 
+/** React context for sharing ClassificationBanner configuration across components. */
 export const ClassificationBannerContext =
   createContext<ContextValue<ClassificationBannerProps, HTMLDivElement>>(null);
 
+/**
+ * Context provider for setting default props across multiple ClassificationBanner components.
+ *
+ * @param props - The provider props.
+ * @param props.children - Child components that will receive the classification banner context.
+ * @returns The classification banner context provider wrapping children.
+ *
+ * @example
+ * ```tsx
+ * <ClassificationBannerProvider variant="secret">
+ *   <ClassificationBanner />
+ *   <ClassificationBanner />
+ * </ClassificationBannerProvider>
+ * ```
+ */
 export function ClassificationBannerProvider({
   children,
   ...props

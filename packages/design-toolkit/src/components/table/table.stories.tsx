@@ -172,6 +172,10 @@ const meta = {
     controls: {
       exclude: ['columns', 'data'],
     },
+    docs: {
+      subtitle:
+        'Configurable data table with sorting, selection, and row actions',
+    },
   },
 } satisfies Meta<typeof Table<Person>>;
 

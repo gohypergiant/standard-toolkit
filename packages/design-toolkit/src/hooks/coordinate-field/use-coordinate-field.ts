@@ -26,12 +26,19 @@ import type {
 
 const FOCUS_DELAY_MS = 0;
 
+/** Return value from the useCoordinateField hook */
 export interface UseCoordinateFieldResult {
+  /** Coordinate state management utilities */
   state: ReturnType<typeof useCoordinateFieldState>;
+  /** Focus management utilities */
   focus: ReturnType<typeof useCoordinateFocus>;
+  /** Paste handling utilities */
   paste: ReturnType<typeof useCoordinatePaste>;
+  /** Copy handling utilities */
   copy: ReturnType<typeof useCoordinateCopy>;
+  /** Register timeouts for cleanup */
   registerTimeout: (timeoutId: NodeJS.Timeout) => void;
+  /** ARIA props for the field container */
   fieldProps: {
     id: string;
     role: 'group';
@@ -43,27 +50,81 @@ export interface UseCoordinateFieldResult {
     'aria-required': boolean | undefined;
     'aria-disabled': boolean | undefined;
   };
+  /** Props for the label element */
   labelProps: {
     id: string;
     htmlFor: string;
   };
+  /** Props for the description element */
   descriptionProps: {
     id: string;
   };
+  /** Props for the error message element */
   errorProps: {
     id: string;
   };
+  /** Validation result for react-aria */
   validation: ValidationResult;
+  /** Generated element IDs */
   ids: {
     fieldId: string;
     labelId: string;
     descriptionId: string;
     errorId: string;
   };
+  /** First error message or null */
   effectiveErrorMessage: string | null;
+  /** Whether the field is in an invalid state */
   isInvalid: boolean;
 }
 
+/**
+ * Manages coordinate field state, focus, copy, paste, and accessibility props
+ *
+ * @example
+ * ```tsx
+ * function CoordinateFieldComponent() {
+ *   const [value, setValue] = useState<CoordinateValue | null>(null);
+ *
+ *   const {
+ *     state,
+ *     focus,
+ *     paste,
+ *     copy,
+ *     fieldProps,
+ *     labelProps,
+ *     isInvalid,
+ *     effectiveErrorMessage,
+ *   } = useCoordinateField({
+ *     value,
+ *     onChange: setValue,
+ *     format: 'dd',
+ *     label: 'Location',
+ *   });
+ *
+ *   return (
+ *     <div {...fieldProps}>
+ *       <label {...labelProps}>Location</label>
+ *       {state.editableSegmentConfigs.map((config, index) => (
+ *         <input
+ *           key={index}
+ *           ref={focus.segmentRefs[index]}
+ *           value={state.segmentValues[index]}
+ *           onChange={(e) => state.handleSegmentChange(index, e.target.value)}
+ *         />
+ *       ))}
+ *       {isInvalid && <span>{effectiveErrorMessage}</span>}
+ *     </div>
+ *   );
+ * }
+ * ```
+ *
+ * @param props - {@link CoordinateFieldProps}
+ * @param customAriaLabel - Custom aria-label for the field.
+ * @param customAriaDescribedby - Custom aria-describedby IDs.
+ * @param customAriaDetails - Custom aria-details ID.
+ * @returns {@link UseCoordinateFieldResult} Combined state, focus, copy, paste utilities and accessibility props.
+ */
 export function useCoordinateField(
   props: CoordinateFieldProps,
   customAriaLabel?: string,

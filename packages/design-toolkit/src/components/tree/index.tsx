@@ -32,25 +32,47 @@ const defaultRenderDropIndicator = (target: DropTarget) => (
 );
 
 /**
- * Tree - Hierarchical tree view with optional drag-and-drop and visibility
+ * Tree - Hierarchical tree view with selection, visibility, and drag-and-drop
  *
- * Renders a selectable tree with support for nested items, drag-and-drop,
- * selection modes, and visibility controls. Use TreeItem to define nodes.
+ * Supports static or dynamic collections with keyboard navigation and accessibility.
+ *
+ * @param props - {@link TreeProps}
+ * @param props.children - Tree items or render function for dynamic collections.
+ * @param props.className - CSS class for the tree container.
+ * @param props.disabledKeys - Set of disabled item keys.
+ * @param props.dragAndDropConfig - Configuration for drag and drop behavior.
+ * @param props.expandedKeys - Set of expanded item keys.
+ * @param props.items - Data source for dynamic collections.
+ * @param props.selectedKeys - Set of selected item keys.
+ * @param props.showRuleLines - Whether to show connecting lines between items.
+ * @param props.showVisibility - Whether to show visibility toggle buttons.
+ * @param props.selectionMode - Selection mode for the tree.
+ * @param props.variant - Visual density variant.
+ * @param props.visibleKeys - Set of visible item keys.
+ * @param props.onVisibilityChange - Callback when item visibility changes.
+ * @param props.onSelectionChange - Callback when selection changes.
+ * @returns The rendered Tree component.
  *
  * @example
+ * // Dynamic collection
+ * ```tsx
  * <Tree items={items} expandedKeys={expandedKeys}>
- *   {(node) => <Node key={node.key} node={node} />}
+ *   {(node) => <TreeItem key={node.key}>{node.label}</TreeItem>}
  * </Tree>
+ * ```
  *
  * @example
+ * ```tsx
+ * // Static collection
  * <Tree>
- *   <TreeItem id='one' textValue='one'>
+ *   <TreeItem id="one" textValue="one">
  *     <TreeItemContent>One</TreeItemContent>
- *     <TreeItem id='two' textValue='two'>
+ *     <TreeItem id="two" textValue="two">
  *       <TreeItemContent>Two</TreeItemContent>
  *     </TreeItem>
  *   </TreeItem>
  * </Tree>
+ * ```
  */
 export function Tree<T>({
   children,

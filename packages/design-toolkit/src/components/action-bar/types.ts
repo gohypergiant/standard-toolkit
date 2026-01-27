@@ -11,9 +11,16 @@
  */
 import type { HTMLAttributes, PropsWithChildren } from 'react';
 
+/**
+ * Props for the ActionBar component.
+ *
+ * Extends standard HTML div attributes with action bar-specific options.
+ */
 export type ActionBarProps = PropsWithChildren<
   HTMLAttributes<HTMLDivElement>
 > & {
+  /** Visual elevation style: 'flat' for embedded, 'overlay' for floating, 'raised' for prominent. */
   elevation?: 'flat' | 'overlay' | 'raised';
+  /** Size of action buttons within the bar. */
   size?: 'medium' | 'small';
 };

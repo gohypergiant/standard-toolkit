@@ -16,6 +16,14 @@ import { clsx } from '@accelint/design-foundation/lib/utils';
 import styles from './styles.module.css';
 import type { KanbanComponentProps } from './types';
 
+/**
+ * KanbanColumnContainer - Container that holds all columns
+ *
+ * @param props - {@link KanbanComponentProps}
+ * @param props.children - Column elements.
+ * @param props.className - Optional CSS class name.
+ * @returns The rendered KanbanColumnContainer component.
+ */
 export function KanbanColumnContainer({
   children,
   className,

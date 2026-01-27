@@ -29,9 +29,22 @@ import type { Key } from '@react-types/shared';
 import type { TreeItemContentProps } from './types';
 
 /**
- * ItemContent - Content of a tree item
+ * TreeItemContent - Renders the display content of a tree node
  *
- * Renders the content of a tree item with proper styling
+ * @example
+ * ```tsx
+ * <TreeItem id="node" textValue="Node">
+ *   <TreeItemContent>
+ *     <TreeItemPrefixIcon><Folder /></TreeItemPrefixIcon>
+ *     <TreeItemLabel>Folder Name</TreeItemLabel>
+ *     <TreeItemDescription>Contains 5 items</TreeItemDescription>
+ *   </TreeItemContent>
+ * </TreeItem>
+ * ```
+ *
+ * @param props - {@link TreeItemContentProps}
+ * @param props.children - Content to render, or a render function receiving TreeItemContentRenderProps.
+ * @returns The rendered TreeItemContent component.
  */
 export function TreeItemContent({ children }: TreeItemContentProps) {
   const { showVisibility, variant, visibleKeys, onVisibilityChange } =

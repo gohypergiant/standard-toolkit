@@ -25,6 +25,11 @@ const meta = {
       options: ['circle', 'rectangle'],
     },
   },
+  parameters: {
+    docs: {
+      subtitle: 'Placeholder content for loading states',
+    },
+  },
 } satisfies Meta<typeof Skeleton>;
 
 export default meta;

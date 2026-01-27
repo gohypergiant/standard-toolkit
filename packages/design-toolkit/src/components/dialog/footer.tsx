@@ -20,6 +20,29 @@ import { ButtonContext } from '../button/context';
 import { DialogContext } from './context';
 import styles from './styles.module.css';
 
+/**
+ * DialogFooter - Container for dialog action buttons.
+ *
+ * Automatically sizes child Button components based on the dialog size
+ * and wires up default close behavior on button press.
+ *
+ * @param props - The dialog footer props.
+ * @param props.children - Action buttons to display in the footer.
+ * @param props.className - Additional CSS class name.
+ * @returns The dialog footer component.
+ *
+ * @example
+ * ```tsx
+ * <Dialog>
+ *   <DialogTitle>Confirm</DialogTitle>
+ *   <DialogContent>Are you sure?</DialogContent>
+ *   <DialogFooter>
+ *     <Button variant="flat">Cancel</Button>
+ *     <Button>Confirm</Button>
+ *   </DialogFooter>
+ * </Dialog>
+ * ```
+ */
 export function DialogFooter({
   children,
   className,

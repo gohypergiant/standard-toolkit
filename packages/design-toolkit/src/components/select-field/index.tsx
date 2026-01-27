@@ -35,48 +35,28 @@ import styles from './styles.module.css';
 import type { SelectFieldProps } from './types';
 
 /**
- * SelectField - A dropdown selection component with comprehensive form field features
+ * SelectField - Dropdown select with form field features
  *
- * Provides an accessible and feature-rich select dropdown with built-in validation,
- * multiple sizing options, virtualization support for large datasets, and seamless
- * integration with form libraries. Includes label, description, and error messaging
- * capabilities with customizable styling through className props.
+ * Includes label, description, error messaging, and virtualized rendering for large datasets.
  *
- * @example
- * // Basic select field
- * <SelectField label='Country' placeholder='Select a country'>
- *   <OptionsItem textValue='us'>United States</OptionsItem>
- *   <OptionsItem textValue='ca'>Canada</OptionsItem>
- *   <OptionsItem textValue='uk'>United Kingdom</OptionsItem>
- * </SelectField>
- *
- * @example
- * // Select field with validation and description
- * <SelectField
- *   label="Priority Level"
- *   description="Choose the urgency level for this task"
- *   errorMessage={errors.priority}
- *   isRequired
- *   isInvalid={!!errors.priority}
- * >
- *   <OptionsItem textValue="low">Low</OptionsItem>
- *   <OptionsItem textValue="medium">Medium</OptionsItem>
- *   <OptionsItem textValue="high">High</OptionsItem>
- * </SelectField>
+ * @param props - {@link SelectFieldProps}
+ * @param props.ref - Forwarded ref for the field container.
+ * @param props.size - Field size ('medium' or 'small').
+ * @param props.classNames - Custom CSS class names for field elements.
+ * @param props.label - Label text for the field.
+ * @param props.description - Helper text below the field.
+ * @param props.errorMessage - Error message displayed when invalid.
+ * @param props.isReadOnly - Displays value without dropdown interaction.
+ * @param props.layoutOptions - Virtualizer layout options for large lists.
+ * @returns The rendered SelectField component.
  *
  * @example
- * // Small size select field with custom styling
- * <SelectField
- *   size="small"
- *   placeholder="Quick select"
- *   classNames={{
- *     field: "custom-field-styles",
- *     trigger: "custom-trigger-styles"
- *   }}
- * >
- *   <OptionsItem textValue="option1">Option 1</OptionsItem>
- *   <OptionsItem textValue="option2">Option 2</OptionsItem>
+ * ```tsx
+ * <SelectField label="Country" onSelectionChange={setCountry}>
+ *   <Option id="us">United States</Option>
+ *   <Option id="ca">Canada</Option>
  * </SelectField>
+ * ```
  */
 export function SelectField({ ref, ...props }: SelectFieldProps) {
   [props, ref] = useContextProps(props, ref ?? null, SelectFieldContext);

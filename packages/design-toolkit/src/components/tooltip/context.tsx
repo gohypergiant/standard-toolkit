@@ -16,5 +16,6 @@ import { createContext } from 'react';
 import type { ContextValue } from 'react-aria-components';
 import type { TooltipTriggerProps } from './types';
 
+/** Context for sharing props across TooltipTrigger components */
 export const TooltipContext =
   createContext<ContextValue<TooltipTriggerProps, HTMLDivElement>>(null);

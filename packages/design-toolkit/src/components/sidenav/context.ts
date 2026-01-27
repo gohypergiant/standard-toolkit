@@ -17,6 +17,7 @@ import 'client-only';
 import { createContext } from 'react';
 import type { SidenavContextValue } from './types';
 
+/** Context for sidenav state and identification */
 export const SidenavContext = createContext<SidenavContextValue>({
   id: uuid(),
   isOpen: false,

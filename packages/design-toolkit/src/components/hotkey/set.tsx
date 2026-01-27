@@ -18,6 +18,24 @@ import { IconProvider } from '../icon/context';
 import styles from './styles.module.css';
 import type { ComponentPropsWithRef } from 'react';
 
+/**
+ * HotkeySet - Container for grouping multiple Hotkey components.
+ *
+ * Automatically sizes icons via IconProvider.
+ *
+ * @param props - ComponentPropsWithRef<'div'>
+ * @param props.className - Optional CSS class name.
+ * @returns The rendered HotkeySet component.
+ *
+ * @example
+ * ```tsx
+ * <HotkeySet>
+ *   <Hotkey>CMD</Hotkey>
+ *   <span>+</span>
+ *   <Hotkey>K</Hotkey>
+ * </HotkeySet>
+ * ```
+ */
 export function HotkeySet({
   className,
   ...rest

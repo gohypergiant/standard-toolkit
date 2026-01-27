@@ -13,6 +13,7 @@
 import { withThemeByClassName } from '@storybook/addon-themes';
 import type { Preview, ReactRenderer } from '@storybook/react-vite';
 import './index.css';
+import './assets/docs.css';
 import { DocsContainer } from '@storybook/addon-docs/blocks';
 import { createElement } from 'react';
 import { type ThemeVars, themes } from 'storybook/theming';

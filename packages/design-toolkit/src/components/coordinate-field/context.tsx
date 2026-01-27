@@ -74,6 +74,10 @@ export const CoordinateFieldStateContext =
 /**
  * Provider component for CoordinateField context
  * Wraps children with CoordinateFieldContext
+ *
+ * @param props - The provider props.
+ * @param props.children - Child components that will receive the coordinate field context.
+ * @returns The coordinate field context provider wrapping children.
  */
 export function CoordinateFieldProvider({
   children,
@@ -89,6 +93,11 @@ export function CoordinateFieldProvider({
 /**
  * Provider component for CoordinateField state context
  * Wraps children with CoordinateFieldStateContext
+ *
+ * @param props - The provider props.
+ * @param props.children - Child components that will receive the state context.
+ * @param props.value - The coordinate field state to provide.
+ * @returns The coordinate field state context provider wrapping children.
  */
 export function CoordinateFieldStateProvider({
   children,

@@ -54,11 +54,11 @@ For simple content that doesn't involve expensive collection processing, you can
 
 ## Props
 
-### DeferredCollectionProps
-
-* **`children`** - The content to render once ready: `ReactNode | (() => ReactNode)` (required). Use a function for React Aria collections to defer expensive processing.
-* **`fallback`** - Fallback element to show while deferring render: `ReactNode` (optional)
-* **`deferFrames`** - Number of animation frames to defer before rendering: `number` (default: 2)
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `children` | `ReactNode \| (() => ReactNode)` | - | Content to render once ready. Use a function for React Aria collections to defer expensive processing (required) |
+| `fallback` | `ReactNode` | - | Fallback element to show while deferring render |
+| `deferFrames` | `number` | `2` | Number of animation frames to defer before rendering |
 
 ## Implementation Notes
 

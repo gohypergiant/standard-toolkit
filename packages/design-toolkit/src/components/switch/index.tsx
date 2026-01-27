@@ -23,40 +23,23 @@ import styles from './styles.module.css';
 import type { SwitchProps } from './types';
 
 /**
- * Switch - A toggle control for binary state changes
+ * Switch - Toggle control for binary on/off states
  *
- * Provides an accessible toggle switch component for enabling/disabling features
- * or settings. Offers clear visual feedback for on/off states with smooth transitions
- * and proper keyboard and screen reader support.
+ * Provides visual feedback with smooth transitions and accessible keyboard/screen reader support.
+ *
+ * @param props - {@link SwitchProps}
+ * @param props.ref - Ref to the switch label element.
+ * @param props.children - Label content for the switch.
+ * @param props.classNames - Custom CSS class names for switch elements.
+ * @param props.labelPosition - Position of the label relative to the switch control.
+ * @returns The rendered Switch component.
  *
  * @example
- * // Basic switch
- * <Switch>Enable notifications</Switch>
- *
- * @example
- * // Controlled switch
- * <Switch
- *   isSelected={isEnabled}
- *   onChange={setIsEnabled}
- * >
- *   Dark mode
+ * ```tsx
+ * <Switch isSelected={enabled} onChange={setEnabled}>
+ *   Enable notifications
  * </Switch>
- *
- * @example
- * // Switch with default state
- * <Switch defaultSelected>
- *   Auto-save documents
- * </Switch>
- *
- * @example
- * // Disabled switch
- * <Switch isDisabled>
- *   Premium feature (upgrade required)
- * </Switch>
- *
- * @example
- * // Switch without label (icon-only)
- * <Switch aria-label="Toggle sidebar" />
+ * ```
  */
 export function Switch({ ref, ...props }: SwitchProps) {
   [props, ref] = useContextProps(props, ref ?? null, SwitchContext);

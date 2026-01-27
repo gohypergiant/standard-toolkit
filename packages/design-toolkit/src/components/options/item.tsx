@@ -19,6 +19,27 @@ import { OptionsItemLabel } from './item-label';
 import styles from './styles.module.css';
 import type { OptionsDataItem, OptionsItemProps } from './types';
 
+/**
+ * OptionsItem - Individual selectable item within an Options list
+ *
+ * Supports icons, labels, descriptions, and color variants.
+ * String children are automatically wrapped in OptionsItemLabel.
+ *
+ * @example
+ * ```tsx
+ * <OptionsItem textValue="Edit">
+ *   <Icon><Edit /></Icon>
+ *   <OptionsItemLabel>Edit</OptionsItemLabel>
+ * </OptionsItem>
+ * ```
+ *
+ * @param props - {@link OptionsItemProps}
+ * @param props.children - Content to render inside the item.
+ * @param props.classNames - CSS class names for item elements.
+ * @param props.color - Color variant for the item.
+ * @param props.textValue - Accessible text value for the item.
+ * @returns The rendered OptionsItem component.
+ */
 export function OptionsItem<T extends OptionsDataItem>({
   children,
   classNames,

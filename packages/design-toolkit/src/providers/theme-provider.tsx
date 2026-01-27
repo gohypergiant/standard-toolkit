@@ -30,6 +30,7 @@ import type {
 } from '@accelint/design-foundation/tokens/types';
 import type { PartialDeep } from 'type-fest';
 
+/** Theme mode for light or dark appearance */
 export type ThemeMode = 'dark' | 'light';
 type ContextColorTokens = SemanticColorTokens & StaticColorTokens;
 
@@ -55,6 +56,16 @@ type ThemeProviderProps = PropsWithChildren & {
   overrides?: PartialDeep<ThemeTokens>;
 };
 
+/**
+ * Provides theme context with mode toggling and token overrides
+ *
+ * @param props - {@link ThemeProviderProps}
+ * @param props.children - Content to render within the theme context.
+ * @param props.defaultMode - Initial theme mode (defaults to 'dark').
+ * @param props.onChange - Callback when theme mode changes.
+ * @param props.overrides - Partial overrides for theme tokens.
+ * @returns The theme provider wrapping children.
+ */
 export function ThemeProvider({
   children,
   defaultMode,
@@ -95,6 +106,11 @@ export function ThemeProvider({
   );
 }
 
+/**
+ * Access the current theme context
+ *
+ * @returns Theme context with mode, tokens, and toggleMode function.
+ */
 export function useTheme() {
   return useContext(ThemeContext);
 }

@@ -15,34 +15,20 @@ import styles from './styles.module.css';
 import type { SkeletonProps } from './types';
 
 /**
- * Skeleton - A flexible skeleton loader component for indicating loading states
+ * Skeleton - Placeholder content for loading states
  *
- * Used to show placeholder content while data is being fetched or processed.
- * Provides visual feedback to users during loading states with customizable shapes.
+ * Displays a pulsing placeholder while content is being fetched.
  *
- * @example
- * // Basic rectangular placeholder
- * <Skeleton />
- *
- * @example
- * // Circular placeholder (useful for avatars)
- * <Skeleton variant="circle" />
+ * @param props - {@link SkeletonProps}
+ * @param props.className - CSS class for the skeleton element.
+ * @param props.variant - Shape variant of the skeleton.
+ * @returns The rendered Skeleton component.
  *
  * @example
- * // With loading text content
- * <Skeleton>Loading content...</Skeleton>
- *
- * @example
- * // Nested placeholders for complex layouts
- * <Skeleton className="mb-xl p-m">
- *   <br />
- *   <br />
- *   <Skeleton className="w-[75%]" />
- * </Skeleton>
- *
- * @example
- * // Custom styling
- * <Skeleton className="w-[50%] mt-l" />
+ * ```tsx
+ * <Skeleton variant="rectangle" style={{ width: 200, height: 20 }} />
+ * <Skeleton variant="circle" style={{ width: 40, height: 40 }} />
+ * ```
  */
 export function Skeleton({
   className,

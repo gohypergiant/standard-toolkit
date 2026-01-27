@@ -22,6 +22,23 @@ import {
   useStopEventPropagation,
 } from 'react-querybuilder';
 
+/**
+ * RuleGroup - Container for organizing rules with a shared combinator
+ *
+ * Renders header with combinator selector and actions, body with rules, and footer with add actions.
+ *
+ * @example
+ * ```tsx
+ * <RuleGroup
+ *   ruleGroup={{ combinator: 'and', rules: [] }}
+ *   path={[]}
+ *   schema={queryBuilderSchema}
+ * />
+ * ```
+ *
+ * @param props - RuleGroupProps from react-querybuilder.
+ * @returns The rendered RuleGroup component.
+ */
 export function RuleGroup(props: RuleGroupProps) {
   const group = useRuleGroup(props);
 
@@ -68,6 +85,21 @@ export function RuleGroup(props: RuleGroupProps) {
   );
 }
 
+/**
+ * Header section with combinator selector and group actions (clone, lock, remove)
+ *
+ * @example
+ * ```tsx
+ * <RuleGroupHeaderComponent
+ *   {...ruleGroupProps}
+ *   combinator="and"
+ *   schema={queryBuilderSchema}
+ * />
+ * ```
+ *
+ * @param ruleGroup - Combined RuleGroupProps and useRuleGroup return value.
+ * @returns The rendered header with combinator and action controls.
+ */
 export function RuleGroupHeaderComponent(
   ruleGroup: RuleGroupProps & ReturnType<typeof useRuleGroup>,
 ) {
@@ -174,6 +206,21 @@ export function RuleGroupHeaderComponent(
   );
 }
 
+/**
+ * Footer section with add rule and add group actions
+ *
+ * @example
+ * ```tsx
+ * <RuleGroupFooterComponent
+ *   {...ruleGroupProps}
+ *   addRule={() => console.log('add rule')}
+ *   addGroup={() => console.log('add group')}
+ * />
+ * ```
+ *
+ * @param ruleGroup - Combined RuleGroupProps and useRuleGroup return value.
+ * @returns The rendered footer with add rule and add group buttons.
+ */
 export function RuleGroupFooterComponent(
   ruleGroup: RuleGroupProps & ReturnType<typeof useRuleGroup>,
 ) {

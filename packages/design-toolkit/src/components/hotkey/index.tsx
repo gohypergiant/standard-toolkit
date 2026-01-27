@@ -27,28 +27,43 @@ import type { HotkeyProps } from './types';
  * keyboard shortcuts. Supports multiple visual styles including outlined keys,
  * flat presentation, and icon-specific formatting.
  *
- * @example
- * // Basic hotkey display
- * <Hotkey>Ctrl</Hotkey>
+ * @param props - {@link HotkeyProps}
+ * @param props.ref - Ref to the kbd element.
+ * @param props.children - Key text or icon to display.
+ * @param props.className - Optional CSS class name.
+ * @param props.variant - Visual style variant.
+ * @returns The rendered Hotkey component.
  *
  * @example
+ * ```tsx
+ * // Basic hotkey display
+ * <Hotkey>Ctrl</Hotkey>
+ * ```
+ *
+ * @example
+ * ```tsx
  * // Hotkey combination with different variants
  * <HotkeySet>
  *   <Hotkey variant="outline">Cmd</Hotkey>
  *   <span>+</span>
  *   <Hotkey variant="outline">K</Hotkey>
  * </HotkeySet>
+ * ```
  *
  * @example
+ * ```tsx
  * // Flat style for inline text
  * <p>Press <Hotkey variant="flat">Enter</Hotkey> to submit</p>
+ * ```
  *
  * @example
+ * ```tsx
  * // Icon variant for special keys
  * <HotkeySet>
  *   <Hotkey variant="icon">⌘</Hotkey>
  *   <Hotkey>Space</Hotkey>
  * </HotkeySet>
+ * ```
  */
 export function Hotkey({ ref, children, ...props }: HotkeyProps) {
   [props, ref] = useContextProps(props, ref ?? null, HotkeyContext);

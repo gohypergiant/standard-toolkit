@@ -21,9 +21,7 @@ import type { ViewStackContextValue, ViewStackEvent } from './types';
 
 const bus = Broadcast.getInstance<ViewStackEvent>();
 
-/**
- * Context for ViewStack component
- */
+/** Context for sharing state across ViewStack components */
 export const ViewStackContext = createContext<ViewStackContextValue>({
   parent: null,
   stack: [],
@@ -32,9 +30,7 @@ export const ViewStackContext = createContext<ViewStackContextValue>({
   unregister: () => undefined,
 });
 
-/**
- * Event handlers for ViewStack events
- */
+/** Event handlers for ViewStack events */
 export const ViewStackEventHandlers = {
   back: (stack: UniqueId) => bus.emit(ViewStackEventTypes.back, { stack }),
   clear: (stack: UniqueId) => bus.emit(ViewStackEventTypes.clear, { stack }),
@@ -43,7 +39,22 @@ export const ViewStackEventHandlers = {
 } as const;
 
 /**
- * Hook for emitting ViewStack events
+ * Hook for programmatic ViewStack control from anywhere in the application
+ *
+ * @example
+ * ```tsx
+ * function MyComponent() {
+ *   const viewStack = useViewStackEmit();
+ *
+ *   return (
+ *     <Button onPress={() => viewStack.push('view-id')}>
+ *       Navigate to View
+ *     </Button>
+ *   );
+ * }
+ * ```
+ *
+ * @returns Object with emit functions for back, clear, push, and reset actions.
  */
 export function useViewStackEmit() {
   const emitBack = useEmit<ViewStackEvent>(ViewStackEventTypes.back);

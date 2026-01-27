@@ -17,5 +17,9 @@ import { createContext } from 'react';
 import type { ContextValue } from 'react-aria-components';
 import type { InputProps } from './types';
 
+/**
+ * Context for sharing Input props across component tree.
+ * Used internally by field components to pass props to Input.
+ */
 export const InputContext =
   createContext<ContextValue<InputProps, HTMLInputElement>>(null);

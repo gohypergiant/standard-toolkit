@@ -26,38 +26,30 @@ import type {
 } from './types';
 
 /**
- * ViewStack - Stack-based view manager for pushing/popping views
+ * ViewStack - Stack-based navigation for managing multiple views
  *
- * Manages a stack of views that can be pushed, popped, or reset programmatically
- * and is intended for building nested or stacked UIs such as Drawer views.
+ * Supports push, pop, clear, and reset operations with global event system.
+ *
+ * @param props - {@link ViewStackProps}
+ * @param props.id - Unique identifier for the stack.
+ * @param props.children - ViewStackView components.
+ * @param props.defaultView - Default view to display when the stack is initialized.
+ * @param props.onChange - Callback when the active view changes.
+ * @returns The rendered ViewStack component.
  *
  * @example
- * const ids = {
- *   stack: uuid(),
- *   a: uuid(),
- *   b: uuid(),
- * };
+ * ```tsx
+ * const ids = { stack: uuid(), a: uuid(), b: uuid() };
  *
  * <ViewStack id={ids.stack} defaultView={ids.a}>
  *   <ViewStackView id={ids.a}>
- *     <ViewStackTrigger for={ids.b}>
- *       <Button>
- *         Push View B
- *       </Button>
- *     </ViewStackTrigger>
- *     <h1>View A</h1>
+ *     <ViewStackTrigger for={ids.b}><Button>Go to B</Button></ViewStackTrigger>
  *   </ViewStackView>
  *   <ViewStackView id={ids.b}>
- *     <ViewStackTrigger for='back'>
- *       <Button variant='icon'>
- *         <Icon>
- *           <ChevronLeft />
- *         </Icon>
- *       </Button>
- *     </ViewStackTrigger>
- *     <h1>View B</h1>
+ *     <ViewStackTrigger for="back"><Button>Back</Button></ViewStackTrigger>
  *   </ViewStackView>
  * </ViewStack>
+ * ```
  */
 export function ViewStack({
   id,

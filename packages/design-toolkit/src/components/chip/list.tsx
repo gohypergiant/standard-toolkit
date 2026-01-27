@@ -24,8 +24,53 @@ import { ChipContext, ChipProvider } from './context';
 import styles from './styles.module.css';
 import type { ChipListProps } from './types';
 
+/**
+ * React context indicating whether chips are being rendered inside a ChipList.
+ */
 export const ChipListRenderingContext = createContext(false);
 
+/**
+ * ChipList - Container component for grouping multiple chips with shared behavior.
+ *
+ * Provides context for size and color, and enables selection and removal functionality.
+ *
+ * @param props - The chip list props.
+ * @param props.ref - Reference to the list container element.
+ * @param props.children - Chip components to render in the list.
+ * @param props.className - Additional CSS class names for styling.
+ * @param props.color - Default color for all chips in the list.
+ * @param props.size - Default size for all chips in the list.
+ * @param props.selectionMode - Enable single or multiple selection.
+ * @param props.onRemove - Callback when chips are removed.
+ * @returns The chip list component.
+ *
+ * @example
+ * ```tsx
+ * // Basic list
+ * <ChipList>
+ *   <Chip color="info">React</Chip>
+ *   <Chip color="advisory">TypeScript</Chip>
+ * </ChipList>
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // Selectable chips
+ * <ChipList selectionMode="multiple" onSelectionChange={handleChange}>
+ *   <SelectableChip id="react">React</SelectableChip>
+ *   <SelectableChip id="vue">Vue</SelectableChip>
+ * </ChipList>
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // Deletable chips
+ * <ChipList onRemove={(keys) => console.log('Removed:', keys)}>
+ *   <DeletableChip id="tag1">Tag 1</DeletableChip>
+ *   <DeletableChip id="tag2">Tag 2</DeletableChip>
+ * </ChipList>
+ * ```
+ */
 export function ChipList<T extends object>({
   ref,
   ...props

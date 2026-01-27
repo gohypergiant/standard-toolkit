@@ -97,13 +97,34 @@ function RowActionsMenu<T>({
 }
 
 /**
- * Table - Configurable data table with sorting and row actions
+ * Table - Configurable data table with sorting, selection, and row actions
  *
- * Standardizes table behavior (sorting, selection, row actions) and can be
- * used with column definitions from TanStack React Table.
+ * Supports data-driven mode with TanStack column definitions or static mode with subcomponents.
+ *
+ * @param props - {@link TableProps}
+ * @param props.children - Custom children for static mode.
+ * @param props.columns - Column definitions for data-driven mode.
+ * @param props.data - Data array for data-driven mode.
+ * @param props.showCheckbox - Whether to show selection checkboxes.
+ * @param props.rowSelection - Initial row selection state.
+ * @param props.kebabPosition - Position of row action menu.
+ * @param props.persistRowKebabMenu - Keep row kebab menu visible.
+ * @param props.persistHeaderKebabMenu - Keep header kebab menu visible.
+ * @param props.persistNumerals - Keep row numerals visible.
+ * @param props.enableSorting - Enable column sorting.
+ * @param props.enableColumnReordering - Enable column reordering.
+ * @param props.enableRowActions - Enable row action menu.
+ * @param props.manualSorting - Use server-side sorting.
+ * @param props.onSortChange - Callback when sort changes.
+ * @param props.onColumnReorderChange - Callback when column order changes.
+ * @param props.onRowSelectionChange - Callback when row selection changes.
+ * @param props.fullWidth - Whether table uses full width.
+ * @returns The rendered Table component.
  *
  * @example
- * <Table columns={columns} data={data} />
+ * ```tsx
+ * <Table columns={columns} data={rows} enableSorting showCheckbox />
+ * ```
  */
 export function Table<T extends { id: Key }>({
   children,

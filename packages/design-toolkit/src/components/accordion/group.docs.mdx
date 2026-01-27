@@ -4,34 +4,32 @@ import * as AccordionGroupStories from './group.stories';
 <Meta of={AccordionGroupStories} />
 
 # Accordion Group
-The Accordion Group component combines provides a convenient grouping for Accordion components. Use this component when you need a series of related Accordions that all track together in size and behavior. It supports both single and multiple expanded items.
+Groups multiple Accordion components with shared configuration. Use this component when you need related accordions that share variant styling and expansion behavior.
 
-## Example usage
+## Example Usage
 
-### Basic
 ```tsx
-// Accordion group with multiple items
-<AccordionGroup allowsMultipleExpanded={true}>
+<AccordionGroup>
   <Accordion>
     <AccordionHeader>
       <AccordionTrigger>
-        <Icon><Settings /></Icon>
-        Settings
+        <Icon><Placeholder /></Icon>
+        Accordion one
       </AccordionTrigger>
     </AccordionHeader>
     <AccordionPanel>
-      <p>Settings configuration options...</p>
+      <p>First accordion content...</p>
     </AccordionPanel>
   </Accordion>
   <Accordion>
     <AccordionHeader>
       <AccordionTrigger>
-        <Icon><Help /></Icon>
-        Help
+        <Icon><Placeholder /></Icon>
+        Accordion two
       </AccordionTrigger>
     </AccordionHeader>
     <AccordionPanel>
-      <p>Help documentation...</p>
+      <p>Second accordion content...</p>
     </AccordionPanel>
   </Accordion>
 </AccordionGroup>
@@ -43,11 +41,26 @@ The Accordion Group component combines provides a convenient grouping for Accord
 * **cozy** - Standard size with larger text and spacing (default)
 * **compact** - Smaller size with reduced text and spacing for space-constrained layouts
 
-### AccordionGroup Props
-The Accordion supports all the `Disclosure Group` [props and events from `react-aria-components`](https://react-spectrum.adobe.com/react-aria/DisclosureGroup.html#disclosuregroup-1) and
-* **`variant`** - Global variant for all child accordions.
+## Props
+Extends all [`DisclosureGroup` props](https://react-spectrum.adobe.com/react-aria/DisclosureGroup.html#disclosuregroup-1) from react-aria-components.
 
-See [Accordion](?path=/docs/components-accordion--playground) for details on props for individual sections.
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `'cozy' \| 'compact'` | `'cozy'` | Visual style for all child accordions |
+| `isDisabled` | `boolean` | `false` | Disables all child accordions |
+| `allowsMultipleExpanded` | `boolean` | `false` | Allow multiple accordions to be expanded simultaneously |
+| `expandedKeys` | `Iterable<Key>` | - | Controlled set of expanded accordion keys |
+| `defaultExpandedKeys` | `Iterable<Key>` | - | Default expanded keys (uncontrolled) |
+| `onExpandedChange` | `(keys: Set<Key>) => void` | - | Called when expanded keys change |
+| `className` | `string \| ((state) => string)` | - | CSS class name, supports render props |
+| `children` | `ReactNode` | - | Accordion components |
+
+See [Accordion](?path=/docs/components-accordion--playground) for individual accordion props.
 
 ## Implementation Notes
-The `AccordionGroup` component wraps the `DisclosureGroup` component from `react-aria-components`. [Docs](https://react-spectrum.adobe.com/react-aria/DisclosureGroup.html)
+- Wraps `DisclosureGroup` from react-aria-components
+- Provides variant context to all child accordions
+- Supports keyboard navigation between accordions
+
+**Related:**
+- [DisclosureGroup Docs](https://react-spectrum.adobe.com/react-aria/DisclosureGroup.html)

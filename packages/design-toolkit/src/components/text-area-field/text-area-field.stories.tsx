@@ -43,6 +43,11 @@ const meta = {
       },
     },
   },
+  parameters: {
+    docs: {
+      subtitle: 'Multi-line text input with label and validation',
+    },
+  },
 } satisfies Meta<typeof TextAreaField>;
 
 export default meta;

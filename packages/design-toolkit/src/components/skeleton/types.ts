@@ -12,6 +12,10 @@
 
 import type { ComponentPropsWithRef } from 'react';
 
+/**
+ * Props for the Skeleton component.
+ */
 export type SkeletonProps = ComponentPropsWithRef<'div'> & {
+  /** Shape variant of the skeleton. */
   variant?: 'rectangle' | 'circle';
 };

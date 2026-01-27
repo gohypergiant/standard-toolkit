@@ -19,6 +19,29 @@ import { useDragContext } from './kanban';
 import styles from './styles.module.css';
 import type { KanbanCardProps } from './types';
 
+/**
+ * KanbanCard - Individual draggable card component
+ *
+ * Provides drag-and-drop functionality with visual feedback
+ * including drop position indicators.
+ *
+ * @param props - {@link KanbanCardProps}
+ * @param props.className - Optional CSS class name.
+ * @param props.children - Card content (header, body).
+ * @param props.card - Card data.
+ * @param props.isActive - Whether this card is currently active/selected.
+ * @returns The rendered KanbanCard component.
+ *
+ * @example
+ * ```tsx
+ * <KanbanCard card={cardData}>
+ *   <KanbanCardHeader>
+ *     <KanbanCardHeaderTitle>{card.title}</KanbanCardHeaderTitle>
+ *   </KanbanCardHeader>
+ *   <KanbanCardBody>{card.body}</KanbanCardBody>
+ * </KanbanCard>
+ * ```
+ */
 export function KanbanCard({
   className,
   children,

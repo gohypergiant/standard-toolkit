@@ -28,24 +28,29 @@ import styles from './styles.module.css';
 import type { TextAreaFieldProps } from './types';
 
 /**
- * TextAreaField - A multi-line text input component with label and validation
+ * TextAreaField - Multi-line text input with label and validation
  *
- * Provides a complete form field experience for longer text content with integrated
- * label, description, and error message components. Handles validation states and
- * accessibility automatically while supporting resizable text areas.
+ * Provides integrated label, description, and error message with automatic accessibility.
+ *
+ * @param props - {@link TextAreaFieldProps}
+ * @param props.ref - Ref to the field container element.
+ * @param props.classNames - Custom CSS class names for field elements.
+ * @param props.description - Helper text displayed below the input.
+ * @param props.errorMessage - Error message displayed when validation fails.
+ * @param props.label - Label text for the field.
+ * @param props.inputProps - Props passed to the underlying TextArea element.
+ * @param props.size - Size variant of the field.
+ * @param props.isInvalid - Whether the field is in an invalid state.
+ * @returns The rendered TextAreaField component.
  *
  * @example
- * // Basic text area field
- * <TextAreaField label="Comments" />
- *
- * @example
- * // Text area with validation
+ * ```tsx
  * <TextAreaField
- *   isInvalid={true}
- *   errorMessage='Message is required'
- *   label='Foo'
- *   isRequired
- *   />
+ *   label="Description"
+ *   placeholder="Enter description..."
+ *   onChange={setDescription}
+ * />
+ * ```
  */
 export function TextAreaField({ ref, ...props }: TextAreaFieldProps) {
   [props, ref] = useContextProps(props, ref ?? null, TextAreaFieldContext);

@@ -12,7 +12,11 @@
 
 import type { ComponentPropsWithRef } from 'react';
 
+/**
+ * Props for the ClassificationBanner component.
+ */
 export type ClassificationBannerProps = ComponentPropsWithRef<'div'> & {
+  /** Classification level to display. */
   variant?:
     | 'missing'
     | 'unclassified'

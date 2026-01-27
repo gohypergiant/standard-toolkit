@@ -13,20 +13,34 @@
 import type { ComponentPropsWithRef, RefAttributes } from 'react';
 import type { TextProps } from 'react-aria-components';
 
+/**
+ * Props for the DetailsList component.
+ */
 export type DetailsListProps = Omit<
   ComponentPropsWithRef<'dl'>,
   'className'
 > & {
+  /** Custom class names for sub-elements. */
   classNames?: {
+    /** Class name for the list container. */
     list?: string;
+    /** Class name for label elements. */
     label?: string;
+    /** Class name for value elements. */
     value?: string;
   };
+  /** Text alignment for list items. */
   align?: 'center' | 'justify' | 'left';
 };
 
+/**
+ * Props for the DetailsListLabel component.
+ */
 export type DetailsListLabelProps = Omit<TextProps, 'elementType'> &
   RefAttributes<HTMLElement>;
 
+/**
+ * Props for the DetailsListValue component.
+ */
 export type DetailsListValueProps = Omit<TextProps, 'elementType'> &
   RefAttributes<HTMLElement>;

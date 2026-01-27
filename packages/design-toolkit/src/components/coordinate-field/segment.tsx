@@ -29,7 +29,29 @@ import type { CoordinateSegmentProps } from './types';
  * - Directional: "[NSEW]" - for DDM/DMS direction indicators
  * - Alphanumeric: "[0-9A-Z]" - for MGRS/UTM zone identifiers
  *
+ * @param props - The coordinate segment props.
+ * @param props.value - Current value of the segment.
+ * @param props.onChange - Callback when the segment value changes.
+ * @param props.onFocus - Callback when the segment gains focus.
+ * @param props.onBlur - Callback when the segment loses focus.
+ * @param props.onKeyDown - Callback for key down events.
+ * @param props.placeholder - Placeholder text for the segment.
+ * @param props.maxLength - Maximum character length for the segment.
+ * @param props.className - Additional CSS class name.
+ * @param props.isDisabled - Whether the segment is disabled.
+ * @param props.isReadOnly - Whether the segment is read-only.
+ * @param props.allowedChars - Regex pattern for allowed characters.
+ * @param props.segmentRef - Ref for the segment input element.
+ * @param props.segmentIndex - Index of this segment within the coordinate field.
+ * @param props.totalSegments - Total number of segments in the coordinate field.
+ * @param props.onAutoAdvance - Callback to advance focus to the next segment.
+ * @param props.onAutoRetreat - Callback to retreat focus to the previous segment.
+ * @param props.pad - Padding value for width calculation.
+ * @param props.ariaLabel - Accessible label for the segment.
+ * @returns The coordinate segment input component.
+ *
  * @example
+ * ```tsx
  * // Numeric segment (latitude degrees)
  * <CoordinateSegment
  *   value={latDegrees}
@@ -38,8 +60,10 @@ import type { CoordinateSegmentProps } from './types';
  *   maxLength={10}
  *   placeholder="00.00000"
  * />
+ * ```
  *
  * @example
+ * ```tsx
  * // Directional segment (latitude direction)
  * <CoordinateSegment
  *   value={latDir}
@@ -48,6 +72,7 @@ import type { CoordinateSegmentProps } from './types';
  *   maxLength={1}
  *   placeholder="N"
  * />
+ * ```
  */
 export function CoordinateSegment({
   value,

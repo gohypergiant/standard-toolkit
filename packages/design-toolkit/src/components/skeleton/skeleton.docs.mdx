@@ -5,68 +5,38 @@ import * as SkeletonStories from './skeleton.stories';
 <Meta of={SkeletonStories} />
 
 # Skeleton
-The Skeleton component provides a flexible skeleton loader for indicating loading states in your application. It creates placeholder content that mimics the shape and size of actual content while data is being fetched or processed. Skeleton loaders improve perceived performance and provide visual feedback to users during loading states.
 
-## Example usage
+Placeholder content for loading states with a pulsing animation.
+
 ```tsx
-// Basic rectangular placeholder
 <Skeleton />
 
-// Circular placeholder (useful for avatars)
 <Skeleton variant="circle" />
 
-// With loading text content
 <Skeleton>Loading content...</Skeleton>
 
-// Nested placeholders for complex layouts
 <Skeleton className="mb-xl p-m">
-  <br />
-  <br />
   <Skeleton className="w-[75%]" />
 </Skeleton>
-
-// Custom styling
-<Skeleton className="w-[50%] mt-l" />
 ```
-
-## Variants
-
-* **rectangle** - Rectangular placeholder with rounded corners (default)
-* **circle** - Circular placeholder, useful for avatars or circular elements
-
-The shape can be controlled via the `shape` prop. Both variants include a subtle pulse animation for better visual feedback.
 
 <Canvas of={SkeletonStories.Default} />
 
 ## Props
 
-* **`variant`** - Visual shape: `'rectangle'` (default) or `'circle'`
-* **`className`** - Additional CSS classes for custom styling
-* **`children`** - Optional content to display inside the skeleton (useful for text placeholders)
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `'rectangle' \| 'circle'` | `'rectangle'` | Shape of the placeholder |
+| `className` | `string` | — | Custom CSS class |
+| `children` | `ReactNode` | — | Nested content or placeholders |
 
-The component accepts all standard HTML div attributes and forwards them to the underlying element.
+Accepts all standard HTML div attributes.
 
-## Implementation Notes
-The `Skeleton` component is a simple, lightweight component built with Tailwind CSS and Tailwind Variants (tv).
+## Accessibility
 
-[Github Source](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-toolkit/src/components/skeleton)
+- Respects `prefers-reduced-motion` for animations
+- Semantic HTML structure
 
-The underlying element is a `div` with:
-- Base styling including light foreground color, transparent background, and padding
-- Pulse animation for visual feedback during loading states
-- Shape-specific styling:
-  - **Rectangle**: Full width with minimum height, rounded corners
-  - **Circle**: Square aspect ratio with full border radius
+## Related
 
-The component automatically handles:
-- Responsive sizing based on content
-- Smooth pulse animations (respects user's motion preferences)
-- Flexible layout integration through standard CSS classes
-- Accessibility through semantic HTML structure
-
-Skeleton components are commonly used in:
-- Content loading states
-- Form field placeholders
-- Card and list item placeholders
-- Avatar and image placeholders
-- Complex layout placeholders through nesting
+- [GitHub Source](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-toolkit/src/components/skeleton)

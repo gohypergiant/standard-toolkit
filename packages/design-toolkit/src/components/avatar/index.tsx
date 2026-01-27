@@ -25,33 +25,40 @@ import styles from './styles.module.css';
 import type { AvatarProps } from './types';
 
 /**
- * Avatar - A user profile image component with fallback support
+ * Displays a user's profile image with automatic fallback support.
+ * Built on Radix UI Avatar.
  *
- * Displays a user's profile image with automatic fallback to a default person icon
- * when the image fails to load. Supports multiple sizes and can include status badges.
- * Built on Radix UI Avatar for accessibility and reliability.
+ * @param props - The avatar props.
+ * @param props.ref - Reference to the root span element.
+ * @param props.children - Optional content such as a Badge to overlay on the avatar.
+ * @param props.classNames - Custom class names for avatar sub-elements.
+ * @param props.fallbackProps - Props passed to the fallback element.
+ * @param props.imageProps - Props passed to the image element.
+ * @param props.size - Size variant ('medium' or 'small').
+ * @returns The avatar component.
  *
  * @example
- * // Basic avatar with image
+ * ```tsx
  * <Avatar imageProps={{ src: "/user.jpg", alt: "User Name" }} />
+ * ```
  *
  * @example
- * // Avatar with fallback and custom size
+ * ```tsx
+ * // With initials fallback
  * <Avatar
- *   size="large"
+ *   size="small"
  *   imageProps={{ src: "/user.jpg", alt: "User Name" }}
  *   fallbackProps={{ children: "UN" }}
  * />
+ * ```
  *
  * @example
- * // Avatar with status badge
+ * ```tsx
+ * // With status badge
  * <Avatar imageProps={{ src: "/user.jpg", alt: "User Name" }}>
- *   <Badge variant="success" />
+ *   <Badge color="critical">3</Badge>
  * </Avatar>
- *
- * @example
- * // Avatar with only initials fallback
- * <Avatar fallbackProps={{ children: "JD" }} />
+ * ```
  */
 export function Avatar({ ref, ...props }: AvatarProps) {
   [props, ref] = useContextProps(props, ref ?? null, AvatarContext);
