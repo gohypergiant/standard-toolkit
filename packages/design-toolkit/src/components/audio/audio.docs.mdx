@@ -45,6 +45,12 @@ It is composed of the following components:
     <MuteButton />
   </div>
 </Audio>
+
+// Disable keyboard shortcuts (e.g. when inside a form)
+<Audio src="audio.mp3" noHotkeys />
+
+// Disable preference persistence
+<Audio src="audio.mp3" noVolumePref noMutedPref />
 ```
 
 <Canvas of={AudioStories.Default} />
@@ -60,6 +66,12 @@ Display a title above the controls, useful for showing the filename or track nam
 The Audio component provides callbacks for common media events.
 
 <Canvas of={AudioStories.Events} />
+
+## No Hotkeys
+
+Disable keyboard shortcuts when embedding in forms or apps with custom hotkey systems.
+
+<Canvas of={AudioStories.NoHotkeys} />
 
 ## Props
 
@@ -89,6 +101,16 @@ The Audio component provides callbacks for common media events.
 * **`classNames.timeRow`** - Applied to the time/seek row
 * **`classNames.controlsRow`** - Applied to the controls row
 * **`classNames.mediaControls`** - Applied to the media controls wrapper
+
+### Media Controller Props
+
+These props configure the underlying media-chrome `MediaController`:
+
+* **`noHotkeys`** - Disable all keyboard shortcuts (space=play, arrows=seek, m=mute). Useful when embedding in forms or apps with their own hotkey system.
+* **`hotkeys`** - Custom hotkey configuration string. See [media-chrome hotkeys docs](https://www.media-chrome.org/docs/en/keyboard-shortcuts).
+* **`noVolumePref`** - Don't persist volume level to localStorage across page loads.
+* **`noMutedPref`** - Don't persist muted state to localStorage across page loads.
+* **`lang`** - Language for media-chrome's built-in accessibility labels.
 
 ## Implementation Notes
 

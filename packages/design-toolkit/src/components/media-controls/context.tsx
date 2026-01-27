@@ -46,14 +46,15 @@ export function useMediaProviderGuard(): void {
 /**
  * Resolves disabled state from prop or context.
  *
- * Prop value takes precedence over context, defaulting to false if neither is set.
+ * Returns true if either the prop or context indicates disabled.
+ * A parent context disabling controls cannot be overridden by children.
  *
  * @param propIsDisabled - The disabled prop value.
  * @returns The resolved disabled state.
  */
-export function useResolvedDisabled(propIsDisabled?: boolean): boolean {
+export function useMediaControlsDisabled(propIsDisabled?: boolean): boolean {
   const context = useContext(MediaControlsContext);
-  return propIsDisabled ?? context?.isDisabled ?? false;
+  return Boolean(propIsDisabled || context?.isDisabled);
 }
 
 /**

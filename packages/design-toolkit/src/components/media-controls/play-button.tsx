@@ -18,9 +18,10 @@ import {
   useMediaDispatch,
   useMediaSelector,
 } from 'media-chrome/react/media-store';
+import { useCallback } from 'react';
 import { Button } from '../button';
 import { Icon } from '../icon';
-import { useResolvedDisabled } from './context';
+import { useMediaControlsDisabled } from './context';
 import type { PlayButtonProps } from './types';
 
 /**
@@ -51,14 +52,14 @@ export function PlayButton({
 }: PlayButtonProps) {
   const dispatch = useMediaDispatch();
   const mediaPaused = useMediaSelector((state) => state.mediaPaused);
-  const isDisabled = useResolvedDisabled(isDisabledProp);
+  const isDisabled = useMediaControlsDisabled(isDisabledProp);
 
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     const type = mediaPaused
       ? MediaActionTypes.MEDIA_PLAY_REQUEST
       : MediaActionTypes.MEDIA_PAUSE_REQUEST;
     dispatch({ type });
-  };
+  }, [dispatch, mediaPaused]);
 
   return (
     <Button

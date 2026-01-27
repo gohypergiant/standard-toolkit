@@ -286,13 +286,13 @@ describe('SeekButton', () => {
       expect(screen.getByRole('button')).toBeDisabled();
     });
 
-    it('should allow isDisabled prop to override context', () => {
+    it('should be disabled when context is disabled regardless of prop', () => {
       render(
         <MediaControlsProvider isDisabled={true}>
           <SeekButton direction='forward' isDisabled={false} />
         </MediaControlsProvider>,
       );
-      expect(screen.getByRole('button')).not.toBeDisabled();
+      expect(screen.getByRole('button')).toBeDisabled();
     });
   });
 });

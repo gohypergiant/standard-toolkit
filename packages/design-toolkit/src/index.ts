@@ -334,8 +334,8 @@ export type {
 export {
   MediaControlsContext,
   MediaControlsProvider,
+  useMediaControlsDisabled,
   useMediaProviderGuard,
-  useResolvedDisabled,
 } from './components/media-controls/context';
 export { MediaControls } from './components/media-controls';
 export { MuteButton } from './components/media-controls/mute-button';

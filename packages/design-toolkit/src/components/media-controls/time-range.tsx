@@ -14,7 +14,7 @@
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import { MediaTimeDisplay, MediaTimeRange } from 'media-chrome/react';
-import { useResolvedDisabled } from './context';
+import { useMediaControlsDisabled } from './context';
 import styles from './styles.module.css';
 import type { TimeRangeProps } from './types';
 
@@ -43,7 +43,7 @@ export function TimeRange({
   isDisabled: isDisabledProp,
   ref,
 }: TimeRangeProps) {
-  const isDisabled = useResolvedDisabled(isDisabledProp);
+  const isDisabled = useMediaControlsDisabled(isDisabledProp);
 
   return (
     <div ref={ref} className={clsx(styles.timeRange, className)}>

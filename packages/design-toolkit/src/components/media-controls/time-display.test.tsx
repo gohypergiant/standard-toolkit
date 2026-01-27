@@ -136,14 +136,14 @@ describe('TimeDisplay', () => {
       expect(wrapper).toHaveAttribute('data-disabled');
     });
 
-    it('should allow isDisabled prop to override context', () => {
+    it('should be disabled when context is disabled regardless of prop', () => {
       render(
         <MediaControlsProvider isDisabled={true}>
           <TimeDisplay isDisabled={false} />
         </MediaControlsProvider>,
       );
       const wrapper = screen.getByTestId('media-time-display').parentElement;
-      expect(wrapper).not.toHaveAttribute('data-disabled');
+      expect(wrapper).toHaveAttribute('data-disabled', 'true');
     });
   });
 });

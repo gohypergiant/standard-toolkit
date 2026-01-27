@@ -23,9 +23,6 @@ import { VolumeSlider } from './volume-slider';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ReactNode } from 'react';
 
-const SAMPLE_AUDIO =
-  'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3';
-
 /**
  * Decorator that wraps stories in MediaProvider with an audio element.
  * Required for MediaControls to function properly.
@@ -35,7 +32,11 @@ function MediaProviderDecorator({ children }: { children: ReactNode }) {
     <MediaProvider>
       <MediaController audio>
         {/* biome-ignore lint/a11y/useMediaCaption: Demo audio for Storybook */}
-        <audio slot='media' src={SAMPLE_AUDIO} preload='metadata' />
+        <audio
+          slot='media'
+          src='https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'
+          preload='metadata'
+        />
         {children}
       </MediaController>
     </MediaProvider>

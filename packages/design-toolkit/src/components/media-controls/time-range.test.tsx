@@ -71,13 +71,13 @@ describe('TimeRange', () => {
       expect(screen.getByRole('slider')).toBeDisabled();
     });
 
-    it('should allow isDisabled prop to override context', () => {
+    it('should be disabled when context is disabled regardless of prop', () => {
       render(
         <MediaControlsProvider isDisabled={true}>
           <TimeRange isDisabled={false} />
         </MediaControlsProvider>,
       );
-      expect(screen.getByRole('slider')).not.toBeDisabled();
+      expect(screen.getByRole('slider')).toBeDisabled();
     });
   });
 });

@@ -15,7 +15,7 @@ import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import { MediaDurationDisplay, MediaTimeDisplay } from 'media-chrome/react';
 import { useMediaSelector } from 'media-chrome/react/media-store';
-import { useResolvedDisabled } from './context';
+import { useMediaControlsDisabled } from './context';
 import styles from './styles.module.css';
 import type { TimeDisplayProps } from './types';
 
@@ -68,7 +68,7 @@ export function TimeDisplay({
   ref,
 }: TimeDisplayProps) {
   const mediaDuration = useMediaSelector((state) => state.mediaDuration);
-  const isDisabled = useResolvedDisabled(isDisabledProp);
+  const isDisabled = useMediaControlsDisabled(isDisabledProp);
   const isLoaded = mediaDuration != null && mediaDuration > 0;
 
   const renderContent = () => {

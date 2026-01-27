@@ -21,7 +21,7 @@ import {
 } from 'media-chrome/react/media-store';
 import { Button } from '../button';
 import { Icon } from '../icon';
-import { useResolvedDisabled } from './context';
+import { useMediaControlsDisabled } from './context';
 import type { SeekButtonProps } from './types';
 
 const logger = getLogger({
@@ -83,7 +83,7 @@ export function SeekButton({
   const dispatch = useMediaDispatch();
   const mediaCurrentTime = useMediaSelector((state) => state.mediaCurrentTime);
   const mediaDuration = useMediaSelector((state) => state.mediaDuration);
-  const isDisabledFromContext = useResolvedDisabled(isDisabledProp);
+  const isDisabledFromContext = useMediaControlsDisabled(isDisabledProp);
 
   // Validate and resolve seekOffset
   const seekOffset = isPositiveFinite(seekOffsetProp)

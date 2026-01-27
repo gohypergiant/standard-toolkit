@@ -10,32 +10,39 @@
  * governing permissions and limitations under the License.
  */
 
-import type { ComponentPropsWithRef, ReactNode } from 'react';
+import type { ComponentProps, ComponentPropsWithRef, ReactNode } from 'react';
+import type { MediaController } from 'media-chrome/react';
 
 export type AudioProps = Omit<
   ComponentPropsWithRef<'audio'>,
-  'children' | 'onEnded' | 'onTimeUpdate' | 'onError'
-> & {
-  /** Title to display (e.g., filename) */
-  title?: string;
-  /** Disable all audio controls */
-  isDisabled?: boolean;
-  /** Custom controls (replaces default layout) */
-  children?: ReactNode;
-  /** Class names for sub-elements */
-  classNames?: {
-    container?: string;
+  'children' | 'onEnded' | 'onTimeUpdate' | 'onError' | 'src' | 'className'
+> &
+  Pick<
+    ComponentProps<typeof MediaController>,
+    'noHotkeys' | 'hotkeys' | 'noVolumePref' | 'noMutedPref' | 'lang'
+  > & {
+    /** Audio source URL */
+    src: string;
+    /** Title to display (e.g., filename) */
     title?: string;
-    mediaControls?: string;
-    timeRow?: string;
-    controlsRow?: string;
+    /** Disable all audio controls */
+    isDisabled?: boolean;
+    /** Custom controls (replaces default layout) */
+    children?: ReactNode;
+    /** Class names for sub-elements */
+    classNames?: {
+      container?: string;
+      title?: string;
+      mediaControls?: string;
+      timeRow?: string;
+      controlsRow?: string;
+    };
+    /** Callback when audio ends */
+    onEnded?: () => void;
+    /** Callback when playback time updates */
+    onTimeUpdate?: (currentTime: number) => void;
+    /** Callback when audio fails to load or encounters an error */
+    onError?: (error: MediaError | null) => void;
+    /** Custom playback rate options (default: [1, 2, 3]) */
+    playbackRates?: number[];
   };
-  /** Callback when audio ends */
-  onEnded?: () => void;
-  /** Callback when playback time updates */
-  onTimeUpdate?: (currentTime: number) => void;
-  /** Callback when audio fails to load or encounters an error */
-  onError?: (error: MediaError | null) => void;
-  /** Custom playback rate options (default: [1, 2, 3]) */
-  playbackRates?: number[];
-};

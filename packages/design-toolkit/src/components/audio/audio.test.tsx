@@ -9,8 +9,10 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
+import type { ReactNode } from 'react';
 import type { AudioProps } from './types';
 
 // Mock media-chrome hooks
@@ -29,7 +31,7 @@ vi.mock('media-chrome/react/media-store', () => ({
   }),
   useMediaDispatch: vi.fn(() => mockDispatch),
   useMediaStore: vi.fn(() => ({ getState: vi.fn() })),
-  MediaProvider: ({ children }: { children: React.ReactNode }) => (
+  MediaProvider: ({ children }: { children: ReactNode }) => (
     <div data-testid='media-provider'>{children}</div>
   ),
   useMediaRef: vi.fn(() => vi.fn()),
@@ -49,7 +51,7 @@ vi.mock('media-chrome/react', () => ({
     audio,
     ...props
   }: {
-    children: React.ReactNode;
+    children: ReactNode;
     className?: string;
     audio?: boolean;
   }) => (
@@ -119,8 +121,7 @@ describe('Audio', () => {
 
   it('should not display title row when title is not provided', () => {
     setup({ src: 'test.mp3' });
-    const titleRow = document.querySelector('[class*="titleRow"]');
-    expect(titleRow).not.toBeInTheDocument();
+    expect(screen.queryByText('test.mp3')).not.toBeInTheDocument();
   });
 
   it('should render default controls layout', () => {
@@ -194,34 +195,42 @@ describe('Audio', () => {
   it('should call onTimeUpdate callback with current time', () => {
     const onTimeUpdate = vi.fn();
     setup({ onTimeUpdate });
-    const audio = document.querySelector('audio') as HTMLAudioElement;
-    // Set currentTime and trigger event
-    Object.defineProperty(audio, 'currentTime', { value: 42, writable: true });
-    fireEvent.timeUpdate(audio);
+    const audio = document.querySelector('audio');
+    if (audio) {
+      Object.defineProperty(audio, 'currentTime', {
+        value: 42,
+        writable: true,
+      });
+      fireEvent.timeUpdate(audio);
+    }
     expect(onTimeUpdate).toHaveBeenCalledWith(42);
   });
 
   it('should not call onTimeUpdate callback when currentTime is NaN', () => {
     const onTimeUpdate = vi.fn();
     setup({ onTimeUpdate });
-    const audio = document.querySelector('audio') as HTMLAudioElement;
-    Object.defineProperty(audio, 'currentTime', {
-      value: Number.NaN,
-      writable: true,
-    });
-    fireEvent.timeUpdate(audio);
+    const audio = document.querySelector('audio');
+    if (audio) {
+      Object.defineProperty(audio, 'currentTime', {
+        value: Number.NaN,
+        writable: true,
+      });
+      fireEvent.timeUpdate(audio);
+    }
     expect(onTimeUpdate).not.toHaveBeenCalled();
   });
 
   it('should not call onTimeUpdate callback when currentTime is Infinity', () => {
     const onTimeUpdate = vi.fn();
     setup({ onTimeUpdate });
-    const audio = document.querySelector('audio') as HTMLAudioElement;
-    Object.defineProperty(audio, 'currentTime', {
-      value: Number.POSITIVE_INFINITY,
-      writable: true,
-    });
-    fireEvent.timeUpdate(audio);
+    const audio = document.querySelector('audio');
+    if (audio) {
+      Object.defineProperty(audio, 'currentTime', {
+        value: Number.POSITIVE_INFINITY,
+        writable: true,
+      });
+      fireEvent.timeUpdate(audio);
+    }
     expect(onTimeUpdate).not.toHaveBeenCalled();
   });
 
@@ -233,12 +242,6 @@ describe('Audio', () => {
       fireEvent.loadedMetadata(audio);
     }
     expect(onLoadedMetadata).toHaveBeenCalledTimes(1);
-  });
-
-  it('should apply className to container', () => {
-    setup({ className: 'custom-class' });
-    const controller = screen.getByTestId('media-controller');
-    expect(controller).toHaveClass('custom-class');
   });
 
   it('should apply classNames.container to container', () => {
@@ -323,31 +326,37 @@ describe('Audio', () => {
   describe('error state', () => {
     it('should display fallback error message when audio fails to load with no error', () => {
       setup();
-      const audio = document.querySelector('audio') as HTMLAudioElement;
-      fireEvent.error(audio);
+      const audio = document.querySelector('audio');
+      if (audio) {
+        fireEvent.error(audio);
+      }
       expect(screen.getByText('Unable to load audio file')).toBeInTheDocument();
     });
 
     it('should display fallback message for MEDIA_ERR_ABORTED (user-initiated abort)', () => {
       setup();
-      const audio = document.querySelector('audio') as HTMLAudioElement;
-      Object.defineProperty(audio, 'error', {
-        value: { code: 1 }, // MEDIA_ERR_ABORTED
-        writable: true,
-      });
-      fireEvent.error(audio);
+      const audio = document.querySelector('audio');
+      if (audio) {
+        Object.defineProperty(audio, 'error', {
+          value: { code: 1 }, // MEDIA_ERR_ABORTED
+          writable: true,
+        });
+        fireEvent.error(audio);
+      }
       // MEDIA_ERR_ABORTED is treated as non-error by media-chrome, so fallback is shown
       expect(screen.getByText('Unable to load audio file')).toBeInTheDocument();
     });
 
     it('should display MEDIA_ERR_NETWORK message', () => {
       setup();
-      const audio = document.querySelector('audio') as HTMLAudioElement;
-      Object.defineProperty(audio, 'error', {
-        value: { code: 2 }, // MEDIA_ERR_NETWORK
-        writable: true,
-      });
-      fireEvent.error(audio);
+      const audio = document.querySelector('audio');
+      if (audio) {
+        Object.defineProperty(audio, 'error', {
+          value: { code: 2 }, // MEDIA_ERR_NETWORK
+          writable: true,
+        });
+        fireEvent.error(audio);
+      }
       expect(
         screen.getByText('A network error caused the media download to fail.'),
       ).toBeInTheDocument();
@@ -355,12 +364,14 @@ describe('Audio', () => {
 
     it('should display MEDIA_ERR_DECODE message', () => {
       setup();
-      const audio = document.querySelector('audio') as HTMLAudioElement;
-      Object.defineProperty(audio, 'error', {
-        value: { code: 3 }, // MEDIA_ERR_DECODE
-        writable: true,
-      });
-      fireEvent.error(audio);
+      const audio = document.querySelector('audio');
+      if (audio) {
+        Object.defineProperty(audio, 'error', {
+          value: { code: 3 }, // MEDIA_ERR_DECODE
+          writable: true,
+        });
+        fireEvent.error(audio);
+      }
       expect(
         screen.getByText(
           'A media error caused playback to be aborted. The media could be corrupt or your browser does not support this format.',
@@ -370,12 +381,14 @@ describe('Audio', () => {
 
     it('should display MEDIA_ERR_SRC_NOT_SUPPORTED message', () => {
       setup();
-      const audio = document.querySelector('audio') as HTMLAudioElement;
-      Object.defineProperty(audio, 'error', {
-        value: { code: 4 }, // MEDIA_ERR_SRC_NOT_SUPPORTED
-        writable: true,
-      });
-      fireEvent.error(audio);
+      const audio = document.querySelector('audio');
+      if (audio) {
+        Object.defineProperty(audio, 'error', {
+          value: { code: 4 }, // MEDIA_ERR_SRC_NOT_SUPPORTED
+          writable: true,
+        });
+        fireEvent.error(audio);
+      }
       expect(
         screen.getByText(
           'An unsupported error occurred. The server or network failed, or your browser does not support this format.',
@@ -386,20 +399,24 @@ describe('Audio', () => {
     it('should call onError callback with MediaError when audio fails', () => {
       const onError = vi.fn();
       setup({ onError });
-      const audio = document.querySelector('audio') as HTMLAudioElement;
+      const audio = document.querySelector('audio');
       const mockError = { code: 4, message: 'MEDIA_ERR_SRC_NOT_SUPPORTED' };
-      Object.defineProperty(audio, 'error', {
-        value: mockError,
-        writable: true,
-      });
-      fireEvent.error(audio);
+      if (audio) {
+        Object.defineProperty(audio, 'error', {
+          value: mockError,
+          writable: true,
+        });
+        fireEvent.error(audio);
+      }
       expect(onError).toHaveBeenCalledWith(mockError);
     });
 
     it('should disable all controls when audio fails to load', () => {
       setup();
-      const audio = document.querySelector('audio') as HTMLAudioElement;
-      fireEvent.error(audio);
+      const audio = document.querySelector('audio');
+      if (audio) {
+        fireEvent.error(audio);
+      }
       const buttons = screen.getAllByRole('button');
       for (const button of buttons) {
         expect(button).toBeDisabled();
@@ -408,12 +425,14 @@ describe('Audio', () => {
 
     it('should reset error state when source changes', () => {
       const { rerender } = render(<Audio src='bad-audio.mp3' />);
-      const audio = document.querySelector('audio') as HTMLAudioElement;
-      Object.defineProperty(audio, 'error', {
-        value: { code: 4 },
-        writable: true,
-      });
-      fireEvent.error(audio);
+      const audio = document.querySelector('audio');
+      if (audio) {
+        Object.defineProperty(audio, 'error', {
+          value: { code: 4 },
+          writable: true,
+        });
+        fireEvent.error(audio);
+      }
       const errorMessage =
         'An unsupported error occurred. The server or network failed, or your browser does not support this format.';
       expect(screen.getByText(errorMessage)).toBeInTheDocument();

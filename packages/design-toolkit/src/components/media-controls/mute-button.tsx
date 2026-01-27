@@ -19,9 +19,10 @@ import {
   useMediaSelector,
   VolumeLevels,
 } from 'media-chrome/react/media-store';
+import { useCallback } from 'react';
 import { Button } from '../button';
 import { Icon } from '../icon';
-import { useResolvedDisabled } from './context';
+import { useMediaControlsDisabled } from './context';
 import type { MuteButtonProps } from './types';
 
 /**
@@ -53,17 +54,17 @@ export function MuteButton({
   const dispatch = useMediaDispatch();
   const mediaMuted = useMediaSelector((state) => state.mediaMuted);
   const mediaVolumeLevel = useMediaSelector((state) => state.mediaVolumeLevel);
-  const isDisabled = useResolvedDisabled(isDisabledProp);
+  const isDisabled = useMediaControlsDisabled(isDisabledProp);
 
   // Effective muted state: true when volume is off (either muted or volume=0)
   const isEffectivelyMuted = mediaVolumeLevel === VolumeLevels.OFF;
 
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     const type = mediaMuted
       ? MediaActionTypes.MEDIA_UNMUTE_REQUEST
       : MediaActionTypes.MEDIA_MUTE_REQUEST;
     dispatch({ type });
-  };
+  }, [dispatch, mediaMuted]);
 
   return (
     <Button
