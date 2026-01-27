@@ -13,6 +13,7 @@
 // biome-ignore lint/style/useNamingConvention: acronym
 type RGBA = [number, number, number, number];
 
+/** Static color tokens for classification levels and rules of engagement */
 export type StaticColorTokens = {
   classification: {
     missing: RGBA;
@@ -35,6 +36,7 @@ export type StaticColorTokens = {
   };
 };
 
+/** Semantic color tokens for backgrounds, foregrounds, outlines, and shadows */
 export type SemanticColorTokens = {
   bg: {
     surface: {
@@ -200,6 +202,7 @@ export type SemanticColorTokens = {
   };
 };
 
+/** Complete theme token structure including colors, typography, spacing, radius, and shadows */
 export type ThemeTokens = {
   static: StaticColorTokens;
   dark: SemanticColorTokens;

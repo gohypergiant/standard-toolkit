@@ -44,6 +44,11 @@ const meta = {
       options: ['medium', 'small'],
     },
   },
+  parameters: {
+    docs: {
+      subtitle: 'Dropdown select with form field features and virtualization',
+    },
+  },
 } satisfies Meta<typeof SelectField>;
 
 export default meta;

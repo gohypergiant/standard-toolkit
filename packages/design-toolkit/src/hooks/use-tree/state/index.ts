@@ -30,6 +30,13 @@ import type {
   UseTreeStateOptions,
 } from '../types';
 
+/**
+ * Stateful tree manager with drag-and-drop, selection, expansion, and visibility controls
+ *
+ * @param options - {@link UseTreeStateOptions}
+ * @param options.items - Initial tree node items.
+ * @returns {@link UseTreeState} Tree state, actions, and drag-and-drop configuration.
+ */
 export function useTreeState<T>({
   items,
 }: UseTreeStateOptions<T>): UseTreeState<T> {

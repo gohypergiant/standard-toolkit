@@ -23,6 +23,8 @@ import type { AccordionPanelProps } from './types';
  * Wraps collapsible content that is shown or hidden when the
  * corresponding accordion trigger is activated.
  *
+ * Wraps react-aria-components DisclosurePanel with consistent styling.
+ *
  * @param props - The accordion panel props.
  * @param props.ref - Reference to the panel div element.
  * @param props.children - Content to display within the panel.

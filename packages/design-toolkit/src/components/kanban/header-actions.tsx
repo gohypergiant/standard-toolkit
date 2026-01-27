@@ -16,6 +16,14 @@ import { clsx } from '@accelint/design-foundation/lib/utils';
 import styles from './styles.module.css';
 import type { KanbanComponentProps } from './types';
 
+/**
+ * KanbanHeaderActions - Container for header action buttons
+ *
+ * @param props - {@link KanbanComponentProps}
+ * @param props.children - Action button elements.
+ * @param props.className - Optional CSS class name.
+ * @returns The rendered KanbanHeaderActions component.
+ */
 export function KanbanHeaderActions({
   children,
   className,

@@ -1,7 +1,7 @@
 {
   "name": "@accelint/smeegl",
   "description": "A small, spreet-based spritesheet/texture package for use with Deck.gl.",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "bin": {

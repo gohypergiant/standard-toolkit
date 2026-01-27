@@ -13,9 +13,18 @@
 import type { Axis } from '@react-types/overlays';
 import type { ComponentPropsWithRef } from 'react';
 
+/**
+ * Props for the Badge component.
+ *
+ * Extends span props with color, positioning, and offset options.
+ */
 export type BadgeProps = ComponentPropsWithRef<'span'> & {
+  /** Badge content. Empty renders as a dot indicator. */
   children?: boolean | null | number | string;
+  /** Semantic color variant for the badge. */
   color?: 'info' | 'advisory' | 'normal' | 'serious' | 'critical';
+  /** Offset from the positioned edge in pixels. */
   offset?: number | { x?: number; y?: number };
+  /** Position of the badge relative to its container. */
   placement?: Axis | `${'top' | 'bottom'} ${'left' | 'right'}`;
 };

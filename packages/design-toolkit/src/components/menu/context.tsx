@@ -17,5 +17,9 @@ import { createContext } from 'react';
 import type { ContextValue } from 'react-aria-components';
 import type { MenuProps } from './types';
 
+/**
+ * Context for sharing Menu props across component tree.
+ * Used internally by Menu subcomponents for variant and state coordination.
+ */
 export const MenuContext =
   createContext<ContextValue<MenuProps<unknown>, HTMLDivElement>>(null);

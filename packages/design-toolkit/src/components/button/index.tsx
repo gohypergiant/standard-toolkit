@@ -30,32 +30,51 @@ import type { ButtonProps } from './types';
  * sizes, and interactive states. Includes icon support and integrates with React Aria
  * for keyboard navigation and accessibility features.
  *
- * @example
- * // Basic button
- * <Button>Click me</Button>
+ * @param props - The button props.
+ * @param props.ref - Reference to the button element.
+ * @param props.children - Button content (text, icons, or both).
+ * @param props.className - Additional CSS class names for styling.
+ * @param props.color - Semantic color variant.
+ * @param props.size - Size of the button.
+ * @param props.variant - Visual style variant.
+ * @returns The button component.
  *
  * @example
+ * ```tsx
+ * // Basic button
+ * <Button>Click me</Button>
+ * ```
+ *
+ * @example
+ * ```tsx
  * // Primary button with different sizes
  * <Button variant="filled" size="large">Large Filled</Button>
  * <Button variant="outline" size="small">Small Outline</Button>
+ * ```
  *
  * @example
+ * ```tsx
  * // Button with icon
  * <Button variant="flat">
  *   <Icon><Plus /></Icon>
  *   Add Item
  * </Button>
+ * ```
  *
  * @example
+ * ```tsx
  * // Icon-only button
  * <Button variant="icon">
  *   <Icon><Settings /></Icon>
  * </Button>
+ * ```
  *
  * @example
+ * ```tsx
  * // Button with different colors
  * <Button color="critical">Critical Button</Button>
  * <Button color="serious">Delete</Button>
+ * ```
  */
 export function Button({ ref, ...props }: ButtonProps) {
   [props, ref] = useContextProps(props, ref ?? null, ButtonContext);

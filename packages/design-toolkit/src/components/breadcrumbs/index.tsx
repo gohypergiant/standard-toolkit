@@ -26,11 +26,18 @@ import styles from './styles.module.css';
  * Displays the user's location within an application hierarchy and provides
  * links back to parent pages. The final item represents the current page.
  *
+ * @param props - The breadcrumbs props.
+ * @param props.children - BreadcrumbItem components representing the navigation path.
+ * @param props.className - Additional CSS class names for styling.
+ * @returns The breadcrumbs navigation component.
+ *
  * @example
+ * ```tsx
  * <Breadcrumbs>
  *   <BreadcrumbItem linkProps={{ href: '/' }}>Home</BreadcrumbItem>
  *   <BreadcrumbItem>Current</BreadcrumbItem>
  * </Breadcrumbs>
+ * ```
  */
 export function Breadcrumbs({
   children,

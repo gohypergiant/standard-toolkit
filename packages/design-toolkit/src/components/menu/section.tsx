@@ -22,6 +22,26 @@ import {
 import styles from './styles.module.css';
 import type { MenuSectionProps } from './types';
 
+/**
+ * MenuSection - Groups related menu items with an optional header
+ *
+ * Use to organize menu items into logical groups with visual separation.
+ *
+ * @example
+ * ```tsx
+ * <MenuSection title="File Actions">
+ *   <MenuItem>New</MenuItem>
+ *   <MenuItem>Open</MenuItem>
+ * </MenuSection>
+ * ```
+ *
+ * @param props - {@link MenuSectionProps}
+ * @param props.children - Menu items to render in the section.
+ * @param props.classNames - CSS class names for section elements.
+ * @param props.items - Collection of items for dynamic rendering.
+ * @param props.title - Title displayed in the section header.
+ * @returns The rendered MenuSection component.
+ */
 export function MenuSection<T extends object>({
   children,
   classNames,

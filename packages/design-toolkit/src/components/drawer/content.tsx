@@ -13,6 +13,25 @@ import { clsx } from '@accelint/design-foundation/lib/utils';
 import styles from './styles.module.css';
 import type { ComponentPropsWithRef } from 'react';
 
+/**
+ * DrawerContent - Main content area within a DrawerView.
+ *
+ * Scrollable container for the view's primary content.
+ *
+ * @param props - ComponentPropsWithRef<'div'>
+ * @param props.className - Optional CSS class name.
+ * @returns The rendered DrawerContent component.
+ *
+ * @example
+ * ```tsx
+ * <DrawerView id={viewId}>
+ *   <DrawerHeader title="Settings" />
+ *   <DrawerContent>
+ *     <p>Your content here</p>
+ *   </DrawerContent>
+ * </DrawerView>
+ * ```
+ */
 export function DrawerContent({
   className,
   ...rest

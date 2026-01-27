@@ -1,5 +1,11 @@
 # @accelint/map-toolkit
 
+## 1.2.0
+
+### Minor Changes
+
+- 878bfa6: Refactored the hotkey-manager package to decouple react.
+
 ## 1.1.0
 
 ### Minor Changes

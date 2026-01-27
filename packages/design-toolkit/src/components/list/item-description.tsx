@@ -24,7 +24,14 @@ import type { ListItemDescriptionProps } from './types';
  * Automatically adjusts font size for cozy (body-s) and compact (body-xs) variants.
  *
  * @example
+ * ```tsx
  * <ListItemDescription>Software Engineer</ListItemDescription>
+ * ```
+ *
+ * @param props - {@link ListItemDescriptionProps}
+ * @param props.children - Description text content.
+ * @param props.className - Optional CSS class name.
+ * @returns The rendered ListItemDescription component.
  */
 export function ListItemDescription({
   children,

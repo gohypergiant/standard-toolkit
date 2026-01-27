@@ -12,6 +12,10 @@
 
 import type { ComponentPropsWithRef } from 'react';
 
+/**
+ * Props for the Icon component.
+ */
 export type IconProps = ComponentPropsWithRef<'span'> & {
+  /** Size variant for the icon. */
   size?: 'large' | 'medium' | 'small' | 'xsmall';
 };

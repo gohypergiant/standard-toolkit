@@ -12,6 +12,10 @@
 
 import type { ComponentPropsWithRef } from 'react';
 
+/**
+ * Props for the Clock component.
+ */
 export type ClockProps = ComponentPropsWithRef<'time'> & {
+  /** Custom DateTimeFormat for time display. */
   formatter?: Intl.DateTimeFormat;
 };

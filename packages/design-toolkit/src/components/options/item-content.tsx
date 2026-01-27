@@ -13,6 +13,25 @@ import { clsx } from '@accelint/design-foundation/lib/utils';
 import styles from './styles.module.css';
 import type { TextProps } from 'react-aria-components';
 
+/**
+ * OptionsItemContent - Container for label and description within an item
+ *
+ * Use when an item needs both a label and description.
+ *
+ * @example
+ * ```tsx
+ * <OptionsItem>
+ *   <OptionsItemContent>
+ *     <OptionsItemLabel>Option Name</OptionsItemLabel>
+ *     <OptionsItemDescription>Description text</OptionsItemDescription>
+ *   </OptionsItemContent>
+ * </OptionsItem>
+ * ```
+ *
+ * @param props - TextProps from react-aria-components.
+ * @param props.className - Optional CSS class name.
+ * @returns The rendered OptionsItemContent component.
+ */
 export function OptionsItemContent({ className, ...rest }: TextProps) {
   return <div {...rest} className={clsx(styles.content, className)} />;
 }

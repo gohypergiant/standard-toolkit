@@ -50,6 +50,11 @@ const meta = {
       control: 'number',
     },
   },
+  parameters: {
+    docs: {
+      subtitle: 'Single-line text input with label and validation',
+    },
+  },
 } satisfies Meta<typeof TextField>;
 
 export default meta;

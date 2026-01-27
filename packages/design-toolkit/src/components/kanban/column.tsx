@@ -17,6 +17,25 @@ import { useColumnInteractions } from '../../hooks/kanban';
 import styles from './styles.module.css';
 import type { KanbanColProps } from './types';
 
+/**
+ * KanbanColumn - Individual column that contains cards
+ *
+ * Handles drop target highlighting and card positioning.
+ *
+ * @param props - {@link KanbanColProps}
+ * @param props.children - Column content (header, cards).
+ * @param props.className - Optional CSS class name.
+ * @param props.column - Column data.
+ * @returns The rendered KanbanColumn component.
+ *
+ * @example
+ * ```tsx
+ * <KanbanColumn column={columnData}>
+ *   <KanbanColumnHeader>...</KanbanColumnHeader>
+ *   <KanbanColumnContent column={columnData}>...</KanbanColumnContent>
+ * </KanbanColumn>
+ * ```
+ */
 export function KanbanColumn({
   children,
   className,

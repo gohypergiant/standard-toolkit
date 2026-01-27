@@ -30,11 +30,13 @@ import type { ColorPickerProps } from './types';
  * to select that color. The component supports keyboard navigation, accessibility
  * features, and fine-grained styling control through the classNames prop.
  *
- * @param items - Array of color values to display as selectable swatches
- * @param classNames - Object containing CSS class names for fine-grained styling control
- * @param classNames.picker - CSS class name for the main picker container
- * @param classNames.item - CSS class name for individual swatch items
- * @param classNames.swatch - CSS class name for the color swatch elements
+ * @param props - The color picker props.
+ * @param props.items - Array of color values to display as selectable swatches.
+ * @param props.classNames - Custom class names for sub-elements.
+ * @param props.classNames.picker - Class name for the picker container.
+ * @param props.classNames.item - Class name for individual swatch items.
+ * @param props.classNames.swatch - Class name for the color swatch elements.
+ * @returns The color picker component.
  *
  * @example
  * ```tsx
@@ -45,13 +47,13 @@ import type { ColorPickerProps } from './types';
  * ];
  *
  * <ColorPicker
- *   options={colors}
- *   value={'#ff0000'}
+ *   items={colors}
+ *   value="#ff0000"
  *   onChange={(color) => console.log('Selected:', color)}
  *   classNames={{
  *     picker: 'gap-4',
  *     item: 'rounded-lg',
- *     swatch: 'w-8 h-8'
+ *     swatch: 'w-8 h-8',
  *   }}
  * />
  * ```

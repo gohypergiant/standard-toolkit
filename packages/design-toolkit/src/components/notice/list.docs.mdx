@@ -94,35 +94,30 @@ emit({
 * **left** - Middle left of the container
 
 ## Props
-The NoticeList component accepts all standard HTML div attributes
 
-### Core Props
-* **`id`** - Unique identifier for the notice list
-* **`global`** - Render the list at the document root or inline: `boolean`
-* **`placement`** - Position of notices: `'top left'` | `'top'` | `'top right'` | `'right'` | `'bottom right'` | `'bottom'` | `'bottom left'` | `'left'`
-* **`limit`** - Maximum number of visible notices at once (default: 3)
-* **`defaultColor`** - Default color for notices in this list: `'info'` | `'advisory'` | `'normal'` | `'serious'` | `'critical'`
-* **`defaultTimeout`** - Default timeout duration in milliseconds
-* **`hideClearAll`** - Whether to hide the "Clear All" button: `boolean`
-* **`size`** - Default size for notices: `'medium'` (default) | `'small'`
-- **`classNames`** - Optional class names for custom styling
-  - `region` -  Class names applied to the region element
-  - `list` -  Class names applied to the `ToastList` element
-  - `button` -  Class names applied to the Clear All button
-  - `notice` -  Class names applied to each `Notice`
-    - `notice` - Class name applied to the container element
-    - `content` - Class name applied to the content container
-    - `actions` - Class name applied to the actions container
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `id` | `string` | - | Unique identifier for the list |
+| `global` | `boolean` | `false` | Render at document root |
+| `placement` | `'top left' \| 'top' \| 'top right' \| 'right' \| 'bottom right' \| 'bottom' \| 'bottom left' \| 'left'` | - | Position of notices |
+| `limit` | `number` | `3` | Max visible notices |
+| `defaultColor` | `NoticeColor` | - | Default color for notices |
+| `defaultTimeout` | `number` | - | Default timeout in ms |
+| `hideClearAll` | `boolean` | `false` | Hide "Clear All" button |
+| `size` | `'medium' \| 'small'` | `'medium'` | Default size for notices |
+| `classNames` | `{ region?, list?, button?, notice? }` | - | Custom class names |
 
 ## Events
-The NoticeList implements events via bus
 
-### Events
-* **`queue`** - Add an event to the queue
-* **`dequeue`** - Remove an event from the queue
-* **`actionPrimary`** - Primary button was pressed
-* **`actionSecondary`** - Secondary button was pressed
-* **`close`** - Close button was pressed
+The NoticeList uses an event bus for queue management.
+
+| Event | Description |
+|-------|-------------|
+| `queue` | Add a notice to the queue |
+| `dequeue` | Remove a notice from the queue |
+| `actionPrimary` | Primary button was pressed |
+| `actionSecondary` | Secondary button was pressed |
+| `close` | Close button was pressed |
 
 ## Queue Management
 
@@ -223,33 +218,15 @@ emit({
 dequeue({ metadata: { fileId: "file-123" } });
 ```
 
-## Implementation Notes
-The `NoticeList` component wraps the `ToastRegion` and `ToastQueue` components from `react-aria-components` and integrates with a custom event bus system for queue management.
+## Accessibility
 
-[React Aria Toast Docs](https://react-spectrum.adobe.com/react-aria/Toast.html)
-
-[Github Source](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-toolkit/src/components/notice)
-
-The underlying elements are:
-- `ToastRegion` with proper ARIA labeling
-- `ToastList` for managing the queue of notices
-- `PortalProvider` for rendering notices in the correct DOM location
-- Individual `Toast` components wrapping each `Notice`
-
-The component automatically handles accessibility features including:
 - ARIA live regions for screen reader announcements
-- Proper focus management when notices appear and disappear
+- Focus management when notices appear/disappear
 - Keyboard navigation support
 - Queue state announcements
 - Automatic cleanup of expired notices
 
-The notice list includes sophisticated queue management that handles:
-- **Automatic timeout and dismissal** with configurable durations
-- **Queue overflow management** respecting the configured limit
-- **Multiple targeting strategies** for precise notice removal
-- **Persistent state** across component re-renders
-- **Event-driven architecture** enabling decoupled communication
+## Related
 
-The queue uses a first-in-first-out (FIFO) approach where new notices push out older ones when the limit is reached. The "Clear All" button provides users with quick access to dismiss all current notices, improving the overall user experience by preventing notification overflow.
-
-All placement options provide consistent positioning relative to the parent container, with notices automatically stacking and animating smoothly during queue operations. The component integrates seamlessly with the broader event system, making it ideal for global notification management in complex applications.
+- [React Aria Toast](https://react-spectrum.adobe.com/react-aria/Toast.html)
+- [GitHub Source](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-toolkit/src/components/notice)

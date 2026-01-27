@@ -24,6 +24,21 @@ interface SlottedValue<T> {
 
 /**
  * A helper to narrow the type of Context Value
+ *
+ * @example
+ * ```tsx
+ * function ComponentWithContext({ context }: { context: ContextValue<Props, HTMLElement> }) {
+ *   if (isSlottedContextValue(context)) {
+ *     // TypeScript knows context has 'slots' property
+ *     const slotValue = context.slots?.['header'];
+ *     return <div>{slotValue && 'Has header slot'}</div>;
+ *   }
+ *   return <div>No slots</div>;
+ * }
+ * ```
+ *
+ * @param context - The context value to check.
+ * @returns True if the context contains slot definitions.
  */
 export function isSlottedContextValue<T, E>(
   context: ContextValue<T, E>,

@@ -16,5 +16,8 @@ import { createContext } from 'react';
 import type { ContextValue } from 'react-aria-components';
 import type { HeroProps } from './types';
 
+/**
+ * Context for sharing Hero props across component tree.
+ */
 export const HeroContext =
   createContext<ContextValue<HeroProps, HTMLElement>>(null);

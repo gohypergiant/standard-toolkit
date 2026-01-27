@@ -29,6 +29,13 @@ import type { HeroProps } from './types';
  * A versatile hero component that displays an icon alongside primary and secondary content.
  * Automatically organizes child components by type and supports both stacked and grid layouts.
  *
+ * @param props - {@link HeroProps}
+ * @param props.ref - Ref to the header element.
+ * @param props.children - Child components (Icon, HeroTitle, HeroSubtitle).
+ * @param props.classNames - Class names for Hero sub-elements.
+ * @param props.compact - Whether to use compact grid layout.
+ * @returns The rendered Hero component.
+ *
  * @example
  * ```tsx
  * // Basic hero with icon and content

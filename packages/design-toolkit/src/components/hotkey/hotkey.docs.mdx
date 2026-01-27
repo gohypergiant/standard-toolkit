@@ -2,59 +2,81 @@ import { Canvas, Meta } from '@storybook/addon-docs/blocks';
 
 import * as HotkeyStories from './hotkey.stories';
 
-<Meta of={HotkeyStories}/>
+<Meta of={HotkeyStories} />
 
 # Hotkey
-This is a representation of key(s) from a keyboard that executes a specific action. Common examples of hotkeys are: Copy (CMD/Ctrl + C), Paste (CMD/Ctrl + V), Undo (CMD/Ctrl + Z), and Save (CMD/Ctrl/ + S);
+Visual representation of keyboard keys and shortcuts. Used to show keyboard shortcuts in documentation, help systems, and UI elements.
 
-It is composed of the following components:
+Components:
+- **Hotkey** - Individual key display (renders as `<kbd>`)
+- **HotkeySet** - Container for grouping multiple keys
+- **HotkeyProvider** - Context provider for default props
 
-- **Hotkey** - Main hotkey component for displaying keyboard shortcuts in various styles
-- **HotkeySet** - Container for grouping multiple hotkeys with proper spacing
-- **HotkeyProvider** - Context provider for setting default props across multiple hotkeys
+## Example Usage
 
-## Example usage
+```tsx
+<Hotkey>CMD</Hotkey>
 ```
-<Hotkey>KEY</Hotkey>
-```
+<Canvas of={HotkeyStories.Default} />
 
 ## Variants
 
-* **flat** - Renders plain text, appropriate for using in a `MenuItem` component
-* **outline** - Renders with borders.
-* **icon** - Renders an icon with the right size and spacing. An icon hotkey will never have a border.
+| Variant | Description |
+|---------|-------------|
+| `outline` | Renders with borders (default) |
+| `flat` | Plain text, appropriate for use in MenuItem components |
+| `icon` | For icon content with proper sizing, never has a border |
 
-**Outline** is the default variant and should be used in most cases, unless the Hotkey is used as an element in a more complex parent, like an `Options` list.
+## Props
 
-<Canvas of={HotkeyStories.Default} />
+### Hotkey
+Extends [Keyboard](https://github.com/adobe/react-spectrum/blob/main/packages/react-aria-components/src/Keyboard.tsx) from react-aria-components.
 
-# Hotkey Set
-If you want to group a set of `Hotkey` together to show multiple keystrokes or mouse events, wrap in a `HotkeySet` component.
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `'outline' \| 'flat' \| 'icon'` | `'outline'` | Visual style |
+| `className` | `string` | - | Custom CSS class |
+| `children` | `ReactNode` | - | Key label or icon |
 
-Wrapping the `+` or `or` interstitial marks in a `span` is optional.
+### HotkeySet
+Container for grouping multiple Hotkey components. Extends all standard HTML `<div>` attributes.
 
-## Example usage
-```
+```tsx
 <HotkeySet>
-  <Hotkey variant='outline'>CMD</Hotkey>
+  <Hotkey>CMD</Hotkey>
   <span>+</span>
-  <Hotkey variant='icon'>
-    <Icon>
-      <MouseRightClick />
-    </Icon>
+  <Hotkey variant="icon">
+    <Icon><MouseRightClick /></Icon>
   </Hotkey>
 </HotkeySet>
 ```
-
 <Canvas of={HotkeyStories.KeysSet} />
 
+### HotkeyProvider
+Context provider for setting default props across multiple Hotkey components.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `'outline' \| 'flat' \| 'icon'` | - | Visual style for all child Hotkeys |
+| `children` | `ReactNode` | - | Hotkey components |
+
+```tsx
+<HotkeyProvider variant="flat">
+  <Hotkey>Ctrl</Hotkey>
+  <Hotkey>C</Hotkey>
+</HotkeyProvider>
+```
+
+## Accessibility
+- Uses semantic `<kbd>` HTML element for keyboard input
+- Screen readers announce the content as keyboard keys
+- Wraps react-aria's Keyboard component for proper semantics
+
 ## Implementation Notes
-The `Hotkey` component wraps the `Keyboard` component from `react-aria-components`.
+- Wraps `Keyboard` from react-aria-components
+- HotkeySet automatically sizes icons via IconProvider
 
-[Docs](https://react-spectrum.adobe.com/react-aria/Keyboard.html#keyboard)
-
-[Github Source](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-toolkit/src/components/hotkey)
-
-The underlying element is a `kbd` HTML element. [Docs](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/kbd) -->
-
-
+**Related:**
+- [React Aria Keyboard Source](https://github.com/adobe/react-spectrum/blob/main/packages/react-aria-components/src/Keyboard.tsx)
+- [MDN kbd element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/kbd)
+- [Github Source](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-toolkit/src/components/hotkey)

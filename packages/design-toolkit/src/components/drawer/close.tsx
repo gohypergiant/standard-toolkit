@@ -12,15 +12,46 @@
 
 'use client';
 
-import 'client-only';
 import Cancel from '@accelint/icons/cancel';
+import type { UniqueId } from '@accelint/core';
+import 'client-only';
+import { useContext } from 'react';
 import { Button } from '../button';
 import { Icon } from '../icon';
+import { ViewStackContext } from '../view-stack/context';
 import { DrawerTrigger } from './trigger';
+import type { DrawerCloseProps, SimpleEvents, TargetedEvents } from './types';
 
-export function DrawerClose() {
+/**
+ * DrawerClose - Close button for the drawer.
+ *
+ * Triggers a 'close' action to close the entire drawer.
+ *
+ * @param props - {@link DrawerCloseProps}
+ * @param props.for - Optional drawer ID to close. Defaults to current drawer.
+ * @param props.aria-label - Optional accessible label for the button.
+ * @returns The rendered DrawerClose button.
+ *
+ * @example
+ * ```tsx
+ * <DrawerHeader>
+ *   <DrawerHeaderTitle>Settings</DrawerHeaderTitle>
+ *   <DrawerClose />
+ * </DrawerHeader>
+ * ```
+ */
+export function DrawerClose(props: DrawerCloseProps) {
+  const context = useContext(ViewStackContext);
+  const id: UniqueId | null = props.for ?? context.parent ?? null;
+
+  const event = id
+    ? (`close:${id}` as TargetedEvents)
+    : ('close' as SimpleEvents);
+
   return (
-    <DrawerTrigger for='close'>
+    // Note, not using ...rest due to possible memory leak within <Pressable />
+    // Still investigating.
+    <DrawerTrigger aria-label={props['aria-label']} for={event}>
       <Button variant='icon'>
         <Icon>
           <Cancel />
@@ -29,3 +60,4 @@ export function DrawerClose() {
     </DrawerTrigger>
   );
 }
+DrawerClose.displayName = 'DrawerClose';

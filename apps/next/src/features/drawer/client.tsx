@@ -60,7 +60,7 @@ export function DrawerClient() {
             <DrawerView id={ids.viewA}>
               <DrawerHeader>
                 <DrawerHeaderTitle>View A</DrawerHeaderTitle>
-                <DrawerClose />
+                <DrawerClose for={ids.viewA} />
               </DrawerHeader>
               <DrawerContent>
                 <p>This is the content for View A.</p>
@@ -76,7 +76,7 @@ export function DrawerClient() {
             <DrawerView id={ids.viewB}>
               <DrawerHeader>
                 <DrawerHeaderTitle>View B</DrawerHeaderTitle>
-                <DrawerClose />
+                <DrawerClose for={ids.viewB} />
               </DrawerHeader>
               <DrawerContent>
                 <p>This is the content for View B.</p>
@@ -92,7 +92,7 @@ export function DrawerClient() {
             <DrawerView id={ids.viewC}>
               <DrawerHeader>
                 <DrawerHeaderTitle>View C</DrawerHeaderTitle>
-                <DrawerClose />
+                <DrawerClose for={ids.viewC} />
               </DrawerHeader>
               <DrawerContent>
                 <p>This is the content for View C.</p>

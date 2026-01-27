@@ -12,6 +12,10 @@
 
 import type { ComponentPropsWithRef } from 'react';
 
+/**
+ * Props for the Hotkey component.
+ */
 export type HotkeyProps = ComponentPropsWithRef<'kbd'> & {
+  /** Visual style variant for the hotkey display. */
   variant?: 'flat' | 'icon' | 'outline';
 };

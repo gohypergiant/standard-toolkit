@@ -19,25 +19,76 @@ import {
 } from 'react';
 import type { SegmentConfig } from '../../components/coordinate-field/types';
 
+/** Options for the useCoordinateFocus hook */
 export interface UseCoordinateFocusOptions {
+  /** Array of editable segment configurations */
   editableSegmentConfigs: SegmentConfig[];
 }
 
+/** Return value from the useCoordinateFocus hook */
 export interface UseCoordinateFocusResult {
+  /** Array of refs for each input segment */
   segmentRefs: React.RefObject<HTMLInputElement>[];
+  /** Index of the currently focused segment (-1 if none) */
   focusedSegmentIndex: number;
+  /** Focus a specific segment by index */
   focusSegment: (index: number) => void;
+  /** Focus the next segment after the current index */
   focusNextSegment: (currentIndex: number) => void;
+  /** Focus the previous segment before the current index */
   focusPreviousSegment: (currentIndex: number) => void;
+  /** Focus the first segment */
   focusFirstSegment: () => void;
+  /** Focus the last segment */
   focusLastSegment: () => void;
+  /** Handle keyboard navigation (Home/End keys) */
   handleSegmentKeyDown: (
     index: number,
     e: KeyboardEvent<HTMLInputElement>,
   ) => void;
+  /** Update the focused segment index state */
   setFocusedSegmentIndex: (index: number) => void;
 }
 
+/**
+ * Manages focus navigation between coordinate input segments
+ *
+ * @example
+ * ```tsx
+ * function CoordinateSegments({ configs }: { configs: SegmentConfig[] }) {
+ *   const {
+ *     segmentRefs,
+ *     focusedSegmentIndex,
+ *     focusNextSegment,
+ *     focusPreviousSegment,
+ *     handleSegmentKeyDown,
+ *     setFocusedSegmentIndex,
+ *   } = useCoordinateFocus({ editableSegmentConfigs: configs });
+ *
+ *   return (
+ *     <div>
+ *       {configs.map((config, i) => (
+ *         <input
+ *           key={i}
+ *           ref={segmentRefs[i]}
+ *           onFocus={() => setFocusedSegmentIndex(i)}
+ *           onKeyDown={(e) => {
+ *             handleSegmentKeyDown(i, e);
+ *             if (e.key === 'ArrowRight') focusNextSegment(i);
+ *             if (e.key === 'ArrowLeft') focusPreviousSegment(i);
+ *           }}
+ *           aria-current={focusedSegmentIndex === i || undefined}
+ *         />
+ *       ))}
+ *     </div>
+ *   );
+ * }
+ * ```
+ *
+ * @param options - {@link UseCoordinateFocusOptions}
+ * @param options.editableSegmentConfigs - Array of editable segment configurations.
+ * @returns {@link UseCoordinateFocusResult} Focus management utilities and state.
+ */
 export function useCoordinateFocus({
   editableSegmentConfigs,
 }: UseCoordinateFocusOptions): UseCoordinateFocusResult {

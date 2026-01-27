@@ -46,7 +46,7 @@ _            |           |           | Disqualified |       |       |       |   
 [Pandoc]     | 1 day     | 140       | 522          | Yes   | att0  | Ext   | Extensive     | Burden of extension
 [RSPress]    | 2 days    | 115       | 97           | Yes   | easy  | Yes   | Moderate      | Maintained by Bytedance
 [Slate]      | 10 months | 28        | 126          | Yes   | hard  | No?   | Extensive     | Burden of extension
-[Startlight] | 2 days    | 134       | 228          | Yes   |       | Yes   | Moderate      | Versioning support
+[Starlight]  | 2 days    | 134       | 228          | Yes   |       | Yes   | Moderate      | Versioning support
 [TS-Docs]    | 2 years   | 16        | 1            | Yes   | att0  | No    | Extensive     | Burden of extension
 [TSDoc]      | 2 weeks   | ???       | 36           | Yes   | hard  | No?   | Extensive     | Burden of extension
 [Vocs]       | 2 months  | 468       | 21           | Yes   | hard  | Yes   | Moderate      | Integration with TypeDoc
@@ -132,7 +132,7 @@ The tooling looks to be great and there are a lot of features available that are
 [Pandoc]: https://pandoc.org/
 [RSPress]: https://rspress.dev/
 [Slate]: https://slatedocs.github.io/slate/#introduction
-[Startlight]: https://starlight.astro.build/
+[Starlight]: https://starlight.astro.build/
 [TS-Docs]: https://ts-docs.github.io/ts-docs/
 [TSDoc]: https://tsdoc.org/
 [TypeDoc]: https://typedoc.org/

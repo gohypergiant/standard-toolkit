@@ -17,9 +17,27 @@ import { createContext } from 'react';
 import type { ContextValue } from 'react-aria-components';
 import type { AvatarProps } from './types';
 
+/**
+ * React context for sharing avatar configuration across components.
+ */
 export const AvatarContext =
   createContext<ContextValue<AvatarProps, HTMLSpanElement>>(null);
 
+/**
+ * Context provider for setting default props across multiple Avatar components.
+ *
+ * @param props - The provider props.
+ * @param props.children - Child components that will receive the avatar context.
+ * @returns The avatar context provider wrapping children.
+ *
+ * @example
+ * ```tsx
+ * <AvatarProvider size="small">
+ *   <Avatar imageProps={{ alt: "User 1", src: "avatar1.jpg" }} />
+ *   <Avatar imageProps={{ alt: "User 2", src: "avatar2.jpg" }} />
+ * </AvatarProvider>
+ * ```
+ */
 export function AvatarProvider({
   children,
   ...props

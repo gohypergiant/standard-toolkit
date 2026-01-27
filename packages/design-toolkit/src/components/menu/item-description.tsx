@@ -17,6 +17,21 @@ import { clsx } from '@accelint/design-foundation/lib/utils';
 import { Text, type TextProps } from 'react-aria-components';
 import styles from './styles.module.css';
 
+/**
+ * MenuItemDescription - Secondary descriptive text for menu items
+ *
+ * Renders as a Text component with the 'description' slot.
+ *
+ * @example
+ * ```tsx
+ * <MenuItemDescription>Open the document for editing</MenuItemDescription>
+ * ```
+ *
+ * @param props - TextProps from react-aria-components.
+ * @param props.children - Description text content.
+ * @param props.className - Optional CSS class name.
+ * @returns The rendered MenuItemDescription component.
+ */
 export function MenuItemDescription({
   children,
   className,

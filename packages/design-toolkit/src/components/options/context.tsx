@@ -16,6 +16,7 @@ import { createContext } from 'react';
 import type { ContextValue } from 'react-aria-components';
 import type { OptionsDataItem, OptionsProps } from './types';
 
+/** Context for sharing Options props with nested components */
 export const OptionsContext =
   createContext<ContextValue<OptionsProps<OptionsDataItem>, HTMLDivElement>>(
     null,

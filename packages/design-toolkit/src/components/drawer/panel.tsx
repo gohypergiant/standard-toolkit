@@ -13,6 +13,24 @@ import { clsx } from '@accelint/design-foundation/lib/utils';
 import styles from './styles.module.css';
 import type { ComponentPropsWithRef } from 'react';
 
+/**
+ * DrawerPanel - Main panel container for drawer content.
+ *
+ * Contains DrawerView components. Only one DrawerPanel allowed per Drawer.
+ *
+ * @param props - ComponentPropsWithRef<'div'>
+ * @param props.className - Optional CSS class name.
+ * @returns The rendered DrawerPanel component.
+ *
+ * @example
+ * ```tsx
+ * <Drawer id={drawerId} defaultView={viewId}>
+ *   <DrawerPanel>
+ *     <DrawerView id={viewId}>...</DrawerView>
+ *   </DrawerPanel>
+ * </Drawer>
+ * ```
+ */
 export function DrawerPanel({
   className,
   ...rest

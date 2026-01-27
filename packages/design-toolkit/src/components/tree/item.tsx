@@ -23,9 +23,28 @@ import styles from './styles.module.css';
 import type { TreeItemProps } from './types';
 
 /**
- * TreeItem - Individual node in a tree
+ * TreeItem - Individual node in the tree hierarchy
  *
- * Represents a single item in the tree structure
+ * @example
+ * ```tsx
+ * <Tree>
+ *   <TreeItem id="root" textValue="Root">
+ *     <TreeItemContent>
+ *       <TreeItemLabel>Root Node</TreeItemLabel>
+ *     </TreeItemContent>
+ *     <TreeItem id="child" textValue="Child">
+ *       <TreeItemContent>
+ *         <TreeItemLabel>Child Node</TreeItemLabel>
+ *       </TreeItemContent>
+ *     </TreeItem>
+ *   </TreeItem>
+ * </Tree>
+ * ```
+ *
+ * @param props - {@link TreeItemProps}
+ * @param props.className - CSS class for the tree item.
+ * @param props.id - Unique identifier for the tree item.
+ * @returns The rendered TreeItem component.
  */
 export function TreeItem({ className, id, ...rest }: TreeItemProps) {
   const { visibilityComputedKeys, visibleKeys, isStatic } =

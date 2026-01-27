@@ -30,6 +30,11 @@ export interface UseFrameDelayResult {
  * Useful for deferring expensive renders to allow the browser to paint
  * a loading state first.
  *
+ * @param options - {@link UseFrameDelayOptions}
+ * @param options.frames - Number of animation frames to wait (default: 2).
+ * @param options.onReady - Callback fired when delay completes.
+ * @returns {@link UseFrameDelayResult} Object with isReady boolean.
+ *
  * @example
  * ```tsx
  * // Pattern 1: Reactive

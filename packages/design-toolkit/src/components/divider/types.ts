@@ -12,10 +12,10 @@
 
 import type { ComponentPropsWithRef } from 'react';
 
+/**
+ * Props for the Divider component.
+ */
 export type DividerProps = ComponentPropsWithRef<'hr'> & {
-  /**
-   * The orientation of the divider.
-   * @default 'horizontal'
-   */
+  /** The orientation of the divider (defaults to 'horizontal'). */
   orientation?: 'horizontal' | 'vertical';
 };

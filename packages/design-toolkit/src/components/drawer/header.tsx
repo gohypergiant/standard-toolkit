@@ -11,16 +11,50 @@
  */
 'use client';
 
-import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
+import { Cancel } from '@accelint/icons';
+import 'client-only';
 import { type ComponentPropsWithRef, useContext } from 'react';
 import { Header } from 'react-aria-components';
+import { Button } from '../button';
+import { Icon } from '../icon';
 import { ViewStackContext } from '../view-stack/context';
 import { DrawerBack } from './back';
-import { DrawerClose } from './close';
 import { DrawerHeaderTitle } from './header-title';
 import styles from './styles.module.css';
+import { DrawerTrigger } from './trigger';
 
+/**
+ * DrawerHeader - Header region within a DrawerView.
+ *
+ * Supports two usage patterns:
+ * - Use `title` prop for automatic layout with back/close buttons
+ * - Use `children` for custom header content
+ *
+ * Heading level automatically adjusts based on view stack depth
+ * (h2 for root view, h4 for nested views).
+ *
+ * @param props - ComponentPropsWithRef<'header'>
+ * @param props.className - Optional CSS class name.
+ * @param props.title - Title text for the header.
+ * @param props.children - Custom header content (overrides title).
+ * @returns The rendered DrawerHeader component.
+ *
+ * @example
+ * ```tsx
+ * // Simplified with title prop
+ * <DrawerHeader title="Settings" />
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // Custom layout
+ * <DrawerHeader>
+ *   <DrawerHeaderTitle level={2}>Settings</DrawerHeaderTitle>
+ *   <DrawerClose />
+ * </DrawerHeader>
+ *```
+ */
 export function DrawerHeader({
   className,
   title,
@@ -36,7 +70,13 @@ export function DrawerHeader({
         <>
           <DrawerBack />
           <DrawerHeaderTitle level={level}>{title}</DrawerHeaderTitle>
-          <DrawerClose />
+          <DrawerTrigger for='clear'>
+            <Button variant='icon'>
+              <Icon>
+                <Cancel />
+              </Icon>
+            </Button>
+          </DrawerTrigger>
         </>
       ) : (
         children

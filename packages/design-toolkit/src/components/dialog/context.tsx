@@ -16,5 +16,8 @@ import { createContext } from 'react';
 import type { ContextValue } from 'react-aria-components';
 import type { DialogProps } from './types';
 
+/**
+ * Context for sharing Dialog props across component tree.
+ */
 export const DialogContext =
   createContext<ContextValue<DialogProps, HTMLDivElement>>(null);

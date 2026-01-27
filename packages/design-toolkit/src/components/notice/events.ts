@@ -10,8 +10,17 @@
  * governing permissions and limitations under the License.
  */
 
+/** Event namespace for Notice-related bus events */
 export const NoticeEventNamespace = 'Notice';
 
+/**
+ * Event types for Notice queue management via the bus system.
+ * - queue: Add a notice to the queue
+ * - dequeue: Remove notices matching criteria
+ * - actionPrimary: Primary button was pressed
+ * - actionSecondary: Secondary button was pressed
+ * - close: Notice was closed/dismissed
+ */
 export const NoticeEventTypes = {
   queue: `${NoticeEventNamespace}:queue`,
   dequeue: `${NoticeEventNamespace}:dequeue`,

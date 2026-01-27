@@ -208,39 +208,40 @@ function normalizeValue(
 }
 
 /**
- * Slider - An interactive range input component for numeric value selection
+ * Slider - Range input for numeric value selection
  *
- * Provides accessible slider functionality with optional input field integration,
- * flexible layouts, and comprehensive keyboard and mouse interaction support.
- * Perfect for settings, filters, or any numeric input requiring visual feedback.
+ * Supports single values or ranges, optional input fields, markers, and snap-to-markers behavior.
+ *
+ * @param props - {@link SliderProps}
+ * @param props.classNames - Custom CSS class names for slider elements.
+ * @param props.defaultValue - Default value(s) for uncontrolled mode.
+ * @param props.label - Label text for the slider.
+ * @param props.layout - Layout variant for the slider.
+ * @param props.markers - Marker configuration for discrete points.
+ * @param props.maxValue - Maximum value of the slider range.
+ * @param props.minValue - Minimum value of the slider range.
+ * @param props.onChange - Callback when value changes.
+ * @param props.onChangeEnd - Callback when user finishes dragging.
+ * @param props.orientation - Slider orientation.
+ * @param props.showInput - Whether to show numeric input fields.
+ * @param props.showLabel - Whether to display the label.
+ * @param props.showMarkerLabels - Whether to show labels on markers.
+ * @param props.showValueLabels - Whether to show min/max value labels.
+ * @param props.snapToMarkers - Whether to snap to marker values only.
+ * @param props.step - Step increment for value changes.
+ * @param props.value - Controlled value(s).
+ * @returns The rendered Slider component.
  *
  * @example
- * // Basic slider
- * <Slider label="Volume" defaultValue={50} />
- *
- * @example
- * // Slider with input field
- * <Slider label="Opacity" defaultValue={50} showInput />
- *
- * @example
- * // Slider with labeled markers
+ * ```tsx
  * <Slider
- *   label="Quality"
- *   markers={[
- *     { value: 0, label: 'Low' },
- *     { value: 50, label: 'Medium' },
- *     { value: 100, label: 'High' },
- *   ]}
- *   showMarkerLabels
+ *   label="Volume"
+ *   defaultValue={50}
+ *   minValue={0}
+ *   maxValue={100}
+ *   onChange={setVolume}
  * />
- *
- * @example
- * // Slider that snaps to marker values only
- * <Slider
- *   label="Rating"
- *   markers={[0, 25, 50, 75, 100]}
- *   snapToMarkers
- * />
+ * ```
  */
 export function Slider({
   classNames,

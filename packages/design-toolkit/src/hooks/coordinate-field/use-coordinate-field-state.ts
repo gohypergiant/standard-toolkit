@@ -32,31 +32,100 @@ import type {
   SegmentConfig,
 } from '../../components/coordinate-field/types';
 
+/** Options for the useCoordinateFieldState hook */
 export interface UseCoordinateFieldStateOptions {
+  /** Controlled coordinate value */
   value?: CoordinateValue | null;
+  /** Default value for uncontrolled mode */
   defaultValue?: CoordinateValue;
+  /** Coordinate format system (dd, ddm, dms, mgrs, utm) */
   format: CoordinateSystem;
+  /** Callback when coordinate value changes */
   onChange?:
     | Dispatch<SetStateAction<CoordinateValue | null>>
     | ((value: CoordinateValue | null) => void);
+  /** Callback for validation errors */
   onError?: (message: string, context?: Record<string, unknown>) => void;
+  /** Register timeouts for cleanup on unmount */
   registerTimeout?: (timeoutId: NodeJS.Timeout) => void;
 }
 
+/** Return value from the useCoordinateFieldState hook */
 export interface UseCoordinateFieldStateResult {
+  /** Current coordinate value (null if incomplete/invalid) */
   currentValue: CoordinateValue | null;
+  /** Array of display values for each segment */
   segmentValues: string[];
+  /** Array of validation error messages */
   validationErrors: string[];
+  /** All segment configurations including literals */
   segmentConfigs: SegmentConfig[];
+  /** Only editable segment configurations */
   editableSegmentConfigs: SegmentConfig[];
+  /** Handle change of a single segment */
   handleSegmentChange: (index: number, newValue: string) => void;
+  /** Set all segment values at once */
   setSegmentValues: (values: string[]) => void;
+  /** Set validation errors */
   setValidationErrors: (errors: string[]) => void;
+  /** First validation error or null */
   effectiveErrorMessage: string | null;
+  /** Apply a pasted coordinate value */
   applyPastedCoordinate: (pastedValue: CoordinateValue) => void;
+  /** Immediately run pending validation */
   flushPendingValidation: () => void;
 }
 
+/**
+ * Manages coordinate segment values, validation, and format conversion
+ *
+ * @example
+ * ```tsx
+ * function CoordinateInputs() {
+ *   const [value, setValue] = useState<CoordinateValue | null>(null);
+ *   const { registerTimeout } = useTimeoutCleanup();
+ *
+ *   const {
+ *     currentValue,
+ *     segmentValues,
+ *     validationErrors,
+ *     editableSegmentConfigs,
+ *     handleSegmentChange,
+ *   } = useCoordinateFieldState({
+ *     value,
+ *     format: 'ddm',
+ *     onChange: setValue,
+ *     onError: (msg) => console.error(msg),
+ *     registerTimeout,
+ *   });
+ *
+ *   return (
+ *     <div>
+ *       {editableSegmentConfigs.map((config, i) => (
+ *         <input
+ *           key={i}
+ *           value={segmentValues[i]}
+ *           onChange={(e) => handleSegmentChange(i, e.target.value)}
+ *           placeholder={config.placeholder}
+ *         />
+ *       ))}
+ *       {validationErrors.map((error, i) => (
+ *         <span key={i}>{error}</span>
+ *       ))}
+ *     </div>
+ *   );
+ * }
+ * ```
+ *
+ * @param options - {@link UseCoordinateFieldStateOptions}
+ * @param options.value - Controlled coordinate value.
+ * @param options.defaultValue - Default value for uncontrolled mode.
+ * @param options.format - Coordinate format system (dd, ddm, dms, mgrs, utm).
+ * @param options.onChange - Callback when coordinate value changes.
+ * @param options.onError - Callback for validation errors.
+ * @param options.registerTimeout - Register timeouts for cleanup on unmount.
+ * @returns {@link UseCoordinateFieldStateResult} Segment state, validation, and change handlers.
+ */
 export function useCoordinateFieldState({
   value,
   defaultValue,

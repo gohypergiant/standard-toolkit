@@ -258,6 +258,9 @@ export type TableHeaderProps<T> = ComponentPropsWithRef<'thead'> & {
   columnSelection?: string | null;
 };
 
+/**
+ * Context value for table configuration and state.
+ */
 export type TableContextValue = {
   columnSelection: string | null;
   enableColumnReordering: boolean;

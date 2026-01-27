@@ -12,16 +12,21 @@
 'use client';
 
 import { useOn } from '@accelint/bus/react';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import type { UniqueId } from '@accelint/core';
 import 'client-only';
-import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useCallback, useRef, useState } from 'react';
 import { ViewStack } from '../view-stack';
 import { useViewStackEmit } from '../view-stack/context';
 import { DrawerContext } from './context';
 import { DrawerEventTypes } from './events';
 import styles from './styles.module.css';
-import type { DrawerOpenEvent, DrawerProps, DrawerToggleEvent } from './types';
+import type {
+  DrawerCloseEvent,
+  DrawerOpenEvent,
+  DrawerProps,
+  DrawerToggleEvent,
+} from './types';
 
 /**
  * Drawer - Slide-in panel for navigation or contextual content
@@ -29,7 +34,18 @@ import type { DrawerOpenEvent, DrawerProps, DrawerToggleEvent } from './types';
  * A flexible panel that slides in from the viewport edge and supports
  * stacked views, headers, footers, and programmatic triggers.
  *
+ * @param props - {@link DrawerProps}
+ * @param props.id - Unique identifier for the drawer.
+ * @param props.children - Content to render inside the drawer.
+ * @param props.className - Optional CSS class name.
+ * @param props.defaultView - ID of the view to display initially.
+ * @param props.placement - Edge of the viewport the drawer slides from.
+ * @param props.size - Size of the drawer panel.
+ * @param props.onChange - Callback when the active view changes.
+ * @returns The rendered Drawer component.
+ *
  * @example
+ * ```tsx
  * const ids = { drawer: uuid(), a: uuid() };
  *
  * <DrawerLayout push="left">
@@ -48,6 +64,7 @@ import type { DrawerOpenEvent, DrawerProps, DrawerToggleEvent } from './types';
  *     </DrawerPanel>
  *   </Drawer>
  * </DrawerLayout>
+ * ```
  */
 export function Drawer({
   id,
@@ -66,6 +83,17 @@ export function Drawer({
 
   const viewStackEmit = useViewStackEmit();
 
+  const handleClose = useCallback(
+    (data: DrawerCloseEvent) => {
+      if (
+        views.current.has(data?.payload?.view) ||
+        data?.payload?.view === id
+      ) {
+        viewStackEmit.clear(id);
+      }
+    },
+    [viewStackEmit.clear, id],
+  );
   const handleOpen = useCallback(
     (data: DrawerOpenEvent) => {
       if (views.current.has(data?.payload?.view)) {
@@ -87,6 +115,7 @@ export function Drawer({
     [id, activeView, viewStackEmit.clear, viewStackEmit.push],
   );
 
+  useOn(DrawerEventTypes.close, handleClose);
   useOn(DrawerEventTypes.open, handleOpen);
   useOn(DrawerEventTypes.toggle, handleToggle);
 

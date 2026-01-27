@@ -28,6 +28,11 @@ const meta = {
     showValueLabels: true,
     isDisabled: false,
   },
+  parameters: {
+    docs: {
+      subtitle: 'Range input for numeric value selection',
+    },
+  },
   argTypes: {
     layout: {
       control: 'select',

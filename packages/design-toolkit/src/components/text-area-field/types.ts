@@ -17,11 +17,15 @@ import type {
   TextFieldProps,
 } from 'react-aria-components';
 
+/**
+ * Props for the TextAreaField component.
+ */
 export type TextAreaFieldProps = Omit<
   TextFieldProps,
   'children' | 'className'
 > &
   RefAttributes<HTMLDivElement> & {
+    /** Custom CSS class names for field elements. */
     classNames?: {
       field?: TextFieldProps['className'];
       label?: string;
@@ -29,10 +33,15 @@ export type TextAreaFieldProps = Omit<
       description?: string;
       error?: FieldErrorProps['className'];
     };
+    /** Label text for the field. */
     label?: string;
+    /** Props passed to the underlying TextArea element. */
     inputProps?: Omit<TextAreaProps, 'className'> &
       RefAttributes<HTMLTextAreaElement>;
+    /** Helper text displayed below the input. */
     description?: string;
+    /** Error message displayed when validation fails. */
     errorMessage?: FieldErrorProps['children'];
+    /** Size variant of the field. */
     size?: 'medium' | 'small';
   };

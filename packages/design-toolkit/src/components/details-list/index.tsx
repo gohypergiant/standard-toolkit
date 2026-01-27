@@ -27,6 +27,13 @@ import type { DetailsListProps } from './types';
  * Uses CSS Grid layout with labels in the first column and values in the second column.
  * Perfect for map object details, user profiles, or any structured information.
  *
+ * @param props - The details list props.
+ * @param props.ref - Reference to the list element.
+ * @param props.children - Label and value child components.
+ * @param props.classNames - Custom class names for sub-elements.
+ * @param props.align - Text alignment for list items.
+ * @returns The details list component.
+ *
  * @example
  * ```tsx
  * <DetailsList align="left">

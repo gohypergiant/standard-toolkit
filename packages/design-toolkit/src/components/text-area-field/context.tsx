@@ -18,18 +18,28 @@ import type { ContextValue } from 'react-aria-components';
 import type { ProviderProps } from '@/lib/types';
 import type { TextAreaFieldProps } from './types';
 
-/**
- * Context for TextAreaField component
- *
- * Provides context for TextAreaField component to share props
- */
+/** Context for sharing props across TextAreaField components */
 export const TextAreaFieldContext =
   createContext<ContextValue<TextAreaFieldProps, HTMLDivElement>>(null);
 
 /**
- * Provider for TextAreaField component
+ * Sets default props for all TextAreaField components within.
  *
- * Allows setting default props for all TextAreaField components within
+ * @example
+ * ```tsx
+ * <TextAreaFieldProvider isRequired>
+ *   <TextAreaField label="Bio">
+ *     <TextArea placeholder="Tell us about yourself" />
+ *   </TextAreaField>
+ *   <TextAreaField label="Comments">
+ *     <TextArea placeholder="Additional comments" />
+ *   </TextAreaField>
+ * </TextAreaFieldProvider>
+ * ```
+ *
+ * @param props - ProviderProps with TextAreaFieldProps.
+ * @param props.children - Child components that receive the context.
+ * @returns The TextAreaFieldContext provider wrapping children.
  */
 export function TextAreaFieldProvider({
   children,
