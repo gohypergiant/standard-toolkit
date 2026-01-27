@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -91,13 +91,13 @@ describe('VolumeSlider', () => {
       expect(screen.getByRole('slider')).toBeDisabled();
     });
 
-    it('should allow isDisabled prop to override context', () => {
+    it('should be disabled when context is disabled regardless of prop', () => {
       render(
         <MediaControlsProvider isDisabled={true}>
           <VolumeSlider isDisabled={false} />
         </MediaControlsProvider>,
       );
-      expect(screen.getByRole('slider')).not.toBeDisabled();
+      expect(screen.getByRole('slider')).toBeDisabled();
     });
   });
 });

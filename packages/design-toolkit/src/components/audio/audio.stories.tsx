@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -10,16 +10,16 @@
  * governing permissions and limitations under the License.
  */
 
+import { action } from 'storybook/actions';
 import { Audio } from './index';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-
-const SAMPLE_AUDIO = '/test.mp3';
 
 const meta = {
   title: 'Components/Audio',
   component: Audio,
   args: {
-    src: SAMPLE_AUDIO,
+    src: '/test.mp3',
+    classNames: { container: 'w-[400px]' },
     isDisabled: false,
     muted: false,
     autoPlay: false,
@@ -27,9 +27,13 @@ const meta = {
     playbackRates: [1, 2, 3],
   },
   argTypes: {
+    classNames: {
+      control: 'object',
+      description: 'Class names for sub-elements (container, title, etc.)',
+    },
     src: {
       control: 'text',
-      description: 'Audio source URL or array of sources',
+      description: 'Audio source URL',
     },
     title: {
       control: 'text',
@@ -60,25 +64,29 @@ const meta = {
       control: 'object',
       description: 'Array of playback rate options (e.g., [0.5, 1, 1.5, 2])',
     },
+    noHotkeys: {
+      control: 'boolean',
+      description: 'Disable all keyboard shortcuts',
+    },
+    noVolumePref: {
+      control: 'boolean',
+      description: 'Disable volume persistence to localStorage',
+    },
+    noMutedPref: {
+      control: 'boolean',
+      description: 'Disable muted state persistence to localStorage',
+    },
   },
 } satisfies Meta<typeof Audio>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const renderInWrapper: Story['render'] = (args) => (
-  <div className='w-[400px]'>
-    <Audio {...args} />
-  </div>
-);
-
 /**
  * Default audio player with standard controls.
  * Includes play/pause, seek, volume, and playback rate controls.
  */
-export const Default: Story = {
-  render: renderInWrapper,
-};
+export const Default: Story = {};
 
 /**
  * Audio player with a title displayed above the controls.
@@ -88,31 +96,21 @@ export const WithTitle: Story = {
   args: {
     title: 'Sample Audio Track.mp3',
   },
-  render: renderInWrapper,
 };
 
 /**
  * Audio player with event callbacks.
- * Open the browser console to see the events being logged.
+ * Open the Storybook Actions panel to see the events being logged.
  */
 export const Events: Story = {
   args: {
     title: 'Audio with Event Callbacks',
-    onPlay: () => console.log('[Audio] Play event'),
-    onPause: () => console.log('[Audio] Pause event'),
-    onEnded: () => console.log('[Audio] Ended event'),
-    onTimeUpdate: (time) =>
-      console.log('[Audio] Time update:', time.toFixed(2)),
-    onLoadedMetadata: () => console.log('[Audio] Metadata loaded'),
+    onPlay: action('onPlay'),
+    onPause: action('onPause'),
+    onEnded: action('onEnded'),
+    onTimeUpdate: action('onTimeUpdate'),
+    onLoadedMetadata: action('onLoadedMetadata'),
   },
-  render: (args) => (
-    <div style={{ width: 400 }}>
-      <Audio {...args} />
-      <p className='mt-2 text-gray-500 text-xs'>
-        Open the browser console to see event logs
-      </p>
-    </div>
-  ),
 };
 
 /**
@@ -124,7 +122,6 @@ export const Looping: Story = {
     title: 'Looping Audio',
     loop: true,
   },
-  render: renderInWrapper,
 };
 
 /**
@@ -135,7 +132,17 @@ export const ErrorState: Story = {
   args: {
     title: 'audioFileName.flac',
     src: '/nonexistent-file.mp3',
-    onError: (error) => console.log('[Audio] Error:', error?.message),
+    onError: action('onError'),
   },
-  render: renderInWrapper,
+};
+
+/**
+ * Audio player with keyboard shortcuts disabled.
+ * Useful when embedding in forms or apps with custom hotkey systems.
+ */
+export const NoHotkeys: Story = {
+  args: {
+    title: 'No Keyboard Shortcuts',
+    noHotkeys: true,
+  },
 };

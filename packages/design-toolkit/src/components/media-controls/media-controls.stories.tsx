@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -23,9 +23,6 @@ import { VolumeSlider } from './volume-slider';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ReactNode } from 'react';
 
-const SAMPLE_AUDIO =
-  'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3';
-
 /**
  * Decorator that wraps stories in MediaProvider with an audio element.
  * Required for MediaControls to function properly.
@@ -35,7 +32,7 @@ function MediaProviderDecorator({ children }: { children: ReactNode }) {
     <MediaProvider>
       <MediaController audio>
         {/* biome-ignore lint/a11y/useMediaCaption: Demo audio for Storybook */}
-        <audio slot='media' src={SAMPLE_AUDIO} preload='metadata' />
+        <audio slot='media' src='/test.mp3' preload='metadata' />
         {children}
       </MediaController>
     </MediaProvider>

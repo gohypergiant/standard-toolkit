@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -19,8 +19,9 @@ import {
   useMediaDispatch,
   useMediaSelector,
 } from 'media-chrome/react/media-store';
+import { useCallback } from 'react';
 import { Button } from '../button';
-import { useResolvedDisabled } from './context';
+import { useMediaControlsDisabled } from './context';
 import styles from './styles.module.css';
 import type { PlaybackRateButtonProps } from './types';
 
@@ -81,7 +82,7 @@ export function PlaybackRateButton({
   const mediaPlaybackRate = useMediaSelector(
     (state) => state.mediaPlaybackRate ?? 1,
   );
-  const isDisabled = useResolvedDisabled(isDisabledProp);
+  const isDisabled = useMediaControlsDisabled(isDisabledProp);
 
   const validRates = filterValidRates(rates);
   const safeRates = validRates.length > 0 ? validRates : DEFAULT_RATES;
@@ -97,14 +98,14 @@ export function PlaybackRateButton({
       ? mediaPlaybackRate
       : safeRates[0];
 
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     const currentIndex = safeRates.indexOf(mediaPlaybackRate);
     const nextIndex = (currentIndex + 1) % safeRates.length;
     dispatch({
       type: MediaActionTypes.MEDIA_PLAYBACK_RATE_REQUEST,
       detail: safeRates[nextIndex],
     });
-  };
+  }, [dispatch, mediaPlaybackRate, safeRates]);
 
   return (
     <Button

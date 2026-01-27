@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -12,6 +12,7 @@
 'use client';
 
 import 'client-only';
+import { useCallback } from 'react';
 import { FastForward, FastRewind } from '@accelint/icons';
 import { getLogger } from '@accelint/logger/default';
 import {
@@ -21,7 +22,7 @@ import {
 } from 'media-chrome/react/media-store';
 import { Button } from '../button';
 import { Icon } from '../icon';
-import { useResolvedDisabled } from './context';
+import { useMediaControlsDisabled } from './context';
 import type { SeekButtonProps } from './types';
 
 const logger = getLogger({
@@ -83,7 +84,7 @@ export function SeekButton({
   const dispatch = useMediaDispatch();
   const mediaCurrentTime = useMediaSelector((state) => state.mediaCurrentTime);
   const mediaDuration = useMediaSelector((state) => state.mediaDuration);
-  const isDisabledFromContext = useResolvedDisabled(isDisabledProp);
+  const isDisabledFromContext = useMediaControlsDisabled(isDisabledProp);
 
   // Validate and resolve seekOffset
   const seekOffset = isPositiveFinite(seekOffsetProp)
@@ -101,7 +102,7 @@ export function SeekButton({
     mediaDuration != null && mediaDuration > 0 && mediaCurrentTime != null;
   const isDisabled = isDisabledFromContext || !isMediaLoaded;
 
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     if (mediaCurrentTime == null || mediaDuration == null) {
       return;
     }
@@ -112,7 +113,7 @@ export function SeekButton({
       Math.min(mediaDuration, mediaCurrentTime + delta),
     );
     dispatch({ type: MediaActionTypes.MEDIA_SEEK_REQUEST, detail: targetTime });
-  };
+  }, [mediaCurrentTime, mediaDuration, direction, seekOffset, dispatch]);
 
   return (
     <Button

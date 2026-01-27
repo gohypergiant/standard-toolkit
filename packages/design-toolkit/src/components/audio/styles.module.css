@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -14,7 +14,8 @@
 
 @layer components.l1 {
   .container {
-    @apply bg-surface-raised rounded-medium p-s space-y-s flex w-full min-w-[270px] flex-col;
+    @apply bg-surface-raised rounded-medium p-s space-y-s flex w-full flex-col;
+    min-width: 270px;
 
     /* Media Chrome theming - maps design tokens to media-chrome CSS variables */
     --media-primary-color: var(--fg-primary-bold);
@@ -23,10 +24,10 @@
     --media-text-color: var(--fg-accent-primary-bold);
     --media-control-background: transparent;
     --media-control-hover-background: transparent;
-  }
 
-  .container[data-disabled] {
-    @apply opacity-50;
+    @variant disabled {
+      @apply opacity-50;
+    }
   }
 
   .audio {
@@ -38,8 +39,7 @@
   }
 
   .errorMessage {
-    @apply text-body-m text-center;
-    color: var(--fg-serious-bold);
+    @apply text-body-m fg-serious-bold text-center;
   }
 
   .timeRow {

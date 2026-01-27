@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -67,14 +67,14 @@ const logger = getLogger({
 function AudioInner({
   src,
   title,
-  classNames,
   children,
+  classNames,
   autoPlay,
   loop,
   muted,
   preload = 'metadata',
   crossOrigin,
-  isDisabled: isDisabledProp = false,
+  isDisabled: isDisabledProp,
   onEnded,
   onTimeUpdate,
   onLoadedMetadata,
@@ -82,7 +82,7 @@ function AudioInner({
   onPause,
   onError,
   playbackRates,
-}: Omit<AudioProps, 'className'>) {
+}: AudioProps) {
   const mediaRef = useMediaRef();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -92,7 +92,7 @@ function AudioInner({
   }, [src]);
 
   const hasError = errorMessage !== null;
-  const isDisabled = isDisabledProp || hasError;
+  const isDisabled = isDisabledProp === true || hasError;
 
   return (
     <>
@@ -100,57 +100,22 @@ function AudioInner({
         ref={mediaRef}
         slot='media'
         className={styles.audio}
+        data-testid='audio-element'
         autoPlay={autoPlay}
         loop={loop}
         muted={muted}
         preload={preload}
         crossOrigin={crossOrigin}
-        onEnded={() => {
-          try {
-            onEnded?.();
-          } catch (error) {
-            logger
-              .withError(error)
-              .error('onEnded callback threw an exception');
-          }
-        }}
+        onEnded={() => onEnded?.()}
         onTimeUpdate={(e) => {
           const time = e.currentTarget.currentTime;
           if (Number.isFinite(time)) {
-            try {
-              onTimeUpdate?.(time);
-            } catch (error) {
-              logger
-                .withError(error)
-                .error('onTimeUpdate callback threw an exception');
-            }
+            onTimeUpdate?.(time);
           }
         }}
-        onLoadedMetadata={(e) => {
-          try {
-            onLoadedMetadata?.(e);
-          } catch (error) {
-            logger
-              .withError(error)
-              .error('onLoadedMetadata callback threw an exception');
-          }
-        }}
-        onPlay={(e) => {
-          try {
-            onPlay?.(e);
-          } catch (error) {
-            logger.withError(error).error('onPlay callback threw an exception');
-          }
-        }}
-        onPause={(e) => {
-          try {
-            onPause?.(e);
-          } catch (error) {
-            logger
-              .withError(error)
-              .error('onPause callback threw an exception');
-          }
-        }}
+        onLoadedMetadata={(e) => onLoadedMetadata?.(e)}
+        onPlay={(e) => onPlay?.(e)}
+        onPause={(e) => onPause?.(e)}
         onError={(e) => {
           const mediaError = e.currentTarget.error;
           logger
@@ -161,13 +126,7 @@ function AudioInner({
             (mediaError && formatError(mediaError)?.message) ??
               'Unable to load audio file',
           );
-          try {
-            onError?.(mediaError);
-          } catch (error) {
-            logger
-              .withError(error)
-              .error('onError callback threw an exception');
-          }
+          onError?.(mediaError);
         }}
       >
         <source src={src} />
@@ -231,7 +190,6 @@ function AudioInner({
  * @param props - The component props.
  * @param props.src - Audio source URL.
  * @param props.title - Title to display (e.g., filename).
- * @param props.className - CSS class name for the container.
  * @param props.classNames - Class names for sub-elements.
  * @param props.isDisabled - Disable all audio controls.
  * @returns The rendered audio player component.
@@ -265,28 +223,28 @@ function AudioInner({
  * ```
  */
 export function Audio({
-  className,
   classNames,
-  isDisabled = false,
-  ...props
+  isDisabled,
+  noHotkeys,
+  hotkeys,
+  noVolumePref,
+  noMutedPref,
+  lang,
+  ...rest
 }: AudioProps) {
   return (
     <MediaProvider>
       <MediaController
-        className={clsx(
-          'group/audio',
-          styles.container,
-          className,
-          classNames?.container,
-        )}
+        className={clsx('group/audio', styles.container, classNames?.container)}
         audio
         data-disabled={isDisabled || undefined}
+        noHotkeys={noHotkeys}
+        hotkeys={hotkeys}
+        noVolumePref={noVolumePref}
+        noMutedPref={noMutedPref}
+        lang={lang}
       >
-        <AudioInner
-          {...props}
-          classNames={classNames}
-          isDisabled={isDisabled}
-        />
+        <AudioInner {...rest} classNames={classNames} isDisabled={isDisabled} />
       </MediaController>
     </MediaProvider>
   );

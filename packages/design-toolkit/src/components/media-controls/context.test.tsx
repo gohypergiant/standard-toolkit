@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -11,17 +11,17 @@
  */
 import { renderHook } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { MediaControlsProvider, useResolvedDisabled } from './context';
+import { MediaControlsProvider, useMediaControlsDisabled } from './context';
 
-describe('useResolvedDisabled', () => {
-  describe('priority: prop > context > default', () => {
+describe('useMediaControlsDisabled', () => {
+  describe('disabled if prop or context is true', () => {
     it('should return false when no prop and no context', () => {
-      const { result } = renderHook(() => useResolvedDisabled());
+      const { result } = renderHook(() => useMediaControlsDisabled());
       expect(result.current).toBe(false);
     });
 
     it('should return false when no prop and no context (explicit undefined)', () => {
-      const { result } = renderHook(() => useResolvedDisabled(undefined));
+      const { result } = renderHook(() => useMediaControlsDisabled(undefined));
       expect(result.current).toBe(false);
     });
 
@@ -31,7 +31,9 @@ describe('useResolvedDisabled', () => {
           {children}
         </MediaControlsProvider>
       );
-      const { result } = renderHook(() => useResolvedDisabled(), { wrapper });
+      const { result } = renderHook(() => useMediaControlsDisabled(), {
+        wrapper,
+      });
       expect(result.current).toBe(true);
     });
 
@@ -41,30 +43,32 @@ describe('useResolvedDisabled', () => {
           {children}
         </MediaControlsProvider>
       );
-      const { result } = renderHook(() => useResolvedDisabled(), { wrapper });
+      const { result } = renderHook(() => useMediaControlsDisabled(), {
+        wrapper,
+      });
       expect(result.current).toBe(false);
     });
 
     it('should return prop value when prop is true (no context)', () => {
-      const { result } = renderHook(() => useResolvedDisabled(true));
+      const { result } = renderHook(() => useMediaControlsDisabled(true));
       expect(result.current).toBe(true);
     });
 
     it('should return prop value when prop is false (no context)', () => {
-      const { result } = renderHook(() => useResolvedDisabled(false));
+      const { result } = renderHook(() => useMediaControlsDisabled(false));
       expect(result.current).toBe(false);
     });
 
-    it('should allow prop false to override context true', () => {
+    it('should return true when context is disabled regardless of prop', () => {
       const wrapper = ({ children }: { children: React.ReactNode }) => (
         <MediaControlsProvider isDisabled={true}>
           {children}
         </MediaControlsProvider>
       );
-      const { result } = renderHook(() => useResolvedDisabled(false), {
+      const { result } = renderHook(() => useMediaControlsDisabled(false), {
         wrapper,
       });
-      expect(result.current).toBe(false);
+      expect(result.current).toBe(true);
     });
 
     it('should allow prop true to override context false', () => {
@@ -73,7 +77,7 @@ describe('useResolvedDisabled', () => {
           {children}
         </MediaControlsProvider>
       );
-      const { result } = renderHook(() => useResolvedDisabled(true), {
+      const { result } = renderHook(() => useMediaControlsDisabled(true), {
         wrapper,
       });
       expect(result.current).toBe(true);

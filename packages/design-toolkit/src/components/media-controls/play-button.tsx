@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -18,9 +18,10 @@ import {
   useMediaDispatch,
   useMediaSelector,
 } from 'media-chrome/react/media-store';
+import { useCallback } from 'react';
 import { Button } from '../button';
 import { Icon } from '../icon';
-import { useResolvedDisabled } from './context';
+import { useMediaControlsDisabled } from './context';
 import type { PlayButtonProps } from './types';
 
 /**
@@ -51,14 +52,14 @@ export function PlayButton({
 }: PlayButtonProps) {
   const dispatch = useMediaDispatch();
   const mediaPaused = useMediaSelector((state) => state.mediaPaused);
-  const isDisabled = useResolvedDisabled(isDisabledProp);
+  const isDisabled = useMediaControlsDisabled(isDisabledProp);
 
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     const type = mediaPaused
       ? MediaActionTypes.MEDIA_PLAY_REQUEST
       : MediaActionTypes.MEDIA_PAUSE_REQUEST;
     dispatch({ type });
-  };
+  }, [dispatch, mediaPaused]);
 
   return (
     <Button
