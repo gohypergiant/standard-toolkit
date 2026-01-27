@@ -17,6 +17,7 @@ export default defineConfig({
   entry: [
     'src/**/*.{ts,tsx}',
     '!src/**/*.{d,stories,test,test-d,bench}.{ts,tsx}',
+    '!src/test.setup.ts/',
     '!**/__fixtures__',
   ],
   clean: true,

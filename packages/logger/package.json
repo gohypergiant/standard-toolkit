@@ -34,7 +34,6 @@
     "./definitions": "./dist/definitions.js",
     "./plugins/callsite": "./dist/plugins/callsite.js",
     "./plugins/environment": "./dist/plugins/environment.js",
-    "./test.setup": "./dist/test.setup.js",
     "./package.json": "./package.json"
   },
   "files": [
