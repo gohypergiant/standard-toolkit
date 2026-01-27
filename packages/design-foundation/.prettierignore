@@ -1,4 +1,0 @@
-# Ignore all files except CSS-related ones
-*
-dist
-!**/*.css
