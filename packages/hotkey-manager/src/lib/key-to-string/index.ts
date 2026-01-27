@@ -12,6 +12,29 @@
 
 import type { KeyCombination } from '@/types/key-combination';
 
+/**
+ * Converts a key combination to a human-readable string representation.
+ *
+ * @internal
+ * @param key - The key combination to convert.
+ * @returns A human-readable string like "[CTRL] + [SHIFT] + [KeyA]".
+ *
+ * @example
+ * ```typescript
+ * import { keyToString } from '@/lib/key-to-string';
+ *
+ * const keyString = keyToString({
+ *   code: 'KeyS',
+ *   alt: false,
+ *   ctrl: false,
+ *   meta: true,
+ *   shift: false,
+ *   autoMacStyle: false,
+ *   id: 'KeyS_meta',
+ * });
+ * console.log(keyString); // "[Win/⌘] + [KeyS]"
+ * ```
+ */
 export function keyToString(key: KeyCombination): string {
   return [
     key.ctrl ? '[CTRL]' : undefined,

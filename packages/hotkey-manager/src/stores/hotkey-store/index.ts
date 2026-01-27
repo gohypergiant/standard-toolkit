@@ -51,6 +51,39 @@ type HotkeyActions = {
   ) => HotkeyConfig[] | null;
 };
 
+/**
+ * Zustand store for managing hotkey registration, activation, and key combination mappings.
+ *
+ * Manages the lifecycle of hotkeys including registration, activation tracking,
+ * and lookup of active hotkeys by key combination.
+ *
+ * @internal
+ *
+ * @example
+ * ```typescript
+ * import { hotkeyStore } from '@/stores/hotkey-store';
+ *
+ * const state = hotkeyStore.getState();
+ *
+ * // Register a hotkey
+ * const config = {
+ *   id: 'save-action',
+ *   key: [{ id: 'KeyS_meta', code: 'KeyS', meta: true }],
+ * };
+ * state.registerHotkey(config);
+ *
+ * // Activate the hotkey
+ * const symbol = Symbol();
+ * state.activateHotkey('save-action', symbol);
+ *
+ * // Get active hotkeys for a key combination
+ * const hotkeys = state.getHotkeysForKeyCombination('KeyS_meta');
+ *
+ * // Deactivate and unregister
+ * state.deactivateHotkey('save-action', symbol);
+ * state.unregisterHotkey('save-action');
+ * ```
+ */
 export const hotkeyStore = createStore<HotkeyState & HotkeyActions>()(
   immer((set, get) => ({
     allHotkeys: new Map(),
@@ -166,6 +199,18 @@ export const hotkeyStore = createStore<HotkeyState & HotkeyActions>()(
   })),
 );
 
+/**
+ * Removes a hotkey from all registered key combinations.
+ *
+ * @param state - The writable draft state from Immer.
+ * @param id - The hotkey ID to remove.
+ * @returns void
+ *
+ * @example
+ * ```typescript
+ * removeHotkeyFromRegisteredKeyCombinations(state, 'my-hotkey');
+ * ```
+ */
 function removeHotkeyFromRegisteredKeyCombinations(
   state: WritableDraft<HotkeyState>,
   id: HotkeyId,
@@ -188,6 +233,18 @@ function removeHotkeyFromRegisteredKeyCombinations(
   }
 }
 
+/**
+ * Removes a hotkey from all active key combinations.
+ *
+ * @param state - The writable draft state from Immer.
+ * @param id - The hotkey ID to remove.
+ * @returns void
+ *
+ * @example
+ * ```typescript
+ * removeHotkeyFromActiveKeyCombinations(state, 'my-hotkey');
+ * ```
+ */
 function removeHotkeyFromActiveKeyCombinations(
   state: WritableDraft<HotkeyState>,
   id: HotkeyId,

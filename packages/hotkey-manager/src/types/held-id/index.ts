@@ -10,4 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
+/**
+ * Type representing a unique identifier for tracking held key state.
+ *
+ * Composed of the key combination ID and the hotkey ID.
+ */
 export type HeldId = string;
