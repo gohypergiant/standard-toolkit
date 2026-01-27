@@ -245,7 +245,7 @@ export default {
       { name: 'arrow-northwest', icon: <Icon.ArrowNorthwest /> },
       { name: 'arrow-right', icon: <Icon.ArrowRight /> },
       { name: 'arrow-southeast', icon: <Icon.ArrowSoutheast /> },
-      { name: 'arrow-southeast', icon: <Icon.ArrowSouthwest /> },
+      { name: 'arrow-southwest', icon: <Icon.ArrowSouthwest /> },
       { name: 'arrow-up', icon: <Icon.ArrowUp /> },
       { name: 'arrow-keys', icon: <Icon.ArrowKeys /> },
       { name: 'arrow', icon: <Icon.Arrow /> },
