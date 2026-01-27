@@ -45,14 +45,11 @@ describe('getLogger', () => {
 
   describe('Initial logger creation', () => {
     test('should create logger instance on first call', async () => {
-      // Arrange
       const { getLogger } = await import('./index');
       const options: LoggerOptions = { enabled: true, level: 'info' };
 
-      // Act
       const logger = getLogger(options);
 
-      // Assert
       expect(logger).toBeDefined();
       expect(logger.info).toBeTypeOf('function');
       expect(logger.error).toBeTypeOf('function');
@@ -60,7 +57,6 @@ describe('getLogger', () => {
     });
 
     test('should call bootstrap with provided options on first call', async () => {
-      // Arrange
       const { getLogger } = await import('./index');
       const options: LoggerOptions = {
         enabled: true,
@@ -69,16 +65,13 @@ describe('getLogger', () => {
         env: 'production',
       };
 
-      // Act
       getLogger(options);
 
-      // Assert
       expect(bootstrapMock).toHaveBeenCalledTimes(1);
       expect(bootstrapMock).toHaveBeenCalledWith(options);
     });
 
     test('should pass all LoggerOptions properties to bootstrap', async () => {
-      // Arrange
       const { getLogger } = await import('./index');
       const customPlugin = { id: 'test-plugin', onBeforeDataOut: vi.fn() };
       const customTransport = { log: vi.fn() };
@@ -92,10 +85,8 @@ describe('getLogger', () => {
         transports: [customTransport],
       };
 
-      // Act
       getLogger(options);
 
-      // Assert
       expect(bootstrapMock).toHaveBeenCalledWith(
         expect.objectContaining({
           enabled: false,
@@ -112,47 +103,38 @@ describe('getLogger', () => {
 
   describe('Singleton behavior', () => {
     test('should return same instance on subsequent calls', async () => {
-      // Arrange
       const { getLogger } = await import('./index');
       const options1: LoggerOptions = { enabled: true, level: 'debug' };
       const options2: LoggerOptions = { enabled: true, level: 'error' };
 
-      // Act
       const logger1 = getLogger(options1);
       const logger2 = getLogger(options2);
 
-      // Assert
       expect(logger1).toBe(logger2);
     });
 
     test('should call bootstrap only once across multiple calls', async () => {
-      // Arrange
       const { getLogger } = await import('./index');
       const options1: LoggerOptions = { enabled: true };
       const options2: LoggerOptions = { enabled: false };
       const options3: LoggerOptions = { enabled: true, level: 'warn' };
 
-      // Act
       getLogger(options1);
       getLogger(options2);
       getLogger(options3);
 
-      // Assert
       expect(bootstrapMock).toHaveBeenCalledTimes(1);
       expect(bootstrapMock).toHaveBeenCalledWith(options1);
     });
 
     test('should ignore options on second call', async () => {
-      // Arrange
       const { getLogger } = await import('./index');
       const firstOptions: LoggerOptions = { enabled: true, level: 'info' };
       const secondOptions: LoggerOptions = { enabled: false, level: 'error' };
 
-      // Act
       const logger1 = getLogger(firstOptions);
       const logger2 = getLogger(secondOptions);
 
-      // Assert
       expect(logger1).toBe(logger2);
       expect(bootstrapMock).toHaveBeenCalledTimes(1);
       expect(bootstrapMock).toHaveBeenCalledWith(firstOptions);
@@ -160,17 +142,14 @@ describe('getLogger', () => {
     });
 
     test('should maintain singleton across many calls', async () => {
-      // Arrange
       const { getLogger } = await import('./index');
       const options: LoggerOptions = { enabled: true };
       const instances = [];
 
-      // Act
       for (let i = 0; i < 10; i++) {
         instances.push(getLogger(options));
       }
 
-      // Assert
       const firstInstance = instances[0];
       for (const instance of instances) {
         expect(instance).toBe(firstInstance);
@@ -188,14 +167,11 @@ describe('getLogger', () => {
       { method: 'trace', description: 'trace method' },
       { method: 'fatal', description: 'fatal method' },
     ])('should return logger with $description', async ({ method }) => {
-      // Arrange
       const { getLogger } = await import('./index');
       const options: LoggerOptions = { enabled: true };
 
-      // Act
       const logger = getLogger(options);
 
-      // Assert
       expect(logger[method as keyof typeof logger]).toBeDefined();
       expect(logger[method as keyof typeof logger]).toBeTypeOf('function');
     });
@@ -203,14 +179,11 @@ describe('getLogger', () => {
 
   describe('Configuration variations', () => {
     test('should create logger with enabled=true', async () => {
-      // Arrange
       const { getLogger } = await import('./index');
       const options: LoggerOptions = { enabled: true };
 
-      // Act
       const logger = getLogger(options);
 
-      // Assert
       expect(logger).toBeDefined();
       expect(bootstrapMock).toHaveBeenCalledWith(
         expect.objectContaining({ enabled: true }),
@@ -218,14 +191,11 @@ describe('getLogger', () => {
     });
 
     test('should create logger with enabled=false', async () => {
-      // Arrange
       const { getLogger } = await import('./index');
       const options: LoggerOptions = { enabled: false };
 
-      // Act
       const logger = getLogger(options);
 
-      // Assert
       expect(logger).toBeDefined();
       expect(bootstrapMock).toHaveBeenCalledWith(
         expect.objectContaining({ enabled: false }),
@@ -240,14 +210,11 @@ describe('getLogger', () => {
       { level: 'error' as const, description: 'error' },
       { level: 'fatal' as const, description: 'fatal' },
     ])('should create logger with level=$description', async ({ level }) => {
-      // Arrange
       const { getLogger } = await import('./index');
       const options: LoggerOptions = { enabled: true, level };
 
-      // Act
       getLogger(options);
 
-      // Assert
       expect(bootstrapMock).toHaveBeenCalledWith(
         expect.objectContaining({ level }),
       );
@@ -258,56 +225,44 @@ describe('getLogger', () => {
       { env: 'production' as const, description: 'production' },
       { env: 'test' as const, description: 'test' },
     ])('should create logger with env=$description', async ({ env }) => {
-      // Arrange
       const { getLogger } = await import('./index');
       const options: LoggerOptions = { enabled: true, env };
 
-      // Act
       getLogger(options);
 
-      // Assert
       expect(bootstrapMock).toHaveBeenCalledWith(
         expect.objectContaining({ env }),
       );
     });
 
     test('should create logger with custom prefix', async () => {
-      // Arrange
       const { getLogger } = await import('./index');
       const options: LoggerOptions = { enabled: true, prefix: '[TestApp]' };
 
-      // Act
       getLogger(options);
 
-      // Assert
       expect(bootstrapMock).toHaveBeenCalledWith(
         expect.objectContaining({ prefix: '[TestApp]' }),
       );
     });
 
     test('should create logger with pretty=true', async () => {
-      // Arrange
       const { getLogger } = await import('./index');
       const options: LoggerOptions = { enabled: true, pretty: true };
 
-      // Act
       getLogger(options);
 
-      // Assert
       expect(bootstrapMock).toHaveBeenCalledWith(
         expect.objectContaining({ pretty: true }),
       );
     });
 
     test('should create logger with pretty=false', async () => {
-      // Arrange
       const { getLogger } = await import('./index');
       const options: LoggerOptions = { enabled: true, pretty: false };
 
-      // Act
       getLogger(options);
 
-      // Assert
       expect(bootstrapMock).toHaveBeenCalledWith(
         expect.objectContaining({ pretty: false }),
       );
@@ -316,20 +271,16 @@ describe('getLogger', () => {
 
   describe('Edge cases', () => {
     test('should handle minimal options object', async () => {
-      // Arrange
       const { getLogger } = await import('./index');
       const options: LoggerOptions = { enabled: true };
 
-      // Act
       const logger = getLogger(options);
 
-      // Assert
       expect(logger).toBeDefined();
       expect(bootstrapMock).toHaveBeenCalledWith(options);
     });
 
     test('should handle options with undefined optional fields', async () => {
-      // Arrange
       const { getLogger } = await import('./index');
       const options: LoggerOptions = {
         enabled: true,
@@ -341,10 +292,8 @@ describe('getLogger', () => {
         transports: undefined,
       };
 
-      // Act
       const logger = getLogger(options);
 
-      // Assert
       expect(logger).toBeDefined();
       expect(bootstrapMock).toHaveBeenCalledWith(
         expect.objectContaining({ enabled: true }),
@@ -352,14 +301,11 @@ describe('getLogger', () => {
     });
 
     test('should handle empty plugins array', async () => {
-      // Arrange
       const { getLogger } = await import('./index');
       const options: LoggerOptions = { enabled: true, plugins: [] };
 
-      // Act
       const logger = getLogger(options);
 
-      // Assert
       expect(logger).toBeDefined();
       expect(bootstrapMock).toHaveBeenCalledWith(
         expect.objectContaining({ plugins: [] }),
@@ -367,14 +313,11 @@ describe('getLogger', () => {
     });
 
     test('should handle empty transports array', async () => {
-      // Arrange
       const { getLogger } = await import('./index');
       const options: LoggerOptions = { enabled: true, transports: [] };
 
-      // Act
       const logger = getLogger(options);
 
-      // Assert
       expect(logger).toBeDefined();
       expect(bootstrapMock).toHaveBeenCalledWith(
         expect.objectContaining({ transports: [] }),

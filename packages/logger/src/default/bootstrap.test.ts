@@ -113,13 +113,10 @@ describe('bootstrap', () => {
 
   describe('Default configuration', () => {
     test('should create LogLayer instance with default options', () => {
-      // Arrange
       const options: LoggerOptions = { enabled: true };
 
-      // Act
       const logger = bootstrap(options);
 
-      // Assert
       expect(logger).toBeDefined();
       expect(logger.info).toBeTypeOf('function');
       expect(logger.warn).toBeTypeOf('function');
@@ -129,13 +126,10 @@ describe('bootstrap', () => {
     });
 
     test('should use debug level when level option is not provided', () => {
-      // Arrange
       const options: LoggerOptions = { enabled: true };
 
-      // Act
       const logger = bootstrap(options);
 
-      // Assert
       expect(logger).toBeDefined();
       expect(getSimplePrettyTerminalMock).toHaveBeenCalledWith(
         expect.objectContaining({ level: 'debug' }),
@@ -143,13 +137,10 @@ describe('bootstrap', () => {
     });
 
     test('should use development environment when env option is not provided', () => {
-      // Arrange
       const options: LoggerOptions = { enabled: true };
 
-      // Act
       const logger = bootstrap(options);
 
-      // Assert
       expect(logger).toBeDefined();
       expect(callsitePluginMock).toHaveBeenCalledWith(
         expect.objectContaining({ isProductionEnv: false }),
@@ -160,26 +151,20 @@ describe('bootstrap', () => {
     });
 
     test('should enable pretty printing when pretty option is not provided', () => {
-      // Arrange
       const options: LoggerOptions = { enabled: true };
 
-      // Act
       const logger = bootstrap(options);
 
-      // Assert
       expect(logger).toBeDefined();
       expect(getSimplePrettyTerminalMock).toHaveBeenCalled();
       expect(ConsoleTransportMock).not.toHaveBeenCalled();
     });
 
     test('should use empty prefix when prefix option is not provided', () => {
-      // Arrange
       const options: LoggerOptions = { enabled: true };
 
-      // Act
       const logger = bootstrap(options);
 
-      // Assert
       expect(logger).toBeDefined();
       expect(LogLayerMock).toHaveBeenCalledWith(
         expect.objectContaining({ prefix: '' }),
@@ -198,13 +183,10 @@ describe('bootstrap', () => {
     ])('should create logger with $description when level is $level', ({
       level,
     }) => {
-      // Arrange
       const options: LoggerOptions = { enabled: true, level };
 
-      // Act
       const logger = bootstrap(options);
 
-      // Assert
       expect(logger).toBeDefined();
       expect(getSimplePrettyTerminalMock).toHaveBeenCalledWith(
         expect.objectContaining({ level }),
@@ -214,13 +196,10 @@ describe('bootstrap', () => {
 
   describe('Environment detection', () => {
     test('should set isProductionEnv to true when env is production', () => {
-      // Arrange
       const options: LoggerOptions = { enabled: true, env: 'production' };
 
-      // Act
       const logger = bootstrap(options);
 
-      // Assert
       expect(logger).toBeDefined();
       expect(callsitePluginMock).toHaveBeenCalledWith(
         expect.objectContaining({ isProductionEnv: true }),
@@ -231,13 +210,10 @@ describe('bootstrap', () => {
     });
 
     test('should set isProductionEnv to false when env is development', () => {
-      // Arrange
       const options: LoggerOptions = { enabled: true, env: 'development' };
 
-      // Act
       const logger = bootstrap(options);
 
-      // Assert
       expect(logger).toBeDefined();
       expect(callsitePluginMock).toHaveBeenCalledWith(
         expect.objectContaining({ isProductionEnv: false }),
@@ -248,13 +224,10 @@ describe('bootstrap', () => {
     });
 
     test('should set isProductionEnv to false when env is test', () => {
-      // Arrange
       const options: LoggerOptions = { enabled: true, env: 'test' };
 
-      // Act
       const logger = bootstrap(options);
 
-      // Assert
       expect(logger).toBeDefined();
       expect(callsitePluginMock).toHaveBeenCalledWith(
         expect.objectContaining({ isProductionEnv: false }),
@@ -265,15 +238,12 @@ describe('bootstrap', () => {
     });
 
     test('should set isServer to true when window is undefined', () => {
-      // Arrange
       // @ts-expect-error - intentionally deleting window to simulate Node.js
       delete globalThis.window;
       const options: LoggerOptions = { enabled: true };
 
-      // Act
       const logger = bootstrap(options);
 
-      // Assert
       expect(logger).toBeDefined();
       expect(environmentPluginMock).toHaveBeenCalledWith(
         expect.objectContaining({ isServer: true }),
@@ -281,14 +251,11 @@ describe('bootstrap', () => {
     });
 
     test('should set isServer to false when window is defined', () => {
-      // Arrange
       globalThis.window = {} as Window & typeof globalThis;
       const options: LoggerOptions = { enabled: true };
 
-      // Act
       const logger = bootstrap(options);
 
-      // Assert
       expect(logger).toBeDefined();
       expect(environmentPluginMock).toHaveBeenCalledWith(
         expect.objectContaining({ isServer: false }),
@@ -298,33 +265,26 @@ describe('bootstrap', () => {
 
   describe('Transport configuration', () => {
     test('should use pretty terminal transport when pretty is true', () => {
-      // Arrange
       const options: LoggerOptions = { enabled: true, pretty: true };
 
-      // Act
       const logger = bootstrap(options);
 
-      // Assert
       expect(logger).toBeDefined();
       expect(getSimplePrettyTerminalMock).toHaveBeenCalled();
       expect(ConsoleTransportMock).not.toHaveBeenCalled();
     });
 
     test('should use console transport when pretty is false', () => {
-      // Arrange
       const options: LoggerOptions = { enabled: true, pretty: false };
 
-      // Act
       const logger = bootstrap(options);
 
-      // Assert
       expect(logger).toBeDefined();
       expect(ConsoleTransportMock).toHaveBeenCalled();
       expect(getSimplePrettyTerminalMock).not.toHaveBeenCalled();
     });
 
     test('should include custom transports after default transport', () => {
-      // Arrange
       const customTransport = {
         log: vi.fn(),
       };
@@ -333,10 +293,8 @@ describe('bootstrap', () => {
         transports: [customTransport],
       };
 
-      // Act
       const logger = bootstrap(options);
 
-      // Assert
       expect(logger).toBeDefined();
       expect(LogLayerMock).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -346,13 +304,10 @@ describe('bootstrap', () => {
     });
 
     test('should handle empty transports array', () => {
-      // Arrange
       const options: LoggerOptions = { enabled: true, transports: [] };
 
-      // Act
       const logger = bootstrap(options);
 
-      // Assert
       expect(logger).toBeDefined();
       expect(LogLayerMock).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -362,7 +317,6 @@ describe('bootstrap', () => {
     });
 
     test('should handle multiple custom transports', () => {
-      // Arrange
       const transport1 = { log: vi.fn() };
       const transport2 = { log: vi.fn() };
       const options: LoggerOptions = {
@@ -370,10 +324,8 @@ describe('bootstrap', () => {
         transports: [transport1, transport2],
       };
 
-      // Act
       const logger = bootstrap(options);
 
-      // Assert
       expect(logger).toBeDefined();
       expect(LogLayerMock).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -385,20 +337,16 @@ describe('bootstrap', () => {
 
   describe('Plugin configuration', () => {
     test('should include callsitePlugin and environmentPlugin by default', () => {
-      // Arrange
       const options: LoggerOptions = { enabled: true };
 
-      // Act
       const logger = bootstrap(options);
 
-      // Assert
       expect(logger).toBeDefined();
       expect(callsitePluginMock).toHaveBeenCalled();
       expect(environmentPluginMock).toHaveBeenCalled();
     });
 
     test('should append custom plugins after default plugins', () => {
-      // Arrange
       const customPlugin = {
         id: 'custom-plugin',
         onBeforeDataOut: vi.fn(({ data }) => data),
@@ -408,10 +356,8 @@ describe('bootstrap', () => {
         plugins: [customPlugin],
       };
 
-      // Act
       const logger = bootstrap(options);
 
-      // Assert
       expect(logger).toBeDefined();
       expect(LogLayerMock).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -421,13 +367,10 @@ describe('bootstrap', () => {
     });
 
     test('should handle empty plugins array', () => {
-      // Arrange
       const options: LoggerOptions = { enabled: true, plugins: [] };
 
-      // Act
       const logger = bootstrap(options);
 
-      // Assert
       expect(logger).toBeDefined();
       expect(LogLayerMock).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -437,7 +380,6 @@ describe('bootstrap', () => {
     });
 
     test('should handle multiple custom plugins', () => {
-      // Arrange
       const plugin1 = {
         id: 'plugin-1',
         onBeforeDataOut: vi.fn(({ data }) => data),
@@ -451,10 +393,8 @@ describe('bootstrap', () => {
         plugins: [plugin1, plugin2],
       };
 
-      // Act
       const logger = bootstrap(options);
 
-      // Assert
       expect(logger).toBeDefined();
       expect(LogLayerMock).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -466,13 +406,10 @@ describe('bootstrap', () => {
 
   describe('Prefix configuration', () => {
     test('should set custom prefix when provided', () => {
-      // Arrange
       const options: LoggerOptions = { enabled: true, prefix: '[MyApp]' };
 
-      // Act
       const logger = bootstrap(options);
 
-      // Assert
       expect(logger).toBeDefined();
       expect(LogLayerMock).toHaveBeenCalledWith(
         expect.objectContaining({ prefix: '[MyApp]' }),
@@ -480,13 +417,10 @@ describe('bootstrap', () => {
     });
 
     test('should handle empty string prefix', () => {
-      // Arrange
       const options: LoggerOptions = { enabled: true, prefix: '' };
 
-      // Act
       const logger = bootstrap(options);
 
-      // Assert
       expect(logger).toBeDefined();
       expect(LogLayerMock).toHaveBeenCalledWith(
         expect.objectContaining({ prefix: '' }),
@@ -496,13 +430,10 @@ describe('bootstrap', () => {
 
   describe('Enabled configuration', () => {
     test('should create logger with enabled=true', () => {
-      // Arrange
       const options: LoggerOptions = { enabled: true };
 
-      // Act
       const logger = bootstrap(options);
 
-      // Assert
       expect(logger).toBeDefined();
       expect(LogLayerMock).toHaveBeenCalledWith(
         expect.objectContaining({ enabled: true }),
@@ -510,13 +441,10 @@ describe('bootstrap', () => {
     });
 
     test('should create logger with enabled=false', () => {
-      // Arrange
       const options: LoggerOptions = { enabled: false };
 
-      // Act
       const logger = bootstrap(options);
 
-      // Assert
       expect(logger).toBeDefined();
       expect(LogLayerMock).toHaveBeenCalledWith(
         expect.objectContaining({ enabled: false }),
@@ -526,13 +454,10 @@ describe('bootstrap', () => {
 
   describe('Error serialization', () => {
     test('should configure serializeError as errorSerializer', () => {
-      // Arrange
       const options: LoggerOptions = { enabled: true };
 
-      // Act
       const logger = bootstrap(options);
 
-      // Assert
       expect(logger).toBeDefined();
       expect(LogLayerMock).toHaveBeenCalledWith(
         expect.objectContaining({ errorSerializer: serializeErrorMock }),
@@ -542,13 +467,10 @@ describe('bootstrap', () => {
 
   describe('Pretty terminal configuration', () => {
     test('should configure viewMode as message-only for pretty transport', () => {
-      // Arrange
       const options: LoggerOptions = { enabled: true, pretty: true };
 
-      // Act
       const logger = bootstrap(options);
 
-      // Assert
       expect(logger).toBeDefined();
       expect(getSimplePrettyTerminalMock).toHaveBeenCalledWith(
         expect.objectContaining({ viewMode: 'message-only' }),
@@ -556,13 +478,10 @@ describe('bootstrap', () => {
     });
 
     test('should configure runtime as browser for pretty transport', () => {
-      // Arrange
       const options: LoggerOptions = { enabled: true, pretty: true };
 
-      // Act
       const logger = bootstrap(options);
 
-      // Assert
       expect(logger).toBeDefined();
       expect(getSimplePrettyTerminalMock).toHaveBeenCalledWith(
         expect.objectContaining({ runtime: 'browser' }),
@@ -570,13 +489,10 @@ describe('bootstrap', () => {
     });
 
     test('should set includeDataInBrowserConsole to true for pretty transport', () => {
-      // Arrange
       const options: LoggerOptions = { enabled: true, pretty: true };
 
-      // Act
       const logger = bootstrap(options);
 
-      // Assert
       expect(logger).toBeDefined();
       expect(getSimplePrettyTerminalMock).toHaveBeenCalledWith(
         expect.objectContaining({ includeDataInBrowserConsole: true }),
@@ -586,13 +502,10 @@ describe('bootstrap', () => {
 
   describe('Console transport configuration', () => {
     test('should configure appendObjectData for console transport', () => {
-      // Arrange
       const options: LoggerOptions = { enabled: true, pretty: false };
 
-      // Act
       const logger = bootstrap(options);
 
-      // Assert
       expect(logger).toBeDefined();
       expect(ConsoleTransportMock).toHaveBeenCalledWith(
         expect.objectContaining({ appendObjectData: true }),
@@ -600,13 +513,10 @@ describe('bootstrap', () => {
     });
 
     test('should use console as logger for console transport', () => {
-      // Arrange
       const options: LoggerOptions = { enabled: true, pretty: false };
 
-      // Act
       const logger = bootstrap(options);
 
-      // Assert
       expect(logger).toBeDefined();
       expect(ConsoleTransportMock).toHaveBeenCalledWith(
         expect.objectContaining({ logger: console }),

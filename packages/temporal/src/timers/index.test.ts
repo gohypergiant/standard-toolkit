@@ -25,10 +25,8 @@ describe('timers', () => {
   const ms = 1000;
 
   it('should execute callback repeatedly at specified interval starting at next clock second', () => {
-    // Arrange
     const callback = vi.fn();
 
-    // Act
     const cleanup = setClockInterval(callback, ms);
 
     // Tick to next second
@@ -36,19 +34,16 @@ describe('timers', () => {
     // Tick from internal timer
     vi.advanceTimersByTime(ms);
 
-    // Assert
     expect(callback).toHaveBeenCalled();
     expect(cleanup).toBeTypeOf('function');
   });
 
   it('setClockInterval should execute multiple times with drift correction', () => {
-    // Arrange
     const callback = vi.fn();
     const interval = 250;
     const now = 1500; // 1500 % 1000 = 500, so next second is in 500ms
     vi.setSystemTime(now);
 
-    // Act
     const cleanup = setClockInterval(callback, interval);
 
     // Assert - advance to next second (500ms)
@@ -71,11 +66,9 @@ describe('timers', () => {
   });
 
   it('setClockInterval cleanup should stop further executions', () => {
-    // Arrange
     const callback = vi.fn();
     const interval = 250;
 
-    // Act
     const cleanup = setClockInterval(callback, interval);
 
     // Advance to next second and let it execute a few times
@@ -93,11 +86,9 @@ describe('timers', () => {
   });
 
   it('setClockInterval should handle zero interval', () => {
-    // Arrange
     const callback = vi.fn();
     const interval = 0;
 
-    // Act
     const cleanup = setClockInterval(callback, interval);
 
     // Assert - zero interval causes NaN in remainder calculation
@@ -112,11 +103,9 @@ describe('timers', () => {
   });
 
   it('setClockInterval should handle negative interval', () => {
-    // Arrange
     const callback = vi.fn();
     const interval = -1000;
 
-    // Act
     const cleanup = setClockInterval(callback, interval);
 
     // Assert - negative interval causes incorrect modulo calculation
@@ -133,13 +122,11 @@ describe('timers', () => {
   });
 
   it('setClockInterval should execute exact number of times based on elapsed time', () => {
-    // Arrange
     const callback = vi.fn();
     const interval = 200;
     const now = 1000; // Start at second boundary for predictability
     vi.setSystemTime(now);
 
-    // Act
     const cleanup = setClockInterval(callback, interval);
 
     // Assert - advance to next second (1000ms from now % 1000 = 0, so wait full 1000ms)
@@ -162,13 +149,11 @@ describe('timers', () => {
   });
 
   it('setClockInterval should allow callback to throw error', () => {
-    // Arrange
     const throwingCallback = vi.fn(() => {
       throw new Error('Callback error');
     });
     const interval = 250;
 
-    // Act
     const cleanup = setClockInterval(throwingCallback, interval);
 
     // Assert - callback throws but timer mechanism continues
@@ -185,7 +170,6 @@ describe('timers', () => {
   });
 
   it('setClockInterval should stop execution when callback throws error', () => {
-    // Arrange
     let callCount = 0;
     const callback = vi.fn(() => {
       callCount++;
@@ -195,7 +179,6 @@ describe('timers', () => {
     });
     const interval = 250;
 
-    // Act
     const cleanup = setClockInterval(callback, interval);
 
     // Assert - first call throws
@@ -213,11 +196,9 @@ describe('timers', () => {
   });
 
   it('setClockInterval should handle very large interval', () => {
-    // Arrange
     const callback = vi.fn();
     const interval = 10000000; // 10 million ms (~2.7 hours)
 
-    // Act
     const cleanup = setClockInterval(callback, interval);
 
     // Assert - advance to next second
@@ -232,13 +213,11 @@ describe('timers', () => {
   });
 
   it('setClockInterval should handle fractional interval values', () => {
-    // Arrange
     const callback = vi.fn();
     const interval = 250.75;
     const now = 1000; // Start at second boundary
     vi.setSystemTime(now);
 
-    // Act
     const cleanup = setClockInterval(callback, interval);
 
     // Assert - advance to next second
@@ -253,13 +232,11 @@ describe('timers', () => {
   });
 
   it('setClockInterval should handle multiple rapid cleanup calls', () => {
-    // Arrange
     const callback = vi.fn();
     const interval = 2000; // Use interval larger than 1 second to avoid multiple executions
     const now = 1000; // Start at second boundary
     vi.setSystemTime(now);
 
-    // Act
     const cleanup = setClockInterval(callback, interval);
 
     // Advance to next second
@@ -277,10 +254,8 @@ describe('timers', () => {
   });
 
   it('should execute callback once after specified delay starting at next clock second', () => {
-    // Arrange
     const callback = vi.fn();
 
-    // Act
     const cleanup = setClockTimeout(callback, ms);
 
     // Tick to next second
@@ -288,19 +263,16 @@ describe('timers', () => {
     // Tick from internal timer
     vi.advanceTimersByTime(ms);
 
-    // Assert
     expect(callback).toHaveBeenCalled();
     expect(cleanup).toBeTypeOf('function');
   });
 
   it('setClockTimeout cleanup should prevent callback execution', () => {
-    // Arrange
     const callback = vi.fn();
     const timeout = 500;
     const now = 1500; // Start at 1500ms (500ms to next second)
     vi.setSystemTime(now);
 
-    // Act
     const cleanup = setClockTimeout(callback, timeout);
 
     // Advance to next second - execute() runs and sets the timeout
@@ -320,13 +292,11 @@ describe('timers', () => {
   });
 
   it('setClockTimeout should execute callback only once', () => {
-    // Arrange
     const callback = vi.fn();
     const timeout = 500;
     const now = 1000; // Start at second boundary
     vi.setSystemTime(now);
 
-    // Act
     const cleanup = setClockTimeout(callback, timeout);
 
     // Advance to next second (from boundary, need full 1000ms)
@@ -345,11 +315,9 @@ describe('timers', () => {
   });
 
   it('setClockTimeout should handle zero timeout', () => {
-    // Arrange
     const callback = vi.fn();
     const timeout = 0;
 
-    // Act
     const cleanup = setClockTimeout(callback, timeout);
 
     // Assert - zero timeout means callback executes immediately after next second
@@ -363,11 +331,9 @@ describe('timers', () => {
   });
 
   it('setClockTimeout should handle negative timeout', () => {
-    // Arrange
     const callback = vi.fn();
     const timeout = -1000;
 
-    // Act
     const cleanup = setClockTimeout(callback, timeout);
 
     // Assert - setTimeout treats negative values as 0
@@ -381,7 +347,6 @@ describe('timers', () => {
   });
 
   it('setClockTimeout should allow callback to throw error', () => {
-    // Arrange
     const throwingCallback = vi.fn(() => {
       throw new Error('Timeout callback error');
     });
@@ -389,7 +354,6 @@ describe('timers', () => {
     const now = 1000; // Start at second boundary
     vi.setSystemTime(now);
 
-    // Act
     const cleanup = setClockTimeout(throwingCallback, timeout);
 
     // Assert - advance to next second
@@ -408,11 +372,9 @@ describe('timers', () => {
   });
 
   it('setClockTimeout should handle very large timeout', () => {
-    // Arrange
     const callback = vi.fn();
     const timeout = 10000000; // 10 million ms (~2.7 hours)
 
-    // Act
     const cleanup = setClockTimeout(callback, timeout);
 
     // Assert - advance to next second
@@ -428,13 +390,11 @@ describe('timers', () => {
   });
 
   it('setClockTimeout should handle fractional timeout values', () => {
-    // Arrange
     const callback = vi.fn();
     const timeout = 500.75;
     const now = 1000; // Start at second boundary
     vi.setSystemTime(now);
 
-    // Act
     const cleanup = setClockTimeout(callback, timeout);
 
     // Assert - advance to next second
@@ -449,13 +409,11 @@ describe('timers', () => {
   });
 
   it('setClockTimeout should handle multiple rapid cleanup calls', () => {
-    // Arrange
     const callback = vi.fn();
     const timeout = 500;
     const now = 1000; // Start at second boundary
     vi.setSystemTime(now);
 
-    // Act
     const cleanup = setClockTimeout(callback, timeout);
 
     // Advance to trigger the internal timeout setup

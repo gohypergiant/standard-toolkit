@@ -34,53 +34,40 @@ describe('callsitePlugin', () => {
 
   describe('Plugin creation', () => {
     test('should create plugin with provided id', () => {
-      // Arrange
       const options = { isProductionEnv: false, id: 'test-callsite' };
 
-      // Act
       const plugin = callsitePlugin(options);
 
-      // Assert
       expect(plugin.id).toBe('test-callsite');
     });
 
     test('should create plugin with disabled flag', () => {
-      // Arrange
       const options = { isProductionEnv: false, disabled: true };
 
-      // Act
       const plugin = callsitePlugin(options);
 
-      // Assert
       expect(plugin.disabled).toBe(true);
     });
 
     test('should create plugin without disabled flag when not provided', () => {
-      // Arrange
       const options = { isProductionEnv: false };
 
-      // Act
       const plugin = callsitePlugin(options);
 
-      // Assert
       expect(plugin.disabled).toBeUndefined();
     });
 
     test('should have onBeforeDataOut hook', () => {
-      // Arrange
       const options = { isProductionEnv: false };
 
-      // Act
       const plugin = callsitePlugin(options);
 
-      // Assert
       expect(plugin.onBeforeDataOut).toBeTypeOf('function');
     });
   });
 
   describe('Callsite detection - positive cases', () => {
     test('should extract callsite with file path, line number, and column number', () => {
-      // Arrange
       const mockCallsite = {
         getFunctionName: () => 'debug',
         getFileName: () => '/src/app.ts',
@@ -103,10 +90,8 @@ describe('callsitePlugin', () => {
 
       const plugin = callsitePlugin({ isProductionEnv: false });
 
-      // Act
       const result = plugin.onBeforeDataOut({ data: {} });
 
-      // Assert
       expect(result).toEqual({
         callSite: '/src/user.ts:100:5',
       });
@@ -122,7 +107,6 @@ describe('callsitePlugin', () => {
     ])('should detect callsite after $description method in stack', ({
       level,
     }) => {
-      // Arrange
       const levelCallsite = {
         getFunctionName: () => level,
         getFileName: () => '/node_modules/loglayer/index.js',
@@ -145,17 +129,14 @@ describe('callsitePlugin', () => {
 
       const plugin = callsitePlugin({ isProductionEnv: false });
 
-      // Act
       const result = plugin.onBeforeDataOut({ data: {} });
 
-      // Assert
       expect(result).toEqual({
         callSite: '/src/main.ts:50:15',
       });
     });
 
     test('should preserve existing data properties when adding callSite', () => {
-      // Arrange
       const mockCallsite = {
         getFunctionName: () => 'info',
         getFileName: () => '/src/app.ts',
@@ -179,10 +160,8 @@ describe('callsitePlugin', () => {
       const plugin = callsitePlugin({ isProductionEnv: false });
       const existingData = { userId: 123, action: 'login' };
 
-      // Act
       const result = plugin.onBeforeDataOut({ data: existingData });
 
-      // Assert
       expect(result).toEqual({
         userId: 123,
         action: 'login',
@@ -191,7 +170,6 @@ describe('callsitePlugin', () => {
     });
 
     test('should not mutate original data object', () => {
-      // Arrange
       const mockCallsite = {
         getFunctionName: () => 'debug',
         getFileName: () => '/src/app.ts',
@@ -215,10 +193,8 @@ describe('callsitePlugin', () => {
       const plugin = callsitePlugin({ isProductionEnv: false });
       const originalData = { key: 'value' };
 
-      // Act
       plugin.onBeforeDataOut({ data: originalData });
 
-      // Assert
       expect(originalData).toEqual({ key: 'value' });
       expect(originalData).not.toHaveProperty('callSite');
     });
@@ -226,7 +202,6 @@ describe('callsitePlugin', () => {
 
   describe('Callsite detection - eval origin handling', () => {
     test('should use getEvalOrigin when callsite is from eval', () => {
-      // Arrange
       const mockCallsite = {
         getFunctionName: () => 'error',
         getFileName: () => null,
@@ -249,17 +224,14 @@ describe('callsitePlugin', () => {
 
       const plugin = callsitePlugin({ isProductionEnv: false });
 
-      // Act
       const result = plugin.onBeforeDataOut({ data: {} });
 
-      // Assert
       expect(result).toEqual({
         callSite: 'eval at <anonymous> (/src/dynamic.ts:42:10):5:2',
       });
     });
 
     test('should use getFileName when callsite is not from eval', () => {
-      // Arrange
       const mockCallsite = {
         getFunctionName: () => 'warn',
         getFileName: () => '/lib/logger.js',
@@ -282,10 +254,8 @@ describe('callsitePlugin', () => {
 
       const plugin = callsitePlugin({ isProductionEnv: false });
 
-      // Act
       const result = plugin.onBeforeDataOut({ data: {} });
 
-      // Assert
       expect(result).toEqual({
         callSite: '/src/processor.ts:100:12',
       });
@@ -294,52 +264,42 @@ describe('callsitePlugin', () => {
 
   describe('Callsite detection - edge cases', () => {
     test('should return unknown when callsites returns empty array', () => {
-      // Arrange
       callsitesMock.mockReturnValue([]);
 
       const plugin = callsitePlugin({ isProductionEnv: false });
 
-      // Act
       const result = plugin.onBeforeDataOut({ data: {} });
 
-      // Assert
       expect(result).toEqual({
         callSite: 'unknown',
       });
     });
 
     test('should return unknown when callsites returns null', () => {
-      // Arrange
       callsitesMock.mockReturnValue(null);
 
       const plugin = callsitePlugin({ isProductionEnv: false });
 
-      // Act
       const result = plugin.onBeforeDataOut({ data: {} });
 
-      // Assert
       expect(result).toEqual({
         callSite: 'unknown',
       });
     });
 
     test('should return unknown when callsites returns undefined', () => {
-      // Arrange
       callsitesMock.mockReturnValue(undefined);
 
       const plugin = callsitePlugin({ isProductionEnv: false });
 
-      // Act
       const result = plugin.onBeforeDataOut({ data: {} });
 
-      // Assert
       expect(result).toEqual({
         callSite: 'unknown',
       });
     });
 
     test('should handle stack with no matching log level method', () => {
-      // Arrange
       const callsite1 = {
         getFunctionName: () => 'someFunction',
         getFileName: () => '/src/app.ts',
@@ -362,10 +322,8 @@ describe('callsitePlugin', () => {
 
       const plugin = callsitePlugin({ isProductionEnv: false });
 
-      // Act
       const result = plugin.onBeforeDataOut({ data: {} });
 
-      // Assert
       expect(result.callSite).toBeDefined();
       // When no level found, levelLine = 0, so it uses callsite at index 1
       expect(result).toEqual({
@@ -374,7 +332,6 @@ describe('callsitePlugin', () => {
     });
 
     test('should handle callsite with undefined line number', () => {
-      // Arrange
       const mockCallsite = {
         getFunctionName: () => 'info',
         getFileName: () => '/src/app.ts',
@@ -397,17 +354,14 @@ describe('callsitePlugin', () => {
 
       const plugin = callsitePlugin({ isProductionEnv: false });
 
-      // Act
       const result = plugin.onBeforeDataOut({ data: {} });
 
-      // Assert
       expect(result).toEqual({
         callSite: '/src/user.ts:undefined:20',
       });
     });
 
     test('should handle callsite with undefined column number', () => {
-      // Arrange
       const mockCallsite = {
         getFunctionName: () => 'debug',
         getFileName: () => '/src/app.ts',
@@ -430,17 +384,14 @@ describe('callsitePlugin', () => {
 
       const plugin = callsitePlugin({ isProductionEnv: false });
 
-      // Act
       const result = plugin.onBeforeDataOut({ data: {} });
 
-      // Assert
       expect(result).toEqual({
         callSite: '/src/user.ts:50:undefined',
       });
     });
 
     test('should handle callsite with undefined file name', () => {
-      // Arrange
       const mockCallsite = {
         getFunctionName: () => 'error',
         getFileName: () => '/src/app.ts',
@@ -463,17 +414,14 @@ describe('callsitePlugin', () => {
 
       const plugin = callsitePlugin({ isProductionEnv: false });
 
-      // Act
       const result = plugin.onBeforeDataOut({ data: {} });
 
-      // Assert
       expect(result).toEqual({
         callSite: 'undefined:30:8',
       });
     });
 
     test('should handle stack with only one callsite (out of bounds access)', () => {
-      // Arrange
       const singleCallsite = {
         getFunctionName: () => 'info',
         getFileName: () => '/src/app.ts',
@@ -487,10 +435,8 @@ describe('callsitePlugin', () => {
 
       const plugin = callsitePlugin({ isProductionEnv: false });
 
-      // Act
       const result = plugin.onBeforeDataOut({ data: {} });
 
-      // Assert
       expect(result.callSite).toBeDefined();
       // levelLine = 0, accessing index 1 (out of bounds) returns undefined
       expect(result).toEqual({
@@ -499,7 +445,6 @@ describe('callsitePlugin', () => {
     });
 
     test('should handle callsite with null function name', () => {
-      // Arrange
       const mockCallsite = {
         getFunctionName: () => 'warn',
         getFileName: () => '/src/lib.ts',
@@ -522,10 +467,8 @@ describe('callsitePlugin', () => {
 
       const plugin = callsitePlugin({ isProductionEnv: false });
 
-      // Act
       const result = plugin.onBeforeDataOut({ data: {} });
 
-      // Assert
       expect(result).toEqual({
         callSite: '/src/anonymous.ts:100:25',
       });
@@ -534,7 +477,6 @@ describe('callsitePlugin', () => {
 
   describe('Data handling', () => {
     test('should handle missing data object', () => {
-      // Arrange
       const mockCallsite = {
         getFunctionName: () => 'debug',
         getFileName: () => '/src/app.ts',
@@ -557,17 +499,14 @@ describe('callsitePlugin', () => {
 
       const plugin = callsitePlugin({ isProductionEnv: false });
 
-      // Act
       const result = plugin.onBeforeDataOut({});
 
-      // Assert
       expect(result).toEqual({
         callSite: '/src/user.ts:20:10',
       });
     });
 
     test('should handle empty data object', () => {
-      // Arrange
       const mockCallsite = {
         getFunctionName: () => 'info',
         getFileName: () => '/src/app.ts',
@@ -590,10 +529,8 @@ describe('callsitePlugin', () => {
 
       const plugin = callsitePlugin({ isProductionEnv: false });
 
-      // Act
       const result = plugin.onBeforeDataOut({ data: {} });
 
-      // Assert
       expect(result).toEqual({
         callSite: '/src/test.ts:25:12',
       });
@@ -602,7 +539,6 @@ describe('callsitePlugin', () => {
 
   describe('Production environment', () => {
     test('should create plugin with isProductionEnv=true', () => {
-      // Arrange
       const mockCallsite = {
         getFunctionName: () => 'error',
         getFileName: () => '/src/app.ts',
@@ -625,10 +561,8 @@ describe('callsitePlugin', () => {
 
       const plugin = callsitePlugin({ isProductionEnv: true });
 
-      // Act
       const result = plugin.onBeforeDataOut({ data: {} });
 
-      // Assert
       expect(result).toEqual({
         callSite: '/src/prod.ts:50:20',
       });
