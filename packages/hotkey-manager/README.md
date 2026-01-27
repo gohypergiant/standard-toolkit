@@ -317,4 +317,3 @@ When including this package in a library:
 3. Avoid hardcoding hotkeys that might conflict with common OS shortcuts
 
 This ensures only one hotkey manager instance exists in the application, preventing conflicts between different libraries.
- 

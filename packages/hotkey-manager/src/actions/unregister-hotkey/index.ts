@@ -14,7 +14,6 @@
 import { hotkeyStore } from '@/stores/hotkey-store';
 import type { HotkeyConfig } from '@/types/hotkey-config';
 import type { HotkeyId } from '@/types/hotkey-id';
-
 import type { HotkeyManager } from '@/types/hotkey-manager';
 
 /**
