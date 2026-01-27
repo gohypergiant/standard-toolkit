@@ -384,9 +384,9 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
             <DialogTrigger onOpenChange={handlePopoverOpenChange}>
               <Button
                 variant='icon'
-                size={size}
+                size='small'
                 color='mono-bold'
-                className={classNames?.formatButton}
+                className={clsx(styles.formatButton, classNames?.formatButton)}
                 aria-label='View coordinate in all formats'
                 isDisabled={!copy.isFormatButtonEnabled}
               >

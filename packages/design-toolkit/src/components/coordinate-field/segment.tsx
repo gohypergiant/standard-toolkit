@@ -116,7 +116,7 @@ export function CoordinateSegment({
     const newValue = e.target.value;
 
     if (allowedChars) {
-      const regex = new RegExp(`^${allowedChars}*$`);
+      const regex = new RegExp(`^${allowedChars}*$`, 'i');
       if (!regex.test(newValue)) {
         return;
       }

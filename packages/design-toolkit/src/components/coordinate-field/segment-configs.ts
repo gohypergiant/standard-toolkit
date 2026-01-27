@@ -38,7 +38,7 @@ import type { CoordinateSystem, SegmentConfig } from './types';
 const NUMERIC_PAD = 0.25;
 
 /** Larger padding for final segment to account for container edge (0.5ch ≈ half character) */
-const LAST_PAD = 0.5;
+const LAST_PAD = 0.8;
 
 /** The separator used for the logical field groups. */
 export const GROUP_SEPARATOR = ', ';
