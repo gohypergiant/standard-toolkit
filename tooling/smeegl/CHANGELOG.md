@@ -1,5 +1,11 @@
 # @accelint/smeegl
 
+## 0.3.5
+
+### Patch Changes
+
+- 9996294: Swapped lodash for radashi for performance and build size optimization. Resolves security vulnerability: https://github.com/gohypergiant/standard-toolkit/security/dependabot/130
+
 ## 0.3.4
 
 ### Patch Changes

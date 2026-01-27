@@ -1,5 +1,20 @@
 # @accelint/design-toolkit
 
+## 9.4.0
+### Minor Changes
+
+- a8ce0bc: Refactors existing implementation of DrawerClose event to now emit a new event tied to an ID, to allow for listening to bus for Drawer Open and Close. Previously, the viewstack would be cleared without emitting an event with a given id.
+
+### Patch Changes
+
+- ab729dc: Changed icon imports to use full path
+- 075f526: fix: Updates the outline color of text-area-field to correct color and fixes the right padding of the coordinate-field
+- 669a261: move some lingering inline utility classes to css modules
+- 975f690: chore: expose more drawer / drawer-layout props in their stories; update their docs for any missing props
+- f577fef: Fixed issue with Popover where dialogProps is not being passed down to child Dialog component
+- c73558a: Fix keyboard event trigger for coordinate field copy popover
+- c3f5b00: Update the default variant for toggle buttons from the incorrect `filled` to `flat`. Types exclude `filled` variant from ToggleButtons
+
 ## 9.3.0
 ### Minor Changes
 
