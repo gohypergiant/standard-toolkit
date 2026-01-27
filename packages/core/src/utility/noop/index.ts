@@ -17,6 +17,7 @@
  * @returns void
  *
  * @example
+ * ```typescript
  * import { noop } from '@accelint/core';
  *
  * noop();
@@ -24,6 +25,7 @@
  *
  * noop('ignored');
  * // Still does nothing
+ * ```
  */
 // biome-ignore lint/suspicious/noEmptyBlockStatements: It is intentional
 export const noop = (_x?: unknown) => {};

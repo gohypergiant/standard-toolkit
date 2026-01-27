@@ -25,10 +25,12 @@ import type { Predicate } from '@/types';
  * pure function
  *
  * @example
+ * ```ts
  * import { findLastIndex } from '@accelint/core';
  *
  * findLastIndex(x => !(x & 1))([1, 2, 3, 4, 5]);
  * // 3
+ * ```
  */
 export const findLastIndex =
   <T>(predicate: Predicate<T>) =>

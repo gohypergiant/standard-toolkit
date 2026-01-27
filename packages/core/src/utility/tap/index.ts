@@ -23,8 +23,10 @@
  * tap :: (a -> b) -> a -> a
  *
  * @example
+ * ```typescript
  * tap(console.log)('foobar');
  * // foobar
+ * ```
  */
 export const tap =
   <T, R>(fn: (v: T) => R) =>

@@ -41,6 +41,7 @@ export type Lens<T, V> = {
  * pure function
  *
  * @example
+ * ```typescript
  * const nameLens = lens(
  *   (person: Person) => person.name,
  *   (person, name) => ({ ...person, name })
@@ -54,6 +55,7 @@ export type Lens<T, V> = {
  * );
  *
  * const username = getUsername(user);
+ * ```
  */
 export const lens = <T, V>(
   getter: LenseGet<T, V>,
@@ -82,6 +84,7 @@ export const lens = <T, V>(
  * pure function
  *
  * @example
+ * ```typescript
  * const addressLens = lens(
  *   (person: Person) => property(person)('address'),
  *   (person) => (addr) => associateDeep(person)('address')(addr)
@@ -92,6 +95,7 @@ export const lens = <T, V>(
  * );
  *
  * const personCityLens = composeLens(addressLens, cityLens);
+ * ```
  */
 export const composeLens = <A, B, C>(
   ab: Lens<A, B>,
@@ -116,7 +120,9 @@ export const composeLens = <A, B, C>(
  * pure function
  *
  * @example
+ * ```typescript
  * get(nameLens)(personStore);
+ * ```
  */
 export const get =
   <T, V>(lensVal: Lens<T, V>) =>
@@ -137,7 +143,9 @@ export const get =
  * pure function
  *
  * @example
+ * ```typescript
  * set(nameLens)('Fred')(personStore);
+ * ```
  */
 export const set =
   <T, V>(lensVal: Lens<T, V>) =>
@@ -162,7 +170,9 @@ export const set =
  * pure function
  *
  * @example
+ * ```typescript
  * const { get, set } = lensProp<Person>()('name');
+ * ```
  */
 export const lensProp =
   <T extends object>() =>
@@ -184,7 +194,9 @@ export const lensProp =
  * pure function
  *
  * @example
+ * ```typescript
  * const { get, set } = lensOptionalProp<Person>()('name');
+ * ```
  */
 export const lensOptionalProp =
   <T extends object>() =>

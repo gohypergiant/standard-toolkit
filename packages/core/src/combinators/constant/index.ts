@@ -30,8 +30,10 @@
  * pure function
  *
  * @example
+ * ```typescript
  * constant(1)(2);
  * // 1
+ * ```
  */
 export const constant =
   <A>(a: A) =>

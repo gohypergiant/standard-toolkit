@@ -26,10 +26,12 @@ import type { Accumulator } from '@/types';
  * pure function
  *
  * @example
+ * ```typescript
  * import { reduce } from '@accelint/core';
  *
  * reduce((total, n) => total + n)(0)([1, 2, 3, 4, 5]);
  * // 15
+ * ```
  */
 export const reduce =
   <T, R>(fn: Accumulator<T, R>) =>

@@ -21,10 +21,12 @@
  * pure function
  *
  * @example
+ * ```typescript
  * import { reverse } from '@accelint/core';
  *
  * reverse([1, 2, 3, 4, 5]);
  * // [5, 4, 3, 2, 1]
+ * ```
  */
 export const reverse = <T>(arr: T[]) => {
   const len = arr.length;

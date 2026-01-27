@@ -20,6 +20,7 @@ type IteratorCallback<T> = () => IteratorResult<T>;
  * @returns An iterable iterator object.
  *
  * @example
+ * ```typescript
  * import { createIterable } from '@accelint/core';
  *
  * let count = 0;
@@ -30,6 +31,7 @@ type IteratorCallback<T> = () => IteratorResult<T>;
  * for (const num of counter) {
  *   console.log(num); // 0, 1, 2
  * }
+ * ```
  */
 export function createIterable<T>(
   iterCb: IteratorCallback<T>,

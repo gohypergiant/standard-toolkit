@@ -33,8 +33,10 @@
  * pure function
  *
  * @example
+ * ```typescript
  * fork((x) => (y) => x + y)(x => x + 3)(x => x - 2)(9)
  * // 19
+ * ```
  */
 export const fork =
   <A, B, C>(a: (x: A) => (y: B) => C) =>

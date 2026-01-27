@@ -31,8 +31,10 @@
  * pure function
  *
  * @example
+ * ```typescript
  * inverseConstant(1)(2);
  * // 2
+ * ```
  */
 export const inverseConstant =
   <A>(_: A) =>

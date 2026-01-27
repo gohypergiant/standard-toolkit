@@ -22,10 +22,12 @@
  * pure function
  *
  * @example
+ * ```typescript
  * import { concat } from '@accelint/core';
  *
  * concat([1, 2, 3])([4, 5, 6]);
  * // [1, 2, 3, 4, 5, 6]
+ * ```
  */
 export const concat =
   <T>(concatable: T[]) =>

@@ -31,8 +31,10 @@
  * pure function
  *
  * @example
+ * ```typescript
  * composition((x) => x + 8)((x) => x * 3)(4);
  * // 20
+ * ```
  */
 export const composition =
   <A, B>(f: (z: A) => B) =>

@@ -26,10 +26,12 @@ import type { MapFn } from '@/types';
  * pure function
  *
  * @example
+ * ```typescript
  * import { map } from '@accelint/core';
  *
  * map(x => x * 2)([1, 2, 3, 4, 5]);
  * // [2, 4, 6, 8, 10]
+ * ```
  */
 export const map =
   <T, R>(map: MapFn<T, R>) =>

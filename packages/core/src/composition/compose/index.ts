@@ -136,6 +136,7 @@ type Composable<Fn extends CompositionArray> = Fn extends readonly [
  * 3. The leftmost function's result becomes the final output
  *
  * @example
+ * ```typescript
  * const getActiveUsers = compose(
  *   displayPage,
  *   sortUserNames,
@@ -143,6 +144,7 @@ type Composable<Fn extends CompositionArray> = Fn extends readonly [
  * );
  *
  * const activeUsers = getActiveUsersByPage(users);
+ * ```
  */
 export const compose =
   <Fns extends CompositionArray>(...fns: Composable<Fns>) =>

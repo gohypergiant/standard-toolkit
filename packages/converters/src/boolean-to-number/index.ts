@@ -20,6 +20,7 @@
  * pure function
  *
  * @playground
+ * ```ts
  * import { booleanToNumber } from '@accelint/converters';
  *
  * console.log(booleanToNumber(true));
@@ -27,6 +28,7 @@
  *
  * console.log(booleanToNumber(false));
  * // 0
+ * ```
  */
 export function booleanToNumber(val: boolean) {
   return (val as unknown as number) | 0;

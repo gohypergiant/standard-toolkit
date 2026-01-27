@@ -33,11 +33,13 @@ export type Curried<T extends unknown[], R> = <P extends Partial<T>>(
  * pure function
  *
  * @example
+ * ```typescript
  * const curried = autoCurry((a, b, c) => (a + b) * c);
  * curried(2)(3)(4);
  * curried(2, 3)(4);
  * curried(2)(3, 4);
  * curried(2, 3, 4);
+ * ```
  */
 // biome-ignore lint/suspicious/noExplicitAny: This is intended
 export function autoCurry<T extends (...args: any[]) => any>(

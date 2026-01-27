@@ -30,8 +30,10 @@
  * pure function
  *
  * @example
+ * ```typescript
  * applyTo(6)(x => x * 2);
  * // 12
+ * ```
  */
 export const applyTo =
   <A>(a: A) =>

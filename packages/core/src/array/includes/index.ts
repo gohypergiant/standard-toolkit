@@ -22,10 +22,12 @@
  * pure function
  *
  * @example
+ * ```typescript
  * import { includes } from '@accelint/core';
  *
  * includes(3)([1, 2, 3, 4, 5]);
  * // true
+ * ```
  */
 export const includes =
   <T>(x: T) =>

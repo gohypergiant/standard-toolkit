@@ -21,6 +21,7 @@ import type { ValidEnumStructures } from '../valid-enum-structures';
  * @returns A frozen array of the enum's values.
  *
  * @example
+ * ```typescript
  * import { getSafeEnumValues } from '@accelint/core';
  *
  * const MyEnum = Object.freeze({
@@ -30,6 +31,7 @@ import type { ValidEnumStructures } from '../valid-enum-structures';
  *
  * const values = getSafeEnumValues(MyEnum);
  * // ['active', 'inactive']
+ * ```
  */
 export function getSafeEnumValues<
   TSafeEnum extends ValidEnumStructures,

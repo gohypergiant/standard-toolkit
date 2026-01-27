@@ -23,8 +23,10 @@
  * pure function
  *
  * @example
+ * ```typescript
  * nullishOr(null)(4);
  * // 4
+ * ```
  */
 export const nullishOr =
   <A>(a: A) =>
@@ -46,8 +48,10 @@ export const nullishOr =
  * pure function
  *
  * @example
+ * ```typescript
  * nullishOrFn(x => x.foo)(x => x.bar)({ bar: 4 });
  * // 4
+ * ```
  */
 export const nullishOrFn =
   <T, A>(a: (x: T) => A) =>
@@ -68,8 +72,10 @@ export const nullishOrFn =
  * pure function
  *
  * @example
+ * ```typescript
  * swappedNullishOr(4)(null);
  * // 4
+ * ```
  */
 export const swappedNullishOr =
   <A>(a: A) =>
@@ -91,8 +97,10 @@ export const swappedNullishOr =
  * pure function
  *
  * @example
+ * ```typescript
  * swappedNullishOrFn(x => x.bar)(x => x.foo)({ bar: 4 });
  * // 4
+ * ```
  */
 export const swappedNullishOrFn =
   <T, A>(a: (x: T) => A) =>

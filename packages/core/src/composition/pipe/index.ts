@@ -136,6 +136,7 @@ type Pipeable<Fn extends PipeArray> = Fn extends readonly [
  * 3. The rightmost function's result becomes the final output
  *
  * @example
+ * ```typescript
  * const getActiveUsers = pipe(
  *   filterActive,
  *   sortUserNames,
@@ -143,6 +144,7 @@ type Pipeable<Fn extends PipeArray> = Fn extends readonly [
  * );
  *
  * const activeUsers = getActiveUsers(users, currentPage);
+ * ```
  */
 export const pipe =
   <Fns extends PipeArray>(...fns: Pipeable<Fns>) =>

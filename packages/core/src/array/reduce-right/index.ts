@@ -26,10 +26,12 @@ import type { Accumulator } from '@/types';
  * pure function
  *
  * @example
+ * ```typescript
  * import { reduceRight } from '@accelint/core';
  *
  * reduceRight((base, s) => `${base}${s}`)('')(['a', 'b', 'c', 'd', 'e']);
  * // 'edcba'
+ * ```
  */
 export const reduceRight =
   <T, R>(fn: Accumulator<T, R>) =>

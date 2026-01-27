@@ -24,10 +24,12 @@ import type { Predicate } from '@/types';
  * pure function
  *
  * @example
+ * ```typescript
  * import { filter } from '@accelint/core';
  *
  * filter(x => !(x & 1))([1, 2, 3, 4, 5]);
  * // [2, 4]
+ * ```
  */
 export const filter =
   <T>(predicate: Predicate<T>) =>

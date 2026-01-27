@@ -23,8 +23,10 @@
  * pure function
  *
  * @example
+ * ```typescript
  * not(2);
  * // false
+ * ```
  */
 export const not = <T>(x: T) => !x;
 
@@ -42,8 +44,10 @@ export const not = <T>(x: T) => !x;
  * pure function
  *
  * @example
+ * ```typescript
  * notFn(x => x & 1)(4);
  * // true
+ * ```
  */
 export const notFn =
   <T>(a: (x: T) => unknown) =>

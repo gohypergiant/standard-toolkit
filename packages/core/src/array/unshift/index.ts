@@ -22,10 +22,12 @@
  * pure function
  *
  * @example
+ * ```typescript
  * import { unshift } from '@accelint/core';
  *
  * push([1, 2, 3, 4])(0);
  * // [0, 1, 2, 3, 4]
+ * ```
  */
 export const unshift =
   <T>(arr: T[]) =>

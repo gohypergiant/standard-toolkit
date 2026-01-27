@@ -25,10 +25,12 @@ import type { Predicate } from '@/types';
  * pure function
  *
  * @example
+ * ```typescript
  * import { find } from '@accelint/core';
  *
  * find(x => !(x & 1))([1, 2, 3, 4, 5]);
  * // 2
+ * ```
  */
 export const find =
   <T>(predicate: Predicate<T>) =>

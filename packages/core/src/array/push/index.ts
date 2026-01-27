@@ -22,10 +22,12 @@
  * pure function
  *
  * @example
+ * ```typescript
  * import { push } from '@accelint/core';
  *
  * push([1, 2, 3, 4])(5);
  * // [1, 2, 3, 4, 5]
+ * ```
  */
 export const push =
   <T>(arr: T[]) =>

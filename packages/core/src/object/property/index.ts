@@ -23,11 +23,13 @@
  * pure function
  *
  * @example
+ * ```typescript
  * property(personStore)('address');
  * // personStore.address
  *
  * property(userStore.profile)(0);
  * // userStore.profile.at(0)
+ * ```
  */
 export const property =
   <T extends object>(obj: T) =>
@@ -54,11 +56,13 @@ export const prop = property;
  * pure function
  *
  * @example
+ * ```typescript
  * optionalProperty(personStore)('address');
  * // personStore?.address
  *
  * optionalProperty(userStore.profile)(0);
  * // userStore?.profile?.at(0)
+ * ```
  */
 export const optionalProperty =
   <T extends object>(obj?: T) =>

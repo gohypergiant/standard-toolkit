@@ -21,6 +21,7 @@
  * @returns A new shallow copy of the object with the updated property.
  *
  * @example
+ * ```typescript
  * associate(personStore)('address')({
  *   city: 'Austin',
  *   street: '987 Sample St',
@@ -30,6 +31,7 @@
  * //   city: 'Austin',
  * //   street: '987 Sample St',
  * // }
+ * ```
  */
 export const associate =
   <T extends object>(obj: T) =>
@@ -55,6 +57,7 @@ export const assoc = associate;
  * pure function
  *
  * @example
+ * ```typescript
  * associateDeep(personStore)('address')({
  *   city: 'Austin',
  *   street: '987 Sample St',
@@ -64,6 +67,7 @@ export const assoc = associate;
  * //   city: 'Austin',
  * //   street: '987 Sample St',
  * // }
+ * ```
  */
 export const associateDeep =
   <T extends object>(obj: T) =>

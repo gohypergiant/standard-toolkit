@@ -25,8 +25,10 @@
  * pure function
  *
  * @example
+ * ```typescript
  * or(true)(0);
  * // true
+ * ```
  */
 export const or =
   <A>(a: A) =>
@@ -50,8 +52,10 @@ export const or =
  * pure function
  *
  * @example
+ * ```typescript
  * orFn(s => s.trim())(s => s.trimEnd())('foo bar ');
  * // true
+ * ```
  */
 export const orFn =
   <T, A>(a: (x: T) => A) =>
@@ -74,8 +78,10 @@ export const orFn =
  * pure function
  *
  * @example
+ * ```typescript
  * swappedOr(0)(true);
  * // true
+ * ```
  */
 export const swappedOr =
   <A>(a: A) =>
@@ -99,8 +105,10 @@ export const swappedOr =
  * pure function
  *
  * @example
+ * ```typescript
  * swappedOrFn(s => s.trimEnd())(s => s.trim())('foo bar ');
  * // true
+ * ```
  */
 export const swappedOrFn =
   <T, A>(a: (x: T) => A) =>

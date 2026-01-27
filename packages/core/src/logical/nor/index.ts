@@ -28,8 +28,10 @@ import { or, orFn } from '../or';
  * pure function
  *
  * @example
+ * ```typescript
  * nor(true)(0);
  * // false
+ * ```
  */
 export const nor =
   <A>(a: A) =>
@@ -53,8 +55,10 @@ export const nor =
  * pure function
  *
  * @example
+ * ```typescript
  * norFn(s => s.trim())(s => s.trimEnd())('foo bar ');
  * // false
+ * ```
  */
 export const norFn =
   <T, A>(a: (x: T) => A) =>

@@ -28,8 +28,10 @@ import { not } from '../not';
  * pure function
  *
  * @example
+ * ```typescript
  * nand(true)(0);
  * // true
+ * ```
  */
 export const nand =
   <A>(a: A) =>
@@ -53,8 +55,10 @@ export const nand =
  * pure function
  *
  * @example
+ * ```typescript
  * nandFn(s => s.trim())(s => s.trimEnd())('foo bar ');
  * // false
+ * ```
  */
 export const nandFn =
   <T, A>(a: (x: T) => A) =>

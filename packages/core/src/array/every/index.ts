@@ -24,10 +24,12 @@ import type { Comparator } from '@/types';
  * pure function
  *
  * @example
+ * ```typescript
  * import { every } from '@accelint/core';
  *
  * every(x => !(x & 1))([1, 2, 3, 4, 5]);
  * // false
+ * ```
  */
 export const every =
   <T>(comparator: Comparator<T>) =>

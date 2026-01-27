@@ -25,8 +25,10 @@
  * pure function
  *
  * @example
+ * ```typescript
  * equality(4)(8);
  * // false
+ * ```
  */
 export const equality = (a: unknown) => (b: unknown) => a === b;
 
@@ -47,8 +49,10 @@ export const equality = (a: unknown) => (b: unknown) => a === b;
  * pure function
  *
  * @example
+ * ```typescript
  * equalityFn(x => x % 2)(x => x % 3)(6);
  * // true
+ * ```
  */
 export const equalityFn =
   <T>(a: (x: T) => unknown) =>

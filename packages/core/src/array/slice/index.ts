@@ -24,10 +24,12 @@
  * pure function
  *
  * @example
+ * ```typescript
  * import { slice } from '@accelint/core';
  *
  * slice(0)(4)([1, 2, 3, 4, 5, 6]);
  * // [1, 2, 3, 4]
+ * ```
  */
 export const slice =
   (start: number) =>

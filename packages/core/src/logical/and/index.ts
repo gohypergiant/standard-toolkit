@@ -25,11 +25,13 @@
  * pure function
  *
  * @example
+ * ```typescript
  * and(true)(0);
  * // false
  *
  * and(true)(1);
  * // true
+ * ```
  */
 export const and =
   <A>(a: A) =>
@@ -53,8 +55,10 @@ export const and =
  * pure function
  *
  * @example
+ * ```typescript
  * andFn((x) => x > 0)((x) => x < 10)(5);
  * // true
+ * ```
  */
 export const andFn =
   <T, A>(a: (x: T) => A) =>

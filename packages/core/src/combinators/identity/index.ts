@@ -28,7 +28,9 @@
  * pure function
  *
  * @example
+ * ```typescript
  * identity(4);
  * // 4
+ * ```
  */
 export const identity = <A>(x: A) => x;

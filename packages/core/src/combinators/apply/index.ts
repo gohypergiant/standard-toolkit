@@ -29,8 +29,10 @@
  * pure function
  *
  * @example
+ * ```typescript
  * apply((a) => a + 6)(3);
  * // 9
+ * ```
  */
 export const apply =
   // Types renamed to avoid confusion with the combinator
