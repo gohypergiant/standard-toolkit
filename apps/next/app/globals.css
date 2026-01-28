@@ -15,13 +15,6 @@
 
 @import '@accelint/design-foundation/styles';
 
-@layer base {
-  /* Hide overflow when deck.gl map is present to prevent scroll/zoom issues */
-  html:has(.deckgl-map) {
-    overflow: hidden;
-  }
-}
-
 @layer theme {
   :root {
     /* overrides */
