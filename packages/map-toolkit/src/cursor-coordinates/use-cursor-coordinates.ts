@@ -87,6 +87,11 @@ function buildRawCoordinate(coord: [number, number] | null): RawCoordinate {
  * @param coord - Coordinate tuple [longitude, latitude]
  * @param format - Coordinate format type
  * @returns Formatted coordinate string
+ *  *
+ * @remarks
+ * **UTM/MGRS Limitations:** UTM and MGRS coordinate systems are only valid between 80°S and 84°N.
+ * Coordinates outside this range (e.g., polar regions) will return the default placeholder `--, --`.
+ * Other formats (DD, DDM, DMS) work correctly at all latitudes.
  */
 function formatCoordinate(
   coord: [number, number],
@@ -169,6 +174,11 @@ function formatCoordinate(
  * @param options - Optional configuration options
  * @returns Object containing the formatted coordinate string, raw coordinate, format setter, and current format
  * @throws {Error} When no id is provided and hook is used outside MapProvider context
+ *
+ * @remarks
+ * **UTM/MGRS Limitations:** UTM and MGRS coordinate systems are only valid between 80°S and 84°N.
+ * Coordinates outside this range (e.g., polar regions) will display the default placeholder `--, --`.
+ * Other formats (DD, DDM, DMS) work correctly at all latitudes.
  *
  * @example
  * Basic usage:
