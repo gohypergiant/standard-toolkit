@@ -20,15 +20,18 @@ import type { MapFn } from '@/types';
  * @template R - The return type of the mapping function.
  * @param map - The mapping function to apply to each element of the array.
  * @param arr - The array to map over.
+ * @returns A new array with the results of the mapping function.
  *
  * @remarks
  * pure function
  *
  * @example
+ * ```typescript
  * import { map } from '@accelint/core';
  *
  * map(x => x * 2)([1, 2, 3, 4, 5]);
  * // [2, 4, 6, 8, 10]
+ * ```
  */
 export const map =
   <T, R>(map: MapFn<T, R>) =>

@@ -20,6 +20,7 @@ import { or, orFn } from '../or';
  * @template B - The type of the second input value.
  * @param a - The first value to compare.
  * @param b - The second value to compare.
+ * @returns true if neither value is truthy, false otherwise.
  *
  * @see https://en.wikipedia.org/wiki/Logical_NOR
  *
@@ -27,8 +28,10 @@ import { or, orFn } from '../or';
  * pure function
  *
  * @example
+ * ```typescript
  * nor(true)(0);
  * // false
+ * ```
  */
 export const nor =
   <A>(a: A) =>
@@ -44,6 +47,7 @@ export const nor =
  * @param a - The first function to compare the return of.
  * @param b - The second function to compare the return of.
  * @param c - The value to pass to both `a` and `b`.
+ * @returns true if neither function result is truthy, false otherwise.
  *
  * @see https://en.wikipedia.org/wiki/Logical_NOR
  *
@@ -51,8 +55,10 @@ export const nor =
  * pure function
  *
  * @example
+ * ```typescript
  * norFn(s => s.trim())(s => s.trimEnd())('foo bar ');
  * // false
+ * ```
  */
 export const norFn =
   <T, A>(a: (x: T) => A) =>

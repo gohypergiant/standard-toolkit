@@ -21,6 +21,7 @@ import type { ValidEnumStructures } from '../valid-enum-structures';
  * automatically use the enum when using it in code and the type when using it for type reference.
  *
  * @example
+ * ```typescript
  *  import { SafeEnum } from '@accelint-private/core/safe-enum'
  *
  *  export const MyEnum = Object.freeze({
@@ -34,6 +35,7 @@ import type { ValidEnumStructures } from '../valid-enum-structures';
  *  const defaultValue: MyEnum = MyEnum.Better;
  *
  * @see https://dev.to/ivanzm123/dont-use-enums-in-typescript-they-are-very-dangerous-57bh
+ * ```
  */
 export type SafeEnum<TObject extends ValidEnumStructures> =
   IsLiteralEnum<TObject> extends true

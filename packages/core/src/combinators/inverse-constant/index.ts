@@ -19,6 +19,7 @@
  * @template B - The type of the second input value.
  * @param a - The value to ignore.
  * @param b - The value to return.
+ * @returns The second argument.
  *
  * @remarks
  * KI combinator
@@ -30,8 +31,10 @@
  * pure function
  *
  * @example
+ * ```typescript
  * inverseConstant(1)(2);
  * // 2
+ * ```
  */
 export const inverseConstant =
   <A>(_: A) =>

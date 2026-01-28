@@ -15,6 +15,7 @@
  *
  * @template T - The type of the input value.
  * @param x - The value to negate.
+ * @returns The negated boolean value.
  *
  * @see https://en.wikipedia.org/wiki/Negation
  *
@@ -22,8 +23,10 @@
  * pure function
  *
  * @example
+ * ```typescript
  * not(2);
  * // false
+ * ```
  */
 export const not = <T>(x: T) => !x;
 
@@ -33,6 +36,7 @@ export const not = <T>(x: T) => !x;
  * @template T - The type of the input value.
  * @param a - The function to negate the return of.
  * @param b - The value to pass to the given function.
+ * @returns The negated boolean value of the function result.
  *
  * @see https://en.wikipedia.org/wiki/Negation
  *
@@ -40,8 +44,10 @@ export const not = <T>(x: T) => !x;
  * pure function
  *
  * @example
+ * ```typescript
  * notFn(x => x & 1)(4);
  * // true
+ * ```
  */
 export const notFn =
   <T>(a: (x: T) => unknown) =>

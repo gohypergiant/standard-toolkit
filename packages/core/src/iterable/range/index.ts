@@ -17,8 +17,10 @@ import { createIterable } from '../create-iterable';
  *
  * @param start - The start of the number range (inclusive)
  * @param end - The end of the number range (inclusive)
+ * @returns An iterable iterator over the number range.
  *
  * @example
+ * ```typescript
  * for (const n of range(1, 10)) {
  *   console.log(n);
  * }
@@ -26,6 +28,7 @@ import { createIterable } from '../create-iterable';
  *
  * const rangeArr = [...range(1, 10)];
  * // [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+ * ```
  */
 export function range(start: number, end: number) {
   let counter = start;

@@ -20,15 +20,18 @@ import type { Accumulator } from '@/types';
  * @param fn - The accumulator function to apply to each element of the array.
  * @param initVal - The initial value of the reduction.
  * @param arr - The array to fold over.
+ * @returns The accumulated result.
  *
  * @remarks
  * pure function
  *
  * @example
+ * ```typescript
  * import { reduceRight } from '@accelint/core';
  *
  * reduceRight((base, s) => `${base}${s}`)('')(['a', 'b', 'c', 'd', 'e']);
  * // 'edcba'
+ * ```
  */
 export const reduceRight =
   <T, R>(fn: Accumulator<T, R>) =>

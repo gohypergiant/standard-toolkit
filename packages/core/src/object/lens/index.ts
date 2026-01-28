@@ -35,11 +35,13 @@ export type Lens<T, V> = {
  *
  * @param getter - The lens get function to use.
  * @param setter - The lens set function to use.
+ * @returns A lens object with get and set functions.
  *
  * @remarks
  * pure function
  *
  * @example
+ * ```typescript
  * const nameLens = lens(
  *   (person: Person) => person.name,
  *   (person, name) => ({ ...person, name })
@@ -53,6 +55,7 @@ export type Lens<T, V> = {
  * );
  *
  * const username = getUsername(user);
+ * ```
  */
 export const lens = <T, V>(
   getter: LenseGet<T, V>,
@@ -75,11 +78,13 @@ export const lens = <T, V>(
  * @template C - The type of the property value on the second lens.
  * @param ab - The lens from A ⭢ B.
  * @param bc - The lens from B ⭢ C.
+ * @returns A composed lens from A ⭢ C.
  *
  * @remarks
  * pure function
  *
  * @example
+ * ```typescript
  * const addressLens = lens(
  *   (person: Person) => property(person)('address'),
  *   (person) => (addr) => associateDeep(person)('address')(addr)
@@ -90,6 +95,7 @@ export const lens = <T, V>(
  * );
  *
  * const personCityLens = composeLens(addressLens, cityLens);
+ * ```
  */
 export const composeLens = <A, B, C>(
   ab: Lens<A, B>,
@@ -108,12 +114,15 @@ export const composeLens = <A, B, C>(
  * @template V - The type of the property value.
  * @param lensVal - The Lens to get the getter of.
  * @param obj - The object to focus the lens on.
+ * @returns The value retrieved by the lens getter.
  *
  * @remarks
  * pure function
  *
  * @example
+ * ```typescript
  * get(nameLens)(personStore);
+ * ```
  */
 export const get =
   <T, V>(lensVal: Lens<T, V>) =>
@@ -128,12 +137,15 @@ export const get =
  * @param lensVal - The Lens to get the setter of.
  * @param value - The new value to set.
  * @param obj - The object to focus the lens on.
+ * @returns A new object with the updated value.
  *
  * @remarks
  * pure function
  *
  * @example
+ * ```typescript
  * set(nameLens)('Fred')(personStore);
+ * ```
  */
 export const set =
   <T, V>(lensVal: Lens<T, V>) =>
@@ -152,12 +164,15 @@ export const set =
  * @template T - The type of the object being inspected.
  * @template K - The string template of property name of T.
  * @param prop - The prop on the focused object to access.
+ * @returns A lens for the specified property.
  *
  * @remarks
  * pure function
  *
  * @example
+ * ```typescript
  * const { get, set } = lensProp<Person>()('name');
+ * ```
  */
 export const lensProp =
   <T extends object>() =>
@@ -173,12 +188,15 @@ export const lensProp =
  * @template T - The type of the object being inspected.
  * @template K - The string template of property name of T.
  * @param prop - The prop on the focused object to access.
+ * @returns An optional lens for the specified property.
  *
  * @remarks
  * pure function
  *
  * @example
+ * ```typescript
  * const { get, set } = lensOptionalProp<Person>()('name');
+ * ```
  */
 export const lensOptionalProp =
   <T extends object>() =>

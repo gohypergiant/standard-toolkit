@@ -19,8 +19,10 @@ type SomeFunction = (...args: any[]) => any;
  *
  * @template T - The type of the function to call once.
  * @param fn - The function to call once.
+ * @returns A wrapped function that executes only on the first call.
  *
  * @example
+ * ```typescript
  * let globalVal = 10;
  * const addGlobal = (n: number) => {
  *   globalVal = globalVal + n;
@@ -29,6 +31,7 @@ type SomeFunction = (...args: any[]) => any;
  *
  * onceAdd(5); // 15
  * onceAdd(5); // 15
+ * ```
  */
 export const once = <T extends SomeFunction>(fn: T) => {
   let done = false;

@@ -11,14 +11,16 @@
  */
 
 /**
- * Convert a boolean to an integer
+ * Convert a boolean to an integer.
  *
  * @param val - The boolean value to convert to a number.
+ * @returns 1 if true, 0 if false.
  *
  * @remarks
  * pure function
  *
  * @playground
+ * ```ts
  * import { booleanToNumber } from '@accelint/converters';
  *
  * console.log(booleanToNumber(true));
@@ -26,6 +28,7 @@
  *
  * console.log(booleanToNumber(false));
  * // 0
+ * ```
  */
 export function booleanToNumber(val: boolean) {
   return (val as unknown as number) | 0;

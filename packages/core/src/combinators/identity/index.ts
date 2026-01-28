@@ -16,6 +16,7 @@
  *
  * @template A - The type of the input value.
  * @param x - The value to return.
+ * @returns The input value unchanged.
  *
  * @remarks
  * I combinator
@@ -27,7 +28,9 @@
  * pure function
  *
  * @example
+ * ```typescript
  * identity(4);
  * // 4
+ * ```
  */
 export const identity = <A>(x: A) => x;

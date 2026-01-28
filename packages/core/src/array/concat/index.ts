@@ -16,15 +16,18 @@
  * @template T - The type of array elements.
  * @param concatable - The second array to add to the end of the first.
  * @param newValue - The first array to append to.
+ * @returns A new array with elements from both arrays.
  *
  * @remarks
  * pure function
  *
  * @example
+ * ```typescript
  * import { concat } from '@accelint/core';
  *
  * concat([1, 2, 3])([4, 5, 6]);
  * // [1, 2, 3, 4, 5, 6]
+ * ```
  */
 export const concat =
   <T>(concatable: T[]) =>

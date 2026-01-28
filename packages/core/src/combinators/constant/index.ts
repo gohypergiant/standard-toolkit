@@ -18,6 +18,7 @@
  * @template B - The type of the second input value.
  * @param a - The value to return.
  * @param b - The value to ignore.
+ * @returns The first argument.
  *
  * @remarks
  * K combinator
@@ -29,8 +30,10 @@
  * pure function
  *
  * @example
+ * ```typescript
  * constant(1)(2);
  * // 1
+ * ```
  */
 export const constant =
   <A>(a: A) =>

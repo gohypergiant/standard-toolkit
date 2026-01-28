@@ -21,11 +21,13 @@ import { identity } from '../../combinators/identity';
  * @template C - The string template of property name of A.
  * @param obj - The table lookup object.
  * @param def - The function used to handle the default value if the lookup returns `undefined`.
+ * @returns A function that performs the lookup on the provided object.
  *
  * @remarks
  * pure function
  *
  * @example
+ * ```typescript
  * const colorTable = {
  *  FOO: [0, 0, 255, 155],
  *  BAR: [255, 0, 255, 155],
@@ -35,6 +37,7 @@ import { identity } from '../../combinators/identity';
  *
  * const colorLookup = tableLookup(colorTable, x => x ?? [128, 128, 128, 155]);
  * colorLookup(data.value);
+ * ```
  */
 export const lookup =
   <
