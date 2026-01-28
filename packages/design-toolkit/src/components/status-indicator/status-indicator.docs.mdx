@@ -54,9 +54,7 @@ Note: The visual treatment for each status is defined in the component’s CSS m
 StatusIndicator is presentational and does not provide its own accessible name. If the status meaning must be announced to assistive tech, wrap or annotate it in the parent context, for example:
 
 ```tsx
-<span aria-label="Status: good">
-  <StatusIndicator status="good" />
-</span>
+<StatusIndicator aria-label="Status: good" status="good" />
 ```
 
 Or pair it with visible text.
