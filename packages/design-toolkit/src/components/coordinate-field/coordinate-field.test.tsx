@@ -149,103 +149,111 @@ describe('CoordinateField', () => {
       it('moves to next segment on Tab key', async () => {
         const user = userEvent.setup();
         render(<CoordinateField label='Location' format='dd' />);
-        const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+        const latInput = screen.getByLabelText('Latitude');
+        const lonInput = screen.getByLabelText('Longitude');
 
-        await user.click(inputs[0]);
+        await user.click(latInput);
         await user.keyboard('{Tab}');
 
-        expect(document.activeElement).toBe(inputs[1]);
+        expect(document.activeElement).toBe(lonInput);
       });
 
       it('moves to previous segment on Shift+Tab', async () => {
         const user = userEvent.setup();
         render(<CoordinateField label='Location' format='dd' />);
-        const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+        const latInput = screen.getByLabelText('Latitude');
+        const lonInput = screen.getByLabelText('Longitude');
 
-        await user.click(inputs[1]);
+        await user.click(lonInput);
         await user.keyboard('{Shift>}{Tab}{/Shift}');
 
-        expect(document.activeElement).not.toBe(inputs[1]);
+        expect(document.activeElement).toBe(latInput);
       });
 
       it('moves to next segment on Arrow Right at end of input', async () => {
         const user = userEvent.setup();
         render(<CoordinateField label='Location' format='dd' />);
-        const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+        const latInput = screen.getByLabelText('Latitude');
+        const lonInput = screen.getByLabelText('Longitude');
 
-        await user.type(inputs[0], '40');
+        await user.type(latInput, '40');
         await user.keyboard('{ArrowRight}');
 
-        expect(document.activeElement).toBe(inputs[1]);
+        expect(document.activeElement).toBe(lonInput);
       });
 
       it('moves to previous segment on Arrow Left at start of input', async () => {
         const user = userEvent.setup();
         render(<CoordinateField label='Location' format='dd' />);
-        const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+        const latInput = screen.getByLabelText('Latitude');
+        const lonInput = screen.getByLabelText('Longitude');
 
-        await user.type(inputs[0], '40');
-        await user.click(inputs[1]); // Focus inputs[1]
+        await user.type(latInput, '40');
+        await user.click(lonInput);
         await user.keyboard('{ArrowLeft}');
 
-        expect(document.activeElement).toBe(inputs[0]);
+        expect(document.activeElement).toBe(latInput);
       });
 
       it('jumps to first segment on Home key', async () => {
         const user = userEvent.setup();
         render(<CoordinateField label='Location' format='dd' />);
-        const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+        const latInput = screen.getByLabelText('Latitude');
+        const lonInput = screen.getByLabelText('Longitude');
 
-        await user.click(inputs[1]);
+        await user.click(lonInput);
         await user.keyboard('{Home}');
 
-        expect(document.activeElement).toBe(inputs[0]);
+        expect(document.activeElement).toBe(latInput);
       });
 
       it('jumps to last segment on End key', async () => {
         const user = userEvent.setup();
         render(<CoordinateField label='Location' format='dd' />);
-        const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+        const latInput = screen.getByLabelText('Latitude');
+        const lonInput = screen.getByLabelText('Longitude');
 
-        await user.click(inputs[0]);
+        await user.click(latInput);
         await user.keyboard('{End}');
 
-        expect(document.activeElement).toBe(inputs[inputs.length - 1]);
+        expect(document.activeElement).toBe(lonInput);
       });
 
       it('auto-advances when segment reaches maxLength', async () => {
         const user = userEvent.setup();
         render(<CoordinateField label='Location' format='ddm' />);
-        const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+        const latDegreesInput = screen.getByLabelText('Latitude degrees');
+        const latMinutesInput = screen.getByLabelText('Latitude minutes');
 
-        await user.type(inputs[0], '90');
+        await user.type(latDegreesInput, '90');
 
         await waitFor(() => {
-          expect(document.activeElement).toBe(inputs[1]);
+          expect(document.activeElement).toBe(latMinutesInput);
         });
       });
 
       it('auto-retreats on Backspace in empty segment', async () => {
         const user = userEvent.setup();
         render(<CoordinateField label='Location' format='dd' />);
-        const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+        const latInput = screen.getByLabelText('Latitude');
+        const lonInput = screen.getByLabelText('Longitude');
 
-        await user.click(inputs[1]);
+        await user.click(lonInput);
         await user.keyboard('{Backspace}');
 
-        expect(document.activeElement).toBe(inputs[0]);
+        expect(document.activeElement).toBe(latInput);
       });
 
       it('deletes character on Backspace in filled segment', async () => {
         const user = userEvent.setup();
         render(<CoordinateField label='Location' format='dd' />);
-        const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+        const latInput = screen.getByLabelText('Latitude') as HTMLInputElement;
 
-        await user.type(inputs[0], '40');
-        expect(inputs[0].value).toBe('40');
+        await user.type(latInput, '40');
+        expect(latInput.value).toBe('40');
 
         await user.keyboard('{Backspace}');
-        expect(inputs[0].value).toBe('4');
+        expect(latInput.value).toBe('4');
       });
     });
 
@@ -253,51 +261,95 @@ describe('CoordinateField', () => {
       it('only allows numbers in numeric segments', async () => {
         const user = userEvent.setup();
         render(<CoordinateField label='Location' format='ddm' />);
-        const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+        const input = screen.getByLabelText(
+          'Latitude degrees',
+        ) as HTMLInputElement;
 
-        await user.type(inputs[0], 'abc123xyz');
+        await user.type(input, 'abc123xyz');
 
-        expect(inputs[0].value).toBe('12');
+        expect(input.value).toBe('12');
       });
 
       it('allows minus and decimal in DD segments', async () => {
         const user = userEvent.setup();
         render(<CoordinateField label='Location' format='dd' />);
-        const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+        const input = screen.getByLabelText('Latitude') as HTMLInputElement;
 
-        await user.type(inputs[0], '-40.7128');
+        await user.type(input, '-40.7128');
 
-        expect(inputs[0].value).toBe('-40.7128');
+        expect(input.value).toBe('-40.7128');
       });
 
       it('only allows N/S in latitude direction segments (DDM)', async () => {
         const user = userEvent.setup();
         render(<CoordinateField label='Location' format='ddm' />);
-        const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+        const input = screen.getByLabelText(
+          'Latitude direction',
+        ) as HTMLInputElement;
 
-        await user.type(inputs[2], 'ABCNS');
+        await user.type(input, 'ABCNS');
 
-        expect(inputs[2].value).toBe('N');
+        expect(input.value).toBe('N');
       });
 
       it('only allows E/W in longitude direction segments (DDM)', async () => {
         const user = userEvent.setup();
         render(<CoordinateField label='Location' format='ddm' />);
-        const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+        const input = screen.getByLabelText(
+          'Longitude direction',
+        ) as HTMLInputElement;
 
-        await user.type(inputs[5], 'ABCEW');
+        await user.type(input, 'ABCEW');
 
-        expect(inputs[5].value).toBe('E');
+        expect(input.value).toBe('E');
+      });
+
+      it('allows case insensitive direction segments', async () => {
+        const user = userEvent.setup();
+        render(<CoordinateField label='Location' format='ddm' />);
+        const latitude = screen.getByLabelText(
+          'Latitude direction',
+        ) as HTMLInputElement;
+        const longitude = screen.getByLabelText(
+          'Longitude direction',
+        ) as HTMLInputElement;
+
+        await user.type(latitude, 'n');
+        await user.type(longitude, 'e');
+
+        expect(latitude.value).toBe('n');
+        expect(longitude.value).toBe('e');
+      });
+
+      it('allows case insensitive paste in direction segments', async () => {
+        const user = userEvent.setup();
+        render(<CoordinateField label='Location' format='ddm' />);
+        const latitude = screen.getByLabelText(
+          'Latitude direction',
+        ) as HTMLInputElement;
+        const longitude = screen.getByLabelText(
+          'Longitude direction',
+        ) as HTMLInputElement;
+
+        await user.click(latitude);
+        await user.paste('s');
+        await user.click(longitude);
+        await user.paste('w');
+
+        expect(latitude.value).toBe('s');
+        expect(longitude.value).toBe('w');
       });
 
       it('respects maxLength constraints', async () => {
         const user = userEvent.setup();
         render(<CoordinateField label='Location' format='ddm' />);
-        const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+        const input = screen.getByLabelText(
+          'Latitude degrees',
+        ) as HTMLInputElement;
 
-        await user.type(inputs[0], '123456');
+        await user.type(input, '123456');
 
-        expect(inputs[0].value.length).toBeLessThanOrEqual(2);
+        expect(input.value.length).toBeLessThanOrEqual(2);
       });
     });
 
@@ -311,12 +363,12 @@ describe('CoordinateField', () => {
             defaultValue={{ lat: 40.7128, lon: -74.006 }}
           />,
         );
-        const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+        const latInput = screen.getByLabelText('Latitude') as HTMLInputElement;
 
-        await user.click(inputs[0]);
+        await user.click(latInput);
 
-        expect(inputs[0].selectionStart).toBe(0);
-        expect(inputs[0].selectionEnd).toBe(inputs[0].value.length);
+        expect(latInput.selectionStart).toBe(0);
+        expect(latInput.selectionEnd).toBe(latInput.value.length);
       });
     });
   });
@@ -414,8 +466,8 @@ describe('CoordinateField', () => {
       it('converts DD value to DD segments', () => {
         const result = convertDDToDisplaySegments(newYorkCity, 'dd');
         expect(result?.length).toBe(2);
-        expect(Number.parseFloat(result?.[0])).toBeCloseTo(40.7128, 4);
-        expect(Number.parseFloat(result?.[1])).toBeCloseTo(-74.006, 3);
+        expect(Number.parseFloat(result?.[0] ?? '')).toBeCloseTo(40.7128, 4);
+        expect(Number.parseFloat(result?.[1] ?? '')).toBeCloseTo(-74.006, 3);
       });
 
       it('converts DD value to DDM segments', () => {
@@ -534,18 +586,27 @@ describe('CoordinateField', () => {
         );
         const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
         expect(inputs.length).toBe(2);
-        expect(inputs[0].value).toBeTruthy();
-        expect(inputs[1].value).toBeTruthy();
+        for (const input of inputs) {
+          expect(input.value).toBeTruthy();
+        }
       });
 
       it('converts value prop to DDM format segments', () => {
         render(
           <CoordinateField label='Location' value={newYorkCity} format='ddm' />,
         );
-        const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
-        expect(inputs.length).toBe(6);
-        expect(inputs[0].value).toBe('40');
-        expect(inputs[2].value).toBe('N');
+
+        expect(screen.getAllByRole('textbox').length).toBe(6);
+
+        const latitude = screen.getByLabelText(
+          'Latitude degrees',
+        ) as HTMLInputElement;
+        expect(latitude.value).toBe('40');
+
+        const direction = screen.getByLabelText(
+          'Latitude direction',
+        ) as HTMLInputElement;
+        expect(direction.value).toBe('N');
       });
 
       it('calls onChange with DD value when segments are filled and valid', async () => {
@@ -626,9 +687,10 @@ describe('CoordinateField', () => {
             format='dd'
           />,
         );
-        const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
-        expect(inputs[0].value).toBeTruthy();
-        expect(inputs[1].value).toBeTruthy();
+        const latInput = screen.getByLabelText('Latitude') as HTMLInputElement;
+        const lonInput = screen.getByLabelText('Longitude') as HTMLInputElement;
+        expect(latInput.value).toBeTruthy();
+        expect(lonInput.value).toBeTruthy();
       });
     });
 
@@ -638,17 +700,22 @@ describe('CoordinateField', () => {
           <CoordinateField label='Location' value={newYorkCity} format='dd' />,
         );
 
-        let inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+        const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
         expect(inputs.length).toBe(2);
 
         rerender(
           <CoordinateField label='Location' value={newYorkCity} format='ddm' />,
         );
 
-        inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
-        expect(inputs.length).toBe(6);
-        expect(inputs[0].value).toBe('40');
-        expect(inputs[2].value).toBe('N');
+        const latDegreesInput = screen.getByLabelText(
+          'Latitude degrees',
+        ) as HTMLInputElement;
+        const latDirectionInput = screen.getByLabelText(
+          'Latitude direction',
+        ) as HTMLInputElement;
+        expect(screen.getAllByRole('textbox').length).toBe(6);
+        expect(latDegreesInput.value).toBe('40');
+        expect(latDirectionInput.value).toBe('N');
       });
     });
   });
@@ -787,6 +854,21 @@ describe('CoordinateField', () => {
       });
     });
 
+    it('opens popover on keyboard Enter', async () => {
+      const user = userEvent.setup();
+      render(<CoordinateField label='Location' value={testCoordinate} />);
+      const button = screen.getByRole('button', {
+        name: /view coordinate in all formats/i,
+      });
+
+      button.focus();
+      await user.keyboard('{Enter}');
+
+      await waitFor(() => {
+        expect(screen.getByText('Copy Coordinates')).toBeInTheDocument();
+      });
+    });
+
     it('displays all 5 formats in popover', async () => {
       const user = userEvent.setup();
       render(<CoordinateField label='Location' value={testCoordinate} />);
@@ -845,7 +927,11 @@ describe('CoordinateField', () => {
       });
       expect(copyButtons.length).toBe(5);
 
-      await user.click(copyButtons[0]);
+      const ddCopyButton = screen.getByRole('button', {
+        name: /Copy DD format/i,
+      });
+
+      await user.click(ddCopyButton);
 
       await waitFor(() => {
         expect(writeTextSpy).toHaveBeenCalled();
@@ -881,7 +967,10 @@ describe('CoordinateField', () => {
       });
 
       if (copyButtons.length > 0) {
-        await user.click(copyButtons[0]);
+        const ddCopyButton = screen.getByRole('button', {
+          name: /Copy DD format/i,
+        });
+        await user.click(ddCopyButton);
 
         await waitFor(() => {
           expect(writeTextMock).toHaveBeenCalled();
@@ -1162,9 +1251,15 @@ describe('CoordinateField', () => {
       await user.paste('40.7128, -74.0060');
 
       await waitFor(() => {
-        const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
-        expect(inputs[0].value).toBeTruthy();
-        expect(inputs[2].value).toMatch(/[NS]/);
+        const latDegreesInput = screen.getByLabelText(
+          'Latitude degrees',
+        ) as HTMLInputElement;
+        const latDirectionInput = screen.getByLabelText(
+          'Latitude direction',
+        ) as HTMLInputElement;
+
+        expect(latDegreesInput.value).toBeTruthy();
+        expect(latDirectionInput.value).toMatch(/[NS]/);
       });
     });
 
@@ -1292,14 +1387,15 @@ describe('CoordinateField', () => {
 
         // When deduplicated.length > 1, the paste handler shows the disambiguation modal
         // This flow is verified in the paste handler hook tests and integration tests below
-        expect(deduplicated[0].value.lat).not.toBeCloseTo(
-          deduplicated[1].value.lat,
-          5,
-        );
-        expect(deduplicated[0].value.lon).not.toBeCloseTo(
-          deduplicated[1].value.lon,
-          5,
-        );
+        const first = deduplicated.at(0);
+        const second = deduplicated.at(1);
+        expect(first).toBeDefined();
+        expect(second).toBeDefined();
+
+        if (first && second) {
+          expect(first.value.lat).not.toBeCloseTo(second.value.lat, 5);
+          expect(first.value.lon).not.toBeCloseTo(second.value.lon, 5);
+        }
       });
 
       it('deduplicates coordinates within epsilon tolerance', async () => {
@@ -1327,7 +1423,10 @@ describe('CoordinateField', () => {
           expect(mockOnChange).toHaveBeenCalled();
         });
         const lastCall = mockOnChange.mock.lastCall;
-        expect(lastCall[0]).toBeTruthy();
+        expect(lastCall).toBeDefined();
+        if (lastCall) {
+          expect(lastCall[0]).toBeTruthy();
+        }
       });
 
       it('preserves first format when deduplicating', async () => {
@@ -1434,13 +1533,14 @@ describe('CoordinateField', () => {
   describe('Accessibility', () => {
     it('has proper ARIA labels on segments', () => {
       render(<CoordinateField label='Location' format='dd' />);
-      const inputs = screen.getAllByRole('textbox');
+      const latInput = screen.getByLabelText('Latitude');
+      const lonInput = screen.getByLabelText('Longitude');
 
-      expect(inputs).toHaveLength(2);
+      expect(screen.getAllByRole('textbox')).toHaveLength(2);
 
       // Verify semantic labels for DD format
-      expect(inputs[0].getAttribute('aria-label')).toBe('Latitude');
-      expect(inputs[1].getAttribute('aria-label')).toBe('Longitude');
+      expect(latInput.getAttribute('aria-label')).toBe('Latitude');
+      expect(lonInput.getAttribute('aria-label')).toBe('Longitude');
     });
 
     it('announces segment position to screen readers', () => {
@@ -1489,23 +1589,24 @@ describe('CoordinateField', () => {
     it('supports keyboard-only navigation', async () => {
       const user = userEvent.setup();
       render(<CoordinateField label='Location' format='dd' />);
-      const inputs = screen.getAllByRole('textbox');
+      const latInput = screen.getByLabelText('Latitude');
+      const lonInput = screen.getByLabelText('Longitude');
 
       await user.tab();
-      expect(document.activeElement).toBe(inputs[0]);
+      expect(document.activeElement).toBe(latInput);
 
       await user.tab();
-      expect(document.activeElement).toBe(inputs[1]);
+      expect(document.activeElement).toBe(lonInput);
     });
 
     it('has visible focus indicators', async () => {
       const user = userEvent.setup();
       render(<CoordinateField label='Location' format='dd' />);
-      const inputs = screen.getAllByRole('textbox');
+      const input = screen.getByLabelText('Latitude') as HTMLInputElement;
 
-      await user.click(inputs[0]);
+      await user.click(input);
 
-      expect(document.activeElement).toBe(inputs[0]);
+      expect(document.activeElement).toBe(input);
     });
 
     it('announces errors to screen readers', () => {
@@ -1694,24 +1795,24 @@ describe('CoordinateField', () => {
         <CoordinateField label='Location' format='dd' />,
       );
 
-      let inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
-      await user.type(inputs[0], '40');
+      const latInput = screen.getByLabelText('Latitude');
+      await user.type(latInput, '40');
 
       rerender(<CoordinateField label='Location' format='ddm' />);
 
-      inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+      const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
       expect(inputs.length).toBe(6);
     });
 
     it('handles extremely long decimal precision', async () => {
       const user = userEvent.setup();
       render(<CoordinateField label='Location' format='dd' />);
-      const inputs = screen.getAllByRole('textbox') as HTMLInputElement[];
+      const latInput = screen.getByLabelText('Latitude') as HTMLInputElement;
 
       const longDecimal = '40.123456789012345678901234567890';
-      await user.type(inputs[0], longDecimal);
+      await user.type(latInput, longDecimal);
 
-      expect(inputs[0].value.length).toBeLessThanOrEqual(longDecimal.length);
+      expect(latInput.value.length).toBeLessThanOrEqual(longDecimal.length);
     });
 
     it('handles special characters in input', async () => {

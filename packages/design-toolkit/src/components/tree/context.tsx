@@ -15,9 +15,7 @@ import 'client-only';
 import { createContext } from 'react';
 import type { TreeContextValue, TreeItemContextValue } from './types';
 
-/**
- * Context for Tree component
- */
+/** Context for sharing state across Tree components */
 export const TreeContext = createContext<TreeContextValue>({
   visibilityComputedKeys: new Set(),
   showRuleLines: true,
@@ -27,9 +25,7 @@ export const TreeContext = createContext<TreeContextValue>({
   onVisibilityChange: () => undefined,
 });
 
-/**
- * Context for TreeItem component
- */
+/** Context for sharing state within a TreeItem */
 export const TreeItemContext = createContext<TreeItemContextValue>({
   isVisible: true,
   isViewable: true,

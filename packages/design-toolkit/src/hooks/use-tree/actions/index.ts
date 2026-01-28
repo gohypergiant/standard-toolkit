@@ -31,7 +31,9 @@ import type {
  * Note: each operation returns the whole tree. Future iterations
  * might want to return only the changed portion of the tree.
  *
- * @returns {TreeActions<T>} Object containing all tree manipulation functions
+ * @param options - {@link UseTreeActionsOptions}
+ * @param options.nodes - Current tree nodes to operate on.
+ * @returns {@link TreeActions} Object containing all tree manipulation functions.
  *
  * @example
  * ```tsx
@@ -51,7 +53,7 @@ import type {
  * // Use tree actions
  * const updatedTree = treeActions.insertAfter('child1', [
  *   { key: 'newChild', label: 'New Child' }
- * ]);Type T | undefined is not assignable to type T | undefined. Two different types with this name exist, but they are unrelated.
+ * ]);
  * ```
  */
 export function useTreeActions<T>({

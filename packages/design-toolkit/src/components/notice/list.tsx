@@ -40,6 +40,34 @@ import type {
   NoticeQueueEvent,
 } from './types';
 
+/**
+ * NoticeList - Queue manager for displaying multiple notices
+ *
+ * Manages a FIFO queue of notices with automatic timeout and dismissal.
+ * New notices push out older ones when the limit is reached.
+ * Uses event-driven communication via the bus system.
+ *
+ * @example
+ * ```tsx
+ * <NoticeList
+ *   aria-label="notifications"
+ *   placement="top right"
+ *   limit={3}
+ * />
+ * ```
+ *
+ * @param props - {@link NoticeListProps}
+ * @param props.id - Unique identifier for targeting notices to this list.
+ * @param props.classNames - CSS class names for list elements.
+ * @param props.defaultColor - Default color for notices without explicit color.
+ * @param props.defaultTimeout - Default timeout for notices without explicit timeout.
+ * @param props.hideClearAll - Whether to hide the "Clear All" button.
+ * @param props.limit - Maximum number of visible notices.
+ * @param props.global - Whether to use global ToastRegion for portal rendering.
+ * @param props.placement - Position of the notice list on screen.
+ * @param props.size - Size variant for notices in the list.
+ * @returns The rendered NoticeList component.
+ */
 export function NoticeList({
   id,
   classNames,

@@ -16,6 +16,26 @@ import { clsx } from '@accelint/design-foundation/lib/utils';
 import styles from './styles.module.css';
 import type { ComponentProps } from 'react';
 
+/**
+ * DialogContent - Wrapper for the main dialog content.
+ *
+ * Provides appropriate spacing and styling for dialog body content.
+ *
+ * @param props - The dialog content props.
+ * @param props.children - Content to display in the dialog body.
+ * @param props.className - Additional CSS class name.
+ * @returns The dialog content component.
+ *
+ * @example
+ * ```tsx
+ * <Dialog>
+ *   <DialogTitle>Title</DialogTitle>
+ *   <DialogContent>
+ *     <p>Your content goes here...</p>
+ *   </DialogContent>
+ * </Dialog>
+ * ```
+ */
 export function DialogContent({ children, className }: ComponentProps<'div'>) {
   return <div className={clsx(styles.content, className)}>{children}</div>;
 }

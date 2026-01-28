@@ -15,6 +15,19 @@ import type { SidenavFooterProps } from './types';
  * SidenavFooter - Footer component for sidenav
  *
  * Provides a footer container for the sidenav
+ *
+ * @example
+ * ```tsx
+ * <Sidenav>
+ *   <SidenavContent>...</SidenavContent>
+ *   <SidenavFooter>
+ *     <Button>Logout</Button>
+ *   </SidenavFooter>
+ * </Sidenav>
+ * ```
+ *
+ * @param props - {@link SidenavFooterProps}
+ * @returns The rendered SidenavFooter component.
  */
 export function SidenavFooter(props: SidenavFooterProps) {
   return <footer {...props} />;

@@ -16,6 +16,24 @@ import { clsx } from '@accelint/design-foundation/lib/utils';
 import { Heading, type HeadingProps } from 'react-aria-components';
 import styles from './styles.module.css';
 
+/**
+ * DialogTitle - Semantic heading element for dialog titles.
+ *
+ * Renders as an `<h2>` element with the `title` slot for accessibility.
+ *
+ * @param props - The dialog title props.
+ * @param props.children - Title text content.
+ * @param props.className - Additional CSS class name.
+ * @returns The dialog title component.
+ *
+ * @example
+ * ```tsx
+ * <Dialog>
+ *   <DialogTitle>Confirm Action</DialogTitle>
+ *   <DialogContent>...</DialogContent>
+ * </Dialog>
+ * ```
+ */
 export function DialogTitle({ children, className }: HeadingProps) {
   return (
     <Heading slot='title' className={clsx(styles.title, className)}>

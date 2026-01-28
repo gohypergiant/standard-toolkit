@@ -24,6 +24,21 @@ import styles from './styles.module.css';
 import { isNavigationDisabled } from './utils';
 import type { PaginationPrevProps } from './types';
 
+/**
+ * PaginationPrev - Previous page navigation button
+ *
+ * @example
+ * ```tsx
+ * <Pagination page={5} total={10}>
+ *   <PaginationPrev onPress={(page) => console.log('Previous page:', page)} />
+ * </Pagination>
+ * ```
+ *
+ * @param props - {@link PaginationPrevProps}
+ * @param props.className - Optional CSS class name.
+ * @param props.onPress - Handler called when the previous button is pressed.
+ * @returns The rendered PaginationPrev component.
+ */
 export function PaginationPrev({ className, onPress }: PaginationPrevProps) {
   const { page, total, setPage } = useContext(PaginationContext);
 

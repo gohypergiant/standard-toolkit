@@ -13,10 +13,14 @@
 import type { ComponentPropsWithRef } from 'react';
 import type { ClassificationBannerProps } from '../classification-banner/types';
 
+/**
+ * Props for the ClassificationBadge component.
+ */
 export type ClassificationBadgeProps = Pick<
   ClassificationBannerProps,
   'variant'
 > &
   ComponentPropsWithRef<'span'> & {
+    /** Size of the badge. */
     size?: 'medium' | 'small';
   };

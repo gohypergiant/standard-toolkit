@@ -17,6 +17,7 @@ import { noop } from 'radashi';
 import { createContext } from 'react';
 import type { PaginationContextValue } from './types';
 
+/** Context for sharing pagination state with sub-components */
 export const PaginationContext = createContext<PaginationContextValue>({
   page: 0,
   total: 0,

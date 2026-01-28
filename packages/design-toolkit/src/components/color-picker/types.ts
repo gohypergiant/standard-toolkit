@@ -16,15 +16,23 @@ import type {
   ColorSwatchProps,
 } from 'react-aria-components';
 
+/**
+ * Props for the ColorPicker component.
+ */
 export type ColorPickerProps = Omit<
   ColorSwatchPickerProps,
   'children' | 'layout'
 > &
   RefAttributes<HTMLDivElement> & {
+    /** Custom class names for sub-elements. */
     classNames?: {
+      /** Class name for the picker container. */
       picker?: ColorSwatchPickerProps['className'];
+      /** Class name for individual swatch items. */
       item?: ColorSwatchPickerItemProps['className'];
+      /** Class name for the color swatch elements. */
       swatch?: ColorSwatchProps['className'];
     };
+    /** Array of color values to display as selectable swatches. */
     items: ColorSwatchPickerItemProps['color'][];
   };

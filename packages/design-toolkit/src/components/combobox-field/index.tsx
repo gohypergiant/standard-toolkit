@@ -10,10 +10,9 @@
  * governing permissions and limitations under the License.
  */
 'use client';
-
-import { ChevronDown } from '@accelint/icons';
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
+import ChevronDown from '@accelint/icons/chevron-down';
 import {
   Button,
   ComboBox,
@@ -40,10 +39,22 @@ import type { ComboBoxFieldProps } from './types';
  * A combobox field that provides a searchable input with virtualized dropdown
  * options and support for sections, icons, and rich content.
  *
+ * @param props - The combobox field props.
+ * @param props.ref - Reference to the field element.
+ * @param props.children - Render function for options.
+ * @param props.classNames - Custom class names for sub-elements.
+ * @param props.label - Label text displayed above the field.
+ * @param props.description - Helper text displayed below the field.
+ * @param props.errorMessage - Error message displayed when invalid.
+ * @param props.size - Size variant of the field.
+ * @returns The combobox field component.
+ *
  * @example
+ * ```tsx
  * <ComboBoxField defaultItems={items}>
  *   {(item) => <OptionsItem key={item.id} textValue={item.name}>{item.name}</OptionsItem>}
  * </ComboBoxField>
+ * ```
  */
 export function ComboBoxField<T extends OptionsDataItem>({
   ref,

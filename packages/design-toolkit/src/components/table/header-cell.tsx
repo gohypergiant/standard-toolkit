@@ -12,7 +12,9 @@
  */
 
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { ArrowDown, ArrowUp, Kebab } from '@accelint/icons';
+import ArrowDown from '@accelint/icons/arrow-down';
+import ArrowUp from '@accelint/icons/arrow-up';
+import Kebab from '@accelint/icons/kebab';
 import { flexRender, type Header } from '@tanstack/react-table';
 import { useContext, useState } from 'react';
 import { Button } from '../button';
@@ -141,6 +143,27 @@ function HeaderCellMenu<T>({ header }: { header: Header<T, unknown> }) {
   );
 }
 
+/**
+ * TableHeaderCell - Individual header cell (`<th>`) with optional sorting controls.
+ *
+ * @example
+ * ```tsx
+ * <TableHeader headerGroups={headerGroups}>
+ *   <tr>
+ *     {headerGroup.headers.map(header => (
+ *       <TableHeaderCell key={header.id} header={header} />
+ *     ))}
+ *   </tr>
+ * </TableHeader>
+ * ```
+ *
+ * @param props - {@link TableHeaderCellProps}
+ * @param props.ref - Ref to the th element.
+ * @param props.children - Custom children content.
+ * @param props.className - CSS class for the th element.
+ * @param props.header - TanStack table header object.
+ * @returns The rendered TableHeaderCell component.
+ */
 export function TableHeaderCell<T>({
   ref,
   children,

@@ -17,9 +17,27 @@ import { createContext } from 'react';
 import type { ContextValue } from 'react-aria-components';
 import type { ChipContextValue } from './types';
 
+/**
+ * React context for sharing Chip configuration across components.
+ */
 export const ChipContext =
   createContext<ContextValue<ChipContextValue, HTMLDivElement>>(null);
 
+/**
+ * Context provider for setting default props across multiple Chip components.
+ *
+ * @param props - The provider props.
+ * @param props.children - Child components that will receive the chip context.
+ * @returns The chip context provider wrapping children.
+ *
+ * @example
+ * ```tsx
+ * <ChipProvider size="small" color="info">
+ *   <Chip>Chip 1</Chip>
+ *   <Chip>Chip 2</Chip>
+ * </ChipProvider>
+ * ```
+ */
 export function ChipProvider({
   children,
   ...props

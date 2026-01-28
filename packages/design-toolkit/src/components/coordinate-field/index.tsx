@@ -48,7 +48,6 @@ import { Label } from '../label';
 import { Popover } from '../popover';
 import { PopoverContent } from '../popover/content';
 import { PopoverTitle } from '../popover/title';
-import { PopoverTrigger } from '../popover/trigger';
 import { Radio } from '../radio';
 import { RadioGroup } from '../radio/group';
 import { CoordinateFieldContext, CoordinateFieldStateContext } from './context';
@@ -75,11 +74,29 @@ import type { CoordinateFieldProps } from './types';
  * systems (DD, DDM, DMS, MGRS, UTM). All values are normalized to Decimal Degrees internally
  * for consistency.
  *
- * @example
- * // Basic coordinate field
- * <CoordinateField label="Location" />
+ * @param props - The coordinate field props.
+ * @param props.ref - Reference to the coordinate field element.
+ * @param props.classNames - Custom class names for sub-elements.
+ * @param props.description - Description text displayed below the field.
+ * @param props.label - Label text for the coordinate field.
+ * @param props.format - Coordinate format to use (dd, ddm, dms, mgrs, utm).
+ * @param props.size - Size variant of the field.
+ * @param props.variant - Layout variant (inline or stacked).
+ * @param props.showFormatButton - Whether to show the format conversion button.
+ * @param props.isDisabled - Whether the field is disabled.
+ * @param props.isInvalid - Whether the field is in an invalid state.
+ * @param props.isRequired - Whether the field is required.
+ * @param props.isReadOnly - Whether the field is read-only.
+ * @returns The coordinate field component.
  *
  * @example
+ * ```tsx
+ * // Basic coordinate field
+ * <CoordinateField label="Location" />
+ * ```
+ *
+ * @example
+ * ```tsx
  * // Coordinate field with validation
  * <CoordinateField
  *   label="Target Coordinates"
@@ -87,32 +104,40 @@ import type { CoordinateFieldProps } from './types';
  *   isInvalid={hasError}
  *   errorMessage="Please enter a valid coordinate"
  * />
+ * ```
  *
  * @example
+ * ```tsx
  * // Coordinate field with specific format
  * <CoordinateField
  *   label="Position"
  *   format="dms"
  *   description="Enter coordinates in Degrees Minutes Seconds format"
  * />
+ * ```
  *
  * @example
+ * ```tsx
  * // Compact coordinate field
  * <CoordinateField
  *   label="Coordinates"
  *   size="small"
  *   format="dd"
  * />
+ * ```
  *
  * @example
+ * ```tsx
  * // Controlled coordinate field
  * <CoordinateField
  *   label="Selected Location"
  *   value={coordinates}
  *   onChange={setCoordinates}
  * />
+ * ```
  *
  * @example
+ * ```tsx
  * // Coordinate field with error handling
  * <CoordinateField
  *   label="Target Coordinates"
@@ -125,6 +150,7 @@ import type { CoordinateFieldProps } from './types';
  *   isInvalid={!!errorMessage}
  *   errorMessage={errorMessage}
  * />
+ * ```
  */
 export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
   [props, ref] = useContextProps(props, ref, CoordinateFieldContext);
@@ -355,12 +381,12 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
           </div>
 
           {showFormatButton && (
-            <PopoverTrigger onOpenChange={handlePopoverOpenChange}>
+            <DialogTrigger onOpenChange={handlePopoverOpenChange}>
               <Button
                 variant='icon'
-                size={size}
+                size='small'
                 color='mono-bold'
-                className={classNames?.formatButton}
+                className={clsx(styles.formatButton, classNames?.formatButton)}
                 aria-label='View coordinate in all formats'
                 isDisabled={!copy.isFormatButtonEnabled}
               >
@@ -407,7 +433,7 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
                     })}
                 </PopoverContent>
               </Popover>
-            </PopoverTrigger>
+            </DialogTrigger>
           )}
         </div>
 
@@ -433,7 +459,7 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
           isOpen={paste.showDisambiguationModal}
           onOpenChange={paste.setShowDisambiguationModal}
         >
-          <Button className='hidden'>Hidden Trigger</Button>
+          <Button className={styles.hiddenTrigger}>Hidden Trigger</Button>
           <Dialog size='small'>
             <DialogTitle className={styles.modalTitle}>
               Select Coordinate Format

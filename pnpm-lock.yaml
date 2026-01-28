@@ -1294,12 +1294,12 @@ importers:
       inquirer:
         specifier: ^12.6.1
         version: 12.11.1(@types/node@22.19.3)
-      lodash:
-        specifier: ^4.17.21
-        version: 4.17.21
       ora:
         specifier: ^8.2.0
         version: 8.2.0
+      radashi:
+        specifier: ^12.6.2
+        version: 12.7.1
       true-myth:
         specifier: ^9.0.1
         version: 9.3.1
@@ -1313,9 +1313,6 @@ importers:
       '@accelint/vitest-config':
         specifier: workspace:*
         version: link:../vitest-config
-      '@types/lodash':
-        specifier: ^4.17.20
-        version: 4.17.21
       '@types/node':
         specifier: ^22
         version: 22.19.3
@@ -4663,9 +4660,6 @@ packages:
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
 
-  '@types/lodash@4.17.21':
-    resolution: {integrity: sha512-FOvQ0YPD5NOfPgMzJihoT+Za5pdkDJWcbpuj1DjaKZIr/gxodQjY/uWEFlTNqW2ugXHUiL8lRQgw63dzKHZdeQ==}
-
   '@types/mdast@4.0.4':
     resolution: {integrity: sha512-kGaNbPh1k7AFzgpud/gMdvIm5xuECykRR+JnWKQno9TAXVa6WIVCGTPvYGekIDL4uwCZQSYbUxNBSb1aUo79oA==}
 
@@ -6469,9 +6463,6 @@ packages:
 
   lodash.throttle@4.1.1:
     resolution: {integrity: sha512-wIkUCfVKpVsWo3JSZlc+8MB5it+2AN5W8J7YVMST30UrvcQNZ1Okbj+rbVniijTWE6FGYy4XJq/rHkas8qJMLQ==}
-
-  lodash@4.17.21:
-    resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
 
   log-symbols@6.0.0:
     resolution: {integrity: sha512-i24m8rpwhmPIS4zscNzK6MSEhk0DUWa/8iYQWxhffV8jkI4Phvs3F+quL5xvS0gdQR0FyTCMMH33Y78dDTzzIw==}
@@ -13360,8 +13351,6 @@ snapshots:
   '@types/json-schema@7.0.15':
     optional: true
 
-  '@types/lodash@4.17.21': {}
-
   '@types/mdast@4.0.4':
     dependencies:
       '@types/unist': 3.0.3
@@ -15306,8 +15295,6 @@ snapshots:
 
   lodash.throttle@4.1.1:
     optional: true
-
-  lodash@4.17.21: {}
 
   log-symbols@6.0.0:
     dependencies:

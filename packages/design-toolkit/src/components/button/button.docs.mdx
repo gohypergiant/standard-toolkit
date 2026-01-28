@@ -1,92 +1,130 @@
 import { Canvas, Meta } from '@storybook/addon-docs/blocks';
 
 import * as ButtonStories from './button.stories';
+import * as MenuButtonStories from './composition/menu-button.stories';
 
 <Meta of={ButtonStories} />
 
 # Button
-The Button component provides interactive elements for user actions, navigation, and form submissions. It's built on React Aria Components and provides excellent accessibility out of the box. Buttons are the primary interactive elements in user interfaces, used for submitting forms, triggering actions, navigating between pages, and providing clear calls-to-action.
+Interactive elements for user actions, navigation, and form submissions. Built on React Aria Components with accessibility out of the box.
 
-## Example usage
+Components:
+- **Button** - Standard button for actions
+- **LinkButton** - Button-styled link for navigation
+- **ToggleButton** - Button with pressed/unpressed state
 
-### Basic
+## Example Usage
+
+### Button
 ```tsx
 <Button>Click me</Button>
+<Button variant="outline" color="mono-bold">Outline Button</Button>
 <Button variant="flat">Flat Button</Button>
-<Button variant="outline" color="mono-bold">
-  Button with Color Variant
-</Button>
 <Button variant="icon">
   <Icon><Settings /></Icon>
 </Button>
-<Button variant="floating">
-  <Icon><Plus /></Icon>
-</Button>
 ```
-
 <Canvas of={ButtonStories.Default} />
 
-### Link Button
-Used for navigating
+### LinkButton
+Button-styled link for navigation.
 ```tsx
 <LinkButton href="/dashboard" variant="outline">
   Go to Dashboard
 </LinkButton>
 ```
+<Canvas of={ButtonStories.Link} />
 
-### Toggle Button
+### ToggleButton
+Button with pressed/unpressed state. Note: `filled` variant is not available for ToggleButton.
 ```tsx
-<ToggleButton variant="outline">
-    Toggle Button
-</ToggleButton>
-
-<ToggleButton variant="flat" color="accent">
-    Toggle Button with Color Variant
-</ToggleButton>
-
+<ToggleButton variant="flat">Toggle Feature</ToggleButton>
+<ToggleButton variant="outline" color="accent">Toggle with Color</ToggleButton>
 <ToggleButton variant="icon">
-    <Icon>
-      <Placeholder />
-    </Icon>
+  <Icon><Placeholder /></Icon>
 </ToggleButton>
 ```
+<Canvas of={ButtonStories.Toggle} />
+
+### Composite Menu Button
+Examples of using a button in a very common compositional pattern
+<Canvas of={MenuButtonStories.Default} />
+<Canvas of={MenuButtonStories.WithTooltip} />
 
 ## Variants
 
-* **outline** - Transparent background with border and text
-* **flat** - Transparent background with text only
-* **icon** - Square button optimized for icon-only content
+| Variant | Description | Available On |
+|---------|-------------|--------------|
+| `filled` | Solid background (default) | Button, LinkButton |
+| `outline` | Transparent background with border | All |
+| `flat` | Transparent background, text only | All |
+| `icon` | Square button for icon-only content | All |
 
 ## Colors
 
-* **mono-muted** - Monochromatic styling (default)
-* **mono-bold** - Monochromatic styling with bolder accents
-* **accent** - Primary accent color for primary actions
-* **serious** - Orange styling for warning or caution actions
-* **critical** - Red styling for destructive or dangerous actions
+| Color | Description |
+|-------|-------------|
+| `mono-muted` | Monochromatic styling (default) |
+| `mono-bold` | Monochromatic with bolder accents |
+| `accent` | Primary accent for main actions |
+| `serious` | Orange for warning/caution actions |
+| `critical` | Red for destructive actions |
 
 ## Sizes
 
-* **large** - Prominent size for primary actions
-* **medium** - Standard size for most use cases (default)
-* **small** - Compact size for secondary actions
-* **xsmall** - Minimal size for tight spaces or icon buttons
+| Size | Description |
+|------|-------------|
+| `large` | Prominent size for primary actions |
+| `medium` | Standard size (default) |
+| `small` | Compact size for secondary actions |
+| `xsmall` | Minimal size for tight spaces |
 
 ## Props
-All components and subcomponents accept a `className` prop that allow for custom style overrides.
 
-The Button and LinkButton support all the `Button` [props and events from `react-aria-components`](https://react-spectrum.adobe.com/react-aria/Button.html#props).
+### Button
+Extends all [`Button` props](https://react-spectrum.adobe.com/react-aria/Button.html#props) from react-aria-components.
 
-The ToggleButton supports all the `ToggleButton` [props and events from `react-aria-components`](https://react-spectrum.adobe.com/react-aria/ToggleButton.html#props).
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `'filled' \| 'outline' \| 'flat' \| 'icon'` | `'filled'` | Visual style |
+| `color` | `'mono-muted' \| 'mono-bold' \| 'accent' \| 'serious' \| 'critical'` | `'mono-muted'` | Color scheme |
+| `size` | `'large' \| 'medium' \| 'small' \| 'xsmall'` | `'medium'` | Size variant |
+| `children` | `ReactNode` | - | Button content |
+| `className` | `string` | - | Additional CSS classes |
+| `isDisabled` | `boolean` | `false` | Whether the button is disabled |
+| `onPress` | `(e: PressEvent) => void` | - | Called when button is pressed |
 
-* **`variant`** - Visual style: `'filled'` (default) | `'outline'` | `'flat'` | `'icon'` | `'floating'`
-* **`color`** - Color scheme: `'mono-muted'` (default) | `'mono-bold`' | `'accent'` | `'serious'` | `'critical'`
-* **`size`** - Size variant: `'large'` | `'medium'` (default) | `'small'` |  `'xsmall'`
+### LinkButton
+Extends all [`Link` props](https://react-spectrum.adobe.com/react-aria/Link.html#props) from react-aria-components.
 
-All button types accept standard HTML button/anchor attributes and forward them to the underlying elements.
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `href` | `string` | - | URL to navigate to |
+| `variant` | `'filled' \| 'outline' \| 'flat' \| 'icon'` | `'filled'` | Visual style |
+| `color` | `'mono-muted' \| 'mono-bold' \| 'accent' \| 'serious' \| 'critical'` | `'mono-muted'` | Color scheme |
+| `size` | `'large' \| 'medium' \| 'small' \| 'xsmall'` | `'medium'` | Size variant |
+
+### ToggleButton
+Extends all [`ToggleButton` props](https://react-spectrum.adobe.com/react-aria/ToggleButton.html#props) from react-aria-components.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `'outline' \| 'flat' \| 'icon'` | `'flat'` | Visual style (no `filled`) |
+| `color` | `'mono-muted' \| 'mono-bold' \| 'accent' \| 'serious' \| 'critical'` | `'mono-muted'` | Color scheme |
+| `size` | `'large' \| 'medium' \| 'small' \| 'xsmall'` | `'medium'` | Size variant |
+| `isSelected` | `boolean` | - | Controlled selected state |
+| `defaultSelected` | `boolean` | `false` | Default selected state |
+| `onChange` | `(isSelected: boolean) => void` | - | Called when selection changes |
 
 ### ButtonProvider
-Context provider component that allows setting default props for multiple Button components. Useful for maintaining consistent styling across a group of buttons.
+Context provider for setting default props across multiple buttons.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `'filled' \| 'outline' \| 'flat' \| 'icon'` | - | Visual style for all child Buttons |
+| `color` | `'mono-muted' \| 'mono-bold' \| 'accent' \| 'serious' \| 'critical'` | - | Color for all child Buttons |
+| `size` | `'large' \| 'medium' \| 'small' \| 'xsmall'` | - | Size for all child Buttons |
+| `children` | `ReactNode` | - | Button components |
 
 ```tsx
 <ButtonProvider size="small" variant="outline">
@@ -95,22 +133,43 @@ Context provider component that allows setting default props for multiple Button
 </ButtonProvider>
 ```
 
-## Implementation Notes
-The `Button` component wraps the `Button` component from `react-aria-components`. [Docs](https://react-spectrum.adobe.com/react-aria/Button.html)
-The `ToggleButton` component wraps the `ToggleButton` component from `react-aria-components`. [Docs](https://react-spectrum.adobe.com/react-aria/ToggleButton.html)
+### LinkButtonProvider
+Context provider for setting default props across multiple LinkButton components.
 
-[Github Source](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-toolkit/src/components/avatar)
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `'filled' \| 'outline' \| 'flat' \| 'icon'` | - | Visual style for all child LinkButtons |
+| `color` | `'mono-muted' \| 'mono-bold' \| 'accent' \| 'serious' \| 'critical'` | - | Color for all child LinkButtons |
+| `size` | `'large' \| 'medium' \| 'small' \| 'xsmall'` | - | Size for all child LinkButtons |
+| `children` | `ReactNode` | - | LinkButton components |
 
-The underlying elements are:
-- `button` for standard buttons
-- `a` for link buttons
-- `button` with `aria-pressed` for toggle buttons
+### ToggleButtonProvider
+Context provider for setting default props across multiple ToggleButton components.
 
-The component automatically handles accessibility features including:
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `'outline' \| 'flat' \| 'icon'` | - | Visual style for all child ToggleButtons |
+| `color` | `'mono-muted' \| 'mono-bold' \| 'accent' \| 'serious' \| 'critical'` | - | Color for all child ToggleButtons |
+| `size` | `'large' \| 'medium' \| 'small' \| 'xsmall'` | - | Size for all child ToggleButtons |
+| `children` | `ReactNode` | - | ToggleButton components |
+
+## Accessibility
+- Keyboard: Enter and Space to activate
 - ARIA attributes for screen readers
-- Keyboard navigation (Enter, Space, Arrow keys)
-- Focus management
-- Form integration
-- Proper labeling and descriptions
+- Focus management and visual focus indicators
+- ToggleButton uses `aria-pressed` for state
 
-All variants provide clear visual feedback for hover, focus, pressed, and disabled states. The button automatically scales icons based on the selected size variant, ensuring consistent visual hierarchy across different use cases.
+## Implementation Notes
+- Button wraps `Button` from react-aria-components
+- LinkButton wraps `Link` from react-aria-components
+- ToggleButton wraps `ToggleButton` from react-aria-components
+- Icons automatically scale based on size variant via IconProvider
+
+Underlying elements:
+- `<button>` for Button and ToggleButton
+- `<a>` for LinkButton
+
+**Related:**
+- [React Aria Button](https://react-spectrum.adobe.com/react-aria/Button.html)
+- [React Aria ToggleButton](https://react-spectrum.adobe.com/react-aria/ToggleButton.html)
+- [Github Source](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-toolkit/src/components/button)

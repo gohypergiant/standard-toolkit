@@ -1,5 +1,17 @@
 # @accelint/hotkey-manager
 
+## 1.0.1
+
+### Patch Changes
+
+- a4b56b7: Updates `unregister-hotkey` to use the renamed `HotkeyManager` type (previously `HotkeyHook`)
+
+## 1.0.0
+
+### Major Changes
+
+- 878bfa6: Refactored the hotkey-manager package to decouple react.
+
 ## 0.1.3
 
 ### Patch Changes

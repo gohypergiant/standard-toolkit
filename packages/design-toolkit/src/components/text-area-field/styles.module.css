@@ -41,7 +41,7 @@
     }
 
     @variant pressed {
-      @apply outline-accent-primary-pressed;
+      @apply outline-interactive-pressed;
     }
 
     @variant group-invalid/text-area-field {

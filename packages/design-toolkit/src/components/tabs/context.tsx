@@ -18,18 +18,28 @@ import type { ContextValue } from 'react-aria-components';
 import type { ProviderProps } from '@/lib/types';
 import type { TabsProps } from './types';
 
-/**
- * Context for Tabs component
- *
- * Provides context for Tabs component to share props
- */
+/** Context for sharing props across Tabs components */
 export const TabsContext =
   createContext<ContextValue<TabsProps, HTMLDivElement>>(null);
 
 /**
- * Provider for Tabs component
+ * Sets default props for all Tabs components within.
  *
- * Allows setting default props for all Tabs components within
+ * @example
+ * ```tsx
+ * <TabsProvider orientation="vertical">
+ *   <Tabs>
+ *     <TabList>
+ *       <Tab>Profile</Tab>
+ *       <Tab>Settings</Tab>
+ *     </TabList>
+ *   </Tabs>
+ * </TabsProvider>
+ * ```
+ *
+ * @param props - ProviderProps with TabsProps.
+ * @param props.children - Child components that receive the context.
+ * @returns The TabsContext provider wrapping children.
  */
 export function TabsProvider({ children, ...props }: ProviderProps<TabsProps>) {
   return <TabsContext.Provider value={props}>{children}</TabsContext.Provider>;

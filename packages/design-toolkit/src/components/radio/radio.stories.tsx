@@ -34,6 +34,9 @@ const meta = {
     controls: {
       exclude: ['children', 'validationBehavior'],
     },
+    docs: {
+      subtitle: 'Exclusive selection from a group of options',
+    },
   },
 } satisfies Meta<RadioGroupProps>;
 

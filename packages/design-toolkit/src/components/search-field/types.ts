@@ -18,6 +18,19 @@ import type {
 import type { ButtonProps } from '../button/types';
 import type { IconProps } from '../icon/types';
 
+/**
+ * Props for SearchField component.
+ *
+ * Extends AriaSearchFieldProps with custom classNames, variant, and loading support.
+ * - `classNames.field` - CSS class for the field container.
+ * - `classNames.input` - CSS class for the input element.
+ * - `classNames.clear` - CSS class for the clear button.
+ * - `classNames.loading` - CSS class for the loading spinner.
+ * - `classNames.search` - CSS class for the search icon.
+ * - `inputProps` - Additional props passed to the Input element.
+ * - `variant` - Visual style ('filled' or 'outline').
+ * - `isLoading` - Displays a loading spinner when true.
+ */
 export interface SearchFieldProps
   extends Omit<AriaSearchFieldProps, 'className' | 'pattern' | 'type'>,
     RefAttributes<HTMLDivElement> {

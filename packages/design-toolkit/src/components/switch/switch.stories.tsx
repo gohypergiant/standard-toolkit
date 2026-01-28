@@ -21,6 +21,11 @@ const meta = {
     isDisabled: false,
     labelPosition: 'end',
   },
+  parameters: {
+    docs: {
+      subtitle: 'Toggle control for binary on/off states',
+    },
+  },
 } satisfies Meta<typeof Switch>;
 
 export default meta;

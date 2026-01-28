@@ -20,10 +20,19 @@ const ListStylesDefaults = {
   variant: 'cozy',
 } as const;
 
+/**
+ * Context for sharing List variant across component tree.
+ */
 export const ListContext = createContext<
   ContextValue<ListProps<object>, HTMLDivElement>
 >({ variant: ListStylesDefaults.variant });
 
+/**
+ * Hook to get the current list item variant from context.
+ * Used internally by ListItemTitle and ListItemDescription for sizing.
+ *
+ * @returns The current list item variant from context, or 'cozy' as the default.
+ */
 export const useListItemVariant = () => {
   const context = useContext(ListContext);
 

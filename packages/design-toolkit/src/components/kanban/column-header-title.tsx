@@ -16,6 +16,14 @@ import { clsx } from '@accelint/design-foundation/lib/utils';
 import styles from './styles.module.css';
 import type { KanbanComponentProps } from './types';
 
+/**
+ * KanbanColumnHeaderTitle - Title of the column
+ *
+ * @param props - {@link KanbanComponentProps}
+ * @param props.children - Title text content.
+ * @param props.className - Optional CSS class name.
+ * @returns The rendered KanbanColumnHeaderTitle component.
+ */
 export function KanbanColumnHeaderTitle({
   children,
   className,

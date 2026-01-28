@@ -17,9 +17,25 @@ import { createContext } from 'react';
 import type { ContextValue } from 'react-aria-components';
 import type { ClassificationBadgeProps } from './types';
 
+/** React context for sharing ClassificationBadge configuration across components. */
 export const ClassificationBadgeContext =
   createContext<ContextValue<ClassificationBadgeProps, HTMLSpanElement>>(null);
 
+/**
+ * Context provider for setting default props across multiple ClassificationBadge components.
+ *
+ * @param props - The provider props.
+ * @param props.children - Child components that will receive the classification badge context.
+ * @returns The classification badge context provider wrapping children.
+ *
+ * @example
+ * ```tsx
+ * <ClassificationBadgeProvider variant="secret" size="small">
+ *   <ClassificationBadge />
+ *   <ClassificationBadge />
+ * </ClassificationBadgeProvider>
+ * ```
+ */
 export function ClassificationBadgeProvider({
   children,
   ...props

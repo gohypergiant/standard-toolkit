@@ -26,6 +26,22 @@ import {
   SEGMENT_GAP_WIDTH,
 } from './width-utils';
 
+// DD has 2 editable segments:
+// - Segment 1: maxLength=10, pad=0.25 → 10.25ch
+// - Segment 2: maxLength=11, pad=0.8 → 11.8ch
+// Total segments: 21.75ch
+const segmentWidth = 10.25 + 11.8;
+
+// DD has 1 literal: ", " (2 chars) → 2ch
+const literalWidth = 2;
+
+// DD has 3 total segments (2 editable + 1 literal) → 2 gaps
+const gapWidth = 2 * SEGMENT_GAP_WIDTH; // 1ch
+
+// expected base 27.05ch
+const baseWidth =
+  segmentWidth + literalWidth + gapWidth + CONTAINER_PADDING_WIDTH;
+
 describe('width-utils', () => {
   describe('constants', () => {
     it('exports spacing constants with sensible values', () => {
@@ -49,32 +65,7 @@ describe('width-utils', () => {
           false,
         );
 
-        // DD has 2 editable segments:
-        // - Segment 1: maxLength=10, pad=0.25 → 10.25ch
-        // - Segment 2: maxLength=11, pad=0.5 → 11.5ch
-        // Total segments: 21.75ch
-        const segmentWidth = 10.25 + 11.5;
-
-        // DD has 1 literal: ", " (2 chars) → 2ch
-        const literalWidth = 2;
-
-        // DD has 3 total segments (2 editable + 1 literal) → 2 gaps
-        const gapWidth = 2 * SEGMENT_GAP_WIDTH; // 1ch
-
-        // No button
-        const buttonWidth = 0;
-        const inputButtonGap = 0;
-
-        const expectedTotal =
-          segmentWidth +
-          literalWidth +
-          gapWidth +
-          CONTAINER_PADDING_WIDTH +
-          buttonWidth +
-          inputButtonGap;
-
-        expect(width).toBe(`${expectedTotal}ch`);
-        expect(width).toBe('26.75ch');
+        expect(width).toBe(`${baseWidth}ch`);
       });
 
       it('calculates width with format button', () => {
@@ -84,11 +75,9 @@ describe('width-utils', () => {
           true,
         );
 
-        const baseWidth = 26.75;
         const withButton = baseWidth + FORMAT_BUTTON_WIDTH + INPUT_BUTTON_GAP;
 
-        expect(width).toBe(`${withButton}ch`);
-        expect(width).toBe('31.75ch');
+        expect(width).toBe(`${withButton}ch`); // 32.05ch
       });
     });
 
@@ -304,8 +293,7 @@ describe('width-utils', () => {
           Number.parseFloat(withButton) - Number.parseFloat(withoutButton);
         const expectedDifference = FORMAT_BUTTON_WIDTH + INPUT_BUTTON_GAP;
 
-        expect(widthDifference).toBe(expectedDifference);
-        expect(widthDifference).toBe(5);
+        expect(widthDifference).toBeCloseTo(expectedDifference);
       });
 
       it('excludes button width when showFormatButton is false', () => {
@@ -317,7 +305,7 @@ describe('width-utils', () => {
 
         // Should not include FORMAT_BUTTON_WIDTH or INPUT_BUTTON_GAP
         const widthValue = Number.parseFloat(width);
-        expect(widthValue).toBe(26.75);
+        expect(widthValue).toBe(baseWidth);
       });
     });
 

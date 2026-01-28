@@ -17,14 +17,24 @@ import type {
   DialogTriggerProps,
 } from 'react-aria-components';
 
+/**
+ * Props for the PopoverTrigger component.
+ */
 export type PopoverTriggerProps = ComponentPropsWithRef<'div'> &
   DialogTriggerProps;
 
+/**
+ * Props for the Popover component.
+ */
 export type PopoverProps = Omit<AriaPopoverProps, 'children' | 'className'> &
   Pick<DialogProps, 'children'> & {
+    /** CSS class names for popover elements. */
     classNames?: {
+      /** Class name for the popover container. */
       popover?: AriaPopoverProps['className'];
+      /** Class name for the dialog content. */
       dialog?: DialogProps['className'];
     };
+    /** Additional props passed to the Dialog component. */
     dialogProps?: Omit<DialogProps, 'children' | 'className'>;
   };

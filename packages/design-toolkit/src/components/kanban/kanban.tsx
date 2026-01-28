@@ -31,12 +31,18 @@ import { parseDropTarget, useKanban } from '@/components/kanban/context';
 import styles from './styles.module.css';
 import type { KanbanProps } from './types';
 
-// Context for sharing active drag state
-
+/**
+ * Context for sharing active drag state across Kanban components.
+ */
 export const DragContext = createContext<{ activeId: string | null } | null>(
   null,
 );
 
+/**
+ * Hook to access the active drag state.
+ * Must be used within a Kanban component.
+ * @returns The drag context with activeId.
+ */
 export const useDragContext = () => {
   const context = useContext(DragContext);
   if (!context) {
@@ -47,6 +53,27 @@ export const useDragContext = () => {
 
 const ACTIVATION_DISTANCE = 8;
 
+/**
+ * Kanban - Root container for the drag-and-drop kanban board
+ *
+ * Provides DnD context and manages drag state for cards and columns.
+ * Must be wrapped in a KanbanProvider.
+ *
+ * @param props - {@link KanbanProps}
+ * @param props.children - Child components (columns, header, etc.).
+ * @param props.className - Optional CSS class name.
+ * @returns The rendered Kanban component.
+ *
+ * @example
+ * ```tsx
+ * <KanbanProvider columns={columns} updateColumnState={setColumns}>
+ *   <Kanban>
+ *     <KanbanHeader>...</KanbanHeader>
+ *     <KanbanColumnContainer>...</KanbanColumnContainer>
+ *   </Kanban>
+ * </KanbanProvider>
+ * ```
+ */
 export function Kanban({ children, className, ...rest }: KanbanProps) {
   const { moveCard, cardMap } = useKanban();
   const [activeId, setActiveId] = useState<string | null>(null);

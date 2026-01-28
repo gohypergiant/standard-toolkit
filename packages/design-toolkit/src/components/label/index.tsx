@@ -25,17 +25,31 @@ import type { LabelProps } from './types';
  * required/optional states. Integrates with React Aria form components to
  * ensure proper accessibility and screen reader support.
  *
+ * @param props - {@link LabelProps}
+ * @param props.ref - Ref to the label element.
+ * @param props.children - Label text content.
+ * @param props.className - Optional CSS class name.
+ * @param props.isDisabled - Whether the label is in a disabled state.
+ * @param props.isRequired - Whether the associated field is required.
+ * @returns The rendered Label component.
+ *
  * @example
+ * ```tsx
  * // Basic label
  * <Label>Username</Label>
+ * ```
  *
  * @example
+ * ```tsx
  * // Required field label
  * <Label isRequired>Email Address</Label>
+ * ```
  *
  * @example
+ * ```tsx
  * // Disabled label
  * <Label isDisabled>Inactive Field</Label>
+ * ```
  */
 export function Label({ ref, ...props }: LabelProps) {
   [props, ref] = useContextProps(props, ref ?? null, LabelContext);

@@ -20,6 +20,11 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 const meta = {
   title: 'Components/Tooltip',
   component: Tooltip,
+  parameters: {
+    docs: {
+      subtitle: 'Contextual popup for additional information on hover or focus',
+    },
+  },
 } satisfies Meta<typeof Tooltip>;
 
 export default meta;

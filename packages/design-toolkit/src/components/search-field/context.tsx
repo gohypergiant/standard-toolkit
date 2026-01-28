@@ -29,6 +29,9 @@ export const SearchFieldContext =
  * Provider for SearchField component
  *
  * Allows setting default props for all SearchField components within
+ *
+ * @param props - Provider props including children and default SearchFieldProps.
+ * @returns The provider component wrapping children with context.
  */
 export function SearchFieldProvider({
   children,

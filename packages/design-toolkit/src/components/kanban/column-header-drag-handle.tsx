@@ -12,9 +12,14 @@
 'use client';
 import 'client-only';
 
-import { DragVert } from '@accelint/icons';
+import DragVert from '@accelint/icons/drag-vert';
 import { Icon } from '../icon';
 
+/**
+ * KanbanColumnHeaderDragHandle - Visual indicator for column dragging
+ *
+ * @returns The rendered KanbanColumnHeaderDragHandle component.
+ */
 export function KanbanColumnHeaderDragHandle() {
   return (
     <Icon size='small' aria-label='Drag column'>

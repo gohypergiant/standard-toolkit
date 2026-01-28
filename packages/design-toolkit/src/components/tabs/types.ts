@@ -13,4 +13,7 @@
 import type { RefAttributes } from 'react';
 import type { TabsProps as AriaTabsProps } from 'react-aria-components';
 
+/**
+ * Props for the Tabs component.
+ */
 export type TabsProps = AriaTabsProps & RefAttributes<HTMLDivElement>;

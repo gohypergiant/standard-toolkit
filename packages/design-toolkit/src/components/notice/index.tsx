@@ -11,10 +11,9 @@
  */
 
 'use client';
-
-import { Cancel } from '@accelint/icons';
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
+import Cancel from '@accelint/icons/cancel';
 import {
   Text,
   UNSTABLE_Toast as Toast,
@@ -35,6 +34,37 @@ const ButtonColorMap: Record<NoticeColor, ButtonProps['color']> = {
   critical: 'critical',
 };
 
+/**
+ * Notice - Notification component for temporary messages and alerts
+ *
+ * Displays messages with optional action buttons and close functionality.
+ * Icons are automatically displayed based on the color variant.
+ *
+ * @example
+ * ```tsx
+ * <Notice
+ *   id="notice-1"
+ *   message="Operation completed"
+ *   color="normal"
+ * />
+ * ```
+ *
+ * @param props - {@link NoticeProps}
+ * @param props.id - Unique identifier for the notice.
+ * @param props.classNames - CSS class names for notice elements.
+ * @param props.color - Color variant indicating severity.
+ * @param props.message - Message text to display.
+ * @param props.primary - Primary action button configuration.
+ * @param props.secondary - Secondary action button configuration.
+ * @param props.hideIcon - Whether to hide the status icon.
+ * @param props.showClose - Whether to show the close button.
+ * @param props.shouldCloseOnAction - Whether to close the notice when an action button is pressed.
+ * @param props.size - Size variant for the notice.
+ * @param props.onPrimaryAction - Callback when primary action button is pressed.
+ * @param props.onSecondaryAction - Callback when secondary action button is pressed.
+ * @param props.onClose - Callback when the notice is closed.
+ * @returns The rendered Notice component.
+ */
 export function Notice({
   id,
   classNames,

@@ -12,11 +12,25 @@
 'use client';
 
 import 'client-only';
-import { Delete, Duplicate, LockFill } from '@accelint/icons';
+
+import Delete from '@accelint/icons/delete';
+import Duplicate from '@accelint/icons/duplicate';
+import LockFill from '@accelint/icons/lock-fill';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import type { ActionProps } from 'react-querybuilder';
 
+/**
+ * Delete button for removing rules or groups
+ *
+ * @example
+ * ```tsx
+ * <RemoveRuleAction handleOnClick={() => console.log('remove')} />
+ * ```
+ *
+ * @param props - ActionProps from react-querybuilder.
+ * @returns The rendered RemoveRuleAction button.
+ */
 export function RemoveRuleAction({
   handleOnClick,
   className,
@@ -37,6 +51,17 @@ export function RemoveRuleAction({
   );
 }
 
+/**
+ * Lock/unlock toggle button for rules or groups
+ *
+ * @example
+ * ```tsx
+ * <LockAction handleOnClick={() => console.log('lock toggled')} />
+ * ```
+ *
+ * @param props - ActionProps from react-querybuilder.
+ * @returns The rendered LockAction button.
+ */
 export function LockAction({ handleOnClick, className, ...rest }: ActionProps) {
   return (
     <Button
@@ -53,6 +78,17 @@ export function LockAction({ handleOnClick, className, ...rest }: ActionProps) {
   );
 }
 
+/**
+ * Duplicate button for cloning rules or groups
+ *
+ * @example
+ * ```tsx
+ * <CloneAction handleOnClick={() => console.log('clone')} />
+ * ```
+ *
+ * @param props - ActionProps from react-querybuilder.
+ * @returns The rendered CloneAction button.
+ */
 export function CloneAction({
   handleOnClick,
   className,

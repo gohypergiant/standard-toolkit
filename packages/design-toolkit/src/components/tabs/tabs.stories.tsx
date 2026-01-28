@@ -44,6 +44,11 @@ const meta = {
       options: ['horizontal', 'vertical'],
     },
   },
+  parameters: {
+    docs: {
+      subtitle: 'Tab navigation for organizing content into sections',
+    },
+  },
 } satisfies Meta<typeof Tabs>;
 
 export default meta;

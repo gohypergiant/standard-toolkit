@@ -13,7 +13,7 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { ChevronDown } from '@accelint/icons';
+import ChevronDown from '@accelint/icons/chevron-down';
 import { useContext } from 'react';
 import { composeRenderProps, Heading } from 'react-aria-components';
 import { isSlottedContextValue } from '../../lib/utils';
@@ -24,6 +24,28 @@ import { AccordionContext } from './context';
 import styles from './styles.module.css';
 import type { AccordionTriggerProps } from './types';
 
+/**
+ * Trigger button component for expanding/collapsing accordion sections.
+ *
+ * Renders a clickable button that toggles the visibility of the associated
+ * accordion panel. Includes a chevron icon that rotates to indicate state.
+ *
+ * @param props - The accordion trigger props.
+ * @param props.ref - Reference to the heading element.
+ * @param props.children - Content to display in the trigger button.
+ * @param props.classNames - Custom class names for the heading and trigger elements.
+ * @returns The accordion trigger component.
+ *
+ * @example
+ * ```tsx
+ * <Accordion>
+ *   <AccordionHeader>
+ *     <AccordionTrigger>Click to expand</AccordionTrigger>
+ *   </AccordionHeader>
+ *   <AccordionPanel>Hidden content</AccordionPanel>
+ * </Accordion>
+ * ```
+ */
 export function AccordionTrigger({
   ref,
   children,

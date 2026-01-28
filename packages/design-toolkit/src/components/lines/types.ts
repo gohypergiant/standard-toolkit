@@ -12,8 +12,14 @@
 
 import type { ComponentProps } from 'react';
 
+/**
+ * Props for the Lines component.
+ */
 export type LinesProps = Omit<ComponentProps<'div'>, 'size'> & {
+  /** Size variant for the lines. */
   size?: 'large' | 'medium' | 'small';
+  /** Visual style variant for the connector line. */
   variant?: 'branch' | 'vert' | 'last';
+  /** Whether the lines are visible. */
   isVisible?: boolean;
 };

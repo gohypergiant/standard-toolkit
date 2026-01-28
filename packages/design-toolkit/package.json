@@ -1,7 +1,7 @@
 {
   "name": "@accelint/design-toolkit",
   "description": "An open-source component library to serve as part of the entire ecosystem of UX for Accelint.",
-  "version": "9.3.0",
+  "version": "9.4.1",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "devDependencies": {
@@ -424,8 +424,8 @@
     "format:biome": "pnpm biome format . --write --verbose",
     "format:biome:check": "pnpm biome format . --verbose",
     "format:check": "pnpm format:biome:check && pnpm format:prettier:check",
-    "format:prettier": "pnpm prettier --write './**/*.css'",
-    "format:prettier:check": "pnpm prettier --check './**/*.css'",
+    "format:prettier": "pnpm prettier --write \"./src/**/*.css\"",
+    "format:prettier:check": "pnpm prettier --check \"./src/**/*.css\"",
     "index": "pnpm zx ../../scripts/indexer.mjs packages/design-toolkit",
     "license": "pnpm zx ../../scripts/license.mjs",
     "lint": "pnpm biome lint . --verbose",

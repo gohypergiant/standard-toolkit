@@ -16,9 +16,23 @@ import { TreeContext } from './context';
 import styles from './styles.module.css';
 
 /**
- * ItemActions - Action buttons for a tree item
+ * TreeItemActions - Container for action buttons in a tree item
  *
- * Container for action buttons in a tree item
+ * @example
+ * ```tsx
+ * <TreeItemContent>
+ *   <TreeItemLabel>Document</TreeItemLabel>
+ *   <TreeItemActions>
+ *     <Button variant="icon"><Icon><Edit /></Icon></Button>
+ *     <Button variant="icon"><Icon><Delete /></Icon></Button>
+ *   </TreeItemActions>
+ * </TreeItemContent>
+ * ```
+ *
+ * @param props - Component props.
+ * @param props.children - Action buttons to render.
+ * @param props.className - CSS class for the actions container.
+ * @returns The rendered TreeItemActions component.
  */
 export function TreeItemActions({
   children,

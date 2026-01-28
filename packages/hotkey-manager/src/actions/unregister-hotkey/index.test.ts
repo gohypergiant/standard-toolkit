@@ -17,13 +17,13 @@ import { Keycode } from '@/enums/keycode';
 import { hotkeyStore } from '@/stores/hotkey-store';
 import { unregisterHotkey } from '.';
 import type { HotkeyConfig } from '@/types/hotkey-config';
-import type { HotkeyHook } from '@/types/hotkey-hook';
+import type { HotkeyManager } from '@/types/hotkey-manager';
 import type { HotkeyId } from '@/types/hotkey-id';
 
 describe('unregisterHotkey', () => {
   let mockHotkeyId: HotkeyId;
   let mockHotkeyConfig: HotkeyConfig;
-  let mockHotkeyHook: HotkeyHook;
+  let mockHotkeyManager: HotkeyManager;
 
   beforeEach(() => {
     mockHotkeyId = 'test-hotkey' as HotkeyId;
@@ -41,13 +41,13 @@ describe('unregisterHotkey', () => {
       ...HOTKEY_EXTRA_DEFAULTS,
     };
 
-    mockHotkeyHook = {
+    mockHotkeyManager = {
       id: mockHotkeyId,
       config: mockHotkeyConfig,
       isBound: false,
       forceBind: vi.fn(),
       forceUnbind: vi.fn(),
-    } as unknown as HotkeyHook;
+    } as unknown as HotkeyManager;
 
     hotkeyStore.getState().registerHotkey(mockHotkeyConfig);
   });
@@ -73,11 +73,11 @@ describe('unregisterHotkey', () => {
     expect(hotkeyStore.getState().allHotkeys.has(mockHotkeyId)).toBe(false);
   });
 
-  it('should unregister a hotkey by hook', () => {
+  it('should unregister a hotkey by manager', () => {
     expect(hotkeyStore.getState().allHotkeys.has(mockHotkeyId)).toBe(true);
 
-    // Unregister by hook
-    unregisterHotkey(mockHotkeyHook);
+    // Unregister by manager
+    unregisterHotkey(mockHotkeyManager);
     expect(hotkeyStore.getState().allHotkeys.has(mockHotkeyId)).toBe(false);
   });
 

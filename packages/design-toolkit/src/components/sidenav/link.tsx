@@ -10,10 +10,9 @@
  * governing permissions and limitations under the License.
  */
 'use client';
-
-import { ArrowNortheast } from '@accelint/icons';
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
+import ArrowNortheast from '@accelint/icons/arrow-northeast';
 import { useContext, useRef } from 'react';
 import {
   composeRenderProps,
@@ -32,6 +31,20 @@ import type { SidenavLinkProps } from './types';
  * SidenavLink - Link component for sidenav
  *
  * Provides a link with tooltip for the sidenav
+ *
+ * @example
+ * ```tsx
+ * <SidenavLink href="https://example.com" textValue="External Link">
+ *   <Icon><Link /></Icon>
+ *   <Text>External Link</Text>
+ * </SidenavLink>
+ * ```
+ *
+ * @param props - {@link SidenavLinkProps}
+ * @param props.children - Link content (icon and text).
+ * @param props.classNames - Custom CSS class names for link elements.
+ * @param props.textValue - Text displayed in tooltip when collapsed.
+ * @returns The rendered SidenavLink component.
  */
 export function SidenavLink({
   children,

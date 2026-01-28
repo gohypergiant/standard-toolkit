@@ -10,8 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
+/** Namespace for sidenav bus events. */
 export const SidenavEventNamespace = 'Sidenav';
 
+/** Event types for sidenav toggle, open, and close actions. */
 export const SidenavEventTypes = {
   toggle: `${SidenavEventNamespace}:toggle`,
   open: `${SidenavEventNamespace}:open`,

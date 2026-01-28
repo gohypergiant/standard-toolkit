@@ -14,7 +14,7 @@
 import 'client-only';
 import { useEmit } from '@accelint/bus/react';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { ChevronLeft } from '@accelint/icons';
+import ChevronLeft from '@accelint/icons/chevron-left';
 import { useContext } from 'react';
 import { Button, composeRenderProps, Header } from 'react-aria-components';
 import { Icon } from '../icon';
@@ -27,6 +27,23 @@ import type { SidenavHeaderProps, SidenavToggleEvent } from './types';
  * SidenavHeader - Header component for sidenav
  *
  * Provides a header with toggle button for the sidenav
+ *
+ * @example
+ * ```tsx
+ * <Sidenav>
+ *   <SidenavHeader>
+ *     <SidenavAvatar>
+ *       <Avatar>JD</Avatar>
+ *       <Heading>John Doe</Heading>
+ *     </SidenavAvatar>
+ *   </SidenavHeader>
+ * </Sidenav>
+ * ```
+ *
+ * @param props - {@link SidenavHeaderProps}
+ * @param props.children - Header content (typically SidenavAvatar).
+ * @param props.classNames - Custom CSS class names for header elements.
+ * @returns The rendered SidenavHeader component.
  */
 export function SidenavHeader({
   children,

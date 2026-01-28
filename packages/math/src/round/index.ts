@@ -15,14 +15,17 @@
  *
  * @param value - The value to round.
  * @param precision - The precision of the rounded output.
+ * @returns The rounded value.
  *
  * @throws {Error} Throws if precision is not an integer.
  *
  * @example
+ * ```typescript
  * const value = round(1, 1.2345); // 1.2
  * const value = round(2, 1.2345); // 1.23
  * const value = round(3, 1.2345); // 1.235
  * const value = round(3.1, 1.2345); // Error
+ * ```
  */
 export function round(precision: number, value: number): number {
   if (!Number.isInteger(precision)) {

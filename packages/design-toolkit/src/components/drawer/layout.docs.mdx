@@ -4,141 +4,68 @@ import * as DrawerLayoutStories from './layout.stories';
 <Meta of={DrawerLayoutStories} />
 
 # DrawerLayout
-
-A flexible layout system for managing multiple drawers that can be positioned on any side of the main content area. Supports pushing and extending behaviors with configurable sizes and placements.
+A CSS Grid-based layout system for positioning panels on any side of the main content area. Shared layout primitive used by [Drawer](?path=/docs/components-drawer--playground) and [Sidenav](?path=/docs/components-sidenav--playground).
 
 <Canvas of={DrawerLayoutStories.Default} />
 
-## Structure
-
-The DrawerLayout system consists of the following components:
+## Example Usage
 
 ```tsx
-<DrawerLayout>
+<DrawerLayout extend="left right" push="left">
   <DrawerLayoutMain>
     {/* Main content area */}
   </DrawerLayoutMain>
 
-  <Drawer>
-    <DrawerMenu>
-      <DrawerMenuItem />
-    </DrawerMenu>
-    <DrawerPanel>
-      <DrawerHeader>
-        <DrawerHeaderTitle />
-      </DrawerHeader>
-      <DrawerContent>
-        <DrawerView />
-      </DrawerContent>
-    </DrawerPanel>
-  </Drawer>
+  {/* Drawer, Sidenav, or other panel components */}
 </DrawerLayout>
 ```
 
-- **DrawerLayout**: Container that manages drawer interactions and layout
-- **DrawerLayoutMain**: Main content area that responds to drawer states
-- **Drawer**: Individual drawer container with configurable placement
-- **DrawerMenu**: Navigation menu for controlling drawer views
-- **DrawerMenuItem**: Interactive item for toggling drawer states
-- **DrawerPanel**: Content container for the drawer
-- **DrawerHeader**: Header section of the drawer
-- **DrawerHeaderTitle**: Title component for the drawer
-- **DrawerContent**: Main content area within the drawer
-- **DrawerView**: Individual view container within the drawer
-
 ## Props
 
-### DrawerLayout Props
+### DrawerLayout
 
-- `extend`
-  - Type: select ('top bottom', 'left right', 'top', 'bottom', 'left', 'right')
-  - Default: ''
-  - Description: Specifies which drawers should extend over the main content
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `extend` | `'top bottom' \| 'left right' \| 'top' \| 'bottom' \| 'left' \| 'right'` | `'left right'` | Which panels span full container dimensions |
+| `push` | `'top' \| 'bottom' \| 'left' \| 'right'` (combinable) | - | Which panels push content aside vs overlay |
+| `children` | `ReactNode` | - | DrawerLayoutMain and panel components |
 
-- `push`
-  - Type: string
-  - Default: ''
-  - Description: Specifies which drawers should push the main content
+### DrawerLayoutMain
 
-- `children`
-  - Type: ReactNode
-  - Required
-  - Description: Content to render within the layout
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `className` | `string` | - | Custom CSS class |
+| `children` | `ReactNode` | - | Main content |
 
-### Drawer Props
+## How `extend` Works
 
-- `id`
-  - Type: string
-  - Required
-  - Description: Unique identifier for the drawer
+```
+extend: 'left right' (default)        extend: 'top bottom'
+┌──────┬──────────┬───────┐           ┌─────────────────────────┐
+│      │   top    │       │           │          top            │
+│      ├──────────┤       │           ├──────┬──────────┬───────┤
+│ left │   main   │ right │           │ left │   main   │ right │
+│      ├──────────┤       │           ├──────┴──────────┴───────┤
+│      │  bottom  │       │           │         bottom          │
+└──────┴──────────┴───────┘           └─────────────────────────┘
+```
 
-- `placement`
-  - Type: select ('top', 'bottom', 'left', 'right')
-  - Required
-  - Description: Position of the drawer
+## How `push` Works
 
-- `size`
-  - Type: select ('medium')
-  - Default: 'medium'
-  - Description: Size of the drawer
-
-### DrawerMenuItem Props
-
-- `toggle`
-  - Type: boolean
-  - Default: false
-  - Description: Whether this item toggles the drawer state
-
-- `for`
-  - Type: string
-  - Required
-  - Description: ID of the view this item controls
-
-### DrawerView Props
-
-- `id`
-  - Type: string
-  - Required
-  - Description: Unique identifier for the view
+| Value | Behavior |
+|-------|----------|
+| `undefined` | Panels float over main content (overlay) |
+| `'left'` | Left panel pushes content to the right |
+| `'left right'` | Both side panels push content |
+| `'top bottom left right'` | All panels push content from all sides |
 
 ## Implementation Notes
-
-- Built with TailwindCSS for styling
-- Uses CSS Grid for layout management
-- Handles transitions and animations automatically
-- **Props use camelCase** (e.g., `placement`, `size`)
-- **Component names use PascalCase** (e.g., `DrawerLayout`)
-- **Descriptions begin with uppercase letters**
-
-## Usage Requirements
-
+- Built with CSS Grid for layout management
+- Layout responds automatically to panel open/close states
 - Must include exactly one `DrawerLayoutMain` component
-- Each `Drawer` must have a unique `id`
-- Each `DrawerView` must have a unique `id`
-- `placement` must be one of: 'top', 'bottom', 'left', 'right'
-- Menu items must reference valid view IDs
 
-## Accessibility
-
-- Keyboard navigation support for drawer controls
-- ARIA attributes for drawer states and controls
-- Focus management between drawers
-- Support for reduced motion preferences
-- Screen reader announcements for drawer state changes
-
-## Contextual Use Cases
-
-- Application navigation systems
-- Tool panels and sidebars
-- Property inspectors
-- Configuration panels
-- Multi-panel dashboards
-- Complex form layouts
-- Responsive mobile navigation
-
-## References
-
-- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
-- [Standard Toolkit Icon Component](/docs/components-icon--docs)
+**Related:**
+- [Drawer](?path=/docs/components-drawer--playground)
+- [Sidenav](?path=/docs/components-sidenav--playground)
 
 <Controls of={DrawerLayoutStories.Default} />

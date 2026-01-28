@@ -13,7 +13,7 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { ChevronDown } from '@accelint/icons';
+import ChevronDown from '@accelint/icons/chevron-down';
 import { useContext, useRef } from 'react';
 import {
   Button,
@@ -35,6 +35,22 @@ import type { SidenavMenuProps } from './types';
  * SidenavMenu - Menu component for sidenav
  *
  * Provides a collapsible menu with items for the sidenav
+ *
+ * @example
+ * ```tsx
+ * <SidenavMenu icon={<Icon><Settings /></Icon>} title="Settings">
+ *   <SidenavMenuItem>Profile</SidenavMenuItem>
+ *   <SidenavMenuItem>Preferences</SidenavMenuItem>
+ *   <SidenavMenuItem>Security</SidenavMenuItem>
+ * </SidenavMenu>
+ * ```
+ *
+ * @param props - {@link SidenavMenuProps}
+ * @param props.icon - Icon displayed before the menu title.
+ * @param props.title - Menu title text.
+ * @param props.classNames - Custom CSS class names for menu elements.
+ * @param props.children - Menu items (SidenavMenuItem components).
+ * @returns The rendered SidenavMenu component.
  */
 export function SidenavMenu({
   icon,

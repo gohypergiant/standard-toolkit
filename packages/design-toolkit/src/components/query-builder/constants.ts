@@ -11,6 +11,7 @@
  * governing permissions and limitations under the License.
  */
 
+/** Operators that require multiple input values (e.g., between, during). */
 export const multiValueOperators = [
   'between',
   'notBetween',

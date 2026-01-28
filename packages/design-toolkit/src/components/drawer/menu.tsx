@@ -13,6 +13,25 @@ import { clsx } from '@accelint/design-foundation/lib/utils';
 import styles from './styles.module.css';
 import type { DrawerMenuProps } from './types';
 
+/**
+ * DrawerMenu - Navigation menu for switching between drawer views.
+ *
+ * Contains DrawerMenuItem components. Renders as a semantic `<nav>` element.
+ *
+ * @param props - {@link DrawerMenuProps}
+ * @param props.className - Optional CSS class name.
+ * @param props.position - Position of the menu within the layout.
+ * @param props.children - DrawerMenuItem components to render.
+ * @returns The rendered DrawerMenu component.
+ *
+ * @example
+ * ```tsx
+ * <DrawerMenu position="center">
+ *   <DrawerMenuItem for={viewA}>View A</DrawerMenuItem>
+ *   <DrawerMenuItem for={viewB}>View B</DrawerMenuItem>
+ * </DrawerMenu>
+ * ```
+ */
 export function DrawerMenu({
   className,
   position = 'center',

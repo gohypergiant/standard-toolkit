@@ -21,6 +21,25 @@ import type { ViewStackViewProps } from './types';
  * ViewStackView - Individual view in a ViewStack
  *
  * Represents a single view that can be pushed onto the ViewStack
+ *
+ * @example
+ * ```tsx
+ * <ViewStack id="app-stack">
+ *   <ViewStackView id="home-view">
+ *     <h1>Home Screen</h1>
+ *     <p>Welcome to the app</p>
+ *   </ViewStackView>
+ *   <ViewStackView id="details-view">
+ *     <h1>Details Screen</h1>
+ *     <p>Detailed information</p>
+ *   </ViewStackView>
+ * </ViewStack>
+ * ```
+ *
+ * @param props - {@link ViewStackViewProps}
+ * @param props.id - Unique identifier for the view.
+ * @param props.children - View content to render when active.
+ * @returns The rendered view content if active, or null.
  */
 export function ViewStackView({ id, children }: ViewStackViewProps) {
   const { parent, view, register, unregister } = useContext(ViewStackContext);

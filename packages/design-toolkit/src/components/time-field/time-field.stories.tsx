@@ -37,6 +37,11 @@ const meta = {
       control: 'select',
     },
   },
+  parameters: {
+    docs: {
+      subtitle: 'Form input for entering and editing time values',
+    },
+  },
 } satisfies Meta<typeof TimeField>;
 
 export default meta;

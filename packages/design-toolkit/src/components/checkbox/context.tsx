@@ -16,8 +16,14 @@ import { createContext } from 'react';
 import type { ContextValue } from 'react-aria-components';
 import type { CheckboxGroupProps, CheckboxProps } from './types';
 
+/**
+ * React context for sharing CheckboxGroup configuration across components.
+ */
 export const CheckboxGroupContext =
   createContext<ContextValue<CheckboxGroupProps, HTMLDivElement>>(null);
 
+/**
+ * React context for sharing Checkbox configuration across components.
+ */
 export const CheckboxContext =
   createContext<ContextValue<CheckboxProps, HTMLLabelElement>>(null);

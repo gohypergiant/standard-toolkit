@@ -5,56 +5,75 @@ import * as CheckboxStories from './checkbox.stories';
 <Meta of={CheckboxStories} />
 
 # Checkbox
-The Checkbox component provides interactive checkboxes for form inputs, settings, and multi-selection interfaces. It's built on React Aria Components and provides excellent accessibility out of the box. Checkboxes are commonly used in forms, settings panels, data tables, and anywhere users need to make binary selections or choose from multiple options.
+Interactive checkbox for form inputs, settings, and multi-selection interfaces. Built on React Aria Components with accessibility out of the box.
 
-It is composed of the following components:
-- **Checkbox** - Main checkbox component for individual selections
-- **CheckboxGroup** - Container for grouping multiple checkboxes with shared configuration
+Components:
+- **Checkbox** - Individual checkbox for binary selections
+- **[CheckboxGroup](?path=/docs/components-checkboxgroup--playground)** - Container for grouping multiple checkboxes
 
+## Example Usage
 
-## Example usage
-
-### Basic
 ```tsx
-// Basic checkbox
 <Checkbox>Accept terms and conditions</Checkbox>
 ```
 <Canvas of={CheckboxStories.Default} />
 
+### Controlled
+```tsx
+const [isSelected, setIsSelected] = useState(false);
+
+<Checkbox isSelected={isSelected} onChange={setIsSelected}>
+  Subscribe to newsletter
+</Checkbox>
+```
+
+### Indeterminate
+Used for "select all" scenarios with partial selection.
+```tsx
+<Checkbox isIndeterminate>Select all items</Checkbox>
+```
+
 ## States
 
-* **unselected** - Default state with empty checkbox
-* **selected** - Checked state with checkmark icon
-* **indeterminate** - Partial selection state with minus icon (commonly used for "select all" scenarios)
-* **disabled** - Non-interactive state with reduced opacity
-
-## Orientations
-
-* **vertical** - Checkboxes stacked vertically (default)
-* **horizontal** - Checkboxes arranged horizontally with wrapping
-
+| State | Description |
+|-------|-------------|
+| Unselected | Default state, empty checkbox |
+| Selected | Checked state with checkmark icon |
+| Indeterminate | Partial selection with minus icon |
+| Disabled | Non-interactive with reduced opacity |
 
 ## Props
-All components and subcomponents accept a `className` prop that allow for custom style overrides.
+Extends all [`Checkbox` props](https://react-spectrum.adobe.com/react-aria/Checkbox.html#props) from react-aria-components.
 
-The Checkbox supports all the `Checkbox` [props and events from `react-aria-components`](https://react-spectrum.adobe.com/react-aria/Checkbox.html#props).
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `children` | `ReactNode` | - | Label text |
+| `isSelected` | `boolean` | - | Controlled selected state |
+| `defaultSelected` | `boolean` | `false` | Default selected state |
+| `isIndeterminate` | `boolean` | `false` | Partial selection state |
+| `isDisabled` | `boolean` | `false` | Whether checkbox is disabled |
+| `value` | `string` | - | Value when used in CheckboxGroup |
+| `onChange` | `(isSelected: boolean) => void` | - | Called when selection changes |
+| `classNames` | `object` | - | Custom class names (see below) |
 
-* **`classNames`** - Custom class names for styling:
-  * `checkbox` - Applied to the checkbox container
-  * `control` - Applied to the checkbox control (the square box)
-  * `label` - Applied to the label text
+**classNames:**
+| Key | Description |
+|-----|-------------|
+| `checkbox` | Applied to the checkbox container |
+| `control` | Applied to the checkbox control (square box) |
+| `label` | Applied to the label text |
 
-All checkbox types accept standard HTML input attributes and forward them to the underlying elements.
+## Accessibility
+- Keyboard: Space to toggle
+- ARIA attributes for screen readers
+- Focus management and visual indicators
+- Supports form validation
 
 ## Implementation Notes
-The `Checkbox` component wraps the `Checkbox` component from `react-aria-components`.
+- Wraps `Checkbox` from react-aria-components
+- Shows Check icon when selected, Remove icon when indeterminate
+- Use within CheckboxGroup for multi-selection with shared state
 
-[Docs](https://react-spectrum.adobe.com/react-aria/Checkbox.html)
-
-[Github Source](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-toolkit/src/components/checkbox)
-
-The component includes state management that handles:
-- Selected state with checkmark icon
-- Indeterminate state with minus icon (perfect for "select all" scenarios)
-- Disabled state with reduced opacity and non-interactive behavior
-- Focus and hover states with visual feedback
+**Related:**
+- [React Aria Checkbox](https://react-spectrum.adobe.com/react-aria/Checkbox.html)
+- [Github Source](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-toolkit/src/components/checkbox)

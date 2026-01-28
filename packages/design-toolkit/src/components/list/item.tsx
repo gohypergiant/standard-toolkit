@@ -27,6 +27,7 @@ import type { ListItemProps } from './types';
  * wrapped in a ListItemTitle.
  *
  * @example
+ * ```tsx
  * <ListItem textValue="User item">
  *   <Icon><Avatar /></Icon>
  *   <ListItemContent>
@@ -34,6 +35,13 @@ import type { ListItemProps } from './types';
  *     <ListItemDescription>Software Engineer</ListItemDescription>
  *   </ListItemContent>
  * </ListItem>
+ * ```
+ *
+ * @param props - {@link ListItemProps}
+ * @param props.children - Content to render inside the list item.
+ * @param props.classNames - CSS class names for list item elements.
+ * @param props.textValue - Accessible text value for the item.
+ * @returns The rendered ListItem component.
  */
 export function ListItem<T extends object>({
   children,

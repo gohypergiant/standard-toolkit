@@ -15,6 +15,23 @@ import 'client-only';
 import { Text } from 'react-aria-components';
 import type { DetailsListValueProps } from './types';
 
+/**
+ * DetailsListValue - Value component for DetailsList definition.
+ *
+ * Renders as a `<dd>` element within the DetailsList grid.
+ * Supports complex React nodes as children for rich value content.
+ *
+ * @param props - The details list value props.
+ * @returns The details list value component.
+ *
+ * @example
+ * ```tsx
+ * <DetailsList>
+ *   <DetailsListLabel>Name</DetailsListLabel>
+ *   <DetailsListValue>John Doe</DetailsListValue>
+ * </DetailsList>
+ * ```
+ */
 export function DetailsListValue(props: DetailsListValueProps) {
   return <Text {...props} elementType='dd' slot='value' />;
 }

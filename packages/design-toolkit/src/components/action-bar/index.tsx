@@ -19,21 +19,42 @@ import styles from './styles.module.css';
 import type { ActionBarProps } from './types';
 
 /**
- * ActionBar - Container for icon action buttons
+ * Container for icon action buttons with consistent spacing and alignment.
+ * Commonly used in toolbars, editors, or command interfaces.
  *
- * A container component that displays a collection of action buttons (typically icon-only)
- * and provides consistent spacing and alignment for toolbar-style actions.
+ * Renders as a `<nav>` element and provides `variant="icon"` context to child buttons.
+ *
+ * @param props - The action bar props.
+ * @param props.className - Additional CSS class names for styling.
+ * @param props.elevation - Visual elevation style ('flat', 'overlay', or 'raised').
+ * @param props.size - Size of action buttons within the bar ('medium' or 'small').
+ * @param props.children - Action buttons to render within the bar.
+ * @returns The action bar navigation element.
  *
  * @example
+ * ```tsx
  * <ActionBar>
- *   <Button><Icon><Copy/></Icon></Button>
+ *   <Button><Icon><Copy /></Icon></Button>
+ *   <Button><Icon><Delete /></Icon></Button>
  * </ActionBar>
+ * ```
  *
  * @example
- * // Without elevation shadow
- * <ActionBar elevation="flat">
- *   <Button><Icon><Copy/></Icon></Button>
+ * ```tsx
+ * // With ToggleButton
+ * <ActionBar>
+ *   <ToggleButton><Icon><Bold /></Icon></ToggleButton>
+ *   <ToggleButton><Icon><Italic /></Icon></ToggleButton>
  * </ActionBar>
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // Flat elevation for embedded contexts
+ * <ActionBar elevation="flat">
+ *   <Button><Icon><Copy /></Icon></Button>
+ * </ActionBar>
+ * ```
  */
 export function ActionBar({
   className,

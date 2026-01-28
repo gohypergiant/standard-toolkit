@@ -12,11 +12,14 @@
 
 import type { ReactNode } from 'react';
 
+/**
+ * Props for the DeferredCollection component.
+ */
 export interface DeferredCollectionProps {
-  /** The content to render once ready - can be ReactNode or a function returning ReactNode for deferred creation */
+  /** The content to render once ready - can be ReactNode or a function returning ReactNode for deferred creation. */
   children: ReactNode | (() => ReactNode);
-  /** Fallback element to show while deferring render */
+  /** Fallback element to show while deferring render. */
   fallback?: ReactNode;
-  /** Number of animation frames to defer before rendering (default: 2) */
+  /** Number of animation frames to defer before rendering (default: 2). */
   deferFrames?: number;
 }

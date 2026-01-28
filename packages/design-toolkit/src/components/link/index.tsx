@@ -28,8 +28,17 @@ import type { LinkProps } from './types';
  * A flexible link component that handles visited state, external anchors, and
  * icon integration while providing ARIA-compatible behavior.
  *
+ * @param props - {@link LinkProps}
+ * @param props.ref - Ref to the anchor element.
+ * @param props.allowsVisited - Whether the link shows visited styling when visited.
+ * @param props.className - Optional CSS class name.
+ * @param props.isVisited - Whether the link is in a visited state.
+ * @returns The rendered Link component.
+ *
  * @example
+ * ```tsx
  * <Link href="/dashboard">Go to Dashboard</Link>
+ * ```
  */
 export function Link({ ref, ...props }: LinkProps) {
   [props, ref] = useContextProps(props, ref ?? null, LinkContext);

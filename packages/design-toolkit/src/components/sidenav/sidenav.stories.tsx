@@ -47,6 +47,9 @@ const meta: Meta<SidenavWithLayoutArgs> = {
   },
   parameters: {
     layout: 'fullscreen',
+    docs: {
+      subtitle: 'Collapsible side navigation for hierarchical navigation',
+    },
   },
 };
 

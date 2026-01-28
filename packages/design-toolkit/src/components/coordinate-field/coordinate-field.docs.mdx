@@ -308,50 +308,51 @@ Full keyboard accessibility for efficient data entry:
 
 ## Props
 
-### Core Props
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `label` | `string` | - | Label text (hidden in small size) |
+| `description` | `string` | - | Helper text (hidden in small size or when invalid) |
+| `errorMessage` | `string` | - | Error message when invalid |
+| `format` | `'dd' \| 'ddm' \| 'dms' \| 'mgrs' \| 'utm'` | `'dd'` | Display format for coordinates |
+| `size` | `'small' \| 'medium'` | `'medium'` | Size variant |
+| `variant` | `'inline' \| 'stacked'` | `'inline'` | Layout variant |
+| `showFormatButton` | `boolean` | `true` | Show format conversion popover button |
+| `value` | `CoordinateValue \| null` | - | Controlled value in DD format |
+| `defaultValue` | `CoordinateValue` | - | Default uncontrolled value in DD format |
+| `onChange` | `(value: CoordinateValue \| null) => void` | - | Called when value changes (null if invalid) |
+| `onError` | `(message: string, context?) => void` | - | Called on parsing/conversion errors |
+| `isReadOnly` | `boolean` | `false` | Readonly state |
+| `isRequired` | `boolean` | `false` | Required field |
+| `isDisabled` | `boolean` | `false` | Disabled state |
+| `isInvalid` | `boolean` | - | Invalid state |
+| `aria-label` | `string` | - | Accessible label (required for small size) |
+| `id` | `string` | - | Unique identifier |
+| `classNames` | `object` | - | Custom classes (see below) |
 
-- **`label`** - Text label displayed above the input field (medium size only)
-- **`description`** - Helper text displayed below the input field. Note: Hidden when field is in small size or invalid state (unless disabled)
-- **`errorMessage`** - Error message displayed when validation fails
-- **`isReadOnly`** - Whether the field is read-only
-- **`isRequired`** - Whether the field is required (adds required indicator to label)
-- **`isDisabled`** - Whether the field is disabled
-- **`isInvalid`** - Whether to show the field in an invalid state
-- **`aria-label`** - Accessible label for screen readers. Required for accessibility when using small size without a visible label
+**classNames:**
 
-### Coordinate Configuration
+| Key | Description |
+|-----|-------------|
+| `field` | Main container |
+| `label` | Label element |
+| `control` | Control container (icon + input + button) |
+| `input` | Input container with segments |
+| `segment` | Individual segment |
+| `description` | Description text |
+| `error` | Error message |
+| `formatButton` | Format conversion button |
 
-- **`format`** - Display format: `'dd'` | `'ddm'` | `'dms'` | `'mgrs'` | `'utm'` (default: `'dd'`)
-- **`value`** - Controlled value in Decimal Degrees format `{ lat: number, lon: number }`
-- **`defaultValue`** - Uncontrolled default value in Decimal Degrees format
-- **`onChange`** - Callback when value changes: `(value: CoordinateValue | null) => void`. Receives `null` when coordinate is invalid or incomplete
-- **`onError`** - Callback for internal errors during parsing or format conversion: `(message: string, context?: Record<string, unknown>) => void`. Useful for error monitoring, logging, or debugging. Not typically needed for form validation (use `onChange` returning `null` instead)
+**Note:** The `name` prop is not supported as CoordinateField uses multi-segment input. Use `onChange` to capture values for form submission.
 
-### Size & Appearance
+### CoordinateFieldProvider
+Context provider for setting default props across multiple CoordinateField components.
 
-- **`size`** - Size variant: `'small'` | `'medium'` (default: `'medium'`)
-- **`variant`** - Layout variant: `'inline'` | `'stacked'` (default: `'inline'`). Controls whether coordinate segments are displayed in a single row (inline) or split across multiple rows (stacked) with latitude and longitude separated.
-- **`showFormatButton`** - Whether to show the format button for copying coordinates in different formats (default: `true`). When enabled, shows a button that opens a popover with all coordinate formats and copy functionality.
-
-### Styling
-
-- **`classNames`** - Object containing custom class names for different parts:
-  - `field` - Main container
-  - `label` - Label element
-  - `control` - Control container (icon + input + button)
-  - `input` - Input container with segments
-  - `segment` - Individual segment
-  - `description` - Description text
-  - `error` - Error message
-  - `formatButton` - Format conversion button
-
-**Note:** Internal popover and modal styling (popover content, format rows, copy buttons, etc.) cannot be customized via the `classNames` prop. These use predefined styles for consistency.
-
-### Form Integration
-
-- **`id`** - Unique identifier for the field
-
-**Note:** The `name` prop is not supported for CoordinateField as it uses a multi-segment input architecture. For form integration, use the `onChange` callback to capture the coordinate value and manage form state externally.
+```tsx
+<CoordinateFieldProvider format="dms" size="small">
+  <CoordinateField label="Start" />
+  <CoordinateField label="End" />
+</CoordinateFieldProvider>
+```
 
 ## Types
 
@@ -808,7 +809,7 @@ The underlying HTML structure uses semantic form elements with proper ARIA label
 
 ## Interactive Examples
 
-For interactive examples and a live testing playground, explore the [CoordinateField Storybook stories](/?path=/docs/components-coordinatefield--docs).
+For interactive examples and a live testing playground, explore the CoordinateField Storybook stories.
 
 The Storybook includes:
 - All coordinate format examples (DD, DDM, DMS, MGRS, UTM)

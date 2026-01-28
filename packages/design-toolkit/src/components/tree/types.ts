@@ -19,8 +19,12 @@ import type {
 } from 'react-aria-components';
 import type { DragAndDropConfig, TreeNode } from '@/hooks/use-tree/types';
 
+/** Visual density variant for Tree components. */
 export type TreeStyleVariant = 'cozy' | 'compact' | 'crammed';
 
+/**
+ * Props for the Tree component.
+ */
 export type TreeProps<T> = Omit<
   AriaTreeProps<TreeNode<T>>,
   | 'defaultExpandedKeys'
@@ -42,21 +46,37 @@ export type TreeProps<T> = Omit<
   variant?: TreeStyleVariant;
 };
 
+/**
+ * Props for the TreeItem component.
+ */
 export type TreeItemProps = Omit<AriaTreeItemProps, 'id'> & {
+  /** Unique identifier for the tree item. */
   id: Key;
 };
 
+/**
+ * Props for the TreeItemContent component.
+ */
 export type TreeItemContentProps = Pick<
   RenderProps<TreeItemContentRenderProps>,
   'children'
 >;
 
+/**
+ * Render props passed to TreeItemContent children.
+ */
 export type TreeItemContentRenderProps = AriaTreeItemContentRenderProps & {
+  /** Whether the item is viewable based on ancestor visibility. */
   isViewable?: boolean;
+  /** Whether the item is currently visible. */
   isVisible?: boolean;
+  /** Visual density variant. */
   variant?: TreeStyleVariant;
 };
 
+/**
+ * Context value for the Tree component.
+ */
 export type TreeContextValue = Required<
   Pick<
     TreeProps<unknown>,
@@ -71,8 +91,14 @@ export type TreeContextValue = Required<
   isStatic: boolean;
 };
 
+/**
+ * Context value for a TreeItem component.
+ */
 export type TreeItemContextValue = {
+  /** Whether the item is currently visible. */
   isVisible?: boolean;
+  /** Whether the item is viewable based on ancestor visibility. */
   isViewable?: boolean;
+  /** Array of ancestor item keys. */
   ancestors: Key[];
 };

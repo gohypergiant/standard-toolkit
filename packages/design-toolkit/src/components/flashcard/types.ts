@@ -13,14 +13,26 @@
 import type { ComponentPropsWithRef, PropsWithChildren } from 'react';
 import type { DetailsListProps } from '../details-list/types';
 
+/**
+ * Base props for Flashcard child components.
+ */
 export type FlashcardComponentProps = PropsWithChildren &
   ComponentPropsWithRef<'div'>;
 
+/**
+ * Props for the Flashcard component.
+ */
 export type FlashcardProps = FlashcardComponentProps & {
+  /** Whether the flashcard is in a loading state. */
   isLoading?: boolean;
+  /** Primary header text displayed in the hero section. */
   header: string;
+  /** Secondary text displayed below the header. */
   subheader: string;
 };
 
+/**
+ * Props for the FlashcardDetailsList component.
+ */
 export type FlashcardDetailsListProps = FlashcardComponentProps &
   Partial<DetailsListProps>;

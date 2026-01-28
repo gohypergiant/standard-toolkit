@@ -17,6 +17,23 @@ import { clsx } from '@accelint/design-foundation/lib/utils';
 import styles from './styles.module.css';
 import type { ComponentPropsWithRef } from 'react';
 
+/**
+ * PopoverContent - Main content area for the popover body
+ *
+ * @example
+ * ```tsx
+ * <Popover>
+ *   <PopoverTitle>Settings</PopoverTitle>
+ *   <PopoverContent>
+ *     <p>Configure your preferences here.</p>
+ *   </PopoverContent>
+ * </Popover>
+ * ```
+ *
+ * @param props - ComponentPropsWithRef<'div'>
+ * @param props.className - Optional CSS class name.
+ * @returns The rendered PopoverContent component.
+ */
 export function PopoverContent({
   className,
   ...rest
