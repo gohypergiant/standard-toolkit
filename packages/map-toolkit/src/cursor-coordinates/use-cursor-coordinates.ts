@@ -120,11 +120,18 @@ function formatCoordinate(
       });
     case 'mgrs':
     case 'utm': {
+      // UTM and MGRS are only valid between 80°S and 84°N
       // Use createCoordinate for grid-based formats
       // Input format: "lon E / lat N" for LONLAT (matching geo package DD tests)
       // Limit to 10 decimal places (geo parser max) and avoid floating point precision issues
       const lat = latLon[0];
       const lon = latLon[1];
+
+      // Check if coordinate is within valid UTM/MGRS range
+      if (lat < -80 || lat > 84) {
+        return DEFAULT_COORDINATE;
+      }
+
       const latOrdinal = lat >= 0 ? 'N' : 'S';
       const lonOrdinal = lon >= 0 ? 'E' : 'W';
       // Use LONLAT format: longitude first, then latitude
@@ -135,6 +142,14 @@ function formatCoordinate(
         coordinateSystems.dd,
         'LONLAT',
       )(formattedInput);
+
+      // Validate the coordinate was created successfully
+      if (!geoCoord.valid) {
+        logger.error(
+          `Failed to create coordinate for ${format}: ${geoCoord.errors.join(', ')}`,
+        );
+        return DEFAULT_COORDINATE;
+      }
 
       return geoCoord[format]();
     }
@@ -240,7 +255,7 @@ export function useCursorCoordinates(
 
   // Compute formatted coordinate string
   const formattedCoord = useMemo(() => {
-    if (!rawCoord) {
+    if (!(rawCoord && state.coordinate)) {
       return DEFAULT_COORDINATE;
     }
 
@@ -257,7 +272,7 @@ export function useCursorCoordinates(
     }
 
     // Use built-in formatter
-    return formatCoordinate(state.coordinate!, state.format);
+    return formatCoordinate(state.coordinate, state.format);
   }, [rawCoord, customFormatter, state.format, state.coordinate]);
 
   // Memoize the return value to prevent unnecessary re-renders
