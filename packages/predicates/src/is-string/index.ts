@@ -14,6 +14,17 @@
  * Determines if the given value is a string.
  *
  * @param val - The value to check whether or not it is a string.
+ * @returns True if the value is a string (primitive or String object), false otherwise.
+ *
+ * @example
+ * ```typescript
+ * import { isString } from '@accelint/predicates/is-string';
+ *
+ * isString('hello');          // true
+ * isString(new String('hi')); // true
+ * isString(123);              // false
+ * isString(null);             // false
+ * ```
  */
 export function isString(val: unknown) {
   return typeof val === 'string' || val instanceof String;

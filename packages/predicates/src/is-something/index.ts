@@ -17,10 +17,21 @@ import { isNothing } from '../is-nothing';
  * Determines if the given value is **not** undefined or null.
  *
  * @param val - The value to check whether or not it is not null or undefined.
+ * @returns True if the value is not null or undefined, false otherwise.
  *
  * @example
- * if(isSomething(val)) {
+ * ```typescript
+ * import { isSomething } from '@accelint/predicates/is-something';
+ *
+ * if (isSomething(val)) {
  *   // happy path...
  * }
+ *
+ * isSomething(0);         // true
+ * isSomething('');        // true
+ * isSomething(false);     // true
+ * isSomething(null);      // false
+ * isSomething(undefined); // false
+ * ```
  */
 export const isSomething = compose(not, isNothing);

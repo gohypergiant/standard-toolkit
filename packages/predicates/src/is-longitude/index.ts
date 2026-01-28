@@ -19,13 +19,18 @@ const MAX_ABSOLUTE_VALUE = 180;
  * Assumes degrees as the unit of measure.
  *
  * @param val - The value to check whether or not it is a longitude.
+ * @returns True if the value is a finite number between -180 and 180 (inclusive), false otherwise.
  *
  * @example
- * isLongitude(-180) // true
- * isLongitude(0) // true
- * isLongitude(180) // true
- * isLongitude(-190) // false
- * isLongitude(NaN) // false
+ * ```typescript
+ * import { isLongitude } from '@accelint/predicates/is-longitude';
+ *
+ * isLongitude(-180); // true
+ * isLongitude(0);    // true
+ * isLongitude(180);  // true
+ * isLongitude(-190); // false
+ * isLongitude(NaN);  // false
+ * ```
  */
 export function isLongitude(val: unknown) {
   if (!isFiniteNumber(val)) {

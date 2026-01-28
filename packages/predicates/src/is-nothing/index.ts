@@ -14,10 +14,21 @@
  * Determines if the given value is undefined or null.
  *
  * @param val - The value to check whether or not it is null or undefined.
+ * @returns True if the value is null or undefined, false otherwise.
  *
  * @example
- * if(isNothing(val)) {
+ * ```typescript
+ * import { isNothing } from '@accelint/predicates/is-nothing';
+ *
+ * if (isNothing(val)) {
  *   // error path...
  * }
+ *
+ * isNothing(null);      // true
+ * isNothing(undefined); // true
+ * isNothing(0);         // false
+ * isNothing('');        // false
+ * isNothing(false);     // false
+ * ```
  */
 export const isNothing = (val: unknown) => val == null;

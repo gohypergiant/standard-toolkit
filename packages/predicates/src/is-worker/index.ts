@@ -14,6 +14,17 @@
  * Determines if given value is a Worker.
  *
  * @param val - The value to check whether or not it is a worker.
+ * @returns True if the value is a Worker instance, false otherwise.
+ *
+ * @example
+ * ```typescript
+ * import { isWorker } from '@accelint/predicates/is-worker';
+ *
+ * const worker = new Worker(new URL('./my-worker.ts', import.meta.url));
+ * isWorker(worker);              // true
+ * isWorker(new SharedWorker(new URL('./shared.ts', import.meta.url))); // false
+ * isWorker({});                  // false
+ * ```
  */
 export function isWorker(val: unknown) {
   return val instanceof Worker;
@@ -23,6 +34,17 @@ export function isWorker(val: unknown) {
  * Determine if the given value is a SharedWorker.
  *
  * @param val - The value to check whether or not it is a shared worker.
+ * @returns True if the value is a SharedWorker instance, false otherwise.
+ *
+ * @example
+ * ```typescript
+ * import { isSharedWorker } from '@accelint/predicates/is-worker';
+ *
+ * const sharedWorker = new SharedWorker(new URL('./shared.ts', import.meta.url));
+ * isSharedWorker(sharedWorker);  // true
+ * isSharedWorker(new Worker(new URL('./worker.ts', import.meta.url))); // false
+ * isSharedWorker({});            // false
+ * ```
  */
 export function isSharedWorker(val: unknown) {
   return val instanceof SharedWorker;
