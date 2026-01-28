@@ -26,6 +26,7 @@ export default defineConfig({
       passWithNoTests: true,
     },
     clearMocks: true,
+    mockReset: true,
     restoreMocks: true,
     passWithNoTests: true,
   },

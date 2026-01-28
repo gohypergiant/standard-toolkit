@@ -22,107 +22,97 @@ afterEach(() => {
 });
 
 describe('remainder', () => {
-  it('should return correct remainder for valid interval', () => {
-    const now = 1234567890;
-    const interval = 1000;
-    vi.setSystemTime(now);
+  describe('normal operation', () => {
+    it('should return correct remainder for valid interval', () => {
+      const now = 1234567890;
+      const interval = 1000;
+      vi.setSystemTime(now);
 
-    const result = remainder(interval);
+      const result = remainder(interval);
 
-    const expected = interval - (now % interval);
-    expect(result).toBe(expected);
+      const expected = interval - (now % interval);
+      expect(result).toBe(expected);
+    });
+
+    it('should return full interval when at second boundary', () => {
+      const interval = 1000;
+      const now = 5000;
+      vi.setSystemTime(now);
+
+      const result = remainder(interval);
+
+      expect(result).toBe(interval);
+    });
+
+    it('should calculate correctly with decimal precision', () => {
+      const now = 1234567890;
+      const interval = 100.5;
+      vi.setSystemTime(now);
+
+      const result = remainder(interval);
+
+      const expected = interval - (now % interval);
+      expect(result).toBeCloseTo(expected, 10);
+      expect(result).toBeGreaterThan(0);
+      expect(result).toBeLessThanOrEqual(interval);
+    });
   });
 
-  it('should handle interval equal to current timestamp modulo', () => {
-    const interval = 1000;
-    const now = 5000; // 5000 % 1000 = 0
-    vi.setSystemTime(now);
+  describe('edge cases', () => {
+    it.each([
+      { interval: 0, description: 'zero' },
+      { interval: Number.NaN, description: 'NaN' },
+    ])('should return NaN for $description interval', ({ interval }) => {
+      const result = remainder(interval);
 
-    const result = remainder(interval);
+      expect(result).toBeNaN();
+    });
 
-    expect(result).toBe(interval);
-  });
+    it('should return negative value for negative interval', () => {
+      const now = 1234567890;
+      const interval = -1000;
+      vi.setSystemTime(now);
 
-  it('should handle zero interval', () => {
-    const interval = 0;
+      const result = remainder(interval);
 
-    const result = remainder(interval);
+      const expected = interval - (now % interval);
+      expect(result).toBe(expected);
+      expect(result).toBeLessThan(0);
+    });
 
-    // Assert - zero interval causes NaN result
-    // Calculation: 0 - (Date.now() % 0) = 0 - NaN = NaN
-    expect(result).toBeNaN();
-  });
+    it('should handle very large interval', () => {
+      const now = 1234567890;
+      const interval = Number.MAX_SAFE_INTEGER;
+      vi.setSystemTime(now);
 
-  it('should handle negative interval', () => {
-    const now = 1234567890;
-    const interval = -1000;
-    vi.setSystemTime(now);
+      const result = remainder(interval);
 
-    const result = remainder(interval);
+      expect(result).toBeGreaterThan(0);
+      expect(result).toBeLessThanOrEqual(interval);
+    });
 
-    // Assert - negative interval produces mathematically valid but semantically incorrect result
-    // Calculation: -1000 - (1234567890 % -1000)
-    // In JavaScript, modulo with negative divisor: 1234567890 % -1000 = 890
-    // Result: -1000 - 890 = -1890
-    const expected = interval - (now % interval);
-    expect(result).toBe(expected);
-    expect(result).toBeLessThan(0);
-  });
+    it.each([
+      {
+        interval: Number.POSITIVE_INFINITY,
+        expected: Number.POSITIVE_INFINITY,
+        description: 'positive Infinity',
+      },
+      {
+        interval: Number.NEGATIVE_INFINITY,
+        expected: Number.NEGATIVE_INFINITY,
+        description: 'negative Infinity',
+      },
+    ])('should return $description for $description interval', ({
+      interval,
+      expected,
+    }) => {
+      const now = 1234567890;
+      vi.setSystemTime(now);
 
-  it('should handle very large interval', () => {
-    const now = 1234567890;
-    const interval = Number.MAX_SAFE_INTEGER;
-    vi.setSystemTime(now);
+      const result = remainder(interval);
 
-    const result = remainder(interval);
-
-    expect(result).toBeGreaterThan(0);
-    expect(result).toBeLessThanOrEqual(interval);
-  });
-
-  it('should handle Infinity interval', () => {
-    const now = 1234567890;
-    const interval = Number.POSITIVE_INFINITY;
-    vi.setSystemTime(now);
-
-    const result = remainder(interval);
-
-    // Assert - Infinity - (now % Infinity) = Infinity - now = Infinity
-    expect(result).toBe(Number.POSITIVE_INFINITY);
-  });
-
-  it('should handle negative Infinity interval', () => {
-    const now = 1234567890;
-    const interval = Number.NEGATIVE_INFINITY;
-    vi.setSystemTime(now);
-
-    const result = remainder(interval);
-
-    // Assert - -Infinity - (now % -Infinity) = -Infinity - now = -Infinity
-    expect(result).toBe(Number.NEGATIVE_INFINITY);
-  });
-
-  it('should handle NaN interval', () => {
-    const interval = Number.NaN;
-
-    const result = remainder(interval);
-
-    // Assert - NaN - (Date.now() % NaN) = NaN - NaN = NaN
-    expect(result).toBeNaN();
-  });
-
-  it('should handle decimal interval values', () => {
-    const now = 1234567890;
-    const interval = 100.5;
-    vi.setSystemTime(now);
-
-    const result = remainder(interval);
-
-    // Assert - should calculate correctly with decimal precision
-    const expected = interval - (now % interval);
-    expect(result).toBeCloseTo(expected, 10);
-    expect(result).toBeGreaterThan(0);
-    expect(result).toBeLessThanOrEqual(interval);
+      expect(result).toBe(expected);
+    });
   });
 });
 
@@ -130,87 +120,82 @@ describe('callNextSecond', () => {
   // biome-ignore lint/style/useNamingConvention: We need to change rule, this is valid
   const SECOND = 1000;
 
-  it('should execute callback at next clock second', () => {
-    const callback = vi.fn();
-    const now = 1234567890;
-    vi.setSystemTime(now);
-    const expectedDelay = SECOND - (now % SECOND);
+  describe('normal operation', () => {
+    it('should execute callback at next clock second', () => {
+      const callback = vi.fn();
+      const now = 1234567890;
+      vi.setSystemTime(now);
+      const expectedDelay = SECOND - (now % SECOND);
 
-    callNextSecond(callback);
+      callNextSecond(callback);
 
-    // Assert - callback should not execute immediately
-    expect(callback).not.toHaveBeenCalled();
+      expect(callback).not.toHaveBeenCalled();
 
-    // Advance to next second
-    vi.advanceTimersByTime(expectedDelay);
-    expect(callback).toHaveBeenCalledTimes(1);
-  });
-
-  it('should set timeout with correct delay', () => {
-    const callback = vi.fn();
-    const now = 1500; // 1500 % 1000 = 500
-    vi.setSystemTime(now);
-    const expectedDelay = SECOND - (now % SECOND); // 500
-
-    callNextSecond(callback);
-
-    // Assert - advance less than expected delay
-    vi.advanceTimersByTime(expectedDelay - 1);
-    expect(callback).not.toHaveBeenCalled();
-
-    // Advance the remaining time
-    vi.advanceTimersByTime(1);
-    expect(callback).toHaveBeenCalledTimes(1);
-  });
-
-  it('should cleanup timeout after execution', () => {
-    const callback = vi.fn();
-    const now = 1234567890;
-    vi.setSystemTime(now);
-    const expectedDelay = SECOND - (now % SECOND);
-
-    callNextSecond(callback);
-    vi.advanceTimersByTime(expectedDelay);
-
-    // Assert - callback executed once
-    expect(callback).toHaveBeenCalledTimes(1);
-
-    // Advance more time - callback should not execute again
-    vi.advanceTimersByTime(SECOND * 10);
-    expect(callback).toHaveBeenCalledTimes(1);
-  });
-
-  it('should handle callback execution at second boundary', () => {
-    const callback = vi.fn();
-    const now = 5000; // Exactly on second boundary (5000 % 1000 = 0)
-    vi.setSystemTime(now);
-
-    callNextSecond(callback);
-
-    // Assert - should wait full second
-    vi.advanceTimersByTime(SECOND);
-    expect(callback).toHaveBeenCalledTimes(1);
-  });
-
-  it('should allow callback to throw error without affecting timeout cleanup', () => {
-    const throwingCallback = vi.fn(() => {
-      throw new Error('Callback execution error');
-    });
-    const now = 1234567890;
-    vi.setSystemTime(now);
-    const expectedDelay = SECOND - (now % SECOND);
-
-    callNextSecond(throwingCallback);
-
-    // Assert - callback throws when executed
-    expect(() => {
       vi.advanceTimersByTime(expectedDelay);
-    }).toThrow('Callback execution error');
+      expect(callback).toHaveBeenCalledTimes(1);
+    });
 
-    expect(throwingCallback).toHaveBeenCalledTimes(1);
+    it('should calculate correct delay from current time', () => {
+      const callback = vi.fn();
+      const now = 1500;
+      vi.setSystemTime(now);
+      const expectedDelay = SECOND - (now % SECOND);
 
-    // Verify timeout is cleaned up (callback should not execute again)
-    vi.advanceTimersByTime(SECOND * 10);
-    expect(throwingCallback).toHaveBeenCalledTimes(1);
+      callNextSecond(callback);
+
+      vi.advanceTimersByTime(expectedDelay - 1);
+      expect(callback).not.toHaveBeenCalled();
+
+      vi.advanceTimersByTime(1);
+      expect(callback).toHaveBeenCalledTimes(1);
+    });
+
+    it('should execute only once', () => {
+      const callback = vi.fn();
+      const now = 1234567890;
+      vi.setSystemTime(now);
+      const expectedDelay = SECOND - (now % SECOND);
+
+      callNextSecond(callback);
+      vi.advanceTimersByTime(expectedDelay);
+
+      expect(callback).toHaveBeenCalledTimes(1);
+
+      vi.advanceTimersByTime(SECOND * 10);
+      expect(callback).toHaveBeenCalledTimes(1);
+    });
+
+    it('should wait full second when at second boundary', () => {
+      const callback = vi.fn();
+      const now = 5000;
+      vi.setSystemTime(now);
+
+      callNextSecond(callback);
+
+      vi.advanceTimersByTime(SECOND);
+      expect(callback).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('error handling', () => {
+    it('should propagate callback errors to caller', () => {
+      const throwingCallback = vi.fn(() => {
+        throw new Error('Callback execution error');
+      });
+      const now = 1234567890;
+      vi.setSystemTime(now);
+      const expectedDelay = SECOND - (now % SECOND);
+
+      callNextSecond(throwingCallback);
+
+      expect(() => {
+        vi.advanceTimersByTime(expectedDelay);
+      }).toThrow('Callback execution error');
+
+      expect(throwingCallback).toHaveBeenCalledTimes(1);
+
+      vi.advanceTimersByTime(SECOND * 10);
+      expect(throwingCallback).toHaveBeenCalledTimes(1);
+    });
   });
 });

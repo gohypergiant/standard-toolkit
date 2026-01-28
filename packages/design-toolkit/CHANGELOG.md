@@ -1,5 +1,12 @@
 # @accelint/design-toolkit
 
+## 9.4.1
+### Patch Changes
+
+- aa1b0d6: Adds SearchField for UI Icons story, fixes typo in Icon catalog.
+- 5fd10e7: - Allow case-insensitive input for CoordinateField component.
+  - Adjust height of CoordinateField for consistency with other input fields
+
 ## 9.4.0
 ### Minor Changes
 
