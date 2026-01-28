@@ -18,8 +18,17 @@ import type { KeyCombinationId } from '@/types/key-combination-id';
  * Creates a standard id for tracking when a key is held down.
  *
  * @internal
- * @param keyId The standard key id
- * @param configId The hotkey id
+ * @param keyId - The standard key id.
+ * @param configId - The hotkey id.
+ * @returns The held id for tracking held key state.
+ *
+ * @example
+ * ```typescript
+ * import { heldId } from '@/lib/held-id';
+ *
+ * const id = heldId('KeyA|no-alt|no-ctrl|meta|no-shift', 'my-hotkey');
+ * console.log(id); // "KeyA|no-alt|no-ctrl|meta|no-shift::my-hotkey"
+ * ```
  */
 export function heldId(keyId: KeyCombinationId, configId: HotkeyId): HeldId {
   return `${keyId}::${configId}`;

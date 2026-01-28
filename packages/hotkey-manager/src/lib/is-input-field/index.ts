@@ -10,6 +10,26 @@
  * governing permissions and limitations under the License.
  */
 
+/**
+ * Checks if the event target is an input field (input, textarea, or contentEditable element).
+ *
+ * @internal
+ * @param event - The keyboard event to check.
+ * @returns True if the event target is an input field, false otherwise.
+ *
+ * @example
+ * ```typescript
+ * import { isInputField } from '@/lib/is-input-field';
+ *
+ * window.addEventListener('keydown', (event) => {
+ *   if (isInputField(event)) {
+ *     console.log('Key pressed in input field');
+ *   } else {
+ *     console.log('Key pressed outside input field');
+ *   }
+ * });
+ * ```
+ */
 export function isInputField(event: KeyboardEvent) {
   const target = event.target;
 

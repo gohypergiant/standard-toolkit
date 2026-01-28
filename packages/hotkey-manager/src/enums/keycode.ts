@@ -16,6 +16,28 @@ import type { SafeEnum } from '@accelint/core';
  * Common keycodes for the {@link KeyboardEvent}.
  *
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_code_values | Keyboard event code values}
+ *
+ * @example
+ * ```typescript
+ * import { Keycode, registerHotkey } from '@accelint/hotkey-manager';
+ *
+ * // Register a hotkey for Cmd+S
+ * const saveHotkey = registerHotkey({
+ *   key: {
+ *     code: Keycode.KeyS,
+ *     meta: true,
+ *   },
+ *   onKeyUp: () => console.log('Save triggered'),
+ * });
+ *
+ * // Register a hotkey for Escape
+ * const cancelHotkey = registerHotkey({
+ *   key: {
+ *     code: Keycode.Escape,
+ *   },
+ *   onKeyUp: () => console.log('Cancel triggered'),
+ * });
+ * ```
  */
 export const Keycode = Object.freeze({
   KeyA: 'KeyA',
@@ -127,5 +149,18 @@ export const Keycode = Object.freeze({
 
 /**
  * A [KeyboardEvent](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent) code.
+ *
+ * @example
+ * ```typescript
+ * import type { Keycode } from '@accelint/hotkey-manager';
+ *
+ * // Use as a type for function parameters
+ * function handleKeyPress(code: Keycode): void {
+ *   console.log(`Key pressed: ${code}`);
+ * }
+ *
+ * // Type-safe keycode references
+ * const key: Keycode = 'KeyA';
+ * ```
  */
 export type Keycode = SafeEnum<typeof Keycode>;

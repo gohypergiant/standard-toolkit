@@ -17,10 +17,27 @@ import type { KeyCombinationId } from '@/types/key-combination-id';
 /**
  * Converts a key combination to a standard key id.
  *
- * Handles auto mac style
+ * Handles auto mac style.
  *
  * @internal
- * @param key Key combination
+ * @param key - Key combination.
+ * @returns The standard key combination id.
+ *
+ * @example
+ * ```typescript
+ * import { keyToId } from '@/lib/key-to-id';
+ *
+ * const id = keyToId({
+ *   code: 'KeyA',
+ *   alt: false,
+ *   ctrl: false,
+ *   meta: true,
+ *   shift: false,
+ *   autoMacStyle: false,
+ *   id: 'KeyA_meta',
+ * });
+ * console.log(id); // "KeyA|no-alt|no-ctrl|meta|no-shift"
+ * ```
  */
 export function keyToId(key: KeyCombination): KeyCombinationId {
   const ctrl =

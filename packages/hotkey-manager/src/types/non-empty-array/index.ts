@@ -10,4 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
+/**
+ * Type representing an array that is guaranteed to have at least one element.
+ *
+ * @template TValue - The type of values in the array.
+ */
 export type NonEmptyArray<TValue> = [TValue, ...TValue[]];

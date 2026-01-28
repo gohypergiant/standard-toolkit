@@ -20,7 +20,13 @@ import { hotkeyStore } from '@/stores/hotkey-store';
  * Handles the `keyup` event.
  *
  * @internal
- * @param event The `keyup` event.
+ * @param event - The `keyup` event.
+ * @returns void
+ *
+ * @example
+ * ```typescript
+ * window.addEventListener('keyup', handleOnKeyUp);
+ * ```
  */
 export function handleOnKeyUp(event: KeyboardEvent) {
   const keyId = eventToId(event);

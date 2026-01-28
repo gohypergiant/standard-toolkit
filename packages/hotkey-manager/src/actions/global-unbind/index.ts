@@ -19,6 +19,16 @@ import { eventStore } from '@/stores/event-store';
  * Unbinds the hotkey listener from the global window object.
  *
  * Safe to call on the server.
+ *
+ * @returns void
+ *
+ * @example
+ * ```typescript
+ * import { globalUnbind } from '@accelint/hotkey-manager';
+ *
+ * // Unbind hotkey listeners from window
+ * globalUnbind();
+ * ```
  */
 export function globalUnbind() {
   if (!isClient) {

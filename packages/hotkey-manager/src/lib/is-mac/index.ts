@@ -13,7 +13,18 @@
 import { isClient } from '@/lib/is-client';
 
 /**
- * Is `true` when client-side and on a Mac
+ * Is `true` when client-side and on a Mac.
+ *
+ * @example
+ * ```typescript
+ * import { isMac } from '@/lib/is-mac';
+ *
+ * if (isMac) {
+ *   console.log('Show Cmd key');
+ * } else {
+ *   console.log('Show Ctrl key');
+ * }
+ * ```
  */
 export const isMac =
   isClient && window.navigator.userAgent.indexOf('Mac') !== -1;
