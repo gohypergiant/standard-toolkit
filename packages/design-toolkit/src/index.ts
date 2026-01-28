@@ -463,6 +463,8 @@ export type {
   SliderMarkersConfig,
   SliderProps,
 } from './components/slider/types';
+export { StatusIndicator } from './components/status-indicator';
+export type { StatusIndicatorProps } from './components/status-indicator/types';
 export { SwitchContext, SwitchProvider } from './components/switch/context';
 export { Switch } from './components/switch';
 export type { SwitchProps } from './components/switch/types';
