@@ -19,6 +19,7 @@ ignore:
   - .git
   - .github
   - .claude
+  - .windsurf
   - .turbo
   - .vscode
   - .agents
