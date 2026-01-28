@@ -15,7 +15,7 @@ import type { PropsWithChildren } from 'react';
 export function BentoGroup(props: PropsWithChildren) {
   const { children } = props;
 
-  return <div className='grid grid-cols-4 gap-l p-l'>{children}</div>;
+  return <div className='grid grid-cols-4 gap-l'>{children}</div>;
 }
 
 export function BentoItem(props: PropsWithChildren) {
