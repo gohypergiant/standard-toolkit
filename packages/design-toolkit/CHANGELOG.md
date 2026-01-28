@@ -1,5 +1,10 @@
 # @accelint/design-toolkit
 
+## 9.4.2
+### Patch Changes
+
+- 1889101: Add `isRequired`` to query selector combinator
+
 ## 9.4.1
 ### Patch Changes
 
