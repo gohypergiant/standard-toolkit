@@ -12,7 +12,6 @@
 'use client';
 
 import 'client-only';
-import { Label } from '../label';
 import { Radio } from '../radio';
 import { RadioGroup } from '../radio/group';
 import { Tooltip } from '../tooltip';
@@ -43,8 +42,9 @@ export function CombinatorSelector({
       onChange={handleOnChange}
       orientation='horizontal'
       style={{ flexWrap: 'nowrap' }}
+      label='Combinator'
+      isRequired
     >
-      <Label>Combinator</Label>
       {options.map((option) => (
         <Radio key={option.label} value={option.label}>
           <TooltipTrigger>
