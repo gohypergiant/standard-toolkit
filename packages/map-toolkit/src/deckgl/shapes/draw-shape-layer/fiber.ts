@@ -10,6 +10,43 @@
  * governing permissions and limitations under the License.
  */
 
+/**
+ * DeckGL Fiber Registration for EditableGeoJsonLayer
+ *
+ * Registers the `EditableGeoJsonLayer` from @deck.gl-community/editable-layers
+ * with the DeckGL Fiber renderer, enabling JSX syntax for the layer.
+ *
+ * ## Why This Is Needed
+ * DeckGL Fiber (used by BaseMap) requires explicit registration of deck.gl layers
+ * before they can be used as JSX elements. This file extends the fiber renderer
+ * to recognize `<editableGeoJsonLayer>` as a valid JSX element.
+ *
+ * ## Usage
+ * Import this file once (typically in DrawShapeLayer) before using the layer in JSX:
+ *
+ * @example
+ * ```tsx
+ * // Import to register the layer
+ * import '@accelint/map-toolkit/deckgl/shapes/draw-shape-layer/fiber';
+ *
+ * // Now you can use it in JSX
+ * function DrawShapeLayer() {
+ *   return (
+ *     <editableGeoJsonLayer
+ *       id="draw-layer"
+ *       mode={drawMode}
+ *       onEdit={handleEdit}
+ *     />
+ *   );
+ * }
+ * ```
+ *
+ * ## Note on DrawShapeLayer
+ * `DrawShapeLayer` is a React component, not a deck.gl layer class, so it doesn't
+ * need fiber registration. It uses `<editableGeoJsonLayer>` internally, which is
+ * registered here.
+ */
+
 import { EditableGeoJsonLayer } from '@deck.gl-community/editable-layers';
 import { extend } from '@deckgl-fiber-renderer/dom';
 

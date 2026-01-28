@@ -30,20 +30,44 @@ import {
 /**
  * Extends DrawEllipseUsingThreePointsMode to display contextual tooltips.
  *
- * Drawing process (3 clicks):
- * 1. First click: Sets the first endpoint of the major axis
- * 2. Second click: Sets the second endpoint of the major axis
- *    - While moving to second click, shows distance tooltip (like line/polygon)
- * 3. Third click: Sets the minor axis radius
- *    - While moving to third click, shows area tooltip (like circle)
+ * Provides different tooltip content based on the drawing stage:
+ * - **Stage 1** (after first click): Distance from first point to cursor
+ * - **Stage 2** (after second click): Major/minor axes dimensions and area
  *
- * The ellipse center is the midpoint between the first two clicks.
- * The Y semi-axis is half the distance between clicks 1 and 2.
- * The X semi-axis is the distance from center to click 3.
+ * ## Drawing Flow
+ * 1. **First click**: Sets the first endpoint of the major axis
+ * 2. **Second click**: Sets the second endpoint of the major axis
+ *    - While moving to second click, shows distance tooltip (like line/polygon)
+ * 3. **Third click**: Sets the minor axis radius
+ *    - While moving to third click, shows dimensions and area tooltip
+ *
+ * ## Geometry Calculations
+ * - **Center**: Midpoint between first and second clicks
+ * - **Y semi-axis**: Half the distance between clicks 1 and 2
+ * - **X semi-axis**: Distance from center to cursor (becomes distance to click 3)
+ * - **Area**: π × X semi-axis × Y semi-axis
+ *
+ * @example
+ * ```typescript
+ * import { DrawEllipseModeWithTooltip } from '@accelint/map-toolkit/deckgl/shapes/draw-shape-layer/modes';
+ *
+ * // Used internally by DrawShapeLayer
+ * const mode = new DrawEllipseModeWithTooltip();
+ * ```
  */
 export class DrawEllipseModeWithTooltip extends DrawEllipseUsingThreePointsMode {
+  /** Current tooltip state (null when not drawing) */
   private tooltip: Tooltip | null = null;
 
+  /**
+   * Handle pointer move events to update the tooltip based on drawing stage.
+   *
+   * Stage 1 (1 click): Shows distance from first point to cursor.
+   * Stage 2 (2 clicks): Shows major/minor axes dimensions and ellipse area.
+   *
+   * @param event - Pointer move event with cursor position
+   * @param props - Mode properties including distance units configuration
+   */
   override handlePointerMove(
     event: PointerMoveEvent,
     props: ModeProps<FeatureCollection>,
@@ -112,6 +136,11 @@ export class DrawEllipseModeWithTooltip extends DrawEllipseUsingThreePointsMode 
     }
   }
 
+  /**
+   * Get the current tooltip array for rendering.
+   *
+   * @returns Array containing the tooltip if one is active, empty array otherwise
+   */
   override getTooltips(): Tooltip[] {
     return this.tooltip ? [this.tooltip] : [];
   }

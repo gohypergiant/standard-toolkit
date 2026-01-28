@@ -43,6 +43,9 @@ import type {
 /**
  * Serializes PickingInfo for event bus transmission.
  * Omits viewport, layer, and sourceLayer (contain functions) but preserves layer IDs.
+ *
+ * @param info - The PickingInfo object from Deck.gl
+ * @returns Serializable picking info with layer IDs extracted
  */
 function serializePickingInfo(info: PickingInfo): SerializablePickingInfo {
   const { viewport, layer, sourceLayer, ...infoRest } = info;
@@ -56,6 +59,9 @@ function serializePickingInfo(info: PickingInfo): SerializablePickingInfo {
 /**
  * Strips non-serializable properties from MjolnirGestureEvent for event bus transmission.
  * Removes functions, DOM elements, and PointerEvent objects that cannot be cloned.
+ *
+ * @param event - The MjolnirGestureEvent from Deck.gl
+ * @returns Serializable gesture event with non-cloneable properties removed
  */
 function serializeMjolnirEvent(
   event: MjolnirGestureEvent,
@@ -73,6 +79,9 @@ function serializeMjolnirEvent(
 /**
  * Strips non-serializable properties from MjolnirPointerEvent for event bus transmission.
  * Removes functions and DOM elements that cannot be cloned.
+ *
+ * @param event - The MjolnirPointerEvent from Deck.gl
+ * @returns Serializable pointer event with non-cloneable properties removed
  */
 function serializeMjolnirEvent(
   event: MjolnirPointerEvent,
@@ -107,6 +116,12 @@ function serializeMjolnirEvent(
   return rest;
 }
 
+/**
+ * Internal component that registers the Deck.gl instance as a MapLibre control.
+ * Enables the Deck.gl canvas to render within the MapLibre GL map container.
+ *
+ * @returns null (headless component)
+ */
 function AddDeckglControl() {
   const deckglInstance = useDeckgl();
   useControl(() => deckglInstance as IControl);

@@ -56,6 +56,9 @@ type ViewportActions = Record<string, never>;
 /**
  * Create default state for a given mapId.
  * Returns uninitialized values that indicate no viewport data yet.
+ *
+ * @param mapId - Unique identifier for the map instance
+ * @returns Uninitialized viewport state with NaN values and undefined bounds
  */
 function createDefaultState(mapId: UniqueId): ViewportState {
   return {
@@ -154,6 +157,7 @@ export function getViewport(mapId: UniqueId): ViewportState {
  * This is typically not needed as cleanup happens automatically when all subscribers unmount.
  *
  * @param mapId - The unique identifier for the map instance to clear
+ * @returns void
  */
 export function clearViewportState(mapId: UniqueId): void {
   viewportStore.clear(mapId);

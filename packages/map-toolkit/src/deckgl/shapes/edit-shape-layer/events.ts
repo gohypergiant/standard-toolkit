@@ -30,7 +30,7 @@
  *
  * When emitting these events via the bus, use type assertions:
  * @example
- * ```ts
+ * ```typescript
  * bus.emit('shapes:updated', {
  *   type: 'shapes:updated',
  *   payload: { shape, mapId },

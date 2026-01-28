@@ -49,8 +49,32 @@ const EDIT_MODE_INSTANCES = {
 /**
  * Get the cached mode instance for an edit mode.
  *
+ * Returns the pre-instantiated edit mode for the specified mode type.
+ * Modes are cached at module level to prevent deck.gl assertion failures
+ * that occur when creating new mode instances on each render.
+ *
+ * ## Available Edit Modes
+ * - `'bounding-transform'`: For shapes without vertex editing (rectangles, ellipses)
+ * - `'vertex-transform'`: For shapes with vertex editing (polygons, lines)
+ * - `'circle-transform'`: For circles (resize from edge + translate)
+ * - `'translate'`: For points (drag to move)
+ *
  * @param mode - The edit mode to get the instance for
  * @returns The cached mode instance
+ *
+ * @example
+ * ```typescript
+ * import { getEditModeInstance } from '@accelint/map-toolkit/deckgl/shapes/edit-shape-layer/modes';
+ *
+ * // Get the bounding transform mode for editing rectangles/ellipses
+ * const boundingMode = getEditModeInstance('bounding-transform');
+ *
+ * // Use with EditableGeoJsonLayer
+ * const layer = new EditableGeoJsonLayer({
+ *   mode: boundingMode,
+ *   // ... other props
+ * });
+ * ```
  */
 export function getEditModeInstance(
   mode: EditMode,
@@ -61,7 +85,25 @@ export function getEditModeInstance(
 /**
  * Get the ViewMode instance (for when not editing).
  *
+ * Returns the pre-instantiated ViewMode which is the default mode when
+ * no editing operation is active. This mode allows viewing and interacting
+ * with the map without editing shapes.
+ *
  * @returns The cached ViewMode instance
+ *
+ * @example
+ * ```typescript
+ * import { getViewModeInstance } from '@accelint/map-toolkit/deckgl/shapes/edit-shape-layer/modes';
+ *
+ * // Get the view mode (default when not editing)
+ * const viewMode = getViewModeInstance();
+ *
+ * // Use with EditableGeoJsonLayer
+ * const layer = new EditableGeoJsonLayer({
+ *   mode: viewMode,
+ *   // ... other props
+ * });
+ * ```
  */
 export function getViewModeInstance(): ViewMode {
   return EDIT_MODE_INSTANCES.view;

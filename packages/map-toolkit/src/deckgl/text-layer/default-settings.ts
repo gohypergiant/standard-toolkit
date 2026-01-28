@@ -13,6 +13,34 @@
 import { DEFAULT_TEXT_STYLE } from '../text-settings';
 import type { TextLayerProps as DglTextLayerProps } from '@deck.gl/layers';
 
+/**
+ * Default settings for TextLayer with opinionated styling.
+ *
+ * Provides consistent text rendering with white text, black outline,
+ * centered alignment, and system font stack for optimal performance.
+ *
+ * @example
+ * ```typescript
+ * import { TextLayer } from '@accelint/map-toolkit/deckgl/text-layer';
+ * import { defaultSettings } from '@accelint/map-toolkit/deckgl/text-layer/default-settings';
+ *
+ * // Use defaults as-is
+ * const layer = new TextLayer({
+ *   id: 'text',
+ *   data: [...],
+ *   ...defaultSettings,
+ * });
+ *
+ * // Override specific defaults
+ * const customLayer = new TextLayer({
+ *   id: 'text',
+ *   data: [...],
+ *   ...defaultSettings,
+ *   fontFamily: 'Arial',
+ *   getSize: 14,
+ * });
+ * ```
+ */
 export const defaultSettings: Partial<DglTextLayerProps> = {
   ...DEFAULT_TEXT_STYLE,
   fontFamily: 'system-ui, sans-serif',

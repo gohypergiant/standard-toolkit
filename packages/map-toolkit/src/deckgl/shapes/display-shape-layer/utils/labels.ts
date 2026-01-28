@@ -60,7 +60,10 @@ import type { LineString, Point, Polygon } from 'geojson';
 import type { Shape } from '../../shared/types';
 
 /**
- * Label positioning information including coordinates and screen-space offsets
+ * Label positioning information including coordinates and screen-space offsets.
+ *
+ * Defines where a label should be positioned on the map, combining geographic coordinates
+ * with text alignment and pixel-level offsets for precise placement.
  */
 export interface LabelPosition2d {
   /** Geographic coordinates [longitude, latitude] */
@@ -154,9 +157,27 @@ function findPointAtDistance(
 }
 
 /**
- * Get the midpoint of a LineString
+ * Get the midpoint of a LineString.
+ *
+ * Calculates the geometric center point along a LineString by measuring distances
+ * along each segment. This is more accurate than the bounding box center for curved lines.
+ *
  * @param coordinates - LineString coordinates array
  * @returns Midpoint coordinate [lon, lat]
+ *
+ * @example
+ * ```typescript
+ * import { getLineStringMidpoint } from '@accelint/map-toolkit/deckgl/shapes/display-shape-layer/utils/labels';
+ *
+ * const lineCoordinates: [number, number][] = [
+ *   [-122.4, 37.8],
+ *   [-122.3, 37.85],
+ *   [-122.2, 37.9],
+ * ];
+ *
+ * const midpoint = getLineStringMidpoint(lineCoordinates);
+ * // Returns the coordinate at the middle of the line's total length
+ * ```
  */
 export function getLineStringMidpoint(
   coordinates: [number, number][],
@@ -175,9 +196,27 @@ export function getLineStringMidpoint(
 }
 
 /**
- * Get the end point of a LineString
+ * Get the end point of a LineString.
+ *
+ * Returns the last coordinate in the LineString, useful for positioning labels
+ * at the end of lines (e.g., directional arrows, route endpoints).
+ *
  * @param coordinates - LineString coordinates array
  * @returns End coordinate [lon, lat]
+ *
+ * @example
+ * ```typescript
+ * import { getLineStringEndpoint } from '@accelint/map-toolkit/deckgl/shapes/display-shape-layer/utils/labels';
+ *
+ * const lineCoordinates: [number, number][] = [
+ *   [-122.4, 37.8],
+ *   [-122.3, 37.85],
+ *   [-122.2, 37.9],
+ * ];
+ *
+ * const endpoint = getLineStringEndpoint(lineCoordinates);
+ * // Returns: [-122.2, 37.9]
+ * ```
  */
 export function getLineStringEndpoint(
   coordinates: [number, number][],
@@ -189,9 +228,31 @@ export function getLineStringEndpoint(
 }
 
 /**
- * Get the midpoint of a Polygon's outer ring
+ * Get the midpoint of a Polygon's outer ring.
+ *
+ * Calculates the geometric center point along the polygon's perimeter by using
+ * the midpoint of the outer ring. This is useful for positioning labels on polygons.
+ *
  * @param coordinates - Polygon coordinates array (rings)
  * @returns Midpoint of outer ring [lon, lat]
+ *
+ * @example
+ * ```typescript
+ * import { getPolygonMidpoint } from '@accelint/map-toolkit/deckgl/shapes/display-shape-layer/utils/labels';
+ *
+ * const polygonCoordinates: [number, number][][] = [
+ *   [
+ *     [-122.4, 37.8],
+ *     [-122.3, 37.8],
+ *     [-122.3, 37.9],
+ *     [-122.4, 37.9],
+ *     [-122.4, 37.8], // Closing point
+ *   ]
+ * ];
+ *
+ * const midpoint = getPolygonMidpoint(polygonCoordinates);
+ * // Returns the coordinate at the middle of the outer ring's perimeter
+ * ```
  */
 export function getPolygonMidpoint(
   coordinates: [number, number][][],
@@ -205,21 +266,32 @@ export function getPolygonMidpoint(
 }
 
 /**
- * Vertical label position relative to anchor point
+ * Vertical label position relative to anchor point.
+ *
+ * Controls how the label aligns vertically with its anchor coordinate:
+ * - `'top'`: Label text appears below the anchor point
+ * - `'middle'`: Label text is vertically centered on the anchor point
+ * - `'bottom'`: Label text appears above the anchor point
  */
 export type LabelVerticalPosition = 'top' | 'middle' | 'bottom';
 
 /**
- * Horizontal label position relative to anchor point
+ * Horizontal label position relative to anchor point.
+ *
+ * Controls how the label aligns horizontally with its anchor coordinate:
+ * - `'left'`: Label text appears to the right of the anchor point
+ * - `'center'`: Label text is horizontally centered on the anchor point
+ * - `'right'`: Label text appears to the left of the anchor point
  */
 export type LabelHorizontalPosition = 'left' | 'center' | 'right';
 
 /**
- * Cardinal direction anchor for positioning labels on geometry edges
- * Uses edge positions relative to the geometry's bounding box
- * Works for LineString, Polygon, and Circle geometries
- * - 'center': centroid/midpoint of the geometry
- * - 'top'/'right'/'bottom'/'left': edge positions
+ * Cardinal direction anchor for positioning labels on geometry edges.
+ *
+ * Uses edge positions relative to the geometry's bounding box.
+ * Works for LineString, Polygon, and Circle geometries:
+ * - `'center'`: centroid/midpoint of the geometry
+ * - `'top'`/`'right'`/`'bottom'`/`'left'`: edge positions based on bounding box
  */
 export type CardinalLabelCoordinateAnchor =
   | 'center'
@@ -695,15 +767,49 @@ function getPolygonPosition(
 }
 
 /**
- * Get 2D position for label based on geometry type
- * Uses pixel-based offsets for consistent positioning at all zoom levels
+ * Get 2D position for label based on geometry type.
+ *
+ * Calculates label positioning using pixel-based offsets for consistent placement
+ * at all zoom levels. Handles Point, LineString, Polygon, and Circle geometries.
  *
  * Priority for positioning:
  * 1. Per-shape properties in styleProperties (highest)
  * 2. Global labelOptions from layer props
  * 3. Default values (fallback)
  *
- * Returns null if no valid coordinates can be determined
+ * Returns null if no valid coordinates can be determined.
+ *
+ * @param shape - The shape to position a label for
+ * @param options - Optional global label positioning options
+ * @returns Label position information or null if coordinates are invalid
+ *
+ * @example
+ * ```typescript
+ * import { getLabelPosition2d } from '@accelint/map-toolkit/deckgl/shapes/display-shape-layer/utils/labels';
+ * import type { Shape, LabelPositionOptions } from '@accelint/map-toolkit/deckgl/shapes/display-shape-layer/utils/labels';
+ *
+ * const shape: Shape = {
+ *   id: 'point-1',
+ *   name: 'Location',
+ *   label: 'LOC',
+ *   feature: {
+ *     type: 'Feature',
+ *     geometry: { type: 'Point', coordinates: [-122.4, 37.8] },
+ *     properties: {},
+ *   },
+ * };
+ *
+ * // Get default positioning
+ * const position = getLabelPosition2d(shape);
+ * // Returns: { coordinates: [-122.4, 37.8], textAnchor: 'middle', alignmentBaseline: 'top', pixelOffset: [0, 10] }
+ *
+ * // Use custom global options
+ * const options: LabelPositionOptions = {
+ *   pointLabelVerticalAnchor: 'bottom',
+ *   pointLabelOffset: [0, -15],
+ * };
+ * const customPosition = getLabelPosition2d(shape, options);
+ * ```
  */
 export function getLabelPosition2d(
   shape: Shape,
@@ -756,7 +862,7 @@ export function getLabelPosition2d(
 }
 
 /**
- * Get label text for a shape
+ * Get label text for a shape.
  *
  * Returns the display label for the shape on the map in uppercase.
  * - `label`: Optional short display name shown on the map (e.g., "NYC")
@@ -764,6 +870,43 @@ export function getLabelPosition2d(
  *
  * If `label` is not provided, falls back to using `name`.
  * Text is automatically converted to uppercase for display.
+ *
+ * @param shape - The shape to get label text for
+ * @returns The label text in uppercase
+ *
+ * @example
+ * ```typescript
+ * import { getLabelText } from '@accelint/map-toolkit/deckgl/shapes/display-shape-layer/utils/labels';
+ * import type { Shape } from '@accelint/map-toolkit/deckgl/shapes/shared/types';
+ *
+ * const shape: Shape = {
+ *   id: 'location-1',
+ *   name: 'New York City Office',
+ *   label: 'NYC',
+ *   feature: {
+ *     type: 'Feature',
+ *     geometry: { type: 'Point', coordinates: [-74.0, 40.7] },
+ *     properties: {},
+ *   },
+ * };
+ *
+ * const text = getLabelText(shape);
+ * // Returns: "NYC"
+ *
+ * // Without label property, uses name
+ * const shapeWithoutLabel: Shape = {
+ *   id: 'location-2',
+ *   name: 'Boston Office',
+ *   feature: {
+ *     type: 'Feature',
+ *     geometry: { type: 'Point', coordinates: [-71.0, 42.3] },
+ *     properties: {},
+ *   },
+ * };
+ *
+ * const textFromName = getLabelText(shapeWithoutLabel);
+ * // Returns: "BOSTON OFFICE"
+ * ```
  */
 export function getLabelText(shape: Shape): string {
   return (shape.label || shape.name).toUpperCase();

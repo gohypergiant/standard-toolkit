@@ -260,7 +260,7 @@ export interface PointShape extends BaseShape {
  *
  * Use this for type narrowing based on shape:
  * @example
- * ```ts
+ * ```typescript
  * function handleShape(shape: Shape) {
  *   if (shape.shape === 'Circle') {
  *     // TypeScript knows shape.feature.properties.circleProperties exists
@@ -316,7 +316,7 @@ export type Subscription = (onStoreChange: () => void) => () => void;
  * Type guard for Circle shapes.
  *
  * @example
- * ```ts
+ * ```typescript
  * if (isCircleShape(shape)) {
  *   // shape.feature.properties.circleProperties is available
  *   const { center, radius } = shape.feature.properties.circleProperties;
@@ -331,7 +331,7 @@ export function isCircleShape(shape: Shape): shape is CircleShape {
  * Type guard for Ellipse shapes.
  *
  * @example
- * ```ts
+ * ```typescript
  * if (isEllipseShape(shape)) {
  *   // shape.feature.properties.ellipseProperties is available
  *   const { center, xSemiAxis, ySemiAxis } = shape.feature.properties.ellipseProperties;

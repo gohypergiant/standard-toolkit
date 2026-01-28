@@ -6,7 +6,7 @@ import * as SymbolLayerStories from './symbol-layer.stories';
 
 # Symbol Layer
 
-Adds support for rendering MIL-STD-2525 and others standard symbologies as a Deck.gl layer. This layer is an extension of the [IconLayer](https://deck.gl/docs/api-reference/layers/icon-layer) but swaps the `getIcon` function for a the `getSidc` function.
+Adds support for rendering MIL-STD-2525 and other standard symbologies as a Deck.gl layer. This layer is an extension of the [IconLayer](https://deck.gl/docs/api-reference/layers/icon-layer) but swaps the `getIcon` function for the `getSidc` function.
 
 ## Supported Symbology
 
@@ -20,7 +20,7 @@ _By default the SIDC will be used to determine which symbology to use._
 
 ```typescript
 import { Deck } from '@deck.gl/core';
-import { SymbolLayer } from '@accelint/map-toolkit/deckgl-layer-symbol';
+import { SymbolLayer } from '@accelint/map-toolkit/deckgl/symbol-layer';
 
 const layer = new SymbolLayer({
   id: 'SymbolLayer',
@@ -49,7 +49,7 @@ new Deck({
 This allows for easy integration with the [DeckGL Fiber Renderer](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main).
 
 ```typescript
-import '@accelint/map-toolkit/deckgl-layer-symbol/fiber';
+import '@accelint/map-toolkit/deckgl/symbol-layer/fiber';
 
 export function AssetsLayer() {
   const data = useAssetData();

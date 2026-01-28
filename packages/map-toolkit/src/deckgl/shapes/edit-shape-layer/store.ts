@@ -18,7 +18,7 @@
  * Manages editing state for shape modification.
  *
  * @example
- * ```tsx
+ * ```typescript
  * import { editStore } from '@accelint/map-toolkit/deckgl/shapes';
  *
  * function EditControls({ mapId }) {

@@ -126,6 +126,40 @@ type CameraStateInput = {
 /**
  * Build a complete camera state from partial input.
  * Returns the appropriate discriminated union variant based on view/projection.
+ *
+ * This function ensures type-safe camera states by constructing the correct
+ * discriminated union variant (2D, 2.5D, or 3D) based on view and projection
+ * settings, applying appropriate defaults and constraints.
+ *
+ * @param partial - Optional partial camera state input
+ * @returns Complete camera state matching one of the discriminated union variants
+ *
+ * @example
+ * ```typescript
+ * // Build 2D state (default)
+ * const state2D = buildCameraState({
+ *   latitude: 40.7128,
+ *   longitude: -74.0060,
+ *   zoom: 10,
+ * });
+ * // Result: { ..., view: '2D', projection: 'mercator', pitch: 0 }
+ *
+ * // Build 2.5D state
+ * const state2Point5D = buildCameraState({
+ *   latitude: 37.7749,
+ *   longitude: -122.4194,
+ *   zoom: 12,
+ *   view: '2.5D',
+ * });
+ * // Result: { ..., view: '2.5D', projection: 'mercator', pitch: 45 }
+ *
+ * // Build 3D state
+ * const state3D = buildCameraState({
+ *   view: '3D',
+ *   zoom: 2,
+ * });
+ * // Result: { ..., view: '3D', projection: 'globe', pitch: 0, rotation: 0 }
+ * ```
  */
 function buildCameraState(partial?: CameraStateInput): CameraState {
   const latitude = partial?.latitude ?? 0;
@@ -391,6 +425,27 @@ export const cameraStore = createMapStore<CameraState, CameraActions>({
  *
  * @param mapId - Unique identifier for the map instance
  * @param initialState - Optional initial camera state
+ * @returns void
+ *
+ * @example
+ * ```typescript
+ * import { uuid } from '@accelint/core';
+ * import { initializeCameraState } from '@accelint/map-toolkit/camera';
+ *
+ * const mapId = uuid();
+ *
+ * // Initialize with default state
+ * initializeCameraState(mapId);
+ *
+ * // Initialize with custom state
+ * initializeCameraState(mapId, {
+ *   latitude: 37.7749,
+ *   longitude: -122.4194,
+ *   zoom: 10,
+ *   view: '2.5D',
+ *   pitch: 45,
+ * });
+ * ```
  */
 export function initializeCameraState(
   mapId: UniqueId,
@@ -447,7 +502,33 @@ export function useMapCamera(
 /**
  * Manually clear camera state for a specific map instance.
  *
+ * Removes all cached state including initial values and subscription tracking.
+ * Useful for cleanup when dynamically destroying map instances.
+ *
  * @param mapId - The unique identifier for the map instance to clear
+ * @returns void
+ *
+ * @example
+ * ```typescript
+ * import { clearCameraState } from '@accelint/map-toolkit/camera';
+ *
+ * // Clean up when removing a map
+ * function removeMap(mapId: UniqueId) {
+ *   clearCameraState(mapId);
+ *   // ... remove map component
+ * }
+ * ```
+ *
+ * @example
+ * ```typescript
+ * import { clearCameraState } from '@accelint/map-toolkit/camera';
+ * import { afterEach } from 'vitest';
+ *
+ * // Clean up in tests
+ * afterEach(() => {
+ *   clearCameraState('test-map-id');
+ * });
+ * ```
  */
 export function clearCameraState(mapId: UniqueId): void {
   initializedInstances.delete(mapId);

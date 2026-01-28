@@ -32,6 +32,18 @@ import type {
  *
  * @param mapId - The map instance ID
  * @param isActive - Whether the hook should be active (e.g., when editing/drawing)
+ *
+ * @example
+ * ```typescript
+ * function EditShapeLayer({ mapId }) {
+ *   const isEditing = editStore.use(mapId).state?.editingShape != null;
+ *
+ *   // Disable zoom when editing to allow Shift modifiers to work
+ *   useShiftZoomDisable(mapId, isEditing);
+ *
+ *   // ... rest of component
+ * }
+ * ```
  */
 export function useShiftZoomDisable(mapId: UniqueId, isActive: boolean): void {
   const emitDisableZoom = useEmit<MapDisableZoomEvent>(MapEvents.disableZoom);

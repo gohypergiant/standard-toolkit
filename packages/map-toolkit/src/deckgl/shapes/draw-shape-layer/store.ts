@@ -262,8 +262,28 @@ export const drawStore = createMapStore<DrawingState, DrawShapeActions>({
 // =============================================================================
 
 /**
- * Get the current drawing state for a mapId
- * Returns null if no store instance exists
+ * Get the current drawing state for a map instance.
+ *
+ * Returns the drawing state (active shape type, style defaults, etc.) for the
+ * specified map ID. Returns null if no drawing store instance exists for that map.
+ *
+ * ## Use Cases
+ * - Check if a map is currently in drawing mode
+ * - Access drawing state outside of React components
+ * - Inspect state for debugging purposes
+ *
+ * @param mapId - Unique identifier for the map instance
+ * @returns The drawing state, or null if no store instance exists
+ *
+ * @example
+ * ```typescript
+ * import { getDrawingState } from '@accelint/map-toolkit/deckgl/shapes';
+ *
+ * const state = getDrawingState('map-1');
+ * if (state?.activeShapeType) {
+ *   console.log(`Currently drawing: ${state.activeShapeType}`);
+ * }
+ * ```
  */
 export function getDrawingState(mapId: UniqueId): DrawingState | null {
   if (!drawStore.exists(mapId)) {
@@ -273,7 +293,43 @@ export function getDrawingState(mapId: UniqueId): DrawingState | null {
 }
 
 /**
- * Hook for drawing state
+ * React hook for accessing drawing state and actions.
+ *
+ * Provides access to the drawing store for a specific map instance, including
+ * the current state and draw/cancel actions. Uses `useSyncExternalStore` for
+ * concurrent-safe React subscriptions.
+ *
+ * ## Comparison with useDrawShape
+ * - `useDrawingState`: Low-level store access without event callbacks
+ * - `useDrawShape`: High-level API with onCreate/onCancel callbacks
+ *
+ * Use `useDrawingState` when you need direct store access without event handling.
+ * Use `useDrawShape` (recommended) for most drawing interactions.
+ *
+ * @param mapId - Unique identifier for the map instance
+ * @returns Object containing drawing state and actions (draw, cancel)
+ *
+ * @example
+ * ```tsx
+ * import { useDrawingState } from '@accelint/map-toolkit/deckgl/shapes';
+ * import { ShapeFeatureType } from '@accelint/map-toolkit/deckgl/shapes/shared/types';
+ *
+ * function DrawingStatus({ mapId }: { mapId: UniqueId }) {
+ *   const { state, draw, cancel } = useDrawingState(mapId);
+ *
+ *   return (
+ *     <div>
+ *       <p>Status: {state.activeShapeType ?? 'Not drawing'}</p>
+ *       <button onClick={() => draw(ShapeFeatureType.Polygon)}>
+ *         Start Drawing
+ *       </button>
+ *       {state.activeShapeType && (
+ *         <button onClick={cancel}>Cancel</button>
+ *       )}
+ *     </div>
+ *   );
+ * }
+ * ```
  */
 export function useDrawingState(
   mapId: UniqueId,
@@ -282,14 +338,69 @@ export function useDrawingState(
 }
 
 /**
- * Manually clear drawing state for a specific mapId.
+ * Manually clear the drawing state for a specific map instance.
+ *
+ * Removes the drawing store instance for the given map ID, canceling any
+ * active drawing operation and releasing mode/cursor ownership. This is
+ * typically called automatically during cleanup, but can be used manually
+ * when needed.
+ *
+ * ## When to Use
+ * - Cleanup after programmatically managing drawing state
+ * - Force-reset drawing state in error conditions
+ * - Testing and debugging
+ *
+ * ## Side Effects
+ * - Cancels active drawing (if any)
+ * - Releases map mode and cursor
+ * - Emits 'shapes:draw-canceled' event
+ * - Removes store instance from memory
+ *
+ * @param mapId - Unique identifier for the map instance
+ *
+ * @example
+ * ```typescript
+ * import { clearDrawingState } from '@accelint/map-toolkit/deckgl/shapes';
+ *
+ * // Clear drawing state when unmounting a map
+ * function cleanup(mapId: UniqueId) {
+ *   clearDrawingState(mapId);
+ * }
+ * ```
  */
 export function clearDrawingState(mapId: UniqueId): void {
   drawStore.clear(mapId);
 }
 
 /**
- * Complete drawing with a feature (called by the layer component)
+ * Complete the drawing operation with a GeoJSON feature.
+ *
+ * Called internally by the DrawShapeLayer component when the user finishes
+ * drawing a shape. Converts the raw EditableGeoJsonLayer feature to a Shape
+ * object, resets drawing state, releases mode/cursor, and emits the drawn event.
+ *
+ * ## Internal API
+ * This function is exported for use by the DrawShapeLayer component and should
+ * not be called directly from application code. Use the `draw` action from
+ * `useDrawShape` or `useDrawingState` instead.
+ *
+ * @param mapId - Unique identifier for the map instance
+ * @param feature - The completed GeoJSON feature from EditableGeoJsonLayer
+ * @returns The newly created Shape object
+ * @throws Error if not currently drawing
+ *
+ * @example
+ * ```typescript
+ * // Internal usage in DrawShapeLayer
+ * const handleEdit = ({ updatedData, editType }: EditAction) => {
+ *   if (editType === 'addFeature') {
+ *     const feature = updatedData.features[updatedData.features.length - 1];
+ *     if (feature) {
+ *       completeDrawingFromLayer(mapId, feature);
+ *     }
+ *   }
+ * };
+ * ```
  */
 export function completeDrawingFromLayer(
   mapId: UniqueId,
@@ -308,7 +419,28 @@ export function completeDrawingFromLayer(
 }
 
 /**
- * Cancel drawing (called by the layer component)
+ * Cancel the current drawing operation from the layer.
+ *
+ * Called internally by the DrawShapeLayer component when the user presses ESC
+ * or the drawing is otherwise canceled. Resets drawing state, releases mode/cursor,
+ * and emits the canceled event.
+ *
+ * ## Internal API
+ * This function is exported for use by the DrawShapeLayer component and should
+ * not be called directly from application code. Use the `cancel` action from
+ * `useDrawShape` or `useDrawingState` instead.
+ *
+ * @param mapId - Unique identifier for the map instance
+ *
+ * @example
+ * ```typescript
+ * // Internal usage in DrawShapeLayer
+ * const handleEdit = ({ editType }: EditAction) => {
+ *   if (editType === 'cancelFeature') {
+ *     cancelDrawingFromLayer(mapId);
+ *   }
+ * };
+ * ```
  */
 export function cancelDrawingFromLayer(mapId: UniqueId): void {
   drawStore.actions(mapId).cancel();

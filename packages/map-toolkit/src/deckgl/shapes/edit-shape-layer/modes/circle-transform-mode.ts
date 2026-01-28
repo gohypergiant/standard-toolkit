@@ -31,14 +31,39 @@ import type { Feature, Polygon } from 'geojson';
 /**
  * Transform mode for circles combining resize and translate.
  *
+ * ## Capabilities
  * This composite mode provides:
  * - **Resize** (ResizeCircleMode): Drag edge to resize from center
  * - **Translation** (TranslateMode): Drag the circle body to move it
  * - **Live tooltip**: Shows diameter and area during resize
  *
- * Priority logic:
- * - If dragging on the edge/handle, resize takes priority
- * - If dragging on the circle body, translate takes priority
+ * ## Handle Priority Logic
+ * When drag starts, modes are evaluated in this priority order:
+ * 1. If dragging on the edge/handle → resize takes priority
+ * 2. Otherwise → dragging the circle body translates it
+ *
+ * ## Resize Behavior
+ * Unlike scale operations in BoundingTransformMode, circle resize maintains
+ * the shape's circular geometry by resizing from the center point. The center
+ * remains fixed while the radius changes based on cursor distance.
+ *
+ * @example
+ * ```typescript
+ * import { CircleTransformMode } from '@accelint/map-toolkit/deckgl/shapes/edit-shape-layer/modes/circle-transform-mode';
+ * import { EditableGeoJsonLayer } from '@deck.gl-community/editable-layers';
+ *
+ * // Used internally by EditShapeLayer for circles
+ * const mode = new CircleTransformMode();
+ *
+ * const layer = new EditableGeoJsonLayer({
+ *   mode,
+ *   data: circleFeatureCollection,
+ *   selectedFeatureIndexes: [0],
+ *   onEdit: handleEdit,
+ *   modeConfig: { distanceUnits: 'kilometers' },
+ *   // ... other props
+ * });
+ * ```
  */
 export class CircleTransformMode extends BaseTransformMode {
   private resizeMode: ResizeCircleMode;

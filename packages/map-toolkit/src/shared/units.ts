@@ -40,8 +40,20 @@ export const DEFAULT_DISTANCE_UNITS: DistanceUnit = 'kilometers';
 
 /**
  * Get the full Turf.js unit name from an abbreviation.
+ *
  * @param abbrev - The abbreviation (e.g., 'km', 'nm')
  * @returns The full unit name (e.g., 'kilometers', 'nauticalmiles') or undefined
+ *
+ * @example
+ * ```typescript
+ * import { getDistanceUnitFromAbbreviation } from '@accelint/map-toolkit/shared';
+ *
+ * const unit = getDistanceUnitFromAbbreviation('km');
+ * console.log(unit); // 'kilometers'
+ *
+ * const unknown = getDistanceUnitFromAbbreviation('invalid');
+ * console.log(unknown); // undefined
+ * ```
  */
 export function getDistanceUnitFromAbbreviation(
   abbrev: string,
@@ -54,8 +66,20 @@ export function getDistanceUnitFromAbbreviation(
 
 /**
  * Get the abbreviation for a Turf.js unit name.
+ *
  * @param unit - The full unit name (e.g., 'kilometers')
  * @returns The abbreviation (e.g., 'km') or the input if not found
+ *
+ * @example
+ * ```typescript
+ * import { getDistanceUnitAbbreviation } from '@accelint/map-toolkit/shared';
+ *
+ * const abbrev = getDistanceUnitAbbreviation('kilometers');
+ * console.log(abbrev); // 'km'
+ *
+ * const fallback = getDistanceUnitAbbreviation('unknown');
+ * console.log(fallback); // 'unknown'
+ * ```
  */
 export function getDistanceUnitAbbreviation(unit: string): string {
   return DISTANCE_UNIT_ABBREVIATIONS[unit as DistanceUnit] ?? unit;

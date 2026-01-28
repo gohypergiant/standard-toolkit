@@ -109,6 +109,7 @@ export const cursorCoordinateStore = createMapStore<
  * Use this only in advanced scenarios where manual cleanup is required.
  *
  * @param instanceId - The unique identifier for the map to clear
+ * @returns void
  *
  * @example
  * ```tsx

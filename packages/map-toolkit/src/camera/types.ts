@@ -15,10 +15,26 @@ import type { UniqueId } from '@accelint/core/utility/uuid';
 import type { Bounds } from '@/deckgl/base-map/types';
 import type { CameraEventTypes } from './events';
 
+/**
+ * Map projection types supported by the camera system.
+ *
+ * - `mercator`: Web Mercator projection for 2D and 2.5D views
+ * - `globe`: Spherical globe projection for 3D views
+ */
 export type ProjectionType = 'mercator' | 'globe';
 
+/**
+ * Camera view modes defining perspective and interaction capabilities.
+ *
+ * - `2D`: Traditional flat map view with rotation
+ * - `2.5D`: Tilted perspective view with pitch and rotation
+ * - `3D`: Globe view with fixed orientation
+ */
 export type ViewType = '2D' | '2.5D' | '3D';
 
+/**
+ * Payload for setting camera center position.
+ */
 export type CameraSetCenterPayload = {
   /** Identifier of the camera */
   id: UniqueId;
@@ -34,6 +50,9 @@ export type CameraSetCenterPayload = {
   pitch?: number;
 };
 
+/**
+ * Payload for fitting camera to show a bounding box.
+ */
 export type CameraFitBoundsPayload = {
   /** Identifier of the camera */
   id: UniqueId;
@@ -51,54 +70,116 @@ export type CameraFitBoundsPayload = {
   pitch?: number;
 };
 
+/**
+ * Payload for resetting camera to initial state.
+ *
+ * Set property to `false` to preserve that property during reset.
+ * By default, all properties are reset to initial values.
+ *
+ * @example
+ * ```typescript
+ * import type { CameraResetPayload } from '@accelint/map-toolkit/camera';
+ *
+ * // Full reset
+ * const fullReset: CameraResetPayload = {
+ *   id: 'map-1',
+ * };
+ *
+ * // Reset but keep current zoom
+ * const keepZoom: CameraResetPayload = {
+ *   id: 'map-1',
+ *   zoom: false,
+ * };
+ * ```
+ */
 export type CameraResetPayload = {
   /** Identifier of the camera */
   id: UniqueId;
+  /** Set to false to preserve current zoom during reset */
   zoom?: boolean;
+  /** Set to false to preserve current pitch during reset */
   pitch?: boolean;
+  /** Set to false to preserve current rotation during reset */
   rotation?: boolean;
 };
 
+/**
+ * Event type for setting camera center position.
+ */
 export type CameraSetCenterEvent = Payload<
   typeof CameraEventTypes.setCenter,
   CameraSetCenterPayload
 >;
 
+/**
+ * Event type for fitting camera to bounds.
+ */
 export type CameraFitBoundsEvent = Payload<
   typeof CameraEventTypes.fitBounds,
   CameraFitBoundsPayload
 >;
 
+/**
+ * Event type for setting camera projection.
+ */
 export type CameraSetProjectionEvent = Payload<
   typeof CameraEventTypes.setProjection,
   { id: UniqueId; projection: ProjectionType }
 >;
 
+/**
+ * Event type for setting camera view mode.
+ */
 export type CameraSetViewEvent = Payload<
   typeof CameraEventTypes.setView,
   { id: UniqueId; view: ViewType }
 >;
 
+/**
+ * Event type for setting camera zoom level.
+ */
 export type CameraSetZoomEvent = Payload<
   typeof CameraEventTypes.setZoom,
   { id: UniqueId; zoom: number }
 >;
 
+/**
+ * Event type for setting camera rotation angle.
+ */
 export type CameraSetRotationEvent = Payload<
   typeof CameraEventTypes.setRotation,
   { id: UniqueId; rotation: number }
 >;
 
+/**
+ * Event type for setting camera pitch angle.
+ */
 export type CameraSetPitchEvent = Payload<
   typeof CameraEventTypes.setPitch,
   { id: UniqueId; pitch: number }
 >;
 
+/**
+ * Event type for resetting camera to initial state.
+ */
 export type CameraResetEvent = Payload<
   typeof CameraEventTypes.reset,
   CameraResetPayload
 >;
 
+/**
+ * Union type of all camera events.
+ *
+ * Use this type when registering bus listeners that handle multiple camera events.
+ *
+ * @example
+ * ```typescript
+ * import { Broadcast } from '@accelint/bus';
+ * import type { CameraEvent } from '@accelint/map-toolkit/camera';
+ *
+ * const bus = Broadcast.getInstance<CameraEvent>();
+ * ```
+ */
 export type CameraEvent =
   | CameraSetCenterEvent
   | CameraFitBoundsEvent

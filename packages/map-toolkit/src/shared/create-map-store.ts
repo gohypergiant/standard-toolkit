@@ -20,6 +20,11 @@ import type { UniqueId } from '@accelint/core';
 /**
  * Create a new Map with an entry added or updated (immutable).
  *
+ * @param map - The Map to copy
+ * @param key - The key to set
+ * @param value - The value to set
+ * @returns A new Map with the entry added/updated
+ *
  * @example
  * ```ts
  * const newMap = mapSet(state.cursorOwners, 'draw-layer', 'crosshair');
@@ -35,6 +40,10 @@ export function mapSet<K, V>(map: Map<K, V>, key: K, value: V): Map<K, V> {
 /**
  * Create a new Map with an entry removed (immutable).
  *
+ * @param map - The Map to copy
+ * @param key - The key to remove
+ * @returns A new Map with the entry removed
+ *
  * @example
  * ```ts
  * const newMap = mapDelete(state.cursorOwners, 'draw-layer');
@@ -49,6 +58,8 @@ export function mapDelete<K, V>(map: Map<K, V>, key: K): Map<K, V> {
 
 /**
  * Create a new empty Map (immutable replacement for Map.clear()).
+ *
+ * @returns A new empty Map
  *
  * @example
  * ```ts
@@ -207,6 +218,9 @@ export type MapStore<TState, TActions> = {
 /**
  * Creates a store for managing state across multiple map instances.
  *
+ * @param config - Store configuration including default state, actions, and optional bus setup
+ * @returns A MapStore instance with hooks and methods for accessing/updating state
+ *
  * @example
  * ```ts
  * const cursorStore = createMapStore({
@@ -298,7 +312,10 @@ export function createMapStore<TState, TActions>(
   }
 
   /**
-   * Clean up instance when last subscriber unmounts
+   * Clean up instance when last subscriber unmounts.
+   *
+   * @param mapId - Unique identifier for the map instance
+   * @param instance - The instance to clean up
    */
   function cleanupInstance(
     mapId: UniqueId,
@@ -360,7 +377,10 @@ export function createMapStore<TState, TActions>(
   }
 
   /**
-   * Main hook - returns state and actions
+   * Main hook - returns state and actions.
+   *
+   * @param mapId - Unique identifier for the map instance
+   * @returns Object containing state and all actions
    */
   function use(mapId: UniqueId): { state: TState } & TActions {
     const state = useSyncExternalStore(
@@ -381,6 +401,10 @@ export function createMapStore<TState, TActions>(
    * Note: The selector function is intentionally NOT tracked as a dependency.
    * This prevents infinite re-render loops when using inline arrow functions.
    * If you need dynamic selector behavior, use the `use()` hook with `useMemo`.
+   *
+   * @param mapId - Unique identifier for the map instance
+   * @param selector - Function to select derived state
+   * @returns The selected value
    */
   function useSelector<TSelected>(
     mapId: UniqueId,

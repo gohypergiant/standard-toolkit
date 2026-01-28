@@ -20,6 +20,9 @@ import type {
 
 const MilSymbol = ms.Symbol;
 
+/**
+ * Internal props specific to SymbolLayer.
+ */
 type _SymbolLayerProps<TData = unknown> = {
   /**
    * An accessor function that returns the SIDC for a given data point.
@@ -35,6 +38,10 @@ type _SymbolLayerProps<TData = unknown> = {
   defaultSymbolOptions?: SymbolOptions;
 };
 
+/**
+ * Props for SymbolLayer component.
+ * Extends IconLayer props with MIL-STD-2525 symbol rendering support.
+ */
 export type SymbolLayerProps<TData = unknown> = _SymbolLayerProps<TData> &
   Omit<
     IconLayerProps<TData>,
@@ -50,7 +57,78 @@ const defaultProps: DefaultProps<SymbolLayerProps> = {
 };
 
 /**
- * Provides a layer for rendering MIL-STD-2525 and APP-6 symbols.
+ * A Deck.gl layer for rendering MIL-STD-2525 and APP-6 military symbols.
+ *
+ * This layer extends IconLayer and automatically generates symbol icons from SIDC codes.
+ * It supports multiple symbology standards including MIL-STD-2525 B/C/D/E, STANAG APP6 B/D/E,
+ * and FM 1-02.2.
+ *
+ * Features:
+ * - Automatic symbol generation from SIDC codes
+ * - Caching for performance optimization
+ * - Customizable symbol options per data point
+ * - Dark/Light color modes
+ *
+ * Can be used directly with Deck.gl or as a JSX element with React Fiber:
+ * - React Fiber: `<symbolLayer id="symbols" data={[...]} ... />`
+ * - Direct: `new SymbolLayer({ id: 'symbols', data: [...], ... })`
+ *
+ * @example
+ * Direct Deck.gl usage:
+ * ```typescript
+ * import { Deck } from '@deck.gl/core';
+ * import { SymbolLayer } from '@accelint/map-toolkit/deckgl/symbol-layer';
+ *
+ * const layer = new SymbolLayer({
+ *   id: 'military-symbols',
+ *   data: [
+ *     { position: [-122.4, 37.74], sidc: 'SFG-UCI----D', name: 'Unit 1' },
+ *     { position: [-118.2, 34.05], sidc: 'SFG-UCIZ---D', name: 'Unit 2' },
+ *   ],
+ *   getSidc: d => d.sidc,
+ *   getPosition: d => d.position,
+ *   getSize: 32,
+ *   defaultSymbolOptions: {
+ *     colorMode: 'Dark',
+ *     size: 100,
+ *   },
+ * });
+ *
+ * new Deck({
+ *   initialViewState: { longitude: -120, latitude: 36, zoom: 6 },
+ *   controller: true,
+ *   layers: [layer],
+ * });
+ * ```
+ *
+ * @example
+ * React Fiber usage:
+ * ```tsx
+ * import '@accelint/map-toolkit/deckgl/symbol-layer/fiber';
+ * import { BaseMap } from '@accelint/map-toolkit/deckgl';
+ * import { View } from '@deckgl-fiber-renderer/dom';
+ *
+ * function MilitaryMap() {
+ *   const units = [
+ *     { position: [-122.4, 37.74], sidc: 'SFG-UCI----D', name: 'Unit 1' },
+ *     { position: [-118.2, 34.05], sidc: 'SFG-UCIZ---D', name: 'Unit 2' },
+ *   ];
+ *
+ *   return (
+ *     <BaseMap id="map" className="w-full h-full">
+ *       <View id="main" controller />
+ *       <symbolLayer
+ *         id="military-units"
+ *         data={units}
+ *         getSidc={d => d.sidc}
+ *         getPosition={d => d.position}
+ *         getSize={32}
+ *         defaultSymbolOptions={{ colorMode: 'Dark' }}
+ *       />
+ *     </BaseMap>
+ *   );
+ * }
+ * ```
  */
 export class SymbolLayer<
   TData = unknown,

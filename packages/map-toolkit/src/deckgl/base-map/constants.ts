@@ -10,9 +10,17 @@
  * governing permissions and limitations under the License.
  */
 
+/**
+ * Dark theme base map style URL from Carto.
+ * Provides a dark background for visualization layers.
+ */
 export const DARK_BASE_MAP_STYLE =
   'https://tiles.basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
 
+/**
+ * Light theme base map style URL from Carto.
+ * Provides a light background for visualization layers.
+ */
 export const LIGHT_BASE_MAP_STYLE =
   'https://tiles.basemaps.cartocdn.com/gl/voyager-gl-style/style.json';
 
@@ -23,6 +31,10 @@ export const LIGHT_BASE_MAP_STYLE =
  */
 export const PICKING_RADIUS = 5;
 
+/**
+ * Default WebGL rendering parameters for Deck.gl.
+ * Configures depth testing, blending, and rendering behavior for optimal layer compositing.
+ */
 export const PARAMETERS = {
   depthWriteEnabled: true,
   depthCompare: 'always',
