@@ -38,7 +38,7 @@ export function StatusIndicator({
       {...rest}
       className={clsx(styles.icon, classNames?.icon)}
       data-status={status}
-      data-testid={`status-${status}icon`}
+      data-testid={`status-${status}-icon`}
     />
   );
 }
