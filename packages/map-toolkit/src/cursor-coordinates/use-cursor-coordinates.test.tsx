@@ -695,4 +695,217 @@ describe('useCursorCoordinates', () => {
       expect(formatted).toMatch(/^\d{1,2}[NS]\s\d+\s\d+$/);
     });
   });
+
+  describe('UTM/MGRS Polar Limits', () => {
+    it('returns default coordinate for UTM at South Pole (< -80°)', async () => {
+      const { result } = renderHook(() => useCursorCoordinates(id));
+
+      act(() => {
+        bus.emit(MapEvents.hover, createMockPayload(id, [0, -85]));
+      });
+
+      await waitFor(() => {
+        expect(result.current.formattedCoord).not.toBe('--, --');
+      });
+
+      // Switch to UTM format
+      act(() => {
+        result.current.setFormat('utm');
+      });
+
+      await waitFor(() => {
+        expect(result.current.currentFormat).toBe('utm');
+      });
+
+      // Should return default coordinate for coordinates outside UTM range
+      expect(result.current.formattedCoord).toBe('--, --');
+    });
+
+    it('returns default coordinate for UTM at North Pole (> 84°)', async () => {
+      const { result } = renderHook(() => useCursorCoordinates(id));
+
+      act(() => {
+        bus.emit(MapEvents.hover, createMockPayload(id, [0, 85]));
+      });
+
+      await waitFor(() => {
+        expect(result.current.formattedCoord).not.toBe('--, --');
+      });
+
+      // Switch to UTM format
+      act(() => {
+        result.current.setFormat('utm');
+      });
+
+      await waitFor(() => {
+        expect(result.current.currentFormat).toBe('utm');
+      });
+
+      // Should return default coordinate for coordinates outside UTM range
+      expect(result.current.formattedCoord).toBe('--, --');
+    });
+
+    it('returns default coordinate for MGRS at South Pole (< -80°)', async () => {
+      const { result } = renderHook(() => useCursorCoordinates(id));
+
+      act(() => {
+        bus.emit(MapEvents.hover, createMockPayload(id, [0, -80.5]));
+      });
+
+      await waitFor(() => {
+        expect(result.current.formattedCoord).not.toBe('--, --');
+      });
+
+      // Switch to MGRS format
+      act(() => {
+        result.current.setFormat('mgrs');
+      });
+
+      await waitFor(() => {
+        expect(result.current.currentFormat).toBe('mgrs');
+      });
+
+      // Should return default coordinate for coordinates outside MGRS range
+      expect(result.current.formattedCoord).toBe('--, --');
+    });
+
+    it('returns default coordinate for MGRS at North Pole (> 84°)', async () => {
+      const { result } = renderHook(() => useCursorCoordinates(id));
+
+      act(() => {
+        bus.emit(MapEvents.hover, createMockPayload(id, [0, 84.5]));
+      });
+
+      await waitFor(() => {
+        expect(result.current.formattedCoord).not.toBe('--, --');
+      });
+
+      // Switch to MGRS format
+      act(() => {
+        result.current.setFormat('mgrs');
+      });
+
+      await waitFor(() => {
+        expect(result.current.currentFormat).toBe('mgrs');
+      });
+
+      // Should return default coordinate for coordinates outside MGRS range
+      expect(result.current.formattedCoord).toBe('--, --');
+    });
+
+    it('handles UTM at southern boundary (-80°)', async () => {
+      const { result } = renderHook(() => useCursorCoordinates(id));
+
+      act(() => {
+        bus.emit(MapEvents.hover, createMockPayload(id, [0, -80]));
+      });
+
+      await waitFor(() => {
+        expect(result.current.formattedCoord).not.toBe('--, --');
+      });
+
+      // Switch to UTM format
+      act(() => {
+        result.current.setFormat('utm');
+      });
+
+      await waitFor(() => {
+        expect(result.current.currentFormat).toBe('utm');
+      });
+
+      // Should work at exactly -80°
+      const formatted = result.current.formattedCoord;
+      expect(formatted).not.toBe('--, --');
+      expect(formatted).toMatch(/^\d{1,2}[NS]\s\d+\s\d+$/);
+    });
+
+    it('handles UTM at northern boundary (84°)', async () => {
+      const { result } = renderHook(() => useCursorCoordinates(id));
+
+      act(() => {
+        bus.emit(MapEvents.hover, createMockPayload(id, [0, 84]));
+      });
+
+      await waitFor(() => {
+        expect(result.current.formattedCoord).not.toBe('--, --');
+      });
+
+      // Switch to UTM format
+      act(() => {
+        result.current.setFormat('utm');
+      });
+
+      await waitFor(() => {
+        expect(result.current.currentFormat).toBe('utm');
+      });
+
+      // Should work at exactly 84°
+      const formatted = result.current.formattedCoord;
+      expect(formatted).not.toBe('--, --');
+      expect(formatted).toMatch(/^\d{1,2}[NS]\s\d+\s\d+$/);
+    });
+
+    it('DD format still works at poles when UTM/MGRS fail', async () => {
+      const { result } = renderHook(() => useCursorCoordinates(id));
+
+      act(() => {
+        bus.emit(MapEvents.hover, createMockPayload(id, [0, -85]));
+      });
+
+      await waitFor(() => {
+        expect(result.current.formattedCoord).not.toBe('--, --');
+      });
+
+      // DD format should work
+      expect(result.current.formattedCoord).toContain('85');
+      expect(result.current.formattedCoord).toContain('S');
+
+      // Switch to UTM - should fail
+      act(() => {
+        result.current.setFormat('utm');
+      });
+
+      await waitFor(() => {
+        expect(result.current.formattedCoord).toBe('--, --');
+      });
+
+      // Switch back to DD - should work again
+      act(() => {
+        result.current.setFormat('dd');
+      });
+
+      await waitFor(() => {
+        expect(result.current.formattedCoord).not.toBe('--, --');
+        expect(result.current.formattedCoord).toContain('85');
+      });
+    });
+
+    it('rawCoord still provides values when UTM format fails', async () => {
+      const { result } = renderHook(() => useCursorCoordinates(id));
+
+      act(() => {
+        bus.emit(MapEvents.hover, createMockPayload(id, [45, -85]));
+      });
+
+      await waitFor(() => {
+        expect(result.current.rawCoord).not.toBeNull();
+      });
+
+      // Switch to UTM format
+      act(() => {
+        result.current.setFormat('utm');
+      });
+
+      await waitFor(() => {
+        expect(result.current.currentFormat).toBe('utm');
+      });
+
+      // formattedCoord should be default
+      expect(result.current.formattedCoord).toBe('--, --');
+
+      // But rawCoord should still have the values
+      expect(result.current.rawCoord?.latitude).toBe(-85);
+      expect(result.current.rawCoord?.longitude).toBe(45);
+    });
+  });
 });
