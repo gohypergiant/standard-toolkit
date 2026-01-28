@@ -18,9 +18,17 @@ import { CHARACTER_SETS, type CharacterSetsKeys } from './character-sets.js';
 import { defaultSettings } from './default-settings.js';
 import type { LiteralUnion } from 'type-fest';
 
+/**
+ * Props for TextLayer component.
+ * Extends Deck.gl's TextLayerProps with enhanced character set support.
+ */
 export interface TextLayerProps<TData = unknown>
   extends DglTextLayerProps<TData> {
-  // A union type that preserves autocompletion for CharacterSetsKeys while allowing any string.
+  /**
+   * Character set to use for text rendering.
+   * Can be a predefined CHARACTER_SETS key or a custom string of characters.
+   * Defaults to CHARACTER_SETS.EXPANDED for international text support.
+   */
   characterSet?: LiteralUnion<CharacterSetsKeys, string>;
 }
 
@@ -36,6 +44,62 @@ export interface TextLayerProps<TData = unknown>
  * Can be used directly with Deck.gl or as a JSX element with React Fiber:
  * - React Fiber: `<textLayer id="text" data={[...]} ... />`
  * - Direct: `new TextLayer({ id: 'text', data: [...], ... })`
+ *
+ * @example
+ * Direct Deck.gl usage:
+ * ```typescript
+ * import { Deck } from '@deck.gl/core';
+ * import { TextLayer } from '@accelint/map-toolkit/deckgl/text-layer';
+ *
+ * const layer = new TextLayer({
+ *   id: 'text-labels',
+ *   data: [
+ *     { position: [-122.4, 37.74], text: 'San Francisco' },
+ *     { position: [-118.2, 34.05], text: 'Los Angeles' },
+ *   ],
+ *   getText: d => d.text,
+ *   getPosition: d => d.position,
+ *   getSize: 14,
+ *   fontWeight: 600,
+ *   outlineWidth: 2,
+ * });
+ *
+ * new Deck({
+ *   initialViewState: { longitude: -120, latitude: 36, zoom: 6 },
+ *   controller: true,
+ *   layers: [layer],
+ * });
+ * ```
+ *
+ * @example
+ * React Fiber usage:
+ * ```tsx
+ * import '@accelint/map-toolkit/deckgl/text-layer/fiber';
+ * import { BaseMap } from '@accelint/map-toolkit/deckgl';
+ * import { View } from '@deckgl-fiber-renderer/dom';
+ *
+ * function MapWithLabels() {
+ *   const cities = [
+ *     { position: [-122.4, 37.74], text: 'San Francisco' },
+ *     { position: [-118.2, 34.05], text: 'Los Angeles' },
+ *   ];
+ *
+ *   return (
+ *     <BaseMap id="map" className="w-full h-full">
+ *       <View id="main" controller />
+ *       <textLayer
+ *         id="city-labels"
+ *         data={cities}
+ *         getText={d => d.text}
+ *         getPosition={d => d.position}
+ *         getSize={14}
+ *         fontWeight={600}
+ *         outlineWidth={2}
+ *       />
+ *     </BaseMap>
+ *   );
+ * }
+ * ```
  */
 export class TextLayer<TData = unknown> extends DglTextLayer<TData> {
   static CHARACTER_SETS = CHARACTER_SETS;

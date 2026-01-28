@@ -61,15 +61,63 @@ export type HandleMatcher = {
  * This class extracts the common patterns shared by CircleTransformMode,
  * BoundingTransformMode, and VertexTransformMode:
  *
- * - Active mode tracking during drag operations
- * - Cursor aggregation from child modes
- * - Pick-based mode selection at drag start
- * - Shift key modifier handling for scale/rotate operations
- * - Clean state reset on drag stop
- * - Pick filtering to prevent TypeError from sublayer elements
+ * ## Core Responsibilities
+ * - **Active mode tracking**: Tracks which child mode is handling the drag operation
+ * - **Cursor aggregation**: Combines cursor updates from all child modes
+ * - **Pick-based delegation**: Selects mode at drag start based on picked handles
+ * - **Shift key modifiers**: Dynamic Shift key handling for scale/rotate operations
+ * - **State management**: Clean state reset on drag stop
+ * - **Pick filtering**: Prevents TypeError from sublayer elements without geometry
  *
- * Subclasses define their specific modes and handle matchers, while this
- * base class handles the delegation logic.
+ * ## Implementation Pattern
+ * Subclasses define their specific child modes and handle matchers, while this
+ * base class handles the delegation logic. The pattern is:
+ *
+ * 1. Define child mode instances in constructor
+ * 2. Implement `getHandleMatchers()` to map picks to modes
+ * 3. Implement `getDefaultMode()` for fallback behavior
+ * 4. Optionally override `onDragging()` for tooltips or side effects
+ *
+ * ## How Mode Selection Works
+ * At drag start, the base class evaluates handle matchers in order:
+ * - First matcher that matches any pick wins
+ * - If no matcher matches, uses the default mode
+ * - Selected mode remains active for the entire drag operation
+ *
+ * @example Implementing a custom transform mode
+ * ```typescript
+ * import { BaseTransformMode, type HandleMatcher } from './base-transform-mode';
+ * import { TranslateMode, RotateMode } from '@deck.gl-community/editable-layers';
+ *
+ * class MyTransformMode extends BaseTransformMode {
+ *   private translateMode: TranslateMode;
+ *   private rotateMode: RotateMode;
+ *
+ *   constructor() {
+ *     const translateMode = new TranslateMode();
+ *     const rotateMode = new RotateMode();
+ *     super([rotateMode, translateMode]); // Order matters for cursor handling
+ *
+ *     this.translateMode = translateMode;
+ *     this.rotateMode = rotateMode;
+ *   }
+ *
+ *   protected getHandleMatchers(): HandleMatcher[] {
+ *     return [
+ *       {
+ *         match: (pick) =>
+ *           Boolean(pick.isGuide && pick.object?.properties?.editHandleType === 'rotate'),
+ *         mode: this.rotateMode,
+ *         shiftConfig: { configKey: 'snapRotation' },
+ *       },
+ *     ];
+ *   }
+ *
+ *   protected getDefaultMode() {
+ *     return this.translateMode; // Dragging body translates by default
+ *   }
+ * }
+ * ```
  */
 export abstract class BaseTransformMode extends CompositeMode {
   /** Track which mode is currently handling the drag operation */

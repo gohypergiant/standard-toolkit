@@ -32,6 +32,10 @@ const LATIN_ALL = `${LATIN_LETTERS}${ALL_NUMBERS}${LATIN_SYMBOLS}`;
 
 const EXPANDED = `${ASCII_ALL}${LATIN_ALL}`;
 
+/**
+ * Valid keys for predefined character sets.
+ * Used for type-safe character set selection.
+ */
 export type CharacterSetsKeys = keyof typeof CHARACTER_SETS;
 
 /**
@@ -40,6 +44,32 @@ export type CharacterSetsKeys = keyof typeof CHARACTER_SETS;
  * Use smaller character sets (ASCII_ALL, ASCII_ALPHA_NUMERIC) for better performance,
  * or use AUTO for dynamic optimization based on content.
  * EXPANDED includes ASCII and Latin characters with diacritics for international text.
+ *
+ * @example
+ * ```typescript
+ * import { TextLayer, CHARACTER_SETS } from '@accelint/map-toolkit/deckgl/text-layer';
+ *
+ * // Use ASCII-only for better performance
+ * const asciiLayer = new TextLayer({
+ *   id: 'ascii-text',
+ *   data: [...],
+ *   characterSet: CHARACTER_SETS.ASCII_ALL,
+ * });
+ *
+ * // Use EXPANDED for international text with diacritics
+ * const internationalLayer = new TextLayer({
+ *   id: 'international-text',
+ *   data: [...],
+ *   characterSet: CHARACTER_SETS.EXPANDED,
+ * });
+ *
+ * // Use AUTO for dynamic optimization
+ * const autoLayer = new TextLayer({
+ *   id: 'auto-text',
+ *   data: [...],
+ *   characterSet: CHARACTER_SETS.AUTO,
+ * });
+ * ```
  */
 export const CHARACTER_SETS = Object.freeze({
   ALL_NUMBERS,
