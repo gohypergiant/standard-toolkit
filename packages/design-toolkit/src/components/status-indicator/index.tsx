@@ -28,11 +28,17 @@ import type { StatusIndicatorProps } from './types';
  *
  **/
 
-export function StatusIndicator({ classNames, status }: StatusIndicatorProps) {
+export function StatusIndicator({
+  classNames,
+  status,
+  ...rest
+}: StatusIndicatorProps) {
   return (
     <span
+      {...rest}
       className={clsx(styles.icon, classNames?.icon)}
       data-status={status}
+      data-testid={`status-${status}icon`}
     />
   );
 }
