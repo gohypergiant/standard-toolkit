@@ -14,20 +14,18 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import CancelFill from '@accelint/icons/cancel-fill';
 import { useControlledState } from '@react-stately/utils';
+import { type ChangeEvent, useCallback } from 'react';
 import {
   Input as AriaInput,
   InputContext as AriaInputContext,
   composeRenderProps,
   useContextProps,
 } from 'react-aria-components';
-import { Button } from '../button';
-import { Icon } from '../icon';
+import { ClearButton } from '../button/clear';
 import { IconProvider } from '../icon/context';
 import { InputContext } from './context';
 import styles from './styles.module.css';
-import type { ChangeEvent } from 'react';
 import type { InputProps } from './types';
 
 // TODO: Improve this implementation so it is more of a realistic event
@@ -109,13 +107,21 @@ export function Input({ ref = null, ...props }: InputProps) {
   const clear = isClearable && styles.isClearable;
   const isEmpty = value == null || value === '';
 
-  function handleChange(event: ChangeEvent<HTMLInputElement>) {
-    onChange?.(event);
+  const handleChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      onChange?.(event);
 
-    if (!event.defaultPrevented) {
-      setValue(event.target.value);
-    }
-  }
+      if (!event.defaultPrevented) {
+        setValue(event.target.value);
+      }
+    },
+    [onChange, setValue],
+  );
+  const handleClearButtonPress = useCallback(() => {
+    handleChange(clearInputEvent);
+
+    ref?.current?.focus();
+  }, [handleChange, ref]);
 
   return (
     <IconProvider size='small'>
@@ -190,24 +196,13 @@ export function Input({ ref = null, ...props }: InputProps) {
           </span>
         )}
         {!readOnly && isClearable && (
-          <Button
+          <ClearButton
             className={composeRenderProps(classNames?.clear, (className) =>
               clsx(styles.clear, prefix, suffix, clear, className),
             )}
-            excludeFromTabOrder
-            size='small'
-            variant='icon'
             isDisabled={disabled}
-            onPress={() => {
-              handleChange(clearInputEvent);
-
-              ref?.current?.focus();
-            }}
-          >
-            <Icon>
-              <CancelFill />
-            </Icon>
-          </Button>
+            onPress={handleClearButtonPress}
+          />
         )}
       </div>
     </IconProvider>

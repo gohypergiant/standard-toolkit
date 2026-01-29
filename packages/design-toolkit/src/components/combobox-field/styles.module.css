@@ -19,6 +19,7 @@
 
   .control {
     @apply rounded-medium px-s py-xs fg-primary-bold outline-interactive flex items-center outline;
+    @apply gap-xs;
 
     @variant placeholder {
       @apply fg-primary-muted;
@@ -82,6 +83,16 @@
 
     @variant group-disabled/combobox-field {
       @apply fg-disabled;
+    }
+  }
+
+  .clear {
+    @apply invisible;
+
+    @variant group-focus-within/combobox-field {
+      @variant group-not-data-empty/combobox-field {
+        @apply visible;
+      }
     }
   }
 

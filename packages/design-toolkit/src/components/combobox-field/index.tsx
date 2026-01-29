@@ -13,6 +13,8 @@
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import ChevronDown from '@accelint/icons/chevron-down';
+import { useControlledState } from '@react-stately/utils';
+import { useCallback } from 'react';
 import {
   Button,
   ComboBox,
@@ -25,6 +27,7 @@ import {
   useContextProps,
   Virtualizer,
 } from 'react-aria-components';
+import { ClearButton } from '../button/clear';
 import { Icon } from '../icon';
 import { Label } from '../label';
 import { Options } from '../options';
@@ -68,16 +71,41 @@ export function ComboBoxField<T extends OptionsDataItem>({
     description: descriptionProp,
     errorMessage: errorMessageProp,
     inputProps,
+    inputValue: inputValueProp,
+    defaultInputValue = '',
     label: labelProp,
     layoutOptions,
     menuTrigger = 'focus',
     size = 'medium',
     isInvalid: isInvalidProp,
     isReadOnly = false,
+    isClearable = true,
+    onInputChange,
+    onKeyDown,
     ...rest
   } = props;
+
+  const [inputValue, setInputValue] = useControlledState(
+    inputValueProp,
+    defaultInputValue,
+    onInputChange,
+  );
+
+  const isEmpty = !inputValue;
+
   const errorMessage = errorMessageProp || null; // Protect against empty string
   const isSmall = size === 'small';
+
+  const handleInputChange = useCallback(
+    (value: string) => {
+      setInputValue(value);
+    },
+    [setInputValue],
+  );
+
+  const handleClear = useCallback(() => {
+    handleInputChange('');
+  }, [handleInputChange]);
 
   return (
     <ComboBox<T>
@@ -89,11 +117,26 @@ export function ComboBoxField<T extends OptionsDataItem>({
       menuTrigger={menuTrigger}
       isInvalid={isInvalidProp || (errorMessage ? true : undefined)} // Leave uncontrolled if possible to fallback to validation state
       isReadOnly={isReadOnly}
+      inputValue={inputValue}
+      onInputChange={handleInputChange}
+      onKeyDown={(event) => {
+        onKeyDown?.(event);
+
+        if (
+          isClearable &&
+          !event.defaultPrevented &&
+          event.key === 'Escape' &&
+          !isEmpty
+        ) {
+          event.preventDefault();
+          event.stopPropagation();
+          handleClear();
+        }
+      }}
       data-size={size}
+      data-empty={isEmpty || null}
     >
-      {(
-        { isDisabled, isInvalid, isRequired }, // Rely on internal state, not props, since state could differ from props
-      ) => {
+      {({ isDisabled, isInvalid, isRequired }) => {
         const shouldShowDescription =
           !isReadOnly && !!descriptionProp && !(isSmall || isInvalid);
 
@@ -120,6 +163,16 @@ export function ComboBoxField<T extends OptionsDataItem>({
                 )}
                 title={inputProps?.value ? String(inputProps?.value) : ''}
               />
+              {!isReadOnly && isClearable && (
+                <ClearButton
+                  className={composeRenderProps(
+                    classNames?.clear,
+                    (className) => clsx(styles.clear, className),
+                  )}
+                  isDisabled={isDisabled}
+                  onPress={handleClear}
+                />
+              )}
               {!isReadOnly && (
                 <Button
                   className={composeRenderProps(
