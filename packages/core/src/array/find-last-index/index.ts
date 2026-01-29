@@ -19,15 +19,18 @@ import type { Predicate } from '@/types';
  * @template T - The type of array elements.
  * @param predicate - A predicate function to apply to each element of the array.
  * @param arr - The array to find against based on the predicate.
+ * @returns The index of the last matching element, or -1 if not found.
  *
  * @remarks
  * pure function
  *
- * @playground
+ * @example
+ * ```ts
  * import { findLastIndex } from '@accelint/core';
  *
  * findLastIndex(x => !(x & 1))([1, 2, 3, 4, 5]);
  * // 3
+ * ```
  */
 export const findLastIndex =
   <T>(predicate: Predicate<T>) =>

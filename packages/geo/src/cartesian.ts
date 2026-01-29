@@ -26,8 +26,10 @@
  * pure function
  *
  * @example
+ * ```typescript
  * const result = cartesian([1, 2], ['a', 'b']);
  * // result: [[1, 'a'], [1, 'b'], [2, 'a'], [2, 'b']]
+ * ```
  */
 export function cartesian<T>(...all: T[][]): T[][] {
   return all.reduce<T[][]>(

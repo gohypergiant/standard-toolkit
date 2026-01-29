@@ -11,7 +11,36 @@
  */
 
 'use client';
-
+/**
+ * Drawing Constants
+ *
+ * Constants used by the DrawShapeLayer for map-mode and cursor integration.
+ *
+ * ## Map Mode Integration
+ * The drawing system uses a protected mode (`DRAW_SHAPE_MODE`) that prevents
+ * other map features from changing the mode or cursor while a shape is being drawn.
+ * This ensures drawing operations are not interrupted by other interactions.
+ *
+ * ## Cursor Management
+ * All shape types use the crosshair cursor (`DRAW_CURSOR`) during drawing operations.
+ * The cursor is automatically set when drawing starts and restored when complete.
+ *
+ * ## Layer Identification
+ * The `DRAW_SHAPE_LAYER_ID` serves dual purposes:
+ * - Default ID for the EditableGeoJsonLayer instance
+ * - Owner identifier for map-mode and cursor requests
+ *
+ * @example
+ * ```typescript
+ * import { DRAW_SHAPE_MODE, DRAW_CURSOR, DRAW_SHAPE_LAYER_ID } from '@accelint/map-toolkit/deckgl/shapes/draw-shape-layer';
+ *
+ * // Request drawing mode and cursor
+ * requestModeAndCursor(mapId, DRAW_SHAPE_MODE, DRAW_CURSOR, DRAW_SHAPE_LAYER_ID);
+ *
+ * // Release when done
+ * releaseModeAndCursor(mapId, DRAW_SHAPE_LAYER_ID);
+ * ```
+ */
 import { ShapeFeatureType } from '../shared/types';
 import type { CSSCursorType } from '@/map-cursor/types';
 

@@ -61,6 +61,7 @@ type CoordinateInternalValue = { LAT: number; LON: number };
  * pure function
  *
  * @example
+ * ```typescript
  * const create = createCoordinate(coordinateSystems.dd, 'LATLON')
  * const coord = create('89.765432109 / 123.456789012')
  *
@@ -71,6 +72,7 @@ type CoordinateInternalValue = { LAT: number; LON: number };
  *
  * // change format to 'LONLAT'
  * coord.dms('LONLAT') === '123 27 24.4404432 E / 89 45 55.5555924 N'
+ * ```
  */
 type Formatter = (f?: Format) => string;
 
@@ -78,6 +80,28 @@ type ToFloatArg = Parameters<CoordinateSystem['toFloat']>[0];
 
 type OutputCache = Record<keyof typeof coordinateSystems, CoordinateCache>;
 
+/**
+ * Available coordinate systems for parsing, converting, and formatting geographic coordinates.
+ *
+ * Provides five coordinate notation systems:
+ * - dd: Decimal Degrees
+ * - ddm: Degrees Decimal Minutes
+ * - dms: Degrees Minutes Seconds
+ * - mgrs: Military Grid Reference System
+ * - utm: Universal Transverse Mercator
+ *
+ * @example
+ * ```typescript
+ * const create = createCoordinate(coordinateSystems.dd, 'LATLON');
+ * const coord = create('40.7128 / -74.0060');
+ * ```
+ *
+ * @example
+ * ```typescript
+ * const createMGRS = createCoordinate(coordinateSystems.mgrs);
+ * const coord = createMGRS('18T WL 80000 00000');
+ * ```
+ */
 export const coordinateSystems = Object.freeze({
   dd: systemDecimalDegrees,
   ddm: systemDegreesDecimalMinutes,
@@ -109,14 +133,27 @@ const freezeCoordinate = (
  * used for validation and eventually for output as defaults if no alternatives
  * are provided.
  *
- * @param initSystem dd, ddm, dms, mgrs, or utm of coordinateSystems
+ * @param initSystem - Coordinate system to use for parsing (dd, ddm, dms, mgrs, or utm from coordinateSystems). Defaults to Decimal Degrees.
+ * @param initFormat - Coordinate format ordering (LATLON or LONLAT). Defaults to LATLON.
+ * @returns Function that accepts coordinate string and returns Coordinate object with formatters.
  *
  * @remarks
  * pure function
  *
  * @example
+ * ```typescript
  * const create = createCoordinate(coordinateSystems.dd, 'LATLON')
+ * const coord = create('40.7128 / -74.0060')
+ * coord.dd() // '40.7128 N / 74.006 W'
+ * coord.dms() // '40 42 46.08 N / 74 0 21.6 W'
+ * ```
+ *
+ * @example
+ * ```typescript
  * const create = createCoordinate(coordinateSystems.ddm, 'LONLAT')
+ * const coord = create('-74 0.36 / 40 42.768')
+ * coord.ddm('LATLON') // '40 42.768 N / 74 0.36 W'
+ * ```
  */
 export function createCoordinate(
   initSystem: CoordinateSystem = coordinateSystems.dd,

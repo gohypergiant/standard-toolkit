@@ -64,7 +64,7 @@ export interface RectangleMeasurements {
  * @returns Circle measurements including radius, diameter, and area
  *
  * @example
- * ```ts
+ * ```typescript
  * const { radius, diameter, area } = computeCircleMeasurements(
  *   [-122.4, 37.8],
  *   [-122.3, 37.8],
@@ -92,7 +92,7 @@ export function computeCircleMeasurements(
  * @returns Ellipse measurements including axes and area
  *
  * @example
- * ```ts
+ * ```typescript
  * const { majorAxis, minorAxis, area } = computeEllipseMeasurementsFromAxes(100, 50);
  * ```
  */
@@ -122,7 +122,7 @@ export function computeEllipseMeasurementsFromAxes(
  * @returns Rectangle measurements including width, height, and area
  *
  * @example
- * ```ts
+ * ```typescript
  * const coords = polygon.geometry.coordinates[0];
  * const { width, height, area } = computeRectangleMeasurementsFromCorners(
  *   coords[0] as [number, number],
@@ -156,7 +156,7 @@ export function computeRectangleMeasurementsFromCorners(
  * @returns Ellipse measurements including axes and area
  *
  * @example
- * ```ts
+ * ```typescript
  * const coords = polygon.geometry.coordinates[0];
  * const { majorAxis, minorAxis, area } = computeEllipseMeasurementsFromPolygon(
  *   coords as [number, number][],

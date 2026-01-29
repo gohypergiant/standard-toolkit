@@ -19,6 +19,7 @@
  * @param f - The second function in the composition.
  * @param g - The first function in the composition.
  * @param x - The value to pass to `g`.
+ * @returns The result of f(g(x)).
  *
  * @remarks
  * B combinator
@@ -30,8 +31,10 @@
  * pure function
  *
  * @example
+ * ```typescript
  * composition((x) => x + 8)((x) => x * 3)(4);
  * // 20
+ * ```
  */
 export const composition =
   <A, B>(f: (z: A) => B) =>

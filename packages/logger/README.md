@@ -182,7 +182,7 @@ The following log levels are available, in order of severity:
 
 ## API Reference
 
-### `getLogger(options: LoggerOptions): ILogLayer`
+### `getLogger(options: LoggerOptions): LogLayer`
 
 Returns a singleton LogLayer instance configured with the provided options.
 

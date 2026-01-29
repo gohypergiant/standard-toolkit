@@ -8,6 +8,60 @@ An NTDS-compliant offering of a set of SVG Icon Components with fill color input
 npm install @accelint/ntds
 ```
 
+## Usage
+
+### React SVG Components
+
+Import and use the NTDS icons as React components with customizable colors.
+
+```tsx
+import {
+  SvgAirFriend,
+  SvgSurfaceHostile,
+  NTDS_COLOR_FRIEND,
+  NTDS_COLOR_HOSTILE
+} from '@accelint/ntds';
+
+export function TacticalDisplay() {
+  return (
+    <div>
+      <SvgAirFriend fill={NTDS_COLOR_FRIEND} width={32} height={32} />
+      <SvgSurfaceHostile fill={NTDS_COLOR_HOSTILE} width={32} height={32} />
+    </div>
+  );
+}
+```
+
+### Color Constants
+
+Use the predefined NTDS color constants for consistent styling.
+
+```typescript
+import {
+  NTDS_COLOR_FRIEND,      // '#1484F4' - Blue for friendly
+  NTDS_COLOR_HOSTILE,     // '#FF0033' - Red for hostile
+  NTDS_COLOR_UNKNOWN,     // '#EDDA0A' - Yellow for unknown
+  NTDS_COLOR_NEUTRAL,     // '#5B137A' - Purple for neutral
+  NTDS_COLOR_SUSPECT,     // '#FFAD38' - Orange for suspect
+  NTDS_COLOR_PENDING,     // '#404040' - Dark gray for pending
+  NTDS_COLOR_ASSUMED_FRIEND // '#0E8F37' - Green for assumed friend
+} from '@accelint/ntds/constants';
+```
+
+### Spritesheet (Advanced)
+
+For high-performance rendering in mapping applications, use the masked spritesheet.
+
+```typescript
+import {
+  AIR_FRIEND,
+  SURFACE_HOSTILE,
+  LAND_UNKNOWN
+} from '@accelint/ntds/spritesheets/masked';
+
+// Use these constants with deck.gl IconLayer or similar mapping libraries
+```
+
 ## Background
 
 This package contains two sets of output: a spritesheet for icons for the CBC2 COP, and a core set of colorable React SVG Components.

@@ -1,5 +1,7 @@
 # @accelint/bus
 
+An open-source event bus library for type-safe event-driven communication across your application, with built-in React hooks support.
+
 ## Installation
 
 ```sh

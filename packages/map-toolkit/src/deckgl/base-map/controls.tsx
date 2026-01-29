@@ -25,8 +25,13 @@ import type {
   MapEnableZoomEvent,
 } from './types';
 
+/**
+ * Props for the MapControls component.
+ */
 type MapControlsProps = {
+  /** Unique identifier for the map instance */
   id: UniqueId;
+  /** Reference to the MapLibre map instance */
   mapRef: RefObject<MapRef | null>;
 };
 
@@ -35,6 +40,11 @@ type MapControlsProps = {
  *
  * This component is rendered inside BaseMap to wire up event listeners
  * for pan and zoom control events.
+ *
+ * @param props - Component props
+ * @param props.id - Unique identifier for the map instance
+ * @param props.mapRef - Reference to the MapLibre map instance
+ * @returns null (headless component)
  */
 export function MapControls({ id, mapRef }: MapControlsProps) {
   useOn<MapEnablePanEvent>(MapEvents.enablePan, (event) => {

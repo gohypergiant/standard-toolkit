@@ -1,6 +1,6 @@
 {
   "name": "@accelint/converters",
-  "description": "A lightweight JavaScript utility for converting between various value types, including numbers, strings, booleans, dates, and more.",
+  "description": "A lightweight JavaScript utility for converting between various value types, including booleans, numbers, geographic coordinates, and map tile coordinates.",
   "version": "0.3.6",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
