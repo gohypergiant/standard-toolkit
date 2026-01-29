@@ -28,6 +28,23 @@ type MessageDataResult = { id: string; ok?: any; error?: any };
 
 type Events = Record<string, MessageDataResult>;
 
+/**
+ * Represents an action result with optional transferable objects.
+ *
+ * This type is a tuple containing the return value and an array of transferable
+ * objects (like ArrayBuffer, MessagePort) that can be efficiently transferred to
+ * the main thread without copying.
+ *
+ * @example
+ * ```typescript
+ * // Return a simple value with no transferables
+ * const result: Action<string> = ['hello', []];
+ *
+ * // Return an ArrayBuffer with transferable
+ * const buffer = new ArrayBuffer(1024);
+ * const result: Action<ArrayBuffer> = [buffer, [buffer]];
+ * ```
+ */
 // TODO: allow for transferables to be nullable?
 export type Action<T> = [T, Transferable[]];
 
@@ -35,6 +52,60 @@ function isSharedWorker(w: Worker | SharedWorker) {
   return w instanceof SharedWorker;
 }
 
+/**
+ * Creates a type-safe interface for communicating with a Web Worker.
+ *
+ * This function wraps a Web Worker or SharedWorker instance with a simple API
+ * that provides type-safe function calls, automatic message handling, and cleanup.
+ * It uses an event emitter internally to match requests with responses.
+ *
+ * @param createFn - A factory function that creates and returns a Worker or SharedWorker instance.
+ * @returns An object with three properties:
+ *   - `run`: Function to execute worker actions with type-safe parameters and return values
+ *   - `destroy`: Function to terminate the worker and clean up event listeners
+ *   - `instance`: The underlying Worker or SharedWorker instance
+ *
+ * @example
+ * ```typescript
+ * import { create } from '@accelint/worker';
+ *
+ * // Define the worker's function signatures
+ * type WorkerFunctions = {
+ *   add: (a: number, b: number) => number;
+ *   processData: (data: string[]) => string;
+ * };
+ *
+ * // Create a worker interface
+ * const worker = create<WorkerFunctions>(
+ *   () => new Worker(new URL('./my-worker.ts', import.meta.url))
+ * );
+ *
+ * // Call worker functions with type safety
+ * const sum = await worker.run('add', 5, 3); // Returns: 8
+ * const result = await worker.run('processData', ['a', 'b', 'c']);
+ *
+ * // Clean up when done
+ * worker.destroy();
+ * ```
+ *
+ * @example
+ * ```typescript
+ * // Using with SharedWorker
+ * import { create } from '@accelint/worker';
+ *
+ * type SharedFunctions = {
+ *   getState: () => Record<string, unknown>;
+ *   setState: (key: string, value: unknown) => void;
+ * };
+ *
+ * const sharedWorker = create<SharedFunctions>(
+ *   () => new SharedWorker(new URL('./shared-worker.ts', import.meta.url))
+ * );
+ *
+ * await sharedWorker.run('setState', 'count', 42);
+ * const state = await sharedWorker.run('getState');
+ * ```
+ */
 export function create<Functions extends Actions>(
   createFn: () => Worker | SharedWorker,
 ) {
@@ -117,6 +188,61 @@ export function create<Functions extends Actions>(
   return { run, destroy, instance: worker };
 }
 
+/**
+ * Exposes a set of functions to be called from the main thread.
+ *
+ * This function should be called inside a Web Worker script to register functions
+ * that can be invoked from the main thread via the `run` method of a worker interface
+ * created with `create()`. It automatically handles message routing, error handling,
+ * and supports both regular Workers and SharedWorkers.
+ *
+ * @param actions - An object mapping function names to their implementations.
+ *   Each function can return either a direct value or an Action tuple [value, transferables].
+ * @param shared - Whether this is a SharedWorker. Defaults to false.
+ *
+ * @example
+ * ```typescript
+ * // my-worker.ts - Regular Worker
+ * import { expose } from '@accelint/worker/worker';
+ * import type { Action } from '@accelint/worker';
+ *
+ * expose({
+ *   add: async (a: number, b: number): Promise<Action<number>> => {
+ *     return [a + b, []];
+ *   },
+ *   multiply: async (a: number, b: number): Promise<Action<number>> => {
+ *     return [a * b, []];
+ *   },
+ *   processBuffer: async (buffer: ArrayBuffer): Promise<Action<ArrayBuffer>> => {
+ *     // Process the buffer
+ *     const result = new ArrayBuffer(buffer.byteLength);
+ *     // ... processing logic ...
+ *     // Return with transferable to avoid copying
+ *     return [result, [result]];
+ *   }
+ * });
+ * ```
+ *
+ * @example
+ * ```typescript
+ * // shared-worker.ts - SharedWorker
+ * import { expose } from '@accelint/worker/worker';
+ * import type { Action } from '@accelint/worker';
+ *
+ * const state: Record<string, unknown> = {};
+ *
+ * expose({
+ *   getState: async (): Promise<Action<Record<string, unknown>>> => {
+ *     return [state, []];
+ *   },
+ *   setState: async (key: string, value: unknown): Promise<Action<void>> => {
+ *     state[key] = value;
+ *     // Void actions don't need to return anything
+ *     return [undefined, []];
+ *   }
+ * }, true); // Note: second parameter is true for SharedWorker
+ * ```
+ */
 export function expose(actions: Actions, shared = false) {
   let endpoint: (Window & typeof globalThis) | MessagePort = self;
 
