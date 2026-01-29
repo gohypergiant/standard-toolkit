@@ -12,9 +12,9 @@
 
 import { Seeker } from './components/seeker';
 import { Timeline } from './components/timeline';
+import { GanttProvider } from './context';
 import { useGanttInit } from './hooks/use-gantt-init';
 import styles from './styles.module.css';
-import { getMsPerPx } from './utils/conversions';
 import type { Timescale } from './types';
 
 type GanttProps = {
@@ -25,17 +25,14 @@ type GanttProps = {
 
 export function Gantt({ startTimeMs, endTimeMs, timescale }: GanttProps) {
   useGanttInit(startTimeMs);
-  const msPerPx = getMsPerPx(timescale);
 
   return (
     <div className={styles.container}>
-      <Timeline msPerPx={msPerPx} timescale={timescale} />
-      {/* Render Rows */}
-      <Seeker
-        startTimeMs={startTimeMs}
-        endTimeMs={endTimeMs}
-        msPerPx={msPerPx}
-      />
+      <GanttProvider timescale={timescale}>
+        <Timeline />
+        {/* Render Rows */}
+        <Seeker startTimeMs={startTimeMs} endTimeMs={endTimeMs} />
+      </GanttProvider>
     </div>
   );
 }

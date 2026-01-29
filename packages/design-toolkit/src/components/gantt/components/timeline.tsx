@@ -10,46 +10,17 @@
  * governing permissions and limitations under the License.
  */
 
-import { useRef, useState } from 'react';
-import { TIMESCALE_MAPPING } from '../constants';
+import { useRef } from 'react';
+import { useGanttContext } from '../context';
 import { useTimelineTransform } from '../hooks/use-timeline-transform';
-import { selectors, useGanttStore } from '../store';
 import { formatTimestampLabel } from '../utils/formatting';
-import { generateTimelineChunks } from '../utils/generation';
-import { getViewableRegionWidth } from '../utils/helpers';
 import styles from './styles.module.css';
 import { TimelineChunk } from './timeline-chunk';
-import type { Timescale } from '../types';
 
-type TimelineProps = {
-  msPerPx: number;
-  timescale: Timescale;
-};
-
-export function Timeline({ msPerPx, timescale }: TimelineProps) {
-  const [containerElement, setContainerElement] =
-    useState<HTMLDivElement | null>(null);
+export function Timeline() {
+  const { assignTimelineContainerElementRef, msPerPx, timelineChunks } =
+    useGanttContext();
   const timelineElementRef = useRef<HTMLDivElement | null>(null);
-
-  const selectedTimeIntervalMs = TIMESCALE_MAPPING[timescale];
-  const roundedTimestampMs = useGanttStore(
-    selectors.roundedCurrentPositionMs(selectedTimeIntervalMs),
-  );
-
-  const timelineChunks = generateTimelineChunks(
-    roundedTimestampMs,
-    getViewableRegionWidth(containerElement),
-    selectedTimeIntervalMs,
-    msPerPx,
-  );
-
-  const assignRef = (node: HTMLDivElement) => {
-    if (!node) {
-      return;
-    }
-
-    setContainerElement(node);
-  };
 
   useTimelineTransform({
     timelineElement: timelineElementRef.current,
@@ -58,7 +29,7 @@ export function Timeline({ msPerPx, timescale }: TimelineProps) {
   });
 
   return (
-    <div ref={assignRef}>
+    <div ref={assignTimelineContainerElementRef}>
       <div ref={timelineElementRef} className={styles.timeline}>
         {timelineChunks.map((chunk) => (
           <TimelineChunk
