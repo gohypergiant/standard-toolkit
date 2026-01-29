@@ -1,6 +1,6 @@
 # Color Converters
 
-Comprehensive color conversion utilities for web applications. Convert between deck.gl, GLSL, CSS RGBA (string/tuple/object), and hex formats.
+Comprehensive color conversion utilities for web applications. Convert between deck.gl tuples and GLSL tuples, CSS RGBA (string/tuple/object), and hex string formats.
 
 ## Installation
 
