@@ -10,11 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
-import { Seeker } from './components/seeker';
+import { RowsVirtualizer } from './components/rows-virtualizer';
 import { Timeline } from './components/timeline';
+import { GanttProvider } from './context';
 import { useGanttInit } from './hooks/use-gantt-init';
 import styles from './styles.module.css';
-import { getMsPerPx } from './utils/conversions';
+import type { PropsWithChildren } from 'react';
 import type { Timescale } from './types';
 
 type GanttProps = {
@@ -23,19 +24,25 @@ type GanttProps = {
   timescale: Timescale;
 };
 
-export function Gantt({ startTimeMs, endTimeMs, timescale }: GanttProps) {
+export function Gantt({
+  startTimeMs,
+  endTimeMs,
+  timescale,
+  children,
+}: PropsWithChildren<GanttProps>) {
   useGanttInit(startTimeMs);
-  const msPerPx = getMsPerPx(timescale);
+
+  const totalBounds = {
+    startMs: startTimeMs,
+    endMs: endTimeMs,
+  };
 
   return (
-    <div className={styles.container}>
-      <Timeline msPerPx={msPerPx} timescale={timescale} />
-      {/* Render Rows */}
-      <Seeker
-        startTimeMs={startTimeMs}
-        endTimeMs={endTimeMs}
-        msPerPx={msPerPx}
-      />
-    </div>
+    <GanttProvider timescale={timescale} totalBounds={totalBounds}>
+      <div className={styles.container}>
+        <Timeline />
+        <RowsVirtualizer>{children}</RowsVirtualizer>
+      </div>
+    </GanttProvider>
   );
 }
