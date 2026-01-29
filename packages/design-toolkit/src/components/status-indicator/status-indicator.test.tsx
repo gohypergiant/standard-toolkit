@@ -27,10 +27,26 @@ function setup({
   };
 }
 
-describe('StatusIndicator', () => {
-  it('should render', () => {
-    const { status } = setup();
+const VALID_STATUSES: StatusIndicatorProps['status'][] = [
+  'good',
+  'degraded',
+  'poor',
+] as const;
 
-    expect(screen.getByTestId(`status-${status}-icon`)).toBeInTheDocument();
+describe('StatusIndicator', () => {
+  it.each(VALID_STATUSES)('should render with %s status', (status) => {
+    setup({ status });
+
+    const indicator = screen.getByTestId(`status-${status}-icon`);
+    expect(indicator).toBeInTheDocument();
+    expect(indicator).toHaveAttribute('data-status', status);
+  });
+
+  it('should apply custom className', () => {
+    const customClass = 'custom-status-indicator';
+    setup({ className: customClass });
+
+    const indicator = screen.getByTestId('status-good-icon');
+    expect(indicator).toHaveClass(customClass);
   });
 });
