@@ -45,9 +45,13 @@ Note: The visual treatment for each status is defined in the component’s CSS m
 <Canvas of={StatusIndicatorStories.Default} />
 
 ## Props
-* **`status`** — The current status to display (e.g. good, degraded, poor). This value is applied as data-status for styling.
-* **`classNames`** — Custom class names for styling:
-  * `icon` — Applied to the root span
+
+| Prop        | Type                             | Default  | Description                                                 |
+| ----------- | -------------------------------- | -------- | ----------------------------------------------------------- |
+| `status`    | `'good' \| 'degraded' \| 'poor'` | `'good'` | The status to display; applied as `data-status` for styling |
+| `className` | `string`                         | —        | Custom CSS class for the status indicator                   |
+
+Extends standard HTML `<span>` props.
 
 
 ## Accessibility
