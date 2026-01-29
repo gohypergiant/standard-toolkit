@@ -32,6 +32,8 @@ export type {
 } from './components/accordion/types';
 export { ActionBar } from './components/action-bar';
 export type { ActionBarProps } from './components/action-bar/types';
+export { Audio } from './components/audio';
+export type { AudioProps } from './components/audio/types';
 export { AvatarContext, AvatarProvider } from './components/avatar/context';
 export { Avatar } from './components/avatar';
 export type { AvatarProps } from './components/avatar/types';
@@ -329,6 +331,32 @@ export type {
   ListItemVariant,
   ListProps,
 } from './components/list/types';
+export {
+  MediaControlsContext,
+  MediaControlsProvider,
+  useMediaControlsDisabled,
+  useMediaProviderGuard,
+} from './components/media-controls/context';
+export { MediaControls } from './components/media-controls';
+export { MuteButton } from './components/media-controls/mute-button';
+export { PlayButton } from './components/media-controls/play-button';
+export { PlaybackRateButton } from './components/media-controls/playback-rate';
+export { SeekButton } from './components/media-controls/seek-button';
+export { TimeDisplay } from './components/media-controls/time-display';
+export { TimeRange } from './components/media-controls/time-range';
+export type {
+  MediaControlsContextValue,
+  MediaControlsProps,
+  MuteButtonProps,
+  PlayButtonProps,
+  PlaybackRateButtonProps,
+  SeekButtonProps,
+  TimeDisplayMode,
+  TimeDisplayProps,
+  TimeRangeProps,
+  VolumeSliderProps,
+} from './components/media-controls/types';
+export { VolumeSlider } from './components/media-controls/volume-slider';
 export { MenuContext } from './components/menu/context';
 export { Menu } from './components/menu';
 export { MenuItemDescription } from './components/menu/item-description';
