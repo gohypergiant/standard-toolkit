@@ -59,41 +59,44 @@ export function AlertMessage() {
 
 ### Styling Icons
 
-Icons inherit the current text color and can be styled using CSS classes or inline styles.
+Icons inherit the current text color and can be styled using CSS classes. For consistent sizing and styling, consider using the `<Icon>` component from `@accelint/design-toolkit`.
 
-**Using CSS Classes (Tailwind):**
+**Using CSS Classes:**
 
 ```tsx
 import { Check } from '@accelint/icons/check';
 
 export function SuccessIcon() {
-  return <Check className="text-green-500 w-6 h-6" />;
-}
-```
-
-**Using Inline Styles:**
-
-```tsx
-import { Alert } from '@accelint/icons/alert';
-
-export function WarningIcon() {
-  return (
-    <Alert
-      style={{ color: '#ef4444', width: '24px', height: '24px' }}
-    />
-  );
+  return <Check className="fg-normal-bold" />;
 }
 ```
 
 **Inheriting Parent Color:**
 
 ```tsx
-export function ColoredButton() {
+export function SearchButton() {
   return (
-    <button className="text-blue-600">
-      <Search className="w-5 h-5" />
+    <button className="fg-accent-primary-bold">
+      <Search />
       Search
     </button>
+  );
+}
+```
+
+**Using the Icon Component (Recommended):**
+
+The `@accelint/design-toolkit` provides an `<Icon>` component with built-in size variants:
+
+```tsx
+import { Icon } from '@accelint/design-toolkit';
+import { Alert } from '@accelint/icons/alert';
+
+export function WarningIcon() {
+  return (
+    <Icon size="medium" className="fg-serious-bold">
+      <Alert />
+    </Icon>
   );
 }
 ```
@@ -116,10 +119,10 @@ interface IconButtonProps {
   label: string;
 }
 
-export function IconButton({ icon: Icon, label }: IconButtonProps) {
+export function IconButton({ icon: IconSvg, label }: IconButtonProps) {
   return (
     <button>
-      <Icon className="w-5 h-5" />
+      <IconSvg />
       <span>{label}</span>
     </button>
   );
@@ -160,27 +163,13 @@ Icons use kebab-case naming:
 
 ### Best Practices
 
-1. **Sizing**: Use consistent icon sizes within your application (e.g., 16px, 20px, 24px)
+1. **Sizing**: Use the `<Icon>` component from `@accelint/design-toolkit` for consistent sizing with predefined variants (`xsmall`, `small`, `medium`, `large`)
 2. **Spacing**: Maintain adequate padding around icons for touch targets
 3. **Accessibility**: Always provide `title` prop for standalone icons
 4. **Color Contrast**: Ensure sufficient contrast between icon color and background
 5. **Loading**: Icons are lightweight, but consider lazy loading for pages with many icons
 
-### Example: Consistent Icon Sizing
-
-```tsx
-// Define standard sizes
-const iconSizes = {
-  sm: 'w-4 h-4',   // 16px
-  md: 'w-5 h-5',   // 20px
-  lg: 'w-6 h-6',   // 24px
-  xl: 'w-8 h-8',   // 32px
-} as const;
-
-// Use consistently
-<Search className={iconSizes.md} />
-<Settings className={iconSizes.lg} />
-```
+For more information about the Icon component and its size variants, see the [Icon component documentation](https://design-toolkit.accelint.io/?path=/docs/components-icon--playground#sizes).
 
 ## Contributing
 
