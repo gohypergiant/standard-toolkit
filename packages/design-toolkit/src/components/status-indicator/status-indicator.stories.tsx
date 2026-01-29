@@ -13,34 +13,40 @@
 import { Label } from 'react-aria-components';
 import { StatusIndicator } from '.';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import type { StatusIndicatorProps } from './types';
+import type { ComponentProps } from 'react';
+
+type StoryArgs = ComponentProps<typeof StatusIndicator> & {
+  label?: string;
+};
 
 const meta = {
   title: 'Components/StatusIndicator',
   component: StatusIndicator,
-} satisfies Meta<typeof StatusIndicator>;
+  args: {
+    status: 'good',
+    label: 'Custom text',
+  },
+  argTypes: {
+    label: {
+      control: 'text',
+      description: 'Text to display next to the status indicator',
+      table: {
+        category: 'Story',
+      },
+    },
+  },
+} satisfies Meta<StoryArgs>;
 
 export default meta;
-type Story = StoryObj<typeof StatusIndicator>;
-
-const STATUSES: StatusIndicatorProps['status'][] = [
-  'good',
-  'degraded',
-  'poor',
-] as const;
+type Story = StoryObj<StoryArgs>;
 
 export const Default: Story = {
-  render: () => (
+  render: (args) => (
     <div className='flex gap-xl'>
-      {STATUSES.map((status) => (
-        <div
-          key={status}
-          className='flex flex-col items-center justify-center gap-s'
-        >
-          <StatusIndicator status={status} />
-          <Label className='capitalize'>{status}</Label>
-        </div>
-      ))}
+      <div key={args.status} className='flex items-center justify-center gap-s'>
+        <StatusIndicator {...args} status={args.status} />
+        <Label className='capitalize'>{args.label}</Label>
+      </div>
     </div>
   ),
 };

@@ -17,7 +17,7 @@ import styles from './styles.module.css';
 import type { StatusIndicatorProps } from './types';
 
 /**
- * StatusIndicator - A component for displaying connection/service status informatio
+ * StatusIndicator - A component for displaying connection/service status information
  *
  * Provides a purely presentational component to allow users to display the status of something.
  * Only 'good,' 'degraded,', and 'poor' statuses are being supported.
