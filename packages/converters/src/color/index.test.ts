@@ -123,26 +123,6 @@ describe('color', () => {
 
   describe('cssRgbaObjectToColor', () => {
     it.each([
-      [{ r: 255, g: 128, b: 64, a: 255 }, [255, 128, 64, 255]],
-      [{ r: 0, g: 0, b: 0, a: 0 }, [0, 0, 0, 0]],
-      [{ r: 255, g: 255, b: 255, a: 255 }, [255, 255, 255, 255]],
-    ] as const)('should convert %o to %o', (obj, expected) => {
-      expect(cssRgbaObjectToColor(obj)).toEqual(expected);
-    });
-
-    it.each([
-      { r: 256, g: 0, b: 0, a: 0 },
-      { r: -1, g: 0, b: 0, a: 0 },
-      { r: 0, g: 256, b: 0, a: 0 },
-      { r: 0, g: 0, b: 256, a: 0 },
-      { r: 0, g: 0, b: 0, a: 256 },
-    ])('should throw for out of range values: %o', (obj) => {
-      expect(() => cssRgbaObjectToColor(obj as CssRgbaObject)).toThrow();
-    });
-  });
-
-  describe('cssRgbaObjectToColor', () => {
-    it.each([
       [{ r: 255, g: 128, b: 64, a: 1 }, [255, 128, 64, 255]],
       [{ r: 255, g: 128, b: 64, a: 0.5 }, [255, 128, 64, 128]],
       [{ r: 0, g: 0, b: 0, a: 0 }, [0, 0, 0, 0]],
