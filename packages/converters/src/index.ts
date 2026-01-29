@@ -17,6 +17,21 @@
 // biome-ignore-all assist/source/organizeImports: This comment is used to prevent the biome tool from altering the import statements in this file.
 
 export { booleanToNumber } from './boolean-to-number';
+export {
+  colorToCssRgbaObject,
+  colorToCssRgbaString,
+  colorToCssRgbaTuple,
+  colorToGlsl,
+  colorToHex,
+  cssRgbaObjectToColor,
+  cssRgbaStringToColor,
+  cssRgbaTupleToColor,
+  glslToColor,
+  hexToColor,
+  isColor,
+  isCssRgbaObject,
+} from './color';
+export type { Color, CssRgbaObject } from './color';
 export { toBoolean } from './to-boolean';
 export { zxyToBbox } from './zxy-to-bbox';
 export type { BoundingBoxTuple, ZxyTuple } from './zxy-to-bbox';
