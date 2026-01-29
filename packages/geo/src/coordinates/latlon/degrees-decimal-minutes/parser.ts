@@ -58,6 +58,22 @@ const formats = {
   ),
 };
 
+/**
+ * Creates an error identification function for degrees decimal minutes coordinates.
+ *
+ * Validates that degree values are integers, minutes are in valid range (0-59.999...),
+ * and that seconds indicators are not present.
+ *
+ * @param format - The coordinate format (LATLON or LONLAT).
+ * @returns Function that validates coordinate components and returns parse results.
+ *
+ * @example
+ * ```typescript
+ * const validator = identifyErrors('LATLON');
+ * const result = validator({ deg: '91', min: '0', bear: 'N' }, 0);
+ * // [[], ['Degrees value (91) exceeds max value (90).']]
+ * ```
+ */
 function identifyErrors(format: Format) {
   return (arg: DegreesDecimalMinutes | undefined, i: number) => {
     if (!arg) {
@@ -90,6 +106,27 @@ function identifyErrors(format: Format) {
   };
 }
 
+/**
+ * Identifies and organizes coordinate components from parsed tokens.
+ *
+ * Separates bearing indicators (N/S/E/W), degree values, and minute values from tokens.
+ * Uses symbol patterns to identify component types and positional logic as fallback.
+ *
+ * @param half - Array of tokens representing one coordinate component.
+ * @returns Object with `bear`, `deg`, and `min` properties, or undefined if invalid.
+ *
+ * @example
+ * ```typescript
+ * identifyPieces(['45', '30.5', 'N']);
+ * // { bear: 'N', deg: '45', min: '30.5' }
+ * ```
+ *
+ * @example
+ * ```typescript
+ * identifyPieces(['122°', '25.164'', 'W']);
+ * // { bear: 'W', deg: '122', min: '25.164' }
+ * ```
+ */
 function identifyPieces(half: string[]) {
   if (half.length < 1 || half.length > 3) {
     return;
@@ -118,7 +155,29 @@ function identifyPieces(half: string[]) {
   }, places);
 }
 
-/** Parse a Degrees Decimal Minutes coordinate. */
+/**
+ * Parses a Degrees Decimal Minutes coordinate string.
+ *
+ * Accepts coordinates in degrees decimal minutes format with bearing indicators.
+ * Validates that degrees are integers, minutes are in valid range (0-59.999...),
+ * and ensures no seconds indicators are present.
+ *
+ * @param input - Raw coordinate string to parse.
+ * @param format - Expected format (LATLON or LONLAT).
+ * @returns Parsed coordinate values or errors.
+ *
+ * @example
+ * ```typescript
+ * parseDegreesDecimalMinutes('37° 46.4940' N / 122° 25.1640' W', 'LATLON');
+ * // [[37.7749, -122.4194], []]
+ * ```
+ *
+ * @example
+ * ```typescript
+ * parseDegreesDecimalMinutes('45 30.5 N, 122 15.3 W');
+ * // [[45.508333, -122.255], []]
+ * ```
+ */
 export const parseDegreesDecimalMinutes = createParser<DegreesDecimalMinutes>({
   formats,
   identifyErrors,

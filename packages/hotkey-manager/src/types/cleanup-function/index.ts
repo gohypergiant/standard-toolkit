@@ -10,4 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
+/**
+ * A function that cleans up resources when called.
+ *
+ * Typically returned from activation functions to allow deactivation.
+ */
 export type CleanupFunction = () => void;

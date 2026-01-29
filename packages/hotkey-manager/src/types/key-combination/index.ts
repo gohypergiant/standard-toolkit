@@ -41,13 +41,14 @@ export type KeyCombination = {
    *
    * @default false
    */
-  shift: boolean /**
+  shift: boolean;
+  /**
    * When `true` requires the Windows key to be press. This setting is not recommended.
    *
    * If `autoMacStyle` is `true` then this will switch to the control key otherwise this will be the command key.
    *
    * @default false
-   */;
+   */
   meta: boolean;
   /**
    * Automatically convert the hotkey to the common macOS style, e.g. `ctl+shift+g` becomes `cmd+shift+g` to better

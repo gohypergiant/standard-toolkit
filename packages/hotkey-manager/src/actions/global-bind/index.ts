@@ -19,6 +19,16 @@ import { eventStore } from '@/stores/event-store';
  * Binds the hotkey listener to the global window object.
  *
  * Safe to call on the server.
+ *
+ * @returns void
+ *
+ * @example
+ * ```typescript
+ * import { globalBind } from '@accelint/hotkey-manager';
+ *
+ * // Bind hotkey listeners to window
+ * globalBind();
+ * ```
  */
 export function globalBind() {
   // Exit if running on a server

@@ -16,7 +16,18 @@ import type { KeyCombinationId } from '@/types/key-combination-id';
  * Converts an event to a standard key id.
  *
  * @internal
- * @param event Triggered event.
+ * @param event - Triggered event.
+ * @returns The standard key combination id.
+ *
+ * @example
+ * ```typescript
+ * import { eventToId } from '@/lib/event-to-id';
+ *
+ * window.addEventListener('keydown', (event) => {
+ *   const keyId = eventToId(event);
+ *   console.log(keyId); // e.g., "KeyA|no-alt|no-ctrl|meta|no-shift"
+ * });
+ * ```
  */
 export function eventToId(event: KeyboardEvent): KeyCombinationId {
   return [

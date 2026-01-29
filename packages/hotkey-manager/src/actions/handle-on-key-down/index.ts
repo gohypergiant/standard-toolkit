@@ -20,7 +20,13 @@ import { hotkeyStore } from '@/stores/hotkey-store';
  * Handles the `keydown` event.
  *
  * @internal
- * @param event The `keydown` event.
+ * @param event - The `keydown` event.
+ * @returns void
+ *
+ * @example
+ * ```typescript
+ * window.addEventListener('keydown', handleOnKeyDown);
+ * ```
  */
 export function handleOnKeyDown(event: KeyboardEvent) {
   const keyId = eventToId(event);
