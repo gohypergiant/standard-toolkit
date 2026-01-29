@@ -12,7 +12,7 @@
 
 import { describe, expect, it } from 'vitest';
 import { MS_PER_HOUR, TIMELINE_CHUNK_WIDTH } from '../constants';
-import { deriveTranslateXValue } from './layout';
+import { deriveRangeElementLayout, deriveTranslateXValue } from './layout';
 import type { TimelineChunkObject } from '../types';
 
 describe('deriveTranslateXValue', () => {
@@ -76,6 +76,69 @@ describe('deriveTranslateXValue', () => {
       );
 
       expect(result).toBe(-1);
+    });
+  });
+
+  describe('deriveRangeElementLayout', () => {
+    const currentPositionMs = 1200;
+    const renderedRegion = { startMs: 1000, endMs: 2000 };
+    const msPerPx = 10;
+
+    it('calculates translateX and width for a range fully inside the rendered region', () => {
+      const elementRange = {
+        startMs: 1100,
+        endMs: 1500,
+      };
+
+      const { translateX, widthPx } = deriveRangeElementLayout(
+        renderedRegion,
+        elementRange,
+        msPerPx,
+        currentPositionMs,
+      );
+
+      expect(translateX).toBe(
+        (elementRange.startMs - currentPositionMs) / msPerPx,
+      );
+      expect(widthPx).toBe(40);
+    });
+
+    it('handles a range that starts before the rendered region', () => {
+      const elementRange = {
+        startMs: 900,
+        endMs: 1500,
+      };
+
+      const { translateX, widthPx } = deriveRangeElementLayout(
+        renderedRegion,
+        elementRange,
+        msPerPx,
+        currentPositionMs,
+      );
+
+      expect(translateX).toBe(
+        (renderedRegion.startMs - currentPositionMs) / msPerPx,
+      );
+      expect(widthPx).toBe(50);
+    });
+
+    it('handles a range that ends after the rendered region', () => {
+      const elementRange = {
+        startMs: 1900,
+        endMs: 2200,
+      };
+
+      const { translateX, widthPx } = deriveRangeElementLayout(
+        renderedRegion,
+        elementRange,
+        msPerPx,
+        currentPositionMs,
+      );
+
+      expect(translateX).toBe(
+        (elementRange.startMs - currentPositionMs) / msPerPx,
+      );
+      expect(widthPx).toBe(10);
     });
   });
 });

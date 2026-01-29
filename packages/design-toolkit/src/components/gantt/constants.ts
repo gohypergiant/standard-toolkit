@@ -40,3 +40,5 @@ export const TIMESCALE_MAPPING: Record<Timescale, number> = {
 export const TIMELINE_CHUNK_WIDTH = 80;
 
 export const OUT_OF_VIEW_CHUNK_COUNT = 2;
+export const GANTT_ROW_HEIGHT_PX = 40;
+export const GANTT_BLOCK_HEIGHT_PX = 30;
