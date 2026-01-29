@@ -241,6 +241,29 @@ export type {
   FlashcardDetailsListProps,
   FlashcardProps,
 } from './components/flashcard/types';
+export { Tick, TimeMarker } from './components/gantt/components/time-marker';
+export {
+  HOURS_MAPPING,
+  MINUTES_MAPPING,
+  MS_PER_HOUR,
+  MS_PER_MINUTE,
+  TIMESCALE_MAPPING,
+  TIME_MARKER_WIDTH,
+} from './components/gantt/constants';
+export { useGanttInit } from './components/gantt/hooks/use-gantt-init';
+export { useTimelineTransform } from './components/gantt/hooks/use-timeline-transform';
+export { Gantt } from './components/gantt';
+export { selectors, useGanttStore } from './components/gantt/store';
+export type {
+  HoursTimescale,
+  MinutesTimescale,
+  TimeMarkerObject,
+  Timescale,
+} from './components/gantt/types';
+export {
+  deriveTranslateXValue,
+  roundDateToInterval,
+} from './components/gantt/utils';
 export { HeroContext } from './components/hero/context';
 export { Hero } from './components/hero';
 export { HeroSubtitle } from './components/hero/subtitle';

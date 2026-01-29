@@ -1,0 +1,23 @@
+/*
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+// AI suggested values. Easy values for consumer to
+// specify as prop to Gantt component.
+export type HoursTimescale = '1h' | '2h' | '6h' | '12h' | '24h';
+
+export type MinutesTimescale = '1m' | '5m' | '10m' | '30m';
+
+export type Timescale = HoursTimescale | MinutesTimescale;
+
+export type TimeMarkerObject = {
+  timestampMs: number;
+};
