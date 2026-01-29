@@ -22,14 +22,15 @@ import type { StatusIndicatorProps } from './types';
  * Provides a purely presentational component to allow users to display the status of something.
  * Only 'good,' 'degraded,', and 'poor' statuses are being supported.
  *
+ * @param props - {@link StatusIndicatorProps}
+ * @param props.status - The status to display (good, degraded, or poor)
+ * @returns The rendered StatusIndicator component.
+ *
  * @example
  * ```tsx
  * // Basic status indicator
  * <StatusIndicator status="good" />
  * ```
- * @param props - {@link StatusIndicatorProps}
- * @param props.status - The status to display (good, degraded, or poor)
- * @returns The rendered StatusIndicator component.
  */
 
 export function StatusIndicator({
