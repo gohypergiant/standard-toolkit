@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -29,14 +29,14 @@ import type { StatusIndicatorProps } from './types';
  **/
 
 export function StatusIndicator({
-  classNames,
+  className,
   status,
   ...rest
 }: StatusIndicatorProps) {
   return (
     <span
       {...rest}
-      className={clsx(styles.icon, classNames?.icon)}
+      className={clsx(styles.icon, className)}
       data-status={status}
       data-testid={`status-${status}-icon`}
     />
