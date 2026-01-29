@@ -10,18 +10,29 @@
  * governing permissions and limitations under the License.
  */
 
-@reference '@accelint/design-foundation/styles';
+import styles from './styles.module.css';
+import { useRenderedRows } from './use-rendered-rows';
+import type { PropsWithChildren } from 'react';
 
-@layer components.l1 {
-  .container {
-    @apply flex max-h-full w-full flex-col overflow-hidden;
-  }
+export function RowsVirtualizer({ children }: PropsWithChildren) {
+  const { dimensions, renderedRows, assignContainerRef, onScroll } =
+    useRenderedRows({ children });
 
-  .rows-container {
-    @apply flex-1 overflow-hidden;
-  }
-
-  .row-scroll-container {
-    @apply pr-px;
-  }
+  return (
+    <div
+      ref={assignContainerRef}
+      className={styles.container}
+      onScroll={onScroll}
+    >
+      <div
+        className={styles['inner-container']}
+        style={{
+          height: dimensions.height,
+          width: dimensions.width,
+        }}
+      >
+        {renderedRows}
+      </div>
+    </div>
+  );
 }
