@@ -11,19 +11,21 @@
  */
 
 /* Markdown table striped row styling for light mode */
-.light .sbdocs-content table tbody tr:nth-of-type(odd) {
+/* Only target tables in markdown content, exclude tables in story previews */
+.light .sbdocs-content table:not(.docs-story table, #storybook-root table) tbody tr:nth-of-type(odd) {
   background-color: rgb(0 0 0 / 0.04);
 }
 
-.light .sbdocs-content table tbody tr:nth-of-type(even) {
+.light .sbdocs-content table:not(.docs-story table, #storybook-root table) tbody tr:nth-of-type(even) {
   background-color: transparent;
 }
 
 /* Markdown table striped row styling for dark mode */
-.dark .sbdocs-content table tbody tr:nth-of-type(odd) {
+/* Only target tables in markdown content, exclude tables in story previews */
+.dark .sbdocs-content table:not(.docs-story table, #storybook-root table) tbody tr:nth-of-type(odd) {
   background-color: rgb(255 255 255 / 0.04);
 }
 
-.dark .sbdocs-content table tbody tr:nth-of-type(even) {
+.dark .sbdocs-content table:not(.docs-story table, #storybook-root table) tbody tr:nth-of-type(even) {
   background-color: transparent;
 }
