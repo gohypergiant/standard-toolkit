@@ -28,11 +28,37 @@ import { computeCircleMeasurements } from '../../shared/utils/geometry-measureme
  * Extends DrawCircleFromCenterMode to display diameter and area tooltip.
  *
  * Shows the diameter and area of the circle being drawn based on the radius
- * from center point to cursor position.
+ * from center point to cursor position. The tooltip updates in real-time as
+ * the cursor moves, displaying measurements in the configured distance units.
+ *
+ * ## Usage
+ * This mode is automatically used by DrawShapeLayer when drawing circles.
+ * The mode is cached at module level to prevent deck.gl assertion failures.
+ *
+ * ## Drawing Flow
+ * 1. Click to set center point
+ * 2. Move cursor to set radius (tooltip shows diameter and area)
+ * 3. Click to finish the circle
+ *
+ * @example
+ * ```typescript
+ * import { DrawCircleModeWithTooltip } from '@accelint/map-toolkit/deckgl/shapes/draw-shape-layer/modes';
+ *
+ * // Used internally by DrawShapeLayer
+ * const mode = new DrawCircleModeWithTooltip();
+ * ```
  */
 export class DrawCircleModeWithTooltip extends DrawCircleFromCenterMode {
+  /** Current tooltip state (null when not drawing) */
   private tooltip: Tooltip | null = null;
 
+  /**
+   * Handle pointer move events to update the tooltip with circle measurements.
+   * Calculates diameter and area based on the distance from center to cursor.
+   *
+   * @param event - Pointer move event with cursor position
+   * @param props - Mode properties including distance units configuration
+   */
   override handlePointerMove(
     event: PointerMoveEvent,
     props: ModeProps<FeatureCollection>,
@@ -68,6 +94,11 @@ export class DrawCircleModeWithTooltip extends DrawCircleFromCenterMode {
     };
   }
 
+  /**
+   * Get the current tooltip array for rendering.
+   *
+   * @returns Array containing the tooltip if one is active, empty array otherwise
+   */
   override getTooltips(): Tooltip[] {
     return this.tooltip ? [this.tooltip] : [];
   }

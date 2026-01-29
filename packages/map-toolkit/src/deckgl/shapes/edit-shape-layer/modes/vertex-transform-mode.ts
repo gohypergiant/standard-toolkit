@@ -29,6 +29,7 @@ import { ScaleModeWithFreeTransform } from './scale-mode-with-free-transform';
  * Use this mode for shapes where individual vertices can be dragged to reshape
  * the geometry. This provides the most flexibility for freeform shape editing.
  *
+ * ## Capabilities
  * This composite mode provides:
  * - **Vertex editing** (ModifyMode): Drag vertices to reshape the geometry
  * - **Translation** (TranslateMode): Drag the shape to move it
@@ -39,20 +40,43 @@ import { ScaleModeWithFreeTransform } from './scale-mode-with-free-transform';
  *   - Default: Free rotation
  *   - With Shift: Snap to 45° intervals
  *
- * Priority logic:
- * - If hovering over a scale handle, scaling takes priority
- * - If hovering over the rotate handle, rotation takes priority
- * - If hovering over a vertex (edit handle from ModifyMode), vertex editing takes priority
- * - Otherwise, dragging the shape translates it
+ * ## Handle Priority Logic
+ * When drag starts, modes are evaluated in this priority order:
+ * 1. If hovering over a vertex (edit handle) → vertex editing takes priority
+ * 2. If hovering over a scale handle → scaling takes priority
+ * 3. If hovering over the rotate handle → rotation takes priority
+ * 4. Otherwise → dragging the shape translates it
  *
- * The guides from all modes are combined, showing both vertex handles and transform handles.
+ * ## Visual Behavior
+ * The guides from all modes are combined, showing both vertex handles (white circles
+ * on existing points) and transform handles (corner/rotation handles on bounding box).
  *
- * Note: For shapes like rectangles where vertex editing is filtered out (to preserve
- * rotation), consider using BoundingTransformMode instead.
- *
- * Note: This mode does not show tooltips during editing because arbitrary polygons
- * don't have meaningful dimensions to display. Use BoundingTransformMode for shapes
+ * ## Tooltips
+ * This mode does not show live measurement tooltips during editing because arbitrary
+ * polygons don't have well-defined dimensions. Use BoundingTransformMode for shapes
  * like rectangles and ellipses where dimension tooltips are useful.
+ *
+ * ## Rectangle Special Handling
+ * For rectangles, vertex handles are hidden to preserve rotation and right angles.
+ * Only scale/rotate/translate handles are shown. Consider using BoundingTransformMode
+ * directly for rectangles if vertex editing should never be available.
+ *
+ * @example
+ * ```typescript
+ * import { VertexTransformMode } from '@accelint/map-toolkit/deckgl/shapes/edit-shape-layer/modes/vertex-transform-mode';
+ * import { EditableGeoJsonLayer } from '@deck.gl-community/editable-layers';
+ *
+ * // Used internally by EditShapeLayer for polygons and lines
+ * const mode = new VertexTransformMode();
+ *
+ * const layer = new EditableGeoJsonLayer({
+ *   mode,
+ *   data: polygonFeatureCollection,
+ *   selectedFeatureIndexes: [0],
+ *   onEdit: handleEdit,
+ *   // ... other props
+ * });
+ * ```
  */
 export class VertexTransformMode extends BaseTransformMode {
   private modifyMode: ModifyMode;

@@ -34,8 +34,8 @@ type ScaleContext = {
  * Extends ScaleMode to support non-uniform (free) scaling.
  *
  * ## Features
- * - Default: Free scaling - can stretch/squish in any direction
- * - With modeConfig.lockScaling = true: Uniform scaling (maintains aspect ratio)
+ * - **Default**: Free scaling - can stretch/squish in any direction
+ * - **With Shift**: Uniform scaling (maintains aspect ratio)
  *
  * ## How Non-Uniform Scaling Works
  *
@@ -69,6 +69,25 @@ type ScaleContext = {
  * All scale factors are clamped to a minimum of 0.01 to prevent:
  * - Shape inversion (negative scale flipping the shape inside-out)
  * - Shape collapse (scale of 0 making the shape a point/line)
+ *
+ * @example
+ * ```typescript
+ * import { ScaleModeWithFreeTransform } from '@accelint/map-toolkit/deckgl/shapes/edit-shape-layer/modes/scale-mode-with-free-transform';
+ * import { EditableGeoJsonLayer } from '@deck.gl-community/editable-layers';
+ *
+ * const mode = new ScaleModeWithFreeTransform();
+ *
+ * const layer = new EditableGeoJsonLayer({
+ *   mode,
+ *   data: featureCollection,
+ *   selectedFeatureIndexes: [0],
+ *   onEdit: handleEdit,
+ *   modeConfig: {
+ *     lockScaling: false, // Default: free scaling (stretch/squish)
+ *     // lockScaling: true, // Hold Shift: uniform scaling (maintain aspect ratio)
+ *   },
+ * });
+ * ```
  */
 export class ScaleModeWithFreeTransform extends ScaleMode {
   /**

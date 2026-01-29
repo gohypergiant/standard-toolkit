@@ -36,10 +36,24 @@ import type {
 import type { Feature } from 'geojson';
 import type { EditShapeLayerProps } from './types';
 
+/**
+ * Check if an edit type is a continuous event (fires during drag).
+ * Continuous events are batched with RAF for smooth performance.
+ *
+ * @param editType - The edit type string from EditableGeoJsonLayer
+ * @returns True if the edit type is continuous (e.g., 'translating', 'scaling', 'rotating')
+ */
 function isContinuousEditType(editType: string): boolean {
   return CONTINUOUS_EDIT_TYPES.has(editType);
 }
 
+/**
+ * Check if an edit type is a completion event (fires at drag end).
+ * Completion events update state immediately without RAF batching.
+ *
+ * @param editType - The edit type string from EditableGeoJsonLayer
+ * @returns True if the edit type is a completion event (e.g., 'translated', 'scaled', 'rotated')
+ */
 function isCompletionEditType(editType: string): boolean {
   return COMPLETION_EDIT_TYPES.has(editType);
 }

@@ -10,8 +10,38 @@
  * governing permissions and limitations under the License.
  */
 
+/**
+ * Namespace for all map-related events.
+ */
 export const MapEventsNamespace = 'map';
 
+/**
+ * Event keys for map interactions and control changes.
+ * These events are emitted through the event bus for communication between map components and consumers.
+ *
+ * @example
+ * ```typescript
+ * import { Broadcast } from '@accelint/bus';
+ * import { MapEvents } from '@accelint/map-toolkit/deckgl/base-map';
+ * import type { MapEventType } from '@accelint/map-toolkit/deckgl/base-map';
+ *
+ * const bus = Broadcast.getInstance<MapEventType>();
+ *
+ * // Listen for click events
+ * bus.on(MapEvents.click, (event) => {
+ *   console.log('Map clicked:', event.payload.info);
+ * });
+ *
+ * // Listen for viewport changes
+ * bus.on(MapEvents.viewport, (event) => {
+ *   console.log('Viewport changed:', event.payload.bounds);
+ * });
+ *
+ * // Emit control events
+ * bus.emit(MapEvents.disablePan, { id: mapId });
+ * bus.emit(MapEvents.enableZoom, { id: mapId });
+ * ```
+ */
 export const MapEvents = {
   click: `${MapEventsNamespace}:click`,
   hover: `${MapEventsNamespace}:hover`,

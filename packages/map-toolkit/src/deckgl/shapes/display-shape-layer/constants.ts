@@ -15,8 +15,10 @@
 import { DEFAULT_COLORS } from '../shared/constants';
 
 /**
- * Map interaction constants
- * Values derived from ngc2 for consistency
+ * Map interaction constants.
+ *
+ * Values derived from ngc2 for consistency with existing UI patterns.
+ * Controls sizing and interaction feedback for shape rendering.
  */
 export const MAP_INTERACTION = {
   LINE_WIDTH_MIN_PIXELS: 1, // Minimum line width in pixels
@@ -25,7 +27,10 @@ export const MAP_INTERACTION = {
 } as const;
 
 /**
- * Selection highlight configuration
+ * Selection highlight configuration.
+ *
+ * Controls the appearance of selected shapes, including highlight color
+ * and icon size adjustments for Point shapes.
  */
 export const SELECTION_HIGHLIGHT = {
   /** Uses DEFAULT_COLORS.highlight from shared constants */
@@ -34,8 +39,11 @@ export const SELECTION_HIGHLIGHT = {
 } as const;
 
 /**
- * Coffin corners configuration for Point selection/hover feedback
- * Coffin corners are bracket-like corners that appear around points
+ * Coffin corners configuration for Point selection/hover feedback.
+ *
+ * Coffin corners are bracket-like corners that appear around Point shapes
+ * with icons to indicate hover and selection states. They provide visual
+ * feedback without obscuring the icon itself.
  */
 export const COFFIN_CORNERS = {
   /** Icon name for hover state (white corners with background fill) */
@@ -49,7 +57,11 @@ export const COFFIN_CORNERS = {
 } as const;
 
 /**
- * Default props for DisplayShapeLayer
+ * Default props for DisplayShapeLayer.
+ *
+ * Provides sensible defaults for interactive shape display with labels,
+ * standard opacity handling, and minimal visual feedback. These can be
+ * overridden via layer props.
  */
 export const DEFAULT_DISPLAY_PROPS = {
   pickable: true,

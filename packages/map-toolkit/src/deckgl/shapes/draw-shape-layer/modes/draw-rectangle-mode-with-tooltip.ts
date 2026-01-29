@@ -37,16 +37,44 @@ import type { Position } from 'geojson';
  * Extends DrawRectangleMode to display dimensions and area tooltip.
  *
  * Shows the width, height, and total area of the rectangle being drawn.
- * Hold Shift to constrain to a square.
+ * The tooltip updates in real-time as the cursor moves, displaying measurements
+ * in the configured distance units.
+ *
+ * ## Drawing Flow
+ * 1. Click to set first corner
+ * 2. Move cursor (tooltip shows dimensions and area)
+ * 3. Click to set opposite corner and finish the rectangle
+ *
+ * ## Shift-to-Square Constraint
+ * Hold Shift while drawing to constrain the rectangle to a square with equal sides.
+ * Uses real-world distances (via Turf.js) to account for lat/lon distortion.
+ *
+ * @example
+ * ```typescript
+ * import { DrawRectangleModeWithTooltip } from '@accelint/map-toolkit/deckgl/shapes/draw-shape-layer/modes';
+ *
+ * // Used internally by DrawShapeLayer
+ * const mode = new DrawRectangleModeWithTooltip();
+ * ```
  */
 export class DrawRectangleModeWithTooltip extends DrawRectangleMode {
+  /** Current tooltip state (null when not drawing) */
   private tooltip: Tooltip | null = null;
+  /** Tracks whether Shift key is currently pressed for square constraint */
   private isShiftPressed = false;
 
   /**
    * Override getTwoClickPolygon to support Shift-constrained squares.
-   * When Shift is held, the rectangle is constrained to a square using
-   * real-world distances to account for lat/lon distortion.
+   *
+   * When Shift is held, constrains the rectangle to a square by using the larger
+   * of the horizontal or vertical distances as the side length. Uses real-world
+   * geographic distances (via Turf.js) to account for lat/lon distortion at different
+   * latitudes.
+   *
+   * @param coord1 - First corner coordinates [lon, lat]
+   * @param coord2 - Second corner coordinates [lon, lat]
+   * @param modeConfig - Mode configuration options
+   * @returns Polygon geometry for the rectangle or square
    */
   override getTwoClickPolygon(
     coord1: Position,
@@ -110,6 +138,16 @@ export class DrawRectangleModeWithTooltip extends DrawRectangleMode {
     return super.getTwoClickPolygon(coord1, finalCoord2, modeConfig);
   }
 
+  /**
+   * Handle pointer move events to update the tooltip with rectangle measurements.
+   *
+   * Tracks the Shift key state for square constraint and calculates the width,
+   * height, and area of the rectangle being drawn. Uses Turf.js for accurate
+   * geographic distance and area calculations.
+   *
+   * @param event - Pointer move event with cursor position and source event
+   * @param props - Mode properties including distance units configuration
+   */
   override handlePointerMove(
     event: PointerMoveEvent,
     props: ModeProps<FeatureCollection>,
@@ -164,6 +202,11 @@ export class DrawRectangleModeWithTooltip extends DrawRectangleMode {
     };
   }
 
+  /**
+   * Get the current tooltip array for rendering.
+   *
+   * @returns Array containing the tooltip if one is active, empty array otherwise
+   */
   override getTooltips(): Tooltip[] {
     return this.tooltip ? [this.tooltip] : [];
   }
