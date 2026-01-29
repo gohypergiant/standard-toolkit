@@ -68,5 +68,9 @@ export function Clock({ formatter = DEFAULT_FORMATTER, ...rest }: ClockProps) {
 
   useEffect(() => setClockInterval(() => setTime(now()), 1000), [now]);
 
-  return <time {...rest}>{time}</time>;
+  return (
+    <time suppressHydrationWarning {...rest}>
+      {time}
+    </time>
+  );
 }
