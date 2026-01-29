@@ -55,3 +55,5 @@ export const MONTHS: Record<number, string> = {
 };
 
 export const OUT_OF_VIEW_CHUNK_COUNT = 2;
+export const GANTT_ROW_HEIGHT_PX = 40;
+export const GANTT_BLOCK_HEIGHT_PX = 30;

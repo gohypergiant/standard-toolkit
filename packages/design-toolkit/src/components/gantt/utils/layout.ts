@@ -28,3 +28,27 @@ export function deriveTranslateXValue(
 
   return timeOutsideViewableRegion / msPerPx;
 }
+
+export function deriveRangeElementLayout(
+  renderedRegionBoundary: { startMs: number; endMs: number },
+  rangeElementBoundary: { startMs: number; endMs: number },
+  msPerPx: number,
+  currentPositionMs: number,
+) {
+  const renderedStartMs = Math.max(
+    renderedRegionBoundary.startMs,
+    rangeElementBoundary.startMs,
+  );
+  const renderedEndMs = Math.min(
+    renderedRegionBoundary.endMs,
+    rangeElementBoundary.endMs,
+  );
+
+  const offsetMs = currentPositionMs - renderedRegionBoundary.startMs;
+  const offsetPx = offsetMs / msPerPx;
+  const translateX =
+    (renderedStartMs - renderedRegionBoundary.startMs) / msPerPx - offsetPx;
+  const widthPx = (renderedEndMs - renderedStartMs) / msPerPx;
+
+  return { translateX, widthPx };
+}
