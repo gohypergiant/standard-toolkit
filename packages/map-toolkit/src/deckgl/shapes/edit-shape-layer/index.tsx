@@ -12,6 +12,15 @@
 
 'use client';
 
+import { Broadcast } from '@accelint/bus';
+import { useBus } from '@accelint/bus/react';
+import { Keycode, registerHotkey } from '@accelint/hotkey-manager';
+import { useHotkey } from '@accelint/hotkey-manager/react';
+import type {
+  EditAction,
+  FeatureCollection,
+} from '@deck.gl-community/editable-layers';
+import type { Feature } from 'geojson';
 import { useContext, useEffect, useRef } from 'react';
 import { MapContext } from '../../base-map/provider';
 import { useShiftZoomDisable } from '../shared/hooks/use-shift-zoom-disable';
@@ -23,17 +32,14 @@ import {
   CONTINUOUS_EDIT_TYPES,
   EDIT_SHAPE_LAYER_ID,
 } from './constants';
+import { type EditShapeEvent, EditShapeEvents } from './events';
 import { getEditModeInstance } from './modes';
 import {
   cancelEditingFromLayer,
   editStore,
+  saveEditingFromLayer,
   updateFeatureFromLayer,
 } from './store';
-import type {
-  EditAction,
-  FeatureCollection,
-} from '@deck.gl-community/editable-layers';
-import type { Feature } from 'geojson';
 import type { EditShapeLayerProps } from './types';
 
 /**
@@ -57,6 +63,18 @@ function isContinuousEditType(editType: string): boolean {
 function isCompletionEditType(editType: string): boolean {
   return COMPLETION_EDIT_TYPES.has(editType);
 }
+
+const bus = Broadcast.getInstance<EditShapeEvent>();
+const saveEditHotkey = registerHotkey({
+  id: 'saveEditHotkey',
+  key: {
+    code: Keycode.Enter,
+  },
+  onKeyUp: () => {
+    console.log('onKeyUp');
+    bus.emit(EditShapeEvents.confirmed);
+  },
+});
 
 /**
  * Convert a GeoJSON Feature to a FeatureCollection for EditableGeoJsonLayer.
@@ -157,6 +175,11 @@ export function EditShapeLayer({
 
   const isEditing = editingState?.editingShape != null;
 
+  // Hotkey manager. On enter, figure out what saving looks like.
+  // "hot key is already registered" yeah isn't that the hook's problem?
+  useHotkey(saveEditHotkey);
+  const { useOn } = useBus<EditShapeEvent>();
+
   // Disable zoom while Shift is held during editing
   // This prevents boxZoom (Shift+drag) from interfering with Shift modifier constraints
   // (e.g., Shift for uniform scaling, Shift for rotation snap)
@@ -176,6 +199,18 @@ export function EditShapeLayer({
       }
     };
   }, []);
+
+  useOn(EditShapeEvents.confirmed, () => {
+    console.log(1);
+    if (!editingState.editingShape) {
+      return;
+    }
+
+    console.log(2);
+
+    cancelPendingUpdate();
+    saveEditingFromLayer(actualMapId);
+  });
 
   // If not editing, return null (don't render the editable layer)
   if (!editingState?.editingShape) {

@@ -54,6 +54,8 @@ export const EditShapeEvents = {
   updated: 'shapes:updated',
   /** Editing was canceled */
   canceled: 'shapes:edit-canceled',
+  /** Editing changes have been confirmed via Hotkey */
+  confirmed: 'shapes:edit-confirmed',
 } as const;
 
 export type EditShapeEventType =
@@ -122,10 +124,16 @@ export type ShapeEditCanceledEvent = {
   target?: UniqueId;
 };
 
+export type ShapeEditConfirmedEvent = {
+  type: 'shapes:edit-confirmed';
+  payload: ShapeUpdatedPayload;
+};
+
 /**
  * Union of all edit shape event types
  */
 export type EditShapeEvent =
   | ShapeEditingEvent
   | ShapeUpdatedEvent
-  | ShapeEditCanceledEvent;
+  | ShapeEditCanceledEvent
+  | ShapeEditConfirmedEvent;
