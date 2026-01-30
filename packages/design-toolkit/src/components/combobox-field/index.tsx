@@ -18,6 +18,7 @@ import { useCallback } from 'react';
 import {
   Button,
   ComboBox,
+  type ComboBoxProps,
   composeRenderProps,
   FieldError,
   Input,
@@ -91,21 +92,22 @@ export function ComboBoxField<T extends OptionsDataItem>({
     onInputChange,
   );
 
-  const isEmpty = !inputValue;
-
   const errorMessage = errorMessageProp || null; // Protect against empty string
   const isSmall = size === 'small';
 
-  const handleInputChange = useCallback(
-    (value: string) => {
-      setInputValue(value);
-    },
-    [setInputValue],
-  );
-
   const handleClear = useCallback(() => {
-    handleInputChange('');
-  }, [handleInputChange]);
+    setInputValue('');
+  }, [setInputValue]);
+
+  const handleKeyDown = useCallback<Required<ComboBoxProps<T>>['onKeyDown']>(
+    (event) => {
+      onKeyDown?.(event);
+      if (isClearable && event.key === 'Escape' && inputValue) {
+        handleClear();
+      }
+    },
+    [onKeyDown, isClearable, handleClear, inputValue],
+  );
 
   return (
     <ComboBox<T>
@@ -118,23 +120,10 @@ export function ComboBoxField<T extends OptionsDataItem>({
       isInvalid={isInvalidProp || (errorMessage ? true : undefined)} // Leave uncontrolled if possible to fallback to validation state
       isReadOnly={isReadOnly}
       inputValue={inputValue}
-      onInputChange={handleInputChange}
-      onKeyDown={(event) => {
-        onKeyDown?.(event);
-
-        if (
-          isClearable &&
-          !event.defaultPrevented &&
-          event.key === 'Escape' &&
-          !isEmpty
-        ) {
-          event.preventDefault();
-          event.stopPropagation();
-          handleClear();
-        }
-      }}
+      onInputChange={setInputValue}
+      onKeyDown={handleKeyDown}
       data-size={size}
-      data-empty={isEmpty || null}
+      data-empty={!inputValue || null}
     >
       {({ isDisabled, isInvalid, isRequired }) => {
         const shouldShowDescription =

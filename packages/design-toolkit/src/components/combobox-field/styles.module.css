@@ -18,8 +18,7 @@
   }
 
   .control {
-    @apply rounded-medium px-s py-xs fg-primary-bold outline-interactive flex items-center outline;
-    @apply gap-xs;
+    @apply rounded-medium px-s py-xs fg-primary-bold outline-interactive gap-xs flex items-center outline;
 
     @variant placeholder {
       @apply fg-primary-muted;
