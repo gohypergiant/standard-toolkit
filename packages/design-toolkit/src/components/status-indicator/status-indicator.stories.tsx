@@ -22,6 +22,7 @@ import { TooltipTrigger } from '../tooltip/trigger';
 import { StatusIndicator } from '.';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ComponentProps } from 'react';
+import type { StatusIndicatorProps } from './types';
 
 type StoryArgs = ComponentProps<typeof StatusIndicator> & {
   label?: string;
@@ -47,6 +48,30 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<StoryArgs>;
+
+const STATUSES: StatusIndicatorProps['status'][] = [
+  'good',
+  'degraded',
+  'poor',
+] as const;
+
+// made this story for documentation only; hence the !dev tag
+export const Demo: Story = {
+  tags: ['!dev'],
+  render: () => (
+    <div className='flex gap-xl'>
+      {STATUSES.map((status) => (
+        <div
+          key={status}
+          className='flex flex-col items-center justify-center gap-s'
+        >
+          <StatusIndicator status={status} />
+          <Label className='capitalize'>{status}</Label>
+        </div>
+      ))}
+    </div>
+  ),
+};
 
 export const Default: Story = {
   render: (args) => (
