@@ -241,10 +241,13 @@ export type {
   FlashcardDetailsListProps,
   FlashcardProps,
 } from './components/flashcard/types';
+export { Seeker } from './components/gantt/components/seeker';
+export { TimeBlock } from './components/gantt/components/time-block';
 export { Tick, TimeMarker } from './components/gantt/components/time-marker';
 export {
   HOURS_MAPPING,
   MINUTES_MAPPING,
+  MONTHS,
   MS_PER_HOUR,
   MS_PER_MINUTE,
   TIMESCALE_MAPPING,
@@ -261,9 +264,19 @@ export type {
   Timescale,
 } from './components/gantt/types';
 export {
-  deriveTranslateXValue,
-  roundDateToInterval,
-} from './components/gantt/utils';
+  getMsPerPx,
+  getMsRepresentedInViewableRegion,
+  getTotalTimelineMs,
+  getTotalTimelineWidth,
+} from './components/gantt/utils/conversions';
+export { roundDateToInterval } from './components/gantt/utils/dates';
+export { formatTimestampLabel } from './components/gantt/utils/formatting';
+export { generateTimeMarkers } from './components/gantt/utils/generation';
+export {
+  getScrolledPixels,
+  getViewableRegionWidth,
+} from './components/gantt/utils/helpers';
+export { deriveTranslateXValue } from './components/gantt/utils/layout';
 export { HeroContext } from './components/hero/context';
 export { Hero } from './components/hero';
 export { HeroSubtitle } from './components/hero/subtitle';

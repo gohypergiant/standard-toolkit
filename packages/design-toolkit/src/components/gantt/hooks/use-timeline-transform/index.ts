@@ -12,7 +12,7 @@
 
 import { useCallback, useEffect } from 'react';
 import { useGanttStore } from '../../store';
-import { deriveTranslateXValue } from '../../utils';
+import { deriveTranslateXValue } from '../../utils/layout';
 import type { TimeMarkerObject } from '../../types';
 
 type UseTimelineTransformProps = {

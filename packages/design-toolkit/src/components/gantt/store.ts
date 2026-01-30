@@ -11,7 +11,7 @@
  */
 
 import { create } from 'zustand';
-import { roundDateToInterval } from './utils';
+import { roundDateToInterval } from './utils/dates';
 
 type GanttState = {
   currentPositionMs: number;

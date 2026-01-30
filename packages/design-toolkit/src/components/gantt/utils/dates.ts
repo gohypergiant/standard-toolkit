@@ -10,29 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { HOURS_MAPPING, MINUTES_MAPPING } from './constants';
-import type { TimeMarkerObject } from './types';
-
-export function deriveTranslateXValue(
-  msPerPx: number,
-  timeMarkers: TimeMarkerObject[],
-  currentPositionMs: number,
-) {
-  const firstTimeMarker = timeMarkers[0];
-
-  if (!firstTimeMarker) {
-    return 0;
-  }
-
-  // const offsetMs = viewableRegionTimeMs / 2;
-  // const midpointMs = currentPositionMs + offsetMs;
-
-  // const timestampAtStartOfViewableRegion =
-
-  const timeOutsideViewableRegion =
-    firstTimeMarker.timestampMs - currentPositionMs;
-  return timeOutsideViewableRegion / msPerPx;
-}
+import { HOURS_MAPPING, MINUTES_MAPPING } from '../constants';
 
 function msToSeconds(valueMs: number) {
   return valueMs / 1000;

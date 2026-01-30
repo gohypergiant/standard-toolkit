@@ -10,14 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
-import { type UIEvent, useRef, useState } from 'react';
-import { TimeMarker } from './components/time-marker';
-import { TIME_MARKER_WIDTH, TIMESCALE_MAPPING } from './constants';
+import { Seeker } from './components/seeker';
+import { TimeBlock } from './components/time-block';
 import { useGanttInit } from './hooks/use-gantt-init';
-import { useTimelineTransform } from './hooks/use-timeline-transform';
-import { selectors, useGanttStore } from './store';
-import { roundDateToInterval } from './utils';
-import type { TimeMarkerObject, Timescale } from './types';
+import { getMsPerPx } from './utils/conversions';
+import type { Timescale } from './types';
 
 type GanttProps = {
   startTimeMs: number;
@@ -25,149 +22,19 @@ type GanttProps = {
   timescale: Timescale;
 };
 
-function getMsPerPx(timelineChunkPx: number, timescale: Timescale) {
-  return TIMESCALE_MAPPING[timescale] / timelineChunkPx;
-}
-
-function getTotalTimelineMs(startTimeMs: number, endTimeMs: number) {
-  return endTimeMs - startTimeMs;
-}
-
-function getTotalTimelineWidth(totalTimelineMs: number, msPerPx: number) {
-  return totalTimelineMs / msPerPx;
-}
-
-function getScrolledPixels(event: UIEvent<HTMLDivElement>) {
-  const { currentTarget } = event;
-
-  return currentTarget.scrollLeft;
-}
-
-const updateCurrentPositionMs =
-  (startTimeMs: number, msPerPx: number) => (event: UIEvent<HTMLDivElement>) =>
-    useGanttStore
-      .getState()
-      .setCurrentPositionMs(startTimeMs + getScrolledPixels(event) * msPerPx);
-
-function formatTimestampLabel(timestampMs: number) {
-  const date = new Date(timestampMs);
-
-  return `${date.getUTCHours().toString().padStart(2, '0')}:${date.getUTCMinutes().toString().padStart(2, '0')}`;
-}
-
-function getViewableRegionWidth(element: HTMLElement | null) {
-  if (!element) {
-    return 0;
-  }
-
-  return element.clientWidth;
-}
-
-function getMsRepresentedInViewableRegion(
-  viewableRegionWidth: number,
-  msPerPx: number,
-) {
-  return viewableRegionWidth * msPerPx;
-}
-
-function generateTimeMarkers(
-  currentPositionMs: number,
-  viewableRegionWidth: number,
-  selectedTimeIntervalMs: number,
-  msPerPx: number,
-): TimeMarkerObject[] {
-  if (viewableRegionWidth === 0) {
-    return [];
-  }
-
-  const offsetMs =
-    getMsRepresentedInViewableRegion(viewableRegionWidth, msPerPx) / 2;
-
-  const proposedMarkerCount =
-    Math.ceil(viewableRegionWidth / TIME_MARKER_WIDTH) + 2;
-
-  const markersInViewableRegion =
-    proposedMarkerCount % 2 === 0
-      ? proposedMarkerCount + 1
-      : proposedMarkerCount;
-
-  const midpointMs = currentPositionMs + offsetMs;
-  const midpointIndex = Math.floor(markersInViewableRegion / 2);
-  const msPerMarker = TIME_MARKER_WIDTH * msPerPx;
-
-  const workerDate = new Date(midpointMs);
-  roundDateToInterval(workerDate, selectedTimeIntervalMs);
-  const roundedMidpointMs = workerDate.getTime();
-
-  const markers: TimeMarkerObject[] = [];
-
-  for (let i = 0; i < markersInViewableRegion; i++) {
-    const markerTimestampMs =
-      roundedMidpointMs + msPerMarker * (i - midpointIndex);
-
-    markers.push({
-      timestampMs: markerTimestampMs,
-    });
-  }
-
-  return markers;
-}
-
 export function Gantt({ startTimeMs, endTimeMs, timescale }: GanttProps) {
-  const [containerElement, setContainerElement] =
-    useState<HTMLDivElement | null>(null);
-  const timelineElementRef = useRef<HTMLDivElement | null>(null);
   useGanttInit(startTimeMs);
-  const selectedTimeIntervalMs = TIMESCALE_MAPPING[timescale];
-  const roundedTimestampMs = useGanttStore(
-    selectors.roundedCurrentPositionMs(selectedTimeIntervalMs),
-  );
-  const msPerPx = getMsPerPx(TIME_MARKER_WIDTH, timescale);
-  const width = getTotalTimelineWidth(
-    getTotalTimelineMs(startTimeMs, endTimeMs),
-    msPerPx,
-  );
-
-  const renderedMarkers = generateTimeMarkers(
-    roundedTimestampMs,
-    getViewableRegionWidth(containerElement),
-    selectedTimeIntervalMs,
-    msPerPx,
-  );
-
-  useTimelineTransform({
-    timelineElement: timelineElementRef.current,
-    msPerPx,
-    timeMarkers: renderedMarkers,
-  });
-
-  const assignRef = (node: HTMLDivElement) => {
-    if (!node) {
-      return;
-    }
-
-    setContainerElement(node);
-  };
+  const msPerPx = getMsPerPx(timescale);
 
   return (
     <div className='w-full overflow-hidden'>
-      <div ref={assignRef}>
-        <div ref={timelineElementRef} className='flex'>
-          {renderedMarkers.map((marker) => (
-            <TimeMarker
-              key={marker.timestampMs}
-              label={formatTimestampLabel(marker.timestampMs)}
-            />
-          ))}
-        </div>
-      </div>
-      <div
-        style={{ overflowX: 'scroll' }}
-        onScroll={updateCurrentPositionMs(startTimeMs, msPerPx)}
-        className='p-px'
-      >
-        <div style={{ width, overflowX: 'auto' }} />
-      </div>
+      <TimeBlock msPerPx={msPerPx} timescale={timescale} />
+      {/* Render Rows */}
+      <Seeker
+        startTimeMs={startTimeMs}
+        endTimeMs={endTimeMs}
+        msPerPx={msPerPx}
+      />
     </div>
   );
 }
