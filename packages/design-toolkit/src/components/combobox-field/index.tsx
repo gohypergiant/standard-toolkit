@@ -27,7 +27,7 @@ import {
   useContextProps,
   Virtualizer,
 } from 'react-aria-components';
-import { ClearButton } from '../button/clear';
+import { ClearButton } from '../button/__internal__/clear';
 import { Icon } from '../icon';
 import { Label } from '../label';
 import { Options } from '../options';

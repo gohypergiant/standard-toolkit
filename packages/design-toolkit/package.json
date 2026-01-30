@@ -93,7 +93,6 @@
     "./components/breadcrumbs/item": "./dist/components/breadcrumbs/item.js",
     "./components/breadcrumbs/types": "./dist/components/breadcrumbs/types.js",
     "./components/button": "./dist/components/button/index.js",
-    "./components/button/clear": "./dist/components/button/clear.js",
     "./components/button/context": "./dist/components/button/context.js",
     "./components/button/link": "./dist/components/button/link.js",
     "./components/button/toggle": "./dist/components/button/toggle.js",

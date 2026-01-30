@@ -21,7 +21,7 @@ import {
   Button,
   composeRenderProps,
 } from 'react-aria-components';
-import { Icon } from '../icon';
+import { Icon } from '../../icon';
 import styles from './clear.module.css';
 
 /**

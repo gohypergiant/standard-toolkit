@@ -14,7 +14,7 @@
 
 @layer components.l1 {
   .clearButton {
-    @apply w-content rounded-small flex shrink-0 cursor-pointer items-center justify-center outline outline-transparent;
+    @apply w-content rounded-small flex shrink-0 cursor-pointer items-center justify-center;
     @apply gap-xxs p-xxs py-xs text-button-s;
     @apply min-w-0;
 

@@ -22,7 +22,7 @@ import {
   composeRenderProps,
   useContextProps,
 } from 'react-aria-components';
-import { ClearButton } from '../button/clear';
+import { ClearButton } from '../button/__internal__/clear';
 import { IconProvider } from '../icon/context';
 import { InputContext } from './context';
 import styles from './styles.module.css';
