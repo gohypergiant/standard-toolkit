@@ -14,7 +14,7 @@
 
 @layer components.l1 {
   .button {
-    @apply w-content rounded-medium flex shrink-0 cursor-pointer items-center justify-center outline outline-transparent;
+    @apply w-content rounded-medium flex shrink-0 cursor-pointer items-center justify-center outline outline-transparent select-none;
 
     @variant size-large {
       @apply gap-xs px-l py-s text-button-l;

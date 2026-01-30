@@ -18,7 +18,7 @@
   }
 
   .chip {
-    @apply fg-primary-bold gap-xxs w-content inline-flex items-center justify-center rounded-full outline;
+    @apply fg-primary-bold gap-xxs w-content inline-flex items-center justify-center rounded-full outline select-none;
 
     @variant size-medium {
       @apply px-s py-xs text-body-s;

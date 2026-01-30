@@ -18,7 +18,7 @@
   }
 
   .accordion {
-    @apply flex w-full flex-col bg-transparent;
+    @apply flex w-full flex-col bg-transparent select-none;
   }
 
   .header {

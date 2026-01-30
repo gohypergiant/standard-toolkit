@@ -18,7 +18,7 @@
   }
 
   .item {
-    @apply gap-s flex items-center;
+    @apply gap-s flex items-center select-none;
 
     @variant current {
       @apply fg-accent-primary-bold;

@@ -14,7 +14,7 @@
 
 @layer components.l1 {
   .list {
-    @apply rounded-medium bg-surface-overlay shadow-elevation-overlay outline-static overflow-x-clip overflow-y-auto outline;
+    @apply rounded-medium bg-surface-overlay shadow-elevation-overlay outline-static overflow-x-clip overflow-y-auto outline select-none;
     max-height: 200px;
   }
 
