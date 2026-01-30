@@ -22,7 +22,7 @@ import {
   composeRenderProps,
 } from 'react-aria-components';
 import { Icon } from '../../icon';
-import styles from './clear.module.css';
+import styles from './styles.module.css';
 
 /**
  * ClearButton - Internal-only button for clearing input values
