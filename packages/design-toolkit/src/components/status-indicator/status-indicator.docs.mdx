@@ -1,0 +1,69 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+
+import * as StatusIndicatorStories from './status-indicator.stories';
+
+<Meta of={StatusIndicatorStories} />
+
+# StatusIndicator
+
+The `StatusIndicator` component renders a small, non-interactive visual indicator used to communicate a current status at-a-glance. It is intended for use in places like tables, lists, headers, and health/availability summaries where you need a compact, consistent status dot.
+
+It is composed of a single element:
+
+- **StatusIndicator** — a `span` that renders a status “dot” via styling and a `data-status` attribute.
+
+## Example usage
+
+```tsx
+// Basic usage
+<StatusIndicator status="good" />
+
+// Degraded status
+<StatusIndicator status="degraded" />
+
+// Poor status
+<StatusIndicator status="poor" />
+
+// With custom styling hook
+<StatusIndicator
+  status="good"
+  className="ring-2 ring-offset-2"
+/>
+```
+
+## Statuses
+The component supports the following statuses (mapped via data-status):
+
+good — normal/healthy state
+
+degraded — partial issues / warning state
+
+poor — unhealthy / critical state
+
+Note: The visual treatment for each status is defined in the component’s CSS module (styles.module.css) using data-status variants.
+
+<Canvas of={StatusIndicatorStories.Demo} />
+
+## Props
+
+| Prop        | Type                             | Default  | Description                                                 |
+| ----------- | -------------------------------- | -------- | ----------------------------------------------------------- |
+| `status`    | `'good' \| 'degraded' \| 'poor'` | `'good'` | The status to display; applied as `data-status` for styling |
+| `className` | `string`                         | —        | Custom CSS class for the status indicator                   |
+
+Extends standard HTML `<span>` props.
+
+
+## Accessibility
+StatusIndicator is presentational and does not provide its own accessible name. If the status meaning must be announced to assistive tech, wrap or annotate it in the parent context, for example:
+
+```tsx
+<StatusIndicator aria-label="Status: good" status="good" />
+```
+
+Or pair it with visible text.
+
+## Implementation Notes
+The component uses a CSS Module (styles.module.css) to apply the base “dot” styling and to style variants via the data-status attribute.
+
+The component is intentionally non-interactive and does not handle keyboard/mouse events.
