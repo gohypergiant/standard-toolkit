@@ -18,7 +18,7 @@
   }
 
   .accordion {
-    @apply flex w-full flex-col bg-transparent select-none;
+    @apply flex w-full flex-col bg-transparent;
   }
 
   .header {
@@ -70,7 +70,7 @@
   }
 
   .trigger {
-    @apply w-full justify-start px-0;
+    @apply w-full justify-start px-0 select-none;
 
     &.cozy {
       @apply gap-s text-header-m;

@@ -18,7 +18,7 @@
   }
 
   .chip {
-    @apply fg-primary-bold gap-xxs w-content inline-flex items-center justify-center rounded-full outline select-none;
+    @apply fg-primary-bold gap-xxs w-content inline-flex items-center justify-center rounded-full outline;
 
     @variant size-medium {
       @apply px-s py-xs text-body-s;
@@ -50,7 +50,7 @@
   }
 
   .selectable {
-    @apply outline-interactive cursor-pointer;
+    @apply outline-interactive cursor-pointer select-none;
 
     @variant hover {
       @apply outline-interactive-hover outline-2;
@@ -90,7 +90,7 @@
   }
 
   .deletable {
-    @apply gap-xs outline-interactive fg-primary-muted cursor-default;
+    @apply gap-xs outline-interactive fg-primary-muted cursor-default select-none;
 
     @variant has-group-hover/button {
       @apply fg-hover;

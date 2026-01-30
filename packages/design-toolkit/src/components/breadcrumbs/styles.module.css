@@ -18,7 +18,7 @@
   }
 
   .item {
-    @apply gap-s flex items-center select-none;
+    @apply gap-s flex items-center;
 
     @variant current {
       @apply fg-accent-primary-bold;
@@ -28,6 +28,7 @@
 
 @layer components.l2 {
   .link {
+    @apply select-none;
     @variant hover {
       @apply fg-primary-bold;
     }
