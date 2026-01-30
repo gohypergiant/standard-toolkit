@@ -31,26 +31,36 @@ This provides:
 
 #### `hexToColor(hex: string): Color`
 
-Parse hex color strings. Supports 3, 6, and 8 character formats.
+Parse hex color strings. Supports 3, 4, 6, and 8 character formats following the CSS hex color spec.
 
 ```ts
 import { hexToColor } from '@accelint/converters/color';
 
-hexToColor('#FF8040');      // [255, 128, 64, 255]
-hexToColor('#F84');         // [255, 136, 68, 255] (expands to FF8844)
-hexToColor('#FF804080');    // [255, 128, 64, 128]
+hexToColor('#FF8040');      // [255, 128, 64, 255] (6-char: #RRGGBB)
+hexToColor('#F84');         // [255, 136, 68, 255] (3-char: #RGB expands to #FF8844)
+hexToColor('#F840');        // [255, 136, 68, 0]   (4-char: #RGBA expands to #FF884400)
+hexToColor('#FF804080');    // [255, 128, 64, 128] (8-char: #RRGGBBAA)
 hexToColor('FF8040');       // [255, 128, 64, 255] (hash optional)
 ```
 
 #### `cssRgbaStringToColor(css: string): Color`
 
-Parse CSS RGBA/RGB strings.
+Parse CSS RGBA/RGB strings. Supports CSS Color Module Level 4 spec including legacy comma-separated and modern space-separated syntax with percentages.
 
 ```ts
 import { cssRgbaStringToColor } from '@accelint/converters/color';
 
+// Legacy comma-separated syntax
 cssRgbaStringToColor('rgba(255, 128, 64, 0.5)');  // [255, 128, 64, 128]
 cssRgbaStringToColor('rgb(255, 128, 64)');        // [255, 128, 64, 255]
+
+// Modern space-separated syntax with slash for alpha
+cssRgbaStringToColor('rgb(255 128 64 / 0.5)');    // [255, 128, 64, 128]
+cssRgbaStringToColor('rgb(255 128 64)');          // [255, 128, 64, 255]
+
+// Percentage RGB values
+cssRgbaStringToColor('rgb(100%, 50%, 25%)');      // [255, 128, 64, 255]
+cssRgbaStringToColor('rgb(100% 50% 25% / 50%)');  // [255, 128, 64, 128]
 ```
 
 #### `cssRgbaTupleToColor(tuple: [r, g, b, a]): Color`
@@ -262,6 +272,8 @@ type CssRgbaObject = {
 | **CSS RGBA String** | 0-255 | 0-1 | `"rgba(255, 128, 64, 0.5)"` |
 | **CSS RGBA Tuple** | 0-255 | 0-1 | `[255, 128, 64, 0.5]` |
 | **CSS RGBA Object** | 0-255 | 0-1 | `{ r: 255, g: 128, b: 64, a: 0.5 }` |
+| **Hex (3-char)** | 0-F | - | `"#F84"` (expands to #FF8844) |
+| **Hex (4-char)** | 0-F | 0-F | `"#F840"` (expands to #FF884400) |
 | **Hex (6-char)** | 00-FF | - | `"#FF8040"` |
 | **Hex (8-char)** | 00-FF | 00-FF | `"#FF804080"` |
 

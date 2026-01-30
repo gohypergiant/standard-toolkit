@@ -1,6 +1,6 @@
 # @accelint/converters
 
-A lightweight JavaScript utility for converting between various value types, including booleans, numbers, geographic coordinates, and map tile coordinates.
+A lightweight JavaScript utility for converting between various value types, including colors, booleans, numbers, geographic coordinates, and map tile coordinates.
 
 ## Installation
 

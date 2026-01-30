@@ -40,6 +40,13 @@ describe('color', () => {
       ['#F84', [255, 136, 68, 255]], // F84 -> FF8844
       ['#000', [0, 0, 0, 255]],
       ['#FFF', [255, 255, 255, 255]],
+      // 4-char hex (RGBA) - expands to RRGGBBAA
+      ['#F09A', [255, 0, 153, 170]], // F09A -> FF0099AA
+      ['#F840', [255, 136, 68, 0]], // F840 -> FF884400
+      ['#000F', [0, 0, 0, 255]], // 000F -> 000000FF
+      ['#0000', [0, 0, 0, 0]], // 0000 -> 00000000
+      ['#FFFF', [255, 255, 255, 255]], // FFFF -> FFFFFFFF
+      ['F84A', [255, 136, 68, 170]], // Without hash
       // 8-char hex (RRGGBBAA)
       ['#FF804080', [255, 128, 64, 128]],
       ['#FF8040FF', [255, 128, 64, 255]],
@@ -51,8 +58,8 @@ describe('color', () => {
     it.each([
       'invalid',
       '#GG0000', // Invalid hex character
-      '#FF', // Too short
-      '#FF00', // Invalid length (4 chars)
+      '#FF', // Too short (2 chars)
+      '#FFFFF', // Invalid length (5 chars)
       '#FF00000', // Invalid length (7 chars)
       '#FF0000000', // Invalid length (9 chars)
       '',
@@ -81,31 +88,88 @@ describe('color', () => {
   });
 
   describe('cssRgbaStringToColor', () => {
-    it.each([
-      ['rgba(255, 128, 64, 1)', [255, 128, 64, 255]],
-      ['rgba(255, 128, 64, 0.5)', [255, 128, 64, 128]],
-      ['rgba(255, 128, 64, 0)', [255, 128, 64, 0]],
-      ['rgb(255, 128, 64)', [255, 128, 64, 255]],
-      ['rgba(  255  ,  128  ,  64  ,  1  )', [255, 128, 64, 255]],
-      ['rgba(0, 0, 0, 0)', [0, 0, 0, 0]],
-      ['rgb(0, 0, 0)', [0, 0, 0, 255]],
-      ['rgba(255, 255, 255, 1)', [255, 255, 255, 255]],
-    ] as const)('should parse %s to %o', (css, expected) => {
-      expect(cssRgbaStringToColor(css)).toEqual(expected);
+    describe('legacy comma-separated syntax', () => {
+      it.each([
+        // Integer RGB with decimal alpha
+        ['rgba(255, 128, 64, 1)', [255, 128, 64, 255]],
+        ['rgba(255, 128, 64, 0.5)', [255, 128, 64, 128]],
+        ['rgba(255, 128, 64, 0)', [255, 128, 64, 0]],
+        ['rgb(255, 128, 64)', [255, 128, 64, 255]],
+        ['rgba(  255  ,  128  ,  64  ,  1  )', [255, 128, 64, 255]],
+        ['rgba(0, 0, 0, 0)', [0, 0, 0, 0]],
+        ['rgb(0, 0, 0)', [0, 0, 0, 255]],
+        ['rgba(255, 255, 255, 1)', [255, 255, 255, 255]],
+        // Percentage RGB with decimal alpha
+        ['rgb(100%, 50%, 25%)', [255, 128, 64, 255]],
+        ['rgba(100%, 50%, 25%, 0.5)', [255, 128, 64, 128]],
+        ['rgba(100%, 50%, 25%, 1)', [255, 128, 64, 255]],
+        ['rgba(100%, 50%, 25%, 0)', [255, 128, 64, 0]],
+        ['rgb(0%, 0%, 0%)', [0, 0, 0, 255]],
+        ['rgb(100%, 100%, 100%)', [255, 255, 255, 255]],
+        // Percentage RGB with percentage alpha
+        ['rgba(100%, 50%, 25%, 50%)', [255, 128, 64, 128]],
+        ['rgba(100%, 50%, 25%, 100%)', [255, 128, 64, 255]],
+        ['rgba(100%, 50%, 25%, 0%)', [255, 128, 64, 0]],
+        // Integer RGB with percentage alpha
+        ['rgba(255, 128, 64, 50%)', [255, 128, 64, 128]],
+        ['rgba(255, 128, 64, 100%)', [255, 128, 64, 255]],
+      ] as const)('should parse %s to %o', (css, expected) => {
+        expect(cssRgbaStringToColor(css)).toEqual(expected);
+      });
     });
 
-    it.each([
-      'invalid',
-      'rgb(256, 0, 0)',
-      'rgb(-1, 0, 0)',
-      'rgba(1,2)',
-      'rgba(1, 2, 3, 2)',
-      'rgba(1, 2, 3, -0.5)',
-      '',
-      'rgba()',
-      'rgb()',
-    ])('should throw for invalid input: %s', (css) => {
-      expect(() => cssRgbaStringToColor(css)).toThrow();
+    describe('modern space-separated syntax', () => {
+      it.each([
+        // Integer RGB without alpha
+        ['rgb(255 128 64)', [255, 128, 64, 255]],
+        ['rgb(0 0 0)', [0, 0, 0, 255]],
+        ['rgb(255 255 255)', [255, 255, 255, 255]],
+        // Integer RGB with decimal alpha (slash separator)
+        ['rgb(255 128 64 / 0.5)', [255, 128, 64, 128]],
+        ['rgb(255 128 64 / 1)', [255, 128, 64, 255]],
+        ['rgb(255 128 64 / 0)', [255, 128, 64, 0]],
+        ['rgb(  255  128  64  /  0.5  )', [255, 128, 64, 128]],
+        // Integer RGB with percentage alpha (slash separator)
+        ['rgb(255 128 64 / 50%)', [255, 128, 64, 128]],
+        ['rgb(255 128 64 / 100%)', [255, 128, 64, 255]],
+        ['rgb(255 128 64 / 0%)', [255, 128, 64, 0]],
+        // Percentage RGB without alpha
+        ['rgb(100% 50% 25%)', [255, 128, 64, 255]],
+        ['rgb(0% 0% 0%)', [0, 0, 0, 255]],
+        ['rgb(100% 100% 100%)', [255, 255, 255, 255]],
+        // Percentage RGB with decimal alpha (slash separator)
+        ['rgb(100% 50% 25% / 0.5)', [255, 128, 64, 128]],
+        ['rgb(100% 50% 25% / 1)', [255, 128, 64, 255]],
+        ['rgb(100% 50% 25% / 0)', [255, 128, 64, 0]],
+        // Percentage RGB with percentage alpha (slash separator)
+        ['rgb(100% 50% 25% / 50%)', [255, 128, 64, 128]],
+        ['rgb(100% 50% 25% / 100%)', [255, 128, 64, 255]],
+        ['rgb(100% 50% 25% / 0%)', [255, 128, 64, 0]],
+      ] as const)('should parse %s to %o', (css, expected) => {
+        expect(cssRgbaStringToColor(css)).toEqual(expected);
+      });
+    });
+
+    describe('error cases', () => {
+      it.each([
+        'invalid',
+        'rgb(256, 0, 0)', // Out of range
+        'rgb(-1, 0, 0)', // Negative
+        'rgba(1,2)', // Incomplete
+        'rgba(1, 2, 3, 2)', // Alpha out of range
+        'rgba(1, 2, 3, -0.5)', // Negative alpha
+        'rgba(1, 2, 3, 101%)', // Alpha percentage out of range
+        '', // Empty
+        'rgba()', // Empty values
+        'rgb()', // Empty values
+        'rgb(255, 50%, 64)', // Mixed integer and percentage
+        'rgb(100%, 128, 25%)', // Mixed integer and percentage
+        'rgb(50%, 128, 64)', // Mixed integer and percentage
+        'rgb(255 128, 64)', // Mixed separators
+        'rgb(255, 128 64)', // Mixed separators
+      ])('should throw for invalid input: %s', (css) => {
+        expect(() => cssRgbaStringToColor(css)).toThrow();
+      });
     });
   });
 
@@ -179,6 +243,17 @@ describe('color', () => {
           values as readonly [number, number, number, number],
         ),
       ).toThrow();
+    });
+
+    it('should throw for tuple with wrong length', () => {
+      expect(() =>
+        cssRgbaTupleToColor([255, 128, 64] as unknown as readonly [
+          number,
+          number,
+          number,
+          number,
+        ]),
+      ).toThrow('CSS RGBA tuple must have exactly 4 values');
     });
   });
 
