@@ -15,6 +15,7 @@
  *
  * @param a - The first value in the bitwise XOR.
  * @param b - The second value in the bitwise XOR.
+ * @returns true if exactly one value is truthy, false otherwise.
  *
  * @see https://en.wikipedia.org/wiki/Exclusive_or
  *
@@ -22,8 +23,10 @@
  * pure function
  *
  * @example
+ * ```typescript
  * xor(true)(0);
  * // true
+ * ```
  */
 export const xor = (a: unknown) => (b: unknown) =>
   Boolean((a ? 1 : 0) ^ (b ? 1 : 0));
@@ -35,6 +38,7 @@ export const xor = (a: unknown) => (b: unknown) =>
  * @param a - The first function to bitwise XOR the return of.
  * @param b - The second function to bitwise XOR the return of.
  * @param c - The value to pass to both `a` and `b`.
+ * @returns true if exactly one function result is truthy, false otherwise.
  *
  * @see https://en.wikipedia.org/wiki/Exclusive_or
  *
@@ -42,8 +46,10 @@ export const xor = (a: unknown) => (b: unknown) =>
  * pure function
  *
  * @example
+ * ```typescript
  * xorFn(s => s.trim())(s => s.trimEnd())('foo bar ');
  * // false
+ * ```
  */
 export const xorFn =
   <T>(a: (x: T) => unknown) =>

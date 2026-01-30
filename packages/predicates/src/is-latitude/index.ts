@@ -19,13 +19,18 @@ const MAX_ABSOLUTE_VALUE = 90;
  * Assumes degrees as the unit of measure.
  *
  * @param val - The value to check whether or not it is a latitude.
+ * @returns True if the value is a finite number between -90 and 90 (inclusive), false otherwise.
  *
  * @example
- * isLatitude(-90) // true
- * isLatitude(0) // true
- * isLatitude(90) // true
- * isLatitude(-100) // false
- * isLatitude(NaN) // false
+ * ```typescript
+ * import { isLatitude } from '@accelint/predicates/is-latitude';
+ *
+ * isLatitude(-90);  // true
+ * isLatitude(0);    // true
+ * isLatitude(90);   // true
+ * isLatitude(-100); // false
+ * isLatitude(NaN);  // false
+ * ```
  */
 export function isLatitude(val: unknown) {
   if (!isFiniteNumber(val)) {

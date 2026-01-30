@@ -37,7 +37,7 @@ export interface FilteredPicksResult<T> {
  * @returns Object containing filtered picks and whether filtering occurred
  *
  * @example
- * ```ts
+ * ```typescript
  * const picks = props.lastPointerMoveEvent?.picks;
  * if (picks && picks.length > 0) {
  *   const { filteredPicks, didFilter } = filterGeometryAwarePicks(picks);

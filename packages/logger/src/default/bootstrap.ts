@@ -17,6 +17,30 @@ import { callsitePlugin } from '../plugins/callsite';
 import { environmentPlugin } from '../plugins/environment';
 import type { LoggerOptions } from '../definitions';
 
+/**
+ * Initializes and configures a LogLayer instance with default plugins and transports.
+ *
+ * This function creates a logger with pre-configured callsite tracking, environment detection,
+ * and error serialization. It supports both pretty-printed and structured JSON output.
+ *
+ * @param options - Logger configuration options
+ * @returns A configured LogLayer instance with all plugins and transports applied
+ *
+ * @example
+ * ```typescript
+ * import { bootstrap } from '@accelint/logger/default/bootstrap';
+ *
+ * const logger = bootstrap({
+ *   enabled: true,
+ *   level: 'info',
+ *   env: 'production',
+ *   pretty: false,
+ *   prefix: '[API]',
+ * });
+ *
+ * logger.info('Server started', { port: 3000 });
+ * ```
+ */
 export function bootstrap({
   enabled,
   plugins = [],

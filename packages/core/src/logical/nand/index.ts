@@ -20,6 +20,7 @@ import { not } from '../not';
  * @template B - The type of the second input value.
  * @param a - The first value to compare.
  * @param b - The second value to compare.
+ * @returns true if not both values are truthy, false otherwise.
  *
  * @see https://en.wikipedia.org/wiki/Sheffer_stroke
  *
@@ -27,8 +28,10 @@ import { not } from '../not';
  * pure function
  *
  * @example
+ * ```typescript
  * nand(true)(0);
  * // true
+ * ```
  */
 export const nand =
   <A>(a: A) =>
@@ -44,6 +47,7 @@ export const nand =
  * @param a - The first function to compare the return of.
  * @param b - The second function to compare the return of.
  * @param c - The value to pass to both `a` and `b`.
+ * @returns true if not both function results are truthy, false otherwise.
  *
  * @see https://en.wikipedia.org/wiki/Sheffer_stroke
  *
@@ -51,8 +55,10 @@ export const nand =
  * pure function
  *
  * @example
+ * ```typescript
  * nandFn(s => s.trim())(s => s.trimEnd())('foo bar ');
  * // false
+ * ```
  */
 export const nandFn =
   <T, A>(a: (x: T) => A) =>

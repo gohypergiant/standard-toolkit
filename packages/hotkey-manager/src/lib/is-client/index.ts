@@ -11,6 +11,18 @@
  */
 
 /**
- * Is true if running client-side
+ * Is true if running client-side.
+ *
+ * @example
+ * ```typescript
+ * import { isClient } from '@/lib/is-client';
+ *
+ * if (isClient) {
+ *   console.log('Running in browser');
+ *   window.addEventListener('keydown', handler);
+ * } else {
+ *   console.log('Running on server');
+ * }
+ * ```
  */
 export const isClient = typeof window !== 'undefined';

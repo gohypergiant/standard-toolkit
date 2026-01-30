@@ -29,18 +29,40 @@ import { formatDistanceTooltip } from '../../shared/constants';
  * Extends DrawLineStringMode to display distance tooltip between points.
  *
  * Shows the distance from the last clicked point to the current cursor position
- * while drawing a line string.
+ * while drawing a line string. The tooltip updates in real-time as the cursor moves.
  *
+ * ## Drawing Flow
+ * 1. Click to add first point
+ * 2. Move cursor (tooltip shows distance from last point)
+ * 3. Click to add more points
+ * 4. Double-click to finish the line string
+ *
+ * ## Double-Click Workaround
  * Includes a workaround for the double-click to finish issue in @deck.gl-community/editable-layers ~9.1.
  * This will be fixed in a future version (PR #225).
+ *
+ * @example
+ * ```typescript
+ * import { DrawLineStringModeWithTooltip } from '@accelint/map-toolkit/deckgl/shapes/draw-shape-layer/modes';
+ *
+ * // Used internally by DrawShapeLayer
+ * const mode = new DrawLineStringModeWithTooltip();
+ * ```
  */
 export class DrawLineStringModeWithTooltip extends DrawLineStringMode {
+  /** Current tooltip state (null when not drawing) */
   private tooltip: Tooltip | null = null;
+  /** Cached mode props for double-click workaround */
   private lastModeProps: ModeProps<FeatureCollection> | null = null;
 
   /**
    * Finish drawing the line string.
+   *
+   * Creates a LineString geometry from the click sequence and emits an edit action.
+   * Requires at least 2 points to create a valid line string.
    * Extracted to share between double-click workaround and parent class logic.
+   *
+   * @param props - Mode properties with onEdit callback
    */
   private finishDrawing(props: ModeProps<FeatureCollection>): void {
     const clickSequence = this.getClickSequence();
@@ -77,6 +99,12 @@ export class DrawLineStringModeWithTooltip extends DrawLineStringMode {
 
   /**
    * Override handleClick to store props for double-click workaround.
+   *
+   * Caches the mode props so that the external double-click handler can
+   * access them when finishing the drawing.
+   *
+   * @param event - Click event with map coordinates
+   * @param props - Mode properties including onEdit callback
    */
   override handleClick(
     event: ClickEvent,
@@ -87,6 +115,15 @@ export class DrawLineStringModeWithTooltip extends DrawLineStringMode {
     super.handleClick(event, props);
   }
 
+  /**
+   * Handle pointer move events to update the tooltip with distance.
+   *
+   * Calculates the distance from the last clicked point to the current
+   * cursor position and displays it in the configured distance units.
+   *
+   * @param event - Pointer move event with cursor position
+   * @param props - Mode properties including distance units configuration
+   */
   override handlePointerMove(
     event: PointerMoveEvent,
     props: ModeProps<FeatureCollection>,
@@ -115,6 +152,11 @@ export class DrawLineStringModeWithTooltip extends DrawLineStringMode {
     };
   }
 
+  /**
+   * Get the current tooltip array for rendering.
+   *
+   * @returns Array containing the tooltip if one is active, empty array otherwise
+   */
   override getTooltips(): Tooltip[] {
     return this.tooltip ? [this.tooltip] : [];
   }

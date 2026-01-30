@@ -35,8 +35,10 @@ export type ParseResults = [Tokens, Errors];
  * pure function
  *
  * @example
+ * ```typescript
  * const input = '1 2 3 / 4 5 6'
  * parse(input); // [['1', '2', '3', '/', '4', '5', '6'], []]
+ * ```
  *
  * @description
  * __Assumptions/Specification__

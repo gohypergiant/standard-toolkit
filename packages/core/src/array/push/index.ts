@@ -16,15 +16,18 @@
  * @template T - The type of array elements.
  * @param arr - The array to add an item to.
  * @param x - The value to add to the end of the array.
+ * @returns A new array with the value added to the end.
  *
  * @remarks
  * pure function
  *
  * @example
+ * ```typescript
  * import { push } from '@accelint/core';
  *
  * push([1, 2, 3, 4])(5);
  * // [1, 2, 3, 4, 5]
+ * ```
  */
 export const push =
   <T>(arr: T[]) =>

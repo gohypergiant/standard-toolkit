@@ -20,8 +20,15 @@ import { callNextSecond, remainder } from './utils';
  * @returns A function to clear the timeout.
  *
  * @example
+ * ```typescript
+ * import { setClockInterval } from '@accelint/temporal/timers';
+ *
  * const cleanup = setClockInterval(() => console.log('hi'), 250);
- * // will log hi every 250ms starting on next clock second
+ * // Will log "hi" every 250ms starting on next clock second
+ *
+ * // Later, cleanup when done
+ * cleanup();
+ * ```
  */
 export function setClockInterval(cb: () => void, ms: number) {
   let timeout: number | undefined;
@@ -49,8 +56,15 @@ export function setClockInterval(cb: () => void, ms: number) {
  * @returns A function to clear the timeout.
  *
  * @example
+ * ```typescript
+ * import { setClockTimeout } from '@accelint/temporal/timers';
+ *
  * const cleanup = setClockTimeout(() => console.log('hi'), 250);
- * // will log hi after 250ms starting on next clock second
+ * // Will log "hi" after 250ms starting on next clock second
+ *
+ * // Later, cleanup if needed
+ * cleanup();
+ * ```
  */
 export function setClockTimeout(cb: () => void, ms: number) {
   let timeout: number | undefined;

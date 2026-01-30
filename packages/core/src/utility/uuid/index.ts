@@ -16,12 +16,42 @@ import type { Tagged } from 'type-fest';
 
 export type UniqueId = Tagged<string, 'UUID'>;
 
+/**
+ * Generates a new UUID v4.
+ *
+ * @returns A unique identifier string.
+ *
+ * @example
+ * ```typescript
+ * import { uuid } from '@accelint/core';
+ *
+ * const id = uuid();
+ * // '550e8400-e29b-41d4-a716-446655440000'
+ * ```
+ */
 export function uuid() {
   return v4() as UniqueId;
 }
 
 const validator = z.uuid();
 
+/**
+ * Checks if a value is a valid UUID.
+ *
+ * @param value - The value to validate.
+ * @returns true if the value is a valid UUID, false otherwise.
+ *
+ * @example
+ * ```typescript
+ * import { isUUID } from '@accelint/core';
+ *
+ * isUUID('550e8400-e29b-41d4-a716-446655440000');
+ * // true
+ *
+ * isUUID('not-a-uuid');
+ * // false
+ * ```
+ */
 export function isUUID(value: unknown): value is UniqueId {
   return validator.safeParse(value).success;
 }

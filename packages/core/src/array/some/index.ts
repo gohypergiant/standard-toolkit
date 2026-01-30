@@ -18,15 +18,18 @@ import type { Comparator } from '@/types';
  * @template T - The type of array elements.
  * @param comparator - The comparator function to apply to each element of the array.
  * @param arr - The array to check each element of.
+ * @returns true if any element passes the comparator, false otherwise.
  *
  * @remarks
  * pure function
  *
  * @example
+ * ```typescript
  * import { some } from '@accelint/core';
  *
  * every(x => !(x & 1))([1, 2, 3, 4, 5]);
  * // true
+ * ```
  */
 export const some =
   <T>(comparator: Comparator<T>) =>

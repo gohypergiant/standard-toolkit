@@ -16,15 +16,18 @@
  * @template T - The type of array elements.
  * @param x - The value to find in the array.
  * @param arr - The array to search for the element in.
+ * @returns true if the array includes the element, false otherwise.
  *
  * @remarks
  * pure function
  *
  * @example
+ * ```typescript
  * import { includes } from '@accelint/core';
  *
  * includes(3)([1, 2, 3, 4, 5]);
  * // true
+ * ```
  */
 export const includes =
   <T>(x: T) =>

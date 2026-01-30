@@ -17,6 +17,7 @@
  * @template R - The return type of given function.
  * @param f - The function to apply to the value.
  * @param x - The value to pass to the function.
+ * @returns The result of applying the function to the value.
  *
  * @remarks
  * A combinator
@@ -28,8 +29,10 @@
  * pure function
  *
  * @example
+ * ```typescript
  * apply((a) => a + 6)(3);
  * // 9
+ * ```
  */
 export const apply =
   // Types renamed to avoid confusion with the combinator
