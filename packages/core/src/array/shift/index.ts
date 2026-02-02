@@ -16,15 +16,18 @@
  *
  * @template T - The type of array elements.
  * @param arr - The element to get the `head`/`tail` of.
+ * @returns A tuple of [head, tail].
  *
  * @remarks
  * pure function
  *
  * @example
+ * ```typescript
  * import { shift } from '@accelint/core';
  *
  * shift([1, 2, 3, 4]);
  * // [1, [2, 3, 4, 5]]
+ * ```
  */
 export const shift = <T>(arr: T[]): [T, T[]] => {
   const len = arr.length;

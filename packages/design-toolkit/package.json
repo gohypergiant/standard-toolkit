@@ -292,6 +292,8 @@
     "./components/skeleton/types": "./dist/components/skeleton/types.js",
     "./components/slider": "./dist/components/slider/index.js",
     "./components/slider/types": "./dist/components/slider/types.js",
+    "./components/status-indicator": "./dist/components/status-indicator/index.js",
+    "./components/status-indicator/types": "./dist/components/status-indicator/types.js",
     "./components/switch": "./dist/components/switch/index.js",
     "./components/switch/context": "./dist/components/switch/context.js",
     "./components/switch/types": "./dist/components/switch/types.js",

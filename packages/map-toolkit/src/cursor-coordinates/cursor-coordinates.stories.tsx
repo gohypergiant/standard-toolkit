@@ -75,6 +75,16 @@ const CursorCoordinateDisplay = (props: Props) => {
       <div className='absolute top-l left-l z-10 flex w-[320px] flex-col gap-l rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
         <p className='font-bold text-header-l'>useCursorCoordinates Output</p>
 
+        {/* UTM/MGRS limitation notice */}
+        {(currentFormat === 'utm' || currentFormat === 'mgrs') && (
+          <div className='rounded-lg bg-warning-muted p-s'>
+            <p className='text-body-xs text-content-warning'>
+              <strong>Note:</strong> {currentFormat.toUpperCase()} is only valid
+              between 80°S and 84°N. Polar coordinates will display "--, --".
+            </p>
+          </div>
+        )}
+
         <div className='rounded-lg bg-info-muted p-s'>
           <p className='mb-xs text-body-xs'>formattedCoord</p>
           <code className='text-body-m'>{formattedCoord}</code>

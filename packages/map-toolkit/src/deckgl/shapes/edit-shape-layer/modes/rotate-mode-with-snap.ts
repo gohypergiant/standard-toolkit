@@ -52,11 +52,40 @@ function snapAngle(angle: number, interval: number): number {
 /**
  * Extends RotateMode to support snapping rotation to 45° intervals.
  *
- * Features:
- * - Default: Free rotation
- * - With modeConfig.snapRotation = true: Snap to 45° intervals (0°, 45°, 90°, etc.)
+ * ## Features
+ * - **Default**: Free rotation (smooth, continuous angles)
+ * - **With Shift**: Snap to 45° intervals (0°, 45°, 90°, 135°, 180°, etc.)
  *
- * This allows precise alignment of shapes to common angles.
+ * This allows precise alignment of shapes to common angles, making it easy to
+ * create axis-aligned or diagonally-aligned shapes.
+ *
+ * ## Implementation
+ * The snap behavior is controlled by the `modeConfig.snapRotation` property,
+ * which is set by BaseTransformMode when the Shift key is held. This class
+ * calculates the rotation angle and rounds it to the nearest 45° interval
+ * when snapping is enabled.
+ *
+ * ## Snap Interval
+ * The snap interval is fixed at 45° (8 positions around the circle), providing
+ * these angles: 0°, 45°, 90°, 135°, 180°, 225°, 270°, 315°.
+ *
+ * @example
+ * ```typescript
+ * import { RotateModeWithSnap } from '@accelint/map-toolkit/deckgl/shapes/edit-shape-layer/modes/rotate-mode-with-snap';
+ * import { EditableGeoJsonLayer } from '@deck.gl-community/editable-layers';
+ *
+ * const mode = new RotateModeWithSnap();
+ *
+ * const layer = new EditableGeoJsonLayer({
+ *   mode,
+ *   data: featureCollection,
+ *   selectedFeatureIndexes: [0],
+ *   onEdit: handleEdit,
+ *   modeConfig: {
+ *     snapRotation: true, // Enable 45° snapping
+ *   },
+ * });
+ * ```
  */
 export class RotateModeWithSnap extends RotateMode {
   /**

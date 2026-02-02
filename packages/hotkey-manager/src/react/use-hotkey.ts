@@ -16,7 +16,8 @@ import type { HotkeyManager } from '@/types/hotkey-manager';
 /**
  * A React hook that binds a HotkeyManager on mount and unbinds on unmount.
  *
- * @param manager The hotkey manager to bind.
+ * @param manager - The hotkey manager to bind.
+ * @returns void
  *
  * @example
  * ```tsx
@@ -36,7 +37,7 @@ export function useHotkey(manager: HotkeyManager): void {
  * Creates a React hook from a HotkeyManager for module-level usage.
  * This is useful when you want to define the hotkey at module scope and use it as a hook.
  *
- * @param manager The hotkey manager to wrap.
+ * @param manager - The hotkey manager to wrap.
  * @returns A React hook that binds the hotkey on mount.
  *
  * @example

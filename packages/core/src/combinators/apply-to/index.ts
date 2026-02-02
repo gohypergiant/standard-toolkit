@@ -18,6 +18,7 @@
  * @template B - The return type of given function.
  * @param a - The value to pass to the function.
  * @param b - The function to apply to the value.
+ * @returns The result of applying the function to the value.
  *
  * @remarks
  * Th combinator
@@ -29,8 +30,10 @@
  * pure function
  *
  * @example
+ * ```typescript
  * applyTo(6)(x => x * 2);
  * // 12
+ * ```
  */
 export const applyTo =
   <A>(a: A) =>

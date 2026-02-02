@@ -17,13 +17,16 @@
  * @template R - The return type of the given function.
  * @param fn - The function to call, passing the given value.
  * @param val - The value to pass to the function and then return.
+ * @returns The input value unchanged.
  *
  * @remarks
  * tap :: (a -> b) -> a -> a
  *
  * @example
+ * ```typescript
  * tap(console.log)('foobar');
  * // foobar
+ * ```
  */
 export const tap =
   <T, R>(fn: (v: T) => R) =>

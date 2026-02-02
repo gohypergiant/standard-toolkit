@@ -14,10 +14,47 @@ import parser, { type ClassName, type Root } from 'postcss-selector-parser';
 import type { Plugin, Rule } from 'postcss';
 
 const PROCESSED = Symbol('global-group-class-processed');
+
+/**
+ * Extended Rule interface with processed tracking.
+ *
+ * Adds a symbol-based property to track whether a rule has already been
+ * processed by the plugin to prevent duplicate transformations.
+ */
 interface ProcessedRule extends Rule {
   [PROCESSED]?: boolean;
 }
 
+/**
+ * PostCSS plugin that wraps Tailwind CSS `group/` classes in `:global()` pseudo-class.
+ *
+ * This plugin solves issues with Tailwind's parent state utilities (like `group/`)
+ * when used with CSS Modules. Without this plugin, CSS Modules hashes these classes,
+ * breaking Tailwind's parent state functionality.
+ *
+ * The plugin only processes files ending in `.module.css` and ensures each rule is
+ * transformed only once using a symbol-based marker.
+ *
+ * @returns A PostCSS plugin instance configured to transform group classes.
+ *
+ * @example
+ * ```typescript
+ * // postcss.config.js
+ * export default {
+ *   plugins: {
+ *     '@tailwindcss/postcss': {},
+ *     '@accelint/postcss-tailwind-css-modules': {},
+ *   },
+ * };
+ * ```
+ *
+ * @example
+ * ```typescript
+ * // Transformation example
+ * // Input:  .group/sidebar { }
+ * // Output: :global(.group/sidebar) { }
+ * ```
+ */
 const globalGroupPlugin = (): Plugin => {
   const transform = parser((selectors: Root) => {
     selectors.walkClasses((currentClassNode: ClassName) => {

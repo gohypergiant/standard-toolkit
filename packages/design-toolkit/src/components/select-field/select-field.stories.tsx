@@ -11,11 +11,13 @@
  */
 
 import Placeholder from '@accelint/icons/placeholder';
-import { type ReactNode, useId, useState } from 'react';
+import { useId, useState } from 'react';
+import { DeferredCollection } from '../deferred-collection';
 import { Icon } from '../icon';
 import { OptionsItem } from '../options/item';
 import { OptionsItemLabel } from '../options/item-label';
 import { OptionsSection } from '../options/section';
+import { Skeleton } from '../skeleton';
 import { SelectField } from './index';
 import type { Key } from '@react-types/shared';
 import type { Meta, StoryObj } from '@storybook/react-vite';
@@ -148,21 +150,44 @@ export const ControlledSelection: Story = {
   },
 };
 
-const manyItems: { id: number; name: string; prefixIcon: ReactNode }[] = [];
-for (let i = 0; i < 5000; i++) {
-  manyItems.push({ id: i, name: `Item ${i}`, prefixIcon: <Placeholder /> });
-}
+const manyItems = Array.from({ length: 5000 }, (_, index) => ({
+  id: index,
+  name: `Item ${index}`,
+  hasIcon: true,
+}));
 
 export const WithManyItems: Story = {
   render: (args) => (
-    <SelectField {...args}>
-      {manyItems.map((item) => (
-        <OptionsItem key={item.id} textValue={item.name}>
-          {item.prefixIcon && <Icon>{item.prefixIcon}</Icon>}
-          <OptionsItemLabel>{item.name}</OptionsItemLabel>
-        </OptionsItem>
-      ))}
-    </SelectField>
+    <>
+      <DeferredCollection
+        fallback={
+          <div className='flex w-[200px] flex-col gap-xs'>
+            <Skeleton className='h-[32px]' />
+          </div>
+        }
+      >
+        {() => (
+          <SelectField {...args}>
+            {manyItems.map((item) => (
+              <OptionsItem key={item.id} textValue={item.name}>
+                {item.hasIcon && (
+                  <Icon>
+                    <Placeholder />
+                  </Icon>
+                )}
+                <OptionsItemLabel>{item.name}</OptionsItemLabel>
+              </OptionsItem>
+            ))}
+          </SelectField>
+        )}
+      </DeferredCollection>
+      <p className='w-[400px] text-body-s'>
+        This story demonstrates virtualization with a large dataset. For
+        production use, presenting thousands of unfiltered options in a
+        SelectField is not recommended. Prefer a ComboBox or similar component
+        that allows users to filter the list.
+      </p>
+    </>
   ),
 };
 

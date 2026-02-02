@@ -20,15 +20,18 @@ import type { Accumulator } from '@/types';
  * @param fn - The accumulator function to apply to each element of the array.
  * @param initVal - The initial value of the reduction.
  * @param arr - The array to fold over.
+ * @returns The accumulated result.
  *
  * @remarks
  * pure function
  *
  * @example
+ * ```typescript
  * import { reduce } from '@accelint/core';
  *
  * reduce((total, n) => total + n)(0)([1, 2, 3, 4, 5]);
  * // 15
+ * ```
  */
 export const reduce =
   <T, R>(fn: Accumulator<T, R>) =>

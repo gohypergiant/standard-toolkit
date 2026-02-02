@@ -21,6 +21,26 @@ export interface FormatOptions {
   withOrdinal?: boolean;
 }
 
+/**
+ * Creates a coordinate formatter function from a coordinate conversion function.
+ *
+ * @param fn - Function that converts a single coordinate value to a formatted string.
+ * @returns Formatter function that takes coordinate pair and optional config.
+ *
+ * @example
+ * ```typescript
+ * const formatDD = createFormatter((num) => `${num.toFixed(6)}°`);
+ * formatDD([37.7749, -122.4194]);
+ * // '37.774900° N, 122.419400° W'
+ * ```
+ *
+ * @example
+ * ```typescript
+ * const formatDMS = createFormatter(toDegreesMinutesSeconds);
+ * formatDMS([37.7749, -122.4194], { separator: ' / ', withOrdinal: true });
+ * // '37° 46' 29.64″ N / 122° 25' 9.84″ W'
+ * ```
+ */
 export const createFormatter =
   (fn: (coord: number, withOrdinal?: boolean) => string) =>
   (coordinates: [number, number], config?: FormatOptions): string => {

@@ -27,8 +27,24 @@ import type { NonEmptyArray } from '@/types/non-empty-array';
 /**
  * Registers a hotkey and returns a manager to activate and deactivate it.
  *
- * @param options The hotkey options.
+ * @param options - The hotkey options.
  * @returns A framework-agnostic hotkey manager.
+ *
+ * @example
+ * ```typescript
+ * import { registerHotkey } from '@accelint/hotkey-manager';
+ *
+ * const manager = registerHotkey({
+ *   key: { code: 'KeyS', meta: true },
+ *   onKeyDown: () => console.log('Save triggered'),
+ * });
+ *
+ * // Bind the hotkey
+ * const unbind = manager.bind();
+ *
+ * // Later, unbind the hotkey
+ * unbind();
+ * ```
  */
 export function registerHotkey(options: HotkeyOptions): HotkeyManager {
   const config = {

@@ -19,7 +19,9 @@
  * pure function
  *
  * @example
+ * ```typescript
  * capture(/a/, /b/, /c/) === /(abc)/
+ * ```
  */
 export const capture = (...p: RegExp[]) =>
   new RegExp(`(${merge(...p).source})`);
@@ -36,7 +38,9 @@ export const capture = (...p: RegExp[]) =>
  * pure function
  *
  * @example
+ * ```typescript
  * fromTemplate({ a: /alpha/, b: /beta/, ' ': / / }, 'a b') === /^alpha beta$/
+ * ```
  *
  */
 export const fromTemplate = (dict: Record<string, RegExp>, template: string) =>
@@ -56,7 +60,9 @@ export const fromTemplate = (dict: Record<string, RegExp>, template: string) =>
  * pure function
  *
  * @example
- * capture(/a/, /b/, /c/) === /(?:abc)/
+ * ```typescript
+ * group(/a/, /b/, /c/) === /(?:abc)/
+ * ```
  */
 export const group = (...p: RegExp[]) =>
   new RegExp(`(?:${merge(...p).source})`);
@@ -70,7 +76,9 @@ export const group = (...p: RegExp[]) =>
  * pure function
  *
  * @example
+ * ```typescript
  * merge(/a/, /b/, /c/) === /abc/
+ * ```
  */
 export const merge = (...all: RegExp[]) =>
   all.reduce((acc, next) => new RegExp(acc?.source + next.source));
@@ -83,7 +91,9 @@ export const merge = (...all: RegExp[]) =>
  * pure function
  *
  * @example
- * capture(/a/, /b/, /c/) === /(?:abc)?/
+ * ```typescript
+ * optional(/a/, /b/, /c/) === /(?:abc)?/
+ * ```
  */
 export const optional = (...p: RegExp[]) =>
   new RegExp(`(?:${merge(...p).source})?`);

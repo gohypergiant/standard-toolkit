@@ -14,6 +14,7 @@
  * Returns true for any value not found to be a "false" value.
  *
  * @param val - The value to convert to a boolean.
+ * @returns true if the value is truthy, false otherwise.
  *
  * **"false" values**
  *   - inherently false values: '' (empty string), 0, false, undefined, null, NaN
@@ -27,12 +28,14 @@
  * pure function
  *
  * @playground
+ * ```ts
  * import { toBoolean } from '@accelint/converters';
  *
  * console.log(toBoolean(1));          // true
  * console.log(toBoolean(' FaLsE '));  // false
  * console.log(toBoolean('  true'));   // true
  * console.log(toBoolean('000.000'));  // false
+ * ```
  */
 export function toBoolean(val: unknown) {
   return !(

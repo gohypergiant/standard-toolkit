@@ -27,7 +27,7 @@ Once created the safe enum works like any other enum.
 
 ```typescript
 
-function doSomething(value: StopLight) {
+function doSomething(value: StopLightState) {
   // ...
 }
 

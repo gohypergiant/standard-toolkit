@@ -127,6 +127,7 @@ type Pipeable<Fn extends PipeArray> = Fn extends readonly [
  * @template Fns - The list of functions starting with one that can be n-ary, followed by unary functions.
  * @param fns - The functions to pipe.
  * @param args - The arguments to give to the first function in the pipe.
+ * @returns A piped function that executes left-to-right.
  *
  * @remarks
  * The implementation follows left-to-right pipe semantics:
@@ -135,6 +136,7 @@ type Pipeable<Fn extends PipeArray> = Fn extends readonly [
  * 3. The rightmost function's result becomes the final output
  *
  * @example
+ * ```typescript
  * const getActiveUsers = pipe(
  *   filterActive,
  *   sortUserNames,
@@ -142,6 +144,7 @@ type Pipeable<Fn extends PipeArray> = Fn extends readonly [
  * );
  *
  * const activeUsers = getActiveUsers(users, currentPage);
+ * ```
  */
 export const pipe =
   <Fns extends PipeArray>(...fns: Pipeable<Fns>) =>
