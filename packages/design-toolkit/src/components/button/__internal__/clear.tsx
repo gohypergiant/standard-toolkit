@@ -33,10 +33,9 @@ import styles from './styles.module.css';
  *
  * @internal
  */
-export type ClearButtonProps = Omit<
-  AriaButtonProps,
-  'children' | 'size' | 'variant'
-> & {};
+export type ClearButtonProps = Readonly<
+  Omit<AriaButtonProps, 'children' | 'size' | 'variant'>
+>;
 
 /**
  * @internal
