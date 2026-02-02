@@ -17,10 +17,7 @@ import { ClearButton } from './clear';
 import type { ClearButtonProps } from './clear';
 
 function setup(props: Partial<ClearButtonProps> = {}) {
-  return {
-    ...render(<ClearButton {...props} />),
-    ...props,
-  };
+  render(<ClearButton {...props} />);
 }
 
 describe('ClearButton', () => {
