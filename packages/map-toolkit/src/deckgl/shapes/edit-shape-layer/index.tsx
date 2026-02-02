@@ -201,13 +201,10 @@ export function EditShapeLayer({
   }, []);
 
   useOn(EditShapeEvents.confirmed, () => {
-    console.log(1);
-    if (!editingState.editingShape) {
+    // no-op if not currently editing.
+    if (!editingState?.editingShape) {
       return;
     }
-
-    console.log(2);
-
     cancelPendingUpdate();
     saveEditingFromLayer(actualMapId);
   });

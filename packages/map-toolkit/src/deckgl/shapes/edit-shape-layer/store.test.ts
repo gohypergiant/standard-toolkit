@@ -10,19 +10,20 @@
  * governing permissions and limitations under the License.
  */
 
+import type { UniqueId } from '@accelint/core';
 import { uuid } from '@accelint/core';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { mockShapes } from '../__fixtures__/mock-shapes';
+import type { Shape } from '../shared/types';
 import { ShapeFeatureType } from '../shared/types';
 import {
   cancelEditingFromLayer,
   clearEditingState,
   editStore,
   getEditingState,
+  saveEditingFromLayer,
   updateFeatureFromLayer,
 } from './store';
-import type { UniqueId } from '@accelint/core';
-import type { Shape } from '../shared/types';
 
 // Get fixture shapes by type
 const mockCircle = mockShapes.find((s) => s.shape === 'Circle');
@@ -435,6 +436,18 @@ describe('edit-shape-layer store', () => {
 
       cancelEditingFromLayer(mapId);
 
+      expect(editStore.get(mapId)?.editingShape).toBeNull();
+    });
+  });
+
+  describe('saveEditingFromLayer', () => {
+    it('saves current editing shape from layer component', () => {
+      const { edit } = editStore.actions(mapId);
+
+      const shape = createMockShape();
+      edit(shape);
+      expect(editStore.get(mapId)?.editingShape).not.toBeNull();
+      saveEditingFromLayer(mapId);
       expect(editStore.get(mapId)?.editingShape).toBeNull();
     });
   });
