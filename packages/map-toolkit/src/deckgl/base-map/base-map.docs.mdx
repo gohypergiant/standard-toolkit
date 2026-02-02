@@ -46,14 +46,14 @@ pnpm add @accelint/map-toolkit @accelint/bus @deck.gl/core @deckgl-fiber-rendere
 ```typescript
 import { BaseMap } from '@accelint/map-toolkit/deckgl';
 import { View } from '@deckgl-fiber-renderer/dom';
-import { uuid } from '@accelint/core';
-
-// Module-level constant for stability
-const MAIN_MAP_ID = uuid();
+import { useId } from 'react';
+import type { UniqueId } from '@accelint/core';
 
 export function MapView() {
+  const mapId = useId() as UniqueId;
+
   return (
-    <BaseMap id={MAIN_MAP_ID} className="w-full h-full">
+    <BaseMap id={mapId} className="w-full h-full">
       <View id="main" controller />
       {/* Add your Deck.gl layers here */}
     </BaseMap>
@@ -61,22 +61,62 @@ export function MapView() {
 }
 ```
 
+### Choosing Between `uuid()` and `useId()`
+
+**For Client Components (Recommended):** Use React's `useId()` hook:
+- ✅ Prevents hydration mismatches in SSR/Next.js applications
+- ✅ Stable across server and client renders
+- ✅ No import needed from `@accelint/core`
+
+**For Module-Level Constants:** Use `uuid()` from `@accelint/core`:
+- ✅ When you need a persistent ID across component instances
+- ✅ For IDs that should be consistent across page reloads
+- ⚠️ Only use at module level, never inside component render
+
+**⚠️ Hydration Warning:**
+If you use `uuid()` inside a React component (even with `useMemo` or `useState`), it will generate different IDs during server-side rendering and client hydration, causing React hydration errors. Always use `useId()` for component-level IDs.
+
+```typescript
+// ❌ NEVER - Causes hydration mismatch
+function MapView() {
+  const mapId = uuid(); // Different ID on server vs client!
+  return <BaseMap id={mapId}>...</BaseMap>;
+}
+
+// ❌ STILL WRONG - useMemo doesn't prevent hydration issues
+function MapView() {
+  const mapId = useMemo(() => uuid(), []); // Still different on server vs client!
+  return <BaseMap id={mapId}>...</BaseMap>;
+}
+
+// ✅ CORRECT - useId() is stable across server/client
+function MapView() {
+  const mapId = useId();
+  return <BaseMap id={mapId}>...</BaseMap>;
+}
+
+// ✅ ALSO CORRECT - Module-level for shared IDs
+const MAIN_MAP_ID = uuid();
+function MapView() {
+  return <BaseMap id={MAIN_MAP_ID}>...</BaseMap>;
+}
+```
+
 ### With UI Components
 
-UI components (toolbars, buttons, etc.) should be rendered as **siblings** to BaseMap, not children:
+UI components (toolbars, buttons, etc.) should be rendered as **siblings** to BaseMap, not children. When sharing IDs across components, create a context or pass the ID as props:
 
 ```typescript
 import { BaseMap } from '@accelint/map-toolkit/deckgl';
 import { useMapMode } from '@accelint/map-toolkit/map-mode';
 import { View } from '@deckgl-fiber-renderer/dom';
-import { uuid } from '@accelint/core';
+import { createContext, useContext, useId } from 'react';
 
-// Module-level constant shared across components
-const MAIN_MAP_ID = uuid();
+const MapIdContext = createContext<string>('');
 
 function Toolbar() {
-  // Use the shared id
-  const { mode, requestModeChange } = useMapMode(MAIN_MAP_ID);
+  const mapId = useContext(MapIdContext);
+  const { mode, requestModeChange } = useMapMode(mapId);
 
   return (
     <div className="absolute top-4 left-4">
@@ -88,14 +128,18 @@ function Toolbar() {
 }
 
 export function InteractiveMap() {
+  const mapId = useId();
+
   return (
-    <div className="relative w-full h-full">
-      <BaseMap id={MAIN_MAP_ID} className="absolute inset-0">
-        <View id="main" controller />
-        {/* Only Deck.gl layers as children */}
-      </BaseMap>
-      <Toolbar />
-    </div>
+    <MapIdContext.Provider value={mapId}>
+      <div className="relative w-full h-full">
+        <BaseMap id={mapId} className="absolute inset-0">
+          <View id="main" controller />
+          {/* Only Deck.gl layers as children */}
+        </BaseMap>
+        <Toolbar />
+      </div>
+    </MapIdContext.Provider>
   );
 }
 ```
@@ -104,14 +148,13 @@ export function InteractiveMap() {
 
 ```typescript
 import { BaseMap } from '@accelint/map-toolkit/deckgl';
-import { uuid } from '@accelint/core';
+import { useId } from 'react';
 import type { PickingInfo } from '@deck.gl/core';
 import type { MjolnirGestureEvent, MjolnirPointerEvent } from 'mjolnir.js';
 
-// Module-level constant
-const MAIN_MAP_ID = uuid();
-
 export function InteractiveMap() {
+  const mapId = useId();
+
   const handleClick = (info: PickingInfo, event: MjolnirGestureEvent) => {
     console.log('Clicked:', info.object);
   };
@@ -122,7 +165,7 @@ export function InteractiveMap() {
 
   return (
     <BaseMap
-      id={MAIN_MAP_ID}
+      id={mapId}
       className="w-full h-full"
       onClick={handleClick}
       onHover={handleHover}
@@ -156,23 +199,38 @@ export function MapListener() {
 
 The `BaseMap` component extends all `DeckglProps` from `@deckgl-fiber-renderer/types` and includes the following additional props:
 
-#### `id: UniqueId` (required)
+#### `id: UniqueId | string` (required)
 
-Unique identifier for this map instance. Used to isolate map mode state between multiple map instances (e.g., main map vs minimap). This prop is required and should be a UUID generated using `uuid()` from `@accelint/core`.
+Unique identifier for this map instance. Used to isolate map mode state between multiple map instances (e.g., main map vs minimap). Accepts either:
+- A string from React's `useId()` hook (recommended for client components)
+- A `UniqueId` from `uuid()` in `@accelint/core` (for module-level constants)
 
 **Important**: This same `id` must be passed to `useMapMode(id)` in UI components that are rendered as siblings to BaseMap, since UI components cannot be children of BaseMap.
 
 **ID Changes**: If the `id` prop changes, BaseMap will perform a complete remount. The old store is properly cleaned up and a new one is created. While this is handled safely, frequent ID changes will cause performance issues due to remounting.
 
-**Recommended Pattern**: Create the `id` as a **module-level constant**. This ensures stability and makes it easy to share across all components:
+**Recommended Patterns:**
+
+```tsx
+import { useId } from 'react';
+
+// ✅ BEST - useId() for client components (prevents hydration issues)
+// - Stable across server/client renders
+// - No hydration mismatches in SSR/Next.js
+// - Unique per component instance
+function MapView() {
+  const mapId = useId();
+  return <BaseMap id={mapId}>...</BaseMap>;
+}
+```
 
 ```tsx
 import { uuid } from '@accelint/core';
 
-// ✅ BEST - Module-level constant (recommended)
-// - Stable across renders and remounts
+// ✅ ALSO GOOD - Module-level constant for shared IDs
+// - Stable across all renders and instances
 // - Easy to import and share across components
-// - No useState/useRef complexity
+// - Use when you need consistent IDs across reloads
 const MAIN_MAP_ID = uuid();
 
 export function MapView() {
@@ -185,18 +243,24 @@ export function Toolbar() {
 }
 ```
 
-Alternative patterns (only use if you need dynamic IDs):
+**Anti-patterns to avoid:**
 
 ```tsx
-// ✅ OK - For components that need their own isolated map instance
-function MapView() {
-  const [mapId] = useState(() => uuid());
-  return <BaseMap id={mapId}>...</BaseMap>;
-}
-
 // ❌ NEVER - Creates new ID on every render (causes constant remounting)
 function MapView() {
   const mapId = uuid(); // Don't do this!
+  return <BaseMap id={mapId}>...</BaseMap>;
+}
+
+// ❌ NEVER - Causes hydration mismatch in SSR
+function MapView() {
+  const [mapId] = useState(() => uuid()); // Different ID on server vs client!
+  return <BaseMap id={mapId}>...</BaseMap>;
+}
+
+// ❌ NEVER - Still causes hydration mismatch
+function MapView() {
+  const mapId = useMemo(() => uuid(), []); // Different ID on server vs client!
   return <BaseMap id={mapId}>...</BaseMap>;
 }
 ```
@@ -379,6 +443,8 @@ import { useEmit } from '@accelint/bus/react';
 import { MapEvents } from '@accelint/map-toolkit/deckgl';
 import type { MapDisablePanEvent, MapEnablePanEvent } from '@accelint/map-toolkit/deckgl';
 
+// If using a shared module-level ID
+import { uuid } from '@accelint/core';
 const MAIN_MAP_ID = uuid();
 
 function DrawingToolbar() {

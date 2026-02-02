@@ -232,6 +232,10 @@ export function BaseMap({
     longitude: initialViewState?.longitude ?? DEFAULT_VIEW_STATE.longitude,
   });
 
+  // Note: deckglInstance?._deck?._getViewState is intentionally NOT in the dependency array.
+  // Including the function reference causes infinite renders because optional chaining creates
+  // a new reference on every render. We only need to recompute when cameraState changes.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: we don't want function refs in deps
   const viewState = useMemo<ViewState>(
     () => ({
       // @ts-expect-error squirrelly deckglInstance typing
@@ -239,8 +243,7 @@ export function BaseMap({
       ...cameraState,
       bearing: cameraState.rotation,
     }),
-    // @ts-expect-error squirrelly deckglInstance typing
-    [cameraState, deckglInstance?._deck?._getViewState],
+    [cameraState],
   );
 
   // Memoize MapLibre options to avoid creating new object on every render
@@ -311,10 +314,13 @@ export function BaseMap({
       } = params;
 
       // @ts-expect-error squirrelly deckglInstance typing
-      const viewport = deckglInstance._deck
-        .getViewports()
-        // @ts-expect-error squirrelly deckglInstance typing
-        ?.find((vp) => vp.id === viewId);
+      const viewports = deckglInstance._deck?.getViewports();
+      if (!viewports) {
+        return;
+      }
+
+      // @ts-expect-error squirrelly deckglInstance typing
+      const viewport = viewports.find((vp) => vp.id === viewId);
 
       if (!viewport) {
         return;
@@ -341,7 +347,10 @@ export function BaseMap({
     // Debounce
     resizeTimeoutRef.current = setTimeout(() => {
       // @ts-expect-error squirrelly deckglInstance typing
-      const viewports = deckglInstance._deck.getViewports() ?? [];
+      const viewports = deckglInstance._deck?.getViewports();
+      if (!viewports) {
+        return;
+      }
       for (const vp of viewports) {
         handleViewStateChange({
           viewId: vp.id,
@@ -362,7 +371,10 @@ export function BaseMap({
   const handleLoad = useEffectEvent(() => {
     //--- force update viewport state once all viewports initialized ---
     // @ts-expect-error squirrelly deckglInstance typing
-    const viewports = deckglInstance._deck.getViewports() ?? [];
+    const viewports = deckglInstance._deck?.getViewports();
+    if (!viewports) {
+      return;
+    }
     for (const vp of viewports) {
       handleViewStateChange({
         viewId: vp.id,
@@ -384,7 +396,9 @@ export function BaseMap({
       {enableControlEvents && <MapControls id={id} mapRef={mapRef} />}
       <MapProvider id={id}>
         <MapLibre
-          onMove={(evt) => setCameraState(evt.viewState)}
+          onMove={(evt) => {
+            setCameraState(evt.viewState);
+          }}
           mapStyle={styleUrl}
           ref={mapRef}
           {...mapOptions}
