@@ -516,6 +516,9 @@ importers:
       '@dnd-kit/utilities':
         specifier: ^3.2.2
         version: 3.2.2(react@19.2.3)
+      media-chrome:
+        specifier: ^4.17.2
+        version: 4.17.2(react@19.2.3)
     devDependencies:
       '@accelint/biome-config':
         specifier: workspace:*
@@ -655,9 +658,6 @@ importers:
       jsdom:
         specifier: ^25.0.1
         version: 25.0.1
-      media-chrome:
-        specifier: ^4.17.2
-        version: 4.17.2(react@19.2.3)
       postcss:
         specifier: ^8.5.6
         version: 8.5.6
