@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { TIME_MARKER_WIDTH } from '../constants';
+import { OUT_OF_VIEW_MARKER_COUNT, TIME_MARKER_WIDTH } from '../constants';
 import { getMsRepresentedInViewableRegion } from './conversions';
 import { roundDateToInterval } from './dates';
 import type { TimeMarkerObject } from '../types';
@@ -29,7 +29,8 @@ export function generateTimeMarkers(
     getMsRepresentedInViewableRegion(viewableRegionWidth, msPerPx) / 2;
 
   const proposedMarkerCount =
-    Math.ceil(viewableRegionWidth / TIME_MARKER_WIDTH) + 2;
+    Math.ceil(viewableRegionWidth / TIME_MARKER_WIDTH) +
+    OUT_OF_VIEW_MARKER_COUNT;
 
   const markersInViewableRegion =
     proposedMarkerCount % 2 === 0

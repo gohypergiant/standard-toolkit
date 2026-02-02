@@ -53,3 +53,5 @@ export const MONTHS: Record<number, string> = {
   10: 'Nov',
   11: 'Dec',
 };
+
+export const OUT_OF_VIEW_MARKER_COUNT = 2;
