@@ -15,6 +15,14 @@
 @layer components.l1 {
   .button {
     @apply w-content rounded-medium flex shrink-0 cursor-pointer items-center justify-center outline outline-transparent;
+    transition:
+      background-color var(--animation-duration-fast)
+        var(--animation-easing-standard),
+      color var(--animation-duration-fast) var(--animation-easing-standard),
+      outline-color var(--animation-duration-fast)
+        var(--animation-easing-standard),
+      outline-width var(--animation-duration-fast)
+        var(--animation-easing-standard);
 
     @variant size-large {
       @apply gap-xs px-l py-s text-button-l;

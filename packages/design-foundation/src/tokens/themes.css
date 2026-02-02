@@ -393,6 +393,28 @@
   --icon-size-s: var(--icon-size-s);
   --icon-size-xs: var(--icon-size-xs);
 }
+
+@theme {
+  /** Animation **/
+  --animation-duration-instant: var(--animation-duration-instant, 0ms);
+  --animation-duration-fast: var(--animation-duration-fast, 150ms);
+  --animation-duration-normal: var(--animation-duration-normal, 200ms);
+  --animation-duration-slow: var(--animation-duration-slow, 300ms);
+  --animation-easing-standard: var(
+    --animation-easing-standard,
+    cubic-bezier(0.4, 0, 0.2, 1)
+  );
+  --animation-easing-decelerate: var(
+    --animation-easing-decelerate,
+    cubic-bezier(0, 0, 0.2, 1)
+  );
+  --animation-easing-accelerate: var(
+    --animation-easing-accelerate,
+    cubic-bezier(0.4, 0, 1, 1)
+  );
+  --animation-spring-stiffness: var(--animation-spring-stiffness, 300);
+  --animation-spring-damping: var(--animation-spring-damping, 30);
+}
 @utility bg-classification-missing {
   background-color: var(--classification-missing);
 }

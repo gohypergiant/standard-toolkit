@@ -130,6 +130,68 @@
     }
   }
 
+  .drawerInner {
+    @apply relative flex flex-col;
+    height: 100%;
+    width: 100%;
+
+    @variant group-placement-left/drawer {
+      @variant group-size-large/drawer {
+        @apply w-(--drawer-size-large);
+      }
+
+      @variant group-size-medium/drawer {
+        @apply w-(--drawer-size-medium);
+      }
+
+      @variant group-size-small/drawer {
+        @apply w-(--drawer-size-small);
+      }
+    }
+
+    @variant group-placement-right/drawer {
+      @variant group-size-large/drawer {
+        @apply w-(--drawer-size-large);
+      }
+
+      @variant group-size-medium/drawer {
+        @apply w-(--drawer-size-medium);
+      }
+
+      @variant group-size-small/drawer {
+        @apply w-(--drawer-size-small);
+      }
+    }
+
+    @variant group-placement-top/drawer {
+      @variant group-size-large/drawer {
+        @apply h-(--drawer-size-large);
+      }
+
+      @variant group-size-medium/drawer {
+        @apply h-(--drawer-size-medium);
+      }
+
+      @variant group-size-small/drawer {
+        @apply h-(--drawer-size-small);
+      }
+    }
+
+    @variant group-placement-bottom/drawer {
+      @variant group-size-large/drawer {
+        @apply h-(--drawer-size-large);
+      }
+
+      @variant group-size-medium/drawer {
+        @apply h-(--drawer-size-medium);
+      }
+
+      @variant group-size-small/drawer {
+        @apply h-(--drawer-size-small);
+      }
+    }
+  }
+
   .menu {
     @apply rounded-large bg-surface-default p-xs gap-xs absolute flex;
 
@@ -205,67 +267,7 @@
   }
 
   .panel {
-    @apply gap-s p-l hidden h-full min-h-0 flex-col;
-
-    @variant group-open/drawer {
-      @apply flex;
-    }
-
-    @variant group-placement-left/drawer {
-      @variant group-size-large/drawer {
-        @apply w-(--drawer-size-large);
-      }
-
-      @variant group-size-medium/drawer {
-        @apply w-(--drawer-size-medium);
-      }
-
-      @variant group-size-small/drawer {
-        @apply w-(--drawer-size-small);
-      }
-    }
-
-    @variant group-placement-right/drawer {
-      @variant group-size-large/drawer {
-        @apply w-(--drawer-size-large);
-      }
-
-      @variant group-size-medium/drawer {
-        @apply w-(--drawer-size-medium);
-      }
-
-      @variant group-size-small/drawer {
-        @apply w-(--drawer-size-small);
-      }
-    }
-
-    @variant group-placement-top/drawer {
-      @variant group-size-large/drawer {
-        @apply h-(--drawer-size-large);
-      }
-
-      @variant group-size-medium/drawer {
-        @apply h-(--drawer-size-medium);
-      }
-
-      @variant group-size-small/drawer {
-        @apply h-(--drawer-size-small);
-      }
-    }
-
-    @variant group-placement-bottom/drawer {
-      @variant group-size-large/drawer {
-        @apply h-(--drawer-size-large);
-      }
-
-      @variant group-size-medium/drawer {
-        @apply h-(--drawer-size-medium);
-      }
-
-      @variant group-size-small/drawer {
-        @apply h-(--drawer-size-small);
-      }
-    }
+    @apply gap-s p-l flex h-full min-h-0 flex-col;
   }
 
   .view {

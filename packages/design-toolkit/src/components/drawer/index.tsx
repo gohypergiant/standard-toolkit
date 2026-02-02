@@ -15,7 +15,12 @@ import { useOn } from '@accelint/bus/react';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import type { UniqueId } from '@accelint/core';
 import 'client-only';
-import { useCallback, useRef, useState } from 'react';
+import { motion } from 'motion/react';
+import { useCallback, useMemo, useRef, useState } from 'react';
+import {
+  ANIMATION_DURATION_NORMAL,
+  ANIMATION_EASING_STANDARD,
+} from '@/lib/animation';
 import { ViewStack } from '../view-stack';
 import { useViewStackEmit } from '../view-stack/context';
 import { DrawerContext } from './context';
@@ -119,12 +124,44 @@ export function Drawer({
   useOn(DrawerEventTypes.open, handleOpen);
   useOn(DrawerEventTypes.toggle, handleToggle);
 
+  const getInitialPosition = useMemo(() => {
+    switch (placement) {
+      case 'left':
+        return { x: '-100%' };
+      case 'right':
+        return { x: '100%' };
+      case 'top':
+        return { y: '-100%' };
+      case 'bottom':
+        return { y: '100%' };
+      default:
+        return { x: '-100%' };
+    }
+  }, [placement]);
+
+  const getAnimatePosition = useMemo(() => {
+    if (!activeView) {
+      return getInitialPosition;
+    }
+    switch (placement) {
+      case 'left':
+      case 'right':
+        return { x: 0 };
+      case 'top':
+      case 'bottom':
+        return { y: 0 };
+      default:
+        return { x: 0 };
+    }
+  }, [placement, activeView, getInitialPosition]);
+
   return (
     <DrawerContext.Provider
       value={{
         register: (view: UniqueId) => views.current.add(view),
         unregister: (view: UniqueId) => views.current.delete(view),
         placement,
+        isOpen: !!activeView,
       }}
     >
       <ViewStack
@@ -135,15 +172,22 @@ export function Drawer({
           onChange?.(view);
         }}
       >
-        <div
+        <motion.div
           {...rest}
           className={clsx('group/drawer', styles.drawer, className)}
           data-open={!!activeView || null}
           data-placement={placement}
           data-size={size}
+          initial={getInitialPosition}
+          animate={getAnimatePosition}
+          transition={{
+            type: 'tween',
+            duration: ANIMATION_DURATION_NORMAL,
+            ease: ANIMATION_EASING_STANDARD,
+          }}
         >
-          {children}
-        </div>
+          <div className={styles.drawerInner}>{children}</div>
+        </motion.div>
       </ViewStack>
     </DrawerContext.Provider>
   );

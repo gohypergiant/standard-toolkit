@@ -28,13 +28,14 @@ import type { DrawerContextValue, DrawerEvent } from './types';
  *
  * @example
  * ```tsx
- * const { register, unregister, placement } = useContext(DrawerContext);
+ * const { register, unregister, placement, isOpen } = useContext(DrawerContext);
  * ```
  */
 export const DrawerContext = createContext<DrawerContextValue>({
   register: () => undefined,
   unregister: () => undefined,
   placement: 'left',
+  isOpen: false,
 });
 
 /**

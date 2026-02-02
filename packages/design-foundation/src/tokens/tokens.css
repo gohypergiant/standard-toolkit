@@ -199,4 +199,13 @@
   --icon-size-m: 20px;
   --icon-size-s: var(--spacing-l);
   --icon-size-xs: var(--spacing-m);
+  --animation-duration-instant: 0ms;
+  --animation-duration-fast: 150ms;
+  --animation-duration-normal: 200ms;
+  --animation-duration-slow: 300ms;
+  --animation-easing-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --animation-easing-decelerate: cubic-bezier(0, 0, 0.2, 1);
+  --animation-easing-accelerate: cubic-bezier(0.4, 0, 1, 1);
+  --animation-spring-stiffness: 300;
+  --animation-spring-damping: 30;
 }

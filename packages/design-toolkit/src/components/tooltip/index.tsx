@@ -14,11 +14,10 @@
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useIsSSR } from '@react-aria/ssr';
+import { motion } from 'motion/react';
 import { useMemo } from 'react';
-import {
-  Tooltip as AriaTooltip,
-  composeRenderProps,
-} from 'react-aria-components';
+import { Tooltip as AriaTooltip } from 'react-aria-components';
+import { ANIMATION_DURATION_FAST } from '@/lib/animation';
 import { PortalProvider } from '@/providers/portal';
 import styles from './styles.module.css';
 import type { TooltipProps } from './types';
@@ -65,17 +64,35 @@ export function Tooltip({
     return div;
   }, [isSSR]);
 
+  const getInitialPosition = () => {
+    switch (placement) {
+      case 'top':
+        return { y: 8, opacity: 0 };
+      case 'bottom':
+        return { y: -8, opacity: 0 };
+      case 'left':
+        return { x: 8, opacity: 0 };
+      case 'right':
+        return { x: -8, opacity: 0 };
+      default:
+        return { y: -8, opacity: 0 };
+    }
+  };
+
   return (
     <PortalProvider parentRef={parentRef} inject={overlayContainer}>
-      <AriaTooltip
-        {...props}
-        className={composeRenderProps(className, (className) =>
-          clsx(styles.tooltip, className),
+      <AriaTooltip {...props} offset={offset} placement={placement}>
+        {(renderProps) => (
+          <motion.div
+            initial={getInitialPosition()}
+            animate={{ x: 0, y: 0, opacity: 1 }}
+            exit={getInitialPosition()}
+            transition={{ duration: ANIMATION_DURATION_FAST }}
+            className={clsx(styles.tooltip, className)}
+          >
+            {typeof children === 'function' ? children(renderProps) : children}
+          </motion.div>
         )}
-        offset={offset}
-        placement={placement}
-      >
-        {children}
       </AriaTooltip>
     </PortalProvider>
   );
