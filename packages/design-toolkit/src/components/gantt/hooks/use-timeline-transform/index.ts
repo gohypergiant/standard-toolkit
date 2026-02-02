@@ -52,7 +52,9 @@ export function useTimelineTransform({
     // a browser paint of newly generated array of timeline chunks.
     // Prevents a timeline position flicker issue because of a
     // translate-x calculation based on a stale array of objects.
-    updateElementTranslateX(useGanttStore.getState().currentPositionMs);
+    animationFrameId = requestAnimationFrame(() => {
+      updateElementTranslateX(useGanttStore.getState().currentPositionMs);
+    });
 
     const unsubscribe = useGanttStore.subscribe((state) => {
       animationFrameId = requestAnimationFrame(() => {
