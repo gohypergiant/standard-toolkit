@@ -11,21 +11,16 @@
  */
 
 'use client';
-import 'client-only';
-import { getLogger } from '@accelint/logger';
-import { ErrorBoundary } from 'react-error-boundary';
 import type { ErrorInfo, PropsWithChildren } from 'react';
+import 'client-only';
+import { ErrorBoundary } from 'react-error-boundary';
+import { logger } from '~/utils/logger';
 
-const logger = getLogger({
-  enabled: process.env.NODE_ENV !== 'production',
-  level: 'error',
-  prefix: '[Map]',
-  pretty: true,
-});
+const mapLogger = logger.child().withContext({ domain: '[Map]' });
 
 function onError(err: Error, info: ErrorInfo) {
-  logger
-    .withContext({ componentStack: info.componentStack })
+  mapLogger
+    .withMetadata({ componentStack: info.componentStack })
     .withError(err)
     .error('Error boundary caught error');
 }

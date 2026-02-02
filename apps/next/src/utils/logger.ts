@@ -10,18 +10,22 @@
  * governing permissions and limitations under the License.
  */
 
-'use client';
-import 'client-only';
-import { MapClient } from './client';
-import { ErrorComponent } from './error';
-import { LoadingComponent } from './loading';
+import { getLogger } from '@accelint/logger';
 
-export function MapExample() {
-  return (
-    <ErrorComponent>
-      <LoadingComponent>
-        <MapClient />
-      </LoadingComponent>
-    </ErrorComponent>
-  );
-}
+/**
+ * Shared application logger instance.
+ * Use `.child()` to create domain-specific loggers.
+ *
+ * @example
+ * ```typescript
+ * import { logger } from '~/utils/logger';
+ *
+ * const mapLogger = logger.child().withContext({ domain: '[Map]' });
+ * mapLogger.info('Map initialized');
+ * ```
+ */
+export const logger = getLogger({
+  enabled: process.env.NODE_ENV !== 'production',
+  level: 'error',
+  pretty: true,
+});
