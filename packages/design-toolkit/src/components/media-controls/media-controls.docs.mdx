@@ -140,46 +140,62 @@ All components accept a `className` prop for custom style overrides.
 
 ### MediaControls
 
-* **`children`** - Child control components to render
-* **`className`** - CSS class for styling
-* **`classNames.container`** - Applied to the main container element
-* **`isDisabled`** - Disable all child controls (default: `false`)
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `children` | `ReactNode` | - | Child control components to render |
+| `className` | `string` | - | CSS class for styling |
+| `classNames.container` | `string` | - | Applied to the main container element |
+| `isDisabled` | `boolean` | `false` | Disable all child controls |
 
 ### PlayButton
 
-* **`isDisabled`** - Disable this specific control (overrides context-level isDisabled)
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `isDisabled` | `boolean` | `false` | Disable this specific control (overrides context-level isDisabled) |
 
 ### MuteButton
 
-* **`isDisabled`** - Disable this specific control (overrides context-level isDisabled)
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `isDisabled` | `boolean` | `false` | Disable this specific control (overrides context-level isDisabled) |
 
 ### SeekButton
 
-* **`direction`** - `'forward'` | `'backward'` (required)
-* **`seekOffset`** - Seek amount in seconds (default: `10`)
-* **`isDisabled`** - Disable this specific control (overrides context-level isDisabled)
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `direction` | `'forward' \| 'backward'` | - | Seek direction (required) |
+| `seekOffset` | `number` | `10` | Seek amount in seconds |
+| `isDisabled` | `boolean` | `false` | Disable this specific control (overrides context-level isDisabled) |
 
 > **Note:** The SeekButton is automatically disabled when media metadata is not yet loaded (i.e., duration is unknown). This provides visual feedback to users that seeking is not available until the media is ready.
 
 ### VolumeSlider
 
-* **`showLabel`** - Whether to show volume label (default: `false`)
-* **`isDisabled`** - Disable this specific control (overrides context-level isDisabled)
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `showLabel` | `boolean` | `false` | Whether to show volume label |
+| `isDisabled` | `boolean` | `false` | Disable this specific control (overrides context-level isDisabled) |
 
 ### TimeRange
 
-* **`isDisabled`** - Disable this specific control (overrides context-level isDisabled)
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `isDisabled` | `boolean` | `false` | Disable this specific control (overrides context-level isDisabled) |
 
 ### TimeDisplay
 
-* **`mode`** - Display mode: `'current'` (default), `'remaining'`, or `'duration'`
-* **`placeholder`** - Text to display before media loads (default: `'hh:mm:ss'`)
-* **`isDisabled`** - Disable this specific control (overrides context-level isDisabled)
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `mode` | `'current' \| 'remaining' \| 'duration'` | `'current'` | Display mode |
+| `placeholder` | `string` | `'hh:mm:ss'` | Text to display before media loads |
+| `isDisabled` | `boolean` | `false` | Disable this specific control (overrides context-level isDisabled) |
 
 ### PlaybackRateButton
 
-* **`rates`** - Array of available rates (default: `[1, 2, 3]`)
-* **`isDisabled`** - Disable this specific control (overrides context-level isDisabled)
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `rates` | `number[]` | `[1, 2, 3]` | Array of available rates |
+| `isDisabled` | `boolean` | `false` | Disable this specific control (overrides context-level isDisabled) |
 
 ## Implementation Notes
 

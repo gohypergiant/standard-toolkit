@@ -52,7 +52,7 @@ const filterValidRates = (rates: number[]) =>
  *
  * @param props - The button props.
  * @param props.className - CSS class name for the button.
- * @param props.rates - Array of playback rates to cycle through (default: [1, 2, 3]).
+ * @param props.rates - Array of playback rates to cycle through (default: [1, 2, 3]). Only positive finite numbers are accepted.
  * @param props.isDisabled - Whether the button is disabled.
  * @param props.ref - Ref to the button element.
  * @returns The rendered playback rate button.

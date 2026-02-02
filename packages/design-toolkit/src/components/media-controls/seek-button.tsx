@@ -49,11 +49,13 @@ function isPositiveFinite(value: number): boolean {
  *
  * Integrates with media-chrome's media store to seek the media playback position.
  * Can be configured to seek forward or backward with a customizable time offset.
+ * Invalid seekOffset values (negative, zero, NaN, Infinity) automatically fall back
+ * to the default of 10 seconds.
  *
  * @param props - The button props.
  * @param props.className - CSS class name for the button.
  * @param props.direction - Direction to seek ('forward' or 'backward').
- * @param props.seekOffset - Number of seconds to seek (default: 10).
+ * @param props.seekOffset - Number of seconds to seek (default: 10). Must be a positive finite number.
  * @param props.isDisabled - Whether the button is disabled.
  * @param props.ref - Ref to the button element.
  * @returns The rendered seek button.

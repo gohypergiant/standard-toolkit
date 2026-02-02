@@ -188,10 +188,26 @@ function AudioInner({
  * for the accessible media chrome elements.
  *
  * @param props - The component props.
- * @param props.src - Audio source URL.
+ * @param props.src - Audio source URL. Must be accessible to the browser - if loading
+ *   from a different origin, ensure the server sends appropriate CORS headers
+ *   (Access-Control-Allow-Origin) or use the crossOrigin prop.
  * @param props.title - Title to display (e.g., filename).
  * @param props.classNames - Class names for sub-elements.
  * @param props.isDisabled - Disable all audio controls.
+ * @param props.crossOrigin - CORS setting ('anonymous' | 'use-credentials'). Required when
+ *   loading audio from a different origin that requires credentials or when using canvas
+ *   to analyze audio. Without proper CORS configuration, the audio may fail to load.
+ * @param props.playbackRates - Array of playback speed multipliers (default: [1, 2, 3]).
+ *   Only positive finite numbers are accepted; invalid values are filtered out.
+ * @param props.children - Custom controls to render instead of the default layout.
+ * @param props.onEnded - Callback invoked when audio playback finishes.
+ * @param props.onTimeUpdate - Callback invoked during playback with current time in seconds.
+ * @param props.onError - Callback invoked when audio fails to load or encounters an error.
+ * @param props.noHotkeys - Disable all keyboard shortcuts for media control.
+ * @param props.hotkeys - Custom keyboard shortcuts configuration for media control.
+ * @param props.noVolumePref - Disable automatic saving/restoring of volume preference.
+ * @param props.noMutedPref - Disable automatic saving/restoring of muted state preference.
+ * @param props.lang - Language code for localized media control labels.
  * @returns The rendered audio player component.
  *
  * @example
@@ -220,6 +236,19 @@ function AudioInner({
  *   <PlayButton />
  *   <TimeRange />
  * </Audio>
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // Loading audio from external origin (requires CORS)
+ * <Audio
+ *   src="https://example.com/audio.mp3"
+ *   crossOrigin="anonymous"
+ *   onError={(error) => {
+ *     // Handle CORS or loading errors
+ *     console.error('Failed to load audio:', error);
+ *   }}
+ * />
  * ```
  */
 export function Audio({

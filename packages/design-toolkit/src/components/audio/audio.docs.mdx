@@ -76,41 +76,52 @@ Disable keyboard shortcuts when embedding in forms or apps with custom hotkey sy
 ## Props
 
 ### Audio Props
-* **`src`** - Audio source URL (string)
-* **`title`** - Optional title to display above the controls
-* **`autoPlay`** - Whether to start playing automatically (note: browsers may block this)
-* **`loop`** - Whether to loop the audio when it ends
-* **`muted`** - Whether to start muted
-* **`preload`** - Preload behavior: `'none'` | `'metadata'` (default) | `'auto'`
-* **`crossOrigin`** - CORS setting: `''` | `'anonymous'` | `'use-credentials'`
-* **`isDisabled`** - Disable all controls
-* **`playbackRates`** - Custom playback rate options (default: `[1, 2, 3]`)
-* **`children`** - Custom controls (replaces default layout)
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `src` | `string` | - | Audio source URL |
+| `title` | `string` | - | Optional title to display above the controls |
+| `autoPlay` | `boolean` | `false` | Whether to start playing automatically (note: browsers may block this) |
+| `loop` | `boolean` | `false` | Whether to loop the audio when it ends |
+| `muted` | `boolean` | `false` | Whether to start muted |
+| `preload` | `'none' \| 'metadata' \| 'auto'` | `'metadata'` | Preload behavior |
+| `crossOrigin` | `'' \| 'anonymous' \| 'use-credentials'` | - | CORS setting |
+| `isDisabled` | `boolean` | `false` | Disable all controls |
+| `playbackRates` | `number[]` | `[1, 2, 3]` | Custom playback rate options |
+| `children` | `ReactNode` | - | Custom controls (replaces default layout) |
 
 ### Event Callbacks
-* **`onPlay`** - `(e: SyntheticEvent<HTMLAudioElement>) => void` - Called when playback starts
-* **`onPause`** - `(e: SyntheticEvent<HTMLAudioElement>) => void` - Called when playback pauses
-* **`onEnded`** - `() => void` - Called when audio finishes playing
-* **`onTimeUpdate`** - `(currentTime: number) => void` - Called during playback with current time in seconds
-* **`onLoadedMetadata`** - `(e: SyntheticEvent<HTMLAudioElement>) => void` - Called when audio metadata is loaded
-* **`onError`** - `(error: MediaError | null) => void` - Called when audio fails to load
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `onPlay` | `(e: SyntheticEvent<HTMLAudioElement>) => void` | Called when playback starts |
+| `onPause` | `(e: SyntheticEvent<HTMLAudioElement>) => void` | Called when playback pauses |
+| `onEnded` | `() => void` | Called when audio finishes playing |
+| `onTimeUpdate` | `(currentTime: number) => void` | Called during playback with current time in seconds |
+| `onLoadedMetadata` | `(e: SyntheticEvent<HTMLAudioElement>) => void` | Called when audio metadata is loaded |
+| `onError` | `(error: MediaError \| null) => void` | Called when audio fails to load |
 
 ### classNames
-* **`classNames.container`** - Applied to the main container
-* **`classNames.title`** - Applied to the title element
-* **`classNames.timeRow`** - Applied to the time/seek row
-* **`classNames.controlsRow`** - Applied to the controls row
-* **`classNames.mediaControls`** - Applied to the media controls wrapper
+
+| Prop | Description |
+|------|-------------|
+| `classNames.container` | Applied to the main container |
+| `classNames.title` | Applied to the title element |
+| `classNames.timeRow` | Applied to the time/seek row |
+| `classNames.controlsRow` | Applied to the controls row |
+| `classNames.mediaControls` | Applied to the media controls wrapper |
 
 ### Media Controller Props
 
 These props configure the underlying media-chrome `MediaController`:
 
-* **`noHotkeys`** - Disable all keyboard shortcuts (space=play, arrows=seek, m=mute). Useful when embedding in forms or apps with their own hotkey system.
-* **`hotkeys`** - Custom hotkey configuration string. See [media-chrome hotkeys docs](https://www.media-chrome.org/docs/en/keyboard-shortcuts).
-* **`noVolumePref`** - Don't persist volume level to localStorage across page loads.
-* **`noMutedPref`** - Don't persist muted state to localStorage across page loads.
-* **`lang`** - Language for media-chrome's built-in accessibility labels.
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `noHotkeys` | `boolean` | `false` | Disable all keyboard shortcuts (space=play, arrows=seek, m=mute). Useful when embedding in forms or apps with their own hotkey system. |
+| `hotkeys` | `string` | - | Custom hotkey configuration string. See [media-chrome hotkeys docs](https://www.media-chrome.org/docs/en/keyboard-shortcuts). |
+| `noVolumePref` | `boolean` | `false` | Don't persist volume level to localStorage across page loads. |
+| `noMutedPref` | `boolean` | `false` | Don't persist muted state to localStorage across page loads. |
+| `lang` | `string` | - | Language for media-chrome's built-in accessibility labels. |
 
 ## Implementation Notes
 
