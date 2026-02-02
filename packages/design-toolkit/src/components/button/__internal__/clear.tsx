@@ -36,10 +36,7 @@ import styles from './styles.module.css';
 export type ClearButtonProps = Omit<
   AriaButtonProps,
   'children' | 'size' | 'variant'
-> & {
-  /** Optional className for additional styling */
-  className?: AriaButtonProps['className'];
-};
+> & {};
 
 /**
  * @internal
@@ -53,7 +50,7 @@ export function ClearButton({ className, ...rest }: ClearButtonProps) {
         clsx(styles.clearButton, className),
       )}
     >
-      <Icon>
+      <Icon size='small'>
         <CancelFill />
       </Icon>
     </Button>

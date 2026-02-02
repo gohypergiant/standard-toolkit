@@ -14,7 +14,7 @@
 
 @layer components.l1 {
   .clearButton {
-    @apply w-content rounded-small gap-xxs p-xxs py-xs text-button-s flex min-w-0 shrink-0 cursor-pointer items-center justify-center;
+    @apply w-content rounded-small gap-xxs text-button-s flex min-w-0 shrink-0 cursor-pointer items-center justify-center;
 
     @variant hover {
       @apply bg-interactive-muted-hover;
@@ -22,10 +22,6 @@
 
     @variant pressed {
       @apply bg-interactive-muted-pressed;
-    }
-
-    @variant disabled {
-      @apply fg-disabled bg-interactive-disabled cursor-not-allowed;
     }
   }
 }
