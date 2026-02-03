@@ -37,9 +37,13 @@ import type { LogLevel } from '@accelint/logger';
  * const memlabLogger = createLogger('[MemLab]', 'debug', !!process.env.DEBUG_MEMLAB);
  * memlabLogger.debug('Memory snapshot taken');
  *
- * // Base logger without prefix
+ * // Base logger without prefix (error level by default)
  * const logger = createLogger();
- * logger.info('Application started');
+ * logger.error('Application error occurred');
+ *
+ * // Base logger with custom level
+ * const infoLogger = createLogger(undefined, 'info');
+ * infoLogger.info('Application started');
  * ```
  */
 export function createLogger(
