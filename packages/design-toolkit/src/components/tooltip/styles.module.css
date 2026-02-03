@@ -16,5 +16,141 @@
   .tooltip {
     @apply fg-primary-bold rounded-small bg-surface-overlay px-s py-xs text-body-xs shadow-elevation-overlay flex items-center justify-center text-center wrap-break-word;
     max-width: 160px;
+    opacity: 0;
+  }
+
+  /* Keyframe animations for entrance */
+  @keyframes tooltip-enter-top {
+    from {
+      opacity: 0;
+      transform: translateY(var(--spacing-s));
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes tooltip-enter-bottom {
+    from {
+      opacity: 0;
+      transform: translateY(calc(-1 * var(--spacing-s)));
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes tooltip-enter-left {
+    from {
+      opacity: 0;
+      transform: translateX(var(--spacing-s));
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes tooltip-enter-right {
+    from {
+      opacity: 0;
+      transform: translateX(calc(-1 * var(--spacing-s)));
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  /* Keyframe animations for exit */
+  @keyframes tooltip-exit-top {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(var(--spacing-s));
+    }
+  }
+
+  @keyframes tooltip-exit-bottom {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(calc(-1 * var(--spacing-s)));
+    }
+  }
+
+  @keyframes tooltip-exit-left {
+    from {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateX(var(--spacing-s));
+    }
+  }
+
+  @keyframes tooltip-exit-right {
+    from {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateX(calc(-1 * var(--spacing-s)));
+    }
+  }
+
+  .tooltip[data-placement^='top'][data-entering] {
+    animation: tooltip-enter-top var(--animation-duration-fast)
+      var(--animation-easing-standard) both;
+  }
+
+  .tooltip[data-placement^='bottom'][data-entering] {
+    animation: tooltip-enter-bottom var(--animation-duration-fast)
+      var(--animation-easing-standard) both;
+  }
+
+  .tooltip[data-placement^='left'][data-entering] {
+    animation: tooltip-enter-left var(--animation-duration-fast)
+      var(--animation-easing-standard) both;
+  }
+
+  .tooltip[data-placement^='right'][data-entering] {
+    animation: tooltip-enter-right var(--animation-duration-fast)
+      var(--animation-easing-standard) both;
+  }
+
+  .tooltip[data-placement]:not([data-entering]):not([data-exiting]) {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+
+  .tooltip[data-placement^='top'][data-exiting] {
+    animation: tooltip-exit-top var(--animation-duration-fast)
+      var(--animation-easing-standard) both;
+  }
+
+  .tooltip[data-placement^='bottom'][data-exiting] {
+    animation: tooltip-exit-bottom var(--animation-duration-fast)
+      var(--animation-easing-standard) both;
+  }
+
+  .tooltip[data-placement^='left'][data-exiting] {
+    animation: tooltip-exit-left var(--animation-duration-fast)
+      var(--animation-easing-standard) both;
+  }
+
+  .tooltip[data-placement^='right'][data-exiting] {
+    animation: tooltip-exit-right var(--animation-duration-fast)
+      var(--animation-easing-standard) both;
   }
 }
