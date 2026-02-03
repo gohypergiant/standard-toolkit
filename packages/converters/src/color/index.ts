@@ -16,10 +16,28 @@ import { clamp } from '@accelint/math';
 const HEX_CHARS = '0123456789ABCDEF';
 
 /**
+ * Convert a number (0-255) to a 2-character hex string.
+ *
+ * @param n - The number to convert (0-255).
+ * @returns A 2-character hex string (e.g., "00", "FF", "A3").
+ *
+ * @remarks
+ * Uses bitwise operations and lookup table to avoid string allocations
+ * from toString(16).padStart(2, '0').toUpperCase().
+ */
+const numberToHex = (n: number): string =>
+  HEX_CHARS.charAt(n >> 4) + HEX_CHARS.charAt(n & 0x0f);
+
+/**
  * RGBA color where all channels are 0-255 (deck.gl standard format)
  * [red, green, blue, alpha]
  */
-export type Color = readonly [number, number, number, number];
+export type Color = readonly [
+  r: number, // 0-255
+  g: number, // 0-255
+  b: number, // 0-255
+  a: number, // 0-255
+];
 
 /**
  * CSS-style RGBA color object (React Aria Components style)
@@ -31,6 +49,18 @@ export type CssRgbaObject = {
   readonly b: number; // 0-255
   readonly a: number; // 0-1
 };
+
+/**
+ * CSS RGBA tuple format (used by React Aria Components and other CSS-based libraries)
+ * RGB channels are 0-255, alpha is 0-1
+ * [red, green, blue, alpha]
+ */
+export type CssRgbaTuple = readonly [
+  r: number, // 0-255
+  g: number, // 0-255
+  b: number, // 0-255
+  a: number, // 0-1
+];
 
 // CSS rgba regex patterns - support both legacy and modern syntax
 
@@ -113,7 +143,7 @@ function parseCssValue(value: string, isAlpha: boolean): number {
  * - 6-char (#RRGGBB): Standard format
  * - 8-char (#RRGGBBAA): Standard format with alpha
  *
- * @playground
+ * @example
  * ```ts
  * import { hexToColor } from '@accelint/converters/color';
  *
@@ -189,7 +219,7 @@ export function hexToColor(hex: string): Color {
  * @remarks
  * pure function
  *
- * @playground
+ * @example
  * ```ts
  * import { colorToHex } from '@accelint/converters/color';
  *
@@ -202,12 +232,7 @@ export function hexToColor(hex: string): Color {
  */
 export function colorToHex(color: Color, includeAlpha = false): string {
   const [r, g, b, a] = color;
-
-  // Convert to hex using lookup table (avoid toString/padStart/toUpperCase allocations)
-  const toHex2 = (n: number): string =>
-    HEX_CHARS.charAt(n >> 4) + HEX_CHARS.charAt(n & 0x0f);
-
-  return `#${toHex2(r)}${toHex2(g)}${toHex2(b)}${includeAlpha ? toHex2(a) : ''}`;
+  return `#${numberToHex(r)}${numberToHex(g)}${numberToHex(b)}${includeAlpha ? numberToHex(a) : ''}`;
 }
 
 /**
@@ -225,7 +250,7 @@ export function colorToHex(color: Color, includeAlpha = false): string {
  * @remarks
  * pure function
  *
- * @playground
+ * @example
  * ```ts
  * import { cssRgbaStringToColor } from '@accelint/converters/color';
  *
@@ -293,7 +318,7 @@ export function cssRgbaStringToColor(css: string): Color {
  * @remarks
  * pure function
  *
- * @playground
+ * @example
  * ```ts
  * import { colorToCssRgbaString } from '@accelint/converters/color';
  *
@@ -320,7 +345,7 @@ export function colorToCssRgbaString(color: Color): string {
  * @remarks
  * pure function
  *
- * @playground
+ * @example
  * ```ts
  * import { cssRgbaTupleToColor } from '@accelint/converters/color';
  *
@@ -331,9 +356,7 @@ export function colorToCssRgbaString(color: Color): string {
  * // [255, 128, 64, 128]
  * ```
  */
-export function cssRgbaTupleToColor(
-  tuple: readonly [number, number, number, number],
-): Color {
+export function cssRgbaTupleToColor(tuple: CssRgbaTuple): Color {
   if (tuple.length !== 4) {
     throw new Error(
       `CSS RGBA tuple must have exactly 4 values, got ${tuple.length}`,
@@ -368,7 +391,7 @@ export function cssRgbaTupleToColor(
  * @remarks
  * pure function
  *
- * @playground
+ * @example
  * ```ts
  * import { colorToCssRgbaTuple } from '@accelint/converters/color';
  *
@@ -379,9 +402,7 @@ export function cssRgbaTupleToColor(
  * // [255, 128, 64, 0.5019607843137255]
  * ```
  */
-export function colorToCssRgbaTuple(
-  color: Color,
-): readonly [number, number, number, number] {
+export function colorToCssRgbaTuple(color: Color): CssRgbaTuple {
   const [r, g, b, a] = color;
   // Convert alpha from 0-255 to 0-1
   return [r, g, b, a / 255];
@@ -397,7 +418,7 @@ export function colorToCssRgbaTuple(
  * @remarks
  * pure function
  *
- * @playground
+ * @example
  * ```ts
  * import { cssRgbaObjectToColor } from '@accelint/converters/color';
  *
@@ -437,7 +458,7 @@ export function cssRgbaObjectToColor(obj: CssRgbaObject): Color {
  * @remarks
  * pure function
  *
- * @playground
+ * @example
  * ```ts
  * import { colorToCssRgbaObject } from '@accelint/converters/color';
  *
@@ -463,7 +484,7 @@ export function colorToCssRgbaObject(color: Color): CssRgbaObject {
  * @remarks
  * pure function
  *
- * @playground
+ * @example
  * ```ts
  * import { colorToGlsl } from '@accelint/converters/color';
  *
@@ -490,7 +511,7 @@ export function colorToGlsl(color: Color): Color {
  * @remarks
  * pure function
  *
- * @playground
+ * @example
  * ```ts
  * import { glslToColor } from '@accelint/converters/color';
  *
@@ -517,7 +538,7 @@ export function glslToColor(color: Color): Color {
  * @remarks
  * pure function
  *
- * @playground
+ * @example
  * ```ts
  * import { isColor } from '@accelint/converters/color';
  *
@@ -555,7 +576,7 @@ export function isColor(value: unknown): value is Color {
  * @remarks
  * pure function
  *
- * @playground
+ * @example
  * ```ts
  * import { isCssRgbaObject } from '@accelint/converters/color';
  *

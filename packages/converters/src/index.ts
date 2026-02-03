@@ -31,7 +31,7 @@ export {
   isColor,
   isCssRgbaObject,
 } from './color';
-export type { Color, CssRgbaObject } from './color';
+export type { Color, CssRgbaObject, CssRgbaTuple } from './color';
 export { toBoolean } from './to-boolean';
 export { zxyToBbox } from './zxy-to-bbox';
 export type { BoundingBoxTuple, ZxyTuple } from './zxy-to-bbox';

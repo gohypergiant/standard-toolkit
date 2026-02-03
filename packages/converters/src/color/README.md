@@ -2,16 +2,54 @@
 
 Comprehensive color conversion utilities for web applications. Convert between deck.gl tuples and GLSL tuples, CSS RGBA (string/tuple/object), and hex string formats.
 
+## Table of Contents
+
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [Core Concept](#core-concept)
+- [API](#api)
+  - [Parsing](#parsing-external--color)
+  - [Serialization](#serialization-color--external)
+  - [Transforms](#transforms-color--color)
+  - [Type Guards](#type-guards)
+- [Usage Examples](#usage-examples)
+- [Type Definitions](#type-definitions)
+- [Format Reference](#format-reference)
+- [Round-Trip Conversions](#round-trip-conversions)
+- [Why This Approach](#why-this-approach)
+- [License](#license)
+
 ## Installation
 
 ```sh
-npm install @accelint/converters
+pnpm add @accelint/converters
 ```
 
-Optional dependency (for GLSL conversions):
+**Required peer dependency:**
 
 ```sh
-npm install @accelint/math
+pnpm add @accelint/math
+```
+
+The color converters require `@accelint/math` for clamping operations in GLSL conversions. If you're only using other converters from this package (like `boolean-to-number`), you won't need it.
+
+## Quick Start
+
+```ts
+import {
+  hexToColor,
+  colorToCssRgbaString,
+  cssRgbaStringToColor,
+} from '@accelint/converters/color';
+
+// Parse hex color
+const color = hexToColor('#FF8040');  // [255, 128, 64, 255]
+
+// Convert to CSS
+const css = colorToCssRgbaString(color);  // "rgba(255, 128, 64, 1)"
+
+// Parse CSS color
+const parsed = cssRgbaStringToColor('rgb(255 128 64 / 0.5)');  // [255, 128, 64, 128]
 ```
 
 ## Core Concept
@@ -227,19 +265,20 @@ const hexString = colorToHex(deckColor);  // "#FF8040"
 
 ```ts
 import { colorToGlsl, glslToColor } from '@accelint/converters/color';
-import { compose } from 'your-compose-library';
 
 const adjustBrightness = (color: Color, factor: number): Color => {
-  return color.map(v => Math.min(1, v * factor)) as Color;
+  // Convert to GLSL space (0-1)
+  const glsl = colorToGlsl(color);
+
+  // Adjust brightness in normalized space
+  const adjusted = glsl.map(v => Math.min(1, v * factor)) as Color;
+
+  // Convert back to deck.gl format (0-255)
+  return glslToColor(adjusted);
 };
 
-const pipeline = compose(
-  colorToGlsl,           // [0-255] → [0-1]
-  adjustBrightness,      // Adjust in normalized space
-  glslToColor            // [0-1] → [0-255]
-);
-
-const adjusted = pipeline([255, 128, 64, 255], 1.2);
+const brighter = adjustBrightness([255, 128, 64, 255], 1.2);
+// [255, 154, 77, 255]
 ```
 
 ## Type Definitions
@@ -249,7 +288,12 @@ const adjusted = pipeline([255, 128, 64, 255], 1.2);
  * RGBA color where all channels are 0-255 (deck.gl standard format)
  * [red, green, blue, alpha]
  */
-type Color = readonly [number, number, number, number];
+type Color = readonly [
+  r: number,  // 0-255
+  g: number,  // 0-255
+  b: number,  // 0-255
+  a: number,  // 0-255
+];
 
 /**
  * CSS-style RGBA color object (React Aria Components style)
@@ -261,6 +305,18 @@ type CssRgbaObject = {
   readonly b: number;  // 0-255
   readonly a: number;  // 0-1
 };
+
+/**
+ * CSS RGBA tuple format (used by React Aria Components and other CSS-based libraries)
+ * RGB channels are 0-255, alpha is 0-1
+ * [red, green, blue, alpha]
+ */
+type CssRgbaTuple = readonly [
+  r: number,  // 0-255
+  g: number,  // 0-255
+  b: number,  // 0-255
+  a: number,  // 0-1
+];
 ```
 
 ## Format Reference
