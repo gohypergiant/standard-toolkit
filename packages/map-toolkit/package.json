@@ -137,6 +137,7 @@
   ],
   "license": "Apache-2.0",
   "optionalDependencies": {
+    "@accelint/hotkey-manager": "workspace:*",
     "@deck.gl-community/editable-layers": "~9.1",
     "@deck.gl/core": "~9.1",
     "@deck.gl/extensions": "~9.1",
@@ -157,7 +158,6 @@
     "@accelint/bus": "workspace:*",
     "@accelint/core": "workspace:*",
     "@accelint/geo": "workspace:*",
-    "@accelint/hotkey-manager": "workspace:*",
     "@accelint/logger": "workspace:*",
     "@types/geojson": "^7946.0.14",
     "react": "^19"
