@@ -232,10 +232,7 @@ export function BaseMap({
     longitude: initialViewState?.longitude ?? DEFAULT_VIEW_STATE.longitude,
   });
 
-  // Note: deckglInstance?._deck?._getViewState is intentionally NOT in the dependency array.
-  // Including the function reference causes infinite renders because optional chaining creates
-  // a new reference on every render. We only need to recompute when cameraState changes.
-  // biome-ignore lint/correctness/useExhaustiveDependencies: we don't want function refs in deps
+  // biome-ignore lint/correctness/useExhaustiveDependencies: we only need to recompute when cameraState changes.
   const viewState = useMemo<ViewState>(
     () => ({
       // @ts-expect-error squirrelly deckglInstance typing
