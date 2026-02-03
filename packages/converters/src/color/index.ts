@@ -384,8 +384,7 @@ export function colorToCssRgbaTuple(
 ): readonly [number, number, number, number] {
   const [r, g, b, a] = color;
   // Convert alpha from 0-255 to 0-1
-  const alpha = a / 255;
-  return [r, g, b, alpha];
+  return [r, g, b, a / 255];
 }
 
 /**
@@ -426,9 +425,7 @@ export function cssRgbaObjectToColor(obj: CssRgbaObject): Color {
   }
 
   // Convert alpha from 0-1 to 0-255
-  const alpha255 = Math.round(a * 255);
-
-  return [r, g, b, alpha255];
+  return [r, g, b, Math.round(a * 255)];
 }
 
 /**
@@ -454,8 +451,7 @@ export function cssRgbaObjectToColor(obj: CssRgbaObject): Color {
 export function colorToCssRgbaObject(color: Color): CssRgbaObject {
   const [r, g, b, a] = color;
   // Convert alpha from 0-255 to 0-1
-  const alpha = a / 255;
-  return { r, g, b, a: alpha };
+  return { r, g, b, a: a / 255 };
 }
 
 /**
@@ -583,25 +579,21 @@ export function isCssRgbaObject(value: unknown): value is CssRgbaObject {
 
   const obj = value as Record<string, unknown>;
 
-  const hasAllKeys = 'r' in obj && 'g' in obj && 'b' in obj && 'a' in obj;
-  if (!hasAllKeys) {
+  if (!('r' in obj && 'g' in obj && 'b' in obj && 'a' in obj)) {
     return false;
   }
 
-  // Validate RGB channels (avoid array allocation)
-  const rgbValid =
+  // Validate all channels in single return
+  return (
     typeof obj.r === 'number' &&
     isValidChannel(obj.r) &&
     typeof obj.g === 'number' &&
     isValidChannel(obj.g) &&
     typeof obj.b === 'number' &&
-    isValidChannel(obj.b);
-
-  if (!rgbValid) {
-    return false;
-  }
-
-  // Validate alpha (0-1)
-  const a = obj.a as number;
-  return typeof a === 'number' && Number.isFinite(a) && a >= 0 && a <= 1;
+    isValidChannel(obj.b) &&
+    typeof obj.a === 'number' &&
+    Number.isFinite(obj.a) &&
+    obj.a >= 0 &&
+    obj.a <= 1
+  );
 }
