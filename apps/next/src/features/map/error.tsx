@@ -16,11 +16,11 @@ import 'client-only';
 import { ErrorBoundary } from 'react-error-boundary';
 import { logger } from '~/utils/logger';
 
-const mapLogger = logger.child().withContext({ domain: '[Map]' });
+const mapLogger = logger('[Map]');
 
 function onError(err: Error, info: ErrorInfo) {
   mapLogger
-    .withMetadata({ componentStack: info.componentStack })
+    .withContext({ componentStack: info.componentStack })
     .withError(err)
     .error('Error boundary caught error');
 }

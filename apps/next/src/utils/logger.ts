@@ -11,21 +11,76 @@
  */
 
 import { getLogger } from '@accelint/logger';
+import type { LogLevel } from '@accelint/logger';
+
+const baseLogger = getLogger({
+  enabled: process.env.NODE_ENV !== 'production',
+  level: 'error',
+  pretty: true,
+});
 
 /**
- * Shared application logger instance.
- * Use `.child()` to create domain-specific loggers.
+ * Get a logger instance with an optional prefix.
+ * Without a prefix, returns the base shared logger.
+ * With a prefix, returns a child logger with that prefix.
+ *
+ * @param prefix - Optional prefix for log messages (e.g., '[Map]')
+ * @returns A logger instance
  *
  * @example
  * ```typescript
  * import { logger } from '~/utils/logger';
  *
- * const mapLogger = logger.child().withContext({ domain: '[Map]' });
+ * // Use base logger
+ * logger().info('Application started');
+ *
+ * // Create domain-specific logger
+ * const mapLogger = logger('[Map]');
  * mapLogger.info('Map initialized');
  * ```
  */
-export const logger = getLogger({
-  enabled: process.env.NODE_ENV !== 'production',
-  level: 'error',
-  pretty: true,
-});
+export function logger(prefix?: string) {
+  if (!prefix) {
+    return baseLogger;
+  }
+  return getLogger({
+    enabled: process.env.NODE_ENV !== 'production',
+    level: 'error',
+    pretty: true,
+    prefix,
+  });
+}
+
+/**
+ * Create a logger with a custom log level, optional prefix, and optional enabled condition.
+ * Useful for test files that need debug or warn levels, or conditional logging.
+ *
+ * @param level - The log level to use
+ * @param prefix - Optional prefix for log messages (e.g., '[Test]')
+ * @param enabled - Optional custom enabled condition (defaults to NODE_ENV !== 'production')
+ * @returns A logger instance configured with the specified settings
+ *
+ * @example
+ * ```typescript
+ * import { createLogger } from '~/utils/logger';
+ *
+ * // Debug logger with prefix
+ * const logger = createLogger('debug', '[VRT:Static]');
+ * logger.debug('Test started');
+ *
+ * // Conditionally enabled logger with prefix
+ * const memlabLogger = createLogger('debug', '[MemLab]', !!process.env.DEBUG_MEMLAB);
+ * ```
+ */
+export function createLogger(
+  level: LogLevel = 'error',
+  prefix?: string,
+  enabled: boolean = process.env.NODE_ENV !== 'production',
+) {
+  return getLogger({
+    enabled,
+    level,
+    pretty: true,
+    ...(prefix && { prefix }),
+  });
+}

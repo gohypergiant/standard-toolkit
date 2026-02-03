@@ -12,19 +12,14 @@
 
 'use client';
 import 'client-only';
-import { getLogger } from '@accelint/logger';
 import { ErrorBoundary } from 'react-error-boundary';
+import { logger } from '~/utils/logger';
 import type { ErrorInfo, PropsWithChildren } from 'react';
 
-const logger = getLogger({
-  enabled: process.env.NODE_ENV !== 'production',
-  level: 'error',
-  prefix: '[Avatar]',
-  pretty: true,
-});
+const avatarLogger = logger('[Avatar]');
 
 function onError(err: Error, info: ErrorInfo) {
-  logger
+  avatarLogger
     .withContext({ componentStack: info.componentStack })
     .withError(err)
     .error('Error boundary caught error');

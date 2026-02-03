@@ -22,7 +22,7 @@ export function MapClient() {
 
   return (
     <BaseMap
-      className='fixed top-xxl left-0 right-0 bottom-0 deckgl-map'
+      className='fixed top-xxl left-0 right-0 bottom-0'
       id={mapId}
       initialViewState={DEFAULT_VIEW_STATE}
     />

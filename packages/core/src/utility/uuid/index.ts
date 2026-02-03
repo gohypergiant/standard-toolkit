@@ -43,9 +43,10 @@ export type UniqueId = Tagged<string, 'UUID'>;
  *
  * @example
  * ```typescript
+ * import 'server-only'
  * import { uuid } from '@accelint/core';
  *
- * // ✅ CORRECT - Module-level constant
+ * // ✅ CORRECT - Module-level constant in server files
  * const FEATURE_ID = uuid();
  *
  * export function MyComponent() {

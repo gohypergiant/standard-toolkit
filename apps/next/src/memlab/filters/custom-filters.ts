@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { getLogger } from '@accelint/logger';
+import { createLogger } from '~/utils/logger';
 import type { IHeapEdge, IHeapNode, IHeapSnapshot } from '@memlab/core';
 
 /**
@@ -38,12 +38,13 @@ const MIN_CONTEXT_RETAINED_SIZE = 10000;
 
 /**
  * Logger for filter debug output
+ * Only enabled when DEBUG_MEMLAB environment variable is set
  */
-const logger = getLogger({
-  enabled: !!process.env.DEBUG_MEMLAB,
-  level: 'debug',
-  prefix: '[MemLab:Filters]',
-});
+const logger = createLogger(
+  'debug',
+  '[MemLab:Filters]',
+  !!process.env.DEBUG_MEMLAB,
+);
 
 /**
  * Custom leak filter interface matching MemLab's ILeakFilter
