@@ -71,7 +71,6 @@ const saveEditHotkey = registerHotkey({
     code: Keycode.Enter,
   },
   onKeyUp: () => {
-    console.log('onKeyUp');
     bus.emit(EditShapeEvents.confirmed);
   },
 });
@@ -175,8 +174,6 @@ export function EditShapeLayer({
 
   const isEditing = editingState?.editingShape != null;
 
-  // Hotkey manager. On enter, figure out what saving looks like.
-  // "hot key is already registered" yeah isn't that the hook's problem?
   useHotkey(saveEditHotkey);
   const { useOn } = useBus<EditShapeEvent>();
 
