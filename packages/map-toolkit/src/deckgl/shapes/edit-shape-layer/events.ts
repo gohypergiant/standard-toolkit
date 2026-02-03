@@ -124,6 +124,10 @@ export type ShapeEditCanceledEvent = {
   target?: UniqueId;
 };
 
+/**
+ * Event payload for shapes:edit-confirmed
+ * Emitted when editing is saved via Hotkey
+ */
 export type ShapeEditConfirmedEvent = {
   type: 'shapes:edit-confirmed';
   payload: ShapeUpdatedPayload;

@@ -261,6 +261,20 @@ useOn(EditShapeEvents.canceled, (event) => {
 });
 ```
 
+### shapes:edit-confirmed
+
+Emitted when Enter key is pressed while editing.
+
+```tsx
+import { useOn } from '@accelint/bus/react';
+import { EditShapeEvents } from '@accelint/map-toolkit/deckgl/shapes';
+
+useOn(EditShapeEvents.confirmed, (event) => {
+  if (event.payload.mapId !== MAP_ID) return;
+  console.log('Edit confirmed for:', event.payload.shape.name);
+});
+```
+
 ## Map Mode Integration
 
 EditShapeLayer is **neutral** regarding mode change authorization. When editing starts:

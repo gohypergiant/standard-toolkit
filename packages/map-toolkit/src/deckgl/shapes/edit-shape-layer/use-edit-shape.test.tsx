@@ -11,21 +11,21 @@
  */
 
 import { Broadcast } from '@accelint/bus';
+import type { UniqueId } from '@accelint/core';
 import { uuid } from '@accelint/core';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { mockShapes } from '../__fixtures__/mock-shapes';
-import { ShapeFeatureType } from '../shared/types';
-import { EditShapeEvents } from './events';
-import { clearEditingState } from './store';
-import { useEditShape } from './use-edit-shape';
-import type { UniqueId } from '@accelint/core';
 import type { Shape } from '../shared/types';
+import { ShapeFeatureType } from '../shared/types';
 import type {
   EditShapeEvent,
   ShapeEditCanceledEvent,
   ShapeUpdatedEvent,
 } from './events';
+import { EditShapeEvents } from './events';
+import { clearEditingState } from './store';
+import { useEditShape } from './use-edit-shape';
 
 // Get fixture shapes by type
 const mockCircle = mockShapes.find((s) => s.shape === 'Circle');
