@@ -153,4 +153,16 @@
     animation: tooltip-exit-right var(--animation-duration-fast)
       var(--animation-easing-standard) both;
   }
+
+  /* Disable animations for users who prefer reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .tooltip[data-entering],
+    .tooltip[data-exiting] {
+      animation: none;
+    }
+
+    .tooltip[data-placement]:not([data-entering]):not([data-exiting]) {
+      opacity: 1;
+    }
+  }
 }

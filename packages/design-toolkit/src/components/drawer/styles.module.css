@@ -467,6 +467,51 @@
   .footer {
     @apply fg-primary-bold mt-s flex flex-row items-center justify-end;
   }
+
+  /* Disable animations for users who prefer reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .drawer {
+      transition: none;
+      animation: none;
+    }
+
+    .drawer[data-entering],
+    .drawer[data-exiting] {
+      animation: none;
+    }
+
+    .drawer[data-placement='left'][data-open] {
+      transform: translateX(0);
+    }
+
+    .drawer[data-placement='right'][data-open] {
+      transform: translateX(0);
+    }
+
+    .drawer[data-placement='top'][data-open] {
+      transform: translateY(0);
+    }
+
+    .drawer[data-placement='bottom'][data-open] {
+      transform: translateY(0);
+    }
+
+    .drawer[data-placement='left']:not([data-open]) {
+      transform: translateX(-100%);
+    }
+
+    .drawer[data-placement='right']:not([data-open]) {
+      transform: translateX(100%);
+    }
+
+    .drawer[data-placement='top']:not([data-open]) {
+      transform: translateY(-100%);
+    }
+
+    .drawer[data-placement='bottom']:not([data-open]) {
+      transform: translateY(100%);
+    }
+  }
 }
 
 @layer components.l2 {

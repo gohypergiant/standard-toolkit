@@ -13,16 +13,11 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { motion } from 'motion/react';
 import {
   Button as AriaButton,
   composeRenderProps,
   useContextProps,
 } from 'react-aria-components';
-import {
-  ANIMATION_DURATION_FAST,
-  ANIMATION_EASING_STANDARD,
-} from '../../lib/animation';
 import { IconProvider } from '../icon/context';
 import { ButtonContext } from './context';
 import styles from './styles.module.css';
@@ -106,16 +101,7 @@ export function Button({ ref, ...props }: ButtonProps) {
         data-color={color}
         data-size={size}
       >
-        <motion.span
-          style={{ display: 'contents' }}
-          animate={{ opacity: 1 }}
-          transition={{
-            duration: ANIMATION_DURATION_FAST,
-            ease: ANIMATION_EASING_STANDARD,
-          }}
-        >
-          {children}
-        </motion.span>
+        {children}
       </AriaButton>
     </IconProvider>
   );
