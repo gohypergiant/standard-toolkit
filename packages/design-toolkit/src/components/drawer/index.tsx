@@ -15,12 +15,7 @@ import { useOn } from '@accelint/bus/react';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import type { UniqueId } from '@accelint/core';
 import 'client-only';
-import { motion } from 'motion/react';
-import { useCallback, useMemo, useRef, useState } from 'react';
-import {
-  ANIMATION_DURATION_NORMAL,
-  ANIMATION_EASING_STANDARD,
-} from '@/lib/animation';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { ViewStack } from '../view-stack';
 import { useViewStackEmit } from '../view-stack/context';
 import { DrawerContext } from './context';
@@ -85,8 +80,51 @@ export function Drawer({
   const [activeView, setActiveView] = useState<UniqueId | null>(
     defaultView || null,
   );
+  const [isEntering, setIsEntering] = useState(false);
+  const [isExiting, setIsExiting] = useState(false);
+  const prevActiveView = useRef<UniqueId | null>(null);
+  const isInitialMount = useRef(true);
 
   const viewStackEmit = useViewStackEmit();
+
+  // Animation duration in milliseconds (matches CSS var --animation-duration-normal: 200ms)
+  const animationDurationMs = 200;
+
+  // Handle animation states when activeView changes
+  useEffect(() => {
+    // Skip animation on initial mount
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      prevActiveView.current = activeView;
+      return;
+    }
+
+    const wasOpen = prevActiveView.current !== null;
+    const isOpen = activeView !== null;
+
+    // Update ref before triggering animations
+    prevActiveView.current = activeView;
+
+    if (!wasOpen && isOpen) {
+      // Opening: trigger enter animation
+      setIsEntering(true);
+      setIsExiting(false);
+      const timer = setTimeout(() => {
+        setIsEntering(false);
+      }, animationDurationMs);
+      return () => clearTimeout(timer);
+    }
+
+    if (wasOpen && !isOpen) {
+      // Closing: trigger exit animation
+      setIsExiting(true);
+      setIsEntering(false);
+      const timer = setTimeout(() => {
+        setIsExiting(false);
+      }, animationDurationMs);
+      return () => clearTimeout(timer);
+    }
+  }, [activeView]);
 
   const handleClose = useCallback(
     (data: DrawerCloseEvent) => {
@@ -124,37 +162,6 @@ export function Drawer({
   useOn(DrawerEventTypes.open, handleOpen);
   useOn(DrawerEventTypes.toggle, handleToggle);
 
-  const getInitialPosition = useMemo(() => {
-    switch (placement) {
-      case 'left':
-        return { x: '-100%' };
-      case 'right':
-        return { x: '100%' };
-      case 'top':
-        return { y: '-100%' };
-      case 'bottom':
-        return { y: '100%' };
-      default:
-        return { x: '-100%' };
-    }
-  }, [placement]);
-
-  const getAnimatePosition = useMemo(() => {
-    if (!activeView) {
-      return getInitialPosition;
-    }
-    switch (placement) {
-      case 'left':
-      case 'right':
-        return { x: 0 };
-      case 'top':
-      case 'bottom':
-        return { y: 0 };
-      default:
-        return { x: 0 };
-    }
-  }, [placement, activeView, getInitialPosition]);
-
   return (
     <DrawerContext.Provider
       value={{
@@ -172,22 +179,17 @@ export function Drawer({
           onChange?.(view);
         }}
       >
-        <motion.div
+        <div
           {...rest}
           className={clsx('group/drawer', styles.drawer, className)}
           data-open={!!activeView || null}
           data-placement={placement}
           data-size={size}
-          initial={getInitialPosition}
-          animate={getAnimatePosition}
-          transition={{
-            type: 'tween',
-            duration: ANIMATION_DURATION_NORMAL,
-            ease: ANIMATION_EASING_STANDARD,
-          }}
+          data-entering={isEntering || null}
+          data-exiting={isExiting || null}
         >
           <div className={styles.drawerInner}>{children}</div>
-        </motion.div>
+        </div>
       </ViewStack>
     </DrawerContext.Provider>
   );

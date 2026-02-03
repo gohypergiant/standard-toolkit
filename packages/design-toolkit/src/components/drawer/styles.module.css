@@ -32,6 +32,7 @@
     @apply relative grid h-full w-full;
     grid-template-columns: auto 1fr auto;
     grid-template-rows: auto 1fr auto;
+    overflow: hidden;
 
     @variant push-top {
       --drawer-main-row-start: 2;
@@ -58,8 +59,177 @@
     @apply relative col-(--drawer-main-cols) row-(--drawer-main-rows);
   }
 
+  /* Keyframe animations for entrance */
+  @keyframes drawer-enter-left {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes drawer-enter-right {
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes drawer-enter-top {
+    from {
+      transform: translateY(-100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes drawer-enter-bottom {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  /* Keyframe animations for exit */
+  @keyframes drawer-exit-left {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-100%);
+    }
+  }
+
+  @keyframes drawer-exit-right {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(100%);
+    }
+  }
+
+  @keyframes drawer-exit-top {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(-100%);
+    }
+  }
+
+  @keyframes drawer-exit-bottom {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(100%);
+    }
+  }
+
   .drawer {
     @apply bg-surface-default text-body-m pointer-events-none relative flex flex-col;
+
+    /* Transition as fallback to prevent flicker during state changes */
+    transition: transform var(--animation-duration-normal)
+      var(--animation-easing-standard);
+
+    /* Disable transition when animation is active */
+    &[data-entering],
+    &[data-exiting] {
+      transition: none;
+    }
+
+    /* Initial off-screen positions when closed */
+    &[data-placement='left']:not([data-open]) {
+      transform: translateX(-100%);
+    }
+
+    &[data-placement='right']:not([data-open]) {
+      transform: translateX(100%);
+    }
+
+    &[data-placement='top']:not([data-open]) {
+      transform: translateY(-100%);
+    }
+
+    &[data-placement='bottom']:not([data-open]) {
+      transform: translateY(100%);
+    }
+
+    /* Animation states for left placement */
+    &[data-placement='left'][data-entering] {
+      animation: drawer-enter-left var(--animation-duration-normal)
+        var(--animation-easing-standard) both;
+    }
+
+    &[data-placement='left'][data-exiting] {
+      animation: drawer-exit-left var(--animation-duration-normal)
+        var(--animation-easing-standard) both;
+    }
+
+    &[data-placement='left'][data-open]:not([data-entering]):not(
+        [data-exiting]
+      ) {
+      transform: translateX(0);
+    }
+
+    /* Animation states for right placement */
+    &[data-placement='right'][data-entering] {
+      animation: drawer-enter-right var(--animation-duration-normal)
+        var(--animation-easing-standard) both;
+    }
+
+    &[data-placement='right'][data-exiting] {
+      animation: drawer-exit-right var(--animation-duration-normal)
+        var(--animation-easing-standard) both;
+    }
+
+    &[data-placement='right'][data-open]:not([data-entering]):not(
+        [data-exiting]
+      ) {
+      transform: translateX(0);
+    }
+
+    /* Animation states for top placement */
+    &[data-placement='top'][data-entering] {
+      animation: drawer-enter-top var(--animation-duration-normal)
+        var(--animation-easing-standard) both;
+    }
+
+    &[data-placement='top'][data-exiting] {
+      animation: drawer-exit-top var(--animation-duration-normal)
+        var(--animation-easing-standard) both;
+    }
+
+    &[data-placement='top'][data-open]:not([data-entering]):not(
+        [data-exiting]
+      ) {
+      transform: translateY(0);
+    }
+
+    /* Animation states for bottom placement */
+    &[data-placement='bottom'][data-entering] {
+      animation: drawer-enter-bottom var(--animation-duration-normal)
+        var(--animation-easing-standard) both;
+    }
+
+    &[data-placement='bottom'][data-exiting] {
+      animation: drawer-exit-bottom var(--animation-duration-normal)
+        var(--animation-easing-standard) both;
+    }
+
+    &[data-placement='bottom'][data-open]:not([data-entering]):not(
+        [data-exiting]
+      ) {
+      transform: translateY(0);
+    }
 
     @variant placement-top {
       @apply col-span-full row-start-1 row-end-2;
