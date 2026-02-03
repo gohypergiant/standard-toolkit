@@ -41,8 +41,8 @@ const MIN_CONTEXT_RETAINED_SIZE = 10000;
  * Only enabled when DEBUG_MEMLAB environment variable is set
  */
 const logger = createLogger(
-  'debug',
   '[MemLab:Filters]',
+  'debug',
   !!process.env.DEBUG_MEMLAB,
 );
 

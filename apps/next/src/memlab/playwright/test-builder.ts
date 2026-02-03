@@ -14,7 +14,7 @@ import { createLogger } from '~/utils/logger';
 import { expect, forceGC, test, waitForCleanup } from './fixtures';
 import type { Page } from '@playwright/test';
 
-const logger = createLogger('debug', '[MemLab:TestBuilder]');
+const logger = createLogger('[MemLab:TestBuilder]', 'debug');
 
 /**
  * Scenario definition for a memory leak test

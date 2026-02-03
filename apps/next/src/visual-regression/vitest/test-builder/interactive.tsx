@@ -28,7 +28,7 @@ import type {
   ThemeMode,
 } from '../../lib/types';
 
-const logger = createLogger('debug', '[VRT:Interactive]');
+const logger = createLogger('[VRT:Interactive]', 'debug');
 
 const FOCUSABLE_SELECTOR =
   'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';

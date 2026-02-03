@@ -13,10 +13,10 @@
 'use client';
 import 'client-only';
 import { ErrorBoundary } from 'react-error-boundary';
-import { logger } from '~/utils/logger';
+import { createLogger } from '~/utils/logger';
 import type { ErrorInfo, PropsWithChildren } from 'react';
 
-const tooltipLogger = logger('[Tooltip]');
+const tooltipLogger = createLogger('[Tooltip]');
 
 function onError(err: Error, info: ErrorInfo) {
   tooltipLogger

@@ -13,10 +13,10 @@
 'use client';
 import 'client-only';
 import { ErrorBoundary } from 'react-error-boundary';
-import { logger } from '~/utils/logger';
+import { createLogger } from '~/utils/logger';
 import type { ErrorInfo, PropsWithChildren } from 'react';
 
-const accordionGroupLogger = logger('[AccordionGroup]');
+const accordionGroupLogger = createLogger('[AccordionGroup]');
 
 function onError(err: Error, info: ErrorInfo) {
   accordionGroupLogger

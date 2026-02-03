@@ -19,7 +19,7 @@ import { createLogger } from '~/utils/logger';
 import { insertModeInFilename, THEME_MODES } from '../../lib/theme-modes';
 import type { VisualTestConfig, VisualTestScenario } from '../../lib/types';
 
-const logger = createLogger('warn', '[VRT:Static]');
+const logger = createLogger('[VRT:Static]', 'warn');
 
 /**
  * Create a visual regression test for a component using a declarative configuration.

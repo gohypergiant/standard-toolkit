@@ -14,9 +14,9 @@
 import type { ErrorInfo, PropsWithChildren } from 'react';
 import 'client-only';
 import { ErrorBoundary } from 'react-error-boundary';
-import { logger } from '~/utils/logger';
+import { createLogger } from '~/utils/logger';
 
-const mapLogger = logger('[Map]');
+const mapLogger = createLogger('[Map]');
 
 function onError(err: Error, info: ErrorInfo) {
   mapLogger

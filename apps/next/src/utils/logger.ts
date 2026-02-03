@@ -13,68 +13,38 @@
 import { getLogger } from '@accelint/logger';
 import type { LogLevel } from '@accelint/logger';
 
-const baseLogger = getLogger({
-  enabled: process.env.NODE_ENV !== 'production',
-  level: 'error',
-  pretty: true,
-});
-
 /**
- * Get a logger instance with an optional prefix.
- * Without a prefix, returns the base shared logger.
- * With a prefix, returns a child logger with that prefix.
+ * Create a logger instance with optional prefix, log level, and enabled condition.
  *
- * @param prefix - Optional prefix for log messages (e.g., '[Map]')
- * @returns A logger instance
- *
- * @example
- * ```typescript
- * import { logger } from '~/utils/logger';
- *
- * // Use base logger
- * logger().info('Application started');
- *
- * // Create domain-specific logger
- * const mapLogger = logger('[Map]');
- * mapLogger.info('Map initialized');
- * ```
- */
-export function logger(prefix?: string) {
-  if (!prefix) {
-    return baseLogger;
-  }
-  return getLogger({
-    enabled: process.env.NODE_ENV !== 'production',
-    level: 'error',
-    pretty: true,
-    prefix,
-  });
-}
-
-/**
- * Create a logger with a custom log level, optional prefix, and optional enabled condition.
- * Useful for test files that need debug or warn levels, or conditional logging.
- *
- * @param level - The log level to use
- * @param prefix - Optional prefix for log messages (e.g., '[Test]')
- * @param enabled - Optional custom enabled condition (defaults to NODE_ENV !== 'production')
+ * @param prefix - Optional prefix for log messages (e.g., '[Map]', '[VRT:Static]')
+ * @param level - Log level to use (defaults to 'error')
+ * @param enabled - Custom enabled condition (defaults to NODE_ENV !== 'production')
  * @returns A logger instance configured with the specified settings
  *
  * @example
  * ```typescript
  * import { createLogger } from '~/utils/logger';
  *
- * // Debug logger with prefix
- * const logger = createLogger('debug', '[VRT:Static]');
- * logger.debug('Test started');
+ * // Simple logger with prefix (error level by default)
+ * const mapLogger = createLogger('[Map]');
+ * mapLogger.error('Map failed to load');
  *
- * // Conditionally enabled logger with prefix
- * const memlabLogger = createLogger('debug', '[MemLab]', !!process.env.DEBUG_MEMLAB);
+ * // Debug logger with prefix
+ * const testLogger = createLogger('[VRT:Static]', 'debug');
+ * testLogger.debug('Test started');
+ *
+ * // Conditionally enabled logger
+ * const memlabLogger = createLogger('[MemLab]', 'debug', !!process.env.DEBUG_MEMLAB);
+ * memlabLogger.debug('Memory snapshot taken');
+ *
+ * // Base logger without prefix
+ * const logger = createLogger();
+ * logger.info('Application started');
  * ```
  */
 export function createLogger(
-  level: LogLevel = 'error',
   prefix?: string,
+  level: LogLevel = 'error',
   enabled: boolean = process.env.NODE_ENV !== 'production',
 ) {
   return getLogger({
