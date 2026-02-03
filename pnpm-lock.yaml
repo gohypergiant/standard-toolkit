@@ -895,6 +895,10 @@ importers:
         version: 4.0.16(@types/node@22.19.3)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.6.1)(jsdom@25.0.1)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2)
 
   packages/map-toolkit:
+    dependencies:
+      '@accelint/hotkey-manager':
+        specifier: workspace:*
+        version: link:../hotkey-manager
     devDependencies:
       '@accelint/biome-config':
         specifier: workspace:*
@@ -1005,9 +1009,6 @@ importers:
         specifier: ^4.0.15
         version: 4.0.16(@types/node@22.19.3)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.6.1)(jsdom@25.0.1)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2)
     optionalDependencies:
-      '@accelint/hotkey-manager':
-        specifier: workspace:*
-        version: link:../hotkey-manager
       '@deck.gl-community/editable-layers':
         specifier: ~9.1
         version: 9.1.1(05af2827c57d42d046ad9cd0cbf4efcb)
