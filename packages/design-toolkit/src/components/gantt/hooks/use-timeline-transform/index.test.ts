@@ -11,27 +11,11 @@
  */
 
 import { act, renderHook, waitFor } from '@testing-library/react';
-import {
-  afterEach,
-  beforeAll,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi,
-} from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { MS_PER_HOUR, TIME_MARKER_WIDTH } from '../../constants';
 import { useGanttStore } from '../../store';
 import { useTimelineTransform } from './index';
 import type { TimeMarkerObject } from '../../types';
-
-const mocks = {
-  requestAnimationFrame: vi.fn((cb) => {
-    cb(0);
-    return 0;
-  }),
-  cancelAnimationFrame: vi.fn(),
-};
 
 describe('useTimelineTransform', () => {
   let mockElement: HTMLDivElement;
@@ -45,15 +29,6 @@ describe('useTimelineTransform', () => {
   beforeEach(() => {
     mockElement = document.createElement('div');
     useGanttStore.setState({ currentPositionMs: 0 });
-  });
-
-  beforeAll(() => {
-    vi.spyOn(window, 'requestAnimationFrame').mockImplementation(
-      mocks.requestAnimationFrame,
-    );
-    vi.spyOn(window, 'cancelAnimationFrame').mockImplementation(
-      mocks.cancelAnimationFrame,
-    );
   });
 
   afterEach(() => {
@@ -135,7 +110,15 @@ describe('useTimelineTransform', () => {
     });
 
     it('should request animation frame on store update', async () => {
-      useGanttStore.setState({ currentPositionMs: 0 });
+      const rafSpy = vi
+        .spyOn(window, 'requestAnimationFrame')
+        .mockImplementation((cb) => {
+          console.log('hello world');
+          cb(0);
+          return 0;
+        });
+
+      useGanttStore.setState({ currentPositionMs: 100 });
 
       renderHook(() =>
         useTimelineTransform({
@@ -151,10 +134,10 @@ describe('useTimelineTransform', () => {
       const expectedNumRafCalls = 2; // One for initial, one for the update
 
       await waitFor(() => {
-        expect(mocks.requestAnimationFrame).toHaveBeenCalledTimes(
-          expectedNumRafCalls,
-        );
+        expect(rafSpy).toHaveBeenCalledTimes(expectedNumRafCalls);
       });
+
+      rafSpy.mockRestore();
     });
   });
 

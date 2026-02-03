@@ -71,5 +71,5 @@ export function useTimelineTransform({
 
       unsubscribe();
     };
-  });
+  }, [updateElementTranslateX]);
 }

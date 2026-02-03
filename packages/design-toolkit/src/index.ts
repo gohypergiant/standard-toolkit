@@ -250,6 +250,7 @@ export {
   MONTHS,
   MS_PER_HOUR,
   MS_PER_MINUTE,
+  OUT_OF_VIEW_MARKER_COUNT,
   TIMESCALE_MAPPING,
   TIME_MARKER_WIDTH,
 } from './components/gantt/constants';
