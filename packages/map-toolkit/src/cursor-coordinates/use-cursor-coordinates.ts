@@ -24,8 +24,8 @@ import 'client-only';
 import { useContext, useMemo } from 'react';
 import { MapContext } from '../deckgl/base-map/provider';
 import {
-  DEFAULT_COORDINATE,
-  DEFAULT_MGRS_COORDS,
+  DEFAULT_LATLON_COORDS,
+  DEFAULT_MGRS_UTM_COORDS,
   LONGITUDE_RANGE,
   MAX_LONGITUDE,
 } from './constants';
@@ -136,7 +136,7 @@ function formatCoordinate(
 
       // Check if coordinate is within valid UTM/MGRS range
       if (lat < -80 || lat > 84) {
-        return DEFAULT_MGRS_COORDS;
+        return DEFAULT_MGRS_UTM_COORDS;
       }
 
       const latOrdinal = lat >= 0 ? 'N' : 'S';
@@ -155,7 +155,7 @@ function formatCoordinate(
         logger.error(
           `Failed to create coordinate for ${format}: ${geoCoord.errors.join(', ')}`,
         );
-        return DEFAULT_MGRS_COORDS;
+        return DEFAULT_MGRS_UTM_COORDS;
       }
 
       return geoCoord[format]();
@@ -270,8 +270,8 @@ export function useCursorCoordinates(
     // Return default coords based on current format.
     const getDefaultCoords = () =>
       state.format === 'mgrs' || state.format === 'utm'
-        ? DEFAULT_MGRS_COORDS
-        : DEFAULT_COORDINATE;
+        ? DEFAULT_MGRS_UTM_COORDS
+        : DEFAULT_LATLON_COORDS;
 
     if (!(rawCoord && state.coordinate)) {
       return getDefaultCoords();
