@@ -356,7 +356,7 @@ export function BaseMap({
           },
         } as ViewStateChangeParameters);
       }
-    }, 500);
+    }, 200);
   });
 
   const handleLoad = useEffectEvent(() => {
