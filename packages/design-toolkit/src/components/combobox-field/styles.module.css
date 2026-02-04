@@ -18,7 +18,7 @@
   }
 
   .control {
-    @apply rounded-medium px-s py-xs fg-primary-bold outline-interactive flex items-center outline;
+    @apply rounded-medium px-s py-xs fg-primary-bold outline-interactive gap-xs flex items-center outline;
 
     @variant placeholder {
       @apply fg-primary-muted;
@@ -101,5 +101,17 @@
     --trigger-width: initial; /* is inlined by react aria components on render */
     @apply -ml-s;
     min-width: calc(var(--trigger-width) + (var(--spacing-s) * 2));
+  }
+}
+
+@layer components.l2 {
+  .clear {
+    @apply invisible;
+
+    @variant group-focus-within/combobox-field {
+      @variant group-not-data-empty/combobox-field {
+        @apply visible;
+      }
+    }
   }
 }
