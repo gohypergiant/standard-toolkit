@@ -11,7 +11,7 @@
  */
 
 import { MediaController } from 'media-chrome/react';
-import { MediaProvider } from 'media-chrome/react/media-store';
+import { MediaProvider, useMediaRef } from 'media-chrome/react/media-store';
 import { MediaControls } from './index';
 import { MuteButton } from './mute-button';
 import { PlayButton } from './play-button';
@@ -24,6 +24,21 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ReactNode } from 'react';
 
 /**
+ * Inner component that uses useMediaRef to connect the audio element to the React store.
+ * This must be rendered inside MediaProvider context.
+ */
+function MediaProviderInner({ children }: { children: ReactNode }) {
+  const mediaRef = useMediaRef();
+  return (
+    <>
+      {/* biome-ignore lint/a11y/useMediaCaption: Demo audio for Storybook */}
+      <audio ref={mediaRef} slot='media' src='/test.mp3' preload='metadata' />
+      {children}
+    </>
+  );
+}
+
+/**
  * Decorator that wraps stories in MediaProvider with an audio element.
  * Required for MediaControls to function properly.
  */
@@ -31,9 +46,7 @@ function MediaProviderDecorator({ children }: { children: ReactNode }) {
   return (
     <MediaProvider>
       <MediaController audio>
-        {/* biome-ignore lint/a11y/useMediaCaption: Demo audio for Storybook */}
-        <audio slot='media' src='/test.mp3' preload='metadata' />
-        {children}
+        <MediaProviderInner>{children}</MediaProviderInner>
       </MediaController>
     </MediaProvider>
   );
