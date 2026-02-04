@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 import { render, screen } from '@testing-library/react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import type { TimeRangeProps } from './types';
 
 // Mock media-chrome components
@@ -41,10 +41,6 @@ function setup(props: Partial<TimeRangeProps> = {}) {
 }
 
 describe('TimeRange', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
   it('should render MediaTimeRange', () => {
     setup();
     expect(screen.getByTestId('media-time-range')).toBeInTheDocument();

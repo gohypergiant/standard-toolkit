@@ -26,8 +26,9 @@ import type { MediaControlsContextValue } from './types';
  *
  * Provides shared configuration values (isDisabled) to all child controls.
  */
-export const MediaControlsContext =
-  createContext<MediaControlsContextValue>({ isDisabled: false });
+export const MediaControlsContext = createContext<MediaControlsContextValue>({
+  isDisabled: false,
+});
 
 /**
  * Validates that media-chrome's MediaProvider is present.

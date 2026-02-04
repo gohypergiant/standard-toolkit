@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 import { render, screen } from '@testing-library/react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import type { VolumeSliderProps } from './types';
 
 // Mock media-chrome components
@@ -40,10 +40,6 @@ function setup(props: Partial<VolumeSliderProps> = {}) {
 }
 
 describe('VolumeSlider', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
   it('should render MediaVolumeRange', () => {
     setup();
     expect(screen.getByTestId('media-volume-range')).toBeInTheDocument();

@@ -52,7 +52,6 @@ function setup(props: Partial<TimeDisplayProps> = {}) {
 
 describe('TimeDisplay', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
     mockMediaDuration.mockReturnValue(100); // Default to loaded state
   });
 

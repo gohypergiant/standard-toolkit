@@ -36,7 +36,6 @@ function setup(props: Partial<PlaybackRateButtonProps> = {}) {
 
 describe('PlaybackRateButton', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
     // Reset to default rate
     vi.mocked(useMediaSelector).mockImplementation((selector) =>
       selector({ mediaPlaybackRate: 1 }),

@@ -127,7 +127,7 @@ function AudioInner({
               'Unable to load audio file',
           );
           if (mediaError) {
-            onError?.(mediaError)
+            onError?.(mediaError);
           }
         }}
       >

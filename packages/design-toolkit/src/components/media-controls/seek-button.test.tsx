@@ -42,7 +42,6 @@ function setup(
 
 describe('SeekButton', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
     // Reset to default state
     vi.mocked(useMediaSelector).mockImplementation((selector) =>
       selector({ mediaCurrentTime: 30, mediaDuration: 100 }),

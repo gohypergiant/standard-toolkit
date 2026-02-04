@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 import { fireEvent, render, screen } from '@testing-library/react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import type { PlayButtonProps } from './types';
 
 // Mock media-chrome hooks
@@ -40,10 +40,6 @@ function setup(props: Partial<PlayButtonProps> = {}) {
 }
 
 describe('PlayButton', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
   it('should render a button', () => {
     setup();
     expect(screen.getByRole('button')).toBeInTheDocument();
