@@ -337,6 +337,7 @@ export {
   useMediaControlsDisabled,
   useMediaProviderGuard,
 } from './components/media-controls/context';
+export { FullscreenButton } from './components/media-controls/fullscreen-button';
 export { MediaControls } from './components/media-controls';
 export { MuteButton } from './components/media-controls/mute-button';
 export { PlayButton } from './components/media-controls/play-button';
@@ -345,6 +346,7 @@ export { SeekButton } from './components/media-controls/seek-button';
 export { TimeDisplay } from './components/media-controls/time-display';
 export { TimeRange } from './components/media-controls/time-range';
 export type {
+  FullscreenButtonProps,
   MediaControlsContextValue,
   MediaControlsProps,
   MuteButtonProps,
@@ -567,6 +569,8 @@ export type {
   TreeProps,
   TreeStyleVariant,
 } from './components/tree/types';
+export { Video } from './components/video';
+export type { VideoProps } from './components/video/types';
 export {
   ViewStackContext,
   ViewStackEventHandlers,

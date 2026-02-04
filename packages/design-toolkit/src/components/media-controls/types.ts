@@ -45,6 +45,11 @@ export type PlayButtonProps = MediaButtonProps;
 export type MuteButtonProps = MediaButtonProps;
 
 /**
+ * Props for the FullscreenButton component.
+ */
+export type FullscreenButtonProps = MediaButtonProps;
+
+/**
  * Props for the SeekButton component.
  */
 export type SeekButtonProps = MediaButtonProps & {
@@ -118,6 +123,7 @@ export type TimeDisplayProps = MediaControlBaseProps &
      * - 'duration': Shows total duration
      */
     mode?: TimeDisplayMode;
+    /** Text shown when time value is unavailable or loading (e.g., "--:--"). */
     placeholder?: string;
   };
 
