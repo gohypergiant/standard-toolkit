@@ -11,7 +11,7 @@
  */
 'use client';
 
-import 'client-only';
+import type { UniqueId } from '@accelint/core';
 import {
   coordinateSystems,
   createCoordinate,
@@ -20,10 +20,10 @@ import {
   formatDegreesMinutesSeconds,
 } from '@accelint/geo';
 import { getLogger } from '@accelint/logger';
+import 'client-only';
 import { useContext, useMemo } from 'react';
 import { MapContext } from '../deckgl/base-map/provider';
 import { cursorCoordinateStore } from './store';
-import type { UniqueId } from '@accelint/core';
 import type {
   CoordinateFormatTypes,
   RawCoordinate,
@@ -42,6 +42,7 @@ const logger = getLogger({
 const MAX_LONGITUDE = 180;
 const LONGITUDE_RANGE = 360;
 const DEFAULT_COORDINATE = '--, --';
+const DEFAULT_MGRS_COORDS = '--- -- ---- ----';
 
 /**
  * Normalizes longitude to -180 to 180 range.
@@ -134,7 +135,7 @@ function formatCoordinate(
 
       // Check if coordinate is within valid UTM/MGRS range
       if (lat < -80 || lat > 84) {
-        return DEFAULT_COORDINATE;
+        return DEFAULT_MGRS_COORDS;
       }
 
       const latOrdinal = lat >= 0 ? 'N' : 'S';
@@ -153,7 +154,7 @@ function formatCoordinate(
         logger.error(
           `Failed to create coordinate for ${format}: ${geoCoord.errors.join(', ')}`,
         );
-        return DEFAULT_COORDINATE;
+        return DEFAULT_MGRS_COORDS;
       }
 
       return geoCoord[format]();
@@ -265,8 +266,12 @@ export function useCursorCoordinates(
 
   // Compute formatted coordinate string
   const formattedCoord = useMemo(() => {
+    // Return default coords based on current format.
+    const getDefaultCoords = () =>
+      state.format === 'mgrs' ? DEFAULT_MGRS_COORDS : DEFAULT_COORDINATE;
+
     if (!(rawCoord && state.coordinate)) {
-      return DEFAULT_COORDINATE;
+      return getDefaultCoords();
     }
 
     // Use custom formatter if provided
@@ -277,7 +282,7 @@ export function useCursorCoordinates(
         logger.error(
           `Custom formatter failed: ${error instanceof Error ? error.message : String(error)}`,
         );
-        return DEFAULT_COORDINATE;
+        return getDefaultCoords();
       }
     }
 
