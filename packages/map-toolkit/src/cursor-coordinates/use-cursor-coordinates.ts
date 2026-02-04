@@ -23,6 +23,12 @@ import { getLogger } from '@accelint/logger';
 import 'client-only';
 import { useContext, useMemo } from 'react';
 import { MapContext } from '../deckgl/base-map/provider';
+import {
+  DEFAULT_COORDINATE,
+  DEFAULT_MGRS_COORDS,
+  LONGITUDE_RANGE,
+  MAX_LONGITUDE,
+} from './constants';
 import { cursorCoordinateStore } from './store';
 import type {
   CoordinateFormatTypes,
@@ -38,11 +44,6 @@ const logger = getLogger({
   prefix: '[CursorCoordinates]',
   pretty: true,
 });
-
-const MAX_LONGITUDE = 180;
-const LONGITUDE_RANGE = 360;
-const DEFAULT_COORDINATE = '--, --';
-const DEFAULT_MGRS_COORDS = '--- -- ---- ----';
 
 /**
  * Normalizes longitude to -180 to 180 range.
@@ -268,7 +269,9 @@ export function useCursorCoordinates(
   const formattedCoord = useMemo(() => {
     // Return default coords based on current format.
     const getDefaultCoords = () =>
-      state.format === 'mgrs' ? DEFAULT_MGRS_COORDS : DEFAULT_COORDINATE;
+      state.format === 'mgrs' || state.format === 'utm'
+        ? DEFAULT_MGRS_COORDS
+        : DEFAULT_COORDINATE;
 
     if (!(rawCoord && state.coordinate)) {
       return getDefaultCoords();
