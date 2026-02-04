@@ -13,30 +13,11 @@
 @reference '@accelint/design-foundation/styles';
 
 @layer components.l1 {
-  .list {
-    @apply fg-primary-muted gap-s flex items-center;
-  }
+  .clearButton {
+    @apply w-content rounded-small gap-xxs text-button-s flex min-w-0 shrink-0 cursor-pointer items-center justify-center;
 
-  .item {
-    @apply gap-s flex items-center;
-
-    @variant current {
-      @apply fg-accent-primary-bold;
-    }
-  }
-}
-
-@layer components.l2 {
-  .link {
-    @apply select-none;
     @variant hover {
-      @apply fg-primary-bold;
-    }
-  }
-
-  .separator {
-    @variant group-current/breadcrumb {
-      @apply hidden;
+      @apply bg-interactive-muted-hover;
     }
   }
 }
