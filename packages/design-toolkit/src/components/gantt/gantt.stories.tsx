@@ -11,10 +11,29 @@
  */
 
 import { Gantt } from './';
+import { GanttRow } from './components/gantt-row';
+import { GanttRowBlock } from './components/gantt-row-block';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 // Tuesday, Jan 27, 2026 at 12:00 AM UTC
 const START_TIME_MS = 1769472000000;
+
+// Wednesday, Jan 28, 2026 at 10:00 AM UTC (2-hour block: 10:00 AM - 12:00 PM)
+const BLOCK_START_MS = 1769594400000;
+const BLOCK_END_MS = 1769601600000;
+
+// Thursday, Jan 29, 2026 at 2:00 PM UTC (3-hour block: 2:00 PM - 5:00 PM)
+const BLOCK2_START_MS = 1769688000000;
+const BLOCK2_END_MS = 1769698800000;
+
+// Thursday, Jan 29, 2026 at 11:00 PM UTC (1-hour block: 11:00 PM - 12:00 AM)
+const BLOCK3_START_MS = 1769720400000;
+const BLOCK3_END_MS = 1769724000000;
+
+// Friday, Jan 30, 2026 at 6:00 AM UTC (4-hour block extends past END_TIME_MS: 6:00 AM - 10:00 AM)
+const BLOCK4_START_MS = 1769752800000;
+const BLOCK4_END_MS = 1769767200000;
+
 // Friday, Jan 30, 2026 at 8:00 AM UTC
 const END_TIME_MS = 1769760000000;
 
@@ -35,5 +54,30 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  render: (args) => <Gantt {...args} />,
+  render: (args) => (
+    <Gantt {...args}>
+      <GanttRow>
+        <GanttRowBlock
+          id='block-1'
+          startMs={BLOCK_START_MS}
+          endMs={BLOCK_END_MS}
+        />
+        <GanttRowBlock
+          id='block-2'
+          startMs={BLOCK2_START_MS}
+          endMs={BLOCK2_END_MS}
+        />
+        <GanttRowBlock
+          id='block-3'
+          startMs={BLOCK3_START_MS}
+          endMs={BLOCK3_END_MS}
+        />
+        <GanttRowBlock
+          id='block-4'
+          startMs={BLOCK4_START_MS}
+          endMs={BLOCK4_END_MS}
+        />
+      </GanttRow>
+    </Gantt>
+  ),
 };

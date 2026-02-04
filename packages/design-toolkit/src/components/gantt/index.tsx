@@ -15,6 +15,7 @@ import { Timeline } from './components/timeline';
 import { GanttProvider } from './context';
 import { useGanttInit } from './hooks/use-gantt-init';
 import styles from './styles.module.css';
+import type { PropsWithChildren } from 'react';
 import type { Timescale } from './types';
 
 type GanttProps = {
@@ -23,14 +24,19 @@ type GanttProps = {
   timescale: Timescale;
 };
 
-export function Gantt({ startTimeMs, endTimeMs, timescale }: GanttProps) {
+export function Gantt({
+  startTimeMs,
+  endTimeMs,
+  timescale,
+  children,
+}: PropsWithChildren<GanttProps>) {
   useGanttInit(startTimeMs);
 
   return (
     <div className={styles.container}>
       <GanttProvider timescale={timescale}>
         <Timeline />
-        {/* Render Rows */}
+        {children}
         <Seeker startTimeMs={startTimeMs} endTimeMs={endTimeMs} />
       </GanttProvider>
     </div>

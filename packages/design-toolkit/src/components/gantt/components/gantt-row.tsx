@@ -10,26 +10,20 @@
  * governing permissions and limitations under the License.
  */
 
+import React from 'react';
+import { GANTT_ROW_HEIGHT_PX } from '../constants';
 import { useGanttContext } from '../context';
-import {
-  getRenderedRegionBoundaryMs,
-  shouldRenderBlock,
-} from '../utils/helpers';
+import { shouldRenderBlock } from '../utils/helpers';
 import type { PropsWithChildren } from 'react';
+import type { GanttRowBlockProps } from './gantt-row-block';
 
-type TimeBlockProps = {
-  id: string;
-  startMs: number;
-  endMs: number;
-};
-
-export function TimelineRow({ children }: PropsWithChildren) {
-  const { timelineChunks, msPerPx } = useGanttContext();
-  const renderedRegionBoundary = getRenderedRegionBoundaryMs(
-    timelineChunks,
-    msPerPx,
+export function GanttRow({ children }: PropsWithChildren) {
+  const { renderedRegionBoundary } = useGanttContext();
+  const blocks = React.Children.toArray(children).filter(
+    (child): child is React.ReactElement<GanttRowBlockProps> => {
+      return React.isValidElement(child);
+    },
   );
-  const blocks = children as React.ReactElement<TimeBlockProps>[];
   const renderedBlocks = blocks.filter((child) =>
     shouldRenderBlock(
       renderedRegionBoundary,
@@ -37,5 +31,9 @@ export function TimelineRow({ children }: PropsWithChildren) {
       child.props.endMs,
     ),
   );
-  return <div>{renderedBlocks}</div>;
+  return (
+    <div style={{ position: 'relative', height: GANTT_ROW_HEIGHT_PX }}>
+      {renderedBlocks}
+    </div>
+  );
 }

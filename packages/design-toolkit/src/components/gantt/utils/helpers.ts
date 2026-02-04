@@ -65,3 +65,26 @@ export function shouldRenderBlock(
     doesBlockEndAfterRegionEnd
   );
 }
+
+export function formatBlockDisplay(
+  renderedRegionBoundary: { startMs: number; endMs: number },
+  blockBoundary: { startMs: number; endMs: number },
+  msPerPx: number,
+  currentPositionMs: number,
+) {
+  const renderedStartMs = Math.max(
+    renderedRegionBoundary.startMs,
+    blockBoundary.startMs,
+  );
+  const renderedEndMs = Math.min(
+    renderedRegionBoundary.endMs,
+    blockBoundary.endMs,
+  );
+
+  const offsetMs = currentPositionMs - renderedRegionBoundary.startMs;
+  const offsetPx = offsetMs / msPerPx;
+  const leftPx =
+    (renderedStartMs - renderedRegionBoundary.startMs) / msPerPx - offsetPx;
+  const widthPx = (renderedEndMs - renderedStartMs) / msPerPx;
+  return { leftPx, widthPx };
+}
