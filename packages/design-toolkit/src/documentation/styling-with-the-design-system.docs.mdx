@@ -1,0 +1,282 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Styling with the Design System" />
+
+# Styling with the Design System
+
+This guide covers how to style your application using the Design Toolkit's styling system.
+
+## TailwindCSS
+
+The Design Toolkit uses [TailwindCSS](https://tailwindcss.com/docs/styling-with-utility-classes) as its styling foundation. If you're new to utility-first CSS, we recommend reading the Tailwind documentation first.
+
+While many standard Tailwind classes work as expected, the Design Toolkit extends Tailwind with custom semantic tokens for colors, spacing, radius, and typography. These custom classes ensure consistency with the design system and support light/dark mode theming out of the box.
+
+### Colors
+
+Use the Design Toolkit's semantic color classes. These automatically adapt to light and dark mode.
+
+- **Background colors** use the `bg-` prefix (e.g., `bg-surface-default`, `bg-accent-primary-bold`)
+- **Foreground colors** (text, icons) use the `fg-` prefix (e.g., `fg-primary-bold`, `fg-primary-muted`)
+- **Outline colors** use the `outline-` prefix (e.g., `outline-static`, `outline-interactive`)
+
+See the **Foundation / Colors** stories in Storybook for the complete color palette with visual examples.
+
+#### Semantic Colors, Not Primitives
+
+**Primitive Tailwind color classes (e.g., `bg-blue-500`, `text-gray-900`) are not supported.** The Design Toolkit uses semantic color classes exclusively.
+
+Under the hood, semantic classes map to our own primitive color palette based on the user's selected theme (light or dark). This means you can use semantic classes like `bg-surface-default` or `fg-primary-bold` throughout your codebase without conditional logic:
+
+```jsx
+// ✅ Correct - semantic class adapts to theme automatically
+<div className="bg-surface-default fg-primary-bold">
+  Content
+</div>
+
+// ❌ Avoid - manual theme handling is unnecessary with semantic classes
+<div className={theme === 'dark' ? 'bg-[black]' : 'bg-[white]'}>
+  Content
+</div>
+```
+
+This approach eliminates theme-checking ternaries scattered throughout the codebase and ensures consistent color usage across the application.
+
+### Spacing
+
+The Design Toolkit uses a custom spacing scale instead of Tailwind's numeric scale:
+
+| Token | Usage |
+|-------|-------|
+| `xxs` | Extra extra small |
+| `xs` | Extra small |
+| `s` | Small |
+| `m` | Medium |
+| `l` | Large |
+| `xl` | Extra large |
+| `xxl` | Extra extra large |
+| `oversized` | Oversized spacing |
+
+Use these with standard Tailwind spacing utilities (`p-`, `m-`, `gap-`, `w-`, `h-`, `size-`):
+
+```jsx
+<div className="p-m gap-l">        // padding: medium, gap: large
+<div className="mt-xl mb-s">       // margin-top: xl, margin-bottom: small
+<div className="size-xxl">         // width and height: xxl
+```
+
+See the **Foundation / Spacing** story in Storybook for exact pixel values.
+
+### Radius
+
+Use the custom border radius scale with the `rounded-` prefix:
+
+| Class | Description |
+|-------|-------------|
+| `rounded-none` | No border radius |
+| `rounded-small` | Small radius |
+| `rounded-medium` | Medium radius |
+| `rounded-large` | Large radius |
+| `rounded-round` | Fully rounded (pill shape) |
+
+See the **Foundation / Radius** story in Storybook for visual examples.
+
+### Typography
+
+The Design Toolkit provides two categories of typography classes: font families and text styles.
+
+#### Font Families
+
+Use these classes to set the font family:
+
+```
+font-primary              # Roboto - for body text, headers
+font-display              # Roboto Mono - for code, labels, data
+```
+
+#### Text Styles
+
+Text style classes (e.g., `text-header-xl`, `text-body-m`) set four CSS properties at once:
+
+- `font-size`
+- `font-weight`
+- `letter-spacing`
+- `line-height`
+
+These values align directly with the text styles designers use in Figma, ensuring pixel-perfect implementation of designs.
+
+See the **Foundation / Typography** stories in Storybook for the complete type scale.
+
+### Border vs Outline
+
+DesignTK chooses to implement outlines instead of borders to make it so that the style doesn't impact box model dimensions. This way elements with or without a "border" are consistently sized based on content and padding alone. This also helps with sibling components rendering at the same size when their border styles may not match.
+
+Do not implement borders, do implement outlines.
+
+## Overriding Design Toolkit Component Styles
+
+Each Design Toolkit component exposes a prop for applying Tailwind utility classes as overrides.
+
+### Simple Components: `className`
+
+For simple components, use the `className` prop:
+
+```jsx
+import { Button } from '@accelint/design-toolkit';
+
+<Button className="mt-l">
+  Submit
+</Button>
+```
+
+### Compound Components: `classNames`
+
+For complex or compound components where you may want to override styles for multiple parts, use the `classNames` prop. This prop accepts an object with properties corresponding to different parts of the component:
+
+```jsx
+import { TextField } from '@accelint/design-toolkit';
+
+<TextField
+  label="Email"
+  classNames={{
+    field: 'w-full',
+    label: 'fg-accent-primary-bold',
+    input: {
+      container: 'bg-surface-raised',
+      input: 'text-body-l',
+    },
+    description: 'fg-primary-muted',
+    error: 'fg-critical-bold',
+  }}
+/>
+```
+
+### Discovering Available Class Props
+
+TypeScript is useful for discovering which parts of a component can be styled. Check the component's prop types for `className` or `classNames`:
+
+```tsx
+// TextField's classNames type
+classNames?: {
+  field?: string;
+  label?: string;
+  input?: {
+    container?: string;
+    sizer?: string;
+    input?: string;
+    clear?: string;
+    prefix?: string;
+    suffix?: string;
+  };
+  description?: string;
+  error?: string;
+};
+```
+
+Hover over the `classNames` prop in your IDE or check the component's type definitions to see available styling targets.
+
+## Breaking Out of the System Constraints
+
+While the Design Toolkit provides a styling system that should fit many use cases, there will likely be situations where you need to operate outside of the constraints it provides. Here are some common examples:
+
+### Arbitrary Tailwind Classes
+
+Tailwind supports [arbitrary values](https://tailwindcss.com/docs/adding-custom-styles#using-arbitrary-values) for one-off styles that don't exist in the theme. Use these sparingly and only when necessary:
+
+```jsx
+// Arbitrary value - use when no theme token exists
+<div className="w-[327px]" />
+
+// Arbitrary property - use for CSS properties without utility classes
+<div className="[clip-path:circle(50%)]" />
+
+// Referencing theme variables in arbitrary values
+<div className="bg-(--fg-critical-bold)" />
+```
+
+When using arbitrary values, prefer referencing theme variables over hardcoding values:
+
+```jsx
+// ❌ Avoid hardcoding values that exist in the theme
+<div className="[--my-font-size:12px]" />
+
+// ✅ Reference theme variables instead
+<div className="[--my-font-size:var(--body-m-size)]" />
+```
+
+If you find yourself reaching for arbitrary classes frequently, raise this to the core team so they can consider whether the design system should be extended to support your use case.
+
+#### Borders
+
+If you absolutely need a border, use an outline color variable:
+
+```jsx
+<div className="border border-(--outline-static)" />
+```
+
+Consider reaching out to a core team member to discuss alternatives.
+
+### Overriding Theme Variables
+
+You can override theme variables in your application's global CSS file.
+
+Add overrides within the `@layer theme` block on `:root`. Use `@variant light` and `@variant dark` for theme-specific values:
+
+**Practical example:** In Amorphous, we needed to override the accent color to use a custom seafoam palette instead of the default:
+
+```css
+/* globals.css */
+@import '@accelint/design-foundation/styles';
+
+/* override accent color */
+@layer theme {
+  :root {
+    /* amorphous accent primitives */
+    --seafoam-primary-50: #EBFFFA;
+    --seafoam-primary-100: #B9FFEC;
+    --seafoam-primary-200: #8AFFDF;
+    --seafoam-primary-300: #5AFFD2;
+    --seafoam-primary-400: #28F5BE;
+    --seafoam-primary-500: #16D3A0;
+    --seafoam-primary-600: #059971;
+    --seafoam-primary-700: #01684C;
+    --seafoam-primary-800: #014130;
+    --seafoam-primary-900: #012A1F;
+
+    @variant light {
+      --bg-accent-primary-bold: var(--seafoam-primary-700);
+      --bg-accent-primary-hover: var(--seafoam-primary-600);
+      --bg-accent-primary-pressed: var(--seafoam-primary-800);
+      --bg-accent-primary-muted: var(--seafoam-primary-100);
+
+      --fg-accent-primary-bold: var(--seafoam-primary-600);
+      --fg-accent-primary-hover: var(--seafoam-primary-400);
+      --fg-accent-primary-pressed: var(--seafoam-primary-600);
+      --fg-primary-muted: var(--seafoam-primary-800);
+
+      --outline-accent-primary-bold: var(--seafoam-primary-600);
+      --outline-accent-primary-hover: var(--seafoam-primary-200);
+      --outline-accent-primary-pressed: var(--seafoam-primary-600);
+    }
+
+    @variant dark {
+      --bg-accent-primary-bold: var(--seafoam-primary-700);
+      --bg-accent-primary-hover: var(--seafoam-primary-600);
+      --bg-accent-primary-pressed: var(--seafoam-primary-800);
+      --bg-accent-primary-muted: var(--seafoam-primary-900);
+
+      --fg-accent-primary-bold: var(--seafoam-primary-300);
+      --fg-accent-primary-hover: var(--seafoam-primary-200);
+      --fg-accent-primary-pressed: var(--seafoam-primary-600);
+
+      --outline-accent-primary-bold: var(--seafoam-primary-300);
+      --outline-accent-primary-hover: var(--seafoam-primary-200);
+      --outline-accent-primary-pressed: var(--seafoam-primary-600);
+    }
+  }
+}
+```
+
+As you can see, we defined custom primitive colors and then mapped the semantic variables to use those primitives.
+
+This specific case was guided by design. Generally, overriding theme variables should not be something engineers do without first consulting with their design partners.
