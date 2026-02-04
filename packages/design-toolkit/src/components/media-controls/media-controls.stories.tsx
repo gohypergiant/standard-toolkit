@@ -179,25 +179,6 @@ export const VolumeSliderDefault: StoryObj<typeof VolumeSlider> = {
 };
 
 // =============================================================================
-// TimeRange Stories
-// =============================================================================
-
-/**
- * TimeRange - Basic seek bar for navigating through media.
- */
-export const TimeRangeDefault: StoryObj<typeof TimeRange> = {
-  name: 'TimeRange',
-  args: {
-    isDisabled: false,
-  },
-  render: (args) => (
-    <div className='w-[250px]'>
-      <TimeRange {...args} />
-    </div>
-  ),
-};
-
-// =============================================================================
 // TimeDisplay Stories
 // =============================================================================
 
