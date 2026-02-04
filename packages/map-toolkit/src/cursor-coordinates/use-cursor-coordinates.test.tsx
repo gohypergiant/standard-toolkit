@@ -17,7 +17,7 @@ import { act, renderHook, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { MapEvents } from '../deckgl/base-map/events';
 import type { MapEventType, MapHoverPayload } from '../deckgl/base-map/types';
-import { DEFAULT_MGRS_COORDS } from './constants';
+import { DEFAULT_MGRS_UTM_COORDS } from './constants';
 import { clearCursorCoordinateState } from './store';
 import type { CoordinateFormatter } from './types';
 import { useCursorCoordinates } from './use-cursor-coordinates';
@@ -706,7 +706,7 @@ describe('useCursorCoordinates', () => {
       });
 
       await waitFor(() => {
-        expect(result.current.formattedCoord).not.toBe(DEFAULT_MGRS_COORDS);
+        expect(result.current.formattedCoord).not.toBe(DEFAULT_MGRS_UTM_COORDS);
       });
 
       // Switch to UTM format
@@ -719,7 +719,7 @@ describe('useCursorCoordinates', () => {
       });
 
       // Should return default coordinate for coordinates outside UTM range
-      expect(result.current.formattedCoord).toBe(DEFAULT_MGRS_COORDS);
+      expect(result.current.formattedCoord).toBe(DEFAULT_MGRS_UTM_COORDS);
     });
 
     it('returns default coordinate for UTM at North Pole (> 84°)', async () => {
@@ -730,7 +730,7 @@ describe('useCursorCoordinates', () => {
       });
 
       await waitFor(() => {
-        expect(result.current.formattedCoord).not.toBe(DEFAULT_MGRS_COORDS);
+        expect(result.current.formattedCoord).not.toBe(DEFAULT_MGRS_UTM_COORDS);
       });
 
       // Switch to UTM format
@@ -743,7 +743,7 @@ describe('useCursorCoordinates', () => {
       });
 
       // Should return default coordinate for coordinates outside UTM range
-      expect(result.current.formattedCoord).toBe(DEFAULT_MGRS_COORDS);
+      expect(result.current.formattedCoord).toBe(DEFAULT_MGRS_UTM_COORDS);
     });
 
     it('returns default coordinate for MGRS at South Pole (< -80°)', async () => {
@@ -754,7 +754,7 @@ describe('useCursorCoordinates', () => {
       });
 
       await waitFor(() => {
-        expect(result.current.formattedCoord).not.toBe(DEFAULT_MGRS_COORDS);
+        expect(result.current.formattedCoord).not.toBe(DEFAULT_MGRS_UTM_COORDS);
       });
 
       // Switch to MGRS format
@@ -767,7 +767,7 @@ describe('useCursorCoordinates', () => {
       });
 
       // Should return default coordinate for coordinates outside MGRS range
-      expect(result.current.formattedCoord).toBe(DEFAULT_MGRS_COORDS);
+      expect(result.current.formattedCoord).toBe(DEFAULT_MGRS_UTM_COORDS);
     });
 
     it('returns default coordinate for MGRS at North Pole (> 84°)', async () => {
@@ -778,7 +778,7 @@ describe('useCursorCoordinates', () => {
       });
 
       await waitFor(() => {
-        expect(result.current.formattedCoord).not.toBe(DEFAULT_MGRS_COORDS);
+        expect(result.current.formattedCoord).not.toBe(DEFAULT_MGRS_UTM_COORDS);
       });
 
       // Switch to MGRS format
@@ -791,7 +791,7 @@ describe('useCursorCoordinates', () => {
       });
 
       // Should return default coordinate for coordinates outside MGRS range
-      expect(result.current.formattedCoord).toBe(DEFAULT_MGRS_COORDS);
+      expect(result.current.formattedCoord).toBe(DEFAULT_MGRS_UTM_COORDS);
     });
 
     it('handles UTM at southern boundary (-80°)', async () => {
@@ -802,7 +802,7 @@ describe('useCursorCoordinates', () => {
       });
 
       await waitFor(() => {
-        expect(result.current.formattedCoord).not.toBe(DEFAULT_MGRS_COORDS);
+        expect(result.current.formattedCoord).not.toBe(DEFAULT_MGRS_UTM_COORDS);
       });
 
       // Switch to UTM format
@@ -816,7 +816,7 @@ describe('useCursorCoordinates', () => {
 
       // Should work at exactly -80°
       const formatted = result.current.formattedCoord;
-      expect(formatted).not.toBe(DEFAULT_MGRS_COORDS);
+      expect(formatted).not.toBe(DEFAULT_MGRS_UTM_COORDS);
       expect(formatted).toMatch(/^\d{1,2}[NS]\s\d+\s\d+$/);
     });
 
@@ -828,7 +828,7 @@ describe('useCursorCoordinates', () => {
       });
 
       await waitFor(() => {
-        expect(result.current.formattedCoord).not.toBe(DEFAULT_MGRS_COORDS);
+        expect(result.current.formattedCoord).not.toBe(DEFAULT_MGRS_UTM_COORDS);
       });
 
       // Switch to UTM format
@@ -842,7 +842,7 @@ describe('useCursorCoordinates', () => {
 
       // Should work at exactly 84°
       const formatted = result.current.formattedCoord;
-      expect(formatted).not.toBe(DEFAULT_MGRS_COORDS);
+      expect(formatted).not.toBe(DEFAULT_MGRS_UTM_COORDS);
       expect(formatted).toMatch(/^\d{1,2}[NS]\s\d+\s\d+$/);
     });
 
@@ -854,7 +854,7 @@ describe('useCursorCoordinates', () => {
       });
 
       await waitFor(() => {
-        expect(result.current.formattedCoord).not.toBe(DEFAULT_MGRS_COORDS);
+        expect(result.current.formattedCoord).not.toBe(DEFAULT_MGRS_UTM_COORDS);
       });
 
       // DD format should work
@@ -867,7 +867,7 @@ describe('useCursorCoordinates', () => {
       });
 
       await waitFor(() => {
-        expect(result.current.formattedCoord).toBe(DEFAULT_MGRS_COORDS);
+        expect(result.current.formattedCoord).toBe(DEFAULT_MGRS_UTM_COORDS);
       });
 
       // Switch back to DD - should work again
@@ -876,7 +876,7 @@ describe('useCursorCoordinates', () => {
       });
 
       await waitFor(() => {
-        expect(result.current.formattedCoord).not.toBe(DEFAULT_MGRS_COORDS);
+        expect(result.current.formattedCoord).not.toBe(DEFAULT_MGRS_UTM_COORDS);
         expect(result.current.formattedCoord).toContain('85');
       });
     });
@@ -902,7 +902,7 @@ describe('useCursorCoordinates', () => {
       });
 
       // formattedCoord should be default
-      expect(result.current.formattedCoord).toBe(DEFAULT_MGRS_COORDS);
+      expect(result.current.formattedCoord).toBe(DEFAULT_MGRS_UTM_COORDS);
 
       // But rawCoord should still have the values
       expect(result.current.rawCoord?.latitude).toBe(-85);
