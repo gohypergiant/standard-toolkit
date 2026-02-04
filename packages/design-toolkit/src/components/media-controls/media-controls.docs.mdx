@@ -164,7 +164,7 @@ All components accept a `className` prop for custom style overrides.
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `direction` | `'forward' \| 'backward'` | - | Seek direction (required) |
-| `seekOffset` | `number` | `10` | Seek amount in seconds |
+| `seekOffset` | `number` | `10` | Seek amount in seconds. Must be a positive finite number. Invalid values automatically fall back to 10 seconds with a warning in development mode. |
 | `isDisabled` | `boolean` | `false` | Disable this specific control (overrides context-level isDisabled) |
 
 > **Note:** The SeekButton is automatically disabled when media metadata is not yet loaded (i.e., duration is unknown). This provides visual feedback to users that seeking is not available until the media is ready.
@@ -194,7 +194,7 @@ All components accept a `className` prop for custom style overrides.
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `rates` | `number[]` | `[1, 2, 3]` | Array of available rates |
+| `rates` | `number[]` | `[1, 2, 3]` | Array of available rates. Invalid values (non-finite, negative, or zero) are automatically filtered out. If all rates are invalid, falls back to `[1, 2, 3]` with a warning in development mode. |
 | `isDisabled` | `boolean` | `false` | Disable this specific control (overrides context-level isDisabled) |
 
 ## Implementation Notes
@@ -210,7 +210,8 @@ The MediaControls component is built on [media-chrome](https://www.media-chrome.
 The component provides:
 - **MediaControlsContext** - React context for sharing isDisabled state with children
 - **MediaControlsProvider** - Provider component for the context
-- **useResolvedDisabled** - Hook to resolve isDisabled state from prop or context
+- **useMediaControlsDisabled** - Hook to resolve isDisabled state from prop or context
+- **useMediaProviderGuard** - Validates MediaProvider context is present (throws error if not)
 
 The component automatically handles accessibility features including:
 - ARIA attributes for screen readers

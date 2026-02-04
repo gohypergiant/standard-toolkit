@@ -63,7 +63,8 @@ export function VolumeSlider({
       <MediaVolumeRange
         className={styles.volumeRange}
         aria-label='Volume'
-        // @ts-expect-error - disabled is a valid HTML attribute on the underlying web component
+        // @ts-expect-error - disabled prop is supported by the underlying web component but not in media-chrome's TypeScript types
+
         disabled={isDisabled || undefined}
       />
     </div>

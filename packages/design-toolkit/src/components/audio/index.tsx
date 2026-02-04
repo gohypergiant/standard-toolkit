@@ -84,14 +84,14 @@ function AudioInner({
   playbackRates,
 }: AudioProps) {
   const mediaRef = useMediaRef();
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: src is intentionally used as a trigger to reset error state when audio source changes
   useEffect(() => {
-    setErrorMessage(null);
+    setErrorMessage('');
   }, [src]);
 
-  const hasError = errorMessage !== null;
+  const hasError = errorMessage !== '';
   const isDisabled = isDisabledProp === true || hasError;
 
   return (
@@ -126,7 +126,9 @@ function AudioInner({
             (mediaError && formatError(mediaError)?.message) ??
               'Unable to load audio file',
           );
-          onError?.(mediaError);
+          if (mediaError) {
+            onError?.(mediaError)
+          }
         }}
       >
         <source src={src} />

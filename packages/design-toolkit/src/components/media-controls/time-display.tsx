@@ -71,6 +71,10 @@ export function TimeDisplay({
   const isDisabled = useMediaControlsDisabled(isDisabledProp);
   const isLoaded = mediaDuration != null && mediaDuration > 0;
 
+/**
+ * Renders time display content based on load state and mode.
+ * Shows placeholder before media loads, then delegates to media-chrome components.
+ */
   const renderContent = () => {
     if (!isLoaded) {
       return <span className={styles.timeDisplayText}>{placeholder}</span>;

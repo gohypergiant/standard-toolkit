@@ -32,6 +32,7 @@ const logger = getLogger({
   pretty: true,
 });
 
+/** Default seek distance in seconds. */
 const DEFAULT_SEEK_OFFSET = 10;
 
 /**

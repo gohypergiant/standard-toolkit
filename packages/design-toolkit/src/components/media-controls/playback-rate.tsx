@@ -32,6 +32,7 @@ const logger = getLogger({
   pretty: true,
 });
 
+/** Default playback rate options: normal, 2x, and 3x speed. */
 const DEFAULT_RATES = [1, 2, 3];
 
 /**
@@ -49,6 +50,8 @@ const filterValidRates = (rates: number[]) =>
  * Integrates with media-chrome's media store to control playback rate.
  * Cycles through available playback rates on each click.
  * Shows the current playback rate as text (e.g., '1x', '2x').
+ * Invalid rates (negative, zero, NaN, Infinity) are automatically filtered out.
+ * If all provided rates are invalid, falls back to default rates [1, 2, 3].
  *
  * @param props - The button props.
  * @param props.className - CSS class name for the button.

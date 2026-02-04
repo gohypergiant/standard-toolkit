@@ -42,7 +42,7 @@ export type AudioProps = Omit<
     /** Callback when playback time updates */
     onTimeUpdate?: (currentTime: number) => void;
     /** Callback when audio fails to load or encounters an error */
-    onError?: (error: MediaError | null) => void;
+    onError?: (error: MediaError) => void;
     /** Custom playback rate options (default: [1, 2, 3]) */
     playbackRates?: number[];
   };

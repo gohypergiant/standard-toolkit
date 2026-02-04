@@ -73,6 +73,17 @@ Disable keyboard shortcuts when embedding in forms or apps with custom hotkey sy
 
 <Canvas of={AudioStories.NoHotkeys} />
 
+## Looping
+
+Enable looping to automatically restart playback when the audio ends.
+
+<Canvas of={AudioStories.Looping} />
+
+## Error State
+
+When audio fails to load, an error message is displayed and controls are automatically disabled.
+
+<Canvas of={AudioStories.ErrorState} />
 ## Props
 
 ### Audio Props
@@ -86,7 +97,7 @@ Disable keyboard shortcuts when embedding in forms or apps with custom hotkey sy
 | `muted` | `boolean` | `false` | Whether to start muted |
 | `preload` | `'none' \| 'metadata' \| 'auto'` | `'metadata'` | Preload behavior |
 | `crossOrigin` | `'' \| 'anonymous' \| 'use-credentials'` | - | CORS setting |
-| `isDisabled` | `boolean` | `false` | Disable all controls |
+| `isDisabled` | `boolean` | `false` | Disable all controls. Note: Controls are automatically disabled when an error occurs. |
 | `playbackRates` | `number[]` | `[1, 2, 3]` | Custom playback rate options |
 | `children` | `ReactNode` | - | Custom controls (replaces default layout) |
 
