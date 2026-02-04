@@ -5,7 +5,7 @@ import { PROP_COMBOS } from './variants';
 function PropCombos() {
   return PROP_COMBOS.map((props, k) => (
     <BentoItem key={k}>
-      <Label {...props} />
+      <Label {...props}>This is an example label.</Label>
     </BentoItem>
   ));
 }
