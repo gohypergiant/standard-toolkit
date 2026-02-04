@@ -14,7 +14,7 @@
 
 @layer components.l1 {
   .field {
-    @apply gap-xs flex flex-col;
+    @apply gap-xs flex flex-col select-none;
   }
 
   .control {
@@ -99,7 +99,7 @@
 
   .popover {
     --trigger-width: initial; /* is inlined by react aria components on render */
-    @apply -ml-s;
+    @apply -ml-s select-none;
     min-width: calc(var(--trigger-width) + (var(--spacing-s) * 2));
   }
 }

@@ -70,7 +70,7 @@
   }
 
   .trigger {
-    @apply w-full justify-start px-0;
+    @apply w-full justify-start px-0 select-none;
 
     &.cozy {
       @apply gap-s text-header-m;
