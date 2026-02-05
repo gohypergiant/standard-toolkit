@@ -13,6 +13,7 @@
 import { Seeker } from './components/seeker';
 import { Timeline } from './components/timeline';
 import { useGanttInit } from './hooks/use-gantt-init';
+import styles from './styles.module.css';
 import { getMsPerPx } from './utils/conversions';
 import type { Timescale } from './types';
 
@@ -27,7 +28,7 @@ export function Gantt({ startTimeMs, endTimeMs, timescale }: GanttProps) {
   const msPerPx = getMsPerPx(timescale);
 
   return (
-    <div className='w-full overflow-hidden'>
+    <div className={styles.container}>
       <Timeline msPerPx={msPerPx} timescale={timescale} />
       {/* Render Rows */}
       <Seeker

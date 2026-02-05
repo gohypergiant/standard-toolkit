@@ -10,16 +10,14 @@
  * governing permissions and limitations under the License.
  */
 
-import { clsx } from '@accelint/design-foundation/lib/utils';
 import { TIMELINE_CHUNK_WIDTH } from '../../constants';
-import styles from './styles.module.css';
+import styles from '../styles.module.css';
+import type { CSSProperties } from 'react';
 
-export function Tick(props: React.ComponentProps<'div'>) {
-  const classNames = clsx('fg-disabled h-[6px] border', props.className);
-
+export function Tick() {
   return (
-    <div className='flex flex-1'>
-      <span className={classNames} />
+    <div className={styles['chunk-tick-container']}>
+      <span className={styles['chunk-tick']} />
     </div>
   );
 }
@@ -30,14 +28,23 @@ type TimelineChunkProps = {
 
 export function TimelineChunk({ label }: TimelineChunkProps) {
   return (
-    <div className={styles.chunk} data-width={TIMELINE_CHUNK_WIDTH}>
+    <div
+      className={styles.chunk}
+      style={
+        { '--tick-chunk-width': `${TIMELINE_CHUNK_WIDTH}px` } as CSSProperties
+      }
+    >
       <div
-        className={styles.label}
-        data-margin={TIMELINE_CHUNK_WIDTH / 4 - 2.5}
+        className={styles['chunk-label']}
+        style={
+          {
+            '--tick-margin': `-${TIMELINE_CHUNK_WIDTH / 4 - 2.5}px`,
+          } as CSSProperties
+        }
       >
         {label}
       </div>
-      <div className='flex flex-row'>
+      <div className={styles['chunk-ticks-container']}>
         <Tick />
         <Tick />
       </div>

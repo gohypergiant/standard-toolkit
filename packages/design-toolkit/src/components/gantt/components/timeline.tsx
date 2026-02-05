@@ -17,6 +17,7 @@ import { selectors, useGanttStore } from '../store';
 import { formatTimestampLabel } from '../utils/formatting';
 import { generateTimelineChunks } from '../utils/generation';
 import { getViewableRegionWidth } from '../utils/helpers';
+import styles from './styles.module.css';
 import { TimelineChunk } from './timeline-chunk';
 import type { Timescale } from '../types';
 
@@ -58,7 +59,7 @@ export function Timeline({ msPerPx, timescale }: TimelineProps) {
 
   return (
     <div ref={assignRef}>
-      <div ref={timelineElementRef} className='flex'>
+      <div ref={timelineElementRef} className={styles.timeline}>
         {timelineChunks.map((chunk) => (
           <TimelineChunk
             key={chunk.timestampMs}

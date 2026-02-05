@@ -14,11 +14,31 @@
 
 @layer components.l1 {
   .chunk {
-    min-width: attr(data-width px);
+    min-width: var(--tick-chunk-width);
   }
 
-  .label {
+  .chunk-label {
     @apply font-display text-body-s fg-primary-muted;
-    margin-left: calc((attr(data-margin px)) * -1);
+    margin-left: var(--tick-margin);
+  }
+
+  .chunk-ticks-container {
+    @apply flex;
+  }
+
+  .chunk-tick-container {
+    @apply flex flex-1;
+  }
+
+  .chunk-tick {
+    @apply fg-disabled h-[6px] border;
+  }
+
+  .timeline {
+    @apply flex;
+  }
+
+  .seeker-container {
+    @apply overflow-x-scroll p-px;
   }
 }
