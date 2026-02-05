@@ -311,13 +311,13 @@ describe('edit-shape-layer store', () => {
       expect(editStore.get(mapId)?.editMode).toBe('bounding-transform');
     });
 
-    it('sets translate mode for points', () => {
+    it('sets point-translate mode for points', () => {
       const { edit } = editStore.actions(mapId);
 
       const shape = createMockPointShape();
       edit(shape);
 
-      expect(editStore.get(mapId)?.editMode).toBe('translate');
+      expect(editStore.get(mapId)?.editMode).toBe('point-translate');
     });
 
     it('allows mode override via options', () => {

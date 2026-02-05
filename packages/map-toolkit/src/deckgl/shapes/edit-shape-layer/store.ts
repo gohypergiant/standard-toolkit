@@ -113,7 +113,7 @@ type EditShapeActions = {
  */
 function getEditModeForShape(shape: Shape): EditMode {
   if (isPointShape(shape)) {
-    return 'translate';
+    return 'point-translate';
   }
   if (isCircleShape(shape)) {
     return 'circle-transform';
