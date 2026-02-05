@@ -6,7 +6,8 @@ metadata:
   title: Accelint Converters
   description: >-
     A lightweight JavaScript utility for converting between various value types,
-    including numbers, strings, booleans, dates, and more.
+    including colors, booleans, numbers, geographic coordinates, and map tile
+    coordinates.
 
 
     Dependencies:
@@ -16,7 +17,7 @@ metadata:
   annotations:
     backstage.io/edit-url: https://github.com/gohypergiant/standard-toolkit/blob/main/packages/converters/catalog-info.yaml
     backstage.io/techdocs-ref: dir:.
-    package/version: 0.3.6
+    package/version: 0.4.0
     github.com/project-slug: gohypergiant/standard-toolkit
   links:
     - url: https://github.com/gohypergiant/standard-toolkit/tree/main/packages/converters

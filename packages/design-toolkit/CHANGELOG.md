@@ -1,5 +1,27 @@
 # @accelint/design-toolkit
 
+## 10.0.0
+### Minor Changes
+
+- 77b277d: Add audio and media controls components implemented using media-chrome
+- 2101f3b: Added new component - <StatusIndicator />
+- b07b967: Added clear button functionality to ComboBoxField component. The clear button appears when the input has a value and allows users to quickly clear the input.
+  
+  New props:
+  - `isClearable` (boolean, default: true) - Controls whether the clear button is shown
+  
+  The clear button can be triggered by clicking the button or pressing Escape when the input is focused and not empty. The button is automatically hidden in read-only mode and respects the disabled state.
+  
+  Additionally, the Input component has been optimized to use a shared internal ClearButton component, reducing style overhead.
+
+### Patch Changes
+
+- 1889101: Add `isRequired`` to query selector combinator
+- 63d4e06: Fix hydration warning for <Clock /> component.
+- a829cc2: Added `select-none` utility to interactable elements to prevent accidental text selection.
+- Updated dependencies [77b277d]
+  - @accelint/icons@2.2.0
+
 ## 9.4.1
 ### Patch Changes
 
