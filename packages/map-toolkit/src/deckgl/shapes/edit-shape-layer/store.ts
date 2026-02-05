@@ -35,14 +35,10 @@
  * ```
  */
 
-import { createMapStore } from '@/shared/create-map-store';
 import { Broadcast } from '@accelint/bus';
-import type { UniqueId } from '@accelint/core';
 import { getLogger } from '@accelint/logger';
-import type { Feature } from 'geojson';
+import { createMapStore } from '@/shared/create-map-store';
 import { MapEvents } from '../../base-map/events';
-import type { MapEventType } from '../../base-map/types';
-import type { Shape } from '../shared/types';
 import {
   isCircleShape,
   isEllipseShape,
@@ -59,13 +55,17 @@ import {
   EDIT_SHAPE_LAYER_ID,
   EDIT_SHAPE_MODE,
 } from './constants';
+import { EditShapeEvents } from './events';
+import type { UniqueId } from '@accelint/core';
+import type { Feature } from 'geojson';
+import type { MapEventType } from '../../base-map/types';
+import type { Shape } from '../shared/types';
 import type {
   EditShapeEvent,
   ShapeEditCanceledEvent,
   ShapeEditingEvent,
   ShapeUpdatedEvent,
 } from './events';
-import { EditShapeEvents } from './events';
 import type {
   EditFunction,
   EditingState,
