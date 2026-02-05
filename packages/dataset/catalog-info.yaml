@@ -5,7 +5,8 @@ metadata:
   name: accelint_dataset
   title: Accelint Dataset
   description: >-
-    A simple, consistent representation of data.
+    TypeScript library for validating and accessing geospatial dataset
+    configurations with type-safe lenses and runtime validation.
 
 
     Dependencies:

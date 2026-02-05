@@ -1,5 +1,16 @@
 # @accelint/map-toolkit
 
+## 1.3.0
+
+### Minor Changes
+
+- 58199e5: Updates use-cursor-coordinates to format MGRS and UTM default coordinates to follow a more expected format.
+
+### Patch Changes
+
+- 03c1e39: Add a tweak for the Viewport Resize debounce timing, 500 -> 200, for better visual feedback on updates.
+- 0265877: Fixed error handling in `useCursorCoordinates` hook for coordinates outside UTM/MGRS valid range. UTM and MGRS coordinate systems are only valid between 80°S and 84°N. The hook now returns the default placeholder (`--, --`) when attempting to format polar coordinates in these formats.
+
 ## 1.2.0
 
 ### Minor Changes
