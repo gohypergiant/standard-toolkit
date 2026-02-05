@@ -10,12 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
-import type { UniqueId } from '@accelint/core';
+import { Broadcast } from '@accelint/bus';
 import { uuid } from '@accelint/core';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { MapEvents } from '../../base-map/events';
 import { mockShapes } from '../__fixtures__/mock-shapes';
-import type { Shape } from '../shared/types';
 import { ShapeFeatureType } from '../shared/types';
+import { EditShapeEvents } from './events';
 import {
   cancelEditingFromLayer,
   clearEditingState,
@@ -24,6 +25,8 @@ import {
   saveEditingFromLayer,
   updateFeatureFromLayer,
 } from './store';
+import type { UniqueId } from '@accelint/core';
+import type { Shape } from '../shared/types';
 
 // Get fixture shapes by type
 const mockCircle = mockShapes.find((s) => s.shape === 'Circle');
@@ -449,6 +452,76 @@ describe('edit-shape-layer store', () => {
       expect(editStore.get(mapId)?.editingShape).not.toBeNull();
       saveEditingFromLayer(mapId);
       expect(editStore.get(mapId)?.editingShape).toBeNull();
+    });
+
+    it('emits shapes:updated event when saving', () => {
+      const { edit } = editStore.actions(mapId);
+      const emitSpy = vi.fn();
+      const bus = Broadcast.getInstance();
+      bus.on(EditShapeEvents.updated, emitSpy);
+
+      const shape = createMockShape();
+      edit(shape);
+      saveEditingFromLayer(mapId);
+
+      expect(emitSpy).toHaveBeenCalledTimes(1);
+      expect(emitSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          payload: expect.objectContaining({
+            mapId,
+            shape: expect.objectContaining({
+              id: shape.id,
+            }),
+          }),
+        }),
+      );
+
+      bus.off(EditShapeEvents.updated, emitSpy);
+    });
+
+    it('does nothing when not currently editing', () => {
+      const emitSpy = vi.fn();
+      const bus = Broadcast.getInstance();
+      bus.on(EditShapeEvents.updated, emitSpy);
+
+      // No shape being edited
+      expect(editStore.get(mapId)?.editingShape).toBeNull();
+
+      // Should be a no-op
+      saveEditingFromLayer(mapId);
+
+      expect(editStore.get(mapId)?.editingShape).toBeNull();
+      expect(emitSpy).not.toHaveBeenCalled();
+
+      bus.off(EditShapeEvents.updated, emitSpy);
+    });
+
+    it('returns to default mode and cursor after saving', () => {
+      const { edit } = editStore.actions(mapId);
+      const mapEventBus = Broadcast.getInstance();
+      const editShapeBus = Broadcast.getInstance();
+      const modeEmitSpy = vi.fn();
+      const cursorEmitSpy = vi.fn();
+
+      mapEventBus.on(MapEvents.enablePan, modeEmitSpy);
+      editShapeBus.on(EditShapeEvents.updated, cursorEmitSpy);
+
+      const shape = createMockShape();
+      edit(shape);
+
+      // Verify we're in edit mode
+      expect(editStore.get(mapId)?.editMode).not.toBe('view');
+
+      saveEditingFromLayer(mapId);
+
+      // Should have re-enabled panning
+      expect(modeEmitSpy).toHaveBeenCalled();
+
+      // Should have emitted updated event
+      expect(cursorEmitSpy).toHaveBeenCalled();
+
+      mapEventBus.off(MapEvents.enablePan, modeEmitSpy);
+      editShapeBus.off(EditShapeEvents.updated, cursorEmitSpy);
     });
   });
 

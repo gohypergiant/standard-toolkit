@@ -2,4 +2,4 @@
 "@accelint/map-toolkit": minor
 ---
 
-Updates EditShapeLayer to use the Enter key as a hotkey for saving shapes while in edit mode.
+Add Enter key hotkey to save shape edits. Pressing Enter while editing a shape now saves the changes and emits the existing `shapes:updated` event, providing an alternative to clicking the Save button.

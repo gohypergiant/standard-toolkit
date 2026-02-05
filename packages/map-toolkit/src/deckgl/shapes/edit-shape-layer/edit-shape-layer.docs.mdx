@@ -18,7 +18,7 @@ A deck.gl layer for interactively editing existing geographic shapes on a map. I
 - **Multi-map support**: Events include map instance ID for isolation
 - **Cursor integration**: Automatically changes cursor based on edit mode
 - **ESC to cancel**: Press ESC key to cancel editing and restore original shape
-- **Enter to confirm**: Press Enter key to confirm current changes
+- **Enter to save**: Press Enter key to save current changes
 - **Live measurements**: Tooltip shows dimensions and area during editing
 
 ## Edit Modes
@@ -189,6 +189,7 @@ function MapWithEditing() {
 ### Keyboard Shortcuts
 
 - **ESC**: Cancel current editing and restore original shape
+- **Enter**: Save current changes (emits `shapes:updated` event)
 - **Shift** (hold while scaling): Maintain aspect ratio (uniform scaling)
 - **Shift** (hold while rotating): Snap to 45° intervals (0°, 45°, 90°, 135°, 180°, etc.)
 
@@ -262,19 +263,7 @@ useOn(EditShapeEvents.canceled, (event) => {
 });
 ```
 
-### shapes:edit-confirmed
-
-Emitted when Enter key is pressed while editing.
-
-```tsx
-import { useOn } from '@accelint/bus/react';
-import { EditShapeEvents } from '@accelint/map-toolkit/deckgl/shapes';
-
-useOn(EditShapeEvents.confirmed, (event) => {
-  if (event.payload.mapId !== MAP_ID) return;
-  console.log('Edit confirmed for:', event.payload.shape.name);
-});
-```
+**Note**: The `shapes:updated` event is also emitted when pressing the Enter key to save edits.
 
 ## Map Mode Integration
 

@@ -12,16 +12,9 @@
 
 'use client';
 
-import { Broadcast } from '@accelint/bus';
-import { useBus } from '@accelint/bus/react';
-import { Keycode, registerHotkey } from '@accelint/hotkey-manager';
+import { globalBind, Keycode, registerHotkey } from '@accelint/hotkey-manager';
 import { useHotkey } from '@accelint/hotkey-manager/react';
-import type {
-  EditAction,
-  FeatureCollection,
-} from '@deck.gl-community/editable-layers';
-import type { Feature } from 'geojson';
-import { useContext, useEffect, useRef } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useRef } from 'react';
 import { MapContext } from '../../base-map/provider';
 import { useShiftZoomDisable } from '../shared/hooks/use-shift-zoom-disable';
 import { ShapeFeatureType, type ShapeFeatureTypeValues } from '../shared/types';
@@ -32,7 +25,6 @@ import {
   CONTINUOUS_EDIT_TYPES,
   EDIT_SHAPE_LAYER_ID,
 } from './constants';
-import { type EditShapeEvent, EditShapeEvents } from './events';
 import { getEditModeInstance } from './modes';
 import {
   cancelEditingFromLayer,
@@ -40,6 +32,11 @@ import {
   saveEditingFromLayer,
   updateFeatureFromLayer,
 } from './store';
+import type {
+  EditAction,
+  FeatureCollection,
+} from '@deck.gl-community/editable-layers';
+import type { Feature } from 'geojson';
 import type { EditShapeLayerProps } from './types';
 
 /**
@@ -63,17 +60,6 @@ function isContinuousEditType(editType: string): boolean {
 function isCompletionEditType(editType: string): boolean {
   return COMPLETION_EDIT_TYPES.has(editType);
 }
-
-const bus = Broadcast.getInstance<EditShapeEvent>();
-const saveEditHotkey = registerHotkey({
-  id: 'saveEditHotkey',
-  key: {
-    code: Keycode.Enter,
-  },
-  onKeyUp: () => {
-    bus.emit(EditShapeEvents.confirmed);
-  },
-});
 
 /**
  * Convert a GeoJSON Feature to a FeatureCollection for EditableGeoJsonLayer.
@@ -174,19 +160,54 @@ export function EditShapeLayer({
 
   const isEditing = editingState?.editingShape != null;
 
-  useHotkey(saveEditHotkey);
-  const { useOn } = useBus<EditShapeEvent>();
-
-  // Disable zoom while Shift is held during editing
-  // This prevents boxZoom (Shift+drag) from interfering with Shift modifier constraints
-  // (e.g., Shift for uniform scaling, Shift for rotation snap)
-  useShiftZoomDisable(actualMapId, isEditing);
-
   // RAF batching for movePosition events to reduce React updates during drag
   const pendingUpdateRef = useRef<{
     feature: Feature;
     rafId: number;
   } | null>(null);
+
+  // Keep a ref to the latest editing state so the hotkey handler can access it
+  const editingStateRef = useRef(editingState);
+  editingStateRef.current = editingState;
+
+  // Ensure global hotkey listeners are initialized
+  // Safe to call multiple times - globalBind() checks if already bound
+  useEffect(() => {
+    globalBind();
+  }, []);
+
+  // Helper to cancel any pending RAF update (stable reference with useCallback)
+  const cancelPendingUpdate = useCallback(() => {
+    if (pendingUpdateRef.current) {
+      cancelAnimationFrame(pendingUpdateRef.current.rafId);
+      pendingUpdateRef.current = null;
+    }
+  }, []);
+
+  // Register Enter key hotkey scoped to this component and map instance
+  // Handler checks if actively editing to prevent conflicts with other Enter key uses
+  const saveEditHotkey = useMemo(
+    () =>
+      registerHotkey({
+        id: `saveEditHotkey-${actualMapId}`,
+        key: { code: Keycode.Enter },
+        onKeyUp: () => {
+          // Use ref to get current editing state, avoiding stale closure
+          if (editingStateRef.current?.editingShape) {
+            cancelPendingUpdate();
+            saveEditingFromLayer(actualMapId);
+          }
+        },
+      }),
+    [actualMapId, cancelPendingUpdate],
+  );
+
+  useHotkey(saveEditHotkey);
+
+  // Disable zoom while Shift is held during editing
+  // This prevents boxZoom (Shift+drag) from interfering with Shift modifier constraints
+  // (e.g., Shift for uniform scaling, Shift for rotation snap)
+  useShiftZoomDisable(actualMapId, isEditing);
 
   // Cleanup RAF on unmount
   useEffect(() => {
@@ -196,15 +217,6 @@ export function EditShapeLayer({
       }
     };
   }, []);
-
-  useOn(EditShapeEvents.confirmed, () => {
-    // no-op if not currently editing.
-    if (!editingState?.editingShape) {
-      return;
-    }
-    cancelPendingUpdate();
-    saveEditingFromLayer(actualMapId);
-  });
 
   // If not editing, return null (don't render the editable layer)
   if (!editingState?.editingShape) {
@@ -219,14 +231,6 @@ export function EditShapeLayer({
   // Use the live feature being edited, or fall back to original shape
   const featureToRender = featureBeingEdited ?? editingShape.feature;
   const data = toFeatureCollection(featureToRender, editingShape.shape);
-
-  // Helper to cancel any pending RAF update
-  const cancelPendingUpdate = () => {
-    if (pendingUpdateRef.current) {
-      cancelAnimationFrame(pendingUpdateRef.current.rafId);
-      pendingUpdateRef.current = null;
-    }
-  };
 
   // Handle edit events from EditableGeoJsonLayer
   const handleEdit = ({
