@@ -1,6 +1,6 @@
 # @accelint/design-toolkit
 
-## 10.0.0
+## 9.5.0
 ### Minor Changes
 
 - 77b277d: Add audio and media controls components implemented using media-chrome
