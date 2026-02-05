@@ -17,7 +17,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 });
 
 const nextConfig: NextConfig = {
-  cacheComponents: false,
+  cacheComponents: true,
   reactStrictMode: true,
   poweredByHeader: false,
   reactCompiler: true,
