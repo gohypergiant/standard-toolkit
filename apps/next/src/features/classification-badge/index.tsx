@@ -1,13 +1,13 @@
 import 'server-only';
 import { ErrorComponent } from './error';
 import { LoadingComponent } from './loading';
-import { LinkServerExample } from './server';
+import { ClassificationBadgeServerExample } from './server';
 
 export function LinkExample() {
   return (
     <ErrorComponent>
       <LoadingComponent>
-        <LinkServerExample />
+        <ClassificationBadgeServerExample />
       </LoadingComponent>
     </ErrorComponent>
   );

@@ -1,10 +1,8 @@
-import type { LinkProps } from '@accelint/design-toolkit';
+import type { HeroProps } from '@accelint/design-toolkit';
 
-export type LinkVariant = Pick<LinkProps, 'allowsVisited' | 'isVisited'>;
+export type HeroVariant = Pick<HeroProps, 'compact'>;
 
-export const PROP_COMBOS: LinkVariant[] = [
-  { allowsVisited: true, isVisited: true },
-  { allowsVisited: true, isVisited: false },
-  { allowsVisited: false, isVisited: true },
-  { allowsVisited: false, isVisited: false },
+export const PROP_COMBOS: HeroVariant[] = [
+  { compact: true },
+  { compact: false },
 ];

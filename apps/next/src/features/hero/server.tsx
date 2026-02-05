@@ -1,15 +1,19 @@
-import { Link } from '@accelint/design-toolkit';
+import { Hero, HeroSubtitle, HeroTitle } from '@accelint/design-toolkit';
 import { BentoItem } from '~/components/bento';
 import { PROP_COMBOS } from './variants';
 
 function PropCombos() {
-  return PROP_COMBOS.map((props, k) => (
+  return PROP_COMBOS.map((_props, k) => (
     <BentoItem key={k}>
-      <Link {...props} />
+      <Hero>
+        <HeroTitle>John Doe</HeroTitle>
+        <HeroSubtitle>Software Engineer</HeroSubtitle>
+        <HeroSubtitle>San Francisco, CA</HeroSubtitle>
+      </Hero>
     </BentoItem>
   ));
 }
 
-export function LinkServerExample() {
+export function HeroServerExample() {
   return <PropCombos />;
 }

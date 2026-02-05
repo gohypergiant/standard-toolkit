@@ -1,15 +1,15 @@
-import { Link } from '@accelint/design-toolkit';
+import { ClassificationBanner } from '@accelint/design-toolkit';
 import { BentoItem } from '~/components/bento';
 import { PROP_COMBOS } from './variants';
 
 function PropCombos() {
   return PROP_COMBOS.map((props, k) => (
     <BentoItem key={k}>
-      <Link {...props} />
+      <ClassificationBanner {...props} />
     </BentoItem>
   ));
 }
 
-export function LinkServerExample() {
+export function ClassificationBannerServerExample() {
   return <PropCombos />;
 }

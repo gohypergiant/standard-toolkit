@@ -19,7 +19,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 const logger = getLogger({
   enabled: process.env.NODE_ENV !== 'production',
   level: 'error',
-  prefix: '[Link]',
+  prefix: '[Hero]',
   pretty: true,
 });
 

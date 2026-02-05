@@ -1,16 +1,16 @@
 import { BentoGroup } from '~/components/bento';
 import { createVisualTests } from '~/visual-regression/vitest';
-import { LinkServerExample } from './server';
+import { HeroServerExample } from './server';
 
-function LinkVariants() {
+function HeroVariants() {
   return (
     <BentoGroup>
-      <LinkServerExample />
+      <HeroServerExample />
     </BentoGroup>
   );
 }
 
 createVisualTests({
-  componentName: 'Link',
-  variantsComponent: LinkVariants,
+  componentName: 'Hero',
+  variantsComponent: HeroVariants,
 });

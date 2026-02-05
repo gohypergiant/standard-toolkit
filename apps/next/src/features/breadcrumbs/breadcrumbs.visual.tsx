@@ -3,7 +3,6 @@ import { createVisualTests } from '~/visual-regression/vitest';
 import { BreadcrumbsServerExample } from './server';
 
 function BreadcrumbsVariants() {
-  // ?: No variants, should probably rename?
   return (
     <BentoGroup>
       <BreadcrumbsServerExample />

@@ -1,13 +1,13 @@
 import 'server-only';
 import { ErrorComponent } from './error';
 import { LoadingComponent } from './loading';
-import { LinkServerExample } from './server';
+import { BreadcrumbsServerExample } from './server';
 
 export function LinkExample() {
   return (
     <ErrorComponent>
       <LoadingComponent>
-        <LinkServerExample />
+        <BreadcrumbsServerExample />
       </LoadingComponent>
     </ErrorComponent>
   );
