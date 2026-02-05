@@ -40,7 +40,7 @@ import { useStressTest } from '~/memlab/hooks/use-stress-test';
  * 2. User Flow - Navigation between multiple views
  * 3. Stress Test - Rapid open/close cycles
  */
-export function DrawerExampleInternal() {
+function DrawerExampleInternal() {
   const ids = useMemo(
     () => ({
       drawer: uuid(),
