@@ -10,8 +10,17 @@
  * governing permissions and limitations under the License.
  */
 
-import { DrawerClient } from '~/features/drawer/client';
+import 'server-only';
+import { DrawerExampleClient } from './client';
+import { ErrorComponent } from './error';
+import { LoadingComponent } from './loading';
 
-export default function Page() {
-  return <DrawerClient />;
+export function DrawerExample() {
+  return (
+    <ErrorComponent>
+      <LoadingComponent>
+        <DrawerExampleClient />
+      </LoadingComponent>
+    </ErrorComponent>
+  );
 }
