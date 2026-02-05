@@ -16,6 +16,7 @@ import {
   getTotalTimelineWidth,
 } from '../utils/conversions';
 import { getScrolledPixels } from '../utils/helpers';
+import styles from './styles.module.css';
 import type { UIEvent } from 'react';
 
 type SeekerProps = {
@@ -38,11 +39,10 @@ export function Seeker({ startTimeMs, endTimeMs, msPerPx }: SeekerProps) {
 
   return (
     <div
-      style={{ overflowX: 'scroll' }}
       onScroll={updateCurrentPositionMs(startTimeMs, msPerPx)}
-      className='p-px'
+      className={styles['seeker-container']}
     >
-      <div style={{ width, overflowX: 'auto' }} />
+      <div className={styles.seeker} style={{ width }} />
     </div>
   );
 }
