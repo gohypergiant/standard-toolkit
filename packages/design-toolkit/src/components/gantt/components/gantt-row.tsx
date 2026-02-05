@@ -32,7 +32,10 @@ export function GanttRow({ children }: PropsWithChildren) {
     ),
   );
   return (
-    <div style={{ position: 'relative', height: GANTT_ROW_HEIGHT_PX }}>
+    <div
+      className='border'
+      style={{ position: 'relative', height: GANTT_ROW_HEIGHT_PX }}
+    >
       {renderedBlocks}
     </div>
   );
