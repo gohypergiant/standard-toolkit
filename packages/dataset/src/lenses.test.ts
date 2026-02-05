@@ -12,6 +12,7 @@
 
 import { describe, expect, it } from 'vitest';
 import {
+  datasetBackend,
   datasetBatchSize,
   datasetDataType,
   datasetDefaultFields,
@@ -36,7 +37,9 @@ import {
   datasetServiceUrls,
   datasetServiceVersion,
   datasetTable,
+  datasetVendorParams,
   datasetVisible,
+  metaDataBackend,
   metaDataBatchSize,
   metaDataDefaultFields,
   metaDataFilterDialect,
@@ -51,6 +54,7 @@ import {
   metaDataServiceUrls,
   metaDataServiceVersion,
   metaDataTable,
+  metaDataVendorParams,
 } from './lenses';
 import type {
   AnyDataset,
@@ -117,6 +121,11 @@ const fullDatasetConfig = <T extends LayerDataType, S extends LayerServiceType>(
     serviceUrls: ['https://api.test.com/geoserver', 'https://backup.test.com'],
     serviceVersion: '2.0.0',
     serviceLayer: 'test:layer',
+    backend: 'geoserver',
+    vendorParams: {
+      formatOptions: 'includeFids:false',
+      viewparams: 'test:value',
+    },
     idProperty: 'feature_id',
     geometryProperty: 'location',
     minZoom: 5,
@@ -283,6 +292,11 @@ describe('Metadata Property Lenses (Direct Access)', () => {
     serviceUrls: ['https://api.example.com'],
     serviceVersion: '1.1.0',
     serviceLayer: 'test:stations',
+    backend: 'geoserver',
+    vendorParams: {
+      formatOptions: 'includeFids:false;batchSize:10000',
+      viewparams: 'minMagnitude:5.0',
+    },
     idProperty: 'station_id',
     geometryProperty: 'geom',
     minZoom: 3,
@@ -350,6 +364,65 @@ describe('Metadata Property Lenses (Direct Access)', () => {
       };
       const actual = metaDataServiceLayer(minimalMetadata);
       expect(actual).toBeUndefined();
+    });
+  });
+
+  describe('metaDataBackend', () => {
+    it('should extract backend identifier', () => {
+      const actual = metaDataBackend(metadata);
+      expect(actual).toBe('geoserver');
+    });
+
+    it('should return undefined when not present', () => {
+      const minimalMetadata: LayerDatasetMetadata = {
+        table: 'minimal',
+        geometryProperty: 'geom',
+        defaultFields: ['geom'],
+      };
+      const actual = metaDataBackend(minimalMetadata);
+      expect(actual).toBeUndefined();
+    });
+
+    it('should extract different backend types', () => {
+      const mapserverMetadata: LayerDatasetMetadata = {
+        ...metadata,
+        backend: 'mapserver',
+      };
+      expect(metaDataBackend(mapserverMetadata)).toBe('mapserver');
+
+      const qgisMetadata: LayerDatasetMetadata = {
+        ...metadata,
+        backend: 'qgis',
+      };
+      expect(metaDataBackend(qgisMetadata)).toBe('qgis');
+    });
+  });
+
+  describe('metaDataVendorParams', () => {
+    it('should extract vendor parameters', () => {
+      const actual = metaDataVendorParams(metadata);
+      expect(actual).toStrictEqual({
+        formatOptions: 'includeFids:false;batchSize:10000',
+        viewparams: 'minMagnitude:5.0',
+      });
+    });
+
+    it('should return undefined when not present', () => {
+      const minimalMetadata: LayerDatasetMetadata = {
+        table: 'minimal',
+        geometryProperty: 'geom',
+        defaultFields: ['geom'],
+      };
+      const actual = metaDataVendorParams(minimalMetadata);
+      expect(actual).toBeUndefined();
+    });
+
+    it('should extract empty vendor params object', () => {
+      const emptyVendorMetadata: LayerDatasetMetadata = {
+        ...metadata,
+        vendorParams: {},
+      };
+      expect(metaDataVendorParams(emptyVendorMetadata)).toStrictEqual({});
     });
   });
 
@@ -556,6 +629,86 @@ describe('Composed Dataset Lenses', () => {
     });
   });
 
+  describe('datasetBackend', () => {
+    it('should extract backend identifier from dataset', () => {
+      const actual = datasetBackend(dataset);
+      expect(actual).toBe('geoserver');
+    });
+
+    it('should return undefined when not present', () => {
+      const minimalDataset = genericDatasetConfig('GEOJSON', 'FS');
+      const actual = datasetBackend(minimalDataset);
+      expect(actual).toBeUndefined();
+    });
+
+    it('should extract different backend types', () => {
+      const mapserverDataset: LayerDataset<'GEOJSON', 'WFS'> = {
+        ...dataset,
+        metadata: {
+          ...dataset.metadata,
+          backend: 'mapserver',
+        },
+      };
+      expect(datasetBackend(mapserverDataset)).toBe('mapserver');
+
+      const qgisDataset: LayerDataset<'ARROW', 'WFS'> = {
+        ...dataset,
+        metadata: {
+          ...dataset.metadata,
+          backend: 'qgis',
+        },
+      };
+      expect(datasetBackend(qgisDataset)).toBe('qgis');
+    });
+  });
+
+  describe('datasetVendorParams', () => {
+    it('should extract vendor parameters from dataset', () => {
+      const actual = datasetVendorParams(dataset);
+      expect(actual).toStrictEqual({
+        formatOptions: 'includeFids:false',
+        viewparams: 'test:value',
+      });
+    });
+
+    it('should return undefined when not present', () => {
+      const minimalDataset = genericDatasetConfig('GEOJSON', 'FS');
+      const actual = datasetVendorParams(minimalDataset);
+      expect(actual).toBeUndefined();
+    });
+
+    it('should extract empty vendor params object', () => {
+      const emptyVendorDataset: LayerDataset<'ARROW', 'WFS'> = {
+        ...dataset,
+        metadata: {
+          ...dataset.metadata,
+          vendorParams: {},
+        },
+      };
+      expect(datasetVendorParams(emptyVendorDataset)).toStrictEqual({});
+    });
+
+    it('should extract arbitrary vendor params', () => {
+      const customVendorDataset: LayerDataset<'GEOJSON', 'WFS'> = {
+        ...dataset,
+        metadata: {
+          ...dataset.metadata,
+          backend: 'custom-backend',
+          vendorParams: {
+            customParam1: 'value1',
+            customParam2: 42,
+            customParam3: { nested: 'object' },
+          },
+        },
+      };
+      expect(datasetVendorParams(customVendorDataset)).toStrictEqual({
+        customParam1: 'value1',
+        customParam2: 42,
+        customParam3: { nested: 'object' },
+      });
+    });
+  });
+
   describe('datasetIdProperty', () => {
     type TestFeature = {
       // biome-ignore lint/style/useNamingConvention: It's fine, this could happen
@@ -741,6 +894,8 @@ describe('Edge Cases', () => {
       expect(datasetServiceUrls(minimalDataset)).toBeUndefined();
       expect(datasetServiceVersion(minimalDataset)).toBeUndefined();
       expect(datasetServiceLayer(minimalDataset)).toBeUndefined();
+      expect(datasetBackend(minimalDataset)).toBeUndefined();
+      expect(datasetVendorParams(minimalDataset)).toBeUndefined();
       expect(datasetIdProperty(minimalDataset)).toBeUndefined();
       expect(datasetMinZoom(minimalDataset)).toBeUndefined();
       expect(datasetMaxZoom(minimalDataset)).toBeUndefined();
@@ -757,6 +912,8 @@ describe('Edge Cases', () => {
       expect(datasetServiceUrls(dataset)).toBeDefined();
       expect(datasetServiceVersion(dataset)).toBeDefined();
       expect(datasetServiceLayer(dataset)).toBeDefined();
+      expect(datasetBackend(dataset)).toBeDefined();
+      expect(datasetVendorParams(dataset)).toBeDefined();
       expect(datasetIdProperty(dataset)).toBeDefined();
       expect(datasetMinZoom(dataset)).toBeDefined();
       expect(datasetMaxZoom(dataset)).toBeDefined();

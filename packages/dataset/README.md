@@ -184,6 +184,11 @@ const config = {
     table: 'buildings',
     serviceUrls: ['https://gis.city.gov/wfs'],
     serviceVersion: '2.0.0',
+    backend: 'geoserver',
+    vendorParams: {
+      formatOptions: 'includeFids:false;batchSize:10000',
+      viewparams: 'filter:active'
+    },
     geometryProperty: 'geometry',
     defaultFields: ['height', 'status'],
     filterDialect: 'cql'
@@ -253,6 +258,56 @@ Fields with finite, enumerable options populate the `availableValues` property w
 - **GEOJSON**: RFC 7946 GeoJSON format
 - **ARROW**: Apache Arrow columnar format
 - **Unknown**: Unspecified data format
+
+## Backend Integration
+
+The library supports backend-specific customization through two optional metadata properties:
+
+### `backend`
+
+Identifies the backend server implementation powering a service. This enables client-side logic to adapt to server-specific capabilities, limitations, or quirks.
+
+```typescript
+metadata: {
+  backend: 'geoserver',  // or 'mapserver', 'qgis', 'custom-server', etc.
+  // ... other properties
+}
+```
+
+### `vendorParams`
+
+Backend-specific parameters that customize service requests without polluting the core schema. These parameters are passed directly to the service and vary by backend implementation.
+
+```typescript
+// GeoServer vendor parameters
+metadata: {
+  backend: 'geoserver',
+  vendorParams: {
+    formatOptions: 'includeFids:false;batchSize:10000',
+    viewparams: 'minMagnitude:5.0;maxDepth:100'
+  }
+}
+
+// MapServer vendor parameters
+metadata: {
+  backend: 'mapserver',
+  vendorParams: {
+    map: '/path/to/mapfile.map'
+  }
+}
+
+// Custom backend parameters
+metadata: {
+  backend: 'custom-server',
+  vendorParams: {
+    apiKey: 'secret',
+    cacheStrategy: 'aggressive',
+    maxFeatures: 10000
+  }
+}
+```
+
+Both fields are optional and independent - you can specify `backend` without `vendorParams` or vice versa.
 
 ## Layer Configuration Types
 
@@ -348,6 +403,12 @@ These functions provide direct access to nested metadata properties by composing
 - **`datasetServiceLayer(dataset: AnyDataset): string | undefined`**
   - Extract layer identifier for service requests
 
+- **`datasetBackend(dataset: AnyDataset): string | undefined`**
+  - Extract backend server implementation identifier (e.g., geoserver, mapserver, qgis)
+
+- **`datasetVendorParams(dataset: AnyDataset): Record<string, unknown> | undefined`**
+  - Extract backend-specific vendor parameters for customizing service requests
+
 - **`datasetIdProperty(dataset: AnyDataset): string | undefined`**
   - Extract unique feature identifier property name
 
@@ -386,6 +447,8 @@ For cases where you already have the metadata object extracted:
 - **`metaDataServiceUrls(metadata: LayerDatasetMetadata): string[] | undefined`**
 - **`metaDataServiceVersion(metadata: LayerDatasetMetadata): SemVerVersion | undefined`**
 - **`metaDataServiceLayer(metadata: LayerDatasetMetadata): string | undefined`**
+- **`metaDataBackend(metadata: LayerDatasetMetadata): string | undefined`**
+- **`metaDataVendorParams(metadata: LayerDatasetMetadata): Record<string, unknown> | undefined`**
 - **`metaDataIdProperty(metadata: LayerDatasetMetadata): string | undefined`**
 - **`metaDataGeometryProperty(metadata: LayerDatasetMetadata): string`**
 - **`metaDataMinZoom(metadata: LayerDatasetMetadata): number | undefined`**
@@ -408,6 +471,7 @@ The library exports TypeScript types for all dataset variants:
 - `LayerDatasetFieldTypes` - Field data types
 - `FilterDialect` - Query language dialects
 - `SemVerVersion` - Semantic version string type
+- `WFSBackend` - Known WFS backend implementations (`'geoserver' | 'mapserver' | 'qgis'`)
 - `LayerDatasetField` - Field configuration schema
 - `LayerDatasetMetadata` - Metadata configuration schema
 - `LayerDataset<DataType, ServiceType, ExtensionType>` - Generic dataset type
