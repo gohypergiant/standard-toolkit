@@ -1,7 +1,7 @@
 {
   "name": "@accelint/converters",
-  "description": "A lightweight JavaScript utility for converting between various value types, including booleans, numbers, geographic coordinates, and map tile coordinates.",
-  "version": "0.3.6",
+  "description": "A lightweight JavaScript utility for converting between various value types, including colors, booleans, numbers, geographic coordinates, and map tile coordinates.",
+  "version": "0.4.0",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "devDependencies": {
@@ -20,6 +20,7 @@
     ".": "./dist/index.js",
     "./azimuth-to-cardinal": "./dist/azimuth-to-cardinal/index.js",
     "./boolean-to-number": "./dist/boolean-to-number/index.js",
+    "./color": "./dist/color/index.js",
     "./to-boolean": "./dist/to-boolean/index.js",
     "./zxy-to-bbox": "./dist/zxy-to-bbox/index.js",
     "./package.json": "./package.json"
@@ -38,6 +39,9 @@
   "license": "Apache-2.0",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
+  "optionalDependencies": {
+    "@accelint/math": "workspace:*"
+  },
   "owner": "default/pathfinder",
   "peerDependencies": {
     "@accelint/constants": "workspace:*"
