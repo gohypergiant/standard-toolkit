@@ -60,6 +60,9 @@ export class PointTranslateMode extends GeoJsonEditMode {
    *
    * If the click is on empty map space (not on the point itself),
    * moves the point to the clicked location immediately.
+   *
+   * @param event - Click event containing map coordinates and pick information
+   * @param props - Mode props containing data, selected indexes, and edit callback
    */
   override handleClick(
     event: ClickEvent,
@@ -111,6 +114,9 @@ export class PointTranslateMode extends GeoJsonEditMode {
 
   /**
    * Delegate pointer move events to TranslateMode for cursor updates.
+   *
+   * @param event - Pointer move event with current cursor position
+   * @param props - Mode props containing state and configuration
    */
   override handlePointerMove(
     event: PointerMoveEvent,
@@ -121,6 +127,9 @@ export class PointTranslateMode extends GeoJsonEditMode {
 
   /**
    * Delegate start dragging to TranslateMode for traditional drag behavior.
+   *
+   * @param event - Drag start event with pointer down coordinates
+   * @param props - Mode props containing data and edit callback
    */
   override handleStartDragging(
     event: StartDraggingEvent,
@@ -131,6 +140,9 @@ export class PointTranslateMode extends GeoJsonEditMode {
 
   /**
    * Delegate dragging to TranslateMode for traditional drag behavior.
+   *
+   * @param event - Dragging event with current and previous pointer positions
+   * @param props - Mode props containing data and edit callback
    */
   override handleDragging(
     event: DraggingEvent,
@@ -141,6 +153,9 @@ export class PointTranslateMode extends GeoJsonEditMode {
 
   /**
    * Delegate stop dragging to TranslateMode for traditional drag behavior.
+   *
+   * @param event - Drag stop event with final pointer position
+   * @param props - Mode props containing data and edit callback
    */
   override handleStopDragging(
     event: StopDraggingEvent,
@@ -151,6 +166,9 @@ export class PointTranslateMode extends GeoJsonEditMode {
 
   /**
    * Delegate guide rendering to TranslateMode.
+   *
+   * @param props - Mode props containing data and selected indexes
+   * @returns Guide feature collection for rendering edit handles
    */
   override getGuides(
     props: ModeProps<FeatureCollection>,

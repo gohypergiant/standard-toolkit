@@ -110,6 +110,9 @@ type EditShapeActions = {
 
 /**
  * Determine the appropriate edit mode for a shape type
+ *
+ * @param shape - The shape to determine the edit mode for
+ * @returns The edit mode to use for this shape type
  */
 function getEditModeForShape(shape: Shape): EditMode {
   if (isPointShape(shape)) {

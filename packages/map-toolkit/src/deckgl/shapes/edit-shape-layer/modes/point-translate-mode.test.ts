@@ -73,12 +73,12 @@ describe('PointTranslateMode', () => {
     });
 
     it('has the expected methods', () => {
-      expect(typeof mode.handleClick).toBe('function');
-      expect(typeof mode.handlePointerMove).toBe('function');
-      expect(typeof mode.handleStartDragging).toBe('function');
-      expect(typeof mode.handleDragging).toBe('function');
-      expect(typeof mode.handleStopDragging).toBe('function');
-      expect(typeof mode.getGuides).toBe('function');
+      expect(mode.handleClick).toBeTypeOf('function');
+      expect(mode.handlePointerMove).toBeTypeOf('function');
+      expect(mode.handleStartDragging).toBeTypeOf('function');
+      expect(mode.handleDragging).toBeTypeOf('function');
+      expect(mode.handleStopDragging).toBeTypeOf('function');
+      expect(mode.getGuides).toBeTypeOf('function');
     });
   });
 
@@ -183,59 +183,102 @@ describe('PointTranslateMode', () => {
     });
   });
 
-  describe('drag delegation', () => {
-    it('delegates handleStartDragging to TranslateMode', () => {
+  describe('handlePointerMove', () => {
+    it('delegates to TranslateMode with correct arguments', () => {
+      // Arrange
       const props = createMockProps();
-      const event = {
-        picks: [{ featureIndex: 0 }],
-        mapCoords: [0, 0],
-        screenCoords: [0, 0],
-        pointerDownMapCoords: [0, 0],
-        pointerDownScreenCoords: [0, 0],
-        sourceEvent: new MouseEvent('mousedown'),
-        cancelPan: vi.fn(),
-      };
+      const event = createMockClickEvent(); // ClickEvent has same base properties
+      // Access private property for testing delegation behavior
+      const spy = vi.spyOn(
+        (mode as { translateMode: { handlePointerMove: () => void } })
+          .translateMode,
+        'handlePointerMove',
+      );
 
-      // Should not throw
-      expect(() => {
-        mode.handleStartDragging(event as never, props);
-      }).not.toThrow();
+      // Act
+      mode.handlePointerMove(event, props);
+
+      // Assert
+      expect(spy).toHaveBeenCalledWith(event, props);
+      expect(spy).toHaveBeenCalledTimes(1);
     });
+  });
 
-    it('delegates handleDragging to TranslateMode', () => {
+  describe('handleStartDragging', () => {
+    it('delegates to TranslateMode with correct arguments', () => {
+      // Arrange
       const props = createMockProps();
       const event = {
-        picks: [],
-        mapCoords: [1, 1],
-        screenCoords: [100, 100],
+        ...createMockClickEvent(),
         pointerDownMapCoords: [0, 0],
         pointerDownScreenCoords: [0, 0],
-        sourceEvent: new MouseEvent('mousemove'),
         cancelPan: vi.fn(),
       };
+      // Access private property for testing delegation behavior
+      const spy = vi.spyOn(
+        (mode as { translateMode: { handleStartDragging: () => void } })
+          .translateMode,
+        'handleStartDragging',
+      );
 
-      // Should not throw
-      expect(() => {
-        mode.handleDragging(event as never, props);
-      }).not.toThrow();
+      // Act
+      mode.handleStartDragging(event, props);
+
+      // Assert
+      expect(spy).toHaveBeenCalledWith(event, props);
+      expect(spy).toHaveBeenCalledTimes(1);
     });
+  });
 
-    it('delegates handleStopDragging to TranslateMode', () => {
+  describe('handleDragging', () => {
+    it('delegates to TranslateMode with correct arguments', () => {
+      // Arrange
       const props = createMockProps();
       const event = {
-        picks: [],
-        mapCoords: [1, 1],
-        screenCoords: [100, 100],
+        ...createMockClickEvent(),
         pointerDownMapCoords: [0, 0],
         pointerDownScreenCoords: [0, 0],
-        sourceEvent: new MouseEvent('mouseup'),
         cancelPan: vi.fn(),
       };
+      // Access private property for testing delegation behavior
+      const spy = vi.spyOn(
+        (mode as { translateMode: { handleDragging: () => void } })
+          .translateMode,
+        'handleDragging',
+      );
 
-      // Should not throw
-      expect(() => {
-        mode.handleStopDragging(event as never, props);
-      }).not.toThrow();
+      // Act
+      mode.handleDragging(event, props);
+
+      // Assert
+      expect(spy).toHaveBeenCalledWith(event, props);
+      expect(spy).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('handleStopDragging', () => {
+    it('delegates to TranslateMode with correct arguments', () => {
+      // Arrange
+      const props = createMockProps();
+      const event = {
+        ...createMockClickEvent(),
+        pointerDownMapCoords: [0, 0],
+        pointerDownScreenCoords: [0, 0],
+        cancelPan: vi.fn(),
+      };
+      // Access private property for testing delegation behavior
+      const spy = vi.spyOn(
+        (mode as { translateMode: { handleStopDragging: () => void } })
+          .translateMode,
+        'handleStopDragging',
+      );
+
+      // Act
+      mode.handleStopDragging(event, props);
+
+      // Assert
+      expect(spy).toHaveBeenCalledWith(event, props);
+      expect(spy).toHaveBeenCalledTimes(1);
     });
   });
 
