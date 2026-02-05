@@ -237,7 +237,7 @@ useOn(EditShapeEvents.editing, (event) => {
 
 ### shapes:updated
 
-Emitted when a shape edit is saved:
+Emitted when a shape edit is saved - either via pressing Enter or manually via a button / save():
 
 ```tsx
 import { useOn } from '@accelint/bus/react';
@@ -262,8 +262,6 @@ useOn(EditShapeEvents.canceled, (event) => {
   console.log('Edit canceled for:', event.payload.shape.name);
 });
 ```
-
-**Note**: The `shapes:updated` event is also emitted when pressing the Enter key to save edits.
 
 ## Map Mode Integration
 
