@@ -244,6 +244,7 @@ export const BasicEditing: Story = {
               <li>Drag vertices to modify geometry</li>
               <li>Click and drag to move the shape</li>
               <li>Shift: hold to scale proportionally</li>
+              <li>Press Enter to save</li>
               <li>Press ESC to cancel</li>
             </ul>
           </div>
