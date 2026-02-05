@@ -19,7 +19,7 @@ import type { ErrorInfo, PropsWithChildren } from 'react';
 const logger = getLogger({
   enabled: process.env.NODE_ENV !== 'production',
   level: 'error',
-  prefix: '[Accordion]',
+  prefix: '[Drawer]',
   pretty: true,
 });
 
