@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { useGanttContext } from '../context';
 import { useGanttStore } from '../store';
 import {
   getTotalTimelineMs,
@@ -22,7 +23,6 @@ import type { UIEvent } from 'react';
 type SeekerProps = {
   startTimeMs: number;
   endTimeMs: number;
-  msPerPx: number;
 };
 
 const updateCurrentPositionMs =
@@ -31,7 +31,9 @@ const updateCurrentPositionMs =
       .getState()
       .setCurrentPositionMs(startTimeMs + getScrolledPixels(event) * msPerPx);
 
-export function Seeker({ startTimeMs, endTimeMs, msPerPx }: SeekerProps) {
+export function Seeker({ startTimeMs, endTimeMs }: SeekerProps) {
+  const { msPerPx } = useGanttContext();
+
   const width = getTotalTimelineWidth(
     getTotalTimelineMs(startTimeMs, endTimeMs),
     msPerPx,
