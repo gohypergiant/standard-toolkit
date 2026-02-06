@@ -15,12 +15,12 @@
 // Legacy comma-separated: rgb(255, 128, 64) or rgba(255, 128, 64, 0.5)
 // Supports integers and percentages for both RGB and alpha
 export const CSS_RGBA_LEGACY_REGEX =
-  /^rgba?\(\s*(\d+(?:\.\d+)?%?)\s*,\s*(\d+(?:\.\d+)?%?)\s*,\s*(\d+(?:\.\d+)?%?)\s*(?:,\s*(\d+(?:\.\d+)?%?)\s*)?\)$/;
+  /^rgba?\(\s*(\d+(?:\.\d+)?%?)\s*,\s*(\d+(?:\.\d+)?%?)\s*,\s*(\d+(?:\.\d+)?%?)\s*(?:,\s*(\d+(?:\.\d+)?%?)\s*)?\)$/i;
 
 // Modern space-separated: rgb(255 128 64) or rgb(255 128 64 / 0.5)
 // Supports integers and percentages for both RGB and alpha
 export const CSS_RGBA_MODERN_REGEX =
-  /^rgba?\(\s*(\d+(?:\.\d+)?%?)\s+(\d+(?:\.\d+)?%?)\s+(\d+(?:\.\d+)?%?)\s*(?:\/\s*(\d+(?:\.\d+)?%?)\s*)?\)$/;
+  /^rgba?\(\s*(\d+(?:\.\d+)?%?)\s+(\d+(?:\.\d+)?%?)\s+(\d+(?:\.\d+)?%?)\s*(?:\/\s*(\d+(?:\.\d+)?%?)\s*)?\)$/i;
 
 // Hex color regex - matches #RGB, #RGBA, #RRGGBB, #RRGGBBAA (with or without #)
 export const HEX_REGEX =
