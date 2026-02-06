@@ -32,6 +32,18 @@ export {
   isCssRgbaObject,
 } from './color';
 export type { Color, CssRgbaObject, CssRgbaTuple } from './color';
+export {
+  cssRgbaObjectToRgba255Tuple,
+  cssRgbaStringToRgba255Tuple,
+  cssRgbaTupleToRgba255Tuple,
+  rgba255TupleToCssRgbaObject,
+  rgba255TupleToCssRgbaString,
+  rgba255TupleToCssRgbaTuple,
+} from './css-rgba';
+export type { CssRgbaTuple } from './css-rgba';
+export { glslToRgba255Tuple, rgba255TupleToGlsl } from './glsl';
+export type { GlslRgbaTuple } from './glsl';
+export { hexToRgba255Tuple, rgba255TupleToHex } from './hex';
 export { toBoolean } from './to-boolean';
 export { zxyToBbox } from './zxy-to-bbox';
 export type { BoundingBoxTuple, ZxyTuple } from './zxy-to-bbox';

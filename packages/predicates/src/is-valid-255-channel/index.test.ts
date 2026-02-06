@@ -9,16 +9,3 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-
-/**
- * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
- */
-
-// biome-ignore-all assist/source/organizeImports: This comment is used to prevent the biome tool from altering the import statements in this file.
-
-export {
-  CSS_RGBA_LEGACY_REGEX,
-  CSS_RGBA_MODERN_REGEX,
-  HEX_REGEX,
-} from './color';
-export { DEFAULT_COORDINATE } from './coordinates';
