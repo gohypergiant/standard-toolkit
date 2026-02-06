@@ -20,7 +20,7 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   reactStrictMode: true,
   poweredByHeader: false,
-  reactCompiler: true,
+  reactCompiler: false,
 
   logging: {
     fetches: {
