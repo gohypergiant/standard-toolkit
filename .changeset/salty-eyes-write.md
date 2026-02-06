@@ -29,7 +29,41 @@ Split color conversion functionality into three dedicated submodule exports for 
   - `rgba255TupleToGlsl()` - Convert deck.gl (0-255) to GLSL format (0-1)
   - Type: `GlslRgbaTuple`
 
-All functions use explicit `Rgba255Tuple` naming to clarify the deck.gl format (all RGBA channels 0-255). The main package export re-exports all functions for convenience. The existing `/color` export remains available for backward compatibility.
+All functions use explicit `Rgba255Tuple` naming to clarify the deck.gl format (all RGBA channels 0-255). The main package export re-exports all functions for convenience.
+
+**BREAKING CHANGES:**
+
+Removed the `/color` module and old function names. Functions are now organized into dedicated submodules:
+
+**Migration Guide:**
+
+```typescript
+// Before
+import { hexToColor, colorToHex } from '@accelint/converters/color';
+
+// After - Option 1: Import from specific submodule
+import { hexToRgba255Tuple, rgba255TupleToHex } from '@accelint/converters/hex';
+
+// After - Option 2: Import from main package
+import { hexToRgba255Tuple, rgba255TupleToHex } from '@accelint/converters';
+```
+
+**Function name mappings:**
+- `hexToColor` → `hexToRgba255Tuple` (from `/hex`)
+- `colorToHex` → `rgba255TupleToHex` (from `/hex`)
+- `cssRgbaStringToColor` → `cssRgbaStringToRgba255Tuple` (from `/css-rgba`)
+- `colorToCssRgbaString` → `rgba255TupleToCssRgbaString` (from `/css-rgba`)
+- `cssRgbaObjectToColor` → `cssRgbaObjectToRgba255Tuple` (from `/css-rgba`)
+- `colorToCssRgbaObject` → `rgba255TupleToCssRgbaObject` (from `/css-rgba`)
+- `glslToColor` → `glslToRgba255Tuple` (from `/glsl`)
+- `colorToGlsl` → `rgba255TupleToGlsl` (from `/glsl`)
+
+**Type name changes:**
+- `Color` → `Rgba255Tuple` (exported from `@accelint/predicates/is-rgba-255-tuple`)
+
+**Type guards moved to predicates:**
+- `isColor` → `isRgba255Tuple` from `@accelint/predicates/is-rgba-255-tuple`
+- `isCssRgbaObject` → `isCssRgbaObject` from `@accelint/predicates/is-css-rgba-object`
 
 ### @accelint/predicates
 
