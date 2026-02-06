@@ -17,6 +17,15 @@ export {
   PARAMETERS,
 } from './base-map/constants';
 export { MapEvents, MapEventsNamespace } from './base-map/events';
+export {
+  CoffinCornerEvents,
+  CoffinCornersExtension,
+  clearSelection,
+  coffinCornerStore,
+  getHoveredEntityId,
+  getSelectedEntityId,
+  useCoffinCorner,
+} from './extensions/coffin-corner';
 export { createSavedViewport } from './saved-viewports';
 export {
   DASH_ARRAYS,
@@ -43,6 +52,16 @@ export type {
   MapHoverEvent,
   MapHoverPayload,
 } from './base-map/types';
+export type {
+  CoffinCornerDeselectedEvent,
+  CoffinCornerEvent,
+  CoffinCornerEventType,
+  CoffinCornerHoveredEvent,
+  CoffinCornerSelectedEvent,
+  CoffinCornersExtensionProps,
+  EntityId,
+  UseCoffinCornerReturn,
+} from './extensions/coffin-corner';
 export type { SavedViewportOptions } from './saved-viewports';
 export type {
   CircleProperties,
