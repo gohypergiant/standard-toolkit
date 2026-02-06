@@ -12,6 +12,7 @@
 
 import { extend } from '@deckgl-fiber-renderer/dom';
 import { SymbolLayer, type SymbolLayerProps } from './index';
+import type { CoffinCornersExtensionProps } from '../extensions';
 
 extend({ SymbolLayer });
 
@@ -20,7 +21,7 @@ declare global {
     // biome-ignore lint/style/useNamingConvention: Built-in React namespace.
     namespace JSX {
       interface IntrinsicElements {
-        symbolLayer: SymbolLayerProps;
+        symbolLayer: CoffinCornersExtensionProps<SymbolLayerProps>;
       }
     }
   }
