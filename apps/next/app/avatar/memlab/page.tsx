@@ -10,8 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
+import { Suspense } from 'react';
 import { AvatarExample } from '~/features/avatar/memlab';
 
 export default function Page() {
-  return <AvatarExample />;
+  return (
+    <Suspense>
+      <AvatarExample />
+    </Suspense>
+  );
 }

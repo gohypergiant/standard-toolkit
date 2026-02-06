@@ -28,7 +28,7 @@ import {
   DrawerTrigger,
   DrawerView,
 } from '@accelint/design-toolkit';
-import { Suspense, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useStressTest } from '~/memlab/hooks/use-stress-test';
 
 /**
@@ -40,7 +40,7 @@ import { useStressTest } from '~/memlab/hooks/use-stress-test';
  * 2. User Flow - Navigation between multiple views
  * 3. Stress Test - Rapid open/close cycles
  */
-function DrawerExampleInternal() {
+export function DrawerExample() {
   const ids = useMemo(
     () => ({
       drawer: uuid(),
@@ -173,13 +173,5 @@ function DrawerExampleInternal() {
         )}
       </DrawerLayout>
     </div>
-  );
-}
-
-export function DrawerExample() {
-  return (
-    <Suspense>
-      <DrawerExampleInternal />
-    </Suspense>
   );
 }
