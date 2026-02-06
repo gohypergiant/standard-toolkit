@@ -63,7 +63,7 @@ The Core team has chosen not to implement the RAC TW plugin directly. Instead we
 
 Because we have a custom implementation, there may be additional variants available than what is documented in RAC. Check out [variants.css](../variants/variants.css) to see the custom variants defined and the selectors associated with each.
 
-Any reusable component that is being developed without RAC underpinning or has additional internal state which would be useful to expose to styling should implement data attributes and a custom variant. However, consider how generic the implementation is before proceeding. If the state is unique to the component being developed, using TV variants instead is likely the way to go.
+Any reusable component that is being developed without RAC underpinning or has additional internal state which would be useful to expose to styling should implement data attributes and a custom variant. However, consider how generic the implementation is before proceeding. If the state is unique to the component being developed, using dynamically rendered classNames with `clsx` is likely the way to go.
 
 ```jsx
 function MyComponent() {
@@ -116,20 +116,9 @@ Do not use arbitrary properties unless you're 100% certain (and double checked) 
 <div className="bg-interactive-disabled" />
 ```
 
-Do not use arbitrary variants, instead use TV and / or RAC state classes.
+Do not use arbitrary variants, instead use RAC state classes or conditional class rendering with `clsx`.
 
 ```jsx
-const styles = tv({
-  variants: {
-    isSelected: {
-      true: 'foo'
-    }
-    size: {
-      large: 'bar'
-    }
-  }
-});
-
 function MyComponent({ size }: Props) {
   // Bad
   return (
@@ -143,12 +132,12 @@ function MyComponent({ size }: Props) {
   return <ToggleButton className="selected:foo" />
 
   // Good, if renderProps from RAC are available (props and internal state can be used too)
-  return <ToggleButton className={({ isSelected }) => styles({ size, isSelected })} />
+  return <ToggleButton className={({ isSelected }) => clsx(styles[size], isSelected && styles.selected)} />
 
   // Good, if renderProps from RAC are not available
   const [isSelected, setIsSelected] = useState(false);
 
-  return <button className={styles({ size, isSelected })} />
+  return <button className={clsx(styles[size], isSelected && styles.selected)} />
 }
 ```
 
