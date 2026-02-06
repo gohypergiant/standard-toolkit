@@ -105,6 +105,18 @@ describe('css-rgba', () => {
       ])('should throw for invalid input: %s', (css) => {
         expect(() => cssRgbaStringToRgba255Tuple(css)).toThrow();
       });
+
+      it('should throw for percentage RGB values > 100%', () => {
+        expect(() =>
+          cssRgbaStringToRgba255Tuple('rgb(101%, 50%, 25%)'),
+        ).toThrow(/RGB percentage must be between 0-100%/);
+      });
+
+      it('should throw for percentage alpha > 100%', () => {
+        expect(() =>
+          cssRgbaStringToRgba255Tuple('rgba(255, 128, 64, 150%)'),
+        ).toThrow(/Alpha percentage must be between 0-100%/);
+      });
     });
   });
 
