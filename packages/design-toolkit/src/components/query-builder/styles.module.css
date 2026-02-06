@@ -83,5 +83,6 @@
 
   .textInput {
     @apply min-h-xl;
+    max-width: 200px;
   }
 }
