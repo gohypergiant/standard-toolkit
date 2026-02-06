@@ -46,24 +46,34 @@ import type {
  *
  * @example
  * ```tsx
- * const ids = { drawer: uuid(), a: uuid() };
+ * import { useId } from 'react';
  *
- * <DrawerLayout push="left">
- *   <DrawerLayoutMain>
- *     <DrawerTrigger for={`open:${ids.a}`}>
- *       <Button variant="icon">Open</Button>
- *     </DrawerTrigger>
- *   </DrawerLayoutMain>
+ * function MyDrawer() {
+ *   const baseId = useId();
+ *   const ids = {
+ *     drawer: `${baseId}-drawer`,
+ *     a: `${baseId}-a`,
+ *   };
  *
- *   <Drawer id={ids.drawer} defaultView={ids.a}>
- *     <DrawerPanel>
- *       <DrawerView id={ids.a}>
- *         <DrawerHeader title="Title A" />
- *         <DrawerContent>Content for View A</DrawerContent>
- *       </DrawerView>
- *     </DrawerPanel>
- *   </Drawer>
- * </DrawerLayout>
+ *   return (
+ *     <DrawerLayout push="left">
+ *       <DrawerLayoutMain>
+ *         <DrawerTrigger for={`open:${ids.a}`}>
+ *           <Button variant="icon">Open</Button>
+ *         </DrawerTrigger>
+ *       </DrawerLayoutMain>
+ *
+ *       <Drawer id={ids.drawer} defaultView={ids.a}>
+ *         <DrawerPanel>
+ *           <DrawerView id={ids.a}>
+ *             <DrawerHeader title="Title A" />
+ *             <DrawerContent>Content for View A</DrawerContent>
+ *           </DrawerView>
+ *         </DrawerPanel>
+ *       </Drawer>
+ *     </DrawerLayout>
+ *   );
+ * }
  * ```
  */
 export function Drawer({

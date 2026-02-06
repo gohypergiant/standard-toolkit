@@ -13,9 +13,6 @@
 import { BentoGroup } from '~/components/bento';
 import { AvatarExample } from '~/features/avatar';
 
-// biome-ignore lint/style/useNamingConvention: nextjs convention
-export const experimental_ppr = true;
-
 export default function Page() {
   return (
     <BentoGroup>

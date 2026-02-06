@@ -10,13 +10,21 @@
  * governing permissions and limitations under the License.
  */
 
-import { BentoGroup } from '~/components/bento';
-import { AccordionGroupExample } from '~/features/accordion-group';
+'use client';
+import 'client-only';
+import { BaseMap } from '@accelint/map-toolkit/deckgl';
+import { DEFAULT_VIEW_STATE } from '@accelint/map-toolkit/shared/constants';
+import { useId } from 'react';
+import type { UniqueId } from '@accelint/core';
 
-export default function Page() {
+export function MapClient() {
+  const mapId = useId() as UniqueId;
+
   return (
-    <BentoGroup>
-      <AccordionGroupExample />
-    </BentoGroup>
+    <BaseMap
+      className='fixed top-xxl left-0 right-0 bottom-0'
+      id={mapId}
+      initialViewState={DEFAULT_VIEW_STATE}
+    />
   );
 }

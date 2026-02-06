@@ -25,25 +25,60 @@ Components:
 
 ### Using the Title Prop
 ```tsx
-const ids = { drawer: uuid(), a: uuid(), b: uuid() };
+import { useId } from 'react';
 
-<Drawer id={ids.drawer} defaultView={ids.a}>
-  <DrawerMenu>
-    <DrawerMenuItem for={ids.a}>View A</DrawerMenuItem>
-    <DrawerMenuItem for={ids.b}>View B</DrawerMenuItem>
-  </DrawerMenu>
-  <DrawerPanel>
-    <DrawerView id={ids.a}>
-      <DrawerHeader title="Title A" />
-      <DrawerContent>Content for View A</DrawerContent>
-      <DrawerFooter>Footer Actions</DrawerFooter>
-    </DrawerView>
-    <DrawerView id={ids.b}>
-      <DrawerHeader title="Title B" />
-      <DrawerContent>Content for View B</DrawerContent>
-    </DrawerView>
-  </DrawerPanel>
-</Drawer>
+function MyDrawer() {
+  const baseId = useId();
+  const ids = {
+    drawer: `${baseId}-drawer`,
+    a: `${baseId}-a`,
+    b: `${baseId}-b`,
+  };
+
+  return (
+    <Drawer id={ids.drawer} defaultView={ids.a}>
+      <DrawerMenu>
+        <DrawerMenuItem for={ids.a}>View A</DrawerMenuItem>
+        <DrawerMenuItem for={ids.b}>View B</DrawerMenuItem>
+      </DrawerMenu>
+      <DrawerPanel>
+        <DrawerView id={ids.a}>
+          <DrawerHeader title="Title A" />
+          <DrawerContent>Content for View A</DrawerContent>
+          <DrawerFooter>Footer Actions</DrawerFooter>
+        </DrawerView>
+        <DrawerView id={ids.b}>
+          <DrawerHeader title="Title B" />
+          <DrawerContent>Content for View B</DrawerContent>
+        </DrawerView>
+      </DrawerPanel>
+    </Drawer>
+  );
+}
+```
+
+**⚠️ Important:** When using Drawer in Next.js or SSR environments, always use React's `useId()` hook instead of `uuid()` from `@accelint/core`. Using `uuid()` inside components (even with `useMemo` or `useState`) will cause hydration mismatches because different IDs are generated on the server vs client.
+
+```tsx
+// ❌ NEVER - Causes hydration mismatch in SSR
+function MyDrawer() {
+  const ids = useMemo(() => ({ drawer: uuid(), a: uuid() }), []); // Different IDs on server vs client!
+  return <Drawer id={ids.drawer}>...</Drawer>;
+}
+
+// ✅ CORRECT - useId() is stable across server/client
+function MyDrawer() {
+  const baseId = useId();
+  const ids = { drawer: `${baseId}-drawer`, a: `${baseId}-a` };
+  return <Drawer id={ids.drawer}>...</Drawer>;
+}
+
+// ✅ ALSO CORRECT - Module-level constant (if ID should be shared across instances)
+import { uuid } from '@accelint/core';
+const DRAWER_ID = uuid();
+function MyDrawer() {
+  return <Drawer id={DRAWER_ID}>...</Drawer>;
+}
 ```
 
 ### Custom Header Layout

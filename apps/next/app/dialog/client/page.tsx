@@ -12,9 +12,6 @@
 
 import { DialogClient } from '~/features/dialog/client';
 
-// biome-ignore lint/style/useNamingConvention: nextjs convention
-export const experimental_ppr = true;
-
 export default function Page() {
   return <DialogClient />;
 }

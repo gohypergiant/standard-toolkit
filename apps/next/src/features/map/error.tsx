@@ -10,13 +10,31 @@
  * governing permissions and limitations under the License.
  */
 
-import { BentoGroup } from '~/components/bento';
-import { AccordionGroupExample } from '~/features/accordion-group';
+'use client';
+import type { ErrorInfo, PropsWithChildren } from 'react';
+import 'client-only';
+import { ErrorBoundary } from 'react-error-boundary';
+import { createLogger } from '~/utils/logger';
 
-export default function Page() {
+const mapLogger = createLogger('[Map]');
+
+function onError(err: Error, info: ErrorInfo) {
+  mapLogger
+    .withContext({ componentStack: info.componentStack })
+    .withError(err)
+    .error('Error boundary caught error');
+}
+
+function Fallback() {
+  return <div>Error</div>;
+}
+
+export function ErrorComponent(props: PropsWithChildren) {
+  const { children } = props;
+
   return (
-    <BentoGroup>
-      <AccordionGroupExample />
-    </BentoGroup>
+    <ErrorBoundary fallback={<Fallback />} onError={onError}>
+      {children}
+    </ErrorBoundary>
   );
 }

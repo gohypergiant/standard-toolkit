@@ -10,13 +10,18 @@
  * governing permissions and limitations under the License.
  */
 
-import { BentoGroup } from '~/components/bento';
-import { AccordionGroupExample } from '~/features/accordion-group';
+'use client';
+import 'client-only';
+import { MapClient } from './client';
+import { ErrorComponent } from './error';
+import { LoadingComponent } from './loading';
 
-export default function Page() {
+export function MapExample() {
   return (
-    <BentoGroup>
-      <AccordionGroupExample />
-    </BentoGroup>
+    <ErrorComponent>
+      <LoadingComponent>
+        <MapClient />
+      </LoadingComponent>
+    </ErrorComponent>
   );
 }
