@@ -14,11 +14,10 @@ import fs, { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
-  cssRgbaStringToColor,
-  hexToColor,
-  isCssRgbaString,
-  isHexColor,
-} from '@accelint/converters/color';
+  cssRgbaStringToRgba255Tuple,
+  hexToRgba255Tuple,
+} from '@accelint/converters';
+import { isCssRgbaString, isHexColor } from '@accelint/predicates';
 import { argv, chalk, spinner } from 'zx';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -54,10 +53,10 @@ async function writeFile(filename, content) {
 //#region Conversion utils
 function convert(raw) {
   if (isHexColor(raw)) {
-    return hexToColor(raw);
+    return hexToRgba255Tuple(raw);
   }
   if (isCssRgbaString(raw)) {
-    return cssRgbaStringToColor(raw);
+    return cssRgbaStringToRgba255Tuple(raw);
   }
   return raw;
 }

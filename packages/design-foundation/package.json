@@ -5,7 +5,9 @@
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "dependencies": {
+    "@accelint/constants": "workspace:*",
     "@accelint/converters": "workspace:*",
+    "@accelint/predicates": "workspace:*",
     "string-hash": "^1.1.3"
   },
   "devDependencies": {
