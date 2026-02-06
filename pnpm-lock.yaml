@@ -711,6 +711,10 @@ importers:
       zod:
         specifier: ^4.1.12
         version: 4.2.1
+    optionalDependencies:
+      zustand:
+        specifier: ^5.0.3
+        version: 5.0.9(@types/react@19.2.7)(immer@11.0.1)(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))
 
   packages/formatters:
     devDependencies:
