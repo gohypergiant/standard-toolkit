@@ -1,5 +1,5 @@
 ---
-'@accelint/converters': minor
+'@accelint/converters': major
 '@accelint/predicates': minor
 '@accelint/constants': minor
 ---

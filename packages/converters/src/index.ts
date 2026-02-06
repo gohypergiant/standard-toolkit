@@ -18,21 +18,6 @@
 
 export { booleanToNumber } from './boolean-to-number';
 export {
-  colorToCssRgbaObject,
-  colorToCssRgbaString,
-  colorToCssRgbaTuple,
-  colorToGlsl,
-  colorToHex,
-  cssRgbaObjectToColor,
-  cssRgbaStringToColor,
-  cssRgbaTupleToColor,
-  glslToColor,
-  hexToColor,
-  isColor,
-  isCssRgbaObject,
-} from './color';
-export type { Color, CssRgbaObject, CssRgbaTuple } from './color';
-export {
   cssRgbaObjectToRgba255Tuple,
   cssRgbaStringToRgba255Tuple,
   cssRgbaTupleToRgba255Tuple,
