@@ -17,7 +17,7 @@ import { BaseMap } from '../deckgl/base-map';
 import type { Decorator } from '@storybook/react-vite';
 
 // Module-level constant - stable across all Storybook renders
-const STORYBOOK_MAP_ID = uuid();
+export const STORYBOOK_MAP_ID = uuid();
 
 /**
  * Storybook decorator that wraps stories with a BaseMap component.
