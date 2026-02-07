@@ -1,5 +1,11 @@
 # @accelint/map-toolkit
 
+## 1.3.1
+
+### Patch Changes
+
+- 6cb6e17: Enable antialiasing for maplibre to smooth out lines
+
 ## 1.3.0
 
 ### Minor Changes
