@@ -6,36 +6,43 @@ This directory contains the design tokens system that generates both CSS variabl
 
 The design tokens system ensures consistency between CSS and JavaScript by:
 
-1. **Single Source of Truth**: All design tokens are defined in `tokens.json`
+1. **Single Source of Truth**: All design tokens are defined in `primitive.json` with semantic mappings in `semantic.json`
 2. **Automatic Generation**: CSS variables and TS constants are generated from the same source
-3. **Type Safety**: TypeScript types are generated for all tokens
+3. **Type Safety**: TypeScript types are defined for all tokens
 4. **Build Integration**: Token generation is part of the build process
 
 ## File Structure
 
-```
-scripts
-├── generate-tokens.mjs # Token generator logic
+```text
+scripts/
+└── generate-tokens.mjs   # Token generator logic
 
 src/tokens/
-├── tokens.json   # Single source of truth for all tokens
-├── tokens.d.ts   # TypeScript declarations
-│── tokens.css    # CSS variables
-│── index.ts      # TypeScript constants and types
+├── primitive.json   # Raw design tokens (colors, spacing, etc.)
+├── semantic.json    # Semantic mappings to primitives
+├── types.ts         # TypeScript type definitions
+├── tokens.css       # Generated CSS variables
+├── themes.css       # Generated Tailwind theme blocks
+└── index.ts         # Generated TypeScript constants (deck.gl RGBA format)
 ```
 
 ## Usage
 
 ### 1. Defining Tokens
 
-Edit `tokens.json` to define your design tokens:
+Edit `primitive.json` to define your design tokens:
 
 ```json
 {
-  "colors": {
+  "primitive": {
     "neutral": {
-      "01": "#ffffff",
-      "02": "#e6e6e6"
+      "50": "#ffffff",
+      "100": "#eff1f2"
+    },
+    "alpha": {
+      "black": {
+        "100": "rgba(0, 0, 0, 0.08)"
+      }
     }
   },
   "spacing": {
@@ -52,13 +59,14 @@ Edit `semantic.json` to create meaningful semantic mappings:
 
 ```json
 {
-  "colors": {
-    "surface": {
-      "default": "---colors-neutral-01"
+  "dark": {
+    "bg": {
+      "surface": {
+        "default": "--primitive-neutral-900"
+      }
     }
   }
 }
-
 ```
 
 ### 3. Generating Tokens
@@ -70,65 +78,55 @@ pnpm gen:tokens
 ```
 
 This will create:
-- `src/tokens/tokens.css` - CSS variables
-- `src/tokens/index.ts`  - TypeScript constants and types
-- `src/tokens/themes.css` - Tailwind theme blocks which map the raw color tokens to their semantic naming convention 
+
+- `src/tokens/tokens.css` - CSS variables (hex colors)
+- `src/tokens/index.ts` - TypeScript constants (deck.gl RGBA format)
+- `src/tokens/themes.css` - Tailwind theme blocks with semantic naming
 
 ### 4. Using Tokens in CSS
 
 Import the generated CSS in your stylesheets:
 
 ```css
-@import './tokens/generated/tokens.css';
+@import './tokens/tokens.css';
 
 .my-component {
-  background-color: var(--colors-neutral-01);
+  background-color: var(--primitive-neutral-50);
   padding: var(--spacing-l);
 }
 ```
 
-### 4. Using Tokens in JavaScript/TypeScript
+### 5. Using Tokens in JavaScript/TypeScript
 
 Import the generated constants:
 
 ```typescript
-import { 
-  colorSurfaceDefault, 
-  colorInteractiveHover, 
-  spacingL 
- } from './tokens/generated/tokens';
+import { designTokens } from '@accelint/design-foundation/tokens';
 
-// colorSurfaceDefault is a tuple: [11, 11, 11, 1]
-const styles = {
-  backgroundColor: `rgba(${colorSurfaceDefault.join(', ')})`,
-  padding: spacingL // number, e.g. 16
-};
+// Color tokens are deck.gl RGBA format: [R, G, B, A] all 0-255
+const surfaceColor = designTokens.dark.bg.surface.default;
+// e.g., [21, 21, 23, 255]
 ```
 
-### 5. Using Tokens in Components
+### 6. Using Tokens with Deck.gl
+
+The TypeScript token format is optimized for deck.gl layers:
 
 ```tsx
 import DeckGL from '@deck.gl/react';
 import { ScatterplotLayer } from '@deck.gl/layers';
-import { 
-  colorHighlight, 
-  colorSurfaceDefault, 
-  spacingL 
- } from './tokens/generated/tokens';
+import { designTokens } from '@accelint/design-foundation/tokens';
 
-const data = [
-  { position: [-122.45, 37.78], size: 100 },
-  { position: [-122.46, 37.76], size: 200 }
-];
+const { dark } = designTokens;
 
 const layer = new ScatterplotLayer({
   id: 'scatter',
   data,
   getPosition: d => d.position,
   getRadius: d => d.size,
-  getFillColor: () => colorHighlight,
-  getLineColor: () => colorSurfaceDefault,   
-  radiusMinPixels: spacingL, 
+  // Colors are already in deck.gl format [R, G, B, A] 0-255
+  getFillColor: dark.bg.accent.primary.base,
+  getLineColor: dark.outline.neutral.bold,
   stroked: true,
   lineWidthMinPixels: 2
 });

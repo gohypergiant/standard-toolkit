@@ -618,3 +618,69 @@ export function isCssRgbaObject(value: unknown): value is CssRgbaObject {
     obj.a <= 1
   );
 }
+
+/**
+ * Check if a value is a valid hex color string.
+ *
+ * @param value - The value to check.
+ * @returns true if the value is a valid hex color string, false otherwise.
+ *
+ * @remarks
+ * pure function
+ *
+ * Supports: #RGB, #RGBA, #RRGGBB, #RRGGBBAA (hash optional)
+ *
+ * @example
+ * ```ts
+ * import { isHexColor } from '@accelint/converters/color';
+ *
+ * console.log(isHexColor('#FF8040'));
+ * // true
+ *
+ * console.log(isHexColor('#F84'));
+ * // true
+ *
+ * console.log(isHexColor('rgb(255, 128, 64)'));
+ * // false
+ * ```
+ */
+export function isHexColor(value: unknown): value is string {
+  return typeof value === 'string' && HEX_REGEX.test(value.trim());
+}
+
+/**
+ * Check if a value is a valid CSS rgba/rgb string.
+ *
+ * @param value - The value to check.
+ * @returns true if the value is a valid CSS rgba string, false otherwise.
+ *
+ * @remarks
+ * pure function
+ *
+ * Supports both legacy and modern CSS Color Module Level 4 syntax:
+ * - Legacy: "rgb(255, 128, 64)", "rgba(255, 128, 64, 0.5)"
+ * - Modern: "rgb(255 128 64)", "rgb(255 128 64 / 0.5)"
+ *
+ * @example
+ * ```ts
+ * import { isCssRgbaString } from '@accelint/converters/color';
+ *
+ * console.log(isCssRgbaString('rgba(255, 128, 64, 0.5)'));
+ * // true
+ *
+ * console.log(isCssRgbaString('rgb(255 128 64 / 50%)'));
+ * // true
+ *
+ * console.log(isCssRgbaString('#FF8040'));
+ * // false
+ * ```
+ */
+export function isCssRgbaString(value: unknown): value is string {
+  if (typeof value !== 'string') {
+    return false;
+  }
+  const trimmed = value.trim();
+  return (
+    CSS_RGBA_LEGACY_REGEX.test(trimmed) || CSS_RGBA_MODERN_REGEX.test(trimmed)
+  );
+}

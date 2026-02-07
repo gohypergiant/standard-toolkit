@@ -30,6 +30,8 @@ export {
   hexToColor,
   isColor,
   isCssRgbaObject,
+  isCssRgbaString,
+  isHexColor,
 } from './color';
 export type { Color, CssRgbaObject, CssRgbaTuple } from './color';
 export { toBoolean } from './to-boolean';
