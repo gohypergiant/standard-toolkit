@@ -15,11 +15,31 @@ import { systemDegreesDecimalMinutes } from './latlon/degrees-decimal-minutes/sy
 import { systemDegreesMinutesSeconds } from './latlon/degrees-minutes-seconds/system';
 import {
   type Axes,
+  type CoordinateInternalValue,
   type Errors,
   FORMATS_DEFAULT,
   type Format,
+  isCoordinateObject,
+  isCoordinateTuple,
+  normalizeObjectToLatLon,
   SYMBOLS,
+  tupleToLatLon,
+  validateNumericCoordinate,
+  type CoordinateInput,
 } from './latlon/internal';
+
+export {
+  isFiniteNumber,
+  LIMITS,
+  validateNumericCoordinate,
+  validateSignedRange,
+} from './latlon/internal';
+export type {
+  CoordinateInput,
+  CoordinateObject,
+  CoordinateTuple,
+} from './latlon/internal';
+
 import {
   type CoordinateCache,
   createCache,
@@ -44,9 +64,6 @@ type Coordinate = {
   raw: CoordinateInternalValue;
   valid: boolean;
 };
-
-// biome-ignore lint/style/useNamingConvention: consistency with Axes type
-type CoordinateInternalValue = { LAT: number; LON: number };
 
 /**
  * Output a string value of a coordinate using an available system. The
@@ -159,7 +176,7 @@ export function createCoordinate(
   initSystem: CoordinateSystem = coordinateSystems.dd,
   initFormat: Format = FORMATS_DEFAULT,
 ) {
-  return (input: string) => {
+  function parseStringInput(input: string): Coordinate {
     let tokens: Tokens;
     let errors: Errors;
 
@@ -233,5 +250,82 @@ export function createCoordinate(
     }
 
     return freezeCoordinate([] as Coordinate['errors'], to, raw, true);
+  }
+
+  function parseNumericInput(lat: number, lon: number): Coordinate {
+    const errors = validateNumericCoordinate(lat, lon);
+
+    if (errors.length) {
+      return freezeCoordinate(
+        errors,
+        () => '',
+        {} as CoordinateInternalValue,
+        false,
+      );
+    }
+
+    const raw: CoordinateInternalValue = { LAT: lat, LON: lon };
+    const cachedValues = {} as OutputCache;
+
+    function to(
+      system: CoordinateSystem = initSystem,
+      format: Format = initFormat,
+    ) {
+      const key = system.name as keyof typeof coordinateSystems;
+
+      if (!cachedValues[key]?.[format]) {
+        cachedValues[key] = {
+          ...cachedValues[key],
+          [format]: system.toFormat(
+            format,
+            ([format.slice(0, 3), format.slice(3)] as Axes[]).map(
+              (k) => raw[k],
+            ) as [number, number],
+          ),
+        };
+      }
+
+      return cachedValues[key][format];
+    }
+
+    return freezeCoordinate([] as Coordinate['errors'], to, raw, true);
+  }
+
+  return (input: CoordinateInput): Coordinate => {
+    if (typeof input === 'string') {
+      return parseStringInput(input);
+    }
+
+    if (isCoordinateTuple(input)) {
+      const { lat, lon } = tupleToLatLon(initFormat, input);
+      return parseNumericInput(lat, lon);
+    }
+
+    if (isCoordinateObject(input)) {
+      const result = normalizeObjectToLatLon(input);
+
+      if (result === null) {
+        return freezeCoordinate(
+          [
+            '[ERROR] Invalid coordinate object; object must contain valid latitude and longitude properties.',
+          ],
+          () => '',
+          {} as CoordinateInternalValue,
+          false,
+        );
+      }
+
+      const { lat, lon } = result;
+      return parseNumericInput(lat, lon);
+    }
+
+    return freezeCoordinate(
+      [
+        '[ERROR] Invalid coordinate input; expected a string, [lat, lon] tuple, or { lat, lon } object.',
+      ],
+      () => '',
+      {} as CoordinateInternalValue,
+      false,
+    );
   };
 }

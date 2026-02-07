@@ -265,3 +265,306 @@ describe('raw coordinate parsing', () => {
     });
   });
 });
+
+describe('createCoordinate', () => {
+  describe('default parameters', () => {
+    it('should use DD system and LATLON format when no args provided', () => {
+      const create = createCoordinate();
+      const coord = create('45.5 N / 90.5 W');
+      expect(coord.valid).toBe(true);
+      expect(coord.dd()).toBe('45.5 N / 90.5 W');
+    });
+  });
+
+  describe('raw property', () => {
+    it('should expose raw LAT/LON values in decimal degrees', () => {
+      const create = createCoordinate(coordinateSystems.dd, 'LATLON');
+      const coord = create('45.5 N / 90.5 W');
+      expect(coord.raw).toEqual({ LAT: 45.5, LON: -90.5 });
+    });
+
+    it('should have correct raw values regardless of input format', () => {
+      const create = createCoordinate(coordinateSystems.dd, 'LONLAT');
+      const coord = create('90.5 W / 45.5 N');
+      expect(coord.raw).toEqual({ LAT: 45.5, LON: -90.5 });
+    });
+
+    it('should be empty object for invalid coordinate', () => {
+      const create = createCoordinate();
+      const coord = create('invalid');
+      expect(coord.raw).toEqual({});
+    });
+  });
+
+  describe('utm formatter', () => {
+    it('should format valid coordinate as UTM', () => {
+      const create = createCoordinate(coordinateSystems.dd, 'LATLON');
+      const coord = create('51.5074 N / 0.1278 W');
+      expect(coord.utm()).toBe('30N 699316 5710164');
+    });
+  });
+
+  describe('utm system as input', () => {
+    const create = createCoordinate(coordinateSystems.utm, 'LATLON');
+
+    it('should parse UTM input and convert to other formats', () => {
+      const coord = create('30 N 585358 5669660');
+      expect(coord.valid).toBe(true);
+      expect(coord.dd()).toBe('51.17199279600467 N / 1.7790080009934 W');
+    });
+  });
+
+  describe('edge cases - boundary values', () => {
+    const create = createCoordinate(coordinateSystems.dd, 'LATLON');
+
+    it('should accept exact latitude boundaries', () => {
+      expect(create('90 N / 0 E').valid).toBe(true);
+      expect(create('90 S / 0 E').valid).toBe(true);
+    });
+
+    it('should accept exact longitude boundaries', () => {
+      expect(create('0 N / 180 E').valid).toBe(true);
+      expect(create('0 N / 180 W').valid).toBe(true);
+    });
+  });
+});
+
+describe('createCoordinate with non-string inputs', () => {
+  const create = createCoordinate(coordinateSystems.dd, 'LATLON');
+  const createLonLat = createCoordinate(coordinateSystems.dd, 'LONLAT');
+
+  describe('tuple input', () => {
+    it('should accept [lat, lon] tuple with LATLON format', () => {
+      const coord = create([40.7128, -74.006]);
+      expect(coord.valid).toBe(true);
+      expect(coord.raw).toEqual({ LAT: 40.7128, LON: -74.006 });
+    });
+
+    it('should accept [lon, lat] tuple with LONLAT format', () => {
+      const coord = createLonLat([-74.006, 40.7128]);
+      expect(coord.valid).toBe(true);
+      expect(coord.raw).toEqual({ LAT: 40.7128, LON: -74.006 });
+    });
+
+    it('should reject tuple with latitude above 90', () => {
+      const coord = create([91, 0]);
+      expect(coord.valid).toBe(false);
+      expect(coord.errors).toContain(
+        '[ERROR] Latitude value (91) is outside valid range (-90 to 90).',
+      );
+    });
+
+    it('should reject tuple with latitude below -90', () => {
+      const coord = create([-91, 0]);
+      expect(coord.valid).toBe(false);
+      expect(coord.errors).toContain(
+        '[ERROR] Latitude value (-91) is outside valid range (-90 to 90).',
+      );
+    });
+
+    it('should reject tuple with longitude above 180', () => {
+      const coord = create([0, 181]);
+      expect(coord.valid).toBe(false);
+      expect(coord.errors).toContain(
+        '[ERROR] Longitude value (181) is outside valid range (-180 to 180).',
+      );
+    });
+
+    it('should reject tuple with longitude below -180', () => {
+      const coord = create([0, -181]);
+      expect(coord.valid).toBe(false);
+      expect(coord.errors).toContain(
+        '[ERROR] Longitude value (-181) is outside valid range (-180 to 180).',
+      );
+    });
+
+    it('should accept exact negative boundaries', () => {
+      const coord = create([-90, -180]);
+      expect(coord.valid).toBe(true);
+      expect(coord.raw).toEqual({ LAT: -90, LON: -180 });
+    });
+
+    it('should reject tuple with NaN latitude', () => {
+      const coord = create([Number.NaN, 0]);
+      expect(coord.valid).toBe(false);
+      expect(coord.errors).toContain(
+        '[ERROR] Invalid latitude value (NaN); expected a finite number.',
+      );
+    });
+
+    it('should reject tuple with NaN longitude', () => {
+      const coord = create([0, Number.NaN]);
+      expect(coord.valid).toBe(false);
+      expect(coord.errors).toContain(
+        '[ERROR] Invalid longitude value (NaN); expected a finite number.',
+      );
+    });
+
+    it('should reject tuple with Infinity latitude', () => {
+      const coord = create([Number.POSITIVE_INFINITY, 0]);
+      expect(coord.valid).toBe(false);
+      expect(coord.errors).toContain(
+        '[ERROR] Invalid latitude value (Infinity); expected a finite number.',
+      );
+    });
+
+    it('should reject tuple with Infinity longitude', () => {
+      const coord = create([0, Number.POSITIVE_INFINITY]);
+      expect(coord.valid).toBe(false);
+      expect(coord.errors).toContain(
+        '[ERROR] Invalid longitude value (Infinity); expected a finite number.',
+      );
+    });
+
+    it('should reject tuple with negative Infinity', () => {
+      const coord = create([
+        Number.NEGATIVE_INFINITY,
+        Number.NEGATIVE_INFINITY,
+      ]);
+      expect(coord.valid).toBe(false);
+      expect(coord.errors).toContain(
+        '[ERROR] Invalid latitude value (-Infinity); expected a finite number.',
+      );
+      expect(coord.errors).toContain(
+        '[ERROR] Invalid longitude value (-Infinity); expected a finite number.',
+      );
+    });
+
+    it('should accept readonly tuple', () => {
+      const tuple = [40.7128, -74.006] as const;
+      const coord = create(tuple);
+      expect(coord.valid).toBe(true);
+    });
+  });
+
+  describe('object input (case-insensitive keys)', () => {
+    it('should accept { lat, lon } object', () => {
+      const coord = create({ lat: 40.7128, lon: -74.006 });
+      expect(coord.valid).toBe(true);
+      expect(coord.raw).toEqual({ LAT: 40.7128, LON: -74.006 });
+    });
+
+    it('should accept { LAT, LON } object', () => {
+      const coord = create({ LAT: 40.7128, LON: -74.006 });
+      expect(coord.valid).toBe(true);
+    });
+
+    it('should accept { Lat, Lon } object (mixed case)', () => {
+      const coord = create({ Lat: 40.7128, Lon: -74.006 });
+      expect(coord.valid).toBe(true);
+    });
+
+    it('should accept { latitude, longitude } object', () => {
+      const coord = create({ latitude: 40.7128, longitude: -74.006 });
+      expect(coord.valid).toBe(true);
+    });
+
+    it('should accept { LATITUDE, LONGITUDE } object', () => {
+      const coord = create({ LATITUDE: 40.7128, LONGITUDE: -74.006 });
+      expect(coord.valid).toBe(true);
+    });
+
+    it('should reject object with unrecognized keys', () => {
+      // biome-ignore lint/suspicious/noExplicitAny: testing invalid input
+      const coord = create({ x: 40, y: -74 } as any);
+      expect(coord.valid).toBe(false);
+    });
+
+    it('should reject object with latitude out of range', () => {
+      const coord = create({ lat: 100, lon: 0 });
+      expect(coord.valid).toBe(false);
+      expect(coord.errors).toContain(
+        '[ERROR] Latitude value (100) is outside valid range (-90 to 90).',
+      );
+    });
+
+    it('should reject object with NaN latitude', () => {
+      const coord = create({ lat: Number.NaN, lon: 0 });
+      expect(coord.valid).toBe(false);
+      expect(coord.errors).toContain(
+        '[ERROR] Invalid latitude value (NaN); expected a finite number.',
+      );
+    });
+
+    it('should reject object with NaN longitude', () => {
+      const coord = create({ lat: 0, lon: Number.NaN });
+      expect(coord.valid).toBe(false);
+      expect(coord.errors).toContain(
+        '[ERROR] Invalid longitude value (NaN); expected a finite number.',
+      );
+    });
+
+    it('should reject object with Infinity values', () => {
+      const coord = create({
+        lat: Number.POSITIVE_INFINITY,
+        lon: Number.NEGATIVE_INFINITY,
+      });
+      expect(coord.valid).toBe(false);
+      expect(coord.errors).toContain(
+        '[ERROR] Invalid latitude value (Infinity); expected a finite number.',
+      );
+      expect(coord.errors).toContain(
+        '[ERROR] Invalid longitude value (-Infinity); expected a finite number.',
+      );
+    });
+
+    it('object input ignores initFormat (keys are explicit)', () => {
+      const coord = createLonLat({ lat: 40.7128, lon: -74.006 });
+      expect(coord.raw).toEqual({ LAT: 40.7128, LON: -74.006 });
+    });
+  });
+
+  describe('formatters work with numeric input', () => {
+    const coord = create([51.5074, -0.1278]);
+
+    it('should format as DD', () => {
+      expect(coord.dd()).toBe('51.5074 N / 0.1278 W');
+    });
+
+    it('should format as DDM', () => {
+      expect(coord.ddm()).toBe('51 30.444 N / 0 7.668 W');
+    });
+
+    it('should format as DMS', () => {
+      expect(coord.dms()).toBe('51 30 26.64 N / 0 7 40.08 W');
+    });
+
+    it('should format as MGRS', () => {
+      expect(coord.mgrs()).toBe('30U XC 99316 10163');
+    });
+
+    it('should format as UTM', () => {
+      expect(coord.utm()).toBe('30N 699316 5710164');
+    });
+
+    it('should respect format parameter', () => {
+      expect(coord.dd('LONLAT')).toBe('0.1278 W / 51.5074 N');
+    });
+  });
+
+  describe('invalid input types', () => {
+    it('should reject null', () => {
+      // biome-ignore lint/suspicious/noExplicitAny: testing invalid input
+      const coord = create(null as any);
+      expect(coord.valid).toBe(false);
+    });
+
+    it('should reject undefined', () => {
+      // biome-ignore lint/suspicious/noExplicitAny: testing invalid input
+      const coord = create(undefined as any);
+      expect(coord.valid).toBe(false);
+    });
+
+    it('should reject single number', () => {
+      // biome-ignore lint/suspicious/noExplicitAny: testing invalid input
+      const coord = create(42 as any);
+      expect(coord.valid).toBe(false);
+    });
+
+    it('should reject array with wrong length', () => {
+      // biome-ignore lint/suspicious/noExplicitAny: testing invalid input
+      const coord = create([1, 2, 3] as any);
+      expect(coord.valid).toBe(false);
+    });
+  });
+});
