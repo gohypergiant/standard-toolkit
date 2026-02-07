@@ -10,13 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { BentoGroup } from '~/components/bento';
-import { TooltipExample } from '~/features/tooltip';
+import { DrawerExample } from '~/features/drawer';
 
 export default function Page() {
-  return (
-    <BentoGroup>
-      <TooltipExample />
-    </BentoGroup>
-  );
+  return <DrawerExample />;
 }
