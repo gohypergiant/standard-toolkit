@@ -352,3 +352,10 @@ export function updateFeatureFromLayer(
 export function cancelEditingFromLayer(mapId: UniqueId): void {
   editStore.actions(mapId).cancel();
 }
+
+/**
+ * Save editing (called by the layer component on Enter)
+ */
+export function saveEditingFromLayer(mapId: UniqueId): void {
+  editStore.actions(mapId).save();
+}
