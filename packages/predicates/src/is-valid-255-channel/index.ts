@@ -11,14 +11,11 @@
  */
 
 /**
- * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
+ * Check if a number is a valid color channel value (0-255).
+ *
+ * @param n - The number to check.
+ * @returns true if the value is between 0-255, false otherwise.
  */
-
-// biome-ignore-all assist/source/organizeImports: This comment is used to prevent the biome tool from altering the import statements in this file.
-
-export {
-  CSS_RGBA_LEGACY_REGEX,
-  CSS_RGBA_MODERN_REGEX,
-  HEX_REGEX,
-} from './color';
-export { DEFAULT_COORDINATE } from './coordinates';
+export function isValid255Channel(n: number): boolean {
+  return Number.isFinite(n) && n >= 0 && n <= 255;
+}
