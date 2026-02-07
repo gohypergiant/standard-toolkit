@@ -21,6 +21,7 @@ The modes follow a **leaf mode / composite mode** pattern from `@deck.gl-communi
 map-toolkit/edit-shape-layer/modes
 ├── ScaleModeWithFreeTransform extends ScaleMode (leaf)
 ├── RotateModeWithSnap extends RotateMode (leaf)
+├── PointTranslateMode extends GeoJsonEditMode (composite)
 ├── BaseTransformMode extends CompositeMode (composite base)
 │   ├── CircleTransformMode extends BaseTransformMode
 │   ├── BoundingTransformMode extends BaseTransformMode
@@ -90,6 +91,15 @@ For shapes supporting vertex editing (polygons, lines). Combines:
 
 Note: Does not show tooltips because arbitrary polygons don't have meaningful dimensions.
 
+### PointTranslateMode
+
+For point shapes. Extends `GeoJsonEditMode` directly (not `BaseTransformMode`) to support both:
+
+- **Click to place**: Click anywhere on the map to instantly move the point
+- **Drag**: Traditional drag behavior (delegated to `TranslateMode`)
+
+This provides a much better UX for points since they have a very small surface area for clicking.
+
 ## Mode Selection
 
 The `EditShapeLayer` automatically selects the appropriate mode based on shape type:
@@ -101,7 +111,7 @@ The `EditShapeLayer` automatically selects the appropriate mode based on shape t
 | Rectangle | `bounding-transform` |
 | Polygon | `vertex-transform` |
 | LineString | `vertex-transform` |
-| Point | `translate` |
+| Point | `point-translate` |
 
 ## HandleMatcher Pattern
 

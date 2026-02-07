@@ -41,4 +41,5 @@ export const EDIT_CURSOR_MAP: Record<EditMode, CSSCursorType> = {
   'vertex-transform': 'crosshair',
   'circle-transform': 'crosshair',
   translate: 'crosshair',
+  'point-translate': 'crosshair',
 };
