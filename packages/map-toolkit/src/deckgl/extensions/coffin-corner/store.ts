@@ -154,7 +154,7 @@ export const coffinCornerStore = createMapStore<
       const { layerId, selectedId } = get();
 
       if (info.layerId === layerId && info.object) {
-        const entityId = (info.object as { id: EntityId }).id;
+        const entityId = info.object.id;
 
         if (selectedId === entityId) {
           coffinCornerEventBus.emit(CoffinCornerEvents.DESELECTED, {
@@ -189,9 +189,7 @@ export const coffinCornerStore = createMapStore<
       const { layerId } = get();
 
       const hoveredId =
-        info.layerId === layerId && info.object
-          ? (info.object as { id: EntityId }).id
-          : undefined;
+        info.layerId === layerId && info.object ? info.object.id : undefined;
 
       if (get().hoveredId !== hoveredId) {
         coffinCornerEventBus.emit(CoffinCornerEvents.HOVERED, {

@@ -11,7 +11,7 @@
  */
 
 import { LayerExtension } from '@deck.gl/core';
-import type { Layer } from '@deck.gl/core';
+import type { Layer, UpdateParameters } from '@deck.gl/core';
 import type { EntityId } from './types';
 
 type CoffinCornerLayer = Layer & {
@@ -78,88 +78,16 @@ type CoffinCornerLayer = Layer & {
  * ```
  */
 
-export type CoffinCornersExtensionProps<TLayerProps = unknown> = {
-  /**
-   * The currently selected entity ID. Matched against each data object's `id`
-   * field to determine selection state for the coffin corners shader.
-   */
-  selectedEntityId?: EntityId;
-} & TLayerProps;
-
-export default class CoffinCornersExtension extends LayerExtension {
-  static override extensionName = 'CoffinCornersExtension';
-
-  static override defaultProps = {
-    selectedEntityId: { type: 'value', value: undefined },
-  };
-
-  override initializeState(this: CoffinCornerLayer) {
-    this.state.selectedEntities = new Map<EntityId, number>();
-
-    // Registers the GPU attribute. The `update` callback bridges the
-    // JavaScript Map to the GPU Float32Array. When `updateState` calls
-    // `invalidate`, this runs to copy selection values into the buffer.
-    const attributeManager = this.getAttributeManager();
-    if (attributeManager) {
-      attributeManager.addInstanced({
-        instanceSelectedEntity: {
-          size: 1,
-          update: (
-            attribute: { value: unknown },
-            { data }: { data: { id: EntityId }[] | undefined },
-          ) => {
-            const { selectedEntities } = this.state;
-            const items = data ?? [];
-            const value = attribute.value as Float32Array;
-
-            for (const [i, item] of items.entries()) {
-              value[i] = selectedEntities.get(item.id) ?? 0;
-            }
-          },
-        },
-      });
-    }
-  }
-
-  override updateState(
-    this: CoffinCornerLayer,
-    params: {
-      props: CoffinCornersExtensionProps & Record<string, unknown>;
-      oldProps: CoffinCornersExtensionProps & Record<string, unknown>;
-      changeFlags: Record<string, unknown>;
-    },
-  ) {
-    const { selectedEntityId: newId } = params.props;
-    const { selectedEntityId: oldId } = params.oldProps;
-
-    if (newId === oldId) {
-      return;
-    }
-
-    const { selectedEntities } = this.state;
-
-    if (oldId) {
-      selectedEntities.set(oldId, 0);
-    }
-
-    if (newId) {
-      selectedEntities.set(newId, 1);
-    }
-
-    this.getAttributeManager()?.invalidate('instanceSelectedEntity');
-  }
-
-  override getShaders(this: CoffinCornerLayer, _extensions: this) {
-    return {
-      inject: {
-        'vs:#decl': `\
+const SHADERS = {
+  inject: {
+    'vs:#decl': `\
 in float instanceSelectedEntity;
 out float v_instanceSelectedEntity;
 `,
-        'vs:#main-end': `\
+    'vs:#main-end': `\
 v_instanceSelectedEntity = instanceSelectedEntity;
 `,
-        'fs:#decl': `\
+    'fs:#decl': `\
 in float v_instanceSelectedEntity;
 
 float coffinCorners_sdBox(vec2 p, vec2 b) {
@@ -196,7 +124,7 @@ float coffinCorners_allCorners(vec2 uvCoord) {
   );
 }
 `,
-        'fs:#main-start': `\
+    'fs:#main-start': `\
   geometry.uv = uv;
   {
     bool cc_isHovered = bool(picking_vRGBcolor_Avalid.a);
@@ -245,7 +173,75 @@ float coffinCorners_allCorners(vec2 uvCoord) {
     }
   }
 `,
-      },
-    };
+  },
+};
+
+export type CoffinCornersExtensionProps<TLayerProps = unknown> = {
+  /**
+   * The currently selected entity ID. Matched against each data object's `id`
+   * field to determine selection state for the coffin corners shader.
+   */
+  selectedEntityId?: EntityId;
+} & TLayerProps;
+
+export default class CoffinCornersExtension extends LayerExtension {
+  static override defaultProps = {
+    selectedEntityId: { type: 'value', value: undefined },
+  };
+
+  override initializeState(this: CoffinCornerLayer) {
+    this.state.selectedEntities = new Map<EntityId, number>();
+
+    // Registers the GPU attribute. The `update` callback bridges the
+    // JavaScript Map to the GPU Float32Array. When `updateState` calls
+    // `invalidate`, this runs to copy selection values into the buffer.
+    const attributeManager = this.getAttributeManager();
+    if (attributeManager) {
+      attributeManager.addInstanced({
+        instanceSelectedEntity: {
+          size: 1,
+          update: (
+            attribute: { value: unknown },
+            { data }: { data: { id: EntityId }[] | undefined },
+          ) => {
+            const { selectedEntities } = this.state;
+            const items = data ?? [];
+            const value = attribute.value as Float32Array;
+
+            for (const [i, item] of items.entries()) {
+              value[i] = selectedEntities.get(item.id) ?? 0;
+            }
+          },
+        },
+      });
+    }
+  }
+
+  override updateState(
+    this: CoffinCornerLayer,
+    params: UpdateParameters<Layer<CoffinCornersExtensionProps>>,
+  ) {
+    const { selectedEntityId: newId } = params.props;
+    const { selectedEntityId: oldId } = params.oldProps;
+
+    if (newId === oldId) {
+      return;
+    }
+
+    const { selectedEntities } = this.state;
+
+    if (oldId) {
+      selectedEntities.set(oldId, 0);
+    }
+
+    if (newId) {
+      selectedEntities.set(newId, 1);
+    }
+
+    this.getAttributeManager()?.invalidate('instanceSelectedEntity');
+  }
+
+  override getShaders(this: CoffinCornerLayer, _extensions: this) {
+    return SHADERS;
   }
 }
