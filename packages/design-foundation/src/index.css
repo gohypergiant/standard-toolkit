@@ -66,10 +66,6 @@
   );
 }
 
-@utility shadow-* {
-  box-shadow: --value(--shadow-*);
-}
-
 /**
  * DesignTK chooses to implement outlines instead of borders to make it so
  * that the style doesn't impact box model dimensions. This way elements with
