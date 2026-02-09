@@ -2,4 +2,4 @@
 "@accelint/map-toolkit": minor
 ---
 
-Add coffin corner layer extension to the map
+Add coffin corner layer extension
