@@ -10,13 +10,15 @@
  * governing permissions and limitations under the License.
  */
 
-import { BentoGroup } from '~/components/bento';
-import { TooltipExample } from '~/features/tooltip';
+import { Suspense } from 'react';
+import type { PropsWithChildren } from 'react';
 
-export default function Page() {
-  return (
-    <BentoGroup>
-      <TooltipExample />
-    </BentoGroup>
-  );
+export function Fallback() {
+  return <div>Loading...</div>;
+}
+
+export function LoadingComponent(props: PropsWithChildren) {
+  const { children } = props;
+
+  return <Suspense fallback={<Fallback />}>{children}</Suspense>;
 }
