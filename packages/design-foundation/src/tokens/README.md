@@ -79,9 +79,28 @@ pnpm gen:tokens
 
 This will create:
 
-- `src/tokens/tokens.css` - CSS variables (hex colors)
-- `src/tokens/index.ts` - TypeScript constants (deck.gl RGBA format)
+- `src/tokens/tokens.css` - CSS variables (standard hex/rgba format)
+- `src/tokens/index.ts` - TypeScript constants (deck.gl RGBA format: all channels 0-255)
 - `src/tokens/themes.css` - Tailwind theme blocks with semantic naming
+
+## Important: Format Differences
+
+**CSS Variables** (`tokens.css`, `themes.css`):
+
+- Use standard CSS color formats (hex, rgba)
+- Alpha channel: **0-1** (CSS standard)
+- Example: `--color-surface: rgba(21, 21, 23, 1)`
+
+**TypeScript Constants** (`index.ts`):
+
+- Use deck.gl RGBA tuple format
+- Alpha channel: **0-255** (deck.gl standard)
+- Example: `[21, 21, 23, 255]`
+
+This dual format optimizes for both contexts:
+
+- CSS variables work seamlessly with standard CSS
+- TypeScript constants eliminate runtime conversion overhead in deck.gl
 
 ### 4. Using Tokens in CSS
 
@@ -98,50 +117,53 @@ Import the generated CSS in your stylesheets:
 
 ### 5. Using Tokens in JavaScript/TypeScript
 
-Import the generated constants:
+**In React contexts that use deck.gl / WebGL components**, use the theme provider to access tokens that match the user's current theme:
+
+```typescript
+import { useTheme } from '@accelint/design-foundation';
+import { ScatterplotLayer } from '@deck.gl/layers';
+
+function MyDeckGLComponent() {
+  const theme = useTheme();
+
+  const layer = new ScatterplotLayer({
+    id: 'points',
+    data,
+    // Color tokens are deck.gl RGBA format: [R, G, B, A] all 0-255
+    // Values automatically match the current theme (dark/light)
+    getFillColor: theme.bg.accent.primary.base,
+    getLineColor: theme.outline.neutral.bold,
+  });
+
+  return <DeckGL layers={[layer]} />;
+}
+```
+
+**In non-React contexts** (Node.js scripts, workers), import tokens directly:
 
 ```typescript
 import { designTokens } from '@accelint/design-foundation/tokens';
 
-// Color tokens are deck.gl RGBA format: [R, G, B, A] all 0-255
+// Must specify theme explicitly
 const surfaceColor = designTokens.dark.bg.surface.default;
 // e.g., [21, 21, 23, 255]
 ```
 
-### 6. Using Tokens with Deck.gl
+**For CSS-based styling** (React components, DOM elements), use CSS variables via Tailwind classes or className props:
 
-The TypeScript token format is optimized for deck.gl layers:
+```typescript
+import { Button } from '@accelint/design-toolkit';
 
-```tsx
-import DeckGL from '@deck.gl/react';
-import { ScatterplotLayer } from '@deck.gl/layers';
-import { designTokens } from '@accelint/design-foundation/tokens';
-
-const { dark } = designTokens;
-
-const layer = new ScatterplotLayer({
-  id: 'scatter',
-  data,
-  getPosition: d => d.position,
-  getRadius: d => d.size,
-  // Colors are already in deck.gl format [R, G, B, A] 0-255
-  getFillColor: dark.bg.accent.primary.base,
-  getLineColor: dark.outline.neutral.bold,
-  stroked: true,
-  lineWidthMinPixels: 2
-});
-
-export default function MyDeckGLMap() {
+function MyComponent() {
   return (
-    <DeckGL
-      initialViewState={{
-        longitude: -122.45,
-        latitude: 37.78,
-        zoom: 12
-      }}
-      controller={true}
-      layers={[layer]}
-    />
+    <Button
+      className="bg-surface-default text-fg-primary-bold"
+      variant="primary"
+    >
+      Click me
+    </Button>
   );
 }
 ```
+
+See the [Tailwind best practices documentation](../documentation/tailwind.md) for guidance on when to use design tokens in classNames vs. Tailwind utility classes.
