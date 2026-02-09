@@ -119,6 +119,8 @@ describe('raw coordinate parsing', () => {
       ${'181 , 90'}                      | ${'LONLAT'} | ${''}                                | ${['[ERROR] Degrees value (181) exceeds max value (180).']}
       ${'-33 / 22 / 3'}                  | ${'LATLON'} | ${''}                                | ${['[ERROR] Invalid coordinate value.']}
       ${'1 N / 2 E'}                     | ${'LONLAT'} | ${''}                                | ${['[ERROR] Mismatched formats: "LONLAT" expected, "LATLON" found.']}
+      ${'-45.5 75.3'}                    | ${'LATLON'} | ${'45.5 S / 75.3 E'}                 | ${[]}
+      ${'-45.5 -75.3'}                   | ${'LATLON'} | ${'45.5 S / 75.3 W'}                 | ${[]}
     `('$format, $input', ({ format, input, ...expected }) => {
       const [tokens, errors] = parseDecimalDegrees(format, input);
 
@@ -148,6 +150,8 @@ describe('raw coordinate parsing', () => {
       ${`12   ° 56 '      12 56 `}      | ${'LATLON'} | ${''}                          | ${['[ERROR] Ambiguous grouping of numbers with no divider.']}
       ${`9° 8' 9 8 `}                   | ${'LATLON'} | ${''}                          | ${['[ERROR] Ambiguous grouping of numbers with no divider.']}
       ${`9° -8' 9° 8 `}                 | ${'LATLON'} | ${''}                          | ${['[ERROR] Negative value for non-degrees value found.']}
+      ${'-40 26 / 79 58'}               | ${'LATLON'} | ${'40 26 S / 79 58 E'}         | ${[]}
+      ${'-40 26 / -79 58'}              | ${'LATLON'} | ${'40 26 S / 79 58 W'}         | ${[]}
     `('$format, $input', ({ format, input, ...expected }) => {
       const [tokens, errors] = parseDegreesDecimalMinutes(format, input);
 
@@ -192,6 +196,8 @@ describe('raw coordinate parsing', () => {
       ${`45° -10' 10" N, 75° 30' 10" W extra stuff`}   | ${'LATLON'} | ${''}                                 | ${['[ERROR] Too many bearings.']}
       ${`45° -10' 10" N, 75° 30' 10" W 213`}           | ${'LATLON'} | ${''}                                 | ${['[ERROR] Too many numbers.']}
       ${`45° 10' 10" E, 75° 30' 10" N`}                | ${'LATLON'} | ${''}                                 | ${['[ERROR] Mismatched formats: "LATLON" expected, "LONLAT" found.']}
+      ${'-40 26 46 / 79 58 56'}                        | ${'LATLON'} | ${'40 26 46 S / 79 58 56 E'}          | ${[]}
+      ${'-40 26 46 / -79 58 56'}                       | ${'LATLON'} | ${'40 26 46 S / 79 58 56 W'}          | ${[]}
     `('$format, $input', ({ format, input, ...expected }) => {
       const [tokens, errors] = parseDegreesMinutesSeconds(format, input);
 

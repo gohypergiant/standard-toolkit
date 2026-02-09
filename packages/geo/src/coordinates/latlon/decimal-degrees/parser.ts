@@ -29,7 +29,11 @@ type DecimalDegrees = {
 
 const checks = {
   deg: (deg: string, limit: number) => {
-    if (Number.parseFloat(deg) > limit) {
+    const num = Number.parseFloat(deg);
+    if (Number.isNaN(num)) {
+      return `Degrees value (${deg}) is not a valid number.`;
+    }
+    if (num > limit) {
       return `Degrees value (${deg}) exceeds max value (${limit}).`;
     }
   },
@@ -128,13 +132,17 @@ function identifyPieces(half: string[]) {
 
   const places = { bear: '', deg: '' };
 
-  return half.reduce((acc, token) => {
-    if (SYMBOL_PATTERNS.NSEW.test(token) && !acc.bear) {
-      acc.bear ||= token;
-    } else {
-      acc.deg ||= token;
+  return half.reduce<typeof places | undefined>((acc, token) => {
+    if (!acc) {
+      return undefined;
     }
-
+    if (SYMBOL_PATTERNS.NSEW.test(token) && !acc.bear) {
+      acc.bear = token;
+    } else if (acc.deg) {
+      return undefined;
+    } else {
+      acc.deg = token;
+    }
     return acc;
   }, places);
 }
@@ -166,3 +174,5 @@ export const parseDecimalDegrees = createParser<DecimalDegrees>({
   identifyErrors,
   identifyPieces,
 });
+
+export { identifyErrors as _identifyErrors, identifyPieces as _identifyPieces };
