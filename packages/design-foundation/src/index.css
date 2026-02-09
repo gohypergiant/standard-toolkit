@@ -45,14 +45,16 @@
 @utility bg-* {
   --bg-alpha: calc(--modifier([number]) / 100);
   background-color: rgb(
-    from --value(--color-bg-*, --color-domain-*) r g b / var(--bg-alpha, 1)
+    from --value(--color-bg-*, --color-domain-*, --color-*) r g b /
+      var(--bg-alpha, 1)
   );
 }
 
 @utility fg-* {
   --fg-alpha: calc(--modifier([number]) / 100);
   --fg-value: rgb(
-    from --value(--color-fg-*, --color-domain-*) r g b / var(--fg-alpha, 1)
+    from --value(--color-fg-*, --color-domain-*, --color-*) r g b /
+      var(--fg-alpha, 1)
   );
   color: var(--fg-value);
   --icon-color: var(--fg-value);
@@ -61,7 +63,7 @@
 @utility outline-* {
   --outline-alpha: calc(--modifier([number]) / 100);
   outline-color: rgb(
-    from --value(--color-outline-*, --color-domain-*) r g b /
+    from --value(--color-outline-*, --color-domain-*, --color-*) r g b /
       var(--outline-alpha, 1)
   );
 }
