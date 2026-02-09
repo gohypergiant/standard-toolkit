@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -10,13 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
-import { BentoGroup } from '~/components/bento';
-import { TooltipExample } from '~/features/tooltip';
-
-export default function Page() {
-  return (
-    <BentoGroup>
-      <TooltipExample />
-    </BentoGroup>
-  );
+/**
+ * Check if a number is a valid color channel value (0-255).
+ *
+ * @param n - The number to check.
+ * @returns true if the value is between 0-255, false otherwise.
+ */
+export function isValid255Channel(n: number): boolean {
+  return Number.isFinite(n) && n >= 0 && n <= 255;
 }

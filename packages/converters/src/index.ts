@@ -18,22 +18,17 @@
 
 export { booleanToNumber } from './boolean-to-number';
 export {
-  colorToCssRgbaObject,
-  colorToCssRgbaString,
-  colorToCssRgbaTuple,
-  colorToGlsl,
-  colorToHex,
-  cssRgbaObjectToColor,
-  cssRgbaStringToColor,
-  cssRgbaTupleToColor,
-  glslToColor,
-  hexToColor,
-  isColor,
-  isCssRgbaObject,
-  isCssRgbaString,
-  isHexColor,
-} from './color';
-export type { Color, CssRgbaObject, CssRgbaTuple } from './color';
+  cssRgbaObjectToRgba255Tuple,
+  cssRgbaStringToRgba255Tuple,
+  cssRgbaTupleToRgba255Tuple,
+  rgba255TupleToCssRgbaObject,
+  rgba255TupleToCssRgbaString,
+  rgba255TupleToCssRgbaTuple,
+} from './css-rgba';
+export type { CssRgbaTuple } from './css-rgba';
+export { glslToRgba255Tuple, rgba255TupleToGlsl } from './glsl';
+export type { GlslRgbaTuple } from './glsl';
+export { hexToRgba255Tuple, rgba255TupleToHex } from './hex';
 export { toBoolean } from './to-boolean';
 export { zxyToBbox } from './zxy-to-bbox';
 export type { BoundingBoxTuple, ZxyTuple } from './zxy-to-bbox';

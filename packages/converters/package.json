@@ -5,7 +5,6 @@
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "devDependencies": {
-    "@accelint/constants": "workspace:*",
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",
     "tsdown": "^0.18.0",
@@ -20,7 +19,9 @@
     ".": "./dist/index.js",
     "./azimuth-to-cardinal": "./dist/azimuth-to-cardinal/index.js",
     "./boolean-to-number": "./dist/boolean-to-number/index.js",
-    "./color": "./dist/color/index.js",
+    "./css-rgba": "./dist/css-rgba/index.js",
+    "./glsl": "./dist/glsl/index.js",
+    "./hex": "./dist/hex/index.js",
     "./to-boolean": "./dist/to-boolean/index.js",
     "./zxy-to-bbox": "./dist/zxy-to-bbox/index.js",
     "./package.json": "./package.json"
@@ -40,7 +41,9 @@
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "optionalDependencies": {
-    "@accelint/math": "workspace:*"
+    "@accelint/constants": "workspace:*",
+    "@accelint/math": "workspace:*",
+    "@accelint/predicates": "workspace:*"
   },
   "owner": "default/pathfinder",
   "peerDependencies": {

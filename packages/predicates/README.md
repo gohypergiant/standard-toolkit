@@ -16,6 +16,7 @@ npm install @accelint/predicates
 - **Array Membership**: Test value presence in arrays
 - **Boolean Evaluation**: Advanced true/false/yes/no/on/off checking
 - **Geospatial Validation**: Validate latitude, longitude, and bounding boxes
+- **Color Validation**: Validate hex colors, CSS rgb/rgba strings, RGBA tuples, and RGBA objects
 - **Null Checking**: Test for null/undefined values
 - **Functional API**: Curried predicates perfect for array methods and composition
 - **Tree-Shakeable**: Import only what you need for optimal bundle size
@@ -267,6 +268,121 @@ isBbox([-180, -90, 180, 90]);   // true
 isBbox([-122.5, 37.7, -122.4, 37.8]); // true
 isBbox([1, 2, 3]);              // false (wrong length)
 isBbox([1, 2, NaN, 4]);         // false (NaN not allowed)
+```
+
+## Color Validation
+
+Validate color values in multiple formats - hex strings, CSS rgb/rgba strings, RGBA tuples, and RGBA objects:
+
+```typescript
+import {
+  isHexColor,
+  isCssRgbaString,
+  isRgba255Tuple,
+  isCssRgbaObject,
+  isValid255Channel
+} from '@accelint/predicates';
+
+// Hex color validation (#RGB, #RGBA, #RRGGBB, #RRGGBBAA, hash optional)
+isHexColor('#FF8040');    // true
+isHexColor('#F84');       // true (short form)
+isHexColor('FF8040');     // true (hash optional)
+isHexColor('#FF804080');  // true (with alpha)
+isHexColor('#GG8040');    // false (invalid hex chars)
+
+// CSS rgba/rgb string validation (legacy and modern syntax)
+isCssRgbaString('rgba(255, 128, 64, 0.5)');  // true (legacy comma syntax)
+isCssRgbaString('rgb(255 128 64)');          // true (modern space syntax)
+isCssRgbaString('rgb(255 128 64 / 50%)');    // true (modern with alpha)
+isCssRgbaString('RGBA(255, 128, 64, 1)');    // true (case insensitive)
+isCssRgbaString('rgb(100%, 50%, 25%)');      // true (percentage values)
+isCssRgbaString('#FF8040');                  // false (hex, not rgb string)
+
+// RGBA 255 tuple validation (deck.gl format: [r, g, b, a] where all are 0-255)
+isRgba255Tuple([255, 128, 64, 255]);  // true
+isRgba255Tuple([255, 128, 64, 128]);  // true (alpha 0-255)
+isRgba255Tuple([255, 128, 64]);       // false (missing alpha)
+isRgba255Tuple([255, 128, 64, 1]);    // true (alpha = 1 is valid)
+isRgba255Tuple([256, 128, 64, 255]);  // false (out of range)
+
+// CSS RGBA object validation (React Aria Components format: {r, g, b, a} where a is 0-1)
+isCssRgbaObject({ r: 255, g: 128, b: 64, a: 1 });    // true
+isCssRgbaObject({ r: 255, g: 128, b: 64, a: 0.5 });  // true
+isCssRgbaObject({ r: 255, g: 128, b: 64 });          // false (missing alpha)
+isCssRgbaObject([255, 128, 64, 255]);                // false (array, not object)
+
+// Individual color channel validation (0-255)
+isValid255Channel(0);      // true
+isValid255Channel(128);    // true
+isValid255Channel(255);    // true
+isValid255Channel(127.5);  // true (decimals allowed)
+isValid255Channel(-1);     // false (below 0)
+isValid255Channel(256);    // false (above 255)
+isValid255Channel(NaN);    // false
+```
+
+### Color Format Type Definitions
+
+```typescript
+// deck.gl format - all channels 0-255
+type Rgba255Tuple = readonly [r: number, g: number, b: number, a: number];
+
+// React Aria Components format - RGB 0-255, alpha 0-1
+type CssRgbaObject = {
+  readonly r: number; // 0-255
+  readonly g: number; // 0-255
+  readonly b: number; // 0-255
+  readonly a: number; // 0-1
+};
+```
+
+### Color Validation Use Cases
+
+```typescript
+import { isHexColor, isCssRgbaString, isRgba255Tuple } from '@accelint/predicates';
+
+// Validate user color input
+function parseColorInput(input: unknown) {
+  if (isHexColor(input)) {
+    return { format: 'hex', value: input };
+  }
+  if (isCssRgbaString(input)) {
+    return { format: 'css', value: input };
+  }
+  if (isRgba255Tuple(input)) {
+    return { format: 'tuple', value: input };
+  }
+  throw new Error('Invalid color format');
+}
+
+// Filter valid colors from mixed data
+const mixedColors = [
+  '#FF8040',
+  'rgb(255, 128, 64)',
+  [255, 128, 64, 255],
+  'invalid',
+  { r: 255, g: 128, b: 64, a: 1 }
+];
+
+const hexColors = mixedColors.filter(isHexColor);
+// ['#FF8040']
+
+const cssStrings = mixedColors.filter(isCssRgbaString);
+// ['rgb(255, 128, 64)']
+
+const tuples = mixedColors.filter(isRgba255Tuple);
+// [[255, 128, 64, 255]]
+
+// Validate deck.gl color props
+import type { Layer } from 'deck.gl';
+
+function createLayerWithColor(color: unknown): Layer {
+  if (!isRgba255Tuple(color)) {
+    throw new Error('deck.gl requires RGBA tuple with all channels 0-255');
+  }
+  // TypeScript now knows color is Rgba255Tuple
+  return new ScatterplotLayer({ getFillColor: color });
+}
 ```
 
 ## Functional Composition

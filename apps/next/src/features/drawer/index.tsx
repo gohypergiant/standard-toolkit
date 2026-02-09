@@ -10,11 +10,17 @@
  * governing permissions and limitations under the License.
  */
 
-import { DrawerClient } from '~/features/drawer/client';
+import 'server-only';
+import { DrawerExampleClient } from './client';
+import { ErrorComponent } from './error';
+import { LoadingComponent } from './loading';
 
-// biome-ignore lint/style/useNamingConvention: nextjs convention
-export const experimental_ppr = true;
-
-export default function Page() {
-  return <DrawerClient />;
+export function DrawerExample() {
+  return (
+    <ErrorComponent>
+      <LoadingComponent>
+        <DrawerExampleClient />
+      </LoadingComponent>
+    </ErrorComponent>
+  );
 }
