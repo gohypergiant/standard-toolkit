@@ -97,7 +97,7 @@ describe.each`
     Format,
   ])('exhaustive errors for DD %s', (format) => {
     it.each(EXHAUSTIVE_ERRORS[system][format] as string[])('%s', (input) => {
-      expect(parser(format, input)[1].length !== 0);
+      expect(parser(format, input)[1].length).toBeGreaterThan(0);
     });
   });
 });

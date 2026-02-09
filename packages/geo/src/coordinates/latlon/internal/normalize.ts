@@ -15,8 +15,27 @@ type Format = 'LATLON' | 'LONLAT';
 // biome-ignore lint/style/useNamingConvention: consistency with Axes type
 export type CoordinateInternalValue = { LAT: number; LON: number };
 
-export type CoordinateTuple = readonly [number, number];
+/** Tuple in `[latitude, longitude]` order. */
+export type LatLonTuple = readonly [latitude: number, longitude: number];
 
+/** Tuple in `[longitude, latitude]` order (GeoJSON convention). */
+export type LonLatTuple = readonly [longitude: number, latitude: number];
+
+/** A coordinate tuple in either lat/lon or lon/lat order. */
+export type CoordinateTuple = LatLonTuple | LonLatTuple;
+
+/**
+ * Object representation of a coordinate with explicit lat/lon keys.
+ * Accepts objects with case-insensitive variations: lat/LAT/latitude/LATITUDE and lon/LON/longitude/LONGITUDE.
+ * Runtime validation via `isCoordinateObject` ensures proper keys are present.
+ *
+ * @example
+ * ```typescript
+ * { lat: 40.7128, lon: -74.0060 }
+ * { latitude: 40.7128, longitude: -74.0060 }
+ * { LAT: 40.7128, LON: -74.0060 }
+ * ```
+ */
 export type CoordinateObject = Record<string, number>;
 
 export type CoordinateInput = string | CoordinateTuple | CoordinateObject;
@@ -47,6 +66,34 @@ export function isCoordinateObject(
   return hasLat && hasLon;
 }
 
+/**
+ * Normalizes a coordinate object to a consistent lat/lon format.
+ *
+ * Accepts coordinate objects with case-insensitive key variations (lat/LAT/latitude/LATITUDE
+ * and lon/LON/longitude/LONGITUDE) and returns a normalized object with lowercase 'lat' and 'lon' keys.
+ * Returns null if required keys are not found.
+ *
+ * @param obj - Coordinate object with lat/lon keys (case-insensitive)
+ * @returns Normalized object with lat and lon keys, or null if invalid
+ *
+ * @example
+ * ```typescript
+ * normalizeObjectToLatLon({ lat: 40.7128, lon: -74.0060 });
+ * // => { lat: 40.7128, lon: -74.0060 }
+ * ```
+ *
+ * @example
+ * ```typescript
+ * normalizeObjectToLatLon({ LATITUDE: 40.7128, LONGITUDE: -74.0060 });
+ * // => { lat: 40.7128, lon: -74.0060 }
+ * ```
+ *
+ * @example
+ * ```typescript
+ * normalizeObjectToLatLon({ x: 10, y: 20 });
+ * // => null (missing required keys)
+ * ```
+ */
 export function normalizeObjectToLatLon(obj: CoordinateObject): {
   lat: number;
   lon: number;

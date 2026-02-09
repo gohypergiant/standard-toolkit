@@ -36,6 +36,8 @@ export type {
   CoordinateInternalValue,
   CoordinateObject,
   CoordinateTuple,
+  LatLonTuple,
+  LonLatTuple,
 } from './coordinates/latlon/internal/normalize';
 export { getOrdinal } from './coordinates/latlon/internal/ordinal';
 export {

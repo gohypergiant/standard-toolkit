@@ -73,10 +73,17 @@ const coordMGRS = parseMGRS('18T WL 80000 00000');
 
 ```typescript
 import { createCoordinate, coordinateSystems } from '@accelint/geo';
+import type { LatLonTuple, LonLatTuple } from '@accelint/geo';
 
-// Using numeric tuple input (order follows format parameter)
+// Using typed tuple input (order follows format parameter)
 const create = createCoordinate(coordinateSystems.dd, 'LATLON');
-const coordTuple = create([40.7128, -74.0060]);
+const latlon: LatLonTuple = [40.7128, -74.0060];
+const coordTuple = create(latlon);
+
+// LONLAT order (GeoJSON convention)
+const createLonLat = createCoordinate(coordinateSystems.dd, 'LONLAT');
+const lonlat: LonLatTuple = [-74.0060, 40.7128];
+const coordLonLat = createLonLat(lonlat);
 
 // Using object input
 const coordObj = create({ lat: 40.7128, lon: -74.0060 });
@@ -137,7 +144,7 @@ Creates a coordinate parser function.
 **Input types:**
 
 - **String**: Coordinate string in the specified system's format (e.g., `'40.7128 / -74.0060'`)
-- **Tuple**: `[number, number]` array where order follows the `format` parameter (e.g., `[40.7128, -74.0060]` for LATLON)
+- **Tuple**: `LatLonTuple` or `LonLatTuple` — a `readonly [number, number]` with named elements, where order follows the `format` parameter (e.g., `[40.7128, -74.0060]` for LATLON)
 - **Object**: Object with lat/lon properties. Accepts case-insensitive keys:
   - `lat` / `lon`
   - `latitude` / `longitude`
@@ -180,6 +187,25 @@ The object returned by calling the function from `createCoordinate()`.
 - `utm(format?)`: Format as UTM
 
 Each method accepts an optional `format` parameter (`'LATLON'` or `'LONLAT'`) to override the default format order.
+
+### TypeScript Types
+
+The package exports named tuple types for type-safe coordinate handling:
+
+- **`LatLonTuple`** — `readonly [latitude: number, longitude: number]` — tuple in lat/lon order
+- **`LonLatTuple`** — `readonly [longitude: number, latitude: number]` — tuple in lon/lat order (GeoJSON convention)
+- **`CoordinateTuple`** — `LatLonTuple | LonLatTuple` — union of both orderings
+- **`CoordinateObject`** — `Record<string, number>` — object with string keys (e.g., `{ lat, lon }`)
+- **`CoordinateInput`** — `string | CoordinateTuple | CoordinateObject` — all accepted input types
+
+Named tuple elements provide IDE hints for element order, preventing lat/lon mix-ups:
+
+```typescript
+import type { LatLonTuple, LonLatTuple } from '@accelint/geo';
+
+const latlon: LatLonTuple = [40.7128, -74.0060]; // [latitude, longitude]
+const lonlat: LonLatTuple = [-74.0060, 40.7128]; // [longitude, latitude]
+```
 
 ## Coordinate System Formats
 

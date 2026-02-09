@@ -172,6 +172,8 @@ export {
   type CoordinateInternalValue,
   type CoordinateObject,
   type CoordinateTuple,
+  type LatLonTuple,
+  type LonLatTuple,
   isCoordinateObject,
   isCoordinateTuple,
   normalizeObjectToLatLon,

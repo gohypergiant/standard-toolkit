@@ -15,18 +15,49 @@ import { violation } from './violation';
 const LAT_LIMIT = 90;
 const LON_LIMIT = 180;
 
+/**
+ * Checks if a value is a finite number (not NaN, not Infinity, not -Infinity).
+ *
+ * @param value - The numeric value to check
+ * @returns True if the value is a finite number, false otherwise
+ *
+ * @example
+ * ```typescript
+ * isFiniteNumber(42);        // true
+ * isFiniteNumber(NaN);       // false
+ * isFiniteNumber(Infinity);  // false
+ * ```
+ */
 export function isFiniteNumber(value: number): boolean {
   return typeof value === 'number' && Number.isFinite(value);
 }
 
 /**
  * Validates that a value is within a signed range (-limit to +limit).
- * Returns an error message if invalid, undefined if valid.
  *
  * @param label - The label for error messages (used as-is for range errors,
  *                lowercased for "Invalid" errors)
  * @param value - The numeric value to validate
  * @param limit - The absolute limit (validates -limit to +limit)
+ * @returns Error message string if validation fails, undefined if valid
+ *
+ * @example
+ * ```typescript
+ * validateSignedRange('Latitude', 45, 90);
+ * // => undefined
+ * ```
+ *
+ * @example
+ * ```typescript
+ * validateSignedRange('Latitude', 95, 90);
+ * // => '[ERROR] Latitude value (95) is outside valid range (-90 to 90).'
+ * ```
+ *
+ * @example
+ * ```typescript
+ * validateSignedRange('Longitude', NaN, 180);
+ * // => '[ERROR] Invalid longitude value (NaN); expected a finite number.'
+ * ```
  */
 export function validateSignedRange(
   label: string,
@@ -46,6 +77,34 @@ export function validateSignedRange(
   }
 }
 
+/**
+ * Validates numeric latitude and longitude coordinate values.
+ *
+ * @param lat - The latitude value to validate (must be -90 to 90)
+ * @param lon - The longitude value to validate (must be -180 to 180)
+ * @returns Array of error message strings, empty if all validations pass
+ *
+ * @example
+ * ```typescript
+ * validateNumericCoordinate(45.5, -122.6);
+ * // => []
+ * ```
+ *
+ * @example
+ * ```typescript
+ * validateNumericCoordinate(91, -122.6);
+ * // => ['[ERROR] Latitude value (91) is outside valid range (-90 to 90).']
+ * ```
+ *
+ * @example
+ * ```typescript
+ * validateNumericCoordinate(NaN, 200);
+ * // => [
+ * //   '[ERROR] Invalid latitude value (NaN); expected a finite number.',
+ * //   '[ERROR] Longitude value (200) is outside valid range (-180 to 180).'
+ * // ]
+ * ```
+ */
 export function validateNumericCoordinate(lat: number, lon: number): string[] {
   const errors: string[] = [];
 

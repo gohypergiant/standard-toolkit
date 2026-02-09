@@ -15,6 +15,7 @@ import { systemDegreesDecimalMinutes } from './latlon/degrees-decimal-minutes/sy
 import { systemDegreesMinutesSeconds } from './latlon/degrees-minutes-seconds/system';
 import {
   type Axes,
+  type CoordinateInput,
   type CoordinateInternalValue,
   type Errors,
   FORMATS_DEFAULT,
@@ -25,19 +26,14 @@ import {
   SYMBOLS,
   tupleToLatLon,
   validateNumericCoordinate,
-  type CoordinateInput,
 } from './latlon/internal';
 
-export {
-  isFiniteNumber,
-  LIMITS,
-  validateNumericCoordinate,
-  validateSignedRange,
-} from './latlon/internal';
 export type {
   CoordinateInput,
   CoordinateObject,
   CoordinateTuple,
+  LatLonTuple,
+  LonLatTuple,
 } from './latlon/internal';
 
 import {
@@ -144,6 +140,33 @@ const freezeCoordinate = (
     valid,
   } as Coordinate);
 
+const errorCoordinate = (errors: string[]) =>
+  freezeCoordinate(errors, () => '', {} as CoordinateInternalValue, false);
+
+const createFormatter =
+  (
+    raw: CoordinateInternalValue,
+    cachedValues: OutputCache,
+    initSystem: CoordinateSystem,
+    initFormat: Format,
+  ) =>
+  (system: CoordinateSystem = initSystem, format: Format = initFormat) => {
+    const key = system.name as keyof typeof coordinateSystems;
+
+    if (!cachedValues[key]?.[format]) {
+      if (!cachedValues[key]) {
+        cachedValues[key] = {} as CoordinateCache;
+      }
+
+      cachedValues[key][format] = system.toFormat(format, [
+        raw[format.slice(0, 3) as Axes],
+        raw[format.slice(3) as Axes],
+      ] as [number, number]);
+    }
+
+    return cachedValues[key][format];
+  };
+
 /**
  * Create a coordinate object enabling: lexing, parsing, validation, and
  * formatting in alternative systems and formats. The system and format will be
@@ -187,12 +210,7 @@ export function createCoordinate(
         throw errors;
       }
     } catch (errors) {
-      return freezeCoordinate(
-        errors as Coordinate['errors'],
-        () => '',
-        {} as CoordinateInternalValue,
-        false,
-      );
+      return errorCoordinate(errors as Coordinate['errors']);
     }
 
     // start with the original value for the original system in the original format
@@ -208,46 +226,17 @@ export function createCoordinate(
     // Create the "internal" representation - Decimal Degrees - for
     // consistency and ease of computation; all systems expect to
     // start from a common starting point to reduce complexity.
-    const raw = Object.fromEntries([
-      [
-        initFormat.slice(0, 3),
-        initSystem.toFloat(
-          tokens.slice(0, tokens.indexOf(SYMBOLS.DIVIDER)) as ToFloatArg,
-        ),
-      ],
-      [
-        initFormat.slice(3),
-        initSystem.toFloat(
-          tokens.slice(1 + tokens.indexOf(SYMBOLS.DIVIDER)) as ToFloatArg,
-        ),
-      ],
-    ]) as CoordinateInternalValue;
+    const dividerIndex = tokens.indexOf(SYMBOLS.DIVIDER);
+    const raw = {
+      [initFormat.slice(0, 3)]: initSystem.toFloat(
+        tokens.slice(0, dividerIndex) as ToFloatArg,
+      ),
+      [initFormat.slice(3)]: initSystem.toFloat(
+        tokens.slice(dividerIndex + 1) as ToFloatArg,
+      ),
+    } as CoordinateInternalValue;
 
-    function to(
-      system: CoordinateSystem = initSystem,
-      format: Format = initFormat,
-    ) {
-      const key = system.name as keyof typeof coordinateSystems;
-
-      if (!cachedValues[key]?.[format]) {
-        // cache "miss" - fill the missing value in the cache before returning it
-
-        // update the cache to include the newly computed value
-        cachedValues[key] = {
-          ...cachedValues[key],
-          // use the Format to build the object, correctly pairing the halves of
-          // the coordinate value with their labels
-          [format]: system.toFormat(
-            format,
-            ([format.slice(0, 3), format.slice(3)] as Axes[]).map(
-              (key) => raw[key],
-            ) as [number, number],
-          ),
-        };
-      }
-
-      return cachedValues[key][format];
-    }
+    const to = createFormatter(raw, cachedValues, initSystem, initFormat);
 
     return freezeCoordinate([] as Coordinate['errors'], to, raw, true);
   }
@@ -256,37 +245,13 @@ export function createCoordinate(
     const errors = validateNumericCoordinate(lat, lon);
 
     if (errors.length) {
-      return freezeCoordinate(
-        errors,
-        () => '',
-        {} as CoordinateInternalValue,
-        false,
-      );
+      return errorCoordinate(errors);
     }
 
     const raw: CoordinateInternalValue = { LAT: lat, LON: lon };
     const cachedValues = {} as OutputCache;
 
-    function to(
-      system: CoordinateSystem = initSystem,
-      format: Format = initFormat,
-    ) {
-      const key = system.name as keyof typeof coordinateSystems;
-
-      if (!cachedValues[key]?.[format]) {
-        cachedValues[key] = {
-          ...cachedValues[key],
-          [format]: system.toFormat(
-            format,
-            ([format.slice(0, 3), format.slice(3)] as Axes[]).map(
-              (k) => raw[k],
-            ) as [number, number],
-          ),
-        };
-      }
-
-      return cachedValues[key][format];
-    }
+    const to = createFormatter(raw, cachedValues, initSystem, initFormat);
 
     return freezeCoordinate([] as Coordinate['errors'], to, raw, true);
   }
@@ -305,27 +270,17 @@ export function createCoordinate(
       const result = normalizeObjectToLatLon(input);
 
       if (result === null) {
-        return freezeCoordinate(
-          [
-            '[ERROR] Invalid coordinate object; object must contain valid latitude and longitude properties.',
-          ],
-          () => '',
-          {} as CoordinateInternalValue,
-          false,
-        );
+        return errorCoordinate([
+          '[ERROR] Invalid coordinate object; object must contain valid latitude and longitude properties.',
+        ]);
       }
 
       const { lat, lon } = result;
       return parseNumericInput(lat, lon);
     }
 
-    return freezeCoordinate(
-      [
-        '[ERROR] Invalid coordinate input; expected a string, [lat, lon] tuple, or { lat, lon } object.',
-      ],
-      () => '',
-      {} as CoordinateInternalValue,
-      false,
-    );
+    return errorCoordinate([
+      '[ERROR] Invalid coordinate input; expected a string, [lat, lon] tuple, or { lat, lon } object.',
+    ]);
   };
 }
