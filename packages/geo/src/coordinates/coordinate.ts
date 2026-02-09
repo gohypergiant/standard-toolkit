@@ -167,6 +167,10 @@ const createFormatter =
     return cachedValues[key][format];
   };
 
+type NormalizedResult =
+  | { valid: true; raw: CoordinateInternalValue; cachedValues: OutputCache }
+  | { valid: false; errors: string[] };
+
 /**
  * Create a coordinate object enabling: lexing, parsing, validation, and
  * formatting in alternative systems and formats. The system and format will be
@@ -199,7 +203,7 @@ export function createCoordinate(
   initSystem: CoordinateSystem = coordinateSystems.dd,
   initFormat: Format = FORMATS_DEFAULT,
 ) {
-  function parseStringInput(input: string): Coordinate {
+  function normalizeString(input: string): NormalizedResult {
     let tokens: Tokens;
     let errors: Errors;
 
@@ -210,22 +214,16 @@ export function createCoordinate(
         throw errors;
       }
     } catch (errors) {
-      return errorCoordinate(errors as Coordinate['errors']);
+      return { valid: false, errors: errors as string[] };
     }
 
-    // start with the original value for the original system in the original format
-    // other values will be computed as needed and cached per request
     const cachedValues = {
       [initSystem.name]: createCache(
         initFormat,
-        // because mgrs doesn't have two formats: LATLON v LONLAT
         initSystem.name === systemMGRS.name ? input : tokens.join(' '),
       ),
     } as OutputCache;
 
-    // Create the "internal" representation - Decimal Degrees - for
-    // consistency and ease of computation; all systems expect to
-    // start from a common starting point to reduce complexity.
     const dividerIndex = tokens.indexOf(SYMBOLS.DIVIDER);
     const raw = {
       [initFormat.slice(0, 3)]: initSystem.toFloat(
@@ -236,51 +234,70 @@ export function createCoordinate(
       ),
     } as CoordinateInternalValue;
 
-    const to = createFormatter(raw, cachedValues, initSystem, initFormat);
-
-    return freezeCoordinate([] as Coordinate['errors'], to, raw, true);
+    return { valid: true, raw, cachedValues };
   }
 
-  function parseNumericInput(lat: number, lon: number): Coordinate {
+  function normalizeNumeric(lat: number, lon: number): NormalizedResult {
     const errors = validateNumericCoordinate(lat, lon);
 
     if (errors.length) {
-      return errorCoordinate(errors);
+      return { valid: false, errors };
     }
 
-    const raw: CoordinateInternalValue = { LAT: lat, LON: lon };
-    const cachedValues = {} as OutputCache;
-
-    const to = createFormatter(raw, cachedValues, initSystem, initFormat);
-
-    return freezeCoordinate([] as Coordinate['errors'], to, raw, true);
+    return {
+      valid: true,
+      raw: { LAT: lat, LON: lon },
+      cachedValues: {} as OutputCache,
+    };
   }
 
-  return (input: CoordinateInput): Coordinate => {
+  function normalize(input: CoordinateInput): NormalizedResult {
     if (typeof input === 'string') {
-      return parseStringInput(input);
+      return normalizeString(input);
     }
 
     if (isCoordinateTuple(input)) {
       const { lat, lon } = tupleToLatLon(initFormat, input);
-      return parseNumericInput(lat, lon);
+      return normalizeNumeric(lat, lon);
     }
 
     if (isCoordinateObject(input)) {
       const result = normalizeObjectToLatLon(input);
 
       if (result === null) {
-        return errorCoordinate([
-          '[ERROR] Invalid coordinate object; object must contain valid latitude and longitude properties.',
-        ]);
+        return {
+          valid: false,
+          errors: [
+            '[ERROR] Invalid coordinate object; object must contain valid latitude and longitude properties.',
+          ],
+        };
       }
 
-      const { lat, lon } = result;
-      return parseNumericInput(lat, lon);
+      return normalizeNumeric(result.lat, result.lon);
     }
 
-    return errorCoordinate([
-      '[ERROR] Invalid coordinate input; expected a string, [lat, lon] tuple, or { lat, lon } object.',
-    ]);
+    return {
+      valid: false,
+      errors: [
+        '[ERROR] Invalid coordinate input; expected a string, [lat, lon] tuple, or { lat, lon } object.',
+      ],
+    };
+  }
+
+  return (input: CoordinateInput): Coordinate => {
+    const result = normalize(input);
+
+    if (!result.valid) {
+      return errorCoordinate(result.errors);
+    }
+
+    const to = createFormatter(
+      result.raw,
+      result.cachedValues,
+      initSystem,
+      initFormat,
+    );
+
+    return freezeCoordinate([], to, result.raw, true);
   };
 }
