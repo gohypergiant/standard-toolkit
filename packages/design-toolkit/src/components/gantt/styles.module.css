@@ -16,4 +16,12 @@
   .container {
     @apply w-full overflow-hidden;
   }
+
+  .rows-container {
+    @apply flex-1 overflow-hidden;
+  }
+
+  .row-scroll-container {
+    @apply overflow-y-scroll pr-px;
+  }
 }

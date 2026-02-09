@@ -11,33 +11,35 @@
  */
 
 import { useEffect } from 'react';
-import { useGanttStore } from '../../store';
+import { type GanttState, useGanttStore } from '../../store';
 
 type UseLayoutSubscriptionProps = {
-  callback: (currentPositionMs: number) => void;
+  callback: (value: number) => void;
+  selector: (state: GanttState) => number;
 };
 
 export function useLayoutSubscription({
   callback,
+  selector,
 }: UseLayoutSubscriptionProps) {
   useEffect(() => {
     let animationFrameId: number;
 
-    // Invoke callback as soon as this effect runs. If a timestamp
+    // Invoke callback as soon as this effect runs. If a subscribed value
     // change causes a re-render to occur, we want layout
-    // calculations based on the new timestamp to be done after
+    // calculations based on the new value to be done after
     // a browser paint. Prevents potential layout flickers because
     // of calculations based on a stale rendered UI (since the
     // subscription in this effect runs outside of the React render
     // cycle).
     animationFrameId = requestAnimationFrame(() => {
-      callback(useGanttStore.getState().currentPositionMs);
+      callback(selector(useGanttStore.getState()));
     });
 
-    const unsubscribe = useGanttStore.subscribe((state) => {
+    const unsubscribe = useGanttStore.subscribe(selector, (value) => {
       animationFrameId = requestAnimationFrame(() => {
         // Invoke callback whenever the timestamp is changed.
-        callback(state.currentPositionMs);
+        callback(value);
       });
     });
 
@@ -45,5 +47,5 @@ export function useLayoutSubscription({
       cancelAnimationFrame(animationFrameId);
       unsubscribe();
     };
-  }, [callback]);
+  }, [callback, selector]);
 }

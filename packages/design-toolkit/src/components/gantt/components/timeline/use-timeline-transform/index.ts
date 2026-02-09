@@ -43,5 +43,8 @@ export function useTimelineTransform({
     [timelineElementRef.current, msPerPx, timelineChunks],
   );
 
-  useLayoutSubscription({ callback: updateElementTranslateX });
+  useLayoutSubscription({
+    callback: updateElementTranslateX,
+    selector: (state) => state.currentPositionMs,
+  });
 }

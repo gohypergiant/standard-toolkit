@@ -45,5 +45,8 @@ export function useRowElementLayout(props: UseRowElementLayoutProps) {
     [elementRef.current, msPerPx, renderedRegionBoundary, startMs, endMs],
   );
 
-  useLayoutSubscription({ callback: updateElementLayout });
+  useLayoutSubscription({
+    callback: updateElementLayout,
+    selector: (state) => state.currentPositionMs,
+  });
 }

@@ -22,10 +22,16 @@ export function getViewableRegionWidth(element: HTMLElement | null) {
   return element.clientWidth;
 }
 
-export function getScrolledPixels(event: UIEvent<HTMLDivElement>) {
+export function getHorizontalScrolledPixels(event: UIEvent<HTMLDivElement>) {
   const { currentTarget } = event;
 
   return currentTarget.scrollLeft;
+}
+
+export function getVerticalScrolledPixels(event: UIEvent<HTMLDivElement>) {
+  const { currentTarget } = event;
+
+  return currentTarget.scrollTop;
 }
 
 export function getRenderedRegionBoundaryMs(

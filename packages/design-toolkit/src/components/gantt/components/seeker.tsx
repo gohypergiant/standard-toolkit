@@ -16,7 +16,7 @@ import {
   getTotalTimelineMs,
   getTotalTimelineWidth,
 } from '../utils/conversions';
-import { getScrolledPixels } from '../utils/helpers';
+import { getHorizontalScrolledPixels } from '../utils/helpers';
 import styles from './styles.module.css';
 import type { UIEvent } from 'react';
 
@@ -29,7 +29,9 @@ const updateCurrentPositionMs =
   (startTimeMs: number, msPerPx: number) => (event: UIEvent<HTMLDivElement>) =>
     useGanttStore
       .getState()
-      .setCurrentPositionMs(startTimeMs + getScrolledPixels(event) * msPerPx);
+      .setCurrentPositionMs(
+        startTimeMs + getHorizontalScrolledPixels(event) * msPerPx,
+      );
 
 export function Seeker({ startTimeMs, endTimeMs }: SeekerProps) {
   const { msPerPx } = useGanttContext();

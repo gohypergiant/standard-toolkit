@@ -11,14 +11,18 @@
  */
 
 import { create } from 'zustand';
+import { subscribeWithSelector } from 'zustand/middleware';
+import { GANTT_ROW_HEIGHT_PX } from './constants';
 import { roundDateToInterval } from './utils/dates';
 
-type GanttState = {
+export type GanttState = {
   currentPositionMs: number;
+  currentRowScrollPx: number;
 };
 
 type GanttActions = {
   setCurrentPositionMs: (ms: number) => void;
+  setCurrentRowScrollPx: (px: number) => void;
 };
 
 type GanttStore = GanttState & GanttActions;
@@ -33,11 +37,22 @@ export const selectors = {
 
       return workerDate.getTime();
     },
+  roundedCurrentRowScrollPx: (state: GanttState) => {
+    const rawValue = state.currentRowScrollPx / GANTT_ROW_HEIGHT_PX;
+
+    return Math.floor(rawValue) * GANTT_ROW_HEIGHT_PX;
+  },
 };
 
-export const useGanttStore = create<GanttStore>()((set) => ({
-  currentPositionMs: 0,
-  setCurrentPositionMs: (ms: number) => {
-    set({ currentPositionMs: ms });
-  },
-}));
+export const useGanttStore = create<GanttStore>()(
+  subscribeWithSelector((set) => ({
+    currentPositionMs: 0,
+    currentRowScrollPx: 0,
+    setCurrentPositionMs: (ms: number) => {
+      set({ currentPositionMs: ms });
+    },
+    setCurrentRowScrollPx: (px: number) => {
+      set({ currentRowScrollPx: px });
+    },
+  })),
+);
