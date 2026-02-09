@@ -17,10 +17,10 @@ import {
   type Axes,
   type CoordinateInput,
   type CoordinateInternalValue,
+  type CoordinateObject,
   type Errors,
   FORMATS_DEFAULT,
   type Format,
-  isCoordinateObject,
   isCoordinateTuple,
   normalizeObjectToLatLon,
   SYMBOLS,
@@ -91,7 +91,7 @@ type Formatter = (f?: Format) => string;
 
 type ToFloatArg = Parameters<CoordinateSystem['toFloat']>[0];
 
-type OutputCache = Record<keyof typeof coordinateSystems, CoordinateCache>;
+type OutputCache = Map<CoordinateSystem, CoordinateCache>;
 
 /**
  * Available coordinate systems for parsing, converting, and formatting geographic coordinates.
@@ -151,20 +151,21 @@ const createFormatter =
     initFormat: Format,
   ) =>
   (system: CoordinateSystem = initSystem, format: Format = initFormat) => {
-    const key = system.name as keyof typeof coordinateSystems;
+    let cache = cachedValues.get(system);
 
-    if (!cachedValues[key]?.[format]) {
-      if (!cachedValues[key]) {
-        cachedValues[key] = {} as CoordinateCache;
+    if (!cache?.[format]) {
+      if (!cache) {
+        cache = {} as CoordinateCache;
+        cachedValues.set(system, cache);
       }
 
-      cachedValues[key][format] = system.toFormat(format, [
+      cache[format] = system.toFormat(format, [
         raw[format.slice(0, 3) as Axes],
         raw[format.slice(3) as Axes],
       ] as [number, number]);
     }
 
-    return cachedValues[key][format];
+    return cache[format];
   };
 
 type NormalizedResult =
@@ -217,12 +218,15 @@ export function createCoordinate(
       return { valid: false, errors: errors as string[] };
     }
 
-    const cachedValues = {
-      [initSystem.name]: createCache(
-        initFormat,
-        initSystem.name === systemMGRS.name ? input : tokens.join(' '),
-      ),
-    } as OutputCache;
+    const cachedValues: OutputCache = new Map([
+      [
+        initSystem,
+        createCache(
+          initFormat,
+          initSystem === systemMGRS ? input : tokens.join(' '),
+        ),
+      ],
+    ]);
 
     const dividerIndex = tokens.indexOf(SYMBOLS.DIVIDER);
     const raw = {
@@ -247,7 +251,7 @@ export function createCoordinate(
     return {
       valid: true,
       raw: { LAT: lat, LON: lon },
-      cachedValues: {} as OutputCache,
+      cachedValues: new Map(),
     };
   }
 
@@ -261,8 +265,8 @@ export function createCoordinate(
       return normalizeNumeric(lat, lon);
     }
 
-    if (isCoordinateObject(input)) {
-      const result = normalizeObjectToLatLon(input);
+    if (typeof input === 'object' && input !== null && !Array.isArray(input)) {
+      const result = normalizeObjectToLatLon(input as CoordinateObject);
 
       if (result === null) {
         return {

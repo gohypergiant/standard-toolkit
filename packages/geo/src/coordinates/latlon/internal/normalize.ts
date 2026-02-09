@@ -98,20 +98,27 @@ export function normalizeObjectToLatLon(obj: CoordinateObject): {
   lat: number;
   lon: number;
 } | null {
-  const normalized: Record<string, number> = {};
+  const lower = new Map<string, number>();
   for (const [key, value] of Object.entries(obj)) {
-    normalized[key.toLowerCase()] = value;
+    lower.set(key.toLowerCase(), value);
   }
 
-  const latKey = LAT_KEYS.find((k) => k in normalized);
-  const lonKey = LON_KEYS.find((k) => k in normalized);
+  let lat: number | undefined;
+  let lon: number | undefined;
 
-  if (!(latKey && lonKey)) {
-    return null;
+  for (const k of LAT_KEYS) {
+    if (lower.has(k)) {
+      lat = lower.get(k);
+      break;
+    }
   }
 
-  const lat = normalized[latKey];
-  const lon = normalized[lonKey];
+  for (const k of LON_KEYS) {
+    if (lower.has(k)) {
+      lon = lower.get(k);
+      break;
+    }
+  }
 
   if (lat === undefined || lon === undefined) {
     return null;
