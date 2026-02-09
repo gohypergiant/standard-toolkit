@@ -18,6 +18,16 @@
 
 @import 'tailwindcss';
 
+@theme {
+  /* Remove the default Tailwind styles. */
+  --color-*: initial;
+  --font-*: initial;
+  --radius-*: initial;
+  --shadow-*: initial;
+  --spacing-*: initial;
+  --text-*: initial;
+}
+
 /* Import generated themes.css */
 @import './tokens/themes.css';
 
@@ -31,6 +41,34 @@
 @source inline('animate-spin');
 @source inline('animate-ping');
 @source inline('animate-pulse');
+
+@utility bg-* {
+  --bg-alpha: calc(--modifier([number]) / 100);
+  background-color: rgb(
+    from --value(--color-bg-*, --color-domain-*) r g b / var(--bg-alpha, 1)
+  );
+}
+
+@utility fg-* {
+  --fg-alpha: calc(--modifier([number]) / 100);
+  --fg-value: rgb(
+    from --value(--color-fg-*, --color-domain-*) r g b / var(--fg-alpha, 1)
+  );
+  color: var(--fg-value);
+  --icon-color: var(--fg-value);
+}
+
+@utility outline-* {
+  --outline-alpha: calc(--modifier([number]) / 100);
+  outline-color: rgb(
+    from --value(--color-outline-*, --color-domain-*) r g b /
+      var(--outline-alpha, 1)
+  );
+}
+
+@utility shadow-* {
+  box-shadow: --value(--shadow-*);
+}
 
 /**
  * DesignTK chooses to implement outlines instead of borders to make it so
@@ -147,45 +185,25 @@
   line-height: var(--typography-button-xs-height);
 }
 
-@utility w-content {
-  width: fit-content;
-}
-
-@utility h-content {
-  height: fit-content;
-}
-
-@utility w-* {
-  width: --value([*]);
-}
-
 @utility icon-* {
-  --icon-color: --value([*]);
-  --icon-color: --value(--color-*);
+  --icon-color: --value(--color-*, [*]);
 }
 
 html {
-  @apply bg-surface-default;
-  @apply fg-primary-bold;
-  @apply font-primary;
+  @apply bg-surface-default fg-primary-bold font-primary;
 }
 
 @layer base {
-  /*
- * Scrollbars
- */
   ::-webkit-scrollbar {
-    width: var(--spacing-l);
-    height: var(--spacing-l);
+    @apply size-l;
   }
 
   ::-webkit-scrollbar-track {
-    background: var(--bg-interactive-muted-hover);
+    @apply bg-interactive-muted-hover;
   }
 
   ::-webkit-scrollbar-thumb {
-    background-color: var(--bg-interactive-muted);
-    border-radius: var(--radius-large);
+    @apply bg-interactive-muted rounded-large;
     border: 5px solid transparent;
     background-clip: padding-box;
   }

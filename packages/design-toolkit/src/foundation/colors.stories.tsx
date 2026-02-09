@@ -35,7 +35,7 @@ function useColorValues(utilityClassGroup: Record<PropertyKey, string[]>) {
       const newColorValues = new Map<string, string>();
       for (const utilityClass of Object.values(utilityClassGroup).flat()) {
         const computedStyle = getComputedStyle(root)
-          .getPropertyValue(`--${utilityClass}`)
+          .getPropertyValue(`--color-${utilityClass}`)
           .trim();
         newColorValues.set(utilityClass, computedStyle);
       }
