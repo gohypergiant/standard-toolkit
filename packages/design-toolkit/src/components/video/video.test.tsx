@@ -203,30 +203,6 @@ describe('Video', () => {
     expect(onTimeUpdate).toHaveBeenCalledWith(42);
   });
 
-  it('should not call onTimeUpdate callback when currentTime is NaN', () => {
-    const onTimeUpdate = vi.fn();
-    setup({ onTimeUpdate });
-    const video = screen.getByTestId('video-element');
-    Object.defineProperty(video, 'currentTime', {
-      value: Number.NaN,
-      writable: true,
-    });
-    fireEvent.timeUpdate(video);
-    expect(onTimeUpdate).not.toHaveBeenCalled();
-  });
-
-  it('should not call onTimeUpdate callback when currentTime is Infinity', () => {
-    const onTimeUpdate = vi.fn();
-    setup({ onTimeUpdate });
-    const video = screen.getByTestId('video-element');
-    Object.defineProperty(video, 'currentTime', {
-      value: Number.POSITIVE_INFINITY,
-      writable: true,
-    });
-    fireEvent.timeUpdate(video);
-    expect(onTimeUpdate).not.toHaveBeenCalled();
-  });
-
   it('should apply classNames.container to container', () => {
     setup({ classNames: { container: 'container-class' } });
     const controller = screen.getByTestId('media-controller');

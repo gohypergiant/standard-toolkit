@@ -110,10 +110,7 @@ function VideoInner({
 
   const handleTimeUpdate = useCallback(
     (e: React.SyntheticEvent<HTMLVideoElement>) => {
-      const time = e.currentTarget.currentTime;
-      if (Number.isFinite(time)) {
-        onTimeUpdate?.(time);
-      }
+      onTimeUpdate?.(e.currentTarget.currentTime);
     },
     [onTimeUpdate],
   );
@@ -177,6 +174,7 @@ function VideoInner({
       <MediaControlsProvider isDisabled={isDisabled}>
         {/* noautohide tells MediaController (web component) to keep this element visible */}
         {children ?? (
+          // @ts-expect-error noautohide is a valid attribute for media-chrome's MediaController but not recognized by React typings
           <div className={styles.controlsOverlay} noautohide=''>
             <div className={clsx(styles.controls, classNames?.mediaControls)}>
               <div className={clsx(styles.timeRow, classNames?.timeRow)}>
