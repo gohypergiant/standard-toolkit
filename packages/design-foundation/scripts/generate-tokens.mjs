@@ -26,8 +26,6 @@ const __dirname = path.dirname(__filename);
 const OUTPUT_DIR = path.join(__dirname, '..', 'src', 'tokens');
 const INPUT_DIR = path.join(__dirname, '..', 'src', 'tokens');
 
-const skipFallback = ['icon-size', 'shadow-elevation', 'font'];
-
 //#region I/O utils
 function parse(file) {
   const tokensPath = path.join(INPUT_DIR, file);
@@ -70,20 +68,6 @@ function flattenTokens(obj, prefix = '') {
     }
   }
   return result;
-}
-
-function _walkTokens(obj, prefix) {
-  let lines = [];
-  for (const [k, v] of Object.entries(obj)) {
-    if (typeof v === 'object' && v !== null) {
-      lines = lines.concat(_walkTokens(v, `${prefix}-${k}`));
-    } else {
-      skipFallback.includes(prefix)
-        ? lines.push(`  --${prefix}-${k}: var(--${prefix}-${k});`)
-        : lines.push(`  --${prefix}-${k}: var(--${prefix}-${k}, ${v});`);
-    }
-  }
-  return lines;
 }
 
 function getTokenFallback(tokenRef, primitives) {
