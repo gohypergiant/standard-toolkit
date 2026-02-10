@@ -133,16 +133,18 @@ function identifyPieces(half: string[]) {
   const places = { bear: '', deg: '' };
 
   return half.reduce<typeof places | undefined>((acc, token) => {
-    if (!acc) {
+    const isBearing = SYMBOL_PATTERNS.NSEW.test(token) && !acc?.bear;
+
+    if (!acc || (!isBearing && acc.deg)) {
       return undefined;
     }
-    if (SYMBOL_PATTERNS.NSEW.test(token) && !acc.bear) {
+
+    if (isBearing) {
       acc.bear = token;
-    } else if (acc.deg) {
-      return undefined;
     } else {
       acc.deg = token;
     }
+
     return acc;
   }, places);
 }
