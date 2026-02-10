@@ -6,7 +6,6 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/features/hero/hero/.visual.tsx"
   ],
   "exclude": [
     "node_modules",
