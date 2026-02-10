@@ -17,6 +17,7 @@
   },
   "exports": {
     ".": "./dist/index.js",
+    "./color": "./dist/color/index.js",
     "./coordinates": "./dist/coordinates/index.js",
     "./package.json": "./package.json"
   },
