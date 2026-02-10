@@ -10,28 +10,14 @@
  * governing permissions and limitations under the License.
  */
 
-import React from 'react';
+import { RowsVirtualizer } from './components/rows-virtualizer';
 import { Seeker } from './components/seeker';
 import { Timeline } from './components/timeline';
-import { GANTT_ROW_HEIGHT_PX } from './constants';
 import { GanttProvider } from './context';
 import { useGanttInit } from './hooks/use-gantt-init';
-import { useLayoutSubscription } from './hooks/use-layout-subscription';
-import { useVirtualizedRows } from './hooks/use-virtualized-rows';
-import { useGanttStore } from './store';
 import styles from './styles.module.css';
-import { getVerticalScrolledPixels } from './utils/helpers';
-import type { PropsWithChildren, UIEvent } from 'react';
+import type { PropsWithChildren } from 'react';
 import type { Timescale } from './types';
-
-const updateCurrentScrollPx = (event: UIEvent<HTMLDivElement>) =>
-  useGanttStore
-    .getState()
-    .setCurrentRowScrollPx(getVerticalScrolledPixels(event));
-
-function deriveTranslateYValue(currentScrollPx: number) {
-  return currentScrollPx % GANTT_ROW_HEIGHT_PX;
-}
 
 type GanttProps = {
   startTimeMs: number;
@@ -45,64 +31,16 @@ export function Gantt({
   timescale,
   children,
 }: PropsWithChildren<GanttProps>) {
-  const rowDisplayRef = React.useRef<HTMLDivElement>(null);
-  const [rowContainerElement, setRowContainerElement] =
-    React.useState<HTMLDivElement | null>(null);
   useGanttInit(startTimeMs);
 
-  const rows = React.Children.toArray(children);
-
-  const applyTranslateY = (currentScrollPx: number) => {
-    if (!rowDisplayRef.current) {
-      return;
-    }
-
-    const translateY = deriveTranslateYValue(currentScrollPx);
-    rowDisplayRef.current.style.transform = `translateY(-${translateY}px)`;
-  };
-
-  useLayoutSubscription({
-    callback: applyTranslateY,
-    selector: (state) => state.currentRowScrollPx,
-  });
-
-  const { totalHeightPx, renderedIndices } = useVirtualizedRows({
-    rowContainer: rowContainerElement,
-    rowCount: rows.length,
-  });
-
-  const assignRowContainerElementRef = (element: HTMLDivElement | null) => {
-    setRowContainerElement(element);
-  };
-
-  const renderedRows = rows.slice(renderedIndices.start, renderedIndices.end);
-
   return (
-    <div className={styles.container}>
-      <GanttProvider timescale={timescale}>
+    <GanttProvider timescale={timescale}>
+      <div className={styles.container}>
         <Timeline />
-        <div className='flex'>
-          <div
-            ref={assignRowContainerElementRef}
-            className={styles['rows-container']}
-            style={{
-              height: 130,
-              maxHeight: 130,
-              overflowY: 'hidden',
-            }}
-          >
-            <div ref={rowDisplayRef}>{renderedRows}</div>
-          </div>
-          <div
-            onScroll={updateCurrentScrollPx}
-            className={styles['row-scroll-container']}
-            style={{ height: 130, maxHeight: 130 }}
-          >
-            <div style={{ height: totalHeightPx }} />
-          </div>
-        </div>
+        <RowsVirtualizer>{children}</RowsVirtualizer>
+        {/* <div style={{ height: rows.length * GANTT_ROW_HEIGHT_PX }} /> */}
         <Seeker startTimeMs={startTimeMs} endTimeMs={endTimeMs} />
-      </GanttProvider>
-    </div>
+      </div>
+    </GanttProvider>
   );
 }

@@ -31,6 +31,8 @@ export function getHorizontalScrolledPixels(event: UIEvent<HTMLDivElement>) {
 export function getVerticalScrolledPixels(event: UIEvent<HTMLDivElement>) {
   const { currentTarget } = event;
 
+  console.log({ scrollTop: currentTarget.scrollTop });
+
   return currentTarget.scrollTop;
 }
 

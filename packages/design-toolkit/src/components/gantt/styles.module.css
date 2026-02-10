@@ -14,7 +14,7 @@
 
 @layer components.l1 {
   .container {
-    @apply w-full overflow-hidden;
+    @apply flex max-h-full w-full flex-col overflow-hidden;
   }
 
   .rows-container {
@@ -22,6 +22,6 @@
   }
 
   .row-scroll-container {
-    @apply overflow-y-scroll pr-px;
+    @apply pr-px;
   }
 }

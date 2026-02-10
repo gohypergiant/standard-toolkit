@@ -13,32 +13,10 @@
 @reference '@accelint/design-foundation/styles';
 
 @layer components.l1 {
-  .chunk {
-    min-width: var(--tick-chunk-width);
+  .container {
+    @apply relative flex overflow-x-hidden overflow-y-auto;
   }
-
-  .chunk-label {
-    @apply font-display text-body-s fg-primary-muted;
-    margin-left: var(--tick-margin);
-  }
-
-  .chunk-ticks-container {
-    @apply flex;
-  }
-
-  .chunk-tick-container {
-    @apply flex flex-1;
-  }
-
-  .chunk-tick {
-    @apply fg-disabled h-[6px] border;
-  }
-
-  .timeline {
-    @apply flex;
-  }
-
-  .seeker-container {
-    @apply overflow-x-scroll p-[6px];
+  .inner-container {
+    @apply relative w-full overflow-hidden;
   }
 }

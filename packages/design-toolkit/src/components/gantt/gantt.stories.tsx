@@ -34,19 +34,22 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: (args) => (
-    <Gantt {...args}>
-      {ROWS.map(({ id, ranges }) => (
-        <GanttRow key={id}>
-          {ranges.map(([startMs, endMs], index) => (
-            <GanttRowBlock
-              key={`${id}-block-${index}`}
-              id={`${id}-block-${index}`}
-              startMs={startMs}
-              endMs={endMs}
-            />
-          ))}
-        </GanttRow>
-      ))}
-    </Gantt>
+    // consumer-set height to demonstrate scroll behavior with virtualized rows
+    <div className='h-[270px]'>
+      <Gantt {...args}>
+        {ROWS.map(({ id, ranges }) => (
+          <GanttRow key={id}>
+            {ranges.map(([startMs, endMs], index) => (
+              <GanttRowBlock
+                key={`${id}-block-${index}`}
+                id={`${id}-block-${index}`}
+                startMs={startMs}
+                endMs={endMs}
+              />
+            ))}
+          </GanttRow>
+        ))}
+      </Gantt>
+    </div>
   ),
 };

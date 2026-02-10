@@ -15,7 +15,7 @@
 @layer components.l1 {
   .row-container {
     @apply outline-static py-xxs relative flex flex-col justify-center outline;
-    height: var(--row-height);
+    height: attr(data-height px);
   }
 
   .row-block {

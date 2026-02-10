@@ -15,10 +15,10 @@ import { GANTT_ROW_HEIGHT_PX } from '../../constants';
 import { useGanttContext } from '../../context';
 import { shouldRenderBlock } from '../../utils/helpers';
 import styles from './styles.module.css';
-import type { CSSProperties, PropsWithChildren } from 'react';
+import type { PropsWithChildren } from 'react';
 import type { GanttRowBlockProps } from './gantt-row-block';
 
-export function GanttRow({ children }: PropsWithChildren) {
+export function GanttRow({ children, ...rest }: PropsWithChildren) {
   const { renderedRegionBoundary } = useGanttContext();
   const blocks = React.Children.toArray(children).filter(
     (child): child is React.ReactElement<GanttRowBlockProps> => {
@@ -35,7 +35,8 @@ export function GanttRow({ children }: PropsWithChildren) {
   return (
     <div
       className={styles['row-container']}
-      style={{ '--row-height': `${GANTT_ROW_HEIGHT_PX}px` } as CSSProperties}
+      data-height={GANTT_ROW_HEIGHT_PX}
+      {...rest}
     >
       {renderedBlocks}
     </div>
