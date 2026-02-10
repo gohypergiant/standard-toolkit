@@ -3,9 +3,9 @@ import { BentoItem } from '~/components/bento';
 import { PROP_COMBOS } from './variants';
 
 function PropCombos() {
-  return PROP_COMBOS.map((_props, k) => (
+  return PROP_COMBOS.map((props, k) => (
     <BentoItem key={k}>
-      <Hero>
+      <Hero {...props}>
         <HeroTitle>John Doe</HeroTitle>
         <HeroSubtitle>Software Engineer</HeroSubtitle>
         <HeroSubtitle>San Francisco, CA</HeroSubtitle>

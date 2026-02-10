@@ -1,4 +1,3 @@
-// divider
 import 'server-only';
 import { ErrorComponent } from './error';
 import { LoadingComponent } from './loading';

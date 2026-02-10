@@ -1,3 +1,5 @@
+import 'server-only';
+
 import { Link } from '@accelint/design-toolkit';
 import { BentoItem } from '~/components/bento';
 import { PROP_COMBOS } from './variants';
