@@ -43,28 +43,28 @@
 @source inline('animate-pulse');
 
 @utility bg-* {
-  --bg-alpha: calc(--modifier([number]) / 100);
+  background-color: --value(--color-bg-*, --color-domain-*, --color-*);
   background-color: rgb(
     from --value(--color-bg-*, --color-domain-*, --color-*) r g b /
-      var(--bg-alpha, 1)
+      calc(--modifier([number]) / 100)
   );
 }
 
 @utility fg-* {
-  --fg-alpha: calc(--modifier([number]) / 100);
-  --fg-value: rgb(
+  --fg-value: --value(--color-fg-*, --color-domain-*, --color-*);
+  --fg-modified-value: rgb(
     from --value(--color-fg-*, --color-domain-*, --color-*) r g b /
-      var(--fg-alpha, 1)
+      calc(--modifier([number]) / 100)
   );
-  color: var(--fg-value);
-  --icon-color: var(--fg-value);
+  color: var(--fg-modified-value, --fg-value);
+  --icon-color: var(--fg-modified-value, --fg-value);
 }
 
 @utility outline-* {
-  --outline-alpha: calc(--modifier([number]) / 100);
+  outline-color: --value(--color-outline-*, --color-domain-*, --color-*);
   outline-color: rgb(
     from --value(--color-outline-*, --color-domain-*, --color-*) r g b /
-      var(--outline-alpha, 1)
+      calc(--modifier([number]) / 100)
   );
 }
 
