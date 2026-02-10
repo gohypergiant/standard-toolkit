@@ -102,4 +102,6 @@ export interface VisualTestScenario {
   selector?: string;
   /** Optional delay in ms before taking screenshot (for animations/transitions) */
   waitMs?: number;
+  /** Optional CSS class name applied to the wrapper div (e.g., 'inline-block' for tight screenshots) */
+  className?: string;
 }

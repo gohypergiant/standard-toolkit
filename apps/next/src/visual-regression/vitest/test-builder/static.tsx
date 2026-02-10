@@ -133,11 +133,14 @@ export function createVisualTestScenarios(
     for (const scenario of scenarios) {
       for (const mode of THEME_MODES) {
         const filename = insertModeInFilename(scenario.screenshotName, mode);
+        const testId = `vrt-${dash(componentName)}-${dash(scenario.name)}-${mode}`;
 
         test(`${scenario.name} (${mode} mode)`, async () => {
-          const { container } = render(
+          render(
             <ThemeProvider defaultMode={mode}>
-              {scenario.render()}
+              <div data-testid={testId} className={scenario.className}>
+                {scenario.render()}
+              </div>
             </ThemeProvider>,
           );
 
@@ -148,16 +151,12 @@ export function createVisualTestScenarios(
             );
           }
 
-          // Use selector if provided, otherwise screenshot container
+          // Use selector if provided, otherwise screenshot the wrapper div
           const target = scenario.selector
             ? getTargetFromSelector(scenario.selector)
-            : null;
+            : page.getByTestId(testId);
 
-          if (target) {
-            await expect.element(target).toMatchScreenshot(filename);
-          } else {
-            await expect.element(container).toMatchScreenshot(filename);
-          }
+          await expect.element(target).toMatchScreenshot(filename);
         });
       }
     }
