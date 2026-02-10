@@ -424,6 +424,15 @@ importers:
 
   packages/design-foundation:
     dependencies:
+      '@accelint/constants':
+        specifier: workspace:*
+        version: link:../constants
+      '@accelint/converters':
+        specifier: workspace:*
+        version: link:../converters
+      '@accelint/predicates':
+        specifier: workspace:*
+        version: link:../predicates
       string-hash:
         specifier: ^1.1.3
         version: 1.1.3
