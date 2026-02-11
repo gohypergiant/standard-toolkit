@@ -79,6 +79,27 @@ describe('useRenderedRows', () => {
     expect(currentRowScrollPx).toBe(verticalScrolledPixels);
   });
 
+  it('should apply correct translateY to rendered rows based on vertical scroll', () => {
+    const { result } = renderHook(() => useRenderedRows({ children }));
+
+    act(() => {
+      result.current.onScroll({
+        ...fakeEvent,
+        currentTarget: {
+          ...fakeEvent.currentTarget,
+          scrollTop: 0,
+        },
+      });
+    });
+
+    // The translateY for each row should be based on its index and the row height
+    result.current.renderedRows?.forEach((row, index) => {
+      expect(row.props.style?.transform ?? '').toContain(
+        `translateY(${GANTT_ROW_HEIGHT_PX * index}px)`,
+      );
+    });
+  });
+
   it('should rerender with expected values when element ref is assigned', () => {
     const elementHeight = 200;
 
@@ -100,12 +121,11 @@ describe('useRenderedRows', () => {
     expect(result.current.renderedRows).toHaveLength(
       expectedSlice.end - expectedSlice.start,
     );
-
-    // ensure the expected translateY values are applied to the rendered rows
-    result.current.renderedRows?.forEach((row, index) => {
-      expect(row.props.style?.transform ?? '').toContain(
-        `translateY(${GANTT_ROW_HEIGHT_PX * index}px)`,
-      );
-    });
+    expect(result.current.dimensions.height).toBe(
+      children.length * GANTT_ROW_HEIGHT_PX,
+    );
+    expect(result.current.dimensions.width).toBe(
+      (totalBounds.endMs - totalBounds.startMs) / mocks.msPerPx,
+    );
   });
 });
