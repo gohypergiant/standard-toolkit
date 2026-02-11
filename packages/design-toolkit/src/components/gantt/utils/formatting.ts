@@ -10,18 +10,36 @@
  * governing permissions and limitations under the License.
  */
 
-import { MONTHS } from '../constants';
+// These two values can ultimately be configured by the user
+// but for now, we'll stick to hardcoding them here
+const DEFAULT_LOCALE = 'en-US';
+const options: Intl.DateTimeFormatOptions = {
+  minute: '2-digit',
+  hour: '2-digit',
+  day: '2-digit',
+  month: 'short',
+  timeZone: 'UTC',
+  hour12: false,
+};
 
 export function formatTimestampLabel(timestampMs: number) {
-  const date = new Date(timestampMs);
-  const hour = date.getUTCHours();
-  const minute = date.getUTCMinutes();
+  const formatter = new Intl.DateTimeFormat(DEFAULT_LOCALE, options);
 
-  const shouldRenderDate = hour === 0 && minute === 0;
+  const { minute, hour, day, month } = formatter
+    .formatToParts(timestampMs)
+    .reduce(
+      (acc, part) => {
+        acc[part.type] = part.value;
+        return acc;
+      },
+      {} as Record<Intl.DateTimeFormatPartTypes, string>,
+    );
+
+  const shouldRenderDate = hour === '00' && minute === '00';
 
   if (shouldRenderDate) {
-    return `${date.getUTCDate().toString().padStart(2, '0')} ${MONTHS[date.getUTCMonth()]?.toUpperCase()}`;
+    return `${day} ${month.toUpperCase()}`;
   }
 
-  return `${date.getUTCHours().toString().padStart(2, '0')}:${date.getUTCMinutes().toString().padStart(2, '0')}`;
+  return `${hour}:${minute}`;
 }
