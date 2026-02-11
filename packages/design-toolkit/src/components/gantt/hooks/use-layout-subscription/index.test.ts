@@ -35,7 +35,12 @@ describe('useLayoutSubscription', () => {
     const rafSpy = createRafSpy();
     const callback = vi.fn();
 
-    renderHook(() => useLayoutSubscription({ callback }));
+    renderHook(() =>
+      useLayoutSubscription({
+        callback,
+        selector: (state) => state.currentPositionMs,
+      }),
+    );
 
     act(() => {
       useGanttStore.setState({ currentPositionMs: 500 });

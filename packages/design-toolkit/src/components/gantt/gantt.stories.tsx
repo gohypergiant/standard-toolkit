@@ -35,7 +35,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: (args) => (
     // consumer-set height to demonstrate scroll behavior with virtualized rows
-    <div className='h-[270px]'>
+    <div className='h-[280px]'>
       <Gantt {...args}>
         {ROWS.map(({ id, ranges }) => (
           <GanttRow key={id}>

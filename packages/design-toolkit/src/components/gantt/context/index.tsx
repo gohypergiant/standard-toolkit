@@ -23,15 +23,16 @@ import { selectors, useGanttStore } from '../store';
 import { getMsPerPx } from '../utils/conversions';
 import { generateTimelineChunks } from '../utils/generation';
 import {
-  getRenderedRegionBoundaryMs,
+  getRenderedRegionBoundsMs,
   getViewableRegionWidth,
 } from '../utils/helpers';
-import type { TimelineChunkObject, Timescale } from '../types';
+import type { TimeBounds, TimelineChunkObject, Timescale } from '../types';
 
 export type GanttContextValue = {
   msPerPx: number;
-  renderedRegionBoundary: { startMs: number; endMs: number };
+  renderedRegionBounds: TimeBounds;
   timescale: Timescale;
+  totalBounds: TimeBounds;
   timelineChunks: TimelineChunkObject[];
   assignTimelineContainerElementRef: (node: HTMLDivElement) => void;
 };
@@ -42,11 +43,13 @@ export const GanttContext = createContext<GanttContextValue | undefined>(
 
 export type GanttProviderProps = {
   timescale: Timescale;
+  totalBounds: TimeBounds;
 };
 
 export function GanttProvider({
   children,
   timescale,
+  totalBounds,
 }: PropsWithChildren<GanttProviderProps>) {
   const [timelineContainerElementRef, setTimelineContainerElementRef] =
     useState<HTMLDivElement | null>(null);
@@ -65,7 +68,7 @@ export function GanttProvider({
     msPerPx,
   );
 
-  const renderedRegionBoundary = getRenderedRegionBoundaryMs(
+  const renderedRegionBounds = getRenderedRegionBoundsMs(
     timelineChunks,
     msPerPx,
   );
@@ -85,16 +88,18 @@ export function GanttProvider({
     () => ({
       assignTimelineContainerElementRef,
       msPerPx,
-      renderedRegionBoundary,
+      renderedRegionBounds,
       timescale,
       timelineChunks,
+      totalBounds,
     }),
     [
       assignTimelineContainerElementRef,
       msPerPx,
-      renderedRegionBoundary,
+      renderedRegionBounds,
       timescale,
       timelineChunks,
+      totalBounds,
     ],
   );
 

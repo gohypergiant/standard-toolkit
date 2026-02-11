@@ -38,9 +38,9 @@ export const selectors = {
       return workerDate.getTime();
     },
   roundedCurrentRowScrollPx: (state: GanttState) => {
-    const rawValue = state.currentRowScrollPx / GANTT_ROW_HEIGHT_PX;
+    const scrollPxValue = state.currentRowScrollPx;
 
-    return Math.floor(rawValue) * GANTT_ROW_HEIGHT_PX;
+    return scrollPxValue - (scrollPxValue % GANTT_ROW_HEIGHT_PX);
   },
 };
 

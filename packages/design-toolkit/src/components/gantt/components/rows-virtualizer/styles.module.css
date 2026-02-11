@@ -14,7 +14,7 @@
 
 @layer components.l1 {
   .container {
-    @apply relative flex overflow-x-hidden overflow-y-auto;
+    @apply relative overflow-y-auto;
   }
   .inner-container {
     @apply relative w-full overflow-hidden;

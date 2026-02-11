@@ -11,37 +11,41 @@
  */
 
 import { useEffect } from 'react';
+import { shallow } from 'zustand/shallow';
 import { type GanttState, useGanttStore } from '../../store';
 
-type UseLayoutSubscriptionProps = {
-  callback: (value: number) => void;
-  selector: (state: GanttState) => number;
+type UseLayoutSubscriptionProps<T> = {
+  callback: (value: T) => void;
+  selector: (state: GanttState) => T;
 };
 
-export function useLayoutSubscription({
+export function useLayoutSubscription<T>({
   callback,
   selector,
-}: UseLayoutSubscriptionProps) {
+}: UseLayoutSubscriptionProps<T>) {
   useEffect(() => {
     let animationFrameId: number;
 
-    // Invoke callback as soon as this effect runs. If a subscribed value
-    // change causes a re-render to occur, we want layout
-    // calculations based on the new value to be done after
-    // a browser paint. Prevents potential layout flickers because
-    // of calculations based on a stale rendered UI (since the
-    // subscription in this effect runs outside of the React render
-    // cycle).
-    animationFrameId = requestAnimationFrame(() => {
-      callback(selector(useGanttStore.getState()));
-    });
-
-    const unsubscribe = useGanttStore.subscribe(selector, (value) => {
-      animationFrameId = requestAnimationFrame(() => {
-        // Invoke callback whenever the timestamp is changed.
-        callback(value);
-      });
-    });
+    const unsubscribe = useGanttStore.subscribe(
+      selector,
+      (value) => {
+        animationFrameId = requestAnimationFrame(() => {
+          // Invoke callback whenever the timestamp is changed.
+          callback(value);
+        });
+      },
+      {
+        // Invoke immediately on initial subscription. If a subscribed value
+        // change causes a re-render to occur, we want to perform layout
+        // calculations using the latest value in the store after a browser
+        // paint occurs (when this effect runs). Prevents potential layout
+        // flickers because of calculations against a stale rendered UI
+        // (since the subscription in this effect runs outside of the React
+        // render cycle).
+        fireImmediately: true,
+        equalityFn: shallow,
+      },
+    );
 
     return () => {
       cancelAnimationFrame(animationFrameId);

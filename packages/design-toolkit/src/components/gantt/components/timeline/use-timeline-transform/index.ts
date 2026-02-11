@@ -12,6 +12,7 @@
 
 import { type RefObject, useCallback } from 'react';
 import { useLayoutSubscription } from '../../../hooks/use-layout-subscription';
+import { selectors } from '../../../store';
 import { deriveTranslateXValue } from '../../../utils/layout';
 import type { TimelineChunkObject } from '../../../types';
 
@@ -45,6 +46,6 @@ export function useTimelineTransform({
 
   useLayoutSubscription({
     callback: updateElementTranslateX,
-    selector: (state) => state.currentPositionMs,
+    selector: selectors.currentPositionMs,
   });
 }

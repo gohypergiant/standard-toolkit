@@ -13,7 +13,6 @@
 import { renderHook } from '@testing-library/react';
 import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { useRowElementLayout } from './';
-import type React from 'react';
 import type { GanttContextValue } from '../../../context';
 
 const mocks = vi.hoisted(() => {
@@ -32,7 +31,8 @@ vi.mock('../../../hooks/use-layout-subscription', () => ({
 vi.mock('../../../context', () => {
   const mockGanttContextValue: Partial<GanttContextValue> = {
     msPerPx: 10,
-    renderedRegionBoundary: { startMs: 1000, endMs: 2500 },
+    renderedRegionBounds: { startMs: 1000, endMs: 2500 },
+    totalBounds: { startMs: 0, endMs: 5000 },
   };
 
   return {
@@ -69,13 +69,11 @@ describe('useRowElementLayout', () => {
 
   it('updates element styles when subscription callback runs', () => {
     const div = document.createElement('div');
-    const ref = { current: div } as React.RefObject<HTMLDivElement>;
 
     renderHook(() =>
       useRowElementLayout({
-        elementRef: ref,
-        startMs: 1000,
-        endMs: 1500,
+        element: div,
+        timeBounds: { startMs: 1000, endMs: 1500 },
       }),
     );
 
@@ -91,13 +89,10 @@ describe('useRowElementLayout', () => {
   });
 
   it('does nothing if elementRef.current is null', () => {
-    const ref = { current: null } as React.RefObject<HTMLDivElement | null>;
-
     renderHook(() =>
       useRowElementLayout({
-        elementRef: ref,
-        startMs: 1000,
-        endMs: 1500,
+        element: null,
+        timeBounds: { startMs: 1000, endMs: 1500 },
       }),
     );
 

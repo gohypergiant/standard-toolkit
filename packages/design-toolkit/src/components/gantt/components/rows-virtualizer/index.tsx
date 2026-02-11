@@ -10,94 +10,26 @@
  * governing permissions and limitations under the License.
  */
 
-import {
-  Children,
-  cloneElement,
-  type JSX,
-  type PropsWithChildren,
-  type ReactElement,
-  type UIEvent,
-  useState,
-} from 'react';
-import { GANTT_ROW_HEIGHT_PX } from '../../constants';
-import { getVerticalScrolledPixels } from '../../utils/helpers';
 import styles from './styles.module.css';
-
-const BUFFERED_ROWS_COUNT = 1;
-
-type RowChild = ReactElement<JSX.IntrinsicElements['div']>;
-
-function deriveRenderedIndices(
-  scrollPx: number,
-  viewableRegionHeightPx: number,
-) {
-  const startIndex = Math.floor(scrollPx / GANTT_ROW_HEIGHT_PX);
-
-  const viewableIndices = Math.ceil(
-    viewableRegionHeightPx / GANTT_ROW_HEIGHT_PX,
-  );
-
-  const proposedRenderedIndicesCount = viewableIndices + BUFFERED_ROWS_COUNT;
-
-  const indicesCountEven = proposedRenderedIndicesCount % 2 === 0;
-  const indicesCount = indicesCountEven
-    ? proposedRenderedIndicesCount + 1
-    : proposedRenderedIndicesCount;
-
-  return {
-    start: startIndex,
-    end: startIndex + indicesCount,
-  };
-}
-
-const applyVirtualizedRowStyles =
-  (startIndex: number) => (element: RowChild, index: number) =>
-    cloneElement(element, {
-      style: {
-        ...element.props.style,
-        position: 'absolute',
-        transform: `translateY(${GANTT_ROW_HEIGHT_PX * (startIndex + index)}px)`,
-        width: '100%',
-      },
-    });
+import { useRenderedRows } from './use-rendered-rows';
+import type { PropsWithChildren } from 'react';
 
 export function RowsVirtualizer({ children }: PropsWithChildren) {
-  const [roundedScrollPx, setRoundedScrollPx] = useState(0);
-  const [containerElement, setContainerElement] =
-    useState<HTMLDivElement | null>(null);
-
-  const updateRoundedScrollPx = (event: UIEvent<HTMLDivElement>) => {
-    const currentScrollPx = getVerticalScrolledPixels(event);
-
-    const roundedScrollPx =
-      currentScrollPx - (currentScrollPx % GANTT_ROW_HEIGHT_PX);
-
-    setRoundedScrollPx(roundedScrollPx);
-  };
-
-  const assignContainerElementRef = (element: HTMLDivElement | null) => {
-    setContainerElement(element);
-  };
-
-  const { start, end } = deriveRenderedIndices(
-    roundedScrollPx,
-    containerElement?.clientHeight ?? 0,
-  );
-
-  const renderedRows = Children.map(
-    Children.toArray(children).slice(start, end) as RowChild[],
-    applyVirtualizedRowStyles(start),
-  );
+  const { dimensions, renderedRows, assignContainerRef, onScroll } =
+    useRenderedRows({ children });
 
   return (
     <div
-      ref={assignContainerElementRef}
+      ref={assignContainerRef}
       className={styles.container}
-      onScroll={updateRoundedScrollPx}
+      onScroll={onScroll}
     >
       <div
         className={styles['inner-container']}
-        style={{ height: Children.count(children) * GANTT_ROW_HEIGHT_PX }}
+        style={{
+          height: dimensions.height,
+          width: dimensions.width,
+        }}
       >
         {renderedRows}
       </div>

@@ -19,18 +19,17 @@ import type { PropsWithChildren } from 'react';
 import type { GanttRowBlockProps } from './gantt-row-block';
 
 export function GanttRow({ children, ...rest }: PropsWithChildren) {
-  const { renderedRegionBoundary } = useGanttContext();
+  const { renderedRegionBounds } = useGanttContext();
   const blocks = React.Children.toArray(children).filter(
     (child): child is React.ReactElement<GanttRowBlockProps> => {
       return React.isValidElement(child);
     },
   );
   const renderedBlocks = blocks.filter((block) =>
-    shouldRenderBlock(
-      renderedRegionBoundary,
-      block.props.startMs,
-      block.props.endMs,
-    ),
+    shouldRenderBlock(renderedRegionBounds, {
+      startMs: block.props.startMs,
+      endMs: block.props.endMs,
+    }),
   );
   return (
     <div
