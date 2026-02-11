@@ -35,6 +35,7 @@ const IGNORE_LIST = [
   '**/*.{bench,spec,test,test-d,stories}.*',
   '**/examples.*',
   '**/tokens/example-usage.tsx',
+  '**/design-toolkit/src/components/gantt',
 ];
 
 const require = createRequire(import.meta.url);

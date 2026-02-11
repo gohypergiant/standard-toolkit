@@ -241,45 +241,6 @@ export type {
   FlashcardDetailsListProps,
   FlashcardProps,
 } from './components/flashcard/types';
-export { Seeker } from './components/gantt/components/seeker';
-export {
-  Tick,
-  TimelineChunk,
-} from './components/gantt/components/timeline-chunk';
-export { Timeline } from './components/gantt/components/timeline';
-export {
-  HOURS_MAPPING,
-  MINUTES_MAPPING,
-  MS_PER_HOUR,
-  MS_PER_MINUTE,
-  OUT_OF_VIEW_CHUNK_COUNT,
-  TIMELINE_CHUNK_WIDTH,
-  TIMESCALE_MAPPING,
-} from './components/gantt/constants';
-export { useGanttInit } from './components/gantt/hooks/use-gantt-init';
-export { useTimelineTransform } from './components/gantt/hooks/use-timeline-transform';
-export { Gantt } from './components/gantt';
-export { selectors, useGanttStore } from './components/gantt/store';
-export type {
-  HoursTimescale,
-  MinutesTimescale,
-  TimelineChunkObject,
-  Timescale,
-} from './components/gantt/types';
-export {
-  getMsPerPx,
-  getMsRepresentedInViewableRegion,
-  getTotalTimelineMs,
-  getTotalTimelineWidth,
-} from './components/gantt/utils/conversions';
-export { roundDateToInterval } from './components/gantt/utils/dates';
-export { formatTimestampLabel } from './components/gantt/utils/formatting';
-export { generateTimelineChunks } from './components/gantt/utils/generation';
-export {
-  getScrolledPixels,
-  getViewableRegionWidth,
-} from './components/gantt/utils/helpers';
-export { deriveTranslateXValue } from './components/gantt/utils/layout';
 export { HeroContext } from './components/hero/context';
 export { Hero } from './components/hero';
 export { HeroSubtitle } from './components/hero/subtitle';
