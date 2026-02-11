@@ -14,6 +14,8 @@ However, in order to support the simplification of utilities, the structure of t
 
 Additionally, all `classification` and `roe` colors have been structured under the `domain` key
 
+Finally, the `w-content` utility was removed in favor of the existing `w-fit` class from Tailwind
+
 NEW FEATURES: The color and spacing utilities have become more flexible
 
 The color utilities `bg`, `fg`, `icon` & `outline` now support more colors as well as alpha overrides.
