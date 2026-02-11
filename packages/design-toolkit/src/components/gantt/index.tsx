@@ -11,7 +11,6 @@
  */
 
 import { RowsVirtualizer } from './components/rows-virtualizer';
-import { Seeker } from './components/seeker';
 import { Timeline } from './components/timeline';
 import { GanttProvider } from './context';
 import { useGanttInit } from './hooks/use-gantt-init';
@@ -33,13 +32,16 @@ export function Gantt({
 }: PropsWithChildren<GanttProps>) {
   useGanttInit(startTimeMs);
 
+  const totalBounds = {
+    startMs: startTimeMs,
+    endMs: endTimeMs,
+  };
+
   return (
-    <GanttProvider timescale={timescale}>
+    <GanttProvider timescale={timescale} totalBounds={totalBounds}>
       <div className={styles.container}>
         <Timeline />
         <RowsVirtualizer>{children}</RowsVirtualizer>
-        {/* <div style={{ height: rows.length * GANTT_ROW_HEIGHT_PX }} /> */}
-        <Seeker startTimeMs={startTimeMs} endTimeMs={endTimeMs} />
       </div>
     </GanttProvider>
   );

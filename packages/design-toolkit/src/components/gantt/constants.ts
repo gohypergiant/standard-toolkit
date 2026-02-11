@@ -57,3 +57,4 @@ export const MONTHS: Record<number, string> = {
 export const BUFFERED_CHUNK_COUNT = 2;
 export const GANTT_ROW_HEIGHT_PX = 40;
 export const GANTT_BLOCK_HEIGHT_PX = 30;
+export const ROW_VIRTUALIZATION_OVERSCAN = 1;

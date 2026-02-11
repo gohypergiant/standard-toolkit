@@ -10,7 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import type { TimelineChunkObject } from '../types';
+import { GANTT_ROW_HEIGHT_PX, ROW_VIRTUALIZATION_OVERSCAN } from '../constants';
+import type { TimeBounds, TimelineChunkObject } from '../types';
 
 export function deriveTranslateXValue(
   msPerPx: number,
@@ -30,25 +31,49 @@ export function deriveTranslateXValue(
 }
 
 export function deriveRangeElementLayout(
-  renderedRegionBoundary: { startMs: number; endMs: number },
-  rangeElementBoundary: { startMs: number; endMs: number },
+  renderedRegionBounds: TimeBounds,
+  rangeElementBounds: TimeBounds,
+  totalBounds: TimeBounds,
   msPerPx: number,
-  currentPositionMs: number,
 ) {
   const renderedStartMs = Math.max(
-    renderedRegionBoundary.startMs,
-    rangeElementBoundary.startMs,
+    renderedRegionBounds.startMs,
+    rangeElementBounds.startMs,
   );
   const renderedEndMs = Math.min(
-    renderedRegionBoundary.endMs,
-    rangeElementBoundary.endMs,
+    renderedRegionBounds.endMs,
+    rangeElementBounds.endMs,
   );
 
-  const offsetMs = currentPositionMs - renderedRegionBoundary.startMs;
-  const offsetPx = offsetMs / msPerPx;
-  const translateX =
-    (renderedStartMs - renderedRegionBoundary.startMs) / msPerPx - offsetPx;
+  const distanceFromTimelineStart =
+    (rangeElementBounds.startMs - totalBounds.startMs) / msPerPx;
+
+  const offsetMs = renderedRegionBounds.startMs - rangeElementBounds.startMs;
+  const offsetPx = offsetMs > 0 ? offsetMs / msPerPx : 0;
+  const translateX = distanceFromTimelineStart + offsetPx;
   const widthPx = (renderedEndMs - renderedStartMs) / msPerPx;
 
   return { translateX, widthPx };
+}
+
+export function deriveRenderedSlice(
+  scrollPx: number,
+  viewableRegionHeightPx: number,
+) {
+  const startIndex = Math.floor(scrollPx / GANTT_ROW_HEIGHT_PX);
+
+  const viewableItems = Math.ceil(viewableRegionHeightPx / GANTT_ROW_HEIGHT_PX);
+
+  const proposedRenderedItemsCount =
+    viewableItems + ROW_VIRTUALIZATION_OVERSCAN;
+
+  const itemsCountEvent = proposedRenderedItemsCount % 2 === 0;
+  const itemsCount = itemsCountEvent
+    ? proposedRenderedItemsCount + 1
+    : proposedRenderedItemsCount;
+
+  return {
+    start: startIndex,
+    end: startIndex + itemsCount,
+  };
 }

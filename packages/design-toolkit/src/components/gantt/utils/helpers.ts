@@ -12,7 +12,7 @@
 
 import { TIMELINE_CHUNK_WIDTH } from '../constants';
 import type { UIEvent } from 'react';
-import type { TimelineChunkObject } from '../types';
+import type { TimeBounds, TimelineChunkObject } from '../types';
 
 export function getViewableRegionWidth(element: HTMLElement | null) {
   if (!element) {
@@ -31,15 +31,13 @@ export function getHorizontalScrolledPixels(event: UIEvent<HTMLDivElement>) {
 export function getVerticalScrolledPixels(event: UIEvent<HTMLDivElement>) {
   const { currentTarget } = event;
 
-  console.log({ scrollTop: currentTarget.scrollTop });
-
   return currentTarget.scrollTop;
 }
 
-export function getRenderedRegionBoundaryMs(
+export function getRenderedRegionBoundsMs(
   timeMarkers: TimelineChunkObject[],
   msPerPx: number,
-) {
+): TimeBounds {
   if (timeMarkers.length === 0) {
     return { startMs: 0, endMs: 0 };
   }
@@ -53,20 +51,17 @@ export function getRenderedRegionBoundaryMs(
   };
 }
 
-type RenderedRegionBoundary = { startMs: number; endMs: number };
-
 export function shouldRenderBlock(
-  renderedRegionBoundary: RenderedRegionBoundary,
-  blockStartMs: number,
-  blockEndMs: number,
+  renderedRegionBoundary: TimeBounds,
+  blockTimeBounds: TimeBounds,
 ) {
+  const { startMs: blockStartMs, endMs: blockEndMs } = blockTimeBounds;
   const { startMs, endMs } = renderedRegionBoundary;
 
   const doesBlockStartBeforeRegionStart =
     blockStartMs < startMs && blockEndMs > startMs;
   const isBlockWithinRegion = blockStartMs >= startMs && blockEndMs <= endMs;
   const doesBlockEndAfterRegionEnd = blockStartMs < endMs && blockEndMs > endMs;
-
   return (
     doesBlockStartBeforeRegionStart ||
     isBlockWithinRegion ||

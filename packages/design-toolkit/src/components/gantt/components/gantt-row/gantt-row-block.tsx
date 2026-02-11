@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { type CSSProperties, useRef } from 'react';
+import { type CSSProperties, useState } from 'react';
 import { GANTT_BLOCK_HEIGHT_PX } from '../../constants';
 import styles from './styles.module.css';
 import { useRowElementLayout } from './use-row-element-layout';
@@ -21,24 +21,30 @@ export type GanttRowBlockProps = {
   endMs: number;
 };
 
-export function GanttRowBlock(props: GanttRowBlockProps) {
-  const { startMs, endMs } = props;
-  const blockRef = useRef<HTMLDivElement>(null);
+const elementStyle = {
+  '--block-height': `${GANTT_BLOCK_HEIGHT_PX}px`,
+} as CSSProperties;
+
+export function GanttRowBlock({ startMs, endMs }: GanttRowBlockProps) {
+  const [blockElement, setBlockElement] = useState<HTMLDivElement | null>(null);
+
   useRowElementLayout({
-    elementRef: blockRef,
-    startMs,
-    endMs,
+    element: blockElement,
+    timeBounds: {
+      startMs,
+      endMs,
+    },
   });
+
+  const assignBlockElementRef = (node: HTMLDivElement) => {
+    setBlockElement(node);
+  };
 
   return (
     <div
-      style={
-        {
-          '--block-height': `${GANTT_BLOCK_HEIGHT_PX}px`,
-        } as CSSProperties
-      }
+      style={elementStyle}
+      ref={assignBlockElementRef}
       className={styles['row-block']}
-      ref={blockRef}
     />
   );
 }

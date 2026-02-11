@@ -21,3 +21,5 @@ export type Timescale = HoursTimescale | MinutesTimescale;
 export type TimelineChunkObject = {
   timestampMs: number;
 };
+
+export type TimeBounds = { startMs: number; endMs: number };
