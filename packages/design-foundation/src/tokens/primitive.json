@@ -155,85 +155,96 @@
     }
   },
   "typography": {
-    "header": {
-      "xxl": {
-        "size": "32px",
-        "height": "40px",
-        "spacing": "0px"
+    "height": {
+      "header": {
+        "xxl": "40px",
+        "xl": "28px",
+        "l": "24px",
+        "m": "20px",
+        "s": "16px",
+        "xs": "12px"
       },
-      "xl": {
-        "size": "24px",
-        "height": "28px",
-        "spacing": "0.18px"
+      "body": {
+        "l": "24px",
+        "m": "20px",
+        "s": "16px",
+        "xs": "12px",
+        "xxs": "12px"
       },
-      "l": {
-        "size": "20px",
-        "height": "24px",
-        "spacing": "0.18px"
-      },
-      "m": {
-        "size": "14px",
-        "height": "20px",
-        "spacing": "0.25px"
-      },
-      "s": {
-        "size": "12px",
-        "height": "16px",
-        "spacing": "0.4px"
-      },
-      "xs": {
-        "size": "10px",
-        "height": "12px",
-        "spacing": "0.25px"
+      "button": {
+        "l": "24px",
+        "m": "20px",
+        "s": "16px",
+        "xs": "12px"
       }
     },
-    "body": {
-      "l": {
-        "size": "16px",
-        "height": "24px",
-        "spacing": "0.5px"
+    "size": {
+      "header": {
+        "xxl": "32px",
+        "xl": "24px",
+        "l": "20px",
+        "m": "14px",
+        "s": "12px",
+        "xs": "10px"
       },
-      "m": {
-        "size": "14px",
-        "height": "20px",
-        "spacing": "0.25px"
+      "body": {
+        "l": "16px",
+        "m": "14px",
+        "s": "12px",
+        "xs": "10px",
+        "xxs": "9px"
       },
-      "s": {
-        "size": "12px",
-        "height": "16px",
-        "spacing": "0.4px"
-      },
-      "xs": {
-        "size": "10px",
-        "height": "12px",
-        "spacing": "0.5px"
-      },
-      "xxs": {
-        "size": "9px",
-        "height": "12px",
-        "spacing": "0.25px"
+      "button": {
+        "l": "16px",
+        "m": "14px",
+        "s": "12px",
+        "xs": "10px"
       }
     },
-    "button": {
-      "l": {
-        "size": "16px",
-        "height": "24px",
-        "spacing": "0.5px"
+    "spacing": {
+      "header": {
+        "xxl": "0px",
+        "xl": "0.18px",
+        "l": "0.18px",
+        "m": "0.25px",
+        "s": "0.4px",
+        "xs": "0.25px"
       },
-      "m": {
-        "size": "14px",
-        "height": "20px",
-        "spacing": "0.25px"
+      "body": {
+        "l": "0.5px",
+        "m": "0.25px",
+        "s": "0.4px",
+        "xs": "0.5px",
+        "xxs": "0.25px"
       },
-      "s": {
-        "size": "12px",
-        "height": "16px",
-        "spacing": "0.4px"
+      "button": {
+        "l": "0.5px",
+        "m": "0.25px",
+        "s": "0.4px",
+        "xs": "0.5px"
+      }
+    },
+    "weight": {
+      "header": {
+        "xxl": 500,
+        "xl": 500,
+        "l": 500,
+        "m": 500,
+        "s": 500,
+        "xs": 500
       },
-      "xs": {
-        "size": "10px",
-        "height": "12px",
-        "spacing": "0.5px"
+      "body": {
+        "l": 400,
+        "m": 400,
+        "s": 400,
+        "xs": 400,
+        "xxs": 400
+      },
+      "button": {
+        "l": 700,
+        "m": 700,
+        "s": 700,
+        "xs": 700
       }
     }
   },

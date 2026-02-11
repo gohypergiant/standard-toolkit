@@ -497,85 +497,96 @@ export const designTokens = {
     },
   },
   typography: {
-    header: {
-      xxl: {
-        size: 32,
-        height: 40,
-        spacing: 0,
+    height: {
+      header: {
+        xxl: 40,
+        xl: 28,
+        l: 24,
+        m: 20,
+        s: 16,
+        xs: 12,
       },
-      xl: {
-        size: 24,
-        height: 28,
-        spacing: 0.18,
+      body: {
+        l: 24,
+        m: 20,
+        s: 16,
+        xs: 12,
+        xxs: 12,
       },
-      l: {
-        size: 20,
-        height: 24,
-        spacing: 0.18,
-      },
-      m: {
-        size: 14,
-        height: 20,
-        spacing: 0.25,
-      },
-      s: {
-        size: 12,
-        height: 16,
-        spacing: 0.4,
-      },
-      xs: {
-        size: 10,
-        height: 12,
-        spacing: 0.25,
+      button: {
+        l: 24,
+        m: 20,
+        s: 16,
+        xs: 12,
       },
     },
-    body: {
-      l: {
-        size: 16,
-        height: 24,
-        spacing: 0.5,
+    size: {
+      header: {
+        xxl: 32,
+        xl: 24,
+        l: 20,
+        m: 14,
+        s: 12,
+        xs: 10,
       },
-      m: {
-        size: 14,
-        height: 20,
-        spacing: 0.25,
+      body: {
+        l: 16,
+        m: 14,
+        s: 12,
+        xs: 10,
+        xxs: 9,
       },
-      s: {
-        size: 12,
-        height: 16,
-        spacing: 0.4,
-      },
-      xs: {
-        size: 10,
-        height: 12,
-        spacing: 0.5,
-      },
-      xxs: {
-        size: 9,
-        height: 12,
-        spacing: 0.25,
+      button: {
+        l: 16,
+        m: 14,
+        s: 12,
+        xs: 10,
       },
     },
-    button: {
-      l: {
-        size: 16,
-        height: 24,
-        spacing: 0.5,
+    spacing: {
+      header: {
+        xxl: 0,
+        xl: 0.18,
+        l: 0.18,
+        m: 0.25,
+        s: 0.4,
+        xs: 0.25,
       },
-      m: {
-        size: 14,
-        height: 20,
-        spacing: 0.25,
+      body: {
+        l: 0.5,
+        m: 0.25,
+        s: 0.4,
+        xs: 0.5,
+        xxs: 0.25,
       },
-      s: {
-        size: 12,
-        height: 16,
-        spacing: 0.4,
+      button: {
+        l: 0.5,
+        m: 0.25,
+        s: 0.4,
+        xs: 0.5,
       },
-      xs: {
-        size: 10,
-        height: 12,
-        spacing: 0.5,
+    },
+    weight: {
+      header: {
+        xxl: 500,
+        xl: 500,
+        l: 500,
+        m: 500,
+        s: 500,
+        xs: 500,
+      },
+      body: {
+        l: 400,
+        m: 400,
+        s: 400,
+        xs: 400,
+        xxs: 400,
+      },
+      button: {
+        l: 700,
+        m: 700,
+        s: 700,
+        xs: 700,
       },
     },
   },

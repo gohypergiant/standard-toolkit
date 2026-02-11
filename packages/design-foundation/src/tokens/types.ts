@@ -338,6 +338,30 @@ export type SemanticColorTokens = {
   };
 };
 
+export type TypographyTokenSet = {
+  header: {
+    xxl: number;
+    xl: number;
+    l: number;
+    m: number;
+    s: number;
+    xs: number;
+  };
+  body: {
+    l: number;
+    m: number;
+    s: number;
+    xs: number;
+    xxs: number;
+  };
+  button: {
+    l: number;
+    m: number;
+    s: number;
+    xs: number;
+  };
+};
+
 /** Complete theme token structure including colors, typography, spacing, radius, and shadows */
 export type ThemeTokens = {
   dark: SemanticColorTokens;
@@ -345,87 +369,10 @@ export type ThemeTokens = {
   primitive: PrimitiveColorTokens;
   domain: DomainColorTokens;
   typography: {
-    header: {
-      xxl: {
-        size: number;
-        height: number;
-        spacing: number;
-      };
-      xl: {
-        size: number;
-        height: number;
-        spacing: number;
-      };
-      l: {
-        size: number;
-        height: number;
-        spacing: number;
-      };
-      m: {
-        size: number;
-        height: number;
-        spacing: number;
-      };
-      s: {
-        size: number;
-        height: number;
-        spacing: number;
-      };
-      xs: {
-        size: number;
-        height: number;
-        spacing: number;
-      };
-    };
-    body: {
-      l: {
-        size: number;
-        height: number;
-        spacing: number;
-      };
-      m: {
-        size: number;
-        height: number;
-        spacing: number;
-      };
-      s: {
-        size: number;
-        height: number;
-        spacing: number;
-      };
-      xs: {
-        size: number;
-        height: number;
-        spacing: number;
-      };
-      xxs: {
-        size: number;
-        height: number;
-        spacing: number;
-      };
-    };
-    button: {
-      l: {
-        size: number;
-        height: number;
-        spacing: number;
-      };
-      m: {
-        size: number;
-        height: number;
-        spacing: number;
-      };
-      s: {
-        size: number;
-        height: number;
-        spacing: number;
-      };
-      xs: {
-        size: number;
-        height: number;
-        spacing: number;
-      };
-    };
+    height: TypographyTokenSet;
+    size: TypographyTokenSet;
+    spacing: TypographyTokenSet;
+    weight: TypographyTokenSet;
   };
   spacing: {
     '0': number;
