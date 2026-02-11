@@ -250,7 +250,6 @@ export { Timeline } from './components/gantt/components/timeline';
 export {
   HOURS_MAPPING,
   MINUTES_MAPPING,
-  MONTHS,
   MS_PER_HOUR,
   MS_PER_MINUTE,
   OUT_OF_VIEW_CHUNK_COUNT,
