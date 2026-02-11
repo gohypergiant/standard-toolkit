@@ -71,9 +71,7 @@ function flattenTokens(obj, prefix = '') {
 }
 
 function getTokenFallback(tokenRef, primitives) {
-  // tokenRef is like --colors-neutral-10
-  const key = tokenRef.replace(/^--/, '');
-  return primitives[key];
+  return primitives[tokenRef.replace(/^--/, '')];
 }
 //#endregion
 
@@ -184,15 +182,6 @@ function generateTS(tokens, lookup) {
 
     if (value !== null && typeof value === 'object') {
       return Object.entries(value).reduce((acc, [key, value]) => {
-        // Skip over color key to maintain simpler structure
-        if (key === 'color') {
-          return {
-            // biome-ignore lint/performance/noAccumulatingSpread: performance doesn't matter much for a build script
-            ...acc,
-            ...traverse(value),
-          };
-        }
-
         acc[key] = traverse(value);
 
         return acc;
@@ -224,7 +213,7 @@ async function main() {
     // Generate TypeScript constants and types
     const colorTokens = generateTS(semanticConfig, primitiveMap);
     // We don't want to generate colors, fonts or icon values
-    const { primitive, font, icon, ...rest } = primitiveConfig;
+    const { font, icon, ...rest } = primitiveConfig;
     const otherTokens = generateTS(rest, primitiveMap);
 
     await writeFile(

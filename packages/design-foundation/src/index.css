@@ -43,28 +43,33 @@
 @source inline('animate-pulse');
 
 @utility bg-* {
-  background-color: --value(--color-bg-*, --color-domain-*, --color-*);
-  background-color: rgb(
-    from --value(--color-bg-*, --color-domain-*, --color-*) r g b /
-      calc(--modifier([number]) / 100)
-  );
+  --bg-value: --value(--bg-*, --domain-*, --primitive-*);
+  --bg-alpha: --modifier(number);
+  --bg-alpha: calc(--modifier(integer) / 100);
+  --bg-alpha: calc(--modifier(percentage) / 100%);
+
+  background-color: rgb(from var(--bg-value) r g b / var(--bg-alpha, alpha));
 }
 
 @utility fg-* {
-  --fg-value: --value(--color-fg-*, --color-domain-*, --color-*);
-  --fg-modified-value: rgb(
-    from --value(--color-fg-*, --color-domain-*, --color-*) r g b /
-      calc(--modifier([number]) / 100)
-  );
-  color: var(--fg-modified-value, --fg-value);
-  --icon-color: var(--fg-modified-value, --fg-value);
+  --fg-value: --value(--fg-*, --domain-*, --primitive-*);
+  --fg-alpha: --modifier(number);
+  --fg-alpha: calc(--modifier(integer) / 100);
+  --fg-alpha: calc(--modifier(percentage) / 100%);
+  --fg-color: rgb(from var(--fg-value) r g b / var(--fg-alpha, alpha));
+  --icon-color: var(--fg-color);
+
+  color: var(--fg-color);
 }
 
 @utility outline-* {
-  outline-color: --value(--color-outline-*, --color-domain-*, --color-*);
+  --outline-value: --value(--outline-*, --domain-*, --primitive-*);
+  --outline-alpha: --modifier(number);
+  --outline-alpha: calc(--modifier(integer) / 100);
+  --outline-alpha: calc(--modifier(percentage) / 100%);
+
   outline-color: rgb(
-    from --value(--color-outline-*, --color-domain-*, --color-*) r g b /
-      calc(--modifier([number]) / 100)
+    from var(--outline-value) r g b / var(--outline-alpha, alpha)
   );
 }
 

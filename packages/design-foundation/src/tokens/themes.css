@@ -18,94 +18,94 @@
 @import './tokens.css';
 
 @theme static {
-  --color-bg-surface-default: ;
-  --color-bg-surface-raised: ;
-  --color-bg-surface-overlay: ;
-  --color-bg-surface-muted: ;
-  --color-bg-interactive-bold: ;
-  --color-bg-interactive-bold-hover: ;
-  --color-bg-interactive-bold-pressed: ;
-  --color-bg-interactive-muted: ;
-  --color-bg-interactive-muted-hover: ;
-  --color-bg-interactive-muted-pressed: ;
-  --color-bg-interactive-disabled: ;
-  --color-bg-accent-primary-bold: ;
-  --color-bg-accent-primary-hover: ;
-  --color-bg-accent-primary-pressed: ;
-  --color-bg-accent-primary-muted: ;
-  --color-bg-info-bold: ;
-  --color-bg-info-hover: ;
-  --color-bg-info-pressed: ;
-  --color-bg-info-muted: ;
-  --color-bg-advisory-bold: ;
-  --color-bg-advisory-hover: ;
-  --color-bg-advisory-pressed: ;
-  --color-bg-advisory-muted: ;
-  --color-bg-normal-bold: ;
-  --color-bg-normal-hover: ;
-  --color-bg-normal-pressed: ;
-  --color-bg-normal-muted: ;
-  --color-bg-serious-bold: ;
-  --color-bg-serious-hover: ;
-  --color-bg-serious-pressed: ;
-  --color-bg-serious-muted: ;
-  --color-bg-critical-bold: ;
-  --color-bg-critical-hover: ;
-  --color-bg-critical-pressed: ;
-  --color-bg-critical-muted: ;
-  --color-fg-hover: ;
-  --color-fg-pressed: ;
-  --color-fg-primary-bold: ;
-  --color-fg-primary-muted: ;
-  --color-fg-inverse-bold: ;
-  --color-fg-inverse-muted: ;
-  --color-fg-disabled: ;
-  --color-fg-accent-primary-bold: ;
-  --color-fg-accent-primary-hover: ;
-  --color-fg-accent-primary-pressed: ;
-  --color-fg-info-bold: ;
-  --color-fg-info-hover: ;
-  --color-fg-info-pressed: ;
-  --color-fg-advisory-bold: ;
-  --color-fg-advisory-hover: ;
-  --color-fg-advisory-pressed: ;
-  --color-fg-normal-bold: ;
-  --color-fg-normal-hover: ;
-  --color-fg-normal-pressed: ;
-  --color-fg-serious-bold: ;
-  --color-fg-serious-hover: ;
-  --color-fg-serious-pressed: ;
-  --color-fg-critical-bold: ;
-  --color-fg-critical-hover: ;
-  --color-fg-critical-pressed: ;
-  --color-fg-a11y-on-accent: ;
-  --color-fg-a11y-on-utility: ;
-  --color-outline-static: ;
-  --color-outline-interactive: ;
-  --color-outline-interactive-hover: ;
-  --color-outline-interactive-pressed: ;
-  --color-outline-interactive-disabled: ;
-  --color-outline-accent-primary-bold: ;
-  --color-outline-accent-primary-hover: ;
-  --color-outline-accent-primary-pressed: ;
-  --color-outline-info-bold: ;
-  --color-outline-info-hover: ;
-  --color-outline-info-pressed: ;
-  --color-outline-advisory-bold: ;
-  --color-outline-advisory-hover: ;
-  --color-outline-advisory-pressed: ;
-  --color-outline-normal-bold: ;
-  --color-outline-normal-hover: ;
-  --color-outline-normal-pressed: ;
-  --color-outline-serious-bold: ;
-  --color-outline-serious-hover: ;
-  --color-outline-serious-pressed: ;
-  --color-outline-critical-bold: ;
-  --color-outline-critical-hover: ;
-  --color-outline-critical-pressed: ;
-  --color-outline-mono-bold: ;
-  --color-outline-mono-bold-hover: ;
-  --color-outline-mono-bold-pressed: ;
+  --bg-surface-default: ;
+  --bg-surface-raised: ;
+  --bg-surface-overlay: ;
+  --bg-surface-muted: ;
+  --bg-interactive-bold: ;
+  --bg-interactive-bold-hover: ;
+  --bg-interactive-bold-pressed: ;
+  --bg-interactive-muted: ;
+  --bg-interactive-muted-hover: ;
+  --bg-interactive-muted-pressed: ;
+  --bg-interactive-disabled: ;
+  --bg-accent-primary-bold: ;
+  --bg-accent-primary-hover: ;
+  --bg-accent-primary-pressed: ;
+  --bg-accent-primary-muted: ;
+  --bg-info-bold: ;
+  --bg-info-hover: ;
+  --bg-info-pressed: ;
+  --bg-info-muted: ;
+  --bg-advisory-bold: ;
+  --bg-advisory-hover: ;
+  --bg-advisory-pressed: ;
+  --bg-advisory-muted: ;
+  --bg-normal-bold: ;
+  --bg-normal-hover: ;
+  --bg-normal-pressed: ;
+  --bg-normal-muted: ;
+  --bg-serious-bold: ;
+  --bg-serious-hover: ;
+  --bg-serious-pressed: ;
+  --bg-serious-muted: ;
+  --bg-critical-bold: ;
+  --bg-critical-hover: ;
+  --bg-critical-pressed: ;
+  --bg-critical-muted: ;
+  --fg-hover: ;
+  --fg-pressed: ;
+  --fg-primary-bold: ;
+  --fg-primary-muted: ;
+  --fg-inverse-bold: ;
+  --fg-inverse-muted: ;
+  --fg-disabled: ;
+  --fg-accent-primary-bold: ;
+  --fg-accent-primary-hover: ;
+  --fg-accent-primary-pressed: ;
+  --fg-info-bold: ;
+  --fg-info-hover: ;
+  --fg-info-pressed: ;
+  --fg-advisory-bold: ;
+  --fg-advisory-hover: ;
+  --fg-advisory-pressed: ;
+  --fg-normal-bold: ;
+  --fg-normal-hover: ;
+  --fg-normal-pressed: ;
+  --fg-serious-bold: ;
+  --fg-serious-hover: ;
+  --fg-serious-pressed: ;
+  --fg-critical-bold: ;
+  --fg-critical-hover: ;
+  --fg-critical-pressed: ;
+  --fg-a11y-on-accent: ;
+  --fg-a11y-on-utility: ;
+  --outline-static: ;
+  --outline-interactive: ;
+  --outline-interactive-hover: ;
+  --outline-interactive-pressed: ;
+  --outline-interactive-disabled: ;
+  --outline-accent-primary-bold: ;
+  --outline-accent-primary-hover: ;
+  --outline-accent-primary-pressed: ;
+  --outline-info-bold: ;
+  --outline-info-hover: ;
+  --outline-info-pressed: ;
+  --outline-advisory-bold: ;
+  --outline-advisory-hover: ;
+  --outline-advisory-pressed: ;
+  --outline-normal-bold: ;
+  --outline-normal-hover: ;
+  --outline-normal-pressed: ;
+  --outline-serious-bold: ;
+  --outline-serious-hover: ;
+  --outline-serious-pressed: ;
+  --outline-critical-bold: ;
+  --outline-critical-hover: ;
+  --outline-critical-pressed: ;
+  --outline-mono-bold: ;
+  --outline-mono-bold-hover: ;
+  --outline-mono-bold-pressed: ;
   --shadow-elevation-raised: ;
   --shadow-elevation-overlay: ;
 }
@@ -114,286 +114,112 @@
   :root {
     /** Dark theme **/
     @variant dark {
-      --color-bg-surface-default: var(--color-primitive-neutral-900, #151517);
-      --color-bg-surface-raised: var(--color-primitive-neutral-800, #212223);
-      --color-bg-surface-overlay: var(--color-primitive-neutral-800, #212223);
-      --color-bg-surface-muted: var(
-        --color-primitive-alpha-white-100,
+      --bg-surface-default: var(--primitive-neutral-900, #151517);
+      --bg-surface-raised: var(--primitive-neutral-800, #212223);
+      --bg-surface-overlay: var(--primitive-neutral-800, #212223);
+      --bg-surface-muted: var(
+        --primitive-alpha-white-100,
         rgba(255, 255, 255, 0.08)
       );
-      --color-bg-interactive-bold: var(--color-primitive-neutral-50, #ffffff);
-      --color-bg-interactive-bold-hover: var(
-        --color-primitive-neutral-100,
-        #eff1f2
-      );
-      --color-bg-interactive-bold-pressed: var(
-        --color-primitive-neutral-300,
-        #c3c5c7
-      );
-      --color-bg-interactive-muted: var(--color-primitive-neutral-700, #38393a);
-      --color-bg-interactive-muted-hover: var(
-        --color-primitive-neutral-600,
-        #414245
-      );
-      --color-bg-interactive-muted-pressed: var(
-        --color-primitive-neutral-950,
-        #000000
-      );
-      --color-bg-interactive-disabled: var(
-        --color-primitive-neutral-700,
-        #38393a
-      );
-      --color-bg-accent-primary-bold: var(
-        --color-primitive-accent-primary-700,
-        #004f7e
-      );
-      --color-bg-accent-primary-hover: var(
-        --color-primitive-accent-primary-600,
-        #0068a1
-      );
-      --color-bg-accent-primary-pressed: var(
-        --color-primitive-accent-primary-800,
-        #002c52
-      );
-      --color-bg-accent-primary-muted: var(
-        --color-primitive-accent-primary-800,
-        #002c52
-      );
-      --color-bg-info-bold: var(--color-primitive-utility-info-500, #565759);
-      --color-bg-info-hover: var(--color-primitive-utility-info-400, #888a8f);
-      --color-bg-info-pressed: var(--color-primitive-utility-info-600, #414245);
-      --color-bg-info-muted: var(--color-primitive-utility-info-800, #212223);
-      --color-bg-advisory-bold: var(
-        --color-primitive-utility-advisory-600,
-        #3c67a0
-      );
-      --color-bg-advisory-hover: var(
-        --color-primitive-utility-advisory-500,
-        #4e88da
-      );
-      --color-bg-advisory-pressed: var(
-        --color-primitive-utility-advisory-700,
-        #264062
-      );
-      --color-bg-advisory-muted: var(
-        --color-primitive-utility-advisory-900,
-        #0e1825
-      );
-      --color-bg-normal-bold: var(
-        --color-primitive-utility-normal-600,
-        #1c7e23
-      );
-      --color-bg-normal-hover: var(
-        --color-primitive-utility-normal-500,
-        #26a12e
-      );
-      --color-bg-normal-pressed: var(
-        --color-primitive-utility-normal-700,
-        #145718
-      );
-      --color-bg-normal-muted: var(
-        --color-primitive-utility-normal-900,
-        #08210a
-      );
-      --color-bg-serious-bold: var(
-        --color-primitive-utility-serious-600,
-        #bb7a00
-      );
-      --color-bg-serious-hover: var(
-        --color-primitive-utility-serious-500,
-        #e69600
-      );
-      --color-bg-serious-pressed: var(
-        --color-primitive-utility-serious-800,
-        #634101
-      );
-      --color-bg-serious-muted: var(
-        --color-primitive-utility-serious-900,
-        #412b00
-      );
-      --color-bg-critical-bold: var(
-        --color-primitive-utility-critical-700,
-        #790501
-      );
-      --color-bg-critical-hover: var(
-        --color-primitive-utility-critical-600,
-        #a10701
-      );
-      --color-bg-critical-pressed: var(
-        --color-primitive-utility-critical-800,
-        #540300
-      );
-      --color-bg-critical-muted: var(
-        --color-primitive-utility-critical-900,
-        #290200
-      );
-      --color-fg-hover: var(--color-primitive-neutral-50, #ffffff);
-      --color-fg-pressed: var(--color-primitive-neutral-400, #888a8f);
-      --color-fg-primary-bold: var(--color-primitive-neutral-50, #ffffff);
-      --color-fg-primary-muted: var(--color-primitive-neutral-300, #c3c5c7);
-      --color-fg-inverse-bold: var(--color-primitive-neutral-800, #212223);
-      --color-fg-inverse-muted: var(--color-primitive-neutral-400, #888a8f);
-      --color-fg-disabled: var(--color-primitive-neutral-500, #565759);
-      --color-fg-accent-primary-bold: var(
-        --color-primitive-accent-primary-300,
+      --bg-interactive-bold: var(--primitive-neutral-50, #ffffff);
+      --bg-interactive-bold-hover: var(--primitive-neutral-100, #eff1f2);
+      --bg-interactive-bold-pressed: var(--primitive-neutral-300, #c3c5c7);
+      --bg-interactive-muted: var(--primitive-neutral-700, #38393a);
+      --bg-interactive-muted-hover: var(--primitive-neutral-600, #414245);
+      --bg-interactive-muted-pressed: var(--primitive-neutral-950, #000000);
+      --bg-interactive-disabled: var(--primitive-neutral-700, #38393a);
+      --bg-accent-primary-bold: var(--primitive-accent-primary-700, #004f7e);
+      --bg-accent-primary-hover: var(--primitive-accent-primary-600, #0068a1);
+      --bg-accent-primary-pressed: var(--primitive-accent-primary-800, #002c52);
+      --bg-accent-primary-muted: var(--primitive-accent-primary-800, #002c52);
+      --bg-info-bold: var(--primitive-utility-info-500, #565759);
+      --bg-info-hover: var(--primitive-utility-info-400, #888a8f);
+      --bg-info-pressed: var(--primitive-utility-info-600, #414245);
+      --bg-info-muted: var(--primitive-utility-info-800, #212223);
+      --bg-advisory-bold: var(--primitive-utility-advisory-600, #3c67a0);
+      --bg-advisory-hover: var(--primitive-utility-advisory-500, #4e88da);
+      --bg-advisory-pressed: var(--primitive-utility-advisory-700, #264062);
+      --bg-advisory-muted: var(--primitive-utility-advisory-900, #0e1825);
+      --bg-normal-bold: var(--primitive-utility-normal-600, #1c7e23);
+      --bg-normal-hover: var(--primitive-utility-normal-500, #26a12e);
+      --bg-normal-pressed: var(--primitive-utility-normal-700, #145718);
+      --bg-normal-muted: var(--primitive-utility-normal-900, #08210a);
+      --bg-serious-bold: var(--primitive-utility-serious-600, #bb7a00);
+      --bg-serious-hover: var(--primitive-utility-serious-500, #e69600);
+      --bg-serious-pressed: var(--primitive-utility-serious-800, #634101);
+      --bg-serious-muted: var(--primitive-utility-serious-900, #412b00);
+      --bg-critical-bold: var(--primitive-utility-critical-700, #790501);
+      --bg-critical-hover: var(--primitive-utility-critical-600, #a10701);
+      --bg-critical-pressed: var(--primitive-utility-critical-800, #540300);
+      --bg-critical-muted: var(--primitive-utility-critical-900, #290200);
+      --fg-hover: var(--primitive-neutral-50, #ffffff);
+      --fg-pressed: var(--primitive-neutral-400, #888a8f);
+      --fg-primary-bold: var(--primitive-neutral-50, #ffffff);
+      --fg-primary-muted: var(--primitive-neutral-300, #c3c5c7);
+      --fg-inverse-bold: var(--primitive-neutral-800, #212223);
+      --fg-inverse-muted: var(--primitive-neutral-400, #888a8f);
+      --fg-disabled: var(--primitive-neutral-500, #565759);
+      --fg-accent-primary-bold: var(--primitive-accent-primary-300, #39b7fa);
+      --fg-accent-primary-hover: var(--primitive-accent-primary-200, #6ed1ff);
+      --fg-accent-primary-pressed: var(--primitive-accent-primary-600, #0068a1);
+      --fg-info-bold: var(--primitive-utility-info-400, #888a8f);
+      --fg-info-hover: var(--primitive-utility-info-200, #e1e1e1);
+      --fg-info-pressed: var(--primitive-utility-info-600, #414245);
+      --fg-advisory-bold: var(--primitive-utility-advisory-400, #62a6ff);
+      --fg-advisory-hover: var(--primitive-utility-advisory-200, #a9ceff);
+      --fg-advisory-pressed: var(--primitive-utility-advisory-600, #3c67a0);
+      --fg-normal-bold: var(--primitive-utility-normal-400, #2bbf35);
+      --fg-normal-hover: var(--primitive-utility-normal-200, #86e98c);
+      --fg-normal-pressed: var(--primitive-utility-normal-600, #1c7e23);
+      --fg-serious-bold: var(--primitive-utility-serious-500, #e69600);
+      --fg-serious-hover: var(--primitive-utility-serious-300, #ffc14c);
+      --fg-serious-pressed: var(--primitive-utility-serious-600, #bb7a00);
+      --fg-critical-bold: var(--primitive-utility-critical-400, #ff2e27);
+      --fg-critical-hover: var(--primitive-utility-critical-300, #ff6d68);
+      --fg-critical-pressed: var(--primitive-utility-critical-600, #a10701);
+      --fg-a11y-on-accent: var(--primitive-neutral-50, #ffffff);
+      --fg-a11y-on-utility: var(--primitive-neutral-50, #ffffff);
+      --outline-static: var(--primitive-neutral-600, #414245);
+      --outline-interactive: var(--primitive-neutral-600, #414245);
+      --outline-interactive-hover: var(--primitive-neutral-400, #888a8f);
+      --outline-interactive-pressed: var(--primitive-neutral-700, #38393a);
+      --outline-interactive-disabled: var(--primitive-neutral-700, #38393a);
+      --outline-accent-primary-bold: var(
+        --primitive-accent-primary-300,
         #39b7fa
       );
-      --color-fg-accent-primary-hover: var(
-        --color-primitive-accent-primary-200,
+      --outline-accent-primary-hover: var(
+        --primitive-accent-primary-200,
         #6ed1ff
       );
-      --color-fg-accent-primary-pressed: var(
-        --color-primitive-accent-primary-600,
+      --outline-accent-primary-pressed: var(
+        --primitive-accent-primary-600,
         #0068a1
       );
-      --color-fg-info-bold: var(--color-primitive-utility-info-400, #888a8f);
-      --color-fg-info-hover: var(--color-primitive-utility-info-200, #e1e1e1);
-      --color-fg-info-pressed: var(--color-primitive-utility-info-600, #414245);
-      --color-fg-advisory-bold: var(
-        --color-primitive-utility-advisory-400,
-        #62a6ff
-      );
-      --color-fg-advisory-hover: var(
-        --color-primitive-utility-advisory-200,
-        #a9ceff
-      );
-      --color-fg-advisory-pressed: var(
-        --color-primitive-utility-advisory-600,
+      --outline-info-bold: var(--primitive-utility-info-400, #888a8f);
+      --outline-info-hover: var(--primitive-utility-info-200, #e1e1e1);
+      --outline-info-pressed: var(--primitive-utility-info-600, #414245);
+      --outline-advisory-bold: var(--primitive-utility-advisory-400, #62a6ff);
+      --outline-advisory-hover: var(--primitive-utility-advisory-200, #a9ceff);
+      --outline-advisory-pressed: var(
+        --primitive-utility-advisory-600,
         #3c67a0
       );
-      --color-fg-normal-bold: var(
-        --color-primitive-utility-normal-400,
-        #2bbf35
-      );
-      --color-fg-normal-hover: var(
-        --color-primitive-utility-normal-200,
-        #86e98c
-      );
-      --color-fg-normal-pressed: var(
-        --color-primitive-utility-normal-600,
-        #1c7e23
-      );
-      --color-fg-serious-bold: var(
-        --color-primitive-utility-serious-500,
-        #e69600
-      );
-      --color-fg-serious-hover: var(
-        --color-primitive-utility-serious-300,
-        #ffc14c
-      );
-      --color-fg-serious-pressed: var(
-        --color-primitive-utility-serious-600,
-        #bb7a00
-      );
-      --color-fg-critical-bold: var(
-        --color-primitive-utility-critical-400,
-        #ff2e27
-      );
-      --color-fg-critical-hover: var(
-        --color-primitive-utility-critical-300,
-        #ff6d68
-      );
-      --color-fg-critical-pressed: var(
-        --color-primitive-utility-critical-600,
+      --outline-normal-bold: var(--primitive-utility-normal-400, #2bbf35);
+      --outline-normal-hover: var(--primitive-utility-normal-200, #86e98c);
+      --outline-normal-pressed: var(--primitive-utility-normal-600, #1c7e23);
+      --outline-serious-bold: var(--primitive-utility-serious-500, #e69600);
+      --outline-serious-hover: var(--primitive-utility-serious-200, #ffd382);
+      --outline-serious-pressed: var(--primitive-utility-serious-700, #8e5d00);
+      --outline-critical-bold: var(--primitive-utility-critical-400, #ff2e27);
+      --outline-critical-hover: var(--primitive-utility-critical-300, #ff6d68);
+      --outline-critical-pressed: var(
+        --primitive-utility-critical-600,
         #a10701
       );
-      --color-fg-a11y-on-accent: var(--color-primitive-neutral-50, #ffffff);
-      --color-fg-a11y-on-utility: var(--color-primitive-neutral-50, #ffffff);
-      --color-outline-static: var(--color-primitive-neutral-600, #414245);
-      --color-outline-interactive: var(--color-primitive-neutral-600, #414245);
-      --color-outline-interactive-hover: var(
-        --color-primitive-neutral-400,
-        #888a8f
-      );
-      --color-outline-interactive-pressed: var(
-        --color-primitive-neutral-700,
-        #38393a
-      );
-      --color-outline-interactive-disabled: var(
-        --color-primitive-neutral-700,
-        #38393a
-      );
-      --color-outline-accent-primary-bold: var(
-        --color-primitive-accent-primary-300,
-        #39b7fa
-      );
-      --color-outline-accent-primary-hover: var(
-        --color-primitive-accent-primary-200,
-        #6ed1ff
-      );
-      --color-outline-accent-primary-pressed: var(
-        --color-primitive-accent-primary-600,
-        #0068a1
-      );
-      --color-outline-info-bold: var(
-        --color-primitive-utility-info-400,
-        #888a8f
-      );
-      --color-outline-info-hover: var(
-        --color-primitive-utility-info-200,
-        #e1e1e1
-      );
-      --color-outline-info-pressed: var(
-        --color-primitive-utility-info-600,
-        #414245
-      );
-      --color-outline-advisory-bold: var(
-        --color-primitive-utility-advisory-400,
-        #62a6ff
-      );
-      --color-outline-advisory-hover: var(
-        --color-primitive-utility-advisory-200,
-        #a9ceff
-      );
-      --color-outline-advisory-pressed: var(
-        --color-primitive-utility-advisory-600,
-        #3c67a0
-      );
-      --color-outline-normal-bold: var(
-        --color-primitive-utility-normal-400,
-        #2bbf35
-      );
-      --color-outline-normal-hover: var(
-        --color-primitive-utility-normal-200,
-        #86e98c
-      );
-      --color-outline-normal-pressed: var(
-        --color-primitive-utility-normal-600,
-        #1c7e23
-      );
-      --color-outline-serious-bold: var(
-        --color-primitive-utility-serious-500,
-        #e69600
-      );
-      --color-outline-serious-hover: var(
-        --color-primitive-utility-serious-200,
-        #ffd382
-      );
-      --color-outline-serious-pressed: var(
-        --color-primitive-utility-serious-700,
-        #8e5d00
-      );
-      --color-outline-critical-bold: var(
-        --color-primitive-utility-critical-400,
-        #ff2e27
-      );
-      --color-outline-critical-hover: var(
-        --color-primitive-utility-critical-300,
-        #ff6d68
-      );
-      --color-outline-critical-pressed: var(
-        --color-primitive-utility-critical-600,
-        #a10701
-      );
-      --color-outline-mono-bold: var(--color-primitive-neutral-50, #ffffff);
-      --color-outline-mono-bold-hover: var(
-        --color-primitive-neutral-100,
-        #eff1f2
-      );
-      --color-outline-mono-bold-pressed: var(
-        --color-primitive-neutral-300,
-        #c3c5c7
-      );
+      --outline-mono-bold: var(--primitive-neutral-50, #ffffff);
+      --outline-mono-bold-hover: var(--primitive-neutral-100, #eff1f2);
+      --outline-mono-bold-pressed: var(--primitive-neutral-300, #c3c5c7);
       --shadow-elevation-raised: var(
         --shadow-elevation-raised-bold,
         0 1px 4px 0 rgba(0 0 0 / 0.8)
@@ -406,286 +232,109 @@
 
     /** Light theme **/
     @variant light {
-      --color-bg-surface-default: var(--color-primitive-neutral-100, #eff1f2);
-      --color-bg-surface-raised: var(--color-primitive-neutral-50, #ffffff);
-      --color-bg-surface-overlay: var(--color-primitive-neutral-50, #ffffff);
-      --color-bg-surface-muted: var(
-        --color-primitive-alpha-black-100,
-        rgba(0, 0, 0, 0.08)
-      );
-      --color-bg-interactive-bold: var(--color-primitive-neutral-900, #151517);
-      --color-bg-interactive-bold-hover: var(
-        --color-primitive-neutral-800,
-        #212223
-      );
-      --color-bg-interactive-bold-pressed: var(
-        --color-primitive-neutral-300,
-        #c3c5c7
-      );
-      --color-bg-interactive-muted: var(--color-primitive-neutral-300, #c3c5c7);
-      --color-bg-interactive-muted-hover: var(
-        --color-primitive-neutral-200,
-        #e1e1e1
-      );
-      --color-bg-interactive-muted-pressed: var(
-        --color-primitive-neutral-400,
-        #888a8f
-      );
-      --color-bg-interactive-disabled: var(
-        --color-primitive-neutral-200,
-        #e1e1e1
-      );
-      --color-bg-accent-primary-bold: var(
-        --color-primitive-accent-primary-700,
-        #004f7e
-      );
-      --color-bg-accent-primary-hover: var(
-        --color-primitive-accent-primary-600,
-        #0068a1
-      );
-      --color-bg-accent-primary-pressed: var(
-        --color-primitive-accent-primary-800,
-        #002c52
-      );
-      --color-bg-accent-primary-muted: var(
-        --color-primitive-accent-primary-100,
-        #b1e9ff
-      );
-      --color-bg-info-bold: var(--color-primitive-utility-info-400, #888a8f);
-      --color-bg-info-hover: var(--color-primitive-utility-info-300, #c3c5c7);
-      --color-bg-info-pressed: var(--color-primitive-utility-info-600, #414245);
-      --color-bg-info-muted: var(--color-primitive-utility-info-100, #eff1f2);
-      --color-bg-advisory-bold: var(
-        --color-primitive-utility-advisory-600,
-        #3c67a0
-      );
-      --color-bg-advisory-hover: var(
-        --color-primitive-utility-advisory-500,
-        #4e88da
-      );
-      --color-bg-advisory-pressed: var(
-        --color-primitive-utility-advisory-700,
-        #264062
-      );
-      --color-bg-advisory-muted: var(
-        --color-primitive-utility-advisory-100,
-        #c4deff
-      );
-      --color-bg-normal-bold: var(
-        --color-primitive-utility-normal-600,
-        #1c7e23
-      );
-      --color-bg-normal-hover: var(
-        --color-primitive-utility-normal-500,
-        #26a12e
-      );
-      --color-bg-normal-pressed: var(
-        --color-primitive-utility-normal-700,
-        #145718
-      );
-      --color-bg-normal-muted: var(
-        --color-primitive-utility-normal-100,
-        #c2f5c5
-      );
-      --color-bg-serious-bold: var(
-        --color-primitive-utility-serious-600,
-        #bb7a00
-      );
-      --color-bg-serious-hover: var(
-        --color-primitive-utility-serious-500,
-        #e69600
-      );
-      --color-bg-serious-pressed: var(
-        --color-primitive-utility-serious-800,
-        #634101
-      );
-      --color-bg-serious-muted: var(
-        --color-primitive-utility-serious-100,
-        #ffeac2
-      );
-      --color-bg-critical-bold: var(
-        --color-primitive-utility-critical-700,
-        #790501
-      );
-      --color-bg-critical-hover: var(
-        --color-primitive-utility-critical-600,
-        #a10701
-      );
-      --color-bg-critical-pressed: var(
-        --color-primitive-utility-critical-800,
-        #540300
-      );
-      --color-bg-critical-muted: var(
-        --color-primitive-utility-critical-100,
-        #ffc4c2
-      );
-      --color-fg-hover: var(--color-primitive-neutral-800, #212223);
-      --color-fg-pressed: var(--color-primitive-neutral-500, #565759);
-      --color-fg-primary-bold: var(--color-primitive-neutral-800, #212223);
-      --color-fg-primary-muted: var(--color-primitive-neutral-500, #565759);
-      --color-fg-inverse-bold: var(--color-primitive-neutral-50, #ffffff);
-      --color-fg-inverse-muted: var(--color-primitive-neutral-400, #888a8f);
-      --color-fg-disabled: var(--color-primitive-neutral-300, #c3c5c7);
-      --color-fg-accent-primary-bold: var(
-        --color-primitive-accent-primary-300,
+      --bg-surface-default: var(--primitive-neutral-100, #eff1f2);
+      --bg-surface-raised: var(--primitive-neutral-50, #ffffff);
+      --bg-surface-overlay: var(--primitive-neutral-50, #ffffff);
+      --bg-surface-muted: var(--primitive-alpha-black-100, rgba(0, 0, 0, 0.08));
+      --bg-interactive-bold: var(--primitive-neutral-900, #151517);
+      --bg-interactive-bold-hover: var(--primitive-neutral-800, #212223);
+      --bg-interactive-bold-pressed: var(--primitive-neutral-300, #c3c5c7);
+      --bg-interactive-muted: var(--primitive-neutral-300, #c3c5c7);
+      --bg-interactive-muted-hover: var(--primitive-neutral-200, #e1e1e1);
+      --bg-interactive-muted-pressed: var(--primitive-neutral-400, #888a8f);
+      --bg-interactive-disabled: var(--primitive-neutral-200, #e1e1e1);
+      --bg-accent-primary-bold: var(--primitive-accent-primary-700, #004f7e);
+      --bg-accent-primary-hover: var(--primitive-accent-primary-600, #0068a1);
+      --bg-accent-primary-pressed: var(--primitive-accent-primary-800, #002c52);
+      --bg-accent-primary-muted: var(--primitive-accent-primary-100, #b1e9ff);
+      --bg-info-bold: var(--primitive-utility-info-400, #888a8f);
+      --bg-info-hover: var(--primitive-utility-info-300, #c3c5c7);
+      --bg-info-pressed: var(--primitive-utility-info-600, #414245);
+      --bg-info-muted: var(--primitive-utility-info-100, #eff1f2);
+      --bg-advisory-bold: var(--primitive-utility-advisory-600, #3c67a0);
+      --bg-advisory-hover: var(--primitive-utility-advisory-500, #4e88da);
+      --bg-advisory-pressed: var(--primitive-utility-advisory-700, #264062);
+      --bg-advisory-muted: var(--primitive-utility-advisory-100, #c4deff);
+      --bg-normal-bold: var(--primitive-utility-normal-600, #1c7e23);
+      --bg-normal-hover: var(--primitive-utility-normal-500, #26a12e);
+      --bg-normal-pressed: var(--primitive-utility-normal-700, #145718);
+      --bg-normal-muted: var(--primitive-utility-normal-100, #c2f5c5);
+      --bg-serious-bold: var(--primitive-utility-serious-600, #bb7a00);
+      --bg-serious-hover: var(--primitive-utility-serious-500, #e69600);
+      --bg-serious-pressed: var(--primitive-utility-serious-800, #634101);
+      --bg-serious-muted: var(--primitive-utility-serious-100, #ffeac2);
+      --bg-critical-bold: var(--primitive-utility-critical-700, #790501);
+      --bg-critical-hover: var(--primitive-utility-critical-600, #a10701);
+      --bg-critical-pressed: var(--primitive-utility-critical-800, #540300);
+      --bg-critical-muted: var(--primitive-utility-critical-100, #ffc4c2);
+      --fg-hover: var(--primitive-neutral-800, #212223);
+      --fg-pressed: var(--primitive-neutral-500, #565759);
+      --fg-primary-bold: var(--primitive-neutral-800, #212223);
+      --fg-primary-muted: var(--primitive-neutral-500, #565759);
+      --fg-inverse-bold: var(--primitive-neutral-50, #ffffff);
+      --fg-inverse-muted: var(--primitive-neutral-400, #888a8f);
+      --fg-disabled: var(--primitive-neutral-300, #c3c5c7);
+      --fg-accent-primary-bold: var(--primitive-accent-primary-300, #39b7fa);
+      --fg-accent-primary-hover: var(--primitive-accent-primary-200, #6ed1ff);
+      --fg-accent-primary-pressed: var(--primitive-accent-primary-600, #0068a1);
+      --fg-info-bold: var(--primitive-utility-info-600, #414245);
+      --fg-info-hover: var(--primitive-utility-info-700, #38393a);
+      --fg-info-pressed: var(--primitive-utility-info-500, #565759);
+      --fg-advisory-bold: var(--primitive-utility-advisory-400, #62a6ff);
+      --fg-advisory-hover: var(--primitive-utility-advisory-600, #3c67a0);
+      --fg-advisory-pressed: var(--primitive-utility-advisory-500, #4e88da);
+      --fg-normal-bold: var(--primitive-utility-normal-400, #2bbf35);
+      --fg-normal-hover: var(--primitive-utility-normal-600, #1c7e23);
+      --fg-normal-pressed: var(--primitive-utility-normal-500, #26a12e);
+      --fg-serious-bold: var(--primitive-utility-serious-600, #bb7a00);
+      --fg-serious-hover: var(--primitive-utility-serious-700, #8e5d00);
+      --fg-serious-pressed: var(--primitive-utility-serious-600, #bb7a00);
+      --fg-critical-bold: var(--primitive-utility-critical-400, #ff2e27);
+      --fg-critical-hover: var(--primitive-utility-critical-600, #a10701);
+      --fg-critical-pressed: var(--primitive-utility-critical-500, #d40b04);
+      --fg-a11y-on-accent: var(--primitive-neutral-50, #ffffff);
+      --fg-a11y-on-utility: var(--primitive-neutral-50, #ffffff);
+      --outline-static: var(--primitive-neutral-300, #c3c5c7);
+      --outline-interactive: var(--primitive-neutral-300, #c3c5c7);
+      --outline-interactive-hover: var(--primitive-neutral-400, #888a8f);
+      --outline-interactive-pressed: var(--primitive-neutral-200, #e1e1e1);
+      --outline-interactive-disabled: var(--primitive-neutral-200, #e1e1e1);
+      --outline-accent-primary-bold: var(
+        --primitive-accent-primary-300,
         #39b7fa
       );
-      --color-fg-accent-primary-hover: var(
-        --color-primitive-accent-primary-200,
+      --outline-accent-primary-hover: var(
+        --primitive-accent-primary-200,
         #6ed1ff
       );
-      --color-fg-accent-primary-pressed: var(
-        --color-primitive-accent-primary-600,
+      --outline-accent-primary-pressed: var(
+        --primitive-accent-primary-600,
         #0068a1
       );
-      --color-fg-info-bold: var(--color-primitive-utility-info-600, #414245);
-      --color-fg-info-hover: var(--color-primitive-utility-info-700, #38393a);
-      --color-fg-info-pressed: var(--color-primitive-utility-info-500, #565759);
-      --color-fg-advisory-bold: var(
-        --color-primitive-utility-advisory-400,
-        #62a6ff
-      );
-      --color-fg-advisory-hover: var(
-        --color-primitive-utility-advisory-600,
-        #3c67a0
-      );
-      --color-fg-advisory-pressed: var(
-        --color-primitive-utility-advisory-500,
+      --outline-info-bold: var(--primitive-utility-info-400, #888a8f);
+      --outline-info-hover: var(--primitive-utility-info-600, #414245);
+      --outline-info-pressed: var(--primitive-utility-info-500, #565759);
+      --outline-advisory-bold: var(--primitive-utility-advisory-400, #62a6ff);
+      --outline-advisory-hover: var(--primitive-utility-advisory-600, #3c67a0);
+      --outline-advisory-pressed: var(
+        --primitive-utility-advisory-500,
         #4e88da
       );
-      --color-fg-normal-bold: var(
-        --color-primitive-utility-normal-400,
-        #2bbf35
-      );
-      --color-fg-normal-hover: var(
-        --color-primitive-utility-normal-600,
-        #1c7e23
-      );
-      --color-fg-normal-pressed: var(
-        --color-primitive-utility-normal-500,
-        #26a12e
-      );
-      --color-fg-serious-bold: var(
-        --color-primitive-utility-serious-600,
-        #bb7a00
-      );
-      --color-fg-serious-hover: var(
-        --color-primitive-utility-serious-700,
-        #8e5d00
-      );
-      --color-fg-serious-pressed: var(
-        --color-primitive-utility-serious-600,
-        #bb7a00
-      );
-      --color-fg-critical-bold: var(
-        --color-primitive-utility-critical-400,
-        #ff2e27
-      );
-      --color-fg-critical-hover: var(
-        --color-primitive-utility-critical-600,
-        #a10701
-      );
-      --color-fg-critical-pressed: var(
-        --color-primitive-utility-critical-500,
+      --outline-normal-bold: var(--primitive-utility-normal-400, #2bbf35);
+      --outline-normal-hover: var(--primitive-utility-normal-600, #1c7e23);
+      --outline-normal-pressed: var(--primitive-utility-normal-500, #26a12e);
+      --outline-serious-bold: var(--primitive-utility-serious-600, #bb7a00);
+      --outline-serious-hover: var(--primitive-utility-serious-700, #8e5d00);
+      --outline-serious-pressed: var(--primitive-utility-serious-500, #e69600);
+      --outline-critical-bold: var(--primitive-utility-critical-400, #ff2e27);
+      --outline-critical-hover: var(--primitive-utility-critical-600, #a10701);
+      --outline-critical-pressed: var(
+        --primitive-utility-critical-500,
         #d40b04
       );
-      --color-fg-a11y-on-accent: var(--color-primitive-neutral-50, #ffffff);
-      --color-fg-a11y-on-utility: var(--color-primitive-neutral-50, #ffffff);
-      --color-outline-static: var(--color-primitive-neutral-300, #c3c5c7);
-      --color-outline-interactive: var(--color-primitive-neutral-300, #c3c5c7);
-      --color-outline-interactive-hover: var(
-        --color-primitive-neutral-400,
-        #888a8f
-      );
-      --color-outline-interactive-pressed: var(
-        --color-primitive-neutral-200,
-        #e1e1e1
-      );
-      --color-outline-interactive-disabled: var(
-        --color-primitive-neutral-200,
-        #e1e1e1
-      );
-      --color-outline-accent-primary-bold: var(
-        --color-primitive-accent-primary-300,
-        #39b7fa
-      );
-      --color-outline-accent-primary-hover: var(
-        --color-primitive-accent-primary-200,
-        #6ed1ff
-      );
-      --color-outline-accent-primary-pressed: var(
-        --color-primitive-accent-primary-600,
-        #0068a1
-      );
-      --color-outline-info-bold: var(
-        --color-primitive-utility-info-400,
-        #888a8f
-      );
-      --color-outline-info-hover: var(
-        --color-primitive-utility-info-600,
-        #414245
-      );
-      --color-outline-info-pressed: var(
-        --color-primitive-utility-info-500,
-        #565759
-      );
-      --color-outline-advisory-bold: var(
-        --color-primitive-utility-advisory-400,
-        #62a6ff
-      );
-      --color-outline-advisory-hover: var(
-        --color-primitive-utility-advisory-600,
-        #3c67a0
-      );
-      --color-outline-advisory-pressed: var(
-        --color-primitive-utility-advisory-500,
-        #4e88da
-      );
-      --color-outline-normal-bold: var(
-        --color-primitive-utility-normal-400,
-        #2bbf35
-      );
-      --color-outline-normal-hover: var(
-        --color-primitive-utility-normal-600,
-        #1c7e23
-      );
-      --color-outline-normal-pressed: var(
-        --color-primitive-utility-normal-500,
-        #26a12e
-      );
-      --color-outline-serious-bold: var(
-        --color-primitive-utility-serious-600,
-        #bb7a00
-      );
-      --color-outline-serious-hover: var(
-        --color-primitive-utility-serious-700,
-        #8e5d00
-      );
-      --color-outline-serious-pressed: var(
-        --color-primitive-utility-serious-500,
-        #e69600
-      );
-      --color-outline-critical-bold: var(
-        --color-primitive-utility-critical-400,
-        #ff2e27
-      );
-      --color-outline-critical-hover: var(
-        --color-primitive-utility-critical-600,
-        #a10701
-      );
-      --color-outline-critical-pressed: var(
-        --color-primitive-utility-critical-500,
-        #d40b04
-      );
-      --color-outline-mono-bold: var(--color-primitive-neutral-900, #151517);
-      --color-outline-mono-bold-hover: var(
-        --color-primitive-neutral-700,
-        #38393a
-      );
-      --color-outline-mono-bold-pressed: var(
-        --color-primitive-neutral-600,
-        #414245
-      );
+      --outline-mono-bold: var(--primitive-neutral-900, #151517);
+      --outline-mono-bold-hover: var(--primitive-neutral-700, #38393a);
+      --outline-mono-bold-pressed: var(--primitive-neutral-600, #414245);
       --shadow-elevation-raised: var(
         --shadow-elevation-raised-muted,
         0 1px 4px 0 rgba(0 0 0 / 0.16)
