@@ -249,6 +249,7 @@
     }
   },
   "spacing": {
+    "base": "1px",
     "none": "unset",
     "0": "0px",
     "xxs": "2px",

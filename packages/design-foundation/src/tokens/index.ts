@@ -592,6 +592,7 @@ export const designTokens = {
   },
   spacing: {
     '0': 0,
+    base: 1,
     none: 'unset',
     xxs: 2,
     xs: 4,

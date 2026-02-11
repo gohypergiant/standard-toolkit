@@ -375,6 +375,7 @@ export type ThemeTokens = {
     weight: TypographyTokenSet;
   };
   spacing: {
+    base: number;
     '0': number;
     none: string | number;
     xxs: number;
