@@ -13,31 +13,49 @@
 import React from 'react';
 import { GANTT_ROW_HEIGHT_PX } from '../../constants';
 import { useGanttContext } from '../../context';
-import { shouldRenderBlock } from '../../utils/helpers';
+import {
+  shouldRenderPointElement,
+  shouldRenderRangeElement,
+} from '../../utils/helpers';
 import styles from './styles.module.css';
 import type { PropsWithChildren } from 'react';
-import type { GanttRowBlockProps } from './gantt-row-block';
+import type { GanttRowElementProps } from './types';
 
 export function GanttRow({ children, ...rest }: PropsWithChildren) {
   const { renderedRegionBounds } = useGanttContext();
-  const blocks = React.Children.toArray(children).filter(
-    (child): child is React.ReactElement<GanttRowBlockProps> => {
+  const elements = React.Children.toArray(children).filter(
+    (child): child is React.ReactElement<GanttRowElementProps> => {
       return React.isValidElement(child);
     },
   );
-  const renderedBlocks = blocks.filter((block) =>
-    shouldRenderBlock(renderedRegionBounds, {
-      startMs: block.props.startMs,
-      endMs: block.props.endMs,
-    }),
-  );
+  const renderedElements = elements.filter((element) => {
+    if (
+      element.props.startMs !== undefined &&
+      element.props.endMs !== undefined
+    ) {
+      return shouldRenderRangeElement(renderedRegionBounds, {
+        startMs: element.props.startMs,
+        endMs: element.props.endMs,
+      });
+    }
+
+    if (element.props.timeMs !== undefined) {
+      return shouldRenderPointElement(
+        renderedRegionBounds,
+        element.props.timeMs,
+      );
+    }
+
+    return false;
+  });
+
   return (
     <div
       className={styles['row-container']}
       data-height={GANTT_ROW_HEIGHT_PX}
       {...rest}
     >
-      {renderedBlocks}
+      {renderedElements}
     </div>
   );
 }

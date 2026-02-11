@@ -10,41 +10,30 @@
  * governing permissions and limitations under the License.
  */
 
-import { type CSSProperties, useState } from 'react';
-import { GANTT_BLOCK_HEIGHT_PX } from '../../constants';
+import { useState } from 'react';
 import styles from './styles.module.css';
 import { useRangeElementLayout } from './use-range-element-layout';
 
-export type GanttRowBlockProps = {
+export type SpacerProps = {
   id: string;
   startMs: number;
   endMs: number;
 };
 
-const elementStyle = {
-  '--block-height': `${GANTT_BLOCK_HEIGHT_PX}px`,
-} as CSSProperties;
-
-export function GanttRowBlock({ startMs, endMs }: GanttRowBlockProps) {
-  const [blockElement, setBlockElement] = useState<HTMLDivElement | null>(null);
+export function Spacer({ startMs, endMs }: SpacerProps) {
+  const [element, setElement] = useState<HTMLDivElement | null>(null);
 
   useRangeElementLayout({
-    element: blockElement,
+    element,
     timeBounds: {
       startMs,
       endMs,
     },
   });
 
-  const assignBlockElementRef = (node: HTMLDivElement) => {
-    setBlockElement(node);
+  const assignElementRef = (node: HTMLDivElement) => {
+    setElement(node);
   };
 
-  return (
-    <div
-      style={elementStyle}
-      ref={assignBlockElementRef}
-      className={styles['row-block']}
-    />
-  );
+  return <div ref={assignElementRef} className={styles['row-spacer']} />;
 }

@@ -30,6 +30,19 @@ export function deriveTranslateXValue(
   return timeOutsideViewableRegion / msPerPx;
 }
 
+function deriveElementTranslateX(
+  renderedRegionBounds: TimeBounds,
+  elementStartMs: number,
+  totalBounds: TimeBounds,
+  msPerPx: number,
+) {
+  const distanceFromTimelineStart =
+    (elementStartMs - totalBounds.startMs) / msPerPx;
+  const offsetMs = renderedRegionBounds.startMs - elementStartMs;
+  const offsetPx = offsetMs > 0 ? offsetMs / msPerPx : 0;
+  return distanceFromTimelineStart + offsetPx;
+}
+
 export function deriveRangeElementLayout(
   renderedRegionBounds: TimeBounds,
   rangeElementBounds: TimeBounds,
@@ -45,15 +58,32 @@ export function deriveRangeElementLayout(
     rangeElementBounds.endMs,
   );
 
-  const distanceFromTimelineStart =
-    (rangeElementBounds.startMs - totalBounds.startMs) / msPerPx;
+  const translateX = deriveElementTranslateX(
+    renderedRegionBounds,
+    rangeElementBounds.startMs,
+    totalBounds,
+    msPerPx,
+  );
 
-  const offsetMs = renderedRegionBounds.startMs - rangeElementBounds.startMs;
-  const offsetPx = offsetMs > 0 ? offsetMs / msPerPx : 0;
-  const translateX = distanceFromTimelineStart + offsetPx;
   const widthPx = (renderedEndMs - renderedStartMs) / msPerPx;
 
   return { translateX, widthPx };
+}
+
+export function derivePointElementLayout(
+  renderedRegionBounds: TimeBounds,
+  pointElementMs: number,
+  totalBounds: TimeBounds,
+  msPerPx: number,
+) {
+  const translateX = deriveElementTranslateX(
+    renderedRegionBounds,
+    pointElementMs,
+    totalBounds,
+    msPerPx,
+  );
+
+  return { translateX };
 }
 
 export function deriveRenderedSlice(

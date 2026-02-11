@@ -13,7 +13,9 @@
 import { Gantt } from './';
 import { END_TIME_MS, ROWS, START_TIME_MS } from './__fixtures__';
 import { GanttRow } from './components/gantt-row';
+import { CloseBracket, OpenBracket } from './components/gantt-row/bracket';
 import { GanttRowBlock } from './components/gantt-row/gantt-row-block';
+import { Spacer } from './components/gantt-row/spacer';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
@@ -35,21 +37,59 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: (args) => (
     // consumer-set height to demonstrate scroll behavior with virtualized rows
-    <div className='h-[280px]'>
+    <div className='h-[360px]'>
       <Gantt {...args}>
-        {ROWS.map(({ id, ranges }) => (
+        {ROWS.map(({ id, elements }) => (
           <GanttRow key={id}>
-            {ranges.map(([startMs, endMs], index) => (
-              <GanttRowBlock
-                key={`${id}-block-${index}`}
-                id={`${id}-block-${index}`}
-                startMs={startMs}
-                endMs={endMs}
-              />
-            ))}
+            {elements.map((element, index) => {
+              if (element.type === 'block') {
+                const [startMs, endMs] = element.rangeMs;
+                return (
+                  <GanttRowBlock
+                    key={`${id}-block-${index}`}
+                    id={`${id}-block-${index}`}
+                    startMs={startMs}
+                    endMs={endMs}
+                  />
+                );
+              }
+
+              if (element.type === 'spacer') {
+                const [startMs, endMs] = element.rangeMs;
+
+                return (
+                  <Spacer
+                    key={`${id}-spacer-${index}`}
+                    id={`${id}-spacer-${index}`}
+                    startMs={startMs}
+                    endMs={endMs}
+                  />
+                );
+              }
+
+              if (
+                element.type === 'close-bracket' ||
+                element.type === 'open-bracket'
+              ) {
+                return element.type === 'open-bracket' ? (
+                  <OpenBracket
+                    key={`${id}-open-bracket-${index}`}
+                    timeMs={element.timeMs}
+                  />
+                ) : (
+                  <CloseBracket
+                    key={`${id}-close-bracket-${index}`}
+                    timeMs={element.timeMs}
+                  />
+                );
+              }
+
+              return null;
+            })}
           </GanttRow>
         ))}
       </Gantt>
+      {/* <CloseBracket /> */}
     </div>
   ),
 };
