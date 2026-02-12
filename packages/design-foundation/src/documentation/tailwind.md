@@ -79,6 +79,42 @@ function MyComponent() {
 
 When using these variants in CSS modules (like in the example in the CSS modules section) be sure to utilize the `@variant` approach. When you use variant selectors inline you have no control over the order in which the styles apply, it's entirely up the Tailwind's build output. But if you use the `@variant` approach in CSS modules, the order of the styles written is the order they are applied, just like normal CSS. This means you have complete control over peer style precedence.
 
+### Semantics
+
+In the overwhelming majority of cases, developers should adhere strictly to the design system. Design systems exist to ensure consistency, accessibility, scalability, and efficiency across products. By using semantic color and spacing tokens—rather than raw primitives or arbitrary values—teams create interfaces that are cohesive, themeable, and resilient to change. Semantic tokens communicate intent (e.g., `bg-surface-default`, `fg-hover`, `p-m`) instead of hard-coded values, making the UI easier to maintain, update, and evolve over time.
+
+Relying on primitives or one-off values fragments the experience, introduces visual inconsistencies, and increases long-term maintenance costs. Exceptions should be rare and deliberate: early-stage prototypes where speed of exploration matters more than polish, or truly bespoke features that push beyond the current boundaries of the design system. Even in those cases, deviations should be treated as signals—either to formalize a new pattern within the system or to confirm that the exception is justified. Default to the system first; extend it thoughtfully when necessary.
+
+```jsx
+// Ok, if prototyping or in rare edge cases
+<div className="gap-10" />
+
+// Good
+<div className="gap-m" />
+```
+
+```jsx
+// Ok, if prototyping or in rare edge cases
+<div className="bg-neutral-300" />
+
+// Good
+<div className="bg-surface-raised" />
+```
+
+```jsx
+// Ok, if prototyping or in rare edge cases
+<div className="icon-primary-bold/50" />
+
+// Good
+<div className="icon-primary-bold" />
+```
+
+While most product experiences should comfortably live within the boundaries of the design system, any mature application will inevitably include bespoke features that stretch beyond what the system has explicitly accounted for. Complex workflows, novel interactions, and domain-specific requirements can introduce edge cases that require thoughtful extension rather than rigid adherence. These moments are not failures of the system—they are signals that the product is evolving.
+
+It is the responsibility of design to ensure the design system is robust, flexible, and extensible enough to accommodate the vast majority of real-world scenarios. Patterns, components, and tokens should be built with adaptability in mind, anticipating variation without sacrificing coherence.
+
+At the same time, developers play a critical role in maintaining the system’s integrity. When implementation challenges arise—whether due to technical constraints, missing tokens, unclear guidelines, or component limitations—it’s the developer’s responsibility to surface those gaps early. Transparent feedback loops between design and engineering ensure that bespoke solutions don’t become one-off exceptions, but instead inform thoughtful improvements to the system. In this way, the design system remains a living, evolving foundation rather than a static rulebook.
+
 ## Unsupported
 
 ### [Arbitrary Values, Properties & Variants](https://tailwindcss.com/docs/adding-custom-styles#using-arbitrary-values)

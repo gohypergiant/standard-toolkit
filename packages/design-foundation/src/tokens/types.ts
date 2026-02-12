@@ -13,8 +13,144 @@
 // biome-ignore lint/style/useNamingConvention: acronym
 type RGBA = [number, number, number, number];
 
-/** Static color tokens for classification levels and rules of engagement */
-export type StaticColorTokens = {
+/** Primitive color tokens which feed into semantic color tokens */
+export type PrimitiveColorTokens = {
+  neutral: {
+    '50': RGBA;
+    '100': RGBA;
+    '200': RGBA;
+    '300': RGBA;
+    '400': RGBA;
+    '500': RGBA;
+    '600': RGBA;
+    '700': RGBA;
+    '800': RGBA;
+    '900': RGBA;
+    '950': RGBA;
+  };
+  alpha: {
+    black: {
+      '100': RGBA;
+      '200': RGBA;
+      '300': RGBA;
+      '400': RGBA;
+      '500': RGBA;
+    };
+    white: {
+      '100': RGBA;
+      '200': RGBA;
+      '300': RGBA;
+      '400': RGBA;
+      '500': RGBA;
+    };
+  };
+  accent: {
+    primary: {
+      '50': RGBA;
+      '100': RGBA;
+      '200': RGBA;
+      '300': RGBA;
+      '400': RGBA;
+      '500': RGBA;
+      '600': RGBA;
+      '700': RGBA;
+      '800': RGBA;
+      '900': RGBA;
+    };
+    secondary: {
+      '50': RGBA;
+      '100': RGBA;
+      '200': RGBA;
+      '300': RGBA;
+      '400': RGBA;
+      '500': RGBA;
+      '600': RGBA;
+      '700': RGBA;
+      '800': RGBA;
+      '900': RGBA;
+    };
+    tertiary: {
+      '50': RGBA;
+      '100': RGBA;
+      '200': RGBA;
+      '300': RGBA;
+      '400': RGBA;
+      '500': RGBA;
+      '600': RGBA;
+      '700': RGBA;
+      '800': RGBA;
+      '900': RGBA;
+    };
+  };
+  utility: {
+    info: {
+      '50': RGBA;
+      '100': RGBA;
+      '200': RGBA;
+      '300': RGBA;
+      '400': RGBA;
+      '500': RGBA;
+      '600': RGBA;
+      '700': RGBA;
+      '800': RGBA;
+      '900': RGBA;
+    };
+    advisory: {
+      '50': RGBA;
+      '100': RGBA;
+      '200': RGBA;
+      '300': RGBA;
+      '400': RGBA;
+      '500': RGBA;
+      '600': RGBA;
+      '700': RGBA;
+      '800': RGBA;
+      '900': RGBA;
+    };
+    normal: {
+      '50': RGBA;
+      '100': RGBA;
+      '200': RGBA;
+      '300': RGBA;
+      '400': RGBA;
+      '500': RGBA;
+      '600': RGBA;
+      '700': RGBA;
+      '800': RGBA;
+      '900': RGBA;
+    };
+    serious: {
+      '50': RGBA;
+      '100': RGBA;
+      '200': RGBA;
+      '300': RGBA;
+      '400': RGBA;
+      '500': RGBA;
+      '600': RGBA;
+      '700': RGBA;
+      '800': RGBA;
+      '900': RGBA;
+    };
+    critical: {
+      '50': RGBA;
+      '100': RGBA;
+      '200': RGBA;
+      '300': RGBA;
+      '400': RGBA;
+      '500': RGBA;
+      '600': RGBA;
+      '700': RGBA;
+      '800': RGBA;
+      '900': RGBA;
+    };
+  };
+  on: {
+    accent: RGBA;
+  };
+};
+
+/** Domain specific color tokens */
+export type DomainColorTokens = {
   classification: {
     missing: RGBA;
     unclass: RGBA;
@@ -202,95 +338,44 @@ export type SemanticColorTokens = {
   };
 };
 
+export type TypographyTokenSet = {
+  header: {
+    xxl: number;
+    xl: number;
+    l: number;
+    m: number;
+    s: number;
+    xs: number;
+  };
+  body: {
+    l: number;
+    m: number;
+    s: number;
+    xs: number;
+    xxs: number;
+  };
+  button: {
+    l: number;
+    m: number;
+    s: number;
+    xs: number;
+  };
+};
+
 /** Complete theme token structure including colors, typography, spacing, radius, and shadows */
 export type ThemeTokens = {
-  static: StaticColorTokens;
   dark: SemanticColorTokens;
   light: SemanticColorTokens;
+  primitive: PrimitiveColorTokens;
+  domain: DomainColorTokens;
   typography: {
-    header: {
-      xxl: {
-        size: number;
-        height: number;
-        spacing: number;
-      };
-      xl: {
-        size: number;
-        height: number;
-        spacing: number;
-      };
-      l: {
-        size: number;
-        height: number;
-        spacing: number;
-      };
-      m: {
-        size: number;
-        height: number;
-        spacing: number;
-      };
-      s: {
-        size: number;
-        height: number;
-        spacing: number;
-      };
-      xs: {
-        size: number;
-        height: number;
-        spacing: number;
-      };
-    };
-    body: {
-      l: {
-        size: number;
-        height: number;
-        spacing: number;
-      };
-      m: {
-        size: number;
-        height: number;
-        spacing: number;
-      };
-      s: {
-        size: number;
-        height: number;
-        spacing: number;
-      };
-      xs: {
-        size: number;
-        height: number;
-        spacing: number;
-      };
-      xxs: {
-        size: number;
-        height: number;
-        spacing: number;
-      };
-    };
-    button: {
-      l: {
-        size: number;
-        height: number;
-        spacing: number;
-      };
-      m: {
-        size: number;
-        height: number;
-        spacing: number;
-      };
-      s: {
-        size: number;
-        height: number;
-        spacing: number;
-      };
-      xs: {
-        size: number;
-        height: number;
-        spacing: number;
-      };
-    };
+    height: TypographyTokenSet;
+    size: TypographyTokenSet;
+    spacing: TypographyTokenSet;
+    weight: TypographyTokenSet;
   };
   spacing: {
+    base: number;
     '0': number;
     none: string | number;
     xxs: number;
