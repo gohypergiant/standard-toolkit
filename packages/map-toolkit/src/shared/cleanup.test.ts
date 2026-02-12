@@ -46,8 +46,20 @@ describe('clearAllMapStores', () => {
     const clearMapModeSpy = vi.spyOn(mapModeStore, 'clearMapModeState');
     const clearViewportSpy = vi.spyOn(viewportStore, 'clearViewportState');
 
-    // Call cleanup
+    // Arrange: Initialize stores to create state
+    cameraStore.cameraStore.get(testId);
+    mapModeStore.modeStore.get(testId);
+
+    // Verify state exists
+    expect(cameraStore.cameraStore.exists(testId)).toBe(true);
+    expect(mapModeStore.modeStore.exists(testId)).toBe(true);
+
+    // Act: Clear all stores
     clearAllMapStores(testId);
+
+    // Assert: State is actually cleared
+    expect(cameraStore.cameraStore.exists(testId)).toBe(false);
+    expect(mapModeStore.modeStore.exists(testId)).toBe(false);
 
     // Verify all cleanup functions were called with correct mapId
     expect(clearCameraSpy).toHaveBeenCalledWith(testId);

@@ -213,6 +213,13 @@ describe('useMapCamera', () => {
   });
 
   describe('initialization timing', () => {
+    beforeEach(() => {
+      // Create a stable id for each test
+      testid = uuid();
+      // Reset state for initialization timing tests
+      clearCameraState(testid);
+    });
+
     it('should initialize with provided initial state', () => {
       const { result } = renderHook(() =>
         useMapCamera(testid, {
