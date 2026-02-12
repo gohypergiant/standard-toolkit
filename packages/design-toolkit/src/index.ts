@@ -524,12 +524,22 @@ export type {
   TableProps,
   TableRowProps,
 } from './components/table/types';
-export { TabsContext, TabsProvider } from './components/tabs/context';
+export { TabStyleDefaults } from './components/tabs/constants';
+export {
+  TabContext,
+  TabProvider,
+  TabsContext,
+  TabsProvider,
+} from './components/tabs/context';
 export { Tabs } from './components/tabs';
 export { TabList } from './components/tabs/list';
 export { TabPanel } from './components/tabs/panel';
 export { Tab } from './components/tabs/tab';
-export type { TabsProps } from './components/tabs/types';
+export type {
+  TabProps,
+  TabStyleProps,
+  TabsProps,
+} from './components/tabs/types';
 export {
   TextAreaFieldContext,
   TextAreaFieldProvider,
