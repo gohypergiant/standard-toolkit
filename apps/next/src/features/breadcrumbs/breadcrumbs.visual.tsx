@@ -1,11 +1,11 @@
 import { BentoGroup } from '~/components/bento';
 import { createVisualTests } from '~/visual-regression/vitest';
-import { BreadcrumbsServerExample } from './server';
+import { BreadcrumbsExampleServer } from './server';
 
 function BreadcrumbsVariants() {
   return (
     <BentoGroup>
-      <BreadcrumbsServerExample />
+      <BreadcrumbsExampleServer />
     </BentoGroup>
   );
 }

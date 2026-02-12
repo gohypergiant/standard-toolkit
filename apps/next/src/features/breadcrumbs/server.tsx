@@ -1,9 +1,10 @@
 import 'server-only';
 
-import { BreadcrumbItem, Breadcrumbs } from '@accelint/design-toolkit';
+import { Breadcrumbs } from '@accelint/design-toolkit/components/breadcrumbs';
+import { BreadcrumbItem } from '@accelint/design-toolkit/components/breadcrumbs/item';
 import { BentoItem } from '~/components/bento';
 
-export function BreadcrumbsServerExample() {
+export function BreadcrumbsExampleServer() {
   return (
     <BentoItem>
       <Breadcrumbs>

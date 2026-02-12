@@ -3,7 +3,7 @@ import { ErrorComponent } from './error';
 import { LoadingComponent } from './loading';
 import { ClassificationBadgeServerExample } from './server';
 
-export function LinkExample() {
+export function ClassificationBadgeExample() {
   return (
     <ErrorComponent>
       <LoadingComponent>
