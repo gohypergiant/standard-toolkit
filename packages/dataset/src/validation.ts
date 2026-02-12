@@ -81,6 +81,8 @@ const layerDatasetMetadataSchema = z.object({
     .regex(/^\d+\.\d+\.\d+$/, 'Invalid version: must be x.y.z')
     .optional(),
   serviceLayer: z.string().optional(),
+  backend: z.string().optional(),
+  vendorParams: z.record(z.string(), z.unknown()).optional(),
   idProperty: z.string().optional(),
   geometryProperty: z.string(),
   minZoom: z.number().optional(),

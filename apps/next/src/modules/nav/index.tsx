@@ -21,7 +21,7 @@ const LINKS = [
   { path: '/badge', label: 'Badge' },
   { path: '/button', label: 'Button' },
   { path: '/dialog/client', label: 'Dialog' },
-  { path: '/drawer/client', label: 'Drawer' },
+  { path: '/drawer', label: 'Drawer' },
   { path: '/map', label: 'Map' },
   { path: '/notice', label: 'Notice' },
   { path: '/tooltip', label: 'Tooltip' },

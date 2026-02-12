@@ -877,3 +877,90 @@ export const metaDataFilterDialect = get(filterDialectLens);
 export const datasetFilterDialect = get(
   composeLens(metadataLens, filterDialectLens),
 );
+
+/**
+ * Lens focusing on the metadata's backend field.
+ *
+ * @example
+ * ```typescript
+ * const backend = get(backendLens)(metadata);
+ * ```
+ */
+const backendLens = lensOptionalProp<LayerDatasetMetadata>()('backend');
+
+/**
+ * Extract the backend implementation identifier from metadata.
+ *
+ * @param metadata - The metadata object to extract from
+ * @returns Backend identifier string or undefined
+ *
+ * @example
+ * ```typescript
+ * const backend = metaDataBackend(metadata);
+ * ```
+ */
+export const metaDataBackend = get(backendLens);
+
+/**
+ * Extract the backend implementation identifier directly from a dataset.
+ *
+ * @param dataset - The dataset to extract backend from
+ * @returns Backend identifier string or undefined
+ *
+ * @remarks
+ * Composed lens that navigates: dataset → metadata → backend
+ * Used to identify the specific backend server implementation for adapter selection.
+ *
+ * @example
+ * ```typescript
+ * const backend = datasetBackend(dataset);
+ * const adapter = getAdapter(backend || 'geoserver');
+ * ```
+ */
+export const datasetBackend = get(composeLens(metadataLens, backendLens));
+
+/**
+ * Lens focusing on the metadata's vendorParams field.
+ *
+ * @example
+ * ```typescript
+ * const vendorParams = get(vendorParamsLens)(metadata);
+ * ```
+ */
+const vendorParamsLens =
+  lensOptionalProp<LayerDatasetMetadata>()('vendorParams');
+
+/**
+ * Extract backend-specific vendor parameters from metadata.
+ *
+ * @param metadata - The metadata object to extract from
+ * @returns Record of vendor-specific parameters or undefined
+ *
+ * @example
+ * ```typescript
+ * const vendorParams = metaDataVendorParams(metadata);
+ * ```
+ */
+export const metaDataVendorParams = get(vendorParamsLens);
+
+/**
+ * Extract backend-specific vendor parameters directly from a dataset.
+ *
+ * @param dataset - The dataset to extract vendor params from
+ * @returns Record of vendor-specific parameters or undefined
+ *
+ * @remarks
+ * Composed lens that navigates: dataset → metadata → vendorParams
+ * Parameter interpretation depends on both the service type and backend field values.
+ *
+ * @example
+ * ```typescript
+ * const vendorParams = datasetVendorParams(dataset);
+ * if (vendorParams?.formatOptions) {
+ *   // Use GeoServer format options
+ * }
+ * ```
+ */
+export const datasetVendorParams = get(
+  composeLens(metadataLens, vendorParamsLens),
+);

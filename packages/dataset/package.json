@@ -1,7 +1,7 @@
 {
   "name": "@accelint/dataset",
   "description": "TypeScript library for validating and accessing geospatial dataset configurations with type-safe lenses and runtime validation.",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "devDependencies": {

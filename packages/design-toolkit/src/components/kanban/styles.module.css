@@ -14,7 +14,7 @@
 
 @layer components.l1 {
   .kanban {
-    @apply h-full w-full;
+    @apply h-full w-full select-none;
   }
 
   .header {

@@ -58,6 +58,7 @@
     "@memlab/api": "^1.0.42",
     "@memlab/core": "^1.1.43",
     "@memlab/heap-analysis": "^1.0.40",
+    "@next/bundle-analyzer": "^16.1.6",
     "@playwright/test": "^1.49.0",
     "@tailwindcss/vite": "^4.1.18",
     "@testing-library/dom": "^10.4.1",
@@ -76,6 +77,8 @@
   },
   "private": true,
   "scripts": {
+    "analyze": "pnpm next experimental-analyze",
+    "analyze:webpack": "WEBPACK_ANALYZE=true pnpm next build --webpack",
     "build": "NODE_ENV=production next build",
     "dev": "NODE_ENV=development next dev",
     "memlab": "playwright test --config=src/memlab/config/playwright.config.ts",
