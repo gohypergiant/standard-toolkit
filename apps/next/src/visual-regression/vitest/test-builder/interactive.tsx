@@ -11,11 +11,11 @@
  */
 
 import { ThemeProvider } from '@accelint/design-toolkit';
+import { getLogger } from '@accelint/logger';
 import { dash } from 'radashi';
 import { describe, expect, test } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { createLogger } from '~/utils/logger';
 import {
   DEFAULT_TEST_STATES,
   INTERACTION_STATES,
@@ -28,7 +28,12 @@ import type {
   ThemeMode,
 } from '../../lib/types';
 
-const logger = createLogger('[VRT:Interactive]', 'debug');
+const logger = getLogger({
+  enabled: process.env.NODE_ENV !== 'production',
+  level: 'debug',
+  prefix: '[VRT:Interactive]',
+  pretty: true,
+});
 
 const FOCUSABLE_SELECTOR =
   'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';

@@ -11,15 +11,20 @@
  */
 
 import { ThemeProvider } from '@accelint/design-toolkit';
+import { getLogger } from '@accelint/logger';
 import { dash } from 'radashi';
 import { describe, expect, test } from 'vitest';
 import { page } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { createLogger } from '~/utils/logger';
 import { insertModeInFilename, THEME_MODES } from '../../lib/theme-modes';
 import type { VisualTestConfig, VisualTestScenario } from '../../lib/types';
 
-const logger = createLogger('[VRT:Static]', 'warn');
+const logger = getLogger({
+  enabled: process.env.NODE_ENV !== 'production',
+  level: 'warn',
+  prefix: '[VRT:Static]',
+  pretty: true,
+});
 
 /**
  * Create a visual regression test for a component using a declarative configuration.
@@ -114,7 +119,7 @@ function getTargetFromSelector(selector: string) {
   logger.warn(
     `Unsupported selector format: "${selector}". ` +
       `Only [role="..."] and [data-testid="..."] are supported. ` +
-      'Falling back to container screenshot.',
+      `Falling back to container screenshot.`,
   );
 
   return null;

@@ -12,14 +12,19 @@
 
 'use client';
 import 'client-only';
+import { getLogger } from '@accelint/logger';
 import { ErrorBoundary } from 'react-error-boundary';
-import { createLogger } from '~/utils/logger';
 import type { ErrorInfo, PropsWithChildren } from 'react';
 
-const accordionGroupLogger = createLogger('[AccordionGroup]');
+const logger = getLogger({
+  enabled: process.env.NODE_ENV !== 'production',
+  level: 'error',
+  prefix: '[AccordionGroup]',
+  pretty: true,
+});
 
 function onError(err: Error, info: ErrorInfo) {
-  accordionGroupLogger
+  logger
     .withContext({ componentStack: info.componentStack })
     .withError(err)
     .error('Error boundary caught error');
