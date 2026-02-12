@@ -1,5 +1,24 @@
 # @accelint/map-toolkit
 
+## 2.0.0
+
+### Minor Changes
+
+- 89914b0: Add Enter key hotkey to save shape edits. Pressing Enter while editing a shape now saves the changes and emits the existing `shapes:updated` event, providing an alternative to clicking the Save button.
+- 7503e7e: Add click-to-place editing for Point shapes in EditShapeLayer.
+
+  Point shapes now use a new `point-translate` edit mode that supports two ways to reposition:
+  - **Click anywhere on the map** to instantly move the point to that location
+  - **Drag the point directly** for traditional drag behavior
+
+  This improves UX for points which previously required precise clicking on a very small target area.
+
+### Patch Changes
+
+- 6cb6e17: Enable antialiasing for maplibre to smooth out lines
+- Updated dependencies [58bc0db]
+  - @accelint/geo@0.6.0
+
 ## 1.3.0
 
 ### Minor Changes

@@ -1,5 +1,11 @@
 # @accelint/geo
 
+## 0.6.0
+
+### Minor Changes
+
+- 58bc0db: Extends `createCoordinate` to accept numeric input formats in addition to strings
+
 ## 0.5.1
 
 ### Patch Changes
