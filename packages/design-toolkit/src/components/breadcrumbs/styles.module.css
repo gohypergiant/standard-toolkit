@@ -28,6 +28,7 @@
 
 @layer components.l2 {
   .link {
+    @apply select-none;
     @variant hover {
       @apply fg-primary-bold;
     }

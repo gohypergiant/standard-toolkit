@@ -45,6 +45,8 @@ export type ComboBoxFieldProps<T extends OptionsDataItem> = Omit<
       control?: string;
       /** Class name for the input element. */
       input?: InputProps['className'];
+      /** Class name for the clear button. */
+      clear?: ButtonProps['className'];
       /** Class name for the trigger button. */
       trigger?: ButtonProps['className'];
       /** Class name for the description text. */
@@ -64,4 +66,6 @@ export type ComboBoxFieldProps<T extends OptionsDataItem> = Omit<
     errorMessage?: string;
     /** Size variant of the field. */
     size?: 'small' | 'medium';
+    /** Whether the field shows a clear button. Will not show if the field is read-only. */
+    isClearable?: boolean;
   };

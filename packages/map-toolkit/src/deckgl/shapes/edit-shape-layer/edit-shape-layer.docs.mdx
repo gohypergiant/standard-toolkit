@@ -18,6 +18,7 @@ A deck.gl layer for interactively editing existing geographic shapes on a map. I
 - **Multi-map support**: Events include map instance ID for isolation
 - **Cursor integration**: Automatically changes cursor based on edit mode
 - **ESC to cancel**: Press ESC key to cancel editing and restore original shape
+- **Enter to save**: Press Enter key to save current changes
 - **Live measurements**: Tooltip shows dimensions and area during editing
 
 ## Edit Modes
@@ -26,7 +27,7 @@ The layer automatically selects the appropriate edit mode based on shape type:
 
 | Shape Type | Edit Mode | Behavior |
 |------------|-----------|----------|
-| **Point** | `translate` | Drag to reposition |
+| **Point** | `point-translate` | Click anywhere on the map to reposition, OR drag the point directly |
 | **LineString** | `vertex-transform` | Drag vertices to reshape, OR scale/rotate/translate the entire shape |
 | **Polygon** | `vertex-transform` | Drag vertices to reshape, OR scale/rotate/translate the entire shape |
 | **Rectangle** | `bounding-transform` | Drag corner handles to resize, drag body to move, or rotate via handle. Hold Shift for uniform scaling. |
@@ -143,6 +144,14 @@ function MapWithEditing() {
 
 ## Editing Instructions
 
+### Point
+
+1. Click on a point to select it
+2. Click "Edit" to enter edit mode
+3. **Click to place**: Click anywhere on the map to instantly move the point to that location
+4. **Drag**: Alternatively, click directly on the point and drag it to reposition
+5. Click "Save" to confirm changes or "Cancel" (or press ESC) to discard
+
 ### Polygon, LineString
 
 1. Click on a shape to select it
@@ -188,6 +197,7 @@ function MapWithEditing() {
 ### Keyboard Shortcuts
 
 - **ESC**: Cancel current editing and restore original shape
+- **Enter**: Save current changes (emits `shapes:updated` event)
 - **Shift** (hold while scaling): Maintain aspect ratio (uniform scaling)
 - **Shift** (hold while rotating): Snap to 45° intervals (0°, 45°, 90°, 135°, 180°, etc.)
 
@@ -235,7 +245,7 @@ useOn(EditShapeEvents.editing, (event) => {
 
 ### shapes:updated
 
-Emitted when a shape edit is saved:
+Emitted when a shape edit is saved - either via pressing Enter or manually via a button / save():
 
 ```tsx
 import { useOn } from '@accelint/bus/react';
@@ -282,6 +292,7 @@ When editing is active, the cursor automatically changes based on the edit mode:
 | `bounding-transform` | `crosshair` |
 | `vertex-transform` | `crosshair` |
 | `circle-transform` | `crosshair` |
+| `point-translate` | `crosshair` |
 | `translate` | `crosshair` |
 | `view` | `default` |
 
@@ -353,7 +364,7 @@ Options passed to the `edit()` function:
 
 | Option | Type | Description |
 |--------|------|-------------|
-| `mode` | `'bounding-transform' \| 'vertex-transform' \| 'circle-transform' \| 'translate'` | Override the automatic mode selection |
+| `mode` | `'bounding-transform' \| 'vertex-transform' \| 'circle-transform' \| 'point-translate' \| 'translate'` | Override the automatic mode selection |
 
 ### EditShapeEvents
 

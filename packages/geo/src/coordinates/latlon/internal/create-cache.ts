@@ -11,7 +11,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { FORMATS, type Format, SYMBOLS } from '.';
+import { type Format, SYMBOLS } from '.';
 
 export type CoordinateCache = Record<Format, string>;
 
@@ -40,7 +40,7 @@ const DIVIDER = ` ${SYMBOLS.DIVIDER} `;
  * ```
  */
 export function createCache(format: Format, value: string) {
-  const [alternate] = FORMATS.filter((o) => o !== format) as [Format];
+  const alternate: Format = format === 'LATLON' ? 'LONLAT' : 'LATLON';
 
   return {
     [format]: value,

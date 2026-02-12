@@ -39,11 +39,20 @@ const meta = {
     isInvalid: false,
     isRequired: true,
     allowsCustomValue: false,
+    isReadOnly: false,
   },
   argTypes: {
     size: {
       control: 'select',
       options: ['medium', 'small'],
+    },
+    onInputChange: {
+      action: 'onInputChange',
+      description:
+        'Callback when input value changes. Receives the current input value as a parameter.',
+      table: {
+        type: { summary: '(value: string | null) => void' },
+      },
     },
   },
 } satisfies Meta<typeof ComboBoxField>;
