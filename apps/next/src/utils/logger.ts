@@ -11,50 +11,44 @@
  */
 
 import { getLogger } from '@accelint/logger';
+import { OneWayLogLevelManager } from '@loglayer/log-level-manager-one-way';
 import type { LogLevel } from '@accelint/logger';
 
+const logger = getLogger({
+  level: 'error',
+  enabled: process.env.NODE_ENV !== 'production',
+}).withLogLevelManager(new OneWayLogLevelManager());
+
 /**
- * Create a logger instance with optional prefix, log level, and enabled condition.
+ * Create a child logger with module-specific context and log level.
  *
- * @param prefix - Optional prefix for log messages (e.g., '[Map]', '[VRT:Static]')
- * @param level - Log level to use (defaults to 'error')
- * @param enabled - Custom enabled condition (defaults to NODE_ENV !== 'production')
- * @returns A logger instance configured with the specified settings
+ * All child loggers inherit from a single base logger instance configured with
+ * OneWayLogLevelManager, allowing per-child log level control while maintaining
+ * a single underlying logger instance (important for transports like Pino).
+ *
+ * @param module - Module identifier for log messages (e.g., '[VRT:Static]', '[MemLab:Filters]')
+ * @param level - Log level for this module ('trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatal')
+ * @returns A child logger instance with isolated context and specified log level
  *
  * @example
  * ```typescript
  * import { createLogger } from '~/utils/logger';
  *
- * // Simple logger with prefix (error level by default)
- * const mapLogger = createLogger('[Map]');
- * mapLogger.error('Map failed to load');
+ * // Error-only logger for component error boundaries
+ * const errorLogger = createLogger('[Accordion]', 'error');
+ * errorLogger.error('Component failed to render');
  *
- * // Debug logger with prefix
+ * // Debug logger for test utilities
  * const testLogger = createLogger('[VRT:Static]', 'debug');
  * testLogger.debug('Test started');
+ * testLogger.info('Rendering component');
+ * testLogger.warn('Unexpected selector format');
  *
- * // Conditionally enabled logger
- * const memlabLogger = createLogger('[MemLab]', 'debug', !!process.env.DEBUG_MEMLAB);
- * memlabLogger.debug('Memory snapshot taken');
- *
- * // Base logger without prefix (error level by default)
- * const logger = createLogger();
- * logger.error('Application error occurred');
- *
- * // Base logger with custom level
- * const infoLogger = createLogger(undefined, 'info');
- * infoLogger.info('Application started');
+ * // Warning logger for visual regression tests
+ * const vrtLogger = createLogger('[VRT:Interactive]', 'warn');
+ * vrtLogger.warn('No focusable elements found');
  * ```
  */
-export function createLogger(
-  prefix?: string,
-  level: LogLevel = 'error',
-  enabled: boolean = process.env.NODE_ENV !== 'production',
-) {
-  return getLogger({
-    enabled,
-    level,
-    pretty: true,
-    ...(prefix && { prefix }),
-  });
+export function createLogger(module: string, level: LogLevel) {
+  return logger.child().setLevel(level).withContext({ source: module });
 }

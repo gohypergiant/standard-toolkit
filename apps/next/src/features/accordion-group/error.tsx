@@ -16,7 +16,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { createLogger } from '~/utils/logger';
 import type { ErrorInfo, PropsWithChildren } from 'react';
 
-const logger = createLogger('[AccordionGroup]');
+const logger = createLogger('[AccordionGroup]', 'error');
 
 function onError(err: Error, info: ErrorInfo) {
   logger

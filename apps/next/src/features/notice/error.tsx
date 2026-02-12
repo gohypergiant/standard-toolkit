@@ -16,7 +16,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { createLogger } from '~/utils/logger';
 import type { ErrorInfo, PropsWithChildren } from 'react';
 
-const logger = createLogger('[Notice]');
+const logger = createLogger('[Notice]', 'error');
 
 function onError(err: Error, info: ErrorInfo) {
   logger
