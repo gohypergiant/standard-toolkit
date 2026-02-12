@@ -10,8 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
-import { DrawerExample } from '~/features/drawer';
+import { BentoGroup } from '~/components/bento';
+import { ClassificationBadgeExample } from '~/features/classification-badge';
 
 export default function Page() {
-  return <DrawerExample />;
+  return (
+    <BentoGroup>
+      <ClassificationBadgeExample />
+    </BentoGroup>
+  );
 }

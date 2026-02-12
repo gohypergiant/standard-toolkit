@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { DrawerExample } from '~/features/drawer';
+import { LabelExample } from '~/features/label';
 
 export default function Page() {
-  return <DrawerExample />;
+  return <LabelExample />;
 }

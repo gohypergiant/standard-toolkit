@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { DrawerExample } from '~/features/drawer';
+import { DividerExample } from '~/features/divider';
 
 export default function Page() {
-  return <DrawerExample />;
+  return <DividerExample />;
 }

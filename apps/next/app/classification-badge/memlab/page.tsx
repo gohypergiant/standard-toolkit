@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { DrawerExample } from '~/features/drawer';
+import { ClassificationBadgeExample } from '~/features/classification-badge';
 
 export default function Page() {
-  return <DrawerExample />;
+  return <ClassificationBadgeExample />;
 }

@@ -3,7 +3,7 @@ import { ErrorComponent } from './error';
 import { LoadingComponent } from './loading';
 import { ClassificationBannerServerExample } from './server';
 
-export function LinkExample() {
+export function ClassificationBannerExample() {
   return (
     <ErrorComponent>
       <LoadingComponent>

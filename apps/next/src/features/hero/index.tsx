@@ -3,7 +3,7 @@ import { ErrorComponent } from './error';
 import { LoadingComponent } from './loading';
 import { HeroServerExample } from './server';
 
-export function LinkExample() {
+export function HeroExample() {
   return (
     <ErrorComponent>
       <LoadingComponent>
