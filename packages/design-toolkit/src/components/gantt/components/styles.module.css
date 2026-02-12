@@ -37,8 +37,4 @@
   .timeline {
     @apply flex;
   }
-
-  .seeker-container {
-    @apply overflow-x-scroll p-px;
-  }
 }

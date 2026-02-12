@@ -11,7 +11,7 @@
  */
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { MS_PER_HOUR } from './constants';
+import { GANTT_ROW_HEIGHT_PX, MS_PER_HOUR } from './constants';
 import { selectors, useGanttStore } from './store';
 
 describe('gantt store', () => {
@@ -43,5 +43,25 @@ describe('gantt store', () => {
     );
 
     expect(result).toBe(1738530000000);
+  });
+
+  it('currentRowScrollPx initial state is 0 and setter updates it', () => {
+    expect(useGanttStore.getState().currentRowScrollPx).toBe(0);
+
+    useGanttStore.getState().setCurrentRowScrollPx(123);
+
+    expect(useGanttStore.getState().currentRowScrollPx).toBe(123);
+  });
+
+  it('roundedCurrentRowScrollPx returns value rounded down to row height', () => {
+    // e.g., if row height is 40 and scroll is 125, rounded should be 120
+    const scrollPx = GANTT_ROW_HEIGHT_PX * 3 + 5; // 3 rows + 5px
+    useGanttStore.setState({ currentRowScrollPx: scrollPx });
+
+    const rounded = selectors.roundedCurrentRowScrollPx(
+      useGanttStore.getState(),
+    );
+
+    expect(rounded).toBe(GANTT_ROW_HEIGHT_PX * 3);
   });
 });

@@ -10,16 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
-// AI suggested values. Easy values for consumer to
-// specify as prop to Gantt component.
-export type HoursTimescale = '1h' | '2h' | '6h' | '12h' | '24h';
+@reference '@accelint/design-foundation/styles';
 
-export type MinutesTimescale = '1m' | '5m' | '10m' | '30m';
-
-export type Timescale = HoursTimescale | MinutesTimescale;
-
-export type TimelineChunkObject = {
-  timestampMs: number;
-};
-
-export type TimeBounds = { startMs: number; endMs: number };
+@layer components.l1 {
+  .container {
+    @apply relative overflow-y-auto;
+  }
+  .inner-container {
+    @apply relative w-full overflow-hidden;
+  }
+}

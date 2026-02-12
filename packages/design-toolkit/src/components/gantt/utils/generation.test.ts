@@ -12,9 +12,9 @@
 
 import { describe, expect, it } from 'vitest';
 import {
+  BUFFERED_CHUNK_COUNT,
   MS_PER_HOUR,
   MS_PER_MINUTE,
-  OUT_OF_VIEW_CHUNK_COUNT,
   TIMELINE_CHUNK_WIDTH,
 } from '../constants';
 import { generateTimelineChunks } from './generation';
@@ -54,7 +54,7 @@ describe('generateTimelineChunks', () => {
 
       const expectedMinChunks =
         Math.ceil(viewableRegionWidth / TIMELINE_CHUNK_WIDTH) +
-        OUT_OF_VIEW_CHUNK_COUNT;
+        BUFFERED_CHUNK_COUNT;
       expect(result.length).toBeGreaterThanOrEqual(expectedMinChunks);
     });
   });
