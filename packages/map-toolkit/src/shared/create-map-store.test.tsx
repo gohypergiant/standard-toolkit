@@ -300,4 +300,105 @@ describe('createMapStore v2', () => {
       store.clear(mapId2);
     });
   });
+
+  describe('setInitialState', () => {
+    it('sets initial state before instance is created', () => {
+      const store = createTestStore();
+      const mapId = 'test-map' as UniqueId;
+
+      // Set initial state BEFORE using the store
+      store.setInitialState(mapId, { count: 42 });
+
+      // When we use the store, it should have the initial state
+      const { result } = renderHook(() => store.use(mapId));
+      expect(result.current.state.count).toBe(42);
+
+      store.clear(mapId);
+    });
+
+    it('updates existing instance if already created', () => {
+      const store = createTestStore();
+      const mapId = 'test-map' as UniqueId;
+
+      // Create instance first
+      const { result, rerender } = renderHook(() => store.use(mapId));
+      expect(result.current.state.count).toBe(0);
+
+      // Set initial state AFTER instance exists
+      act(() => {
+        store.setInitialState(mapId, { count: 99 });
+      });
+
+      // setInitialState doesn't trigger re-renders, but we can check imperative API
+      expect(store.get(mapId).count).toBe(99);
+
+      // On next render, the component will see the new state
+      rerender();
+      expect(result.current.state.count).toBe(99);
+
+      store.clear(mapId);
+    });
+
+    it('handles React Strict Mode double-mount scenario', () => {
+      const store = createTestStore();
+      const mapId = 'test-map' as UniqueId;
+
+      // Simulate Strict Mode: first mount
+      const { unmount: unmount1 } = renderHook(() => store.use(mapId));
+
+      // Set initial state during first mount
+      act(() => {
+        store.setInitialState(mapId, { count: 50 });
+      });
+
+      // Simulate Strict Mode: unmount (cleanup)
+      unmount1();
+
+      // Simulate Strict Mode: second mount (re-mount)
+      const { result: result2 } = renderHook(() => store.use(mapId));
+
+      // The initial state should persist across the cleanup and remount
+      expect(result2.current.state.count).toBe(50);
+
+      store.clear(mapId);
+    });
+
+    it('last setInitialState wins if called multiple times', () => {
+      const store = createTestStore();
+      const mapId = 'test-map' as UniqueId;
+
+      store.setInitialState(mapId, { count: 10 });
+      store.setInitialState(mapId, { count: 20 });
+      store.setInitialState(mapId, { count: 30 });
+
+      const { result } = renderHook(() => store.use(mapId));
+      expect(result.current.state.count).toBe(30);
+
+      store.clear(mapId);
+    });
+
+    it('does not trigger re-renders when updating existing instance', () => {
+      const store = createTestStore();
+      const mapId = 'test-map' as UniqueId;
+      let renderCount = 0;
+
+      const { result } = renderHook(() => {
+        renderCount++;
+        return store.use(mapId);
+      });
+
+      const initialRenderCount = renderCount;
+      expect(result.current.state.count).toBe(0);
+
+      // Set initial state on existing instance
+      store.setInitialState(mapId, { count: 100 });
+
+      // Should not trigger additional renders
+      expect(renderCount).toBe(initialRenderCount);
+      // State will be updated on next render cycle
+      expect(store.get(mapId).count).toBe(100);
+
+      store.clear(mapId);
+    });
+  });
 });
