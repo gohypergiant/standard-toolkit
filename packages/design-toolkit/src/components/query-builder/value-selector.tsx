@@ -46,6 +46,7 @@ import { OptionsSection } from '../options/section';
  */
 export function ValueSelector(props: ValueSelectorProps) {
   const {
+    className,
     handleOnChange,
     disabled,
     listsAsArrays,
@@ -66,7 +67,7 @@ export function ValueSelector(props: ValueSelectorProps) {
 
   const handleSelectionChange = useCallback(
     (selection: Key | null) => {
-      if (selection) {
+      if (selection !== null) {
         onChange(`${selection}`);
       }
     },
@@ -79,7 +80,11 @@ export function ValueSelector(props: ValueSelectorProps) {
         ? optionsProp.map((section) => (
             <OptionsSection key={section.label} header={section.label}>
               {section.options.map((option) => (
-                <OptionsItem id={option.name} key={option.name}>
+                <OptionsItem
+                  textValue={option.label}
+                  id={option.name}
+                  key={option.name}
+                >
                   {option.label}
                 </OptionsItem>
               ))}
@@ -99,12 +104,15 @@ export function ValueSelector(props: ValueSelectorProps) {
 
   return (
     <ComboBoxField
+      classNames={{ control: className }}
       size='small'
+      allowsCustomValue={false}
+      isClearable={false}
       isDisabled={disabled}
-      {...rest}
       selectedKey={Array.isArray(val) ? val[0] : val}
       aria-labelledby={title}
       onSelectionChange={handleSelectionChange}
+      {...rest}
     >
       {options}
     </ComboBoxField>

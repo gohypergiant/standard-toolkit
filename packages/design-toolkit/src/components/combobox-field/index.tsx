@@ -86,6 +86,9 @@ export function ComboBoxField<T extends OptionsDataItem>({
     ...rest
   } = props;
 
+  const isInputValueControlled =
+    inputValueProp !== undefined || Boolean(defaultInputValue);
+
   const [inputValue, setInputValue] = useControlledState(
     inputValueProp,
     defaultInputValue,
@@ -119,7 +122,7 @@ export function ComboBoxField<T extends OptionsDataItem>({
       menuTrigger={menuTrigger}
       isInvalid={isInvalidProp || (errorMessage ? true : undefined)} // Leave uncontrolled if possible to fallback to validation state
       isReadOnly={isReadOnly}
-      inputValue={inputValue}
+      inputValue={isInputValueControlled ? inputValue : undefined}
       onInputChange={setInputValue}
       onKeyDown={handleKeyDown}
       data-size={size}
