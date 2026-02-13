@@ -1,6 +1,6 @@
 # @accelint/design-toolkit
 
-## 10.0.0
+## 9.6.0
 ### Minor Changes
 
 - d8a0168: Add video player component implemented using media-chrome

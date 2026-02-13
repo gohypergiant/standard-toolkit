@@ -12,7 +12,7 @@ metadata:
     Dependencies:
 
     accelint_biome-config@1.1.0, accelint_bus@3.0.2, accelint_core@0.5.2,
-    accelint_design-foundation@3.0.0, accelint_design-toolkit@10.0.0,
+    accelint_design-foundation@3.0.0, accelint_design-toolkit@9.6.0,
     accelint_geo@0.6.0, accelint_logger@0.1.5,
     accelint_postcss-tailwind-css-modules@1.0.1, accelint_smeegl@0.3.5,
     accelint_typescript-config@0.1.4, accelint_vitest-config@0.1.6
