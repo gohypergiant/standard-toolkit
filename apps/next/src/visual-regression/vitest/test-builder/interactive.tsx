@@ -12,6 +12,7 @@
 
 import { ThemeProvider } from '@accelint/design-toolkit';
 import { getLogger } from '@accelint/logger';
+import clsx from 'clsx';
 import { dash } from 'radashi';
 import { describe, expect, test } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
@@ -188,7 +189,7 @@ async function runStateTest<TProps>(
 
   render(
     <ThemeProvider defaultMode={ctx.mode}>
-      <div data-testid={testIdValue} className={`inline-block ${ctx.className ?? ''}`}>
+      <div data-testid={testIdValue} className={clsx('inline-block', ctx.className)}>
         {ctx.renderComponent(props)}
       </div>
     </ThemeProvider>,
