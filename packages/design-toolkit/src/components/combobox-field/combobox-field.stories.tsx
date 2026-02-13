@@ -158,7 +158,11 @@ const itemsWithSections: CustomOptionsItem[] = [
 
 export const Default: Story = {
   render: ({ children, ...args }) => (
-    <ComboBoxField<CustomOptionsItem> {...args} defaultItems={items}>
+    <ComboBoxField<CustomOptionsItem>
+      {...args}
+      defaultItems={items}
+      selectedKey={6}
+    >
       {(item) => (
         <OptionsItem
           key={item.id}
