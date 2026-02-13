@@ -70,7 +70,8 @@
   }
 
   .fields,
-  .value {
+  .value,
+  .operators {
     @apply w-full;
   }
 }
@@ -83,6 +84,13 @@
 
   .textInput {
     @apply min-h-xl;
-    max-width: 200px;
+  }
+
+  .fields,
+  .value,
+  .operators {
+    @variant group-size-small/combobox-field {
+      @apply max-w-[250px];
+    }
   }
 }

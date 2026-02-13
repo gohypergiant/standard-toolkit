@@ -100,7 +100,7 @@ export function QueryBuilder({
       header: styles.header,
       combinators: styles.combinators,
       fields: styles.fields,
-      operators: '',
+      operators: styles.operators,
       value: styles.value,
       valueListItem: '',
       valueSource: '',

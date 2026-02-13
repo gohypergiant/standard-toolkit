@@ -46,6 +46,7 @@ import { OptionsSection } from '../options/section';
  */
 export function ValueSelector(props: ValueSelectorProps) {
   const {
+    className,
     handleOnChange,
     disabled,
     listsAsArrays,
@@ -99,6 +100,7 @@ export function ValueSelector(props: ValueSelectorProps) {
 
   return (
     <ComboBoxField
+      classNames={{ control: className }}
       size='small'
       isDisabled={disabled}
       {...rest}
