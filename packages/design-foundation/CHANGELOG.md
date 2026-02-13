@@ -1,5 +1,83 @@
 # @accelint/design-toolkit
 
+## 3.0.0
+### Major Changes
+
+- 4fc6b36: **BREAKING CHANGE:** Convert design-foundation TypeScript color tokens to deck.gl RGBA format.
+  
+  ## What Changed
+  
+  **TypeScript token exports** (`@accelint/design-foundation/tokens`) now use deck.gl's RGBA format where all channels are 0-255:
+  
+  - **Before:** `[R, G, B, A]` where A is 0-1 (e.g., `[21, 21, 23, 1]`)
+  - **After:** `[R, G, B, A]` where A is 0-255 (e.g., `[21, 21, 23, 255]`)
+  
+  **CSS variables are NOT affected** - `tokens.css` and `themes.css` continue to use standard CSS color formats (hex, rgba with alpha 0-1).
+  
+  ## Why This Change
+  
+  This aligns TypeScript tokens with deck.gl's expected color format, eliminating runtime alpha conversion overhead when using tokens with deck.gl layers.
+  
+  ## Migration Guide
+  
+  ### If you use tokens with deck.gl or WebGL:
+  ✅ **Action required:** Remove any conversion logic that was converting alpha from 0-1 to 0-255. Colors now work directly with deck.gl!
+  
+  ### If you use TypeScript tokens in CSS/DOM contexts:
+  ❌ **Breaking:** Direct usage like `rgba(${color.join(', ')})` will produce invalid CSS
+  
+  ✅ **Recommended:** Use CSS variables via Tailwind classes instead:
+  ```tsx
+  <Button className="bg-surface-default text-fg-primary-bold" />
+  ```
+  
+  ✅ **Alternative:** Convert using `rgba255TupleToCssRgbaString()` from `@accelint/converters`:
+  ```ts
+  import { rgba255TupleToCssRgbaString } from '@accelint/converters';
+  const cssColor = rgba255TupleToCssRgbaString(color); // "rgba(21, 21, 23, 1)"
+  ```
+  
+  ### If you only use CSS variables:
+  ✅ **No changes needed** - CSS variables are unchanged.
+- 18f8fdc: BREAKING CHANGE: Restructured tokens and utilities to better utilize Tailwind patterns
+  
+  The vast majority of changes are non-breaking: All of the same utility classes for color, typography and spacing exist and should work without change
+  
+  However, in order to support the simplification of utilities, the structure of typography tokens had to be inverted. This means that if you were directly referencing a typography CSS var or TS token, the name / pathing has changed. Examples of how to migrate:
+  
+  `--typography-header-xxl-size` -> `--typography-size-header-xxl`
+  `tokens.typography.header.xxl.size` -> `tokens.typography.size.header.xxl`
+  
+  Additionally, all `classification` and `roe` colors have been structured under the `domain` key
+  
+  Finally, the `w-content` utility was removed in favor of the existing `w-fit` class from Tailwind
+  
+  NEW FEATURES: The color and spacing utilities have become more flexible
+  
+  The color utilities `bg`, `fg`, `icon` & `outline` now support more colors as well as alpha overrides.
+  
+  - `bg-` can now access `bg-*`, `domain-*`, `primitive-*` colors
+  - `fg-` can now access `fg-*`, `domain-*`, `primitive-*` colors
+  - `icon-` can now access `fg-*`, `domain-*`, `primitive-*` colors
+  - `outline-` can now access `outline-*`, `domain-*`, `primitive-*` colors
+  
+  And all of these utilities support the Tailwind alpha override pattern, which makes `bg-surface-default/50` possible
+  
+  The spacing utilities are now able to implement values outside of the labeled scale of `xxs` -> `oversized`. If needed, it is now possible to use `p-10` which would implement padding of `10px`
+  
+  CAVEAT!
+  
+  While we strive to enable easier use of our design system, we expect that the use of non-semantic color values and spacing values outside of the labeled scale should only be used during rapid prototyping / experimentation or in extreme edge cases where a style has gone beyond the prescribed design system approach
+  
+  Please continue to use the semantic tokens and labeled spacing tokens for the overwhelming majority of implementation to avoid stylistic drift
+
+### Patch Changes
+
+- Updated dependencies [4550911]
+  - @accelint/converters@1.0.0
+  - @accelint/predicates@0.5.0
+  - @accelint/constants@0.2.0
+
 ## 2.1.0
 ### Minor Changes
 
