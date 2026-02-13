@@ -20,7 +20,7 @@ The Design Toolkit relies on the `@accelint/design-foundation` package that esta
 - **[Foreground colors](?path=/story/foundation-colors--foreground)** (text, icons) use the `fg-` prefix (e.g., `fg-primary-bold`, `fg-primary-muted`)
 - **[Outline colors](?path=/story/foundation-colors--outline)** use the `outline-` prefix (e.g., `outline-static`, `outline-interactive`)
 
-See the **Foundation / Colors** stories in Storybook for the complete color palette with visual examples.
+See the **[Foundation / Colors](?path=/story/foundation-colors--background)** stories in Storybook for the complete color palette with visual examples.
 
 #### Prefer Semantic Colors
 
@@ -80,19 +80,19 @@ Use these with standard Tailwind spacing utilities (`p-`, `m-`, `gap-`, `w-`, `h
 <div className="size-xxl">         // width and height: xxl
 ```
 
-See the **Foundation / Spacing** story in Storybook for exact pixel values.
+See the **[Foundation / Spacing](?path=/story/foundation-spacing--spacing)** story in Storybook for exact pixel values.
 
 #### Pixels for Prototyping and Edge Cases
 
-While the spacing tokens should cover the majority of cases and are preferred, it is possible to use arbitrary spacing values. The `w-<number>` and `size-<number>` utilities are driven by the `--spacing` theme variable, which is set to `1px` in the Design Toolkit. That means when you need to express arbitrary spacing values, you can do a direct translation.
+While the spacing tokens should cover the majority of cases and are preferred, it is possible to use arbitrary spacing values. The `w-<number>` and `size-<number>` utilities are driven by the `--spacing` [theme variable](https://tailwindcss.com/docs/width#customizing-your-theme), which is set to `1px` in the Design Toolkit. That means when you need to express arbitrary spacing values, you can do a direct translation.
 
 ```jsx
+// Preferred
+<div className="gap-m" />
+
 // Ok, if prototyping or in rare edge cases
 // Represents a 10px gap
 <div className="gap-10" />
-
-// Preferred
-<div className="gap-m" />
 ```
 
 ### Radius
@@ -135,11 +135,22 @@ These values align directly with the text styles designers use in Figma, ensurin
 
 See the **Foundation / Typography** stories in Storybook for the complete type scale.
 
-### Border vs Outline
+### Outlines, Not Borders
 
 DesignTK chooses to implement outlines instead of borders to make it so that the style doesn't impact box model dimensions. This way elements with or without a "border" are consistently sized based on content and padding alone. This also helps with sibling components rendering at the same size when their border styles may not match.
 
 Do not implement borders, do implement outlines.
+
+You might have rare instances where you do need to use a border and there. For example, if you need a line only at the top of a div. In this situation, use an outline semantic color variable directly to ensure consistency with the color system:
+
+```jsx
+// Preferred
+<div className="outline outline-advisory-bold" />
+<div className="outline-2 outline-advisory-bold" />
+
+// Ok, if prototyping or in rare edge cases
+<div className="border border-t-(--outline-advisory-bold)" />
+```
 
 ## Overriding Design Toolkit Component Styles
 
@@ -233,14 +244,6 @@ When using arbitrary values, prefer referencing theme variables over hardcoding 
 ```
 
 If you find yourself reaching for arbitrary classes frequently, raise this to the core team so they can consider whether the design system should be extended to support your use case.
-
-#### Borders
-
-While borders are not supported so that the style doesn't impact box model dimensions, you might have rare instances where you need to use a border. For example, if you need a line only at the top of a div. In this situation, use an outline semantic color variable directly to ensure consistency with the color system:
-
-```jsx
-<div className="border border-t-(--outline-static)" />
-```
 
 ### Overriding Theme Variables
 
