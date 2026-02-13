@@ -19,7 +19,8 @@ import {
   composeRenderProps,
   useContextProps,
 } from 'react-aria-components';
-import { TabsContext } from './context';
+import { TabStyleDefaults } from './constants';
+import { TabProvider, TabsContext } from './context';
 import styles from './styles.module.css';
 import type { TabsProps } from './types';
 
@@ -49,17 +50,22 @@ import type { TabsProps } from './types';
 export function Tabs({ ref, ...props }: TabsProps) {
   [props, ref] = useContextProps(props, ref ?? null, TabsContext);
 
-  const { children, className, ...rest } = props;
+  const { children, className, align, flex, ...rest } = {
+    ...TabStyleDefaults,
+    ...props,
+  };
 
   return (
-    <AriaTabs
-      {...rest}
-      ref={ref}
-      className={composeRenderProps(className, (className) =>
-        clsx('group/tabs', styles.tabs, className),
-      )}
-    >
-      {children}
-    </AriaTabs>
+    <TabProvider align={align} flex={flex}>
+      <AriaTabs
+        {...rest}
+        ref={ref}
+        className={composeRenderProps(className, (className) =>
+          clsx('group/tabs', styles.tabs, className),
+        )}
+      >
+        {children}
+      </AriaTabs>
+    </TabProvider>
   );
 }
