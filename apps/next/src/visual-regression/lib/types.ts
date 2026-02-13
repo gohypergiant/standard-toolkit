@@ -69,6 +69,12 @@ export interface InteractiveVisualTestConfig<TProps = Record<string, unknown>> {
   beforeEach?: () => Promise<void> | void;
   /** Custom screenshot naming function */
   screenshotName?: (variant: string, state: InteractiveState) => string;
+  /** Optional className for the screenshot wrapper element */
+  className?: string;
+  /** CSS selector for the child element that should receive hover/pressed interactions.
+   *  When omitted, interactions target the wrapper element.
+   *  Use for compound components where a specific child needs to be hovered/pressed. */
+  interactionTarget?: string;
 }
 
 // =============================================================================
@@ -102,4 +108,6 @@ export interface VisualTestScenario {
   selector?: string;
   /** Optional delay in ms before taking screenshot (for animations/transitions) */
   waitMs?: number;
+  /** Optional className for the screenshot wrapper element */
+  className?: string;
 }
