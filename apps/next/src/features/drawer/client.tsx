@@ -29,7 +29,7 @@ import {
 } from '@accelint/design-toolkit';
 import { useMemo } from 'react';
 
-export function DrawerClient() {
+export function DrawerExampleClient() {
   const ids = useMemo(
     () => ({
       drawer: uuid(),

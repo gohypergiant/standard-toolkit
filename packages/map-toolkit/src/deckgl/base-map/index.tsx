@@ -13,11 +13,9 @@
 'use client';
 
 import { useEffectEvent, useEmit } from '@accelint/bus/react';
-import type { PickingInfo, ViewStateChangeParameters } from '@deck.gl/core';
 import { Deckgl, useDeckgl } from '@deckgl-fiber-renderer/dom';
+import type { PickingInfo, ViewStateChangeParameters } from '@deck.gl/core';
 import 'client-only';
-import type { IControl } from 'maplibre-gl';
-import type { MjolnirGestureEvent, MjolnirPointerEvent } from 'mjolnir.js';
 import { useCallback, useId, useMemo, useRef } from 'react';
 import {
   Map as MapLibre,
@@ -32,6 +30,8 @@ import { DARK_BASE_MAP_STYLE, PARAMETERS, PICKING_RADIUS } from './constants';
 import { MapControls } from './controls';
 import { MapEvents } from './events';
 import { MapProvider } from './provider';
+import type { IControl, WebGLContextAttributesWithType } from 'maplibre-gl';
+import type { MjolnirGestureEvent, MjolnirPointerEvent } from 'mjolnir.js';
 import type {
   BaseMapProps,
   MapClickEvent,
@@ -39,6 +39,15 @@ import type {
   MapViewportEvent,
   SerializablePickingInfo,
 } from './types';
+
+const CANVAS_CONTEXT_ATTRIBUTES: WebGLContextAttributesWithType = {
+  antialias: true,
+  powerPreference: 'high-performance',
+  preserveDrawingBuffer: false,
+  failIfMajorPerformanceCaveat: false,
+  desynchronized: false,
+  contextType: 'webgl2',
+} as const;
 
 /**
  * Serializes PickingInfo for event bus transmission.
@@ -259,6 +268,7 @@ export function BaseMap({
       attributionControl: { compact: true },
       projection: cameraState.projection,
       maxPitch: cameraState.view === '2D' ? 0 : 85,
+      canvasContextAttributes: CANVAS_CONTEXT_ATTRIBUTES,
     }),
     [viewState, container, cameraState.projection, cameraState.view],
   );
@@ -356,7 +366,7 @@ export function BaseMap({
           },
         } as ViewStateChangeParameters);
       }
-    }, 500);
+    }, 200);
   });
 
   const handleLoad = useEffectEvent(() => {

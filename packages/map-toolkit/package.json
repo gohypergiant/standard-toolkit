@@ -1,7 +1,7 @@
 {
   "name": "@accelint/map-toolkit",
   "description": "A collection of components and utilities to simplify visualizing and working with geospatial data.",
-  "version": "1.2.0",
+  "version": "1.4.0",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "devDependencies": {
@@ -64,6 +64,7 @@
     "./camera/store": "./dist/camera/store.js",
     "./camera/types": "./dist/camera/types.js",
     "./cursor-coordinates": "./dist/cursor-coordinates/index.js",
+    "./cursor-coordinates/constants": "./dist/cursor-coordinates/constants.js",
     "./cursor-coordinates/store": "./dist/cursor-coordinates/store.js",
     "./cursor-coordinates/types": "./dist/cursor-coordinates/types.js",
     "./cursor-coordinates/use-cursor-coordinates": "./dist/cursor-coordinates/use-cursor-coordinates.js",

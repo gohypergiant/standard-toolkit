@@ -110,10 +110,13 @@ type EditShapeActions = {
 
 /**
  * Determine the appropriate edit mode for a shape type
+ *
+ * @param shape - The shape to determine the edit mode for
+ * @returns The edit mode to use for this shape type
  */
 function getEditModeForShape(shape: Shape): EditMode {
   if (isPointShape(shape)) {
-    return 'translate';
+    return 'point-translate';
   }
   if (isCircleShape(shape)) {
     return 'circle-transform';
@@ -351,4 +354,11 @@ export function updateFeatureFromLayer(
  */
 export function cancelEditingFromLayer(mapId: UniqueId): void {
   editStore.actions(mapId).cancel();
+}
+
+/**
+ * Save editing (called by the layer component on Enter)
+ */
+export function saveEditingFromLayer(mapId: UniqueId): void {
+  editStore.actions(mapId).save();
 }

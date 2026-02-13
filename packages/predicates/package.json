@@ -1,7 +1,7 @@
 {
   "name": "@accelint/predicates",
   "description": "A collection of useful predicate functions for JavaScript.",
-  "version": "0.4.5",
+  "version": "0.5.0",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "devDependencies": {
@@ -26,9 +26,12 @@
     "./does-start-with": "./dist/does-start-with/index.js",
     "./is-bbox": "./dist/is-bbox/index.js",
     "./is-between": "./dist/is-between/index.js",
+    "./is-css-rgba-object": "./dist/is-css-rgba-object/index.js",
+    "./is-css-rgba-string": "./dist/is-css-rgba-string/index.js",
     "./is-equal": "./dist/is-equal/index.js",
     "./is-greater": "./dist/is-greater/index.js",
     "./is-greater-equal": "./dist/is-greater-equal/index.js",
+    "./is-hex-color": "./dist/is-hex-color/index.js",
     "./is-in": "./dist/is-in/index.js",
     "./is-latitude": "./dist/is-latitude/index.js",
     "./is-lesser": "./dist/is-lesser/index.js",
@@ -42,8 +45,10 @@
     "./is-nothing": "./dist/is-nothing/index.js",
     "./is-noyes": "./dist/is-noyes/index.js",
     "./is-number": "./dist/is-number/index.js",
+    "./is-rgba-255-tuple": "./dist/is-rgba-255-tuple/index.js",
     "./is-something": "./dist/is-something/index.js",
     "./is-string": "./dist/is-string/index.js",
+    "./is-valid-255-channel": "./dist/is-valid-255-channel/index.js",
     "./is-worker": "./dist/is-worker/index.js",
     "./package.json": "./package.json"
   },
@@ -61,6 +66,9 @@
   "license": "Apache-2.0",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
+  "optionalDependencies": {
+    "@accelint/constants": "workspace:*"
+  },
   "owner": "default/pathfinder",
   "peerDependencies": {
     "@accelint/core": "workspace:*"

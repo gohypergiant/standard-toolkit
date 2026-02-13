@@ -23,14 +23,16 @@ import type { Shape } from '../shared/types';
  * - 'bounding-transform': Scale/rotate/translate via bounding box handles (ellipses, rectangles)
  * - 'vertex-transform': Drag vertices OR scale/rotate/translate (polygons, lines)
  * - 'circle-transform': Drag edge to resize, drag body to translate (circles)
- * - 'translate': Drag to move the shape (points)
+ * - 'translate': Drag to move the shape (generic translation)
+ * - 'point-translate': Click to place OR drag to move (points)
  */
 export type EditMode =
   | 'view'
   | 'bounding-transform'
   | 'vertex-transform'
   | 'circle-transform'
-  | 'translate';
+  | 'translate'
+  | 'point-translate';
 
 /**
  * State for the editing store
@@ -53,7 +55,8 @@ export type EditShapeOptions = {
     | 'bounding-transform'
     | 'vertex-transform'
     | 'circle-transform'
-    | 'translate';
+    | 'translate'
+    | 'point-translate';
 };
 
 /**

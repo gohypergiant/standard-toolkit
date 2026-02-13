@@ -87,6 +87,11 @@ describe('validateDatasetConfig - Optional Fields', () => {
         serviceUrls: ['https://example.com'],
         serviceVersion: '1.0.0',
         serviceLayer: 'layer1',
+        backend: 'geoserver',
+        vendorParams: {
+          formatOptions: 'includeFids:false;batchSize:10000',
+          viewparams: 'minMagnitude:5.0',
+        },
         idProperty: 'id',
         geometryProperty: 'geom',
         minZoom: 0,
@@ -97,6 +102,114 @@ describe('validateDatasetConfig - Optional Fields', () => {
         defaultFields: ['geom'],
         batchSize: 100,
         filterDialect: 'cql' as const,
+      },
+    };
+
+    expect(() => validateDatasetConfig(ds)).not.toThrow();
+  });
+});
+
+describe('validateDatasetConfig - Backend and Vendor Parameters', () => {
+  it('should validate known WFS backend types', () => {
+    const backends = ['geoserver', 'mapserver', 'qgis'];
+
+    backends.forEach((backend) => {
+      const ds = {
+        ...genericDatasetConfig('ARROW', 'WFS'),
+        metadata: {
+          ...genericDatasetConfig('ARROW', 'WFS').metadata,
+          backend,
+        },
+      };
+
+      expect(() => validateDatasetConfig(ds)).not.toThrow();
+    });
+  });
+
+  it('should validate arbitrary backend strings', () => {
+    const backends = ['custom-backend', 'my-server', 'backend-v2'];
+
+    backends.forEach((backend) => {
+      const ds = {
+        ...genericDatasetConfig('ARROW', 'WFS'),
+        metadata: {
+          ...genericDatasetConfig('ARROW', 'WFS').metadata,
+          backend,
+        },
+      };
+
+      expect(() => validateDatasetConfig(ds)).not.toThrow();
+    });
+  });
+
+  it('should validate GeoServer vendor parameters', () => {
+    const ds = {
+      ...genericDatasetConfig('ARROW', 'WFS'),
+      metadata: {
+        ...genericDatasetConfig('ARROW', 'WFS').metadata,
+        backend: 'geoserver',
+        vendorParams: {
+          formatOptions: 'includeFids:false;batchSize:10000',
+          viewparams: 'minMagnitude:5.0;maxDepth:100',
+        },
+      },
+    };
+
+    expect(() => validateDatasetConfig(ds)).not.toThrow();
+  });
+
+  it('should validate arbitrary vendor parameters', () => {
+    const ds = {
+      ...genericDatasetConfig('ARROW', 'WFS'),
+      metadata: {
+        ...genericDatasetConfig('ARROW', 'WFS').metadata,
+        backend: 'custom-backend',
+        vendorParams: {
+          customParam1: 'value1',
+          customParam2: 42,
+          customParam3: true,
+          customParam4: { nested: 'object' },
+          customParam5: ['array', 'of', 'values'],
+        },
+      },
+    };
+
+    expect(() => validateDatasetConfig(ds)).not.toThrow();
+  });
+
+  it('should validate empty vendor parameters object', () => {
+    const ds = {
+      ...genericDatasetConfig('ARROW', 'WFS'),
+      metadata: {
+        ...genericDatasetConfig('ARROW', 'WFS').metadata,
+        backend: 'geoserver',
+        vendorParams: {},
+      },
+    };
+
+    expect(() => validateDatasetConfig(ds)).not.toThrow();
+  });
+
+  it('should validate backend without vendorParams', () => {
+    const ds = {
+      ...genericDatasetConfig('ARROW', 'WFS'),
+      metadata: {
+        ...genericDatasetConfig('ARROW', 'WFS').metadata,
+        backend: 'geoserver',
+      },
+    };
+
+    expect(() => validateDatasetConfig(ds)).not.toThrow();
+  });
+
+  it('should validate vendorParams without backend', () => {
+    const ds = {
+      ...genericDatasetConfig('ARROW', 'WFS'),
+      metadata: {
+        ...genericDatasetConfig('ARROW', 'WFS').metadata,
+        vendorParams: {
+          someParam: 'value',
+        },
       },
     };
 

@@ -14,7 +14,7 @@
 
 @layer components.l1 {
   .list {
-    @apply gap-xxs flex h-full w-full flex-col overflow-y-auto;
+    @apply gap-xxs flex h-full w-full flex-col overflow-y-auto select-none;
   }
 
   .item {

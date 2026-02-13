@@ -13,6 +13,7 @@
 import { TranslateMode, ViewMode } from '@deck.gl-community/editable-layers';
 import { BoundingTransformMode } from './bounding-transform-mode';
 import { CircleTransformMode } from './circle-transform-mode';
+import { PointTranslateMode } from './point-translate-mode';
 import { VertexTransformMode } from './vertex-transform-mode';
 import type { EditMode } from '../types';
 
@@ -36,7 +37,10 @@ import type { EditMode } from '../types';
  * for circles, allowing resize from edge plus drag to translate.
  * Shows live diameter/area tooltips during resize.
  *
- * TranslateMode allows dragging to move the shape (used for points).
+ * PointTranslateMode allows clicking anywhere on the map to reposition
+ * a point, or dragging the point for traditional translation behavior.
+ *
+ * TranslateMode allows dragging to move the shape (generic translation).
  */
 const EDIT_MODE_INSTANCES = {
   view: new ViewMode(),
@@ -44,6 +48,7 @@ const EDIT_MODE_INSTANCES = {
   'vertex-transform': new VertexTransformMode(),
   'circle-transform': new CircleTransformMode(),
   translate: new TranslateMode(),
+  'point-translate': new PointTranslateMode(),
 } as const;
 
 /**
@@ -57,7 +62,8 @@ const EDIT_MODE_INSTANCES = {
  * - `'bounding-transform'`: For shapes without vertex editing (rectangles, ellipses)
  * - `'vertex-transform'`: For shapes with vertex editing (polygons, lines)
  * - `'circle-transform'`: For circles (resize from edge + translate)
- * - `'translate'`: For points (drag to move)
+ * - `'point-translate'`: For points (click to place + drag to move)
+ * - `'translate'`: Generic translation (drag to move)
  *
  * @param mode - The edit mode to get the instance for
  * @returns The cached mode instance

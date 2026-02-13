@@ -14,7 +14,7 @@
 
 @layer components.l1 {
   .tree {
-    @apply overflow-auto outline-hidden;
+    @apply overflow-auto outline-hidden select-none;
   }
 
   .item {

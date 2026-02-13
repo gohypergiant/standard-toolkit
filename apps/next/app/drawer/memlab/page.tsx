@@ -10,8 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
+import { Suspense } from 'react';
 import { DrawerExample } from '~/features/drawer/memlab';
 
 export default function Page() {
-  return <DrawerExample />;
+  return (
+    <Suspense>
+      <DrawerExample />
+    </Suspense>
+  );
 }
