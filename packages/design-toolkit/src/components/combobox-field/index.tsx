@@ -86,7 +86,8 @@ export function ComboBoxField<T extends OptionsDataItem>({
     ...rest
   } = props;
 
-  const isInputValueControlled = inputValueProp !== undefined;
+  const isInputValueControlled =
+    inputValueProp !== undefined || Boolean(defaultInputValue);
 
   const [inputValue, setInputValue] = useControlledState(
     inputValueProp,
