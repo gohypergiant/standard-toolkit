@@ -1,4 +1,4 @@
-import 'server-only';
+'use client';
 
 import { Divider } from '@accelint/design-toolkit';
 import { BentoItem } from '~/components/bento';
@@ -12,6 +12,6 @@ function PropCombos() {
   ));
 }
 
-export function DividerServerExample() {
+export function DividerClientExample() {
   return <PropCombos />;
 }

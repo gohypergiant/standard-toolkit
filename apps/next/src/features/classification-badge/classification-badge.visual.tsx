@@ -1,11 +1,11 @@
 import { BentoGroup } from '~/components/bento';
 import { createVisualTests } from '~/visual-regression/vitest';
-import { ClassificationBadgeServerExample } from './server';
+import { ClassificationBadgeClientExample } from './client';
 
 function ClassificationBadgeVariants() {
   return (
     <BentoGroup>
-      <ClassificationBadgeServerExample />
+      <ClassificationBadgeClientExample />
     </BentoGroup>
   );
 }

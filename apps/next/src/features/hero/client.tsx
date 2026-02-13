@@ -1,3 +1,4 @@
+'use client';
 import { Hero, HeroSubtitle, HeroTitle } from '@accelint/design-toolkit';
 import { BentoItem } from '~/components/bento';
 import { PROP_COMBOS } from './variants';
@@ -14,6 +15,6 @@ function PropCombos() {
   ));
 }
 
-export function HeroServerExample() {
+export function HeroClientExample() {
   return <PropCombos />;
 }

@@ -1,11 +1,11 @@
 import { BentoGroup } from '~/components/bento';
 import { createVisualTests } from '~/visual-regression/vitest';
-import { LabelServerExample } from './server';
+import { LabelClientExample } from './client';
 
 function LabelVariants() {
   return (
     <BentoGroup>
-      <LabelServerExample />
+      <LabelClientExample />
     </BentoGroup>
   );
 }

@@ -1,17 +1,17 @@
-import 'server-only';
+'use client';
 
-import { Link } from '@accelint/design-toolkit';
+import { Label } from '@accelint/design-toolkit';
 import { BentoItem } from '~/components/bento';
 import { PROP_COMBOS } from './variants';
 
 function PropCombos() {
   return PROP_COMBOS.map((props, k) => (
     <BentoItem key={k}>
-      <Link {...props}>This is an example link.</Link>
+      <Label {...props}>This is an example label.</Label>
     </BentoItem>
   ));
 }
 
-export function LinkServerExample() {
+export function LabelClientExample() {
   return <PropCombos />;
 }

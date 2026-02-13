@@ -1,11 +1,11 @@
 import { BentoGroup } from '~/components/bento';
 import { createVisualTests } from '~/visual-regression/vitest';
-import { HeroServerExample } from './server';
+import { HeroClientExample } from './client';
 
 function HeroVariants() {
   return (
     <BentoGroup>
-      <HeroServerExample />
+      <HeroClientExample />
     </BentoGroup>
   );
 }

@@ -1,13 +1,13 @@
 import 'server-only';
+import { HeroClientExample } from './client';
 import { ErrorComponent } from './error';
 import { LoadingComponent } from './loading';
-import { HeroServerExample } from './server';
 
 export function HeroExample() {
   return (
     <ErrorComponent>
       <LoadingComponent>
-        <HeroServerExample />
+        <HeroClientExample />
       </LoadingComponent>
     </ErrorComponent>
   );
