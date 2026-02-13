@@ -1,6 +1,6 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 
-<Meta title="Styling with the Design System" />
+<Meta title="Styling Guide" />
 
 # Styling with the Design System
 
@@ -8,25 +8,23 @@ This guide covers how to style your application using the Design Toolkit's styli
 
 ## TailwindCSS
 
-The Design Toolkit uses [TailwindCSS](https://tailwindcss.com/docs/styling-with-utility-classes) as its styling foundation. If you're new to utility-first CSS, we recommend reading the Tailwind documentation first.
+The Design Toolkit uses TailwindCSS as its styling foundation. If you're new to utility-first CSS, we recommend starting with [Tailwind documentation](https://tailwindcss.com/docs/styling-with-utility-classes). The fundamental concepts of utility classes are critical to being able to style in the Design Toolkit effectively.
 
-While many standard Tailwind classes work as expected, the Design Toolkit extends Tailwind with custom semantic tokens for colors, spacing, radius, and typography. These custom classes ensure consistency with the design system and support light/dark mode theming out of the box.
+However, the Core team has established opinionated patterns on how to keep code clean, readable and consistent. While many standard Tailwind classes work as expected, not all the Tailwind documentation will be relevant. The Design Toolkit extends Tailwind with custom semantic tokens for colors, spacing, radius, and typography. These custom classes ensure consistency with the design system and support light/dark mode theming out of the box. We've also made the choice to support css modules, despite the stance taken by the Tailwind.
 
 ### Colors
 
-Use the Design Toolkit's semantic color classes. These automatically adapt to light and dark mode.
+The Design Toolkit relies on the `@accelint/design-foundation` package that establishes an opinionated set of semantic color classes for background, foreground and outline colors (among other tokens). These colors ensure compatibility in our design and automatically adapt to light and dark mode. The tokens all have a prefix that will orient you to their intended use. They also target the css property that is relevant. For example, adding a `bg-surface-bold` semantic color class to a div will apply the `--bg-interactive-bold` css var to the `background-color` css property.
 
-- **Background colors** use the `bg-` prefix (e.g., `bg-surface-default`, `bg-accent-primary-bold`)
-- **Foreground colors** (text, icons) use the `fg-` prefix (e.g., `fg-primary-bold`, `fg-primary-muted`)
-- **Outline colors** use the `outline-` prefix (e.g., `outline-static`, `outline-interactive`)
+- **[Background colors](?path=/story/foundation-colors--background)** use the `bg-` prefix (e.g., `bg-surface-default`, `bg-accent-primary-bold`)
+- **[Foreground colors](?path=/story/foundation-colors--foreground)** (text, icons) use the `fg-` prefix (e.g., `fg-primary-bold`, `fg-primary-muted`)
+- **[Outline colors](?path=/story/foundation-colors--outline)** use the `outline-` prefix (e.g., `outline-static`, `outline-interactive`)
 
 See the **Foundation / Colors** stories in Storybook for the complete color palette with visual examples.
 
-#### Semantic Colors, Not Primitives
+#### Prefer Semantic Colors
 
-**Primitive Tailwind color classes (e.g., `bg-blue-500`, `text-gray-900`) are not supported.** The Design Toolkit uses semantic color classes exclusively.
-
-Under the hood, semantic classes map to our own primitive color palette based on the user's selected theme (light or dark). This means you can use semantic classes like `bg-surface-default` or `fg-primary-bold` throughout your codebase without conditional logic:
+Under the hood, semantic classes map to our own primitive color palette based on the user's selected theme (light or dark). This means you can use semantic classes like `bg-surface-default` or `fg-primary-bold` throughout your codebase without conditional logic to guarantee support for light/dark mode theming:
 
 ```jsx
 // ✅ Correct - semantic class adapts to theme automatically
@@ -42,9 +40,26 @@ Under the hood, semantic classes map to our own primitive color palette based on
 
 This approach eliminates theme-checking ternaries scattered throughout the codebase and ensures consistent color usage across the application.
 
+#### Primitives for Prototyping and Edge Cases
+
+While most product experiences should comfortably live within the boundaries of the semantic colors, any mature application will inevitably include bespoke features that stretch beyond what the system has explicitly accounted for. In these rare cases, using the [primitive color tokens](https://github.com/gohypergiant/standard-toolkit/blob/main/packages/design-foundation/src/tokens/primitive.json) directly is also supported. While relying on primitives or one-off values fragments the experience, introduces visual inconsistencies, and increases long-term maintenance costs, this will provide you with a syntactically clean escape hatch. Exceptions should be rare and deliberate.
+
+```jsx
+// Supported and preferred
+<div className="bg-surface-raised" />
+
+// Ok, if prototyping or in rare edge cases
+<div className="bg-neutral-300" />
+<div className="fg-neutral-300" />
+<div className="outline-neutral-300" />
+
+```
+
 ### Spacing
 
-The Design Toolkit uses a custom spacing scale instead of Tailwind's numeric scale:
+The Design Toolkit uses a custom spacing scale instead of Tailwind's numeric scale to maintain consistency.
+
+#### Prefer Semantic Spacing
 
 | Token | Usage |
 |-------|-------|
@@ -66,6 +81,19 @@ Use these with standard Tailwind spacing utilities (`p-`, `m-`, `gap-`, `w-`, `h
 ```
 
 See the **Foundation / Spacing** story in Storybook for exact pixel values.
+
+#### Pixels for Prototyping and Edge Cases
+
+While the spacing tokens should cover the majority of cases and are preferred, it is possible to use arbitrary spacing values. The `w-<number>` and `size-<number>` utilities are driven by the `--spacing` theme variable, which is set to `1px` in the Design Toolkit. That means when you need to express arbitrary spacing values, you can do a direct translation.
+
+```jsx
+// Ok, if prototyping or in rare edge cases
+// Represents a 10px gap
+<div className="gap-10" />
+
+// Preferred
+<div className="gap-m" />
+```
 
 ### Radius
 
@@ -208,21 +236,19 @@ If you find yourself reaching for arbitrary classes frequently, raise this to th
 
 #### Borders
 
-If you absolutely need a border, use an outline color variable:
+While borders are not supported so that the style doesn't impact box model dimensions, you might have rare instances where you need to use a border. For example, if you need a line only at the top of a div. In this situation, use an outline semantic color variable directly to ensure consistency with the color system:
 
 ```jsx
-<div className="border border-(--outline-static)" />
+<div className="border border-t-(--outline-static)" />
 ```
-
-Consider reaching out to a core team member to discuss alternatives.
 
 ### Overriding Theme Variables
 
-You can override theme variables in your application's global CSS file.
+You can override theme variables in your application's global CSS file. You can also create application-specific variables in this manner.
 
 Add overrides within the `@layer theme` block on `:root`. Use `@variant light` and `@variant dark` for theme-specific values:
 
-**Practical example:** In Amorphous, we needed to override the accent color to use a custom seafoam palette instead of the default:
+**Example:** Override the accent color to use a custom seafoam palette instead of the default:
 
 ```css
 /* globals.css */
@@ -277,6 +303,4 @@ Add overrides within the `@layer theme` block on `:root`. Use `@variant light` a
 }
 ```
 
-As you can see, we defined custom primitive colors and then mapped the semantic variables to use those primitives.
-
-This specific case was guided by design. Generally, overriding theme variables should not be something engineers do without first consulting with their design partners.
+Here, there are custom primitive colors that are then mapped the semantic variables that use those primitives. We recommend you take this approach in your own application for maximum flexibility. Generally, overriding theme variables should not be something engineers do without first consulting with their design partners.
