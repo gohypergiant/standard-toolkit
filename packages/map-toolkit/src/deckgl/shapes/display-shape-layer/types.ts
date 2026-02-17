@@ -136,4 +136,25 @@ export interface DisplayShapeLayerProps extends CompositeLayerProps {
    * ```
    */
   applyBaseOpacity?: boolean;
+
+  /**
+   * Enable 3D elevation rendering features (extrusion, curtains, vertical indicators).
+   * When false, shapes render as flat 2D with standard styling.
+   * When true, enables:
+   * - Polygon extrusion based on elevation coordinates
+   * - Filled curtains for elevated LineStrings
+   * - Vertical indicator lines from ground to elevated points
+   *
+   * Typically controlled by camera view: enable in 2.5D/3D, disable in 2D.
+   * @default false
+   * @example Enable elevation in 2.5D/3D views
+   * ```tsx
+   * const { cameraState } = useMapCamera(mapId);
+   * <DisplayShapeLayer
+   *   data={shapes}
+   *   enableElevation={cameraState.view !== '2D'}
+   * />
+   * ```
+   */
+  enableElevation?: boolean;
 }
