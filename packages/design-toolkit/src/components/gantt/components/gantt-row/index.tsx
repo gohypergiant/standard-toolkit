@@ -10,12 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
-import React from 'react';
+import React, { type PropsWithChildren } from 'react';
 import { GANTT_ROW_HEIGHT_PX } from '../../constants';
 import { useGanttContext } from '../../context';
 import { shouldRenderRangeElement } from '../../utils/helpers';
 import styles from './styles.module.css';
-import type { PropsWithChildren } from 'react';
 import type { GanttRowElementProps } from './types';
 
 export function GanttRow({ children, ...rest }: PropsWithChildren) {
