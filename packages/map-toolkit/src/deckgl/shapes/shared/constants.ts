@@ -222,19 +222,19 @@ export function formatDistance(value: number): string {
 // These functions generate consistent tooltip text for both draw and edit modes.
 
 /**
- * Format circle tooltip text showing diameter and area.
+ * Format circle tooltip text showing radius and area.
  *
- * @param diameter - Circle diameter in the specified units
+ * @param radius - Circle radius in the specified units
  * @param area - Circle area in the specified units squared
  * @param unitAbbrev - Unit abbreviation (e.g., 'km', 'mi')
- * @returns Formatted tooltip text: "d: {diameter} {unit}\n{area} {unit}²"
+ * @returns Formatted tooltip text: "r: {radius} {unit}\n{area} {unit}²"
  */
 export function formatCircleTooltip(
-  diameter: number,
+  radius: number,
   area: number,
   unitAbbrev: string,
 ): string {
-  return `d: ${formatDistance(diameter)} ${unitAbbrev}\n${formatDistance(area)} ${unitAbbrev}²`;
+  return `r: ${formatDistance(radius)} ${unitAbbrev}\n${formatDistance(area)} ${unitAbbrev}²`;
 }
 
 /**
