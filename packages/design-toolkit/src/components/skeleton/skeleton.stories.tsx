@@ -42,27 +42,25 @@ export const Default: StoryObj<typeof meta> = {
   ),
 };
 
-export const Nested: StoryObj<typeof meta> = {
-  render: (args) => (
-    <div className='w-[280px]'>
-      <Skeleton className='mb-xl p-m' {...args}>
-        <br />
-        <br />
-        <Skeleton className='w-[75%]' {...args} />
-      </Skeleton>
-
-      <Skeleton className='mt-l w-[50%]' {...args} />
-      <Skeleton className='mt-l w-[50%]' {...args} />
-      <Skeleton className='mt-l w-[50%]' {...args} />
-      <Skeleton className='mt-l w-[50%]' {...args} />
-    </div>
-  ),
-};
-
-export const Text: StoryObj<typeof meta> = {
-  render: (args) => (
-    <div className='w-[280px]'>
-      <Skeleton {...args}>Loading content...</Skeleton>
+export const Multiple: StoryObj<typeof meta> = {
+  argTypes: {
+    variant: {
+      control: false,
+    },
+  },
+  render: () => (
+    <div className='flex w-[280px] flex-col gap-l'>
+      <Skeleton className='h-oversized' />
+      <div className='grid grid-cols-[auto_1fr] gap-m'>
+        <Skeleton variant='circle' />
+        <Skeleton />
+        <Skeleton variant='circle' />
+        <Skeleton />
+        <Skeleton variant='circle' />
+        <Skeleton />
+        <Skeleton variant='circle' />
+        <Skeleton />
+      </div>
     </div>
   ),
 };
