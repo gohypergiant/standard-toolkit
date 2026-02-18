@@ -189,7 +189,7 @@ export const BasicDisplayAndEvents: Story = {
           <displayShapeLayer
             id='basic-shapes'
             mapId={DISPLAY_MAP_ID}
-            data={mockShapes}
+            data={mockShapes3D}
             selectedShapeId={selectedId}
             showLabels={args.showLabels}
             pickable={args.pickable}

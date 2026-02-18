@@ -14,7 +14,7 @@
 
 import { Broadcast } from '@accelint/bus';
 import { getLogger } from '@accelint/logger';
-import { CompositeLayer, type Color } from '@deck.gl/core';
+import { type Color, CompositeLayer } from '@deck.gl/core';
 import { PathStyleExtension } from '@deck.gl/extensions';
 import { GeoJsonLayer, IconLayer, LineLayer } from '@deck.gl/layers';
 import { DASH_ARRAYS, SHAPE_LAYER_IDS } from '../shared/constants';
@@ -24,7 +24,6 @@ import {
   getFillColor,
   getLineColor,
 } from '../shared/utils/style-utils';
-import { releaseCursor, requestCursorChange } from '../shared/utils/mode-utils';
 import {
   COFFIN_CORNERS,
   DEFAULT_DISPLAY_PROPS,
@@ -576,13 +575,6 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
         shapeId,
         mapId,
       });
-
-      // Request cursor change when hovering over a shape
-      if (shapeId) {
-        requestCursorChange(mapId, 'pointer', 'display-shape-layer');
-      } else {
-        releaseCursor(mapId, 'display-shape-layer');
-      }
     }
 
     // Always call callback if provided (for local state updates)
@@ -1021,6 +1013,16 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       autoHighlight: false, // We handle highlighting manually
       // Note: onClick and onHover are handled via getPickingInfo() override
 
+      // Depth testing - enable for 3D shapes to prevent rendering through globe
+      ...(this.props.enableElevation
+        ? {
+            parameters: {
+              depthTest: true,
+              depthCompare: 'less-equal',
+            },
+          }
+        : {}),
+
       // Update triggers
       updateTriggers: {
         getFillColor: [
@@ -1400,6 +1402,10 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
             // biome-ignore lint/suspicious/noExplicitAny: GeoJsonLayer accessor type compatibility
             getFillColor: (d: any) => d.properties.fillColor,
             pickable: this.props.pickable ?? true,
+            parameters: {
+              depthTest: true,
+              depthCompare: 'less-equal',
+            },
             updateTriggers: {
               data: [features, hoveredShapeId, selectedShapeId],
               getFillColor: [features, this.props.applyBaseOpacity],
@@ -1423,6 +1429,10 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
             getFillColor: (d: any) =>
               brightenColor(d.properties.fillColor, 1.5),
             pickable: this.props.pickable ?? true,
+            parameters: {
+              depthTest: true,
+              depthCompare: 'less-equal',
+            },
             updateTriggers: {
               data: [features, hoveredShapeId, selectedShapeId],
               getFillColor: [features, this.props.applyBaseOpacity],
@@ -1449,6 +1459,10 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
             // biome-ignore lint/suspicious/noExplicitAny: GeoJsonLayer accessor type compatibility
             getFillColor: () => selectedFillColor,
             pickable: this.props.pickable ?? true,
+            parameters: {
+              depthTest: true,
+              depthCompare: 'less-equal',
+            },
             updateTriggers: {
               data: [features, hoveredShapeId, selectedShapeId],
               getFillColor: [isSelectedHovered],
@@ -1483,6 +1497,10 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
             getFillColor(d, applyBaseOpacity),
           getLineColor,
           pickable: false,
+          parameters: {
+            depthTest: true,
+            depthCompare: 'less-equal',
+          },
           updateTriggers: {
             getElevation: [features],
             getFillColor: [features, applyBaseOpacity],
