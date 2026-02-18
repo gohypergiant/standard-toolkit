@@ -31,14 +31,15 @@ let logInstance: LogLayer | undefined;
  * @returns A configured LogLayer instance
  *
  * @example
- * ```ts
+ * ```typescript
  * const logger = getLogger({
- *   enabled: process.env.NODE_ENV !== 'test',
+ *   enabled: true,
+ *   env: process.env.NODE_ENV as 'production' | 'development',
  *   level: 'warn',
  *   prefix: '[MyApp]',
  * });
  *
- * logger.info('User logged in', { userId: 123 });
+ * logger.withMetadata({ userId: 123 }).info('User logged in');
  * ```
  */
 export function getLogger(opts: LoggerOptions) {

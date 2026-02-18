@@ -23,7 +23,7 @@ export type EnvironmentPluginOptions = LogLayerPluginParams & {
   isServer: boolean;
   /**
    * Whether the application is running in production.
-   * Reserved for future use.
+   * Reserved for future use — currently has no effect on plugin behavior.
    */
   isProductionEnv: boolean;
 };
@@ -38,7 +38,7 @@ export type EnvironmentPluginOptions = LogLayerPluginParams & {
  * @returns A LogLayer plugin instance
  *
  * @example
- * ```ts
+ * ```typescript
  * import { environmentPlugin } from '@accelint/logger/plugins/environment';
  *
  * const plugin = environmentPlugin({

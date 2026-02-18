@@ -40,6 +40,8 @@ export type LoggerOptions = {
   transports?: LogLayerTransport[];
 
   /**
+   * Named log groups configuration for conditional group-level logging.
+   * Allows enabling or disabling entire categories of log calls by name.
    * Reference: https://loglayer.dev/logging-api/groups.html
    */
   groups?: LogGroupsConfig;
@@ -68,7 +70,10 @@ export type LoggerOptions = {
   env?: 'production' | 'development';
 };
 
-// Re-export from loglayer
+/**
+ * The log level type accepted by logger configuration.
+ * One of: `'trace'`, `'debug'`, `'info'`, `'warn'`, `'error'`, `'fatal'`.
+ */
 export type { LogLevelType as LogLevel };
 
 /**
