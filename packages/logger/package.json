@@ -53,7 +53,7 @@
   "module": "./dist/index.js",
   "owner": "default/pathfinder",
   "peerDependencies": {
-    "loglayer": "^6.10.0"
+    "loglayer": "^9.1.0"
   },
   "private": false,
   "publishConfig": {
