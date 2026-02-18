@@ -43,7 +43,6 @@ export function GanttRow({ children, ...rest }: PropsWithChildren) {
     <div
       className={styles['row-container']}
       data-height={GANTT_ROW_HEIGHT_PX}
-      // spread props, including virtualizer-augmented style prop, if used
       {...rest}
     >
       {renderedElements}
