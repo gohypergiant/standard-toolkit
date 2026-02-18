@@ -18,17 +18,17 @@ import type {
 
 export type TabStyleProps = {
   /**
-   * If set to true will cause the tabs to flex to fill the available space, with a max width
+   * If set to true will cause the Tabs to flex to fill the available space, with a max width
    *
    * @default true
    */
   flex?: boolean;
   /**
-   * Determines text alignment
+   * Determines content alignment within a Tab
    *
    * @default 'start'
    */
-  align?: 'start' | 'center';
+  align?: 'start' | 'center' | 'end';
 };
 
 /**

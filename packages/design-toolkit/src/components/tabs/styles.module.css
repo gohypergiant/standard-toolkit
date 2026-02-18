@@ -43,7 +43,9 @@
   }
 
   .tab {
-    @apply gap-xs fg-primary-muted rounded-small p-s relative flex max-h-[200px] max-w-[200px] cursor-pointer items-center;
+    @apply gap-xs fg-primary-muted rounded-small p-s relative flex cursor-pointer items-center;
+    max-width: 200px;
+    max-height: 200px;
 
     &.flex {
       @apply grow;
@@ -51,6 +53,10 @@
 
     &.center {
       @apply justify-center;
+    }
+
+    &.end {
+      @apply justify-end;
     }
 
     @variant hover {

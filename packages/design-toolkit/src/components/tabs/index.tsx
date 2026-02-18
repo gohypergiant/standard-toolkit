@@ -33,6 +33,8 @@ import type { TabsProps } from './types';
  * @param props.ref - Ref to the tabs container element.
  * @param props.children - TabList and TabPanel components.
  * @param props.className - CSS class for the tabs container.
+ * @param props.flex - Boolean passed down to Tab components.
+ * @param props.align - Justification alignment passed down to Tab components.
  * @returns The rendered Tabs component.
  *
  * @example
