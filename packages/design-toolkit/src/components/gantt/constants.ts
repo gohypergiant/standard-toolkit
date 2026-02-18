@@ -41,5 +41,5 @@ export const TIMELINE_CHUNK_WIDTH = 80;
 
 export const BUFFERED_CHUNK_COUNT = 2;
 export const GANTT_ROW_HEIGHT_PX = 40;
-export const GANTT_BLOCK_HEIGHT_PX = 30;
+export const GANTT_ROW_ELEMENT_HEIGHT = 30;
 export const ROW_VIRTUALIZATION_OVERSCAN = 1;

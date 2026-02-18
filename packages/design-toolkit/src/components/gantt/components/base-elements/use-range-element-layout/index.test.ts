@@ -12,7 +12,7 @@
 
 import { renderHook } from '@testing-library/react';
 import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { useRowElementLayout } from './';
+import { useRangeElementLayout } from '.';
 import type { GanttContextValue } from '../../../context';
 
 const mocks = vi.hoisted(() => {
@@ -47,7 +47,7 @@ vi.mock('../../../utils/layout', () => ({
 import { useLayoutSubscription } from '../../../hooks/use-layout-subscription';
 import { deriveRangeElementLayout } from '../../../utils/layout';
 
-describe('useRowElementLayout', () => {
+describe('useRangeElementLayout', () => {
   const capturedCallbackHarness: { callback?: (ms: number) => void } = {};
 
   beforeEach(() => {
@@ -71,7 +71,7 @@ describe('useRowElementLayout', () => {
     const div = document.createElement('div');
 
     renderHook(() =>
-      useRowElementLayout({
+      useRangeElementLayout({
         element: div,
         timeBounds: { startMs: 1000, endMs: 1500 },
       }),
@@ -90,7 +90,7 @@ describe('useRowElementLayout', () => {
 
   it('does nothing if elementRef.current is null', () => {
     renderHook(() =>
-      useRowElementLayout({
+      useRangeElementLayout({
         element: null,
         timeBounds: { startMs: 1000, endMs: 1500 },
       }),
