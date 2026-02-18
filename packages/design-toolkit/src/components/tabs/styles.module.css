@@ -14,7 +14,7 @@
 
 @layer components.l1 {
   .tabs {
-    @apply w-content flex;
+    @apply flex w-fit;
 
     @variant orientation-horizontal {
       @apply flex-col;
