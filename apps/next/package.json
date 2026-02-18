@@ -15,7 +15,7 @@
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
     "@internationalized/date": "~3.9.0",
-    "@loglayer/log-level-manager-one-way": "^1.0.5",
+    "@loglayer/log-level-manager-one-way": "^2.0.2",
     "@radix-ui/react-avatar": "^1.1.10",
     "@react-aria/dnd": "~3.11.2",
     "@react-aria/interactions": "~3.25.5",

@@ -15,20 +15,22 @@ import { OneWayLogLevelManager } from '@loglayer/log-level-manager-one-way';
 import type { LogLevel } from '@accelint/logger';
 
 const logger = getLogger({
-  level: 'error',
-  enabled: process.env.NODE_ENV !== 'production',
+  level: process.env.NODE_ENV === 'production'
+  ? 'error'
+  : 'debug',
+  enabled: true,
 }).withLogLevelManager(new OneWayLogLevelManager());
 
 /**
- * Create a child logger with module-specific context and log level.
+ * Creates a child logger with module-specific context for organized log output.
  *
- * All child loggers inherit from a single base logger instance configured with
- * OneWayLogLevelManager, allowing per-child log level control while maintaining
- * a single underlying logger instance (important for transports like Pino).
+ * Each child logger can have its own log level threshold while sharing a single
+ * underlying logger instance. This allows fine-grained verbosity control per
+ * module without duplicating transport connections.
  *
- * @param module - Module identifier for log messages (e.g., '[VRT:Static]', '[MemLab:Filters]')
- * @param level - Log level for this module ('trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatal')
- * @returns A child logger instance with isolated context and specified log level
+ * @param module - Module identifier prepended to all log messages for filtering and debugging
+ * @param level - Optional log level threshold; only messages at this level or higher are output
+ * @returns Logger instance with standard logging methods (trace, debug, info, warn, error, fatal)
  *
  * @example
  * ```typescript
@@ -49,6 +51,12 @@ const logger = getLogger({
  * vrtLogger.warn('No focusable elements found');
  * ```
  */
-export function createLogger(module: string, level: LogLevel) {
-  return logger.child().setLevel(level).withContext({ source: module });
+export function createLogger(module: string, level?: LogLevel) {
+  const child = logger.child();
+
+  if (level) {
+    child.setLevel(level)
+  }
+
+  return child.withContext({ source: module });
 }

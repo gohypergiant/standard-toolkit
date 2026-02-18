@@ -6,8 +6,8 @@ settings:
 
 overrides:
   '@internationalized/date': ~3.9.0
-  '@loglayer/plugin': ^2.2.7
-  '@loglayer/shared': ^3.3.0
+  '@loglayer/plugin': ^3.0.2
+  '@loglayer/shared': ^4.1.0
   '@react-aria/dnd': ~3.11.2
   '@react-aria/interactions': ~3.25.5
   '@react-aria/overlays': ~3.29.1
@@ -124,8 +124,8 @@ importers:
         specifier: ~3.9.0
         version: 3.9.0
       '@loglayer/log-level-manager-one-way':
-        specifier: ^1.0.5
-        version: 1.0.5
+        specifier: ^2.0.2
+        version: 2.0.2
       '@radix-ui/react-avatar':
         specifier: ^1.1.10
         version: 1.1.11(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -873,17 +873,17 @@ importers:
   packages/logger:
     dependencies:
       '@loglayer/plugin':
-        specifier: ^2.2.7
-        version: 2.2.7
+        specifier: ^3.0.2
+        version: 3.0.2
       '@loglayer/shared':
-        specifier: ^3.3.0
-        version: 3.3.0
+        specifier: ^4.1.0
+        version: 4.1.0
       '@loglayer/transport':
-        specifier: ^2.3.13
-        version: 2.3.13
+        specifier: ^3.0.2
+        version: 3.0.2
       '@loglayer/transport-simple-pretty-terminal':
-        specifier: ^2.3.1
-        version: 2.3.1
+        specifier: ^3.0.2
+        version: 3.0.2
       callsites:
         specifier: ^4.2.0
         version: 4.2.0
@@ -907,8 +907,8 @@ importers:
         specifier: ^16.3.0
         version: 16.3.1(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       loglayer:
-        specifier: ^8.5.0
-        version: 8.5.0
+        specifier: ^9.0.0
+        version: 9.1.0
       tsdown:
         specifier: ^0.18.0
         version: 0.18.1(publint@0.3.16)(typescript@5.9.3)
@@ -2516,35 +2516,35 @@ packages:
     resolution: {integrity: sha512-kntdCN9MtNctoMpDBMk9D1begChINbdYJNso5YLB0bbKNIy819rKfarSn7Xmtcq0aBxFUHPp04wj6XnvWseFOQ==}
     engines: {node: '>=18'}
 
-  '@loglayer/context-manager@1.2.0':
-    resolution: {integrity: sha512-0bIN4NP6GDcgVVQi5K9kDfxK9T8IV3PHpLVCih23q7LlxNUlBwWEZpdhpEkkum0nlVYviLw0ugBbogsd5IijTw==}
+  '@loglayer/context-manager@2.0.2':
+    resolution: {integrity: sha512-IVt/iqACGw2GnucKOpyJ69MbGQSRzsArOwsTNMuOAfzm36zTphGIH4K7g7lhRvcd2jY0dZzvWA6tCqannpgXXg==}
     engines: {node: '>=18'}
 
-  '@loglayer/log-level-manager-one-way@1.0.5':
-    resolution: {integrity: sha512-vRaA1CayB0Km6ZzfXDuHA0PwdX6e3ablGsFDjwqq6fyhfV705+RQ6xHB/fKjIMxoEROv/Nr4iD2bbOzwbry1zQ==}
+  '@loglayer/log-level-manager-one-way@2.0.2':
+    resolution: {integrity: sha512-IBaCfn4bPvJdyUsTtSA8cX8KVawFgdXJ0rX9Q4T6aGEir55bpp+dGF0p6FH6KLXinV5sxQ5bnDjy3PderigGZA==}
     engines: {node: '>=18'}
 
-  '@loglayer/log-level-manager@1.0.5':
-    resolution: {integrity: sha512-kEeJqkc7iJO4hwvUjMVS9gPJJzTEPGRpI3DzMaW8pQRYhSsg4PyJnHDaCd8UqEyrxnuT8YJ7iqsZ9BdyuO9Ckg==}
+  '@loglayer/log-level-manager@2.0.2':
+    resolution: {integrity: sha512-hq6hjkXzrYyz0DwYUqizP0hS3jhPl5S/7U33Cd0EPbfLmDjYWzzcM0mQKUdtBi6qNX4DAPpag3oBGytB2zmghg==}
     engines: {node: '>=18'}
 
-  '@loglayer/plugin@2.2.7':
-    resolution: {integrity: sha512-k9O21Z7TxFemZUrC4YL2pJZG48QQPLCPVJQ1zg42y0kYveACuIb0a7abe40MkfrZOu9ApNHQHC5wcggQf0V7pA==}
+  '@loglayer/plugin@3.0.2':
+    resolution: {integrity: sha512-ghIYpuPw/Q0jdlr7ErkaySfsSCsIigwIb1lvR5qhZrz3oEqGotDFZzhgU1YeO7BacA042ygv/xww3Ip3ROokeg==}
     engines: {node: '>=18'}
 
-  '@loglayer/shared@3.3.0':
-    resolution: {integrity: sha512-E596RsJSRthGkG7PTGAeja5OIwB0fK3FCvZYXx7nFSv+J1Bk8RJO/vb6IB5th8dB9zoaQ/ahvlZ1Jfhg0dy/Mg==}
+  '@loglayer/shared@4.1.0':
+    resolution: {integrity: sha512-hGSWhLhMF9L7sB0rXippvKhku9D9dT8imZ5OFpa4VHAVnclY0DQ+3wIPE37rzu0QAiBbyR3/HH03Q1Cgik8zYA==}
     engines: {node: '>=18'}
 
-  '@loglayer/transport-simple-pretty-terminal@2.3.1':
-    resolution: {integrity: sha512-e6ncsmyhMomC35oJH55+QWzD8VRnsRD2dsZmlIKhTV6jBuVmX0Z2CiUFutS+6oBG2IgSwSe+LJiVqofuBq3sEg==}
-
-  '@loglayer/transport@2.3.13':
-    resolution: {integrity: sha512-sfw6xvsIOzTh4l8ZpSH7Vfj3ajH/y+PUBShclqjaLtXxurKGh8xZuciDsL3wuern+Ea/r8+iT2vzK3d2BSUyQQ==}
-    engines: {node: '>=18'}
+  '@loglayer/transport-simple-pretty-terminal@3.0.2':
+    resolution: {integrity: sha512-XD5xA0mbf103DXSgtFoDb5UGv/JNUIEMgv9DxVnnOhE7+h8Gf7Wjvz+e/8IvlBFJ0ouep8lTKfz7yENpQi3XUQ==}
 
   '@loglayer/transport@2.3.4':
     resolution: {integrity: sha512-SHvaex987nfqV9hNj/KEMEnE7SwtDa5YwxqXbZNEtWDSWimn6agHyce73/qJC86GVrtOJmLj2HMii9JdKeZozw==}
+    engines: {node: '>=18'}
+
+  '@loglayer/transport@3.0.2':
+    resolution: {integrity: sha512-5t0lj/ibQQxGPpghNta8u10zl8owU0my/i2fHF/LdcCAtpw/IHblmpKSgOzdH9XE19Ub/i0VYj0JrFrFv8/NXw==}
     engines: {node: '>=18'}
 
   '@ls-lint/ls-lint@2.3.1':
@@ -6528,8 +6528,8 @@ packages:
     resolution: {integrity: sha512-EOxAzIiyzmfdXjCiwLWzPl9Syxt2ds+8w4tkdeC3TzSXnKzPcD4dc6vh8JRBO37BE6kiQhXWXrxJMqZ0BWi1fQ==}
     engines: {node: '>=18'}
 
-  loglayer@8.5.0:
-    resolution: {integrity: sha512-Dx8GGZffaJmAm18e7/BwgrwxLOmCHJe2TxC0Ja0+FdJjSjXCM60nsHpTD3FjQMzu0cVr7HPUAAmGJIz4b3qKQg==}
+  loglayer@9.1.0:
+    resolution: {integrity: sha512-KFCtoydUtfshszDMIEMa180MMT4jDgBz7FkkO0r3mLDzOkfqGUCbtH9DRszK/pEPrG7999FXfBsyv4DNhvmrag==}
     engines: {node: '>=18'}
 
   long@3.2.0:
@@ -9822,42 +9822,42 @@ snapshots:
 
   '@loglayer/context-manager@1.1.6':
     dependencies:
-      '@loglayer/shared': 3.3.0
+      '@loglayer/shared': 4.1.0
     optional: true
 
-  '@loglayer/context-manager@1.2.0':
+  '@loglayer/context-manager@2.0.2':
     dependencies:
-      '@loglayer/shared': 3.3.0
+      '@loglayer/shared': 4.1.0
 
-  '@loglayer/log-level-manager-one-way@1.0.5':
+  '@loglayer/log-level-manager-one-way@2.0.2':
     dependencies:
-      '@loglayer/log-level-manager': 1.0.5
+      '@loglayer/log-level-manager': 2.0.2
 
-  '@loglayer/log-level-manager@1.0.5':
+  '@loglayer/log-level-manager@2.0.2':
     dependencies:
-      '@loglayer/shared': 3.3.0
+      '@loglayer/shared': 4.1.0
 
-  '@loglayer/plugin@2.2.7':
+  '@loglayer/plugin@3.0.2':
     dependencies:
-      '@loglayer/shared': 3.3.0
+      '@loglayer/shared': 4.1.0
 
-  '@loglayer/shared@3.3.0': {}
+  '@loglayer/shared@4.1.0': {}
 
-  '@loglayer/transport-simple-pretty-terminal@2.3.1':
+  '@loglayer/transport-simple-pretty-terminal@3.0.2':
     dependencies:
-      '@loglayer/transport': 2.3.13
+      '@loglayer/transport': 3.0.2
       chalk: 5.6.2
       date-fns: 4.1.0
       sprintf-js: 1.1.3
 
-  '@loglayer/transport@2.3.13':
-    dependencies:
-      '@loglayer/shared': 3.3.0
-
   '@loglayer/transport@2.3.4':
     dependencies:
-      '@loglayer/shared': 3.3.0
+      '@loglayer/shared': 4.1.0
     optional: true
+
+  '@loglayer/transport@3.0.2':
+    dependencies:
+      '@loglayer/shared': 4.1.0
 
   '@ls-lint/ls-lint@2.3.1': {}
 
@@ -15542,18 +15542,18 @@ snapshots:
   loglayer@6.10.0:
     dependencies:
       '@loglayer/context-manager': 1.1.6
-      '@loglayer/plugin': 2.2.7
-      '@loglayer/shared': 3.3.0
+      '@loglayer/plugin': 3.0.2
+      '@loglayer/shared': 4.1.0
       '@loglayer/transport': 2.3.4
     optional: true
 
-  loglayer@8.5.0:
+  loglayer@9.1.0:
     dependencies:
-      '@loglayer/context-manager': 1.2.0
-      '@loglayer/log-level-manager': 1.0.5
-      '@loglayer/plugin': 2.2.7
-      '@loglayer/shared': 3.3.0
-      '@loglayer/transport': 2.3.13
+      '@loglayer/context-manager': 2.0.2
+      '@loglayer/log-level-manager': 2.0.2
+      '@loglayer/plugin': 3.0.2
+      '@loglayer/shared': 4.1.0
+      '@loglayer/transport': 3.0.2
 
   long@3.2.0:
     optional: true
