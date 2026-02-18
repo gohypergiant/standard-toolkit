@@ -10,18 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import { GANTT_ROW_ELEMENT_HEIGHT } from '../../constants';
-import { Range, type RangeProps } from '../base-elements/range';
-import styles from './styles.module.css';
-
-export function GanttRowBlock({ id, startMs, endMs }: RangeProps) {
-  return (
-    <Range
-      id={id}
-      startMs={startMs}
-      endMs={endMs}
-      data-height={GANTT_ROW_ELEMENT_HEIGHT}
-      className={styles['row-block']}
-    />
-  );
-}
+export type GanttRowElementProps = {
+  id: string;
+  startMs?: number;
+  endMs?: number;
+  timeMs?: number;
+};
