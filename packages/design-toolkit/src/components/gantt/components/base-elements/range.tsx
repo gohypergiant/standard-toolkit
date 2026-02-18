@@ -1,0 +1,59 @@
+/*
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+import { clsx } from '@accelint/design-foundation/lib/utils';
+import { type CSSProperties, type PropsWithChildren, useState } from 'react';
+import { GANTT_ROW_ELEMENT_HEIGHT } from '../../constants';
+import styles from './styles.module.css';
+import { useRangeElementLayout } from './use-range-element-layout';
+
+export type RangeProps = {
+  id: string;
+  startMs: number;
+  endMs: number;
+  className?: string;
+};
+
+const elementStyle = {
+  '--height': `${GANTT_ROW_ELEMENT_HEIGHT}px`,
+} as CSSProperties;
+
+export function Range({
+  children,
+  startMs,
+  endMs,
+  className,
+}: PropsWithChildren<RangeProps>) {
+  const [element, setElement] = useState<HTMLDivElement | null>(null);
+
+  useRangeElementLayout({
+    element,
+    timeBounds: {
+      startMs,
+      endMs,
+    },
+  });
+
+  const assignElementRef = (node: HTMLDivElement) => {
+    setElement(node);
+  };
+
+  return (
+    <div
+      style={elementStyle}
+      ref={assignElementRef}
+      className={clsx(styles.container, className)}
+    >
+      {children}
+    </div>
+  );
+}

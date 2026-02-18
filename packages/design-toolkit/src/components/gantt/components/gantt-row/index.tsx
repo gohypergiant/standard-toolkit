@@ -16,7 +16,7 @@ import { useGanttContext } from '../../context';
 import { shouldRenderBlock } from '../../utils/helpers';
 import styles from './styles.module.css';
 import type { HTMLAttributes, PropsWithChildren } from 'react';
-import type { GanttRowBlockProps } from './gantt-row-block';
+import type { RangeProps } from '../base-elements/range';
 
 export function GanttRow({
   children,
@@ -24,7 +24,7 @@ export function GanttRow({
 }: PropsWithChildren<HTMLAttributes<HTMLDivElement>>) {
   const { renderedRegionBounds } = useGanttContext();
   const blocks = React.Children.toArray(children).filter(
-    (child): child is React.ReactElement<GanttRowBlockProps> => {
+    (child): child is React.ReactElement<RangeProps> => {
       return React.isValidElement(child);
     },
   );
