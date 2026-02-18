@@ -111,3 +111,23 @@ export function getHighlightLineWidth(feature: StyledFeature): number {
   const baseWidth = getLineWidth(feature);
   return baseWidth + HIGHLIGHT_WIDTH_INCREASE;
 }
+
+/**
+ * Brighten an RGBA color by multiplying RGB channels by a factor.
+ * Alpha is preserved unchanged.
+ *
+ * @param color - RGBA color tuple [r, g, b, a] (0-255)
+ * @param factor - Multiplier for RGB channels (e.g. 1.5 = 50% brighter)
+ * @returns Brightened RGBA color, clamped to 0-255
+ */
+export function brightenColor(
+  color: [number, number, number, number],
+  factor: number,
+): [number, number, number, number] {
+  return [
+    Math.min(255, Math.round(color[0] * factor)),
+    Math.min(255, Math.round(color[1] * factor)),
+    Math.min(255, Math.round(color[2] * factor)),
+    color[3],
+  ];
+}

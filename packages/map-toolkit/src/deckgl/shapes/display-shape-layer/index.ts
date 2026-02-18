@@ -31,6 +31,7 @@ import {
 } from './constants';
 import { createShapeLabelLayer } from './shape-label-layer';
 import {
+  brightenColor,
   getHighlightColor,
   getHighlightLineWidth,
   getHoverLineWidth,
@@ -661,7 +662,13 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
    * Works for both selected and non-selected shapes.
    */
   private renderHoverLayer(features: Shape['feature'][]): GeoJsonLayer | null {
-    const { enableElevation, selectedShapeId, applyBaseOpacity } = this.props;
+    const {
+      enableElevation,
+      selectedShapeId,
+      applyBaseOpacity,
+      highlightColor,
+    } = this.props;
+    const resolvedHighlight = highlightColor ?? getHighlightColor();
     const hoverIndex = this.state?.hoverIndex;
 
     // Only render if elevation is enabled and something is hovered
@@ -688,10 +695,15 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
     ): [number, number, number, number] => {
       const baseColor = getFillColor(d, applyBaseOpacity);
 
-      // Use solid turquoise if this is the selected shape (matching curtains)
+      // Use highlight color if this is the selected shape (matching curtains)
       if (d.properties?.shapeId === selectedShapeId) {
         const a = baseColor[3] ?? 255;
-        return [40, 245, 190, a];
+        return [
+          resolvedHighlight[0],
+          resolvedHighlight[1],
+          resolvedHighlight[2],
+          a,
+        ];
       }
 
       // Ensure we return RGBA format
@@ -878,8 +890,13 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
    * Render main shapes layer
    */
   private renderMainLayer(features: Shape['feature'][]): GeoJsonLayer {
-    const { pickable, applyBaseOpacity, selectedShapeId, enableElevation } =
-      this.props;
+    const {
+      pickable,
+      applyBaseOpacity,
+      selectedShapeId,
+      enableElevation,
+      highlightColor,
+    } = this.props;
 
     // Single-pass icon config extraction (O(1) best case with early return)
     const {
@@ -888,13 +905,20 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       mapping: iconMapping,
     } = this.getIconConfig(features);
 
-    // Helper to get selection color (solid turquoise, matching curtains)
-    const getSelectionColor = (
+    // Resolved highlight color - use prop if provided, fall back to default
+    const resolvedHighlight = highlightColor ?? getHighlightColor();
+
+    // Helper to get selection fill color (highlight RGB, preserving base alpha)
+    const getSelectionFillColor = (
       baseColor: Color,
     ): [number, number, number, number] => {
-      // Use solid turquoise with the base alpha (same as curtains)
       const a = baseColor[3] ?? 255;
-      return [40, 245, 190, a];
+      return [
+        resolvedHighlight[0],
+        resolvedHighlight[1],
+        resolvedHighlight[2],
+        a,
+      ];
     };
 
     return new GeoJsonLayer({
@@ -908,7 +932,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       getFillColor: (d: Shape['feature']) => {
         const baseColor = getFillColor(d, applyBaseOpacity);
 
-        // Apply solid turquoise for selected extruded polygons and elevated points (matching curtains)
+        // Apply highlight color for selected extruded polygons and elevated points (matching curtains)
         if (enableElevation && d.properties?.shapeId === selectedShapeId) {
           const isPolygon =
             d.geometry.type === 'Polygon' || d.geometry.type === 'MultiPolygon';
@@ -916,13 +940,29 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
           const hasElevation = this.getFeatureElevation(d) > 0;
 
           if ((isPolygon || isPoint) && hasElevation) {
-            return getSelectionColor(baseColor);
+            return getSelectionFillColor(baseColor);
           }
         }
 
         return baseColor;
       },
-      getLineColor,
+      getLineColor: (d: Shape['feature'], info) => {
+        const isSelected = d.properties?.shapeId === selectedShapeId;
+        if (isSelected) {
+          return resolvedHighlight;
+        }
+
+        const base = getLineColor(d);
+        const isHovered = info?.index === this.state?.hoverIndex;
+        if (isHovered) {
+          return brightenColor(
+            [base[0] ?? 0, base[1] ?? 0, base[2] ?? 0, base[3] ?? 255],
+            1.5,
+          );
+        }
+
+        return base;
+      },
       getLineWidth: (d, info) => {
         // Skip hover line width for elevated LineStrings - curtain handles it
         if (
@@ -1031,7 +1071,12 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
           selectedShapeId,
           enableElevation,
         ],
-        getLineColor: [features],
+        getLineColor: [
+          features,
+          this.state?.hoverIndex,
+          selectedShapeId,
+          highlightColor,
+        ],
         getLineWidth: [features, this.state?.hoverIndex],
         getDashArray: [features, selectedShapeId],
         getPointRadius: [features],
@@ -1337,7 +1382,8 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
     features: Shape['feature'][],
   ): GeoJsonLayer[] {
     const layers: GeoJsonLayer[] = [];
-    const { selectedShapeId } = this.props;
+    const { selectedShapeId, highlightColor } = this.props;
+    const resolvedHighlight = highlightColor ?? getHighlightColor();
     const hoverIndex = this.state?.hoverIndex;
 
     // LineString curtains (filled vertical surfaces)
@@ -1374,19 +1420,6 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
 
       // Determine if selected curtain is also hovered
       const isSelectedHovered = selectedShapeId === hoveredShapeId;
-
-      // Helper to brighten color for hover/selection (increases RGB values while preserving alpha)
-      const brightenColor = (
-        color: [number, number, number, number],
-        factor: number,
-      ): [number, number, number, number] => {
-        return [
-          Math.min(255, Math.round(color[0] * factor)),
-          Math.min(255, Math.round(color[1] * factor)),
-          Math.min(255, Math.round(color[2] * factor)),
-          color[3], // Keep original alpha
-        ];
-      };
 
       // Main curtains (normal color)
       if (mainCurtains.length > 0) {
@@ -1441,11 +1474,25 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
         );
       }
 
-      // Selected curtains (turquoise tint with brightness boost)
+      // Selected curtains (highlight tint with brightness boost)
       if (selectedCurtains.length > 0) {
+        const highlightBase: [number, number, number, number] = [
+          resolvedHighlight[0],
+          resolvedHighlight[1],
+          resolvedHighlight[2],
+          60,
+        ];
         const selectedFillColor = isSelectedHovered
-          ? brightenColor([40, 245, 190, 80], 1.3) // Brighter turquoise when hovered+selected
-          : ([40, 245, 190, 60] as [number, number, number, number]); // Turquoise tint
+          ? brightenColor(
+              [
+                resolvedHighlight[0],
+                resolvedHighlight[1],
+                resolvedHighlight[2],
+                80,
+              ],
+              1.3,
+            )
+          : highlightBase;
 
         layers.push(
           new GeoJsonLayer({
@@ -1465,7 +1512,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
             },
             updateTriggers: {
               data: [features, hoveredShapeId, selectedShapeId],
-              getFillColor: [isSelectedHovered],
+              getFillColor: [isSelectedHovered, highlightColor],
             },
           }),
         );
