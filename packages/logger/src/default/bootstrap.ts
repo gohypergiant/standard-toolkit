@@ -10,8 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
+import { OneWayLogLevelManager } from '@loglayer/log-level-manager-one-way';
 import { getSimplePrettyTerminal } from '@loglayer/transport-simple-pretty-terminal';
-import { ConsoleTransport, LogLayer } from 'loglayer';
+import { LogLayer, StructuredTransport } from 'loglayer';
 import { serializeError } from 'serialize-error';
 import { callsitePlugin } from '../plugins/callsite';
 import { environmentPlugin } from '../plugins/environment';
@@ -25,21 +26,6 @@ import type { LoggerOptions } from '../definitions';
  *
  * @param options - Logger configuration options
  * @returns A configured LogLayer instance with all plugins and transports applied
- *
- * @example
- * ```typescript
- * import { bootstrap } from '@accelint/logger/default/bootstrap';
- *
- * const logger = bootstrap({
- *   enabled: true,
- *   level: 'info',
- *   env: 'production',
- *   pretty: false,
- *   prefix: '[API]',
- * });
- *
- * logger.info('Server started', { port: 3000 });
- * ```
  */
 export function bootstrap({
   enabled,
@@ -47,9 +33,10 @@ export function bootstrap({
   transports = [],
   level = 'debug',
   env = 'development',
+  groups = {},
   pretty = true,
   prefix = '',
-}: LoggerOptions): LogLayer {
+}: LoggerOptions) {
   const isProductionEnv = env === 'production';
   const isServer = typeof window === 'undefined';
 
@@ -64,10 +51,9 @@ export function bootstrap({
             runtime: 'browser',
             includeDataInBrowserConsole: true,
           })
-        : new ConsoleTransport({
+        : new StructuredTransport({
             level,
             logger: console,
-            appendObjectData: true,
           }),
       ...transports,
     ],
@@ -76,9 +62,12 @@ export function bootstrap({
       environmentPlugin({ isProductionEnv, isServer }),
       ...plugins,
     ],
+    groups,
     enabled,
     prefix,
   });
+
+  instance.withLogLevelManager(new OneWayLogLevelManager());
 
   return instance;
 }

@@ -11,14 +11,10 @@
  */
 
 import { bootstrap } from './bootstrap';
-import type { LogLayer, LogLevel } from 'loglayer';
+import type { LogLayer } from 'loglayer';
 import type { LoggerOptions } from '../definitions';
 
-let logInstance: LogLayer;
-
-type LogLevelType = LogLevel | `${LogLevel}`;
-
-export type { LogLevel, LogLevelType };
+let logInstance: LogLayer | undefined;
 
 /**
  * Returns a singleton LogLayer logger instance.
@@ -45,7 +41,7 @@ export type { LogLevel, LogLevelType };
  * logger.info('User logged in', { userId: 123 });
  * ```
  */
-export function getLogger(opts: LoggerOptions): LogLayer {
+export function getLogger(opts: LoggerOptions) {
   if (!logInstance) {
     logInstance = bootstrap(opts);
   }

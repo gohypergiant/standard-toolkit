@@ -45,10 +45,15 @@ function getCallsite() {
   }
 
   const site = sites[levelLine + 1];
-  const columnNumber = site?.getColumnNumber();
-  const lineNumber = site?.getLineNumber();
+
+  if (!site) {
+    return 'unknown';
+  }
+
+  const columnNumber = site.getColumnNumber();
+  const lineNumber = site.getLineNumber();
   // NOTE: in bundler environments eval() is often used during dev builds
-  const fileName = site?.isEval() ? site.getEvalOrigin() : site?.getFileName();
+  const fileName = site.isEval() ? site.getEvalOrigin() : site.getFileName();
 
   return `${fileName}:${lineNumber}:${columnNumber}`;
 }
@@ -56,13 +61,13 @@ function getCallsite() {
 /**
  * Options for the callsite tracking plugin.
  */
-export interface CallsitePluginOptions extends LogLayerPluginParams {
+export type CallsitePluginOptions = LogLayerPluginParams & {
   /**
    * Whether the application is running in production.
    * Reserved for future use.
    */
   isProductionEnv: boolean;
-}
+};
 
 /**
  * Creates a LogLayer plugin that tracks and injects source code location into log data.

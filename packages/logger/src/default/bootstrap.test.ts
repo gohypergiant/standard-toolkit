@@ -25,10 +25,11 @@ vi.mock('loglayer', () => ({
     this.debug = vi.fn();
     this.trace = vi.fn();
     this.fatal = vi.fn();
+    this.withLogLevelManager = vi.fn().mockReturnThis();
     return this;
   }),
-  ConsoleTransport: vi.fn(function (this: any, config: any) {
-    this.type = 'console';
+  StructuredTransport: vi.fn(function (this: any, config: any) {
+    this.type = 'structured';
     this.config = config;
     return this;
   }),
@@ -71,7 +72,7 @@ describe('bootstrap', () => {
   let windowSpy: typeof globalThis.window | undefined;
   let LogLayerMock: any;
   let getSimplePrettyTerminalMock: any;
-  let ConsoleTransportMock: any;
+  let StructuredTransportMock: any;
   let callsitePluginMock: any;
   let environmentPluginMock: any;
   let serializeErrorMock: any;
@@ -92,7 +93,7 @@ describe('bootstrap', () => {
     LogLayerMock = loglayerModule.LogLayer as any;
     getSimplePrettyTerminalMock =
       prettyTerminalModule.getSimplePrettyTerminal as any;
-    ConsoleTransportMock = loglayerModule.ConsoleTransport as any;
+    StructuredTransportMock = loglayerModule.StructuredTransport as any;
     callsitePluginMock = callsiteModule.callsitePlugin as any;
     environmentPluginMock = environmentModule.environmentPlugin as any;
     serializeErrorMock = serializeErrorModule.serializeError as any;
@@ -154,7 +155,7 @@ describe('bootstrap', () => {
 
       expect(logger).toBeDefined();
       expect(getSimplePrettyTerminalMock).toHaveBeenCalled();
-      expect(ConsoleTransportMock).not.toHaveBeenCalled();
+      expect(StructuredTransportMock).not.toHaveBeenCalled();
     });
 
     test('should use empty prefix when prefix option is not provided', () => {
@@ -268,7 +269,7 @@ describe('bootstrap', () => {
 
       expect(logger).toBeDefined();
       expect(getSimplePrettyTerminalMock).toHaveBeenCalled();
-      expect(ConsoleTransportMock).not.toHaveBeenCalled();
+      expect(StructuredTransportMock).not.toHaveBeenCalled();
     });
 
     test('should use console transport when pretty is false', () => {
@@ -277,7 +278,7 @@ describe('bootstrap', () => {
       const logger = bootstrap(options);
 
       expect(logger).toBeDefined();
-      expect(ConsoleTransportMock).toHaveBeenCalled();
+      expect(StructuredTransportMock).toHaveBeenCalled();
       expect(getSimplePrettyTerminalMock).not.toHaveBeenCalled();
     });
 
@@ -497,25 +498,29 @@ describe('bootstrap', () => {
     });
   });
 
-  describe('Console transport configuration', () => {
-    test('should configure appendObjectData for console transport', () => {
-      const options: LoggerOptions = { enabled: true, pretty: false };
+  describe('Structured transport configuration', () => {
+    test('should configure log level for structured transport', () => {
+      const options: LoggerOptions = {
+        enabled: true,
+        pretty: false,
+        level: 'warn',
+      };
 
       const logger = bootstrap(options);
 
       expect(logger).toBeDefined();
-      expect(ConsoleTransportMock).toHaveBeenCalledWith(
-        expect.objectContaining({ appendObjectData: true }),
+      expect(StructuredTransportMock).toHaveBeenCalledWith(
+        expect.objectContaining({ level: 'warn' }),
       );
     });
 
-    test('should use console as logger for console transport', () => {
+    test('should use console as logger for structured transport', () => {
       const options: LoggerOptions = { enabled: true, pretty: false };
 
       const logger = bootstrap(options);
 
       expect(logger).toBeDefined();
-      expect(ConsoleTransportMock).toHaveBeenCalledWith(
+      expect(StructuredTransportMock).toHaveBeenCalledWith(
         expect.objectContaining({ logger: console }),
       );
     });

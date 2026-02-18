@@ -15,7 +15,7 @@ import type { LogLayerPlugin, LogLayerPluginParams } from '@loglayer/plugin';
 /**
  * Options for the environment detection plugin.
  */
-export interface EnvironmentPluginOptions extends LogLayerPluginParams {
+export type EnvironmentPluginOptions = LogLayerPluginParams & {
   /**
    * Whether the code is running in a server environment (Node.js).
    * Typically determined by `typeof window === 'undefined'`.
@@ -26,7 +26,7 @@ export interface EnvironmentPluginOptions extends LogLayerPluginParams {
    * Reserved for future use.
    */
   isProductionEnv: boolean;
-}
+};
 
 /**
  * Creates a LogLayer plugin that injects environment context into log data.
