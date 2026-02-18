@@ -18,7 +18,7 @@ import { type GanttState, selectors } from '../../../store';
 import { deriveRangeElementLayout } from '../../../utils/layout';
 import type { TimeBounds, Timescale } from '../../../types';
 
-type UseRowElementLayoutProps = {
+type UseRangeElementLayoutProps = {
   element: HTMLDivElement | null;
   timeBounds: TimeBounds;
 };
@@ -28,13 +28,13 @@ const storeSelector = (timescale: Timescale) => (state: GanttState) => [
   selectors.roundedCurrentRowScrollPx(state),
 ];
 
-export function useRowElementLayout(props: UseRowElementLayoutProps) {
+export function useRangeElementLayout(props: UseRangeElementLayoutProps) {
   const { timeBounds, element } = props;
 
   const { renderedRegionBounds, msPerPx, timescale, totalBounds } =
     useGanttContext();
 
-  const applyRowElementLayout = useCallback(() => {
+  const applyRangeElementLayout = useCallback(() => {
     if (!element) {
       return;
     }
@@ -53,7 +53,7 @@ export function useRowElementLayout(props: UseRowElementLayoutProps) {
   const selector = useMemo(() => storeSelector(timescale), [timescale]);
 
   useLayoutSubscription({
-    callback: applyRowElementLayout,
+    callback: applyRangeElementLayout,
     selector,
   });
 }

@@ -51,20 +51,18 @@ export function getRenderedRegionBoundsMs(
   };
 }
 
-export function shouldRenderBlock(
+export function shouldRenderRangeElement(
   renderedRegionBoundary: TimeBounds,
-  blockTimeBounds: TimeBounds,
+  rangeElementTimeBounds: TimeBounds,
 ) {
-  const { startMs: blockStartMs, endMs: blockEndMs } = blockTimeBounds;
+  const { startMs: blockStartMs, endMs: blockEndMs } = rangeElementTimeBounds;
   const { startMs, endMs } = renderedRegionBoundary;
 
-  const doesBlockStartBeforeRegionStart =
+  const startsBeforeRegionStart =
     blockStartMs < startMs && blockEndMs > startMs;
-  const isBlockWithinRegion = blockStartMs >= startMs && blockEndMs <= endMs;
-  const doesBlockEndAfterRegionEnd = blockStartMs < endMs && blockEndMs > endMs;
+  const isEntirelyWithinRegion = blockStartMs >= startMs && blockEndMs <= endMs;
+  const endsAftgerRegionEnd = blockStartMs < endMs && blockEndMs > endMs;
   return (
-    doesBlockStartBeforeRegionStart ||
-    isBlockWithinRegion ||
-    doesBlockEndAfterRegionEnd
+    startsBeforeRegionStart || isEntirelyWithinRegion || endsAftgerRegionEnd
   );
 }

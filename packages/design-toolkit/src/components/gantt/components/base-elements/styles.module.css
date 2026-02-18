@@ -10,18 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
-import { GANTT_ROW_ELEMENT_HEIGHT } from '../../constants';
-import { Range, type RangeProps } from '../base-elements/range';
-import styles from './styles.module.css';
+@reference '@accelint/design-foundation/styles';
 
-export function GanttRowBlock({ id, startMs, endMs }: RangeProps) {
-  return (
-    <Range
-      id={id}
-      startMs={startMs}
-      endMs={endMs}
-      data-height={GANTT_ROW_ELEMENT_HEIGHT}
-      className={styles['row-block']}
-    />
-  );
+@layer components.l1 {
+  .container {
+    @apply absolute;
+    height: var(--height);
+  }
 }
