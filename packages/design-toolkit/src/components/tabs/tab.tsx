@@ -39,8 +39,8 @@ import type { TabProps } from './types';
  * @param props - TabProps from react-aria-components.
  * @param props.children - Tab label content.
  * @param props.className - CSS class for the tab.
- * @param props.flex - Boolean to determine if the Tab should grow in size (up to a max width).
- * @param props.align - Justification alignment for content within the Tab
+ * @param props.align - Justification alignment for content within the Tab (only applicable when orientation is horizontal)
+ * @param props.flex - Boolean to determine if the Tab should grow in size (up to a max width). (only applicable when orientation is horizontal)
  * @returns The rendered Tab component.
  */
 export function Tab({ ref, ...props }: TabProps) {

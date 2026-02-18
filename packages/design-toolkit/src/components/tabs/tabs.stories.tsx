@@ -47,7 +47,11 @@ const meta = {
   argTypes: {
     align: {
       control: 'select',
-      options: ['start', 'center'],
+      options: ['start', 'center', 'end'],
+      if: { arg: 'orientation', eq: 'horizontal' },
+    },
+    flex: {
+      if: { arg: 'orientation', eq: 'horizontal' },
     },
     orientation: {
       control: 'select',

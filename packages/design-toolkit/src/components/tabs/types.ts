@@ -16,20 +16,22 @@ import type {
   TabsProps as AriaTabsProps,
 } from 'react-aria-components';
 
-export type TabStyleProps = {
-  /**
-   * If set to true will cause the Tabs to flex to fill the available space, with a max width
-   *
-   * @default true
-   */
-  flex?: boolean;
-  /**
-   * Determines content alignment within a Tab
-   *
-   * @default 'start'
-   */
-  align?: 'start' | 'center' | 'end';
-};
+export type TabStyleProps =
+  | ({ orientation?: 'horizontal' } & {
+      /**
+       * Determines content alignment within a Tab
+       *
+       * @default 'start'
+       */
+      align?: 'start' | 'center' | 'end';
+      /**
+       * If set to true will cause the Tabs to flex to fill the available space, with a max width
+       *
+       * @default true
+       */
+      flex?: boolean;
+    })
+  | ({ orientation: 'vertical' } & { align?: never; flex?: never });
 
 /**
  * Props for the Tabs component.

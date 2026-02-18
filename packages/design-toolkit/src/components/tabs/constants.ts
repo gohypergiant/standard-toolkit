@@ -13,6 +13,7 @@
 import type { TabStyleProps } from './types';
 
 export const TabStyleDefaults: Required<TabStyleProps> = {
+  orientation: 'horizontal',
   align: 'start',
   flex: true,
 };
