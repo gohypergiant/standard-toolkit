@@ -84,7 +84,7 @@ See the **[Foundation / Spacing](?path=/story/foundation-spacing--spacing)** sto
 
 #### Pixels for Prototyping and Edge Cases
 
-While the spacing tokens should cover the majority of cases and are preferred, it is possible to use arbitrary spacing values. The `w-<number>` and `size-<number>` utilities are driven by the `--spacing` [theme variable](https://tailwindcss.com/docs/width#customizing-your-theme), which is set to `1px` in the Design Toolkit. That means when you need to express arbitrary spacing values, you can do a direct translation.
+While the spacing tokens should cover the majority of cases and are preferred, it is possible to use arbitrary spacing values. The `w-<number>` and `size-<number>` utilities are driven by the `--spacing` [theme variable](https://tailwindcss.com/docs/width#customizing-your-theme), which is set to `1px` in the Design Toolkit. That means when you need to express arbitrary spacing values, numeric values translate directly (e.g., `gap-10` = 10px, `w-24` = 24px).
 
 ```jsx
 // Preferred
@@ -217,6 +217,28 @@ classNames?: {
 ```
 
 Hover over the `classNames` prop in your IDE or check the component's type definitions to see available styling targets.
+
+## Conditional class rendering and `clsx`
+
+Use `clsx` for any dynamic class application logic. The import should be from the design foundation library.
+
+```tsx
+import { clsx } from '@accelint/design-foundation/lib/utils';
+
+function MyComponent({ className, isDisabled }: Props) {
+  // Bad
+  return <div className={`foo ${isDisabled && 'bar'} ${className}`} />
+
+  // Bad
+  return <div className={['foo', isDisabled ? 'bar' : undefined, className].join(' ')} />
+
+  // Bad
+  return <div className={clsx(['foo', isDisabled && 'bar', className])} />
+
+  // Good
+  return <div className={clsx('foo', { bar: isDisabled }, className)} />
+}
+```
 
 ## Breaking Out of the System Constraints
 
