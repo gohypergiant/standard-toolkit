@@ -66,6 +66,11 @@ export const Elevation: Story = {
           <strong>Note: </strong> The class name and Figma names are different
           to avoid color naming conflicts.
         </p>
+        <p>
+          <a href='https://www.figma.com/design/yMWadmpVp2WC6VAOpFQwqx/CORE-Design-System?node-id=18479-286789&t=5t9gE0E8F1c3sod9-0'>
+            Figma resource
+          </a>
+        </p>
       </div>
       <div className='flex flex-col gap-y-xxl'>
         {elevations.map(ElevationDisplay)}

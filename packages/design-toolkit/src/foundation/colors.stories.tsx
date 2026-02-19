@@ -100,6 +100,11 @@ export const Background: Story = {
             component that contains content such as containers, sections,
             headers, buttons, etc.
           </p>
+          <p>
+            <a href='https://www.figma.com/design/yMWadmpVp2WC6VAOpFQwqx/CORE-Design-System?node-id=25198-92501&t=VRQeSZYRYrbdF9X3-0'>
+              Figma resource
+            </a>
+          </p>
         </div>
         <div className='grid grid-cols-2 gap-x-l gap-y-xl'>
           {tokens.bg.base.map((utilityClass) => (
@@ -138,6 +143,11 @@ export const Foreground: Story = {
           <p className='fg-primary-muted text-body-s'>
             These are tokens primarily used as fill for elements like text,
             icons, vectors, and other things that sit above a background.
+          </p>
+          <p>
+            <a href='https://www.figma.com/design/yMWadmpVp2WC6VAOpFQwqx/CORE-Design-System?node-id=4854-15581&t=tQisZyKYmfip05RW-0'>
+              Figma resource
+            </a>
           </p>
         </div>
         <div className='grid grid-cols-2 gap-x-l gap-y-xl'>
@@ -185,6 +195,11 @@ export const Outline: Story = {
           <p className='fg-primary-muted text-body-s'>
             These are tokens primarily used as stroke colors for components and
             elements.
+          </p>
+          <p>
+            <a href='https://www.figma.com/design/yMWadmpVp2WC6VAOpFQwqx/CORE-Design-System?node-id=4854-15582&t=xfflxavlaQlRuzkC-0'>
+              Figma resource
+            </a>
           </p>
         </div>
         <div className='grid grid-cols-2 gap-x-l gap-y-xl'>
