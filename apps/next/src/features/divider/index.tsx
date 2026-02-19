@@ -1,7 +1,7 @@
 import 'server-only';
+import { DividerClientExample } from './client';
 import { ErrorComponent } from './error';
 import { LoadingComponent } from './loading';
-import { DividerClientExample } from './server';
 
 export function DividerExample() {
   return (

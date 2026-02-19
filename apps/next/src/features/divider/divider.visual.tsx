@@ -1,6 +1,6 @@
 import { BentoGroup } from '~/components/bento';
 import { createVisualTests } from '~/visual-regression/vitest';
-import { DividerClientExample } from './server';
+import { DividerClientExample } from './client';
 
 // divider visual
 function DividerVariants() {

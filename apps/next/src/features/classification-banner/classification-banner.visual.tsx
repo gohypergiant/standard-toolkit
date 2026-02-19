@@ -2,7 +2,7 @@ import { BentoGroup } from '~/components/bento';
 import { createVisualTests } from '~/visual-regression/vitest';
 import { ClassificationBannerClientExample } from './client';
 
-function ClassificationBadgeVariants() {
+function ClassificationBannerVariants() {
   return (
     <BentoGroup>
       <ClassificationBannerClientExample />
@@ -11,6 +11,6 @@ function ClassificationBadgeVariants() {
 }
 
 createVisualTests({
-  componentName: 'ClassificationBadge',
-  variantsComponent: ClassificationBadgeVariants,
+  componentName: 'ClassificationBanner',
+  variantsComponent: ClassificationBannerVariants,
 });
