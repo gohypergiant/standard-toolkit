@@ -11,17 +11,104 @@
  */
 
 import {
+  Icon,
   Options,
   OptionsItem,
+  OptionsItemContent,
+  OptionsItemDescription,
   OptionsItemLabel,
   OptionsSection,
 } from '@accelint/design-toolkit';
+import Placeholder from '@accelint/icons/placeholder';
 import {
   createInteractiveVisualTests,
   createVisualTestScenarios,
   generateVariantMatrix,
 } from '~/visual-regression/vitest';
 import { type OptionsVariant, PROP_COMBOS } from './variants';
+
+type ContentComposition =
+  | 'description'
+  | 'prefix-icon'
+  | 'suffix-icon'
+  | 'prefix-suffix-icons'
+  | 'prefix-icon-description'
+  | 'full';
+
+function renderItemContent(content: ContentComposition) {
+  switch (content) {
+    case 'description':
+      return (
+        <OptionsItemContent>
+          <OptionsItemLabel>Option One</OptionsItemLabel>
+          <OptionsItemDescription>
+            First option description
+          </OptionsItemDescription>
+        </OptionsItemContent>
+      );
+    case 'prefix-icon':
+      return (
+        <>
+          <Icon>
+            <Placeholder />
+          </Icon>
+          <OptionsItemLabel>Option One</OptionsItemLabel>
+        </>
+      );
+    case 'suffix-icon':
+      return (
+        <>
+          <OptionsItemLabel>Option One</OptionsItemLabel>
+          <Icon>
+            <Placeholder />
+          </Icon>
+        </>
+      );
+    case 'prefix-suffix-icons':
+      return (
+        <>
+          <Icon>
+            <Placeholder />
+          </Icon>
+          <OptionsItemLabel>Option One</OptionsItemLabel>
+          <Icon>
+            <Placeholder />
+          </Icon>
+        </>
+      );
+    case 'prefix-icon-description':
+      return (
+        <>
+          <Icon>
+            <Placeholder />
+          </Icon>
+          <OptionsItemContent>
+            <OptionsItemLabel>Option One</OptionsItemLabel>
+            <OptionsItemDescription>
+              First option description
+            </OptionsItemDescription>
+          </OptionsItemContent>
+        </>
+      );
+    case 'full':
+      return (
+        <>
+          <Icon>
+            <Placeholder />
+          </Icon>
+          <OptionsItemContent>
+            <OptionsItemLabel>Option One</OptionsItemLabel>
+            <OptionsItemDescription>
+              First option description
+            </OptionsItemDescription>
+          </OptionsItemContent>
+          <Icon>
+            <Placeholder />
+          </Icon>
+        </>
+      );
+  }
+}
 
 function BasicItems() {
   return (
@@ -156,5 +243,53 @@ createInteractiveVisualTests({
     </Options>
   ),
   variants: colorVariants,
+  states: ['default', 'hover', 'focus', 'pressed'],
+});
+
+type CompositionProps = {
+  content: ContentComposition;
+};
+
+const compositionVariants = generateVariantMatrix<CompositionProps>({
+  dimensions: {
+    content: [
+      'description',
+      'prefix-icon',
+      'suffix-icon',
+      'prefix-suffix-icons',
+      'prefix-icon-description',
+      'full',
+    ],
+  },
+});
+
+createInteractiveVisualTests({
+  componentName: 'OptionsItemComposition',
+  renderComponent: ({ content }: CompositionProps) => (
+    <Options size='large' selectionMode='none' aria-label='Options'>
+      <OptionsItem id='opt-1' textValue='Option One'>
+        {renderItemContent(content)}
+      </OptionsItem>
+    </Options>
+  ),
+  variants: compositionVariants,
+  states: ['default', 'hover', 'focus', 'pressed'],
+});
+
+createInteractiveVisualTests({
+  componentName: 'OptionsItemCompositionSelected',
+  renderComponent: ({ content }: CompositionProps) => (
+    <Options
+      size='large'
+      selectionMode='single'
+      selectedKeys={new Set(['opt-1'])}
+      aria-label='Options'
+    >
+      <OptionsItem id='opt-1' textValue='Option One'>
+        {renderItemContent(content)}
+      </OptionsItem>
+    </Options>
+  ),
+  variants: compositionVariants,
   states: ['default', 'hover', 'focus', 'pressed'],
 });
