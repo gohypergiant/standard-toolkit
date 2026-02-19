@@ -20,8 +20,8 @@ import {
 const linkVariants = generateVariantMatrix<LinkProps>({
   dimensions: {
     allowsVisited: [true, false],
-    isVisited: [true, false],
     isDisabled: [true, false],
+    isVisited: [true, false],
   },
 });
 
@@ -30,5 +30,5 @@ createInteractiveVisualTests({
   renderComponent: (props) => <Link {...props}>Example Link</Link>,
   testId: 'test-link',
   variants: linkVariants,
-  states: ['hover', 'focus', 'disabled', 'default'],
+  states: ['default', 'hover', 'focus', 'disabled'],
 });
