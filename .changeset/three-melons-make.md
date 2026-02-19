@@ -8,4 +8,4 @@
 4. Updated all dependencies to latest
 5. Added support for Groups feature https://loglayer.dev/logging-api/groups.html
 6. Swap to structured logger when in production mode
-7. Remove type export (breaking change)
+7. Remove type export `LOG_LEVEL` (breaking change), this was just a re-export from `loglayer` and was technically a TS enum which we try and avoid. Since we already export each individual log level as a const this felt a little redundant.
