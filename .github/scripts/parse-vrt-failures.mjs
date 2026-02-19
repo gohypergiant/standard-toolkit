@@ -199,6 +199,11 @@ async function main() {
     if (!testFile || !Array.isArray(testFile.assertionResults)) {
       continue;
     }
+    // Extract relative file path (strip absolute prefix up to apps/next/)
+    const rawName = testFile.name || '';
+    const appsIdx = rawName.indexOf('apps/next/');
+    const relativeFile = appsIdx >= 0 ? rawName.slice(appsIdx + 'apps/next/'.length) : rawName;
+
     for (const assertion of testFile.assertionResults) {
       if (assertion.status === 'failed') {
         const parsed = parseAssertion(assertion);
@@ -209,6 +214,7 @@ async function main() {
 
         failures.push({
           component: parsed.component,
+          file: relativeFile,
           theme: parsed.theme,
           variant: parsed.variant,
           state: parsed.state,

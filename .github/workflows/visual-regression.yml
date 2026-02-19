@@ -248,18 +248,52 @@ jobs:
               failedTestsSection = lines.join('\n');
             }
 
+            // Extract failed file paths for the gh CLI command
+            let failedFilesList = '';
+            if (failuresData && failuresData.failures && failuresData.failures.length > 0) {
+              const uniqueFiles = [...new Set(failuresData.failures.map(f => f.file).filter(Boolean))];
+              failedFilesList = uniqueFiles.join('\n');
+            }
+
             // Build update instructions (only shown when tests fail)
-            const updateInstructions = failed > 0 ? [
-              '',
-              '### 🔄 Update Snapshots',
-              '',
-              'If these visual changes are intentional, update the baselines:',
-              '',
-              `1. Go to **[Actions → Update Visual Regression Snapshots](${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/workflows/visual-regression-update.yml)**`,
-              `2. Click **"Run workflow"**`,
-              `3. Select branch: \`${{ github.head_ref }}\``,
-              `4. Click **"Run workflow"** to update and commit new baselines`,
-            ].join('\n') : '';
+            let updateInstructions = '';
+            if (failed > 0) {
+              const dispatchUrl = `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/workflows/visual-regression-update.yml`;
+
+              const lines = [
+                '',
+                '### 🔄 Update Snapshots',
+                '',
+                'If these visual changes are intentional, update the baselines:',
+              ];
+
+              if (failedFilesList) {
+                // Escape the newlines for the -f flag value
+                const escaped = failedFilesList.replace(/\n/g, '\\n');
+                lines.push(
+                  '',
+                  '**Option 1** — Fast update (skips re-detection):',
+                  '```sh',
+                  `gh workflow run visual-regression-update.yml --ref ${{ github.head_ref }} -f failed_files="${escaped}"`,
+                  '```',
+                  '',
+                  `**Option 2** — [Run manually from Actions UI](${dispatchUrl}), paste into the \`failed_files\` input:`,
+                  '```',
+                  failedFilesList,
+                  '```',
+                );
+              } else {
+                lines.push(
+                  '',
+                  `1. Go to **[Actions → Update Visual Regression Snapshots](${dispatchUrl})**`,
+                  `2. Click **"Run workflow"**`,
+                  `3. Select branch: \`${{ github.head_ref }}\``,
+                  `4. Click **"Run workflow"** to update and commit new baselines`,
+                );
+              }
+
+              updateInstructions = lines.join('\n');
+            }
 
             // Build coverage section
             let coverageSection = '';
