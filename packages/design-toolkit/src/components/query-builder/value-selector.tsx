@@ -121,7 +121,7 @@ export function ValueSelector(props: ValueSelectorProps) {
       isClearable={false}
       isDisabled={disabled}
       defaultInputValue={selectedValue}
-      defaultSelectedKey={selectedValue}
+      defaultSelectedKey={selectedKey}
       aria-labelledby={title}
       onSelectionChange={handleSelectionChange}
     >
