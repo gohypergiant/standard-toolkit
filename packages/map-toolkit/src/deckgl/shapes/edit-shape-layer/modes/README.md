@@ -70,7 +70,7 @@ For circle shapes. Combines:
 - `ResizeCircleMode`: Drag edge to resize from center
 - `TranslateMode`: Drag body to move
 
-Shows live diameter/area tooltip during resize.
+Shows live radius/area tooltip during resize.
 
 ### BoundingTransformMode
 
