@@ -14,10 +14,8 @@
 
 @layer components.l1 {
   .skeleton {
-    /* TODO: bg-[color]/[opacity] isn't working, nesting of Skeleton isn't working ATM */
-    @apply fg-primary-bold bg-interactive-disabled px-l py-s;
+    @apply fg-primary-bold bg-interactive-disabled;
 
-    /* TODO: animation styles non-functional with @apply directive */
     @variant motion-safe {
       @apply animate-pulse;
     }
@@ -27,7 +25,7 @@
     }
 
     &.rectangle {
-      @apply rounded-small min-h-lh w-full;
+      @apply rounded-small h-lh w-full;
     }
   }
 }
