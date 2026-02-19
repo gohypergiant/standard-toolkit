@@ -14,14 +14,14 @@
 
 @layer components.l1 {
   .tabs {
-    @apply flex w-fit;
+    @apply flex;
 
     @variant orientation-horizontal {
       @apply flex-col;
     }
 
     @variant orientation-vertical {
-      @apply flex-row;
+      @apply h-full flex-row;
     }
   }
 
@@ -29,16 +29,22 @@
     @apply flex;
 
     @variant orientation-horizontal {
-      @apply flex-row;
+      @apply relative w-full flex-row;
+
+      &:before {
+        @apply absolute bottom-0 left-0 block h-px w-full bg-(--outline-static);
+        content: '';
+      }
     }
 
     @variant orientation-vertical {
-      @apply flex-col;
+      @apply h-full flex-col;
     }
   }
 
   .tab {
-    @apply fg-primary-muted rounded-small p-s relative cursor-pointer;
+    @apply gap-xs fg-primary-muted rounded-small p-s relative flex cursor-pointer items-center;
+    max-width: 200px;
 
     @variant hover {
       @apply fg-primary-bold;
@@ -74,6 +80,18 @@
       &:after {
         @apply absolute bottom-0 left-0 block h-px w-full bg-(--outline-static);
         content: '';
+      }
+
+      &.flex {
+        @apply grow;
+      }
+
+      &.center {
+        @apply justify-center;
+      }
+
+      &.end {
+        @apply justify-end;
       }
 
       @variant hover {
@@ -117,6 +135,10 @@
           }
         }
       }
+    }
+
+    @variant group-orientation-vertical/tabs {
+      @apply flex-col;
     }
 
     @variant disabled {
