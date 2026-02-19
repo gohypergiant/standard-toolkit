@@ -9,7 +9,7 @@ import {
   getRenderedRegionBoundsMs,
   getVerticalScrolledPixels,
   getViewableRegionWidth,
-  shouldRenderBlock,
+  shouldRenderRangeElement,
 } from './helpers';
 import type { UIEvent } from 'react';
 
@@ -68,7 +68,7 @@ describe('helpers', () => {
     });
   });
 
-  describe('shouldRenderBlock', () => {
+  describe('shouldRenderRangeElement', () => {
     const renderedRegion = { startMs: 1000, endMs: 2000 };
 
     it.each([
@@ -108,7 +108,7 @@ describe('helpers', () => {
         false,
       ],
     ])('%s', (_description, { startMs, endMs }, expected) => {
-      const result = shouldRenderBlock(renderedRegion, {
+      const result = shouldRenderRangeElement(renderedRegion, {
         startMs,
         endMs,
       });

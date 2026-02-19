@@ -11,27 +11,22 @@
  */
 
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { type CSSProperties, type PropsWithChildren, useState } from 'react';
-import { GANTT_ROW_ELEMENT_HEIGHT } from '../../constants';
+import { type HTMLAttributes, type PropsWithChildren, useState } from 'react';
 import styles from './styles.module.css';
 import { useRangeElementLayout } from './use-range-element-layout';
 
-export type RangeProps = {
+export type RangeProps = HTMLAttributes<HTMLDivElement> & {
   id: string;
   startMs: number;
   endMs: number;
-  className?: string;
 };
-
-const elementStyle = {
-  '--height': `${GANTT_ROW_ELEMENT_HEIGHT}px`,
-} as CSSProperties;
 
 export function Range({
   children,
   startMs,
   endMs,
   className,
+  ...rest
 }: PropsWithChildren<RangeProps>) {
   const [element, setElement] = useState<HTMLDivElement | null>(null);
 
@@ -49,9 +44,9 @@ export function Range({
 
   return (
     <div
-      style={elementStyle}
       ref={assignElementRef}
-      className={clsx(styles.container, className)}
+      className={clsx(styles['range-container'], className)}
+      {...rest}
     >
       {children}
     </div>
