@@ -74,16 +74,17 @@ export const Default: StoryObj<typeof meta> = {
     const isVertical = orientation === 'vertical';
     const style = {
       width: isHorizontal ? dimension : 'auto',
-      height: isVertical ? dimension : 'auto',
     };
 
     return (
       <TabsProvider {...rest} orientation={orientation}>
-        <div className='mb-oversized flex justify-center gap-m'>
-          <Button onPress={() => setDimension('300px')}>Small</Button>
-          <Button onPress={() => setDimension('600px')}>Medium</Button>
-          <Button onPress={() => setDimension('1200px')}>Large</Button>
-        </div>
+        {isHorizontal && (
+          <div className='mb-oversized flex justify-center gap-m'>
+            <Button onPress={() => setDimension('300px')}>Small</Button>
+            <Button onPress={() => setDimension('600px')}>Medium</Button>
+            <Button onPress={() => setDimension('1200px')}>Large</Button>
+          </div>
+        )}
         <div
           className={clsx('flex w-full flex-wrap gap-m', {
             'flex-row': isVertical,
