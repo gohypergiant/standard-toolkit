@@ -36,7 +36,7 @@ const LINKS = [
 export function Nav() {
   return (
     <div className='flex flex-row gap-s fixed top-0 left-0 right-0 bg-surface-default p-xs shadow-elevation-overlay'>
-      {LINKS.map((link, _k) => {
+      {LINKS.map((link) => {
         return (
           <Link key={link.path} href={link.path}>
             {link.label}
