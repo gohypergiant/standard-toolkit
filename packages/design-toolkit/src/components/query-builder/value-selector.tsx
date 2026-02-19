@@ -102,17 +102,28 @@ export function ValueSelector(props: ValueSelectorProps) {
     [optionsProp],
   );
 
+  const selectedKey = Array.isArray(val) ? val[0] : val;
+
+  const flatOptions = isOptionGroupArray(optionsProp)
+    ? optionsProp.flatMap((group) => group.options)
+    : optionsProp;
+
+  const selectedValue =
+    flatOptions.find((option) => option.name === selectedKey)?.label ??
+    selectedKey;
+
   return (
     <ComboBoxField
+      {...rest}
       classNames={{ control: className }}
       size='small'
       allowsCustomValue={false}
       isClearable={false}
       isDisabled={disabled}
-      selectedKey={Array.isArray(val) ? val[0] : val}
+      defaultInputValue={selectedValue}
+      defaultSelectedKey={selectedValue}
       aria-labelledby={title}
       onSelectionChange={handleSelectionChange}
-      {...rest}
     >
       {options}
     </ComboBoxField>
