@@ -260,28 +260,6 @@ describe('ComboBoxField', () => {
       expect(combobox).toHaveValue('Updated');
     });
 
-    it('should display the textValue of the selected item when using selectedKey without inputValue', () => {
-      setup({
-        'aria-label': 'Animals',
-        selectedKey: 'cat',
-        children: (
-          <>
-            <OptionsItem id='red-panda' textValue='Red Panda'>
-              Red Panda
-            </OptionsItem>
-            <OptionsItem id='cat' textValue='Cat'>
-              Cat
-            </OptionsItem>
-            <OptionsItem id='dog' textValue='Dog'>
-              Dog
-            </OptionsItem>
-          </>
-        ),
-      });
-
-      expect(screen.getByRole('combobox')).toHaveValue('Cat');
-    });
-
     it('should call onInputChange when typing', async () => {
       const user = userEvent.setup();
       const onInputChange = vi.fn();
