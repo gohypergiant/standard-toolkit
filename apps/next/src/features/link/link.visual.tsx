@@ -30,7 +30,7 @@ const linkVariants = generateVariantMatrix<LinkProps>({
 
 createInteractiveVisualTests({
   componentName: 'Link',
-  renderComponent: (props) => <Link {...props} />,
+  renderComponent: (props) => <Link {...props}>{props.children}</Link>,
   testId: 'test-link',
   variants: linkVariants,
   states: ['default', 'hover', 'focus', 'disabled'],
