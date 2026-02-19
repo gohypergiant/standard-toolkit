@@ -90,7 +90,7 @@
   .value,
   .operators {
     @variant group-size-small/combobox-field {
-      @apply max-w-[250px];
+      max-width: 250px;
     }
   }
 }
