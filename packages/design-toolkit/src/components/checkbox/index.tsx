@@ -77,14 +77,19 @@ import type { CheckboxProps } from './types';
 export function Checkbox({ ref, ...props }: CheckboxProps) {
   [props, ref] = useContextProps(props, ref ?? null, CheckboxContext);
 
-  const { classNames, children, ...rest } = props;
+  const { classNames, children, labelPosition = 'end', ...rest } = props;
 
   return (
     <AriaCheckbox
       {...rest}
       ref={ref}
       className={composeRenderProps(classNames?.checkbox, (className) =>
-        clsx('group/checkbox', styles.checkbox, className),
+        clsx(
+          'group/checkbox',
+          styles.checkbox,
+          styles[labelPosition],
+          className,
+        ),
       )}
     >
       {composeRenderProps(
