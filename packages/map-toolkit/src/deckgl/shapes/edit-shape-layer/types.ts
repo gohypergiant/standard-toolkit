@@ -12,9 +12,9 @@
 
 'use client';
 
+import type { DistanceUnitAbbreviation } from '@/shared/units';
 import type { UniqueId } from '@accelint/core';
 import type { Feature } from 'geojson';
-import type { DistanceUnitAbbreviation } from '@/shared/units';
 import type { Shape } from '../shared/types';
 
 /**
@@ -44,6 +44,8 @@ export type EditingState = {
   editMode: EditMode;
   /** Live feature being edited (updates in real-time during drag) */
   featureBeingEdited: Feature | null;
+  /** Temporary store for previous mode while panning */
+  prevMode: EditMode | null;
 };
 
 /**

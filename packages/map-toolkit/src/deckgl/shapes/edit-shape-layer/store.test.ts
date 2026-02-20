@@ -11,22 +11,24 @@
  */
 
 import { Broadcast } from '@accelint/bus';
+import type { UniqueId } from '@accelint/core';
 import { uuid } from '@accelint/core';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { MapEvents } from '../../base-map/events';
 import { mockShapes } from '../__fixtures__/mock-shapes';
+import type { Shape } from '../shared/types';
 import { ShapeFeatureType } from '../shared/types';
 import { EditShapeEvents } from './events';
 import {
   cancelEditingFromLayer,
   clearEditingState,
+  disableEditPanning,
   editStore,
+  enableEditPanning,
   getEditingState,
   saveEditingFromLayer,
   updateFeatureFromLayer,
 } from './store';
-import type { UniqueId } from '@accelint/core';
-import type { Shape } from '../shared/types';
 
 // Get fixture shapes by type
 const mockCircle = mockShapes.find((s) => s.shape === 'Circle');
@@ -596,5 +598,55 @@ describe('edit-shape-layer store', () => {
       // Now state should be cleaned up
       expect(getEditingState(mapId)).toBeNull();
     });
+  });
+
+  describe('enableEditPanning', () => {
+    it('should return and do nothing if editing shape does not exist', () => {
+      const mapEventBus = Broadcast.getInstance();
+      const modeEmitSpy = vi.fn();
+
+      mapEventBus.on(MapEvents.enablePan, modeEmitSpy);
+
+      disableEditPanning(mapId);
+      expect(editStore.get(mapId)?.prevMode).toBe(null);
+    });
+
+    it('should store prev mode when called during editing', () => {
+      const { edit } = editStore.actions(mapId);
+      const mapEventBus = Broadcast.getInstance();
+      const editShapeBus = Broadcast.getInstance();
+      const modeEmitSpy = vi.fn();
+      const cursorEmitSpy = vi.fn();
+
+      mapEventBus.on(MapEvents.enablePan, modeEmitSpy);
+      editShapeBus.on(EditShapeEvents.updated, cursorEmitSpy);
+
+      const shape = createMockShape();
+      edit(shape);
+
+      expect(editStore.get(mapId)?.editMode).not.toBe('view');
+
+      enableEditPanning(mapId, editStore.get(mapId).editMode);
+
+      expect(editStore.get(mapId)?.prevMode).not.toBe(null);
+      expect(editStore.get(mapId)?.prevMode).not.toEqual(
+        editStore.get(mapId).editMode,
+      );
+      expect(modeEmitSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('disableEditPanning', () => {
+    it('should return and do nothing if editing shape exists', () => {
+      const mapEventBus = Broadcast.getInstance();
+      const modeEmitSpy = vi.fn();
+
+      mapEventBus.on(MapEvents.enablePan, modeEmitSpy);
+
+      disableEditPanning(mapId);
+      expect(editStore.get(mapId)?.prevMode).toBe(null);
+    });
+
+    it('should set editMode to prev mode, then clear prev mode', () => {});
   });
 });

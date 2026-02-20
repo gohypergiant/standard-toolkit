@@ -14,6 +14,11 @@
 
 import { globalBind, Keycode, registerHotkey } from '@accelint/hotkey-manager';
 import { useHotkey } from '@accelint/hotkey-manager/react';
+import type {
+  EditAction,
+  FeatureCollection,
+} from '@deck.gl-community/editable-layers';
+import type { Feature } from 'geojson';
 import { useCallback, useContext, useEffect, useMemo, useRef } from 'react';
 import { MapContext } from '../../base-map/provider';
 import { useShiftZoomDisable } from '../shared/hooks/use-shift-zoom-disable';
@@ -28,15 +33,12 @@ import {
 import { getEditModeInstance } from './modes';
 import {
   cancelEditingFromLayer,
+  disableEditPanning,
   editStore,
+  enableEditPanning,
   saveEditingFromLayer,
   updateFeatureFromLayer,
 } from './store';
-import type {
-  EditAction,
-  FeatureCollection,
-} from '@deck.gl-community/editable-layers';
-import type { Feature } from 'geojson';
 import type { EditShapeLayerProps } from './types';
 
 /**
@@ -203,6 +205,30 @@ export function EditShapeLayer({
   );
 
   useHotkey(saveEditHotkey);
+
+  // Register Space key for enabling panning while editing shape.
+  const editPanningHotkey = useMemo(
+    () =>
+      registerHotkey({
+        id: `editPanningHotkey-${actualMapId}`,
+        key: { code: Keycode.Space },
+        onKeyDown: (e: KeyboardEvent) => {
+          e.preventDefault();
+        },
+        onKeyHeld: () => {
+          const prevMode = editStore.get(actualMapId).editMode;
+          enableEditPanning(actualMapId, prevMode);
+        },
+        onKeyUp: () => {
+          disableEditPanning(actualMapId);
+        },
+        heldThresholdMs: 50,
+        alwaysTriggerKeyUp: true,
+      }),
+    [actualMapId],
+  );
+
+  useHotkey(editPanningHotkey);
 
   // Disable zoom while Shift is held during editing
   // This prevents boxZoom (Shift+drag) from interfering with Shift modifier constraints
