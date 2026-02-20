@@ -11,10 +11,10 @@
  */
 
 import { type RefObject, useCallback } from 'react';
-import { useLayoutSubscription } from '../../../hooks/use-layout-subscription';
-import { selectors } from '../../../store';
-import { deriveTranslateXValue } from '../../../utils/layout';
-import type { TimelineChunkObject } from '../../../types';
+import { useLayoutSubscription } from '@/components/gantt/hooks/use-layout-subscription';
+import { selectors } from '@/components/gantt/store';
+import { deriveTranslateXValue } from '@/components/gantt/utils/layout';
+import type { TimelineChunkObject } from '@/components/gantt/types';
 
 type UseTimelineTransformProps = {
   timelineElementRef: RefObject<HTMLDivElement | null>;

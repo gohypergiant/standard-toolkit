@@ -18,6 +18,7 @@ import {
   TIMELINE_CHUNK_WIDTH,
 } from '../constants';
 import {
+  derivePointElementLayout,
   deriveRangeElementLayout,
   deriveRenderedSlice,
   deriveTranslateXValue,
@@ -186,6 +187,50 @@ describe('deriveTranslateXValue', () => {
           ROW_VIRTUALIZATION_OVERSCAN +
           1, // +1 to adjust for even proposed count
       );
+    });
+  });
+
+  describe('derivePointElementLayout', () => {
+    const totalBounds = { startMs: 0, endMs: 5000 };
+    const renderedRegionBounds = { startMs: 1000, endMs: 2000 };
+    const msPerPx = 10;
+    const pointMs = 1500;
+
+    it('calculates correct translateX', () => {
+      expect(
+        derivePointElementLayout(
+          renderedRegionBounds,
+          pointMs,
+          totalBounds,
+          msPerPx,
+        ).translateX,
+      ).toBe(150);
+    });
+
+    it('handles point at rendered region start boundary', () => {
+      const boundaryPointMs = renderedRegionBounds.startMs;
+
+      expect(
+        derivePointElementLayout(
+          renderedRegionBounds,
+          boundaryPointMs,
+          totalBounds,
+          msPerPx,
+        ).translateX,
+      ).toBe(100); // (1000 - 0) / 10 = 100
+    });
+
+    it('handles point at rendered region end boundary', () => {
+      const boundaryPointMs = renderedRegionBounds.endMs;
+
+      expect(
+        derivePointElementLayout(
+          renderedRegionBounds,
+          boundaryPointMs,
+          totalBounds,
+          msPerPx,
+        ).translateX,
+      ).toBe(200); // (2000 - 0) / 10 = 200
     });
   });
 });

@@ -13,7 +13,9 @@
 import { Gantt } from './';
 import { END_TIME_MS, ROWS, START_TIME_MS } from './__fixtures__';
 import { GanttRow } from './components/gantt-row';
+import { BracketClose, BracketOpen } from './components/gantt-row/bracket';
 import { GanttRowBlock } from './components/gantt-row/gantt-row-block';
+import { Spacer } from './components/gantt-row/spacer';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
@@ -49,6 +51,36 @@ export const Default: Story = {
                       id={`${id}-block-${index}`}
                       startMs={startMs}
                       endMs={endMs}
+                    />
+                  );
+                }
+
+                case 'spacer': {
+                  const [startMs, endMs] = element.rangeMs;
+
+                  return (
+                    <Spacer
+                      key={`${id}-spacer-${index}`}
+                      id={`${id}-spacer-${index}`}
+                      startMs={startMs}
+                      endMs={endMs}
+                    />
+                  );
+                }
+
+                case 'bracket-close':
+                case 'bracket-open': {
+                  const timeMs = element.timeMs;
+
+                  return element.type === 'bracket-close' ? (
+                    <BracketClose
+                      key={`${id}-bracket-close-${index}`}
+                      timeMs={timeMs}
+                    />
+                  ) : (
+                    <BracketOpen
+                      key={`${id}-bracket-open-${index}`}
+                      timeMs={timeMs}
                     />
                   );
                 }
