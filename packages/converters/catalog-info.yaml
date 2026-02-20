@@ -13,7 +13,7 @@ metadata:
     Dependencies:
 
     accelint_typescript-config@0.1.4, accelint_vitest-config@0.1.6,
-    accelint_constants@0.1.9
+    accelint_constants@0.2.0
   annotations:
     backstage.io/edit-url: https://github.com/gohypergiant/standard-toolkit/blob/main/packages/converters/catalog-info.yaml
     backstage.io/techdocs-ref: dir:.

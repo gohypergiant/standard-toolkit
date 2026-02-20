@@ -1,5 +1,17 @@
 # @accelint/map-toolkit
 
+## 2.0.0
+
+### Minor Changes
+
+- cae932c: Update circle tooltip to show radius instead of diameter in draw and edit modes.
+
+### Patch Changes
+
+- 9419d41: Fix infinite render loop in BaseMap when navigating in React Strict Mode. The camera store's `createMapStore` now properly handles initial state timing by directly updating existing instances when `setInitialState` is called after the instance already exists, which can occur during React Strict Mode's double-mount behavior.
+- Updated dependencies [ed09ea6]
+  - @accelint/logger@1.0.0
+
 ## 1.4.0
 
 ### Minor Changes

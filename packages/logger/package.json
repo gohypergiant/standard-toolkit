@@ -1,7 +1,7 @@
 {
   "name": "@accelint/logger",
   "description": "A flexible and extensible logging utility with callsite tracking and environment-aware capabilities.",
-  "version": "0.1.5",
+  "version": "1.0.0",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "dependencies": {
