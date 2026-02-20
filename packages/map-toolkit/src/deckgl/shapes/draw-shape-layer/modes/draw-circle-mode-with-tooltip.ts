@@ -25,9 +25,9 @@ import { formatCircleTooltip } from '../../shared/constants';
 import { computeCircleMeasurements } from '../../shared/utils/geometry-measurements';
 
 /**
- * Extends DrawCircleFromCenterMode to display diameter and area tooltip.
+ * Extends DrawCircleFromCenterMode to display radius and area tooltip.
  *
- * Shows the diameter and area of the circle being drawn based on the radius
+ * Shows the radius and area of the circle being drawn based on the radius
  * from center point to cursor position. The tooltip updates in real-time as
  * the cursor moves, displaying measurements in the configured distance units.
  *
@@ -37,7 +37,7 @@ import { computeCircleMeasurements } from '../../shared/utils/geometry-measureme
  *
  * ## Drawing Flow
  * 1. Click to set center point
- * 2. Move cursor to set radius (tooltip shows diameter and area)
+ * 2. Move cursor to set radius (tooltip shows radius and area)
  * 3. Click to finish the circle
  *
  * @example
@@ -54,7 +54,7 @@ export class DrawCircleModeWithTooltip extends DrawCircleFromCenterMode {
 
   /**
    * Handle pointer move events to update the tooltip with circle measurements.
-   * Calculates diameter and area based on the distance from center to cursor.
+   * Calculates radius and area based on the distance from center to cursor.
    *
    * @param event - Pointer move event with cursor position
    * @param props - Mode properties including distance units configuration
@@ -81,7 +81,7 @@ export class DrawCircleModeWithTooltip extends DrawCircleFromCenterMode {
     ];
     const edgePoint = mapCoords as [number, number];
 
-    const { diameter, area } = computeCircleMeasurements(
+    const { radius, area } = computeCircleMeasurements(
       centerPoint,
       edgePoint,
       distanceUnits,
@@ -90,7 +90,7 @@ export class DrawCircleModeWithTooltip extends DrawCircleFromCenterMode {
 
     this.tooltip = {
       position: mapCoords,
-      text: formatCircleTooltip(diameter, area, unitAbbrev),
+      text: formatCircleTooltip(radius, area, unitAbbrev),
     };
   }
 
