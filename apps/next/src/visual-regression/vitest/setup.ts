@@ -10,6 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
+// Polyfill process for react-aria-components Virtualizer in browser mode
+if (typeof globalThis.process === 'undefined') {
+  // @ts-expect-error -- minimal polyfill for browser environment
+  globalThis.process = { env: { NODE_ENV: 'test' } };
+}
+
 import '@accelint/design-foundation/styles';
 
 // Disable all animations and transitions for visual regression tests
