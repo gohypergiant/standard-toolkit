@@ -66,3 +66,12 @@ export function shouldRenderRangeElement(
     startsBeforeRegionStart || isEntirelyWithinRegion || endsAftgerRegionEnd
   );
 }
+
+export function shouldRenderPointElement(
+  renderedRegionBoundary: TimeBounds,
+  pointTimeMs: number,
+) {
+  const { startMs, endMs } = renderedRegionBoundary;
+
+  return pointTimeMs >= startMs && pointTimeMs <= endMs;
+}

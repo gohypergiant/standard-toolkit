@@ -13,7 +13,10 @@
 import React from 'react';
 import { GANTT_ROW_HEIGHT_PX } from '../../constants';
 import { useGanttContext } from '../../context';
-import { shouldRenderRangeElement } from '../../utils/helpers';
+import {
+  shouldRenderPointElement,
+  shouldRenderRangeElement,
+} from '../../utils/helpers';
 import styles from './styles.module.css';
 import type { PropsWithChildren } from 'react';
 import type { GanttRowElementProps } from './types';
@@ -34,6 +37,13 @@ export function GanttRow({ children, ...rest }: PropsWithChildren) {
         startMs: element.props.startMs,
         endMs: element.props.endMs,
       });
+    }
+
+    if (element.props.timeMs !== undefined) {
+      return shouldRenderPointElement(
+        renderedRegionBounds,
+        element.props.timeMs,
+      );
     }
 
     return false;
