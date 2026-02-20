@@ -28,7 +28,7 @@ pnpm dev
 
 ## Path Aliases Inside CSS Files
 
-**Problem**: In NextJS, directly using aliases (like `@/` or `~/`) inside CSS files, including CSS Modules. Attempting to use them can result in "Module not found" errors.  This is because the standard CSS loader do not automatically resolve the aliases in the name manner as JS/TS imports. This is a known NextJS limitation that affects imports and `@reference` directives in CSS files.
+**Problem**: In NextJS, directly using aliases (like `@/` or `~/`) inside CSS files, including CSS Modules. Attempting to use them can result in "Module not found" errors.  This is because the standard CSS loader does not automatically resolve the aliases in the name manner as JS/TS imports. This is a known NextJS limitation that affects imports and `@reference` directives in CSS files.
 
 ```css
 /* ❌ WRONG - Path aliases don't work in CSS */
