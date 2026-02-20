@@ -54,4 +54,6 @@ export type CheckboxProps = Omit<AriaCheckboxProps, 'className'> &
       /** Class name for the label text. */
       label?: string;
     };
+    /** Position of the label relative to the checkbox control. */
+    labelPosition?: 'start' | 'end';
   };

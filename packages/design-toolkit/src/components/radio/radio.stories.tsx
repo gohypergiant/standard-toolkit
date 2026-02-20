@@ -13,7 +13,7 @@
 import { RadioGroup } from './group';
 import { Radio } from './index';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import type { RadioGroupProps } from './types';
+import type { RadioGroupProps, RadioProps } from './types';
 
 const meta = {
   title: 'Components/Radio',
@@ -23,6 +23,7 @@ const meta = {
     isDisabled: false,
     isRequired: false,
     label: 'Header',
+    labelPosition: 'end',
   },
   argTypes: {
     orientation: {
@@ -38,16 +39,22 @@ const meta = {
       subtitle: 'Exclusive selection from a group of options',
     },
   },
-} satisfies Meta<RadioGroupProps>;
+} satisfies Meta<RadioGroupProps & Pick<RadioProps, 'labelPosition'>>;
 
 export default meta;
 
 export const Default: StoryObj<typeof meta> = {
-  render: ({ children, label, ...args }) => (
+  render: ({ children, label, labelPosition, ...args }) => (
     <RadioGroup label={label} {...args}>
-      <Radio value='1'>Radio text</Radio>
-      <Radio value='2'>Radio text</Radio>
-      <Radio value='3'>Radio text</Radio>
+      <Radio value='1' labelPosition={labelPosition}>
+        Radio text
+      </Radio>
+      <Radio value='2' labelPosition={labelPosition}>
+        Radio text
+      </Radio>
+      <Radio value='3' labelPosition={labelPosition}>
+        Radio text
+      </Radio>
     </RadioGroup>
   ),
 };
