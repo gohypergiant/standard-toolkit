@@ -102,7 +102,7 @@
         }
 
         @variant hover {
-          @apply bg-serious-bold;
+          @apply fg-a11y-on-utility bg-serious-bold;
 
           &:before {
             @apply bg-(--outline-serious-hover);
@@ -110,7 +110,7 @@
         }
 
         @variant focus-visible {
-          @apply bg-serious-bold;
+          @apply fg-a11y-on-utility bg-serious-bold;
         }
 
         @variant pressed {
@@ -144,7 +144,7 @@
         }
 
         @variant hover {
-          @apply bg-critical-bold;
+          @apply fg-a11y-on-utility bg-critical-bold;
 
           &:before {
             @apply bg-(--outline-critical-hover);
@@ -152,7 +152,7 @@
         }
 
         @variant focus-visible {
-          @apply bg-critical-bold;
+          @apply fg-a11y-on-utility bg-critical-bold;
         }
 
         @variant pressed {
@@ -234,6 +234,14 @@
       }
 
       @variant group-selected/options-item {
+        @variant group-hover/options-item {
+          @apply fg-a11y-on-utility;
+        }
+
+        @variant group-focus-visible/options-item {
+          @apply fg-a11y-on-utility;
+        }
+
         @variant group-pressed/options-item {
           @apply fg-serious-bold;
         }
@@ -248,6 +256,14 @@
       }
 
       @variant group-selected/options-item {
+        @variant group-hover/options-item {
+          @apply fg-a11y-on-utility;
+        }
+
+        @variant group-focus-visible/options-item {
+          @apply fg-a11y-on-utility;
+        }
+
         @variant group-pressed/options-item {
           @apply fg-critical-bold;
         }
@@ -304,6 +320,14 @@
       }
 
       @variant group-selected/options-item {
+        @variant group-hover/options-item {
+          @apply fg-a11y-on-utility;
+        }
+
+        @variant group-focus-visible/options-item {
+          @apply fg-a11y-on-utility;
+        }
+
         @variant group-pressed/options-item {
           @apply fg-serious-bold;
         }
@@ -318,6 +342,14 @@
       }
 
       @variant group-selected/options-item {
+        @variant group-hover/options-item {
+          @apply fg-a11y-on-utility;
+        }
+
+        @variant group-focus-visible/options-item {
+          @apply fg-a11y-on-utility;
+        }
+
         @variant group-pressed/options-item {
           @apply fg-critical-bold;
         }
@@ -370,6 +402,14 @@
       @variant group-selected/options-item {
         @apply fg-primary-bold;
 
+        @variant group-hover/options-item {
+          @apply fg-a11y-on-utility;
+        }
+
+        @variant group-focus-visible/options-item {
+          @apply fg-a11y-on-utility;
+        }
+
         @variant group-pressed/options-item {
           @apply fg-serious-bold;
         }
@@ -383,6 +423,14 @@
 
       @variant group-selected/options-item {
         @apply fg-primary-bold;
+
+        @variant group-hover/options-item {
+          @apply fg-a11y-on-utility;
+        }
+
+        @variant group-focus-visible/options-item {
+          @apply fg-a11y-on-utility;
+        }
 
         @variant group-pressed/options-item {
           @apply fg-critical-bold;

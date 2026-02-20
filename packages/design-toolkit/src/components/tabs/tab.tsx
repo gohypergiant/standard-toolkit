@@ -17,9 +17,12 @@ import { clsx } from '@accelint/design-foundation/lib/utils';
 import {
   Tab as AriaTab,
   composeRenderProps,
-  type TabProps,
+  useContextProps,
 } from 'react-aria-components';
+import { TabStyleDefaults } from './constants';
+import { TabContext } from './context';
 import styles from './styles.module.css';
+import type { TabProps } from './types';
 
 /**
  * Tab - Selectable tab within a TabList.
@@ -36,14 +39,23 @@ import styles from './styles.module.css';
  * @param props - TabProps from react-aria-components.
  * @param props.children - Tab label content.
  * @param props.className - CSS class for the tab.
+ * @param props.align - Justification alignment for content within the Tab (only applicable when orientation is horizontal)
+ * @param props.flex - Boolean to determine if the Tab should grow in size (up to a max width). (only applicable when orientation is horizontal)
  * @returns The rendered Tab component.
  */
-export function Tab({ children, className, ...rest }: TabProps) {
+export function Tab({ ref, ...props }: TabProps) {
+  [props, ref] = useContextProps(props, ref, TabContext);
+
+  const { children, className, align, flex, ...rest } = {
+    ...TabStyleDefaults,
+    ...props,
+  };
+
   return (
     <AriaTab
       {...rest}
       className={composeRenderProps(className, (className) =>
-        clsx(styles.tab, className),
+        clsx(styles.tab, styles[align], flex && styles.flex, className),
       )}
     >
       {children}
