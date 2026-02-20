@@ -1,5 +1,21 @@
 # @accelint/design-toolkit
 
+## 10.0.0
+### Minor Changes
+
+- 774ee92: Tabs (& Tab) components now have two new props:
+  - `align` which changes the alignment of content within a tab
+  - `flex` which causes the tab to grow up to a maximum dimension of 200px
+
+### Patch Changes
+
+- c2d54b3: Removed support for child content or nesting of Skeleton components
+  
+  While this is technically a breaking change, it was never intended to be supported by design and was never allowed in the Figma version of the component
+- 8f76cc7: Fixes alignment for querybuilder text fields, addresses regression in combobox.
+- Updated dependencies [ed09ea6]
+  - @accelint/logger@1.0.0
+
 ## 9.6.0
 ### Minor Changes
 
