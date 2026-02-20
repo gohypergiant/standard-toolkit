@@ -13,9 +13,9 @@
 import { act, renderHook } from '@testing-library/react';
 import React, { type UIEvent } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { GANTT_ROW_HEIGHT_PX } from '../../../constants';
-import { useGanttStore } from '../../../store';
-import { deriveRenderedSlice } from '../../../utils/layout';
+import { GANTT_ROW_HEIGHT_PX } from '@/components/gantt/constants';
+import { useGanttStore } from '@/components/gantt/store';
+import { deriveRenderedSlice } from '@/components/gantt/utils/layout';
 import { useRenderedRows } from './';
 
 const mocks = vi.hoisted(() => {
@@ -24,7 +24,7 @@ const mocks = vi.hoisted(() => {
   };
 });
 
-vi.mock('../../../context', () => {
+vi.mock('@/components/gantt/context', () => {
   const mock = {
     totalBounds: { startMs: 0, endMs: 1000 },
     msPerPx: mocks.msPerPx,

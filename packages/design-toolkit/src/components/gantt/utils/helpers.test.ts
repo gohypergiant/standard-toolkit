@@ -1,5 +1,13 @@
 /*
  * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
  */
 
 import { describe, expect, it } from 'vitest';
@@ -9,6 +17,7 @@ import {
   getRenderedRegionBoundsMs,
   getVerticalScrolledPixels,
   getViewableRegionWidth,
+  shouldRenderPointElement,
   shouldRenderRangeElement,
 } from './helpers';
 import type { UIEvent } from 'react';
@@ -112,6 +121,21 @@ describe('helpers', () => {
         startMs,
         endMs,
       });
+      expect(result).toBe(expected);
+    });
+  });
+
+  describe('shouldRenderPointElement', () => {
+    const renderedRegion = { startMs: 1000, endMs: 2000 };
+
+    it.each([
+      ['returns true when point is at region start', 1000, true],
+      ['returns true when point is at region end', 2000, true],
+      ['returns true when point is inside region', 1500, true],
+      ['returns false when point is before region', 999, false],
+      ['returns false when point is after region', 2001, false],
+    ])('%s', (_description, pointTimeMs, expected) => {
+      const result = shouldRenderPointElement(renderedRegion, pointTimeMs);
       expect(result).toBe(expected);
     });
   });

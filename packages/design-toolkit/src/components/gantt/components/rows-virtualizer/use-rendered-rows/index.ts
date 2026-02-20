@@ -21,14 +21,14 @@ import {
   useMemo,
   useState,
 } from 'react';
-import { GANTT_ROW_HEIGHT_PX } from '../../../constants';
-import { useGanttContext } from '../../../context';
-import { selectors, useGanttStore } from '../../../store';
+import { GANTT_ROW_HEIGHT_PX } from '@/components/gantt/constants';
+import { useGanttContext } from '@/components/gantt/context';
+import { selectors, useGanttStore } from '@/components/gantt/store';
 import {
   getHorizontalScrolledPixels,
   getVerticalScrolledPixels,
-} from '../../../utils/helpers';
-import { deriveRenderedSlice } from '../../../utils/layout';
+} from '@/components/gantt/utils/helpers';
+import { deriveRenderedSlice } from '@/components/gantt/utils/layout';
 
 type RowChild = ReactElement<JSX.IntrinsicElements['div']>;
 

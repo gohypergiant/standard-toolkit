@@ -24,11 +24,11 @@ const mocks = vi.hoisted(() => {
   };
 });
 
-vi.mock('../../../hooks/use-layout-subscription', () => ({
+vi.mock('@/components/gantt/hooks/use-layout-subscription', () => ({
   useLayoutSubscription: vi.fn(),
 }));
 
-vi.mock('../../../utils/layout', () => ({
+vi.mock('@/components/gantt/utils/layout', () => ({
   deriveTranslateXValue: vi.fn(),
 }));
 
@@ -40,8 +40,8 @@ const mockTimelineChunks = [
   { timestampMs: 3000 },
 ];
 
-import { useLayoutSubscription } from '../../../hooks/use-layout-subscription';
-import { deriveTranslateXValue } from '../../../utils/layout';
+import { useLayoutSubscription } from '@/components/gantt/hooks/use-layout-subscription';
+import { deriveTranslateXValue } from '@/components/gantt/utils/layout';
 
 describe('useTimelineTransform', () => {
   const capturedCallbackHarness: { callback?: (ms: number) => void } = {};
