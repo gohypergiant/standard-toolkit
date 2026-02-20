@@ -35,10 +35,14 @@
  * ```
  */
 
-import { Broadcast } from '@accelint/bus';
-import { getLogger } from '@accelint/logger';
 import { createMapStore } from '@/shared/create-map-store';
+import { Broadcast } from '@accelint/bus';
+import { type UniqueId } from '@accelint/core';
+import { getLogger } from '@accelint/logger';
+import type { Feature } from 'geojson';
 import { MapEvents } from '../../base-map/events';
+import type { MapEventType } from '../../base-map/types';
+import type { Shape } from '../shared/types';
 import {
   isCircleShape,
   isEllipseShape,
@@ -55,17 +59,13 @@ import {
   EDIT_SHAPE_LAYER_ID,
   EDIT_SHAPE_MODE,
 } from './constants';
-import { EditShapeEvents } from './events';
-import type { UniqueId } from '@accelint/core';
-import type { Feature } from 'geojson';
-import type { MapEventType } from '../../base-map/types';
-import type { Shape } from '../shared/types';
 import type {
   EditShapeEvent,
   ShapeEditCanceledEvent,
   ShapeEditingEvent,
   ShapeUpdatedEvent,
 } from './events';
+import { EditShapeEvents } from './events';
 import type {
   EditFunction,
   EditingState,
@@ -94,6 +94,7 @@ const DEFAULT_EDITING_STATE: EditingState = {
   editingShape: null,
   editMode: 'view',
   featureBeingEdited: null,
+  prevMode: null,
 };
 
 /**
@@ -361,4 +362,36 @@ export function cancelEditingFromLayer(mapId: UniqueId): void {
  */
 export function saveEditingFromLayer(mapId: UniqueId): void {
   editStore.actions(mapId).save();
+}
+
+/**
+ * While editing, if hotkey is held, we want to enable panning and store
+ * previous editing mode to return to when we release the key.
+ */
+export function enableEditPanning(mapId: UniqueId, prevMode: EditMode): void {
+  // Not disable hotkey if not in edit mode.
+  if (!editStore.get(mapId)?.editingShape) {
+    return;
+  }
+
+  editStore.set(mapId, { prevMode, editMode: 'view' });
+  mapEventBus.emit(MapEvents.enablePan, { id: mapId });
+  requestCursorChange(mapId, 'grab', EDIT_SHAPE_LAYER_ID);
+}
+
+/**
+ * End of panning, we return to previous editing mode and clear stored mode.
+ */
+export function disableEditPanning(mapId: UniqueId): void {
+  // If we're done editing (via another hotkey), we're gucci.
+  if (!editStore.get(mapId)?.editingShape) {
+    editStore.set(mapId, { prevMode: null });
+    requestCursorChange(mapId, 'default', EDIT_SHAPE_LAYER_ID);
+    return;
+  }
+
+  const prevMode = editStore.get(mapId)?.prevMode as EditMode;
+  editStore.set(mapId, { editMode: prevMode, prevMode: null });
+  mapEventBus.emit(MapEvents.disablePan, { id: mapId });
+  requestCursorChange(mapId, 'crosshair', EDIT_SHAPE_LAYER_ID);
 }

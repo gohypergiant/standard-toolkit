@@ -11,10 +11,12 @@
  */
 
 import { Broadcast } from '@accelint/bus';
+import type { UniqueId } from '@accelint/core';
 import { uuid } from '@accelint/core';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { MapEvents } from '../../base-map/events';
 import { mockShapes } from '../__fixtures__/mock-shapes';
+import type { Shape } from '../shared/types';
 import { ShapeFeatureType } from '../shared/types';
 import { EditShapeEvents } from './events';
 import {
@@ -25,8 +27,6 @@ import {
   saveEditingFromLayer,
   updateFeatureFromLayer,
 } from './store';
-import type { UniqueId } from '@accelint/core';
-import type { Shape } from '../shared/types';
 
 // Get fixture shapes by type
 const mockCircle = mockShapes.find((s) => s.shape === 'Circle');
@@ -596,5 +596,15 @@ describe('edit-shape-layer store', () => {
       // Now state should be cleaned up
       expect(getEditingState(mapId)).toBeNull();
     });
+  });
+
+  describe('enableEditPanning', () => {
+    // expect enablePanning to be true
+    // expect cursor to be grab
+  });
+
+  describe('disableEditPanning', () => {
+    // expect enablePanning to be false
+    // expect cursor to be crosshair
   });
 });
