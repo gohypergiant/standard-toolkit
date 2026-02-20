@@ -98,8 +98,8 @@ export interface StyleProperties {
  * Stored alongside the polygon approximation
  */
 export interface CircleProperties {
-  /** Center point as [longitude, latitude] */
-  center: [number, number];
+  /** Center point as [longitude, latitude] or [longitude, latitude, elevation] */
+  center: [number, number] | [number, number, number];
   /** Radius with value and units */
   radius: {
     /** Radius value */
@@ -114,8 +114,8 @@ export interface CircleProperties {
  * Stored alongside the polygon approximation
  */
 export interface EllipseProperties {
-  /** Center point as [longitude, latitude] */
-  center: [number, number];
+  /** Center point as [longitude, latitude] or [longitude, latitude, elevation] */
+  center: [number, number] | [number, number, number];
   /** X semi-axis (horizontal radius) with value and units */
   xSemiAxis: {
     /** X semi-axis value */
@@ -298,9 +298,9 @@ export type ShapeFeatureProperties = StyledFeature['properties'];
 export type CircleRadius = CircleProperties['radius'];
 
 /**
- * Coordinate as [longitude, latitude]
+ * Coordinate as [longitude, latitude] or [longitude, latitude, elevation]
  */
-export type Coordinate = [number, number];
+export type Coordinate = [number, number] | [number, number, number];
 
 /**
  * Function type for subscription (useSyncExternalStore pattern).
