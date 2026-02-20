@@ -1,0 +1,469 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Styling Guide" />
+
+# Styling with the Design System
+
+This guide covers how to style your application using the Design Toolkit's styling system.
+
+## Contents
+
+- [TailwindCSS](#tailwindcss)
+  - [Colors](#colors)
+  - [Spacing](#spacing)
+  - [Radius](#radius)
+  - [Typography](#typography)
+  - [Outlines, Not Borders](#outlines-not-borders)
+  - [Variants](#variants-and-selectors)
+  - [Responsive design](#responsive-design)
+- [CSS Modules](#css-modules)
+  - [CSS Layers](#css-layers)
+- [Overriding Design Toolkit Component Styles](#overriding-design-toolkit-component-styles)
+  - [Simple Components: className](#simple-components-classname)
+  - [Compound Components: classNames](#compound-components-classnames)
+  - [Discovering Available Class Props](#discovering-available-class-props)
+- [Conditional class rendering and clsx](#conditional-class-rendering-and-clsx)
+- [Breaking Out of the System Constraints](#breaking-out-of-the-system-constraints)
+  - [Arbitrary Tailwind Classes](#arbitrary-tailwind-classes)
+  - [Overriding Theme Variables](#overriding-theme-variables)
+
+
+## TailwindCSS
+
+The Design Toolkit uses TailwindCSS as its styling foundation. If you're new to utility-first CSS, we recommend starting with [Tailwind documentation](https://tailwindcss.com/docs/styling-with-utility-classes). The fundamental concepts of utility classes are critical to being able to style in the Design Toolkit effectively.
+
+However, the Core team has established opinionated patterns on how to keep code clean, readable and consistent. While many standard Tailwind classes work as expected, not all the Tailwind documentation will be relevant. The Design Toolkit extends Tailwind with custom semantic tokens for colors, spacing, radius, and typography. These custom classes ensure consistency with the design system and support light/dark mode theming out of the box. We've also made the choice to support css modules, despite the stance taken by the Tailwind.
+
+### Colors
+[↑ Top](#styling-with-the-design-system)
+
+The Design Toolkit relies on the `@accelint/design-foundation` package that establishes an opinionated set of semantic color classes for background, foreground and outline colors (among other tokens). These colors ensure compatibility in our design and automatically adapt to light and dark mode. The tokens all have a prefix that will orient you to their intended use. They also target the css property that is relevant. For example, adding a `bg-surface-bold` semantic color class to a div will apply the `--bg-interactive-bold` css var to the `background-color` css property.
+
+- **[Background colors](?path=/story/foundation-colors--background)** use the `bg-` prefix (e.g., `bg-surface-default`, `bg-accent-primary-bold`)
+- **[Foreground colors](?path=/story/foundation-colors--foreground)** (text, icons) use the `fg-` prefix (e.g., `fg-primary-bold`, `fg-primary-muted`)
+- **[Outline colors](?path=/story/foundation-colors--outline)** use the `outline-` prefix (e.g., `outline-static`, `outline-interactive`)
+
+See the **[Foundation / Colors](?path=/story/foundation-colors--background)** stories in Storybook for the complete color palette with visual examples.
+
+#### Prefer Semantic Colors
+
+Under the hood, semantic classes map to our own primitive color palette based on the user's selected theme (light or dark). This means you can use semantic classes like `bg-surface-default` or `fg-primary-bold` throughout your codebase without conditional logic to guarantee support for light/dark mode theming:
+
+```jsx
+// ✅ Correct - semantic class adapts to theme automatically
+<div className="bg-surface-default fg-primary-bold">
+  Content
+</div>
+
+// ❌ Avoid - manual theme handling is unnecessary with semantic classes
+<div className={theme === 'dark' ? 'bg-[black]' : 'bg-[white]'}>
+  Content
+</div>
+```
+
+This approach eliminates theme-checking ternaries scattered throughout the codebase and ensures consistent color usage across the application.
+
+#### Primitives for Prototyping and Edge Cases
+
+While most product experiences should comfortably live within the boundaries of the semantic colors, any mature application will inevitably include bespoke features that stretch beyond what the system has explicitly accounted for. In these rare cases, using the [primitive color tokens](https://github.com/gohypergiant/standard-toolkit/blob/main/packages/design-foundation/src/tokens/primitive.json) directly is also supported. While relying on primitives or one-off values fragments the experience, introduces visual inconsistencies, and increases long-term maintenance costs, this will provide you with a syntactically clean escape hatch. Exceptions should be rare and deliberate.
+
+```jsx
+// Supported and preferred
+<div className="bg-surface-raised" />
+
+// Ok, if prototyping or in rare edge cases
+<div className="bg-neutral-300" />
+<div className="fg-neutral-300" />
+<div className="outline-neutral-300" />
+
+```
+### Spacing
+[↑ Top](#styling-with-the-design-system)
+
+The Design Toolkit uses a custom spacing scale instead of Tailwind's numeric scale to maintain consistency.
+
+#### Prefer Semantic Spacing
+
+| Token | Usage |
+|-------|-------|
+| `xxs` | Extra extra small |
+| `xs` | Extra small |
+| `s` | Small |
+| `m` | Medium |
+| `l` | Large |
+| `xl` | Extra large |
+| `xxl` | Extra extra large |
+| `oversized` | Oversized spacing |
+
+Use these with standard Tailwind spacing utilities (`p-`, `m-`, `gap-`, `w-`, `h-`, `size-`):
+
+```jsx
+<div className="p-m gap-l">        // padding: medium, gap: large
+<div className="mt-xl mb-s">       // margin-top: xl, margin-bottom: small
+<div className="size-xxl">         // width and height: xxl
+```
+
+See the **[Foundation / Spacing](?path=/story/foundation-spacing--spacing)** story in Storybook for exact pixel values.
+
+#### Pixels for Prototyping and Edge Cases
+
+While the spacing tokens should cover the majority of cases and are preferred, it is possible to use arbitrary spacing values. The `w-<number>` and `size-<number>` utilities are driven by the `--spacing` [theme variable](https://tailwindcss.com/docs/width#customizing-your-theme), which is set to `1px` in the Design Toolkit. That means when you need to express arbitrary spacing values, numeric values translate directly (e.g., `gap-10` = 10px, `w-24` = 24px).
+
+```jsx
+// Preferred
+<div className="gap-m" />
+
+// Ok, if prototyping or in rare edge cases
+// Represents a 10px gap
+<div className="gap-10" />
+```
+
+### Radius
+[↑ Top](#styling-with-the-design-system)
+
+Use the custom border radius scale with the `rounded-` prefix:
+
+| Class | Description |
+|-------|-------------|
+| `rounded-none` | No border radius |
+| `rounded-small` | Small radius |
+| `rounded-medium` | Medium radius |
+| `rounded-large` | Large radius |
+| `rounded-round` | Fully rounded (pill shape) |
+
+See the **Foundation / Radius** story in Storybook for visual examples.
+
+### Typography
+[↑ Top](#styling-with-the-design-system)
+
+The Design Toolkit provides two categories of typography classes: font families and text styles.
+
+#### Font Families
+
+Use these classes to set the font family:
+
+```
+font-primary              # Roboto - for body text, headers
+font-display              # Roboto Mono - for code, labels, data
+```
+
+#### Text Styles
+
+Text style classes (e.g., `text-header-xl`, `text-body-m`) set four CSS properties at once:
+
+- `font-size`
+- `font-weight`
+- `letter-spacing`
+- `line-height`
+
+These values align directly with the text styles designers use in Figma, ensuring pixel-perfect implementation of designs.
+
+See the **Foundation / Typography** stories in Storybook for the complete type scale.
+
+### Outlines, Not Borders
+[↑ Top](#styling-with-the-design-system)
+
+DesignTK chooses to implement outlines instead of borders to make it so that the style doesn't impact box model dimensions. This way elements with or without a "border" are consistently sized based on content and padding alone. This also helps with sibling components rendering at the same size when their border styles may not match.
+
+Do not implement borders, do implement outlines.
+
+You might have rare instances where you do need to use a border. For example, if you need a line only at the top of a div. In this situation, use an outline semantic color variable directly to ensure consistency with the color system:
+
+```jsx
+// Preferred
+<div className="outline outline-advisory-bold" />
+<div className="outline-2 outline-advisory-bold" />
+
+// Ok, if prototyping or in rare edge cases
+<div className="border border-t-(--outline-advisory-bold)" />
+```
+
+### Variants and selectors
+[↑ Top](#styling-with-the-design-system)
+Tailwind supports [variants](https://tailwindcss.com/docs/hover-focus-and-other-states) that allow for conditional application of styles, such as `:hover`, `:focus`, and `:active`. Additionally, in the Design Toolkit we have chosen to implement additional variants that are specific to [react aria components](https://react-aria.adobe.com/styling#plugin) which allow variants based on state. The fill list of what is implemented can be [found here in variants.css](https://github.com/gohypergiant/standard-toolkit/blob/main/packages/design-foundation/src/variants/variants.css). You can combine variants for additional complexity or use them with the [`group` class](https://tailwindcss.com/docs/hover-focus-and-other-states#styling-based-on-the-descendants-of-a-group) provided by Tailwind.
+
+```tsx
+<div className="empty:none">{maybeContent}</div>
+
+// using state for conditional utility classes
+<Button className="pressed:bg-accent-primary-muted">
+  {/* ... */}
+</Button>
+
+//can be used with grouped elements
+<ToggleButton>
+  <Icon>
+    <MyIcon className="transform group-selected:rotate-180" />
+  </Icon>
+</ToggleButton>
+
+//can be stacked
+<div className="md:hover:bg-critical-bold ...">Important thing...</div>
+```
+
+Avoid using arbitrary variants, for example with a `data-` selector. Instead prefer the supported variants or conditional class rendering using the `clsx` library.
+
+```tsx
+function MyComponent({ size }: Props) {
+  // Bad
+  return (
+    <ToggleButton
+      className="data-selected:foo data-[size=large]:bar"
+      data-size={size}
+    />
+  );
+
+  // Ok, but custom variants aren't available
+  return <ToggleButton className="selected:foo" />
+
+  // Good, if renderProps from RAC are available (props and internal state can be used too)
+  return <ToggleButton className={({ isSelected }) => clsx(styles[size], isSelected && styles.selected)} />
+
+  // Good, if renderProps from RAC are not available
+  const [isSelected, setIsSelected] = useState(false);
+
+  return <button className={clsx(styles[size], isSelected && styles.selected)} />
+}
+```
+
+### Responsive design
+[↑ Top](#styling-with-the-design-system)
+
+You can apply styles at specific breakpoints using prefixes like `sm:`, `md:`, `lg:`, and `xl:` using Tailwind's standard responsive utility classes as described in the [Tailwind responsive design documentation](https://tailwindcss.com/docs/responsive-design). All responsive utilities work exactly as documented in the official Tailwind guides.
+
+
+## CSS Modules
+[↑ Top](#styling-with-the-design-system)
+
+For most use cases, applying Tailwind utility classes directly to your components is sufficient. However, when building reusable components or implementing complex styles, it's better to extract styles into a separate CSS module file (e.g., `styles.module.css`). This keeps your component focused on business logic rather than styling details.
+
+Despite Tailwind's recommendation to avoid abstraction layers, CSS Modules are the preferred approach for reusable components to minimize runtime overhead and prevent class name collisions with other components or libraries.
+
+To access design tokens and Tailwind classes in your CSS module, include the `@reference` [directive](https://tailwindcss.com/docs/functions-and-directives#reference-directive) at the top of the file. You can then use the `@apply` [directive](https://tailwindcss.com/docs/functions-and-directives#apply-directive) to apply utility classes and the `@variant` [directive](https://tailwindcss.com/docs/functions-and-directives#variant-directive) to define variants.
+
+```
+// styles.module.css
+@reference '@accelint/design-foundation/styles';
+
+@layer components.l1 {
+  .myComponent {
+    @apply p-s fg-primary-bold;
+
+    @variant disabled {
+      @apply cursor-not-allowed fg-disabled;
+    }
+  }
+}
+```
+
+```tsx
+import styles from './styles.module.css';
+
+export function MyReusableComponent({ children, className, variant }: Props) {
+  return <div className={clsx(styles.myComponent, styles[variant], className)}>{children}</div>
+}
+```
+
+## CSS Layers
+[↑ Top](#styling-with-the-design-system)
+
+The example above uses `@layer components.l1` to explicitly define where styles sit in the cascade hierarchy. The Design Toolkit provides five component layers (`components.l1` through `components.l5`) that work together with Tailwind's layer system to ensure predictable style overrides.
+
+**Layer Guidelines:**
+
+- **`components.l1`** - Base components with no dependencies on other styled components
+- **`components.l2` through `components.l5`** - Higher-level components that wrap or compose lower-level components. Use the next level up when building on top of existing styled components.
+
+CSS layers establish a clear cascade hierarchy where:
+* Component styles can override each other based on their layer (l2 beats l1, l3 beats l2, etc.)
+* Tailwind utility classes always win over component styles for one-off customizations
+* You maintain explicit control over style precedence without wrestling with specificity
+* The need for `!important` is eliminated and makes the cascade predictable and maintainable
+
+## Overriding Design Toolkit Component Styles
+[↑ Top](#styling-with-the-design-system)
+
+Each Design Toolkit component exposes a prop for applying Tailwind utility classes as overrides.
+
+### Simple Components: `className`
+[↑ Top](#styling-with-the-design-system)
+
+For simple components, use the `className` prop:
+
+```jsx
+import { Button } from '@accelint/design-toolkit/components/button';
+
+<Button className="mt-l">
+  Submit
+</Button>
+```
+
+### Compound Components: `classNames`
+[↑ Top](#styling-with-the-design-system)
+
+For complex or compound components where you may want to override styles for multiple parts, use the `classNames` prop. This prop accepts an object with properties corresponding to different parts of the component:
+
+```jsx
+import { TextField } from '@accelint/design-toolkit/components/text-field';
+
+<TextField
+  label="Email"
+  classNames={{
+    field: 'w-full',
+    label: 'fg-accent-primary-bold',
+    input: {
+      container: 'bg-surface-raised',
+      input: 'text-body-l',
+    },
+    description: 'fg-primary-muted',
+    error: 'fg-critical-bold',
+  }}
+/>
+```
+
+### Discovering Available Class Props
+[↑ Top](#styling-with-the-design-system)
+
+TypeScript is useful for discovering which parts of a component can be styled. Check the component's prop types for `className` or `classNames`:
+
+```tsx
+// TextField's classNames type
+classNames?: {
+  field?: string;
+  label?: string;
+  input?: {
+    container?: string;
+    sizer?: string;
+    input?: string;
+    clear?: string;
+    prefix?: string;
+    suffix?: string;
+  };
+  description?: string;
+  error?: string;
+};
+```
+
+Hover over the `classNames` prop in your IDE or check the component's type definitions to see available styling targets.
+
+## Conditional class rendering and `clsx`
+[↑ Top](#styling-with-the-design-system)
+
+Use `clsx` for any dynamic class application logic. The import should be from the design foundation library.
+
+```tsx
+import { clsx } from '@accelint/design-foundation/lib/utils';
+
+function MyComponent({ className, isDisabled }: Props) {
+  // ❌ Bad
+  return <div className={`foo ${isDisabled && 'bar'} ${className}`} />
+
+  return <div className={['foo', isDisabled ? 'bar' : undefined, className].join(' ')} />
+
+  return <div className={clsx(['foo', isDisabled && 'bar', className])} />
+
+  // ✅ Good
+  return <div className={clsx('foo', { bar: isDisabled }, className)} />
+}
+```
+
+
+## Breaking Out of the System Constraints
+[↑ Top](#styling-with-the-design-system)
+
+While the Design Toolkit provides a styling system that should fit many use cases, there will likely be situations where you need to operate outside of the constraints it provides. Here are some common examples:
+
+### Arbitrary Tailwind Classes
+[↑ Top](#styling-with-the-design-system)
+
+Tailwind supports [arbitrary values](https://tailwindcss.com/docs/adding-custom-styles#using-arbitrary-values) for one-off styles that don't exist in the theme. While tailwind provides bracketing to use arbitrary values, these should be avoided. In all cases, use these techniques sparingly and only when necessary:
+
+```jsx
+// ❌ Avoid using the bracket syntax
+<div className="w-[325px]" />
+
+// ✅ Ok to use arbitrary spacing values, if necessary
+<div className="w-325" />
+
+// ✅ Arbitrary property - use for CSS properties without utility classes
+<div className="[clip-path:circle(50%)]" />
+
+// ✅ Referencing theme variables in arbitrary values
+<div className="border border-t-(--outline-advisory-bold)" />
+```
+
+When using arbitrary values, prefer referencing theme variables over hardcoding values:
+
+```jsx
+// ❌ Avoid hardcoding values that exist in the theme
+<div className="[--my-font-size:12px]" />
+
+// ✅ Reference theme variables instead
+<div className="[--my-font-size:var(--body-m-size)]" />
+```
+
+If you find yourself reaching for arbitrary classes frequently, raise this to the core team so they can consider whether the design system should be extended to support your use case.
+
+### Overriding Theme Variables
+[↑ Top](#styling-with-the-design-system)
+
+You can override theme variables in your application's global CSS file. You can also create application-specific variables in this manner.
+
+Add overrides within the `@layer theme` block on `:root`. Use `@variant light` and `@variant dark` for theme-specific values:
+
+**Example:** Override the accent color to use a custom seafoam palette instead of the default:
+
+```css
+/* globals.css */
+@import '@accelint/design-foundation/styles';
+
+/* override accent color */
+@layer theme {
+  :root {
+    /* amorphous accent primitives */
+    --seafoam-primary-50: #EBFFFA;
+    --seafoam-primary-100: #B9FFEC;
+    --seafoam-primary-200: #8AFFDF;
+    --seafoam-primary-300: #5AFFD2;
+    --seafoam-primary-400: #28F5BE;
+    --seafoam-primary-500: #16D3A0;
+    --seafoam-primary-600: #059971;
+    --seafoam-primary-700: #01684C;
+    --seafoam-primary-800: #014130;
+    --seafoam-primary-900: #012A1F;
+
+    @variant light {
+      --bg-accent-primary-bold: var(--seafoam-primary-700);
+      --bg-accent-primary-hover: var(--seafoam-primary-600);
+      --bg-accent-primary-pressed: var(--seafoam-primary-800);
+      --bg-accent-primary-muted: var(--seafoam-primary-100);
+
+      --fg-accent-primary-bold: var(--seafoam-primary-600);
+      --fg-accent-primary-hover: var(--seafoam-primary-400);
+      --fg-accent-primary-pressed: var(--seafoam-primary-600);
+      --fg-primary-muted: var(--seafoam-primary-800);
+
+      --outline-accent-primary-bold: var(--seafoam-primary-600);
+      --outline-accent-primary-hover: var(--seafoam-primary-200);
+      --outline-accent-primary-pressed: var(--seafoam-primary-600);
+    }
+
+    @variant dark {
+      --bg-accent-primary-bold: var(--seafoam-primary-700);
+      --bg-accent-primary-hover: var(--seafoam-primary-600);
+      --bg-accent-primary-pressed: var(--seafoam-primary-800);
+      --bg-accent-primary-muted: var(--seafoam-primary-900);
+
+      --fg-accent-primary-bold: var(--seafoam-primary-300);
+      --fg-accent-primary-hover: var(--seafoam-primary-200);
+      --fg-accent-primary-pressed: var(--seafoam-primary-600);
+
+      --outline-accent-primary-bold: var(--seafoam-primary-300);
+      --outline-accent-primary-hover: var(--seafoam-primary-200);
+      --outline-accent-primary-pressed: var(--seafoam-primary-600);
+    }
+  }
+}
+```
+
+Here, there are custom primitive colors that are then mapped the semantic variables that use those primitives. We recommend you take this approach in your own application for maximum flexibility. Generally, overriding theme variables should not be something engineers do without first consulting with their design partners.
