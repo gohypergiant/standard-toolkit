@@ -19,63 +19,14 @@ export type UniqueId = Tagged<string, 'UUID'>;
 /**
  * Generates a new UUID v4.
  *
- * ⚠️ **React/SSR Warning**: Do NOT call this function inside React components
- * or hooks, as it will generate different IDs during server-side rendering
- * and client hydration, causing React hydration errors.
- *
- * For React components, use React's `useId()` hook instead:
- * ```typescript
- * import { useId } from 'react';
- * import type { UniqueId } from '@accelint/core';
- *
- * function MyComponent() {
- *   const id = useId() as UniqueId; // ✅ Stable across server/client
- *   return <div id={id}>...</div>;
- * }
- * ```
- *
- * This function is safe to use:
- * - At module level (outside components)
- * - In Node.js/server-side code
- * - In client-only code that never runs during SSR
- *
  * @returns A unique identifier string.
  *
  * @example
  * ```typescript
- * import 'server-only'
  * import { uuid } from '@accelint/core';
  *
- * // ✅ CORRECT - Module-level constant in server files
- * const FEATURE_ID = uuid();
- *
- * export function MyComponent() {
- *   return <Feature id={FEATURE_ID}>...</Feature>;
- * }
- * ```
- *
- * @example
- * ```typescript
- * // ❌ WRONG - Inside component (causes hydration mismatch)
- * function MyComponent() {
- *   const id = uuid(); // Different ID on server vs client!
- *   return <div id={id}>...</div>;
- * }
- *
- * // ❌ STILL WRONG - Even with useMemo/useState
- * function MyComponent() {
- *   const id = useMemo(() => uuid(), []); // Still different on server vs client!
- *   return <div id={id}>...</div>;
- * }
- *
- * // ✅ CORRECT - Use React's useId() instead
- * import { useId } from 'react';
- * import type { UniqueId } from '@accelint/core';
- *
- * function MyComponent() {
- *   const id = useId() as UniqueId;
- *   return <div id={id}>...</div>;
- * }
+ * const id = uuid();
+ * // '550e8400-e29b-41d4-a716-446655440000'
  * ```
  */
 export function uuid() {
