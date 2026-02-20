@@ -10,11 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-'use client';
-import 'client-only';
-import { MapClient } from './client';
+import 'server-only';
 import { ErrorComponent } from './error';
 import { LoadingComponent } from './loading';
+import { MapClient } from './server';
 
 export function MapExample() {
   return (

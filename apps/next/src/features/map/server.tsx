@@ -10,8 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-'use client';
-import 'client-only';
+import 'server-only';
 import { uuid } from '@accelint/core'
 import { BaseMap } from '@accelint/map-toolkit/deckgl';
 import { DEFAULT_VIEW_STATE } from '@accelint/map-toolkit/shared/constants';

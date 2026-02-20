@@ -11,10 +11,10 @@
  */
 
 'use client';
-import type { ErrorInfo, PropsWithChildren } from 'react';
 import 'client-only';
 import { ErrorBoundary } from 'react-error-boundary';
 import { createLogger } from '~/utils/logger';
+import type { ErrorInfo, PropsWithChildren } from 'react';
 
 const mapLogger = createLogger('[Map]');
 
