@@ -320,6 +320,7 @@
     "./components/table/row": "./dist/components/table/row.js",
     "./components/table/types": "./dist/components/table/types.js",
     "./components/tabs": "./dist/components/tabs/index.js",
+    "./components/tabs/constants": "./dist/components/tabs/constants.js",
     "./components/tabs/context": "./dist/components/tabs/context.js",
     "./components/tabs/list": "./dist/components/tabs/list.js",
     "./components/tabs/panel": "./dist/components/tabs/panel.js",
