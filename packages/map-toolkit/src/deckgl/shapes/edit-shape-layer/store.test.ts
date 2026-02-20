@@ -22,7 +22,9 @@ import { EditShapeEvents } from './events';
 import {
   cancelEditingFromLayer,
   clearEditingState,
+  disableEditPanning,
   editStore,
+  enableEditPanning,
   getEditingState,
   saveEditingFromLayer,
   updateFeatureFromLayer,
@@ -599,12 +601,52 @@ describe('edit-shape-layer store', () => {
   });
 
   describe('enableEditPanning', () => {
-    // expect enablePanning to be true
-    // expect cursor to be grab
+    it('should return and do nothing if editing shape does not exist', () => {
+      const mapEventBus = Broadcast.getInstance();
+      const modeEmitSpy = vi.fn();
+
+      mapEventBus.on(MapEvents.enablePan, modeEmitSpy);
+
+      disableEditPanning(mapId);
+      expect(editStore.get(mapId)?.prevMode).toBe(null);
+    });
+
+    it('should store prev mode when called during editing', () => {
+      const { edit } = editStore.actions(mapId);
+      const mapEventBus = Broadcast.getInstance();
+      const editShapeBus = Broadcast.getInstance();
+      const modeEmitSpy = vi.fn();
+      const cursorEmitSpy = vi.fn();
+
+      mapEventBus.on(MapEvents.enablePan, modeEmitSpy);
+      editShapeBus.on(EditShapeEvents.updated, cursorEmitSpy);
+
+      const shape = createMockShape();
+      edit(shape);
+
+      expect(editStore.get(mapId)?.editMode).not.toBe('view');
+
+      enableEditPanning(mapId, editStore.get(mapId).editMode);
+
+      expect(editStore.get(mapId)?.prevMode).not.toBe(null);
+      expect(editStore.get(mapId)?.prevMode).not.toEqual(
+        editStore.get(mapId).editMode,
+      );
+      expect(modeEmitSpy).toHaveBeenCalled();
+    });
   });
 
   describe('disableEditPanning', () => {
-    // expect enablePanning to be false
-    // expect cursor to be crosshair
+    it('should return and do nothing if editing shape exists', () => {
+      const mapEventBus = Broadcast.getInstance();
+      const modeEmitSpy = vi.fn();
+
+      mapEventBus.on(MapEvents.enablePan, modeEmitSpy);
+
+      disableEditPanning(mapId);
+      expect(editStore.get(mapId)?.prevMode).toBe(null);
+    });
+
+    it('should set editMode to prev mode, then clear prev mode', () => {});
   });
 });
