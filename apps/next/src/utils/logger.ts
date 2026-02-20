@@ -14,9 +14,7 @@ import { getLogger } from '@accelint/logger';
 import type { LoggerOptions } from '@accelint/logger';
 
 const logger = getLogger({
-  level: process.env.NODE_ENV === 'production'
-  ? 'error'
-  : 'debug',
+  level: process.env.NODE_ENV === 'production' ? 'error' : 'debug',
   enabled: true,
 });
 
@@ -57,5 +55,5 @@ export function createLogger(module: string, level?: LoggerOptions['level']) {
     child.setLevel(level);
   }
 
-  return child.withContext({ source: module });
+  return child.withPrefix(module).withContext({ source: module });
 }
