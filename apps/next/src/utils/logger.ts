@@ -11,15 +11,14 @@
  */
 
 import { getLogger } from '@accelint/logger';
-import { OneWayLogLevelManager } from '@loglayer/log-level-manager-one-way';
-import type { LogLevel } from '@accelint/logger';
+import type { LoggerOptions } from '@accelint/logger';
 
 const logger = getLogger({
   level: process.env.NODE_ENV === 'production'
   ? 'error'
   : 'debug',
   enabled: true,
-}).withLogLevelManager(new OneWayLogLevelManager());
+});
 
 /**
  * Creates a child logger with module-specific context for organized log output.
@@ -51,11 +50,11 @@ const logger = getLogger({
  * vrtLogger.warn('No focusable elements found');
  * ```
  */
-export function createLogger(module: string, level?: LogLevel) {
+export function createLogger(module: string, level?: LoggerOptions['level']) {
   const child = logger.child();
 
   if (level) {
-    child.setLevel(level)
+    child.setLevel(level);
   }
 
   return child.withContext({ source: module });
