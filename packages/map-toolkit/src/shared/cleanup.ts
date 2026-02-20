@@ -21,6 +21,33 @@ import { clearViewportState } from '../viewport/store';
 import type { UniqueId } from '@accelint/core';
 
 /**
+ * Tracks how many times each map instance has been cleaned up.
+ *
+ * This counter is module-level (not React state), so React 19's Activity component
+ * does NOT preserve it across deactivation/reactivation cycles. Each time
+ * `clearAllMapStores` runs (during Activity deactivation cleanup), the generation
+ * increments. On reactivation, `BaseMap` reads the new generation during render and
+ * passes it as `key` to `<MapLibre>`, forcing a clean remount of react-map-gl's Map
+ * component — which resets `mapInstance` to `null` and prevents the crash caused by
+ * `setProps` being called on a destroyed MapLibre instance (one whose `map.style` was
+ * set to `undefined` by `map.remove()`).
+ */
+const mapGenerations = new Map<UniqueId, number>();
+
+/**
+ * Returns the current generation counter for a map instance.
+ *
+ * Use as a `key` prop on `<MapLibre>` to force a clean remount whenever the map's
+ * stores are cleared (e.g., on Activity deactivation).
+ *
+ * @param mapId - The map instance ID
+ * @returns The current generation (0 on first render, increments with each cleanup)
+ */
+export function getMapGeneration(mapId: UniqueId): number {
+  return mapGenerations.get(mapId) ?? 0;
+}
+
+/**
  * Clears ALL map store state for a given map instance.
  *
  * This function calls cleanup for every store in the map-toolkit. It's called
@@ -50,6 +77,11 @@ import type { UniqueId } from '@accelint/core';
  * ```
  */
 export function clearAllMapStores(mapId: UniqueId): void {
+  // Increment generation so BaseMap's next render passes a new key to <MapLibre>,
+  // forcing a clean remount and resetting react-map-gl's internal mapInstance state.
+  const nextGen = (mapGenerations.get(mapId) ?? 0) + 1;
+  mapGenerations.set(mapId, nextGen);
+
   // Core stores
   clearMapModeState(mapId);
   clearCursorState(mapId);

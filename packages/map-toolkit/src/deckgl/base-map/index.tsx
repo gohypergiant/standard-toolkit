@@ -25,6 +25,7 @@ import {
 } from 'react-map-gl/maplibre';
 import { useMapCamera } from '../../camera';
 import { getCursor } from '../../map-cursor/store';
+import { getMapGeneration } from '../../shared/cleanup';
 import { DEFAULT_VIEW_STATE } from '../../shared/constants';
 import { DARK_BASE_MAP_STYLE, PARAMETERS, PICKING_RADIUS } from './constants';
 import { MapControls } from './controls';
@@ -230,6 +231,7 @@ export function BaseMap({
   pickingRadius,
   ...rest
 }: BaseMapProps) {
+  const mapGeneration = getMapGeneration(id);
   const deckglInstance = useDeckgl();
   const container = useId();
   const mapRef = useRef<MapRef>(null);
@@ -403,6 +405,7 @@ export function BaseMap({
       {enableControlEvents && <MapControls id={id} mapRef={mapRef} />}
       <MapProvider id={id}>
         <MapLibre
+          key={mapGeneration}
           onMove={(evt) => {
             setCameraState(evt.viewState);
           }}
