@@ -348,8 +348,13 @@ export function createMapStore<TState, TActions>(
       instance.busCleanup();
     }
     instances.delete(mapId);
-    subscriptionCache.delete(mapId);
-    snapshotCache.delete(mapId);
+    // NOTE: Do NOT delete subscriptionCache or snapshotCache here!
+    // These are function reference caches. Clearing them causes React's
+    // useSyncExternalStore to see a new subscribe function reference on the next
+    // render, which triggers re-subscription, which triggers cleanupInstance again,
+    // creating an infinite cycle. The cached functions call getInstance() dynamically,
+    // so they work correctly even after the instance is recreated.
+    //
     // NOTE: Do NOT delete pendingInitialState here!
     // In React Strict Mode, cleanup runs but then subscribe re-runs BEFORE render.
     // The pending state must survive cleanup so it's available when getInstance

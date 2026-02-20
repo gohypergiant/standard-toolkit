@@ -12,14 +12,13 @@
 
 'use client';
 import 'client-only';
+import { uuid } from '@accelint/core'
 import { BaseMap } from '@accelint/map-toolkit/deckgl';
 import { DEFAULT_VIEW_STATE } from '@accelint/map-toolkit/shared/constants';
-import { useId } from 'react';
-import type { UniqueId } from '@accelint/core';
+
+const mapId = uuid()
 
 export function MapClient() {
-  const mapId = useId() as UniqueId;
-
   return (
     <BaseMap
       className='fixed top-xxl left-0 right-0 bottom-0'
