@@ -18,6 +18,7 @@ import {
   TIMELINE_CHUNK_WIDTH,
 } from '../constants';
 import {
+  derivePointElementLayout,
   deriveRangeElementLayout,
   deriveRenderedSlice,
   deriveTranslateXValue,
@@ -186,6 +187,24 @@ describe('deriveTranslateXValue', () => {
           ROW_VIRTUALIZATION_OVERSCAN +
           1, // +1 to adjust for even proposed count
       );
+    });
+  });
+
+  describe('derivePointElementLayout', () => {
+    const totalBounds = { startMs: 0, endMs: 5000 };
+    const renderedRegionBounds = { startMs: 1000, endMs: 2000 };
+    const msPerPx = 10;
+    const pointMs = 1500;
+
+    it('calculates correct translateX', () => {
+      expect(
+        derivePointElementLayout(
+          renderedRegionBounds,
+          pointMs,
+          totalBounds,
+          msPerPx,
+        ).translateX,
+      ).toBe(150);
     });
   });
 });
