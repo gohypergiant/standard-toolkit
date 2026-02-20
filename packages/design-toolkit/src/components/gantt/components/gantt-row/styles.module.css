@@ -12,11 +12,15 @@
 
 @reference '@accelint/design-foundation/styles';
 
+@utility bracket-pseudo-base {
+  @apply rounded-small fg-accent-primary-bold absolute left-[4px] border border-current border-t-transparent border-b-transparent border-l-transparent content-[''];
+}
+
 @layer components.l1 {
   .row-container {
     --height: attr(data-height px);
 
-    @apply outline-static py-xxs relative flex flex-col justify-center outline;
+    @apply outline-static py-xxs relative flex items-center outline;
     height: var(--height);
   }
 
@@ -25,5 +29,32 @@
 
     @apply bg-accent-primary-muted outline-accent-primary-bold absolute outline;
     height: var(--block-height);
+  }
+
+  .row-spacer {
+    @apply fg-accent-primary-bold absolute h-px bg-current;
+    transform: translateX(var(--translate-x));
+    width: var(--width);
+  }
+
+  .bracket-container {
+    @apply relative;
+
+    --rotate: attr(data-rotate deg);
+    min-height: attr(data-height px);
+    transform: translateX(var(--translate-x)) rotate(var(--rotate));
+
+    &::before {
+      @apply bracket-pseudo-base -top-px rotate-45;
+    }
+
+    &::after {
+      @apply bracket-pseudo-base -bottom-px -rotate-45;
+    }
+  }
+
+  .bracket {
+    @apply fg-accent-primary-bold rounded-bl-small rounded-tl-small absolute left-0 w-[6px] border border-r-transparent border-b-current bg-transparent;
+    min-height: attr(data-height px);
   }
 }
