@@ -220,6 +220,14 @@
       }
 
       @variant group-selected/options-item {
+        @variant group-hover/options-item {
+          @apply fg-a11y-on-accent;
+        }
+
+        @variant group-focus-visible/options-item {
+          @apply fg-a11y-on-accent;
+        }
+
         @variant group-pressed/options-item {
           @apply fg-accent-primary-bold;
         }
@@ -306,6 +314,14 @@
       }
 
       @variant group-selected/options-item {
+        @variant group-hover/options-item {
+          @apply fg-a11y-on-accent;
+        }
+
+        @variant group-focus-visible/options-item {
+          @apply fg-a11y-on-accent;
+        }
+
         @variant group-pressed/options-item {
           @apply fg-accent-primary-bold;
         }
@@ -388,6 +404,14 @@
       }
 
       @variant group-selected/options-item {
+        @variant group-hover/options-item {
+          @apply fg-a11y-on-accent;
+        }
+
+        @variant group-focus-visible/options-item {
+          @apply fg-a11y-on-accent;
+        }
+
         @variant group-pressed/options-item {
           @apply fg-accent-primary-bold;
         }
