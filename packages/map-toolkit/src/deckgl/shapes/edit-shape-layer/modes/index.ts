@@ -35,7 +35,7 @@ import type { EditMode } from '../types';
  *
  * CircleTransformMode combines ResizeCircleMode with TranslateMode
  * for circles, allowing resize from edge plus drag to translate.
- * Shows live diameter/area tooltips during resize.
+ * Shows live radius/area tooltips during resize.
  *
  * PointTranslateMode allows clicking anywhere on the map to reposition
  * a point, or dragging the point for traditional translation behavior.

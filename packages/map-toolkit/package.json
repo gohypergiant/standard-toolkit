@@ -1,7 +1,7 @@
 {
   "name": "@accelint/map-toolkit",
   "description": "A collection of components and utilities to simplify visualizing and working with geospatial data.",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "devDependencies": {
@@ -113,6 +113,7 @@
     "./map-mode/use-map-mode": "./dist/map-mode/use-map-mode.js",
     "./maplibre": "./dist/maplibre/index.js",
     "./maplibre/hooks/use-maplibre": "./dist/maplibre/hooks/use-maplibre.js",
+    "./shared/cleanup": "./dist/shared/cleanup.js",
     "./shared/constants": "./dist/shared/constants.js",
     "./shared/create-map-store": "./dist/shared/create-map-store.js",
     "./shared/units": "./dist/shared/units.js",

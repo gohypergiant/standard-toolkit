@@ -460,7 +460,9 @@ export function initializeCameraState(
     initialStateCache.set(mapId, initialState);
   }
   const builtState = buildCameraState(initialState);
-  cameraStore.set(mapId, builtState);
+  // Set initial state BEFORE getInstance is called by useSyncExternalStore
+  // This ensures any code path that creates the instance uses this state
+  cameraStore.setInitialState(mapId, builtState);
 }
 
 /**
@@ -489,7 +491,10 @@ export function useMapCamera(
   cameraState: CameraState;
   setCameraState: (state: Partial<CameraState>) => void;
 } {
-  // Initialize on first use if initial state provided
+  // Initialize BEFORE subscribing to ensure first render has correct state.
+  // This prevents MapLibre from rendering at default (0,0,0) and firing onMove
+  // events that would overwrite the initialized state.
+  // This is safe because initializeCameraState is idempotent (checks initializedInstances first).
   if (initialCameraState && !initializedInstances.has(mapId)) {
     initializeCameraState(mapId, initialCameraState);
   }

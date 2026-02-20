@@ -5,12 +5,13 @@
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "dependencies": {
+    "@loglayer/log-level-manager-one-way": "^2.0.2",
     "@loglayer/plugin": "^3.0.2",
     "@loglayer/shared": "^4.1.0",
     "@loglayer/transport": "^3.0.2",
     "@loglayer/transport-simple-pretty-terminal": "^3.0.2",
     "callsites": "^4.2.0",
-    "serialize-error": "^12.0.0"
+    "serialize-error": "^13.0.1"
   },
   "devDependencies": {
     "@accelint/typescript-config": "workspace:*",
@@ -18,7 +19,7 @@
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
-    "loglayer": "^9.0.0",
+    "loglayer": "^9.1.0",
     "tsdown": "^0.18.0",
     "typescript": "^5.9.3",
     "vitest": "^4.0.15"
@@ -52,7 +53,7 @@
   "module": "./dist/index.js",
   "owner": "default/pathfinder",
   "peerDependencies": {
-    "loglayer": "^9.0.0"
+    "loglayer": "^9.1.0"
   },
   "private": false,
   "publishConfig": {

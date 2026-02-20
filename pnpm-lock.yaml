@@ -6,8 +6,6 @@ settings:
 
 overrides:
   '@internationalized/date': ~3.9.0
-  '@loglayer/plugin': ^3.0.2
-  '@loglayer/shared': ^4.1.0
   '@react-aria/dnd': ~3.11.2
   '@react-aria/interactions': ~3.25.5
   '@react-aria/overlays': ~3.29.1
@@ -872,6 +870,9 @@ importers:
 
   packages/logger:
     dependencies:
+      '@loglayer/log-level-manager-one-way':
+        specifier: ^2.0.2
+        version: 2.0.2
       '@loglayer/plugin':
         specifier: ^3.0.2
         version: 3.0.2
@@ -888,8 +889,8 @@ importers:
         specifier: ^4.2.0
         version: 4.2.0
       serialize-error:
-        specifier: ^12.0.0
-        version: 12.0.0
+        specifier: ^13.0.1
+        version: 13.0.1
     devDependencies:
       '@accelint/typescript-config':
         specifier: workspace:*
@@ -907,7 +908,7 @@ importers:
         specifier: ^16.3.0
         version: 16.3.1(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       loglayer:
-        specifier: ^9.0.0
+        specifier: ^9.1.0
         version: 9.1.0
       tsdown:
         specifier: ^0.18.0
@@ -2528,8 +2529,16 @@ packages:
     resolution: {integrity: sha512-hq6hjkXzrYyz0DwYUqizP0hS3jhPl5S/7U33Cd0EPbfLmDjYWzzcM0mQKUdtBi6qNX4DAPpag3oBGytB2zmghg==}
     engines: {node: '>=18'}
 
+  '@loglayer/plugin@2.1.6':
+    resolution: {integrity: sha512-jZWnExpiYl+BefpiZC34/Finuu9fucxkPfz6re0xF1cUSOmZjy3fGeQtB+zVFYQz7mf6bWbN8dn5z22cH+Hdug==}
+    engines: {node: '>=18'}
+
   '@loglayer/plugin@3.0.2':
     resolution: {integrity: sha512-ghIYpuPw/Q0jdlr7ErkaySfsSCsIigwIb1lvR5qhZrz3oEqGotDFZzhgU1YeO7BacA042ygv/xww3Ip3ROokeg==}
+    engines: {node: '>=18'}
+
+  '@loglayer/shared@2.5.3':
+    resolution: {integrity: sha512-KT8ic1wWstCKOjZNR6Vqpk9rK7PPx/QPjGhfqePGYjo6l9R94mSHry+zdtYjIrIPvQHbnzsp/wd6lj6IvD3MvQ==}
     engines: {node: '>=18'}
 
   '@loglayer/shared@4.1.0':
@@ -6859,6 +6868,10 @@ packages:
   node-releases@2.0.27:
     resolution: {integrity: sha512-nmh3lCkYZ3grZvqcCH+fjmQ7X+H0OeZgP40OierEaAptX4XofMh5kwNbWh7lBduUzCcV/8kZ+NDLCwm2iorIlA==}
 
+  non-error@0.1.0:
+    resolution: {integrity: sha512-TMB1uHiGsHRGv1uYclfhivcnf0/PdFp2pNqRxXjncaAsjYMoisaQJI+SSZCqRq+VliwRTC8tsMQfmrWjDMhkPQ==}
+    engines: {node: '>=20'}
+
   nth-check@2.1.1:
     resolution: {integrity: sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==}
 
@@ -7534,9 +7547,9 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
-  serialize-error@12.0.0:
-    resolution: {integrity: sha512-ZYkZLAvKTKQXWuh5XpBw7CdbSzagarX39WyZ2H07CDLC5/KfsRGlIXV8d4+tfqX1M7916mRqR1QfNHSij+c9Pw==}
-    engines: {node: '>=18'}
+  serialize-error@13.0.1:
+    resolution: {integrity: sha512-bBZaRwLH9PN5HbLCjPId4dP5bNGEtumcErgOX952IsvOhVPrm3/AeK1y0UHA/QaPG701eg0yEnOKsCOC6X/kaA==}
+    engines: {node: '>=20'}
 
   serialize-javascript@6.0.2:
     resolution: {integrity: sha512-Saa1xPByTTq2gdeFZYLLo+RFE35NHZkAbqZeWNd3BpzppeVisAqpDjcp8dyf6uIvEqJRd46jemmyA4iFIeVk8g==}
@@ -8072,12 +8085,12 @@ packages:
   turf-jsts@1.2.3:
     resolution: {integrity: sha512-Ja03QIJlPuHt4IQ2FfGex4F4JAr8m3jpaHbFbQrgwr7s7L6U8ocrHiF3J1+wf9jzhGKxvDeaCAnGDot8OjGFyA==}
 
-  type-fest@4.41.0:
-    resolution: {integrity: sha512-TeTSQ6H5YHvpqVwBRcnLDCBnDOHWYu7IvGbHT6N8AOymcr9PJGjc1GTtiWZTYg0NCgYwvnYWEkVChQAr9bjfwA==}
-    engines: {node: '>=16'}
-
   type-fest@5.3.1:
     resolution: {integrity: sha512-VCn+LMHbd4t6sF3wfU/+HKT63C9OoyrSIf4b+vtWHpt2U7/4InZG467YDNMFMR70DdHjAdpPWmw2lzRdg0Xqqg==}
+    engines: {node: '>=20'}
+
+  type-fest@5.4.4:
+    resolution: {integrity: sha512-JnTrzGu+zPV3aXIUhnyWJj4z/wigMsdYajGLIYakqyOW1nPllzXEJee0QQbHj+CTIQtXGlAjuK0UY+2xTyjVAw==}
     engines: {node: '>=20'}
 
   typed-array-buffer@1.0.3:
@@ -9822,7 +9835,7 @@ snapshots:
 
   '@loglayer/context-manager@1.1.6':
     dependencies:
-      '@loglayer/shared': 4.1.0
+      '@loglayer/shared': 2.5.3
     optional: true
 
   '@loglayer/context-manager@2.0.2':
@@ -9837,9 +9850,17 @@ snapshots:
     dependencies:
       '@loglayer/shared': 4.1.0
 
+  '@loglayer/plugin@2.1.6':
+    dependencies:
+      '@loglayer/shared': 2.5.3
+    optional: true
+
   '@loglayer/plugin@3.0.2':
     dependencies:
       '@loglayer/shared': 4.1.0
+
+  '@loglayer/shared@2.5.3':
+    optional: true
 
   '@loglayer/shared@4.1.0': {}
 
@@ -9852,7 +9873,7 @@ snapshots:
 
   '@loglayer/transport@2.3.4':
     dependencies:
-      '@loglayer/shared': 4.1.0
+      '@loglayer/shared': 2.5.3
     optional: true
 
   '@loglayer/transport@3.0.2':
@@ -15542,8 +15563,8 @@ snapshots:
   loglayer@6.10.0:
     dependencies:
       '@loglayer/context-manager': 1.1.6
-      '@loglayer/plugin': 3.0.2
-      '@loglayer/shared': 4.1.0
+      '@loglayer/plugin': 2.1.6
+      '@loglayer/shared': 2.5.3
       '@loglayer/transport': 2.3.4
     optional: true
 
@@ -16053,6 +16074,8 @@ snapshots:
   node-gyp-build@4.8.4: {}
 
   node-releases@2.0.27: {}
+
+  non-error@0.1.0: {}
 
   nth-check@2.1.1:
     dependencies:
@@ -16881,9 +16904,10 @@ snapshots:
 
   semver@7.7.3: {}
 
-  serialize-error@12.0.0:
+  serialize-error@13.0.1:
     dependencies:
-      type-fest: 4.41.0
+      non-error: 0.1.0
+      type-fest: 5.4.4
 
   serialize-javascript@6.0.2:
     dependencies:
@@ -17496,9 +17520,11 @@ snapshots:
   turf-jsts@1.2.3:
     optional: true
 
-  type-fest@4.41.0: {}
-
   type-fest@5.3.1:
+    dependencies:
+      tagged-tag: 1.0.0
+
+  type-fest@5.4.4:
     dependencies:
       tagged-tag: 1.0.0
 
