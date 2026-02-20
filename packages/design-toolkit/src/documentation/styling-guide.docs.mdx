@@ -14,7 +14,10 @@ This guide covers how to style your application using the Design Toolkit's styli
   - [Radius](#radius)
   - [Typography](#typography)
   - [Outlines, Not Borders](#outlines-not-borders)
+  - [Variants](#variants-and-selectors)
   - [Responsive design](#responsive-design)
+- [CSS Modules](#css-modules)
+  - [CSS Layers](#css-layers)
 - [Overriding Design Toolkit Component Styles](#overriding-design-toolkit-component-styles)
   - [Simple Components: className](#simple-components-classname)
   - [Compound Components: classNames](#compound-components-classnames)
@@ -175,14 +178,75 @@ You might have rare instances where you do need to use a border. For example, if
 <div className="border border-t-(--outline-advisory-bold)" />
 ```
 
+### Variants and selectors
+[↑ Top](#styling-with-the-design-system)
+Tailwind supports [variants](https://tailwindcss.com/docs/hover-focus-and-other-states) that allow for conditional application of styles, such as `:hover`, `:focus`, and `:active`. Additionally, in the Design Toolkit we have chosen to implement additional variants that are specific to [react aria components](https://react-aria.adobe.com/styling#plugin) which allow variants based on state. The fill list of what is implemented can be [found here in variants.css](https://github.com/gohypergiant/standard-toolkit/blob/main/packages/design-foundation/src/variants/variants.css).
+
+```tsx
+<Button className="pressed:bg-blue">
+  {/* ... */}
+</Button>
+
+<ToggleButton>
+  <Icon>
+    <MyIcon className="transform group-selected:rotate-180" />
+  <Icon>
+</ToggleButton>
+```
+
 ### Responsive design
 [↑ Top](#styling-with-the-design-system)
 
 You can apply styles at specific breakpoints using prefixes like `sm:`, `md:`, `lg:`, and `xl:` using Tailwind's standard responsive utility classes as described in the [Tailwind responsive design documentation](https://tailwindcss.com/docs/responsive-design). All responsive utilities work exactly as documented in the official Tailwind guides.
 
 
-## Css Modules
+## CSS Modules
+[↑ Top](#styling-with-the-design-system)
 
+For most use cases, applying Tailwind utility classes directly to your components is sufficient. However, when building reusable components or implementing complex styles, it's better to extract styles into a separate CSS module file (e.g., `styles.module.css`). This keeps your component focused on business logic rather than styling details.
+
+Despite Tailwind's recommendation to avoid abstraction layers, CSS Modules are the preferred approach for reusable components to minimize runtime overhead and prevent class name collisions with other components or libraries.
+
+To access design tokens and Tailwind classes in your CSS module, include the `@reference` [directive](https://tailwindcss.com/docs/functions-and-directives#reference-directive) at the top of the file. You can then use the `@apply` [directive](https://tailwindcss.com/docs/functions-and-directives#apply-directive) to apply utility classes and the `@variant` [directive](https://tailwindcss.com/docs/functions-and-directives#variant-directive) to define variants.
+
+```
+// styles.module.css
+@reference '@accelint/design-foundation/styles';
+
+@layer components.l1 {
+  .myComponent {
+    @apply p-s fg-primary-bold;
+
+    @variant disabled {
+      @apply cursor-not-allowed fg-disabled;
+    }
+  }
+}
+```
+
+```tsx
+import styles from './styles.module.css';
+
+export function MyReusableComponent({ children, className, variant }: Props) {
+  return <div className={clsx(styles.myComponent, styles[variant], className)}>{children}</div>
+}
+```
+
+### CSS Layers
+[↑ Top](#styling-with-the-design-system)
+
+The example above uses `@layer components.l1` to explicitly define where styles sit in the cascade hierarchy. The Design Toolkit provides five component layers (`components.l1` through `components.l5`) that work together with Tailwind's layer system to ensure predictable style overrides.
+
+**Layer Guidelines:**
+
+- **`components.l1`** - Base components with no dependencies on other styled components
+- **`components.l2` through `components.l5`** - Higher-level components that wrap or compose lower-level components. Use the next level up when building on top of existing styled components.
+
+CSS layers establish a clear cascade hierarchy where:
+* Component styles can override each other based on their layer (l2 beats l1, l3 beats l2, etc.)
+* Tailwind utility classes always win over component styles for one-off customizations
+* You maintain explicit control over style precedence without wrestling with specificity
+* The need for `!important` is eliminated and makes the cascade predictable and maintainable
 
 ## Overriding Design Toolkit Component Styles
 [↑ Top](#styling-with-the-design-system)

@@ -36,7 +36,7 @@ pnpm dev
 ```
 
 **Solution**:
-Add to your package.json the imports property below, with the specific path to inclue. The `"imports"` field defines [subpath imports](https://nodejs.org/api/packages.html#subpath-imports), a standard Node.js feature that both the JavaScript/TypeScript toolchain and CSS loaders respect. Unlike path aliases (which are TypeScript-specific configuration), subpath imports work uniformly across the entire build pipeline, including CSS Modules.
+Add to your package.json the imports property below, with the specific path to include. The `"imports"` field defines [subpath imports](https://nodejs.org/api/packages.html#subpath-imports), a standard Node.js feature that both the JavaScript/TypeScript toolchain and CSS loaders respect. Unlike path aliases (which are TypeScript-specific configuration), subpath imports work uniformly across the entire build pipeline, including CSS Modules.
 
 ```json
 {
