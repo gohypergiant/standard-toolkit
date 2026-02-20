@@ -6,6 +6,25 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 This guide covers how to style your application using the Design Toolkit's styling system.
 
+## Contents
+
+- [TailwindCSS](#tailwindcss)
+  - [Colors](#colors)
+  - [Spacing](#spacing)
+  - [Radius](#radius)
+  - [Typography](#typography)
+  - [Outlines, Not Borders](#outlines-not-borders)
+  - [Responsive design](#responsive-design)
+- [Overriding Design Toolkit Component Styles](#overriding-design-toolkit-component-styles)
+  - [Simple Components: className](#simple-components-classname)
+  - [Compound Components: classNames](#compound-components-classnames)
+  - [Discovering Available Class Props](#discovering-available-class-props)
+- [Conditional class rendering and clsx](#conditional-class-rendering-and-clsx)
+- [Breaking Out of the System Constraints](#breaking-out-of-the-system-constraints)
+  - [Arbitrary Tailwind Classes](#arbitrary-tailwind-classes)
+  - [Overriding Theme Variables](#overriding-theme-variables)
+
+
 ## TailwindCSS
 
 The Design Toolkit uses TailwindCSS as its styling foundation. If you're new to utility-first CSS, we recommend starting with [Tailwind documentation](https://tailwindcss.com/docs/styling-with-utility-classes). The fundamental concepts of utility classes are critical to being able to style in the Design Toolkit effectively.
@@ -13,6 +32,7 @@ The Design Toolkit uses TailwindCSS as its styling foundation. If you're new to 
 However, the Core team has established opinionated patterns on how to keep code clean, readable and consistent. While many standard Tailwind classes work as expected, not all the Tailwind documentation will be relevant. The Design Toolkit extends Tailwind with custom semantic tokens for colors, spacing, radius, and typography. These custom classes ensure consistency with the design system and support light/dark mode theming out of the box. We've also made the choice to support css modules, despite the stance taken by the Tailwind.
 
 ### Colors
+[↑ Top](#styling-with-the-design-system)
 
 The Design Toolkit relies on the `@accelint/design-foundation` package that establishes an opinionated set of semantic color classes for background, foreground and outline colors (among other tokens). These colors ensure compatibility in our design and automatically adapt to light and dark mode. The tokens all have a prefix that will orient you to their intended use. They also target the css property that is relevant. For example, adding a `bg-surface-bold` semantic color class to a div will apply the `--bg-interactive-bold` css var to the `background-color` css property.
 
@@ -54,8 +74,8 @@ While most product experiences should comfortably live within the boundaries of 
 <div className="outline-neutral-300" />
 
 ```
-
 ### Spacing
+[↑ Top](#styling-with-the-design-system)
 
 The Design Toolkit uses a custom spacing scale instead of Tailwind's numeric scale to maintain consistency.
 
@@ -96,6 +116,7 @@ While the spacing tokens should cover the majority of cases and are preferred, i
 ```
 
 ### Radius
+[↑ Top](#styling-with-the-design-system)
 
 Use the custom border radius scale with the `rounded-` prefix:
 
@@ -110,6 +131,7 @@ Use the custom border radius scale with the `rounded-` prefix:
 See the **Foundation / Radius** story in Storybook for visual examples.
 
 ### Typography
+[↑ Top](#styling-with-the-design-system)
 
 The Design Toolkit provides two categories of typography classes: font families and text styles.
 
@@ -136,6 +158,7 @@ These values align directly with the text styles designers use in Figma, ensurin
 See the **Foundation / Typography** stories in Storybook for the complete type scale.
 
 ### Outlines, Not Borders
+[↑ Top](#styling-with-the-design-system)
 
 DesignTK chooses to implement outlines instead of borders to make it so that the style doesn't impact box model dimensions. This way elements with or without a "border" are consistently sized based on content and padding alone. This also helps with sibling components rendering at the same size when their border styles may not match.
 
@@ -153,14 +176,21 @@ You might have rare instances where you do need to use a border. For example, if
 ```
 
 ### Responsive design
+[↑ Top](#styling-with-the-design-system)
 
 You can apply styles at specific breakpoints using prefixes like `sm:`, `md:`, `lg:`, and `xl:` using Tailwind's standard responsive utility classes as described in the [Tailwind responsive design documentation](https://tailwindcss.com/docs/responsive-design). All responsive utilities work exactly as documented in the official Tailwind guides.
 
+
+## Css Modules
+
+
 ## Overriding Design Toolkit Component Styles
+[↑ Top](#styling-with-the-design-system)
 
 Each Design Toolkit component exposes a prop for applying Tailwind utility classes as overrides.
 
 ### Simple Components: `className`
+[↑ Top](#styling-with-the-design-system)
 
 For simple components, use the `className` prop:
 
@@ -173,6 +203,7 @@ import { Button } from '@accelint/design-toolkit';
 ```
 
 ### Compound Components: `classNames`
+[↑ Top](#styling-with-the-design-system)
 
 For complex or compound components where you may want to override styles for multiple parts, use the `classNames` prop. This prop accepts an object with properties corresponding to different parts of the component:
 
@@ -195,6 +226,7 @@ import { TextField } from '@accelint/design-toolkit';
 ```
 
 ### Discovering Available Class Props
+[↑ Top](#styling-with-the-design-system)
 
 TypeScript is useful for discovering which parts of a component can be styled. Check the component's prop types for `className` or `classNames`:
 
@@ -219,6 +251,7 @@ classNames?: {
 Hover over the `classNames` prop in your IDE or check the component's type definitions to see available styling targets.
 
 ## Conditional class rendering and `clsx`
+[↑ Top](#styling-with-the-design-system)
 
 Use `clsx` for any dynamic class application logic. The import should be from the design foundation library.
 
@@ -241,10 +274,12 @@ function MyComponent({ className, isDisabled }: Props) {
 ```
 
 ## Breaking Out of the System Constraints
+[↑ Top](#styling-with-the-design-system)
 
 While the Design Toolkit provides a styling system that should fit many use cases, there will likely be situations where you need to operate outside of the constraints it provides. Here are some common examples:
 
 ### Arbitrary Tailwind Classes
+[↑ Top](#styling-with-the-design-system)
 
 Tailwind supports [arbitrary values](https://tailwindcss.com/docs/adding-custom-styles#using-arbitrary-values) for one-off styles that don't exist in the theme. Use these sparingly and only when necessary:
 
@@ -272,6 +307,7 @@ When using arbitrary values, prefer referencing theme variables over hardcoding 
 If you find yourself reaching for arbitrary classes frequently, raise this to the core team so they can consider whether the design system should be extended to support your use case.
 
 ### Overriding Theme Variables
+[↑ Top](#styling-with-the-design-system)
 
 You can override theme variables in your application's global CSS file. You can also create application-specific variables in this manner.
 
