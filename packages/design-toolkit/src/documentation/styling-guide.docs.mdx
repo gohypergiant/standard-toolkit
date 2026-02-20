@@ -180,18 +180,50 @@ You might have rare instances where you do need to use a border. For example, if
 
 ### Variants and selectors
 [↑ Top](#styling-with-the-design-system)
-Tailwind supports [variants](https://tailwindcss.com/docs/hover-focus-and-other-states) that allow for conditional application of styles, such as `:hover`, `:focus`, and `:active`. Additionally, in the Design Toolkit we have chosen to implement additional variants that are specific to [react aria components](https://react-aria.adobe.com/styling#plugin) which allow variants based on state. The fill list of what is implemented can be [found here in variants.css](https://github.com/gohypergiant/standard-toolkit/blob/main/packages/design-foundation/src/variants/variants.css).
+Tailwind supports [variants](https://tailwindcss.com/docs/hover-focus-and-other-states) that allow for conditional application of styles, such as `:hover`, `:focus`, and `:active`. Additionally, in the Design Toolkit we have chosen to implement additional variants that are specific to [react aria components](https://react-aria.adobe.com/styling#plugin) which allow variants based on state. The fill list of what is implemented can be [found here in variants.css](https://github.com/gohypergiant/standard-toolkit/blob/main/packages/design-foundation/src/variants/variants.css). You can combine variants for additional complexity or use them with the [`group` class](https://tailwindcss.com/docs/hover-focus-and-other-states#styling-based-on-the-descendants-of-a-group) provided by Tailwind.
 
 ```tsx
-<Button className="pressed:bg-blue">
+<div className="empty:none">{maybeContent}</div>
+
+// using state for conditional utility classes
+<Button className="pressed:bg-accent-primary-muted">
   {/* ... */}
 </Button>
 
+//can be used with grouped elements
 <ToggleButton>
   <Icon>
     <MyIcon className="transform group-selected:rotate-180" />
-  <Icon>
+  </Icon>
 </ToggleButton>
+
+//can be stacked
+<div className="md:hover:bg-critical-bold ...">Important thing...</div>
+```
+
+Avoid using arbitrary variants, for example with a `data-` selector. Instead prefer the supported variants or conditional class rendering using the `clsx` library.
+
+```tsx
+function MyComponent({ size }: Props) {
+  // Bad
+  return (
+    <ToggleButton
+      className="data-selected:foo data-[size=large]:bar"
+      data-size={size}
+    />
+  );
+
+  // Ok, but custom variants aren't available
+  return <ToggleButton className="selected:foo" />
+
+  // Good, if renderProps from RAC are available (props and internal state can be used too)
+  return <ToggleButton className={({ isSelected }) => clsx(styles[size], isSelected && styles.selected)} />
+
+  // Good, if renderProps from RAC are not available
+  const [isSelected, setIsSelected] = useState(false);
+
+  return <button className={clsx(styles[size], isSelected && styles.selected)} />
+}
 ```
 
 ### Responsive design
@@ -232,7 +264,7 @@ export function MyReusableComponent({ children, className, variant }: Props) {
 }
 ```
 
-### CSS Layers
+## CSS Layers
 [↑ Top](#styling-with-the-design-system)
 
 The example above uses `@layer components.l1` to explicitly define where styles sit in the cascade hierarchy. The Design Toolkit provides five component layers (`components.l1` through `components.l5`) that work together with Tailwind's layer system to ensure predictable style overrides.
@@ -259,7 +291,7 @@ Each Design Toolkit component exposes a prop for applying Tailwind utility class
 For simple components, use the `className` prop:
 
 ```jsx
-import { Button } from '@accelint/design-toolkit';
+import { Button } from '@accelint/design-toolkit/components/button';
 
 <Button className="mt-l">
   Submit
@@ -272,7 +304,7 @@ import { Button } from '@accelint/design-toolkit';
 For complex or compound components where you may want to override styles for multiple parts, use the `classNames` prop. This prop accepts an object with properties corresponding to different parts of the component:
 
 ```jsx
-import { TextField } from '@accelint/design-toolkit';
+import { TextField } from '@accelint/design-toolkit/components/text-field';
 
 <TextField
   label="Email"
@@ -323,19 +355,18 @@ Use `clsx` for any dynamic class application logic. The import should be from th
 import { clsx } from '@accelint/design-foundation/lib/utils';
 
 function MyComponent({ className, isDisabled }: Props) {
-  // Bad
+  // ❌ Bad
   return <div className={`foo ${isDisabled && 'bar'} ${className}`} />
 
-  // Bad
   return <div className={['foo', isDisabled ? 'bar' : undefined, className].join(' ')} />
 
-  // Bad
   return <div className={clsx(['foo', isDisabled && 'bar', className])} />
 
-  // Good
+  // ✅ Good
   return <div className={clsx('foo', { bar: isDisabled }, className)} />
 }
 ```
+
 
 ## Breaking Out of the System Constraints
 [↑ Top](#styling-with-the-design-system)
@@ -345,17 +376,20 @@ While the Design Toolkit provides a styling system that should fit many use case
 ### Arbitrary Tailwind Classes
 [↑ Top](#styling-with-the-design-system)
 
-Tailwind supports [arbitrary values](https://tailwindcss.com/docs/adding-custom-styles#using-arbitrary-values) for one-off styles that don't exist in the theme. Use these sparingly and only when necessary:
+Tailwind supports [arbitrary values](https://tailwindcss.com/docs/adding-custom-styles#using-arbitrary-values) for one-off styles that don't exist in the theme. While tailwind provides bracketing to use arbitrary values, these should be avoided. In all cases, use these techniques sparingly and only when necessary:
 
 ```jsx
-// Arbitrary value - use when no theme token exists
-<div className="w-[327px]" />
+// ❌ Avoid using the bracket syntax
+<div className="w-[325px]" />
 
-// Arbitrary property - use for CSS properties without utility classes
+// ✅ Ok to use arbitrary spacing values, if necessary
+<div className="w-325" />
+
+// ✅ Arbitrary property - use for CSS properties without utility classes
 <div className="[clip-path:circle(50%)]" />
 
-// Referencing theme variables in arbitrary values
-<div className="bg-(--fg-critical-bold)" />
+// ✅ Referencing theme variables in arbitrary values
+<div className="border border-t-(--outline-advisory-bold)" />
 ```
 
 When using arbitrary values, prefer referencing theme variables over hardcoding values:
