@@ -49,4 +49,6 @@ export type RadioProps = Omit<AriaRadioProps, 'className'> &
       control?: string;
       label?: string;
     };
+    /** Position of the label relative to the radio control. */
+    labelPosition?: 'start' | 'end';
   };

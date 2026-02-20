@@ -32,6 +32,14 @@
   .checkbox {
     @apply gap-m flex cursor-pointer items-center;
 
+    &.labelStart {
+      @apply flex-row-reverse;
+    }
+
+    &.labelEnd {
+      @apply flex-row;
+    }
+
     @variant disabled {
       @apply cursor-not-allowed;
     }

@@ -35,12 +35,22 @@ import type { RadioProps } from './types';
  * </RadioGroup>
  * ```
  */
-export function Radio({ classNames, children, ...rest }: RadioProps) {
+export function Radio({
+  classNames,
+  children,
+  labelPosition = 'end',
+  ...rest
+}: RadioProps) {
   return (
     <AriaRadio
       {...rest}
       className={composeRenderProps(classNames?.radio, (className) =>
-        clsx('group/radio', styles.radio, className),
+        clsx(
+          'group/radio',
+          styles.radio,
+          labelPosition === 'start' ? styles.labelStart : styles.labelEnd,
+          className,
+        ),
       )}
     >
       {composeRenderProps(children, (children) => (
