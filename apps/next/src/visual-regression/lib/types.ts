@@ -75,6 +75,13 @@ export interface InteractiveVisualTestConfig<TProps = Record<string, unknown>> {
    *  When omitted, interactions target the wrapper element.
    *  Use for compound components where a specific child needs to be hovered/pressed. */
   interactionTarget?: string;
+  /** CSS selector for the element to screenshot (e.g. '[role="menu"]').
+   *  Use for portal-based components where the visual content renders outside the wrapper.
+   *  When omitted, screenshots target the wrapper element via testId. */
+  screenshotSelector?: string;
+  /** Delay in ms after render before interacting.
+   *  Use for portal-based components that need time to mount (e.g. menus, popovers). */
+  waitMs?: number;
 }
 
 // =============================================================================

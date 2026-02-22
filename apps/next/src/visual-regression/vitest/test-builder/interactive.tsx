@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -21,6 +21,7 @@ import {
   DEFAULT_TEST_STATES,
   INTERACTION_STATES,
 } from '../../lib/interactive-states';
+import { getTargetFromSelector } from '../../lib/selectors';
 import { insertModeInFilename, THEME_MODES } from '../../lib/theme-modes';
 import type {
   ComponentVariantConfig,
@@ -31,7 +32,7 @@ import type {
 
 const logger = getLogger({
   enabled: process.env.NODE_ENV !== 'production',
-  level: 'debug',
+  level: 'warn',
   prefix: '[VRT:Interactive]',
   pretty: true,
 });
@@ -56,7 +57,7 @@ function findFocusableElement(container: Element): HTMLElement | null {
 }
 
 /**
- * Trigger an interactive state on an element
+ * Trigger an interactive state on an element.
  */
 async function triggerState(
   element: Element,
@@ -65,11 +66,14 @@ async function triggerState(
   switch (state) {
     case 'hover':
       try {
-        await userEvent.hover(element);
+        await userEvent.hover(element, { timeout: 3_000 });
       } catch {
-        logger.warn(
-          `Failed to hover element: ${element.tagName}${element.id ? `#${element.id}` : ''}`,
-        );
+        // Fallback: set data-hovered directly. The design system's hover
+        // variant matches [data-hovered], so this produces identical visual
+        // output to a real hover interaction.
+        if (element instanceof HTMLElement) {
+          element.setAttribute('data-hovered', 'true');
+        }
       }
       break;
     case 'focus': {
@@ -119,7 +123,10 @@ async function waitForPaint(): Promise<void> {
 async function resetState(): Promise<void> {
   // Move mouse to body to clear hover
   await userEvent.hover(document.body);
-  // Clean up any manually-set data-pressed attributes
+  // Clean up any manually-set data-hovered/data-pressed attributes
+  for (const el of document.querySelectorAll('[data-hovered]')) {
+    el.removeAttribute('data-hovered');
+  }
   for (const el of document.querySelectorAll('[data-pressed]')) {
     el.removeAttribute('data-pressed');
   }
@@ -145,6 +152,8 @@ interface StateTestContext<TProps> {
   screenshotName?: (variantId: string, state: InteractiveState) => string;
   className?: string;
   interactionTarget?: string;
+  screenshotSelector?: string;
+  waitMs?: number;
 }
 
 /**
@@ -189,20 +198,52 @@ async function runStateTest<TProps>(
 
   render(
     <ThemeProvider defaultMode={ctx.mode}>
-      <div data-testid={testIdValue} className={clsx('inline-block', ctx.className)}>
+      <div
+        data-testid={testIdValue}
+        className={clsx('inline-block', ctx.className)}
+      >
         {ctx.renderComponent(props)}
       </div>
     </ThemeProvider>,
   );
 
-  const locator = page.getByTestId(testIdValue);
-  const element = locator.element();
+  // Wait for portal-based components to mount (e.g. menus, popovers)
+  if (ctx.waitMs) {
+    await new Promise((r) => setTimeout(r, ctx.waitMs));
+  }
 
-  const interactionElement = ctx.interactionTarget
-    ? element.querySelector(ctx.interactionTarget) ?? element
-    : element;
+  const wrapperLocator = page.getByTestId(testIdValue);
+  const element = wrapperLocator.element();
+
+  // For portal-based components (e.g. menus rendered via Popover), the
+  // interaction target may live outside the wrapper in a React portal.
+  let interactionElement: Element = element;
+
+  if (ctx.interactionTarget) {
+    const found = element.querySelector(ctx.interactionTarget);
+    if (found) {
+      interactionElement = found;
+    } else {
+      // Portal elements live outside the wrapper but in the same document.
+      const doc = element.ownerDocument;
+      for (let i = 0; i < 40; i++) {
+        const portalEl = doc.querySelector(ctx.interactionTarget);
+        if (portalEl) {
+          interactionElement = portalEl;
+          break;
+        }
+        await new Promise((r) => setTimeout(r, 50));
+      }
+      if (interactionElement === element) {
+        logger.warn(
+          `Portal element not found for "${ctx.interactionTarget}"`,
+        );
+      }
+    }
+  }
 
   await triggerState(interactionElement, ctx.state);
+  await waitForPaint();
 
   const filename = ctx.screenshotName
     ? insertModeInFilename(
@@ -216,7 +257,13 @@ async function runStateTest<TProps>(
         ctx.mode,
       );
 
-  await expect.element(locator).toMatchScreenshot(filename);
+  // For portal-based components, screenshot the actual content element
+  // instead of the wrapper which may only contain the trigger.
+  const screenshotLocator = ctx.screenshotSelector
+    ? (getTargetFromSelector(ctx.screenshotSelector) ?? wrapperLocator)
+    : wrapperLocator;
+
+  await expect.element(screenshotLocator).toMatchScreenshot(filename);
 
   await resetState();
 }
@@ -254,6 +301,8 @@ export function createInteractiveVisualTests<TProps>(
     screenshotName,
     className,
     interactionTarget,
+    screenshotSelector,
+    waitMs,
   } = config;
 
   describe(`${componentName} Interactive States`, () => {
@@ -284,6 +333,8 @@ export function createInteractiveVisualTests<TProps>(
                   screenshotName,
                   className,
                   interactionTarget,
+                  screenshotSelector,
+                  waitMs,
                 }));
             }
           });
