@@ -1,7 +1,7 @@
 {
   "name": "@accelint/design-toolkit",
   "description": "An open-source component library to serve as part of the entire ecosystem of UX for Accelint.",
-  "version": "10.0.0",
+  "version": "9.7.0",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "devDependencies": {
@@ -320,6 +320,7 @@
     "./components/table/row": "./dist/components/table/row.js",
     "./components/table/types": "./dist/components/table/types.js",
     "./components/tabs": "./dist/components/tabs/index.js",
+    "./components/tabs/constants": "./dist/components/tabs/constants.js",
     "./components/tabs/context": "./dist/components/tabs/context.js",
     "./components/tabs/list": "./dist/components/tabs/list.js",
     "./components/tabs/panel": "./dist/components/tabs/panel.js",

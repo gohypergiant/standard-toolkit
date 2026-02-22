@@ -1,6 +1,6 @@
 # @accelint/design-toolkit
 
-## 10.0.0
+## 9.7.0
 ### Minor Changes
 
 - 774ee92: Tabs (& Tab) components now have two new props:
