@@ -13,11 +13,11 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { getLogger } from '@accelint/logger/default';
 import { formatError } from 'media-chrome/dist/labels/labels.js';
 import { MediaController } from 'media-chrome/react';
 import { MediaProvider, useMediaRef } from 'media-chrome/react/media-store';
 import { useEffect, useState } from 'react';
+import { createLoggerDomain } from '@/utils/logger';
 import { MediaControlsProvider } from '../media-controls/context';
 import { MuteButton } from '../media-controls/mute-button';
 import { PlayButton } from '../media-controls/play-button';
@@ -29,12 +29,7 @@ import { VolumeSlider } from '../media-controls/volume-slider';
 import styles from './styles.module.css';
 import type { AudioProps } from './types';
 
-const logger = getLogger({
-  enabled: true,
-  level: 'error',
-  prefix: '[Audio]',
-  pretty: true,
-});
+const logger = createLoggerDomain('[Audio]');
 
 /**
  * Internal component that renders within MediaProvider context.
@@ -117,7 +112,9 @@ function AudioInner({
         onPlay={(e) => onPlay?.(e)}
         onPause={(e) => onPause?.(e)}
         onError={(e) => {
+          // FIXME: this is currently always null
           const mediaError = e.currentTarget.error;
+
           logger
             .withContext({ src })
             .withError(mediaError)

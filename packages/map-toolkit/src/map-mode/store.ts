@@ -36,7 +36,7 @@
 
 import { Broadcast } from '@accelint/bus';
 import { uuid } from '@accelint/core';
-import { getLogger } from '@accelint/logger';
+import { createLoggerDomain } from '@/shared/logger';
 import {
   createMapStore,
   mapClear,
@@ -48,13 +48,7 @@ import type { UniqueId } from '@accelint/core';
 import type { StoreHelpers } from '../shared/create-map-store';
 import type { MapModeEventType, ModeChangeDecisionPayload } from './types';
 
-const logger = getLogger({
-  enabled:
-    process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test',
-  level: 'warn',
-  prefix: '[MapMode]',
-  pretty: true,
-});
+const logger = createLoggerDomain('[MapMode]');
 
 const DEFAULT_MODE = 'default';
 

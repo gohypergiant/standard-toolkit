@@ -29,6 +29,7 @@ export default defineConfig({
     '!src/deckgl/shapes/**/hooks/**',
     // Additional internal files
     '!src/deckgl/shapes/display-shape-layer/shape-label-layer.ts',
+    '!src/shared/logger.ts',
   ],
   // NOTE: optionalDependencies must be included here
   // SEE: https://tsdown.dev/options/dependencies#default-behavior

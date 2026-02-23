@@ -14,7 +14,6 @@
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import { Loop, Problem } from '@accelint/icons';
-import { getLogger } from '@accelint/logger/default';
 import { formatError } from 'media-chrome/dist/labels/labels.js';
 import { MediaController } from 'media-chrome/react';
 import {
@@ -22,11 +21,11 @@ import {
   useMediaRef,
   useMediaSelector,
 } from 'media-chrome/react/media-store';
-import type { MediaState } from 'media-chrome/react/media-store';
 import { useCallback, useEffect, useState } from 'react';
+import { createLoggerDomain } from '@/utils/logger';
 import { Icon } from '../icon';
-import { FullscreenButton } from '../media-controls/fullscreen-button';
 import { MediaControlsProvider } from '../media-controls/context';
+import { FullscreenButton } from '../media-controls/fullscreen-button';
 import { MuteButton } from '../media-controls/mute-button';
 import { PlayButton } from '../media-controls/play-button';
 import { PlaybackRateButton } from '../media-controls/playback-rate';
@@ -35,14 +34,10 @@ import { TimeDisplay } from '../media-controls/time-display';
 import { TimeRange } from '../media-controls/time-range';
 import { VolumeSlider } from '../media-controls/volume-slider';
 import styles from './styles.module.css';
+import type { MediaState } from 'media-chrome/react/media-store';
 import type { VideoProps } from './types';
 
-const logger = getLogger({
-  enabled: true,
-  level: 'error',
-  prefix: '[Video]',
-  pretty: true,
-});
+const logger = createLoggerDomain('[Video]');
 
 const selectMediaLoading = (state: MediaState) => state.mediaLoading;
 const selectMediaDuration = (state: MediaState) => state.mediaDuration;
@@ -117,9 +112,11 @@ function VideoInner({
 
   const handleError = useCallback(
     (e: React.SyntheticEvent<HTMLVideoElement>) => {
+      // FIXME: this is currently always null
       const mediaError = e.currentTarget.error;
+
       logger
-        .withContext({ src })
+        .withMetadata({ src })
         .withError(mediaError)
         .error('Failed to load video');
       setErrorMessage(

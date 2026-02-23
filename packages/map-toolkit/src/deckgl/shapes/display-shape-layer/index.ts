@@ -13,10 +13,10 @@
 'use client';
 
 import { Broadcast } from '@accelint/bus';
-import { getLogger } from '@accelint/logger';
 import { CompositeLayer } from '@deck.gl/core';
 import { PathStyleExtension } from '@deck.gl/extensions';
 import { GeoJsonLayer, IconLayer } from '@deck.gl/layers';
+import { createLoggerDomain } from '@/shared/logger';
 import { DASH_ARRAYS, SHAPE_LAYER_IDS } from '../shared/constants';
 import { type ShapeEvent, ShapeEvents } from '../shared/events';
 import {
@@ -39,12 +39,7 @@ import type { Layer, PickingInfo } from '@deck.gl/core';
 import type { Shape, ShapeId } from '../shared/types';
 import type { DisplayShapeLayerProps } from './types';
 
-const logger = getLogger({
-  enabled: process.env.NODE_ENV !== 'production',
-  level: 'warn',
-  prefix: '[DisplayShapeLayer]',
-  pretty: true,
-});
+const logger = createLoggerDomain('[DisplayShapeLayer]');
 
 /**
  * Typed event bus instance for shape events.

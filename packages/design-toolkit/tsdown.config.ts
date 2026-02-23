@@ -29,6 +29,7 @@ export default defineConfig({
     '!src/test',
     '!src/icons',
     '!src/foundation',
+    '!src/utils/logger',
   ],
   tsconfig: './tsconfig.dist.json',
   clean: true,

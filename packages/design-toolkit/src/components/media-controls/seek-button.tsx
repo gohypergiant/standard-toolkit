@@ -12,25 +12,20 @@
 'use client';
 
 import 'client-only';
-import { useCallback } from 'react';
 import { FastForward, FastRewind } from '@accelint/icons';
-import { getLogger } from '@accelint/logger/default';
 import {
   MediaActionTypes,
   useMediaDispatch,
   useMediaSelector,
 } from 'media-chrome/react/media-store';
+import { useCallback } from 'react';
+import { createLoggerDomain } from '@/utils/logger';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { useMediaControlsDisabled } from './context';
 import type { SeekButtonProps } from './types';
 
-const logger = getLogger({
-  enabled: process.env.NODE_ENV === 'development',
-  level: 'warn',
-  prefix: '[SeekButton]',
-  pretty: true,
-});
+const logger = createLoggerDomain('[SeekButton]');
 
 /** Default seek distance in seconds. */
 const DEFAULT_SEEK_OFFSET = 10;
