@@ -37,7 +37,7 @@
 
 import { createMapStore } from '@/shared/create-map-store';
 import { Broadcast } from '@accelint/bus';
-import { type UniqueId } from '@accelint/core';
+import type { UniqueId } from '@accelint/core';
 import { getLogger } from '@accelint/logger';
 import type { Feature } from 'geojson';
 import { MapEvents } from '../../base-map/events';
@@ -369,7 +369,6 @@ export function saveEditingFromLayer(mapId: UniqueId): void {
  * previous editing mode to return to when we release the key.
  */
 export function enableEditPanning(mapId: UniqueId, prevMode: EditMode): void {
-  // Not disable hotkey if not in edit mode.
   if (!editStore.get(mapId)?.editingShape) {
     return;
   }
@@ -383,7 +382,6 @@ export function enableEditPanning(mapId: UniqueId, prevMode: EditMode): void {
  * End of panning, we return to previous editing mode and clear stored mode.
  */
 export function disableEditPanning(mapId: UniqueId): void {
-  // If we're done editing (via another hotkey), we're gucci.
   if (!editStore.get(mapId)?.editingShape) {
     editStore.set(mapId, { prevMode: null });
     requestCursorChange(mapId, 'default', EDIT_SHAPE_LAYER_ID);
