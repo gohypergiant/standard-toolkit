@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { MapCursorEvents } from '@/map-cursor/events';
 import { Broadcast } from '@accelint/bus';
 import type { UniqueId } from '@accelint/core';
 import { uuid } from '@accelint/core';
@@ -607,19 +608,19 @@ describe('edit-shape-layer store', () => {
 
       mapEventBus.on(MapEvents.enablePan, modeEmitSpy);
 
-      disableEditPanning(mapId);
+      enableEditPanning(mapId, editStore.get(mapId)?.editMode);
       expect(editStore.get(mapId)?.prevMode).toBe(null);
     });
 
     it('should store prev mode when called during editing', () => {
       const { edit } = editStore.actions(mapId);
       const mapEventBus = Broadcast.getInstance();
-      const editShapeBus = Broadcast.getInstance();
+      const mapCursorBus = Broadcast.getInstance();
       const modeEmitSpy = vi.fn();
       const cursorEmitSpy = vi.fn();
 
       mapEventBus.on(MapEvents.enablePan, modeEmitSpy);
-      editShapeBus.on(EditShapeEvents.updated, cursorEmitSpy);
+      mapCursorBus.on(MapCursorEvents.changeRequest, cursorEmitSpy);
 
       const shape = createMockShape();
       edit(shape);
@@ -633,20 +634,50 @@ describe('edit-shape-layer store', () => {
         editStore.get(mapId).editMode,
       );
       expect(modeEmitSpy).toHaveBeenCalled();
+      expect(cursorEmitSpy).toHaveBeenCalled();
     });
   });
 
   describe('disableEditPanning', () => {
-    it('should return and do nothing if editing shape exists', () => {
+    it('should clear prevMode and return to editMode', () => {
+      const { edit } = editStore.actions(mapId);
       const mapEventBus = Broadcast.getInstance();
-      const modeEmitSpy = vi.fn();
+      const mapCursorBus = Broadcast.getInstance();
 
-      mapEventBus.on(MapEvents.enablePan, modeEmitSpy);
+      const modeEmitSpy = vi.fn();
+      const cursorEmitSpy = vi.fn();
+
+      mapEventBus.on(MapEvents.disablePan, modeEmitSpy);
+      mapCursorBus.on(MapCursorEvents.changeRequest, cursorEmitSpy);
+
+      const shape = createMockShape();
+      edit(shape);
 
       disableEditPanning(mapId);
       expect(editStore.get(mapId)?.prevMode).toBe(null);
+      expect(modeEmitSpy).toHaveBeenCalled();
+      expect(cursorEmitSpy).toHaveBeenCalled();
     });
 
-    it('should set editMode to prev mode, then clear prev mode', () => {});
+    it('should return and clear prevMode if editMode is active', () => {
+      const { edit } = editStore.actions(mapId);
+      const mapEventBus = Broadcast.getInstance();
+      const mapCursorBus = Broadcast.getInstance();
+      const modeEmitSpy = vi.fn();
+      const cursorEmitSpy = vi.fn();
+
+      mapEventBus.on(MapEvents.disablePan, modeEmitSpy);
+      mapCursorBus.on(MapCursorEvents.changeRequest, cursorEmitSpy);
+
+      const shape = createMockShape();
+      edit(shape);
+
+      expect(editStore.get(mapId)?.editMode).not.toBe('view');
+
+      disableEditPanning(mapId);
+      expect(editStore.get(mapId)?.prevMode).toBe(null);
+      expect(modeEmitSpy).toHaveBeenCalled();
+      expect(cursorEmitSpy).toHaveBeenCalled();
+    });
   });
 });
