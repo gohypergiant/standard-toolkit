@@ -445,7 +445,7 @@
     "format:check": "pnpm format:biome:check && pnpm format:prettier:check",
     "format:prettier": "pnpm prettier --write \"./src/**/*.css\"",
     "format:prettier:check": "pnpm prettier --check \"./src/**/*.css\"",
-    "index": "pnpm zx ../../scripts/indexer.mjs packages/design-toolkit",
+    "index": "pnpm zx ../../scripts/indexer.mjs packages/design-toolkit --client",
     "license": "pnpm zx ../../scripts/license.mjs",
     "lint": "pnpm biome lint . --verbose",
     "lint:package": "pnpm publint",
