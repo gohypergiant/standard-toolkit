@@ -15,7 +15,7 @@ import type { Preview, ReactRenderer } from '@storybook/react-vite';
 import './index.css';
 import './assets/docs.css';
 import { DocsContainer } from '@storybook/addon-docs/blocks';
-import { createElement } from 'react';
+import { createElement, StrictMode } from 'react';
 import { type ThemeVars, themes } from 'storybook/theming';
 import { Docs } from './docs';
 
@@ -60,6 +60,15 @@ const preview: Preview = {
     },
   },
   decorators: [
+    // Enable React Strict Mode to catch side effects and render issues during development
+    (Story) =>
+      process.env.NODE_ENV === 'development' ? (
+        <StrictMode>
+          <Story />
+        </StrictMode>
+      ) : (
+        <Story />
+      ),
     withThemeByClassName<ReactRenderer>({
       themes: {
         light: 'light !bg-surface-default', // need important because storybook uses important 🫠

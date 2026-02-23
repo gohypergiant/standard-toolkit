@@ -29,13 +29,14 @@ const LINKS = [
   { path: '/hero', label: 'Hero' },
   { path: '/label', label: 'Label' },
   { path: '/link', label: 'Link' },
+  { path: '/map', label: 'Map' },
   { path: '/notice', label: 'Notice' },
   { path: '/tooltip', label: 'Tooltip' },
 ];
 
 export function Nav() {
   return (
-    <div className='flex flex-row gap-s fixed top-0 left-0 right-0 bg-surface-default p-xs shadow-elevation-overlay'>
+    <div className='flex flex-row gap-s fixed top-0 left-0 right-0 bg-surface-default p-xs shadow-elevation-raised'>
       {LINKS.map((link) => {
         return (
           <Link key={link.path} href={link.path}>
