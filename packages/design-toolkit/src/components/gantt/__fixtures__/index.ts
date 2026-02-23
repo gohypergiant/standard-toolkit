@@ -13,6 +13,10 @@
 // Tuesday, Jan 27, 2026 at 12:00 AM UTC
 export const START_TIME_MS = 1769472000000;
 
+// Proxy for 'Now' in stories to demonstrate current time indicator
+// Wed Jan 28, 2026 at 7:30 AM UTC
+export const CURRENT_TIME_MS = 1769585400000;
+
 // Friday, Jan 30, 2026 at 8:00 AM UTC
 export const END_TIME_MS = 1769760000000;
 

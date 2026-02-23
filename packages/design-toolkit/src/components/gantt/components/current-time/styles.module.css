@@ -13,15 +13,19 @@
 @reference '@accelint/design-foundation/styles';
 
 @layer components.l1 {
-  .container {
-    @apply relative flex max-h-full w-full flex-col overflow-hidden pt-[40px];
+  .current-time-marker {
+    @apply font-display text-body-xs fg-primary-bold absolute top-[20px] z-10 h-full w-fit;
+    transform: translateX(var(--translate-x));
   }
 
-  .rows-container {
-    @apply flex-1 overflow-hidden;
+  .current-time-label {
+    @apply rounded-b-medium outline-accent-primary-bold p-xs ml-[-19px] border;
+    border-color: var(--outline-accent-primary-bold);
   }
 
-  .row-scroll-container {
-    @apply pr-px;
+  .current-time-indicator {
+    @apply h-full;
+    border-left: 2px dashed red;
+    border-color: var(--outline-accent-primary-bold);
   }
 }

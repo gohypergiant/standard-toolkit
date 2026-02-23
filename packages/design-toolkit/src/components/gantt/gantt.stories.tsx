@@ -11,7 +11,12 @@
  */
 
 import { Gantt } from './';
-import { END_TIME_MS, ROWS, START_TIME_MS } from './__fixtures__';
+import {
+  CURRENT_TIME_MS,
+  END_TIME_MS,
+  ROWS,
+  START_TIME_MS,
+} from './__fixtures__';
 import { GanttRow } from './components/gantt-row';
 import { BracketClose, BracketOpen } from './components/gantt-row/bracket';
 import { GanttRowBlock } from './components/gantt-row/gantt-row-block';
@@ -24,6 +29,7 @@ const meta = {
   args: {
     startTimeMs: START_TIME_MS,
     endTimeMs: END_TIME_MS,
+    currentTimeMs: CURRENT_TIME_MS,
     timescale: '1h',
   },
   parameters: {

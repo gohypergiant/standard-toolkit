@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { CurrentTime } from './components/current-time';
 import { RowsVirtualizer } from './components/rows-virtualizer';
 import { Timeline } from './components/timeline';
 import { GanttProvider } from './context';
@@ -21,12 +22,14 @@ import type { Timescale } from './types';
 type GanttProps = {
   startTimeMs: number;
   endTimeMs: number;
+  currentTimeMs: number;
   timescale: Timescale;
 };
 
 export function Gantt({
   startTimeMs,
   endTimeMs,
+  currentTimeMs,
   timescale,
   children,
 }: PropsWithChildren<GanttProps>) {
@@ -40,6 +43,7 @@ export function Gantt({
   return (
     <GanttProvider timescale={timescale} totalBounds={totalBounds}>
       <div className={styles.container}>
+        <CurrentTime currentTimeMs={currentTimeMs} />
         <Timeline />
         <RowsVirtualizer>{children}</RowsVirtualizer>
       </div>
