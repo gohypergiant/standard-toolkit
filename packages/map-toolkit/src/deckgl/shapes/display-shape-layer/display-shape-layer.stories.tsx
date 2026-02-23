@@ -16,7 +16,7 @@ import { Button } from '@accelint/design-toolkit/components/button';
 import { OptionsItem } from '@accelint/design-toolkit/components/options/item';
 import { SelectField } from '@accelint/design-toolkit/components/select-field';
 import { Slider } from '@accelint/design-toolkit/components/slider';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { CameraEventTypes } from '@/camera/events';
 import { useMapCamera } from '@/camera/store';
 import { useMapCursor } from '@/map-cursor/use-map-cursor';
@@ -189,7 +189,7 @@ export const BasicDisplayAndEvents: Story = {
           <displayShapeLayer
             id='basic-shapes'
             mapId={DISPLAY_MAP_ID}
-            data={mockShapes3D}
+            data={mockShapes}
             selectedShapeId={selectedId}
             showLabels={args.showLabels}
             pickable={args.pickable}
@@ -660,24 +660,11 @@ const DISPLAY_25D_MAP_ID_INNER = uuid();
 
 export const DisplayShapes25D: Story = {
   render: () => {
-    const setView = useEmit<CameraSetViewEvent>(CameraEventTypes.setView);
     const { selectedId } = useSelectShape(DISPLAY_25D_MAP_ID_INNER);
+    const { cameraState } = useMapCamera(DISPLAY_25D_MAP_ID_INNER);
     const { requestCursorChange, clearCursor } = useMapCursor(
       DISPLAY_25D_MAP_ID_INNER,
     );
-
-    // Set camera to 2.5D view after map loads
-    useEffect(() => {
-      // Delay to ensure MapLibre style is loaded before changing view
-      const timeout = setTimeout(() => {
-        setView({
-          id: DISPLAY_25D_MAP_ID_INNER,
-          view: '2.5D',
-        });
-      }, 500);
-
-      return () => clearTimeout(timeout);
-    }, [setView]);
 
     // Handle hover events for cursor changes
     useOn<ShapeHoveredEvent>(ShapeEvents.hovered, (event) => {
@@ -693,7 +680,11 @@ export const DisplayShapes25D: Story = {
 
     return (
       <div className='relative h-dvh w-dvw'>
-        <BaseMap className='absolute inset-0' id={DISPLAY_25D_MAP_ID_INNER}>
+        <BaseMap
+          className='absolute inset-0'
+          id={DISPLAY_25D_MAP_ID_INNER}
+          defaultView='2.5D'
+        >
           <displayShapeLayer
             id='shapes-25d'
             mapId={DISPLAY_25D_MAP_ID_INNER}
@@ -702,7 +693,7 @@ export const DisplayShapes25D: Story = {
             showLabels='always'
             pickable={true}
             applyBaseOpacity={true}
-            enableElevation={true}
+            enableElevation={cameraState.view !== '2D'}
           />
         </BaseMap>
 
@@ -726,24 +717,10 @@ const DISPLAY_3D_MAP_ID_INNER = uuid();
 
 export const DisplayShapes3D: Story = {
   render: () => {
-    const setView = useEmit<CameraSetViewEvent>(CameraEventTypes.setView);
     const { selectedId } = useSelectShape(DISPLAY_3D_MAP_ID_INNER);
     const { requestCursorChange, clearCursor } = useMapCursor(
       DISPLAY_3D_MAP_ID_INNER,
     );
-
-    // Set camera to 3D view after map loads
-    useEffect(() => {
-      // Delay to ensure MapLibre style is loaded before changing to globe projection
-      const timeout = setTimeout(() => {
-        setView({
-          id: DISPLAY_3D_MAP_ID_INNER,
-          view: '3D',
-        });
-      }, 500);
-
-      return () => clearTimeout(timeout);
-    }, [setView]);
 
     // Handle hover events for cursor changes
     useOn<ShapeHoveredEvent>(ShapeEvents.hovered, (event) => {
@@ -759,7 +736,11 @@ export const DisplayShapes3D: Story = {
 
     return (
       <div className='relative h-dvh w-dvw'>
-        <BaseMap className='absolute inset-0' id={DISPLAY_3D_MAP_ID_INNER}>
+        <BaseMap
+          className='absolute inset-0'
+          id={DISPLAY_3D_MAP_ID_INNER}
+          defaultView='3D'
+        >
           <displayShapeLayer
             id='shapes-3d'
             mapId={DISPLAY_3D_MAP_ID_INNER}

@@ -99,7 +99,7 @@ export interface StyleProperties {
  */
 export interface CircleProperties {
   /** Center point as [longitude, latitude] or [longitude, latitude, elevation] */
-  center: [number, number] | [number, number, number];
+  center: [number, number, number?];
   /** Radius with value and units */
   radius: {
     /** Radius value */
@@ -115,7 +115,7 @@ export interface CircleProperties {
  */
 export interface EllipseProperties {
   /** Center point as [longitude, latitude] or [longitude, latitude, elevation] */
-  center: [number, number] | [number, number, number];
+  center: [number, number, number?];
   /** X semi-axis (horizontal radius) with value and units */
   xSemiAxis: {
     /** X semi-axis value */
@@ -300,7 +300,7 @@ export type CircleRadius = CircleProperties['radius'];
 /**
  * Coordinate as [longitude, latitude] or [longitude, latitude, elevation]
  */
-export type Coordinate = [number, number] | [number, number, number];
+export type Coordinate = [number, number, number?];
 
 /**
  * Function type for subscription (useSyncExternalStore pattern).

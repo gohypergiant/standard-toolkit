@@ -20,15 +20,15 @@ import type { Shape } from '../shared/types';
  * Centered around the East Coast of the United States for better visibility.
  *
  * Shapes use different elevations to test z-axis rendering:
- * - Circle: 3000m
- * - LineString: varying (2000m - 4000m)
+ * - Circle: 33000m
+ * - LineString: varying (20000m - 85000m)
  * - Point: 1500m
- * - Polygon: 2500m
- * - Rectangle: 4000m
- * - Ellipse: 3500m
+ * - Polygon: 22500m
+ * - Rectangle: 34000m
+ * - Ellipse: 43500m
  */
 export const mockShapes3D: Shape[] = [
-  // Circle shape at 3000m elevation
+  // Circle shape at 33000m elevation
   {
     id: uuid(),
     name: 'New Circle',
@@ -161,7 +161,7 @@ export const mockShapes3D: Shape[] = [
     },
     lastUpdated: 1761946918381,
   },
-  // LineString shape with varying elevations (2000m - 4000m)
+  // LineString shape with varying elevations (20000m - 85000m)
   {
     id: uuid(),
     name: 'New LineString',
@@ -215,7 +215,7 @@ export const mockShapes3D: Shape[] = [
     },
     lastUpdated: 1761946839060,
   },
-  // Polygon shape at 2500m elevation
+  // Polygon shape at 22500m elevation
   {
     id: uuid(),
     name: 'New Polygon',
@@ -248,7 +248,7 @@ export const mockShapes3D: Shape[] = [
     },
     lastUpdated: 1761946937125,
   },
-  // Rectangle shape at 4000m elevation
+  // Rectangle shape at 34000m elevation
   {
     id: uuid(),
     name: 'New Rectangle',
@@ -280,7 +280,7 @@ export const mockShapes3D: Shape[] = [
     },
     lastUpdated: 1766815821472,
   },
-  // Ellipse shape at 3500m elevation (truncated for brevity - full polygon with all coordinates)
+  // Ellipse shape at 43500m elevation (truncated for brevity - full polygon with all coordinates)
   {
     id: uuid(),
     name: 'New Ellipse',
