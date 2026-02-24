@@ -126,6 +126,22 @@ export const BasicDisplayAndEvents: Story = {
       ? mockShapes.find((s) => s.id === selectedId)?.name
       : undefined;
 
+    const highlightColor = useMemo(
+      () =>
+        [
+          args.highlightColorR,
+          args.highlightColorG,
+          args.highlightColorB,
+          args.highlightColorA,
+        ] as [number, number, number, number],
+      [
+        args.highlightColorR,
+        args.highlightColorG,
+        args.highlightColorB,
+        args.highlightColorA,
+      ],
+    );
+
     // Log selection events for demonstration purposes
     useOn<ShapeSelectedEvent>(ShapeEvents.selected, (event) => {
       if (event.payload.mapId !== DISPLAY_MAP_ID) {
@@ -195,12 +211,7 @@ export const BasicDisplayAndEvents: Story = {
             pickable={args.pickable}
             applyBaseOpacity={args.applyBaseOpacity}
             showHighlight={args.showHighlight}
-            highlightColor={[
-              args.highlightColorR,
-              args.highlightColorG,
-              args.highlightColorB,
-              args.highlightColorA,
-            ]}
+            highlightColor={highlightColor}
           />
         </BaseMap>
 

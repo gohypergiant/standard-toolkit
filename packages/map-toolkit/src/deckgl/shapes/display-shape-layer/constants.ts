@@ -11,8 +11,9 @@
  */
 
 'use client';
-
+import { PathStyleExtension } from '@deck.gl/extensions';
 import { DEFAULT_COLORS } from '../shared/constants';
+import { normalizeColor } from '../shared/utils/style-utils';
 
 /**
  * Map interaction constants.
@@ -70,3 +71,31 @@ export const DEFAULT_DISPLAY_PROPS = {
   applyBaseOpacity: true,
   highlightColor: SELECTION_HIGHLIGHT.COLOR,
 };
+
+/**
+ * Material settings for 3D lighting effects on extruded shapes.
+ * Used for hover state when stroke styling is unavailable.
+ * Selection state uses color tinting instead of material settings.
+ */
+export const MATERIAL_SETTINGS = {
+  // Normal state - standard lighting
+  NORMAL: {
+    ambient: 0.35,
+    diffuse: 0.6,
+    shininess: 32,
+    specularColor: [255, 255, 255] as [number, number, number],
+  },
+  // Hovered state - brighter, more prominent
+  HOVERED: {
+    ambient: 0.6,
+    diffuse: 0.8,
+    shininess: 64,
+    specularColor: [255, 255, 255] as [number, number, number],
+  },
+} as const;
+
+export const DASH_EXTENSION = [new PathStyleExtension({ dash: true })];
+
+/** Pre-computed default highlight color to avoid per-frame allocation. */
+export const DEFAULT_HIGHLIGHT_COLOR: [number, number, number, number] =
+  normalizeColor(DEFAULT_COLORS.highlight);

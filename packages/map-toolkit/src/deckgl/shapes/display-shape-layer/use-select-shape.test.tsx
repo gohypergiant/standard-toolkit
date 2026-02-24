@@ -63,13 +63,13 @@ describe('useSelectShape', () => {
     it('provides setSelectedId function', () => {
       const { result } = renderHook(() => useSelectShape(mapId));
 
-      expect(typeof result.current.setSelectedId).toBe('function');
+      expect(result.current.setSelectedId).toBeTypeOf('function');
     });
 
     it('provides clearSelection function', () => {
       const { result } = renderHook(() => useSelectShape(mapId));
 
-      expect(typeof result.current.clearSelection).toBe('function');
+      expect(result.current.clearSelection).toBeTypeOf('function');
     });
   });
 
@@ -236,10 +236,9 @@ describe('useSelectShape', () => {
         mapBus.emit(MapEvents.click, createMockMapClickPayload(mapId, -1));
       });
 
-      // Wait a tick to ensure event processing
-      await new Promise((resolve) => setTimeout(resolve, 10));
-
-      expect(deselectedSpy).not.toHaveBeenCalled();
+      await waitFor(() => {
+        expect(deselectedSpy).not.toHaveBeenCalled();
+      });
 
       deselectedBus.off(ShapeEvents.deselected, deselectedSpy);
     });
@@ -267,10 +266,9 @@ describe('useSelectShape', () => {
         mapBus.emit(MapEvents.click, createMockMapClickPayload(mapId, 0));
       });
 
-      // Wait a tick to ensure event processing
-      await new Promise((resolve) => setTimeout(resolve, 10));
-
-      expect(deselectedSpy).not.toHaveBeenCalled();
+      await waitFor(() => {
+        expect(deselectedSpy).not.toHaveBeenCalled();
+      });
 
       deselectedBus.off(ShapeEvents.deselected, deselectedSpy);
     });
@@ -299,10 +297,9 @@ describe('useSelectShape', () => {
         mapBus.emit(MapEvents.click, createMockMapClickPayload(otherMapId, -1));
       });
 
-      // Wait a tick to ensure event processing
-      await new Promise((resolve) => setTimeout(resolve, 10));
-
-      expect(deselectedSpy).not.toHaveBeenCalled();
+      await waitFor(() => {
+        expect(deselectedSpy).not.toHaveBeenCalled();
+      });
 
       deselectedBus.off(ShapeEvents.deselected, deselectedSpy);
     });

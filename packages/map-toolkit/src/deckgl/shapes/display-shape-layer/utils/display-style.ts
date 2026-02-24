@@ -18,6 +18,7 @@ import {
   HOVER_WIDTH_INCREASE,
 } from '../../shared/constants';
 import { getLineWidth, normalizeColor } from '../../shared/utils/style-utils';
+import type { Color } from '@deck.gl/core';
 import type { StyledFeature } from '../../shared/types';
 
 /**
@@ -113,12 +114,46 @@ export function getHighlightLineWidth(feature: StyledFeature): number {
 }
 
 /**
+ * Get fill color for a selected shape.
+ *
+ * Replaces the RGB channels with the highlight color while preserving the
+ * base color's alpha. Used by both the main layer and hover layer to show
+ * selection state on extruded polygons and elevated points.
+ *
+ * @param baseColor - The original fill color of the feature
+ * @param highlightColor - The resolved highlight RGBA color
+ * @returns RGBA color with highlight RGB and original alpha
+ *
+ * @example
+ * ```typescript
+ * const fillColor = getSelectionFillColor(
+ *   [98, 166, 255, 51],  // base fill (semi-transparent blue)
+ *   [40, 245, 190, 100], // highlight color
+ * );
+ * // Returns: [40, 245, 190, 51] — highlight RGB with original alpha
+ * ```
+ */
+export function getSelectionFillColor(
+  baseColor: Color,
+  highlightColor: [number, number, number, number],
+): [number, number, number, number] {
+  const a = baseColor[3] ?? 255;
+  return [highlightColor[0], highlightColor[1], highlightColor[2], a];
+}
+
+/**
  * Brighten an RGBA color by multiplying RGB channels by a factor.
  * Alpha is preserved unchanged.
  *
  * @param color - RGBA color tuple [r, g, b, a] (0-255)
  * @param factor - Multiplier for RGB channels (e.g. 1.5 = 50% brighter)
  * @returns Brightened RGBA color, clamped to 0-255
+ *
+ * @example
+ * ```typescript
+ * const brighter = brightenColor([100, 150, 200, 255], 1.5);
+ * // Returns: [150, 225, 255, 255] — RGB multiplied by 1.5, alpha unchanged
+ * ```
  */
 export function brightenColor(
   color: [number, number, number, number],

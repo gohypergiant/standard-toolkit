@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { uuid } from '@accelint/core';
 import { describe, expect, it } from 'vitest';
+import { mockShapes } from '../__fixtures__/mock-shapes';
 import {
   isCircleShape,
   isEllipseShape,
@@ -31,176 +31,27 @@ import type {
   Shape,
 } from './types';
 
-/**
- * Creates a base feature structure for testing
- */
-function createBaseFeature() {
-  return {
-    type: 'Feature' as const,
-    properties: {
-      styleProperties: {
-        fillColor: [255, 255, 255, 255] as [number, number, number, number],
-        lineColor: [0, 0, 0, 255] as [number, number, number, number],
-        lineWidth: 2 as const,
-        linePattern: 'solid' as const,
-      },
-    },
-    geometry: {
-      type: 'Polygon' as const,
-      coordinates: [
-        [
-          [0, 0],
-          [1, 0],
-          [1, 1],
-          [0, 1],
-          [0, 0],
-        ],
-      ],
-    },
-  };
-}
-
-/**
- * Creates a mock CircleShape for testing
- */
-function createCircleShape(): CircleShape {
-  return {
-    id: uuid(),
-    name: 'Test Circle',
-    shape: ShapeFeatureType.Circle,
-    feature: {
-      ...createBaseFeature(),
-      properties: {
-        styleProperties: {
-          fillColor: [255, 255, 255, 255],
-          lineColor: [0, 0, 0, 255],
-          lineWidth: 2,
-          linePattern: 'solid',
-        },
-        circleProperties: {
-          center: [-82.16, 41.46],
-          radius: {
-            value: 250,
-            units: 'kilometers',
-          },
-        },
-      },
-    },
-  };
-}
-
-/**
- * Creates a mock EllipseShape for testing
- */
-function createEllipseShape(): EllipseShape {
-  return {
-    id: uuid(),
-    name: 'Test Ellipse',
-    shape: ShapeFeatureType.Ellipse,
-    feature: {
-      ...createBaseFeature(),
-      properties: {
-        styleProperties: {
-          fillColor: [255, 255, 255, 255],
-          lineColor: [0, 0, 0, 255],
-          lineWidth: 2,
-          linePattern: 'solid',
-        },
-        ellipseProperties: {
-          center: [-84.53, 36.09],
-          xSemiAxis: {
-            value: 100,
-            units: 'kilometers',
-          },
-          ySemiAxis: {
-            value: 200,
-            units: 'kilometers',
-          },
-          angle: 45,
-        },
-      },
-    },
-  };
-}
-
-/**
- * Creates a mock PolygonShape for testing
- */
-function createPolygonShape(): PolygonShape {
-  return {
-    id: uuid(),
-    name: 'Test Polygon',
-    shape: ShapeFeatureType.Polygon,
-    feature: createBaseFeature(),
-  };
-}
-
-/**
- * Creates a mock RectangleShape for testing
- */
-function createRectangleShape(): RectangleShape {
-  return {
-    id: uuid(),
-    name: 'Test Rectangle',
-    shape: ShapeFeatureType.Rectangle,
-    feature: createBaseFeature(),
-  };
-}
-
-/**
- * Creates a mock LineStringShape for testing
- */
-function createLineStringShape(): LineStringShape {
-  return {
-    id: uuid(),
-    name: 'Test LineString',
-    shape: ShapeFeatureType.LineString,
-    feature: {
-      ...createBaseFeature(),
-      geometry: {
-        type: 'LineString' as const,
-        coordinates: [
-          [0, 0],
-          [1, 1],
-          [2, 0],
-        ],
-      },
-    },
-  };
-}
-
-/**
- * Creates a mock PointShape for testing
- */
-function createPointShape(): PointShape {
-  return {
-    id: uuid(),
-    name: 'Test Point',
-    shape: ShapeFeatureType.Point,
-    feature: {
-      ...createBaseFeature(),
-      geometry: {
-        type: 'Point' as const,
-        coordinates: [0, 0],
-      },
-    },
-  };
-}
+/** Typed fixture references for each shape variant. */
+const circleFixture = mockShapes[0] as CircleShape;
+const lineStringFixture = mockShapes[1] as LineStringShape;
+const pointFixture = mockShapes[2] as PointShape;
+const polygonFixture = mockShapes[3] as PolygonShape;
+const rectangleFixture = mockShapes[4] as RectangleShape;
+const ellipseFixture = mockShapes[5] as EllipseShape;
 
 describe('Type Guards', () => {
   describe('isCircleShape', () => {
     it('returns true for Circle shapes', () => {
-      const circle = createCircleShape();
-      expect(isCircleShape(circle)).toBe(true);
+      expect(isCircleShape(circleFixture)).toBe(true);
     });
 
     it('returns false for non-Circle shapes', () => {
       const shapes: Shape[] = [
-        createEllipseShape(),
-        createPolygonShape(),
-        createRectangleShape(),
-        createLineStringShape(),
-        createPointShape(),
+        ellipseFixture,
+        polygonFixture,
+        rectangleFixture,
+        lineStringFixture,
+        pointFixture,
       ];
 
       for (const shape of shapes) {
@@ -209,12 +60,11 @@ describe('Type Guards', () => {
     });
 
     it('provides type narrowing for circleProperties', () => {
-      const shape: Shape = createCircleShape();
+      const shape: Shape = circleFixture;
 
       if (isCircleShape(shape)) {
-        // TypeScript should know circleProperties exists
         expect(shape.feature.properties.circleProperties.center).toEqual([
-          -82.16, 41.46,
+          -82.16095, 41.459647,
         ]);
         expect(shape.feature.properties.circleProperties.radius.value).toBe(
           250,
@@ -225,17 +75,16 @@ describe('Type Guards', () => {
 
   describe('isEllipseShape', () => {
     it('returns true for Ellipse shapes', () => {
-      const ellipse = createEllipseShape();
-      expect(isEllipseShape(ellipse)).toBe(true);
+      expect(isEllipseShape(ellipseFixture)).toBe(true);
     });
 
     it('returns false for non-Ellipse shapes', () => {
       const shapes: Shape[] = [
-        createCircleShape(),
-        createPolygonShape(),
-        createRectangleShape(),
-        createLineStringShape(),
-        createPointShape(),
+        circleFixture,
+        polygonFixture,
+        rectangleFixture,
+        lineStringFixture,
+        pointFixture,
       ];
 
       for (const shape of shapes) {
@@ -244,37 +93,37 @@ describe('Type Guards', () => {
     });
 
     it('provides type narrowing for ellipseProperties', () => {
-      const shape: Shape = createEllipseShape();
+      const shape: Shape = ellipseFixture;
 
       if (isEllipseShape(shape)) {
-        // TypeScript should know ellipseProperties exists
         expect(shape.feature.properties.ellipseProperties.center).toEqual([
-          -84.53, 36.09,
+          -84.53249402465865, 36.093725788749154,
         ]);
         expect(shape.feature.properties.ellipseProperties.xSemiAxis.value).toBe(
-          100,
+          101.01710768121133,
         );
         expect(shape.feature.properties.ellipseProperties.ySemiAxis.value).toBe(
-          200,
+          244.01551298835645,
         );
-        expect(shape.feature.properties.ellipseProperties.angle).toBe(45);
+        expect(shape.feature.properties.ellipseProperties.angle).toBe(
+          81.85494137591265,
+        );
       }
     });
   });
 
   describe('isPolygonShape', () => {
     it('returns true for Polygon shapes', () => {
-      const polygon = createPolygonShape();
-      expect(isPolygonShape(polygon)).toBe(true);
+      expect(isPolygonShape(polygonFixture)).toBe(true);
     });
 
     it('returns false for non-Polygon shapes', () => {
       const shapes: Shape[] = [
-        createCircleShape(),
-        createEllipseShape(),
-        createRectangleShape(),
-        createLineStringShape(),
-        createPointShape(),
+        circleFixture,
+        ellipseFixture,
+        rectangleFixture,
+        lineStringFixture,
+        pointFixture,
       ];
 
       for (const shape of shapes) {
@@ -283,10 +132,9 @@ describe('Type Guards', () => {
     });
 
     it('provides type narrowing for PolygonShape', () => {
-      const shape: Shape = createPolygonShape();
+      const shape: Shape = polygonFixture;
 
       if (isPolygonShape(shape)) {
-        // TypeScript should narrow to PolygonShape
         expect(shape.shape).toBe(ShapeFeatureType.Polygon);
       }
     });
@@ -294,17 +142,16 @@ describe('Type Guards', () => {
 
   describe('isRectangleShape', () => {
     it('returns true for Rectangle shapes', () => {
-      const rectangle = createRectangleShape();
-      expect(isRectangleShape(rectangle)).toBe(true);
+      expect(isRectangleShape(rectangleFixture)).toBe(true);
     });
 
     it('returns false for non-Rectangle shapes', () => {
       const shapes: Shape[] = [
-        createCircleShape(),
-        createEllipseShape(),
-        createPolygonShape(),
-        createLineStringShape(),
-        createPointShape(),
+        circleFixture,
+        ellipseFixture,
+        polygonFixture,
+        lineStringFixture,
+        pointFixture,
       ];
 
       for (const shape of shapes) {
@@ -313,10 +160,9 @@ describe('Type Guards', () => {
     });
 
     it('provides type narrowing for RectangleShape', () => {
-      const shape: Shape = createRectangleShape();
+      const shape: Shape = rectangleFixture;
 
       if (isRectangleShape(shape)) {
-        // TypeScript should narrow to RectangleShape
         expect(shape.shape).toBe(ShapeFeatureType.Rectangle);
       }
     });
@@ -324,17 +170,16 @@ describe('Type Guards', () => {
 
   describe('isLineStringShape', () => {
     it('returns true for LineString shapes', () => {
-      const lineString = createLineStringShape();
-      expect(isLineStringShape(lineString)).toBe(true);
+      expect(isLineStringShape(lineStringFixture)).toBe(true);
     });
 
     it('returns false for non-LineString shapes', () => {
       const shapes: Shape[] = [
-        createCircleShape(),
-        createEllipseShape(),
-        createPolygonShape(),
-        createRectangleShape(),
-        createPointShape(),
+        circleFixture,
+        ellipseFixture,
+        polygonFixture,
+        rectangleFixture,
+        pointFixture,
       ];
 
       for (const shape of shapes) {
@@ -343,10 +188,9 @@ describe('Type Guards', () => {
     });
 
     it('provides type narrowing for LineStringShape', () => {
-      const shape: Shape = createLineStringShape();
+      const shape: Shape = lineStringFixture;
 
       if (isLineStringShape(shape)) {
-        // TypeScript should narrow to LineStringShape
         expect(shape.shape).toBe(ShapeFeatureType.LineString);
       }
     });
@@ -354,17 +198,16 @@ describe('Type Guards', () => {
 
   describe('isPointShape', () => {
     it('returns true for Point shapes', () => {
-      const point = createPointShape();
-      expect(isPointShape(point)).toBe(true);
+      expect(isPointShape(pointFixture)).toBe(true);
     });
 
     it('returns false for non-Point shapes', () => {
       const shapes: Shape[] = [
-        createCircleShape(),
-        createEllipseShape(),
-        createPolygonShape(),
-        createRectangleShape(),
-        createLineStringShape(),
+        circleFixture,
+        ellipseFixture,
+        polygonFixture,
+        rectangleFixture,
+        lineStringFixture,
       ];
 
       for (const shape of shapes) {
@@ -373,10 +216,9 @@ describe('Type Guards', () => {
     });
 
     it('provides type narrowing for PointShape', () => {
-      const shape: Shape = createPointShape();
+      const shape: Shape = pointFixture;
 
       if (isPointShape(shape)) {
-        // TypeScript should narrow to PointShape
         expect(shape.shape).toBe(ShapeFeatureType.Point);
       }
     });
@@ -385,12 +227,12 @@ describe('Type Guards', () => {
   describe('Type guard mutual exclusivity', () => {
     it('each shape type matches exactly one type guard', () => {
       const allShapes: Shape[] = [
-        createCircleShape(),
-        createEllipseShape(),
-        createPolygonShape(),
-        createRectangleShape(),
-        createLineStringShape(),
-        createPointShape(),
+        circleFixture,
+        ellipseFixture,
+        polygonFixture,
+        rectangleFixture,
+        lineStringFixture,
+        pointFixture,
       ];
 
       const typeGuards = [

@@ -20,6 +20,39 @@ import type {
 import type { LabelPositionOptions } from './utils/labels';
 
 /**
+ * A vertical curtain polygon feature for elevation visualization.
+ * Used to render filled vertical surfaces from ground to elevation for LineStrings.
+ */
+export type CurtainFeature = {
+  type: 'Feature';
+  geometry: {
+    type: 'Polygon';
+    coordinates: number[][][];
+  };
+  properties: {
+    fillColor: [number, number, number, number];
+    lineColor: [number, number, number, number];
+    shapeId?: ShapeId;
+  };
+};
+
+/** A vertical line segment from ground to an elevated position. */
+export type LineSegment = {
+  source: [number, number, number];
+  target: [number, number, number];
+  color: [number, number, number, number];
+};
+
+/**
+ * Result of classifying features by geometry type and elevation.
+ */
+export type ElevatedFeatureClassification = {
+  lines: Shape['feature'][];
+  polygons: Shape['feature'][];
+  nonPolygons: Shape['feature'][];
+};
+
+/**
  * Label display mode for shapes
  * - `'always'`: Show labels for all shapes
  * - `'hover'`: Show label only for the currently hovered shape
@@ -50,7 +83,7 @@ export type StyledFeatureProperties = SharedStyledFeature['properties'];
  * };
  * ```
  */
-export interface DisplayShapeLayerProps extends CompositeLayerProps {
+export type DisplayShapeLayerProps = CompositeLayerProps & {
   /** Unique layer ID - required for deck.gl layer management */
   id: string;
 
@@ -157,4 +190,4 @@ export interface DisplayShapeLayerProps extends CompositeLayerProps {
    * ```
    */
   enableElevation?: boolean;
-}
+};

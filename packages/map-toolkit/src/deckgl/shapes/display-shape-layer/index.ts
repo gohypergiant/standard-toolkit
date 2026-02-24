@@ -14,11 +14,11 @@
 
 import { Broadcast } from '@accelint/bus';
 import { getLogger } from '@accelint/logger';
-import { type Color, CompositeLayer } from '@deck.gl/core';
-import { PathStyleExtension } from '@deck.gl/extensions';
+import { CompositeLayer } from '@deck.gl/core';
 import { GeoJsonLayer, IconLayer, LineLayer } from '@deck.gl/layers';
 import { DASH_ARRAYS, SHAPE_LAYER_IDS } from '../shared/constants';
 import { type ShapeEvent, ShapeEvents } from '../shared/events';
+import { isLineGeometry, isPolygonGeometry } from '../shared/types';
 import {
   getDashArray,
   getFillColor,
@@ -26,19 +26,39 @@ import {
 } from '../shared/utils/style-utils';
 import {
   COFFIN_CORNERS,
+  DASH_EXTENSION,
   DEFAULT_DISPLAY_PROPS,
+  DEFAULT_HIGHLIGHT_COLOR,
   MAP_INTERACTION,
+  MATERIAL_SETTINGS,
 } from './constants';
 import { createShapeLabelLayer } from './shape-label-layer';
 import {
   brightenColor,
-  getHighlightColor,
   getHighlightLineWidth,
   getHoverLineWidth,
+  getSelectionFillColor,
 } from './utils/display-style';
+import {
+  classifyElevatedFeatures,
+  createCurtainPolygonFeatures,
+  createElevationLineSegments,
+  getFeatureElevation,
+  partitionCurtains,
+} from './utils/elevation';
+import {
+  extendMappingWithCoffinCorners,
+  getIconConfig,
+  getIconLayerProps,
+  getIconUpdateTriggers,
+} from './utils/icon-config';
 import type { Layer, PickingInfo } from '@deck.gl/core';
 import type { Shape, ShapeId } from '../shared/types';
-import type { DisplayShapeLayerProps } from './types';
+import type {
+  CurtainFeature,
+  DisplayShapeLayerProps,
+  LineSegment,
+} from './types';
 
 const logger = getLogger({
   enabled: process.env.NODE_ENV !== 'production',
@@ -46,28 +66,6 @@ const logger = getLogger({
   prefix: '[DisplayShapeLayer]',
   pretty: true,
 });
-
-/**
- * Material settings for 3D lighting effects on extruded shapes.
- * Used for hover state when stroke styling is unavailable.
- * Selection state uses color tinting instead of material settings.
- */
-const MATERIAL_SETTINGS = {
-  // Normal state - standard lighting
-  NORMAL: {
-    ambient: 0.35,
-    diffuse: 0.6,
-    shininess: 32,
-    specularColor: [255, 255, 255] as [number, number, number],
-  },
-  // Hovered state - brighter, more prominent
-  HOVERED: {
-    ambient: 0.6,
-    diffuse: 0.8,
-    shininess: 64,
-    specularColor: [255, 255, 255] as [number, number, number],
-  },
-} as const;
 
 /**
  * Typed event bus instance for shape events.
@@ -85,23 +83,6 @@ type DisplayShapeLayerState = {
   lastHoveredId?: ShapeId | null;
   /** Allow additional properties from base layer state */
   [key: string]: unknown;
-};
-
-/**
- * A vertical curtain polygon feature for elevation visualization.
- * Used to render filled vertical surfaces from ground to elevation for LineStrings.
- */
-type CurtainFeature = {
-  type: 'Feature';
-  geometry: {
-    type: 'Polygon';
-    coordinates: number[][][];
-  };
-  properties: {
-    fillColor: [number, number, number, number];
-    lineColor: [number, number, number, number];
-    shapeId?: ShapeId;
-  };
 };
 
 /**
@@ -223,6 +204,13 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
     }
     // Clear features cache
     this.featuresCache = null;
+  }
+
+  /**
+   * Resolved highlight color — uses prop if provided, falls back to default.
+   */
+  private get resolvedHighlight(): [number, number, number, number] {
+    return this.props.highlightColor ?? DEFAULT_HIGHLIGHT_COLOR;
   }
 
   /**
@@ -378,168 +366,6 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
   }
 
   /**
-   * Extract elevation from 3D coordinates.
-   * Returns the z-coordinate if present, otherwise returns 0.
-   */
-  // biome-ignore lint/suspicious/noExplicitAny: GeoJSON coordinates can be deeply nested (Position | Position[] | Position[][] | Position[][][])
-  private getElevationFromCoordinates(coordinates: any): number {
-    // Handle nested coordinate arrays (polygons, multi-polygons)
-    if (Array.isArray(coordinates[0])) {
-      return this.getElevationFromCoordinates(coordinates[0]);
-    }
-
-    // Single coordinate [lon, lat] or [lon, lat, elevation]
-    return (coordinates as number[])[2] ?? 0;
-  }
-
-  /**
-   * Get elevation accessor for GeoJsonLayer.
-   * Extracts z-coordinate from feature geometry.
-   */
-  private getFeatureElevation = (feature: Shape['feature']): number => {
-    const { geometry } = feature;
-
-    if (!geometry) {
-      return 0;
-    }
-
-    // GeometryCollection doesn't have coordinates property
-    if (geometry.type === 'GeometryCollection') {
-      return 0;
-    }
-
-    return this.getElevationFromCoordinates(geometry.coordinates);
-  };
-
-  /**
-   * Extract [lon, lat] from coordinate array if valid.
-   */
-  private extractLonLat(
-    coords: number[] | undefined,
-  ): [number, number] | undefined {
-    if (!coords || coords.length < 2) {
-      return undefined;
-    }
-    const [lon, lat] = coords;
-    return lon !== undefined && lat !== undefined ? [lon, lat] : undefined;
-  }
-
-  /**
-   * Extract representative coordinate from a feature for elevation indicators.
-   * Returns [lon, lat] or undefined if coordinates cannot be extracted.
-   */
-  private getRepresentativeCoordinate(
-    geometry: Shape['feature']['geometry'],
-  ): [number, number] | undefined {
-    if (geometry.type === 'Point') {
-      return this.extractLonLat(geometry.coordinates as number[]);
-    }
-
-    if (geometry.type === 'LineString' || geometry.type === 'MultiPoint') {
-      return this.extractLonLat((geometry.coordinates as number[][])[0]);
-    }
-
-    if (geometry.type === 'MultiLineString') {
-      return this.extractLonLat((geometry.coordinates as number[][][])[0]?.[0]);
-    }
-
-    return undefined;
-  }
-
-  /**
-   * Create vertical line segment from coordinate to ground.
-   */
-  private createVerticalSegment(
-    lon: number,
-    lat: number,
-    elevation: number,
-    color: [number, number, number, number],
-  ) {
-    return {
-      source: [lon, lat, 0] as [number, number, number],
-      target: [lon, lat, elevation] as [number, number, number],
-      color,
-    };
-  }
-
-  /**
-   * Process coordinates array and create vertical segments.
-   */
-  private processCoordinates(
-    coordinates: number[][],
-    color: [number, number, number, number],
-  ) {
-    const segments: Array<{
-      source: [number, number, number];
-      target: [number, number, number];
-      color: [number, number, number, number];
-    }> = [];
-
-    for (const coord of coordinates) {
-      const [lon, lat, elevation] = coord;
-      if (
-        lon !== undefined &&
-        lat !== undefined &&
-        elevation !== undefined &&
-        elevation > 0
-      ) {
-        segments.push(this.createVerticalSegment(lon, lat, elevation, color));
-      }
-    }
-
-    return segments;
-  }
-
-  /**
-   * Create elevation indicator line segments for a geometry.
-   * Returns array of line segments from ground to elevated positions.
-   */
-  private createElevationLineSegments(
-    geometry: Shape['feature']['geometry'],
-    color: [number, number, number, number],
-  ): Array<{
-    source: [number, number, number];
-    target: [number, number, number];
-    color: [number, number, number, number];
-  }> {
-    // Skip GeometryCollection
-    if (geometry.type === 'GeometryCollection') {
-      return [];
-    }
-
-    if (geometry.type === 'LineString') {
-      // Create vertical lines at EACH coordinate to form a "curtain"
-      return this.processCoordinates(geometry.coordinates as number[][], color);
-    }
-
-    if (geometry.type === 'MultiLineString') {
-      // Create vertical lines for each coordinate in each line
-      const allSegments: Array<{
-        source: [number, number, number];
-        target: [number, number, number];
-        color: [number, number, number, number];
-      }> = [];
-      const lines = geometry.coordinates as number[][][];
-      for (const line of lines) {
-        allSegments.push(...this.processCoordinates(line, color));
-      }
-      return allSegments;
-    }
-
-    // For Point and MultiPoint, use single representative coordinate
-    const coords = this.getRepresentativeCoordinate(geometry);
-    if (coords) {
-      const [lon, lat] = coords;
-      const elevation = this.getElevationFromCoordinates(geometry.coordinates);
-      if (elevation > 0) {
-        return [this.createVerticalSegment(lon, lat, elevation, color)];
-      }
-    }
-
-    return [];
-  }
-
-  /**
    * Handle shape click
    */
   private handleShapeClick = (info: PickingInfo): void => {
@@ -605,17 +431,18 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
   private renderHighlightLayer(
     features: Shape['feature'][],
   ): GeoJsonLayer | null {
-    const { selectedShapeId, showHighlight, highlightColor, enableElevation } =
-      this.props;
+    const { selectedShapeId, showHighlight, enableElevation } = this.props;
 
     // Skip if no selection or highlight is disabled
     if (!selectedShapeId || showHighlight === false) {
       return null;
     }
 
-    const selectedFeature = features.find(
-      (f) => f.properties?.shapeId === selectedShapeId,
-    );
+    const featureIndex =
+      this.featuresCache?.shapeIdToIndex.get(selectedShapeId);
+
+    const selectedFeature =
+      featureIndex !== undefined ? features[featureIndex] : undefined;
 
     if (!selectedFeature) {
       return null;
@@ -631,13 +458,13 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
 
     // Skip for 3D shapes - they use color tinting in main layer
     if (enableElevation) {
-      const isPolygon =
-        selectedFeature.geometry.type === 'Polygon' ||
-        selectedFeature.geometry.type === 'MultiPolygon';
-      const isPoint = selectedFeature.geometry.type === 'Point';
-      const hasElevation = this.getFeatureElevation(selectedFeature) > 0;
+      const geomType = selectedFeature.geometry.type;
+      const hasElevation = getFeatureElevation(selectedFeature) > 0;
 
-      if ((isPolygon || isPoint) && hasElevation) {
+      if (
+        (isPolygonGeometry(geomType) || geomType === 'Point') &&
+        hasElevation
+      ) {
         return null; // Main layer handles 3D selection highlight
       }
     }
@@ -653,13 +480,13 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       stroked: true,
       lineWidthUnits: 'pixels',
       lineWidthMinPixels: MAP_INTERACTION.LINE_WIDTH_MIN_PIXELS,
-      getLineColor: () => highlightColor || getHighlightColor(),
+      getLineColor: () => this.resolvedHighlight,
       getLineWidth: getHighlightLineWidth,
 
       // Behavior
       pickable: false,
       updateTriggers: {
-        getLineColor: [highlightColor],
+        getLineColor: [this.props.highlightColor],
         getLineWidth: [selectedShapeId, features],
       },
     });
@@ -671,13 +498,8 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
    * Works for both selected and non-selected shapes.
    */
   private renderHoverLayer(features: Shape['feature'][]): GeoJsonLayer | null {
-    const {
-      enableElevation,
-      selectedShapeId,
-      applyBaseOpacity,
-      highlightColor,
-    } = this.props;
-    const resolvedHighlight = highlightColor ?? getHighlightColor();
+    const { enableElevation, selectedShapeId, applyBaseOpacity } = this.props;
+    const resolvedHighlight = this.resolvedHighlight;
     const hoverIndex = this.state?.hoverIndex;
 
     // Only render if elevation is enabled and something is hovered
@@ -691,39 +513,21 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
     }
 
     // Only render for polygons
-    const isPolygon =
-      hoveredFeature.geometry.type === 'Polygon' ||
-      hoveredFeature.geometry.type === 'MultiPolygon';
-    if (!isPolygon) {
+    if (!isPolygonGeometry(hoveredFeature.geometry.type)) {
       return null;
     }
 
-    // Get the fill color for hover (solid turquoise if selected, base color otherwise)
+    // Get the fill color for hover (highlight color if selected, base color otherwise)
     const getHoverFillColor = (
       d: Shape['feature'],
     ): [number, number, number, number] => {
       const baseColor = getFillColor(d, applyBaseOpacity);
 
-      // Use highlight color if this is the selected shape (matching curtains)
       if (d.properties?.shapeId === selectedShapeId) {
-        const a = baseColor[3] ?? 255;
-        return [
-          resolvedHighlight[0],
-          resolvedHighlight[1],
-          resolvedHighlight[2],
-          a,
-        ];
+        return getSelectionFillColor(baseColor, resolvedHighlight);
       }
 
-      // Ensure we return RGBA format
-      return baseColor.length === 4
-        ? (baseColor as [number, number, number, number])
-        : [
-            baseColor[0] ?? 0,
-            baseColor[1] ?? 0,
-            baseColor[2] ?? 0,
-            baseColor[3] ?? 255,
-          ];
+      return baseColor as [number, number, number, number];
     };
 
     return new GeoJsonLayer({
@@ -738,7 +542,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
 
       // Extrusion with hover material (brighter lighting)
       extruded: true,
-      getElevation: this.getFeatureElevation,
+      getElevation: getFeatureElevation,
       material: MATERIAL_SETTINGS.HOVERED,
 
       // Behavior
@@ -768,22 +572,22 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
     }
 
     // Find point features that need coffin corners (hovered or selected)
-    const pointFeatures = features.filter((f) => {
+    const pointFeatures: Shape['feature'][] = [];
+    for (const f of features) {
       if (f.geometry.type !== 'Point') {
-        return false;
+        continue;
       }
-      const hasIcon = !!f.properties?.styleProperties?.icon;
-      if (!hasIcon) {
-        return false;
+      if (!f.properties?.styleProperties?.icon) {
+        continue;
       }
-
       const shapeId = f.properties?.shapeId;
       const isSelected = shapeId === selectedShapeId;
       const featureIndex = shapeId ? shapeIdToIndex.get(shapeId) : undefined;
       const isHovered = hoverIndex !== undefined && featureIndex === hoverIndex;
-
-      return isSelected || isHovered;
-    });
+      if (isSelected || isHovered) {
+        pointFeatures.push(f);
+      }
+    }
 
     if (pointFeatures.length === 0) {
       return null;
@@ -801,31 +605,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       return null;
     }
 
-    // Add coffin corners icons to the mapping
-    const extendedMapping = {
-      ...iconMapping,
-      [COFFIN_CORNERS.HOVER_ICON]: {
-        x: 0,
-        y: 0,
-        width: 76,
-        height: 76,
-        mask: false,
-      },
-      [COFFIN_CORNERS.SELECTED_ICON]: {
-        x: 76,
-        y: 0,
-        width: 76,
-        height: 76,
-        mask: false,
-      },
-      [COFFIN_CORNERS.SELECTED_HOVER_ICON]: {
-        x: 152,
-        y: 0,
-        width: 76,
-        height: 76,
-        mask: false,
-      },
-    };
+    const extendedMapping = extendMappingWithCoffinCorners(iconMapping);
 
     return new IconLayer({
       id: `${this.props.id}-${SHAPE_LAYER_IDS.DISPLAY}-coffin-corners`,
@@ -870,65 +650,20 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
   }
 
   /**
-   * Extract icon configuration from features in a single pass.
-   * Returns the first icon's atlas and mapping (all shapes share the same atlas).
-   * Uses early return for O(1) best case when first feature has icons.
-   */
-  private getIconConfig(features: Shape['feature'][]): {
-    hasIcons: boolean;
-    atlas?: string;
-    mapping?: Record<
-      string,
-      { x: number; y: number; width: number; height: number; mask?: boolean }
-    >;
-  } {
-    for (const f of features) {
-      const icon = f.properties?.styleProperties?.icon;
-      if (icon) {
-        return {
-          hasIcons: true,
-          atlas: icon.atlas,
-          mapping: icon.mapping,
-        };
-      }
-    }
-    return { hasIcons: false };
-  }
-
-  /**
    * Render main shapes layer
    */
   private renderMainLayer(features: Shape['feature'][]): GeoJsonLayer {
-    const {
-      pickable,
-      applyBaseOpacity,
-      selectedShapeId,
-      enableElevation,
-      highlightColor,
-    } = this.props;
+    const { pickable, applyBaseOpacity, selectedShapeId, enableElevation } =
+      this.props;
 
     // Single-pass icon config extraction (O(1) best case with early return)
     const {
       hasIcons,
       atlas: iconAtlas,
       mapping: iconMapping,
-    } = this.getIconConfig(features);
+    } = getIconConfig(features);
 
-    // Resolved highlight color - use prop if provided, fall back to default
-    const resolvedHighlight = highlightColor ?? getHighlightColor();
-
-    // Helper to get selection fill color (highlight RGB, preserving base alpha)
-    const getSelectionFillColor = (
-      baseColor: Color,
-    ): [number, number, number, number] => {
-      const a = baseColor[3] ?? 255;
-      return [
-        resolvedHighlight[0],
-        resolvedHighlight[1],
-        resolvedHighlight[2],
-        a,
-      ];
-    };
+    const resolvedHighlight = this.resolvedHighlight;
 
     return new GeoJsonLayer({
       id: `${this.props.id}-${SHAPE_LAYER_IDS.DISPLAY}`,
@@ -943,13 +678,14 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
 
         // Apply highlight color for selected extruded polygons and elevated points (matching curtains)
         if (enableElevation && d.properties?.shapeId === selectedShapeId) {
-          const isPolygon =
-            d.geometry.type === 'Polygon' || d.geometry.type === 'MultiPolygon';
-          const isPoint = d.geometry.type === 'Point';
-          const hasElevation = this.getFeatureElevation(d) > 0;
+          const geomType = d.geometry.type;
+          const hasElevation = getFeatureElevation(d) > 0;
 
-          if ((isPolygon || isPoint) && hasElevation) {
-            return getSelectionFillColor(baseColor);
+          if (
+            (isPolygonGeometry(geomType) || geomType === 'Point') &&
+            hasElevation
+          ) {
+            return getSelectionFillColor(baseColor, resolvedHighlight);
           }
         }
 
@@ -961,19 +697,17 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
 
         // Apply highlight border color only for elevated non-polygon shapes
         if (isSelected && enableElevation) {
-          const isPolygon =
-            d.geometry.type === 'Polygon' || d.geometry.type === 'MultiPolygon';
-          if (!isPolygon && this.getFeatureElevation(d) > 0) {
+          if (
+            !isPolygonGeometry(d.geometry.type) &&
+            getFeatureElevation(d) > 0
+          ) {
             return resolvedHighlight;
           }
         }
 
         const isHovered = info?.index === this.state?.hoverIndex;
         if (isHovered) {
-          return brightenColor(
-            [base[0] ?? 0, base[1] ?? 0, base[2] ?? 0, base[3] ?? 255],
-            1.5,
-          );
+          return brightenColor(base as [number, number, number, number], 1.5);
         }
 
         return base;
@@ -982,9 +716,8 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
         // Skip hover line width for elevated LineStrings - curtain handles it
         if (
           this.props.enableElevation &&
-          (d.geometry.type === 'LineString' ||
-            d.geometry.type === 'MultiLineString') &&
-          this.getFeatureElevation(d) > 0
+          isLineGeometry(d.geometry.type) &&
+          getFeatureElevation(d) > 0
         ) {
           return d.properties?.styleProperties?.lineWidth ?? 2;
         }
@@ -1003,7 +736,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       // Tested fix: Changing condition to `!wireframe && stroked` in deck.gl source did NOT resolve the issue
       // Solution: Separate hover/highlight layers with material-based lighting for extruded polygons
       extruded: this.props.enableElevation ?? false,
-      getElevation: this.getFeatureElevation,
+      getElevation: getFeatureElevation,
       ...(this.props.enableElevation
         ? {
             material: MATERIAL_SETTINGS.NORMAL,
@@ -1019,39 +752,17 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       pointRadiusUnits: 'pixels',
 
       // Icon configuration (only used if pointType includes 'icon')
-      ...(hasIcons && iconAtlas ? { iconAtlas } : {}),
-      ...(hasIcons && iconMapping ? { iconMapping } : {}),
-      ...(hasIcons
-        ? {
-            getIcon: (d: Shape['feature']) =>
-              d.properties?.styleProperties?.icon?.name ?? 'marker',
-            getIconSize: (d: Shape['feature']) => {
-              return (
-                d.properties?.styleProperties?.icon?.size ??
-                MAP_INTERACTION.ICON_SIZE
-              );
-            },
-            getIconColor: getLineColor,
-            getIconPixelOffset: (d: Shape['feature']) => {
-              const iconSize =
-                d.properties?.styleProperties?.icon?.size ??
-                MAP_INTERACTION.ICON_SIZE;
-              return [-1, -iconSize / 2];
-            },
-            iconBillboard: false,
-          }
-        : {}),
+      ...getIconLayerProps(hasIcons, iconAtlas, iconMapping),
 
       // Dash pattern support - selected shapes get dotted border
       // Skip for elevated LineStrings (curtains handle selection visual feedback)
-      extensions: [new PathStyleExtension({ dash: true })],
+      extensions: DASH_EXTENSION,
       getDashArray: (d: Shape['feature']) => {
         // Skip dash styling for elevated LineStrings - curtain handles it
         if (
           this.props.enableElevation &&
-          (d.geometry.type === 'LineString' ||
-            d.geometry.type === 'MultiLineString') &&
-          this.getFeatureElevation(d) > 0
+          isLineGeometry(d.geometry.type) &&
+          getFeatureElevation(d) > 0
         ) {
           return getDashArray(d); // Use default dash pattern only
         }
@@ -1090,19 +801,12 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
           features,
           this.state?.hoverIndex,
           selectedShapeId,
-          highlightColor,
+          this.props.highlightColor,
         ],
         getLineWidth: [features, this.state?.hoverIndex],
         getDashArray: [features, selectedShapeId],
         getPointRadius: [features],
-        ...(hasIcons
-          ? {
-              getIcon: [features],
-              getIconSize: [features],
-              getIconColor: [features],
-              getIconPixelOffset: [features],
-            }
-          : {}),
+        ...getIconUpdateTriggers(hasIcons, features),
       },
     });
   }
@@ -1152,57 +856,38 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
    */
   private renderElevationIndicatorLayer(
     features: Shape['feature'][],
+    elevatedNonPolygons: Shape['feature'][],
   ): LineLayer | null {
-    // Filter to non-polygon features with elevation > 0
-    const elevatedFeatures = features.filter((f) => {
-      // Polygons use wireframe extrusion, don't need separate indicators
-      if (f.geometry.type === 'Polygon' || f.geometry.type === 'MultiPolygon') {
-        return false;
-      }
-
-      const elevation = this.getFeatureElevation(f);
-      return elevation > 0;
-    });
-
-    if (elevatedFeatures.length === 0) {
+    if (elevatedNonPolygons.length === 0) {
       return null;
     }
 
-    // Create line segments from ground to elevated position
-    type LineSegment = {
-      source: [number, number, number];
-      target: [number, number, number];
-      color: [number, number, number, number];
-    };
-
     const lineData: LineSegment[] = [];
 
-    const { selectedShapeId, highlightColor } = this.props;
-    const resolvedHighlight = highlightColor ?? getHighlightColor();
+    const { selectedShapeId } = this.props;
+    const resolvedHighlight = this.resolvedHighlight;
     const hoverIndex = this.state?.hoverIndex;
 
-    for (const feature of elevatedFeatures) {
+    for (const feature of elevatedNonPolygons) {
       const { geometry } = feature;
       const shapeId = feature.properties?.shapeId;
       const isSelected = shapeId != null && shapeId === selectedShapeId;
       const isHovered =
-        hoverIndex !== undefined && features[hoverIndex] === feature;
+        hoverIndex !== undefined &&
+        features[hoverIndex]?.properties?.shapeId === shapeId;
 
       let color: [number, number, number, number];
       if (isSelected) {
-        color = resolvedHighlight as [number, number, number, number];
+        color = resolvedHighlight;
       } else {
-        const lineColor = getLineColor(feature);
-        const base: [number, number, number, number] =
-          lineColor.length === 4
-            ? (lineColor as [number, number, number, number])
-            : ([...lineColor, 255] as [number, number, number, number]);
+        const base = getLineColor(feature) as [number, number, number, number];
         color = isHovered ? brightenColor(base, 1.5) : base;
       }
 
       // Generate line segments for this feature
-      const segments = this.createElevationLineSegments(geometry, color);
-      lineData.push(...segments);
+      for (const segment of createElevationLineSegments(geometry, color)) {
+        lineData.push(segment);
+      }
     }
 
     if (lineData.length === 0) {
@@ -1220,147 +905,46 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       pickable: false,
       updateTriggers: {
         data: [features, selectedShapeId, hoverIndex],
-        getColor: [features, selectedShapeId, hoverIndex, highlightColor],
+        getColor: [
+          features,
+          selectedShapeId,
+          hoverIndex,
+          this.props.highlightColor,
+        ],
       },
     });
   }
 
   /**
-   * Create vertical curtain polygon features from LineString coordinates.
-   * Converts elevated LineStrings into vertical rectangular polygons from ground to elevation.
+   * Create a single curtain GeoJsonLayer with shared configuration.
    */
-  private createCurtainPolygonFeatures(
-    features: Shape['feature'][],
-  ): CurtainFeature[] {
-    const { applyBaseOpacity } = this.props;
-    const curtainFeatures: CurtainFeature[] = [];
-
-    // Filter to LineString features with elevation > 0
-    const lineFeatures = features.filter((f) => {
-      if (
-        f.geometry.type !== 'LineString' &&
-        f.geometry.type !== 'MultiLineString'
-      ) {
-        return false;
-      }
-      const elevation = this.getFeatureElevation(f);
-      return elevation > 0;
+  private createCurtainGeoJsonLayer(
+    idSuffix: string,
+    data: CurtainFeature[],
+    getFillColor: (d: CurtainFeature) => [number, number, number, number],
+    dataTriggers: unknown[],
+    fillColorTriggers: unknown[],
+  ): GeoJsonLayer {
+    return new GeoJsonLayer({
+      id: `${this.props.id}-${SHAPE_LAYER_IDS.DISPLAY}-${idSuffix}`,
+      // biome-ignore lint/suspicious/noExplicitAny: GeoJsonLayer accepts various feature formats
+      data: data as any,
+      filled: true,
+      stroked: false,
+      // biome-ignore lint/style/useNamingConvention: deck.gl uses _full3d naming
+      _full3d: true,
+      // biome-ignore lint/suspicious/noExplicitAny: GeoJsonLayer accessor type incompatible with CurtainFeature
+      getFillColor: getFillColor as any,
+      pickable: this.props.pickable ?? true,
+      parameters: {
+        depthTest: true,
+        depthCompare: 'less-equal',
+      },
+      updateTriggers: {
+        data: dataTriggers,
+        getFillColor: fillColorTriggers,
+      },
     });
-
-    for (const feature of lineFeatures) {
-      const { geometry } = feature;
-      const lineColor = getLineColor(feature);
-      const shapeId = feature.properties?.shapeId;
-
-      // Ensure RGBA format
-      const lineColorRGBA: [number, number, number, number] =
-        lineColor.length === 4
-          ? (lineColor as [number, number, number, number])
-          : ([...lineColor, 255] as [number, number, number, number]);
-
-      // Create fill color with base opacity (same as polygon fills)
-      const fillColor: [number, number, number, number] = applyBaseOpacity
-        ? [
-            lineColorRGBA[0],
-            lineColorRGBA[1],
-            lineColorRGBA[2],
-            Math.round(lineColorRGBA[3] * 0.2),
-          ]
-        : lineColorRGBA;
-
-      if (geometry.type === 'LineString') {
-        const coordinates = geometry.coordinates as number[][];
-        curtainFeatures.push(
-          ...this.createCurtainPolygonsFromLine(
-            coordinates,
-            fillColor,
-            lineColorRGBA,
-            shapeId,
-          ),
-        );
-      } else if (geometry.type === 'MultiLineString') {
-        const lines = geometry.coordinates as number[][][];
-        for (const line of lines) {
-          curtainFeatures.push(
-            ...this.createCurtainPolygonsFromLine(
-              line,
-              fillColor,
-              lineColorRGBA,
-              shapeId,
-            ),
-          );
-        }
-      }
-    }
-
-    return curtainFeatures;
-  }
-
-  /**
-   * Create curtain polygon features from a single LineString.
-   * Each pair of consecutive coordinates becomes a vertical rectangular polygon.
-   */
-  private createCurtainPolygonsFromLine(
-    coordinates: number[][],
-    fillColor: [number, number, number, number],
-    lineColor: [number, number, number, number],
-    shapeId?: ShapeId,
-  ): CurtainFeature[] {
-    const polygons: CurtainFeature[] = [];
-
-    // Create vertical polygon for each pair of consecutive coordinates
-    for (let i = 0; i < coordinates.length - 1; i++) {
-      const coord1 = coordinates[i];
-      const coord2 = coordinates[i + 1];
-      if (coord1 === undefined || coord2 === undefined) {
-        continue;
-      }
-
-      const [lon1, lat1, elev1] = coord1;
-      const [lon2, lat2, elev2] = coord2;
-
-      if (
-        lon1 === undefined ||
-        lat1 === undefined ||
-        elev1 === undefined ||
-        lon2 === undefined ||
-        lat2 === undefined ||
-        elev2 === undefined
-      ) {
-        continue;
-      }
-
-      // Skip if both points are at ground level
-      if (elev1 === 0 && elev2 === 0) {
-        continue;
-      }
-
-      // Create vertical rectangle as a polygon
-      // Winding order: counter-clockwise when viewed from outside
-      // Bottom-left -> Bottom-right -> Top-right -> Top-left -> Bottom-left (closing)
-      const ring: number[][] = [
-        [lon1, lat1, 0], // Bottom left (ground)
-        [lon2, lat2, 0], // Bottom right (ground)
-        [lon2, lat2, elev2], // Top right (elevated)
-        [lon1, lat1, elev1], // Top left (elevated)
-        [lon1, lat1, 0], // Close the ring
-      ];
-
-      polygons.push({
-        type: 'Feature',
-        geometry: {
-          type: 'Polygon',
-          coordinates: [ring],
-        },
-        properties: {
-          fillColor,
-          lineColor,
-          shapeId,
-        },
-      });
-    }
-
-    return polygons;
   }
 
   /**
@@ -1372,170 +956,114 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
     allCurtainFeatures: CurtainFeature[],
   ): GeoJsonLayer[] {
     const layers: GeoJsonLayer[] = [];
-    const { selectedShapeId, highlightColor } = this.props;
-    const resolvedHighlight = highlightColor ?? getHighlightColor();
+    const { selectedShapeId } = this.props;
+    const resolvedHighlight = this.resolvedHighlight;
     const hoverIndex = this.state?.hoverIndex;
 
-    // Determine hovered shape ID
     const hoveredShapeId =
       hoverIndex !== undefined && features[hoverIndex]
         ? features[hoverIndex].properties?.shapeId
         : undefined;
 
-    // Filter curtains by state (main, hovered, selected)
-    const mainCurtains = allCurtainFeatures.filter((f) => {
-      const curtainShapeId = f.properties.shapeId;
-      return (
-        curtainShapeId !== hoveredShapeId && curtainShapeId !== selectedShapeId
-      );
-    });
+    const { main, hovered, selected } = partitionCurtains(
+      allCurtainFeatures,
+      hoveredShapeId,
+      selectedShapeId,
+    );
 
-    const hoveredCurtains = allCurtainFeatures.filter((f) => {
-      const curtainShapeId = f.properties.shapeId;
-      return (
-        curtainShapeId === hoveredShapeId && curtainShapeId !== selectedShapeId
-      );
-    });
-
-    const selectedCurtains = allCurtainFeatures.filter((f) => {
-      const curtainShapeId = f.properties.shapeId;
-      return curtainShapeId === selectedShapeId;
-    });
-
-    // Determine if selected curtain is also hovered
     const isSelectedHovered = selectedShapeId === hoveredShapeId;
+    const dataTriggers = [features, hoveredShapeId, selectedShapeId];
 
-    // Main curtains (normal color)
-    if (mainCurtains.length > 0) {
+    if (main.length > 0) {
       layers.push(
-        new GeoJsonLayer({
-          id: `${this.props.id}-${SHAPE_LAYER_IDS.DISPLAY}-elevation-curtain`,
-          // biome-ignore lint/suspicious/noExplicitAny: GeoJsonLayer accepts various feature formats
-          data: mainCurtains as any,
-          filled: true,
-          stroked: false,
-          // biome-ignore lint/style/useNamingConvention: deck.gl uses _full3d naming
-          _full3d: true, // Render both sides of vertical surfaces
-          // biome-ignore lint/suspicious/noExplicitAny: GeoJsonLayer accessor type compatibility
-          getFillColor: (d: any) => d.properties.fillColor,
-          pickable: this.props.pickable ?? true,
-          parameters: {
-            depthTest: true,
-            depthCompare: 'less-equal',
-          },
-          updateTriggers: {
-            data: [features, hoveredShapeId, selectedShapeId],
-            getFillColor: [features, this.props.applyBaseOpacity],
-          },
-        }),
+        this.createCurtainGeoJsonLayer(
+          'elevation-curtain',
+          main,
+          (d) => d.properties.fillColor,
+          dataTriggers,
+          [features, this.props.applyBaseOpacity],
+        ),
       );
     }
 
-    // Hovered curtains (brightened by 1.5x for visibility)
-    if (hoveredCurtains.length > 0) {
+    if (hovered.length > 0) {
       layers.push(
-        new GeoJsonLayer({
-          id: `${this.props.id}-${SHAPE_LAYER_IDS.DISPLAY}-elevation-curtain-hover`,
-          // biome-ignore lint/suspicious/noExplicitAny: GeoJsonLayer accepts various feature formats
-          data: hoveredCurtains as any,
-          filled: true,
-          stroked: false,
-          // biome-ignore lint/style/useNamingConvention: deck.gl uses _full3d naming
-          _full3d: true, // Render both sides of vertical surfaces
-          // biome-ignore lint/suspicious/noExplicitAny: GeoJsonLayer accessor type compatibility
-          getFillColor: (d: any) => brightenColor(d.properties.fillColor, 1.5),
-          pickable: this.props.pickable ?? true,
-          parameters: {
-            depthTest: true,
-            depthCompare: 'less-equal',
-          },
-          updateTriggers: {
-            data: [features, hoveredShapeId, selectedShapeId],
-            getFillColor: [features, this.props.applyBaseOpacity],
-          },
-        }),
+        this.createCurtainGeoJsonLayer(
+          'elevation-curtain-hover',
+          hovered,
+          (d) => brightenColor(d.properties.fillColor, 1.5),
+          dataTriggers,
+          [features, this.props.applyBaseOpacity],
+        ),
       );
     }
 
-    // Selected curtains (highlight tint with brightness boost)
-    if (selectedCurtains.length > 0) {
-      const highlightBase: [number, number, number, number] = [
-        resolvedHighlight[0],
-        resolvedHighlight[1],
-        resolvedHighlight[2],
-        60,
-      ];
-      const selectedFillColor = isSelectedHovered
-        ? brightenColor(
-            [
+    if (selected.length > 0) {
+      const selectedFillColor: [number, number, number, number] =
+        isSelectedHovered
+          ? brightenColor(
+              [
+                resolvedHighlight[0],
+                resolvedHighlight[1],
+                resolvedHighlight[2],
+                80,
+              ],
+              1.3,
+            )
+          : [
               resolvedHighlight[0],
               resolvedHighlight[1],
               resolvedHighlight[2],
-              80,
-            ],
-            1.3,
-          )
-        : highlightBase;
+              60,
+            ];
 
       layers.push(
-        new GeoJsonLayer({
-          id: `${this.props.id}-${SHAPE_LAYER_IDS.DISPLAY}-elevation-curtain-selected`,
-          // biome-ignore lint/suspicious/noExplicitAny: GeoJsonLayer accepts various feature formats
-          data: selectedCurtains as any,
-          filled: true,
-          stroked: false,
-          // biome-ignore lint/style/useNamingConvention: deck.gl uses _full3d naming
-          _full3d: true, // Render both sides of vertical surfaces
-          getFillColor: () => selectedFillColor,
-          pickable: this.props.pickable ?? true,
-          parameters: {
-            depthTest: true,
-            depthCompare: 'less-equal',
-          },
-          updateTriggers: {
-            data: [features, hoveredShapeId, selectedShapeId],
-            getFillColor: [isSelectedHovered, highlightColor],
-          },
-        }),
+        this.createCurtainGeoJsonLayer(
+          'elevation-curtain-selected',
+          selected,
+          () => selectedFillColor,
+          dataTriggers,
+          [isSelectedHovered, this.props.highlightColor],
+        ),
       );
     }
 
     return layers;
   }
 
+  /**
+   * Render elevation visualization layers (curtains for lines, wireframes for polygons).
+   */
   private renderElevationVisualizationLayer(
     features: Shape['feature'][],
+    elevatedLines: Shape['feature'][],
+    elevatedPolygons: Shape['feature'][],
   ): GeoJsonLayer[] {
     const layers: GeoJsonLayer[] = [];
 
     // LineString curtains (filled vertical surfaces)
-    const allCurtainFeatures = this.createCurtainPolygonFeatures(features);
+    const allCurtainFeatures = createCurtainPolygonFeatures(
+      elevatedLines,
+      this.props.applyBaseOpacity,
+    );
 
     if (allCurtainFeatures.length > 0) {
       layers.push(...this.renderCurtainLayers(features, allCurtainFeatures));
     }
 
     // Polygon wireframes (extruded 3D boxes with edges)
-    const polygonFeatures = features.filter((f) => {
-      const geomType = f.geometry.type;
-      return (
-        (geomType === 'Polygon' || geomType === 'MultiPolygon') &&
-        this.getFeatureElevation(f) > 0
-      );
-    });
-
-    if (polygonFeatures.length > 0) {
+    if (elevatedPolygons.length > 0) {
       const { applyBaseOpacity } = this.props;
       layers.push(
         new GeoJsonLayer({
           id: `${this.props.id}-${SHAPE_LAYER_IDS.DISPLAY}-elevation-wireframe`,
           // biome-ignore lint/suspicious/noExplicitAny: GeoJsonLayer accepts various feature formats
-          data: polygonFeatures as any,
+          data: elevatedPolygons as any,
           filled: false,
           stroked: false,
           extruded: true,
           wireframe: true,
-          getElevation: this.getFeatureElevation,
+          getElevation: getFeatureElevation,
           getFillColor: (d: Shape['feature']) =>
             getFillColor(d, applyBaseOpacity),
           getLineColor,
@@ -1572,9 +1100,16 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
 
     // Elevation visualization layers (wireframe for polygons, curtains for lines)
     // These render UNDER the main layer
+    // Single classification pass replaces 3 separate .filter() calls per frame
     if (enableElevation) {
-      layers.push(...this.renderElevationVisualizationLayer(features));
-      layers.push(this.renderElevationIndicatorLayer(features));
+      const { lines, polygons, nonPolygons } = classifyElevatedFeatures(
+        features,
+        getFeatureElevation,
+      );
+      layers.push(
+        ...this.renderElevationVisualizationLayer(features, lines, polygons),
+      );
+      layers.push(this.renderElevationIndicatorLayer(features, nonPolygons));
     }
 
     // Main layer with fills and styled strokes

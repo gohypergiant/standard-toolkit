@@ -369,3 +369,19 @@ export function isLineStringShape(shape: Shape): shape is LineStringShape {
 export function isPointShape(shape: Shape): shape is PointShape {
   return shape.shape === ShapeFeatureType.Point;
 }
+
+// =============================================================================
+// Geometry Type Predicates
+// =============================================================================
+// These check GeoJSON geometry.type strings (e.g. 'Polygon', 'MultiPolygon'),
+// distinct from the Shape type guards above which check shape.shape ('Circle', etc.).
+
+/** Check if a GeoJSON geometry type is polygon-like (Polygon or MultiPolygon). */
+export function isPolygonGeometry(type: string): boolean {
+  return type === 'Polygon' || type === 'MultiPolygon';
+}
+
+/** Check if a GeoJSON geometry type is line-like (LineString or MultiLineString). */
+export function isLineGeometry(type: string): boolean {
+  return type === 'LineString' || type === 'MultiLineString';
+}
