@@ -120,8 +120,8 @@ describe('DisplayShapeLayer', () => {
       initializeLayerWithState(layer, { hoverIndex: 0 });
       sublayers = layer.renderLayers();
 
-      // Should have main layer + label layer
-      expect(sublayers.length).toBe(2);
+      // Should have hover layer + main layer + label layer
+      expect(sublayers.length).toBe(3);
       const labelLayer = sublayers.find(
         (l) => l.id === `test-layer-${SHAPE_LAYER_IDS.DISPLAY_LABELS}`,
       );
@@ -921,7 +921,7 @@ describe('DisplayShapeLayer', () => {
         expect(props.material).toEqual(MATERIAL_SETTINGS.HOVERED);
       });
 
-      it('does not render hover layer when enableElevation is false', () => {
+      it('renders hover layer when enableElevation is false (2D hover)', () => {
         const layer = new DisplayShapeLayer({
           id: 'test-layer',
           mapId,
@@ -937,7 +937,10 @@ describe('DisplayShapeLayer', () => {
           (l) => l.id === `test-layer-${SHAPE_LAYER_IDS.DISPLAY}-hover`,
         );
 
-        expect(hoverLayer).toBeUndefined();
+        expect(hoverLayer).toBeInstanceOf(GeoJsonLayer);
+        const props = (hoverLayer as GeoJsonLayer).props;
+        expect(props.extruded).toBe(false);
+        expect(props.material).toEqual(MATERIAL_SETTINGS.HOVERED);
       });
 
       it('does not render hover layer for non-polygon shapes', () => {

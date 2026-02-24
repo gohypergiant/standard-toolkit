@@ -16,7 +16,7 @@ import { Broadcast } from '@accelint/bus';
 import { getLogger } from '@accelint/logger';
 import { CompositeLayer } from '@deck.gl/core';
 import { GeoJsonLayer, IconLayer, LineLayer } from '@deck.gl/layers';
-import { DASH_ARRAYS, SHAPE_LAYER_IDS } from '../shared/constants';
+import { SHAPE_LAYER_IDS } from '../shared/constants';
 import { type ShapeEvent, ShapeEvents } from '../shared/events';
 import { isLineGeometry, isPolygonGeometry } from '../shared/types';
 import {
@@ -493,13 +493,12 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
   }
 
   /**
-   * Render hover layer for all shapes (2D and 3D)
-   * Uses material-based lighting to add brightness on hover.
-   * Works for both selected and non-selected shapes.
+   * Render hover layer for all polygon shapes (2D and 3D).
+   * Overlays the shape's base fill with brighter material lighting.
+   * Stacks with other interaction layers (e.g. selection highlight underneath).
    */
   private renderHoverLayer(features: Shape['feature'][]): GeoJsonLayer | null {
-    const { enableElevation, selectedShapeId, applyBaseOpacity } = this.props;
-    const resolvedHighlight = this.resolvedHighlight;
+    const { enableElevation, applyBaseOpacity } = this.props;
     const hoverIndex = this.state?.hoverIndex;
 
     // Only render if something is hovered
@@ -517,19 +516,6 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       return null;
     }
 
-    // Get the fill color for hover (highlight color if selected, base color otherwise)
-    const getHoverFillColor = (
-      d: Shape['feature'],
-    ): [number, number, number, number] => {
-      const baseColor = getFillColor(d, applyBaseOpacity);
-
-      if (d.properties?.shapeId === selectedShapeId) {
-        return getSelectionFillColor(baseColor, resolvedHighlight);
-      }
-
-      return baseColor;
-    };
-
     return new GeoJsonLayer({
       id: `${this.props.id}-${SHAPE_LAYER_IDS.DISPLAY}-hover`,
       // biome-ignore lint/suspicious/noExplicitAny: GeoJsonLayer accepts various feature formats
@@ -538,7 +524,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       // Styling
       filled: true,
       stroked: false, // Main layer handles strokes; this layer is fill-only
-      getFillColor: getHoverFillColor,
+      getFillColor: (d: Shape['feature']) => getFillColor(d, applyBaseOpacity),
 
       // Hover material provides brighter lighting; extrusion only when elevation enabled
       extruded: enableElevation,
@@ -549,7 +535,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       pickable: false,
       updateTriggers: {
         data: [features, hoverIndex],
-        getFillColor: [features, applyBaseOpacity, selectedShapeId],
+        getFillColor: [features, applyBaseOpacity],
         getElevation: [features],
       },
     });
@@ -754,25 +740,9 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       // Icon configuration (only used if pointType includes 'icon')
       ...getIconLayerProps(hasIcons, iconAtlas, iconMapping),
 
-      // Dash pattern support - selected shapes get dotted border
-      // Skip for elevated LineStrings (curtains handle selection visual feedback)
+      // Dash pattern support for shape-configured line patterns (solid/dashed/dotted)
       extensions: DASH_EXTENSION,
-      getDashArray: (d: Shape['feature']) => {
-        // Skip dash styling for elevated LineStrings - curtain handles it
-        if (
-          this.props.enableElevation &&
-          isLineGeometry(d.geometry.type) &&
-          getFeatureElevation(d) > 0
-        ) {
-          return getDashArray(d); // Use default dash pattern only
-        }
-
-        const isSelected = d.properties?.shapeId === selectedShapeId;
-        if (isSelected) {
-          return DASH_ARRAYS.dotted;
-        }
-        return getDashArray(d);
-      },
+      getDashArray,
 
       // Behavior
       pickable,
@@ -804,7 +774,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
           this.props.highlightColor,
         ],
         getLineWidth: [features, this.state?.hoverIndex],
-        getDashArray: [features, selectedShapeId],
+        getDashArray: [features],
         getPointRadius: [features],
         ...getIconUpdateTriggers(hasIcons, features),
       },
