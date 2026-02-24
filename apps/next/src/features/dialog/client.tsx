@@ -26,6 +26,7 @@ function DialogCard({ size }: DialogVariant) {
 
   return (
     <>
+      <div ref={containerRef} className='relative min-h-[300px] flex-1' />
       <DialogTrigger isOpen>
         <Button className='hidden'>Open</Button>
         <Dialog size={size} parentRef={containerRef}>
@@ -39,7 +40,6 @@ function DialogCard({ size }: DialogVariant) {
           </DialogFooter>
         </Dialog>
       </DialogTrigger>
-      <div ref={containerRef} className='relative min-h-[300px] flex-1' />
     </>
   );
 }
