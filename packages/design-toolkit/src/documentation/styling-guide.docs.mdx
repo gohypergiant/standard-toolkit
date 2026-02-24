@@ -183,7 +183,7 @@ You might have rare instances where you do need to use a border. For example, if
 Tailwind supports [variants](https://tailwindcss.com/docs/hover-focus-and-other-states) that allow for conditional application of styles, such as `:hover`, `:focus`, and `:active`. Additionally, in the Design Toolkit we have chosen to implement additional variants that are specific to [react aria components](https://react-aria.adobe.com/styling#plugin) which allow variants based on state. The full list of what is implemented can be [found here in variants.css](https://github.com/gohypergiant/standard-toolkit/blob/main/packages/design-foundation/src/variants/variants.css). You can combine variants for additional complexity or use them with the [`group` class](https://tailwindcss.com/docs/hover-focus-and-other-states#styling-based-on-the-descendants-of-a-group) provided by Tailwind.
 
 ```tsx
-<div className="empty:none">{maybeContent}</div>
+<div className="empty:hidden">{maybeContent}</div>
 
 // using state for conditional utility classes
 <Button className="pressed:bg-accent-primary-muted">
