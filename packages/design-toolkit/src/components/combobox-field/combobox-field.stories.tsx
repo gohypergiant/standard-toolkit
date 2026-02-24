@@ -12,12 +12,14 @@
 
 import Placeholder from '@accelint/icons/placeholder';
 import { type ReactNode, useState } from 'react';
+import { DeferredCollection } from '../deferred-collection';
 import { Icon } from '../icon';
 import { OptionsItem } from '../options/item';
 import { OptionsItemContent } from '../options/item-content';
 import { OptionsItemDescription } from '../options/item-description';
 import { OptionsItemLabel } from '../options/item-label';
 import { OptionsSection } from '../options/section';
+import { Skeleton } from '../skeleton';
 import { ComboBoxField } from './';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
@@ -279,14 +281,24 @@ export const WithManyItems: Story = {
     },
   },
   render: ({ children, ...args }) => (
-    <ComboBoxField {...args}>
-      {manyItems.map((item) => (
-        <OptionsItem key={item.id} textValue={item.name}>
-          {item.prefixIcon && <Icon>{item.prefixIcon}</Icon>}
-          <OptionsItemLabel>{item.name}</OptionsItemLabel>
-        </OptionsItem>
-      ))}
-    </ComboBoxField>
+    <DeferredCollection
+      fallback={
+        <div className='flex w-[200px] flex-col gap-xs'>
+          <Skeleton className='h-[32px]' />
+        </div>
+      }
+    >
+      {() => (
+        <ComboBoxField {...args}>
+          {manyItems.map((item) => (
+            <OptionsItem key={item.id} textValue={item.name}>
+              {item.prefixIcon && <Icon>{item.prefixIcon}</Icon>}
+              <OptionsItemLabel>{item.name}</OptionsItemLabel>
+            </OptionsItem>
+          ))}
+        </ComboBoxField>
+      )}
+    </DeferredCollection>
   ),
 };
 
