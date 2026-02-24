@@ -493,7 +493,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
   }
 
   /**
-   * Render hover layer for extruded polygons (when enableElevation is true).
+   * Render hover layer for all shapes (2D and 3D)
    * Uses material-based lighting to add brightness on hover.
    * Works for both selected and non-selected shapes.
    */
@@ -502,8 +502,8 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
     const resolvedHighlight = this.resolvedHighlight;
     const hoverIndex = this.state?.hoverIndex;
 
-    // Only render if elevation is enabled and something is hovered
-    if (!enableElevation || hoverIndex === undefined) {
+    // Only render if something is hovered
+    if (hoverIndex === undefined) {
       return null;
     }
 
@@ -537,11 +537,11 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
 
       // Styling
       filled: true,
-      stroked: false, // No strokes on extruded polygons (deck.gl limitation)
+      stroked: false, // Main layer handles strokes; this layer is fill-only
       getFillColor: getHoverFillColor,
 
-      // Extrusion with hover material (brighter lighting)
-      extruded: true,
+      // Hover material provides brighter lighting; extrusion only when elevation enabled
+      extruded: enableElevation,
       getElevation: getFeatureElevation,
       material: MATERIAL_SETTINGS.HOVERED,
 
@@ -692,7 +692,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
         return baseColor;
       },
       getLineColor: (d: Shape['feature'], info) => {
-        const base = getLineColor(d);
+        const baseColor = getLineColor(d);
         const isSelected = d.properties?.shapeId === selectedShapeId;
 
         // Apply highlight border color only for elevated non-polygon shapes
@@ -707,10 +707,10 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
 
         const isHovered = info?.index === this.state?.hoverIndex;
         if (isHovered) {
-          return brightenColor(base, 1.5);
+          return brightenColor(baseColor, 1.5);
         }
 
-        return base;
+        return baseColor;
       },
       getLineWidth: (d, info) => {
         // Skip hover line width for elevated LineStrings - curtain handles it

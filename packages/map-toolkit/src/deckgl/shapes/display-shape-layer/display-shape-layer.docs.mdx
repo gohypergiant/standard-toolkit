@@ -517,7 +517,8 @@ The highlight effect can be toggled with the `showHighlight` prop:
 
 When `pickable={true}`, shapes show hover feedback:
 
-- **All shapes (except Points with icons)**: Border/outline width increases by 2 pixels
+- **Polygon shapes**: Fill brightens via material-based lighting, and border/outline width increases by 2 pixels
+- **Non-polygon shapes (except Points with icons)**: Border/outline width increases by 2 pixels
 - **Point shapes with icons**: Coffin corners appear with a white fill and black outline
 
 ## 3D Elevation Rendering
@@ -615,7 +616,7 @@ Elevation layers respond to hover and selection with color feedback:
 - **Selection**: Curtain walls and indicator lines change to the `highlightColor`
 - **Hover + Selection**: Curtain walls use a brighter version of the highlight color
 
-Extruded polygons use a material-based hover effect (lighting change) since deck.gl can't stroke extruded shapes.
+All polygons (2D and extruded) use a material-based hover effect (lighting change) for fill brightness. In 3D, this also compensates for deck.gl's inability to render outlines on extruded polygons.
 
 ## Event Bus Integration
 
