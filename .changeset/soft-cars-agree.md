@@ -10,8 +10,6 @@ Remove dotted border treatment on shape selection — interactions no longer mod
 
 Apply material-based brightness effect for hover and selection on all polygon shapes. All shapes brighten their outline color on hover or select (1.4×), with an even brighter combined state when both active (1.7×).
 
-Fix curtain (elevated LineString) hover and selection colors to use overlay opacity treatment, matching the visual weight of polygon overlays.
-
 ## Breaking Changes
 
 ### `showHighlight` removed
