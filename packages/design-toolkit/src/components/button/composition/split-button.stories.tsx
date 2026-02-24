@@ -10,10 +10,17 @@
  * governing permissions and limitations under the License.
  */
 
+import { Icon } from '@/components/icon';
+import { Menu } from '@/components/menu';
+import { MenuItem } from '@/components/menu/item';
+import { MenuItemLabel } from '@/components/menu/item-label';
+import { MenuTrigger } from '@/components/menu/trigger';
+import { ChevronDown, Placeholder } from '@accelint/icons';
 import type { StoryObj } from '@storybook/react-vite';
+import { useState } from 'react';
+import { Button } from '../';
 
 type StoryArgs = {
-  buttonVariant: 'filled' | 'flat' | 'icon' | 'outline';
   buttonColor: 'mono-muted' | 'mono-bold' | 'accent';
   buttonSize: 'large' | 'medium' | 'small' | 'xsmall';
   menuVariant: 'compact' | 'cozy';
@@ -24,25 +31,12 @@ const meta = {
   title: 'Components/Button/Composition/Split Button',
   tags: ['!autodocs'], // what this do
   args: {
-    buttonVariant: 'filled',
     buttonColor: 'mono-muted',
   },
   argTypes: {
-    buttonVariant: {
-      control: 'select',
-      options: ['filled', 'flat', 'icon', 'outline'],
-    },
     buttonColor: {
       control: 'select',
       options: ['mono-muted', 'mono-bold', 'accent'],
-    },
-    buttonSize: {
-      control: 'select',
-      options: ['large', 'medium', 'small', 'xsmall'],
-    },
-    menuVariant: {
-      control: 'select',
-      options: ['compact', 'cozy'],
     },
     isDisabled: {
       control: 'boolean',
@@ -53,8 +47,47 @@ const meta = {
 export default meta;
 type Story = StoryObj<StoryArgs>;
 
+const chevronStyle = (isOpen: boolean) => ({
+  transform: isOpen ? 'rotate(180deg)' : undefined,
+  transition: 'transform 150ms',
+});
+
 export const Default: Story = {
-  render: (_args) => {
-    return <div>sup</div>;
+  render: (args) => {
+    const [isOpen, setIsOpen] = useState(false);
+
+    return (
+      <div className='flex flex-row'>
+        <Button variant='icon' color='mono-muted' isDisabled={args.isDisabled}>
+          <Icon>
+            <Placeholder />
+          </Icon>
+        </Button>
+        <MenuTrigger onOpenChange={setIsOpen}>
+          <Button
+            className='w-[12px] min-w-[12px] p-0'
+            variant='flat'
+            size='icon'
+            color={args.buttonColor}
+            isDisabled={args.isDisabled}
+          >
+            <Icon style={chevronStyle(isOpen)} className='flex h-full w-[12px]'>
+              <ChevronDown />
+            </Icon>
+          </Button>
+          <Menu variant={args.menuVariant}>
+            <MenuItem id='option-1'>
+              <MenuItemLabel>Option 1</MenuItemLabel>
+            </MenuItem>
+            <MenuItem id='option-2'>
+              <MenuItemLabel>Option 2</MenuItemLabel>
+            </MenuItem>
+            <MenuItem id='option-3'>
+              <MenuItemLabel>Option 3</MenuItemLabel>
+            </MenuItem>
+          </Menu>
+        </MenuTrigger>
+      </div>
+    );
   },
 };
