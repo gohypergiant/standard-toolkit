@@ -149,14 +149,13 @@ describe('DisplayShapeLayer', () => {
       expect(mainLayer.id).toBe(`test-layer-${SHAPE_LAYER_IDS.DISPLAY}`);
     });
 
-    it('renders highlight layer when selectedShapeId is provided and showHighlight is true', () => {
+    it('renders select layer when selectedShapeId is provided', () => {
       const shape = polygonFixture;
       const layer = new DisplayShapeLayer({
         id: 'test-layer',
         mapId,
         data: [shape],
         selectedShapeId: shape.id,
-        showHighlight: true,
         showLabels: 'never',
       });
 
@@ -620,29 +619,21 @@ describe('DisplayShapeLayer', () => {
         data: [],
       });
 
-      // Check default props
       expect(layer.props.pickable).toBe(true);
       expect(layer.props.showLabels).toBe('always');
-      expect(layer.props.highlightColor).toEqual([40, 245, 190, 100]);
     });
 
     it('allows overriding default props', () => {
-      const customHighlight: [number, number, number, number] = [
-        255, 0, 0, 200,
-      ];
-
       const layer = new DisplayShapeLayer({
         id: 'test-layer',
         mapId,
         data: [],
         pickable: false,
         showLabels: 'never',
-        highlightColor: customHighlight,
       });
 
       expect(layer.props.pickable).toBe(false);
       expect(layer.props.showLabels).toBe('never');
-      expect(layer.props.highlightColor).toEqual(customHighlight);
     });
   });
 
@@ -918,7 +909,7 @@ describe('DisplayShapeLayer', () => {
         // biome-ignore lint/suspicious/noExplicitAny: accessing internal props for testing
         const props = (hoverLayer as GeoJsonLayer).props as any;
         expect(props.extruded).toBe(true);
-        expect(props.material).toEqual(MATERIAL_SETTINGS.HOVERED);
+        expect(props.material).toEqual(MATERIAL_SETTINGS.HOVER_OR_SELECT);
       });
 
       it('renders hover layer when enableElevation is false (2D hover)', () => {
@@ -940,7 +931,7 @@ describe('DisplayShapeLayer', () => {
         expect(hoverLayer).toBeInstanceOf(GeoJsonLayer);
         const props = (hoverLayer as GeoJsonLayer).props;
         expect(props.extruded).toBe(false);
-        expect(props.material).toEqual(MATERIAL_SETTINGS.HOVERED);
+        expect(props.material).toEqual(MATERIAL_SETTINGS.HOVER_OR_SELECT);
       });
 
       it('does not render hover layer for non-polygon shapes', () => {
@@ -963,14 +954,13 @@ describe('DisplayShapeLayer', () => {
       });
     });
 
-    describe('highlight layer', () => {
-      it('skips highlight for elevated polygon when enableElevation is true', () => {
+    describe('select layer', () => {
+      it('renders select layer for elevated polygon when enableElevation is true', () => {
         const layer = new DisplayShapeLayer({
           id: 'test-layer',
           mapId,
           data: [elevatedPolygon],
           selectedShapeId: elevatedPolygon.id,
-          showHighlight: true,
           showLabels: 'never',
           enableElevation: true,
         });
@@ -978,38 +968,37 @@ describe('DisplayShapeLayer', () => {
         initializeLayerWithState(layer);
         const sublayers = layer.renderLayers();
 
-        const highlightLayer = sublayers.find(
+        const selectLayer = sublayers.find(
           (l) => l.id === `test-layer-${SHAPE_LAYER_IDS.DISPLAY_HIGHLIGHT}`,
         );
 
-        expect(highlightLayer).toBeUndefined();
+        expect(selectLayer).toBeInstanceOf(GeoJsonLayer);
       });
 
-      it('renders highlight for non-elevated shape when enableElevation is true', () => {
+      it('renders select layer for polygon when enableElevation is false', () => {
         const shape = polygonFixture;
         const layer = new DisplayShapeLayer({
           id: 'test-layer',
           mapId,
           data: [shape],
           selectedShapeId: shape.id,
-          showHighlight: true,
           showLabels: 'never',
-          enableElevation: true,
+          enableElevation: false,
         });
 
         initializeLayerWithState(layer);
         const sublayers = layer.renderLayers();
 
-        const highlightLayer = sublayers.find(
+        const selectLayer = sublayers.find(
           (l) => l.id === `test-layer-${SHAPE_LAYER_IDS.DISPLAY_HIGHLIGHT}`,
         );
 
-        expect(highlightLayer).toBeInstanceOf(GeoJsonLayer);
+        expect(selectLayer).toBeInstanceOf(GeoJsonLayer);
       });
     });
 
-    describe('selection fill color tinting', () => {
-      it('applies highlight color to fill for selected elevated polygon', () => {
+    describe('selection fill color', () => {
+      it('does not modify fill color for selected elevated polygon', () => {
         const layer = new DisplayShapeLayer({
           id: 'test-layer',
           mapId,
@@ -1031,10 +1020,9 @@ describe('DisplayShapeLayer', () => {
 
         const fillColor = props.getFillColor(feature);
 
+        // Selection no longer modifies fill — innate shape styling is preserved
         // Base: [255, 255, 255, 255] → with applyBaseOpacity alpha = round(255 * 0.2) = 51
-        // Highlight: [40, 245, 190, 100]
-        // Selection fill: highlight RGB + base alpha = [40, 245, 190, 51]
-        expect(fillColor).toEqual([40, 245, 190, 51]);
+        expect(fillColor).toEqual([255, 255, 255, 51]);
       });
     });
 

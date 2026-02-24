@@ -12,13 +12,9 @@
 
 'use client';
 
-import {
-  DEFAULT_COLORS,
-  HIGHLIGHT_WIDTH_INCREASE,
-  HOVER_WIDTH_INCREASE,
-} from '../../shared/constants';
-import { getLineWidth, normalizeColor } from '../../shared/utils/style-utils';
-import type { Color } from '@deck.gl/core';
+import { HOVER_WIDTH_INCREASE } from '../../shared/constants';
+import { getFillColor, getLineWidth } from '../../shared/utils/style-utils';
+import { OVERLAY_FILL_OPACITY } from '../constants';
 import type { StyledFeature } from '../../shared/types';
 
 /**
@@ -30,19 +26,6 @@ import type { StyledFeature } from '../../shared/types';
  * @param feature - The styled feature to calculate width for
  * @param isHovered - Whether the feature is currently being hovered
  * @returns The calculated line width in pixels
- *
- * @example
- * ```typescript
- * import { getHoverLineWidth } from '@accelint/map-toolkit/deckgl/shapes/display-shape-layer/utils/display-style';
- * import type { StyledFeature } from '@accelint/map-toolkit/deckgl/shapes/shared/types';
- *
- * const feature: StyledFeature = {
- *   properties: { styleProperties: { lineWidth: 2 } }
- * };
- *
- * const width = getHoverLineWidth(feature, true);
- * // Returns: 2 + HOVER_WIDTH_INCREASE (typically 4 pixels total)
- * ```
  */
 export function getHoverLineWidth(
   feature: StyledFeature,
@@ -53,92 +36,38 @@ export function getHoverLineWidth(
 }
 
 /**
- * Get selection highlight color.
+ * Scale the alpha channel of a raw RGBA color by OVERLAY_FILL_OPACITY.
+ * Used by interaction overlay layers (hover, select, curtains) to sit at
+ * a consistent opacity between the base layer (0.2) and fully solid (1.0).
  *
- * Returns the default highlight color with optional custom opacity override.
- * The highlight color is used to indicate selected features on the map.
- *
- * @param opacity - Optional opacity value (0-1 range), overrides default opacity
- * @returns RGBA color array [red, green, blue, alpha] with values 0-255
- *
- * @example
- * ```typescript
- * import { getHighlightColor } from '@accelint/map-toolkit/deckgl/shapes/display-shape-layer/utils/display-style';
- *
- * // Use default highlight color with default opacity
- * const defaultColor = getHighlightColor();
- * // Returns: [r, g, b, a] from DEFAULT_COLORS.highlight
- *
- * // Use custom opacity (50% transparent)
- * const semiTransparent = getHighlightColor(0.5);
- * // Returns: [r, g, b, 127]
- * ```
+ * @param color - RGBA color tuple [r, g, b, a] (0-255)
+ * @returns Color with alpha multiplied by OVERLAY_FILL_OPACITY
  */
-export function getHighlightColor(
-  opacity?: number,
+export function applyOverlayOpacity(
+  color: [number, number, number, number],
 ): [number, number, number, number] {
-  const rgba = normalizeColor(DEFAULT_COLORS.highlight);
-
-  if (opacity !== undefined) {
-    return [rgba[0], rgba[1], rgba[2], Math.round(opacity * 255)];
-  }
-
-  return rgba;
+  return [
+    color[0],
+    color[1],
+    color[2],
+    Math.round(color[3] * OVERLAY_FILL_OPACITY),
+  ];
 }
 
 /**
- * Get highlight border/outline width.
+ * Get fill color for interaction overlay layers (hover, select).
  *
- * Calculates the line width for a selected/highlighted feature by adding a fixed
- * pixel increase to the base width. This makes selected features more prominent.
+ * Returns the shape's fill color with alpha scaled by OVERLAY_FILL_OPACITY —
+ * more opaque than the base-opacity main layer but not fully solid, so the
+ * material brightness effect reads clearly without looking like a solid block.
  *
- * @param feature - The styled feature to calculate width for
- * @returns The calculated line width in pixels (base width + HIGHLIGHT_WIDTH_INCREASE)
- *
- * @example
- * ```typescript
- * import { getHighlightLineWidth } from '@accelint/map-toolkit/deckgl/shapes/display-shape-layer/utils/display-style';
- * import type { StyledFeature } from '@accelint/map-toolkit/deckgl/shapes/shared/types';
- *
- * const feature: StyledFeature = {
- *   properties: { styleProperties: { lineWidth: 2 } }
- * };
- *
- * const width = getHighlightLineWidth(feature);
- * // Returns: 2 + HIGHLIGHT_WIDTH_INCREASE (typically 5 pixels total)
- * ```
+ * @param feature - The styled feature
+ * @returns RGBA color with alpha multiplied by OVERLAY_FILL_OPACITY
  */
-export function getHighlightLineWidth(feature: StyledFeature): number {
-  const baseWidth = getLineWidth(feature);
-  return baseWidth + HIGHLIGHT_WIDTH_INCREASE;
-}
-
-/**
- * Get fill color for a selected shape.
- *
- * Replaces the RGB channels with the highlight color while preserving the
- * base color's alpha. Used by both the main layer and hover layer to show
- * selection state on extruded polygons and elevated points.
- *
- * @param baseColor - The original fill color of the feature
- * @param highlightColor - The resolved highlight RGBA color
- * @returns RGBA color with highlight RGB and original alpha
- *
- * @example
- * ```typescript
- * const fillColor = getSelectionFillColor(
- *   [98, 166, 255, 51],  // base fill (semi-transparent blue)
- *   [40, 245, 190, 100], // highlight color
- * );
- * // Returns: [40, 245, 190, 51] — highlight RGB with original alpha
- * ```
- */
-export function getSelectionFillColor(
-  baseColor: Color,
-  highlightColor: [number, number, number, number],
+export function getOverlayFillColor(
+  feature: StyledFeature,
 ): [number, number, number, number] {
-  const a = baseColor[3] ?? 255;
-  return [highlightColor[0], highlightColor[1], highlightColor[2], a];
+  return applyOverlayOpacity(getFillColor(feature));
 }
 
 /**

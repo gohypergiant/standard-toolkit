@@ -13,7 +13,6 @@
 'use client';
 import { PathStyleExtension } from '@deck.gl/extensions';
 import { DEFAULT_COLORS } from '../shared/constants';
-
 /**
  * Map interaction constants.
  *
@@ -54,15 +53,13 @@ export const COFFIN_CORNERS = {
 export const DEFAULT_DISPLAY_PROPS = {
   pickable: true,
   showLabels: 'always' as const,
-  showHighlight: false,
   applyBaseOpacity: true,
-  highlightColor: DEFAULT_COLORS.highlight,
 };
 
 /**
- * Material settings for 3D lighting effects on extruded shapes.
- * Used for hover state when stroke styling is unavailable.
- * Selection state uses color tinting instead of material settings.
+ * Material settings for lighting effects on polygon shapes.
+ * Controls fill brightness for hover and selection overlay layers.
+ * Keys mirror BRIGHTNESS_FACTOR for consistency.
  */
 export const MATERIAL_SETTINGS = {
   // Normal state - standard lighting
@@ -72,19 +69,39 @@ export const MATERIAL_SETTINGS = {
     shininess: 32,
     specularColor: [255, 255, 255] as [number, number, number],
   },
-  // Hovered state - brighter, more prominent
-  HOVERED: {
+  // Hovered or selected (single active state)
+  HOVER_OR_SELECT: {
     ambient: 0.6,
     diffuse: 0.8,
     shininess: 64,
     specularColor: [255, 255, 255] as [number, number, number],
   },
+  // Hovered and selected simultaneously - brighter
+  HOVER_AND_SELECT: {
+    ambient: 0.75,
+    diffuse: 0.95,
+    shininess: 80,
+    specularColor: [255, 255, 255] as [number, number, number],
+  },
 } as const;
+
+/**
+ * Brightness multipliers for interaction state feedback.
+ * Applied via brightenColor() to line colors, curtains, and elevation indicators.
+ * - HOVER_OR_SELECT: shape is hovered or selected (single active state)
+ * - HOVER_AND_SELECT: shape is both hovered and selected simultaneously
+ */
+export const BRIGHTNESS_FACTOR = {
+  HOVER_OR_SELECT: 1.4,
+  HOVER_AND_SELECT: 1.7,
+} as const;
+
+/**
+ * Opacity multiplier for interaction overlay layers (hover, select).
+ * Applied to the shape's fill alpha — sits between the base opacity (0.2)
+ * and full opacity (1.0) so the overlay reads clearly without being too solid.
+ */
+export const OVERLAY_FILL_OPACITY = 0.25;
 
 /** Reusable deck.gl PathStyleExtension enabling dash patterns on GeoJsonLayer lines. */
 export const DASH_EXTENSION = [new PathStyleExtension({ dash: true })];
-
-/** Mutable [r, g, b, a] tuple of DEFAULT_COLORS.highlight, pre-spread at module load for hot-path usage. */
-export const HIGHLIGHT_COLOR_TUPLE: [number, number, number, number] = [
-  ...DEFAULT_COLORS.highlight,
-] as [number, number, number, number];

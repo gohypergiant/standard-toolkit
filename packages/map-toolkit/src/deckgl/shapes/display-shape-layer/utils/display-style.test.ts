@@ -18,14 +18,13 @@ import {
   getLineColor,
   getLineWidth,
 } from '../../shared/utils/style-utils';
+import { OVERLAY_FILL_OPACITY } from '../constants';
 import {
+  applyOverlayOpacity,
   brightenColor,
-  getHighlightColor,
-  getHighlightLineWidth,
   getHoverLineWidth,
-  getSelectionFillColor,
+  getOverlayFillColor,
 } from './display-style';
-import type { Color } from '@deck.gl/core';
 import type { StyledFeature } from '../../shared/types';
 
 /** Create a minimal StyledFeature with given style overrides. */
@@ -36,8 +35,8 @@ function createStyledFeature(
     type: 'Feature',
     properties: {
       styleProperties: {
-        fillColor: [0, 0, 0, 255] as Color,
-        lineColor: [0, 0, 0, 255] as Color,
+        fillColor: [0, 0, 0, 255],
+        lineColor: [0, 0, 0, 255],
         lineWidth: 2,
         linePattern: 'solid',
         ...styles,
@@ -62,9 +61,7 @@ describe('Display Style Utilities', () => {
     });
 
     it('passes through RGBA color as-is when applyBaseOpacity is false', () => {
-      const feature = createStyledFeature({
-        fillColor: [255, 0, 0, 200] as Color,
-      });
+      const feature = createStyledFeature({ fillColor: [255, 0, 0, 200] });
 
       const result = getFillColor(feature);
 
@@ -72,9 +69,7 @@ describe('Display Style Utilities', () => {
     });
 
     it('applies BASE_FILL_OPACITY when applyBaseOpacity is true', () => {
-      const feature = createStyledFeature({
-        fillColor: [255, 0, 0, 255] as Color,
-      });
+      const feature = createStyledFeature({ fillColor: [255, 0, 0, 255] });
 
       const result = getFillColor(feature, true);
 
@@ -83,9 +78,7 @@ describe('Display Style Utilities', () => {
     });
 
     it('applies BASE_FILL_OPACITY to custom alpha value', () => {
-      const feature = createStyledFeature({
-        fillColor: [0, 255, 0, 200] as Color,
-      });
+      const feature = createStyledFeature({ fillColor: [0, 255, 0, 200] });
 
       const result = getFillColor(feature, true);
 
@@ -94,7 +87,9 @@ describe('Display Style Utilities', () => {
     });
 
     it('handles RGB array (3 elements) by adding default alpha', () => {
-      const feature = createStyledFeature({ fillColor: [0, 0, 255] as Color });
+      const feature = createStyledFeature({
+        fillColor: [0, 0, 255] as [number, number, number],
+      });
 
       const result = getFillColor(feature);
 
@@ -102,9 +97,7 @@ describe('Display Style Utilities', () => {
     });
 
     it('handles zero alpha correctly', () => {
-      const feature = createStyledFeature({
-        fillColor: [255, 255, 255, 0] as Color,
-      });
+      const feature = createStyledFeature({ fillColor: [255, 255, 255, 0] });
 
       const result = getFillColor(feature);
 
@@ -126,9 +119,7 @@ describe('Display Style Utilities', () => {
     });
 
     it('passes through RGBA color exactly as provided', () => {
-      const feature = createStyledFeature({
-        lineColor: [255, 0, 0, 200] as Color,
-      });
+      const feature = createStyledFeature({ lineColor: [255, 0, 0, 200] });
 
       const result = getLineColor(feature);
 
@@ -136,7 +127,9 @@ describe('Display Style Utilities', () => {
     });
 
     it('handles RGB array (3 elements) by adding default alpha', () => {
-      const feature = createStyledFeature({ lineColor: [0, 255, 0] as Color });
+      const feature = createStyledFeature({
+        lineColor: [0, 255, 0] as [number, number, number],
+      });
 
       const result = getLineColor(feature);
 
@@ -238,100 +231,59 @@ describe('Display Style Utilities', () => {
     });
   });
 
-  describe('getHighlightColor', () => {
-    it('returns default highlight color from DEFAULT_COLORS when no opacity provided', () => {
-      const result = getHighlightColor();
+  describe('applyOverlayOpacity', () => {
+    it('scales alpha by OVERLAY_FILL_OPACITY', () => {
+      const result = applyOverlayOpacity([255, 100, 50, 200]);
 
-      // DEFAULT_COLORS.highlight is [40, 245, 190, 100]
-      expect(result).toEqual([40, 245, 190, 100]);
+      expect(result).toEqual([
+        255,
+        100,
+        50,
+        Math.round(200 * OVERLAY_FILL_OPACITY),
+      ]);
     });
 
-    it('applies custom opacity override', () => {
-      const result = getHighlightColor(0.5);
+    it('preserves RGB channels unchanged', () => {
+      const [r, g, b] = applyOverlayOpacity([40, 245, 190, 255]);
 
-      const expectedOpacity = Math.round(0.5 * 255);
-      expect(result).toEqual([40, 245, 190, expectedOpacity]);
+      expect([r, g, b]).toEqual([40, 245, 190]);
     });
 
-    it('handles full opacity', () => {
-      const result = getHighlightColor(1.0);
+    it('scales zero alpha to zero', () => {
+      const result = applyOverlayOpacity([255, 255, 255, 0]);
 
-      expect(result).toEqual([40, 245, 190, 255]);
-    });
-
-    it('handles zero opacity', () => {
-      const result = getHighlightColor(0);
-
-      expect(result).toEqual([40, 245, 190, 0]);
+      expect(result[3]).toBe(0);
     });
   });
 
-  describe('getHighlightLineWidth', () => {
-    it('increases base width by HIGHLIGHT_WIDTH_INCREASE (5)', () => {
-      const feature = createStyledFeature({ lineWidth: 4 });
+  describe('getOverlayFillColor', () => {
+    it('scales alpha by OVERLAY_FILL_OPACITY', () => {
+      const feature = createStyledFeature({ fillColor: [255, 100, 50, 200] });
 
-      const result = getHighlightLineWidth(feature);
+      const result = getOverlayFillColor(feature);
 
-      expect(result).toBe(9);
+      expect(result).toEqual([
+        255,
+        100,
+        50,
+        Math.round(200 * OVERLAY_FILL_OPACITY),
+      ]);
     });
 
-    it.each([
-      { width: 1, expected: 6 },
-      { width: 2, expected: 7 },
-      { width: 4, expected: 9 },
-      { width: 8, expected: 13 },
-    ])('returns $expected for base width $width', ({ width, expected }) => {
-      const feature = createStyledFeature({ lineWidth: width });
+    it('preserves RGB channels unchanged', () => {
+      const feature = createStyledFeature({ fillColor: [40, 245, 190, 255] });
 
-      expect(getHighlightLineWidth(feature)).toBe(expected);
+      const [r, g, b] = getOverlayFillColor(feature);
+
+      expect([r, g, b]).toEqual([40, 245, 190]);
     });
 
-    it('uses default width when not provided', () => {
-      const feature: StyledFeature = {
-        type: 'Feature',
-        properties: {} as StyledFeature['properties'],
-        geometry: { type: 'Point', coordinates: [0, 0] },
-      };
+    it('scales zero alpha to zero', () => {
+      const feature = createStyledFeature({ fillColor: [255, 255, 255, 0] });
 
-      const result = getHighlightLineWidth(feature);
+      const result = getOverlayFillColor(feature);
 
-      // DEFAULT_LINE_WIDTH (2) + HIGHLIGHT_WIDTH_INCREASE (5) = 7
-      expect(result).toBe(7);
-    });
-  });
-
-  describe('getSelectionFillColor', () => {
-    it('replaces RGB with highlight color and preserves base alpha', () => {
-      const baseColor: [number, number, number, number] = [98, 166, 255, 51];
-      const highlightColor: [number, number, number, number] = [
-        40, 245, 190, 100,
-      ];
-
-      const result = getSelectionFillColor(baseColor, highlightColor);
-
-      expect(result).toEqual([40, 245, 190, 51]);
-    });
-
-    it('uses 255 alpha when base color has 3 channels', () => {
-      const baseColor: Color = [98, 166, 255];
-      const highlightColor: [number, number, number, number] = [
-        40, 245, 190, 100,
-      ];
-
-      const result = getSelectionFillColor(baseColor, highlightColor);
-
-      expect(result).toEqual([40, 245, 190, 255]);
-    });
-
-    it('preserves zero alpha from base color', () => {
-      const baseColor: [number, number, number, number] = [255, 255, 255, 0];
-      const highlightColor: [number, number, number, number] = [
-        40, 245, 190, 100,
-      ];
-
-      const result = getSelectionFillColor(baseColor, highlightColor);
-
-      expect(result).toEqual([40, 245, 190, 0]);
+      expect(result[3]).toBe(0);
     });
   });
 

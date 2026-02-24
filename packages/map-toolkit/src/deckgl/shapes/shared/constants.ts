@@ -67,8 +67,8 @@ export const DEFAULT_COLORS = {
   fill: [255, 255, 255, 255] as Color,
   /** Default border/outline color (outline-interactive-hover: #888a8f) */
   line: [136, 138, 143, 255] as Color,
-  /** Highlight/selection color (turquoise at ~39% alpha) */
-  highlight: [40, 245, 190, 100] as Color,
+  /** Highlight/selection color (turquoise) */
+  highlight: [40, 245, 190, 255] as Color,
 } as const;
 
 /**

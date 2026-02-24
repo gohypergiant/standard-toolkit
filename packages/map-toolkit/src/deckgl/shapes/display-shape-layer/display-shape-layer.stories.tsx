@@ -23,6 +23,7 @@ import { useMapCursor } from '@/map-cursor/use-map-cursor';
 import { BaseMap } from '../../base-map/index';
 import { mockShapes } from '../__fixtures__/mock-shapes';
 import { mockShapes3D } from '../__fixtures__/mock-shapes-3d';
+import { mockShapes3DColor } from '../__fixtures__/mock-shapes-3d-color';
 import { mockShapesWithIcons } from '../__fixtures__/mock-shapes-with-icons';
 import {
   type ShapeDeselectedEvent,
@@ -61,7 +62,7 @@ const WITH_ICONS_MAP_ID = uuid();
  * Demonstrates automatic bus integration:
  * - Click a shape to select it (emits shapes:selected via bus automatically)
  * - Click empty space to deselect (emits shapes:deselected via bus)
- * - The highlight layer responds to selection state
+ * - The selection layer responds to selection state
  * - Selection state can be controlled via the bus from anywhere in the app
  */
 export const BasicDisplayAndEvents: Story = {
@@ -69,11 +70,6 @@ export const BasicDisplayAndEvents: Story = {
     showLabels: 'always',
     pickable: true,
     applyBaseOpacity: true,
-    showHighlight: false,
-    highlightColorR: 40,
-    highlightColorG: 245,
-    highlightColorB: 190,
-    highlightColorA: 100,
   },
   argTypes: {
     showLabels: {
@@ -91,27 +87,6 @@ export const BasicDisplayAndEvents: Story = {
       description:
         'Multiply fill alpha by 0.2 (20% of original) for semi-transparent look',
     },
-    showHighlight: {
-      control: { type: 'boolean' },
-      description:
-        'Show/hide highlight effect around selected shapes (dotted border always shows)',
-    },
-    highlightColorR: {
-      control: { type: 'number', min: 0, max: 255, step: 1 },
-      description: 'Highlight color red channel (0-255)',
-    },
-    highlightColorG: {
-      control: { type: 'number', min: 0, max: 255, step: 1 },
-      description: 'Highlight color green channel (0-255)',
-    },
-    highlightColorB: {
-      control: { type: 'number', min: 0, max: 255, step: 1 },
-      description: 'Highlight color blue channel (0-255)',
-    },
-    highlightColorA: {
-      control: { type: 'number', min: 0, max: 255, step: 1 },
-      description: 'Highlight color alpha/opacity (0-255)',
-    },
   },
   render: (args) => {
     // useSelectShape handles selection, deselection, and click-away deselection
@@ -125,22 +100,6 @@ export const BasicDisplayAndEvents: Story = {
     const selectedName = selectedId
       ? mockShapes.find((s) => s.id === selectedId)?.name
       : undefined;
-
-    const highlightColor = useMemo(
-      () =>
-        [
-          args.highlightColorR,
-          args.highlightColorG,
-          args.highlightColorB,
-          args.highlightColorA,
-        ] as [number, number, number, number],
-      [
-        args.highlightColorR,
-        args.highlightColorG,
-        args.highlightColorB,
-        args.highlightColorA,
-      ],
-    );
 
     // Log selection events for demonstration purposes
     useOn<ShapeSelectedEvent>(ShapeEvents.selected, (event) => {
@@ -210,8 +169,6 @@ export const BasicDisplayAndEvents: Story = {
             showLabels={args.showLabels}
             pickable={args.pickable}
             applyBaseOpacity={args.applyBaseOpacity}
-            showHighlight={args.showHighlight}
-            highlightColor={highlightColor}
           />
         </BaseMap>
 
@@ -699,7 +656,7 @@ export const DisplayShapes25D: Story = {
           <displayShapeLayer
             id='shapes-25d'
             mapId={DISPLAY_25D_MAP_ID_INNER}
-            data={mockShapes3D}
+            data={mockShapes3DColor}
             selectedShapeId={selectedId}
             showLabels='always'
             pickable={true}
