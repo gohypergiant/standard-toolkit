@@ -139,6 +139,9 @@ export function getIconUpdateTriggers(
   };
 }
 
+let cachedCoffinBase: Record<string, IconMappingEntry> | undefined;
+let cachedCoffinResult: Record<string, IconMappingEntry> | undefined;
+
 /**
  * Extend an icon mapping with coffin corners entries for hover/selection feedback.
  * Memoized on baseMapping identity to avoid re-spreading per render frame.
@@ -152,9 +155,6 @@ export function getIconUpdateTriggers(
  * // Result includes original mapping entries plus coffin corner icons
  * ```
  */
-let cachedCoffinBase: Record<string, IconMappingEntry> | undefined;
-let cachedCoffinResult: Record<string, IconMappingEntry> | undefined;
-
 export function extendMappingWithCoffinCorners(
   baseMapping: Record<string, IconMappingEntry>,
 ): Record<string, IconMappingEntry> {

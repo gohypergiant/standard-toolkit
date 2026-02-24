@@ -52,7 +52,7 @@ export function normalizeColor(color: Color): [number, number, number, number] {
 export function getFillColor(
   feature: StyledFeature,
   applyBaseOpacity = false,
-): Color {
+): [number, number, number, number] {
   const styleProps = feature.properties?.styleProperties;
   const color = styleProps?.fillColor ?? DEFAULT_COLORS.fill;
 
@@ -77,7 +77,9 @@ export function getFillColor(
  * @param feature - The styled feature
  * @returns RGBA color array
  */
-export function getLineColor(feature: StyledFeature): Color {
+export function getLineColor(
+  feature: StyledFeature,
+): [number, number, number, number] {
   const styleProps = feature.properties?.styleProperties;
   const color = styleProps?.lineColor ?? DEFAULT_COLORS.line;
 

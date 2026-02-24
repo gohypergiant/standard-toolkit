@@ -28,7 +28,7 @@ import {
   COFFIN_CORNERS,
   DASH_EXTENSION,
   DEFAULT_DISPLAY_PROPS,
-  DEFAULT_HIGHLIGHT_COLOR,
+  HIGHLIGHT_COLOR_TUPLE,
   MAP_INTERACTION,
   MATERIAL_SETTINGS,
 } from './constants';
@@ -210,7 +210,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
    * Resolved highlight color — uses prop if provided, falls back to default.
    */
   private get resolvedHighlight(): [number, number, number, number] {
-    return this.props.highlightColor ?? DEFAULT_HIGHLIGHT_COLOR;
+    return this.props.highlightColor ?? HIGHLIGHT_COLOR_TUPLE;
   }
 
   /**
@@ -527,7 +527,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
         return getSelectionFillColor(baseColor, resolvedHighlight);
       }
 
-      return baseColor as [number, number, number, number];
+      return baseColor;
     };
 
     return new GeoJsonLayer({
@@ -707,7 +707,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
 
         const isHovered = info?.index === this.state?.hoverIndex;
         if (isHovered) {
-          return brightenColor(base as [number, number, number, number], 1.5);
+          return brightenColor(base, 1.5);
         }
 
         return base;
@@ -880,7 +880,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       if (isSelected) {
         color = resolvedHighlight;
       } else {
-        const base = getLineColor(feature) as [number, number, number, number];
+        const base = getLineColor(feature);
         color = isHovered ? brightenColor(base, 1.5) : base;
       }
 

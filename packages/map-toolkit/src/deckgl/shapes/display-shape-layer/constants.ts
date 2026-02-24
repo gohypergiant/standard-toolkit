@@ -13,7 +13,6 @@
 'use client';
 import { PathStyleExtension } from '@deck.gl/extensions';
 import { DEFAULT_COLORS } from '../shared/constants';
-import { normalizeColor } from '../shared/utils/style-utils';
 
 /**
  * Map interaction constants.
@@ -25,18 +24,6 @@ export const MAP_INTERACTION = {
   LINE_WIDTH_MIN_PIXELS: 1, // Minimum line width in pixels
   ICON_SIZE: 38, // Size of shape icons
   ICON_HOVER_SIZE_INCREASE: 5, // Additional pixels added on hover
-} as const;
-
-/**
- * Selection highlight configuration.
- *
- * Controls the appearance of selected shapes, including highlight color
- * and icon size adjustments for Point shapes.
- */
-export const SELECTION_HIGHLIGHT = {
-  /** Uses DEFAULT_COLORS.highlight from shared constants */
-  COLOR: DEFAULT_COLORS.highlight,
-  ICON_SIZE_INCREASE: 8, // Additional pixels for highlight icon
 } as const;
 
 /**
@@ -69,7 +56,7 @@ export const DEFAULT_DISPLAY_PROPS = {
   showLabels: 'always' as const,
   showHighlight: false,
   applyBaseOpacity: true,
-  highlightColor: SELECTION_HIGHLIGHT.COLOR,
+  highlightColor: DEFAULT_COLORS.highlight,
 };
 
 /**
@@ -94,8 +81,10 @@ export const MATERIAL_SETTINGS = {
   },
 } as const;
 
+/** Reusable deck.gl PathStyleExtension enabling dash patterns on GeoJsonLayer lines. */
 export const DASH_EXTENSION = [new PathStyleExtension({ dash: true })];
 
-/** Pre-computed default highlight color to avoid per-frame allocation. */
-export const DEFAULT_HIGHLIGHT_COLOR: [number, number, number, number] =
-  normalizeColor(DEFAULT_COLORS.highlight);
+/** Mutable [r, g, b, a] tuple of DEFAULT_COLORS.highlight, pre-spread at module load for hot-path usage. */
+export const HIGHLIGHT_COLOR_TUPLE: [number, number, number, number] = [
+  ...DEFAULT_COLORS.highlight,
+] as [number, number, number, number];

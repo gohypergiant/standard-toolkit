@@ -15,8 +15,10 @@ import { mockShapes } from '../__fixtures__/mock-shapes';
 import {
   isCircleShape,
   isEllipseShape,
+  isLineGeometry,
   isLineStringShape,
   isPointShape,
+  isPolygonGeometry,
   isPolygonShape,
   isRectangleShape,
   ShapeFeatureType,
@@ -248,6 +250,43 @@ describe('Type Guards', () => {
         const matchCount = typeGuards.filter((guard) => guard(shape)).length;
         expect(matchCount).toBe(1);
       }
+    });
+  });
+});
+
+describe('Geometry Type Predicates', () => {
+  describe('isPolygonGeometry', () => {
+    it.each(['Polygon', 'MultiPolygon'])('returns true for %s', (type) => {
+      expect(isPolygonGeometry(type)).toBe(true);
+    });
+
+    it.each([
+      'Point',
+      'LineString',
+      'MultiLineString',
+      'MultiPoint',
+      '',
+    ])('returns false for %s', (type) => {
+      expect(isPolygonGeometry(type)).toBe(false);
+    });
+  });
+
+  describe('isLineGeometry', () => {
+    it.each([
+      'LineString',
+      'MultiLineString',
+    ])('returns true for %s', (type) => {
+      expect(isLineGeometry(type)).toBe(true);
+    });
+
+    it.each([
+      'Point',
+      'Polygon',
+      'MultiPolygon',
+      'MultiPoint',
+      '',
+    ])('returns false for %s', (type) => {
+      expect(isLineGeometry(type)).toBe(false);
     });
   });
 });
