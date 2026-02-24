@@ -101,8 +101,8 @@ export type DisplayShapeLayerProps = CompositeLayerProps & {
   data: Shape[];
 
   /**
-   * Currently selected shape ID (for highlighting)
-   * When set, renders a highlight layer around the selected shape
+   * Currently selected shape ID.
+   * When set, renders a brightness overlay for polygon shapes.
    */
   selectedShapeId?: ShapeId;
 

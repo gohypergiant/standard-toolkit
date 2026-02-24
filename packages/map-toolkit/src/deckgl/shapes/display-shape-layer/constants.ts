@@ -12,7 +12,7 @@
 
 'use client';
 import { PathStyleExtension } from '@deck.gl/extensions';
-import { DEFAULT_COLORS } from '../shared/constants';
+
 /**
  * Map interaction constants.
  *

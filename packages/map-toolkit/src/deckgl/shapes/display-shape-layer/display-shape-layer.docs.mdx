@@ -12,8 +12,8 @@ A read-only deck.gl composite layer for displaying geographic shapes with intera
 
 - **Multiple geometry types**: Point, LineString, Polygon, and Circle
 - **Icon support**: Custom icons for Point geometries via icon atlases
-- **Interactive selection**: Click handling with visual highlight feedback
-- **Hover effects**: Border/outline width increases on hover; Points with icons show coffin corners
+- **Interactive selection**: Click handling with visual brightness feedback; Points with icons show coffin corners
+- **Hover effects**: Border/outline width increases on hover; fills and curtains brighten via material lighting; Points with icons show coffin corners
 - **Customizable labels**: White uppercase text with black outline, flexible positioning, show always/hover/never modes
 - **Style properties**: Full control over colors, border/outline patterns, and opacity
 - **Event bus integration**: Automatically emits shape events via @accelint/bus
@@ -472,17 +472,23 @@ Each geometry type has sensible defaults (labels appear below shapes):
 
 ### Visual Feedback
 
+Interactions never modify a shape's innate styling — hover and selection are always additive overlays.
+
 When a shape is selected via `selectedShapeId`, the layer provides visual indicators:
 
-1. **Coffin corners** (Point shapes with icons): Bracket-like corners appear around selected Point icons with a blue fill. These are not currently customizable.
-2. **Selection brightness overlay** (polygon shapes): A brightness overlay renders on top of the selected polygon using `MATERIAL_SETTINGS.HOVER_OR_SELECT` lighting. When the selected shape is also hovered, the hover layer stacks on top using `MATERIAL_SETTINGS.HOVER_AND_SELECT` for an even brighter combined effect.
+1. **Line/outline brightness** (all shapes): The shape's border/outline brightens to 1.4× its base color.
+2. **Fill brightness overlay** (polygon shapes): A brightness overlay renders using `MATERIAL_SETTINGS.HOVER_OR_SELECT` lighting. When the selected shape is also hovered, the hover layer stacks on top using `MATERIAL_SETTINGS.HOVER_AND_SELECT` for an even brighter combined effect.
+3. **Curtain brightness** (elevated LineString shapes): Curtain walls render at overlay opacity using a brightened version of the shape's line color.
+4. **Coffin corners** (Point shapes with icons): Bracket-like corners appear with a blue fill. These are not currently customizable.
 
 ### Hover Effects
 
 When `pickable={true}`, shapes show hover feedback:
 
-- **Polygon shapes**: Fill brightens via material-based lighting; stacks with any active selection treatment underneath
-- **Non-polygon shapes (except Points with icons)**: Border/outline width increases by 2 pixels
+- **All shapes**: Border/outline color brightens to 1.4× its base color
+- **Polygon shapes**: Fill brightens via material-based lighting; stacks with any active selection treatment
+- **Elevated LineString shapes**: Curtain walls brighten at overlay opacity
+- **Non-icon shapes**: Border/outline width increases by 2 pixels
 - **Point shapes with icons**: Coffin corners appear with a white fill and black outline
 
 ## 3D Elevation Rendering
@@ -576,9 +582,8 @@ function MapWithElevation() {
 
 Elevation layers respond to hover and selection with color feedback:
 
-- **Hover**: Curtain walls and indicator lines brighten to 1.25x their base color
-- **Selection**: Curtain walls and indicator lines brighten to 1.25x their base color
-- **Hover + Selection**: Curtain walls and indicator lines brighten to 1.5x their base color
+- **Hover or Selection**: Curtain walls render at overlay opacity using the shape's line color brightened to 1.4×
+- **Hover + Selection**: Curtain walls render at overlay opacity using the shape's line color brightened to 1.7×
 
 All polygons (2D and extruded) use a material-based hover effect (lighting change) for fill brightness. In 3D, this also compensates for deck.gl's inability to render outlines on extruded polygons.
 

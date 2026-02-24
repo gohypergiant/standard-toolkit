@@ -106,22 +106,27 @@ type FeaturesCache = {
  * ## Features
  * - **Multiple geometry types**: Point, LineString, Polygon, and Circle
  * - **Icon support**: Custom icons for Point geometries via icon atlases
- * - **Interactive selection**: Click handling with dotted border and optional highlight
- * - **Hover effects**: Border/outline width increases on hover for better UX
+ * - **Interactive selection**: Click handling with brightness overlay on polygon select
+ * - **Hover effects**: Polygon fills brighten via material lighting; outline width increases by 2px on hover
  * - **Customizable labels**: Flexible label positioning with per-shape or global options
  * - **Style properties**: Full control over colors, border/outline patterns, and opacity
  * - **Event bus integration**: Automatically emits shape events via @accelint/bus
  * - **Multi-map support**: Events include map instance ID for isolation
  *
- * ## Selection Visual Feedback
- * When a shape is selected via `selectedShapeId`, a brightness overlay renders on top of polygon shapes.
+ * ## Interaction Philosophy
+ * Interactions never modify a shape's innate styling. Hover and selection are always
+ * additive overlays rendered on top of the main layer using opacity-scaled fill colors
+ * and material-based brightness — the base shape is never altered.
  *
  * ## Layer Structure
- * Renders up to four sublayers (in order, bottom to top):
+ * Renders up to seven sublayers (in order, bottom to top):
  * 1. **Select layer**: Selection brightness overlay for polygon shapes
- * 2. **Coffin corners layer**: Selection/hover feedback for Point shapes with icons
- * 3. **Main GeoJsonLayer**: Shape geometries with styling and interaction
- * 4. **Label layer**: Text labels (if showLabels enabled)
+ * 2. **Hover layer**: Hover brightness overlay for polygon shapes
+ * 3. **Coffin corners layer**: Selection/hover feedback for Point shapes with icons
+ * 4. **Elevation visualization**: Curtains (LineStrings) or wireframes (polygons) — elevation only
+ * 5. **Elevation indicators**: Vertical strut lines for elevated non-polygon shapes — elevation only
+ * 6. **Main GeoJsonLayer**: Shape geometries with styling and interaction
+ * 7. **Label layer**: Text labels (if showLabels enabled)
  *
  * ## Icon Atlas Constraint
  * When using icons for Point geometries, all shapes in a single layer must share the
