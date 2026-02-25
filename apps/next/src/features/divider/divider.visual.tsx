@@ -10,8 +10,20 @@
  * governing permissions and limitations under the License.
  */
 
-import { DrawerExample } from '~/features/drawer';
+import { BentoGroup } from '~/components/bento';
+import { createVisualTests } from '~/visual-regression/vitest';
+import { DividerServerExample } from './server';
 
-export default function Page() {
-  return <DrawerExample />;
+// divider visual
+function DividerVariants() {
+  return (
+    <BentoGroup>
+      <DividerServerExample />
+    </BentoGroup>
+  );
 }
+
+createVisualTests({
+  componentName: 'Divider',
+  variantsComponent: DividerVariants,
+});

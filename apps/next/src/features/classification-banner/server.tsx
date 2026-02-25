@@ -10,8 +10,20 @@
  * governing permissions and limitations under the License.
  */
 
-import { DrawerExample } from '~/features/drawer';
+import 'server-only';
 
-export default function Page() {
-  return <DrawerExample />;
+import { ClassificationBanner } from '@accelint/design-toolkit';
+import { BentoItem } from '~/components/bento';
+import { PROP_COMBOS } from './variants';
+
+function PropCombos() {
+  return PROP_COMBOS.map((props, k) => (
+    <BentoItem key={k}>
+      <ClassificationBanner {...props} />
+    </BentoItem>
+  ));
+}
+
+export function ClassificationBannerServerExample() {
+  return <PropCombos />;
 }

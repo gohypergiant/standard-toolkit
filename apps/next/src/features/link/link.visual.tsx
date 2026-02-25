@@ -10,8 +10,25 @@
  * governing permissions and limitations under the License.
  */
 
-import { DrawerExample } from '~/features/drawer';
+import type { LinkProps } from '@accelint/design-toolkit';
+import { Link } from '@accelint/design-toolkit';
+import {
+  createInteractiveVisualTests,
+  generateVariantMatrix,
+} from '~/visual-regression/vitest';
 
-export default function Page() {
-  return <DrawerExample />;
-}
+const linkVariants = generateVariantMatrix<LinkProps>({
+  dimensions: {
+    allowsVisited: [true, false],
+    isDisabled: [true, false],
+    isVisited: [true, false],
+  },
+});
+
+createInteractiveVisualTests({
+  componentName: 'Link',
+  renderComponent: (props) => <Link {...props}>Example Link</Link>,
+  testId: 'test-link',
+  variants: linkVariants,
+  states: ['default', 'hover', 'focus', 'disabled'],
+});

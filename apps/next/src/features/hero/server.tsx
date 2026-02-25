@@ -10,8 +10,24 @@
  * governing permissions and limitations under the License.
  */
 
-import { DrawerExample } from '~/features/drawer';
+import 'server-only';
 
-export default function Page() {
-  return <DrawerExample />;
+import { Hero, HeroSubtitle, HeroTitle } from '@accelint/design-toolkit';
+import { BentoItem } from '~/components/bento';
+import { PROP_COMBOS } from './variants';
+
+function PropCombos() {
+  return PROP_COMBOS.map((props, k) => (
+    <BentoItem key={k}>
+      <Hero {...props}>
+        <HeroTitle>John Doe</HeroTitle>
+        <HeroSubtitle>Software Engineer</HeroSubtitle>
+        <HeroSubtitle>San Francisco, CA</HeroSubtitle>
+      </Hero>
+    </BentoItem>
+  ));
+}
+
+export function HeroServerExample() {
+  return <PropCombos />;
 }

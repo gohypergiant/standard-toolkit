@@ -10,8 +10,19 @@
  * governing permissions and limitations under the License.
  */
 
-import { DrawerExample } from '~/features/drawer';
+import { BentoGroup } from '~/components/bento';
+import { createVisualTests } from '~/visual-regression/vitest';
+import { HeroServerExample } from './server';
 
-export default function Page() {
-  return <DrawerExample />;
+function HeroVariants() {
+  return (
+    <BentoGroup>
+      <HeroServerExample />
+    </BentoGroup>
+  );
 }
+
+createVisualTests({
+  componentName: 'Hero',
+  variantsComponent: HeroVariants,
+});

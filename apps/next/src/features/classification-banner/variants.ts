@@ -10,8 +10,19 @@
  * governing permissions and limitations under the License.
  */
 
-import { DrawerExample } from '~/features/drawer';
+import type { ClassificationBannerProps } from '@accelint/design-toolkit';
 
-export default function Page() {
-  return <DrawerExample />;
-}
+export type ClassificationBannerVariant = Pick<
+  ClassificationBannerProps,
+  'variant'
+>;
+
+export const PROP_COMBOS: ClassificationBannerVariant[] = [
+  { variant: 'missing' },
+  { variant: 'unclassified' },
+  { variant: 'cui' },
+  { variant: 'confidential' },
+  { variant: 'secret' },
+  { variant: 'top-secret' },
+  { variant: 'ts-sci' },
+];

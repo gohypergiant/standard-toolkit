@@ -10,8 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
-import { DrawerExample } from '~/features/drawer';
+import type { HeroProps } from '@accelint/design-toolkit';
 
-export default function Page() {
-  return <DrawerExample />;
-}
+export type HeroVariant = Pick<HeroProps, 'compact'>;
+
+export const PROP_COMBOS: HeroVariant[] = [
+  { compact: true },
+  { compact: false },
+];

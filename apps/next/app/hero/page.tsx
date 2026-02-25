@@ -10,8 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
-import { DrawerExample } from '~/features/drawer';
+import { BentoGroup } from '~/components/bento';
+import { HeroExample } from '~/features/hero';
 
-export default function Page() {
-  return <DrawerExample />;
+export default function Hero() {
+  return (
+    <BentoGroup>
+      <HeroExample />
+    </BentoGroup>
+  );
 }

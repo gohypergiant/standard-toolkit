@@ -10,8 +10,17 @@
  * governing permissions and limitations under the License.
  */
 
-import { DrawerExample } from '~/features/drawer';
+import 'server-only';
+import { ErrorComponent } from './error';
+import { LoadingComponent } from './loading';
+import { BreadcrumbsExampleServer } from './server';
 
-export default function Page() {
-  return <DrawerExample />;
+export function BreadcrumbsExample() {
+  return (
+    <ErrorComponent>
+      <LoadingComponent>
+        <BreadcrumbsExampleServer />
+      </LoadingComponent>
+    </ErrorComponent>
+  );
 }

@@ -10,8 +10,19 @@
  * governing permissions and limitations under the License.
  */
 
-import { DrawerExample } from '~/features/drawer';
+import { BentoGroup } from '~/components/bento';
+import { createVisualTests } from '~/visual-regression/vitest';
+import { BreadcrumbsExampleServer } from './server';
 
-export default function Page() {
-  return <DrawerExample />;
+function BreadcrumbsVariants() {
+  return (
+    <BentoGroup>
+      <BreadcrumbsExampleServer />
+    </BentoGroup>
+  );
 }
+
+createVisualTests({
+  componentName: 'Breadcrumbs',
+  variantsComponent: BreadcrumbsVariants,
+});

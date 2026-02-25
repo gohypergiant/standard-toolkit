@@ -10,8 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
-import { DrawerExample } from '~/features/drawer';
+import type { DividerProps } from '@accelint/design-toolkit';
 
-export default function Page() {
-  return <DrawerExample />;
-}
+export type DividerVariant = Pick<DividerProps, 'orientation'>;
+
+export const PROP_COMBOS: DividerVariant[] = [
+  { orientation: 'horizontal' },
+  { orientation: 'vertical' },
+];

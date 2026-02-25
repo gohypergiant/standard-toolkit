@@ -10,8 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
-import { DrawerExample } from '~/features/drawer';
+import type { LabelProps } from '@accelint/design-toolkit';
 
-export default function Page() {
-  return <DrawerExample />;
-}
+export type LabelVariant = Pick<LabelProps, 'isRequired' | 'isDisabled'>;
+
+export const PROP_COMBOS: LabelVariant[] = [
+  { isRequired: true, isDisabled: true },
+  { isRequired: true, isDisabled: false },
+  { isRequired: false, isDisabled: true },
+  { isRequired: false, isDisabled: false },
+];

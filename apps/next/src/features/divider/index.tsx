@@ -10,8 +10,17 @@
  * governing permissions and limitations under the License.
  */
 
-import { DrawerExample } from '~/features/drawer';
+import 'server-only';
+import { ErrorComponent } from './error';
+import { LoadingComponent } from './loading';
+import { DividerServerExample } from './server';
 
-export default function Page() {
-  return <DrawerExample />;
+export function DividerExample() {
+  return (
+    <ErrorComponent>
+      <LoadingComponent>
+        <DividerServerExample />
+      </LoadingComponent>
+    </ErrorComponent>
+  );
 }

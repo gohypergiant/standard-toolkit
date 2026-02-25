@@ -10,8 +10,19 @@
  * governing permissions and limitations under the License.
  */
 
-import { DrawerExample } from '~/features/drawer';
+import 'server-only';
 
-export default function Page() {
-  return <DrawerExample />;
+import { Breadcrumbs } from '@accelint/design-toolkit/components/breadcrumbs';
+import { BreadcrumbItem } from '@accelint/design-toolkit/components/breadcrumbs/item';
+import { BentoItem } from '~/components/bento';
+
+export function BreadcrumbsExampleServer() {
+  return (
+    <BentoItem>
+      <Breadcrumbs>
+        <BreadcrumbItem>This is an item.</BreadcrumbItem>
+        <BreadcrumbItem>This is another item.</BreadcrumbItem>
+      </Breadcrumbs>
+    </BentoItem>
+  );
 }
