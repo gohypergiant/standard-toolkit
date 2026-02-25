@@ -10,20 +10,20 @@
  * governing permissions and limitations under the License.
  */
 
-'use client';
+import 'server-only';
 
-import { Divider } from '@accelint/design-toolkit';
+import { Label } from '@accelint/design-toolkit';
 import { BentoItem } from '~/components/bento';
 import { PROP_COMBOS } from './variants';
 
 function PropCombos() {
   return PROP_COMBOS.map((props, k) => (
     <BentoItem key={k}>
-      <Divider {...props} />
+      <Label {...props}>This is an example label.</Label>
     </BentoItem>
   ));
 }
 
-export function DividerClientExample() {
+export function LabelServerExample() {
   return <PropCombos />;
 }

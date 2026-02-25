@@ -10,23 +10,20 @@
  * governing permissions and limitations under the License.
  */
 
-'use client';
-import { Hero, HeroSubtitle, HeroTitle } from '@accelint/design-toolkit';
+import 'server-only';
+
+import { Link } from '@accelint/design-toolkit';
 import { BentoItem } from '~/components/bento';
 import { PROP_COMBOS } from './variants';
 
 function PropCombos() {
   return PROP_COMBOS.map((props, k) => (
     <BentoItem key={k}>
-      <Hero {...props}>
-        <HeroTitle>John Doe</HeroTitle>
-        <HeroSubtitle>Software Engineer</HeroSubtitle>
-        <HeroSubtitle>San Francisco, CA</HeroSubtitle>
-      </Hero>
+      <Link {...props}>This is an example link.</Link>
     </BentoItem>
   ));
 }
 
-export function HeroClientExample() {
+export function LinkServerExample() {
   return <PropCombos />;
 }

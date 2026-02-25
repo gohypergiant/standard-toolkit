@@ -12,13 +12,13 @@
 
 import { BentoGroup } from '~/components/bento';
 import { createVisualTests } from '~/visual-regression/vitest';
-import { DividerClientExample } from './client';
+import { DividerServerExample } from './server';
 
 // divider visual
 function DividerVariants() {
   return (
     <BentoGroup>
-      <DividerClientExample />
+      <DividerServerExample />
     </BentoGroup>
   );
 }

@@ -11,15 +11,15 @@
  */
 
 import 'server-only';
-import { LabelClientExample } from './client';
 import { ErrorComponent } from './error';
 import { LoadingComponent } from './loading';
+import { LabelServerExample } from './server';
 
 export function LabelExample() {
   return (
     <ErrorComponent>
       <LoadingComponent>
-        <LabelClientExample />
+        <LabelServerExample />
       </LoadingComponent>
     </ErrorComponent>
   );

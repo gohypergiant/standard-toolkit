@@ -11,15 +11,15 @@
  */
 
 import 'server-only';
-import { ClassificationBadgeClientExample } from './client';
 import { ErrorComponent } from './error';
 import { LoadingComponent } from './loading';
+import { ClassificationBadgeServerExample } from './server';
 
 export function ClassificationBadgeExample() {
   return (
     <ErrorComponent>
       <LoadingComponent>
-        <ClassificationBadgeClientExample />
+        <ClassificationBadgeServerExample />
       </LoadingComponent>
     </ErrorComponent>
   );

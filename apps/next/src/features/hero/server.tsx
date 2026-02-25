@@ -10,20 +10,24 @@
  * governing permissions and limitations under the License.
  */
 
-'use client';
+import 'server-only';
 
-import { Label } from '@accelint/design-toolkit';
+import { Hero, HeroSubtitle, HeroTitle } from '@accelint/design-toolkit';
 import { BentoItem } from '~/components/bento';
 import { PROP_COMBOS } from './variants';
 
 function PropCombos() {
   return PROP_COMBOS.map((props, k) => (
     <BentoItem key={k}>
-      <Label {...props}>This is an example label.</Label>
+      <Hero {...props}>
+        <HeroTitle>John Doe</HeroTitle>
+        <HeroSubtitle>Software Engineer</HeroSubtitle>
+        <HeroSubtitle>San Francisco, CA</HeroSubtitle>
+      </Hero>
     </BentoItem>
   ));
 }
 
-export function LabelClientExample() {
+export function HeroServerExample() {
   return <PropCombos />;
 }

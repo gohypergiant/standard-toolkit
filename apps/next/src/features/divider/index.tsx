@@ -11,15 +11,15 @@
  */
 
 import 'server-only';
-import { DividerClientExample } from './client';
 import { ErrorComponent } from './error';
 import { LoadingComponent } from './loading';
+import { DividerServerExample } from './server';
 
 export function DividerExample() {
   return (
     <ErrorComponent>
       <LoadingComponent>
-        <DividerClientExample />
+        <DividerServerExample />
       </LoadingComponent>
     </ErrorComponent>
   );

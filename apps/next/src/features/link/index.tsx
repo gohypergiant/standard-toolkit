@@ -11,15 +11,15 @@
  */
 
 import 'server-only';
-import { LinkClientExample } from './client';
 import { ErrorComponent } from './error';
 import { LoadingComponent } from './loading';
+import { LinkServerExample } from './server';
 
 export function LinkExample() {
   return (
     <ErrorComponent>
       <LoadingComponent>
-        <LinkClientExample />
+        <LinkServerExample />
       </LoadingComponent>
     </ErrorComponent>
   );

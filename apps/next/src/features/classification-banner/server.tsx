@@ -10,8 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import { ClassificationBanner } from '@accelint/design-toolkit';
 import 'server-only';
+
+import { ClassificationBanner } from '@accelint/design-toolkit';
 import { BentoItem } from '~/components/bento';
 import { PROP_COMBOS } from './variants';
 
