@@ -11,12 +11,10 @@
  */
 
 import { Gantt } from './';
+import { END_TIME_MS, ROWS, START_TIME_MS } from './__fixtures__';
+import { GanttRow } from './components/gantt-row';
+import { GanttRowBlock } from './components/gantt-row/gantt-row-block';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-
-// Tuesday, Jan 27, 2026 at 12:00 AM UTC
-const START_TIME_MS = 1769472000000;
-// Friday, Jan 30, 2026 at 8:00 AM UTC
-const END_TIME_MS = 1769760000000;
 
 const meta = {
   title: 'Components/Gantt',
@@ -35,5 +33,23 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  render: (args) => <Gantt {...args} />,
+  render: (args) => (
+    // consumer-set height to demonstrate scroll behavior with virtualized rows
+    <div className='h-[280px]'>
+      <Gantt {...args}>
+        {ROWS.map(({ id, ranges }) => (
+          <GanttRow key={id}>
+            {ranges.map(([startMs, endMs], index) => (
+              <GanttRowBlock
+                key={`${id}-block-${index}`}
+                id={`${id}-block-${index}`}
+                startMs={startMs}
+                endMs={endMs}
+              />
+            ))}
+          </GanttRow>
+        ))}
+      </Gantt>
+    </div>
+  ),
 };

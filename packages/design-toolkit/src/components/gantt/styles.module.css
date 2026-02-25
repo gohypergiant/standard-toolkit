@@ -14,6 +14,14 @@
 
 @layer components.l1 {
   .container {
-    @apply w-full overflow-hidden;
+    @apply flex max-h-full w-full flex-col overflow-hidden;
+  }
+
+  .rows-container {
+    @apply flex-1 overflow-hidden;
+  }
+
+  .row-scroll-container {
+    @apply pr-px;
   }
 }
