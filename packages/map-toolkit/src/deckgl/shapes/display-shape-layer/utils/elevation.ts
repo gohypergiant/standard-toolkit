@@ -14,6 +14,8 @@
 
 import { isLineGeometry, isPolygonGeometry } from '../../shared/types';
 import { getLineColor } from '../../shared/utils/style-utils';
+import { BRIGHTNESS_FACTOR } from '../constants';
+import { brightenColor } from './display-style';
 import type { Shape, ShapeId } from '../../shared/types';
 import type {
   CurtainFeature,
@@ -39,16 +41,21 @@ import type {
  * getElevationFromCoordinates([10, 20]); // 0
  * ```
  */
+// GeoJSON nesting is at most 4 levels deep (MultiPolygon → Polygon → Ring → Position)
+const MAX_COORDINATE_DEPTH = 5;
+
 export function getElevationFromCoordinates(coordinates: unknown): number {
   let current = coordinates;
+  let depth = 0;
 
-  while (Array.isArray(current)) {
+  while (Array.isArray(current) && depth < MAX_COORDINATE_DEPTH) {
     // Leaf coordinate: [lon, lat] or [lon, lat, elevation]
     if (!Array.isArray(current[0])) {
       return (current[2] as number) ?? 0;
     }
     // Drill into nested coordinate arrays (polygons, multi-polygons)
     current = current[0];
+    depth++;
   }
 
   return 0;
@@ -373,12 +380,7 @@ export function createCurtainPolygonFeatures(
 
   for (const feature of elevatedLines) {
     const { geometry } = feature;
-    const lineColorRGBA = getLineColor(feature) as [
-      number,
-      number,
-      number,
-      number,
-    ];
+    const lineColorRGBA = getLineColor(feature);
     const shapeId = feature.properties?.shapeId;
 
     // Create fill color with base opacity (same as polygon fills)
@@ -510,4 +512,55 @@ export function partitionCurtains(
   }
 
   return { main, hovered, selected };
+}
+
+/**
+ * Build elevation indicator line segments for a set of elevated non-polygon features,
+ * applying interaction-state colors (brightened on hover/select).
+ *
+ * @param elevatedNonPolygons - Features to generate segments for
+ * @param features - Full feature array for hover-index lookup
+ * @param selectedShapeId - Currently selected shape ID
+ * @param hoverIndex - Currently hovered feature index
+ * @returns Array of colored line segments from ground to elevation
+ * @example
+ * ```typescript
+ * const lineData = buildIndicatorLineData(
+ *   elevatedNonPolygons,
+ *   allFeatures,
+ *   selectedShapeId,
+ *   hoverIndex,
+ * );
+ * // Each segment: { source: [lon, lat, 0], target: [lon, lat, elevation], color: [r, g, b, a] }
+ * ```
+ */
+export function buildIndicatorLineData(
+  elevatedNonPolygons: Shape['feature'][],
+  features: Shape['feature'][],
+  selectedShapeId: ShapeId | undefined,
+  hoverIndex: number | undefined,
+): LineSegment[] {
+  const lineData: LineSegment[] = [];
+
+  for (const feature of elevatedNonPolygons) {
+    const { geometry } = feature;
+    const shapeId = feature.properties?.shapeId;
+    const isSelected = shapeId != null && shapeId === selectedShapeId;
+    const isHovered =
+      hoverIndex !== undefined &&
+      features[hoverIndex]?.properties?.shapeId === shapeId;
+
+    const base = getLineColor(feature);
+    const factor =
+      isSelected && isHovered
+        ? BRIGHTNESS_FACTOR.HOVER_AND_SELECT
+        : BRIGHTNESS_FACTOR.HOVER_OR_SELECT;
+    const color = isSelected || isHovered ? brightenColor(base, factor) : base;
+
+    for (const segment of createElevationLineSegments(geometry, color)) {
+      lineData.push(segment);
+    }
+  }
+
+  return lineData;
 }

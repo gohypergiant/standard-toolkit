@@ -27,6 +27,11 @@ import type { StyledFeature } from '../types';
  *
  * @param color - The color to normalize
  * @returns 4-element RGBA array [r, g, b, a]
+ * @example
+ * ```typescript
+ * normalizeColor([255, 128, 0]);        // → [255, 128, 0, 255]
+ * normalizeColor([255, 128, 0, 200]);   // → [255, 128, 0, 200]
+ * ```
  */
 export function normalizeColor(color: Color): [number, number, number, number] {
   if (color instanceof Uint8Array || color instanceof Uint8ClampedArray) {
@@ -48,6 +53,11 @@ export function normalizeColor(color: Color): [number, number, number, number] {
  * @param feature - The styled feature
  * @param applyBaseOpacity - When true, multiplies alpha by BASE_FILL_OPACITY (0.2)
  * @returns RGBA color array
+ * @example
+ * ```typescript
+ * getFillColor(feature);        // → [255, 255, 255, 255]  (full opacity)
+ * getFillColor(feature, true);  // → [255, 255, 255, 51]   (255 × 0.2)
+ * ```
  */
 export function getFillColor(
   feature: StyledFeature,
@@ -76,6 +86,10 @@ export function getFillColor(
  *
  * @param feature - The styled feature
  * @returns RGBA color array
+ * @example
+ * ```typescript
+ * getLineColor(feature); // → [136, 138, 143, 255]  (default line color)
+ * ```
  */
 export function getLineColor(
   feature: StyledFeature,
@@ -94,6 +108,10 @@ export function getLineColor(
  *
  * @param feature - The styled feature
  * @returns Border/outline width in pixels
+ * @example
+ * ```typescript
+ * getLineWidth(feature); // → 2  (default width)
+ * ```
  */
 export function getLineWidth(feature: StyledFeature): number {
   const styleProps = feature.properties?.styleProperties;
@@ -105,10 +123,16 @@ export function getLineWidth(feature: StyledFeature): number {
  *
  * @param feature - The styled feature
  * @returns Dash array [dash, gap] or null for solid outlines
+ * @example
+ * ```typescript
+ * getDashArray(solidFeature);   // → null
+ * getDashArray(dashedFeature);  // → [8, 4]
+ * getDashArray(dottedFeature);  // → [2, 4]
+ * ```
  */
 export function getDashArray(feature: StyledFeature): [number, number] | null {
   const styleProps = feature.properties?.styleProperties;
   const pattern = styleProps?.linePattern ?? 'solid';
 
-  return DASH_ARRAYS[pattern] || null;
+  return DASH_ARRAYS[pattern] ?? null;
 }

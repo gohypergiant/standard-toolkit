@@ -124,6 +124,11 @@ export function getHighlightLineWidth(feature: StyledFeature): number {
  *
  * @param color - RGBA color tuple [r, g, b, a] (0-255)
  * @returns Color with alpha multiplied by OVERLAY_FILL_OPACITY
+ * @example
+ * ```typescript
+ * applyOverlayOpacity([255, 128, 0, 200]);
+ * // → [255, 128, 0, 50]  (200 × 0.25)
+ * ```
  */
 export function applyOverlayOpacity(
   color: [number, number, number, number],
@@ -145,6 +150,11 @@ export function applyOverlayOpacity(
  *
  * @param feature - The styled feature
  * @returns RGBA color with alpha multiplied by OVERLAY_FILL_OPACITY
+ * @example
+ * ```typescript
+ * // Feature with fillColor [98, 166, 255, 255]
+ * getOverlayFillColor(feature); // → [98, 166, 255, 64]
+ * ```
  */
 export function getOverlayFillColor(
   feature: StyledFeature,

@@ -47,18 +47,14 @@ describe('Type Guards', () => {
       expect(isCircleShape(circleFixture)).toBe(true);
     });
 
-    it('returns false for non-Circle shapes', () => {
-      const shapes: Shape[] = [
-        ellipseFixture,
-        polygonFixture,
-        rectangleFixture,
-        lineStringFixture,
-        pointFixture,
-      ];
-
-      for (const shape of shapes) {
-        expect(isCircleShape(shape)).toBe(false);
-      }
+    it.each([
+      ['Ellipse', ellipseFixture],
+      ['Polygon', polygonFixture],
+      ['Rectangle', rectangleFixture],
+      ['LineString', lineStringFixture],
+      ['Point', pointFixture],
+    ] as [string, Shape][])('returns false for %s shape', (_label, shape) => {
+      expect(isCircleShape(shape)).toBe(false);
     });
 
     it('provides type narrowing for circleProperties', () => {
@@ -80,18 +76,14 @@ describe('Type Guards', () => {
       expect(isEllipseShape(ellipseFixture)).toBe(true);
     });
 
-    it('returns false for non-Ellipse shapes', () => {
-      const shapes: Shape[] = [
-        circleFixture,
-        polygonFixture,
-        rectangleFixture,
-        lineStringFixture,
-        pointFixture,
-      ];
-
-      for (const shape of shapes) {
-        expect(isEllipseShape(shape)).toBe(false);
-      }
+    it.each([
+      ['Circle', circleFixture],
+      ['Polygon', polygonFixture],
+      ['Rectangle', rectangleFixture],
+      ['LineString', lineStringFixture],
+      ['Point', pointFixture],
+    ] as [string, Shape][])('returns false for %s shape', (_label, shape) => {
+      expect(isEllipseShape(shape)).toBe(false);
     });
 
     it('provides type narrowing for ellipseProperties', () => {
@@ -119,18 +111,14 @@ describe('Type Guards', () => {
       expect(isPolygonShape(polygonFixture)).toBe(true);
     });
 
-    it('returns false for non-Polygon shapes', () => {
-      const shapes: Shape[] = [
-        circleFixture,
-        ellipseFixture,
-        rectangleFixture,
-        lineStringFixture,
-        pointFixture,
-      ];
-
-      for (const shape of shapes) {
-        expect(isPolygonShape(shape)).toBe(false);
-      }
+    it.each([
+      ['Circle', circleFixture],
+      ['Ellipse', ellipseFixture],
+      ['Rectangle', rectangleFixture],
+      ['LineString', lineStringFixture],
+      ['Point', pointFixture],
+    ] as [string, Shape][])('returns false for %s shape', (_label, shape) => {
+      expect(isPolygonShape(shape)).toBe(false);
     });
 
     it('provides type narrowing for PolygonShape', () => {
@@ -147,18 +135,14 @@ describe('Type Guards', () => {
       expect(isRectangleShape(rectangleFixture)).toBe(true);
     });
 
-    it('returns false for non-Rectangle shapes', () => {
-      const shapes: Shape[] = [
-        circleFixture,
-        ellipseFixture,
-        polygonFixture,
-        lineStringFixture,
-        pointFixture,
-      ];
-
-      for (const shape of shapes) {
-        expect(isRectangleShape(shape)).toBe(false);
-      }
+    it.each([
+      ['Circle', circleFixture],
+      ['Ellipse', ellipseFixture],
+      ['Polygon', polygonFixture],
+      ['LineString', lineStringFixture],
+      ['Point', pointFixture],
+    ] as [string, Shape][])('returns false for %s shape', (_label, shape) => {
+      expect(isRectangleShape(shape)).toBe(false);
     });
 
     it('provides type narrowing for RectangleShape', () => {
@@ -175,18 +159,14 @@ describe('Type Guards', () => {
       expect(isLineStringShape(lineStringFixture)).toBe(true);
     });
 
-    it('returns false for non-LineString shapes', () => {
-      const shapes: Shape[] = [
-        circleFixture,
-        ellipseFixture,
-        polygonFixture,
-        rectangleFixture,
-        pointFixture,
-      ];
-
-      for (const shape of shapes) {
-        expect(isLineStringShape(shape)).toBe(false);
-      }
+    it.each([
+      ['Circle', circleFixture],
+      ['Ellipse', ellipseFixture],
+      ['Polygon', polygonFixture],
+      ['Rectangle', rectangleFixture],
+      ['Point', pointFixture],
+    ] as [string, Shape][])('returns false for %s shape', (_label, shape) => {
+      expect(isLineStringShape(shape)).toBe(false);
     });
 
     it('provides type narrowing for LineStringShape', () => {
@@ -203,18 +183,14 @@ describe('Type Guards', () => {
       expect(isPointShape(pointFixture)).toBe(true);
     });
 
-    it('returns false for non-Point shapes', () => {
-      const shapes: Shape[] = [
-        circleFixture,
-        ellipseFixture,
-        polygonFixture,
-        rectangleFixture,
-        lineStringFixture,
-      ];
-
-      for (const shape of shapes) {
-        expect(isPointShape(shape)).toBe(false);
-      }
+    it.each([
+      ['Circle', circleFixture],
+      ['Ellipse', ellipseFixture],
+      ['Polygon', polygonFixture],
+      ['Rectangle', rectangleFixture],
+      ['LineString', lineStringFixture],
+    ] as [string, Shape][])('returns false for %s shape', (_label, shape) => {
+      expect(isPointShape(shape)).toBe(false);
     });
 
     it('provides type narrowing for PointShape', () => {

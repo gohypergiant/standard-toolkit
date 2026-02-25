@@ -52,7 +52,7 @@ export type LinePattern = 'solid' | 'dashed' | 'dotted';
 /**
  * Style properties for rendering shapes
  */
-export interface StyleProperties {
+export type StyleProperties = {
   /** Fill color as RGBA array [r, g, b, a] where each value is 0-255 */
   fillColor: Color;
   /** Border/outline color as RGBA array [r, g, b, a] where each value is 0-255 */
@@ -91,13 +91,13 @@ export interface StyleProperties {
     | 'right'
     | 'bottom'
     | 'left';
-}
+};
 
 /**
  * Circle-specific properties for precise rendering
  * Stored alongside the polygon approximation
  */
-export interface CircleProperties {
+export type CircleProperties = {
   /** Center point as [longitude, latitude] or [longitude, latitude, elevation] */
   center: [number, number, number?];
   /** Radius with value and units */
@@ -107,13 +107,13 @@ export interface CircleProperties {
     /** Units for the radius measurement */
     units: DistanceUnit;
   };
-}
+};
 
 /**
  * Ellipse-specific properties for precise rendering
  * Stored alongside the polygon approximation
  */
-export interface EllipseProperties {
+export type EllipseProperties = {
   /** Center point as [longitude, latitude] or [longitude, latitude, elevation] */
   center: [number, number, number?];
   /** X semi-axis (horizontal radius) with value and units */
@@ -132,7 +132,7 @@ export interface EllipseProperties {
   };
   /** Rotation angle in degrees */
   angle: number;
-}
+};
 
 /**
  * Custom geometry types supported
@@ -146,7 +146,7 @@ export type CustomGeometry = Point | LineString | Polygon;
  * but are guaranteed to be present for their respective shape types.
  * Use the type guards (isCircleShape, isEllipseShape) for type narrowing.
  */
-export interface StyledFeatureProperties {
+export type StyledFeatureProperties = {
   /** Style properties for rendering */
   styleProperties: StyleProperties;
   /** Shape ID for correlation */
@@ -155,37 +155,37 @@ export interface StyledFeatureProperties {
   circleProperties?: CircleProperties;
   /** Ellipse properties (present for Ellipse shapes) */
   ellipseProperties?: EllipseProperties;
-}
+};
 
 /**
  * Feature properties for Circle shapes (circleProperties required).
  * Used by CircleShape for better type narrowing.
  */
-export interface CircleFeatureProperties extends StyledFeatureProperties {
+export type CircleFeatureProperties = StyledFeatureProperties & {
   /** Circle properties (required for Circle shapes) */
   circleProperties: CircleProperties;
-}
+};
 
 /**
  * Feature properties for Ellipse shapes (ellipseProperties required).
  * Used by EllipseShape for better type narrowing.
  */
-export interface EllipseFeatureProperties extends StyledFeatureProperties {
+export type EllipseFeatureProperties = StyledFeatureProperties & {
   /** Ellipse properties (required for Ellipse shapes) */
   ellipseProperties: EllipseProperties;
-}
+};
 
 /**
  * GeoJSON Feature with style properties
  */
-export interface StyledFeature extends Feature {
+export type StyledFeature = Feature & {
   properties: StyledFeatureProperties;
-}
+};
 
 /**
  * Base shape properties shared by all shapes
  */
-interface BaseShape {
+type BaseShape = {
   /** Unique identifier */
   id: ShapeId;
   /** Full shape name used internally and in UI */
@@ -205,55 +205,55 @@ interface BaseShape {
    * Locked shapes cannot be modified due to data restrictions or user preference
    */
   locked?: boolean;
-}
+};
 
 /**
  * Circle shape with required circleProperties
  */
-export interface CircleShape extends BaseShape {
+export type CircleShape = BaseShape & {
   shape: typeof ShapeFeatureType.Circle;
   feature: StyledFeature & { properties: CircleFeatureProperties };
-}
+};
 
 /**
  * Ellipse shape with required ellipseProperties
  */
-export interface EllipseShape extends BaseShape {
+export type EllipseShape = BaseShape & {
   shape: typeof ShapeFeatureType.Ellipse;
   feature: StyledFeature & { properties: EllipseFeatureProperties };
-}
+};
 
 /**
  * Polygon shape
  */
-export interface PolygonShape extends BaseShape {
+export type PolygonShape = BaseShape & {
   shape: typeof ShapeFeatureType.Polygon;
   feature: StyledFeature;
-}
+};
 
 /**
  * Rectangle shape
  */
-export interface RectangleShape extends BaseShape {
+export type RectangleShape = BaseShape & {
   shape: typeof ShapeFeatureType.Rectangle;
   feature: StyledFeature;
-}
+};
 
 /**
  * LineString shape
  */
-export interface LineStringShape extends BaseShape {
+export type LineStringShape = BaseShape & {
   shape: typeof ShapeFeatureType.LineString;
   feature: StyledFeature;
-}
+};
 
 /**
  * Point shape
  */
-export interface PointShape extends BaseShape {
+export type PointShape = BaseShape & {
   shape: typeof ShapeFeatureType.Point;
   feature: StyledFeature;
-}
+};
 
 /**
  * Discriminated union of all shape types.
@@ -344,6 +344,15 @@ export function isEllipseShape(shape: Shape): shape is EllipseShape {
 
 /**
  * Type guard for Polygon shapes.
+ *
+ * @param shape - The shape to test
+ * @returns True if shape is a PolygonShape
+ * @example
+ * ```typescript
+ * if (isPolygonShape(shape)) {
+ *   // TypeScript narrows shape to PolygonShape
+ * }
+ * ```
  */
 export function isPolygonShape(shape: Shape): shape is PolygonShape {
   return shape.shape === ShapeFeatureType.Polygon;
@@ -351,6 +360,15 @@ export function isPolygonShape(shape: Shape): shape is PolygonShape {
 
 /**
  * Type guard for Rectangle shapes.
+ *
+ * @param shape - The shape to test
+ * @returns True if shape is a RectangleShape
+ * @example
+ * ```typescript
+ * if (isRectangleShape(shape)) {
+ *   // TypeScript narrows shape to RectangleShape
+ * }
+ * ```
  */
 export function isRectangleShape(shape: Shape): shape is RectangleShape {
   return shape.shape === ShapeFeatureType.Rectangle;
@@ -358,6 +376,15 @@ export function isRectangleShape(shape: Shape): shape is RectangleShape {
 
 /**
  * Type guard for LineString shapes.
+ *
+ * @param shape - The shape to test
+ * @returns True if shape is a LineStringShape
+ * @example
+ * ```typescript
+ * if (isLineStringShape(shape)) {
+ *   // TypeScript narrows shape to LineStringShape
+ * }
+ * ```
  */
 export function isLineStringShape(shape: Shape): shape is LineStringShape {
   return shape.shape === ShapeFeatureType.LineString;
@@ -365,6 +392,15 @@ export function isLineStringShape(shape: Shape): shape is LineStringShape {
 
 /**
  * Type guard for Point shapes.
+ *
+ * @param shape - The shape to test
+ * @returns True if shape is a PointShape
+ * @example
+ * ```typescript
+ * if (isPointShape(shape)) {
+ *   // TypeScript narrows shape to PointShape
+ * }
+ * ```
  */
 export function isPointShape(shape: Shape): shape is PointShape {
   return shape.shape === ShapeFeatureType.Point;
@@ -376,12 +412,34 @@ export function isPointShape(shape: Shape): shape is PointShape {
 // These check GeoJSON geometry.type strings (e.g. 'Polygon', 'MultiPolygon'),
 // distinct from the Shape type guards above which check shape.shape ('Circle', etc.).
 
-/** Check if a GeoJSON geometry type is polygon-like (Polygon or MultiPolygon). */
+/**
+ * Check if a GeoJSON geometry type is polygon-like (Polygon or MultiPolygon).
+ *
+ * @param type - The GeoJSON geometry type string
+ * @returns True if type is 'Polygon' or 'MultiPolygon'
+ * @example
+ * ```typescript
+ * if (isPolygonGeometry(feature.geometry.type)) {
+ *   // render fill
+ * }
+ * ```
+ */
 export function isPolygonGeometry(type: string): boolean {
   return type === 'Polygon' || type === 'MultiPolygon';
 }
 
-/** Check if a GeoJSON geometry type is line-like (LineString or MultiLineString). */
+/**
+ * Check if a GeoJSON geometry type is line-like (LineString or MultiLineString).
+ *
+ * @param type - The GeoJSON geometry type string
+ * @returns True if type is 'LineString' or 'MultiLineString'
+ * @example
+ * ```typescript
+ * if (isLineGeometry(feature.geometry.type)) {
+ *   // render curtain
+ * }
+ * ```
+ */
 export function isLineGeometry(type: string): boolean {
   return type === 'LineString' || type === 'MultiLineString';
 }

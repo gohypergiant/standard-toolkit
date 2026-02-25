@@ -89,9 +89,7 @@ export function getIconLayerProps(
     return {};
   }
 
-  return {
-    ...(iconAtlas ? { iconAtlas } : {}),
-    ...(iconMapping ? { iconMapping } : {}),
+  const result: Record<string, unknown> = {
     getIcon: (d: Shape['feature']) =>
       d.properties?.styleProperties?.icon?.name ?? 'marker',
     getIconSize: (d: Shape['feature']) =>
@@ -104,6 +102,16 @@ export function getIconLayerProps(
     },
     iconBillboard: false,
   };
+
+  if (iconAtlas) {
+    result.iconAtlas = iconAtlas;
+  }
+
+  if (iconMapping) {
+    result.iconMapping = iconMapping;
+  }
+
+  return result;
 }
 
 /**
@@ -139,12 +147,15 @@ export function getIconUpdateTriggers(
   };
 }
 
-let cachedCoffinBase: Record<string, IconMappingEntry> | undefined;
-let cachedCoffinResult: Record<string, IconMappingEntry> | undefined;
+/** WeakMap memoizing extended icon mappings by baseMapping identity. */
+const coffinCornerCache = new WeakMap<
+  Record<string, IconMappingEntry>,
+  Record<string, IconMappingEntry>
+>();
 
 /**
  * Extend an icon mapping with coffin corners entries for hover/selection feedback.
- * Memoized on baseMapping identity to avoid re-spreading per render frame.
+ * Memoized per baseMapping identity via WeakMap to avoid re-spreading per render frame.
  *
  * @param baseMapping - The original icon mapping from the feature's icon config
  * @returns Extended mapping with coffin corners icons added
@@ -158,12 +169,12 @@ let cachedCoffinResult: Record<string, IconMappingEntry> | undefined;
 export function extendMappingWithCoffinCorners(
   baseMapping: Record<string, IconMappingEntry>,
 ): Record<string, IconMappingEntry> {
-  if (baseMapping === cachedCoffinBase && cachedCoffinResult) {
-    return cachedCoffinResult;
+  const cached = coffinCornerCache.get(baseMapping);
+  if (cached) {
+    return cached;
   }
 
-  cachedCoffinBase = baseMapping;
-  cachedCoffinResult = {
+  const result = {
     ...baseMapping,
     [COFFIN_CORNERS.HOVER_ICON]: {
       x: 0,
@@ -187,5 +198,6 @@ export function extendMappingWithCoffinCorners(
       mask: false,
     },
   };
-  return cachedCoffinResult;
+  coffinCornerCache.set(baseMapping, result);
+  return result;
 }

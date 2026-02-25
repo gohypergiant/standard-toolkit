@@ -160,12 +160,11 @@ export const EMPTY_FEATURE_COLLECTION: import('geojson').FeatureCollection = {
  * like degree symbol (°) and superscript 2 (²) must be explicitly included
  * for tooltip text like "100.5 km²" to render correctly.
  */
-export const TOOLTIP_CHARACTER_SET: string[] = ['°', '²'];
-
-// Add standard ASCII characters (space through tilde + DEL)
-for (let i = 32; i <= 128; i++) {
-  TOOLTIP_CHARACTER_SET.push(String.fromCharCode(i));
-}
+export const TOOLTIP_CHARACTER_SET: string[] = [
+  '°',
+  '²',
+  ...Array.from({ length: 97 }, (_, i) => String.fromCharCode(32 + i)),
+];
 
 /**
  * Sublayer props for tooltip text rendering.
@@ -212,6 +211,10 @@ export const EDITABLE_LAYER_SUBLAYER_PROPS = {
  *
  * @param value - The distance value to format
  * @returns The formatted string with 2 decimal places
+ * @example
+ * ```typescript
+ * formatDistance(3.14159); // → "3.14"
+ * ```
  */
 export function formatDistance(value: number): string {
   return value.toFixed(2);
@@ -229,6 +232,11 @@ export function formatDistance(value: number): string {
  * @param area - Circle area in the specified units squared
  * @param unitAbbrev - Unit abbreviation (e.g., 'km', 'mi')
  * @returns Formatted tooltip text: "r: {radius} {unit}\n{area} {unit}²"
+ * @example
+ * ```typescript
+ * formatCircleTooltip(12.5, 490.87, 'km');
+ * // → "r: 12.50 km\n490.87 km²"
+ * ```
  */
 export function formatCircleTooltip(
   radius: number,
@@ -246,6 +254,11 @@ export function formatCircleTooltip(
  * @param area - Rectangle area in the specified units squared
  * @param unitAbbrev - Unit abbreviation (e.g., 'km', 'mi')
  * @returns Formatted tooltip text: "{width} {unit} x {height} {unit}\n{area} {unit}²"
+ * @example
+ * ```typescript
+ * formatRectangleTooltip(5.0, 3.2, 16.0, 'km');
+ * // → "5.00 km x 3.20 km\n16.00 km²"
+ * ```
  */
 export function formatRectangleTooltip(
   width: number,
@@ -264,6 +277,11 @@ export function formatRectangleTooltip(
  * @param area - Ellipse area in the specified units squared
  * @param unitAbbrev - Unit abbreviation (e.g., 'km', 'mi')
  * @returns Formatted tooltip text: "{major} {unit} x {minor} {unit}\n{area} {unit}²"
+ * @example
+ * ```typescript
+ * formatEllipseTooltip(10.0, 6.0, 47.12, 'km');
+ * // → "10.00 km x 6.00 km\n47.12 km²"
+ * ```
  */
 export function formatEllipseTooltip(
   majorAxis: number,
@@ -280,6 +298,10 @@ export function formatEllipseTooltip(
  * @param distance - Distance value in the specified units
  * @param unitAbbrev - Unit abbreviation (e.g., 'km', 'mi')
  * @returns Formatted tooltip text: "{distance} {unit}"
+ * @example
+ * ```typescript
+ * formatDistanceTooltip(42.5, 'km'); // → "42.50 km"
+ * ```
  */
 export function formatDistanceTooltip(
   distance: number,

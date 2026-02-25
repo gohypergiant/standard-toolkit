@@ -115,10 +115,10 @@ export type DisplayShapeLayerProps = CompositeLayerProps & {
 
   /**
    * Callback when a shape is hovered
-   * Called with null when hover ends
-   * @param shape - The hovered shape, or null when hover ends
+   * Called with no argument when hover ends
+   * @param shape - The hovered shape, or undefined when hover ends
    */
-  onShapeHover?: (shape: Shape | null) => void;
+  onShapeHover?: (shape?: Shape) => void;
 
   /**
    * Label display mode for shapes

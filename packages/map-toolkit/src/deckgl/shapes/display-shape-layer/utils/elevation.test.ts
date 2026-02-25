@@ -11,7 +11,10 @@
  */
 
 import { describe, expect, it } from 'vitest';
+import { BRIGHTNESS_FACTOR } from '../constants';
+import { brightenColor } from './display-style';
 import {
+  buildIndicatorLineData,
   classifyElevatedFeatures,
   createCurtainPolygonFeatures,
   createCurtainPolygonsFromLine,
@@ -597,6 +600,95 @@ describe('Elevation Utilities', () => {
       expect(result.main).toEqual([]);
       expect(result.hovered).toEqual([]);
       expect(result.selected).toEqual([]);
+    });
+  });
+
+  describe('buildIndicatorLineData', () => {
+    const baseColor: Color = [98, 166, 255, 255];
+    const pointFeature = createFeature(
+      { type: 'Point', coordinates: [10, 20, 5000] },
+      baseColor,
+    );
+
+    it('returns empty array for empty input', () => {
+      const result = buildIndicatorLineData([], [], undefined, undefined);
+
+      expect(result).toEqual([]);
+    });
+
+    it('generates segments with base line color when no interaction', () => {
+      const result = buildIndicatorLineData(
+        [pointFeature],
+        [pointFeature],
+        undefined,
+        undefined,
+      );
+
+      expect(result).toHaveLength(1);
+      expect(result[0]?.source).toEqual([10, 20, 0]);
+      expect(result[0]?.target).toEqual([10, 20, 5000]);
+      expect(result[0]?.color).toEqual(baseColor);
+    });
+
+    it('brightens color when feature is selected', () => {
+      const result = buildIndicatorLineData(
+        [pointFeature],
+        [pointFeature],
+        pointFeature.properties?.shapeId,
+        undefined,
+      );
+
+      expect(result).toHaveLength(1);
+      expect(result[0]?.color).toEqual(
+        brightenColor(baseColor, BRIGHTNESS_FACTOR.HOVER_OR_SELECT),
+      );
+    });
+
+    it('brightens color when feature is hovered', () => {
+      const result = buildIndicatorLineData(
+        [pointFeature],
+        [pointFeature],
+        undefined,
+        0,
+      );
+
+      expect(result).toHaveLength(1);
+      expect(result[0]?.color).toEqual(
+        brightenColor(baseColor, BRIGHTNESS_FACTOR.HOVER_OR_SELECT),
+      );
+    });
+
+    it('uses HOVER_AND_SELECT factor when both selected and hovered', () => {
+      const result = buildIndicatorLineData(
+        [pointFeature],
+        [pointFeature],
+        pointFeature.properties?.shapeId,
+        0,
+      );
+
+      expect(result).toHaveLength(1);
+      expect(result[0]?.color).toEqual(
+        brightenColor(baseColor, BRIGHTNESS_FACTOR.HOVER_AND_SELECT),
+      );
+    });
+
+    it('generates one segment per elevated coordinate in LineString', () => {
+      const lineFeature = createFeature({
+        type: 'LineString',
+        coordinates: [
+          [10, 20, 5000],
+          [11, 21, 6000],
+        ],
+      });
+
+      const result = buildIndicatorLineData(
+        [lineFeature],
+        [lineFeature],
+        undefined,
+        undefined,
+      );
+
+      expect(result).toHaveLength(2);
     });
   });
 });
