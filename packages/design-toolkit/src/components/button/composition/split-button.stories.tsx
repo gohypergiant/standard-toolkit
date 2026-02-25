@@ -60,6 +60,11 @@ const monoBoldStyle = (isDisabled: boolean) =>
     ? ''
     : 'color-mono-bold:hover:bg-interactive-bold color-mono-bold:focus-visible:bg-interactive-bold color-mono-bold:hover:fg-inverse-muted color-mono-bold:focus-visible:fg-inverse-muted';
 
+const enabledStyling = (enabled: boolean) =>
+  enabled
+    ? 'color-mono-muted:bg-interactive-muted color-mono-bold:bg-interactive-muted color-accent:bg-accent-primary-muted color-accent:fg-accent-primary-hover'
+    : '';
+
 export const Default: Story = {
   render: (args) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -76,6 +81,7 @@ export const Default: Story = {
             <Button
               className={clsx(
                 monoBoldStyle(args.isDisabled),
+                enabledStyling(isOpen),
                 'w-[12px] min-w-[12px] p-0',
               )}
               variant='flat'
