@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { OUT_OF_VIEW_CHUNK_COUNT, TIMELINE_CHUNK_WIDTH } from '../constants';
+import { BUFFERED_CHUNK_COUNT, TIMELINE_CHUNK_WIDTH } from '../constants';
 import { getMsRepresentedInViewableRegion } from './conversions';
 import { roundDateToInterval } from './dates';
 import type { TimelineChunkObject } from '../types';
@@ -30,7 +30,7 @@ export function generateTimelineChunks(
 
   const proposedChunkCount =
     Math.ceil(viewableRegionWidth / TIMELINE_CHUNK_WIDTH) +
-    OUT_OF_VIEW_CHUNK_COUNT;
+    BUFFERED_CHUNK_COUNT;
 
   const chunksInViewableRegion =
     proposedChunkCount % 2 === 0 ? proposedChunkCount + 1 : proposedChunkCount;

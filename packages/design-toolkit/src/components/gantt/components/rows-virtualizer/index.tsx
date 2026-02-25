@@ -10,16 +10,27 @@
  * governing permissions and limitations under the License.
  */
 
-// AI suggested values. Easy values for consumer to
-// specify as prop to Gantt component.
-export type HoursTimescale = '1h' | '2h' | '6h' | '12h' | '24h';
+import styles from './styles.module.css';
+import { useRenderedRows } from './use-rendered-rows';
+import type { PropsWithChildren } from 'react';
 
-export type MinutesTimescale = '1m' | '5m' | '10m' | '30m';
+export function RowsVirtualizer({ children }: PropsWithChildren) {
+  const { dimensions, renderedRows, assignContainerRef, onScroll } =
+    useRenderedRows({ children });
 
-export type Timescale = HoursTimescale | MinutesTimescale;
-
-export type TimelineChunkObject = {
-  timestampMs: number;
-};
-
-export type TimeBounds = { startMs: number; endMs: number };
+  return (
+    <div
+      ref={assignContainerRef}
+      className={styles.container}
+      onScroll={onScroll}
+    >
+      <div
+        className={styles['inner-container']}
+        data-height={dimensions.height}
+        data-width={dimensions.width}
+      >
+        {renderedRows}
+      </div>
+    </div>
+  );
+}
