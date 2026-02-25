@@ -671,11 +671,56 @@ function ShapesCameraControls({
 const DISPLAY_25D_MAP_ID_INNER = uuid();
 
 export const DisplayShapes25D: Story = {
-  render: () => {
+  args: {
+    showHighlight: false,
+    highlightColorR: 40,
+    highlightColorG: 245,
+    highlightColorB: 190,
+    highlightColorA: 100,
+  },
+  argTypes: {
+    showHighlight: {
+      control: { type: 'boolean' },
+      description: 'Show/hide highlight outline around selected shapes',
+    },
+    highlightColorR: {
+      control: { type: 'number', min: 0, max: 255, step: 1 },
+      description: 'Highlight color red channel (0-255)',
+    },
+    highlightColorG: {
+      control: { type: 'number', min: 0, max: 255, step: 1 },
+      description: 'Highlight color green channel (0-255)',
+    },
+    highlightColorB: {
+      control: { type: 'number', min: 0, max: 255, step: 1 },
+      description: 'Highlight color blue channel (0-255)',
+    },
+    highlightColorA: {
+      control: { type: 'number', min: 0, max: 255, step: 1 },
+      description: 'Highlight color alpha/opacity (0-255)',
+    },
+  },
+  render: (args) => {
     const { selectedId } = useSelectShape(DISPLAY_25D_MAP_ID_INNER);
     const { cameraState } = useMapCamera(DISPLAY_25D_MAP_ID_INNER);
     const { requestCursorChange, clearCursor } = useMapCursor(
       DISPLAY_25D_MAP_ID_INNER,
+    );
+
+    const highlightColor = useMemo(
+      () =>
+        [
+          args.highlightColorR,
+          args.highlightColorG,
+          args.highlightColorB,
+          args.highlightColorA,
+        ] as [number, number, number, number],
+      [
+        args.highlightColorR,
+        args.highlightColorG,
+        args.highlightColorB,
+        args.highlightColorA,
+      ],
     );
 
     // Handle hover events for cursor changes
@@ -706,6 +751,8 @@ export const DisplayShapes25D: Story = {
             pickable={true}
             applyBaseOpacity={true}
             enableElevation={cameraState.view !== '2D'}
+            showHighlight={args.showHighlight}
+            highlightColor={highlightColor}
           />
         </BaseMap>
 
@@ -728,10 +775,55 @@ export const DisplayShapes25D: Story = {
 const DISPLAY_3D_MAP_ID_INNER = uuid();
 
 export const DisplayShapes3D: Story = {
-  render: () => {
+  args: {
+    showHighlight: false,
+    highlightColorR: 40,
+    highlightColorG: 245,
+    highlightColorB: 190,
+    highlightColorA: 100,
+  },
+  argTypes: {
+    showHighlight: {
+      control: { type: 'boolean' },
+      description: 'Show/hide highlight outline around selected shapes',
+    },
+    highlightColorR: {
+      control: { type: 'number', min: 0, max: 255, step: 1 },
+      description: 'Highlight color red channel (0-255)',
+    },
+    highlightColorG: {
+      control: { type: 'number', min: 0, max: 255, step: 1 },
+      description: 'Highlight color green channel (0-255)',
+    },
+    highlightColorB: {
+      control: { type: 'number', min: 0, max: 255, step: 1 },
+      description: 'Highlight color blue channel (0-255)',
+    },
+    highlightColorA: {
+      control: { type: 'number', min: 0, max: 255, step: 1 },
+      description: 'Highlight color alpha/opacity (0-255)',
+    },
+  },
+  render: (args) => {
     const { selectedId } = useSelectShape(DISPLAY_3D_MAP_ID_INNER);
     const { requestCursorChange, clearCursor } = useMapCursor(
       DISPLAY_3D_MAP_ID_INNER,
+    );
+
+    const highlightColor = useMemo(
+      () =>
+        [
+          args.highlightColorR,
+          args.highlightColorG,
+          args.highlightColorB,
+          args.highlightColorA,
+        ] as [number, number, number, number],
+      [
+        args.highlightColorR,
+        args.highlightColorG,
+        args.highlightColorB,
+        args.highlightColorA,
+      ],
     );
 
     // Handle hover events for cursor changes
@@ -762,6 +854,8 @@ export const DisplayShapes3D: Story = {
             pickable={true}
             applyBaseOpacity={true}
             enableElevation={true}
+            showHighlight={args.showHighlight}
+            highlightColor={highlightColor}
           />
         </BaseMap>
       </div>

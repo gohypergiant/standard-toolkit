@@ -16,6 +16,7 @@ import {
   createCurtainPolygonFeatures,
   createCurtainPolygonsFromLine,
   createElevationLineSegments,
+  flattenFeatureTo2D,
   getElevationFromCoordinates,
   getFeatureElevation,
   partitionCurtains,
@@ -432,6 +433,125 @@ describe('Elevation Utilities', () => {
 
       // One curtain per consecutive pair per line: 1 + 1 = 2
       expect(curtains).toHaveLength(2);
+    });
+  });
+
+  describe('flattenFeatureTo2D', () => {
+    it('strips Z from LineString coordinates', () => {
+      const feature = createFeature({
+        type: 'LineString',
+        coordinates: [
+          [10, 20, 5000],
+          [11, 21, 6000],
+          [12, 22, 7000],
+        ],
+      });
+
+      const result = flattenFeatureTo2D(feature);
+
+      expect(result.geometry.type).toBe('LineString');
+      const coords = (result.geometry as { coordinates: number[][] })
+        .coordinates;
+      expect(coords).toEqual([
+        [10, 20],
+        [11, 21],
+        [12, 22],
+      ]);
+    });
+
+    it('strips Z from MultiLineString coordinates', () => {
+      const feature = createFeature({
+        type: 'MultiLineString',
+        coordinates: [
+          [
+            [10, 20, 3000],
+            [11, 21, 4000],
+          ],
+          [
+            [12, 22, 5000],
+            [13, 23, 6000],
+          ],
+        ],
+      });
+
+      const result = flattenFeatureTo2D(feature);
+
+      expect(result.geometry.type).toBe('MultiLineString');
+      const coords = (result.geometry as { coordinates: number[][][] })
+        .coordinates;
+      expect(coords).toEqual([
+        [
+          [10, 20],
+          [11, 21],
+        ],
+        [
+          [12, 22],
+          [13, 23],
+        ],
+      ]);
+    });
+
+    it('returns same reference for Polygon (unaffected)', () => {
+      const feature = createFeature({
+        type: 'Polygon',
+        coordinates: [
+          [
+            [0, 0, 5000],
+            [1, 0, 5000],
+            [1, 1, 5000],
+            [0, 0, 5000],
+          ],
+        ],
+      });
+
+      const result = flattenFeatureTo2D(feature);
+
+      expect(result).toBe(feature);
+    });
+
+    it('returns same reference for Point (unaffected)', () => {
+      const feature = createFeature({
+        type: 'Point',
+        coordinates: [10, 20, 5000],
+      });
+
+      const result = flattenFeatureTo2D(feature);
+
+      expect(result).toBe(feature);
+    });
+
+    it('preserves all feature properties', () => {
+      const feature = createFeature({
+        type: 'LineString',
+        coordinates: [
+          [10, 20, 5000],
+          [11, 21, 6000],
+        ],
+      });
+
+      const result = flattenFeatureTo2D(feature);
+
+      expect(result.type).toBe(feature.type);
+      expect(result.properties).toBe(feature.properties);
+    });
+
+    it('returns 2D coordinates for already-2D LineString', () => {
+      const feature = createFeature({
+        type: 'LineString',
+        coordinates: [
+          [10, 20],
+          [11, 21],
+        ],
+      });
+
+      const result = flattenFeatureTo2D(feature);
+
+      const coords = (result.geometry as { coordinates: number[][] })
+        .coordinates;
+      expect(coords).toEqual([
+        [10, 20],
+        [11, 21],
+      ]);
     });
   });
 

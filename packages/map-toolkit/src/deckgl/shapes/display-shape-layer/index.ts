@@ -45,6 +45,7 @@ import {
   classifyElevatedFeatures,
   createCurtainPolygonFeatures,
   createElevationLineSegments,
+  flattenFeatureTo2D,
   getFeatureElevation,
   partitionCurtains,
 } from './utils/elevation';
@@ -429,14 +430,13 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
   };
 
   /**
-   * Render highlight sublayer (underneath main layer) for 2D shapes only.
-   * 3D shapes (extruded polygons/elevated points) use color tinting in the main layer instead.
+   * Render highlight sublayer (underneath main layer).
    * Note: Points with icons use coffin corners instead of highlight layer.
    */
   private renderHighlightLayer(
     features: Shape['feature'][],
   ): GeoJsonLayer | null {
-    const { selectedShapeId, showHighlight, enableElevation } = this.props;
+    const { selectedShapeId, showHighlight } = this.props;
 
     // Skip if no selection or highlight is disabled
     if (!selectedShapeId || showHighlight === false) {
@@ -461,24 +461,15 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       }
     }
 
-    // Skip for 3D shapes - they use color tinting in main layer
-    if (enableElevation) {
-      const geomType = selectedFeature.geometry.type;
-      const hasElevation = getFeatureElevation(selectedFeature) > 0;
-
-      if (
-        (isPolygonGeometry(geomType) || geomType === 'Point') &&
-        hasElevation
-      ) {
-        return null; // Main layer handles 3D selection highlight
-      }
-    }
+    // Strip Z from LineString coordinates so the highlight outline renders at
+    // ground level rather than following the elevated path
+    const highlightFeature = flattenFeatureTo2D(selectedFeature);
 
     // Render 2D highlight layer (outline only)
     return new GeoJsonLayer({
       id: `${this.props.id}-${SHAPE_LAYER_IDS.DISPLAY_HIGHLIGHT}`,
       // biome-ignore lint/suspicious/noExplicitAny: GeoJsonLayer accepts various feature formats
-      data: [selectedFeature] as any,
+      data: [highlightFeature] as any,
 
       // Styling - outline only for 2D shapes
       filled: false,

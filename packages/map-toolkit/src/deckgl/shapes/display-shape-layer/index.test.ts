@@ -1013,7 +1013,7 @@ describe('DisplayShapeLayer', () => {
     });
 
     describe('highlight layer', () => {
-      it('skips highlight for elevated polygon when enableElevation is true', () => {
+      it('renders highlight for elevated polygon at its ground footprint', () => {
         const layer = new DisplayShapeLayer({
           id: 'test-layer',
           mapId,
@@ -1031,7 +1031,9 @@ describe('DisplayShapeLayer', () => {
           (l) => l.id === `test-layer-${SHAPE_LAYER_IDS.DISPLAY_HIGHLIGHT}`,
         );
 
-        expect(highlightLayer).toBeUndefined();
+        // Elevated polygons still get a highlight outline — it traces the
+        // ground footprint beneath the extruded shape
+        expect(highlightLayer).toBeInstanceOf(GeoJsonLayer);
       });
 
       it('renders highlight for non-elevated shape when enableElevation is true', () => {
@@ -1054,6 +1056,36 @@ describe('DisplayShapeLayer', () => {
         );
 
         expect(highlightLayer).toBeInstanceOf(GeoJsonLayer);
+      });
+
+      it('renders highlight for elevated LineString with 2D coordinates', () => {
+        const layer = new DisplayShapeLayer({
+          id: 'test-layer',
+          mapId,
+          data: [elevatedLineString],
+          selectedShapeId: elevatedLineString.id,
+          showHighlight: true,
+          showLabels: 'never',
+          enableElevation: true,
+        });
+
+        initializeLayerWithState(layer);
+        const sublayers = layer.renderLayers();
+
+        const highlightLayer = sublayers.find(
+          (l) => l.id === `test-layer-${SHAPE_LAYER_IDS.DISPLAY_HIGHLIGHT}`,
+        ) as GeoJsonLayer;
+
+        expect(highlightLayer).toBeInstanceOf(GeoJsonLayer);
+
+        // biome-ignore lint/suspicious/noExplicitAny: accessing internal props for testing
+        const data = (highlightLayer.props as any).data as Array<{
+          geometry: { coordinates: number[][] };
+        }>;
+        const coords = data[0]?.geometry.coordinates;
+
+        // All coordinates must be 2D — no Z component
+        expect(coords?.every((c) => c.length === 2)).toBe(true);
       });
     });
 

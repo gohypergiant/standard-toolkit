@@ -414,6 +414,60 @@ export function createCurtainPolygonFeatures(
   return curtainFeatures;
 }
 
+// =============================================================================
+// Coordinate Projection
+// =============================================================================
+
+/**
+ * Returns a copy of a feature with Z coordinates stripped from its geometry.
+ *
+ * LineStrings and MultiLineStrings have elevation baked into their coordinates
+ * as the Z component. When rendered by GeoJsonLayer, those Z values position
+ * the path in 3D space. Use this to project a feature back to the ground plane
+ * (e.g. for the highlight outline layer, which should always render at ground).
+ *
+ * Polygon features are unaffected — deck.gl reads their elevation via the
+ * `getElevation` accessor, not from geometry coordinates.
+ *
+ * @param feature - The feature to flatten
+ * @returns A new feature with 2D coordinates, or the original if no Z present
+ *
+ * @example
+ * ```typescript
+ * // Elevated LineString [lon, lat, 20000] → [lon, lat]
+ * const flat = flattenFeatureTo2D(elevatedLineStringFeature);
+ * // flat.geometry.coordinates: [[lon, lat], [lon, lat], ...]
+ * ```
+ */
+export function flattenFeatureTo2D(
+  feature: Shape['feature'],
+): Shape['feature'] {
+  const { geometry } = feature;
+  if (geometry.type === 'LineString') {
+    return {
+      ...feature,
+      geometry: {
+        ...geometry,
+        coordinates: (geometry.coordinates as number[][]).map(
+          ([lon, lat]) => [lon, lat] as [number, number],
+        ),
+      },
+    };
+  }
+  if (geometry.type === 'MultiLineString') {
+    return {
+      ...feature,
+      geometry: {
+        ...geometry,
+        coordinates: (geometry.coordinates as number[][][]).map((line) =>
+          line.map(([lon, lat]) => [lon, lat] as [number, number]),
+        ),
+      },
+    };
+  }
+  return feature;
+}
+
 /**
  * Partition curtain features by interaction state (main, hovered, selected).
  *
