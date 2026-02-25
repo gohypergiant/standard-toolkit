@@ -123,7 +123,7 @@ export const MultipleCards: Story = {
 export const CustomDimensions: Story = {
   render: () => {
     return (
-      <div className='relative h-800 w-full p-l outline outline-info-bold'>
+      <div className='relative h-800 w-600 p-l outline outline-info-bold'>
         <FloatingCardProvider>
           <FloatingCard
             id={panelIds.a}
