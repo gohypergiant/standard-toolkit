@@ -480,6 +480,43 @@ When a shape is selected via `selectedShapeId`, the layer provides visual indica
 2. **Fill brightness overlay** (polygon shapes): A brightness overlay renders using `MATERIAL_SETTINGS.HOVER_OR_SELECT` lighting. When the selected shape is also hovered, the hover layer stacks on top using `MATERIAL_SETTINGS.HOVER_AND_SELECT` for an even brighter combined effect.
 3. **Curtain brightness** (elevated LineString shapes): Curtain walls render at overlay opacity using a brightened version of the shape's line color.
 4. **Coffin corners** (Point shapes with icons): Bracket-like corners appear with a blue fill. These are not currently customizable.
+5. **Highlight** (optional, non-icon-Point shapes): A highlight layer underneath with:
+
+   - Increased border/outline width (+5 pixels)
+   - Custom highlight color (default: turquoise at ~39% opacity)
+
+### Controlling the Highlight Effect when Selecting Shapes
+
+The highlight effect can be toggled with the `showHighlight` prop:
+
+```tsx
+// To show the highlight effect in addition to dotted border:
+<displayShapeLayer
+  id="shapes"
+  data={shapes}
+  selectedShapeId={selectedId}
+  showHighlight={true}  // enables the highlight layer
+/>
+
+// Default behavior (no highlight, just dotted border):
+<displayShapeLayer
+  id="shapes"
+  data={shapes}
+  selectedShapeId={selectedId}
+  // showHighlight={false} is the default - only dotted border shows on selection
+/>
+```
+
+### Custom Highlight Color
+
+```tsx
+<displayShapeLayer
+  id="shapes"
+  data={shapes}
+  selectedShapeId={selectedId}
+  highlightColor={[255, 0, 0, 128]} // Red at 50% opacity [R, G, B, A]
+/>
+```
 
 ### Hover Effects
 
@@ -715,12 +752,14 @@ When using icons for Point geometries, **all shapes in a single DisplayShapeLaye
 | `id` | `string` | *required* | Unique layer ID |
 | `mapId` | `UniqueId` | *required* | Map instance ID for event bus isolation in multi-map scenarios |
 | `data` | `Shape[]` | *required* | Array of shapes to display |
-| `selectedShapeId` | `ShapeId` | `undefined` | Currently selected shape ID for highlighting |
+| `selectedShapeId` | `ShapeId` | `undefined` | Currently selected shape ID for showing the select layer |
 | `onShapeClick` | `(shape: Shape) => void` | `undefined` | Callback when shape is clicked |
 | `onShapeHover` | `(shape: Shape \| null) => void` | `undefined` | Callback when shape is hovered |
 | `pickable` | `boolean` | `true` | Whether shapes are clickable/hoverable |
 | `showLabels` | `'always' \| 'hover' \| 'never'` | `'always'` | Label display mode: `'always'` shows all labels, `'hover'` shows label only for hovered shape, `'never'` hides all labels |
+| `showHighlight` | `boolean` | `false` | Whether to show highlight around selected shapes (dotted border always shows) |
 | `labelOptions` | `LabelPositionOptions` | `undefined` | Global label positioning options |
+| `highlightColor` | `[number, number, number, number]` | `[40, 245, 190, 100]` | Highlight color RGBA (0-255) |
 | `enableElevation` | `boolean` | `false` | Enable 3D elevation rendering (extrusion, curtains, vertical indicators). See [3D Elevation Rendering](#3d-elevation-rendering). |
 | `applyBaseOpacity` | `boolean` | `true` | Apply 20% opacity multiplier to fill colors for semi-transparent look |
 

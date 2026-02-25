@@ -140,6 +140,24 @@ export type DisplayShapeLayerProps = CompositeLayerProps & {
   labelOptions?: LabelPositionOptions;
 
   /**
+   * Whether to show the highlight layer around selected shapes
+   * When false, no highlight effect is rendered even when a shape is selected
+   * @default false
+   */
+  showHighlight?: boolean;
+
+  /**
+   * Custom highlight color for selected shapes [r, g, b, a]
+   * Each channel is 0-255
+   * @default [40, 245, 190, 100] - Turquoise at ~39% opacity
+   * @example Custom red highlight
+   * ```tsx
+   * highlightColor={[255, 0, 0, 128]} // Red at 50% opacity
+   * ```
+   */
+  highlightColor?: [number, number, number, number];
+
+  /**
    * When true (default), multiplies fill color alpha by 0.2 (reducing to 20% of original opacity)
    * for a standard semi-transparent look.
    * When false, colors are rendered exactly as specified in styleProperties.

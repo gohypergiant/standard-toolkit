@@ -85,7 +85,7 @@ describe('DisplayShapeLayer', () => {
 
       const sublayers = layer.renderLayers();
 
-      // Should have 2 layers: main GeoJsonLayer + TextLayer (no highlight without selection)
+      // Should have 2 layers: main GeoJsonLayer + TextLayer (no select layer without selectedShapeId)
       expect(sublayers.length).toBe(2);
 
       const mainLayer = sublayers.find(
@@ -149,13 +149,14 @@ describe('DisplayShapeLayer', () => {
       expect(mainLayer.id).toBe(`test-layer-${SHAPE_LAYER_IDS.DISPLAY}`);
     });
 
-    it('renders select layer when selectedShapeId is provided', () => {
+    it('renders highlight layer when selectedShapeId is provided and showHighlight is true', () => {
       const shape = polygonFixture;
       const layer = new DisplayShapeLayer({
         id: 'test-layer',
         mapId,
         data: [shape],
         selectedShapeId: shape.id,
+        showHighlight: true,
         showLabels: 'never',
       });
 
@@ -178,6 +179,53 @@ describe('DisplayShapeLayer', () => {
     });
 
     it('does not render highlight layer when selectedShapeId does not match any shape', () => {
+      const shape = polygonFixture;
+      const layer = new DisplayShapeLayer({
+        id: 'test-layer',
+        mapId,
+        data: [shape],
+        selectedShapeId: 'non-existent-id',
+        showLabels: 'never',
+      });
+
+      initializeLayerWithState(layer);
+
+      const sublayers = layer.renderLayers();
+
+      // Should have only 1 layer: main
+      expect(sublayers.length).toBe(1);
+      expect(sublayers[0].id).toBe(`test-layer-${SHAPE_LAYER_IDS.DISPLAY}`);
+    });
+
+    it('renders select layer when selectedShapeId is provided', () => {
+      const shape = polygonFixture;
+      const layer = new DisplayShapeLayer({
+        id: 'test-layer',
+        mapId,
+        data: [shape],
+        selectedShapeId: shape.id,
+        showLabels: 'never',
+      });
+
+      initializeLayerWithState(layer);
+
+      const sublayers = layer.renderLayers();
+
+      // Should have 2 layers: select layer + main
+      expect(sublayers.length).toBe(2);
+
+      const selectLayer = sublayers.find(
+        (l) => l.id === `test-layer-${SHAPE_LAYER_IDS.DISPLAY_SELECTION}`,
+      );
+      const mainLayer = sublayers.find(
+        (l) => l.id === `test-layer-${SHAPE_LAYER_IDS.DISPLAY}`,
+      );
+
+      expect(selectLayer).toBeInstanceOf(GeoJsonLayer);
+      expect(mainLayer).toBeInstanceOf(GeoJsonLayer);
+    });
+
+    it('does not render select layer when selectedShapeId does not match any shape', () => {
       const shape = polygonFixture;
       const layer = new DisplayShapeLayer({
         id: 'test-layer',
@@ -346,14 +394,14 @@ describe('DisplayShapeLayer', () => {
       initializeLayerWithState(layer);
       layer.renderLayers();
 
-      // Simulate click from highlight layer (should be ignored)
+      // Simulate click from select layer (should be ignored)
       layer.getPickingInfo({
         info: {
           object: { properties: { shapeId: shape.id } },
           index: 0,
         } as never,
         mode: 'query',
-        sourceLayer: { id: `test-layer-${SHAPE_LAYER_IDS.DISPLAY_HIGHLIGHT}` },
+        sourceLayer: { id: `test-layer-${SHAPE_LAYER_IDS.DISPLAY_SELECTION}` },
       });
 
       expect(selectedSpy).not.toHaveBeenCalled();
@@ -621,19 +669,25 @@ describe('DisplayShapeLayer', () => {
 
       expect(layer.props.pickable).toBe(true);
       expect(layer.props.showLabels).toBe('always');
+      expect(layer.props.highlightColor).toEqual([40, 245, 190, 100]);
     });
 
     it('allows overriding default props', () => {
+      const customHighlight: [number, number, number, number] = [
+        255, 0, 0, 200,
+      ];
       const layer = new DisplayShapeLayer({
         id: 'test-layer',
         mapId,
         data: [],
         pickable: false,
         showLabels: 'never',
+        highlightColor: customHighlight,
       });
 
       expect(layer.props.pickable).toBe(false);
       expect(layer.props.showLabels).toBe('never');
+      expect(layer.props.highlightColor).toEqual(customHighlight);
     });
   });
 
@@ -954,6 +1008,51 @@ describe('DisplayShapeLayer', () => {
       });
     });
 
+    describe('highlight layer', () => {
+      it('skips highlight for elevated polygon when enableElevation is true', () => {
+        const layer = new DisplayShapeLayer({
+          id: 'test-layer',
+          mapId,
+          data: [elevatedPolygon],
+          selectedShapeId: elevatedPolygon.id,
+          showHighlight: true,
+          showLabels: 'never',
+          enableElevation: true,
+        });
+
+        initializeLayerWithState(layer);
+        const sublayers = layer.renderLayers();
+
+        const highlightLayer = sublayers.find(
+          (l) => l.id === `test-layer-${SHAPE_LAYER_IDS.DISPLAY_HIGHLIGHT}`,
+        );
+
+        expect(highlightLayer).toBeUndefined();
+      });
+
+      it('renders highlight for non-elevated shape when enableElevation is true', () => {
+        const shape = polygonFixture;
+        const layer = new DisplayShapeLayer({
+          id: 'test-layer',
+          mapId,
+          data: [shape],
+          selectedShapeId: shape.id,
+          showHighlight: true,
+          showLabels: 'never',
+          enableElevation: true,
+        });
+
+        initializeLayerWithState(layer);
+        const sublayers = layer.renderLayers();
+
+        const highlightLayer = sublayers.find(
+          (l) => l.id === `test-layer-${SHAPE_LAYER_IDS.DISPLAY_HIGHLIGHT}`,
+        );
+
+        expect(highlightLayer).toBeInstanceOf(GeoJsonLayer);
+      });
+    });
+
     describe('select layer', () => {
       it('renders select layer for elevated polygon when enableElevation is true', () => {
         const layer = new DisplayShapeLayer({
@@ -969,7 +1068,7 @@ describe('DisplayShapeLayer', () => {
         const sublayers = layer.renderLayers();
 
         const selectLayer = sublayers.find(
-          (l) => l.id === `test-layer-${SHAPE_LAYER_IDS.DISPLAY_HIGHLIGHT}`,
+          (l) => l.id === `test-layer-${SHAPE_LAYER_IDS.DISPLAY_SELECTION}`,
         );
 
         expect(selectLayer).toBeInstanceOf(GeoJsonLayer);
@@ -990,7 +1089,7 @@ describe('DisplayShapeLayer', () => {
         const sublayers = layer.renderLayers();
 
         const selectLayer = sublayers.find(
-          (l) => l.id === `test-layer-${SHAPE_LAYER_IDS.DISPLAY_HIGHLIGHT}`,
+          (l) => l.id === `test-layer-${SHAPE_LAYER_IDS.DISPLAY_SELECTION}`,
         );
 
         expect(selectLayer).toBeInstanceOf(GeoJsonLayer);

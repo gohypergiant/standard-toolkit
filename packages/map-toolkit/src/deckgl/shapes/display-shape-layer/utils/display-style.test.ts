@@ -23,6 +23,8 @@ import {
   applyOverlayOpacity,
   brightenColor,
   getHoverLineWidth,
+  getHighlightColor,
+  getHighlightLineWidth,
   getOverlayFillColor,
 } from './display-style';
 import type { StyledFeature } from '../../shared/types';
@@ -228,6 +230,68 @@ describe('Display Style Utilities', () => {
 
       expect(getHoverLineWidth(feature, true)).toBe(width + 2);
       expect(getHoverLineWidth(feature, false)).toBe(width);
+    });
+  });
+
+  describe('getHighlightColor', () => {
+    it('returns default highlight color from DEFAULT_COLORS when no opacity provided', () => {
+      const result = getHighlightColor();
+
+      // DEFAULT_COLORS.highlight is [40, 245, 190, 100]
+      expect(result).toEqual([40, 245, 190, 100]);
+    });
+
+    it('applies custom opacity override', () => {
+      const result = getHighlightColor(0.5);
+
+      const expectedOpacity = Math.round(0.5 * 255);
+      expect(result).toEqual([40, 245, 190, expectedOpacity]);
+    });
+
+    it('handles full opacity', () => {
+      const result = getHighlightColor(1.0);
+
+      expect(result).toEqual([40, 245, 190, 255]);
+    });
+
+    it('handles zero opacity', () => {
+      const result = getHighlightColor(0);
+
+      expect(result).toEqual([40, 245, 190, 0]);
+    });
+  });
+
+  describe('getHighlightLineWidth', () => {
+    it('increases base width by HIGHLIGHT_WIDTH_INCREASE (5)', () => {
+      const feature = createStyledFeature({ lineWidth: 4 });
+
+      const result = getHighlightLineWidth(feature);
+
+      expect(result).toBe(9);
+    });
+
+    it.each([
+      { width: 1, expected: 6 },
+      { width: 2, expected: 7 },
+      { width: 4, expected: 9 },
+      { width: 8, expected: 13 },
+    ])('returns $expected for base width $width', ({ width, expected }) => {
+      const feature = createStyledFeature({ lineWidth: width });
+
+      expect(getHighlightLineWidth(feature)).toBe(expected);
+    });
+
+    it('uses default width when not provided', () => {
+      const feature: StyledFeature = {
+        type: 'Feature',
+        properties: {} as StyledFeature['properties'],
+        geometry: { type: 'Point', coordinates: [0, 0] },
+      };
+
+      const result = getHighlightLineWidth(feature);
+
+      // DEFAULT_LINE_WIDTH (2) + HIGHLIGHT_WIDTH_INCREASE (5) = 7
+      expect(result).toBe(7);
     });
   });
 

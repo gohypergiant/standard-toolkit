@@ -12,6 +12,7 @@
 
 'use client';
 import { PathStyleExtension } from '@deck.gl/extensions';
+import { DEFAULT_COLORS } from '../shared/constants';
 
 /**
  * Map interaction constants.
@@ -53,7 +54,9 @@ export const COFFIN_CORNERS = {
 export const DEFAULT_DISPLAY_PROPS = {
   pickable: true,
   showLabels: 'always' as const,
+  showHighlight: false,
   applyBaseOpacity: true,
+  highlightColor: DEFAULT_COLORS.highlight,
 };
 
 /**
@@ -105,3 +108,8 @@ export const OVERLAY_FILL_OPACITY = 0.25;
 
 /** Reusable deck.gl PathStyleExtension enabling dash patterns on GeoJsonLayer lines. */
 export const DASH_EXTENSION = [new PathStyleExtension({ dash: true })];
+
+/** Mutable [r, g, b, a] tuple of DEFAULT_COLORS.highlight, pre-spread at module load for hot-path usage. */
+export const HIGHLIGHT_COLOR_TUPLE: [number, number, number, number] = [
+  ...DEFAULT_COLORS.highlight,
+] as [number, number, number, number];

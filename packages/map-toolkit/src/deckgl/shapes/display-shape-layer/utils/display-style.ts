@@ -12,8 +12,16 @@
 
 'use client';
 
-import { HOVER_WIDTH_INCREASE } from '../../shared/constants';
-import { getFillColor, getLineWidth } from '../../shared/utils/style-utils';
+import {
+  DEFAULT_COLORS,
+  HIGHLIGHT_WIDTH_INCREASE,
+  HOVER_WIDTH_INCREASE,
+} from '../../shared/constants';
+import {
+  getFillColor,
+  getLineWidth,
+  normalizeColor,
+} from '../../shared/utils/style-utils';
 import { OVERLAY_FILL_OPACITY } from '../constants';
 import type { StyledFeature } from '../../shared/types';
 
@@ -26,6 +34,19 @@ import type { StyledFeature } from '../../shared/types';
  * @param feature - The styled feature to calculate width for
  * @param isHovered - Whether the feature is currently being hovered
  * @returns The calculated line width in pixels
+ *
+ * @example
+ * ```typescript
+ * import { getHoverLineWidth } from '@accelint/map-toolkit/deckgl/shapes/display-shape-layer/utils/display-style';
+ * import type { StyledFeature } from '@accelint/map-toolkit/deckgl/shapes/shared/types';
+ *
+ * const feature: StyledFeature = {
+ *   properties: { styleProperties: { lineWidth: 2 } }
+ * };
+ *
+ * const width = getHoverLineWidth(feature, true);
+ * // Returns: 2 + HOVER_WIDTH_INCREASE (typically 4 pixels total)
+ * ```
  */
 export function getHoverLineWidth(
   feature: StyledFeature,
@@ -33,6 +54,67 @@ export function getHoverLineWidth(
 ): number {
   const baseWidth = getLineWidth(feature);
   return isHovered ? baseWidth + HOVER_WIDTH_INCREASE : baseWidth;
+}
+
+/**
+ * Get selection highlight color.
+ *
+ * Returns the default highlight color with optional custom opacity override.
+ * The highlight color is used to indicate selected features on the map.
+ *
+ * @param opacity - Optional opacity value (0-1 range), overrides default opacity
+ * @returns RGBA color array [red, green, blue, alpha] with values 0-255
+ *
+ * @example
+ * ```typescript
+ * import { getHighlightColor } from '@accelint/map-toolkit/deckgl/shapes/display-shape-layer/utils/display-style';
+ *
+ * // Use default highlight color with default opacity
+ * const defaultColor = getHighlightColor();
+ * // Returns: [r, g, b, a] from DEFAULT_COLORS.highlight
+ *
+ * // Use custom opacity (50% transparent)
+ * const semiTransparent = getHighlightColor(0.5);
+ * // Returns: [r, g, b, 127]
+ * ```
+ */
+export function getHighlightColor(
+  opacity?: number,
+): [number, number, number, number] {
+  const rgba = normalizeColor(DEFAULT_COLORS.highlight);
+
+  if (opacity !== undefined) {
+    return [rgba[0], rgba[1], rgba[2], Math.round(opacity * 255)];
+  }
+
+  return rgba;
+}
+
+/**
+ * Get highlight border/outline width.
+ *
+ * Calculates the line width for a selected/highlighted feature by adding a fixed
+ * pixel increase to the base width. This makes selected features more prominent.
+ *
+ * @param feature - The styled feature to calculate width for
+ * @returns The calculated line width in pixels (base width + HIGHLIGHT_WIDTH_INCREASE)
+ *
+ * @example
+ * ```typescript
+ * import { getHighlightLineWidth } from '@accelint/map-toolkit/deckgl/shapes/display-shape-layer/utils/display-style';
+ * import type { StyledFeature } from '@accelint/map-toolkit/deckgl/shapes/shared/types';
+ *
+ * const feature: StyledFeature = {
+ *   properties: { styleProperties: { lineWidth: 2 } }
+ * };
+ *
+ * const width = getHighlightLineWidth(feature);
+ * // Returns: 2 + HIGHLIGHT_WIDTH_INCREASE (typically 5 pixels total)
+ * ```
+ */
+export function getHighlightLineWidth(feature: StyledFeature): number {
+  const baseWidth = getLineWidth(feature);
+  return baseWidth + HIGHLIGHT_WIDTH_INCREASE;
 }
 
 /**

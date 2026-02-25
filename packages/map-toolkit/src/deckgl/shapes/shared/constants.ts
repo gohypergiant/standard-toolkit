@@ -23,6 +23,7 @@ export const SHAPE_LAYER_IDS = {
   DISPLAY: 'DISPLAY_SHAPES',
   DISPLAY_HIGHLIGHT: 'DISPLAY_SHAPES::Highlight',
   DISPLAY_LABELS: 'DISPLAY_SHAPES::Labels',
+  DISPLAY_SELECTION: 'DISPLAY_SHAPES::Selection',
 } as const;
 
 /**
@@ -67,8 +68,8 @@ export const DEFAULT_COLORS = {
   fill: [255, 255, 255, 255] as Color,
   /** Default border/outline color (outline-interactive-hover: #888a8f) */
   line: [136, 138, 143, 255] as Color,
-  /** Highlight/selection color (turquoise) */
-  highlight: [40, 245, 190, 255] as Color,
+  /** Highlight/selection color (turquoise at ~39% alpha) */
+  highlight: [40, 245, 190, 100] as Color,
 } as const;
 
 /**
