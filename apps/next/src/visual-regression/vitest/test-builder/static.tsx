@@ -133,7 +133,6 @@ export function createVisualTestScenarios(
     for (const scenario of scenarios) {
       for (const mode of THEME_MODES) {
         const filename = insertModeInFilename(scenario.screenshotName, mode);
-
         test(`${scenario.name} (${mode} mode)`, async () => {
           const testIdValue = `vrt-scenario-${dash(scenario.name)}`;
 
