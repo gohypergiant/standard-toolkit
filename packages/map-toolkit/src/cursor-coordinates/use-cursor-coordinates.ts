@@ -11,7 +11,6 @@
  */
 'use client';
 
-import type { UniqueId } from '@accelint/core';
 import {
   coordinateSystems,
   createCoordinate,
@@ -20,6 +19,7 @@ import {
   formatDegreesMinutesSeconds,
 } from '@accelint/geo';
 import { getLogger } from '@accelint/logger';
+import type { UniqueId } from '@accelint/core';
 import 'client-only';
 import { useContext, useMemo } from 'react';
 import { MapContext } from '../deckgl/base-map/provider';

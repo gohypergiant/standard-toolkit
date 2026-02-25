@@ -12,6 +12,7 @@
 
 import { ThemeProvider } from '@accelint/design-toolkit';
 import { getLogger } from '@accelint/logger';
+import clsx from 'clsx';
 import { dash } from 'radashi';
 import { describe, expect, test } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
@@ -36,10 +37,11 @@ const logger = getLogger({
 });
 
 const FOCUSABLE_SELECTOR =
-  'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+  'button, [href], input, select, textarea, [tabindex]';
 
 /**
- * Find the first focusable element within a container
+ * Find the first focusable element within a container.
+ * Includes [tabindex="-1"] because programmatic .focus() works on those elements.
  */
 function findFocusableElement(container: Element): HTMLElement | null {
   // Check if container itself is focusable
@@ -74,7 +76,7 @@ async function triggerState(
       // Find the actual focusable element within the container
       const focusTarget = findFocusableElement(element);
       if (focusTarget) {
-        focusTarget.focus();
+        focusTarget.focus({ focusVisible: true });
       } else {
         logger.warn(
           `No focusable element found for focus state. Element: ${element.tagName}${element.id ? `#${element.id}` : ''}`,
@@ -83,18 +85,13 @@ async function triggerState(
       break;
     }
     case 'pressed': {
-      // Dispatch mousedown to trigger :active state
-      const isInteractive = element.matches(
-        'button, a, input, [role="button"], [tabindex]',
-      );
-      if (!isInteractive) {
-        logger.warn(
-          `Pressed state triggered on potentially non-interactive element: ${element.tagName}${element.id ? `#${element.id}` : ''}`,
-        );
+      // Set data-pressed directly: vitest browser mode has no mouseDown() API,
+      // and react-aria's usePress ignores untrusted synthetic events.
+      // The pressed CSS variant matches [data-pressed], so this produces
+      // identical visual output to a real press interaction.
+      if (element instanceof HTMLElement) {
+        element.setAttribute('data-pressed', 'true');
       }
-      element.dispatchEvent(
-        new MouseEvent('mousedown', { bubbles: true, cancelable: true }),
-      );
       break;
     }
     case 'default':
@@ -122,10 +119,10 @@ async function waitForPaint(): Promise<void> {
 async function resetState(): Promise<void> {
   // Move mouse to body to clear hover
   await userEvent.hover(document.body);
-  // Release any mouse buttons
-  document.body.dispatchEvent(
-    new MouseEvent('mouseup', { bubbles: true, cancelable: true }),
-  );
+  // Clean up any manually-set data-pressed attributes
+  for (const el of document.querySelectorAll('[data-pressed]')) {
+    el.removeAttribute('data-pressed');
+  }
   // Blur active element
   if (document.activeElement instanceof HTMLElement) {
     document.activeElement.blur();
@@ -146,6 +143,8 @@ interface StateTestContext<TProps> {
   testId?: string;
   beforeEach?: () => Promise<void> | void;
   screenshotName?: (variantId: string, state: InteractiveState) => string;
+  className?: string;
+  interactionTarget?: string;
 }
 
 /**
@@ -188,20 +187,22 @@ async function runStateTest<TProps>(
 
   const testIdValue = ctx.testId ?? `test-${dash(ctx.componentName)}`;
 
-  const { container } = render(
+  render(
     <ThemeProvider defaultMode={ctx.mode}>
-      <div data-testid={testIdValue} className='inline-block'>
+      <div data-testid={testIdValue} className={clsx('inline-block', ctx.className)}>
         {ctx.renderComponent(props)}
       </div>
     </ThemeProvider>,
   );
 
-  container.style.padding = '24px';
-
   const locator = page.getByTestId(testIdValue);
   const element = locator.element();
 
-  await triggerState(element, ctx.state);
+  const interactionElement = ctx.interactionTarget
+    ? element.querySelector(ctx.interactionTarget) ?? element
+    : element;
+
+  await triggerState(interactionElement, ctx.state);
 
   const filename = ctx.screenshotName
     ? insertModeInFilename(
@@ -251,6 +252,8 @@ export function createInteractiveVisualTests<TProps>(
     testId,
     beforeEach: customBeforeEach,
     screenshotName,
+    className,
+    interactionTarget,
   } = config;
 
   describe(`${componentName} Interactive States`, () => {
@@ -279,6 +282,8 @@ export function createInteractiveVisualTests<TProps>(
                   testId,
                   beforeEach: customBeforeEach,
                   screenshotName,
+                  className,
+                  interactionTarget,
                 }));
             }
           });

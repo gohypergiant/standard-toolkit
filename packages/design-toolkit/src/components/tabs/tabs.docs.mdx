@@ -50,11 +50,13 @@ Tab navigation for organizing content into multiple sections.
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `selectedKey` | `Key` | — | Controlled selected tab key |
+| `align` | `'start' \| 'center' \| 'end'` | `'start'` | — | Determines content alignment within Tab (only applicable when orientation is horizontal) |
 | `defaultSelectedKey` | `Key` | — | Initial selected tab key |
-| `onSelectionChange` | `(key: Key) => void` | — | Callback when selection changes |
+| `flex` | `boolean` | true | Causes tab size to grow up to a max width (only applicable when orientation is horizontal) |
 | `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | Tab orientation |
+| `selectedKey` | `Key` | — | Controlled selected tab key |
 | `isDisabled` | `boolean` | — | Disable all tabs |
+| `onSelectionChange` | `(key: Key) => void` | — | Callback when selection changes |
 | `children` | `ReactNode` | — | TabList and TabPanel components |
 
 Extends React Aria [Tabs](https://react-spectrum.adobe.com/react-aria/Tabs.html) props.
@@ -71,8 +73,10 @@ Extends React Aria [Tabs](https://react-spectrum.adobe.com/react-aria/Tabs.html)
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `id` | `Key` | — | Unique identifier matching a TabPanel |
-| `children` | `ReactNode` | — | Tab content (text or icon) |
+| `align` | `'start' \| 'center' \| 'end'` | `'start'` | — | Determines content alignment within Tab |
+| `flex` | `boolean` | true | Causes tab size to grow up to a max width |
 | `isDisabled` | `boolean` | — | Whether the tab is disabled |
+| `children` | `ReactNode` | — | Tab content (text or icon) |
 
 ### TabPanel
 
