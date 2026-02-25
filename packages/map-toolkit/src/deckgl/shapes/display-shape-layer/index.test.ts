@@ -164,17 +164,21 @@ describe('DisplayShapeLayer', () => {
 
       const sublayers = layer.renderLayers();
 
-      // Should have 2 layers: highlight + main
-      expect(sublayers.length).toBe(2);
+      // Should have 3 layers: highlight + select + main
+      expect(sublayers.length).toBe(3);
 
       const highlightLayer = sublayers.find(
         (l) => l.id === `test-layer-${SHAPE_LAYER_IDS.DISPLAY_HIGHLIGHT}`,
+      );
+      const selectLayer = sublayers.find(
+        (l) => l.id === `test-layer-${SHAPE_LAYER_IDS.DISPLAY_SELECTION}`,
       );
       const mainLayer = sublayers.find(
         (l) => l.id === `test-layer-${SHAPE_LAYER_IDS.DISPLAY}`,
       );
 
       expect(highlightLayer).toBeInstanceOf(GeoJsonLayer);
+      expect(selectLayer).toBeInstanceOf(GeoJsonLayer);
       expect(mainLayer).toBeInstanceOf(GeoJsonLayer);
     });
 
