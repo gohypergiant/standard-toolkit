@@ -77,6 +77,14 @@ export function getElevationFromCoordinates(coordinates: unknown): number {
  * ```
  */
 export function getFeatureElevation(feature: Shape['feature']): number {
+  // Prefer explicit maxElevation from feature properties (set at data creation time).
+  // This avoids needing to drill into coordinates and is the source of truth for
+  // Z-stripped polygons where coordinate Z has been removed.
+  const maxElevation = feature.properties?.maxElevation;
+  if (maxElevation !== undefined) {
+    return maxElevation;
+  }
+
   const { geometry } = feature;
 
   if (!geometry) {
@@ -423,24 +431,29 @@ export function createCurtainPolygonFeatures(
 /**
  * Returns a copy of a feature with Z coordinates stripped from its geometry.
  *
- * LineStrings and MultiLineStrings have elevation baked into their coordinates
- * as the Z component. When rendered by GeoJsonLayer, those Z values position
- * the path in 3D space. Use this to project a feature back to the ground plane
- * (e.g. for the highlight outline layer, which should always render at ground).
- *
- * Polygon features are unaffected — deck.gl reads their elevation via the
- * `getElevation` accessor, not from geometry coordinates.
+ * Use this to project a feature back to the ground plane. Common use cases:
+ * - Highlight outlines that should render at ground level
+ * - Extruded polygons where elevation must come solely from `getElevation`,
+ *   not from coordinate Z (deck.gl's SolidPolygonLayer adds both together)
  *
  * @param feature - The feature to flatten
- * @returns A new feature with 2D coordinates, or the original if no Z present
+ * @returns A new feature with 2D coordinates, or the original if geometry
+ *   type is not handled (Point, MultiPoint, GeometryCollection)
  *
  * @example
  * ```typescript
  * // Elevated LineString [lon, lat, 20000] → [lon, lat]
  * const flat = flattenFeatureTo2D(elevatedLineStringFeature);
  * // flat.geometry.coordinates: [[lon, lat], [lon, lat], ...]
+ *
+ * // Elevated Polygon [lon, lat, 43500] → [lon, lat]
+ * const flat = flattenFeatureTo2D(elevatedPolygonFeature);
+ * // flat.geometry.coordinates: [[[lon, lat], [lon, lat], ...]]
  * ```
  */
+
+const stripZ = ([lon, lat]: number[]) => [lon, lat] as [number, number];
+
 export function flattenFeatureTo2D(
   feature: Shape['feature'],
 ): Shape['feature'] {
@@ -450,19 +463,28 @@ export function flattenFeatureTo2D(
       ...feature,
       geometry: {
         ...geometry,
-        coordinates: (geometry.coordinates as number[][]).map(
-          ([lon, lat]) => [lon, lat] as [number, number],
-        ),
+        coordinates: (geometry.coordinates as number[][]).map(stripZ),
       },
     };
   }
-  if (geometry.type === 'MultiLineString') {
+  if (geometry.type === 'MultiLineString' || geometry.type === 'Polygon') {
     return {
       ...feature,
       geometry: {
         ...geometry,
-        coordinates: (geometry.coordinates as number[][][]).map((line) =>
-          line.map(([lon, lat]) => [lon, lat] as [number, number]),
+        coordinates: (geometry.coordinates as number[][][]).map((ring) =>
+          ring.map(stripZ),
+        ),
+      },
+    };
+  }
+  if (geometry.type === 'MultiPolygon') {
+    return {
+      ...feature,
+      geometry: {
+        ...geometry,
+        coordinates: (geometry.coordinates as number[][][][]).map((polygon) =>
+          polygon.map((ring) => ring.map(stripZ)),
         ),
       },
     };

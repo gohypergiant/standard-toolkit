@@ -155,6 +155,10 @@ export type StyledFeatureProperties = {
   circleProperties?: CircleProperties;
   /** Ellipse properties (present for Ellipse shapes) */
   ellipseProperties?: EllipseProperties;
+  /** Minimum elevation in meters (optional) */
+  minElevation?: number;
+  /** Maximum elevation in meters (optional) */
+  maxElevation?: number;
 };
 
 /**

@@ -127,6 +127,33 @@ describe('Elevation Utilities', () => {
 
       expect(getFeatureElevation(feature)).toBe(0);
     });
+
+    it('returns maxElevation when present in properties', () => {
+      const feature = createFeature({
+        type: 'Polygon',
+        coordinates: [
+          [
+            [0, 0],
+            [1, 0],
+            [1, 1],
+            [0, 0],
+          ],
+        ],
+      });
+      (feature.properties as Record<string, unknown>).maxElevation = 43500;
+
+      expect(getFeatureElevation(feature)).toBe(43500);
+    });
+
+    it('prefers maxElevation over coordinate Z', () => {
+      const feature = createFeature({
+        type: 'Point',
+        coordinates: [10, 20, 5000],
+      });
+      (feature.properties as Record<string, unknown>).maxElevation = 99999;
+
+      expect(getFeatureElevation(feature)).toBe(99999);
+    });
   });
 
   describe('createElevationLineSegments', () => {
@@ -494,7 +521,7 @@ describe('Elevation Utilities', () => {
       ]);
     });
 
-    it('returns same reference for Polygon (unaffected)', () => {
+    it('strips Z from Polygon coordinates', () => {
       const feature = createFeature({
         type: 'Polygon',
         coordinates: [
@@ -509,7 +536,18 @@ describe('Elevation Utilities', () => {
 
       const result = flattenFeatureTo2D(feature);
 
-      expect(result).toBe(feature);
+      expect(result).not.toBe(feature);
+      expect(result.geometry.type).toBe('Polygon');
+      const coords = (result.geometry as { coordinates: number[][][] })
+        .coordinates;
+      expect(coords).toEqual([
+        [
+          [0, 0],
+          [1, 0],
+          [1, 1],
+          [0, 0],
+        ],
+      ]);
     });
 
     it('returns same reference for Point (unaffected)', () => {

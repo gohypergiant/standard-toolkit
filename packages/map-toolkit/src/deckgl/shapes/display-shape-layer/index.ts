@@ -382,13 +382,25 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
     const normalizedLineColors: [number, number, number, number][] = [];
 
     for (const [i, shape] of data.entries()) {
-      features.push({
+      let feature: Shape['feature'] = {
         ...shape.feature,
         properties: {
           ...shape.feature.properties,
           shapeId: shape.id,
         },
-      });
+      };
+
+      // For polygon geometries with elevation: strip Z coordinates to prevent
+      // deck.gl double-counting (SolidPolygonLayer adds coordinate Z + getElevation).
+      // The feature's maxElevation property is the source of truth for getFeatureElevation.
+      if (
+        isPolygonGeometry(feature.geometry.type) &&
+        getFeatureElevation(feature) > 0
+      ) {
+        feature = flattenFeatureTo2D(feature);
+      }
+
+      features.push(feature);
       shapeIdToIndex.set(shape.id, i);
       normalizedLineColors.push(getLineColor(shape.feature));
     }

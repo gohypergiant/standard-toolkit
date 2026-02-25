@@ -530,23 +530,23 @@ When `pickable={true}`, shapes show hover feedback:
 
 ## 3D Elevation Rendering
 
-Shapes with elevation coordinates render as 3D objects when `enableElevation` is true. Elevation is encoded as the third value in GeoJSON coordinate arrays, in meters above mean sea level (MSL).
+Shapes with elevation render as 3D objects when `enableElevation` is true. Elevation is specified in meters above mean sea level (MSL).
 
 ### How It Works
 
-Set `enableElevation={true}` to activate 3D rendering. When disabled (the default), shapes render flat regardless of their elevation coordinates.
+Set `enableElevation={true}` to activate 3D rendering. When disabled (the default), shapes render flat regardless of their elevation data.
 
 Each geometry type gets a different 3D treatment:
 
-| Geometry | 3D Behavior |
-|----------|-------------|
-| **Polygon / Rectangle / Circle / Ellipse** | Extruded upward from the ground to the shape's elevation |
-| **LineString** | Filled curtain walls drop from the line down to the ground |
-| **Point** | Vertical indicator line from the ground up to the point |
+| Geometry | Elevation Source | 3D Behavior |
+|----------|-----------------|-------------|
+| **Polygon / Rectangle / Circle / Ellipse** | `maxElevation` property on `StyledFeatureProperties` | Extruded upward from the ground to `maxElevation`. Z coordinates in geometry are ignored. |
+| **LineString** | Per-vertex Z coordinates | Filled curtain walls drop from the line down to the ground |
+| **Point** | Z coordinate | Vertical indicator line drops from the point down to the ground |
 
-### Elevation Coordinates
+### Elevation Data
 
-Add elevation as the third coordinate value (meters MSL):
+For **Points** and **LineStrings**, elevation is encoded as the third value in GeoJSON coordinate arrays. For **polygon-type shapes** (Polygon, Rectangle, Circle, Ellipse), elevation is specified via the optional `minElevation` and `maxElevation` properties on `StyledFeatureProperties`:
 
 ```tsx
 // Point at 1500m elevation
@@ -572,7 +572,7 @@ const line = {
   // ...
 };
 
-// Polygon at 22500m elevation (all vertices share the same elevation)
+// Polygon at 22500m elevation via maxElevation (Z coordinates optional)
 const polygon = {
   type: 'Feature',
   geometry: {
@@ -585,7 +585,10 @@ const polygon = {
       [-118.3, 34.0, 22500],
     ]],
   },
-  // ...
+  properties: {
+    styleProperties: { /* ... */ },
+    maxElevation: 22500,
+  },
 };
 ```
 
