@@ -10,9 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-'use client';
-
 import { ClassificationBanner } from '@accelint/design-toolkit';
+import 'server-only';
 import { BentoItem } from '~/components/bento';
 import { PROP_COMBOS } from './variants';
 
@@ -24,6 +23,6 @@ function PropCombos() {
   ));
 }
 
-export function ClassificationBannerClientExample() {
+export function ClassificationBannerServerExample() {
   return <PropCombos />;
 }

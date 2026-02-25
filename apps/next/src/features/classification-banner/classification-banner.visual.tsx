@@ -12,12 +12,12 @@
 
 import { BentoGroup } from '~/components/bento';
 import { createVisualTests } from '~/visual-regression/vitest';
-import { ClassificationBannerClientExample } from './client';
+import { ClassificationBannerServerExample } from './server';
 
 function ClassificationBannerVariants() {
   return (
     <BentoGroup>
-      <ClassificationBannerClientExample />
+      <ClassificationBannerServerExample />
     </BentoGroup>
   );
 }

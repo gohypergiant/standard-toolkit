@@ -11,15 +11,15 @@
  */
 
 import 'server-only';
-import { ClassificationBannerClientExample } from './client';
 import { ErrorComponent } from './error';
 import { LoadingComponent } from './loading';
+import { ClassificationBannerServerExample } from './server';
 
 export function ClassificationBannerExample() {
   return (
     <ErrorComponent>
       <LoadingComponent>
-        <ClassificationBannerClientExample />
+        <ClassificationBannerServerExample />
       </LoadingComponent>
     </ErrorComponent>
   );
