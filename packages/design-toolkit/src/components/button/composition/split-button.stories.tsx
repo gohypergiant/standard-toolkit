@@ -15,6 +15,8 @@ import { Menu } from '@/components/menu';
 import { MenuItem } from '@/components/menu/item';
 import { MenuItemLabel } from '@/components/menu/item-label';
 import { MenuTrigger } from '@/components/menu/trigger';
+import { Tooltip } from '@/components/tooltip';
+import { TooltipTrigger } from '@/components/tooltip/trigger';
 import { ChevronDown, Placeholder } from '@accelint/icons';
 import type { StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
@@ -30,7 +32,7 @@ type StoryArgs = {
 
 const meta = {
   title: 'Components/Button/Composition/Split Button',
-  tags: ['!autodocs'], // what this do
+  tags: ['!autodocs'],
   args: {
     buttonColor: 'mono-muted',
   },
@@ -53,8 +55,10 @@ const chevronStyle = (isOpen: boolean) => ({
   transition: 'transform 150ms',
 });
 
-const monoBoldStyle =
-  'color-mono-bold:hover:bg-interactive-bold color-mono-bold:focus-visible:bg-interactive-bold color-mono-bold:hover:fg-inverse-muted color-mono-bold:focus-visible:fg-inverse-muted';
+const monoBoldStyle = (isDisabled: boolean) =>
+  isDisabled
+    ? ''
+    : 'color-mono-bold:hover:bg-interactive-bold color-mono-bold:focus-visible:bg-interactive-bold color-mono-bold:hover:fg-inverse-muted color-mono-bold:focus-visible:fg-inverse-muted';
 
 export const Default: Story = {
   render: (args) => {
@@ -68,16 +72,25 @@ export const Default: Story = {
           </Icon>
         </Button>
         <MenuTrigger onOpenChange={setIsOpen}>
-          <Button
-            className={clsx(monoBoldStyle, 'w-[12px] min-w-[12px] p-0')}
-            variant='flat'
-            color={args.buttonColor}
-            isDisabled={args.isDisabled}
-          >
-            <Icon style={chevronStyle(isOpen)} className='flex h-full w-[12px]'>
-              <ChevronDown />
-            </Icon>
-          </Button>
+          <TooltipTrigger>
+            <Button
+              className={clsx(
+                monoBoldStyle(args.isDisabled),
+                'w-[12px] min-w-[12px] p-0',
+              )}
+              variant='flat'
+              color={args.buttonColor}
+              isDisabled={args.isDisabled}
+            >
+              <Icon
+                style={chevronStyle(isOpen)}
+                className='flex h-full w-[12px]'
+              >
+                <ChevronDown />
+              </Icon>
+            </Button>
+            <Tooltip>Tool label</Tooltip>
+          </TooltipTrigger>
           <Menu variant={args.menuVariant}>
             <MenuItem id='option-1'>
               <MenuItemLabel>Option 1</MenuItemLabel>
