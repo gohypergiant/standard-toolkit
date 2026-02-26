@@ -12,7 +12,7 @@
 
 import { ThemeProvider } from '@accelint/design-toolkit';
 import { getLogger } from '@accelint/logger';
-import clsx from 'clsx';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { dash } from 'radashi';
 import { describe, expect, test } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
@@ -80,7 +80,7 @@ async function triggerState(
       // Find the actual focusable element within the container
       const focusTarget = findFocusableElement(element);
       if (focusTarget) {
-        focusTarget.focus({ focusVisible: true });
+        focusTarget.focus();
       } else {
         logger.warn(
           `No focusable element found for focus state. Element: ${element.tagName}${element.id ? `#${element.id}` : ''}`,
