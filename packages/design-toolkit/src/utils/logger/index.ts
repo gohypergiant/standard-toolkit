@@ -1,3 +1,4 @@
+// __private-exports
 /*
  * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -10,7 +11,6 @@
  * governing permissions and limitations under the License.
  */
 
-// __private-exports
 import { bootstrap, type LogLevel } from '@accelint/logger';
 
 // NOTE: we don't want to use the singleton variant getLogger to
