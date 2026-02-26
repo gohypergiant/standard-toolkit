@@ -61,7 +61,11 @@ import type { Shape, ShapeId } from '../shared/types';
 import type {
   CurtainFeature,
   DisplayShapeLayerProps,
+  DisplayShapeLayerState,
   ElevatedFeatureClassification,
+  ElevationCache,
+  FeaturesCache,
+  IndicatorCache,
   LineSegment,
 } from './types';
 
@@ -77,56 +81,6 @@ const logger = getLogger({
  * Provides type-safe event emission for shape interactions.
  */
 const shapeBus = Broadcast.getInstance<ShapeEvent>();
-
-/**
- * State type for DisplayShapeLayer
- */
-type DisplayShapeLayerState = {
-  /** Index of currently hovered shape, undefined when not hovering */
-  hoverIndex?: number;
-  /** ID of the last hovered shape for event deduplication */
-  lastHoveredId?: ShapeId;
-  /** Allow additional properties from base layer state */
-  [key: string]: unknown;
-};
-
-/**
- * Cache for transformed features to avoid recreating objects on every render.
- */
-type FeaturesCache = {
-  /** Reference to the original data array for identity comparison */
-  data: Shape[];
-  /** Transformed features with shapeId added to properties */
-  features: Shape['feature'][];
-  /** Map of shapeId to feature index for O(1) lookup */
-  shapeIdToIndex: Map<ShapeId, number>;
-  /** Pre-normalized line colors parallel to features, for O(1) accessor lookup */
-  normalizedLineColors: [number, number, number, number][];
-};
-
-/**
- * Cache for elevation-derived data (feature classification + curtain features).
- * Keyed on features identity and applyBaseOpacity to avoid per-frame recomputation.
- * deck.gl calls renderLayers() every frame during map interaction; without this cache,
- * curtain polygon arrays are recreated every frame, forcing deck.gl GPU buffer rebuilds.
- */
-type ElevationCache = {
-  features: Shape['feature'][];
-  applyBaseOpacity: boolean | undefined;
-  classification: ElevatedFeatureClassification;
-  curtainFeatures: CurtainFeature[];
-};
-
-/**
- * Cache for elevation indicator line segments.
- * Keyed on features, selectedShapeId, and hoverIndex since all three affect output.
- */
-type IndicatorCache = {
-  features: Shape['feature'][];
-  selectedShapeId: ShapeId | undefined;
-  hoverIndex: number | undefined;
-  lineData: LineSegment[];
-};
 
 /**
  * DisplayShapeLayer - Read-only shapes visualization layer

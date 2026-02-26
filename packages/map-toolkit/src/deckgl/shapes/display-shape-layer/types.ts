@@ -12,13 +12,10 @@
 
 import type { UniqueId } from '@accelint/core';
 import type { CompositeLayerProps } from '@deck.gl/core';
-import type {
-  Shape,
-  ShapeId,
-  StyledFeature as SharedStyledFeature,
-} from '../shared/types';
+import type { Shape, ShapeId } from '../shared/types';
 import type { LabelPositionOptions } from './utils/labels';
 
+// internal
 /**
  * A vertical curtain polygon feature for elevation visualization.
  * Used to render filled vertical surfaces from ground to elevation for LineStrings.
@@ -53,22 +50,63 @@ export type ElevatedFeatureClassification = {
 };
 
 /**
+ * State type for DisplayShapeLayer
+ */
+export type DisplayShapeLayerState = {
+  /** Index of currently hovered shape, undefined when not hovering */
+  hoverIndex?: number;
+  /** ID of the last hovered shape for event deduplication */
+  lastHoveredId?: ShapeId;
+  /** Allow additional properties from base layer state */
+  [key: string]: unknown;
+};
+
+/**
+ * Cache for transformed features to avoid recreating objects on every render.
+ */
+export type FeaturesCache = {
+  /** Reference to the original data array for identity comparison */
+  data: Shape[];
+  /** Transformed features with shapeId added to properties */
+  features: Shape['feature'][];
+  /** Map of shapeId to feature index for O(1) lookup */
+  shapeIdToIndex: Map<ShapeId, number>;
+  /** Pre-normalized line colors parallel to features, for O(1) accessor lookup */
+  normalizedLineColors: [number, number, number, number][];
+};
+
+/**
+ * Cache for elevation-derived data (feature classification + curtain features).
+ * Keyed on features identity and applyBaseOpacity to avoid per-frame recomputation.
+ * deck.gl calls renderLayers() every frame during map interaction; without this cache,
+ * curtain polygon arrays are recreated every frame, forcing deck.gl GPU buffer rebuilds.
+ */
+export type ElevationCache = {
+  features: Shape['feature'][];
+  applyBaseOpacity: boolean | undefined;
+  classification: ElevatedFeatureClassification;
+  curtainFeatures: CurtainFeature[];
+};
+
+/**
+ * Cache for elevation indicator line segments.
+ * Keyed on features, selectedShapeId, and hoverIndex since all three affect output.
+ */
+export type IndicatorCache = {
+  features: Shape['feature'][];
+  selectedShapeId: ShapeId | undefined;
+  hoverIndex: number | undefined;
+  lineData: LineSegment[];
+};
+
+// external
+/**
  * Label display mode for shapes
  * - `'always'`: Show labels for all shapes
  * - `'hover'`: Show label only for the currently hovered shape
  * - `'never'`: Never show labels
  */
 export type ShowLabelsMode = 'always' | 'hover' | 'never';
-
-/**
- * Re-export StyledFeature from shared types
- */
-export type StyledFeature = SharedStyledFeature;
-
-/**
- * Re-export StyledFeatureProperties from shared types
- */
-export type StyledFeatureProperties = SharedStyledFeature['properties'];
 
 /**
  * Props for DisplayShapeLayer
