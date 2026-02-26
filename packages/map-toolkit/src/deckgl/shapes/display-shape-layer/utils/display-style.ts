@@ -13,15 +13,10 @@
 'use client';
 
 import {
-  DEFAULT_COLORS,
   HIGHLIGHT_WIDTH_INCREASE,
   HOVER_WIDTH_INCREASE,
 } from '../../shared/constants';
-import {
-  getFillColor,
-  getLineWidth,
-  normalizeColor,
-} from '../../shared/utils/style-utils';
+import { getFillColor, getLineWidth } from '../../shared/utils/style-utils';
 import { OVERLAY_FILL_OPACITY } from '../constants';
 import type { StyledFeature } from '../../shared/types';
 
@@ -54,40 +49,6 @@ export function getHoverLineWidth(
 ): number {
   const baseWidth = getLineWidth(feature);
   return isHovered ? baseWidth + HOVER_WIDTH_INCREASE : baseWidth;
-}
-
-/**
- * Get selection highlight color.
- *
- * Returns the default highlight color with optional custom opacity override.
- * The highlight color is used to indicate selected features on the map.
- *
- * @param opacity - Optional opacity value (0-1 range), overrides default opacity
- * @returns RGBA color array [red, green, blue, alpha] with values 0-255
- *
- * @example
- * ```typescript
- * import { getHighlightColor } from '@accelint/map-toolkit/deckgl/shapes/display-shape-layer/utils/display-style';
- *
- * // Use default highlight color with default opacity
- * const defaultColor = getHighlightColor();
- * // Returns: [r, g, b, a] from DEFAULT_COLORS.highlight
- *
- * // Use custom opacity (50% transparent)
- * const semiTransparent = getHighlightColor(0.5);
- * // Returns: [r, g, b, 127]
- * ```
- */
-export function getHighlightColor(
-  opacity?: number,
-): [number, number, number, number] {
-  const rgba = normalizeColor(DEFAULT_COLORS.highlight);
-
-  if (opacity !== undefined) {
-    return [rgba[0], rgba[1], rgba[2], Math.round(opacity * 255)];
-  }
-
-  return rgba;
 }
 
 /**

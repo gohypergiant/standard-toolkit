@@ -23,7 +23,6 @@ import {
   applyOverlayOpacity,
   brightenColor,
   getHoverLineWidth,
-  getHighlightColor,
   getHighlightLineWidth,
   getOverlayFillColor,
 } from './display-style';
@@ -230,34 +229,6 @@ describe('Display Style Utilities', () => {
 
       expect(getHoverLineWidth(feature, true)).toBe(width + 2);
       expect(getHoverLineWidth(feature, false)).toBe(width);
-    });
-  });
-
-  describe('getHighlightColor', () => {
-    it('returns default highlight color from DEFAULT_COLORS when no opacity provided', () => {
-      const result = getHighlightColor();
-
-      // DEFAULT_COLORS.highlight is [40, 245, 190, 100]
-      expect(result).toEqual([40, 245, 190, 100]);
-    });
-
-    it('applies custom opacity override', () => {
-      const result = getHighlightColor(0.5);
-
-      const expectedOpacity = Math.round(0.5 * 255);
-      expect(result).toEqual([40, 245, 190, expectedOpacity]);
-    });
-
-    it('handles full opacity', () => {
-      const result = getHighlightColor(1.0);
-
-      expect(result).toEqual([40, 245, 190, 255]);
-    });
-
-    it('handles zero opacity', () => {
-      const result = getHighlightColor(0);
-
-      expect(result).toEqual([40, 245, 190, 0]);
     });
   });
 
