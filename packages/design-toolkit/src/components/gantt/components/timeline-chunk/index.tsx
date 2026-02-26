@@ -12,7 +12,6 @@
 
 import { TIMELINE_CHUNK_WIDTH } from '../../constants';
 import styles from '../styles.module.css';
-import type { CSSProperties } from 'react';
 
 export function Tick() {
   return (
@@ -27,20 +26,13 @@ type TimelineChunkProps = {
 };
 
 export function TimelineChunk({ label }: TimelineChunkProps) {
+  const tickMarginOffset = TIMELINE_CHUNK_WIDTH / 4 + 1.5;
+
   return (
-    <div
-      className={styles.chunk}
-      style={
-        { '--tick-chunk-width': `${TIMELINE_CHUNK_WIDTH}px` } as CSSProperties
-      }
-    >
+    <div className={styles.chunk} data-width={TIMELINE_CHUNK_WIDTH}>
       <div
         className={styles['chunk-label']}
-        style={
-          {
-            '--tick-margin': `-${TIMELINE_CHUNK_WIDTH / 4 - 2.5}px`,
-          } as CSSProperties
-        }
+        data-tick-margin={tickMarginOffset}
       >
         {label}
       </div>
