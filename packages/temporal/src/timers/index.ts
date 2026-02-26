@@ -15,65 +15,73 @@ import { callNextSecond, remainder } from './utils';
 /**
  * Works the same way as setInterval but will wait to fire until next clock second.
  *
- * @param cb - The callback to execute immediately and after each duration.
- * @param ms - The time, in ms, between callback execution.
- * @returns A function to clear the timeout.
+ * @param callback - The callback to execute at the next second boundary and after each interval.
+ * @param ms - The time, in ms, between callback execution. Must be a finite positive number.
+ * @returns A function that cancels all pending timers when called.
+ * @throws {RangeError} If `ms` is not a finite positive number.
  *
  * @example
  * ```typescript
  * import { setClockInterval } from '@accelint/temporal/timers';
  *
  * const cleanup = setClockInterval(() => console.log('hi'), 250);
- * // Will log "hi" every 250ms starting on next clock second
+ * // Will log "hi" at the next clock second boundary, then approximately every 250ms
  *
  * // Later, cleanup when done
  * cleanup();
  * ```
  */
-export function setClockInterval(cb: () => void, ms: number) {
-  let timeout: number | undefined;
-
-  function repeat() {
-    cb();
-    clearTimeout(timeout);
-
-    // Catch any potential drift and correct it for next setTimeout call
-    const adjustedMs = remainder(ms);
-
-    timeout = setTimeout(repeat, adjustedMs);
+export function setClockInterval(callback: () => void, ms: number): () => void {
+  if (!Number.isFinite(ms) || ms <= 0) {
+    throw new RangeError(
+      `setClockInterval: ms must be a finite positive number, got ${ms}`,
+    );
   }
 
-  callNextSecond(repeat);
+  let timeout: ReturnType<typeof setTimeout> | undefined;
 
-  return () => clearTimeout(timeout);
+  function repeat(): void {
+    callback();
+    // Re-anchor to the next ms-boundary to prevent drift accumulation over time
+    timeout = setTimeout(repeat, remainder(ms));
+  }
+
+  const initialDelay = callNextSecond(repeat);
+
+  return () => {
+    clearTimeout(initialDelay);
+    clearTimeout(timeout);
+  };
 }
 
 /**
  * Works the same way as setTimeout but will wait to fire until next clock second.
  *
- * @param cb - The callback to execute after each duration.
- * @param ms - The time, in ms, between callback execution.
- * @returns A function to clear the timeout.
+ * @param callback - The callback to execute once after the specified duration.
+ * @param ms - The time, in ms, to wait after the next second boundary before executing the callback.
+ *   Zero or negative values are treated as immediate execution after the next second boundary.
+ * @returns A function that cancels any pending timers. Safe to call after the callback has already fired.
  *
  * @example
  * ```typescript
  * import { setClockTimeout } from '@accelint/temporal/timers';
  *
  * const cleanup = setClockTimeout(() => console.log('hi'), 250);
- * // Will log "hi" after 250ms starting on next clock second
+ * // Will log "hi" 250ms after the next clock second boundary
  *
  * // Later, cleanup if needed
  * cleanup();
  * ```
  */
-export function setClockTimeout(cb: () => void, ms: number) {
-  let timeout: number | undefined;
+export function setClockTimeout(callback: () => void, ms: number): () => void {
+  let timeout: ReturnType<typeof setTimeout> | undefined;
 
-  function execute() {
-    timeout = setTimeout(cb, ms);
-  }
+  const initialDelay = callNextSecond(() => {
+    timeout = setTimeout(callback, ms);
+  });
 
-  callNextSecond(execute);
-
-  return () => clearTimeout(timeout);
+  return () => {
+    clearTimeout(initialDelay);
+    clearTimeout(timeout);
+  };
 }
