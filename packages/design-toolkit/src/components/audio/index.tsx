@@ -116,7 +116,7 @@ function AudioInner({
           const mediaError = e.currentTarget.error;
 
           logger
-            .withContext({ src })
+            .withMetadata({ src })
             .withError(mediaError)
             .error('Failed to load audio');
           setErrorMessage(
