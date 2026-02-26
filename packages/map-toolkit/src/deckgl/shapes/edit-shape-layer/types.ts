@@ -14,6 +14,8 @@
 
 import type { DistanceUnitAbbreviation } from '@/shared/units';
 import type { UniqueId } from '@accelint/core';
+import type { KeyOption } from '@accelint/hotkey-manager';
+import type { NonEmptyArray } from '@accelint/hotkey-manager/types/non-empty-array';
 import type { Feature } from 'geojson';
 import type { Shape } from '../shared/types';
 
@@ -103,9 +105,18 @@ export type EditShapeLayerProps = {
   mapId?: UniqueId;
   /** Distance unit for tooltip measurements (defaults to 'km') */
   unit?: DistanceUnitAbbreviation;
+  /** Configuration for hotkeys in EditShapesLayer */
+  hotkeyConfig: EditShapeHotkeyConfig;
 };
 
 /**
  * Function type for the edit action
  */
 export type EditFunction = (shape: Shape, options?: EditShapeOptions) => void;
+
+/**
+ * Type to define hotkey configurations for functions in EditShapeLayer
+ */
+export type EditShapeHotkeyConfig = {
+  panning: KeyOption | NonEmptyArray<KeyOption>;
+};

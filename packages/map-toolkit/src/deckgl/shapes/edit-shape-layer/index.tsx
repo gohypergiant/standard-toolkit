@@ -146,6 +146,9 @@ export function EditShapeLayer({
   id = EDIT_SHAPE_LAYER_ID,
   mapId,
   unit,
+  hotkeyConfig = {
+    panning: { code: Keycode.Space },
+  },
 }: EditShapeLayerProps) {
   // Get mapId from context if not provided
   const contextId = useContext(MapContext);
@@ -211,7 +214,7 @@ export function EditShapeLayer({
     () =>
       registerHotkey({
         id: `editPanningHotkey-${actualMapId}`,
-        key: { code: Keycode.Space },
+        key: hotkeyConfig.panning,
         onKeyDown: (e: KeyboardEvent) => {
           e.preventDefault();
         },
@@ -225,7 +228,7 @@ export function EditShapeLayer({
         heldThresholdMs: 50,
         alwaysTriggerKeyUp: true,
       }),
-    [actualMapId],
+    [actualMapId, hotkeyConfig.panning],
   );
 
   useHotkey(editPanningHotkey);
