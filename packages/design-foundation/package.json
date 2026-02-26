@@ -97,6 +97,9 @@
     "test": "pnpm vitest --dir=src",
     "test:watch": "pnpm vitest --dir=src --watch"
   },
+  "sideEffects": [
+    "**/*.css"
+  ],
   "subPath": "packages/design-foundation",
   "title": "Design Foundation",
   "type": "module"
