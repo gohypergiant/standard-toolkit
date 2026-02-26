@@ -36,9 +36,9 @@
  */
 
 import { createMapStore } from '@/shared/create-map-store';
+import { createLoggerDomain } from '@/shared/logger';
 import { Broadcast } from '@accelint/bus';
 import type { UniqueId } from '@accelint/core';
-import { getLogger } from '@accelint/logger';
 import type { Feature } from 'geojson';
 import { MapEvents } from '../../base-map/events';
 import type { MapEventType } from '../../base-map/types';
@@ -73,13 +73,7 @@ import type {
   EditShapeOptions,
 } from './types';
 
-const logger = getLogger({
-  enabled:
-    process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test',
-  level: 'warn',
-  prefix: '[EditShapeLayer]',
-  pretty: true,
-});
+const logger = createLoggerDomain('[EditShapeLayer]');
 
 /**
  * Typed event bus instances
