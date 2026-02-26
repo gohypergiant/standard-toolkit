@@ -36,8 +36,8 @@
  */
 
 import { Broadcast } from '@accelint/bus';
-import { getLogger } from '@accelint/logger';
 import { createMapStore } from '@/shared/create-map-store';
+import { createLoggerDomain } from '@/shared/logger';
 import { MapEvents } from '../../base-map/events';
 import {
   isCircleShape,
@@ -73,13 +73,7 @@ import type {
   EditShapeOptions,
 } from './types';
 
-const logger = getLogger({
-  enabled:
-    process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test',
-  level: 'warn',
-  prefix: '[EditShapeLayer]',
-  pretty: true,
-});
+const logger = createLoggerDomain('[EditShapeLayer]');
 
 /**
  * Typed event bus instances
