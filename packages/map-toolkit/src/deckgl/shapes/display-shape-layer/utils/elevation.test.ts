@@ -25,19 +25,60 @@ import {
   partitionCurtains,
 } from './elevation';
 import type { Color } from '@deck.gl/core';
-import type { Shape } from '../../shared/types';
+import type { Shape, ShapeId } from '../../shared/types';
 import type { CurtainFeature } from '../types';
+
+// =============================================================================
+// Shared test data
+// =============================================================================
+
+const BASE_COLOR: Color = [98, 166, 255, 255];
+const WHITE: [number, number, number, number] = [255, 255, 255, 255];
+const ZERO_COLOR: [number, number, number, number] = [0, 0, 0, 0];
+
+/** Common coordinate fixtures */
+const COORDS = {
+  point3D: [10, 20, 5000] as number[],
+  point2D: [10, 20] as number[],
+  line3D: [
+    [10, 20, 5000],
+    [11, 21, 6000],
+  ] as number[][],
+  linePartialGround: [
+    [10, 20, 0],
+    [11, 21, 5000],
+  ] as number[][],
+  polygonRing3D: [
+    [0, 0, 5000],
+    [1, 0, 5000],
+    [1, 1, 5000],
+    [0, 0, 5000],
+  ] as number[][],
+  polygonRing2D: [
+    [0, 0],
+    [1, 0],
+    [1, 1],
+    [0, 0],
+  ] as number[][],
+  multiLine3D: [
+    [
+      [10, 20, 3000],
+      [11, 21, 4000],
+    ],
+    [[12, 22, 5000]],
+  ] as number[][][],
+};
 
 /** Create a minimal feature with the given geometry. */
 function createFeature(
   geometry: Shape['feature']['geometry'],
-  lineColor: Color = [98, 166, 255, 255],
+  lineColor: Color = BASE_COLOR,
 ): Shape['feature'] {
   return {
     type: 'Feature',
     properties: {
       styleProperties: {
-        fillColor: [98, 166, 255, 255] as Color,
+        fillColor: BASE_COLOR,
         lineColor,
         lineWidth: 2,
         linePattern: 'solid',
@@ -51,23 +92,19 @@ function createFeature(
 describe('Elevation Utilities', () => {
   describe('getElevationFromCoordinates', () => {
     it.each([
-      { input: [10, 20, 5000], expected: 5000, label: 'single 3D coordinate' },
-      { input: [10, 20], expected: 0, label: '2D coordinate (no elevation)' },
+      { input: COORDS.point3D, expected: 5000, label: 'single 3D coordinate' },
       {
-        input: [
-          [10, 20, 5000],
-          [11, 21, 6000],
-        ],
+        input: COORDS.point2D,
+        expected: 0,
+        label: '2D coordinate (no elevation)',
+      },
+      {
+        input: COORDS.line3D,
         expected: 5000,
         label: 'nested coordinate array',
       },
       {
-        input: [
-          [
-            [10, 20, 3000],
-            [11, 21, 4000],
-          ],
-        ],
+        input: [COORDS.multiLine3D[0]],
         expected: 3000,
         label: 'double-nested coordinate array',
       },
@@ -94,7 +131,7 @@ describe('Elevation Utilities', () => {
     it('returns elevation from Point geometry', () => {
       const feature = createFeature({
         type: 'Point',
-        coordinates: [10, 20, 5000],
+        coordinates: COORDS.point3D,
       });
 
       expect(getFeatureElevation(feature)).toBe(5000);
@@ -103,7 +140,7 @@ describe('Elevation Utilities', () => {
     it('returns 0 for 2D Point geometry', () => {
       const feature = createFeature({
         type: 'Point',
-        coordinates: [10, 20],
+        coordinates: COORDS.point2D,
       });
 
       expect(getFeatureElevation(feature)).toBe(0);
@@ -131,14 +168,7 @@ describe('Elevation Utilities', () => {
     it('returns maxElevation when present in properties', () => {
       const feature = createFeature({
         type: 'Polygon',
-        coordinates: [
-          [
-            [0, 0],
-            [1, 0],
-            [1, 1],
-            [0, 0],
-          ],
-        ],
+        coordinates: [COORDS.polygonRing2D],
       });
       (feature.properties as Record<string, unknown>).maxElevation = 43500;
 
@@ -148,7 +178,7 @@ describe('Elevation Utilities', () => {
     it('prefers maxElevation over coordinate Z', () => {
       const feature = createFeature({
         type: 'Point',
-        coordinates: [10, 20, 5000],
+        coordinates: COORDS.point3D,
       });
       (feature.properties as Record<string, unknown>).maxElevation = 99999;
 
@@ -158,35 +188,27 @@ describe('Elevation Utilities', () => {
 
   describe('createElevationLineSegments', () => {
     it('creates vertical segment for Point with elevation', () => {
-      const geometry = { type: 'Point', coordinates: [10, 20, 5000] };
-      const color: [number, number, number, number] = [255, 255, 255, 255];
+      const geometry = { type: 'Point', coordinates: COORDS.point3D };
 
       const segments = createElevationLineSegments(
         geometry as Shape['feature']['geometry'],
-        color,
+        WHITE,
       );
 
       expect(segments).toHaveLength(1);
       expect(segments[0]).toEqual({
         source: [10, 20, 0],
         target: [10, 20, 5000],
-        color,
+        color: WHITE,
       });
     });
 
     it('creates segment per coordinate for LineString', () => {
-      const geometry = {
-        type: 'LineString',
-        coordinates: [
-          [10, 20, 5000],
-          [11, 21, 6000],
-        ],
-      };
-      const color: [number, number, number, number] = [255, 255, 255, 255];
+      const geometry = { type: 'LineString', coordinates: COORDS.line3D };
 
       const segments = createElevationLineSegments(
         geometry as Shape['feature']['geometry'],
-        color,
+        WHITE,
       );
 
       expect(segments).toHaveLength(2);
@@ -199,16 +221,12 @@ describe('Elevation Utilities', () => {
     it('skips ground-level coordinates in LineString', () => {
       const geometry = {
         type: 'LineString',
-        coordinates: [
-          [10, 20, 0],
-          [11, 21, 5000],
-        ],
+        coordinates: COORDS.linePartialGround,
       };
-      const color: [number, number, number, number] = [255, 255, 255, 255];
 
       const segments = createElevationLineSegments(
         geometry as Shape['feature']['geometry'],
-        color,
+        WHITE,
       );
 
       expect(segments).toHaveLength(1);
@@ -220,18 +238,18 @@ describe('Elevation Utilities', () => {
 
       const segments = createElevationLineSegments(
         geometry as unknown as Shape['feature']['geometry'],
-        [255, 255, 255, 255],
+        WHITE,
       );
 
       expect(segments).toEqual([]);
     });
 
     it('returns empty array for Point without elevation', () => {
-      const geometry = { type: 'Point', coordinates: [10, 20] };
+      const geometry = { type: 'Point', coordinates: COORDS.point2D };
 
       const segments = createElevationLineSegments(
         geometry as Shape['feature']['geometry'],
-        [255, 255, 255, 255],
+        WHITE,
       );
 
       expect(segments).toEqual([]);
@@ -240,19 +258,12 @@ describe('Elevation Utilities', () => {
     it('handles MultiLineString geometry', () => {
       const geometry = {
         type: 'MultiLineString',
-        coordinates: [
-          [
-            [10, 20, 3000],
-            [11, 21, 4000],
-          ],
-          [[12, 22, 5000]],
-        ],
+        coordinates: COORDS.multiLine3D,
       };
-      const color: [number, number, number, number] = [255, 255, 255, 255];
 
       const segments = createElevationLineSegments(
         geometry as Shape['feature']['geometry'],
-        color,
+        WHITE,
       );
 
       expect(segments).toHaveLength(3);
@@ -263,10 +274,7 @@ describe('Elevation Utilities', () => {
     it('classifies elevated LineString into lines and nonPolygons', () => {
       const lineFeature = createFeature({
         type: 'LineString',
-        coordinates: [
-          [10, 20, 5000],
-          [11, 21, 6000],
-        ],
+        coordinates: COORDS.line3D,
       });
 
       const result = classifyElevatedFeatures([lineFeature], () => 5000);
@@ -279,14 +287,7 @@ describe('Elevation Utilities', () => {
     it('classifies elevated Polygon into polygons only', () => {
       const polygonFeature = createFeature({
         type: 'Polygon',
-        coordinates: [
-          [
-            [0, 0, 5000],
-            [1, 0, 5000],
-            [1, 1, 5000],
-            [0, 0, 5000],
-          ],
-        ],
+        coordinates: [COORDS.polygonRing3D],
       });
 
       const result = classifyElevatedFeatures([polygonFeature], () => 5000);
@@ -299,7 +300,7 @@ describe('Elevation Utilities', () => {
     it('classifies elevated Point into nonPolygons only', () => {
       const pointFeature = createFeature({
         type: 'Point',
-        coordinates: [10, 20, 5000],
+        coordinates: COORDS.point3D,
       });
 
       const result = classifyElevatedFeatures([pointFeature], () => 5000);
@@ -312,7 +313,7 @@ describe('Elevation Utilities', () => {
     it('skips features with zero elevation', () => {
       const flatFeature = createFeature({
         type: 'Point',
-        coordinates: [10, 20],
+        coordinates: COORDS.point2D,
       });
 
       const result = classifyElevatedFeatures([flatFeature], () => 0);
@@ -325,24 +326,17 @@ describe('Elevation Utilities', () => {
 
   describe('createCurtainPolygonsFromLine', () => {
     it('creates vertical polygon for consecutive coordinate pair', () => {
-      const coordinates = [
-        [10, 20, 5000],
-        [11, 21, 6000],
-      ];
-      const fillColor: [number, number, number, number] = [98, 166, 255, 51];
-      const lineColor: [number, number, number, number] = [98, 166, 255, 255];
-
       const curtains = createCurtainPolygonsFromLine(
-        coordinates,
-        fillColor,
-        lineColor,
+        COORDS.line3D,
+        [98, 166, 255, 51],
+        BASE_COLOR as [number, number, number, number],
         'shape-1',
       );
 
       expect(curtains).toHaveLength(1);
       expect(curtains[0]?.geometry.type).toBe('Polygon');
-      expect(curtains[0]?.properties.fillColor).toEqual(fillColor);
-      expect(curtains[0]?.properties.lineColor).toEqual(lineColor);
+      expect(curtains[0]?.properties.fillColor).toEqual([98, 166, 255, 51]);
+      expect(curtains[0]?.properties.lineColor).toEqual(BASE_COLOR);
       expect(curtains[0]?.properties.shapeId).toBe('shape-1');
 
       // Verify ring: bottom-left, bottom-right, top-right, top-left, close
@@ -364,8 +358,8 @@ describe('Elevation Utilities', () => {
 
       const curtains = createCurtainPolygonsFromLine(
         coordinates,
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
+        ZERO_COLOR,
+        ZERO_COLOR,
       );
 
       // First pair [0,0] skipped, second pair [0, 5000] kept
@@ -374,9 +368,9 @@ describe('Elevation Utilities', () => {
 
     it('returns empty for single coordinate', () => {
       const curtains = createCurtainPolygonsFromLine(
-        [[10, 20, 5000]],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
+        [COORDS.point3D],
+        ZERO_COLOR,
+        ZERO_COLOR,
       );
 
       expect(curtains).toEqual([]);
@@ -385,8 +379,8 @@ describe('Elevation Utilities', () => {
     it('returns empty for empty coordinates', () => {
       const curtains = createCurtainPolygonsFromLine(
         [],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
+        ZERO_COLOR,
+        ZERO_COLOR,
       );
 
       expect(curtains).toEqual([]);
@@ -397,10 +391,7 @@ describe('Elevation Utilities', () => {
     it('creates curtains from elevated LineString features', () => {
       const feature = createFeature({
         type: 'LineString',
-        coordinates: [
-          [10, 20, 5000],
-          [11, 21, 6000],
-        ],
+        coordinates: COORDS.line3D,
       });
 
       const curtains = createCurtainPolygonFeatures([feature], true);
@@ -411,13 +402,7 @@ describe('Elevation Utilities', () => {
 
     it('applies base opacity when applyBaseOpacity is true', () => {
       const feature = createFeature(
-        {
-          type: 'LineString',
-          coordinates: [
-            [10, 20, 5000],
-            [11, 21, 6000],
-          ],
-        },
+        { type: 'LineString', coordinates: COORDS.line3D },
         [100, 150, 200, 255] as Color,
       );
 
@@ -429,13 +414,7 @@ describe('Elevation Utilities', () => {
 
     it('uses full line color when applyBaseOpacity is false', () => {
       const feature = createFeature(
-        {
-          type: 'LineString',
-          coordinates: [
-            [10, 20, 5000],
-            [11, 21, 6000],
-          ],
-        },
+        { type: 'LineString', coordinates: COORDS.line3D },
         [100, 150, 200, 255] as Color,
       );
 
@@ -448,10 +427,7 @@ describe('Elevation Utilities', () => {
       const feature = createFeature({
         type: 'MultiLineString',
         coordinates: [
-          [
-            [10, 20, 5000],
-            [11, 21, 6000],
-          ],
+          COORDS.line3D,
           [
             [12, 22, 7000],
             [13, 23, 8000],
@@ -470,11 +446,7 @@ describe('Elevation Utilities', () => {
     it('strips Z from LineString coordinates', () => {
       const feature = createFeature({
         type: 'LineString',
-        coordinates: [
-          [10, 20, 5000],
-          [11, 21, 6000],
-          [12, 22, 7000],
-        ],
+        coordinates: [...COORDS.line3D, [12, 22, 7000]],
       });
 
       const result = flattenFeatureTo2D(feature);
@@ -524,14 +496,7 @@ describe('Elevation Utilities', () => {
     it('strips Z from Polygon coordinates', () => {
       const feature = createFeature({
         type: 'Polygon',
-        coordinates: [
-          [
-            [0, 0, 5000],
-            [1, 0, 5000],
-            [1, 1, 5000],
-            [0, 0, 5000],
-          ],
-        ],
+        coordinates: [COORDS.polygonRing3D],
       });
 
       const result = flattenFeatureTo2D(feature);
@@ -540,20 +505,13 @@ describe('Elevation Utilities', () => {
       expect(result.geometry.type).toBe('Polygon');
       const coords = (result.geometry as { coordinates: number[][][] })
         .coordinates;
-      expect(coords).toEqual([
-        [
-          [0, 0],
-          [1, 0],
-          [1, 1],
-          [0, 0],
-        ],
-      ]);
+      expect(coords).toEqual([COORDS.polygonRing2D]);
     });
 
     it('returns same reference for Point (unaffected)', () => {
       const feature = createFeature({
         type: 'Point',
-        coordinates: [10, 20, 5000],
+        coordinates: COORDS.point3D,
       });
 
       const result = flattenFeatureTo2D(feature);
@@ -564,10 +522,7 @@ describe('Elevation Utilities', () => {
     it('preserves all feature properties', () => {
       const feature = createFeature({
         type: 'LineString',
-        coordinates: [
-          [10, 20, 5000],
-          [11, 21, 6000],
-        ],
+        coordinates: COORDS.line3D,
       });
 
       const result = flattenFeatureTo2D(feature);
@@ -602,9 +557,9 @@ describe('Elevation Utilities', () => {
         type: 'Feature',
         geometry: { type: 'Polygon', coordinates: [[[0, 0, 0]]] },
         properties: {
-          fillColor: [0, 0, 0, 0],
-          lineColor: [0, 0, 0, 0],
-          shapeId,
+          fillColor: ZERO_COLOR,
+          lineColor: ZERO_COLOR,
+          shapeId: shapeId as ShapeId | undefined,
         },
       };
     }
@@ -614,7 +569,11 @@ describe('Elevation Utilities', () => {
       const hovered1 = createCurtain('b');
       const selected1 = createCurtain('c');
 
-      const result = partitionCurtains([main1, hovered1, selected1], 'b', 'c');
+      const result = partitionCurtains(
+        [main1, hovered1, selected1],
+        'b' as ShapeId,
+        'c' as ShapeId,
+      );
 
       expect(result.main).toEqual([main1]);
       expect(result.hovered).toEqual([hovered1]);
@@ -633,7 +592,7 @@ describe('Elevation Utilities', () => {
     });
 
     it('returns empty arrays for empty input', () => {
-      const result = partitionCurtains([], 'a', 'b');
+      const result = partitionCurtains([], 'a' as ShapeId, 'b' as ShapeId);
 
       expect(result.main).toEqual([]);
       expect(result.hovered).toEqual([]);
@@ -642,10 +601,9 @@ describe('Elevation Utilities', () => {
   });
 
   describe('buildIndicatorLineData', () => {
-    const baseColor: Color = [98, 166, 255, 255];
     const pointFeature = createFeature(
-      { type: 'Point', coordinates: [10, 20, 5000] },
-      baseColor,
+      { type: 'Point', coordinates: COORDS.point3D },
+      BASE_COLOR,
     );
 
     it('returns empty array for empty input', () => {
@@ -665,7 +623,7 @@ describe('Elevation Utilities', () => {
       expect(result).toHaveLength(1);
       expect(result[0]?.source).toEqual([10, 20, 0]);
       expect(result[0]?.target).toEqual([10, 20, 5000]);
-      expect(result[0]?.color).toEqual(baseColor);
+      expect(result[0]?.color).toEqual(BASE_COLOR);
     });
 
     it('brightens color when feature is selected', () => {
@@ -678,7 +636,10 @@ describe('Elevation Utilities', () => {
 
       expect(result).toHaveLength(1);
       expect(result[0]?.color).toEqual(
-        brightenColor(baseColor, BRIGHTNESS_FACTOR.HOVER_OR_SELECT),
+        brightenColor(
+          BASE_COLOR as [number, number, number, number],
+          BRIGHTNESS_FACTOR.HOVER_OR_SELECT,
+        ),
       );
     });
 
@@ -692,7 +653,10 @@ describe('Elevation Utilities', () => {
 
       expect(result).toHaveLength(1);
       expect(result[0]?.color).toEqual(
-        brightenColor(baseColor, BRIGHTNESS_FACTOR.HOVER_OR_SELECT),
+        brightenColor(
+          BASE_COLOR as [number, number, number, number],
+          BRIGHTNESS_FACTOR.HOVER_OR_SELECT,
+        ),
       );
     });
 
@@ -706,17 +670,17 @@ describe('Elevation Utilities', () => {
 
       expect(result).toHaveLength(1);
       expect(result[0]?.color).toEqual(
-        brightenColor(baseColor, BRIGHTNESS_FACTOR.HOVER_AND_SELECT),
+        brightenColor(
+          BASE_COLOR as [number, number, number, number],
+          BRIGHTNESS_FACTOR.HOVER_AND_SELECT,
+        ),
       );
     });
 
     it('generates one segment per elevated coordinate in LineString', () => {
       const lineFeature = createFeature({
         type: 'LineString',
-        coordinates: [
-          [10, 20, 5000],
-          [11, 21, 6000],
-        ],
+        coordinates: COORDS.line3D,
       });
 
       const result = buildIndicatorLineData(

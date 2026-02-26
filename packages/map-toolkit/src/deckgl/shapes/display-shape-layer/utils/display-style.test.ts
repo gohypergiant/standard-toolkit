@@ -201,22 +201,6 @@ describe('Display Style Utilities', () => {
   });
 
   describe('getHoverLineWidth', () => {
-    it('returns base width when not hovered', () => {
-      const feature = createStyledFeature({ lineWidth: 4 });
-
-      const result = getHoverLineWidth(feature, false);
-
-      expect(result).toBe(4);
-    });
-
-    it('increases width by 2 when hovered', () => {
-      const feature = createStyledFeature({ lineWidth: 4 });
-
-      const result = getHoverLineWidth(feature, true);
-
-      expect(result).toBe(6);
-    });
-
     it.each([
       { width: 1 },
       { width: 2 },
@@ -233,14 +217,6 @@ describe('Display Style Utilities', () => {
   });
 
   describe('getHighlightLineWidth', () => {
-    it('increases base width by HIGHLIGHT_WIDTH_INCREASE (5)', () => {
-      const feature = createStyledFeature({ lineWidth: 4 });
-
-      const result = getHighlightLineWidth(feature);
-
-      expect(result).toBe(9);
-    });
-
     it.each([
       { width: 1, expected: 6 },
       { width: 2, expected: 7 },
@@ -278,12 +254,6 @@ describe('Display Style Utilities', () => {
       ]);
     });
 
-    it('preserves RGB channels unchanged', () => {
-      const [r, g, b] = applyOverlayOpacity([40, 245, 190, 255]);
-
-      expect([r, g, b]).toEqual([40, 245, 190]);
-    });
-
     it('scales zero alpha to zero', () => {
       const result = applyOverlayOpacity([255, 255, 255, 0]);
 
@@ -303,14 +273,6 @@ describe('Display Style Utilities', () => {
         50,
         Math.round(200 * OVERLAY_FILL_OPACITY),
       ]);
-    });
-
-    it('preserves RGB channels unchanged', () => {
-      const feature = createStyledFeature({ fillColor: [40, 245, 190, 255] });
-
-      const [r, g, b] = getOverlayFillColor(feature);
-
-      expect([r, g, b]).toEqual([40, 245, 190]);
     });
 
     it('scales zero alpha to zero', () => {
