@@ -25,7 +25,7 @@ import { useMediaControlsDisabled } from './context';
 import styles from './styles.module.css';
 import type { PlaybackRateButtonProps } from './types';
 
-const logger = createLoggerDomain('PlaybackRate');
+const logger = createLoggerDomain('[PlaybackRateButton]');
 
 /** Default playback rate options: normal, 2x, and 3x speed. */
 const DEFAULT_RATES = [1, 2, 3];
