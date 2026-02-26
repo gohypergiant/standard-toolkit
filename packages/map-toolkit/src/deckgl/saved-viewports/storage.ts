@@ -10,16 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import { getLogger } from '@accelint/logger';
+import { createLoggerDomain } from '@/shared/logger';
 import type { MapViewState } from '@deck.gl/core';
 
-const logger = getLogger({
-  enabled:
-    process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test',
-  level: 'warn',
-  prefix: '[SavedViewports]',
-  pretty: true,
-});
+const logger = createLoggerDomain('[SavedViewports]');
 
 /**
  * Base storage key for saved viewports in localStorage.
@@ -45,10 +39,13 @@ const getContainerKey = (uniqueIdentifier?: string) =>
 const getContainer = (containerKey: string) => {
   try {
     return JSON.parse(localStorage.getItem(containerKey) ?? '{}');
-  } catch {
-    logger.warn(
-      `Failed to parse storage container for key: ${containerKey}, returning empty container.`,
-    );
+  } catch (err) {
+    logger
+      .withError(err)
+      .error(
+        `Failed to parse storage container for key: ${containerKey}, returning empty container.`,
+      );
+
     return {};
   }
 };
