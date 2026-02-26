@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "skills": {
+    "accelint-nextjs-best-practices": {
+      "source": "gohypergiant/agent-skills",
+      "sourceType": "github",
+      "computedHash": "6a07b7b3e8436d50d3bf10b920deaafc3338bfb31270de14269c262dafa4ae2c"
+    },
+    "accelint-react-best-practices": {
+      "source": "gohypergiant/agent-skills",
+      "sourceType": "github",
+      "computedHash": "9e913014b66df6d7c3bff4b22af060231a0f0336d08223c0d9865beae9317c5a"
+    },
+    "accelint-react-testing": {
+      "source": "gohypergiant/agent-skills",
+      "sourceType": "github",
+      "computedHash": "2e2e1d68f5abce426529ae470e1d1b90ac4dc0d314ad1c27b3ef9c7d1e3eb502"
+    },
+    "accelint-readme-writer": {
+      "source": "gohypergiant/agent-skills",
+      "sourceType": "github",
+      "computedHash": "b82d8e3d9fa4274d0ceb461d88b508a8b5f726500c9351dc459e145127405160"
+    },
+    "accelint-security-best-practices": {
+      "source": "gohypergiant/agent-skills",
+      "sourceType": "github",
+      "computedHash": "7e00fcbe4e84561aa19e64a8f091498c996e69a67c1a569d205ebc9286500680"
+    },
+    "accelint-ts-best-practices": {
+      "source": "gohypergiant/agent-skills",
+      "sourceType": "github",
+      "computedHash": "98954e2f678f1ceae6f900bfc670fb45f9ec3e1fd8ea704d402f97038f69bf65"
+    },
+    "accelint-ts-documentation": {
+      "source": "gohypergiant/agent-skills",
+      "sourceType": "github",
+      "computedHash": "1a6274a7f334b46be91e44b708e42c3aa3c2e4399136dd3b798d877e8a2eee21"
+    },
+    "accelint-ts-performance": {
+      "source": "gohypergiant/agent-skills",
+      "sourceType": "github",
+      "computedHash": "cbf0cefa36231ddc26338a6dc7fceaca5c5d49f4f82271ac4b2f52536eb7c532"
+    },
+    "accelint-ts-testing": {
+      "source": "gohypergiant/agent-skills",
+      "sourceType": "github",
+      "computedHash": "9aadc1431dc626ecf42e3f9d903a3647346e504c577e57237acb056d3ee373d2"
+    }
+  }
+}
