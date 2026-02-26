@@ -41,10 +41,8 @@ export const ROWS: Row[] = [
 
       // Tue Jan 27 — 12:30 AM - 2:00 AM
       { type: 'block', rangeMs: [1769473800000, 1769479200000] },
-      // Tue Jan 27 — 2:00 AM - 2:05 AM
-      { type: 'spacer', rangeMs: [1769479200000, 1769479500000] },
       // Tue Jan 27 — 2:05 AM - 2:45 AM
-      { type: 'block', rangeMs: [1769479500000, 1769481900000] },
+      { type: 'block', rangeMs: [1769479200000, 1769481900000] },
       // Tue Jan 27 — 2:45 AM - 2:50 AM
       { type: 'spacer', rangeMs: [1769481900000, 1769482200000] },
       // Tue Jan 27 — 2:50 AM - 3:30 AM
@@ -55,10 +53,21 @@ export const ROWS: Row[] = [
       // Tue Jan 27 — 4:00 AM
       { type: 'bracket-close', timeMs: 1769486400000 },
 
+      // Tue Jan 27 — 4:10 AM
+      { type: 'marker', timeMs: 1769487000000 },
+
       // Tue Jan 27 — 4:15 AM
       { type: 'bracket-open', timeMs: 1769487300000 },
-      // Tue Jan 27 — 4:15 AM - 10:30 AM
-      { type: 'spacer', rangeMs: [1769487300000, 1769509800000] },
+      // Tue Jan 27 — 4:15 AM - 7:30 AM
+      { type: 'spacer', rangeMs: [1769487300000, 1769499000000] },
+      // Tue Jan 27 — 7:30 AM
+      { type: 'marker', timeMs: 1769499000000 },
+      // Tue Jan 27 — 7:30 AM - 8:45 AM
+      { type: 'spacer', rangeMs: [1769499000000, 1769503500000] },
+      // Tue Jan 27 — 8:45 AM
+      { type: 'marker', timeMs: 1769503500000 },
+      // Tue Jan 27 — 8:45 AM - 10:30 AM
+      { type: 'spacer', rangeMs: [1769503500000, 1769509800000] },
 
       // Tue Jan 27 — 10:30 AM - 12:00 PM
       { type: 'block', rangeMs: [1769509800000, 1769515200000] },
@@ -121,8 +130,12 @@ export const ROWS: Row[] = [
 
       // Tue Jan 27 — 5:25 AM
       { type: 'bracket-open', timeMs: 1769491500000 },
-      // Tue Jan 27 — 5:25 AM - 6:00 AM
-      { type: 'spacer', rangeMs: [1769491500000, 1769493600000] },
+      // Tue Jan 27 — 5:25 AM - 5:40 AM
+      { type: 'spacer', rangeMs: [1769491500000, 1769492400000] },
+      // Tue Jan 27 — 5:40 AM
+      { type: 'marker', timeMs: 1769492400000 },
+      // Tue Jan 27 — 5:40 AM - 6:00 AM
+      { type: 'spacer', rangeMs: [1769492400000, 1769493600000] },
 
       // Tue Jan 27 — 6:00 AM - 8:00 AM
       { type: 'block', rangeMs: [1769493600000, 1769500800000] },
@@ -162,6 +175,8 @@ export const ROWS: Row[] = [
   {
     id: 'row-C',
     elements: [
+      // Tue Jan 27 - 2:00 AM
+      { type: 'marker', timeMs: 1769479200000 },
       // Tue Jan 27 — 5:30 AM - 7:00 AM
       { type: 'block', rangeMs: [1769491800000, 1769497200000] },
       // Tue Jan 27 — 7:00 AM - 7:05 AM
@@ -183,8 +198,16 @@ export const ROWS: Row[] = [
 
       // Tue Jan 27 — 6:50 PM
       { type: 'bracket-open', timeMs: 1769540400000 },
-      // Tue Jan 27 — 6:50 PM - Wed Jan 28 11:30 PM
-      { type: 'spacer', rangeMs: [1769540400000, 1769643000000] },
+      // Tue Jan 27 — 6:50 PM - Tue Jan 27 1:46 AM (next day boundary not shown)
+      { type: 'spacer', rangeMs: [1769540400000, 1769564000000] },
+      // Wed Jan 28 — 1:46 AM
+      { type: 'marker', timeMs: 1769564000000 },
+      // Wed Jan 28 — 1:46 AM - Wed Jan 28 12:26 PM
+      { type: 'spacer', rangeMs: [1769564000000, 1769600000000] },
+      // Wed Jan 28 — 12:26 PM
+      { type: 'marker', timeMs: 1769600000000 },
+      // Wed Jan 28 — 12:26 PM - Wed Jan 28 11:30 PM
+      { type: 'spacer', rangeMs: [1769600000000, 1769643000000] },
 
       // Wed Jan 28 — 11:30 PM - Thu Jan 29 2:30 AM
       { type: 'block', rangeMs: [1769643000000, 1769653800000] },
@@ -217,8 +240,12 @@ export const ROWS: Row[] = [
 
       // Wed Jan 28 — 5:10 AM
       { type: 'bracket-open', timeMs: 1769577000000 },
-      // Wed Jan 28 — 5:10 AM - 10:00 AM
-      { type: 'spacer', rangeMs: [1769577000000, 1769594400000] },
+      // Wed Jan 28 — 5:10 AM - 7:00 AM
+      { type: 'spacer', rangeMs: [1769577000000, 1769583600000] },
+      // Wed Jan 28 — 7:00 AM
+      { type: 'marker', timeMs: 1769583600000 },
+      // Wed Jan 28 — 7:00 AM - 10:00 AM
+      { type: 'spacer', rangeMs: [1769583600000, 1769594400000] },
 
       // Wed Jan 28 — 10:00 AM - 12:00 PM
       { type: 'block', rangeMs: [1769594400000, 1769601600000] },
@@ -268,6 +295,9 @@ export const ROWS: Row[] = [
       // Tue Jan 27 — 8:00 PM
       { type: 'bracket-close', timeMs: 1769544000000 },
 
+      // Wed Jan 28 — 12:00 AM
+      { type: 'marker', timeMs: 1769562000000 },
+
       // Wed Jan 28 — 8:30 AM - 11:00 AM
       { type: 'block', rangeMs: [1769589000000, 1769598000000] },
       // Wed Jan 28 — 11:00 AM - 11:05 AM
@@ -309,8 +339,12 @@ export const ROWS: Row[] = [
 
       // Tue Jan 27 — 11:20 PM
       { type: 'bracket-open', timeMs: 1769556000000 },
-      // Tue Jan 27 — 11:20 PM - Wed Jan 28 12:10 AM
-      { type: 'spacer', rangeMs: [1769556000000, 1769559000000] },
+      // Tue Jan 27 — 11:20 PM - 11:40 PM
+      { type: 'spacer', rangeMs: [1769556000000, 1769557200000] },
+      // Tue Jan 27 — 11:40 PM
+      { type: 'marker', timeMs: 1769557200000 },
+      // Tue Jan 27 — 11:40 PM - Wed Jan 28 12:10 AM
+      { type: 'spacer', rangeMs: [1769557200000, 1769559000000] },
       // Wed Jan 28 — 12:10 AM
       { type: 'bracket-close', timeMs: 1769559000000 },
 
@@ -323,8 +357,16 @@ export const ROWS: Row[] = [
 
       // Wed Jan 28 — 8:30 AM
       { type: 'bracket-open', timeMs: 1769589000000 },
-      // Wed Jan 28 — 8:30 AM - Thu Jan 29 2:00 PM
-      { type: 'spacer', rangeMs: [1769589000000, 1769688000000] },
+      // Wed Jan 28 — 8:30 AM - Wed Jan 28 5:20 PM
+      { type: 'spacer', rangeMs: [1769589000000, 1769620000000] },
+      // Wed Jan 28 — 5:20 PM
+      { type: 'marker', timeMs: 1769620000000 },
+      // Wed Jan 28 — 5:20 PM - Thu Jan 29 4:26 AM
+      { type: 'spacer', rangeMs: [1769620000000, 1769660000000] },
+      // Thu Jan 29 — 4:26 AM
+      { type: 'marker', timeMs: 1769660000000 },
+      // Thu Jan 29 — 4:26 AM - Thu Jan 29 2:00 PM
+      { type: 'spacer', rangeMs: [1769660000000, 1769688000000] },
 
       // Thu Jan 29 — 2:00 PM - 5:00 PM
       { type: 'block', rangeMs: [1769688000000, 1769698800000] },
@@ -355,8 +397,16 @@ export const ROWS: Row[] = [
 
       // Tue Jan 27 — 2:00 AM
       { type: 'bracket-open', timeMs: 1769479200000 },
-      // Tue Jan 27 — 2:00 AM - Wed Jan 28 12:30 PM
-      { type: 'spacer', rangeMs: [1769479200000, 1769603400000] },
+      // Tue Jan 27 — 2:00 AM - Tue Jan 27 6:40 PM
+      { type: 'spacer', rangeMs: [1769479200000, 1769540000000] },
+      // Tue Jan 27 — 6:40 PM
+      { type: 'marker', timeMs: 1769540000000 },
+      // Tue Jan 27 — 6:40 PM - Wed Jan 28 6:00 AM
+      { type: 'spacer', rangeMs: [1769540000000, 1769580000000] },
+      // Wed Jan 28 — 6:00 AM
+      { type: 'marker', timeMs: 1769580000000 },
+      // Wed Jan 28 — 6:00 AM - Wed Jan 28 12:30 PM
+      { type: 'spacer', rangeMs: [1769580000000, 1769603400000] },
 
       // Wed Jan 28 — 12:30 PM - 2:00 PM
       { type: 'block', rangeMs: [1769603400000, 1769608800000] },
@@ -398,8 +448,12 @@ export const ROWS: Row[] = [
 
       // Tue Jan 27 — 6:00 AM
       { type: 'bracket-open', timeMs: 1769493600000 },
-      // Tue Jan 27 — 6:00 AM - 12:00 PM
-      { type: 'spacer', rangeMs: [1769493600000, 1769515200000] },
+      // Tue Jan 27 — 6:00 AM - 8:10 AM
+      { type: 'spacer', rangeMs: [1769493600000, 1769502000000] },
+      // Tue Jan 27 — 8:10 AM
+      { type: 'marker', timeMs: 1769502000000 },
+      // Tue Jan 27 — 8:10 AM - 12:00 PM
+      { type: 'spacer', rangeMs: [1769502000000, 1769515200000] },
 
       // Tue Jan 27 — 12:00 PM - 2:30 PM
       { type: 'block', rangeMs: [1769515200000, 1769524200000] },
@@ -458,8 +512,16 @@ export const ROWS: Row[] = [
 
       // Wed Jan 28 — 7:00 AM
       { type: 'bracket-open', timeMs: 1769583600000 },
-      // Wed Jan 28 — 7:00 AM - 7:30 PM
-      { type: 'spacer', rangeMs: [1769583600000, 1769628600000] },
+      // Wed Jan 28 — 7:00 AM - 1:20 PM
+      { type: 'spacer', rangeMs: [1769583600000, 1769608000000] },
+      // Wed Jan 28 — 1:20 PM
+      { type: 'marker', timeMs: 1769608000000 },
+      // Wed Jan 28 — 1:20 PM - 3:20 PM
+      { type: 'spacer', rangeMs: [1769608000000, 1769616000000] },
+      // Wed Jan 28 — 3:20 PM
+      { type: 'marker', timeMs: 1769616000000 },
+      // Wed Jan 28 — 3:20 PM - 7:30 PM
+      { type: 'spacer', rangeMs: [1769616000000, 1769628600000] },
 
       // Wed Jan 28 — 7:30 PM - 10:30 PM
       { type: 'block', rangeMs: [1769628600000, 1769639400000] },
@@ -500,8 +562,12 @@ export const ROWS: Row[] = [
 
       // Tue Jan 27 — 9:40 PM
       { type: 'bracket-open', timeMs: 1769550000000 },
-      // Tue Jan 27 — 9:40 PM - 10:30 PM
-      { type: 'spacer', rangeMs: [1769550000000, 1769553000000] },
+      // Tue Jan 27 — 9:40 PM - 10:00 PM
+      { type: 'spacer', rangeMs: [1769550000000, 1769551200000] },
+      // Tue Jan 27 — 10:00 PM
+      { type: 'marker', timeMs: 1769551200000 },
+      // Tue Jan 27 — 10:00 PM - 10:30 PM
+      { type: 'spacer', rangeMs: [1769551200000, 1769553000000] },
       // Tue Jan 27 — 10:30 PM
       { type: 'bracket-close', timeMs: 1769553000000 },
 
@@ -537,8 +603,12 @@ export const ROWS: Row[] = [
 
       // Tue Jan 27 — 6:00 AM
       { type: 'bracket-open', timeMs: 1769493600000 },
-      // Tue Jan 27 — 6:00 AM - 11:00 AM
-      { type: 'spacer', rangeMs: [1769493600000, 1769511600000] },
+      // Tue Jan 27 — 6:00 AM - 8:00 AM
+      { type: 'spacer', rangeMs: [1769493600000, 1769500800000] },
+      // Tue Jan 27 — 8:00 AM
+      { type: 'marker', timeMs: 1769500800000 },
+      // Tue Jan 27 — 8:00 AM - 11:00 AM
+      { type: 'spacer', rangeMs: [1769500800000, 1769511600000] },
 
       // Tue Jan 27 — 11:00 AM - 12:00 PM
       { type: 'block', rangeMs: [1769511600000, 1769515200000] },
@@ -589,8 +659,12 @@ export const ROWS: Row[] = [
 
       // Tue Jan 27 — 11:33 AM
       { type: 'bracket-open', timeMs: 1769511960000 },
-      // Tue Jan 27 — 11:33 AM - 12:23 PM
-      { type: 'spacer', rangeMs: [1769511960000, 1769514960000] },
+      // Tue Jan 27 — 11:33 AM - 11:53 AM
+      { type: 'spacer', rangeMs: [1769511960000, 1769513200000] },
+      // Tue Jan 27 — 11:53 AM
+      { type: 'marker', timeMs: 1769513200000 },
+      // Tue Jan 27 — 11:53 AM - 12:23 PM
+      { type: 'spacer', rangeMs: [1769513200000, 1769514960000] },
       // Tue Jan 27 — 12:23 PM
       { type: 'bracket-close', timeMs: 1769514960000 },
 
@@ -632,8 +706,16 @@ export const ROWS: Row[] = [
 
       // Tue Jan 27 — 2:30 AM
       { type: 'bracket-open', timeMs: 1769481000000 },
-      // Tue Jan 27 — 2:30 AM - 4:00 PM
-      { type: 'spacer', rangeMs: [1769481000000, 1769532000000] },
+      // Tue Jan 27 — 2:30 AM - 7:46 AM
+      { type: 'spacer', rangeMs: [1769481000000, 1769500000000] },
+      // Tue Jan 27 — 7:46 AM
+      { type: 'marker', timeMs: 1769500000000 },
+      // Tue Jan 27 — 7:46 AM - 1:20 PM
+      { type: 'spacer', rangeMs: [1769500000000, 1769520000000] },
+      // Tue Jan 27 — 1:20 PM
+      { type: 'marker', timeMs: 1769520000000 },
+      // Tue Jan 27 — 1:20 PM - 4:00 PM
+      { type: 'spacer', rangeMs: [1769520000000, 1769532000000] },
 
       // Tue Jan 27 — 4:00 PM - 5:30 PM
       { type: 'block', rangeMs: [1769532000000, 1769537400000] },
@@ -687,17 +769,25 @@ export const ROWS: Row[] = [
 
       // Tue Jan 27 — 5:00 PM
       { type: 'bracket-open', timeMs: 1769533200000 },
-      // Tue Jan 27 — 5:00 PM - Wed Jan 28 2:00 AM
-      { type: 'spacer', rangeMs: [1769533200000, 1769565600000] },
+      // Tue Jan 27 — 5:00 PM - Tue Jan 27 9:10 PM
+      { type: 'spacer', rangeMs: [1769533200000, 1769550000000] },
+      // Tue Jan 27 — 9:10 PM
+      { type: 'marker', timeMs: 1769550000000 },
+      // Tue Jan 27 — 9:10 PM - Wed Jan 28 2:00 AM
+      { type: 'spacer', rangeMs: [1769550000000, 1769565600000] },
 
       // Wed Jan 28 — 2:00 AM - 3:30 AM
       { type: 'block', rangeMs: [1769565600000, 1769571000000] },
 
-      // Wed Jan 28 — 9:46 AM
-      { type: 'bracket-open', timeMs: 1769599960000 },
-      // Wed Jan 28 — 9:46 AM - 10:00 AM
-      { type: 'spacer', rangeMs: [1769599960000, 1769601600000] },
+      // Wed Jan 28 — 9:43 AM
+      { type: 'bracket-open', timeMs: 1769599800000 },
+      // Wed Jan 28 — 9:43 AM - 10:00 AM
+      { type: 'spacer', rangeMs: [1769599800000, 1769600400000] },
       // Wed Jan 28 — 10:00 AM
+      { type: 'marker', timeMs: 1769600400000 },
+      // Wed Jan 28 — 10:00 AM - 10:30 AM
+      { type: 'spacer', rangeMs: [1769600400000, 1769601600000] },
+      // Wed Jan 28 — 10:30 AM
       { type: 'bracket-close', timeMs: 1769601600000 },
 
       // Wed Jan 28 — 5:00 PM - 6:30 PM

@@ -15,6 +15,7 @@ import { END_TIME_MS, ROWS, START_TIME_MS } from './__fixtures__';
 import { GanttRow } from './components/gantt-row';
 import { BracketClose, BracketOpen } from './components/gantt-row/bracket';
 import { GanttRowBlock } from './components/gantt-row/gantt-row-block';
+import { Marker } from './components/gantt-row/marker';
 import { Spacer } from './components/gantt-row/spacer';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
@@ -82,6 +83,13 @@ export const Default: Story = {
                       key={`${id}-bracket-open-${index}`}
                       timeMs={timeMs}
                     />
+                  );
+                }
+
+                case 'marker': {
+                  const timeMs = element.timeMs;
+                  return (
+                    <Marker key={`${id}-marker-${index}`} timeMs={timeMs} />
                   );
                 }
 

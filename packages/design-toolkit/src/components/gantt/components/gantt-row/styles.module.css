@@ -57,4 +57,16 @@
     @apply fg-accent-primary-bold rounded-bl-small rounded-tl-small absolute left-0 w-6 border border-r-transparent border-b-current bg-transparent;
     min-height: attr(data-height px);
   }
+
+  .marker-container {
+    @apply fg-accent-primary-bold absolute flex w-px items-center justify-center border-solid border-current bg-current;
+    min-height: attr(data-height px);
+    transform: translateX(var(--translate-x));
+  }
+
+  .marker-point {
+    @apply fg-accent-primary-bold absolute rounded-full bg-current;
+    width: 3px;
+    height: 3px;
+  }
 }
