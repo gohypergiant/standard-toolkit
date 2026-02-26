@@ -22,6 +22,7 @@ const LINKS = [
   { path: '/button', label: 'Button' },
   { path: '/dialog/client', label: 'Dialog' },
   { path: '/drawer', label: 'Drawer' },
+  { path: '/floating-card', label: 'Floating Card' },
   { path: '/map', label: 'Map' },
   { path: '/notice', label: 'Notice' },
   { path: '/tooltip', label: 'Tooltip' },
