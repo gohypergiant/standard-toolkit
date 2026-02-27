@@ -625,17 +625,13 @@ describe('edit-shape-layer store', () => {
       const shape = createMockShape();
       edit(shape);
 
-      expect(editStore.get(mapId)?.editMode).not.toBe('view');
-
-      enableEditPanning(mapId, editStore.get(mapId).editMode);
       const originalMode = editStore.get(mapId).editMode;
       expect(originalMode).not.toBe('view'); // Precondition: editing is active
-      expect(editStore.get(mapId)?.previousMode).toBe(originalMode);
 
-      expect(editStore.get(mapId)?.previousMode).not.toBe(null);
-      expect(editStore.get(mapId)?.previousMode).not.toEqual(
-        editStore.get(mapId).editMode,
-      );
+      enableEditPanning(mapId, editStore.get(mapId).editMode);
+
+      expect(editStore.get(mapId)?.previousMode).toBe(originalMode);
+      expect(editStore.get(mapId)?.editMode).toBe('view');
       expect(modeEmitSpy).toHaveBeenCalled();
       expect(cursorEmitSpy).toHaveBeenCalled();
     });

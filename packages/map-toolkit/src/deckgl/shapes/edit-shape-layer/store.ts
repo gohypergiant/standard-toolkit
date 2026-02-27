@@ -403,13 +403,15 @@ export function enableEditPanning(
  * ```
  */
 export function disableEditPanning(mapId: UniqueId): void {
-  if (!editStore.get(mapId)?.editingShape) {
+  const state = editStore.get(mapId);
+
+  if (!state?.editingShape) {
     editStore.set(mapId, { previousMode: null });
     requestCursorChange(mapId, 'default', EDIT_SHAPE_LAYER_ID);
     return;
   }
 
-  const previousMode = editStore.get(mapId)?.previousMode;
+  const previousMode = state?.previousMode;
   if (!previousMode) {
     editStore.set(mapId, { previousMode: null });
     return;
