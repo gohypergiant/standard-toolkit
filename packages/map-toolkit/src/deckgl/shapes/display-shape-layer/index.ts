@@ -13,9 +13,9 @@
 'use client';
 
 import { Broadcast } from '@accelint/bus';
-import { getLogger } from '@accelint/logger';
 import { CompositeLayer } from '@deck.gl/core';
 import { GeoJsonLayer, IconLayer, LineLayer } from '@deck.gl/layers';
+import { createLoggerDomain } from '@/shared/logger';
 import { SHAPE_LAYER_IDS } from '../shared/constants';
 import { type ShapeEvent, ShapeEvents } from '../shared/events';
 import { isLineGeometry, isPolygonGeometry } from '../shared/types';
@@ -69,12 +69,7 @@ import type {
   LineSegment,
 } from './types';
 
-const logger = getLogger({
-  enabled: process.env.NODE_ENV !== 'production',
-  level: 'warn',
-  prefix: '[DisplayShapeLayer]',
-  pretty: true,
-});
+const logger = createLoggerDomain('[DisplayShapeLayer]');
 
 /**
  * Typed event bus instance for shape events.

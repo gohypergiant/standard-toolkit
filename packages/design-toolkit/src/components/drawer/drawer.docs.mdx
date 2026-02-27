@@ -128,6 +128,51 @@ Controls drawer state or navigates to views.
 - `UniqueId`: Push view onto stack
 - `Array`: Fire multiple events in sequence
 
+## Programmatic Control
+
+The `useDrawerEmit` hook provides programmatic control over drawer state and navigation. It combines [ViewStack](?path=/docs/components-viewstack--playground) methods with drawer-specific actions.
+
+### useDrawerEmit
+
+```tsx
+import { useDrawerEmit } from '@accelint/design-toolkit';
+
+function MyComponent() {
+  const emit = useDrawerEmit();
+
+  // Open a specific view
+  emit.open(viewId);
+
+  // Toggle a view open/closed
+  emit.toggle(viewId);
+
+  // Close the drawer
+  emit.close(drawerId);
+
+  // Navigate within the stack
+  emit.push(viewId);      // Push a view onto the stack
+  emit.pop(viewId);       // Pop the current view
+  emit.back(drawerId);    // Navigate back one view
+  emit.clear(drawerId);   // Clear the view stack
+  emit.reset(drawerId);   // Reset to default view
+}
+```
+
+### Available Methods
+
+| Method | Parameter | Description |
+|--------|-----------|-------------|
+| `open` | `UniqueId` | Opens the drawer and navigates to the specified view |
+| `toggle` | `UniqueId` | Toggles the drawer open/closed for the specified view |
+| `close` | `UniqueId` | Closes the drawer |
+| `push` | `UniqueId` | Pushes a view onto the navigation stack |
+| `pop` | `UniqueId` | Pops the current view from the stack |
+| `back` | `UniqueId` | Navigates back one view in the stack |
+| `clear` | `UniqueId` | Clears all views from the stack |
+| `reset` | `UniqueId` | Resets the stack to the default view |
+
+All methods accept a `UniqueId` parameter identifying the drawer or view to control.
+
 ## Accessibility
 - ARIA roles and keyboard support built-in
 - Focus management for panel open/close
