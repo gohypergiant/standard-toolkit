@@ -12,7 +12,7 @@
 
 import { ThemeProvider } from '@accelint/design-toolkit';
 import { getLogger } from '@accelint/logger';
-import clsx from 'clsx';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { dash } from 'radashi';
 import { describe, expect, test } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
@@ -80,7 +80,7 @@ async function triggerState(
       // Find the actual focusable element within the container
       const focusTarget = findFocusableElement(element);
       if (focusTarget) {
-        focusTarget.focus({ focusVisible: true });
+        focusTarget.focus({ focusVisible: true } as FocusOptions);
       } else {
         logger.warn(
           `No focusable element found for focus state. Element: ${element.tagName}${element.id ? `#${element.id}` : ''}`,
@@ -241,6 +241,10 @@ async function runStateTest<TProps>(
       }
     }
   }
+
+  // Wait for initial render to complete before triggering interactions.
+  // Components like DateField need time to render segments/format values.
+  await waitForPaint();
 
   await triggerState(interactionElement, ctx.state);
   await waitForPaint();
