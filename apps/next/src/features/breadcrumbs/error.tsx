@@ -11,17 +11,12 @@
  */
 
 'use client';
-import { getLogger } from '@accelint/logger';
 import 'client-only';
-import type { ErrorInfo, PropsWithChildren } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
+import { createLogger } from '~/utils/logger';
+import type { ErrorInfo, PropsWithChildren } from 'react';
 
-const logger = getLogger({
-  enabled: process.env.NODE_ENV !== 'production',
-  level: 'error',
-  prefix: '[Breadcrumbs]',
-  pretty: true,
-});
+const logger = createLogger('[Breadcrumbs]', 'error');
 
 function onError(err: Error, info: ErrorInfo) {
   logger
