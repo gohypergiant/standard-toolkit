@@ -46,8 +46,8 @@ export type EditingState = {
   editMode: EditMode;
   /** Live feature being edited (updates in real-time during drag) */
   featureBeingEdited: Feature | null;
-  /** Temporary store for previous mode while panning */
-  prevMode: EditMode | null;
+  /** Edit mode to restore after held panning hotkey is released. Null when not panning. */
+  previousMode: EditMode | null;
 };
 
 /**

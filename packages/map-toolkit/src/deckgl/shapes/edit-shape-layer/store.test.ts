@@ -609,7 +609,7 @@ describe('edit-shape-layer store', () => {
       mapEventBus.on(MapEvents.enablePan, modeEmitSpy);
 
       enableEditPanning(mapId, editStore.get(mapId)?.editMode);
-      expect(editStore.get(mapId)?.prevMode).toBe(null);
+      expect(editStore.get(mapId)?.previousMode).toBe(null);
     });
 
     it('should store prev mode when called during editing', () => {
@@ -628,9 +628,12 @@ describe('edit-shape-layer store', () => {
       expect(editStore.get(mapId)?.editMode).not.toBe('view');
 
       enableEditPanning(mapId, editStore.get(mapId).editMode);
+      const originalMode = editStore.get(mapId).editMode;
+      expect(originalMode).not.toBe('view'); // Precondition: editing is active
+      expect(editStore.get(mapId)?.previousMode).toBe(originalMode);
 
-      expect(editStore.get(mapId)?.prevMode).not.toBe(null);
-      expect(editStore.get(mapId)?.prevMode).not.toEqual(
+      expect(editStore.get(mapId)?.previousMode).not.toBe(null);
+      expect(editStore.get(mapId)?.previousMode).not.toEqual(
         editStore.get(mapId).editMode,
       );
       expect(modeEmitSpy).toHaveBeenCalled();
@@ -639,7 +642,7 @@ describe('edit-shape-layer store', () => {
   });
 
   describe('disableEditPanning', () => {
-    it('should clear prevMode and return to editMode', () => {
+    it('should clear previousMode and return to editMode', () => {
       const { edit } = editStore.actions(mapId);
       const mapEventBus = Broadcast.getInstance();
       const mapCursorBus = Broadcast.getInstance();
@@ -654,12 +657,12 @@ describe('edit-shape-layer store', () => {
       edit(shape);
 
       disableEditPanning(mapId);
-      expect(editStore.get(mapId)?.prevMode).toBe(null);
+      expect(editStore.get(mapId)?.previousMode).toBe(null);
       expect(modeEmitSpy).toHaveBeenCalled();
       expect(cursorEmitSpy).toHaveBeenCalled();
     });
 
-    it('should return and clear prevMode if editMode is active', () => {
+    it('should clear previousMode and emit disablePan when editing is active', () => {
       const { edit } = editStore.actions(mapId);
       const mapEventBus = Broadcast.getInstance();
       const mapCursorBus = Broadcast.getInstance();
@@ -675,7 +678,7 @@ describe('edit-shape-layer store', () => {
       expect(editStore.get(mapId)?.editMode).not.toBe('view');
 
       disableEditPanning(mapId);
-      expect(editStore.get(mapId)?.prevMode).toBe(null);
+      expect(editStore.get(mapId)?.previousMode).toBe(null);
       expect(modeEmitSpy).toHaveBeenCalled();
       expect(cursorEmitSpy).toHaveBeenCalled();
     });

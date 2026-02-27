@@ -88,7 +88,7 @@ const DEFAULT_EDITING_STATE: EditingState = {
   editingShape: null,
   editMode: 'view',
   featureBeingEdited: null,
-  prevMode: null,
+  previousMode: null,
 };
 
 /**
@@ -359,31 +359,67 @@ export function saveEditingFromLayer(mapId: UniqueId): void {
 }
 
 /**
- * While editing, if hotkey is held, we want to enable panning and store
- * previous editing mode to return to when we release the key.
+ * Enables map panning while editing by switching to view mode and storing the
+ * current edit mode for restoration.
+ *
+ * No-op if no shape is currently being edited.
+ *
+ * @param mapId - The map instance ID.
+ * @param previousMode - The current edit mode to restore when panning ends.
+ *
+ * @example
+ * ```typescript
+ * const previousMode = editStore.get(mapId).editMode;
+ * enableEditPanning(mapId, previousMode);
+ * ```
  */
-export function enableEditPanning(mapId: UniqueId, prevMode: EditMode): void {
-  if (!editStore.get(mapId)?.editingShape) {
-    return;
+export function enableEditPanning(
+  mapId: UniqueId,
+  previousMode: EditMode,
+): void {
+  if (
+    editStore.get(mapId)?.previousMode !== null ||
+    !editStore.get(mapId)?.editingShape
+  ) {
+    return; // already panning
   }
 
-  editStore.set(mapId, { prevMode, editMode: 'view' });
+  editStore.set(mapId, { previousMode, editMode: 'view' });
   mapEventBus.emit(MapEvents.enablePan, { id: mapId });
   requestCursorChange(mapId, 'grab', EDIT_SHAPE_LAYER_ID);
 }
 
 /**
- * End of panning, we return to previous editing mode and clear stored mode.
+ * Disables map panning and restores the previous edit mode.
+ *
+ * If no shape is being edited, clears the stored mode and resets the cursor.
+ * Otherwise, restores the edit mode from the stored `previousMode` and re-disables panning.
+ *
+ * @param mapId - The map instance ID.
+ *
+ * @example
+ * ```typescript
+ * disableEditPanning(mapId);
+ * ```
  */
 export function disableEditPanning(mapId: UniqueId): void {
   if (!editStore.get(mapId)?.editingShape) {
-    editStore.set(mapId, { prevMode: null });
+    editStore.set(mapId, { previousMode: null });
     requestCursorChange(mapId, 'default', EDIT_SHAPE_LAYER_ID);
     return;
   }
 
-  const prevMode = editStore.get(mapId)?.prevMode as EditMode;
-  editStore.set(mapId, { editMode: prevMode, prevMode: null });
+  const previousMode = editStore.get(mapId)?.previousMode;
+  if (!previousMode) {
+    editStore.set(mapId, { previousMode: null });
+    return;
+  }
+
+  editStore.set(mapId, { editMode: previousMode, previousMode: null });
   mapEventBus.emit(MapEvents.disablePan, { id: mapId });
-  requestCursorChange(mapId, 'crosshair', EDIT_SHAPE_LAYER_ID);
+  requestCursorChange(
+    mapId,
+    EDIT_CURSOR_MAP[previousMode],
+    EDIT_SHAPE_LAYER_ID,
+  );
 }

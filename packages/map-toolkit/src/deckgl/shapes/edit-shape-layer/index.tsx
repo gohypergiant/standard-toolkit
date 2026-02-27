@@ -210,13 +210,17 @@ export function EditShapeLayer({
   useHotkey(saveEditHotkey);
 
   // Register Space key for enabling panning while editing shape.
+  // NOTE: Low threshold (50ms) enables near-instant panning response on hold.
+  // alwaysTriggerKeyUp ensures panning ends even if onKeyHeld was triggered.
   const editPanningHotkey = useMemo(
     () =>
       registerHotkey({
         id: `editPanningHotkey-${actualMapId}`,
         key: hotkeyConfig.panning,
         onKeyDown: (e: KeyboardEvent) => {
-          e.preventDefault();
+          if (editStore.get(actualMapId)?.editingShape) {
+            e.preventDefault();
+          }
         },
         onKeyHeld: () => {
           const prevMode = editStore.get(actualMapId).editMode;
