@@ -12,14 +12,18 @@
 
 'use client';
 
-import { globalBind, Keycode, registerHotkey } from '@accelint/hotkey-manager';
-import { useHotkey } from '@accelint/hotkey-manager/react';
+import {
+  globalBind,
+  Keycode,
+  registerHotkey,
+  unregisterHotkey,
+} from '@accelint/hotkey-manager';
 import type {
   EditAction,
   FeatureCollection,
 } from '@deck.gl-community/editable-layers';
 import type { Feature } from 'geojson';
-import { useCallback, useContext, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useContext, useEffect, useRef } from 'react';
 import { MapContext } from '../../base-map/provider';
 import { useShiftZoomDisable } from '../shared/hooks/use-shift-zoom-disable';
 import { ShapeFeatureType, type ShapeFeatureTypeValues } from '../shared/types';
@@ -189,53 +193,59 @@ export function EditShapeLayer({
     }
   }, []);
 
-  // Register Enter key hotkey scoped to this component and map instance
-  // Handler checks if actively editing to prevent conflicts with other Enter key uses
-  const saveEditHotkey = useMemo(
-    () =>
-      registerHotkey({
-        id: `saveEditHotkey-${actualMapId}`,
-        key: { code: Keycode.Enter },
-        onKeyUp: () => {
-          // Use ref to get current editing state, avoiding stale closure
-          if (editingStateRef.current?.editingShape) {
-            cancelPendingUpdate();
-            saveEditingFromLayer(actualMapId);
-          }
-        },
-      }),
-    [actualMapId, cancelPendingUpdate],
-  );
+  // Register Enter key hotkey scoped to this component and map instance.
+  // Handles the full lifecycle: register → bind → unbind → unregister.
+  // Without unregistering on cleanup, remounting throws a duplicate-id error.
+  useEffect(() => {
+    const manager = registerHotkey({
+      id: `saveEditHotkey-${actualMapId}`,
+      key: { code: Keycode.Enter },
+      onKeyUp: () => {
+        if (editingStateRef.current?.editingShape) {
+          cancelPendingUpdate();
+          saveEditingFromLayer(actualMapId);
+        }
+      },
+    });
 
-  useHotkey(saveEditHotkey);
+    const unbind = manager.bind();
+
+    return () => {
+      unbind();
+      unregisterHotkey(manager);
+    };
+  }, [actualMapId, cancelPendingUpdate]);
 
   // Register Space key for enabling panning while editing shape.
   // NOTE: Low threshold (50ms) enables near-instant panning response on hold.
   // alwaysTriggerKeyUp ensures panning ends even if onKeyHeld was triggered.
-  const editPanningHotkey = useMemo(
-    () =>
-      registerHotkey({
-        id: `editPanningHotkey-${actualMapId}`,
-        key: hotkeyConfig.panning,
-        onKeyDown: (e: KeyboardEvent) => {
-          if (editStore.get(actualMapId)?.editingShape) {
-            e.preventDefault();
-          }
-        },
-        onKeyHeld: () => {
-          const prevMode = editStore.get(actualMapId).editMode;
-          enableEditPanning(actualMapId, prevMode);
-        },
-        onKeyUp: () => {
-          disableEditPanning(actualMapId);
-        },
-        heldThresholdMs: 50,
-        alwaysTriggerKeyUp: true,
-      }),
-    [actualMapId, hotkeyConfig.panning],
-  );
+  useEffect(() => {
+    const manager = registerHotkey({
+      id: `editPanningHotkey-${actualMapId}`,
+      key: hotkeyConfig.panning,
+      onKeyDown: (e: KeyboardEvent) => {
+        if (editStore.get(actualMapId)?.editingShape) {
+          e.preventDefault();
+        }
+      },
+      onKeyHeld: () => {
+        const prevMode = editStore.get(actualMapId).editMode;
+        enableEditPanning(actualMapId, prevMode);
+      },
+      onKeyUp: () => {
+        disableEditPanning(actualMapId);
+      },
+      heldThresholdMs: 50,
+      alwaysTriggerKeyUp: true,
+    });
 
-  useHotkey(editPanningHotkey);
+    const unbind = manager.bind();
+
+    return () => {
+      unbind();
+      unregisterHotkey(manager);
+    };
+  }, [actualMapId, hotkeyConfig.panning]);
 
   // Disable zoom while Shift is held during editing
   // This prevents boxZoom (Shift+drag) from interfering with Shift modifier constraints
