@@ -11,6 +11,7 @@
  */
 
 import type { UniqueId } from '@accelint/core';
+import type { Rgba255Tuple } from '@accelint/predicates';
 import type { CompositeLayerProps } from '@deck.gl/core';
 import type { Shape, ShapeId } from '../shared/types';
 import type { LabelPositionOptions } from './utils/labels';
@@ -27,8 +28,8 @@ export type CurtainFeature = {
     coordinates: number[][][];
   };
   properties: {
-    fillColor: [number, number, number, number];
-    lineColor: [number, number, number, number];
+    fillColor: Rgba255Tuple;
+    lineColor: Rgba255Tuple;
     shapeId?: ShapeId;
   };
 };
@@ -37,7 +38,7 @@ export type CurtainFeature = {
 export type LineSegment = {
   source: [number, number, number];
   target: [number, number, number];
-  color: [number, number, number, number];
+  color: Rgba255Tuple;
 };
 
 /**
@@ -72,7 +73,7 @@ export type FeaturesCache = {
   /** Map of shapeId to feature index for O(1) lookup */
   shapeIdToIndex: Map<ShapeId, number>;
   /** Pre-normalized line colors parallel to features, for O(1) accessor lookup */
-  normalizedLineColors: [number, number, number, number][];
+  normalizedLineColors: Rgba255Tuple[];
 };
 
 /**
@@ -193,7 +194,7 @@ export type DisplayShapeLayerProps = CompositeLayerProps & {
    * highlightColor={[255, 0, 0, 128]} // Red at 50% opacity
    * ```
    */
-  highlightColor?: [number, number, number, number];
+  highlightColor?: Rgba255Tuple;
 
   /**
    * When true (default), multiplies fill color alpha by 0.2 (reducing to 20% of original opacity)

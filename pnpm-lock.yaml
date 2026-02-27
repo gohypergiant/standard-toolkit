@@ -933,10 +933,6 @@ importers:
         version: 4.0.16(@types/node@22.19.3)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.6.1)(jsdom@25.0.1)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2)
 
   packages/map-toolkit:
-    dependencies:
-      '@accelint/hotkey-manager':
-        specifier: workspace:*
-        version: link:../hotkey-manager
     devDependencies:
       '@accelint/biome-config':
         specifier: workspace:*
@@ -956,12 +952,18 @@ importers:
       '@accelint/geo':
         specifier: workspace:*
         version: link:../geo
+      '@accelint/hotkey-manager':
+        specifier: workspace:*
+        version: link:../hotkey-manager
       '@accelint/logger':
         specifier: workspace:*
         version: link:../logger
       '@accelint/postcss-tailwind-css-modules':
         specifier: workspace:*
         version: link:../postcss-tailwind-css-modules
+      '@accelint/predicates':
+        specifier: workspace:*
+        version: link:../predicates
       '@accelint/smeegl':
         specifier: workspace:*
         version: link:../../tooling/smeegl

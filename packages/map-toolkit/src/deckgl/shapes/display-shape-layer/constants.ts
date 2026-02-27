@@ -13,6 +13,7 @@
 'use client';
 import { PathStyleExtension } from '@deck.gl/extensions';
 import { DEFAULT_COLORS } from '../shared/constants';
+import type { Rgba255Tuple } from '@accelint/predicates';
 
 /**
  * Map interaction constants.
@@ -110,6 +111,6 @@ export const OVERLAY_FILL_OPACITY = 0.25;
 export const DASH_EXTENSION = [new PathStyleExtension({ dash: true })];
 
 /** Mutable [r, g, b, a] tuple of DEFAULT_COLORS.highlight, pre-spread at module load for hot-path usage. */
-export const HIGHLIGHT_COLOR_TUPLE: [number, number, number, number] = [
+export const HIGHLIGHT_COLOR_TUPLE: Rgba255Tuple = [
   ...DEFAULT_COLORS.highlight,
-] as [number, number, number, number];
+] as unknown as Rgba255Tuple;

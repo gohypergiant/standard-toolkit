@@ -18,6 +18,7 @@ import {
 } from '../../shared/constants';
 import { getFillColor, getLineWidth } from '../../shared/utils/style-utils';
 import { OVERLAY_FILL_OPACITY } from '../constants';
+import type { Rgba255Tuple } from '@accelint/predicates';
 import type { StyledFeature } from '../../shared/types';
 
 /**
@@ -92,7 +93,7 @@ export function getHighlightLineWidth(feature: StyledFeature): number {
  * ```
  */
 export function applyOverlayOpacity(
-  color: [number, number, number, number],
+  color: Rgba255Tuple,
 ): [number, number, number, number] {
   return [
     color[0],
@@ -138,7 +139,7 @@ export function getOverlayFillColor(
  * ```
  */
 export function brightenColor(
-  color: [number, number, number, number],
+  color: Rgba255Tuple,
   factor: number,
 ): [number, number, number, number] {
   return [

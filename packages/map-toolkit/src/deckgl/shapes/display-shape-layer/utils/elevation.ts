@@ -16,6 +16,7 @@ import { isLineGeometry, isPolygonGeometry } from '../../shared/types';
 import { getLineColor } from '../../shared/utils/style-utils';
 import { BRIGHTNESS_FACTOR } from '../constants';
 import { brightenColor } from './display-style';
+import type { Rgba255Tuple } from '@accelint/predicates';
 import type { Shape, ShapeId } from '../../shared/types';
 import type {
   CurtainFeature,
@@ -145,7 +146,7 @@ function createVerticalSegment(
   lon: number,
   lat: number,
   elevation: number,
-  color: [number, number, number, number],
+  color: Rgba255Tuple,
 ): LineSegment {
   return {
     source: [lon, lat, 0] as [number, number, number],
@@ -157,7 +158,7 @@ function createVerticalSegment(
 /** Process a coordinates array and create vertical segments for each elevated point. */
 function processCoordinates(
   coordinates: number[][],
-  color: [number, number, number, number],
+  color: Rgba255Tuple,
 ): LineSegment[] {
   const segments: LineSegment[] = [];
 
@@ -194,7 +195,7 @@ function processCoordinates(
  */
 export function createElevationLineSegments(
   geometry: Shape['feature']['geometry'],
-  color: [number, number, number, number],
+  color: Rgba255Tuple,
 ): LineSegment[] {
   // Skip GeometryCollection
   if (geometry.type === 'GeometryCollection') {
@@ -305,8 +306,8 @@ export function classifyElevatedFeatures(
  */
 export function createCurtainPolygonsFromLine(
   coordinates: number[][],
-  fillColor: [number, number, number, number],
-  lineColor: [number, number, number, number],
+  fillColor: Rgba255Tuple,
+  lineColor: Rgba255Tuple,
   shapeId?: ShapeId,
 ): CurtainFeature[] {
   const polygons: CurtainFeature[] = [];
@@ -392,7 +393,7 @@ export function createCurtainPolygonFeatures(
     const shapeId = feature.properties?.shapeId;
 
     // Create fill color with base opacity (same as polygon fills)
-    const fillColor: [number, number, number, number] = applyBaseOpacity
+    const fillColor: Rgba255Tuple = applyBaseOpacity
       ? [
           lineColorRGBA[0],
           lineColorRGBA[1],
