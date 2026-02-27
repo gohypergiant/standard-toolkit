@@ -249,6 +249,10 @@ async function runStateTest<TProps>(
     }
   }
 
+  // Wait for initial render to complete before triggering interactions.
+  // Components like DateField need time to render segments/format values.
+  await waitForPaint();
+
   await triggerState(interactionElement, ctx.state);
   await waitForPaint();
 
