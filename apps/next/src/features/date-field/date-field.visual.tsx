@@ -47,6 +47,7 @@ createInteractiveVisualTests({
   testId: 'test-date-field',
   variants,
   states: ['default', 'hover', 'focus', 'disabled'],
+  waitMs: 300, // Wait for date segments to render and format
 });
 
 // ---------------------------------------------------------------------------
