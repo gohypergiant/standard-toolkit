@@ -80,7 +80,10 @@ async function triggerState(
       // Find the actual focusable element within the container
       const focusTarget = findFocusableElement(element);
       if (focusTarget) {
-        focusTarget.focus();
+        // Use non-standard focusVisible option to signal to monkey patches
+        // (e.g., menu.visual.tsx) that this is an intentional VRT focus.
+        // Type assertion needed because focusVisible is not in standard FocusOptions.
+        focusTarget.focus({ focusVisible: true } as FocusOptions);
       } else {
         logger.warn(
           `No focusable element found for focus state. Element: ${element.tagName}${element.id ? `#${element.id}` : ''}`,
@@ -122,7 +125,11 @@ async function waitForPaint(): Promise<void> {
  */
 async function resetState(): Promise<void> {
   // Move mouse to body to clear hover
-  await userEvent.hover(document.body);
+  try {
+    await userEvent.hover(document.body, { timeout: 3_000 });
+  } catch {
+    // Hover reset failed; continue with cleanup anyway
+  }
   // Clean up any manually-set data-hovered/data-pressed attributes
   for (const el of document.querySelectorAll('[data-hovered]')) {
     el.removeAttribute('data-hovered');
