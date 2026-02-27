@@ -16,13 +16,9 @@ export default defineConfig({
   plugins: [
     copy({
       targets: [
-        { src: 'src/**/*.json', dest: 'dist' },
-        {
-          src: 'src/**/*.png',
-          dest: 'dist',
-        },
+        { src: 'src/spritesheets/**/*.json', dest: 'dist/spritesheets' },
+        { src: 'src/spritesheets/**/*.png', dest: 'dist/spritesheets' },
       ],
-      flatten: false,
       hook: 'writeBundle',
     }),
   ],
@@ -47,10 +43,6 @@ export default defineConfig({
       return pkg;
     },
   },
-  external: [
-    // we just copy css files manually
-    /\.css$/,
-  ],
   // NOTE: our license header is currently not formatted correctly to support https://rolldown.rs/options/output#legalcomments
   outputOptions: {
     banner: `/*
