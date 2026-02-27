@@ -11,11 +11,11 @@
  */
 
 import {
-  type ClickEvent,
   DrawPolygonMode,
   type FeatureCollection,
   type ModeProps,
   type PointerMoveEvent,
+  type SimpleFeatureCollection,
   type Tooltip,
 } from '@deck.gl-community/editable-layers';
 import { type Coord, distance } from '@turf/turf';
@@ -37,9 +37,6 @@ import { formatDistanceTooltip } from '../../shared/constants';
  * 3. Click to add more vertices
  * 4. Double-click or click the starting point to close the polygon
  *
- * ## Double-Click Workaround
- * Includes a workaround for the double-click to finish issue in @deck.gl-community/editable-layers ~9.1.
- * This will be fixed in a future version (PR #225).
  *
  * @example
  * ```typescript
@@ -52,8 +49,6 @@ import { formatDistanceTooltip } from '../../shared/constants';
 export class DrawPolygonModeWithTooltip extends DrawPolygonMode {
   /** Current tooltip state (null when not drawing) */
   private tooltip: Tooltip | null = null;
-  /** Cached mode props for double-click workaround */
-  private lastModeProps: ModeProps<FeatureCollection> | null = null;
 
   /**
    * Finish drawing the polygon.
@@ -61,11 +56,10 @@ export class DrawPolygonModeWithTooltip extends DrawPolygonMode {
    * Creates a Polygon geometry from the click sequence and emits an edit action.
    * Requires at least 3 points to create a valid polygon. Automatically closes
    * the polygon by adding the first point to the end of the coordinate ring.
-   * Extracted to share between double-click workaround and parent class logic.
    *
    * @param props - Mode properties with onEdit callback
    */
-  private finishDrawing(props: ModeProps<FeatureCollection>): void {
+  override finishDrawing(props: ModeProps<SimpleFeatureCollection>): void {
     const clickSequence = this.getClickSequence();
     const firstPoint = clickSequence[0];
     if (clickSequence.length <= 2 || !firstPoint) {
@@ -79,7 +73,6 @@ export class DrawPolygonModeWithTooltip extends DrawPolygonMode {
 
     this.resetClickSequence();
     this.tooltip = null;
-    this.lastModeProps = null;
 
     const editAction = this.getAddFeatureOrBooleanPolygonAction(
       polygonToAdd,
@@ -88,36 +81,6 @@ export class DrawPolygonModeWithTooltip extends DrawPolygonMode {
     if (editAction) {
       props.onEdit(editAction);
     }
-  }
-
-  /**
-   * Handle double-click to finish drawing.
-   * This is called externally via a DOM event listener as a workaround for
-   * @deck.gl-community/editable-layers ~9.1 which doesn't register 'dblclick' in EVENT_TYPES.
-   * @see https://github.com/visgl/deck.gl-community/pull/225
-   */
-  handleDoubleClick(): void {
-    if (this.lastModeProps) {
-      this.finishDrawing(this.lastModeProps);
-    }
-  }
-
-  /**
-   * Override handleClick to store props for double-click workaround.
-   *
-   * Caches the mode props so that the external double-click handler can
-   * access them when finishing the drawing.
-   *
-   * @param event - Click event with map coordinates
-   * @param props - Mode properties including onEdit callback
-   */
-  override handleClick(
-    event: ClickEvent,
-    props: ModeProps<FeatureCollection>,
-  ): void {
-    // Store props so handleDoubleClick can access them
-    this.lastModeProps = props;
-    super.handleClick(event, props);
   }
 
   /**
@@ -145,7 +108,7 @@ export class DrawPolygonModeWithTooltip extends DrawPolygonMode {
     const distanceUnits =
       props.modeConfig?.distanceUnits ?? DEFAULT_DISTANCE_UNITS;
 
-    const lastPoint = clickSequence[clickSequence.length - 1] as Coord;
+    const lastPoint = clickSequence.at(-1) as Coord;
     const currentPoint = mapCoords as Coord;
 
     const dist = distance(lastPoint, currentPoint, { units: distanceUnits });

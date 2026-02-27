@@ -46,6 +46,7 @@ import { OptionsSection } from '../options/section';
  */
 export function ValueSelector(props: ValueSelectorProps) {
   const {
+    className,
     handleOnChange,
     disabled,
     listsAsArrays,
@@ -66,7 +67,7 @@ export function ValueSelector(props: ValueSelectorProps) {
 
   const handleSelectionChange = useCallback(
     (selection: Key | null) => {
-      if (selection) {
+      if (selection !== null) {
         onChange(`${selection}`);
       }
     },
@@ -79,7 +80,11 @@ export function ValueSelector(props: ValueSelectorProps) {
         ? optionsProp.map((section) => (
             <OptionsSection key={section.label} header={section.label}>
               {section.options.map((option) => (
-                <OptionsItem id={option.name} key={option.name}>
+                <OptionsItem
+                  textValue={option.label}
+                  id={option.name}
+                  key={option.name}
+                >
                   {option.label}
                 </OptionsItem>
               ))}
@@ -97,12 +102,26 @@ export function ValueSelector(props: ValueSelectorProps) {
     [optionsProp],
   );
 
+  const selectedKey = Array.isArray(val) ? val[0] : val;
+
+  const flatOptions = isOptionGroupArray(optionsProp)
+    ? optionsProp.flatMap((group) => group.options)
+    : optionsProp;
+
+  const selectedValue =
+    flatOptions.find((option) => option.name === selectedKey)?.label ??
+    selectedKey;
+
   return (
     <ComboBoxField
-      size='small'
-      isDisabled={disabled}
       {...rest}
-      selectedKey={Array.isArray(val) ? val[0] : val}
+      classNames={{ control: className }}
+      size='small'
+      allowsCustomValue={false}
+      isClearable={false}
+      isDisabled={disabled}
+      defaultInputValue={selectedValue}
+      defaultSelectedKey={selectedKey}
       aria-labelledby={title}
       onSelectionChange={handleSelectionChange}
     >

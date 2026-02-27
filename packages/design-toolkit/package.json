@@ -1,7 +1,7 @@
 {
   "name": "@accelint/design-toolkit",
   "description": "An open-source component library to serve as part of the entire ecosystem of UX for Accelint.",
-  "version": "9.6.0",
+  "version": "9.7.0",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "devDependencies": {
@@ -455,6 +455,9 @@
     "test:watch": "pnpm vitest --dir=src --watch",
     "typecheck": "tsc --noEmit"
   },
+  "sideEffects": [
+    "**/*.css"
+  ],
   "subPath": "packages/design-toolkit",
   "title": "Design Toolkit",
   "type": "module",

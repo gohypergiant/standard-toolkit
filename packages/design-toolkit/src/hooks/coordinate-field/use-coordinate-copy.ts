@@ -10,15 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import { getLogger } from '@accelint/logger';
 import { useState } from 'react';
+import { createLoggerDomain } from '@/utils/logger';
 
-const logger = getLogger({
-  enabled: process.env.NODE_ENV !== 'production',
-  level: 'debug',
-  prefix: '[CoordinateField]',
-  pretty: true,
-});
+const logger = createLoggerDomain('[CoordinateField]');
 
 import { getAllCoordinateFormats } from '../../components/coordinate-field/coordinate-utils';
 import type {
@@ -132,7 +127,7 @@ export function useCoordinateCopy({
         }, COPY_FEEDBACK_DURATION_MS),
       );
     } catch (err) {
-      logger.withError(err).warn('Fallback copy to clipboard failed');
+      logger.withError(err).error('Fallback copy to clipboard failed');
     }
 
     // Clean up temporary textarea
