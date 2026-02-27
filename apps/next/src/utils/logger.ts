@@ -55,5 +55,5 @@ export function createLogger(module: string, level?: LoggerOptions['level']) {
     child.setLevel(level);
   }
 
-  return child.withPrefix(module).withContext({ source: module });
+  return child.withPrefix(module).withMetadata({ source: module });
 }
