@@ -20,7 +20,7 @@ const mapLogger = createLogger('[Map]');
 
 function onError(err: Error, info: ErrorInfo) {
   mapLogger
-    .withContext({ componentStack: info.componentStack })
+    .withMetadata({ componentStack: info.componentStack })
     .withError(err)
     .error('Error boundary caught error');
 }

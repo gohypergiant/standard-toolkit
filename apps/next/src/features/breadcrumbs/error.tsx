@@ -20,7 +20,7 @@ const logger = createLogger('[Breadcrumbs]', 'error');
 
 function onError(err: Error, info: ErrorInfo) {
   logger
-    .withContext({ componentStack: info.componentStack })
+    .withMetadata({ componentStack: info.componentStack })
     .withError(err)
     .error('Error boundary caught error');
 }
