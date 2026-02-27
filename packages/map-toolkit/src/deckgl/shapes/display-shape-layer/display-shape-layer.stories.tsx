@@ -11,7 +11,7 @@
  */
 
 import { useEmit, useOn } from '@accelint/bus/react';
-import { uuid } from '@accelint/core';
+import { type UniqueId, uuid } from '@accelint/core';
 import { Button } from '@accelint/design-toolkit/components/button';
 import { OptionsItem } from '@accelint/design-toolkit/components/options/item';
 import { SelectField } from '@accelint/design-toolkit/components/select-field';
@@ -31,6 +31,7 @@ import {
   type ShapeHoveredEvent,
   type ShapeSelectedEvent,
 } from '../shared/events';
+import { HIGHLIGHT_COLOR_TUPLE } from './constants';
 import type {
   CameraResetEvent,
   CameraSetPitchEvent,
@@ -71,10 +72,7 @@ export const BasicDisplayAndEvents: Story = {
     pickable: true,
     applyBaseOpacity: true,
     showHighlight: false,
-    highlightColorR: 40,
-    highlightColorG: 245,
-    highlightColorB: 190,
-    highlightColorA: 100,
+    highlightColor: [...HIGHLIGHT_COLOR_TUPLE],
   },
   argTypes: {
     showLabels: {
@@ -97,21 +95,9 @@ export const BasicDisplayAndEvents: Story = {
       description:
         'Show/hide highlight effect around selected shapes (dotted border always shows)',
     },
-    highlightColorR: {
-      control: { type: 'number', min: 0, max: 255, step: 1 },
-      description: 'Highlight color red channel (0-255)',
-    },
-    highlightColorG: {
-      control: { type: 'number', min: 0, max: 255, step: 1 },
-      description: 'Highlight color green channel (0-255)',
-    },
-    highlightColorB: {
-      control: { type: 'number', min: 0, max: 255, step: 1 },
-      description: 'Highlight color blue channel (0-255)',
-    },
-    highlightColorA: {
-      control: { type: 'number', min: 0, max: 255, step: 1 },
-      description: 'Highlight color alpha/opacity (0-255)',
+    highlightColor: {
+      control: { type: 'object' },
+      description: 'Highlight color [R, G, B, A] with values 0-255',
     },
   },
   render: (args) => {
@@ -127,21 +113,12 @@ export const BasicDisplayAndEvents: Story = {
       ? mockShapes.find((s) => s.id === selectedId)?.name
       : undefined;
 
-    const highlightColor = useMemo(
-      () =>
-        [
-          args.highlightColorR,
-          args.highlightColorG,
-          args.highlightColorB,
-          args.highlightColorA,
-        ] as [number, number, number, number],
-      [
-        args.highlightColorR,
-        args.highlightColorG,
-        args.highlightColorB,
-        args.highlightColorA,
-      ],
-    );
+    const highlightColor = args.highlightColor as [
+      number,
+      number,
+      number,
+      number,
+    ];
 
     // Log selection events for demonstration purposes
     useOn<ShapeSelectedEvent>(ShapeEvents.selected, (event) => {
@@ -549,11 +526,7 @@ export const WithPointIcons: Story = {
  * Camera control panel for 3D shape stories.
  * Provides full camera controls like the camera story.
  */
-function ShapesCameraControls({
-  mapId,
-}: {
-  mapId: import('@accelint/core').UniqueId;
-}) {
+function ShapesCameraControls({ mapId }: { mapId: UniqueId }) {
   const setZoom = useEmit<CameraSetZoomEvent>(CameraEventTypes.setZoom);
   const setPitch = useEmit<CameraSetPitchEvent>(CameraEventTypes.setPitch);
   const setRotation = useEmit<CameraSetRotationEvent>(
@@ -673,31 +646,16 @@ const DISPLAY_25D_MAP_ID_INNER = uuid();
 export const DisplayShapes25D: Story = {
   args: {
     showHighlight: false,
-    highlightColorR: 40,
-    highlightColorG: 245,
-    highlightColorB: 190,
-    highlightColorA: 100,
+    highlightColor: [...HIGHLIGHT_COLOR_TUPLE],
   },
   argTypes: {
     showHighlight: {
       control: { type: 'boolean' },
       description: 'Show/hide highlight outline around selected shapes',
     },
-    highlightColorR: {
-      control: { type: 'number', min: 0, max: 255, step: 1 },
-      description: 'Highlight color red channel (0-255)',
-    },
-    highlightColorG: {
-      control: { type: 'number', min: 0, max: 255, step: 1 },
-      description: 'Highlight color green channel (0-255)',
-    },
-    highlightColorB: {
-      control: { type: 'number', min: 0, max: 255, step: 1 },
-      description: 'Highlight color blue channel (0-255)',
-    },
-    highlightColorA: {
-      control: { type: 'number', min: 0, max: 255, step: 1 },
-      description: 'Highlight color alpha/opacity (0-255)',
+    highlightColor: {
+      control: { type: 'object' },
+      description: 'Highlight color [R, G, B, A] with values 0-255',
     },
   },
   render: (args) => {
@@ -707,21 +665,12 @@ export const DisplayShapes25D: Story = {
       DISPLAY_25D_MAP_ID_INNER,
     );
 
-    const highlightColor = useMemo(
-      () =>
-        [
-          args.highlightColorR,
-          args.highlightColorG,
-          args.highlightColorB,
-          args.highlightColorA,
-        ] as [number, number, number, number],
-      [
-        args.highlightColorR,
-        args.highlightColorG,
-        args.highlightColorB,
-        args.highlightColorA,
-      ],
-    );
+    const highlightColor = args.highlightColor as [
+      number,
+      number,
+      number,
+      number,
+    ];
 
     // Handle hover events for cursor changes
     useOn<ShapeHoveredEvent>(ShapeEvents.hovered, (event) => {
@@ -777,31 +726,16 @@ const DISPLAY_3D_MAP_ID_INNER = uuid();
 export const DisplayShapes3D: Story = {
   args: {
     showHighlight: false,
-    highlightColorR: 40,
-    highlightColorG: 245,
-    highlightColorB: 190,
-    highlightColorA: 100,
+    highlightColor: [...HIGHLIGHT_COLOR_TUPLE],
   },
   argTypes: {
     showHighlight: {
       control: { type: 'boolean' },
       description: 'Show/hide highlight outline around selected shapes',
     },
-    highlightColorR: {
-      control: { type: 'number', min: 0, max: 255, step: 1 },
-      description: 'Highlight color red channel (0-255)',
-    },
-    highlightColorG: {
-      control: { type: 'number', min: 0, max: 255, step: 1 },
-      description: 'Highlight color green channel (0-255)',
-    },
-    highlightColorB: {
-      control: { type: 'number', min: 0, max: 255, step: 1 },
-      description: 'Highlight color blue channel (0-255)',
-    },
-    highlightColorA: {
-      control: { type: 'number', min: 0, max: 255, step: 1 },
-      description: 'Highlight color alpha/opacity (0-255)',
+    highlightColor: {
+      control: { type: 'object' },
+      description: 'Highlight color [R, G, B, A] with values 0-255',
     },
   },
   render: (args) => {
@@ -810,21 +744,12 @@ export const DisplayShapes3D: Story = {
       DISPLAY_3D_MAP_ID_INNER,
     );
 
-    const highlightColor = useMemo(
-      () =>
-        [
-          args.highlightColorR,
-          args.highlightColorG,
-          args.highlightColorB,
-          args.highlightColorA,
-        ] as [number, number, number, number],
-      [
-        args.highlightColorR,
-        args.highlightColorG,
-        args.highlightColorB,
-        args.highlightColorA,
-      ],
-    );
+    const highlightColor = args.highlightColor as [
+      number,
+      number,
+      number,
+      number,
+    ];
 
     // Handle hover events for cursor changes
     useOn<ShapeHoveredEvent>(ShapeEvents.hovered, (event) => {

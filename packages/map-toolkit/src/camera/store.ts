@@ -325,6 +325,7 @@ export const cameraStore = createMapStore<CameraState, CameraActions>({
         newState.projection = payload.projection;
         if (payload.projection === 'globe') {
           newState.view = '3D';
+          newState.pitch = 0;
         } else {
           newState.view = '2D';
           newState.pitch = 0;

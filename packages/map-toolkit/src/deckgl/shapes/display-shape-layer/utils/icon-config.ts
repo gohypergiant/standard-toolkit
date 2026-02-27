@@ -52,8 +52,8 @@ export type IconConfig = {
  * ```
  */
 export function getIconConfig(features: Shape['feature'][]): IconConfig {
-  for (const f of features) {
-    const icon = f.properties?.styleProperties?.icon;
+  for (const feature of features) {
+    const icon = feature.properties?.styleProperties?.icon;
     if (icon) {
       return {
         hasIcons: true,
