@@ -9,11 +9,23 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-
+import copy from 'rollup-plugin-copy';
 import { defineConfig } from 'tsdown';
 
 export default defineConfig({
-  plugins: [],
+  plugins: [
+    copy({
+      targets: [
+        { src: 'src/**/*.json', dest: 'dist' },
+        {
+          src: 'src/**/*.png',
+          dest: 'dist',
+        },
+      ],
+      flatten: false,
+      hook: 'writeBundle',
+    }),
+  ],
   entry: [
     'src/**/*.{ts,tsx}',
     '!src/**/*.{d,stories,test,test-d,bench}.{ts,tsx}',
@@ -27,7 +39,18 @@ export default defineConfig({
   treeshake: true,
   platform: 'neutral',
   minify: false,
-  exports: true,
+  exports: {
+    customExports(pkg) {
+      // pkg already contains all the js exports. we only need to manually add the spritesheet assets
+      pkg['./spritesheets/*.png'] = './dist/spritesheets/*.png';
+      pkg['./spritesheets/*.json'] = './dist/spritesheets/*.json';
+      return pkg;
+    },
+  },
+  external: [
+    // we just copy css files manually
+    /\.css$/,
+  ],
   // NOTE: our license header is currently not formatted correctly to support https://rolldown.rs/options/output#legalcomments
   outputOptions: {
     banner: `/*
