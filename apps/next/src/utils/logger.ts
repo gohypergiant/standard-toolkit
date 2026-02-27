@@ -13,9 +13,12 @@
 import { getLogger } from '@accelint/logger';
 import type { LoggerOptions } from '@accelint/logger';
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 const logger = getLogger({
-  level: process.env.NODE_ENV === 'production' ? 'error' : 'debug',
+  level: isProduction ? 'error' : 'debug',
   enabled: true,
+  pretty: !isProduction,
 });
 
 /**
@@ -25,7 +28,7 @@ const logger = getLogger({
  * underlying logger instance. This allows fine-grained verbosity control per
  * module without duplicating transport connections.
  *
- * @param module - Module identifier prepended to all log messages for filtering and debugging
+ * @param prefix - Prefix identifier prepended to all log messages for filtering and debugging
  * @param level - Optional log level threshold; only messages at this level or higher are output
  * @returns Logger instance with standard logging methods (trace, debug, info, warn, error, fatal)
  *
@@ -48,12 +51,15 @@ const logger = getLogger({
  * vrtLogger.warn('No focusable elements found');
  * ```
  */
-export function createLogger(module: string, level?: LoggerOptions['level']) {
-  const child = logger.child();
+export function createLoggerDomain(
+  prefix: string,
+  level?: LoggerOptions['level'],
+) {
+  const child = logger.child().withPrefix(prefix);
 
   if (level) {
     child.setLevel(level);
   }
 
-  return child.withPrefix(module).withMetadata({ source: module });
+  return child;
 }

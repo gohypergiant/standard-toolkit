@@ -16,7 +16,7 @@ import { dash } from 'radashi';
 import { describe, expect, test } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import { createLogger } from '~/utils/logger';
+import { createLoggerDomain } from '~/utils/logger';
 import {
   DEFAULT_TEST_STATES,
   INTERACTION_STATES,
@@ -30,7 +30,7 @@ import type {
   ThemeMode,
 } from '../../lib/types';
 
-const logger = createLogger('[VRT:Interactive]', 'warn');
+const logger = createLoggerDomain('[VRT:Interactive]', 'warn');
 
 const FOCUSABLE_SELECTOR =
   'button, [href], input, select, textarea, [tabindex]';
@@ -230,9 +230,7 @@ async function runStateTest<TProps>(
         await new Promise((r) => setTimeout(r, 50));
       }
       if (interactionElement === element) {
-        logger.warn(
-          `Portal element not found for "${ctx.interactionTarget}"`,
-        );
+        logger.warn(`Portal element not found for "${ctx.interactionTarget}"`);
       }
     }
   }

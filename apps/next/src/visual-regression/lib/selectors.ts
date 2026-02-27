@@ -11,9 +11,9 @@
  */
 
 import { page } from 'vitest/browser';
-import { createLogger } from '~/utils/logger';
+import { createLoggerDomain } from '~/utils/logger';
 
-const logger = createLogger('[VRT:Static]', 'warn');
+const logger = createLoggerDomain('[VRT:Static]', 'warn');
 
 /**
  * Parse a selector string and return a vitest page locator.

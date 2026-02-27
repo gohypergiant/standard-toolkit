@@ -10,11 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
-import { createLogger } from '~/utils/logger';
+import { createLoggerDomain } from '~/utils/logger';
 import { expect, forceGC, test, waitForCleanup } from './fixtures';
 import type { Page } from '@playwright/test';
 
-const logger = createLogger('[MemLab:TestBuilder]', 'debug');
+const logger = createLoggerDomain('[MemLab:TestBuilder]', 'debug');
 
 /**
  * Scenario definition for a memory leak test

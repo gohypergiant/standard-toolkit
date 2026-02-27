@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { createLogger } from '~/utils/logger';
+import { createLoggerDomain } from '~/utils/logger';
 import type { IHeapEdge, IHeapNode, IHeapSnapshot } from '@memlab/core';
 
 /**
@@ -39,7 +39,7 @@ const MIN_CONTEXT_RETAINED_SIZE = 10000;
 /**
  * Logger for filter debug output
  */
-const logger = createLogger('[MemLab:Filters]', 'debug');
+const logger = createLoggerDomain('[MemLab:Filters]', 'debug');
 
 /**
  * Custom leak filter interface matching MemLab's ILeakFilter

@@ -13,10 +13,10 @@
 'use client';
 import 'client-only';
 import { ErrorBoundary } from 'react-error-boundary';
-import { createLogger } from '~/utils/logger';
+import { createLoggerDomain } from '~/utils/logger';
 import type { ErrorInfo, PropsWithChildren } from 'react';
 
-const logger = createLogger('[ClassificationBadge]', 'error');
+const logger = createLoggerDomain('[ClassificationBadge]', 'error');
 
 function onError(err: Error, info: ErrorInfo) {
   logger
