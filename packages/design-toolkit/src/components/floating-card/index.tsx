@@ -66,10 +66,7 @@ export function FloatingCard({
     throw new Error('FloatingCard must be used within a FloatingCardProvider.');
   }
 
-  const dimensions = useMemo(
-    () => initialDimensions ?? defaultDimensions,
-    [initialDimensions],
-  );
+  const dimensions = initialDimensions ?? defaultDimensions;
 
   useEffect(() => {
     // If the API is not available, we cannot register the card. This can happen if Dockview is not fully initialized yet.
