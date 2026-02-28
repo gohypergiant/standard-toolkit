@@ -110,7 +110,10 @@ export const OVERLAY_FILL_OPACITY = 0.25;
 /** Reusable deck.gl PathStyleExtension enabling dash patterns on GeoJsonLayer lines. */
 export const DASH_EXTENSION = [new PathStyleExtension({ dash: true })];
 
-/** Mutable [r, g, b, a] tuple of DEFAULT_COLORS.highlight, pre-spread at module load for hot-path usage. */
+/** Readonly [r, g, b, a] tuple of DEFAULT_COLORS.highlight, pre-spread at module load for hot-path usage. */
 export const HIGHLIGHT_COLOR_TUPLE: Rgba255Tuple = [
-  ...DEFAULT_COLORS.highlight,
-] as unknown as Rgba255Tuple;
+  DEFAULT_COLORS.highlight[0],
+  DEFAULT_COLORS.highlight[1],
+  DEFAULT_COLORS.highlight[2],
+  DEFAULT_COLORS.highlight[3] ?? 255,
+];

@@ -575,14 +575,16 @@ export function buildIndicatorLineData(
   hoverIndex: number | undefined,
 ): LineSegment[] {
   const lineData: LineSegment[] = [];
+  const hoveredFeatureShapeId =
+    hoverIndex !== undefined
+      ? features[hoverIndex]?.properties?.shapeId
+      : undefined;
 
   for (const feature of elevatedNonPolygons) {
     const { geometry } = feature;
     const shapeId = feature.properties?.shapeId;
     const isSelected = shapeId != null && shapeId === selectedShapeId;
-    const isHovered =
-      hoverIndex !== undefined &&
-      features[hoverIndex]?.properties?.shapeId === shapeId;
+    const isHovered = shapeId != null && shapeId === hoveredFeatureShapeId;
 
     const base = getLineColor(feature);
     const factor =
