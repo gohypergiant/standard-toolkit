@@ -12,7 +12,17 @@
 
 'use client';
 
-import { isLineGeometry, isPolygonGeometry } from '../../shared/types';
+import {
+  isGeometryCollectionType,
+  isLineGeometry,
+  isLineStringType,
+  isMultiLineStringType,
+  isMultiPointType,
+  isMultiPolygonType,
+  isPointType,
+  isPolygonGeometry,
+  isPolygonType,
+} from '../../shared/types';
 import { getLineColor } from '../../shared/utils/style-utils';
 import { BRIGHTNESS_FACTOR } from '../constants';
 import { brightenColor } from './display-style';
@@ -93,7 +103,7 @@ export function getFeatureElevation(feature: Shape['feature']): number {
   }
 
   // GeometryCollection doesn't have coordinates property
-  if (geometry.type === 'GeometryCollection') {
+  if (isGeometryCollectionType(geometry)) {
     return 0;
   }
 
@@ -122,16 +132,16 @@ function extractLonLat(
 function getRepresentativeCoordinate(
   geometry: Shape['feature']['geometry'],
 ): [number, number] | undefined {
-  if (geometry.type === 'Point') {
+  if (isPointType(geometry)) {
     return extractLonLat(geometry.coordinates as number[]);
   }
 
-  if (geometry.type === 'LineString' || geometry.type === 'MultiPoint') {
-    return extractLonLat((geometry.coordinates as number[][])[0]);
+  if (isLineStringType(geometry) || isMultiPointType(geometry)) {
+    return extractLonLat(geometry.coordinates[0] as number[]);
   }
 
-  if (geometry.type === 'MultiLineString') {
-    return extractLonLat((geometry.coordinates as number[][][])[0]?.[0]);
+  if (isMultiLineStringType(geometry)) {
+    return extractLonLat(geometry.coordinates[0]?.[0] as number[] | undefined);
   }
 
   return undefined;
@@ -198,16 +208,16 @@ export function createElevationLineSegments(
   color: Rgba255Tuple,
 ): LineSegment[] {
   // Skip GeometryCollection
-  if (geometry.type === 'GeometryCollection') {
+  if (isGeometryCollectionType(geometry)) {
     return [];
   }
 
-  if (geometry.type === 'LineString') {
+  if (isLineStringType(geometry)) {
     // Create vertical lines at EACH coordinate to form a "curtain"
     return processCoordinates(geometry.coordinates as number[][], color);
   }
 
-  if (geometry.type === 'MultiLineString') {
+  if (isMultiLineStringType(geometry)) {
     // Create vertical lines for each coordinate in each line
     const allSegments: LineSegment[] = [];
     const lines = geometry.coordinates as number[][][];
@@ -266,12 +276,12 @@ export function classifyElevatedFeatures(
       continue;
     }
 
-    const geomType = f.geometry.type;
-    if (isPolygonGeometry(geomType)) {
+    const { geometry } = f;
+    if (isPolygonGeometry(geometry)) {
       polygons.push(f);
     } else {
       nonPolygons.push(f);
-      if (isLineGeometry(geomType)) {
+      if (isLineGeometry(geometry)) {
         lines.push(f);
       }
     }
@@ -404,11 +414,12 @@ export function createCurtainPolygonFeatures(
 
     // Normalize to array of coordinate arrays for both LineString and MultiLineString
     // Safe cast: elevatedLines only contains LineString/MultiLineString features
-    const rawCoords = (geometry as { coordinates: unknown }).coordinates;
-    const coordArrays: number[][][] =
-      geometry.type === 'LineString'
-        ? [rawCoords as number[][]]
-        : (rawCoords as number[][][]);
+    let coordArrays: number[][][];
+    if (isLineStringType(geometry)) {
+      coordArrays = [geometry.coordinates as number[][]];
+    } else {
+      coordArrays = (geometry as { coordinates: number[][][] }).coordinates;
+    }
 
     for (const coords of coordArrays) {
       for (const polygon of createCurtainPolygonsFromLine(
@@ -459,7 +470,7 @@ export function flattenFeatureTo2D(
   feature: Shape['feature'],
 ): Shape['feature'] {
   const { geometry } = feature;
-  if (geometry.type === 'LineString') {
+  if (isLineStringType(geometry)) {
     return {
       ...feature,
       geometry: {
@@ -468,7 +479,7 @@ export function flattenFeatureTo2D(
       },
     };
   }
-  if (geometry.type === 'MultiLineString' || geometry.type === 'Polygon') {
+  if (isMultiLineStringType(geometry) || isPolygonType(geometry)) {
     return {
       ...feature,
       geometry: {
@@ -479,7 +490,7 @@ export function flattenFeatureTo2D(
       },
     };
   }
-  if (geometry.type === 'MultiPolygon') {
+  if (isMultiPolygonType(geometry)) {
     return {
       ...feature,
       geometry: {

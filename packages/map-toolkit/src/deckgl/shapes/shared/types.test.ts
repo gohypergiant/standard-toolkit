@@ -23,6 +23,7 @@ import {
   isRectangleShape,
   ShapeFeatureType,
 } from './types';
+import type { Geometry } from 'geojson';
 import type {
   CircleShape,
   EllipseShape,
@@ -231,9 +232,12 @@ describe('Type Guards', () => {
 });
 
 describe('Geometry Type Predicates', () => {
+  // Minimal geometry stubs keyed by type — only `type` matters for the predicates
+  const geo = (type: string) => ({ type }) as Geometry;
+
   describe('isPolygonGeometry', () => {
     it.each(['Polygon', 'MultiPolygon'])('returns true for %s', (type) => {
-      expect(isPolygonGeometry(type)).toBe(true);
+      expect(isPolygonGeometry(geo(type))).toBe(true);
     });
 
     it.each([
@@ -241,9 +245,8 @@ describe('Geometry Type Predicates', () => {
       'LineString',
       'MultiLineString',
       'MultiPoint',
-      '',
     ])('returns false for %s', (type) => {
-      expect(isPolygonGeometry(type)).toBe(false);
+      expect(isPolygonGeometry(geo(type))).toBe(false);
     });
   });
 
@@ -252,7 +255,7 @@ describe('Geometry Type Predicates', () => {
       'LineString',
       'MultiLineString',
     ])('returns true for %s', (type) => {
-      expect(isLineGeometry(type)).toBe(true);
+      expect(isLineGeometry(geo(type))).toBe(true);
     });
 
     it.each([
@@ -260,9 +263,8 @@ describe('Geometry Type Predicates', () => {
       'Polygon',
       'MultiPolygon',
       'MultiPoint',
-      '',
     ])('returns false for %s', (type) => {
-      expect(isLineGeometry(type)).toBe(false);
+      expect(isLineGeometry(geo(type))).toBe(false);
     });
   });
 });

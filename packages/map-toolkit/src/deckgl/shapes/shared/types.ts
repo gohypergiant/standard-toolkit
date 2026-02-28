@@ -14,7 +14,17 @@
 
 import type { UniqueId } from '@accelint/core';
 import type { Color } from '@deck.gl/core';
-import type { Feature, LineString, Point, Polygon } from 'geojson';
+import type {
+  Feature,
+  Geometry,
+  GeometryCollection,
+  LineString,
+  MultiLineString,
+  MultiPoint,
+  MultiPolygon,
+  Point,
+  Polygon,
+} from 'geojson';
 import type { DistanceUnit } from '@/shared/units';
 
 /**
@@ -413,37 +423,88 @@ export function isPointShape(shape: Shape): shape is PointShape {
 // =============================================================================
 // Geometry Type Predicates
 // =============================================================================
-// These check GeoJSON geometry.type strings (e.g. 'Polygon', 'MultiPolygon'),
+// These narrow GeoJSON Geometry unions (e.g. Polygon, MultiPolygon),
 // distinct from the Shape type guards above which check shape.shape ('Circle', etc.).
 
+// --- Granular geometry predicates (single GeoJSON type) ---
+
+export function isPointType(geometry: Geometry): geometry is Point {
+  return geometry.type === 'Point';
+}
+
+export function isMultiPointType(geometry: Geometry): geometry is MultiPoint {
+  return geometry.type === 'MultiPoint';
+}
+
+export function isLineStringType(geometry: Geometry): geometry is LineString {
+  return geometry.type === 'LineString';
+}
+
+export function isMultiLineStringType(
+  geometry: Geometry,
+): geometry is MultiLineString {
+  return geometry.type === 'MultiLineString';
+}
+
+export function isPolygonType(geometry: Geometry): geometry is Polygon {
+  return geometry.type === 'Polygon';
+}
+
+export function isMultiPolygonType(
+  geometry: Geometry,
+): geometry is MultiPolygon {
+  return geometry.type === 'MultiPolygon';
+}
+
+export function isGeometryCollectionType(
+  geometry: Geometry,
+): geometry is GeometryCollection {
+  return geometry.type === 'GeometryCollection';
+}
+
+// --- Composite geometry predicates (multiple GeoJSON types) ---
+
 /**
- * Check if a GeoJSON geometry type is polygon-like (Polygon or MultiPolygon).
+ * Narrow a GeoJSON geometry to polygon-like types (Polygon or MultiPolygon).
  *
- * @param type - The GeoJSON geometry type string
- * @returns True if type is 'Polygon' or 'MultiPolygon'
+ * @param geometry - The GeoJSON geometry to test
  * @example
  * ```typescript
- * if (isPolygonGeometry(feature.geometry.type)) {
- *   // render fill
+ * if (isPolygonGeometry(feature.geometry)) {
+ *   // geometry narrowed to Polygon | MultiPolygon
  * }
  * ```
  */
-export function isPolygonGeometry(type: string): boolean {
-  return type === 'Polygon' || type === 'MultiPolygon';
+export function isPolygonGeometry(
+  geometry: Geometry,
+): geometry is Polygon | MultiPolygon {
+  return geometry.type === 'Polygon' || geometry.type === 'MultiPolygon';
 }
 
 /**
- * Check if a GeoJSON geometry type is line-like (LineString or MultiLineString).
+ * Narrow a GeoJSON geometry to line-like types (LineString or MultiLineString).
  *
- * @param type - The GeoJSON geometry type string
- * @returns True if type is 'LineString' or 'MultiLineString'
+ * @param geometry - The GeoJSON geometry to test
  * @example
  * ```typescript
- * if (isLineGeometry(feature.geometry.type)) {
- *   // render curtain
+ * if (isLineGeometry(feature.geometry)) {
+ *   // geometry narrowed to LineString | MultiLineString
  * }
  * ```
  */
-export function isLineGeometry(type: string): boolean {
-  return type === 'LineString' || type === 'MultiLineString';
+export function isLineGeometry(
+  geometry: Geometry,
+): geometry is LineString | MultiLineString {
+  return geometry.type === 'LineString' || geometry.type === 'MultiLineString';
+}
+
+/**
+ * Narrow a GeoJSON geometry to point-like types (Point or MultiPoint).
+ *
+ * @param geometry - The GeoJSON geometry to test
+ */
+export function isPointGeometry(
+  geometry: Geometry,
+): geometry is Point | MultiPoint {
+  return geometry.type === 'Point' || geometry.type === 'MultiPoint';
 }

@@ -18,7 +18,11 @@ import { GeoJsonLayer, IconLayer, LineLayer } from '@deck.gl/layers';
 import { createLoggerDomain } from '@/shared/logger';
 import { SHAPE_LAYER_IDS } from '../shared/constants';
 import { type ShapeEvent, ShapeEvents } from '../shared/events';
-import { isLineGeometry, isPolygonGeometry } from '../shared/types';
+import {
+  isLineGeometry,
+  isPointType,
+  isPolygonGeometry,
+} from '../shared/types';
 import {
   getDashArray,
   getFillColor,
@@ -56,6 +60,7 @@ import {
   getIconUpdateTriggers,
 } from './utils/icon-config';
 import { getPointInteractionState } from './utils/interaction';
+import type { Rgba255Tuple } from '@accelint/predicates';
 import type { Layer, PickingInfo } from '@deck.gl/core';
 import type { Shape, ShapeId } from '../shared/types';
 import type {
@@ -198,7 +203,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
   /**
    * Resolved highlight color — uses prop if provided, falls back to default.
    */
-  private get resolvedHighlight(): [number, number, number, number] {
+  private get resolvedHighlight(): Rgba255Tuple {
     return this.props.highlightColor ?? HIGHLIGHT_COLOR_TUPLE;
   }
 
@@ -343,7 +348,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       // deck.gl double-counting (SolidPolygonLayer adds coordinate Z + getElevation).
       // The feature's maxElevation property is the source of truth for getFeatureElevation.
       if (
-        isPolygonGeometry(feature.geometry.type) &&
+        isPolygonGeometry(feature.geometry) &&
         getFeatureElevation(feature) > 0
       ) {
         feature = flattenFeatureTo2D(feature);
@@ -490,7 +495,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
     }
 
     // Skip highlight layer for Point geometries with icons - they use coffin corners instead
-    if (selectedFeature.geometry.type === 'Point') {
+    if (isPointType(selectedFeature.geometry)) {
       const hasIcon = !!selectedFeature.properties?.styleProperties?.icon;
       if (hasIcon) {
         return [];
@@ -550,7 +555,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
     }
 
     // Only render for polygons — non-polygon shapes have no fill to brighten
-    if (!isPolygonGeometry(selectedFeature.geometry.type)) {
+    if (!isPolygonGeometry(selectedFeature.geometry)) {
       return [];
     }
 
@@ -600,7 +605,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
     }
 
     // Only render for polygons
-    if (!isPolygonGeometry(hoveredFeature.geometry.type)) {
+    if (!isPolygonGeometry(hoveredFeature.geometry)) {
       return [];
     }
 
@@ -713,8 +718,9 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
         },
         getSize: COFFIN_CORNERS.SIZE,
         getPosition: (d: Shape['feature']) => {
-          const coords =
-            d.geometry.type === 'Point' ? d.geometry.coordinates : [0, 0];
+          const coords = isPointType(d.geometry)
+            ? d.geometry.coordinates
+            : [0, 0];
           return coords as [number, number];
         },
         getPixelOffset: (d: Shape['feature']) => {
@@ -775,7 +781,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
         // Skip hover line width for elevated LineStrings - curtain handles it
         if (
           this.props.enableElevation &&
-          isLineGeometry(d.geometry.type) &&
+          isLineGeometry(d.geometry) &&
           getFeatureElevation(d) > 0
         ) {
           return d.properties?.styleProperties?.lineWidth ?? 2;
@@ -950,7 +956,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
   private createCurtainGeoJsonLayer(
     idSuffix: string,
     data: CurtainFeature[],
-    getFillColor: (d: CurtainFeature) => [number, number, number, number],
+    getFillColor: (d: CurtainFeature) => Rgba255Tuple,
     dataTriggers: unknown[],
     fillColorTriggers: unknown[],
   ): GeoJsonLayer {
