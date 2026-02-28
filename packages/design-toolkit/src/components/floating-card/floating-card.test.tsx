@@ -13,10 +13,12 @@
 import { act, render } from '@testing-library/react';
 import { type FunctionComponent, useContext } from 'react';
 import { describe, expect, it, type Mock, vi } from 'vitest';
+import { FloatingCard } from '.';
 import { FloatingCardContext, type FloatingCardContextValue } from './context';
 import { FloatingCardProvider } from './provider';
 import type { UniqueId } from '@accelint/core/utility/uuid';
 import type {
+  DockviewApi,
   IDockviewHeaderActionsProps,
   IDockviewPanelProps,
 } from 'dockview-react';
@@ -177,7 +179,7 @@ describe('PanelProvider', () => {
     it('should create right header adapter when headerActions are provided', () => {
       render(
         <FloatingCardProvider
-          headerActions={[{ icon: <span>act</span>, onClick: vi.fn() }]}
+          headerActions={[{ icon: <span>act</span>, onPress: vi.fn() }]}
         >
           <div />
         </FloatingCardProvider>,
@@ -498,9 +500,9 @@ describe('header adapters', () => {
 
   it('should render headerActions in the provided order', () => {
     const actions = [
-      { icon: <span>first</span>, onClick: vi.fn() },
-      { icon: <span>second</span>, onClick: vi.fn() },
-      { icon: <span>third</span>, onClick: vi.fn() },
+      { icon: <span>first</span>, onPress: vi.fn() },
+      { icon: <span>second</span>, onPress: vi.fn() },
+      { icon: <span>third</span>, onPress: vi.fn() },
     ];
 
     render(
@@ -519,6 +521,362 @@ describe('header adapters', () => {
     // 3 action buttons + 1 always-present close button
     const buttons = getAllByRole('button');
     expect(buttons).toHaveLength(4);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// FloatingCard
+// ---------------------------------------------------------------------------
+
+describe('FloatingCard', () => {
+  type MockPanel = {
+    id: string;
+    api: { close: ReturnType<typeof vi.fn> };
+    group: { locked: unknown };
+    setTitle: ReturnType<typeof vi.fn>;
+  };
+
+  function createMockPanel(id = 'test-panel'): MockPanel {
+    return {
+      id,
+      api: { close: vi.fn() },
+      group: { locked: undefined },
+      setTitle: vi.fn(),
+    };
+  }
+
+  /** API where getPanel() returns undefined until addPanel() is called. */
+  function makeEmptyApi() {
+    let storedPanel: MockPanel | undefined;
+    const panel = createMockPanel();
+
+    const api = {
+      getPanel: vi.fn(() => storedPanel),
+      addPanel: vi.fn(() => {
+        storedPanel = panel;
+        return panel;
+      }),
+      onDidRemovePanel: vi.fn(() => ({ dispose: vi.fn() })),
+    } as unknown as DockviewApi;
+
+    return { api, panel };
+  }
+
+  /** API where getPanel() always returns the given panel. */
+  function makePopulatedApi(panel?: MockPanel) {
+    const p = panel ?? createMockPanel();
+
+    const api = {
+      getPanel: vi.fn(() => p),
+      addPanel: vi.fn(() => p),
+      onDidRemovePanel: vi.fn(() => ({ dispose: vi.fn() })),
+    } as unknown as DockviewApi;
+
+    return { api, panel: p };
+  }
+
+  function makeContextValue(
+    api: FloatingCardContextValue['api'] = null,
+    cards: Record<string, HTMLDivElement> = {},
+  ): FloatingCardContextValue {
+    return {
+      cards: cards as Record<UniqueId, HTMLDivElement>,
+      addRef: vi.fn(),
+      removeRef: vi.fn(),
+      closeCard: vi.fn(),
+      api,
+    };
+  }
+
+  describe('isOpen toggling', () => {
+    it('should call api.addPanel when isOpen is true and no panel exists', () => {
+      const { api, panel } = makeEmptyApi();
+      const div = document.createElement('div');
+
+      render(
+        <FloatingCardContext.Provider
+          value={makeContextValue(api, { 'card-1': div })}
+        >
+          <FloatingCard id={'card-1' as UniqueId} title='Test Card' isOpen>
+            <div>content</div>
+          </FloatingCard>
+        </FloatingCardContext.Provider>,
+      );
+
+      expect(
+        (api as unknown as { addPanel: ReturnType<typeof vi.fn> }).addPanel,
+      ).toHaveBeenCalledWith(
+        expect.objectContaining({
+          id: 'card-1',
+          title: 'Test Card',
+          component: 'default',
+        }),
+      );
+      expect(panel.group.locked).toBe('no-drop-target');
+    });
+
+    it('should not call api.addPanel when panel already exists', () => {
+      const { api } = makePopulatedApi();
+      const div = document.createElement('div');
+
+      render(
+        <FloatingCardContext.Provider
+          value={makeContextValue(api, { 'card-existing': div })}
+        >
+          <FloatingCard id={'card-existing' as UniqueId} isOpen>
+            <div>content</div>
+          </FloatingCard>
+        </FloatingCardContext.Provider>,
+      );
+
+      expect(
+        (api as unknown as { addPanel: ReturnType<typeof vi.fn> }).addPanel,
+      ).not.toHaveBeenCalled();
+    });
+
+    it('should call panel.api.close() when isOpen changes from true to false', () => {
+      const { api, panel } = makePopulatedApi();
+      const div = document.createElement('div');
+      const ctxValue = makeContextValue(api, { 'card-toggle': div });
+
+      const { rerender } = render(
+        <FloatingCardContext.Provider value={ctxValue}>
+          <FloatingCard id={'card-toggle' as UniqueId} isOpen>
+            content
+          </FloatingCard>
+        </FloatingCardContext.Provider>,
+      );
+
+      rerender(
+        <FloatingCardContext.Provider value={ctxValue}>
+          <FloatingCard id={'card-toggle' as UniqueId} isOpen={false}>
+            content
+          </FloatingCard>
+        </FloatingCardContext.Provider>,
+      );
+
+      expect(panel.api.close).toHaveBeenCalledOnce();
+    });
+
+    it('should not call api.addPanel when api is null', () => {
+      const addPanel = vi.fn();
+      const div = document.createElement('div');
+
+      render(
+        <FloatingCardContext.Provider
+          value={makeContextValue(null, { 'card-null-api': div })}
+        >
+          <FloatingCard id={'card-null-api' as UniqueId} isOpen>
+            content
+          </FloatingCard>
+        </FloatingCardContext.Provider>,
+      );
+
+      expect(addPanel).not.toHaveBeenCalled();
+    });
+
+    it('should throw when FloatingCardContext value is null', () => {
+      const consoleSpy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => undefined);
+
+      expect(() =>
+        render(
+          <FloatingCardContext.Provider
+            value={null as unknown as FloatingCardContextValue}
+          >
+            <FloatingCard id={'no-provider' as UniqueId} isOpen>
+              content
+            </FloatingCard>
+          </FloatingCardContext.Provider>,
+        ),
+      ).toThrow('FloatingCard must be used within a FloatingCardProvider.');
+
+      consoleSpy.mockRestore();
+    });
+  });
+
+  describe('portal rendering', () => {
+    it('should render children into cards[id] via createPortal when isOpen', () => {
+      const container = document.createElement('div');
+      document.body.appendChild(container);
+      const { api } = makeEmptyApi();
+
+      render(
+        <FloatingCardContext.Provider
+          value={makeContextValue(api, { 'portal-card': container })}
+        >
+          <FloatingCard id={'portal-card' as UniqueId} isOpen>
+            <span data-testid='portal-child'>hello</span>
+          </FloatingCard>
+        </FloatingCardContext.Provider>,
+      );
+
+      expect(
+        container.querySelector('[data-testid="portal-child"]'),
+      ).not.toBeNull();
+
+      container.remove();
+    });
+
+    it('should return null when cards[id] does not exist', () => {
+      const { api } = makeEmptyApi();
+
+      render(
+        <FloatingCardContext.Provider value={makeContextValue(api, {})}>
+          <FloatingCard id={'no-ref-card' as UniqueId} isOpen>
+            <span data-testid='unreachable-child'>hello</span>
+          </FloatingCard>
+        </FloatingCardContext.Provider>,
+      );
+
+      expect(
+        document.body.querySelector('[data-testid="unreachable-child"]'),
+      ).toBeNull();
+    });
+
+    it('should return null when isOpen is false, even if cards[id] exists', () => {
+      const container = document.createElement('div');
+      document.body.appendChild(container);
+      const { api } = makeEmptyApi();
+
+      render(
+        <FloatingCardContext.Provider
+          value={makeContextValue(api, { 'closed-card': container })}
+        >
+          <FloatingCard id={'closed-card' as UniqueId} isOpen={false}>
+            <span data-testid='closed-child'>hello</span>
+          </FloatingCard>
+        </FloatingCardContext.Provider>,
+      );
+
+      expect(
+        container.querySelector('[data-testid="closed-child"]'),
+      ).toBeNull();
+
+      container.remove();
+    });
+  });
+
+  describe('title update effect', () => {
+    it('should call panel.setTitle with the new title when title changes', () => {
+      const { api, panel } = makeEmptyApi();
+      const div = document.createElement('div');
+      const ctxValue = makeContextValue(api, { 'title-card': div });
+
+      const { rerender } = render(
+        <FloatingCardContext.Provider value={ctxValue}>
+          <FloatingCard
+            id={'title-card' as UniqueId}
+            title='Initial Title'
+            isOpen
+          >
+            content
+          </FloatingCard>
+        </FloatingCardContext.Provider>,
+      );
+
+      rerender(
+        <FloatingCardContext.Provider value={ctxValue}>
+          <FloatingCard
+            id={'title-card' as UniqueId}
+            title='Updated Title'
+            isOpen
+          >
+            content
+          </FloatingCard>
+        </FloatingCardContext.Provider>,
+      );
+
+      expect(panel.setTitle).toHaveBeenLastCalledWith('Updated Title');
+    });
+
+    it('should fall back to id when title is undefined', () => {
+      const { api, panel } = makeEmptyApi();
+      const div = document.createElement('div');
+
+      render(
+        <FloatingCardContext.Provider
+          value={makeContextValue(api, { 'fallback-card': div })}
+        >
+          <FloatingCard id={'fallback-card' as UniqueId} isOpen>
+            content
+          </FloatingCard>
+        </FloatingCardContext.Provider>,
+      );
+
+      expect(panel.setTitle).toHaveBeenCalledWith('fallback-card');
+    });
+
+    it('should not call setTitle when api is null', () => {
+      // With api=null the second effect skips, so setTitle is never called.
+      // This verifies the api?.getPanel guard in the title update effect.
+      const setTitle = vi.fn();
+      const div = document.createElement('div');
+
+      render(
+        <FloatingCardContext.Provider
+          value={makeContextValue(null, { 'no-api-card': div })}
+        >
+          <FloatingCard id={'no-api-card' as UniqueId} title='Title' isOpen>
+            content
+          </FloatingCard>
+        </FloatingCardContext.Provider>,
+      );
+
+      expect(setTitle).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('unmount behavior', () => {
+    it('should not call panel.api.close() when the component unmounts', () => {
+      // The first useEffect has no cleanup — close is the provider\'s responsibility
+      const { api, panel } = makePopulatedApi();
+      const div = document.createElement('div');
+
+      const { unmount } = render(
+        <FloatingCardContext.Provider
+          value={makeContextValue(api, { 'unmount-card': div })}
+        >
+          <FloatingCard id={'unmount-card' as UniqueId} isOpen>
+            content
+          </FloatingCard>
+        </FloatingCardContext.Provider>,
+      );
+
+      const closeCallsBefore = panel.api.close.mock.calls.length;
+      unmount();
+
+      expect(panel.api.close.mock.calls.length).toBe(closeCallsBefore);
+    });
+
+    it('should remove portal content from the DOM when the component unmounts', () => {
+      const container = document.createElement('div');
+      document.body.appendChild(container);
+      const { api } = makeEmptyApi();
+
+      const { unmount } = render(
+        <FloatingCardContext.Provider
+          value={makeContextValue(api, { 'portal-unmount': container })}
+        >
+          <FloatingCard id={'portal-unmount' as UniqueId} isOpen>
+            <span data-testid='unmount-child'>bye</span>
+          </FloatingCard>
+        </FloatingCardContext.Provider>,
+      );
+
+      expect(
+        container.querySelector('[data-testid="unmount-child"]'),
+      ).not.toBeNull();
+
+      unmount();
+
+      expect(
+        container.querySelector('[data-testid="unmount-child"]'),
+      ).toBeNull();
+
+      container.remove();
+    });
   });
 });
 

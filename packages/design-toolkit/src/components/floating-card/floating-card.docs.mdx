@@ -124,7 +124,6 @@ const [isOpen, setIsOpen] = useState(true);
 ## Implementation Notes
 
 - Renders children into floating dockview panels via `createPortal`
-- Cards persist in the background when closed (`isOpen={false}`), enabling fast reopening without remounting
 - The provider creates an absolutely-positioned overlay with `pointer-events: none`; only the card panels receive pointer events
 - Floating cards are bounded within the viewport
 - Stale card refs are automatically cleaned up when panels are removed via any path (drag close, API close, etc.)

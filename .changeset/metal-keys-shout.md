@@ -2,7 +2,7 @@
 "@accelint/design-toolkit": minor
 ---
 
-Summary: Added a new FloatingCard component to the @accelint/design-toolkit package with a minor version bump.
+Summary: Added a new FloatingCard component.
 
 What's included:
 

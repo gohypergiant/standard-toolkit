@@ -29,22 +29,18 @@ export function FloatingCardExampleClient() {
   return (
     <div className='fg-primary-bold h-screen bg-surface-muted'>
       <FloatingCardProvider>
-        {/* Controlled visibility card — tests portal registration/teardown */}
         <FloatingCard
           id={ids.cardA}
           title='Card A'
-          //isOpen={isCardOpen}
           initialDimensions={{ width: 280, height: 200 }}
         >
           <div
             data-testid='floating-card-a-content'
-            className='flex h-full flex-col items-center justify-center gap-2 p-4'
+            className='flex h-full flex-col items-center justify-center gap-xxs p-xs'
           >
             <p className='text-sm font-semibold'>Card A</p>
           </div>
         </FloatingCard>
-
-        {/* Always-open card — tests stable portal mounts */}
         <FloatingCard
           id={ids.cardB}
           title='Card B'
@@ -52,13 +48,11 @@ export function FloatingCardExampleClient() {
         >
           <div
             data-testid='floating-card-b-content'
-            className='flex h-full flex-col items-center justify-center gap-2 p-4'
+            className='flex h-full flex-col items-center justify-center gap-xxs p-xs'
           >
             <p className='text-sm font-semibold'>Card B</p>
           </div>
         </FloatingCard>
-
-        {/* Custom dimensions card — tests varying layout engine allocations */}
         <FloatingCard
           id={ids.cardC}
           title='Card C'
@@ -66,7 +60,7 @@ export function FloatingCardExampleClient() {
         >
           <div
             data-testid='floating-card-c-content'
-            className='flex h-full flex-col items-center justify-center gap-2 p-4'
+            className='flex h-full flex-col items-center justify-center gap-xxs p-xs'
           >
             <p className='text-sm font-semibold'>Card C</p>
           </div>

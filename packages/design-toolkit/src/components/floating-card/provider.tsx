@@ -31,6 +31,7 @@ import {
   useMemo,
   useState,
 } from 'react';
+import { Divider } from '../divider';
 import { FloatingCardContext, type FloatingCardContextValue } from './context';
 import styles from './styles.module.css';
 import type { UniqueId } from '@accelint/core/utility/uuid';
@@ -43,10 +44,13 @@ type FloatingCardHeaderProps = {
   title?: string;
   icon?: ReactNode;
   closeGroup: () => void;
-  headerActions?: {
-    icon: ReactNode;
-    onClick: () => void;
-  }[];
+  headerActions?: (
+    | {
+        icon: ReactNode;
+        onPress: () => void;
+      }
+    | 'divider'
+  )[];
 };
 
 /**
@@ -76,7 +80,7 @@ function DefaultLeftHeader({
 }: Readonly<FloatingCardHeaderProps>) {
   return (
     <div className={styles.headerSide}>
-      {icon ? <Icon size='large'>{icon}</Icon> : null}
+      {icon ? <Icon size='small'>{icon}</Icon> : null}
       {title && title !== id ? (
         <div className={styles.headerTitle}>{title}</div>
       ) : null}
@@ -94,20 +98,28 @@ function DefaultRightHeader({
 }: Readonly<FloatingCardHeaderProps>) {
   return (
     <div className={styles.headerSide}>
-      {headerActions?.map((action, index) => (
-        <Button
-          key={`${id}-${
+      {headerActions?.map((action, index) => {
+        if (action === 'divider') {
+          return (
             // biome-ignore lint/suspicious/noArrayIndexKey: Using index as key is acceptable here because the order of actions is unlikely to change.
-            index
-          }`}
-          variant='icon'
-          size='small'
-          onClick={action.onClick}
-        >
-          <Icon>{action.icon}</Icon>
-        </Button>
-      ))}
-      <Button variant='icon' size='small' onClick={closeGroup}>
+            <Divider key={`${id}-divider-${index}`} orientation='vertical' />
+          );
+        }
+        return (
+          <Button
+            key={`${id}-${
+              // biome-ignore lint/suspicious/noArrayIndexKey: Using index as key is acceptable here because the order of actions is unlikely to change.
+              index
+            }`}
+            variant='icon'
+            size='small'
+            onPress={action.onPress}
+          >
+            <Icon>{action.icon}</Icon>
+          </Button>
+        );
+      })}
+      <Button variant='icon' size='small' onPress={closeGroup}>
         <Icon>
           <CloseIcon />
         </Icon>
@@ -118,7 +130,7 @@ function DefaultRightHeader({
 
 type HeaderAdapterOptions = {
   icon?: MaybeFactory<ReactNode>;
-  headerActions?: MaybeFactory<{ icon: ReactNode; onClick: () => void }[]>;
+  headerActions?: MaybeFactory<FloatingCardHeaderProps['headerActions']>;
 };
 
 /**
@@ -182,14 +194,18 @@ export type FloatingCardProviderProps = Readonly<
     icon?: MaybeFactory<ReactNode>;
     /**
      * Optional action buttons rendered in the floating card header before the close button.
+     * Can include dividers to separate groups of actions.
      * Can be an array or a function `(cardId: string) => array` to return
      * per-floating card actions.
      */
     headerActions?: MaybeFactory<
-      {
-        icon: ReactNode;
-        onClick: () => void;
-      }[]
+      (
+        | {
+            icon: ReactNode;
+            onPress: () => void;
+          }
+        | 'divider'
+      )[]
     >;
     className?: string;
   }>

@@ -421,7 +421,7 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
                             variant='icon'
                             color='mono-bold'
                             aria-label={`Copy ${COORDINATE_FORMAT_LABELS[formatKey]} format`}
-                            onClick={() => copy.handleCopyFormat(formatKey)}
+                            onPress={() => copy.handleCopyFormat(formatKey)}
                             isDisabled={!formatResult.isValid}
                           >
                             <Icon>

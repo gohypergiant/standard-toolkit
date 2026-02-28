@@ -11,6 +11,7 @@
  */
 
 import { uuid } from '@accelint/core/utility/uuid';
+import Placeholder from '@accelint/icons/placeholder';
 import { useState } from 'react';
 import { Button } from '../button';
 import { FloatingCard } from './index';
@@ -32,17 +33,20 @@ const meta = {
     id: panelIds.a,
     title: 'Test FloatingCard',
   },
+  argTypes: {
+    isOpen: {
+      table: {
+        disable: true,
+      },
+    },
+  },
 } satisfies Meta<typeof FloatingCard>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  args: {
-    isOpen: false,
-  },
-
-  render: ({ children, ...args }) => {
+  render: (args) => {
     return (
       <div className='relative h-800 w-600 p-l outline outline-info-bold'>
         <FloatingCardProvider>
@@ -58,7 +62,7 @@ export const Default: Story = {
 };
 
 export const WithHeaderActions: Story = {
-  render: ({ children, ...args }) => {
+  render: (args) => {
     return (
       <div className='relative h-800 w-600 p-l outline outline-info-bold'>
         <FloatingCardProvider
@@ -66,7 +70,7 @@ export const WithHeaderActions: Story = {
           headerActions={[
             {
               icon: <span className='text-lg'>⚙️</span>,
-              onClick: () => alert('Action clicked'),
+              onPress: () => alert('Action clicked'),
             },
           ]}
         >
@@ -149,6 +153,44 @@ export const CustomDimensions: Story = {
   },
 };
 
+export const WithHeaderActionDividers: Story = {
+  render: (args) => {
+    return (
+      <div className='relative h-800 w-600 p-l outline outline-info-bold'>
+        <FloatingCardProvider
+          icon={<Placeholder />}
+          headerActions={[
+            {
+              icon: <span>📌</span>,
+              onPress: () => alert('Pin clicked'),
+            },
+            {
+              icon: <span className='text-lg'>🔗</span>,
+              onPress: () => alert('Share clicked'),
+            },
+            'divider',
+            {
+              icon: <span className='text-lg'>⚙️</span>,
+              onPress: () => alert('Settings clicked'),
+            },
+            'divider',
+            {
+              icon: <span className='text-lg'>🗑️</span>,
+              onPress: () => alert('Delete clicked'),
+            },
+          ]}
+        >
+          <FloatingCard id={args.id} title={args.title}>
+            <div className='flex h-full flex-col items-center justify-center gap-m self-stretch rounded-medium outline outline-dashed outline-1 outline-interactive-hover'>
+              Header actions separated by dividers
+            </div>
+          </FloatingCard>
+        </FloatingCardProvider>
+      </div>
+    );
+  },
+};
+
 export const ControlledVisibility: Story = {
   render: () => {
     const [isOpen, setIsOpen] = useState(true);
@@ -157,7 +199,7 @@ export const ControlledVisibility: Story = {
       <div className='relative h-800 w-600 p-l outline outline-info-bold'>
         <div className='absolute top-0 left-0 z-50 p-m'>
           <Button
-            onClick={() => setIsOpen(!isOpen)}
+            onPress={() => setIsOpen(!isOpen)}
             className='rounded border border-interactive-default bg-base-surface px-m py-s font-semibold text-sm hover:bg-base-surface-hover'
           >
             {isOpen ? 'Close Card' : 'Open Card'}

@@ -60,7 +60,11 @@ export function FloatingCard({
   isOpen = true,
   initialDimensions,
 }: PropsWithChildren<FloatingCardProps>) {
-  const { api, cards } = useContext(FloatingCardContext);
+  const floatingCardContext = useContext(FloatingCardContext);
+
+  if (!floatingCardContext) {
+    throw new Error('FloatingCard must be used within a FloatingCardProvider.');
+  }
 
   const dimensions = useMemo(
     () => initialDimensions ?? defaultDimensions,
@@ -68,17 +72,17 @@ export function FloatingCard({
   );
 
   useEffect(() => {
-    if (!api) {
+    // If the API is not available, we cannot register the card. This can happen if Dockview is not fully initialized yet.
+    if (!floatingCardContext.api) {
       return;
     }
-
     if (!isOpen) {
-      api.getPanel(id)?.api.close();
+      floatingCardContext.api.getPanel(id)?.api.close();
       return;
     }
 
-    if (!api.getPanel(id)) {
-      const panel = api.addPanel({
+    if (!floatingCardContext.api.getPanel(id)) {
+      const panel = floatingCardContext.api.addPanel({
         id,
         title,
         component: 'default',
@@ -88,15 +92,17 @@ export function FloatingCard({
       panel.group.locked = 'no-drop-target';
     }
 
-    // Cleanup not included here since we want the card to persist in the background when closed, allowing for quick reopening without remounting. Cleanup is done at the provider level when the card is removed from the `cards` registry.
-  }, [api, id, title, isOpen, dimensions]);
+    // Cleanup not included here. Cleanup is done at the provider level when the card is removed from the `cards` registry.
+  }, [id, title, isOpen, dimensions, floatingCardContext.api]);
 
   useEffect(() => {
-    if (api?.getPanel(id)) {
-      const panel = api.getPanel(id);
-      panel?.setTitle(title ?? id);
+    const panel = floatingCardContext.api?.getPanel(id);
+    if (panel) {
+      panel.setTitle(title ?? id);
     }
-  }, [title, api, id]);
+  }, [title, floatingCardContext.api, id]);
 
-  return isOpen && cards[id] ? createPortal(children, cards[id]) : null;
+  return isOpen && floatingCardContext.cards[id]
+    ? createPortal(children, floatingCardContext.cards[id])
+    : null;
 }
