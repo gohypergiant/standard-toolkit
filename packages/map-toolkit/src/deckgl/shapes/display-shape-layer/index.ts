@@ -333,7 +333,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
     // Transform features and build shapeId->index map in a single pass
     const features: Shape['feature'][] = [];
     const shapeIdToIndex = new Map<ShapeId, number>();
-    const normalizedLineColors: [number, number, number, number][] = [];
+    const normalizedLineColors: Rgba255Tuple[] = [];
 
     for (const [i, shape] of data.entries()) {
       let feature: Shape['feature'] = {

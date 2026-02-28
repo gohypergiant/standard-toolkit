@@ -42,7 +42,7 @@ export function getPointInteractionState(
   shapeIdToIndex: Map<ShapeId, number>,
 ): { isSelected: boolean; isHovered: boolean } {
   const shapeId = feature.properties?.shapeId;
-  const isSelected = shapeId === selectedShapeId;
+  const isSelected = shapeId != null && shapeId === selectedShapeId;
   const featureIndex = shapeId ? shapeIdToIndex.get(shapeId) : undefined;
   const isHovered = hoverIndex !== undefined && featureIndex === hoverIndex;
   return { isSelected, isHovered };
