@@ -511,8 +511,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
     return [
       new GeoJsonLayer({
         id: `${this.props.id}-${SHAPE_LAYER_IDS.DISPLAY_HIGHLIGHT}`,
-        // biome-ignore lint/suspicious/noExplicitAny: GeoJsonLayer accepts various feature formats
-        data: [highlightFeature] as any,
+        data: [highlightFeature],
 
         // Styling - outline only for 2D shapes
         filled: false,
@@ -562,8 +561,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
     return [
       new GeoJsonLayer({
         id: `${this.props.id}-${SHAPE_LAYER_IDS.DISPLAY_SELECTION}`,
-        // biome-ignore lint/suspicious/noExplicitAny: GeoJsonLayer accepts various feature formats
-        data: [selectedFeature] as any,
+        data: [selectedFeature],
 
         filled: true,
         stroked: false,
@@ -618,8 +616,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
     return [
       new GeoJsonLayer({
         id: `${this.props.id}-${SHAPE_LAYER_IDS.DISPLAY}-hover`,
-        // biome-ignore lint/suspicious/noExplicitAny: GeoJsonLayer accepts various feature formats
-        data: [hoveredFeature] as any,
+        data: [hoveredFeature],
 
         // Styling
         filled: true,
@@ -755,8 +752,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
 
     return new GeoJsonLayer({
       id: `${this.props.id}-${SHAPE_LAYER_IDS.DISPLAY}`,
-      // biome-ignore lint/suspicious/noExplicitAny: GeoJsonLayer accepts various feature formats
-      data: features as any,
+      data: features,
 
       // Styling
       filled: true,
@@ -962,8 +958,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
   ): GeoJsonLayer {
     return new GeoJsonLayer({
       id: `${this.props.id}-${SHAPE_LAYER_IDS.DISPLAY}-${idSuffix}`,
-      // biome-ignore lint/suspicious/noExplicitAny: GeoJsonLayer accepts various feature formats
-      data: data as any,
+      data: data,
       filled: true,
       stroked: false,
       // biome-ignore lint/style/useNamingConvention: deck.gl uses _full3d naming
@@ -1086,8 +1081,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       layers.push(
         new GeoJsonLayer({
           id: `${this.props.id}-${SHAPE_LAYER_IDS.DISPLAY}-elevation-wireframe`,
-          // biome-ignore lint/suspicious/noExplicitAny: GeoJsonLayer accepts various feature formats
-          data: elevatedPolygons as any,
+          data: elevatedPolygons,
           filled: false,
           stroked: false,
           extruded: true,
