@@ -75,10 +75,7 @@ export class DrawCircleModeWithTooltip extends DrawCircleFromCenterMode {
     const distanceUnits =
       props.modeConfig?.distanceUnits ?? DEFAULT_DISTANCE_UNITS;
 
-    const centerPoint = clickSequence[clickSequence.length - 1] as [
-      number,
-      number,
-    ];
+    const centerPoint = clickSequence.at(-1) as [number, number];
     const edgePoint = mapCoords as [number, number];
 
     const { radius, area } = computeCircleMeasurements(

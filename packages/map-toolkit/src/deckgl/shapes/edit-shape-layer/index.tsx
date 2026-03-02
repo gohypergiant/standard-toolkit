@@ -12,9 +12,13 @@
 
 'use client';
 
-import { globalBind, Keycode, registerHotkey } from '@accelint/hotkey-manager';
-import { useHotkey } from '@accelint/hotkey-manager/react';
-import { useCallback, useContext, useEffect, useMemo, useRef } from 'react';
+import {
+  globalBind,
+  Keycode,
+  registerHotkey,
+  unregisterHotkey,
+} from '@accelint/hotkey-manager';
+import { useCallback, useContext, useEffect, useRef } from 'react';
 import { MapContext } from '../../base-map/provider';
 import { useShiftZoomDisable } from '../shared/hooks/use-shift-zoom-disable';
 import { ShapeFeatureType, type ShapeFeatureTypeValues } from '../shared/types';
@@ -184,25 +188,28 @@ export function EditShapeLayer({
     }
   }, []);
 
-  // Register Enter key hotkey scoped to this component and map instance
-  // Handler checks if actively editing to prevent conflicts with other Enter key uses
-  const saveEditHotkey = useMemo(
-    () =>
-      registerHotkey({
-        id: `saveEditHotkey-${actualMapId}`,
-        key: { code: Keycode.Enter },
-        onKeyUp: () => {
-          // Use ref to get current editing state, avoiding stale closure
-          if (editingStateRef.current?.editingShape) {
-            cancelPendingUpdate();
-            saveEditingFromLayer(actualMapId);
-          }
-        },
-      }),
-    [actualMapId, cancelPendingUpdate],
-  );
+  // Register Enter key hotkey scoped to this component and map instance.
+  // Handles the full lifecycle: register → bind → unbind → unregister.
+  // Without unregistering on cleanup, remounting throws a duplicate-id error.
+  useEffect(() => {
+    const manager = registerHotkey({
+      id: `saveEditHotkey-${actualMapId}`,
+      key: { code: Keycode.Enter },
+      onKeyUp: () => {
+        if (editingStateRef.current?.editingShape) {
+          cancelPendingUpdate();
+          saveEditingFromLayer(actualMapId);
+        }
+      },
+    });
 
-  useHotkey(saveEditHotkey);
+    const unbind = manager.bind();
+
+    return () => {
+      unbind();
+      unregisterHotkey(manager);
+    };
+  }, [actualMapId, cancelPendingUpdate]);
 
   // Disable zoom while Shift is held during editing
   // This prevents boxZoom (Shift+drag) from interfering with Shift modifier constraints
