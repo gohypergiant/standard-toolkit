@@ -50,6 +50,7 @@ import {
   isRectangleShape,
 } from '../shared/types';
 import {
+  releaseCursor,
   releaseModeAndCursor,
   requestCursorChange,
   requestModeChange,
@@ -205,6 +206,7 @@ function saveEditingInternal(
     editingShape: null,
     editMode: 'view',
     featureBeingEdited: null,
+    previousMode: null,
   });
 
   // Return to default mode and cursor
@@ -244,6 +246,7 @@ function cancelEditingInternal(
     editingShape: null,
     editMode: 'view',
     featureBeingEdited: null,
+    previousMode: null,
   });
 
   // Return to default mode and cursor
@@ -407,7 +410,7 @@ export function disableEditPanning(mapId: UniqueId): void {
 
   if (!state?.editingShape) {
     editStore.set(mapId, { previousMode: null });
-    requestCursorChange(mapId, 'default', EDIT_SHAPE_LAYER_ID);
+    releaseCursor(mapId, EDIT_SHAPE_LAYER_ID);
     return;
   }
 
