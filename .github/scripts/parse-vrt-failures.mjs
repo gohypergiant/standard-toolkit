@@ -19,51 +19,50 @@ import process from 'node:process';
  * Parse Vitest JSON output and extract failed test information.
  * Usage: node parse-vrt-failures.mjs <test-results.json>
  *
- * Parses test names like:
- * "Button Interactive States > dark mode > filled / accent / medium > hover state"
- * Into structured data: { component, theme, variant, state }
+ * Uses ancestorTitles array from Vitest JSON output to extract structured data.
+ * ancestorTitles: ["Button Interactive States", "dark mode", "filled / accent / medium"]
+ * title: "hover state"
+ * → { component: "Button", theme: "dark", variant: "filled / accent / medium", state: "hover state" }
  */
 
 /**
- * Parse a test name into structured components.
- * Format: "Component Interactive States > theme mode > variant > state"
+ * Parse a test assertion into structured components using ancestorTitles + title.
  *
- * Examples:
- * - "Accordion Interactive States > dark mode > cozy > hover state"
- * - "Button Interactive States > light mode > filled / accent / medium > pressed state"
+ * Vitest v4 uses space-separated fullName (no " > " delimiters), so we rely on
+ * the ancestorTitles array which preserves the describe() nesting structure.
  */
-function parseTestName(fullTitle) {
-  const parts = fullTitle.split(' > ').map((s) => s.trim());
+function parseAssertion(assertion) {
+  const ancestors = assertion.ancestorTitles || [];
+  const title = assertion.title || '';
 
-  // Part 0: Component (remove "Interactive States" suffix)
+  // ancestorTitles[0]: "Component Interactive States" or "Component"
   let component = 'Unknown';
-  if (parts[0]) {
-    component = parts[0].replace(/\s*Interactive States$/i, '').trim();
-    // If still multi-word, just take first word as component name
+  if (ancestors[0]) {
+    component = ancestors[0].replace(/\s*Interactive States$/i, '').trim();
     if (!component) {
-      const match = parts[0].match(/^(\w+)/);
+      const match = ancestors[0].match(/^(\w+)/);
       if (match) component = match[1];
     }
   }
 
-  // Part 1: Theme (should be "dark mode" or "light mode")
+  // ancestorTitles[1]: "dark mode" or "light mode"
   let theme = 'unknown';
-  if (parts[1]) {
-    const modePart = parts[1].toLowerCase();
-    if (modePart.includes('dark')) {
-      theme = 'dark';
-    } else if (modePart.includes('light')) {
-      theme = 'light';
-    }
+  if (ancestors[1]) {
+    const modePart = ancestors[1].toLowerCase();
+    if (modePart.includes('dark')) theme = 'dark';
+    else if (modePart.includes('light')) theme = 'light';
   }
 
-  // Part 2: Variant (may have slashes like "filled / accent / medium" or simple like "cozy")
-  const variant = parts[2] || 'default';
+  // ancestorTitles[2]: variant (e.g., "filled / accent / medium", "cozy")
+  const variant = ancestors[2] || 'default';
 
-  // Part 3: State (last part, e.g., "hover state", "default state")
-  const state = parts[3] || 'default';
+  // title: state (e.g., "hover state", "default state")
+  const state = title || 'default';
 
-  return { component, theme, variant, state };
+  // Reconstruct fullName with " > " for display
+  const fullName = [...ancestors, title].filter(Boolean).join(' > ');
+
+  return { component, theme, variant, state, fullName };
 }
 
 /**
@@ -114,6 +113,40 @@ function getScreenshotDir(component) {
     .replace(/([a-z])([A-Z])/g, '$1-$2')
     .toLowerCase();
   return `${kebabCase}/__screenshots__/${kebabCase}.visual.tsx/`;
+}
+
+/**
+ * Analyze failure patterns to suggest a likely root cause.
+ */
+function analyzeRootCause(failures, groupedByComponent, groupedByTheme) {
+  if (failures.length === 0) return null;
+
+  const componentNames = Object.keys(groupedByComponent);
+  const themeNames = Object.keys(groupedByTheme);
+
+  // Single component with many failures → likely that component changed
+  for (const [comp, count] of Object.entries(groupedByComponent)) {
+    if (count >= 20 || (count >= failures.length * 0.8 && count >= 3)) {
+      return `Likely root cause: changes to ${comp}`;
+    }
+  }
+
+  // All failures share one theme → theme token issue
+  const nonUnknownThemes = themeNames.filter((t) => t !== 'unknown');
+  if (
+    nonUnknownThemes.length === 1 &&
+    groupedByTheme[nonUnknownThemes[0]] === failures.length
+  ) {
+    const theme = nonUnknownThemes[0];
+    return `All failures in ${theme} mode — check ${theme} theme tokens`;
+  }
+
+  // Many components, many themes → widespread regression
+  if (componentNames.length >= 3 && failures.length >= 5) {
+    return 'Widespread regression — likely a foundation/token change';
+  }
+
+  return null;
 }
 
 async function main() {
@@ -168,8 +201,7 @@ async function main() {
     }
     for (const assertion of testFile.assertionResults) {
       if (assertion.status === 'failed') {
-        const fullTitle = assertion.fullName || assertion.title || 'Unknown';
-        const parsed = parseTestName(fullTitle);
+        const parsed = parseAssertion(assertion);
 
         // Extract error message
         const errorMessages = assertion.failureMessages || [];
@@ -180,7 +212,7 @@ async function main() {
           theme: parsed.theme,
           variant: parsed.variant,
           state: parsed.state,
-          fullName: fullTitle,
+          fullName: parsed.fullName,
           screenshotDir: getScreenshotDir(parsed.component),
           errorSummary,
         });
@@ -192,10 +224,25 @@ async function main() {
     }
   }
 
+  // Group by theme
+  const groupedByTheme = {};
+  for (const f of failures) {
+    groupedByTheme[f.theme] = (groupedByTheme[f.theme] || 0) + 1;
+  }
+
+  // Determine root cause hint
+  const rootCauseHint = analyzeRootCause(
+    failures,
+    groupedByComponent,
+    groupedByTheme,
+  );
+
   const result = {
     summary,
     failures,
     groupedByComponent,
+    groupedByTheme,
+    rootCauseHint,
   };
 
   // Output compact JSON to avoid multiline issues in GitHub Actions outputs
