@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { type PropsWithChildren, useContext, useEffect, useMemo } from 'react';
+import { type PropsWithChildren, useContext, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { FloatingCardContext } from './context';
 import type { UniqueId } from '@accelint/core';
