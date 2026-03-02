@@ -28,12 +28,14 @@ export const ShapeEvents = {
   hovered: 'shapes:hovered',
 } as const;
 
+/** Union of all shape event string literals */
 export type ShapeEventType = (typeof ShapeEvents)[keyof typeof ShapeEvents];
 
 /**
  * Event payload types (all payloads are serializable)
  */
 
+/** Event payload emitted when a shape is selected */
 export type ShapeSelectedEvent = Payload<
   'shapes:selected',
   {
@@ -43,6 +45,7 @@ export type ShapeSelectedEvent = Payload<
   }
 >;
 
+/** Event payload emitted when a shape selection is cleared */
 export type ShapeDeselectedEvent = Payload<
   'shapes:deselected',
   {
@@ -51,6 +54,7 @@ export type ShapeDeselectedEvent = Payload<
   }
 >;
 
+/** Event payload emitted when a shape is hovered or hover ends */
 export type ShapeHoveredEvent = Payload<
   'shapes:hovered',
   {

@@ -12,9 +12,9 @@
 
 import {
   type DraggingEvent,
-  type FeatureCollection,
   type ModeProps,
   ScaleMode,
+  type SimpleFeatureCollection,
   type StopDraggingEvent,
 } from '@deck.gl-community/editable-layers';
 import type { Position } from 'geojson';
@@ -27,7 +27,7 @@ type ScaleFactors = {
 type ScaleContext = {
   origin: Position;
   scaleFactors: ScaleFactors;
-  geometry: FeatureCollection;
+  geometry: SimpleFeatureCollection;
 };
 
 /**
@@ -101,7 +101,7 @@ export class ScaleModeWithFreeTransform extends ScaleMode {
    */
   override handleDragging(
     event: DraggingEvent,
-    props: ModeProps<FeatureCollection>,
+    props: ModeProps<SimpleFeatureCollection>,
   ) {
     // biome-ignore lint/suspicious/noExplicitAny: Accessing private properties from parent class
     const self = this as any;
@@ -155,7 +155,7 @@ export class ScaleModeWithFreeTransform extends ScaleMode {
    */
   override handleStopDragging(
     event: StopDraggingEvent,
-    props: ModeProps<FeatureCollection>,
+    props: ModeProps<SimpleFeatureCollection>,
   ) {
     // biome-ignore lint/suspicious/noExplicitAny: Accessing private properties from parent class
     const self = this as any;
@@ -327,7 +327,7 @@ export class ScaleModeWithFreeTransform extends ScaleMode {
    */
   private emitFinalScaledGeometry(
     event: StopDraggingEvent,
-    props: ModeProps<FeatureCollection>,
+    props: ModeProps<SimpleFeatureCollection>,
     // biome-ignore lint/suspicious/noExplicitAny: Accessing private properties from parent class
     self: any,
   ) {
@@ -369,7 +369,7 @@ export class ScaleModeWithFreeTransform extends ScaleMode {
    * Reset the scale state after dragging stops.
    */
   private resetScaleState(
-    props: ModeProps<FeatureCollection>,
+    props: ModeProps<SimpleFeatureCollection>,
     // biome-ignore lint/suspicious/noExplicitAny: Accessing private properties from parent class
     self: any,
   ) {
@@ -385,11 +385,11 @@ export class ScaleModeWithFreeTransform extends ScaleMode {
    * Transforms each coordinate by scaling X and Y independently around the origin.
    */
   private applyNonUniformScale(
-    geometry: FeatureCollection,
+    geometry: SimpleFeatureCollection,
     scaleX: number,
     scaleY: number,
     origin: Position,
-  ): FeatureCollection {
+  ): SimpleFeatureCollection {
     const scaledFeatures = geometry.features.map((feature) => {
       const scaledGeometry = this.scaleGeometry(
         feature.geometry,

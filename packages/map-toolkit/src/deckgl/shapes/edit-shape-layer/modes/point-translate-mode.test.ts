@@ -10,13 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { PointTranslateMode } from './point-translate-mode';
 import type {
   ClickEvent,
   FeatureCollection,
   ModeProps,
 } from '@deck.gl-community/editable-layers';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { PointTranslateMode } from './point-translate-mode';
 
 /**
  * Create mock props for testing
