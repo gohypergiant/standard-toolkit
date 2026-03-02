@@ -25,7 +25,7 @@ let mockUnregisterHotkey: MockFn;
 
 vi.mock('@accelint/hotkey-manager', () => ({
   globalBind: vi.fn(),
-  Keycode: { Enter: 'Enter' },
+  Keycode: { Enter: 'Enter', Space: 'Space' },
   registerHotkey: (...args: unknown[]) => mockRegisterHotkey(...args),
   unregisterHotkey: (...args: unknown[]) => mockUnregisterHotkey(...args),
 }));
@@ -96,6 +96,12 @@ describe('EditShapeLayer', () => {
         expect.objectContaining({
           id: `saveEditHotkey-${mapId}`,
           key: { code: 'Enter' },
+        }),
+      );
+      expect(mockRegisterHotkey).toHaveBeenCalledWith(
+        expect.objectContaining({
+          id: `editPanningHotkey-${mapId}`,
+          key: { code: 'Space' },
         }),
       );
       expect(mockBind).toHaveBeenCalledTimes(2);
