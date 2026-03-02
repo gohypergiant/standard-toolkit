@@ -671,7 +671,10 @@ describe('edit-shape-layer store', () => {
       const shape = createMockShape();
       edit(shape);
 
-      expect(editStore.get(mapId)?.editMode).not.toBe('view');
+      const originalMode = editStore.get(mapId).editMode;
+      enableEditPanning(mapId, originalMode);
+
+      expect(editStore.get(mapId)?.editMode).toBe('view');
 
       disableEditPanning(mapId);
       expect(editStore.get(mapId)?.previousMode).toBe(null);
@@ -713,7 +716,7 @@ describe('edit-shape-layer store', () => {
     });
   });
 
-  describe('enable -> disable', () => {
+  describe('enable -> disable map panning while editing', () => {
     it('should complete the panning lifecycle: edit → pan → resume editing', () => {
       const { edit } = editStore.actions(mapId);
       const shape = createMockShape();
