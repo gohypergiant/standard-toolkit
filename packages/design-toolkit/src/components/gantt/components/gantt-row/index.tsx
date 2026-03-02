@@ -14,8 +14,8 @@ import React from 'react';
 import { GANTT_ROW_HEIGHT_PX } from '../../constants';
 import { useGanttContext } from '../../context';
 import {
-  shouldRenderPointElement,
   shouldRenderRangeElement,
+  timestampWithinBounds,
 } from '../../utils/helpers';
 import styles from './styles.module.css';
 import type { PropsWithChildren } from 'react';
@@ -37,10 +37,8 @@ export function GanttRow({ children, ...rest }: PropsWithChildren) {
     }
 
     if (element.props.timeMs !== undefined) {
-      return shouldRenderPointElement(
-        renderedRegionBounds,
-        element.props.timeMs,
-      );
+      // render point element if it's within the rendered region
+      return timestampWithinBounds(element.props.timeMs, renderedRegionBounds);
     }
 
     return false;

@@ -18,6 +18,7 @@ import {
   TIMELINE_CHUNK_WIDTH,
 } from '../constants';
 import {
+  deriveHorizontalScrollPosition,
   derivePointElementLayout,
   deriveRangeElementLayout,
   deriveRenderedSlice,
@@ -231,6 +232,27 @@ describe('deriveTranslateXValue', () => {
           msPerPx,
         ).translateX,
       ).toBe(200); // (2000 - 0) / 10 = 200
+    });
+  });
+
+  describe('deriveHorizontalScrollPosition', () => {
+    const totalBounds = { startMs: 1000, endMs: 5000 };
+    const midpointMs = (totalBounds.startMs + totalBounds.endMs) / 2;
+    const msPerPx = 10;
+
+    it.each([
+      ['returns 0 when timestamp is at start bound', totalBounds.startMs, 0],
+      [
+        'calculates position for timestamp at end bound',
+        totalBounds.endMs,
+        400,
+      ],
+      ['calculates position for timestamp in middle', midpointMs, 200],
+      ['handles timestamp with fractional pixel result', 1005, 0.5],
+    ])('%s', (_description, timestampMs, expected) => {
+      expect(
+        deriveHorizontalScrollPosition(timestampMs, msPerPx, totalBounds),
+      ).toBe(expected);
     });
   });
 });

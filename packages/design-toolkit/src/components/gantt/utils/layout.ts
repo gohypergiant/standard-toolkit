@@ -108,3 +108,11 @@ export function deriveRenderedSlice(
     end: startIndex + itemsCount,
   };
 }
+
+export function deriveHorizontalScrollPosition(
+  timestampMs: number,
+  msPerPx: number,
+  totalBounds: TimeBounds,
+): number {
+  return (timestampMs - totalBounds.startMs) / msPerPx;
+}

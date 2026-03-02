@@ -67,11 +67,6 @@ export function shouldRenderRangeElement(
   );
 }
 
-export function shouldRenderPointElement(
-  renderedRegionBoundary: TimeBounds,
-  pointTimeMs: number,
-) {
-  const { startMs, endMs } = renderedRegionBoundary;
-
-  return pointTimeMs >= startMs && pointTimeMs <= endMs;
+export function timestampWithinBounds(timestampMs: number, bounds: TimeBounds) {
+  return timestampMs >= bounds.startMs && timestampMs <= bounds.endMs;
 }

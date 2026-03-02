@@ -19,7 +19,6 @@ import {
   type UIEvent,
   useCallback,
   useMemo,
-  useState,
 } from 'react';
 import { GANTT_ROW_HEIGHT_PX } from '@/components/gantt/constants';
 import { useGanttContext } from '@/components/gantt/context';
@@ -46,16 +45,18 @@ const applyVirtualizedRowStyles =
 type UseRenderedRowsValue = {
   dimensions: { height: number; width: number };
   renderedRows: ReactElement<JSX.IntrinsicElements['div']>[] | null;
-  assignContainerRef: (element: HTMLDivElement | null) => void;
   onScroll: (event: UIEvent<HTMLDivElement>) => void;
+};
+
+type UseRenderedRowsProps = {
+  scrollContainerElement: HTMLDivElement | null;
 };
 
 export function useRenderedRows({
   children,
-}: PropsWithChildren): UseRenderedRowsValue {
+  scrollContainerElement,
+}: PropsWithChildren<UseRenderedRowsProps>): UseRenderedRowsValue {
   const { totalBounds, msPerPx } = useGanttContext();
-  const [containerElement, setContainerElement] =
-    useState<HTMLDivElement | null>(null);
   const roundedCurrentRowScrollPx = useGanttStore(
     selectors.roundedCurrentRowScrollPx,
   );
@@ -75,16 +76,9 @@ export function useRenderedRows({
     [msPerPx, totalBounds.startMs],
   );
 
-  const assignContainerElementRef = useCallback(
-    (element: HTMLDivElement | null) => {
-      setContainerElement(element);
-    },
-    [],
-  );
-
   const { start, end } = deriveRenderedSlice(
     roundedCurrentRowScrollPx,
-    containerElement?.clientHeight ?? 0,
+    scrollContainerElement?.clientHeight ?? 0,
   );
 
   const renderedRows = useMemo(
@@ -102,7 +96,6 @@ export function useRenderedRows({
       width: (totalBounds.endMs - totalBounds.startMs) / msPerPx,
     },
     renderedRows,
-    assignContainerRef: assignContainerElementRef,
     onScroll: updateRoundedScrollPx,
   };
 }

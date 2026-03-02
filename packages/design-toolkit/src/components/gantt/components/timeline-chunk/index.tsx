@@ -26,7 +26,7 @@ type TimelineChunkProps = {
 };
 
 export function TimelineChunk({ label }: TimelineChunkProps) {
-  const tickMarginOffset = TIMELINE_CHUNK_WIDTH / 4 + 1.5;
+  const tickMarginOffset = -(TIMELINE_CHUNK_WIDTH / 4 + 1.5);
 
   return (
     <div className={styles.chunk} data-width={TIMELINE_CHUNK_WIDTH}>

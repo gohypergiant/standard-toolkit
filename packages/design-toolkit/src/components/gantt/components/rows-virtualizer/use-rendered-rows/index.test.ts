@@ -54,7 +54,9 @@ describe('useRenderedRows', () => {
   const totalBounds = { startMs: 0, endMs: 1000 };
 
   it('computes dimensions from context and children count', () => {
-    const { result } = renderHook(() => useRenderedRows({ children }));
+    const { result } = renderHook(() =>
+      useRenderedRows({ children, scrollContainerElement: null }),
+    );
 
     const expectedHeight = children.length * GANTT_ROW_HEIGHT_PX;
     const expectedWidth =
@@ -65,7 +67,9 @@ describe('useRenderedRows', () => {
   });
 
   it('updates store with position and row scroll px when onScroll is called', () => {
-    const { result } = renderHook(() => useRenderedRows({ children }));
+    const { result } = renderHook(() =>
+      useRenderedRows({ children, scrollContainerElement: null }),
+    );
 
     act(() => {
       result.current.onScroll(fakeEvent);
@@ -80,7 +84,9 @@ describe('useRenderedRows', () => {
   });
 
   it('should apply correct translateY to rendered rows based on vertical scroll', () => {
-    const { result } = renderHook(() => useRenderedRows({ children }));
+    const { result } = renderHook(() =>
+      useRenderedRows({ children, scrollContainerElement: null }),
+    );
 
     act(() => {
       result.current.onScroll({
@@ -100,18 +106,21 @@ describe('useRenderedRows', () => {
     });
   });
 
-  it('should rerender with expected values when element ref is assigned', () => {
+  it('should render with expected values when scrollContainerElement is provided', () => {
     const elementHeight = 200;
-
-    const { result } = renderHook(() => useRenderedRows({ children }));
 
     const fakeElement = {
       clientHeight: elementHeight,
     } as unknown as HTMLDivElement;
 
+    // Set up the store with a scroll position for testing
     act(() => {
-      result.current.assignContainerRef(fakeElement);
+      useGanttStore.setState({ currentRowScrollPx: verticalScrolledPixels });
     });
+
+    const { result } = renderHook(() =>
+      useRenderedRows({ children, scrollContainerElement: fakeElement }),
+    );
 
     const expectedSlice = deriveRenderedSlice(
       verticalScrolledPixels,
