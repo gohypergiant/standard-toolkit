@@ -10,14 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
-import { MapCursorEvents } from '@/map-cursor/events';
 import { Broadcast } from '@accelint/bus';
-import type { UniqueId } from '@accelint/core';
 import { uuid } from '@accelint/core';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { MapCursorEvents } from '@/map-cursor/events';
 import { MapEvents } from '../../base-map/events';
 import { mockShapes } from '../__fixtures__/mock-shapes';
-import type { Shape } from '../shared/types';
 import { ShapeFeatureType } from '../shared/types';
 import { EditShapeEvents } from './events';
 import {
@@ -30,6 +28,8 @@ import {
   saveEditingFromLayer,
   updateFeatureFromLayer,
 } from './store';
+import type { UniqueId } from '@accelint/core';
+import type { Shape } from '../shared/types';
 
 // Get fixture shapes by type
 const mockCircle = mockShapes.find((s) => s.shape === 'Circle');

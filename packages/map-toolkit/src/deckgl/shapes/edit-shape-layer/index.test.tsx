@@ -10,11 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
-import type { UniqueId } from '@accelint/core';
 import { uuid } from '@accelint/core';
 import { render } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { clearEditingState } from './store';
+import type { UniqueId } from '@accelint/core';
 
 // Track hotkey lifecycle calls
 type MockFn = ReturnType<typeof vi.fn<(...args: unknown[]) => unknown>>;

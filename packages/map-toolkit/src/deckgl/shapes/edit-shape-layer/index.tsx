@@ -18,11 +18,6 @@ import {
   registerHotkey,
   unregisterHotkey,
 } from '@accelint/hotkey-manager';
-import type {
-  EditAction,
-  FeatureCollection,
-} from '@deck.gl-community/editable-layers';
-import type { Feature } from 'geojson';
 import { useCallback, useContext, useEffect, useRef } from 'react';
 import { MapContext } from '../../base-map/provider';
 import { useShiftZoomDisable } from '../shared/hooks/use-shift-zoom-disable';
@@ -32,6 +27,7 @@ import { getFillColor, getLineColor } from '../shared/utils/style-utils';
 import {
   COMPLETION_EDIT_TYPES,
   CONTINUOUS_EDIT_TYPES,
+  DEFAULT_HOTKEY_CONFIG,
   EDIT_SHAPE_LAYER_ID,
 } from './constants';
 import { getEditModeInstance } from './modes';
@@ -43,6 +39,11 @@ import {
   saveEditingFromLayer,
   updateFeatureFromLayer,
 } from './store';
+import type {
+  EditAction,
+  FeatureCollection,
+} from '@deck.gl-community/editable-layers';
+import type { Feature } from 'geojson';
 import type { EditShapeLayerProps } from './types';
 
 /**
@@ -150,9 +151,7 @@ export function EditShapeLayer({
   id = EDIT_SHAPE_LAYER_ID,
   mapId,
   unit,
-  hotkeyConfig = {
-    panning: { code: Keycode.Space },
-  },
+  hotkeyConfig = DEFAULT_HOTKEY_CONFIG,
 }: EditShapeLayerProps) {
   // Get mapId from context if not provided
   const contextId = useContext(MapContext);
@@ -245,7 +244,7 @@ export function EditShapeLayer({
       unbind();
       unregisterHotkey(manager);
     };
-  }, [actualMapId, hotkeyConfig.panning]);
+  }, [actualMapId, hotkeyConfig]);
 
   // Disable zoom while Shift is held during editing
   // This prevents boxZoom (Shift+drag) from interfering with Shift modifier constraints

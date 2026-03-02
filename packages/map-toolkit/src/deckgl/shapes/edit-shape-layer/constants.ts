@@ -13,6 +13,7 @@
 'use client';
 
 import type { CSSCursorType } from '@/map-cursor/types';
+import { Keycode } from '@accelint/hotkey-manager';
 import type { EditMode } from './types';
 
 // Re-export edit event type sets from shared constants
@@ -42,4 +43,11 @@ export const EDIT_CURSOR_MAP: Record<EditMode, CSSCursorType> = {
   'circle-transform': 'crosshair',
   translate: 'crosshair',
   'point-translate': 'crosshair',
+};
+
+/**
+ * Defaults for EditShapeLayer hotkeys.
+ */
+export const DEFAULT_HOTKEY_CONFIG = {
+  panning: { code: Keycode.Space },
 };

@@ -12,11 +12,11 @@
 
 'use client';
 
-import type { DistanceUnitAbbreviation } from '@/shared/units';
 import type { UniqueId } from '@accelint/core';
 import type { KeyOption } from '@accelint/hotkey-manager';
 import type { NonEmptyArray } from '@accelint/hotkey-manager/types/non-empty-array';
 import type { Feature } from 'geojson';
+import type { DistanceUnitAbbreviation } from '@/shared/units';
 import type { Shape } from '../shared/types';
 
 /**
