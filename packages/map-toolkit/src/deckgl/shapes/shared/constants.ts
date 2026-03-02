@@ -14,7 +14,8 @@
 
 import { DEFAULT_TEXT_STYLE } from '../../text-settings';
 import type { Color } from '@deck.gl/core';
-import type { StyleProperties } from './types';
+import type { FeatureCollection } from 'geojson';
+import type { LinePattern, StyleProperties } from './types';
 
 /**
  * Layer IDs for shape layers
@@ -95,7 +96,7 @@ export const DEFAULT_TENTATIVE_COLORS = {
 export const DEFAULT_STYLE_PROPERTIES: StyleProperties = {
   fillColor: DEFAULT_COLORS.fill,
   lineColor: DEFAULT_COLORS.line,
-  lineWidth: 2,
+  lineWidth: DEFAULT_LINE_WIDTH,
   linePattern: 'solid',
 };
 
@@ -112,27 +113,11 @@ export const LINE_PATTERNS = ['solid', 'dashed', 'dotted'] as const;
 /**
  * Dash array patterns for border/outline rendering
  */
-export const DASH_ARRAYS: Record<
-  'solid' | 'dashed' | 'dotted',
-  [number, number] | null
-> = {
+export const DASH_ARRAYS: Record<LinePattern, [number, number] | null> = {
   solid: null,
   dashed: [8, 4],
   dotted: [2, 4],
 };
-
-/**
- * Default tentative fill color (white at 8% opacity - rgba(255, 255, 255, 0.08))
- * Used when drawing new shapes before they're completed.
- * 0.08 * 255 ≈ 20
- */
-export const DEFAULT_TENTATIVE_FILL_COLOR: Color = [255, 255, 255, 20];
-
-/**
- * Default tentative border/outline color (outline-interactive-hover: #888a8f)
- * Used when drawing new shapes before they're completed.
- */
-export const DEFAULT_TENTATIVE_LINE_COLOR: Color = [136, 138, 143, 255];
 
 /**
  * Default edit handle color (white) - used by both draw and edit layers
@@ -147,10 +132,13 @@ export const DEFAULT_EDIT_HANDLE_OUTLINE_COLOR: Color = [0, 0, 0, 200];
 /**
  * Empty feature collection for initializing editable layers
  */
-export const EMPTY_FEATURE_COLLECTION: import('geojson').FeatureCollection = {
+export const EMPTY_FEATURE_COLLECTION: FeatureCollection = Object.freeze({
   type: 'FeatureCollection',
-  features: [],
-};
+  features: Object.freeze([]),
+}) as unknown as FeatureCollection;
+
+const ASCII_RANGE =
+  ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~\x7f\x80';
 
 /**
  * Custom character set for deck.gl TextLayer used by tooltip rendering.
@@ -163,7 +151,7 @@ export const EMPTY_FEATURE_COLLECTION: import('geojson').FeatureCollection = {
 export const TOOLTIP_CHARACTER_SET: string[] = [
   '°',
   '²',
-  ...Array.from({ length: 97 }, (_, i) => String.fromCharCode(32 + i)),
+  ...ASCII_RANGE.split(''),
 ];
 
 /**
@@ -247,6 +235,24 @@ export function formatCircleTooltip(
 }
 
 /**
+ * Format a "{dim1} {unit} x {dim2} {unit}\n{area} {unit}²" tooltip string.
+ *
+ * @param dim1 - First dimension value
+ * @param dim2 - Second dimension value
+ * @param area - Area value
+ * @param unitAbbrev - Unit abbreviation (e.g., 'km', 'mi')
+ * @returns Formatted tooltip text
+ */
+function formatDimensionsTooltip(
+  dim1: number,
+  dim2: number,
+  area: number,
+  unitAbbrev: string,
+): string {
+  return `${formatDistance(dim1)} ${unitAbbrev} x ${formatDistance(dim2)} ${unitAbbrev}\n${formatDistance(area)} ${unitAbbrev}²`;
+}
+
+/**
  * Format rectangle tooltip text showing dimensions and area.
  *
  * @param width - Rectangle width in the specified units
@@ -266,7 +272,7 @@ export function formatRectangleTooltip(
   area: number,
   unitAbbrev: string,
 ): string {
-  return `${formatDistance(width)} ${unitAbbrev} x ${formatDistance(height)} ${unitAbbrev}\n${formatDistance(area)} ${unitAbbrev}²`;
+  return formatDimensionsTooltip(width, height, area, unitAbbrev);
 }
 
 /**
@@ -289,7 +295,7 @@ export function formatEllipseTooltip(
   area: number,
   unitAbbrev: string,
 ): string {
-  return `${formatDistance(majorAxis)} ${unitAbbrev} x ${formatDistance(minorAxis)} ${unitAbbrev}\n${formatDistance(area)} ${unitAbbrev}²`;
+  return formatDimensionsTooltip(majorAxis, minorAxis, area, unitAbbrev);
 }
 
 /**

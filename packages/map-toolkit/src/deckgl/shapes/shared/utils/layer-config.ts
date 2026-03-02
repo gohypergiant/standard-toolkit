@@ -10,10 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-'use client';
-
 import {
   DEFAULT_DISTANCE_UNITS,
+  type DistanceUnit,
+  type DistanceUnitAbbreviation,
   getDistanceUnitFromAbbreviation,
 } from '@/shared/units';
 import {
@@ -21,24 +21,26 @@ import {
   EDITABLE_LAYER_SUBLAYER_PROPS,
 } from '../constants';
 import type { Color } from '@deck.gl/core';
-import type { DistanceUnit } from '@/shared/units';
 
 /**
  * Props returned by getDefaultEditableLayerProps.
  * These are common configuration props shared between DrawShapeLayer and EditShapeLayer.
  */
-export interface EditableLayerDefaultProps {
-  /** Edit handle point color */
+export type EditableLayerDefaultProps = {
+  /** Edit handle point color. */
   getEditHandlePointColor: Color;
-  /** Edit handle point outline color */
+  /** Edit handle point outline color. */
   getEditHandlePointOutlineColor: Color;
-  /** Mode configuration with distance units */
+  /** Mode configuration with distance units. */
   modeConfig: {
     distanceUnits: DistanceUnit;
   };
-  /** Sublayer props for tooltips and edit handles */
+  /** Sublayer props for tooltips and edit handles. */
   _subLayerProps: typeof EDITABLE_LAYER_SUBLAYER_PROPS;
-}
+};
+
+let cachedAbbrev: DistanceUnitAbbreviation | undefined | null = null;
+let cachedProps: EditableLayerDefaultProps | undefined;
 
 /**
  * Returns default props for EditableGeoJsonLayer configuration.
@@ -49,7 +51,7 @@ export interface EditableLayerDefaultProps {
  * - Sublayer props for tooltips and handles
  *
  * @param unitAbbrev - Optional unit abbreviation (e.g., 'km', 'mi'). Defaults to DEFAULT_DISTANCE_UNITS.
- * @returns Default props to spread onto EditableGeoJsonLayer
+ * @returns Default props to spread onto EditableGeoJsonLayer.
  *
  * @example
  * ```tsx
@@ -60,9 +62,14 @@ export interface EditableLayerDefaultProps {
  * ```
  */
 export function getDefaultEditableLayerProps(
-  unitAbbrev?: string,
+  unitAbbrev?: DistanceUnitAbbreviation,
 ): EditableLayerDefaultProps {
-  return {
+  if (cachedAbbrev !== null && cachedAbbrev === unitAbbrev && cachedProps) {
+    return cachedProps;
+  }
+
+  cachedAbbrev = unitAbbrev;
+  cachedProps = {
     getEditHandlePointColor: DEFAULT_EDIT_HANDLE_COLOR,
     getEditHandlePointOutlineColor: DEFAULT_EDIT_HANDLE_COLOR,
     modeConfig: {
@@ -74,4 +81,6 @@ export function getDefaultEditableLayerProps(
     // biome-ignore lint/style/useNamingConvention: deck.gl API convention
     _subLayerProps: EDITABLE_LAYER_SUBLAYER_PROPS,
   };
+
+  return cachedProps;
 }

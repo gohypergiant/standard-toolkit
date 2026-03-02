@@ -114,8 +114,6 @@ export type {
   Shape,
   ShapeFeature,
   ShapeFeatureProperties,
-  ShapeFeatureTypeValues,
   ShapeId,
   StyleProperties,
-  Subscription,
 } from './shared/types';

@@ -53,7 +53,6 @@ export type {
   ShapeEventType,
   ShapeFeature,
   ShapeFeatureProperties,
-  ShapeFeatureTypeValues,
   ShapeId,
   StyledFeature,
   StyledFeatureProperties,

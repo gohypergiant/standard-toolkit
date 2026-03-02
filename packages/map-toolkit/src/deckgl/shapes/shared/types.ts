@@ -39,6 +39,7 @@ export const ShapeFeatureType = {
   Point: 'Point',
 } as const;
 
+/** Union of all supported shape feature type string literals. */
 export type ShapeFeatureType =
   (typeof ShapeFeatureType)[keyof typeof ShapeFeatureType];
 
@@ -145,11 +146,6 @@ export type EllipseProperties = {
 };
 
 /**
- * Custom geometry types supported
- */
-export type CustomGeometry = Point | LineString | Polygon;
-
-/**
  * Properties for styled features.
  *
  * Note: circleProperties and ellipseProperties are optional at the type level
@@ -197,7 +193,7 @@ export type StyledFeature = Feature & {
 };
 
 /**
- * Base shape properties shared by all shapes
+ * Base shape properties shared by all shapes.
  */
 type BaseShape = {
   /** Unique identifier */
@@ -292,11 +288,6 @@ export type Shape =
   | PointShape;
 
 /**
- * Alias for ShapeFeatureType values
- */
-export type ShapeFeatureTypeValues = ShapeFeatureType;
-
-/**
  * Alias for StyledFeature (shape feature)
  */
 export type ShapeFeature = StyledFeature;
@@ -311,23 +302,15 @@ export type ShapeFeatureProperties = StyledFeature['properties'];
  */
 export type CircleRadius = CircleProperties['radius'];
 
-/**
- * Coordinate as [longitude, latitude] or [longitude, latitude, elevation]
- */
-export type Coordinate = [number, number, number?];
-
-/**
- * Function type for subscription (useSyncExternalStore pattern).
- * Used by draw-shape-layer and edit-shape-layer stores.
- */
-export type Subscription = (onStoreChange: () => void) => () => void;
-
 // =============================================================================
 // Type Guards
 // =============================================================================
 
 /**
  * Type guard for Circle shapes.
+ *
+ * @param shape - The shape to test.
+ * @returns True if shape is a CircleShape.
  *
  * @example
  * ```typescript
@@ -343,6 +326,9 @@ export function isCircleShape(shape: Shape): shape is CircleShape {
 
 /**
  * Type guard for Ellipse shapes.
+ *
+ * @param shape - The shape to test.
+ * @returns True if shape is an EllipseShape.
  *
  * @example
  * ```typescript
@@ -428,34 +414,76 @@ export function isPointShape(shape: Shape): shape is PointShape {
 
 // --- Granular geometry predicates (single GeoJSON type) ---
 
+/**
+ * Narrow a GeoJSON geometry to the Point type.
+ *
+ * @param geometry - The GeoJSON geometry to test.
+ * @returns True if the geometry is a Point.
+ */
 export function isPointType(geometry: Geometry): geometry is Point {
   return geometry.type === 'Point';
 }
 
+/**
+ * Narrow a GeoJSON geometry to the MultiPoint type.
+ *
+ * @param geometry - The GeoJSON geometry to test.
+ * @returns True if the geometry is a MultiPoint.
+ */
 export function isMultiPointType(geometry: Geometry): geometry is MultiPoint {
   return geometry.type === 'MultiPoint';
 }
 
+/**
+ * Narrow a GeoJSON geometry to the LineString type.
+ *
+ * @param geometry - The GeoJSON geometry to test.
+ * @returns True if the geometry is a LineString.
+ */
 export function isLineStringType(geometry: Geometry): geometry is LineString {
   return geometry.type === 'LineString';
 }
 
+/**
+ * Narrow a GeoJSON geometry to the MultiLineString type.
+ *
+ * @param geometry - The GeoJSON geometry to test.
+ * @returns True if the geometry is a MultiLineString.
+ */
 export function isMultiLineStringType(
   geometry: Geometry,
 ): geometry is MultiLineString {
   return geometry.type === 'MultiLineString';
 }
 
+/**
+ * Narrow a GeoJSON geometry to the Polygon type.
+ *
+ * @param geometry - The GeoJSON geometry to test.
+ * @returns True if the geometry is a Polygon.
+ */
 export function isPolygonType(geometry: Geometry): geometry is Polygon {
   return geometry.type === 'Polygon';
 }
 
+/**
+ * Narrow a GeoJSON geometry to the MultiPolygon type.
+ *
+ * @param geometry - The GeoJSON geometry to test.
+ * @returns True if the geometry is a MultiPolygon.
+ */
 export function isMultiPolygonType(
   geometry: Geometry,
 ): geometry is MultiPolygon {
   return geometry.type === 'MultiPolygon';
 }
 
+/**
+ * Narrow a GeoJSON geometry to the GeometryCollection type.
+ *
+ * @param geometry - The GeoJSON geometry to test.
+ * @returns True if the geometry is a GeometryCollection.
+ */
 export function isGeometryCollectionType(
   geometry: Geometry,
 ): geometry is GeometryCollection {
@@ -467,7 +495,9 @@ export function isGeometryCollectionType(
 /**
  * Narrow a GeoJSON geometry to polygon-like types (Polygon or MultiPolygon).
  *
- * @param geometry - The GeoJSON geometry to test
+ * @param geometry - The GeoJSON geometry to test.
+ * @returns True if the geometry is a Polygon or MultiPolygon.
+ *
  * @example
  * ```typescript
  * if (isPolygonGeometry(feature.geometry)) {
@@ -484,7 +514,9 @@ export function isPolygonGeometry(
 /**
  * Narrow a GeoJSON geometry to line-like types (LineString or MultiLineString).
  *
- * @param geometry - The GeoJSON geometry to test
+ * @param geometry - The GeoJSON geometry to test.
+ * @returns True if the geometry is a LineString or MultiLineString.
+ *
  * @example
  * ```typescript
  * if (isLineGeometry(feature.geometry)) {
@@ -501,7 +533,15 @@ export function isLineGeometry(
 /**
  * Narrow a GeoJSON geometry to point-like types (Point or MultiPoint).
  *
- * @param geometry - The GeoJSON geometry to test
+ * @param geometry - The GeoJSON geometry to test.
+ * @returns True if the geometry is a Point or MultiPoint.
+ *
+ * @example
+ * ```typescript
+ * if (isPointGeometry(feature.geometry)) {
+ *   // geometry narrowed to Point | MultiPoint
+ * }
+ * ```
  */
 export function isPointGeometry(
   geometry: Geometry,
