@@ -12,13 +12,14 @@ A read-only deck.gl composite layer for displaying geographic shapes with intera
 
 - **Multiple geometry types**: Point, LineString, Polygon, and Circle
 - **Icon support**: Custom icons for Point geometries via icon atlases
-- **Interactive selection**: Click handling with visual highlight feedback
-- **Hover effects**: Border/outline width increases on hover; Points with icons show coffin corners
+- **Interactive selection**: Click handling with visual brightness feedback; Points with icons show coffin corners
+- **Hover effects**: Border/outline width increases on hover; fills and curtains brighten via material lighting; Points with icons show coffin corners
 - **Customizable labels**: White uppercase text with black outline, flexible positioning, show always/hover/never modes
 - **Style properties**: Full control over colors, border/outline patterns, and opacity
 - **Event bus integration**: Automatically emits shape events via @accelint/bus
 - **Multi-map support**: Events include map instance ID for isolation
 - **Cursor integration**: Works with map-cursor for hover cursor changes
+- **3D elevation rendering**: Extruded polygons, filled curtains for LineStrings, and vertical indicator lines for elevated points
 
 ## Dependencies
 
@@ -471,11 +472,16 @@ Each geometry type has sensible defaults (labels appear below shapes):
 
 ### Visual Feedback
 
+Interactions never modify a shape's innate styling — hover and selection are always additive overlays.
+
 When a shape is selected via `selectedShapeId`, the layer provides visual indicators:
 
-1. **Dotted border**: The selected shape's border/outline pattern changes to dotted (`[2, 4]` dash array)
-2. **Coffin corners** (Point shapes with icons): Bracket-like corners appear around selected Point icons with a blue fill. These are not currently customizable.
-3. **Highlight** (optional, non-icon-Point shapes): A highlight layer underneath with:
+1. **Line/outline brightness** (all shapes): The shape's border/outline brightens to 1.4× its base color.
+2. **Fill brightness overlay** (polygon shapes): A brightness overlay renders using `MATERIAL_SETTINGS.HOVER_OR_SELECT` lighting. When the selected shape is also hovered, the hover layer stacks on top using `MATERIAL_SETTINGS.HOVER_AND_SELECT` for an even brighter combined effect.
+3. **Curtain brightness** (elevated LineString shapes): Curtain walls render at overlay opacity using a brightened version of the shape's line color.
+4. **Coffin corners** (Point shapes with icons): Bracket-like corners appear with a blue fill. These are not currently customizable.
+5. **Highlight** (optional, non-icon-Point shapes): A highlight layer underneath with:
+
    - Increased border/outline width (+5 pixels)
    - Custom highlight color (default: turquoise at ~39% opacity)
 
@@ -484,20 +490,20 @@ When a shape is selected via `selectedShapeId`, the layer provides visual indica
 The highlight effect can be toggled with the `showHighlight` prop:
 
 ```tsx
-// To show the highlight effect in addition to dotted border:
+// Enable the highlight outline around selected shapes:
 <displayShapeLayer
   id="shapes"
   data={shapes}
   selectedShapeId={selectedId}
-  showHighlight={true}  // enables the highlight layer
+  showHighlight={true}
 />
 
-// Default behavior (no highlight, just dotted border):
+// Default behavior — no highlight outline:
 <displayShapeLayer
   id="shapes"
   data={shapes}
   selectedShapeId={selectedId}
-  // showHighlight={false} is the default - only dotted border shows on selection
+  // showHighlight={false} is the default
 />
 ```
 
@@ -516,8 +522,110 @@ The highlight effect can be toggled with the `showHighlight` prop:
 
 When `pickable={true}`, shapes show hover feedback:
 
-- **All shapes (except Points with icons)**: Border/outline width increases by 2 pixels
+- **All shapes**: Border/outline color brightens to 1.4× its base color
+- **Polygon shapes**: Fill brightens via material-based lighting; stacks with any active selection treatment
+- **Elevated LineString shapes**: Curtain walls brighten at overlay opacity
+- **Non-icon shapes**: Border/outline width increases by 2 pixels
 - **Point shapes with icons**: Coffin corners appear with a white fill and black outline
+
+## 3D Elevation Rendering
+
+Shapes with elevation render as 3D objects when `enableElevation` is true. Elevation is specified in meters above mean sea level (MSL).
+
+### How It Works
+
+Set `enableElevation={true}` to activate 3D rendering. When disabled (the default), shapes render flat regardless of their elevation data.
+
+Each geometry type gets a different 3D treatment:
+
+| Geometry | Elevation Source | 3D Behavior |
+|----------|-----------------|-------------|
+| **Polygon / Rectangle / Circle / Ellipse** | `maxElevation` property on `StyledFeatureProperties` | Extruded upward from the ground to `maxElevation`. Z coordinates in geometry are ignored. |
+| **LineString** | Per-vertex Z coordinates | Filled curtain walls drop from the line down to the ground |
+| **Point** | Z coordinate | Vertical indicator line drops from the point down to the ground |
+
+### Elevation Data
+
+For **Points** and **LineStrings**, elevation is encoded as the third value in GeoJSON coordinate arrays. For **polygon-type shapes** (Polygon, Rectangle, Circle, Ellipse), elevation is specified via the optional `minElevation` and `maxElevation` properties on `StyledFeatureProperties`:
+
+```tsx
+// Point at 1500m elevation
+const point = {
+  type: 'Feature',
+  geometry: {
+    type: 'Point',
+    coordinates: [-122.4, 37.8, 1500], // [lng, lat, elevation]
+  },
+  // ...
+};
+
+// LineString with varying elevation
+const line = {
+  type: 'Feature',
+  geometry: {
+    type: 'LineString',
+    coordinates: [
+      [-122.5, 37.7, 20000],
+      [-122.3, 37.9, 40000],
+    ],
+  },
+  // ...
+};
+
+// Polygon at 22500m elevation via maxElevation (Z coordinates optional)
+const polygon = {
+  type: 'Feature',
+  geometry: {
+    type: 'Polygon',
+    coordinates: [[
+      [-118.3, 34.0, 22500],
+      [-118.2, 34.0, 22500],
+      [-118.2, 34.1, 22500],
+      [-118.3, 34.1, 22500],
+      [-118.3, 34.0, 22500],
+    ]],
+  },
+  properties: {
+    styleProperties: { /* ... */ },
+    maxElevation: 22500,
+  },
+};
+```
+
+### Tying Elevation to Camera View
+
+Elevation rendering only makes sense with a pitched camera. The recommended pattern ties `enableElevation` to the camera view mode so elevation features appear in 2.5D/3D and disappear in 2D:
+
+```tsx
+import { useMapCamera } from '@accelint/map-toolkit/camera';
+import { useSelectShape } from '@accelint/map-toolkit/deckgl/shapes';
+
+function MapWithElevation() {
+  const { cameraState } = useMapCamera(MAP_ID);
+  const { selectedId } = useSelectShape(MAP_ID);
+
+  return (
+    <BaseMap id={MAP_ID} defaultView="2.5D">
+      <displayShapeLayer
+        id="shapes"
+        mapId={MAP_ID}
+        data={shapesWithElevation}
+        selectedShapeId={selectedId}
+        enableElevation={cameraState.view !== '2D'}
+      />
+    </BaseMap>
+  );
+}
+```
+
+### Hover and Selection in 3D
+
+Elevation layers respond to hover and selection with color feedback:
+
+- **Hover or Selection**: Curtain walls render at overlay opacity using the shape's line color brightened to 1.4×
+- **Hover + Selection**: Curtain walls render at overlay opacity using the shape's line color brightened to 1.7×
+
+All polygons (2D and extruded) use a material-based hover effect (lighting change) for fill brightness. In 3D, this also compensates for deck.gl's inability to render outlines on extruded polygons.
 
 ## Event Bus Integration
 
@@ -647,14 +755,15 @@ When using icons for Point geometries, **all shapes in a single DisplayShapeLaye
 | `id` | `string` | *required* | Unique layer ID |
 | `mapId` | `UniqueId` | *required* | Map instance ID for event bus isolation in multi-map scenarios |
 | `data` | `Shape[]` | *required* | Array of shapes to display |
-| `selectedShapeId` | `ShapeId` | `undefined` | Currently selected shape ID for highlighting |
+| `selectedShapeId` | `ShapeId` | `undefined` | Currently selected shape ID for showing the select layer |
 | `onShapeClick` | `(shape: Shape) => void` | `undefined` | Callback when shape is clicked |
 | `onShapeHover` | `(shape: Shape \| null) => void` | `undefined` | Callback when shape is hovered |
 | `pickable` | `boolean` | `true` | Whether shapes are clickable/hoverable |
 | `showLabels` | `'always' \| 'hover' \| 'never'` | `'always'` | Label display mode: `'always'` shows all labels, `'hover'` shows label only for hovered shape, `'never'` hides all labels |
-| `showHighlight` | `boolean` | `false` | Whether to show highlight around selected shapes (dotted border always shows) |
+| `showHighlight` | `boolean` | `false` | Whether to show a highlight outline around selected shapes |
 | `labelOptions` | `LabelPositionOptions` | `undefined` | Global label positioning options |
 | `highlightColor` | `[number, number, number, number]` | `[40, 245, 190, 100]` | Highlight color RGBA (0-255) |
+| `enableElevation` | `boolean` | `false` | Enable 3D elevation rendering (extrusion, curtains, vertical indicators). See [3D Elevation Rendering](#3d-elevation-rendering). |
 | `applyBaseOpacity` | `boolean` | `true` | Apply 20% opacity multiplier to fill colors for semi-transparent look |
 
 ### LabelPositionOptions
@@ -694,3 +803,5 @@ See the Storybook stories for interactive examples:
 - **BasicDisplayAndEvents**: Interactive shape display with event logging and `applyBaseOpacity` toggle
 - **LabelPositioning**: Comprehensive label positioning controls
 - **WithPointIcons**: Custom icon atlas demo
+- **DisplayShapes25D**: Shapes with elevation in 2.5D view (mercator + pitch), full camera controls, `enableElevation` tied to camera view
+- **DisplayShapes3D**: Shapes with elevation on a 3D globe

@@ -37,9 +37,5 @@ function PropCombos() {
 }
 
 export function ButtonExampleServer() {
-  return (
-    <>
-      <PropCombos />
-    </>
-  );
+  return <PropCombos />;
 }

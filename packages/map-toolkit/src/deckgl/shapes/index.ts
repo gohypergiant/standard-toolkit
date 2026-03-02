@@ -55,8 +55,6 @@ export {
 export type {
   DisplayShapeLayerProps,
   ShowLabelsMode,
-  StyledFeature,
-  StyledFeatureProperties,
 } from './display-shape-layer/types';
 export type { UseSelectShapeReturn } from './display-shape-layer/use-select-shape';
 export type {
@@ -112,8 +110,8 @@ export type {
   Shape,
   ShapeFeature,
   ShapeFeatureProperties,
-  ShapeFeatureTypeValues,
   ShapeId,
+  StyledFeature,
+  StyledFeatureProperties,
   StyleProperties,
-  Subscription,
 } from './shared/types';

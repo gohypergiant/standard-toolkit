@@ -18,13 +18,34 @@ import {
   getLineColor,
   getLineWidth,
 } from '../../shared/utils/style-utils';
+import { OVERLAY_FILL_OPACITY } from '../constants';
 import {
-  getHighlightColor,
+  applyOverlayOpacity,
+  brightenColor,
   getHighlightLineWidth,
   getHoverLineWidth,
+  getOverlayFillColor,
 } from './display-style';
-import type { Color } from '@deck.gl/core';
 import type { StyledFeature } from '../../shared/types';
+
+/** Create a minimal StyledFeature with given style overrides. */
+function createStyledFeature(
+  styles: Partial<StyledFeature['properties']['styleProperties']> = {},
+): StyledFeature {
+  return {
+    type: 'Feature',
+    properties: {
+      styleProperties: {
+        fillColor: [0, 0, 0, 255],
+        lineColor: [0, 0, 0, 255],
+        lineWidth: 2,
+        linePattern: 'solid',
+        ...styles,
+      },
+    },
+    geometry: { type: 'Point', coordinates: [0, 0] },
+  };
+}
 
 describe('Display Style Utilities', () => {
   describe('getFillColor', () => {
@@ -37,105 +58,47 @@ describe('Display Style Utilities', () => {
 
       const result = getFillColor(feature);
 
-      // Default fill: DEFAULT_COLORS.fill passed through (white)
       expect(result).toEqual([255, 255, 255, 255]);
     });
 
     it('passes through RGBA color as-is when applyBaseOpacity is false', () => {
-      const feature: StyledFeature = {
-        type: 'Feature',
-        properties: {
-          styleProperties: {
-            fillColor: [255, 0, 0, 200] as Color,
-            lineColor: [0, 0, 0, 255] as Color,
-            lineWidth: 2,
-            linePattern: 'solid',
-          },
-        },
-        geometry: { type: 'Point', coordinates: [0, 0] },
-      };
+      const feature = createStyledFeature({ fillColor: [255, 0, 0, 200] });
 
       const result = getFillColor(feature);
 
-      // Color passed through exactly as provided
       expect(result).toEqual([255, 0, 0, 200]);
     });
 
     it('applies BASE_FILL_OPACITY when applyBaseOpacity is true', () => {
-      const feature: StyledFeature = {
-        type: 'Feature',
-        properties: {
-          styleProperties: {
-            fillColor: [255, 0, 0, 255] as Color,
-            lineColor: [0, 0, 0, 255] as Color,
-            lineWidth: 2,
-            linePattern: 'solid',
-          },
-        },
-        geometry: { type: 'Point', coordinates: [0, 0] },
-      };
+      const feature = createStyledFeature({ fillColor: [255, 0, 0, 255] });
 
       const result = getFillColor(feature, true);
 
-      // Red with alpha multiplied by BASE_FILL_OPACITY (0.2)
       const expectedOpacity = Math.round(255 * BASE_FILL_OPACITY);
       expect(result).toEqual([255, 0, 0, expectedOpacity]);
     });
 
     it('applies BASE_FILL_OPACITY to custom alpha value', () => {
-      const feature: StyledFeature = {
-        type: 'Feature',
-        properties: {
-          styleProperties: {
-            fillColor: [0, 255, 0, 200] as Color,
-            lineColor: [0, 0, 0, 255] as Color,
-            lineWidth: 2,
-            linePattern: 'solid',
-          },
-        },
-        geometry: { type: 'Point', coordinates: [0, 0] },
-      };
+      const feature = createStyledFeature({ fillColor: [0, 255, 0, 200] });
 
       const result = getFillColor(feature, true);
 
-      // Green with alpha 200 multiplied by BASE_FILL_OPACITY
       const expectedOpacity = Math.round(200 * BASE_FILL_OPACITY);
       expect(result).toEqual([0, 255, 0, expectedOpacity]);
     });
 
     it('handles RGB array (3 elements) by adding default alpha', () => {
-      const feature: StyledFeature = {
-        type: 'Feature',
-        properties: {
-          styleProperties: {
-            fillColor: [0, 0, 255] as Color,
-            lineColor: [0, 0, 0, 255] as Color,
-            lineWidth: 2,
-            linePattern: 'solid',
-          },
-        },
-        geometry: { type: 'Point', coordinates: [0, 0] },
-      };
+      const feature = createStyledFeature({
+        fillColor: [0, 0, 255] as [number, number, number],
+      });
 
       const result = getFillColor(feature);
 
-      // Blue with default alpha 255
       expect(result).toEqual([0, 0, 255, 255]);
     });
 
     it('handles zero alpha correctly', () => {
-      const feature: StyledFeature = {
-        type: 'Feature',
-        properties: {
-          styleProperties: {
-            fillColor: [255, 255, 255, 0] as Color,
-            lineColor: [0, 0, 0, 255] as Color,
-            lineWidth: 2,
-            linePattern: 'solid',
-          },
-        },
-        geometry: { type: 'Point', coordinates: [0, 0] },
-      };
+      const feature = createStyledFeature({ fillColor: [255, 255, 255, 0] });
 
       const result = getFillColor(feature);
 
@@ -153,47 +116,24 @@ describe('Display Style Utilities', () => {
 
       const result = getLineColor(feature);
 
-      // Default line: DEFAULT_COLORS.line passed through (gray)
       expect(result).toEqual([136, 138, 143, 255]);
     });
 
     it('passes through RGBA color exactly as provided', () => {
-      const feature: StyledFeature = {
-        type: 'Feature',
-        properties: {
-          styleProperties: {
-            fillColor: [0, 0, 0, 255] as Color,
-            lineColor: [255, 0, 0, 200] as Color,
-            lineWidth: 2,
-            linePattern: 'solid',
-          },
-        },
-        geometry: { type: 'Point', coordinates: [0, 0] },
-      };
+      const feature = createStyledFeature({ lineColor: [255, 0, 0, 200] });
 
       const result = getLineColor(feature);
 
-      // Color passed through exactly as provided
       expect(result).toEqual([255, 0, 0, 200]);
     });
 
     it('handles RGB array (3 elements) by adding default alpha', () => {
-      const feature: StyledFeature = {
-        type: 'Feature',
-        properties: {
-          styleProperties: {
-            fillColor: [0, 0, 0, 255] as Color,
-            lineColor: [0, 255, 0] as Color,
-            lineWidth: 2,
-            linePattern: 'solid',
-          },
-        },
-        geometry: { type: 'Point', coordinates: [0, 0] },
-      };
+      const feature = createStyledFeature({
+        lineColor: [0, 255, 0] as [number, number, number],
+      });
 
       const result = getLineColor(feature);
 
-      // Green with default alpha 255
       expect(result).toEqual([0, 255, 0, 255]);
     });
   });
@@ -208,107 +148,34 @@ describe('Display Style Utilities', () => {
 
       const result = getLineWidth(feature);
 
-      // DEFAULT_LINE_WIDTH is 2
       expect(result).toBe(2);
     });
 
-    it('returns lineWidth from style properties', () => {
-      const feature: StyledFeature = {
-        type: 'Feature',
-        properties: {
-          styleProperties: {
-            fillColor: [0, 0, 0, 255] as Color,
-            lineColor: [0, 0, 0, 255] as Color,
-            lineWidth: 8,
-            linePattern: 'solid',
-          },
-        },
-        geometry: { type: 'Point', coordinates: [0, 0] },
-      };
+    it.each([
+      { width: 1 },
+      { width: 2 },
+      { width: 4 },
+      { width: 8 },
+    ])('returns $width from style properties', ({ width }) => {
+      const feature = createStyledFeature({ lineWidth: width });
 
       const result = getLineWidth(feature);
 
-      expect(result).toBe(8);
-    });
-
-    it('handles different line widths', () => {
-      const widths = [1, 2, 4, 8] as const;
-
-      for (const width of widths) {
-        const feature: StyledFeature = {
-          type: 'Feature',
-          properties: {
-            styleProperties: {
-              fillColor: [0, 0, 0, 255] as Color,
-              lineColor: [0, 0, 0, 255] as Color,
-              lineWidth: width,
-              linePattern: 'solid',
-            },
-          },
-          geometry: { type: 'Point', coordinates: [0, 0] },
-        };
-
-        expect(getLineWidth(feature)).toBe(width);
-      }
+      expect(result).toBe(width);
     });
   });
 
   describe('getDashArray', () => {
-    it('returns null for solid pattern', () => {
-      const feature: StyledFeature = {
-        type: 'Feature',
-        properties: {
-          styleProperties: {
-            fillColor: [0, 0, 0, 255] as Color,
-            lineColor: [0, 0, 0, 255] as Color,
-            lineWidth: 2,
-            linePattern: 'solid',
-          },
-        },
-        geometry: { type: 'Point', coordinates: [0, 0] },
-      };
+    it.each([
+      { pattern: 'solid' as const, expected: null },
+      { pattern: 'dashed' as const, expected: [8, 4] },
+      { pattern: 'dotted' as const, expected: [2, 4] },
+    ])('returns $expected for $pattern pattern', ({ pattern, expected }) => {
+      const feature = createStyledFeature({ linePattern: pattern });
 
       const result = getDashArray(feature);
 
-      expect(result).toBeNull();
-    });
-
-    it('returns dash array for dashed pattern', () => {
-      const feature: StyledFeature = {
-        type: 'Feature',
-        properties: {
-          styleProperties: {
-            fillColor: [0, 0, 0, 255] as Color,
-            lineColor: [0, 0, 0, 255] as Color,
-            lineWidth: 2,
-            linePattern: 'dashed',
-          },
-        },
-        geometry: { type: 'Point', coordinates: [0, 0] },
-      };
-
-      const result = getDashArray(feature);
-
-      expect(result).toEqual([8, 4]);
-    });
-
-    it('returns dash array for dotted pattern', () => {
-      const feature: StyledFeature = {
-        type: 'Feature',
-        properties: {
-          styleProperties: {
-            fillColor: [0, 0, 0, 255] as Color,
-            lineColor: [0, 0, 0, 255] as Color,
-            lineWidth: 2,
-            linePattern: 'dotted',
-          },
-        },
-        geometry: { type: 'Point', coordinates: [0, 0] },
-      };
-
-      const result = getDashArray(feature);
-
-      expect(result).toEqual([2, 4]);
+      expect(result).toEqual(expected);
     });
 
     it('uses default solid pattern when not provided', () => {
@@ -324,19 +191,8 @@ describe('Display Style Utilities', () => {
     });
 
     it('returns null for unknown pattern', () => {
-      const feature: StyledFeature = {
-        type: 'Feature',
-        properties: {
-          styleProperties: {
-            fillColor: [0, 0, 0, 255] as Color,
-            lineColor: [0, 0, 0, 255] as Color,
-            lineWidth: 2,
-            // biome-ignore lint/suspicious/noExplicitAny: testing invalid input
-            linePattern: 'unknown' as any,
-          },
-        },
-        geometry: { type: 'Point', coordinates: [0, 0] },
-      };
+      // biome-ignore lint/suspicious/noExplicitAny: testing invalid input
+      const feature = createStyledFeature({ linePattern: 'unknown' as any });
 
       const result = getDashArray(feature);
 
@@ -345,136 +201,31 @@ describe('Display Style Utilities', () => {
   });
 
   describe('getHoverLineWidth', () => {
-    it('returns base width when not hovered', () => {
-      const feature: StyledFeature = {
-        type: 'Feature',
-        properties: {
-          styleProperties: {
-            fillColor: [0, 0, 0, 255] as Color,
-            lineColor: [0, 0, 0, 255] as Color,
-            lineWidth: 4,
-            linePattern: 'solid',
-          },
-        },
-        geometry: { type: 'Point', coordinates: [0, 0] },
-      };
+    it.each([
+      { width: 1 },
+      { width: 2 },
+      { width: 4 },
+      { width: 8 },
+    ])('returns $width + 2 when hovered with base width $width', ({
+      width,
+    }) => {
+      const feature = createStyledFeature({ lineWidth: width });
 
-      const result = getHoverLineWidth(feature, false);
-
-      expect(result).toBe(4);
-    });
-
-    it('increases width by 2 when hovered', () => {
-      const feature: StyledFeature = {
-        type: 'Feature',
-        properties: {
-          styleProperties: {
-            fillColor: [0, 0, 0, 255] as Color,
-            lineColor: [0, 0, 0, 255] as Color,
-            lineWidth: 4,
-            linePattern: 'solid',
-          },
-        },
-        geometry: { type: 'Point', coordinates: [0, 0] },
-      };
-
-      const result = getHoverLineWidth(feature, true);
-
-      expect(result).toBe(6);
-    });
-
-    it('works with different base widths', () => {
-      const widths = [1, 2, 4, 8] as const;
-
-      for (const width of widths) {
-        const feature: StyledFeature = {
-          type: 'Feature',
-          properties: {
-            styleProperties: {
-              fillColor: [0, 0, 0, 255] as Color,
-              lineColor: [0, 0, 0, 255] as Color,
-              lineWidth: width,
-              linePattern: 'solid',
-            },
-          },
-          geometry: { type: 'Point', coordinates: [0, 0] },
-        };
-
-        expect(getHoverLineWidth(feature, true)).toBe(width + 2);
-        expect(getHoverLineWidth(feature, false)).toBe(width);
-      }
-    });
-  });
-
-  describe('getHighlightColor', () => {
-    it('returns default highlight color from DEFAULT_COLORS when no opacity provided', () => {
-      const result = getHighlightColor();
-
-      // DEFAULT_COLORS.highlight is [40, 245, 190, 100]
-      expect(result).toEqual([40, 245, 190, 100]);
-    });
-
-    it('applies custom opacity override', () => {
-      const result = getHighlightColor(0.5);
-
-      const expectedOpacity = Math.round(0.5 * 255);
-      expect(result).toEqual([40, 245, 190, expectedOpacity]);
-    });
-
-    it('handles full opacity', () => {
-      const result = getHighlightColor(1.0);
-
-      expect(result).toEqual([40, 245, 190, 255]);
-    });
-
-    it('handles zero opacity', () => {
-      const result = getHighlightColor(0);
-
-      expect(result).toEqual([40, 245, 190, 0]);
+      expect(getHoverLineWidth(feature, true)).toBe(width + 2);
+      expect(getHoverLineWidth(feature, false)).toBe(width);
     });
   });
 
   describe('getHighlightLineWidth', () => {
-    it('increases base width by HIGHLIGHT_WIDTH_INCREASE (5)', () => {
-      const feature: StyledFeature = {
-        type: 'Feature',
-        properties: {
-          styleProperties: {
-            fillColor: [0, 0, 0, 255] as Color,
-            lineColor: [0, 0, 0, 255] as Color,
-            lineWidth: 4,
-            linePattern: 'solid',
-          },
-        },
-        geometry: { type: 'Point', coordinates: [0, 0] },
-      };
+    it.each([
+      { width: 1, expected: 6 },
+      { width: 2, expected: 7 },
+      { width: 4, expected: 9 },
+      { width: 8, expected: 13 },
+    ])('returns $expected for base width $width', ({ width, expected }) => {
+      const feature = createStyledFeature({ lineWidth: width });
 
-      const result = getHighlightLineWidth(feature);
-
-      // lineWidth (4) + HIGHLIGHT_WIDTH_INCREASE (5) = 9
-      expect(result).toBe(9);
-    });
-
-    it('works with different base widths', () => {
-      const widths = [1, 2, 4, 8] as const;
-
-      for (const width of widths) {
-        const feature: StyledFeature = {
-          type: 'Feature',
-          properties: {
-            styleProperties: {
-              fillColor: [0, 0, 0, 255] as Color,
-              lineColor: [0, 0, 0, 255] as Color,
-              lineWidth: width,
-              linePattern: 'solid',
-            },
-          },
-          geometry: { type: 'Point', coordinates: [0, 0] },
-        };
-
-        // HIGHLIGHT_WIDTH_INCREASE is 5
-        expect(getHighlightLineWidth(feature)).toBe(width + 5);
-      }
+      expect(getHighlightLineWidth(feature)).toBe(expected);
     });
 
     it('uses default width when not provided', () => {
@@ -488,6 +239,90 @@ describe('Display Style Utilities', () => {
 
       // DEFAULT_LINE_WIDTH (2) + HIGHLIGHT_WIDTH_INCREASE (5) = 7
       expect(result).toBe(7);
+    });
+  });
+
+  describe('applyOverlayOpacity', () => {
+    it('scales alpha by OVERLAY_FILL_OPACITY', () => {
+      const result = applyOverlayOpacity([255, 100, 50, 200]);
+
+      expect(result).toEqual([
+        255,
+        100,
+        50,
+        Math.round(200 * OVERLAY_FILL_OPACITY),
+      ]);
+    });
+
+    it('scales zero alpha to zero', () => {
+      const result = applyOverlayOpacity([255, 255, 255, 0]);
+
+      expect(result[3]).toBe(0);
+    });
+  });
+
+  describe('getOverlayFillColor', () => {
+    it('scales alpha by OVERLAY_FILL_OPACITY', () => {
+      const feature = createStyledFeature({ fillColor: [255, 100, 50, 200] });
+
+      const result = getOverlayFillColor(feature);
+
+      expect(result).toEqual([
+        255,
+        100,
+        50,
+        Math.round(200 * OVERLAY_FILL_OPACITY),
+      ]);
+    });
+
+    it('scales zero alpha to zero', () => {
+      const feature = createStyledFeature({ fillColor: [255, 255, 255, 0] });
+
+      const result = getOverlayFillColor(feature);
+
+      expect(result[3]).toBe(0);
+    });
+  });
+
+  describe('brightenColor', () => {
+    it('multiplies RGB channels by factor', () => {
+      const color: [number, number, number, number] = [100, 150, 200, 255];
+
+      const result = brightenColor(color, 1.5);
+
+      expect(result).toEqual([150, 225, 255, 255]);
+    });
+
+    it('clamps RGB values to 255', () => {
+      const color: [number, number, number, number] = [200, 200, 200, 255];
+
+      const result = brightenColor(color, 2.0);
+
+      expect(result).toEqual([255, 255, 255, 255]);
+    });
+
+    it('preserves alpha unchanged', () => {
+      const color: [number, number, number, number] = [100, 100, 100, 128];
+
+      const result = brightenColor(color, 1.5);
+
+      expect(result[3]).toBe(128);
+    });
+
+    it('darkens with factor less than 1', () => {
+      const color: [number, number, number, number] = [200, 200, 200, 255];
+
+      const result = brightenColor(color, 0.5);
+
+      expect(result).toEqual([100, 100, 100, 255]);
+    });
+
+    it('returns zeros for factor of 0', () => {
+      const color: [number, number, number, number] = [100, 150, 200, 255];
+
+      const result = brightenColor(color, 0);
+
+      expect(result).toEqual([0, 0, 0, 255]);
     });
   });
 });

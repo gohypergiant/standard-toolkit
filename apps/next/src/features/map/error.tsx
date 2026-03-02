@@ -13,14 +13,14 @@
 'use client';
 import 'client-only';
 import { ErrorBoundary } from 'react-error-boundary';
-import { createLogger } from '~/utils/logger';
+import { createLoggerDomain } from '~/utils/logger';
 import type { ErrorInfo, PropsWithChildren } from 'react';
 
-const mapLogger = createLogger('[Map]');
+const mapLogger = createLoggerDomain('[Map]');
 
 function onError(err: Error, info: ErrorInfo) {
   mapLogger
-    .withContext({ componentStack: info.componentStack })
+    .withMetadata({ componentStack: info.componentStack })
     .withError(err)
     .error('Error boundary caught error');
 }

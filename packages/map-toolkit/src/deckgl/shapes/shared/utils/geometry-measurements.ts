@@ -10,58 +10,56 @@
  * governing permissions and limitations under the License.
  */
 
-'use client';
-
-import { distance, point } from '@turf/turf';
+import { distance } from '@turf/turf';
 import type { DistanceUnit } from '@/shared/units';
 
 /**
  * Circle measurement result containing radius, diameter, and area.
  */
-export interface CircleMeasurements {
-  /** Radius in the specified units */
+export type CircleMeasurements = {
+  /** Radius in the specified units. */
   radius: number;
-  /** Diameter (radius * 2) in the specified units */
+  /** Diameter (radius * 2) in the specified units. */
   diameter: number;
-  /** Area (π * radius²) in the specified units squared */
+  /** Area (π * radius²) in the specified units squared. */
   area: number;
-}
+};
 
 /**
  * Ellipse measurement result containing semi-axes and area.
  */
-export interface EllipseMeasurements {
-  /** X semi-axis (horizontal radius) in the specified units */
+export type EllipseMeasurements = {
+  /** X semi-axis (horizontal radius) in the specified units. */
   xSemiAxis: number;
-  /** Y semi-axis (vertical radius) in the specified units */
+  /** Y semi-axis (vertical radius) in the specified units. */
   ySemiAxis: number;
-  /** Major axis (full length of longer axis) in the specified units */
+  /** Major axis (full length of longer axis) in the specified units. */
   majorAxis: number;
-  /** Minor axis (full length of shorter axis) in the specified units */
+  /** Minor axis (full length of shorter axis) in the specified units. */
   minorAxis: number;
-  /** Area (π * xSemiAxis * ySemiAxis) in the specified units squared */
+  /** Area (π * xSemiAxis * ySemiAxis) in the specified units squared. */
   area: number;
-}
+};
 
 /**
  * Rectangle measurement result containing width, height, and area.
  */
-export interface RectangleMeasurements {
-  /** Width in the specified units */
+export type RectangleMeasurements = {
+  /** Width in the specified units. */
   width: number;
-  /** Height in the specified units */
+  /** Height in the specified units. */
   height: number;
-  /** Area (width * height) in the specified units squared */
+  /** Area (width * height) in the specified units squared. */
   area: number;
-}
+};
 
 /**
  * Compute circle measurements from center and edge point.
  *
- * @param center - Center point as [longitude, latitude]
- * @param edgePoint - Point on the circle's edge as [longitude, latitude]
- * @param units - Distance units for the measurements
- * @returns Circle measurements including radius, diameter, and area
+ * @param center - Center point as [longitude, latitude].
+ * @param edgePoint - Point on the circle's edge as [longitude, latitude].
+ * @param units - Distance units for the measurements.
+ * @returns Circle measurements including radius, diameter, and area.
  *
  * @example
  * ```typescript
@@ -85,11 +83,11 @@ export function computeCircleMeasurements(
 }
 
 /**
- * Compute ellipse measurements from center and semi-axis lengths.
+ * Compute ellipse measurements from semi-axis lengths.
  *
- * @param xSemiAxis - X semi-axis (horizontal radius) in the specified units
- * @param ySemiAxis - Y semi-axis (vertical radius) in the specified units
- * @returns Ellipse measurements including axes and area
+ * @param xSemiAxis - X semi-axis (horizontal radius) in the specified units.
+ * @param ySemiAxis - Y semi-axis (vertical radius) in the specified units.
+ * @returns Ellipse measurements including axes and area.
  *
  * @example
  * ```typescript
@@ -115,11 +113,11 @@ export function computeEllipseMeasurementsFromAxes(
  * - corner0 to corner1 defines one edge (width)
  * - corner1 to corner2 defines the adjacent edge (height)
  *
- * @param corner0 - First corner as [longitude, latitude]
- * @param corner1 - Adjacent corner as [longitude, latitude]
- * @param corner2 - Corner adjacent to corner1 as [longitude, latitude]
- * @param units - Distance units for the measurements
- * @returns Rectangle measurements including width, height, and area
+ * @param corner0 - First corner as [longitude, latitude].
+ * @param corner1 - Adjacent corner as [longitude, latitude].
+ * @param corner2 - Corner adjacent to corner1 as [longitude, latitude].
+ * @param units - Distance units for the measurements.
+ * @returns Rectangle measurements including width, height, and area.
  *
  * @example
  * ```typescript
@@ -138,8 +136,9 @@ export function computeRectangleMeasurementsFromCorners(
   corner2: [number, number],
   units: DistanceUnit,
 ): RectangleMeasurements {
-  const width = distance(point(corner0), point(corner1), { units });
-  const height = distance(point(corner1), point(corner2), { units });
+  const options = { units };
+  const width = distance(corner0, corner1, options);
+  const height = distance(corner1, corner2, options);
   const area = width * height;
 
   return { width, height, area };
@@ -151,9 +150,9 @@ export function computeRectangleMeasurementsFromCorners(
  * For an ellipse approximated as a polygon, calculates the major and minor axes
  * by measuring distances between opposite points on the perimeter.
  *
- * @param coordinates - Polygon ring coordinates as [[lon, lat], ...]
- * @param units - Distance units for the measurements
- * @returns Ellipse measurements including axes and area
+ * @param coordinates - Polygon ring coordinates as [[lon, lat], ...].
+ * @param units - Distance units for the measurements.
+ * @returns Ellipse measurements including axes and area.
  *
  * @example
  * ```typescript
@@ -167,36 +166,34 @@ export function computeRectangleMeasurementsFromCorners(
 export function computeEllipseMeasurementsFromPolygon(
   coordinates: [number, number][],
   units: DistanceUnit,
-): { majorAxis: number; minorAxis: number; area: number } {
-  // Remove the closing point if it duplicates the first
-  const points =
-    coordinates[0]?.[0] === coordinates[coordinates.length - 1]?.[0] &&
-    coordinates[0]?.[1] === coordinates[coordinates.length - 1]?.[1]
-      ? coordinates.slice(0, -1)
-      : coordinates;
+): EllipseMeasurements {
+  // Determine effective point count without allocating a new array
+  const len = coordinates.length;
+  const isClosed =
+    len > 0 &&
+    coordinates[0]?.[0] === coordinates[len - 1]?.[0] &&
+    coordinates[0]?.[1] === coordinates[len - 1]?.[1];
+  const pointCount = isClosed ? len - 1 : len;
 
-  if (points.length < 4) {
-    return { majorAxis: 0, minorAxis: 0, area: 0 };
+  if (pointCount < 4) {
+    return { xSemiAxis: 0, ySemiAxis: 0, majorAxis: 0, minorAxis: 0, area: 0 };
   }
 
   // For an ellipse polygon, opposite points are at index i and i + n/2
-  const halfLen = Math.floor(points.length / 2);
+  const halfLen = Math.floor(pointCount / 2);
+  const options = { units };
   let maxDist = 0;
   let minDist = Number.POSITIVE_INFINITY;
 
   // Sample several diameter measurements
   for (let i = 0; i < halfLen; i++) {
-    const p1 = points[i];
-    const p2 = points[i + halfLen];
+    const p1 = coordinates[i];
+    const p2 = coordinates[i + halfLen];
     if (!(p1 && p2)) {
       continue;
     }
 
-    const dist = distance(
-      [p1[0] as number, p1[1] as number],
-      [p2[0] as number, p2[1] as number],
-      { units },
-    );
+    const dist = distance(p1, p2, options);
 
     if (dist > maxDist) {
       maxDist = dist;
@@ -212,7 +209,13 @@ export function computeEllipseMeasurementsFromPolygon(
   // Ellipse area = π × a × b (where a and b are semi-axes)
   const semiMajor = majorAxis / 2;
   const semiMinor = minorAxis / 2;
-  const ellipseArea = Math.PI * semiMajor * semiMinor;
+  const area = Math.PI * semiMajor * semiMinor;
 
-  return { majorAxis, minorAxis, area: ellipseArea };
+  return {
+    xSemiAxis: semiMajor,
+    ySemiAxis: semiMinor,
+    majorAxis,
+    minorAxis,
+    area,
+  };
 }

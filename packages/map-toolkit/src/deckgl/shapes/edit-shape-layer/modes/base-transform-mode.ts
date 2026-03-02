@@ -36,6 +36,12 @@ export type ShiftKeyConfig = {
 
 /**
  * Definition for how to detect and handle a specific edit handle type.
+ *
+ * Note: `mode` is typed as `any` because library modes (TranslateMode, RotateMode,
+ * ScaleMode, etc.) narrow ModeProps to SimpleFeatureCollection while GeoJsonEditMode
+ * uses FeatureCollection. This makes the concrete mode classes structurally incompatible
+ * with their own parent type — a known type inconsistency in @deck.gl-community/editable-layers.
+ * At runtime all modes are GeoJsonEditMode subclasses, so the widened type is safe.
  */
 export type HandleMatcher = {
   /** Function to determine if a pick matches this handle type */
@@ -50,7 +56,8 @@ export type HandleMatcher = {
     };
   }) => boolean;
   /** The mode instance to delegate to when this handle is matched */
-  mode: GeoJsonEditMode;
+  // biome-ignore lint/suspicious/noExplicitAny: Library type inconsistency — see HandleMatcher JSDoc
+  mode: any;
   /** Optional Shift key configuration for this mode */
   shiftConfig?: ShiftKeyConfig;
 };
@@ -120,6 +127,12 @@ export type HandleMatcher = {
  * ```
  */
 export abstract class BaseTransformMode extends CompositeMode {
+  // biome-ignore lint/complexity/noUselessConstructor: Widens parameter type from GeoJsonEditMode[] to any[] — see HandleMatcher JSDoc
+  // biome-ignore lint/suspicious/noExplicitAny: Library type inconsistency — see HandleMatcher JSDoc
+  constructor(modes: any[]) {
+    super(modes);
+  }
+
   /** Track which mode is currently handling the drag operation */
   protected activeDragMode: GeoJsonEditMode | null = null;
 

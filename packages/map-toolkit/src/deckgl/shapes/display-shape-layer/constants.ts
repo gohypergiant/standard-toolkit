@@ -11,8 +11,9 @@
  */
 
 'use client';
-
+import { PathStyleExtension } from '@deck.gl/extensions';
 import { DEFAULT_COLORS } from '../shared/constants';
+import type { Rgba255Tuple } from '@accelint/predicates';
 
 /**
  * Map interaction constants.
@@ -24,18 +25,6 @@ export const MAP_INTERACTION = {
   LINE_WIDTH_MIN_PIXELS: 1, // Minimum line width in pixels
   ICON_SIZE: 38, // Size of shape icons
   ICON_HOVER_SIZE_INCREASE: 5, // Additional pixels added on hover
-} as const;
-
-/**
- * Selection highlight configuration.
- *
- * Controls the appearance of selected shapes, including highlight color
- * and icon size adjustments for Point shapes.
- */
-export const SELECTION_HIGHLIGHT = {
-  /** Uses DEFAULT_COLORS.highlight from shared constants */
-  COLOR: DEFAULT_COLORS.highlight,
-  ICON_SIZE_INCREASE: 8, // Additional pixels for highlight icon
 } as const;
 
 /**
@@ -68,5 +57,63 @@ export const DEFAULT_DISPLAY_PROPS = {
   showLabels: 'always' as const,
   showHighlight: false,
   applyBaseOpacity: true,
-  highlightColor: SELECTION_HIGHLIGHT.COLOR,
+  highlightColor: DEFAULT_COLORS.highlight,
 };
+
+/**
+ * Material settings for lighting effects on polygon shapes.
+ * Controls fill brightness for hover and selection overlay layers.
+ * Keys mirror BRIGHTNESS_FACTOR for consistency.
+ */
+export const MATERIAL_SETTINGS = {
+  // Normal state - standard lighting
+  NORMAL: {
+    ambient: 0.35,
+    diffuse: 0.6,
+    shininess: 32,
+    specularColor: [255, 255, 255] as [number, number, number],
+  },
+  // Hovered or selected (single active state)
+  HOVER_OR_SELECT: {
+    ambient: 0.6,
+    diffuse: 0.8,
+    shininess: 64,
+    specularColor: [255, 255, 255] as [number, number, number],
+  },
+  // Hovered and selected simultaneously - brighter
+  HOVER_AND_SELECT: {
+    ambient: 0.75,
+    diffuse: 0.95,
+    shininess: 80,
+    specularColor: [255, 255, 255] as [number, number, number],
+  },
+} as const;
+
+/**
+ * Brightness multipliers for interaction state feedback.
+ * Applied via brightenColor() to line colors, curtains, and elevation indicators.
+ * - HOVER_OR_SELECT: shape is hovered or selected (single active state)
+ * - HOVER_AND_SELECT: shape is both hovered and selected simultaneously
+ */
+export const BRIGHTNESS_FACTOR = {
+  HOVER_OR_SELECT: 1.4,
+  HOVER_AND_SELECT: 1.7,
+} as const;
+
+/**
+ * Opacity multiplier for interaction overlay layers (hover, select).
+ * Applied to the shape's fill alpha — sits between the base opacity (0.2)
+ * and full opacity (1.0) so the overlay reads clearly without being too solid.
+ */
+export const OVERLAY_FILL_OPACITY = 0.25;
+
+/** Reusable deck.gl PathStyleExtension enabling dash patterns on GeoJsonLayer lines. */
+export const DASH_EXTENSION = [new PathStyleExtension({ dash: true })];
+
+/** Readonly [r, g, b, a] tuple of DEFAULT_COLORS.highlight, pre-spread at module load for hot-path usage. */
+export const HIGHLIGHT_COLOR_TUPLE: Rgba255Tuple = [
+  DEFAULT_COLORS.highlight[0],
+  DEFAULT_COLORS.highlight[1],
+  DEFAULT_COLORS.highlight[2],
+  DEFAULT_COLORS.highlight[3] ?? 255,
+];
