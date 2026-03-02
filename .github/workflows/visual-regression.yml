@@ -100,12 +100,20 @@ jobs:
           echo "$FAILURES_JSON" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
-      - name: Upload Screenshot Diffs
+      - name: Organize VRT Failures
+        if: steps.visual-tests.outputs.exit_code != '0'
+        run: node .github/scripts/organize-vrt-failures.mjs apps/next
+
+      - name: Generate VRT Report
+        if: steps.visual-tests.outputs.exit_code != '0'
+        run: node .github/scripts/generate-vrt-report.mjs apps/next/vrt-report
+
+      - name: Upload VRT Report
         uses: actions/upload-artifact@v4
         if: steps.visual-tests.outputs.exit_code != '0'
         with:
-          name: screenshot-diffs
-          path: apps/next/src/features/**/__screenshots__/
+          name: vrt-report
+          path: apps/next/vrt-report/
           retention-days: 30
 
       - name: Generate VRT Coverage Report
@@ -179,9 +187,9 @@ jobs:
                   repo: context.repo.repo,
                   run_id: parseInt(process.env.GITHUB_RUN_ID),
                 });
-                const screenshotArtifact = artifacts.artifacts.find(a => a.name === 'screenshot-diffs');
-                if (screenshotArtifact) {
-                  artifactUrl = `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}/artifacts/${screenshotArtifact.id}`;
+                const reportArtifact = artifacts.artifacts.find(a => a.name === 'vrt-report');
+                if (reportArtifact) {
+                  artifactUrl = `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}/artifacts/${reportArtifact.id}`;
                 }
               } catch (e) {
                 console.log('Failed to get artifact URL:', e);
@@ -189,44 +197,55 @@ jobs:
               }
             }
 
-            // Build download link with fallback for errors
+            // Build download link text (no leading newlines — caller controls spacing)
             let downloadLink = '';
             if (artifactUrl) {
-              downloadLink = ` | **[Download screenshots](${artifactUrl})**`;
+              downloadLink = `**[Download VRT Report](${artifactUrl})** — open \`report.html\` for interactive comparison`;
             } else if (artifactError) {
-              downloadLink = ' | _Screenshot artifacts uploaded (link unavailable)_';
+              downloadLink = '_VRT report artifact uploaded (link unavailable)_';
             }
 
             // Build failed tests section
             let failedTestsSection = '';
             if (failuresData && failuresData.failures && failuresData.failures.length > 0) {
-              // Build simple list of all failing test names
-              const testNames = failuresData.failures.map(f => `- ${f.fullName}`).join('\n');
               const count = failuresData.failures.length;
 
-              failedTestsSection = [
+              // Build grouped failure list by component
+              const grouped = failuresData.groupedByComponent || {};
+              const componentList = Object.entries(grouped)
+                .sort(([, a], [, b]) => b - a)
+                .map(([comp, cnt]) => `| ${comp} | ${cnt} |`)
+                .join('\n');
+
+              // Root cause hint
+              const rootCauseHint = failuresData.rootCauseHint
+                ? `> 💡 ${failuresData.rootCauseHint}`
+                : '';
+
+              // Build details body
+              const detailsBody = [rootCauseHint, '', '| Component | Failures |', '|-----------|----------|', componentList].filter(Boolean).join('\n');
+
+              const lines = [
                 '',
                 '### ❌ Failed Tests',
                 '',
-                `**[View full test output](${jobUrl})**${downloadLink}`,
-                '',
-                '<details>',
-                `<summary>${count} failing test${count === 1 ? '' : 's'}</summary>`,
-                '',
-                testNames,
-                '',
-                '</details>',
-              ].join('\n');
+                `**[View full test output](${jobUrl})**`,
+              ];
+              if (downloadLink) lines.push('', downloadLink);
+              // GitHub needs blank line after </summary> for markdown rendering inside <details>
+              lines.push('', '<details>', `<summary>${count} failing test${count === 1 ? '' : 's'}</summary>`, '', detailsBody, '', '</details>');
+              failedTestsSection = lines.join('\n');
             } else if (failed > 0) {
               // Fallback when parsing failed but we know tests failed
-              failedTestsSection = [
+              const lines = [
                 '',
                 '### ❌ Failed Tests',
                 '',
-                `**[View full test output](${jobUrl})**${downloadLink}`,
-                '',
-                '> ⚠️ Failed to parse test details. Check the workflow logs for specifics.',
-              ].join('\n');
+                `**[View full test output](${jobUrl})**`,
+              ];
+              if (downloadLink) lines.push('', downloadLink);
+              lines.push('', '> ⚠️ Failed to parse test details. Check the workflow logs for specifics.');
+              failedTestsSection = lines.join('\n');
             }
 
             // Build update instructions (only shown when tests fail)

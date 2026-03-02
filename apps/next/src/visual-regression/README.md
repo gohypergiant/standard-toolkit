@@ -203,6 +203,50 @@ Visual regression testing is built on:
 
 Interactions (hover, focus) use Vitest's built-in `userEvent` from `vitest/browser`, not Testing Library.
 
+## Debugging Failed Tests
+
+When VRT tests fail in CI, the PR comment provides:
+
+- **Failure groups** — failures grouped by component with counts
+- **Root cause hints** — automated analysis suggesting why failures occurred
+- **Download link** — artifact containing an interactive HTML report
+
+### HTML report navigation
+
+Download the `vrt-report` artifact from the PR comment link and open `report.html`.
+
+The report shows expected and actual images side by side for each failure.
+
+- **`j` / `k`** — navigate between failures
+- **Sidebar** — jump to specific components
+- **Filters** — filter by component or theme (dark/light) using the header buttons
+
+### Deciding what to do
+
+| Scenario | Action |
+|----------|--------|
+| Intentional visual change | Update baselines via the "Update Visual Regression Snapshots" workflow |
+| Unintentional regression | Fix the code causing the visual change |
+| Only dark/light mode fails | Check theme token changes |
+| One component, many failures | Check recent changes to that component |
+| Widespread failures | Check foundation/token changes |
+
+### Artifact structure
+
+When downloaded, the `vrt-report` artifact contains:
+
+```
+vrt-report/
+├── report.html                          # Interactive HTML report (open this)
+├── test-results.json                    # Raw Vitest JSON output
+└── failures/
+    └── {component}/
+        └── {screenshot-name}/
+            ├── expected.png             # Baseline image
+            ├── actual.png               # Current screenshot
+            └── diff.png                 # Visual diff
+```
+
 ## Configuration
 
 Visual test configuration is in `vitest.config.js` under the `visual` project:
