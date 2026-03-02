@@ -61,6 +61,33 @@ describe('EditShapeLayer', () => {
   });
 
   describe('hotkey lifecycle', () => {
+    it('should throw when mapId is not provided and no MapProvider exists', () => {
+      const spy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => undefined);
+
+      expect(() => {
+        render(<EditShapeLayer />);
+      }).toThrow(
+        'EditShapeLayer requires either a mapId prop or to be used within a MapProvider',
+      );
+
+      spy.mockRestore();
+    });
+
+    it('should throw when mapId is not provided and no MapProvider exists', () => {
+      const spy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => undefined);
+
+      expect(() => {
+        render(<EditShapeLayer />);
+      }).toThrow(
+        'EditShapeLayer requires either a mapId prop or to be used within a MapProvider',
+      );
+
+      spy.mockRestore();
+    });
     it('registers and binds the save hotkey on mount', () => {
       const { unmount } = render(<EditShapeLayer mapId={mapId} />);
 
