@@ -68,12 +68,12 @@ export function filterGeometryAwarePicks<T extends PickLike>(
 
   for (let i = 0; i < len; i++) {
     const pick = picks[i];
-    if (!pick.isGuide && pick.object?.geometry?.type === undefined) {
+    if (!pick?.isGuide && pick?.object?.geometry?.type === undefined) {
       // Found a pick that needs filtering — build filtered array from here
       const filteredPicks: T[] = picks.slice(0, i);
       for (let j = i + 1; j < len; j++) {
         const p = picks[j];
-        if (p.isGuide || p.object?.geometry?.type !== undefined) {
+        if (p?.isGuide || p?.object?.geometry?.type !== undefined) {
           filteredPicks.push(p);
         }
       }
