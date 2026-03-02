@@ -10,17 +10,28 @@
  * governing permissions and limitations under the License.
  */
 
+import { useState } from 'react';
 import styles from './styles.module.css';
 import { useRenderedRows } from './use-rendered-rows';
+import { useScrollSync } from './use-scroll-sync';
 import type { PropsWithChildren } from 'react';
 
 export function RowsVirtualizer({ children }: PropsWithChildren) {
-  const { dimensions, renderedRows, assignContainerRef, onScroll } =
-    useRenderedRows({ children });
+  const [scrollContainerElement, setScrollContainerElement] =
+    useState<HTMLDivElement | null>(null);
+
+  const { dimensions, renderedRows, onScroll } = useRenderedRows({
+    children,
+    scrollContainerElement,
+  });
+
+  useScrollSync({
+    scrollContainerElement,
+  });
 
   return (
     <div
-      ref={assignContainerRef}
+      ref={setScrollContainerElement}
       className={styles.container}
       onScroll={onScroll}
     >
