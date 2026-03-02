@@ -18,6 +18,16 @@
 
 @import 'tailwindcss';
 
+@theme {
+  /* Remove the default Tailwind styles. */
+  --color-*: initial;
+  --font-*: initial;
+  --radius-*: initial;
+  --shadow-*: initial;
+  --spacing-*: initial;
+  --text-*: initial;
+}
+
 /* Import generated themes.css */
 @import './tokens/themes.css';
 
@@ -32,6 +42,41 @@
 @source inline('animate-ping');
 @source inline('animate-pulse');
 
+@utility bg-* {
+  --bg-value: --value(--bg-*, --domain-*, --primitive-*);
+  --bg-alpha: calc(--modifier(integer) / 100);
+
+  background-color: rgb(from var(--bg-value) r g b / var(--bg-alpha, alpha));
+}
+
+@utility fg-* {
+  --fg-value: --value(--fg-*, --domain-*, --primitive-*);
+  --fg-alpha: calc(--modifier(integer) / 100);
+  --fg-color: rgb(from var(--fg-value) r g b / var(--fg-alpha, alpha));
+  --icon-color: var(--fg-color);
+
+  color: var(--fg-color);
+}
+
+@utility icon-* {
+  --icon-value: --value(--fg-*, --domain-*, --primitive-*);
+  --icon-alpha: calc(--modifier(integer) / 100);
+  --icon-color: rgb(from var(--icon-value) r g b / var(--icon-alpha, alpha));
+}
+
+@utility outline-* {
+  --outline-value: --value(--outline-*, --domain-*, --primitive-*);
+  --outline-alpha: calc(--modifier(integer) / 100);
+
+  outline-color: rgb(
+    from var(--outline-value) r g b / var(--outline-alpha, alpha)
+  );
+}
+
+@utility shadow-* {
+  box-shadow: --value(--shadow-*);
+}
+
 /**
  * DesignTK chooses to implement outlines instead of borders to make it so
  * that the style doesn't impact box model dimensions. This way elements with
@@ -41,151 +86,28 @@
   outline-offset: -1px;
 }
 
-/* Note: we may want to generate these typography utility classes in themes.css in the future */
-@utility text-header-xxl {
-  font-size: var(--typography-header-xxl-size);
-  font-weight: 500;
-  letter-spacing: var(--typography-header-xxl-spacing);
-  line-height: var(--typography-header-xxl-height);
-}
-
-@utility text-header-xl {
-  font-size: var(--typography-header-xl-size);
-  font-weight: 500;
-  letter-spacing: var(--typography-header-xl-spacing);
-  line-height: var(--typography-header-xl-height);
-}
-
-@utility text-header-l {
-  font-size: var(--typography-header-l-size);
-  font-weight: 500;
-  letter-spacing: var(--typography-header-l-spacing);
-  line-height: var(--typography-header-l-height);
-}
-
-@utility text-header-m {
-  font-size: var(--typography-header-m-size);
-  font-weight: 500;
-  letter-spacing: var(--typography-header-m-spacing);
-  line-height: var(--typography-header-m-height);
-}
-
-@utility text-header-s {
-  font-size: var(--typography-header-s-size);
-  font-weight: 500;
-  letter-spacing: var(--typography-header-s-spacing);
-  line-height: var(--typography-header-s-height);
-}
-
-@utility text-header-xs {
-  font-size: var(--typography-header-xs-size);
-  font-weight: 500;
-  letter-spacing: var(--typography-header-xs-spacing);
-  line-height: var(--typography-header-xs-height);
-}
-
-@utility text-body-l {
-  font-size: var(--typography-body-l-size);
-  font-weight: 400;
-  letter-spacing: var(--typography-body-l-spacing);
-  line-height: var(--typography-body-l-height);
-}
-
-@utility text-body-m {
-  font-size: var(--typography-body-m-size);
-  font-weight: 400;
-  letter-spacing: var(--typography-body-m-spacing);
-  line-height: var(--typography-body-m-height);
-}
-
-@utility text-body-s {
-  font-size: var(--typography-body-s-size);
-  font-weight: 400;
-  letter-spacing: var(--typography-body-s-spacing);
-  line-height: var(--typography-body-s-height);
-}
-
-@utility text-body-xs {
-  font-size: var(--typography-body-xs-size);
-  font-weight: 400;
-  letter-spacing: var(--typography-body-xs-spacing);
-  line-height: var(--typography-body-xs-height);
-}
-
-@utility text-body-xxs {
-  font-size: var(--typography-body-xxs-size);
-  font-weight: 400;
-  letter-spacing: var(--typography-body-xxs-spacing);
-  line-height: var(--typography-body-xxs-height);
-}
-
-@utility text-button-l {
-  font-size: var(--typography-button-l-size);
-  font-weight: bold;
-  letter-spacing: var(--typography-button-l-spacing);
-  line-height: var(--typography-button-l-height);
-}
-
-@utility text-button-m {
-  font-size: var(--typography-button-m-size);
-  font-weight: bold;
-  letter-spacing: var(--typography-button-m-spacing);
-  line-height: var(--typography-button-m-height);
-}
-
-@utility text-button-s {
-  font-size: var(--typography-button-s-size);
-  font-weight: bold;
-  letter-spacing: var(--typography-button-s-spacing);
-  line-height: var(--typography-button-s-height);
-}
-
-@utility text-button-xs {
-  font-size: var(--typography-button-xs-size);
-  font-weight: bold;
-  letter-spacing: var(--typography-button-xs-spacing);
-  line-height: var(--typography-button-xs-height);
-}
-
-@utility w-content {
-  width: fit-content;
-}
-
-@utility h-content {
-  height: fit-content;
-}
-
-@utility w-* {
-  width: --value([*]);
-}
-
-@utility icon-* {
-  --icon-color: --value([*]);
-  --icon-color: --value(--color-*);
+@utility text-* {
+  font-size: --value(--typography-size-*);
+  font-weight: --value(--typography-weight-*);
+  letter-spacing: --value(--typography-spacing-*);
+  line-height: --value(--typography-height-*);
 }
 
 html {
-  @apply bg-surface-default;
-  @apply fg-primary-bold;
-  @apply font-primary;
+  @apply bg-surface-default fg-primary-bold font-primary;
 }
 
 @layer base {
-  /*
- * Scrollbars
- */
   ::-webkit-scrollbar {
-    width: var(--spacing-l);
-    height: var(--spacing-l);
+    @apply size-l;
   }
 
   ::-webkit-scrollbar-track {
-    background: var(--bg-interactive-muted-hover);
+    @apply bg-interactive-muted-hover;
   }
 
   ::-webkit-scrollbar-thumb {
-    background-color: var(--bg-interactive-muted);
-    border-radius: var(--radius-large);
+    @apply bg-interactive-muted rounded-large;
     border: 5px solid transparent;
     background-clip: padding-box;
   }

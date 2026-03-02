@@ -11,7 +11,6 @@
  */
 'use client';
 
-import type { UniqueId } from '@accelint/core';
 import {
   coordinateSystems,
   createCoordinate,
@@ -19,9 +18,10 @@ import {
   formatDegreesDecimalMinutes,
   formatDegreesMinutesSeconds,
 } from '@accelint/geo';
-import { getLogger } from '@accelint/logger';
+import type { UniqueId } from '@accelint/core';
 import 'client-only';
 import { useContext, useMemo } from 'react';
+import { createLoggerDomain } from '@/shared/logger';
 import { MapContext } from '../deckgl/base-map/provider';
 import {
   DEFAULT_LATLON_COORDS,
@@ -37,13 +37,7 @@ import type {
   UseCursorCoordinatesReturn,
 } from './types';
 
-const logger = getLogger({
-  enabled:
-    process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test',
-  level: 'warn',
-  prefix: '[CursorCoordinates]',
-  pretty: true,
-});
+const logger = createLoggerDomain('[CursorCoordinates]');
 
 /**
  * Normalizes longitude to -180 to 180 range.
@@ -282,9 +276,7 @@ export function useCursorCoordinates(
       try {
         return customFormatter(rawCoord);
       } catch (error) {
-        logger.error(
-          `Custom formatter failed: ${error instanceof Error ? error.message : String(error)}`,
-        );
+        logger.withError(error).error('Custom formatter failed');
         return getDefaultCoords();
       }
     }

@@ -25,6 +25,7 @@ import {
 } from 'react-map-gl/maplibre';
 import { useMapCamera } from '../../camera';
 import { getCursor } from '../../map-cursor/store';
+import { getMapGeneration } from '../../shared/cleanup';
 import { DEFAULT_VIEW_STATE } from '../../shared/constants';
 import { DARK_BASE_MAP_STYLE, PARAMETERS, PICKING_RADIUS } from './constants';
 import { MapControls } from './controls';
@@ -230,6 +231,7 @@ export function BaseMap({
   pickingRadius,
   ...rest
 }: BaseMapProps) {
+  const mapGeneration = getMapGeneration(id);
   const deckglInstance = useDeckgl();
   const container = useId();
   const mapRef = useRef<MapRef>(null);
@@ -241,6 +243,7 @@ export function BaseMap({
     longitude: initialViewState?.longitude ?? DEFAULT_VIEW_STATE.longitude,
   });
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: we only need to recompute when cameraState changes.
   const viewState = useMemo<ViewState>(
     () => ({
       // @ts-expect-error squirrelly deckglInstance typing
@@ -248,8 +251,7 @@ export function BaseMap({
       ...cameraState,
       bearing: cameraState.rotation,
     }),
-    // @ts-expect-error squirrelly deckglInstance typing
-    [cameraState, deckglInstance?._deck?._getViewState],
+    [cameraState],
   );
 
   // Memoize MapLibre options to avoid creating new object on every render
@@ -321,10 +323,13 @@ export function BaseMap({
       } = params;
 
       // @ts-expect-error squirrelly deckglInstance typing
-      const viewport = deckglInstance._deck
-        .getViewports()
-        // @ts-expect-error squirrelly deckglInstance typing
-        ?.find((vp) => vp.id === viewId);
+      const viewports = deckglInstance._deck?.getViewports();
+      if (!viewports) {
+        return;
+      }
+
+      // @ts-expect-error squirrelly deckglInstance typing
+      const viewport = viewports.find((vp) => vp.id === viewId);
 
       if (!viewport) {
         return;
@@ -351,7 +356,10 @@ export function BaseMap({
     // Debounce
     resizeTimeoutRef.current = setTimeout(() => {
       // @ts-expect-error squirrelly deckglInstance typing
-      const viewports = deckglInstance._deck.getViewports() ?? [];
+      const viewports = deckglInstance._deck?.getViewports();
+      if (!viewports) {
+        return;
+      }
       for (const vp of viewports) {
         handleViewStateChange({
           viewId: vp.id,
@@ -372,7 +380,10 @@ export function BaseMap({
   const handleLoad = useEffectEvent(() => {
     //--- force update viewport state once all viewports initialized ---
     // @ts-expect-error squirrelly deckglInstance typing
-    const viewports = deckglInstance._deck.getViewports() ?? [];
+    const viewports = deckglInstance._deck?.getViewports();
+    if (!viewports) {
+      return;
+    }
     for (const vp of viewports) {
       handleViewStateChange({
         viewId: vp.id,
@@ -394,7 +405,10 @@ export function BaseMap({
       {enableControlEvents && <MapControls id={id} mapRef={mapRef} />}
       <MapProvider id={id}>
         <MapLibre
-          onMove={(evt) => setCameraState(evt.viewState)}
+          key={mapGeneration}
+          onMove={(evt) => {
+            setCameraState(evt.viewState);
+          }}
           mapStyle={styleUrl}
           ref={mapRef}
           {...mapOptions}

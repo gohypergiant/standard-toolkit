@@ -11,14 +11,10 @@
  */
 
 import { bootstrap } from './bootstrap';
-import type { LogLayer, LogLevel } from 'loglayer';
+import type { LogLayer } from 'loglayer';
 import type { LoggerOptions } from '../definitions';
 
-let logInstance: LogLayer;
-
-type LogLevelType = LogLevel | `${LogLevel}`;
-
-export type { LogLevel, LogLevelType };
+let logInstance: LogLayer | undefined;
 
 /**
  * Returns a singleton LogLayer logger instance.
@@ -35,17 +31,18 @@ export type { LogLevel, LogLevelType };
  * @returns A configured LogLayer instance
  *
  * @example
- * ```ts
+ * ```typescript
  * const logger = getLogger({
- *   enabled: process.env.NODE_ENV !== 'test',
+ *   enabled: true,
+ *   env: process.env.NODE_ENV as 'production' | 'development',
  *   level: 'warn',
  *   prefix: '[MyApp]',
  * });
  *
- * logger.info('User logged in', { userId: 123 });
+ * logger.withMetadata({ userId: 123 }).info('User logged in');
  * ```
  */
-export function getLogger(opts: LoggerOptions): LogLayer {
+export function getLogger(opts: LoggerOptions) {
   if (!logInstance) {
     logInstance = bootstrap(opts);
   }

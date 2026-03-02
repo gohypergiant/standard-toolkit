@@ -1,5 +1,36 @@
 # @accelint/map-toolkit
 
+## 1.5.0
+
+### Minor Changes
+
+- cae932c: Update circle tooltip to show radius instead of diameter in draw and edit modes.
+
+### Patch Changes
+
+- 9419d41: Fix infinite render loop in BaseMap when navigating in React Strict Mode. The camera store's `createMapStore` now properly handles initial state timing by directly updating existing instances when `setInitialState` is called after the instance already exists, which can occur during React Strict Mode's double-mount behavior.
+- Updated dependencies [ed09ea6]
+  - @accelint/logger@1.0.0
+
+## 1.4.0
+
+### Minor Changes
+
+- 89914b0: Add Enter key hotkey to save shape edits. Pressing Enter while editing a shape now saves the changes and emits the existing `shapes:updated` event, providing an alternative to clicking the Save button.
+- 7503e7e: Add click-to-place editing for Point shapes in EditShapeLayer.
+
+  Point shapes now use a new `point-translate` edit mode that supports two ways to reposition:
+  - **Click anywhere on the map** to instantly move the point to that location
+  - **Drag the point directly** for traditional drag behavior
+
+  This improves UX for points which previously required precise clicking on a very small target area.
+
+### Patch Changes
+
+- 6cb6e17: Enable antialiasing for maplibre to smooth out lines
+- Updated dependencies [58bc0db]
+  - @accelint/geo@0.6.0
+
 ## 1.3.0
 
 ### Minor Changes

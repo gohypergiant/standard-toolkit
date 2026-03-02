@@ -337,6 +337,7 @@ export {
   useMediaControlsDisabled,
   useMediaProviderGuard,
 } from './components/media-controls/context';
+export { FullscreenButton } from './components/media-controls/fullscreen-button';
 export { MediaControls } from './components/media-controls';
 export { MuteButton } from './components/media-controls/mute-button';
 export { PlayButton } from './components/media-controls/play-button';
@@ -345,6 +346,7 @@ export { SeekButton } from './components/media-controls/seek-button';
 export { TimeDisplay } from './components/media-controls/time-display';
 export { TimeRange } from './components/media-controls/time-range';
 export type {
+  FullscreenButtonProps,
   MediaControlsContextValue,
   MediaControlsProps,
   MuteButtonProps,
@@ -522,12 +524,22 @@ export type {
   TableProps,
   TableRowProps,
 } from './components/table/types';
-export { TabsContext, TabsProvider } from './components/tabs/context';
+export { TabStyleDefaults } from './components/tabs/constants';
+export {
+  TabContext,
+  TabProvider,
+  TabsContext,
+  TabsProvider,
+} from './components/tabs/context';
 export { Tabs } from './components/tabs';
 export { TabList } from './components/tabs/list';
 export { TabPanel } from './components/tabs/panel';
 export { Tab } from './components/tabs/tab';
-export type { TabsProps } from './components/tabs/types';
+export type {
+  TabProps,
+  TabStyleProps,
+  TabsProps,
+} from './components/tabs/types';
 export {
   TextAreaFieldContext,
   TextAreaFieldProvider,
@@ -567,6 +579,8 @@ export type {
   TreeProps,
   TreeStyleVariant,
 } from './components/tree/types';
+export { Video } from './components/video';
+export type { VideoProps } from './components/video/types';
 export {
   ViewStackContext,
   ViewStackEventHandlers,

@@ -1,7 +1,7 @@
 {
   "name": "@accelint/design-toolkit",
   "description": "An open-source component library to serve as part of the entire ecosystem of UX for Accelint.",
-  "version": "9.5.0",
+  "version": "9.7.0",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "devDependencies": {
@@ -221,6 +221,7 @@
     "./components/list/types": "./dist/components/list/types.js",
     "./components/media-controls": "./dist/components/media-controls/index.js",
     "./components/media-controls/context": "./dist/components/media-controls/context.js",
+    "./components/media-controls/fullscreen-button": "./dist/components/media-controls/fullscreen-button.js",
     "./components/media-controls/mute-button": "./dist/components/media-controls/mute-button.js",
     "./components/media-controls/play-button": "./dist/components/media-controls/play-button.js",
     "./components/media-controls/playback-rate": "./dist/components/media-controls/playback-rate.js",
@@ -319,6 +320,7 @@
     "./components/table/row": "./dist/components/table/row.js",
     "./components/table/types": "./dist/components/table/types.js",
     "./components/tabs": "./dist/components/tabs/index.js",
+    "./components/tabs/constants": "./dist/components/tabs/constants.js",
     "./components/tabs/context": "./dist/components/tabs/context.js",
     "./components/tabs/list": "./dist/components/tabs/list.js",
     "./components/tabs/panel": "./dist/components/tabs/panel.js",
@@ -346,6 +348,8 @@
     "./components/tree/item-prefix-icon": "./dist/components/tree/item-prefix-icon.js",
     "./components/tree/lines": "./dist/components/tree/lines.js",
     "./components/tree/types": "./dist/components/tree/types.js",
+    "./components/video": "./dist/components/video/index.js",
+    "./components/video/types": "./dist/components/video/types.js",
     "./components/view-stack": "./dist/components/view-stack/index.js",
     "./components/view-stack/context": "./dist/components/view-stack/context.js",
     "./components/view-stack/events": "./dist/components/view-stack/events.js",
@@ -451,6 +455,9 @@
     "test:watch": "pnpm vitest --dir=src --watch",
     "typecheck": "tsc --noEmit"
   },
+  "sideEffects": [
+    "**/*.css"
+  ],
   "subPath": "packages/design-toolkit",
   "title": "Design Toolkit",
   "type": "module",

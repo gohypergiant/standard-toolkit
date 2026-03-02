@@ -41,6 +41,10 @@
 export const inRange = (label: string, value: string, limit: number) => {
   const num = Number.parseFloat(value);
 
+  if (value !== '' && Number.isNaN(num)) {
+    return `${label} value (${value}) is not a valid number.`;
+  }
+
   if (limit < num) {
     return `${label} value (${value}) exceeds max value (${limit}).`;
   }

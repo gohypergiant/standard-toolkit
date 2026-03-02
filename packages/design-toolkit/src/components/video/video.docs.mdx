@@ -1,0 +1,169 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+
+import * as VideoStories from './video.stories';
+
+<Meta of={VideoStories} />
+
+# Video
+
+The Video component wraps an HTML video element with MediaControls, providing playback controls, seek functionality, volume control, playback rate adjustment, fullscreen support, and visual overlays for loading and error states.
+
+Built on [media-chrome](https://www.media-chrome.org/) for state management and accessibility.
+
+It is composed of the following components:
+
+- **Video** - Main video player component with integrated controls
+- **PlayButton** - Play/pause toggle button
+- **MuteButton** - Mute/unmute toggle button
+- **VolumeSlider** - Volume level slider
+- **TimeRange** - Seek/scrub bar for video position
+- **TimeDisplay** - Current time or duration display
+- **SeekButton** - Skip forward/backward button
+- **PlaybackRateButton** - Playback speed selector
+- **FullscreenButton** - Enter/exit fullscreen toggle button
+
+## Example usage
+
+```tsx
+// Basic usage
+<Video src="video.mp4" />
+
+// With poster image
+<Video
+  src="video.mp4"
+  poster="thumbnail.jpg"
+/>
+
+// With event callbacks
+<Video
+  src="video.mp4"
+  onEnded={() => console.log('Ended')}
+  onTimeUpdate={(time) => console.log('Current time:', time)}
+  onError={(error) => console.error('Video error:', error)}
+/>
+
+// Custom controls layout
+<Video src="video.mp4">
+  <div className="flex items-center gap-2">
+    <PlayButton />
+    <TimeRange />
+    <MuteButton />
+  </div>
+</Video>
+
+// Disable keyboard shortcuts (e.g. when inside a form)
+<Video src="video.mp4" noHotkeys />
+
+// Disable preference persistence
+<Video src="video.mp4" noVolumePref noMutedPref />
+```
+
+<Canvas of={VideoStories.Default} />
+
+## With Poster
+
+Display a poster image before playback starts, useful for showing a video thumbnail or preview frame.
+
+<Canvas of={VideoStories.WithPoster} />
+
+## Events
+
+The Video component provides callbacks for common media events.
+
+<Canvas of={VideoStories.Events} />
+
+## Looping
+
+Enable looping to automatically restart playback when the video ends.
+
+<Canvas of={VideoStories.Looping} />
+
+## Error State
+
+When video fails to load, an error message is displayed and controls are automatically disabled.
+
+<Canvas of={VideoStories.ErrorState} />
+
+## No Hotkeys
+
+Disable keyboard shortcuts when embedding in forms or apps with custom hotkey systems.
+
+<Canvas of={VideoStories.NoHotkeys} />
+
+## Props
+
+### Video Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `src` | `string` | - | Video source URL |
+| `poster` | `string` | - | Poster image URL displayed before playback starts |
+| `autoPlay` | `boolean` | `false` | Whether to start playing automatically (note: browsers may block this) |
+| `loop` | `boolean` | `false` | Whether to loop the video when it ends |
+| `muted` | `boolean` | `false` | Whether to start muted |
+| `preload` | `'none' \| 'metadata' \| 'auto'` | `'metadata'` | Preload behavior |
+| `crossOrigin` | `'' \| 'anonymous' \| 'use-credentials'` | - | CORS setting |
+| `isDisabled` | `boolean` | `false` | Disable all controls. Note: Controls are automatically disabled when an error occurs. |
+| `playbackRates` | `number[]` | `[1, 2, 3]` | Custom playback rate options |
+| `children` | `ReactNode` | - | Custom controls (replaces default layout) |
+
+### Event Callbacks
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `onEnded` | `() => void` | Called when video finishes playing |
+| `onTimeUpdate` | `(currentTime: number) => void` | Called during playback with current time in seconds |
+| `onError` | `(error: MediaError) => void` | Called when video fails to load |
+
+### classNames
+
+| Prop | Description |
+|------|-------------|
+| `classNames.container` | Applied to the main container |
+| `classNames.video` | Applied to the native HTML video element |
+| `classNames.mediaControls` | Applied to the media controls wrapper |
+| `classNames.timeRow` | Applied to the time/seek row |
+| `classNames.controlsRow` | Applied to the controls row |
+
+### Media Controller Props
+
+These props configure the underlying media-chrome `MediaController`:
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `noHotkeys` | `boolean` | `false` | Disable all keyboard shortcuts (space=play, arrows=seek, m=mute). Useful when embedding in forms or apps with their own hotkey system. |
+| `hotkeys` | `string` | - | Custom hotkey configuration string. See [media-chrome hotkeys docs](https://www.media-chrome.org/docs/en/keyboard-shortcuts). |
+| `noVolumePref` | `boolean` | `false` | Don't persist volume level to localStorage across page loads. |
+| `noMutedPref` | `boolean` | `false` | Don't persist muted state to localStorage across page loads. |
+| `lang` | `string` | - | Language for media-chrome's built-in accessibility labels. |
+
+## Implementation Notes
+
+The `Video` component wraps the HTML `<video>` element and uses media-chrome for state management. It automatically includes `MediaProvider` context, so child control components can access media state without additional setup.
+
+### Default Controls
+
+The `Video` component includes a full set of controls arranged in two rows:
+- **Time row**: Current time display, seek bar, duration display
+- **Controls row**: Mute button, volume slider, seek backward, play/pause, seek forward, playback rate, fullscreen
+
+### Visual Overlays
+
+The component renders visual overlays for loading and error states:
+- **Loading overlay**: Shown while video metadata is loading or media is buffering
+- **Error overlay**: Shown when the video fails to load, with an error message describing the failure
+
+[media-chrome Docs](https://www.media-chrome.org/docs)
+
+[GitHub Source](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-toolkit/src/components/video)
+
+The underlying elements are:
+- `media-controller` for the accessible media chrome container
+- `video` element for the actual video playback
+- Various control components (PlayButton, TimeRange, FullscreenButton, etc.) for user interaction
+
+The component automatically handles accessibility features including:
+- ARIA attributes for screen readers
+- Keyboard navigation for all controls
+- Focus management
+- Proper labeling of interactive elements

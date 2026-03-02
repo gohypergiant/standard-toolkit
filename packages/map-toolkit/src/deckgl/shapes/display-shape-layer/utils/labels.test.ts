@@ -27,6 +27,7 @@ describe('Label Positioning Utilities', () => {
     it('returns start point when ratio is 0', () => {
       const start: [number, number] = [-122.4, 37.8];
       const end: [number, number] = [-122.3, 37.9];
+
       const result = interpolatePoint(start, end, 0);
 
       expect(result).toEqual(start);
@@ -35,6 +36,7 @@ describe('Label Positioning Utilities', () => {
     it('returns end point when ratio is 1', () => {
       const start: [number, number] = [-122.4, 37.8];
       const end: [number, number] = [-122.3, 37.9];
+
       const result = interpolatePoint(start, end, 1);
 
       expect(result).toEqual(end);
@@ -43,6 +45,7 @@ describe('Label Positioning Utilities', () => {
     it('returns midpoint when ratio is 0.5', () => {
       const start: [number, number] = [-122.4, 37.8];
       const end: [number, number] = [-122.2, 38.0];
+
       const result = interpolatePoint(start, end, 0.5);
 
       expect(result[0]).toBeCloseTo(-122.3);
@@ -54,15 +57,16 @@ describe('Label Positioning Utilities', () => {
       const end: [number, number] = [-122.3, 37.9];
 
       const negativeResult = interpolatePoint(start, end, -0.5);
-      expect(negativeResult).toEqual(start);
-
       const overResult = interpolatePoint(start, end, 1.5);
+
+      expect(negativeResult).toEqual(start);
       expect(overResult).toEqual(end);
     });
 
     it('interpolates correctly at quarter point', () => {
       const start: [number, number] = [0, 0];
       const end: [number, number] = [100, 100];
+
       const result = interpolatePoint(start, end, 0.25);
 
       expect(result).toEqual([25, 25]);
@@ -76,6 +80,7 @@ describe('Label Positioning Utilities', () => {
         [-122.3, 37.9],
         [-122.2, 38.0],
       ];
+
       const result = getLineStringEndpoint(coordinates);
 
       expect(result).toEqual([-122.2, 38.0]);
@@ -89,6 +94,7 @@ describe('Label Positioning Utilities', () => {
 
     it('returns the only point for single coordinate', () => {
       const coordinates: [number, number][] = [[-122.4, 37.8]];
+
       const result = getLineStringEndpoint(coordinates);
 
       expect(result).toEqual([-122.4, 37.8]);
@@ -104,6 +110,7 @@ describe('Label Positioning Utilities', () => {
 
     it('returns the only point for single coordinate', () => {
       const coordinates: [number, number][] = [[-122.4, 37.8]];
+
       const result = getLineStringMidpoint(coordinates);
 
       expect(result).toEqual([-122.4, 37.8]);
@@ -115,6 +122,7 @@ describe('Label Positioning Utilities', () => {
         [100, 0],
         [100, 100],
       ];
+
       const result = getLineStringMidpoint(coordinates);
 
       // Total length: 100 + 100 = 200, midpoint at 100
@@ -127,6 +135,7 @@ describe('Label Positioning Utilities', () => {
         [0, 0],
         [100, 0],
       ];
+
       const result = getLineStringMidpoint(coordinates);
 
       expect(result).toEqual([50, 0]);

@@ -32,7 +32,11 @@ type DegreesMinutesSeconds = {
 
 const checks = {
   deg: (deg: string, limit: number) => {
-    if (Number.parseFloat(deg) > limit) {
+    const num = Number.parseFloat(deg);
+    if (Number.isNaN(num)) {
+      return `Degrees value (${deg}) is not a valid number.`;
+    }
+    if (num > limit) {
       return `Degrees value (${deg}) exceeds max value (${limit}).`;
     }
 
@@ -137,7 +141,10 @@ function identifyPieces(half: string[]) {
   const test = (r: RegExp, b: boolean, v: string) =>
     r.test(v) || (r.test(asString) && b);
 
-  return half.reduce((acc, token, i, { length }) => {
+  return half.reduce<typeof places | undefined>((acc, token, i, { length }) => {
+    if (!acc) {
+      return undefined;
+    }
     if (test(SYMBOL_PATTERNS.NSEW, i === length - 1, token)) {
       acc.bear ||= token;
     } else if (test(SYMBOL_PATTERNS.DEGREES, i === 0, token)) {
@@ -148,8 +155,10 @@ function identifyPieces(half: string[]) {
       acc.sec ||= token;
     } else {
       const key = keys.find((k) => !acc[k]);
-
-      acc[key as keyof typeof acc] = token;
+      if (!key) {
+        return undefined;
+      }
+      acc[key] = token;
     }
 
     return acc;
@@ -184,3 +193,5 @@ export const parseDegreesMinutesSeconds = createParser<DegreesMinutesSeconds>({
   identifyErrors,
   identifyPieces,
 });
+
+export { identifyErrors as _identifyErrors, identifyPieces as _identifyPieces };

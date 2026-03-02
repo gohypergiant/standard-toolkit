@@ -15,7 +15,7 @@ import type { LogLayerPlugin, LogLayerPluginParams } from '@loglayer/plugin';
 /**
  * Options for the environment detection plugin.
  */
-export interface EnvironmentPluginOptions extends LogLayerPluginParams {
+export type EnvironmentPluginOptions = LogLayerPluginParams & {
   /**
    * Whether the code is running in a server environment (Node.js).
    * Typically determined by `typeof window === 'undefined'`.
@@ -23,10 +23,10 @@ export interface EnvironmentPluginOptions extends LogLayerPluginParams {
   isServer: boolean;
   /**
    * Whether the application is running in production.
-   * Reserved for future use.
+   * Reserved for future use — currently has no effect on plugin behavior.
    */
   isProductionEnv: boolean;
-}
+};
 
 /**
  * Creates a LogLayer plugin that injects environment context into log data.
@@ -38,7 +38,7 @@ export interface EnvironmentPluginOptions extends LogLayerPluginParams {
  * @returns A LogLayer plugin instance
  *
  * @example
- * ```ts
+ * ```typescript
  * import { environmentPlugin } from '@accelint/logger/plugins/environment';
  *
  * const plugin = environmentPlugin({

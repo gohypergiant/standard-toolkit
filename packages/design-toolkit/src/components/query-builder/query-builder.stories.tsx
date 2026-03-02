@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { action } from 'storybook/actions';
 import { useState } from 'react';
 import { QueryBuilder } from './';
 import { defaultQuery, fields } from './__fixtures__/example-configuration';
@@ -59,12 +60,18 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: (args) => {
     const [query, setQuery] = useState<RuleGroupType>(defaultQuery);
+    const onQueryChange = action('onQueryChange');
+
+    const handleQueryChange = (newQuery: RuleGroupType) => {
+      onQueryChange(newQuery);
+      setQuery(newQuery);
+    };
 
     return (
       <QueryBuilder
         fields={fields}
         query={query}
-        onQueryChange={setQuery}
+        onQueryChange={handleQueryChange}
         {...args}
       />
     );

@@ -11,32 +11,29 @@
  */
 
 import { beforeEach, describe, expect, test, vi } from 'vitest';
+import type { LogLayer } from 'loglayer';
+import type { MockedFunction } from 'vitest';
 import type { LoggerOptions } from '../definitions';
+import type { bootstrap as BootstrapFn } from './bootstrap';
 
-// Mock the bootstrap module
-vi.mock('./bootstrap', () => ({
-  bootstrap: vi.fn((opts: LoggerOptions) => ({
-    info: vi.fn(),
-    warn: vi.fn(),
-    error: vi.fn(),
-    debug: vi.fn(),
-    trace: vi.fn(),
-    fatal: vi.fn(),
-    // biome-ignore lint/style/useNamingConvention: This is for testing
-    _testOptions: opts, // For test verification
-  })),
-}));
+// MockLogLayer is a no-op ILogLayer implementation — the correct double for
+// code that consumes a logger rather than code that creates one.
+vi.mock('./bootstrap', async () => {
+  const { MockLogLayer } = await import('loglayer');
+  return {
+    bootstrap: vi.fn(() => new MockLogLayer()),
+  };
+});
 
 describe('getLogger', () => {
-  let bootstrapMock: ReturnType<typeof vi.fn>;
+  let bootstrapMock: MockedFunction<typeof BootstrapFn>;
 
   beforeEach(async () => {
-    // Clear module cache to reset singleton state between tests
+    // Reset module cache so each test gets a fresh singleton.
     vi.resetModules();
 
-    // Get fresh mock
-    const bootstrapModule = await import('./bootstrap');
-    bootstrapMock = bootstrapModule.bootstrap as ReturnType<typeof vi.fn>;
+    const { bootstrap } = await import('./bootstrap');
+    bootstrapMock = vi.mocked(bootstrap);
   });
 
   describe('Initial logger creation', () => {
@@ -46,7 +43,6 @@ describe('getLogger', () => {
 
       const logger = getLogger(options);
 
-      expect(logger).toBeDefined();
       expect(logger.info).toBeTypeOf('function');
       expect(logger.error).toBeTypeOf('function');
       expect(logger.debug).toBeTypeOf('function');
@@ -63,7 +59,7 @@ describe('getLogger', () => {
 
       getLogger(options);
 
-      expect(bootstrapMock).toHaveBeenCalledTimes(1);
+      expect(bootstrapMock).toHaveBeenCalledOnce();
       expect(bootstrapMock).toHaveBeenCalledWith(options);
     });
 
@@ -75,9 +71,10 @@ describe('getLogger', () => {
         enabled: false,
         level: 'error',
         prefix: '[MyService]',
-        env: 'test',
+        env: 'development',
         pretty: false,
         plugins: [customPlugin],
+        // @ts-expect-error partial transport implementation
         transports: [customTransport],
       };
 
@@ -88,7 +85,7 @@ describe('getLogger', () => {
           enabled: false,
           level: 'error',
           prefix: '[MyService]',
-          env: 'test',
+          env: 'development',
           pretty: false,
           plugins: [customPlugin],
           transports: [customTransport],
@@ -119,7 +116,7 @@ describe('getLogger', () => {
       getLogger(options2);
       getLogger(options3);
 
-      expect(bootstrapMock).toHaveBeenCalledTimes(1);
+      expect(bootstrapMock).toHaveBeenCalledOnce();
       expect(bootstrapMock).toHaveBeenCalledWith(options1);
     });
 
@@ -132,7 +129,7 @@ describe('getLogger', () => {
       const logger2 = getLogger(secondOptions);
 
       expect(logger1).toBe(logger2);
-      expect(bootstrapMock).toHaveBeenCalledTimes(1);
+      expect(bootstrapMock).toHaveBeenCalledOnce();
       expect(bootstrapMock).toHaveBeenCalledWith(firstOptions);
       expect(bootstrapMock).not.toHaveBeenCalledWith(secondOptions);
     });
@@ -150,37 +147,34 @@ describe('getLogger', () => {
       for (const instance of instances) {
         expect(instance).toBe(firstInstance);
       }
-      expect(bootstrapMock).toHaveBeenCalledTimes(1);
+      expect(bootstrapMock).toHaveBeenCalledOnce();
     });
   });
 
   describe('Logger instance properties', () => {
     test.each([
-      { method: 'info', description: 'info method' },
-      { method: 'warn', description: 'warn method' },
-      { method: 'error', description: 'error method' },
-      { method: 'debug', description: 'debug method' },
-      { method: 'trace', description: 'trace method' },
-      { method: 'fatal', description: 'fatal method' },
-    ])('should return logger with $description', async ({ method }) => {
+      { method: 'info' },
+      { method: 'warn' },
+      { method: 'error' },
+      { method: 'debug' },
+      { method: 'trace' },
+      { method: 'fatal' },
+    ])('should return logger with $method method', async ({ method }) => {
       const { getLogger } = await import('./index');
       const options: LoggerOptions = { enabled: true };
 
       const logger = getLogger(options);
 
-      expect(logger[method as keyof typeof logger]).toBeDefined();
-      expect(logger[method as keyof typeof logger]).toBeTypeOf('function');
+      expect(logger[method as keyof LogLayer]).toBeTypeOf('function');
     });
   });
 
   describe('Configuration variations', () => {
     test('should create logger with enabled=true', async () => {
       const { getLogger } = await import('./index');
-      const options: LoggerOptions = { enabled: true };
 
-      const logger = getLogger(options);
+      getLogger({ enabled: true });
 
-      expect(logger).toBeDefined();
       expect(bootstrapMock).toHaveBeenCalledWith(
         expect.objectContaining({ enabled: true }),
       );
@@ -188,28 +182,25 @@ describe('getLogger', () => {
 
     test('should create logger with enabled=false', async () => {
       const { getLogger } = await import('./index');
-      const options: LoggerOptions = { enabled: false };
 
-      const logger = getLogger(options);
+      getLogger({ enabled: false });
 
-      expect(logger).toBeDefined();
       expect(bootstrapMock).toHaveBeenCalledWith(
         expect.objectContaining({ enabled: false }),
       );
     });
 
     test.each([
-      { level: 'trace' as const, description: 'trace' },
-      { level: 'debug' as const, description: 'debug' },
-      { level: 'info' as const, description: 'info' },
-      { level: 'warn' as const, description: 'warn' },
-      { level: 'error' as const, description: 'error' },
-      { level: 'fatal' as const, description: 'fatal' },
-    ])('should create logger with level=$description', async ({ level }) => {
+      { level: 'trace' as const },
+      { level: 'debug' as const },
+      { level: 'info' as const },
+      { level: 'warn' as const },
+      { level: 'error' as const },
+      { level: 'fatal' as const },
+    ])('should create logger with level=$level', async ({ level }) => {
       const { getLogger } = await import('./index');
-      const options: LoggerOptions = { enabled: true, level };
 
-      getLogger(options);
+      getLogger({ enabled: true, level });
 
       expect(bootstrapMock).toHaveBeenCalledWith(
         expect.objectContaining({ level }),
@@ -217,14 +208,12 @@ describe('getLogger', () => {
     });
 
     test.each([
-      { env: 'development' as const, description: 'development' },
-      { env: 'production' as const, description: 'production' },
-      { env: 'test' as const, description: 'test' },
-    ])('should create logger with env=$description', async ({ env }) => {
+      { env: 'development' as const },
+      { env: 'production' as const },
+    ])('should create logger with env=$env', async ({ env }) => {
       const { getLogger } = await import('./index');
-      const options: LoggerOptions = { enabled: true, env };
 
-      getLogger(options);
+      getLogger({ enabled: true, env });
 
       expect(bootstrapMock).toHaveBeenCalledWith(
         expect.objectContaining({ env }),
@@ -233,9 +222,8 @@ describe('getLogger', () => {
 
     test('should create logger with custom prefix', async () => {
       const { getLogger } = await import('./index');
-      const options: LoggerOptions = { enabled: true, prefix: '[TestApp]' };
 
-      getLogger(options);
+      getLogger({ enabled: true, prefix: '[TestApp]' });
 
       expect(bootstrapMock).toHaveBeenCalledWith(
         expect.objectContaining({ prefix: '[TestApp]' }),
@@ -244,9 +232,8 @@ describe('getLogger', () => {
 
     test('should create logger with pretty=true', async () => {
       const { getLogger } = await import('./index');
-      const options: LoggerOptions = { enabled: true, pretty: true };
 
-      getLogger(options);
+      getLogger({ enabled: true, pretty: true });
 
       expect(bootstrapMock).toHaveBeenCalledWith(
         expect.objectContaining({ pretty: true }),
@@ -255,9 +242,8 @@ describe('getLogger', () => {
 
     test('should create logger with pretty=false', async () => {
       const { getLogger } = await import('./index');
-      const options: LoggerOptions = { enabled: true, pretty: false };
 
-      getLogger(options);
+      getLogger({ enabled: true, pretty: false });
 
       expect(bootstrapMock).toHaveBeenCalledWith(
         expect.objectContaining({ pretty: false }),
@@ -288,9 +274,8 @@ describe('getLogger', () => {
         transports: undefined,
       };
 
-      const logger = getLogger(options);
+      getLogger(options);
 
-      expect(logger).toBeDefined();
       expect(bootstrapMock).toHaveBeenCalledWith(
         expect.objectContaining({ enabled: true }),
       );
@@ -298,11 +283,9 @@ describe('getLogger', () => {
 
     test('should handle empty plugins array', async () => {
       const { getLogger } = await import('./index');
-      const options: LoggerOptions = { enabled: true, plugins: [] };
 
-      const logger = getLogger(options);
+      getLogger({ enabled: true, plugins: [] });
 
-      expect(logger).toBeDefined();
       expect(bootstrapMock).toHaveBeenCalledWith(
         expect.objectContaining({ plugins: [] }),
       );
@@ -310,11 +293,9 @@ describe('getLogger', () => {
 
     test('should handle empty transports array', async () => {
       const { getLogger } = await import('./index');
-      const options: LoggerOptions = { enabled: true, transports: [] };
 
-      const logger = getLogger(options);
+      getLogger({ enabled: true, transports: [] });
 
-      expect(logger).toBeDefined();
       expect(bootstrapMock).toHaveBeenCalledWith(
         expect.objectContaining({ transports: [] }),
       );

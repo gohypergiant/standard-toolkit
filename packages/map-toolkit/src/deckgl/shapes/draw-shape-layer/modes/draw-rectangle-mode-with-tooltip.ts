@@ -159,7 +159,7 @@ export class DrawRectangleModeWithTooltip extends DrawRectangleMode {
     super.handlePointerMove(event, props);
 
     const clickSequence = this.getClickSequence();
-    const firstClick = clickSequence[clickSequence.length - 1];
+    const firstClick = clickSequence.at(-1);
     if (!firstClick) {
       this.tooltip = null;
       return;

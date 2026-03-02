@@ -21,7 +21,7 @@
     }
 
     @variant selected {
-      @apply bg-accent-primary-muted;
+      @apply bg-accent-primary-muted visible;
 
       border-top-color: var(--outline-accent-primary-bold);
       box-shadow:
@@ -92,6 +92,10 @@
     @apply invisible;
 
     @variant group-hover/header-cell {
+      @apply visible;
+    }
+
+    @variant group-selected/header-cell {
       @apply visible;
     }
   }

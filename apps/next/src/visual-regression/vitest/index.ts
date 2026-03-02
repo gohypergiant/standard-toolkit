@@ -15,8 +15,12 @@ export {
   DEFAULT_TEST_STATES,
   INTERACTION_STATES,
 } from '../lib/interactive-states';
+// Screenshot helpers
+export { constrainBodyToContent } from '../lib/screenshot-helpers';
 // Theme mode utilities
 export { insertModeInFilename, THEME_MODES } from '../lib/theme-modes';
+// Virtualizer fixes
+export { fixVirtualizerItemWidths } from '../lib/virtualizer-fixes';
 // Test builders
 export {
   createInteractiveVisualTests,

@@ -12,86 +12,22 @@
 
 import { Broadcast } from '@accelint/bus';
 import { uuid } from '@accelint/core';
-import { GeoJsonLayer, TextLayer } from '@deck.gl/layers';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { GeoJsonLayer, LineLayer, TextLayer } from '@deck.gl/layers';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { mockShapes } from '../__fixtures__/mock-shapes';
+import { mockShapes3D } from '../__fixtures__/mock-shapes-3d';
+import { mockShapesWithIcons } from '../__fixtures__/mock-shapes-with-icons';
 import { SHAPE_LAYER_IDS } from '../shared/constants';
 import {
   ShapeEvents,
   type ShapeHoveredEvent,
   type ShapeSelectedEvent,
 } from '../shared/events';
+import { MATERIAL_SETTINGS } from './constants';
 import { DisplayShapeLayer } from './index';
 import type { UniqueId } from '@accelint/core';
-import type { Color } from '@deck.gl/core';
 import type { Shape } from '../shared/types';
-
-/**
- * Create a minimal mock shape for testing
- */
-function createMockShape(overrides?: Partial<Shape>): Shape {
-  const id = uuid();
-  return {
-    id,
-    name: 'Test Shape',
-    label: 'Test',
-    locked: false,
-    shape: 'Polygon',
-    feature: {
-      type: 'Feature',
-      properties: {
-        styleProperties: {
-          fillColor: [98, 166, 255, 255] as Color,
-          lineColor: [98, 166, 255, 255] as Color,
-          lineWidth: 4,
-          linePattern: 'solid',
-        },
-      },
-      geometry: {
-        type: 'Polygon',
-        coordinates: [
-          [
-            [0, 0],
-            [1, 0],
-            [1, 1],
-            [0, 1],
-            [0, 0],
-          ],
-        ],
-      },
-    },
-    ...overrides,
-  };
-}
-
-/**
- * Create a mock Point shape for testing
- */
-function createMockPointShape(overrides?: Partial<Shape>): Shape {
-  const id = uuid();
-  return {
-    id,
-    name: 'Test Point',
-    label: 'Point',
-    locked: false,
-    shape: 'Point',
-    feature: {
-      type: 'Feature',
-      properties: {
-        styleProperties: {
-          fillColor: [98, 166, 255, 255] as Color,
-          lineColor: [98, 166, 255, 255] as Color,
-          lineWidth: 4,
-          linePattern: 'solid',
-        },
-      },
-      geometry: {
-        type: 'Point',
-        coordinates: [0, 0],
-      },
-    },
-    ...overrides,
-  };
-}
+import type { DisplayShapeLayerProps } from './types';
 
 /**
  * Initialize layer with proper deck.gl state
@@ -114,6 +50,21 @@ function initializeLayerWithState(
   }
 }
 
+const TEST_LAYER_ID = 'test-layer';
+
+/** 2D Polygon fixture */
+const polygonFixture = mockShapes[3] as Shape;
+/** 2D Point fixture */
+const pointFixture = mockShapes[2] as Shape;
+/** 2D Rectangle fixture (second shape for multi-shape tests) */
+const rectangleFixture = mockShapes[4] as Shape;
+/** 2D Point with icon fixture */
+const iconPointFixture = mockShapesWithIcons[0] as Shape;
+/** Elevated LineString fixture (varying 20000m–85000m) */
+const elevatedLineString = mockShapes3D[1] as Shape;
+/** Elevated Polygon fixture (22500m) */
+const elevatedPolygon = mockShapes3D[3] as Shape;
+
 describe('DisplayShapeLayer', () => {
   let mapId: UniqueId;
   let shapeBus: ReturnType<typeof Broadcast.getInstance<ShapeSelectedEvent>>;
@@ -123,28 +74,37 @@ describe('DisplayShapeLayer', () => {
     shapeBus = Broadcast.getInstance();
   });
 
+  /** Create an initialized DisplayShapeLayer with sensible test defaults. */
+  function createTestLayer(
+    props: Partial<DisplayShapeLayerProps> = {},
+    initialState?: Record<string, unknown>,
+  ): DisplayShapeLayer {
+    const layer = new DisplayShapeLayer({
+      id: TEST_LAYER_ID,
+      mapId,
+      data: [],
+      showLabels: 'never',
+      ...props,
+    });
+    initializeLayerWithState(layer, initialState);
+    return layer;
+  }
+
   describe('renderLayers', () => {
     it('renders main layer and labels layer when showLabels is "always"', () => {
-      const shapes = [createMockShape()];
-      const layer = new DisplayShapeLayer({
-        id: 'test-layer',
-        mapId,
-        data: shapes,
+      const layer = createTestLayer({
+        data: [polygonFixture],
         showLabels: 'always',
       });
-
-      initializeLayerWithState(layer);
-
       const sublayers = layer.renderLayers();
 
-      // Should have 2 layers: main GeoJsonLayer + TextLayer (no highlight without selection)
       expect(sublayers.length).toBe(2);
 
       const mainLayer = sublayers.find(
-        (l) => l.id === `test-layer-${SHAPE_LAYER_IDS.DISPLAY}`,
+        (l) => l.id === `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY}`,
       );
       const labelLayer = sublayers.find(
-        (l) => l.id === `test-layer-${SHAPE_LAYER_IDS.DISPLAY_LABELS}`,
+        (l) => l.id === `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY_LABELS}`,
       );
 
       expect(mainLayer).toBeInstanceOf(GeoJsonLayer);
@@ -152,19 +112,14 @@ describe('DisplayShapeLayer', () => {
     });
 
     it('renders label only for hovered shape when showLabels is "hover"', () => {
-      const shapes = [createMockShape(), createMockShape()];
-      const layer = new DisplayShapeLayer({
-        id: 'test-layer',
-        mapId,
-        data: shapes,
-        showLabels: 'hover',
-      });
+      const layer = createTestLayer(
+        { data: [polygonFixture, rectangleFixture], showLabels: 'hover' },
+        { hoverIndex: undefined },
+      );
 
-      // Initialize without hover - should not show labels
-      initializeLayerWithState(layer, { hoverIndex: undefined });
+      // Without hover - should not show labels
       let sublayers = layer.renderLayers();
 
-      // Should have only main layer, no labels
       expect(sublayers.length).toBe(1);
       expect(sublayers[0]).toBeInstanceOf(GeoJsonLayer);
 
@@ -172,113 +127,107 @@ describe('DisplayShapeLayer', () => {
       initializeLayerWithState(layer, { hoverIndex: 0 });
       sublayers = layer.renderLayers();
 
-      // Should have main layer + label layer
-      expect(sublayers.length).toBe(2);
+      expect(sublayers.length).toBe(3);
       const labelLayer = sublayers.find(
-        (l) => l.id === `test-layer-${SHAPE_LAYER_IDS.DISPLAY_LABELS}`,
+        (l) => l.id === `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY_LABELS}`,
       );
       expect(labelLayer).toBeInstanceOf(TextLayer);
     });
 
     it('renders only main layer when showLabels is "never"', () => {
-      const shapes = [createMockShape()];
-      const layer = new DisplayShapeLayer({
-        id: 'test-layer',
-        mapId,
-        data: shapes,
-        showLabels: 'never',
-      });
-
-      initializeLayerWithState(layer);
-
+      const layer = createTestLayer({ data: [polygonFixture] });
       const sublayers = layer.renderLayers();
 
-      // Should have only 1 layer: main GeoJsonLayer
       expect(sublayers.length).toBe(1);
 
       const mainLayer = sublayers[0];
       expect(mainLayer).toBeInstanceOf(GeoJsonLayer);
-      expect(mainLayer.id).toBe(`test-layer-${SHAPE_LAYER_IDS.DISPLAY}`);
+      expect(mainLayer.id).toBe(`${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY}`);
     });
 
     it('renders highlight layer when selectedShapeId is provided and showHighlight is true', () => {
-      const shape = createMockShape();
-      const layer = new DisplayShapeLayer({
-        id: 'test-layer',
-        mapId,
-        data: [shape],
-        selectedShapeId: shape.id,
+      const layer = createTestLayer({
+        data: [polygonFixture],
+        selectedShapeId: polygonFixture.id,
         showHighlight: true,
-        showLabels: 'never',
       });
-
-      initializeLayerWithState(layer);
-
       const sublayers = layer.renderLayers();
 
-      // Should have 2 layers: highlight + main
-      expect(sublayers.length).toBe(2);
+      expect(sublayers.length).toBe(3);
 
       const highlightLayer = sublayers.find(
-        (l) => l.id === `test-layer-${SHAPE_LAYER_IDS.DISPLAY_HIGHLIGHT}`,
+        (l) => l.id === `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY_HIGHLIGHT}`,
+      );
+      const selectLayer = sublayers.find(
+        (l) => l.id === `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY_SELECTION}`,
       );
       const mainLayer = sublayers.find(
-        (l) => l.id === `test-layer-${SHAPE_LAYER_IDS.DISPLAY}`,
+        (l) => l.id === `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY}`,
       );
 
       expect(highlightLayer).toBeInstanceOf(GeoJsonLayer);
+      expect(selectLayer).toBeInstanceOf(GeoJsonLayer);
       expect(mainLayer).toBeInstanceOf(GeoJsonLayer);
     });
 
     it('does not render highlight layer when selectedShapeId does not match any shape', () => {
-      const shape = createMockShape();
-      const layer = new DisplayShapeLayer({
-        id: 'test-layer',
-        mapId,
-        data: [shape],
+      const layer = createTestLayer({
+        data: [polygonFixture],
         selectedShapeId: 'non-existent-id',
-        showLabels: 'never',
       });
-
-      initializeLayerWithState(layer);
-
       const sublayers = layer.renderLayers();
 
-      // Should have only 1 layer: main
       expect(sublayers.length).toBe(1);
-      expect(sublayers[0].id).toBe(`test-layer-${SHAPE_LAYER_IDS.DISPLAY}`);
+      expect(sublayers[0].id).toBe(
+        `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY}`,
+      );
+    });
+
+    it('renders select layer when selectedShapeId is provided', () => {
+      const layer = createTestLayer({
+        data: [polygonFixture],
+        selectedShapeId: polygonFixture.id,
+      });
+      const sublayers = layer.renderLayers();
+
+      expect(sublayers.length).toBe(2);
+
+      const selectLayer = sublayers.find(
+        (l) => l.id === `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY_SELECTION}`,
+      );
+      const mainLayer = sublayers.find(
+        (l) => l.id === `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY}`,
+      );
+
+      expect(selectLayer).toBeInstanceOf(GeoJsonLayer);
+      expect(mainLayer).toBeInstanceOf(GeoJsonLayer);
+    });
+
+    it('does not render select layer when selectedShapeId does not match any shape', () => {
+      const layer = createTestLayer({
+        data: [polygonFixture],
+        selectedShapeId: 'non-existent-id',
+      });
+      const sublayers = layer.renderLayers();
+
+      expect(sublayers.length).toBe(1);
+      expect(sublayers[0].id).toBe(
+        `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY}`,
+      );
     });
 
     it('adds shapeId to feature properties for event correlation', () => {
-      const shape = createMockShape();
-      const layer = new DisplayShapeLayer({
-        id: 'test-layer',
-        mapId,
-        data: [shape],
-        showLabels: 'never',
-      });
-
-      initializeLayerWithState(layer);
-
+      const layer = createTestLayer({ data: [polygonFixture] });
       const sublayers = layer.renderLayers();
       const mainLayer = sublayers[0] as GeoJsonLayer;
 
-      // Access the data prop from the layer
       // biome-ignore lint/suspicious/noExplicitAny: accessing internal props for testing
       const layerData = (mainLayer.props as any).data;
-      expect(layerData[0].properties.shapeId).toBe(shape.id);
+      expect(layerData[0].properties.shapeId).toBe(polygonFixture.id);
     });
 
     it('caches features when data reference is unchanged', () => {
-      const shapes = [createMockShape()];
-      const layer = new DisplayShapeLayer({
-        id: 'test-layer',
-        mapId,
-        data: shapes,
-        showLabels: 'never',
-      });
-
-      initializeLayerWithState(layer);
+      const layer = createTestLayer({ data: [polygonFixture] });
 
       // First render
       const sublayers1 = layer.renderLayers();
@@ -290,240 +239,208 @@ describe('DisplayShapeLayer', () => {
       // biome-ignore lint/suspicious/noExplicitAny: accessing internal props for testing
       const data2 = ((sublayers2[0] as GeoJsonLayer).props as any).data;
 
-      // Should be the same cached array
       expect(data1).toBe(data2);
     });
   });
 
   describe('getPickingInfo - click handling', () => {
+    let cleanupBusSpy: () => void;
+
+    beforeEach(() => {
+      cleanupBusSpy = () => undefined;
+    });
+
+    afterEach(() => {
+      cleanupBusSpy();
+    });
+
     it('emits shapes:selected event when shape is clicked', () => {
-      const shape = createMockShape();
       const selectedSpy = vi.fn();
       shapeBus.on(ShapeEvents.selected, selectedSpy);
+      cleanupBusSpy = () => shapeBus.off(ShapeEvents.selected, selectedSpy);
 
-      const layer = new DisplayShapeLayer({
-        id: 'test-layer',
-        mapId,
-        data: [shape],
-        showLabels: 'never',
-      });
-
-      initializeLayerWithState(layer);
-      // Render to populate cache with shapeId in properties
+      const layer = createTestLayer({ data: [polygonFixture] });
       layer.renderLayers();
 
-      // Simulate click via getPickingInfo
       layer.getPickingInfo({
         info: {
-          object: { properties: { shapeId: shape.id } },
+          object: { properties: { shapeId: polygonFixture.id } },
           index: 0,
         } as never,
         mode: 'query',
-        sourceLayer: { id: `test-layer-${SHAPE_LAYER_IDS.DISPLAY}` },
+        sourceLayer: {
+          id: `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY}`,
+        },
       });
 
       expect(selectedSpy).toHaveBeenCalledWith(
         expect.objectContaining({
-          payload: { shapeId: shape.id, mapId },
+          payload: { shapeId: polygonFixture.id, mapId },
         }),
       );
-
-      shapeBus.off(ShapeEvents.selected, selectedSpy);
     });
 
     it('calls onShapeClick callback when shape is clicked', () => {
-      const shape = createMockShape();
       const clickCallback = vi.fn();
 
-      const layer = new DisplayShapeLayer({
-        id: 'test-layer',
-        mapId,
-        data: [shape],
-        showLabels: 'never',
+      const layer = createTestLayer({
+        data: [polygonFixture],
         onShapeClick: clickCallback,
       });
-
-      initializeLayerWithState(layer);
       layer.renderLayers();
 
       layer.getPickingInfo({
         info: {
-          object: { properties: { shapeId: shape.id } },
+          object: { properties: { shapeId: polygonFixture.id } },
           index: 0,
         } as never,
         mode: 'query',
-        sourceLayer: { id: `test-layer-${SHAPE_LAYER_IDS.DISPLAY}` },
+        sourceLayer: {
+          id: `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY}`,
+        },
       });
 
-      expect(clickCallback).toHaveBeenCalledWith(shape);
+      expect(clickCallback).toHaveBeenCalledWith(polygonFixture);
     });
 
     it('does not emit event when clicking on empty space', () => {
-      const shape = createMockShape();
       const selectedSpy = vi.fn();
       shapeBus.on(ShapeEvents.selected, selectedSpy);
+      cleanupBusSpy = () => shapeBus.off(ShapeEvents.selected, selectedSpy);
 
-      const layer = new DisplayShapeLayer({
-        id: 'test-layer',
-        mapId,
-        data: [shape],
-        showLabels: 'never',
-      });
+      const layer = createTestLayer({ data: [polygonFixture] });
 
-      initializeLayerWithState(layer);
-
-      // Simulate click on empty space (no object)
       layer.getPickingInfo({
         info: { object: null, index: -1 } as never,
         mode: 'query',
-        sourceLayer: { id: `test-layer-${SHAPE_LAYER_IDS.DISPLAY}` },
+        sourceLayer: {
+          id: `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY}`,
+        },
       });
 
       expect(selectedSpy).not.toHaveBeenCalled();
-
-      shapeBus.off(ShapeEvents.selected, selectedSpy);
     });
 
     it('ignores clicks from non-main sublayers', () => {
-      const shape = createMockShape();
       const selectedSpy = vi.fn();
       shapeBus.on(ShapeEvents.selected, selectedSpy);
+      cleanupBusSpy = () => shapeBus.off(ShapeEvents.selected, selectedSpy);
 
-      const layer = new DisplayShapeLayer({
-        id: 'test-layer',
-        mapId,
-        data: [shape],
-        showLabels: 'never',
-      });
-
-      initializeLayerWithState(layer);
+      const layer = createTestLayer({ data: [polygonFixture] });
       layer.renderLayers();
 
-      // Simulate click from highlight layer (should be ignored)
       layer.getPickingInfo({
         info: {
-          object: { properties: { shapeId: shape.id } },
+          object: { properties: { shapeId: polygonFixture.id } },
           index: 0,
         } as never,
         mode: 'query',
-        sourceLayer: { id: `test-layer-${SHAPE_LAYER_IDS.DISPLAY_HIGHLIGHT}` },
+        sourceLayer: {
+          id: `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY_SELECTION}`,
+        },
       });
 
       expect(selectedSpy).not.toHaveBeenCalled();
-
-      shapeBus.off(ShapeEvents.selected, selectedSpy);
     });
   });
 
   describe('getPickingInfo - hover handling', () => {
+    let hoveredBus: ReturnType<typeof Broadcast.getInstance<ShapeHoveredEvent>>;
+    let cleanupBusSpy: () => void;
+
+    beforeEach(() => {
+      hoveredBus = Broadcast.getInstance();
+      cleanupBusSpy = () => undefined;
+    });
+
+    afterEach(() => {
+      cleanupBusSpy();
+    });
+
     it('emits shapes:hovered event when hovering over shape', () => {
-      const shape = createMockShape();
-      const hoveredBus = Broadcast.getInstance<ShapeHoveredEvent>();
       const hoveredSpy = vi.fn();
       hoveredBus.on(ShapeEvents.hovered, hoveredSpy);
+      cleanupBusSpy = () => hoveredBus.off(ShapeEvents.hovered, hoveredSpy);
 
-      const layer = new DisplayShapeLayer({
-        id: 'test-layer',
-        mapId,
-        data: [shape],
-        showLabels: 'never',
-      });
-
-      initializeLayerWithState(layer);
+      const layer = createTestLayer({ data: [polygonFixture] });
       layer.renderLayers();
 
-      // Simulate hover
       layer.getPickingInfo({
         info: {
-          object: { properties: { shapeId: shape.id } },
+          object: { properties: { shapeId: polygonFixture.id } },
           index: 0,
         } as never,
         mode: 'hover',
-        sourceLayer: { id: `test-layer-${SHAPE_LAYER_IDS.DISPLAY}` },
+        sourceLayer: {
+          id: `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY}`,
+        },
       });
 
       expect(hoveredSpy).toHaveBeenCalledWith(
         expect.objectContaining({
-          payload: { shapeId: shape.id, mapId },
+          payload: { shapeId: polygonFixture.id, mapId },
         }),
       );
-
-      hoveredBus.off(ShapeEvents.hovered, hoveredSpy);
     });
 
     it('deduplicates hover events for same shape', () => {
-      const shape = createMockShape();
-      const hoveredBus = Broadcast.getInstance<ShapeHoveredEvent>();
       const hoveredSpy = vi.fn();
       hoveredBus.on(ShapeEvents.hovered, hoveredSpy);
+      cleanupBusSpy = () => hoveredBus.off(ShapeEvents.hovered, hoveredSpy);
 
-      const layer = new DisplayShapeLayer({
-        id: 'test-layer',
-        mapId,
-        data: [shape],
-        showLabels: 'never',
-      });
-
-      initializeLayerWithState(layer);
+      const layer = createTestLayer({ data: [polygonFixture] });
       layer.renderLayers();
 
-      // First hover
       layer.getPickingInfo({
         info: {
-          object: { properties: { shapeId: shape.id } },
+          object: { properties: { shapeId: polygonFixture.id } },
           index: 0,
         } as never,
         mode: 'hover',
-        sourceLayer: { id: `test-layer-${SHAPE_LAYER_IDS.DISPLAY}` },
+        sourceLayer: {
+          id: `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY}`,
+        },
       });
 
-      // Second hover on same shape
       layer.getPickingInfo({
         info: {
-          object: { properties: { shapeId: shape.id } },
+          object: { properties: { shapeId: polygonFixture.id } },
           index: 0,
         } as never,
         mode: 'hover',
-        sourceLayer: { id: `test-layer-${SHAPE_LAYER_IDS.DISPLAY}` },
+        sourceLayer: {
+          id: `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY}`,
+        },
       });
 
-      // Should only emit once due to deduplication
       expect(hoveredSpy).toHaveBeenCalledTimes(1);
-
-      hoveredBus.off(ShapeEvents.hovered, hoveredSpy);
     });
 
     it('emits shapes:hovered with null when hover ends', () => {
-      const shape = createMockShape();
-      const hoveredBus = Broadcast.getInstance<ShapeHoveredEvent>();
       const hoveredSpy = vi.fn();
       hoveredBus.on(ShapeEvents.hovered, hoveredSpy);
+      cleanupBusSpy = () => hoveredBus.off(ShapeEvents.hovered, hoveredSpy);
 
-      const layer = new DisplayShapeLayer({
-        id: 'test-layer',
-        mapId,
-        data: [shape],
-        showLabels: 'never',
-      });
-
-      initializeLayerWithState(layer);
+      const layer = createTestLayer({ data: [polygonFixture] });
       layer.renderLayers();
 
-      // First hover on shape
       layer.getPickingInfo({
         info: {
-          object: { properties: { shapeId: shape.id } },
+          object: { properties: { shapeId: polygonFixture.id } },
           index: 0,
         } as never,
         mode: 'hover',
-        sourceLayer: { id: `test-layer-${SHAPE_LAYER_IDS.DISPLAY}` },
+        sourceLayer: {
+          id: `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY}`,
+        },
       });
 
-      // Then hover off (no object)
       layer.getPickingInfo({
         info: { object: null, index: undefined } as never,
         mode: 'hover',
-        sourceLayer: { id: `test-layer-${SHAPE_LAYER_IDS.DISPLAY}` },
+        sourceLayer: {
+          id: `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY}`,
+        },
       });
 
       expect(hoveredSpy).toHaveBeenLastCalledWith(
@@ -531,71 +448,57 @@ describe('DisplayShapeLayer', () => {
           payload: { shapeId: null, mapId },
         }),
       );
-
-      hoveredBus.off(ShapeEvents.hovered, hoveredSpy);
     });
 
     it('calls onShapeHover callback', () => {
-      const shape = createMockShape();
       const hoverCallback = vi.fn();
 
-      const layer = new DisplayShapeLayer({
-        id: 'test-layer',
-        mapId,
-        data: [shape],
-        showLabels: 'never',
+      const layer = createTestLayer({
+        data: [polygonFixture],
         onShapeHover: hoverCallback,
       });
-
-      initializeLayerWithState(layer);
       layer.renderLayers();
 
       layer.getPickingInfo({
         info: {
-          object: { properties: { shapeId: shape.id } },
+          object: { properties: { shapeId: polygonFixture.id } },
           index: 0,
         } as never,
         mode: 'hover',
-        sourceLayer: { id: `test-layer-${SHAPE_LAYER_IDS.DISPLAY}` },
+        sourceLayer: {
+          id: `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY}`,
+        },
       });
 
-      expect(hoverCallback).toHaveBeenCalledWith(shape);
+      expect(hoverCallback).toHaveBeenCalledWith(polygonFixture);
     });
 
     it('updates hover state for line width increase', () => {
-      const shape = createMockShape();
+      const layer = createTestLayer({ data: [polygonFixture] });
 
-      const layer = new DisplayShapeLayer({
-        id: 'test-layer',
-        mapId,
-        data: [shape],
-        showLabels: 'never',
-      });
-
-      initializeLayerWithState(layer);
-
-      // Initially no hover
       expect(layer.state.hoverIndex).toBeUndefined();
 
       layer.renderLayers();
 
-      // Hover on shape at index 0
       layer.getPickingInfo({
         info: {
-          object: { properties: { shapeId: shape.id } },
+          object: { properties: { shapeId: polygonFixture.id } },
           index: 0,
         } as never,
         mode: 'hover',
-        sourceLayer: { id: `test-layer-${SHAPE_LAYER_IDS.DISPLAY}` },
+        sourceLayer: {
+          id: `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY}`,
+        },
       });
 
       expect(layer.state.hoverIndex).toBe(0);
 
-      // Hover off
       layer.getPickingInfo({
         info: { object: null, index: undefined } as never,
         mode: 'hover',
-        sourceLayer: { id: `test-layer-${SHAPE_LAYER_IDS.DISPLAY}` },
+        sourceLayer: {
+          id: `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY}`,
+        },
       });
 
       expect(layer.state.hoverIndex).toBeUndefined();
@@ -604,59 +507,36 @@ describe('DisplayShapeLayer', () => {
 
   describe('finalizeState', () => {
     it('clears hover state when layer is destroyed', () => {
-      const shape = createMockShape();
-
-      const layer = new DisplayShapeLayer({
-        id: 'test-layer',
-        mapId,
-        data: [shape],
-        showLabels: 'never',
-      });
-
-      initializeLayerWithState(layer);
+      const layer = createTestLayer({ data: [polygonFixture] });
       layer.renderLayers();
 
-      // Set hover state
       layer.getPickingInfo({
         info: {
-          object: { properties: { shapeId: shape.id } },
+          object: { properties: { shapeId: polygonFixture.id } },
           index: 0,
         } as never,
         mode: 'hover',
-        sourceLayer: { id: `test-layer-${SHAPE_LAYER_IDS.DISPLAY}` },
+        sourceLayer: {
+          id: `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY}`,
+        },
       });
 
       expect(layer.state.hoverIndex).toBe(0);
-      expect(layer.state.lastHoveredId).toBe(shape.id);
+      expect(layer.state.lastHoveredId).toBe(polygonFixture.id);
 
-      // Finalize (destroy) the layer
       layer.finalizeState();
 
-      // State should be cleared
       expect(layer.state.hoverIndex).toBeUndefined();
       expect(layer.state.lastHoveredId).toBeUndefined();
     });
 
     it('clears features cache when layer is destroyed', () => {
-      const shapes = [createMockShape()];
-
-      const layer = new DisplayShapeLayer({
-        id: 'test-layer',
-        mapId,
-        data: shapes,
-        showLabels: 'never',
-      });
-
-      initializeLayerWithState(layer);
-
-      // Render to populate cache
+      const layer = createTestLayer({ data: [polygonFixture] });
       layer.renderLayers();
 
-      // Access private cache via any cast
       // biome-ignore lint/suspicious/noExplicitAny: accessing private field for testing
       expect((layer as any).featuresCache).not.toBeNull();
 
-      // Finalize
       layer.finalizeState();
 
       // biome-ignore lint/suspicious/noExplicitAny: accessing private field for testing
@@ -666,13 +546,13 @@ describe('DisplayShapeLayer', () => {
 
   describe('default props', () => {
     it('uses default props when not specified', () => {
+      // Intentionally NOT using createTestLayer — testing real layer defaults
       const layer = new DisplayShapeLayer({
-        id: 'test-layer',
+        id: TEST_LAYER_ID,
         mapId,
         data: [],
       });
 
-      // Check default props
       expect(layer.props.pickable).toBe(true);
       expect(layer.props.showLabels).toBe('always');
       expect(layer.props.highlightColor).toEqual([40, 245, 190, 100]);
@@ -682,9 +562,9 @@ describe('DisplayShapeLayer', () => {
       const customHighlight: [number, number, number, number] = [
         255, 0, 0, 200,
       ];
-
+      // Intentionally NOT using createTestLayer — testing prop overrides
       const layer = new DisplayShapeLayer({
-        id: 'test-layer',
+        id: TEST_LAYER_ID,
         mapId,
         data: [],
         pickable: false,
@@ -700,67 +580,21 @@ describe('DisplayShapeLayer', () => {
 
   describe('icon support', () => {
     it('detects icon configuration from features', () => {
-      const iconAtlas = 'https://example.com/icons.png';
-      const iconMapping = {
-        marker: { x: 0, y: 0, width: 32, height: 32 },
-      };
-
-      const pointShape = createMockPointShape({
-        feature: {
-          type: 'Feature',
-          properties: {
-            styleProperties: {
-              fillColor: [98, 166, 255, 255] as Color,
-              lineColor: [98, 166, 255, 255] as Color,
-              lineWidth: 4,
-              linePattern: 'solid',
-              icon: {
-                atlas: iconAtlas,
-                mapping: iconMapping,
-                name: 'marker',
-                size: 32,
-              },
-            },
-          },
-          geometry: {
-            type: 'Point',
-            coordinates: [0, 0],
-          },
-        },
-      });
-
-      const layer = new DisplayShapeLayer({
-        id: 'test-layer',
-        mapId,
-        data: [pointShape],
-        showLabels: 'never',
-      });
-
-      initializeLayerWithState(layer);
-
+      const layer = createTestLayer({ data: [iconPointFixture] });
       const sublayers = layer.renderLayers();
       const mainLayer = sublayers[0] as GeoJsonLayer;
 
-      // Check that icon config was applied
       // biome-ignore lint/suspicious/noExplicitAny: accessing internal props for testing
       const props = mainLayer.props as any;
+      const iconConfig =
+        iconPointFixture.feature.properties.styleProperties.icon;
       expect(props.pointType).toBe('icon');
-      expect(props.iconAtlas).toBe(iconAtlas);
-      expect(props.iconMapping).toEqual(iconMapping);
+      expect(props.iconAtlas).toBe(iconConfig?.atlas);
+      expect(props.iconMapping).toEqual(iconConfig?.mapping);
     });
 
     it('uses circle point type when no icons configured', () => {
-      const pointShape = createMockPointShape();
-
-      const layer = new DisplayShapeLayer({
-        id: 'test-layer',
-        mapId,
-        data: [pointShape],
-        showLabels: 'never',
-      });
-
-      initializeLayerWithState(layer);
-
+      const layer = createTestLayer({ data: [pointFixture] });
       const sublayers = layer.renderLayers();
       const mainLayer = sublayers[0] as GeoJsonLayer;
 
@@ -772,25 +606,408 @@ describe('DisplayShapeLayer', () => {
 
   describe('applyBaseOpacity', () => {
     it('passes applyBaseOpacity to getFillColor accessor', () => {
-      const shape = createMockShape();
-
-      const layer = new DisplayShapeLayer({
-        id: 'test-layer',
-        mapId,
-        data: [shape],
-        showLabels: 'never',
+      const layer = createTestLayer({
+        data: [polygonFixture],
         applyBaseOpacity: true,
       });
-
-      initializeLayerWithState(layer);
-
       const sublayers = layer.renderLayers();
       const mainLayer = sublayers[0] as GeoJsonLayer;
 
-      // The getFillColor accessor should be configured with applyBaseOpacity
       // biome-ignore lint/suspicious/noExplicitAny: accessing internal props for testing
       const props = mainLayer.props as any;
       expect(props.updateTriggers.getFillColor).toContain(true);
+    });
+  });
+
+  describe('main layer configuration', () => {
+    it('sets extruded and material when enableElevation is true', () => {
+      const layer = createTestLayer({
+        data: [elevatedPolygon],
+        enableElevation: true,
+      });
+      const sublayers = layer.renderLayers();
+
+      const mainLayer = sublayers.find(
+        (l) => l.id === `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY}`,
+      ) as GeoJsonLayer;
+      // biome-ignore lint/suspicious/noExplicitAny: accessing internal props for testing
+      const props = mainLayer.props as any;
+
+      expect(props.extruded).toBe(true);
+      expect(props.material).toEqual(MATERIAL_SETTINGS.NORMAL);
+    });
+
+    it('sets extruded to false when enableElevation is false', () => {
+      const layer = createTestLayer({
+        data: [elevatedPolygon],
+        enableElevation: false,
+      });
+      const sublayers = layer.renderLayers();
+
+      const mainLayer = sublayers.find(
+        (l) => l.id === `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY}`,
+      ) as GeoJsonLayer;
+      // biome-ignore lint/suspicious/noExplicitAny: accessing internal props for testing
+      const props = mainLayer.props as any;
+
+      expect(props.extruded).toBe(false);
+    });
+
+    it('adds depth test parameters when enableElevation is true', () => {
+      const layer = createTestLayer({
+        data: [elevatedPolygon],
+        enableElevation: true,
+      });
+      const sublayers = layer.renderLayers();
+
+      const mainLayer = sublayers.find(
+        (l) => l.id === `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY}`,
+      ) as GeoJsonLayer;
+      // biome-ignore lint/suspicious/noExplicitAny: accessing internal props for testing
+      const props = mainLayer.props as any;
+
+      expect(props.parameters).toEqual({
+        depthTest: true,
+        depthCompare: 'less-equal',
+      });
+    });
+  });
+
+  describe('elevation sublayers', () => {
+    it('renders curtain layers for elevated LineStrings', () => {
+      const layer = createTestLayer({
+        data: [elevatedLineString],
+        enableElevation: true,
+      });
+      const sublayers = layer.renderLayers();
+
+      const curtainLayer = sublayers.find((l) =>
+        l.id.includes('elevation-curtain'),
+      );
+
+      expect(curtainLayer).toBeInstanceOf(GeoJsonLayer);
+    });
+
+    it('renders wireframe layer for elevated Polygons', () => {
+      const layer = createTestLayer({
+        data: [elevatedPolygon],
+        enableElevation: true,
+      });
+      const sublayers = layer.renderLayers();
+
+      const wireframeLayer = sublayers.find((l) =>
+        l.id.includes('elevation-wireframe'),
+      );
+
+      expect(wireframeLayer).toBeInstanceOf(GeoJsonLayer);
+    });
+
+    it('renders elevation indicator lines for elevated LineStrings', () => {
+      const layer = createTestLayer({
+        data: [elevatedLineString],
+        enableElevation: true,
+      });
+      const sublayers = layer.renderLayers();
+
+      const indicatorLayer = sublayers.find((l) =>
+        l.id.includes('elevation-indicators'),
+      );
+
+      expect(indicatorLayer).toBeInstanceOf(LineLayer);
+    });
+
+    it('does not render elevation layers when enableElevation is false', () => {
+      const layer = createTestLayer({
+        data: [elevatedLineString],
+        enableElevation: false,
+      });
+      const sublayers = layer.renderLayers();
+
+      expect(sublayers).toHaveLength(1);
+      expect(sublayers[0]?.id).toBe(
+        `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY}`,
+      );
+    });
+
+    it('renders curtain selected layer when elevated LineString is selected', () => {
+      const layer = createTestLayer({
+        data: [elevatedLineString],
+        selectedShapeId: elevatedLineString.id,
+        enableElevation: true,
+      });
+      const sublayers = layer.renderLayers();
+
+      const curtainSelectedLayer = sublayers.find((l) =>
+        l.id.includes('elevation-curtain-selected'),
+      );
+
+      expect(curtainSelectedLayer).toBeInstanceOf(GeoJsonLayer);
+    });
+
+    it('renders curtain hover layer when elevated LineString is hovered', () => {
+      const layer = createTestLayer(
+        { data: [elevatedLineString], enableElevation: true },
+        { hoverIndex: 0 },
+      );
+      const sublayers = layer.renderLayers();
+
+      const curtainHoverLayer = sublayers.find((l) =>
+        l.id.includes('elevation-curtain-hover'),
+      );
+
+      expect(curtainHoverLayer).toBeInstanceOf(GeoJsonLayer);
+    });
+  });
+
+  describe('hover layer', () => {
+    it('renders hover layer for extruded polygon when hovered', () => {
+      const layer = createTestLayer(
+        { data: [elevatedPolygon], enableElevation: true },
+        { hoverIndex: 0 },
+      );
+      const sublayers = layer.renderLayers();
+
+      const hoverLayer = sublayers.find(
+        (l) => l.id === `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY}-hover`,
+      );
+
+      expect(hoverLayer).toBeInstanceOf(GeoJsonLayer);
+      // biome-ignore lint/suspicious/noExplicitAny: accessing internal props for testing
+      const props = (hoverLayer as GeoJsonLayer).props as any;
+      expect(props.extruded).toBe(true);
+      expect(props.material).toEqual(MATERIAL_SETTINGS.HOVER_OR_SELECT);
+    });
+
+    it('renders hover layer when enableElevation is false (2D hover)', () => {
+      const layer = createTestLayer(
+        { data: [elevatedPolygon], enableElevation: false },
+        { hoverIndex: 0 },
+      );
+      const sublayers = layer.renderLayers();
+
+      const hoverLayer = sublayers.find(
+        (l) => l.id === `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY}-hover`,
+      );
+
+      expect(hoverLayer).toBeInstanceOf(GeoJsonLayer);
+      const props = (hoverLayer as GeoJsonLayer).props;
+      expect(props.extruded).toBe(false);
+      expect(props.material).toEqual(MATERIAL_SETTINGS.HOVER_OR_SELECT);
+    });
+
+    it('does not render hover layer for non-polygon shapes', () => {
+      const layer = createTestLayer(
+        { data: [elevatedLineString], enableElevation: true },
+        { hoverIndex: 0 },
+      );
+      const sublayers = layer.renderLayers();
+
+      const hoverLayer = sublayers.find(
+        (l) => l.id === `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY}-hover`,
+      );
+
+      expect(hoverLayer).toBeUndefined();
+    });
+  });
+
+  describe('highlight layer', () => {
+    it('renders highlight for elevated polygon at its ground footprint', () => {
+      const layer = createTestLayer({
+        data: [elevatedPolygon],
+        selectedShapeId: elevatedPolygon.id,
+        showHighlight: true,
+        enableElevation: true,
+      });
+      const sublayers = layer.renderLayers();
+
+      const highlightLayer = sublayers.find(
+        (l) => l.id === `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY_HIGHLIGHT}`,
+      );
+
+      expect(highlightLayer).toBeInstanceOf(GeoJsonLayer);
+    });
+
+    it('renders highlight for non-elevated shape when enableElevation is true', () => {
+      const layer = createTestLayer({
+        data: [polygonFixture],
+        selectedShapeId: polygonFixture.id,
+        showHighlight: true,
+        enableElevation: true,
+      });
+      const sublayers = layer.renderLayers();
+
+      const highlightLayer = sublayers.find(
+        (l) => l.id === `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY_HIGHLIGHT}`,
+      );
+
+      expect(highlightLayer).toBeInstanceOf(GeoJsonLayer);
+    });
+
+    it('renders highlight for elevated LineString with 2D coordinates', () => {
+      const layer = createTestLayer({
+        data: [elevatedLineString],
+        selectedShapeId: elevatedLineString.id,
+        showHighlight: true,
+        enableElevation: true,
+      });
+      const sublayers = layer.renderLayers();
+
+      const highlightLayer = sublayers.find(
+        (l) => l.id === `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY_HIGHLIGHT}`,
+      ) as GeoJsonLayer;
+
+      expect(highlightLayer).toBeInstanceOf(GeoJsonLayer);
+
+      // biome-ignore lint/suspicious/noExplicitAny: accessing internal props for testing
+      const data = (highlightLayer.props as any).data as Array<{
+        geometry: { coordinates: number[][] };
+      }>;
+      const coords = data[0]?.geometry.coordinates;
+
+      expect(coords?.every((c) => c.length === 2)).toBe(true);
+    });
+  });
+
+  describe('select layer', () => {
+    it('renders select layer for elevated polygon when enableElevation is true', () => {
+      const layer = createTestLayer({
+        data: [elevatedPolygon],
+        selectedShapeId: elevatedPolygon.id,
+        enableElevation: true,
+      });
+      const sublayers = layer.renderLayers();
+
+      const selectLayer = sublayers.find(
+        (l) => l.id === `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY_SELECTION}`,
+      );
+
+      expect(selectLayer).toBeInstanceOf(GeoJsonLayer);
+    });
+
+    it('renders select layer for polygon when enableElevation is false', () => {
+      const layer = createTestLayer({
+        data: [polygonFixture],
+        selectedShapeId: polygonFixture.id,
+        enableElevation: false,
+      });
+      const sublayers = layer.renderLayers();
+
+      const selectLayer = sublayers.find(
+        (l) => l.id === `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY_SELECTION}`,
+      );
+
+      expect(selectLayer).toBeInstanceOf(GeoJsonLayer);
+    });
+  });
+
+  describe('selection fill color', () => {
+    it('does not modify fill color for selected elevated polygon', () => {
+      const layer = createTestLayer({
+        data: [elevatedPolygon],
+        selectedShapeId: elevatedPolygon.id,
+        enableElevation: true,
+      });
+      const sublayers = layer.renderLayers();
+
+      const mainLayer = sublayers.find(
+        (l) => l.id === `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY}`,
+      ) as GeoJsonLayer;
+      // biome-ignore lint/suspicious/noExplicitAny: accessing internal props for testing
+      const props = mainLayer.props as any;
+      const feature = props.data[0];
+
+      const fillColor = props.getFillColor(feature);
+
+      // Selection no longer modifies fill — innate shape styling is preserved
+      // Base: [255, 255, 255, 255] → with applyBaseOpacity alpha = round(255 * 0.2) = 51
+      expect(fillColor).toEqual([255, 255, 255, 51]);
+    });
+  });
+
+  describe('curtain picking', () => {
+    let cleanupBusSpy: () => void;
+
+    beforeEach(() => {
+      cleanupBusSpy = () => undefined;
+    });
+
+    afterEach(() => {
+      cleanupBusSpy();
+    });
+
+    it('emits shapes:selected event when curtain is clicked', () => {
+      const selectedSpy = vi.fn();
+      shapeBus.on(ShapeEvents.selected, selectedSpy);
+      cleanupBusSpy = () => shapeBus.off(ShapeEvents.selected, selectedSpy);
+
+      const layer = createTestLayer({
+        data: [elevatedLineString],
+        enableElevation: true,
+      });
+      layer.renderLayers();
+
+      layer.getPickingInfo({
+        info: {
+          object: { properties: { shapeId: elevatedLineString.id } },
+          index: 0,
+        } as never,
+        mode: 'query',
+        sourceLayer: {
+          id: `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY}-elevation-curtain`,
+        },
+      });
+
+      expect(selectedSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          payload: { shapeId: elevatedLineString.id, mapId },
+        }),
+      );
+    });
+
+    it('calls onShapeClick with original LineString shape when curtain is clicked', () => {
+      const clickCallback = vi.fn();
+      const layer = createTestLayer({
+        data: [elevatedLineString],
+        enableElevation: true,
+        onShapeClick: clickCallback,
+      });
+      layer.renderLayers();
+
+      layer.getPickingInfo({
+        info: {
+          object: { properties: { shapeId: elevatedLineString.id } },
+          index: 0,
+        } as never,
+        mode: 'query',
+        sourceLayer: {
+          id: `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY}-elevation-curtain`,
+        },
+      });
+
+      expect(clickCallback).toHaveBeenCalledWith(elevatedLineString);
+    });
+
+    it('updates hover state when hovering over curtain', () => {
+      const layer = createTestLayer({
+        data: [elevatedLineString],
+        enableElevation: true,
+      });
+      layer.renderLayers();
+
+      expect(layer.state.hoverIndex).toBeUndefined();
+
+      layer.getPickingInfo({
+        info: {
+          object: { properties: { shapeId: elevatedLineString.id } },
+          index: 0,
+        } as never,
+        mode: 'hover',
+        sourceLayer: {
+          id: `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY}-elevation-curtain`,
+        },
+      });
+
+      expect(layer.state.hoverIndex).toBe(0);
     });
   });
 });

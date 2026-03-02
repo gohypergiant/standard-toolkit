@@ -12,7 +12,7 @@
 
 'use client';
 
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { MapContext } from '../../base-map/provider';
 import {
   DEFAULT_TENTATIVE_COLORS,
@@ -21,7 +21,7 @@ import {
 import { useShiftZoomDisable } from '../shared/hooks/use-shift-zoom-disable';
 import { getDefaultEditableLayerProps } from '../shared/utils/layer-config';
 import { DRAW_SHAPE_LAYER_ID } from './constants';
-import { getModeInstance, triggerDoubleClickFinish } from './modes';
+import { getModeInstance } from './modes';
 import {
   cancelDrawingFromLayer,
   completeDrawingFromLayer,
@@ -85,27 +85,6 @@ export function DrawShapeLayer({
   // This prevents boxZoom (Shift+drag) from interfering with Shift-to-square constraint
   useShiftZoomDisable(actualMapId, activeShapeType === 'Rectangle');
 
-  // Set up dblclick listener as workaround for deck.gl-community/editable-layers ~9.1
-  // which doesn't register 'dblclick' in EVENT_TYPES
-  // @see https://github.com/visgl/deck.gl-community/pull/225
-  // TODO: Remove this workaround when @deck.gl-community/editable-layers 9.2.0 is released
-  useEffect(() => {
-    if (!activeShapeType) {
-      return;
-    }
-
-    const handleDblClick = () => {
-      triggerDoubleClickFinish(activeShapeType);
-    };
-
-    // Add listener to document to catch dblclick anywhere on the map
-    document.addEventListener('dblclick', handleDblClick);
-
-    return () => {
-      document.removeEventListener('dblclick', handleDblClick);
-    };
-  }, [activeShapeType]);
-
   // If not drawing, return null (don't render the editable layer)
   if (!activeShapeType) {
     return null;
@@ -123,7 +102,7 @@ export function DrawShapeLayer({
   }: EditAction<FeatureCollection>) => {
     // Only process addFeature (drawing complete) and cancelFeature (ESC pressed)
     if (editType === 'addFeature') {
-      const feature = updatedData.features[updatedData.features.length - 1];
+      const feature = updatedData.features.at(-1);
       if (feature) {
         // Type assertion: editable-layers Feature type differs slightly from geojson Feature
         // but they are structurally compatible for our conversion purposes

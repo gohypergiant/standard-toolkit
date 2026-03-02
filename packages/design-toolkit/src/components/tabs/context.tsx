@@ -16,7 +16,7 @@ import 'client-only';
 import { createContext } from 'react';
 import type { ContextValue } from 'react-aria-components';
 import type { ProviderProps } from '@/lib/types';
-import type { TabsProps } from './types';
+import type { TabProps, TabsProps } from './types';
 
 /** Context for sharing props across Tabs components */
 export const TabsContext =
@@ -43,4 +43,10 @@ export const TabsContext =
  */
 export function TabsProvider({ children, ...props }: ProviderProps<TabsProps>) {
   return <TabsContext.Provider value={props}>{children}</TabsContext.Provider>;
+}
+
+export const TabContext = createContext<ContextValue<TabProps, Element>>(null);
+
+export function TabProvider({ children, ...props }: ProviderProps<TabProps>) {
+  return <TabContext.Provider value={props}>{children}</TabContext.Provider>;
 }

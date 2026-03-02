@@ -35,7 +35,7 @@ import type { Feature, Polygon } from 'geojson';
  * This composite mode provides:
  * - **Resize** (ResizeCircleMode): Drag edge to resize from center
  * - **Translation** (TranslateMode): Drag the circle body to move it
- * - **Live tooltip**: Shows diameter and area during resize
+ * - **Live tooltip**: Shows radius and area during resize
  *
  * ## Handle Priority Logic
  * When drag starts, modes are evaluated in this priority order:
@@ -97,11 +97,12 @@ export class CircleTransformMode extends BaseTransformMode {
   }
 
   protected override getDefaultMode(): GeoJsonEditMode {
-    return this.translateMode;
+    // biome-ignore lint/suspicious/noExplicitAny: Library type inconsistency — see HandleMatcher JSDoc in base-transform-mode
+    return this.translateMode as any;
   }
 
   /**
-   * Update the tooltip with circle diameter and area during resize.
+   * Update the tooltip with circle radius and area during resize.
    */
   protected override onDragging(
     event: DraggingEvent,
@@ -142,7 +143,7 @@ export class CircleTransformMode extends BaseTransformMode {
     const centerFeature = centroid(feature);
     const center = centerFeature.geometry.coordinates as [number, number];
     const firstPoint = coordinates[0] as [number, number];
-    const { diameter, area } = computeCircleMeasurements(
+    const { radius, area } = computeCircleMeasurements(
       center,
       firstPoint,
       distanceUnits,
@@ -152,7 +153,7 @@ export class CircleTransformMode extends BaseTransformMode {
     // Position tooltip at cursor - offset is applied via getPixelOffset in sublayer props
     this.tooltip = {
       position: mapCoords,
-      text: formatCircleTooltip(diameter, area, unitAbbrev),
+      text: formatCircleTooltip(radius, area, unitAbbrev),
     };
   }
 }

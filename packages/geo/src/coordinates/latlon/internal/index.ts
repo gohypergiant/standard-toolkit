@@ -166,3 +166,21 @@ export const PARTIAL_PATTERNS = {
   minDec: decimalSecAndMin(SYMBOL_PATTERNS.MINUTES),
   secDec: decimalSecAndMin(SYMBOL_PATTERNS.SECONDS),
 } as const;
+
+export {
+  type CoordinateInput,
+  type CoordinateInternalValue,
+  type CoordinateObject,
+  type CoordinateTuple,
+  type LatLonTuple,
+  type LonLatTuple,
+  isCoordinateObject,
+  isCoordinateTuple,
+  normalizeObjectToLatLon,
+  tupleToLatLon,
+} from './normalize';
+export {
+  isFiniteNumber,
+  validateNumericCoordinate,
+  validateSignedRange,
+} from './validate';
