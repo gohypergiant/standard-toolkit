@@ -26,6 +26,11 @@
       "sourceType": "github",
       "computedHash": "7e00fcbe4e84561aa19e64a8f091498c996e69a67c1a569d205ebc9286500680"
     },
+    "accelint-ts-audit-all": {
+      "source": "gohypergiant/agent-skills",
+      "sourceType": "github",
+      "computedHash": "d634481d5e79d7ffdde79fec04cf877bfbd5c91dc62e22aff13ac421281fe40c"
+    },
     "accelint-ts-best-practices": {
       "source": "gohypergiant/agent-skills",
       "sourceType": "github",

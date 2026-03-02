@@ -13,24 +13,19 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { getLogger } from '@accelint/logger/default';
 import {
   MediaActionTypes,
   useMediaDispatch,
   useMediaSelector,
 } from 'media-chrome/react/media-store';
 import { useCallback } from 'react';
+import { createLoggerDomain } from '@/utils/logger';
 import { Button } from '../button';
 import { useMediaControlsDisabled } from './context';
 import styles from './styles.module.css';
 import type { PlaybackRateButtonProps } from './types';
 
-const logger = getLogger({
-  enabled: process.env.NODE_ENV === 'development',
-  level: 'warn',
-  prefix: '[PlaybackRateButton]',
-  pretty: true,
-});
+const logger = createLoggerDomain('[PlaybackRateButton]');
 
 /** Default playback rate options: normal, 2x, and 3x speed. */
 const DEFAULT_RATES = [1, 2, 3];

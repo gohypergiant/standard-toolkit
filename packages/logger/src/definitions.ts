@@ -73,8 +73,9 @@ export type LoggerOptions = {
 /**
  * The log level type accepted by logger configuration.
  * One of: `'trace'`, `'debug'`, `'info'`, `'warn'`, `'error'`, `'fatal'`.
+ * NOTE: this is vendored from @loglayer/shared since tsdown will not export/bundle an external
  */
-export type { LogLevelType as LogLevel };
+export type LogLevel = 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatal';
 
 /**
  * Log level constant for error messages.
