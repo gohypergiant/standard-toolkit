@@ -10,8 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-'use client';
-
 import {
   BASE_FILL_OPACITY,
   DASH_ARRAYS,
@@ -25,8 +23,8 @@ import type { StyledFeature } from '../types';
  * Normalize a Color to a 4-element RGBA array.
  * Handles RGB arrays (adds alpha 255), RGBA arrays, and typed arrays.
  *
- * @param color - The color to normalize
- * @returns 4-element RGBA array [r, g, b, a]
+ * @param color - The color to normalize.
+ * @returns 4-element RGBA array [r, g, b, a].
  * @example
  * ```typescript
  * normalizeColor([255, 128, 0]);        // → [255, 128, 0, 255]
@@ -34,25 +32,24 @@ import type { StyledFeature } from '../types';
  * ```
  */
 export function normalizeColor(color: Color): [number, number, number, number] {
-  if (color instanceof Uint8Array || color instanceof Uint8ClampedArray) {
+  if (
+    color instanceof Uint8Array ||
+    color instanceof Uint8ClampedArray ||
+    (Array.isArray(color) && color.length >= 3)
+  ) {
     return [color[0] ?? 0, color[1] ?? 0, color[2] ?? 0, color[3] ?? 255];
   }
 
-  // Handle RGB (3-element) or RGBA (4-element) arrays
-  // Validate array has at least 3 elements for RGB
-  if (!Array.isArray(color) || color.length < 3) {
-    return [0, 0, 0, 255]; // Fallback to opaque black
-  }
-  return [color[0] ?? 0, color[1] ?? 0, color[2] ?? 0, color[3] ?? 255];
+  return [0, 0, 0, 255]; // Fallback to opaque black for malformed input
 }
 
 /**
  * Get fill color for a feature.
  * Colors are passed through as-is unless applyBaseOpacity is true.
  *
- * @param feature - The styled feature
- * @param applyBaseOpacity - When true, multiplies alpha by BASE_FILL_OPACITY (0.2)
- * @returns RGBA color array
+ * @param feature - The styled feature.
+ * @param applyBaseOpacity - When true, multiplies alpha by BASE_FILL_OPACITY (0.2).
+ * @returns RGBA color array.
  * @example
  * ```typescript
  * getFillColor(feature);        // → [255, 255, 255, 255]  (full opacity)
@@ -63,15 +60,13 @@ export function getFillColor(
   feature: StyledFeature,
   applyBaseOpacity = false,
 ): [number, number, number, number] {
-  const styleProps = feature.properties?.styleProperties;
-  const color = styleProps?.fillColor ?? DEFAULT_COLORS.fill;
+  const color =
+    feature.properties.styleProperties?.fillColor ?? DEFAULT_COLORS.fill;
 
-  // Normalize to 4-element array
   const rgba = normalizeColor(color);
 
   if (applyBaseOpacity) {
-    // Apply base opacity multiplier to alpha channel
-    return [rgba[0], rgba[1], rgba[2], Math.round(rgba[3] * BASE_FILL_OPACITY)];
+    rgba[3] = Math.round(rgba[3] * BASE_FILL_OPACITY);
   }
 
   return rgba;
@@ -84,8 +79,8 @@ export function getFillColor(
  * Named to match deck.gl's `getLineColor` accessor convention.
  * Reads from `lineColor` in the feature's style properties.
  *
- * @param feature - The styled feature
- * @returns RGBA color array
+ * @param feature - The styled feature.
+ * @returns RGBA color array.
  * @example
  * ```typescript
  * getLineColor(feature); // → [136, 138, 143, 255]  (default line color)
@@ -94,8 +89,8 @@ export function getFillColor(
 export function getLineColor(
   feature: StyledFeature,
 ): [number, number, number, number] {
-  const styleProps = feature.properties?.styleProperties;
-  const color = styleProps?.lineColor ?? DEFAULT_COLORS.line;
+  const color =
+    feature.properties.styleProperties?.lineColor ?? DEFAULT_COLORS.line;
 
   return normalizeColor(color);
 }
@@ -106,23 +101,22 @@ export function getLineColor(
  * Named to match deck.gl's `getLineWidth` accessor convention.
  * Reads from `lineWidth` in the feature's style properties.
  *
- * @param feature - The styled feature
- * @returns Border/outline width in pixels
+ * @param feature - The styled feature.
+ * @returns Border/outline width in pixels.
  * @example
  * ```typescript
  * getLineWidth(feature); // → 2  (default width)
  * ```
  */
 export function getLineWidth(feature: StyledFeature): number {
-  const styleProps = feature.properties?.styleProperties;
-  return styleProps?.lineWidth ?? DEFAULT_LINE_WIDTH;
+  return feature.properties.styleProperties?.lineWidth ?? DEFAULT_LINE_WIDTH;
 }
 
 /**
  * Get dash array for border/outline pattern.
  *
- * @param feature - The styled feature
- * @returns Dash array [dash, gap] or null for solid outlines
+ * @param feature - The styled feature.
+ * @returns Dash array [dash, gap] or null for solid outlines.
  * @example
  * ```typescript
  * getDashArray(solidFeature);   // → null
@@ -131,8 +125,7 @@ export function getLineWidth(feature: StyledFeature): number {
  * ```
  */
 export function getDashArray(feature: StyledFeature): [number, number] | null {
-  const styleProps = feature.properties?.styleProperties;
-  const pattern = styleProps?.linePattern ?? 'solid';
+  const pattern = feature.properties.styleProperties?.linePattern ?? 'solid';
 
   return DASH_ARRAYS[pattern] ?? null;
 }
