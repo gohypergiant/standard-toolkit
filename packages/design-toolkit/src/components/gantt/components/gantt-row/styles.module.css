@@ -13,7 +13,8 @@
 @reference '@accelint/design-foundation/styles';
 
 @utility bracket-pseudo-base {
-  @apply rounded-small fg-accent-primary-bold absolute left-4 border border-current border-t-transparent border-b-transparent border-l-transparent content-[''];
+  @apply rounded-small fg-accent-primary-bold absolute border border-current border-t-transparent border-b-transparent border-l-transparent content-[''];
+  left: 4px;
 }
 
 @layer components.l1 {
@@ -54,8 +55,9 @@
   }
 
   .bracket {
-    @apply fg-accent-primary-bold rounded-bl-small rounded-tl-small absolute left-0 w-6 border border-r-transparent border-b-current bg-transparent;
+    @apply fg-accent-primary-bold rounded-bl-small rounded-tl-small absolute left-0 border border-r-transparent border-b-current bg-transparent;
     min-height: attr(data-height px);
+    width: 6px;
   }
 
   .marker-container {

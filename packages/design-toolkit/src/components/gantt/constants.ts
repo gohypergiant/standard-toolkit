@@ -43,3 +43,15 @@ export const BUFFERED_CHUNK_COUNT = 2;
 export const GANTT_ROW_HEIGHT_PX = 40;
 export const GANTT_ROW_ELEMENT_HEIGHT = 30;
 export const ROW_VIRTUALIZATION_OVERSCAN = 1;
+
+export const TIMESCALE_OPTIONS: Timescale[] = [
+  '1h',
+  '2h',
+  '6h',
+  '12h',
+  '24h',
+  '1m',
+  '5m',
+  '10m',
+  '30m',
+];
