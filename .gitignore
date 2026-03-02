@@ -34,3 +34,6 @@ storybook-static
 */memlab/reports/html
 */memlab/reports/memlab-report.html
 apps/next/test-results/
+
+# Agent audits
+.agents/audit/*

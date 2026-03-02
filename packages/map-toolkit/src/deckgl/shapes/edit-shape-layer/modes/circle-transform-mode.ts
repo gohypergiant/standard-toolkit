@@ -97,7 +97,8 @@ export class CircleTransformMode extends BaseTransformMode {
   }
 
   protected override getDefaultMode(): GeoJsonEditMode {
-    return this.translateMode;
+    // biome-ignore lint/suspicious/noExplicitAny: Library type inconsistency — see HandleMatcher JSDoc in base-transform-mode
+    return this.translateMode as any;
   }
 
   /**

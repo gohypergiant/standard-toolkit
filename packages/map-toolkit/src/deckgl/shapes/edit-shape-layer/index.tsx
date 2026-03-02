@@ -21,7 +21,7 @@ import {
 import { useCallback, useContext, useEffect, useRef } from 'react';
 import { MapContext } from '../../base-map/provider';
 import { useShiftZoomDisable } from '../shared/hooks/use-shift-zoom-disable';
-import { ShapeFeatureType, type ShapeFeatureTypeValues } from '../shared/types';
+import { ShapeFeatureType } from '../shared/types';
 import { getDefaultEditableLayerProps } from '../shared/utils/layer-config';
 import { getFillColor, getLineColor } from '../shared/utils/style-utils';
 import {
@@ -81,7 +81,7 @@ function isCompletionEditType(editType: string): boolean {
  */
 function toFeatureCollection(
   feature: Feature,
-  shape: ShapeFeatureTypeValues,
+  shape: ShapeFeatureType,
 ): import('geojson').FeatureCollection {
   // Add shape property for modes that require it
   // - ResizeCircleMode requires shape: 'Circle'

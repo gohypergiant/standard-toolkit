@@ -10,15 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import { getLogger } from '@accelint/logger';
 import { page } from 'vitest/browser';
+import { createLoggerDomain } from '~/utils/logger';
 
-const logger = getLogger({
-  enabled: process.env.NODE_ENV !== 'production',
-  level: 'warn',
-  prefix: '[VRT:Selectors]',
-  pretty: true,
-});
+const logger = createLoggerDomain('[VRT:Static]', 'warn');
 
 /**
  * Parse a selector string and return a vitest page locator.
