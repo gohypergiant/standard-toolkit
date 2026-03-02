@@ -55,7 +55,7 @@ export function createLoggerDomain(
   prefix: string,
   level?: LoggerOptions['level'],
 ) {
-  const child = logger.child().withPrefix(prefix);
+  const child = logger.withPrefix(prefix);
 
   if (level) {
     child.setLevel(level);
