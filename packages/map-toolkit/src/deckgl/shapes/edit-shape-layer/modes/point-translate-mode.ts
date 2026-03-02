@@ -53,7 +53,8 @@ import {
  * ```
  */
 export class PointTranslateMode extends GeoJsonEditMode {
-  private translateMode = new TranslateMode();
+  // biome-ignore lint/suspicious/noExplicitAny: TranslateMode narrows ModeProps to SimpleFeatureCollection but GeoJsonEditMode uses FeatureCollection — library type inconsistency
+  private translateMode: GeoJsonEditMode = new TranslateMode() as any;
 
   /**
    * Handle click events to reposition the point.

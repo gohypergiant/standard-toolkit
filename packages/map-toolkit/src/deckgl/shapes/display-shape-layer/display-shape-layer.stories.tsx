@@ -10,12 +10,20 @@
  * governing permissions and limitations under the License.
  */
 
-import { useOn } from '@accelint/bus/react';
-import { uuid } from '@accelint/core';
+import { useEmit, useOn } from '@accelint/bus/react';
+import { type UniqueId, uuid } from '@accelint/core';
+import { Button } from '@accelint/design-toolkit/components/button';
+import { OptionsItem } from '@accelint/design-toolkit/components/options/item';
+import { SelectField } from '@accelint/design-toolkit/components/select-field';
+import { Slider } from '@accelint/design-toolkit/components/slider';
 import { useMemo, useState } from 'react';
+import { CameraEventTypes } from '@/camera/events';
+import { useMapCamera } from '@/camera/store';
 import { useMapCursor } from '@/map-cursor/use-map-cursor';
 import { BaseMap } from '../../base-map/index';
 import { mockShapes } from '../__fixtures__/mock-shapes';
+import { mockShapes3D } from '../__fixtures__/mock-shapes-3d';
+import { mockShapes3DColor } from '../__fixtures__/mock-shapes-3d-color';
 import { mockShapesWithIcons } from '../__fixtures__/mock-shapes-with-icons';
 import {
   type ShapeDeselectedEvent,
@@ -23,6 +31,17 @@ import {
   type ShapeHoveredEvent,
   type ShapeSelectedEvent,
 } from '../shared/events';
+import { HIGHLIGHT_COLOR_TUPLE } from './constants';
+import type {
+  CameraResetEvent,
+  CameraSetPitchEvent,
+  CameraSetProjectionEvent,
+  CameraSetRotationEvent,
+  CameraSetViewEvent,
+  CameraSetZoomEvent,
+  ProjectionType,
+  ViewType,
+} from '@/camera/types';
 import './fiber';
 import { useSelectShape } from './use-select-shape';
 import type { Meta, StoryObj } from '@storybook/react-vite';
@@ -44,7 +63,7 @@ const WITH_ICONS_MAP_ID = uuid();
  * Demonstrates automatic bus integration:
  * - Click a shape to select it (emits shapes:selected via bus automatically)
  * - Click empty space to deselect (emits shapes:deselected via bus)
- * - The highlight layer responds to selection state
+ * - The selection (and highlight layer if enabled) layer responds to selection state
  * - Selection state can be controlled via the bus from anywhere in the app
  */
 export const BasicDisplayAndEvents: Story = {
@@ -53,10 +72,7 @@ export const BasicDisplayAndEvents: Story = {
     pickable: true,
     applyBaseOpacity: true,
     showHighlight: false,
-    highlightColorR: 40,
-    highlightColorG: 245,
-    highlightColorB: 190,
-    highlightColorA: 100,
+    highlightColor: [...HIGHLIGHT_COLOR_TUPLE],
   },
   argTypes: {
     showLabels: {
@@ -79,21 +95,9 @@ export const BasicDisplayAndEvents: Story = {
       description:
         'Show/hide highlight effect around selected shapes (dotted border always shows)',
     },
-    highlightColorR: {
-      control: { type: 'number', min: 0, max: 255, step: 1 },
-      description: 'Highlight color red channel (0-255)',
-    },
-    highlightColorG: {
-      control: { type: 'number', min: 0, max: 255, step: 1 },
-      description: 'Highlight color green channel (0-255)',
-    },
-    highlightColorB: {
-      control: { type: 'number', min: 0, max: 255, step: 1 },
-      description: 'Highlight color blue channel (0-255)',
-    },
-    highlightColorA: {
-      control: { type: 'number', min: 0, max: 255, step: 1 },
-      description: 'Highlight color alpha/opacity (0-255)',
+    highlightColor: {
+      control: { type: 'object' },
+      description: 'Highlight color [R, G, B, A] with values 0-255',
     },
   },
   render: (args) => {
@@ -108,6 +112,13 @@ export const BasicDisplayAndEvents: Story = {
     const selectedName = selectedId
       ? mockShapes.find((s) => s.id === selectedId)?.name
       : undefined;
+
+    const highlightColor = args.highlightColor as [
+      number,
+      number,
+      number,
+      number,
+    ];
 
     // Log selection events for demonstration purposes
     useOn<ShapeSelectedEvent>(ShapeEvents.selected, (event) => {
@@ -178,12 +189,7 @@ export const BasicDisplayAndEvents: Story = {
             pickable={args.pickable}
             applyBaseOpacity={args.applyBaseOpacity}
             showHighlight={args.showHighlight}
-            highlightColor={[
-              args.highlightColorR,
-              args.highlightColorG,
-              args.highlightColorB,
-              args.highlightColorA,
-            ]}
+            highlightColor={highlightColor}
           />
         </BaseMap>
 
@@ -511,6 +517,272 @@ export const WithPointIcons: Story = {
             from design-toolkit via icon atlas
           </p>
         </div>
+      </div>
+    );
+  },
+};
+
+/**
+ * Camera control panel for 3D shape stories.
+ * Provides full camera controls like the camera story.
+ */
+function ShapesCameraControls({ mapId }: { mapId: UniqueId }) {
+  const setZoom = useEmit<CameraSetZoomEvent>(CameraEventTypes.setZoom);
+  const setPitch = useEmit<CameraSetPitchEvent>(CameraEventTypes.setPitch);
+  const setRotation = useEmit<CameraSetRotationEvent>(
+    CameraEventTypes.setRotation,
+  );
+  const setProjection = useEmit<CameraSetProjectionEvent>(
+    CameraEventTypes.setProjection,
+  );
+  const resetCamera = useEmit<CameraResetEvent>(CameraEventTypes.reset);
+  const setView = useEmit<CameraSetViewEvent>(CameraEventTypes.setView);
+  const { cameraState } = useMapCamera(mapId);
+
+  return (
+    <div className='absolute top-l left-l flex w-[280px] flex-col gap-l rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
+      <div>
+        <p className='font-bold text-header-l'>3D Shapes with Elevation</p>
+        <p className='mt-xs text-body-s text-content-secondary'>
+          Shapes with MSL elevation coordinates
+        </p>
+      </div>
+
+      <div className='flex flex-col gap-s'>
+        <p className='font-bold text-body-m'>Camera Controls</p>
+
+        <Button
+          variant='filled'
+          color='mono-muted'
+          onPress={() => resetCamera({ id: mapId })}
+          className='w-full'
+        >
+          Reset Camera
+        </Button>
+
+        <Slider
+          label='Zoom'
+          showLabel
+          showInput
+          value={cameraState.zoom}
+          minValue={0}
+          maxValue={22}
+          layout='stack'
+          onChange={(value) => {
+            const zoom = typeof value === 'number' ? value : (value[0] ?? 0);
+            setZoom({ id: mapId, zoom });
+          }}
+        />
+
+        <Slider
+          label='Pitch'
+          showLabel
+          showInput
+          value={cameraState.pitch}
+          isDisabled={cameraState.view !== '2.5D'}
+          minValue={0}
+          maxValue={65}
+          layout='stack'
+          onChange={(value) => {
+            const pitch = typeof value === 'number' ? value : (value[0] ?? 0);
+            setPitch({ id: mapId, pitch });
+          }}
+        />
+
+        <Slider
+          label='Rotation'
+          showLabel
+          showInput
+          value={cameraState.rotation}
+          minValue={0}
+          maxValue={360}
+          layout='stack'
+          onChange={(value) => {
+            const rotation =
+              typeof value === 'number' ? value : (value[0] ?? 0);
+            setRotation({ id: mapId, rotation });
+          }}
+        />
+
+        <SelectField
+          label='Projection'
+          value={cameraState.projection}
+          onChange={(value) => {
+            setProjection({ id: mapId, projection: value as ProjectionType });
+          }}
+        >
+          <OptionsItem id='mercator'>Mercator</OptionsItem>
+          <OptionsItem id='globe'>Globe</OptionsItem>
+        </SelectField>
+
+        <SelectField
+          label='View'
+          value={cameraState.view}
+          onChange={(value) => {
+            setView({ id: mapId, view: value as ViewType });
+          }}
+        >
+          <OptionsItem id='2D'>2D</OptionsItem>
+          <OptionsItem id='2.5D'>2.5D</OptionsItem>
+          <OptionsItem id='3D'>3D</OptionsItem>
+        </SelectField>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Display shapes with 3D coordinates in 2.5D view (mercator + pitch)
+ *
+ * Demonstrates shapes with elevation rendered in 2.5D view:
+ * - Uses mockShapes3D with elevation coordinates (MSL in meters)
+ * - Camera set to 2.5D view mode (mercator projection with ~45° pitch)
+ * - Shapes at different elevations: Circle (13000m), LineString (varying 20000-40000m),
+ *   Point (1500m), Polygon (22500m), Rectangle (34000m), Ellipse (43500m)
+ * - Full camera controls for interactive exploration
+ */
+const DISPLAY_25D_MAP_ID_INNER = uuid();
+
+export const DisplayShapes25D: Story = {
+  args: {
+    showHighlight: false,
+    highlightColor: [...HIGHLIGHT_COLOR_TUPLE],
+  },
+  argTypes: {
+    showHighlight: {
+      control: { type: 'boolean' },
+      description: 'Show/hide highlight outline around selected shapes',
+    },
+    highlightColor: {
+      control: { type: 'object' },
+      description: 'Highlight color [R, G, B, A] with values 0-255',
+    },
+  },
+  render: (args) => {
+    const { selectedId } = useSelectShape(DISPLAY_25D_MAP_ID_INNER);
+    const { cameraState } = useMapCamera(DISPLAY_25D_MAP_ID_INNER);
+    const { requestCursorChange, clearCursor } = useMapCursor(
+      DISPLAY_25D_MAP_ID_INNER,
+    );
+
+    const highlightColor = args.highlightColor as [
+      number,
+      number,
+      number,
+      number,
+    ];
+
+    // Handle hover events for cursor changes
+    useOn<ShapeHoveredEvent>(ShapeEvents.hovered, (event) => {
+      if (event.payload.mapId !== DISPLAY_25D_MAP_ID_INNER) {
+        return;
+      }
+      if (event.payload.shapeId) {
+        requestCursorChange('pointer', 'display-shapes-25d');
+      } else {
+        clearCursor('display-shapes-25d');
+      }
+    });
+
+    return (
+      <div className='relative h-dvh w-dvw'>
+        <BaseMap
+          className='absolute inset-0'
+          id={DISPLAY_25D_MAP_ID_INNER}
+          defaultView='2.5D'
+        >
+          <displayShapeLayer
+            id='shapes-25d'
+            mapId={DISPLAY_25D_MAP_ID_INNER}
+            data={mockShapes3DColor}
+            selectedShapeId={selectedId}
+            showLabels='always'
+            pickable={true}
+            applyBaseOpacity={true}
+            enableElevation={cameraState.view !== '2D'}
+            showHighlight={args.showHighlight}
+            highlightColor={highlightColor}
+          />
+        </BaseMap>
+
+        <ShapesCameraControls mapId={DISPLAY_25D_MAP_ID_INNER} />
+      </div>
+    );
+  },
+};
+
+/**
+ * Display shapes with 3D coordinates on 3D globe
+ *
+ * Demonstrates shapes with elevation rendered on 3D globe:
+ * - Uses mockShapes3D with elevation coordinates (MSL in meters)
+ * - Camera set to 3D view mode (globe projection)
+ * - Shapes render on globe surface with elevation
+ * - Tests shapes at various latitudes/longitudes
+ * - Verifies GeoJsonLayer auto-adapts to globe projection
+ */
+const DISPLAY_3D_MAP_ID_INNER = uuid();
+
+export const DisplayShapes3D: Story = {
+  args: {
+    showHighlight: false,
+    highlightColor: [...HIGHLIGHT_COLOR_TUPLE],
+  },
+  argTypes: {
+    showHighlight: {
+      control: { type: 'boolean' },
+      description: 'Show/hide highlight outline around selected shapes',
+    },
+    highlightColor: {
+      control: { type: 'object' },
+      description: 'Highlight color [R, G, B, A] with values 0-255',
+    },
+  },
+  render: (args) => {
+    const { selectedId } = useSelectShape(DISPLAY_3D_MAP_ID_INNER);
+    const { requestCursorChange, clearCursor } = useMapCursor(
+      DISPLAY_3D_MAP_ID_INNER,
+    );
+
+    const highlightColor = args.highlightColor as [
+      number,
+      number,
+      number,
+      number,
+    ];
+
+    // Handle hover events for cursor changes
+    useOn<ShapeHoveredEvent>(ShapeEvents.hovered, (event) => {
+      if (event.payload.mapId !== DISPLAY_3D_MAP_ID_INNER) {
+        return;
+      }
+      if (event.payload.shapeId) {
+        requestCursorChange('pointer', 'display-shapes-3d');
+      } else {
+        clearCursor('display-shapes-3d');
+      }
+    });
+
+    return (
+      <div className='relative h-dvh w-dvw'>
+        <BaseMap
+          className='absolute inset-0'
+          id={DISPLAY_3D_MAP_ID_INNER}
+          defaultView='3D'
+        >
+          <displayShapeLayer
+            id='shapes-3d'
+            mapId={DISPLAY_3D_MAP_ID_INNER}
+            data={mockShapes3D}
+            selectedShapeId={selectedId}
+            showLabels='always'
+            pickable={true}
+            applyBaseOpacity={true}
+            enableElevation={true}
+            showHighlight={args.showHighlight}
+            highlightColor={highlightColor}
+          />
+        </BaseMap>
       </div>
     );
   },

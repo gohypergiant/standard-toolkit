@@ -180,6 +180,9 @@ function defaultScreenshotName(
 async function runStateTest<TProps>(
   ctx: StateTestContext<TProps>,
 ): Promise<void> {
+  // Reset hover/focus/pressed state from any previous test
+  await resetState();
+
   if (ctx.beforeEach) {
     await ctx.beforeEach();
   }
