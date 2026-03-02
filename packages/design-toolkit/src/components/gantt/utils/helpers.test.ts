@@ -17,8 +17,8 @@ import {
   getRenderedRegionBoundsMs,
   getVerticalScrolledPixels,
   getViewableRegionWidth,
-  shouldRenderPointElement,
   shouldRenderRangeElement,
+  timestampWithinBounds,
 } from './helpers';
 import type { UIEvent } from 'react';
 
@@ -77,6 +77,21 @@ describe('helpers', () => {
     });
   });
 
+  describe('timestampWithinBounds', () => {
+    const bounds = { startMs: 1000, endMs: 2000 };
+
+    it.each([
+      ['returns true when timestamp is at start bound', 1000, true],
+      ['returns true when timestamp is at end bound', 2000, true],
+      ['returns true when timestamp is inside bounds', 1500, true],
+      ['returns false when timestamp is before start bound', 999, false],
+      ['returns false when timestamp is after end bound', 2001, false],
+    ])('%s', (_description, timestampMs, expected) => {
+      const result = timestampWithinBounds(timestampMs, bounds);
+      expect(result).toBe(expected);
+    });
+  });
+
   describe('shouldRenderRangeElement', () => {
     const renderedRegion = { startMs: 1000, endMs: 2000 };
 
@@ -121,21 +136,6 @@ describe('helpers', () => {
         startMs,
         endMs,
       });
-      expect(result).toBe(expected);
-    });
-  });
-
-  describe('shouldRenderPointElement', () => {
-    const renderedRegion = { startMs: 1000, endMs: 2000 };
-
-    it.each([
-      ['returns true when point is at region start', 1000, true],
-      ['returns true when point is at region end', 2000, true],
-      ['returns true when point is inside region', 1500, true],
-      ['returns false when point is before region', 999, false],
-      ['returns false when point is after region', 2001, false],
-    ])('%s', (_description, pointTimeMs, expected) => {
-      const result = shouldRenderPointElement(renderedRegion, pointTimeMs);
       expect(result).toBe(expected);
     });
   });
