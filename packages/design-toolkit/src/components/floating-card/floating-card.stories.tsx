@@ -32,13 +32,7 @@ const meta = {
   args: {
     id: panelIds.a,
     title: 'Test FloatingCard',
-  },
-  argTypes: {
-    isOpen: {
-      table: {
-        disable: true,
-      },
-    },
+    isOpen: true,
   },
 } satisfies Meta<typeof FloatingCard>;
 
@@ -50,7 +44,7 @@ export const Default: Story = {
     return (
       <div className='relative h-800 w-600 p-l outline outline-info-bold'>
         <FloatingCardProvider>
-          <FloatingCard id={args.id} title={args.title}>
+          <FloatingCard {...args}>
             <div className='flex h-full flex-col items-center justify-center gap-m self-stretch rounded-medium outline outline-dashed outline-1 outline-interactive-hover'>
               Panel Content
             </div>
@@ -213,6 +207,26 @@ export const ControlledVisibility: Story = {
           >
             <div className='flex h-full flex-col items-center justify-center gap-m self-stretch rounded-medium outline outline-dashed outline-1 outline-interactive-hover'>
               <p className='text-sm'>This card can be opened and closed</p>
+            </div>
+          </FloatingCard>
+        </FloatingCardProvider>
+      </div>
+    );
+  },
+};
+
+export const WithScrollableContent: Story = {
+  render: (args) => {
+    return (
+      <div className='relative h-800 w-600 p-l outline outline-info-bold'>
+        <FloatingCardProvider>
+          <FloatingCard id={args.id} title={args.title}>
+            <div className='flex h-full flex-col items-center justify-start gap-m self-stretch overflow-auto rounded-medium p-m'>
+              {Array.from({ length: 20 }, (_, i) => (
+                <p key={i} className='text-sm'>
+                  Scrollable content line {i + 1}
+                </p>
+              ))}
             </div>
           </FloatingCard>
         </FloatingCardProvider>
