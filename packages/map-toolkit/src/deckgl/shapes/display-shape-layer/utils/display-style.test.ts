@@ -22,8 +22,8 @@ import { OVERLAY_FILL_OPACITY } from '../constants';
 import {
   applyOverlayOpacity,
   brightenColor,
-  getHoverLineWidth,
   getHighlightLineWidth,
+  getHoverLineWidth,
   getOverlayFillColor,
 } from './display-style';
 import type { StyledFeature } from '../../shared/types';

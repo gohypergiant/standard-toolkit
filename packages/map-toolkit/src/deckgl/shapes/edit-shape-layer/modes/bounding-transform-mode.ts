@@ -19,7 +19,6 @@ import {
   TranslateMode,
 } from '@deck.gl-community/editable-layers';
 import { featureCollection } from '@turf/helpers';
-import type { Feature, Polygon } from 'geojson';
 import {
   DEFAULT_DISTANCE_UNITS,
   getDistanceUnitAbbreviation,
@@ -35,6 +34,7 @@ import {
 import { BaseTransformMode, type HandleMatcher } from './base-transform-mode';
 import { RotateModeWithSnap } from './rotate-mode-with-snap';
 import { ScaleModeWithFreeTransform } from './scale-mode-with-free-transform';
+import type { Feature, Polygon } from 'geojson';
 
 /**
  * Transform mode for shapes that use bounding box manipulation (no vertex editing).

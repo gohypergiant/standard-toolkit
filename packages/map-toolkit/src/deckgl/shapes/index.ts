@@ -56,10 +56,6 @@ export type {
   DisplayShapeLayerProps,
   ShowLabelsMode,
 } from './display-shape-layer/types';
-export type {
-  StyledFeature,
-  StyledFeatureProperties,
-} from './shared/types';
 export type { UseSelectShapeReturn } from './display-shape-layer/use-select-shape';
 export type {
   CardinalLabelCoordinateAnchor,
@@ -115,5 +111,7 @@ export type {
   ShapeFeature,
   ShapeFeatureProperties,
   ShapeId,
+  StyledFeature,
+  StyledFeatureProperties,
   StyleProperties,
 } from './shared/types';

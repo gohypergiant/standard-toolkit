@@ -1,5 +1,5 @@
 ---
-"@accelint/map-toolkit": minor
+"@accelint/map-toolkit": major
 ---
 
 Add `enableElevation` prop to DisplayShapeLayer for 3D shapes rendering.
@@ -11,3 +11,5 @@ Apply material-based brightness effect for hover and selection on all polygon sh
 Add new Selection layer for brightness effect while shape is selected.
 
 Add optional `maxElevation` property to `StyledFeatureProperties` as the source of truth for Polygon shape elevation. Point and LineString elevation is derived from z coordinates.
+
+Note: the only breaking change is removal of a redundant type. If you were using `type ShapeFeatureTypeValues` from map-toolkit, replace that with `type ShapeFeatureType`.
