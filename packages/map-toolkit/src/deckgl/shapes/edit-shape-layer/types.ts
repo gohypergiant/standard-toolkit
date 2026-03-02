@@ -106,7 +106,7 @@ export type EditShapeLayerProps = {
   /** Distance unit for tooltip measurements (defaults to 'km') */
   unit?: DistanceUnitAbbreviation;
   /** Configuration for hotkeys in EditShapesLayer */
-  hotkeyConfig: EditShapeHotkeyConfig;
+  hotkeyConfig?: EditShapeHotkeyConfig;
 };
 
 /**

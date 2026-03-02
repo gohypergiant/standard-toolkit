@@ -10,11 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
+import type { UniqueId } from '@accelint/core';
 import { uuid } from '@accelint/core';
 import { render } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { clearEditingState } from './store';
-import type { UniqueId } from '@accelint/core';
 
 // Track hotkey lifecycle calls
 type MockFn = ReturnType<typeof vi.fn<(...args: unknown[]) => unknown>>;
@@ -64,14 +64,14 @@ describe('EditShapeLayer', () => {
     it('registers and binds the save hotkey on mount', () => {
       const { unmount } = render(<EditShapeLayer mapId={mapId} />);
 
-      expect(mockRegisterHotkey).toHaveBeenCalledTimes(1);
+      expect(mockRegisterHotkey).toHaveBeenCalledTimes(2);
       expect(mockRegisterHotkey).toHaveBeenCalledWith(
         expect.objectContaining({
           id: `saveEditHotkey-${mapId}`,
           key: { code: 'Enter' },
         }),
       );
-      expect(mockBind).toHaveBeenCalledTimes(1);
+      expect(mockBind).toHaveBeenCalledTimes(2);
 
       unmount();
     });
@@ -81,8 +81,8 @@ describe('EditShapeLayer', () => {
 
       unmount();
 
-      expect(mockUnbind).toHaveBeenCalledTimes(1);
-      expect(mockUnregisterHotkey).toHaveBeenCalledTimes(1);
+      expect(mockUnbind).toHaveBeenCalledTimes(2);
+      expect(mockUnregisterHotkey).toHaveBeenCalledTimes(2);
       expect(mockUnregisterHotkey).toHaveBeenCalledWith(
         expect.objectContaining({ id: 'test-hotkey' }),
       );
@@ -95,13 +95,13 @@ describe('EditShapeLayer', () => {
       // Remount should register a fresh hotkey without error
       const { unmount: unmount2 } = render(<EditShapeLayer mapId={mapId} />);
 
-      expect(mockRegisterHotkey).toHaveBeenCalledTimes(2);
-      expect(mockBind).toHaveBeenCalledTimes(2);
+      expect(mockRegisterHotkey).toHaveBeenCalledTimes(4);
+      expect(mockBind).toHaveBeenCalledTimes(4);
 
       unmount2();
 
-      expect(mockUnbind).toHaveBeenCalledTimes(2);
-      expect(mockUnregisterHotkey).toHaveBeenCalledTimes(2);
+      expect(mockUnbind).toHaveBeenCalledTimes(4);
+      expect(mockUnregisterHotkey).toHaveBeenCalledTimes(4);
     });
   });
 });
