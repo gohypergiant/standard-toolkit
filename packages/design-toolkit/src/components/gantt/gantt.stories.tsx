@@ -11,95 +11,132 @@
  */
 
 import { Gantt } from './';
-import { END_TIME_MS, ROWS, START_TIME_MS } from './__fixtures__';
+import {
+  DATASET_JAN25_TO_JAN28,
+  DATASET_JAN27_TO_JAN30,
+  DATASET_JAN29_TO_FEB1,
+} from './__fixtures__';
 import { GanttRow } from './components/gantt-row';
 import { BracketClose, BracketOpen } from './components/gantt-row/bracket';
 import { GanttRowBlock } from './components/gantt-row/gantt-row-block';
 import { Marker } from './components/gantt-row/marker';
 import { Spacer } from './components/gantt-row/spacer';
+import { TIMESCALE_OPTIONS } from './constants';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { Timescale } from './types';
+
+type GanttStoryControls = {
+  datasetKey: keyof typeof datasetKeys;
+  timescale: Timescale;
+};
+
+const datasetKeys: Record<string, typeof DATASET_JAN27_TO_JAN30> = {
+  JAN25_TO_JAN28: DATASET_JAN25_TO_JAN28,
+  JAN27_TO_JAN30: DATASET_JAN27_TO_JAN30,
+  JAN29_TO_FEB1: DATASET_JAN29_TO_FEB1,
+};
 
 const meta = {
   title: 'Components/Gantt',
-  component: Gantt,
   args: {
-    startTimeMs: START_TIME_MS,
-    endTimeMs: END_TIME_MS,
+    datasetKey: Object.keys(datasetKeys)[0] as keyof typeof datasetKeys,
     timescale: '1h',
+  } satisfies GanttStoryControls,
+  argTypes: {
+    datasetKey: {
+      control: {
+        type: 'select',
+      },
+      options: Object.keys(datasetKeys),
+    },
+    timescale: {
+      control: {
+        type: 'select',
+      },
+      options: TIMESCALE_OPTIONS,
+    },
+  },
+  render: (args: GanttStoryControls) => {
+    const { datasetKey } = args;
+
+    // biome-ignore lint/style/noNonNullAssertion: <not undefined>
+    const dataset = datasetKeys[datasetKey]!;
+
+    return (
+      <div className='h-[360px]'>
+        <Gantt
+          startTimeMs={dataset.startTimeMs}
+          endTimeMs={dataset.endTimeMs}
+          timescale={args.timescale}
+        >
+          {dataset.rows.map(({ id, elements }) => (
+            <GanttRow key={id}>
+              {elements.map((element, index) => {
+                switch (element.type) {
+                  case 'block': {
+                    const [startMs, endMs] = element.rangeMs;
+                    return (
+                      <GanttRowBlock
+                        key={`${id}-block-${index}`}
+                        id={`${id}-block-${index}`}
+                        startMs={startMs}
+                        endMs={endMs}
+                      />
+                    );
+                  }
+
+                  case 'spacer': {
+                    const [startMs, endMs] = element.rangeMs;
+
+                    return (
+                      <Spacer
+                        key={`${id}-spacer-${index}`}
+                        id={`${id}-spacer-${index}`}
+                        startMs={startMs}
+                        endMs={endMs}
+                      />
+                    );
+                  }
+
+                  case 'bracket-close':
+                  case 'bracket-open': {
+                    const timeMs = element.timeMs;
+
+                    return element.type === 'bracket-close' ? (
+                      <BracketClose
+                        key={`${id}-bracket-close-${index}`}
+                        timeMs={timeMs}
+                      />
+                    ) : (
+                      <BracketOpen
+                        key={`${id}-bracket-open-${index}`}
+                        timeMs={timeMs}
+                      />
+                    );
+                  }
+
+                  case 'marker': {
+                    const timeMs = element.timeMs;
+                    return (
+                      <Marker key={`${id}-marker-${index}`} timeMs={timeMs} />
+                    );
+                  }
+
+                  default:
+                    return null;
+                }
+              })}
+            </GanttRow>
+          ))}
+        </Gantt>
+      </div>
+    );
   },
   parameters: {
     layout: 'padded',
   },
-} satisfies Meta<typeof Gantt>;
+} satisfies Meta<GanttStoryControls>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
-
-export const Default: Story = {
-  render: (args) => (
-    // consumer-set height to demonstrate scroll behavior with virtualized rows
-    <div className='h-[360px]'>
-      <Gantt {...args}>
-        {ROWS.map(({ id, elements }) => (
-          <GanttRow key={id}>
-            {elements.map((element, index) => {
-              switch (element.type) {
-                case 'block': {
-                  const [startMs, endMs] = element.rangeMs;
-                  return (
-                    <GanttRowBlock
-                      key={`${id}-block-${index}`}
-                      id={`${id}-block-${index}`}
-                      startMs={startMs}
-                      endMs={endMs}
-                    />
-                  );
-                }
-
-                case 'spacer': {
-                  const [startMs, endMs] = element.rangeMs;
-
-                  return (
-                    <Spacer
-                      key={`${id}-spacer-${index}`}
-                      id={`${id}-spacer-${index}`}
-                      startMs={startMs}
-                      endMs={endMs}
-                    />
-                  );
-                }
-
-                case 'bracket-close':
-                case 'bracket-open': {
-                  const timeMs = element.timeMs;
-
-                  return element.type === 'bracket-close' ? (
-                    <BracketClose
-                      key={`${id}-bracket-close-${index}`}
-                      timeMs={timeMs}
-                    />
-                  ) : (
-                    <BracketOpen
-                      key={`${id}-bracket-open-${index}`}
-                      timeMs={timeMs}
-                    />
-                  );
-                }
-
-                case 'marker': {
-                  const timeMs = element.timeMs;
-                  return (
-                    <Marker key={`${id}-marker-${index}`} timeMs={timeMs} />
-                  );
-                }
-
-                default:
-                  return null;
-              }
-            })}
-          </GanttRow>
-        ))}
-      </Gantt>
-    </div>
-  ),
-};
+export const Default: Story = {};
