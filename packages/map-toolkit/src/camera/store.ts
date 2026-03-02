@@ -323,12 +323,11 @@ export const cameraStore = createMapStore<CameraState, CameraActions>({
         const state = get();
         const newState = { ...state };
         newState.projection = payload.projection;
+        newState.pitch = 0;
         if (payload.projection === 'globe') {
           newState.view = '3D';
-          newState.pitch = 0;
         } else {
           newState.view = '2D';
-          newState.pitch = 0;
         }
         replace(newState);
       },
