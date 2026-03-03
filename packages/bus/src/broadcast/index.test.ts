@@ -16,6 +16,7 @@ import {
   resetMockBroadcastChannel,
 } from '@accelint/vitest-config/mocks/broadcast-channel';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { CONNECTION_EVENT_TYPES } from './constants';
 import { Broadcast } from './index';
 import type { StructuredCloneable } from 'type-fest';
 import type { Payload } from './types';
@@ -345,6 +346,78 @@ describe('broadcast', () => {
       payload: payload,
       source: bus.id,
       target: bus.id,
+    });
+  });
+
+  describe('connection management', () => {
+    it('should emit ping event on init', () => {
+      const bus = new Broadcast();
+
+      // @ts-expect-error Accessing protected property
+      expect(bus.channel.postMessage).toHaveBeenCalledWith({
+        type: CONNECTION_EVENT_TYPES.ping,
+        payload: undefined,
+        source: bus.id,
+      });
+    });
+
+    it('should update connected property when echo event is received', () => {
+      const bus = new Broadcast();
+      const remoteId = uuid();
+
+      expect(bus.connected.size).toBe(0);
+
+      // Simulate receiving an echo event from another instance
+      // @ts-expect-error Accessing protected method
+      bus.handleListeners({
+        type: CONNECTION_EVENT_TYPES.echo,
+        source: remoteId,
+        target: bus.id,
+      });
+
+      expect(bus.connected.size).toBe(1);
+      expect(bus.connected.has(remoteId)).toBe(true);
+    });
+
+    it('should update connected property when stop event is received', () => {
+      const bus = new Broadcast();
+      const remoteId = uuid();
+
+      // First add the remote to connected
+      bus.connected.add(remoteId);
+      expect(bus.connected.size).toBe(1);
+
+      // Simulate receiving a stop event
+      // @ts-expect-error Accessing protected method
+      bus.handleListeners({
+        type: CONNECTION_EVENT_TYPES.stop,
+        source: remoteId,
+        target: bus.id,
+      });
+
+      expect(bus.connected.size).toBe(0);
+      expect(bus.connected.has(remoteId)).toBe(false);
+    });
+
+    it('should clear connected and emit ping when ping() is called', () => {
+      const bus = new Broadcast();
+      const remoteId = uuid();
+
+      // Add a remote connection
+      bus.connected.add(remoteId);
+      expect(bus.connected.size).toBe(1);
+
+      // Call ping manually
+      bus.ping();
+
+      expect(bus.connected.size).toBe(0);
+
+      // @ts-expect-error Accessing protected property
+      expect(bus.channel.postMessage).toHaveBeenCalledWith({
+        type: CONNECTION_EVENT_TYPES.ping,
+        payload: undefined,
+        source: bus.id,
+      });
     });
   });
 });
