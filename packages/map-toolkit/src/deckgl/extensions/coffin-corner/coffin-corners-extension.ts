@@ -15,6 +15,7 @@ import type { Rgba255Tuple } from '@accelint/predicates';
 import type { Layer, UpdateParameters } from '@deck.gl/core';
 import type { EntityId } from './types';
 
+/** Layer shape with coffin-corner selection and hover state maps. */
 type CoffinCornerLayer = Layer & {
   state: {
     selectedEntities: Map<EntityId, number>;
@@ -22,8 +23,7 @@ type CoffinCornerLayer = Layer & {
   };
 };
 
-// -- Shader module for the highlight color uniform --
-
+/** Shader module defining the `highlightColor` uniform for coffin corner brackets. */
 const coffinCornersModule: {
   name: string;
   fs: string;
@@ -40,8 +40,7 @@ uniform coffinCornersUniforms {
   },
 };
 
-// -- Shader injection code --
-
+/** Shader injection config for vertex/fragment attribute passing and SDF bracket rendering. */
 const SHADERS = {
   modules: [coffinCornersModule],
   inject: {
@@ -162,7 +161,11 @@ float coffinCorners_allCorners(vec2 uvCoord) {
 
 // -- Props type --
 
-/** Props added by {@link CoffinCornersExtension}. */
+/**
+ * Props added by the CoffinCornersExtension.
+ *
+ * @template TLayerProps - The host layer's props type to intersect with.
+ */
 export type CoffinCornersExtensionProps<TLayerProps = unknown> = {
   /** The currently selected entity ID. */
   selectedEntityId?: EntityId;
@@ -183,7 +186,7 @@ export type CoffinCornersExtensionProps<TLayerProps = unknown> = {
   getEntityId?: (item: any) => EntityId;
 } & TLayerProps;
 
-// -- Default highlight color: #39B7FA fully opaque --
+/** Default bracket fill color: #39B7FA fully opaque. */
 const DEFAULT_CORNER_COLOR: Rgba255Tuple = [57, 183, 250, 255];
 
 // -- Extension class --
@@ -198,6 +201,8 @@ const DEFAULT_CORNER_COLOR: Rgba255Tuple = [57, 183, 250, 255];
  *
  * The host layer must set `pickable` to enable picking events.
  *
+ * @see CoffinCornersExtensionProps for the full list of extension props.
+ *
  * @example Fiber renderer JSX
  * ```tsx
  * <symbolLayer
@@ -210,7 +215,7 @@ const DEFAULT_CORNER_COLOR: Rgba255Tuple = [57, 183, 250, 255];
  * ```
  *
  * @example Custom entity ID accessor (e.g. GeoJSON features)
- * ```ts
+ * ```typescript
  * new IconLayer({
  *   extensions: [new CoffinCornersExtension()],
  *   getEntityId: (d) => d.properties?.shapeId,
@@ -233,6 +238,10 @@ export default class CoffinCornersExtension extends LayerExtension {
     },
   };
 
+  /**
+   * Initializes selection and hover entity state maps and registers
+   * `instanceSelectedEntity` / `instanceHoveredEntity` GPU attributes.
+   */
   override initializeState(this: CoffinCornerLayer) {
     this.state.selectedEntities = new Map<EntityId, number>();
     this.state.hoveredEntities = new Map<EntityId, number>();
@@ -273,6 +282,12 @@ export default class CoffinCornersExtension extends LayerExtension {
     });
   }
 
+  /**
+   * Syncs `selectedEntityId` and `hoveredEntityId` prop changes into the
+   * entity state maps and invalidates the corresponding GPU attributes.
+   *
+   * @param params - The deck.gl update parameters containing current and previous props.
+   */
   override updateState(
     this: CoffinCornerLayer,
     params: UpdateParameters<Layer<CoffinCornersExtensionProps>>,
@@ -308,6 +323,10 @@ export default class CoffinCornersExtension extends LayerExtension {
     }
   }
 
+  /**
+   * Pushes the normalized `coffinCornerColor` to the shader's `highlightColor` uniform
+   * each frame.
+   */
   override draw(this: CoffinCornerLayer) {
     const color =
       (this.props as unknown as CoffinCornersExtensionProps)
@@ -325,6 +344,11 @@ export default class CoffinCornersExtension extends LayerExtension {
     });
   }
 
+  /**
+   * Returns the shader injection modules for coffin corner rendering.
+   *
+   * @returns The vertex/fragment shader injection config and uniform module.
+   */
   override getShaders(this: CoffinCornerLayer, _extensions: this) {
     return SHADERS;
   }
