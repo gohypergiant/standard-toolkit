@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -14,12 +14,20 @@
 import 'client-only';
 import { createContext } from 'react';
 import type { ContextValue } from 'react-aria-components';
-import type { RadioGroupProps } from './types';
+import type { RadioGroupProps, RadioProps } from './types';
 
 /**
  * Context for RadioGroup component
  *
  * Provides context for RadioGroup component to share state with Radio components
  */
-export const RadioContext =
+export const RadioGroupContext =
   createContext<ContextValue<RadioGroupProps, HTMLDivElement>>(null);
+
+/**
+ * Context for Radio component
+ *
+ * Provides context for Radio component to share configuration from RadioGroup
+ */
+export const RadioContext =
+  createContext<ContextValue<RadioProps, HTMLLabelElement>>(null);
