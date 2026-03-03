@@ -28,7 +28,7 @@ import process from 'node:process';
 /**
  * Parse a test assertion into structured components using ancestorTitles + title.
  *
- * Vitest v4 uses space-separated fullName (no " > " delimiters), so we rely on
+ * Vitest uses space-separated fullName (no " > " delimiters), so we rely on
  * the ancestorTitles array which preserves the describe() nesting structure.
  */
 function parseAssertion(assertion) {
@@ -174,14 +174,7 @@ async function main() {
 
   if (!Array.isArray(testResults.testResults)) {
     console.error('Invalid test results: missing or invalid testResults array');
-    // Return empty results instead of crashing - allows workflow to continue
-    const emptyResult = {
-      summary: { passed: 0, failed: 0, total: 0 },
-      failures: [],
-      groupedByComponent: {},
-    };
-    console.log(JSON.stringify(emptyResult));
-    process.exit(0);
+    process.exit(1);
   }
 
   const summary = {

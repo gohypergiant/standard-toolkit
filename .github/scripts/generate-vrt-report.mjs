@@ -26,11 +26,22 @@ import process from 'node:process';
 
 const MAX_FAILURES = 100;
 
+function escapeHTML(str) {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
 async function readImageAsBase64(filePath) {
   try {
     const buffer = await fs.readFile(filePath);
     return `data:image/png;base64,${buffer.toString('base64')}`;
-  } catch {
+  } catch (err) {
+    if (err.code !== 'ENOENT') {
+      console.warn(`Warning: failed to read image ${filePath}:`, err.message);
+    }
     return null;
   }
 }
@@ -41,17 +52,25 @@ async function collectFailures(failuresDir) {
 
   try {
     componentDirs = await fs.readdir(failuresDir, { withFileTypes: true });
-  } catch {
-    return failures;
+  } catch (err) {
+    if (err.code === 'ENOENT') return failures;
+    throw err;
   }
 
   for (const componentEntry of componentDirs) {
     if (!componentEntry.isDirectory()) continue;
     const component = componentEntry.name;
     const componentPath = path.join(failuresDir, component);
-    const screenshotDirs = await fs.readdir(componentPath, {
-      withFileTypes: true,
-    });
+
+    let screenshotDirs;
+    try {
+      screenshotDirs = await fs.readdir(componentPath, {
+        withFileTypes: true,
+      });
+    } catch (err) {
+      console.warn(`Warning: failed to read ${componentPath}:`, err.message);
+      continue;
+    }
 
     for (const screenshotEntry of screenshotDirs) {
       if (!screenshotEntry.isDirectory()) continue;
@@ -177,14 +196,14 @@ function generateHTML(failures, totalFound) {
   ${components
     .map(
       (comp) => `
-  <div class="sidebar-group" data-component="${comp}">
-    <div class="sidebar-group-header">${comp} <span class="count">${grouped[comp].length}</span></div>
+  <div class="sidebar-group" data-component="${escapeHTML(comp)}">
+    <div class="sidebar-group-header">${escapeHTML(comp)} <span class="count">${grouped[comp].length}</span></div>
     ${grouped[comp]
       .map(
         (f) => `
-    <div class="sidebar-item" data-index="${failures.indexOf(f)}" data-theme="${f.theme}">
-      ${f.screenshotName}
-      <span class="theme-badge theme-${f.theme}">${f.theme}</span>
+    <div class="sidebar-item" data-index="${failures.indexOf(f)}" data-theme="${escapeHTML(f.theme)}">
+      ${escapeHTML(f.screenshotName)}
+      <span class="theme-badge theme-${escapeHTML(f.theme)}">${escapeHTML(f.theme)}</span>
     </div>`,
       )
       .join('')}
@@ -199,8 +218,8 @@ function generateHTML(failures, totalFound) {
     <span class="stats">${failures.length} failure${failures.length === 1 ? '' : 's'} across ${components.length} component${components.length === 1 ? '' : 's'}</span>
     <div class="filters">
       <button class="filter-btn active" data-filter="all">All</button>
-      ${components.map((c) => `<button class="filter-btn" data-filter="component:${c}">${c}</button>`).join('')}
-      ${themes.filter((t) => t !== 'unknown').map((t) => `<button class="filter-btn" data-filter="theme:${t}">${t}</button>`).join('')}
+      ${components.map((c) => `<button class="filter-btn" data-filter="component:${escapeHTML(c)}">${escapeHTML(c)}</button>`).join('')}
+      ${themes.filter((t) => t !== 'unknown').map((t) => `<button class="filter-btn" data-filter="theme:${escapeHTML(t)}">${escapeHTML(t)}</button>`).join('')}
     </div>
   </div>
 
@@ -210,10 +229,10 @@ function generateHTML(failures, totalFound) {
     ${failures
       .map(
         (f, i) => `
-    <div class="failure-card" data-index="${i}" data-component="${f.component}" data-theme="${f.theme}" id="failure-${i}">
+    <div class="failure-card" data-index="${i}" data-component="${escapeHTML(f.component)}" data-theme="${escapeHTML(f.theme)}" id="failure-${i}">
       <div class="card-header">
-        <h2>${f.component} / ${f.screenshotName}</h2>
-        <div class="meta">Theme: ${f.theme}</div>
+        <h2>${escapeHTML(f.component)} / ${escapeHTML(f.screenshotName)}</h2>
+        <div class="meta">Theme: ${escapeHTML(f.theme)}</div>
       </div>
 
       <div class="view-tabs">
@@ -370,18 +389,23 @@ async function main() {
   const failuresDir = path.join(resolvedDir, 'failures');
 
   let totalFound = 0;
+  let components;
   try {
-    const components = await fs.readdir(failuresDir, { withFileTypes: true });
-    for (const comp of components) {
-      if (!comp.isDirectory()) continue;
-      const screenshots = await fs.readdir(path.join(failuresDir, comp.name), {
-        withFileTypes: true,
-      });
-      totalFound += screenshots.filter((s) => s.isDirectory()).length;
+    components = await fs.readdir(failuresDir, { withFileTypes: true });
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      console.log('No failures directory found. Nothing to report.');
+      process.exit(0);
     }
-  } catch {
-    console.log('No failures directory found. Nothing to report.');
-    process.exit(0);
+    throw err;
+  }
+
+  for (const comp of components) {
+    if (!comp.isDirectory()) continue;
+    const screenshots = await fs.readdir(path.join(failuresDir, comp.name), {
+      withFileTypes: true,
+    });
+    totalFound += screenshots.filter((s) => s.isDirectory()).length;
   }
 
   if (totalFound === 0) {

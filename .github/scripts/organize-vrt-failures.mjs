@@ -111,15 +111,19 @@ async function main() {
     // Copy diff (may not exist)
     try {
       await fs.copyFile(diffPath, path.join(outputDir, 'diff.png'));
-    } catch {
-      // diff file may not exist for new screenshots
+    } catch (err) {
+      if (err.code !== 'ENOENT') {
+        console.warn(`Warning: failed to copy diff ${diffPath}:`, err.message);
+      }
     }
 
     // Copy expected baseline (may not exist for new tests)
     try {
       await fs.copyFile(expectedPath, path.join(outputDir, 'expected.png'));
-    } catch {
-      // expected file may not exist for brand new tests
+    } catch (err) {
+      if (err.code !== 'ENOENT') {
+        console.warn(`Warning: failed to copy expected ${expectedPath}:`, err.message);
+      }
     }
 
     organized++;
@@ -129,8 +133,10 @@ async function main() {
   const testResultsPath = path.join(resolvedAppDir, 'test-results.json');
   try {
     await fs.copyFile(testResultsPath, path.join(reportDir, 'test-results.json'));
-  } catch {
-    // test-results.json may not exist
+  } catch (err) {
+    if (err.code !== 'ENOENT') {
+      console.warn(`Warning: failed to copy test-results.json:`, err.message);
+    }
   }
 
   console.log(`Organized ${organized} failure(s) into ${failuresDir}`);

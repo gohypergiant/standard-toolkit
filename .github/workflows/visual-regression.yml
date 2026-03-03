@@ -80,8 +80,14 @@ jobs:
           TEST_EXIT_CODE=${TEST_EXIT_CODE:-0}
 
           # Parse test counts from JSON output
-          PASSED=$(jq -r '.numPassedTests // 0' test-results.json)
-          FAILED=$(jq -r '.numFailedTests // 0' test-results.json)
+          if [ -f test-results.json ]; then
+            PASSED=$(jq -r '.numPassedTests // 0' test-results.json)
+            FAILED=$(jq -r '.numFailedTests // 0' test-results.json)
+          else
+            echo "::warning::test-results.json not found - test runner may have crashed"
+            PASSED=0
+            FAILED=0
+          fi
 
           echo "passed=$PASSED" >> $GITHUB_OUTPUT
           echo "failed=$FAILED" >> $GITHUB_OUTPUT
@@ -90,6 +96,14 @@ jobs:
           exit $TEST_EXIT_CODE
         working-directory: apps/next
         continue-on-error: true
+
+      - name: Verify test output exists
+        if: steps.visual-tests.outputs.exit_code != '0'
+        run: |
+          if [ ! -f apps/next/test-results.json ]; then
+            echo "::error::Test runner crashed without producing test-results.json"
+            exit 1
+          fi
 
       - name: Parse VRT Failures
         id: parse-failures
@@ -141,12 +155,14 @@ jobs:
             // Parse VRT coverage data
             const coverageJson = process.env.COVERAGE_JSON || '';
             let coverage = null;
+            let coverageParseError = false;
             try {
               if (coverageJson) {
                 coverage = JSON.parse(coverageJson);
               }
             } catch (e) {
               console.log('Failed to parse coverage JSON:', e);
+              coverageParseError = true;
             }
 
             // Parse VRT failures data
@@ -297,7 +313,14 @@ jobs:
 
             // Build coverage section
             let coverageSection = '';
-            if (coverage) {
+            if (coverageParseError) {
+              coverageSection = [
+                '',
+                '### Component Coverage',
+                '',
+                '> :warning: Failed to parse coverage data. Check the workflow logs for details.',
+              ].join('\n');
+            } else if (coverage) {
               const missingList = coverage.missingComponents.length > 0
                 ? coverage.missingComponents.map(c => `- ${c}`).join('\n')
                 : 'None';
