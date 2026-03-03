@@ -10,9 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import { type PropsWithChildren, useContext, useEffect } from 'react';
+import { type PropsWithChildren, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { FloatingCardContext } from './context';
+import { useFloatingCard } from './context';
 import type { UniqueId } from '@accelint/core';
 
 const defaultDimensions = { width: 300, height: 400 } as const;
@@ -60,13 +60,13 @@ export function FloatingCard({
   isOpen = true,
   initialDimensions,
 }: PropsWithChildren<FloatingCardProps>) {
-  const floatingCardContext = useContext<FloatingCardContextValue | null>(null);
+  const floatingCardContext = useFloatingCard();
 
   if (!floatingCardContext) {
     throw new Error('FloatingCard must be used within a FloatingCardProvider.');
   }
 
-  const dimensions = initialDimensions ?? defaultDimensions;
+  const { width, height } = initialDimensions ?? defaultDimensions;
 
   useEffect(() => {
     // If the API is not available, we cannot register the card. This can happen if Dockview is not fully initialized yet.
@@ -83,14 +83,14 @@ export function FloatingCard({
         id,
         title,
         component: 'default',
-        floating: dimensions,
+        floating: { width, height },
       });
 
       panel.group.locked = 'no-drop-target';
     }
 
     // Cleanup not included here. Cleanup is done at the provider level when the card is removed from the `cards` registry.
-  }, [id, title, isOpen, dimensions, floatingCardContext.api]);
+  }, [id, title, isOpen, width, height, floatingCardContext.api]);
 
   useEffect(() => {
     const panel = floatingCardContext.api?.getPanel(id);

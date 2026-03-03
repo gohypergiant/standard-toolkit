@@ -26,13 +26,16 @@ import {
   type PropsWithChildren,
   type ReactNode,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useState,
 } from 'react';
 import { Divider } from '../divider';
-import { FloatingCardContext, type FloatingCardContextValue } from './context';
+import {
+  FloatingCardContext,
+  type FloatingCardContextValue,
+  useFloatingCard,
+} from './context';
 import styles from './styles.module.css';
 import type { UniqueId } from '@accelint/core/utility/uuid';
 
@@ -58,7 +61,7 @@ type FloatingCardHeaderProps = {
  * Used by the floating card engine to mount portal targets.
  */
 function FloatingCardContainer(props: Readonly<IDockviewPanelProps>) {
-  const { addRef } = useContext(FloatingCardContext);
+  const { addRef } = useFloatingCard();
 
   const refCallback = useCallback(
     (ref: HTMLDivElement | null) => {

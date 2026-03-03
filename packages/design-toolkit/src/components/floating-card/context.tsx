@@ -11,7 +11,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { createContext } from 'react';
+import { createContext, useContext } from 'react';
 import type { UniqueId } from '@accelint/core/utility/uuid';
 import type { DockviewApi } from 'dockview-react';
 
@@ -23,10 +23,21 @@ export type FloatingCardContextValue = {
   api: DockviewApi | null;
 };
 
-export const FloatingCardContext = createContext<FloatingCardContextValue>({
-  cards: {},
-  addRef: () => undefined,
-  removeRef: () => undefined,
-  closeCard: () => undefined,
-  api: null,
-});
+export const FloatingCardContext =
+  createContext<FloatingCardContextValue | null>(null);
+/**
+ * Hook to access the floating card context.
+ * Must be used within a FloatingCardProvider.
+ *
+ * @throws {Error} If used outside of a FloatingCardProvider.
+ * @returns The floating card context value.
+ */
+export function useFloatingCard(): FloatingCardContextValue {
+  const context = useContext(FloatingCardContext);
+  if (!context) {
+    throw new Error(
+      'useFloatingCard must be used within a FloatingCardProvider.',
+    );
+  }
+  return context;
+}

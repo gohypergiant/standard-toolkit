@@ -11,10 +11,13 @@
  */
 
 import { act, render } from '@testing-library/react';
-import { type FunctionComponent, useContext } from 'react';
 import { describe, expect, it, type Mock, vi } from 'vitest';
 import { FloatingCard } from '.';
-import { FloatingCardContext, type FloatingCardContextValue } from './context';
+import {
+  FloatingCardContext,
+  type FloatingCardContextValue,
+  useFloatingCard,
+} from './context';
 import { FloatingCardProvider } from './provider';
 import type { UniqueId } from '@accelint/core/utility/uuid';
 import type {
@@ -22,6 +25,7 @@ import type {
   IDockviewHeaderActionsProps,
   IDockviewPanelProps,
 } from 'dockview-react';
+import type { FunctionComponent } from 'react';
 
 // --- Design toolkit component mocks ---
 // Icon and Button import `client-only` which is not compatible with the jsdom
@@ -90,7 +94,7 @@ function ContextReader({
 }: {
   onContext: (ctx: FloatingCardContextValue) => void;
 }) {
-  const ctx = useContext(FloatingCardContext);
+  const ctx = useFloatingCard();
   onContext(ctx);
   return <div data-testid='context-reader' />;
 }
@@ -675,23 +679,17 @@ describe('FloatingCard', () => {
       expect(addPanel).not.toHaveBeenCalled();
     });
 
-    it('should throw when FloatingCardContext value is null', () => {
+    it('should throw when used without a FloatingCardProvider', () => {
       const consoleSpy = vi
         .spyOn(console, 'error')
         .mockImplementation(() => undefined);
-
       expect(() =>
         render(
-          <FloatingCardContext.Provider
-            value={null as unknown as FloatingCardContextValue}
-          >
-            <FloatingCard id={'no-provider' as UniqueId} isOpen>
-              content
-            </FloatingCard>
-          </FloatingCardContext.Provider>,
+          <FloatingCard id={'no-provider' as UniqueId} isOpen>
+            content
+          </FloatingCard>,
         ),
-      ).toThrow('FloatingCard must be used within a FloatingCardProvider.');
-
+      ).toThrow('useFloatingCard must be used within a FloatingCardProvider.');
       consoleSpy.mockRestore();
     });
   });
