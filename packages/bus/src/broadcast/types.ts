@@ -31,6 +31,11 @@ export type BroadcastConfig = {
  */
 export type StructuredCloneableData = StructuredCloneable;
 
+/**
+ * Plain payload type used for `extends`
+ *
+ * Use @type Payload instead when defining events
+ */
 export type BasicPayload = {
   type: string;
   payload?: StructuredCloneableData;

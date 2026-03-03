@@ -46,7 +46,14 @@ export class Broadcast<
   protected listeners: Partial<Record<Events['type'], Listener<Events>[]>> = {};
   protected emitOptions: Map<Events['type'], EmitOptions> = new Map();
 
+  /**
+   * A UUID for this instance to help identify source and target of events
+   */
   readonly id = uuid();
+
+  /**
+   * A list of ids of other bus instances communicating with this instance
+   */
   readonly connected = new Set<UniqueId>();
 
   // biome-ignore lint/suspicious/noExplicitAny: Can't use generics in static properties
@@ -113,8 +120,8 @@ export class Broadcast<
       this.connected.add(source);
     });
 
-    if (typeof addEventListener === 'function') {
-      addEventListener('visibilitychange', this.onVisibilityChange);
+    if (typeof globalThis.addEventListener === 'function') {
+      globalThis.addEventListener('visibilitychange', this.onVisibilityChange);
     }
   }
 
@@ -206,6 +213,16 @@ export class Broadcast<
     this.listeners[type].push(listener);
   }
 
+  /**
+   * Send out a request for an echo from all connected bus instances
+   *
+   * This will populate the `connected` property. However, due to the
+   * nature of event driven systems, this is both not synchronous nor
+   * is it possible to async / await for all responses. Listening for
+   * the ping & echo events and updating UI to reflect the current state
+   * of the connected property is the best solution to maintain the
+   * correct list of connections
+   */
   ping() {
     this.connected.clear();
 
@@ -401,8 +418,11 @@ export class Broadcast<
       this.channel = null;
       this.channelName = DEFAULT_CONFIG.channelName;
 
-      if (typeof removeEventListener === 'function') {
-        removeEventListener('visibilitychange', this.onVisibilityChange);
+      if (typeof globalThis.removeEventListener === 'function') {
+        globalThis.removeEventListener(
+          'visibilitychange',
+          this.onVisibilityChange,
+        );
       }
     }
 

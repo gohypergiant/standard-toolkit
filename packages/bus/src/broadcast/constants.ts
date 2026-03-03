@@ -13,15 +13,22 @@
 
 import type { BroadcastConfig, EmitTarget } from './types';
 
-/** The default broadcast configuration. */
+/** The default broadcast configuration */
 export const DEFAULT_CONFIG: BroadcastConfig = {
   channelName: '@accelint/bus',
   // TODO: implement logger
   debug: false,
 };
 
+/** The default event target when emitting */
 export const DEFAULT_TARGET: EmitTarget = 'self';
 
+/**
+ * These connection events are used to determine which bus instances are connected
+ *
+ * None of these events have a payload, linking is handled entirely through
+ * source / target metadata available on every event
+ */
 export const CONNECTION_EVENT_TYPES = {
   echo: '__ECHO__',
   ping: '__PING__',
