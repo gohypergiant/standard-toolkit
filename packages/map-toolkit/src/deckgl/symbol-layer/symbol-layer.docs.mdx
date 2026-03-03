@@ -70,6 +70,47 @@ export function AssetsLayer() {
 }
 ```
 
+### With Coffin Corners (Selection / Hover Indicators)
+
+The `CoffinCornersExtension` renders GPU-driven bracket indicators around selected and hovered symbols. Pair it with `useCoffinCorner` for click/hover state management.
+
+```tsx
+import '@accelint/map-toolkit/deckgl/symbol-layer/fiber';
+import { uuid } from '@accelint/core';
+import { BaseMap } from '@accelint/map-toolkit/deckgl';
+import { CoffinCornersExtension, useCoffinCorner } from '@accelint/map-toolkit/deckgl/extensions/coffin-corner';
+
+const MAP_ID = uuid();
+const coffinCornersExtension = new CoffinCornersExtension();
+
+export function SelectableSymbols() {
+  const { selectedId, hoveredId } = useCoffinCorner(MAP_ID, 'symbols');
+
+  return (
+    <BaseMap id={MAP_ID}>
+      <symbolLayer
+        id="symbols"
+        data={data}
+        getSidc={d => d.sidc}
+        getPosition={d => d.position}
+        selectedEntityId={selectedId}
+        hoveredEntityId={hoveredId}
+        extensions={[coffinCornersExtension]}
+        pickable
+      />
+    </BaseMap>
+  );
+}
+```
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `selectedEntityId` | `EntityId \| undefined` | ID of the selected entity (bracket + fill indicator) |
+| `hoveredEntityId` | `EntityId \| undefined` | ID of the hovered entity (bracket indicator) |
+| `coffinCornerColor` | `[R, G, B, A]` (0–255) | Bracket color override (default: `[57, 183, 250, 255]`) |
+
+> **Note:** Stories that use `useCoffinCorner` must render their own `<BaseMap>` with a dedicated `uuid()` instead of using the `withDeckGL()` decorator. See the `withDeckGL` JSDoc for details.
+
 ## API
 
 This layer extends the IconLayer and has all the methods and properties of the IconLayer except for `getIcon`, `getColor`, `iconAtlas`, and `iconMapping`. In addition, it has the following methods:
