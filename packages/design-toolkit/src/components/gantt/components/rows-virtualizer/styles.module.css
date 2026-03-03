@@ -20,7 +20,7 @@
     --height: attr(data-height px);
     --width: attr(data-width px);
 
-    @apply relative w-full overflow-hidden;
+    @apply relative w-full min-w-full overflow-hidden;
     height: var(--height);
     width: var(--width);
   }

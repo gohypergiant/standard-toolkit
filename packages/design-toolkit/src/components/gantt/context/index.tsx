@@ -19,6 +19,7 @@ import {
   useState,
 } from 'react';
 import { TIMESCALE_MAPPING } from '../constants';
+import { useResizeIntersectionEffect } from '../hooks/use-resize-intersection-effect';
 import { selectors, useGanttStore } from '../store';
 import { getMsPerPx } from '../utils/conversions';
 import { generateTimelineChunks } from '../utils/generation';
@@ -51,7 +52,7 @@ export function GanttProvider({
   timescale,
   totalBounds,
 }: PropsWithChildren<GanttProviderProps>) {
-  const [timelineContainerElementRef, setTimelineContainerElementRef] =
+  const [timelineContainerElement, setTimelineContainerElement] =
     useState<HTMLDivElement | null>(null);
 
   const msPerPx = getMsPerPx(timescale);
@@ -63,7 +64,7 @@ export function GanttProvider({
 
   const timelineChunks = generateTimelineChunks(
     roundedTimestampMs,
-    getViewableRegionWidth(timelineContainerElementRef),
+    getViewableRegionWidth(timelineContainerElement),
     selectedTimeIntervalMs,
     msPerPx,
   );
@@ -73,13 +74,18 @@ export function GanttProvider({
     msPerPx,
   );
 
+  useResizeIntersectionEffect({
+    timelineContainerElement,
+    timelineChunks,
+  });
+
   const assignTimelineContainerElementRef = useCallback(
     (node: HTMLDivElement | null) => {
       if (!node) {
         return;
       }
 
-      setTimelineContainerElementRef(node);
+      setTimelineContainerElement(node);
     },
     [],
   );

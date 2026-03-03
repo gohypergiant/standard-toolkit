@@ -11,6 +11,7 @@
  */
 
 import { TIMELINE_CHUNK_WIDTH } from '../../constants';
+import { formatTimestampLabel } from '../../utils/formatting';
 import styles from '../styles.module.css';
 
 export function Tick() {
@@ -22,19 +23,23 @@ export function Tick() {
 }
 
 type TimelineChunkProps = {
-  label: string;
+  timestampMs: number;
 };
 
-export function TimelineChunk({ label }: TimelineChunkProps) {
+export function TimelineChunk({ timestampMs }: TimelineChunkProps) {
   const tickMarginOffset = -(TIMELINE_CHUNK_WIDTH / 4 + 1.5);
 
   return (
-    <div className={styles.chunk} data-width={TIMELINE_CHUNK_WIDTH}>
+    <div
+      className={styles.chunk}
+      data-width={TIMELINE_CHUNK_WIDTH}
+      data-timestamp={timestampMs}
+    >
       <div
         className={styles['chunk-label']}
         data-tick-margin={tickMarginOffset}
       >
-        {label}
+        {formatTimestampLabel(timestampMs)}
       </div>
       <div className={styles['chunk-ticks-container']}>
         <Tick />
