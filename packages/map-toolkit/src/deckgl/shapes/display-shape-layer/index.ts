@@ -28,9 +28,9 @@ import {
   getFillColor,
   getLineColor,
 } from '../shared/utils/style-utils';
-import { CoffinCornersExtension } from '../../extensions/coffin-corner/coffin-corners-extension';
 import {
   BRIGHTNESS_FACTOR,
+  COFFIN_CORNERS,
   DASH_EXTENSION,
   DEFAULT_DISPLAY_PROPS,
   HIGHLIGHT_COLOR_TUPLE,
@@ -54,11 +54,12 @@ import {
   partitionCurtains,
 } from './utils/elevation';
 import {
+  extendMappingWithCoffinCorners,
   getIconConfig,
   getIconLayerProps,
   getIconUpdateTriggers,
 } from './utils/icon-config';
-import { collectActivePointFeatures } from './utils/interaction';
+import { getPointInteractionState } from './utils/interaction';
 import type { Rgba255Tuple } from '@accelint/predicates';
 import type { Layer, PickingInfo } from '@deck.gl/core';
 import type { Shape, ShapeId } from '../shared/types';
@@ -74,8 +75,6 @@ import type {
 } from './types';
 
 const logger = createLoggerDomain('[DisplayShapeLayer]');
-
-const coffinCornersExtension = new CoffinCornersExtension();
 
 /**
  * Typed event bus instance for shape events.
@@ -648,25 +647,39 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
   private renderCoffinCornersLayer(features: Shape['feature'][]): IconLayer[] {
     const { selectedShapeId } = this.props;
     const hoverIndex = this.state?.hoverIndex;
-    const shapeIdToIndex = this.featuresCache?.shapeIdToIndex;
 
+    // Use cached shapeId->index map for O(1) lookup
+    const shapeIdToIndex = this.featuresCache?.shapeIdToIndex;
     if (!shapeIdToIndex) {
       return [];
     }
 
-    const active = collectActivePointFeatures(
-      features,
-      selectedShapeId,
-      hoverIndex,
-      shapeIdToIndex,
-    );
+    // Find point features that need coffin corners (hovered or selected)
+    const pointFeatures: Shape['feature'][] = [];
+    for (const f of features) {
+      if (f.geometry.type !== 'Point') {
+        continue;
+      }
+      if (!f.properties?.styleProperties?.icon) {
+        continue;
+      }
+      const { isSelected, isHovered } = getPointInteractionState(
+        f,
+        selectedShapeId,
+        hoverIndex,
+        shapeIdToIndex,
+      );
+      if (isSelected || isHovered) {
+        pointFeatures.push(f);
+      }
+    }
 
-    if (active.features.length === 0) {
+    if (pointFeatures.length === 0) {
       return [];
     }
 
-    const firstPointIcon =
-      active.features[0]?.properties?.styleProperties?.icon;
+    // Get icon atlas from first point feature (all should share the same atlas)
+    const firstPointIcon = pointFeatures[0]?.properties?.styleProperties?.icon;
     const iconAtlas = firstPointIcon?.atlas;
     const iconMapping = firstPointIcon?.mapping;
 
@@ -677,17 +690,30 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       return [];
     }
 
+    const extendedMapping = extendMappingWithCoffinCorners(iconMapping);
+
     return [
       new IconLayer({
         id: `${this.props.id}-${SHAPE_LAYER_IDS.DISPLAY}-coffin-corners`,
-        data: active.features,
+        data: pointFeatures,
         iconAtlas,
-        iconMapping,
-        getIcon: (d: Shape['feature']) =>
-          d.properties?.styleProperties?.icon?.name ?? 'marker',
-        getSize: (d: Shape['feature']) =>
-          d.properties?.styleProperties?.icon?.size ??
-          MAP_INTERACTION.ICON_SIZE,
+        iconMapping: extendedMapping,
+        getIcon: (d: Shape['feature']) => {
+          const { isSelected, isHovered } = getPointInteractionState(
+            d,
+            selectedShapeId,
+            hoverIndex,
+            shapeIdToIndex,
+          );
+          if (isSelected && isHovered) {
+            return COFFIN_CORNERS.SELECTED_HOVER_ICON;
+          }
+          if (isSelected) {
+            return COFFIN_CORNERS.SELECTED_ICON;
+          }
+          return COFFIN_CORNERS.HOVER_ICON;
+        },
+        getSize: COFFIN_CORNERS.SIZE,
         getPosition: (d: Shape['feature']) => {
           const coords = isPointType(d.geometry)
             ? d.geometry.coordinates
@@ -698,18 +724,14 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
           const iconSize =
             d.properties?.styleProperties?.icon?.size ??
             MAP_INTERACTION.ICON_SIZE;
+          // Center the coffin corners on the point icon
           return [-1, -iconSize / 2];
         },
         billboard: false,
         pickable: false,
-        extensions: [coffinCornersExtension],
-        selectedEntityId: active.selectedEntityId,
-        hoveredEntityId: active.hoveredEntityId,
-        getEntityId: (d: Shape['feature']) => d.properties?.shapeId as ShapeId,
         updateTriggers: {
-          data: [features, selectedShapeId, hoverIndex],
-          getIcon: [features],
-          getSize: [features],
+          getIcon: [selectedShapeId, this.state?.hoverIndex],
+          data: [features, selectedShapeId, this.state?.hoverIndex],
         },
       }),
     ];
