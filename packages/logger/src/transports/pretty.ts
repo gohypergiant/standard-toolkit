@@ -13,10 +13,28 @@
 import { getSimplePrettyTerminal } from '@loglayer/transport-simple-pretty-terminal';
 import type { LogLevel } from '../definitions';
 
+/** Configuration props for {@link prettyTransport}. */
 type PrettyTransportProps = {
   level: LogLevel;
 };
 
+/**
+ * Creates a pretty-printed console transport for log output.
+ *
+ * Configures the simple pretty terminal transport with `message-only` view mode
+ * and browser runtime for consistent output across server and client contexts.
+ *
+ * @param options - Transport configuration options
+ * @param options.level - Minimum log level to output
+ * @returns A configured LogLayer transport instance
+ *
+ * @example
+ * ```typescript
+ * import { prettyTransport } from '@accelint/logger/transports/pretty';
+ *
+ * const transport = prettyTransport({ level: 'debug' });
+ * ```
+ */
 export function prettyTransport({ level }: PrettyTransportProps) {
   return getSimplePrettyTerminal({
     viewMode: 'message-only',

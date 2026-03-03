@@ -13,11 +13,32 @@
 import { StructuredTransport } from 'loglayer';
 import type { LogLevel } from '../definitions';
 
+/** Configuration props for {@link structuredTransport}. */
 type StructuredTransportProps = {
   level: LogLevel;
 };
 
-export function structuredTransport({ level }: StructuredTransportProps) {
+/**
+ * Creates a structured JSON log transport for log output.
+ *
+ * Configures LogLayer's StructuredTransport to emit JSON-formatted log entries
+ * to `console`. Use when machine-readable log output is needed (e.g., production
+ * log aggregation pipelines).
+ *
+ * @param options - Transport configuration options
+ * @param options.level - Minimum log level to output
+ * @returns A configured LogLayer transport instance
+ *
+ * @example
+ * ```typescript
+ * import { structuredTransport } from '@accelint/logger/transports/structured';
+ *
+ * const transport = structuredTransport({ level: 'info' });
+ * ```
+ */
+export function structuredTransport({
+  level,
+}: StructuredTransportProps): StructuredTransport {
   return new StructuredTransport({
     level,
     logger: console,

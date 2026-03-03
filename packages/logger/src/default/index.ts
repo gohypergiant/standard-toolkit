@@ -27,7 +27,15 @@ let logInstance: LogLayer | undefined;
  * - Environment plugin (adds server/browser context to log data)
  * - Error serialization via serialize-error
  *
- * @param opts - Configuration options for the logger
+ * @param opts - Logger configuration options
+ * @param opts.enabled - Whether logging is active; `false` makes all calls no-ops
+ * @param opts.level - Minimum log level to output (default: `'debug'`)
+ * @param opts.env - Runtime environment; controls server detection (default: `'development'`)
+ * @param opts.pretty - Use pretty console output; `false` emits structured JSON (default: `true`)
+ * @param opts.prefix - String prepended to all log messages (default: `''`)
+ * @param opts.plugins - Additional plugins applied after the built-in ones
+ * @param opts.transports - Additional transports applied alongside the console transport
+ * @param opts.groups - Named group configuration for conditional group logging
  * @returns A configured LogLayer instance
  *
  * @example

@@ -35,6 +35,8 @@ export type EnvironmentPluginOptions = LogLayerPluginParams & {
  * whether the log originated from a server or browser context.
  *
  * @param options - Plugin configuration options
+ * @param options.isServer - True when running in a Node.js environment (`typeof window === 'undefined'`)
+ * @param options.isProductionEnv - Reserved for future use; currently has no effect
  * @returns A LogLayer plugin instance
  *
  * @example
