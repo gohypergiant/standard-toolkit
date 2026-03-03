@@ -19,7 +19,7 @@ import {
   useContextProps,
 } from 'react-aria-components';
 import { Label } from '../label';
-import { CheckboxGroupContext } from './context';
+import { CheckboxContext, CheckboxGroupContext } from './context';
 import styles from './styles.module.css';
 import type { CheckboxGroupProps } from './types';
 
@@ -58,6 +58,7 @@ export function CheckboxGroup({ ref, ...props }: CheckboxGroupProps) {
     children,
     classNames,
     label,
+    labelPosition,
     orientation = 'vertical',
     ...rest
   } = props;
@@ -72,7 +73,7 @@ export function CheckboxGroup({ ref, ...props }: CheckboxGroupProps) {
       data-orientation={orientation}
     >
       {composeRenderProps(children, (children, { isDisabled, isRequired }) => (
-        <>
+        <CheckboxContext value={{ labelPosition }}>
           {label && (
             <Label
               className={clsx(styles.label, classNames?.label)}
@@ -83,7 +84,7 @@ export function CheckboxGroup({ ref, ...props }: CheckboxGroupProps) {
             </Label>
           )}
           {children}
-        </>
+        </CheckboxContext>
       ))}
     </AriaCheckboxGroup>
   );

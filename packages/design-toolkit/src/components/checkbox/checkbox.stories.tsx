@@ -20,6 +20,7 @@ const meta = {
     children: 'Checkbox',
     isDisabled: false,
     isIndeterminate: false,
+    labelPosition: 'end',
   },
   parameters: {
     controls: {

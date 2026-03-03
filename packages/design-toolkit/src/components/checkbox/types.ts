@@ -34,6 +34,8 @@ export type CheckboxGroupProps = Omit<AriaCheckboxGroupProps, 'className'> &
     };
     /** Label text displayed above the checkbox group. */
     label?: string;
+    /** Position of labels for all child Checkboxes. Individual Checkbox `labelPosition` overrides this. */
+    labelPosition?: 'start' | 'end';
     /** Layout orientation for the checkboxes. */
     orientation?: Orientation;
   };
@@ -54,4 +56,6 @@ export type CheckboxProps = Omit<AriaCheckboxProps, 'className'> &
       /** Class name for the label text. */
       label?: string;
     };
+    /** Position of the label relative to the checkbox control. */
+    labelPosition?: 'start' | 'end';
   };

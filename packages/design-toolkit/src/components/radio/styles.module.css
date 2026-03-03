@@ -24,7 +24,7 @@
       @apply flex-col;
     }
 
-    .label {
+    > .label {
       @apply w-full;
     }
   }
@@ -32,12 +32,14 @@
   .radio {
     @apply gap-m flex cursor-pointer items-center;
 
-    @variant group-orientation-horizontal/radio-group {
-      @apply grow;
+    &.labelStart {
+      .label {
+        order: -1;
+      }
     }
 
     @variant group-orientation-horizontal/radio-group {
-      @apply basis-1/3;
+      @apply grow basis-1/3;
     }
 
     @variant disabled {

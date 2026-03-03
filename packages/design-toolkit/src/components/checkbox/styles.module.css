@@ -24,13 +24,19 @@
       @apply flex-col;
     }
 
-    .label {
+    > .label {
       @apply w-full;
     }
   }
 
   .checkbox {
     @apply gap-m flex cursor-pointer items-center;
+
+    &.labelStart {
+      .label {
+        order: -1;
+      }
+    }
 
     @variant disabled {
       @apply cursor-not-allowed;

@@ -13,7 +13,12 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { Radio as AriaRadio, composeRenderProps } from 'react-aria-components';
+import {
+  Radio as AriaRadio,
+  composeRenderProps,
+  useContextProps,
+} from 'react-aria-components';
+import { RadioContext } from './context';
 import styles from './styles.module.css';
 import type { RadioProps } from './types';
 
@@ -35,12 +40,22 @@ import type { RadioProps } from './types';
  * </RadioGroup>
  * ```
  */
-export function Radio({ classNames, children, ...rest }: RadioProps) {
+export function Radio({ ref, ...props }: RadioProps) {
+  [props, ref] = useContextProps(props, ref ?? null, RadioContext);
+
+  const { classNames, children, labelPosition = 'end', ...rest } = props;
+
   return (
     <AriaRadio
       {...rest}
+      ref={ref}
       className={composeRenderProps(classNames?.radio, (className) =>
-        clsx('group/radio', styles.radio, className),
+        clsx(
+          'group/radio',
+          styles.radio,
+          labelPosition === 'start' && styles.labelStart,
+          className,
+        ),
       )}
     >
       {composeRenderProps(children, (children) => (
