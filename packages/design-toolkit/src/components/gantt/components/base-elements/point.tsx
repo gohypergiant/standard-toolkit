@@ -10,34 +10,32 @@
  * governing permissions and limitations under the License.
  */
 
-@reference '@accelint/design-foundation/styles';
+import { type HTMLAttributes, type PropsWithChildren, useState } from 'react';
+import { usePointElementLayout } from '../base-elements/use-point-element-layout';
 
-@layer components.l1 {
-  .chunk {
-    --chunk-width: attr(data-width px);
-    min-width: var(--chunk-width);
-  }
+export type PointProps = HTMLAttributes<HTMLDivElement> & {
+  timeMs: number;
+};
 
-  .chunk-label {
-    --tick-margin: attr(data-tick-margin px);
-    @apply font-display text-body-s fg-primary-muted;
-    margin-left: var(--tick-margin);
-  }
+export function Point({
+  timeMs,
+  children,
+  ...rest
+}: PropsWithChildren<PointProps>) {
+  const [element, setElement] = useState<HTMLDivElement | null>(null);
 
-  .chunk-ticks-container {
-    @apply flex;
-  }
+  usePointElementLayout({
+    element,
+    timeMs,
+  });
 
-  .chunk-tick-container {
-    @apply flex flex-1;
-  }
+  const assignElementRef = (node: HTMLDivElement) => {
+    setElement(node);
+  };
 
-  .chunk-tick {
-    @apply fg-disabled h-[6px] w-px bg-current;
-  }
-
-  .timeline {
-    @apply flex;
-    transform: translateX(var(--translate-x));
-  }
+  return (
+    <div ref={assignElementRef} {...rest}>
+      {children}
+    </div>
+  );
 }

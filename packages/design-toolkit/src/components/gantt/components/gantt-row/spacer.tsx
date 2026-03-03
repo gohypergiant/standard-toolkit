@@ -10,34 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
-@reference '@accelint/design-foundation/styles';
+import { Range, type RangeProps } from '../base-elements/range';
+import styles from './styles.module.css';
 
-@layer components.l1 {
-  .chunk {
-    --chunk-width: attr(data-width px);
-    min-width: var(--chunk-width);
-  }
+export type SpacerProps = Omit<RangeProps, 'className'>;
 
-  .chunk-label {
-    --tick-margin: attr(data-tick-margin px);
-    @apply font-display text-body-s fg-primary-muted;
-    margin-left: var(--tick-margin);
-  }
-
-  .chunk-ticks-container {
-    @apply flex;
-  }
-
-  .chunk-tick-container {
-    @apply flex flex-1;
-  }
-
-  .chunk-tick {
-    @apply fg-disabled h-[6px] w-px bg-current;
-  }
-
-  .timeline {
-    @apply flex;
-    transform: translateX(var(--translate-x));
-  }
+export function Spacer(props: SpacerProps) {
+  return <Range className={styles['row-spacer']} {...props} />;
 }
