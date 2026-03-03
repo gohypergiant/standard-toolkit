@@ -12,7 +12,6 @@
 
 import { useRef } from 'react';
 import { useGanttContext } from '../../context';
-import { formatTimestampLabel } from '../../utils/formatting';
 import styles from '../styles.module.css';
 import { TimelineChunk } from '../timeline-chunk';
 import { useTimelineTransform } from './use-timeline-transform';
@@ -34,7 +33,7 @@ export function Timeline() {
         {timelineChunks.map((chunk) => (
           <TimelineChunk
             key={chunk.timestampMs}
-            label={formatTimestampLabel(chunk.timestampMs)}
+            timestampMs={chunk.timestampMs}
           />
         ))}
       </div>
