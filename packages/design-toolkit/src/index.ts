@@ -243,6 +243,10 @@ export type {
   FlashcardDetailsListProps,
   FlashcardProps,
 } from './components/flashcard/types';
+export { FloatingCard } from './components/floating-card';
+export type { FloatingCardProps } from './components/floating-card';
+export { FloatingCardProvider } from './components/floating-card/provider';
+export type { FloatingCardProviderProps } from './components/floating-card/provider';
 export { HeroContext } from './components/hero/context';
 export { Hero } from './components/hero';
 export { HeroSubtitle } from './components/hero/subtitle';
@@ -441,7 +445,7 @@ export type {
   QueryBuilderValueEditors,
   RuleGroupType,
 } from './components/query-builder/types';
-export { RadioContext } from './components/radio/context';
+export { RadioContext, RadioGroupContext } from './components/radio/context';
 export { RadioGroup } from './components/radio/group';
 export { Radio } from './components/radio';
 export type { RadioGroupProps, RadioProps } from './components/radio/types';

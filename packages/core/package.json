@@ -11,8 +11,7 @@
     "type-fest": "^5.3.1",
     "typescript": "^5.9.3",
     "uuid": "^11.1.0",
-    "vitest": "^4.0.15",
-    "zod": "^4.1.12"
+    "vitest": "^4.0.15"
   },
   "engines": {
     "node": ">=22",
@@ -89,8 +88,7 @@
   "module": "./dist/index.js",
   "owner": "default/pathfinder",
   "peerDependencies": {
-    "uuid": "^11.1.0",
-    "zod": "^4.1.12"
+    "uuid": "^11.1.0"
   },
   "private": false,
   "publishConfig": {
@@ -110,7 +108,8 @@
     "license": "pnpm zx ../../scripts/license.mjs",
     "lint": "pnpm biome lint . --verbose",
     "lint:package": "pnpm publint",
-    "test": "pnpm vitest --dir=src"
+    "test": "pnpm vitest --dir=src",
+    "test:watch": "pnpm vitest --dir=src --watch"
   },
   "sideEffects": false,
   "subPath": "packages/core",
