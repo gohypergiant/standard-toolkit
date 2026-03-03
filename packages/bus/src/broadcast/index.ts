@@ -100,6 +100,10 @@ export class Broadcast<
     });
 
     this.on(CONNECTION_EVENT_TYPES.ping, ({ source }) => {
+      if (typeof document !== 'undefined' && document.hidden) {
+        return;
+      }
+
       this.connected.add(source);
 
       this.emit(CONNECTION_EVENT_TYPES.echo, undefined, { target: source });
@@ -109,7 +113,9 @@ export class Broadcast<
       this.connected.add(source);
     });
 
-    addEventListener('visibilitychange', this.onVisibilityChange);
+    if (typeof addEventListener === 'function') {
+      addEventListener('visibilitychange', this.onVisibilityChange);
+    }
   }
 
   /**
@@ -394,6 +400,10 @@ export class Broadcast<
       this.channel.close();
       this.channel = null;
       this.channelName = DEFAULT_CONFIG.channelName;
+
+      if (typeof removeEventListener === 'function') {
+        removeEventListener('visibilitychange', this.onVisibilityChange);
+      }
     }
 
     this.connected.clear();
