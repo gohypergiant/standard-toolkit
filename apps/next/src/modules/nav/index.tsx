@@ -26,6 +26,7 @@ const LINKS = [
   { path: '/dialog/client', label: 'Dialog' },
   { path: '/divider', label: 'Divider' },
   { path: '/drawer', label: 'Drawer' },
+  { path: '/floating-card', label: 'Floating Card' },
   { path: '/hero', label: 'Hero' },
   { path: '/label', label: 'Label' },
   { path: '/link', label: 'Link' },
