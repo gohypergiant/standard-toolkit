@@ -11,11 +11,12 @@
  */
 
 import { OneWayLogLevelManager } from '@loglayer/log-level-manager-one-way';
-import { getSimplePrettyTerminal } from '@loglayer/transport-simple-pretty-terminal';
-import { LogLayer, StructuredTransport } from 'loglayer';
+import { LogLayer } from 'loglayer';
 import { serializeError } from 'serialize-error';
 import { callsitePlugin } from '../plugins/callsite';
 import { environmentPlugin } from '../plugins/environment';
+import { prettyTransport } from '../transports/pretty';
+import { structuredTransport } from '../transports/structured';
 import type { LoggerOptions } from '../definitions';
 
 /**
@@ -69,24 +70,15 @@ export function bootstrap({
 }: LoggerOptions) {
   const isProductionEnv = env === 'production';
   const isServer = typeof window === 'undefined';
+  const defaultTransport = pretty
+    ? prettyTransport({ level })
+    : structuredTransport({ level });
+  const actualTransports =
+    transports.length > 0 ? transports : defaultTransport;
 
   const instance = new LogLayer({
     errorSerializer: serializeError,
-    transport: [
-      pretty
-        ? getSimplePrettyTerminal({
-            viewMode: 'message-only',
-            level,
-            // NOTE: this gives us a nice balance even on the server
-            runtime: 'browser',
-            includeDataInBrowserConsole: true,
-          })
-        : new StructuredTransport({
-            level,
-            logger: console,
-          }),
-      ...transports,
-    ],
+    transport: actualTransports,
     plugins: [
       callsitePlugin({ isProductionEnv }),
       environmentPlugin({ isProductionEnv, isServer }),

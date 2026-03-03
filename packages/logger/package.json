@@ -35,6 +35,8 @@
     "./definitions": "./dist/definitions.js",
     "./plugins/callsite": "./dist/plugins/callsite.js",
     "./plugins/environment": "./dist/plugins/environment.js",
+    "./transports/pretty": "./dist/transports/pretty.js",
+    "./transports/structured": "./dist/transports/structured.js",
     "./package.json": "./package.json"
   },
   "files": [
