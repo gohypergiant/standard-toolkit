@@ -20,6 +20,8 @@ It doesn't change LogLayer's API. Anything in the [LogLayer docs](https://loglay
 - [Quick Start](#quick-start)
 - [Configuration Options](#configuration-options)
 - [Log Levels](#log-levels)
+- [Environment-Based Configuration](#environment-based-configuration)
+  - [Next.js Setup](#nextjs-setup)
 - [API](#api)
   - [getLogger](#getlogger)
   - [Log Level Constants](#log-level-constants)
@@ -94,6 +96,49 @@ export function login(credentials: Credentials) {
 | `warn` | `logger.warn()` | Something looks wrong but execution continues |
 | `error` | `logger.error()` | An operation failed |
 | `fatal` | `logger.fatal()` | Critical failure, app likely needs to stop |
+
+## Environment-Based Configuration
+
+Tie the log level and output format to environment variables so you don't have to touch code between deploys. In development, pretty-printed output is easier to read; in production, structured JSON is what log aggregators expect.
+
+```ts
+// ~/utils/logger/index.ts
+import { getLogger } from '@accelint/logger';
+
+const NODE_ENV = process.env.NODE_ENV;
+const LOG_LEVEL = process.env.LOG_LEVEL;
+const isProduction = NODE_ENV === 'production';
+
+export const logger = getLogger({
+  level: LOG_LEVEL,
+  enabled: true,
+  pretty: !isProduction,
+});
+```
+
+With `LOG_LEVEL` unset, the logger defaults to `'debug'`. Set it to `'info'` or `'warn'` in production to cut down on noise.
+
+### Next.js Setup
+
+Next.js complicates this because the logger may run on the server or in the browser. `NEXT_PUBLIC_` env vars work if they're known at build time. For runtime server variables that need to be available on the client, attaching them to `globalThis` is the common pattern — this example assumes that:
+
+```ts
+// ~/utils/logger/index.ts
+import { getLogger } from '@accelint/logger';
+import { env } from '~/configs/env/server';
+
+const NODE_ENV = env.NODE_ENV ?? globalThis.NODE_ENV ?? 'development';
+const LOG_LEVEL = env.LOG_LEVEL ?? globalThis.LOG_LEVEL ?? 'debug';
+const isProduction = NODE_ENV === 'production';
+
+export const logger = getLogger({
+  level: LOG_LEVEL,
+  enabled: true,
+  pretty: !isProduction,
+});
+```
+
+---
 
 ## API
 
