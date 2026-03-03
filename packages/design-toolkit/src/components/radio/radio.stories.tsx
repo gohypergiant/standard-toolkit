@@ -10,52 +10,35 @@
  * governing permissions and limitations under the License.
  */
 
-import { RadioGroup } from './group';
+import { RadioGroup } from './group.tsx';
 import { Radio } from './index';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import type { RadioGroupProps, RadioProps } from './types';
 
 const meta = {
   title: 'Components/Radio',
-  component: RadioGroup,
+  component: Radio,
+  decorators: [
+    (Story) => (
+      <RadioGroup aria-label='Radio story'>
+        <Story />
+      </RadioGroup>
+    ),
+  ],
   args: {
-    orientation: 'vertical',
+    children: 'Radio',
     isDisabled: false,
-    isRequired: false,
-    label: 'Header',
     labelPosition: 'end',
-  },
-  argTypes: {
-    orientation: {
-      control: 'select',
-      options: ['horizontal', 'vertical'],
-    },
   },
   parameters: {
     controls: {
-      exclude: ['children', 'validationBehavior'],
-    },
-    docs: {
-      subtitle: 'Exclusive selection from a group of options',
+      exclude: ['inputRef', 'validationBehavior'],
     },
   },
-  // labelPosition is a Radio-level prop, hoisted here for Storybook controls
-} satisfies Meta<RadioGroupProps & Pick<RadioProps, 'labelPosition'>>;
+} satisfies Meta<typeof Radio>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: StoryObj<typeof meta> = {
-  render: ({ children, label, labelPosition, ...args }) => (
-    <RadioGroup label={label} {...args}>
-      <Radio value='1' labelPosition={labelPosition}>
-        Radio text
-      </Radio>
-      <Radio value='2' labelPosition={labelPosition}>
-        Radio text
-      </Radio>
-      <Radio value='3' labelPosition={labelPosition}>
-        Radio text
-      </Radio>
-    </RadioGroup>
-  ),
+export const Default: Story = {
+  render: ({ children, ...args }) => <Radio {...args}>Radio text</Radio>,
 };

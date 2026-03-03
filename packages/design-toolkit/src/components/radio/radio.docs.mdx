@@ -5,54 +5,48 @@ import * as RadioStories from './radio.stories';
 <Meta of={RadioStories} />
 
 # Radio
+Individual radio button option for use within a RadioGroup. Built on React Aria Components with accessibility out of the box.
 
-Radio buttons allow users to select one option from a group of mutually exclusive choices.
+Components:
+- **Radio** - Individual radio button option
+- **[RadioGroup](?path=/docs/components-radiogroup--playground)** - Container for grouping radio buttons
+
+## Example Usage
 
 ```tsx
-<RadioGroup label="Select an option">
-  <Radio value="1">Option 1</Radio>
-  <Radio value="2">Option 2</Radio>
-  <Radio value="3">Option 3</Radio>
-</RadioGroup>
+<Radio value="red">Red</Radio>
 ```
-
 <Canvas of={RadioStories.Default} />
 
-## Component Structure
-
-- **RadioGroup**: Container that manages selection state and layout
-- **Radio**: Individual radio button option
-
-## RadioGroup Props
+## Props
+Extends all [`Radio` props](https://react-spectrum.adobe.com/react-aria/RadioGroup.html#radio-1) from react-aria-components.
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `label` | `ReactNode` | — | Label displayed above the radio group |
-| `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | Layout direction of radio buttons |
-| `value` | `string` | — | Controlled selected value |
-| `defaultValue` | `string` | — | Default selected value (uncontrolled) |
-| `onChange` | `(value: string) => void` | — | Called when selection changes |
-| `isDisabled` | `boolean` | `false` | Disables all radio options |
-| `isRequired` | `boolean` | `false` | Marks selection as required |
-| `classNames` | `object` | — | Custom classes: `group`, `label` |
-
-## Radio Props
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
+| `children` | `ReactNode` | - | Label text |
 | `value` | `string` | — | Value associated with this option |
 | `isDisabled` | `boolean` | `false` | Disables this specific option |
 | `labelPosition` | `'start' \| 'end'` | `'end'` | Position of the label relative to the control |
-| `classNames` | `object` | — | Custom classes: `radio`, `control`, `label` |
+| `classNames` | `object` | — | Custom class names (see below) |
+
+**classNames:**
+| Key | Description |
+|-----|-------------|
+| `radio` | Applied to the radio container |
+| `control` | Applied to the radio control (circle) |
+| `label` | Applied to the label text |
 
 ## Accessibility
-
 - Arrow keys navigate between options
 - Space/Enter selects the focused option
 - Automatic ARIA attributes for screen readers
 - Focus management and form integration
 
-## Related
+## Implementation Notes
+- Wraps `Radio` from react-aria-components
+- Must be used inside a RadioGroup
+- Inherits `labelPosition` from RadioGroup when not set directly
 
+**Related:**
 - [React Aria RadioGroup](https://react-spectrum.adobe.com/react-aria/RadioGroup.html)
 - [GitHub Source](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-toolkit/src/components/radio)

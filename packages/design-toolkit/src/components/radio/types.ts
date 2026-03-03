@@ -32,6 +32,8 @@ export type RadioGroupProps = Omit<AriaRadioGroupProps, 'className'> &
       label?: LabelProps['className'];
     };
     label?: string;
+    /** Position of the label relative to the radio control for all child Radios. Individual Radio `labelPosition` overrides this. */
+    labelPosition?: 'start' | 'end';
   };
 
 /**

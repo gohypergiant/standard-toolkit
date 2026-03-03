@@ -14,12 +14,20 @@
 import 'client-only';
 import { createContext } from 'react';
 import type { ContextValue } from 'react-aria-components';
-import type { RadioGroupProps } from './types';
+import type { RadioGroupProps, RadioProps } from './types';
 
 /**
  * Context for RadioGroup component
  *
  * Provides context for RadioGroup component to share state with Radio components
  */
-export const RadioContext =
+export const RadioGroupContext =
   createContext<ContextValue<RadioGroupProps, HTMLDivElement>>(null);
+
+/**
+ * Context for Radio component
+ *
+ * Provides context for Radio component to share configuration from RadioGroup
+ */
+export const RadioContext =
+  createContext<ContextValue<RadioProps, HTMLLabelElement>>(null);

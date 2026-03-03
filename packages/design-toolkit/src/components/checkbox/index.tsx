@@ -87,7 +87,7 @@ export function Checkbox({ ref, ...props }: CheckboxProps) {
         clsx(
           'group/checkbox',
           styles.checkbox,
-          labelPosition === 'start' ? styles.labelStart : styles.labelEnd,
+          labelPosition === 'start' && styles.labelStart,
           className,
         ),
       )}
