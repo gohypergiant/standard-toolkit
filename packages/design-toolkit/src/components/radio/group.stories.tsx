@@ -10,23 +10,23 @@
  * governing permissions and limitations under the License.
  */
 
-import { CheckboxGroup } from './group';
-import { Checkbox } from './index';
+import { RadioGroup } from './group';
+import { Radio } from './index';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import type { CheckboxGroupProps } from './types';
+import type { RadioGroupProps } from './types';
 
 /**
- * The `<CheckboxGroup>` component is a direct wrapper around the equiavalent component from
+ * The `<RadioGroup>` component is a direct wrapper around the equivalent component from
  * `react-aria-components`.
  *
- * Please see the documentation for that component <a href="https://react-spectrum.adobe.com/react-aria/CheckboxGroup.html">here</a>.
+ * Please see the documentation for that component <a href="https://react-spectrum.adobe.com/react-aria/RadioGroup.html">here</a>.
  *
  * By default, it lays its children out in a stacked Flexbox layout, but you can customize the `className` to change the layout
  * behavior.
  */
 const meta = {
-  title: 'Components/CheckboxGroup',
-  component: CheckboxGroup,
+  title: 'Components/RadioGroup',
+  component: RadioGroup,
   args: {
     label: 'Header',
     labelPosition: 'end',
@@ -42,20 +42,19 @@ const meta = {
   },
   parameters: {
     controls: {
-      exclude: ['validationBehavior'],
+      exclude: ['children', 'validationBehavior'],
     },
   },
-} satisfies Meta<CheckboxGroupProps>;
+} satisfies Meta<RadioGroupProps>;
 
 export default meta;
 
 export const Default: StoryObj<typeof meta> = {
   render: ({ children, ...args }) => (
-    <CheckboxGroup {...args}>
-      <Checkbox value='value1'>Checkbox text</Checkbox>
-      <Checkbox value='value2'>Checkbox text</Checkbox>
-      <Checkbox value='value3'>Checkbox text</Checkbox>
-      <Checkbox value='value4'>Checkbox text</Checkbox>
-    </CheckboxGroup>
+    <RadioGroup {...args}>
+      <Radio value='1'>Radio text</Radio>
+      <Radio value='2'>Radio text</Radio>
+      <Radio value='3'>Radio text</Radio>
+    </RadioGroup>
   ),
 };

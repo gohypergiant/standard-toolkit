@@ -19,7 +19,7 @@ import {
   useContextProps,
 } from 'react-aria-components';
 import { Label } from '../label';
-import { RadioContext } from './context';
+import { RadioContext, RadioGroupContext } from './context';
 import styles from './styles.module.css';
 import type { RadioGroupProps } from './types';
 
@@ -46,9 +46,9 @@ import type { RadioGroupProps } from './types';
  * @returns The rendered RadioGroup component.
  */
 export function RadioGroup({ ref, ...props }: RadioGroupProps) {
-  [props, ref] = useContextProps(props, ref ?? null, RadioContext);
+  [props, ref] = useContextProps(props, ref ?? null, RadioGroupContext);
 
-  const { children, classNames, label, ...rest } = props;
+  const { children, classNames, label, labelPosition, ...rest } = props;
 
   return (
     <AriaRadioGroup
@@ -59,7 +59,7 @@ export function RadioGroup({ ref, ...props }: RadioGroupProps) {
       )}
     >
       {composeRenderProps(children, (children, { isDisabled, isRequired }) => (
-        <>
+        <RadioContext value={{ labelPosition }}>
           {label && (
             <Label
               className={clsx(styles.label, classNames?.label)}
@@ -70,7 +70,7 @@ export function RadioGroup({ ref, ...props }: RadioGroupProps) {
             </Label>
           )}
           {children}
-        </>
+        </RadioContext>
       ))}
     </AriaRadioGroup>
   );

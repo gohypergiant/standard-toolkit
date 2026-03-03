@@ -9,25 +9,9 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-'use client';
 
-import 'client-only';
-import { createContext } from 'react';
-import type { ContextValue } from 'react-aria-components';
-import type { RadioGroupProps, RadioProps } from './types';
+import { FloatingCardExample } from '~/features/floating-card/memlab';
 
-/**
- * Context for RadioGroup component
- *
- * Provides context for RadioGroup component to share state with Radio components
- */
-export const RadioGroupContext =
-  createContext<ContextValue<RadioGroupProps, HTMLDivElement>>(null);
-
-/**
- * Context for Radio component
- *
- * Provides context for Radio component to share configuration from RadioGroup
- */
-export const RadioContext =
-  createContext<ContextValue<RadioProps, HTMLLabelElement>>(null);
+export default function Page() {
+  return <FloatingCardExample />;
+}
