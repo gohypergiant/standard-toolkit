@@ -47,7 +47,7 @@ export class Broadcast<
   protected emitOptions: Map<Events['type'], EmitOptions> = new Map();
 
   readonly id = uuid();
-  readonly connected = new Set();
+  readonly connected = new Set<UniqueId>();
 
   // biome-ignore lint/suspicious/noExplicitAny: Can't use generics in static properties
   private static instance: Broadcast<any> | null = null;
