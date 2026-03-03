@@ -39,7 +39,7 @@ import type { LoggerOptions } from '../definitions';
  * @param options.pretty - Use pretty console output; `false` emits structured JSON (default: `true`)
  * @param options.prefix - String prepended to all log messages (default: `''`)
  * @param options.plugins - Additional plugins applied after the built-in ones
- * @param options.transports - Additional transports applied alongside the console transport
+ * @param options.transports - Custom transports that replace the default console transport; include `prettyTransport` or `structuredTransport` explicitly to keep console output
  * @param options.groups - Named group configuration for conditional group logging
  * @returns A configured LogLayer instance
  *

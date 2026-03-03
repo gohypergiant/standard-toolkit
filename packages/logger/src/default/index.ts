@@ -34,7 +34,7 @@ let logInstance: LogLayer | undefined;
  * @param opts.pretty - Use pretty console output; `false` emits structured JSON (default: `true`)
  * @param opts.prefix - String prepended to all log messages (default: `''`)
  * @param opts.plugins - Additional plugins applied after the built-in ones
- * @param opts.transports - Additional transports applied alongside the console transport
+ * @param opts.transports - Custom transports that replace the default console transport; include `prettyTransport` or `structuredTransport` explicitly to keep console output
  * @param opts.groups - Named group configuration for conditional group logging
  * @returns A configured LogLayer instance
  *
