@@ -479,7 +479,7 @@ When a shape is selected via `selectedShapeId`, the layer provides visual indica
 1. **Line/outline brightness** (all shapes): The shape's border/outline brightens to 1.4× its base color.
 2. **Fill brightness overlay** (polygon shapes): A brightness overlay renders using `MATERIAL_SETTINGS.HOVER_OR_SELECT` lighting. When the selected shape is also hovered, the hover layer stacks on top using `MATERIAL_SETTINGS.HOVER_AND_SELECT` for an even brighter combined effect.
 3. **Curtain brightness** (elevated LineString shapes): Curtain walls render at overlay opacity using a brightened version of the shape's line color.
-4. **Coffin corners** (Point shapes with icons): Bracket-like corners appear with a blue fill. These are not currently customizable.
+4. **Coffin corners** (Point shapes with icons): Bracket-like corners appear with a blue fill and black outline. The fill color defaults to `#39B7FA` and can be customized via `coffinCornerColor` when using the `CoffinCornersExtension` directly.
 5. **Highlight** (optional, non-icon-Point shapes): A highlight layer underneath with:
 
    - Increased border/outline width (+5 pixels)
@@ -526,7 +526,7 @@ When `pickable={true}`, shapes show hover feedback:
 - **Polygon shapes**: Fill brightens via material-based lighting; stacks with any active selection treatment
 - **Elevated LineString shapes**: Curtain walls brighten at overlay opacity
 - **Non-icon shapes**: Border/outline width increases by 2 pixels
-- **Point shapes with icons**: Coffin corners appear with a white fill and black outline
+- **Point shapes with icons**: Coffin corners appear with a white fill and black outline bracket
 
 ## 3D Elevation Rendering
 

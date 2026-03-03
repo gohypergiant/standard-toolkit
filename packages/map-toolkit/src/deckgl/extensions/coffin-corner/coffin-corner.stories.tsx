@@ -67,7 +67,11 @@ const MAP_ID = uuid();
 const LAYER_ID = 'icons';
 const coffinCornersExtension = new CoffinCornersExtension();
 
-function CoffinCornersDemo() {
+function CoffinCornersDemo({
+  coffinCornerColor,
+}: {
+  coffinCornerColor: [number, number, number];
+}) {
   const { selectedId, hoveredId } = useCoffinCorner(MAP_ID, LAYER_ID);
 
   return (
@@ -89,6 +93,7 @@ function CoffinCornersDemo() {
           extensions={[coffinCornersExtension]}
           selectedEntityId={selectedId}
           hoveredEntityId={hoveredId}
+          coffinCornerColor={coffinCornerColor}
         />
       </BaseMap>
 
@@ -103,5 +108,18 @@ function CoffinCornersDemo() {
 }
 
 export const Default: Story = {
-  render: () => <CoffinCornersDemo />,
+  args: {
+    coffinCornerColor: [57, 183, 250],
+  },
+  argTypes: {
+    coffinCornerColor: {
+      control: { type: 'object' },
+      description: 'Coffin corner color [R, G, B] with values 0-255',
+    },
+  },
+  render: (args) => (
+    <CoffinCornersDemo
+      coffinCornerColor={args.coffinCornerColor as [number, number, number]}
+    />
+  ),
 };
