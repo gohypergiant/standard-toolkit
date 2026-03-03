@@ -308,7 +308,7 @@ async function fetchUserData(userId: string) {
 
 ### Domain Loggers
 
-For larger apps, give each module its own prefixed logger so it's clear where each log came from. `withPrefix()` returns a child logger with the prefix applied; all modules share the underlying instance.
+For larger apps, give each module its own prefixed logger so it's clear where each log came from. `withPrefix()` returns a child logger with the prefix applied.
 
 Create a small utility for this:
 
