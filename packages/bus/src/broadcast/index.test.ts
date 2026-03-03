@@ -122,6 +122,7 @@ describe('broadcast', () => {
       type: 'test',
       payload: 'test',
       source: bus.id,
+      target: bus.id,
     });
   });
 
@@ -139,6 +140,7 @@ describe('broadcast', () => {
       type: 'test',
       payload: 'test',
       source: bus.id,
+      target: bus.id,
     });
   });
 
@@ -159,16 +161,19 @@ describe('broadcast', () => {
       type: 'test',
       payload: 'A',
       source: bus.id,
+      target: bus.id,
     });
     expect(on).toHaveBeenNthCalledWith(2, {
       type: 'test',
       payload: 'B',
       source: bus.id,
+      target: bus.id,
     });
     expect(on).toHaveBeenNthCalledWith(3, {
       type: 'test',
       payload: 'C',
       source: bus.id,
+      target: bus.id,
     });
 
     expect(once).toHaveBeenCalledOnce();
@@ -176,6 +181,7 @@ describe('broadcast', () => {
       type: 'test',
       payload: 'A',
       source: bus.id,
+      target: bus.id,
     });
   });
 
@@ -265,6 +271,7 @@ describe('broadcast', () => {
       type: 'test',
       payload: 'default',
       source: bus.id,
+      target: bus.id,
     });
   });
 
@@ -337,7 +344,7 @@ describe('broadcast', () => {
       type: 'test',
       payload: payload,
       source: bus.id,
-      target: undefined,
+      target: bus.id,
     });
   });
 });

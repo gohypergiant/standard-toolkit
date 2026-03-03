@@ -21,10 +21,14 @@ import type {
   Payload,
 } from './types';
 
+const DISCONNECT = '__DISCONNECT__';
+const PING = '__PING__';
+const ECHO = '__ECHO__';
+
 /**
  * Broadcast event class allows for emitting and listening for events across browser contexts.
  *
- * @template P - The payload type union for all events handled by this broadcast instance.
+ * @template Events - The payload type union for all events handled by this broadcast instance.
  *
  * @example
  * ```typescript
@@ -34,17 +38,19 @@ import type {
  * ```
  */
 export class Broadcast<
-  P extends { type: string; payload?: unknown; target?: UniqueId } = Payload<
-    string,
-    StructuredCloneable
-  >,
+  Events extends {
+    type: string;
+    payload?: unknown;
+    target?: UniqueId;
+  } = Payload<string, StructuredCloneable>,
 > {
   protected channel: BroadcastChannel | null = null;
   protected channelName = DEFAULT_CONFIG.channelName;
-  protected listeners: Partial<Record<P['type'], Listener<P>[]>> = {};
-  protected emitOptions: Map<P['type'], EmitOptions> = new Map();
+  protected listeners: Partial<Record<Events['type'], Listener<Events>[]>> = {};
+  protected emitOptions: Map<Events['type'], EmitOptions> = new Map();
 
   readonly id = uuid();
+  readonly connected = new Set();
 
   // biome-ignore lint/suspicious/noExplicitAny: Can't use generics in static properties
   private static instance: Broadcast<any> | null = null;
@@ -60,6 +66,7 @@ export class Broadcast<
     }
 
     this.init();
+    this.ping();
   }
 
   /**
@@ -76,14 +83,14 @@ export class Broadcast<
    * ```
    */
   static getInstance<
-    T extends { type: string; payload?: unknown } = Payload<
+    Type extends { type: string; payload?: unknown } = Payload<
       string,
       StructuredCloneable
     >,
   >(config?: BroadcastConfig) {
-    Broadcast.instance ??= new Broadcast<T>(config);
+    Broadcast.instance ??= new Broadcast<Type>(config);
 
-    return Broadcast.instance as Broadcast<T>;
+    return Broadcast.instance as Broadcast<Type>;
   }
 
   /**
@@ -93,6 +100,22 @@ export class Broadcast<
     this.channel = new BroadcastChannel(this.channelName);
     this.channel.onmessage = this.onMessage.bind(this);
     this.channel.onmessageerror = this.onError.bind(this);
+
+    this.on(DISCONNECT, ({ source }) => {
+      this.connected.delete(source);
+    });
+
+    this.on(PING, ({ source }) => {
+      this.connected.add(source);
+
+      this.emit(ECHO, undefined, { target: source });
+    });
+
+    this.on(ECHO, ({ source }) => {
+      this.connected.add(source);
+    });
+
+    addEventListener('visibilitychange', this.onVisibilityChange);
   }
 
   /**
@@ -100,7 +123,7 @@ export class Broadcast<
    *
    * @param event - Incoming message event.
    */
-  protected onMessage(event: MessageEvent<P>) {
+  protected onMessage(event: MessageEvent<Events>) {
     this.handleListeners(event.data);
   }
 
@@ -114,6 +137,22 @@ export class Broadcast<
   }
 
   /**
+   * Browser only, handler for tab visibility changes:
+   * https://developer.mozilla.org/en-US/docs/Web/API/Document/visibilitychange_event
+   */
+  protected onVisibilityChange() {
+    if (typeof document === 'undefined') {
+      return;
+    }
+
+    if (document.hidden) {
+      this.emit(DISCONNECT, undefined, { target: 'others' });
+    } else {
+      this.ping();
+    }
+  }
+
+  /**
    * Iterate through listeners for the given topic and invoke callbacks if criteria match.
    *
    * @param data - The event payload containing `type`, optional `payload`, and optional `targetId`.
@@ -124,8 +163,8 @@ export class Broadcast<
    * `target === this.uuid`. If omitted, the event is treated as a broadcast within
    * this context (audience filtering may occur elsewhere).
    */
-  protected handleListeners(data: P) {
-    const handlers = this.listeners[data.type as P['type']];
+  protected handleListeners(data: Events) {
+    const handlers = this.listeners[data.type as Events['type']];
 
     // If no handler exists or if event targets a specific instance of Broadcast that isn't this instance, do nothing
     if (!handlers?.length || (data.target && data.target !== this.id)) {
@@ -149,7 +188,7 @@ export class Broadcast<
    * @param topic - The event topic.
    * @param listenerId - id of the listener.
    */
-  protected removeListener(type: P['type'], id: UniqueId) {
+  protected removeListener(type: Events['type'], id: UniqueId) {
     if (this.listeners[type]) {
       this.listeners[type] = this.listeners[type].filter(
         (handler) => handler.id !== id,
@@ -162,9 +201,15 @@ export class Broadcast<
    *
    * @param type - The event type.
    */
-  protected addListener(type: P['type'], listener: Listener<P>) {
+  protected addListener(type: Events['type'], listener: Listener<Events>) {
     this.listeners[type] ??= [];
     this.listeners[type].push(listener);
+  }
+
+  ping() {
+    this.connected.clear();
+
+    this.emit(PING, undefined, { target: 'others' });
   }
 
   /**
@@ -175,7 +220,7 @@ export class Broadcast<
    * @param type event type
    * @param options emit options
    */
-  setEventEmitOptions(type: P['type'], options: EmitOptions | null) {
+  setEventEmitOptions(type: Events['type'], options: EmitOptions | null) {
     if (options) {
       this.emitOptions.set(type, options);
     } else {
@@ -188,7 +233,7 @@ export class Broadcast<
    *
    * @param events map of event type & options
    */
-  setEventsEmitOptions(events: Map<P['type'], EmitOptions | null>) {
+  setEventsEmitOptions(events: Map<Events['type'], EmitOptions | null>) {
     for (const [type, options] of events) {
       this.setEventEmitOptions(type, options);
     }
@@ -221,13 +266,13 @@ export class Broadcast<
    * // Later: unsubscribe();
    * ```
    */
-  on<T extends P['type']>(
-    type: T,
-    callback: (data: ExtractEvent<P, T>) => void,
+  on<Type extends Events['type']>(
+    type: Type,
+    callback: (data: ExtractEvent<Events, Type> & { source: UniqueId }) => void,
   ) {
     const id = uuid();
 
-    this.addListener(type, { callback, id, once: false } as Listener<P>);
+    this.addListener(type, { callback, id, once: false } as Listener<Events>);
 
     return () => this.removeListener(type, id);
   }
@@ -240,13 +285,13 @@ export class Broadcast<
    * @param callback - The callback function.
    * @returns Unsubscribe function to remove the listener.
    */
-  once<T extends P['type']>(
-    type: T,
-    callback: (data: ExtractEvent<P, T>) => void,
+  once<Type extends Events['type']>(
+    type: Type,
+    callback: (data: ExtractEvent<Events, Type> & { source: UniqueId }) => void,
   ) {
     const id = uuid();
 
-    this.addListener(type, { callback, id, once: true } as Listener<P>);
+    this.addListener(type, { callback, id, once: true } as Listener<Events>);
 
     return () => this.removeListener(type, id);
   }
@@ -257,9 +302,9 @@ export class Broadcast<
    * @template T - The Payload type, inferred from the event.
    * @param type - The event type.
    */
-  off<T extends P['type']>(
-    type: T,
-    callback: (data: ExtractEvent<P, T>) => void,
+  off<Type extends Events['type']>(
+    type: Type,
+    callback: (data: ExtractEvent<Events, Type> & { source: UniqueId }) => void,
   ) {
     if (this.listeners[type]) {
       this.listeners[type] = this.listeners[type].filter(
@@ -289,31 +334,30 @@ export class Broadcast<
    * );
    * ```
    */
-  emit<T extends P['type']>(
-    type: T,
+  emit<Type extends Events['type']>(
+    type: Type,
     payload?: never,
     options?: EmitOptions,
   ): void;
-  emit<T extends P['type']>(
-    type: T,
-    payload: ExtractEvent<P, T> extends { payload: infer Data }
+  emit<Type extends Events['type']>(
+    type: Type,
+    payload: ExtractEvent<Events, Type> extends { payload: infer Data }
       ? Data
       : undefined,
     options?: EmitOptions,
   ): void;
-  emit<T extends P['type']>(
-    type: T,
-    payload?: ExtractEvent<P, T> extends { payload: infer Data }
+  emit<Type extends Events['type']>(
+    type: Type,
+    payload?: ExtractEvent<Events, Type> extends { payload: infer Data }
       ? Data
       : undefined,
     options?: EmitOptions,
   ) {
     if (!this.channel) {
-      console.warn('Cannot emit: BroadcastChannel is not initialized.');
-      return;
+      return console.warn('Cannot emit: BroadcastChannel is not initialized.');
     }
 
-    const { target = 'all' } = {
+    const { target = 'self' } = {
       ...this.emitOptions.get(this.id),
       ...this.emitOptions.get(type),
       ...options,
@@ -323,7 +367,7 @@ export class Broadcast<
       payload,
       source: this.id,
       target: target === 'self' ? this.id : isUUID(target) ? target : undefined,
-    } as unknown as P;
+    } as unknown as Events;
 
     if (message.target !== this.id) {
       this.channel.postMessage(message);
@@ -339,7 +383,7 @@ export class Broadcast<
    *
    * @param type - The event to delete.
    */
-  deleteEvent(type: P['type']) {
+  deleteEvent(type: Events['type']) {
     delete this.listeners[type];
 
     this.emitOptions.delete(type);
@@ -351,11 +395,14 @@ export class Broadcast<
    */
   destroy() {
     if (this.channel) {
+      this.emit(DISCONNECT, undefined, { target: 'others' });
+
       this.channel.close();
       this.channel = null;
       this.channelName = DEFAULT_CONFIG.channelName;
     }
 
+    this.connected.clear();
     this.listeners = {};
     this.emitOptions = new Map();
 

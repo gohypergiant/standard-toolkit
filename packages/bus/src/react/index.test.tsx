@@ -61,6 +61,7 @@ describe('useOn', () => {
       type: 'foo',
       payload: { foo: true },
       source: bus.id,
+      target: bus.id,
     });
   });
 });
@@ -83,6 +84,7 @@ describe('useOnce', () => {
       type: 'foo',
       payload: { foo: true },
       source: bus.id,
+      target: bus.id,
     });
   });
 });
@@ -103,6 +105,7 @@ describe('useEmit', () => {
       type: 'bar',
       payload: { bar: true },
       source: bus.id,
+      target: bus.id,
     });
 
     off();
