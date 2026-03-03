@@ -17,6 +17,35 @@ it('should return true for a UUID', () => {
   expect(isUUID(uuid())).toBe(true);
 });
 
+it('should return a unique uuid without a path', () => {
+  expect(uuid()).not.toBe(uuid());
+});
+
+it('should return a unique uuid with different paths', () => {
+  expect(uuid({ path: ['foo'] })).not.toBe(uuid({ path: ['bar'] }));
+});
+
+it('should return a unique uuid with different namespaces, but same paths', () => {
+  const path = ['foo', 'bar'];
+
+  expect(uuid({ namespace: uuid(), path })).not.toBe(
+    uuid({ namespace: uuid(), path }),
+  );
+});
+
+it('should return a stable uuid', () => {
+  const namespace = uuid();
+  const path = ['foo', 'bar'];
+
+  expect(uuid({ path })).toBe(uuid({ path }));
+
+  expect(uuid({ namespace, path })).toBe(uuid({ namespace, path }));
+
+  expect(uuid({ namespace: uuid({ path: ['app'] }), path })).toBe(
+    uuid({ namespace: uuid({ path: ['app'] }), path }),
+  );
+});
+
 it.each([
   false,
   null,
