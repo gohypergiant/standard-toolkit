@@ -15,6 +15,7 @@ import { BaseMap } from '@/deckgl/base-map';
 import iconMapping from '../../shapes/__fixtures__/atlas.json';
 import iconAtlas from '../../shapes/__fixtures__/atlas.png';
 import { CoffinCornersExtension } from './coffin-corners-extension';
+import './fiber';
 import { useCoffinCorner } from './use-coffin-corner';
 import type { Rgba255Tuple } from '@accelint/predicates';
 import type { Meta, StoryObj } from '@storybook/react-vite';
@@ -87,9 +88,9 @@ function CoffinCornersDemo({
           data={ICON_DATA}
           iconAtlas={iconAtlas}
           iconMapping={iconMapping}
-          getPosition={(d: IconData) => d.position}
-          getIcon={(d: IconData) => d.icon}
-          getSize={(d: IconData) => d.size}
+          getPosition={(d: unknown) => (d as IconData).position}
+          getIcon={(d: unknown) => (d as IconData).icon}
+          getSize={(d: unknown) => (d as IconData).size}
           pickable
           extensions={[coffinCornersExtension]}
           selectedEntityId={selectedId}

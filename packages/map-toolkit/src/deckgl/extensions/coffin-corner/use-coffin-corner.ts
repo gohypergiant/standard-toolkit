@@ -20,7 +20,7 @@ import type { EntityId } from './types';
 /**
  * Return type for useCoffinCorner hook
  */
-export interface UseCoffinCornerReturn {
+export type UseCoffinCornerReturn = {
   /** Currently selected entity ID, or undefined if nothing selected */
   selectedId: EntityId | undefined;
   /** Currently hovered entity ID, or undefined if nothing hovered */
@@ -29,12 +29,12 @@ export interface UseCoffinCornerReturn {
   setSelectedId: (id: EntityId | undefined) => void;
   /** Clear the current selection */
   clearSelection: () => void;
-}
+};
 
 /**
  * Options for the useCoffinCorner hook.
  */
-export interface UseCoffinCornerOptions {
+export type UseCoffinCornerOptions = {
   /**
    * Accessor to extract an entity ID from a picked data item.
    * Must match the `getEntityId` prop passed to the CoffinCornersExtension.
@@ -42,7 +42,7 @@ export interface UseCoffinCornerOptions {
    */
   // biome-ignore lint/suspicious/noExplicitAny: Data type is unknown at hook level.
   getEntityId?: (item: any) => EntityId;
-}
+};
 
 /**
  * Hook to manage coffin corner entity selection state.
