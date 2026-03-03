@@ -10,5 +10,5 @@
  * governing permissions and limitations under the License.
  */
 
-export { default as CoffinCornersExtension } from './coffin-corner/coffin-corners-extension';
+export { CoffinCornersExtension } from './coffin-corner/coffin-corners-extension';
 export type { CoffinCornersExtensionProps } from './coffin-corner/coffin-corners-extension';

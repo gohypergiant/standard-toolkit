@@ -32,6 +32,19 @@ export interface UseCoffinCornerReturn {
 }
 
 /**
+ * Options for the useCoffinCorner hook.
+ */
+export interface UseCoffinCornerOptions {
+  /**
+   * Accessor to extract an entity ID from a picked data item.
+   * Must match the `getEntityId` prop passed to the CoffinCornersExtension.
+   * @default (item) => item.id
+   */
+  // biome-ignore lint/suspicious/noExplicitAny: Data type is unknown at hook level.
+  getEntityId?: (item: any) => EntityId;
+}
+
+/**
  * Hook to manage coffin corner entity selection state.
  *
  * Automatically subscribes to map bus events for the given map and layer,
@@ -39,6 +52,7 @@ export interface UseCoffinCornerReturn {
  *
  * @param mapId - The BaseMap instance ID
  * @param layerId - The deck.gl layer ID to listen for interactions on
+ * @param options - Optional configuration for entity ID extraction
  *
  * @example
  * ```tsx
@@ -58,12 +72,20 @@ export interface UseCoffinCornerReturn {
  *   );
  * }
  * ```
+ *
+ * @example Custom entity ID accessor
+ * ```tsx
+ * const { selectedId, hoveredId } = useCoffinCorner(mapId, 'geojson-icons', {
+ *   getEntityId: (d) => d.properties?.shapeId,
+ * });
+ * ```
  */
 export function useCoffinCorner(
   mapId: UniqueId,
   layerId: string,
+  options?: UseCoffinCornerOptions,
 ): UseCoffinCornerReturn {
-  const { state, setSelectedId, clearSelection, setLayerId } =
+  const { state, setSelectedId, clearSelection, setLayerId, setGetEntityId } =
     coffinCornerStore.use(mapId);
 
   // Unlike a CompositeLayer, CoffinCornersExtension is a shader-only plugin
@@ -72,6 +94,12 @@ export function useCoffinCorner(
   useEffect(() => {
     setLayerId(layerId);
   }, [setLayerId, layerId]);
+
+  useEffect(() => {
+    if (options?.getEntityId) {
+      setGetEntityId(options.getEntityId);
+    }
+  }, [setGetEntityId, options?.getEntityId]);
 
   return {
     selectedId: state.selectedId,

@@ -69,15 +69,9 @@ float coffinCorners_sdLCorner(vec2 p, float len, float wid) {
   return min(h, v);
 }
 
-float coffinCorners_allCorners(vec2 uvCoord) {
-  vec2 boxSize = vec2(40.0);
-  float len = 10.0;
-  float wid = 2.0;
-
-  vec2 halfSize = boxSize * 0.5;
-  vec2 localUV = (uvCoord + 1.0) * 0.5;
-  vec2 pixelPos = localUV * boxSize;
-  vec2 p = pixelPos - halfSize;
+float coffinCorners_allCorners(vec2 p, vec2 halfSize) {
+  float len = 0.26;   // bracket arm ≈ 26% of icon
+  float wid = 0.07;   // bracket stroke ≈ 7% of icon
 
   vec2 top_left = p + halfSize;
   vec2 top_right = vec2(halfSize.x - p.x, p.y + halfSize.y);
@@ -99,24 +93,22 @@ float coffinCorners_allCorners(vec2 uvCoord) {
     bool cc_isSelected = v_instanceSelectedEntity > 0.5;
 
     if (cc_isHovered || cc_isSelected) {
-      vec2 boxSize = vec2(40.0);
-      vec2 halfSize = boxSize * 0.5;
-      vec2 localUV = (uv + 1.0) * 0.5;
-      vec2 pixelPos = localUV * boxSize;
-      vec2 p = pixelPos - halfSize;
+      vec2 halfSize = vec2(0.5);
+      vec2 p = uv * 0.5;  // map -1..1 to -0.5..0.5
 
-      // Check if inside the coffin corner box
-      float cc_boxDist = max(abs(p.x), abs(p.y)) - halfSize.x;
-      bool cc_insideBox = cc_boxDist < 0.0;
+      // Check if inside the icon quad
+      bool cc_insideBox = max(abs(p.x), abs(p.y)) < halfSize.x;
 
-      float cc_d = coffinCorners_allCorners(uv);
+      float cc_d = coffinCorners_allCorners(p, halfSize);
 
-      // Stroke width in pixels
-      float strokeWidth = 1.0;
+      // Outline width (proportional to icon)
+      float cc_stroke = 0.026;
+      // Anti-alias band: ~1 screen pixel regardless of icon size
+      float cc_aa = fwidth(cc_d);
 
       // Two alphas: stroke (dilated) and fill (normal)
-      float cc_strokeAlpha = 1.0 - smoothstep(0.0, 1.0, cc_d + strokeWidth);
-      float cc_fillAlpha = 1.0 - smoothstep(0.0, 1.0, cc_d);
+      float cc_strokeAlpha = 1.0 - smoothstep(0.0, cc_aa, cc_d + cc_stroke);
+      float cc_fillAlpha = 1.0 - smoothstep(0.0, cc_aa, cc_d);
 
       if (cc_insideBox) {
         // Sample icon texture
@@ -225,7 +217,7 @@ const DEFAULT_CORNER_COLOR: Rgba255Tuple = [57, 183, 250, 255];
  * })
  * ```
  */
-export default class CoffinCornersExtension extends LayerExtension {
+export class CoffinCornersExtension extends LayerExtension {
   static override componentName = 'CoffinCornersExtension';
 
   static override defaultProps = {
@@ -300,7 +292,7 @@ export default class CoffinCornersExtension extends LayerExtension {
     if (newSelectedId !== oldSelectedId) {
       const { selectedEntities } = this.state;
       if (oldSelectedId != null) {
-        selectedEntities.set(oldSelectedId, 0);
+        selectedEntities.delete(oldSelectedId);
       }
       if (newSelectedId != null) {
         selectedEntities.set(newSelectedId, 1);
@@ -314,7 +306,7 @@ export default class CoffinCornersExtension extends LayerExtension {
     if (newHoveredId !== oldHoveredId) {
       const { hoveredEntities } = this.state;
       if (oldHoveredId != null) {
-        hoveredEntities.set(oldHoveredId, 0);
+        hoveredEntities.delete(oldHoveredId);
       }
       if (newHoveredId != null) {
         hoveredEntities.set(newHoveredId, 1);

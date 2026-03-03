@@ -13,42 +13,17 @@
 import { Broadcast } from '@accelint/bus';
 import { uuid } from '@accelint/core';
 import { renderHook, waitFor } from '@testing-library/react';
-import {
-  afterAll,
-  afterEach,
-  beforeAll,
-  beforeEach,
-  describe,
-  expect,
-  it,
-} from 'vitest';
-import { clearSelection } from './store';
+import { act } from 'react';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { clearSelection, coffinCornerStore } from './store';
 import { CoffinCornerEvents } from './types';
 import { useCoffinCorner } from './use-coffin-corner';
 import type { UniqueId } from '@accelint/core';
 import type { CoffinCornerEvent } from './types';
 
-const consoleError = console.error;
-
 describe('useCoffinCorner', () => {
   let mapId: UniqueId;
   let bus: ReturnType<typeof Broadcast.getInstance<CoffinCornerEvent>>;
-
-  beforeAll(() => {
-    console.error = (...args: unknown[]) => {
-      if (
-        typeof args[0] === 'string' &&
-        args[0].includes('not wrapped in act')
-      ) {
-        return;
-      }
-      consoleError.call(console, ...args);
-    };
-  });
-
-  afterAll(() => {
-    console.error = consoleError;
-  });
 
   beforeEach(() => {
     mapId = uuid();
@@ -79,7 +54,7 @@ describe('useCoffinCorner', () => {
     it('should update selectedId when selecting an entity', async () => {
       const { result } = renderHook(() => useCoffinCorner(mapId, 'symbols'));
 
-      result.current.setSelectedId('entity-1');
+      act(() => result.current.setSelectedId('entity-1'));
 
       await waitFor(() => {
         expect(result.current.selectedId).toBe('entity-1');
@@ -89,13 +64,13 @@ describe('useCoffinCorner', () => {
     it('should update selectedId when changing selection', async () => {
       const { result } = renderHook(() => useCoffinCorner(mapId, 'symbols'));
 
-      result.current.setSelectedId('entity-1');
+      act(() => result.current.setSelectedId('entity-1'));
 
       await waitFor(() => {
         expect(result.current.selectedId).toBe('entity-1');
       });
 
-      result.current.setSelectedId('entity-2');
+      act(() => result.current.setSelectedId('entity-2'));
 
       await waitFor(() => {
         expect(result.current.selectedId).toBe('entity-2');
@@ -105,13 +80,13 @@ describe('useCoffinCorner', () => {
     it('should clear selectedId when passing undefined', async () => {
       const { result } = renderHook(() => useCoffinCorner(mapId, 'symbols'));
 
-      result.current.setSelectedId('entity-1');
+      act(() => result.current.setSelectedId('entity-1'));
 
       await waitFor(() => {
         expect(result.current.selectedId).toBe('entity-1');
       });
 
-      result.current.setSelectedId(undefined);
+      act(() => result.current.setSelectedId(undefined));
 
       await waitFor(() => {
         expect(result.current.selectedId).toBeUndefined();
@@ -123,13 +98,13 @@ describe('useCoffinCorner', () => {
     it('should clear selectedId', async () => {
       const { result } = renderHook(() => useCoffinCorner(mapId, 'symbols'));
 
-      result.current.setSelectedId('entity-1');
+      act(() => result.current.setSelectedId('entity-1'));
 
       await waitFor(() => {
         expect(result.current.selectedId).toBe('entity-1');
       });
 
-      result.current.clearSelection();
+      act(() => result.current.clearSelection());
 
       await waitFor(() => {
         expect(result.current.selectedId).toBeUndefined();
@@ -141,10 +116,12 @@ describe('useCoffinCorner', () => {
     it('should update hoveredId when HOVERED event is emitted', async () => {
       const { result } = renderHook(() => useCoffinCorner(mapId, 'symbols'));
 
-      bus.emit(CoffinCornerEvents.HOVERED, {
-        hoveredId: 'entity-5',
-        mapId,
-      });
+      act(() =>
+        bus.emit(CoffinCornerEvents.HOVERED, {
+          hoveredId: 'entity-5',
+          mapId,
+        }),
+      );
 
       await waitFor(() => {
         expect(result.current.hoveredId).toBe('entity-5');
@@ -154,38 +131,68 @@ describe('useCoffinCorner', () => {
     it('should clear hoveredId when HOVERED event has no hoveredId', async () => {
       const { result } = renderHook(() => useCoffinCorner(mapId, 'symbols'));
 
-      bus.emit(CoffinCornerEvents.HOVERED, {
-        hoveredId: 'entity-5',
-        mapId,
-      });
+      act(() =>
+        bus.emit(CoffinCornerEvents.HOVERED, {
+          hoveredId: 'entity-5',
+          mapId,
+        }),
+      );
 
       await waitFor(() => {
         expect(result.current.hoveredId).toBe('entity-5');
       });
 
-      bus.emit(CoffinCornerEvents.HOVERED, {
-        hoveredId: undefined,
-        mapId,
-      });
+      act(() =>
+        bus.emit(CoffinCornerEvents.HOVERED, {
+          hoveredId: undefined,
+          mapId,
+        }),
+      );
 
       await waitFor(() => {
         expect(result.current.hoveredId).toBeUndefined();
       });
     });
 
-    it('should ignore HOVERED events for different mapId', async () => {
+    it('should ignore HOVERED events for different mapId', () => {
       const otherMapId = uuid();
       const { result } = renderHook(() => useCoffinCorner(mapId, 'symbols'));
 
-      bus.emit(CoffinCornerEvents.HOVERED, {
-        hoveredId: 'entity-5',
-        mapId: otherMapId,
-      });
-
-      // Wait a tick
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      act(() =>
+        bus.emit(CoffinCornerEvents.HOVERED, {
+          hoveredId: 'entity-5',
+          mapId: otherMapId,
+        }),
+      );
 
       expect(result.current.hoveredId).toBeUndefined();
+    });
+  });
+
+  describe('getEntityId option', () => {
+    it('should forward getEntityId to the store', () => {
+      const customAccessor = (item: { uid: string }) => item.uid;
+      renderHook(() =>
+        useCoffinCorner(mapId, 'symbols', { getEntityId: customAccessor }),
+      );
+
+      const state = coffinCornerStore.get(mapId);
+      expect(state.getEntityId).toBe(customAccessor);
+    });
+  });
+
+  describe('layerId changes', () => {
+    it('should update layerId in store when prop changes', () => {
+      const { rerender } = renderHook(
+        ({ layerId }) => useCoffinCorner(mapId, layerId),
+        { initialProps: { layerId: 'layer-a' } },
+      );
+
+      expect(coffinCornerStore.get(mapId).layerId).toBe('layer-a');
+
+      rerender({ layerId: 'layer-b' });
+
+      expect(coffinCornerStore.get(mapId).layerId).toBe('layer-b');
     });
   });
 
@@ -198,7 +205,7 @@ describe('useCoffinCorner', () => {
         useCoffinCorner(mapId1, 'symbols'),
       );
 
-      result1.current.setSelectedId('entity-1');
+      act(() => result1.current.setSelectedId('entity-1'));
 
       await waitFor(() => {
         expect(result1.current.selectedId).toBe('entity-1');
@@ -214,7 +221,7 @@ describe('useCoffinCorner', () => {
 
       expect(result2.current.selectedId).toBeUndefined();
 
-      result2.current.setSelectedId('entity-2');
+      act(() => result2.current.setSelectedId('entity-2'));
 
       await waitFor(() => {
         expect(result2.current.selectedId).toBe('entity-2');

@@ -14,7 +14,7 @@ import { uuid } from '@accelint/core';
 import { BaseMap } from '@/deckgl/base-map';
 import iconMapping from '../../shapes/__fixtures__/atlas.json';
 import iconAtlas from '../../shapes/__fixtures__/atlas.png';
-import CoffinCornersExtension from './coffin-corners-extension';
+import { CoffinCornersExtension } from './coffin-corners-extension';
 import { useCoffinCorner } from './use-coffin-corner';
 import type { Rgba255Tuple } from '@accelint/predicates';
 import type { Meta, StoryObj } from '@storybook/react-vite';

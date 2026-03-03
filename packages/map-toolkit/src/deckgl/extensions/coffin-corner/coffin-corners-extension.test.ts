@@ -11,16 +11,31 @@
  */
 
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import CoffinCornersExtension from './coffin-corners-extension';
+import { CoffinCornersExtension } from './coffin-corners-extension';
 import type { Rgba255Tuple } from '@accelint/predicates';
 import type { EntityId } from './types';
 
 /**
+ * Creates mock UpdateParameters with only the props/oldProps the extension reads.
+ */
+function createMockParams(
+  props: Record<string, unknown>,
+  oldProps: Record<string, unknown>,
+) {
+  // biome-ignore lint/suspicious/noExplicitAny: Mock params only implements the subset of UpdateParameters the extension uses.
+  return { props, oldProps } as any;
+}
+
+/**
  * Creates a mock deck.gl layer object that satisfies the `this` binding
  * required by CoffinCornersExtension lifecycle methods.
+ *
+ * Uses a type assertion to avoid needing the full 70+ property Layer interface
+ * while still providing the properties the extension actually accesses.
  */
 function createMockLayer(propsOverrides: Record<string, unknown> = {}) {
   const invalidate = vi.fn();
+  const addInstanced = vi.fn();
 
   return {
     state: {
@@ -28,10 +43,12 @@ function createMockLayer(propsOverrides: Record<string, unknown> = {}) {
       hoveredEntities: new Map<EntityId, number>(),
     },
     props: propsOverrides,
-    getAttributeManager: vi.fn(() => ({ invalidate })),
+    getAttributeManager: vi.fn(() => ({ invalidate, addInstanced })),
     setShaderModuleProps: vi.fn(),
     invalidate,
-  };
+    addInstanced,
+    // biome-ignore lint/suspicious/noExplicitAny: Mock layer only implements the subset of Layer the extension uses.
+  } as any;
 }
 
 describe('CoffinCornersExtension', () => {
@@ -41,85 +58,191 @@ describe('CoffinCornersExtension', () => {
     extension = new CoffinCornersExtension();
   });
 
-  describe('updateState', () => {
-    it('should set selectedEntityId=1 in Map and invalidate attribute', () => {
+  describe('initializeState', () => {
+    it('should initialize empty entity state maps', () => {
       const layer = createMockLayer();
-      const params = {
-        props: { selectedEntityId: 'entity-1' },
-        oldProps: { selectedEntityId: undefined },
-      };
 
-      extension.updateState.call(layer, params);
+      extension.initializeState.call(layer);
+
+      expect(layer.state.selectedEntities).toBeInstanceOf(Map);
+      expect(layer.state.hoveredEntities).toBeInstanceOf(Map);
+      expect(layer.state.selectedEntities.size).toBe(0);
+      expect(layer.state.hoveredEntities.size).toBe(0);
+    });
+
+    it('should register two instanced GPU attributes', () => {
+      const layer = createMockLayer();
+
+      extension.initializeState.call(layer);
+
+      expect(layer.addInstanced).toHaveBeenCalledWith(
+        expect.objectContaining({
+          instanceSelectedEntity: expect.objectContaining({ size: 1 }),
+          instanceHoveredEntity: expect.objectContaining({ size: 1 }),
+        }),
+      );
+    });
+
+    it('should handle null attributeManager gracefully', () => {
+      const layer = createMockLayer();
+      layer.getAttributeManager = vi.fn(() => null);
+
+      extension.initializeState.call(layer);
+
+      expect(layer.state.selectedEntities).toBeInstanceOf(Map);
+      expect(layer.state.hoveredEntities).toBeInstanceOf(Map);
+    });
+
+    it('should write 1.0 for selected entities in the attribute update callback', () => {
+      const layer = createMockLayer();
+      extension.initializeState.call(layer);
+
+      layer.state.selectedEntities.set('entity-a', 1);
+
+      const addInstancedCall = layer.addInstanced.mock.calls[0][0];
+      const updateFn = addInstancedCall.instanceSelectedEntity.update;
+
+      const attribute = { value: new Float32Array(3) };
+      const data = [{ id: 'entity-a' }, { id: 'entity-b' }, { id: 'entity-c' }];
+      updateFn(attribute, { data });
+
+      expect(attribute.value[0]).toBe(1);
+      expect(attribute.value[1]).toBe(0);
+      expect(attribute.value[2]).toBe(0);
+    });
+
+    it('should use custom getEntityId accessor from props', () => {
+      const layer = createMockLayer({
+        getEntityId: (d: { uid: string }) => d.uid,
+      });
+      extension.initializeState.call(layer);
+
+      layer.state.hoveredEntities.set('custom-1', 1);
+
+      const addInstancedCall = layer.addInstanced.mock.calls[0][0];
+      const updateFn = addInstancedCall.instanceHoveredEntity.update;
+
+      const attribute = { value: new Float32Array(2) };
+      const data = [{ uid: 'custom-1' }, { uid: 'custom-2' }];
+      updateFn(attribute, { data });
+
+      expect(attribute.value[0]).toBe(1);
+      expect(attribute.value[1]).toBe(0);
+    });
+
+    it('should default to 0 for items not in the entity map', () => {
+      const layer = createMockLayer();
+      extension.initializeState.call(layer);
+
+      const addInstancedCall = layer.addInstanced.mock.calls[0][0];
+      const updateFn = addInstancedCall.instanceSelectedEntity.update;
+
+      const attribute = { value: new Float32Array(2) };
+      const data = [{ id: 'not-selected' }, { id: 'also-not-selected' }];
+      updateFn(attribute, { data });
+
+      expect(attribute.value[0]).toBe(0);
+      expect(attribute.value[1]).toBe(0);
+    });
+
+    it('should handle undefined data gracefully', () => {
+      const layer = createMockLayer();
+      extension.initializeState.call(layer);
+
+      const addInstancedCall = layer.addInstanced.mock.calls[0][0];
+      const updateFn = addInstancedCall.instanceSelectedEntity.update;
+
+      const attribute = { value: new Float32Array(0) };
+
+      expect(() => updateFn(attribute, { data: undefined })).not.toThrow();
+    });
+  });
+
+  describe('updateState', () => {
+    it('should mark entity as selected when selectedEntityId prop changes', () => {
+      const layer = createMockLayer();
+
+      extension.updateState.call(
+        layer,
+        createMockParams(
+          { selectedEntityId: 'entity-1' },
+          { selectedEntityId: undefined },
+        ),
+      );
 
       expect(layer.state.selectedEntities.get('entity-1')).toBe(1);
       expect(layer.invalidate).toHaveBeenCalledWith('instanceSelectedEntity');
     });
 
-    it('should clear old selectedEntityId when changed', () => {
+    it('should remove old entity and add new when selection changes', () => {
       const layer = createMockLayer();
       layer.state.selectedEntities.set('entity-1', 1);
-      const params = {
-        props: { selectedEntityId: 'entity-2' },
-        oldProps: { selectedEntityId: 'entity-1' },
-      };
 
-      extension.updateState.call(layer, params);
+      extension.updateState.call(
+        layer,
+        createMockParams(
+          { selectedEntityId: 'entity-2' },
+          { selectedEntityId: 'entity-1' },
+        ),
+      );
 
-      expect(layer.state.selectedEntities.get('entity-1')).toBe(0);
+      expect(layer.state.selectedEntities.has('entity-1')).toBe(false);
       expect(layer.state.selectedEntities.get('entity-2')).toBe(1);
       expect(layer.invalidate).toHaveBeenCalledWith('instanceSelectedEntity');
     });
 
     it('should not invalidate when selectedEntityId is unchanged', () => {
       const layer = createMockLayer();
-      const params = {
-        props: { selectedEntityId: 'entity-1' },
-        oldProps: { selectedEntityId: 'entity-1' },
-      };
 
-      extension.updateState.call(layer, params);
+      extension.updateState.call(
+        layer,
+        createMockParams(
+          { selectedEntityId: 'entity-1' },
+          { selectedEntityId: 'entity-1' },
+        ),
+      );
 
       expect(layer.invalidate).not.toHaveBeenCalledWith(
         'instanceSelectedEntity',
       );
     });
 
-    it('should set hoveredEntityId=1 in Map and invalidate attribute', () => {
+    it('should mark entity as hovered when hoveredEntityId prop changes', () => {
       const layer = createMockLayer();
-      const params = {
-        props: { hoveredEntityId: 42 },
-        oldProps: { hoveredEntityId: undefined },
-      };
 
-      extension.updateState.call(layer, params);
+      extension.updateState.call(
+        layer,
+        createMockParams(
+          { hoveredEntityId: 42 },
+          { hoveredEntityId: undefined },
+        ),
+      );
 
       expect(layer.state.hoveredEntities.get(42)).toBe(1);
       expect(layer.invalidate).toHaveBeenCalledWith('instanceHoveredEntity');
     });
 
-    it('should clear old hoveredEntityId when changed', () => {
+    it('should remove old entity and add new when hover changes', () => {
       const layer = createMockLayer();
       layer.state.hoveredEntities.set(42, 1);
-      const params = {
-        props: { hoveredEntityId: 99 },
-        oldProps: { hoveredEntityId: 42 },
-      };
 
-      extension.updateState.call(layer, params);
+      extension.updateState.call(
+        layer,
+        createMockParams({ hoveredEntityId: 99 }, { hoveredEntityId: 42 }),
+      );
 
-      expect(layer.state.hoveredEntities.get(42)).toBe(0);
+      expect(layer.state.hoveredEntities.has(42)).toBe(false);
       expect(layer.state.hoveredEntities.get(99)).toBe(1);
       expect(layer.invalidate).toHaveBeenCalledWith('instanceHoveredEntity');
     });
 
     it('should not invalidate when hoveredEntityId is unchanged', () => {
       const layer = createMockLayer();
-      const params = {
-        props: { hoveredEntityId: 42 },
-        oldProps: { hoveredEntityId: 42 },
-      };
 
-      extension.updateState.call(layer, params);
+      extension.updateState.call(
+        layer,
+        createMockParams({ hoveredEntityId: 42 }, { hoveredEntityId: 42 }),
+      );
 
       expect(layer.invalidate).not.toHaveBeenCalledWith(
         'instanceHoveredEntity',
@@ -128,15 +251,14 @@ describe('CoffinCornersExtension', () => {
 
     it('should handle both selection and hover changing simultaneously', () => {
       const layer = createMockLayer();
-      const params = {
-        props: { selectedEntityId: 'sel-1', hoveredEntityId: 'hov-1' },
-        oldProps: {
-          selectedEntityId: undefined,
-          hoveredEntityId: undefined,
-        },
-      };
 
-      extension.updateState.call(layer, params);
+      extension.updateState.call(
+        layer,
+        createMockParams(
+          { selectedEntityId: 'sel-1', hoveredEntityId: 'hov-1' },
+          { selectedEntityId: undefined, hoveredEntityId: undefined },
+        ),
+      );
 
       expect(layer.state.selectedEntities.get('sel-1')).toBe(1);
       expect(layer.state.hoveredEntities.get('hov-1')).toBe(1);
@@ -146,42 +268,113 @@ describe('CoffinCornersExtension', () => {
 
     it('should handle entity ID of 0 (falsy but valid)', () => {
       const layer = createMockLayer();
-      const params = {
-        props: { selectedEntityId: 0 },
-        oldProps: { selectedEntityId: undefined },
-      };
 
-      extension.updateState.call(layer, params);
+      extension.updateState.call(
+        layer,
+        createMockParams(
+          { selectedEntityId: 0 },
+          { selectedEntityId: undefined },
+        ),
+      );
 
       expect(layer.state.selectedEntities.get(0)).toBe(1);
       expect(layer.invalidate).toHaveBeenCalledWith('instanceSelectedEntity');
     });
 
-    it('should clear entity ID of 0 when changed', () => {
+    it('should remove entity ID of 0 when selection changes', () => {
       const layer = createMockLayer();
       layer.state.selectedEntities.set(0, 1);
-      const params = {
-        props: { selectedEntityId: 'new-id' },
-        oldProps: { selectedEntityId: 0 },
-      };
 
-      extension.updateState.call(layer, params);
+      extension.updateState.call(
+        layer,
+        createMockParams(
+          { selectedEntityId: 'new-id' },
+          { selectedEntityId: 0 },
+        ),
+      );
 
-      expect(layer.state.selectedEntities.get(0)).toBe(0);
+      expect(layer.state.selectedEntities.has(0)).toBe(false);
       expect(layer.state.selectedEntities.get('new-id')).toBe(1);
+    });
+
+    it('should handle empty string as entity ID', () => {
+      const layer = createMockLayer();
+
+      extension.updateState.call(
+        layer,
+        createMockParams(
+          { selectedEntityId: '' },
+          { selectedEntityId: undefined },
+        ),
+      );
+
+      expect(layer.state.selectedEntities.get('')).toBe(1);
+      expect(layer.invalidate).toHaveBeenCalledWith('instanceSelectedEntity');
+    });
+
+    it('should treat null the same as undefined for deselection', () => {
+      const layer = createMockLayer();
+      layer.state.selectedEntities.set('entity-1', 1);
+
+      extension.updateState.call(
+        layer,
+        createMockParams(
+          { selectedEntityId: null },
+          { selectedEntityId: 'entity-1' },
+        ),
+      );
+
+      expect(layer.state.selectedEntities.has('entity-1')).toBe(false);
+      expect(layer.invalidate).toHaveBeenCalledWith('instanceSelectedEntity');
     });
 
     it('should handle null attributeManager gracefully', () => {
       const layer = createMockLayer();
       layer.getAttributeManager = vi.fn(() => null);
-      const params = {
-        props: { selectedEntityId: 'entity-1' },
-        oldProps: { selectedEntityId: undefined },
-      };
 
-      extension.updateState.call(layer, params);
+      extension.updateState.call(
+        layer,
+        createMockParams(
+          { selectedEntityId: 'entity-1' },
+          { selectedEntityId: undefined },
+        ),
+      );
 
       expect(layer.state.selectedEntities.get('entity-1')).toBe(1);
+    });
+
+    it('should not accumulate stale entries in entity maps', () => {
+      const layer = createMockLayer();
+
+      // Select entity-1
+      extension.updateState.call(
+        layer,
+        createMockParams(
+          { selectedEntityId: 'entity-1' },
+          { selectedEntityId: undefined },
+        ),
+      );
+      expect(layer.state.selectedEntities.size).toBe(1);
+
+      // Change to entity-2
+      extension.updateState.call(
+        layer,
+        createMockParams(
+          { selectedEntityId: 'entity-2' },
+          { selectedEntityId: 'entity-1' },
+        ),
+      );
+      expect(layer.state.selectedEntities.size).toBe(1);
+
+      // Deselect
+      extension.updateState.call(
+        layer,
+        createMockParams(
+          { selectedEntityId: undefined },
+          { selectedEntityId: 'entity-2' },
+        ),
+      );
+      expect(layer.state.selectedEntities.size).toBe(0);
     });
   });
 
@@ -223,6 +416,19 @@ describe('CoffinCornersExtension', () => {
           highlightColor: [100 / 255, 100 / 255, 100 / 255, 127 / 255],
         },
       });
+    });
+  });
+
+  describe('getShaders', () => {
+    it('should return shader config with modules and inject keys', () => {
+      const layer = createMockLayer();
+
+      const shaders = extension.getShaders.call(layer, extension);
+
+      expect(shaders).toHaveProperty('modules');
+      expect(shaders).toHaveProperty('inject');
+      expect(shaders.modules).toHaveLength(1);
+      expect(shaders.modules[0].name).toBe('coffinCorners');
     });
   });
 });

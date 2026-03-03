@@ -11,7 +11,7 @@
  */
 
 // Extension exports
-export { default as CoffinCornersExtension } from './coffin-corners-extension';
+export { CoffinCornersExtension } from './coffin-corners-extension';
 // Store exports
 export {
   clearSelection,
@@ -23,6 +23,7 @@ export {
 export { CoffinCornerEvents } from './types';
 // Hook exports
 export {
+  type UseCoffinCornerOptions,
   type UseCoffinCornerReturn,
   useCoffinCorner,
 } from './use-coffin-corner';

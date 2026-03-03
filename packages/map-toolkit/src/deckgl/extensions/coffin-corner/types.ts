@@ -10,8 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-'use client';
-
 import type { Payload } from '@accelint/bus';
 import type { UniqueId } from '@accelint/core';
 

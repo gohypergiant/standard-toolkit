@@ -28,7 +28,7 @@ import {
   getFillColor,
   getLineColor,
 } from '../shared/utils/style-utils';
-import CoffinCornersExtension from '../../extensions/coffin-corner/coffin-corners-extension';
+import { CoffinCornersExtension } from '../../extensions/coffin-corner/coffin-corners-extension';
 import {
   BRIGHTNESS_FACTOR,
   DASH_EXTENSION,

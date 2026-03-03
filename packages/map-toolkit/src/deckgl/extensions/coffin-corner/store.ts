@@ -24,6 +24,14 @@ import type {
 } from '../../base-map/types';
 import type { CoffinCornerEvent, EntityId } from './types';
 
+/** Extracts an entity ID from a picked data item. */
+// biome-ignore lint/suspicious/noExplicitAny: Data type is unknown at store level.
+type GetEntityId = (item: any) => EntityId;
+
+/** Default accessor — assumes the data item has an `id` property. */
+// biome-ignore lint/suspicious/noExplicitAny: Data type is unknown at store level.
+const defaultGetEntityId: GetEntityId = (item: any) => item.id as EntityId;
+
 /**
  * State for coffin corner selection and hover
  */
@@ -31,6 +39,7 @@ type CoffinCornerState = {
   selectedId: EntityId | undefined;
   hoveredId: EntityId | undefined;
   layerId: string | undefined;
+  getEntityId: GetEntityId;
 };
 
 /**
@@ -40,6 +49,7 @@ type CoffinCornerActions = {
   setSelectedId: (id: EntityId | undefined) => void;
   clearSelection: () => void;
   setLayerId: (layerId: string) => void;
+  setGetEntityId: (fn: GetEntityId) => void;
 };
 
 const coffinCornerEventBus = Broadcast.getInstance<CoffinCornerEvent>();
@@ -65,6 +75,7 @@ export const coffinCornerStore = createMapStore<
     selectedId: undefined,
     hoveredId: undefined,
     layerId: undefined,
+    getEntityId: defaultGetEntityId,
   },
 
   actions: (mapId, { get, set }) => ({
@@ -100,6 +111,12 @@ export const coffinCornerStore = createMapStore<
     setLayerId: (layerId: string) => {
       if (get().layerId !== layerId) {
         set({ layerId });
+      }
+    },
+
+    setGetEntityId: (fn: GetEntityId) => {
+      if (get().getEntityId !== fn) {
+        set({ getEntityId: fn });
       }
     },
   }),
@@ -154,7 +171,7 @@ export const coffinCornerStore = createMapStore<
       const { layerId, selectedId } = get();
 
       if (info.layerId === layerId && info.object) {
-        const entityId = info.object.id;
+        const entityId = get().getEntityId(info.object);
 
         if (selectedId === entityId) {
           coffinCornerEventBus.emit(CoffinCornerEvents.DESELECTED, {
@@ -189,7 +206,9 @@ export const coffinCornerStore = createMapStore<
       const { layerId } = get();
 
       const hoveredId =
-        info.layerId === layerId && info.object ? info.object.id : undefined;
+        info.layerId === layerId && info.object
+          ? get().getEntityId(info.object)
+          : undefined;
 
       if (get().hoveredId !== hoveredId) {
         coffinCornerEventBus.emit(CoffinCornerEvents.HOVERED, {
