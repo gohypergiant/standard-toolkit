@@ -18,8 +18,10 @@
 
 export { Broadcast } from './broadcast';
 export type {
+  BasicPayload,
   BroadcastConfig,
   EmitOptions,
+  EmitTarget,
   ExtractEvent,
   Listener,
   Payload,
