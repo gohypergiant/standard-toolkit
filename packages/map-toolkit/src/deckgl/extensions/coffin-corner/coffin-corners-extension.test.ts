@@ -236,6 +236,23 @@ describe('CoffinCornersExtension', () => {
       expect(layer.invalidate).toHaveBeenCalledWith('instanceHoveredEntity');
     });
 
+    it('should clear hovered entity when hoveredEntityId becomes undefined', () => {
+      const layer = createMockLayer();
+      layer.state.hoveredEntities.set('hov-1', 1);
+
+      extension.updateState.call(
+        layer,
+        createMockParams(
+          { hoveredEntityId: undefined },
+          { hoveredEntityId: 'hov-1' },
+        ),
+      );
+
+      expect(layer.state.hoveredEntities.has('hov-1')).toBe(false);
+      expect(layer.state.hoveredEntities.size).toBe(0);
+      expect(layer.invalidate).toHaveBeenCalledWith('instanceHoveredEntity');
+    });
+
     it('should not invalidate when hoveredEntityId is unchanged', () => {
       const layer = createMockLayer();
 
@@ -425,10 +442,16 @@ describe('CoffinCornersExtension', () => {
 
       const shaders = extension.getShaders.call(layer, extension);
 
-      expect(shaders).toHaveProperty('modules');
-      expect(shaders).toHaveProperty('inject');
       expect(shaders.modules).toHaveLength(1);
       expect(shaders.modules[0].name).toBe('coffinCorners');
+      expect(Object.keys(shaders.inject)).toEqual(
+        expect.arrayContaining([
+          'vs:#decl',
+          'vs:#main-end',
+          'fs:#decl',
+          'fs:#main-start',
+        ]),
+      );
     });
   });
 });

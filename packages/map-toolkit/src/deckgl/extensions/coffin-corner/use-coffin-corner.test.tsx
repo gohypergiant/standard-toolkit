@@ -179,6 +179,21 @@ describe('useCoffinCorner', () => {
       const state = coffinCornerStore.get(mapId);
       expect(state.getEntityId).toBe(customAccessor);
     });
+
+    it('should update getEntityId in store when option changes', () => {
+      const accessor1 = (item: { uid: string }) => item.uid;
+      const accessor2 = (item: { code: string }) => item.code;
+      const { rerender } = renderHook(
+        ({ getEntityId }) => useCoffinCorner(mapId, 'symbols', { getEntityId }),
+        { initialProps: { getEntityId: accessor1 } },
+      );
+
+      expect(coffinCornerStore.get(mapId).getEntityId).toBe(accessor1);
+
+      rerender({ getEntityId: accessor2 });
+
+      expect(coffinCornerStore.get(mapId).getEntityId).toBe(accessor2);
+    });
   });
 
   describe('layerId changes', () => {

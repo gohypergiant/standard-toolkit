@@ -168,10 +168,10 @@ export const coffinCornerStore = createMapStore<
       }
 
       const { info } = event.payload;
-      const { layerId, selectedId } = get();
+      const { layerId, selectedId, getEntityId: getId } = get();
 
       if (info.layerId === layerId && info.object) {
-        const entityId = get().getEntityId(info.object);
+        const entityId = getId(info.object);
 
         if (selectedId === entityId) {
           coffinCornerEventBus.emit(CoffinCornerEvents.DESELECTED, {
@@ -203,14 +203,18 @@ export const coffinCornerStore = createMapStore<
       }
 
       const { info } = event.payload;
-      const { layerId } = get();
+      const {
+        layerId,
+        getEntityId: getId,
+        hoveredId: currentHoveredId,
+      } = get();
 
       const hoveredId =
         info.layerId === layerId && info.object
-          ? get().getEntityId(info.object)
+          ? getId(info.object)
           : undefined;
 
-      if (get().hoveredId !== hoveredId) {
+      if (currentHoveredId !== hoveredId) {
         coffinCornerEventBus.emit(CoffinCornerEvents.HOVERED, {
           hoveredId,
           mapId,
