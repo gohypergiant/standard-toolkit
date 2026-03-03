@@ -259,7 +259,7 @@ describe('broadcast', () => {
     expect(fn).not.toHaveBeenCalled();
   });
 
-  it('should default to all as target audience', () => {
+  it('should default to self as target audience', () => {
     const bus = Broadcast.getInstance<Payload<'test', string>>();
     const fn = vi.fn();
 
