@@ -494,4 +494,4 @@ The library exports TypeScript types for all dataset variants:
 
 ## License
 
-Apache License 2.0 - Copyright 2025 Hypergiant Galactic Systems Inc.
+Apache License 2.0 - Copyright 2026 Hypergiant Galactic Systems Inc.
