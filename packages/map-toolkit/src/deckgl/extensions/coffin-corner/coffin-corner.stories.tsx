@@ -16,6 +16,7 @@ import iconMapping from '../../shapes/__fixtures__/atlas.json';
 import iconAtlas from '../../shapes/__fixtures__/atlas.png';
 import CoffinCornersExtension from './coffin-corners-extension';
 import { useCoffinCorner } from './use-coffin-corner';
+import type { Rgba255Tuple } from '@accelint/predicates';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const CA_VIEW_STATE = {
@@ -70,7 +71,7 @@ const coffinCornersExtension = new CoffinCornersExtension();
 function CoffinCornersDemo({
   coffinCornerColor,
 }: {
-  coffinCornerColor: [number, number, number];
+  coffinCornerColor: Rgba255Tuple;
 }) {
   const { selectedId, hoveredId } = useCoffinCorner(MAP_ID, LAYER_ID);
 
@@ -109,17 +110,17 @@ function CoffinCornersDemo({
 
 export const Default: Story = {
   args: {
-    coffinCornerColor: [57, 183, 250],
+    coffinCornerColor: [57, 183, 250, 255],
   },
   argTypes: {
     coffinCornerColor: {
       control: { type: 'object' },
-      description: 'Coffin corner color [R, G, B] with values 0-255',
+      description: 'Coffin corner color [R, G, B, A] with values 0-255',
     },
   },
   render: (args) => (
     <CoffinCornersDemo
-      coffinCornerColor={args.coffinCornerColor as [number, number, number]}
+      coffinCornerColor={args.coffinCornerColor as Rgba255Tuple}
     />
   ),
 };

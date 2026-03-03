@@ -11,6 +11,7 @@
  */
 
 import { LayerExtension } from '@deck.gl/core';
+import type { Rgba255Tuple } from '@accelint/predicates';
 import type { Layer, UpdateParameters } from '@deck.gl/core';
 import type { EntityId } from './types';
 
@@ -48,7 +49,7 @@ type CoffinCornerLayer = Layer & {
  *   getEntityId: (d) => d.properties?.shapeId,
  *   selectedEntityId: selectedShapeId,
  *   hoveredEntityId: hoveredShapeId,
- *   coffinCornerColor: [255, 0, 0],
+ *   coffinCornerColor: [255, 0, 0, 255],
  * })
  * ```
  */
@@ -63,11 +64,11 @@ const coffinCornersModule: {
   name: 'coffinCorners',
   fs: /* glsl */ `\
 uniform coffinCornersUniforms {
-  vec3 highlightColor;
+  vec4 highlightColor;
 } coffinCorners;
 `,
   uniformTypes: {
-    highlightColor: 'vec3<f32>',
+    highlightColor: 'vec4<f32>',
   },
 };
 
@@ -173,11 +174,12 @@ float coffinCorners_allCorners(vec2 uvCoord) {
 
         // Composite colored fill OVER stroke (normal shape)
         if (cc_fillAlpha > 0.01) {
-          vec3 cc_cornerColor = cc_isSelected
+          vec4 cc_cornerColor = cc_isSelected
             ? coffinCorners.highlightColor
-            : vec3(1.0);  // White for hover-only
-          result.rgb = cc_cornerColor * cc_fillAlpha + result.rgb * (1.0 - cc_fillAlpha);
-          result.a = cc_fillAlpha + result.a * (1.0 - cc_fillAlpha);
+            : vec4(1.0);  // White fully opaque for hover-only
+          float cc_modAlpha = cc_fillAlpha * cc_cornerColor.a;
+          result.rgb = cc_cornerColor.rgb * cc_modAlpha + result.rgb * (1.0 - cc_modAlpha);
+          result.a = cc_modAlpha + result.a * (1.0 - cc_modAlpha);
         }
 
         fragColor = result;
@@ -198,10 +200,11 @@ export type CoffinCornersExtensionProps<TLayerProps = unknown> = {
   /** The currently hovered entity ID. */
   hoveredEntityId?: EntityId;
   /**
-   * RGB color (0-255) for the selected-state bracket fill.
-   * @default [57, 183, 250] (#39B7FA)
+   * RGBA color (0-255) for the selected-state bracket fill.
+   * Alpha modulates the bracket opacity.
+   * @default [57, 183, 250, 255] (#39B7FA, fully opaque)
    */
-  coffinCornerColor?: [number, number, number];
+  coffinCornerColor?: Rgba255Tuple;
   /**
    * Accessor to extract an entity ID from a data item. Matched against
    * `selectedEntityId` and `hoveredEntityId` to drive the shader state.
@@ -211,8 +214,8 @@ export type CoffinCornersExtensionProps<TLayerProps = unknown> = {
   getEntityId?: (item: any) => EntityId;
 } & TLayerProps;
 
-// -- Default highlight color: #39B7FA --
-const DEFAULT_CORNER_COLOR: [number, number, number] = [57, 183, 250];
+// -- Default highlight color: #39B7FA fully opaque --
+const DEFAULT_CORNER_COLOR: Rgba255Tuple = [57, 183, 250, 255];
 
 // -- Extension class --
 
@@ -311,7 +314,12 @@ export default class CoffinCornersExtension extends LayerExtension {
 
     this.setShaderModuleProps({
       coffinCorners: {
-        highlightColor: [color[0] / 255, color[1] / 255, color[2] / 255],
+        highlightColor: [
+          color[0] / 255,
+          color[1] / 255,
+          color[2] / 255,
+          color[3] / 255,
+        ],
       },
     });
   }
