@@ -11,7 +11,7 @@
  * governing permissions and limitations under the License.
  */
 
-import type { BroadcastConfig } from './types';
+import type { BroadcastConfig, EmitTarget } from './types';
 
 /** The default broadcast configuration. */
 export const DEFAULT_CONFIG: BroadcastConfig = {
@@ -20,10 +20,10 @@ export const DEFAULT_CONFIG: BroadcastConfig = {
   debug: false,
 };
 
-export const DEFAULT_TARGET = 'self';
+export const DEFAULT_TARGET: EmitTarget = 'self';
 
 export const CONNECTION_EVENT_TYPES = {
   echo: '__ECHO__',
   ping: '__PING__',
   stop: '__STOP__',
-};
+} as const;
