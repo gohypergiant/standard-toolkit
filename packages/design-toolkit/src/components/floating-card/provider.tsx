@@ -50,7 +50,7 @@ type FloatingCardHeaderProps = {
   headerActions?: (
     | {
         icon: ReactNode;
-        onPress: () => void;
+        onClick: () => void;
       }
     | 'divider'
   )[];
@@ -116,13 +116,13 @@ function DefaultRightHeader({
             }`}
             variant='icon'
             size='small'
-            onPress={action.onPress}
+            onClick={action.onClick}
           >
             <Icon>{action.icon}</Icon>
           </Button>
         );
       })}
-      <Button variant='icon' size='small' onPress={closeGroup}>
+      <Button variant='icon' size='small' onClick={closeGroup}>
         <Icon>
           <CloseIcon />
         </Icon>
@@ -205,7 +205,7 @@ export type FloatingCardProviderProps = Readonly<
       (
         | {
             icon: ReactNode;
-            onPress: () => void;
+            onClick: () => void;
           }
         | 'divider'
       )[]

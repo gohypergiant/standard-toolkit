@@ -183,7 +183,7 @@ describe('PanelProvider', () => {
     it('should create right header adapter when headerActions are provided', () => {
       render(
         <FloatingCardProvider
-          headerActions={[{ icon: <span>act</span>, onPress: vi.fn() }]}
+          headerActions={[{ icon: <span>act</span>, onClick: vi.fn() }]}
         >
           <div />
         </FloatingCardProvider>,
@@ -504,9 +504,9 @@ describe('header adapters', () => {
 
   it('should render headerActions in the provided order', () => {
     const actions = [
-      { icon: <span>first</span>, onPress: vi.fn() },
-      { icon: <span>second</span>, onPress: vi.fn() },
-      { icon: <span>third</span>, onPress: vi.fn() },
+      { icon: <span>first</span>, onClick: vi.fn() },
+      { icon: <span>second</span>, onClick: vi.fn() },
+      { icon: <span>third</span>, onClick: vi.fn() },
     ];
 
     render(
