@@ -62,10 +62,6 @@ export function FloatingCard({
 }: PropsWithChildren<FloatingCardProps>) {
   const floatingCardContext = useFloatingCard();
 
-  if (!floatingCardContext) {
-    throw new Error('FloatingCard must be used within a FloatingCardProvider.');
-  }
-
   const { width, height } = initialDimensions ?? defaultDimensions;
 
   useEffect(() => {
