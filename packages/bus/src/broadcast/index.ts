@@ -11,19 +11,20 @@
  */
 
 import { isUUID, type UniqueId, uuid } from '@accelint/core';
-import { DEFAULT_CONFIG } from './constants';
+import {
+  CONNECTION_EVENT_TYPES,
+  DEFAULT_CONFIG,
+  DEFAULT_TARGET,
+} from './constants';
 import type { StructuredCloneable } from 'type-fest';
 import type {
+  BasicPayload,
   BroadcastConfig,
   EmitOptions,
   ExtractEvent,
   Listener,
   Payload,
 } from './types';
-
-const DISCONNECT = '__DISCONNECT__';
-const PING = '__PING__';
-const ECHO = '__ECHO__';
 
 /**
  * Broadcast event class allows for emitting and listening for events across browser contexts.
@@ -38,11 +39,7 @@ const ECHO = '__ECHO__';
  * ```
  */
 export class Broadcast<
-  Events extends {
-    type: string;
-    payload?: unknown;
-    target?: UniqueId;
-  } = Payload<string, StructuredCloneable>,
+  Events extends BasicPayload = Payload<string, StructuredCloneable>,
 > {
   protected channel: BroadcastChannel | null = null;
   protected channelName = DEFAULT_CONFIG.channelName;
@@ -83,10 +80,7 @@ export class Broadcast<
    * ```
    */
   static getInstance<
-    Type extends { type: string; payload?: unknown } = Payload<
-      string,
-      StructuredCloneable
-    >,
+    Type extends BasicPayload = Payload<string, StructuredCloneable>,
   >(config?: BroadcastConfig) {
     Broadcast.instance ??= new Broadcast<Type>(config);
 
@@ -101,17 +95,17 @@ export class Broadcast<
     this.channel.onmessage = this.onMessage.bind(this);
     this.channel.onmessageerror = this.onError.bind(this);
 
-    this.on(DISCONNECT, ({ source }) => {
+    this.on(CONNECTION_EVENT_TYPES.stop, ({ source }) => {
       this.connected.delete(source);
     });
 
-    this.on(PING, ({ source }) => {
+    this.on(CONNECTION_EVENT_TYPES.ping, ({ source }) => {
       this.connected.add(source);
 
-      this.emit(ECHO, undefined, { target: source });
+      this.emit(CONNECTION_EVENT_TYPES.echo, undefined, { target: source });
     });
 
-    this.on(ECHO, ({ source }) => {
+    this.on(CONNECTION_EVENT_TYPES.echo, ({ source }) => {
       this.connected.add(source);
     });
 
@@ -146,7 +140,7 @@ export class Broadcast<
     }
 
     if (document.hidden) {
-      this.emit(DISCONNECT, undefined, { target: 'others' });
+      this.emit(CONNECTION_EVENT_TYPES.stop, undefined, { target: 'others' });
     } else {
       this.ping();
     }
@@ -209,7 +203,7 @@ export class Broadcast<
   ping() {
     this.connected.clear();
 
-    this.emit(PING, undefined, { target: 'others' });
+    this.emit(CONNECTION_EVENT_TYPES.ping, undefined, { target: 'others' });
   }
 
   /**
@@ -251,7 +245,7 @@ export class Broadcast<
   /**
    * Register a callback to be executed when a message of the specified event type is received.
    *
-   * @template T - The Payload type, inferred from the event.
+   * @template Type - The Payload type, inferred from the event.
    * @param type - The event type.
    * @param callback - The callback function.
    * @returns Unsubscribe function to remove the listener.
@@ -268,7 +262,7 @@ export class Broadcast<
    */
   on<Type extends Events['type']>(
     type: Type,
-    callback: (data: ExtractEvent<Events, Type> & { source: UniqueId }) => void,
+    callback: (data: ExtractEvent<Events, Type>) => void,
   ) {
     const id = uuid();
 
@@ -280,14 +274,14 @@ export class Broadcast<
   /**
    * Register a callback to be executed only once for a specified event type.
    *
-   * @template T - The Payload type, inferred from the event.
+   * @template Type - The Payload type, inferred from the event.
    * @param type - The event type.
    * @param callback - The callback function.
    * @returns Unsubscribe function to remove the listener.
    */
   once<Type extends Events['type']>(
     type: Type,
-    callback: (data: ExtractEvent<Events, Type> & { source: UniqueId }) => void,
+    callback: (data: ExtractEvent<Events, Type>) => void,
   ) {
     const id = uuid();
 
@@ -299,12 +293,12 @@ export class Broadcast<
   /**
    * Unregister callback for the specified event type.
    *
-   * @template T - The Payload type, inferred from the event.
+   * @template Type - The Payload type, inferred from the event.
    * @param type - The event type.
    */
   off<Type extends Events['type']>(
     type: Type,
-    callback: (data: ExtractEvent<Events, Type> & { source: UniqueId }) => void,
+    callback: (data: ExtractEvent<Events, Type>) => void,
   ) {
     if (this.listeners[type]) {
       this.listeners[type] = this.listeners[type].filter(
@@ -316,7 +310,7 @@ export class Broadcast<
   /**
    * Emit an event to all listening contexts.
    *
-   * @template T - The Payload type, inferred from the event.
+   * @template Type - The Payload type, inferred from the event.
    * @param type - The event type.
    * @param payload - The event payload -- must be serializable by the structured clone algorithm. (https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm)
    * @param options - Emit options to control delivery.
@@ -357,7 +351,7 @@ export class Broadcast<
       return console.warn('Cannot emit: BroadcastChannel is not initialized.');
     }
 
-    const { target = 'self' } = {
+    const { target = DEFAULT_TARGET } = {
       ...this.emitOptions.get(this.id),
       ...this.emitOptions.get(type),
       ...options,
@@ -395,7 +389,7 @@ export class Broadcast<
    */
   destroy() {
     if (this.channel) {
-      this.emit(DISCONNECT, undefined, { target: 'others' });
+      this.emit(CONNECTION_EVENT_TYPES.stop, undefined, { target: 'others' });
 
       this.channel.close();
       this.channel = null;

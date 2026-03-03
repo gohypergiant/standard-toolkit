@@ -19,3 +19,11 @@ export const DEFAULT_CONFIG: BroadcastConfig = {
   // TODO: implement logger
   debug: false,
 };
+
+export const DEFAULT_TARGET = 'self';
+
+export const CONNECTION_EVENT_TYPES = {
+  echo: '__ECHO__',
+  ping: '__PING__',
+  stop: '__STOP__',
+};
