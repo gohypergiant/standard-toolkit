@@ -45,15 +45,15 @@ export interface UseCoffinCornerReturn {
  * import { useCoffinCorner } from '@accelint/map-toolkit/deckgl/extensions/coffin-corner';
  *
  * function MapWithIcons({ mapId }) {
- *   const { selectedId } = useCoffinCorner(mapId, 'base-icons');
+ *   const { selectedId, hoveredId } = useCoffinCorner(mapId, 'base-icons');
  *
  *   return (
  *     <iconLayer
  *       id="base-icons"
  *       pickable
- *       autoHighlight
  *       extensions={[coffinCornersExtension]}
- *       coffinCornersSelectedId={selectedId}
+ *       selectedEntityId={selectedId}
+ *       hoveredEntityId={hoveredId}
  *     />
  *   );
  * }

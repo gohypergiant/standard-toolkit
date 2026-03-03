@@ -71,7 +71,7 @@ export const coffinCornerStore = createMapStore<
     setSelectedId: (id: EntityId | undefined) => {
       const currentId = get().selectedId;
 
-      if (!id && currentId) {
+      if (id == null && currentId != null) {
         coffinCornerEventBus.emit(CoffinCornerEvents.DESELECTED, {
           mapId,
           selectedId: undefined,
@@ -80,7 +80,7 @@ export const coffinCornerStore = createMapStore<
         return;
       }
 
-      if (id && currentId !== id) {
+      if (id != null && currentId !== id) {
         coffinCornerEventBus.emit(CoffinCornerEvents.SELECTED, {
           selectedId: id,
           mapId,
@@ -214,21 +214,44 @@ export const coffinCornerStore = createMapStore<
 // =============================================================================
 
 /**
- * Get selected icon ID imperatively (non-reactive)
+ * Get selected entity ID imperatively (non-reactive).
+ *
+ * @param mapId - The map instance to query.
+ * @returns The selected entity ID, or undefined if nothing is selected.
+ *
+ * @example
+ * ```typescript
+ * const selectedId = getSelectedEntityId(mapId);
+ * ```
  */
 export function getSelectedEntityId(mapId: UniqueId): EntityId | undefined {
   return coffinCornerStore.get(mapId).selectedId;
 }
 
 /**
- * Get hovered icon ID imperatively (non-reactive)
+ * Get hovered entity ID imperatively (non-reactive).
+ *
+ * @param mapId - The map instance to query.
+ * @returns The hovered entity ID, or undefined if nothing is hovered.
+ *
+ * @example
+ * ```typescript
+ * const hoveredId = getHoveredEntityId(mapId);
+ * ```
  */
 export function getHoveredEntityId(mapId: UniqueId): EntityId | undefined {
   return coffinCornerStore.get(mapId).hoveredId;
 }
 
 /**
- * Clear selection state (for tests/cleanup)
+ * Clear selection state (for tests/cleanup).
+ *
+ * @param mapId - The map instance to clear selection for.
+ *
+ * @example
+ * ```typescript
+ * clearSelection(mapId);
+ * ```
  */
 export function clearSelection(mapId: UniqueId): void {
   coffinCornerStore.clear(mapId);
