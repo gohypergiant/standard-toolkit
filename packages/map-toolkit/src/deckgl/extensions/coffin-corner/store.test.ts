@@ -25,6 +25,52 @@ import type { UniqueId } from '@accelint/core';
 import type { MapEventType } from '../../base-map/types';
 import type { CoffinCornerEvent } from './types';
 
+/**
+ * Creates a mock map click event payload with sensible defaults.
+ * Only test-relevant properties need to be specified.
+ */
+function createClickEvent(id: UniqueId, info: Record<string, unknown> = {}) {
+  return {
+    id,
+    info: {
+      index: 0,
+      picked: true,
+      x: 0,
+      y: 0,
+      coordinate: [0, 0],
+      pixel: [0, 0],
+      devicePixel: [0, 0],
+      pixelRatio: 1,
+      color: null,
+      ...info,
+    },
+    event: {} as never,
+  };
+}
+
+/**
+ * Creates a mock map hover event payload with sensible defaults.
+ * Only test-relevant properties need to be specified.
+ */
+function createHoverEvent(id: UniqueId, info: Record<string, unknown> = {}) {
+  return {
+    id,
+    info: {
+      index: 0,
+      picked: true,
+      x: 0,
+      y: 0,
+      coordinate: [0, 0],
+      pixel: [0, 0],
+      devicePixel: [0, 0],
+      pixelRatio: 1,
+      color: null,
+      ...info,
+    },
+    event: {} as never,
+  };
+}
+
 describe('coffin-corner store', () => {
   let mapId: UniqueId;
 
@@ -394,23 +440,13 @@ describe('coffin-corner store', () => {
       const { setLayerId } = coffinCornerStore.actions(mapId);
       setLayerId('symbols');
 
-      mapBus.emit(MapEvents.click, {
-        id: mapId,
-        info: {
+      mapBus.emit(
+        MapEvents.click,
+        createClickEvent(mapId, {
           layerId: 'symbols',
           object: { id: 'entity-1' },
-          index: 0,
-          picked: true,
-          x: 0,
-          y: 0,
-          coordinate: [0, 0],
-          pixel: [0, 0],
-          devicePixel: [0, 0],
-          pixelRatio: 1,
-          color: null,
-        },
-        event: {} as never,
-      });
+        }),
+      );
 
       expect(coffinCornerStore.get(mapId).selectedId).toBe('entity-1');
 
@@ -427,23 +463,10 @@ describe('coffin-corner store', () => {
       const { setLayerId } = coffinCornerStore.actions(mapId);
       setLayerId('symbols');
 
-      const clickInfo = {
-        id: mapId,
-        info: {
-          layerId: 'symbols',
-          object: { id: 'entity-1' },
-          index: 0,
-          picked: true,
-          x: 0,
-          y: 0,
-          coordinate: [0, 0],
-          pixel: [0, 0],
-          devicePixel: [0, 0],
-          pixelRatio: 1,
-          color: null,
-        },
-        event: {} as never,
-      };
+      const clickInfo = createClickEvent(mapId, {
+        layerId: 'symbols',
+        object: { id: 'entity-1' },
+      });
 
       // First click selects
       mapBus.emit(MapEvents.click, clickInfo);
@@ -467,42 +490,21 @@ describe('coffin-corner store', () => {
       setLayerId('symbols');
 
       // Select something first
-      mapBus.emit(MapEvents.click, {
-        id: mapId,
-        info: {
+      mapBus.emit(
+        MapEvents.click,
+        createClickEvent(mapId, {
           layerId: 'symbols',
           object: { id: 'entity-1' },
-          index: 0,
-          picked: true,
-          x: 0,
-          y: 0,
-          coordinate: [0, 0],
-          pixel: [0, 0],
-          devicePixel: [0, 0],
-          pixelRatio: 1,
-          color: null,
-        },
-        event: {} as never,
-      });
+        }),
+      );
 
       expect(coffinCornerStore.get(mapId).selectedId).toBe('entity-1');
 
       // Click empty space (index -1, no object)
-      mapBus.emit(MapEvents.click, {
-        id: mapId,
-        info: {
-          index: -1,
-          picked: false,
-          x: 0,
-          y: 0,
-          coordinate: [0, 0],
-          pixel: [0, 0],
-          devicePixel: [0, 0],
-          pixelRatio: 1,
-          color: null,
-        },
-        event: {} as never,
-      });
+      mapBus.emit(
+        MapEvents.click,
+        createClickEvent(mapId, { index: -1, picked: false }),
+      );
 
       expect(coffinCornerStore.get(mapId).selectedId).toBeUndefined();
 
@@ -520,23 +522,13 @@ describe('coffin-corner store', () => {
       const { setLayerId } = coffinCornerStore.actions(mapId);
       setLayerId('symbols');
 
-      mapBus.emit(MapEvents.click, {
-        id: otherMapId,
-        info: {
+      mapBus.emit(
+        MapEvents.click,
+        createClickEvent(otherMapId, {
           layerId: 'symbols',
           object: { id: 'entity-1' },
-          index: 0,
-          picked: true,
-          x: 0,
-          y: 0,
-          coordinate: [0, 0],
-          pixel: [0, 0],
-          devicePixel: [0, 0],
-          pixelRatio: 1,
-          color: null,
-        },
-        event: {} as never,
-      });
+        }),
+      );
 
       expect(coffinCornerStore.get(mapId).selectedId).toBeUndefined();
 
@@ -554,23 +546,13 @@ describe('coffin-corner store', () => {
       setLayerId('symbols');
       setGetEntityId((item: { uid: string }) => item.uid);
 
-      mapBus.emit(MapEvents.click, {
-        id: mapId,
-        info: {
+      mapBus.emit(
+        MapEvents.click,
+        createClickEvent(mapId, {
           layerId: 'symbols',
           object: { uid: 'custom-entity' },
-          index: 0,
-          picked: true,
-          x: 0,
-          y: 0,
-          coordinate: [0, 0],
-          pixel: [0, 0],
-          devicePixel: [0, 0],
-          pixelRatio: 1,
-          color: null,
-        },
-        event: {} as never,
-      });
+        }),
+      );
 
       expect(coffinCornerStore.get(mapId).selectedId).toBe('custom-entity');
 
@@ -587,23 +569,13 @@ describe('coffin-corner store', () => {
       const { setLayerId } = coffinCornerStore.actions(mapId);
       setLayerId('symbols');
 
-      mapBus.emit(MapEvents.click, {
-        id: mapId,
-        info: {
+      mapBus.emit(
+        MapEvents.click,
+        createClickEvent(mapId, {
           layerId: 'symbols',
           object: { id: 0 },
-          index: 0,
-          picked: true,
-          x: 0,
-          y: 0,
-          coordinate: [0, 0],
-          pixel: [0, 0],
-          devicePixel: [0, 0],
-          pixelRatio: 1,
-          color: null,
-        },
-        event: {} as never,
-      });
+        }),
+      );
 
       expect(coffinCornerStore.get(mapId).selectedId).toBe(0);
 
@@ -620,26 +592,42 @@ describe('coffin-corner store', () => {
       const { setLayerId } = coffinCornerStore.actions(mapId);
       setLayerId('symbols');
 
-      mapBus.emit(MapEvents.click, {
-        id: mapId,
-        info: {
+      mapBus.emit(
+        MapEvents.click,
+        createClickEvent(mapId, {
           layerId: 'other-layer',
           object: { id: 'entity-1' },
-          index: 0,
-          picked: true,
-          x: 0,
-          y: 0,
-          coordinate: [0, 0],
-          pixel: [0, 0],
-          devicePixel: [0, 0],
-          pixelRatio: 1,
-          color: null,
-        },
-        event: {} as never,
-      });
+        }),
+      );
 
       expect(coffinCornerStore.get(mapId).selectedId).toBeUndefined();
 
+      unsubscribe();
+    });
+
+    it('should not emit DESELECTED when clicking empty space with no selection', () => {
+      const bus = Broadcast.getInstance<CoffinCornerEvent>();
+      const mapBus = Broadcast.getInstance<MapEventType>();
+      const deselectedSpy = vi.fn();
+      bus.on(CoffinCornerEvents.DESELECTED, deselectedSpy);
+
+      const subscription = coffinCornerStore.subscribe(mapId);
+      const callback = vi.fn();
+      const unsubscribe = subscription(callback);
+
+      const { setLayerId } = coffinCornerStore.actions(mapId);
+      setLayerId('symbols');
+
+      // Click empty space without any prior selection
+      mapBus.emit(
+        MapEvents.click,
+        createClickEvent(mapId, { index: -1, picked: false }),
+      );
+
+      expect(deselectedSpy).not.toHaveBeenCalled();
+      expect(coffinCornerStore.get(mapId).selectedId).toBeUndefined();
+
+      bus.off(CoffinCornerEvents.DESELECTED, deselectedSpy);
       unsubscribe();
     });
   });
@@ -655,23 +643,13 @@ describe('coffin-corner store', () => {
       const { setLayerId } = coffinCornerStore.actions(mapId);
       setLayerId('symbols');
 
-      mapBus.emit(MapEvents.hover, {
-        id: mapId,
-        info: {
+      mapBus.emit(
+        MapEvents.hover,
+        createHoverEvent(mapId, {
           layerId: 'symbols',
           object: { id: 'entity-3' },
-          index: 0,
-          picked: true,
-          x: 0,
-          y: 0,
-          coordinate: [0, 0],
-          pixel: [0, 0],
-          devicePixel: [0, 0],
-          pixelRatio: 1,
-          color: null,
-        },
-        event: {} as never,
-      });
+        }),
+      );
 
       expect(coffinCornerStore.get(mapId).hoveredId).toBe('entity-3');
 
@@ -689,42 +667,21 @@ describe('coffin-corner store', () => {
       setLayerId('symbols');
 
       // Hover over entity
-      mapBus.emit(MapEvents.hover, {
-        id: mapId,
-        info: {
+      mapBus.emit(
+        MapEvents.hover,
+        createHoverEvent(mapId, {
           layerId: 'symbols',
           object: { id: 'entity-3' },
-          index: 0,
-          picked: true,
-          x: 0,
-          y: 0,
-          coordinate: [0, 0],
-          pixel: [0, 0],
-          devicePixel: [0, 0],
-          pixelRatio: 1,
-          color: null,
-        },
-        event: {} as never,
-      });
+        }),
+      );
 
       expect(coffinCornerStore.get(mapId).hoveredId).toBe('entity-3');
 
       // Hover away (no object)
-      mapBus.emit(MapEvents.hover, {
-        id: mapId,
-        info: {
-          index: -1,
-          picked: false,
-          x: 0,
-          y: 0,
-          coordinate: [0, 0],
-          pixel: [0, 0],
-          devicePixel: [0, 0],
-          pixelRatio: 1,
-          color: null,
-        },
-        event: {} as never,
-      });
+      mapBus.emit(
+        MapEvents.hover,
+        createHoverEvent(mapId, { index: -1, picked: false }),
+      );
 
       expect(coffinCornerStore.get(mapId).hoveredId).toBeUndefined();
 
@@ -742,23 +699,13 @@ describe('coffin-corner store', () => {
       setLayerId('symbols');
       setGetEntityId((item: { uid: string }) => item.uid);
 
-      mapBus.emit(MapEvents.hover, {
-        id: mapId,
-        info: {
+      mapBus.emit(
+        MapEvents.hover,
+        createHoverEvent(mapId, {
           layerId: 'symbols',
           object: { uid: 'hover-entity' },
-          index: 0,
-          picked: true,
-          x: 0,
-          y: 0,
-          coordinate: [0, 0],
-          pixel: [0, 0],
-          devicePixel: [0, 0],
-          pixelRatio: 1,
-          color: null,
-        },
-        event: {} as never,
-      });
+        }),
+      );
 
       expect(coffinCornerStore.get(mapId).hoveredId).toBe('hover-entity');
 
@@ -776,23 +723,48 @@ describe('coffin-corner store', () => {
       const { setLayerId } = coffinCornerStore.actions(mapId);
       setLayerId('symbols');
 
-      mapBus.emit(MapEvents.hover, {
-        id: otherMapId,
-        info: {
+      mapBus.emit(
+        MapEvents.hover,
+        createHoverEvent(otherMapId, {
           layerId: 'symbols',
           object: { id: 'entity-3' },
-          index: 0,
-          picked: true,
-          x: 0,
-          y: 0,
-          coordinate: [0, 0],
-          pixel: [0, 0],
-          devicePixel: [0, 0],
-          pixelRatio: 1,
-          color: null,
-        },
-        event: {} as never,
-      });
+        }),
+      );
+
+      expect(coffinCornerStore.get(mapId).hoveredId).toBeUndefined();
+
+      unsubscribe();
+    });
+
+    it('should clear hoveredId when hovering over a different layer', () => {
+      const mapBus = Broadcast.getInstance<MapEventType>();
+
+      const subscription = coffinCornerStore.subscribe(mapId);
+      const callback = vi.fn();
+      const unsubscribe = subscription(callback);
+
+      const { setLayerId } = coffinCornerStore.actions(mapId);
+      setLayerId('symbols');
+
+      // Hover over matching layer
+      mapBus.emit(
+        MapEvents.hover,
+        createHoverEvent(mapId, {
+          layerId: 'symbols',
+          object: { id: 'entity-3' },
+        }),
+      );
+
+      expect(coffinCornerStore.get(mapId).hoveredId).toBe('entity-3');
+
+      // Hover over a different layer's object
+      mapBus.emit(
+        MapEvents.hover,
+        createHoverEvent(mapId, {
+          layerId: 'other-layer',
+          object: { id: 'entity-99' },
+        }),
+      );
 
       expect(coffinCornerStore.get(mapId).hoveredId).toBeUndefined();
 

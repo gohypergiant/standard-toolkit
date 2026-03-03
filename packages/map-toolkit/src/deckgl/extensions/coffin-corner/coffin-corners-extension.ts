@@ -257,8 +257,8 @@ export class CoffinCornersExtension extends LayerExtension {
         const items = data ?? [];
         const value = attribute.value as Float32Array;
 
-        for (const [i, item] of items.entries()) {
-          value[i] = entities.get(getId(item)) ?? 0;
+        for (let i = 0; i < items.length; i++) {
+          value[i] = entities.get(getId(items[i])) ?? 0;
         }
       };
 
