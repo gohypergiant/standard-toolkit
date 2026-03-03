@@ -99,8 +99,8 @@ export class Broadcast<
    */
   protected init() {
     this.channel = new BroadcastChannel(this.channelName);
-    this.channel.onmessage = this.onMessage.bind(this);
-    this.channel.onmessageerror = this.onError.bind(this);
+    this.channel.onmessage = this.onMessage;
+    this.channel.onmessageerror = this.onError;
 
     this.on(CONNECTION_EVENT_TYPES.stop, ({ source }) => {
       this.connected.delete(source);
@@ -130,9 +130,9 @@ export class Broadcast<
    *
    * @param event - Incoming message event.
    */
-  protected onMessage(event: MessageEvent<Events>) {
+  protected onMessage = (event: MessageEvent<Events>) => {
     this.handleListeners(event.data);
-  }
+  };
 
   /**
    * Handle errors from the BroadcastChannel.
@@ -147,7 +147,7 @@ export class Broadcast<
    * Browser only, handler for tab visibility changes:
    * https://developer.mozilla.org/en-US/docs/Web/API/Document/visibilitychange_event
    */
-  protected onVisibilityChange() {
+  protected onVisibilityChange = () => {
     if (typeof document === 'undefined') {
       return;
     }
@@ -157,7 +157,7 @@ export class Broadcast<
     } else {
       this.ping();
     }
-  }
+  };
 
   /**
    * Iterate through listeners for the given topic and invoke callbacks if criteria match.
