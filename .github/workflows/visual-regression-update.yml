@@ -84,21 +84,40 @@ jobs:
       - name: Use provided failure list
         id: detect-from-input
         if: inputs.failed_files != ''
+        env:
+          INPUT_FAILED_FILES: ${{ inputs.failed_files }}
         run: |
+          # Validate each line matches expected path pattern
+          while IFS= read -r line; do
+            if [ -z "$line" ]; then continue; fi
+            if ! echo "$line" | grep -qE '^src/features/[a-zA-Z0-9/_-]+\.visual\.tsx$'; then
+              echo "::error::Invalid file path: $line"
+              echo "Each line must match: src/features/{path}.visual.tsx"
+              exit 1
+            fi
+          done <<< "$INPUT_FAILED_FILES"
+
           echo "has_failures=true" >> $GITHUB_OUTPUT
           EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
           echo "failed_files<<$EOF" >> $GITHUB_OUTPUT
-          echo "${{ inputs.failed_files }}" >> $GITHUB_OUTPUT
+          echo "$INPUT_FAILED_FILES" >> $GITHUB_OUTPUT
           echo "$EOF" >> $GITHUB_OUTPUT
           echo "Skipping detection — using provided failure list:"
-          echo "${{ inputs.failed_files }}"
+          echo "$INPUT_FAILED_FILES"
 
       - name: Detect failing visual tests
         id: detect
         if: inputs.failed_files == ''
         working-directory: apps/next
         run: |
-          pnpm visual --reporter=default --reporter=json --outputFile=test-results.json || true
+          pnpm visual --reporter=default --reporter=json --outputFile=test-results.json || TEST_EXIT_CODE=$?
+          TEST_EXIT_CODE=${TEST_EXIT_CODE:-0}
+
+          if [ ! -f test-results.json ]; then
+            echo "::error::Test runner crashed without producing test-results.json"
+            exit 1
+          fi
+
           FAILED_FILES=$(node ../../.github/scripts/extract-failed-files.mjs test-results.json --relative-to=$(pwd))
 
           if [ -z "$FAILED_FILES" ]; then
@@ -117,8 +136,11 @@ jobs:
       - name: Update failed baselines
         if: steps.detect-from-input.outputs.has_failures == 'true' || steps.detect.outputs.has_failures == 'true'
         working-directory: apps/next
+        env:
+          INPUT_FAILED_FILES: ${{ steps.detect-from-input.outputs.failed_files }}
+          DETECTED_FAILED_FILES: ${{ steps.detect.outputs.failed_files }}
         run: |
-          FAILED_FILES="${{ steps.detect-from-input.outputs.failed_files }}${{ steps.detect.outputs.failed_files }}"
+          FAILED_FILES="${INPUT_FAILED_FILES:-$DETECTED_FAILED_FILES}"
           FILE_ARGS=$(echo "$FAILED_FILES" | tr '\n' ' ')
           pnpm exec vitest --project=visual --run --update --no-coverage $FILE_ARGS
 
@@ -154,16 +176,22 @@ jobs:
           git push
 
       - name: Generate summary
+        env:
+          INPUT_HAS_FAILURES: ${{ steps.detect-from-input.outputs.has_failures }}
+          DETECTED_HAS_FAILURES: ${{ steps.detect.outputs.has_failures }}
+          INPUT_FAILED_FILES: ${{ steps.detect-from-input.outputs.failed_files }}
+          DETECTED_FAILED_FILES: ${{ steps.detect.outputs.failed_files }}
+          HAS_CHANGES: ${{ steps.changes.outputs.has_changes }}
         run: |
           echo "## Visual Regression Snapshot Update" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
-          HAS_FAILURES="${{ steps.detect-from-input.outputs.has_failures }}${{ steps.detect.outputs.has_failures }}"
-          FAILED_FILES="${{ steps.detect-from-input.outputs.failed_files }}${{ steps.detect.outputs.failed_files }}"
+          HAS_FAILURES="${INPUT_HAS_FAILURES:-$DETECTED_HAS_FAILURES}"
+          FAILED_FILES="${INPUT_FAILED_FILES:-$DETECTED_FAILED_FILES}"
 
           if [[ "$HAS_FAILURES" != *"true"* ]]; then
             echo "**No failing tests detected** - all snapshots are already up to date." >> $GITHUB_STEP_SUMMARY
-          elif [ "${{ steps.changes.outputs.has_changes }}" == "true" ]; then
+          elif [ "$HAS_CHANGES" == "true" ]; then
             echo "**Snapshots updated and pushed**" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "### Targeted test files:" >> $GITHUB_STEP_SUMMARY

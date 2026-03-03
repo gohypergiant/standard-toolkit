@@ -9,9 +9,12 @@ Visual regression tests capture screenshots of components and compare them again
 ```
 src/visual-regression/
 ├── lib/
-│   ├── interactive-states.ts # Interactive state constants
-│   ├── theme-modes.ts        # Theme mode utilities
-│   └── types.ts              # TypeScript interfaces
+│   ├── interactive-states.ts  # Interactive state constants
+│   ├── screenshot-helpers.ts  # Screenshot utility functions
+│   ├── selectors.ts           # CSS selector utilities
+│   ├── theme-modes.ts         # Theme mode utilities
+│   ├── types.ts               # TypeScript interfaces
+│   └── virtualizer-fixes.ts   # Virtualizer layout fixes
 ├── mocks/
 │   └── server-only.ts        # Mock for server components
 └── vitest/
@@ -35,7 +38,7 @@ Use the **Update Visual Regression Snapshots** GitHub Action:
 1. Go to the **Actions** tab in GitHub
 2. Select **"Update Visual Regression Snapshots"** from the workflows list
 3. Click **"Run workflow"** and select your feature branch
-4. The workflow will regenerate all baselines and commit them to your branch
+4. The workflow will regenerate failing baselines and commit them to your branch
 
 The workflow:
 - Runs `visual:update` on Linux (matching CI environment)
@@ -163,8 +166,8 @@ All tests automatically run in both **dark** and **light** modes. Screenshot fil
 
 ### Interactive State Simulation
 - **hover**: Simulated via `userEvent.hover()`
-- **focus**: Finds first focusable element and calls `.focus()`
-- **pressed**: Dispatches `mousedown` event for `:active` state
+- **focus**: Finds first focusable element and calls `.focus({ focusVisible: true })`
+- **pressed**: Sets `data-pressed` attribute directly (vitest browser mode has no mouseDown API)
 - **disabled**: Renders with `isDisabled: true` prop
 
 ### Smart Skipping
@@ -182,6 +185,11 @@ import {
   createVisualTestScenarios,
   createInteractiveVisualTests,
   generateVariantMatrix,
+
+  // Utilities
+  constrainBodyToContent,   // Constrain body size for screenshots
+  fixVirtualizerItemWidths, // Fix virtualizer item layout for screenshots
+  insertModeInFilename,     // Insert theme mode suffix into filenames
 
   // Constants
   THEME_MODES,              // ['dark', 'light']
