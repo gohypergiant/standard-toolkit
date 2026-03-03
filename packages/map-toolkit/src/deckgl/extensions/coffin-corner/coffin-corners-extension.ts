@@ -22,38 +22,6 @@ type CoffinCornerLayer = Layer & {
   };
 };
 
-/**
- * Props added by CoffinCornersExtension.
- *
- * The extension uses explicit `hoveredEntityId` and `selectedEntityId` props
- * to drive hover/selection state. Data objects are identified via the
- * `getEntityId` accessor (defaults to `item => item.id`).
- *
- * The host layer must set `pickable` to enable picking events.
- *
- * @example Fiber renderer JSX
- * ```tsx
- * <symbolLayer
- *   {...props}
- *   pickable
- *   extensions={[new CoffinCornersExtension()]}
- *   selectedEntityId={selectedId}
- *   hoveredEntityId={hoveredId}
- * />
- * ```
- *
- * @example Custom entity ID accessor (e.g. GeoJSON features)
- * ```ts
- * new IconLayer({
- *   extensions: [new CoffinCornersExtension()],
- *   getEntityId: (d) => d.properties?.shapeId,
- *   selectedEntityId: selectedShapeId,
- *   hoveredEntityId: hoveredShapeId,
- *   coffinCornerColor: [255, 0, 0, 255],
- * })
- * ```
- */
-
 // -- Shader module for the highlight color uniform --
 
 const coffinCornersModule: {
@@ -194,6 +162,7 @@ float coffinCorners_allCorners(vec2 uvCoord) {
 
 // -- Props type --
 
+/** Props added by {@link CoffinCornersExtension}. */
 export type CoffinCornersExtensionProps<TLayerProps = unknown> = {
   /** The currently selected entity ID. */
   selectedEntityId?: EntityId;
@@ -219,6 +188,38 @@ const DEFAULT_CORNER_COLOR: Rgba255Tuple = [57, 183, 250, 255];
 
 // -- Extension class --
 
+/**
+ * deck.gl layer extension that renders bracket-like "coffin corner" indicators
+ * around hovered and selected map entities.
+ *
+ * Driven by explicit `hoveredEntityId` and `selectedEntityId` props rather than
+ * deck.gl's built-in autoHighlight. Data objects are identified via the
+ * `getEntityId` accessor (defaults to `item => item.id`).
+ *
+ * The host layer must set `pickable` to enable picking events.
+ *
+ * @example Fiber renderer JSX
+ * ```tsx
+ * <symbolLayer
+ *   {...props}
+ *   pickable
+ *   extensions={[new CoffinCornersExtension()]}
+ *   selectedEntityId={selectedId}
+ *   hoveredEntityId={hoveredId}
+ * />
+ * ```
+ *
+ * @example Custom entity ID accessor (e.g. GeoJSON features)
+ * ```ts
+ * new IconLayer({
+ *   extensions: [new CoffinCornersExtension()],
+ *   getEntityId: (d) => d.properties?.shapeId,
+ *   selectedEntityId: selectedShapeId,
+ *   hoveredEntityId: hoveredShapeId,
+ *   coffinCornerColor: [255, 0, 0, 255],
+ * })
+ * ```
+ */
 export default class CoffinCornersExtension extends LayerExtension {
   static override componentName = 'CoffinCornersExtension';
 
@@ -283,10 +284,10 @@ export default class CoffinCornersExtension extends LayerExtension {
     const oldSelectedId = params.oldProps.selectedEntityId;
     if (newSelectedId !== oldSelectedId) {
       const { selectedEntities } = this.state;
-      if (oldSelectedId) {
+      if (oldSelectedId != null) {
         selectedEntities.set(oldSelectedId, 0);
       }
-      if (newSelectedId) {
+      if (newSelectedId != null) {
         selectedEntities.set(newSelectedId, 1);
       }
       attributeManager?.invalidate('instanceSelectedEntity');
@@ -297,10 +298,10 @@ export default class CoffinCornersExtension extends LayerExtension {
     const oldHoveredId = params.oldProps.hoveredEntityId;
     if (newHoveredId !== oldHoveredId) {
       const { hoveredEntities } = this.state;
-      if (oldHoveredId) {
+      if (oldHoveredId != null) {
         hoveredEntities.set(oldHoveredId, 0);
       }
-      if (newHoveredId) {
+      if (newHoveredId != null) {
         hoveredEntities.set(newHoveredId, 1);
       }
       attributeManager?.invalidate('instanceHoveredEntity');
