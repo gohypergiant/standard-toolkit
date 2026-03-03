@@ -60,7 +60,7 @@ export function FloatingCard({
   isOpen = true,
   initialDimensions,
 }: PropsWithChildren<FloatingCardProps>) {
-  const floatingCardContext = useContext(FloatingCardContext);
+  const floatingCardContext = useContext<FloatingCardContextValue | null>(null);
 
   if (!floatingCardContext) {
     throw new Error('FloatingCard must be used within a FloatingCardProvider.');
