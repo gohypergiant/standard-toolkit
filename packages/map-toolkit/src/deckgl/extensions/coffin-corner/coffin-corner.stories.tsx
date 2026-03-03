@@ -31,8 +31,6 @@ interface IconData {
   id: number;
 }
 
-const HIGHLIGHT_COLOR = [0, 0, 0, 0];
-
 const ICON_DATA: IconData[] = [
   // San Francisco area
   { id: 1, position: [-122.45, 37.78], icon: 'marker', size: 24 },
@@ -70,7 +68,7 @@ const LAYER_ID = 'icons';
 const coffinCornersExtension = new CoffinCornersExtension();
 
 function CoffinCornersDemo() {
-  const { selectedId } = useCoffinCorner(MAP_ID, LAYER_ID);
+  const { selectedId, hoveredId } = useCoffinCorner(MAP_ID, LAYER_ID);
 
   return (
     <div className='relative h-dvh w-dvw'>
@@ -88,10 +86,9 @@ function CoffinCornersDemo() {
           getIcon={(d: IconData) => d.icon}
           getSize={(d: IconData) => d.size}
           pickable
-          autoHighlight
-          highlightColor={HIGHLIGHT_COLOR}
           extensions={[coffinCornersExtension]}
           selectedEntityId={selectedId}
+          hoveredEntityId={hoveredId}
         />
       </BaseMap>
 

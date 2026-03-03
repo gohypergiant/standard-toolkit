@@ -11,8 +11,10 @@
  */
 
 import '@/deckgl/symbol-layer/fiber';
+import { uuid } from '@accelint/core';
 import { useId } from 'react';
-import { STORYBOOK_MAP_ID, withDeckGL } from '@/decorators/deckgl';
+import { BaseMap } from '@/deckgl/base-map';
+import { withDeckGL } from '@/decorators/deckgl';
 import { CoffinCornersExtension } from '../extensions';
 import { useCoffinCorner } from '../extensions/coffin-corner';
 import type { Meta, StoryObj } from '@storybook/react-vite';
@@ -122,7 +124,6 @@ const MOCK_DATA = [
 
 const meta: Meta = {
   title: 'DeckGL/Symbol Layer',
-  decorators: [withDeckGL()],
   parameters: {
     layout: 'fullscreen',
   },
@@ -132,6 +133,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const SymbolLayer: Story = {
+  decorators: [withDeckGL()],
   render: () => {
     return (
       <symbolLayer
@@ -146,29 +148,33 @@ export const SymbolLayer: Story = {
   },
 };
 
-const HIGHLIGHT_COLOR: number[] = [0, 0, 0, 0];
 const coffinCornersExtension = new CoffinCornersExtension();
+
+const COFFIN_CORNERS_MAP_ID = uuid();
 
 export const SymbolLayerWithCoffinCorners: Story = {
   render: () => {
     const layerId = 'symbols';
-    const { selectedId } = useCoffinCorner(STORYBOOK_MAP_ID, layerId);
+    const { selectedId, hoveredId } = useCoffinCorner(
+      COFFIN_CORNERS_MAP_ID,
+      layerId,
+    );
 
     return (
-      <symbolLayer
-        id={layerId}
-        data={MOCK_DATA}
-        defaultSymbolOptions={{
-          colorMode: 'Dark',
-          square: true,
-        }}
-        // need all of the below to turn on the coffin corners shader for selection highlighting
-        selectedEntityId={selectedId}
-        extensions={[coffinCornersExtension]}
-        pickable
-        autoHighlight
-        highlightColor={HIGHLIGHT_COLOR}
-      />
+      <BaseMap className='relative h-dvh w-dvw' id={COFFIN_CORNERS_MAP_ID}>
+        <symbolLayer
+          id={layerId}
+          data={MOCK_DATA}
+          defaultSymbolOptions={{
+            colorMode: 'Dark',
+            square: true,
+          }}
+          selectedEntityId={selectedId}
+          hoveredEntityId={hoveredId}
+          extensions={[coffinCornersExtension]}
+          pickable
+        />
+      </BaseMap>
     );
   },
 };

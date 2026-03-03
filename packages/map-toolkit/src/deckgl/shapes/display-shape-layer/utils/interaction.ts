@@ -47,3 +47,49 @@ export function getPointInteractionState(
   const isHovered = hoverIndex !== undefined && featureIndex === hoverIndex;
   return { isSelected, isHovered };
 }
+
+/** Result of collecting point features that need coffin corner feedback. */
+export type ActivePointFeatures = {
+  features: Shape['feature'][];
+  hoveredEntityId: ShapeId | undefined;
+  selectedEntityId: ShapeId | undefined;
+};
+
+/**
+ * Collect point features with icons that are hovered or selected,
+ * along with their resolved entity IDs.
+ */
+export function collectActivePointFeatures(
+  features: Shape['feature'][],
+  selectedShapeId: ShapeId | undefined,
+  hoverIndex: number | undefined,
+  shapeIdToIndex: Map<ShapeId, number>,
+): ActivePointFeatures {
+  const result: Shape['feature'][] = [];
+  let hoveredEntityId: ShapeId | undefined;
+  let selectedEntityId: ShapeId | undefined;
+
+  for (const f of features) {
+    if (f.geometry.type !== 'Point' || !f.properties?.styleProperties?.icon) {
+      continue;
+    }
+    const shapeId = f.properties?.shapeId as ShapeId | undefined;
+    const { isSelected, isHovered } = getPointInteractionState(
+      f,
+      selectedShapeId,
+      hoverIndex,
+      shapeIdToIndex,
+    );
+    if (isHovered) {
+      hoveredEntityId = shapeId;
+    }
+    if (isSelected) {
+      selectedEntityId = shapeId;
+    }
+    if (isSelected || isHovered) {
+      result.push(f);
+    }
+  }
+
+  return { features: result, hoveredEntityId, selectedEntityId };
+}

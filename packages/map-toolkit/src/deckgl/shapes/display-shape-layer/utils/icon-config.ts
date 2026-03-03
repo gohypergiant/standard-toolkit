@@ -13,7 +13,7 @@
 'use client';
 
 import { getLineColor } from '../../shared/utils/style-utils';
-import { COFFIN_CORNERS, MAP_INTERACTION } from '../constants';
+import { MAP_INTERACTION } from '../constants';
 import type { Shape } from '../../shared/types';
 
 /** Icon mapping entry describing position and dimensions within an atlas. */
@@ -145,59 +145,4 @@ export function getIconUpdateTriggers(
     getIconColor: [features],
     getIconPixelOffset: [features],
   };
-}
-
-/** WeakMap memoizing extended icon mappings by baseMapping identity. */
-const coffinCornerCache = new WeakMap<
-  Record<string, IconMappingEntry>,
-  Record<string, IconMappingEntry>
->();
-
-/**
- * Extend an icon mapping with coffin corners entries for hover/selection feedback.
- * Memoized per baseMapping identity via WeakMap to avoid re-spreading per render frame.
- *
- * @param baseMapping - The original icon mapping from the feature's icon config
- * @returns Extended mapping with coffin corners icons added
- *
- * @example
- * ```typescript
- * const extendedMapping = extendMappingWithCoffinCorners(iconMapping);
- * // Result includes original mapping entries plus coffin corner icons
- * ```
- */
-export function extendMappingWithCoffinCorners(
-  baseMapping: Record<string, IconMappingEntry>,
-): Record<string, IconMappingEntry> {
-  const cached = coffinCornerCache.get(baseMapping);
-  if (cached) {
-    return cached;
-  }
-
-  const result = {
-    ...baseMapping,
-    [COFFIN_CORNERS.HOVER_ICON]: {
-      x: 0,
-      y: 0,
-      width: 76,
-      height: 76,
-      mask: false,
-    },
-    [COFFIN_CORNERS.SELECTED_ICON]: {
-      x: 76,
-      y: 0,
-      width: 76,
-      height: 76,
-      mask: false,
-    },
-    [COFFIN_CORNERS.SELECTED_HOVER_ICON]: {
-      x: 152,
-      y: 0,
-      width: 76,
-      height: 76,
-      mask: false,
-    },
-  };
-  coffinCornerCache.set(baseMapping, result);
-  return result;
 }

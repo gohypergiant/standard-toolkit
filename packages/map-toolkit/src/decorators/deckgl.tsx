@@ -25,9 +25,17 @@ export const STORYBOOK_MAP_ID = uuid();
  * Provides a full-screen map instance with a stable ID across re-renders,
  * allowing stories to test map-related components in a realistic context.
  *
+ * **Warning:** This decorator uses a shared `STORYBOOK_MAP_ID` across all stories.
+ * It is only suitable for visual-only stories (rendering layers without interactivity).
+ * Stories that use store-based interactivity (e.g. `useCoffinCorner`, `useMapMode`,
+ * cursor state) must render their own `<BaseMap>` with a dedicated `uuid()` and pass
+ * that ID to hooks. Using the shared ID with per-map stores causes stale state after
+ * zoom/pan because bus events and store subscriptions reference different map instances.
+ *
  * @returns Storybook decorator function that wraps the story in a BaseMap
  *
  * @example
+ * Visual-only story (no interactivity):
  * ```tsx
  * import type { Meta, StoryObj } from '@storybook/react';
  * import { withDeckGL } from '@accelint/map-toolkit/decorators/deckgl';
@@ -42,6 +50,28 @@ export const STORYBOOK_MAP_ID = uuid();
  * type Story = StoryObj<typeof MyMapComponent>;
  *
  * export const Default: Story = {};
+ * ```
+ *
+ * @example
+ * Interactive story (needs dedicated BaseMap):
+ * ```tsx
+ * import { uuid } from '@accelint/core';
+ * import { BaseMap } from '@accelint/map-toolkit/deckgl';
+ * import { useCoffinCorner } from '@accelint/map-toolkit/deckgl/extensions/coffin-corner';
+ *
+ * const MY_MAP_ID = uuid();
+ *
+ * // Do NOT use withDeckGL() — render your own BaseMap instead
+ * export const Interactive: Story = {
+ *   render: () => {
+ *     const { selectedId } = useCoffinCorner(MY_MAP_ID, 'my-layer');
+ *     return (
+ *       <BaseMap id={MY_MAP_ID}>
+ *         <myLayer selectedEntityId={selectedId} />
+ *       </BaseMap>
+ *     );
+ *   },
+ * };
  * ```
  */
 export const withDeckGL = (): Decorator => {
