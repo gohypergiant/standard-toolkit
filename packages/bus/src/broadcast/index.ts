@@ -215,6 +215,11 @@ export class Broadcast<
    * Check for the existence of a event type and create it if missing.
    *
    * @param type - The event type.
+  /**
+   * Register a listener for the given event type, initializing the handler list if needed.
+   *
+   * @param type - The event type.
+   * @param listener - The listener to register.
    */
   protected addListener(type: Events['type'], listener: Listener<Events>) {
     this.listeners[type] ??= [];
