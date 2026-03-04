@@ -10,35 +10,47 @@
  * governing permissions and limitations under the License.
  */
 
+import { type PropsWithChildren, useMemo } from 'react';
 import { RowsVirtualizer } from './components/rows-virtualizer';
 import { Timeline } from './components/timeline';
 import { GanttProvider } from './context';
 import { useGanttInit } from './hooks/use-gantt-init';
 import styles from './styles.module.css';
-import type { PropsWithChildren } from 'react';
-import type { Timescale } from './types';
+import type { ThresholdProps, Timescale } from './types';
 
 type GanttProps = {
   startTimeMs: number;
   endTimeMs: number;
   timescale: Timescale;
+  thresholdProps?: ThresholdProps;
 };
 
 export function Gantt({
   startTimeMs,
   endTimeMs,
   timescale,
+  thresholdProps,
   children,
 }: PropsWithChildren<GanttProps>) {
-  useGanttInit(startTimeMs);
+  const midpointMs = startTimeMs + (endTimeMs - startTimeMs) / 2;
 
-  const totalBounds = {
-    startMs: startTimeMs,
-    endMs: endTimeMs,
-  };
+  useGanttInit(midpointMs);
+
+  const totalBounds = useMemo(
+    () => ({
+      startMs: startTimeMs,
+      endMs: endTimeMs,
+    }),
+    [startTimeMs, endTimeMs],
+  );
 
   return (
-    <GanttProvider timescale={timescale} totalBounds={totalBounds}>
+    <GanttProvider
+      timescale={timescale}
+      totalBounds={totalBounds}
+      threshold={thresholdProps?.threshold}
+      onThresholdMet={thresholdProps?.onThresholdMet}
+    >
       <div className={styles.container}>
         <Timeline />
         <RowsVirtualizer>{children}</RowsVirtualizer>

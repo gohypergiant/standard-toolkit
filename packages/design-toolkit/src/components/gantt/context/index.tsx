@@ -27,7 +27,13 @@ import {
   getRenderedRegionBoundsMs,
   getViewableRegionWidth,
 } from '../utils/helpers';
-import type { TimeBounds, TimelineChunkObject, Timescale } from '../types';
+import type {
+  MetThresholdData,
+  Threshold,
+  TimeBounds,
+  TimelineChunkObject,
+  Timescale,
+} from '../types';
 
 export type GanttContextValue = {
   msPerPx: number;
@@ -35,6 +41,8 @@ export type GanttContextValue = {
   timescale: Timescale;
   totalBounds: TimeBounds;
   timelineChunks: TimelineChunkObject[];
+  threshold?: Threshold;
+  onThresholdMet?: (metThresholds: MetThresholdData[]) => void;
   assignTimelineContainerElementRef: (node: HTMLDivElement) => void;
 };
 
@@ -45,12 +53,16 @@ export const GanttContext = createContext<GanttContextValue | undefined>(
 export type GanttProviderProps = {
   timescale: Timescale;
   totalBounds: TimeBounds;
+  threshold?: Threshold;
+  onThresholdMet?: (metThresholds: MetThresholdData[]) => void;
 };
 
 export function GanttProvider({
   children,
   timescale,
   totalBounds,
+  threshold,
+  onThresholdMet,
 }: PropsWithChildren<GanttProviderProps>) {
   const [timelineContainerElement, setTimelineContainerElement] =
     useState<HTMLDivElement | null>(null);
@@ -98,6 +110,8 @@ export function GanttProvider({
       timescale,
       timelineChunks,
       totalBounds,
+      threshold,
+      onThresholdMet,
     }),
     [
       assignTimelineContainerElementRef,
@@ -106,6 +120,8 @@ export function GanttProvider({
       timescale,
       timelineChunks,
       totalBounds,
+      threshold,
+      onThresholdMet,
     ],
   );
 
