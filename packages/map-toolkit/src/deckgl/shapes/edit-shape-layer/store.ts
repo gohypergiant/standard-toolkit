@@ -418,7 +418,6 @@ export function disableEditPanning(mapId: UniqueId): void {
 
   if (!state?.editingShape) {
     editStore.set(mapId, { previousMode: null });
-    releaseCursor(mapId, EDIT_SHAPE_LAYER_ID);
     return;
   }
 
