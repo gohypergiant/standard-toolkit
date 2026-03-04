@@ -25,3 +25,31 @@ export type TimelineChunkObject = {
 export type TimeBounds = { startMs: number; endMs: number };
 
 export type RowElementColorProp = 'serious' | 'accent' | 'critical';
+
+export type Threshold = {
+  timescaleMultipleDistance: number;
+  rowIndexBoundaryDistance: number;
+};
+
+export type DerivedThresholdValue = {
+  start: number;
+  end: number;
+};
+
+export type MetThresholdData = {
+  axis: 'horizontal' | 'vertical';
+  direction: 'start' | 'end';
+  value: number;
+};
+
+export type GanttRegion = {
+  startMs: number;
+  endMs: number;
+  startRowIndex: number;
+  endRowIndex: number;
+};
+
+export type ThresholdProps = {
+  threshold: Threshold;
+  onThresholdMet: (metThresholds: MetThresholdData[]) => void;
+};
