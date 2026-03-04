@@ -422,6 +422,99 @@ describe('broadcast', () => {
         payload: undefined,
         source: bus.id,
       });
+
+    it('should not respond to ping when document is hidden', () => {
+      const bus = new Broadcast();
+
+      Object.defineProperty(document, 'hidden', {
+        value: true,
+        configurable: true,
+      });
+
+      // @ts-expect-error Accessing protected property
+      const postMessageSpy = bus.channel.postMessage;
+      postMessageSpy.mockClear();
+
+      const remoteId = uuid();
+
+      // @ts-expect-error Accessing protected method
+      bus.handleListeners({
+        type: CONNECTION_EVENT_TYPES.ping,
+        source: remoteId,
+        target: bus.id,
+      });
+
+      // Should not add to connected or echo back
+      expect(bus.connected.size).toBe(0);
+      expect(postMessageSpy).not.toHaveBeenCalled();
+
+      Object.defineProperty(document, 'hidden', {
+        value: false,
+        configurable: true,
+      });
+    });
+
+    it('should emit stop to others when tab becomes hidden', () => {
+      const bus = new Broadcast();
+
+      Object.defineProperty(document, 'hidden', {
+        value: true,
+        configurable: true,
+      });
+
+      // @ts-expect-error Accessing protected method
+      bus.onVisibilityChange();
+
+      // @ts-expect-error Accessing protected property
+      expect(bus.channel.postMessage).toHaveBeenCalledWith({
+        type: CONNECTION_EVENT_TYPES.stop,
+        payload: undefined,
+        source: bus.id,
+      });
+
+      Object.defineProperty(document, 'hidden', {
+        value: false,
+        configurable: true,
+      });
+    });
+
+    it('should ping when tab becomes visible', () => {
+      const bus = new Broadcast();
+
+      // @ts-expect-error Accessing protected property
+      const postMessageSpy = bus.channel.postMessage;
+      postMessageSpy.mockClear();
+
+      Object.defineProperty(document, 'hidden', {
+        value: false,
+        configurable: true,
+      });
+
+      // @ts-expect-error Accessing protected method
+      bus.onVisibilityChange();
+
+      expect(bus.connected.size).toBe(0);
+      expect(postMessageSpy).toHaveBeenCalledWith({
+        type: CONNECTION_EVENT_TYPES.ping,
+        payload: undefined,
+        source: bus.id,
+      });
+    });
+
+    it('should emit stop to others on destroy', () => {
+      const bus = Broadcast.getInstance<Payload<'test', string>>();
+
+      // @ts-expect-error Accessing protected property
+      const postMessageSpy = bus.channel.postMessage;
+      postMessageSpy.mockClear();
+
+      bus.destroy();
+
+      expect(postMessageSpy).toHaveBeenCalledWith({
+        type: CONNECTION_EVENT_TYPES.stop,
+        payload: undefined,
+        source: bus.id,
+      });
     });
   });
 });
