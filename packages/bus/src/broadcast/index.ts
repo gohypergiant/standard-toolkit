@@ -54,7 +54,8 @@ export class Broadcast<
   /**
    * A list of ids of other bus instances communicating with this instance
    */
-  readonly connected = new Set<UniqueId>();
+private _connected = new Set<UniqueId>();
+get connected(): ReadonlySet<UniqueId> { return this._connected; }
 
   // biome-ignore lint/suspicious/noExplicitAny: Can't use generics in static properties
   private static instance: Broadcast<any> | null = null;
