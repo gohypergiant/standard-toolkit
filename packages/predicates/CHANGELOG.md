@@ -1,6 +1,6 @@
 # @accelint/predicates
 
-## 1.0.0
+## 0.5.1
 
 ### Patch Changes
 

@@ -1,13 +1,11 @@
 # @accelint/design-toolkit
 
-## 10.0.0
-### Major Changes
-
-- a70629c: Add labelPosition prop to radio and checkbox components
-  
-  `RadioContext` has been split into `RadioGroupContext` and `RadioContext` to match the checkbox pattern. If you were importing `RadioContext` to configure a RadioGroup, update your import to `RadioGroupContext` instead.
+## 9.8.0
 
 ### Minor Changes
+- a70629c: Add labelPosition prop to radio and checkbox components
+
+  `RadioContext` has been split into `RadioGroupContext` and `RadioContext` to match the checkbox pattern. If you were importing `RadioContext` to configure a RadioGroup, update your import to `RadioGroupContext` instead.
 
 - 596c8ea: Summary: Added a new FloatingCard component.
   
