@@ -195,11 +195,6 @@ export class Broadcast<
   /**
    * Removes a listener by id.
    *
-   * @param topic - The event topic.
-   * @param listenerId - id of the listener.
-  /**
-   * Removes a listener by id.
-   *
    * @param type - The event type.
    * @param id - The listener id.
    */
@@ -211,10 +206,6 @@ export class Broadcast<
     }
   }
 
-  /**
-   * Check for the existence of a event type and create it if missing.
-   *
-   * @param type - The event type.
   /**
    * Register a listener for the given event type, initializing the handler list if needed.
    *
