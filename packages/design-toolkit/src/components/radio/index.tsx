@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -13,7 +13,12 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { Radio as AriaRadio, composeRenderProps } from 'react-aria-components';
+import {
+  Radio as AriaRadio,
+  composeRenderProps,
+  useContextProps,
+} from 'react-aria-components';
+import { RadioContext } from './context';
 import styles from './styles.module.css';
 import type { RadioProps } from './types';
 
@@ -35,12 +40,22 @@ import type { RadioProps } from './types';
  * </RadioGroup>
  * ```
  */
-export function Radio({ classNames, children, ...rest }: RadioProps) {
+export function Radio({ ref, ...props }: RadioProps) {
+  [props, ref] = useContextProps(props, ref ?? null, RadioContext);
+
+  const { classNames, children, labelPosition = 'end', ...rest } = props;
+
   return (
     <AriaRadio
       {...rest}
+      ref={ref}
       className={composeRenderProps(classNames?.radio, (className) =>
-        clsx('group/radio', styles.radio, className),
+        clsx(
+          'group/radio',
+          styles.radio,
+          labelPosition === 'start' && styles.labelStart,
+          className,
+        ),
       )}
     >
       {composeRenderProps(children, (children) => (

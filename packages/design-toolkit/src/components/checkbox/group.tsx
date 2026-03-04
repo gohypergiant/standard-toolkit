@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -19,7 +19,7 @@ import {
   useContextProps,
 } from 'react-aria-components';
 import { Label } from '../label';
-import { CheckboxGroupContext } from './context';
+import { CheckboxContext, CheckboxGroupContext } from './context';
 import styles from './styles.module.css';
 import type { CheckboxGroupProps } from './types';
 
@@ -58,6 +58,7 @@ export function CheckboxGroup({ ref, ...props }: CheckboxGroupProps) {
     children,
     classNames,
     label,
+    labelPosition,
     orientation = 'vertical',
     ...rest
   } = props;
@@ -72,7 +73,7 @@ export function CheckboxGroup({ ref, ...props }: CheckboxGroupProps) {
       data-orientation={orientation}
     >
       {composeRenderProps(children, (children, { isDisabled, isRequired }) => (
-        <>
+        <CheckboxContext value={{ labelPosition }}>
           {label && (
             <Label
               className={clsx(styles.label, classNames?.label)}
@@ -83,7 +84,7 @@ export function CheckboxGroup({ ref, ...props }: CheckboxGroupProps) {
             </Label>
           )}
           {children}
-        </>
+        </CheckboxContext>
       ))}
     </AriaCheckboxGroup>
   );

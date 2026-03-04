@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -9,11 +9,19 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-
+import copy from 'rollup-plugin-copy';
 import { defineConfig } from 'tsdown';
 
 export default defineConfig({
-  plugins: [],
+  plugins: [
+    copy({
+      targets: [
+        { src: 'src/spritesheets/**/*.json', dest: 'dist/spritesheets' },
+        { src: 'src/spritesheets/**/*.png', dest: 'dist/spritesheets' },
+      ],
+      hook: 'writeBundle',
+    }),
+  ],
   entry: [
     'src/**/*.{ts,tsx}',
     '!src/**/*.{d,stories,test,test-d,bench}.{ts,tsx}',
@@ -27,11 +35,18 @@ export default defineConfig({
   treeshake: true,
   platform: 'neutral',
   minify: false,
-  exports: true,
+  exports: {
+    customExports(pkg) {
+      // pkg already contains all the js exports. we only need to manually add the spritesheet assets
+      pkg['./spritesheets/*.png'] = './dist/spritesheets/*.png';
+      pkg['./spritesheets/*.json'] = './dist/spritesheets/*.json';
+      return pkg;
+    },
+  },
   // NOTE: our license header is currently not formatted correctly to support https://rolldown.rs/options/output#legalcomments
   outputOptions: {
     banner: `/*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0

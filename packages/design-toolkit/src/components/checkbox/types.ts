@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -34,6 +34,8 @@ export type CheckboxGroupProps = Omit<AriaCheckboxGroupProps, 'className'> &
     };
     /** Label text displayed above the checkbox group. */
     label?: string;
+    /** Position of labels for all child Checkboxes. Individual Checkbox `labelPosition` overrides this. */
+    labelPosition?: 'start' | 'end';
     /** Layout orientation for the checkboxes. */
     orientation?: Orientation;
   };
@@ -54,4 +56,6 @@ export type CheckboxProps = Omit<AriaCheckboxProps, 'className'> &
       /** Class name for the label text. */
       label?: string;
     };
+    /** Position of the label relative to the checkbox control. */
+    labelPosition?: 'start' | 'end';
   };
