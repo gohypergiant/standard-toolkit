@@ -46,7 +46,6 @@ import {
   isRectangleShape,
 } from '../shared/types';
 import {
-  releaseCursor,
   releaseModeAndCursor,
   requestCursorChange,
   requestModeChange,
