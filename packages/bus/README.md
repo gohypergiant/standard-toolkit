@@ -256,29 +256,18 @@ bus.on(CONNECTION_EVENT_TYPES.stop, ({ source }) => {
 
 ```tsx
 import { CONNECTION_EVENT_TYPES } from '@accelint/bus';
-import { useBus } from '@accelint/bus/react';
-import { useEffect, useState } from 'react';
+import { useBus, useOn } from '@accelint/bus/react';
+import { useState } from 'react';
 
 function ConnectedCounter() {
   const { bus } = useBus<MyEvents>();
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(bus.connected.size);
 
-  useEffect(() => {
-    const updateCount = () => setCount(bus.connected.size);
+  const updateCount = () => setCount(bus.connected.size);
 
-    const offPing = bus.on(CONNECTION_EVENT_TYPES.ping, updateCount);
-    const offEcho = bus.on(CONNECTION_EVENT_TYPES.echo, updateCount);
-    const offStop = bus.on(CONNECTION_EVENT_TYPES.stop, updateCount);
-
-    // Set initial count
-    updateCount();
-
-    return () => {
-      offPing();
-      offEcho();
-      offStop();
-    };
-  }, [bus]);
+  useOn(CONNECTION_EVENT_TYPES.ping, updateCount);
+  useOn(CONNECTION_EVENT_TYPES.echo, updateCount);
+  useOn(CONNECTION_EVENT_TYPES.stop, updateCount);
 
   return <div>Connected instances: {count}</div>;
 }
