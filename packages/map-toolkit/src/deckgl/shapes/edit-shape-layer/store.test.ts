@@ -609,7 +609,7 @@ describe('edit-shape-layer store', () => {
       mapEventBus.on(MapEvents.enablePan, modeEmitSpy);
 
       // Pass a concrete edit mode — function should no-op regardless
-      enableEditPanning(mapId, 'vertex-transform');
+      enableEditPanning(mapId);
 
       expect(editStore.get(mapId)?.previousMode).toBeNull();
       expect(modeEmitSpy).not.toHaveBeenCalled();
@@ -630,7 +630,7 @@ describe('edit-shape-layer store', () => {
       const shape = createMockShape();
       edit(shape);
 
-      enableEditPanning(mapId, editStore.get(mapId).editMode);
+      enableEditPanning(mapId);
 
       expect(editStore.get(mapId)?.previousMode).not.toBeNull();
       expect(modeEmitSpy).toHaveBeenCalled();
@@ -675,8 +675,7 @@ describe('edit-shape-layer store', () => {
       const shape = createMockShape();
       edit(shape);
 
-      const originalMode = editStore.get(mapId).editMode;
-      enableEditPanning(mapId, originalMode);
+      enableEditPanning(mapId);
 
       expect(editStore.get(mapId)?.editMode).toBe('view');
 
@@ -694,7 +693,7 @@ describe('edit-shape-layer store', () => {
       const originalMode = editStore.get(mapId).editMode;
 
       // Enable panning (stores original mode, switches to view)
-      enableEditPanning(mapId, originalMode);
+      enableEditPanning(mapId);
       expect(editStore.get(mapId)?.editMode).toBe('view');
       expect(editStore.get(mapId)?.previousMode).toBe(originalMode);
 
@@ -728,7 +727,7 @@ describe('edit-shape-layer store', () => {
       edit(shape);
       const originalMode = editStore.get(mapId).editMode;
 
-      enableEditPanning(mapId, originalMode);
+      enableEditPanning(mapId);
 
       expect(editStore.get(mapId)?.editMode).toBe('view');
       expect(editStore.get(mapId)?.previousMode).toBe(originalMode);
@@ -748,12 +747,12 @@ describe('edit-shape-layer store', () => {
       expect(originalMode).not.toBe('view');
 
       // First call: stores original mode, switches to view
-      enableEditPanning(mapId, originalMode);
+      enableEditPanning(mapId);
       expect(editStore.get(mapId)?.previousMode).toBe(originalMode);
       expect(editStore.get(mapId)?.editMode).toBe('view');
 
       // Second call: should NOT overwrite previousMode with 'view'
-      enableEditPanning(mapId, editStore.get(mapId).editMode);
+      enableEditPanning(mapId);
 
       // previousMode must still be the original editing mode, not 'view'
       expect(editStore.get(mapId)?.previousMode).toBe(originalMode);
@@ -770,7 +769,7 @@ describe('edit-shape-layer store', () => {
       edit(shape);
 
       const originalMode = editStore.get(mapId).editMode;
-      enableEditPanning(mapId, originalMode);
+      enableEditPanning(mapId);
       expect(editStore.get(mapId)?.previousMode).toBe(originalMode);
 
       save();
@@ -785,8 +784,7 @@ describe('edit-shape-layer store', () => {
       const shape = createMockShape();
       edit(shape);
 
-      const originalMode = editStore.get(mapId).editMode;
-      enableEditPanning(mapId, originalMode);
+      enableEditPanning(mapId);
 
       cancel();
 

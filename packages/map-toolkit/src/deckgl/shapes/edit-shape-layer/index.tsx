@@ -21,7 +21,6 @@ import {
 import { useCallback, useContext, useEffect, useRef } from 'react';
 import { MapContext } from '../../base-map/provider';
 import { useShiftZoomDisable } from '../shared/hooks/use-shift-zoom-disable';
-import { ShapeFeatureType } from '../shared/types';
 import { getDefaultEditableLayerProps } from '../shared/utils/layer-config';
 import { getFillColor, getLineColor } from '../shared/utils/style-utils';
 import {
@@ -29,6 +28,7 @@ import {
   CONTINUOUS_EDIT_TYPES,
   DEFAULT_HOTKEY_CONFIG,
   EDIT_SHAPE_LAYER_ID,
+  SHAPE_PROPERTY_MAP,
 } from './constants';
 import { getEditModeInstance } from './modes';
 import {
@@ -44,6 +44,7 @@ import type {
   FeatureCollection,
 } from '@deck.gl-community/editable-layers';
 import type { Feature } from 'geojson';
+import type { ShapeFeatureType } from '../shared/types';
 import type { EditShapeLayerProps } from './types';
 
 /**
@@ -78,6 +79,10 @@ function isCompletionEditType(editType: string): boolean {
  *
  * For rectangles, adds the `shape: 'Rectangle'` property required by ModifyMode's
  * lockRectangles feature. ModifyMode checks `properties.shape === 'Rectangle'`.
+ *
+ * @param feature - The GeoJSON Feature to wrap.
+ * @param shape - The shape type, used to determine if mode-specific properties are needed.
+ * @returns A GeoJSON FeatureCollection containing the single feature.
  */
 function toFeatureCollection(
   feature: Feature,
@@ -86,12 +91,7 @@ function toFeatureCollection(
   // Add shape property for modes that require it
   // - ResizeCircleMode requires shape: 'Circle'
   // - ModifyMode lockRectangles requires shape: 'Rectangle'
-  let shapeProperty: string | undefined;
-  if (shape === ShapeFeatureType.Circle) {
-    shapeProperty = 'Circle';
-  } else if (shape === ShapeFeatureType.Rectangle) {
-    shapeProperty = 'Rectangle';
-  }
+  const shapeProperty = SHAPE_PROPERTY_MAP[shape];
 
   const featureWithShape = shapeProperty
     ? {
@@ -146,6 +146,8 @@ function toFeatureCollection(
  *   );
  * }
  * ```
+ *
+ * @throws {Error} Throws if neither `mapId` prop nor `MapProvider` context is available.
  */
 export function EditShapeLayer({
   id = EDIT_SHAPE_LAYER_ID,
@@ -228,8 +230,7 @@ export function EditShapeLayer({
         }
       },
       onKeyHeld: () => {
-        const prevMode = editStore.get(actualMapId).editMode;
-        enableEditPanning(actualMapId, prevMode);
+        enableEditPanning(actualMapId);
       },
       onKeyUp: () => {
         disableEditPanning(actualMapId);

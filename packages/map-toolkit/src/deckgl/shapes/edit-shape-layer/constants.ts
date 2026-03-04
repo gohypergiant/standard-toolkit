@@ -12,8 +12,9 @@
 
 'use client';
 
-import type { CSSCursorType } from '@/map-cursor/types';
 import { Keycode } from '@accelint/hotkey-manager';
+import { ShapeFeatureType } from '../shared/types';
+import type { CSSCursorType } from '@/map-cursor/types';
 import type { EditMode } from './types';
 
 // Re-export edit event type sets from shared constants
@@ -50,4 +51,14 @@ export const EDIT_CURSOR_MAP: Record<EditMode, CSSCursorType> = {
  */
 export const DEFAULT_HOTKEY_CONFIG = {
   panning: { code: Keycode.Space },
+};
+
+/**
+ * Maps shape types to the `properties.shape` value required by editable-layers modes.
+ * - ResizeCircleMode requires `shape: 'Circle'`
+ * - ModifyMode lockRectangles requires `shape: 'Rectangle'`
+ */
+export const SHAPE_PROPERTY_MAP: Partial<Record<ShapeFeatureType, string>> = {
+  [ShapeFeatureType.Circle]: 'Circle',
+  [ShapeFeatureType.Rectangle]: 'Rectangle',
 };
