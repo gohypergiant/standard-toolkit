@@ -197,6 +197,11 @@ export class Broadcast<
    *
    * @param topic - The event topic.
    * @param listenerId - id of the listener.
+  /**
+   * Removes a listener by id.
+   *
+   * @param type - The event type.
+   * @param id - The listener id.
    */
   protected removeListener(type: Events['type'], id: UniqueId) {
     if (this.listeners[type]) {
