@@ -37,9 +37,13 @@ export type StructuredCloneableData = StructuredCloneable;
  * Use @type Payload instead when defining events
  */
 export type BasicPayload = {
+  /** The event type identifier. */
   type: string;
+  /** Optional event data, must be structured-cloneable. */
   payload?: StructuredCloneableData;
+  /** The ID of the bus instance that emitted this event. */
   source: UniqueId;
+  /** The ID of the intended recipient bus instance, if targeted. */
   target?: UniqueId;
 };
 
