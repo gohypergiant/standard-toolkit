@@ -1,0 +1,225 @@
+# `useTotalDataRegionThresholds`
+
+## Summary
+A hook that notifies the Gantt component consumer when certain thresholds are
+reached in the total data region currently being virtualized. This allows the
+consumer to perform actions when the rendered region reaches certain thresholds
+(like fetching additional data to provide to the Gantt component). The thresholds
+apply to both horizontal (temporal) and vertical (row index) axes.
+
+This hook will be used by the `RowsVirtualizer` component.
+
+## Types
+```ts
+type Timescale = '1m' | '5m' | '10m' | '30m' | '1h' | '2h' | '6h' | '12h' | '24h';
+
+type GanttRegion = {
+  // The start time of the region in milliseconds.
+  startMs: number;
+  // The end time of the region in milliseconds.
+  endMs: number;
+  // The start row index of the region.
+  startRowIndex: number;
+  // The end row index of the region.
+  endRowIndex: number;
+};
+
+type RenderedRegion = GanttRegion;
+type TotalDataRegion = GanttRegion;
+
+type MetThresholdData = {
+  // The axis of the threshold.
+  axis: 'horizontal' | 'vertical';
+  // The direction of the threshold.
+  direction: 'start' | 'end';
+  // The value of the threshold.
+  value: number;
+};
+
+type ThresholdProps = {
+  threshold: Threshold;
+  onThresholdMet: (metThresholds: MetThresholdData[]) => void;
+};
+
+type Threshold = {
+  // The distance in timescale units from a TotalDataRegion temporal boundary
+  timescaleMultipleDistance: number;
+  // The number of rows from a TotalDataRegion row index boundary
+  rowIndexBoundaryDistance: number;
+};
+
+type UseTotalDataRegionThresholdsProps = {
+  totalRowsCount: number;
+  scrollContainerElement: HTMLDivElement | null;
+};
+
+```
+### Notes on Types
+- The `timescaleMultipleDistance` property on a `Threshold` object is a multiple of
+  timescale units (e.g. 1h, 6h, 12h, etc.). This provides a timescale-normalized
+  distance from a `TotalDataRegion` temporal boundary. This is superior to a
+  percentage-based threshold value because of the inherent size of timestamp
+  millisecond values.
+- Define and export needed types in `gantt/types.ts` if they don't already exist
+  there.
+
+## Functional Requirements
+- The hook must subscribe to `roundedCurrentRowScrollPx` value via `useGanttStore` hook:
+  ```ts
+  const roundedCurrentRowScrollPx = useGanttStore(
+    selectors.roundedCurrentRowScrollPx,
+  );
+  ```
+- The hook should derive the `TotalDataRegion` value.
+  - To derive this value, the hook will need the following values:
+    - `totalRowsCount` - Prop passed to the hook
+      - This will be used to calculate the `endRowIndex` of `TotalDataRegion`
+      - `startRowIndex` is just `0`.
+    - `totalBounds` - Value access via `useGanttContext` hook.
+      - This will be used to calculate the `startMs` and `endMs` of `TotalDataRegion`.
+    - This derivation should be captured in a separate/dedicated utility function.
+      - The input values to this utility function will be the `totalRowsCount` value
+        and the `totalBounds` object.
+- The hook should derive the `RenderedRegion` value.
+  - To derive this value, the hook will need the following values:
+    - `start` and `end` properties from the object returned from
+      `deriveRenderedSlice` utility function.
+      - `startRowIndex` will be the `start` value
+      - `endRowIndex` will be the `end` value minus 1. This is because the end
+        index is exclusive (intentional since the result of `deriveRenderedSlice` is
+        meant to be used within the context of the array `slice` method, hence the
+        name).
+      - Use the subscribed `roundedCurrentRowScrollPx` value and the
+        `scrollContainerElement` prop as the function's input arguments.
+    - `renderedRegionBounds` - Value accessed via `useGanttContext` hook.
+      - This will be used to calculate the `startMs` and `endMs` of `RenderedRegion`.
+    - This derivation should be captured in a separate/dedicated utility function.
+      - The input values to this utility function will be the object returned from
+        `deriveRenderedSlice` and the `renderedRegionBounds` object.
+- The hook should derive the temporal threshold values from the provided
+  `threshold` prop (accessed via `useGanttContext` hook).
+  - The actual temporal threshold values should be derived by adding/subtracting
+    a relative value to/from the `TotalDataRegion` temporal boundaries.
+    - The relative value is computed by multiplying the `timescaleMultipleDistance`
+      by the number of milliseconds in the `timescale` (e.g. 1h = 3600000ms).
+      - For the start temporal threshold, add this relative value to the
+        `TotalDataRegion` `startMs`.
+      - For the end temporal threshold, subtract this relative value from the
+        `TotalDataRegion` `endMs`.
+  - This derivation should be captured in a separate/dedicated utility function.
+    - The input values to this utility function will be the `Threshold` object
+      and the `TotalDataRegion` object.
+- The hook should derive the integer row index threshold values from the provided
+  `threshold` prop (accessed via `useGanttContext` hook).
+  - Similar to the temporal threshold values, the actual index threshold values
+    should be derived by adding/subtracting the `rowIndexBoundaryDistance` value
+    to/from the `TotalDataRegion` row index boundaries.
+    - For the start row index threshold, add this relative value to the
+      `TotalDataRegion` `startRowIndex`.
+    - For the end row index threshold, subtract this relative value from the
+      `TotalDataRegion` `endRowIndex`.
+  - This derivation should be captured in a separate/dedicated utility function.
+    - The input values to this utility function will be the `Threshold` object
+      and the `TotalDataRegion` object.
+- The hook should examine the provided thresholds using the derived values.
+  - Each axis has two thresholds (start & end). The way a threshold is considered
+    to be met depends on the direction of the threshold.
+    - For the start threshold, the threshold is considered met if the rendered
+      region's start is less than or equal to the derived threshold value.
+    - For the end threshold, the threshold is considered met if the rendered
+      region's end is greater than or equal to the derived threshold value.
+  - Construct an array of `MetThresholdData` objects by mapping over all possible
+    thresholds (temporal start and end values, row index start and end values).
+  - If the resulting array is empty, the hook should not invoke the
+    `onThresholdMet` callback.
+  - If the resulting array is not empty, the hook should invoke the
+    `onThresholdMet` callback with the array of `MetThresholdData` objects.
+
+## Implementation Notes
+- Where possible, the hook should extract logic (like threshold examination logic,
+  threshold value computation logic, etc.) into smaller, focused functions outside
+  of the hook that are then used in the main hook logic. This will make it easier
+  to make sense of the hook's core functionality while also improving
+  maintainability and testability.
+  - These extracted utility functions should be placed in
+    `gantt/utils/thresholds.ts`.
+- The hook will be located in an `index.ts` file adjacent to this spec file.
+- Threshold examination/callback invocation must occur within a `useEffect` and not
+  within the main render scope. Invoking `onThresholdMet` is a side effect that
+  may trigger parent component state updates.
+
+### Edge Cases
+- Threshold examination/management is opt-in by the consumer of the Gantt component
+  based on if they specify the `ThresholdProps` prop on the Gantt component.
+  - If the `threshold` and `onThresholdMet` props are not specified in context
+    (mapped from the top-level `ThresholdProps` prop specified on the Gantt
+    component), the hook should not perform any threshold examination logic.
+- If either the `totalRowsCount` prop is 0, or `scrollContainerElement.clientHeight` is 0,
+  the hook should not run any of its threshold examination logic.
+- If the provided threshold values are negative, the hook should not run any of
+  its threshold examination logic.
+- If the provided threshold values cause the derived thresholds to be invalid, the
+  hook should not run any of its threshold examination logic.
+  - The derived thresholds are considered invalid in the following cases:
+    - The start threshold is greater than the end threshold.
+    - The start threshold is less than the start of the total data region.
+    - The end threshold is greater than the end of the total data region.
+
+
+## Testing
+
+### Utility Function Tests
+- There should be complete but concise test coverage for the created utility
+  functions. The tests for these functions should be placed in
+  `gantt/utils/thresholds.test.ts`.
+- Each utility function should be tested in isolation with clear input/output assertions.
+
+### Hook Tests
+- The hook tests should focus on **behavior testing** rather than implementation details.
+  This means testing the observable outcomes of the hook rather than its internal workings.
+- The hook itself should have complete test coverage which tests the following behaviors:
+  - When `threshold` or `onThresholdMet` is not specified, `onThresholdMet` is never called
+  - When conditions for threshold examination aren't met (e.g., `totalRowsCount` is 0,
+    `scrollContainerElement` is null, threshold values are invalid), `onThresholdMet` is never called
+  - When thresholds are met, `onThresholdMet` is called with the correct `MetThresholdData` objects
+  - When no thresholds are met, `onThresholdMet` is not called
+  - The hook correctly responds to dependency changes (re-running effect)
+- For testing the hook:
+  - Replace imported utility functions with mocks (not just spies) to control their return values
+    and isolate the hook's logic from the actual utility implementations
+  - Avoid assertions that test whether utility functions were called with specific arguments,
+    as this couples tests to implementation details
+  - Mock `useGanttContext` and `useGanttStore` to return suitable test values
+  - Focus assertions on the end result (whether `onThresholdMet` was called correctly)
+    rather than the intermediate steps
+- The hook's tests should be placed in
+  `gantt/hooks/use-total-data-region-thresholds/index.test.ts`.
+- Tests should not be overly exhaustive; test important behaviors to ensure
+  coverage, but do not create tests that are redundant or repetitive.
+- Tests should remain consistent with testing patterns found elsewhere within the
+  Gantt component feature (e.g., use vitest if that's what other tests use).
+
+## Key Assumptions
+- This hook assumes the `currentPositionMs` value in the Gantt store is initialized
+  to the midpoint of the current total data region on mount.
+  - If the `currentPositionMs` value is initialized to the start of the total data
+    region, the temporal start threshold will be considered to have been met,
+    causing the `onThresholdMet` callback to be invoked.
+  - For additional flexibility, the Gantt component should, at some point, allow
+    an initial value for the `currentPositionMs` value to be specified as a prop
+    to avoid an immediate invocation of the `onThresholdMet` callback.
+- The consumer of the Gantt component has logic in place to interpret the results
+  of the `onThresholdMet` callback.
+  - For example, if the user "zooms out" such that the entirety of the total data
+    region is visible (e.g., goes from '2h' timescale to '24h' timescale),
+    the `onThresholdMet` callback will be invoked with an array of
+    `MetThresholdData` objects signifying both start and end temporal thresholds
+    have been met. In this case, the consumer might request a larger window of
+    data to be provided to the Gantt component, if available, to accommodate
+    larger rendered temporal regions.
+- The `onThresholdMet` callback will be invoked on every render where thresholds
+  are met. Since renders occur only when the rendered region changes, each
+  invocation represents a new region state. The consumer is responsible for
+  implementing any de-duplication logic if needed (e.g., avoiding redundant
+  data fetches).
+

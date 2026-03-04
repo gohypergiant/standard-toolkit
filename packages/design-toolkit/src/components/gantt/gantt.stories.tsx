@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { useMemo } from 'react';
 import { Gantt } from './';
 import {
   DATASET_JAN25_TO_JAN28,
@@ -62,12 +63,24 @@ const meta = {
     // biome-ignore lint/style/noNonNullAssertion: <not undefined>
     const dataset = datasetKeys[datasetKey]!;
 
+    const thresholdProps = useMemo(
+      () => ({
+        threshold: {
+          timescaleMultipleDistance: 3,
+          rowIndexBoundaryDistance: 2,
+        },
+        onThresholdMet: console.log,
+      }),
+      [],
+    );
+
     return (
       <div className='h-[360px]'>
         <Gantt
           startTimeMs={dataset.startTimeMs}
           endTimeMs={dataset.endTimeMs}
           timescale={args.timescale}
+          thresholdProps={thresholdProps}
         >
           {dataset.rows.map(({ id, elements }) => (
             <GanttRow key={id}>

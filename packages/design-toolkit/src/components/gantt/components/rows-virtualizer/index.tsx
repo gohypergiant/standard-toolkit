@@ -10,7 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { useState } from 'react';
+import { Children, useState } from 'react';
+import { useTotalDataRegionThresholds } from '../../hooks/use-total-data-region-thresholds';
 import styles from './styles.module.css';
 import { useRenderedRows } from './use-rendered-rows';
 import { useScrollSync } from './use-scroll-sync';
@@ -22,6 +23,11 @@ export function RowsVirtualizer({ children }: PropsWithChildren) {
 
   const { dimensions, renderedRows, onScroll } = useRenderedRows({
     children,
+    scrollContainerElement,
+  });
+
+  useTotalDataRegionThresholds({
+    totalRowsCount: Children.count(children),
     scrollContainerElement,
   });
 
