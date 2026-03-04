@@ -384,7 +384,9 @@ describe('broadcast', () => {
       const remoteId = uuid();
 
       // First add the remote to connected
+      // @ts-expect-error bypass "readonly" status of Set for testing
       bus.connected.add(remoteId);
+
       expect(bus.connected.size).toBe(1);
 
       // Simulate receiving a stop event
@@ -404,7 +406,9 @@ describe('broadcast', () => {
       const remoteId = uuid();
 
       // Add a remote connection
+      // @ts-expect-error bypass "readonly" status of Set for testing
       bus.connected.add(remoteId);
+
       expect(bus.connected.size).toBe(1);
 
       // Call ping manually

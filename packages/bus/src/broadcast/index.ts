@@ -51,11 +51,13 @@ export class Broadcast<
    */
   readonly id = uuid();
 
+  private _connected = new Set<UniqueId>();
   /**
    * A list of ids of other bus instances communicating with this instance
    */
-private _connected = new Set<UniqueId>();
-get connected(): ReadonlySet<UniqueId> { return this._connected; }
+  get connected(): ReadonlySet<UniqueId> {
+    return this._connected;
+  }
 
   // biome-ignore lint/suspicious/noExplicitAny: Can't use generics in static properties
   private static instance: Broadcast<any> | null = null;
@@ -104,7 +106,7 @@ get connected(): ReadonlySet<UniqueId> { return this._connected; }
     this.channel.onmessageerror = this.onError;
 
     this.on(CONNECTION_EVENT_TYPES.stop, ({ source }) => {
-      this.connected.delete(source);
+      this._connected.delete(source);
     });
 
     this.on(CONNECTION_EVENT_TYPES.ping, ({ source }) => {
@@ -112,13 +114,13 @@ get connected(): ReadonlySet<UniqueId> { return this._connected; }
         return;
       }
 
-      this.connected.add(source);
+      this._connected.add(source);
 
       this.emit(CONNECTION_EVENT_TYPES.echo, undefined, { target: source });
     });
 
     this.on(CONNECTION_EVENT_TYPES.echo, ({ source }) => {
-      this.connected.add(source);
+      this._connected.add(source);
     });
 
     if (typeof globalThis.addEventListener === 'function') {
@@ -225,7 +227,7 @@ get connected(): ReadonlySet<UniqueId> { return this._connected; }
    * correct list of connections
    */
   ping() {
-    this.connected.clear();
+    this._connected.clear();
 
     this.emit(CONNECTION_EVENT_TYPES.ping, undefined, { target: 'others' });
   }
@@ -427,7 +429,7 @@ get connected(): ReadonlySet<UniqueId> { return this._connected; }
       }
     }
 
-    this.connected.clear();
+    this._connected.clear();
     this.listeners = {};
     this.emitOptions = new Map();
 
