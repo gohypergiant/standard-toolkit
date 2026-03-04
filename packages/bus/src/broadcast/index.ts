@@ -170,7 +170,7 @@ export class Broadcast<
    * @remarks
    * If `targetId` is provided, delivery is scoped to a specific browser context.
    * We assume exactly one bus instance per context, so events are delivered only when
-   * `target === this.uuid`. If omitted, the event is treated as a broadcast within
+   * `target === this.id`. If omitted, the event is treated as a broadcast within
    * this context (audience filtering may occur elsewhere).
    */
   protected handleListeners(data: Events) {
