@@ -105,12 +105,20 @@ export type StyleProperties = {
 };
 
 /**
+ * Geographic position as [longitude, latitude] with optional elevation.
+ *
+ * Similar to GeoJSON's `Position` (`number[]`) but with stricter typing
+ * that guarantees at least two elements.
+ */
+export type GeoPosition = [number, number, number?];
+
+/**
  * Circle-specific properties for precise rendering
  * Stored alongside the polygon approximation
  */
 export type CircleProperties = {
   /** Center point as [longitude, latitude] or [longitude, latitude, elevation] */
-  center: [number, number, number?];
+  center: GeoPosition;
   /** Radius with value and units */
   radius: {
     /** Radius value */
@@ -126,7 +134,7 @@ export type CircleProperties = {
  */
 export type EllipseProperties = {
   /** Center point as [longitude, latitude] or [longitude, latitude, elevation] */
-  center: [number, number, number?];
+  center: GeoPosition;
   /** X semi-axis (horizontal radius) with value and units */
   xSemiAxis: {
     /** X semi-axis value */
