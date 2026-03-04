@@ -17,19 +17,19 @@ import { useState } from 'react';
 import { useMapCursor } from '@/map-cursor';
 import { BaseMap } from '../../base-map/index';
 import { mockShapes } from '../__fixtures__/mock-shapes';
-import '../draw-shape-layer/fiber';
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import '../display-shape-layer/fiber';
 import { useSelectShape } from '../display-shape-layer/use-select-shape';
+import '../draw-shape-layer/fiber';
 import { DrawShapeLayer } from '../draw-shape-layer/index';
 import { useDrawShape } from '../draw-shape-layer/use-draw-shape';
 import { ShapeEvents } from '../shared/events';
 import { ShapeFeatureType } from '../shared/types';
 import type { ShapeHoveredEvent, ShapeSelectedEvent } from '../shared/events';
 import type { Shape } from '../shared/types';
-import '../display-shape-layer/fiber';
 import './fiber';
 import { EditShapeLayer } from './index';
 import { useEditShape } from './use-edit-shape';
-import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta = {
   title: 'DeckGL/Shapes/Edit Shape Layer',
@@ -246,6 +246,7 @@ export const BasicEditing: Story = {
               <li>Shift: hold to scale proportionally</li>
               <li>Press Enter to save</li>
               <li>Press ESC to cancel</li>
+              <li>Hold Space while editing to pan</li>
             </ul>
           </div>
         </div>
