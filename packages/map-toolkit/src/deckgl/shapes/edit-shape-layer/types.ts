@@ -13,6 +13,8 @@
 'use client';
 
 import type { UniqueId } from '@accelint/core';
+import type { KeyOption } from '@accelint/hotkey-manager';
+import type { NonEmptyArray } from '@accelint/hotkey-manager/types/non-empty-array';
 import type { Feature } from 'geojson';
 import type { DistanceUnitAbbreviation } from '@/shared/units';
 import type { Shape } from '../shared/types';
@@ -44,6 +46,8 @@ export type EditingState = {
   editMode: EditMode;
   /** Live feature being edited (updates in real-time during drag) */
   featureBeingEdited: Feature | null;
+  /** Edit mode to restore after held panning hotkey is released. Null when not panning. */
+  previousMode: EditMode | null;
 };
 
 /**
@@ -101,9 +105,18 @@ export type EditShapeLayerProps = {
   mapId?: UniqueId;
   /** Distance unit for tooltip measurements (defaults to 'km') */
   unit?: DistanceUnitAbbreviation;
+  /** Configuration for hotkeys in EditShapesLayer */
+  hotkeyConfig?: EditShapeHotkeyConfig;
 };
 
 /**
  * Function type for the edit action
  */
 export type EditFunction = (shape: Shape, options?: EditShapeOptions) => void;
+
+/**
+ * Type to define hotkey configurations for functions in EditShapeLayer
+ */
+export type EditShapeHotkeyConfig = {
+  panning: KeyOption | NonEmptyArray<KeyOption>;
+};

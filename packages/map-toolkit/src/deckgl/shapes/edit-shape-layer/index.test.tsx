@@ -25,7 +25,7 @@ let mockUnregisterHotkey: MockFn;
 
 vi.mock('@accelint/hotkey-manager', () => ({
   globalBind: vi.fn(),
-  Keycode: { Enter: 'Enter' },
+  Keycode: { Enter: 'Enter', Space: 'Space' },
   registerHotkey: (...args: unknown[]) => mockRegisterHotkey(...args),
   unregisterHotkey: (...args: unknown[]) => mockUnregisterHotkey(...args),
 }));
@@ -61,17 +61,50 @@ describe('EditShapeLayer', () => {
   });
 
   describe('hotkey lifecycle', () => {
+    it('should throw when mapId is not provided and no MapProvider exists', () => {
+      const spy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => undefined);
+
+      expect(() => {
+        render(<EditShapeLayer />);
+      }).toThrow(
+        'EditShapeLayer requires either a mapId prop or to be used within a MapProvider',
+      );
+
+      spy.mockRestore();
+    });
+
+    it('should throw when mapId is not provided and no MapProvider exists', () => {
+      const spy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => undefined);
+
+      expect(() => {
+        render(<EditShapeLayer />);
+      }).toThrow(
+        'EditShapeLayer requires either a mapId prop or to be used within a MapProvider',
+      );
+
+      spy.mockRestore();
+    });
     it('registers and binds the save hotkey on mount', () => {
       const { unmount } = render(<EditShapeLayer mapId={mapId} />);
 
-      expect(mockRegisterHotkey).toHaveBeenCalledTimes(1);
+      expect(mockRegisterHotkey).toHaveBeenCalledTimes(2);
       expect(mockRegisterHotkey).toHaveBeenCalledWith(
         expect.objectContaining({
           id: `saveEditHotkey-${mapId}`,
           key: { code: 'Enter' },
         }),
       );
-      expect(mockBind).toHaveBeenCalledTimes(1);
+      expect(mockRegisterHotkey).toHaveBeenCalledWith(
+        expect.objectContaining({
+          id: `editPanningHotkey-${mapId}`,
+          key: { code: 'Space' },
+        }),
+      );
+      expect(mockBind).toHaveBeenCalledTimes(2);
 
       unmount();
     });
@@ -81,8 +114,8 @@ describe('EditShapeLayer', () => {
 
       unmount();
 
-      expect(mockUnbind).toHaveBeenCalledTimes(1);
-      expect(mockUnregisterHotkey).toHaveBeenCalledTimes(1);
+      expect(mockUnbind).toHaveBeenCalledTimes(2);
+      expect(mockUnregisterHotkey).toHaveBeenCalledTimes(2);
       expect(mockUnregisterHotkey).toHaveBeenCalledWith(
         expect.objectContaining({ id: 'test-hotkey' }),
       );
@@ -95,13 +128,13 @@ describe('EditShapeLayer', () => {
       // Remount should register a fresh hotkey without error
       const { unmount: unmount2 } = render(<EditShapeLayer mapId={mapId} />);
 
-      expect(mockRegisterHotkey).toHaveBeenCalledTimes(2);
-      expect(mockBind).toHaveBeenCalledTimes(2);
+      expect(mockRegisterHotkey).toHaveBeenCalledTimes(4);
+      expect(mockBind).toHaveBeenCalledTimes(4);
 
       unmount2();
 
-      expect(mockUnbind).toHaveBeenCalledTimes(2);
-      expect(mockUnregisterHotkey).toHaveBeenCalledTimes(2);
+      expect(mockUnbind).toHaveBeenCalledTimes(4);
+      expect(mockUnregisterHotkey).toHaveBeenCalledTimes(4);
     });
   });
 });
