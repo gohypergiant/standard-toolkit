@@ -15,7 +15,15 @@ import {
   mockBroadcastChannel,
   resetMockBroadcastChannel,
 } from '@accelint/vitest-config/mocks/broadcast-channel';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  type Mock,
+  vi,
+} from 'vitest';
 import { CONNECTION_EVENT_TYPES } from './constants';
 import { Broadcast } from './index';
 import type { StructuredCloneable } from 'type-fest';
@@ -422,6 +430,7 @@ describe('broadcast', () => {
         payload: undefined,
         source: bus.id,
       });
+    });
 
     it('should not respond to ping when document is hidden', () => {
       const bus = new Broadcast();
@@ -433,9 +442,10 @@ describe('broadcast', () => {
 
       // @ts-expect-error Accessing protected property
       const postMessageSpy = bus.channel.postMessage;
-      postMessageSpy.mockClear();
-
       const remoteId = uuid();
+
+      // Clear the initial call to ping on init of the bus
+      (postMessageSpy as Mock).mockClear();
 
       // @ts-expect-error Accessing protected method
       bus.handleListeners({
@@ -483,7 +493,6 @@ describe('broadcast', () => {
 
       // @ts-expect-error Accessing protected property
       const postMessageSpy = bus.channel.postMessage;
-      postMessageSpy.mockClear();
 
       Object.defineProperty(document, 'hidden', {
         value: false,
@@ -506,7 +515,6 @@ describe('broadcast', () => {
 
       // @ts-expect-error Accessing protected property
       const postMessageSpy = bus.channel.postMessage;
-      postMessageSpy.mockClear();
 
       bus.destroy();
 

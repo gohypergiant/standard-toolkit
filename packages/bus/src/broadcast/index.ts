@@ -142,9 +142,9 @@ export class Broadcast<
    *
    * @param error - Error event.
    */
-  protected onError(error: MessageEvent<Error>) {
+  protected onError = (error: MessageEvent<Error>) => {
     console.error('BroadcastChannel message error', error);
-  }
+  };
 
   /**
    * Browser only, handler for tab visibility changes:
