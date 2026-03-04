@@ -22,6 +22,7 @@ import type { StoryObj } from '@storybook/react-vite';
 import { useState } from 'react';
 import { clsx } from 'react-querybuilder';
 import { Button } from '../';
+import { ToggleButton } from '../toggle';
 
 type StoryArgs = {
   buttonColor: 'mono-muted' | 'mono-bold' | 'accent';
@@ -55,19 +56,21 @@ const chevronStyle = (isOpen: boolean) => ({
   transition: 'transform 150ms',
 });
 
-const monoBoldStyle = (isDisabled: boolean) =>
-  isDisabled
-    ? ''
-    : 'color-mono-bold:hover:bg-interactive-bold color-mono-bold:focus-visible:bg-interactive-bold color-mono-bold:hover:fg-inverse-muted color-mono-bold:focus-visible:fg-inverse-muted';
+// const monoBoldStyle = (isDisabled: boolean) =>
+//   isDisabled
+//     ? ''
+//     : 'color-mono-bold:hover:bg-interactive-bold color-mono-bold:focus-visible:bg-interactive-bold color-mono-bold:hover:fg-inverse-muted color-mono-bold:focus-visible:fg-inverse-muted';
 
-const enabledStyling = (enabled: boolean) =>
-  enabled
-    ? 'color-mono-muted:bg-interactive-muted color-mono-bold:bg-interactive-muted color-accent:bg-accent-primary-muted color-accent:fg-accent-primary-hover'
-    : '';
+// const enabledStyling = (enabled: boolean) =>
+//   enabled
+//     ? 'color-mono-muted:bg-interactive-muted color-mono-bold:bg-interactive-muted color-accent:bg-accent-primary-muted color-accent:fg-accent-primary-hover'
+//     : '';
 
 export const Default: Story = {
   render: (args) => {
     const [isOpen, setIsOpen] = useState(false);
+
+    console.log(isOpen);
 
     return (
       <div className='flex flex-row'>
@@ -76,17 +79,14 @@ export const Default: Story = {
             <Placeholder />
           </Icon>
         </Button>
-        <MenuTrigger onOpenChange={setIsOpen}>
-          <TooltipTrigger>
-            <Button
-              className={clsx(
-                monoBoldStyle(args.isDisabled),
-                enabledStyling(isOpen),
-                'w-[12px] min-w-[12px] p-0',
-              )}
-              variant='flat'
+        <TooltipTrigger>
+          <MenuTrigger onOpenChange={setIsOpen}>
+            <ToggleButton
+              variant='icon'
+              className='w-[12px] min-w-[12px] p-0'
               color={args.buttonColor}
               isDisabled={args.isDisabled}
+              isSelected={isOpen}
             >
               <Icon
                 style={chevronStyle(isOpen)}
@@ -94,21 +94,21 @@ export const Default: Story = {
               >
                 <ChevronDown />
               </Icon>
-            </Button>
+            </ToggleButton>
             <Tooltip>Tool label</Tooltip>
-          </TooltipTrigger>
-          <Menu variant={args.menuVariant}>
-            <MenuItem id='option-1'>
-              <MenuItemLabel>Option 1</MenuItemLabel>
-            </MenuItem>
-            <MenuItem id='option-2'>
-              <MenuItemLabel>Option 2</MenuItemLabel>
-            </MenuItem>
-            <MenuItem id='option-3'>
-              <MenuItemLabel>Option 3</MenuItemLabel>
-            </MenuItem>
-          </Menu>
-        </MenuTrigger>
+            <Menu variant={args.menuVariant}>
+              <MenuItem id='option-1'>
+                <MenuItemLabel>Option 1</MenuItemLabel>
+              </MenuItem>
+              <MenuItem id='option-2'>
+                <MenuItemLabel>Option 2</MenuItemLabel>
+              </MenuItem>
+              <MenuItem id='option-3'>
+                <MenuItemLabel>Option 3</MenuItemLabel>
+              </MenuItem>
+            </Menu>
+          </MenuTrigger>
+        </TooltipTrigger>
       </div>
     );
   },
