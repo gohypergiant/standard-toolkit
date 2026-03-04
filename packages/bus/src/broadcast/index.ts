@@ -11,9 +11,14 @@
  */
 
 import { isUUID, type UniqueId, uuid } from '@accelint/core';
-import { DEFAULT_CONFIG } from './constants';
+import {
+  CONNECTION_EVENT_TYPES,
+  DEFAULT_CONFIG,
+  DEFAULT_TARGET,
+} from './constants';
 import type { StructuredCloneable } from 'type-fest';
 import type {
+  BasicPayload,
   BroadcastConfig,
   EmitOptions,
   ExtractEvent,
@@ -24,7 +29,7 @@ import type {
 /**
  * Broadcast event class allows for emitting and listening for events across browser contexts.
  *
- * @template P - The payload type union for all events handled by this broadcast instance.
+ * @template Events - The payload type union for all events handled by this broadcast instance.
  *
  * @example
  * ```typescript
@@ -34,17 +39,25 @@ import type {
  * ```
  */
 export class Broadcast<
-  P extends { type: string; payload?: unknown; target?: UniqueId } = Payload<
-    string,
-    StructuredCloneable
-  >,
+  Events extends BasicPayload = Payload<string, StructuredCloneable>,
 > {
   protected channel: BroadcastChannel | null = null;
   protected channelName = DEFAULT_CONFIG.channelName;
-  protected listeners: Partial<Record<P['type'], Listener<P>[]>> = {};
-  protected emitOptions: Map<P['type'], EmitOptions> = new Map();
+  protected listeners: Partial<Record<Events['type'], Listener<Events>[]>> = {};
+  protected emitOptions: Map<Events['type'], EmitOptions> = new Map();
 
+  /**
+   * A UUID for this instance to help identify source and target of events
+   */
   readonly id = uuid();
+
+  private _connected = new Set<UniqueId>();
+  /**
+   * A list of ids of other bus instances communicating with this instance
+   */
+  get connected(): ReadonlySet<UniqueId> {
+    return this._connected;
+  }
 
   // biome-ignore lint/suspicious/noExplicitAny: Can't use generics in static properties
   private static instance: Broadcast<any> | null = null;
@@ -60,6 +73,7 @@ export class Broadcast<
     }
 
     this.init();
+    this.ping();
   }
 
   /**
@@ -76,14 +90,11 @@ export class Broadcast<
    * ```
    */
   static getInstance<
-    T extends { type: string; payload?: unknown } = Payload<
-      string,
-      StructuredCloneable
-    >,
+    Type extends BasicPayload = Payload<string, StructuredCloneable>,
   >(config?: BroadcastConfig) {
-    Broadcast.instance ??= new Broadcast<T>(config);
+    Broadcast.instance ??= new Broadcast<Type>(config);
 
-    return Broadcast.instance as Broadcast<T>;
+    return Broadcast.instance as Broadcast<Type>;
   }
 
   /**
@@ -91,8 +102,30 @@ export class Broadcast<
    */
   protected init() {
     this.channel = new BroadcastChannel(this.channelName);
-    this.channel.onmessage = this.onMessage.bind(this);
-    this.channel.onmessageerror = this.onError.bind(this);
+    this.channel.onmessage = this.onMessage;
+    this.channel.onmessageerror = this.onError;
+
+    this.on(CONNECTION_EVENT_TYPES.stop, ({ source }) => {
+      this._connected.delete(source);
+    });
+
+    this.on(CONNECTION_EVENT_TYPES.ping, ({ source }) => {
+      if (typeof document !== 'undefined' && document.hidden) {
+        return;
+      }
+
+      this._connected.add(source);
+
+      this.emit(CONNECTION_EVENT_TYPES.echo, undefined, { target: source });
+    });
+
+    this.on(CONNECTION_EVENT_TYPES.echo, ({ source }) => {
+      this._connected.add(source);
+    });
+
+    if (typeof globalThis.addEventListener === 'function') {
+      globalThis.addEventListener('visibilitychange', this.onVisibilityChange);
+    }
   }
 
   /**
@@ -100,18 +133,34 @@ export class Broadcast<
    *
    * @param event - Incoming message event.
    */
-  protected onMessage(event: MessageEvent<P>) {
+  protected onMessage = (event: MessageEvent<Events>) => {
     this.handleListeners(event.data);
-  }
+  };
 
   /**
    * Handle errors from the BroadcastChannel.
    *
    * @param error - Error event.
    */
-  protected onError(error: MessageEvent<Error>) {
+  protected onError = (error: MessageEvent<Error>) => {
     console.error('BroadcastChannel message error', error);
-  }
+  };
+
+  /**
+   * Browser only, handler for tab visibility changes:
+   * https://developer.mozilla.org/en-US/docs/Web/API/Document/visibilitychange_event
+   */
+  protected onVisibilityChange = () => {
+    if (typeof document === 'undefined') {
+      return;
+    }
+
+    if (document.hidden) {
+      this.emit(CONNECTION_EVENT_TYPES.stop, undefined, { target: 'others' });
+    } else {
+      this.ping();
+    }
+  };
 
   /**
    * Iterate through listeners for the given topic and invoke callbacks if criteria match.
@@ -121,11 +170,11 @@ export class Broadcast<
    * @remarks
    * If `targetId` is provided, delivery is scoped to a specific browser context.
    * We assume exactly one bus instance per context, so events are delivered only when
-   * `target === this.uuid`. If omitted, the event is treated as a broadcast within
+   * `target === this.id`. If omitted, the event is treated as a broadcast within
    * this context (audience filtering may occur elsewhere).
    */
-  protected handleListeners(data: P) {
-    const handlers = this.listeners[data.type as P['type']];
+  protected handleListeners(data: Events) {
+    const handlers = this.listeners[data.type as Events['type']];
 
     // If no handler exists or if event targets a specific instance of Broadcast that isn't this instance, do nothing
     if (!handlers?.length || (data.target && data.target !== this.id)) {
@@ -146,10 +195,10 @@ export class Broadcast<
   /**
    * Removes a listener by id.
    *
-   * @param topic - The event topic.
-   * @param listenerId - id of the listener.
+   * @param type - The event type.
+   * @param id - The listener id.
    */
-  protected removeListener(type: P['type'], id: UniqueId) {
+  protected removeListener(type: Events['type'], id: UniqueId) {
     if (this.listeners[type]) {
       this.listeners[type] = this.listeners[type].filter(
         (handler) => handler.id !== id,
@@ -158,13 +207,30 @@ export class Broadcast<
   }
 
   /**
-   * Check for the existence of a event type and create it if missing.
+   * Register a listener for the given event type, initializing the handler list if needed.
    *
    * @param type - The event type.
+   * @param listener - The listener to register.
    */
-  protected addListener(type: P['type'], listener: Listener<P>) {
+  protected addListener(type: Events['type'], listener: Listener<Events>) {
     this.listeners[type] ??= [];
     this.listeners[type].push(listener);
+  }
+
+  /**
+   * Send out a request for an echo from all connected bus instances
+   *
+   * This will populate the `connected` property. However, due to the
+   * nature of event driven systems, this is both not synchronous nor
+   * is it possible to async / await for all responses. Listening for
+   * the ping & echo events and updating UI to reflect the current state
+   * of the connected property is the best solution to maintain the
+   * correct list of connections
+   */
+  ping() {
+    this._connected.clear();
+
+    this.emit(CONNECTION_EVENT_TYPES.ping, undefined, { target: 'others' });
   }
 
   /**
@@ -175,7 +241,7 @@ export class Broadcast<
    * @param type event type
    * @param options emit options
    */
-  setEventEmitOptions(type: P['type'], options: EmitOptions | null) {
+  setEventEmitOptions(type: Events['type'], options: EmitOptions | null) {
     if (options) {
       this.emitOptions.set(type, options);
     } else {
@@ -188,7 +254,7 @@ export class Broadcast<
    *
    * @param events map of event type & options
    */
-  setEventsEmitOptions(events: Map<P['type'], EmitOptions | null>) {
+  setEventsEmitOptions(events: Map<Events['type'], EmitOptions | null>) {
     for (const [type, options] of events) {
       this.setEventEmitOptions(type, options);
     }
@@ -206,7 +272,7 @@ export class Broadcast<
   /**
    * Register a callback to be executed when a message of the specified event type is received.
    *
-   * @template T - The Payload type, inferred from the event.
+   * @template Type - The Payload type, inferred from the event.
    * @param type - The event type.
    * @param callback - The callback function.
    * @returns Unsubscribe function to remove the listener.
@@ -221,13 +287,13 @@ export class Broadcast<
    * // Later: unsubscribe();
    * ```
    */
-  on<T extends P['type']>(
-    type: T,
-    callback: (data: ExtractEvent<P, T>) => void,
+  on<Type extends Events['type']>(
+    type: Type,
+    callback: (data: ExtractEvent<Events, Type>) => void,
   ) {
     const id = uuid();
 
-    this.addListener(type, { callback, id, once: false } as Listener<P>);
+    this.addListener(type, { callback, id, once: false } as Listener<Events>);
 
     return () => this.removeListener(type, id);
   }
@@ -235,18 +301,18 @@ export class Broadcast<
   /**
    * Register a callback to be executed only once for a specified event type.
    *
-   * @template T - The Payload type, inferred from the event.
+   * @template Type - The Payload type, inferred from the event.
    * @param type - The event type.
    * @param callback - The callback function.
    * @returns Unsubscribe function to remove the listener.
    */
-  once<T extends P['type']>(
-    type: T,
-    callback: (data: ExtractEvent<P, T>) => void,
+  once<Type extends Events['type']>(
+    type: Type,
+    callback: (data: ExtractEvent<Events, Type>) => void,
   ) {
     const id = uuid();
 
-    this.addListener(type, { callback, id, once: true } as Listener<P>);
+    this.addListener(type, { callback, id, once: true } as Listener<Events>);
 
     return () => this.removeListener(type, id);
   }
@@ -254,12 +320,12 @@ export class Broadcast<
   /**
    * Unregister callback for the specified event type.
    *
-   * @template T - The Payload type, inferred from the event.
+   * @template Type - The Payload type, inferred from the event.
    * @param type - The event type.
    */
-  off<T extends P['type']>(
-    type: T,
-    callback: (data: ExtractEvent<P, T>) => void,
+  off<Type extends Events['type']>(
+    type: Type,
+    callback: (data: ExtractEvent<Events, Type>) => void,
   ) {
     if (this.listeners[type]) {
       this.listeners[type] = this.listeners[type].filter(
@@ -271,7 +337,7 @@ export class Broadcast<
   /**
    * Emit an event to all listening contexts.
    *
-   * @template T - The Payload type, inferred from the event.
+   * @template Type - The Payload type, inferred from the event.
    * @param type - The event type.
    * @param payload - The event payload -- must be serializable by the structured clone algorithm. (https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm)
    * @param options - Emit options to control delivery.
@@ -289,31 +355,30 @@ export class Broadcast<
    * );
    * ```
    */
-  emit<T extends P['type']>(
-    type: T,
+  emit<Type extends Events['type']>(
+    type: Type,
     payload?: never,
     options?: EmitOptions,
   ): void;
-  emit<T extends P['type']>(
-    type: T,
-    payload: ExtractEvent<P, T> extends { payload: infer Data }
+  emit<Type extends Events['type']>(
+    type: Type,
+    payload: ExtractEvent<Events, Type> extends { payload: infer Data }
       ? Data
       : undefined,
     options?: EmitOptions,
   ): void;
-  emit<T extends P['type']>(
-    type: T,
-    payload?: ExtractEvent<P, T> extends { payload: infer Data }
+  emit<Type extends Events['type']>(
+    type: Type,
+    payload?: ExtractEvent<Events, Type> extends { payload: infer Data }
       ? Data
       : undefined,
     options?: EmitOptions,
   ) {
     if (!this.channel) {
-      console.warn('Cannot emit: BroadcastChannel is not initialized.');
-      return;
+      return console.warn('Cannot emit: BroadcastChannel is not initialized.');
     }
 
-    const { target = 'all' } = {
+    const { target = DEFAULT_TARGET } = {
       ...this.emitOptions.get(this.id),
       ...this.emitOptions.get(type),
       ...options,
@@ -323,7 +388,7 @@ export class Broadcast<
       payload,
       source: this.id,
       target: target === 'self' ? this.id : isUUID(target) ? target : undefined,
-    } as unknown as P;
+    } as unknown as Events;
 
     if (message.target !== this.id) {
       this.channel.postMessage(message);
@@ -339,7 +404,7 @@ export class Broadcast<
    *
    * @param type - The event to delete.
    */
-  deleteEvent(type: P['type']) {
+  deleteEvent(type: Events['type']) {
     delete this.listeners[type];
 
     this.emitOptions.delete(type);
@@ -351,11 +416,21 @@ export class Broadcast<
    */
   destroy() {
     if (this.channel) {
+      this.emit(CONNECTION_EVENT_TYPES.stop, undefined, { target: 'others' });
+
       this.channel.close();
       this.channel = null;
       this.channelName = DEFAULT_CONFIG.channelName;
+
+      if (typeof globalThis.removeEventListener === 'function') {
+        globalThis.removeEventListener(
+          'visibilitychange',
+          this.onVisibilityChange,
+        );
+      }
     }
 
+    this._connected.clear();
     this.listeners = {};
     this.emitOptions = new Map();
 
