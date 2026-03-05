@@ -241,8 +241,8 @@ console.log('Current cursor:', cursor);
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `id` | `string` | `'draw-shape-layer'` | Unique layer ID |
-| `mapId` | `UniqueId` | *required* | Map instance ID for multi-map isolation |
-| `unit` | `'km' \| 'm' \| 'NM' \| 'mi' \| 'ft'` | `'km'` | Distance unit for tooltip measurements |
+| `mapId` | `UniqueId` | Context ID | Map instance ID for multi-map isolation |
+| `unit` | `DistanceUnitSymbol` | `'km'` | Distance unit for tooltip measurements (supports `'km'`, `'m'`, `'NM'`, `'mi'`, `'ft'`) |
 
 ### useDrawShape Hook
 

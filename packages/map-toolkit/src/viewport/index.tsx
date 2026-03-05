@@ -17,8 +17,4 @@ export {
 } from './store';
 export { getViewportSize } from './utils';
 export { ViewportSize, type ViewportSizeProps } from './viewport-size';
-export type {
-  GeoCoordinate,
-  GetViewportSizeArgs,
-  SupportedDistanceUnit,
-} from './types';
+export type { GeoCoordinate, GetViewportSizeArgs } from './types';

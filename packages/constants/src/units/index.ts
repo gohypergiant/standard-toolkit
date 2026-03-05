@@ -45,6 +45,9 @@ export const DISTANCE_UNIT_SYMBOLS = {
  */
 export type DistanceUnit = keyof typeof DISTANCE_UNIT_SYMBOLS;
 
+/**
+ * Display symbol for a distance unit (e.g., 'km', 'NM', 'mi').
+ */
 export type DistanceUnitSymbol = (typeof DISTANCE_UNIT_SYMBOLS)[DistanceUnit];
 
 /**

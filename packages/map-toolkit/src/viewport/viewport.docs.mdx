@@ -82,7 +82,7 @@ import { ViewportSize } from '@accelint/map-toolkit/viewport';
 
 Unique identifier for the map instance. Must match the `id` prop passed to `BaseMap`.
 
-##### `unit?: SupportedDistanceUnit`
+##### `unit?: DistanceUnitSymbol`
 
 Unit of measurement for dimensions. Defaults to `'NM'` (nautical miles).
 
@@ -365,7 +365,7 @@ function CustomViewportDisplay({ mapId }: { mapId: UniqueId }) {
   zoom: number;                  // Zoom level for meters-per-pixel calculation
   width: number;                 // Viewport width in pixels
   height: number;                // Viewport height in pixels
-  unit?: SupportedDistanceUnit;  // 'km' | 'm' | 'NM' | 'mi' | 'ft' (default: 'NM')
+  unit?: DistanceUnitSymbol;     // 'km' | 'm' | 'NM' | 'mi' | 'ft' (default: 'NM')
   formatter?: Intl.NumberFormat; // Custom number formatter (default: en-US)
 }
 ```
@@ -406,7 +406,6 @@ import type { UniqueId } from '@accelint/core';
 import type {
   GeoCoordinate,
   GetViewportSizeArgs,
-  SupportedDistanceUnit,
 } from '@accelint/map-toolkit/viewport';
 import type {
   Bounds,
@@ -428,8 +427,8 @@ type Bounds = [
 // Geographic coordinate
 type GeoCoordinate = [longitude: number, latitude: number];
 
-// Supported units (derived from @accelint/constants/units)
-type SupportedDistanceUnit = DistanceUnitSymbol; // 'km' | 'm' | 'NM' | 'mi' | 'ft'
+// Display symbol for distance units (from @accelint/constants/units)
+type DistanceUnitSymbol = 'km' | 'm' | 'NM' | 'mi' | 'ft';
 
 // Full Turf.js unit names (for use with Turf functions)
 type DistanceUnit = 'kilometers' | 'meters' | 'nauticalmiles' | 'miles' | 'feet';

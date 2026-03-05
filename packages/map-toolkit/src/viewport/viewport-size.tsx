@@ -12,13 +12,14 @@
 
 import { useMapViewport } from './store';
 import { getViewportSize } from './utils';
+import type { DistanceUnitSymbol } from '@accelint/constants/units';
 import type { UniqueId } from '@accelint/core';
 import type { ComponentPropsWithRef } from 'react';
-import type { SupportedDistanceUnit } from './types';
 
+/** Props for {@link ViewportSize}. */
 export type ViewportSizeProps = ComponentPropsWithRef<'span'> & {
   instanceId: UniqueId;
-  unit?: SupportedDistanceUnit;
+  unit?: DistanceUnitSymbol;
 };
 
 /**
