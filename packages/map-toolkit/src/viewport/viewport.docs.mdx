@@ -461,17 +461,20 @@ import {
 // { kilometers: 'km', meters: 'm', nauticalmiles: 'NM', miles: 'mi', feet: 'ft' }
 ```
 
+Reverse lookup (symbol → unit name) is available from `@accelint/constants/units`:
+
+```tsx
+import { DISTANCE_UNIT_BY_SYMBOL } from '@accelint/constants/units';
+
+// Convert symbol to Turf.js unit name
+DISTANCE_UNIT_BY_SYMBOL['NM']; // 'nauticalmiles'
+DISTANCE_UNIT_BY_SYMBOL['km']; // 'kilometers'
+```
+
 Map-toolkit-specific helpers are in `@accelint/map-toolkit/shared/units`:
 
 ```tsx
-import {
-  DEFAULT_DISTANCE_UNITS,
-  getDistanceUnitFromSymbol,
-} from '@accelint/map-toolkit/shared/units';
-
-// Convert symbol to Turf.js unit name
-getDistanceUnitFromSymbol('NM'); // 'nauticalmiles'
-getDistanceUnitFromSymbol('km'); // 'kilometers'
+import { DEFAULT_DISTANCE_UNITS } from '@accelint/map-toolkit/shared/units';
 
 // Default units for measurements
 DEFAULT_DISTANCE_UNITS; // 'kilometers'

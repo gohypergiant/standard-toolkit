@@ -10,9 +10,15 @@
  * governing permissions and limitations under the License.
  */
 
-import { getDistanceUnitFromSymbol } from '../shared/units';
-import type { DistanceUnit } from '@accelint/constants/units';
+import {
+  DISTANCE_UNIT_BY_SYMBOL,
+  DISTANCE_UNIT_SYMBOLS,
+  type DistanceUnitSymbol,
+} from '@accelint/constants/units';
+import { createLoggerDomain } from '../shared/logger';
 import type { GetViewportSizeArgs } from './types';
+
+const logger = createLoggerDomain('[Viewport]');
 
 const numberFormatter = Intl.NumberFormat('en-US');
 
@@ -66,8 +72,18 @@ export function getViewportSize({
   unit = 'NM',
   formatter = numberFormatter,
 }: GetViewportSizeArgs) {
-  const unitKey = getDistanceUnitFromSymbol(unit) as DistanceUnit;
   const defaultValue = `-- x -- ${unit}`;
+  const unitKey = DISTANCE_UNIT_BY_SYMBOL[unit as DistanceUnitSymbol];
+
+  if (!unitKey) {
+    const validSymbols = Object.values(DISTANCE_UNIT_SYMBOLS).join(', ');
+
+    logger.error(
+      `Invalid distance unit symbol: "${unit}". Expected one of: ${validSymbols}`,
+    );
+
+    return defaultValue;
+  }
 
   // Validate inputs
   if (!bounds || bounds.every((b) => Number.isNaN(b))) {

@@ -10,27 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import {
-  DISTANCE_UNIT_SYMBOLS,
-  type DistanceUnit,
-} from '@accelint/constants/units';
+import type { DistanceUnit } from '@accelint/constants/units';
 
 /**
  * Default distance units for geographic measurements.
  */
 export const DEFAULT_DISTANCE_UNITS: DistanceUnit = 'kilometers';
-
-/**
- * Get the full Turf.js unit name from a symbol.
- *
- * @param symbol - The unit symbol (e.g., 'km', 'NM')
- * @returns The full unit name (e.g., 'kilometers', 'nauticalmiles') or undefined
- */
-export function getDistanceUnitFromSymbol(
-  symbol: string,
-): DistanceUnit | undefined {
-  const entry = Object.entries(DISTANCE_UNIT_SYMBOLS).find(
-    ([, s]) => s === symbol,
-  );
-  return entry?.[0] as DistanceUnit | undefined;
-}

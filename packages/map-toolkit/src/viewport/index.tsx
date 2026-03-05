@@ -10,7 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-export { getDistanceUnitFromSymbol } from '../shared/units';
 export {
   clearViewportState,
   useMapViewport,

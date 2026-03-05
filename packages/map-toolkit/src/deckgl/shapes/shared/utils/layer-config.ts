@@ -10,10 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import {
-  DEFAULT_DISTANCE_UNITS,
-  getDistanceUnitFromSymbol,
-} from '@/shared/units';
+import { DISTANCE_UNIT_BY_SYMBOL } from '@accelint/constants/units';
+import { DEFAULT_DISTANCE_UNITS } from '@/shared/units';
 import {
   DEFAULT_EDIT_HANDLE_COLOR,
   EDITABLE_LAYER_SUBLAYER_PROPS,
@@ -41,8 +39,9 @@ export type EditableLayerDefaultProps = {
   _subLayerProps: typeof EDITABLE_LAYER_SUBLAYER_PROPS;
 };
 
-let cachedSymbol: DistanceUnitSymbol | undefined | null = null;
+let cachedSymbol: DistanceUnitSymbol | undefined;
 let cachedProps: EditableLayerDefaultProps | undefined;
+let hasCache = false;
 
 /**
  * Returns default props for EditableGeoJsonLayer configuration.
@@ -66,17 +65,18 @@ let cachedProps: EditableLayerDefaultProps | undefined;
 export function getDefaultEditableLayerProps(
   unitSymbol?: DistanceUnitSymbol,
 ): EditableLayerDefaultProps {
-  if (cachedSymbol !== null && cachedSymbol === unitSymbol && cachedProps) {
+  if (hasCache && cachedSymbol === unitSymbol && cachedProps) {
     return cachedProps;
   }
 
+  hasCache = true;
   cachedSymbol = unitSymbol;
   cachedProps = {
     getEditHandlePointColor: DEFAULT_EDIT_HANDLE_COLOR,
     getEditHandlePointOutlineColor: DEFAULT_EDIT_HANDLE_COLOR,
     modeConfig: {
       distanceUnits: unitSymbol
-        ? (getDistanceUnitFromSymbol(unitSymbol) ?? DEFAULT_DISTANCE_UNITS)
+        ? (DISTANCE_UNIT_BY_SYMBOL[unitSymbol] ?? DEFAULT_DISTANCE_UNITS)
         : DEFAULT_DISTANCE_UNITS,
     },
     // biome-ignore lint/style/useNamingConvention: deck.gl API convention

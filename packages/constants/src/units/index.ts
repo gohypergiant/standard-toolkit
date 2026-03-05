@@ -46,3 +46,18 @@ export const DISTANCE_UNIT_SYMBOLS = {
 export type DistanceUnit = keyof typeof DISTANCE_UNIT_SYMBOLS;
 
 export type DistanceUnitSymbol = (typeof DISTANCE_UNIT_SYMBOLS)[DistanceUnit];
+
+/**
+ * Reverse lookup map: display symbol → Turf.js unit name.
+ *
+ * @example
+ * ```typescript
+ * import { DISTANCE_UNIT_BY_SYMBOL } from '@accelint/constants/units';
+ *
+ * DISTANCE_UNIT_BY_SYMBOL['km'];  // 'kilometers'
+ * DISTANCE_UNIT_BY_SYMBOL['NM'];  // 'nauticalmiles'
+ * ```
+ */
+export const DISTANCE_UNIT_BY_SYMBOL = Object.fromEntries(
+  Object.entries(DISTANCE_UNIT_SYMBOLS).map(([unit, symbol]) => [symbol, unit]),
+) as Record<DistanceUnitSymbol, DistanceUnit>;
