@@ -73,7 +73,7 @@ export function getViewportSize({
   formatter = numberFormatter,
 }: GetViewportSizeArgs) {
   const defaultValue = `-- x -- ${unit}`;
-  const unitKey = DISTANCE_UNIT_BY_SYMBOL[unit as DistanceUnitSymbol];
+  const unitKey = DISTANCE_UNIT_BY_SYMBOL[unit];
 
   if (!unitKey) {
     const validSymbols = Object.values(DISTANCE_UNIT_SYMBOLS).join(', ');

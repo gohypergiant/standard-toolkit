@@ -80,6 +80,28 @@ describe('getViewportSize', () => {
     expect(result).toBe('-- x -- NM');
   });
 
+  it('should return default value and log error for invalid unit symbol', () => {
+    const result = getViewportSize({
+      bounds: [-82, 22, -71, 52],
+      zoom: 5,
+      width: 800,
+      height: 600,
+      // @ts-expect-error testing runtime invalid input
+      unit: 'INVALID',
+    });
+    expect(result).toBe('-- x -- INVALID');
+  });
+
+  it('should return default value when bounds are undefined', () => {
+    const result = getViewportSize({
+      bounds: undefined,
+      zoom: 5,
+      width: 800,
+      height: 600,
+    });
+    expect(result).toBe('-- x -- NM');
+  });
+
   it('handles invalid latitude values outside -90 to 90 range', () => {
     const result = getViewportSize({
       bounds: [-82, -100, -71, 52],
@@ -97,7 +119,7 @@ describe('getViewportSize', () => {
     ['NM', 'NM'],
     ['mi', 'mi'],
     ['ft', 'ft'],
-  ] as const)('should display SI-correct symbol for unit abbreviation %s', (unit, expectedSymbol) => {
+  ] as const)('should display correct symbol for unit %s', (unit, expectedSymbol) => {
     const result = getViewportSize({
       bounds: [-82, 22, -71, 52],
       zoom: 5,
