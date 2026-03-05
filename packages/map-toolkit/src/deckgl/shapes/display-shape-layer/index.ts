@@ -30,7 +30,7 @@ import {
 } from '../shared/utils/style-utils';
 import {
   BRIGHTNESS_FACTOR,
-  COFFIN_CORNER,
+  COFFIN_CORNERS,
   DASH_EXTENSION,
   DEFAULT_DISPLAY_PROPS,
   HIGHLIGHT_COLOR_TUPLE,
@@ -54,7 +54,7 @@ import {
   partitionCurtains,
 } from './utils/elevation';
 import {
-  extendMappingWithCoffinCorner,
+  extendMappingWithCoffinCorners,
   getIconConfig,
   getIconLayerProps,
   getIconUpdateTriggers,
@@ -107,7 +107,7 @@ const shapeBus = Broadcast.getInstance<ShapeEvent>();
  * Renders up to seven sublayers (in order, bottom to top):
  * 1. **Select layer**: Selection brightness overlay for polygon shapes
  * 2. **Hover layer**: Hover brightness overlay for polygon shapes
- * 3. **Coffin corner layer**: Selection/hover feedback for Point shapes with icons
+ * 3. **Coffin corners layer**: Selection/hover feedback for Point shapes with icons
  * 4. **Elevation visualization**: Curtains (LineStrings) or wireframes (polygons) — elevation only
  * 5. **Elevation indicators**: Vertical strut lines for elevated non-polygon shapes — elevation only
  * 6. **Main GeoJsonLayer**: Shape geometries with styling and interaction
@@ -474,7 +474,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
 
   /**
    * Render highlight sublayer (underneath main layer).
-   * Note: Points with icons use coffin corner instead of highlight layer.
+   * Note: Points with icons use coffin corners instead of highlight layer.
    */
   private renderHighlightLayer(features: Shape['feature'][]): GeoJsonLayer[] {
     const { selectedShapeId, showHighlight } = this.props;
@@ -494,7 +494,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       return [];
     }
 
-    // Skip highlight layer for Point geometries with icons - they use coffin corner instead
+    // Skip highlight layer for Point geometries with icons - they use coffin corners instead
     if (isPointType(selectedFeature.geometry)) {
       const hasIcon = !!selectedFeature.properties?.styleProperties?.icon;
       if (hasIcon) {
@@ -641,10 +641,10 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
   }
 
   /**
-   * Render coffin corner layer for Point geometries that have icons on hover/select
-   * Coffin corner provides visual feedback for points instead of select layer
+   * Render coffin corners layer for Point geometries that have icons on hover/select
+   * Coffin corners provide visual feedback for points instead of select layer
    */
-  private renderCoffinCornerLayer(features: Shape['feature'][]): IconLayer[] {
+  private renderCoffinCornersLayer(features: Shape['feature'][]): IconLayer[] {
     const { selectedShapeId } = this.props;
     const hoverIndex = this.state?.hoverIndex;
 
@@ -654,7 +654,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       return [];
     }
 
-    // Find point features that need coffin corner (hovered or selected)
+    // Find point features that need coffin corners (hovered or selected)
     const pointFeatures: Shape['feature'][] = [];
     for (const f of features) {
       if (f.geometry.type !== 'Point') {
@@ -685,16 +685,16 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
 
     if (!(iconAtlas && iconMapping)) {
       logger.warn(
-        'Point shape has icon style but missing iconAtlas or iconMapping - coffin corner will not render',
+        'Point shape has icon style but missing iconAtlas or iconMapping - coffin corners will not render',
       );
       return [];
     }
 
-    const extendedMapping = extendMappingWithCoffinCorner(iconMapping);
+    const extendedMapping = extendMappingWithCoffinCorners(iconMapping);
 
     return [
       new IconLayer({
-        id: `${this.props.id}-${SHAPE_LAYER_IDS.DISPLAY}-coffin-corner`,
+        id: `${this.props.id}-${SHAPE_LAYER_IDS.DISPLAY}-coffin-corners`,
         data: pointFeatures,
         iconAtlas,
         iconMapping: extendedMapping,
@@ -706,14 +706,14 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
             shapeIdToIndex,
           );
           if (isSelected && isHovered) {
-            return COFFIN_CORNER.SELECTED_HOVER_ICON;
+            return COFFIN_CORNERS.SELECTED_HOVER_ICON;
           }
           if (isSelected) {
-            return COFFIN_CORNER.SELECTED_ICON;
+            return COFFIN_CORNERS.SELECTED_ICON;
           }
-          return COFFIN_CORNER.HOVER_ICON;
+          return COFFIN_CORNERS.HOVER_ICON;
         },
-        getSize: COFFIN_CORNER.SIZE,
+        getSize: COFFIN_CORNERS.SIZE,
         getPosition: (d: Shape['feature']) => {
           const coords = isPointType(d.geometry)
             ? d.geometry.coordinates
@@ -724,7 +724,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
           const iconSize =
             d.properties?.styleProperties?.icon?.size ??
             MAP_INTERACTION.ICON_SIZE;
-          // Center the coffin corner on the point icon
+          // Center the coffin corners on the point icon
           return [-1, -iconSize / 2];
         },
         billboard: false,
@@ -1119,7 +1119,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       ...this.renderHighlightLayer(features),
       ...this.renderSelectLayer(features),
       ...this.renderHoverLayer(features),
-      ...this.renderCoffinCornerLayer(features),
+      ...this.renderCoffinCornersLayer(features),
     ];
 
     // Elevation visualization layers (wireframe for polygons, curtains for lines)

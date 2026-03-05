@@ -1,19 +1,19 @@
 {
-  "coffin-corner-hover": {
+  "coffin-corners-hover": {
     "height": 76,
     "pixelRatio": 2,
     "width": 76,
     "x": 0,
     "y": 0
   },
-  "coffin-corner-selected": {
+  "coffin-corners-selected": {
     "height": 76,
     "pixelRatio": 2,
     "width": 76,
     "x": 76,
     "y": 0
   },
-  "coffin-corner-selected-hover": {
+  "coffin-corners-selected-hover": {
     "height": 76,
     "pixelRatio": 2,
     "width": 76,

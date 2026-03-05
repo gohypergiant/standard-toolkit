@@ -11,9 +11,9 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { COFFIN_CORNER, MAP_INTERACTION } from '../constants';
+import { COFFIN_CORNERS, MAP_INTERACTION } from '../constants';
 import {
-  extendMappingWithCoffinCorner,
+  extendMappingWithCoffinCorners,
   getIconConfig,
   getIconLayerProps,
   getIconUpdateTriggers,
@@ -239,29 +239,29 @@ describe('Icon Config Utilities', () => {
     });
   });
 
-  describe('extendMappingWithCoffinCorner', () => {
+  describe('extendMappingWithCoffinCorners', () => {
     it('adds coffin corner entries to base mapping', () => {
-      const result = extendMappingWithCoffinCorner(TEST_MAPPING);
+      const result = extendMappingWithCoffinCorners(TEST_MAPPING);
 
       expect(result).toHaveProperty('marker');
-      expect(result).toHaveProperty(COFFIN_CORNER.HOVER_ICON);
-      expect(result).toHaveProperty(COFFIN_CORNER.SELECTED_ICON);
-      expect(result).toHaveProperty(COFFIN_CORNER.SELECTED_HOVER_ICON);
+      expect(result).toHaveProperty(COFFIN_CORNERS.HOVER_ICON);
+      expect(result).toHaveProperty(COFFIN_CORNERS.SELECTED_ICON);
+      expect(result).toHaveProperty(COFFIN_CORNERS.SELECTED_HOVER_ICON);
     });
 
     it('preserves original mapping entries', () => {
-      const result = extendMappingWithCoffinCorner(TEST_MAPPING);
+      const result = extendMappingWithCoffinCorners(TEST_MAPPING);
 
       expect(result.marker).toEqual(TEST_MAPPING.marker);
     });
 
     it('coffin corner entries have correct dimensions', () => {
-      const result = extendMappingWithCoffinCorner(TEST_MAPPING);
+      const result = extendMappingWithCoffinCorners(TEST_MAPPING);
 
       for (const key of [
-        COFFIN_CORNER.HOVER_ICON,
-        COFFIN_CORNER.SELECTED_ICON,
-        COFFIN_CORNER.SELECTED_HOVER_ICON,
+        COFFIN_CORNERS.HOVER_ICON,
+        COFFIN_CORNERS.SELECTED_ICON,
+        COFFIN_CORNERS.SELECTED_HOVER_ICON,
       ]) {
         expect(result[key]).toMatchObject({
           width: 76,
@@ -272,8 +272,8 @@ describe('Icon Config Utilities', () => {
     });
 
     it('returns cached result for same base mapping identity', () => {
-      const first = extendMappingWithCoffinCorner(TEST_MAPPING);
-      const second = extendMappingWithCoffinCorner(TEST_MAPPING);
+      const first = extendMappingWithCoffinCorners(TEST_MAPPING);
+      const second = extendMappingWithCoffinCorners(TEST_MAPPING);
 
       expect(first).toBe(second);
     });
@@ -282,8 +282,8 @@ describe('Icon Config Utilities', () => {
       const mappingA = { a: { x: 0, y: 0, width: 10, height: 10 } };
       const mappingB = { b: { x: 0, y: 0, width: 20, height: 20 } };
 
-      const resultA = extendMappingWithCoffinCorner(mappingA);
-      const resultB = extendMappingWithCoffinCorner(mappingB);
+      const resultA = extendMappingWithCoffinCorners(mappingA);
+      const resultB = extendMappingWithCoffinCorners(mappingB);
 
       expect(resultA).not.toBe(resultB);
       expect(resultA).toHaveProperty('a');
