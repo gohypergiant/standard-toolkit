@@ -14,7 +14,7 @@ import { uuid } from '@accelint/core';
 import { BaseMap } from '@/deckgl/base-map';
 import iconMapping from '../../shapes/__fixtures__/atlas.json';
 import iconAtlas from '../../shapes/__fixtures__/atlas.png';
-import { CoffinCornersExtension } from './coffin-corners-extension';
+import { CoffinCornerExtension } from './coffin-corner-extension';
 import './fiber';
 import { useCoffinCorner } from './use-coffin-corner';
 import type { Rgba255Tuple } from '@accelint/predicates';
@@ -67,9 +67,9 @@ type Story = StoryObj<typeof meta>;
 
 const MAP_ID = uuid();
 const LAYER_ID = 'icons';
-const coffinCornersExtension = new CoffinCornersExtension();
+const coffinCornerExtension = new CoffinCornerExtension();
 
-function CoffinCornersDemo({
+function CoffinCornerDemo({
   coffinCornerColor,
 }: {
   coffinCornerColor: Rgba255Tuple;
@@ -92,7 +92,7 @@ function CoffinCornersDemo({
           getIcon={(d: unknown) => (d as IconData).icon}
           getSize={(d: unknown) => (d as IconData).size}
           pickable
-          extensions={[coffinCornersExtension]}
+          extensions={[coffinCornerExtension]}
           selectedEntityId={selectedId}
           hoveredEntityId={hoveredId}
           coffinCornerColor={coffinCornerColor}
@@ -120,7 +120,7 @@ export const Default: Story = {
     },
   },
   render: (args) => (
-    <CoffinCornersDemo
+    <CoffinCornerDemo
       coffinCornerColor={args.coffinCornerColor as Rgba255Tuple}
     />
   ),

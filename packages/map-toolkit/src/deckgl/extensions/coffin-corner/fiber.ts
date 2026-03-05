@@ -11,14 +11,14 @@
  */
 
 import type { IconLayerProps } from '@deck.gl/layers';
-import type { CoffinCornersExtensionProps } from './coffin-corners-extension';
+import type { CoffinCornerExtensionProps } from './types';
 
 declare global {
   namespace React {
     // biome-ignore lint/style/useNamingConvention: Built-in React namespace.
     namespace JSX {
       interface IntrinsicElements {
-        iconLayer: CoffinCornersExtensionProps<IconLayerProps>;
+        iconLayer: CoffinCornerExtensionProps<IconLayerProps>;
       }
     }
   }

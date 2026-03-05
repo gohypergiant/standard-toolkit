@@ -28,20 +28,20 @@ export const MAP_INTERACTION = {
 } as const;
 
 /**
- * Coffin corners configuration for Point selection/hover feedback.
+ * Coffin corner configuration for Point selection/hover feedback.
  *
- * Coffin corners are bracket-like corners that appear around Point shapes
+ * Coffin corner are bracket-like corners that appear around Point shapes
  * with icons to indicate hover and selection states. They provide visual
  * feedback without obscuring the icon itself.
  */
-export const COFFIN_CORNERS = {
+export const COFFIN_CORNER = {
   /** Icon name for hover state (white corners with background fill) */
-  HOVER_ICON: 'coffin-corners-hover',
+  HOVER_ICON: 'coffin-corner-hover',
   /** Icon name for selected state (blue corners, no fill) */
-  SELECTED_ICON: 'coffin-corners-selected',
+  SELECTED_ICON: 'coffin-corner-selected',
   /** Icon name for selected+hover state (blue corners with background fill) */
-  SELECTED_HOVER_ICON: 'coffin-corners-selected-hover',
-  /** Size of the coffin corners icon */
+  SELECTED_HOVER_ICON: 'coffin-corner-selected-hover',
+  /** Size of the coffin corner icon */
   SIZE: 38,
 } as const;
 

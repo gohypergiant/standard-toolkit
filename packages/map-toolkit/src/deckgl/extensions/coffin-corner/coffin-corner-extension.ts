@@ -13,7 +13,7 @@
 import { LayerExtension } from '@deck.gl/core';
 import type { Rgba255Tuple } from '@accelint/predicates';
 import type { Layer, UpdateParameters } from '@deck.gl/core';
-import type { EntityId } from './types';
+import type { CoffinCornerExtensionProps, EntityId } from './types';
 
 /** Layer shape with coffin-corner selection and hover state maps. */
 type CoffinCornerLayer = Layer & {
@@ -24,16 +24,16 @@ type CoffinCornerLayer = Layer & {
 };
 
 /** Shader module defining the `highlightColor` uniform for coffin corner brackets. */
-const coffinCornersModule: {
+const coffinCornerModule: {
   name: string;
   fs: string;
   uniformTypes: Record<string, string>;
 } = {
-  name: 'coffinCorners',
+  name: 'coffinCorner',
   fs: /* glsl */ `\
-uniform coffinCornersUniforms {
+uniform coffinCornerUniforms {
   vec4 highlightColor;
-} coffinCorners;
+} coffinCorner;
 `,
   uniformTypes: {
     highlightColor: 'vec4<f32>',
@@ -42,7 +42,7 @@ uniform coffinCornersUniforms {
 
 /** Shader injection config for vertex/fragment attribute passing and SDF bracket rendering. */
 const SHADERS = {
-  modules: [coffinCornersModule],
+  modules: [coffinCornerModule],
   inject: {
     'vs:#decl': `\
 in float instanceSelectedEntity;
@@ -58,18 +58,18 @@ v_instanceHoveredEntity = instanceHoveredEntity;
 in float v_instanceSelectedEntity;
 in float v_instanceHoveredEntity;
 
-float coffinCorners_sdBox(vec2 p, vec2 b) {
+float coffinCorner_sdBox(vec2 p, vec2 b) {
   vec2 d = abs(p) - b;
   return length(max(d, 0.0)) + min(max(d.x, d.y), 0.0);
 }
 
-float coffinCorners_sdLCorner(vec2 p, float len, float wid) {
-  float h = coffinCorners_sdBox(p - vec2(len * 0.5, 0.0), vec2(len * 0.5, wid * 0.5));
-  float v = coffinCorners_sdBox(p - vec2(0.0, len * 0.5), vec2(wid * 0.5, len * 0.5));
+float coffinCorner_sdLCorner(vec2 p, float len, float wid) {
+  float h = coffinCorner_sdBox(p - vec2(len * 0.5, 0.0), vec2(len * 0.5, wid * 0.5));
+  float v = coffinCorner_sdBox(p - vec2(0.0, len * 0.5), vec2(wid * 0.5, len * 0.5));
   return min(h, v);
 }
 
-float coffinCorners_allCorners(vec2 p, vec2 halfSize) {
+float coffinCorner_allCorners(vec2 p, vec2 halfSize) {
   float len = 0.26;   // bracket arm ≈ 26% of icon
   float wid = 0.07;   // bracket stroke ≈ 7% of icon
 
@@ -79,10 +79,10 @@ float coffinCorners_allCorners(vec2 p, vec2 halfSize) {
   vec2 bottom_right = halfSize - p;
 
   return min(
-    min(coffinCorners_sdLCorner(top_left, len, wid),
-        coffinCorners_sdLCorner(top_right, len, wid)),
-    min(coffinCorners_sdLCorner(bottom_left, len, wid),
-        coffinCorners_sdLCorner(bottom_right, len, wid))
+    min(coffinCorner_sdLCorner(top_left, len, wid),
+        coffinCorner_sdLCorner(top_right, len, wid)),
+    min(coffinCorner_sdLCorner(bottom_left, len, wid),
+        coffinCorner_sdLCorner(bottom_right, len, wid))
   );
 }
 `,
@@ -99,7 +99,7 @@ float coffinCorners_allCorners(vec2 p, vec2 halfSize) {
       // Check if inside the icon quad
       bool cc_insideBox = max(abs(p.x), abs(p.y)) < halfSize.x;
 
-      float cc_d = coffinCorners_allCorners(p, halfSize);
+      float cc_d = coffinCorner_allCorners(p, halfSize);
 
       // Outline width (proportional to icon)
       float cc_stroke = 0.026;
@@ -134,7 +134,7 @@ float coffinCorners_allCorners(vec2 p, vec2 halfSize) {
         // Composite colored fill OVER stroke (normal shape)
         if (cc_fillAlpha > 0.01) {
           vec4 cc_cornerColor = cc_isSelected
-            ? coffinCorners.highlightColor
+            ? coffinCorner.highlightColor
             : vec4(1.0);  // White fully opaque for hover-only
           float cc_modAlpha = cc_fillAlpha * cc_cornerColor.a;
           result.rgb = cc_cornerColor.rgb * cc_modAlpha + result.rgb * (1.0 - cc_modAlpha);
@@ -151,33 +151,6 @@ float coffinCorners_allCorners(vec2 p, vec2 halfSize) {
   },
 };
 
-// -- Props type --
-
-/**
- * Props added by the CoffinCornersExtension.
- *
- * @template TLayerProps - The host layer's props type to intersect with.
- */
-export type CoffinCornersExtensionProps<TLayerProps = unknown> = {
-  /** The currently selected entity ID. */
-  selectedEntityId?: EntityId;
-  /** The currently hovered entity ID. */
-  hoveredEntityId?: EntityId;
-  /**
-   * RGBA color (0-255) for the selected-state bracket fill.
-   * Alpha modulates the bracket opacity.
-   * @default [57, 183, 250, 255] (#39B7FA, fully opaque)
-   */
-  coffinCornerColor?: Rgba255Tuple;
-  /**
-   * Accessor to extract an entity ID from a data item. Matched against
-   * `selectedEntityId` and `hoveredEntityId` to drive the shader state.
-   * @default (item) => item.id
-   */
-  // biome-ignore lint/suspicious/noExplicitAny: Data type is unknown at extension level.
-  getEntityId?: (item: any) => EntityId;
-} & TLayerProps;
-
 /** Default bracket fill color: #39B7FA fully opaque. */
 const DEFAULT_CORNER_COLOR: Rgba255Tuple = [57, 183, 250, 255];
 
@@ -193,14 +166,14 @@ const DEFAULT_CORNER_COLOR: Rgba255Tuple = [57, 183, 250, 255];
  *
  * The host layer must set `pickable` to enable picking events.
  *
- * @see CoffinCornersExtensionProps for the full list of extension props.
+ * @see CoffinCornerExtensionProps for the full list of extension props.
  *
  * @example Fiber renderer JSX
  * ```tsx
  * <symbolLayer
  *   {...props}
  *   pickable
- *   extensions={[new CoffinCornersExtension()]}
+ *   extensions={[new CoffinCornerExtension()]}
  *   selectedEntityId={selectedId}
  *   hoveredEntityId={hoveredId}
  * />
@@ -209,7 +182,7 @@ const DEFAULT_CORNER_COLOR: Rgba255Tuple = [57, 183, 250, 255];
  * @example Custom entity ID accessor (e.g. GeoJSON features)
  * ```typescript
  * new IconLayer({
- *   extensions: [new CoffinCornersExtension()],
+ *   extensions: [new CoffinCornerExtension()],
  *   getEntityId: (d) => d.properties?.shapeId,
  *   selectedEntityId: selectedShapeId,
  *   hoveredEntityId: hoveredShapeId,
@@ -217,8 +190,8 @@ const DEFAULT_CORNER_COLOR: Rgba255Tuple = [57, 183, 250, 255];
  * })
  * ```
  */
-export class CoffinCornersExtension extends LayerExtension {
-  static override componentName = 'CoffinCornersExtension';
+export class CoffinCornerExtension extends LayerExtension {
+  static override componentName = 'CoffinCornerExtension';
 
   static override defaultProps = {
     selectedEntityId: { type: 'value', value: undefined },
@@ -251,7 +224,7 @@ export class CoffinCornersExtension extends LayerExtension {
       ) => {
         const entities = this.state[stateKey];
         const getId =
-          (this.props as unknown as CoffinCornersExtensionProps).getEntityId ??
+          (this.props as unknown as CoffinCornerExtensionProps).getEntityId ??
           // biome-ignore lint/suspicious/noExplicitAny: Default accessor assumes item.id exists.
           ((item: any) => item.id as EntityId);
         const items = data ?? [];
@@ -282,7 +255,7 @@ export class CoffinCornersExtension extends LayerExtension {
    */
   override updateState(
     this: CoffinCornerLayer,
-    params: UpdateParameters<Layer<CoffinCornersExtensionProps>>,
+    params: UpdateParameters<Layer<CoffinCornerExtensionProps>>,
   ) {
     const attributeManager = this.getAttributeManager();
 
@@ -321,11 +294,11 @@ export class CoffinCornersExtension extends LayerExtension {
    */
   override draw(this: CoffinCornerLayer) {
     const color =
-      (this.props as unknown as CoffinCornersExtensionProps)
-        .coffinCornerColor ?? DEFAULT_CORNER_COLOR;
+      (this.props as unknown as CoffinCornerExtensionProps).coffinCornerColor ??
+      DEFAULT_CORNER_COLOR;
 
     this.setShaderModuleProps({
-      coffinCorners: {
+      coffinCorner: {
         highlightColor: [
           color[0] / 255,
           color[1] / 255,

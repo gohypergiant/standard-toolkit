@@ -37,7 +37,7 @@ export type UseCoffinCornerReturn = {
 export type UseCoffinCornerOptions = {
   /**
    * Accessor to extract an entity ID from a picked data item.
-   * Must match the `getEntityId` prop passed to the CoffinCornersExtension.
+   * Must match the `getEntityId` prop passed to the CoffinCornerExtension.
    * @default (item) => item.id
    */
   // biome-ignore lint/suspicious/noExplicitAny: Data type is unknown at hook level.
@@ -65,7 +65,7 @@ export type UseCoffinCornerOptions = {
  *     <iconLayer
  *       id="base-icons"
  *       pickable
- *       extensions={[coffinCornersExtension]}
+ *       extensions={[coffinCornerExtension]}
  *       selectedEntityId={selectedId}
  *       hoveredEntityId={hoveredId}
  *     />
@@ -88,7 +88,7 @@ export function useCoffinCorner(
   const { state, setSelectedId, clearSelection, setLayerId, setGetEntityId } =
     coffinCornerStore.use(mapId);
 
-  // Unlike a CompositeLayer, CoffinCornersExtension is a shader-only plugin
+  // Unlike a CompositeLayer, CoffinCornerExtension is a shader-only plugin
   // with no picking handlers. The store must filter raw map bus events by
   // layerId to know which clicks/hovers belong to this extension's layer.
   useEffect(() => {

@@ -72,16 +72,16 @@ export function AssetsLayer() {
 
 ### With Coffin Corners (Selection / Hover Indicators)
 
-The `CoffinCornersExtension` renders GPU-driven bracket indicators around selected and hovered symbols. Pair it with `useCoffinCorner` for click/hover state management.
+The `CoffinCornerExtension` renders GPU-driven bracket indicators around selected and hovered symbols. Pair it with `useCoffinCorner` for click/hover state management.
 
 ```tsx
 import '@accelint/map-toolkit/deckgl/symbol-layer/fiber';
 import { uuid } from '@accelint/core';
 import { BaseMap } from '@accelint/map-toolkit/deckgl';
-import { CoffinCornersExtension, useCoffinCorner } from '@accelint/map-toolkit/deckgl/extensions/coffin-corner';
+import { CoffinCornerExtension, useCoffinCorner } from '@accelint/map-toolkit/deckgl/extensions/coffin-corner';
 
 const MAP_ID = uuid();
-const coffinCornersExtension = new CoffinCornersExtension();
+const coffinCornerExtension = new CoffinCornerExtension();
 
 export function SelectableSymbols() {
   const { selectedId, hoveredId } = useCoffinCorner(MAP_ID, 'symbols');
@@ -95,7 +95,7 @@ export function SelectableSymbols() {
         getPosition={d => d.position}
         selectedEntityId={selectedId}
         hoveredEntityId={hoveredId}
-        extensions={[coffinCornersExtension]}
+        extensions={[coffinCornerExtension]}
         pickable
       />
     </BaseMap>

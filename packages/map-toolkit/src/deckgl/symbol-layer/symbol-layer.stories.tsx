@@ -15,7 +15,7 @@ import { uuid } from '@accelint/core';
 import { useId } from 'react';
 import { BaseMap } from '@/deckgl/base-map';
 import { withDeckGL } from '@/decorators/deckgl';
-import { CoffinCornersExtension } from '../extensions';
+import { CoffinCornerExtension } from '../extensions';
 import { useCoffinCorner } from '../extensions/coffin-corner';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
@@ -148,20 +148,20 @@ export const SymbolLayer: Story = {
   },
 };
 
-const coffinCornersExtension = new CoffinCornersExtension();
+const coffinCornerExtension = new CoffinCornerExtension();
 
-const COFFIN_CORNERS_MAP_ID = uuid();
+const COFFIN_CORNER_MAP_ID = uuid();
 
-export const SymbolLayerWithCoffinCorners: Story = {
+export const SymbolLayerWithCoffinCorner: Story = {
   render: () => {
     const layerId = 'symbols';
     const { selectedId, hoveredId } = useCoffinCorner(
-      COFFIN_CORNERS_MAP_ID,
+      COFFIN_CORNER_MAP_ID,
       layerId,
     );
 
     return (
-      <BaseMap className='relative h-dvh w-dvw' id={COFFIN_CORNERS_MAP_ID}>
+      <BaseMap className='relative h-dvh w-dvw' id={COFFIN_CORNER_MAP_ID}>
         <symbolLayer
           id={layerId}
           data={MOCK_DATA}
@@ -171,7 +171,7 @@ export const SymbolLayerWithCoffinCorners: Story = {
           }}
           selectedEntityId={selectedId}
           hoveredEntityId={hoveredId}
-          extensions={[coffinCornersExtension]}
+          extensions={[coffinCornerExtension]}
           pickable
         />
       </BaseMap>

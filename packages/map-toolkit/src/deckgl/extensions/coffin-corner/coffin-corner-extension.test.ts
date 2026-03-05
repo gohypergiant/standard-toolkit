@@ -11,7 +11,7 @@
  */
 
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { CoffinCornersExtension } from './coffin-corners-extension';
+import { CoffinCornerExtension } from './coffin-corner-extension';
 import type { Rgba255Tuple } from '@accelint/predicates';
 import type { EntityId } from './types';
 
@@ -28,7 +28,7 @@ function createMockParams(
 
 /**
  * Creates a mock deck.gl layer object that satisfies the `this` binding
- * required by CoffinCornersExtension lifecycle methods.
+ * required by CoffinCornerExtension lifecycle methods.
  *
  * Uses a type assertion to avoid needing the full 70+ property Layer interface
  * while still providing the properties the extension actually accesses.
@@ -51,11 +51,11 @@ function createMockLayer(propsOverrides: Record<string, unknown> = {}) {
   } as any;
 }
 
-describe('CoffinCornersExtension', () => {
-  let extension: CoffinCornersExtension;
+describe('CoffinCornerExtension', () => {
+  let extension: CoffinCornerExtension;
 
   beforeEach(() => {
-    extension = new CoffinCornersExtension();
+    extension = new CoffinCornerExtension();
   });
 
   describe('initializeState', () => {
@@ -403,7 +403,7 @@ describe('CoffinCornersExtension', () => {
       extension.draw.call(layer);
 
       expect(layer.setShaderModuleProps).toHaveBeenCalledWith({
-        coffinCorners: {
+        coffinCorner: {
           highlightColor: [1, 128 / 255, 0, 1],
         },
       });
@@ -416,7 +416,7 @@ describe('CoffinCornersExtension', () => {
 
       // Default: [57, 183, 250, 255] → normalized
       expect(layer.setShaderModuleProps).toHaveBeenCalledWith({
-        coffinCorners: {
+        coffinCorner: {
           highlightColor: [57 / 255, 183 / 255, 250 / 255, 1],
         },
       });
@@ -429,7 +429,7 @@ describe('CoffinCornersExtension', () => {
       extension.draw.call(layer);
 
       expect(layer.setShaderModuleProps).toHaveBeenCalledWith({
-        coffinCorners: {
+        coffinCorner: {
           highlightColor: [100 / 255, 100 / 255, 100 / 255, 127 / 255],
         },
       });
@@ -443,7 +443,7 @@ describe('CoffinCornersExtension', () => {
       const shaders = extension.getShaders.call(layer, extension);
 
       expect(shaders.modules).toHaveLength(1);
-      expect(shaders.modules[0].name).toBe('coffinCorners');
+      expect(shaders.modules[0]?.name).toBe('coffinCorner');
       expect(Object.keys(shaders.inject)).toEqual(
         expect.arrayContaining([
           'vs:#decl',
