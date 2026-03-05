@@ -4,6 +4,13 @@
 
 ### Patch Changes
 
+- Updated dependencies [162895c]
+  - @accelint/core@0.6.0
+
+## 1.0.1
+
+### Patch Changes
+
 - a4b56b7: Updates `unregister-hotkey` to use the renamed `HotkeyManager` type (previously `HotkeyHook`)
 
 ## 1.0.0
