@@ -13,7 +13,7 @@
 @reference '@accelint/design-foundation/styles';
 
 @utility bracket-pseudo-base {
-  @apply rounded-small fg-accent-primary-bold absolute border border-current border-t-transparent border-b-transparent border-l-transparent content-[''];
+  @apply rounded-small absolute border border-current border-t-transparent border-b-transparent border-l-transparent content-[''];
   left: 4px;
 }
 
@@ -28,14 +28,38 @@
   .row-block {
     --block-height: attr(data-height px);
 
-    @apply bg-accent-primary-muted outline-accent-primary-bold absolute outline;
+    @apply rounded-small absolute outline;
     height: var(--block-height);
+
+    @variant color-accent {
+      @apply bg-accent-primary-muted outline-accent-primary-bold;
+    }
+
+    @variant color-serious {
+      @apply bg-serious-muted outline-serious-bold;
+    }
+
+    @variant color-critical {
+      @apply bg-critical-muted outline-critical-bold;
+    }
   }
 
   .row-spacer {
-    @apply fg-accent-primary-bold absolute h-px bg-current;
+    @apply absolute h-px bg-current;
     transform: translateX(var(--translate-x));
     width: var(--width);
+
+    @variant color-accent {
+      @apply fg-accent-primary-bold;
+    }
+
+    @variant color-serious {
+      @apply fg-serious-bold;
+    }
+
+    @variant color-critical {
+      @apply fg-critical-bold;
+    }
   }
 
   .bracket-container {
@@ -52,22 +76,49 @@
     &::after {
       @apply bracket-pseudo-base -bottom-px -rotate-45;
     }
+
+    @variant color-accent {
+      @apply fg-accent-primary-bold;
+    }
+
+    @variant color-serious {
+      @apply fg-serious-bold;
+    }
+
+    @variant color-critical {
+      @apply fg-critical-bold;
+    }
   }
 
   .bracket {
-    @apply fg-accent-primary-bold rounded-bl-small rounded-tl-small absolute left-0 border border-r-transparent border-b-current bg-transparent;
+    @apply rounded-bl-small rounded-tl-small absolute left-0 border border-r-transparent border-b-current bg-transparent;
     min-height: attr(data-height px);
     width: 6px;
   }
 
   .marker-container {
-    @apply fg-accent-primary-bold absolute flex w-px items-center justify-center border-solid border-current bg-current;
+    @apply absolute flex w-px items-center justify-center border-solid border-current bg-current;
+    /* Ensure the marker is displayed above other elements (like spacers) that may
+       be rendered at same point in time */
+    z-index: 1;
     min-height: attr(data-height px);
     transform: translateX(var(--translate-x));
+
+    @variant color-accent {
+      @apply fg-accent-primary-bold;
+    }
+
+    @variant color-serious {
+      @apply fg-serious-bold;
+    }
+
+    @variant color-critical {
+      @apply fg-critical-bold;
+    }
   }
 
   .marker-point {
-    @apply fg-accent-primary-bold absolute rounded-full bg-current;
+    @apply absolute rounded-full bg-current;
     width: 3px;
     height: 3px;
   }

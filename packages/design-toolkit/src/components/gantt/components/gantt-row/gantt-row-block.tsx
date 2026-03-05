@@ -14,7 +14,7 @@ import { GANTT_ROW_ELEMENT_HEIGHT } from '../../constants';
 import { Range, type RangeProps } from '../base-elements/range';
 import styles from './styles.module.css';
 
-export function GanttRowBlock({ id, startMs, endMs }: RangeProps) {
+export function GanttRowBlock({ id, startMs, endMs, ...rest }: RangeProps) {
   return (
     <Range
       id={id}
@@ -22,6 +22,7 @@ export function GanttRowBlock({ id, startMs, endMs }: RangeProps) {
       endMs={endMs}
       data-height={GANTT_ROW_ELEMENT_HEIGHT}
       className={styles['row-block']}
+      {...rest}
     />
   );
 }

@@ -81,6 +81,7 @@ const meta = {
                         id={`${id}-block-${index}`}
                         startMs={startMs}
                         endMs={endMs}
+                        color={element.color}
                       />
                     );
                   }
@@ -94,6 +95,7 @@ const meta = {
                         id={`${id}-spacer-${index}`}
                         startMs={startMs}
                         endMs={endMs}
+                        color={element.color}
                       />
                     );
                   }
@@ -106,11 +108,13 @@ const meta = {
                       <BracketClose
                         key={`${id}-bracket-close-${index}`}
                         timeMs={timeMs}
+                        color={element.color}
                       />
                     ) : (
                       <BracketOpen
                         key={`${id}-bracket-open-${index}`}
                         timeMs={timeMs}
+                        color={element.color}
                       />
                     );
                   }
@@ -118,7 +122,11 @@ const meta = {
                   case 'marker': {
                     const timeMs = element.timeMs;
                     return (
-                      <Marker key={`${id}-marker-${index}`} timeMs={timeMs} />
+                      <Marker
+                        key={`${id}-marker-${index}`}
+                        timeMs={timeMs}
+                        color={element.color}
+                      />
                     );
                   }
 
