@@ -2,4 +2,9 @@
 "@accelint/constants": minor
 ---
 
-Add `units` module with `DISTANCE_UNIT_SYMBOLS` constant mapping human-readable unit names to SI-compliant display symbols (e.g., `km`, `m`, `NM`, `mi`, `ft`).
+Add `units` subpath (`@accelint/constants/units`) with SI/ICAO-compliant distance unit constants:
+
+- `DISTANCE_UNIT_SYMBOLS` — maps Turf.js unit names to display symbols (`km`, `m`, `NM`, `mi`, `ft`)
+- `DISTANCE_UNIT_BY_SYMBOL` — reverse lookup from display symbol to Turf.js unit name
+- `DistanceUnit` type — Turf.js unit name keys
+- `DistanceUnitSymbol` type — display symbol values
