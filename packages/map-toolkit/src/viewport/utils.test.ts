@@ -37,7 +37,7 @@ describe('getViewportSize', () => {
       formatter,
     });
     // German format uses periods as thousand separators
-    expect(result).toMatch(/^\d{1,3}(\.\d{3})* x \d{1,3}(\.\d{3})* KM$/);
+    expect(result).toMatch(/^\d{1,3}(\.\d{3})* x \d{1,3}(\.\d{3})* km$/);
   });
 
   it('provides a fallback for NaN bounds', () => {
@@ -98,19 +98,19 @@ describe('getViewportSize', () => {
     const height = 600;
     expect(
       getViewportSize({ bounds, zoom, width, height, unit: 'km' }),
-    ).toContain('KM');
+    ).toContain('km');
     expect(
       getViewportSize({ bounds, zoom, width, height, unit: 'm' }),
-    ).toContain('M');
+    ).toContain('m');
     expect(
       getViewportSize({ bounds, zoom, width, height, unit: 'nm' }),
     ).toContain('NM');
     expect(
       getViewportSize({ bounds, zoom, width, height, unit: 'mi' }),
-    ).toContain('MI');
+    ).toContain('mi');
     expect(
       getViewportSize({ bounds, zoom, width, height, unit: 'ft' }),
-    ).toContain('FT');
+    ).toContain('ft');
   });
 
   it('calculates larger dimensions at lower zoom levels', () => {

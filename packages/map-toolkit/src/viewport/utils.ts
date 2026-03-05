@@ -10,13 +10,24 @@
  * governing permissions and limitations under the License.
  */
 
+import { DISTANCE_UNIT_SYMBOLS } from '@accelint/constants/units';
 import {
   type DistanceUnit,
+  type DistanceUnitAbbreviation,
   getDistanceUnitFromAbbreviation,
 } from '../shared/units';
 import type { GetViewportSizeArgs } from './types';
 
 const numberFormatter = Intl.NumberFormat('en-US');
+
+/**
+ * Get the SI-compliant display symbol for a distance unit abbreviation.
+ * Falls back to the abbreviation itself if no symbol mapping exists.
+ */
+function getDisplaySymbol(abbrev: DistanceUnitAbbreviation): string {
+  const unitName = getDistanceUnitFromAbbreviation(abbrev);
+  return unitName ? DISTANCE_UNIT_SYMBOLS[unitName] : abbrev;
+}
 
 /**
  * Web Mercator constant: meters per pixel at zoom 0, equator.
@@ -57,7 +68,7 @@ const METERS_TO_UNIT = {
  * // returns "612 x 459 NM"
  *
  * getViewportSize({ bounds: [170, 50, -170, 60], zoom: 4, width: 1024, height: 768, unit: 'km' })
- * // returns "2,050 x 1,538 KM"
+ * // returns "2,050 x 1,538 km"
  * ```
  */
 export function getViewportSize({
@@ -68,7 +79,7 @@ export function getViewportSize({
   unit = 'nm',
   formatter = numberFormatter,
 }: GetViewportSizeArgs) {
-  const defaultValue = `-- x -- ${unit.toUpperCase()}`;
+  const defaultValue = `-- x -- ${getDisplaySymbol(unit)}`;
 
   // Validate inputs
   if (!bounds || bounds.every((b) => Number.isNaN(b))) {
@@ -109,5 +120,5 @@ export function getViewportSize({
   const width = formatter.format(widthDistance);
   const height = formatter.format(heightDistance);
 
-  return `${width} x ${height} ${unit.toUpperCase()}`;
+  return `${width} x ${height} ${getDisplaySymbol(unit)}`;
 }
