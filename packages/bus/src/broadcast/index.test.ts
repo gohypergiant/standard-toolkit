@@ -15,7 +15,16 @@ import {
   mockBroadcastChannel,
   resetMockBroadcastChannel,
 } from '@accelint/vitest-config/mocks/broadcast-channel';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  type Mock,
+  vi,
+} from 'vitest';
+import { CONNECTION_EVENT_TYPES } from './constants';
 import { Broadcast } from './index';
 import type { StructuredCloneable } from 'type-fest';
 import type { Payload } from './types';
@@ -122,6 +131,7 @@ describe('broadcast', () => {
       type: 'test',
       payload: 'test',
       source: bus.id,
+      target: bus.id,
     });
   });
 
@@ -139,6 +149,7 @@ describe('broadcast', () => {
       type: 'test',
       payload: 'test',
       source: bus.id,
+      target: bus.id,
     });
   });
 
@@ -159,16 +170,19 @@ describe('broadcast', () => {
       type: 'test',
       payload: 'A',
       source: bus.id,
+      target: bus.id,
     });
     expect(on).toHaveBeenNthCalledWith(2, {
       type: 'test',
       payload: 'B',
       source: bus.id,
+      target: bus.id,
     });
     expect(on).toHaveBeenNthCalledWith(3, {
       type: 'test',
       payload: 'C',
       source: bus.id,
+      target: bus.id,
     });
 
     expect(once).toHaveBeenCalledOnce();
@@ -176,6 +190,7 @@ describe('broadcast', () => {
       type: 'test',
       payload: 'A',
       source: bus.id,
+      target: bus.id,
     });
   });
 
@@ -253,7 +268,7 @@ describe('broadcast', () => {
     expect(fn).not.toHaveBeenCalled();
   });
 
-  it('should default to all as target audience', () => {
+  it('should default to self as target audience', () => {
     const bus = Broadcast.getInstance<Payload<'test', string>>();
     const fn = vi.fn();
 
@@ -265,6 +280,7 @@ describe('broadcast', () => {
       type: 'test',
       payload: 'default',
       source: bus.id,
+      target: bus.id,
     });
   });
 
@@ -337,7 +353,176 @@ describe('broadcast', () => {
       type: 'test',
       payload: payload,
       source: bus.id,
-      target: undefined,
+      target: bus.id,
+    });
+  });
+
+  describe('connection management', () => {
+    it('should emit ping event on init', () => {
+      const bus = new Broadcast();
+
+      // @ts-expect-error Accessing protected property
+      expect(bus.channel.postMessage).toHaveBeenCalledWith({
+        type: CONNECTION_EVENT_TYPES.ping,
+        payload: undefined,
+        source: bus.id,
+      });
+    });
+
+    it('should update connected property when echo event is received', () => {
+      const bus = new Broadcast();
+      const remoteId = uuid();
+
+      expect(bus.connected.size).toBe(0);
+
+      // Simulate receiving an echo event from another instance
+      // @ts-expect-error Accessing protected method
+      bus.handleListeners({
+        type: CONNECTION_EVENT_TYPES.echo,
+        source: remoteId,
+        target: bus.id,
+      });
+
+      expect(bus.connected.size).toBe(1);
+      expect(bus.connected.has(remoteId)).toBe(true);
+    });
+
+    it('should update connected property when stop event is received', () => {
+      const bus = new Broadcast();
+      const remoteId = uuid();
+
+      // First add the remote to connected
+      // @ts-expect-error bypass "readonly" status of Set for testing
+      bus.connected.add(remoteId);
+
+      expect(bus.connected.size).toBe(1);
+
+      // Simulate receiving a stop event
+      // @ts-expect-error Accessing protected method
+      bus.handleListeners({
+        type: CONNECTION_EVENT_TYPES.stop,
+        source: remoteId,
+        target: bus.id,
+      });
+
+      expect(bus.connected.size).toBe(0);
+      expect(bus.connected.has(remoteId)).toBe(false);
+    });
+
+    it('should clear connected and emit ping when ping() is called', () => {
+      const bus = new Broadcast();
+      const remoteId = uuid();
+
+      // Add a remote connection
+      // @ts-expect-error bypass "readonly" status of Set for testing
+      bus.connected.add(remoteId);
+
+      expect(bus.connected.size).toBe(1);
+
+      // Call ping manually
+      bus.ping();
+
+      expect(bus.connected.size).toBe(0);
+
+      // @ts-expect-error Accessing protected property
+      expect(bus.channel.postMessage).toHaveBeenCalledWith({
+        type: CONNECTION_EVENT_TYPES.ping,
+        payload: undefined,
+        source: bus.id,
+      });
+    });
+
+    it('should not respond to ping when document is hidden', () => {
+      const bus = new Broadcast();
+
+      Object.defineProperty(document, 'hidden', {
+        value: true,
+        configurable: true,
+      });
+
+      // @ts-expect-error Accessing protected property
+      const postMessageSpy = bus.channel.postMessage;
+      const remoteId = uuid();
+
+      // Clear the initial call to ping on init of the bus
+      (postMessageSpy as Mock).mockClear();
+
+      // @ts-expect-error Accessing protected method
+      bus.handleListeners({
+        type: CONNECTION_EVENT_TYPES.ping,
+        source: remoteId,
+        target: bus.id,
+      });
+
+      // Should not add to connected or echo back
+      expect(bus.connected.size).toBe(0);
+      expect(postMessageSpy).not.toHaveBeenCalled();
+
+      Object.defineProperty(document, 'hidden', {
+        value: false,
+        configurable: true,
+      });
+    });
+
+    it('should emit stop to others when tab becomes hidden', () => {
+      const bus = new Broadcast();
+
+      Object.defineProperty(document, 'hidden', {
+        value: true,
+        configurable: true,
+      });
+
+      // @ts-expect-error Accessing protected method
+      bus.onVisibilityChange();
+
+      // @ts-expect-error Accessing protected property
+      expect(bus.channel.postMessage).toHaveBeenCalledWith({
+        type: CONNECTION_EVENT_TYPES.stop,
+        payload: undefined,
+        source: bus.id,
+      });
+
+      Object.defineProperty(document, 'hidden', {
+        value: false,
+        configurable: true,
+      });
+    });
+
+    it('should ping when tab becomes visible', () => {
+      const bus = new Broadcast();
+
+      // @ts-expect-error Accessing protected property
+      const postMessageSpy = bus.channel.postMessage;
+
+      Object.defineProperty(document, 'hidden', {
+        value: false,
+        configurable: true,
+      });
+
+      // @ts-expect-error Accessing protected method
+      bus.onVisibilityChange();
+
+      expect(bus.connected.size).toBe(0);
+      expect(postMessageSpy).toHaveBeenCalledWith({
+        type: CONNECTION_EVENT_TYPES.ping,
+        payload: undefined,
+        source: bus.id,
+      });
+    });
+
+    it('should emit stop to others on destroy', () => {
+      const bus = Broadcast.getInstance<Payload<'test', string>>();
+
+      // @ts-expect-error Accessing protected property
+      const postMessageSpy = bus.channel.postMessage;
+
+      bus.destroy();
+
+      expect(postMessageSpy).toHaveBeenCalledWith({
+        type: CONNECTION_EVENT_TYPES.stop,
+        payload: undefined,
+        source: bus.id,
+      });
     });
   });
 });

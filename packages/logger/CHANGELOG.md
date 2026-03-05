@@ -1,5 +1,11 @@
 # @accelint/logger
 
+## 1.0.1
+
+### Patch Changes
+
+- 5567348: Update logger implementation to prevent singleton pollution.
+
 ## 1.0.0
 
 ### Major Changes
