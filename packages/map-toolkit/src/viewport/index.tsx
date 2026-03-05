@@ -11,20 +11,10 @@
  */
 
 export {
-  DISTANCE_UNIT_ABBREVIATIONS,
-  type DistanceUnit,
-  type DistanceUnitAbbreviation,
-  getDistanceUnitFromAbbreviation,
-} from '../shared/units';
-export {
   clearViewportState,
   useMapViewport,
   viewportStore,
 } from './store';
 export { getViewportSize } from './utils';
 export { ViewportSize, type ViewportSizeProps } from './viewport-size';
-export type {
-  GeoCoordinate,
-  GetViewportSizeArgs,
-  SupportedDistanceUnit,
-} from './types';
+export type { GeoCoordinate, GetViewportSizeArgs } from './types';
