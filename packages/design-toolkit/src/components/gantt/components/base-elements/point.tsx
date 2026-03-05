@@ -12,14 +12,17 @@
 
 import { type HTMLAttributes, type PropsWithChildren, useState } from 'react';
 import { usePointElementLayout } from '../base-elements/use-point-element-layout';
+import type { RowElementColorProp } from '../../types';
 
 export type PointProps = HTMLAttributes<HTMLDivElement> & {
   timeMs: number;
+  color?: RowElementColorProp;
 };
 
 export function Point({
   timeMs,
   children,
+  color = 'accent',
   ...rest
 }: PropsWithChildren<PointProps>) {
   const [element, setElement] = useState<HTMLDivElement | null>(null);
@@ -34,7 +37,7 @@ export function Point({
   };
 
   return (
-    <div ref={assignElementRef} {...rest}>
+    <div ref={assignElementRef} data-color={color} {...rest}>
       {children}
     </div>
   );

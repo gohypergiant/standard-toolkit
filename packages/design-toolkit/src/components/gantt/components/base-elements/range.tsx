@@ -12,17 +12,20 @@
 
 import { type HTMLAttributes, type PropsWithChildren, useState } from 'react';
 import { useRangeElementLayout } from './use-range-element-layout';
+import type { RowElementColorProp } from '../../types';
 
 export type RangeProps = HTMLAttributes<HTMLDivElement> & {
   id: string;
   startMs: number;
   endMs: number;
+  color?: RowElementColorProp;
 };
 
 export function Range({
   children,
   startMs,
   endMs,
+  color = 'accent',
   ...rest
 }: PropsWithChildren<RangeProps>) {
   const [element, setElement] = useState<HTMLDivElement | null>(null);
@@ -40,7 +43,7 @@ export function Range({
   };
 
   return (
-    <div ref={assignElementRef} {...rest}>
+    <div ref={assignElementRef} data-color={color} {...rest}>
       {children}
     </div>
   );
