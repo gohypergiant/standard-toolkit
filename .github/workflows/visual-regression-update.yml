@@ -1,7 +1,8 @@
 # Visual Regression Snapshot Update Workflow
 #
 # This workflow manually updates visual regression test baselines on feature branches.
-# It regenerates all screenshots and commits them back to the branch.
+# It detects which tests are failing, regenerates only those baselines, and commits
+# the changes back to the branch.
 #
 # Usage:
 # 1. Go to Actions tab in GitHub
@@ -75,20 +76,47 @@ jobs:
         run: pnpm exec playwright install chromium
         working-directory: apps/next
 
-      - name: Update visual regression snapshots
-        run: pnpm visual:update
+      - name: Detect failing visual tests
+        id: detect
         working-directory: apps/next
+        run: |
+          pnpm visual --reporter=default --reporter=json --outputFile=test-results.json || true
+          FAILED_FILES=$(node ../../.github/scripts/extract-failed-files.mjs test-results.json --relative-to=$(pwd))
+
+          if [ -z "$FAILED_FILES" ]; then
+            echo "has_failures=false" >> $GITHUB_OUTPUT
+            echo "No failing visual tests detected"
+          else
+            echo "has_failures=true" >> $GITHUB_OUTPUT
+            EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+            echo "failed_files<<$EOF" >> $GITHUB_OUTPUT
+            echo "$FAILED_FILES" >> $GITHUB_OUTPUT
+            echo "$EOF" >> $GITHUB_OUTPUT
+            echo "Failing test files:"
+            echo "$FAILED_FILES"
+          fi
+
+      - name: Update failed baselines
+        if: steps.detect.outputs.has_failures == 'true'
+        working-directory: apps/next
+        run: |
+          FILE_ARGS=$(echo "${{ steps.detect.outputs.failed_files }}" | tr '\n' ' ')
+          pnpm exec vitest --project=visual --run --update --no-coverage $FILE_ARGS
 
       - name: Check for changes
         id: changes
         run: |
-          if git diff --quiet -- '*.png'; then
+          MODIFIED=$(git diff --name-only -- '*.png')
+          UNTRACKED=$(git ls-files --others --exclude-standard -- '*.png')
+
+          if [ -z "$MODIFIED" ] && [ -z "$UNTRACKED" ]; then
             echo "has_changes=false" >> $GITHUB_OUTPUT
             echo "No screenshot changes detected"
           else
             echo "has_changes=true" >> $GITHUB_OUTPUT
             echo "Screenshot changes detected:"
-            git diff --name-only -- '*.png'
+            if [ -n "$MODIFIED" ]; then echo "$MODIFIED"; fi
+            if [ -n "$UNTRACKED" ]; then echo "$UNTRACKED"; fi
           fi
 
       - name: Configure git
@@ -108,20 +136,25 @@ jobs:
 
       - name: Generate summary
         run: |
-          echo "## 🖼️ Visual Regression Snapshot Update" >> $GITHUB_STEP_SUMMARY
+          echo "## Visual Regression Snapshot Update" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
-          if [ "${{ steps.changes.outputs.has_changes }}" == "true" ]; then
-            echo "✅ **Snapshots updated and pushed**" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.detect.outputs.has_failures }}" != "true" ]; then
+            echo "**No failing tests detected** - all snapshots are already up to date." >> $GITHUB_STEP_SUMMARY
+          elif [ "${{ steps.changes.outputs.has_changes }}" == "true" ]; then
+            echo "**Snapshots updated and pushed**" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
-            echo "### Updated files:" >> $GITHUB_STEP_SUMMARY
+            echo "### Targeted test files:" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            echo "${{ steps.detect.outputs.failed_files }}" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### Updated baselines:" >> $GITHUB_STEP_SUMMARY
             echo '```' >> $GITHUB_STEP_SUMMARY
             git log -1 --name-only --pretty=format: -- '*.png' >> $GITHUB_STEP_SUMMARY
             echo '```' >> $GITHUB_STEP_SUMMARY
           else
-            echo "ℹ️ **No changes detected**" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "All snapshots are already up to date." >> $GITHUB_STEP_SUMMARY
+            echo "**No baseline changes** - tests were re-run but no PNGs changed." >> $GITHUB_STEP_SUMMARY
           fi
 
           echo "" >> $GITHUB_STEP_SUMMARY
