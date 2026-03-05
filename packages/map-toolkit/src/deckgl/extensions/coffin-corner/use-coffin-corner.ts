@@ -99,7 +99,7 @@ export function useCoffinCorner(
     if (options?.getEntityId) {
       setGetEntityId(options.getEntityId);
     }
-  }, [setGetEntityId, options?.getEntityId]);
+  }, [setGetEntityId, options]);
 
   return {
     selectedId: state.selectedId,

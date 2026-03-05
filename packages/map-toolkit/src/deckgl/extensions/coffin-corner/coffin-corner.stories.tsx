@@ -100,7 +100,7 @@ function CoffinCornerDemo({
       </BaseMap>
 
       <div className='absolute top-l left-l z-10 rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
-        <p className='font-bold text-header-l'>Coffin Corners</p>
+        <p className='font-bold text-header-l'>Coffin Corner</p>
         <p className='mt-s text-body-s text-content-secondary'>
           Click icon to select/deselect. Hover for preview.
         </p>

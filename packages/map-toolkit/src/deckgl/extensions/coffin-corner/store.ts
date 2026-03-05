@@ -78,6 +78,9 @@ export const coffinCornerStore = createMapStore<
     getEntityId: defaultGetEntityId,
   },
 
+  // Actions emit domain events rather than calling set() directly.
+  // The bus subscriptions below translate events → state, ensuring
+  // all state changes are observable by external subscribers.
   actions: (mapId, { get, set }) => ({
     setSelectedId: (id: EntityId | undefined) => {
       const currentId = get().selectedId;
