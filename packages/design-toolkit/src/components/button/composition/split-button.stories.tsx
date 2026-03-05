@@ -10,6 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
+import { ChevronDown, Placeholder } from '@accelint/icons';
+import { useState } from 'react';
 import { Icon } from '@/components/icon';
 import { Menu } from '@/components/menu';
 import { MenuItem } from '@/components/menu/item';
@@ -17,12 +19,9 @@ import { MenuItemLabel } from '@/components/menu/item-label';
 import { MenuTrigger } from '@/components/menu/trigger';
 import { Tooltip } from '@/components/tooltip';
 import { TooltipTrigger } from '@/components/tooltip/trigger';
-import { ChevronDown, Placeholder } from '@accelint/icons';
-import type { StoryObj } from '@storybook/react-vite';
-import { useState } from 'react';
-import { clsx } from 'react-querybuilder';
 import { Button } from '../';
 import { ToggleButton } from '../toggle';
+import type { StoryObj } from '@storybook/react-vite';
 
 type StoryArgs = {
   buttonColor: 'mono-muted' | 'mono-bold' | 'accent';
@@ -56,16 +55,6 @@ const chevronStyle = (isOpen: boolean) => ({
   transition: 'transform 150ms',
 });
 
-// const monoBoldStyle = (isDisabled: boolean) =>
-//   isDisabled
-//     ? ''
-//     : 'color-mono-bold:hover:bg-interactive-bold color-mono-bold:focus-visible:bg-interactive-bold color-mono-bold:hover:fg-inverse-muted color-mono-bold:focus-visible:fg-inverse-muted';
-
-// const enabledStyling = (enabled: boolean) =>
-//   enabled
-//     ? 'color-mono-muted:bg-interactive-muted color-mono-bold:bg-interactive-muted color-accent:bg-accent-primary-muted color-accent:fg-accent-primary-hover'
-//     : '';
-
 export const Default: Story = {
   render: (args) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -81,10 +70,11 @@ export const Default: Story = {
         </Button>
         <TooltipTrigger>
           <MenuTrigger onOpenChange={setIsOpen}>
+            {/* TODO: Button is "pressed" with menu active... what do for styling. */}
             <ToggleButton
               variant='icon'
-              className='w-[12px] min-w-[12px] p-0'
               color={args.buttonColor}
+              className='w-[12px] min-w-[12px] p-0'
               isDisabled={args.isDisabled}
               isSelected={isOpen}
             >
