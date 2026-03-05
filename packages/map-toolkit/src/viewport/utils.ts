@@ -13,7 +13,6 @@
 import {
   DISTANCE_UNIT_BY_SYMBOL,
   DISTANCE_UNIT_SYMBOLS,
-  type DistanceUnitSymbol,
 } from '@accelint/constants/units';
 import { createLoggerDomain } from '../shared/logger';
 import type { GetViewportSizeArgs } from './types';
