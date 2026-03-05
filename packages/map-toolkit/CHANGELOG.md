@@ -1,5 +1,38 @@
 # @accelint/map-toolkit
 
+## 2.0.0
+
+### Major Changes
+
+- 7b30771: Add `enableElevation` prop to DisplayShapeLayer for 3D shapes rendering.
+
+  Remove dotted border treatment on shape selection — interactions no longer modify a shape's innate styling.
+
+  Apply material-based brightness effect for hover and selection on all polygon shapes. All shapes brighten their outline color on hover or select (1.4×), with an even brighter combined state when both active (1.7×).
+
+  Add new Selection layer for brightness effect while shape is selected.
+
+  Add optional `maxElevation` property to `StyledFeatureProperties` as the source of truth for Polygon shape elevation. Point and LineString elevation is derived from z coordinates.
+
+  Note: the only breaking change is removal of a redundant type. If you were using `type ShapeFeatureTypeValues` from map-toolkit, replace that with `type ShapeFeatureType`.
+
+### Minor Changes
+
+- d5ac9eb: Update EditShapeLayer to include the ability to pan the map while editing a shape when the spacebar is held.
+- 311d7b6: Upgraded @deck.gl packages to 9.2 and removed shape layer double-click workaround
+
+### Patch Changes
+
+- 5567348: Update logger implementation to prevent singleton pollution.
+- 1106ced: Fix bug where Enter on Save hotkey never unregistered, causing an error on EditShapeLayer remounts.
+- Updated dependencies [3153e74]
+- Updated dependencies [5567348]
+- Updated dependencies [162895c]
+  - @accelint/bus@4.0.0
+  - @accelint/logger@1.0.1
+  - @accelint/core@0.6.0
+  - @accelint/hotkey-manager@2.0.0
+
 ## 1.5.0
 
 ### Minor Changes

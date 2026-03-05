@@ -1,5 +1,12 @@
 # @accelint/design-toolkit
 
+## 3.0.1
+### Patch Changes
+
+- 165cf29: Added missing "sideEffects" entry which was preventing tree shaking.
+  - @accelint/predicates@1.0.0
+  - @accelint/converters@1.0.1
+
 ## 3.0.0
 ### Major Changes
 
