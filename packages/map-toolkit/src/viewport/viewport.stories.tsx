@@ -21,7 +21,7 @@ const BASE_MAP_STORY_ID = uuid();
 const meta: Meta = {
   title: 'Viewport',
   args: {
-    unit: undefined,
+    unit: 'NM',
   },
   argTypes: {
     unit: {
