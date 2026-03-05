@@ -91,26 +91,21 @@ describe('getViewportSize', () => {
     expect(result).toBe('-- x -- NM');
   });
 
-  it('works with all supported units', () => {
-    const bounds: [number, number, number, number] = [-82, 22, -71, 52];
-    const zoom = 5;
-    const width = 800;
-    const height = 600;
-    expect(
-      getViewportSize({ bounds, zoom, width, height, unit: 'km' }),
-    ).toContain('km');
-    expect(
-      getViewportSize({ bounds, zoom, width, height, unit: 'm' }),
-    ).toContain('m');
-    expect(
-      getViewportSize({ bounds, zoom, width, height, unit: 'nm' }),
-    ).toContain('NM');
-    expect(
-      getViewportSize({ bounds, zoom, width, height, unit: 'mi' }),
-    ).toContain('mi');
-    expect(
-      getViewportSize({ bounds, zoom, width, height, unit: 'ft' }),
-    ).toContain('ft');
+  it.each([
+    ['km', 'km'],
+    ['m', 'm'],
+    ['nm', 'NM'],
+    ['mi', 'mi'],
+    ['ft', 'ft'],
+  ] as const)('should display SI-correct symbol for unit abbreviation %s', (unit, expectedSymbol) => {
+    const result = getViewportSize({
+      bounds: [-82, 22, -71, 52],
+      zoom: 5,
+      width: 800,
+      height: 600,
+      unit,
+    });
+    expect(result).toMatch(new RegExp(` ${expectedSymbol}$`));
   });
 
   it('calculates larger dimensions at lower zoom levels', () => {

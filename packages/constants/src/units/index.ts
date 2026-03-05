@@ -23,6 +23,14 @@
  * - "mi" and "ft" are not SI units but follow conventional lowercase
  *
  * @see https://en.wikipedia.org/wiki/International_System_of_Units
+ *
+ * @example
+ * ```typescript
+ * import { DISTANCE_UNIT_SYMBOLS } from '@accelint/constants/units';
+ *
+ * const symbol = DISTANCE_UNIT_SYMBOLS.kilometers; // 'km'
+ * const label = `Viewport: 600 x 400 ${DISTANCE_UNIT_SYMBOLS.nauticalmiles}`; // 'Viewport: 600 x 400 NM'
+ * ```
  */
 export const DISTANCE_UNIT_SYMBOLS = {
   kilometers: 'km',
