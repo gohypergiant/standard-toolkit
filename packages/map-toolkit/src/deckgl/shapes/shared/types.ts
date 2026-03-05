@@ -12,6 +12,7 @@
 
 'use client';
 
+import type { DistanceUnit } from '@accelint/constants/units';
 import type { UniqueId } from '@accelint/core';
 import type { Color } from '@deck.gl/core';
 import type {
@@ -25,7 +26,6 @@ import type {
   Point,
   Polygon,
 } from 'geojson';
-import type { DistanceUnit } from '@/shared/units';
 
 /**
  * Supported shape types

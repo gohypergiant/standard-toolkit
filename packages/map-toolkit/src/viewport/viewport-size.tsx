@@ -29,7 +29,7 @@ export type ViewportSizeProps = ComponentPropsWithRef<'span'> & {
  *
  * @param props - Extends `<span>` props
  * @param props.instanceId - The id of the view to subscribe to
- * @param props.unit - Measure of distance: `km | m | nm | mi | ft`. Defaults to `nm`
+ * @param props.unit - Measure of distance: `km | m | NM | mi | ft`. Defaults to `NM`
  * @param props.className - CSS classes for styling
  *
  * @example
@@ -47,7 +47,7 @@ export type ViewportSizeProps = ComponentPropsWithRef<'span'> & {
  */
 export function ViewportSize({
   instanceId,
-  unit = 'nm',
+  unit = 'NM',
   ...rest
 }: ViewportSizeProps) {
   const { bounds, zoom, width, height } = useMapViewport(instanceId);

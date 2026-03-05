@@ -161,7 +161,7 @@ DrawShapeLayer displays real-time tooltips during drawing:
 Distance units default to kilometers (`'km'`) but can be configured via the `unit` prop:
 
 ```tsx
-<DrawShapeLayer mapId={MAP_ID} unit="nm" />  // nautical miles
+<DrawShapeLayer mapId={MAP_ID} unit="NM" />  // nautical miles
 <DrawShapeLayer mapId={MAP_ID} unit="mi" />  // miles
 ```
 
@@ -242,7 +242,7 @@ console.log('Current cursor:', cursor);
 |------|------|---------|-------------|
 | `id` | `string` | `'draw-shape-layer'` | Unique layer ID |
 | `mapId` | `UniqueId` | *required* | Map instance ID for multi-map isolation |
-| `unit` | `'km' \| 'm' \| 'nm' \| 'mi' \| 'ft'` | `'km'` | Distance unit for tooltip measurements |
+| `unit` | `'km' \| 'm' \| 'NM' \| 'mi' \| 'ft'` | `'km'` | Distance unit for tooltip measurements |
 
 ### useDrawShape Hook
 

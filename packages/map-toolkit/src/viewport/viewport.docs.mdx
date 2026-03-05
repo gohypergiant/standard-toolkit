@@ -84,12 +84,12 @@ Unique identifier for the map instance. Must match the `id` prop passed to `Base
 
 ##### `unit?: SupportedDistanceUnit`
 
-Unit of measurement for dimensions. Defaults to `'nm'` (nautical miles).
+Unit of measurement for dimensions. Defaults to `'NM'` (nautical miles).
 
-Available units (from `@accelint/map-toolkit/shared/units`):
+Available units (from `@accelint/constants/units`):
 - `'km'` - Kilometers
 - `'m'` - Meters
-- `'nm'` - Nautical miles (default)
+- `'NM'` - Nautical miles (default)
 - `'mi'` - Miles
 - `'ft'` - Feet
 
@@ -107,8 +107,8 @@ The component displays: `{width} x {height} {UNIT}`
 
 **Examples:**
 - `"660 x 1,801 NM"` - US formatting, nautical miles
-- `"1,134 x 3,336 KM"` - US formatting, kilometers
-- `"1.134 x 3.336 KM"` - German formatting, kilometers
+- `"1,134 x 3,336 km"` - US formatting, kilometers
+- `"1.134 x 3.336 km"` - German formatting, kilometers
 - `"-- x -- NM"` - Fallback when bounds unavailable
 
 ## Hooks
@@ -242,7 +242,7 @@ The `getViewportSize` utility (used internally by `ViewportSize`) uses a **zoom-
 1. **Web Mercator Formula**: Calculates meters per pixel using `156543.03392 × cos(lat × π/180) / 2^zoom`
 2. **Pixel-Based Dimensions**: Multiplies viewport pixel dimensions by meters-per-pixel
 3. **Latitude Adjustment**: Accounts for Mercator projection distortion at different latitudes
-4. **Unit Conversion**: Converts meters to requested unit (km, m, nm, mi, ft)
+4. **Unit Conversion**: Converts meters to requested unit (km, m, NM, mi, ft)
 5. **Formats Output**: Uses provided formatter to localize numbers
 
 This approach provides stable results without the edge cases of bounds-based calculations, making it ideal for quick spatial orientation (not precision measurement).
@@ -329,7 +329,7 @@ getViewportSize({
   zoom: 5,
   width: 800,
   height: 600,
-  unit: 'nm',
+  unit: 'NM',
 });
 // Returns: "612 x 459 NM"
 
@@ -341,7 +341,7 @@ getViewportSize({
   height: 600,
   unit: 'km',
 });
-// Returns: "113 x 85 KM"
+// Returns: "113 x 85 km"
 
 // With useMapViewport for dynamic updates
 function CustomViewportDisplay({ mapId }: { mapId: UniqueId }) {
@@ -350,7 +350,7 @@ function CustomViewportDisplay({ mapId }: { mapId: UniqueId }) {
   return (
     <div className="space-y-1">
       <div>Kilometers: {getViewportSize({ ...viewport, unit: 'km' })}</div>
-      <div>Nautical Miles: {getViewportSize({ ...viewport, unit: 'nm' })}</div>
+      <div>Nautical Miles: {getViewportSize({ ...viewport, unit: 'NM' })}</div>
       <div>Miles: {getViewportSize({ ...viewport, unit: 'mi' })}</div>
     </div>
   );
@@ -365,7 +365,7 @@ function CustomViewportDisplay({ mapId }: { mapId: UniqueId }) {
   zoom: number;                  // Zoom level for meters-per-pixel calculation
   width: number;                 // Viewport width in pixels
   height: number;                // Viewport height in pixels
-  unit?: SupportedDistanceUnit;  // 'km' | 'm' | 'nm' | 'mi' | 'ft' (default: 'nm')
+  unit?: SupportedDistanceUnit;  // 'km' | 'm' | 'NM' | 'mi' | 'ft' (default: 'NM')
   formatter?: Intl.NumberFormat; // Custom number formatter (default: en-US)
 }
 ```
@@ -414,8 +414,8 @@ import type {
 } from '@accelint/map-toolkit/deckgl/base-map';
 import type {
   DistanceUnit,
-  DistanceUnitAbbreviation,
-} from '@accelint/map-toolkit/shared/units';
+  DistanceUnitSymbol,
+} from '@accelint/constants/units';
 
 // Bounds type
 type Bounds = [
@@ -428,8 +428,8 @@ type Bounds = [
 // Geographic coordinate
 type GeoCoordinate = [longitude: number, latitude: number];
 
-// Supported units (derived from shared/units)
-type SupportedDistanceUnit = DistanceUnitAbbreviation; // 'km' | 'm' | 'nm' | 'mi' | 'ft'
+// Supported units (derived from @accelint/constants/units)
+type SupportedDistanceUnit = DistanceUnitSymbol; // 'km' | 'm' | 'NM' | 'mi' | 'ft'
 
 // Full Turf.js unit names (for use with Turf functions)
 type DistanceUnit = 'kilometers' | 'meters' | 'nauticalmiles' | 'miles' | 'feet';
@@ -446,25 +446,32 @@ type MapViewportPayload = {
 };
 ```
 
-### Shared Units Module
+### Shared Units
 
-The `@accelint/map-toolkit/shared/units` module provides unit conversion utilities used across map-toolkit:
+Distance unit symbols and types are defined in `@accelint/constants/units`:
 
 ```tsx
 import {
-  DISTANCE_UNIT_ABBREVIATIONS,
+  DISTANCE_UNIT_SYMBOLS,
+  type DistanceUnit,
+  type DistanceUnitSymbol,
+} from '@accelint/constants/units';
+
+// DISTANCE_UNIT_SYMBOLS maps Turf.js unit names to SI-compliant symbols:
+// { kilometers: 'km', meters: 'm', nauticalmiles: 'NM', miles: 'mi', feet: 'ft' }
+```
+
+Map-toolkit-specific helpers are in `@accelint/map-toolkit/shared/units`:
+
+```tsx
+import {
   DEFAULT_DISTANCE_UNITS,
-  getDistanceUnitFromAbbreviation,
-  getDistanceUnitAbbreviation,
+  getDistanceUnitFromSymbol,
 } from '@accelint/map-toolkit/shared/units';
 
-// Convert abbreviation to Turf.js unit name
-getDistanceUnitFromAbbreviation('nm'); // 'nauticalmiles'
-getDistanceUnitFromAbbreviation('km'); // 'kilometers'
-
-// Convert Turf.js unit name to abbreviation
-getDistanceUnitAbbreviation('nauticalmiles'); // 'nm'
-getDistanceUnitAbbreviation('kilometers');    // 'km'
+// Convert symbol to Turf.js unit name
+getDistanceUnitFromSymbol('NM'); // 'nauticalmiles'
+getDistanceUnitFromSymbol('km'); // 'kilometers'
 
 // Default units for measurements
 DEFAULT_DISTANCE_UNITS; // 'kilometers'

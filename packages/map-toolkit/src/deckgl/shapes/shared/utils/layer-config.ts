@@ -12,14 +12,16 @@
 
 import {
   DEFAULT_DISTANCE_UNITS,
-  type DistanceUnit,
-  type DistanceUnitAbbreviation,
-  getDistanceUnitFromAbbreviation,
+  getDistanceUnitFromSymbol,
 } from '@/shared/units';
 import {
   DEFAULT_EDIT_HANDLE_COLOR,
   EDITABLE_LAYER_SUBLAYER_PROPS,
 } from '../constants';
+import type {
+  DistanceUnit,
+  DistanceUnitSymbol,
+} from '@accelint/constants/units';
 import type { Color } from '@deck.gl/core';
 
 /**
@@ -39,7 +41,7 @@ export type EditableLayerDefaultProps = {
   _subLayerProps: typeof EDITABLE_LAYER_SUBLAYER_PROPS;
 };
 
-let cachedAbbrev: DistanceUnitAbbreviation | undefined | null = null;
+let cachedSymbol: DistanceUnitSymbol | undefined | null = null;
 let cachedProps: EditableLayerDefaultProps | undefined;
 
 /**
@@ -50,7 +52,7 @@ let cachedProps: EditableLayerDefaultProps | undefined;
  * - Mode configuration with distance units
  * - Sublayer props for tooltips and handles
  *
- * @param unitAbbrev - Optional unit abbreviation (e.g., 'km', 'mi'). Defaults to DEFAULT_DISTANCE_UNITS.
+ * @param unitSymbol - Optional unit symbol (e.g., 'km', 'mi'). Defaults to DEFAULT_DISTANCE_UNITS.
  * @returns Default props to spread onto EditableGeoJsonLayer.
  *
  * @example
@@ -62,20 +64,19 @@ let cachedProps: EditableLayerDefaultProps | undefined;
  * ```
  */
 export function getDefaultEditableLayerProps(
-  unitAbbrev?: DistanceUnitAbbreviation,
+  unitSymbol?: DistanceUnitSymbol,
 ): EditableLayerDefaultProps {
-  if (cachedAbbrev !== null && cachedAbbrev === unitAbbrev && cachedProps) {
+  if (cachedSymbol !== null && cachedSymbol === unitSymbol && cachedProps) {
     return cachedProps;
   }
 
-  cachedAbbrev = unitAbbrev;
+  cachedSymbol = unitSymbol;
   cachedProps = {
     getEditHandlePointColor: DEFAULT_EDIT_HANDLE_COLOR,
     getEditHandlePointOutlineColor: DEFAULT_EDIT_HANDLE_COLOR,
     modeConfig: {
-      distanceUnits: unitAbbrev
-        ? (getDistanceUnitFromAbbreviation(unitAbbrev) ??
-          DEFAULT_DISTANCE_UNITS)
+      distanceUnits: unitSymbol
+        ? (getDistanceUnitFromSymbol(unitSymbol) ?? DEFAULT_DISTANCE_UNITS)
         : DEFAULT_DISTANCE_UNITS,
     },
     // biome-ignore lint/style/useNamingConvention: deck.gl API convention

@@ -40,5 +40,9 @@ export const DISTANCE_UNIT_SYMBOLS = {
   feet: 'ft',
 } as const;
 
-export type DistanceUnitSymbol =
-  (typeof DISTANCE_UNIT_SYMBOLS)[keyof typeof DISTANCE_UNIT_SYMBOLS];
+/**
+ * Turf.js-compatible unit names for distance calculations.
+ */
+export type DistanceUnit = keyof typeof DISTANCE_UNIT_SYMBOLS;
+
+export type DistanceUnitSymbol = (typeof DISTANCE_UNIT_SYMBOLS)[DistanceUnit];

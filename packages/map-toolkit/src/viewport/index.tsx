@@ -10,12 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-export {
-  DISTANCE_UNIT_ABBREVIATIONS,
-  type DistanceUnit,
-  type DistanceUnitAbbreviation,
-  getDistanceUnitFromAbbreviation,
-} from '../shared/units';
+export { getDistanceUnitFromSymbol } from '../shared/units';
 export {
   clearViewportState,
   useMapViewport,

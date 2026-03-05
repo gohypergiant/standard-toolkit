@@ -10,10 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
+import type { DistanceUnitSymbol } from '@accelint/constants/units';
 import type { Bounds } from '../deckgl/base-map/types';
-import type { DistanceUnitAbbreviation } from '../shared/units';
 
-export type SupportedDistanceUnit = DistanceUnitAbbreviation;
+export type SupportedDistanceUnit = DistanceUnitSymbol;
 
 export type GetViewportSizeArgs = {
   /** Geographic bounds, undefined if viewport not yet initialized */

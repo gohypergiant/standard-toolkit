@@ -35,7 +35,7 @@ describe('layer-config', () => {
       ['km', 'kilometers'],
       ['mi', 'miles'],
       ['m', 'meters'],
-      ['nm', 'nauticalmiles'],
+      ['NM', 'nauticalmiles'],
       ['ft', 'feet'],
     ] as const)('should resolve abbreviation "%s" to "%s"', (abbrev, expected) => {
       const result = getDefaultEditableLayerProps(abbrev);

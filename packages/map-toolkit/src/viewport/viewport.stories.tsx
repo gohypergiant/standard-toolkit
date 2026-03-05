@@ -26,7 +26,7 @@ const meta: Meta = {
   argTypes: {
     unit: {
       control: 'select',
-      options: ['km', 'm', 'nm', 'mi', 'ft'],
+      options: ['km', 'm', 'NM', 'mi', 'ft'],
     },
   },
 };

@@ -20,7 +20,7 @@ describe('getViewportSize', () => {
       zoom: 5,
       width: 800,
       height: 600,
-      unit: 'nm',
+      unit: 'NM',
     });
     // Should return a formatted string with calculated distances
     expect(result).toMatch(/^\d{1,3}(,\d{3})* x \d{1,3}(,\d{3})* NM$/);
@@ -86,7 +86,7 @@ describe('getViewportSize', () => {
       zoom: 5,
       width: 800,
       height: 600,
-      unit: 'nm',
+      unit: 'NM',
     });
     expect(result).toBe('-- x -- NM');
   });
@@ -94,7 +94,7 @@ describe('getViewportSize', () => {
   it.each([
     ['km', 'km'],
     ['m', 'm'],
-    ['nm', 'NM'],
+    ['NM', 'NM'],
     ['mi', 'mi'],
     ['ft', 'ft'],
   ] as const)('should display SI-correct symbol for unit abbreviation %s', (unit, expectedSymbol) => {
@@ -118,7 +118,7 @@ describe('getViewportSize', () => {
       zoom: 2,
       width,
       height,
-      unit: 'nm',
+      unit: 'NM',
     });
 
     const highZoomResult = getViewportSize({
@@ -126,7 +126,7 @@ describe('getViewportSize', () => {
       zoom: 8,
       width,
       height,
-      unit: 'nm',
+      unit: 'NM',
     });
 
     // Extract width values
@@ -152,7 +152,7 @@ describe('getViewportSize', () => {
       zoom,
       width: 400,
       height: 300,
-      unit: 'nm',
+      unit: 'NM',
     });
 
     const largeViewport = getViewportSize({
@@ -160,7 +160,7 @@ describe('getViewportSize', () => {
       zoom,
       width: 800,
       height: 600,
-      unit: 'nm',
+      unit: 'NM',
     });
 
     // Extract width values
@@ -190,7 +190,7 @@ describe('getViewportSize', () => {
       zoom,
       width,
       height,
-      unit: 'nm',
+      unit: 'NM',
     });
 
     // Near pole
@@ -199,7 +199,7 @@ describe('getViewportSize', () => {
       zoom,
       width,
       height,
-      unit: 'nm',
+      unit: 'NM',
     });
 
     // Extract width values
@@ -222,7 +222,7 @@ describe('getViewportSize', () => {
       zoom: 1,
       width: 1024,
       height: 768,
-      unit: 'nm',
+      unit: 'NM',
     });
     expect(result).toMatch(/^\d{1,3}(,\d{3})* x \d{1,3}(,\d{3})* NM$/);
   });
@@ -239,7 +239,7 @@ describe('getViewportSize', () => {
       zoom,
       width,
       height,
-      unit: 'nm',
+      unit: 'NM',
     });
 
     const result2 = getViewportSize({
@@ -247,7 +247,7 @@ describe('getViewportSize', () => {
       zoom,
       width,
       height,
-      unit: 'nm',
+      unit: 'NM',
     });
 
     // Width should be nearly the same (small differences due to latitude)
