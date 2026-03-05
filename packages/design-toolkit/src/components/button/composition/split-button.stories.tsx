@@ -55,15 +55,21 @@ const chevronStyle = (isOpen: boolean) => ({
   transition: 'transform 150ms',
 });
 
+const iconButtonStyle = 'rounded-r-none';
+const menuButtonStyle = 'rounded-l-none w-[12px] min-w-[12px] p-0';
+
 export const Default: Story = {
   render: (args) => {
     const [isOpen, setIsOpen] = useState(false);
 
-    console.log(isOpen);
-
     return (
       <div className='flex flex-row'>
-        <Button variant='icon' color='mono-muted' isDisabled={args.isDisabled}>
+        <Button
+          variant='icon'
+          color='mono-muted'
+          isDisabled={args.isDisabled}
+          className={iconButtonStyle}
+        >
           <Icon>
             <Placeholder />
           </Icon>
@@ -74,7 +80,7 @@ export const Default: Story = {
             <ToggleButton
               variant='icon'
               color={args.buttonColor}
-              className='w-[12px] min-w-[12px] p-0'
+              className={menuButtonStyle}
               isDisabled={args.isDisabled}
               isSelected={isOpen}
             >
