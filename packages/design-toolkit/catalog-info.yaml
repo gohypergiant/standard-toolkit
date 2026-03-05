@@ -13,7 +13,7 @@ metadata:
 
     accelint_biome-config@1.1.0, accelint_bus@4.0.0, accelint_core@0.6.0,
     accelint_design-foundation@3.0.1, accelint_geo@0.6.0, accelint_icons@2.2.0,
-    accelint_logger@1.0.0, accelint_postcss-tailwind-css-modules@1.0.1,
+    accelint_logger@1.0.1, accelint_postcss-tailwind-css-modules@1.0.1,
     accelint_prettier-config@0.2.1, accelint_temporal@0.1.4,
     accelint_typescript-config@0.1.4, accelint_vitest-config@0.1.6
   annotations:
