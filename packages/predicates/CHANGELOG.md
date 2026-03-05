@@ -1,5 +1,12 @@
 # @accelint/predicates
 
+## 0.5.1
+
+### Patch Changes
+
+- Updated dependencies [162895c]
+  - @accelint/core@0.6.0
+
 ## 0.5.0
 
 ### Minor Changes
