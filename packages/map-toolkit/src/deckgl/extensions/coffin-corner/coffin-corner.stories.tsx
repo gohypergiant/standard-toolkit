@@ -70,9 +70,9 @@ const LAYER_ID = 'icons';
 const coffinCornerExtension = new CoffinCornerExtension();
 
 function CoffinCornerDemo({
-  coffinCornerColor,
+  selectedCoffinCornerColor,
 }: {
-  coffinCornerColor: Rgba255Tuple;
+  selectedCoffinCornerColor: Rgba255Tuple;
 }) {
   const { selectedId, hoveredId } = useCoffinCorner(MAP_ID, LAYER_ID);
 
@@ -95,7 +95,7 @@ function CoffinCornerDemo({
           extensions={[coffinCornerExtension]}
           selectedEntityId={selectedId}
           hoveredEntityId={hoveredId}
-          coffinCornerColor={coffinCornerColor}
+          selectedCoffinCornerColor={selectedCoffinCornerColor}
         />
       </BaseMap>
 
@@ -111,17 +111,18 @@ function CoffinCornerDemo({
 
 export const Default: Story = {
   args: {
-    coffinCornerColor: [57, 183, 250, 255],
+    selectedCoffinCornerColor: [57, 183, 250, 255],
   },
   argTypes: {
-    coffinCornerColor: {
+    selectedCoffinCornerColor: {
       control: { type: 'object' },
-      description: 'Coffin corner color [R, G, B, A] with values 0-255',
+      description:
+        'Selected coffin corner color [R, G, B, A] with values 0-255',
     },
   },
   render: (args) => (
     <CoffinCornerDemo
-      coffinCornerColor={args.coffinCornerColor as Rgba255Tuple}
+      selectedCoffinCornerColor={args.selectedCoffinCornerColor as Rgba255Tuple}
     />
   ),
 };

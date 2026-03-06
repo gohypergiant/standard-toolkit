@@ -107,7 +107,7 @@ export function SelectableSymbols() {
 |------|------|-------------|
 | `selectedEntityId` | `EntityId \| undefined` | ID of the selected entity (bracket + fill indicator) |
 | `hoveredEntityId` | `EntityId \| undefined` | ID of the hovered entity (bracket indicator) |
-| `coffinCornerColor` | `[R, G, B, A]` (0–255) | Bracket color override (default: `[57, 183, 250, 255]`) |
+| `selectedCoffinCornerColor` | `[R, G, B, A]` (0–255) | Coffin corner color override when selected (default: `[57, 183, 250, 255]`) |
 
 > **Note:** Stories that use `useCoffinCorner` must render their own `<BaseMap>` with a dedicated `uuid()` instead of using the `withDeckGL()` decorator. See the `withDeckGL` JSDoc for details.
 

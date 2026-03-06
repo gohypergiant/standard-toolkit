@@ -29,7 +29,7 @@ export type CoffinCornerExtensionProps<TLayerProps = unknown> = {
    * Alpha modulates the bracket opacity.
    * @default [57, 183, 250, 255] (#39B7FA, fully opaque)
    */
-  coffinCornerColor?: Rgba255Tuple;
+  selectedCoffinCornerColor?: Rgba255Tuple;
   /**
    * Accessor to extract an entity ID from a data item. Matched against
    * `selectedEntityId` and `hoveredEntityId` to drive the shader state.

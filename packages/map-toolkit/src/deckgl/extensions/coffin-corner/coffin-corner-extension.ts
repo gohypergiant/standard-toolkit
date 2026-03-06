@@ -239,7 +239,7 @@ const DEFAULT_SELECTED_CORNER_FILL: Rgba255Tuple = [57, 183, 250, 255];
  *   getEntityId: (d) => d.properties?.shapeId,
  *   selectedEntityId: selectedShapeId,
  *   hoveredEntityId: hoveredShapeId,
- *   coffinCornerColor: [255, 0, 0, 255],
+ *   selectedCoffinCornerColor: [255, 0, 0, 255],
  * })
  * ```
  */
@@ -249,7 +249,10 @@ export class CoffinCornerExtension extends LayerExtension {
   static override defaultProps = {
     selectedEntityId: { type: 'value', value: undefined },
     hoveredEntityId: { type: 'value', value: undefined },
-    coffinCornerColor: { type: 'color', value: DEFAULT_SELECTED_CORNER_FILL },
+    selectedCoffinCornerColor: {
+      type: 'color',
+      value: DEFAULT_SELECTED_CORNER_FILL,
+    },
     getEntityId: {
       type: 'accessor',
       value: (item: { id: EntityId }) => item.id,
@@ -342,13 +345,13 @@ export class CoffinCornerExtension extends LayerExtension {
   }
 
   /**
-   * Pushes the normalized `coffinCornerColor` to the shader's `highlightColor` uniform
+   * Pushes the normalized `selectedCoffinCornerColor` to the shader's `highlightColor` uniform
    * each frame.
    */
   override draw(this: CoffinCornerLayer) {
     const color =
-      (this.props as unknown as CoffinCornerExtensionProps).coffinCornerColor ??
-      DEFAULT_SELECTED_CORNER_FILL;
+      (this.props as unknown as CoffinCornerExtensionProps)
+        .selectedCoffinCornerColor ?? DEFAULT_SELECTED_CORNER_FILL;
 
     this.setShaderModuleProps({
       coffinCorner: {

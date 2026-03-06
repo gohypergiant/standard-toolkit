@@ -397,8 +397,8 @@ describe('CoffinCornerExtension', () => {
 
   describe('draw', () => {
     it('should normalize RGBA 255 values to 0-1 for shader uniform', () => {
-      const coffinCornerColor: Rgba255Tuple = [255, 128, 0, 255];
-      const layer = createMockLayer({ coffinCornerColor });
+      const selectedCoffinCornerColor: Rgba255Tuple = [255, 128, 0, 255];
+      const layer = createMockLayer({ selectedCoffinCornerColor });
 
       extension.draw.call(layer);
 
@@ -409,8 +409,8 @@ describe('CoffinCornerExtension', () => {
       });
     });
 
-    it('should use default color when coffinCornerColor is undefined', () => {
-      const layer = createMockLayer({ coffinCornerColor: undefined });
+    it('should use default color when selectedCoffinCornerColor is undefined', () => {
+      const layer = createMockLayer({ selectedCoffinCornerColor: undefined });
 
       extension.draw.call(layer);
 
@@ -423,8 +423,8 @@ describe('CoffinCornerExtension', () => {
     });
 
     it('should pass alpha channel to shader', () => {
-      const coffinCornerColor: Rgba255Tuple = [100, 100, 100, 127];
-      const layer = createMockLayer({ coffinCornerColor });
+      const selectedCoffinCornerColor: Rgba255Tuple = [100, 100, 100, 127];
+      const layer = createMockLayer({ selectedCoffinCornerColor });
 
       extension.draw.call(layer);
 
