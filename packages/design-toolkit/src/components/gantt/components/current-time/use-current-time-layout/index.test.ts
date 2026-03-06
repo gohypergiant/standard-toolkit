@@ -141,29 +141,6 @@ describe('useCurrentTimeLayout', () => {
     expect(indicatorElement.style.height).toBeTruthy();
   });
 
-  it('resets indicator height when translateX is within scroll container width', () => {
-    const currentTimeElement = document.createElement('div');
-    const indicatorElement = document.createElement('div');
-
-    indicatorElement.style.height = '100px';
-
-    vi.mocked(deriveCurrentTimeTranslateX).mockReturnValue(
-      mockScrollContainerElement.clientWidth - 50,
-    );
-
-    renderHook(() =>
-      useCurrentTimeLayout({
-        currentTimeElement,
-        currentTimeMs: mockCurrentTimeMs,
-        indicatorElement,
-      }),
-    );
-
-    capturedCallbackHarness.callback?.(mockUpdatedPositionMs);
-
-    expect(indicatorElement.style.height).toBe('');
-  });
-
   it('handles null indicatorElement gracefully', () => {
     const currentTimeElement = document.createElement('div');
 

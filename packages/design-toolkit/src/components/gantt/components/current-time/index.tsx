@@ -22,7 +22,7 @@ function CurrentTimeInner({ currentTimeMs }: { currentTimeMs: number }) {
   const [element, setElement] = useState<HTMLDivElement | null>(null);
   const indicatorElementRef = useRef<HTMLDivElement>(null);
 
-  const { labelElementRef, totalIndicatorHeight } = useCurrentTimeLayout({
+  const { labelElementRef } = useCurrentTimeLayout({
     currentTimeElement: element,
     currentTimeMs,
     indicatorElement: indicatorElementRef.current,
@@ -44,7 +44,6 @@ function CurrentTimeInner({ currentTimeMs }: { currentTimeMs: number }) {
       <div
         ref={indicatorElementRef}
         className={styles['current-time-indicator']}
-        data-height={totalIndicatorHeight}
       />
     </div>
   );
