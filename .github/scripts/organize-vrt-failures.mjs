@@ -59,6 +59,7 @@ async function main() {
 
   console.log(`Found ${actualFiles.length} failure(s)`);
 
+  await fs.rm(failuresDir, { recursive: true, force: true });
   await fs.mkdir(failuresDir, { recursive: true });
 
   let organized = 0;

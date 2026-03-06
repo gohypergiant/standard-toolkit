@@ -147,8 +147,8 @@ jobs:
       - name: Check for changes
         id: changes
         run: |
-          MODIFIED=$(git diff --name-only -- '*.png')
-          UNTRACKED=$(git ls-files --others --exclude-standard -- '*.png')
+          MODIFIED=$(git diff --name-only -- 'apps/next/src/features/**/__screenshots__/**/*.png')
+          UNTRACKED=$(git ls-files --others --exclude-standard -- 'apps/next/src/features/**/__screenshots__/**/*.png')
 
           if [ -z "$MODIFIED" ] && [ -z "$UNTRACKED" ]; then
             echo "has_changes=false" >> $GITHUB_OUTPUT
@@ -169,7 +169,7 @@ jobs:
       - name: Commit and push changes
         if: steps.changes.outputs.has_changes == 'true'
         run: |
-          git add '*.png'
+          git add 'apps/next/src/features/**/__screenshots__/**/*.png'
           git commit -m "chore: update visual regression snapshots
 
           Co-authored-by: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>"
@@ -189,7 +189,7 @@ jobs:
           HAS_FAILURES="${INPUT_HAS_FAILURES:-$DETECTED_HAS_FAILURES}"
           FAILED_FILES="${INPUT_FAILED_FILES:-$DETECTED_FAILED_FILES}"
 
-          if [[ "$HAS_FAILURES" != *"true"* ]]; then
+          if [[ "$HAS_FAILURES" != "true" ]]; then
             echo "**No failing tests detected** - all snapshots are already up to date." >> $GITHUB_STEP_SUMMARY
           elif [ "$HAS_CHANGES" == "true" ]; then
             echo "**Snapshots updated and pushed**" >> $GITHUB_STEP_SUMMARY
