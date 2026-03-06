@@ -18,6 +18,7 @@ import {
   TIMELINE_CHUNK_WIDTH,
 } from '../constants';
 import {
+  deriveCurrentTimeTranslateX,
   deriveHorizontalScrollPosition,
   derivePointElementLayout,
   deriveRangeElementLayout,
@@ -253,6 +254,53 @@ describe('deriveTranslateXValue', () => {
       expect(
         deriveHorizontalScrollPosition(timestampMs, msPerPx, totalBounds),
       ).toBe(expected);
+    });
+  });
+
+  describe('deriveCurrentTimeTranslateX', () => {
+    const renderedRegionBounds = { startMs: 1000, endMs: 2000 };
+    const msPerPx = 10;
+
+    it('calculates translateX when current time equals current position', () => {
+      const currentTimeMs = 1500;
+      const currentPositionMs = 1500;
+
+      const result = deriveCurrentTimeTranslateX(
+        renderedRegionBounds,
+        currentTimeMs,
+        msPerPx,
+        currentPositionMs,
+      );
+
+      expect(result).toBe(0);
+    });
+
+    it('calculates positive translateX when current time is ahead of current position', () => {
+      const currentTimeMs = 1600;
+      const currentPositionMs = 1500;
+
+      const result = deriveCurrentTimeTranslateX(
+        renderedRegionBounds,
+        currentTimeMs,
+        msPerPx,
+        currentPositionMs,
+      );
+
+      expect(result).toBe(10);
+    });
+
+    it('calculates negative translateX when current time is behind current position', () => {
+      const currentTimeMs = 1400;
+      const currentPositionMs = 1500;
+
+      const result = deriveCurrentTimeTranslateX(
+        renderedRegionBounds,
+        currentTimeMs,
+        msPerPx,
+        currentPositionMs,
+      );
+
+      expect(result).toBe(-10);
     });
   });
 });
