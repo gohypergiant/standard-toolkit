@@ -10,40 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
-import React from 'react';
 import { GANTT_ROW_HEIGHT_PX } from '../../constants';
-import { useGanttContext } from '../../context';
-import {
-  shouldRenderRangeElement,
-  timestampWithinBounds,
-} from '../../utils/helpers';
 import styles from './styles.module.css';
 import type { PropsWithChildren } from 'react';
-import type { GanttRowElementProps } from './types';
 
 export function GanttRow({ children, ...rest }: PropsWithChildren) {
-  const { renderedRegionBounds } = useGanttContext();
-  const elements = React.Children.toArray(children).filter(
-    (child): child is React.ReactElement<GanttRowElementProps> => {
-      return React.isValidElement(child);
-    },
-  );
-  const renderedElements = elements.filter((element) => {
-    if ('startMs' in element.props && 'endMs' in element.props) {
-      return shouldRenderRangeElement(renderedRegionBounds, {
-        startMs: element.props.startMs,
-        endMs: element.props.endMs,
-      });
-    }
-
-    if (element.props.timeMs !== undefined) {
-      // render point element if it's within the rendered region
-      return timestampWithinBounds(element.props.timeMs, renderedRegionBounds);
-    }
-
-    return false;
-  });
-
   return (
     <div
       className={styles['row-container']}
@@ -51,7 +22,7 @@ export function GanttRow({ children, ...rest }: PropsWithChildren) {
       // spread props, including virtualizer-augmented style prop, if used
       {...rest}
     >
-      {renderedElements}
+      {children}
     </div>
   );
 }
