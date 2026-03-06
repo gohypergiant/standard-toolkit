@@ -30,9 +30,6 @@
 
   .current-time-indicator {
     @apply fg-accent-primary-bold w-px translate-x-px;
-    --height: attr(data-height px);
-    height: var(--height);
-
     --dash: 6px;
     --gap: 6px;
     --border: 3px;
