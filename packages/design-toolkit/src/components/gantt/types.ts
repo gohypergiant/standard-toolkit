@@ -23,3 +23,5 @@ export type TimelineChunkObject = {
 };
 
 export type TimeBounds = { startMs: number; endMs: number };
+
+export type RowElementColorProp = 'serious' | 'accent' | 'critical';
