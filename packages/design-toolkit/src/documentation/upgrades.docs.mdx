@@ -5,6 +5,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 ### All Release Notes
 [All releases and complete changelog](https://github.com/gohypergiant/standard-toolkit/releases?q=design-toolkit&expanded=true)
 
+* [Upgrade to v9.8.1](#v9_8_1)
 * [Upgrade to v9.1](#v9_1)
 * [Upgrade to v9](#v9)
 * [Upgrade to v8](#v8)
@@ -13,6 +14,20 @@ import { Meta } from '@storybook/addon-docs/blocks';
 * [Upgrade to v5](#v5)
 
 These guides explain how to migrate from Design Toolkit prior versions. If you are migrating from a major release multiple versions behind, note that you will have to make all the changes accumulated through each major release.
+
+<hr />
+<a id="v9_8_1"></a>
+# Upgrade to v9.8.1
+
+### What Changed
+
+The `@react-aria/*`, `@react-stately/*`, `@react-types/*`, and `@internationalized/date` peer dependency ranges have been widened from tilde (`~`) to caret (`^`). This prevents version conflicts when `react-aria-components` resolves newer compatible versions of these sub-packages.
+
+### Migration
+
+If you added `overrides` (or `pnpm.overrides`) for React Aria sub-packages as recommended in the [v9.1 upgrade guide](#v9_1), you can now **remove them**. The widened peer dependency ranges allow these packages to resolve naturally without overrides.
+
+You should keep the `react-aria-components` override at `~1.12.1` if you have it, as that package is still pinned to patch ranges.
 
 <hr />
 <a id="v9_1"></a>
