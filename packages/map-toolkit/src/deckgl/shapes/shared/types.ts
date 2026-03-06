@@ -110,7 +110,7 @@ export type StyleProperties = {
  * Similar to GeoJSON's `Position` (`number[]`) but with stricter typing
  * that guarantees at least two elements.
  */
-export type GeoPosition = [number, number, number?];
+export type GeoPosition = [number, number] | [number, number, number];
 
 /**
  * Circle-specific properties for precise rendering
