@@ -11,58 +11,21 @@
  */
 
 import { useRef, useState } from 'react';
-import {
-  GANTT_CONTAINER_TOP_PADDING_PX,
-  GANTT_CONTAINER_TOP_PX,
-} from '../../constants';
+import { GANTT_CONTAINER_TOP_PX } from '../../constants';
 import { useGanttContext } from '../../context';
 import { formatTimestampLabel } from '../../utils/formatting';
+import { shouldRenderCurrentTime } from '../../utils/helpers';
 import styles from './styles.module.css';
-import { useCurrentTimeTransform } from './use-current-time-transform';
-
-function shouldRenderCurrentTime(
-  currentTimeMs: number,
-  renderedRegionBounds: {
-    startMs: number;
-    endMs: number;
-  },
-) {
-  return (
-    currentTimeMs >= renderedRegionBounds.startMs &&
-    currentTimeMs <= renderedRegionBounds.endMs
-  );
-}
-
-function useDisplayCurrentTime(currentTimeMs: number) {
-  const { renderedRegionBounds } = useGanttContext();
-
-  return shouldRenderCurrentTime(currentTimeMs, renderedRegionBounds);
-}
+import { useCurrentTimeLayout } from './use-current-time-layout';
 
 function CurrentTimeInner({ currentTimeMs }: { currentTimeMs: number }) {
-  const { scrollContainerElement, timelineContainerElement } =
-    useGanttContext();
-  const scrollbarHeight =
-    (scrollContainerElement?.offsetHeight ?? 0) -
-      (scrollContainerElement?.clientHeight ?? 0) || 0;
-  console.log(scrollbarHeight);
   const [element, setElement] = useState<HTMLDivElement | null>(null);
   const indicatorElementRef = useRef<HTMLDivElement>(null);
-  const labelElementRef = useRef<HTMLDivElement>(null);
 
-  const timelineHeight = timelineContainerElement?.clientHeight ?? 0;
-  const labelHeight = labelElementRef.current?.clientHeight ?? 0;
-  const containerHeight = timelineHeight + GANTT_CONTAINER_TOP_PADDING_PX;
-  const indicatorHeightOffset =
-    containerHeight - (GANTT_CONTAINER_TOP_PX + labelHeight);
-  const totalIndicatorHeight =
-    (scrollContainerElement?.clientHeight ?? 0) + indicatorHeightOffset;
-
-  useCurrentTimeTransform({
+  const { labelElementRef, totalIndicatorHeight } = useCurrentTimeLayout({
     currentTimeElement: element,
     currentTimeMs,
     indicatorElement: indicatorElementRef.current,
-    indicatorHeightOffset,
   });
 
   const assignElementRef = (node: HTMLDivElement) => {
@@ -76,7 +39,7 @@ function CurrentTimeInner({ currentTimeMs }: { currentTimeMs: number }) {
       data-top={GANTT_CONTAINER_TOP_PX}
     >
       <div ref={labelElementRef} className={styles['current-time-label']}>
-        {formatTimestampLabel(currentTimeMs)}
+        <span>{formatTimestampLabel(currentTimeMs)}</span>
       </div>
       <div
         ref={indicatorElementRef}
@@ -87,6 +50,17 @@ function CurrentTimeInner({ currentTimeMs }: { currentTimeMs: number }) {
   );
 }
 
+function useDisplayCurrentTime(currentTimeMs: number) {
+  const { renderedRegionBounds } = useGanttContext();
+
+  return shouldRenderCurrentTime(currentTimeMs, renderedRegionBounds);
+}
+
+/**
+ * Needed because parent component does not have access to
+ * Gantt context. Need renderedRegionBounds for conditional
+ * rendering calculation.
+ */
 export function CurrentTime({ currentTimeMs }: { currentTimeMs: number }) {
   const shouldDisplayCurrentTime = useDisplayCurrentTime(currentTimeMs);
 

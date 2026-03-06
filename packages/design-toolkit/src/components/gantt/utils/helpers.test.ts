@@ -17,6 +17,7 @@ import {
   getRenderedRegionBoundsMs,
   getVerticalScrolledPixels,
   getViewableRegionWidth,
+  shouldRenderCurrentTime,
   shouldRenderRangeElement,
   timestampWithinBounds,
 } from './helpers';
@@ -136,6 +137,24 @@ describe('helpers', () => {
         startMs,
         endMs,
       });
+      expect(result).toBe(expected);
+    });
+  });
+
+  describe('shouldRenderCurrentTime', () => {
+    const renderedRegionBounds = { startMs: 1000, endMs: 2000 };
+
+    it.each([
+      ['returns true when current time is at start bound', 1000, true],
+      ['returns true when current time is at end bound', 2000, true],
+      ['returns true when current time is inside bounds', 1500, true],
+      ['returns false when current time is before start bound', 999, false],
+      ['returns false when current time is after end bound', 2001, false],
+    ])('%s', (_description, currentTimeMs, expected) => {
+      const result = shouldRenderCurrentTime(
+        currentTimeMs,
+        renderedRegionBounds,
+      );
       expect(result).toBe(expected);
     });
   });

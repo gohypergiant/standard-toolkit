@@ -10,28 +10,58 @@
  * governing permissions and limitations under the License.
  */
 
-import { useCallback } from 'react';
+import { type RefObject, useCallback, useRef } from 'react';
+import {
+  GANTT_CONTAINER_TOP_PADDING_PX,
+  GANTT_CONTAINER_TOP_PX,
+} from '@/components/gantt/constants';
+import { useGanttContext } from '@/components/gantt/context';
 import { useLayoutSubscription } from '@/components/gantt/hooks/use-layout-subscription';
 import { selectors } from '@/components/gantt/store';
 import { deriveCurrentTimeTranslateX } from '@/components/gantt/utils/layout';
-import { useGanttContext } from '../../context';
 
-type UseCurrentTimeTransformProps = {
+type UseCurrentTimeLayoutProps = {
   currentTimeElement: HTMLDivElement | null;
   currentTimeMs: number;
   indicatorElement: HTMLDivElement | null;
-  indicatorHeightOffset: number;
 };
 
-export function useCurrentTimeTransform({
+type UseCurrentTimeLayoutValue = {
+  labelElementRef: RefObject<HTMLDivElement | null>;
+  totalIndicatorHeight: number;
+};
+
+export function useCurrentTimeLayout({
   currentTimeElement,
   currentTimeMs,
   indicatorElement,
-  indicatorHeightOffset,
-}: UseCurrentTimeTransformProps) {
-  const { renderedRegionBounds, msPerPx, scrollContainerElement } =
-    useGanttContext();
-  const updateElementTranslateX = useCallback(
+}: UseCurrentTimeLayoutProps): UseCurrentTimeLayoutValue {
+  const {
+    renderedRegionBounds,
+    msPerPx,
+    scrollContainerElement,
+    timelineContainerElement,
+  } = useGanttContext();
+
+  const labelElementRef = useRef<HTMLDivElement>(null);
+
+  const timelineHeight = timelineContainerElement?.clientHeight ?? 0;
+  const ganttHeaderHeight = timelineHeight + GANTT_CONTAINER_TOP_PADDING_PX;
+  const labelHeight = labelElementRef.current?.offsetHeight ?? 0;
+
+  // Distance between vertical scrollbar and bottom of label element.
+  // Used as the indicator height when the indicator is visually
+  // located above the vertical scrollbar so that the indicator
+  // dashes aren't overlaid on the scrollbar
+  const indicatorHeightOffset =
+    ganttHeaderHeight - (GANTT_CONTAINER_TOP_PX + labelHeight);
+
+  // Default indicator height when the indicator is not
+  // visually located above the vertical scrollbar.
+  const totalIndicatorHeight =
+    (scrollContainerElement?.clientHeight ?? 0) + indicatorHeightOffset;
+
+  const updateElementLayout = useCallback(
     (currentPositionMs: number) => {
       if (!currentTimeElement) {
         return;
@@ -43,15 +73,18 @@ export function useCurrentTimeTransform({
         msPerPx,
         currentPositionMs,
       );
+
+      currentTimeElement.style.setProperty('--translate-x', `${translateX}px`);
+
       if (scrollContainerElement && indicatorElement) {
         if (translateX >= scrollContainerElement.clientWidth) {
           indicatorElement.style.height = `${indicatorHeightOffset}px`;
-        } else {
-          indicatorElement.style.height = '';
-        }
-      }
 
-      currentTimeElement.style.transform = `translateX(${translateX}px)`;
+          return;
+        }
+
+        indicatorElement.style.height = '';
+      }
     },
     [
       currentTimeElement,
@@ -65,7 +98,9 @@ export function useCurrentTimeTransform({
   );
 
   useLayoutSubscription({
-    callback: updateElementTranslateX,
+    callback: updateElementLayout,
     selector: selectors.currentPositionMs,
   });
+
+  return { labelElementRef, totalIndicatorHeight };
 }
