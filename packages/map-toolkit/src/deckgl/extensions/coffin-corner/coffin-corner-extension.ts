@@ -23,7 +23,22 @@ type CoffinCornerLayer = Layer & {
   };
 };
 
-/** Shader module defining the `highlightColor` uniform for coffin corner brackets. */
+/**
+ * Shader module defining the `highlightColor` uniform for coffin corner brackets.
+ *
+ * @property name - Module identifier used by deck.gl's shader assembly.
+ * @property fs - Fragment shader (GLSL) source declaring the uniform block.
+ * @property uniformTypes - Maps uniform names to WGSL-style type strings for deck.gl's uniform system.
+ *
+ * @remarks
+ * GLSL type reference:
+ *   - `float`   — single decimal number
+ *   - `vec2`    — 2-component vector (x, y)
+ *   - `vec3`    — 3-component vector (x, y, z) or (r, g, b)
+ *   - `vec4`    — 4-component vector (x, y, z, w) or (r, g, b, a)
+ *   - `uniform` — read-only value passed from JS to the GPU each frame
+ *   - `in/out`  — values passed between vertex and fragment shader stages
+ */
 const coffinCornerModule: {
   name: string;
   fs: string;
@@ -32,86 +47,119 @@ const coffinCornerModule: {
   name: 'coffinCorner',
   fs: /* glsl */ `\
 uniform coffinCornerUniforms {
-  vec4 highlightColor;
+  vec4 highlightColor;  // RGBA color, each channel 0.0–1.0
 } coffinCorner;
 `,
   uniformTypes: {
-    highlightColor: 'vec4<f32>',
+    highlightColor: 'vec4<f32>', // WGSL-style type: 4-component vector of 32-bit floats (deck.gl convention)
   },
 };
 
-/** Shader injection config for vertex/fragment attribute passing and SDF bracket rendering. */
+/**
+ * Shader injection config for vertex/fragment attribute passing and SDF bracket rendering.
+ *
+ * deck.gl inject keys follow the pattern `<stage>:<hook>`:
+ *   - `vs:#decl`       — vertex shader, top-level declarations (before main)
+ *   - `vs:#main-end`   — vertex shader, end of main()
+ *   - `fs:#decl`       — fragment shader, top-level declarations (before main)
+ *   - `fs:#main-start` — fragment shader, start of main()
+ */
 const SHADERS = {
   modules: [coffinCornerModule],
   inject: {
-    'vs:#decl': `\
+    'vs:#decl': /* glsl */ `\
 in float instanceSelectedEntity;
 in float instanceHoveredEntity;
-out float v_instanceSelectedEntity;
+out float v_instanceSelectedEntity; // v_ is conventional prefix for "varying"
 out float v_instanceHoveredEntity;
 `,
-    'vs:#main-end': `\
+    'vs:#main-end': /* glsl */ `\
 v_instanceSelectedEntity = instanceSelectedEntity;
 v_instanceHoveredEntity = instanceHoveredEntity;
 `,
-    'fs:#decl': `\
+    'fs:#decl': /* glsl */ `\
 in float v_instanceSelectedEntity;
 in float v_instanceHoveredEntity;
 
-float coffinCorner_sdBox(vec2 p, vec2 b) {
-  vec2 d = abs(p) - b;
-  return length(max(d, 0.0)) + min(max(d.x, d.y), 0.0);
+/**
+ * Signed distance functions (SDF): return negative inside the shape,
+ * zero on the edge, and positive outside. Used for anti-aliased rendering.
+ *
+ * @param position - point to measure distance from
+ * @param halfExtents - half-width and half-height of the box (distance from center to each edge)
+ * @returns signed distance: negative inside, zero on edge, positive outside
+ */
+float coffinCorner_signedDistBox(vec2 position, vec2 halfExtents) {
+  vec2 dist = abs(position) - halfExtents;
+  return length(max(dist, 0.0)) + min(max(dist.x, dist.y), 0.0);
 }
 
-float coffinCorner_sdLCorner(vec2 p, float len, float wid) {
-  float h = coffinCorner_sdBox(p - vec2(len * 0.5, 0.0), vec2(len * 0.5, wid * 0.5));
-  float v = coffinCorner_sdBox(p - vec2(0.0, len * 0.5), vec2(wid * 0.5, len * 0.5));
-  return min(h, v);
+/**
+ * Signed distance to an L-shaped bracket arm (horizontal + vertical box union).
+ *
+ * @param position - point to measure distance from
+ * @param length - length of each arm of the L-shape (fraction of icon size)
+ * @param width - stroke width of each arm (fraction of icon size)
+ * @returns signed distance to the nearest arm of the L-shape
+ */
+float coffinCorner_signedDistBracketArm(vec2 position, float length, float width) {
+  float horizontalDist = coffinCorner_signedDistBox(position - vec2(length * 0.5, 0.0), vec2(length * 0.5, width * 0.5));
+  float verticalDist = coffinCorner_signedDistBox(position - vec2(0.0, length * 0.5), vec2(width * 0.5, length * 0.5));
+  return min(horizontalDist, verticalDist);
 }
 
-float coffinCorner_allCorners(vec2 p, vec2 halfSize) {
-  float len = 0.26;   // bracket arm ≈ 26% of icon
-  float wid = 0.07;   // bracket stroke ≈ 7% of icon
+/**
+ * Minimum signed distance from a point to any of the four corner brackets.
+ *
+ * @param position - point in normalized icon space (-0.5 to 0.5)
+ * @returns signed distance to the nearest corner bracket
+ */
+float coffinCorner_allCorners(vec2 position) {
+  const vec2 halfSize = vec2(0.5);
+  float armLength = 0.26;   // bracket arm ≈ 26% of icon
+  float armWidth = 0.07;    // bracket stroke ≈ 7% of icon
 
-  vec2 top_left = p + halfSize;
-  vec2 top_right = vec2(halfSize.x - p.x, p.y + halfSize.y);
-  vec2 bottom_left = vec2(p.x + halfSize.x, halfSize.y - p.y);
-  vec2 bottom_right = halfSize - p;
+  vec2 topLeft = position + halfSize;
+  vec2 topRight = vec2(halfSize.x - position.x, position.y + halfSize.y);
+  vec2 bottomLeft = vec2(position.x + halfSize.x, halfSize.y - position.y);
+  vec2 bottomRight = halfSize - position;
 
   return min(
-    min(coffinCorner_sdLCorner(top_left, len, wid),
-        coffinCorner_sdLCorner(top_right, len, wid)),
-    min(coffinCorner_sdLCorner(bottom_left, len, wid),
-        coffinCorner_sdLCorner(bottom_right, len, wid))
+    min(coffinCorner_signedDistBracketArm(topLeft, armLength, armWidth),
+        coffinCorner_signedDistBracketArm(topRight, armLength, armWidth)),
+    min(coffinCorner_signedDistBracketArm(bottomLeft, armLength, armWidth),
+        coffinCorner_signedDistBracketArm(bottomRight, armLength, armWidth))
   );
 }
 `,
-    'fs:#main-start': `\
-  geometry.uv = uv;
-  {
+    'fs:#main-start': /* glsl */ `\
+  geometry.uv = uv; // uv = texture coordinate of the current pixel on the icon quad (ranges -1 to 1, center is 0,0)
+  { // Scope block: prevents cc_ variables from leaking into the host fragment shader
     bool cc_isHovered = v_instanceHoveredEntity > 0.5;
     bool cc_isSelected = v_instanceSelectedEntity > 0.5;
 
     if (cc_isHovered || cc_isSelected) {
-      vec2 halfSize = vec2(0.5);
-      vec2 p = uv * 0.5;  // map -1..1 to -0.5..0.5
+      vec2 cc_position = uv * 0.5;  // map -1..1 to -0.5..0.5
 
-      // Check if inside the icon quad
-      bool cc_insideBox = max(abs(p.x), abs(p.y)) < halfSize.x;
+      // Check if inside the icon quad (the rectangular surface the icon texture is drawn on)
+      bool cc_insideBox = max(abs(cc_position.x), abs(cc_position.y)) < 0.5;
 
-      float cc_d = coffinCorner_allCorners(p, halfSize);
+      // Distance from this pixel to the nearest bracket edge — drives stroke and fill alpha below
+      float cc_cornerDist = coffinCorner_allCorners(cc_position);
 
       // Outline width (proportional to icon)
       float cc_stroke = 0.026;
       // Anti-alias band: ~1 screen pixel regardless of icon size
-      float cc_aa = fwidth(cc_d);
+      float cc_aa = fwidth(cc_cornerDist);
 
-      // Two alphas: stroke (dilated) and fill (normal)
-      float cc_strokeAlpha = 1.0 - smoothstep(0.0, cc_aa, cc_d + cc_stroke);
-      float cc_fillAlpha = 1.0 - smoothstep(0.0, cc_aa, cc_d);
+      // Two alphas used to layer the bracket rendering:
+      // strokeAlpha: expanded (dilated) shape — adds cc_stroke to push the edge outward, creating a black border
+      // fillAlpha: true SDF edge — the actual bracket shape filled with the highlight color
+      float cc_strokeAlpha = 1.0 - smoothstep(0.0, cc_aa, cc_cornerDist + cc_stroke);
+      float cc_fillAlpha = 1.0 - smoothstep(0.0, cc_aa, cc_cornerDist);
 
       if (cc_insideBox) {
-        // Sample icon texture
+        // Sample icon texture (iconsTexture and vTextureCoords are provided by IconLayer's shader)
         vec4 iconColor = texture(iconsTexture, vTextureCoords);
 
         // Start with background fill (only when hovering)
@@ -136,13 +184,13 @@ float coffinCorner_allCorners(vec2 p, vec2 halfSize) {
           vec4 cc_cornerColor = cc_isSelected
             ? coffinCorner.highlightColor
             : vec4(1.0);  // White fully opaque for hover-only
-          float cc_modAlpha = cc_fillAlpha * cc_cornerColor.a;
-          result.rgb = cc_cornerColor.rgb * cc_modAlpha + result.rgb * (1.0 - cc_modAlpha);
-          result.a = cc_modAlpha + result.a * (1.0 - cc_modAlpha);
+          float cc_blendedAlpha = cc_fillAlpha * cc_cornerColor.a;
+          result.rgb = cc_cornerColor.rgb * cc_blendedAlpha + result.rgb * (1.0 - cc_blendedAlpha);
+          result.a = cc_blendedAlpha + result.a * (1.0 - cc_blendedAlpha);
         }
 
-        fragColor = result;
-        DECKGL_FILTER_COLOR(fragColor, geometry);
+        fragColor = result; // fragColor is deck.gl's built-in output variable for the final pixel color
+        DECKGL_FILTER_COLOR(fragColor, geometry); // deck.gl hook: allows other extensions/filters to modify the color
         return;
       }
     }
@@ -151,8 +199,8 @@ float coffinCorner_allCorners(vec2 p, vec2 halfSize) {
   },
 };
 
-/** Default bracket fill color: #39B7FA fully opaque. */
-const DEFAULT_CORNER_COLOR: Rgba255Tuple = [57, 183, 250, 255];
+/** Default bracket fill color when selected: #39B7FA fully opaque. */
+const DEFAULT_SELECTED_CORNER_FILL: Rgba255Tuple = [57, 183, 250, 255];
 
 // -- Extension class --
 
@@ -163,6 +211,11 @@ const DEFAULT_CORNER_COLOR: Rgba255Tuple = [57, 183, 250, 255];
  * Driven by explicit `hoveredEntityId` and `selectedEntityId` props rather than
  * deck.gl's built-in autoHighlight. Data objects are identified via the
  * `getEntityId` accessor (defaults to `item => item.id`).
+ *
+ * **IconLayer-only** — The fragment shader samples `iconsTexture` and reads
+ * `vTextureCoords`, which are uniforms/varyings specific to deck.gl's IconLayer.
+ * Using this extension on other layer types will produce shader compilation errors.
+ * Note: can be used on layers that extend IconLayer, like map-toolkit's SymbolLayer
  *
  * The host layer must set `pickable` to enable picking events.
  *
@@ -196,7 +249,7 @@ export class CoffinCornerExtension extends LayerExtension {
   static override defaultProps = {
     selectedEntityId: { type: 'value', value: undefined },
     hoveredEntityId: { type: 'value', value: undefined },
-    coffinCornerColor: { type: 'color', value: DEFAULT_CORNER_COLOR },
+    coffinCornerColor: { type: 'color', value: DEFAULT_SELECTED_CORNER_FILL },
     getEntityId: {
       type: 'accessor',
       value: (item: { id: EntityId }) => item.id,
@@ -295,7 +348,7 @@ export class CoffinCornerExtension extends LayerExtension {
   override draw(this: CoffinCornerLayer) {
     const color =
       (this.props as unknown as CoffinCornerExtensionProps).coffinCornerColor ??
-      DEFAULT_CORNER_COLOR;
+      DEFAULT_SELECTED_CORNER_FILL;
 
     this.setShaderModuleProps({
       coffinCorner: {
