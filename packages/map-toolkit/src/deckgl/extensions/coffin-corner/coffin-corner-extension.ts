@@ -134,65 +134,63 @@ float coffinCorner_allCorners(vec2 position) {
 `,
     'fs:#main-start': /* glsl */ `\
   geometry.uv = uv; // uv = texture coordinate of the current pixel on the icon quad (ranges -1 to 1, center is 0,0)
-  { // Scope block: prevents cc_ variables from leaking into the host fragment shader
-    bool cc_isHovered = v_instanceHoveredEntity > 0.5;
-    bool cc_isSelected = v_instanceSelectedEntity > 0.5;
+  bool cc_isHovered = v_instanceHoveredEntity > 0.5;
+  bool cc_isSelected = v_instanceSelectedEntity > 0.5;
 
-    if (cc_isHovered || cc_isSelected) {
-      vec2 cc_position = uv * 0.5;  // map -1..1 to -0.5..0.5
+  if (cc_isHovered || cc_isSelected) {
+    vec2 cc_position = uv * 0.5;  // map -1..1 to -0.5..0.5
 
-      // Check if inside the icon quad (the rectangular surface the icon texture is drawn on)
-      bool cc_insideBox = max(abs(cc_position.x), abs(cc_position.y)) < 0.5;
+    // Check if inside the icon quad (the rectangular surface the icon texture is drawn on)
+    bool cc_insideBox = max(abs(cc_position.x), abs(cc_position.y)) < 0.5;
 
-      // Distance from this pixel to the nearest bracket edge — drives stroke and fill alpha below
-      float cc_cornerDist = coffinCorner_allCorners(cc_position);
+    // Distance from this pixel to the nearest bracket edge — drives stroke and fill alpha below
+    float cc_cornerDist = coffinCorner_allCorners(cc_position);
 
-      // Outline width (proportional to icon)
-      float cc_stroke = 0.026;
-      // Anti-alias band: ~1 screen pixel regardless of icon size
-      float cc_aa = fwidth(cc_cornerDist);
+    // Outline width (proportional to icon)
+    float cc_stroke = 0.026;
+    // Anti-alias band: ~1 screen pixel regardless of icon size
+    float cc_aa = fwidth(cc_cornerDist);
 
-      // Two alphas used to layer the bracket rendering:
-      // strokeAlpha: expanded (dilated) shape — adds cc_stroke to push the edge outward, creating a black border
-      // fillAlpha: true SDF edge — the actual bracket shape filled with the highlight color
-      float cc_strokeAlpha = 1.0 - smoothstep(0.0, cc_aa, cc_cornerDist + cc_stroke);
-      float cc_fillAlpha = 1.0 - smoothstep(0.0, cc_aa, cc_cornerDist);
+    // Two alphas used to layer the bracket rendering:
+    // strokeAlpha: expanded (dilated) shape — adds cc_stroke to push the edge outward, creating a black border
+    // fillAlpha: true SDF edge — the actual bracket shape filled with the highlight color
+    float cc_strokeAlpha = 1.0 - smoothstep(0.0, cc_aa, cc_cornerDist + cc_stroke);
+    float cc_fillAlpha = 1.0 - smoothstep(0.0, cc_aa, cc_cornerDist);
 
-      if (cc_insideBox) {
-        // Sample icon texture (iconsTexture and vTextureCoords are provided by IconLayer's shader)
-        vec4 iconColor = texture(iconsTexture, vTextureCoords);
+    if (cc_insideBox) {
+      // Sample icon texture (iconsTexture and vTextureCoords are provided by IconLayer's shader)
+      vec4 iconColor = texture(iconsTexture, vTextureCoords);
 
-        // Start with background fill (only when hovering)
-        // White 30% opacity
-        vec4 result = cc_isHovered
-          ? vec4(1.0, 1.0, 1.0, 0.3)
-          : vec4(0.0);  // no fill when just selected
+      // Start with background fill (only when hovering)
+      // White 30% opacity
+      vec4 result = cc_isHovered
+        ? vec4(1.0, 1.0, 1.0, 0.3)
+        : vec4(0.0);  // no fill when just selected
 
-        // Composite icon OVER fill
-        result.rgb = iconColor.rgb * iconColor.a + result.rgb * result.a * (1.0 - iconColor.a);
-        result.a = iconColor.a + result.a * (1.0 - iconColor.a);
+      // Composite icon OVER fill
+      result.rgb = iconColor.rgb * iconColor.a + result.rgb * result.a * (1.0 - iconColor.a);
+      result.a = iconColor.a + result.a * (1.0 - iconColor.a);
 
-        // Composite black stroke OVER icon (dilated shape)
-        if (cc_strokeAlpha > 0.01) {
-          vec3 strokeColor = vec3(0.0);  // Black
-          result.rgb = strokeColor * cc_strokeAlpha + result.rgb * (1.0 - cc_strokeAlpha);
-          result.a = cc_strokeAlpha + result.a * (1.0 - cc_strokeAlpha);
-        }
-
-        // Composite colored fill OVER stroke (normal shape)
-        if (cc_fillAlpha > 0.01) {
-          vec4 cc_cornerColor = cc_isSelected
-            ? coffinCorner.highlightColor
-            : vec4(1.0);  // White fully opaque for hover-only
-          float cc_blendedAlpha = cc_fillAlpha * cc_cornerColor.a;
-          result.rgb = cc_cornerColor.rgb * cc_blendedAlpha + result.rgb * (1.0 - cc_blendedAlpha);
-          result.a = cc_blendedAlpha + result.a * (1.0 - cc_blendedAlpha);
-        }
-
-        fragColor = result; // fragColor is deck.gl's built-in output variable for the final pixel color
-        DECKGL_FILTER_COLOR(fragColor, geometry); // deck.gl hook: allows other extensions/filters to modify the color
-        return;
+      // Composite black stroke OVER icon (dilated shape)
+      if (cc_strokeAlpha > 0.01) {
+        vec3 strokeColor = vec3(0.0);  // Black
+        result.rgb = strokeColor * cc_strokeAlpha + result.rgb * (1.0 - cc_strokeAlpha);
+        result.a = cc_strokeAlpha + result.a * (1.0 - cc_strokeAlpha);
       }
+
+      // Composite colored fill OVER stroke (normal shape)
+      if (cc_fillAlpha > 0.01) {
+        vec4 cc_cornerColor = cc_isSelected
+          ? coffinCorner.highlightColor
+          : vec4(1.0);  // White fully opaque for hover-only
+        float cc_blendedAlpha = cc_fillAlpha * cc_cornerColor.a;
+        result.rgb = cc_cornerColor.rgb * cc_blendedAlpha + result.rgb * (1.0 - cc_blendedAlpha);
+        result.a = cc_blendedAlpha + result.a * (1.0 - cc_blendedAlpha);
+      }
+
+      fragColor = result; // fragColor is deck.gl's built-in output variable for the final pixel color
+      DECKGL_FILTER_COLOR(fragColor, geometry); // deck.gl hook: allows other extensions/filters to modify the color
+      return;
     }
   }
 `,
