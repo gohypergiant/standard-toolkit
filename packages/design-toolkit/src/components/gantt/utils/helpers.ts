@@ -70,3 +70,13 @@ export function shouldRenderRangeElement(
 export function timestampWithinBounds(timestampMs: number, bounds: TimeBounds) {
   return timestampMs >= bounds.startMs && timestampMs <= bounds.endMs;
 }
+
+export function shouldRenderCurrentTime(
+  currentTimeMs: number,
+  renderedRegionBounds: TimeBounds,
+) {
+  return (
+    currentTimeMs >= renderedRegionBounds.startMs &&
+    currentTimeMs <= renderedRegionBounds.endMs
+  );
+}

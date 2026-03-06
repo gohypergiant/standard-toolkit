@@ -16,20 +16,31 @@
   .current-time-marker {
     --top: attr(data-top px);
 
-    @apply font-display text-body-xs fg-primary-bold absolute z-10 w-fit;
+    @apply font-display text-body-xs fg-primary-bold pointer-events-none absolute z-10 flex flex-col items-center justify-center;
+    margin-left: -22px;
     top: var(--top);
     transform: translateX(var(--translate-x));
   }
 
   .current-time-label {
-    @apply rounded-b-medium outline-accent-primary-bold p-xs ml-[-19px] border;
+    @apply outline-accent-primary-bold p-xs text-body-xs border;
     border-color: var(--outline-accent-primary-bold);
+    border-radius: 3px;
   }
 
   .current-time-indicator {
+    @apply fg-accent-primary-bold w-px translate-x-px;
     --height: attr(data-height px);
-
-    border-left: 2px solid var(--outline-accent-primary-bold);
     height: var(--height);
+
+    --dash: 6px;
+    --gap: 6px;
+    --border: 3px;
+    background: repeating-linear-gradient(
+        to bottom,
+        currentColor 0 var(--dash),
+        transparent var(--dash) calc(var(--dash) + var(--gap))
+      )
+      left / var(--border) 100% no-repeat;
   }
 }
