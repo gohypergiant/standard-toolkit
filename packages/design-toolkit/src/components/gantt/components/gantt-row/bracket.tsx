@@ -18,7 +18,11 @@ type BracketBaseProps = PointProps & {
   direction: 'open' | 'close';
 };
 
-function BracketBase({ direction, ...rest }: BracketBaseProps) {
+function BracketBase({
+  direction,
+  color = 'accent',
+  ...rest
+}: BracketBaseProps) {
   const rotate = direction === 'open' ? '0' : '180';
 
   return (
@@ -26,6 +30,7 @@ function BracketBase({ direction, ...rest }: BracketBaseProps) {
       className={styles['bracket-container']}
       data-rotate={rotate}
       data-height={GANTT_ROW_ELEMENT_HEIGHT}
+      data-color={color}
       {...rest}
     >
       <div className={styles.bracket} data-height={GANTT_ROW_ELEMENT_HEIGHT} />
