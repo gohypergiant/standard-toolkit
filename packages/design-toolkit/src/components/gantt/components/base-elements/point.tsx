@@ -11,6 +11,8 @@
  */
 
 import { type HTMLAttributes, type PropsWithChildren, useState } from 'react';
+import { useGanttContext } from '../../context';
+import { timestampWithinBounds } from '../../utils/helpers';
 import { usePointElementLayout } from '../base-elements/use-point-element-layout';
 
 export type PointProps = HTMLAttributes<HTMLDivElement> & {
@@ -22,12 +24,18 @@ export function Point({
   children,
   ...rest
 }: PropsWithChildren<PointProps>) {
+  const { renderedRegionBounds } = useGanttContext();
+
   const [element, setElement] = useState<HTMLDivElement | null>(null);
 
   usePointElementLayout({
     element,
     timeMs,
   });
+
+  if (!timestampWithinBounds(timeMs, renderedRegionBounds)) {
+    return null;
+  }
 
   const assignElementRef = (node: HTMLDivElement) => {
     setElement(node);
