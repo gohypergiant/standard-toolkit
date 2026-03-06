@@ -161,17 +161,6 @@ describe('bootstrap', () => {
       );
     });
 
-    test('should set isProductionEnv to false when env is test', () => {
-      bootstrap({ enabled: true, env: 'development' });
-
-      expect(vi.mocked(callsitePlugin)).toHaveBeenCalledWith(
-        expect.objectContaining({ isProductionEnv: false }),
-      );
-      expect(vi.mocked(environmentPlugin)).toHaveBeenCalledWith(
-        expect.objectContaining({ isProductionEnv: false }),
-      );
-    });
-
     test('should set isServer to true when window is undefined', () => {
       // @ts-expect-error - intentionally deleting window to simulate Node.js
       delete globalThis.window;
@@ -209,7 +198,7 @@ describe('bootstrap', () => {
       expect(vi.mocked(getSimplePrettyTerminal)).not.toHaveBeenCalled();
     });
 
-    test('should include custom transports after default transport', () => {
+    test('should use only custom transports when provided, replacing the default', () => {
       const customTransport = { log: vi.fn() };
 
       // @ts-expect-error partial transport implementation
@@ -217,17 +206,17 @@ describe('bootstrap', () => {
 
       expect(vi.mocked(LogLayer)).toHaveBeenCalledWith(
         expect.objectContaining({
-          transport: expect.arrayContaining([customTransport]),
+          transport: [customTransport],
         }),
       );
     });
 
-    test('should handle empty transports array', () => {
+    test('should use default transport when transports array is empty', () => {
       bootstrap({ enabled: true, transports: [] });
 
       expect(vi.mocked(LogLayer)).toHaveBeenCalledWith(
         expect.objectContaining({
-          transport: expect.any(Array),
+          transport: { type: 'pretty' },
         }),
       );
     });
@@ -335,6 +324,38 @@ describe('bootstrap', () => {
       expect(vi.mocked(LogLayer)).toHaveBeenCalledWith(
         expect.objectContaining({ enabled: false }),
       );
+    });
+  });
+
+  describe('Groups configuration', () => {
+    test('should pass groups option to LogLayer', () => {
+      const groups = {
+        database: { enabled: true },
+        network: { enabled: false },
+      };
+
+      // @ts-expect-error partial groups implementation
+      bootstrap({ enabled: true, groups });
+
+      expect(vi.mocked(LogLayer)).toHaveBeenCalledWith(
+        expect.objectContaining({ groups }),
+      );
+    });
+
+    test('should pass empty groups when not provided', () => {
+      bootstrap({ enabled: true });
+
+      expect(vi.mocked(LogLayer)).toHaveBeenCalledWith(
+        expect.objectContaining({ groups: {} }),
+      );
+    });
+  });
+
+  describe('Log level manager', () => {
+    test('should configure a log level manager on the instance', () => {
+      const logger = bootstrap({ enabled: true });
+
+      expect(logger.withLogLevelManager).toHaveBeenCalledOnce();
     });
   });
 

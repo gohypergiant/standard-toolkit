@@ -320,7 +320,6 @@ describe('callsitePlugin', () => {
 
       const result = plugin.onBeforeDataOut({ data: {} });
 
-      expect(result.callSite).toBeDefined();
       // When no level found, levelLine = 0, so it uses callsite at index 1
       expect(result).toEqual({
         callSite: '/src/util.ts:20:10',
