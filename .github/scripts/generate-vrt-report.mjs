@@ -85,6 +85,9 @@ async function collectFailures(failuresDir) {
       const actual = await readImageAsBase64(
         path.join(screenshotPath, 'actual.png'),
       );
+      const diff = await readImageAsBase64(
+        path.join(screenshotPath, 'diff.png'),
+      );
 
       // Detect theme from screenshot name
       let theme = 'unknown';
@@ -97,6 +100,7 @@ async function collectFailures(failuresDir) {
         theme,
         expected,
         actual,
+        diff,
       });
     }
     if (failures.length >= MAX_FAILURES) break;
@@ -126,7 +130,7 @@ function generateHTML(failures, totalFound) {
       screenshotName: f.screenshotName,
       theme: f.theme,
     })),
-  );
+  ).replace(/<\//g, '<\\/');
 
   const overflowNote =
     totalFound > MAX_FAILURES
@@ -238,6 +242,7 @@ function generateHTML(failures, totalFound) {
       <div class="view-tabs">
         <button class="view-tab active" data-view="expected">Expected <kbd>1</kbd></button>
         <button class="view-tab" data-view="actual">Actual <kbd>2</kbd></button>
+        <button class="view-tab" data-view="diff">Diff <kbd>3</kbd></button>
       </div>
 
       <div class="image-container">
@@ -246,6 +251,9 @@ function generateHTML(failures, totalFound) {
         </div>
         <div class="view-panel" data-view="actual">
           ${f.actual ? `<img src="${f.actual}" alt="Actual">` : '<div class="no-image">No actual image</div>'}
+        </div>
+        <div class="view-panel" data-view="diff">
+          ${f.diff ? `<img src="${f.diff}" alt="Diff">` : '<div class="no-image">No diff image</div>'}
         </div>
       </div>
     </div>`,
@@ -257,7 +265,8 @@ function generateHTML(failures, totalFound) {
 <div class="keyboard-help">
   <kbd>j</kbd> / <kbd>k</kbd> navigate &nbsp;
   <kbd>1</kbd> expected &nbsp;
-  <kbd>2</kbd> actual
+  <kbd>2</kbd> actual &nbsp;
+  <kbd>3</kbd> diff
 </div>
 
 <script>
@@ -365,6 +374,10 @@ function generateHTML(failures, totalFound) {
         break;
       case '2':
         setView('actual');
+        e.preventDefault();
+        break;
+      case '3':
+        setView('diff');
         e.preventDefault();
         break;
     }
