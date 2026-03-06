@@ -29,6 +29,8 @@ If you added `overrides` (or `pnpm.overrides`) for React Aria sub-packages as re
 
 You should keep the `react-aria-components` override at `~1.12.1` if you have it, as that package is still pinned to patch ranges.
 
+After updating, run `pnpm dedupe` to consolidate any duplicate React Aria package versions in your lockfile. This ensures a single version of each sub-package is resolved across your project.
+
 <hr />
 <a id="v9_1"></a>
 # Upgrade to v9.1
