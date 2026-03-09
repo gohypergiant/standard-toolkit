@@ -37,10 +37,23 @@ export function CarouselViewer({ children }: PropsWithChildren) {
   return <div>{children}</div>;
 }
 
-export function CarouselControls({ children }: PropsWithChildren) {
+export function CarouselControls({
+  children,
+  onPrevious,
+  onNext,
+}: PropsWithChildren & {
+  onPrevious: () => void;
+  onNext: () => void;
+}) {
   // TODO: Make pre-built component here? Or allow for the manual placement of
   // navigation controls?
-  return <div>{children}</div>;
+  return (
+    <div className='flex w-full flex-row'>
+      <CarouselNavigation direction='left' onClick={onPrevious} />
+      {children}
+      <CarouselNavigation direction='right' onClick={onNext} />
+    </div>
+  );
 }
 
 export function CarouselNavigation({
