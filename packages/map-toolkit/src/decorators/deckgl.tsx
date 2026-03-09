@@ -14,10 +14,23 @@
 
 import { uuid } from '@accelint/core';
 import { BaseMap } from '../deckgl/base-map';
+import { DEFAULT_VIEW_STATE } from '../shared/constants';
 import type { Decorator } from '@storybook/react-vite';
+import type { MapViewportPayload } from '../deckgl/base-map/types';
 
 // Module-level constant - stable across all Storybook renders
 const STORYBOOK_MAP_ID = uuid();
+
+/**
+ * Options for the withDeckGL decorator.
+ */
+export type WithDeckGLOptions = {
+  /**
+   * Initial zoom level for the map.
+   * @default 4
+   */
+  viewState?: Partial<MapViewportPayload>;
+};
 
 /**
  * Storybook decorator that wraps stories with a BaseMap component.
@@ -44,10 +57,16 @@ const STORYBOOK_MAP_ID = uuid();
  * export const Default: Story = {};
  * ```
  */
-export const withDeckGL = (): Decorator => {
+export const withDeckGL = ({
+  viewState,
+}: WithDeckGLOptions = {}): Decorator => {
   return (Story) => {
     return (
-      <BaseMap className='h-dvh w-dvw' id={STORYBOOK_MAP_ID}>
+      <BaseMap
+        className='h-dvh w-dvw'
+        id={STORYBOOK_MAP_ID}
+        initialViewState={{ ...DEFAULT_VIEW_STATE, ...viewState }}
+      >
         <Story />
       </BaseMap>
     );
