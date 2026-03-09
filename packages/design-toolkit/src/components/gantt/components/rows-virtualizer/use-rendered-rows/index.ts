@@ -22,7 +22,11 @@ import {
 } from 'react';
 import { GANTT_ROW_HEIGHT_PX } from '@/components/gantt/constants';
 import { useGanttContext } from '@/components/gantt/context';
-import { selectors, useGanttStore } from '@/components/gantt/store';
+import {
+  useGanttStore,
+  useGanttStoreApi,
+} from '@/components/gantt/context/store';
+import { selectors } from '@/components/gantt/store';
 import {
   getHorizontalScrolledPixels,
   getVerticalScrolledPixels,
@@ -57,6 +61,7 @@ export function useRenderedRows({
   scrollContainerElement,
 }: PropsWithChildren<UseRenderedRowsProps>): UseRenderedRowsValue {
   const { totalBounds, msPerPx } = useGanttContext();
+  const store = useGanttStoreApi();
   const roundedCurrentRowScrollPx = useGanttStore(
     selectors.roundedCurrentRowScrollPx,
   );
@@ -64,8 +69,7 @@ export function useRenderedRows({
   const updateRoundedScrollPx = useCallback(
     (event: UIEvent<HTMLDivElement>) => {
       const currentScrollPx = getVerticalScrolledPixels(event);
-      const { setCurrentPositionMs, setCurrentRowScrollPx } =
-        useGanttStore.getState();
+      const { setCurrentPositionMs, setCurrentRowScrollPx } = store.getState();
 
       setCurrentPositionMs(
         totalBounds.startMs + getHorizontalScrolledPixels(event) * msPerPx,
@@ -73,7 +77,7 @@ export function useRenderedRows({
 
       setCurrentRowScrollPx(currentScrollPx);
     },
-    [msPerPx, totalBounds.startMs],
+    [msPerPx, totalBounds.startMs, store],
   );
 
   const { start, end } = deriveRenderedSlice(

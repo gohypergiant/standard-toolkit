@@ -10,11 +10,21 @@
  * governing permissions and limitations under the License.
  */
 
-import { useEffect } from 'react';
-import { useGanttStore } from '../../store';
+import { GanttStoreProvider } from '../context/store';
+import type { ReactNode } from 'react';
 
-export function useGanttInit(startTimeMs: number) {
-  useEffect(() => {
-    useGanttStore.getState().setCurrentPositionMs(startTimeMs);
-  }, [startTimeMs]);
+export type GanttStoreProviderProps = {
+  startTimeMs?: number;
+};
+
+export function createGanttStoreProvider({
+  startTimeMs = 0,
+}: GanttStoreProviderProps = {}) {
+  return function GanttStoreWrapper({ children }: { children: ReactNode }) {
+    return (
+      <GanttStoreProvider startTimeMs={startTimeMs}>
+        {children}
+      </GanttStoreProvider>
+    );
+  };
 }

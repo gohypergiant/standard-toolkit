@@ -12,7 +12,8 @@
 
 import { useEffect } from 'react';
 import { shallow } from 'zustand/shallow';
-import { type GanttState, useGanttStore } from '../../store';
+import { useGanttStoreApi } from '../../context/store';
+import type { GanttState } from '../../store';
 
 type UseLayoutSubscriptionProps<T> = {
   callback: (value: T) => void;
@@ -23,10 +24,11 @@ export function useLayoutSubscription<T>({
   callback,
   selector,
 }: UseLayoutSubscriptionProps<T>) {
+  const store = useGanttStoreApi();
   useEffect(() => {
     let animationFrameId: number;
 
-    const unsubscribe = useGanttStore.subscribe(
+    const unsubscribe = store.subscribe(
       selector,
       (value) => {
         animationFrameId = requestAnimationFrame(() => {
@@ -51,5 +53,5 @@ export function useLayoutSubscription<T>({
       cancelAnimationFrame(animationFrameId);
       unsubscribe();
     };
-  }, [callback, selector]);
+  }, [callback, selector, store]);
 }

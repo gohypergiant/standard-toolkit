@@ -12,7 +12,8 @@
 
 import { useEffect, useRef } from 'react';
 import { useGanttContext } from '../../context';
-import { selectors, useGanttStore } from '../../store';
+import { useGanttStore } from '../../context/store';
+import { selectors } from '../../store';
 import { deriveRenderedSlice } from '../../utils/layout';
 import {
   deriveRenderedRegion,

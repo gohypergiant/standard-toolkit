@@ -12,8 +12,8 @@
 
 import { renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { createGanttStoreProvider } from '@/components/gantt/__fixtures__/store-provider';
 import * as GanttContext from '@/components/gantt/context';
-import { useGanttStore } from '@/components/gantt/store';
 import * as layoutUtils from '@/components/gantt/utils/layout';
 import * as thresholdUtils from '@/components/gantt/utils/thresholds';
 import { useTotalDataRegionThresholds } from './index';
@@ -23,7 +23,6 @@ import type { MetThresholdData } from '@/components/gantt/types';
 vi.mock('@/components/gantt/context', () => ({
   useGanttContext: vi.fn(),
 }));
-vi.mock('@/components/gantt/store');
 vi.mock('@/components/gantt/utils/layout');
 vi.mock('@/components/gantt/utils/thresholds', async () => {
   const actual = await vi.importActual('@/components/gantt/utils/thresholds');
@@ -60,7 +59,6 @@ describe('useTotalDataRegionThresholds', () => {
     clientHeight: 500,
   } as HTMLDivElement;
   const mockRenderedSlice = { start: 2, end: 7 };
-  const mockRoundedCurrentRowScrollPx = 100;
   const mockMetThresholds: MetThresholdData[] = [
     {
       axis: 'horizontal',
@@ -69,12 +67,12 @@ describe('useTotalDataRegionThresholds', () => {
     },
   ];
 
+  const wrapper = createGanttStoreProvider({ startTimeMs: 0 });
+
   beforeEach(() => {
     vi.clearAllMocks();
 
     vi.mocked(GanttContext.useGanttContext).mockReturnValue(baseContextValue);
-
-    vi.mocked(useGanttStore).mockReturnValue(mockRoundedCurrentRowScrollPx);
 
     vi.mocked(layoutUtils.deriveRenderedSlice).mockReturnValue(
       mockRenderedSlice,
@@ -111,11 +109,13 @@ describe('useTotalDataRegionThresholds', () => {
       onThresholdMet: undefined,
     });
 
-    renderHook(() =>
-      useTotalDataRegionThresholds({
-        totalRowsCount: 10,
-        scrollContainerElement: mockScrollContainerElement,
-      }),
+    renderHook(
+      () =>
+        useTotalDataRegionThresholds({
+          totalRowsCount: 10,
+          scrollContainerElement: mockScrollContainerElement,
+        }),
+      { wrapper },
     );
 
     expect(mockOnThresholdMet).not.toHaveBeenCalled();
@@ -124,11 +124,13 @@ describe('useTotalDataRegionThresholds', () => {
   it('should not call onThresholdMet when shouldExamineThresholds returns false', () => {
     vi.mocked(thresholdUtils.shouldExamineThresholds).mockReturnValue(false);
 
-    renderHook(() =>
-      useTotalDataRegionThresholds({
-        totalRowsCount: 10,
-        scrollContainerElement: mockScrollContainerElement,
-      }),
+    renderHook(
+      () =>
+        useTotalDataRegionThresholds({
+          totalRowsCount: 10,
+          scrollContainerElement: mockScrollContainerElement,
+        }),
+      { wrapper },
     );
 
     expect(mockOnThresholdMet).not.toHaveBeenCalled();
@@ -139,22 +141,26 @@ describe('useTotalDataRegionThresholds', () => {
       mockMetThresholds,
     );
 
-    renderHook(() =>
-      useTotalDataRegionThresholds({
-        totalRowsCount: 10,
-        scrollContainerElement: mockScrollContainerElement,
-      }),
+    renderHook(
+      () =>
+        useTotalDataRegionThresholds({
+          totalRowsCount: 10,
+          scrollContainerElement: mockScrollContainerElement,
+        }),
+      { wrapper },
     );
 
     expect(mockOnThresholdMet).toHaveBeenCalledWith(mockMetThresholds);
   });
 
   it('should not call onThresholdMet when no thresholds are met', () => {
-    renderHook(() =>
-      useTotalDataRegionThresholds({
-        totalRowsCount: 10,
-        scrollContainerElement: mockScrollContainerElement,
-      }),
+    renderHook(
+      () =>
+        useTotalDataRegionThresholds({
+          totalRowsCount: 10,
+          scrollContainerElement: mockScrollContainerElement,
+        }),
+      { wrapper },
     );
 
     expect(mockOnThresholdMet).not.toHaveBeenCalled();
@@ -172,6 +178,7 @@ describe('useTotalDataRegionThresholds', () => {
           totalRowsCount: 10,
           scrollContainerElement: mockScrollContainerElement,
         },
+        wrapper,
       },
     );
 
@@ -198,6 +205,7 @@ describe('useTotalDataRegionThresholds', () => {
           totalRowsCount: 10,
           scrollContainerElement: mockScrollContainerElement,
         },
+        wrapper,
       },
     );
 
@@ -224,6 +232,7 @@ describe('useTotalDataRegionThresholds', () => {
           totalRowsCount: 10,
           scrollContainerElement: mockScrollContainerElement,
         },
+        wrapper,
       },
     );
 
@@ -263,6 +272,7 @@ describe('useTotalDataRegionThresholds', () => {
           totalRowsCount: 10,
           scrollContainerElement: mockScrollContainerElement,
         },
+        wrapper,
       },
     );
 
@@ -297,6 +307,7 @@ describe('useTotalDataRegionThresholds', () => {
           totalRowsCount: 10,
           scrollContainerElement: mockScrollContainerElement,
         },
+        wrapper,
       },
     );
 
@@ -323,6 +334,7 @@ describe('useTotalDataRegionThresholds', () => {
           totalRowsCount: 10,
           scrollContainerElement: mockScrollContainerElement,
         },
+        wrapper,
       },
     );
 

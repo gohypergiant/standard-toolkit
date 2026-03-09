@@ -16,7 +16,7 @@ import { RowsVirtualizer } from './components/rows-virtualizer';
 import { Timeline } from './components/timeline';
 import { GANTT_CONTAINER_TOP_PADDING_PX } from './constants';
 import { GanttProvider } from './context';
-import { useGanttInit } from './hooks/use-gantt-init';
+import { GanttStoreProvider } from './context/store';
 import styles from './styles.module.css';
 import type { ThresholdProps, Timescale } from './types';
 
@@ -38,8 +38,6 @@ export function Gantt({
 }: PropsWithChildren<GanttProps>) {
   const midpointMs = startTimeMs + (endTimeMs - startTimeMs) / 2;
 
-  useGanttInit(midpointMs);
-
   const totalBounds = useMemo(
     () => ({
       startMs: startTimeMs,
@@ -49,20 +47,22 @@ export function Gantt({
   );
 
   return (
-    <GanttProvider
-      timescale={timescale}
-      totalBounds={totalBounds}
-      threshold={thresholdProps?.threshold}
-      onThresholdMet={thresholdProps?.onThresholdMet}
-    >
-      <div
-        className={styles.container}
-        data-padding-top={GANTT_CONTAINER_TOP_PADDING_PX}
+    <GanttStoreProvider startTimeMs={midpointMs}>
+      <GanttProvider
+        timescale={timescale}
+        totalBounds={totalBounds}
+        threshold={thresholdProps?.threshold}
+        onThresholdMet={thresholdProps?.onThresholdMet}
       >
-        {currentTimeMs && <CurrentTime currentTimeMs={currentTimeMs} />}
-        <Timeline />
-        <RowsVirtualizer>{children}</RowsVirtualizer>
-      </div>
-    </GanttProvider>
+        <div
+          className={styles.container}
+          data-padding-top={GANTT_CONTAINER_TOP_PADDING_PX}
+        >
+          {currentTimeMs && <CurrentTime currentTimeMs={currentTimeMs} />}
+          <Timeline />
+          <RowsVirtualizer>{children}</RowsVirtualizer>
+        </div>
+      </GanttProvider>
+    </GanttStoreProvider>
   );
 }

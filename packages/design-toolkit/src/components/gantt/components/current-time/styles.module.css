@@ -16,7 +16,7 @@
   .current-time-marker {
     --top: attr(data-top px);
 
-    @apply font-display text-body-xs fg-primary-bold pointer-events-none absolute z-10 flex flex-col items-center justify-center;
+    @apply font-display text-body-xs fg-primary-bold pointer-events-none absolute z-10 flex flex-col justify-center;
     top: var(--top);
     transform: translateX(calc(var(--translate-x) - 50%));
   }
@@ -25,6 +25,7 @@
     @apply outline-accent-primary-bold p-xs text-body-xs border;
     border-color: var(--outline-accent-primary-bold);
     border-radius: 3px;
+    transform: translateX(-50%);
   }
 
   .current-time-indicator {

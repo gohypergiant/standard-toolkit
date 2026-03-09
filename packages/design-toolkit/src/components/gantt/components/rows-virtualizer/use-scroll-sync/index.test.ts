@@ -12,8 +12,9 @@
 
 import { renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { createGanttStoreProvider } from '@/components/gantt/__fixtures__/store-provider';
 import * as GanttContext from '@/components/gantt/context';
-import { useGanttStore } from '@/components/gantt/store';
+import { useGanttStoreApi } from '@/components/gantt/context/store';
 import { useScrollSync } from './';
 import type { GanttContextValue } from '@/components/gantt/context';
 
@@ -32,9 +33,9 @@ describe('useScrollSync', () => {
   const scrollToMock = vi.fn();
   // Only implementing the scrollTo method that's used in the hook
   const fakeElement = { scrollTo: scrollToMock } as unknown as HTMLDivElement;
+  const wrapper = createGanttStoreProvider({ startTimeMs: 0 });
 
   beforeEach(() => {
-    useGanttStore.setState(useGanttStore.getInitialState());
     scrollToMock.mockClear();
 
     // Set up the default mock for useGanttContext
@@ -42,19 +43,39 @@ describe('useScrollSync', () => {
   });
 
   it('should do nothing when scrollContainerElement is null', () => {
-    renderHook(() => useScrollSync({ scrollContainerElement: null }));
+    renderHook(() => useScrollSync({ scrollContainerElement: null }), {
+      wrapper,
+    });
 
     // No scrollTo calls should happen with null element
     expect(scrollToMock).not.toHaveBeenCalled();
   });
 
   it('should reset scroll position when timestamp is outside data range', () => {
-    // Set current position in store to a value outside the bounds
-    useGanttStore.setState({ currentPositionMs: 1500 });
+    // Initial render — store starts at currentPositionMs: 0, within bounds [0, 1000]
+    const { rerender } = renderHook(
+      () => {
+        useScrollSync({
+          scrollContainerElement: fakeElement,
+        });
+      },
+      { wrapper },
+    );
 
-    renderHook(() => useScrollSync({ scrollContainerElement: fakeElement }));
+    // Initial render scrolls to a position — clear to isolate the reset call
+    scrollToMock.mockClear();
 
-    // Should reset scroll position when timestamp is outside bounds
+    const updatedTotalBounds = { startMs: 100, endMs: 1000 };
+
+    // Change bounds so that currentPositionMs: 0 is now outside the range
+    vi.mocked(GanttContext.useGanttContext).mockReturnValue({
+      ...baseContextValue,
+      totalBounds: updatedTotalBounds,
+    });
+
+    rerender();
+
+    // Should reset both axes
     expect(scrollToMock).toHaveBeenCalledWith({
       top: 0,
       left: 0,
@@ -62,11 +83,20 @@ describe('useScrollSync', () => {
   });
 
   it('should set horizontal scroll position based on currentPositionMs', () => {
+    const { result } = renderHook(
+      () => {
+        const store = useGanttStoreApi();
+        const hookResult = useScrollSync({
+          scrollContainerElement: fakeElement,
+        });
+        return { hookResult, store };
+      },
+      { wrapper },
+    );
+
     // Set current position in store to a value within bounds
     const currentPositionMs = 500;
-    useGanttStore.setState({ currentPositionMs });
-
-    renderHook(() => useScrollSync({ scrollContainerElement: fakeElement }));
+    result.current.store?.setState({ currentPositionMs });
 
     // Should call scrollTo with a calculated position. Just verifying it
     // was called with a numeric value.
@@ -77,9 +107,10 @@ describe('useScrollSync', () => {
 
   it('should react to changes in totalBounds', () => {
     // Initial render
-    const { rerender } = renderHook((props) => useScrollSync(props), {
-      initialProps: { scrollContainerElement: fakeElement },
-    });
+    const { rerender } = renderHook(
+      () => useScrollSync({ scrollContainerElement: fakeElement }),
+      { wrapper },
+    );
 
     expect(scrollToMock).toHaveBeenCalled();
     scrollToMock.mockClear();
@@ -99,9 +130,10 @@ describe('useScrollSync', () => {
 
   it('should react to changes in msPerPx', () => {
     // Initial render
-    const { rerender } = renderHook((props) => useScrollSync(props), {
-      initialProps: { scrollContainerElement: fakeElement },
-    });
+    const { rerender } = renderHook(
+      () => useScrollSync({ scrollContainerElement: fakeElement }),
+      { wrapper },
+    );
 
     expect(scrollToMock).toHaveBeenCalled();
     scrollToMock.mockClear();
@@ -120,15 +152,19 @@ describe('useScrollSync', () => {
   });
 
   it('should react to changes in scrollContainerElement', () => {
+    let element: HTMLDivElement | null = null;
+
     // Initial render with null element
-    const { rerender } = renderHook((props) => useScrollSync(props), {
-      initialProps: { scrollContainerElement: null as HTMLDivElement | null },
-    });
+    const { rerender } = renderHook(
+      () => useScrollSync({ scrollContainerElement: element }),
+      { wrapper },
+    );
 
     expect(scrollToMock).not.toHaveBeenCalled();
 
     // Re-render with non-null element
-    rerender({ scrollContainerElement: fakeElement });
+    element = fakeElement;
+    rerender();
 
     // Should call scrollTo now that we have an element
     expect(scrollToMock).toHaveBeenCalled();

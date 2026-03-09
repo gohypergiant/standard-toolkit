@@ -12,7 +12,7 @@
 
 import { useEffect } from 'react';
 import { useGanttContext } from '@/components/gantt/context';
-import { useGanttStore } from '@/components/gantt/store';
+import { useGanttStoreApi } from '@/components/gantt/context/store';
 import { timestampWithinBounds } from '@/components/gantt/utils/helpers';
 import { deriveHorizontalScrollPosition } from '@/components/gantt/utils/layout';
 
@@ -22,6 +22,7 @@ type UseScrollSyncProps = {
 
 export function useScrollSync({ scrollContainerElement }: UseScrollSyncProps) {
   const { totalBounds, msPerPx } = useGanttContext();
+  const store = useGanttStoreApi();
 
   useEffect(() => {
     if (!scrollContainerElement) {
@@ -32,7 +33,7 @@ export function useScrollSync({ scrollContainerElement }: UseScrollSyncProps) {
     // This effect should only run when the dataset changes (totalBounds) or
     // when another value changes that affects the effective scroll position
     // (like msPerPx which scales the timeline)
-    const currentPositionMs = useGanttStore.getState().currentPositionMs;
+    const currentPositionMs = store.getState().currentPositionMs;
     const resetScrollPosition = () =>
       scrollContainerElement.scrollTo({
         top: 0,
@@ -46,6 +47,7 @@ export function useScrollSync({ scrollContainerElement }: UseScrollSyncProps) {
 
     if (timestampOutsideDataRange) {
       resetScrollPosition();
+      store.setState({ currentPositionMs: totalBounds.startMs });
 
       return;
     }
@@ -59,5 +61,5 @@ export function useScrollSync({ scrollContainerElement }: UseScrollSyncProps) {
     scrollContainerElement.scrollTo({
       left: scrollPosition,
     });
-  }, [totalBounds, msPerPx, scrollContainerElement]);
+  }, [totalBounds, msPerPx, scrollContainerElement, store]);
 }
