@@ -1,0 +1,341 @@
+# Coffin Corner Extension
+
+A deck.gl layer extension that draws bracket-shaped "coffin corner" indicators around hovered and selected map entities. Works with IconLayer and anything that extends it (like SymbolLayer).
+
+## Table of Contents
+
+- [Quick Start](#quick-start)
+- [What is this?](#what-is-this)
+- [Why a shader extension?](#why-a-shader-extension)
+- [Architecture](#architecture)
+- [API](#api)
+  - [CoffinCornerExtension](#coffincornerextension)
+  - [useCoffinCorner](#usecoffincorner)
+  - [Store (imperative)](#store-imperative)
+  - [Events](#events)
+  - [Types](#types)
+- [Examples](#examples)
+  - [React (with hook)](#react-with-hook)
+  - [Imperative (without React)](#imperative-without-react)
+  - [Custom entity ID accessor](#custom-entity-id-accessor)
+  - [Custom selection color](#custom-selection-color)
+- [Limitations](#limitations)
+
+## Quick Start
+
+```tsx
+import { CoffinCornerExtension, useCoffinCorner } from '@accelint/map-toolkit/deckgl';
+
+const coffinCornerExtension = new CoffinCornerExtension();
+
+function MapWithIcons({ mapId }) {
+  const { selectedId, hoveredId } = useCoffinCorner(mapId, 'my-icons');
+
+  return (
+    <iconLayer
+      id="my-icons"
+      data={data}
+      pickable
+      extensions={[coffinCornerExtension]}
+      selectedEntityId={selectedId}
+      hoveredEntityId={hoveredId}
+    />
+  );
+}
+```
+
+## What is this?
+
+This extension renders L-shaped bracket indicators at all four corners of an icon when it's hovered or selected. The brackets are drawn entirely in the GPU using signed distance functions (SDFs) — no extra DOM elements, no additional layers, no texture swaps. Hovering shows white brackets with a subtle background fill. Selecting shows colored brackets (configurable via `selectedCoffinCornerColor`).
+
+## Why a shader extension?
+
+deck.gl's built-in picking has issues when the viewport is actively updating (panning, zooming). Icons can become un-clickable or report stale positions mid-animation. By tracking selection state in a separate store and rendering the indicators in the shader, we avoid the picking pipeline entirely. The store syncs via `@accelint/bus` events, so it works regardless of viewport state.
+
+## Architecture
+
+```
+┌─────────────────────────────────────────────────┐
+│  React                                          │
+│  useCoffinCorner(mapId, layerId)                │
+│    ↕ reads state, sets layerId                  │
+├─────────────────────────────────────────────────┤
+│  Store (framework-agnostic)                     │
+│  coffinCornerStore                              │
+│    ← listens to map bus (click/hover events)    │
+│    → emits domain events (selected/deselected)  │
+│    → state: { selectedId, hoveredId }           │
+├─────────────────────────────────────────────────┤
+│  Extension (pure deck.gl)                       │
+│  CoffinCornerExtension                          │
+│    ← reads selectedEntityId/hoveredEntityId     │
+│    → injects SDF shader code into IconLayer     │
+│    → draws brackets on GPU                      │
+└─────────────────────────────────────────────────┘
+```
+
+The three layers are independent. The React hook is a convenience wrapper — you can use the store imperatively for non-React contexts.
+
+## API
+
+### `CoffinCornerExtension`
+
+deck.gl `LayerExtension` that injects coffin corner shader code into the host layer.
+
+**Constraint:** Only works with `IconLayer` or layers that extend it (e.g., `SymbolLayer`). The shader depends on `iconsTexture` and `vTextureCoords`, which are IconLayer-specific.
+
+**Props (added to the host layer):**
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `selectedEntityId` | `EntityId \| undefined` | `undefined` | ID of the selected entity (shows colored brackets + fill) |
+| `hoveredEntityId` | `EntityId \| undefined` | `undefined` | ID of the hovered entity (shows white brackets) |
+| `selectedCoffinCornerColor` | `[R, G, B, A]` (0-255) | `[57, 183, 250, 255]` | Bracket fill color when selected |
+| `getEntityId` | `(item: any) => EntityId` | `(item) => item.id` | Accessor to extract entity ID from data items |
+
+```tsx
+const extension = new CoffinCornerExtension();
+
+<iconLayer
+  extensions={[extension]}
+  selectedEntityId="entity-123"
+  hoveredEntityId="entity-456"
+  selectedCoffinCornerColor={[255, 0, 0, 255]}
+  getEntityId={(d) => d.properties.id}
+  pickable
+/>
+```
+
+---
+
+### `useCoffinCorner(mapId, layerId, options?)`
+
+React hook that manages coffin corner selection/hover state. Subscribes to map bus events automatically — no `onClick`/`onHover` callbacks needed on the layer.
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `mapId` | `UniqueId` | The `<BaseMap>` instance ID |
+| `layerId` | `string` | The deck.gl layer ID to listen for interactions on |
+| `options` | `UseCoffinCornerOptions` | Optional config (see below) |
+
+**Returns:** `UseCoffinCornerReturn`
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `selectedId` | `EntityId \| undefined` | Currently selected entity ID |
+| `hoveredId` | `EntityId \| undefined` | Currently hovered entity ID |
+| `setSelectedId` | `(id: EntityId \| undefined) => void` | Programmatically set selection |
+| `clearSelection` | `() => void` | Clear the current selection |
+
+**Options:**
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `getEntityId` | `(item: any) => EntityId` | `(item) => item.id` | Must match the `getEntityId` prop on the extension |
+
+---
+
+### Store (imperative)
+
+For non-React contexts (orchestrated maps, vanilla JS, etc.), use the store API directly. Everything is exported from `@accelint/map-toolkit/deckgl`.
+
+```ts
+import {
+  coffinCornerStore,
+  getSelectedEntityId,
+  getHoveredEntityId,
+  clearSelection,
+} from '@accelint/map-toolkit/deckgl';
+```
+
+#### `getSelectedEntityId(mapId)`
+
+Read the selected entity ID for a map instance. Non-reactive (snapshot).
+
+#### `getHoveredEntityId(mapId)`
+
+Read the hovered entity ID for a map instance. Non-reactive (snapshot).
+
+#### `clearSelection(mapId)`
+
+Clear selection state and clean up the store instance.
+
+#### `coffinCornerStore.actions(mapId)`
+
+Get action methods without subscribing to state changes.
+
+| Action | Type | Description |
+|--------|------|-------------|
+| `setSelectedId` | `(id: EntityId \| undefined) => void` | Set the selected entity |
+| `clearSelection` | `() => void` | Clear selection |
+| `setLayerId` | `(layerId: string) => void` | Set which layer to listen for interactions on |
+| `setGetEntityId` | `(fn: GetEntityId) => void` | Set the entity ID accessor |
+
+#### `coffinCornerStore.subscribe(mapId)`
+
+Subscribe to state changes. Returns a function that accepts a callback and returns an unsubscribe function.
+
+**Important:** Bus listeners (map click/hover → store state) are lazily initialized on the first `subscribe()` call. In React, `useSyncExternalStore` handles this automatically. Outside React, you need to call `subscribe` yourself to wire up the bus.
+
+---
+
+### Events
+
+Domain events emitted via `@accelint/bus`:
+
+| Event | Payload | Description |
+|-------|---------|-------------|
+| `coffin-corner:selected` | `{ selectedId, mapId }` | Entity was selected |
+| `coffin-corner:deselected` | `{ selectedId: undefined, mapId }` | Selection was cleared |
+| `coffin-corner:hovered` | `{ hoveredId, mapId }` | Hover state changed |
+
+Access event constants via `CoffinCornerEvents`:
+
+```ts
+import { CoffinCornerEvents } from '@accelint/map-toolkit/deckgl';
+
+CoffinCornerEvents.SELECTED   // 'coffin-corner:selected'
+CoffinCornerEvents.DESELECTED // 'coffin-corner:deselected'
+CoffinCornerEvents.HOVERED    // 'coffin-corner:hovered'
+```
+
+---
+
+### Types
+
+```ts
+import type {
+  CoffinCornerExtensionProps,
+  EntityId,
+  CoffinCornerEvent,
+  CoffinCornerSelectedEvent,
+  CoffinCornerDeselectedEvent,
+  CoffinCornerHoveredEvent,
+  UseCoffinCornerReturn,
+  UseCoffinCornerOptions,
+} from '@accelint/map-toolkit/deckgl';
+```
+
+| Type | Description |
+|------|-------------|
+| `EntityId` | `string \| number` |
+| `CoffinCornerExtensionProps<TLayerProps>` | Props the extension adds to the host layer |
+| `CoffinCornerEvent` | Union of all domain event types |
+| `UseCoffinCornerReturn` | Return type of `useCoffinCorner` |
+| `UseCoffinCornerOptions` | Options for `useCoffinCorner` |
+
+## Examples
+
+### React (with hook)
+
+The most common usage. The hook wires up map click/hover events automatically.
+
+```tsx
+import { uuid } from '@accelint/core';
+import { BaseMap } from '@accelint/map-toolkit/deckgl';
+import { CoffinCornerExtension, useCoffinCorner } from '@accelint/map-toolkit/deckgl';
+
+const coffinCornerExtension = new CoffinCornerExtension();
+const MAP_ID = uuid();
+
+function MyMap() {
+  const { selectedId, hoveredId } = useCoffinCorner(MAP_ID, 'icons');
+
+  return (
+    <BaseMap id={MAP_ID}>
+      <symbolLayer
+        id="icons"
+        data={myData}
+        pickable
+        extensions={[coffinCornerExtension]}
+        selectedEntityId={selectedId}
+        hoveredEntityId={hoveredId}
+      />
+    </BaseMap>
+  );
+}
+```
+
+> **Note:** Stories/components using `useCoffinCorner` must render their own `<BaseMap>` with a dedicated `uuid()` instead of using the `withDeckGL()` decorator.
+
+### Imperative (without React)
+
+For orchestrated or non-React map instances. The store and bus have no React dependency.
+
+```ts
+import { uuid } from '@accelint/core';
+import {
+  coffinCornerStore,
+  getSelectedEntityId,
+  getHoveredEntityId,
+  clearSelection,
+} from '@accelint/map-toolkit/deckgl';
+
+// Same ID you pass to your Deck instance / BaseMap
+const mapId = uuid();
+
+// Get actions and configure
+const { setSelectedId, setLayerId } = coffinCornerStore.actions(mapId);
+setLayerId('my-layer');
+
+// Subscribe to changes — also wires up bus listeners on first call
+const unsubscribe = coffinCornerStore.subscribe(mapId)(() => {
+  const state = coffinCornerStore.get(mapId);
+  // Update layer props, re-render deck.gl, etc.
+});
+
+// Read state imperatively at any time
+const selectedId = getSelectedEntityId(mapId);
+const hoveredId = getHoveredEntityId(mapId);
+
+// Mutate state
+setSelectedId('entity-123');
+
+// Cleanup
+clearSelection(mapId);
+unsubscribe();
+```
+
+### Custom entity ID accessor
+
+If your data items don't have a top-level `id` field:
+
+```tsx
+const { selectedId, hoveredId } = useCoffinCorner(mapId, 'icons', {
+  getEntityId: (d) => d.properties.shapeId,
+});
+
+<iconLayer
+  extensions={[coffinCornerExtension]}
+  selectedEntityId={selectedId}
+  hoveredEntityId={hoveredId}
+  getEntityId={(d) => d.properties.shapeId}
+/>
+```
+
+Both the hook and the extension need the same accessor so they agree on entity identity.
+
+### Custom selection color
+
+Override the default blue (`#39B7FA`) bracket color:
+
+```tsx
+<symbolLayer
+  extensions={[coffinCornerExtension]}
+  selectedEntityId={selectedId}
+  hoveredEntityId={hoveredId}
+  selectedCoffinCornerColor={[255, 0, 0, 255]} // Red, fully opaque
+/>
+```
+
+The alpha channel modulates bracket opacity. `[255, 0, 0, 127]` gives you semi-transparent red brackets.
+
+## Limitations
+
+- **IconLayer only.** The shader depends on `iconsTexture` and `vTextureCoords`, which only exist on `IconLayer` and its subclasses (`SymbolLayer`, `MultiIconLayer`). It won't work on `ScatterplotLayer`, `GeoJsonLayer` (for circle points), or other layer types. Supporting non-icon point layers is a potential follow-on — the SDF bracket math is reusable, but the compositing logic would need to differ per layer type.
+
+- **No deck.gl picking.** Selection is tracked in a store rather than using deck.gl's built-in picking, since picking has issues during viewport updates (panning/zooming). This means the extension doesn't integrate with deck.gl's `highlightedObjectIndex` or `autoHighlight`.
+
+## License
+
+Apache 2.0 — see [LICENSE](../../../../LICENSE) for details.
