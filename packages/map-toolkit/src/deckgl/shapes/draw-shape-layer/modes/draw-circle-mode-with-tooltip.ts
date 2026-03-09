@@ -11,16 +11,17 @@
  */
 
 import {
+  DISTANCE_UNIT_SYMBOLS,
+  type DistanceUnit,
+} from '@accelint/constants/units';
+import {
   DrawCircleFromCenterMode,
   type FeatureCollection,
   type ModeProps,
   type PointerMoveEvent,
   type Tooltip,
 } from '@deck.gl-community/editable-layers';
-import {
-  DEFAULT_DISTANCE_UNITS,
-  getDistanceUnitAbbreviation,
-} from '@/shared/units';
+import { DEFAULT_DISTANCE_UNITS } from '@/shared/units';
 import { formatCircleTooltip } from '../../shared/constants';
 import { computeCircleMeasurements } from '../../shared/utils/geometry-measurements';
 
@@ -73,7 +74,8 @@ export class DrawCircleModeWithTooltip extends DrawCircleFromCenterMode {
 
     const { mapCoords } = event;
     const distanceUnits =
-      props.modeConfig?.distanceUnits ?? DEFAULT_DISTANCE_UNITS;
+      (props.modeConfig?.distanceUnits as DistanceUnit) ??
+      DEFAULT_DISTANCE_UNITS;
 
     const centerPoint = clickSequence.at(-1) as [number, number];
     const edgePoint = mapCoords as [number, number];
@@ -83,7 +85,7 @@ export class DrawCircleModeWithTooltip extends DrawCircleFromCenterMode {
       edgePoint,
       distanceUnits,
     );
-    const unitAbbrev = getDistanceUnitAbbreviation(distanceUnits);
+    const unitAbbrev = DISTANCE_UNIT_SYMBOLS[distanceUnits];
 
     this.tooltip = {
       position: mapCoords,
