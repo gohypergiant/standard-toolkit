@@ -14,11 +14,13 @@
 
 import { Broadcast } from '@accelint/bus';
 import { CompositeLayer } from '@deck.gl/core';
-import { GeoJsonLayer, IconLayer, LineLayer } from '@deck.gl/layers';
+import { GeoJsonLayer, IconLayer, LineLayer, TextLayer } from '@deck.gl/layers';
 import { createLoggerDomain } from '@/shared/logger';
+import { DEFAULT_TEXT_STYLE } from '../../text-settings';
 import { SHAPE_LAYER_IDS } from '../shared/constants';
 import { type ShapeEvent, ShapeEvents } from '../shared/events';
 import {
+  isCircleShape,
   isLineGeometry,
   isPointType,
   isPolygonGeometry,
@@ -60,6 +62,7 @@ import {
   getIconUpdateTriggers,
 } from './utils/icon-config';
 import { getPointInteractionState } from './utils/interaction';
+import { getRadiusLabelText } from './utils/radius-label';
 import type { Rgba255Tuple } from '@accelint/predicates';
 import type { Layer, PickingInfo } from '@deck.gl/core';
 import type { Shape, ShapeId } from '../shared/types';
@@ -886,6 +889,52 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
   }
 
   /**
+   * Render radius label layer for hovered circle shapes.
+   * Shows the circle's radius value converted to the configured display unit.
+   * Positioned at the circle center with a vertical offset below the name label.
+   */
+  private renderRadiusLabelLayer(): TextLayer[] {
+    const { data, unit } = this.props;
+    const hoverIndex = this.state?.hoverIndex;
+
+    if (hoverIndex === undefined) {
+      return [];
+    }
+
+    const hoveredShape = data[hoverIndex];
+    if (!(hoveredShape && isCircleShape(hoveredShape))) {
+      return [];
+    }
+
+    const radiusText = getRadiusLabelText(hoveredShape, unit);
+    if (!radiusText) {
+      return [];
+    }
+
+    const center = hoveredShape.feature.properties.circleProperties.center;
+
+    return [
+      new TextLayer({
+        id: `${this.props.id}-${SHAPE_LAYER_IDS.DISPLAY}-radius-label`,
+        data: [{ text: radiusText, position: center }],
+        getText: (d) => d.text,
+        getPosition: (d) => d.position as [number, number],
+        getPixelOffset: [0, 14],
+        getTextAnchor: 'middle',
+        getAlignmentBaseline: 'top',
+        ...DEFAULT_TEXT_STYLE,
+        getAngle: 0,
+        background: false,
+        fontFamily: 'Roboto MonoVariable, monospace',
+        pickable: false,
+        updateTriggers: {
+          getText: [hoverIndex, unit],
+        },
+      }),
+    ];
+  }
+
+  /**
    * Render vertical elevation indicator lines for non-polygon shapes.
    * Creates vertical "strut" lines from ground level to elevated features.
    * For LineStrings, creates a "curtain" effect with vertical lines at each coordinate.
@@ -1148,6 +1197,9 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
 
     // Labels on top of everything
     layers.push(...this.renderLabelsLayer());
+
+    // Radius label on hover (above name labels)
+    layers.push(...this.renderRadiusLabelLayer());
 
     return layers;
   }

@@ -1010,4 +1010,61 @@ describe('DisplayShapeLayer', () => {
       expect(layer.state.hoverIndex).toBe(0);
     });
   });
+
+  describe('radius label layer', () => {
+    /** Circle fixture: radius 250 km */
+    const circleFixture = mockShapes[0] as Shape;
+
+    it('renders radius label when hovering over a circle shape', () => {
+      const layer = createTestLayer(
+        { data: [circleFixture] },
+        { hoverIndex: 0 },
+      );
+      const sublayers = layer.renderLayers();
+
+      const radiusLabel = sublayers.find((l) => l.id.includes('radius-label'));
+
+      expect(radiusLabel).toBeInstanceOf(TextLayer);
+    });
+
+    it('does not render radius label when hovering over a non-circle shape', () => {
+      const layer = createTestLayer(
+        { data: [polygonFixture] },
+        { hoverIndex: 0 },
+      );
+      const sublayers = layer.renderLayers();
+
+      const radiusLabel = sublayers.find((l) => l.id.includes('radius-label'));
+
+      expect(radiusLabel).toBeUndefined();
+    });
+
+    it('does not render radius label when nothing is hovered', () => {
+      const layer = createTestLayer(
+        { data: [circleFixture] },
+        { hoverIndex: undefined },
+      );
+      const sublayers = layer.renderLayers();
+
+      const radiusLabel = sublayers.find((l) => l.id.includes('radius-label'));
+
+      expect(radiusLabel).toBeUndefined();
+    });
+
+    it('passes the unit prop to the radius label', () => {
+      const layer = createTestLayer(
+        { data: [circleFixture], unit: 'km' },
+        { hoverIndex: 0 },
+      );
+      const sublayers = layer.renderLayers();
+
+      const radiusLabel = sublayers.find((l) => l.id.includes('radius-label'));
+
+      expect(radiusLabel).toBeInstanceOf(TextLayer);
+      // biome-ignore lint/suspicious/noExplicitAny: accessing internal props for testing
+      const props = (radiusLabel as TextLayer).props as any;
+      // 250 km stored, display in km — should show "r: 250.00 km"
+      expect(props.data[0].text).toBe('r: 250.00 km');
+    });
+  });
 });
