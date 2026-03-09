@@ -10,57 +10,55 @@
  * governing permissions and limitations under the License.
  */
 
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { GANTT_ROW_HEIGHT_PX, MS_PER_HOUR } from './constants';
-import { selectors, useGanttStore } from './store';
+import { createGanttStore, selectors } from './store';
 
 describe('gantt store', () => {
-  beforeEach(() => {
-    useGanttStore.setState({ currentPositionMs: 0 });
-    vi.clearAllMocks();
-  });
-
   afterEach(() => {
     vi.clearAllMocks();
   });
 
   it('initial state is 0 and setCurrentPositionMs updates it', () => {
-    expect(selectors.currentPositionMs(useGanttStore.getState())).toBe(0);
+    const store = createGanttStore({ startTimeMs: 0 });
+
+    expect(selectors.currentPositionMs(store.getState())).toBe(0);
 
     const newMs = 5000;
-    useGanttStore.getState().setCurrentPositionMs(newMs);
+    store.getState().setCurrentPositionMs(newMs);
 
-    expect(selectors.currentPositionMs(useGanttStore.getState())).toBe(newMs);
+    expect(selectors.currentPositionMs(store.getState())).toBe(newMs);
   });
 
   it('roundedCurrentPositionMs returns interval-rounded time', () => {
+    const store = createGanttStore({ startTimeMs: 0 });
     const value = 1738531200000;
-    useGanttStore.setState({ currentPositionMs: value });
+    store.setState({ currentPositionMs: value });
 
     const interval = MS_PER_HOUR;
     const result = selectors.roundedCurrentPositionMs(interval)(
-      useGanttStore.getState(),
+      store.getState(),
     );
 
     expect(result).toBe(1738530000000);
   });
 
   it('currentRowScrollPx initial state is 0 and setter updates it', () => {
-    expect(useGanttStore.getState().currentRowScrollPx).toBe(0);
+    const store = createGanttStore({ startTimeMs: 0 });
 
-    useGanttStore.getState().setCurrentRowScrollPx(123);
+    expect(store.getState().currentRowScrollPx).toBe(0);
 
-    expect(useGanttStore.getState().currentRowScrollPx).toBe(123);
+    store.getState().setCurrentRowScrollPx(123);
+
+    expect(store.getState().currentRowScrollPx).toBe(123);
   });
 
   it('roundedCurrentRowScrollPx returns value rounded down to row height', () => {
-    // e.g., if row height is 40 and scroll is 125, rounded should be 120
-    const scrollPx = GANTT_ROW_HEIGHT_PX * 3 + 5; // 3 rows + 5px
-    useGanttStore.setState({ currentRowScrollPx: scrollPx });
+    const store = createGanttStore({ startTimeMs: 0 });
+    const scrollPx = GANTT_ROW_HEIGHT_PX * 3 + 5;
+    store.setState({ currentRowScrollPx: scrollPx });
 
-    const rounded = selectors.roundedCurrentRowScrollPx(
-      useGanttStore.getState(),
-    );
+    const rounded = selectors.roundedCurrentRowScrollPx(store.getState());
 
     expect(rounded).toBe(GANTT_ROW_HEIGHT_PX * 3);
   });

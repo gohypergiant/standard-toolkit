@@ -11,15 +11,12 @@
  */
 
 import { act, renderHook } from '@testing-library/react';
-import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { useGanttStore } from '../../store';
+import { afterAll, describe, expect, it, vi } from 'vitest';
+import { createGanttStoreProvider } from '../../__fixtures__/store-provider';
+import { useGanttStoreApi } from '../../context/store';
 import { useLayoutSubscription } from './index';
 
 describe('useLayoutSubscription', () => {
-  beforeEach(() => {
-    useGanttStore.setState({ currentPositionMs: 0 });
-  });
-
   afterAll(() => vi.restoreAllMocks());
 
   const createRafSpy = () => {
@@ -34,16 +31,22 @@ describe('useLayoutSubscription', () => {
   it('calls callback within effect (on render + store update)', () => {
     const rafSpy = createRafSpy();
     const callback = vi.fn();
+    const wrapper = createGanttStoreProvider({ startTimeMs: 0 });
 
-    renderHook(() =>
-      useLayoutSubscription({
-        callback,
-        selector: (state) => state.currentPositionMs,
-      }),
+    const { result } = renderHook(
+      () => {
+        const store = useGanttStoreApi();
+        const hookResult = useLayoutSubscription({
+          callback,
+          selector: (state) => state.currentPositionMs,
+        });
+        return { hookResult, store };
+      },
+      { wrapper },
     );
 
     act(() => {
-      useGanttStore.setState({ currentPositionMs: 500 });
+      result.current.store?.setState({ currentPositionMs: 500 });
     });
 
     // One call for initial mount, one for the store update

@@ -10,17 +10,17 @@
  * governing permissions and limitations under the License.
  */
 
-import { Children } from 'react';
+import { Children, type PropsWithChildren } from 'react';
 import { useGanttContext } from '../../context';
 import { useTotalDataRegionThresholds } from '../../hooks/use-total-data-region-thresholds';
 import styles from './styles.module.css';
 import { useRenderedRows } from './use-rendered-rows';
 import { useScrollSync } from './use-scroll-sync';
-import type { PropsWithChildren } from 'react';
 
 export function RowsVirtualizer({ children }: PropsWithChildren) {
   const { assignScrollContainerElementRef, scrollContainerElement } =
     useGanttContext();
+
   const { dimensions, renderedRows, onScroll } = useRenderedRows({
     children,
     scrollContainerElement,
