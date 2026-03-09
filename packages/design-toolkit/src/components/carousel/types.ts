@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import type { UniqueId } from '@accelint/core';
 import type { PropsWithChildren } from 'react';
 
 export type CarouselProps = PropsWithChildren & {
@@ -17,4 +18,14 @@ export type CarouselProps = PropsWithChildren & {
   // a matter of offloading that responsibility to implementation.
   currentPosition?: number;
   variant?: 'gallery' | 'noPreview' | 'select';
+};
+
+export type CarouselData = {
+  dataType: 'image' | 'video' | 'audio';
+  dataUrl: string;
+  fileName: string; // is this metadata?
+  metadata: object; // How to define this better.
+  title: string; // metadata?
+  thumbnailUrl: string;
+  uuid: UniqueId;
 };

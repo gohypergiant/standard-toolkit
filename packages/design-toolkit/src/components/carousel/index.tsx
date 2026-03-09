@@ -15,9 +15,11 @@ import 'client-only';
 import { ChevronLeft, ChevronRight } from '@accelint/icons';
 import { Button } from '../button';
 import { Icon } from '../icon';
+import { OptionsItem } from '../options/item';
+import { SelectField } from '../select-field';
 import { CarouselProvider } from './context';
 import type { PropsWithChildren } from 'react';
-import type { CarouselProps } from './types';
+import type { CarouselData, CarouselProps } from './types';
 
 export function Carousel({ children, variant = 'gallery' }: CarouselProps) {
   return (
@@ -70,14 +72,20 @@ export function CarouselNavigation({
   );
 }
 
-export function CarouselThumbnailGallery() {
+export function CarouselThumbnailGallery({ items }: { items: CarouselData[] }) {
   // height 284, y spacing-s, w-full
 
-  return <div>thumbnails</div>;
+  return (
+    <div className='spacing-y-s h-[284px] w-full'>
+      {items.map((item) => (
+        <CarouselThumbnailItem item={item} key={item.uuid} />
+      ))}
+    </div>
+  );
 }
 
-export function CarouselThumbnailItem() {
-  return <div>item</div>;
+function CarouselThumbnailItem({ item }: { item: CarouselData }) {
+  return <div>{item.title}</div>;
 }
 
 // Depends on how we want to handle carousel state. Might just grab
@@ -96,13 +104,14 @@ export function CarouselPositionDisplay({
   );
 }
 
-export function CarouselSelectField({ items }: { items: any[] }) {
-  return <div>hej</div>;
-  // return {
-  //   <SelectField>
-  //     {items.map((item) => (
-  //       <Selectio
-  //     ))}
-  //   </SelectField>
-  // }
+export function CarouselSelectField({ items }: { items: CarouselData[] }) {
+  return (
+    <SelectField placeholder='img'>
+      {items.map((item) => (
+        <OptionsItem textValue={item.title} key={item.uuid}>
+          {item.title}
+        </OptionsItem>
+      ))}
+    </SelectField>
+  );
 }

@@ -10,8 +10,15 @@
  * governing permissions and limitations under the License.
  */
 
-import { Carousel, CarouselViewer } from './';
+import { useState } from 'react';
+import {
+  Carousel,
+  CarouselControls,
+  CarouselThumbnailGallery,
+  CarouselViewer,
+} from './';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { CarouselData } from './types';
 
 const meta = {
   args: {
@@ -24,11 +31,26 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+const CAROUSEL_ITEMS: CarouselData[] = [];
+
 export const Default: Story = {
   render: (args) => {
+    const [_currentPosition, setCurrentPosition] = useState(0);
+    // TODO: Should this be baked in via context?
+    const onNext = () =>
+      setCurrentPosition((prev) =>
+        prev + 1 > CAROUSEL_ITEMS.length ? prev + 1 : prev,
+      );
+    const onPrevious = () =>
+      setCurrentPosition((prev) => (prev - 1 < 0 ? prev - 1 : 0));
+
     return (
       <Carousel variant={args.variant}>
+        {/* ? Design, can we condense the structure here. */}
         <CarouselViewer>View</CarouselViewer>
+        <CarouselControls onNext={onNext} onPrevious={onPrevious}>
+          <CarouselThumbnailGallery items={CAROUSEL_ITEMS} />
+        </CarouselControls>
       </Carousel>
     );
   },
