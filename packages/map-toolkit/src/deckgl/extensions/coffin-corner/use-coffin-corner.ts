@@ -38,6 +38,7 @@ export type UseCoffinCornerOptions = {
   /**
    * Accessor to extract an entity ID from a picked data item.
    * Must match the `getEntityId` prop passed to the CoffinCornerExtension.
+   * Should be a stable reference (module-level or `useCallback`) to avoid unnecessary store updates on every render.
    * @default (item) => item.id
    */
   // biome-ignore lint/suspicious/noExplicitAny: Data type is unknown at hook level.

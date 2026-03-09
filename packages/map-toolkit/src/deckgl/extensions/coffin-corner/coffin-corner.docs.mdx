@@ -104,7 +104,7 @@ React hook that manages coffin corner selection/hover state. Subscribes to map b
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
-| `getEntityId` | `(item: any) => EntityId` | `(item) => item.id` | Must match the `getEntityId` prop on the extension |
+| `getEntityId` | `(item: any) => EntityId` | `(item) => item.id` | Must match the `getEntityId` prop on the extension. Use a stable reference (module-level or `useCallback`) to avoid unnecessary store updates. |
 
 ---
 
