@@ -1,0 +1,206 @@
+name: to-core
+version: 1
+description: Extract and document an existing capability for library handoff
+artifacts:
+  - id: overview
+    generates: overview.md
+    description: What the capability is, what it does, what it depends on
+    template: overview.md
+    instruction: >
+      Analyze the existing implementation and produce an overview document.
+      Do NOT design or invent — extract from what exists in the codebase.
+      The user will tell you which directory or files to analyze.
+
+
+      Sections:
+
+      - **What This Is**: 2-3 sentences describing the capability. What does
+        it do? Who uses it in the application?
+
+      - **Problem It Solves**: What application need does this address?
+        Why was it built rather than using an off-the-shelf solution?
+
+      - **Key Dependencies**: External libraries and internal modules this
+        capability depends on. Distinguish between:
+        - Required: the capability cannot work without these
+        - Peer: expected in the host application (e.g. React, Deck.gl)
+        - Internal: app-specific, would need decoupling for library form
+
+      - **Scope Boundaries**:
+        - In Scope: What this capability does
+        - Out of Scope: What it deliberately does NOT do
+
+
+      Keep it concise (1 page). This becomes shared context for spec and design.
+    requires: []
+
+  - id: spec
+    generates: spec.md
+    description: Formal requirements extracted from the implementation behavior
+    template: spec.md
+    instruction: >
+      Extract formal requirements from the existing implementation.
+      Do NOT invent requirements — extract behavioral contracts from what the
+      code actually does. Read the implementation carefully before writing.
+
+
+      Rules:
+
+      - Requirements describe WHAT the system does, not HOW it does it
+
+      - Each requirement MUST be testable and observable from the outside
+
+      - Strip out app-specific coupling — requirements should describe
+        the capability, not the host application's configuration
+
+      - Use SHALL/MUST for normative requirements
+
+      - Every requirement MUST have at least one scenario
+
+      - Scenarios use exactly 4 hashtags (####). Using 3 will fail silently.
+
+
+      Format:
+
+      ```
+      ### Requirement: <name>
+      Description using SHALL/MUST.
+
+      #### Scenario: <name>
+      - **WHEN** <condition>
+      - **THEN** <expected outcome>
+      ```
+
+
+      Organize requirements into logical groups with ## headings.
+      Focus on the contract a consumer would observe, not internal mechanics.
+    requires:
+      - overview
+
+  - id: design
+    generates: design.md
+    description: Implementation decisions, tradeoffs, callouts, and library considerations
+    template: design.md
+    instruction: >
+      Document the key design decisions and insights from the existing
+      implementation. This is the most critical handoff artifact — it captures
+      what cannot be learned from reading the spec alone.
+
+
+      Do NOT evaluate or second-guess decisions — document them accurately.
+      The receiving team needs to understand WHY things are the way they are.
+
+
+      Sections:
+
+      - **Decisions**: Key technical choices made. For each:
+        - What was chosen
+        - Why (what problem it solves or constraint it addresses)
+        - Alternatives considered (if discernible from the code)
+
+      - **Tradeoffs**: Known limitations or accepted compromises. Be honest.
+        What does this implementation trade away for what it gains?
+
+      - **Callouts**: Non-obvious details the receiving team MUST know.
+        These are things that look simple but will cause subtle bugs if
+        misunderstood. Format each as:
+
+        **[Topic]**: explanation of the non-obvious detail and consequence
+        of getting it wrong.
+
+      - **Application Specific Concerns**: App-specific concerns that need
+        to be decoupled in a standalone library. For each item, specify:
+        - What is coupled to the host app
+        - What the coupling is (import, framework, state, config)
+        - Suggestions for a library abstraction
+    requires:
+      - overview
+
+  - id: system
+    generates: system.md
+    description: Implementation details — module structure, data flow, and key algorithms
+    template: system.md
+    instruction: >
+      Document the actual implementation of this capability. This is the HOW —
+      not decisions (that's design.md) and not requirements (that's spec.md),
+      but the concrete mechanics of how the code works.
+
+
+      The receiving team will use this to understand the reference implementation
+      deeply before designing their own. AI agents will use it to understand
+      internal wiring when generating library architecture.
+
+
+      Do NOT editorialize or suggest improvements. Document what exists.
+      Use ASCII diagrams liberally — they are often clearer than prose for
+      data flow and module relationships.
+
+
+      Sections:
+
+      - **Module Structure**: A map of every file in the capability, with a
+        one-line description of what each file does. Group by subdirectory.
+
+      - **Data Flow**: How data moves through the system at runtime. Cover:
+        - What triggers a render cycle
+        - How viewport state becomes grid geometry
+        - How selection state reaches the overlay layer
+        Use a diagram where helpful.
+
+      - **Rendering Pipeline**: How Deck.gl layers are constructed and returned.
+        For each layer class:
+        - What triggers re-render (`shouldUpdateState`)
+        - What sub-layers are produced (`renderLayers`)
+        - How data is shaped before passing to sub-layers
+
+      - **Key Algorithms**: Non-obvious logic worth documenting in detail.
+        At minimum, cover:
+        - Viewport bounds calculation (antimeridian, full-globe detection)
+        - Zoom range filtering and draw order
+        - Any other logic that would be easy to get wrong in a reimplementation
+    requires:
+      - overview
+
+  - id: api
+    generates: api.md
+    description: Suggestive proposed public API for the library
+    template: api.md
+    instruction: >
+      Propose a suggestive public API for the library form of this capability.
+      This is guidance, not a contract. The receiving team will make their own
+      decisions. Your job is to give them a well-informed starting point based
+      on deep knowledge of the implementation.
+
+
+      Important: Decouple from the host application. The proposed API should
+      work as a standalone library — no app-specific state, no internal
+      framework assumptions unless they are explicit peer dependencies.
+
+
+      Sections:
+
+      - **Proposed Types**: Suggested public TypeScript interfaces and types.
+        Include only what a consumer needs to see — not internal types.
+
+      - **Proposed Layer / Component API**: Suggested names and prop shapes
+        for the primary exports. Show example usage where it clarifies intent.
+
+      - **Proposed Exports**: What the library package would expose.
+        Named exports, default exports, type-only exports.
+
+      - **What NOT to Expose**: Internal implementation details that should
+        stay private. Name them and briefly explain why.
+
+      - **Open Questions for the Receiving Team**: Decisions this team
+        deliberately leaves for the library team. Frame as real questions
+        with context — the receiving team should be able to answer each one
+        in their scope.md.
+
+
+      Note: These artifacts will be delivered to the receiving team out-of-band
+      (e.g. zipped and attached to a ticket). They will place them in
+      openspec/handoff/ in their repository and run the from-backport schema.
+    requires:
+      - spec
+      - design
+      - system
