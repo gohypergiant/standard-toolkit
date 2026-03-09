@@ -39,7 +39,12 @@ export const TIMESCALE_MAPPING: Record<Timescale, number> = {
 
 export const TIMELINE_CHUNK_WIDTH = 80;
 
-export const BUFFERED_CHUNK_COUNT = 2;
+// Important: This needs to be at least 4 so we have at least
+// one chunk completely out of view on either end of
+// the timeline. Otherwise, the useResizeIntersectionEffect
+// hook will create an infinite rendering loop because
+// of the IntersectionObserver logic.
+export const BUFFERED_CHUNK_COUNT = 4;
 export const GANTT_ROW_HEIGHT_PX = 40;
 export const GANTT_ROW_ELEMENT_HEIGHT = 30;
 export const ROW_VIRTUALIZATION_OVERSCAN = 1;
