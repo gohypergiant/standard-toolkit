@@ -47,7 +47,7 @@ type CoffinCornerState = {
  */
 type CoffinCornerActions = {
   setSelectedId: (id: EntityId | undefined) => void;
-  clearSelection: () => void;
+  deselect: () => void;
   setLayerId: (layerId: string) => void;
   setGetEntityId: (fn: GetEntityId) => void;
 };
@@ -64,7 +64,7 @@ const mapEventBus = Broadcast.getInstance<MapEventType>();
  *
  * @example
  * ```tsx
- * const { state, setSelectedId, clearSelection } = coffinCornerStore.use(mapId);
+ * const { state, setSelectedId, deselect } = coffinCornerStore.use(mapId);
  * ```
  */
 export const coffinCornerStore = createMapStore<
@@ -104,7 +104,7 @@ export const coffinCornerStore = createMapStore<
       }
     },
 
-    clearSelection: () => {
+    deselect: () => {
       coffinCornerEventBus.emit(CoffinCornerEvents.DESELECTED, {
         mapId,
         selectedId: undefined,

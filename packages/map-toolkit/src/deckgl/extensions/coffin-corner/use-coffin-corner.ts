@@ -28,7 +28,7 @@ export type UseCoffinCornerReturn = {
   /** Set the selected entity ID */
   setSelectedId: (id: EntityId | undefined) => void;
   /** Clear the current selection */
-  clearSelection: () => void;
+  deselect: () => void;
 };
 
 /**
@@ -85,7 +85,7 @@ export function useCoffinCorner(
   layerId: string,
   options?: UseCoffinCornerOptions,
 ): UseCoffinCornerReturn {
-  const { state, setSelectedId, clearSelection, setLayerId, setGetEntityId } =
+  const { state, setSelectedId, deselect, setLayerId, setGetEntityId } =
     coffinCornerStore.use(mapId);
 
   // Unlike a CompositeLayer, CoffinCornerExtension is a shader-only plugin
@@ -95,16 +95,18 @@ export function useCoffinCorner(
     setLayerId(layerId);
   }, [setLayerId, layerId]);
 
+  const getEntityId = options?.getEntityId;
+
   useEffect(() => {
-    if (options?.getEntityId) {
-      setGetEntityId(options.getEntityId);
+    if (getEntityId) {
+      setGetEntityId(getEntityId);
     }
-  }, [setGetEntityId, options]);
+  }, [setGetEntityId, getEntityId]);
 
   return {
     selectedId: state.selectedId,
     hoveredId: state.hoveredId,
     setSelectedId,
-    clearSelection,
+    deselect,
   };
 }

@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+// Storybook-only JSX augmentation — not exported from the package build.
 import type { IconLayerProps } from '@deck.gl/layers';
 import type { CoffinCornerExtensionProps } from './types';
 

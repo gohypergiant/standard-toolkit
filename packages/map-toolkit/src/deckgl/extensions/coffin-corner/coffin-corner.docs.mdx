@@ -1,25 +1,12 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+import * as CoffinCornerStories from './coffin-corner.stories';
+
+<Meta of={CoffinCornerStories} />
+
 # Coffin Corner Extension
 
 A deck.gl layer extension that draws bracket-shaped "coffin corner" indicators around hovered and selected map entities. Works with IconLayer and anything that extends it (like SymbolLayer).
-
-## Table of Contents
-
-- [Quick Start](#quick-start)
-- [What is this?](#what-is-this)
-- [Why a shader extension?](#why-a-shader-extension)
-- [Architecture](#architecture)
-- [API](#api)
-  - [CoffinCornerExtension](#coffincornerextension)
-  - [useCoffinCorner](#usecoffincorner)
-  - [Store (imperative)](#store-imperative)
-  - [Events](#events)
-  - [Types](#types)
-- [Examples](#examples)
-  - [React (with hook)](#react-with-hook)
-  - [Imperative (without React)](#imperative-without-react)
-  - [Custom entity ID accessor](#custom-entity-id-accessor)
-  - [Custom selection color](#custom-selection-color)
-- [Limitations](#limitations)
 
 ## Quick Start
 
@@ -50,31 +37,17 @@ This extension renders L-shaped bracket indicators at all four corners of an ico
 
 ## Why a shader extension?
 
-deck.gl's built-in picking has issues when the viewport is actively updating (panning, zooming). Icons can become un-clickable or report stale positions mid-animation. By tracking selection state in a separate store and rendering the indicators in the shader, we avoid the picking pipeline entirely. The store syncs via `@accelint/bus` events, so it works regardless of viewport state.
+The original approach used a separate icon atlas (sprite sheet) layer to draw coffin corners. This creates a dependency on a sprite sheet that is typically generated at the application level rather than the library level, forcing consumers to either pass sprite sheet props into the layer or export a "basic" sprite sheet from MapTK. A shader extension sidesteps this entirely: the brackets are rendered via SDF math in the fragment shader, so there's no sprite sheet, no icon atlas conflicts, and no extra layer. The extension plugs directly into the host IconLayer (or SymbolLayer) and composites the brackets over the existing icon texture on the GPU.
 
 ## Architecture
 
-```
-┌─────────────────────────────────────────────────┐
-│  React                                          │
-│  useCoffinCorner(mapId, layerId)                │
-│    ↕ reads state, sets layerId                  │
-├─────────────────────────────────────────────────┤
-│  Store (framework-agnostic)                     │
-│  coffinCornerStore                              │
-│    ← listens to map bus (click/hover events)    │
-│    → emits domain events (selected/deselected)  │
-│    → state: { selectedId, hoveredId }           │
-├─────────────────────────────────────────────────┤
-│  Extension (pure deck.gl)                       │
-│  CoffinCornerExtension                          │
-│    ← reads selectedEntityId/hoveredEntityId     │
-│    → injects SDF shader code into IconLayer     │
-│    → draws brackets on GPU                      │
-└─────────────────────────────────────────────────┘
-```
+The system has three independent layers. The React hook is a convenience wrapper — you can use the store imperatively for non-React contexts.
 
-The three layers are independent. The React hook is a convenience wrapper — you can use the store imperatively for non-React contexts.
+| Layer | Module | Role |
+|-------|--------|------|
+| **React** | `useCoffinCorner(mapId, layerId)` | Reads state, sets `layerId` |
+| **Store** (framework-agnostic) | `coffinCornerStore` | Listens to map bus (click/hover events), emits domain events (selected/deselected), holds `{ selectedId, hoveredId }` |
+| **Extension** (pure deck.gl) | `CoffinCornerExtension` | Reads `selectedEntityId` / `hoveredEntityId`, injects SDF shader code into IconLayer, draws brackets on GPU |
 
 ## API
 
@@ -125,7 +98,7 @@ React hook that manages coffin corner selection/hover state. Subscribes to map b
 | `selectedId` | `EntityId \| undefined` | Currently selected entity ID |
 | `hoveredId` | `EntityId \| undefined` | Currently hovered entity ID |
 | `setSelectedId` | `(id: EntityId \| undefined) => void` | Programmatically set selection |
-| `clearSelection` | `() => void` | Clear the current selection |
+| `deselect` | `() => void` | Clear the current selection |
 
 **Options:**
 
@@ -167,7 +140,7 @@ Get action methods without subscribing to state changes.
 | Action | Type | Description |
 |--------|------|-------------|
 | `setSelectedId` | `(id: EntityId \| undefined) => void` | Set the selected entity |
-| `clearSelection` | `() => void` | Clear selection |
+| `deselect` | `() => void` | Clear selection |
 | `setLayerId` | `(layerId: string) => void` | Set which layer to listen for interactions on |
 | `setGetEntityId` | `(fn: GetEntityId) => void` | Set the entity ID accessor |
 
@@ -335,7 +308,3 @@ The alpha channel modulates bracket opacity. `[255, 0, 0, 127]` gives you semi-t
 - **IconLayer only.** The shader depends on `iconsTexture` and `vTextureCoords`, which only exist on `IconLayer` and its subclasses (`SymbolLayer`, `MultiIconLayer`). It won't work on `ScatterplotLayer`, `GeoJsonLayer` (for circle points), or other layer types. Supporting non-icon point layers is a potential follow-on — the SDF bracket math is reusable, but the compositing logic would need to differ per layer type.
 
 - **No deck.gl picking.** Selection is tracked in a store rather than using deck.gl's built-in picking, since picking has issues during viewport updates (panning/zooming). This means the extension doesn't integrate with deck.gl's `highlightedObjectIndex` or `autoHighlight`.
-
-## License
-
-Apache 2.0 — see [LICENSE](../../../../LICENSE) for details.
