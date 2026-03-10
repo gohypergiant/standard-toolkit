@@ -75,8 +75,5 @@ export function shouldRenderCurrentTime(
   currentTimeMs: number,
   renderedRegionBounds: TimeBounds,
 ) {
-  return (
-    currentTimeMs >= renderedRegionBounds.startMs &&
-    currentTimeMs <= renderedRegionBounds.endMs
-  );
+  return timestampWithinBounds(currentTimeMs, renderedRegionBounds);
 }

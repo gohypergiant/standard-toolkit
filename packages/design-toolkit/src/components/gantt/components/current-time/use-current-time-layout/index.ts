@@ -64,12 +64,8 @@ export function useCurrentTimeLayout({
   currentTimeMs,
   indicatorElement,
 }: UseCurrentTimeLayoutProps): UseCurrentTimeLayoutValue {
-  const {
-    renderedRegionBounds,
-    msPerPx,
-    scrollContainerElement,
-    timelineContainerElement,
-  } = useGanttContext();
+  const { msPerPx, scrollContainerElement, timelineContainerElement } =
+    useGanttContext();
 
   const labelElementRef = useRef<HTMLDivElement>(null);
 
@@ -80,7 +76,6 @@ export function useCurrentTimeLayout({
       }
 
       const translateX = deriveCurrentTimeTranslateX(
-        renderedRegionBounds,
         currentTimeMs,
         msPerPx,
         currentPositionMs,
@@ -100,7 +95,6 @@ export function useCurrentTimeLayout({
     },
     [
       currentTimeElement,
-      renderedRegionBounds,
       msPerPx,
       currentTimeMs,
       indicatorElement,

@@ -17,9 +17,8 @@
     --top: attr(data-top px);
 
     @apply font-display text-body-xs fg-primary-bold pointer-events-none absolute z-10 flex flex-col items-center justify-center;
-    margin-left: -22px;
     top: var(--top);
-    transform: translateX(var(--translate-x));
+    transform: translateX(calc(var(--translate-x) - 50%));
   }
 
   .current-time-label {
@@ -29,7 +28,7 @@
   }
 
   .current-time-indicator {
-    @apply fg-accent-primary-bold w-px translate-x-px;
+    @apply fg-accent-primary-bold w-px;
     --dash: 6px;
     --gap: 6px;
     --border: 3px;

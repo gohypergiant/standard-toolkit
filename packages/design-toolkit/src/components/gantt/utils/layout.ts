@@ -45,16 +45,11 @@ function deriveElementTranslateX(
 }
 
 export function deriveCurrentTimeTranslateX(
-  renderedRegionBounds: TimeBounds,
   currentTimeMs: number,
   msPerPx: number,
   currentPositionMs: number,
 ) {
-  const startMs = renderedRegionBounds.startMs;
-  const timeFromRenderedRegionStartMs = currentTimeMs - startMs;
-  const offsetMs = currentPositionMs - startMs;
-
-  return (timeFromRenderedRegionStartMs - offsetMs) / msPerPx;
+  return (currentTimeMs - currentPositionMs) / msPerPx;
 }
 
 export function deriveRangeElementLayout(

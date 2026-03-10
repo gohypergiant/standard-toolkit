@@ -23,7 +23,7 @@ import type { ThresholdProps, Timescale } from './types';
 type GanttProps = {
   startTimeMs: number;
   endTimeMs: number;
-  currentTimeMs: number;
+  currentTimeMs?: number;
   timescale: Timescale;
   thresholdProps?: ThresholdProps;
 };
@@ -59,7 +59,7 @@ export function Gantt({
         className={styles.container}
         data-padding-top={GANTT_CONTAINER_TOP_PADDING_PX}
       >
-        <CurrentTime currentTimeMs={currentTimeMs} />
+        {currentTimeMs && <CurrentTime currentTimeMs={currentTimeMs} />}
         <Timeline />
         <RowsVirtualizer>{children}</RowsVirtualizer>
       </div>

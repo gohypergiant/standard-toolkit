@@ -258,7 +258,6 @@ describe('deriveTranslateXValue', () => {
   });
 
   describe('deriveCurrentTimeTranslateX', () => {
-    const renderedRegionBounds = { startMs: 1000, endMs: 2000 };
     const msPerPx = 10;
 
     it('calculates translateX when current time equals current position', () => {
@@ -266,7 +265,6 @@ describe('deriveTranslateXValue', () => {
       const currentPositionMs = 1500;
 
       const result = deriveCurrentTimeTranslateX(
-        renderedRegionBounds,
         currentTimeMs,
         msPerPx,
         currentPositionMs,
@@ -280,7 +278,6 @@ describe('deriveTranslateXValue', () => {
       const currentPositionMs = 1500;
 
       const result = deriveCurrentTimeTranslateX(
-        renderedRegionBounds,
         currentTimeMs,
         msPerPx,
         currentPositionMs,
@@ -294,7 +291,6 @@ describe('deriveTranslateXValue', () => {
       const currentPositionMs = 1500;
 
       const result = deriveCurrentTimeTranslateX(
-        renderedRegionBounds,
         currentTimeMs,
         msPerPx,
         currentPositionMs,
