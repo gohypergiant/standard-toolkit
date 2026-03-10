@@ -20,12 +20,13 @@ import { isCircleShape } from '../../shared/types';
 import type { DistanceUnitSymbol } from '@accelint/constants/units';
 import type { Shape } from '../../shared/types';
 
+/** Default distance unit symbol for radius display when no unit is specified. */
 const DEFAULT_RADIUS_DISPLAY_SYMBOL: DistanceUnitSymbol =
   DISTANCE_UNIT_SYMBOLS.nauticalmiles;
 
 /**
  * Get the formatted radius label text for a circle shape.
- * Returns null for non-circle shapes.
+ * Returns an empty string for non-circle shapes.
  *
  * Uses the same `formatDistance` formatter as draw/edit tooltips for consistency.
  * Unlike `formatCircleTooltip` (which shows both radius and area during draw/edit),
@@ -33,14 +34,23 @@ const DEFAULT_RADIUS_DISPLAY_SYMBOL: DistanceUnitSymbol =
  *
  * @param shape - The shape to get radius text for
  * @param unitSymbol - Display unit symbol (e.g., 'km', 'NM'). Defaults to 'NM'.
- * @returns Formatted radius string (e.g., "r: 250.00 NM") or null for non-circle shapes
+ * @returns Formatted radius string (e.g., "r: 250.00 NM") or empty string for non-circle shapes
+ *
+ * @example
+ * ```typescript
+ * const label = getRadiusLabelText(circleShape, 'km');
+ * // 'r: 250.00 km'
+ *
+ * const empty = getRadiusLabelText(polygonShape);
+ * // ''
+ * ```
  */
 export function getRadiusLabelText(
   shape: Shape,
   unitSymbol?: DistanceUnitSymbol,
-): string | null {
+): string {
   if (!isCircleShape(shape)) {
-    return null;
+    return '';
   }
 
   const { value, units } = shape.feature.properties.circleProperties.radius;

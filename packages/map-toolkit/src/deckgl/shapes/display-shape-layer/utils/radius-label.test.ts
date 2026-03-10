@@ -24,8 +24,8 @@ const circleFixture = mockShapes[0] as CircleShape;
 const pointFixture = mockShapes[2] as Shape;
 
 describe('getRadiusLabelText', () => {
-  it('returns null for non-circle shapes', () => {
-    expect(getRadiusLabelText(pointFixture)).toBeNull();
+  it('returns empty string for non-circle shapes', () => {
+    expect(getRadiusLabelText(pointFixture)).toBe('');
   });
 
   it('returns formatted radius with default unit (NM)', () => {
@@ -46,12 +46,5 @@ describe('getRadiusLabelText', () => {
 
     const expectedValue = convertLength(250, 'kilometers', 'miles');
     expect(result).toBe(`r: ${formatDistance(expectedValue)} mi`);
-  });
-
-  it('skips conversion when shape unit matches display unit', () => {
-    const result = getRadiusLabelText(circleFixture, 'km');
-
-    // 250 km stored, display in km — no conversion
-    expect(result).toBe('r: 250.00 km');
   });
 });

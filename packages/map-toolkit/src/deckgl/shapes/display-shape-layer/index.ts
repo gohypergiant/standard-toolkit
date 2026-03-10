@@ -899,8 +899,8 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
    */
   private renderRadiusLabelLayer(): TextLayer[] {
     const { data, unit, showLabels, labelOptions } = this.props;
-    const hoverIndex = this.state?.hoverIndex;
 
+    const hoverIndex = this.state?.hoverIndex;
     if (hoverIndex === undefined) {
       return [];
     }
