@@ -11,10 +11,13 @@
  */
 
 import {
-  type DistanceUnit,
-  getDistanceUnitFromAbbreviation,
-} from '../shared/units';
+  DISTANCE_UNIT_BY_SYMBOL,
+  DISTANCE_UNIT_SYMBOLS,
+} from '@accelint/constants/units';
+import { createLoggerDomain } from '../shared/logger';
 import type { GetViewportSizeArgs } from './types';
+
+const logger = createLoggerDomain('[Viewport]');
 
 const numberFormatter = Intl.NumberFormat('en-US');
 
@@ -47,17 +50,17 @@ const METERS_TO_UNIT = {
  * @param args.zoom - Zoom level for meters-per-pixel calculation
  * @param args.width - Viewport width in pixels
  * @param args.height - Viewport height in pixels
- * @param args.unit - Unit of distance measurement: `km | m | nm | mi | ft`. Defaults to `nm`
+ * @param args.unit - Unit symbol: `km | m | NM | mi | ft`. Defaults to `NM`
  * @param args.formatter - Number formatter for localization (defaults to en-US)
  * @returns Formatted string like "660 x 1,801 NM" or "-- x -- NM" if invalid
  *
  * @example
  * ```typescript
- * getViewportSize({ bounds: [-82, 22, -71, 52], zoom: 5, width: 800, height: 600, unit: 'nm' })
+ * getViewportSize({ bounds: [-82, 22, -71, 52], zoom: 5, width: 800, height: 600, unit: 'NM' })
  * // returns "612 x 459 NM"
  *
  * getViewportSize({ bounds: [170, 50, -170, 60], zoom: 4, width: 1024, height: 768, unit: 'km' })
- * // returns "2,050 x 1,538 KM"
+ * // returns "2,050 x 1,538 km"
  * ```
  */
 export function getViewportSize({
@@ -65,10 +68,21 @@ export function getViewportSize({
   zoom,
   width: pixelWidth,
   height: pixelHeight,
-  unit = 'nm',
+  unit = 'NM',
   formatter = numberFormatter,
 }: GetViewportSizeArgs) {
-  const defaultValue = `-- x -- ${unit.toUpperCase()}`;
+  const defaultValue = `-- x -- ${unit}`;
+  const unitKey = DISTANCE_UNIT_BY_SYMBOL[unit];
+
+  if (!unitKey) {
+    const validSymbols = Object.values(DISTANCE_UNIT_SYMBOLS).join(', ');
+
+    logger.error(
+      `Invalid distance unit symbol: "${unit}". Expected one of: ${validSymbols}`,
+    );
+
+    return defaultValue;
+  }
 
   // Validate inputs
   if (!bounds || bounds.every((b) => Number.isNaN(b))) {
@@ -100,7 +114,6 @@ export function getViewportSize({
   const heightMeters = pixelHeight * metersPerPixel;
 
   // Convert to requested unit
-  const unitKey = getDistanceUnitFromAbbreviation(unit) as DistanceUnit;
   const conversionFactor = METERS_TO_UNIT[unitKey];
 
   const widthDistance = Math.round(widthMeters * conversionFactor);
@@ -109,5 +122,5 @@ export function getViewportSize({
   const width = formatter.format(widthDistance);
   const height = formatter.format(heightDistance);
 
-  return `${width} x ${height} ${unit.toUpperCase()}`;
+  return `${width} x ${height} ${unit}`;
 }

@@ -11,6 +11,10 @@
  */
 
 import {
+  DISTANCE_UNIT_SYMBOLS,
+  type DistanceUnit,
+} from '@accelint/constants/units';
+import {
   type DraggingEvent,
   type FeatureCollection,
   type GeoJsonEditMode,
@@ -19,10 +23,7 @@ import {
   TranslateMode,
 } from '@deck.gl-community/editable-layers';
 import { centroid } from '@turf/turf';
-import {
-  DEFAULT_DISTANCE_UNITS,
-  getDistanceUnitAbbreviation,
-} from '@/shared/units';
+import { DEFAULT_DISTANCE_UNITS } from '@/shared/units';
 import { formatCircleTooltip } from '../../shared/constants';
 import { computeCircleMeasurements } from '../../shared/utils/geometry-measurements';
 import { BaseTransformMode, type HandleMatcher } from './base-transform-mode';
@@ -115,7 +116,8 @@ export class CircleTransformMode extends BaseTransformMode {
 
     const { mapCoords } = event;
     const distanceUnits =
-      props.modeConfig?.distanceUnits ?? DEFAULT_DISTANCE_UNITS;
+      (props.modeConfig?.distanceUnits as DistanceUnit) ??
+      DEFAULT_DISTANCE_UNITS;
 
     // Get the selected feature to calculate radius from its geometry
     const selectedIndexes = props.selectedIndexes;
@@ -148,7 +150,7 @@ export class CircleTransformMode extends BaseTransformMode {
       firstPoint,
       distanceUnits,
     );
-    const unitAbbrev = getDistanceUnitAbbreviation(distanceUnits);
+    const unitAbbrev = DISTANCE_UNIT_SYMBOLS[distanceUnits];
 
     // Position tooltip at cursor - offset is applied via getPixelOffset in sublayer props
     this.tooltip = {

@@ -26,7 +26,7 @@
   }
 
   .headerTitle {
-    @apply text-header-m pl-4;
+    @apply text-header-m pl-xs;
   }
 
   .floatingCardProvider {

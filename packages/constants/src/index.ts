@@ -22,3 +22,5 @@ export {
   HEX_REGEX,
 } from './color';
 export { DEFAULT_COORDINATE } from './coordinates';
+export { DISTANCE_UNIT_BY_SYMBOL, DISTANCE_UNIT_SYMBOLS } from './units';
+export type { DistanceUnit, DistanceUnitSymbol } from './units';

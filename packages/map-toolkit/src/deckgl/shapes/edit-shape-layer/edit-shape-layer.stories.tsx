@@ -25,6 +25,7 @@ import { DrawShapeLayer } from '../draw-shape-layer/index';
 import { useDrawShape } from '../draw-shape-layer/use-draw-shape';
 import { ShapeEvents } from '../shared/events';
 import { ShapeFeatureType } from '../shared/types';
+import { duplicateShape } from '../shared/utils/duplicate-shape';
 import type { ShapeHoveredEvent, ShapeSelectedEvent } from '../shared/events';
 import type { Shape } from '../shared/types';
 import './fiber';
@@ -561,6 +562,183 @@ export const LockedShapes: Story = {
               <li>Locked shapes cannot be edited</li>
               <li>Toggle lock state with the Lock/Unlock button</li>
               <li>Useful for protecting imported or finalized data</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    );
+  },
+};
+
+/**
+ * Duplicate Shape
+ *
+ * Demonstrates programmatic shape duplication using `duplicateShape()`.
+ *
+ * Instructions:
+ * 1. Configure name and offset in the Storybook controls panel
+ * 2. Click a shape on the map to select it
+ * 3. Click "Duplicate" to clone with the configured options
+ * 4. The event log shows each duplication
+ */
+const DUPLICATE_MAP_ID = uuid();
+
+type DuplicateShapeArgs = {
+  /** Custom name for the clone. Defaults to "{original name} (copy)". */
+  name: string;
+  /** Coordinate offset [longitude, latitude] applied to all geometry coordinates. */
+  offset: [number, number];
+};
+
+export const DuplicateShape: StoryObj<DuplicateShapeArgs> = {
+  args: {
+    name: '',
+    offset: [0.5, -0.5],
+  },
+  argTypes: {
+    name: {
+      control: 'text',
+      description:
+        'Custom name for the clone. Leave empty to use default "{name} (copy)".',
+    },
+    offset: {
+      control: 'object',
+      description:
+        'Coordinate offset [longitude, latitude] applied to all geometry coordinates.',
+    },
+  },
+  render: ({ name: customName, offset }) => {
+    const [shapes, setShapes] = useState<Shape[]>(createSampleShapes);
+    const [eventLog, setEventLog] = useState<
+      Array<{ id: string; message: string }>
+    >([]);
+
+    const { requestCursorChange, clearCursor } = useMapCursor(DUPLICATE_MAP_ID);
+
+    const { selectedId, clearSelection } = useSelectShape(DUPLICATE_MAP_ID);
+    const selectedShape = shapes.find((s) => s.id === selectedId) ?? null;
+
+    // Handle hover events for cursor changes
+    useOn<ShapeHoveredEvent>(ShapeEvents.hovered, (event) => {
+      if (event.payload.mapId !== DUPLICATE_MAP_ID) {
+        return;
+      }
+
+      if (event.payload.shapeId) {
+        requestCursorChange('pointer', 'display-shapes');
+      } else {
+        clearCursor('display-shapes');
+      }
+    });
+
+    const handleDuplicate = () => {
+      if (!selectedShape) {
+        return;
+      }
+
+      const options: Parameters<typeof duplicateShape>[1] = {};
+      if (customName) {
+        options.name = customName;
+      }
+      if (offset[0] !== 0 || offset[1] !== 0) {
+        options.offset = offset;
+      }
+
+      const clone = duplicateShape(selectedShape, options);
+      setShapes((prev) => [...prev, clone]);
+      clearSelection();
+      setEventLog((log) => [
+        ...log.slice(-9),
+        {
+          id: `${Date.now()}-duplicated`,
+          message: `Duplicated: "${selectedShape.name}" -> "${clone.name}"${options.offset ? ` (offset: [${offset}])` : ''}`,
+        },
+      ]);
+    };
+
+    const handleDelete = () => {
+      if (selectedShape) {
+        setShapes((prev) => prev.filter((s) => s.id !== selectedShape.id));
+        clearSelection();
+        setEventLog((log) => [
+          ...log.slice(-9),
+          {
+            id: `${Date.now()}-deleted`,
+            message: `Deleted: "${selectedShape.name}"`,
+          },
+        ]);
+      }
+    };
+
+    return (
+      <div className='relative h-dvh w-dvw'>
+        <BaseMap className='absolute inset-0' id={DUPLICATE_MAP_ID}>
+          <displayShapeLayer
+            id='shapes'
+            mapId={DUPLICATE_MAP_ID}
+            data={shapes}
+            showLabels='always'
+            pickable
+            selectedShapeId={selectedId}
+          />
+        </BaseMap>
+
+        <div className='absolute top-l left-l z-10 flex max-h-[calc(100%-2rem)] w-[320px] flex-col gap-l overflow-y-auto rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
+          <p className='font-bold text-header-l'>Duplicate Shapes</p>
+
+          {/* Status indicator */}
+          <div className='rounded-lg bg-info-muted p-s'>
+            <code className='text-body-m'>
+              {selectedShape
+                ? `Selected: ${selectedShape.name}`
+                : 'Click a shape to select'}
+            </code>
+          </div>
+
+          {/* Action buttons */}
+          {selectedShape && (
+            <div className='flex flex-col gap-s'>
+              <Button variant='filled' color='accent' onPress={handleDuplicate}>
+                Duplicate
+              </Button>
+              <Button variant='outline' color='critical' onPress={handleDelete}>
+                Delete
+              </Button>
+            </div>
+          )}
+
+          {/* Event log */}
+          <div className='flex flex-col'>
+            <p className='mb-s font-semibold text-body-s'>
+              Event Log ({shapes.length} shapes)
+            </p>
+            <div className='h-[120px] overflow-y-auto rounded-lg border border-border-default bg-surface-subtle p-s'>
+              {eventLog.length === 0 ? (
+                <p className='text-body-xs text-content-disabled'>
+                  Click a shape, then duplicate it...
+                </p>
+              ) : (
+                eventLog.map((entry) => (
+                  <p key={entry.id} className='mb-xs text-body-xs'>
+                    {entry.message}
+                  </p>
+                ))
+              )}
+            </div>
+          </div>
+
+          {/* Instructions */}
+          <div className='rounded-lg bg-surface-contrast-subtle p-s'>
+            <p className='mb-xs font-semibold text-body-xs'>
+              Duplicate Options:
+            </p>
+            <ul className='list-inside list-disc space-y-xs text-body-xs text-content-secondary'>
+              <li>Click a shape to select it</li>
+              <li>"Duplicate" clones with current control values</li>
+              <li>Set name and offset in the controls panel</li>
+              <li>Offset [0, 0] means no offset (clone in place)</li>
+              <li>Clones inherit shape type, style, and geometry</li>
+              <li>Clones are always unlocked</li>
             </ul>
           </div>
         </div>

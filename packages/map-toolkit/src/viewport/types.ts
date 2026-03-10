@@ -10,21 +10,24 @@
  * governing permissions and limitations under the License.
  */
 
+import type { DistanceUnitSymbol } from '@accelint/constants/units';
 import type { Bounds } from '../deckgl/base-map/types';
-import type { DistanceUnitAbbreviation } from '../shared/units';
 
-export type SupportedDistanceUnit = DistanceUnitAbbreviation;
-
+/** Arguments for {@link getViewportSize}. */
 export type GetViewportSizeArgs = {
   /** Geographic bounds, undefined if viewport not yet initialized */
   bounds?: Bounds;
+  /** Map zoom level for meters-per-pixel calculation. */
   zoom: number;
   /** Viewport width in pixels */
   width: number;
   /** Viewport height in pixels */
   height: number;
-  unit?: SupportedDistanceUnit;
+  /** Distance unit symbol. Defaults to `'NM'`. */
+  unit?: DistanceUnitSymbol;
+  /** Number formatter for localization. Defaults to `en-US`. */
   formatter?: Intl.NumberFormat;
 };
 
+/** A geographic coordinate as `[longitude, latitude]`. */
 export type GeoCoordinate = [longitude: number, latitude: number];
