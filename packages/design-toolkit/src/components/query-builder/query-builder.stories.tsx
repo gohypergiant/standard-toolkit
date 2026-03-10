@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { action } from 'storybook/actions';
 import { useState } from 'react';
+import { action } from 'storybook/actions';
 import { QueryBuilder } from './';
 import { defaultQuery, fields } from './__fixtures__/example-configuration';
 import type { Meta, StoryObj } from '@storybook/react-vite';
