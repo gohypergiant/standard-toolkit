@@ -19,6 +19,7 @@
     ".": "./dist/index.js",
     "./color": "./dist/color/index.js",
     "./coordinates": "./dist/coordinates/index.js",
+    "./units": "./dist/units/index.js",
     "./package.json": "./package.json"
   },
   "files": [

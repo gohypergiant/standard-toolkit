@@ -11,6 +11,10 @@
  */
 
 import {
+  DISTANCE_UNIT_SYMBOLS,
+  type DistanceUnit,
+} from '@accelint/constants/units';
+import {
   DrawRectangleMode,
   type FeatureCollection,
   type ModeProps,
@@ -26,10 +30,7 @@ import {
   destination,
   distance,
 } from '@turf/turf';
-import {
-  DEFAULT_DISTANCE_UNITS,
-  getDistanceUnitAbbreviation,
-} from '@/shared/units';
+import { DEFAULT_DISTANCE_UNITS } from '@/shared/units';
 import { formatRectangleTooltip } from '../../shared/constants';
 import type { Position } from 'geojson';
 
@@ -167,7 +168,8 @@ export class DrawRectangleModeWithTooltip extends DrawRectangleMode {
 
     const { mapCoords } = event;
     const distanceUnits =
-      props.modeConfig?.distanceUnits ?? DEFAULT_DISTANCE_UNITS;
+      (props.modeConfig?.distanceUnits as DistanceUnit) ??
+      DEFAULT_DISTANCE_UNITS;
 
     const firstClickPoint = point(firstClick);
     const currentPoint = point(mapCoords);
@@ -189,7 +191,7 @@ export class DrawRectangleModeWithTooltip extends DrawRectangleMode {
     const bboxPoly = bboxPolygon(bbox(points));
     const rectArea = area(bboxPoly);
     const convertedArea = convertArea(rectArea, 'meters', distanceUnits);
-    const unitAbbrev = getDistanceUnitAbbreviation(distanceUnits);
+    const unitAbbrev = DISTANCE_UNIT_SYMBOLS[distanceUnits];
 
     this.tooltip = {
       position: mapCoords,
