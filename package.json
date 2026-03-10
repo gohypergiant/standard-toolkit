@@ -29,7 +29,7 @@
     "pnpm": ">=10"
   },
   "license": "Apache-2.0",
-  "packageManager": "pnpm@10.25.0",
+  "packageManager": "pnpm@10.32.0",
   "pnpm": {
     "overrides": {
       "@internationalized/date": "~3.9.0",
@@ -46,7 +46,9 @@
       "@react-stately/utils": "~3.10.8",
       "@react-types/overlays": "~3.9.0",
       "@react-types/shared": "~3.32.0",
-      "react-aria-components": "~1.12.1"
+      "react-aria": "~3.43",
+      "react-stately": "~3.41",
+      "react-aria-components": "~1.12"
     }
   },
   "private": true,
