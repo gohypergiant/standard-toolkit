@@ -14,7 +14,7 @@ import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import ChevronDown from '@accelint/icons/chevron-down';
 import { useControlledState } from '@react-stately/utils';
-import { useCallback } from 'react';
+import { useCallback, useRef } from 'react';
 import {
   Button,
   ComboBox,
@@ -28,14 +28,15 @@ import {
   useContextProps,
   Virtualizer,
 } from 'react-aria-components';
-import { ClearButton } from '../button/__internal__/clear';
 import { Icon } from '../icon';
 import { Label } from '../label';
 import { Options } from '../options';
 import { ComboBoxFieldContext } from './context';
+import clearButtonStyles from '../button/__internal__/styles.module.css';
 import styles from './styles.module.css';
 import type { OptionsDataItem } from '../options/types';
 import type { ComboBoxFieldProps } from './types';
+import CancelFill from '@accelint/icons/cancel-fill';
 
 /**
  * ComboBoxField - Accessible searchable combobox with dropdown options
@@ -92,6 +93,7 @@ export function ComboBoxField<T extends OptionsDataItem>({
     onInputChange,
   );
 
+  const pointerDownInsidePopoverRef = useRef(false);
   const errorMessage = errorMessageProp || null; // Protect against empty string
   const isSmall = size === 'small';
 
@@ -153,14 +155,21 @@ export function ComboBoxField<T extends OptionsDataItem>({
                 title={inputProps?.value ? String(inputProps?.value) : ''}
               />
               {!isReadOnly && isClearable && (
-                <ClearButton
-                  className={composeRenderProps(
+                <button
+                  type='button'
+                  aria-label='Clear'
+                  className={clsx(
+                    clearButtonStyles.clearButton,
+                    styles.clear,
                     classNames?.clear,
-                    (className) => clsx(styles.clear, className),
                   )}
-                  isDisabled={isDisabled}
-                  onPress={handleClear}
-                />
+                  onClick={handleClear}
+                  disabled={isDisabled}
+                >
+                  <Icon size='small'>
+                    <CancelFill />
+                  </Icon>
+                </button>
               )}
               {!isReadOnly && (
                 <Button
@@ -191,6 +200,16 @@ export function ComboBoxField<T extends OptionsDataItem>({
               {errorMessage}
             </FieldError>
             <Popover
+              onPointerDownCapture={() => {
+                pointerDownInsidePopoverRef.current = true;
+              }}
+              onPointerUpCapture={(e) => {
+                if (!pointerDownInsidePopoverRef.current) {
+                  e.stopPropagation();
+                  e.preventDefault();
+                }
+                pointerDownInsidePopoverRef.current = false;
+              }}
               className={composeRenderProps(classNames?.popover, (className) =>
                 clsx(styles.popover, className),
               )}

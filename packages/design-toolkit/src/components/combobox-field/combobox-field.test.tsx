@@ -100,7 +100,8 @@ describe('ComboBoxField', () => {
       }
 
       expect(onInputChange).toHaveBeenCalledWith('');
-      expect(combobox).toHaveValue('');
+      // Re-query after clear since ComboBox remounts to reset internal selection state
+      expect(screen.getByRole('combobox')).toHaveValue('');
     });
 
     it('should clear input when clear button is clicked (controlled)', async () => {
@@ -138,7 +139,8 @@ describe('ComboBoxField', () => {
         </ComboBoxField>,
       );
 
-      expect(combobox).toHaveValue('');
+      // Re-query after rerender since ComboBox remounts to reset internal selection state
+      expect(screen.getByRole('combobox')).toHaveValue('');
     });
 
     it('should be disabled when combobox is disabled', () => {
@@ -172,7 +174,8 @@ describe('ComboBoxField', () => {
       await user.type(combobox, '{Escape}');
 
       expect(onInputChange).toHaveBeenCalledWith('');
-      expect(combobox).toHaveValue('');
+      // Re-query after clear since ComboBox remounts to reset internal selection state
+      expect(screen.getByRole('combobox')).toHaveValue('');
     });
 
     it('should not trigger handleClear on Escape when isClearable is false', async () => {
