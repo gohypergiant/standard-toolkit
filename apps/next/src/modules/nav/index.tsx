@@ -23,6 +23,7 @@ const LINKS = [
   { path: '/button', label: 'Button' },
   { path: '/classification-badge', label: 'Classification Badge' },
   { path: '/classification-banner', label: 'Classification Banner' },
+  { path: '/color-picker', label: 'Color Picker' },
   { path: '/dialog/client', label: 'Dialog' },
   { path: '/divider', label: 'Divider' },
   { path: '/drawer', label: 'Drawer' },
