@@ -14,18 +14,24 @@ import type { UniqueId } from '@accelint/core';
 import type { PropsWithChildren } from 'react';
 
 export type CarouselProps = PropsWithChildren & {
-  // ? Should we be keeping track of the index here? Or is this
-  // a matter of offloading that responsibility to implementation.
+  // Current selected media of provided items.
   currentPosition?: number;
+  // image/video/audio data to populate the carousel component.
+  items: CarouselData[];
+  // thumbnails gallery, no thumbnails, or SelectField selection
   variant?: 'gallery' | 'noPreview' | 'select';
 };
 
 export type CarouselData = {
   dataType: 'image' | 'video' | 'audio';
   dataUrl: string;
-  fileName: string; // is this metadata?
-  metadata: object; // How to define this better.
-  title: string; // metadata?
+  fileName: string;
+  metadata?: object;
+  title: string;
   thumbnailUrl: string;
   uuid: UniqueId;
+};
+
+export type CarouselThumbnailGalleryProps = {
+  onSelect: (index: number) => void;
 };

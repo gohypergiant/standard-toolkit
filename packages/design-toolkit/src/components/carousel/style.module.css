@@ -10,4 +10,25 @@
  * governing permissions and limitations under the License.
  */
 
-/* style.module.css */
+@reference '@accelint/design-foundation/styles';
+
+@layer components.l1 {
+  .carousel {
+    @apply gap-s flex flex-col;
+  }
+  .viewer {
+    @apply h-full w-full;
+  }
+
+  .controls {
+    @apply gap-s flex h-[32px] w-full flex-row justify-between;
+  }
+
+  .navigation {
+    @apply p-xs min-h-[20px] min-w-[20px];
+  }
+
+  .thumbnail-gallery {
+    @apply gap-x-s flex flex-row py-0;
+  }
+}

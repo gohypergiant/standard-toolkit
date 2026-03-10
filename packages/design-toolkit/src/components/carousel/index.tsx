@@ -13,18 +13,27 @@
 'use client';
 import 'client-only';
 import { ChevronLeft, ChevronRight } from '@accelint/icons';
+import { type PropsWithChildren, useContext, useMemo } from 'react';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { OptionsItem } from '../options/item';
 import { SelectField } from '../select-field';
-import { CarouselProvider } from './context';
-import type { PropsWithChildren } from 'react';
-import type { CarouselData, CarouselProps } from './types';
+import { CarouselContext, CarouselProvider } from './context';
+import styles from './style.module.css';
+import type {
+  CarouselData,
+  CarouselProps,
+  CarouselThumbnailGalleryProps,
+} from './types';
 
-export function Carousel({ children, variant = 'gallery' }: CarouselProps) {
+export function Carousel({
+  children,
+  variant = 'gallery',
+  items = [],
+}: CarouselProps) {
   return (
-    <CarouselProvider variant={variant} currentPosition={0}>
-      {children}
+    <CarouselProvider variant={variant} currentPosition={0} items={items}>
+      <div className={styles.carousel}>{children}</div>
     </CarouselProvider>
   );
 }
@@ -36,7 +45,18 @@ export function Carousel({ children, variant = 'gallery' }: CarouselProps) {
  * some examples of how to tackle this, and the rest will likely be ezpz.
  */
 export function CarouselViewer({ children }: PropsWithChildren) {
-  return <div>{children}</div>;
+  const context = useContext(CarouselContext);
+  const { currentPosition, items } = context;
+  const currentItem = useMemo(
+    () => items[currentPosition || 0],
+    [currentPosition, items],
+  );
+
+  return (
+    <div className={styles.viewer}>
+      <img src={currentItem?.dataUrl} alt={currentItem?.title} />
+    </div>
+  );
 }
 
 export function CarouselControls({
@@ -47,10 +67,8 @@ export function CarouselControls({
   onPrevious: () => void;
   onNext: () => void;
 }) {
-  // TODO: Make pre-built component here? Or allow for the manual placement of
-  // navigation controls?
   return (
-    <div className='flex w-full flex-row'>
+    <div className={styles.controls}>
       <CarouselNavigation direction='left' onClick={onPrevious} />
       {children}
       <CarouselNavigation direction='right' onClick={onNext} />
@@ -66,26 +84,28 @@ export function CarouselNavigation({
   onClick: () => void;
 }) {
   return (
-    <Button onClick={onClick}>
+    <Button onClick={onClick} className={styles.navigation} variant='flat'>
       <Icon>{direction === 'left' ? <ChevronLeft /> : <ChevronRight />}</Icon>
     </Button>
   );
 }
 
-export function CarouselThumbnailGallery({ items }: { items: CarouselData[] }) {
-  // height 284, y spacing-s, w-full
+export function CarouselThumbnailGallery({
+  onSelect,
+}: CarouselThumbnailGalleryProps) {
+  const context = useContext(CarouselContext);
+  const { items } = context;
 
   return (
-    <div className='spacing-y-s h-[284px] w-full'>
-      {items.map((item) => (
-        <CarouselThumbnailItem item={item} key={item.uuid} />
+    <>
+      {items.map((item, _index) => (
+        // TODO: Should this be a button?
+        <div className={styles['thumbnail-gallery']} key={item.uuid}>
+          <img src={item.thumbnailUrl} alt={item.title} />
+        </div>
       ))}
-    </div>
+    </>
   );
-}
-
-function CarouselThumbnailItem({ item }: { item: CarouselData }) {
-  return <div>{item.title}</div>;
 }
 
 // Depends on how we want to handle carousel state. Might just grab

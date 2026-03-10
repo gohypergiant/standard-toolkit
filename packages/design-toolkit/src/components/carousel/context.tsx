@@ -14,12 +14,14 @@
 
 import 'client-only';
 import { createContext } from 'react';
-import type { ContextValue } from 'react-aria-components';
 import type { ProviderProps } from '@/lib/types';
 import type { CarouselProps } from './types';
 
-export const CarouselContext =
-  createContext<ContextValue<CarouselProps, HTMLDivElement>>(null);
+export const CarouselContext = createContext<CarouselProps>({
+  currentPosition: 0,
+  items: [],
+  variant: 'gallery',
+});
 
 export function CarouselProvider({
   children,

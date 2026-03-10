@@ -19,6 +19,7 @@ import {
 } from './';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { CarouselData } from './types';
+import { uuid } from '@accelint/core';
 
 const meta = {
   args: {
@@ -31,11 +32,31 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const CAROUSEL_ITEMS: CarouselData[] = [];
+// TODO: Find more reasonable images to use, placecage ain't acceptable.
+const IMAGE_SRC = 'https://placecage.lucidinternets.com/434/244';
+const THUMBNAIL_SRC = 'https://placecage.lucidinternets.com/57/32';
+const CAROUSEL_ITEMS: CarouselData[] = [
+  {
+    dataType: 'image',
+    dataUrl: IMAGE_SRC,
+    fileName: 'placecage-1',
+    title: 'Place Cage 1',
+    thumbnailUrl: THUMBNAIL_SRC,
+    uuid: uuid(),
+  },
+  {
+    dataType: 'image',
+    dataUrl: IMAGE_SRC,
+    fileName: 'placecage-2',
+    title: 'Place Cage 2',
+    thumbnailUrl: THUMBNAIL_SRC,
+    uuid: uuid(),
+  },
+];
 
 export const Default: Story = {
   render: (args) => {
-    const [_currentPosition, setCurrentPosition] = useState(0);
+    const [currentPosition, setCurrentPosition] = useState(0);
     // TODO: Should this be baked in via context?
     const onNext = () =>
       setCurrentPosition((prev) =>
@@ -44,12 +65,18 @@ export const Default: Story = {
     const onPrevious = () =>
       setCurrentPosition((prev) => (prev - 1 < 0 ? prev - 1 : 0));
 
+    const handleSelect = (index: number) => setCurrentPosition(index);
+
     return (
-      <Carousel variant={args.variant}>
+      <Carousel
+        variant={args.variant}
+        items={CAROUSEL_ITEMS}
+        currentPosition={currentPosition}
+      >
         {/* ? Design, can we condense the structure here. */}
         <CarouselViewer>View</CarouselViewer>
         <CarouselControls onNext={onNext} onPrevious={onPrevious}>
-          <CarouselThumbnailGallery items={CAROUSEL_ITEMS} />
+          <CarouselThumbnailGallery onSelect={handleSelect} />
         </CarouselControls>
       </Carousel>
     );
