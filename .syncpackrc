@@ -10,6 +10,8 @@
         "!@react-aria/**",
         "!@react-stately/**",
         "!@react-types/**",
+        "!react-aria",
+        "!react-stately",
         "!react-aria-components",
         "!react-querybuilder",
         "!@internationalized/date"
@@ -28,6 +30,8 @@
         "@react-aria/**",
         "@react-stately/**",
         "@react-types/**",
+        "react-aria",
+        "react-stately",
         "react-aria-components",
         "@internationalized/date"
       ],

@@ -15,7 +15,7 @@ import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import Kebab from '@accelint/icons/kebab';
 import Pin from '@accelint/icons/pin';
-import { useListData } from '@react-stately/data';
+import { useListData } from 'react-stately';
 import {
   getCoreRowModel,
   getSortedRowModel,

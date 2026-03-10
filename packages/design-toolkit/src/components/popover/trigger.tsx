@@ -13,7 +13,7 @@
 'use client';
 
 import 'client-only';
-import { Pressable } from '@react-aria/interactions';
+import { Pressable } from 'react-aria';
 import {
   Children,
   type DOMAttributes,

@@ -10,8 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { UNSAFE_PortalProvider } from '@react-aria/overlays';
-import { useIsSSR } from '@react-aria/ssr';
+import { UNSAFE_PortalProvider, useIsSSR } from 'react-aria';
 import {
   type PropsWithChildren,
   type RefObject,
