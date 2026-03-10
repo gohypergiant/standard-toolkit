@@ -34,10 +34,17 @@ export type SemVerVersion = `${string}.${string}.${string}`;
  * - **`'VTS'`**: Vector Tile Service - High performance, pre-processed tiles
  * - **`'WMS'`**: Web Map Service - Raster tiles with feature information
  * - **`'WFS'`**: Web Feature Service - Vector feature data with query capabilities
+ * - **`'REST'`**: RESTful Service - Generic resource-oriented endpoints providing spatial data via HTTP
  * - **`'FS'`**: File System - Static files, local uploads, CDN-hosted data
  * - **`'Unknown'`**: Fallback for unrecognized or pending service detection
  */
-export type LayerServiceType = 'VTS' | 'WMS' | 'WFS' | 'FS' | 'Unknown';
+export type LayerServiceType =
+  | 'VTS'
+  | 'WMS'
+  | 'WFS'
+  | 'REST'
+  | 'FS'
+  | 'Unknown';
 
 /**
  * Supported data formats for dataset responses and processing.

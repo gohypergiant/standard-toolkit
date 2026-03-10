@@ -14,7 +14,8 @@ import { uuid } from '@accelint/core';
 import { BaseMap } from '@/deckgl/base-map';
 import iconMapping from '../../shapes/__fixtures__/atlas.json';
 import iconAtlas from '../../shapes/__fixtures__/atlas.png';
-import { CoffinCornersExtension } from './coffin-corners-extension';
+import { CoffinCornerExtension } from './coffin-corner-extension';
+import './fiber';
 import { useCoffinCorner } from './use-coffin-corner';
 import type { Rgba255Tuple } from '@accelint/predicates';
 import type { Meta, StoryObj } from '@storybook/react-vite';
@@ -66,12 +67,12 @@ type Story = StoryObj<typeof meta>;
 
 const MAP_ID = uuid();
 const LAYER_ID = 'icons';
-const coffinCornersExtension = new CoffinCornersExtension();
+const coffinCornerExtension = new CoffinCornerExtension();
 
-function CoffinCornersDemo({
-  coffinCornerColor,
+function CoffinCornerDemo({
+  selectedCoffinCornerColor,
 }: {
-  coffinCornerColor: Rgba255Tuple;
+  selectedCoffinCornerColor: Rgba255Tuple;
 }) {
   const { selectedId, hoveredId } = useCoffinCorner(MAP_ID, LAYER_ID);
 
@@ -87,19 +88,19 @@ function CoffinCornersDemo({
           data={ICON_DATA}
           iconAtlas={iconAtlas}
           iconMapping={iconMapping}
-          getPosition={(d: IconData) => d.position}
-          getIcon={(d: IconData) => d.icon}
-          getSize={(d: IconData) => d.size}
+          getPosition={(d: unknown) => (d as IconData).position}
+          getIcon={(d: unknown) => (d as IconData).icon}
+          getSize={(d: unknown) => (d as IconData).size}
           pickable
-          extensions={[coffinCornersExtension]}
+          extensions={[coffinCornerExtension]}
           selectedEntityId={selectedId}
           hoveredEntityId={hoveredId}
-          coffinCornerColor={coffinCornerColor}
+          selectedCoffinCornerColor={selectedCoffinCornerColor}
         />
       </BaseMap>
 
       <div className='absolute top-l left-l z-10 rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
-        <p className='font-bold text-header-l'>Coffin Corners</p>
+        <p className='font-bold text-header-l'>Coffin Corner</p>
         <p className='mt-s text-body-s text-content-secondary'>
           Click icon to select/deselect. Hover for preview.
         </p>
@@ -110,17 +111,18 @@ function CoffinCornersDemo({
 
 export const Default: Story = {
   args: {
-    coffinCornerColor: [57, 183, 250, 255],
+    selectedCoffinCornerColor: [57, 183, 250, 255],
   },
   argTypes: {
-    coffinCornerColor: {
+    selectedCoffinCornerColor: {
       control: { type: 'object' },
-      description: 'Coffin corner color [R, G, B, A] with values 0-255',
+      description:
+        'Selected coffin corner color [R, G, B, A] with values 0-255',
     },
   },
   render: (args) => (
-    <CoffinCornersDemo
-      coffinCornerColor={args.coffinCornerColor as Rgba255Tuple}
+    <CoffinCornerDemo
+      selectedCoffinCornerColor={args.selectedCoffinCornerColor as Rgba255Tuple}
     />
   ),
 };

@@ -1,5 +1,34 @@
 # @accelint/design-toolkit
 
+## 9.8.0
+
+### Minor Changes
+- a70629c: Add labelPosition prop to radio and checkbox components
+
+  `RadioContext` has been split into `RadioGroupContext` and `RadioContext` to match the checkbox pattern. If you were importing `RadioContext` to configure a RadioGroup, update your import to `RadioGroupContext` instead.
+
+- 596c8ea: Summary: Added a new FloatingCard component.
+  
+  What's included:
+  
+  FloatingCard component for rendering draggable, resizable floating panels
+  FloatingCardProvider that manages the floating card layout engine
+  Customizable headers with optional icons and action buttons
+
+### Patch Changes
+
+- 5567348: Update logger implementation to prevent singleton pollution.
+- 9f7f039: Fix foreground hover color for 'info' options
+- 165cf29: Added missing "sideEffects" entry which was preventing tree shaking.
+- Updated dependencies [3153e74]
+- Updated dependencies [5567348]
+- Updated dependencies [162895c]
+- Updated dependencies [165cf29]
+  - @accelint/bus@4.0.0
+  - @accelint/logger@1.0.1
+  - @accelint/core@0.6.0
+  - @accelint/design-foundation@3.0.1
+
 ## 9.7.0
 ### Minor Changes
 

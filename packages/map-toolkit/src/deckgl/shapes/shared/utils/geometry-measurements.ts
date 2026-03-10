@@ -11,7 +11,7 @@
  */
 
 import { distance } from '@turf/turf';
-import type { DistanceUnit } from '@/shared/units';
+import type { DistanceUnit } from '@accelint/constants/units';
 
 /**
  * Circle measurement result containing radius, diameter, and area.

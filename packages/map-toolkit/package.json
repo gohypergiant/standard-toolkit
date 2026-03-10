@@ -1,12 +1,13 @@
 {
   "name": "@accelint/map-toolkit",
   "description": "A collection of components and utilities to simplify visualizing and working with geospatial data.",
-  "version": "1.5.0",
+  "version": "2.0.0",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "devDependencies": {
     "@accelint/biome-config": "workspace:*",
     "@accelint/bus": "workspace:*",
+    "@accelint/constants": "workspace:*",
     "@accelint/core": "workspace:*",
     "@accelint/design-foundation": "workspace:*",
     "@accelint/design-toolkit": "workspace:*",
@@ -79,7 +80,7 @@
     "./deckgl/base-map/types": "./dist/deckgl/base-map/types.js",
     "./deckgl/extensions": "./dist/deckgl/extensions/index.js",
     "./deckgl/extensions/coffin-corner": "./dist/deckgl/extensions/coffin-corner/index.js",
-    "./deckgl/extensions/coffin-corner/coffin-corners-extension": "./dist/deckgl/extensions/coffin-corner/coffin-corners-extension.js",
+    "./deckgl/extensions/coffin-corner/coffin-corner-extension": "./dist/deckgl/extensions/coffin-corner/coffin-corner-extension.js",
     "./deckgl/extensions/coffin-corner/types": "./dist/deckgl/extensions/coffin-corner/types.js",
     "./deckgl/extensions/coffin-corner/use-coffin-corner": "./dist/deckgl/extensions/coffin-corner/use-coffin-corner.js",
     "./deckgl/saved-viewports": "./dist/deckgl/saved-viewports/index.js",
@@ -164,6 +165,7 @@
   "owner": "default/pathfinder",
   "peerDependencies": {
     "@accelint/bus": "workspace:*",
+    "@accelint/constants": "workspace:*",
     "@accelint/core": "workspace:*",
     "@accelint/geo": "workspace:*",
     "@accelint/hotkey-manager": "workspace:*",

@@ -11,7 +11,7 @@
  */
 
 // Extension exports
-export { CoffinCornersExtension } from './coffin-corners-extension';
+export { CoffinCornerExtension } from './coffin-corner-extension';
 // Store exports
 export {
   clearSelection,
@@ -27,11 +27,11 @@ export {
   type UseCoffinCornerReturn,
   useCoffinCorner,
 } from './use-coffin-corner';
-export type { CoffinCornersExtensionProps } from './coffin-corners-extension';
 export type {
   CoffinCornerDeselectedEvent,
   CoffinCornerEvent,
   CoffinCornerEventType,
+  CoffinCornerExtensionProps,
   CoffinCornerHoveredEvent,
   CoffinCornerSelectedEvent,
   EntityId,

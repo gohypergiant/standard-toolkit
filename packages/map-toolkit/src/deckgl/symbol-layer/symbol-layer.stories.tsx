@@ -15,8 +15,9 @@ import { uuid } from '@accelint/core';
 import { useId } from 'react';
 import { BaseMap } from '@/deckgl/base-map';
 import { withDeckGL } from '@/decorators/deckgl';
-import { CoffinCornersExtension } from '../extensions';
+import { CoffinCornerExtension } from '../extensions';
 import { useCoffinCorner } from '../extensions/coffin-corner';
+import type { Rgba255Tuple } from '@accelint/predicates';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const MOCK_DATA = [
@@ -148,33 +149,53 @@ export const SymbolLayer: Story = {
   },
 };
 
-const coffinCornersExtension = new CoffinCornersExtension();
+const coffinCornerExtension = new CoffinCornerExtension();
 
-const COFFIN_CORNERS_MAP_ID = uuid();
+const COFFIN_CORNER_MAP_ID = uuid();
 
-export const SymbolLayerWithCoffinCorners: Story = {
-  render: () => {
-    const layerId = 'symbols';
-    const { selectedId, hoveredId } = useCoffinCorner(
-      COFFIN_CORNERS_MAP_ID,
-      layerId,
-    );
+function SymbolLayerWithCoffinCornerDemo({
+  selectedCoffinCornerColor,
+}: {
+  selectedCoffinCornerColor: Rgba255Tuple;
+}) {
+  const layerId = 'symbols';
+  const { selectedId, hoveredId } = useCoffinCorner(
+    COFFIN_CORNER_MAP_ID,
+    layerId,
+  );
 
-    return (
-      <BaseMap className='relative h-dvh w-dvw' id={COFFIN_CORNERS_MAP_ID}>
-        <symbolLayer
-          id={layerId}
-          data={MOCK_DATA}
-          defaultSymbolOptions={{
-            colorMode: 'Dark',
-            square: true,
-          }}
-          selectedEntityId={selectedId}
-          hoveredEntityId={hoveredId}
-          extensions={[coffinCornersExtension]}
-          pickable
-        />
-      </BaseMap>
-    );
+  return (
+    <BaseMap className='relative h-dvh w-dvw' id={COFFIN_CORNER_MAP_ID}>
+      <symbolLayer
+        id={layerId}
+        data={MOCK_DATA}
+        defaultSymbolOptions={{
+          colorMode: 'Dark',
+          square: true,
+        }}
+        selectedEntityId={selectedId}
+        hoveredEntityId={hoveredId}
+        selectedCoffinCornerColor={selectedCoffinCornerColor}
+        extensions={[coffinCornerExtension]}
+        pickable
+      />
+    </BaseMap>
+  );
+}
+
+export const SymbolLayerWithCoffinCorner: Story = {
+  args: {
+    selectedCoffinCornerColor: [57, 183, 250, 255],
   },
+  argTypes: {
+    selectedCoffinCornerColor: {
+      control: { type: 'object' },
+      description: 'Selected bracket color [R, G, B, A] with values 0-255',
+    },
+  },
+  render: (args) => (
+    <SymbolLayerWithCoffinCornerDemo
+      selectedCoffinCornerColor={args.selectedCoffinCornerColor as Rgba255Tuple}
+    />
+  ),
 };

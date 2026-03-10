@@ -19,7 +19,7 @@ export {
 export { MapEvents, MapEventsNamespace } from './base-map/events';
 export {
   CoffinCornerEvents,
-  CoffinCornersExtension,
+  CoffinCornerExtension,
   clearSelection,
   coffinCornerStore,
   getHoveredEntityId,
@@ -56,9 +56,9 @@ export type {
   CoffinCornerDeselectedEvent,
   CoffinCornerEvent,
   CoffinCornerEventType,
+  CoffinCornerExtensionProps,
   CoffinCornerHoveredEvent,
   CoffinCornerSelectedEvent,
-  CoffinCornersExtensionProps,
   EntityId,
   UseCoffinCornerReturn,
 } from './extensions/coffin-corner';

@@ -12,6 +12,32 @@
 
 import type { Payload } from '@accelint/bus';
 import type { UniqueId } from '@accelint/core';
+import type { Rgba255Tuple } from '@accelint/predicates';
+
+/**
+ * Props added by the CoffinCornerExtension.
+ *
+ * @template TLayerProps - The host layer's props type to intersect with.
+ */
+export type CoffinCornerExtensionProps<TLayerProps = unknown> = {
+  /** The currently selected entity ID. */
+  selectedEntityId?: EntityId;
+  /** The currently hovered entity ID. */
+  hoveredEntityId?: EntityId;
+  /**
+   * RGBA color (0-255) for the selected-state bracket fill.
+   * Alpha modulates the bracket opacity.
+   * @default [57, 183, 250, 255] (#39B7FA, fully opaque)
+   */
+  selectedCoffinCornerColor?: Rgba255Tuple;
+  /**
+   * Accessor to extract an entity ID from a data item. Matched against
+   * `selectedEntityId` and `hoveredEntityId` to drive the shader state.
+   * @default (item) => item.id
+   */
+  // biome-ignore lint/suspicious/noExplicitAny: Data type is unknown at extension level.
+  getEntityId?: (item: any) => EntityId;
+} & TLayerProps;
 
 /**
  * Coffin corner interaction events

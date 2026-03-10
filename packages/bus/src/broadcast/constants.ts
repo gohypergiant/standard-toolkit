@@ -1,4 +1,3 @@
-// __private-exports
 /*
  * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -11,11 +10,26 @@
  * governing permissions and limitations under the License.
  */
 
-import type { BroadcastConfig } from './types';
+import type { BroadcastConfig, EmitTarget } from './types';
 
-/** The default broadcast configuration. */
+/** The default broadcast configuration */
 export const DEFAULT_CONFIG: BroadcastConfig = {
   channelName: '@accelint/bus',
   // TODO: implement logger
   debug: false,
 };
+
+/** The default event target when emitting */
+export const DEFAULT_TARGET: EmitTarget = 'self';
+
+/**
+ * These connection events are used to determine which bus instances are connected
+ *
+ * None of these events have a payload, linking is handled entirely through
+ * source / target metadata available on every event
+ */
+export const CONNECTION_EVENT_TYPES = {
+  echo: '__ECHO__',
+  ping: '__PING__',
+  stop: '__STOP__',
+} as const;

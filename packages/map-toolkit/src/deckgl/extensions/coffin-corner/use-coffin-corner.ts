@@ -20,7 +20,7 @@ import type { EntityId } from './types';
 /**
  * Return type for useCoffinCorner hook
  */
-export interface UseCoffinCornerReturn {
+export type UseCoffinCornerReturn = {
   /** Currently selected entity ID, or undefined if nothing selected */
   selectedId: EntityId | undefined;
   /** Currently hovered entity ID, or undefined if nothing hovered */
@@ -28,21 +28,22 @@ export interface UseCoffinCornerReturn {
   /** Set the selected entity ID */
   setSelectedId: (id: EntityId | undefined) => void;
   /** Clear the current selection */
-  clearSelection: () => void;
-}
+  deselect: () => void;
+};
 
 /**
  * Options for the useCoffinCorner hook.
  */
-export interface UseCoffinCornerOptions {
+export type UseCoffinCornerOptions = {
   /**
    * Accessor to extract an entity ID from a picked data item.
-   * Must match the `getEntityId` prop passed to the CoffinCornersExtension.
+   * Must match the `getEntityId` prop passed to the CoffinCornerExtension.
+   * Should be a stable reference (module-level or `useCallback`) to avoid unnecessary store updates on every render.
    * @default (item) => item.id
    */
   // biome-ignore lint/suspicious/noExplicitAny: Data type is unknown at hook level.
   getEntityId?: (item: any) => EntityId;
-}
+};
 
 /**
  * Hook to manage coffin corner entity selection state.
@@ -65,7 +66,7 @@ export interface UseCoffinCornerOptions {
  *     <iconLayer
  *       id="base-icons"
  *       pickable
- *       extensions={[coffinCornersExtension]}
+ *       extensions={[coffinCornerExtension]}
  *       selectedEntityId={selectedId}
  *       hoveredEntityId={hoveredId}
  *     />
@@ -85,26 +86,28 @@ export function useCoffinCorner(
   layerId: string,
   options?: UseCoffinCornerOptions,
 ): UseCoffinCornerReturn {
-  const { state, setSelectedId, clearSelection, setLayerId, setGetEntityId } =
+  const { state, setSelectedId, deselect, setLayerId, setGetEntityId } =
     coffinCornerStore.use(mapId);
 
-  // Unlike a CompositeLayer, CoffinCornersExtension is a shader-only plugin
+  // Unlike a CompositeLayer, CoffinCornerExtension is a shader-only plugin
   // with no picking handlers. The store must filter raw map bus events by
   // layerId to know which clicks/hovers belong to this extension's layer.
   useEffect(() => {
     setLayerId(layerId);
   }, [setLayerId, layerId]);
 
+  const getEntityId = options?.getEntityId;
+
   useEffect(() => {
-    if (options?.getEntityId) {
-      setGetEntityId(options.getEntityId);
+    if (getEntityId) {
+      setGetEntityId(getEntityId);
     }
-  }, [setGetEntityId, options?.getEntityId]);
+  }, [setGetEntityId, getEntityId]);
 
   return {
     selectedId: state.selectedId,
     hoveredId: state.hoveredId,
     setSelectedId,
-    clearSelection,
+    deselect,
   };
 }

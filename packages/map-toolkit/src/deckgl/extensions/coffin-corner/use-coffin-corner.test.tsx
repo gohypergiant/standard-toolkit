@@ -42,11 +42,11 @@ describe('useCoffinCorner', () => {
       expect(result.current.hoveredId).toBeUndefined();
     });
 
-    it('should provide setSelectedId and clearSelection functions', () => {
+    it('should provide setSelectedId and deselect functions', () => {
       const { result } = renderHook(() => useCoffinCorner(mapId, 'symbols'));
 
       expect(typeof result.current.setSelectedId).toBe('function');
-      expect(typeof result.current.clearSelection).toBe('function');
+      expect(typeof result.current.deselect).toBe('function');
     });
   });
 
@@ -94,7 +94,7 @@ describe('useCoffinCorner', () => {
     });
   });
 
-  describe('clearSelection', () => {
+  describe('deselect', () => {
     it('should clear selectedId', async () => {
       const { result } = renderHook(() => useCoffinCorner(mapId, 'symbols'));
 
@@ -104,7 +104,7 @@ describe('useCoffinCorner', () => {
         expect(result.current.selectedId).toBe('entity-1');
       });
 
-      act(() => result.current.clearSelection());
+      act(() => result.current.deselect());
 
       await waitFor(() => {
         expect(result.current.selectedId).toBeUndefined();

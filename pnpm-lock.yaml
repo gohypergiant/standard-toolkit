@@ -404,9 +404,6 @@ importers:
       vitest:
         specifier: ^4.0.15
         version: 4.0.16(@types/node@22.19.3)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.6.1)(jsdom@25.0.1)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2)
-      zod:
-        specifier: ^4.1.12
-        version: 4.2.1
 
   packages/dataset:
     devDependencies:
@@ -943,6 +940,9 @@ importers:
       '@accelint/bus':
         specifier: workspace:*
         version: link:../bus
+      '@accelint/constants':
+        specifier: workspace:*
+        version: link:../constants
       '@accelint/core':
         specifier: workspace:*
         version: link:../core

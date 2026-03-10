@@ -270,14 +270,14 @@ describe('coffin-corner store', () => {
     });
   });
 
-  describe('coffinCornerStore.actions().clearSelection', () => {
+  describe('coffinCornerStore.actions().deselect', () => {
     it('should emit DESELECTED event', () => {
       const bus = Broadcast.getInstance<CoffinCornerEvent>();
       const deselectedSpy = vi.fn();
       bus.on(CoffinCornerEvents.DESELECTED, deselectedSpy);
 
-      const { clearSelection: clear } = coffinCornerStore.actions(mapId);
-      clear();
+      const { deselect } = coffinCornerStore.actions(mapId);
+      deselect();
 
       expect(deselectedSpy).toHaveBeenCalledWith(
         expect.objectContaining({
