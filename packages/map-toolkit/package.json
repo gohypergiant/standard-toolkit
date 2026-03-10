@@ -80,7 +80,6 @@
     "./deckgl/extensions": "./dist/deckgl/extensions/index.js",
     "./deckgl/extensions/coffin-corner": "./dist/deckgl/extensions/coffin-corner/index.js",
     "./deckgl/extensions/coffin-corner/coffin-corner-extension": "./dist/deckgl/extensions/coffin-corner/coffin-corner-extension.js",
-    "./deckgl/extensions/coffin-corner/fiber": "./dist/deckgl/extensions/coffin-corner/fiber.js",
     "./deckgl/extensions/coffin-corner/types": "./dist/deckgl/extensions/coffin-corner/types.js",
     "./deckgl/extensions/coffin-corner/use-coffin-corner": "./dist/deckgl/extensions/coffin-corner/use-coffin-corner.js",
     "./deckgl/saved-viewports": "./dist/deckgl/saved-viewports/index.js",
