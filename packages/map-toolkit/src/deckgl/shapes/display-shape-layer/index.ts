@@ -15,7 +15,6 @@
 import { Broadcast } from '@accelint/bus';
 import { CompositeLayer } from '@deck.gl/core';
 import { GeoJsonLayer, IconLayer, LineLayer } from '@deck.gl/layers';
-import { createLoggerDomain } from '@/shared/logger';
 import { CoffinCornerExtension } from '../../extensions/coffin-corner/coffin-corner-extension';
 import { SHAPE_LAYER_IDS } from '../shared/constants';
 import { type ShapeEvent, ShapeEvents } from '../shared/events';
@@ -58,7 +57,6 @@ import {
   getIconLayerProps,
   getIconUpdateTriggers,
 } from './utils/icon-config';
-import { collectActivePointFeatures } from './utils/interaction';
 import type { Rgba255Tuple } from '@accelint/predicates';
 import type { Layer, PickingInfo } from '@deck.gl/core';
 import type { Shape, ShapeId } from '../shared/types';
@@ -72,8 +70,6 @@ import type {
   IndicatorCache,
   LineSegment,
 } from './types';
-
-const logger = createLoggerDomain('[DisplayShapeLayer]');
 
 const coffinCornerExtension = new CoffinCornerExtension();
 
@@ -105,14 +101,13 @@ const shapeBus = Broadcast.getInstance<ShapeEvent>();
  * and material-based brightness — the base shape is never altered.
  *
  * ## Layer Structure
- * Renders up to seven sublayers (in order, bottom to top):
+ * Renders up to six sublayers (in order, bottom to top):
  * 1. **Select layer**: Selection brightness overlay for polygon shapes
  * 2. **Hover layer**: Hover brightness overlay for polygon shapes
- * 3. **Coffin corners layer**: Selection/hover feedback for Point shapes with icons
- * 4. **Elevation visualization**: Curtains (LineStrings) or wireframes (polygons) — elevation only
- * 5. **Elevation indicators**: Vertical strut lines for elevated non-polygon shapes — elevation only
- * 6. **Main GeoJsonLayer**: Shape geometries with styling and interaction
- * 7. **Label layer**: Text labels (if showLabels enabled)
+ * 3. **Elevation visualization**: Curtains (LineStrings) or wireframes (polygons) — elevation only
+ * 4. **Elevation indicators**: Vertical strut lines for elevated non-polygon shapes — elevation only
+ * 5. **Main GeoJsonLayer**: Shape geometries with styling and interaction (icon sublayer includes coffin corner extension for Point hover/select feedback)
+ * 6. **Label layer**: Text labels (if showLabels enabled)
  *
  * ## Icon Atlas Constraint
  * When using icons for Point geometries, all shapes in a single layer must share the
@@ -642,74 +637,87 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
   }
 
   /**
-   * Render coffin corners layer for Point geometries that have icons on hover/select
-   * Coffin corners provide visual feedback for points instead of select layer
+   * Render coffin corners layer for Point geometries with icons on hover/select.
+   * Reuses the same icon config as the main layer but applies the coffin corner
+   * shader extension for bracket-style hover/select feedback.
    */
   private renderCoffinCornersLayer(features: Shape['feature'][]): IconLayer[] {
     const { selectedShapeId } = this.props;
     const hoverIndex = this.state?.hoverIndex;
-    const shapeIdToIndex = this.featuresCache?.shapeIdToIndex;
 
-    if (!shapeIdToIndex) {
+    const {
+      hasIcons,
+      atlas: iconAtlas,
+      mapping: iconMapping,
+    } = getIconConfig(features);
+
+    if (!(hasIcons && iconAtlas && iconMapping)) {
       return [];
     }
 
-    const active = collectActivePointFeatures(
-      features,
-      selectedShapeId,
-      hoverIndex,
-      shapeIdToIndex,
+    // Resolve entity IDs from index/shapeId
+    const hoveredFeature =
+      hoverIndex !== undefined ? features[hoverIndex] : undefined;
+    const isHoveredPointIcon =
+      hoveredFeature?.geometry.type === 'Point' &&
+      hoveredFeature.properties?.styleProperties?.icon != null;
+    const hoveredEntityId = isHoveredPointIcon
+      ? (hoveredFeature.properties?.shapeId as ShapeId)
+      : undefined;
+
+    // Only render if something is hovered or selected
+    if (!(hoveredEntityId || selectedShapeId)) {
+      return [];
+    }
+
+    // Filter to point features with icons
+    const pointFeatures = features.filter(
+      (f) =>
+        f.geometry.type === 'Point' &&
+        f.properties?.styleProperties?.icon != null,
     );
 
-    if (active.features.length === 0) {
-      return [];
-    }
-
-    const firstPointIcon =
-      active.features[0]?.properties?.styleProperties?.icon;
-    const iconAtlas = firstPointIcon?.atlas;
-    const iconMapping = firstPointIcon?.mapping;
-
-    if (!(iconAtlas && iconMapping)) {
-      logger.warn(
-        'Point shape has icon style but missing iconAtlas or iconMapping - coffin corners will not render',
-      );
+    if (pointFeatures.length === 0) {
       return [];
     }
 
     return [
       new IconLayer({
         id: `${this.props.id}-${SHAPE_LAYER_IDS.DISPLAY}-coffin-corners`,
-        data: active.features,
+        data: pointFeatures,
         iconAtlas,
         iconMapping,
+        // IconLayer prop names (not GeoJsonLayer forwarding names)
         getIcon: (d: Shape['feature']) =>
           d.properties?.styleProperties?.icon?.name ?? 'marker',
         getSize: (d: Shape['feature']) =>
           d.properties?.styleProperties?.icon?.size ??
           MAP_INTERACTION.ICON_SIZE,
-        getPosition: (d: Shape['feature']) => {
-          const coords = isPointType(d.geometry)
-            ? d.geometry.coordinates
-            : [0, 0];
-          return coords as [number, number];
-        },
+        getColor: getLineColor,
         getPixelOffset: (d: Shape['feature']) => {
           const iconSize =
             d.properties?.styleProperties?.icon?.size ??
             MAP_INTERACTION.ICON_SIZE;
           return [-1, -iconSize / 2];
         },
+        getPosition: (d: Shape['feature']) => {
+          const coords = isPointType(d.geometry)
+            ? d.geometry.coordinates
+            : [0, 0];
+          return coords as [number, number];
+        },
         billboard: false,
         pickable: false,
         extensions: [coffinCornerExtension],
-        selectedEntityId: active.selectedEntityId,
-        hoveredEntityId: active.hoveredEntityId,
+        selectedEntityId: selectedShapeId,
+        hoveredEntityId,
         getEntityId: (d: Shape['feature']) => d.properties?.shapeId as ShapeId,
         updateTriggers: {
           data: [features, selectedShapeId, hoverIndex],
           getIcon: [features],
           getSize: [features],
+          getColor: [features],
+          getPixelOffset: [features],
         },
       }),
     ];
