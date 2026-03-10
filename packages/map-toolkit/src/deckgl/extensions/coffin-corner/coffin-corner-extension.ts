@@ -11,9 +11,13 @@
  */
 
 import { LayerExtension } from '@deck.gl/core';
+import { IconLayer } from '@deck.gl/layers';
+import { createLoggerDomain } from '@/shared/logger';
 import type { Rgba255Tuple } from '@accelint/predicates';
 import type { Layer, UpdateParameters } from '@deck.gl/core';
 import type { CoffinCornerExtensionProps, EntityId } from './types';
+
+const logger = createLoggerDomain('[CoffinCornerExtension]');
 
 /** Layer shape with coffin-corner selection and hover state maps. */
 type CoffinCornerLayer = Layer & {
@@ -262,6 +266,12 @@ export class CoffinCornerExtension extends LayerExtension {
    * `instanceSelectedEntity` / `instanceHoveredEntity` GPU attributes.
    */
   override initializeState(this: CoffinCornerLayer) {
+    if (!(this instanceof IconLayer)) {
+      logger.warn(
+        `CoffinCornerExtension currently only supports IconLayer (and subclasses). Received: ${(this.constructor as typeof IconLayer).layerName}`,
+      );
+    }
+
     this.state.selectedEntities = new Map<EntityId, number>();
     this.state.hoveredEntities = new Map<EntityId, number>();
 
