@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -19,17 +19,26 @@ const LINKS = [
   { path: '/action-bar', label: 'Action Bar' },
   { path: '/avatar', label: 'Avatar' },
   { path: '/badge', label: 'Badge' },
+  { path: '/breadcrumbs', label: 'Breadcrumbs' },
   { path: '/button', label: 'Button' },
+  { path: '/classification-badge', label: 'Classification Badge' },
+  { path: '/classification-banner', label: 'Classification Banner' },
   { path: '/dialog/client', label: 'Dialog' },
-  { path: '/drawer/client', label: 'Drawer' },
+  { path: '/divider', label: 'Divider' },
+  { path: '/drawer', label: 'Drawer' },
+  { path: '/floating-card', label: 'Floating Card' },
+  { path: '/hero', label: 'Hero' },
+  { path: '/label', label: 'Label' },
+  { path: '/link', label: 'Link' },
+  { path: '/map', label: 'Map' },
   { path: '/notice', label: 'Notice' },
   { path: '/tooltip', label: 'Tooltip' },
 ];
 
 export function Nav() {
   return (
-    <div className='flex flex-row gap-s fixed top-0 left-0 right-0 bg-surface-default p-xs shadow-elevation-overlay'>
-      {LINKS.map((link, k) => {
+    <div className='flex flex-row gap-s fixed top-0 left-0 right-0 bg-surface-default p-xs shadow-elevation-raised'>
+      {LINKS.map((link) => {
         return (
           <Link key={link.path} href={link.path}>
             {link.label}

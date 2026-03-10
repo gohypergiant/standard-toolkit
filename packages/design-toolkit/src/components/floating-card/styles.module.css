@@ -1,0 +1,60 @@
+/*
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+@reference '@accelint/design-foundation/styles';
+
+@layer components.l3 {
+  .cardContent {
+    @apply h-full w-full;
+  }
+
+  .providerRoot {
+    @apply pointer-events-none absolute inset-0;
+  }
+
+  .headerSide {
+    @apply gap-xs flex h-full items-center;
+  }
+
+  .headerTitle {
+    @apply text-header-m pl-xs;
+  }
+
+  .floatingCardProvider {
+    @apply absolute inset-0;
+    :global(.dv-dockview) {
+      --dv-group-view-background-color: transparent;
+      --dv-tabs-and-actions-container-background-color: var(
+        --bg-surface-default
+      );
+      --dv-floating-box-shadow: var(--shadow-elevation-overlay-bold);
+    }
+    :global(.dv-groupview) {
+      --dv-group-view-background-color: var(--bg-surface-default);
+      @apply pointer-events-auto;
+    }
+    :global(.dv-resize-container) {
+      @apply rounded-large pointer-events-auto;
+    }
+
+    :global(.dv-tabs-and-actions-container) {
+      --dv-tabs-and-actions-container-height: 32px;
+      @apply p-xs text-header-m;
+    }
+    :global(.dv-scrollable) {
+      display: none;
+    }
+    :global(.dv-void-container) {
+      cursor: grab;
+    }
+  }
+}

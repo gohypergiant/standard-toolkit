@@ -44,6 +44,8 @@ export {
   isRectangleShape,
   ShapeFeatureType,
 } from './shared/types';
+// Shape utility exports
+export { duplicateShape } from './shared/utils/duplicate-shape';
 // Style utility exports
 export {
   getDashArray,
@@ -55,8 +57,6 @@ export {
 export type {
   DisplayShapeLayerProps,
   ShowLabelsMode,
-  StyledFeature,
-  StyledFeatureProperties,
 } from './display-shape-layer/types';
 export type { UseSelectShapeReturn } from './display-shape-layer/use-select-shape';
 export type {
@@ -95,6 +95,7 @@ export type {
   UseEditShapeOptions,
   UseEditShapeReturn,
 } from './edit-shape-layer/types';
+export type { DuplicateShapeOptions } from './shared/utils/duplicate-shape';
 export type { ShapeEventType } from './shared/events';
 // Shared type exports
 export type {
@@ -105,6 +106,7 @@ export type {
   EllipseFeatureProperties,
   EllipseProperties,
   EllipseShape,
+  GeoPosition,
   LineStringShape,
   PointShape,
   PolygonShape,
@@ -112,8 +114,8 @@ export type {
   Shape,
   ShapeFeature,
   ShapeFeatureProperties,
-  ShapeFeatureTypeValues,
   ShapeId,
+  StyledFeature,
+  StyledFeatureProperties,
   StyleProperties,
-  Subscription,
 } from './shared/types';

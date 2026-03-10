@@ -155,13 +155,13 @@ DrawShapeLayer displays real-time tooltips during drawing:
 | **LineString** | Distance from last point (e.g., "12.5 km") |
 | **Polygon** | Distance from last point (e.g., "12.5 km") |
 | **Rectangle** | Dimensions and area (e.g., "5.2 km x 3.1 km\n16.12 km²") |
-| **Circle** | Diameter and area (e.g., "d: 12.5 km\n123.7 km²") |
+| **Circle** | Radius and area (e.g., "r: 12.5 km\n123.7 km²") |
 | **Ellipse** | Distance (first click) then dimensions and area (second click) (e.g., "8.5 km x 5.2 km\n34.6 km²") |
 
 Distance units default to kilometers (`'km'`) but can be configured via the `unit` prop:
 
 ```tsx
-<DrawShapeLayer mapId={MAP_ID} unit="nm" />  // nautical miles
+<DrawShapeLayer mapId={MAP_ID} unit="NM" />  // nautical miles
 <DrawShapeLayer mapId={MAP_ID} unit="mi" />  // miles
 ```
 
@@ -241,8 +241,8 @@ console.log('Current cursor:', cursor);
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `id` | `string` | `'draw-shape-layer'` | Unique layer ID |
-| `mapId` | `UniqueId` | *required* | Map instance ID for multi-map isolation |
-| `unit` | `'km' \| 'm' \| 'nm' \| 'mi' \| 'ft'` | `'km'` | Distance unit for tooltip measurements |
+| `mapId` | `UniqueId` | Context-provided mapId | Map instance ID for multi-map isolation |
+| `unit` | `DistanceUnitSymbol` | `'km'` | Distance unit for tooltip measurements (supports `'km'`, `'m'`, `'NM'`, `'mi'`, `'ft'`) |
 
 ### useDrawShape Hook
 

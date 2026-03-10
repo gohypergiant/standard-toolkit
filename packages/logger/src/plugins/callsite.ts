@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -45,10 +45,15 @@ function getCallsite() {
   }
 
   const site = sites[levelLine + 1];
-  const columnNumber = site?.getColumnNumber();
-  const lineNumber = site?.getLineNumber();
+
+  if (!site) {
+    return 'unknown';
+  }
+
+  const columnNumber = site.getColumnNumber();
+  const lineNumber = site.getLineNumber();
   // NOTE: in bundler environments eval() is often used during dev builds
-  const fileName = site?.isEval() ? site.getEvalOrigin() : site?.getFileName();
+  const fileName = site.isEval() ? site.getEvalOrigin() : site.getFileName();
 
   return `${fileName}:${lineNumber}:${columnNumber}`;
 }
@@ -56,13 +61,13 @@ function getCallsite() {
 /**
  * Options for the callsite tracking plugin.
  */
-export interface CallsitePluginOptions extends LogLayerPluginParams {
+export type CallsitePluginOptions = LogLayerPluginParams & {
   /**
    * Whether the application is running in production.
-   * Reserved for future use.
+   * Reserved for future use — currently has no effect on plugin behavior.
    */
   isProductionEnv: boolean;
-}
+};
 
 /**
  * Creates a LogLayer plugin that tracks and injects source code location into log data.
@@ -74,7 +79,7 @@ export interface CallsitePluginOptions extends LogLayerPluginParams {
  * @returns A LogLayer plugin instance
  *
  * @example
- * ```ts
+ * ```typescript
  * import { callsitePlugin } from '@accelint/logger/plugins/callsite';
  *
  * const plugin = callsitePlugin({ isProductionEnv: false });

@@ -1,5 +1,11 @@
 # @accelint/icons
 
+## 2.2.0
+
+### Minor Changes
+
+- 77b277d: Add audio and media controls components implemented using media-chrome
+
 ## 2.1.2
 
 ### Patch Changes

@@ -59,6 +59,14 @@ export function parse(input: string, format?: Format): ParseResults {
     return [[], [violation('No input.')]];
   }
 
+  // Find isolated letters (not part of a larger word)
+  const isolatedLetters = input.match(/(?<![a-z])[a-z](?![a-z])/gi);
+
+  // Reject if any isolated letter is not a valid cardinal direction (N, S, E, W)
+  if (isolatedLetters?.some((ch) => !/^[nsew]$/i.test(ch))) {
+    return [[], [violation('Unrecognized characters in input.')]];
+  }
+
   const [tokens, errors] = pipesRunner(lexer(input), format);
 
   return [tokens, errors?.length ? errors.map(violation) : []];

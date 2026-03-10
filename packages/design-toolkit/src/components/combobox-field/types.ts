@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -45,6 +45,8 @@ export type ComboBoxFieldProps<T extends OptionsDataItem> = Omit<
       control?: string;
       /** Class name for the input element. */
       input?: InputProps['className'];
+      /** Class name for the clear button. */
+      clear?: ButtonProps['className'];
       /** Class name for the trigger button. */
       trigger?: ButtonProps['className'];
       /** Class name for the description text. */
@@ -64,4 +66,6 @@ export type ComboBoxFieldProps<T extends OptionsDataItem> = Omit<
     errorMessage?: string;
     /** Size variant of the field. */
     size?: 'small' | 'medium';
+    /** Whether the field shows a clear button. Will not show if the field is read-only. */
+    isClearable?: boolean;
   };

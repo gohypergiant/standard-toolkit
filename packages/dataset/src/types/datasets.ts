@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -34,10 +34,17 @@ export type SemVerVersion = `${string}.${string}.${string}`;
  * - **`'VTS'`**: Vector Tile Service - High performance, pre-processed tiles
  * - **`'WMS'`**: Web Map Service - Raster tiles with feature information
  * - **`'WFS'`**: Web Feature Service - Vector feature data with query capabilities
+ * - **`'REST'`**: RESTful Service - Generic resource-oriented endpoints providing spatial data via HTTP
  * - **`'FS'`**: File System - Static files, local uploads, CDN-hosted data
  * - **`'Unknown'`**: Fallback for unrecognized or pending service detection
  */
-export type LayerServiceType = 'VTS' | 'WMS' | 'WFS' | 'FS' | 'Unknown';
+export type LayerServiceType =
+  | 'VTS'
+  | 'WMS'
+  | 'WFS'
+  | 'REST'
+  | 'FS'
+  | 'Unknown';
 
 /**
  * Supported data formats for dataset responses and processing.
@@ -221,10 +228,16 @@ export type LayerDatasetField = {
  *
  * @example
  * ```typescript
- * const metadata: LayerDatasetMetadata = {
+ * // WFS dataset with GeoServer backend
+ * const wfsMetadata: LayerDatasetMetadata = {
  *   table: 'weather_stations',
- *   serviceUrls: ['https://api.weather.gov/geoserver'],
+ *   serviceUrls: ['https://api.weather.gov/geoserver/wfs'],
  *   serviceVersion: '2.0.0',
+ *   backend: 'geoserver',
+ *   vendorParams: {
+ *     formatOptions: 'includeFids:false;batchSize:10000',
+ *     viewparams: 'minMagnitude:5.0'
+ *   },
  *   idProperty: 'station_id',
  *   geometryProperty: 'geometry',
  *   minZoom: 5,
@@ -232,7 +245,16 @@ export type LayerDatasetField = {
  *   positionFormat: 'XY',
  *   maxRequests: 6,
  *   refetchInterval: 300000, // 5 minutes
- *   defaultFields: ['station_id', 'temperature', 'humidity', 'geometry']
+ *   defaultFields: ['station_id', 'temperature', 'humidity', 'geometry'],
+ *   filterDialect: 'cql'
+ * };
+ *
+ * // VTS dataset without backend-specific params
+ * const vtsMetadata: LayerDatasetMetadata = {
+ *   table: 'buildings',
+ *   serviceUrls: ['https://tiles.example.com/{z}/{x}/{y}.mvt'],
+ *   geometryProperty: 'geometry',
+ *   defaultFields: ['id', 'name', 'height']
  * };
  * ```
  */
@@ -255,6 +277,53 @@ export type LayerDatasetMetadata = {
    * @example '1.0.0', '1.1.0', '1.3.0', '2.0.0'
    */
   serviceVersion?: SemVerVersion;
+
+  /**
+   * Backend implementation identifier for service-specific adapters.
+   *
+   * @remarks
+   * Identifies the backend server implementation to enable adapter-specific request handling.
+   * Different backend implementations may use different parameter names, response formats,
+   * or feature sets even when implementing the same service protocol.
+   *
+   * **Current Usage (WFS):**
+   * - `geoserver`: GeoServer / GeoMesa (default for WFS) - supports Arrow format, format_options, viewparams
+   *
+   * **Future Extensions:**
+   * This field can be extended to support backend identification for other service types
+   * (e.g., WMS, VTS) as adapter patterns are implemented for those services.
+   *
+   * @example 'geoserver', 'mapserver', 'qgis'
+   */
+  backend?: string;
+
+  /**
+   * Backend-specific vendor parameters for customizing service requests.
+   *
+   * @remarks
+   * Enables backend-specific customization without polluting the core metadata schema.
+   * Parameter interpretation depends on the `backend` field value and service type.
+   *
+   * **Current Usage (WFS):**
+   *
+   * GeoServer/GeoMesa (`backend: 'geoserver'`):
+   * - `formatOptions`: GeoMesa format options (e.g., 'includeFids:false;batchSize:10000')
+   * - `viewparams`: GeoServer view parameters (e.g., 'minMagnitude:5.0;maxDepth:100')
+   *
+   * **Future Extensions:**
+   * This field can be extended to support vendor parameters for other service types
+   * and backend implementations as needed.
+   *
+   * @example
+   * ```typescript
+   * // GeoServer WFS vendor params
+   * {
+   *   formatOptions: 'includeFids:false;batchSize:10000',
+   *   viewparams: 'minMagnitude:5.0'
+   * }
+   * ```
+   */
+  vendorParams?: Record<string, unknown>;
 
   /**
    * Layer identifier for service requests.

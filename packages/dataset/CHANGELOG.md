@@ -1,5 +1,18 @@
 # @accelint/dataset
 
+## 0.2.1
+
+### Patch Changes
+
+- Updated dependencies [162895c]
+  - @accelint/core@0.6.0
+
+## 0.2.0
+
+### Minor Changes
+
+- 2b8e02d: Add in `backend` and `vendorParam` props to the dataset metadata
+
 ## 0.1.2
 
 ### Patch Changes

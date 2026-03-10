@@ -36,8 +36,8 @@
  */
 
 import { Broadcast } from '@accelint/bus';
-import { getLogger } from '@accelint/logger';
 import { createMapStore } from '@/shared/create-map-store';
+import { createLoggerDomain } from '@/shared/logger';
 import { MapEvents } from '../../base-map/events';
 import {
   isCircleShape,
@@ -73,13 +73,7 @@ import type {
   EditShapeOptions,
 } from './types';
 
-const logger = getLogger({
-  enabled:
-    process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test',
-  level: 'warn',
-  prefix: '[EditShapeLayer]',
-  pretty: true,
-});
+const logger = createLoggerDomain('[EditShapeLayer]');
 
 /**
  * Typed event bus instances
@@ -94,6 +88,7 @@ const DEFAULT_EDITING_STATE: EditingState = {
   editingShape: null,
   editMode: 'view',
   featureBeingEdited: null,
+  previousMode: null,
 };
 
 /**
@@ -110,10 +105,13 @@ type EditShapeActions = {
 
 /**
  * Determine the appropriate edit mode for a shape type
+ *
+ * @param shape - The shape to determine the edit mode for
+ * @returns The edit mode to use for this shape type
  */
 function getEditModeForShape(shape: Shape): EditMode {
   if (isPointShape(shape)) {
-    return 'translate';
+    return 'point-translate';
   }
   if (isCircleShape(shape)) {
     return 'circle-transform';
@@ -207,6 +205,7 @@ function saveEditingInternal(
     editingShape: null,
     editMode: 'view',
     featureBeingEdited: null,
+    previousMode: null,
   });
 
   // Return to default mode and cursor
@@ -246,6 +245,7 @@ function cancelEditingInternal(
     editingShape: null,
     editMode: 'view',
     featureBeingEdited: null,
+    previousMode: null,
   });
 
   // Return to default mode and cursor
@@ -312,6 +312,9 @@ export const editStore = createMapStore<EditingState, EditShapeActions>({
 /**
  * Get the current editing state for a mapId
  * Returns null if no store instance exists
+ *
+ * @param mapId - The map instance ID.
+ * @returns The current editing state, or null if no store instance exists.
  */
 export function getEditingState(mapId: UniqueId): EditingState | null {
   if (!editStore.exists(mapId)) {
@@ -322,6 +325,12 @@ export function getEditingState(mapId: UniqueId): EditingState | null {
 
 /**
  * Hook for editing state
+ * @param mapId - The map instance ID.
+ * @returns The current editing state and edit actions.
+ *
+ * @example
+ * ```typescript
+ * const { state, edit, save, cancel } = useEditingState(mapId);
  */
 export function useEditingState(
   mapId: UniqueId,
@@ -331,6 +340,7 @@ export function useEditingState(
 
 /**
  * Manually clear editing state for a specific mapId.
+ * @param mapId - The map instance ID.
  */
 export function clearEditingState(mapId: UniqueId): void {
   editStore.clear(mapId);
@@ -338,6 +348,8 @@ export function clearEditingState(mapId: UniqueId): void {
 
 /**
  * Update feature from the layer component (called during drag operations)
+ * @param mapId - The map instance ID.
+ * @param feature - The updated GeoJSON feature from the editable layer.
  */
 export function updateFeatureFromLayer(
   mapId: UniqueId,
@@ -348,7 +360,77 @@ export function updateFeatureFromLayer(
 
 /**
  * Cancel editing (called by the layer component on ESC)
+ * @param mapId - The map instance ID.
  */
 export function cancelEditingFromLayer(mapId: UniqueId): void {
   editStore.actions(mapId).cancel();
+}
+
+/**
+ * Save editing (called by the layer component on Enter)
+ * @param mapId - The map instance ID.
+ */
+export function saveEditingFromLayer(mapId: UniqueId): void {
+  editStore.actions(mapId).save();
+}
+
+/**
+ * Enables map panning while editing by switching to view mode and storing the
+ * current edit mode for restoration.
+ *
+ * No-op if no shape is currently being edited.
+ *
+ * @param mapId - The map instance ID.
+ *
+ * @example
+ * ```typescript
+ * enableEditPanning(mapId);
+ * ```
+ */
+export function enableEditPanning(mapId: UniqueId): void {
+  const state = editStore.get(mapId);
+  if (state?.previousMode !== null || !state?.editingShape) {
+    return;
+  }
+
+  editStore.set(mapId, { previousMode: state.editMode, editMode: 'view' });
+  mapEventBus.emit(MapEvents.enablePan, { id: mapId });
+  requestCursorChange(mapId, 'grab', EDIT_SHAPE_LAYER_ID);
+}
+
+/**
+ * Disables map panning and restores the previous edit mode.
+ *
+ * If no shape is being edited, clears the stored `previousMode` and returns.
+ * Otherwise, restores the edit mode from `previousMode`, re-disables panning,
+ * and sets the cursor back to the shape-appropriate edit cursor.
+ *
+ * @param mapId - The map instance ID.
+ *
+ * @example
+ * ```typescript
+ * disableEditPanning(mapId);
+ * ```
+ */
+export function disableEditPanning(mapId: UniqueId): void {
+  const state = editStore.get(mapId);
+
+  if (!state?.editingShape) {
+    editStore.set(mapId, { previousMode: null });
+    return;
+  }
+
+  const previousMode = state?.previousMode;
+  if (!previousMode) {
+    editStore.set(mapId, { previousMode: null });
+    return;
+  }
+
+  editStore.set(mapId, { editMode: previousMode, previousMode: null });
+  mapEventBus.emit(MapEvents.disablePan, { id: mapId });
+  requestCursorChange(
+    mapId,
+    EDIT_CURSOR_MAP[previousMode],
+    EDIT_SHAPE_LAYER_ID,
+  );
 }

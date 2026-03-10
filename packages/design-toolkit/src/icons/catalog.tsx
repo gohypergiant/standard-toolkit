@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -43,7 +43,10 @@ export default {
       { name: 'expand-window', icon: <Icon.ExpandWindow /> },
       { name: 'expand', icon: <Icon.Expand /> },
       { name: 'explore-data', icon: <Icon.ExploreData /> },
+      { name: 'fast-forward', icon: <Icon.FastForward /> },
+      { name: 'fast-rewind', icon: <Icon.FastRewind /> },
       { name: 'filter', icon: <Icon.Filter /> },
+      { name: 'full-screen', icon: <Icon.FullScreen /> },
       { name: 'flag', icon: <Icon.Flag /> },
       { name: 'focus', icon: <Icon.Focus /> },
       { name: 'global-share', icon: <Icon.GlobalShare /> },
@@ -80,6 +83,8 @@ export default {
       { name: 'search', icon: <Icon.Search /> },
       { name: 'share', icon: <Icon.Share /> },
       { name: 'show', icon: <Icon.Show /> },
+      { name: 'sound-audible', icon: <Icon.SoundAudible /> },
+      { name: 'sound-mute', icon: <Icon.SoundMute /> },
       { name: 'stack-cards', icon: <Icon.StackCards /> },
       { name: 'stack', icon: <Icon.Stack /> },
       { name: 'tether', icon: <Icon.Tether /> },

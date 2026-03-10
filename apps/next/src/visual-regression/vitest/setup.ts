@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -11,6 +11,15 @@
  */
 
 import '@accelint/design-foundation/styles';
+
+// Polyfill process for libraries (e.g. react-aria-components Virtualizer) that
+// reference it at runtime in the browser context. VIRT_ON enables real
+// virtualization behavior since VRT runs in a real browser, not jsdom.
+if (typeof globalThis.process === 'undefined') {
+  (globalThis as Record<string, unknown>).process = {
+    env: { NODE_ENV: 'test', VIRT_ON: '1' },
+  };
+}
 
 // Disable all animations and transitions for visual regression tests
 // https://vitest.dev/guide/browser/visual-regression-testing.html#disable-animations

@@ -32,6 +32,8 @@ export type {
 } from './components/accordion/types';
 export { ActionBar } from './components/action-bar';
 export type { ActionBarProps } from './components/action-bar/types';
+export { Audio } from './components/audio';
+export type { AudioProps } from './components/audio/types';
 export { AvatarContext, AvatarProvider } from './components/avatar/context';
 export { Avatar } from './components/avatar';
 export type { AvatarProps } from './components/avatar/types';
@@ -241,6 +243,10 @@ export type {
   FlashcardDetailsListProps,
   FlashcardProps,
 } from './components/flashcard/types';
+export { FloatingCard } from './components/floating-card';
+export type { FloatingCardProps } from './components/floating-card';
+export { FloatingCardProvider } from './components/floating-card/provider';
+export type { FloatingCardProviderProps } from './components/floating-card/provider';
 export { HeroContext } from './components/hero/context';
 export { Hero } from './components/hero';
 export { HeroSubtitle } from './components/hero/subtitle';
@@ -329,6 +335,34 @@ export type {
   ListItemVariant,
   ListProps,
 } from './components/list/types';
+export {
+  MediaControlsContext,
+  MediaControlsProvider,
+  useMediaControlsDisabled,
+  useMediaProviderGuard,
+} from './components/media-controls/context';
+export { FullscreenButton } from './components/media-controls/fullscreen-button';
+export { MediaControls } from './components/media-controls';
+export { MuteButton } from './components/media-controls/mute-button';
+export { PlayButton } from './components/media-controls/play-button';
+export { PlaybackRateButton } from './components/media-controls/playback-rate';
+export { SeekButton } from './components/media-controls/seek-button';
+export { TimeDisplay } from './components/media-controls/time-display';
+export { TimeRange } from './components/media-controls/time-range';
+export type {
+  FullscreenButtonProps,
+  MediaControlsContextValue,
+  MediaControlsProps,
+  MuteButtonProps,
+  PlayButtonProps,
+  PlaybackRateButtonProps,
+  SeekButtonProps,
+  TimeDisplayMode,
+  TimeDisplayProps,
+  TimeRangeProps,
+  VolumeSliderProps,
+} from './components/media-controls/types';
+export { VolumeSlider } from './components/media-controls/volume-slider';
 export { MenuContext } from './components/menu/context';
 export { Menu } from './components/menu';
 export { MenuItemDescription } from './components/menu/item-description';
@@ -411,7 +445,7 @@ export type {
   QueryBuilderValueEditors,
   RuleGroupType,
 } from './components/query-builder/types';
-export { RadioContext } from './components/radio/context';
+export { RadioContext, RadioGroupContext } from './components/radio/context';
 export { RadioGroup } from './components/radio/group';
 export { Radio } from './components/radio';
 export type { RadioGroupProps, RadioProps } from './components/radio/types';
@@ -494,12 +528,22 @@ export type {
   TableProps,
   TableRowProps,
 } from './components/table/types';
-export { TabsContext, TabsProvider } from './components/tabs/context';
+export { TabStyleDefaults } from './components/tabs/constants';
+export {
+  TabContext,
+  TabProvider,
+  TabsContext,
+  TabsProvider,
+} from './components/tabs/context';
 export { Tabs } from './components/tabs';
 export { TabList } from './components/tabs/list';
 export { TabPanel } from './components/tabs/panel';
 export { Tab } from './components/tabs/tab';
-export type { TabsProps } from './components/tabs/types';
+export type {
+  TabProps,
+  TabStyleProps,
+  TabsProps,
+} from './components/tabs/types';
 export {
   TextAreaFieldContext,
   TextAreaFieldProvider,
@@ -539,6 +583,8 @@ export type {
   TreeProps,
   TreeStyleVariant,
 } from './components/tree/types';
+export { Video } from './components/video';
+export type { VideoProps } from './components/video/types';
 export {
   ViewStackContext,
   ViewStackEventHandlers,

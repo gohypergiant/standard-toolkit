@@ -1,0 +1,219 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+
+import * as MediaControlsStories from './media-controls.stories';
+
+<Meta of={MediaControlsStories} />
+
+# MediaControls
+
+The MediaControls component provides a composable set of media playback controls for audio and video content. It combines control components (play, pause, seek, volume, etc.) into a control bar using a composition-based API.
+
+It is composed of the following components:
+
+- **MediaControls** - Root container component that provides shared state to children
+- **PlayButton** - Toggle play/pause button
+- **MuteButton** - Toggle mute/unmute button
+- **VolumeSlider** - Adjust volume level slider
+- **TimeRange** - Seek/scrub bar for navigating media
+- **TimeDisplay** - Current playback time or duration display
+- **SeekButton** - Forward and backward seek buttons
+- **PlaybackRateButton** - Playback speed selector
+
+## Example Usage
+
+### Basic
+```tsx
+import { MediaProvider } from 'media-chrome/react/media-store';
+import { MediaController } from 'media-chrome/react';
+import {
+  MediaControls,
+  PlayButton,
+  TimeRange,
+  TimeDisplay,
+  MuteButton,
+  VolumeSlider,
+} from '@accelint/design-toolkit';
+
+<MediaProvider>
+  <MediaController audio>
+    <audio slot="media" src="audio.mp3" />
+    <MediaControls>
+      <PlayButton />
+      <TimeDisplay mode="current" />
+      <TimeRange />
+      <MuteButton />
+      <VolumeSlider />
+    </MediaControls>
+  </MediaController>
+</MediaProvider>
+```
+
+### Full-Featured Layout
+```tsx
+// Two-row layout with all controls
+<MediaControls classNames={{ container: 'flex-col gap-s' }}>
+  {/* Time row */}
+  <div className="flex items-center gap-s">
+    <TimeDisplay mode="current" />
+    <TimeRange />
+    <TimeDisplay mode="duration" />
+  </div>
+
+  {/* Controls row */}
+  <div className="flex items-center">
+    <MuteButton />
+    <VolumeSlider />
+    <SeekButton direction="backward" />
+    <PlayButton />
+    <SeekButton direction="forward" />
+    <PlaybackRateButton rates={[0.5, 1, 1.5, 2]} />
+  </div>
+</MediaControls>
+```
+
+### Disabled State
+```tsx
+// Disable all controls via the root component
+<MediaControls isDisabled>
+  <PlayButton />
+  <TimeRange />
+  <MuteButton />
+</MediaControls>
+
+// Or disable individual controls
+<MediaControls>
+  <PlayButton />
+  <TimeRange isDisabled />
+  <MuteButton />
+</MediaControls>
+```
+
+## Individual Control Components
+
+Each control component can be used independently within a MediaProvider context.
+
+### PlayButton
+
+Toggle play/pause button.
+
+<Canvas of={MediaControlsStories.PlayButtonDefault} />
+
+### MuteButton
+
+Toggle mute/unmute button.
+
+<Canvas of={MediaControlsStories.MuteButtonDefault} />
+
+### SeekButton
+
+Forward and backward seek buttons.
+
+<Canvas of={MediaControlsStories.SeekButtonDefault} />
+
+### VolumeSlider
+
+Volume adjustment slider.
+
+<Canvas of={MediaControlsStories.VolumeSliderDefault} />
+
+### TimeRange
+
+Seek/scrub bar for navigating media.
+
+### TimeDisplay
+
+Current playback time display.
+
+<Canvas of={MediaControlsStories.TimeDisplayDefault} />
+
+### PlaybackRateButton
+
+Playback speed selector button.
+
+<Canvas of={MediaControlsStories.PlaybackRateButtonDefault} />
+
+## Props
+
+All components accept a `className` prop for custom style overrides.
+
+### MediaControls
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `children` | `ReactNode` | - | Child control components to render |
+| `className` | `string` | - | CSS class for styling |
+| `classNames.container` | `string` | - | Applied to the main container element |
+| `isDisabled` | `boolean` | `false` | Disable all child controls |
+
+### PlayButton
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `isDisabled` | `boolean` | `false` | Disable this specific control (overrides context-level isDisabled) |
+
+### MuteButton
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `isDisabled` | `boolean` | `false` | Disable this specific control (overrides context-level isDisabled) |
+
+### SeekButton
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `direction` | `'forward' \| 'backward'` | - | Seek direction (required) |
+| `seekOffset` | `number` | `10` | Seek amount in seconds. Must be a positive finite number. Invalid values automatically fall back to 10 seconds with a warning in development mode. |
+| `isDisabled` | `boolean` | `false` | Disable this specific control (overrides context-level isDisabled) |
+
+> **Note:** The SeekButton is automatically disabled when media metadata is not yet loaded (i.e., duration is unknown). This provides visual feedback to users that seeking is not available until the media is ready.
+
+### VolumeSlider
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `showLabel` | `boolean` | `false` | Whether to show volume label |
+| `isDisabled` | `boolean` | `false` | Disable this specific control (overrides context-level isDisabled) |
+
+### TimeRange
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `isDisabled` | `boolean` | `false` | Disable this specific control (overrides context-level isDisabled) |
+
+### TimeDisplay
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `mode` | `'current' \| 'remaining' \| 'duration'` | `'current'` | Display mode |
+| `placeholder` | `string` | `'hh:mm:ss'` | Text to display before media loads |
+| `isDisabled` | `boolean` | `false` | Disable this specific control (overrides context-level isDisabled) |
+
+### PlaybackRateButton
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `rates` | `number[]` | `[1, 2, 3]` | Array of available rates. Invalid values (non-finite, negative, or zero) are automatically filtered out. If all rates are invalid, falls back to `[1, 2, 3]` with a warning in development mode. |
+| `isDisabled` | `boolean` | `false` | Disable this specific control (overrides context-level isDisabled) |
+
+## Implementation Notes
+
+The MediaControls component is built on [media-chrome](https://www.media-chrome.org/) for state management and accessibility.
+
+**MediaProvider context required:** MediaControls must be used within a `MediaProvider` context from media-chrome. The `Audio` component automatically provides this context, but when using MediaControls standalone, you must wrap it in a provider.
+
+[media-chrome Docs](https://www.media-chrome.org/docs)
+
+[GitHub Source](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-toolkit/src/components/media-controls)
+
+The component provides:
+- **MediaControlsContext** - React context for sharing isDisabled state with children
+- **MediaControlsProvider** - Provider component for the context
+- **useMediaControlsDisabled** - Hook to resolve isDisabled state from prop or context
+- **useMediaProviderGuard** - Validates MediaProvider context is present (throws error if not)
+
+The component automatically handles accessibility features including:
+- ARIA attributes for screen readers
+- Keyboard navigation for all controls
+- Focus management
+- Proper labeling of interactive elements
+- Screen reader announcements for state changes

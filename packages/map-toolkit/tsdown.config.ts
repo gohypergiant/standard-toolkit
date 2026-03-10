@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -29,6 +29,7 @@ export default defineConfig({
     '!src/deckgl/shapes/**/hooks/**',
     // Additional internal files
     '!src/deckgl/shapes/display-shape-layer/shape-label-layer.ts',
+    '!src/shared/logger.ts',
   ],
   // NOTE: optionalDependencies must be included here
   // SEE: https://tsdown.dev/options/dependencies#default-behavior
@@ -66,7 +67,7 @@ export default defineConfig({
   // NOTE: our license header is currently not formatted correctly to support https://rolldown.rs/options/output#legalcomments
   outputOptions: {
     banner: `/*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0

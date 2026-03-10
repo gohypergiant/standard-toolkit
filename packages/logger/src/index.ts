@@ -18,15 +18,7 @@
 
 export { bootstrap } from './default/bootstrap';
 export { getLogger } from './default';
-export {
-  DEBUG,
-  ERROR,
-  FATAL,
-  INFO,
-  LOG_LEVEL,
-  TRACE,
-  WARN,
-} from './definitions';
+export { DEBUG, ERROR, FATAL, INFO, TRACE, WARN } from './definitions';
 export type { LogLevel, LoggerOptions } from './definitions';
 export { callsitePlugin } from './plugins/callsite';
 export type { CallsitePluginOptions } from './plugins/callsite';

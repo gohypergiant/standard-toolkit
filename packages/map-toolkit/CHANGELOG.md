@@ -1,5 +1,80 @@
 # @accelint/map-toolkit
 
+## 2.0.0
+
+### Major Changes
+
+- 7b30771: Add `enableElevation` prop to DisplayShapeLayer for 3D shapes rendering.
+
+  Remove dotted border treatment on shape selection — interactions no longer modify a shape's innate styling.
+
+  Apply material-based brightness effect for hover and selection on all polygon shapes. All shapes brighten their outline color on hover or select (1.4×), with an even brighter combined state when both active (1.7×).
+
+  Add new Selection layer for brightness effect while shape is selected.
+
+  Add optional `maxElevation` property to `StyledFeatureProperties` as the source of truth for Polygon shape elevation. Point and LineString elevation is derived from z coordinates.
+
+  Note: the only breaking change is removal of a redundant type. If you were using `type ShapeFeatureTypeValues` from map-toolkit, replace that with `type ShapeFeatureType`.
+
+### Minor Changes
+
+- d5ac9eb: Update EditShapeLayer to include the ability to pan the map while editing a shape when the spacebar is held.
+- 311d7b6: Upgraded @deck.gl packages to 9.2 and removed shape layer double-click workaround
+
+### Patch Changes
+
+- 5567348: Update logger implementation to prevent singleton pollution.
+- 1106ced: Fix bug where Enter on Save hotkey never unregistered, causing an error on EditShapeLayer remounts.
+- Updated dependencies [3153e74]
+- Updated dependencies [5567348]
+- Updated dependencies [162895c]
+  - @accelint/bus@4.0.0
+  - @accelint/logger@1.0.1
+  - @accelint/core@0.6.0
+  - @accelint/hotkey-manager@2.0.0
+
+## 1.5.0
+
+### Minor Changes
+
+- cae932c: Update circle tooltip to show radius instead of diameter in draw and edit modes.
+
+### Patch Changes
+
+- 9419d41: Fix infinite render loop in BaseMap when navigating in React Strict Mode. The camera store's `createMapStore` now properly handles initial state timing by directly updating existing instances when `setInitialState` is called after the instance already exists, which can occur during React Strict Mode's double-mount behavior.
+- Updated dependencies [ed09ea6]
+  - @accelint/logger@1.0.0
+
+## 1.4.0
+
+### Minor Changes
+
+- 89914b0: Add Enter key hotkey to save shape edits. Pressing Enter while editing a shape now saves the changes and emits the existing `shapes:updated` event, providing an alternative to clicking the Save button.
+- 7503e7e: Add click-to-place editing for Point shapes in EditShapeLayer.
+
+  Point shapes now use a new `point-translate` edit mode that supports two ways to reposition:
+  - **Click anywhere on the map** to instantly move the point to that location
+  - **Drag the point directly** for traditional drag behavior
+
+  This improves UX for points which previously required precise clicking on a very small target area.
+
+### Patch Changes
+
+- 6cb6e17: Enable antialiasing for maplibre to smooth out lines
+- Updated dependencies [58bc0db]
+  - @accelint/geo@0.6.0
+
+## 1.3.0
+
+### Minor Changes
+
+- 58199e5: Updates use-cursor-coordinates to format MGRS and UTM default coordinates to follow a more expected format.
+
+### Patch Changes
+
+- 03c1e39: Add a tweak for the Viewport Resize debounce timing, 500 -> 200, for better visual feedback on updates.
+- 0265877: Fixed error handling in `useCursorCoordinates` hook for coordinates outside UTM/MGRS valid range. UTM and MGRS coordinate systems are only valid between 80°S and 84°N. The hook now returns the default placeholder (`--, --`) when attempting to format polar coordinates in these formats.
+
 ## 1.2.0
 
 ### Minor Changes

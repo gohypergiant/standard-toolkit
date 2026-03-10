@@ -16,4 +16,11 @@
 
 // biome-ignore-all assist/source/organizeImports: This comment is used to prevent the biome tool from altering the import statements in this file.
 
+export {
+  CSS_RGBA_LEGACY_REGEX,
+  CSS_RGBA_MODERN_REGEX,
+  HEX_REGEX,
+} from './color';
 export { DEFAULT_COORDINATE } from './coordinates';
+export { DISTANCE_UNIT_BY_SYMBOL, DISTANCE_UNIT_SYMBOLS } from './units';
+export type { DistanceUnit, DistanceUnitSymbol } from './units';

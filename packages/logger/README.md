@@ -1,26 +1,59 @@
 # @accelint/logger
 
-A logging utility built on [LogLayer](https://loglayer.dev/) with automatic callsite tracking and environment detection. Defaults to `stdout` for log transport to accommodate our most common scenario across products.
+Structured logging built on [LogLayer](https://loglayer.dev/) with automatic callsite tracking and environment detection.
+
+## What is @accelint/logger?
+
+`@accelint/logger` is a thin wrapper around [LogLayer](https://loglayer.dev/) that bakes in sensible defaults for Accelint projects. Out of the box you get:
+
+- **Callsite tracking** — every log entry includes the file and line where it was called
+- **Environment detection** — logs note whether they came from the browser or server
+- **Pretty-printed output** — readable in development, switchable to structured JSON for production pipelines
+- **Error serialization** — errors include full stack traces via `serialize-error`
+- **Singleton pattern** — configure once at startup, import everywhere else
+
+It doesn't change LogLayer's API. Anything in the [LogLayer docs](https://loglayer.dev/) applies here.
+
+## Table of Contents
+
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [Configuration Options](#configuration-options)
+- [Log Levels](#log-levels)
+- [API](#api)
+  - [getLogger](#getlogger)
+  - [Log Level Constants](#log-level-constants)
+- [Examples](#examples)
+  - [Adding Context and Metadata](#adding-context-and-metadata)
+  - [Error Handling](#error-handling)
+  - [Domain Loggers](#domain-loggers)
+  - [Child Loggers](#child-loggers)
+  - [React Error Boundaries](#react-error-boundaries)
+  - [Custom Transports](#custom-transports)
+  - [Custom Plugins](#custom-plugins)
+  - [Testing](#testing)
+- [Built-in Features](#built-in-features)
+- [Further Reading](#further-reading)
 
 ## Installation
 
 ```sh
-npm install @accelint/logger
-# or
-pnpm install @accelint/logger
+pnpm add @accelint/logger
 ```
+
+TypeScript types are included — no separate `@types` package needed.
 
 ## Quick Start
 
-Create a single logger instance in `~/utils/logger/index.ts` and import it throughout your application:
+Create a single logger instance in your app and import it everywhere else:
 
 ```ts
 // ~/utils/logger/index.ts
 import { getLogger } from '@accelint/logger';
 
 export const logger = getLogger({
-  enabled: true, // could disable based on NODE_ENV
-  level: 'info', 
+  enabled: true,
+  level: 'info',
   prefix: '[MyApp]',
   env: process.env.NODE_ENV as 'production' | 'development',
 });
@@ -31,106 +64,121 @@ export const logger = getLogger({
 import { logger } from '~/utils/logger';
 
 export function login(credentials: Credentials) {
-  // All log methods accept multiple parameters, which can be strings, booleans, numbers, null, or undefined
   logger.info('User login attempt');
-  // Login logic...
+  // ...
 }
 ```
 
-This approach:
-
-- Centralizes logging configuration in one place
-- Prevents accidental reconfiguration throughout the codebase
-- Makes it easy to add transports and plugins globally
-- Allows child loggers to inherit consistent settings
-
-Avoid calling `getLogger()` in multiple files. Instead, import the configured logger instance.
-
+`getLogger` returns a singleton — call it once at startup to configure it, then import the result wherever you need it. Don't call it in multiple files with different options; only the first call's options take effect.
 
 ## Configuration Options
 
-| Option       | Type                                                         | Default         | Description                       |
-| ------------ | ------------------------------------------------------------ | --------------- | --------------------------------- |
-| `enabled` | `boolean` | required | Enable or disable logging output |
-| `level` | `'debug' \| 'info' \| 'warn' \| 'error' \| 'trace' \| 'fatal'` | `'debug'` | Minimum log level to output |
-| `prefix` | `string` | `''` | Prefix prepended to all log messages |
-| `pretty` | `boolean` | `true` | Use pretty-printed console output |
-| `env` | `'production' \| 'development' \| 'test'` | `'development'` | Environment context |
-| `plugins` | `LogLayerPlugin[]` | `[]` | Additional LogLayer plugins |
-| `transports` | `LogLayerTransport[]` | `[]` | Additional log transports |
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `enabled` | `boolean` | required | Enable or disable all logging output |
+| `level` | `LogLevel` | `'debug'` | Minimum log level to output |
+| `prefix` | `string` | `''` | String prepended to all log messages |
+| `pretty` | `boolean` | `true` | Use pretty-printed console output. Set to `false` for structured JSON |
+| `env` | `'production' \| 'development'` | `'development'` | Environment context; affects whether callsite and environment data is included |
+| `plugins` | `LogLayerPlugin[]` | `[]` | Additional LogLayer plugins applied after the built-in ones |
+| `transports` | `LogLayerTransport[]` | `[]` | Additional transports alongside the default console output |
+| `groups` | `LogGroupsConfig` | `{}` | Group-based routing for sending logs to specific transports |
 
 ## Log Levels
 
-The following log levels are available, in order of severity:
-
-| Level   | Method           | Use Case               |
-| ------- | ---------------- | ---------------------- |
-| `trace` | `logger.trace()` | Fine-grained debugging |
+| Level | Method | Use case |
+| --- | --- | --- |
+| `trace` | `logger.trace()` | Fine-grained debugging, very verbose |
 | `debug` | `logger.debug()` | Development debugging |
-| `info` | `logger.info()` | General information |
-| `warn` | `logger.warn()` | Warning conditions |
-| `error` | `logger.error()` | Error conditions |
-| `fatal` | `logger.fatal()` | Critical failures |
+| `info` | `logger.info()` | General information about what the app is doing |
+| `warn` | `logger.warn()` | Something looks wrong but execution continues |
+| `error` | `logger.error()` | An operation failed |
+| `fatal` | `logger.fatal()` | Critical failure, app likely needs to stop |
 
-## Working with Metadata and Context
+## API
 
-### Adding Context Data
+### `getLogger`
 
-Context data persists across all subsequent log calls. Use it for request-scoped or execution-scoped data.
+```ts
+function getLogger(opts: LoggerOptions): LogLayer
+```
+
+Returns a singleton `LogLayer` instance. The first call initializes the logger with the provided options. Every call after that returns the same instance regardless of what options you pass.
+
+```ts
+import { getLogger } from '@accelint/logger';
+
+export const logger = getLogger({
+  enabled: true,
+  level: 'info',
+});
+```
+
+**Returns:** `LogLayer` — see the [LogLayer docs](https://loglayer.dev/) for the full instance API, including `withContext`, `withMetadata`, `withError`, `child`, `withPrefix`, and more.
+
+---
+
+### Log Level Constants
+
+String constants for each log level, exported for use where you need to reference a level programmatically rather than with a string literal:
+
+```ts
+import { DEBUG, INFO, WARN, ERROR, TRACE, FATAL } from '@accelint/logger';
+import type { LogLevel } from '@accelint/logger';
+
+const logger = getLogger({ enabled: true, level: WARN });
+```
+
+| Constant | Value |
+| --- | --- |
+| `TRACE` | `'trace'` |
+| `DEBUG` | `'debug'` |
+| `INFO` | `'info'` |
+| `WARN` | `'warn'` |
+| `ERROR` | `'error'` |
+| `FATAL` | `'fatal'` |
+
+The `LogLevel` type is also exported and maps to `LogLevelType` from `@loglayer/shared`.
+
+## Examples
+
+### Adding Context and Metadata
+
+Context persists across all logs on a logger instance. Metadata is scoped to a single log entry.
 
 ```ts
 import { logger } from '~/utils/logger';
 
-export async function handleRequest(req: Request) {
-  // Add request ID to all logs within this function
-  const requestLogger = logger.withContext({
-    requestId: req.id,
-    path: req.path,
-    method: req.method
-  });
-
-  requestLogger.info('Request received');
-  await processRequest(req);
-  requestLogger.info('Request completed');
-}
-```
-
-### Adding Metadata
-
-Metadata is specific to individual log entries. Use it for data that changes with each log.
-
-```ts
-import { logger } from '~/utils/logger';
-
-export function processPayment(payment: Payment) {
-  logger.withMetadata({
-    amount: payment.amount,
-    currency: payment.currency,
-    paymentMethod: payment.method
-  }).info('Processing payment');
-}
-```
-
-### Combining Context and Metadata
-
-```ts
-// Context persists across logs
-const orderLogger = logger.withContext({
-  orderId: '12345',
-  userId: 'user_789'
+// Context: carried through all subsequent logs on this instance
+const requestLogger = logger.withContext({
+  requestId: req.id,
+  path: req.path,
+  method: req.method,
 });
 
-// Metadata is specific to each log entry
+requestLogger.info('Request received');
+await processRequest(req);
+requestLogger.info('Request completed');
+
+// Metadata: attached to this one log entry only
+logger.withMetadata({ amount: payment.amount, currency: payment.currency }).info('Processing payment');
+```
+
+Combining both:
+
+```ts
+const orderLogger = logger.withContext({ orderId: '12345', userId: 'user_789' });
+
 orderLogger.withMetadata({ step: 'validation' }).info('Validating order');
 orderLogger.withMetadata({ step: 'payment' }).info('Processing payment');
 orderLogger.withMetadata({ step: 'fulfillment' }).info('Order fulfilled');
 ```
 
-## Error Handling
+---
 
-Errors are automatically serialized with full stack traces.
+### Error Handling
 
-### Basic Error Logging
+Pass errors via `withError()` before the log level call. They're serialized with full stack traces automatically.
 
 ```ts
 import { logger } from '~/utils/logger';
@@ -142,17 +190,12 @@ try {
 }
 ```
 
-### Error Logging with Context
+With context:
 
 ```ts
-import { logger } from '~/utils/logger';
-
 async function fetchUserData(userId: string) {
   try {
     const response = await fetch(`/api/users/${userId}`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch user');
-    }
     return await response.json();
   } catch (error) {
     logger
@@ -163,6 +206,93 @@ async function fetchUserData(userId: string) {
   }
 }
 ```
+
+---
+
+### Domain Loggers
+
+For larger apps, it's useful to give each module its own prefixed logger so you can tell at a glance which part of the codebase a log came from. `withPrefix()` returns a child logger with the prefix pre-applied — you don't need to manage separate instances or thread loggers through function arguments.
+
+Create a small utility for this:
+
+```ts
+// ~/utils/logger/domain.ts
+import { logger } from '~/utils/logger';
+import type { LogLevel } from '@accelint/logger';
+
+export function createLoggerDomain(prefix: string, level?: LogLevel) {
+  const child = logger.withPrefix(prefix);
+
+  if (level) {
+    child.setLevel(level);
+  }
+
+  return child;
+}
+```
+
+Then use it per module:
+
+```ts
+// ~/data-access/payments/server.ts
+import { createLoggerDomain } from '~/utils/logger/domain';
+
+const log = createLoggerDomain('[Payments]');
+
+export async function processPayment(payment: Payment) {
+  log.info('Processing payment', payment.id);
+  // Output: [Payments] Processing payment abc123
+}
+```
+
+You can suppress noisy log levels in specific modules by passing a level:
+
+```ts
+// ~/data-access/auth/server.ts
+import { createLoggerDomain } from '~/utils/logger/domain';
+
+const log = createLoggerDomain('[Auth]', 'warn'); // debug and info are suppressed
+
+export async function login(credentials: Credentials) {
+  log.debug('Login attempt'); // suppressed
+  log.warn('Rate limit approaching for user', credentials.username);
+}
+```
+
+Each domain logger is a child of the root logger. They inherit the root's context but have independent prefixes and level settings.
+
+---
+
+### Child Loggers
+
+If you want module-specific context without a prefix, use `logger.child()`. Child loggers inherit the parent's configuration and any context set on the parent at the time `child()` is called, then maintain independent context after that.
+
+```ts
+// ~/data-access/users/server.ts
+import { logger } from '~/utils/logger';
+
+const userLogger = logger.child().withContext({
+  module: 'data-access',
+  domain: 'users',
+});
+
+export async function fetchUser(id: string) {
+  userLogger.info('Fetching user', id);
+
+  try {
+    const user = await db.users.findOne(id);
+    userLogger.info('User fetched successfully');
+    return user;
+  } catch (error) {
+    userLogger.withError(error).error('Failed to fetch user');
+    throw error;
+  }
+}
+```
+
+Adding context to `userLogger` won't affect the parent `logger`, and vice versa.
+
+---
 
 ### React Error Boundaries
 
@@ -177,150 +307,54 @@ function onError(err: Error, info: ErrorInfo) {
   logger
     .withContext({ componentStack: info.componentStack })
     .withError(err)
-    .error('React error boundary caught error')
+    .error('React error boundary caught error');
 }
 
-function Fallback() {
-  return <div>Error</div>;
-}
-
-export function ErrorComponent(props: PropsWithChildren) {
-  const { children } = props;
-
+export function ErrorComponent({ children }: PropsWithChildren) {
   return (
-    <ErrorBoundary fallback={<Fallback />} onError={onError}>
+    <ErrorBoundary fallback={<div>Error</div>} onError={onError}>
       {children}
     </ErrorBoundary>
   );
 }
 ```
 
-## Child Loggers
+---
 
-Child loggers inherit configuration from the parent but maintain independent context. Use them to add module-specific metadata without affecting the parent logger.
+### Custom Transports
 
-```ts
-// ~/data-access/users/server.ts
-import { logger } from '~/utils/logger';
+Add transports to ship logs to external destinations alongside the default console output.
 
-// Create a child logger with persistent context for API operations
-const apiLogger = logger.child().withContext({
-  module: 'data-access',
-  domain: 'users'
-});
-
-export async function fetchUser(id: string) {
-  // Logs include module: 'api' and service: 'user' automatically
-  apiLogger.info('Fetching user', id);
-
-  try {
-    const response = await fetch(`/api/users/${id}`);
-    const user = await response.json();
-    apiLogger.info('User fetched successfully');
-    return user;
-  } catch (error) {
-    apiLogger.withError(error).error('Failed to fetch user');
-    throw error;
-  }
-}
-```
-
-Each child logger has isolated context. Adding context to `apiLogger` doesn't affect the parent `logger`.
-
-## Built-in Features
-
-### Automatic Callsite Tracking
-
-Every log entry automatically includes the source location where the log was called:
-
-```ts
-logger.warn('Something happened');
-// Output includes: callSite: "src/data-access/users/server.ts:42:5"
-```
-
-### Environment Detection
-
-Logs automatically include whether code is running in a server or browser context:
-
-```ts
-logger.info('Request received');
-// Output includes: server: true (or false in browser)
-```
-
-### Pretty Printing
-
-By default, logs are formatted for readability. Disable for structured JSON output:
-
-```ts
-// Pretty output (default)
-const logger = getLogger({ enabled: true, pretty: true });
-
-// Structured JSON output
-const logger = getLogger({ enabled: true, pretty: false });
-```
-
-## Custom Transports
-
-Add custom transports to send logs to external services or custom destinations.
-
-### Using Built-in Transports
-
-```ts
-// ~/utils/logger/index.ts
-import { getLogger } from '@accelint/logger';
-import { ConsoleTransport } from 'loglayer';
-
-// Add a separate error-only transport
-const errorTransport = new ConsoleTransport({
-  level: 'error',
-  logger: console,
-});
-
-export const logger = getLogger({
-  enabled: true,
-  level: 'info',
-  transports: [errorTransport],
-});
-```
-
-### OpenTelemetry Transport
-
-Send logs to OpenTelemetry-compatible observability platforms:
+#### OpenTelemetry
 
 ```bash
-npm install @loglayer/transport-opentelemetry
-# or
-pnpm install @loglayer/transport-opentelemetry
+pnpm add @loglayer/transport-opentelemetry
 ```
 
 ```ts
-// ~/utils/logger/index.ts
 import { getLogger } from '@accelint/logger';
 import { OpenTelemetryTransport } from '@loglayer/transport-opentelemetry';
 
 export const logger = getLogger({
-  enabled: process.env.NODE_ENV !== 'test',
+  enabled: true,
   level: 'info',
   transports: [
     new OpenTelemetryTransport({
       level: 'info',
       enabled: process.env.NODE_ENV === 'production',
       onError: (error) => console.error('OpenTelemetry error:', error),
-      consoleDebug: process.env.DEBUG === 'true',
     }),
   ],
 });
 ```
 
-The OpenTelemetry transport integrates with the OpenTelemetry Logs SDK and automatically includes trace IDs and span IDs when used with OpenTelemetry instrumentation.
+When used alongside OpenTelemetry instrumentation, the transport automatically includes trace IDs and span IDs on each log entry.
 
-## Custom Plugins
+---
 
-Create plugins to transform, enrich, or filter logs.
+### Custom Plugins
 
-### Creating Custom Plugins
-
-Create a plugin to add timestamps to messages:
+Plugins let you intercept and transform log data before it reaches a transport. This example prepends a timestamp to every message:
 
 ```ts
 // ~/utils/logger/plugins/timestamp.ts
@@ -330,15 +364,11 @@ export interface TimestampPluginOptions {
   format?: 'iso' | 'locale';
 }
 
-export function timestampPlugin(
-  options: TimestampPluginOptions = {}
-): LogLayerPlugin {
+export function timestampPlugin(options: TimestampPluginOptions = {}): LogLayerPlugin {
   return {
     onBeforeMessageOut({ messages }: PluginBeforeMessageOutParams) {
       const timestamp =
-        options.format === 'locale'
-          ? new Date().toLocaleString()
-          : new Date().toISOString();
+        options.format === 'locale' ? new Date().toLocaleString() : new Date().toISOString();
 
       return messages.map((msg) => `[${timestamp}] ${msg}`);
     },
@@ -348,7 +378,7 @@ export function timestampPlugin(
 
 ```ts
 // ~/utils/logger/index.ts
-import { getLogger } from '@accelint/logger/default';
+import { getLogger } from '@accelint/logger';
 import { timestampPlugin } from './plugins/timestamp';
 
 export const logger = getLogger({
@@ -358,8 +388,60 @@ export const logger = getLogger({
 });
 ```
 
+See the [LogLayer plugin docs](https://loglayer.dev/plugins/) for available hooks and what each can intercept.
+
 ---
 
-## Additional Resources
+### Testing
+
+LogLayer ships a `MockLogLayer` that matches the full logger API but does nothing. Use it in unit tests to silence log output and optionally assert log calls.
+
+```ts
+import { MockLogLayer } from 'loglayer';
+
+vi.mock('~/utils/logger', () => ({
+  logger: new MockLogLayer(),
+}));
+```
+
+See the [LogLayer testing docs](https://loglayer.dev/test-logging.html) for the full `MockLogLayer` API.
+
+## Built-in Features
+
+### Callsite Tracking
+
+Every log entry automatically includes the source file and line number:
+
+```ts
+logger.warn('Something happened');
+// Output includes: callSite: "src/data-access/users/server.ts:42:5"
+```
+
+### Environment Detection
+
+Logs include a `server` field showing where they came from:
+
+```ts
+logger.info('Request received');
+// Output includes: server: true  (or false in the browser)
+```
+
+### Pretty Printing
+
+Development output is formatted for readability. Switch to structured JSON for log aggregation:
+
+```ts
+// Pretty output (default)
+const logger = getLogger({ enabled: true, pretty: true });
+
+// Structured JSON
+const logger = getLogger({ enabled: true, pretty: false });
+```
+
+## Further Reading
 
 - [LogLayer Documentation](https://loglayer.dev/)
+- [Available transports](https://loglayer.dev/transports/) — Pino, Winston, DataDog, AWS CloudWatch, and more
+- [Plugin API](https://loglayer.dev/plugins/) — filter, redact, and enrich log data
+- [Group-based routing](https://loglayer.dev/logging-api/groups.html) — route logs to different transports by tag
+- [Child loggers](https://loglayer.dev/logging-api/child-loggers) — inherit configuration and context across modules

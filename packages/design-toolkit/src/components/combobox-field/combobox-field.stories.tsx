@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -12,12 +12,14 @@
 
 import Placeholder from '@accelint/icons/placeholder';
 import { type ReactNode, useState } from 'react';
+import { DeferredCollection } from '../deferred-collection';
 import { Icon } from '../icon';
 import { OptionsItem } from '../options/item';
 import { OptionsItemContent } from '../options/item-content';
 import { OptionsItemDescription } from '../options/item-description';
 import { OptionsItemLabel } from '../options/item-label';
 import { OptionsSection } from '../options/section';
+import { Skeleton } from '../skeleton';
 import { ComboBoxField } from './';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
@@ -39,11 +41,20 @@ const meta = {
     isInvalid: false,
     isRequired: true,
     allowsCustomValue: false,
+    isReadOnly: false,
   },
   argTypes: {
     size: {
       control: 'select',
       options: ['medium', 'small'],
+    },
+    onInputChange: {
+      action: 'onInputChange',
+      description:
+        'Callback when input value changes. Receives the current input value as a parameter.',
+      table: {
+        type: { summary: '(value: string | null) => void' },
+      },
     },
   },
 } satisfies Meta<typeof ComboBoxField>;
@@ -270,14 +281,24 @@ export const WithManyItems: Story = {
     },
   },
   render: ({ children, ...args }) => (
-    <ComboBoxField {...args}>
-      {manyItems.map((item) => (
-        <OptionsItem key={item.id} textValue={item.name}>
-          {item.prefixIcon && <Icon>{item.prefixIcon}</Icon>}
-          <OptionsItemLabel>{item.name}</OptionsItemLabel>
-        </OptionsItem>
-      ))}
-    </ComboBoxField>
+    <DeferredCollection
+      fallback={
+        <div className='flex w-[200px] flex-col gap-xs'>
+          <Skeleton className='h-[32px]' />
+        </div>
+      }
+    >
+      {() => (
+        <ComboBoxField {...args}>
+          {manyItems.map((item) => (
+            <OptionsItem key={item.id} textValue={item.name}>
+              {item.prefixIcon && <Icon>{item.prefixIcon}</Icon>}
+              <OptionsItemLabel>{item.name}</OptionsItemLabel>
+            </OptionsItem>
+          ))}
+        </ComboBoxField>
+      )}
+    </DeferredCollection>
   ),
 };
 

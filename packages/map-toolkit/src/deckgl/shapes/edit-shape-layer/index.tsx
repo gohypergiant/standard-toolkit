@@ -12,21 +12,31 @@
 
 'use client';
 
-import { useContext, useEffect, useRef } from 'react';
+import {
+  globalBind,
+  Keycode,
+  registerHotkey,
+  unregisterHotkey,
+} from '@accelint/hotkey-manager';
+import { useCallback, useContext, useEffect, useRef } from 'react';
 import { MapContext } from '../../base-map/provider';
 import { useShiftZoomDisable } from '../shared/hooks/use-shift-zoom-disable';
-import { ShapeFeatureType, type ShapeFeatureTypeValues } from '../shared/types';
 import { getDefaultEditableLayerProps } from '../shared/utils/layer-config';
 import { getFillColor, getLineColor } from '../shared/utils/style-utils';
 import {
   COMPLETION_EDIT_TYPES,
   CONTINUOUS_EDIT_TYPES,
+  DEFAULT_HOTKEY_CONFIG,
   EDIT_SHAPE_LAYER_ID,
+  SHAPE_PROPERTY_MAP,
 } from './constants';
 import { getEditModeInstance } from './modes';
 import {
   cancelEditingFromLayer,
+  disableEditPanning,
   editStore,
+  enableEditPanning,
+  saveEditingFromLayer,
   updateFeatureFromLayer,
 } from './store';
 import type {
@@ -34,6 +44,7 @@ import type {
   FeatureCollection,
 } from '@deck.gl-community/editable-layers';
 import type { Feature } from 'geojson';
+import type { ShapeFeatureType } from '../shared/types';
 import type { EditShapeLayerProps } from './types';
 
 /**
@@ -68,20 +79,19 @@ function isCompletionEditType(editType: string): boolean {
  *
  * For rectangles, adds the `shape: 'Rectangle'` property required by ModifyMode's
  * lockRectangles feature. ModifyMode checks `properties.shape === 'Rectangle'`.
+ *
+ * @param feature - The GeoJSON Feature to wrap.
+ * @param shape - The shape type, used to determine if mode-specific properties are needed.
+ * @returns A GeoJSON FeatureCollection containing the single feature.
  */
 function toFeatureCollection(
   feature: Feature,
-  shape: ShapeFeatureTypeValues,
+  shape: ShapeFeatureType,
 ): import('geojson').FeatureCollection {
   // Add shape property for modes that require it
   // - ResizeCircleMode requires shape: 'Circle'
   // - ModifyMode lockRectangles requires shape: 'Rectangle'
-  let shapeProperty: string | undefined;
-  if (shape === ShapeFeatureType.Circle) {
-    shapeProperty = 'Circle';
-  } else if (shape === ShapeFeatureType.Rectangle) {
-    shapeProperty = 'Rectangle';
-  }
+  const shapeProperty = SHAPE_PROPERTY_MAP[shape];
 
   const featureWithShape = shapeProperty
     ? {
@@ -136,11 +146,14 @@ function toFeatureCollection(
  *   );
  * }
  * ```
+ *
+ * @throws {Error} Throws if neither `mapId` prop nor `MapProvider` context is available.
  */
 export function EditShapeLayer({
   id = EDIT_SHAPE_LAYER_ID,
   mapId,
   unit,
+  hotkeyConfig = DEFAULT_HOTKEY_CONFIG,
 }: EditShapeLayerProps) {
   // Get mapId from context if not provided
   const contextId = useContext(MapContext);
@@ -157,16 +170,87 @@ export function EditShapeLayer({
 
   const isEditing = editingState?.editingShape != null;
 
-  // Disable zoom while Shift is held during editing
-  // This prevents boxZoom (Shift+drag) from interfering with Shift modifier constraints
-  // (e.g., Shift for uniform scaling, Shift for rotation snap)
-  useShiftZoomDisable(actualMapId, isEditing);
-
   // RAF batching for movePosition events to reduce React updates during drag
   const pendingUpdateRef = useRef<{
     feature: Feature;
     rafId: number;
   } | null>(null);
+
+  // Keep a ref to the latest editing state so the hotkey handler can access it
+  const editingStateRef = useRef(editingState);
+  editingStateRef.current = editingState;
+
+  // Ensure global hotkey listeners are initialized
+  // Safe to call multiple times - globalBind() checks if already bound
+  useEffect(() => {
+    globalBind();
+  }, []);
+
+  // Helper to cancel any pending RAF update (stable reference with useCallback)
+  const cancelPendingUpdate = useCallback(() => {
+    if (pendingUpdateRef.current) {
+      cancelAnimationFrame(pendingUpdateRef.current.rafId);
+      pendingUpdateRef.current = null;
+    }
+  }, []);
+
+  // Register Enter key hotkey scoped to this component and map instance.
+  // Handles the full lifecycle: register → bind → unbind → unregister.
+  // Without unregistering on cleanup, remounting throws a duplicate-id error.
+  useEffect(() => {
+    const manager = registerHotkey({
+      id: `saveEditHotkey-${actualMapId}`,
+      key: { code: Keycode.Enter },
+      onKeyUp: () => {
+        if (editingStateRef.current?.editingShape) {
+          cancelPendingUpdate();
+          saveEditingFromLayer(actualMapId);
+        }
+      },
+    });
+
+    const unbind = manager.bind();
+
+    return () => {
+      unbind();
+      unregisterHotkey(manager);
+    };
+  }, [actualMapId, cancelPendingUpdate]);
+
+  // Register Space key for enabling panning while editing shape.
+  // NOTE: Low threshold (50ms) enables near-instant panning response on hold.
+  // alwaysTriggerKeyUp ensures panning ends even if onKeyHeld was triggered.
+  useEffect(() => {
+    const manager = registerHotkey({
+      id: `editPanningHotkey-${actualMapId}`,
+      key: hotkeyConfig.panning,
+      onKeyDown: (e: KeyboardEvent) => {
+        if (editStore.get(actualMapId)?.editingShape) {
+          e.preventDefault();
+        }
+      },
+      onKeyHeld: () => {
+        enableEditPanning(actualMapId);
+      },
+      onKeyUp: () => {
+        disableEditPanning(actualMapId);
+      },
+      heldThresholdMs: 50,
+      alwaysTriggerKeyUp: true,
+    });
+
+    const unbind = manager.bind();
+
+    return () => {
+      unbind();
+      unregisterHotkey(manager);
+    };
+  }, [actualMapId, hotkeyConfig]);
+
+  // Disable zoom while Shift is held during editing
+  // This prevents boxZoom (Shift+drag) from interfering with Shift modifier constraints
+  // (e.g., Shift for uniform scaling, Shift for rotation snap)
+  useShiftZoomDisable(actualMapId, isEditing);
 
   // Cleanup RAF on unmount
   useEffect(() => {
@@ -190,14 +274,6 @@ export function EditShapeLayer({
   // Use the live feature being edited, or fall back to original shape
   const featureToRender = featureBeingEdited ?? editingShape.feature;
   const data = toFeatureCollection(featureToRender, editingShape.shape);
-
-  // Helper to cancel any pending RAF update
-  const cancelPendingUpdate = () => {
-    if (pendingUpdateRef.current) {
-      cancelAnimationFrame(pendingUpdateRef.current.rafId);
-      pendingUpdateRef.current = null;
-    }
-  };
 
   // Handle edit events from EditableGeoJsonLayer
   const handleEdit = ({

@@ -30,8 +30,8 @@ import type {
  * - Shift for rotation snap during edit
  * - Shift for square constraint during rectangle drawing
  *
- * @param mapId - The map instance ID
- * @param isActive - Whether the hook should be active (e.g., when editing/drawing)
+ * @param mapId - The map instance ID.
+ * @param isActive - Whether the hook should be active (e.g., when editing/drawing).
  *
  * @example
  * ```typescript
@@ -52,47 +52,49 @@ export function useShiftZoomDisable(mapId: UniqueId, isActive: boolean): void {
 
   useEffect(() => {
     if (!isActive) {
+      isZoomDisabledRef.current = false;
+
       return;
     }
 
-    const disableZoom = () => {
+    function disableZoom(): void {
       if (!isZoomDisabledRef.current) {
         isZoomDisabledRef.current = true;
         emitDisableZoom({ id: mapId });
       }
-    };
+    }
 
-    const enableZoom = () => {
+    function enableZoom(): void {
       if (isZoomDisabledRef.current) {
         isZoomDisabledRef.current = false;
         emitEnableZoom({ id: mapId });
       }
-    };
+    }
 
-    const handleKeyDown = (event: KeyboardEvent) => {
+    function handleKeyDown(event: KeyboardEvent): void {
       if (event.key === 'Shift') {
         disableZoom();
       }
-    };
+    }
 
-    const handleKeyUp = (event: KeyboardEvent) => {
+    function handleKeyUp(event: KeyboardEvent): void {
       if (event.key === 'Shift') {
         enableZoom();
       }
-    };
+    }
 
     // Also catch Shift state on mousedown to handle edge cases where
     // keydown might have been missed (e.g., focus issues)
-    const handleMouseDown = (event: MouseEvent) => {
+    function handleMouseDown(event: MouseEvent): void {
       if (event.shiftKey) {
         disableZoom();
       }
-    };
+    }
 
     // Re-enable zoom if the window loses focus while Shift is held
-    const handleBlur = () => {
+    function handleBlur(): void {
       enableZoom();
-    };
+    }
 
     document.addEventListener('keydown', handleKeyDown);
     document.addEventListener('keyup', handleKeyUp);

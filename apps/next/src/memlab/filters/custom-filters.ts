@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { getLogger } from '@accelint/logger';
+import { createLoggerDomain } from '~/utils/logger';
 import type { IHeapEdge, IHeapNode, IHeapSnapshot } from '@memlab/core';
 
 /**
@@ -39,11 +39,7 @@ const MIN_CONTEXT_RETAINED_SIZE = 10000;
 /**
  * Logger for filter debug output
  */
-const logger = getLogger({
-  enabled: !!process.env.DEBUG_MEMLAB,
-  level: 'debug',
-  prefix: '[MemLab:Filters]',
-});
+const logger = createLoggerDomain('[MemLab:Filters]', 'debug');
 
 /**
  * Custom leak filter interface matching MemLab's ILeakFilter
@@ -79,9 +75,11 @@ export interface CustomLeakFilter {
  */
 export const fiberNodeFilter: CustomLeakFilter = {
   beforeLeakFilter: (_snapshot, leakedNodeIds) => {
-    logger.debug(
-      `🔍 Analyzing ${leakedNodeIds.size} potential leaks for Fiber nodes`,
-    );
+    if (process.env.DEBUG_MEMLAB) {
+      logger.debug(
+        `🔍 Analyzing ${leakedNodeIds.size} potential leaks for Fiber nodes`,
+      );
+    }
   },
 
   leakFilter: (node) => {
@@ -138,9 +136,11 @@ export const fiberNodeFilter: CustomLeakFilter = {
  */
 export const busSubscriptionFilter: CustomLeakFilter = {
   beforeLeakFilter: (_snapshot, leakedNodeIds) => {
-    logger.debug(
-      `🔍 Analyzing ${leakedNodeIds.size} potential leaks for bus subscriptions`,
-    );
+    if (process.env.DEBUG_MEMLAB) {
+      logger.debug(
+        `🔍 Analyzing ${leakedNodeIds.size} potential leaks for bus subscriptions`,
+      );
+    }
   },
 
   leakFilter: (node) => {
@@ -270,9 +270,11 @@ export const portalLeakFilter: CustomLeakFilter = {
  */
 export const designToolkitFilter: CustomLeakFilter = {
   beforeLeakFilter: (_snapshot, leakedNodeIds) => {
-    logger.debug(
-      `🔍 [design-toolkit] Analyzing ${leakedNodeIds.size} potential leaks`,
-    );
+    if (process.env.DEBUG_MEMLAB) {
+      logger.debug(
+        `🔍 [design-toolkit] Analyzing ${leakedNodeIds.size} potential leaks`,
+      );
+    }
   },
 
   leakFilter: (node, snapshot, leakedNodeIds) => {

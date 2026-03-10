@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -14,7 +14,7 @@
 
 @layer components.l1 {
   .list {
-    @apply rounded-medium bg-surface-overlay shadow-elevation-overlay outline-static overflow-x-clip overflow-y-auto outline;
+    @apply rounded-medium bg-surface-overlay shadow-elevation-overlay outline-static overflow-x-clip overflow-y-auto outline select-none;
     max-height: 200px;
   }
 
@@ -102,7 +102,7 @@
         }
 
         @variant hover {
-          @apply bg-serious-bold;
+          @apply fg-a11y-on-utility bg-serious-bold;
 
           &:before {
             @apply bg-(--outline-serious-hover);
@@ -110,7 +110,7 @@
         }
 
         @variant focus-visible {
-          @apply bg-serious-bold;
+          @apply fg-a11y-on-utility bg-serious-bold;
         }
 
         @variant pressed {
@@ -144,7 +144,7 @@
         }
 
         @variant hover {
-          @apply bg-critical-bold;
+          @apply fg-a11y-on-utility bg-critical-bold;
 
           &:before {
             @apply bg-(--outline-critical-hover);
@@ -152,7 +152,7 @@
         }
 
         @variant focus-visible {
-          @apply bg-critical-bold;
+          @apply fg-a11y-on-utility bg-critical-bold;
         }
 
         @variant pressed {
@@ -220,6 +220,14 @@
       }
 
       @variant group-selected/options-item {
+        @variant group-hover/options-item {
+          @apply fg-a11y-on-accent;
+        }
+
+        @variant group-focus-visible/options-item {
+          @apply fg-a11y-on-accent;
+        }
+
         @variant group-pressed/options-item {
           @apply fg-accent-primary-bold;
         }
@@ -234,6 +242,14 @@
       }
 
       @variant group-selected/options-item {
+        @variant group-hover/options-item {
+          @apply fg-a11y-on-utility;
+        }
+
+        @variant group-focus-visible/options-item {
+          @apply fg-a11y-on-utility;
+        }
+
         @variant group-pressed/options-item {
           @apply fg-serious-bold;
         }
@@ -248,6 +264,14 @@
       }
 
       @variant group-selected/options-item {
+        @variant group-hover/options-item {
+          @apply fg-a11y-on-utility;
+        }
+
+        @variant group-focus-visible/options-item {
+          @apply fg-a11y-on-utility;
+        }
+
         @variant group-pressed/options-item {
           @apply fg-critical-bold;
         }
@@ -290,6 +314,14 @@
       }
 
       @variant group-selected/options-item {
+        @variant group-hover/options-item {
+          @apply fg-a11y-on-accent;
+        }
+
+        @variant group-focus-visible/options-item {
+          @apply fg-a11y-on-accent;
+        }
+
         @variant group-pressed/options-item {
           @apply fg-accent-primary-bold;
         }
@@ -304,6 +336,14 @@
       }
 
       @variant group-selected/options-item {
+        @variant group-hover/options-item {
+          @apply fg-a11y-on-utility;
+        }
+
+        @variant group-focus-visible/options-item {
+          @apply fg-a11y-on-utility;
+        }
+
         @variant group-pressed/options-item {
           @apply fg-serious-bold;
         }
@@ -318,6 +358,14 @@
       }
 
       @variant group-selected/options-item {
+        @variant group-hover/options-item {
+          @apply fg-a11y-on-utility;
+        }
+
+        @variant group-focus-visible/options-item {
+          @apply fg-a11y-on-utility;
+        }
+
         @variant group-pressed/options-item {
           @apply fg-critical-bold;
         }
@@ -356,6 +404,14 @@
       }
 
       @variant group-selected/options-item {
+        @variant group-hover/options-item {
+          @apply fg-a11y-on-accent;
+        }
+
+        @variant group-focus-visible/options-item {
+          @apply fg-a11y-on-accent;
+        }
+
         @variant group-pressed/options-item {
           @apply fg-accent-primary-bold;
         }
@@ -370,6 +426,14 @@
       @variant group-selected/options-item {
         @apply fg-primary-bold;
 
+        @variant group-hover/options-item {
+          @apply fg-a11y-on-utility;
+        }
+
+        @variant group-focus-visible/options-item {
+          @apply fg-a11y-on-utility;
+        }
+
         @variant group-pressed/options-item {
           @apply fg-serious-bold;
         }
@@ -383,6 +447,14 @@
 
       @variant group-selected/options-item {
         @apply fg-primary-bold;
+
+        @variant group-hover/options-item {
+          @apply fg-a11y-on-utility;
+        }
+
+        @variant group-focus-visible/options-item {
+          @apply fg-a11y-on-utility;
+        }
 
         @variant group-pressed/options-item {
           @apply fg-critical-bold;

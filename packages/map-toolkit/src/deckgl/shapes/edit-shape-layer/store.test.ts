@@ -10,15 +10,22 @@
  * governing permissions and limitations under the License.
  */
 
+import { Broadcast } from '@accelint/bus';
 import { uuid } from '@accelint/core';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { MapCursorEvents } from '@/map-cursor/events';
+import { MapEvents } from '../../base-map/events';
 import { mockShapes } from '../__fixtures__/mock-shapes';
 import { ShapeFeatureType } from '../shared/types';
+import { EditShapeEvents } from './events';
 import {
   cancelEditingFromLayer,
   clearEditingState,
+  disableEditPanning,
   editStore,
+  enableEditPanning,
   getEditingState,
+  saveEditingFromLayer,
   updateFeatureFromLayer,
 } from './store';
 import type { UniqueId } from '@accelint/core';
@@ -311,13 +318,13 @@ describe('edit-shape-layer store', () => {
       expect(editStore.get(mapId)?.editMode).toBe('bounding-transform');
     });
 
-    it('sets translate mode for points', () => {
+    it('sets point-translate mode for points', () => {
       const { edit } = editStore.actions(mapId);
 
       const shape = createMockPointShape();
       edit(shape);
 
-      expect(editStore.get(mapId)?.editMode).toBe('translate');
+      expect(editStore.get(mapId)?.editMode).toBe('point-translate');
     });
 
     it('allows mode override via options', () => {
@@ -439,6 +446,88 @@ describe('edit-shape-layer store', () => {
     });
   });
 
+  describe('saveEditingFromLayer', () => {
+    it('saves current editing shape from layer component', () => {
+      const { edit } = editStore.actions(mapId);
+
+      const shape = createMockShape();
+      edit(shape);
+      expect(editStore.get(mapId)?.editingShape).not.toBeNull();
+      saveEditingFromLayer(mapId);
+      expect(editStore.get(mapId)?.editingShape).toBeNull();
+    });
+
+    it('emits shapes:updated event when saving', () => {
+      const { edit } = editStore.actions(mapId);
+      const emitSpy = vi.fn();
+      const bus = Broadcast.getInstance();
+      bus.on(EditShapeEvents.updated, emitSpy);
+
+      const shape = createMockShape();
+      edit(shape);
+      saveEditingFromLayer(mapId);
+
+      expect(emitSpy).toHaveBeenCalledTimes(1);
+      expect(emitSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          payload: expect.objectContaining({
+            mapId,
+            shape: expect.objectContaining({
+              id: shape.id,
+            }),
+          }),
+        }),
+      );
+
+      bus.off(EditShapeEvents.updated, emitSpy);
+    });
+
+    it('does nothing when not currently editing', () => {
+      const emitSpy = vi.fn();
+      const bus = Broadcast.getInstance();
+      bus.on(EditShapeEvents.updated, emitSpy);
+
+      // No shape being edited
+      expect(editStore.get(mapId)?.editingShape).toBeNull();
+
+      // Should be a no-op
+      saveEditingFromLayer(mapId);
+
+      expect(editStore.get(mapId)?.editingShape).toBeNull();
+      expect(emitSpy).not.toHaveBeenCalled();
+
+      bus.off(EditShapeEvents.updated, emitSpy);
+    });
+
+    it('returns to default mode and cursor after saving', () => {
+      const { edit } = editStore.actions(mapId);
+      const mapEventBus = Broadcast.getInstance();
+      const editShapeBus = Broadcast.getInstance();
+      const modeEmitSpy = vi.fn();
+      const cursorEmitSpy = vi.fn();
+
+      mapEventBus.on(MapEvents.enablePan, modeEmitSpy);
+      editShapeBus.on(EditShapeEvents.updated, cursorEmitSpy);
+
+      const shape = createMockShape();
+      edit(shape);
+
+      // Verify we're in edit mode
+      expect(editStore.get(mapId)?.editMode).not.toBe('view');
+
+      saveEditingFromLayer(mapId);
+
+      // Should have re-enabled panning
+      expect(modeEmitSpy).toHaveBeenCalled();
+
+      // Should have emitted updated event
+      expect(cursorEmitSpy).toHaveBeenCalled();
+
+      mapEventBus.off(MapEvents.enablePan, modeEmitSpy);
+      editShapeBus.off(EditShapeEvents.updated, cursorEmitSpy);
+    });
+  });
+
   describe('getEditingState', () => {
     it('returns null when no state exists', () => {
       expect(getEditingState(mapId)).toBeNull();
@@ -509,6 +598,198 @@ describe('edit-shape-layer store', () => {
 
       // Now state should be cleaned up
       expect(getEditingState(mapId)).toBeNull();
+    });
+  });
+
+  describe('enableEditPanning', () => {
+    it('should return and do nothing if editing shape does not exist', () => {
+      const mapEventBus = Broadcast.getInstance();
+      const modeEmitSpy = vi.fn();
+
+      mapEventBus.on(MapEvents.enablePan, modeEmitSpy);
+
+      // Pass a concrete edit mode — function should no-op regardless
+      enableEditPanning(mapId);
+
+      expect(editStore.get(mapId)?.previousMode).toBeNull();
+      expect(modeEmitSpy).not.toHaveBeenCalled();
+
+      mapEventBus.off(MapEvents.enablePan, modeEmitSpy);
+    });
+
+    it('should store prev mode when called during editing', () => {
+      const { edit } = editStore.actions(mapId);
+      const mapEventBus = Broadcast.getInstance();
+      const mapCursorBus = Broadcast.getInstance();
+      const modeEmitSpy = vi.fn();
+      const cursorEmitSpy = vi.fn();
+
+      mapEventBus.on(MapEvents.enablePan, modeEmitSpy);
+      mapCursorBus.on(MapCursorEvents.changeRequest, cursorEmitSpy);
+
+      const shape = createMockShape();
+      edit(shape);
+
+      enableEditPanning(mapId);
+
+      expect(editStore.get(mapId)?.previousMode).not.toBeNull();
+      expect(modeEmitSpy).toHaveBeenCalled();
+      expect(cursorEmitSpy).toHaveBeenCalled();
+
+      mapEventBus.off(MapEvents.enablePan, modeEmitSpy);
+      mapCursorBus.off(MapCursorEvents.changeRequest, cursorEmitSpy);
+    });
+  });
+
+  describe('disableEditPanning', () => {
+    it('should clear previousMode and return to editMode', () => {
+      const { edit } = editStore.actions(mapId);
+      const mapEventBus = Broadcast.getInstance();
+      const mapCursorBus = Broadcast.getInstance();
+
+      const modeEmitSpy = vi.fn();
+      const cursorEmitSpy = vi.fn();
+
+      mapEventBus.on(MapEvents.disablePan, modeEmitSpy);
+      mapCursorBus.on(MapCursorEvents.changeRequest, cursorEmitSpy);
+
+      const shape = createMockShape();
+      edit(shape);
+
+      disableEditPanning(mapId);
+      expect(editStore.get(mapId)?.previousMode).toBe(null);
+      expect(modeEmitSpy).toHaveBeenCalled();
+      expect(cursorEmitSpy).toHaveBeenCalled();
+    });
+
+    it('should clear previousMode and emit disablePan when editing is active', () => {
+      const { edit } = editStore.actions(mapId);
+      const mapEventBus = Broadcast.getInstance();
+      const mapCursorBus = Broadcast.getInstance();
+      const modeEmitSpy = vi.fn();
+      const cursorEmitSpy = vi.fn();
+
+      mapEventBus.on(MapEvents.disablePan, modeEmitSpy);
+      mapCursorBus.on(MapCursorEvents.changeRequest, cursorEmitSpy);
+
+      const shape = createMockShape();
+      edit(shape);
+
+      enableEditPanning(mapId);
+
+      expect(editStore.get(mapId)?.editMode).toBe('view');
+
+      disableEditPanning(mapId);
+      expect(editStore.get(mapId)?.previousMode).toBe(null);
+      expect(modeEmitSpy).toHaveBeenCalled();
+      expect(cursorEmitSpy).toHaveBeenCalled();
+    });
+
+    it('should restore the original editMode after enable→disable cycle', () => {
+      const { edit } = editStore.actions(mapId);
+      const shape = createMockShape();
+      edit(shape);
+
+      const originalMode = editStore.get(mapId).editMode;
+
+      // Enable panning (stores original mode, switches to view)
+      enableEditPanning(mapId);
+      expect(editStore.get(mapId)?.editMode).toBe('view');
+      expect(editStore.get(mapId)?.previousMode).toBe(originalMode);
+
+      // Disable panning (restores original mode)
+      disableEditPanning(mapId);
+      expect(editStore.get(mapId)?.editMode).toBe(originalMode);
+      expect(editStore.get(mapId)?.previousMode).toBe(null);
+    });
+
+    it('should not corrupt editMode when previousMode is null', () => {
+      const { edit } = editStore.actions(mapId);
+      const shape = createMockShape();
+      edit(shape);
+
+      const originalMode = editStore.get(mapId).editMode;
+
+      // Disable without enabling first — previousMode is null
+      disableEditPanning(mapId);
+
+      // editMode should NOT become null
+      expect(editStore.get(mapId)?.editMode).not.toBeNull();
+      expect(editStore.get(mapId)?.editMode).toBe(originalMode);
+    });
+  });
+
+  describe('enable -> disable map panning while editing', () => {
+    it('should complete the panning lifecycle: edit → pan → resume editing', () => {
+      const { edit } = editStore.actions(mapId);
+      const shape = createMockShape();
+
+      edit(shape);
+      const originalMode = editStore.get(mapId).editMode;
+
+      enableEditPanning(mapId);
+
+      expect(editStore.get(mapId)?.editMode).toBe('view');
+      expect(editStore.get(mapId)?.previousMode).toBe(originalMode);
+
+      disableEditPanning(mapId);
+
+      expect(editStore.get(mapId)?.editMode).toBe(originalMode);
+      expect(editStore.get(mapId)?.previousMode).toBe(null);
+    });
+
+    it('should not overwrite previousMode when called twice', () => {
+      const { edit } = editStore.actions(mapId);
+      const shape = createMockShape();
+      edit(shape);
+
+      const originalMode = editStore.get(mapId).editMode;
+      expect(originalMode).not.toBe('view');
+
+      // First call: stores original mode, switches to view
+      enableEditPanning(mapId);
+      expect(editStore.get(mapId)?.previousMode).toBe(originalMode);
+      expect(editStore.get(mapId)?.editMode).toBe('view');
+
+      // Second call: should NOT overwrite previousMode with 'view'
+      enableEditPanning(mapId);
+
+      // previousMode must still be the original editing mode, not 'view'
+      expect(editStore.get(mapId)?.previousMode).toBe(originalMode);
+      expect(editStore.get(mapId)?.editMode).toBe('view');
+
+      // Verify restore works correctly after double-enable
+      disableEditPanning(mapId);
+      expect(editStore.get(mapId)?.editMode).toBe(originalMode);
+      expect(editStore.get(mapId)?.previousMode).toBe(null);
+    });
+    it('should reset previousMode when saving while panning is active', () => {
+      const { edit, save } = editStore.actions(mapId);
+      const shape = createMockShape();
+      edit(shape);
+
+      const originalMode = editStore.get(mapId).editMode;
+      enableEditPanning(mapId);
+      expect(editStore.get(mapId)?.previousMode).toBe(originalMode);
+
+      save();
+
+      expect(editStore.get(mapId)?.editingShape).toBeNull();
+      expect(editStore.get(mapId)?.editMode).toBe('view');
+      expect(editStore.get(mapId)?.previousMode).toBeNull();
+    });
+
+    it('should reset previousMode when canceling while panning is active', () => {
+      const { edit, cancel } = editStore.actions(mapId);
+      const shape = createMockShape();
+      edit(shape);
+
+      enableEditPanning(mapId);
+
+      cancel();
+
+      expect(editStore.get(mapId)?.editingShape).toBeNull();
+      expect(editStore.get(mapId)?.previousMode).toBeNull();
     });
   });
 });
