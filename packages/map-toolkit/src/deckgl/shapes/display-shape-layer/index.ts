@@ -16,7 +16,7 @@ import { Broadcast } from '@accelint/bus';
 import { CompositeLayer } from '@deck.gl/core';
 import { GeoJsonLayer, IconLayer, LineLayer, TextLayer } from '@deck.gl/layers';
 import { createLoggerDomain } from '@/shared/logger';
-import { DEFAULT_TEXT_STYLE } from '../../text-settings';
+import { DEFAULT_TEXT_SIZE, DEFAULT_TEXT_STYLE } from '../../text-settings';
 import { SHAPE_LAYER_IDS } from '../shared/constants';
 import { type ShapeEvent, ShapeEvents } from '../shared/events';
 import {
@@ -62,6 +62,7 @@ import {
   getIconUpdateTriggers,
 } from './utils/icon-config';
 import { getPointInteractionState } from './utils/interaction';
+import { getLabelPosition2d } from './utils/labels';
 import { getRadiusLabelText } from './utils/radius-label';
 import type { Rgba255Tuple } from '@accelint/predicates';
 import type { Layer, PickingInfo } from '@deck.gl/core';
@@ -891,10 +892,13 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
   /**
    * Render radius label layer for hovered circle shapes.
    * Shows the circle's radius value converted to the configured display unit.
-   * Positioned at the circle center with a vertical offset below the name label.
+   *
+   * Positioning relative to the shape's label:
+   * - When showLabels is 'always' or 'hover': appears below the label
+   * - When showLabels is 'never': appears in the label's position
    */
   private renderRadiusLabelLayer(): TextLayer[] {
-    const { data, unit } = this.props;
+    const { data, unit, showLabels, labelOptions } = this.props;
     const hoverIndex = this.state?.hoverIndex;
 
     if (hoverIndex === undefined) {
@@ -911,17 +915,30 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       return [];
     }
 
-    const center = hoveredShape.feature.properties.circleProperties.center;
+    // Use the same position the label would occupy
+    const labelPosition = getLabelPosition2d(hoveredShape, labelOptions);
+    if (!labelPosition) {
+      return [];
+    }
+
+    // When label is visible, offset below it; otherwise take its place
+    const labelVisible = showLabels !== 'never';
+    const pixelOffset: [number, number] = labelVisible
+      ? [
+          labelPosition.pixelOffset[0],
+          labelPosition.pixelOffset[1] + DEFAULT_TEXT_SIZE + 2,
+        ]
+      : labelPosition.pixelOffset;
 
     return [
       new TextLayer({
         id: `${this.props.id}-${SHAPE_LAYER_IDS.DISPLAY}-radius-label`,
-        data: [{ text: radiusText, position: center }],
+        data: [{ text: radiusText, position: labelPosition.coordinates }],
         getText: (d) => d.text,
         getPosition: (d) => d.position as [number, number],
-        getPixelOffset: [0, 14],
-        getTextAnchor: 'middle',
-        getAlignmentBaseline: 'top',
+        getPixelOffset: pixelOffset,
+        getTextAnchor: labelPosition.textAnchor,
+        getAlignmentBaseline: labelPosition.alignmentBaseline,
         ...DEFAULT_TEXT_STYLE,
         getAngle: 0,
         background: false,
@@ -929,6 +946,10 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
         pickable: false,
         updateTriggers: {
           getText: [hoverIndex, unit],
+          getPosition: [hoverIndex, labelOptions],
+          getPixelOffset: [hoverIndex, labelOptions, showLabels],
+          getTextAnchor: [hoverIndex, labelOptions],
+          getAlignmentBaseline: [hoverIndex, labelOptions],
         },
       }),
     ];

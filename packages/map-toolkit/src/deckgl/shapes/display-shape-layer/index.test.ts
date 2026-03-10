@@ -1066,5 +1066,37 @@ describe('DisplayShapeLayer', () => {
       // 250 km stored, display in km — should show "r: 250.00 km"
       expect(props.data[0].text).toBe('r: 250.00 km');
     });
+
+    it('offsets below label when showLabels is "always"', () => {
+      const layer = createTestLayer(
+        { data: [circleFixture], showLabels: 'always' },
+        { hoverIndex: 0 },
+      );
+      const sublayers = layer.renderLayers();
+
+      const radiusLabel = sublayers.find((l) => l.id.includes('radius-label'));
+      expect(radiusLabel).toBeInstanceOf(TextLayer);
+
+      // biome-ignore lint/suspicious/noExplicitAny: accessing internal props for testing
+      const props = (radiusLabel as TextLayer).props as any;
+      // Default circle label offset is [0, 10], radius adds DEFAULT_TEXT_SIZE + 2px gap below
+      expect(props.getPixelOffset).toEqual([0, 24]);
+    });
+
+    it('uses label position when showLabels is "never"', () => {
+      const layer = createTestLayer(
+        { data: [circleFixture], showLabels: 'never' },
+        { hoverIndex: 0 },
+      );
+      const sublayers = layer.renderLayers();
+
+      const radiusLabel = sublayers.find((l) => l.id.includes('radius-label'));
+      expect(radiusLabel).toBeInstanceOf(TextLayer);
+
+      // biome-ignore lint/suspicious/noExplicitAny: accessing internal props for testing
+      const props = (radiusLabel as TextLayer).props as any;
+      // Default circle label offset is [0, 10] — no additional offset
+      expect(props.getPixelOffset).toEqual([0, 10]);
+    });
   });
 });
