@@ -25,7 +25,6 @@ import type { StoryObj } from '@storybook/react-vite';
 
 type StoryArgs = {
   buttonColor: 'mono-muted' | 'mono-bold' | 'accent';
-  buttonSize: 'large' | 'medium' | 'small' | 'xsmall';
   menuVariant: 'compact' | 'cozy';
   isDisabled: boolean;
 };
@@ -55,9 +54,6 @@ const chevronStyle = (isOpen: boolean) => ({
   transition: 'transform 150ms',
 });
 
-const iconButtonStyle = 'rounded-r-none';
-const menuButtonStyle = 'rounded-l-none w-[12px] min-w-[12px] p-0';
-
 export const Default: Story = {
   render: (args) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -68,7 +64,7 @@ export const Default: Story = {
           variant='icon'
           color='mono-muted'
           isDisabled={args.isDisabled}
-          className={iconButtonStyle}
+          className='rounded-r-none'
         >
           <Icon>
             <Placeholder />
@@ -76,11 +72,10 @@ export const Default: Story = {
         </Button>
         <TooltipTrigger>
           <MenuTrigger onOpenChange={setIsOpen}>
-            {/* TODO: Button is "pressed" with menu active... what do for styling. */}
             <ToggleButton
               variant='icon'
               color={args.buttonColor}
-              className={menuButtonStyle}
+              className='w-[12px] min-w-[12px] rounded-l-none p-0'
               isDisabled={args.isDisabled}
               isSelected={isOpen}
             >
