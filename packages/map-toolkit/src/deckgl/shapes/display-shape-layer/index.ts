@@ -16,6 +16,7 @@ import { Broadcast } from '@accelint/bus';
 import { CompositeLayer } from '@deck.gl/core';
 import { GeoJsonLayer, IconLayer, LineLayer } from '@deck.gl/layers';
 import { createLoggerDomain } from '@/shared/logger';
+import { CoffinCornerExtension } from '../../extensions/coffin-corner/coffin-corner-extension';
 import { SHAPE_LAYER_IDS } from '../shared/constants';
 import { type ShapeEvent, ShapeEvents } from '../shared/events';
 import {
@@ -28,7 +29,6 @@ import {
   getFillColor,
   getLineColor,
 } from '../shared/utils/style-utils';
-import { CoffinCornersExtension } from '../../extensions/coffin-corner/coffin-corners-extension';
 import {
   BRIGHTNESS_FACTOR,
   DASH_EXTENSION,
@@ -75,7 +75,7 @@ import type {
 
 const logger = createLoggerDomain('[DisplayShapeLayer]');
 
-const coffinCornersExtension = new CoffinCornersExtension();
+const coffinCornerExtension = new CoffinCornerExtension();
 
 /**
  * Typed event bus instance for shape events.
@@ -702,7 +702,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
         },
         billboard: false,
         pickable: false,
-        extensions: [coffinCornersExtension],
+        extensions: [coffinCornerExtension],
         selectedEntityId: active.selectedEntityId,
         hoveredEntityId: active.hoveredEntityId,
         getEntityId: (d: Shape['feature']) => d.properties?.shapeId as ShapeId,
