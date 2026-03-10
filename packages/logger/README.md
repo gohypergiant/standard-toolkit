@@ -4,13 +4,13 @@ Structured logging built on [LogLayer](https://loglayer.dev/) with automatic cal
 
 ## What is @accelint/logger?
 
-`@accelint/logger` is a thin wrapper around [LogLayer](https://loglayer.dev/) that bakes in sensible defaults for Accelint projects. Out of the box you get:
+`@accelint/logger` is a thin wrapper around [LogLayer](https://loglayer.dev/) with sensible defaults baked in:
 
-- **Callsite tracking** — every log entry includes the file and line where it was called
-- **Environment detection** — logs note whether they came from the browser or server
-- **Pretty-printed output** — readable in development, switchable to structured JSON for production pipelines
-- **Error serialization** — errors include full stack traces via `serialize-error`
-- **Singleton pattern** — configure once at startup, import everywhere else
+- **Callsite tracking**: every log entry includes the file and line where it was called
+- **Environment detection**: logs note whether they came from the browser or server
+- **Pretty-printed output**: readable in development, switchable to structured JSON for production pipelines
+- **Error serialization**: errors include full stack traces via `serialize-error`
+- **Singleton pattern**: configure once at startup, import everywhere else
 
 It doesn't change LogLayer's API. Anything in the [LogLayer docs](https://loglayer.dev/) applies here.
 
@@ -20,6 +20,9 @@ It doesn't change LogLayer's API. Anything in the [LogLayer docs](https://loglay
 - [Quick Start](#quick-start)
 - [Configuration Options](#configuration-options)
 - [Log Levels](#log-levels)
+- [Transports](#transports)
+- [Environment-Based Configuration](#environment-based-configuration)
+  - [Next.js Setup](#nextjs-setup)
 - [API](#api)
   - [getLogger](#getlogger)
   - [Log Level Constants](#log-level-constants)
@@ -41,7 +44,7 @@ It doesn't change LogLayer's API. Anything in the [LogLayer docs](https://loglay
 pnpm add @accelint/logger
 ```
 
-TypeScript types are included — no separate `@types` package needed.
+TypeScript types are included. No separate `@types` package needed.
 
 ## Quick Start
 
@@ -69,7 +72,7 @@ export function login(credentials: Credentials) {
 }
 ```
 
-`getLogger` returns a singleton — call it once at startup to configure it, then import the result wherever you need it. Don't call it in multiple files with different options; only the first call's options take effect.
+`getLogger` returns a singleton. Call it once at startup to configure it, then import the result wherever you need it. Don't call it in multiple files with different options; only the first call's options take effect.
 
 ## Configuration Options
 
@@ -81,7 +84,7 @@ export function login(credentials: Credentials) {
 | `pretty` | `boolean` | `true` | Use pretty-printed console output. Set to `false` for structured JSON |
 | `env` | `'production' \| 'development'` | `'development'` | Environment context; affects whether callsite and environment data is included |
 | `plugins` | `LogLayerPlugin[]` | `[]` | Additional LogLayer plugins applied after the built-in ones |
-| `transports` | `LogLayerTransport[]` | `[]` | Additional transports alongside the default console output |
+| `transports` | `LogLayerTransport[]` | `[]` | Custom transports that replace the default console output. Passing nothing or `[]` keeps the default. Include `prettyTransport` or `structuredTransport` explicitly to retain console output alongside custom transports. |
 | `groups` | `LogGroupsConfig` | `{}` | Group-based routing for sending logs to specific transports |
 
 ## Log Levels
@@ -94,6 +97,100 @@ export function login(credentials: Credentials) {
 | `warn` | `logger.warn()` | Something looks wrong but execution continues |
 | `error` | `logger.error()` | An operation failed |
 | `fatal` | `logger.fatal()` | Critical failure, app likely needs to stop |
+
+## Transports
+
+By default, the logger writes to a single console transport (pretty-printed in development, structured JSON when `pretty: false`). Passing a `transports` array changes that entirely: whatever you pass **replaces** the default, it doesn't add to it.
+
+Two patterns to know:
+
+### Replace the default transport
+
+Pass only the transports you want. Nothing goes to stdout.
+
+```ts
+import { getLogger } from '@accelint/logger';
+import { OpenTelemetryTransport } from '@loglayer/transport-opentelemetry';
+
+const otelTransport = new OpenTelemetryTransport({ /* ...settings */ });
+
+export const logger = getLogger({
+  enabled: true,
+  level: LOG_LEVEL,
+  transports: [otelTransport],
+});
+```
+
+All output goes to OpenTelemetry only.
+
+### Keep the built-in transport and add more
+
+Import one of the built-in transports and include it alongside your custom ones:
+
+```ts
+import { getLogger, structuredTransport } from '@accelint/logger';
+import { OpenTelemetryTransport } from '@loglayer/transport-opentelemetry';
+
+const otelTransport = new OpenTelemetryTransport({ /* ...settings */ });
+
+export const logger = getLogger({
+  enabled: true,
+  level: LOG_LEVEL,
+  transports: [
+    structuredTransport({ level: LOG_LEVEL }),
+    otelTransport,
+  ],
+});
+```
+
+Logs go to both stdout and OpenTelemetry. Swap in `prettyTransport` if you want human-readable output instead of JSON.
+
+Both `structuredTransport` and `prettyTransport` are exported from the main `@accelint/logger` package.
+
+---
+
+## Environment-Based Configuration
+
+Tie the log level and output format to environment variables so you don't have to touch code between deploys. In development, pretty-printed output is easier to read; in production, structured JSON is what log aggregators expect.
+
+```ts
+// ~/utils/logger/index.ts
+import { getLogger } from '@accelint/logger';
+
+const NODE_ENV = process.env.NODE_ENV;
+const LOG_LEVEL = process.env.LOG_LEVEL;
+const isProduction = NODE_ENV === 'production';
+
+export const logger = getLogger({
+  level: LOG_LEVEL,
+  enabled: true,
+  pretty: !isProduction,
+});
+```
+
+With `LOG_LEVEL` unset, the logger defaults to `'debug'`. Set it to `'info'` or `'warn'` in production to cut down on noise.
+
+### Next.js Setup
+
+Next.js complicates this because the logger may run on the server or in the browser. `NEXT_PUBLIC_` env vars work if they're known at build time. For runtime server variables that need to reach the client, attaching them to `globalThis` is the common workaround:
+
+```ts
+// ~/utils/logger/index.ts
+import { getLogger } from '@accelint/logger';
+import { env } from '~/configs/env/server';
+
+const NODE_ENV = env.NODE_ENV ?? globalThis.NODE_ENV ?? 'development';
+const LOG_LEVEL = env.LOG_LEVEL ?? globalThis.LOG_LEVEL ?? 'debug';
+const isProduction = NODE_ENV === 'production';
+
+export const logger = getLogger({
+  level: LOG_LEVEL,
+  enabled: true,
+  pretty: !isProduction,
+});
+```
+
+---
 
 ## API
 
@@ -114,7 +211,7 @@ export const logger = getLogger({
 });
 ```
 
-**Returns:** `LogLayer` — see the [LogLayer docs](https://loglayer.dev/) for the full instance API, including `withContext`, `withMetadata`, `withError`, `child`, `withPrefix`, and more.
+**Returns:** `LogLayer`. See the [LogLayer docs](https://loglayer.dev/) for the full instance API, including `withContext`, `withMetadata`, `withError`, `child`, `withPrefix`, and more.
 
 ---
 
@@ -211,7 +308,7 @@ async function fetchUserData(userId: string) {
 
 ### Domain Loggers
 
-For larger apps, it's useful to give each module its own prefixed logger so you can tell at a glance which part of the codebase a log came from. `withPrefix()` returns a child logger with the prefix pre-applied — you don't need to manage separate instances or thread loggers through function arguments.
+For larger apps, give each module its own prefixed logger so it's clear where each log came from. `withPrefix()` returns a child logger with the prefix applied.
 
 Create a small utility for this:
 
@@ -323,7 +420,7 @@ export function ErrorComponent({ children }: PropsWithChildren) {
 
 ### Custom Transports
 
-Add transports to ship logs to external destinations alongside the default console output.
+Add transports to ship logs to external destinations. See [Transports](#transports) for how transport replacement works.
 
 #### OpenTelemetry
 
@@ -441,7 +538,7 @@ const logger = getLogger({ enabled: true, pretty: false });
 ## Further Reading
 
 - [LogLayer Documentation](https://loglayer.dev/)
-- [Available transports](https://loglayer.dev/transports/) — Pino, Winston, DataDog, AWS CloudWatch, and more
-- [Plugin API](https://loglayer.dev/plugins/) — filter, redact, and enrich log data
-- [Group-based routing](https://loglayer.dev/logging-api/groups.html) — route logs to different transports by tag
-- [Child loggers](https://loglayer.dev/logging-api/child-loggers) — inherit configuration and context across modules
+- [Available transports](https://loglayer.dev/transports/): Pino, Winston, DataDog, AWS CloudWatch, and more
+- [Plugin API](https://loglayer.dev/plugins/): filter, redact, and enrich log data
+- [Group-based routing](https://loglayer.dev/logging-api/groups.html): route logs to different transports by tag
+- [Child loggers](https://loglayer.dev/logging-api/child-loggers): inherit configuration and context across modules
