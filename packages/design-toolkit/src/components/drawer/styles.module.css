@@ -59,176 +59,96 @@
     @apply relative col-(--drawer-main-cols) row-(--drawer-main-rows);
   }
 
-  /* Keyframe animations for entrance */
-  @keyframes drawer-enter-left {
+  /* Single keyframe for entrance using CSS variables */
+  @keyframes drawer-enter {
     from {
-      transform: translateX(-100%);
+      transform: translate(var(--drawer-enter-x), var(--drawer-enter-y));
     }
     to {
-      transform: translateX(0);
+      transform: translate(0, 0);
     }
   }
 
-  @keyframes drawer-enter-right {
+  /* Single keyframe for exit using CSS variables */
+  @keyframes drawer-exit {
     from {
-      transform: translateX(100%);
+      transform: translate(0, 0);
     }
     to {
-      transform: translateX(0);
-    }
-  }
-
-  @keyframes drawer-enter-top {
-    from {
-      transform: translateY(-100%);
-    }
-    to {
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes drawer-enter-bottom {
-    from {
-      transform: translateY(100%);
-    }
-    to {
-      transform: translateY(0);
-    }
-  }
-
-  /* Keyframe animations for exit */
-  @keyframes drawer-exit-left {
-    from {
-      transform: translateX(0);
-    }
-    to {
-      transform: translateX(-100%);
-    }
-  }
-
-  @keyframes drawer-exit-right {
-    from {
-      transform: translateX(0);
-    }
-    to {
-      transform: translateX(100%);
-    }
-  }
-
-  @keyframes drawer-exit-top {
-    from {
-      transform: translateY(0);
-    }
-    to {
-      transform: translateY(-100%);
-    }
-  }
-
-  @keyframes drawer-exit-bottom {
-    from {
-      transform: translateY(0);
-    }
-    to {
-      transform: translateY(100%);
+      transform: translate(var(--drawer-exit-x), var(--drawer-exit-y));
     }
   }
 
   .drawer {
     @apply bg-surface-default text-body-m pointer-events-none relative flex flex-col;
 
+    /* CSS variables for animation control */
+    --drawer-enter-x: 0;
+    --drawer-enter-y: 0;
+    --drawer-exit-x: 0;
+    --drawer-exit-y: 0;
+
     /* Transition as fallback to prevent flicker during state changes */
     transition: transform var(--animation-duration-normal)
       var(--animation-easing-standard);
 
+    /* Set animation variables and initial positions based on placement */
+    @variant placement-left {
+      --drawer-enter-x: -100%;
+      --drawer-exit-x: -100%;
+
+      @variant not-open {
+        transform: translateX(-100%);
+      }
+    }
+
+    @variant placement-right {
+      --drawer-enter-x: 100%;
+      --drawer-exit-x: 100%;
+
+      @variant not-open {
+        transform: translateX(100%);
+      }
+    }
+
+    @variant placement-top {
+      --drawer-enter-y: -100%;
+      --drawer-exit-y: -100%;
+
+      @variant not-open {
+        transform: translateY(-100%);
+      }
+    }
+
+    @variant placement-bottom {
+      --drawer-enter-y: 100%;
+      --drawer-exit-y: 100%;
+
+      @variant not-open {
+        transform: translateY(100%);
+      }
+    }
+
     /* Disable transition when animation is active */
-    &[data-entering],
-    &[data-exiting] {
+    @variant entering {
       transition: none;
-    }
-
-    /* Initial off-screen positions when closed */
-    &[data-placement='left']:not([data-open]) {
-      transform: translateX(-100%);
-    }
-
-    &[data-placement='right']:not([data-open]) {
-      transform: translateX(100%);
-    }
-
-    &[data-placement='top']:not([data-open]) {
-      transform: translateY(-100%);
-    }
-
-    &[data-placement='bottom']:not([data-open]) {
-      transform: translateY(100%);
-    }
-
-    /* Animation states for left placement */
-    &[data-placement='left'][data-entering] {
-      animation: drawer-enter-left var(--animation-duration-normal)
+      animation: drawer-enter var(--animation-duration-normal)
         var(--animation-easing-standard) both;
     }
 
-    &[data-placement='left'][data-exiting] {
-      animation: drawer-exit-left var(--animation-duration-normal)
+    @variant exiting {
+      transition: none;
+      animation: drawer-exit var(--animation-duration-normal)
         var(--animation-easing-standard) both;
     }
 
-    &[data-placement='left'][data-open]:not([data-entering]):not(
-        [data-exiting]
-      ) {
-      transform: translateX(0);
-    }
-
-    /* Animation states for right placement */
-    &[data-placement='right'][data-entering] {
-      animation: drawer-enter-right var(--animation-duration-normal)
-        var(--animation-easing-standard) both;
-    }
-
-    &[data-placement='right'][data-exiting] {
-      animation: drawer-exit-right var(--animation-duration-normal)
-        var(--animation-easing-standard) both;
-    }
-
-    &[data-placement='right'][data-open]:not([data-entering]):not(
-        [data-exiting]
-      ) {
-      transform: translateX(0);
-    }
-
-    /* Animation states for top placement */
-    &[data-placement='top'][data-entering] {
-      animation: drawer-enter-top var(--animation-duration-normal)
-        var(--animation-easing-standard) both;
-    }
-
-    &[data-placement='top'][data-exiting] {
-      animation: drawer-exit-top var(--animation-duration-normal)
-        var(--animation-easing-standard) both;
-    }
-
-    &[data-placement='top'][data-open]:not([data-entering]):not(
-        [data-exiting]
-      ) {
-      transform: translateY(0);
-    }
-
-    /* Animation states for bottom placement */
-    &[data-placement='bottom'][data-entering] {
-      animation: drawer-enter-bottom var(--animation-duration-normal)
-        var(--animation-easing-standard) both;
-    }
-
-    &[data-placement='bottom'][data-exiting] {
-      animation: drawer-exit-bottom var(--animation-duration-normal)
-        var(--animation-easing-standard) both;
-    }
-
-    &[data-placement='bottom'][data-open]:not([data-entering]):not(
-        [data-exiting]
-      ) {
-      transform: translateY(0);
+    /* Open state without animation */
+    @variant open {
+      @variant not-entering {
+        @variant not-exiting {
+          transform: translate(0, 0);
+        }
+      }
     }
 
     @variant placement-top {
@@ -466,51 +386,6 @@
 
   .footer {
     @apply fg-primary-bold mt-s flex flex-row items-center justify-end;
-  }
-
-  /* Disable animations for users who prefer reduced motion */
-  @media (prefers-reduced-motion: reduce) {
-    .drawer {
-      transition: none;
-      animation: none;
-    }
-
-    .drawer[data-entering],
-    .drawer[data-exiting] {
-      animation: none;
-    }
-
-    .drawer[data-placement='left'][data-open] {
-      transform: translateX(0);
-    }
-
-    .drawer[data-placement='right'][data-open] {
-      transform: translateX(0);
-    }
-
-    .drawer[data-placement='top'][data-open] {
-      transform: translateY(0);
-    }
-
-    .drawer[data-placement='bottom'][data-open] {
-      transform: translateY(0);
-    }
-
-    .drawer[data-placement='left']:not([data-open]) {
-      transform: translateX(-100%);
-    }
-
-    .drawer[data-placement='right']:not([data-open]) {
-      transform: translateX(100%);
-    }
-
-    .drawer[data-placement='top']:not([data-open]) {
-      transform: translateY(-100%);
-    }
-
-    .drawer[data-placement='bottom']:not([data-open]) {
-      transform: translateY(100%);
-    }
   }
 }
 

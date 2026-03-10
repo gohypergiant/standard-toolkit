@@ -98,6 +98,16 @@ html {
 }
 
 @layer base {
+  /* Global motion-safe variant: disable all animations for users who prefer reduced motion */
+  *,
+  *::before,
+  *::after {
+    @variant motion-safe {
+      animation-duration: 0s !important;
+      transition-duration: 0s !important;
+    }
+  }
+
   ::-webkit-scrollbar {
     @apply size-l;
   }

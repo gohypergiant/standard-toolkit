@@ -16,153 +16,83 @@
   .tooltip {
     @apply fg-primary-bold rounded-small bg-surface-overlay px-s py-xs text-body-xs shadow-elevation-overlay flex items-center justify-center text-center wrap-break-word select-none;
     max-width: 160px;
+
+    /* Start invisible to prevent flash */
     opacity: 0;
+
+    /* CSS variables for animation control */
+    --tooltip-enter-x: 0;
+    --tooltip-enter-y: 0;
+    --tooltip-exit-x: 0;
+    --tooltip-exit-y: 0;
+
+    /* Set animation variables and initial position based on placement */
+    &[data-placement^='top'] {
+      --tooltip-enter-y: var(--spacing-s);
+      --tooltip-exit-y: var(--spacing-s);
+      /* Start at the "from" position before animation */
+      transform: translate(0, var(--spacing-s));
+    }
+
+    &[data-placement^='bottom'] {
+      --tooltip-enter-y: calc(-1 * var(--spacing-s));
+      --tooltip-exit-y: calc(-1 * var(--spacing-s));
+      /* Start at the "from" position before animation */
+      transform: translate(0, calc(-1 * var(--spacing-s)));
+    }
+
+    &[data-placement^='left'] {
+      --tooltip-enter-x: var(--spacing-s);
+      --tooltip-exit-x: var(--spacing-s);
+      /* Start at the "from" position before animation */
+      transform: translate(var(--spacing-s), 0);
+    }
+
+    &[data-placement^='right'] {
+      --tooltip-enter-x: calc(-1 * var(--spacing-s));
+      --tooltip-exit-x: calc(-1 * var(--spacing-s));
+      /* Start at the "from" position before animation */
+      transform: translate(calc(-1 * var(--spacing-s)), 0);
+    }
+
+    /* Apply animations based on state */
+    &[data-entering] {
+      animation: tooltip-enter var(--animation-duration-fast)
+        var(--animation-easing-standard) both;
+    }
+
+    &[data-exiting] {
+      animation: tooltip-exit var(--animation-duration-fast)
+        var(--animation-easing-standard) both;
+    }
+
+    &[data-placement]:not([data-entering]):not([data-exiting]) {
+      opacity: 1;
+      transform: translate(0, 0);
+    }
   }
 
-  /* Keyframe animations for entrance */
-  @keyframes tooltip-enter-top {
+  /* Single keyframe for entrance using CSS variables */
+  @keyframes tooltip-enter {
     from {
       opacity: 0;
-      transform: translateY(var(--spacing-s));
+      transform: translate(var(--tooltip-enter-x), var(--tooltip-enter-y));
     }
     to {
       opacity: 1;
-      transform: translateY(0);
+      transform: translate(0, 0);
     }
   }
 
-  @keyframes tooltip-enter-bottom {
-    from {
-      opacity: 0;
-      transform: translateY(calc(-1 * var(--spacing-s)));
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes tooltip-enter-left {
-    from {
-      opacity: 0;
-      transform: translateX(var(--spacing-s));
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-
-  @keyframes tooltip-enter-right {
-    from {
-      opacity: 0;
-      transform: translateX(calc(-1 * var(--spacing-s)));
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-
-  /* Keyframe animations for exit */
-  @keyframes tooltip-exit-top {
+  /* Single keyframe for exit using CSS variables */
+  @keyframes tooltip-exit {
     from {
       opacity: 1;
-      transform: translateY(0);
+      transform: translate(0, 0);
     }
     to {
       opacity: 0;
-      transform: translateY(var(--spacing-s));
-    }
-  }
-
-  @keyframes tooltip-exit-bottom {
-    from {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    to {
-      opacity: 0;
-      transform: translateY(calc(-1 * var(--spacing-s)));
-    }
-  }
-
-  @keyframes tooltip-exit-left {
-    from {
-      opacity: 1;
-      transform: translateX(0);
-    }
-    to {
-      opacity: 0;
-      transform: translateX(var(--spacing-s));
-    }
-  }
-
-  @keyframes tooltip-exit-right {
-    from {
-      opacity: 1;
-      transform: translateX(0);
-    }
-    to {
-      opacity: 0;
-      transform: translateX(calc(-1 * var(--spacing-s)));
-    }
-  }
-
-  .tooltip[data-placement^='top'][data-entering] {
-    animation: tooltip-enter-top var(--animation-duration-fast)
-      var(--animation-easing-standard) both;
-  }
-
-  .tooltip[data-placement^='bottom'][data-entering] {
-    animation: tooltip-enter-bottom var(--animation-duration-fast)
-      var(--animation-easing-standard) both;
-  }
-
-  .tooltip[data-placement^='left'][data-entering] {
-    animation: tooltip-enter-left var(--animation-duration-fast)
-      var(--animation-easing-standard) both;
-  }
-
-  .tooltip[data-placement^='right'][data-entering] {
-    animation: tooltip-enter-right var(--animation-duration-fast)
-      var(--animation-easing-standard) both;
-  }
-
-  .tooltip[data-placement]:not([data-entering]):not([data-exiting]) {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
-
-  .tooltip[data-placement^='top'][data-exiting] {
-    animation: tooltip-exit-top var(--animation-duration-fast)
-      var(--animation-easing-standard) both;
-  }
-
-  .tooltip[data-placement^='bottom'][data-exiting] {
-    animation: tooltip-exit-bottom var(--animation-duration-fast)
-      var(--animation-easing-standard) both;
-  }
-
-  .tooltip[data-placement^='left'][data-exiting] {
-    animation: tooltip-exit-left var(--animation-duration-fast)
-      var(--animation-easing-standard) both;
-  }
-
-  .tooltip[data-placement^='right'][data-exiting] {
-    animation: tooltip-exit-right var(--animation-duration-fast)
-      var(--animation-easing-standard) both;
-  }
-
-  /* Disable animations for users who prefer reduced motion */
-  @media (prefers-reduced-motion: reduce) {
-    .tooltip[data-entering],
-    .tooltip[data-exiting] {
-      animation: none;
-    }
-
-    .tooltip[data-placement]:not([data-entering]):not([data-exiting]) {
-      opacity: 1;
+      transform: translate(var(--tooltip-exit-x), var(--tooltip-exit-y));
     }
   }
 }
