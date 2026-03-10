@@ -72,10 +72,9 @@ export {
   CarouselPositionDisplay,
   CarouselSelectField,
   CarouselThumbnailGallery,
-  CarouselThumbnailItem,
   CarouselViewer,
 } from './components/carousel';
-export type { CarouselProps } from './components/carousel/types';
+export type { CarouselData, CarouselProps } from './components/carousel/types';
 export {
   CheckboxContext,
   CheckboxGroupContext,
