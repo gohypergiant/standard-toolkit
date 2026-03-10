@@ -84,7 +84,7 @@ export function login(credentials: Credentials) {
 | `pretty` | `boolean` | `true` | Use pretty-printed console output. Set to `false` for structured JSON |
 | `env` | `'production' \| 'development'` | `'development'` | Environment context; affects whether callsite and environment data is included |
 | `plugins` | `LogLayerPlugin[]` | `[]` | Additional LogLayer plugins applied after the built-in ones |
-| `transports` | `LogLayerTransport[]` | `[]` | Override the default console transport. If provided, the default transport is replaced. Include a built-in transport explicitly to keep console output. |
+| `transports` | `LogLayerTransport[]` | `[]` | Custom transports that replace the default console output. Passing nothing or `[]` keeps the default. Include `prettyTransport` or `structuredTransport` explicitly to retain console output alongside custom transports. |
 | `groups` | `LogGroupsConfig` | `{}` | Group-based routing for sending logs to specific transports |
 
 ## Log Levels
