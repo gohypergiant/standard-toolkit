@@ -12,9 +12,9 @@
 
 'use client';
 
+import type { DistanceUnitSymbol } from '@accelint/constants/units';
 import type { UniqueId } from '@accelint/core';
 import type { Feature } from 'geojson';
-import type { DistanceUnitAbbreviation } from '@/shared/units';
 import type {
   CircleProperties,
   Shape,
@@ -85,7 +85,7 @@ export type DrawShapeLayerProps = {
    */
   mapId?: UniqueId;
   /** Distance unit for tooltip measurements (defaults to 'km') */
-  unit?: DistanceUnitAbbreviation;
+  unit?: DistanceUnitSymbol;
 };
 
 /**

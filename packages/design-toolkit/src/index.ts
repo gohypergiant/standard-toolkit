@@ -243,6 +243,10 @@ export type {
   FlashcardDetailsListProps,
   FlashcardProps,
 } from './components/flashcard/types';
+export { FloatingCard } from './components/floating-card';
+export type { FloatingCardProps } from './components/floating-card';
+export { FloatingCardProvider } from './components/floating-card/provider';
+export type { FloatingCardProviderProps } from './components/floating-card/provider';
 export { HeroContext } from './components/hero/context';
 export { Hero } from './components/hero';
 export { HeroSubtitle } from './components/hero/subtitle';

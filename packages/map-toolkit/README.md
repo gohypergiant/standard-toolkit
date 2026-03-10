@@ -9,6 +9,7 @@ Map Toolkit is a comprehensive library that provides:
 - **Deck.gl Components**: Pre-configured layers and components for rendering geospatial data, including symbol layers for military symbology (MIL-STD-2525)
 - **MapLibre Integration**: Components and utilities for working with MapLibre GL JS
 - **React Support**: React-friendly components with hooks and utilities via `@deckgl-fiber-renderer`
+- **Shapes System**: Draw, display, and edit geometric shapes (circles, ellipses, polygons, rectangles, lines, points) on the map with built-in styling, selection, and duplication
 - **Geospatial Utilities**: Helper functions and decorators for common mapping tasks
 
 The package is organized by technology (e.g., `deckgl/`, `maplibre/`) with feature-specific exports, allowing you to import only what you need.
@@ -16,7 +17,7 @@ The package is organized by technology (e.g., `deckgl/`, `maplibre/`) with featu
 ## Installation
 
 ```sh
-npm install @accelint/map-toolkit
+pnpm add @accelint/map-toolkit
 ```
 
 ### Optional Dependencies
@@ -100,6 +101,7 @@ pnpm --filter=@accelint/map-toolkit bench
 packages/map-toolkit/
   src/
     deckgl/           # Deck.gl layers and components
+      shapes/         # Shape drawing, display, editing, and utilities
     maplibre/         # MapLibre utilities and components
     decorators/       # Shared decorators and utilities
 ```

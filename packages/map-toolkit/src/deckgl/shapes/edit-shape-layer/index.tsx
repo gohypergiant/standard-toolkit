@@ -21,18 +21,21 @@ import {
 import { useCallback, useContext, useEffect, useRef } from 'react';
 import { MapContext } from '../../base-map/provider';
 import { useShiftZoomDisable } from '../shared/hooks/use-shift-zoom-disable';
-import { ShapeFeatureType } from '../shared/types';
 import { getDefaultEditableLayerProps } from '../shared/utils/layer-config';
 import { getFillColor, getLineColor } from '../shared/utils/style-utils';
 import {
   COMPLETION_EDIT_TYPES,
   CONTINUOUS_EDIT_TYPES,
+  DEFAULT_HOTKEY_CONFIG,
   EDIT_SHAPE_LAYER_ID,
+  SHAPE_PROPERTY_MAP,
 } from './constants';
 import { getEditModeInstance } from './modes';
 import {
   cancelEditingFromLayer,
+  disableEditPanning,
   editStore,
+  enableEditPanning,
   saveEditingFromLayer,
   updateFeatureFromLayer,
 } from './store';
@@ -41,6 +44,7 @@ import type {
   FeatureCollection,
 } from '@deck.gl-community/editable-layers';
 import type { Feature } from 'geojson';
+import type { ShapeFeatureType } from '../shared/types';
 import type { EditShapeLayerProps } from './types';
 
 /**
@@ -75,6 +79,10 @@ function isCompletionEditType(editType: string): boolean {
  *
  * For rectangles, adds the `shape: 'Rectangle'` property required by ModifyMode's
  * lockRectangles feature. ModifyMode checks `properties.shape === 'Rectangle'`.
+ *
+ * @param feature - The GeoJSON Feature to wrap.
+ * @param shape - The shape type, used to determine if mode-specific properties are needed.
+ * @returns A GeoJSON FeatureCollection containing the single feature.
  */
 function toFeatureCollection(
   feature: Feature,
@@ -83,12 +91,7 @@ function toFeatureCollection(
   // Add shape property for modes that require it
   // - ResizeCircleMode requires shape: 'Circle'
   // - ModifyMode lockRectangles requires shape: 'Rectangle'
-  let shapeProperty: string | undefined;
-  if (shape === ShapeFeatureType.Circle) {
-    shapeProperty = 'Circle';
-  } else if (shape === ShapeFeatureType.Rectangle) {
-    shapeProperty = 'Rectangle';
-  }
+  const shapeProperty = SHAPE_PROPERTY_MAP[shape];
 
   const featureWithShape = shapeProperty
     ? {
@@ -143,11 +146,14 @@ function toFeatureCollection(
  *   );
  * }
  * ```
+ *
+ * @throws {Error} Throws if neither `mapId` prop nor `MapProvider` context is available.
  */
 export function EditShapeLayer({
   id = EDIT_SHAPE_LAYER_ID,
   mapId,
   unit,
+  hotkeyConfig = DEFAULT_HOTKEY_CONFIG,
 }: EditShapeLayerProps) {
   // Get mapId from context if not provided
   const contextId = useContext(MapContext);
@@ -210,6 +216,36 @@ export function EditShapeLayer({
       unregisterHotkey(manager);
     };
   }, [actualMapId, cancelPendingUpdate]);
+
+  // Register Space key for enabling panning while editing shape.
+  // NOTE: Low threshold (50ms) enables near-instant panning response on hold.
+  // alwaysTriggerKeyUp ensures panning ends even if onKeyHeld was triggered.
+  useEffect(() => {
+    const manager = registerHotkey({
+      id: `editPanningHotkey-${actualMapId}`,
+      key: hotkeyConfig.panning,
+      onKeyDown: (e: KeyboardEvent) => {
+        if (editStore.get(actualMapId)?.editingShape) {
+          e.preventDefault();
+        }
+      },
+      onKeyHeld: () => {
+        enableEditPanning(actualMapId);
+      },
+      onKeyUp: () => {
+        disableEditPanning(actualMapId);
+      },
+      heldThresholdMs: 50,
+      alwaysTriggerKeyUp: true,
+    });
+
+    const unbind = manager.bind();
+
+    return () => {
+      unbind();
+      unregisterHotkey(manager);
+    };
+  }, [actualMapId, hotkeyConfig]);
 
   // Disable zoom while Shift is held during editing
   // This prevents boxZoom (Shift+drag) from interfering with Shift modifier constraints

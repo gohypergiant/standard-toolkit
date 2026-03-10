@@ -1,12 +1,13 @@
 {
   "name": "@accelint/map-toolkit",
   "description": "A collection of components and utilities to simplify visualizing and working with geospatial data.",
-  "version": "1.5.0",
+  "version": "2.0.0",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "devDependencies": {
     "@accelint/biome-config": "workspace:*",
     "@accelint/bus": "workspace:*",
+    "@accelint/constants": "workspace:*",
     "@accelint/core": "workspace:*",
     "@accelint/design-foundation": "workspace:*",
     "@accelint/design-toolkit": "workspace:*",
@@ -159,6 +160,7 @@
   "owner": "default/pathfinder",
   "peerDependencies": {
     "@accelint/bus": "workspace:*",
+    "@accelint/constants": "workspace:*",
     "@accelint/core": "workspace:*",
     "@accelint/geo": "workspace:*",
     "@accelint/hotkey-manager": "workspace:*",

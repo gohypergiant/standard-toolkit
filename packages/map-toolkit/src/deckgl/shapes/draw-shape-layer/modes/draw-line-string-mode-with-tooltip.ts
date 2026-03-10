@@ -11,6 +11,10 @@
  */
 
 import {
+  DISTANCE_UNIT_SYMBOLS,
+  type DistanceUnit,
+} from '@accelint/constants/units';
+import {
   type ClickEvent,
   DrawLineStringMode,
   type FeatureCollection,
@@ -20,10 +24,7 @@ import {
   type Tooltip,
 } from '@deck.gl-community/editable-layers';
 import { type Coord, distance } from '@turf/turf';
-import {
-  DEFAULT_DISTANCE_UNITS,
-  getDistanceUnitAbbreviation,
-} from '@/shared/units';
+import { DEFAULT_DISTANCE_UNITS } from '@/shared/units';
 import { formatDistanceTooltip } from '../../shared/constants';
 
 /**
@@ -119,13 +120,14 @@ export class DrawLineStringModeWithTooltip extends DrawLineStringMode {
 
     const { mapCoords } = event;
     const distanceUnits =
-      props.modeConfig?.distanceUnits ?? DEFAULT_DISTANCE_UNITS;
+      (props.modeConfig?.distanceUnits as DistanceUnit) ??
+      DEFAULT_DISTANCE_UNITS;
 
     const lastPoint = clickSequence.at(-1) as Coord;
     const currentPoint = mapCoords as Coord;
 
     const dist = distance(lastPoint, currentPoint, { units: distanceUnits });
-    const unitAbbrev = getDistanceUnitAbbreviation(distanceUnits);
+    const unitAbbrev = DISTANCE_UNIT_SYMBOLS[distanceUnits];
 
     this.tooltip = {
       position: mapCoords,
