@@ -75,14 +75,11 @@ export const Default: Story = {
             <ToggleButton
               variant='icon'
               color={args.buttonColor}
-              className='w-[12px] min-w-[12px] rounded-l-none p-0'
+              className='w-m min-w-m rounded-l-none p-0'
               isDisabled={args.isDisabled}
               isSelected={isOpen}
             >
-              <Icon
-                style={chevronStyle(isOpen)}
-                className='flex h-full w-[12px]'
-              >
+              <Icon style={chevronStyle(isOpen)} className='flex h-full w-m'>
                 <ChevronDown />
               </Icon>
             </ToggleButton>
