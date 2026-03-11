@@ -55,6 +55,12 @@ npm install @accelint/map-toolkit @accelint/bus @accelint/core @deck.gl/core @de
 pnpm add @accelint/map-toolkit @accelint/bus @accelint/core @deck.gl/core @deck.gl-community/editable-layers @deckgl-fiber-renderer/dom react
 ```
 
+## Fiber Registration
+
+`EditShapeLayer` is a **React component** (not a deck.gl layer class), so it handles its own fiber registration internally. You do **not** need to import `edit-shape-layer/fiber`.
+
+However, you **do** still need to import `display-shape-layer/fiber` if you use `<displayShapeLayer>` alongside it — because `DisplayShapeLayer` is a deck.gl layer class that requires explicit fiber registration from the consumer.
+
 ## Basic Usage
 
 ### With useEditShape Hook (Recommended)
@@ -63,7 +69,6 @@ The easiest way to use EditShapeLayer is with the `useEditShape` hook, which man
 
 ```tsx
 import { BaseMap } from '@accelint/map-toolkit/deckgl/base-map';
-import '@accelint/map-toolkit/deckgl/shapes/edit-shape-layer/fiber';
 import '@accelint/map-toolkit/deckgl/shapes/display-shape-layer/fiber';
 import {
   DisplayShapeLayer,
@@ -431,6 +436,7 @@ See the Storybook stories for interactive examples:
 - **CombinedDrawAndEdit**: Drawing new shapes and editing existing ones
 - **LockedShapes**: Demonstrates locked shape behavior with lock/unlock toggle
 - **DuplicateShape**: Clone shapes with optional offset and custom naming
+- **EditIconPoints**: Edit Point shapes that have icon markers
 
 ## For Developers
 

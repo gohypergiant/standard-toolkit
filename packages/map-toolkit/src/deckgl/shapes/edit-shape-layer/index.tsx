@@ -20,6 +20,10 @@ import {
 } from '@accelint/hotkey-manager';
 import { useCallback, useContext, useEffect, useRef } from 'react';
 import { MapContext } from '../../base-map/provider';
+import {
+  getIconConfig,
+  getIconLayerProps,
+} from '../display-shape-layer/utils/icon-config';
 import { useShiftZoomDisable } from '../shared/hooks/use-shift-zoom-disable';
 import { getDefaultEditableLayerProps } from '../shared/utils/layer-config';
 import { getFillColor, getLineColor } from '../shared/utils/style-utils';
@@ -46,6 +50,7 @@ import type {
 import type { Feature } from 'geojson';
 import type { ShapeFeatureType } from '../shared/types';
 import type { EditShapeLayerProps } from './types';
+import './fiber';
 
 /**
  * Check if an edit type is a continuous event (fires during drag).
@@ -125,12 +130,14 @@ function toFeatureCollection(
  * - Live dimension/area tooltips during editing
  * - requestAnimationFrame() batching for smooth drag performance
  *
+ * ## Fiber Registration
+ * Unlike `DisplayShapeLayer` (a deck.gl layer class), `EditShapeLayer` is a React
+ * component that handles its own fiber registration internally. You do **not** need to
+ * import `edit-shape-layer/fiber` — but you **do** still need to import
+ * `display-shape-layer/fiber` if you use `<displayShapeLayer>` in the same tree.
+ *
  * @example
  * ```tsx
- * // Import the fiber registration for JSX support
- * import '@accelint/map-toolkit/deckgl/shapes/edit-shape-layer/fiber';
- * import '@accelint/map-toolkit/deckgl/shapes/display-shape-layer/fiber';
- *
  * function Map({ mapId }) {
  *   const { editingShape } = useEditShape(mapId);
  *
@@ -280,16 +287,18 @@ export function EditShapeLayer({
     updatedData,
     editType,
   }: EditAction<FeatureCollection>) => {
-    const feature = updatedData.features[0];
+    // Single cast at the library boundary: editable-layers Feature is structurally
+    // compatible with geojson Feature but typed differently
+    const feature = updatedData.features[0] as Feature | undefined;
 
     // Continuous events (during drag): batch with RAF for smooth performance
     if (isContinuousEditType(editType) && feature) {
       cancelPendingUpdate();
       const rafId = requestAnimationFrame(() => {
-        updateFeatureFromLayer(actualMapId, feature as Feature);
+        updateFeatureFromLayer(actualMapId, feature);
         pendingUpdateRef.current = null;
       });
-      pendingUpdateRef.current = { feature: feature as Feature, rafId };
+      pendingUpdateRef.current = { feature, rafId };
       return;
     }
 
@@ -297,7 +306,7 @@ export function EditShapeLayer({
     if (isCompletionEditType(editType)) {
       cancelPendingUpdate();
       if (feature) {
-        updateFeatureFromLayer(actualMapId, feature as Feature);
+        updateFeatureFromLayer(actualMapId, feature);
       }
       return;
     }
@@ -313,6 +322,25 @@ export function EditShapeLayer({
   const fillColor = getFillColor(editingShape.feature, true);
   const lineColor = getLineColor(editingShape.feature);
 
+  // Auto-detect icon config from the editing shape's style properties.
+  // EditableGeoJsonLayer only proxies a fixed set of props to its inner GeoJsonLayer,
+  // so icon props must be injected via _subLayerProps targeting the 'geojson' sub-layer.
+  const {
+    hasIcons,
+    atlas: iconAtlas,
+    mapping: iconMapping,
+  } = getIconConfig([editingShape.feature]);
+  const defaultProps = getDefaultEditableLayerProps(unit);
+  const subLayerProps = hasIcons
+    ? {
+        ...defaultProps._subLayerProps,
+        geojson: {
+          pointType: 'icon' as const,
+          ...getIconLayerProps(hasIcons, iconAtlas, iconMapping),
+        },
+      }
+    : defaultProps._subLayerProps;
+
   return (
     <editableGeoJsonLayer
       id={id}
@@ -324,7 +352,8 @@ export function EditShapeLayer({
       getLineColor={lineColor}
       getTentativeFillColor={fillColor}
       getTentativeLineColor={lineColor}
-      {...getDefaultEditableLayerProps(unit)}
+      {...defaultProps}
+      _subLayerProps={subLayerProps}
     />
   );
 }
