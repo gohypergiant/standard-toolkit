@@ -288,50 +288,41 @@ describe('CoffinCornerExtension', () => {
       expect(layer.invalidate).toHaveBeenCalledWith('instanceHoveredEntity');
     });
 
-    it('should handle entity ID of 0 (falsy but valid)', () => {
+    it.each([
+      { id: 0, label: '0 (falsy number)' },
+      { id: '', label: 'empty string' },
+    ])('should handle entity ID of $label as valid selection', ({ id }) => {
       const layer = createMockLayer();
 
       extension.updateState.call(
         layer,
         createMockParams(
-          { selectedEntityId: 0 },
+          { selectedEntityId: id },
           { selectedEntityId: undefined },
         ),
       );
 
-      expect(layer.state.selectedEntities.get(0)).toBe(1);
+      expect(layer.state.selectedEntities.get(id)).toBe(1);
       expect(layer.invalidate).toHaveBeenCalledWith('instanceSelectedEntity');
     });
 
-    it('should remove entity ID of 0 when selection changes', () => {
+    it.each([
+      { id: 0, label: '0 (falsy number)' },
+      { id: '', label: 'empty string' },
+    ])('should remove entity ID of $label when selection changes', ({ id }) => {
       const layer = createMockLayer();
-      layer.state.selectedEntities.set(0, 1);
+      layer.state.selectedEntities.set(id, 1);
 
       extension.updateState.call(
         layer,
         createMockParams(
           { selectedEntityId: 'new-id' },
-          { selectedEntityId: 0 },
+          { selectedEntityId: id },
         ),
       );
 
-      expect(layer.state.selectedEntities.has(0)).toBe(false);
+      expect(layer.state.selectedEntities.has(id)).toBe(false);
       expect(layer.state.selectedEntities.get('new-id')).toBe(1);
-    });
-
-    it('should handle empty string as entity ID', () => {
-      const layer = createMockLayer();
-
-      extension.updateState.call(
-        layer,
-        createMockParams(
-          { selectedEntityId: '' },
-          { selectedEntityId: undefined },
-        ),
-      );
-
-      expect(layer.state.selectedEntities.get('')).toBe(1);
-      expect(layer.invalidate).toHaveBeenCalledWith('instanceSelectedEntity');
     });
 
     it('should treat null the same as undefined for deselection', () => {
@@ -457,6 +448,61 @@ describe('CoffinCornerExtension', () => {
           'fs:#main-start',
         ]),
       );
+    });
+
+    it('should return null for unsupported layer types', () => {
+      // biome-ignore lint/suspicious/noExplicitAny: Mock only needs to fail instanceof checks.
+      const layer = Object.create(Object.prototype) as any;
+
+      const shaders = extension.getShaders.call(layer, extension);
+
+      expect(shaders).toBeNull();
+    });
+  });
+
+  describe('unsupported layer guards', () => {
+    it('should not initialize state on unsupported layer types', () => {
+      // biome-ignore lint/suspicious/noExplicitAny: Mock only needs to fail instanceof checks.
+      const layer = Object.create(Object.prototype) as any;
+      layer.state = {};
+      layer.getAttributeManager = vi.fn();
+
+      extension.initializeState.call(layer);
+
+      expect(layer.state.selectedEntities).toBeUndefined();
+      expect(layer.getAttributeManager).not.toHaveBeenCalled();
+    });
+
+    it('should not update state on unsupported layer types', () => {
+      // biome-ignore lint/suspicious/noExplicitAny: Mock only needs to fail instanceof checks.
+      const layer = Object.create(Object.prototype) as any;
+      layer.state = {
+        selectedEntities: new Map(),
+        hoveredEntities: new Map(),
+      };
+      layer.getAttributeManager = vi.fn();
+
+      extension.updateState.call(
+        layer,
+        createMockParams(
+          { selectedEntityId: 'entity-1' },
+          { selectedEntityId: undefined },
+        ),
+      );
+
+      expect(layer.state.selectedEntities.size).toBe(0);
+      expect(layer.getAttributeManager).not.toHaveBeenCalled();
+    });
+
+    it('should not set shader module props on unsupported layer types', () => {
+      // biome-ignore lint/suspicious/noExplicitAny: Mock only needs to fail instanceof checks.
+      const layer = Object.create(Object.prototype) as any;
+      layer.props = {};
+      layer.setShaderModuleProps = vi.fn();
+
+      extension.draw.call(layer);
+
+      expect(layer.setShaderModuleProps).not.toHaveBeenCalled();
     });
   });
 });

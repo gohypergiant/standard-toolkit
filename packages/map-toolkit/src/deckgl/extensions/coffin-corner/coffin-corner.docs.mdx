@@ -33,11 +33,11 @@ function MapWithIcons({ mapId }) {
 
 ## What is this?
 
-This extension renders L-shaped bracket indicators at all four corners of an icon when it's hovered or selected. The brackets are drawn entirely in the GPU using signed distance functions (SDFs) — no extra DOM elements, no additional layers, no texture swaps. Hovering shows white brackets with a subtle background fill. Selecting shows colored brackets (configurable via `selectedCoffinCornerColor`).
+This extension renders L-shaped bracket indicators at all four corners of an icon or scatterplot circle when it's hovered or selected. The brackets are drawn entirely in the GPU using signed distance functions (SDFs) — no extra DOM elements, no additional layers, no texture swaps. Hovering shows white brackets with a subtle background fill. Selecting shows colored brackets (configurable via `selectedCoffinCornerColor`).
 
 ## Why a shader extension?
 
-The original approach used a separate icon atlas (sprite sheet) layer to draw coffin corners. This creates a dependency on a sprite sheet that is typically generated at the application level rather than the library level, forcing consumers to either pass sprite sheet props into the layer or export a "basic" sprite sheet from MapTK. A shader extension sidesteps this entirely: the brackets are rendered via SDF math in the fragment shader, so there's no sprite sheet, no icon atlas conflicts, and no extra layer. The extension plugs directly into the host IconLayer (or SymbolLayer) and composites the brackets over the existing icon texture on the GPU.
+The original approach used a separate icon atlas (sprite sheet) layer to draw coffin corners. This creates a dependency on a sprite sheet that is typically generated at the application level rather than the library level, forcing consumers to either pass sprite sheet props into the layer or export a "basic" sprite sheet from MapTK. A shader extension sidesteps this entirely: the brackets are rendered via SDF math in the fragment shader, so there's no sprite sheet, no icon atlas conflicts, and no extra layer. The extension plugs directly into the host layer (IconLayer, SymbolLayer, or ScatterplotLayer) and composites the brackets over the existing geometry on the GPU.
 
 ## Architecture
 

@@ -29,9 +29,8 @@ import {
 } from '../shared/utils/style-utils';
 import {
   BRIGHTNESS_FACTOR,
-  COFFIN_CORNER_EXTENSION,
-  DASH_EXTENSION,
   DEFAULT_DISPLAY_PROPS,
+  DISPLAY_EXTENSIONS,
   HIGHLIGHT_COLOR_TUPLE,
   MAP_INTERACTION,
   MATERIAL_SETTINGS,
@@ -175,6 +174,11 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
   private elevationCache: ElevationCache | null = null;
   /** Cache for elevation indicator line segments */
   private indicatorCache: IndicatorCache | null = null;
+  /** Cached coffin corner color tuple — avoids new array reference per render when highlight hasn't changed. */
+  private coffinCornerColorCache: {
+    source: Rgba255Tuple;
+    color: Rgba255Tuple;
+  } | null = null;
 
   static override layerName = 'DisplayShapeLayer';
 
@@ -190,10 +194,11 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
     if (this.state?.hoverIndex !== undefined) {
       this.setState({ hoverIndex: undefined, lastHoveredId: undefined });
     }
-    // Clear features cache
+    // Clear caches
     this.featuresCache = null;
     this.elevationCache = null;
     this.indicatorCache = null;
+    this.coffinCornerColorCache = null;
   }
 
   /**
@@ -201,6 +206,21 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
    */
   private get resolvedHighlight(): Rgba255Tuple {
     return this.props.highlightColor ?? HIGHLIGHT_COLOR_TUPLE;
+  }
+
+  /**
+   * Coffin corner bracket color derived from resolvedHighlight with forced full opacity.
+   * Cached to avoid a new array reference per render triggering deck.gl prop-change detection.
+   */
+  private get coffinCornerColor(): Rgba255Tuple {
+    const highlight = this.resolvedHighlight;
+    if (this.coffinCornerColorCache?.source !== highlight) {
+      this.coffinCornerColorCache = {
+        source: highlight,
+        color: [highlight[0], highlight[1], highlight[2], 255],
+      };
+    }
+    return this.coffinCornerColorCache.color;
   }
 
   /**
@@ -374,7 +394,8 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
   }
 
   /**
-   * Handle shape click
+   * Handle shape click — emits `shapes:selected` via bus and calls `onShapeClick` callback.
+   * @param info - deck.gl picking info from the clicked sublayer.
    */
   private handleShapeClick = (info: PickingInfo): void => {
     const { onShapeClick, mapId } = this.props;
@@ -404,7 +425,8 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
   };
 
   /**
-   * Handle shape hover
+   * Handle shape hover — emits `shapes:hovered` via bus (deduplicated by shapeId) and calls `onShapeHover` callback.
+   * @param info - deck.gl picking info from the hovered sublayer.
    */
   private handleShapeHover = (info: PickingInfo): void => {
     const { onShapeHover, mapId } = this.props;
@@ -470,7 +492,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
 
   /**
    * Render highlight sublayer (underneath main layer).
-   * Point geometries with icons skip this layer — they use coffin corner brackets
+   * Point geometries skip this layer — they use coffin corner brackets
    * via CoffinCornerExtension on the main layer's icon/scatterplot sublayer instead.
    */
   private renderHighlightLayer(features: Shape['feature'][]): GeoJsonLayer[] {
@@ -491,14 +513,9 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       return [];
     }
 
-    // Skip highlight layer for Point geometries with icons — they use coffin corner brackets instead.
-    // TODO: Consider skipping all Point geometries here now that CoffinCornerExtension
-    // supports ScatterplotLayer in addition to IconLayer.
+    // Skip highlight layer for Point geometries — they use coffin corner brackets instead.
     if (isPointType(selectedFeature.geometry)) {
-      const hasIcon = !!selectedFeature.properties?.styleProperties?.icon;
-      if (hasIcon) {
-        return [];
-      }
+      return [];
     }
 
     // Strip Z from LineString coordinates so the highlight outline renders at
@@ -734,17 +751,12 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       selectedEntityId: selectedShapeId,
       hoveredEntityId,
       getEntityId: (d: Shape['feature']) => d.properties?.shapeId as ShapeId,
-      selectedCoffinCornerColor: [
-        this.resolvedHighlight[0],
-        this.resolvedHighlight[1],
-        this.resolvedHighlight[2],
-        255,
-      ] as Rgba255Tuple,
+      selectedCoffinCornerColor: this.coffinCornerColor,
 
       // Extensions: PathStyleExtension for dash patterns + CoffinCornerExtension for bracket indicators.
       // CoffinCornerExtension returns null from getShaders() on unsupported sublayer types
       // (PathLayer, SolidPolygonLayer), so shader injection only occurs on IconLayer/ScatterplotLayer.
-      extensions: [DASH_EXTENSION, COFFIN_CORNER_EXTENSION],
+      extensions: DISPLAY_EXTENSIONS,
       getDashArray,
 
       // Behavior
@@ -1036,7 +1048,8 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
   }
 
   /**
-   * Render all sublayers
+   * Render all sublayers.
+   * @returns Ordered array of sublayers (highlight, select, hover, elevation, main, labels) from bottom to top.
    */
   renderLayers(): Layer[] {
     // Compute features once per render cycle for performance

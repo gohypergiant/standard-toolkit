@@ -23,9 +23,9 @@ import type { Rgba255Tuple } from '@accelint/predicates';
  * Controls sizing and interaction feedback for shape rendering.
  */
 export const MAP_INTERACTION = {
-  LINE_WIDTH_MIN_PIXELS: 1, // Minimum line width in pixels
-  ICON_SIZE: 38, // Size of shape icons
-  ICON_HOVER_SIZE_INCREASE: 5, // Additional pixels added on hover
+  LINE_WIDTH_MIN_PIXELS: 1,
+  ICON_SIZE: 38,
+  ICON_HOVER_SIZE_INCREASE: 5,
 } as const;
 
 /**
@@ -94,6 +94,9 @@ export const OVERLAY_FILL_OPACITY = 0.25;
 export const DASH_EXTENSION = new PathStyleExtension({ dash: true });
 
 export const COFFIN_CORNER_EXTENSION = new CoffinCornerExtension();
+
+/** Stable extensions array for GeoJsonLayer — avoids new reference per render triggering getShaders() re-evaluation. */
+export const DISPLAY_EXTENSIONS = [DASH_EXTENSION, COFFIN_CORNER_EXTENSION];
 
 /** Readonly [r, g, b, a] tuple of DEFAULT_COLORS.highlight, pre-spread at module load for hot-path usage. */
 export const HIGHLIGHT_COLOR_TUPLE: Rgba255Tuple = [
