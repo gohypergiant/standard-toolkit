@@ -10,34 +10,17 @@
  * governing permissions and limitations under the License.
  */
 
-@reference '@accelint/design-foundation/styles';
+import 'server-only';
+import { ErrorComponent } from './error';
+import { LoadingComponent } from './loading';
+import { ColorPickerExampleServer } from './server';
 
-@layer components.l1 {
-  .picker {
-    @apply gap-s p-xxs flex flex-wrap;
-  }
-
-  .item {
-    @apply w-fit cursor-pointer outline outline-offset-1 outline-transparent;
-
-    @variant hover {
-      @apply outline-interactive-hover;
-    }
-
-    @variant focus-visible {
-      @apply outline-interactive-hover;
-    }
-
-    @variant pressed {
-      @apply outline-interactive-pressed;
-    }
-
-    @variant selected {
-      @apply outline-accent-primary-bold cursor-default;
-    }
-  }
-
-  .swatch {
-    @apply size-l;
-  }
+export function ColorPickerExample() {
+  return (
+    <ErrorComponent>
+      <LoadingComponent>
+        <ColorPickerExampleServer />
+      </LoadingComponent>
+    </ErrorComponent>
+  );
 }

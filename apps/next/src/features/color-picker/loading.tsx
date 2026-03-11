@@ -10,34 +10,15 @@
  * governing permissions and limitations under the License.
  */
 
-@reference '@accelint/design-foundation/styles';
+import { Suspense } from 'react';
+import type { PropsWithChildren } from 'react';
 
-@layer components.l1 {
-  .picker {
-    @apply gap-s p-xxs flex flex-wrap;
-  }
+export function Fallback() {
+  return <div>Loading...</div>;
+}
 
-  .item {
-    @apply w-fit cursor-pointer outline outline-offset-1 outline-transparent;
+export function LoadingComponent(props: PropsWithChildren) {
+  const { children } = props;
 
-    @variant hover {
-      @apply outline-interactive-hover;
-    }
-
-    @variant focus-visible {
-      @apply outline-interactive-hover;
-    }
-
-    @variant pressed {
-      @apply outline-interactive-pressed;
-    }
-
-    @variant selected {
-      @apply outline-accent-primary-bold cursor-default;
-    }
-  }
-
-  .swatch {
-    @apply size-l;
-  }
+  return <Suspense fallback={<Fallback />}>{children}</Suspense>;
 }

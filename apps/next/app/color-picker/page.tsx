@@ -10,34 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
-@reference '@accelint/design-foundation/styles';
+import { BentoGroup } from '~/components/bento';
+import { ColorPickerExample } from '~/features/color-picker';
 
-@layer components.l1 {
-  .picker {
-    @apply gap-s p-xxs flex flex-wrap;
-  }
-
-  .item {
-    @apply w-fit cursor-pointer outline outline-offset-1 outline-transparent;
-
-    @variant hover {
-      @apply outline-interactive-hover;
-    }
-
-    @variant focus-visible {
-      @apply outline-interactive-hover;
-    }
-
-    @variant pressed {
-      @apply outline-interactive-pressed;
-    }
-
-    @variant selected {
-      @apply outline-accent-primary-bold cursor-default;
-    }
-  }
-
-  .swatch {
-    @apply size-l;
-  }
+export default function Page() {
+  return (
+    <BentoGroup>
+      <ColorPickerExample />
+    </BentoGroup>
+  );
 }
