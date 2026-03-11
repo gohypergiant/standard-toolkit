@@ -11,8 +11,10 @@
  */
 
 import { type PropsWithChildren, useMemo } from 'react';
+import { CurrentTime } from './components/current-time';
 import { RowsVirtualizer } from './components/rows-virtualizer';
 import { Timeline } from './components/timeline';
+import { GANTT_CONTAINER_TOP_PADDING_PX } from './constants';
 import { GanttProvider } from './context';
 import { useGanttInit } from './hooks/use-gantt-init';
 import styles from './styles.module.css';
@@ -21,6 +23,7 @@ import type { ThresholdProps, Timescale } from './types';
 type GanttProps = {
   startTimeMs: number;
   endTimeMs: number;
+  currentTimeMs?: number;
   timescale: Timescale;
   thresholdProps?: ThresholdProps;
 };
@@ -28,6 +31,7 @@ type GanttProps = {
 export function Gantt({
   startTimeMs,
   endTimeMs,
+  currentTimeMs,
   timescale,
   thresholdProps,
   children,
@@ -51,7 +55,11 @@ export function Gantt({
       threshold={thresholdProps?.threshold}
       onThresholdMet={thresholdProps?.onThresholdMet}
     >
-      <div className={styles.container}>
+      <div
+        className={styles.container}
+        data-padding-top={GANTT_CONTAINER_TOP_PADDING_PX}
+      >
+        {currentTimeMs && <CurrentTime currentTimeMs={currentTimeMs} />}
         <Timeline />
         <RowsVirtualizer>{children}</RowsVirtualizer>
       </div>

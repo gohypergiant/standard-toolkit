@@ -14,7 +14,10 @@
 
 @layer components.l1 {
   .container {
-    @apply flex max-h-full w-full flex-col overflow-hidden;
+    --padding-top: attr(data-padding-top px);
+
+    @apply relative flex max-h-full w-full flex-col overflow-hidden;
+    padding-top: var(--padding-top);
   }
 
   .rows-container {
