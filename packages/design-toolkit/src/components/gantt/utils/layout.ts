@@ -44,6 +44,14 @@ function deriveElementTranslateX(
   return distanceFromTimelineStart + offsetPx;
 }
 
+export function deriveCurrentTimeTranslateX(
+  currentTimeMs: number,
+  msPerPx: number,
+  currentPositionMs: number,
+) {
+  return (currentTimeMs - currentPositionMs) / msPerPx;
+}
+
 export function deriveRangeElementLayout(
   renderedRegionBounds: TimeBounds,
   rangeElementBounds: TimeBounds,

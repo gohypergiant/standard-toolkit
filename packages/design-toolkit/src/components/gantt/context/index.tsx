@@ -44,6 +44,9 @@ export type GanttContextValue = {
   threshold?: Threshold;
   onThresholdMet?: (metThresholds: MetThresholdData[]) => void;
   assignTimelineContainerElementRef: (node: HTMLDivElement) => void;
+  assignScrollContainerElementRef: (node: HTMLDivElement) => void;
+  scrollContainerElement: HTMLDivElement | null;
+  timelineContainerElement: HTMLDivElement | null;
 };
 
 export const GanttContext = createContext<GanttContextValue | undefined>(
@@ -65,6 +68,8 @@ export function GanttProvider({
   onThresholdMet,
 }: PropsWithChildren<GanttProviderProps>) {
   const [timelineContainerElement, setTimelineContainerElement] =
+    useState<HTMLDivElement | null>(null);
+  const [scrollContainerElement, setScrollContainerElement] =
     useState<HTMLDivElement | null>(null);
 
   const msPerPx = getMsPerPx(timescale);
@@ -102,9 +107,21 @@ export function GanttProvider({
     [],
   );
 
+  const assignScrollContainerElementRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (!node) {
+        return;
+      }
+
+      setScrollContainerElement(node);
+    },
+    [],
+  );
+
   const value = useMemo(
     () => ({
       assignTimelineContainerElementRef,
+      assignScrollContainerElementRef,
       msPerPx,
       renderedRegionBounds,
       timescale,
@@ -112,9 +129,12 @@ export function GanttProvider({
       totalBounds,
       threshold,
       onThresholdMet,
+      scrollContainerElement,
+      timelineContainerElement,
     }),
     [
       assignTimelineContainerElementRef,
+      assignScrollContainerElementRef,
       msPerPx,
       renderedRegionBounds,
       timescale,
@@ -122,6 +142,8 @@ export function GanttProvider({
       totalBounds,
       threshold,
       onThresholdMet,
+      scrollContainerElement,
+      timelineContainerElement,
     ],
   );
 

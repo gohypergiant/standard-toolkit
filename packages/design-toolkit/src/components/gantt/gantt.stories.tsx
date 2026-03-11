@@ -13,6 +13,7 @@
 import { useMemo } from 'react';
 import { Gantt } from './';
 import {
+  CURRENT_TIME_MS,
   DATASET_JAN25_TO_JAN28,
   DATASET_JAN27_TO_JAN30,
   DATASET_JAN29_TO_FEB1,
@@ -29,6 +30,7 @@ import type { Timescale } from './types';
 type GanttStoryControls = {
   datasetKey: keyof typeof datasetKeys;
   timescale: Timescale;
+  currentTimeMs: number;
 };
 
 const datasetKeys: Record<string, typeof DATASET_JAN27_TO_JAN30> = {
@@ -41,6 +43,7 @@ const meta = {
   title: 'Components/Gantt',
   args: {
     datasetKey: Object.keys(datasetKeys)[0] as keyof typeof datasetKeys,
+    currentTimeMs: CURRENT_TIME_MS,
     timescale: '1h',
   } satisfies GanttStoryControls,
   argTypes: {
@@ -79,6 +82,7 @@ const meta = {
         <Gantt
           startTimeMs={dataset.startTimeMs}
           endTimeMs={dataset.endTimeMs}
+          currentTimeMs={args.currentTimeMs}
           timescale={args.timescale}
           thresholdProps={thresholdProps}
         >
