@@ -40,6 +40,7 @@ export {
 } from './shapes';
 export { SymbolLayer, type SymbolLayerProps } from './symbol-layer';
 export { HtmlOverlayWidget } from './widgets/html-overlay';
+export { HtmlOverlayItem } from './widgets/html-overlay/item';
 export { useHtmlOverlay } from './widgets/html-overlay/use-html-overlay';
 export type {
   BaseMapProps,

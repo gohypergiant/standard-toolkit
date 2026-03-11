@@ -59,7 +59,7 @@ export function useHtmlOverlay(
   const widgetRef = useRef<HtmlOverlayWidget | null>(null);
 
   const { items, viewId, overflowMargin, zIndex, id, className } = props;
-  console.log(items);
+
   widgetRef.current ??= new HtmlOverlayWidget({
     ...(props as HtmlOverlayWidgetProps),
     onCreateOverlay: (el) => {
