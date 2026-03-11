@@ -147,6 +147,14 @@
         appearance: none;
       }
     }
+
+    :global(.dark) &[type='date'],
+    :global(.dark) &[type='time'],
+    :global(.dark) &[type='datetime-local'] {
+      &::-webkit-calendar-picker-indicator {
+        filter: invert(1);
+      }
+    }
   }
 
   .suffix {

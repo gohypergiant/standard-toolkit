@@ -12,6 +12,7 @@
 
 import { extend } from '@deckgl-fiber-renderer/dom';
 import { SymbolLayer, type SymbolLayerProps } from './index';
+import type { CoffinCornerExtensionProps } from '../extensions';
 
 extend({ SymbolLayer });
 
@@ -38,7 +39,7 @@ declare global {
          * />
          * ```
          */
-        symbolLayer: SymbolLayerProps;
+        symbolLayer: CoffinCornerExtensionProps<SymbolLayerProps>;
       }
     }
   }
