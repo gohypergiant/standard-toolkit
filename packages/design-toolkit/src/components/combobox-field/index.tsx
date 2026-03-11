@@ -13,8 +13,28 @@
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import ChevronDown from '@accelint/icons/chevron-down';
+import { CollectionNode } from '@react-aria/collections';
 import { useControlledState } from '@react-stately/utils';
 import { useCallback, useRef } from 'react';
+
+// Patch CollectionNode.childNodes getter to return an empty array instead of
+// throwing. React 19 dev-mode profiling (logComponentRender → addObjectDiffToProperties)
+// accesses this getter when diffing component props during commitPassiveMountOnFiber.
+// The thrown error prevents useComboBoxState's effect from running, breaking
+// internal state tracking and causing input value resets on every keystroke
+// with static children.
+// https://github.com/adobe/react-spectrum/issues/9405
+if (
+  Object.getOwnPropertyDescriptor(CollectionNode.prototype, 'childNodes')?.get
+) {
+  Object.defineProperty(CollectionNode.prototype, 'childNodes', {
+    get() {
+      return [];
+    },
+    configurable: true,
+  });
+}
+
 import {
   Button,
   ComboBox,
