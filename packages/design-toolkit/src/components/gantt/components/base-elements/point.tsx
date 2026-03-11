@@ -21,24 +21,18 @@ export type PointProps = HTMLAttributes<HTMLDivElement> & {
   color?: RowElementColorProp;
 };
 
-export function Point({
-  timeMs,
+function PointInner({
   children,
+  timeMs,
   color = 'accent',
   ...rest
 }: PropsWithChildren<PointProps>) {
-  const { renderedRegionBounds } = useGanttContext();
-
   const [element, setElement] = useState<HTMLDivElement | null>(null);
 
   usePointElementLayout({
     element,
     timeMs,
   });
-
-  if (!timestampWithinBounds(timeMs, renderedRegionBounds)) {
-    return null;
-  }
 
   const assignElementRef = (node: HTMLDivElement) => {
     setElement(node);
@@ -49,4 +43,14 @@ export function Point({
       {children}
     </div>
   );
+}
+
+export function Point(props: PropsWithChildren<PointProps>) {
+  const { renderedRegionBounds } = useGanttContext();
+
+  if (!timestampWithinBounds(props.timeMs, renderedRegionBounds)) {
+    return null;
+  }
+
+  return <PointInner {...props} />;
 }

@@ -23,14 +23,13 @@ export type RangeProps = HTMLAttributes<HTMLDivElement> & {
   color?: RowElementColorProp;
 };
 
-export function Range({
+function RangeInner({
   children,
   startMs,
   endMs,
   color = 'accent',
   ...rest
 }: PropsWithChildren<RangeProps>) {
-  const { renderedRegionBounds } = useGanttContext();
   const [element, setElement] = useState<HTMLDivElement | null>(null);
 
   useRangeElementLayout({
@@ -41,10 +40,6 @@ export function Range({
     },
   });
 
-  if (!shouldRenderRangeElement(renderedRegionBounds, { startMs, endMs })) {
-    return null;
-  }
-
   const assignElementRef = (node: HTMLDivElement) => {
     setElement(node);
   };
@@ -54,4 +49,15 @@ export function Range({
       {children}
     </div>
   );
+}
+
+export function Range(props: PropsWithChildren<RangeProps>) {
+  const { renderedRegionBounds } = useGanttContext();
+  const { startMs, endMs } = props;
+
+  if (!shouldRenderRangeElement(renderedRegionBounds, { startMs, endMs })) {
+    return null;
+  }
+
+  return <RangeInner {...props} />;
 }
