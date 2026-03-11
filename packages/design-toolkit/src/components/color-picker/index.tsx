@@ -12,13 +12,16 @@
 'use client';
 
 import 'client-only';
+import { uuid } from '@accelint/core';
 import { clsx } from '@accelint/design-foundation/lib/utils';
+import { useMemo } from 'react';
 import {
   ColorSwatch,
   ColorSwatchPicker,
   ColorSwatchPickerItem,
   composeRenderProps,
 } from 'react-aria-components';
+import { Label } from '../label';
 import styles from './styles.module.css';
 import type { ColorPickerProps } from './types';
 
@@ -33,9 +36,12 @@ import type { ColorPickerProps } from './types';
  * @param props - The color picker props.
  * @param props.items - Array of color values to display as selectable swatches.
  * @param props.classNames - Custom class names for sub-elements.
+ * @param props.classNames.container - Class name for the outer container element.
+ * @param props.classNames.label - Class name for the label element.
  * @param props.classNames.picker - Class name for the picker container.
  * @param props.classNames.item - Class name for individual swatch items.
  * @param props.classNames.swatch - Class name for the color swatch elements.
+ * @param props.label - Label text displayed above the picker.
  * @returns The color picker component.
  *
  * @example
@@ -64,29 +70,53 @@ import type { ColorPickerProps } from './types';
  * - Supports all accessibility features from react-aria-components
  * - Uses a grid layout by default but can be customized via the layout prop
  */
-export function ColorPicker({ classNames, items, ...rest }: ColorPickerProps) {
+export function ColorPicker({
+  classNames,
+  isRequired,
+  items,
+  label,
+  ref,
+  ...rest
+}: ColorPickerProps) {
+  const labelId = useMemo(
+    () => (label ? uuid({ path: [label] }) : undefined),
+    [label],
+  );
+
   return (
-    <ColorSwatchPicker
-      {...rest}
-      className={composeRenderProps(classNames?.picker, (className) =>
-        clsx(styles.picker, className),
-      )}
-    >
-      {items.map((color) => (
-        <ColorSwatchPickerItem
-          key={color.toString('hexa')}
-          className={composeRenderProps(classNames?.item, (className) =>
-            clsx(styles.item, className),
-          )}
-          color={color}
+    <div ref={ref} className={clsx(styles.container, classNames?.container)}>
+      {label && (
+        <Label
+          className={classNames?.label}
+          id={labelId}
+          isRequired={isRequired}
         >
-          <ColorSwatch
-            className={composeRenderProps(classNames?.swatch, (className) =>
-              clsx(styles.swatch, className),
+          {label}
+        </Label>
+      )}
+      <ColorSwatchPicker
+        {...rest}
+        aria-labelledby={labelId}
+        className={composeRenderProps(classNames?.picker, (className) =>
+          clsx(styles.picker, className),
+        )}
+      >
+        {items.map((color) => (
+          <ColorSwatchPickerItem
+            key={color.toString('hexa')}
+            className={composeRenderProps(classNames?.item, (className) =>
+              clsx(styles.item, className),
             )}
-          />
-        </ColorSwatchPickerItem>
-      ))}
-    </ColorSwatchPicker>
+            color={color}
+          >
+            <ColorSwatch
+              className={composeRenderProps(classNames?.swatch, (className) =>
+                clsx(styles.swatch, className),
+              )}
+            />
+          </ColorSwatchPickerItem>
+        ))}
+      </ColorSwatchPicker>
+    </div>
   );
 }

@@ -14,6 +14,7 @@ import type {
   ColorSwatchPickerItemProps,
   ColorSwatchPickerProps,
   ColorSwatchProps,
+  LabelProps,
 } from 'react-aria-components';
 
 /**
@@ -26,6 +27,10 @@ export type ColorPickerProps = Omit<
   RefAttributes<HTMLDivElement> & {
     /** Custom class names for sub-elements. */
     classNames?: {
+      /** Class name for the outer container element. */
+      container?: string;
+      /** Class name for the label element. */
+      label?: LabelProps['className'];
       /** Class name for the picker container. */
       picker?: ColorSwatchPickerProps['className'];
       /** Class name for individual swatch items. */
@@ -35,4 +40,8 @@ export type ColorPickerProps = Omit<
     };
     /** Array of color values to display as selectable swatches. */
     items: ColorSwatchPickerItemProps['color'][];
+    /** Whether the associated field is required. */
+    isRequired?: boolean;
+    /** Label text displayed above the picker. */
+    label?: string;
   };
