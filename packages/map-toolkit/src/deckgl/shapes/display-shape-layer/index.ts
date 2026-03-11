@@ -734,6 +734,12 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       selectedEntityId: selectedShapeId,
       hoveredEntityId,
       getEntityId: (d: Shape['feature']) => d.properties?.shapeId as ShapeId,
+      selectedCoffinCornerColor: [
+        this.resolvedHighlight[0],
+        this.resolvedHighlight[1],
+        this.resolvedHighlight[2],
+        255,
+      ] as Rgba255Tuple,
 
       // Extensions: PathStyleExtension for dash patterns + CoffinCornerExtension for bracket indicators.
       // CoffinCornerExtension returns null from getShaders() on unsupported sublayer types

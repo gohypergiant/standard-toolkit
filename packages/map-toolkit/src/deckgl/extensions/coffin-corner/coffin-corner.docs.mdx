@@ -6,7 +6,7 @@ import * as CoffinCornerStories from './coffin-corner.stories';
 
 # Coffin Corner Extension
 
-A deck.gl layer extension that draws bracket-shaped "coffin corner" indicators around hovered and selected map entities. Works with IconLayer and anything that extends it (like SymbolLayer).
+A deck.gl layer extension that draws bracket-shaped "coffin corner" indicators around hovered and selected map entities. Works with IconLayer (and subclasses like SymbolLayer) and ScatterplotLayer.
 
 ## Quick Start
 
@@ -47,7 +47,7 @@ The system has three independent layers. The React hook is a convenience wrapper
 |-------|--------|------|
 | **React** | `useCoffinCorner(mapId, layerId)` | Reads state, sets `layerId` |
 | **Store** (framework-agnostic) | `coffinCornerStore` | Listens to map bus (click/hover events), emits domain events (selected/deselected), holds `{ selectedId, hoveredId }` |
-| **Extension** (pure deck.gl) | `CoffinCornerExtension` | Reads `selectedEntityId` / `hoveredEntityId`, injects SDF shader code into IconLayer, draws brackets on GPU |
+| **Extension** (pure deck.gl) | `CoffinCornerExtension` | Reads `selectedEntityId` / `hoveredEntityId`, injects SDF shader code into IconLayer/ScatterplotLayer, draws brackets on GPU |
 
 ## API
 
@@ -55,7 +55,7 @@ The system has three independent layers. The React hook is a convenience wrapper
 
 deck.gl `LayerExtension` that injects coffin corner shader code into the host layer.
 
-**Constraint:** Only works with `IconLayer` or layers that extend it (e.g., `SymbolLayer`). The shader depends on `iconsTexture` and `vTextureCoords`, which are IconLayer-specific.
+**Supported layers:** `IconLayer` (and subclasses like `SymbolLayer`) and `ScatterplotLayer`. Each layer type gets its own shader path — IconLayer samples `iconsTexture` to composite brackets over the icon, while ScatterplotLayer replicates the circle fill/stroke logic and expands the quad to make room for brackets beyond the circle edge.
 
 **Props (added to the host layer):**
 
@@ -305,6 +305,8 @@ The alpha channel modulates bracket opacity. `[255, 0, 0, 127]` gives you semi-t
 
 ## Limitations
 
-- **IconLayer only.** The shader depends on `iconsTexture` and `vTextureCoords`, which only exist on `IconLayer` and its subclasses (`SymbolLayer`, `MultiIconLayer`). It won't work on `ScatterplotLayer`, `GeoJsonLayer` (for circle points), or other layer types. Supporting non-icon point layers is a potential follow-on — the SDF bracket math is reusable, but the compositing logic would need to differ per layer type.
+- **IconLayer and ScatterplotLayer only.** Other layer types (PathLayer, SolidPolygonLayer, etc.) are not supported — the extension returns `null` from `getShaders()` for unsupported types.
+
+- **Globe mode (ScatterplotLayer).** The scatterplot quad expansion uses clip-space XY manipulation, which conflicts with globe projection depth. The extension skips bracket rendering on ScatterplotLayer in globe mode to prevent points from disappearing. IconLayer brackets are unaffected. This is related to a known deck.gl globe occlusion issue (PR #9975).
 
 - **No deck.gl picking.** Selection is tracked in a store rather than using deck.gl's built-in picking, since picking has issues during viewport updates (panning/zooming). This means the extension doesn't integrate with deck.gl's `highlightedObjectIndex` or `autoHighlight`.

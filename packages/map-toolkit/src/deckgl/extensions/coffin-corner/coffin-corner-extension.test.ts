@@ -447,9 +447,9 @@ describe('CoffinCornerExtension', () => {
 
       const shaders = extension.getShaders.call(layer, extension);
 
-      expect(shaders.modules).toHaveLength(1);
-      expect(shaders.modules[0]?.name).toBe('coffinCorner');
-      expect(Object.keys(shaders.inject)).toEqual(
+      expect(shaders?.modules).toHaveLength(1);
+      expect(shaders?.modules[0]?.name).toBe('coffinCorner');
+      expect(Object.keys(shaders?.inject)).toEqual(
         expect.arrayContaining([
           'vs:#decl',
           'vs:#main-end',
