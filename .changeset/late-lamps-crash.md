@@ -1,10 +1,11 @@
 ---
-"@accelint/map-toolkit": minor
+"@accelint/map-toolkit": patch
 ---
 
-Add CoffinCornerExtension: a GPU-based shader extension that draws bracket-shaped selection/hover indicators around Point shapes using signed distance functions. Replaces the previous icon-atlas approach for coffin corners in shapes layers, removing the dependency on consumer-provided sprite sheets.
+Extend CoffinCornerExtension to support ScatterplotLayer (circle points without icons) alongside IconLayer, and refine DisplayShapeLayer integration.
 
-- New `CoffinCornerExtension` layer extension for IconLayer, SymbolLayer, and ScatterplotLayer
-- New `useCoffinCorner` React hook for automatic map bus event wiring
-- New `coffinCornerStore` for framework-agnostic imperative usage
-- DisplayShapeLayer now uses shader coffin corners for all Point geometries and forwards `highlightColor` as the bracket fill color
+- CoffinCornerExtension now supports ScatterplotLayer with quad expansion and circle-replicating fragment shaders
+- DisplayShapeLayer skips the highlight outline layer for all Point geometries (coffin corner brackets handle hover/select feedback)
+- DisplayShapeLayer forwards `highlightColor` as the bracket fill color via a cached tuple to avoid per-render allocations
+- Stable `DISPLAY_EXTENSIONS` module-level constant prevents unnecessary `getShaders()` re-evaluation
+- Removed icon-atlas-based coffin corner SVG sprites (replaced by shader SDF rendering)
