@@ -377,6 +377,26 @@
     }
   }
 
+  .highlight {
+    @apply fg-accent-primary-bold bg-transparent;
+
+    @variant group-hover/options-item {
+      color: inherit;
+    }
+
+    @variant group-focus-visible/options-item {
+      color: inherit;
+    }
+
+    @variant group-selected/options-item {
+      color: inherit;
+    }
+
+    @variant group-disabled/options-item {
+      color: inherit;
+    }
+  }
+
   .description {
     @apply fg-primary-muted text-body-xs truncate;
 
