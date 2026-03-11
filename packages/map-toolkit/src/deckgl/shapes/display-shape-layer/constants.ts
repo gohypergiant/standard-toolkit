@@ -12,6 +12,7 @@
 
 'use client';
 import { PathStyleExtension } from '@deck.gl/extensions';
+import { CoffinCornerExtension } from '../../extensions/coffin-corner/coffin-corner-extension';
 import { DEFAULT_COLORS } from '../shared/constants';
 import type { Rgba255Tuple } from '@accelint/predicates';
 
@@ -90,7 +91,9 @@ export const BRIGHTNESS_FACTOR = {
 export const OVERLAY_FILL_OPACITY = 0.25;
 
 /** Reusable deck.gl PathStyleExtension enabling dash patterns on GeoJsonLayer lines. */
-export const DASH_EXTENSION = [new PathStyleExtension({ dash: true })];
+export const DASH_EXTENSION = new PathStyleExtension({ dash: true });
+
+export const COFFIN_CORNER_EXTENSION = new CoffinCornerExtension();
 
 /** Readonly [r, g, b, a] tuple of DEFAULT_COLORS.highlight, pre-spread at module load for hot-path usage. */
 export const HIGHLIGHT_COLOR_TUPLE: Rgba255Tuple = [

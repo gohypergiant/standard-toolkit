@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { IconLayer } from '@deck.gl/layers';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { CoffinCornerExtension } from './coffin-corner-extension';
 import type { Rgba255Tuple } from '@accelint/predicates';
@@ -37,7 +38,11 @@ function createMockLayer(propsOverrides: Record<string, unknown> = {}) {
   const invalidate = vi.fn();
   const addInstanced = vi.fn();
 
-  return {
+  // Use Object.create so the mock passes `instanceof IconLayer` checks
+  // in the extension's lifecycle guards.
+  // biome-ignore lint/suspicious/noExplicitAny: Mock layer only implements the subset of Layer the extension uses.
+  const layer = Object.create(IconLayer.prototype) as any;
+  Object.assign(layer, {
     state: {
       selectedEntities: new Map<EntityId, number>(),
       hoveredEntities: new Map<EntityId, number>(),
@@ -47,8 +52,8 @@ function createMockLayer(propsOverrides: Record<string, unknown> = {}) {
     setShaderModuleProps: vi.fn(),
     invalidate,
     addInstanced,
-    // biome-ignore lint/suspicious/noExplicitAny: Mock layer only implements the subset of Layer the extension uses.
-  } as any;
+  });
+  return layer;
 }
 
 describe('CoffinCornerExtension', () => {
