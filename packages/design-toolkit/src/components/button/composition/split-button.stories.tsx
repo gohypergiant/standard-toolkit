@@ -20,11 +20,11 @@ import { MenuTrigger } from '@/components/menu/trigger';
 import { Tooltip } from '@/components/tooltip';
 import { TooltipTrigger } from '@/components/tooltip/trigger';
 import { Button } from '../';
-import { ToggleButton } from '../toggle';
 import type { StoryObj } from '@storybook/react-vite';
 
 type StoryArgs = {
   buttonColor: 'mono-muted' | 'mono-bold' | 'accent';
+  buttonSize: 'large' | 'medium' | 'small' | 'xsmall';
   menuVariant: 'compact' | 'cozy';
   isDisabled: boolean;
 };
@@ -34,11 +34,21 @@ const meta = {
   tags: ['!autodocs'],
   args: {
     buttonColor: 'mono-muted',
+    buttonSize: 'medium',
+    menuVariant: 'compact',
   },
   argTypes: {
     buttonColor: {
       control: 'select',
       options: ['mono-muted', 'mono-bold', 'accent'],
+    },
+    buttonSize: {
+      control: 'select',
+      options: ['large', 'medium', 'small', 'xsmall'],
+    },
+    menuVariant: {
+      control: 'select',
+      options: ['compact', 'cozy'],
     },
     isDisabled: {
       control: 'boolean',
@@ -62,7 +72,8 @@ export const Default: Story = {
       <div className='flex flex-row'>
         <Button
           variant='icon'
-          color='mono-muted'
+          size={args.buttonSize}
+          color={args.buttonColor}
           isDisabled={args.isDisabled}
           className='rounded-r-none'
         >
@@ -72,17 +83,17 @@ export const Default: Story = {
         </Button>
         <TooltipTrigger>
           <MenuTrigger onOpenChange={setIsOpen}>
-            <ToggleButton
+            <Button
               variant='icon'
               color={args.buttonColor}
               className='w-m min-w-m rounded-l-none p-0'
               isDisabled={args.isDisabled}
-              isSelected={isOpen}
+              size={args.buttonSize}
             >
               <Icon style={chevronStyle(isOpen)} className='flex h-full w-m'>
                 <ChevronDown />
               </Icon>
-            </ToggleButton>
+            </Button>
             <Tooltip>Tool label</Tooltip>
             <Menu variant={args.menuVariant}>
               <MenuItem id='option-1'>
