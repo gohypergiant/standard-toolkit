@@ -165,6 +165,7 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
     size = 'medium',
     variant = 'inline',
     showFormatButton = true,
+    formatButtonTooltip = 'View/copy other formats',
     isDisabled = false,
     isInvalid: isInvalidProp = false,
     isRequired = false,
@@ -444,7 +445,7 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
                   </PopoverContent>
                 </Popover>
               </DialogTrigger>
-              <Tooltip>View/copy other formats</Tooltip>
+              <Tooltip>{formatButtonTooltip}</Tooltip>
             </TooltipTrigger>
           )}
         </div>
