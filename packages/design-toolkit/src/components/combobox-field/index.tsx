@@ -48,15 +48,14 @@ import {
   useContextProps,
   Virtualizer,
 } from 'react-aria-components';
+import { ClearButton } from '../button/__internal__/clear';
 import { Icon } from '../icon';
 import { Label } from '../label';
 import { Options } from '../options';
 import { ComboBoxFieldContext } from './context';
-import clearButtonStyles from '../button/__internal__/styles.module.css';
 import styles from './styles.module.css';
 import type { OptionsDataItem } from '../options/types';
 import type { ComboBoxFieldProps } from './types';
-import CancelFill from '@accelint/icons/cancel-fill';
 
 /**
  * ComboBoxField - Accessible searchable combobox with dropdown options
@@ -175,21 +174,14 @@ export function ComboBoxField<T extends OptionsDataItem>({
                 title={inputProps?.value ? String(inputProps?.value) : ''}
               />
               {!isReadOnly && isClearable && (
-                <button
-                  type='button'
-                  aria-label='Clear'
-                  className={clsx(
-                    clearButtonStyles.clearButton,
-                    styles.clear,
+                <ClearButton
+                  className={composeRenderProps(
                     classNames?.clear,
+                    (className) => clsx(styles.clear, className),
                   )}
-                  onClick={handleClear}
-                  disabled={isDisabled}
-                >
-                  <Icon size='small'>
-                    <CancelFill />
-                  </Icon>
-                </button>
+                  isDisabled={isDisabled}
+                  onPress={handleClear}
+                />
               )}
               {!isReadOnly && (
                 <Button
