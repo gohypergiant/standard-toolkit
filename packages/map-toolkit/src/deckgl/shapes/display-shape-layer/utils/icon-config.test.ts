@@ -11,9 +11,8 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { COFFIN_CORNERS, MAP_INTERACTION } from '../constants';
+import { MAP_INTERACTION } from '../constants';
 import {
-  extendMappingWithCoffinCorners,
   getIconConfig,
   getIconLayerProps,
   getIconUpdateTriggers,
@@ -236,59 +235,6 @@ describe('Icon Config Utilities', () => {
         getIconColor: [features],
         getIconPixelOffset: [features],
       });
-    });
-  });
-
-  describe('extendMappingWithCoffinCorners', () => {
-    it('adds coffin corner entries to base mapping', () => {
-      const result = extendMappingWithCoffinCorners(TEST_MAPPING);
-
-      expect(result).toHaveProperty('marker');
-      expect(result).toHaveProperty(COFFIN_CORNERS.HOVER_ICON);
-      expect(result).toHaveProperty(COFFIN_CORNERS.SELECTED_ICON);
-      expect(result).toHaveProperty(COFFIN_CORNERS.SELECTED_HOVER_ICON);
-    });
-
-    it('preserves original mapping entries', () => {
-      const result = extendMappingWithCoffinCorners(TEST_MAPPING);
-
-      expect(result.marker).toEqual(TEST_MAPPING.marker);
-    });
-
-    it('coffin corner entries have correct dimensions', () => {
-      const result = extendMappingWithCoffinCorners(TEST_MAPPING);
-
-      for (const key of [
-        COFFIN_CORNERS.HOVER_ICON,
-        COFFIN_CORNERS.SELECTED_ICON,
-        COFFIN_CORNERS.SELECTED_HOVER_ICON,
-      ]) {
-        expect(result[key]).toMatchObject({
-          width: 76,
-          height: 76,
-          mask: false,
-        });
-      }
-    });
-
-    it('returns cached result for same base mapping identity', () => {
-      const first = extendMappingWithCoffinCorners(TEST_MAPPING);
-      const second = extendMappingWithCoffinCorners(TEST_MAPPING);
-
-      expect(first).toBe(second);
-    });
-
-    it('recomputes when base mapping identity changes', () => {
-      const mappingA = { a: { x: 0, y: 0, width: 10, height: 10 } };
-      const mappingB = { b: { x: 0, y: 0, width: 20, height: 20 } };
-
-      const resultA = extendMappingWithCoffinCorners(mappingA);
-      const resultB = extendMappingWithCoffinCorners(mappingB);
-
-      expect(resultA).not.toBe(resultB);
-      expect(resultA).toHaveProperty('a');
-      expect(resultB).toHaveProperty('b');
-      expect(resultB).not.toHaveProperty('a');
     });
   });
 });
