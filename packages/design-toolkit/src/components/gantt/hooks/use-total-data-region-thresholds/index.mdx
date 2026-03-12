@@ -217,9 +217,15 @@ type UseTotalDataRegionThresholdsProps = {
     have been met. In this case, the consumer might request a larger window of
     data to be provided to the Gantt component, if available, to accommodate
     larger rendered temporal regions.
-- The `onThresholdMet` callback will be invoked on every render where thresholds
-  are met. Since renders occur only when the rendered region changes, each
-  invocation represents a new region state. The consumer is responsible for
-  implementing any de-duplication logic if needed (e.g., avoiding redundant
-  data fetches).
+- The `onThresholdMet` callback is invoked only for **newly entered** thresholds — those
+  not already present (with the same axis, direction, _and_ value) from the previous
+  render. If a threshold remains continuously met with the same derived value across
+  re-renders, `onThresholdMet` will not fire again until the threshold is exited and
+  re-entered, or until the derived threshold value changes (e.g., due to a `totalBounds`,
+  `timescale`, or `threshold` prop change).
+
+  > **Breaking change**: Previous behavior fired `onThresholdMet` on every render where
+  > thresholds were met. Consumers that relied on repeated notifications for the same
+  > threshold (e.g., triggering a fetch on every scroll tick while near a boundary) will
+  > need to adapt their logic accordingly.
 

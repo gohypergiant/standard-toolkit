@@ -24,41 +24,31 @@ import {
 } from '../../utils/thresholds';
 import type { MetThresholdData } from '../../types';
 
-type ThresholdKey =
-  | 'horizontal:start'
-  | 'horizontal:end'
-  | 'vertical:start'
-  | 'vertical:end';
-
-type ThresholdState = Record<ThresholdKey, boolean>;
-
-function toThresholdKey(item: MetThresholdData): ThresholdKey {
-  return `${item.axis}:${item.direction}`;
+function toThresholdKey(item: MetThresholdData): string {
+  return `${item.axis}:${item.direction}:${item.value}`;
 }
 
 function createThresholdProjection() {
-  const state: ThresholdState = {
-    'horizontal:start': false,
-    'horizontal:end': false,
-    'vertical:start': false,
-    'vertical:end': false,
-  };
+  const state = new Set<string>();
 
   function update(metThresholds: MetThresholdData[]): MetThresholdData[] {
-    const nextKeys = new Set(metThresholds.map(toThresholdKey));
-
     const newlyEntered = metThresholds.filter(
-      (item) => !state[toThresholdKey(item)],
+      (item) => !state.has(toThresholdKey(item)),
     );
 
-    for (const key of Object.keys(state) as ThresholdKey[]) {
-      state[key] = nextKeys.has(key);
+    state.clear();
+    for (const item of metThresholds) {
+      state.add(toThresholdKey(item));
     }
 
     return newlyEntered;
   }
 
-  return { update };
+  function reset() {
+    state.clear();
+  }
+
+  return { update, reset };
 }
 
 type UseTotalDataRegionThresholdsProps = {
@@ -77,7 +67,12 @@ export function useTotalDataRegionThresholds({
   totalRowsCount,
   scrollContainerElement,
 }: UseTotalDataRegionThresholdsProps) {
-  const projectionRef = useRef(createThresholdProjection());
+  const projectionRef = useRef<ReturnType<
+    typeof createThresholdProjection
+  > | null>(null);
+  if (projectionRef.current === null) {
+    projectionRef.current = createThresholdProjection();
+  }
 
   const roundedCurrentRowScrollPx = useGanttStore(
     selectors.roundedCurrentRowScrollPx,
@@ -103,6 +98,7 @@ export function useTotalDataRegionThresholds({
         threshold,
       )
     ) {
+      projectionRef.current?.reset();
       return;
     }
 
@@ -135,7 +131,7 @@ export function useTotalDataRegionThresholds({
       rowIndexThresholds,
     );
 
-    const newlyMet = projectionRef.current.update(metThresholds);
+    const newlyMet = projectionRef.current?.update(metThresholds) ?? [];
 
     if (newlyMet.length > 0) {
       onThresholdMet(newlyMet);
