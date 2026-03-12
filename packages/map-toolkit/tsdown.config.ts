@@ -27,6 +27,9 @@ export default defineConfig({
     '!src/deckgl/shapes/**/constants.ts',
     '!src/deckgl/shapes/**/utils/**',
     '!src/deckgl/shapes/**/hooks/**',
+    // Exclude internal implementation details from extensions (not part of public API)
+    '!src/deckgl/extensions/**/store.ts',
+    '!src/deckgl/extensions/coffin-corner/fiber.ts',
     // Additional internal files
     '!src/deckgl/shapes/display-shape-layer/shape-label-layer.ts',
     '!src/shared/logger.ts',
