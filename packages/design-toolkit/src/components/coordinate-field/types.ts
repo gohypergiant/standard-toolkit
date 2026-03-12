@@ -276,4 +276,10 @@ export type CoordinateFieldProps = Omit<
      *   - Paste errors: `{ pastedText: string }`
      */
     onError?: (message: string, context?: Record<string, unknown>) => void;
+
+    /**
+     * Tooltip text for the format button
+     * @default 'View/copy other formats'
+     */
+    formatButtonTooltip?: string;
   };
