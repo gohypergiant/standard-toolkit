@@ -160,7 +160,33 @@ describe('useTotalDataRegionThresholds', () => {
     expect(mockOnThresholdMet).not.toHaveBeenCalled();
   });
 
-  it('should re-run effect when props change', () => {
+  it('should re-run effect when props change and thresholds are newly entered', () => {
+    vi.mocked(thresholdUtils.examineThresholds)
+      .mockReturnValueOnce([])
+      .mockReturnValueOnce(mockMetThresholds);
+
+    const { rerender } = renderHook(
+      (props) => useTotalDataRegionThresholds(props),
+      {
+        initialProps: {
+          totalRowsCount: 10,
+          scrollContainerElement: mockScrollContainerElement,
+        },
+      },
+    );
+
+    expect(mockOnThresholdMet).not.toHaveBeenCalled();
+
+    rerender({
+      totalRowsCount: 20,
+      scrollContainerElement: mockScrollContainerElement,
+    });
+
+    expect(mockOnThresholdMet).toHaveBeenCalledTimes(1);
+    expect(mockOnThresholdMet).toHaveBeenCalledWith(mockMetThresholds);
+  });
+
+  it('should not call onThresholdMet again when same threshold remains met across re-renders', () => {
     vi.mocked(thresholdUtils.examineThresholds).mockReturnValue(
       mockMetThresholds,
     );
@@ -182,6 +208,73 @@ describe('useTotalDataRegionThresholds', () => {
       scrollContainerElement: mockScrollContainerElement,
     });
 
+    expect(mockOnThresholdMet).toHaveBeenCalledTimes(1);
+  });
+
+  it('should call onThresholdMet again after threshold is left and re-entered', () => {
+    vi.mocked(thresholdUtils.examineThresholds)
+      .mockReturnValueOnce(mockMetThresholds) // enter
+      .mockReturnValueOnce([]) // leave
+      .mockReturnValueOnce(mockMetThresholds); // re-enter
+
+    const { rerender } = renderHook(
+      (props) => useTotalDataRegionThresholds(props),
+      {
+        initialProps: {
+          totalRowsCount: 10,
+          scrollContainerElement: mockScrollContainerElement,
+        },
+      },
+    );
+
+    expect(mockOnThresholdMet).toHaveBeenCalledTimes(1);
+
+    rerender({
+      totalRowsCount: 20,
+      scrollContainerElement: mockScrollContainerElement,
+    });
+
+    expect(mockOnThresholdMet).toHaveBeenCalledTimes(1);
+
+    rerender({
+      totalRowsCount: 30,
+      scrollContainerElement: mockScrollContainerElement,
+    });
+
     expect(mockOnThresholdMet).toHaveBeenCalledTimes(2);
+  });
+
+  it('should only call onThresholdMet for newly entered thresholds', () => {
+    const alreadyMet: MetThresholdData[] = [
+      { axis: 'horizontal', direction: 'start', value: 3000 },
+    ];
+    const newlyMet: MetThresholdData[] = [
+      { axis: 'vertical', direction: 'end', value: 7 },
+    ];
+
+    vi.mocked(thresholdUtils.examineThresholds)
+      .mockReturnValueOnce(alreadyMet)
+      .mockReturnValueOnce([...alreadyMet, ...newlyMet]);
+
+    const { rerender } = renderHook(
+      (props) => useTotalDataRegionThresholds(props),
+      {
+        initialProps: {
+          totalRowsCount: 10,
+          scrollContainerElement: mockScrollContainerElement,
+        },
+      },
+    );
+
+    expect(mockOnThresholdMet).toHaveBeenCalledTimes(1);
+    expect(mockOnThresholdMet).toHaveBeenCalledWith(alreadyMet);
+
+    rerender({
+      totalRowsCount: 20,
+      scrollContainerElement: mockScrollContainerElement,
+    });
+
+    expect(mockOnThresholdMet).toHaveBeenCalledTimes(2);
+    expect(mockOnThresholdMet).toHaveBeenLastCalledWith(newlyMet);
   });
 });
