@@ -10,7 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
+import { useTheme } from '../../providers/theme-provider';
 import { ColorPicker } from './';
+import type { Rgba255Tuple } from '@accelint/predicates/is-rgba-255-tuple';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
@@ -57,4 +59,54 @@ export const Controlled: Story = {
     value: '#30D27E',
   },
   render: ColorPicker,
+};
+
+const rgbaItems: Rgba255Tuple[] = [
+  [236, 236, 230, 255],
+  [137, 137, 137, 255],
+  [98, 166, 255, 255],
+  [48, 210, 126, 255],
+  [252, 164, 0, 255],
+  [212, 35, 29, 255],
+];
+
+export const RgbaTuples: Story = {
+  args: {
+    items: rgbaItems,
+    defaultValue: [48, 210, 126, 255] satisfies Rgba255Tuple,
+  },
+  render: ColorPicker,
+};
+
+export const MixedItems: Story = {
+  args: {
+    items: [
+      '#ECECE6',
+      [98, 166, 255, 255] satisfies Rgba255Tuple,
+      '#30D27E',
+      [252, 164, 0, 255] satisfies Rgba255Tuple,
+    ],
+  },
+  render: ColorPicker,
+};
+
+export const ThemeTokens: Story = {
+  render: (args) => {
+    const { tokens } = useTheme();
+
+    return (
+      <ColorPicker
+        {...args}
+        items={[
+          tokens.bg.accent.primary.bold,
+          tokens.bg.info.bold,
+          tokens.bg.advisory.bold,
+          tokens.bg.normal.bold,
+          tokens.bg.serious.bold,
+          tokens.bg.critical.bold,
+        ]}
+        defaultValue={tokens.bg.accent.primary.bold}
+      />
+    );
+  },
 };

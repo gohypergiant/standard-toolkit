@@ -12,7 +12,9 @@
 'use client';
 
 import 'client-only';
+import { rgba255TupleToHex } from '@accelint/converters/hex';
 import { clsx } from '@accelint/design-foundation/lib/utils';
+import { isRgba255Tuple } from '@accelint/predicates/is-rgba-255-tuple';
 import {
   ColorSwatch,
   ColorSwatchPicker,
@@ -64,29 +66,44 @@ import type { ColorPickerProps } from './types';
  * - Supports all accessibility features from react-aria-components
  * - Uses a grid layout by default but can be customized via the layout prop
  */
-export function ColorPicker({ classNames, items, ...rest }: ColorPickerProps) {
+function normalizeColor(value: unknown) {
+  return isRgba255Tuple(value) ? rgba255TupleToHex(value) : value;
+}
+
+export function ColorPicker({
+  classNames,
+  defaultValue,
+  items,
+  value,
+  ...rest
+}: ColorPickerProps) {
   return (
     <ColorSwatchPicker
       {...rest}
+      defaultValue={normalizeColor(defaultValue)}
+      value={normalizeColor(value)}
       className={composeRenderProps(classNames?.picker, (className) =>
         clsx(styles.picker, className),
       )}
     >
-      {items.map((color) => (
-        <ColorSwatchPickerItem
-          key={color.toString('hexa')}
-          className={composeRenderProps(classNames?.item, (className) =>
-            clsx(styles.item, className),
-          )}
-          color={color}
-        >
-          <ColorSwatch
-            className={composeRenderProps(classNames?.swatch, (className) =>
-              clsx(styles.swatch, className),
+      {items.map((item) => {
+        const color = normalizeColor(item);
+        return (
+          <ColorSwatchPickerItem
+            key={typeof color === 'string' ? color : color.toString('hexa')}
+            className={composeRenderProps(classNames?.item, (className) =>
+              clsx(styles.item, className),
             )}
-          />
-        </ColorSwatchPickerItem>
-      ))}
+            color={color}
+          >
+            <ColorSwatch
+              className={composeRenderProps(classNames?.swatch, (className) =>
+                clsx(styles.swatch, className),
+              )}
+            />
+          </ColorSwatchPickerItem>
+        );
+      })}
     </ColorSwatchPicker>
   );
 }

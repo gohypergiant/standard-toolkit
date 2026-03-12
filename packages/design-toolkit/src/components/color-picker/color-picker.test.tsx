@@ -13,6 +13,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { ColorPicker } from './';
+import type { Rgba255Tuple } from '@accelint/predicates/is-rgba-255-tuple';
 import type { ColorPickerProps } from './types';
 
 const items = [
@@ -24,7 +25,7 @@ const items = [
   '#D4231D',
 ];
 
-function setup(props: Partial<ColorPickerProps> = {}) {
+function setup(props: Partial<ColorPickerProps<string>> = {}) {
   return {
     ...render(<ColorPicker items={items} {...props} />),
     ...props,
@@ -36,5 +37,45 @@ describe('ColorPicker', () => {
     setup();
 
     expect(screen.getByRole('listbox')).toBeInTheDocument();
+  });
+
+  it('should render with RGBA tuple items', () => {
+    const rgbaItems: Rgba255Tuple[] = [
+      [255, 0, 0, 255],
+      [0, 255, 0, 255],
+      [0, 0, 255, 255],
+    ];
+
+    render(<ColorPicker items={rgbaItems} />);
+
+    const listbox = screen.getByRole('listbox');
+    expect(listbox).toBeInTheDocument();
+    expect(screen.getAllByRole('option')).toHaveLength(3);
+  });
+
+  it('should render with defaultValue as RGBA tuple', () => {
+    const rgbaItems: Rgba255Tuple[] = [
+      [255, 0, 0, 255],
+      [0, 255, 0, 255],
+    ];
+
+    render(<ColorPicker items={rgbaItems} defaultValue={[255, 0, 0, 255]} />);
+
+    expect(screen.getByRole('listbox')).toBeInTheDocument();
+  });
+
+  it('should render with mixed items (strings and RGBA tuples)', () => {
+    const mixedItems: (string | Rgba255Tuple)[] = [
+      '#FF0000',
+      [0, 255, 0, 255],
+      '#0000FF',
+      [255, 255, 0, 255],
+    ];
+
+    render(<ColorPicker items={mixedItems} />);
+
+    const listbox = screen.getByRole('listbox');
+    expect(listbox).toBeInTheDocument();
+    expect(screen.getAllByRole('option')).toHaveLength(4);
   });
 });
