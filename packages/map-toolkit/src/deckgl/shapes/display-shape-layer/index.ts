@@ -727,7 +727,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
           // Center the coffin corners on the point icon
           return [-1, -iconSize / 2];
         },
-        billboard: false,
+        billboard: true,
         pickable: false,
         updateTriggers: {
           getIcon: [selectedShapeId, this.state?.hoverIndex],

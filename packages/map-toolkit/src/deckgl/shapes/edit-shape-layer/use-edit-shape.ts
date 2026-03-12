@@ -17,7 +17,7 @@ import { useBus } from '@accelint/bus/react';
 import { useContext, useMemo } from 'react';
 import { MapContext } from '../../base-map/provider';
 import { EditShapeEvents } from './events';
-import { editStore } from './store';
+import { editStore, updateFeature as storeUpdateFeature } from './store';
 import type { UniqueId } from '@accelint/core';
 import type { EditShapeEvent } from './events';
 import type { UseEditShapeOptions, UseEditShapeReturn } from './types';
@@ -31,7 +31,7 @@ import type { UseEditShapeOptions, UseEditShapeReturn } from './types';
  *
  * @param mapId - Optional map instance ID. If not provided, will use the ID from `MapContext`.
  * @param options - Optional callbacks for onUpdate and onCancel events
- * @returns Editing state, edit/save/cancel functions, and convenience flags
+ * @returns Editing state, edit/save/cancel/updateFeature functions, and convenience flags
  * @throws Error if no `mapId` is provided and hook is used outside of `MapProvider`
  *
  * @example
@@ -124,9 +124,14 @@ export function useEditShape(
       edit,
       save,
       cancel,
+      updateFeature: (feature) => {
+        if (editingState?.editingShape) {
+          storeUpdateFeature(actualId, feature);
+        }
+      },
       isEditing: !!editingState?.editingShape,
       editingShape: editingState?.editingShape ?? null,
     }),
-    [editingState, edit, save, cancel],
+    [editingState, edit, save, cancel, actualId],
   );
 }

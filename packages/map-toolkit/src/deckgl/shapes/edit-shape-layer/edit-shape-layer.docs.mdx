@@ -148,6 +148,49 @@ function MapWithEditing() {
 }
 ```
 
+### Updating the Feature from a Form
+
+Use `updateFeature` to push changes from a form (e.g., a radius input) into the editing state. The map updates in real time and the changes are included when the user saves.
+
+```tsx
+import { useEditShape } from '@accelint/map-toolkit/deckgl/shapes';
+import { circle } from '@turf/turf';
+
+function CircleRadiusInput({ mapId }) {
+  const { editingState, updateFeature } = useEditShape(mapId);
+  const feature = editingState?.featureBeingEdited;
+  const circleProps = feature?.properties?.circleProperties;
+
+  if (!circleProps) return null;
+
+  const handleRadiusChange = (e) => {
+    const newRadius = Number(e.target.value);
+    // Rebuild circle geometry from center + new radius
+    const newGeometry = circle(circleProps.center, newRadius, {
+      steps: 64,
+    }).geometry;
+
+    updateFeature({
+      ...feature,
+      geometry: newGeometry,
+    });
+  };
+
+  return (
+    <label>
+      Radius (km)
+      <input
+        type="number"
+        value={circleProps.radius.value.toFixed(2)}
+        onChange={handleRadiusChange}
+      />
+    </label>
+  );
+}
+```
+
+`updateFeature` is a no-op when no shape is being edited.
+
 ## Editing Instructions
 
 ### Point
@@ -337,6 +380,7 @@ const {
   edit,
   save,
   cancel,
+  updateFeature,
   isEditing,
   editingShape,
   editingState,
@@ -364,6 +408,7 @@ const {
 | `edit` | `(shape: Shape, options?: EditShapeOptions) => void` | Start editing a shape (no-op if shape is locked) |
 | `save` | `() => void` | Save current edits |
 | `cancel` | `() => void` | Cancel editing and restore original |
+| `updateFeature` | `(feature: Feature) => void` | Update the feature being edited (e.g., from a form). Only applies while editing. |
 | `isEditing` | `boolean` | Whether currently editing |
 | `editingShape` | `Shape \| null` | Shape currently being edited |
 | `editingState` | `EditingState \| null` | Full editing state object |

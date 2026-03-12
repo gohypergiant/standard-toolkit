@@ -211,10 +211,10 @@ describe('Icon Config Utilities', () => {
       expect(getIconPixelOffset(feature)).toEqual([-1, -20]);
     });
 
-    it('sets iconBillboard to false', () => {
+    it('sets iconBillboard to true', () => {
       const result = getIconLayerProps(true, TEST_ATLAS, TEST_MAPPING);
 
-      expect(result.iconBillboard).toBe(false);
+      expect(result.iconBillboard).toBe(true);
     });
   });
 

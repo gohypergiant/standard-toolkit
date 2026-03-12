@@ -41,7 +41,7 @@ import {
   editStore,
   enableEditPanning,
   saveEditingFromLayer,
-  updateFeatureFromLayer,
+  updateFeature,
 } from './store';
 import type {
   EditAction,
@@ -295,7 +295,7 @@ export function EditShapeLayer({
     if (isContinuousEditType(editType) && feature) {
       cancelPendingUpdate();
       const rafId = requestAnimationFrame(() => {
-        updateFeatureFromLayer(actualMapId, feature);
+        updateFeature(actualMapId, feature);
         pendingUpdateRef.current = null;
       });
       pendingUpdateRef.current = { feature, rafId };
@@ -306,7 +306,7 @@ export function EditShapeLayer({
     if (isCompletionEditType(editType)) {
       cancelPendingUpdate();
       if (feature) {
-        updateFeatureFromLayer(actualMapId, feature);
+        updateFeature(actualMapId, feature);
       }
       return;
     }
