@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useGanttContext } from '../../context';
 import { selectors, useGanttStore } from '../../store';
 import { deriveRenderedSlice } from '../../utils/layout';
@@ -22,6 +22,44 @@ import {
   examineThresholds,
   shouldExamineThresholds,
 } from '../../utils/thresholds';
+import type { MetThresholdData } from '../../types';
+
+type ThresholdKey =
+  | 'horizontal:start'
+  | 'horizontal:end'
+  | 'vertical:start'
+  | 'vertical:end';
+
+type ThresholdState = Record<ThresholdKey, boolean>;
+
+function toThresholdKey(item: MetThresholdData): ThresholdKey {
+  return `${item.axis}:${item.direction}`;
+}
+
+function createThresholdProjection() {
+  const state: ThresholdState = {
+    'horizontal:start': false,
+    'horizontal:end': false,
+    'vertical:start': false,
+    'vertical:end': false,
+  };
+
+  function update(metThresholds: MetThresholdData[]): MetThresholdData[] {
+    const nextKeys = new Set(metThresholds.map(toThresholdKey));
+
+    const newlyEntered = metThresholds.filter(
+      (item) => !state[toThresholdKey(item)],
+    );
+
+    for (const key of Object.keys(state) as ThresholdKey[]) {
+      state[key] = nextKeys.has(key);
+    }
+
+    return newlyEntered;
+  }
+
+  return { update };
+}
 
 type UseTotalDataRegionThresholdsProps = {
   totalRowsCount: number;
@@ -39,6 +77,8 @@ export function useTotalDataRegionThresholds({
   totalRowsCount,
   scrollContainerElement,
 }: UseTotalDataRegionThresholdsProps) {
+  const projectionRef = useRef(createThresholdProjection());
+
   const roundedCurrentRowScrollPx = useGanttStore(
     selectors.roundedCurrentRowScrollPx,
   );
@@ -95,8 +135,10 @@ export function useTotalDataRegionThresholds({
       rowIndexThresholds,
     );
 
-    if (metThresholds.length > 0) {
-      onThresholdMet(metThresholds);
+    const newlyMet = projectionRef.current.update(metThresholds);
+
+    if (newlyMet.length > 0) {
+      onThresholdMet(newlyMet);
     }
   }, [
     totalRowsCount,
