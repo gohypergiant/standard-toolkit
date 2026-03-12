@@ -317,6 +317,7 @@ Full keyboard accessibility for efficient data entry:
 | `size` | `'small' \| 'medium'` | `'medium'` | Size variant |
 | `variant` | `'inline' \| 'stacked'` | `'inline'` | Layout variant |
 | `showFormatButton` | `boolean` | `true` | Show format conversion popover button |
+| `formatButtonTooltip` | `string` | `'View/copy other formats'` | Tooltip text for the format button |
 | `value` | `CoordinateValue \| null` | - | Controlled value in DD format |
 | `defaultValue` | `CoordinateValue` | - | Default uncontrolled value in DD format |
 | `onChange` | `(value: CoordinateValue \| null) => void` | - | Called when value changes (null if invalid) |
@@ -372,6 +373,7 @@ type CoordinateFieldProps = {
   size?: 'small' | 'medium';
   variant?: 'inline' | 'stacked';  // Layout variant (default: 'inline')
   showFormatButton?: boolean;  // Whether to show the format button (default: true)
+  formatButtonTooltip?: string;  // Tooltip text for the format button (default: 'View/copy other formats')
   value?: CoordinateValue;
   defaultValue?: CoordinateValue;
   onChange?: (value: CoordinateValue | null) => void;
