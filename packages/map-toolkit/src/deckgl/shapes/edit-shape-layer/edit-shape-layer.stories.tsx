@@ -852,6 +852,19 @@ export const EditIconPoints: Story = {
               </Button>
             </div>
           )}
+
+          {/* Instructions */}
+          <div className='rounded-lg bg-surface-contrast-subtle p-s'>
+            <p className='mb-xs font-semibold text-body-xs'>Editing Tips:</p>
+            <ul className='list-inside list-disc space-y-xs text-body-xs text-content-secondary'>
+              <li>Click an icon point to select it</li>
+              <li>Click "Edit" to start editing</li>
+              <li>Drag the icon to move it</li>
+              <li>Edit layer renders the icon marker, not a circle</li>
+              <li>Press Enter to save</li>
+              <li>Press ESC to cancel</li>
+            </ul>
+          </div>
         </div>
       </div>
     );
