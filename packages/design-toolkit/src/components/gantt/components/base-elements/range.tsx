@@ -11,6 +11,8 @@
  */
 
 import { type HTMLAttributes, type PropsWithChildren, useState } from 'react';
+import { useGanttContext } from '../../context';
+import { shouldRenderRangeElement } from '../../utils/helpers';
 import { useRangeElementLayout } from './use-range-element-layout';
 import type { RowElementColorProp } from '../../types';
 
@@ -21,7 +23,7 @@ export type RangeProps = HTMLAttributes<HTMLDivElement> & {
   color?: RowElementColorProp;
 };
 
-export function Range({
+function RangeInner({
   children,
   startMs,
   endMs,
@@ -47,4 +49,15 @@ export function Range({
       {children}
     </div>
   );
+}
+
+export function Range(props: PropsWithChildren<RangeProps>) {
+  const { renderedRegionBounds } = useGanttContext();
+  const { startMs, endMs } = props;
+
+  if (!shouldRenderRangeElement(renderedRegionBounds, { startMs, endMs })) {
+    return null;
+  }
+
+  return <RangeInner {...props} />;
 }

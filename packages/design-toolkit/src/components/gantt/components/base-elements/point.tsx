@@ -11,6 +11,8 @@
  */
 
 import { type HTMLAttributes, type PropsWithChildren, useState } from 'react';
+import { useGanttContext } from '../../context';
+import { timestampWithinBounds } from '../../utils/helpers';
 import { usePointElementLayout } from '../base-elements/use-point-element-layout';
 import type { RowElementColorProp } from '../../types';
 
@@ -19,9 +21,9 @@ export type PointProps = HTMLAttributes<HTMLDivElement> & {
   color?: RowElementColorProp;
 };
 
-export function Point({
-  timeMs,
+function PointInner({
   children,
+  timeMs,
   color = 'accent',
   ...rest
 }: PropsWithChildren<PointProps>) {
@@ -41,4 +43,14 @@ export function Point({
       {children}
     </div>
   );
+}
+
+export function Point(props: PropsWithChildren<PointProps>) {
+  const { renderedRegionBounds } = useGanttContext();
+
+  if (!timestampWithinBounds(props.timeMs, renderedRegionBounds)) {
+    return null;
+  }
+
+  return <PointInner {...props} />;
 }
