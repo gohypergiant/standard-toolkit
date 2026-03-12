@@ -32,6 +32,7 @@ import type {
   FeatureCollection,
 } from '@deck.gl-community/editable-layers';
 import type { DrawShapeLayerProps } from './types';
+import './fiber';
 
 /**
  * DrawShapeLayer - A React component for drawing shapes on the map.
@@ -46,11 +47,14 @@ import type { DrawShapeLayerProps } from './types';
  * - Protected drawing mode (rejects mode change requests while drawing)
  * - Distance/area tooltips during drawing
  *
+ * ## Fiber Registration
+ * Unlike `DisplayShapeLayer` (a deck.gl layer class), `DrawShapeLayer` is a React
+ * component that handles its own fiber registration internally. You do **not** need to
+ * import `draw-shape-layer/fiber` — but you **do** still need to import
+ * `display-shape-layer/fiber` if you use `<displayShapeLayer>` in the same tree.
+ *
  * @example
  * ```tsx
- * // Import the fiber registration for JSX support
- * import '@accelint/map-toolkit/deckgl/shapes/draw-shape-layer/fiber';
- *
  * function Map({ mapId }) {
  *   return (
  *     <BaseMap id={mapId}>

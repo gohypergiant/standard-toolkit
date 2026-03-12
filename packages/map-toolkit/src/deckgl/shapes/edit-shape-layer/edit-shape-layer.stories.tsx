@@ -17,15 +17,15 @@ import { useState } from 'react';
 import { useMapCursor } from '@/map-cursor';
 import { BaseMap } from '../../base-map/index';
 import { mockShapes } from '../__fixtures__/mock-shapes';
-import type { Meta, StoryObj } from '@storybook/react-vite';
+import { mockShapesWithIcons } from '../__fixtures__/mock-shapes-with-icons';
 import '../display-shape-layer/fiber';
 import { useSelectShape } from '../display-shape-layer/use-select-shape';
-import '../draw-shape-layer/fiber';
 import { DrawShapeLayer } from '../draw-shape-layer/index';
 import { useDrawShape } from '../draw-shape-layer/use-draw-shape';
 import { ShapeEvents } from '../shared/events';
 import { ShapeFeatureType } from '../shared/types';
 import { duplicateShape } from '../shared/utils/duplicate-shape';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ShapeHoveredEvent, ShapeSelectedEvent } from '../shared/events';
 import type { Shape } from '../shared/types';
 import './fiber';
@@ -739,6 +739,130 @@ export const DuplicateShape: StoryObj<DuplicateShapeArgs> = {
               <li>Offset [0, 0] means no offset (clone in place)</li>
               <li>Clones inherit shape type, style, and geometry</li>
               <li>Clones are always unlocked</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    );
+  },
+};
+
+/**
+ * Edit Icon Points
+ *
+ * Demonstrates editing Point shapes that use icon markers instead of scatterplot circles.
+ * When editing, the edit layer should render the icon (not a plain circle).
+ *
+ * Instructions:
+ * 1. Click an icon point on the map to select it
+ * 2. Click "Edit" to start editing
+ * 3. The edit layer should show the icon marker, not a scatterplot circle
+ * 4. Drag the icon to move it
+ * 5. Save or Cancel
+ */
+const ICON_EDIT_MAP_ID = uuid();
+
+function createIconShapes(): Shape[] {
+  return mockShapesWithIcons
+    .filter((s) => s.shape === ShapeFeatureType.Point)
+    .map((shape) => ({
+      ...shape,
+      id: uuid(),
+      lastUpdated: Date.now(),
+    }));
+}
+
+export const EditIconPoints: Story = {
+  render: () => {
+    const [shapes, setShapes] = useState<Shape[]>(createIconShapes);
+
+    const { requestCursorChange, clearCursor } = useMapCursor(ICON_EDIT_MAP_ID);
+    const { selectedId } = useSelectShape(ICON_EDIT_MAP_ID);
+    const selectedShape = shapes.find((s) => s.id === selectedId) ?? null;
+
+    const { edit, save, cancel, isEditing, editingShape } = useEditShape(
+      ICON_EDIT_MAP_ID,
+      {
+        onUpdate: (updatedShape) => {
+          setShapes((prev) =>
+            prev.map((s) => (s.id === updatedShape.id ? updatedShape : s)),
+          );
+        },
+      },
+    );
+
+    useOn<ShapeHoveredEvent>(ShapeEvents.hovered, (event) => {
+      if (event.payload.mapId !== ICON_EDIT_MAP_ID) {
+        return;
+      }
+      if (isEditing) {
+        return;
+      }
+      if (event.payload.shapeId) {
+        requestCursorChange('pointer', 'display-shapes');
+      } else {
+        clearCursor('display-shapes');
+      }
+    });
+
+    return (
+      <div className='relative h-dvh w-dvw'>
+        <BaseMap className='absolute inset-0' id={ICON_EDIT_MAP_ID}>
+          <displayShapeLayer
+            id='shapes'
+            mapId={ICON_EDIT_MAP_ID}
+            data={shapes}
+            showLabels='always'
+            pickable={!isEditing}
+            selectedShapeId={selectedShape?.id ?? editingShape?.id}
+          />
+          <EditShapeLayer mapId={ICON_EDIT_MAP_ID} />
+        </BaseMap>
+
+        <div className='absolute top-l left-l z-10 flex w-[320px] flex-col gap-m rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
+          <p className='font-bold text-header-l'>Edit Icon Points</p>
+
+          <div className='rounded-lg bg-info-muted p-s'>
+            <code className='text-body-s'>
+              {isEditing
+                ? `Editing: ${editingShape?.name}`
+                : selectedShape
+                  ? `Selected: ${selectedShape.name}`
+                  : 'Click an icon point to select'}
+            </code>
+          </div>
+
+          {!isEditing && selectedShape && (
+            <Button
+              variant='filled'
+              color='accent'
+              onPress={() => edit(selectedShape)}
+            >
+              Edit "{selectedShape.name}"
+            </Button>
+          )}
+
+          {isEditing && (
+            <div className='flex gap-s'>
+              <Button variant='filled' color='serious' onPress={save}>
+                Save
+              </Button>
+              <Button variant='outline' color='critical' onPress={cancel}>
+                Cancel
+              </Button>
+            </div>
+          )}
+
+          {/* Instructions */}
+          <div className='rounded-lg bg-surface-contrast-subtle p-s'>
+            <p className='mb-xs font-semibold text-body-xs'>Editing Tips:</p>
+            <ul className='list-inside list-disc space-y-xs text-body-xs text-content-secondary'>
+              <li>Click an icon point to select it</li>
+              <li>Click "Edit" to start editing</li>
+              <li>Drag the icon to move it</li>
+              <li>Edit layer renders the icon marker, not a circle</li>
+              <li>Press Enter to save</li>
+              <li>Press ESC to cancel</li>
             </ul>
           </div>
         </div>

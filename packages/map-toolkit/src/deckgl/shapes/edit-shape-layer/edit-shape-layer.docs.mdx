@@ -55,6 +55,12 @@ npm install @accelint/map-toolkit @accelint/bus @accelint/core @deck.gl/core @de
 pnpm add @accelint/map-toolkit @accelint/bus @accelint/core @deck.gl/core @deck.gl-community/editable-layers @deckgl-fiber-renderer/dom react
 ```
 
+## Fiber Registration
+
+`EditShapeLayer` is a **React component** (not a deck.gl layer class), so it handles its own fiber registration internally. You do **not** need to import `edit-shape-layer/fiber`.
+
+However, you **do** still need to import `display-shape-layer/fiber` if you use `<displayShapeLayer>` alongside it — because `DisplayShapeLayer` is a deck.gl layer class that requires explicit fiber registration from the consumer.
+
 ## Basic Usage
 
 ### With useEditShape Hook (Recommended)
@@ -63,7 +69,6 @@ The easiest way to use EditShapeLayer is with the `useEditShape` hook, which man
 
 ```tsx
 import { BaseMap } from '@accelint/map-toolkit/deckgl/base-map';
-import '@accelint/map-toolkit/deckgl/shapes/edit-shape-layer/fiber';
 import '@accelint/map-toolkit/deckgl/shapes/display-shape-layer/fiber';
 import {
   DisplayShapeLayer,
@@ -142,6 +147,49 @@ function MapWithEditing() {
   );
 }
 ```
+
+### Updating the Feature from a Form
+
+Use `updateFeature` to push changes from a form (e.g., a radius input) into the editing state. The map updates in real time and the changes are included when the user saves.
+
+```tsx
+import { useEditShape } from '@accelint/map-toolkit/deckgl/shapes';
+import { circle } from '@turf/turf';
+
+function CircleRadiusInput({ mapId }) {
+  const { editingState, updateFeature } = useEditShape(mapId);
+  const feature = editingState?.featureBeingEdited;
+  const circleProps = feature?.properties?.circleProperties;
+
+  if (!circleProps) return null;
+
+  const handleRadiusChange = (e) => {
+    const newRadius = Number(e.target.value);
+    // Rebuild circle geometry from center + new radius
+    const newGeometry = circle(circleProps.center, newRadius, {
+      steps: 64,
+    }).geometry;
+
+    updateFeature({
+      ...feature,
+      geometry: newGeometry,
+    });
+  };
+
+  return (
+    <label>
+      Radius (km)
+      <input
+        type="number"
+        value={circleProps.radius.value.toFixed(2)}
+        onChange={handleRadiusChange}
+      />
+    </label>
+  );
+}
+```
+
+`updateFeature` is a no-op when no shape is being edited.
 
 ## Editing Instructions
 
@@ -332,6 +380,7 @@ const {
   edit,
   save,
   cancel,
+  updateFeature,
   isEditing,
   editingShape,
   editingState,
@@ -359,6 +408,7 @@ const {
 | `edit` | `(shape: Shape, options?: EditShapeOptions) => void` | Start editing a shape (no-op if shape is locked) |
 | `save` | `() => void` | Save current edits |
 | `cancel` | `() => void` | Cancel editing and restore original |
+| `updateFeature` | `(feature: Feature) => void` | Update the feature being edited (e.g., from a form). Only applies while editing. |
 | `isEditing` | `boolean` | Whether currently editing |
 | `editingShape` | `Shape \| null` | Shape currently being edited |
 | `editingState` | `EditingState \| null` | Full editing state object |
@@ -431,6 +481,7 @@ See the Storybook stories for interactive examples:
 - **CombinedDrawAndEdit**: Drawing new shapes and editing existing ones
 - **LockedShapes**: Demonstrates locked shape behavior with lock/unlock toggle
 - **DuplicateShape**: Clone shapes with optional offset and custom naming
+- **EditIconPoints**: Edit Point shapes that have icon markers
 
 ## For Developers
 
