@@ -50,6 +50,8 @@ import { PopoverContent } from '../popover/content';
 import { PopoverTitle } from '../popover/title';
 import { Radio } from '../radio';
 import { RadioGroup } from '../radio/group';
+import { Tooltip } from '../tooltip';
+import { TooltipTrigger } from '../tooltip/trigger';
 import { CoordinateFieldContext, CoordinateFieldStateContext } from './context';
 import {
   type CoordinateFormatResult,
@@ -218,8 +220,12 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
     CoordinateFormatResult
   > | null>(null);
 
+  // Track popover open state so tooltip hides when popover is open
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+
   const handlePopoverOpenChange = useCallback(
     (isOpen: boolean) => {
+      setIsPopoverOpen(isOpen);
       if (isOpen) {
         setAllCoordinateFormats(getAllCoordinateFormats(state.currentValue));
       }
@@ -381,59 +387,65 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
           </div>
 
           {showFormatButton && (
-            <DialogTrigger onOpenChange={handlePopoverOpenChange}>
-              <Button
-                variant='icon'
-                size='small'
-                color='mono-bold'
-                className={clsx(styles.formatButton, classNames?.formatButton)}
-                aria-label='View coordinate in all formats'
-                isDisabled={!copy.isFormatButtonEnabled}
-              >
-                <Icon>
-                  <GlobalShare />
-                </Icon>
-              </Button>
-              <Popover classNames={{ popover: styles.popover }}>
-                <PopoverTitle className={styles.popoverTitle}>
-                  Copy Coordinates
-                </PopoverTitle>
-                <PopoverContent>
-                  {allCoordinateFormats &&
-                    COORDINATE_SYSTEMS.map((formatKey) => {
-                      const formatResult = allCoordinateFormats[formatKey];
-                      const isCopied = copy.copiedFormat === formatKey;
+            <TooltipTrigger isDisabled={isPopoverOpen}>
+              <DialogTrigger onOpenChange={handlePopoverOpenChange}>
+                <Button
+                  variant='icon'
+                  size='small'
+                  color='mono-bold'
+                  className={clsx(
+                    styles.formatButton,
+                    classNames?.formatButton,
+                  )}
+                  aria-label='View coordinate in all formats'
+                  isDisabled={!copy.isFormatButtonEnabled}
+                >
+                  <Icon>
+                    <GlobalShare />
+                  </Icon>
+                </Button>
+                <Popover classNames={{ popover: styles.popover }}>
+                  <PopoverTitle className={styles.popoverTitle}>
+                    Copy Coordinates
+                  </PopoverTitle>
+                  <PopoverContent>
+                    {allCoordinateFormats &&
+                      COORDINATE_SYSTEMS.map((formatKey) => {
+                        const formatResult = allCoordinateFormats[formatKey];
+                        const isCopied = copy.copiedFormat === formatKey;
 
-                      return (
-                        <div key={formatKey} className={styles.formatRow}>
-                          <div className={styles.formatLabels}>
-                            <span className={styles.formatLabel}>
-                              {COORDINATE_FORMAT_LABELS[formatKey]}
-                            </span>
-                            <span
-                              className={styles.formatValue}
-                              title={formatResult.value}
+                        return (
+                          <div key={formatKey} className={styles.formatRow}>
+                            <div className={styles.formatLabels}>
+                              <span className={styles.formatLabel}>
+                                {COORDINATE_FORMAT_LABELS[formatKey]}
+                              </span>
+                              <span
+                                className={styles.formatValue}
+                                title={formatResult.value}
+                              >
+                                {formatResult.value}
+                              </span>
+                            </div>
+                            <Button
+                              variant='icon'
+                              color='mono-bold'
+                              aria-label={`Copy ${COORDINATE_FORMAT_LABELS[formatKey]} format`}
+                              onPress={() => copy.handleCopyFormat(formatKey)}
+                              isDisabled={!formatResult.isValid}
                             >
-                              {formatResult.value}
-                            </span>
+                              <Icon>
+                                {isCopied ? <Check /> : <CopyToClipboard />}
+                              </Icon>
+                            </Button>
                           </div>
-                          <Button
-                            variant='icon'
-                            color='mono-bold'
-                            aria-label={`Copy ${COORDINATE_FORMAT_LABELS[formatKey]} format`}
-                            onPress={() => copy.handleCopyFormat(formatKey)}
-                            isDisabled={!formatResult.isValid}
-                          >
-                            <Icon>
-                              {isCopied ? <Check /> : <CopyToClipboard />}
-                            </Icon>
-                          </Button>
-                        </div>
-                      );
-                    })}
-                </PopoverContent>
-              </Popover>
-            </DialogTrigger>
+                        );
+                      })}
+                  </PopoverContent>
+                </Popover>
+              </DialogTrigger>
+              <Tooltip>View/copy other formats</Tooltip>
+            </TooltipTrigger>
           )}
         </div>
 

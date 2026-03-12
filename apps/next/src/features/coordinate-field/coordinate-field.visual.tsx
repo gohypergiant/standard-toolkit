@@ -11,18 +11,22 @@
  */
 
 import { CoordinateField } from '@accelint/design-toolkit/components/coordinate-field';
-import { useEffect, useRef } from 'react';
 import { dash } from 'radashi';
-import { createVisualTestScenarios } from '~/visual-regression/vitest';
+import { useEffect, useRef } from 'react';
 import {
-  type CoordinateFieldVariant,
+  createInteractiveVisualTests,
+  createVisualTestScenarios,
+} from '~/visual-regression/vitest';
+import {
   COPY_MENU_SCENARIOS,
+  type CoordinateFieldVariant,
   DESCRIPTION_SCENARIOS,
   FORMAT_BUTTON_SCENARIOS,
   FORMAT_SCENARIOS,
   LAYOUT_SCENARIOS,
   SIZE_SCENARIOS,
   STATE_SCENARIOS,
+  TOOLTIP_SCENARIOS,
 } from './variants';
 
 function buildScenarios(
@@ -95,3 +99,20 @@ createVisualTestScenarios(
     selector: '[role="dialog"]',
   })),
 );
+
+createInteractiveVisualTests({
+  componentName: 'CoordinateField-Tooltip',
+  renderComponent: (props: CoordinateFieldVariant) => (
+    <CoordinateField {...props} />
+  ),
+  variants: TOOLTIP_SCENARIOS.map((props) => ({
+    id: dash(props.label ?? 'unnamed'),
+    name: `${props.label}`,
+    props,
+  })),
+  states: ['hover'],
+  interactionTarget: '[aria-label="View coordinate in all formats"]',
+  screenshotSelector: '[role="tooltip"]',
+  className: 'p-s',
+  waitMs: 300,
+});
