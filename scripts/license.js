@@ -51,3 +51,7 @@ export function getFormattedHeader(fileExtension) {
     '\n',
   );
 }
+
+export function getBanner() {
+  return `${getFormattedHeader('.js')}\n`;
+}
