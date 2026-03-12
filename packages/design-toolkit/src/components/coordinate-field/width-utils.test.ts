@@ -19,8 +19,8 @@ import {
   utmSegmentConfigs,
 } from './segment-configs';
 import {
-  calculateMinControlWidth,
   CONTAINER_PADDING_WIDTH,
+  calculateMinControlWidth,
   FORMAT_BUTTON_WIDTH,
   INPUT_BUTTON_GAP,
   SEGMENT_GAP_WIDTH,
