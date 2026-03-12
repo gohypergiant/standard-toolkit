@@ -33,22 +33,30 @@ type GetEntityId = (item: any) => EntityId;
 const defaultGetEntityId: GetEntityId = (item: any) => item.id as EntityId;
 
 /**
- * State for coffin corner selection and hover
+ * State for coffin corner selection and hover.
  */
 type CoffinCornerState = {
+  /** Currently selected entity ID, or undefined if nothing is selected. */
   selectedId: EntityId | undefined;
+  /** Currently hovered entity ID, or undefined if nothing is hovered. */
   hoveredId: EntityId | undefined;
+  /** deck.gl layer ID used to filter map bus events to only this layer's interactions. */
   layerId: string | undefined;
+  /** Accessor to extract an entity ID from a picked data item. */
   getEntityId: GetEntityId;
 };
 
 /**
- * Actions for coffin corner interactions
+ * Actions for coffin corner interactions.
  */
 type CoffinCornerActions = {
+  /** Select an entity by ID (emits domain event). Pass undefined to deselect. */
   setSelectedId: (id: EntityId | undefined) => void;
+  /** Clear the current selection (emits deselect domain event). */
   deselect: () => void;
+  /** Set the deck.gl layer ID used to filter map bus events. */
   setLayerId: (layerId: string) => void;
+  /** Override the entity ID accessor for picked data items. */
   setGetEntityId: (fn: GetEntityId) => void;
 };
 
