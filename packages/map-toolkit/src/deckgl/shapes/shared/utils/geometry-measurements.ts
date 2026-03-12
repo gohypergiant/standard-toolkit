@@ -10,8 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
-import { distance } from '@turf/turf';
+import { centroid, distance } from '@turf/turf';
+import { DEFAULT_DISTANCE_UNITS } from '@/shared/units';
 import type { DistanceUnit } from '@accelint/constants/units';
+import type { Polygon } from 'geojson';
+import type { CircleProperties } from '../types';
 
 /**
  * Circle measurement result containing radius, diameter, and area.
@@ -217,5 +220,64 @@ export function computeEllipseMeasurementsFromPolygon(
     majorAxis,
     minorAxis,
     area,
+  };
+}
+
+/**
+ * Compute circle properties (center and radius) from a polygon geometry.
+ *
+ * Calculates the centroid of the polygon as the center, then measures the
+ * geodesic distance from center to the first vertex as the radius.
+ * Returns `undefined` if the geometry has insufficient coordinates or
+ * produces invalid measurements.
+ *
+ * @param geometry - Polygon geometry representing a circle.
+ * @returns Circle properties with center and radius, or `undefined` if invalid.
+ *
+ * @example
+ * ```typescript
+ * const props = computeCirclePropertiesFromGeometry(feature.geometry);
+ * if (props) {
+ *   console.log(props.center, props.radius.value, props.radius.units);
+ * }
+ * ```
+ */
+export function computeCirclePropertiesFromGeometry(
+  geometry: Polygon,
+): CircleProperties | undefined {
+  const coordinates = geometry.coordinates[0];
+  if (!coordinates || coordinates.length < 3) {
+    return undefined;
+  }
+
+  const centerFeature = centroid({
+    type: 'Polygon',
+    coordinates: geometry.coordinates,
+  });
+  const center = centerFeature.geometry.coordinates as [number, number];
+
+  if (!(Number.isFinite(center[0]) && Number.isFinite(center[1]))) {
+    return undefined;
+  }
+
+  const firstPoint = coordinates[0] as [number, number];
+  if (!(Number.isFinite(firstPoint[0]) && Number.isFinite(firstPoint[1]))) {
+    return undefined;
+  }
+
+  const radius = distance(center, firstPoint, {
+    units: DEFAULT_DISTANCE_UNITS,
+  });
+
+  if (!Number.isFinite(radius) || radius <= 0) {
+    return undefined;
+  }
+
+  return {
+    center,
+    radius: {
+      value: radius,
+      units: DEFAULT_DISTANCE_UNITS,
+    },
   };
 }

@@ -85,6 +85,18 @@ export type UseEditShapeReturn = {
   save: () => void;
   /** Cancel editing and revert to original shape */
   cancel: () => void;
+  /**
+   * Update the feature geometry mid-edit without restarting the edit session.
+   *
+   * Use this to sync external changes (e.g. form coordinate input) to the map
+   * while the user is still editing. Unlike {@link edit}, this does not cancel
+   * the current session or re-emit editing events.
+   *
+   * No-op when not currently editing.
+   *
+   * @param feature - The updated GeoJSON feature to render on the map.
+   */
+  updateFeature: (feature: Feature) => void;
   /** Whether currently in editing mode */
   isEditing: boolean;
   /** The shape currently being edited (null if not editing) */

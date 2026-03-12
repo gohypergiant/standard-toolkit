@@ -45,6 +45,7 @@ import {
   isPointShape,
   isRectangleShape,
 } from '../shared/types';
+import { computeCirclePropertiesFromGeometry } from '../shared/utils/geometry-measurements';
 import {
   releaseModeAndCursor,
   requestCursorChange,
@@ -351,10 +352,33 @@ export function clearEditingState(mapId: UniqueId): void {
  * @param mapId - The map instance ID.
  * @param feature - The updated GeoJSON feature from the editable layer.
  */
-export function updateFeatureFromLayer(
-  mapId: UniqueId,
-  feature: Feature,
-): void {
+export function updateFeature(mapId: UniqueId, feature: Feature): void {
+  const state = editStore.get(mapId);
+
+  // Recompute circleProperties from updated geometry so metadata stays in sync
+  if (
+    state?.editingShape &&
+    isCircleShape(state.editingShape) &&
+    feature.geometry.type === 'Polygon'
+  ) {
+    const circleProperties = computeCirclePropertiesFromGeometry(
+      feature.geometry,
+    );
+
+    if (circleProperties) {
+      editStore.set(mapId, {
+        featureBeingEdited: {
+          ...feature,
+          properties: {
+            ...feature.properties,
+            circleProperties,
+          },
+        },
+      });
+      return;
+    }
+  }
+
   editStore.set(mapId, { featureBeingEdited: feature });
 }
 
