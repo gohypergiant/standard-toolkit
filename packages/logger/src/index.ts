@@ -24,3 +24,5 @@ export { callsitePlugin } from './plugins/callsite';
 export type { CallsitePluginOptions } from './plugins/callsite';
 export { environmentPlugin } from './plugins/environment';
 export type { EnvironmentPluginOptions } from './plugins/environment';
+export { prettyTransport } from './transports/pretty';
+export { structuredTransport } from './transports/structured';

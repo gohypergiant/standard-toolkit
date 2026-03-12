@@ -14,8 +14,7 @@
 
 import { Broadcast } from '@accelint/bus';
 import { CompositeLayer } from '@deck.gl/core';
-import { GeoJsonLayer, IconLayer, LineLayer, TextLayer } from '@deck.gl/layers';
-import { createLoggerDomain } from '@/shared/logger';
+import { GeoJsonLayer, LineLayer, TextLayer } from '@deck.gl/layers';
 import { DEFAULT_TEXT_SIZE, DEFAULT_TEXT_STYLE } from '../../text-settings';
 import { SHAPE_LAYER_IDS } from '../shared/constants';
 import { type ShapeEvent, ShapeEvents } from '../shared/events';
@@ -32,9 +31,8 @@ import {
 } from '../shared/utils/style-utils';
 import {
   BRIGHTNESS_FACTOR,
-  COFFIN_CORNERS,
-  DASH_EXTENSION,
   DEFAULT_DISPLAY_PROPS,
+  DISPLAY_EXTENSIONS,
   HIGHLIGHT_COLOR_TUPLE,
   MAP_INTERACTION,
   MATERIAL_SETTINGS,
@@ -56,12 +54,10 @@ import {
   partitionCurtains,
 } from './utils/elevation';
 import {
-  extendMappingWithCoffinCorners,
   getIconConfig,
   getIconLayerProps,
   getIconUpdateTriggers,
 } from './utils/icon-config';
-import { getPointInteractionState } from './utils/interaction';
 import { getLabelPosition2d } from './utils/labels';
 import { getRadiusLabelText } from './utils/radius-label';
 import type { Rgba255Tuple } from '@accelint/predicates';
@@ -78,8 +74,6 @@ import type {
   LineSegment,
 } from './types';
 
-const logger = createLoggerDomain('[DisplayShapeLayer]');
-
 /**
  * Typed event bus instance for shape events.
  * Provides type-safe event emission for shape interactions.
@@ -95,7 +89,7 @@ const shapeBus = Broadcast.getInstance<ShapeEvent>();
  * ## Features
  * - **Multiple geometry types**: Point, LineString, Polygon, and Circle
  * - **Icon support**: Custom icons for Point geometries via icon atlases
- * - **Interactive selection**: Click handling with brightness overlay on polygon select, optional highlight effect for non-icon-Point shapes (if showHighlight=true)
+ * - **Interactive selection**: Click handling with brightness overlay on polygon select, optional highlight outline for non-Point shapes (if showHighlight=true). Point geometries use coffin corner brackets instead.
  * - **Hover effects**: Polygon fills brighten via material lighting; outline width increases by 2px on hover
  * - **Customizable labels**: Flexible label positioning with per-shape or global options
  * - **Style properties**: Full control over colors, border/outline patterns, and opacity
@@ -108,13 +102,14 @@ const shapeBus = Broadcast.getInstance<ShapeEvent>();
  * and material-based brightness — the base shape is never altered.
  *
  * ## Layer Structure
- * Renders up to seven sublayers (in order, bottom to top):
- * 1. **Select layer**: Selection brightness overlay for polygon shapes
- * 2. **Hover layer**: Hover brightness overlay for polygon shapes
- * 3. **Coffin corners layer**: Selection/hover feedback for Point shapes with icons
+ * Renders sublayers in this order (bottom to top):
+ * 1. **Highlight layer**: Selection outline for non-polygon, non-Point shapes (when showHighlight enabled)
+ * 2. **Select layer**: Selection brightness overlay for polygon shapes
+ * 3. **Hover layer**: Hover brightness overlay for polygon shapes
  * 4. **Elevation visualization**: Curtains (LineStrings) or wireframes (polygons) — elevation only
  * 5. **Elevation indicators**: Vertical strut lines for elevated non-polygon shapes — elevation only
- * 6. **Main GeoJsonLayer**: Shape geometries with styling and interaction
+ * 6. **Main GeoJsonLayer**: Shape geometries with styling and interaction; includes CoffinCornerExtension
+ *    which propagates to the icon/scatterplot sublayer for Point hover/select bracket feedback
  * 7. **Label layer**: Text labels (if showLabels enabled)
  *
  * ## Icon Atlas Constraint
@@ -183,6 +178,11 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
   private elevationCache: ElevationCache | null = null;
   /** Cache for elevation indicator line segments */
   private indicatorCache: IndicatorCache | null = null;
+  /** Cached coffin corner color tuple — avoids new array reference per render when highlight hasn't changed. */
+  private coffinCornerColorCache: {
+    source: Rgba255Tuple;
+    color: Rgba255Tuple;
+  } | null = null;
 
   static override layerName = 'DisplayShapeLayer';
 
@@ -198,10 +198,11 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
     if (this.state?.hoverIndex !== undefined) {
       this.setState({ hoverIndex: undefined, lastHoveredId: undefined });
     }
-    // Clear features cache
+    // Clear caches
     this.featuresCache = null;
     this.elevationCache = null;
     this.indicatorCache = null;
+    this.coffinCornerColorCache = null;
   }
 
   /**
@@ -209,6 +210,21 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
    */
   private get resolvedHighlight(): Rgba255Tuple {
     return this.props.highlightColor ?? HIGHLIGHT_COLOR_TUPLE;
+  }
+
+  /**
+   * Coffin corner bracket color derived from resolvedHighlight with forced full opacity.
+   * Cached to avoid a new array reference per render triggering deck.gl prop-change detection.
+   */
+  private get coffinCornerColor(): Rgba255Tuple {
+    const highlight = this.resolvedHighlight;
+    if (this.coffinCornerColorCache?.source !== highlight) {
+      this.coffinCornerColorCache = {
+        source: highlight,
+        color: [highlight[0], highlight[1], highlight[2], 255],
+      };
+    }
+    return this.coffinCornerColorCache.color;
   }
 
   /**
@@ -382,7 +398,8 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
   }
 
   /**
-   * Handle shape click
+   * Handle shape click — emits `shapes:selected` via bus and calls `onShapeClick` callback.
+   * @param info - deck.gl picking info from the clicked sublayer.
    */
   private handleShapeClick = (info: PickingInfo): void => {
     const { onShapeClick, mapId } = this.props;
@@ -412,7 +429,8 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
   };
 
   /**
-   * Handle shape hover
+   * Handle shape hover — emits `shapes:hovered` via bus (deduplicated by shapeId) and calls `onShapeHover` callback.
+   * @param info - deck.gl picking info from the hovered sublayer.
    */
   private handleShapeHover = (info: PickingInfo): void => {
     const { onShapeHover, mapId } = this.props;
@@ -478,7 +496,8 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
 
   /**
    * Render highlight sublayer (underneath main layer).
-   * Note: Points with icons use coffin corners instead of highlight layer.
+   * Point geometries skip this layer — they use coffin corner brackets
+   * via CoffinCornerExtension on the main layer's icon/scatterplot sublayer instead.
    */
   private renderHighlightLayer(features: Shape['feature'][]): GeoJsonLayer[] {
     const { selectedShapeId, showHighlight } = this.props;
@@ -498,12 +517,9 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       return [];
     }
 
-    // Skip highlight layer for Point geometries with icons - they use coffin corners instead
+    // Skip highlight layer for Point geometries — they use coffin corner brackets instead.
     if (isPointType(selectedFeature.geometry)) {
-      const hasIcon = !!selectedFeature.properties?.styleProperties?.icon;
-      if (hasIcon) {
-        return [];
-      }
+      return [];
     }
 
     // Strip Z from LineString coordinates so the highlight outline renders at
@@ -645,103 +661,6 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
   }
 
   /**
-   * Render coffin corners layer for Point geometries that have icons on hover/select
-   * Coffin corners provide visual feedback for points instead of select layer
-   */
-  private renderCoffinCornersLayer(features: Shape['feature'][]): IconLayer[] {
-    const { selectedShapeId } = this.props;
-    const hoverIndex = this.state?.hoverIndex;
-
-    // Use cached shapeId->index map for O(1) lookup
-    const shapeIdToIndex = this.featuresCache?.shapeIdToIndex;
-    if (!shapeIdToIndex) {
-      return [];
-    }
-
-    // Find point features that need coffin corners (hovered or selected)
-    const pointFeatures: Shape['feature'][] = [];
-    for (const f of features) {
-      if (f.geometry.type !== 'Point') {
-        continue;
-      }
-      if (!f.properties?.styleProperties?.icon) {
-        continue;
-      }
-      const { isSelected, isHovered } = getPointInteractionState(
-        f,
-        selectedShapeId,
-        hoverIndex,
-        shapeIdToIndex,
-      );
-      if (isSelected || isHovered) {
-        pointFeatures.push(f);
-      }
-    }
-
-    if (pointFeatures.length === 0) {
-      return [];
-    }
-
-    // Get icon atlas from first point feature (all should share the same atlas)
-    const firstPointIcon = pointFeatures[0]?.properties?.styleProperties?.icon;
-    const iconAtlas = firstPointIcon?.atlas;
-    const iconMapping = firstPointIcon?.mapping;
-
-    if (!(iconAtlas && iconMapping)) {
-      logger.warn(
-        'Point shape has icon style but missing iconAtlas or iconMapping - coffin corners will not render',
-      );
-      return [];
-    }
-
-    const extendedMapping = extendMappingWithCoffinCorners(iconMapping);
-
-    return [
-      new IconLayer({
-        id: `${this.props.id}-${SHAPE_LAYER_IDS.DISPLAY}-coffin-corners`,
-        data: pointFeatures,
-        iconAtlas,
-        iconMapping: extendedMapping,
-        getIcon: (d: Shape['feature']) => {
-          const { isSelected, isHovered } = getPointInteractionState(
-            d,
-            selectedShapeId,
-            hoverIndex,
-            shapeIdToIndex,
-          );
-          if (isSelected && isHovered) {
-            return COFFIN_CORNERS.SELECTED_HOVER_ICON;
-          }
-          if (isSelected) {
-            return COFFIN_CORNERS.SELECTED_ICON;
-          }
-          return COFFIN_CORNERS.HOVER_ICON;
-        },
-        getSize: COFFIN_CORNERS.SIZE,
-        getPosition: (d: Shape['feature']) => {
-          const coords = isPointType(d.geometry)
-            ? d.geometry.coordinates
-            : [0, 0];
-          return coords as [number, number];
-        },
-        getPixelOffset: (d: Shape['feature']) => {
-          const iconSize =
-            d.properties?.styleProperties?.icon?.size ??
-            MAP_INTERACTION.ICON_SIZE;
-          // Center the coffin corners on the point icon
-          return [-1, -iconSize / 2];
-        },
-        billboard: false,
-        pickable: false,
-        updateTriggers: {
-          getIcon: [selectedShapeId, this.state?.hoverIndex],
-          data: [features, selectedShapeId, this.state?.hoverIndex],
-        },
-      }),
-    ];
-  }
-
-  /**
    * Render main shapes layer
    */
   private renderMainLayer(features: Shape['feature'][]): GeoJsonLayer {
@@ -753,6 +672,17 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       atlas: iconAtlas,
       mapping: iconMapping,
     } = getIconConfig(features);
+
+    // Resolve hovered entity ID for coffin corner extension on point sublayers.
+    // Geometry check kept to avoid unnecessary attribute invalidation on non-point hovers.
+    const hoveredFeature =
+      this.state?.hoverIndex !== undefined
+        ? features[this.state.hoverIndex]
+        : undefined;
+    const hoveredEntityId =
+      hoveredFeature?.geometry.type === 'Point'
+        ? (hoveredFeature.properties?.shapeId as ShapeId)
+        : undefined;
 
     return new GeoJsonLayer({
       id: `${this.props.id}-${SHAPE_LAYER_IDS.DISPLAY}`,
@@ -819,8 +749,18 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       // Icon configuration (only used if pointType includes 'icon')
       ...getIconLayerProps(hasIcons, iconAtlas, iconMapping),
 
-      // Dash pattern support for shape-configured line patterns (solid/dashed/dotted)
-      extensions: DASH_EXTENSION,
+      // Coffin corner extension props — the extension is a no-op on non-icon/scatterplot sublayers,
+      // so it's safe to include on the GeoJsonLayer directly. deck.gl's extension propagation
+      // forwards these props to all sublayers via LayerExtension.getSubLayerProps().
+      selectedEntityId: selectedShapeId,
+      hoveredEntityId,
+      getEntityId: (d: Shape['feature']) => d.properties?.shapeId as ShapeId,
+      selectedCoffinCornerColor: this.coffinCornerColor,
+
+      // Extensions: PathStyleExtension for dash patterns + CoffinCornerExtension for bracket indicators.
+      // CoffinCornerExtension returns null from getShaders() on unsupported sublayer types
+      // (PathLayer, SolidPolygonLayer), so shader injection only occurs on IconLayer/ScatterplotLayer.
+      extensions: DISPLAY_EXTENSIONS,
       getDashArray,
 
       // Behavior
@@ -1174,7 +1114,8 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
   }
 
   /**
-   * Render all sublayers
+   * Render all sublayers.
+   * @returns Ordered array of sublayers (highlight, select, hover, elevation, main, labels) from bottom to top.
    */
   renderLayers(): Layer[] {
     // Compute features once per render cycle for performance
@@ -1185,7 +1126,6 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       ...this.renderHighlightLayer(features),
       ...this.renderSelectLayer(features),
       ...this.renderHoverLayer(features),
-      ...this.renderCoffinCornersLayer(features),
     ];
 
     // Elevation visualization layers (wireframe for polygons, curtains for lines)

@@ -14,7 +14,7 @@
 
 @layer components.l1 {
   .picker {
-    @apply gap-s flex flex-wrap;
+    @apply gap-s p-xxs flex flex-wrap;
   }
 
   .item {
