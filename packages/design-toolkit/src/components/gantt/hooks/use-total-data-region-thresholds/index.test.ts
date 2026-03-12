@@ -277,4 +277,75 @@ describe('useTotalDataRegionThresholds', () => {
     expect(mockOnThresholdMet).toHaveBeenCalledTimes(2);
     expect(mockOnThresholdMet).toHaveBeenLastCalledWith(newlyMet);
   });
+
+  it('should call onThresholdMet again when the same axis/direction threshold is met with a new value', () => {
+    const firstMet: MetThresholdData[] = [
+      { axis: 'horizontal', direction: 'start', value: 3000 },
+    ];
+    const changedValue: MetThresholdData[] = [
+      { axis: 'horizontal', direction: 'start', value: 4000 },
+    ];
+
+    vi.mocked(thresholdUtils.examineThresholds)
+      .mockReturnValueOnce(firstMet)
+      .mockReturnValueOnce(changedValue);
+
+    const { rerender } = renderHook(
+      (props) => useTotalDataRegionThresholds(props),
+      {
+        initialProps: {
+          totalRowsCount: 10,
+          scrollContainerElement: mockScrollContainerElement,
+        },
+      },
+    );
+
+    expect(mockOnThresholdMet).toHaveBeenCalledTimes(1);
+
+    rerender({
+      totalRowsCount: 20,
+      scrollContainerElement: mockScrollContainerElement,
+    });
+
+    expect(mockOnThresholdMet).toHaveBeenCalledTimes(2);
+    expect(mockOnThresholdMet).toHaveBeenLastCalledWith(changedValue);
+  });
+
+  it('should call onThresholdMet again after projection is reset by an early return', () => {
+    vi.mocked(thresholdUtils.examineThresholds)
+      .mockReturnValueOnce(mockMetThresholds)
+      .mockReturnValueOnce(mockMetThresholds);
+
+    const { rerender } = renderHook(
+      (props) => useTotalDataRegionThresholds(props),
+      {
+        initialProps: {
+          totalRowsCount: 10,
+          scrollContainerElement: mockScrollContainerElement,
+        },
+      },
+    );
+
+    expect(mockOnThresholdMet).toHaveBeenCalledTimes(1);
+
+    // Trigger early return — projection should be reset
+    vi.mocked(thresholdUtils.shouldExamineThresholds).mockReturnValueOnce(
+      false,
+    );
+    rerender({
+      totalRowsCount: 0,
+      scrollContainerElement: mockScrollContainerElement,
+    });
+
+    expect(mockOnThresholdMet).toHaveBeenCalledTimes(1);
+
+    // Examination resumes — same thresholds should fire again
+    rerender({
+      totalRowsCount: 10,
+      scrollContainerElement: mockScrollContainerElement,
+    });
+
+    expect(mockOnThresholdMet).toHaveBeenCalledTimes(2);
+    expect(mockOnThresholdMet).toHaveBeenLastCalledWith(mockMetThresholds);
+  });
 });
