@@ -899,24 +899,20 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
    */
   private renderRadiusLabelLayer(): TextLayer[] {
     const { data, unit, showLabels, labelOptions } = this.props;
-
     const hoverIndex = this.state?.hoverIndex;
-    if (hoverIndex === undefined) {
-      return [];
-    }
-
-    const hoveredShape = data[hoverIndex];
-    if (!(hoveredShape && isCircleShape(hoveredShape))) {
-      return [];
-    }
-
-    const radiusText = getRadiusLabelText(hoveredShape, unit);
-    if (!radiusText) {
-      return [];
-    }
+    const hoveredShape =
+      hoverIndex !== undefined ? data[hoverIndex] : undefined;
+    const radiusText =
+      hoveredShape && isCircleShape(hoveredShape)
+        ? getRadiusLabelText(hoveredShape, unit)
+        : undefined;
 
     // Use the same position the label would occupy
-    const labelPosition = getLabelPosition2d(hoveredShape, labelOptions);
+    const labelPosition =
+      radiusText && hoveredShape
+        ? getLabelPosition2d(hoveredShape, labelOptions)
+        : undefined;
+
     if (!labelPosition) {
       return [];
     }
