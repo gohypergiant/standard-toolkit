@@ -181,6 +181,24 @@
     }
   }
 
+  .content .selection {
+    @variant group-hover/tree-item {
+      @apply outline-interactive-hover;
+    }
+
+    @variant group-focus-visible/tree-item {
+      @apply outline-interactive-hover;
+    }
+
+    @variant group-hover/checkbox {
+      @apply outline-accent-primary-bold;
+    }
+
+    @variant group-focus-visible/checkbox {
+      @apply outline-accent-primary-bold;
+    }
+  }
+
   .dropIndicator {
     @apply h-xxs bg-(--outline-accent-primary-hover);
   }

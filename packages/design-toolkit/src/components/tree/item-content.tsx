@@ -129,6 +129,7 @@ export function TreeItemContent({ children }: TreeItemContentProps) {
                   slot='selection'
                   isSelected={isSelected}
                   isDisabled={isDisabled}
+                  classNames={{ control: styles.selection }}
                 />
               )}
               {allowsDragging && (
