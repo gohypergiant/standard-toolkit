@@ -123,12 +123,28 @@ export const ClientSidePagination: Story = {
     docs: {
       description: {
         story:
-          'Built-in client-side pagination. Pass all data and a `pageSize` prop — the Table handles pagination internally using TanStack `getPaginationRowModel()` and renders `<Pagination>` automatically.',
+          'Client-side pagination. Pass all data and a `pageSize` prop — the Table handles data slicing internally via TanStack `getPaginationRowModel()`. Render `<Pagination>` alongside the Table to control navigation.',
       },
     },
   },
   render: () => {
-    return <Table columns={columns} data={allData} pageSize={PAGE_SIZE} />;
+    const [page, setPage] = useState(1);
+    return (
+      <div>
+        <Table
+          columns={columns}
+          data={allData}
+          pageSize={PAGE_SIZE}
+          page={page}
+          onPageChange={setPage}
+        />
+        <Pagination
+          value={page}
+          total={Math.ceil(allData.length / PAGE_SIZE)}
+          onChange={setPage}
+        />
+      </div>
+    );
   },
 };
 

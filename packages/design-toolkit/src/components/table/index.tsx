@@ -34,7 +34,6 @@ import { Menu } from '../menu';
 import { MenuItem } from '../menu/item';
 import { MenuSeparator } from '../menu/separator';
 import { MenuTrigger } from '../menu/trigger';
-import { Pagination } from '../pagination/index';
 import { TableBody } from './body';
 import { TableContext } from './context';
 import { TableHeader } from './header';
@@ -359,7 +358,6 @@ export function Table<T extends { id: Key }>({
     getCenterRows,
     getBottomRows,
     getRowModel,
-    getPageCount,
     setColumnOrder,
   } = useReactTable<T>({
     data,
@@ -443,7 +441,7 @@ export function Table<T extends { id: Key }>({
     );
   }
 
-  const tableElement = (
+  return (
     <TableContext.Provider
       value={{
         persistRowKebabMenu,
@@ -471,18 +469,5 @@ export function Table<T extends { id: Key }>({
         />
       </table>
     </TableContext.Provider>
-  );
-
-  if (pagination == null) return tableElement;
-
-  return (
-    <div>
-      {tableElement}
-      <Pagination
-        value={currentPage}
-        total={getPageCount()}
-        onChange={setCurrentPage}
-      />
-    </div>
   );
 }

@@ -100,16 +100,13 @@ const [selectedRows, setSelectedRows] = useState({ tanner: true, joe: true });
 
 ## Pagination
 
-The Table has built-in client-side pagination. Pass all data and set `pageSize` — the Table handles slicing and renders a `<Pagination>` control automatically.
+Table handles client-side data slicing internally when `pageSize` is set. Render `<Pagination>` alongside the Table to provide page navigation — the two components are kept separate so you have full control over Pagination's placement and props.
 
 ```tsx
-<Table columns={columns} data={data} pageSize={10} />
-```
+const [page, setPage] = useState(1);
 
-For controlled pagination, use `page` and `onPageChange`:
-
-```tsx
 <Table columns={columns} data={data} pageSize={10} page={page} onPageChange={setPage} />
+<Pagination value={page} total={Math.ceil(data.length / 10)} onChange={setPage} />
 ```
 
 <Canvas of={TablePaginationStories.ClientSidePagination} />
