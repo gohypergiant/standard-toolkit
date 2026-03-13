@@ -1,6 +1,6 @@
 # @accelint/design-toolkit
 
-## 10.0.0
+## 9.9.0
 ### Minor Changes
 
 - 6d1c73e: Add label and isRequired prop to color picker component

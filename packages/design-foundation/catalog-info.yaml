@@ -11,8 +11,8 @@ metadata:
 
     Dependencies:
 
-    accelint_constants@0.3.0, accelint_converters@1.0.0,
-    accelint_predicates@0.5.1, accelint_biome-config@1.1.0,
+    accelint_constants@0.3.0, accelint_converters@1.0.1,
+    accelint_predicates@0.5.2, accelint_biome-config@1.1.0,
     accelint_prettier-config@0.2.1, accelint_typescript-config@0.1.4,
     accelint_vitest-config@0.1.6
   annotations:
