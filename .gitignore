@@ -21,6 +21,7 @@ build
 dist
 storybook-static
 *storybook.log
+tmp
 
 # Environment variables
 .env

@@ -412,6 +412,7 @@ export function createMapStore<TState, TActions>(
    * @returns Object containing state and all actions
    */
   function use(mapId: UniqueId): { state: TState } & TActions {
+    // biome-ignore lint/correctness/useHookAtTopLevel: FIXME: need to rename/rework this function
     const state = useSyncExternalStore(
       subscribe(mapId),
       snapshot(mapId),

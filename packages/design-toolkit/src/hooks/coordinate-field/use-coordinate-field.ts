@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { useId } from '@react-aria/utils';
+import { useId } from 'react-aria';
 import { useMemo } from 'react';
 import { useCoordinateCopy } from './use-coordinate-copy';
 import { useCoordinateFieldState } from './use-coordinate-field-state';
