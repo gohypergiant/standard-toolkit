@@ -27,17 +27,11 @@ import type { TextProps } from 'react-aria-components';
  *
  * @param props - TextProps from react-aria-components.
  * @param props.className - Optional CSS class name.
- * @param props.highlight - Whether to highlight matched text when inside a ComboBox. Defaults to true.
  * @returns The rendered OptionsItemLabel component.
  */
-export function OptionsItemLabel({
-  className,
-  children,
-  highlight = true,
-  ...rest
-}: TextProps & { highlight?: boolean }) {
+export function OptionsItemLabel({ className, children, ...rest }: TextProps) {
   const comboBoxState = useContext(ComboBoxStateContext);
-  const inputValue = highlight ? (comboBoxState?.inputValue ?? '') : '';
+  const inputValue = comboBoxState?.inputValue ?? '';
 
   const highlighted =
     typeof children === 'string' && inputValue
