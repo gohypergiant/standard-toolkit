@@ -1,0 +1,281 @@
+name: backports
+version: 1
+description: Build a library from a core-backport handoff package
+
+# Required fields in this change's .openspec.yaml:
+#
+#   handoff: <subdirectory>
+#
+# The `handoff` field names the subdirectory under openspec/handoff/ that
+# contains the Team A documents for this backport. Example:
+#
+#   schema: backports
+#   handoff: coordinate-grids
+#
+# All artifact instructions will read from openspec/handoff/<handoff>/.
+
+artifacts:
+  - id: feature-description
+    generates: feature-description.md
+    description: Scope and details of feature value from stakeholder perspective
+    template: feature-description.md
+    instruction: >
+      Read the `handoff` field from this change's .openspec.yaml file.
+      The handoff documents are located at openspec/handoff/<handoff>/.
+
+      Before writing anything, read all five handoff documents:
+        - overview.md   (what the reference implementation is)
+        - spec.md       (requirements extracted from the reference)
+        - design.md     (decisions, tradeoffs, callouts)
+        - api.md        (suggestive API proposal and open questions)
+        - system.md     (implementation details — module structure, data flow, and key algorithms)
+
+      Write a non-technical description
+      of this library for stakeholders — product managers, designers, and other teams
+      who need to understand what the library does without implementation details.
+
+
+      This is not a spec. It does not use SHALL/MUST. It describes the feature in
+      plain language, from the perspective of someone using an application that has
+      adopted this library.
+
+
+      Sections:
+
+      - **Overview**: What the library does and who benefits from it. Your framing —
+        not a copy of the handoff overview.
+
+      - **Supported Features**: The major capabilities, one subsection each. Written
+        as user-facing behavior, not API surface.
+
+      - **User Interactions**: How users interact with the feature (if applicable).
+        What they see, click, hover, configure.
+
+      - **Customization Options**: What application developers can configure or
+        customize when adopting this library.
+
+      - **Technical Deliverables**: What developers receive — layer classes, types,
+        documentation, examples. One short paragraph.
+
+      - **Scope and Limitations**: What is included in v1. What is explicitly not
+        included and why (briefly). Use ✅/❌ lists.
+
+      - **Use Cases**: 3–5 example applications that would benefit from this library.
+        Each should be a brief scenario, not a technical description.
+    requires: []
+
+  - id: proposal
+    generates: proposal.md
+    description: Change proposal — why this backport, what it changes, and its impact
+    template: proposal.md
+    instruction: >
+      Read the `handoff` field from this change's .openspec.yaml file.
+      The handoff documents are located at openspec/handoff/<handoff>/.
+
+      Read feature-description.md first. The proposal's capabilities must match what feature-description.md commits to.
+
+      Before writing anything, read all five handoff documents:
+        - overview.md   (what the reference implementation is)
+        - spec.md       (requirements extracted from the reference)
+        - design.md     (decisions, tradeoffs, callouts)
+        - api.md        (suggestive API proposal and open questions)
+        - system.md     (implementation details — module structure, data flow, and key algorithms)
+
+
+      Write change proposal for this backport. This is not the same as the handoff —
+      it is your team's justification for building this library and a summary of what will
+      change as a result. Audience: this team and its stakeholders.
+
+
+      Sections:
+
+      - **Why**: Why should this library exist? What problem does it solve for consumers
+        in this ecosystem? What value does the backport provide over building from scratch?
+
+      - **What Changes**: Bulleted list of what will be built or modified.
+        Keep it brief — detailed design is in design.md.
+
+      - **Capabilities**: Identify which specs will be created or modified:
+        - **New Capabilities**: List capabilities being introduced. Each becomes a new `specs/<name>/spec.md`. Use kebab-case names (e.g., `user-auth`, `data-export`).
+        - **Modified Capabilities**: List existing capabilities whose REQUIREMENTS are changing. Only include if spec-level behavior changes (not just implementation details). Each needs a delta spec file. Check `openspec/specs/` for existing spec names. Leave empty if no requirement changes.
+        Capabilities should map 1:1 with your scope.md In Scope section.
+
+      - **Impact**: What changes as a result of this work.
+        - Code Changes: which packages, what kind of change
+        - Dependencies: new deps added, why
+        - APIs: new public API surface, breaking or not
+        - Other Systems: anything else affected
+
+      IMPORTANT: The Capabilities section is critical. It creates the contract
+      between
+
+      proposal and specs phases. Research existing specs before filling this in.
+
+      Each capability listed here will need a corresponding spec file.
+
+
+      Keep it concise (1-2 pages). Focus on the "why" not the "how" -
+
+      implementation details belong in design.md.
+
+
+      This is the foundation - specs, design, and tasks all build on this.
+
+    requires:
+      - feature-description
+
+  - id: design
+    generates: design.md
+    description: Library architecture decisions
+    template: design.md
+    instruction: >
+      Read the `handoff` field from this change's .openspec.yaml file.
+      The handoff documents are located at openspec/handoff/<handoff>/.
+
+
+      Document your library architecture decisions.
+
+      Read the handoff design.md first, especially the Callouts and
+      "Application Specific Concerns" sections. Your design.md must explicitly
+      address each callout — either acknowledging how you will handle it, or
+      explaining why it does not apply.
+
+
+      Sections:
+
+      - **Package Structure**: How will this library be packaged?
+        Single package or multiple? Monorepo? Named exports? Entry points?
+
+      - **Peer Dependencies**: What does the consumer need to provide?
+        What is bundled vs. external?
+
+      - **Public API**: Your decisions on the API surface. Reference the handoff
+        api.md proposal — accept, adapt, or deviate with rationale for each
+        significant choice.
+
+      - **State Management**: How does the library handle state?
+        (e.g. fully controlled via props, uncontrolled with hooks, hybrid?)
+        This is typically the most important decoupling decision for a library.
+
+      - **Decisions**: Other key technical choices. For each:
+        - What was chosen
+        - Why
+        - Alternatives considered
+
+      - **Callout Responses**: For each callout in the handoff design.md, document
+        how your implementation will address it. Use the same [Label] for traceability.
+
+      - **Open Questions**: Any remaining architectural unknowns. Be specific
+        about what information or decision is needed to resolve each one.
+    requires:
+      - proposal
+
+  - id: specs
+    generates: specs/**/*.md
+    description: Detailed specifications for the change
+    template: spec.md
+    instruction: >
+      Read the `handoff` field from this change's .openspec.yaml file.
+      The handoff documents are located at openspec/handoff/<handoff>/.
+
+
+      Read proposal.md to get the list of capabilities. For each capability, generate
+      a spec file at specs/<capability-id>/spec.md.
+
+
+      Read scope.md first. Only write requirements for capabilities you committed to
+      in Scope. Each spec file covers exactly one capability from proposal.md.
+
+      Read the handoff spec.md for reference. You may adopt requirements verbatim,
+      adapt them, or replace them. Write each one deliberately — not by copy-paste.
+
+
+      Rules:
+
+      - Requirements describe WHAT the library does from a consumer's perspective
+
+      - Use SHALL/MUST for normative requirements
+
+      - Every requirement MUST have at least one scenario
+
+      - Scenarios use exactly 4 hashtags (####). Using 3 will fail silently.
+
+      - Requirements should be testable against the library's public API,
+        not internal implementation details
+
+
+      Library-specific consideration: requirements should describe
+      consumer-observable behavior. Internal state and rendering mechanics
+      are implementation details, not requirements.
+    requires:
+      - proposal
+
+  - id: tasks
+    generates: tasks.md
+    description: Implementation checklist with library-specific task categories
+    template: tasks.md
+    instruction: >
+      Read the `handoff` field from this change's .openspec.yaml file.
+      The handoff documents are located at openspec/handoff/<handoff>/.
+
+
+      Create the implementation task list.
+
+
+      IMPORTANT: Follow the template exactly. The apply phase parses checkbox
+      format to track progress. Tasks not using `- [ ]` won't be tracked.
+
+
+      Guidelines:
+
+      - Group tasks under ## numbered headings
+
+      - Each task MUST be a checkbox: `- [ ] X.Y Task description`
+
+      - Tasks should be small enough to complete in one session
+
+      - Order by dependency (what must be done first?)
+
+
+      Use these categories. Include all that apply to this library:
+
+
+      ## 1. Package Setup
+      Package scaffolding, build tooling (tsup/rollup/etc.), tsconfig,
+      peer dependency configuration.
+
+      ## 2. Core Types
+      Public TypeScript interfaces and types. These should be done before
+      implementation — they are the contract everything else builds against.
+
+      ## 3. Implementation
+      One task per requirement or logical group from spec.md.
+
+      ## 4. Tests
+      Unit tests for each requirement. Include edge cases called out in
+      the handoff design.md Callouts section.
+
+      ## 5. Examples
+      Working examples demonstrating each capability. Storybook or equivalent
+      if applicable.
+
+      ## 6. Documentation
+      README, API docs, usage guide.
+
+      ## 7. Publishing
+      Build pipeline, versioning, registry configuration.
+    requires:
+      - spec
+      - design
+
+apply:
+  requires:
+    - tasks
+  tracks: tasks.md
+  instruction: |
+    Read the `handoff` field from this change's .openspec.yaml file.
+    Read all five documents in openspec/handoff/<handoff>/ for reference context on the original implementation.
+    Read context files, work through pending tasks, mark complete as you go.
+    Read feature-description.md, proposal.md, spec.md, design.md for your team's commitments and decisions.
+    Work through pending tasks in tasks.md, marking complete as you go.
+    Pause if you hit blockers or need clarification.
