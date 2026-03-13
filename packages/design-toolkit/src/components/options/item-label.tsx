@@ -27,11 +27,17 @@ import type { TextProps } from 'react-aria-components';
  *
  * @param props - TextProps from react-aria-components.
  * @param props.className - Optional CSS class name.
+ * @param props.highlight - Whether to highlight matched text when inside a ComboBox. Defaults to true.
  * @returns The rendered OptionsItemLabel component.
  */
-export function OptionsItemLabel({ className, children, ...rest }: TextProps) {
+export function OptionsItemLabel({
+  className,
+  children,
+  highlight = true,
+  ...rest
+}: TextProps & { highlight?: boolean }) {
   const comboBoxState = useContext(ComboBoxStateContext);
-  const inputValue = comboBoxState?.inputValue ?? '';
+  const inputValue = highlight ? (comboBoxState?.inputValue ?? '') : '';
 
   const highlighted =
     typeof children === 'string' && inputValue
@@ -47,7 +53,9 @@ export function OptionsItemLabel({ className, children, ...rest }: TextProps) {
 
 function highlightMatch(text: string, query: string): ReactNode {
   const index = text.toLowerCase().indexOf(query.toLowerCase());
-  if (index === -1) return text;
+  if (index === -1) {
+    return text;
+  }
 
   return (
     <>
