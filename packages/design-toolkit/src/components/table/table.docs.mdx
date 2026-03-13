@@ -1,6 +1,7 @@
 import { Canvas, Meta } from '@storybook/addon-docs/blocks';
 
 import * as TableStories from './table.stories';
+import * as TablePaginationStories from './table-pagination.stories';
 
 <Meta of={TableStories} />
 
@@ -97,6 +98,36 @@ const [selectedRows, setSelectedRows] = useState({ tanner: true, joe: true });
 
 <Canvas of={TableStories.InitialRowSelection} />
 
+## Pagination
+
+The Table has built-in client-side pagination. Pass all data and set `pageSize` — the Table handles slicing and renders a `<Pagination>` control automatically.
+
+```tsx
+<Table columns={columns} data={data} pageSize={10} />
+```
+
+For controlled pagination, use `page` and `onPageChange`:
+
+```tsx
+<Table columns={columns} data={data} pageSize={10} page={page} onPageChange={setPage} />
+```
+
+<Canvas of={TablePaginationStories.ClientSidePagination} />
+
+### Server-side Pagination
+
+For server-side (pre-paginated) data, manage page state externally and pass only the current page's data. Use `key={page}` on the Table to force a remount when the page changes.
+
+```tsx
+const [page, setPage] = useState(1);
+const pageData = allData.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
+<Table key={page} columns={columns} data={pageData} />
+<Pagination value={page} total={totalPages} onChange={setPage} />
+```
+
+<Canvas of={TablePaginationStories.PrePaginated} />
+
 ## Props
 
 | Prop | Type | Default | Description |
@@ -117,6 +148,10 @@ const [selectedRows, setSelectedRows] = useState({ tanner: true, joe: true });
 | `onSortChange` | `(columnId, direction) => void` | — | Callback for manual sorting |
 | `onColumnReorderChange` | `(index) => void` | — | Callback when column is reordered |
 | `fullWidth` | `boolean` | `false` | Apply full width with fixed layout |
+| `pageSize` | `number` | — | Rows per page; enables built-in pagination |
+| `page` | `number` | — | Controlled current page (1-indexed) |
+| `defaultPage` | `number` | `1` | Uncontrolled default page (1-indexed) |
+| `onPageChange` | `(page: number) => void` | — | Callback when page changes |
 
 ## Subcomponents
 
