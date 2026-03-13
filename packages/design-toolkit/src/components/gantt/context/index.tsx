@@ -20,13 +20,14 @@ import {
 } from 'react';
 import { TIMESCALE_MAPPING } from '../constants';
 import { useResizeIntersectionEffect } from '../hooks/use-resize-intersection-effect';
-import { selectors, useGanttStore } from '../store';
+import { selectors } from '../store';
 import { getMsPerPx } from '../utils/conversions';
 import { generateTimelineChunks } from '../utils/generation';
 import {
   getRenderedRegionBoundsMs,
   getViewableRegionWidth,
 } from '../utils/helpers';
+import { useGanttStore } from './store';
 import type {
   MetThresholdData,
   Threshold,
@@ -75,9 +76,12 @@ export function GanttProvider({
   const msPerPx = getMsPerPx(timescale);
   const selectedTimeIntervalMs = TIMESCALE_MAPPING[timescale];
 
-  const roundedTimestampMs = useGanttStore(
-    selectors.roundedCurrentPositionMs(selectedTimeIntervalMs),
+  const selector = useMemo(
+    () => selectors.roundedCurrentPositionMs(selectedTimeIntervalMs),
+    [selectedTimeIntervalMs],
   );
+
+  const roundedTimestampMs = useGanttStore(selector);
 
   const timelineChunks = generateTimelineChunks(
     roundedTimestampMs,

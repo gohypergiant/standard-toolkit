@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { create } from 'zustand';
+import { createStore } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 import { GANTT_ROW_HEIGHT_PX } from './constants';
 import { roundDateToInterval } from './utils/dates';
@@ -24,8 +24,6 @@ type GanttActions = {
   setCurrentPositionMs: (ms: number) => void;
   setCurrentRowScrollPx: (px: number) => void;
 };
-
-type GanttStore = GanttState & GanttActions;
 
 export const selectors = {
   currentPositionMs: (state: GanttState) => state.currentPositionMs,
@@ -44,15 +42,19 @@ export const selectors = {
   },
 };
 
-export const useGanttStore = create<GanttStore>()(
-  subscribeWithSelector((set) => ({
-    currentPositionMs: 0,
-    currentRowScrollPx: 0,
-    setCurrentPositionMs: (ms: number) => {
-      set({ currentPositionMs: ms });
-    },
-    setCurrentRowScrollPx: (px: number) => {
-      set({ currentRowScrollPx: px });
-    },
-  })),
-);
+export type GanttStoreProps = {
+  startTimeMs: number;
+};
+
+export const createGanttStore = ({ startTimeMs }: GanttStoreProps) => {
+  return createStore<GanttState & GanttActions>()(
+    subscribeWithSelector((set) => ({
+      currentPositionMs: startTimeMs,
+      currentRowScrollPx: 0,
+      setCurrentPositionMs: (ms: number) => set({ currentPositionMs: ms }),
+      setCurrentRowScrollPx: (px: number) => set({ currentRowScrollPx: px }),
+    })),
+  );
+};
+
+export type GanttStore = ReturnType<typeof createGanttStore>;
