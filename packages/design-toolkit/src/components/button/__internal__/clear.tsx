@@ -44,6 +44,7 @@ export function ClearButton({ className, ...rest }: ClearButtonProps) {
   return (
     <Button
       {...rest}
+      slot={null}
       excludeFromTabOrder
       className={composeRenderProps(className, (className) =>
         clsx(styles.clearButton, className),
