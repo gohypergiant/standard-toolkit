@@ -16,8 +16,10 @@ import { clsx } from '@accelint/design-foundation/lib/utils';
 import Kebab from '@accelint/icons/kebab';
 import Pin from '@accelint/icons/pin';
 import { useListData } from '@react-stately/data';
+import { useControlledState } from '@react-stately/utils';
 import {
   getCoreRowModel,
+  getPaginationRowModel,
   getSortedRowModel,
   type Row,
   type RowPinningState,
@@ -32,6 +34,7 @@ import { Menu } from '../menu';
 import { MenuItem } from '../menu/item';
 import { MenuSeparator } from '../menu/separator';
 import { MenuTrigger } from '../menu/trigger';
+import { Pagination } from '../pagination/index';
 import { TableBody } from './body';
 import { TableContext } from './context';
 import { TableHeader } from './header';
@@ -144,6 +147,10 @@ export function Table<T extends { id: Key }>({
   onColumnReorderChange,
   onRowSelectionChange,
   fullWidth = false,
+  pageSize,
+  page: pageProp,
+  defaultPage = 1,
+  onPageChange,
   ...rest
 }: TableProps<T>) {
   const {
@@ -161,6 +168,35 @@ export function Table<T extends { id: Key }>({
     top: [],
     bottom: [],
   });
+
+  const [currentPage, setCurrentPage] = useControlledState(
+    pageProp,
+    defaultPage,
+    onPageChange,
+  );
+
+  const pagination = useMemo(
+    () =>
+      pageSize != null ? { pageIndex: currentPage - 1, pageSize } : undefined,
+    [currentPage, pageSize],
+  );
+
+  const handlePaginationChange = useCallback(
+    (
+      updater:
+        | { pageIndex: number; pageSize: number }
+        | ((old: { pageIndex: number; pageSize: number }) => {
+            pageIndex: number;
+            pageSize: number;
+          }),
+    ) => {
+      if (pagination == null) return;
+      const next =
+        typeof updater === 'function' ? updater(pagination) : updater;
+      setCurrentPage(next.pageIndex + 1);
+    },
+    [pagination, setCurrentPage],
+  );
 
   /**
    * moveUpSelectedRows moves the selected rows up in the table.
@@ -323,6 +359,7 @@ export function Table<T extends { id: Key }>({
     getCenterRows,
     getBottomRows,
     getRowModel,
+    getPageCount,
     setColumnOrder,
   } = useReactTable<T>({
     data,
@@ -335,6 +372,7 @@ export function Table<T extends { id: Key }>({
     state: {
       rowSelection,
       rowPinning,
+      ...(pagination != null && { pagination }),
     },
     getRowId: (row, index) => {
       // Use the index as the row ID if no unique identifier is available
@@ -345,8 +383,12 @@ export function Table<T extends { id: Key }>({
     manualSorting: manualSorting,
     onRowSelectionChange: handleRowSelectionChange,
     onRowPinningChange: setRowPinning,
+    onPaginationChange: handlePaginationChange,
     getCoreRowModel: getCoreRowModel<T>(),
     getSortedRowModel: getSortedRowModel<T>(),
+    ...(pageSize != null && {
+      getPaginationRowModel: getPaginationRowModel<T>(),
+    }),
   });
 
   const moveColumnLeft = useCallback(
@@ -401,7 +443,7 @@ export function Table<T extends { id: Key }>({
     );
   }
 
-  return (
+  const tableElement = (
     <TableContext.Provider
       value={{
         persistRowKebabMenu,
@@ -429,5 +471,18 @@ export function Table<T extends { id: Key }>({
         />
       </table>
     </TableContext.Provider>
+  );
+
+  if (pagination == null) return tableElement;
+
+  return (
+    <div>
+      {tableElement}
+      <Pagination
+        value={currentPage}
+        total={getPageCount()}
+        onChange={setCurrentPage}
+      />
+    </div>
   );
 }
