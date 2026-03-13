@@ -9,6 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+import type { Rgba255Tuple } from '@accelint/predicates/is-rgba-255-tuple';
 import type { RefAttributes } from 'react';
 import type {
   ColorSwatchPickerItemProps,
@@ -22,7 +23,7 @@ import type {
  */
 export type ColorPickerProps = Omit<
   ColorSwatchPickerProps,
-  'children' | 'layout'
+  'children' | 'defaultValue' | 'layout' | 'value'
 > &
   RefAttributes<HTMLDivElement> & {
     /** Custom class names for sub-elements. */
@@ -38,8 +39,12 @@ export type ColorPickerProps = Omit<
       /** Class name for the color swatch elements. */
       swatch?: ColorSwatchProps['className'];
     };
-    /** Array of color values to display as selectable swatches. */
-    items: ColorSwatchPickerItemProps['color'][];
+    /** Default selected color value. Accepts a color string, Color object, or RGBA 255 tuple. */
+    defaultValue?: ColorSwatchPickerProps['defaultValue'] | Rgba255Tuple;
+    /** Controlled selected color value. Accepts a color string, Color object, or RGBA 255 tuple. */
+    value?: ColorSwatchPickerProps['defaultValue'] | Rgba255Tuple;
+    /** Array of color values to display as selectable swatches. Accepts color strings, Color objects, or RGBA 255 tuples. */
+    items: (ColorSwatchPickerItemProps['color'] | Rgba255Tuple)[];
     /** Whether the associated field is required. */
     isRequired?: boolean;
     /** Label text displayed above the picker. */

@@ -85,6 +85,9 @@ importers:
       '@accelint/bus':
         specifier: workspace:*
         version: link:../../packages/bus
+      '@accelint/converters':
+        specifier: workspace:*
+        version: link:../../packages/converters
       '@accelint/core':
         specifier: workspace:*
         version: link:../../packages/core
@@ -109,6 +112,9 @@ importers:
       '@accelint/postcss-tailwind-css-modules':
         specifier: workspace:*
         version: link:../../packages/postcss-tailwind-css-modules
+      '@accelint/predicates':
+        specifier: workspace:*
+        version: link:../../packages/predicates
       '@accelint/temporal':
         specifier: workspace:*
         version: link:../../packages/temporal
@@ -551,6 +557,9 @@ importers:
       '@accelint/bus':
         specifier: workspace:*
         version: link:../bus
+      '@accelint/converters':
+        specifier: workspace:*
+        version: link:../converters
       '@accelint/core':
         specifier: workspace:*
         version: link:../core
@@ -569,6 +578,9 @@ importers:
       '@accelint/postcss-tailwind-css-modules':
         specifier: workspace:*
         version: link:../postcss-tailwind-css-modules
+      '@accelint/predicates':
+        specifier: workspace:*
+        version: link:../predicates
       '@accelint/prettier-config':
         specifier: workspace:*
         version: link:../../tooling/prettier-config
