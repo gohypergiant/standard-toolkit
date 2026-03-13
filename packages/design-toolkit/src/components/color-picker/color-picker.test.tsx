@@ -25,7 +25,7 @@ const items = [
   '#D4231D',
 ];
 
-function setup(props: Partial<ColorPickerProps<string>> = {}) {
+function setup(props: Partial<ColorPickerProps> = {}) {
   return {
     ...render(<ColorPicker items={items} {...props} />),
     ...props,

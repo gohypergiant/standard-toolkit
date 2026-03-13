@@ -15,13 +15,17 @@ import 'client-only';
 import { rgba255TupleToHex } from '@accelint/converters/hex';
 import { uuid } from '@accelint/core';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { isRgba255Tuple } from '@accelint/predicates/is-rgba-255-tuple';
+import {
+  isRgba255Tuple,
+  type Rgba255Tuple,
+} from '@accelint/predicates/is-rgba-255-tuple';
 import { useMemo } from 'react';
 import {
   ColorSwatch,
   ColorSwatchPicker,
   ColorSwatchPickerItem,
   composeRenderProps,
+  type Color,
 } from 'react-aria-components';
 import { Label } from '../label';
 import styles from './styles.module.css';
@@ -72,7 +76,13 @@ import type { ColorPickerProps } from './types';
  * - Supports all accessibility features from react-aria-components
  * - Uses a grid layout by default but can be customized via the layout prop
  */
-function normalizeColor(value: unknown) {
+function normalizeColor(value: string | Color | Rgba255Tuple): string | Color;
+function normalizeColor(
+  value: string | Color | Rgba255Tuple | undefined,
+): string | Color | undefined;
+function normalizeColor(
+  value: string | Color | Rgba255Tuple | undefined,
+): string | Color | undefined {
   return isRgba255Tuple(value) ? rgba255TupleToHex(value) : value;
 }
 
