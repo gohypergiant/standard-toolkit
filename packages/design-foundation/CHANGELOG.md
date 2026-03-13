@@ -1,5 +1,13 @@
 # @accelint/design-toolkit
 
+## 3.0.2
+### Patch Changes
+
+- Updated dependencies [fa05228]
+  - @accelint/constants@0.3.0
+  - @accelint/converters@2.0.0
+  - @accelint/predicates@0.5.2
+
 ## 3.0.1
 ### Patch Changes
 

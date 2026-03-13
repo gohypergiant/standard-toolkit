@@ -1,5 +1,24 @@
 # @accelint/design-toolkit
 
+## 9.9.0
+### Minor Changes
+
+- 6d1c73e: Add label and isRequired prop to color picker component
+- 3407a27: Update the color picker values to accept RGBA values
+- a3a9650: Fix combobox select and clear issues. Add matched text highlighting to OptionsItemLabel when used inside a ComboBox, controllable via `highlight` prop (defaults to `true`).
+
+### Patch Changes
+
+- e2e4f72: Fix native date/time input icon color for dark mode
+- 9a3e62e: Fix color picker outline cutoffs
+- f62aaf1: Fix floating card header padding token
+- 1e97115: Add tooltip to the coordinate field format menu button
+- Updated dependencies [9a25205]
+  - @accelint/logger@1.1.0
+  - @accelint/converters@2.0.0
+  - @accelint/design-foundation@3.0.2
+  - @accelint/predicates@0.5.2
+
 ## 9.8.0
 
 ### Minor Changes
