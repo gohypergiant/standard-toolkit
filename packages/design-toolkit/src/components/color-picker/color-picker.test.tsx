@@ -78,4 +78,24 @@ describe('ColorPicker', () => {
     expect(listbox).toBeInTheDocument();
     expect(screen.getAllByRole('option')).toHaveLength(4);
   });
+
+  it('should render a label when provided', () => {
+    setup({ label: 'Pick a color' });
+
+    expect(screen.getByText(/^Pick a color/)).toBeInTheDocument();
+  });
+
+  it('should render label without "(optional)" when isRequired is true', () => {
+    setup({ label: 'Pick a color', isRequired: true });
+
+    const label = screen.getByText('Pick a color');
+    expect(label).toBeInTheDocument();
+    expect(label).not.toHaveTextContent('(optional)');
+  });
+
+  it('should not render a label when not provided', () => {
+    setup();
+
+    expect(screen.queryByText('Pick a color')).not.toBeInTheDocument();
+  });
 });

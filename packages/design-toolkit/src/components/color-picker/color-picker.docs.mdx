@@ -18,6 +18,16 @@ A grid of interactive color swatches for selecting from a predefined palette. Bu
 ```
 <Canvas of={ColorPickerStories.Default} />
 
+### With Label
+```tsx
+<ColorPicker
+  label="Pick a color"
+  items={['#ECECE6', '#898989', '#62a6ff', '#30D27E', '#FCA400', '#D4231D']}
+  onChange={(color) => console.log('Selected:', color)}
+/>
+```
+<Canvas of={ColorPickerStories.WithLabel} />
+
 ### Controlled
 ```tsx
 const [selectedColor, setSelectedColor] = useState('#30D27E');
@@ -78,6 +88,8 @@ Extends [`ColorSwatchPicker`](https://react-spectrum.adobe.com/react-aria/ColorS
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `items` | `(Color \| string \| Rgba255Tuple)[]` | - | Colors to display (hex, hexa, rgb, rgba, hsl, hsla, hsb, hsba strings, Color objects, or RGBA 255 tuples) |
+| `label` | `string` | - | Label text displayed above the picker |
+| `isRequired` | `boolean` | - | When true, the "(optional)" suffix is hidden from the label |
 | `value` | `Color \| string` | - | Controlled selected color |
 | `defaultValue` | `Color \| string \| Rgba255Tuple` | - | Default selected color |
 | `onChange` | `(color: Color) => void` | - | Called when selection changes |
@@ -87,6 +99,8 @@ Extends [`ColorSwatchPicker`](https://react-spectrum.adobe.com/react-aria/ColorS
 
 | Key | Description |
 |-----|-------------|
+| `container` | The outer container element |
+| `label` | The label element |
 | `picker` | Main picker container (grid layout) |
 | `item` | Individual color swatch items |
 | `swatch` | The color swatch elements |

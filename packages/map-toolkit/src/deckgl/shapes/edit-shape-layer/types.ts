@@ -85,6 +85,8 @@ export type UseEditShapeReturn = {
   save: () => void;
   /** Cancel editing and revert to original shape */
   cancel: () => void;
+  /** Update the feature being edited (e.g., from a form). No-op when not editing. */
+  updateFeature: (feature: Feature) => void;
   /** Whether currently in editing mode */
   isEditing: boolean;
   /** The shape currently being edited (null if not editing) */

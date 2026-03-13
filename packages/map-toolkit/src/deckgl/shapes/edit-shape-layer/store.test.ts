@@ -26,7 +26,7 @@ import {
   enableEditPanning,
   getEditingState,
   saveEditingFromLayer,
-  updateFeatureFromLayer,
+  updateFeature,
 } from './store';
 import type { UniqueId } from '@accelint/core';
 import type { Shape } from '../shared/types';
@@ -426,7 +426,7 @@ describe('edit-shape-layer store', () => {
         },
       };
 
-      updateFeatureFromLayer(mapId, updatedFeature);
+      updateFeature(mapId, updatedFeature);
 
       expect(editStore.get(mapId)?.featureBeingEdited).toEqual(updatedFeature);
     });

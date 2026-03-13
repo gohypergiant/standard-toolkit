@@ -13,14 +13,17 @@
 
 import 'client-only';
 import { rgba255TupleToHex } from '@accelint/converters/hex';
+import { uuid } from '@accelint/core';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import { isRgba255Tuple } from '@accelint/predicates/is-rgba-255-tuple';
+import { useMemo } from 'react';
 import {
   ColorSwatch,
   ColorSwatchPicker,
   ColorSwatchPickerItem,
   composeRenderProps,
 } from 'react-aria-components';
+import { Label } from '../label';
 import styles from './styles.module.css';
 import type { ColorPickerProps } from './types';
 
@@ -35,9 +38,12 @@ import type { ColorPickerProps } from './types';
  * @param props - The color picker props.
  * @param props.items - Array of color values to display as selectable swatches.
  * @param props.classNames - Custom class names for sub-elements.
+ * @param props.classNames.container - Class name for the outer container element.
+ * @param props.classNames.label - Class name for the label element.
  * @param props.classNames.picker - Class name for the picker container.
  * @param props.classNames.item - Class name for individual swatch items.
  * @param props.classNames.swatch - Class name for the color swatch elements.
+ * @param props.label - Label text displayed above the picker.
  * @returns The color picker component.
  *
  * @example
@@ -73,29 +79,48 @@ function normalizeColor(value: unknown) {
 export function ColorPicker({
   classNames,
   defaultValue,
+  isRequired,
   items,
+  label,
+  ref,
   value,
   ...rest
 }: ColorPickerProps) {
+  const labelId = useMemo(
+    () => (label ? uuid({ path: [label] }) : undefined),
+    [label],
+  );
+    
   return (
-    <ColorSwatchPicker
-      {...rest}
-      defaultValue={normalizeColor(defaultValue)}
-      value={normalizeColor(value)}
-      className={composeRenderProps(classNames?.picker, (className) =>
-        clsx(styles.picker, className),
+    <div ref={ref} className={clsx(styles.container, classNames?.container)}>
+      {label && (
+        <Label
+          className={classNames?.label}
+          id={labelId}
+          isRequired={isRequired}
+        >
+          {label}
+        </Label>
       )}
-    >
-      {items.map((item) => {
-        const color = normalizeColor(item);
-        return (
-          <ColorSwatchPickerItem
-            key={typeof color === 'string' ? color : color.toString('hexa')}
-            className={composeRenderProps(classNames?.item, (className) =>
-              clsx(styles.item, className),
-            )}
-            color={color}
-          >
+      <ColorSwatchPicker
+        {...rest}
+        aria-labelledby={labelId}
+        defaultValue={normalizeColor(defaultValue)}
+        value={normalizeColor(value)}
+        className={composeRenderProps(classNames?.picker, (className) =>
+          clsx(styles.picker, className),
+        )}
+      >
+        {items.map((item) => {
+          const color = normalizeColor(item);
+          return (
+            <ColorSwatchPickerItem
+              key={typeof color === 'string' ? color : color.toString('hexa')}
+              className={composeRenderProps(classNames?.item, (className) =>
+                clsx(styles.item, className),
+              )}
+              color={color}
+            >
             <ColorSwatch
               className={composeRenderProps(classNames?.swatch, (className) =>
                 clsx(styles.swatch, className),
@@ -103,7 +128,8 @@ export function ColorPicker({
             />
           </ColorSwatchPickerItem>
         );
-      })}
-    </ColorSwatchPicker>
+        ))}
+      </ColorSwatchPicker>
+    </div>
   );
 }

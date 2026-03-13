@@ -41,8 +41,16 @@ const meta = {
       action: 'changed',
       description: 'Callback function when the color is changed.',
     },
+    isRequired: {
+      control: 'boolean',
+      description: 'Whether the associated field is required.',
+    },
     items: {
       description: 'Array of color options to choose from.',
+    },
+    label: {
+      control: 'text',
+      description: 'Label text displayed above the picker.',
     },
   },
 } satisfies Meta<typeof ColorPicker>;
@@ -51,6 +59,13 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
+  render: ColorPicker,
+};
+
+export const WithLabel: Story = {
+  args: {
+    label: 'Pick a color',
+  },
   render: ColorPicker,
 };
 

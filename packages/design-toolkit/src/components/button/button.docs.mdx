@@ -2,6 +2,7 @@ import { Canvas, Meta } from '@storybook/addon-docs/blocks';
 
 import * as ButtonStories from './button.stories';
 import * as MenuButtonStories from './composition/menu-button.stories';
+import * as SplitButtonStories from './composition/split-button.stories';
 
 <Meta of={ButtonStories} />
 
@@ -50,6 +51,10 @@ Button with pressed/unpressed state. Note: `filled` variant is not available for
 Examples of using a button in a very common compositional pattern
 <Canvas of={MenuButtonStories.Default} />
 <Canvas of={MenuButtonStories.WithTooltip} />
+
+### Composite Split Menu Button
+Examples of using a split icon button and dropdown menu button pattern
+<Canvas of={SplitButtonStories.Default} />
 
 ## Variants
 
