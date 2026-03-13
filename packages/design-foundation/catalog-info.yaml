@@ -11,14 +11,14 @@ metadata:
 
     Dependencies:
 
-    accelint_constants@0.2.0, accelint_converters@1.0.0,
+    accelint_constants@0.3.0, accelint_converters@1.0.0,
     accelint_predicates@0.5.1, accelint_biome-config@1.1.0,
     accelint_prettier-config@0.2.1, accelint_typescript-config@0.1.4,
     accelint_vitest-config@0.1.6
   annotations:
     backstage.io/edit-url: https://github.com/gohypergiant/standard-toolkit/blob/main/packages/design-foundation/catalog-info.yaml
     backstage.io/techdocs-ref: dir:.
-    package/version: 3.0.1
+    package/version: 3.0.2
     github.com/project-slug: gohypergiant/standard-toolkit
   links:
     - url: https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-foundation
