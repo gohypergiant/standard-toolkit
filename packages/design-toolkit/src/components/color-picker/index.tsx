@@ -90,7 +90,7 @@ export function ColorPicker({
     () => (label ? uuid({ path: [label] }) : undefined),
     [label],
   );
-    
+
   return (
     <div ref={ref} className={clsx(styles.container, classNames?.container)}>
       {label && (
@@ -121,14 +121,14 @@ export function ColorPicker({
               )}
               color={color}
             >
-            <ColorSwatch
-              className={composeRenderProps(classNames?.swatch, (className) =>
-                clsx(styles.swatch, className),
-              )}
-            />
-          </ColorSwatchPickerItem>
-        );
-        ))}
+              <ColorSwatch
+                className={composeRenderProps(classNames?.swatch, (className) =>
+                  clsx(styles.swatch, className),
+                )}
+              />
+            </ColorSwatchPickerItem>
+          );
+        })}
       </ColorSwatchPicker>
     </div>
   );
