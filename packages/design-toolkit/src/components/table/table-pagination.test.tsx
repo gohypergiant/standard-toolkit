@@ -13,7 +13,9 @@
 import { createColumnHelper } from '@tanstack/react-table';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { useState } from 'react';
 import { describe, expect, it } from 'vitest';
+import { Pagination } from '../pagination/index';
 import { Table } from './index';
 
 type Person = {
@@ -45,9 +47,29 @@ const allData: Person[] = Array.from({ length: 25 }, (_, i) => ({
   lastName: `last-${i + 1}`,
 }));
 
-describe('Table with built-in pagination', () => {
+function PaginatedTable() {
+  const [page, setPage] = useState(1);
+  return (
+    <>
+      <Table
+        columns={columns}
+        data={allData}
+        pageSize={PAGE_SIZE}
+        page={page}
+        onPageChange={setPage}
+      />
+      <Pagination
+        value={page}
+        total={Math.ceil(allData.length / PAGE_SIZE)}
+        onChange={setPage}
+      />
+    </>
+  );
+}
+
+describe('Table with pagination', () => {
   it('should render correct number of rows on first page', () => {
-    render(<Table columns={columns} data={allData} pageSize={PAGE_SIZE} />);
+    render(<PaginatedTable />);
 
     const rows = screen.getAllByRole('row');
     // 1 header row + 10 data rows
@@ -57,7 +79,7 @@ describe('Table with built-in pagination', () => {
   });
 
   it('should show next page data after clicking next', async () => {
-    render(<Table columns={columns} data={allData} pageSize={PAGE_SIZE} />);
+    render(<PaginatedTable />);
 
     await userEvent.click(screen.getByLabelText('Next page'));
 
@@ -67,7 +89,7 @@ describe('Table with built-in pagination', () => {
   });
 
   it('should navigate back to previous page', async () => {
-    render(<Table columns={columns} data={allData} pageSize={PAGE_SIZE} />);
+    render(<PaginatedTable />);
 
     await userEvent.click(screen.getByLabelText('Next page'));
     expect(screen.getByText('first-11')).toBeInTheDocument();
@@ -78,7 +100,7 @@ describe('Table with built-in pagination', () => {
   });
 
   it('should display correct total pages in pagination', () => {
-    render(<Table columns={columns} data={allData} pageSize={PAGE_SIZE} />);
+    render(<PaginatedTable />);
 
     const nav = screen.getByRole('navigation');
     expect(nav).toHaveAttribute('aria-label', 'Page 1 of 3');
@@ -95,7 +117,7 @@ describe('Table with built-in pagination', () => {
   });
 
   it('should show correct partial row count on last page', async () => {
-    render(<Table columns={columns} data={allData} pageSize={PAGE_SIZE} />);
+    render(<PaginatedTable />);
 
     // Navigate to page 3 (last page with 5 rows)
     await userEvent.click(screen.getByLabelText('Next page'));
