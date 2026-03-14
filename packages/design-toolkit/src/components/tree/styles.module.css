@@ -41,7 +41,7 @@
     }
 
     @variant drop-target {
-      @apply outline-accent-primary-bold border;
+      @apply outline-accent-primary-bold outline;
       background-color: --alpha(var(--bg-accent-primary-muted) / 20%);
     }
 
@@ -183,5 +183,9 @@
 
   .dropIndicator {
     @apply h-xxs bg-(--outline-accent-primary-hover);
+  }
+
+  .dropIndicatorBetween {
+    @apply h-xs my-xs rounded-full bg-(--outline-accent-primary-hover);
   }
 }
