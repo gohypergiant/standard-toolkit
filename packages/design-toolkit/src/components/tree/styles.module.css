@@ -29,7 +29,7 @@
     }
 
     @variant hover {
-      @apply bg-interactive-muted-hover;
+      @apply bg-interactive-muted-hover/50;
     }
 
     @variant focus-visible {
