@@ -49,7 +49,7 @@ import type { TreeItemContentProps } from './types';
 export function TreeItemContent({ children }: TreeItemContentProps) {
   const { showVisibility, variant, visibleKeys, onVisibilityChange } =
     useContext(TreeContext);
-  const { isVisible, isViewable } = useContext(TreeItemContext);
+  const { isVisible, isViewable, ancestors } = useContext(TreeItemContext);
   const size = variant === 'cozy' ? 'medium' : 'small';
 
   return (
@@ -68,9 +68,15 @@ export function TreeItemContent({ children }: TreeItemContentProps) {
           isSelected,
         } = renderProps;
 
-        const isLastOfSet = !(
-          state.collection.getItem(id)?.nextKey || hasChildItems
-        );
+        const item = state.collection.getItem(id);
+        const isLastOfSet = !item?.nextKey;
+
+        // Determine if ancestors are last of set (excludes current item)
+        const ancestorLastOfSet = ancestors.slice(0, -1).map((ancestorKey) => {
+          const ancestorItem = state.collection.getItem(ancestorKey);
+          return !ancestorItem?.nextKey;
+        });
+
         const shouldShowSelection =
           selectionBehavior === 'toggle' && selectionMode !== 'none';
 
@@ -99,7 +105,11 @@ export function TreeItemContent({ children }: TreeItemContentProps) {
                 </Button>
               )}
               {level > 1 && (
-                <TreeLines level={level} isLastOfSet={isLastOfSet} />
+                <TreeLines
+                  level={level}
+                  isLastOfSet={isLastOfSet}
+                  ancestorLastOfSet={ancestorLastOfSet}
+                />
               )}
               {hasChildItems && (
                 <Button
