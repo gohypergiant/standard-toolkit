@@ -101,7 +101,7 @@ export function TreeItemContent({ children }: TreeItemContentProps) {
               {level > 1 && (
                 <TreeLines level={level} isLastOfSet={isLastOfSet} />
               )}
-              {hasChildItems ? (
+              {hasChildItems && (
                 <Button
                   slot='chevron'
                   variant='icon'
@@ -110,8 +110,6 @@ export function TreeItemContent({ children }: TreeItemContentProps) {
                 >
                   <Icon>{isExpanded ? <ChevronDown /> : <ChevronUp />}</Icon>
                 </Button>
-              ) : (
-                <div className={clsx(styles.spacing, styles[variant])} />
               )}
               <div className={clsx(styles.display, styles[variant])}>
                 {typeof children === 'function'
