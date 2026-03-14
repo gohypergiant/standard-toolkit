@@ -46,7 +46,7 @@
     }
 
     @variant disabled {
-      @apply cursor-not-allowed border-none;
+      @apply fg-disabled cursor-not-allowed border-none;
 
       @variant hover {
         @apply bg-transparent;
@@ -54,6 +54,10 @@
 
       @variant data-[drop-target=true] {
         @apply bg-transparent;
+      }
+
+      .description {
+        @apply fg-disabled;
       }
     }
 
@@ -194,6 +198,10 @@
   .visibility {
     @variant group-not-viewable/tree-item {
       @apply fg-primary-muted;
+
+      @variant disabled {
+        @apply fg-disabled;
+      }
     }
   }
 }
