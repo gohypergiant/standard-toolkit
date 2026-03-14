@@ -121,10 +121,21 @@ const items: TreeNode<ItemValues>[] = [
         },
       },
       {
+        key: 'coopers-hawk',
+        parentKey: 'north-american-birds',
+        label: "Cooper's Hawk",
+        isDisabled: true,
+        isVisible: false,
+        values: {
+          description: 'Astur cooperii',
+          iconPrefix: <Placeholder />,
+        },
+      },
+      {
         key: 'black-capped-chickadee',
         parentKey: 'north-american-birds',
         label: 'Black-capped chickadee',
-        isDisabled: true,
+        isDisabled: false,
         isVisible: false,
         values: {
           description: 'Poecile atricapillus',

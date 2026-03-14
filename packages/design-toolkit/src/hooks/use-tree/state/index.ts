@@ -53,13 +53,6 @@ export function useTreeState<T>({
           'text/plain': JSON.stringify(node),
         };
       }),
-    onReorder: (e: DroppableCollectionReorderEvent) => {
-      if (e.target.dropPosition === 'before') {
-        setNodes(actions.moveBefore(e.target.key, e.keys));
-      } else {
-        setNodes(actions.moveAfter(e.target.key, e.keys));
-      }
-    },
     onInsert: ({ items, target }: DroppableCollectionInsertDropEvent) => {
       (async () => {
         const processedItems = await processDroppedItems(
@@ -78,25 +71,6 @@ export function useTreeState<T>({
         }
       })();
     },
-    onItemDrop: ({ target, items }: DroppableCollectionOnItemDropEvent) => {
-      (async () => {
-        const targetNode = actions.getNode(target.key);
-        const [item] = items;
-
-        if (
-          target.dropPosition === 'on' &&
-          targetNode &&
-          item &&
-          item.kind !== 'directory'
-        ) {
-          const key = await item.getText('key');
-
-          if (key) {
-            setNodes(actions.moveInto(target.key, new Set([key])));
-          }
-        }
-      })();
-    },
     onRootDrop: ({ items }: DroppableCollectionRootDropEvent) => {
       (async () => {
         const processedItems = await processDroppedItems(
@@ -109,6 +83,18 @@ export function useTreeState<T>({
         );
         setNodes(actions.insertAfter(null, processedItems));
       })();
+    },
+    onMove: (e) => {
+      if (e.target.dropPosition === 'before') {
+        setNodes(actions.moveBefore(e.target.key, e.keys));
+      } else if (e.target.dropPosition === 'after') {
+        setNodes(actions.moveAfter(e.target.key, e.keys));
+      } else if (e.target.dropPosition === 'on') {
+        const targetNode = actions.getNode(e.target.key);
+        if (targetNode) {
+          setNodes(actions.moveInto(e.target.key, e.keys));
+        }
+      }
     },
   };
 
