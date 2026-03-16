@@ -18,8 +18,6 @@ import { processDroppedItems } from './utils';
 import type {
   DragItem,
   DroppableCollectionInsertDropEvent,
-  DroppableCollectionOnItemDropEvent,
-  DroppableCollectionReorderEvent,
   DroppableCollectionRootDropEvent,
   Key,
   Selection,
