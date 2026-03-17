@@ -10,7 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
+import Placeholder from '@accelint/icons/placeholder';
 import { useMemo } from 'react';
+import { Icon } from '../icon';
 import { Gantt } from './';
 import {
   CURRENT_TIME_MS,
@@ -21,6 +23,7 @@ import {
 import { GanttRow } from './components/gantt-row';
 import { BracketClose, BracketOpen } from './components/gantt-row/bracket';
 import { GanttRowBlock } from './components/gantt-row/gantt-row-block';
+import { IconMarker } from './components/gantt-row/icon-marker';
 import { Marker } from './components/gantt-row/marker';
 import { Spacer } from './components/gantt-row/spacer';
 import { TIMESCALE_OPTIONS } from './constants';
@@ -145,6 +148,21 @@ const meta = {
                           timeMs={timeMs}
                           color={element.color}
                         />
+                      );
+                    }
+
+                    case 'icon-marker': {
+                      const timeMs = element.timeMs;
+                      return (
+                        <IconMarker
+                          key={`${id}-icon-marker-${index}`}
+                          timeMs={timeMs}
+                          color={element.color}
+                        >
+                          <Icon>
+                            <Placeholder />
+                          </Icon>
+                        </IconMarker>
                       );
                     }
 

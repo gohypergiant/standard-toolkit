@@ -29,7 +29,8 @@ type Element =
   | { type: 'spacer'; rangeMs: RangeTuple; color?: RowElementColorProp }
   | { type: 'bracket-open'; timeMs: number; color?: RowElementColorProp }
   | { type: 'bracket-close'; timeMs: number; color?: RowElementColorProp }
-  | { type: 'marker'; timeMs: number; color?: RowElementColorProp };
+  | { type: 'marker'; timeMs: number; color?: RowElementColorProp }
+  | { type: 'icon-marker'; timeMs: number; color?: RowElementColorProp };
 
 type Row = {
   id: string;
@@ -94,7 +95,7 @@ export const DATASET_JAN27_TO_JAN30: Dataset = {
           color: 'serious',
         },
         // Tue Jan 27 — 7:30 AM
-        { type: 'marker', timeMs: 1769499000000, color: 'critical' },
+        { type: 'icon-marker', timeMs: 1769499000000, color: 'critical' },
         // Tue Jan 27 — 7:30 AM - 8:40 AM
         {
           type: 'spacer',
@@ -344,7 +345,7 @@ export const DATASET_JAN27_TO_JAN30: Dataset = {
           color: 'critical',
         },
         // Wed Jan 28 — 1:46 AM
-        { type: 'marker', timeMs: 1769564000000, color: 'serious' },
+        { type: 'icon-marker', timeMs: 1769564000000, color: 'serious' },
         // Wed Jan 28 — 1:46 AM - Wed Jan 28 12:26 PM
         {
           type: 'spacer',
@@ -507,7 +508,7 @@ export const DATASET_JAN27_TO_JAN30: Dataset = {
         { type: 'bracket-close', timeMs: 1769544000000, color: 'accent' },
 
         // Wed Jan 28 — 12:00 AM
-        { type: 'marker', timeMs: 1769562000000, color: 'critical' },
+        { type: 'icon-marker', timeMs: 1769562000000, color: 'critical' },
 
         // Wed Jan 28 — 8:30 AM - 11:00 AM
         {
@@ -627,7 +628,7 @@ export const DATASET_JAN27_TO_JAN30: Dataset = {
           color: 'serious',
         },
         // Thu Jan 29 — 4:26 AM
-        { type: 'marker', timeMs: 1769660000000, color: 'critical' },
+        { type: 'icon-marker', timeMs: 1769660000000, color: 'critical' },
         // Thu Jan 29 — 4:26 AM - Thu Jan 29 2:00 PM
         { type: 'spacer', rangeMs: [1769660000000, 1769688000000] },
 
@@ -778,7 +779,7 @@ export const DATASET_JAN27_TO_JAN30: Dataset = {
           color: 'serious',
         },
         // Tue Jan 27 — 8:10 AM
-        { type: 'marker', timeMs: 1769502000000, color: 'critical' },
+        { type: 'icon-marker', timeMs: 1769502000000, color: 'critical' },
         // Tue Jan 27 — 8:10 AM - 12:00 PM
         { type: 'spacer', rangeMs: [1769502000000, 1769515200000] },
 
@@ -980,7 +981,7 @@ export const DATASET_JAN27_TO_JAN30: Dataset = {
           color: 'accent',
         },
         // Tue Jan 27 — 10:00 PM
-        { type: 'marker', timeMs: 1769551200000, color: 'serious' },
+        { type: 'icon-marker', timeMs: 1769551200000, color: 'serious' },
         // Tue Jan 27 — 10:00 PM - 10:30 PM
         {
           type: 'spacer',
@@ -1252,7 +1253,7 @@ export const DATASET_JAN27_TO_JAN30: Dataset = {
           color: 'serious',
         },
         // Tue Jan 27 — 7:46 AM
-        { type: 'marker', timeMs: 1769500000000, color: 'critical' },
+        { type: 'icon-marker', timeMs: 1769500000000, color: 'critical' },
         // Tue Jan 27 — 7:46 AM - 1:20 PM
         {
           type: 'spacer',
@@ -1391,7 +1392,7 @@ export const DATASET_JAN27_TO_JAN30: Dataset = {
           color: 'serious',
         },
         // Wed Jan 28 — 10:00 AM
-        { type: 'marker', timeMs: 1769600400000, color: 'critical' },
+        { type: 'icon-marker', timeMs: 1769600400000, color: 'critical' },
         // Wed Jan 28 — 10:00 AM - 10:30 AM
         {
           type: 'spacer',
@@ -1542,7 +1543,7 @@ export const DATASET_JAN25_TO_JAN28: Dataset = {
           color: 'serious',
         },
         // Tue Jan 27 — 7:30 AM
-        { type: 'marker', timeMs: 1769499000000, color: 'critical' },
+        { type: 'icon-marker', timeMs: 1769499000000, color: 'critical' },
         // Tue Jan 27 — 7:30 AM - 8:40 AM
         {
           type: 'spacer',
@@ -1642,7 +1643,7 @@ export const DATASET_JAN25_TO_JAN28: Dataset = {
           color: 'critical',
         },
         // Tue Jan 27 — 5:40 AM
-        { type: 'marker', timeMs: 1769492400000, color: 'accent' },
+        { type: 'icon-marker', timeMs: 1769492400000, color: 'accent' },
         // Tue Jan 27 — 5:40 AM - 6:00 AM
         { type: 'spacer', rangeMs: [1769492400000, 1769493600000] },
 
@@ -1767,7 +1768,7 @@ export const DATASET_JAN25_TO_JAN28: Dataset = {
           color: 'accent',
         },
         // Sat Jan 25 — 1:40 PM
-        { type: 'marker', timeMs: 1769348400000, color: 'serious' },
+        { type: 'icon-marker', timeMs: 1769348400000, color: 'serious' },
         // Sat Jan 25 — 1:40 PM - 2:10 PM
         {
           type: 'spacer',
@@ -1846,7 +1847,7 @@ export const DATASET_JAN25_TO_JAN28: Dataset = {
         { type: 'bracket-close', timeMs: 1769544000000, color: 'accent' },
 
         // Wed Jan 28 — 12:00 AM
-        { type: 'marker', timeMs: 1769562000000, color: 'critical' },
+        { type: 'icon-marker', timeMs: 1769562000000, color: 'critical' },
       ],
     },
 
@@ -1961,7 +1962,7 @@ export const DATASET_JAN25_TO_JAN28: Dataset = {
           color: 'accent',
         },
         // Tue Jan 27 — 6:40 PM
-        { type: 'marker', timeMs: 1769540000000, color: 'serious' },
+        { type: 'icon-marker', timeMs: 1769540000000, color: 'serious' },
         // Tue Jan 27 — 6:40 PM - Wed Jan 28 6:00 AM
         {
           type: 'spacer',
@@ -2098,7 +2099,7 @@ export const DATASET_JAN25_TO_JAN28: Dataset = {
       id: 'row-J',
       elements: [
         // Sat Jan 25 — 2:00 PM
-        { type: 'marker', timeMs: 1769352000000, color: 'critical' },
+        { type: 'icon-marker', timeMs: 1769352000000, color: 'critical' },
 
         // --- CANONICAL OVERLAP COPY (from ROWS) ---
         // Tue Jan 27 — 1:00 AM - 1:45 AM
@@ -2242,7 +2243,7 @@ export const DATASET_JAN25_TO_JAN28: Dataset = {
       id: 'row-L',
       elements: [
         // Sat Jan 25 — 5:00 AM
-        { type: 'marker', timeMs: 1769317200000, color: 'accent' },
+        { type: 'icon-marker', timeMs: 1769317200000, color: 'accent' },
 
         // --- CANONICAL OVERLAP COPY (from ROWS) ---
         // Tue Jan 27 — 6:45 AM - 7:30 AM
@@ -2343,7 +2344,7 @@ export const DATASET_JAN25_TO_JAN28: Dataset = {
           color: 'serious',
         },
         // Tue Jan 27 — 7:46 AM
-        { type: 'marker', timeMs: 1769500000000, color: 'critical' },
+        { type: 'icon-marker', timeMs: 1769500000000, color: 'critical' },
         // Tue Jan 27 — 7:46 AM - 1:20 PM
         {
           type: 'spacer',
@@ -2523,7 +2524,7 @@ export const DATASET_JAN29_TO_FEB1: Dataset = {
           color: 'serious',
         },
         // Fri Jan 30 — 7:40 PM
-        { type: 'marker', timeMs: 1769802000000, color: 'accent' },
+        { type: 'icon-marker', timeMs: 1769802000000, color: 'accent' },
         // Fri Jan 30 — 7:40 PM - 9:20 PM
         {
           type: 'spacer',
@@ -2587,7 +2588,7 @@ export const DATASET_JAN29_TO_FEB1: Dataset = {
           color: 'serious',
         },
         // Sat Jan 31 — 7:30 AM
-        { type: 'marker', timeMs: 1769844600000, color: 'critical' },
+        { type: 'icon-marker', timeMs: 1769844600000, color: 'critical' },
         // Sat Jan 31 — 7:30 AM - 8:40 AM
         {
           type: 'spacer',
@@ -2883,7 +2884,7 @@ export const DATASET_JAN29_TO_FEB1: Dataset = {
           color: 'critical',
         },
         // Sun Feb 1 — 1:46 AM
-        { type: 'marker', timeMs: 1769909600000, color: 'serious' },
+        { type: 'icon-marker', timeMs: 1769909600000, color: 'serious' },
         // Sun Feb 1 — 1:46 AM - Sun Feb 1 12:26 PM
         {
           type: 'spacer',
@@ -3055,7 +3056,7 @@ export const DATASET_JAN29_TO_FEB1: Dataset = {
         { type: 'bracket-close', timeMs: 1769890400000, color: 'accent' },
 
         // Sun Feb 1 — 12:00 AM
-        { type: 'marker', timeMs: 1769907600000, color: 'critical' },
+        { type: 'icon-marker', timeMs: 1769907600000, color: 'critical' },
       ],
     },
 
@@ -3117,7 +3118,7 @@ export const DATASET_JAN29_TO_FEB1: Dataset = {
           color: 'serious',
         },
         // Fri Jan 30 — 8:00 PM
-        { type: 'marker', timeMs: 1769812800000, color: 'accent' },
+        { type: 'icon-marker', timeMs: 1769812800000, color: 'accent' },
         // Fri Jan 30 — 8:00 PM - 11:30 PM
         {
           type: 'spacer',
@@ -3279,7 +3280,7 @@ export const DATASET_JAN29_TO_FEB1: Dataset = {
           color: 'critical',
         },
         // Sun Feb 1 — 6:00 AM
-        { type: 'marker', timeMs: 1769925600000, color: 'accent' },
+        { type: 'icon-marker', timeMs: 1769925600000, color: 'accent' },
         // Sun Feb 1 — 6:00 AM - Sun Feb 1 12:30 PM
         { type: 'spacer', rangeMs: [1769925600000, 1769949000000] },
       ],
@@ -3537,7 +3538,7 @@ export const DATASET_JAN29_TO_FEB1: Dataset = {
           color: 'accent',
         },
         // Fri Jan 30 — 4:00 PM
-        { type: 'marker', timeMs: 1769796000000, color: 'serious' },
+        { type: 'icon-marker', timeMs: 1769796000000, color: 'serious' },
         // Fri Jan 30 — 4:00 PM - 4:30 PM
         {
           type: 'spacer',
@@ -3790,7 +3791,7 @@ export const DATASET_JAN29_TO_FEB1: Dataset = {
           color: 'serious',
         },
         // Sat Jan 31 — 11:53 AM
-        { type: 'marker', timeMs: 1769858800000, color: 'accent' },
+        { type: 'icon-marker', timeMs: 1769858800000, color: 'accent' },
         // Sat Jan 31 — 11:53 AM - 12:23 PM
         {
           type: 'spacer',
@@ -3963,7 +3964,7 @@ export const DATASET_JAN29_TO_FEB1: Dataset = {
           color: 'serious',
         },
         // Fri Jan 30 — 9:00 AM
-        { type: 'marker', timeMs: 1769763600000, color: 'critical' },
+        { type: 'icon-marker', timeMs: 1769763600000, color: 'critical' },
         // Fri Jan 30 — 9:00 AM - 9:30 AM
         {
           type: 'spacer',

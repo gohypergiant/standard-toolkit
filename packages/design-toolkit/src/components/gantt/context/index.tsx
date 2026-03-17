@@ -73,7 +73,7 @@ export function GanttProvider({
   const [ganttContentElement, setGanttContentElement] =
     useState<HTMLDivElement | null>(null);
 
-  const midpointMs = startTimeMs + (startTimeMs - startTimeMs) / 2;
+  const midpointMs = startTimeMs + (endTimeMs - startTimeMs) / 2;
 
   const totalBounds = useMemo(
     () => ({
