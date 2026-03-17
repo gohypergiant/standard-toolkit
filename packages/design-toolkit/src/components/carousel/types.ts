@@ -15,13 +15,16 @@ import type { PropsWithChildren } from 'react';
 
 export type CarouselProps = PropsWithChildren & {
   // Current selected media of provided items.
-  currentPosition?: number;
+  currentPosition: number;
+  setCurrentPosition: (index: number) => void;
   // image/video/audio data to populate the carousel component.
   items: CarouselData[];
   // thumbnails gallery, no thumbnails, or SelectField selection
   variant?: 'gallery' | 'noPreview' | 'select';
+  styles?: {
+    container?: string;
+  };
 };
-
 export type CarouselData = {
   dataType: 'image' | 'video' | 'audio';
   dataUrl: string;
@@ -32,6 +35,8 @@ export type CarouselData = {
   uuid: UniqueId;
 };
 
-export type CarouselThumbnailGalleryProps = {
-  onSelect: (index: number) => void;
+export type CarouselNavigationProps = {
+  direction: 'left' | 'right';
+  onClick: () => void;
+  isDisabled?: boolean;
 };

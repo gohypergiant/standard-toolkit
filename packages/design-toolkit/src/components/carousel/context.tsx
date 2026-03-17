@@ -21,14 +21,32 @@ export const CarouselContext = createContext<CarouselProps>({
   currentPosition: 0,
   items: [],
   variant: 'gallery',
+  setCurrentPosition: () => {
+    return null;
+  },
+  setCurrentItem: () => {
+    return null;
+  },
 });
 
 export function CarouselProvider({
   children,
-  ...props
+  currentPosition,
+  items,
+  variant,
+  setCurrentPosition,
+  setCurrentItem,
 }: ProviderProps<CarouselProps>) {
   return (
-    <CarouselContext.Provider value={props}>
+    <CarouselContext.Provider
+      value={{
+        currentPosition,
+        items,
+        variant,
+        setCurrentPosition,
+        setCurrentItem,
+      }}
+    >
       {children}
     </CarouselContext.Provider>
   );

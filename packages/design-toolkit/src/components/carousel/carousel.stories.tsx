@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { uuid } from '@accelint/core';
 import { useState } from 'react';
 import {
   Carousel,
@@ -19,20 +20,7 @@ import {
 } from './';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { CarouselData } from './types';
-import { uuid } from '@accelint/core';
 
-const meta = {
-  args: {
-    variant: 'gallery',
-  },
-  title: 'Components/Carousel',
-  component: Carousel,
-} satisfies Meta<typeof Carousel>;
-
-export default meta;
-type Story = StoryObj<typeof meta>;
-
-// TODO: Find more reasonable images to use, placecage ain't acceptable.
 const IMAGE_SRC = 'https://placecage.lucidinternets.com/434/244';
 const THUMBNAIL_SRC = 'https://placecage.lucidinternets.com/57/32';
 const CAROUSEL_ITEMS: CarouselData[] = [
@@ -52,31 +40,43 @@ const CAROUSEL_ITEMS: CarouselData[] = [
     thumbnailUrl: THUMBNAIL_SRC,
     uuid: uuid(),
   },
+  {
+    dataType: 'image',
+    dataUrl: IMAGE_SRC,
+    fileName: 'placecage-3',
+    title: 'Place Cage 3',
+    thumbnailUrl: THUMBNAIL_SRC,
+    uuid: uuid(),
+  },
 ];
+
+const meta = {
+  title: 'Components/Carousel',
+  args: {
+    variant: 'gallery',
+    items: CAROUSEL_ITEMS,
+  },
+  component: Carousel,
+} satisfies Meta<typeof Carousel>;
+
+export default meta;
+type Story = StoryObj<typeof Carousel>;
 
 export const Default: Story = {
   render: (args) => {
     const [currentPosition, setCurrentPosition] = useState(0);
-    // TODO: Should this be baked in via context?
-    const onNext = () =>
-      setCurrentPosition((prev) =>
-        prev + 1 > CAROUSEL_ITEMS.length ? prev + 1 : prev,
-      );
-    const onPrevious = () =>
-      setCurrentPosition((prev) => (prev - 1 < 0 ? prev - 1 : 0));
-
-    const handleSelect = (index: number) => setCurrentPosition(index);
+    const items = [...args.items];
 
     return (
       <Carousel
         variant={args.variant}
-        items={CAROUSEL_ITEMS}
+        items={items}
         currentPosition={currentPosition}
+        setCurrentPosition={setCurrentPosition}
       >
-        {/* ? Design, can we condense the structure here. */}
-        <CarouselViewer>View</CarouselViewer>
-        <CarouselControls onNext={onNext} onPrevious={onPrevious}>
-          <CarouselThumbnailGallery onSelect={handleSelect} />
+        <CarouselViewer currentItem={items[currentPosition]} />
+        <CarouselControls>
+          <CarouselThumbnailGallery />
         </CarouselControls>
       </Carousel>
     );
