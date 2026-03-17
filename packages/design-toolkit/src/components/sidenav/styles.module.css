@@ -14,7 +14,7 @@
 
 @layer components.l1 {
   .sidenav {
-    @apply fg-a11y-on-accent gap-xs bg-surface-default p-m absolute left-0 row-span-full flex h-full flex-col;
+    @apply fg-primary-bold gap-xs bg-surface-default p-m absolute left-0 row-span-full flex h-full flex-col;
 
     @variant closed {
       @apply items-center;
@@ -81,11 +81,11 @@
     }
 
     @variant pressed {
-      @apply bg-accent-primary-pressed;
+      @apply fg-a11y-on-accent bg-accent-primary-pressed;
     }
 
     @variant selected {
-      @apply bg-accent-primary-bold;
+      @apply fg-a11y-on-accent bg-accent-primary-bold;
 
       @variant hover {
         @apply bg-accent-primary-hover;
@@ -97,6 +97,10 @@
 
       @variant pressed {
         @apply bg-accent-primary-pressed;
+      }
+
+      @variant disabled {
+        @apply fg-a11y-on-accent;
       }
     }
 
@@ -129,7 +133,7 @@
     }
 
     @variant pressed {
-      @apply bg-accent-primary-pressed;
+      @apply fg-a11y-on-accent bg-accent-primary-pressed;
     }
 
     @variant disabled {
@@ -164,11 +168,11 @@
       }
 
       @variant pressed {
-        @apply bg-accent-primary-pressed;
+        @apply fg-a11y-on-accent bg-accent-primary-pressed;
       }
 
       @variant selected {
-        @apply bg-accent-primary-bold;
+        @apply fg-a11y-on-accent bg-accent-primary-bold;
 
         @variant hover {
           @apply bg-accent-primary-hover;
@@ -180,6 +184,10 @@
 
         @variant pressed {
           @apply bg-accent-primary-pressed;
+        }
+
+        @variant disabled {
+          @apply fg-a11y-on-accent;
         }
       }
 
@@ -248,11 +256,11 @@
       }
 
       @variant pressed {
-        @apply bg-accent-primary-pressed;
+        @apply fg-a11y-on-accent bg-accent-primary-pressed;
       }
 
       @variant selected {
-        @apply bg-accent-primary-bold;
+        @apply fg-a11y-on-accent bg-accent-primary-bold;
 
         @variant hover {
           @apply bg-accent-primary-hover;
@@ -264,6 +272,10 @@
 
         @variant pressed {
           @apply bg-accent-primary-pressed;
+        }
+
+        @variant disabled {
+          @apply fg-a11y-on-accent;
         }
       }
 
