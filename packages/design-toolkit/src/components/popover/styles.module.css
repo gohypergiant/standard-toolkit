@@ -16,6 +16,52 @@
   .popover {
     @apply rounded-medium bg-surface-raised p-s outline-static outline;
     max-width: 280px;
+
+    /* Start invisible to prevent flash */
+    opacity: 0;
+    transform-origin: var(--origin);
+
+    /* Animation offset using spacing tokens */
+    --popover-offset-x: 0;
+    --popover-offset-y: 0;
+
+    /* Set origin and offset based on placement */
+    &[data-placement^='top'] {
+      --origin: bottom center;
+      --popover-offset-y: var(--spacing-xs);
+    }
+
+    &[data-placement^='bottom'] {
+      --origin: top center;
+      --popover-offset-y: calc(-1 * var(--spacing-xs));
+    }
+
+    &[data-placement^='left'] {
+      --origin: right center;
+      --popover-offset-x: var(--spacing-xs);
+    }
+
+    &[data-placement^='right'] {
+      --origin: left center;
+      --popover-offset-x: calc(-1 * var(--spacing-xs));
+    }
+
+    /* Apply animations */
+    &[data-entering] {
+      animation: popover-enter var(--animation-duration-fast)
+        var(--animation-easing-standard) both;
+    }
+
+    &[data-exiting] {
+      animation: popover-exit var(--animation-duration-fast)
+        var(--animation-easing-standard) both;
+    }
+
+    /* Final state */
+    &[data-placement]:not([data-entering]):not([data-exiting]) {
+      opacity: 1;
+      transform: translate(0, 0) scale(1);
+    }
   }
 
   .title {
@@ -33,6 +79,38 @@
   .dialog {
     @variant focus-visible {
       @apply outline-none;
+    }
+  }
+
+  /* Popover animations */
+  @keyframes popover-enter {
+    from {
+      opacity: 0;
+      transform: translate(var(--popover-offset-x), var(--popover-offset-y))
+        scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translate(0, 0) scale(1);
+    }
+  }
+
+  @keyframes popover-exit {
+    from {
+      opacity: 1;
+      transform: translate(0, 0) scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: translate(var(--popover-offset-x), var(--popover-offset-y))
+        scale(0.95);
+    }
+  }
+
+  /* Accessibility: Respect reduced motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    .popover {
+      animation-duration: var(--animation-duration-instant) !important;
     }
   }
 }

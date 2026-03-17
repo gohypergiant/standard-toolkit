@@ -393,4 +393,12 @@
   .item {
     @apply rounded-medium;
   }
+
+  /* Accessibility: Respect reduced motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    .drawer {
+      animation-duration: var(--animation-duration-instant) !important;
+      transition-duration: var(--animation-duration-instant) !important;
+    }
+  }
 }

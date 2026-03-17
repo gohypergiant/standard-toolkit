@@ -95,4 +95,11 @@
       transform: translate(var(--tooltip-exit-x), var(--tooltip-exit-y));
     }
   }
+
+  /* Accessibility: Respect reduced motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    .tooltip {
+      animation-duration: var(--animation-duration-instant) !important;
+    }
+  }
 }
