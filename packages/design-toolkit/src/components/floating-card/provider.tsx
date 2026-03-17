@@ -11,8 +11,6 @@
  */
 
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { Button } from '@accelint/design-toolkit/components/button';
-import { Icon } from '@accelint/design-toolkit/components/icon';
 import CloseIcon from '@accelint/icons/cancel';
 import {
   type DockviewApi,
@@ -30,7 +28,9 @@ import {
   useMemo,
   useState,
 } from 'react';
+import { Button } from '../button';
 import { Divider } from '../divider';
+import { Icon } from '../icon';
 import {
   FloatingCardContext,
   type FloatingCardContextValue,

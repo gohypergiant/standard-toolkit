@@ -41,6 +41,12 @@ npm install @accelint/map-toolkit @accelint/bus @accelint/core @deck.gl/core @de
 pnpm add @accelint/map-toolkit @accelint/bus @accelint/core @deck.gl/core @deck.gl-community/editable-layers @deckgl-fiber-renderer/dom @turf/turf react
 ```
 
+## Fiber Registration
+
+`DrawShapeLayer` is a **React component** (not a deck.gl layer class), so it handles its own fiber registration internally. You do **not** need to import `draw-shape-layer/fiber`.
+
+However, you **do** still need to import `display-shape-layer/fiber` if you use `<displayShapeLayer>` alongside it — because `DisplayShapeLayer` is a deck.gl layer class that requires explicit fiber registration from the consumer.
+
 ## Basic Usage
 
 ### With useDrawShape Hook (Recommended)
@@ -49,7 +55,6 @@ The easiest way to use DrawShapeLayer is with the `useDrawShape` hook, which man
 
 ```tsx
 import { BaseMap } from '@accelint/map-toolkit/deckgl/base-map';
-import '@accelint/map-toolkit/deckgl/shapes/draw-shape-layer/fiber';
 import '@accelint/map-toolkit/deckgl/shapes/display-shape-layer/fiber';
 import { DrawShapeLayer } from '@accelint/map-toolkit/deckgl/shapes/draw-shape-layer';
 import { useDrawShape } from '@accelint/map-toolkit/deckgl/shapes/draw-shape-layer/use-draw-shape';

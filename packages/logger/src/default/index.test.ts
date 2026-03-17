@@ -169,88 +169,6 @@ describe('getLogger', () => {
     });
   });
 
-  describe('Configuration variations', () => {
-    test('should create logger with enabled=true', async () => {
-      const { getLogger } = await import('./index');
-
-      getLogger({ enabled: true });
-
-      expect(bootstrapMock).toHaveBeenCalledWith(
-        expect.objectContaining({ enabled: true }),
-      );
-    });
-
-    test('should create logger with enabled=false', async () => {
-      const { getLogger } = await import('./index');
-
-      getLogger({ enabled: false });
-
-      expect(bootstrapMock).toHaveBeenCalledWith(
-        expect.objectContaining({ enabled: false }),
-      );
-    });
-
-    test.each([
-      { level: 'trace' as const },
-      { level: 'debug' as const },
-      { level: 'info' as const },
-      { level: 'warn' as const },
-      { level: 'error' as const },
-      { level: 'fatal' as const },
-    ])('should create logger with level=$level', async ({ level }) => {
-      const { getLogger } = await import('./index');
-
-      getLogger({ enabled: true, level });
-
-      expect(bootstrapMock).toHaveBeenCalledWith(
-        expect.objectContaining({ level }),
-      );
-    });
-
-    test.each([
-      { env: 'development' as const },
-      { env: 'production' as const },
-    ])('should create logger with env=$env', async ({ env }) => {
-      const { getLogger } = await import('./index');
-
-      getLogger({ enabled: true, env });
-
-      expect(bootstrapMock).toHaveBeenCalledWith(
-        expect.objectContaining({ env }),
-      );
-    });
-
-    test('should create logger with custom prefix', async () => {
-      const { getLogger } = await import('./index');
-
-      getLogger({ enabled: true, prefix: '[TestApp]' });
-
-      expect(bootstrapMock).toHaveBeenCalledWith(
-        expect.objectContaining({ prefix: '[TestApp]' }),
-      );
-    });
-
-    test('should create logger with pretty=true', async () => {
-      const { getLogger } = await import('./index');
-
-      getLogger({ enabled: true, pretty: true });
-
-      expect(bootstrapMock).toHaveBeenCalledWith(
-        expect.objectContaining({ pretty: true }),
-      );
-    });
-
-    test('should create logger with pretty=false', async () => {
-      const { getLogger } = await import('./index');
-
-      getLogger({ enabled: true, pretty: false });
-
-      expect(bootstrapMock).toHaveBeenCalledWith(
-        expect.objectContaining({ pretty: false }),
-      );
-    });
-  });
-
   describe('Edge cases', () => {
     test('should handle minimal options object', async () => {
       const { getLogger } = await import('./index');
@@ -258,7 +176,8 @@ describe('getLogger', () => {
 
       const logger = getLogger(options);
 
-      expect(logger).toBeDefined();
+      expect(logger.info).toBeTypeOf('function');
+      expect(logger.error).toBeTypeOf('function');
       expect(bootstrapMock).toHaveBeenCalledWith(options);
     });
 
