@@ -67,15 +67,17 @@ export {
 } from './components/carousel/context';
 export {
   Carousel,
-  CarouselControls,
   CarouselNavigation,
+  CarouselNext,
   CarouselPositionDisplay,
+  CarouselPrevious,
   CarouselSelectField,
   CarouselThumbnailGallery,
   CarouselViewer,
 } from './components/carousel';
 export type {
   CarouselData,
+  CarouselNavigationProps,
   CarouselProps,
   CarouselThumbnailGalleryProps,
 } from './components/carousel/types';

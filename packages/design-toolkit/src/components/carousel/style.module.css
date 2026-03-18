@@ -17,7 +17,7 @@
     @apply gap-s flex flex-col;
   }
   .viewer {
-    @apply h-full w-full;
+    @apply flex h-full min-h-[500px] w-full items-center justify-center;
   }
 
   .controls {
@@ -28,7 +28,15 @@
     @apply p-xs min-h-[20px] min-w-[20px];
   }
 
-  .thumbnail-gallery {
-    @apply gap-x-s flex flex-row py-0;
+  .thumbnail-gallery-container {
+    @apply gap-x-s flex flex-row overflow-hidden py-0;
+  }
+
+  .thumbnail-gallery-item {
+    @apply gap-x-s flex h-[38px] w-[60px] min-w-[60px] flex-row py-0;
+  }
+
+  .selected {
+    @apply outline-accent-primary-bold outline-2;
   }
 }

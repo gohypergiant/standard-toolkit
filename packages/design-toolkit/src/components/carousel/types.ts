@@ -14,14 +14,12 @@ import type { UniqueId } from '@accelint/core';
 import type { PropsWithChildren } from 'react';
 
 export type CarouselProps = PropsWithChildren & {
-  // Current selected media of provided items.
-  currentPosition: number;
-  setCurrentPosition: (index: number) => void;
   // image/video/audio data to populate the carousel component.
   items: CarouselData[];
   // thumbnails gallery, no thumbnails, or SelectField selection
   variant?: 'gallery' | 'noPreview' | 'select';
-  styles?: {
+  // custom classNames for the component
+  classNames?: {
     container?: string;
   };
 };
@@ -37,6 +35,14 @@ export type CarouselData = {
 
 export type CarouselNavigationProps = {
   direction: 'left' | 'right';
-  onClick: () => void;
+  onClick?: () => void;
   isDisabled?: boolean;
+};
+
+export type CarouselThumbnailGalleryProps = {
+  currentPosition: number;
+  classNames?: {
+    container?: string;
+    item?: string;
+  };
 };

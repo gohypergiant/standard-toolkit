@@ -13,30 +13,31 @@
 'use client';
 
 import 'client-only';
-import { createContext } from 'react';
+import { createContext, useState } from 'react';
 import type { ProviderProps } from '@/lib/types';
 import type { CarouselProps } from './types';
 
-export const CarouselContext = createContext<CarouselProps>({
+export const CarouselContext = createContext<
+  CarouselProps & {
+    setCurrentPosition: (position: number) => void;
+    currentPosition: number;
+  }
+>({
   currentPosition: 0,
   items: [],
   variant: 'gallery',
   setCurrentPosition: () => {
     return null;
   },
-  setCurrentItem: () => {
-    return null;
-  },
 });
 
 export function CarouselProvider({
   children,
-  currentPosition,
   items,
   variant,
-  setCurrentPosition,
-  setCurrentItem,
 }: ProviderProps<CarouselProps>) {
+  const [currentPosition, setCurrentPosition] = useState(0);
+
   return (
     <CarouselContext.Provider
       value={{
@@ -44,7 +45,6 @@ export function CarouselProvider({
         items,
         variant,
         setCurrentPosition,
-        setCurrentItem,
       }}
     >
       {children}

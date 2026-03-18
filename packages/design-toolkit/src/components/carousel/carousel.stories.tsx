@@ -11,41 +11,89 @@
  */
 
 import { uuid } from '@accelint/core';
-import { useState } from 'react';
 import {
   Carousel,
-  CarouselControls,
+  CarouselNext,
+  CarouselPositionDisplay,
+  CarouselPrevious,
+  CarouselSelectField,
   CarouselThumbnailGallery,
   CarouselViewer,
 } from './';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { CarouselData } from './types';
 
-const IMAGE_SRC = 'https://placecage.lucidinternets.com/434/244';
-const THUMBNAIL_SRC = 'https://placecage.lucidinternets.com/57/32';
 const CAROUSEL_ITEMS: CarouselData[] = [
   {
     dataType: 'image',
-    dataUrl: IMAGE_SRC,
+    dataUrl: 'https://placecage.lucidinternets.com/434/244',
     fileName: 'placecage-1',
     title: 'Place Cage 1',
-    thumbnailUrl: THUMBNAIL_SRC,
+    thumbnailUrl: 'https://placecage.lucidinternets.com/57/32',
     uuid: uuid(),
   },
   {
     dataType: 'image',
-    dataUrl: IMAGE_SRC,
+    dataUrl: 'https://placecage.lucidinternets.com/434/240',
     fileName: 'placecage-2',
     title: 'Place Cage 2',
-    thumbnailUrl: THUMBNAIL_SRC,
+    thumbnailUrl: 'https://placecage.lucidinternets.com/57/33',
     uuid: uuid(),
   },
   {
     dataType: 'image',
-    dataUrl: IMAGE_SRC,
+    dataUrl: 'https://placecage.lucidinternets.com/434/248',
     fileName: 'placecage-3',
     title: 'Place Cage 3',
-    thumbnailUrl: THUMBNAIL_SRC,
+    thumbnailUrl: 'https://placecage.lucidinternets.com/57/34',
+    uuid: uuid(),
+  },
+  {
+    dataType: 'image',
+    dataUrl: 'https://placecage.lucidinternets.com/434/234',
+    fileName: 'placecage-4',
+    title: 'Place Cage 4',
+    thumbnailUrl: 'https://placecage.lucidinternets.com/57/32',
+    uuid: uuid(),
+  },
+  {
+    dataType: 'image',
+    dataUrl: 'https://placecage.lucidinternets.com/434/241',
+    fileName: 'placecage-5',
+    title: 'Place Cage 5',
+    thumbnailUrl: 'https://placecage.lucidinternets.com/57/33',
+    uuid: uuid(),
+  },
+  {
+    dataType: 'image',
+    dataUrl: 'https://placecage.lucidinternets.com/434/249',
+    fileName: 'placecage-6',
+    title: 'Place Cage 6',
+    thumbnailUrl: 'https://placecage.lucidinternets.com/57/34',
+    uuid: uuid(),
+  },
+  {
+    dataType: 'image',
+    dataUrl: 'https://placecage.lucidinternets.com/434/242',
+    fileName: 'placecage-7',
+    title: 'Place Cage 7',
+    thumbnailUrl: 'https://placecage.lucidinternets.com/57/32',
+    uuid: uuid(),
+  },
+  {
+    dataType: 'image',
+    dataUrl: 'https://placecage.lucidinternets.com/434/243',
+    fileName: 'placecage-8',
+    title: 'Place Cage 8',
+    thumbnailUrl: 'https://placecage.lucidinternets.com/57/33',
+    uuid: uuid(),
+  },
+  {
+    dataType: 'image',
+    dataUrl: 'https://placecage.lucidinternets.com/434/248',
+    fileName: 'placecage-9',
+    title: 'Place Cage 9',
+    thumbnailUrl: 'https://placecage.lucidinternets.com/57/34',
     uuid: uuid(),
   },
 ];
@@ -64,20 +112,25 @@ type Story = StoryObj<typeof Carousel>;
 
 export const Default: Story = {
   render: (args) => {
-    const [currentPosition, setCurrentPosition] = useState(0);
-    const items = [...args.items];
-
     return (
       <Carousel
         variant={args.variant}
-        items={items}
-        currentPosition={currentPosition}
-        setCurrentPosition={setCurrentPosition}
+        items={args.items}
+        classNames={{ container: 'max-w-[600px]' }}
       >
-        <CarouselViewer currentItem={items[currentPosition]} />
-        <CarouselControls>
+        <CarouselViewer />
+        <div className='flex flex-row justify-between'>
+          <CarouselPrevious />
           <CarouselThumbnailGallery />
-        </CarouselControls>
+          <CarouselNext />
+        </div>
+
+        <div className='flex flex-row justify-between'>
+          <CarouselPrevious />
+          <CarouselPositionDisplay />
+          <CarouselNext />
+          <CarouselSelectField />
+        </div>
       </Carousel>
     );
   },

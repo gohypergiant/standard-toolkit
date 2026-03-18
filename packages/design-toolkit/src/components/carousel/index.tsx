@@ -13,7 +13,7 @@
 'use client';
 import 'client-only';
 import { ChevronLeft, ChevronRight } from '@accelint/icons';
-import { type PropsWithChildren, useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { clsx } from 'react-querybuilder';
 import { Button } from '../button';
 import { Icon } from '../icon';
@@ -21,78 +21,38 @@ import { OptionsItem } from '../options/item';
 import { SelectField } from '../select-field';
 import { CarouselContext, CarouselProvider } from './context';
 import styles from './style.module.css';
-import type {
-  CarouselData,
-  CarouselNavigationProps,
-  CarouselProps,
-} from './types';
+import type { Key } from 'react-aria-components';
+import type { CarouselNavigationProps, CarouselProps } from './types';
 
 export function Carousel({
   children,
   variant = 'gallery',
   items = [],
-  setCurrentPosition,
+  classNames,
 }: CarouselProps) {
   return (
-    <CarouselProvider
-      variant={variant}
-      currentPosition={0}
-      items={items}
-      setCurrentPosition={setCurrentPosition}
-    >
-      <div className={styles.carousel}>{children}</div>
+    <CarouselProvider variant={variant} items={items}>
+      <div className={clsx(styles.carousel, classNames?.container)}>
+        {children}
+      </div>
     </CarouselProvider>
   );
 }
 
-/**
- * Main question here, how exactly are we wanting to display the image, and
- * how do we accommodate for NextJS and standard React workflows. Should we
- * be focused on one over the other? Research a bit more, see if we can find
- * some examples of how to tackle this, and the rest will likely be ezpz.
- */
-export function CarouselViewer({
-  currentItem,
-}: {
-  currentItem: CarouselData | undefined;
-}) {
+export function CarouselViewer() {
+  const context = useContext(CarouselContext);
+  const { items, currentPosition } = context;
+  const [currentItem, setCurrentItem] = useState(items[currentPosition]);
+
+  useEffect(() => {
+    if (items[currentPosition]?.uuid !== currentItem?.uuid) {
+      setCurrentItem(items[currentPosition]);
+    }
+  }, [currentPosition, items, currentItem]);
+
   return (
     <div className={styles.viewer}>
       <img src={currentItem?.dataUrl} alt={currentItem?.title} />
-      {currentItem?.title}
-    </div>
-  );
-}
-
-export function CarouselControls({ children }: PropsWithChildren) {
-  const context = useContext(CarouselContext);
-  const { currentPosition, items, setCurrentPosition } = context;
-
-  if (!items) {
-    return null;
-  }
-
-  const onPrevious = () => {
-    setCurrentPosition(currentPosition - 1 < 0 ? 0 : currentPosition - 1);
-  };
-  const onNext = () =>
-    setCurrentPosition(
-      currentPosition + 1 > items.length + 1 ? 0 : currentPosition + 1,
-    );
-
-  return (
-    <div className={styles.controls}>
-      <CarouselNavigation
-        direction='left'
-        onClick={onPrevious}
-        isDisabled={currentPosition === 0}
-      />
-      {children}
-      <CarouselNavigation
-        direction='right'
-        onClick={onNext}
-        isDisabled={currentPosition === items.length - 1}
-      />
     </div>
   );
 }
@@ -114,69 +74,138 @@ export function CarouselNavigation({
   );
 }
 
-export function CarouselThumbnailGallery() {
+export function CarouselPrevious() {
+  const context = useContext(CarouselContext);
+  const { currentPosition, setCurrentPosition } = context;
+
+  const onClick = () => {
+    if (currentPosition - 1 >= 0) {
+      setCurrentPosition(currentPosition - 1);
+    }
+  };
+
+  return (
+    <CarouselNavigation
+      direction='left'
+      onClick={onClick}
+      isDisabled={currentPosition === 0}
+    />
+  );
+}
+
+export function CarouselNext() {
+  const context = useContext(CarouselContext);
+  const { currentPosition, setCurrentPosition, items } = context;
+
+  const onClick = () => {
+    if (currentPosition + 1 < items.length) {
+      setCurrentPosition(currentPosition + 1);
+    }
+  };
+
+  return (
+    <CarouselNavigation
+      direction='right'
+      onClick={onClick}
+      isDisabled={currentPosition === items.length - 1}
+    />
+  );
+}
+
+export function CarouselThumbnailGallery({
+  classNames,
+}: {
+  classNames?: {
+    container?: string;
+  };
+}) {
   const context = useContext(CarouselContext);
   const { items, currentPosition, setCurrentPosition } = context;
-  const selectedStyle = 'outline-accent-primary-bold outline-2';
+  const [galleryXOffset, setGalleryXOffset] = useState(0);
+
+  useEffect(() => {
+    // TODO: Use the scroll grid thing.
+    if (galleryXOffset !== currentPosition * -68) {
+      setGalleryXOffset(currentPosition * -68);
+    }
+  }, [currentPosition, galleryXOffset]);
 
   if (!items) {
     return null;
   }
 
+  const updatePosition = (index: number) => {
+    if (currentPosition === index) {
+      return;
+    }
+    setCurrentPosition(index);
+  };
+
   return (
-    <>
+    <div
+      className={clsx(
+        styles['thumbnail-gallery-container'],
+        classNames?.container,
+      )}
+    >
       {items.map((item, index) => (
-        // TODO: Should this be a button?
         <Button
           className={clsx(
-            styles['thumbnail-gallery'],
-            currentPosition === index && selectedStyle,
+            styles['thumbnail-gallery-item'],
+            currentPosition === index && styles.selected,
           )}
-          key={item.uuid}
-          onClick={() => {
-            if (currentPosition === index) {
-              return;
-            }
-            setCurrentPosition(index);
+          style={{
+            translate: `${galleryXOffset}px`,
+            transition: 'all .3s ease',
           }}
+          key={item.uuid}
+          onClick={() => updatePosition(index)}
         >
           <img src={item.thumbnailUrl} alt={item.title} />
         </Button>
       ))}
-    </>
-  );
-}
-
-// this from context if image array is passed in there.
-export function CarouselPositionDisplay({
-  currentPosition,
-  itemCount,
-}: {
-  currentPosition: number;
-  itemCount: number;
-}) {
-  return (
-    <div>
-      {currentPosition} / {itemCount}
     </div>
   );
 }
 
 export function CarouselSelectField() {
   const context = useContext(CarouselContext);
-  const { items, setCurrentPosition } = context;
+  const { items, currentPosition, setCurrentPosition } = context;
+
+  const onChange = (value: Key | null) => {
+    const index = items.findIndex((i) => i.uuid === value);
+    if (index >= 0) {
+      setCurrentPosition(index);
+    }
+  };
 
   return (
     <SelectField
-      placeholder='img'
-      onChange={(_value: any, index: number) => setCurrentPosition(index)}
+      aria-labelledby='select-field'
+      value={items[currentPosition]?.title}
+      placeholder={items[currentPosition]?.title}
+      onChange={onChange}
     >
-      _value
       {items.map((item) => (
-        <OptionsItem textValue={item.title} key={item.uuid}>
+        <OptionsItem
+          textValue={item.title}
+          key={item.uuid}
+          aria-label={item.title}
+          id={item.uuid}
+        >
           {item.title}
         </OptionsItem>
       ))}
     </SelectField>
+  );
+}
+
+export function CarouselPositionDisplay() {
+  const context = useContext(CarouselContext);
+  const { currentPosition, items } = context;
+  return (
+    <div>
+      {currentPosition + 1} / {items.length}
+    </div>
   );
 }
