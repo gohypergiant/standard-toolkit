@@ -22,10 +22,13 @@ import { SelectField } from '../select-field';
 import { CarouselContext, CarouselProvider } from './context';
 import styles from './style.module.css';
 import type { Key } from 'react-aria-components';
-import type { CarouselNavigationProps, CarouselProps } from './types';
+import type {
+  CarouselNavigationProps,
+  CarouselProps,
+  CarouselViewerProps,
+} from './types';
 
 export function Carousel({
-  children,
   variant = 'gallery',
   items = [],
   classNames,
@@ -33,13 +36,32 @@ export function Carousel({
   return (
     <CarouselProvider variant={variant} items={items}>
       <div className={clsx(styles.carousel, classNames?.container)}>
-        {children}
+        <CarouselViewer />
+        <div className={styles.controls}>
+          {variant === 'gallery' && (
+            <>
+              <CarouselPrevious />
+              <CarouselThumbnailGallery />
+              <CarouselNext />
+            </>
+          )}
+          {variant === 'select' && (
+            <>
+              <CarouselPositionDisplay />
+              <CarouselSelectField />
+            </>
+          )}
+        </div>
       </div>
     </CarouselProvider>
   );
 }
 
-export function CarouselViewer() {
+export function CarouselViewer({
+  children,
+  classNames,
+  ...rest
+}: CarouselViewerProps) {
   const context = useContext(CarouselContext);
   const { items, currentPosition } = context;
   const [currentItem, setCurrentItem] = useState(items[currentPosition]);
@@ -51,8 +73,13 @@ export function CarouselViewer() {
   }, [currentPosition, items, currentItem]);
 
   return (
-    <div className={styles.viewer}>
-      <img src={currentItem?.dataUrl} alt={currentItem?.title} />
+    <div className={clsx(styles.viewer, classNames?.container)} {...rest}>
+      <img
+        src={currentItem?.dataUrl}
+        alt={currentItem?.title}
+        className={classNames?.image}
+      />
+      {children}
     </div>
   );
 }
@@ -124,9 +151,12 @@ export function CarouselThumbnailGallery({
   const [galleryXOffset, setGalleryXOffset] = useState(0);
 
   useEffect(() => {
-    // TODO: Use the scroll grid thing.
-    if (galleryXOffset !== currentPosition * -68) {
-      setGalleryXOffset(currentPosition * -68);
+    // Current Position * -(Item Width + Margin) + (Item Width + Margin) * 3 = 204
+    // TODO: get these numbers dynamically??
+    if (currentPosition > 3 && galleryXOffset !== currentPosition * -68 + 204) {
+      setGalleryXOffset(currentPosition * -68 + 204);
+    } else if (currentPosition <= 3) {
+      setGalleryXOffset(0);
     }
   }, [currentPosition, galleryXOffset]);
 
@@ -185,6 +215,10 @@ export function CarouselSelectField() {
       value={items[currentPosition]?.title}
       placeholder={items[currentPosition]?.title}
       onChange={onChange}
+      classNames={{
+        field: styles['select-field'],
+        trigger: styles['select-trigger'],
+      }}
     >
       {items.map((item) => (
         <OptionsItem
@@ -204,8 +238,10 @@ export function CarouselPositionDisplay() {
   const context = useContext(CarouselContext);
   const { currentPosition, items } = context;
   return (
-    <div>
+    <div className={styles.position}>
+      <CarouselPrevious />
       {currentPosition + 1} / {items.length}
+      <CarouselNext />
     </div>
   );
 }

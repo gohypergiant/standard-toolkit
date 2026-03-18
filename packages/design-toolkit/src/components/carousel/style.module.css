@@ -17,11 +17,11 @@
     @apply gap-s flex flex-col;
   }
   .viewer {
-    @apply flex h-full min-h-[500px] w-full items-center justify-center;
+    @apply flex h-full min-h-[400px] w-full items-center justify-center;
   }
 
   .controls {
-    @apply gap-s flex h-[32px] w-full flex-row justify-between;
+    @apply gap-s flex w-full flex-row items-center;
   }
 
   .navigation {
@@ -38,5 +38,17 @@
 
   .selected {
     @apply outline-accent-primary-bold outline-2;
+  }
+
+  .select-field {
+    @apply grow;
+  }
+
+  .select-trigger {
+    @apply w-full;
+  }
+
+  .position {
+    @apply gap-s flex flex-row items-center;
   }
 }

@@ -11,15 +11,7 @@
  */
 
 import { uuid } from '@accelint/core';
-import {
-  Carousel,
-  CarouselNext,
-  CarouselPositionDisplay,
-  CarouselPrevious,
-  CarouselSelectField,
-  CarouselThumbnailGallery,
-  CarouselViewer,
-} from './';
+import { Carousel } from './';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { CarouselData } from './types';
 
@@ -104,6 +96,12 @@ const meta = {
     variant: 'gallery',
     items: CAROUSEL_ITEMS,
   },
+  argTypes: {
+    variant: {
+      control: 'select',
+      options: ['gallery', 'noPreview', 'select'],
+    },
+  },
   component: Carousel,
 } satisfies Meta<typeof Carousel>;
 
@@ -117,21 +115,7 @@ export const Default: Story = {
         variant={args.variant}
         items={args.items}
         classNames={{ container: 'max-w-[600px]' }}
-      >
-        <CarouselViewer />
-        <div className='flex flex-row justify-between'>
-          <CarouselPrevious />
-          <CarouselThumbnailGallery />
-          <CarouselNext />
-        </div>
-
-        <div className='flex flex-row justify-between'>
-          <CarouselPrevious />
-          <CarouselPositionDisplay />
-          <CarouselNext />
-          <CarouselSelectField />
-        </div>
-      </Carousel>
+      />
     );
   },
 };

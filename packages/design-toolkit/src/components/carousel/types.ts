@@ -13,7 +13,7 @@
 import type { UniqueId } from '@accelint/core';
 import type { PropsWithChildren } from 'react';
 
-export type CarouselProps = PropsWithChildren & {
+export type CarouselProps = {
   // image/video/audio data to populate the carousel component.
   items: CarouselData[];
   // thumbnails gallery, no thumbnails, or SelectField selection
@@ -31,6 +31,13 @@ export type CarouselData = {
   title: string;
   thumbnailUrl: string;
   uuid: UniqueId;
+};
+
+export type CarouselViewerProps = PropsWithChildren & {
+  classNames?: {
+    container?: string;
+    image?: string;
+  };
 };
 
 export type CarouselNavigationProps = {
