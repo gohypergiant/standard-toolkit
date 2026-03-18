@@ -11,6 +11,8 @@
  */
 
 import { GANTT_ROW_ELEMENT_HEIGHT } from '../../constants';
+import { useGanttStore } from '../../context/store';
+import { selectors } from '../../store';
 import { Point, type PointProps } from '../base-elements/point';
 import styles from './styles.module.css';
 
@@ -18,14 +20,22 @@ type BracketBaseProps = PointProps & {
   direction: 'open' | 'close';
 };
 
-function BracketBase({ direction, ...rest }: BracketBaseProps) {
+function BracketBase({ direction, timeMs, ...rest }: BracketBaseProps) {
+  const currentTimeMs = useGanttStore(selectors.currentTimeMs);
   const rotate = direction === 'open' ? '0' : '180';
+
+  const isElapsed =
+    timeMs !== undefined &&
+    currentTimeMs !== undefined &&
+    timeMs <= currentTimeMs;
 
   return (
     <Point
       className={styles['bracket-container']}
       data-rotate={rotate}
       data-height={GANTT_ROW_ELEMENT_HEIGHT}
+      data-elapsed={isElapsed || undefined}
+      timeMs={timeMs}
       {...rest}
     >
       <div className={styles.bracket} data-height={GANTT_ROW_ELEMENT_HEIGHT} />

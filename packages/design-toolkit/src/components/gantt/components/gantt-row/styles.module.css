@@ -33,11 +33,8 @@
     overflow: clip;
 
     &::before {
-      @apply bg-surface-muted pointer-events-none absolute top-0 left-0 h-full;
+      @apply bg-interactive-muted pointer-events-none absolute top-0 left-0 h-full content-[''];
       width: var(--elapsed-pct, 0%);
-      border-color: #414245;
-      background-color: #38393a;
-      content: '';
     }
 
     @variant color-accent {
@@ -60,11 +57,8 @@
     overflow: clip;
 
     &::before {
-      @apply bg-surface-muted pointer-events-none absolute top-0 left-0 h-full;
+      @apply bg-interactive-muted pointer-events-none absolute top-0 left-0 h-full content-[''];
       width: var(--elapsed-pct, 0%);
-      border-color: #414245;
-      background-color: #38393a;
-      content: '';
     }
 
     @variant color-accent {
@@ -86,6 +80,10 @@
     --rotate: attr(data-rotate deg);
     min-height: attr(data-height px);
     transform: translateX(var(--translate-x)) rotate(var(--rotate));
+
+    &[data-elapsed] {
+      @apply fg-inverse-muted;
+    }
 
     &::before {
       @apply bracket-pseudo-base -top-px rotate-45;
@@ -121,6 +119,10 @@
     z-index: 1;
     min-height: attr(data-height px);
     transform: translateX(var(--translate-x));
+
+    &[data-elapsed] {
+      @apply fg-inverse-muted;
+    }
 
     @variant color-accent {
       @apply fg-accent-primary-bold;

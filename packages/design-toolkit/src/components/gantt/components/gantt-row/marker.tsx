@@ -11,14 +11,24 @@
  */
 
 import { GANTT_ROW_ELEMENT_HEIGHT } from '../../constants';
+import { useGanttStore } from '../../context/store';
+import { selectors } from '../../store';
 import { Point, type PointProps } from '../base-elements/point';
 import styles from './styles.module.css';
 
 export function Marker(props: PointProps) {
+  const currentTimeMs = useGanttStore(selectors.currentTimeMs);
+
+  const isElapsed =
+    props.timeMs !== undefined &&
+    currentTimeMs !== undefined &&
+    props.timeMs <= currentTimeMs;
+
   return (
     <Point
       className={styles['marker-container']}
       data-height={GANTT_ROW_ELEMENT_HEIGHT}
+      data-elapsed={isElapsed || undefined}
       {...props}
     >
       <div className={styles['marker-point']} />

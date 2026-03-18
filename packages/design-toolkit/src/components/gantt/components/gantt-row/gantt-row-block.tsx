@@ -11,6 +11,7 @@
  */
 
 import { GANTT_ROW_ELEMENT_HEIGHT } from '../../constants';
+import { useGanttContext } from '../../context';
 import { useGanttStore } from '../../context/store';
 import { selectors } from '../../store';
 import { calculateElapsedPercentage } from '../../utils/helpers';
@@ -19,10 +20,15 @@ import styles from './styles.module.css';
 
 export function GanttRowBlock({ id, startMs, endMs, ...rest }: RangeProps) {
   const currentTimeMs = useGanttStore(selectors.currentTimeMs);
+  const { renderedRegionBounds } = useGanttContext();
 
   let elapsedPct = 0;
   if (currentTimeMs !== undefined) {
-    elapsedPct = calculateElapsedPercentage(currentTimeMs, startMs, endMs);
+    elapsedPct = calculateElapsedPercentage(
+      currentTimeMs,
+      Math.max(startMs, renderedRegionBounds.startMs),
+      Math.min(endMs, renderedRegionBounds.endMs),
+    );
   }
 
   return (

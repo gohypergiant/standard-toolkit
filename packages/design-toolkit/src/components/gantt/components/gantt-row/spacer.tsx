@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { useGanttContext } from '../../context';
 import { useGanttStore } from '../../context/store';
 import { selectors } from '../../store';
 import { calculateElapsedPercentage } from '../../utils/helpers';
@@ -20,10 +21,15 @@ export type SpacerProps = Omit<RangeProps, 'className'>;
 
 export function Spacer({ id, startMs, endMs, ...rest }: SpacerProps) {
   const currentTimeMs = useGanttStore(selectors.currentTimeMs);
+  const { renderedRegionBounds } = useGanttContext();
 
   let elapsedPct = 0;
   if (currentTimeMs !== undefined) {
-    elapsedPct = calculateElapsedPercentage(currentTimeMs, startMs, endMs);
+    elapsedPct = calculateElapsedPercentage(
+      currentTimeMs,
+      Math.max(startMs, renderedRegionBounds.startMs),
+      Math.min(endMs, renderedRegionBounds.endMs),
+    );
   }
 
   return (
