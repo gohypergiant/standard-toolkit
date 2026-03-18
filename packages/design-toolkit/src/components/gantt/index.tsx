@@ -47,7 +47,7 @@ export function Gantt({
   );
 
   return (
-    <GanttStoreProvider startTimeMs={midpointMs}>
+    <GanttStoreProvider startTimeMs={midpointMs} currentTimeMs={currentTimeMs}>
       <GanttProvider
         timescale={timescale}
         totalBounds={totalBounds}

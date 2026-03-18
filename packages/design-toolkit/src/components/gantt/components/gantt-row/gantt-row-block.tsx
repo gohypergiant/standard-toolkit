@@ -11,10 +11,29 @@
  */
 
 import { GANTT_ROW_ELEMENT_HEIGHT } from '../../constants';
+import { useGanttStore } from '../../context/store';
+import { selectors } from '../../store';
 import { Range, type RangeProps } from '../base-elements/range';
 import styles from './styles.module.css';
 
 export function GanttRowBlock({ id, startMs, endMs, ...rest }: RangeProps) {
+  const currentTimeMs = useGanttStore(selectors.currentTimeMs);
+
+  let elapsedPct = 0;
+  if (currentTimeMs !== undefined) {
+    const intersectsCurrentTime = currentTimeMs
+      ? startMs <= currentTimeMs && endMs >= currentTimeMs
+      : false;
+
+    elapsedPct = intersectsCurrentTime
+      ? ((currentTimeMs - startMs) / (endMs - startMs)) * 100
+      : 0;
+  }
+
+  if (elapsedPct > 0) {
+    console.log({ id, startMs, endMs, currentTimeMs, elapsedPct });
+  }
+
   return (
     <Range
       id={id}
@@ -22,6 +41,7 @@ export function GanttRowBlock({ id, startMs, endMs, ...rest }: RangeProps) {
       endMs={endMs}
       data-height={GANTT_ROW_ELEMENT_HEIGHT}
       className={styles['row-block']}
+      style={{ '--elapsed-pct': `${elapsedPct}%` } as React.CSSProperties}
       {...rest}
     />
   );

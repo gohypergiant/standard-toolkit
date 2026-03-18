@@ -30,6 +30,7 @@ export const GanttStoreContext = createContext<GanttStore | null>(null);
 export function GanttStoreProvider({
   children,
   startTimeMs,
+  currentTimeMs,
 }: PropsWithChildren<GanttStoreProps>) {
   const [store] = useState(() => createGanttStore({ startTimeMs }));
 
@@ -37,6 +38,12 @@ export function GanttStoreProvider({
   useEffect(() => {
     store.getState().setCurrentPositionMs(startTimeMs);
   }, [store, startTimeMs]);
+
+  useEffect(() => {
+    if (currentTimeMs !== undefined) {
+      store.getState().setCurrentTimeMs(currentTimeMs);
+    }
+  }, [store, currentTimeMs]);
 
   return (
     <GanttStoreContext.Provider value={store}>

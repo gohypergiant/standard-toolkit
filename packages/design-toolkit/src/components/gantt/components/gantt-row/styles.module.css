@@ -30,6 +30,15 @@
 
     @apply rounded-small absolute outline;
     height: var(--block-height);
+    overflow: clip;
+
+    &::before {
+      @apply bg-surface-muted pointer-events-none absolute top-0 left-0 h-full;
+      width: var(--elapsed-pct, 0%);
+      border-color: #414245;
+      background-color: #38393a;
+      content: '';
+    }
 
     @variant color-accent {
       @apply bg-accent-primary-muted outline-accent-primary-bold;
