@@ -77,3 +77,19 @@ export function shouldRenderCurrentTime(
 ) {
   return timestampWithinBounds(currentTimeMs, renderedRegionBounds);
 }
+
+export function calculateElapsedPercentage(
+  currentTimeMs: number,
+  rangeStartMs: number,
+  rangeEndMs: number,
+) {
+  if (currentTimeMs < rangeStartMs) {
+    return 0;
+  }
+
+  if (currentTimeMs > rangeEndMs) {
+    return 100;
+  }
+
+  return ((currentTimeMs - rangeStartMs) / (rangeEndMs - rangeStartMs)) * 100;
+}

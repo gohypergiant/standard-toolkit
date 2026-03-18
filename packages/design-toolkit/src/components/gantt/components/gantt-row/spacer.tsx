@@ -10,11 +10,30 @@
  * governing permissions and limitations under the License.
  */
 
+import { useGanttStore } from '../../context/store';
+import { selectors } from '../../store';
+import { calculateElapsedPercentage } from '../../utils/helpers';
 import { Range, type RangeProps } from '../base-elements/range';
 import styles from './styles.module.css';
 
 export type SpacerProps = Omit<RangeProps, 'className'>;
 
-export function Spacer(props: SpacerProps) {
-  return <Range className={styles['row-spacer']} {...props} />;
+export function Spacer({ id, startMs, endMs, ...rest }: SpacerProps) {
+  const currentTimeMs = useGanttStore(selectors.currentTimeMs);
+
+  let elapsedPct = 0;
+  if (currentTimeMs !== undefined) {
+    elapsedPct = calculateElapsedPercentage(currentTimeMs, startMs, endMs);
+  }
+
+  return (
+    <Range
+      id={id}
+      startMs={startMs}
+      endMs={endMs}
+      className={styles['row-spacer']}
+      style={{ '--elapsed-pct': `${elapsedPct}%` } as React.CSSProperties}
+      {...rest}
+    />
+  );
 }

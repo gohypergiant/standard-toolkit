@@ -57,6 +57,15 @@
     @apply absolute h-px bg-current;
     transform: translateX(var(--translate-x));
     width: var(--width);
+    overflow: clip;
+
+    &::before {
+      @apply bg-surface-muted pointer-events-none absolute top-0 left-0 h-full;
+      width: var(--elapsed-pct, 0%);
+      border-color: #414245;
+      background-color: #38393a;
+      content: '';
+    }
 
     @variant color-accent {
       @apply fg-accent-primary-bold;
