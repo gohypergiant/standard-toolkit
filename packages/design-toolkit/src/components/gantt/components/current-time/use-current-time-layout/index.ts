@@ -16,6 +16,7 @@ import {
   GANTT_CONTAINER_TOP_PX,
 } from '@/components/gantt/constants';
 import { useGanttContext } from '@/components/gantt/context';
+import { useTemporalDataContext } from '@/components/gantt/context/temporal-data';
 import { useLayoutSubscription } from '@/components/gantt/hooks/use-layout-subscription';
 import { selectors } from '@/components/gantt/store';
 import { deriveCurrentTimeTranslateX } from '@/components/gantt/utils/layout';
@@ -64,8 +65,9 @@ export function useCurrentTimeLayout({
   currentTimeMs,
   indicatorElement,
 }: UseCurrentTimeLayoutProps): UseCurrentTimeLayoutValue {
-  const { msPerPx, scrollContainerElement, timelineContainerElement } =
+  const { scrollContainerElement, timelineContainerElement } =
     useGanttContext();
+  const { msPerPx } = useTemporalDataContext();
 
   const labelElementRef = useRef<HTMLDivElement>(null);
 

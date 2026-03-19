@@ -11,10 +11,10 @@
  */
 
 import { useRef, useState } from 'react';
-import { GANTT_CONTAINER_TOP_PX } from '../../constants';
-import { useGanttContext } from '../../context';
-import { formatTimestampLabel } from '../../utils/formatting';
-import { shouldRenderCurrentTime } from '../../utils/helpers';
+import { GANTT_CONTAINER_TOP_PX } from '@/components/gantt/constants';
+import { useTemporalDataContext } from '@/components/gantt/context/temporal-data';
+import { formatTimestampLabel } from '@/components/gantt/utils/formatting';
+import { shouldRenderCurrentTime } from '@/components/gantt/utils/helpers';
 import styles from './styles.module.css';
 import { useCurrentTimeLayout } from './use-current-time-layout';
 
@@ -50,7 +50,7 @@ function CurrentTimeInner({ currentTimeMs }: { currentTimeMs: number }) {
 }
 
 function useDisplayCurrentTime(currentTimeMs: number) {
-  const { renderedRegionBounds } = useGanttContext();
+  const { renderedRegionBounds } = useTemporalDataContext();
 
   return shouldRenderCurrentTime(currentTimeMs, renderedRegionBounds);
 }

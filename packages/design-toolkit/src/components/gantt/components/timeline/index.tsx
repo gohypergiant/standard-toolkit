@@ -11,14 +11,15 @@
  */
 
 import { useRef } from 'react';
-import { useGanttContext } from '../../context';
+import { TimelineChunk } from '@/components/gantt/components/timeline-chunk';
+import { useGanttContext } from '@/components/gantt/context';
+import { useTemporalDataContext } from '@/components/gantt/context/temporal-data';
 import styles from '../styles.module.css';
-import { TimelineChunk } from '../timeline-chunk';
 import { useTimelineTransform } from './use-timeline-transform';
 
 export function Timeline() {
-  const { assignTimelineContainerElementRef, msPerPx, timelineChunks } =
-    useGanttContext();
+  const { assignTimelineContainerElementRef } = useGanttContext();
+  const { msPerPx, timelineChunks } = useTemporalDataContext();
   const timelineElementRef = useRef<HTMLDivElement | null>(null);
 
   useTimelineTransform({

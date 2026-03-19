@@ -24,6 +24,7 @@ import { GanttRowBlock } from './components/gantt-row/gantt-row-block';
 import { Marker } from './components/gantt-row/marker';
 import { Spacer } from './components/gantt-row/spacer';
 import { TIMESCALE_OPTIONS } from './constants';
+import { GanttProvider } from './context';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { Timescale } from './types';
 
@@ -79,81 +80,82 @@ const meta = {
 
     return (
       <div className='h-[360px]'>
-        <Gantt
+        <GanttProvider
           startTimeMs={dataset.startTimeMs}
           endTimeMs={dataset.endTimeMs}
-          currentTimeMs={args.currentTimeMs}
           timescale={args.timescale}
           thresholdProps={thresholdProps}
         >
-          {dataset.rows.map(({ id, elements }) => (
-            <GanttRow key={id}>
-              {elements.map((element, index) => {
-                switch (element.type) {
-                  case 'block': {
-                    const [startMs, endMs] = element.rangeMs;
-                    return (
-                      <GanttRowBlock
-                        key={`${id}-block-${index}`}
-                        id={`${id}-block-${index}`}
-                        startMs={startMs}
-                        endMs={endMs}
-                        color={element.color}
-                      />
-                    );
+          <Gantt currentTimeMs={args.currentTimeMs}>
+            {dataset.rows.map(({ id, elements }) => (
+              <GanttRow key={id}>
+                {elements.map((element, index) => {
+                  switch (element.type) {
+                    case 'block': {
+                      const [startMs, endMs] = element.rangeMs;
+                      return (
+                        <GanttRowBlock
+                          key={`${id}-block-${index}`}
+                          id={`${id}-block-${index}`}
+                          startMs={startMs}
+                          endMs={endMs}
+                          color={element.color}
+                        />
+                      );
+                    }
+
+                    case 'spacer': {
+                      const [startMs, endMs] = element.rangeMs;
+
+                      return (
+                        <Spacer
+                          key={`${id}-spacer-${index}`}
+                          id={`${id}-spacer-${index}`}
+                          startMs={startMs}
+                          endMs={endMs}
+                          color={element.color}
+                        />
+                      );
+                    }
+
+                    case 'bracket-close':
+                    case 'bracket-open': {
+                      const timeMs = element.timeMs;
+
+                      return element.type === 'bracket-close' ? (
+                        <BracketClose
+                          key={`${id}-bracket-close-${index}`}
+                          timeMs={timeMs}
+                          color={element.color}
+                        />
+                      ) : (
+                        <BracketOpen
+                          key={`${id}-bracket-open-${index}`}
+                          timeMs={timeMs}
+                          color={element.color}
+                        />
+                      );
+                    }
+
+                    case 'marker': {
+                      const timeMs = element.timeMs;
+                      return (
+                        <Marker
+                          key={`${id}-marker-${index}`}
+                          timeMs={timeMs}
+                          color={element.color}
+                        />
+                      );
+                    }
+
+                    default:
+                      return null;
                   }
-
-                  case 'spacer': {
-                    const [startMs, endMs] = element.rangeMs;
-
-                    return (
-                      <Spacer
-                        key={`${id}-spacer-${index}`}
-                        id={`${id}-spacer-${index}`}
-                        startMs={startMs}
-                        endMs={endMs}
-                        color={element.color}
-                      />
-                    );
-                  }
-
-                  case 'bracket-close':
-                  case 'bracket-open': {
-                    const timeMs = element.timeMs;
-
-                    return element.type === 'bracket-close' ? (
-                      <BracketClose
-                        key={`${id}-bracket-close-${index}`}
-                        timeMs={timeMs}
-                        color={element.color}
-                      />
-                    ) : (
-                      <BracketOpen
-                        key={`${id}-bracket-open-${index}`}
-                        timeMs={timeMs}
-                        color={element.color}
-                      />
-                    );
-                  }
-
-                  case 'marker': {
-                    const timeMs = element.timeMs;
-                    return (
-                      <Marker
-                        key={`${id}-marker-${index}`}
-                        timeMs={timeMs}
-                        color={element.color}
-                      />
-                    );
-                  }
-
-                  default:
-                    return null;
-                }
-              })}
-            </GanttRow>
-          ))}
-        </Gantt>
+                })}
+              </GanttRow>
+            ))}
+          </Gantt>
+        </GanttProvider>
       </div>
     );
   },

@@ -13,7 +13,7 @@
 import { renderHook } from '@testing-library/react';
 import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { usePointElementLayout } from '.';
-import type { GanttContextValue } from '@/components/gantt/context';
+import type { TemporalDataContextValue } from '@/components/gantt/context/temporal-data';
 
 const mocks = vi.hoisted(() => {
   const returnedLayout = { translateX: 123 };
@@ -24,35 +24,36 @@ const mocks = vi.hoisted(() => {
   };
 });
 
-vi.mock('../../../hooks/use-layout-subscription', () => ({
+vi.mock('@/components/gantt/hooks/use-layout-subscription', () => ({
   useLayoutSubscription: vi.fn(),
 }));
 
-vi.mock('../../../context', () => {
-  const mockGanttContextValue: Partial<GanttContextValue> = {
+vi.mock('@/components/gantt/context/temporal-data', () => {
+  const mockTemporalDataContextValue: Partial<TemporalDataContextValue> = {
     msPerPx: 10,
     renderedRegionBounds: { startMs: 1000, endMs: 2500 },
     totalBounds: { startMs: 0, endMs: 5000 },
     timescale: '1h',
+    timelineChunks: [],
   };
 
   return {
-    useGanttContext: () => mockGanttContextValue,
+    useTemporalDataContext: () => mockTemporalDataContextValue,
   };
 });
 
-vi.mock('../../../utils/layout', () => ({
+vi.mock('@/components/gantt/utils/layout', () => ({
   derivePointElementLayout: vi.fn(),
 }));
 
-vi.mock('../../../store', () => ({
+vi.mock('@/components/gantt/store', () => ({
   selectors: {
     roundedCurrentPositionMs: vi.fn(() => 'selector-function'),
   },
 }));
 
-import { useLayoutSubscription } from '../../../hooks/use-layout-subscription';
-import { derivePointElementLayout } from '../../../utils/layout';
+import { useLayoutSubscription } from '@/components/gantt/hooks/use-layout-subscription';
+import { derivePointElementLayout } from '@/components/gantt/utils/layout';
 
 describe('usePointElementLayout', () => {
   const capturedCallbackHarness: { callback?: (ms: number) => void } = {};

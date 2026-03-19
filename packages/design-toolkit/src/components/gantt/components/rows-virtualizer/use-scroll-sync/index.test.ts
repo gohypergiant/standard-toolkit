@@ -13,21 +13,21 @@
 import { renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createGanttStoreProvider } from '@/components/gantt/__fixtures__/store-provider';
-import * as GanttContext from '@/components/gantt/context';
 import { useGanttStoreApi } from '@/components/gantt/context/store';
 import { useScrollSync } from './';
-import type { GanttContextValue } from '@/components/gantt/context';
+import type { TemporalDataContextValue } from '@/components/gantt/context/temporal-data';
 
-// Mock the useGanttContext hook
-vi.mock('@/components/gantt/context', () => ({
-  useGanttContext: vi.fn(),
+vi.mock('@/components/gantt/context/temporal-data', () => ({
+  useTemporalDataContext: vi.fn(),
 }));
+
+import { useTemporalDataContext } from '@/components/gantt/context/temporal-data';
 
 // Base context with only the properties used by the hook
 const baseContextValue = {
   totalBounds: { startMs: 0, endMs: 1000 },
   msPerPx: 2,
-} as GanttContextValue;
+} as TemporalDataContextValue;
 
 describe('useScrollSync', () => {
   const scrollToMock = vi.fn();
@@ -38,8 +38,7 @@ describe('useScrollSync', () => {
   beforeEach(() => {
     scrollToMock.mockClear();
 
-    // Set up the default mock for useGanttContext
-    vi.mocked(GanttContext.useGanttContext).mockReturnValue(baseContextValue);
+    vi.mocked(useTemporalDataContext).mockReturnValue(baseContextValue);
   });
 
   it('should do nothing when scrollContainerElement is null', () => {
@@ -68,7 +67,7 @@ describe('useScrollSync', () => {
     const updatedTotalBounds = { startMs: 100, endMs: 1000 };
 
     // Change bounds so that currentPositionMs: 0 is now outside the range
-    vi.mocked(GanttContext.useGanttContext).mockReturnValue({
+    vi.mocked(useTemporalDataContext).mockReturnValue({
       ...baseContextValue,
       totalBounds: updatedTotalBounds,
     });
@@ -116,7 +115,7 @@ describe('useScrollSync', () => {
     scrollToMock.mockClear();
 
     // Update the context mock with new bounds
-    vi.mocked(GanttContext.useGanttContext).mockReturnValue({
+    vi.mocked(useTemporalDataContext).mockReturnValue({
       ...baseContextValue,
       totalBounds: { startMs: 100, endMs: 2000 },
     });
@@ -139,7 +138,7 @@ describe('useScrollSync', () => {
     scrollToMock.mockClear();
 
     // Update the context mock with new msPerPx
-    vi.mocked(GanttContext.useGanttContext).mockReturnValue({
+    vi.mocked(useTemporalDataContext).mockReturnValue({
       ...baseContextValue,
       msPerPx: 4,
     });
