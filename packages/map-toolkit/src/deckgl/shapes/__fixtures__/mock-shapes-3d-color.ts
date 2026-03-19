@@ -11,6 +11,10 @@
  */
 
 import { uuid } from '@accelint/core';
+import { MAP_INTERACTION } from '../display-shape-layer/constants';
+import { MARKER } from './atlas';
+import ATLAS_JSON from './atlas.json';
+import ATLAS_PNG from './atlas.png';
 import type { Shape } from '../shared/types';
 
 /**
@@ -192,7 +196,7 @@ export const mockShapes3DColor: Shape[] = [
     },
     lastUpdated: 1761946887453,
   },
-  // Point shape at 1500m elevation
+  // Point shape at 1500m elevation with icon
   {
     id: uuid(),
     name: 'New Point',
@@ -206,6 +210,15 @@ export const mockShapes3DColor: Shape[] = [
           lineColor: [200, 150, 20, 255],
           lineWidth: 2,
           linePattern: 'solid',
+          icon: {
+            atlas: ATLAS_PNG,
+            mapping: ATLAS_JSON,
+            name: MARKER,
+            size: MAP_INTERACTION.ICON_SIZE,
+          },
+          labelOffset: [0, 10],
+          labelVerticalAnchor: 'top',
+          labelHorizontalAnchor: 'center',
         },
         maxElevation: 1500,
         shapeId: uuid(),

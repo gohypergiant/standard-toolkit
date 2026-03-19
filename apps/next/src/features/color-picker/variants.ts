@@ -14,7 +14,7 @@ import type { ColorPickerProps } from '@accelint/design-toolkit/components/color
 
 type ColorPickerVariant = Pick<
   ColorPickerProps,
-  'items' | 'value'
+  'items' | 'isRequired' | 'label' | 'value'
 >;
 
 export const COLORS: ColorPickerProps['items'] = [
@@ -29,4 +29,13 @@ export const COLORS: ColorPickerProps['items'] = [
 export const PROP_COMBOS: { name: string; props: ColorPickerVariant }[] = [
   { name: 'default', props: { items: COLORS } },
   { name: 'selected', props: { items: COLORS, value: '#30D27E' } },
+  { name: 'with-label', props: { items: COLORS, label: 'Pick a color' } },
+  {
+    name: 'with-label-required',
+    props: { items: COLORS, label: 'Pick a color', isRequired: true },
+  },
+  {
+    name: 'with-label-selected',
+    props: { items: COLORS, label: 'Pick a color', value: '#30D27E' },
+  },
 ];
