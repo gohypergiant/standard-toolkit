@@ -13,7 +13,12 @@
 import { createColumnHelper } from '@tanstack/react-table';
 import { useState } from 'react';
 import { Pagination } from '../pagination/index';
+import { TableBody } from './body';
+import { TableCell } from './cell';
+import { TableHeader } from './header';
+import { TableHeaderCell } from './header-cell';
 import { Table } from './index';
+import { TableRow } from './row';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 type Person = {
@@ -391,4 +396,41 @@ export const PrePaginated: Story = {
       </div>
     );
   },
+};
+
+export const Static: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Manual table composition using sub-components (`TableHeader`, `TableBody`, `TableRow`, `TableHeaderCell`, `TableCell`) for full control over rendering.',
+      },
+    },
+  },
+  render: () => (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHeaderCell>First Name</TableHeaderCell>
+          <TableHeaderCell>Last Name</TableHeaderCell>
+          <TableHeaderCell>Age</TableHeaderCell>
+          <TableHeaderCell>Visits</TableHeaderCell>
+          <TableHeaderCell>Status</TableHeaderCell>
+          <TableHeaderCell>Progress</TableHeaderCell>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {defaultData.map((person) => (
+          <TableRow key={person.id}>
+            <TableCell>{person.firstName}</TableCell>
+            <TableCell>{person.lastName}</TableCell>
+            <TableCell>{person.age}</TableCell>
+            <TableCell>{person.visits}</TableCell>
+            <TableCell>{person.status}</TableCell>
+            <TableCell>{person.progress}%</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  ),
 };
