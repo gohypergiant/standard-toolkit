@@ -49,9 +49,11 @@ import {
   buildIndicatorLineData,
   classifyElevatedFeatures,
   createCurtainPolygonFeatures,
-  flattenFeatureTo2D,
   getFeatureElevation,
+  getFeatureExtrusionHeight,
+  getFeatureMinElevation,
   partitionCurtains,
+  projectFeatureToBaseElevation,
 } from './utils/elevation';
 import {
   getIconConfig,
@@ -364,14 +366,18 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
         },
       };
 
-      // For polygon geometries with elevation: strip Z coordinates to prevent
-      // deck.gl double-counting (SolidPolygonLayer adds coordinate Z + getElevation).
-      // The feature's maxElevation property is the source of truth for getFeatureElevation.
+      // For polygon geometries with elevation: project Z coordinates to the base elevation
+      // to prevent deck.gl double-counting (SolidPolygonLayer adds coordinate Z + getElevation).
+      // Setting Z = minElevation and getElevation = maxElevation - minElevation renders a
+      // slab from minElevation to maxElevation. When minElevation is 0, Z is stripped entirely.
       if (
         isPolygonGeometry(feature.geometry) &&
         getFeatureElevation(feature) > 0
       ) {
-        feature = flattenFeatureTo2D(feature);
+        feature = projectFeatureToBaseElevation(
+          feature,
+          getFeatureMinElevation(feature),
+        );
       }
 
       features.push(feature);
@@ -524,7 +530,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
 
     // Strip Z from LineString coordinates so the highlight outline renders at
     // ground level rather than following the elevated path
-    const highlightFeature = flattenFeatureTo2D(selectedFeature);
+    const highlightFeature = projectFeatureToBaseElevation(selectedFeature, 0);
     const lineColor = this.resolvedHighlight;
 
     // Render 2D highlight layer (outline only)
@@ -589,7 +595,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
 
         // Material brightness for selection; extrusion only when elevation enabled
         extruded: enableElevation,
-        getElevation: getFeatureElevation,
+        getElevation: getFeatureExtrusionHeight,
         material: MATERIAL_SETTINGS.HOVER_OR_SELECT,
 
         // Behavior
@@ -645,7 +651,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
 
         // Material brightness scales with interaction state; extrusion only when elevation enabled
         extruded: enableElevation,
-        getElevation: getFeatureElevation,
+        getElevation: getFeatureExtrusionHeight,
         material,
 
         // Behavior
@@ -731,7 +737,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       // Tested fix: Changing condition to `!wireframe && stroked` in deck.gl source did NOT resolve the issue
       // Solution: Separate hover/select layers with material-based lighting for extruded polygons
       extruded: this.props.enableElevation ?? false,
-      getElevation: getFeatureElevation,
+      getElevation: getFeatureExtrusionHeight,
       ...(this.props.enableElevation
         ? {
             material: MATERIAL_SETTINGS.NORMAL,
@@ -1092,7 +1098,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
           stroked: false,
           extruded: true,
           wireframe: true,
-          getElevation: getFeatureElevation,
+          getElevation: getFeatureExtrusionHeight,
           getFillColor: (d: Shape['feature']) =>
             getFillColor(d, applyBaseOpacity),
           getLineColor,
