@@ -121,6 +121,7 @@
     "./map-mode/use-map-mode": "./dist/map-mode/use-map-mode.js",
     "./maplibre": "./dist/maplibre/index.js",
     "./maplibre/hooks/use-maplibre": "./dist/maplibre/hooks/use-maplibre.js",
+    "./maplibre/rbz-handler": "./dist/maplibre/rbz-handler.js",
     "./shared/cleanup": "./dist/shared/cleanup.js",
     "./shared/constants": "./dist/shared/constants.js",
     "./shared/create-map-store": "./dist/shared/create-map-store.js",
