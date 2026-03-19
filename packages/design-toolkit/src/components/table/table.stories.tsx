@@ -12,6 +12,7 @@
 
 import { createColumnHelper } from '@tanstack/react-table';
 import { useState } from 'react';
+import { Pagination } from '../pagination/index';
 import { Table } from './index';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
@@ -108,6 +109,51 @@ const defaultData: Person[] = [
     progress: 60,
   },
 ];
+
+const firstNames = [
+  'Alice',
+  'Bob',
+  'Charlie',
+  'Dave',
+  'Eve',
+  'Frank',
+  'Grace',
+  'Hank',
+  'Ivy',
+  'Jack',
+];
+const lastNames = [
+  'Smith',
+  'Johnson',
+  'Brown',
+  'White',
+  'Green',
+  'Miller',
+  'Davis',
+  'Wilson',
+  'Moore',
+  'Taylor',
+];
+const statuses = ['Single', 'In Relationship', 'Complicated', 'Married'];
+
+function generateData(count: number): Person[] {
+  return Array.from({ length: count }, (_, i) => {
+    const n = i + 1;
+    return {
+      id: `person-${n}`,
+      firstName: `${firstNames[i % firstNames.length]}-${n}`,
+      lastName: `${lastNames[i % lastNames.length]}-${n}`,
+      age: 20 + (i % 40),
+      visits: (i * 7) % 100,
+      status: statuses[i % statuses.length] as string,
+      progress: (i * 13) % 100,
+    };
+  });
+}
+
+const allData = generateData(100);
+const PAGE_SIZE = 10;
+const totalPages = Math.ceil(allData.length / PAGE_SIZE);
 
 const columnHelper = createColumnHelper<Person>();
 
@@ -290,6 +336,58 @@ export const InitialRowSelection: Story = {
             <p>No rows selected</p>
           )}
         </div>
+      </div>
+    );
+  },
+};
+
+export const ClientSidePagination: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Client-side pagination. Pass all data and a `pageSize` prop — the Table handles data slicing internally via TanStack `getPaginationRowModel()`. Render `<Pagination>` alongside the Table to control navigation.',
+      },
+    },
+  },
+  render: () => {
+    const [page, setPage] = useState(1);
+    return (
+      <div>
+        <Table
+          columns={columns}
+          data={allData}
+          pageSize={PAGE_SIZE}
+          page={page}
+          onPageChange={setPage}
+        />
+        <Pagination
+          value={page}
+          total={Math.ceil(allData.length / PAGE_SIZE)}
+          onChange={setPage}
+        />
+      </div>
+    );
+  },
+};
+
+export const PrePaginated: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Simulates server-side pagination where only the current page of data is passed to the Table. Uses `key={page}` to force remount when the page changes, since `useListData` only reads `initialItems` on mount.',
+      },
+    },
+  },
+  render: () => {
+    const [page, setPage] = useState(1);
+    const pageData = allData.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
+    return (
+      <div>
+        <Table key={page} columns={columns} data={pageData} />
+        <Pagination value={page} total={totalPages} onChange={setPage} />
       </div>
     );
   },
