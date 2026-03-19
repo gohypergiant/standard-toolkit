@@ -116,12 +116,78 @@ describe('Table with pagination', () => {
     expect(rows).toHaveLength(26);
   });
 
+  it('should navigate to specific page by clicking page number', async () => {
+    render(<PaginatedTable />);
+
+    await userEvent.click(screen.getByRole('button', { name: '3' }));
+
+    const rows = screen.getAllByRole('row');
+    // 1 header row + 5 data rows (last page)
+    expect(rows).toHaveLength(6);
+    expect(screen.getByText('first-21')).toBeInTheDocument();
+    expect(screen.getByText('first-25')).toBeInTheDocument();
+  });
+
   it('should show correct partial row count on last page', async () => {
     render(<PaginatedTable />);
 
     // Navigate to page 3 (last page with 5 rows)
     await userEvent.click(screen.getByLabelText('Next page'));
     await userEvent.click(screen.getByLabelText('Next page'));
+
+    const rows = screen.getAllByRole('row');
+    // 1 header row + 5 data rows
+    expect(rows).toHaveLength(6);
+    expect(screen.getByText('first-21')).toBeInTheDocument();
+    expect(screen.getByText('first-25')).toBeInTheDocument();
+  });
+});
+
+function PrePaginatedTable() {
+  const [page, setPage] = useState(1);
+  const pageData = allData.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
+  return (
+    <>
+      <Table key={page} columns={columns} data={pageData} />
+      <Pagination
+        value={page}
+        total={Math.ceil(allData.length / PAGE_SIZE)}
+        onChange={setPage}
+      />
+    </>
+  );
+}
+
+describe('Table with pre-paginated data', () => {
+  it('should render only the current page slice', () => {
+    render(<PrePaginatedTable />);
+
+    const rows = screen.getAllByRole('row');
+    // 1 header row + 10 data rows
+    expect(rows).toHaveLength(11);
+    expect(screen.getByText('first-1')).toBeInTheDocument();
+    expect(screen.getByText('first-10')).toBeInTheDocument();
+    expect(screen.queryByText('first-11')).not.toBeInTheDocument();
+  });
+
+  it('should show next page after clicking next', async () => {
+    render(<PrePaginatedTable />);
+
+    await userEvent.click(screen.getByLabelText('Next page'));
+
+    const rows = screen.getAllByRole('row');
+    // 1 header row + 10 data rows
+    expect(rows).toHaveLength(11);
+    expect(screen.getByText('first-11')).toBeInTheDocument();
+    expect(screen.getByText('first-20')).toBeInTheDocument();
+    expect(screen.queryByText('first-1')).not.toBeInTheDocument();
+  });
+
+  it('should show partial row count on last page', async () => {
+    render(<PrePaginatedTable />);
+
+    await userEvent.click(screen.getByRole('button', { name: '3' }));
 
     const rows = screen.getAllByRole('row');
     // 1 header row + 5 data rows
