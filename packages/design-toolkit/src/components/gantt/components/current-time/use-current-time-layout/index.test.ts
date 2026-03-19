@@ -12,7 +12,6 @@
 
 import { renderHook } from '@testing-library/react';
 import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import * as GanttContext from '@/components/gantt/context';
 import { useCurrentTimeLayout } from '.';
 
 const mocks = vi.hoisted(() => {
@@ -29,6 +28,10 @@ vi.mock('@/components/gantt/context', () => ({
   useGanttContext: vi.fn(),
 }));
 
+vi.mock('@/components/gantt/context/temporal-data', () => ({
+  useTemporalDataContext: vi.fn(),
+}));
+
 vi.mock('@/components/gantt/utils/layout', () => ({
   deriveCurrentTimeTranslateX: vi.fn(),
 }));
@@ -39,9 +42,10 @@ vi.mock('@/components/gantt/store', () => ({
   },
 }));
 
+import { useGanttContext } from '@/components/gantt/context';
+import { useTemporalDataContext } from '@/components/gantt/context/temporal-data';
 import { useLayoutSubscription } from '@/components/gantt/hooks/use-layout-subscription';
 import { deriveCurrentTimeTranslateX } from '@/components/gantt/utils/layout';
-import type { GanttContextValue } from '@/components/gantt/context';
 
 describe('useCurrentTimeLayout', () => {
   const capturedCallbackHarness: { callback?: (ms: number) => void } = {};
@@ -58,17 +62,29 @@ describe('useCurrentTimeLayout', () => {
     clientHeight: 50,
   } as HTMLDivElement;
 
-  const baseContextValue = {
-    msPerPx: 10,
-    renderedRegionBounds: { startMs: 1000, endMs: 2500 },
+  const mockGanttContextValue = {
     scrollContainerElement: mockScrollContainerElement,
     timelineContainerElement: mockTimelineContainerElement,
-  } as GanttContextValue;
+    assignTimelineContainerElementRef: vi.fn(),
+    assignScrollContainerElementRef: vi.fn(),
+  };
+
+  const mockTemporalDataContextValue = {
+    msPerPx: 10,
+    renderedRegionBounds: { startMs: 1000, endMs: 2500 },
+    timescale: '1h' as const,
+    totalBounds: { startMs: 0, endMs: 5000 },
+    timelineChunks: [],
+  };
 
   beforeEach(() => {
     vi.clearAllMocks();
 
-    vi.mocked(GanttContext.useGanttContext).mockReturnValue(baseContextValue);
+    vi.mocked(useGanttContext).mockReturnValue(mockGanttContextValue);
+
+    vi.mocked(useTemporalDataContext).mockReturnValue(
+      mockTemporalDataContextValue,
+    );
 
     vi.mocked(useLayoutSubscription).mockImplementation(
       ({ callback }: { callback: (ms: number) => void }) => {

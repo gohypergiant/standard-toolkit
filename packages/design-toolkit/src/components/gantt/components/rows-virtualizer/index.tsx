@@ -11,8 +11,8 @@
  */
 
 import { Children, type PropsWithChildren } from 'react';
-import { useGanttContext } from '../../context';
-import { useTotalDataRegionThresholds } from '../../hooks/use-total-data-region-thresholds';
+import { useGanttContext } from '@/components/gantt/context';
+import { useTotalDataRegionThresholds } from '@/components/gantt/hooks/use-total-data-region-thresholds';
 import styles from './styles.module.css';
 import { useRenderedRows } from './use-rendered-rows';
 import { useScrollSync } from './use-scroll-sync';

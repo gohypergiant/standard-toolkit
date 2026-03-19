@@ -11,8 +11,8 @@
  */
 
 import { useEffect } from 'react';
-import { useGanttContext } from '@/components/gantt/context';
 import { useGanttStoreApi } from '@/components/gantt/context/store';
+import { useTemporalDataContext } from '@/components/gantt/context/temporal-data';
 import { timestampWithinBounds } from '@/components/gantt/utils/helpers';
 import { deriveHorizontalScrollPosition } from '@/components/gantt/utils/layout';
 
@@ -21,7 +21,7 @@ type UseScrollSyncProps = {
 };
 
 export function useScrollSync({ scrollContainerElement }: UseScrollSyncProps) {
-  const { totalBounds, msPerPx } = useGanttContext();
+  const { totalBounds, msPerPx } = useTemporalDataContext();
   const store = useGanttStoreApi();
 
   useEffect(() => {

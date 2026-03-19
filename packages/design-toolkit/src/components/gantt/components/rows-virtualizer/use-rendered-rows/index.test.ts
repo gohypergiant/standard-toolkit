@@ -25,14 +25,17 @@ const mocks = vi.hoisted(() => {
   };
 });
 
-vi.mock('@/components/gantt/context', () => {
+vi.mock('@/components/gantt/context/temporal-data', () => {
   const mock = {
     totalBounds: { startMs: 0, endMs: 1000 },
     msPerPx: mocks.msPerPx,
+    timescale: '1h',
+    renderedRegionBounds: { startMs: 0, endMs: 1000 },
+    timelineChunks: [],
   } as const;
 
   return {
-    useGanttContext: () => mock,
+    useTemporalDataContext: () => mock,
   };
 });
 

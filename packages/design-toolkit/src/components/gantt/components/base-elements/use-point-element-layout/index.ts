@@ -12,7 +12,7 @@
 
 import { useCallback, useMemo } from 'react';
 import { TIMESCALE_MAPPING } from '@/components/gantt/constants';
-import { useGanttContext } from '@/components/gantt/context';
+import { useTemporalDataContext } from '@/components/gantt/context/temporal-data';
 import { useLayoutSubscription } from '@/components/gantt/hooks/use-layout-subscription';
 import { selectors } from '@/components/gantt/store';
 import { derivePointElementLayout } from '@/components/gantt/utils/layout';
@@ -27,7 +27,7 @@ export function usePointElementLayout({
   timeMs,
 }: UsePointElementLayoutProps) {
   const { renderedRegionBounds, msPerPx, timescale, totalBounds } =
-    useGanttContext();
+    useTemporalDataContext();
 
   const applyLayout = useCallback(() => {
     if (!element) {

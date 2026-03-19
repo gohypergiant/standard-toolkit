@@ -11,10 +11,10 @@
  */
 
 import { type HTMLAttributes, type PropsWithChildren, useState } from 'react';
-import { useGanttContext } from '../../context';
-import { shouldRenderRangeElement } from '../../utils/helpers';
+import { useTemporalDataContext } from '@/components/gantt/context/temporal-data';
+import { shouldRenderRangeElement } from '@/components/gantt/utils/helpers';
 import { useRangeElementLayout } from './use-range-element-layout';
-import type { RowElementColorProp } from '../../types';
+import type { RowElementColorProp } from '@/components/gantt/types';
 
 export type RangeProps = HTMLAttributes<HTMLDivElement> & {
   id: string;
@@ -52,7 +52,7 @@ function RangeInner({
 }
 
 export function Range(props: PropsWithChildren<RangeProps>) {
-  const { renderedRegionBounds } = useGanttContext();
+  const { renderedRegionBounds } = useTemporalDataContext();
   const { startMs, endMs } = props;
 
   if (!shouldRenderRangeElement(renderedRegionBounds, { startMs, endMs })) {

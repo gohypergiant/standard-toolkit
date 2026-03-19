@@ -10,59 +10,29 @@
  * governing permissions and limitations under the License.
  */
 
-import { type PropsWithChildren, useMemo } from 'react';
 import { CurrentTime } from './components/current-time';
 import { RowsVirtualizer } from './components/rows-virtualizer';
 import { Timeline } from './components/timeline';
 import { GANTT_CONTAINER_TOP_PADDING_PX } from './constants';
-import { GanttProvider } from './context';
-import { GanttStoreProvider } from './context/store';
 import styles from './styles.module.css';
-import type { ThresholdProps, Timescale } from './types';
+import type { PropsWithChildren } from 'react';
 
 type GanttProps = {
-  startTimeMs: number;
-  endTimeMs: number;
   currentTimeMs?: number;
-  timescale: Timescale;
-  thresholdProps?: ThresholdProps;
 };
 
 export function Gantt({
-  startTimeMs,
-  endTimeMs,
   currentTimeMs,
-  timescale,
-  thresholdProps,
   children,
 }: PropsWithChildren<GanttProps>) {
-  const midpointMs = startTimeMs + (endTimeMs - startTimeMs) / 2;
-
-  const totalBounds = useMemo(
-    () => ({
-      startMs: startTimeMs,
-      endMs: endTimeMs,
-    }),
-    [startTimeMs, endTimeMs],
-  );
-
   return (
-    <GanttStoreProvider startTimeMs={midpointMs}>
-      <GanttProvider
-        timescale={timescale}
-        totalBounds={totalBounds}
-        threshold={thresholdProps?.threshold}
-        onThresholdMet={thresholdProps?.onThresholdMet}
-      >
-        <div
-          className={styles.container}
-          data-padding-top={GANTT_CONTAINER_TOP_PADDING_PX}
-        >
-          {currentTimeMs && <CurrentTime currentTimeMs={currentTimeMs} />}
-          <Timeline />
-          <RowsVirtualizer>{children}</RowsVirtualizer>
-        </div>
-      </GanttProvider>
-    </GanttStoreProvider>
+    <div
+      className={styles.container}
+      data-padding-top={GANTT_CONTAINER_TOP_PADDING_PX}
+    >
+      {currentTimeMs && <CurrentTime currentTimeMs={currentTimeMs} />}
+      <Timeline />
+      <RowsVirtualizer>{children}</RowsVirtualizer>
+    </div>
   );
 }

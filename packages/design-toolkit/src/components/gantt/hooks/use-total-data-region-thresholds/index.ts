@@ -11,10 +11,10 @@
  */
 
 import { useEffect, useRef } from 'react';
-import { useGanttContext } from '../../context';
-import { useGanttStore } from '../../context/store';
-import { selectors } from '../../store';
-import { deriveRenderedSlice } from '../../utils/layout';
+import { useGanttStore } from '@/components/gantt/context/store';
+import { useTemporalDataContext } from '@/components/gantt/context/temporal-data';
+import { selectors } from '@/components/gantt/store';
+import { deriveRenderedSlice } from '@/components/gantt/utils/layout';
 import {
   deriveRenderedRegion,
   deriveRowIndexThresholds,
@@ -22,8 +22,8 @@ import {
   deriveTotalDataRegion,
   examineThresholds,
   shouldExamineThresholds,
-} from '../../utils/thresholds';
-import type { MetThresholdData } from '../../types';
+} from '@/components/gantt/utils/thresholds';
+import type { MetThresholdData } from '@/components/gantt/types';
 
 function toThresholdKey(item: MetThresholdData): string {
   return `${item.axis}:${item.direction}:${item.value}`;
@@ -85,7 +85,7 @@ export function useTotalDataRegionThresholds({
     threshold,
     onThresholdMet,
     timescale,
-  } = useGanttContext();
+  } = useTemporalDataContext();
 
   useEffect(() => {
     // Early return if threshold examination should not proceed
