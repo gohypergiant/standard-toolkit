@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import type { DistanceUnitSymbol } from '@accelint/constants/units';
 import type { UniqueId } from '@accelint/core';
 import type { Rgba255Tuple } from '@accelint/predicates';
 import type { CompositeLayerProps } from '@deck.gl/core';
@@ -229,4 +230,12 @@ export type DisplayShapeLayerProps = CompositeLayerProps & {
    * ```
    */
   enableElevation?: boolean;
+
+  /**
+   * Distance unit symbol for displaying measurements (e.g., radius on hover).
+   * If the shape's stored radius uses a different unit, the value is converted.
+   * Matches the `unit` prop on DrawShapeLayer and EditShapeLayer.
+   * @default 'NM'
+   */
+  unit?: DistanceUnitSymbol;
 };

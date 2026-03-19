@@ -12,6 +12,7 @@
 
 'use client';
 import { PathStyleExtension } from '@deck.gl/extensions';
+import { CoffinCornerExtension } from '../../extensions/coffin-corner/coffin-corner-extension';
 import { DEFAULT_COLORS } from '../shared/constants';
 import type { Rgba255Tuple } from '@accelint/predicates';
 
@@ -22,27 +23,9 @@ import type { Rgba255Tuple } from '@accelint/predicates';
  * Controls sizing and interaction feedback for shape rendering.
  */
 export const MAP_INTERACTION = {
-  LINE_WIDTH_MIN_PIXELS: 1, // Minimum line width in pixels
-  ICON_SIZE: 38, // Size of shape icons
-  ICON_HOVER_SIZE_INCREASE: 5, // Additional pixels added on hover
-} as const;
-
-/**
- * Coffin corners configuration for Point selection/hover feedback.
- *
- * Coffin corners are bracket-like corners that appear around Point shapes
- * with icons to indicate hover and selection states. They provide visual
- * feedback without obscuring the icon itself.
- */
-export const COFFIN_CORNERS = {
-  /** Icon name for hover state (white corners with background fill) */
-  HOVER_ICON: 'coffin-corners-hover',
-  /** Icon name for selected state (blue corners, no fill) */
-  SELECTED_ICON: 'coffin-corners-selected',
-  /** Icon name for selected+hover state (blue corners with background fill) */
-  SELECTED_HOVER_ICON: 'coffin-corners-selected-hover',
-  /** Size of the coffin corners icon */
-  SIZE: 38,
+  LINE_WIDTH_MIN_PIXELS: 1,
+  ICON_SIZE: 38,
+  ICON_HOVER_SIZE_INCREASE: 5,
 } as const;
 
 /**
@@ -108,7 +91,12 @@ export const BRIGHTNESS_FACTOR = {
 export const OVERLAY_FILL_OPACITY = 0.25;
 
 /** Reusable deck.gl PathStyleExtension enabling dash patterns on GeoJsonLayer lines. */
-export const DASH_EXTENSION = [new PathStyleExtension({ dash: true })];
+export const DASH_EXTENSION = new PathStyleExtension({ dash: true });
+
+export const COFFIN_CORNER_EXTENSION = new CoffinCornerExtension();
+
+/** Stable extensions array for GeoJsonLayer — avoids new reference per render triggering getShaders() re-evaluation. */
+export const DISPLAY_EXTENSIONS = [DASH_EXTENSION, COFFIN_CORNER_EXTENSION];
 
 /** Readonly [r, g, b, a] tuple of DEFAULT_COLORS.highlight, pre-spread at module load for hot-path usage. */
 export const HIGHLIGHT_COLOR_TUPLE: Rgba255Tuple = [

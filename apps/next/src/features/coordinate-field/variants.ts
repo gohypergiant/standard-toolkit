@@ -129,3 +129,7 @@ export const COPY_MENU_SCENARIOS: CoordinateFieldVariant[] = [
   { format: 'dd', label: 'Copy Menu DD', value: NYC_COORDS },
   { format: 'dms', label: 'Copy Menu DMS', value: NYC_COORDS },
 ];
+
+export const TOOLTIP_SCENARIOS: CoordinateFieldVariant[] = [
+  { format: 'dd', label: 'Format Button Tooltip', value: NYC_COORDS },
+];
