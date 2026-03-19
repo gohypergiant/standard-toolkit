@@ -21,6 +21,8 @@ import {
   getCoreRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  type OnChangeFn,
+  type PaginationState,
   type Row,
   type RowPinningState,
   type RowSelectionState,
@@ -180,16 +182,11 @@ export function Table<T extends { id: Key }>({
     [currentPage, pageSize],
   );
 
-  const handlePaginationChange = useCallback(
-    (
-      updater:
-        | { pageIndex: number; pageSize: number }
-        | ((old: { pageIndex: number; pageSize: number }) => {
-            pageIndex: number;
-            pageSize: number;
-          }),
-    ) => {
-      if (pagination == null) return;
+  const handlePaginationChange = useCallback<OnChangeFn<PaginationState>>(
+    (updater) => {
+      if (pagination == null) {
+        return;
+      }
       const next =
         typeof updater === 'function' ? updater(pagination) : updater;
       setCurrentPage(next.pageIndex + 1);
