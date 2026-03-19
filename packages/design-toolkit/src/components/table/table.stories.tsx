@@ -257,7 +257,43 @@ export const SortableColumns: Story = {
   render: (args) => <Table {...args} key={JSON.stringify(args)} />,
 };
 
+const columnsWithSizing = [
+  columnHelper.accessor('firstName', {
+    id: 'firstName',
+    cell: (info) => info.getValue(),
+    header: () => <span>First Name</span>,
+  }),
+  columnHelper.accessor((row) => row.lastName, {
+    id: 'lastName',
+    cell: (info) => <i>{info.getValue()}</i>,
+    header: () => <span>Last Name</span>,
+  }),
+  columnHelper.accessor('age', {
+    id: 'age',
+    cell: (info) => info.renderValue(),
+    header: () => 'Age',
+    size: 42,
+  }),
+  columnHelper.accessor('visits', {
+    id: 'visits',
+    header: () => <span>Visits</span>,
+    size: 42,
+  }),
+  columnHelper.accessor('status', {
+    id: 'status',
+    header: 'Status',
+  }),
+  columnHelper.accessor('progress', {
+    id: 'progress',
+    header: 'Profile Progress',
+    size: 64,
+  }),
+];
+
 export const ColumnSizing: Story = {
+  args: {
+    fullWidth: true,
+  },
   parameters: {
     docs: {
       description: {
@@ -267,42 +303,14 @@ export const ColumnSizing: Story = {
     },
     layout: 'fullscreen',
   },
-  render: () => {
-    const columnsWithSizing = [
-      columnHelper.accessor('firstName', {
-        id: 'firstName',
-        cell: (info) => info.getValue(),
-        header: () => <span>First Name</span>,
-      }),
-      columnHelper.accessor((row) => row.lastName, {
-        id: 'lastName',
-        cell: (info) => <i>{info.getValue()}</i>,
-        header: () => <span>Last Name</span>,
-      }),
-      columnHelper.accessor('age', {
-        id: 'age',
-        cell: (info) => info.renderValue(),
-        header: () => 'Age',
-        size: 42,
-      }),
-      columnHelper.accessor('visits', {
-        id: 'visits',
-        header: () => <span>Visits</span>,
-        size: 42,
-      }),
-      columnHelper.accessor('status', {
-        id: 'status',
-        header: 'Status',
-      }),
-      columnHelper.accessor('progress', {
-        id: 'progress',
-        header: 'Profile Progress',
-        size: 64,
-      }),
-    ];
-
-    return <Table columns={columnsWithSizing} data={defaultData} fullWidth />;
-  },
+  render: (args) => (
+    <Table
+      {...args}
+      columns={columnsWithSizing}
+      data={defaultData}
+      key={JSON.stringify(args)}
+    />
+  ),
 };
 
 export const InitialRowSelection: Story = {
@@ -314,7 +322,7 @@ export const InitialRowSelection: Story = {
       },
     },
   },
-  render: () => {
+  render: (args) => {
     const [selectedRows, setSelectedRows] = useState<Record<string, boolean>>({
       tanner: true,
       joe: true,
@@ -323,11 +331,10 @@ export const InitialRowSelection: Story = {
     return (
       <div>
         <Table
-          columns={columns}
-          data={defaultData}
-          showCheckbox
+          {...args}
           rowSelection={selectedRows}
           onRowSelectionChange={setSelectedRows}
+          key={JSON.stringify(args)}
         />
         <div style={{ marginTop: '1rem' }}>
           <strong>Selected Row IDs:</strong>
@@ -355,16 +362,17 @@ export const ClientSidePagination: Story = {
       },
     },
   },
-  render: () => {
+  render: (args) => {
     const [page, setPage] = useState(1);
     return (
       <div>
         <Table
-          columns={columns}
+          {...args}
           data={allData}
           pageSize={PAGE_SIZE}
           page={page}
           onPageChange={setPage}
+          key={JSON.stringify(args)}
         />
         <Pagination
           value={page}
@@ -385,13 +393,17 @@ export const PrePaginated: Story = {
       },
     },
   },
-  render: () => {
+  render: (args) => {
     const [page, setPage] = useState(1);
     const pageData = allData.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
     return (
       <div>
-        <Table key={page} columns={columns} data={pageData} />
+        <Table
+          {...args}
+          data={pageData}
+          key={`${page}-${JSON.stringify(args)}`}
+        />
         <Pagination value={page} total={totalPages} onChange={setPage} />
       </div>
     );
@@ -400,6 +412,7 @@ export const PrePaginated: Story = {
 
 export const Static: Story = {
   parameters: {
+    controls: { disable: true },
     docs: {
       description: {
         story:
