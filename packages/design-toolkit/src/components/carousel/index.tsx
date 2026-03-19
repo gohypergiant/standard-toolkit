@@ -51,6 +51,7 @@ export function Carousel({
               <CarouselSelectField />
             </>
           )}
+          {variant === 'noPreview' && <CarouselPositionDisplay />}
         </div>
       </div>
     </CarouselProvider>

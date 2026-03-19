@@ -1,1 +1,35 @@
-{/* docs */}
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+
+import * as CarouselStories from './carousel.stories';
+
+<Meta of={CarouselStories} />
+
+# Carousel
+
+A carousel component for displaying a collection of items.
+
+## Example Usage
+
+```tsx
+<Carousel
+  variant="gallery"
+  items={[
+    {
+      dataType: 'image',
+      dataUrl: '[https://example.com/image1.jpg'](https://example.com/image1.jpg'),
+      fileName: 'image1.jpg',
+      title: 'Image 1',
+      thumbnailUrl: '[https://example.com/thumbnail1.jpg'](https://example.com/thumbnail1.jpg'),
+      uuid: '1',
+    },
+    {
+      dataType: 'image',
+      dataUrl: '[https://example.com/image2.jpg'](https://example.com/image2.jpg'),
+      fileName: 'image2.jpg',
+      title: 'Image 2',
+      thumbnailUrl: '[https://example.com/thumbnail2.jpg'](https://example.com/thumbnail2.jpg'),
+      uuid: '2',
+    },
+    // ...
+  ]}
+/>
