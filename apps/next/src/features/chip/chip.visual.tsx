@@ -55,6 +55,7 @@ createInteractiveVisualTests({
 type SelectableVariantProps = {
   color: ChipProps['color'];
   size: ChipProps['size'];
+  isSelected?: boolean;
   isDisabled?: boolean;
 };
 
@@ -62,16 +63,18 @@ const selectableVariants = generateVariantMatrix<SelectableVariantProps>({
   dimensions: {
     color: ['info', 'advisory', 'normal', 'serious', 'critical'],
     size: ['medium', 'small'],
+    isSelected: [true, false],
   },
 });
 
 createInteractiveVisualTests({
   componentName: 'SelectableChip',
-  renderComponent: ({ color, size, isDisabled }) => (
+  renderComponent: ({ color, size, isDisabled, isSelected }) => (
     <ChipList
       selectionMode='multiple'
       items={[{ id: 'chip-1', label: 'Selectable' }]}
       size={size}
+      defaultSelectedKeys={isSelected ? ['chip-1'] : undefined}
       disabledKeys={isDisabled ? ['chip-1'] : undefined}
     >
       {({ id, label }) => (
