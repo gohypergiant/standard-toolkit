@@ -10,9 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
-import type { ReactNode } from 'react';
+import type { DetailedHTMLProps, HTMLAttributes, ReactNode } from 'react';
 
-export type HtmlOverlayItemProps = {
+export type HtmlOverlayItemProps = DetailedHTMLProps<
+  HTMLAttributes<HTMLDivElement>,
+  HTMLDivElement
+> & {
   /** Injected by HtmlOverlayWidget */
   x?: number;
   /** Injected by HtmlOverlayWidget */
@@ -29,21 +32,19 @@ const ITEM_STYLE = {
 } as const satisfies Partial<CSSStyleDeclaration>;
 
 export function HtmlOverlayItem({
-  // biome-ignore lint/correctness/noUnusedFunctionParameters: `x` and `y` are injected by the widget and used for positioning, but not directly rendered in this component
   x = 0,
-  // biome-ignore lint/correctness/noUnusedFunctionParameters: `x` and `y` are injected by the widget and used for positioning, but not directly rendered in this component
   y = 0,
+  coordinates,
   children,
   className,
+  ...props
 }: Readonly<HtmlOverlayItemProps>) {
   return (
     // Using transform translate to position overlay items will result in a smooth zooming
     // effect, whereas using the top/left css properties will cause overlay items to
     // jiggle when zooming
-    <div>
-      <div style={ITEM_STYLE} className={className}>
-        {children}
-      </div>
+    <div style={ITEM_STYLE} className={className} {...props}>
+      {children}
     </div>
   );
 }

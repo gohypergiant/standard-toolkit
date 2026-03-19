@@ -215,7 +215,7 @@ describe('HtmlOverlayWidget', () => {
         widget.onRenderHTML(el);
 
         const element = onRenderOverlay.mock.calls[0]?.[1];
-        expect(element?.props?.children).toHaveLength(1);
+        expect(element).toHaveLength(1);
       });
 
       it('should clone items with projected x and y props inside positioned wrappers', () => {
@@ -235,7 +235,7 @@ describe('HtmlOverlayWidget', () => {
 
         widget.onRenderHTML(el);
 
-        const wrapper = onRenderOverlay.mock.calls[0]?.[1]?.props?.children[0];
+        const wrapper = onRenderOverlay.mock.calls[0]?.[1]?.[0];
         expect(wrapper?.props?.style?.transform).toBe(
           'translate(150px, 250px)',
         );
@@ -264,7 +264,7 @@ describe('HtmlOverlayWidget', () => {
         widget.onRenderHTML(el);
 
         const element = onRenderOverlay.mock.calls[0]?.[1];
-        expect(element?.props?.children).toHaveLength(1);
+        expect(element).toHaveLength(1);
       });
 
       it('should hide items projected outside the viewport via display style', () => {
@@ -286,11 +286,9 @@ describe('HtmlOverlayWidget', () => {
         widget.onRenderHTML(el);
 
         const element = onRenderOverlay.mock.calls[0]?.[1];
-        expect(element?.props?.children).toHaveLength(2);
-        expect(
-          element?.props?.children[0]?.props?.style?.display,
-        ).toBeUndefined();
-        expect(element?.props?.children[1]?.props?.style?.display).toBe('none');
+        expect(element).toHaveLength(2);
+        expect(element?.[0]?.props?.style?.display).toBeUndefined();
+        expect(element?.[1]?.props?.style?.display).toBe('none');
       });
 
       it('should include items within the overflow margin', () => {
@@ -313,7 +311,7 @@ describe('HtmlOverlayWidget', () => {
         widget.onRenderHTML(el);
 
         const element = onRenderOverlay.mock.calls[0]?.[1];
-        expect(element?.props?.children).toHaveLength(2);
+        expect(element).toHaveLength(2);
       });
 
       it('should hide items beyond the negative overflow boundary via display style', () => {
@@ -333,8 +331,8 @@ describe('HtmlOverlayWidget', () => {
         widget.onRenderHTML(el);
 
         const element = onRenderOverlay.mock.calls[0]?.[1];
-        expect(element?.props?.children).toHaveLength(1);
-        expect(element?.props?.children[0]?.props?.style?.display).toBe('none');
+        expect(element).toHaveLength(1);
+        expect(element?.[0]?.props?.style?.display).toBe('none');
       });
 
       it('should render an empty fragment when items is null', () => {
@@ -350,7 +348,7 @@ describe('HtmlOverlayWidget', () => {
 
         const element = onRenderOverlay.mock.calls[0]?.[1];
         expect(element).not.toBeNull();
-        expect(element?.props?.children).toHaveLength(0);
+        expect(element).toHaveLength(0);
       });
 
       it('should handle multiple items with mixed visibility', () => {
@@ -374,7 +372,7 @@ describe('HtmlOverlayWidget', () => {
         widget.onRenderHTML(el);
 
         const element = onRenderOverlay.mock.calls[0]?.[1];
-        const children = element?.props?.children;
+        const children = element;
         // All 4 items have coordinates, so all are rendered as wrapper divs
         expect(children).toHaveLength(4);
         // [100,100] in view, [-100,100] out, [400,300] in view, [100,700] out
