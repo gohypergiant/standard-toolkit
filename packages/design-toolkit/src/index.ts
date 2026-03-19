@@ -80,6 +80,7 @@ export type {
   CarouselNavigationProps,
   CarouselProps,
   CarouselThumbnailGalleryProps,
+  CarouselViewerProps,
 } from './components/carousel/types';
 export {
   CheckboxContext,
