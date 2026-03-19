@@ -24,19 +24,24 @@ export type HtmlOverlayItemProps = {
   className?: string;
 };
 
+const ITEM_STYLE = {
+  userSelect: 'none',
+} as const satisfies Partial<CSSStyleDeclaration>;
+
 export function HtmlOverlayItem({
+  // biome-ignore lint/correctness/noUnusedFunctionParameters: `x` and `y` are injected by the widget and used for positioning, but not directly rendered in this component
   x = 0,
+  // biome-ignore lint/correctness/noUnusedFunctionParameters: `x` and `y` are injected by the widget and used for positioning, but not directly rendered in this component
   y = 0,
   children,
   className,
-  ...props
 }: Readonly<HtmlOverlayItemProps>) {
   return (
     // Using transform translate to position overlay items will result in a smooth zooming
     // effect, whereas using the top/left css properties will cause overlay items to
     // jiggle when zooming
     <div>
-      <div style={{ userSelect: 'none' }} className={className} {...props}>
+      <div style={ITEM_STYLE} className={className}>
         {children}
       </div>
     </div>

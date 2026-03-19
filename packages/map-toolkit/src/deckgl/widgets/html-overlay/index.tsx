@@ -202,8 +202,6 @@ export class HtmlOverlayWidget<
         pointerEvents: 'auto',
       } as const;
 
-      console.log('Projecting item', { key, coordinates, x, y, visible });
-
       renderItems.push(
         <div key={key} style={style}>
           {cloneElement(item, { x, y, key } as Record<string, unknown>)}
@@ -223,7 +221,7 @@ export class HtmlOverlayWidget<
       Object.assign(rootElement.style, ROOT_STYLE);
       this.stylesApplied = true;
     }
-    const zIndex = this.props.zIndex ?? 1;
+    const zIndex = this.props.zIndex;
     if (this.lastZIndex !== zIndex) {
       rootElement.style.zIndex = String(zIndex);
       this.lastZIndex = zIndex;
