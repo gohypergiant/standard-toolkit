@@ -12,147 +12,100 @@
 
 import {
   createContext,
+  type Dispatch,
   type PropsWithChildren,
-  useCallback,
+  type SetStateAction,
   useContext,
   useMemo,
   useState,
 } from 'react';
-import { TIMESCALE_MAPPING } from '../constants';
-import { useResizeIntersectionEffect } from '../hooks/use-resize-intersection-effect';
-import { selectors } from '../store';
-import { getMsPerPx } from '../utils/conversions';
-import { generateTimelineChunks } from '../utils/generation';
-import {
-  getRenderedRegionBoundsMs,
-  getViewableRegionWidth,
-} from '../utils/helpers';
-import { useGanttStore } from './store';
-import type {
-  MetThresholdData,
-  Threshold,
-  TimeBounds,
-  TimelineChunkObject,
-  Timescale,
-} from '../types';
+import { GanttStoreProvider } from './store';
+import { TemporalDataProvider } from './temporal-data';
+import type { ThresholdProps, Timescale } from '@/components/gantt/types';
 
-export type GanttContextValue = {
-  msPerPx: number;
-  renderedRegionBounds: TimeBounds;
-  timescale: Timescale;
-  totalBounds: TimeBounds;
-  timelineChunks: TimelineChunkObject[];
-  threshold?: Threshold;
-  onThresholdMet?: (metThresholds: MetThresholdData[]) => void;
-  assignTimelineContainerElementRef: (node: HTMLDivElement) => void;
-  assignScrollContainerElementRef: (node: HTMLDivElement) => void;
-  scrollContainerElement: HTMLDivElement | null;
+function refAssignmentFactory(
+  setter: Dispatch<SetStateAction<HTMLDivElement | null>>,
+) {
+  return (node: HTMLDivElement | null) => {
+    setter(node);
+  };
+}
+
+type GanttContextValue = {
   timelineContainerElement: HTMLDivElement | null;
+  scrollContainerElement: HTMLDivElement | null;
+  assignTimelineContainerElementRef: (node: HTMLDivElement | null) => void;
+  assignScrollContainerElementRef: (node: HTMLDivElement | null) => void;
 };
 
 export const GanttContext = createContext<GanttContextValue | undefined>(
   undefined,
 );
 
-export type GanttProviderProps = {
+type GanttProviderProps = {
+  startTimeMs: number;
+  endTimeMs: number;
   timescale: Timescale;
-  totalBounds: TimeBounds;
-  threshold?: Threshold;
-  onThresholdMet?: (metThresholds: MetThresholdData[]) => void;
+  thresholdProps: ThresholdProps;
 };
 
 export function GanttProvider({
   children,
+  startTimeMs,
+  endTimeMs,
   timescale,
-  totalBounds,
-  threshold,
-  onThresholdMet,
+  thresholdProps,
 }: PropsWithChildren<GanttProviderProps>) {
   const [timelineContainerElement, setTimelineContainerElement] =
     useState<HTMLDivElement | null>(null);
   const [scrollContainerElement, setScrollContainerElement] =
     useState<HTMLDivElement | null>(null);
 
-  const msPerPx = getMsPerPx(timescale);
-  const selectedTimeIntervalMs = TIMESCALE_MAPPING[timescale];
+  const midpointMs = startTimeMs + (startTimeMs - startTimeMs) / 2;
 
-  const selector = useMemo(
-    () => selectors.roundedCurrentPositionMs(selectedTimeIntervalMs),
-    [selectedTimeIntervalMs],
+  const totalBounds = useMemo(
+    () => ({
+      startMs: startTimeMs,
+      endMs: endTimeMs,
+    }),
+    [startTimeMs, endTimeMs],
   );
 
-  const roundedTimestampMs = useGanttStore(selector);
-
-  const timelineChunks = generateTimelineChunks(
-    roundedTimestampMs,
-    getViewableRegionWidth(timelineContainerElement),
-    selectedTimeIntervalMs,
-    msPerPx,
+  const assignTimelineContainerElementRef = refAssignmentFactory(
+    setTimelineContainerElement,
   );
-
-  const renderedRegionBounds = getRenderedRegionBoundsMs(
-    timelineChunks,
-    msPerPx,
-  );
-
-  useResizeIntersectionEffect({
-    timelineContainerElement,
-    timelineChunks,
-  });
-
-  const assignTimelineContainerElementRef = useCallback(
-    (node: HTMLDivElement | null) => {
-      if (!node) {
-        return;
-      }
-
-      setTimelineContainerElement(node);
-    },
-    [],
-  );
-
-  const assignScrollContainerElementRef = useCallback(
-    (node: HTMLDivElement | null) => {
-      if (!node) {
-        return;
-      }
-
-      setScrollContainerElement(node);
-    },
-    [],
+  const assignScrollContainerElementRef = refAssignmentFactory(
+    setScrollContainerElement,
   );
 
   const value = useMemo(
     () => ({
       assignTimelineContainerElementRef,
       assignScrollContainerElementRef,
-      msPerPx,
-      renderedRegionBounds,
-      timescale,
-      timelineChunks,
-      totalBounds,
-      threshold,
-      onThresholdMet,
-      scrollContainerElement,
       timelineContainerElement,
+      scrollContainerElement,
     }),
     [
       assignTimelineContainerElementRef,
       assignScrollContainerElementRef,
-      msPerPx,
-      renderedRegionBounds,
-      timescale,
-      timelineChunks,
-      totalBounds,
-      threshold,
-      onThresholdMet,
-      scrollContainerElement,
       timelineContainerElement,
+      scrollContainerElement,
     ],
   );
 
   return (
-    <GanttContext.Provider value={value}>{children}</GanttContext.Provider>
+    <GanttContext.Provider value={value}>
+      <GanttStoreProvider startTimeMs={midpointMs}>
+        <TemporalDataProvider
+          timescale={timescale}
+          totalBounds={totalBounds}
+          threshold={thresholdProps?.threshold}
+          onThresholdMet={thresholdProps?.onThresholdMet}
+        >
+          {children}
+        </TemporalDataProvider>
+      </GanttStoreProvider>
+    </GanttContext.Provider>
   );
 }
 

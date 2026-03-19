@@ -21,11 +21,11 @@ import {
   useMemo,
 } from 'react';
 import { GANTT_ROW_HEIGHT_PX } from '@/components/gantt/constants';
-import { useGanttContext } from '@/components/gantt/context';
 import {
   useGanttStore,
   useGanttStoreApi,
 } from '@/components/gantt/context/store';
+import { useTemporalDataContext } from '@/components/gantt/context/temporal-data';
 import { selectors } from '@/components/gantt/store';
 import {
   getHorizontalScrolledPixels,
@@ -60,7 +60,7 @@ export function useRenderedRows({
   children,
   scrollContainerElement,
 }: PropsWithChildren<UseRenderedRowsProps>): UseRenderedRowsValue {
-  const { totalBounds, msPerPx } = useGanttContext();
+  const { totalBounds, msPerPx } = useTemporalDataContext();
   const store = useGanttStoreApi();
   const roundedCurrentRowScrollPx = useGanttStore(
     selectors.roundedCurrentRowScrollPx,

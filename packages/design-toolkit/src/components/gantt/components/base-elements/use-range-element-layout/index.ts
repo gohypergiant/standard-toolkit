@@ -11,12 +11,12 @@
  */
 
 import { useCallback, useMemo } from 'react';
-import { TIMESCALE_MAPPING } from '../../../constants';
-import { useGanttContext } from '../../../context';
-import { useLayoutSubscription } from '../../../hooks/use-layout-subscription';
-import { type GanttState, selectors } from '../../../store';
-import { deriveRangeElementLayout } from '../../../utils/layout';
-import type { TimeBounds, Timescale } from '../../../types';
+import { TIMESCALE_MAPPING } from '@/components/gantt/constants';
+import { useTemporalDataContext } from '@/components/gantt/context/temporal-data';
+import { useLayoutSubscription } from '@/components/gantt/hooks/use-layout-subscription';
+import { type GanttState, selectors } from '@/components/gantt/store';
+import { deriveRangeElementLayout } from '@/components/gantt/utils/layout';
+import type { TimeBounds, Timescale } from '@/components/gantt/types';
 
 type UseRangeElementLayoutProps = {
   element: HTMLDivElement | null;
@@ -32,7 +32,7 @@ export function useRangeElementLayout(props: UseRangeElementLayoutProps) {
   const { timeBounds, element } = props;
 
   const { renderedRegionBounds, msPerPx, timescale, totalBounds } =
-    useGanttContext();
+    useTemporalDataContext();
 
   const applyRangeElementLayout = useCallback(() => {
     if (!element) {

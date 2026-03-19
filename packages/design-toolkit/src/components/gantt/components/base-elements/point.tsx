@@ -11,10 +11,10 @@
  */
 
 import { type HTMLAttributes, type PropsWithChildren, useState } from 'react';
-import { useGanttContext } from '../../context';
-import { timestampWithinBounds } from '../../utils/helpers';
-import { usePointElementLayout } from '../base-elements/use-point-element-layout';
-import type { RowElementColorProp } from '../../types';
+import { useTemporalDataContext } from '@/components/gantt/context/temporal-data';
+import { timestampWithinBounds } from '@/components/gantt/utils/helpers';
+import { usePointElementLayout } from './use-point-element-layout';
+import type { RowElementColorProp } from '@/components/gantt/types';
 
 export type PointProps = HTMLAttributes<HTMLDivElement> & {
   timeMs: number;
@@ -46,7 +46,7 @@ function PointInner({
 }
 
 export function Point(props: PropsWithChildren<PointProps>) {
-  const { renderedRegionBounds } = useGanttContext();
+  const { renderedRegionBounds } = useTemporalDataContext();
 
   if (!timestampWithinBounds(props.timeMs, renderedRegionBounds)) {
     return null;

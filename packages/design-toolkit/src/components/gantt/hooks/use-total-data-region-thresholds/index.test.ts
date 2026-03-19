@@ -13,16 +13,18 @@
 import { renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createGanttStoreProvider } from '@/components/gantt/__fixtures__/store-provider';
-import * as GanttContext from '@/components/gantt/context';
 import * as layoutUtils from '@/components/gantt/utils/layout';
 import * as thresholdUtils from '@/components/gantt/utils/thresholds';
 import { useTotalDataRegionThresholds } from './index';
-import type { GanttContextValue } from '@/components/gantt/context';
+import type { TemporalDataContextValue } from '@/components/gantt/context/temporal-data';
 import type { MetThresholdData } from '@/components/gantt/types';
 
-vi.mock('@/components/gantt/context', () => ({
-  useGanttContext: vi.fn(),
+vi.mock('@/components/gantt/context/temporal-data', () => ({
+  useTemporalDataContext: vi.fn(),
 }));
+
+import { useTemporalDataContext } from '@/components/gantt/context/temporal-data';
+
 vi.mock('@/components/gantt/utils/layout');
 vi.mock('@/components/gantt/utils/thresholds', async () => {
   const actual = await vi.importActual('@/components/gantt/utils/thresholds');
@@ -53,7 +55,7 @@ describe('useTotalDataRegionThresholds', () => {
     threshold: mockThreshold,
     onThresholdMet: mockOnThresholdMet,
     timescale: mockTimescale,
-  } as unknown as GanttContextValue;
+  } as unknown as TemporalDataContextValue;
 
   const mockScrollContainerElement = {
     clientHeight: 500,
@@ -72,7 +74,7 @@ describe('useTotalDataRegionThresholds', () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    vi.mocked(GanttContext.useGanttContext).mockReturnValue(baseContextValue);
+    vi.mocked(useTemporalDataContext).mockReturnValue(baseContextValue);
 
     vi.mocked(layoutUtils.deriveRenderedSlice).mockReturnValue(
       mockRenderedSlice,
@@ -103,7 +105,7 @@ describe('useTotalDataRegionThresholds', () => {
   });
 
   it('should not call onThresholdMet when threshold is not specified', () => {
-    vi.mocked(GanttContext.useGanttContext).mockReturnValue({
+    vi.mocked(useTemporalDataContext).mockReturnValue({
       ...baseContextValue,
       threshold: undefined,
       onThresholdMet: undefined,
