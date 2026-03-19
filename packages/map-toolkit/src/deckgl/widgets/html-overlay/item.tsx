@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import type { CSSProperties, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 export type HtmlOverlayItemProps = {
   /** Injected by HtmlOverlayWidget */
@@ -22,7 +22,6 @@ export type HtmlOverlayItemProps = {
   coordinates: number[];
   children?: ReactNode;
   className?: string;
-  zIndex?: CSSProperties['zIndex'];
 };
 
 export function HtmlOverlayItem({
@@ -30,20 +29,13 @@ export function HtmlOverlayItem({
   y = 0,
   children,
   className,
-  zIndex = 'auto',
   ...props
 }: Readonly<HtmlOverlayItemProps>) {
   return (
     // Using transform translate to position overlay items will result in a smooth zooming
     // effect, whereas using the top/left css properties will cause overlay items to
     // jiggle when zooming
-    <div
-      style={{
-        transform: `translate(${x}px, ${y}px)`,
-        position: 'absolute',
-        zIndex: `${zIndex}`,
-      }}
-    >
+    <div>
       <div style={{ userSelect: 'none' }} className={className} {...props}>
         {children}
       </div>

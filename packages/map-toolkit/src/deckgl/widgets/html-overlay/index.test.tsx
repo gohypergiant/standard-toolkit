@@ -218,7 +218,7 @@ describe('HtmlOverlayWidget', () => {
         expect(element?.props?.children).toHaveLength(1);
       });
 
-      it('should clone items with projected x and y props', () => {
+      it('should clone items with projected x and y props inside positioned wrappers', () => {
         const onRenderOverlay = vi.fn();
         const Item = (props: {
           coordinates: number[];
@@ -235,8 +235,11 @@ describe('HtmlOverlayWidget', () => {
 
         widget.onRenderHTML(el);
 
-        const projected =
-          onRenderOverlay.mock.calls[0]?.[1]?.props?.children[0];
+        const wrapper = onRenderOverlay.mock.calls[0]?.[1]?.props?.children[0];
+        expect(wrapper?.props?.style?.transform).toBe(
+          'translate(150px, 250px)',
+        );
+        const projected = wrapper?.props?.children;
         expect(projected?.props?.x).toBe(150);
         expect(projected?.props?.y).toBe(250);
       });
@@ -264,7 +267,7 @@ describe('HtmlOverlayWidget', () => {
         expect(element?.props?.children).toHaveLength(1);
       });
 
-      it('should exclude items projected outside the viewport', () => {
+      it('should hide items projected outside the viewport via display style', () => {
         const onRenderOverlay = vi.fn();
         const Item = (props: { coordinates: number[] }) => (
           <div data-c={props.coordinates} />
@@ -283,7 +286,11 @@ describe('HtmlOverlayWidget', () => {
         widget.onRenderHTML(el);
 
         const element = onRenderOverlay.mock.calls[0]?.[1];
-        expect(element?.props?.children).toHaveLength(1);
+        expect(element?.props?.children).toHaveLength(2);
+        expect(
+          element?.props?.children[0]?.props?.style?.display,
+        ).toBeUndefined();
+        expect(element?.props?.children[1]?.props?.style?.display).toBe('none');
       });
 
       it('should include items within the overflow margin', () => {
@@ -309,7 +316,7 @@ describe('HtmlOverlayWidget', () => {
         expect(element?.props?.children).toHaveLength(2);
       });
 
-      it('should exclude items beyond the negative overflow boundary', () => {
+      it('should hide items beyond the negative overflow boundary via display style', () => {
         const onRenderOverlay = vi.fn();
         const Item = (props: { coordinates: number[] }) => (
           <div data-c={props.coordinates} />
@@ -326,7 +333,8 @@ describe('HtmlOverlayWidget', () => {
         widget.onRenderHTML(el);
 
         const element = onRenderOverlay.mock.calls[0]?.[1];
-        expect(element?.props?.children).toHaveLength(0);
+        expect(element?.props?.children).toHaveLength(1);
+        expect(element?.props?.children[0]?.props?.style?.display).toBe('none');
       });
 
       it('should render an empty fragment when items is null', () => {
@@ -366,8 +374,14 @@ describe('HtmlOverlayWidget', () => {
         widget.onRenderHTML(el);
 
         const element = onRenderOverlay.mock.calls[0]?.[1];
+        const children = element?.props?.children;
+        // All 4 items have coordinates, so all are rendered as wrapper divs
+        expect(children).toHaveLength(4);
         // [100,100] in view, [-100,100] out, [400,300] in view, [100,700] out
-        expect(element?.props?.children).toHaveLength(2);
+        expect(children[0]?.props?.style?.display).toBeUndefined();
+        expect(children[1]?.props?.style?.display).toBe('none');
+        expect(children[2]?.props?.style?.display).toBeUndefined();
+        expect(children[3]?.props?.style?.display).toBe('none');
       });
     });
   });

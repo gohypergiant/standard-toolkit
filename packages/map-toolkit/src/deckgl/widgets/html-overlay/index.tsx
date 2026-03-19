@@ -14,8 +14,6 @@ import { Widget } from '@deck.gl/core';
 import {
   Children,
   cloneElement,
-  Fragment,
-  type JSX,
   type ReactElement,
   type ReactNode,
 } from 'react';
@@ -41,7 +39,7 @@ export type HtmlOverlayWidgetProps = WidgetProps & {
   /** Render into a previously created overlay root. */
   onRenderOverlay?: (
     overlayRoot: unknown,
-    element: JSX.Element | null,
+    element: ReactNode,
     container: HTMLElement,
   ) => void;
 };
@@ -53,6 +51,9 @@ const ROOT_STYLE: Partial<CSSStyleDeclaration> = {
   pointerEvents: 'none',
   overflow: 'hidden',
 };
+
+const OFFSCREEN: [number, number] = [-1, -1];
+const EMPTY_ARRAY: ReactElement[] = [];
 
 export class HtmlOverlayWidget<
   PropsT extends HtmlOverlayWidgetProps = HtmlOverlayWidgetProps,
@@ -107,6 +108,11 @@ export class HtmlOverlayWidget<
     this.overlayRootInitialized = false;
     this.reactRoot?.unmount();
     this.reactRoot = null;
+    this.cachedItems = null;
+    this.cachedItemsSource = undefined;
+    this.lastRenderedItems = null;
+    this.stylesApplied = false;
+    this.lastZIndex = undefined;
   }
 
   override onViewportChange(viewport: Viewport): void {
@@ -124,28 +130,24 @@ export class HtmlOverlayWidget<
     return this.viewport?.zoom ?? 0;
   }
 
-  protected scaleWithZoom(n: number): number {
-    return n / 2 ** (20 - this.getZoom());
-  }
-
-  protected breakpointWithZoom<T>(threshold: number, a: T, b: T): T {
-    return this.getZoom() > threshold ? a : b;
-  }
-
   protected getCoords(
     viewport: Viewport,
     coordinates: number[],
   ): [number, number] {
     const pos = viewport.project(coordinates);
     if (!pos) {
-      return [-1, -1];
+      return OFFSCREEN;
     }
     return pos as [number, number];
   }
 
-  protected inView(viewport: Viewport, [x, y]: [number, number]): boolean {
-    const overflowMargin = this.props.overflowMargin ?? 0;
-    const { width, height } = viewport;
+  protected inView(
+    width: number,
+    height: number,
+    x: number,
+    y: number,
+    overflowMargin: number,
+  ): boolean {
     return !(
       x < -overflowMargin ||
       y < -overflowMargin ||
@@ -154,47 +156,101 @@ export class HtmlOverlayWidget<
     );
   }
 
+  // Cache the flattened array; invalidate when props.items changes
+  private cachedItems: ReactElement[] | null = null;
+  private cachedItemsSource: ReactNode | undefined;
+  private lastRenderedItems: ReactElement[] | null = null;
+
   protected getOverlayItems(_viewport: Viewport): ReactElement[] {
     const { items } = this.props;
-    return (items ? Children.toArray(items) : []) as ReactElement[];
+    if (items !== this.cachedItemsSource) {
+      this.cachedItemsSource = items;
+      this.cachedItems = items
+        ? (Children.toArray(items) as ReactElement[])
+        : EMPTY_ARRAY;
+    }
+    return this.cachedItems ?? EMPTY_ARRAY;
   }
 
   protected projectItems(
     items: ReactElement[],
     viewport: Viewport,
   ): ReactElement[] {
+    const overflowMargin = this.props.overflowMargin ?? 0;
+    const { width, height } = viewport;
     const renderItems: ReactElement[] = [];
-    items.filter(Boolean).forEach((item, index) => {
+
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      if (!item) {
+        continue;
+      }
       const coordinates = (item.props as Record<string, unknown>)?.coordinates;
       if (!coordinates) {
-        return;
+        continue;
       }
       const [x, y] = this.getCoords(viewport, coordinates as number[]);
-      if (this.inView(viewport, [x, y])) {
-        const key = item.key ?? index;
-        renderItems.push(
-          cloneElement(item, { x, y, key } as Record<string, unknown>),
-        );
-      }
-    });
+      const visible = this.inView(width, height, x, y, overflowMargin);
+      const key = item.key ?? i;
+
+      const style = {
+        position: 'absolute',
+        left: 0,
+        top: 0,
+        transform: `translate(${x}px, ${y}px)`,
+        display: visible ? undefined : 'none',
+        pointerEvents: 'auto',
+      } as const;
+
+      console.log('Projecting item', { key, coordinates, x, y, visible });
+
+      renderItems.push(
+        <div key={key} style={style}>
+          {cloneElement(item, { x, y, key } as Record<string, unknown>)}
+        </div>,
+      );
+    }
 
     return renderItems;
   }
 
+  // Apply static styles once on first render; only update zIndex when it changes
+  private stylesApplied = false;
+  private lastZIndex: number | undefined;
+
   override onRenderHTML(rootElement: HTMLElement): void {
-    Object.assign(rootElement.style, ROOT_STYLE, {
-      zIndex: `${this.props.zIndex ?? 1}`,
-    });
+    if (!this.stylesApplied) {
+      Object.assign(rootElement.style, ROOT_STYLE);
+      this.stylesApplied = true;
+    }
+    const zIndex = this.props.zIndex ?? 1;
+    if (this.lastZIndex !== zIndex) {
+      rootElement.style.zIndex = String(zIndex);
+      this.lastZIndex = zIndex;
+    }
 
     const viewport = this.getViewport();
-    const element = viewport
-      ? (() => {
-          const overlayItems = this.getOverlayItems(viewport);
-          const renderedItems = this.projectItems(overlayItems, viewport);
-          return <Fragment>{renderedItems}</Fragment>;
-        })()
-      : null;
 
+    if (!viewport) {
+      this.lastRenderedItems = null;
+      this.renderOverlay(rootElement, null);
+      return;
+    }
+
+    const overlayItems = this.getOverlayItems(viewport);
+
+    if (overlayItems === this.lastRenderedItems) {
+      // Position-only update — mutate DOM transforms directly, skip React
+      this.updatePositionsDirect(rootElement, overlayItems, viewport);
+    } else {
+      // Items changed — full React render with positioned wrapper divs
+      this.lastRenderedItems = overlayItems;
+      const renderedItems = this.projectItems(overlayItems, viewport);
+      this.renderOverlay(rootElement, renderedItems);
+    }
+  }
+
+  private renderOverlay(rootElement: HTMLElement, element: ReactNode): void {
     const { onRenderOverlay, onCreateOverlay } = this.props;
     if (onRenderOverlay) {
       if (!this.overlayRootInitialized) {
@@ -205,9 +261,42 @@ export class HtmlOverlayWidget<
       return;
     }
 
-    if (!this.reactRoot) {
-      this.reactRoot = createRoot(rootElement);
-    }
+    this.reactRoot ??= createRoot(rootElement);
     this.reactRoot.render(element);
+  }
+
+  protected updatePositionsDirect(
+    rootElement: HTMLElement,
+    items: ReactElement[],
+    viewport: Viewport,
+  ): void {
+    const overflowMargin = this.props.overflowMargin ?? 0;
+    const { width, height } = viewport;
+    const children = rootElement.children;
+    let childIdx = 0;
+
+    for (const element of items) {
+      const item = element;
+      if (!item) {
+        continue;
+      }
+      const coordinates = (item.props as Record<string, unknown>)
+        ?.coordinates as number[] | undefined;
+      if (!coordinates) {
+        continue;
+      }
+
+      if (childIdx >= children.length) {
+        break;
+      }
+      const wrapper = children[childIdx] as HTMLElement;
+      childIdx++;
+
+      const [x, y] = this.getCoords(viewport, coordinates);
+      const visible = this.inView(width, height, x, y, overflowMargin);
+
+      wrapper.style.transform = `translate(${x}px, ${y}px)`;
+      wrapper.style.display = visible ? '' : 'none';
+    }
   }
 }

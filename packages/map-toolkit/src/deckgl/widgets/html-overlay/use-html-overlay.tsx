@@ -11,7 +11,7 @@
  */
 
 import {
-  type JSX,
+  type ReactNode,
   type ReactPortal,
   useEffect,
   useMemo,
@@ -55,7 +55,7 @@ export function useHtmlOverlay(
   props: UseHtmlOverlayProps = {},
 ): UseHtmlOverlayResult {
   const [container, setContainer] = useState<HTMLElement | null>(null);
-  const [content, setContent] = useState<JSX.Element | null>(null);
+  const [content, setContent] = useState<ReactNode>(null);
   const widgetRef = useRef<HtmlOverlayWidget | null>(null);
 
   const { items, viewId, overflowMargin, zIndex, id, className } = props;
@@ -86,25 +86,32 @@ export function useHtmlOverlay(
      * Skip setProps entirely when nothing changed (bonus: eliminates redundant no-op call on initial render with no props).
      */
     const update: Partial<HtmlOverlayWidgetProps> = {};
+    let hasUpdate = false;
     if (viewId !== undefined) {
       update.viewId = viewId;
+      hasUpdate = true;
     }
     if (items !== undefined) {
       update.items = items;
+      hasUpdate = true;
     }
     if (overflowMargin !== undefined) {
       update.overflowMargin = overflowMargin;
+      hasUpdate = true;
     }
     if (zIndex !== undefined) {
       update.zIndex = zIndex;
+      hasUpdate = true;
     }
     if (id !== undefined) {
       update.id = id;
+      hasUpdate = true;
     }
     if (className !== undefined) {
       update.className = className;
+      hasUpdate = true;
     }
-    if (Object.keys(update).length > 0) {
+    if (hasUpdate) {
       widget.setProps(update);
     }
   }, [widget, viewId, items, overflowMargin, zIndex, id, className]);

@@ -128,12 +128,9 @@ function FlashcardOnClickDemo() {
   const items = useMemo(
     () =>
       selected ? (
-        <HtmlOverlayItem
-          key={selected.id}
-          coordinates={selected.position}
-          zIndex={10}
-        >
+        <HtmlOverlayItem key={selected.id} coordinates={selected.position}>
           <Flashcard
+            key={selected.id}
             header={selected.name}
             subheader={selected.type}
             style={{ pointerEvents: 'auto' }}
