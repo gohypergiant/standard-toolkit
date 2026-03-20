@@ -14,9 +14,9 @@
 
 @layer components.l1 {
   .header {
-    @apply flex shrink-0 grow-0 items-end;
+    @apply sticky top-0 left-0 z-10 flex shrink-0 grow-0 items-end bg-inherit;
 
     --height: attr(data-height px);
-    flex-basis: var(--height);
+    height: var(--height);
   }
 }

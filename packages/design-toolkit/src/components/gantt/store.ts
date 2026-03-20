@@ -18,11 +18,13 @@ import { roundDateToInterval } from './utils/dates';
 export type GanttState = {
   currentPositionMs: number;
   currentRowScrollPx: number;
+  virtualizedHeightPx: number;
 };
 
-type GanttActions = {
+export type GanttActions = {
   setCurrentPositionMs: (ms: number) => void;
   setCurrentRowScrollPx: (px: number) => void;
+  setVirtualizedHeightPx: (px: number) => void;
 };
 
 export const selectors = {
@@ -40,6 +42,7 @@ export const selectors = {
 
     return scrollPxValue - (scrollPxValue % GANTT_ROW_HEIGHT_PX);
   },
+  virtualizedHeightPx: (state: GanttState) => state.virtualizedHeightPx,
 };
 
 export type GanttStoreProps = {
@@ -51,8 +54,10 @@ export const createGanttStore = ({ startTimeMs }: GanttStoreProps) => {
     subscribeWithSelector((set) => ({
       currentPositionMs: startTimeMs,
       currentRowScrollPx: 0,
+      virtualizedHeightPx: 0,
       setCurrentPositionMs: (ms: number) => set({ currentPositionMs: ms }),
       setCurrentRowScrollPx: (px: number) => set({ currentRowScrollPx: px }),
+      setVirtualizedHeightPx: (px: number) => set({ virtualizedHeightPx: px }),
     })),
   );
 };

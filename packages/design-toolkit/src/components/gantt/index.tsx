@@ -10,28 +10,4 @@
  * governing permissions and limitations under the License.
  */
 
-import { CurrentTime } from './components/current-time';
-import { Header } from './components/header';
-import { RowsVirtualizer } from './components/rows-virtualizer';
-import { Timeline } from './components/timeline';
-import styles from './styles.module.css';
-import type { PropsWithChildren } from 'react';
-
-type GanttProps = {
-  currentTimeMs?: number;
-};
-
-export function Gantt({
-  currentTimeMs,
-  children,
-}: PropsWithChildren<GanttProps>) {
-  return (
-    <div className={styles.container}>
-      <Header>
-        {currentTimeMs && <CurrentTime currentTimeMs={currentTimeMs} />}
-        <Timeline />
-      </Header>
-      <RowsVirtualizer>{children}</RowsVirtualizer>
-    </div>
-  );
-}
+export { GanttProvider } from '@/components/gantt/context';

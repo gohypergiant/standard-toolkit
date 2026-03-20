@@ -54,7 +54,7 @@ function createThresholdProjection() {
 
 type UseTotalDataRegionThresholdsProps = {
   totalRowsCount: number;
-  scrollContainerElement: HTMLDivElement | null;
+  verticalScrollElement: HTMLDivElement | null;
 };
 
 /**
@@ -66,7 +66,7 @@ type UseTotalDataRegionThresholdsProps = {
  */
 export function useTotalDataRegionThresholds({
   totalRowsCount,
-  scrollContainerElement,
+  verticalScrollElement,
 }: UseTotalDataRegionThresholdsProps) {
   const projectionRef = useRef<ReturnType<
     typeof createThresholdProjection
@@ -90,14 +90,10 @@ export function useTotalDataRegionThresholds({
   useEffect(() => {
     // Early return if threshold examination should not proceed
     if (
-      // biome-ignore lint/complexity/useSimplifiedLogicExpression: <clear NOR>
+      // biome-ignore lint/complexity/useSimplifiedLogicExpression: <clear expression>
       !threshold ||
       !onThresholdMet ||
-      !shouldExamineThresholds(
-        totalRowsCount,
-        scrollContainerElement,
-        threshold,
-      )
+      !shouldExamineThresholds(totalRowsCount, verticalScrollElement, threshold)
     ) {
       projectionRef.current?.reset();
       return;
@@ -107,7 +103,7 @@ export function useTotalDataRegionThresholds({
 
     const renderedSlice = deriveRenderedSlice(
       roundedCurrentRowScrollPx,
-      scrollContainerElement?.clientHeight ?? 0,
+      verticalScrollElement?.clientHeight ?? 0,
     );
 
     const renderedRegion = deriveRenderedRegion(
@@ -145,6 +141,6 @@ export function useTotalDataRegionThresholds({
     onThresholdMet,
     timescale,
     roundedCurrentRowScrollPx,
-    scrollContainerElement,
+    verticalScrollElement,
   ]);
 }

@@ -18,7 +18,8 @@
 
     @apply font-display text-body-xs fg-primary-bold pointer-events-none absolute z-10 flex flex-col justify-center;
     top: var(--top);
-    transform: translateX(calc(var(--translate-x)));
+    transform: translateX(calc(var(--translate-x) - 50%));
+    margin-left: 1px;
   }
 
   .current-time-label {
