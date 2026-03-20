@@ -41,8 +41,8 @@ describe('useScrollSync', () => {
     vi.mocked(useTemporalDataContext).mockReturnValue(baseContextValue);
   });
 
-  it('should do nothing when scrollContainerElement is null', () => {
-    renderHook(() => useScrollSync({ scrollContainerElement: null }), {
+  it('should do nothing when horizontalScrollElement is null', () => {
+    renderHook(() => useScrollSync({ horizontalScrollElement: null }), {
       wrapper,
     });
 
@@ -55,7 +55,7 @@ describe('useScrollSync', () => {
     const { rerender } = renderHook(
       () => {
         useScrollSync({
-          scrollContainerElement: fakeElement,
+          horizontalScrollElement: fakeElement,
         });
       },
       { wrapper },
@@ -86,7 +86,7 @@ describe('useScrollSync', () => {
       () => {
         const store = useGanttStoreApi();
         const hookResult = useScrollSync({
-          scrollContainerElement: fakeElement,
+          horizontalScrollElement: fakeElement,
         });
         return { hookResult, store };
       },
@@ -107,7 +107,7 @@ describe('useScrollSync', () => {
   it('should react to changes in totalBounds', () => {
     // Initial render
     const { rerender } = renderHook(
-      () => useScrollSync({ scrollContainerElement: fakeElement }),
+      () => useScrollSync({ horizontalScrollElement: fakeElement }),
       { wrapper },
     );
 
@@ -121,7 +121,7 @@ describe('useScrollSync', () => {
     });
 
     // Re-render with same props to trigger effect due to context change
-    rerender({ scrollContainerElement: fakeElement });
+    rerender({ horizontalScrollElement: fakeElement });
 
     // Should call scrollTo again with the new context values
     expect(scrollToMock).toHaveBeenCalled();
@@ -130,7 +130,7 @@ describe('useScrollSync', () => {
   it('should react to changes in msPerPx', () => {
     // Initial render
     const { rerender } = renderHook(
-      () => useScrollSync({ scrollContainerElement: fakeElement }),
+      () => useScrollSync({ horizontalScrollElement: fakeElement }),
       { wrapper },
     );
 
@@ -144,18 +144,18 @@ describe('useScrollSync', () => {
     });
 
     // Re-render with same props to trigger effect due to context change
-    rerender({ scrollContainerElement: fakeElement });
+    rerender({ horizontalScrollElement: fakeElement });
 
     // Should call scrollTo again with the new context values
     expect(scrollToMock).toHaveBeenCalled();
   });
 
-  it('should react to changes in scrollContainerElement', () => {
+  it('should react to changes in horizontalScrollElement', () => {
     let element: HTMLDivElement | null = null;
 
     // Initial render with null element
     const { rerender } = renderHook(
-      () => useScrollSync({ scrollContainerElement: element }),
+      () => useScrollSync({ horizontalScrollElement: element }),
       { wrapper },
     );
 

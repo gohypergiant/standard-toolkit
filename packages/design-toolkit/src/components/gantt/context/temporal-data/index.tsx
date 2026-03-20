@@ -42,6 +42,7 @@ export type TemporalDataContextValue = {
   totalBounds: TimeBounds;
   timelineChunks: TimelineChunkObject[];
   threshold?: Threshold;
+  currentTimeMs: number;
   onThresholdMet?: (metThresholds: MetThresholdData[]) => void;
 };
 
@@ -53,6 +54,7 @@ export type TemporalDataProviderProps = {
   timescale: Timescale;
   totalBounds: TimeBounds;
   threshold?: Threshold;
+  currentTimeMs: number;
   onThresholdMet?: (metThresholds: MetThresholdData[]) => void;
 };
 
@@ -61,9 +63,10 @@ export function TemporalDataProvider({
   timescale,
   totalBounds,
   threshold,
+  currentTimeMs,
   onThresholdMet,
 }: PropsWithChildren<TemporalDataProviderProps>) {
-  const { timelineContainerElement } = useGanttContext();
+  const { timelineContainerElement, rootElement } = useGanttContext();
   const msPerPx = getMsPerPx(timescale);
   const selectedTimeIntervalMs = TIMESCALE_MAPPING[timescale];
 
@@ -76,7 +79,7 @@ export function TemporalDataProvider({
 
   const timelineChunks = generateTimelineChunks(
     roundedTimestampMs,
-    getViewableRegionWidth(timelineContainerElement),
+    getViewableRegionWidth(rootElement),
     selectedTimeIntervalMs,
     msPerPx,
   );
@@ -99,6 +102,7 @@ export function TemporalDataProvider({
       timelineChunks,
       totalBounds,
       threshold,
+      currentTimeMs,
       onThresholdMet,
     }),
     [
@@ -108,6 +112,7 @@ export function TemporalDataProvider({
       timelineChunks,
       totalBounds,
       threshold,
+      currentTimeMs,
       onThresholdMet,
     ],
   );

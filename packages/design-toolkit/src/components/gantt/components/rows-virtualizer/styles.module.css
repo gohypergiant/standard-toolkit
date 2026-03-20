@@ -14,7 +14,10 @@
 
 @layer components.l1 {
   .container {
-    @apply relative overflow-y-auto;
+    @apply relative min-w-full overflow-y-hidden;
+
+    --width: attr(data-width px);
+    width: var(--width);
   }
   .inner-container {
     --height: attr(data-height px);

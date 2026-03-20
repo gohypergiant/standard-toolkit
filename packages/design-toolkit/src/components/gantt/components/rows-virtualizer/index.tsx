@@ -12,40 +12,43 @@
 
 import { Children, type PropsWithChildren } from 'react';
 import { useGanttContext } from '@/components/gantt/context';
+import { useRootElementHeight } from '@/components/gantt/hooks/use-root-element-height';
 import { useTotalDataRegionThresholds } from '@/components/gantt/hooks/use-total-data-region-thresholds';
+import { GANTT_HEADER_HEIGHT_PX } from '../../constants';
+import { useTemporalDataContext } from '../../context/temporal-data';
 import styles from './styles.module.css';
 import { useRenderedRows } from './use-rendered-rows';
 import { useScrollSync } from './use-scroll-sync';
 
 export function RowsVirtualizer({ children }: PropsWithChildren) {
-  const { assignScrollContainerElementRef, scrollContainerElement } =
-    useGanttContext();
+  const { ganttContentElement } = useGanttContext();
+  const { totalBounds, msPerPx } = useTemporalDataContext();
 
-  const { dimensions, renderedRows, onScroll } = useRenderedRows({
+  const rootElementHeight = useRootElementHeight();
+
+  const width = (totalBounds.endMs - totalBounds.startMs) / msPerPx;
+
+  const { height, renderedRows } = useRenderedRows({
     children,
-    scrollContainerElement,
+    heightPx: rootElementHeight - GANTT_HEADER_HEIGHT_PX,
   });
 
   useTotalDataRegionThresholds({
     totalRowsCount: Children.count(children),
-    scrollContainerElement,
+    verticalScrollElement: ganttContentElement,
   });
 
   useScrollSync({
-    scrollContainerElement,
+    horizontalScrollElement: ganttContentElement,
   });
 
   return (
     <div
-      ref={assignScrollContainerElementRef}
       className={styles.container}
-      onScroll={onScroll}
+      data-height={rootElementHeight - GANTT_HEADER_HEIGHT_PX}
+      data-width={width}
     >
-      <div
-        className={styles['inner-container']}
-        data-height={dimensions.height}
-        data-width={dimensions.width}
-      >
+      <div className={styles['inner-container']} data-height={height}>
         {renderedRows}
       </div>
     </div>

@@ -167,7 +167,7 @@ export function examineThresholds(
  */
 export function shouldExamineThresholds(
   totalRowsCount: number,
-  scrollContainerElement: { clientHeight: number } | null,
+  verticalScrollElement: { clientHeight: number } | null,
   threshold: Threshold | undefined,
 ): boolean {
   if (!threshold) {
@@ -178,7 +178,7 @@ export function shouldExamineThresholds(
     return false;
   }
 
-  if (!scrollContainerElement || scrollContainerElement.clientHeight <= 0) {
+  if (!verticalScrollElement || verticalScrollElement.clientHeight <= 0) {
     return false;
   }
 
