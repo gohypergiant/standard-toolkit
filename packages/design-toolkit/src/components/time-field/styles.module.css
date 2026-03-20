@@ -62,6 +62,10 @@
     @variant focus-visible {
       @apply fg-a11y-on-accent bg-accent-primary-bold outline-none;
     }
+
+    &:where([data-type='literal']) {
+      white-space: pre;
+    }
   }
 
   .description {
