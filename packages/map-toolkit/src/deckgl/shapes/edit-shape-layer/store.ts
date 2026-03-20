@@ -347,14 +347,22 @@ export function clearEditingState(mapId: UniqueId): void {
 }
 
 /**
- * Update feature from the layer component (called during drag operations)
+ * Update the feature currently being edited.
+ *
+ * Called internally by the layer during drag operations, and also available
+ * to consumers via the `useEditShape` hook for form-driven updates.
+ *
  * @param mapId - The map instance ID.
- * @param feature - The updated GeoJSON feature from the editable layer.
+ * @param feature - The updated GeoJSON feature to store as the live editing state.
+ *
+ * @example
+ * ```typescript
+ * // From a form input handler
+ * const newGeometry = circle(center, radius, { units: 'kilometers' }).geometry;
+ * updateFeature(mapId, { ...currentFeature, geometry: newGeometry });
+ * ```
  */
-export function updateFeatureFromLayer(
-  mapId: UniqueId,
-  feature: Feature,
-): void {
+export function updateFeature(mapId: UniqueId, feature: Feature): void {
   editStore.set(mapId, { featureBeingEdited: feature });
 }
 

@@ -40,43 +40,44 @@ export type CoffinCornerExtensionProps<TLayerProps = unknown> = {
 } & TLayerProps;
 
 /**
- * Coffin corner interaction events
+ * Event type constants for coffin corner interactions.
+ * Used as keys with the Broadcast event bus.
  */
 export const CoffinCornerEvents = {
+  /** Emitted when an entity is selected (click on a new entity). */
   SELECTED: 'coffin-corner:selected',
+  /** Emitted when the current selection is cleared. */
   DESELECTED: 'coffin-corner:deselected',
+  /** Emitted when the hovered entity changes. */
   HOVERED: 'coffin-corner:hovered',
 } as const;
 
+/** String literal union of all coffin corner event type keys. */
 export type CoffinCornerEventType =
   (typeof CoffinCornerEvents)[keyof typeof CoffinCornerEvents];
 
-/**
- * Icon ID type for coffin corner selection
- */
+/** Unique identifier for an entity managed by the coffin corner extension. */
 export type EntityId = string | number;
 
-/**
- * Event payload types
- */
+/** Payload emitted when an entity is selected. Contains the selected ID and map instance. */
 export type CoffinCornerSelectedEvent = Payload<
   typeof CoffinCornerEvents.SELECTED,
   { selectedId: EntityId; mapId: UniqueId }
 >;
 
+/** Payload emitted when selection is cleared. */
 export type CoffinCornerDeselectedEvent = Payload<
   typeof CoffinCornerEvents.DESELECTED,
   { mapId: UniqueId; selectedId: undefined }
 >;
 
+/** Payload emitted when the hovered entity changes. `hoveredId` is undefined when hover ends. */
 export type CoffinCornerHoveredEvent = Payload<
   typeof CoffinCornerEvents.HOVERED,
   { hoveredId?: EntityId; mapId: UniqueId }
 >;
 
-/**
- * Union of all coffin corner event types
- */
+/** Union of all coffin corner event payloads for type-safe bus subscription. */
 export type CoffinCornerEvent =
   | CoffinCornerSelectedEvent
   | CoffinCornerDeselectedEvent

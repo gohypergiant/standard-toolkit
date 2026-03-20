@@ -27,9 +27,19 @@ import { TreeContext } from './context';
 import styles from './styles.module.css';
 import type { TreeProps } from './types';
 
-const defaultRenderDropIndicator = (target: DropTarget) => (
-  <DropIndicator target={target} className={styles.dropIndicator} />
-);
+const defaultRenderDropIndicator = (target: DropTarget) => {
+  const isBetweenItems =
+    target.type === 'item' &&
+    (target.dropPosition === 'before' || target.dropPosition === 'after');
+  return (
+    <DropIndicator
+      target={target}
+      className={
+        isBetweenItems ? styles.dropIndicatorBetween : styles.dropIndicator
+      }
+    />
+  );
+};
 
 /**
  * Tree - Hierarchical tree view with selection, visibility, and drag-and-drop

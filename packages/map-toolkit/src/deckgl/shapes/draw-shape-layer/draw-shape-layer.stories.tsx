@@ -23,7 +23,6 @@ import { ShapeFeatureType } from '../shared/types';
 import type { ShapeHoveredEvent } from '../shared/events';
 import type { Shape } from '../shared/types';
 import '../display-shape-layer/fiber';
-import './fiber';
 import { DrawShapeLayer } from './index';
 import { useDrawShape } from './use-draw-shape';
 import type { Meta, StoryObj } from '@storybook/react-vite';

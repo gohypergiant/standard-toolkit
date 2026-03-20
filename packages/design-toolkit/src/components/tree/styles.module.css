@@ -29,7 +29,7 @@
     }
 
     @variant hover {
-      @apply bg-interactive-muted-hover;
+      @apply bg-interactive-muted-hover/50;
     }
 
     @variant focus-visible {
@@ -41,12 +41,12 @@
     }
 
     @variant drop-target {
-      @apply outline-accent-primary-bold border;
+      @apply outline-accent-primary-bold outline;
       background-color: --alpha(var(--bg-accent-primary-muted) / 20%);
     }
 
     @variant disabled {
-      @apply cursor-not-allowed border-none;
+      @apply fg-disabled cursor-not-allowed border-none;
 
       @variant hover {
         @apply bg-transparent;
@@ -54,6 +54,10 @@
 
       @variant data-[drop-target=true] {
         @apply bg-transparent;
+      }
+
+      .description {
+        @apply fg-disabled;
       }
     }
 
@@ -183,5 +187,21 @@
 
   .dropIndicator {
     @apply h-xxs bg-(--outline-accent-primary-hover);
+  }
+
+  .dropIndicatorBetween {
+    @apply h-xs my-xs rounded-full bg-(--outline-accent-primary-hover);
+  }
+}
+
+@layer components.l2 {
+  .visibility {
+    @variant group-not-viewable/tree-item {
+      @apply fg-primary-muted;
+
+      @variant disabled {
+        @apply fg-disabled;
+      }
+    }
   }
 }
