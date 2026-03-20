@@ -25,6 +25,12 @@ import type {
   WidgetProps,
 } from '@deck.gl/core';
 
+/**
+ * Configuration for {@link HtmlOverlayWidget}.
+ *
+ * Extends the base Deck.gl `WidgetProps` with overlay-specific options for
+ * rendering React content at geographic coordinates.
+ */
 export type HtmlOverlayWidgetProps = WidgetProps & {
   /** View id to attach the overlay to. Defaults to the containing view. */
   viewId?: string | null;
@@ -55,6 +61,29 @@ const ROOT_STYLE: Partial<CSSStyleDeclaration> = {
 const OFFSCREEN: [number, number] = [-1, -1];
 const EMPTY_ARRAY: ReactElement[] = [];
 
+/**
+ * Deck.gl widget that renders React elements at geographic coordinates.
+ *
+ * Projects `[lng, lat]` positions to screen pixels on every viewport change and
+ * manages an absolutely-positioned overlay container. Items outside the viewport
+ * (plus {@link HtmlOverlayWidgetProps.overflowMargin | overflowMargin}) are hidden
+ * with `display: none`. When items haven't changed, the widget takes a fast path
+ * and updates CSS transforms directly without a full React render.
+ *
+ * @template PropsT - Widget props type, defaults to {@link HtmlOverlayWidgetProps}.
+ *
+ * @example
+ * ```typescript
+ * import { HtmlOverlayWidget } from '@accelint/map-toolkit/deckgl/widgets/html-overlay';
+ *
+ * const overlay = new HtmlOverlayWidget({
+ *   id: 'my-overlay',
+ *   zIndex: 2,
+ *   overflowMargin: 50,
+ *   items: myReactElements,
+ * });
+ * ```
+ */
 export class HtmlOverlayWidget<
   PropsT extends HtmlOverlayWidgetProps = HtmlOverlayWidgetProps,
 > extends Widget<PropsT> {

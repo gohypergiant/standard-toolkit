@@ -21,6 +21,12 @@ import {
 import { createPortal } from 'react-dom';
 import { HtmlOverlayWidget, type HtmlOverlayWidgetProps } from './index';
 
+/**
+ * Configuration for {@link useHtmlOverlay}.
+ *
+ * Same shape as {@link HtmlOverlayWidgetProps} minus the custom-rendering
+ * callbacks, which the hook manages internally via portal rendering.
+ */
 export type UseHtmlOverlayProps = Omit<
   HtmlOverlayWidgetProps,
   'onCreateOverlay' | 'onRenderOverlay' | '_container' | 'style'
@@ -46,11 +52,44 @@ export type UseHtmlOverlayProps = Omit<
   items?: HtmlOverlayWidgetProps['items'];
 };
 
+/**
+ * Return value of {@link useHtmlOverlay}.
+ *
+ * @property widget - The widget instance to pass to Deck.gl's `widgets` array.
+ * @property portal - A React portal targeting the overlay container, or `null`
+ *   before the container has been created by Deck.gl.
+ */
 export type UseHtmlOverlayResult = {
   widget: HtmlOverlayWidget;
   portal: ReactPortal | null;
 };
 
+/**
+ * React hook that creates and manages an {@link HtmlOverlayWidget} with
+ * portal-based rendering.
+ *
+ * Returns a stable widget instance and a React portal. Pass `widget` to
+ * Deck.gl's `widgets` array and render `portal` in your JSX tree so overlay
+ * content participates in the parent component's context and state.
+ *
+ * @param props - Overlay configuration. `items` must be referentially stable
+ *   (wrap in `useMemo`) to avoid redundant `setProps` calls and Deck.gl redraws.
+ * @returns An object containing the `widget` and `portal`.
+ *
+ * @example
+ * ```tsx
+ * const items = useMemo(
+ *   () => (
+ *     <HtmlOverlayItem coordinates={[-122.45, 37.78]}>
+ *       <Tooltip>SF</Tooltip>
+ *     </HtmlOverlayItem>
+ *   ),
+ *   [],
+ * );
+ * const { widget, portal } = useHtmlOverlay({ items });
+ * // Pass `widget` to Deck.gl's widgets array, render `portal` in your JSX tree.
+ * ```
+ */
 export function useHtmlOverlay(
   props: UseHtmlOverlayProps = {},
 ): UseHtmlOverlayResult {
