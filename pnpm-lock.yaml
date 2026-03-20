@@ -6,6 +6,7 @@ settings:
 
 overrides:
   '@internationalized/date': ~3.12
+  '@react-aria/collections': ~3.0.3
   '@react-aria/interactions': ~3.27
   '@react-aria/utils': ~3.33
   '@react-stately/utils': ~3.11
@@ -132,6 +133,9 @@ importers:
       '@radix-ui/react-avatar':
         specifier: ^1.1.10
         version: 1.1.11(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@react-aria/collections':
+        specifier: ~3.0.3
+        version: 3.0.3(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@react-aria/interactions':
         specifier: ~3.27
         version: 3.27.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -574,6 +578,9 @@ importers:
       '@radix-ui/react-avatar':
         specifier: ^1.1.10
         version: 1.1.11(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@react-aria/collections':
+        specifier: ~3.0.3
+        version: 3.0.3(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@react-aria/interactions':
         specifier: ~3.27
         version: 3.27.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
