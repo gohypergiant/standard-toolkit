@@ -10,38 +10,21 @@
  * governing permissions and limitations under the License.
  */
 
-@reference '@accelint/design-foundation/styles';
+import { GANTT_HEADER_HEIGHT_PX } from '../../constants';
+import { useGanttContext } from '../../context';
+import styles from './styles.module.css';
+import type { PropsWithChildren } from 'react';
 
-@layer components.l1 {
-  .chunk {
-    --chunk-width: attr(data-width px);
-    min-width: var(--chunk-width);
-  }
+export function Header({ children }: PropsWithChildren) {
+  const { assignHeaderElementRef } = useGanttContext();
 
-  .chunk-label {
-    --tick-margin: attr(data-tick-margin px);
-    @apply font-display text-body-s fg-primary-muted;
-    margin-left: var(--tick-margin);
-  }
-
-  .chunk-ticks-container {
-    @apply flex;
-  }
-
-  .chunk-tick-container {
-    @apply flex flex-1;
-  }
-
-  .chunk-tick {
-    @apply fg-disabled h-[6px] w-px bg-current;
-  }
-
-  .timeline {
-    @apply flex;
-    transform: translateX(var(--translate-x));
-  }
-
-  .timeline-container {
-    @apply w-full overflow-hidden;
-  }
+  return (
+    <div
+      ref={assignHeaderElementRef}
+      className={styles.header}
+      data-height={GANTT_HEADER_HEIGHT_PX}
+    >
+      {children}
+    </div>
+  );
 }

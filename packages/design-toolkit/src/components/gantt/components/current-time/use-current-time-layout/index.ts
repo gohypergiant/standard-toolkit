@@ -11,10 +11,7 @@
  */
 
 import { type RefObject, useCallback, useRef } from 'react';
-import {
-  GANTT_CONTAINER_TOP_PADDING_PX,
-  GANTT_CONTAINER_TOP_PX,
-} from '@/components/gantt/constants';
+import { GANTT_CONTAINER_TOP_PX } from '@/components/gantt/constants';
 import { useGanttContext } from '@/components/gantt/context';
 import { useTemporalDataContext } from '@/components/gantt/context/temporal-data';
 import { useLayoutSubscription } from '@/components/gantt/hooks/use-layout-subscription';
@@ -32,17 +29,15 @@ type UseCurrentTimeLayoutValue = {
 };
 
 function calculateIndicatorHeight(
-  timelineContainerElement: HTMLDivElement | null,
+  headerElement: HTMLDivElement | null,
   labelElement: HTMLDivElement | null,
   scrollContainerElement: HTMLDivElement | null,
   translateX = 0,
 ) {
-  const timelineHeight = timelineContainerElement?.clientHeight ?? 0;
+  const ganttHeaderHeight = headerElement?.clientHeight ?? 0;
   const scrollWidth = scrollContainerElement?.clientWidth ?? 0;
   const scrollHeight = scrollContainerElement?.clientHeight ?? 0;
   const labelHeight = labelElement?.offsetHeight ?? 0;
-
-  const ganttHeaderHeight = timelineHeight + GANTT_CONTAINER_TOP_PADDING_PX;
 
   // Distance between vertical scrollbar and bottom of label element.
   // Used as the indicator height when the indicator is visually
@@ -65,8 +60,7 @@ export function useCurrentTimeLayout({
   currentTimeMs,
   indicatorElement,
 }: UseCurrentTimeLayoutProps): UseCurrentTimeLayoutValue {
-  const { scrollContainerElement, timelineContainerElement } =
-    useGanttContext();
+  const { scrollContainerElement, headerElement } = useGanttContext();
   const { msPerPx } = useTemporalDataContext();
 
   const labelElementRef = useRef<HTMLDivElement>(null);
@@ -83,7 +77,7 @@ export function useCurrentTimeLayout({
         currentPositionMs,
       );
       const indicatorHeight = calculateIndicatorHeight(
-        timelineContainerElement,
+        headerElement,
         labelElementRef.current,
         scrollContainerElement,
         translateX,
@@ -100,7 +94,7 @@ export function useCurrentTimeLayout({
       msPerPx,
       currentTimeMs,
       indicatorElement,
-      timelineContainerElement,
+      headerElement,
       scrollContainerElement,
     ],
   );
