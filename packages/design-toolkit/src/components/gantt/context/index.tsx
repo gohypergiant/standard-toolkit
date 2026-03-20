@@ -34,8 +34,10 @@ function refAssignmentFactory(
 type GanttContextValue = {
   timelineContainerElement: HTMLDivElement | null;
   scrollContainerElement: HTMLDivElement | null;
+  headerElement: HTMLDivElement | null;
   assignTimelineContainerElementRef: (node: HTMLDivElement | null) => void;
   assignScrollContainerElementRef: (node: HTMLDivElement | null) => void;
+  assignHeaderElementRef: (node: HTMLDivElement | null) => void;
 };
 
 export const GanttContext = createContext<GanttContextValue | undefined>(
@@ -60,6 +62,9 @@ export function GanttProvider({
     useState<HTMLDivElement | null>(null);
   const [scrollContainerElement, setScrollContainerElement] =
     useState<HTMLDivElement | null>(null);
+  const [headerElement, setHeaderElement] = useState<HTMLDivElement | null>(
+    null,
+  );
 
   const midpointMs = startTimeMs + (startTimeMs - startTimeMs) / 2;
 
@@ -77,19 +82,24 @@ export function GanttProvider({
   const assignScrollContainerElementRef = refAssignmentFactory(
     setScrollContainerElement,
   );
+  const assignHeaderElementRef = refAssignmentFactory(setHeaderElement);
 
   const value = useMemo(
     () => ({
       assignTimelineContainerElementRef,
       assignScrollContainerElementRef,
+      assignHeaderElementRef,
       timelineContainerElement,
       scrollContainerElement,
+      headerElement,
     }),
     [
       assignTimelineContainerElementRef,
       assignScrollContainerElementRef,
+      assignHeaderElementRef,
       timelineContainerElement,
       scrollContainerElement,
+      headerElement,
     ],
   );
 

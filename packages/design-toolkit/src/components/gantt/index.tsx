@@ -11,9 +11,9 @@
  */
 
 import { CurrentTime } from './components/current-time';
+import { Header } from './components/header';
 import { RowsVirtualizer } from './components/rows-virtualizer';
 import { Timeline } from './components/timeline';
-import { GANTT_CONTAINER_TOP_PADDING_PX } from './constants';
 import styles from './styles.module.css';
 import type { PropsWithChildren } from 'react';
 
@@ -26,12 +26,11 @@ export function Gantt({
   children,
 }: PropsWithChildren<GanttProps>) {
   return (
-    <div
-      className={styles.container}
-      data-padding-top={GANTT_CONTAINER_TOP_PADDING_PX}
-    >
-      {currentTimeMs && <CurrentTime currentTimeMs={currentTimeMs} />}
-      <Timeline />
+    <div className={styles.container}>
+      <Header>
+        {currentTimeMs && <CurrentTime currentTimeMs={currentTimeMs} />}
+        <Timeline />
+      </Header>
       <RowsVirtualizer>{children}</RowsVirtualizer>
     </div>
   );

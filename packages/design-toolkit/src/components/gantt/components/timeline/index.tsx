@@ -29,7 +29,10 @@ export function Timeline() {
   });
 
   return (
-    <div ref={assignTimelineContainerElementRef}>
+    <div
+      ref={assignTimelineContainerElementRef}
+      className={styles['timeline-container']}
+    >
       <div ref={timelineElementRef} className={styles.timeline}>
         {timelineChunks.map((chunk) => (
           <TimelineChunk

@@ -42,6 +42,7 @@ vi.mock('@/components/gantt/store', () => ({
   },
 }));
 
+import { GANTT_HEADER_HEIGHT_PX } from '@/components/gantt/constants';
 import { useGanttContext } from '@/components/gantt/context';
 import { useTemporalDataContext } from '@/components/gantt/context/temporal-data';
 import { useLayoutSubscription } from '@/components/gantt/hooks/use-layout-subscription';
@@ -62,11 +63,17 @@ describe('useCurrentTimeLayout', () => {
     clientHeight: 50,
   } as HTMLDivElement;
 
+  const mockHeaderElement = {
+    clientHeight: GANTT_HEADER_HEIGHT_PX,
+  } as HTMLDivElement;
+
   const mockGanttContextValue = {
     scrollContainerElement: mockScrollContainerElement,
     timelineContainerElement: mockTimelineContainerElement,
+    headerElement: mockHeaderElement,
     assignTimelineContainerElementRef: vi.fn(),
     assignScrollContainerElementRef: vi.fn(),
+    assignHeaderElementRef: vi.fn(),
   };
 
   const mockTemporalDataContextValue = {
