@@ -20,6 +20,7 @@ import {
 import { useStore } from 'zustand';
 import {
   createGanttStore,
+  type GanttActions,
   type GanttState,
   type GanttStore,
   type GanttStoreProps,
@@ -57,7 +58,9 @@ function useGanttStoreBase() {
   return store;
 }
 
-export function useGanttStore<T>(selector: (state: GanttState) => T): T {
+export function useGanttStore<T>(
+  selector: (state: GanttState & GanttActions) => T,
+): T {
   const store = useGanttStoreBase();
 
   return useStore(store, selector);

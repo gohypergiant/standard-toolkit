@@ -31,13 +31,17 @@ function refAssignmentFactory(
   };
 }
 
-type GanttContextValue = {
+export type GanttContextValue = {
   timelineContainerElement: HTMLDivElement | null;
   scrollContainerElement: HTMLDivElement | null;
   headerElement: HTMLDivElement | null;
+  rootElement: HTMLDivElement | null;
+  ganttContentElement: HTMLDivElement | null;
   assignTimelineContainerElementRef: (node: HTMLDivElement | null) => void;
   assignScrollContainerElementRef: (node: HTMLDivElement | null) => void;
   assignHeaderElementRef: (node: HTMLDivElement | null) => void;
+  assignRootElementRef: (node: HTMLDivElement | null) => void;
+  assignGanttContentElementRef: (node: HTMLDivElement | null) => void;
 };
 
 export const GanttContext = createContext<GanttContextValue | undefined>(
@@ -65,6 +69,9 @@ export function GanttProvider({
   const [headerElement, setHeaderElement] = useState<HTMLDivElement | null>(
     null,
   );
+  const [rootElement, setRootElement] = useState<HTMLDivElement | null>(null);
+  const [ganttContentElement, setGanttContentElement] =
+    useState<HTMLDivElement | null>(null);
 
   const midpointMs = startTimeMs + (startTimeMs - startTimeMs) / 2;
 
@@ -83,23 +90,35 @@ export function GanttProvider({
     setScrollContainerElement,
   );
   const assignHeaderElementRef = refAssignmentFactory(setHeaderElement);
+  const assignRootElementRef = refAssignmentFactory(setRootElement);
+  const assignGanttContentElementRef = refAssignmentFactory(
+    setGanttContentElement,
+  );
 
   const value = useMemo(
     () => ({
       assignTimelineContainerElementRef,
       assignScrollContainerElementRef,
       assignHeaderElementRef,
+      assignRootElementRef,
+      assignGanttContentElementRef,
       timelineContainerElement,
       scrollContainerElement,
       headerElement,
+      rootElement,
+      ganttContentElement,
     }),
     [
       assignTimelineContainerElementRef,
       assignScrollContainerElementRef,
       assignHeaderElementRef,
+      assignRootElementRef,
+      assignGanttContentElementRef,
       timelineContainerElement,
       scrollContainerElement,
       headerElement,
+      rootElement,
+      ganttContentElement,
     ],
   );
 
