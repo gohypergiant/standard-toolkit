@@ -19,7 +19,7 @@ A read-only deck.gl composite layer for displaying geographic shapes with intera
 - **Event bus integration**: Automatically emits shape events via @accelint/bus
 - **Multi-map support**: Events include map instance ID for isolation
 - **Cursor integration**: Works with map-cursor for hover cursor changes
-- **3D elevation rendering**: Extruded polygons, filled curtains for LineStrings, and vertical indicator lines for elevated points
+- **3D elevation rendering**: Extruded polygons (ground-anchored or floating slabs via `minElevation`), filled curtains for LineStrings, and vertical indicator lines for elevated points
 
 ## Dependencies
 
@@ -303,6 +303,21 @@ interface StyleProperties {
 
 **Note**: By default, fill colors have a 20% opacity multiplier applied for the standard semi-transparent look. Set `applyBaseOpacity={false}` to render colors exactly as specified.
 
+### Elevation Properties
+
+In addition to `styleProperties`, the feature's `properties` object supports optional elevation fields for 3D rendering. See [3D Elevation Rendering](#3d-elevation-rendering) for details.
+
+```typescript
+interface StyledFeatureProperties {
+  styleProperties: StyleProperties;
+  /** Minimum elevation in meters — the floor of the shape (default 0) */
+  minElevation?: number;
+  /** Maximum elevation in meters — the ceiling of the shape */
+  maxElevation?: number;
+  // ... circleProperties, ellipseProperties, shapeId, etc.
+}
+```
+
 ## Custom Icons for Points
 
 Display custom icons for Point geometries using icon atlases:
@@ -540,9 +555,9 @@ Each geometry type gets a different 3D treatment:
 
 | Geometry | Elevation Source | 3D Behavior |
 |----------|-----------------|-------------|
-| **Polygon / Rectangle / Circle / Ellipse** | `maxElevation` property on `StyledFeatureProperties` | Extruded upward from the ground to `maxElevation`. Z coordinates in geometry are ignored. |
-| **LineString** | Per-vertex Z coordinates | Filled curtain walls drop from the line down to the ground |
-| **Point** | Z coordinate | Vertical indicator line drops from the point down to the ground |
+| **Polygon / Rectangle / Circle / Ellipse** | `minElevation` and `maxElevation` on `StyledFeatureProperties` | Extruded from `minElevation` (default 0) to `maxElevation`. When `minElevation` > 0, renders as a floating slab. Z coordinates in geometry are projected to `minElevation`. |
+| **LineString** | Per-vertex Z coordinates + optional `minElevation` | Filled curtain walls drop from each vertex down to `minElevation` (default 0) |
+| **Point** | Z coordinate + optional `minElevation` | Vertical indicator line drops from the point down to `minElevation` (default 0) |
 
 ### Elevation Data
 
@@ -572,7 +587,7 @@ const line = {
   // ...
 };
 
-// Polygon at 22500m elevation via maxElevation (Z coordinates optional)
+// Polygon extruded from ground to 22500m
 const polygon = {
   type: 'Feature',
   geometry: {
@@ -590,7 +605,31 @@ const polygon = {
     maxElevation: 22500,
   },
 };
+
+// Floating slab: polygon rendered between 10000m and 33000m
+const floatingSlab = {
+  type: 'Feature',
+  geometry: {
+    type: 'Polygon',
+    coordinates: [[
+      [-118.3, 34.0],
+      [-118.2, 34.0],
+      [-118.2, 34.1],
+      [-118.3, 34.1],
+      [-118.3, 34.0],
+    ]],
+  },
+  properties: {
+    styleProperties: { /* ... */ },
+    minElevation: 10000,
+    maxElevation: 33000,
+  },
+};
 ```
+
+When `minElevation` is set, the layer projects all coordinate Z values to `minElevation` and uses `maxElevation - minElevation` as the extrusion height. This produces a slab floating between `minElevation` and `maxElevation`. When `minElevation` is 0 (the default), the shape extrudes from the ground as before.
+
+For **LineStrings** and **Points**, `minElevation` controls where curtain walls and indicator lines bottom out. Without it, they drop to the ground (Z = 0).
 
 ### Tying Elevation to Camera View
 

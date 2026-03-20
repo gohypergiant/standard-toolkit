@@ -36,7 +36,7 @@ export const mockShapes3DColor: Shape[] = [
   {
     id: uuid(),
     name: 'New Circle',
-    label: 'Circle (33000m)',
+    label: 'Circle (33000m min)',
     shape: 'Circle',
     feature: {
       type: 'Feature',
@@ -54,7 +54,8 @@ export const mockShapes3DColor: Shape[] = [
           lineWidth: 2,
           linePattern: 'solid',
         },
-        maxElevation: 33000,
+        maxElevation: 163000,
+        minElevation: 33000,
         shapeId: uuid(),
       },
       geometry: {
@@ -181,6 +182,7 @@ export const mockShapes3DColor: Shape[] = [
           lineWidth: 2,
           linePattern: 'solid',
         },
+        minElevation: 20000,
         shapeId: uuid(),
       },
       geometry: {
@@ -220,7 +222,6 @@ export const mockShapes3DColor: Shape[] = [
           labelVerticalAnchor: 'top',
           labelHorizontalAnchor: 'center',
         },
-        maxElevation: 1500,
         shapeId: uuid(),
       },
       geometry: {
