@@ -25,7 +25,7 @@ import {
   isPolygonType,
 } from '../../shared/types';
 import { getLineColor } from '../../shared/utils/style-utils';
-import { BRIGHTNESS_FACTOR } from '../constants';
+import { BRIGHTNESS_FACTOR, DEFAULT_ELEVATION } from '../constants';
 import { brightenColor } from './display-style';
 import type { Rgba255Tuple } from '@accelint/predicates';
 import type { Shape, ShapeId } from '../../shared/types';
@@ -127,7 +127,7 @@ export function getFeatureElevation(feature: Shape['feature']): number {
  * ```
  */
 export function getFeatureMinElevation(feature: Shape['feature']): number {
-  return feature.properties?.minElevation ?? 0;
+  return feature.properties?.minElevation ?? DEFAULT_ELEVATION;
 }
 
 /**
@@ -226,7 +226,7 @@ function processCoordinates(
   baseElevation?: number,
 ): LineSegment[] {
   const segments: LineSegment[] = [];
-  const base = baseElevation ?? 0;
+  const base = baseElevation ?? DEFAULT_ELEVATION;
 
   for (const coord of coordinates) {
     const [lon, lat, elevation] = coord;
@@ -293,7 +293,7 @@ export function createElevationLineSegments(
   }
 
   // For Point and MultiPoint, use single representative coordinate
-  const base = baseElevation ?? 0;
+  const base = baseElevation ?? DEFAULT_ELEVATION;
   const coords = getRepresentativeCoordinate(geometry);
   if (coords) {
     const [lon, lat] = coords;
@@ -388,7 +388,7 @@ export function createCurtainPolygonsFromLine(
   baseElevation?: number,
 ): CurtainFeature[] {
   const polygons: CurtainFeature[] = [];
-  const base = baseElevation ?? 0;
+  const base = baseElevation ?? DEFAULT_ELEVATION;
 
   // Create vertical polygon for each pair of consecutive coordinates
   for (let i = 0; i < coordinates.length - 1; i++) {
@@ -614,7 +614,7 @@ export function projectFeatureToBaseElevation(
   feature: Shape['feature'],
   baseElevation: number,
 ): Shape['feature'] {
-  if (baseElevation === 0) {
+  if (baseElevation === DEFAULT_ELEVATION) {
     return flattenFeatureTo2D(feature);
   }
 

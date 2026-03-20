@@ -32,6 +32,7 @@ import {
 import {
   BRIGHTNESS_FACTOR,
   DEFAULT_DISPLAY_PROPS,
+  DEFAULT_ELEVATION,
   DISPLAY_EXTENSIONS,
   HIGHLIGHT_COLOR_TUPLE,
   MAP_INTERACTION,
@@ -530,7 +531,10 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
 
     // Strip Z from LineString coordinates so the highlight outline renders at
     // ground level rather than following the elevated path
-    const highlightFeature = projectFeatureToBaseElevation(selectedFeature, 0);
+    const highlightFeature = projectFeatureToBaseElevation(
+      selectedFeature,
+      DEFAULT_ELEVATION,
+    );
     const lineColor = this.resolvedHighlight;
 
     // Render 2D highlight layer (outline only)
