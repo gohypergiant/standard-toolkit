@@ -37,6 +37,7 @@
       "@react-aria/interactions": "~3.27",
       "@react-aria/utils": "~3.33",
       "@react-stately/utils": "~3.11",
+      "@react-types/overlays": "~3.9.4",
       "@react-types/shared": "~3.33",
       "react-aria": "~3.47",
       "react-aria-components": "~1.16",

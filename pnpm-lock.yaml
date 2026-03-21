@@ -10,6 +10,7 @@ overrides:
   '@react-aria/interactions': ~3.27
   '@react-aria/utils': ~3.33
   '@react-stately/utils': ~3.11
+  '@react-types/overlays': ~3.9.4
   '@react-types/shared': ~3.33
   react-aria: ~3.47
   react-aria-components: ~1.16
@@ -591,8 +592,8 @@ importers:
         specifier: ~3.11
         version: 3.11.0(react@19.2.3)
       '@react-types/overlays':
-        specifier: ~3.9
-        version: 3.9.2(react@19.2.3)
+        specifier: ~3.9.4
+        version: 3.9.4(react@19.2.3)
       '@react-types/shared':
         specifier: ~3.33
         version: 3.33.1(react@19.2.3)
@@ -3529,11 +3530,6 @@ packages:
 
   '@react-types/numberfield@3.8.18':
     resolution: {integrity: sha512-nLzk7YAG9yAUtSv+9R8LgCHsu8hJq8/A+m1KsKxvc8WmNJjIujSFgWvT21MWBiUgPBzJKGzAqpMDDa087mltJQ==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
-
-  '@react-types/overlays@3.9.2':
-    resolution: {integrity: sha512-Q0cRPcBGzNGmC8dBuHyoPR7N3057KTS5g+vZfQ53k8WwmilXBtemFJPLsogJbspuewQ/QJ3o2HYsp2pne7/iNw==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
 
@@ -11315,11 +11311,6 @@ snapshots:
       react: 19.2.3
 
   '@react-types/numberfield@3.8.18(react@19.2.3)':
-    dependencies:
-      '@react-types/shared': 3.33.1(react@19.2.3)
-      react: 19.2.3
-
-  '@react-types/overlays@3.9.2(react@19.2.3)':
     dependencies:
       '@react-types/shared': 3.33.1(react@19.2.3)
       react: 19.2.3
