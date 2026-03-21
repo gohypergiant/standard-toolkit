@@ -6,11 +6,11 @@ settings:
 
 overrides:
   '@internationalized/date': ~3.12
-  '@react-aria/collections': ~3.0.3
+  '@react-aria/collections': ~3.0
   '@react-aria/interactions': ~3.27
   '@react-aria/utils': ~3.33
   '@react-stately/utils': ~3.11
-  '@react-types/overlays': ~3.9.4
+  '@react-types/overlays': ~3.9
   '@react-types/shared': ~3.33
   react-aria: ~3.47
   react-aria-components: ~1.16
@@ -135,7 +135,7 @@ importers:
         specifier: ^1.1.10
         version: 1.1.11(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@react-aria/collections':
-        specifier: ~3.0.3
+        specifier: ~3.0
         version: 3.0.3(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@react-aria/interactions':
         specifier: ~3.27
@@ -580,7 +580,7 @@ importers:
         specifier: ^1.1.10
         version: 1.1.11(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@react-aria/collections':
-        specifier: ~3.0.3
+        specifier: ~3.0
         version: 3.0.3(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@react-aria/interactions':
         specifier: ~3.27
@@ -592,7 +592,7 @@ importers:
         specifier: ~3.11
         version: 3.11.0(react@19.2.3)
       '@react-types/overlays':
-        specifier: ~3.9.4
+        specifier: ~3.9
         version: 3.9.4(react@19.2.3)
       '@react-types/shared':
         specifier: ~3.33

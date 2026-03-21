@@ -33,11 +33,11 @@
   "pnpm": {
     "overrides": {
       "@internationalized/date": "~3.12",
-      "@react-aria/collections": "~3.0.3",
+      "@react-aria/collections": "~3.0",
       "@react-aria/interactions": "~3.27",
       "@react-aria/utils": "~3.33",
       "@react-stately/utils": "~3.11",
-      "@react-types/overlays": "~3.9.4",
+      "@react-types/overlays": "~3.9",
       "@react-types/shared": "~3.33",
       "react-aria": "~3.47",
       "react-aria-components": "~1.16",
