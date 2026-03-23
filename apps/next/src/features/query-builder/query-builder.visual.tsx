@@ -11,6 +11,7 @@
  */
 
 import { QueryBuilder } from '@accelint/design-toolkit/components/query-builder';
+import { dash } from 'radashi';
 import {
   createVisualTestScenarios,
   type VisualTestScenario,
@@ -20,6 +21,26 @@ import type { QueryBuilderProps } from '@accelint/design-toolkit/components/quer
 const noop = () => {
   return null;
 };
+
+// ---------------------------------------------------------------------------
+// Scenario factory
+// ---------------------------------------------------------------------------
+
+type ScenarioProps = Partial<QueryBuilderProps> &
+  Pick<QueryBuilderProps, 'fields' | 'query'>;
+
+function scenario(name: string, props: ScenarioProps): VisualTestScenario {
+  return {
+    name,
+    render: () => <QueryBuilder onQueryChange={noop} {...props} />,
+    screenshotName: `query-builder-${dash(name)}.png`,
+    className: 'p-s',
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Shared data
+// ---------------------------------------------------------------------------
 
 const fields: QueryBuilderProps['fields'] = [
   {
@@ -80,11 +101,6 @@ const query: QueryBuilderProps['query'] = {
   ],
 };
 
-const emptyQuery: QueryBuilderProps['query'] = {
-  combinator: 'AND',
-  rules: [{ field: '', operator: '', value: '' }],
-};
-
 const nestedQuery: QueryBuilderProps['query'] = {
   combinator: 'AND',
   rules: [
@@ -100,392 +116,227 @@ const nestedQuery: QueryBuilderProps['query'] = {
   ],
 };
 
-const validationFields: QueryBuilderProps['fields'] = [
-  {
-    name: 'name',
-    label: 'Name',
-    type: 'str',
-    inputType: 'text',
-    operators: [
-      { name: '=', value: '=', label: '=' },
-      { name: 'contains', value: 'contains', label: 'contains' },
-    ],
-    validator: () => ({
-      valid: false,
-      reasons: ['Name is required'],
-    }),
-  },
-  {
-    name: 'altitude',
-    label: 'Altitude',
-    type: 'i32',
-    inputType: 'number',
-    operators: [
-      { name: '>', value: '>', label: '>' },
-      { name: '<', value: '<', label: '<' },
-      { name: '=', value: '=', label: '=' },
-    ],
-    validator: () => ({
-      valid: false,
-      reasons: ['Must be a positive number'],
-    }),
-  },
-];
+// ---------------------------------------------------------------------------
+// Prop-combination scenarios (same base data, different layout/feature props)
+// ---------------------------------------------------------------------------
 
-const validationQuery: QueryBuilderProps['query'] = {
-  combinator: 'AND',
-  rules: [
-    { field: 'name', operator: 'contains', value: '' },
-    { field: 'altitude', operator: '>', value: '-100' },
-  ],
-};
-
-const nullOperatorFields: QueryBuilderProps['fields'] = [
-  {
-    name: 'name',
-    label: 'Name',
-    type: 'str',
-    inputType: 'text',
-    operators: [
-      { name: '=', value: '=', label: '=' },
-      { name: 'null', value: 'null', label: 'is null' },
-      { name: 'notNull', value: 'notNull', label: 'is not null' },
-    ],
-  },
-  {
-    name: 'altitude',
-    label: 'Altitude',
-    type: 'i32',
-    inputType: 'number',
-    operators: [
-      { name: '>', value: '>', label: '>' },
-      { name: '=', value: '=', label: '=' },
-    ],
-  },
-];
-
-const nullOperatorQuery: QueryBuilderProps['query'] = {
-  combinator: 'AND',
-  rules: [
-    { field: 'name', operator: 'null', value: '' },
-    { field: 'altitude', operator: '>', value: '5000' },
-  ],
-};
-
-const selectValidationFields: QueryBuilderProps['fields'] = [
-  {
-    name: 'region',
-    label: 'Region',
-    type: 'str',
-    valueEditorType: 'select',
-    values: [
-      { name: 'north', value: 'north', label: 'North' },
-      { name: 'south', value: 'south', label: 'South' },
-    ],
-    operators: [{ name: '=', value: '=', label: '=' }],
-    validator: () => ({
-      valid: false,
-      reasons: ['Region selection is required'],
-    }),
-  },
-];
-
-const selectValidationQuery: QueryBuilderProps['query'] = {
-  combinator: 'AND',
-  rules: [{ field: 'region', operator: '=', value: '' }],
-};
-
-const betweenFields: QueryBuilderProps['fields'] = [
-  {
-    name: 'altitude',
-    label: 'Altitude',
-    type: 'i32',
-    inputType: 'number',
-    operators: [
-      { name: 'between', value: 'between', label: 'between' },
-      { name: '=', value: '=', label: '=' },
-    ],
-  },
-];
-
-const betweenQuery: QueryBuilderProps['query'] = {
-  combinator: 'AND',
-  rules: [{ field: 'altitude', operator: 'between', value: ['1000', '5000'] }],
-};
-
-const textareaFields: QueryBuilderProps['fields'] = [
-  {
-    name: 'notes',
-    label: 'Notes',
-    type: 'str',
-    valueEditorType: 'textarea',
-    operators: [
-      { name: '=', value: '=', label: '=' },
-      { name: 'contains', value: 'contains', label: 'contains' },
-    ],
-  },
-];
-
-const textareaQuery: QueryBuilderProps['query'] = {
-  combinator: 'AND',
-  rules: [
-    {
-      field: 'notes',
-      operator: 'contains',
-      value: 'Multi-line content\nfor testing textarea rendering',
+const propScenarios: VisualTestScenario[] = [
+  scenario('horizontal (default)', {
+    fields,
+    query,
+    orientation: 'horizontal',
+    showRuleLines: true,
+  }),
+  scenario('vertical', {
+    fields,
+    query,
+    orientation: 'vertical',
+    showRuleLines: true,
+  }),
+  scenario('no rule lines', {
+    fields,
+    query,
+    orientation: 'horizontal',
+    showRuleLines: false,
+  }),
+  scenario('disabled', {
+    fields,
+    query,
+    disabled: true,
+  }),
+  scenario('with clone buttons', {
+    fields,
+    query,
+    showCloneButtons: true,
+  }),
+  scenario('with lock buttons', {
+    fields,
+    query,
+    showLockButtons: true,
+  }),
+  scenario('empty query', {
+    fields,
+    query: {
+      combinator: 'AND',
+      rules: [{ field: '', operator: '', value: '' }],
     },
-  ],
-};
+  }),
+  scenario('nested groups', {
+    fields,
+    query: nestedQuery,
+    showCloneButtons: true,
+    showRuleLines: true,
+  }),
+  scenario('vertical nested groups', {
+    fields,
+    query: nestedQuery,
+    orientation: 'vertical',
+    showCloneButtons: true,
+    showRuleLines: true,
+  }),
+  scenario('clone and lock buttons with nested groups', {
+    fields,
+    query: nestedQuery,
+    showCloneButtons: true,
+    showLockButtons: true,
+    showRuleLines: true,
+  }),
+  scenario('no rule lines with nested groups', {
+    fields,
+    query: nestedQuery,
+    showRuleLines: false,
+  }),
+];
 
-const editorFields: QueryBuilderProps['fields'] = [
-  {
-    name: 'confirmed',
-    label: 'Confirmed',
-    type: 'bool',
-    valueEditorType: 'checkbox',
-    operators: [{ name: '=', value: '=', label: '=' }],
-  },
-  {
-    name: 'priority',
-    label: 'Priority',
-    type: 'str',
-    valueEditorType: 'radio',
-    values: [
-      { name: 'low', value: 'low', label: 'Low' },
-      { name: 'medium', value: 'medium', label: 'Medium' },
-      { name: 'high', value: 'high', label: 'High' },
+// ---------------------------------------------------------------------------
+// Content-variation scenarios (different fields/queries per editor type)
+// ---------------------------------------------------------------------------
+
+const contentScenarios: VisualTestScenario[] = [
+  scenario('validation errors', {
+    fields: [
+      {
+        ...fields[0],
+        validator: () => ({ valid: false, reasons: ['Name is required'] }),
+      },
+      {
+        ...fields[1],
+        validator: () => ({
+          valid: false,
+          reasons: ['Must be a positive number'],
+        }),
+      },
     ],
-    operators: [{ name: '=', value: '=', label: '=' }],
-  },
+    query: {
+      combinator: 'AND',
+      rules: [
+        { field: 'name', operator: 'contains', value: '' },
+        { field: 'altitude', operator: '>', value: '-100' },
+      ],
+    },
+  }),
+
+  scenario('select validation error', {
+    fields: [
+      {
+        ...fields[3],
+        values: [
+          { name: 'north', value: 'north', label: 'North' },
+          { name: 'south', value: 'south', label: 'South' },
+        ],
+        validator: () => ({
+          valid: false,
+          reasons: ['Region selection is required'],
+        }),
+      },
+    ],
+    query: {
+      combinator: 'AND',
+      rules: [{ field: 'region', operator: '=', value: '' }],
+    },
+  }),
+
+  scenario('null operator (no value editor)', {
+    fields: [
+      {
+        ...fields[0],
+        operators: [
+          { name: '=', value: '=', label: '=' },
+          { name: 'null', value: 'null', label: 'is null' },
+          { name: 'notNull', value: 'notNull', label: 'is not null' },
+        ],
+      },
+      fields[1],
+    ],
+    query: {
+      combinator: 'AND',
+      rules: [
+        { field: 'name', operator: 'null', value: '' },
+        { field: 'altitude', operator: '>', value: '5000' },
+      ],
+    },
+  }),
+
+  scenario('between operator', {
+    fields: [
+      {
+        ...fields[1],
+        operators: [
+          { name: 'between', value: 'between', label: 'between' },
+          { name: '=', value: '=', label: '=' },
+        ],
+      },
+    ],
+    query: {
+      combinator: 'AND',
+      rules: [
+        { field: 'altitude', operator: 'between', value: ['1000', '5000'] },
+      ],
+    },
+  }),
+
+  scenario('textarea editor', {
+    fields: [
+      {
+        name: 'notes',
+        label: 'Notes',
+        type: 'str',
+        valueEditorType: 'textarea',
+        operators: [
+          { name: '=', value: '=', label: '=' },
+          { name: 'contains', value: 'contains', label: 'contains' },
+        ],
+      },
+    ],
+    query: {
+      combinator: 'AND',
+      rules: [
+        {
+          field: 'notes',
+          operator: 'contains',
+          value: 'Multi-line content\nfor testing textarea rendering',
+        },
+      ],
+    },
+  }),
+
+  scenario('checkbox and radio editors', {
+    fields: [
+      {
+        name: 'confirmed',
+        label: 'Confirmed',
+        type: 'bool',
+        valueEditorType: 'checkbox',
+        operators: [{ name: '=', value: '=', label: '=' }],
+      },
+      {
+        name: 'priority',
+        label: 'Priority',
+        type: 'str',
+        valueEditorType: 'radio',
+        values: [
+          { name: 'low', value: 'low', label: 'Low' },
+          { name: 'medium', value: 'medium', label: 'Medium' },
+          { name: 'high', value: 'high', label: 'High' },
+        ],
+        operators: [{ name: '=', value: '=', label: '=' }],
+      },
+    ],
+    query: {
+      combinator: 'AND',
+      rules: [
+        { field: 'confirmed', operator: '=', value: true },
+        { field: 'priority', operator: '=', value: 'high' },
+      ],
+    },
+  }),
 ];
 
-const editorQuery: QueryBuilderProps['query'] = {
-  combinator: 'AND',
-  rules: [
-    { field: 'confirmed', operator: '=', value: true },
-    { field: 'priority', operator: '=', value: 'high' },
-  ],
-};
+// ---------------------------------------------------------------------------
+// Register all scenarios
+// ---------------------------------------------------------------------------
 
-const scenarios: VisualTestScenario[] = [
-  {
-    name: 'horizontal (default)',
-    render: () => (
-      <QueryBuilder
-        fields={fields}
-        query={query}
-        onQueryChange={noop}
-        orientation='horizontal'
-        showRuleLines={true}
-      />
-    ),
-    screenshotName: 'query-builder-horizontal.png',
-    className: 'p-s',
-  },
-  {
-    name: 'vertical',
-    render: () => (
-      <QueryBuilder
-        fields={fields}
-        query={query}
-        onQueryChange={noop}
-        orientation='vertical'
-        showRuleLines={true}
-      />
-    ),
-    screenshotName: 'query-builder-vertical.png',
-    className: 'p-s',
-  },
-  {
-    name: 'no rule lines',
-    render: () => (
-      <QueryBuilder
-        fields={fields}
-        query={query}
-        onQueryChange={noop}
-        orientation='horizontal'
-        showRuleLines={false}
-      />
-    ),
-    screenshotName: 'query-builder-no-rule-lines.png',
-    className: 'p-s',
-  },
-  {
-    name: 'disabled',
-    render: () => (
-      <QueryBuilder
-        fields={fields}
-        query={query}
-        onQueryChange={noop}
-        disabled={true}
-      />
-    ),
-    screenshotName: 'query-builder-disabled.png',
-    className: 'p-s',
-  },
-  {
-    name: 'with clone buttons',
-    render: () => (
-      <QueryBuilder
-        fields={fields}
-        query={query}
-        onQueryChange={noop}
-        showCloneButtons={true}
-      />
-    ),
-    screenshotName: 'query-builder-clone-buttons.png',
-    className: 'p-s',
-  },
-  {
-    name: 'with lock buttons',
-    render: () => (
-      <QueryBuilder
-        fields={fields}
-        query={query}
-        onQueryChange={noop}
-        showLockButtons={true}
-      />
-    ),
-    screenshotName: 'query-builder-lock-buttons.png',
-    className: 'p-s',
-  },
-  {
-    name: 'empty query',
-    render: () => (
-      <QueryBuilder fields={fields} query={emptyQuery} onQueryChange={noop} />
-    ),
-    screenshotName: 'query-builder-empty.png',
-    className: 'p-s',
-  },
-  {
-    name: 'nested groups',
-    render: () => (
-      <QueryBuilder
-        fields={fields}
-        query={nestedQuery}
-        onQueryChange={noop}
-        showCloneButtons={true}
-        showRuleLines={true}
-      />
-    ),
-    screenshotName: 'query-builder-nested-groups.png',
-    className: 'p-s',
-  },
-  {
-    name: 'vertical nested groups',
-    render: () => (
-      <QueryBuilder
-        fields={fields}
-        query={nestedQuery}
-        onQueryChange={noop}
-        orientation='vertical'
-        showCloneButtons={true}
-        showRuleLines={true}
-      />
-    ),
-    screenshotName: 'query-builder-vertical-nested-groups.png',
-    className: 'p-s',
-  },
-  {
-    name: 'validation errors',
-    render: () => (
-      <QueryBuilder
-        fields={validationFields}
-        query={validationQuery}
-        onQueryChange={noop}
-      />
-    ),
-    screenshotName: 'query-builder-validation-errors.png',
-    className: 'p-s',
-  },
-  {
-    name: 'between operator',
-    render: () => (
-      <QueryBuilder
-        fields={betweenFields}
-        query={betweenQuery}
-        onQueryChange={noop}
-      />
-    ),
-    screenshotName: 'query-builder-between-operator.png',
-    className: 'p-s',
-  },
-  {
-    name: 'textarea editor',
-    render: () => (
-      <QueryBuilder
-        fields={textareaFields}
-        query={textareaQuery}
-        onQueryChange={noop}
-      />
-    ),
-    screenshotName: 'query-builder-textarea-editor.png',
-    className: 'p-s',
-  },
-  {
-    name: 'checkbox and radio editors',
-    render: () => (
-      <QueryBuilder
-        fields={editorFields}
-        query={editorQuery}
-        onQueryChange={noop}
-      />
-    ),
-    screenshotName: 'query-builder-checkbox-radio-editors.png',
-    className: 'p-s',
-  },
-  {
-    name: 'null operator (no value editor)',
-    render: () => (
-      <QueryBuilder
-        fields={nullOperatorFields}
-        query={nullOperatorQuery}
-        onQueryChange={noop}
-      />
-    ),
-    screenshotName: 'query-builder-null-operator.png',
-    className: 'p-s',
-  },
-  {
-    name: 'select validation error',
-    render: () => (
-      <QueryBuilder
-        fields={selectValidationFields}
-        query={selectValidationQuery}
-        onQueryChange={noop}
-      />
-    ),
-    screenshotName: 'query-builder-select-validation.png',
-    className: 'p-s',
-  },
-  {
-    name: 'clone and lock buttons with nested groups',
-    render: () => (
-      <QueryBuilder
-        fields={fields}
-        query={nestedQuery}
-        onQueryChange={noop}
-        showCloneButtons={true}
-        showLockButtons={true}
-        showRuleLines={true}
-      />
-    ),
-    screenshotName: 'query-builder-clone-lock-nested.png',
-    className: 'p-s',
-  },
-  {
-    name: 'no rule lines with nested groups',
-    render: () => (
-      <QueryBuilder
-        fields={fields}
-        query={nestedQuery}
-        onQueryChange={noop}
-        showRuleLines={false}
-      />
-    ),
-    screenshotName: 'query-builder-no-rule-lines-nested.png',
-    className: 'p-s',
-  },
-];
-
-createVisualTestScenarios('QueryBuilder', scenarios);
+createVisualTestScenarios('QueryBuilder', [
+  ...propScenarios,
+  ...contentScenarios,
+]);
