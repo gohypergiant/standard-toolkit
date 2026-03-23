@@ -1,5 +1,11 @@
 # @accelint/dataset
 
+## 0.4.0
+
+### Minor Changes
+
+- 564238c: Add additional dataset union types
+
 ## 0.3.0
 
 ### Minor Changes
