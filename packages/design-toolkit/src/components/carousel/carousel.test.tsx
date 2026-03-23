@@ -14,7 +14,7 @@
 import { uuid } from '@accelint/core';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { Carousel } from '.';
 import { CarouselGallery } from './gallery';
 import { CarouselNext, CarouselPrevious } from './navigation';
@@ -53,9 +53,19 @@ function setup({
       <CarouselSelect data-testid='select' />
     </>
   ),
+  currentPosition = 0,
+  setCurrentPosition = vi.fn(),
   ...rest
 }: Partial<CarouselProps> = {}) {
-  const result = render(<Carousel items={TEST_ITEMS}>{children}</Carousel>);
+  const result = render(
+    <Carousel
+      items={TEST_ITEMS}
+      currentPosition={currentPosition}
+      setCurrentPosition={setCurrentPosition}
+    >
+      {children}
+    </Carousel>,
+  );
   return {
     ...result,
     ...rest,
@@ -64,14 +74,10 @@ function setup({
 }
 
 describe('Carousel', () => {
-  const defaultProps: CarouselProps = {
-    items: TEST_ITEMS,
-  };
-
   it('renders the carousel with the correct number of items', () => {
     setup();
     const gallery = screen.getByTestId('gallery');
-    expect(gallery.childNodes.length).toBe(defaultProps.items.length);
+    expect(gallery.childNodes.length).toBe(TEST_ITEMS.length);
   });
 
   it('renders the correct item as the current item', () => {
@@ -82,42 +88,44 @@ describe('Carousel', () => {
     expect(viewer);
   });
 
-  it('previous is disabled when currentPosition === 0, otherwise enabled', async () => {
+  it('previous is disabled when currentPosition === 0, otherwise enabled', () => {
     setup();
     const previousButton = screen.getByTestId('previous');
     expect(previousButton.getAttribute('data-disabled')).toBe('true');
-    const nextButton = screen.getByTestId('next');
-    // Current position += 1
-    await userEvent.click(nextButton);
-    // No attribute when enabled.
-    expect(previousButton.getAttribute('data-disabled')).toBe(null);
   });
 
-  it('next is disabled when currentPosition === items.length - 1, otherwise enabled', async () => {
+  it('previous should be enabled when currentPosition > 0', async () => {
+    const setCurrentPosition = vi.fn();
+    setup({ currentPosition: 1, setCurrentPosition });
+    const previousButton = screen.getByTestId('previous');
+    expect(previousButton.getAttribute('data-disabled')).toBe(null);
+    await userEvent.click(previousButton);
+    expect(setCurrentPosition).toHaveBeenCalledWith(0);
+  });
+
+  it('next is enabled when currentPosition < items.length - 1', () => {
     setup();
     const nextButton = screen.getByTestId('next');
     expect(nextButton.getAttribute('data-disabled')).toBe(null);
-    await userEvent.click(nextButton);
+  });
+
+  it('next should be disabled when currentPosition === items.length - 1', () => {
+    setup({ currentPosition: TEST_ITEMS.length - 1 });
+    const nextButton = screen.getByTestId('next');
     expect(nextButton.getAttribute('data-disabled')).toBe('true');
   });
 
   it('updates the current item when selected from gallery', async () => {
-    setup();
+    const setCurrentPosition = vi.fn();
+    setup({ setCurrentPosition });
     const gallery = screen.getByTestId('gallery');
     await userEvent.click(gallery.children[1] as Element);
-    const viewer = screen.getByTestId('viewer');
-    const image = viewer.firstElementChild;
-    expect(image?.getAttribute('src')).toBe(TEST_ITEMS[1]?.dataUrl);
-    expect(viewer);
+    expect(setCurrentPosition).toHaveBeenCalledWith(1);
   });
 
-  it('displays correct current position and total item count', async () => {
+  it('displays correct current position and total item count', () => {
     setup();
     const position = screen.getByTestId('position');
-    console.log(position);
     expect(position).toHaveTextContent('1 / 2');
-    const nextButton = screen.getByTestId('next');
-    await userEvent.click(nextButton);
-    expect(position).toHaveTextContent('2 / 2');
   });
 });

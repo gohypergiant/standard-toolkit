@@ -13,7 +13,7 @@
 'use client';
 
 import 'client-only';
-import { createContext, useState } from 'react';
+import { createContext } from 'react';
 import type { ProviderProps } from '@/lib/types';
 import type { CarouselProps } from './types';
 
@@ -33,9 +33,9 @@ export const CarouselContext = createContext<
 export function CarouselProvider({
   children,
   items,
+  currentPosition,
+  setCurrentPosition,
 }: ProviderProps<CarouselProps>) {
-  const [currentPosition, setCurrentPosition] = useState(0);
-
   return (
     <CarouselContext.Provider
       value={{

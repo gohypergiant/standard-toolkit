@@ -11,6 +11,7 @@
  */
 
 import { uuid } from '@accelint/core';
+import { useState } from 'react';
 import { Carousel } from './';
 import { CarouselGallery } from './gallery';
 import { CarouselNext, CarouselPrevious } from './navigation';
@@ -108,8 +109,15 @@ type Story = StoryObj<typeof Carousel>;
 
 export const Default: Story = {
   render: (args) => {
+    const [currentPosition, setCurrentPosition] = useState(0);
+
     return (
-      <Carousel items={args.items} classNames={{ container: 'max-w-[600px]' }}>
+      <Carousel
+        items={args.items}
+        currentPosition={currentPosition}
+        setCurrentPosition={setCurrentPosition}
+        classNames={{ container: 'max-w-[600px]' }}
+      >
         <CarouselViewer />
         <div className='flex w-full flex-row justify-between gap-s'>
           <CarouselPrevious />
@@ -123,8 +131,15 @@ export const Default: Story = {
 
 export const WithSelect: Story = {
   render: (args) => {
+    const [currentPosition, setCurrentPosition] = useState(0);
+
     return (
-      <Carousel items={args.items} classNames={{ container: 'max-w-[600px]' }}>
+      <Carousel
+        items={args.items}
+        currentPosition={currentPosition}
+        setCurrentPosition={setCurrentPosition}
+        classNames={{ container: 'max-w-[600px]' }}
+      >
         <CarouselViewer />
         <div className='flex flex-row justify-between gap-s'>
           <CarouselPrevious />

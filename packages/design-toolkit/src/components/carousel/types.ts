@@ -22,6 +22,8 @@ export type CarouselProps = PropsWithChildren & {
   classNames?: {
     container?: string;
   };
+  currentPosition: number;
+  setCurrentPosition: (index: number) => void;
 };
 export type CarouselData = {
   dataType: 'image' | 'video' | 'audio';

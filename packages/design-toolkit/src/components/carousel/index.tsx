@@ -29,10 +29,16 @@ export function Carousel({
   items = [],
   classNames,
   children,
+  currentPosition,
+  setCurrentPosition,
   ...rest
 }: CarouselProps) {
   return (
-    <CarouselProvider items={items}>
+    <CarouselProvider
+      items={items}
+      currentPosition={currentPosition}
+      setCurrentPosition={setCurrentPosition}
+    >
       <div className={clsx(styles.carousel, classNames?.container)} {...rest}>
         {children}
       </div>

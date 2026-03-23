@@ -34,6 +34,8 @@ export function CarouselGallery({ classNames, ...rest }: CarouselGalleryProps) {
     const rect = containerRef.current?.children?.[0]?.getBoundingClientRect();
     const { width } = rect || { width: 0 };
 
+    console.log(currentPosition);
+
     if (
       currentPosition > 2 &&
       galleryXOffset !== currentPosition * -width + width * 2
@@ -66,13 +68,14 @@ export function CarouselGallery({ classNames, ...rest }: CarouselGalleryProps) {
     >
       {items.map((item, index) => (
         <Button
-          className={clsx(
-            styles['thumbnail-gallery-item'],
-            currentPosition === index && styles.selected,
-          )}
+          className={clsx(styles.selected, styles['thumbnail-gallery-item'])}
           style={{
             translate: `${galleryXOffset}px`,
             transition: 'all .3s ease',
+            outline:
+              currentPosition === index
+                ? '2px solid var(--fg-accent-primary-bold)'
+                : 'none',
           }}
           onClick={() => updatePosition(index)}
           key={`thumbnail-${item.uuid}`}

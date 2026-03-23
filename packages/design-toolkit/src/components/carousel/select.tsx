@@ -12,7 +12,6 @@
 
 'use client';
 import 'client-only';
-import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useContext } from 'react';
 import { OptionsItem } from '../options/item';
 import { SelectField } from '../select-field';
@@ -43,13 +42,10 @@ export function CarouselSelect({ classNames, ...rest }: CarouselSelectProps) {
       value={items[currentPosition]?.title}
       placeholder={items[currentPosition]?.title}
       onChange={onChange}
-      classNames={clsx(
-        {
-          field: styles['select-field'],
-          trigger: styles['select-trigger'],
-        },
-        classNames?.field,
-      )}
+      classNames={{
+        field: styles['select-field'],
+        trigger: styles['select-trigger'],
+      }}
       {...rest}
     >
       {items.map((item) => (

@@ -29,7 +29,7 @@
   }
 
   .thumbnail-gallery-container {
-    @apply gap-x-s flex w-full flex-row overflow-hidden py-1;
+    @apply gap-x-s flex w-full flex-row overflow-x-hidden py-1;
   }
 
   .thumbnail-gallery-item {

@@ -19,6 +19,7 @@ Its layout is customizable using the following components:
 ## Example Usage
 
 ```tsx
+const [currentPosition, setCurrentPosition] = useState(0);
 <Carousel
   variant="gallery"
   items={[
@@ -40,18 +41,49 @@ Its layout is customizable using the following components:
     },
     // ...
   ]}
+  currentPosition={currentPosition}
+  setCurrentPosition={setCurrentPosition}
 >
-  <>
+  <div className="flex flex-column">
     <CarouselViewer />
-    <CarouselPrevious />
-    <CarouselGallery />
-    <CarouselNext />
-  </>
+    <div className="flex flex-row justify-between gap-s">
+      <CarouselPrevious />
+      <CarouselGallery />
+      <CarouselNext />
+    </div>
+  </div>
 </Carousel>
 ```
 
-## Types
+### CarouselViewer
+The main display area for items in the carousel.
 
+
+### CarouselSelect
+We can compose the Carousel component in a number ways, as needed. Included as an example is the **`CarouselSelect`** field, which will list items using a **`SearchField`** component.
+<Canvas of={CarouselStories.WithSelect} />
+
+### CarouselDisplay
+
+##
+
+## Props
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `items` | `Array<CarouselData>` | - | The items to display in the carousel. |
+
+### CarouselData
+The data type for items in the carousel.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `dataType` | `string` | The data type of the item. |
+| `dataUrl` | `string` | The data URL of the item. |
+| `fileName` | `string` | The file name of the item. |
+| `metadata` | `object` | The metadata of the item. |
+| `title` | `string` | The title of the item. |
+| `thumbnailUrl` | `string` | The thumbnail URL of the item. |
+| `uuid` | `string` | The unique identifier of the item. |
 
 ## Implementation Notes
-
+- Currently limited to displaying images.
