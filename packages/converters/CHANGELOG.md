@@ -1,5 +1,12 @@
 # @accelint/converters
 
+## 1.0.1
+
+### Patch Changes
+
+- Updated dependencies [fa05228]
+  - @accelint/constants@0.3.0
+
 ## 1.0.0
 
 ### Major Changes

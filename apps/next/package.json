@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "dependencies": {
     "@accelint/bus": "workspace:*",
+    "@accelint/converters": "workspace:*",
     "@accelint/core": "workspace:*",
     "@accelint/design-foundation": "workspace:*",
     "@accelint/design-toolkit": "workspace:*",
@@ -11,6 +12,7 @@
     "@accelint/logger": "workspace:*",
     "@accelint/map-toolkit": "workspace:*",
     "@accelint/postcss-tailwind-css-modules": "workspace:*",
+    "@accelint/predicates": "workspace:*",
     "@accelint/temporal": "workspace:*",
     "@deck.gl/core": "~9.2",
     "@deckgl-fiber-renderer/dom": "^1.4.0",

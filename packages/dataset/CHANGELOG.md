@@ -1,5 +1,17 @@
 # @accelint/dataset
 
+## 0.4.0
+
+### Minor Changes
+
+- 564238c: Add additional dataset union types
+
+## 0.3.0
+
+### Minor Changes
+
+- c0dc87d: Add `REST` serive type to datasets
+
 ## 0.2.1
 
 ### Patch Changes

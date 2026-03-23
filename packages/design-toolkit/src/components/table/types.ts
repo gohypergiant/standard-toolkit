@@ -151,6 +151,27 @@ type ExtendedTableProps<T extends { id: Key }> = {
    * @default false
    */
   fullWidth?: boolean;
+
+  /**
+   * Number of rows per page. Enables built-in pagination when set.
+   */
+  pageSize?: number;
+
+  /**
+   * Controlled current page (1-indexed).
+   */
+  page?: number;
+
+  /**
+   * Uncontrolled default page (1-indexed).
+   * @default 1
+   */
+  defaultPage?: number;
+
+  /**
+   * Callback when the page changes.
+   */
+  onPageChange?: (page: number) => void;
 };
 
 /**

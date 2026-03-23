@@ -22,21 +22,27 @@ import styles from './styles.module.css';
  * @param props - Component props.
  * @param props.level - The nesting level of the tree item.
  * @param props.isLastOfSet - Whether this item is the last in its sibling group.
+ * @param props.ancestorLastOfSet - Array tracking which ancestors are last of set at each level.
  * @returns An array of Line components representing the tree structure.
  */
 export const TreeLines = memo(function TreeLines({
   level,
   isLastOfSet,
+  ancestorLastOfSet,
 }: {
   level: number;
   isLastOfSet: boolean;
+  ancestorLastOfSet: boolean[];
 }) {
   const { showRuleLines, variant } = useContext(TreeContext);
 
   return Array.from({ length: level }).map((_, i) => {
     const type = i === level - 1 ? 'branch' : 'vert';
-    const line = isLastOfSet && i > 0 ? 'last' : type;
+    const line = isLastOfSet && i === level - 1 ? 'last' : type;
     const size = variant === 'crammed' ? 'medium' : 'large';
+
+    // Hide line at position i if the ancestor at that level is last of set
+    const shouldHideLine = ancestorLastOfSet[i] ?? false;
 
     return (
       <Lines
@@ -44,7 +50,7 @@ export const TreeLines = memo(function TreeLines({
         key={i}
         variant={line}
         size={size}
-        isVisible={showRuleLines}
+        isVisible={showRuleLines && !shouldHideLine}
         className={clsx(styles.spacing, styles[variant])}
       />
     );

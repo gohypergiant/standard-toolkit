@@ -96,7 +96,6 @@ export type {
   UseEditShapeOptions,
   UseEditShapeReturn,
 } from './edit-shape-layer/types';
-export type { DuplicateShapeOptions } from './shared/utils/duplicate-shape';
 export type { ShapeEventType } from './shared/events';
 // Shared type exports
 export type {
@@ -123,3 +122,4 @@ export type {
   WagonWheelProperties,
   WagonWheelShape,
 } from './shared/types';
+export type { DuplicateShapeOptions } from './shared/utils/duplicate-shape';

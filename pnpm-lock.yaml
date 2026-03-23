@@ -85,6 +85,9 @@ importers:
       '@accelint/bus':
         specifier: workspace:*
         version: link:../../packages/bus
+      '@accelint/converters':
+        specifier: workspace:*
+        version: link:../../packages/converters
       '@accelint/core':
         specifier: workspace:*
         version: link:../../packages/core
@@ -109,6 +112,9 @@ importers:
       '@accelint/postcss-tailwind-css-modules':
         specifier: workspace:*
         version: link:../../packages/postcss-tailwind-css-modules
+      '@accelint/predicates':
+        specifier: workspace:*
+        version: link:../../packages/predicates
       '@accelint/temporal':
         specifier: workspace:*
         version: link:../../packages/temporal
@@ -551,6 +557,9 @@ importers:
       '@accelint/bus':
         specifier: workspace:*
         version: link:../bus
+      '@accelint/converters':
+        specifier: workspace:*
+        version: link:../converters
       '@accelint/core':
         specifier: workspace:*
         version: link:../core
@@ -569,6 +578,9 @@ importers:
       '@accelint/postcss-tailwind-css-modules':
         specifier: workspace:*
         version: link:../postcss-tailwind-css-modules
+      '@accelint/predicates':
+        specifier: workspace:*
+        version: link:../predicates
       '@accelint/prettier-config':
         specifier: workspace:*
         version: link:../../tooling/prettier-config
@@ -587,6 +599,9 @@ importers:
       '@radix-ui/react-avatar':
         specifier: ^1.1.10
         version: 1.1.11(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@react-aria/collections':
+        specifier: ~3.0.0-rc.7
+        version: 3.0.0-rc.7(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@react-aria/dnd':
         specifier: ~3.11.2
         version: 3.11.4(react-dom@19.2.3(react@19.2.3))(react@19.2.3)

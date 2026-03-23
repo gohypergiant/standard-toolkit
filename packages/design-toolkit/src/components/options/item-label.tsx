@@ -10,9 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
+import { useContext } from 'react';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { Text } from 'react-aria-components';
+import { ComboBoxStateContext, Text } from 'react-aria-components';
 import styles from './styles.module.css';
+import type { ReactNode } from 'react';
 import type { TextProps } from 'react-aria-components';
 
 /**
@@ -27,8 +29,35 @@ import type { TextProps } from 'react-aria-components';
  * @param props.className - Optional CSS class name.
  * @returns The rendered OptionsItemLabel component.
  */
-export function OptionsItemLabel({ className, ...rest }: TextProps) {
+export function OptionsItemLabel({ className, children, ...rest }: TextProps) {
+  const comboBoxState = useContext(ComboBoxStateContext);
+  const inputValue = comboBoxState?.inputValue ?? '';
+
+  const highlighted =
+    typeof children === 'string' && inputValue
+      ? highlightMatch(children, inputValue)
+      : children;
+
   return (
-    <Text {...rest} slot='label' className={clsx(styles.label, className)} />
+    <Text {...rest} slot='label' className={clsx(styles.label, className)}>
+      {highlighted}
+    </Text>
+  );
+}
+
+function highlightMatch(text: string, query: string): ReactNode {
+  const index = text.toLowerCase().indexOf(query.toLowerCase());
+  if (index === -1) {
+    return text;
+  }
+
+  return (
+    <>
+      {text.slice(0, index)}
+      <mark className={styles.highlight}>
+        {text.slice(index, index + query.length)}
+      </mark>
+      {text.slice(index + query.length)}
+    </>
   );
 }
