@@ -44,6 +44,7 @@ import {
   isEllipseShape,
   isPointShape,
   isRectangleShape,
+  isWagonWheelShape,
 } from '../shared/types';
 import { computeCirclePropertiesFromGeometry } from '../shared/utils/geometry-measurements';
 import {
@@ -114,7 +115,7 @@ function getEditModeForShape(shape: Shape): EditMode {
   if (isPointShape(shape)) {
     return 'point-translate';
   }
-  if (isCircleShape(shape)) {
+  if (isCircleShape(shape) || isWagonWheelShape(shape)) {
     return 'circle-transform';
   }
   if (isEllipseShape(shape) || isRectangleShape(shape)) {

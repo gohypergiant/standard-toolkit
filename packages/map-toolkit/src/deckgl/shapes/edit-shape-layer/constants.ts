@@ -60,5 +60,8 @@ export const DEFAULT_HOTKEY_CONFIG = {
  */
 export const SHAPE_PROPERTY_MAP: Partial<Record<ShapeFeatureType, string>> = {
   [ShapeFeatureType.Circle]: 'Circle',
+  // WagonWheel uses circle-transform mode for editing; ResizeCircleMode
+  // requires `properties.shape` to include 'Circle' for resize handles.
+  [ShapeFeatureType.WagonWheel]: 'Circle',
   [ShapeFeatureType.Rectangle]: 'Rectangle',
 };
