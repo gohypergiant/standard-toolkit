@@ -11,64 +11,113 @@
  */
 
 // TODO: Redo entire file.
-// import { uuid } from '@accelint/core';
-// import userEvent from '@testing-library/user-event';
-// import { Carousel } from './index';
-// import type { CarouselData, CarouselProps } from './types';
+import { uuid } from '@accelint/core';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { describe, expect, it } from 'vitest';
+import { Carousel } from '.';
+import { CarouselGallery } from './gallery';
+import { CarouselNext, CarouselPrevious } from './navigation';
+import { CarouselPosition } from './position';
+import { CarouselSelect } from './select';
+import { CarouselViewer } from './viewer';
+import type { CarouselData, CarouselProps } from './types';
 
-// // TODO: could add this to fixtures file
-// const TEST_ITEMS = [
-//   {
-//     dataType: 'image',
-//     dataUrl: 'https://example.com/image1.jpg',
-//     fileName: 'image1.jpg',
-//     title: 'Image 1',
-//     thumbnailUrl: 'https://example.com/thumbnail1.jpg',
-//     uuid: uuid(),
-//   },
-//   {
-//     dataType: 'image',
-//     dataUrl: 'https://example.com/image2.jpg',
-//     fileName: 'image2.jpg',
-//     title: 'Image 2',
-//     thumbnailUrl: 'https://example.com/thumbnail2.jpg',
-//     uuid: uuid(),
-//   },
-// ] as CarouselData[];
+const TEST_ITEMS = [
+  {
+    dataType: 'image',
+    dataUrl: 'https://example.com/image1.jpg',
+    fileName: 'image1.jpg',
+    title: 'Image 1',
+    thumbnailUrl: 'https://example.com/thumbnail1.jpg',
+    uuid: uuid(),
+  },
+  {
+    dataType: 'image',
+    dataUrl: 'https://example.com/image2.jpg',
+    fileName: 'image2.jpg',
+    title: 'Image 2',
+    thumbnailUrl: 'https://example.com/thumbnail2.jpg',
+    uuid: uuid(),
+  },
+] as CarouselData[];
 
-// TODO: Rewrite these with new format.
-// describe('Carousel', () => {
-//   const defaultProps: CarouselProps = {
-//     items: TEST_ITEMS,
-//   };
+function setup({
+  children = (
+    <>
+      <CarouselViewer data-testid='viewer' />
+      <CarouselPrevious data-testid='previous' />
+      <CarouselGallery data-testid='gallery' />
+      <CarouselNext data-testid='next' />
+      <CarouselPosition data-testid='position' />
+      <CarouselSelect data-testid='select' />
+    </>
+  ),
+  ...rest
+}: Partial<CarouselProps> = {}) {
+  const result = render(<Carousel items={TEST_ITEMS}>{children}</Carousel>);
+  return {
+    ...result,
+    ...rest,
+    children,
+  };
+}
 
-//   it('renders the carousel with the correct number of items', () => {
-//     render(<Carousel items={...defaultProps} />);
-//     const carouselItems = screen.getAllByTestId('carousel-item');
-//     expect(carouselItems.length).toBe(defaultProps.items.length);
-//   });
+describe('Carousel', () => {
+  const defaultProps: CarouselProps = {
+    items: TEST_ITEMS,
+  };
 
-//   it('renders the correct item as the current item', () => {
-//     render(<Carousel {...defaultProps} />);
-//     const currentItem = screen.getByTestId('carousel-item-0');
-//     expect(currentItem).toHaveTextContent(defaultProps.items[0].title);
-//   });
+  it('renders the carousel with the correct number of items', () => {
+    setup();
+    const gallery = screen.getByTestId('gallery');
+    expect(gallery.childNodes.length).toBe(defaultProps.items.length);
+  });
 
-//   it('updates the current item when the next button is clicked', () => {
-//     render(<Carousel {...defaultProps} />);
-//     const nextButton = screen.getByTestId('carousel-next-button');
-//     const currentItem = screen.getByTestId('carousel-item-0');
-//     userEvent.click(nextButton);
-//     expect(currentItem).toHaveTextContent(defaultProps.items[1].title);
-//   });
+  it('renders the correct item as the current item', () => {
+    setup();
+    const viewer = screen.getByTestId('viewer');
+    const image = viewer.firstElementChild;
+    expect(image?.getAttribute('src')).toBe(TEST_ITEMS[0]?.dataUrl);
+    expect(viewer);
+  });
 
-//   it('updates the current item when the previous button is clicked', () => {
-//     render(<Carousel {...defaultProps} />);
-//     const nextButton = screen.getByTestId('carousel-next-button');
-//     const previousButton = screen.getByTestId('carousel-previous-button');
-//     const currentItem = screen.getByTestId('carousel-item-0');
-//     userEvent.click(nextButton);
-//     userEvent.click(previousButton);
-//     expect(currentItem).toHaveTextContent(defaultProps.items[0].title);
-//   });
-// });
+  it('previous is disabled when currentPosition === 0, otherwise enabled', async () => {
+    setup();
+    const previousButton = screen.getByTestId('previous');
+    expect(previousButton.getAttribute('data-disabled')).toBe('true');
+    const nextButton = screen.getByTestId('next');
+    // Current position += 1
+    await userEvent.click(nextButton);
+    // No attribute when enabled.
+    expect(previousButton.getAttribute('data-disabled')).toBe(null);
+  });
+
+  it('next is disabled when currentPosition === items.length - 1, otherwise enabled', async () => {
+    setup();
+    const nextButton = screen.getByTestId('next');
+    expect(nextButton.getAttribute('data-disabled')).toBe(null);
+    await userEvent.click(nextButton);
+    expect(nextButton.getAttribute('data-disabled')).toBe('true');
+  });
+
+  it('updates the current item when selected from gallery', async () => {
+    setup();
+    const gallery = screen.getByTestId('gallery');
+    await userEvent.click(gallery.children[1] as Element);
+    const viewer = screen.getByTestId('viewer');
+    const image = viewer.firstElementChild;
+    expect(image?.getAttribute('src')).toBe(TEST_ITEMS[1]?.dataUrl);
+    expect(viewer);
+  });
+
+  it('displays correct current position and total item count', async () => {
+    setup();
+    const position = screen.getByTestId('position');
+    console.log(position);
+    expect(position).toHaveTextContent('1 / 2');
+    const nextButton = screen.getByTestId('next');
+    await userEvent.click(nextButton);
+    expect(position).toHaveTextContent('2 / 2');
+  });
+});
