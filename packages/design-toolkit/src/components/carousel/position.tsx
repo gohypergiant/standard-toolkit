@@ -13,29 +13,23 @@
 'use client';
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { CarouselProvider } from './context';
+import { useContext } from 'react';
+import { CarouselContext } from './context';
 import styles from './style.module.css';
-import type { CarouselProps } from './types';
+import type { CarouselControlProps } from './types';
 
 /**
+ * Renders the position of the current item in a carousel.
  *
- * @param {Object} props - The component props.
- * @param {string} [props.variant='gallery'] - The variant of the carousel.
- * @param {Array} [props.items=[]] - The items to display in the carousel.
- * @param {Object} [props.classNames] - The class names to apply to the carousel.
- * @return {JSX.Element} The carousel component.
+ * @return {JSX.Element} The JSX element representing the carousel position.
+ * @property {string} className - The class name for carousel position display.
  */
-export function Carousel({
-  items = [],
-  classNames,
-  children,
-  ...rest
-}: CarouselProps) {
+export function CarouselPosition({ className, ...rest }: CarouselControlProps) {
+  const context = useContext(CarouselContext);
+  const { currentPosition, items } = context;
   return (
-    <CarouselProvider items={items}>
-      <div className={clsx(styles.carousel, classNames?.container)} {...rest}>
-        {children}
-      </div>
-    </CarouselProvider>
+    <div className={clsx(styles.position, className)} {...rest}>
+      {currentPosition + 1} / {items.length}
+    </div>
   );
 }

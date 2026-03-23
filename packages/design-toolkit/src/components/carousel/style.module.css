@@ -29,7 +29,7 @@
   }
 
   .thumbnail-gallery-container {
-    @apply gap-x-s flex flex-row overflow-hidden py-0;
+    @apply gap-x-s flex w-full flex-row overflow-hidden py-1;
   }
 
   .thumbnail-gallery-item {
@@ -37,7 +37,7 @@
   }
 
   .selected {
-    @apply outline-accent-primary-bold outline-2;
+    @apply outline-accent-primary-bold fg-a11y-on-utility outline-2;
   }
 
   .select-field {

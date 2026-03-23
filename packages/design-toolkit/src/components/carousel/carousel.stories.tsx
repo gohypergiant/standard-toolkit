@@ -12,6 +12,11 @@
 
 import { uuid } from '@accelint/core';
 import { Carousel } from './';
+import { CarouselGallery } from './gallery';
+import { CarouselNext, CarouselPrevious } from './navigation';
+import { CarouselPosition } from './position';
+import { CarouselSelect } from './select';
+import { CarouselViewer } from './viewer';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { CarouselData } from './types';
 
@@ -93,14 +98,7 @@ const CAROUSEL_ITEMS: CarouselData[] = [
 const meta = {
   title: 'Components/Carousel',
   args: {
-    variant: 'gallery',
     items: CAROUSEL_ITEMS,
-  },
-  argTypes: {
-    variant: {
-      control: 'select',
-      options: ['gallery', 'noPreview', 'select'],
-    },
   },
   component: Carousel,
 } satisfies Meta<typeof Carousel>;
@@ -111,11 +109,30 @@ type Story = StoryObj<typeof Carousel>;
 export const Default: Story = {
   render: (args) => {
     return (
-      <Carousel
-        variant={args.variant}
-        items={args.items}
-        classNames={{ container: 'max-w-[600px]' }}
-      />
+      <Carousel items={args.items} classNames={{ container: 'max-w-[600px]' }}>
+        <CarouselViewer />
+        <div className='flex w-full flex-row justify-between gap-s'>
+          <CarouselPrevious />
+          <CarouselGallery />
+          <CarouselNext />
+        </div>
+      </Carousel>
+    );
+  },
+};
+
+export const WithSelect: Story = {
+  render: (args) => {
+    return (
+      <Carousel items={args.items} classNames={{ container: 'max-w-[600px]' }}>
+        <CarouselViewer />
+        <div className='flex flex-row justify-between gap-s'>
+          <CarouselPrevious />
+          <CarouselPosition />
+          <CarouselNext />
+          <CarouselSelect />
+        </div>
+      </Carousel>
     );
   },
 };

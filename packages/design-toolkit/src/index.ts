@@ -65,23 +65,24 @@ export {
   CarouselContext,
   CarouselProvider,
 } from './components/carousel/context';
+export { CarouselGallery } from './components/carousel/gallery';
+export { Carousel } from './components/carousel';
 export {
-  Carousel,
-  CarouselNavigation,
   CarouselNext,
-  CarouselPositionDisplay,
   CarouselPrevious,
-  CarouselSelectField,
-  CarouselThumbnailGallery,
-  CarouselViewer,
-} from './components/carousel';
+} from './components/carousel/navigation';
+export { CarouselPosition } from './components/carousel/position';
+export { CarouselSelect } from './components/carousel/select';
 export type {
+  CarouselControlProps,
   CarouselData,
+  CarouselGalleryProps,
   CarouselNavigationProps,
   CarouselProps,
-  CarouselThumbnailGalleryProps,
+  CarouselSelectProps,
   CarouselViewerProps,
 } from './components/carousel/types';
+export { CarouselViewer } from './components/carousel/viewer';
 export {
   CheckboxContext,
   CheckboxGroupContext,

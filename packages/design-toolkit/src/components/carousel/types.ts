@@ -12,12 +12,12 @@
 
 import type { UniqueId } from '@accelint/core';
 import type { PropsWithChildren } from 'react';
+import type { OptionsDataItem, OptionsItemProps } from '../options/types';
+import type { SelectFieldProps } from '../select-field/types';
 
-export type CarouselProps = {
+export type CarouselProps = PropsWithChildren & {
   // image/video/audio data to populate the carousel component.
   items: CarouselData[];
-  // thumbnails gallery, no thumbnails, or SelectField selection
-  variant?: 'gallery' | 'noPreview' | 'select';
   // custom classNames for the component
   classNames?: {
     container?: string;
@@ -44,10 +44,21 @@ export type CarouselNavigationProps = {
   direction: 'left' | 'right';
   onClick?: () => void;
   isDisabled?: boolean;
+  className?: string;
 };
 
-export type CarouselThumbnailGalleryProps = {
-  currentPosition: number;
+export type CarouselControlProps = {
+  className?: string;
+};
+
+export type CarouselSelectProps = CarouselControlProps & {
+  classNames?: {
+    field?: SelectFieldProps['classNames'];
+    optionItem: OptionsItemProps<OptionsDataItem>['classNames'];
+  };
+};
+
+export type CarouselGalleryProps = {
   classNames?: {
     container?: string;
     item?: string;
