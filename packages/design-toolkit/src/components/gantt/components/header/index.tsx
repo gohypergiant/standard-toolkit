@@ -13,18 +13,30 @@
 import { GANTT_HEADER_HEIGHT_PX } from '../../constants';
 import { useGanttContext } from '../../context';
 import styles from './styles.module.css';
-import type { PropsWithChildren } from 'react';
+import type { PropsWithChildren, Ref } from 'react';
 
-export function Header({ children }: PropsWithChildren) {
-  const { assignHeaderElementRef } = useGanttContext();
+type HeaderProps = {
+  ref?: Ref<HTMLDivElement | null>;
+};
 
+function Header({ children, ref }: PropsWithChildren<HeaderProps>) {
   return (
     <div
-      ref={assignHeaderElementRef}
+      ref={ref}
       className={styles.header}
       data-height={GANTT_HEADER_HEIGHT_PX}
     >
       {children}
     </div>
   );
+}
+
+export function ContentHeader({ children }: PropsWithChildren) {
+  const { assignHeaderElementRef } = useGanttContext();
+
+  return <Header ref={assignHeaderElementRef}>{children}</Header>;
+}
+
+export function PanelHeader({ children }: PropsWithChildren) {
+  return <Header>{children}</Header>;
 }

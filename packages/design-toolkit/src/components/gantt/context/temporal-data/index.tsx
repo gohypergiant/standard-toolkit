@@ -66,7 +66,7 @@ export function TemporalDataProvider({
   currentTimeMs,
   onThresholdMet,
 }: PropsWithChildren<TemporalDataProviderProps>) {
-  const { timelineContainerElement, rootElement } = useGanttContext();
+  const { headerElement } = useGanttContext();
   const msPerPx = getMsPerPx(timescale);
   const selectedTimeIntervalMs = TIMESCALE_MAPPING[timescale];
 
@@ -79,7 +79,7 @@ export function TemporalDataProvider({
 
   const timelineChunks = generateTimelineChunks(
     roundedTimestampMs,
-    getViewableRegionWidth(rootElement),
+    getViewableRegionWidth(headerElement),
     selectedTimeIntervalMs,
     msPerPx,
   );
@@ -90,7 +90,7 @@ export function TemporalDataProvider({
   );
 
   useResizeIntersectionEffect({
-    timelineContainerElement,
+    timelineContainerElement: headerElement,
     timelineChunks,
   });
 

@@ -37,10 +37,12 @@ export type GanttContextValue = {
   headerElement: HTMLDivElement | null;
   rootElement: HTMLDivElement | null;
   ganttContentElement: HTMLDivElement | null;
+  ganttPanelElement: HTMLDivElement | null;
   assignTimelineContainerElementRef: (node: HTMLDivElement | null) => void;
   assignHeaderElementRef: (node: HTMLDivElement | null) => void;
   assignRootElementRef: (node: HTMLDivElement | null) => void;
   assignGanttContentElementRef: (node: HTMLDivElement | null) => void;
+  assignGanttPanelElementRef: (node: HTMLDivElement | null) => void;
 };
 
 export const GanttContext = createContext<GanttContextValue | undefined>(
@@ -71,6 +73,8 @@ export function GanttProvider({
   const [rootElement, setRootElement] = useState<HTMLDivElement | null>(null);
   const [ganttContentElement, setGanttContentElement] =
     useState<HTMLDivElement | null>(null);
+  const [ganttPanelElement, setGanttPanelElement] =
+    useState<HTMLDivElement | null>(null);
 
   const midpointMs = startTimeMs + (endTimeMs - startTimeMs) / 2;
 
@@ -90,6 +94,7 @@ export function GanttProvider({
   const assignGanttContentElementRef = refAssignmentFactory(
     setGanttContentElement,
   );
+  const assignGanttPanelElementRef = refAssignmentFactory(setGanttPanelElement);
 
   const value = useMemo(
     () => ({
@@ -97,20 +102,24 @@ export function GanttProvider({
       assignHeaderElementRef,
       assignRootElementRef,
       assignGanttContentElementRef,
+      assignGanttPanelElementRef,
       timelineContainerElement,
       headerElement,
       rootElement,
       ganttContentElement,
+      ganttPanelElement,
     }),
     [
       assignTimelineContainerElementRef,
       assignHeaderElementRef,
       assignRootElementRef,
       assignGanttContentElementRef,
+      assignGanttPanelElementRef,
       timelineContainerElement,
       headerElement,
       rootElement,
       ganttContentElement,
+      ganttPanelElement,
     ],
   );
 

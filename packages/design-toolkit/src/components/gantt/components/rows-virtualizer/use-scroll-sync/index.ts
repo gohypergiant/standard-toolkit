@@ -11,6 +11,7 @@
  */
 
 import { useEffect } from 'react';
+import { useGanttContext } from '@/components/gantt/context';
 import { useGanttStoreApi } from '@/components/gantt/context/store';
 import { useTemporalDataContext } from '@/components/gantt/context/temporal-data';
 import { timestampWithinBounds } from '@/components/gantt/utils/helpers';
@@ -21,6 +22,8 @@ type UseScrollSyncProps = {
 };
 
 export function useScrollSync({ horizontalScrollElement }: UseScrollSyncProps) {
+  const { ganttContentElement, ganttPanelElement, rootElement } =
+    useGanttContext();
   const { totalBounds, msPerPx } = useTemporalDataContext();
   const store = useGanttStoreApi();
 
@@ -36,9 +39,10 @@ export function useScrollSync({ horizontalScrollElement }: UseScrollSyncProps) {
     const currentPositionMs = store.getState().currentPositionMs;
     const resetScrollPosition = () =>
       horizontalScrollElement.scrollTo({
-        top: 0,
         left: 0,
       });
+    ganttContentElement?.scrollTo({ top: rootElement?.scrollTop ?? 0 });
+    ganttPanelElement?.scrollTo({ top: rootElement?.scrollTop ?? 0 });
 
     const timestampOutsideDataRange = !timestampWithinBounds(
       currentPositionMs,
@@ -61,5 +65,13 @@ export function useScrollSync({ horizontalScrollElement }: UseScrollSyncProps) {
     horizontalScrollElement.scrollTo({
       left: scrollPosition,
     });
-  }, [totalBounds, msPerPx, horizontalScrollElement, store]);
+  }, [
+    totalBounds,
+    msPerPx,
+    horizontalScrollElement,
+    store,
+    ganttContentElement,
+    ganttPanelElement,
+    rootElement,
+  ]);
 }

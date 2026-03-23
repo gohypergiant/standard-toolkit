@@ -21,6 +21,14 @@ vi.mock('@/components/gantt/context/temporal-data', () => ({
   useTemporalDataContext: vi.fn(),
 }));
 
+vi.mock('@/components/gantt/context', () => ({
+  useGanttContext: vi.fn(),
+}));
+
+import {
+  type GanttContextValue,
+  useGanttContext,
+} from '@/components/gantt/context';
 import { useTemporalDataContext } from '@/components/gantt/context/temporal-data';
 
 // Base context with only the properties used by the hook
@@ -39,6 +47,11 @@ describe('useScrollSync', () => {
     scrollToMock.mockClear();
 
     vi.mocked(useTemporalDataContext).mockReturnValue(baseContextValue);
+    vi.mocked(useGanttContext).mockReturnValue({
+      ganttContentElement: null,
+      ganttPanelElement: null,
+      rootElement: null,
+    } as unknown as GanttContextValue);
   });
 
   it('should do nothing when horizontalScrollElement is null', () => {
@@ -74,9 +87,8 @@ describe('useScrollSync', () => {
 
     rerender();
 
-    // Should reset both axes
+    // Should reset horizontal scroll position
     expect(scrollToMock).toHaveBeenCalledWith({
-      top: 0,
       left: 0,
     });
   });

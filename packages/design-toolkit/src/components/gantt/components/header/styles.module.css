@@ -14,9 +14,10 @@
 
 @layer components.l1 {
   .header {
-    @apply sticky top-0 left-0 z-10 flex shrink-0 grow-0 items-end bg-inherit;
+    @apply sticky top-0 left-0 z-10 flex shrink-0 grow-0 items-end border-b bg-inherit;
 
     --height: attr(data-height px);
     height: var(--height);
+    border-color: var(--outline-static);
   }
 }

@@ -21,8 +21,9 @@
   .row-container {
     --height: attr(data-height px);
 
-    @apply outline-static py-xxs relative flex items-center outline;
+    @apply py-xxs relative flex items-center border-b;
     height: var(--height);
+    border-color: var(--outline-static);
   }
 
   .row-block {

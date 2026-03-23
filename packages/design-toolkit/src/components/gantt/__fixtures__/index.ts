@@ -35,6 +35,8 @@ type Element =
 type Row = {
   id: string;
   elements: Element[];
+  trackNumber: string;
+  description?: string;
 };
 
 type Dataset = {
@@ -49,6 +51,8 @@ export const DATASET_JAN27_TO_JAN30: Dataset = {
   rows: [
     {
       id: 'row-A',
+      trackNumber: 'KC-135',
+      description: 'Aerial Refueling',
       elements: [
         // Tue Jan 27 — 12:00 AM
         { type: 'bracket-open', timeMs: 1769472000000 },
@@ -198,6 +202,8 @@ export const DATASET_JAN27_TO_JAN30: Dataset = {
 
     {
       id: 'row-B',
+      trackNumber: 'EA-18G',
+      description: 'Electronic Warfare',
       elements: [
         // Tue Jan 27 — 2:00 AM - 4:00 AM
         {
@@ -300,6 +306,8 @@ export const DATASET_JAN27_TO_JAN30: Dataset = {
 
     {
       id: 'row-C',
+      trackNumber: 'F-35',
+      description: 'Early Precision',
       elements: [
         // Tue Jan 27 — 5:30 AM - 7:00 AM
         {
@@ -394,6 +402,8 @@ export const DATASET_JAN27_TO_JAN30: Dataset = {
 
     {
       id: 'row-D',
+      trackNumber: 'F-15E',
+      description: 'Primary Strike Lead',
       elements: [
         // Wed Jan 28 — 1:00 AM - 4:00 AM
         {
@@ -480,6 +490,8 @@ export const DATASET_JAN27_TO_JAN30: Dataset = {
 
     {
       id: 'row-E',
+      trackNumber: 'F-16',
+      description: 'Follow On / Escort',
       elements: [
         // Tue Jan 27 — 9:00 AM - 10:00 AM
         {
@@ -561,6 +573,8 @@ export const DATASET_JAN27_TO_JAN30: Dataset = {
 
     {
       id: 'row-F',
+      trackNumber: 'KC-135',
+      description: 'Aerial Refueling',
       elements: [
         // Tue Jan 27 — 6:00 PM - 8:00 PM
         {
@@ -663,6 +677,8 @@ export const DATASET_JAN27_TO_JAN30: Dataset = {
 
     {
       id: 'row-G',
+      trackNumber: 'EA-18G',
+      description: 'Electronic Warfare',
       elements: [
         // Tue Jan 27 — 12:00 AM - 12:45 AM
         {
@@ -754,6 +770,8 @@ export const DATASET_JAN27_TO_JAN30: Dataset = {
 
     {
       id: 'row-H',
+      trackNumber: 'F-15E',
+      description: 'Primary Strike Lead',
       elements: [
         // Tue Jan 27 — 4:30 AM - 5:15 AM
         {
@@ -840,6 +858,8 @@ export const DATASET_JAN27_TO_JAN30: Dataset = {
 
     {
       id: 'row-I',
+      trackNumber: 'F-35',
+      description: 'Primary Strike Lead',
       elements: [
         // Tue Jan 27 — 8:00 PM - 10:00 PM
         {
@@ -941,6 +961,8 @@ export const DATASET_JAN27_TO_JAN30: Dataset = {
 
     {
       id: 'row-J',
+      trackNumber: 'F-16',
+      description: 'Follow On / Escort',
       elements: [
         // Tue Jan 27 — 1:00 AM - 1:45 AM
         {
@@ -1033,6 +1055,8 @@ export const DATASET_JAN27_TO_JAN30: Dataset = {
 
     {
       id: 'row-K',
+      trackNumber: 'KC-135',
+      description: 'Aerial Refueling',
       elements: [
         // Tue Jan 27 — 3:30 AM - 5:00 AM
         {
@@ -1137,6 +1161,8 @@ export const DATASET_JAN27_TO_JAN30: Dataset = {
 
     {
       id: 'row-L',
+      trackNumber: 'EA-18G',
+      description: 'Electronic Warfare',
       elements: [
         // Tue Jan 27 — 6:45 AM - 7:30 AM
         {
@@ -1228,6 +1254,8 @@ export const DATASET_JAN27_TO_JAN30: Dataset = {
 
     {
       id: 'row-M',
+      trackNumber: 'F-35',
+      description: 'Early Precision',
       elements: [
         // Tue Jan 27 — 12:45 AM - 1:30 AM
         {
@@ -1332,6 +1360,8 @@ export const DATASET_JAN27_TO_JAN30: Dataset = {
 
     {
       id: 'row-N',
+      trackNumber: 'F-15E',
+      description: 'Primary Strike Lead',
       elements: [
         // Tue Jan 27 — 7:30 AM - 9:00 AM
         {
@@ -1448,6 +1478,8 @@ export const DATASET_JAN25_TO_JAN28: Dataset = {
   rows: [
     {
       id: 'row-A',
+      trackNumber: 'KC-135',
+      description: 'Aerial Refueling',
       elements: [
         // Sat Jan 25 — 12:00 AM
         { type: 'bracket-open', timeMs: 1769299200000, color: 'accent' },
@@ -1582,6 +1614,8 @@ export const DATASET_JAN25_TO_JAN28: Dataset = {
 
     {
       id: 'row-B',
+      trackNumber: 'EA-18G',
+      description: 'Electronic Warfare',
       elements: [
         // Sat Jan 25 — 6:00 AM - 7:30 AM
         {
@@ -1671,6 +1705,8 @@ export const DATASET_JAN25_TO_JAN28: Dataset = {
 
     {
       id: 'row-C',
+      trackNumber: 'F-35',
+      description: 'Early Precision',
       elements: [
         // Sun Jan 26 — 12:00 AM
         { type: 'bracket-open', timeMs: 1769385600000, color: 'serious' },
@@ -1754,6 +1790,8 @@ export const DATASET_JAN25_TO_JAN28: Dataset = {
 
     {
       id: 'row-D',
+      trackNumber: 'F-15E',
+      description: 'Primary Strike Lead',
       elements: [
         // Sat Jan 25 — 12:00 PM - 1:30 PM
         {
@@ -1815,6 +1853,8 @@ export const DATASET_JAN25_TO_JAN28: Dataset = {
 
     {
       id: 'row-E',
+      trackNumber: 'F-16',
+      description: 'Follow On / Escort',
       elements: [
         // Sun Jan 26 — 6:00 PM
         { type: 'marker', timeMs: 1769450400000, color: 'serious' },
@@ -1853,6 +1893,8 @@ export const DATASET_JAN25_TO_JAN28: Dataset = {
 
     {
       id: 'row-F',
+      trackNumber: 'KC-135',
+      description: 'Aerial Refueling',
       elements: [
         // Sat Jan 25 — 9:00 PM - 10:30 PM
         {
@@ -1929,6 +1971,8 @@ export const DATASET_JAN25_TO_JAN28: Dataset = {
 
     {
       id: 'row-G',
+      trackNumber: 'EA-18G',
+      description: 'Electronic Warfare',
       elements: [
         // Sun Jan 26 — 3:00 AM - 4:00 AM
         {
@@ -1978,6 +2022,8 @@ export const DATASET_JAN25_TO_JAN28: Dataset = {
 
     {
       id: 'row-H',
+      trackNumber: 'F-15E',
+      description: 'Primary Strike Lead',
       elements: [
         // Sun Jan 26 — 8:00 PM - 9:30 PM
         {
@@ -2034,6 +2080,8 @@ export const DATASET_JAN25_TO_JAN28: Dataset = {
 
     {
       id: 'row-I',
+      trackNumber: 'F-35',
+      description: 'Primary Strike Lead',
       elements: [
         // Sun Jan 26 — 6:00 AM - 7:30 AM
         {
@@ -2097,6 +2145,8 @@ export const DATASET_JAN25_TO_JAN28: Dataset = {
 
     {
       id: 'row-J',
+      trackNumber: 'F-16',
+      description: 'Follow On / Escort',
       elements: [
         // Sat Jan 25 — 2:00 PM
         { type: 'icon-marker', timeMs: 1769352000000, color: 'critical' },
@@ -2170,6 +2220,8 @@ export const DATASET_JAN25_TO_JAN28: Dataset = {
 
     {
       id: 'row-K',
+      trackNumber: 'KC-135',
+      description: 'Aerial Refueling',
       elements: [
         // Sun Jan 26 — 1:00 PM - 2:30 PM
         {
@@ -2241,6 +2293,8 @@ export const DATASET_JAN25_TO_JAN28: Dataset = {
 
     {
       id: 'row-L',
+      trackNumber: 'EA-18G',
+      description: 'Electronic Warfare',
       elements: [
         // Sat Jan 25 — 5:00 AM
         { type: 'icon-marker', timeMs: 1769317200000, color: 'accent' },
@@ -2299,6 +2353,8 @@ export const DATASET_JAN25_TO_JAN28: Dataset = {
 
     {
       id: 'row-M',
+      trackNumber: 'F-35',
+      description: 'Early Precision',
       elements: [
         // Sun Jan 26 — 10:00 PM
         { type: 'bracket-open', timeMs: 1769464800000, color: 'serious' },
@@ -2382,6 +2438,8 @@ export const DATASET_JAN25_TO_JAN28: Dataset = {
 
     {
       id: 'row-N',
+      trackNumber: 'F-15E',
+      description: 'Primary Strike Lead',
       elements: [
         // Sat Jan 25 — 7:00 PM - 8:00 PM
         {
@@ -2457,6 +2515,8 @@ export const DATASET_JAN29_TO_FEB1: Dataset = {
   rows: [
     {
       id: 'row-A',
+      trackNumber: 'KC-135',
+      description: 'Aerial Refueling',
       elements: [
         // --- OVERLAP COPY (from Jan 27–30 dataset) ---
         // Thu Jan 29 — 7:30 AM - 9:00 AM
@@ -2650,6 +2710,8 @@ export const DATASET_JAN29_TO_FEB1: Dataset = {
 
     {
       id: 'row-B',
+      trackNumber: 'EA-18G',
+      description: 'Electronic Warfare',
       elements: [
         // --- OVERLAP COPY ---
         // Thu Jan 29 — 1:00 PM - 4:00 PM
@@ -2780,6 +2842,8 @@ export const DATASET_JAN29_TO_FEB1: Dataset = {
 
     {
       id: 'row-C',
+      trackNumber: 'F-35',
+      description: 'Early Precision',
       elements: [
         // Wed Jan 28 — 11:30 PM - Thu Jan 29 2:30 AM
         {
@@ -2896,6 +2960,8 @@ export const DATASET_JAN29_TO_FEB1: Dataset = {
 
     {
       id: 'row-D',
+      trackNumber: 'F-15E',
+      description: 'Primary Strike Lead',
       elements: [
         // --- OVERLAP COPY ---
         // Thu Jan 29 — 6:00 AM - 8:00 AM
@@ -2990,6 +3056,8 @@ export const DATASET_JAN29_TO_FEB1: Dataset = {
 
     {
       id: 'row-E',
+      trackNumber: 'F-16',
+      description: 'Follow On / Escort',
       elements: [
         // --- OVERLAP COPY ---
         // Thu Jan 29 — 4:30 PM - 6:30 PM
@@ -3062,6 +3130,8 @@ export const DATASET_JAN29_TO_FEB1: Dataset = {
 
     {
       id: 'row-F',
+      trackNumber: 'KC-135',
+      description: 'Aerial Refueling',
       elements: [
         // --- OVERLAP COPY ---
         // Wed Jan 28 — 5:20 PM - Thu Jan 29 4:26 AM
@@ -3181,6 +3251,8 @@ export const DATASET_JAN29_TO_FEB1: Dataset = {
 
     {
       id: 'row-G',
+      trackNumber: 'EA-18G',
+      description: 'Electronic Warfare',
       elements: [
         // --- OVERLAP COPY ---
         // Thu Jan 29 — 9:30 AM - 11:30 AM
@@ -3288,6 +3360,8 @@ export const DATASET_JAN29_TO_FEB1: Dataset = {
 
     {
       id: 'row-H',
+      trackNumber: 'F-15E',
+      description: 'Primary Strike Lead',
       elements: [
         // --- OVERLAP COPY ---
         // Thu Jan 29 — 6:30 PM - 9:00 PM
@@ -3389,6 +3463,8 @@ export const DATASET_JAN29_TO_FEB1: Dataset = {
 
     {
       id: 'row-I',
+      trackNumber: 'F-35',
+      description: 'Early Precision',
       elements: [
         // --- OVERLAP COPY ---
         // Thu Jan 29 — 12:00 PM - 1:00 PM
@@ -3498,6 +3574,8 @@ export const DATASET_JAN29_TO_FEB1: Dataset = {
 
     {
       id: 'row-J',
+      trackNumber: 'F-16',
+      description: 'Follow On / Escort',
       elements: [
         // --- OVERLAP COPY ---
         // Thu Jan 29 — 8:00 AM - 9:30 AM
@@ -3616,6 +3694,8 @@ export const DATASET_JAN29_TO_FEB1: Dataset = {
 
     {
       id: 'row-K',
+      trackNumber: 'KC-135',
+      description: 'Aerial Refueling',
       elements: [
         // --- OVERLAP COPY ---
         // Thu Jan 29 — 5:00 PM - 7:00 PM
@@ -3722,6 +3802,8 @@ export const DATASET_JAN29_TO_FEB1: Dataset = {
 
     {
       id: 'row-L',
+      trackNumber: 'EA-18G',
+      description: 'Electronic Warfare',
       elements: [
         // --- OVERLAP COPY ---
         // Thu Jan 29 — 10:00 AM - 12:00 PM
@@ -3820,6 +3902,8 @@ export const DATASET_JAN29_TO_FEB1: Dataset = {
 
     {
       id: 'row-M',
+      trackNumber: 'F-35',
+      description: 'Early Precision',
       elements: [
         // --- OVERLAP COPY ---
         // Wed Jan 29 — 12:20 AM
@@ -3939,6 +4023,8 @@ export const DATASET_JAN29_TO_FEB1: Dataset = {
 
     {
       id: 'row-N',
+      trackNumber: 'F-15E',
+      description: 'Primary Strike Lead',
       elements: [
         // --- OVERLAP COPY ---
         // Thu Jan 29 — 7:00 AM - 8:30 AM

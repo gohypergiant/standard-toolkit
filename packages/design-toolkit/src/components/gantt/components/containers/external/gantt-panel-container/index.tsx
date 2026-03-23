@@ -10,37 +10,19 @@
  * governing permissions and limitations under the License.
  */
 
-@reference '@accelint/design-foundation/styles';
+import { PanelHeader } from '@/components/gantt/components/header';
+import { PanelRowsVirtualizer } from '@/components/gantt/components/rows-virtualizer';
+import { useGanttContext } from '@/components/gantt/context';
+import styles from '../styles.module.css';
+import type { PropsWithChildren } from 'react';
 
-@layer components.l1 {
-  .chunk {
-    --chunk-width: attr(data-width px);
-    min-width: var(--chunk-width);
-  }
+export function GanttPanelContainer({ children }: PropsWithChildren) {
+  const { assignGanttPanelElementRef } = useGanttContext();
 
-  .chunk-label {
-    @apply font-display text-body-s fg-primary-muted flex justify-center;
-    transform: translateX(-50%);
-  }
-
-  .chunk-ticks-container {
-    @apply flex;
-  }
-
-  .chunk-tick-container {
-    @apply flex flex-1;
-  }
-
-  .chunk-tick {
-    @apply fg-disabled h-[6px] w-px bg-current;
-  }
-
-  .timeline {
-    @apply flex;
-    transform: translateX(var(--translate-x));
-  }
-
-  .timeline-container {
-    @apply flex overflow-hidden;
-  }
+  return (
+    <div ref={assignGanttPanelElementRef} className={styles['gantt-panel']}>
+      <PanelHeader />
+      <PanelRowsVirtualizer>{children}</PanelRowsVirtualizer>
+    </div>
+  );
 }

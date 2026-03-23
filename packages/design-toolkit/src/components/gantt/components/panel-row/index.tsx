@@ -10,37 +10,21 @@
  * governing permissions and limitations under the License.
  */
 
-@reference '@accelint/design-foundation/styles';
+import { GANTT_ROW_HEIGHT_PX } from '../../constants';
+import styles from './styles.module.css';
+import type { PropsWithChildren } from 'react';
 
-@layer components.l1 {
-  .chunk {
-    --chunk-width: attr(data-width px);
-    min-width: var(--chunk-width);
-  }
-
-  .chunk-label {
-    @apply font-display text-body-s fg-primary-muted flex justify-center;
-    transform: translateX(-50%);
-  }
-
-  .chunk-ticks-container {
-    @apply flex;
-  }
-
-  .chunk-tick-container {
-    @apply flex flex-1;
-  }
-
-  .chunk-tick {
-    @apply fg-disabled h-[6px] w-px bg-current;
-  }
-
-  .timeline {
-    @apply flex;
-    transform: translateX(var(--translate-x));
-  }
-
-  .timeline-container {
-    @apply flex overflow-hidden;
-  }
+export function PanelRow({ children, ...rest }: PropsWithChildren) {
+  return (
+    // biome-ignore lint/a11y/useSemanticElements: <parent div role list>
+    <div
+      className={styles.row}
+      role='listitem'
+      data-height={GANTT_ROW_HEIGHT_PX}
+      // spread props, including virtualizer-augmented style prop, if used
+      {...rest}
+    >
+      {children}
+    </div>
+  );
 }

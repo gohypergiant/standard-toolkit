@@ -18,4 +18,15 @@
 
     flex: 1 1 auto;
   }
+
+  .gantt-panel-content-root {
+    @apply bg-surface-default relative max-h-full overflow-x-hidden overflow-y-hidden;
+  }
+
+  .gantt-panel {
+    @apply bg-surface-default relative max-h-full max-w-full overflow-x-hidden overflow-y-hidden border-r;
+
+    border-color: var(--outline-static);
+    flex: 0 0 238px;
+  }
 }
