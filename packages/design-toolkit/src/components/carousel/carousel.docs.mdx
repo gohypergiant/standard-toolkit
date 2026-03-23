@@ -8,6 +8,14 @@ import * as CarouselStories from './carousel.stories';
 
 A carousel component for displaying a collection of items.
 
+Its layout is customizable using the following components:
+- **CarouselViewer** - Main section that displays the current item selected.
+- **CarouselPrevious** - Move to previous item, disabled when first item is active.
+- **CarouselNext** - Move to next item, disabled when last item is selected.
+- **CarouselGallery** - A gallery that displays selectable thumbnails for items.
+- **CarouselSelect** - A select field that displays a list of items in a **`SelectField`** component.
+- **CarouselDisplay** - Displays current position and total count of items.
+
 ## Example Usage
 
 ```tsx
@@ -32,4 +40,18 @@ A carousel component for displaying a collection of items.
     },
     // ...
   ]}
-/>
+>
+  <>
+    <CarouselViewer />
+    <CarouselPrevious />
+    <CarouselGallery />
+    <CarouselNext />
+  </>
+</Carousel>
+```
+
+## Types
+
+
+## Implementation Notes
+
