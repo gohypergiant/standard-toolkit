@@ -13,6 +13,30 @@
 @reference '@accelint/design-foundation/styles';
 
 @layer components.l1 {
+  /* Keyframes for menu fade + scale in */
+  @keyframes menu-fade-scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  /* Keyframes for menu fade + scale out */
+  @keyframes menu-fade-scale-out {
+    from {
+      opacity: 1;
+      transform: scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+  }
+
   .menu {
     @apply rounded-medium bg-surface-overlay shadow-elevation-overlay outline-static overflow-x-clip overflow-y-auto p-px outline select-none;
   }
@@ -427,5 +451,26 @@
 
   .popover {
     @apply outline-none;
+
+    /* Entering animation (fade + scale in) */
+    &[data-entering] {
+      animation: menu-fade-scale-in var(--animation-duration-normal)
+        var(--animation-easing-decelerate) both;
+    }
+
+    /* Exiting animation (fade + scale out) */
+    &[data-exiting] {
+      animation: menu-fade-scale-out var(--animation-duration-fast)
+        var(--animation-easing-accelerate) both;
+    }
+  }
+}
+
+@layer components.l2 {
+  /* Accessibility: Respect reduced motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    .popover {
+      animation-duration: var(--animation-duration-instant) !important;
+    }
   }
 }

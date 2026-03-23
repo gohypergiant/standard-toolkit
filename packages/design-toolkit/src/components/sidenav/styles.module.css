@@ -13,11 +13,78 @@
 @reference '@accelint/design-foundation/styles';
 
 @layer components.l1 {
+  /* Keyframes for sidenav expansion */
+  @keyframes sidenav-expand {
+    from {
+      width: var(--sidenav-collapsed-width);
+    }
+    to {
+      width: var(--sidenav-expanded-width);
+    }
+  }
+
+  /* Keyframes for sidenav collapse */
+  @keyframes sidenav-collapse {
+    from {
+      width: var(--sidenav-expanded-width);
+    }
+    to {
+      width: var(--sidenav-collapsed-width);
+    }
+  }
+
+  /* Keyframes for content fade in */
+  @keyframes sidenav-content-fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* Keyframes for content fade out */
+  @keyframes sidenav-content-fade-out {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
   .sidenav {
     @apply fg-primary-bold gap-xs bg-surface-default p-m absolute left-0 row-span-full flex h-full flex-col;
 
+    /* CSS variables for width control */
+    --sidenav-collapsed-width: 64px;
+    --sidenav-expanded-width: 240px;
+
+    /* Smooth width transition as fallback */
+    transition: width var(--animation-duration-normal)
+      var(--animation-easing-standard);
+
+    /* Closed state (collapsed) */
     @variant closed {
       @apply items-center;
+      width: var(--sidenav-collapsed-width);
+    }
+
+    /* Open state (expanded) */
+    @variant open {
+      width: var(--sidenav-expanded-width);
+    }
+
+    /* Entering animation (expanding) */
+    @variant entering {
+      animation: sidenav-expand var(--animation-duration-normal)
+        var(--animation-easing-decelerate) both;
+    }
+
+    /* Exiting animation (collapsing) */
+    @variant exiting {
+      animation: sidenav-collapse var(--animation-duration-normal)
+        var(--animation-easing-accelerate) both;
     }
 
     @variant group-push-left/layout {
@@ -286,13 +353,41 @@
   }
 
   .transient {
+    /* Animate transient content visibility */
     @variant group-closed/sidenav {
       @apply hidden;
+    }
+
+    /* Fade in when sidenav is entering (opening) */
+    @variant group-entering/sidenav {
+      animation: sidenav-content-fade-in var(--animation-duration-normal)
+        var(--animation-easing-standard) both;
+      /* Delay to sync with width expansion */
+      animation-delay: calc(var(--animation-duration-normal) * 0.3);
+    }
+
+    /* Fade out when sidenav is exiting (closing) */
+    @variant group-exiting/sidenav {
+      animation: sidenav-content-fade-out var(--animation-duration-fast)
+        var(--animation-easing-standard) both;
     }
   }
 }
 
 @layer components.l2 {
+  /* Accessibility: Respect reduced motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    .sidenav {
+      animation-duration: var(--animation-duration-instant) !important;
+      transition-duration: var(--animation-duration-instant) !important;
+    }
+
+    .transient {
+      animation-duration: var(--animation-duration-instant) !important;
+      animation-delay: 0ms !important;
+    }
+  }
+
   .divider {
     @apply my-s;
   }

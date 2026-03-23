@@ -81,7 +81,10 @@ export function NoticeList({
   ...rest
 }: NoticeListProps) {
   const queue = useMemo(
-    () => new ToastQueue<NoticeContent>({ maxVisibleToasts: limit }),
+    () =>
+      new ToastQueue<NoticeContent>({
+        maxVisibleToasts: limit,
+      }),
     [limit],
   );
   const state = useToastQueue(queue);

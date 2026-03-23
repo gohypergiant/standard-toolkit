@@ -16,6 +16,7 @@ import { useOn } from '@accelint/bus/react';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useState } from 'react';
 import { DEFAULT_SLOT, HeadingContext, Provider } from 'react-aria-components';
+import { useEnterExitAnimation } from '@/hooks/use-enter-exit-animation';
 import { SidenavContext } from './context';
 import { SidenavEventTypes } from './events';
 import styles from './styles.module.css';
@@ -100,6 +101,11 @@ export function Sidenav({
 }: SidenavProps) {
   const [isOpen, setIsOpen] = useState(false);
 
+  // Handle enter/exit animation states
+  const { isEntering, isExiting } = useEnterExitAnimation(isOpen, {
+    duration: 200, // matches CSS var --animation-duration-normal
+  });
+
   useOn(SidenavEventTypes.toggle, (data: SidenavToggleEvent) => {
     if (data.payload.id === id) {
       setIsOpen((prev) => !prev);
@@ -144,6 +150,9 @@ export function Sidenav({
         {...rest}
         className={clsx('group/sidenav', styles.sidenav, className)}
         data-open={isOpen || null}
+        data-closed={!isOpen || null}
+        data-entering={isEntering || null}
+        data-exiting={isExiting || null}
       >
         {children}
       </nav>

@@ -23,6 +23,8 @@
 
   .header {
     @apply fg-primary-bold gap-s px-s py-xs rounded-medium flex w-full items-center outline-none;
+    transition: background-color var(--animation-duration-fast)
+      var(--animation-easing-standard);
 
     @variant focus-visible-within {
       @apply bg-interactive-muted-hover;
@@ -46,10 +48,19 @@
   }
 
   .panel {
-    @apply p-s;
+    @apply p-s overflow-hidden;
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows var(--animation-duration-normal)
+      var(--animation-easing-standard);
 
-    @variant aria-hidden {
-      @apply hidden;
+    & > * {
+      min-height: 0;
+    }
+
+    /* When accordion is expanded, show panel */
+    @variant group-expanded/accordion {
+      grid-template-rows: 1fr;
     }
   }
 
@@ -78,6 +89,17 @@
 
     &.compact {
       @apply gap-xs text-header-s;
+    }
+  }
+
+  /* Accessibility: Respect reduced motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    .header {
+      transition-duration: var(--animation-duration-instant);
+    }
+
+    .panel {
+      transition: none;
     }
   }
 }

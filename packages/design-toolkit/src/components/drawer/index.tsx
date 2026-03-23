@@ -15,7 +15,8 @@ import { useOn } from '@accelint/bus/react';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import type { UniqueId } from '@accelint/core';
 import 'client-only';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
+import { useEnterExitAnimation } from '@/hooks/use-enter-exit-animation';
 import { ViewStack } from '../view-stack';
 import { useViewStackEmit } from '../view-stack/context';
 import { DrawerContext } from './context';
@@ -80,51 +81,13 @@ export function Drawer({
   const [activeView, setActiveView] = useState<UniqueId | null>(
     defaultView || null,
   );
-  const [isEntering, setIsEntering] = useState(false);
-  const [isExiting, setIsExiting] = useState(false);
-  const prevActiveView = useRef<UniqueId | null>(null);
-  const isInitialMount = useRef(true);
 
   const viewStackEmit = useViewStackEmit();
 
-  // Animation duration in milliseconds (matches CSS var --animation-duration-normal: 200ms)
-  const animationDurationMs = 200;
-
-  // Handle animation states when activeView changes
-  useEffect(() => {
-    // Skip animation on initial mount
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
-      prevActiveView.current = activeView;
-      return;
-    }
-
-    const wasOpen = prevActiveView.current !== null;
-    const isOpen = activeView !== null;
-
-    // Update ref before triggering animations
-    prevActiveView.current = activeView;
-
-    if (!wasOpen && isOpen) {
-      // Opening: trigger enter animation
-      setIsEntering(true);
-      setIsExiting(false);
-      const timer = setTimeout(() => {
-        setIsEntering(false);
-      }, animationDurationMs);
-      return () => clearTimeout(timer);
-    }
-
-    if (wasOpen && !isOpen) {
-      // Closing: trigger exit animation
-      setIsExiting(true);
-      setIsEntering(false);
-      const timer = setTimeout(() => {
-        setIsExiting(false);
-      }, animationDurationMs);
-      return () => clearTimeout(timer);
-    }
-  }, [activeView]);
+  // Handle enter/exit animation states
+  const { isEntering, isExiting } = useEnterExitAnimation(!!activeView, {
+    duration: 200, // matches CSS var --animation-duration-normal
+  });
 
   const handleClose = useCallback(
     (data: DrawerCloseEvent) => {

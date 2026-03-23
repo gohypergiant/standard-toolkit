@@ -13,8 +13,44 @@
 @reference '@accelint/design-foundation/styles';
 
 @layer components.l1 {
+  /* Keyframes for notice slide + fade in */
+  @keyframes notice-slide-fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(-16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Keyframes for notice slide + fade out */
+  @keyframes notice-slide-fade-out {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-16px);
+    }
+  }
+
   .notice {
     @apply fg-primary-bold rounded-medium text-body-s shadow-elevation-overlay flex outline;
+
+    /* Entering animation (slide + fade in) */
+    &[data-entering] {
+      animation: notice-slide-fade-in var(--animation-duration-normal)
+        var(--animation-easing-decelerate) both;
+    }
+
+    /* Exiting animation (slide + fade out) */
+    &[data-exiting] {
+      animation: notice-slide-fade-out var(--animation-duration-normal)
+        var(--animation-easing-accelerate) both;
+    }
 
     @variant size-small {
       @apply gap-m p-s flex-col flex-wrap;
@@ -129,5 +165,14 @@
 
   .list {
     @apply gap-y-s flex flex-col;
+  }
+}
+
+@layer components.l2 {
+  /* Accessibility: Respect reduced motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    .notice {
+      animation-duration: var(--animation-duration-instant) !important;
+    }
   }
 }

@@ -14,7 +14,7 @@
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useIsSSR } from '@react-aria/ssr';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo } from 'react';
 import { Tooltip as AriaTooltip } from 'react-aria-components';
 import { PortalProvider } from '@/providers/portal';
 import styles from './styles.module.css';
