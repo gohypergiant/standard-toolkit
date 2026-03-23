@@ -19,6 +19,16 @@ import { useGanttStoreApi } from '@/components/gantt/context/store';
 import { deriveRenderedSlice } from '@/components/gantt/utils/layout';
 import { useRenderedRows } from './';
 
+vi.mock('@/components/gantt/hooks/use-scrollbar-height', () => ({
+  useScrollbarHeight: vi.fn(() => 0),
+}));
+
+vi.mock('@/components/gantt/context', () => ({
+  useGanttContext: vi.fn().mockReturnValue({
+    ganttContentElement: null,
+  }),
+}));
+
 describe('useRenderedRows', () => {
   const children = Array.from(Array(10).keys()).map((i) =>
     React.createElement('div', { key: i }),

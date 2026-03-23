@@ -20,7 +20,7 @@ type UseVerticalScrollUpdateValue = {
 };
 
 export function useVerticalScrollUpdate(): UseVerticalScrollUpdateValue {
-  const { ganttContentElement } = useGanttContext();
+  const { ganttContentElement, ganttPanelElement } = useGanttContext();
   const setCurrentRowScrollPx = useGanttStore(
     (state) => state.setCurrentRowScrollPx,
   );
@@ -29,6 +29,7 @@ export function useVerticalScrollUpdate(): UseVerticalScrollUpdateValue {
     const scrolledPixels = getVerticalScrolledPixels(event);
 
     setCurrentRowScrollPx(scrolledPixels);
+    ganttPanelElement?.scrollTo({ top: scrolledPixels });
     ganttContentElement?.scrollTo({ top: scrolledPixels });
   };
 

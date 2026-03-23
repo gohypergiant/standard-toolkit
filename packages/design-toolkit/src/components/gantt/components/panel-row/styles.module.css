@@ -13,34 +13,12 @@
 @reference '@accelint/design-foundation/styles';
 
 @layer components.l1 {
-  .chunk {
-    --chunk-width: attr(data-width px);
-    min-width: var(--chunk-width);
-  }
+  .row {
+    --height: attr(data-height px);
 
-  .chunk-label {
-    @apply font-display text-body-s fg-primary-muted flex justify-center;
-    transform: translateX(-50%);
-  }
+    @apply py-xxs px-m relative flex items-center border-b;
 
-  .chunk-ticks-container {
-    @apply flex;
-  }
-
-  .chunk-tick-container {
-    @apply flex flex-1;
-  }
-
-  .chunk-tick {
-    @apply fg-disabled h-[6px] w-px bg-current;
-  }
-
-  .timeline {
-    @apply flex;
-    transform: translateX(var(--translate-x));
-  }
-
-  .timeline-container {
-    @apply flex overflow-hidden;
+    height: var(--height);
+    border-color: var(--outline-static);
   }
 }

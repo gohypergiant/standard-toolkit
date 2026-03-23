@@ -21,12 +21,14 @@ import {
   DATASET_JAN29_TO_FEB1,
 } from './__fixtures__';
 import { GanttContentContainer } from './components/containers/external/gantt-content-container';
+import { GanttPanelContainer } from './components/containers/external/gantt-panel-container';
 import { GanttRow } from './components/gantt-row';
 import { BracketClose, BracketOpen } from './components/gantt-row/bracket';
 import { GanttRowBlock } from './components/gantt-row/gantt-row-block';
 import { IconMarker } from './components/gantt-row/icon-marker';
 import { Marker } from './components/gantt-row/marker';
 import { Spacer } from './components/gantt-row/spacer';
+import { PanelRow } from './components/panel-row';
 import { TIMESCALE_OPTIONS } from './constants';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { Timescale } from './types';
@@ -90,7 +92,20 @@ const meta = {
           timescale={args.timescale}
           thresholdProps={thresholdProps}
         >
-          {/** TODO: <GanttPanelContainer></GanttPanelContainer> */}
+          <GanttPanelContainer>
+            {dataset.rows.map(({ id, trackNumber, description }) => (
+              <PanelRow key={id}>
+                <div className='fg-primary-bold flex items-center font-display text-body-s'>
+                  <span>{trackNumber}</span>
+                  {description && (
+                    <span className='fg-inverse-muted'>
+                      &nbsp;- {description}
+                    </span>
+                  )}
+                </div>
+              </PanelRow>
+            ))}
+          </GanttPanelContainer>
           <GanttContentContainer>
             {dataset.rows.map(({ id, elements }) => (
               <GanttRow key={id}>

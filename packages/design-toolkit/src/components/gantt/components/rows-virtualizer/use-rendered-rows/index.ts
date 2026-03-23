@@ -24,6 +24,7 @@ import {
   useGanttStore,
   useGanttStoreApi,
 } from '@/components/gantt/context/store';
+import { useScrollbarHeight } from '@/components/gantt/hooks/use-scrollbar-height';
 import { selectors } from '@/components/gantt/store';
 import { deriveRenderedSlice } from '@/components/gantt/utils/layout';
 
@@ -57,6 +58,7 @@ export function useRenderedRows({
   const roundedCurrentRowScrollPx = useGanttStore(
     selectors.roundedCurrentRowScrollPx,
   );
+  const horizontalScrollbarHeight = useScrollbarHeight();
 
   const { start, end } = deriveRenderedSlice(
     roundedCurrentRowScrollPx,
@@ -72,7 +74,8 @@ export function useRenderedRows({
     [children, start, end],
   );
 
-  const virtualizedHeight = Children.count(children) * GANTT_ROW_HEIGHT_PX;
+  const virtualizedHeight =
+    Children.count(children) * GANTT_ROW_HEIGHT_PX + horizontalScrollbarHeight;
 
   // Sets the total virtualized height in store so that it can be used
   // for Gantt overflow management.
@@ -81,7 +84,7 @@ export function useRenderedRows({
   }, [virtualizedHeight, store]);
 
   return {
-    height: Children.count(children) * GANTT_ROW_HEIGHT_PX,
+    height: virtualizedHeight,
     renderedRows,
   };
 }

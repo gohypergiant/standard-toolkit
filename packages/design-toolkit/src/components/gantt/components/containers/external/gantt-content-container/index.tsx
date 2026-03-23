@@ -11,8 +11,8 @@
  */
 
 import { CurrentTime } from '@/components/gantt/components/current-time';
-import { Header } from '@/components/gantt/components/header';
-import { RowsVirtualizer } from '@/components/gantt/components/rows-virtualizer';
+import { ContentHeader } from '@/components/gantt/components/header';
+import { ContentRowsVirtualizer } from '@/components/gantt/components/rows-virtualizer';
 import { Timeline } from '@/components/gantt/components/timeline';
 import { useGanttContext } from '@/components/gantt/context';
 import { useTemporalDataContext } from '@/components/gantt/context/temporal-data';
@@ -31,11 +31,11 @@ export function GanttContentContainer({ children }: PropsWithChildren) {
       className={styles['gantt-content']}
       onScroll={onScroll}
     >
-      <Header>
+      <ContentHeader>
         {currentTimeMs && <CurrentTime currentTimeMs={currentTimeMs} />}
         <Timeline />
-      </Header>
-      <RowsVirtualizer>{children}</RowsVirtualizer>
+      </ContentHeader>
+      <ContentRowsVirtualizer>{children}</ContentRowsVirtualizer>
     </div>
   );
 }

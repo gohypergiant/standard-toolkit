@@ -10,37 +10,14 @@
  * governing permissions and limitations under the License.
  */
 
-@reference '@accelint/design-foundation/styles';
+import { useGanttContext } from '../../context';
 
-@layer components.l1 {
-  .chunk {
-    --chunk-width: attr(data-width px);
-    min-width: var(--chunk-width);
+export function useScrollbarHeight() {
+  const { ganttContentElement } = useGanttContext();
+
+  if (!ganttContentElement) {
+    return 0;
   }
 
-  .chunk-label {
-    @apply font-display text-body-s fg-primary-muted flex justify-center;
-    transform: translateX(-50%);
-  }
-
-  .chunk-ticks-container {
-    @apply flex;
-  }
-
-  .chunk-tick-container {
-    @apply flex flex-1;
-  }
-
-  .chunk-tick {
-    @apply fg-disabled h-[6px] w-px bg-current;
-  }
-
-  .timeline {
-    @apply flex;
-    transform: translateX(var(--translate-x));
-  }
-
-  .timeline-container {
-    @apply flex overflow-hidden;
-  }
+  return ganttContentElement.offsetHeight - ganttContentElement.clientHeight;
 }

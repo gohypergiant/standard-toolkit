@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { Children, type PropsWithChildren } from 'react';
+import { Children, type ComponentProps, type PropsWithChildren } from 'react';
 import { useGanttContext } from '@/components/gantt/context';
 import { useRootElementHeight } from '@/components/gantt/hooks/use-root-element-height';
 import { useTotalDataRegionThresholds } from '@/components/gantt/hooks/use-total-data-region-thresholds';
@@ -20,18 +20,42 @@ import styles from './styles.module.css';
 import { useRenderedRows } from './use-rendered-rows';
 import { useScrollSync } from './use-scroll-sync';
 
-export function RowsVirtualizer({ children }: PropsWithChildren) {
-  const { ganttContentElement } = useGanttContext();
-  const { totalBounds, msPerPx } = useTemporalDataContext();
+type RowsVirtualizerRootProps = ComponentProps<'div'>;
 
+function RowsVirtualizerRoot({
+  children,
+  role,
+  ...rest
+}: RowsVirtualizerRootProps) {
   const rootElementHeight = useRootElementHeight();
-
-  const width = (totalBounds.endMs - totalBounds.startMs) / msPerPx;
 
   const { height, renderedRows } = useRenderedRows({
     children,
     heightPx: rootElementHeight - GANTT_HEADER_HEIGHT_PX,
   });
+
+  return (
+    <div
+      className={styles.container}
+      data-height={rootElementHeight - GANTT_HEADER_HEIGHT_PX}
+      {...rest}
+    >
+      <div
+        className={styles['inner-container']}
+        data-height={height}
+        role={role}
+      >
+        {renderedRows}
+      </div>
+    </div>
+  );
+}
+
+export function ContentRowsVirtualizer({ children }: PropsWithChildren) {
+  const { ganttContentElement } = useGanttContext();
+  const { totalBounds, msPerPx } = useTemporalDataContext();
+
+  const width = (totalBounds.endMs - totalBounds.startMs) / msPerPx;
 
   useTotalDataRegionThresholds({
     totalRowsCount: Children.count(children),
@@ -43,14 +67,10 @@ export function RowsVirtualizer({ children }: PropsWithChildren) {
   });
 
   return (
-    <div
-      className={styles.container}
-      data-height={rootElementHeight - GANTT_HEADER_HEIGHT_PX}
-      data-width={width}
-    >
-      <div className={styles['inner-container']} data-height={height}>
-        {renderedRows}
-      </div>
-    </div>
+    <RowsVirtualizerRoot data-width={width}>{children}</RowsVirtualizerRoot>
   );
+}
+
+export function PanelRowsVirtualizer({ children }: PropsWithChildren) {
+  return <RowsVirtualizerRoot role='list'>{children}</RowsVirtualizerRoot>;
 }
