@@ -122,4 +122,30 @@
     width: 3px;
     height: 3px;
   }
+
+  .marker-icon {
+    @apply outline outline-transparent;
+    border-radius: 50%;
+
+    > * {
+      @apply fg-primary-bold;
+      /* Scale the icon down to provide some spacing */
+      transform: scale(0.6);
+    }
+
+    @variant color-accent {
+      @apply bg-accent-primary-muted;
+      border: 2px solid currentColor;
+    }
+
+    @variant color-serious {
+      @apply bg-serious-muted;
+      border: 2px solid currentColor;
+    }
+
+    @variant color-critical {
+      @apply bg-critical-muted;
+      border: 2px solid currentColor;
+    }
+  }
 }
