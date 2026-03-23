@@ -10,37 +10,17 @@
  * governing permissions and limitations under the License.
  */
 
-// TODO: Redo entire file.
-import { uuid } from '@accelint/core';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { Carousel } from '.';
+import { CAROUSEL_ITEMS } from './__fixtures__';
 import { CarouselGallery } from './gallery';
 import { CarouselNext, CarouselPrevious } from './navigation';
 import { CarouselPosition } from './position';
 import { CarouselSelect } from './select';
 import { CarouselViewer } from './viewer';
-import type { CarouselData, CarouselProps } from './types';
-
-const TEST_ITEMS = [
-  {
-    dataType: 'image',
-    dataUrl: 'https://example.com/image1.jpg',
-    fileName: 'image1.jpg',
-    title: 'Image 1',
-    thumbnailUrl: 'https://example.com/thumbnail1.jpg',
-    uuid: uuid(),
-  },
-  {
-    dataType: 'image',
-    dataUrl: 'https://example.com/image2.jpg',
-    fileName: 'image2.jpg',
-    title: 'Image 2',
-    thumbnailUrl: 'https://example.com/thumbnail2.jpg',
-    uuid: uuid(),
-  },
-] as CarouselData[];
+import type { CarouselProps } from './types';
 
 function setup({
   children = (
@@ -59,7 +39,7 @@ function setup({
 }: Partial<CarouselProps> = {}) {
   const result = render(
     <Carousel
-      items={TEST_ITEMS}
+      items={CAROUSEL_ITEMS}
       currentPosition={currentPosition}
       setCurrentPosition={setCurrentPosition}
     >
@@ -77,14 +57,14 @@ describe('Carousel', () => {
   it('renders the carousel with the correct number of items', () => {
     setup();
     const gallery = screen.getByTestId('gallery');
-    expect(gallery.childNodes.length).toBe(TEST_ITEMS.length);
+    expect(gallery.childNodes.length).toBe(CAROUSEL_ITEMS.length);
   });
 
   it('renders the correct item as the current item', () => {
     setup();
     const viewer = screen.getByTestId('viewer');
     const image = viewer.firstElementChild;
-    expect(image?.getAttribute('src')).toBe(TEST_ITEMS[0]?.dataUrl);
+    expect(image?.getAttribute('src')).toBe(CAROUSEL_ITEMS[0]?.dataUrl);
     expect(viewer);
   });
 
@@ -110,7 +90,7 @@ describe('Carousel', () => {
   });
 
   it('next should be disabled when currentPosition === items.length - 1', () => {
-    setup({ currentPosition: TEST_ITEMS.length - 1 });
+    setup({ currentPosition: CAROUSEL_ITEMS.length - 1 });
     const nextButton = screen.getByTestId('next');
     expect(nextButton.getAttribute('data-disabled')).toBe('true');
   });
@@ -124,8 +104,9 @@ describe('Carousel', () => {
   });
 
   it('displays correct current position and total item count', () => {
-    setup();
+    setup({ currentPosition: 1 });
     const position = screen.getByTestId('position');
-    expect(position).toHaveTextContent('1 / 2');
+    // Current Position + 1 / total
+    expect(position).toHaveTextContent(`2 / ${CAROUSEL_ITEMS.length}`);
   });
 });

@@ -10,91 +10,15 @@
  * governing permissions and limitations under the License.
  */
 
-import { uuid } from '@accelint/core';
 import { useState } from 'react';
 import { Carousel } from './';
+import { CAROUSEL_ITEMS } from './__fixtures__';
 import { CarouselGallery } from './gallery';
 import { CarouselNext, CarouselPrevious } from './navigation';
 import { CarouselPosition } from './position';
 import { CarouselSelect } from './select';
 import { CarouselViewer } from './viewer';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import type { CarouselData } from './types';
-
-const CAROUSEL_ITEMS: CarouselData[] = [
-  {
-    dataType: 'image',
-    dataUrl: 'https://placecage.lucidinternets.com/434/244',
-    fileName: 'placecage-1',
-    title: 'Place Cage 1',
-    thumbnailUrl: 'https://placecage.lucidinternets.com/57/32',
-    uuid: uuid(),
-  },
-  {
-    dataType: 'image',
-    dataUrl: 'https://placecage.lucidinternets.com/434/240',
-    fileName: 'placecage-2',
-    title: 'Place Cage 2',
-    thumbnailUrl: 'https://placecage.lucidinternets.com/57/33',
-    uuid: uuid(),
-  },
-  {
-    dataType: 'image',
-    dataUrl: 'https://placecage.lucidinternets.com/434/248',
-    fileName: 'placecage-3',
-    title: 'Place Cage 3',
-    thumbnailUrl: 'https://placecage.lucidinternets.com/57/34',
-    uuid: uuid(),
-  },
-  {
-    dataType: 'image',
-    dataUrl: 'https://placecage.lucidinternets.com/434/234',
-    fileName: 'placecage-4',
-    title: 'Place Cage 4',
-    thumbnailUrl: 'https://placecage.lucidinternets.com/57/32',
-    uuid: uuid(),
-  },
-  {
-    dataType: 'image',
-    dataUrl: 'https://placecage.lucidinternets.com/434/241',
-    fileName: 'placecage-5',
-    title: 'Place Cage 5',
-    thumbnailUrl: 'https://placecage.lucidinternets.com/57/33',
-    uuid: uuid(),
-  },
-  {
-    dataType: 'image',
-    dataUrl: 'https://placecage.lucidinternets.com/434/249',
-    fileName: 'placecage-6',
-    title: 'Place Cage 6',
-    thumbnailUrl: 'https://placecage.lucidinternets.com/57/34',
-    uuid: uuid(),
-  },
-  {
-    dataType: 'image',
-    dataUrl: 'https://placecage.lucidinternets.com/434/242',
-    fileName: 'placecage-7',
-    title: 'Place Cage 7',
-    thumbnailUrl: 'https://placecage.lucidinternets.com/57/32',
-    uuid: uuid(),
-  },
-  {
-    dataType: 'image',
-    dataUrl: 'https://placecage.lucidinternets.com/434/243',
-    fileName: 'placecage-8',
-    title: 'Place Cage 8',
-    thumbnailUrl: 'https://placecage.lucidinternets.com/57/33',
-    uuid: uuid(),
-  },
-  {
-    dataType: 'image',
-    dataUrl: 'https://placecage.lucidinternets.com/434/248',
-    fileName: 'placecage-9',
-    title: 'Place Cage 9',
-    thumbnailUrl: 'https://placecage.lucidinternets.com/57/34',
-    uuid: uuid(),
-  },
-];
 
 const meta = {
   title: 'Components/Carousel',
