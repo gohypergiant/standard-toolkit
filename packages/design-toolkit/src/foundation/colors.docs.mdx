@@ -1,0 +1,119 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+import * as ColorStories from './colors.stories';
+
+<Meta of={ColorStories} />
+
+# Colors
+
+The design system uses a two-tier color token architecture: **primitive** tokens define the raw palette, and **semantic** tokens map those primitives to meaningful use cases that adapt automatically across light and dark themes.
+
+## Primitive vs Semantic Tokens
+
+### Primitives
+
+Primitive tokens are the base color palette. They have no opinion about _where_ they should be used. They are named by color family and shade:
+
+```
+--primitive-neutral-800
+--primitive-accent-primary-400
+--primitive-utility-info-600
+```
+
+You generally should not use primitives directly in your components. They exist so the semantic layer can reference them. For rare edge cases (prototyping, one-off visuals), see the [Styling Guide](?path=/docs/styling-guide--playground#primitives-for-prototyping-and-edge-cases).
+
+### Semantics
+
+Semantic tokens describe _intent_ rather than color. They resolve to different primitives depending on the active theme (light or dark), so your code automatically supports theming without conditional logic:
+
+```
+--bg-surface-default      /* page/card backgrounds */
+--fg-primary-bold         /* primary text color */
+--outline-interactive     /* interactive element borders */
+```
+
+See the [Styling Guide, Colors section](?path=/docs/styling-guide--playground#colors) for usage patterns and best practices.
+
+## Categories
+
+Semantic color tokens fall into three groups, each targeting a specific CSS property:
+
+| Prefix | CSS Property | Purpose |
+|--------|-------------|---------|
+| `bg-` | `background-color` | Surface fills, interactive backgrounds, status backgrounds |
+| `fg-` | `color` | Text, icons, and other foreground elements |
+| `outline-` | `outline-color` | Borders and outlines on components |
+
+Explore the full palette in the visual stories:
+- [Background colors](?path=/story/foundation-colors--background)
+- [Foreground colors](?path=/story/foundation-colors--foreground)
+- [Outline colors](?path=/story/foundation-colors--outline)
+
+## Using TypeScript Color Tokens
+
+For non-CSS contexts like deck.gl layers, canvas rendering, or WebGL, the design foundation exports color tokens as TypeScript values:
+
+```ts
+import { designTokens } from '@accelint/design-foundation/tokens';
+
+// Values are RGBA arrays: [red, green, blue, alpha] (0–255)
+designTokens.dark.bg.surface.default  // [21, 21, 23, 255]
+designTokens.light.bg.surface.default // [255, 255, 255, 255]
+```
+
+### Deck.gl Example
+
+Deck.gl layers accept RGBA arrays directly, so `designTokens` values can be used as-is:
+
+```ts
+import { designTokens } from '@accelint/design-foundation/tokens';
+
+const { dark } = designTokens;
+
+new ScatterplotLayer({
+  // ...
+  getFillColor: dark.bg.accent.primary.bold,  // [0, 79, 126, 255]
+  getLineColor: dark.outline.accent.primary.bold,
+});
+```
+
+### Token Structure
+
+The exported `designTokens` object is organized by theme, then by category:
+
+```
+designTokens
+├── dark
+│   ├── bg        (surface, interactive, accent, info, advisory, normal, serious, critical)
+│   ├── fg        (primary, inverse, accent, info, advisory, normal, serious, critical)
+│   └── outline   (static, interactive, accent, info, advisory, normal, serious, critical)
+├── light
+│   ├── bg
+│   ├── fg
+│   └── outline
+├── primitive
+│   ├── neutral   (50–950)
+│   ├── alpha     (black, white; 100–500)
+│   ├── accent    (primary, secondary, tertiary; 50–900)
+│   └── utility   (info, advisory, normal, serious, critical; 50–900)
+└── domain
+    ├── classification (missing, unclass, cui, confidential, secret, top-secret, ts-sci)
+    └── roe            (pending, friend, assumed-friend, neutral, unknown, suspect, hostile)
+```
+
+Primitives are available for direct access:
+
+```ts
+import { designTokens } from '@accelint/design-foundation/tokens';
+
+designTokens.primitive.neutral['50']              // [255, 255, 255, 255]  (white)
+designTokens.primitive.neutral['800']             // [33, 34, 35, 255]     (near-black)
+designTokens.primitive.accent.primary['400']      // [0, 156, 222, 255]    (brand blue)
+designTokens.primitive.accent.secondary['400']    // [34, 180, 201, 255]   (teal)
+designTokens.primitive.alpha.black['300']         // [0, 0, 0, 61]         (black at ~24% opacity)
+```
+
+## Related
+
+- [Styling Guide: Colors](?path=/docs/styling-guide--playground#colors) - usage patterns and best practices
+- [GitHub Source: Token Definitions](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-foundation/src/tokens)
