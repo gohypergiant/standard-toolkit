@@ -50,6 +50,8 @@ export type EditingState = {
   featureBeingEdited: Feature | null;
   /** Edit mode to restore after held panning hotkey is released. Null when not panning. */
   previousMode: EditMode | null;
+  /** The most recent completion edit type (e.g. 'scaled', 'rotated', 'translated'). Null during continuous drag events. */
+  lastCompletedEditType: string | null;
 };
 
 /**

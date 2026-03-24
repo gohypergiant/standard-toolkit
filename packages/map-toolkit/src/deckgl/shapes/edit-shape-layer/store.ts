@@ -56,6 +56,7 @@ import {
   requestModeChange,
 } from '../shared/utils/mode-utils';
 import {
+  COMPLETION_EDIT_TYPES,
   EDIT_CURSOR_MAP,
   EDIT_SHAPE_LAYER_ID,
   EDIT_SHAPE_MODE,
@@ -94,6 +95,7 @@ const DEFAULT_EDITING_STATE: EditingState = {
   editMode: 'view',
   featureBeingEdited: null,
   previousMode: null,
+  lastCompletedEditType: null,
 };
 
 /**
@@ -424,6 +426,15 @@ export function updateFeature(
       );
     }
 
+    // Only store completion editTypes (scaled, rotated, translated) —
+    // continuous events fire via RAF and can overwrite due to frame timing.
+    // Clear lastCompletedEditType on continuous events so it doesn't persist.
+    const isCompletion =
+      editType != null && COMPLETION_EDIT_TYPES.has(editType);
+    const editTypeUpdate = isCompletion
+      ? { lastCompletedEditType: editType }
+      : { lastCompletedEditType: null };
+
     if (circleProperties) {
       editStore.set(mapId, {
         featureBeingEdited: {
@@ -433,12 +444,17 @@ export function updateFeature(
             circleProperties,
           },
         },
+        ...editTypeUpdate,
       });
       return;
     }
   }
 
-  editStore.set(mapId, { featureBeingEdited: feature });
+  const isCompletion = editType != null && COMPLETION_EDIT_TYPES.has(editType);
+  editStore.set(mapId, {
+    featureBeingEdited: feature,
+    lastCompletedEditType: isCompletion ? editType : null,
+  });
 }
 
 /**
