@@ -19,7 +19,7 @@ import {
   useEffect,
   useMemo,
 } from 'react';
-import { GANTT_ROW_HEIGHT_PX } from '@/components/gantt/constants';
+import { useGanttContext } from '@/components/gantt/context';
 import {
   useGanttStore,
   useGanttStoreApi,
@@ -31,12 +31,13 @@ import { deriveRenderedSlice } from '@/components/gantt/utils/layout';
 type RowChild = ReactElement<JSX.IntrinsicElements['div']>;
 
 const applyVirtualizedRowStyles =
-  (startIndex: number) => (element: RowChild, index: number) =>
+  (startIndex: number, rowHeightPx: number) =>
+  (element: RowChild, index: number) =>
     cloneElement(element, {
       style: {
         ...element.props.style,
         position: 'absolute',
-        transform: `translateY(${GANTT_ROW_HEIGHT_PX * (startIndex + index)}px)`,
+        transform: `translateY(${rowHeightPx * (startIndex + index)}px)`,
         width: '100%',
       },
     });
@@ -54,6 +55,7 @@ export function useRenderedRows({
   children,
   heightPx,
 }: PropsWithChildren<UseRenderedRowsProps>): UseRenderedRowsValue {
+  const { rowHeightPx } = useGanttContext();
   const store = useGanttStoreApi();
   const roundedCurrentRowScrollPx = useGanttStore(
     selectors.roundedCurrentRowScrollPx,
@@ -62,6 +64,7 @@ export function useRenderedRows({
 
   const { start, end } = deriveRenderedSlice(
     roundedCurrentRowScrollPx,
+    rowHeightPx,
     heightPx,
   );
 
@@ -69,13 +72,15 @@ export function useRenderedRows({
     () =>
       Children.map(
         Children.toArray(children).slice(start, end) as RowChild[],
-        applyVirtualizedRowStyles(start),
+        applyVirtualizedRowStyles(start, rowHeightPx),
       ),
-    [children, start, end],
+    [children, start, end, rowHeightPx],
   );
 
-  const virtualizedHeight =
-    Children.count(children) * GANTT_ROW_HEIGHT_PX + horizontalScrollbarHeight;
+  const virtualizedHeight = useMemo(
+    () => Children.count(children) * rowHeightPx + horizontalScrollbarHeight,
+    [children, rowHeightPx, horizontalScrollbarHeight],
+  );
 
   // Sets the total virtualized height in store so that it can be used
   // for Gantt overflow management.

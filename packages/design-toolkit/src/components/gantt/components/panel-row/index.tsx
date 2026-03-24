@@ -10,17 +10,19 @@
  * governing permissions and limitations under the License.
  */
 
-import { GANTT_ROW_HEIGHT_PX } from '../../constants';
+import { useGanttContext } from '../../context';
 import styles from './styles.module.css';
 import type { PropsWithChildren } from 'react';
 
 export function PanelRow({ children, ...rest }: PropsWithChildren) {
+  const { rowHeightPx } = useGanttContext();
+
   return (
     // biome-ignore lint/a11y/useSemanticElements: <parent div role list>
     <div
       className={styles.row}
       role='listitem'
-      data-height={GANTT_ROW_HEIGHT_PX}
+      data-height={rowHeightPx}
       // spread props, including virtualizer-augmented style prop, if used
       {...rest}
     >

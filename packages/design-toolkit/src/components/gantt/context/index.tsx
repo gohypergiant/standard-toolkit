@@ -20,6 +20,7 @@ import {
   useState,
 } from 'react';
 import { RootContainer } from '../components/containers/internal';
+import { GANTT_ROW_HEIGHT_PX } from '../constants';
 import { GanttStoreProvider } from './store';
 import { TemporalDataProvider } from './temporal-data';
 import type { ThresholdProps, Timescale } from '@/components/gantt/types';
@@ -38,6 +39,7 @@ export type GanttContextValue = {
   rootElement: HTMLDivElement | null;
   ganttContentElement: HTMLDivElement | null;
   ganttPanelElement: HTMLDivElement | null;
+  rowHeightPx: number;
   assignTimelineContainerElementRef: (node: HTMLDivElement | null) => void;
   assignHeaderElementRef: (node: HTMLDivElement | null) => void;
   assignRootElementRef: (node: HTMLDivElement | null) => void;
@@ -55,6 +57,7 @@ type GanttProviderProps = {
   timescale: Timescale;
   currentTimeMs: number;
   thresholdProps: ThresholdProps;
+  rowHeightPx?: number;
 };
 
 export function GanttProvider({
@@ -64,6 +67,7 @@ export function GanttProvider({
   timescale,
   thresholdProps,
   currentTimeMs,
+  rowHeightPx = GANTT_ROW_HEIGHT_PX,
 }: PropsWithChildren<GanttProviderProps>) {
   const [timelineContainerElement, setTimelineContainerElement] =
     useState<HTMLDivElement | null>(null);
@@ -108,6 +112,7 @@ export function GanttProvider({
       rootElement,
       ganttContentElement,
       ganttPanelElement,
+      rowHeightPx,
     }),
     [
       assignTimelineContainerElementRef,
@@ -120,6 +125,7 @@ export function GanttProvider({
       rootElement,
       ganttContentElement,
       ganttPanelElement,
+      rowHeightPx,
     ],
   );
 

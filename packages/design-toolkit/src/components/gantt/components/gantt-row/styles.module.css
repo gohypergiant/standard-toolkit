@@ -20,10 +20,19 @@
 @layer components.l1 {
   .row-container {
     --height: attr(data-height px);
+    --row-padding: 4.5px;
+    --element-height: calc(100% - calc(var(--row-padding) * 2));
 
-    @apply py-xxs relative flex items-center border-b;
+    @apply relative flex items-center border-b;
+    padding-block: var(--row-padding);
     height: var(--height);
     border-color: var(--outline-static);
+
+    & .row-block,
+    & .bracket-container,
+    & .marker-container {
+      height: var(--element-height);
+    }
   }
 
   .row-block {
@@ -33,7 +42,8 @@
     --outline-color: var(--outline-interactive);
     --elapsed-color: var(--bg-interactive-muted);
 
-    @apply rounded-small absolute;
+    @apply rounded-small p-xs absolute flex flex-nowrap items-center overflow-hidden whitespace-nowrap;
+
     height: var(--block-height);
     border: 1px solid transparent;
     background:
@@ -92,10 +102,9 @@
   }
 
   .bracket-container {
-    @apply relative;
+    @apply absolute;
 
     --rotate: attr(data-rotate deg);
-    min-height: attr(data-height px);
     transform: translateX(var(--translate-x)) rotate(var(--rotate));
 
     &[data-elapsed] {
@@ -124,8 +133,7 @@
   }
 
   .bracket {
-    @apply rounded-bl-small rounded-tl-small absolute left-0 border border-r-transparent border-b-current bg-transparent;
-    min-height: attr(data-height px);
+    @apply rounded-bl-small rounded-tl-small absolute left-0 h-full border border-r-transparent border-b-current bg-transparent;
     width: 6px;
   }
 

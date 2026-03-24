@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { GANTT_ROW_HEIGHT_PX, ROW_VIRTUALIZATION_OVERSCAN } from '../constants';
+import { ROW_VIRTUALIZATION_OVERSCAN } from '../constants';
 import type { TimeBounds, TimelineChunkObject } from '../types';
 
 export function deriveTranslateXValue(
@@ -97,11 +97,12 @@ export function derivePointElementLayout(
 
 export function deriveRenderedSlice(
   scrollPx: number,
+  rowHeightPx: number,
   viewableRegionHeightPx: number,
 ) {
-  const startIndex = Math.floor(scrollPx / GANTT_ROW_HEIGHT_PX);
+  const startIndex = Math.floor(scrollPx / rowHeightPx);
 
-  const viewableItems = Math.ceil(viewableRegionHeightPx / GANTT_ROW_HEIGHT_PX);
+  const viewableItems = Math.ceil(viewableRegionHeightPx / rowHeightPx);
 
   const proposedRenderedItemsCount =
     viewableItems + ROW_VIRTUALIZATION_OVERSCAN;

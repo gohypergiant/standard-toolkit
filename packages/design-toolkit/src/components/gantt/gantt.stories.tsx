@@ -23,8 +23,8 @@ import {
 import { GanttContentContainer } from './components/containers/external/gantt-content-container';
 import { GanttPanelContainer } from './components/containers/external/gantt-panel-container';
 import { GanttRow } from './components/gantt-row';
+import { Block } from './components/gantt-row/block';
 import { BracketClose, BracketOpen } from './components/gantt-row/bracket';
-import { GanttRowBlock } from './components/gantt-row/gantt-row-block';
 import { IconMarker } from './components/gantt-row/icon-marker';
 import { Marker } from './components/gantt-row/marker';
 import { Spacer } from './components/gantt-row/spacer';
@@ -37,6 +37,7 @@ type GanttStoryControls = {
   datasetKey: keyof typeof datasetKeys;
   timescale: Timescale;
   currentTimeMs: number;
+  rowHeightPx: string;
 };
 
 const datasetKeys: Record<string, typeof DATASET_JAN27_TO_JAN30> = {
@@ -51,6 +52,7 @@ const meta = {
     datasetKey: Object.keys(datasetKeys)[0] as keyof typeof datasetKeys,
     currentTimeMs: CURRENT_TIME_MS,
     timescale: '1h',
+    rowHeightPx: '40',
   } satisfies GanttStoryControls,
   argTypes: {
     datasetKey: {
@@ -64,6 +66,12 @@ const meta = {
         type: 'select',
       },
       options: TIMESCALE_OPTIONS,
+    },
+    rowHeightPx: {
+      control: {
+        type: 'select',
+      },
+      options: ['35', '40', '60', '80'],
     },
   },
   render: (args: GanttStoryControls) => {
@@ -83,14 +91,34 @@ const meta = {
       [],
     );
 
+    const timestampHour = (timestampMs: number) => {
+      const value = new Date(timestampMs).getUTCHours().toString();
+
+      return value.length === 1 ? `0${value}` : value;
+    };
+
+    const timestampMinutes = (timestampMs: number) => {
+      const value = new Date(timestampMs).getUTCMinutes().toString();
+
+      return value.length === 1 ? `0${value}` : value;
+    };
+
+    const timestampLabel = (
+      startTimestampMs: number,
+      endTimestampMs: number,
+    ) => {
+      return `${timestampHour(startTimestampMs)}:${timestampMinutes(startTimestampMs)}--${timestampHour(endTimestampMs)}:${timestampMinutes(endTimestampMs)}`;
+    };
+
     return (
-      <div className='h-[360px]'>
+      <div className='h-[480px]'>
         <GanttProvider
           startTimeMs={dataset.startTimeMs}
           endTimeMs={dataset.endTimeMs}
           currentTimeMs={args.currentTimeMs}
           timescale={args.timescale}
           thresholdProps={thresholdProps}
+          rowHeightPx={Number(args.rowHeightPx)}
         >
           <GanttPanelContainer>
             {dataset.rows.map(({ id, trackNumber, description }) => (
@@ -114,13 +142,21 @@ const meta = {
                     case 'block': {
                       const [startMs, endMs] = element.rangeMs;
                       return (
-                        <GanttRowBlock
+                        <Block
                           key={`${id}-block-${index}`}
                           id={`${id}-block-${index}`}
                           startMs={startMs}
                           endMs={endMs}
                           color={element.color}
-                        />
+                        >
+                          {element.color === 'critical' ||
+                          element.color === 'serious' ? (
+                            <div className='flex flex-col text-body-xs'>
+                              <span>JAMMING ENTRY</span>
+                              <span>{timestampLabel(startMs, endMs)}</span>
+                            </div>
+                          ) : null}
+                        </Block>
                       );
                     }
 
@@ -176,7 +212,7 @@ const meta = {
                           timeMs={timeMs}
                           color={element.color}
                         >
-                          <Icon>
+                          <Icon size='small'>
                             <Placeholder />
                           </Icon>
                         </IconMarker>
@@ -201,4 +237,9 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
-export const Default: Story = {};
+export const Default: Story = {
+  args: {
+    datasetKey: 'JAN27_TO_JAN30',
+    timescale: '2h',
+  },
+};

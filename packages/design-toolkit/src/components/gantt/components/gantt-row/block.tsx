@@ -10,23 +10,26 @@
  * governing permissions and limitations under the License.
  */
 
-import { GANTT_ROW_ELEMENT_HEIGHT } from '../../constants';
 import { Range, type RangeProps } from '../base-elements/range';
 import styles from './styles.module.css';
 import { useElapsedPercentage } from './use-elapsed-percentage';
 
-export function GanttRowBlock(props: RangeProps) {
+export function Block({ children, id, startMs, endMs, ...rest }: RangeProps) {
   const elapsedPct = useElapsedPercentage({
-    startMs: props.startMs,
-    endMs: props.endMs,
+    startMs,
+    endMs,
   });
 
   return (
     <Range
-      data-height={GANTT_ROW_ELEMENT_HEIGHT}
-      data-elapsed-pct={elapsedPct}
+      id={id}
+      startMs={startMs}
+      endMs={endMs}
       className={styles['row-block']}
-      {...props}
-    />
+      data-elapsed-pct={elapsedPct}
+      {...rest}
+    >
+      {children}
+    </Range>
   );
 }
