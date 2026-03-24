@@ -10,10 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import { centroid, distance } from '@turf/turf';
+import { center as turfCenter, distance } from '@turf/turf';
 import { DEFAULT_DISTANCE_UNITS } from '@/shared/units';
 import type { DistanceUnit } from '@accelint/constants/units';
-import type { Polygon } from 'geojson';
+import type { MultiPolygon, Polygon } from 'geojson';
 import type { CircleProperties } from '../types';
 
 /**
@@ -244,13 +244,16 @@ export function computeEllipseMeasurementsFromPolygon(
  */
 export function computeCirclePropertiesFromGeometry(
   geometry: Polygon,
+  units: DistanceUnit = DEFAULT_DISTANCE_UNITS,
 ): CircleProperties | undefined {
   const coordinates = geometry.coordinates[0];
   if (!coordinates || coordinates.length < 3) {
     return undefined;
   }
 
-  const centerFeature = centroid({
+  // Use turfCenter (bbox center) to match ResizeCircleMode's center computation.
+  // This ensures the center stays stable during resize operations.
+  const centerFeature = turfCenter({
     type: 'Polygon',
     coordinates: geometry.coordinates,
   });
@@ -266,7 +269,7 @@ export function computeCirclePropertiesFromGeometry(
   }
 
   const radius = distance(center, firstPoint, {
-    units: DEFAULT_DISTANCE_UNITS,
+    units,
   });
 
   if (!Number.isFinite(radius) || radius <= 0) {
@@ -277,7 +280,66 @@ export function computeCirclePropertiesFromGeometry(
     center,
     radius: {
       value: radius,
-      units: DEFAULT_DISTANCE_UNITS,
+      units,
     },
+  };
+}
+
+/**
+ * Compute circle properties (center and radius) from a MultiPolygon geometry.
+ *
+ * Uses the bounding box center as the center point and the maximum geodesic
+ * distance from center to any outer-ring vertex as the radius. Designed for
+ * wagon wheel shapes where the MultiPolygon represents segmented circular geometry.
+ *
+ * @param geometry - MultiPolygon geometry representing a circular shape.
+ * @param units - Distance units for the radius measurement.
+ * @returns Circle properties with center and radius, or `undefined` if invalid.
+ */
+export function computeCirclePropertiesFromMultiPolygon(
+  geometry: MultiPolygon,
+  units: DistanceUnit = DEFAULT_DISTANCE_UNITS,
+): CircleProperties | undefined {
+  if (geometry.coordinates.length === 0) {
+    return undefined;
+  }
+
+  // Use turfCenter (bbox center) for consistency with the Polygon version
+  const centerFeature = turfCenter({
+    type: 'MultiPolygon',
+    coordinates: geometry.coordinates,
+  });
+  const center = centerFeature.geometry.coordinates as [number, number];
+
+  if (!(Number.isFinite(center[0]) && Number.isFinite(center[1]))) {
+    return undefined;
+  }
+
+  // Find max distance from center to any outer-ring vertex (= outer radius)
+  let maxRadius = 0;
+  for (const polygon of geometry.coordinates) {
+    const ring = polygon[0];
+    if (!ring) {
+      continue;
+    }
+    for (const coord of ring) {
+      const point = coord as [number, number];
+      if (!(Number.isFinite(point[0]) && Number.isFinite(point[1]))) {
+        continue;
+      }
+      const d = distance(center, point, { units });
+      if (d > maxRadius) {
+        maxRadius = d;
+      }
+    }
+  }
+
+  if (!Number.isFinite(maxRadius) || maxRadius <= 0) {
+    return undefined;
+  }
+
+  return {
+    center,
+    radius: { value: maxRadius, units },
   };
 }

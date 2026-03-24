@@ -97,14 +97,6 @@ export class RotateModeWithSnap extends RotateMode {
     event: DraggingEvent,
     props: ModeProps<SimpleFeatureCollection>,
   ) {
-    const snapRotation = props.modeConfig?.snapRotation ?? false;
-
-    // If not snapping, use parent's rotation logic
-    if (!snapRotation) {
-      super.handleDragging(event, props);
-      return;
-    }
-
     // biome-ignore lint/suspicious/noExplicitAny: Accessing private properties from parent class
     const self = this as any;
 
@@ -112,6 +104,9 @@ export class RotateModeWithSnap extends RotateMode {
       return;
     }
 
+    // Always use our custom rotation path (which stores rotationAngle
+    // on the feature properties). Snap is applied inside getRotateActionWithSnap
+    // when snapRotation is enabled.
     const rotateAction = this.getRotateActionWithSnap(
       event.pointerDownMapCoords,
       event.mapCoords,
@@ -134,14 +129,6 @@ export class RotateModeWithSnap extends RotateMode {
     event: StopDraggingEvent,
     props: ModeProps<SimpleFeatureCollection>,
   ) {
-    const snapRotation = props.modeConfig?.snapRotation ?? false;
-
-    // If not snapping, use parent's rotation logic
-    if (!snapRotation) {
-      super.handleStopDragging(event, props);
-      return;
-    }
-
     // biome-ignore lint/suspicious/noExplicitAny: Accessing private properties from parent class
     const self = this as any;
 
@@ -216,8 +203,31 @@ export class RotateModeWithSnap extends RotateMode {
       }
     }
 
+    // Store the rotation angle on the feature properties during continuous
+    // events so consumers can read it from featureBeingEdited. On completion
+    // ('rotated'), omit it so consumers can detect drag end and reset their
+    // base orientation tracking.
+    const updatedObj = updatedData.getObject();
+    const featureIdx = selectedIndexes[0] ?? 0;
+    const isCompletion = editType === 'rotated';
+    const updatedFeatures = updatedObj.features.map(
+      (f: { properties?: Record<string, unknown> }, idx: number) =>
+        idx === featureIdx
+          ? {
+              ...f,
+              properties: {
+                ...f.properties,
+                // On continuous events, set rotationAngle for live tracking.
+                // On completion, explicitly set to undefined to strip it so
+                // consumers detect drag end and reset base orientation.
+                rotationAngle: isCompletion ? undefined : angle,
+              },
+            }
+          : f,
+    );
+
     return {
-      updatedData: updatedData.getObject(),
+      updatedData: { ...updatedObj, features: updatedFeatures },
       editType,
       editContext: {
         featureIndexes: selectedIndexes,

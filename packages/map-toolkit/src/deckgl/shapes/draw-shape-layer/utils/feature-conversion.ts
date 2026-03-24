@@ -12,6 +12,11 @@
 
 'use client';
 
+import {
+  DISTANCE_UNIT_BY_SYMBOL,
+  type DistanceUnit,
+  type DistanceUnitSymbol,
+} from '@accelint/constants/units';
 import { uuid } from '@accelint/core';
 import { createLoggerDomain } from '@/shared/logger';
 import { DEFAULT_DISTANCE_UNITS } from '@/shared/units';
@@ -65,8 +70,9 @@ function generateShapeName(shape: ShapeFeatureType): string {
  */
 function computeCircleProperties(
   geometry: Polygon,
+  units?: DistanceUnit,
 ): CircleProperties | undefined {
-  const result = computeCirclePropertiesFromGeometry(geometry);
+  const result = computeCirclePropertiesFromGeometry(geometry, units);
   if (!result) {
     logger.warn(
       'Cannot compute circle properties: invalid geometry or coordinates',
@@ -230,6 +236,7 @@ export function convertFeatureToShape(
   feature: Feature,
   shape: ShapeFeatureType,
   styleDefaults?: Partial<StyleProperties> | null,
+  distanceUnit?: DistanceUnitSymbol | null,
 ): Shape {
   const id = uuid();
   const name = generateShapeName(shape);
@@ -240,13 +247,19 @@ export function convertFeatureToShape(
     ...(styleDefaults ?? {}),
   };
 
+  // Resolve the distance unit from symbol to DistanceUnit name
+  const resolvedUnit: DistanceUnit | undefined = distanceUnit
+    ? ((DISTANCE_UNIT_BY_SYMBOL[distanceUnit] as DistanceUnit | undefined) ??
+      undefined)
+    : undefined;
+
   // Compute circle properties if this is a circle
   let circleProperties: CircleProperties | undefined;
   if (
     shape === ShapeFeatureTypeEnum.Circle &&
     feature.geometry.type === 'Polygon'
   ) {
-    circleProperties = computeCircleProperties(feature.geometry);
+    circleProperties = computeCircleProperties(feature.geometry, resolvedUnit);
   }
 
   // Compute ellipse properties if this is an ellipse

@@ -40,6 +40,7 @@ export const EDIT_SHAPE_LAYER_ID = 'edit-shape-layer';
 export const EDIT_CURSOR_MAP: Record<EditMode, CSSCursorType> = {
   view: 'default',
   'bounding-transform': 'crosshair',
+  'locked-bounding-transform': 'crosshair',
   'vertex-transform': 'crosshair',
   'circle-transform': 'crosshair',
   translate: 'crosshair',
@@ -60,8 +61,5 @@ export const DEFAULT_HOTKEY_CONFIG = {
  */
 export const SHAPE_PROPERTY_MAP: Partial<Record<ShapeFeatureType, string>> = {
   [ShapeFeatureType.Circle]: 'Circle',
-  // WagonWheel uses circle-transform mode for editing; ResizeCircleMode
-  // requires `properties.shape` to include 'Circle' for resize handles.
-  [ShapeFeatureType.WagonWheel]: 'Circle',
   [ShapeFeatureType.Rectangle]: 'Rectangle',
 };

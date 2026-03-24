@@ -46,7 +46,10 @@ import {
   isRectangleShape,
   isWagonWheelShape,
 } from '../shared/types';
-import { computeCirclePropertiesFromGeometry } from '../shared/utils/geometry-measurements';
+import {
+  computeCirclePropertiesFromGeometry,
+  computeCirclePropertiesFromMultiPolygon,
+} from '../shared/utils/geometry-measurements';
 import {
   releaseModeAndCursor,
   requestCursorChange,
@@ -115,8 +118,11 @@ function getEditModeForShape(shape: Shape): EditMode {
   if (isPointShape(shape)) {
     return 'point-translate';
   }
-  if (isCircleShape(shape) || isWagonWheelShape(shape)) {
+  if (isCircleShape(shape)) {
     return 'circle-transform';
+  }
+  if (isWagonWheelShape(shape)) {
+    return 'locked-bounding-transform';
   }
   if (isEllipseShape(shape) || isRectangleShape(shape)) {
     return 'bounding-transform';
@@ -364,18 +370,38 @@ export function clearEditingState(mapId: UniqueId): void {
  * updateFeature(mapId, { ...currentFeature, geometry: newGeometry });
  * ```
  */
-export function updateFeature(mapId: UniqueId, feature: Feature): void {
+export function updateFeature(
+  mapId: UniqueId,
+  feature: Feature,
+  editType?: string,
+): void {
   const state = editStore.get(mapId);
 
   // Recompute circleProperties from updated geometry so metadata stays in sync
   if (
     state?.editingShape &&
-    isCircleShape(state.editingShape) &&
-    feature.geometry.type === 'Polygon'
+    (isCircleShape(state.editingShape) || isWagonWheelShape(state.editingShape))
   ) {
-    const circleProperties = computeCirclePropertiesFromGeometry(
-      feature.geometry,
-    );
+    // Use the shape's own radius units so the result matches without conversion drift
+    const shapeUnits = isCircleShape(state.editingShape)
+      ? state.editingShape.feature.properties.circleProperties.radius.units
+      : isWagonWheelShape(state.editingShape)
+        ? state.editingShape.feature.properties.wagonWheelProperties.radius
+            .units
+        : undefined;
+
+    let circleProperties;
+    if (feature.geometry.type === 'Polygon') {
+      circleProperties = computeCirclePropertiesFromGeometry(
+        feature.geometry,
+        shapeUnits,
+      );
+    } else if (feature.geometry.type === 'MultiPolygon') {
+      circleProperties = computeCirclePropertiesFromMultiPolygon(
+        feature.geometry,
+        shapeUnits,
+      );
+    }
 
     if (circleProperties) {
       editStore.set(mapId, {

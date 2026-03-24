@@ -23,6 +23,7 @@ import type { Shape } from '../shared/types';
  * Edit mode for shape editing
  * - 'view': Not editing, shape is viewable only
  * - 'bounding-transform': Scale/rotate/translate via bounding box handles (ellipses, rectangles)
+ * - 'locked-bounding-transform': Like bounding-transform but scaling always maintains aspect ratio (wagon wheels)
  * - 'vertex-transform': Drag vertices OR scale/rotate/translate (polygons, lines)
  * - 'circle-transform': Drag edge to resize, drag body to translate (circles)
  * - 'translate': Drag to move the shape (generic translation)
@@ -31,6 +32,7 @@ import type { Shape } from '../shared/types';
 export type EditMode =
   | 'view'
   | 'bounding-transform'
+  | 'locked-bounding-transform'
   | 'vertex-transform'
   | 'circle-transform'
   | 'translate'

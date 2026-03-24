@@ -55,7 +55,7 @@
 
 'use client';
 
-import { isCircleShape } from '../../shared/types';
+import { isCircleShape, isWagonWheelShape } from '../../shared/types';
 import type { LineString, Point, Polygon } from 'geojson';
 import type { Shape } from '../../shared/types';
 
@@ -696,8 +696,8 @@ function getPolygonPosition(
 ): LabelPosition2d | null {
   const ring = geometry.coordinates[0];
 
-  // Circle shapes use circle-specific options
-  if (isCircleShape(shape)) {
+  // Circular shapes (Circle, WagonWheel) use circle-specific options
+  if (isCircleShape(shape) || isWagonWheelShape(shape)) {
     return getCirclePosition(
       ring,
       shapeOffset,
@@ -827,6 +827,41 @@ export function getLabelPosition2d(
         shapeCoordinateAnchor,
         options,
       );
+
+    case 'MultiPolygon':
+      // WagonWheel: use all outer boundary points across segments for
+      // circle-style label positioning centered on the shape.
+      if (isWagonWheelShape(shape)) {
+        const allPoints = geometry.coordinates.flatMap((poly) =>
+          (poly[0] ?? []).slice(0, -1),
+        );
+        if (allPoints.length > 0) {
+          // Build a synthetic polygon ring from all outer points
+          const ring = [...allPoints, allPoints[0]!];
+          return getCirclePosition(
+            ring,
+            shapeOffset,
+            shapeVertical,
+            shapeHorizontal,
+            shapeCoordinateAnchor,
+            options,
+          );
+        }
+        return null;
+      }
+      // Generic MultiPolygon: use first polygon for label positioning
+      if (geometry.coordinates.length > 0 && geometry.coordinates[0]) {
+        return getPolygonPosition(
+          { type: 'Polygon', coordinates: geometry.coordinates[0] },
+          shape,
+          shapeOffset,
+          shapeVertical,
+          shapeHorizontal,
+          shapeCoordinateAnchor,
+          options,
+        );
+      }
+      return null;
 
     default:
       // Unknown geometry type - return null

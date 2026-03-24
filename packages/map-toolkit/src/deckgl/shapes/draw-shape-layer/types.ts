@@ -34,6 +34,8 @@ export type DrawingState = {
   styleDefaults: Partial<StyleProperties> | null;
   /** Default circle properties (for Circle shapes) */
   circleDefaults: Partial<CircleProperties> | null;
+  /** Distance unit symbol from the layer prop, used for circle radius computation */
+  distanceUnit: DistanceUnitSymbol | null;
 };
 
 /**

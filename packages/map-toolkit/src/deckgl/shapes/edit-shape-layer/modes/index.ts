@@ -13,6 +13,7 @@
 import { TranslateMode, ViewMode } from '@deck.gl-community/editable-layers';
 import { BoundingTransformMode } from './bounding-transform-mode';
 import { CircleTransformMode } from './circle-transform-mode';
+import { LockedBoundingTransformMode } from './locked-bounding-transform-mode';
 import { PointTranslateMode } from './point-translate-mode';
 import { VertexTransformMode } from './vertex-transform-mode';
 import type { EditMode } from '../types';
@@ -45,6 +46,7 @@ import type { EditMode } from '../types';
 const EDIT_MODE_INSTANCES = {
   view: new ViewMode(),
   'bounding-transform': new BoundingTransformMode(),
+  'locked-bounding-transform': new LockedBoundingTransformMode(),
   'vertex-transform': new VertexTransformMode(),
   'circle-transform': new CircleTransformMode(),
   translate: new TranslateMode(),
