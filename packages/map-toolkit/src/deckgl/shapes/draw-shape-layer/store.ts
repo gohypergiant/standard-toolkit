@@ -297,8 +297,12 @@ export const drawStore = createMapStore<DrawingState, DrawShapeActions>({
  */
 /**
  * Set the distance unit for the draw store.
+ *
  * Called by DrawShapeLayer when its `unit` prop changes so that
  * `convertFeatureToShape` can compute circle properties in the correct unit.
+ *
+ * @param mapId - The map instance ID to update.
+ * @param unit - The distance unit symbol (e.g. 'km', 'mi'), or null to clear.
  */
 export function setDrawDistanceUnit(
   mapId: UniqueId,

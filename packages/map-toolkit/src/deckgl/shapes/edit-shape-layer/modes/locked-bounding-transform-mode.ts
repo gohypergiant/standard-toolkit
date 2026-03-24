@@ -37,6 +37,21 @@ import { ScaleModeWithFreeTransform } from './scale-mode-with-free-transform';
  * - **Rotation**: Drag top handle to rotate
  *   - Default: Free rotation
  *   - With Shift: Snap to 45° intervals
+ *
+ * @example
+ * ```typescript
+ * import { LockedBoundingTransformMode } from '@accelint/map-toolkit/deckgl/shapes/edit-shape-layer/modes/locked-bounding-transform-mode';
+ * import { EditableGeoJsonLayer } from '@deck.gl-community/editable-layers';
+ *
+ * const mode = new LockedBoundingTransformMode();
+ *
+ * const layer = new EditableGeoJsonLayer({
+ *   mode,
+ *   data: wagonWheelFeatureCollection,
+ *   selectedFeatureIndexes: [0],
+ *   onEdit: handleEdit,
+ * });
+ * ```
  */
 export class LockedBoundingTransformMode extends BaseTransformMode {
   private translateMode: TranslateMode;

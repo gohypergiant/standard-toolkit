@@ -325,6 +325,14 @@ function findMaxRadius(
  * @param geometry - MultiPolygon geometry representing a circular shape.
  * @param units - Distance units for the radius measurement.
  * @returns Circle properties with center and radius, or `undefined` if invalid.
+ *
+ * @example
+ * ```typescript
+ * const props = computeCirclePropertiesFromMultiPolygon(feature.geometry, 'kilometers');
+ * if (props) {
+ *   console.log(props.center, props.radius.value, props.radius.units);
+ * }
+ * ```
  */
 export function computeCirclePropertiesFromMultiPolygon(
   geometry: MultiPolygon,

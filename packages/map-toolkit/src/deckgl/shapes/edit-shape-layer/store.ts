@@ -379,22 +379,6 @@ export function clearEditingState(mapId: UniqueId): void {
 }
 
 /**
- * Update the feature currently being edited.
- *
- * Called internally by the layer during drag operations, and also available
- * to consumers via the `useEditShape` hook for form-driven updates.
- *
- * @param mapId - The map instance ID.
- * @param feature - The updated GeoJSON feature from the editable layer to store as the live editing state.
- *
- * @example
- * ```typescript
- * // From a form input handler
- * const newGeometry = circle(center, radius, { units: 'kilometers' }).geometry;
- * updateFeature(mapId, { ...currentFeature, geometry: newGeometry });
- * ```
- */
-/**
  * Resolve the radius units from a circular shape (Circle or WagonWheel).
  * Returns `undefined` for non-circular shapes.
  */
@@ -425,6 +409,25 @@ function recomputeCircleProperties(
   return undefined;
 }
 
+/**
+ * Update the feature currently being edited.
+ *
+ * Called internally by the layer during drag operations, and also available
+ * to consumers via the `useEditShape` hook for form-driven updates.
+ * For circular shapes (Circle, WagonWheel), automatically recomputes
+ * `circleProperties` from the updated geometry.
+ *
+ * @param mapId - The map instance ID.
+ * @param feature - The updated GeoJSON feature from the editable layer to store as the live editing state.
+ * @param editType - The edit type string from the editable layer (e.g. 'scaled', 'rotated', 'translated'). Completion types are stored in `lastCompletedEditType`; continuous types clear it.
+ *
+ * @example
+ * ```typescript
+ * // From a form input handler
+ * const newGeometry = circle(center, radius, { units: 'kilometers' }).geometry;
+ * updateFeature(mapId, { ...currentFeature, geometry: newGeometry });
+ * ```
+ */
 export function updateFeature(
   mapId: UniqueId,
   feature: Feature,

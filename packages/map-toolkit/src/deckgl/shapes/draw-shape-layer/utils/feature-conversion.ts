@@ -191,6 +191,7 @@ function computeEllipseProperties(
  * @param feature - The raw GeoJSON feature from the editable layer
  * @param shape - The type of shape being created
  * @param styleDefaults - Optional style property overrides (colors, line width, etc.)
+ * @param distanceUnit - Optional distance unit symbol (e.g. 'km', 'mi') for computing circle radius. When provided, the circle's radius is measured in this unit instead of the default.
  * @returns A complete Shape object ready for use in DisplayShapeLayer
  *
  * @example Basic usage with polygon
