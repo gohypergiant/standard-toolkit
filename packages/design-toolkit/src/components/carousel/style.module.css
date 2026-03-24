@@ -33,7 +33,7 @@
   }
 
   .thumbnail-gallery-item {
-    @apply gap-x-s flex h-[38px] w-[60px] min-w-[60px] flex-row py-0;
+    @apply gap-x-s flex h-[38px] w-[60px] max-w-[60px] min-w-[60px] flex-row py-0;
   }
 
   .selected {

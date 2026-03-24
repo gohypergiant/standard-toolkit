@@ -30,11 +30,8 @@ export function CarouselGallery({ classNames, ...rest }: CarouselGalleryProps) {
       return;
     }
 
-    // TODO: Is this anything.
     const rect = containerRef.current?.children?.[0]?.getBoundingClientRect();
     const { width } = rect || { width: 0 };
-
-    console.log(currentPosition);
 
     if (
       currentPosition > 2 &&

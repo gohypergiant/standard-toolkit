@@ -12,7 +12,7 @@
 
 'use client';
 import 'client-only';
-import { useContext, useEffect, useState } from 'react';
+import { Suspense, useContext, useEffect, useState } from 'react';
 import { clsx } from 'react-querybuilder';
 import { CarouselContext } from './context';
 import styles from './style.module.css';
@@ -34,13 +34,19 @@ export function CarouselViewer({
   }, [currentPosition, items, currentItem]);
 
   return (
-    <div className={clsx(styles.viewer, classNames?.container)} {...rest}>
-      <img
-        src={currentItem?.dataUrl}
-        alt={currentItem?.title}
-        className={classNames?.image}
-      />
-      {children}
-    </div>
+    <Suspense fallback={<ImageFallback />}>
+      <div className={clsx(styles.viewer, classNames?.container)} {...rest}>
+        <img
+          src={currentItem?.dataUrl}
+          alt={currentItem?.title}
+          className={classNames?.image}
+        />
+        {children}
+      </div>
+    </Suspense>
   );
+}
+
+export function ImageFallback() {
+  return <div>Loading...</div>;
 }
