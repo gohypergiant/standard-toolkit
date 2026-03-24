@@ -173,54 +173,20 @@ export const Animation: Story = {
           <div className='fg-primary-muted flex flex-col gap-m text-body-s'>
             <p>
               In mission-critical environments, users operate under time
-              pressure, cognitive load, and high consequence for mistakes.
+              pressure and cognitive load, with high consequence for mistakes.
               Interfaces must communicate system state, interactivity, and
               changes clearly and immediately.
             </p>
             <p>
-              Motion (animation and transitions) is not included in the design
-              system for aesthetic purposes. Instead, it serves as a{' '}
-              <strong>functional communication layer</strong> that helps users:
+              Animations and transitions are included in the design system not
+              just for aesthetic purposes, but Instead serves as a functional
+              communication layer that helps operators understand what is
+              interactive, where changes are occurring, and how the system is
+              responding to their actions. Thoughtful motion design reduces
+              cognitive load and supports efficient, confident operation. The
+              design system provides purposeful, minimal motion patterns that
+              support operational clarity while avoiding distraction.
             </p>
-            <ul className='ml-l flex list-disc flex-col gap-xs'>
-              <li>Understand what just happened</li>
-              <li>Understand what is interactive</li>
-              <li>Maintain spatial and workflow orientation</li>
-              <li>Interpret system status and feedback</li>
-            </ul>
-            <p>
-              Without motion, interfaces often rely on abrupt visual changes
-              that can be ambiguous, easy to miss, or cognitively expensive to
-              interpret. The design system therefore provides purposeful,
-              minimal motion patterns that support operational clarity while
-              avoiding distraction.
-            </p>
-          </div>
-        </div>
-
-        {/* Core Principles */}
-        <div className='flex flex-col gap-m'>
-          <h2 className='fg-primary-bold text-header-l'>
-            Motion Design Principles
-          </h2>
-          <div className='fg-primary-muted text-body-s'>
-            <p className='mb-m'>
-              The design system follows four core motion principles:
-            </p>
-            <ol className='ml-l flex list-decimal flex-col gap-xs'>
-              <li>
-                <strong>Motion Explains Change</strong>
-              </li>
-              <li>
-                <strong>Motion Preserves Context</strong>
-              </li>
-              <li>
-                <strong>Motion Respects the User's Tempo</strong>
-              </li>
-              <li>
-                <strong>Motion Is Functional, Not Decorative</strong>
-              </li>
-            </ol>
           </div>
         </div>
 
@@ -236,18 +202,9 @@ export const Animation: Story = {
                 Operational software frequently updates in response to user
                 actions or system events. Without motion, these changes can
                 appear sudden or disconnected from the user's action. Motion
-                provides causal feedback.
-              </p>
-              <ul className='ml-l flex list-disc flex-col gap-xs'>
-                <li>Opening a panel expands from the trigger location</li>
-                <li>
-                  System updates transition rather than abruptly replacing
-                  information
-                </li>
-              </ul>
-              <p className='mt-xs'>
-                Users can clearly connect action → result, reducing uncertainty
-                and repeated interactions.
+                provides causal feedback. The goal of motion is to clearly
+                connect operator action to result, reducing uncertainty and
+                repeated interactions.
               </p>
             </div>
 
@@ -257,39 +214,22 @@ export const Animation: Story = {
               </h3>
               <p className='mb-xs'>
                 In high-stakes workflows, users need immediate confirmation that
-                their action was registered. Motion provides micro-feedback such
-                as:
+                their action was registered. Motion provides key micro-feedback.
+                Without this feedback, users may click multiple times, question
+                whether the system responded, and even lose confidence in system
+                responsiveness
               </p>
-              <ul className='ml-l flex list-disc flex-col gap-xs'>
-                <li>Button press response</li>
-                <li>Selection transitions</li>
-                <li>Drag interactions</li>
-                {/* cspell:ignore affordances */}
-                <li>Hover affordances</li>
-              </ul>
-              <p className='mt-xs'>Without this feedback, users may:</p>
-              <ul className='ml-l flex list-disc flex-col gap-xs'>
-                <li>Click multiple times</li>
-                <li>Question whether the system responded</li>
-                <li>Lose confidence in system responsiveness</li>
-              </ul>
             </div>
 
             <div>
               <h3 className='fg-primary-bold mb-xs text-body-m'>
-                Preserving Spatial Orientation
+                Preserving Orientation
               </h3>
-              <p className='mb-xs'>Many operational interfaces contain:</p>
-              <ul className='ml-l flex list-disc flex-col gap-xs'>
-                <li>Layered information</li>
-                <li>Map views</li>
-                <li>Panels and overlays</li>
-                <li>Filters and toggles</li>
-                <li>Progressive disclosure</li>
-              </ul>
-              <p className='mt-xs'>
-                When content appears or disappears instantly, users must
-                mentally reconstruct where information came from or went. Motion
+              <p className='mb-xs'>
+                Many operational interfaces contain, layered information,
+                panels, overlays, and progressively disclosed elements. When
+                content appears or disappears instantly, users must mentally
+                reconstruct where information came from or went. Motion
                 preserves spatial continuity by showing where content
                 originated, where it moved, and how it relates to the
                 surrounding interface.
@@ -303,28 +243,8 @@ export const Animation: Story = {
               <p className='mb-xs'>
                 Operational systems often present dense information
                 environments. Motion can be used sparingly to guide attention to
-                meaningful changes:
-              </p>
-              <ul className='ml-l flex list-disc flex-col gap-xs'>
-                <li>Emphasizing an alert state transition</li>
-                <li>Indicating that filtered results have updated</li>
-              </ul>
-              <p className='mt-xs'>
-                Motion is used to draw attention only to meaningful events, not
-                decorative effects.
-              </p>
-            </div>
-
-            <div>
-              <h3 className='fg-primary-bold mb-xs text-body-m'>
-                Reducing Cognitive Load
-              </h3>
-              <p>
-                Instant changes require users to infer what changed. Motion
-                externalizes that change. Instead of the user asking "What
-                changed?" motion answers: "This element moved here; this layer
-                appeared; this panel expanded." The result is less cognitive
-                effort interpreting the interface.
+                meaningful changes. Motion is used to draw attention only to
+                meaningful events, not decorative effects.
               </p>
             </div>
           </div>
@@ -334,8 +254,7 @@ export const Animation: Story = {
         <div className='flex flex-col gap-m'>
           <h2 className='fg-primary-bold text-header-l'>Duration</h2>
           <p className='fg-primary-muted text-body-s'>
-            Animations must complete quickly so they do not slow workflows.
-            These durations balance clarity with speed.
+            Here are the available animation tokens.
           </p>
           <div className='flex flex-col gap-xl'>
             {durations.map((duration) => (
@@ -398,26 +317,20 @@ export const Animation: Story = {
               <h3 className='fg-primary-bold mb-xs text-body-m'>
                 Interruptible
               </h3>
-              <p className='mb-xs'>Users must always be able to:</p>
-              <ul className='ml-l flex list-disc flex-col gap-xs'>
-                <li>Issue another command</li>
-                <li>Change context</li>
-                <li>Cancel actions</li>
-              </ul>
-              <p className='mt-xs'>Motion should never block interaction.</p>
+              <p className='mb-xs'>
+                Users must always be able to issue another command, change
+                contexts, or cancel an action. Motion should never block
+                interaction.
+              </p>
             </div>
             <div>
               <h3 className='fg-primary-bold mb-xs text-body-m'>
                 Reduced When Needed
               </h3>
-              <p className='mb-xs'>Operational contexts may include:</p>
-              <ul className='ml-l flex list-disc flex-col gap-xs'>
-                <li>Fatigue</li>
-                <li>Motion sensitivity</li>
-                <li>High-stress environments</li>
-              </ul>
-              <p className='mt-xs'>
-                The system supports reduced motion modes where appropriate. Use{' '}
+              <p className='mb-xs'>
+                Operational contexts may include fatigue, motion sensitivity,
+                and high-stress environments, or high stress. The system
+                supports reduced motion modes where appropriate. Use{' '}
                 <code className='font-display'>prefers-reduced-motion</code> to
                 respect user preferences.
               </p>
@@ -434,61 +347,13 @@ export const Animation: Story = {
             <p className='mb-m'>
               To maintain operational clarity, the design system explicitly
               avoids:
-            </p>
-          </div>
-          <div className='fg-primary-muted flex flex-col gap-m text-body-s'>
-            <div>
-              <h3 className='fg-primary-bold mb-xs text-body-m'>
-                Decorative Animation
-              </h3>
-              <p>
-                Animations that exist only for visual appeal add no functional
-                value and can distract from critical information.
-              </p>
-            </div>
-            <div>
-              <h3 className='fg-primary-bold mb-xs text-body-m'>
-                Attention-Grabbing Effects
-              </h3>
-              <p className='mb-xs'>Examples to avoid:</p>
               <ul className='ml-l flex list-disc flex-col gap-xs'>
                 <li>Bounces</li>
                 <li>Elastic effects</li>
                 <li>Dramatic easing</li>
                 <li>Exaggerated motion</li>
+                <li>Slow cinematic transitions</li>
               </ul>
-              <p className='mt-xs'>
-                These can distract from critical information in operational
-                interfaces.
-              </p>
-            </div>
-            <div>
-              <h3 className='fg-primary-bold mb-xs text-body-m'>
-                Slow Cinematic Transitions
-              </h3>
-              <p>
-                Operational tools prioritize speed and clarity over visual
-                storytelling. Keep animations brief and functional.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Usage Guidelines */}
-        <div className='flex flex-col gap-m'>
-          <h2 className='fg-primary-bold text-header-l'>Where to Use Motion</h2>
-          <div className='fg-primary-muted flex flex-col gap-s text-body-s'>
-            <p>
-              <strong>Interaction Feedback:</strong>
-            </p>
-            <p>
-              <strong>Layout Changes:</strong>
-            </p>
-            <p>
-              <strong>Data Updates:</strong>
-            </p>
-            <p>
-              <strong>Status and Alerts:</strong>
             </p>
           </div>
         </div>
