@@ -116,7 +116,9 @@ const DurationDemo = ({ duration }: { duration: AnimationDurationInfo }) => {
       <div className='fg-primary-bold flex flex-col gap-xs font-display text-body-xs'>
         <span className='inline-flex gap-s'>
           {duration.name}
-          <span className='fg-disabled text-body-xxs'>({computedValue})</span>
+          <span className='fg-primary-muted text-body-xxs'>
+            ({computedValue})
+          </span>
         </span>
         <span className='fg-primary-muted max-w-400 font-sans text-body-xs'>
           {duration.useCase}
@@ -154,7 +156,7 @@ const EasingDemo = ({ easing }: { easing: AnimationEasingInfo }) => {
       </div>
       <div className='fg-primary-bold flex flex-col gap-xs font-display text-body-xs'>
         <span>{easing.name}</span>
-        <span className='fg-disabled text-body-xxs'>{easing.curve}</span>
+        <span className='fg-primary-muted text-body-xxs'>{easing.curve}</span>
         <span className='fg-primary-muted max-w-400 font-sans text-body-xs'>
           {easing.useCase}
         </span>
@@ -179,7 +181,7 @@ export const Animation: Story = {
             </p>
             <p>
               Animations and transitions are included in the design system not
-              just for aesthetic purposes, but Instead serves as a functional
+              just for aesthetic purposes, but Instead serve as a functional
               communication layer that helps operators understand what is
               interactive, where changes are occurring, and how the system is
               responding to their actions. Thoughtful motion design reduces
@@ -226,13 +228,12 @@ export const Animation: Story = {
                 Preserving Orientation
               </h3>
               <p className='mb-xs'>
-                Many operational interfaces contain, layered information,
-                panels, overlays, and progressively disclosed elements. When
-                content appears or disappears instantly, users must mentally
-                reconstruct where information came from or went. Motion
-                preserves spatial continuity by showing where content
-                originated, where it moved, and how it relates to the
-                surrounding interface.
+                Many operational interfaces contain layered information, panels,
+                overlays, and progressively disclosed elements. When content
+                appears or disappears instantly, users must mentally reconstruct
+                where information came from or went. Motion preserves spatial
+                continuity by showing where content originated, where it moved,
+                and how it relates to the surrounding interface.
               </p>
             </div>
 
