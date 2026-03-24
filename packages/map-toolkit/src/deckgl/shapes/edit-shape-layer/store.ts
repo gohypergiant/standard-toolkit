@@ -147,13 +147,34 @@ function startEditing(
     return;
   }
 
-  // Already editing - cancel first
+  // Determine edit mode (can be overridden via options)
+  const editMode = options?.mode ?? getEditModeForShape(shape);
+
+  // When re-entering edit mode for the same shape (e.g. form commit updating
+  // geometry, or Point→MultiPolygon mode transition during creation), update
+  // state in-place without cancel/restart. This avoids a race condition where
+  // releaseModeAndCursor from cancel fires after requestModeChange.
+  if (state.editingShape?.id === shape.id) {
+    const modeChanged = state.editMode !== editMode;
+    setState({
+      editingShape: shape,
+      editMode,
+      featureBeingEdited: shape.feature,
+    });
+    // Only request new mode/cursor if the edit mode actually changed
+    if (modeChanged) {
+      requestModeChange(mapId, EDIT_SHAPE_MODE, EDIT_SHAPE_LAYER_ID);
+      const cursor = EDIT_CURSOR_MAP[editMode];
+      requestCursorChange(mapId, cursor, EDIT_SHAPE_LAYER_ID);
+    }
+    notify();
+    return;
+  }
+
+  // Different shape — cancel current edit first
   if (state.editingShape) {
     cancelEditingInternal(mapId, state, notify, setState);
   }
-
-  // Determine edit mode (can be overridden via options)
-  const editMode = options?.mode ?? getEditModeForShape(shape);
 
   // Update state with new object reference
   setState({
