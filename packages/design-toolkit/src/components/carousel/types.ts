@@ -16,15 +16,14 @@ import type { OptionsDataItem, OptionsItemProps } from '../options/types';
 import type { SelectFieldProps } from '../select-field/types';
 
 export type CarouselProps = PropsWithChildren & {
-  // image/video/audio data to populate the carousel component.
   items: CarouselData[];
-  // custom classNames for the component
   classNames?: {
     container?: string;
   };
   currentPosition: number;
   setCurrentPosition: (index: number) => void;
 };
+
 export type CarouselData = {
   dataType: 'image' | 'video' | 'audio';
   dataUrl: string;

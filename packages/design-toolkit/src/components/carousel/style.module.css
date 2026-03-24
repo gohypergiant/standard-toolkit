@@ -28,10 +28,6 @@
     @apply gap-x-s flex w-full flex-row overflow-x-hidden py-1;
   }
 
-  .thumbnail-gallery-item {
-    @apply gap-x-s flex flex-row;
-  }
-
   .selected {
     @apply outline-accent-primary-bold fg-a11y-on-utility outline-2;
   }
