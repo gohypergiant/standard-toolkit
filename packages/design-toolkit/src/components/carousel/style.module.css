@@ -17,7 +17,11 @@
     @apply gap-s flex flex-col;
   }
   .viewer {
-    @apply flex h-full min-h-[400px] w-full items-center justify-center;
+    @apply p-s flex w-full items-center justify-center;
+  }
+
+  .viewer > img {
+    @apply w-full;
   }
 
   .controls {
