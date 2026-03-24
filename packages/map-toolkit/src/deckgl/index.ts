@@ -39,6 +39,9 @@ export {
   ShapeFeatureType,
 } from './shapes';
 export { SymbolLayer, type SymbolLayerProps } from './symbol-layer';
+export { HtmlOverlayWidget } from './widgets/html-overlay';
+export { HtmlOverlayItem } from './widgets/html-overlay/item';
+export { useHtmlOverlay } from './widgets/html-overlay/use-html-overlay';
 export type {
   BaseMapProps,
   MapClickEvent,
@@ -77,3 +80,4 @@ export type {
   StyledFeatureProperties,
   StyleProperties,
 } from './shapes';
+export type { HtmlOverlayItemProps } from './widgets/html-overlay/item';
