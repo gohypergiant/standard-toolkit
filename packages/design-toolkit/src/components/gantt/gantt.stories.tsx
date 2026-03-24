@@ -13,13 +13,14 @@
 import Placeholder from '@accelint/icons/placeholder';
 import { useMemo } from 'react';
 import { Icon } from '../icon';
-import { Gantt } from './';
+import { GanttProvider } from './';
 import {
   CURRENT_TIME_MS,
   DATASET_JAN25_TO_JAN28,
   DATASET_JAN27_TO_JAN30,
   DATASET_JAN29_TO_FEB1,
 } from './__fixtures__';
+import { GanttContentContainer } from './components/containers/external/gantt-content-container';
 import { GanttRow } from './components/gantt-row';
 import { BracketClose, BracketOpen } from './components/gantt-row/bracket';
 import { GanttRowBlock } from './components/gantt-row/gantt-row-block';
@@ -27,7 +28,6 @@ import { IconMarker } from './components/gantt-row/icon-marker';
 import { Marker } from './components/gantt-row/marker';
 import { Spacer } from './components/gantt-row/spacer';
 import { TIMESCALE_OPTIONS } from './constants';
-import { GanttProvider } from './context';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { Timescale } from './types';
 
@@ -86,10 +86,12 @@ const meta = {
         <GanttProvider
           startTimeMs={dataset.startTimeMs}
           endTimeMs={dataset.endTimeMs}
+          currentTimeMs={args.currentTimeMs}
           timescale={args.timescale}
           thresholdProps={thresholdProps}
         >
-          <Gantt currentTimeMs={args.currentTimeMs}>
+          {/** TODO: <GanttPanelContainer></GanttPanelContainer> */}
+          <GanttContentContainer>
             {dataset.rows.map(({ id, elements }) => (
               <GanttRow key={id}>
                 {elements.map((element, index) => {
@@ -172,7 +174,7 @@ const meta = {
                 })}
               </GanttRow>
             ))}
-          </Gantt>
+          </GanttContentContainer>
         </GanttProvider>
       </div>
     );

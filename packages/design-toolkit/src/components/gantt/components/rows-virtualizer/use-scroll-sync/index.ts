@@ -17,15 +17,15 @@ import { timestampWithinBounds } from '@/components/gantt/utils/helpers';
 import { deriveHorizontalScrollPosition } from '@/components/gantt/utils/layout';
 
 type UseScrollSyncProps = {
-  scrollContainerElement: HTMLDivElement | null;
+  horizontalScrollElement: HTMLDivElement | null;
 };
 
-export function useScrollSync({ scrollContainerElement }: UseScrollSyncProps) {
+export function useScrollSync({ horizontalScrollElement }: UseScrollSyncProps) {
   const { totalBounds, msPerPx } = useTemporalDataContext();
   const store = useGanttStoreApi();
 
   useEffect(() => {
-    if (!scrollContainerElement) {
+    if (!horizontalScrollElement) {
       return;
     }
 
@@ -35,7 +35,7 @@ export function useScrollSync({ scrollContainerElement }: UseScrollSyncProps) {
     // (like msPerPx which scales the timeline)
     const currentPositionMs = store.getState().currentPositionMs;
     const resetScrollPosition = () =>
-      scrollContainerElement.scrollTo({
+      horizontalScrollElement.scrollTo({
         top: 0,
         left: 0,
       });
@@ -58,8 +58,8 @@ export function useScrollSync({ scrollContainerElement }: UseScrollSyncProps) {
       totalBounds,
     );
 
-    scrollContainerElement.scrollTo({
+    horizontalScrollElement.scrollTo({
       left: scrollPosition,
     });
-  }, [totalBounds, msPerPx, scrollContainerElement, store]);
+  }, [totalBounds, msPerPx, horizontalScrollElement, store]);
 }

@@ -19,6 +19,7 @@ import {
   useMemo,
   useState,
 } from 'react';
+import { RootContainer } from '../components/containers/internal';
 import { GanttStoreProvider } from './store';
 import { TemporalDataProvider } from './temporal-data';
 import type { ThresholdProps, Timescale } from '@/components/gantt/types';
@@ -33,12 +34,10 @@ function refAssignmentFactory(
 
 export type GanttContextValue = {
   timelineContainerElement: HTMLDivElement | null;
-  scrollContainerElement: HTMLDivElement | null;
   headerElement: HTMLDivElement | null;
   rootElement: HTMLDivElement | null;
   ganttContentElement: HTMLDivElement | null;
   assignTimelineContainerElementRef: (node: HTMLDivElement | null) => void;
-  assignScrollContainerElementRef: (node: HTMLDivElement | null) => void;
   assignHeaderElementRef: (node: HTMLDivElement | null) => void;
   assignRootElementRef: (node: HTMLDivElement | null) => void;
   assignGanttContentElementRef: (node: HTMLDivElement | null) => void;
@@ -52,6 +51,7 @@ type GanttProviderProps = {
   startTimeMs: number;
   endTimeMs: number;
   timescale: Timescale;
+  currentTimeMs: number;
   thresholdProps: ThresholdProps;
 };
 
@@ -61,10 +61,9 @@ export function GanttProvider({
   endTimeMs,
   timescale,
   thresholdProps,
+  currentTimeMs,
 }: PropsWithChildren<GanttProviderProps>) {
   const [timelineContainerElement, setTimelineContainerElement] =
-    useState<HTMLDivElement | null>(null);
-  const [scrollContainerElement, setScrollContainerElement] =
     useState<HTMLDivElement | null>(null);
   const [headerElement, setHeaderElement] = useState<HTMLDivElement | null>(
     null,
@@ -86,9 +85,6 @@ export function GanttProvider({
   const assignTimelineContainerElementRef = refAssignmentFactory(
     setTimelineContainerElement,
   );
-  const assignScrollContainerElementRef = refAssignmentFactory(
-    setScrollContainerElement,
-  );
   const assignHeaderElementRef = refAssignmentFactory(setHeaderElement);
   const assignRootElementRef = refAssignmentFactory(setRootElement);
   const assignGanttContentElementRef = refAssignmentFactory(
@@ -98,24 +94,20 @@ export function GanttProvider({
   const value = useMemo(
     () => ({
       assignTimelineContainerElementRef,
-      assignScrollContainerElementRef,
       assignHeaderElementRef,
       assignRootElementRef,
       assignGanttContentElementRef,
       timelineContainerElement,
-      scrollContainerElement,
       headerElement,
       rootElement,
       ganttContentElement,
     }),
     [
       assignTimelineContainerElementRef,
-      assignScrollContainerElementRef,
       assignHeaderElementRef,
       assignRootElementRef,
       assignGanttContentElementRef,
       timelineContainerElement,
-      scrollContainerElement,
       headerElement,
       rootElement,
       ganttContentElement,
@@ -129,9 +121,10 @@ export function GanttProvider({
           timescale={timescale}
           totalBounds={totalBounds}
           threshold={thresholdProps?.threshold}
+          currentTimeMs={currentTimeMs}
           onThresholdMet={thresholdProps?.onThresholdMet}
         >
-          {children}
+          <RootContainer>{children}</RootContainer>
         </TemporalDataProvider>
       </GanttStoreProvider>
     </GanttContext.Provider>

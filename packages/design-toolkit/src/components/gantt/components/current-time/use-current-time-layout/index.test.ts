@@ -42,8 +42,14 @@ vi.mock('@/components/gantt/store', () => ({
   },
 }));
 
-import { GANTT_HEADER_HEIGHT_PX } from '@/components/gantt/constants';
-import { useGanttContext } from '@/components/gantt/context';
+import {
+  GANTT_CONTAINER_TOP_PX,
+  GANTT_HEADER_HEIGHT_PX,
+} from '@/components/gantt/constants';
+import {
+  type GanttContextValue,
+  useGanttContext,
+} from '@/components/gantt/context';
 import { useTemporalDataContext } from '@/components/gantt/context/temporal-data';
 import { useLayoutSubscription } from '@/components/gantt/hooks/use-layout-subscription';
 import { deriveCurrentTimeTranslateX } from '@/components/gantt/utils/layout';
@@ -54,13 +60,14 @@ describe('useCurrentTimeLayout', () => {
   const mockCurrentTimeMs = 1500;
   const mockUpdatedPositionMs = 1200;
 
-  const mockScrollContainerElement = {
+  const mockRootElement = {
     clientWidth: 800,
     clientHeight: 600,
   } as HTMLDivElement;
 
-  const mockTimelineContainerElement = {
-    clientHeight: 50,
+  const mockGanttContentElement = {
+    clientWidth: 800,
+    clientHeight: 600,
   } as HTMLDivElement;
 
   const mockHeaderElement = {
@@ -68,13 +75,10 @@ describe('useCurrentTimeLayout', () => {
   } as HTMLDivElement;
 
   const mockGanttContextValue = {
-    scrollContainerElement: mockScrollContainerElement,
-    timelineContainerElement: mockTimelineContainerElement,
+    rootElement: mockRootElement,
+    ganttContentElement: mockGanttContentElement,
     headerElement: mockHeaderElement,
-    assignTimelineContainerElementRef: vi.fn(),
-    assignScrollContainerElementRef: vi.fn(),
-    assignHeaderElementRef: vi.fn(),
-  };
+  } as unknown as GanttContextValue;
 
   const mockTemporalDataContextValue = {
     msPerPx: 10,
@@ -82,6 +86,7 @@ describe('useCurrentTimeLayout', () => {
     timescale: '1h' as const,
     totalBounds: { startMs: 0, endMs: 5000 },
     timelineChunks: [],
+    currentTimeMs: mockCurrentTimeMs,
   };
 
   beforeEach(() => {
@@ -106,6 +111,22 @@ describe('useCurrentTimeLayout', () => {
 
   afterAll(() => {
     vi.restoreAllMocks();
+  });
+
+  it('returns labelElementRef', () => {
+    const currentTimeElement = document.createElement('div');
+    const indicatorElement = document.createElement('div');
+
+    const { result } = renderHook(() =>
+      useCurrentTimeLayout({
+        currentTimeElement,
+        currentTimeMs: mockCurrentTimeMs,
+        indicatorElement,
+      }),
+    );
+
+    expect(result.current.labelElementRef).toBeDefined();
+    expect(result.current.labelElementRef.current).toBeNull();
   });
 
   it('updates element translateX style when subscription callback runs', () => {
@@ -143,13 +164,12 @@ describe('useCurrentTimeLayout', () => {
     ).not.toThrow();
   });
 
-  it('adjusts indicator height when translateX exceeds scroll container width', () => {
+  it('sets indicator height to full height when translateX is within scroll container width', () => {
     const currentTimeElement = document.createElement('div');
     const indicatorElement = document.createElement('div');
 
-    vi.mocked(deriveCurrentTimeTranslateX).mockReturnValue(
-      mockScrollContainerElement.clientWidth + 50,
-    );
+    const translateX = 400;
+    vi.mocked(deriveCurrentTimeTranslateX).mockReturnValue(translateX);
 
     renderHook(() =>
       useCurrentTimeLayout({
@@ -161,7 +181,37 @@ describe('useCurrentTimeLayout', () => {
 
     capturedCallbackHarness.callback?.(mockUpdatedPositionMs);
 
-    expect(indicatorElement.style.height).toBeTruthy();
+    const expectedIndicatorHeightOffset =
+      GANTT_HEADER_HEIGHT_PX - GANTT_CONTAINER_TOP_PX;
+    const expectedTotalHeight =
+      mockRootElement.clientHeight + expectedIndicatorHeightOffset;
+
+    expect(indicatorElement.style.height).toBe(`${expectedTotalHeight}px`);
+  });
+
+  it('sets indicator height to offset height when translateX exceeds scroll container width', () => {
+    const currentTimeElement = document.createElement('div');
+    const indicatorElement = document.createElement('div');
+
+    const translateX = mockGanttContentElement.clientWidth + 50;
+    vi.mocked(deriveCurrentTimeTranslateX).mockReturnValue(translateX);
+
+    renderHook(() =>
+      useCurrentTimeLayout({
+        currentTimeElement,
+        currentTimeMs: mockCurrentTimeMs,
+        indicatorElement,
+      }),
+    );
+
+    capturedCallbackHarness.callback?.(mockUpdatedPositionMs);
+
+    const expectedIndicatorHeightOffset =
+      GANTT_HEADER_HEIGHT_PX - GANTT_CONTAINER_TOP_PX;
+
+    expect(indicatorElement.style.height).toBe(
+      `${expectedIndicatorHeightOffset}px`,
+    );
   });
 
   it('handles null indicatorElement gracefully', () => {

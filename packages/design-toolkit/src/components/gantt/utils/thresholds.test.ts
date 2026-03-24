@@ -298,14 +298,14 @@ describe('shouldExamineThresholds', () => {
     timescaleMultipleDistance: 2,
     rowIndexBoundaryDistance: 1,
   };
-  const scrollContainerElement = {
+  const verticalScrollElement = {
     clientHeight: 500,
   };
 
   it('should return true when all parameters are valid', () => {
     const result = shouldExamineThresholds(
       10,
-      scrollContainerElement,
+      verticalScrollElement,
       validThreshold,
     );
     expect(result).toBe(true);
@@ -314,7 +314,7 @@ describe('shouldExamineThresholds', () => {
   it('should return false when threshold is undefined', () => {
     const result = shouldExamineThresholds(
       10,
-      scrollContainerElement,
+      verticalScrollElement,
       undefined,
     );
     expect(result).toBe(false);
@@ -323,18 +323,18 @@ describe('shouldExamineThresholds', () => {
   it('should return false when totalRowsCount is 0', () => {
     const result = shouldExamineThresholds(
       0,
-      scrollContainerElement,
+      verticalScrollElement,
       validThreshold,
     );
     expect(result).toBe(false);
   });
 
-  it('should return false when scrollContainerElement is null', () => {
+  it('should return false when verticalScrollElement is null', () => {
     const result = shouldExamineThresholds(10, null, validThreshold);
     expect(result).toBe(false);
   });
 
-  it('should return false when scrollContainerElement.clientHeight is 0', () => {
+  it('should return false when verticalScrollElement.clientHeight is 0', () => {
     const element = { clientHeight: 0 };
     const result = shouldExamineThresholds(10, element, validThreshold);
     expect(result).toBe(false);
@@ -347,7 +347,7 @@ describe('shouldExamineThresholds', () => {
     };
     const result = shouldExamineThresholds(
       10,
-      scrollContainerElement,
+      verticalScrollElement,
       negativeThreshold,
     );
     expect(result).toBe(false);
@@ -358,7 +358,7 @@ describe('shouldExamineThresholds', () => {
     };
     const result2 = shouldExamineThresholds(
       10,
-      scrollContainerElement,
+      verticalScrollElement,
       negativeThreshold2,
     );
     expect(result2).toBe(false);

@@ -31,12 +31,13 @@ type UseCurrentTimeLayoutValue = {
 function calculateIndicatorHeight(
   headerElement: HTMLDivElement | null,
   labelElement: HTMLDivElement | null,
-  scrollContainerElement: HTMLDivElement | null,
+  verticalScrollElement: HTMLDivElement | null,
+  horizontalScrollElement: HTMLDivElement | null,
   translateX = 0,
 ) {
   const ganttHeaderHeight = headerElement?.clientHeight ?? 0;
-  const scrollWidth = scrollContainerElement?.clientWidth ?? 0;
-  const scrollHeight = scrollContainerElement?.clientHeight ?? 0;
+  const scrollWidth = horizontalScrollElement?.clientWidth ?? 0;
+  const scrollHeight = verticalScrollElement?.clientHeight ?? 0;
   const labelHeight = labelElement?.offsetHeight ?? 0;
 
   // Distance between vertical scrollbar and bottom of label element.
@@ -60,7 +61,7 @@ export function useCurrentTimeLayout({
   currentTimeMs,
   indicatorElement,
 }: UseCurrentTimeLayoutProps): UseCurrentTimeLayoutValue {
-  const { scrollContainerElement, headerElement } = useGanttContext();
+  const { rootElement, ganttContentElement, headerElement } = useGanttContext();
   const { msPerPx } = useTemporalDataContext();
 
   const labelElementRef = useRef<HTMLDivElement>(null);
@@ -79,7 +80,8 @@ export function useCurrentTimeLayout({
       const indicatorHeight = calculateIndicatorHeight(
         headerElement,
         labelElementRef.current,
-        scrollContainerElement,
+        rootElement,
+        ganttContentElement,
         translateX,
       );
 
@@ -95,7 +97,8 @@ export function useCurrentTimeLayout({
       currentTimeMs,
       indicatorElement,
       headerElement,
-      scrollContainerElement,
+      rootElement,
+      ganttContentElement,
     ],
   );
 

@@ -50,7 +50,7 @@ type Threshold = {
 
 type UseTotalDataRegionThresholdsProps = {
   totalRowsCount: number;
-  scrollContainerElement: HTMLDivElement | null;
+  verticalScrollElement: HTMLDivElement | null;
 };
 
 ```
@@ -90,7 +90,7 @@ type UseTotalDataRegionThresholdsProps = {
         meant to be used within the context of the array `slice` method, hence the
         name).
       - Use the subscribed `roundedCurrentRowScrollPx` value and the
-        `scrollContainerElement` prop as the function's input arguments.
+        `verticalScrollElement` prop as the function's input arguments.
     - `renderedRegionBounds` - Value accessed via `useGanttContext` hook.
       - This will be used to calculate the `startMs` and `endMs` of `RenderedRegion`.
     - This derivation should be captured in a separate/dedicated utility function.
@@ -154,7 +154,7 @@ type UseTotalDataRegionThresholdsProps = {
   - If the `threshold` and `onThresholdMet` props are not specified in context
     (mapped from the top-level `ThresholdProps` prop specified on the Gantt
     component), the hook should not perform any threshold examination logic.
-- If either the `totalRowsCount` prop is 0, or `scrollContainerElement.clientHeight` is 0,
+- If either the `totalRowsCount` prop is 0, or `verticalScrollElement.clientHeight` is 0,
   the hook should not run any of its threshold examination logic.
 - If the provided threshold values are negative, the hook should not run any of
   its threshold examination logic.
@@ -180,7 +180,7 @@ type UseTotalDataRegionThresholdsProps = {
 - The hook itself should have complete test coverage which tests the following behaviors:
   - When `threshold` or `onThresholdMet` is not specified, `onThresholdMet` is never called
   - When conditions for threshold examination aren't met (e.g., `totalRowsCount` is 0,
-    `scrollContainerElement` is null, threshold values are invalid), `onThresholdMet` is never called
+    `verticalScrollElement` is null, threshold values are invalid), `onThresholdMet` is never called
   - When thresholds are met, `onThresholdMet` is called with the correct `MetThresholdData` objects
   - When no thresholds are met, `onThresholdMet` is not called
   - The hook correctly responds to dependency changes (re-running effect)

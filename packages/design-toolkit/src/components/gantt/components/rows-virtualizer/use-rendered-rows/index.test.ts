@@ -11,33 +11,13 @@
  */
 
 import { act, renderHook } from '@testing-library/react';
-import React, { type UIEvent } from 'react';
-import { describe, expect, it, vi } from 'vitest';
+import React from 'react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createGanttStoreProvider } from '@/components/gantt/__fixtures__/store-provider';
 import { GANTT_ROW_HEIGHT_PX } from '@/components/gantt/constants';
 import { useGanttStoreApi } from '@/components/gantt/context/store';
 import { deriveRenderedSlice } from '@/components/gantt/utils/layout';
 import { useRenderedRows } from './';
-
-const mocks = vi.hoisted(() => {
-  return {
-    msPerPx: 2,
-  };
-});
-
-vi.mock('@/components/gantt/context/temporal-data', () => {
-  const mock = {
-    totalBounds: { startMs: 0, endMs: 1000 },
-    msPerPx: mocks.msPerPx,
-    timescale: '1h',
-    renderedRegionBounds: { startMs: 0, endMs: 1000 },
-    timelineChunks: [],
-  } as const;
-
-  return {
-    useTemporalDataContext: () => mock,
-  };
-});
 
 describe('useRenderedRows', () => {
   const children = Array.from(Array(10).keys()).map((i) =>
@@ -45,112 +25,86 @@ describe('useRenderedRows', () => {
   );
 
   const wrapper = createGanttStoreProvider({ startTimeMs: 0 });
-  const horizontalScrolledPixels = 50;
-  const verticalScrolledPixels = 100;
-  const fakeEvent = {
-    currentTarget: {
-      scrollLeft: horizontalScrolledPixels,
-      scrollTop: verticalScrolledPixels,
-    },
-  } as unknown as UIEvent<HTMLDivElement>;
-  const totalBounds = { startMs: 0, endMs: 1000 };
+  const heightPx = 400;
 
-  it('computes dimensions from context and children count', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('returns total height based on children count', () => {
     const { result } = renderHook(
-      () => useRenderedRows({ children, scrollContainerElement: null }),
+      () => useRenderedRows({ children, heightPx }),
       { wrapper },
     );
 
     const expectedHeight = children.length * GANTT_ROW_HEIGHT_PX;
-    const expectedWidth =
-      (totalBounds.endMs - totalBounds.startMs) / mocks.msPerPx;
-
-    expect(result.current.dimensions.height).toBe(expectedHeight);
-    expect(result.current.dimensions.width).toBe(expectedWidth);
+    expect(result.current.height).toBe(expectedHeight);
   });
 
-  it('updates store with position and row scroll px when onScroll is called', () => {
-    const { result } = renderHook(
+  it('renders slice of rows based on scroll position in store', () => {
+    const { result, rerender } = renderHook(
       () => {
-        const hookResult = useRenderedRows({
-          children,
-          scrollContainerElement: null,
-        });
         const store = useGanttStoreApi();
-        return { hook: hookResult, store };
+        const hook = useRenderedRows({ children, heightPx });
+        return { hook, store };
       },
       { wrapper },
     );
 
+    // Set scroll position in store
+    const scrollPx = GANTT_ROW_HEIGHT_PX * 2; // 80px
     act(() => {
-      result.current.hook.onScroll(fakeEvent);
+      result.current.store.setState({ currentRowScrollPx: scrollPx });
     });
+    rerender();
 
-    const state = result.current.store?.getState();
-    expect(state?.currentPositionMs).toBe(
-      totalBounds.startMs + horizontalScrolledPixels * mocks.msPerPx,
+    // Should render a subset of rows, not all children
+    expect(result.current.hook.renderedRows?.length).toBeLessThan(
+      children.length,
     );
-    expect(state?.currentRowScrollPx).toBe(verticalScrolledPixels);
+    expect(result.current.hook.renderedRows?.length).toBeGreaterThan(0);
   });
 
-  it('should apply correct translateY to rendered rows based on vertical scroll', () => {
-    const { result } = renderHook(
-      () => useRenderedRows({ children, scrollContainerElement: null }),
+  it('applies correct translateY to rendered rows based on slice start', () => {
+    const { result, rerender } = renderHook(
+      () => {
+        const store = useGanttStoreApi();
+        const hook = useRenderedRows({ children, heightPx });
+        return { hook, store };
+      },
       { wrapper },
     );
 
+    // Set scroll to render rows starting at index 2
+    const scrollPx = GANTT_ROW_HEIGHT_PX * 2; // 80px
     act(() => {
-      result.current.onScroll({
-        ...fakeEvent,
-        currentTarget: {
-          ...fakeEvent.currentTarget,
-          scrollTop: 0,
-        },
-      });
+      result.current.store.setState({ currentRowScrollPx: scrollPx });
     });
+    rerender();
 
-    // The translateY for each row should be based on its index and the row height
-    result.current.renderedRows?.forEach((row, index) => {
+    const { start } = deriveRenderedSlice(scrollPx, heightPx);
+
+    result.current.hook.renderedRows?.forEach((row, index) => {
+      const expectedTranslateY = GANTT_ROW_HEIGHT_PX * (start + index);
       expect(row.props.style?.transform ?? '').toContain(
-        `translateY(${GANTT_ROW_HEIGHT_PX * index}px)`,
+        `translateY(${expectedTranslateY}px)`,
       );
     });
   });
 
-  it('should render with expected values when scrollContainerElement is provided', () => {
-    const elementHeight = 200;
-
-    const fakeElement = {
-      clientHeight: elementHeight,
-    } as unknown as HTMLDivElement;
-
+  it('sets virtualizedHeightPx in store', () => {
     const { result } = renderHook(
-      () => useRenderedRows({ children, scrollContainerElement: fakeElement }),
+      () => {
+        const store = useGanttStoreApi();
+        const hook = useRenderedRows({ children, heightPx });
+        return { hook, store };
+      },
       { wrapper },
     );
 
-    act(() => {
-      result.current.onScroll({
-        currentTarget: {
-          scrollLeft: 0,
-          scrollTop: verticalScrolledPixels,
-        },
-      } as unknown as UIEvent<HTMLDivElement>);
-    });
-
-    const expectedSlice = deriveRenderedSlice(
-      verticalScrolledPixels,
-      elementHeight,
-    );
-
-    expect(result.current.renderedRows).toHaveLength(
-      expectedSlice.end - expectedSlice.start,
-    );
-    expect(result.current.dimensions.height).toBe(
-      children.length * GANTT_ROW_HEIGHT_PX,
-    );
-    expect(result.current.dimensions.width).toBe(
-      (totalBounds.endMs - totalBounds.startMs) / mocks.msPerPx,
+    const expectedVirtualizedHeight = children.length * GANTT_ROW_HEIGHT_PX;
+    expect(result.current.store.getState().virtualizedHeightPx).toBe(
+      expectedVirtualizedHeight,
     );
   });
 });

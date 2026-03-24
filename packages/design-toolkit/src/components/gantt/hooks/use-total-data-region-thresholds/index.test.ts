@@ -57,7 +57,7 @@ describe('useTotalDataRegionThresholds', () => {
     timescale: mockTimescale,
   } as unknown as TemporalDataContextValue;
 
-  const mockScrollContainerElement = {
+  const mockVerticalScrollElement = {
     clientHeight: 500,
   } as HTMLDivElement;
   const mockRenderedSlice = { start: 2, end: 7 };
@@ -115,7 +115,7 @@ describe('useTotalDataRegionThresholds', () => {
       () =>
         useTotalDataRegionThresholds({
           totalRowsCount: 10,
-          scrollContainerElement: mockScrollContainerElement,
+          verticalScrollElement: mockVerticalScrollElement,
         }),
       { wrapper },
     );
@@ -130,7 +130,7 @@ describe('useTotalDataRegionThresholds', () => {
       () =>
         useTotalDataRegionThresholds({
           totalRowsCount: 10,
-          scrollContainerElement: mockScrollContainerElement,
+          verticalScrollElement: mockVerticalScrollElement,
         }),
       { wrapper },
     );
@@ -147,7 +147,7 @@ describe('useTotalDataRegionThresholds', () => {
       () =>
         useTotalDataRegionThresholds({
           totalRowsCount: 10,
-          scrollContainerElement: mockScrollContainerElement,
+          verticalScrollElement: mockVerticalScrollElement,
         }),
       { wrapper },
     );
@@ -160,7 +160,7 @@ describe('useTotalDataRegionThresholds', () => {
       () =>
         useTotalDataRegionThresholds({
           totalRowsCount: 10,
-          scrollContainerElement: mockScrollContainerElement,
+          verticalScrollElement: mockVerticalScrollElement,
         }),
       { wrapper },
     );
@@ -178,7 +178,7 @@ describe('useTotalDataRegionThresholds', () => {
       {
         initialProps: {
           totalRowsCount: 10,
-          scrollContainerElement: mockScrollContainerElement,
+          verticalScrollElement: mockVerticalScrollElement,
         },
         wrapper,
       },
@@ -188,7 +188,7 @@ describe('useTotalDataRegionThresholds', () => {
 
     rerender({
       totalRowsCount: 20,
-      scrollContainerElement: mockScrollContainerElement,
+      verticalScrollElement: mockVerticalScrollElement,
     });
 
     expect(mockOnThresholdMet).toHaveBeenCalledTimes(1);
@@ -205,7 +205,7 @@ describe('useTotalDataRegionThresholds', () => {
       {
         initialProps: {
           totalRowsCount: 10,
-          scrollContainerElement: mockScrollContainerElement,
+          verticalScrollElement: mockVerticalScrollElement,
         },
         wrapper,
       },
@@ -215,7 +215,7 @@ describe('useTotalDataRegionThresholds', () => {
 
     rerender({
       totalRowsCount: 20,
-      scrollContainerElement: mockScrollContainerElement,
+      verticalScrollElement: mockVerticalScrollElement,
     });
 
     expect(mockOnThresholdMet).toHaveBeenCalledTimes(1);
@@ -232,7 +232,7 @@ describe('useTotalDataRegionThresholds', () => {
       {
         initialProps: {
           totalRowsCount: 10,
-          scrollContainerElement: mockScrollContainerElement,
+          verticalScrollElement: mockVerticalScrollElement,
         },
         wrapper,
       },
@@ -242,14 +242,14 @@ describe('useTotalDataRegionThresholds', () => {
 
     rerender({
       totalRowsCount: 20,
-      scrollContainerElement: mockScrollContainerElement,
+      verticalScrollElement: mockVerticalScrollElement,
     });
 
     expect(mockOnThresholdMet).toHaveBeenCalledTimes(1);
 
     rerender({
       totalRowsCount: 30,
-      scrollContainerElement: mockScrollContainerElement,
+      verticalScrollElement: mockVerticalScrollElement,
     });
 
     expect(mockOnThresholdMet).toHaveBeenCalledTimes(2);
@@ -272,7 +272,7 @@ describe('useTotalDataRegionThresholds', () => {
       {
         initialProps: {
           totalRowsCount: 10,
-          scrollContainerElement: mockScrollContainerElement,
+          verticalScrollElement: mockVerticalScrollElement,
         },
         wrapper,
       },
@@ -283,7 +283,7 @@ describe('useTotalDataRegionThresholds', () => {
 
     rerender({
       totalRowsCount: 20,
-      scrollContainerElement: mockScrollContainerElement,
+      verticalScrollElement: mockVerticalScrollElement,
     });
 
     expect(mockOnThresholdMet).toHaveBeenCalledTimes(2);
@@ -307,7 +307,7 @@ describe('useTotalDataRegionThresholds', () => {
       {
         initialProps: {
           totalRowsCount: 10,
-          scrollContainerElement: mockScrollContainerElement,
+          verticalScrollElement: mockVerticalScrollElement,
         },
         wrapper,
       },
@@ -317,7 +317,7 @@ describe('useTotalDataRegionThresholds', () => {
 
     rerender({
       totalRowsCount: 20,
-      scrollContainerElement: mockScrollContainerElement,
+      verticalScrollElement: mockVerticalScrollElement,
     });
 
     expect(mockOnThresholdMet).toHaveBeenCalledTimes(2);
@@ -334,7 +334,7 @@ describe('useTotalDataRegionThresholds', () => {
       {
         initialProps: {
           totalRowsCount: 10,
-          scrollContainerElement: mockScrollContainerElement,
+          verticalScrollElement: mockVerticalScrollElement,
         },
         wrapper,
       },
@@ -348,7 +348,7 @@ describe('useTotalDataRegionThresholds', () => {
     );
     rerender({
       totalRowsCount: 0,
-      scrollContainerElement: mockScrollContainerElement,
+      verticalScrollElement: mockVerticalScrollElement,
     });
 
     expect(mockOnThresholdMet).toHaveBeenCalledTimes(1);
@@ -356,7 +356,7 @@ describe('useTotalDataRegionThresholds', () => {
     // Examination resumes — same thresholds should fire again
     rerender({
       totalRowsCount: 10,
-      scrollContainerElement: mockScrollContainerElement,
+      verticalScrollElement: mockVerticalScrollElement,
     });
 
     expect(mockOnThresholdMet).toHaveBeenCalledTimes(2);

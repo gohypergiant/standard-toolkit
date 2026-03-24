@@ -13,35 +13,23 @@
 @reference '@accelint/design-foundation/styles';
 
 @layer components.l1 {
-  .chunk {
-    --chunk-width: attr(data-width px);
-    min-width: var(--chunk-width);
+  .virtualized-content-height {
+    --height: attr(data-height px);
+    height: var(--height);
   }
 
-  .chunk-label {
-    --tick-margin: attr(data-tick-margin px);
-    @apply font-display text-body-s fg-primary-muted;
-    margin-left: var(--tick-margin);
+  .stuck {
+    @apply sticky top-0 max-h-full;
+
+    --height: attr(data-height px);
+    height: var(--height);
   }
 
-  .chunk-ticks-container {
-    @apply flex;
+  .layout {
+    @apply relative flex max-h-full flex-col;
   }
 
-  .chunk-tick-container {
-    @apply flex flex-1;
-  }
-
-  .chunk-tick {
-    @apply fg-disabled h-[6px] w-px bg-current;
-  }
-
-  .timeline {
-    @apply flex;
-    transform: translateX(var(--translate-x));
-  }
-
-  .timeline-container {
-    @apply overflow-hidden;
+  .root {
+    @apply relative h-full max-h-full w-full overflow-x-hidden overflow-y-auto;
   }
 }
