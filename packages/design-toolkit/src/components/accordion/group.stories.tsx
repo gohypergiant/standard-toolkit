@@ -26,6 +26,11 @@ import type { AccordionGroupProps } from './types';
 const meta = {
   title: 'Components/AccordionGroup',
   component: AccordionGroup,
+  subcomponents: {
+    Accordion,
+    AccordionPanel,
+    AccordionTrigger,
+  },
   args: {
     allowsMultipleExpanded: false,
     variant: 'cozy',

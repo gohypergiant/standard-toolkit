@@ -1,4 +1,4 @@
-import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
 
 import * as PopoverStories from './popover.stories';
 
@@ -61,6 +61,10 @@ A floating content container positioned relative to a trigger element. Built on 
 
 ## Props
 
+Extends [React Aria Popover](https://react-spectrum.adobe.com/react-aria/Popover.html#props).
+
+<ArgTypes of={PopoverStories} />
+
 ### PopoverTrigger
 
 | Prop | Type | Default | Description |
@@ -68,21 +72,6 @@ A floating content container positioned relative to a trigger element. Built on 
 | `isOpen` | `boolean` | - | Controlled open state |
 | `onOpenChange` | `(isOpen: boolean) => void` | - | Open state change handler |
 | `children` | `ReactNode` | - | Trigger element and Popover |
-
-### Popover
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `placement` | `'top' \| 'bottom' \| 'left' \| 'right'` | `'bottom'` | Position relative to trigger |
-| `children` | `ReactNode \| ((opts: { close: () => void }) => ReactNode)` | - | Content or render function |
-| `classNames` | `{ popover?: string; dialog?: string }` | - | Custom class names |
-
-### PopoverTitle
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `children` | `ReactNode` | - | Title text |
-| `className` | `string` | - | Custom CSS class |
 
 ### PopoverContent
 

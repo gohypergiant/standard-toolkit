@@ -29,6 +29,7 @@ import type { ReactNode } from 'react';
 const meta = {
   title: 'Components/List',
   component: List,
+  subcomponents: { ListItem },
   args: {
     variant: 'cozy',
   },

@@ -1,4 +1,4 @@
-import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
 import * as AccordionGroupStories from './group.stories';
 
 <Meta of={AccordionGroupStories} />
@@ -42,18 +42,10 @@ Groups multiple Accordion components with shared configuration. Use this compone
 * **compact** - Smaller size with reduced text and spacing for space-constrained layouts
 
 ## Props
+
 Extends all [`DisclosureGroup` props](https://react-spectrum.adobe.com/react-aria/DisclosureGroup.html#disclosuregroup-1) from react-aria-components.
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `variant` | `'cozy' \| 'compact'` | `'cozy'` | Visual style for all child accordions |
-| `isDisabled` | `boolean` | `false` | Disables all child accordions |
-| `allowsMultipleExpanded` | `boolean` | `false` | Allow multiple accordions to be expanded simultaneously |
-| `expandedKeys` | `Iterable<Key>` | - | Controlled set of expanded accordion keys |
-| `defaultExpandedKeys` | `Iterable<Key>` | - | Default expanded keys (uncontrolled) |
-| `onExpandedChange` | `(keys: Set<Key>) => void` | - | Called when expanded keys change |
-| `className` | `string \| ((state) => string)` | - | CSS class name, supports render props |
-| `children` | `ReactNode` | - | Accordion components |
+<ArgTypes of={AccordionGroupStories} />
 
 See [Accordion](?path=/docs/components-accordion--playground) for individual accordion props.
 

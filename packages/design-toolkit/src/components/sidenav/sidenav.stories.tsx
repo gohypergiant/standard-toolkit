@@ -41,6 +41,13 @@ type SidenavWithLayoutArgs = ComponentProps<typeof Sidenav> & {
 const meta: Meta<SidenavWithLayoutArgs> = {
   title: 'Components/Sidenav',
   component: Sidenav,
+  subcomponents: {
+    SidenavHeader,
+    SidenavItem,
+    SidenavLink,
+    SidenavMenu,
+    SidenavMenuItem,
+  },
   args: {
     pushLayout: true,
     isHiddenWhenClosed: false,

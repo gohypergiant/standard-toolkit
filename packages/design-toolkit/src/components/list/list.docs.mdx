@@ -1,4 +1,4 @@
-import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
 
 import * as ListStories from './list.stories';
 
@@ -69,30 +69,9 @@ Components:
 
 ## Props
 
-### List
 Extends [`GridList`](https://react-spectrum.adobe.com/react-aria/GridList.html#props) props from react-aria-components.
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `variant` | `'cozy' \| 'compact'` | `'cozy'` | Spacing variant |
-| `items` | `Iterable<T>` | - | Data items for dynamic rendering |
-| `selectionMode` | `'none' \| 'single' \| 'multiple'` | `'none'` | Selection behavior |
-| `selectedKeys` | `Set<Key>` | - | Controlled selected keys |
-| `onSelectionChange` | `(keys: Set<Key>) => void` | - | Called when selection changes |
-| `aria-label` | `string` | - | Accessible label (required) |
-| `className` | `string` | - | Custom CSS class |
-| `children` | `ReactNode \| (item: T) => ReactNode` | - | List items or render function |
-
-### ListItem
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `id` | `Key` | - | Unique identifier (required for selection) |
-| `textValue` | `string` | - | Text for accessibility and keyboard nav |
-| `isDisabled` | `boolean` | `false` | Disabled state |
-| `href` | `string` | - | URL for link items |
-| `classNames` | `object` | - | Custom classes (`item`, `icon`) |
-| `children` | `ReactNode` | - | Item content |
+<ArgTypes of={ListStories} />
 
 ### ListItemContent
 

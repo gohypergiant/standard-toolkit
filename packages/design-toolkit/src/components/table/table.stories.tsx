@@ -197,6 +197,13 @@ const columns = [
 const meta = {
   title: 'Components/Table',
   component: Table,
+  subcomponents: {
+    TableHeader,
+    TableHeaderCell,
+    TableBody,
+    TableRow,
+    TableCell,
+  },
   args: {
     columns: columns,
     data: defaultData,

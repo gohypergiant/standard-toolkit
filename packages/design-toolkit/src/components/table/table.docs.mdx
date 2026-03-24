@@ -1,4 +1,4 @@
-import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
 
 import * as TableStories from './table.stories';
 
@@ -126,40 +126,9 @@ const pageData = allData.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
 ## Props
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `columns` | `ColumnDef[]` | — | Array of TanStack column definitions |
-| `data` | `T[]` | — | Array of data objects with `id` property |
-| `showCheckbox` | `boolean` | — | Show checkbox column for row selection |
-| `rowSelection` | `RowSelectionState` | — | Controlled row selection state (object mapping row IDs to boolean) |
-| `onRowSelectionChange` | `function` | — | Callback when row selection changes |
-| `kebabPosition` | `'left' \| 'right'` | `'right'` | Position of row action menu |
-| `persistHeaderKebabMenu` | `boolean` | `true` | Always show header kebab menu |
-| `persistRowKebabMenu` | `boolean` | `true` | Always show row kebab menu |
-| `persistNumerals` | `boolean` | `false` | Always show row numbers |
-| `enableSorting` | `boolean` | `true` | Enable column sorting |
-| `enableColumnReordering` | `boolean` | `true` | Enable column reordering |
-| `enableRowActions` | `boolean` | `true` | Enable row action menu |
-| `manualSorting` | `boolean` | `false` | Server-side sorting mode |
-| `onSortChange` | `(columnId, direction) => void` | — | Callback for manual sorting |
-| `onColumnReorderChange` | `(index) => void` | — | Callback when column is reordered |
-| `fullWidth` | `boolean` | `false` | Apply full width with fixed layout |
-| `pageSize` | `number` | — | Rows per page; enables built-in pagination |
-| `page` | `number` | — | Controlled current page (1-indexed) |
-| `defaultPage` | `number` | `1` | Uncontrolled default page (1-indexed) |
-| `onPageChange` | `(page: number) => void` | — | Callback when page changes |
+Extends [TanStack React Table](https://tanstack.com/table/latest).
 
-## Subcomponents
-
-For static tables, use these subcomponents:
-
-| Component | Description |
-|-----------|-------------|
-| `TableHeader` | Renders `<thead>` section |
-| `TableHeaderCell` | Individual header cell `<th>` |
-| `TableBody` | Renders `<tbody>` section |
-| `TableRow` | Table row `<tr>` |
-| `TableCell` | Data cell `<td>` |
+<ArgTypes of={TableStories} />
 
 ## Accessibility
 

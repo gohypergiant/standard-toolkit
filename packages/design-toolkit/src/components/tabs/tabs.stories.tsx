@@ -39,6 +39,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 const meta = {
   title: 'Components/Tabs',
   component: Tabs,
+  subcomponents: { TabList, Tab, TabPanel },
   args: {
     ...TabStyleDefaults,
     orientation: 'horizontal',

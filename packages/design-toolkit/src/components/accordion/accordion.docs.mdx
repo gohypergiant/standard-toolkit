@@ -1,4 +1,4 @@
-import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
 
 import * as AccordionStories from './accordion.stories';
 
@@ -65,31 +65,12 @@ The variant can be controlled via the `variant` prop on individual accordions or
 
 ## Props
 
-### Accordion
 Extends all [`Disclosure` props](https://react-spectrum.adobe.com/react-aria/Disclosure.html#disclosure-1) from react-aria-components.
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `variant` | `'cozy' \| 'compact'` | `'cozy'` | Visual style variant |
-| `isDisabled` | `boolean` | `false` | Whether the accordion is disabled |
-| `isExpanded` | `boolean` | - | Controlled expanded state |
-| `defaultExpanded` | `boolean` | - | Default expanded state (uncontrolled) |
-| `onExpandedChange` | `(isExpanded: boolean) => void` | - | Called when expanded state changes |
-| `className` | `string \| ((state) => string)` | - | CSS class name, supports render props |
-| `children` | `ReactNode \| ((state) => ReactNode)` | - | Content, supports render props |
-
-#### Render Props
-The `className` and `children` props accept a function that receives state:
-```tsx
-<Accordion>
-  {(renderProps) => {}
-    console.log(renderProps);
-    return (<>...//</>);
-  }
-</Accordion>
-```
+<ArgTypes of={AccordionStories} />
 
 ### AccordionHeader
+
 Wraps the trigger and optional elements like menus.
 
 | Prop | Type | Default | Description |
@@ -97,30 +78,6 @@ Wraps the trigger and optional elements like menus.
 | `children` | `ReactNode` | - | Must include `AccordionTrigger`, may include menus |
 | `className` | `string` | - | CSS class name |
 | `ref` | `Ref<HTMLElement>` | - | Ref to the header element |
-
-### AccordionTrigger
-Button controlling expand/collapse state.
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `children` | `ReactNode` | - | Trigger content (typically icon and text) |
-| `classNames` | `object` | - | Custom class names (see below) |
-| `ref` | `Ref<HTMLHeadingElement>` | - | Ref to the heading element |
-
-**classNames object:**
-| Key | Type | Description |
-|-----|------|-------------|
-| `heading` | `string` | Applied to the heading wrapper |
-| `trigger` | `string \| ((state) => string)` | Applied to the button, supports [ButtonRenderProps](https://react-spectrum.adobe.com/react-aria/Button.html#render-props) |
-
-### AccordionPanel
-Extends all [`DisclosurePanel` props](https://react-spectrum.adobe.com/react-aria/Disclosure.html#disclosurepanel).
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `children` | `ReactNode \| ((state) => ReactNode)` | - | Panel content, supports render props |
-| `className` | `string \| ((state) => string)` | - | CSS class name, supports render props |
-| `ref` | `Ref<HTMLDivElement>` | - | Ref to the panel element |
 
 ## Accessibility
 Built on [react-aria-components Disclosure](https://react-spectrum.adobe.com/react-aria/Disclosure.html), the component provides:

@@ -1,4 +1,4 @@
-import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
 
 import * as DrawerStories from './drawer.stories';
 
@@ -66,30 +66,7 @@ const ids = { drawer: uuid(), a: uuid(), b: uuid() };
 
 ## Props
 
-### Drawer
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `id` | `UniqueId` | - | Unique identifier (required) |
-| `placement` | `'top' \| 'bottom' \| 'left' \| 'right'` | `'left'` | Position of the drawer |
-| `size` | `'small' \| 'medium' \| 'large'` | `'medium'` | Size variant |
-| `defaultView` | `UniqueId` | - | ID of the initial view |
-| `onChange` | `(view: UniqueId \| null) => void` | - | Called when active view changes |
-
-### DrawerMenu
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `position` | `'start' \| 'center' \| 'end'` | `'center'` | Position of menu items |
-
-### DrawerMenuItem
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `for` | `UniqueId` | - | View ID to navigate to (required) |
-| `toggle` | `boolean` | `false` | Toggle view open/closed vs only open |
-| `textValue` | `string` | - | Tooltip text on hover (required) |
-| `classNames` | `object` | - | Custom classes for `item` and `tooltip` |
+<ArgTypes of={DrawerStories} />
 
 ### DrawerHeader
 
@@ -107,7 +84,6 @@ When using `title`, the component automatically adds back navigation (for nested
 | `level` | `1-6` | - | Semantic heading level |
 | `children` | `ReactNode` | - | Title text |
 
-
 ### DrawerClose
 
 Close button that triggers a 'close' action to close the entire drawer.
@@ -117,16 +93,17 @@ Close button that triggers a 'close' action to close the entire drawer.
 | `for` | `UniqueId` | - | Optional drawer ID to close. Defaults to current drawer |
 | `aria-label` | `string` | - | Optional accessible label for the button |
 
-### DrawerTrigger
-Controls drawer state or navigates to views.
+### DrawerPanel
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `for` | `'open' \| 'toggle' \| 'close' \| UniqueId \| Array` | - | Action or view ID |
+Container for the drawer's scrollable content area. Accepts standard `<div>` props.
 
-- `'open'`, `'toggle'`, `'close'`: Control drawer state
-- `UniqueId`: Push view onto stack
-- `Array`: Fire multiple events in sequence
+### DrawerContent
+
+Wrapper for main content within a drawer panel. Accepts standard `<div>` props.
+
+### DrawerFooter
+
+Footer area pinned to the bottom of the drawer. Accepts standard `<footer>` props.
 
 ## Programmatic Control
 

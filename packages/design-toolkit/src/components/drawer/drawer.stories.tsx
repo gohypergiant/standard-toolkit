@@ -36,6 +36,13 @@ type DrawerStoryArgs = ComponentProps<typeof Drawer> &
 const meta: Meta<DrawerStoryArgs> = {
   title: 'Components/Drawer',
   component: Drawer,
+  subcomponents: {
+    DrawerTrigger,
+    DrawerView,
+    DrawerLayout,
+    DrawerMenu,
+    DrawerMenuItem,
+  },
   args: {
     placement: 'left',
     size: 'medium',

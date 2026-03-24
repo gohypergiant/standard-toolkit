@@ -1,4 +1,4 @@
-import { Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
+import { ArgTypes, Meta, Canvas, Controls } from '@storybook/addon-docs/blocks';
 import * as DrawerLayoutStories from './layout.stories';
 
 <Meta of={DrawerLayoutStories} />
@@ -22,20 +22,7 @@ A CSS Grid-based layout system for positioning panels on any side of the main co
 
 ## Props
 
-### DrawerLayout
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `extend` | `'top bottom' \| 'left right' \| 'top' \| 'bottom' \| 'left' \| 'right'` | `'left right'` | Which panels span full container dimensions |
-| `push` | `'top' \| 'bottom' \| 'left' \| 'right'` (combinable) | - | Which panels push content aside vs overlay |
-| `children` | `ReactNode` | - | DrawerLayoutMain and panel components |
-
-### DrawerLayoutMain
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `className` | `string` | - | Custom CSS class |
-| `children` | `ReactNode` | - | Main content |
+<ArgTypes of={DrawerLayoutStories} />
 
 ## How `extend` Works
 

@@ -30,6 +30,13 @@ import type { MenuItemProps } from './types';
 const meta = {
   title: 'Components/Menu',
   component: Menu,
+  subcomponents: {
+    MenuItem,
+    MenuItemLabel,
+    MenuItemDescription,
+    MenuSection,
+    MenuSeparator,
+  },
   args: {
     variant: 'cozy',
     selectionMode: 'single',

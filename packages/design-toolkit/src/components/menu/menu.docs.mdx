@@ -1,4 +1,4 @@
-import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+import { ArgTypes, Canvas, Meta } from '@storybook/addon-docs/blocks';
 
 import * as MenuStories from './menu.stories';
 
@@ -201,51 +201,7 @@ Section titles can be strings or React elements for custom formatting.
 
 Extends [React Aria Menu](https://react-spectrum.adobe.com/react-aria/Menu.html#props).
 
-### Menu
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `variant` | `'cozy' \| 'compact'` | `'cozy'` | Visual variant for sizing |
-| `selectionMode` | `'none' \| 'single' \| 'multiple'` | `'none'` | Selection behavior |
-| `popoverProps` | `PopoverProps` | - | Props passed to the underlying Popover |
-| `classNames` | `{ menu?, popover? }` | - | Custom class names for parts |
-| `onAction` | `(key: Key) => void` | - | Handler when item is selected |
-| `onClose` | `() => void` | - | Handler when menu closes |
-
-### MenuItem
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `color` | `'info' \| 'serious' \| 'critical'` | `'info'` | Color variant |
-| `isDisabled` | `boolean` | `false` | Whether item is disabled |
-| `classNames` | `{ item?, icon?, hotkey?, more?, text? }` | - | Custom class names for parts |
-
-### MenuSection
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `title` | `ReactNode` | - | Section header title |
-| `classNames` | `{ section?, header? }` | - | Custom class names for parts |
-
-### MenuItemLabel
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `children` | `ReactNode` | - | Label text content |
-| `className` | `string` | - | Custom CSS class |
-
-### MenuItemDescription
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `children` | `ReactNode` | - | Description text content |
-| `className` | `string` | - | Custom CSS class |
-
-### MenuSeparator
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `className` | `string` | - | Custom CSS class |
+<ArgTypes of={MenuStories} />
 
 ### MenuTrigger
 

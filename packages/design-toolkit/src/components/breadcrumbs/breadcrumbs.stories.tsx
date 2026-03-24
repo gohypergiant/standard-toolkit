@@ -17,6 +17,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 const meta = {
   title: 'Components/Breadcrumbs',
   component: Breadcrumbs,
+  subcomponents: { BreadcrumbItem },
 } satisfies Meta<typeof Breadcrumbs>;
 
 export default meta;

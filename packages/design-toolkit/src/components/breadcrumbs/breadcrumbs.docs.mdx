@@ -1,4 +1,4 @@
-import { Canvas, Meta } from "@storybook/addon-docs/blocks";
+import { ArgTypes, Canvas, Meta } from "@storybook/addon-docs/blocks";
 
 import * as BreadcrumbsStories from "./breadcrumbs.stories";
 
@@ -25,29 +25,9 @@ Components:
 
 ## Props
 
-### Breadcrumbs
 Extends all [`Breadcrumbs` props](https://react-spectrum.adobe.com/react-aria/Breadcrumbs.html#props) from react-aria-components.
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `children` | `ReactNode` | - | One or more `BreadcrumbItem` elements |
-| `className` | `string` | - | Additional CSS classes |
-
-### BreadcrumbItem
-Extends [`Breadcrumb` props](https://react-spectrum.adobe.com/react-aria/Breadcrumbs.html#breadcrumb) from react-aria-components.
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `linkProps` | `LinkProps` | - | Props for the link (include `href` to make clickable) |
-| `children` | `ReactNode` | - | Item content |
-| `classNames` | `object` | - | Custom class names (see below) |
-
-**classNames:**
-| Key | Description |
-|-----|-------------|
-| `item` | Applied to the breadcrumb item wrapper |
-| `link` | Applied to the link element (when `linkProps` provided) |
-| `separator` | Applied to the separator icon |
+<ArgTypes of={BreadcrumbsStories} />
 
 ## Accessibility
 - Keyboard navigation: Tab to focus, Enter to activate links

@@ -28,6 +28,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 const meta = {
   title: 'Components/Accordion',
   component: Accordion,
+  subcomponents: { AccordionPanel, AccordionTrigger },
   args: {
     isDisabled: false,
     variant: 'cozy',

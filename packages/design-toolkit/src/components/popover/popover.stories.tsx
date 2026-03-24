@@ -31,6 +31,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 const meta = {
   title: 'Components/Popover',
   component: Popover,
+  subcomponents: { PopoverTitle },
   args: {
     placement: 'bottom',
     dialogProps: { 'aria-label': 'test dialog' },
