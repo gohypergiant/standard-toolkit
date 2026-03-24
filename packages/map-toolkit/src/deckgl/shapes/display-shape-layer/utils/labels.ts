@@ -56,7 +56,7 @@
 'use client';
 
 import { isCircleShape, isWagonWheelShape } from '../../shared/types';
-import type { LineString, Point, Polygon } from 'geojson';
+import type { LineString, MultiPolygon, Point, Polygon } from 'geojson';
 import type { Shape } from '../../shared/types';
 
 /**
@@ -784,6 +784,33 @@ function getPolygonPosition(
  * const customPosition = getLabelPosition2d(shape, options);
  * ```
  */
+
+/**
+ * Build a closed polygon ring from all outer-ring vertices of a MultiPolygon.
+ * Single pass avoids .flatMap() + .slice() + spread intermediate allocations.
+ * Returns an empty array if no valid points are found.
+ */
+function buildWagonWheelRing(geometry: MultiPolygon): number[][] {
+  const ring: number[][] = [];
+  for (const poly of geometry.coordinates) {
+    const outerRing = poly[0];
+    if (!outerRing) {
+      continue;
+    }
+    for (let i = 0; i < outerRing.length - 1; i++) {
+      const point = outerRing[i];
+      if (point) {
+        ring.push(point);
+      }
+    }
+  }
+  const firstPoint = ring[0];
+  if (firstPoint) {
+    ring.push(firstPoint);
+  }
+  return ring;
+}
+
 export function getLabelPosition2d(
   shape: Shape,
   options?: LabelPositionOptions,
@@ -832,13 +859,8 @@ export function getLabelPosition2d(
       // WagonWheel: use all outer boundary points across segments for
       // circle-style label positioning centered on the shape.
       if (isWagonWheelShape(shape)) {
-        const allPoints = geometry.coordinates.flatMap((poly) =>
-          (poly[0] ?? []).slice(0, -1),
-        );
-        const firstPoint = allPoints[0];
-        if (firstPoint) {
-          // Build a synthetic polygon ring from all outer points
-          const ring = [...allPoints, firstPoint];
+        const ring = buildWagonWheelRing(geometry);
+        if (ring.length > 1) {
           return getCirclePosition(
             ring,
             shapeOffset,

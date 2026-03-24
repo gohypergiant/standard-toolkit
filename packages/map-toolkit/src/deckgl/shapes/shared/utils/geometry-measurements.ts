@@ -268,9 +268,8 @@ export function computeCirclePropertiesFromGeometry(
     return undefined;
   }
 
-  const radius = distance(center, firstPoint, {
-    units,
-  });
+  const options = { units };
+  const radius = distance(center, firstPoint, options);
 
   if (!Number.isFinite(radius) || radius <= 0) {
     return undefined;
@@ -294,6 +293,8 @@ function findMaxRadius(
   coordinates: MultiPolygon['coordinates'],
   units: DistanceUnit,
 ): number {
+  // Hoist options outside both loops to avoid allocating a new object per vertex
+  const options = { units };
   let maxRadius = 0;
   for (const polygon of coordinates) {
     const ring = polygon[0];
@@ -305,7 +306,7 @@ function findMaxRadius(
       if (!(Number.isFinite(point[0]) && Number.isFinite(point[1]))) {
         continue;
       }
-      const d = distance(center, point, { units });
+      const d = distance(center, point, options);
       if (d > maxRadius) {
         maxRadius = d;
       }

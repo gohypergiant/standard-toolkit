@@ -82,6 +82,16 @@ export class LockedBoundingTransformMode extends BaseTransformMode {
     return this.translateMode as any;
   }
 
+  /** Inject lockScaling into props.modeConfig. */
+  private withLockScaling(
+    props: ModeProps<FeatureCollection>,
+  ): ModeProps<FeatureCollection> {
+    return {
+      ...props,
+      modeConfig: { ...props.modeConfig, lockScaling: true },
+    };
+  }
+
   /**
    * Override to always apply lockScaling when scaling, regardless of Shift key.
    * For non-scale modes (rotate, translate), delegates to parent which handles
@@ -95,14 +105,7 @@ export class LockedBoundingTransformMode extends BaseTransformMode {
       const sourceEvent = event.sourceEvent as KeyboardEvent | undefined;
       this.isShiftHeld = sourceEvent?.shiftKey ?? false;
 
-      const propsWithLock: ModeProps<FeatureCollection> = {
-        ...props,
-        modeConfig: {
-          ...props.modeConfig,
-          lockScaling: true,
-        },
-      };
-      this.activeDragMode.handleDragging(event, propsWithLock);
+      this.activeDragMode.handleDragging(event, this.withLockScaling(props));
       this.onDragging?.(event, props);
     } else {
       super.handleDragging(event, props);
@@ -119,14 +122,10 @@ export class LockedBoundingTransformMode extends BaseTransformMode {
     props: ModeProps<FeatureCollection>,
   ) {
     if (this.activeDragMode === this.scaleMode) {
-      const propsWithLock: ModeProps<FeatureCollection> = {
-        ...props,
-        modeConfig: {
-          ...props.modeConfig,
-          lockScaling: true,
-        },
-      };
-      this.activeDragMode.handleStopDragging(event, propsWithLock);
+      this.activeDragMode.handleStopDragging(
+        event,
+        this.withLockScaling(props),
+      );
       this.resetDragState();
     } else {
       super.handleStopDragging(event, props);

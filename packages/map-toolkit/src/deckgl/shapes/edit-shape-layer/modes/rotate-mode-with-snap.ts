@@ -203,31 +203,25 @@ export class RotateModeWithSnap extends RotateMode {
       }
     }
 
-    // Store the rotation angle on the feature properties during continuous
-    // events so consumers can read it from featureBeingEdited. On completion
-    // ('rotated'), omit it so consumers can detect drag end and reset their
-    // base orientation tracking (consumers check `rotationAngle != null`).
+    // Mutate the cloned feature in-place to set/strip rotationAngle.
+    // updatedObj is a fresh clone from ImmutableFeatureCollection.getObject(),
+    // so mutation is safe and avoids .map() + IIFE + destructure allocations
+    // that would otherwise run on every drag frame (~60 calls/sec).
     const updatedObj = updatedData.getObject();
     const featureIdx = selectedIndexes[0] ?? 0;
-    const isCompletion = editType === 'rotated';
-    const updatedFeatures = updatedObj.features.map(
-      (f: { properties?: Record<string, unknown> }, idx: number) =>
-        idx === featureIdx
-          ? {
-              ...f,
-              properties: (() => {
-                // On completion, strip rotationAngle so consumers detect drag
-                // end via `rotationAngle != null`. On continuous events, set it
-                // for live tracking.
-                const { rotationAngle: _, ...rest } = f.properties ?? {};
-                return isCompletion ? rest : { ...rest, rotationAngle: angle };
-              })(),
-            }
-          : f,
-    );
+    const targetFeature = updatedObj.features[featureIdx];
+    if (targetFeature?.properties) {
+      if (editType === 'rotated') {
+        // On completion, strip rotationAngle so consumers detect drag end
+        // via `rotationAngle != null`.
+        delete targetFeature.properties.rotationAngle;
+      } else {
+        targetFeature.properties.rotationAngle = angle;
+      }
+    }
 
     return {
-      updatedData: { ...updatedObj, features: updatedFeatures },
+      updatedData: updatedObj,
       editType,
       editContext: {
         featureIndexes: selectedIndexes,
