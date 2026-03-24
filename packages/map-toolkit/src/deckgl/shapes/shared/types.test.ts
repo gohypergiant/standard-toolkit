@@ -398,6 +398,7 @@ describe('ShapeFeatureType', () => {
     expect(ShapeFeatureType.Rectangle).toBe('Rectangle');
     expect(ShapeFeatureType.LineString).toBe('LineString');
     expect(ShapeFeatureType.Point).toBe('Point');
+    expect(ShapeFeatureType.WagonWheel).toBe('WagonWheel');
   });
 
   it('has exactly 7 shape types', () => {

@@ -106,6 +106,15 @@ function getInternals(mode: CircleTransformMode): ModeInternals {
   return mode as unknown as ModeInternals;
 }
 
+/** Assert that onEdit was never called with editType 'resized'. */
+function expectNoResizedCalls(onEdit: ReturnType<typeof vi.fn>): void {
+  const resizedCalls = onEdit.mock.calls.filter(
+    (call: unknown[]) =>
+      (call[0] as { editType: string }).editType === 'resized',
+  );
+  expect(resizedCalls).toHaveLength(0);
+}
+
 describe('CircleTransformMode', () => {
   let mode: CircleTransformMode;
 
@@ -161,13 +170,8 @@ describe('CircleTransformMode', () => {
       // Act
       mode.handleStopDragging(event, props);
 
-      // Assert — onEdit should not be called by our override
-      // (TranslateMode itself may call onEdit, but our 'resized' event should not fire)
-      const resizedCalls = onEdit.mock.calls.filter(
-        (call: unknown[]) =>
-          (call[0] as { editType: string }).editType === 'resized',
-      );
-      expect(resizedCalls).toHaveLength(0);
+      // Assert — our 'resized' event should not fire (TranslateMode may call onEdit separately)
+      expectNoResizedCalls(onEdit);
     });
 
     it('should not emit when no feature is selected', () => {
@@ -182,11 +186,7 @@ describe('CircleTransformMode', () => {
       mode.handleStopDragging(event, props);
 
       // Assert
-      const resizedCalls = onEdit.mock.calls.filter(
-        (call: unknown[]) =>
-          (call[0] as { editType: string }).editType === 'resized',
-      );
-      expect(resizedCalls).toHaveLength(0);
+      expectNoResizedCalls(onEdit);
     });
 
     it('should not emit when selected feature is not a polygon', () => {
@@ -213,11 +213,7 @@ describe('CircleTransformMode', () => {
       mode.handleStopDragging(event, props);
 
       // Assert
-      const resizedCalls = onEdit.mock.calls.filter(
-        (call: unknown[]) =>
-          (call[0] as { editType: string }).editType === 'resized',
-      );
-      expect(resizedCalls).toHaveLength(0);
+      expectNoResizedCalls(onEdit);
     });
 
     it('should use cached center when available', () => {
