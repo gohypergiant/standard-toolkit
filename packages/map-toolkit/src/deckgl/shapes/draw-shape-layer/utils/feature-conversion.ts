@@ -77,6 +77,7 @@ function computeCircleProperties(
     logger.warn(
       'Cannot compute circle properties: invalid geometry or coordinates',
     );
+    return undefined;
   }
   return result;
 }
@@ -249,8 +250,7 @@ export function convertFeatureToShape(
 
   // Resolve the distance unit from symbol to DistanceUnit name
   const resolvedUnit: DistanceUnit | undefined = distanceUnit
-    ? ((DISTANCE_UNIT_BY_SYMBOL[distanceUnit] as DistanceUnit | undefined) ??
-      undefined)
+    ? (DISTANCE_UNIT_BY_SYMBOL[distanceUnit] as DistanceUnit | undefined)
     : undefined;
 
   // Compute circle properties if this is a circle

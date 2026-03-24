@@ -59,12 +59,7 @@ export type EditingState = {
  */
 export type EditShapeOptions = {
   /** Override the default edit mode (auto-detected from shape type by default) */
-  mode?:
-    | 'bounding-transform'
-    | 'vertex-transform'
-    | 'circle-transform'
-    | 'translate'
-    | 'point-translate';
+  mode?: Exclude<EditMode, 'view'>;
 };
 
 /**

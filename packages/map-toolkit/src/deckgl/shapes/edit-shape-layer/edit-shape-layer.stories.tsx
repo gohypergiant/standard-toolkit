@@ -82,8 +82,9 @@ export const BasicEditing: Story = {
     const { selectedId } = useSelectShape(EDIT_MAP_ID);
     const selectedShape = shapes.find((s) => s.id === selectedId) ?? null;
 
-    const { edit, save, cancel, isEditing, editingShape, editingState } =
-      useEditShape(EDIT_MAP_ID, {
+    const { edit, save, cancel, isEditing, editingShape } = useEditShape(
+      EDIT_MAP_ID,
+      {
         onUpdate: (updatedShape) => {
           setShapes((prev) =>
             prev.map((s) => (s.id === updatedShape.id ? updatedShape : s)),
@@ -105,9 +106,8 @@ export const BasicEditing: Story = {
             },
           ]);
         },
-      });
-
-    console.log('featureBeingEdited:', editingState?.featureBeingEdited);
+      },
+    );
 
     // Log shape selection events (selection is handled by useSelectShape)
     useOn<ShapeSelectedEvent>(ShapeEvents.selected, (event) => {

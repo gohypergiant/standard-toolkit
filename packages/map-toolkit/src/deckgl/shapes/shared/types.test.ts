@@ -400,8 +400,8 @@ describe('ShapeFeatureType', () => {
     expect(ShapeFeatureType.Point).toBe('Point');
   });
 
-  it('has exactly 6 shape types', () => {
+  it('has exactly 7 shape types', () => {
     const shapeTypes = Object.keys(ShapeFeatureType);
-    expect(shapeTypes).toHaveLength(6);
+    expect(shapeTypes).toHaveLength(7);
   });
 });

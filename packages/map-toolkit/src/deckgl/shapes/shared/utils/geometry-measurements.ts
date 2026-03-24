@@ -286,6 +286,35 @@ export function computeCirclePropertiesFromGeometry(
 }
 
 /**
+ * Find the maximum geodesic distance from a center point to any outer-ring
+ * vertex across all polygons in a MultiPolygon.
+ */
+function findMaxRadius(
+  center: [number, number],
+  coordinates: MultiPolygon['coordinates'],
+  units: DistanceUnit,
+): number {
+  let maxRadius = 0;
+  for (const polygon of coordinates) {
+    const ring = polygon[0];
+    if (!ring) {
+      continue;
+    }
+    for (const coord of ring) {
+      const point = coord as [number, number];
+      if (!(Number.isFinite(point[0]) && Number.isFinite(point[1]))) {
+        continue;
+      }
+      const d = distance(center, point, { units });
+      if (d > maxRadius) {
+        maxRadius = d;
+      }
+    }
+  }
+  return maxRadius;
+}
+
+/**
  * Compute circle properties (center and radius) from a MultiPolygon geometry.
  *
  * Uses the bounding box center as the center point and the maximum geodesic
@@ -315,24 +344,7 @@ export function computeCirclePropertiesFromMultiPolygon(
     return undefined;
   }
 
-  // Find max distance from center to any outer-ring vertex (= outer radius)
-  let maxRadius = 0;
-  for (const polygon of geometry.coordinates) {
-    const ring = polygon[0];
-    if (!ring) {
-      continue;
-    }
-    for (const coord of ring) {
-      const point = coord as [number, number];
-      if (!(Number.isFinite(point[0]) && Number.isFinite(point[1]))) {
-        continue;
-      }
-      const d = distance(center, point, { units });
-      if (d > maxRadius) {
-        maxRadius = d;
-      }
-    }
-  }
+  const maxRadius = findMaxRadius(center, geometry.coordinates, units);
 
   if (!Number.isFinite(maxRadius) || maxRadius <= 0) {
     return undefined;

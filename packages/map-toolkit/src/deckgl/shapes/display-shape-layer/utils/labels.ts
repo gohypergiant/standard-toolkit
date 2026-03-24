@@ -835,9 +835,10 @@ export function getLabelPosition2d(
         const allPoints = geometry.coordinates.flatMap((poly) =>
           (poly[0] ?? []).slice(0, -1),
         );
-        if (allPoints.length > 0) {
+        const firstPoint = allPoints[0];
+        if (firstPoint) {
           // Build a synthetic polygon ring from all outer points
-          const ring = [...allPoints, allPoints[0]!];
+          const ring = [...allPoints, firstPoint];
           return getCirclePosition(
             ring,
             shapeOffset,

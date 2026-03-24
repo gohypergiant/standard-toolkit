@@ -84,20 +84,17 @@ export class LockedBoundingTransformMode extends BaseTransformMode {
 
   /**
    * Override to always apply lockScaling when scaling, regardless of Shift key.
+   * For non-scale modes (rotate, translate), delegates to parent which handles
+   * shift config resolution and onDragging hook.
    */
   override handleDragging(
     event: DraggingEvent,
     props: ModeProps<FeatureCollection>,
   ) {
-    if (!this.activeDragMode) {
-      return;
-    }
-
-    const sourceEvent = event.sourceEvent as KeyboardEvent | undefined;
-    this.isShiftHeld = sourceEvent?.shiftKey ?? false;
-
     if (this.activeDragMode === this.scaleMode) {
-      // Always lock scaling for this mode
+      const sourceEvent = event.sourceEvent as KeyboardEvent | undefined;
+      this.isShiftHeld = sourceEvent?.shiftKey ?? false;
+
       const propsWithLock: ModeProps<FeatureCollection> = {
         ...props,
         modeConfig: {
@@ -106,29 +103,10 @@ export class LockedBoundingTransformMode extends BaseTransformMode {
         },
       };
       this.activeDragMode.handleDragging(event, propsWithLock);
+      this.onDragging?.(event, props);
     } else {
-      // For rotate: apply shift config (snap rotation) via parent logic
-      const matchers = this.getHandleMatchers();
-      const activeMatcher = matchers.find(
-        (m) => m.mode === this.activeDragMode,
-      );
-      const shiftConfig = activeMatcher?.shiftConfig;
-
-      if (shiftConfig && this.isShiftHeld) {
-        const propsWithConfig: ModeProps<FeatureCollection> = {
-          ...props,
-          modeConfig: {
-            ...props.modeConfig,
-            [shiftConfig.configKey]: shiftConfig.value ?? true,
-          },
-        };
-        this.activeDragMode.handleDragging(event, propsWithConfig);
-      } else {
-        this.activeDragMode.handleDragging(event, props);
-      }
+      super.handleDragging(event, props);
     }
-
-    this.onDragging?.(event, props);
   }
 
   /**
@@ -140,10 +118,6 @@ export class LockedBoundingTransformMode extends BaseTransformMode {
     event: StopDraggingEvent,
     props: ModeProps<FeatureCollection>,
   ) {
-    if (!this.activeDragMode) {
-      return;
-    }
-
     if (this.activeDragMode === this.scaleMode) {
       const propsWithLock: ModeProps<FeatureCollection> = {
         ...props,
@@ -155,7 +129,6 @@ export class LockedBoundingTransformMode extends BaseTransformMode {
       this.activeDragMode.handleStopDragging(event, propsWithLock);
       this.resetDragState();
     } else {
-      // For rotate/translate, use parent logic
       super.handleStopDragging(event, props);
     }
   }

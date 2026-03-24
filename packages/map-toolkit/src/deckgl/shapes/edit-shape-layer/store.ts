@@ -39,6 +39,7 @@ import { Broadcast } from '@accelint/bus';
 import { createMapStore } from '@/shared/create-map-store';
 import { createLoggerDomain } from '@/shared/logger';
 import { MapEvents } from '../../base-map/events';
+import type { DistanceUnit } from '@accelint/constants/units';
 import {
   isCircleShape,
   isEllipseShape,
@@ -393,6 +394,37 @@ export function clearEditingState(mapId: UniqueId): void {
  * updateFeature(mapId, { ...currentFeature, geometry: newGeometry });
  * ```
  */
+/**
+ * Resolve the radius units from a circular shape (Circle or WagonWheel).
+ * Returns `undefined` for non-circular shapes.
+ */
+function getCircularShapeUnits(shape: Shape): DistanceUnit | undefined {
+  if (isCircleShape(shape)) {
+    return shape.feature.properties.circleProperties.radius.units;
+  }
+  if (isWagonWheelShape(shape)) {
+    return shape.feature.properties.wagonWheelProperties.radius.units;
+  }
+  return undefined;
+}
+
+/**
+ * Recompute circle properties from the given feature geometry using the
+ * appropriate computation function for the geometry type.
+ */
+function recomputeCircleProperties(
+  feature: Feature,
+  units: DistanceUnit | undefined,
+): ReturnType<typeof computeCirclePropertiesFromGeometry> {
+  if (feature.geometry.type === 'Polygon') {
+    return computeCirclePropertiesFromGeometry(feature.geometry, units);
+  }
+  if (feature.geometry.type === 'MultiPolygon') {
+    return computeCirclePropertiesFromMultiPolygon(feature.geometry, units);
+  }
+  return undefined;
+}
+
 export function updateFeature(
   mapId: UniqueId,
   feature: Feature,
@@ -400,40 +432,20 @@ export function updateFeature(
 ): void {
   const state = editStore.get(mapId);
 
+  // Only store completion editTypes (scaled, rotated, translated) —
+  // continuous events fire via RAF and can overwrite due to frame timing.
+  // Clear lastCompletedEditType on continuous events so it doesn't persist.
+  const isCompletion = editType != null && COMPLETION_EDIT_TYPES.has(editType);
+  const lastCompletedEditType = isCompletion ? editType : null;
+
   // Recompute circleProperties from updated geometry so metadata stays in sync
+  const editingShape = state?.editingShape;
   if (
-    state?.editingShape &&
-    (isCircleShape(state.editingShape) || isWagonWheelShape(state.editingShape))
+    editingShape &&
+    (isCircleShape(editingShape) || isWagonWheelShape(editingShape))
   ) {
-    // Use the shape's own radius units so the result matches without conversion drift
-    const shapeUnits = isCircleShape(state.editingShape)
-      ? state.editingShape.feature.properties.circleProperties.radius.units
-      : isWagonWheelShape(state.editingShape)
-        ? state.editingShape.feature.properties.wagonWheelProperties.radius
-            .units
-        : undefined;
-
-    let circleProperties;
-    if (feature.geometry.type === 'Polygon') {
-      circleProperties = computeCirclePropertiesFromGeometry(
-        feature.geometry,
-        shapeUnits,
-      );
-    } else if (feature.geometry.type === 'MultiPolygon') {
-      circleProperties = computeCirclePropertiesFromMultiPolygon(
-        feature.geometry,
-        shapeUnits,
-      );
-    }
-
-    // Only store completion editTypes (scaled, rotated, translated) —
-    // continuous events fire via RAF and can overwrite due to frame timing.
-    // Clear lastCompletedEditType on continuous events so it doesn't persist.
-    const isCompletion =
-      editType != null && COMPLETION_EDIT_TYPES.has(editType);
-    const editTypeUpdate = isCompletion
-      ? { lastCompletedEditType: editType }
-      : { lastCompletedEditType: null };
+    const shapeUnits = getCircularShapeUnits(editingShape);
+    const circleProperties = recomputeCircleProperties(feature, shapeUnits);
 
     if (circleProperties) {
       editStore.set(mapId, {
@@ -444,16 +456,15 @@ export function updateFeature(
             circleProperties,
           },
         },
-        ...editTypeUpdate,
+        lastCompletedEditType,
       });
       return;
     }
   }
 
-  const isCompletion = editType != null && COMPLETION_EDIT_TYPES.has(editType);
   editStore.set(mapId, {
     featureBeingEdited: feature,
-    lastCompletedEditType: isCompletion ? editType : null,
+    lastCompletedEditType,
   });
 }
 

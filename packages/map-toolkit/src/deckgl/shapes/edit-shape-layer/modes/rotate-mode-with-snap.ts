@@ -206,7 +206,7 @@ export class RotateModeWithSnap extends RotateMode {
     // Store the rotation angle on the feature properties during continuous
     // events so consumers can read it from featureBeingEdited. On completion
     // ('rotated'), omit it so consumers can detect drag end and reset their
-    // base orientation tracking.
+    // base orientation tracking (consumers check `rotationAngle != null`).
     const updatedObj = updatedData.getObject();
     const featureIdx = selectedIndexes[0] ?? 0;
     const isCompletion = editType === 'rotated';
@@ -215,13 +215,13 @@ export class RotateModeWithSnap extends RotateMode {
         idx === featureIdx
           ? {
               ...f,
-              properties: {
-                ...f.properties,
-                // On continuous events, set rotationAngle for live tracking.
-                // On completion, explicitly set to undefined to strip it so
-                // consumers detect drag end and reset base orientation.
-                rotationAngle: isCompletion ? undefined : angle,
-              },
+              properties: (() => {
+                // On completion, strip rotationAngle so consumers detect drag
+                // end via `rotationAngle != null`. On continuous events, set it
+                // for live tracking.
+                const { rotationAngle: _, ...rest } = f.properties ?? {};
+                return isCompletion ? rest : { ...rest, rotationAngle: angle };
+              })(),
             }
           : f,
     );
