@@ -425,6 +425,7 @@ export function BaseMap({
             onLoad={handleLoad}
             onResize={handleResize}
             onViewStateChange={handleViewStateChange}
+            widgets={widgetsProp}
             // @ts-expect-error - DeckglProps parameters type is overly strict for WebGL parameter spreading.
             // The merged object is valid at runtime but TypeScript cannot verify all possible parameter combinations.
             parameters={{ ...PARAMETERS, ...parameters }}

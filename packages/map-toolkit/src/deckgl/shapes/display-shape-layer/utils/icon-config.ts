@@ -100,7 +100,7 @@ export function getIconLayerProps(
         d.properties?.styleProperties?.icon?.size ?? MAP_INTERACTION.ICON_SIZE;
       return [-1, -iconSize / 2];
     },
-    iconBillboard: false,
+    iconBillboard: true,
   };
 
   if (iconAtlas) {

@@ -13,6 +13,10 @@
 @reference '@accelint/design-foundation/styles';
 
 @layer components.l1 {
+  .container {
+    @apply gap-xs flex flex-col;
+  }
+
   .picker {
     @apply gap-s p-xxs flex flex-wrap;
   }

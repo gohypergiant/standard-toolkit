@@ -73,6 +73,7 @@ export const BasicDisplayAndEvents: Story = {
     applyBaseOpacity: true,
     showHighlight: false,
     highlightColor: [...HIGHLIGHT_COLOR_TUPLE],
+    unit: 'NM',
   },
   argTypes: {
     showLabels: {
@@ -98,6 +99,12 @@ export const BasicDisplayAndEvents: Story = {
     highlightColor: {
       control: { type: 'object' },
       description: 'Highlight color [R, G, B, A] with values 0-255',
+    },
+    unit: {
+      control: { type: 'select' },
+      options: ['km', 'm', 'NM', 'mi', 'ft'],
+      description:
+        'Distance unit for measurements (e.g., radius on hover). Hover over the circle to see it.',
     },
   },
   render: (args) => {
@@ -190,6 +197,7 @@ export const BasicDisplayAndEvents: Story = {
             applyBaseOpacity={args.applyBaseOpacity}
             showHighlight={args.showHighlight}
             highlightColor={highlightColor}
+            unit={args.unit}
           />
         </BaseMap>
 

@@ -90,6 +90,9 @@ export const BRIGHTNESS_FACTOR = {
  */
 export const OVERLAY_FILL_OPACITY = 0.25;
 
+/** Default elevation in meters — ground level (MSL). Used as the fallback when minElevation is not set. */
+export const DEFAULT_ELEVATION = 0;
+
 /** Reusable deck.gl PathStyleExtension enabling dash patterns on GeoJsonLayer lines. */
 export const DASH_EXTENSION = new PathStyleExtension({ dash: true });
 

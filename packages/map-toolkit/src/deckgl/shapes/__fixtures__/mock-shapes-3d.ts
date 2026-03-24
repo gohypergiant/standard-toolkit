@@ -207,7 +207,6 @@ export const mockShapes3D: Shape[] = [
           lineWidth: 2,
           linePattern: 'solid',
         },
-        maxElevation: 1500,
         shapeId: uuid(),
       },
       geometry: {

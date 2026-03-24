@@ -14,10 +14,12 @@
 
 import { Broadcast } from '@accelint/bus';
 import { CompositeLayer } from '@deck.gl/core';
-import { GeoJsonLayer, LineLayer } from '@deck.gl/layers';
+import { GeoJsonLayer, LineLayer, TextLayer } from '@deck.gl/layers';
+import { DEFAULT_TEXT_SIZE, DEFAULT_TEXT_STYLE } from '../../text-settings';
 import { SHAPE_LAYER_IDS } from '../shared/constants';
 import { type ShapeEvent, ShapeEvents } from '../shared/events';
 import {
+  isCircleShape,
   isLineGeometry,
   isPointType,
   isPolygonGeometry,
@@ -30,6 +32,7 @@ import {
 import {
   BRIGHTNESS_FACTOR,
   DEFAULT_DISPLAY_PROPS,
+  DEFAULT_ELEVATION,
   DISPLAY_EXTENSIONS,
   HIGHLIGHT_COLOR_TUPLE,
   MAP_INTERACTION,
@@ -47,15 +50,19 @@ import {
   buildIndicatorLineData,
   classifyElevatedFeatures,
   createCurtainPolygonFeatures,
-  flattenFeatureTo2D,
   getFeatureElevation,
+  getFeatureExtrusionHeight,
+  getFeatureMinElevation,
   partitionCurtains,
+  projectFeatureToBaseElevation,
 } from './utils/elevation';
 import {
   getIconConfig,
   getIconLayerProps,
   getIconUpdateTriggers,
 } from './utils/icon-config';
+import { getLabelPosition2d } from './utils/labels';
+import { getRadiusLabelText } from './utils/radius-label';
 import type { Rgba255Tuple } from '@accelint/predicates';
 import type { Layer, PickingInfo } from '@deck.gl/core';
 import type { Shape, ShapeId } from '../shared/types';
@@ -360,14 +367,18 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
         },
       };
 
-      // For polygon geometries with elevation: strip Z coordinates to prevent
-      // deck.gl double-counting (SolidPolygonLayer adds coordinate Z + getElevation).
-      // The feature's maxElevation property is the source of truth for getFeatureElevation.
+      // For polygon geometries with elevation: project Z coordinates to the base elevation
+      // to prevent deck.gl double-counting (SolidPolygonLayer adds coordinate Z + getElevation).
+      // Setting Z = minElevation and getElevation = maxElevation - minElevation renders a
+      // slab from minElevation to maxElevation. When minElevation is 0, Z is stripped entirely.
       if (
         isPolygonGeometry(feature.geometry) &&
         getFeatureElevation(feature) > 0
       ) {
-        feature = flattenFeatureTo2D(feature);
+        feature = projectFeatureToBaseElevation(
+          feature,
+          getFeatureMinElevation(feature),
+        );
       }
 
       features.push(feature);
@@ -520,7 +531,10 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
 
     // Strip Z from LineString coordinates so the highlight outline renders at
     // ground level rather than following the elevated path
-    const highlightFeature = flattenFeatureTo2D(selectedFeature);
+    const highlightFeature = projectFeatureToBaseElevation(
+      selectedFeature,
+      DEFAULT_ELEVATION,
+    );
     const lineColor = this.resolvedHighlight;
 
     // Render 2D highlight layer (outline only)
@@ -585,7 +599,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
 
         // Material brightness for selection; extrusion only when elevation enabled
         extruded: enableElevation,
-        getElevation: getFeatureElevation,
+        getElevation: getFeatureExtrusionHeight,
         material: MATERIAL_SETTINGS.HOVER_OR_SELECT,
 
         // Behavior
@@ -641,7 +655,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
 
         // Material brightness scales with interaction state; extrusion only when elevation enabled
         extruded: enableElevation,
-        getElevation: getFeatureElevation,
+        getElevation: getFeatureExtrusionHeight,
         material,
 
         // Behavior
@@ -727,7 +741,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       // Tested fix: Changing condition to `!wireframe && stroked` in deck.gl source did NOT resolve the issue
       // Solution: Separate hover/select layers with material-based lighting for extruded polygons
       extruded: this.props.enableElevation ?? false,
-      getElevation: getFeatureElevation,
+      getElevation: getFeatureExtrusionHeight,
       ...(this.props.enableElevation
         ? {
             material: MATERIAL_SETTINGS.NORMAL,
@@ -821,6 +835,68 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
         id: `${this.props.id}-${SHAPE_LAYER_IDS.DISPLAY_LABELS}`,
         data: labelData,
         labelOptions,
+      }),
+    ];
+  }
+
+  /**
+   * Render radius label layer for hovered circle shapes.
+   * Shows the circle's radius value converted to the configured display unit.
+   *
+   * Positioning relative to the shape's label:
+   * - When showLabels is 'always' or 'hover': appears below the label
+   * - When showLabels is 'never': appears in the label's position
+   */
+  private renderRadiusLabelLayer(): TextLayer[] {
+    const { data, unit, showLabels, labelOptions } = this.props;
+    const hoverIndex = this.state?.hoverIndex;
+    const hoveredShape =
+      hoverIndex !== undefined ? data[hoverIndex] : undefined;
+    const radiusText =
+      hoveredShape && isCircleShape(hoveredShape)
+        ? getRadiusLabelText(hoveredShape, unit)
+        : undefined;
+
+    // Use the same position the label would occupy
+    const labelPosition =
+      radiusText && hoveredShape
+        ? getLabelPosition2d(hoveredShape, labelOptions)
+        : undefined;
+
+    if (!labelPosition) {
+      return [];
+    }
+
+    // When label is visible, offset below it; otherwise take its place
+    const labelVisible = showLabels !== 'never';
+    const pixelOffset: [number, number] = labelVisible
+      ? [
+          labelPosition.pixelOffset[0],
+          labelPosition.pixelOffset[1] + DEFAULT_TEXT_SIZE + 2,
+        ]
+      : labelPosition.pixelOffset;
+
+    return [
+      new TextLayer({
+        id: `${this.props.id}-${SHAPE_LAYER_IDS.DISPLAY}-radius-label`,
+        data: [{ text: radiusText, position: labelPosition.coordinates }],
+        getText: (d) => d.text,
+        getPosition: (d) => d.position as [number, number],
+        getPixelOffset: pixelOffset,
+        getTextAnchor: labelPosition.textAnchor,
+        getAlignmentBaseline: labelPosition.alignmentBaseline,
+        ...DEFAULT_TEXT_STYLE,
+        getAngle: 0,
+        background: false,
+        fontFamily: 'Roboto MonoVariable, monospace',
+        pickable: false,
+        updateTriggers: {
+          getText: [hoverIndex, unit],
+          getPosition: [hoverIndex, labelOptions],
+          getPixelOffset: [hoverIndex, labelOptions, showLabels],
+          getTextAnchor: [hoverIndex, labelOptions],
+          getAlignmentBaseline: [hoverIndex, labelOptions],
+        },
       }),
     ];
   }
@@ -1026,7 +1102,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
           stroked: false,
           extruded: true,
           wireframe: true,
-          getElevation: getFeatureElevation,
+          getElevation: getFeatureExtrusionHeight,
           getFillColor: (d: Shape['feature']) =>
             getFillColor(d, applyBaseOpacity),
           getLineColor,
@@ -1088,6 +1164,9 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
 
     // Labels on top of everything
     layers.push(...this.renderLabelsLayer());
+
+    // Radius label on hover (above name labels)
+    layers.push(...this.renderRadiusLabelLayer());
 
     return layers;
   }

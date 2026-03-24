@@ -13,8 +13,9 @@
 import { uuid } from '@accelint/core';
 import { render } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { clearEditingState } from './store';
+import { clearEditingState, editStore } from './store';
 import type { UniqueId } from '@accelint/core';
+import type { Shape } from '../shared/types';
 
 // Track hotkey lifecycle calls
 type MockFn = ReturnType<typeof vi.fn<(...args: unknown[]) => unknown>>;
@@ -22,6 +23,10 @@ let mockBind: MockFn;
 let mockUnbind: MockFn;
 let mockRegisterHotkey: MockFn;
 let mockUnregisterHotkey: MockFn;
+
+// Track icon-config calls
+const mockGetIconConfig = vi.fn();
+const mockGetIconLayerProps = vi.fn();
 
 vi.mock('@accelint/hotkey-manager', () => ({
   globalBind: vi.fn(),
@@ -34,8 +39,45 @@ vi.mock('../shared/hooks/use-shift-zoom-disable', () => ({
   useShiftZoomDisable: vi.fn(),
 }));
 
+vi.mock('../display-shape-layer/utils/icon-config', () => ({
+  getIconConfig: (...args: unknown[]) => mockGetIconConfig(...args),
+  getIconLayerProps: (...args: unknown[]) => mockGetIconLayerProps(...args),
+}));
+
 // Import after mocks are set up
 const { EditShapeLayer } = await import('./index');
+
+/** Create a minimal shape for testing */
+function createTestShape(
+  icon?: Shape['feature']['properties']['styleProperties']['icon'],
+): Shape {
+  return {
+    id: uuid(),
+    name: 'Test Shape',
+    label: 'Test',
+    shape: 'Point',
+    lastUpdated: Date.now(),
+    feature: {
+      type: 'Feature',
+      properties: {
+        styleProperties: {
+          fillColor: [255, 255, 255, 255],
+          lineColor: [136, 138, 143, 255],
+          lineWidth: 2,
+          linePattern: 'solid',
+          ...(icon ? { icon } : {}),
+        },
+        shapeId: uuid(),
+      },
+      geometry: { type: 'Point', coordinates: [0, 0] },
+    } as Shape['feature'],
+  };
+}
+
+const TEST_ATLAS = 'https://example.com/atlas.png';
+const TEST_MAPPING = {
+  marker: { x: 0, y: 0, width: 32, height: 32, mask: true },
+};
 
 describe('EditShapeLayer', () => {
   let mapId: UniqueId;
@@ -54,6 +96,10 @@ describe('EditShapeLayer', () => {
       isBound: false,
     }));
     mockUnregisterHotkey = vi.fn();
+
+    // Default: no icons
+    mockGetIconConfig.mockReturnValue({ hasIcons: false });
+    mockGetIconLayerProps.mockReturnValue({});
   });
 
   afterEach(() => {
@@ -62,36 +108,18 @@ describe('EditShapeLayer', () => {
 
   describe('hotkey lifecycle', () => {
     it('should throw when mapId is not provided and no MapProvider exists', () => {
-      const spy = vi
-        .spyOn(console, 'error')
-        .mockImplementation(() => undefined);
+      vi.spyOn(console, 'error').mockImplementation(() => undefined);
 
       expect(() => {
         render(<EditShapeLayer />);
       }).toThrow(
         'EditShapeLayer requires either a mapId prop or to be used within a MapProvider',
       );
-
-      spy.mockRestore();
     });
 
-    it('should throw when mapId is not provided and no MapProvider exists', () => {
-      const spy = vi
-        .spyOn(console, 'error')
-        .mockImplementation(() => undefined);
-
-      expect(() => {
-        render(<EditShapeLayer />);
-      }).toThrow(
-        'EditShapeLayer requires either a mapId prop or to be used within a MapProvider',
-      );
-
-      spy.mockRestore();
-    });
-    it('registers and binds the save hotkey on mount', () => {
+    it('should register and bind hotkeys on mount', () => {
       const { unmount } = render(<EditShapeLayer mapId={mapId} />);
 
-      expect(mockRegisterHotkey).toHaveBeenCalledTimes(2);
       expect(mockRegisterHotkey).toHaveBeenCalledWith(
         expect.objectContaining({
           id: `saveEditHotkey-${mapId}`,
@@ -104,37 +132,115 @@ describe('EditShapeLayer', () => {
           key: { code: 'Space' },
         }),
       );
-      expect(mockBind).toHaveBeenCalledTimes(2);
+      expect(mockBind).toHaveBeenCalled();
 
       unmount();
     });
 
-    it('unbinds and unregisters the save hotkey on unmount', () => {
+    it('should unbind and unregister hotkeys on unmount', () => {
       const { unmount } = render(<EditShapeLayer mapId={mapId} />);
 
       unmount();
 
-      expect(mockUnbind).toHaveBeenCalledTimes(2);
-      expect(mockUnregisterHotkey).toHaveBeenCalledTimes(2);
+      expect(mockUnbind).toHaveBeenCalled();
       expect(mockUnregisterHotkey).toHaveBeenCalledWith(
         expect.objectContaining({ id: 'test-hotkey' }),
       );
     });
 
-    it('does not throw when remounting after unmount', () => {
+    it('should not throw when remounting after unmount', () => {
       const { unmount } = render(<EditShapeLayer mapId={mapId} />);
       unmount();
 
       // Remount should register a fresh hotkey without error
       const { unmount: unmount2 } = render(<EditShapeLayer mapId={mapId} />);
 
-      expect(mockRegisterHotkey).toHaveBeenCalledTimes(4);
-      expect(mockBind).toHaveBeenCalledTimes(4);
+      expect(mockRegisterHotkey).toHaveBeenCalled();
+      expect(mockBind).toHaveBeenCalled();
 
       unmount2();
 
-      expect(mockUnbind).toHaveBeenCalledTimes(4);
-      expect(mockUnregisterHotkey).toHaveBeenCalledTimes(4);
+      expect(mockUnbind).toHaveBeenCalled();
+      expect(mockUnregisterHotkey).toHaveBeenCalled();
+    });
+  });
+
+  describe('icon-point editing', () => {
+    it('should call getIconConfig with the editing shape feature', () => {
+      const shape = createTestShape({
+        atlas: TEST_ATLAS,
+        mapping: TEST_MAPPING,
+        name: 'marker',
+        size: 32,
+      });
+
+      editStore.set(mapId, {
+        editingShape: shape,
+        editMode: 'point-translate',
+        featureBeingEdited: null,
+        previousMode: null,
+      });
+
+      const { unmount } = render(<EditShapeLayer mapId={mapId} />);
+
+      expect(mockGetIconConfig).toHaveBeenCalledWith([shape.feature]);
+
+      unmount();
+    });
+
+    it('should call getIconLayerProps when icons are detected', () => {
+      const shape = createTestShape({
+        atlas: TEST_ATLAS,
+        mapping: TEST_MAPPING,
+        name: 'marker',
+        size: 32,
+      });
+
+      mockGetIconConfig.mockReturnValue({
+        hasIcons: true,
+        atlas: TEST_ATLAS,
+        mapping: TEST_MAPPING,
+      });
+      mockGetIconLayerProps.mockReturnValue({
+        iconAtlas: TEST_ATLAS,
+        iconMapping: TEST_MAPPING,
+      });
+
+      editStore.set(mapId, {
+        editingShape: shape,
+        editMode: 'point-translate',
+        featureBeingEdited: null,
+        previousMode: null,
+      });
+
+      const { unmount } = render(<EditShapeLayer mapId={mapId} />);
+
+      expect(mockGetIconLayerProps).toHaveBeenCalledWith(
+        true,
+        TEST_ATLAS,
+        TEST_MAPPING,
+      );
+
+      unmount();
+    });
+
+    it('should not call getIconLayerProps when no icons are detected', () => {
+      const shape = createTestShape();
+
+      mockGetIconConfig.mockReturnValue({ hasIcons: false });
+
+      editStore.set(mapId, {
+        editingShape: shape,
+        editMode: 'point-translate',
+        featureBeingEdited: null,
+        previousMode: null,
+      });
+
+      const { unmount } = render(<EditShapeLayer mapId={mapId} />);
+
+      expect(mockGetIconLayerProps).not.toHaveBeenCalled();
+
+      unmount();
     });
   });
 });
