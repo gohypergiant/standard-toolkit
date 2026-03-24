@@ -42,7 +42,7 @@ function CarouselNavigation({
   return (
     <Button
       onClick={onClick}
-      className={clsx(styles.button, className)}
+      className={clsx(styles.navigation, className)}
       variant='flat'
       isDisabled={isDisabled}
       {...rest}

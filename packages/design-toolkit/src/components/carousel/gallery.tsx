@@ -65,17 +65,18 @@ export function CarouselGallery({ classNames, ...rest }: CarouselGalleryProps) {
     >
       {items.map((item, index) => (
         <Button
-          className={clsx(styles.selected, styles['thumbnail-gallery-item'])}
           style={{
             translate: `${galleryXOffset}px`,
-            transition: 'all .3s ease',
+            transition: 'all .2s ease',
             outline:
               currentPosition === index
                 ? '2px solid var(--fg-accent-primary-bold)'
                 : 'none',
           }}
+          className={styles['thumbnail-gallery-item']}
           onClick={() => updatePosition(index)}
           key={`thumbnail-${item.uuid}`}
+          size='small'
           data-id={`thumbnail-id-${item.uuid}`}
         >
           <img src={item.thumbnailUrl} alt={item.title} />

@@ -55,24 +55,23 @@ const [currentPosition, setCurrentPosition] = useState(0);
 </Carousel>
 ```
 
-### CarouselViewer
-The main display area for items in the carousel.
+### Gallery View
+Default styling for Carousel, uses a gallery of thumbnails.
+<Canvas of={CarouselStories.Default} />
 
-
-### CarouselSelect
+### Select View
 We can compose the Carousel component in a number ways, as needed. Included as an example is the **`CarouselSelect`** field, which will list items using a **`SearchField`** component.
 <Canvas of={CarouselStories.WithSelect} />
 
-### CarouselDisplay
-
-##
 
 ## Props
+
+### Carousel
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `items` | `Array<CarouselData>` | - | The items to display in the carousel. |
 
-### CarouselData
+#### CarouselData
 The data type for items in the carousel.
 
 | Field | Type | Description |
@@ -84,6 +83,57 @@ The data type for items in the carousel.
 | `title` | `string` | The title of the item. |
 | `thumbnailUrl` | `string` | The thumbnail URL of the item. |
 | `uuid` | `string` | The unique identifier of the item. |
+
+
+### CarouselViewer
+Main image display of the carousel.
+
+|Prop|Type|Default|Description|
+|----|----|-------|-----------|
+|`children`|`ReactNode`|-|Additional content to display in the carousel viewer. By default displays an image.|
+|`className`|`string`|-|The class name for the carousel viewer.|
+
+### CarouselGallery
+|Prop|Type|Default|Description|
+|----|----|-------|-----------|
+|`classNames`|`object`|-|The class names for the carousel gallery.|
+
+#### **`classNames`**
+- **`container`** - The class name for the carousel gallery container.
+- **`item`** - The class name for the carousel gallery item.
+
+### CarouselPrevious
+Navigates to the previous item in the carousel.
+
+|Prop|Type|Default|Description|
+|----|----|-------|-----------|
+|`className`|`string`|-|The class name for the carousel previous button.|
+
+### CarouselNext
+Navigates to the next item in the carousel.
+
+|Prop|Type|Default|Description|
+|----|----|-------|-----------|
+|`className`|`string`|-|The class name for the carousel next button.|
+
+### CarouselPosition
+Displays current position and total count of items in the carousel.
+
+|Prop|Type|Default|Description|
+|----|----|-------|-----------|
+|`className`|`string`|-|The class name for the carousel position.|
+
+### CarouselSelect
+**`SelectField`** component that displays a list of items in the carousel.
+
+|Prop|Type|Default|Description|
+|----|----|-------|-----------|
+|`classNames`|`object`|-|The class names for the carousel select.|
+
+#### **`classNames`**
+- **`field`** - The class name for the carousel select field.
+- **`optionItem`** - The class name for the carousel select option item.
+
 
 ## Implementation Notes
 - Currently limited to displaying images.
