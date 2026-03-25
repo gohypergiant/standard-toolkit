@@ -11,18 +11,29 @@
  */
 
 import { GANTT_ROW_ELEMENT_HEIGHT } from '../../constants';
+import { useTemporalDataContext } from '../../context/temporal-data';
+import { calculateElapsedPercentage } from '../../utils/helpers';
 import { Range, type RangeProps } from '../base-elements/range';
 import styles from './styles.module.css';
 
-export function GanttRowBlock({ id, startMs, endMs, ...rest }: RangeProps) {
+export function GanttRowBlock(props: RangeProps) {
+  const { currentTimeMs, renderedRegionBounds } = useTemporalDataContext();
+
+  let elapsedPct = 0;
+  if (currentTimeMs !== undefined) {
+    elapsedPct = calculateElapsedPercentage(
+      currentTimeMs,
+      Math.max(props.startMs, renderedRegionBounds.startMs),
+      Math.min(props.endMs, renderedRegionBounds.endMs),
+    );
+  }
+
   return (
     <Range
-      id={id}
-      startMs={startMs}
-      endMs={endMs}
       data-height={GANTT_ROW_ELEMENT_HEIGHT}
+      data-elapsed-pct={elapsedPct}
       className={styles['row-block']}
-      {...rest}
+      {...props}
     />
   );
 }

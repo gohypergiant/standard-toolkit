@@ -11,6 +11,7 @@
  */
 
 import { GANTT_ROW_ELEMENT_HEIGHT } from '../../constants';
+import { useTemporalDataContext } from '../../context/temporal-data';
 import { Point, type PointProps } from '../base-elements/point';
 import styles from './styles.module.css';
 
@@ -19,13 +20,20 @@ type BracketBaseProps = PointProps & {
 };
 
 function BracketBase({ direction, ...rest }: BracketBaseProps) {
+  const { currentTimeMs } = useTemporalDataContext();
   const rotate = direction === 'open' ? '0' : '180';
+
+  const isElapsed =
+    rest.timeMs !== undefined &&
+    currentTimeMs !== undefined &&
+    rest.timeMs <= currentTimeMs;
 
   return (
     <Point
       className={styles['bracket-container']}
       data-rotate={rotate}
       data-height={GANTT_ROW_ELEMENT_HEIGHT}
+      data-elapsed={isElapsed || undefined}
       {...rest}
     >
       <div className={styles.bracket} data-height={GANTT_ROW_ELEMENT_HEIGHT} />

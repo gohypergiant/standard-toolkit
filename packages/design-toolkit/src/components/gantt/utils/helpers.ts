@@ -77,3 +77,17 @@ export function shouldRenderCurrentTime(
 ) {
   return timestampWithinBounds(currentTimeMs, renderedRegionBounds);
 }
+
+export function calculateElapsedPercentage(
+  currentTimeMs: number,
+  startMs: number,
+  endMs: number,
+): number {
+  const totalDuration = endMs - startMs;
+  if (totalDuration <= 0) {
+    return 0;
+  }
+
+  const elapsed = Math.max(0, Math.min(currentTimeMs - startMs, totalDuration));
+  return (elapsed / totalDuration) * 100;
+}
