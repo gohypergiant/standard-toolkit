@@ -1092,13 +1092,13 @@ importers:
         specifier: ^4.1.0
         version: 4.1.0
       '@ngageoint/gars-js':
-        specifier: 1.0.0
+        specifier: ^1.0.0
         version: 1.0.0
       '@ngageoint/grid-js':
-        specifier: 2.1.0
+        specifier: ^2.1.0
         version: 2.1.0
       '@ngageoint/mgrs-js':
-        specifier: 1.0.0
+        specifier: ^1.0.0
         version: 1.0.0
       '@turf/helpers':
         specifier: ^7.2.0
