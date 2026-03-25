@@ -224,6 +224,8 @@
     "test:watch": "pnpm vitest --dir=src --watch"
   },
   "sideEffects": [
+    "./src/deckgl/grid-layers/gars/fiber.ts",
+    "./src/deckgl/grid-layers/mgrs/fiber.ts",
     "./src/deckgl/shapes/display-shape-layer/fiber.ts",
     "./src/deckgl/shapes/draw-shape-layer/fiber.ts",
     "./src/deckgl/shapes/edit-shape-layer/fiber.ts",
