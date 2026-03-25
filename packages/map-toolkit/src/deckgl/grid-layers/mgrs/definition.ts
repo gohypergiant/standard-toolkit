@@ -11,7 +11,6 @@
  */
 
 import { createMGRSRenderer } from './renderer';
-import { designTokens } from '@accelint/design-foundation/tokens';
 import type { GridDefinition, GridZoomRange } from '../core/types';
 import { DEFAULT_STYLES } from '../shared/constants';
 

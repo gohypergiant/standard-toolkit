@@ -31,8 +31,7 @@ describe('MgrsLayer', () => {
 
   it('should use mgrsDefinition', () => {
     const layer = new MgrsLayer({ id: 'test' });
-    // biome-ignore lint/suspicious/noExplicitAny: Test needs to access internal props
-    expect((layer as any).props.definition).toBe(mgrsDefinition);
+    expect(layer.props.definition).toBe(mgrsDefinition);
   });
 
   it('should map gzdStyle to GZD override', () => {
@@ -41,36 +40,26 @@ describe('MgrsLayer', () => {
       lineWidth: 2,
     };
     const layer = new MgrsLayer({ id: 'test', gzdStyle: style });
-    // biome-ignore lint/suspicious/noExplicitAny: Test needs to access internal props
-    expect((layer as any).props.styleOverrides[MGRS_GRID_TYPES.GZD]).toBe(
-      style,
-    );
+    expect(layer.props.styleOverrides?.[MGRS_GRID_TYPES.GZD]).toBe(style);
   });
 
   it('should map grid100kmStyle to GRID_100KM override', () => {
     const style = { lineWidth: 1.5 };
     const layer = new MgrsLayer({ id: 'test', grid100kmStyle: style });
-    // biome-ignore lint/suspicious/noExplicitAny: Test needs to access internal props
-    expect(
-      (layer as any).props.styleOverrides[MGRS_GRID_TYPES.GRID_100KM],
-    ).toBe(style);
+    expect(layer.props.styleOverrides?.[MGRS_GRID_TYPES.GRID_100KM]).toBe(
+      style,
+    );
   });
 
   it('should map grid10kmStyle to GRID_10KM override', () => {
     const style = { lineWidth: 1 };
     const layer = new MgrsLayer({ id: 'test', grid10kmStyle: style });
-    // biome-ignore lint/suspicious/noExplicitAny: Test needs to access internal props
-    expect((layer as any).props.styleOverrides[MGRS_GRID_TYPES.GRID_10KM]).toBe(
-      style,
-    );
+    expect(layer.props.styleOverrides?.[MGRS_GRID_TYPES.GRID_10KM]).toBe(style);
   });
 
   it('should map grid1kmStyle to GRID_1KM override', () => {
     const style = { lineWidth: 0.5 };
     const layer = new MgrsLayer({ id: 'test', grid1kmStyle: style });
-    // biome-ignore lint/suspicious/noExplicitAny: Test needs to access internal props
-    expect((layer as any).props.styleOverrides[MGRS_GRID_TYPES.GRID_1KM]).toBe(
-      style,
-    );
+    expect(layer.props.styleOverrides?.[MGRS_GRID_TYPES.GRID_1KM]).toBe(style);
   });
 });

@@ -14,6 +14,8 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { GarsLayer } from './';
 import { Broadcast } from '@accelint/bus';
 import { type GridCellEvent, GridCellEvents } from '../core/types';
+import type { Layer } from '@deck.gl/core';
+import type { PathLayer } from '@deck.gl/layers';
 
 /**
  * Create a mock viewport with unproject method
@@ -67,17 +69,15 @@ describe('GARSLayer Integration', () => {
     unsubscribe = eventBus.on(GridCellEvents.click, clickHandler);
 
     // Set context before rendering (zoom >= 6 for labels/polygons to be visible)
-    // biome-ignore lint/suspicious/noExplicitAny: Test needs to set internal context
-    (layer as any).context = {
+    layer.context = {
       viewport: createMockViewport(7),
-    };
+    } as Layer['context'];
 
     // Verify event handlers are attached via polygon layer
     const sublayers = layer.renderLayers();
-    // biome-ignore lint/suspicious/noExplicitAny: Test needs to access sublayer props
     const polygonLayer = sublayers.find((l) =>
       l.id.includes('-polygons-'),
-    ) as any;
+    ) as unknown as Layer;
     expect(polygonLayer).toBeDefined();
     expect(polygonLayer?.props.pickable).toBe(true);
   });
@@ -96,15 +96,15 @@ describe('GARSLayer Integration', () => {
     };
 
     // Set context before rendering
-    // biome-ignore lint/suspicious/noExplicitAny: Test needs to set internal context
-    (layer as any).context = {
+    layer.context = {
       viewport: createMockViewport(5),
-    };
+    } as Layer['context'];
 
     // Verify hover handlers are attached
     const sublayers = layer.renderLayers();
-    // biome-ignore lint/suspicious/noExplicitAny: Test needs to access sublayer props
-    const pathLayer = sublayers.find((l) => l.id.includes('lines')) as any;
+    const pathLayer = sublayers.find((l) =>
+      l.id.includes('lines'),
+    ) as PathLayer;
     expect(pathLayer).toBeDefined();
     expect(pathLayer?.props.onHover).toBeDefined();
   });
@@ -127,17 +127,17 @@ describe('GARSLayer Integration', () => {
     });
 
     // Mock viewport context
-    // biome-ignore lint/suspicious/noExplicitAny: Test needs to set internal context
-    (layer as any).context = {
+    layer.context = {
       viewport: createMockViewport(5),
-    };
+    } as Layer['context'];
 
     const sublayers = layer.renderLayers();
     expect(sublayers.length).toBeGreaterThan(0);
 
     // Verify PathLayer uses custom styles
-    // biome-ignore lint/suspicious/noExplicitAny: Test needs to access sublayer props
-    const pathLayer = sublayers.find((l) => l.id.includes('lines')) as any;
+    const pathLayer = sublayers.find((l) =>
+      l.id.includes('lines'),
+    ) as PathLayer;
     expect(pathLayer).toBeDefined();
     expect(pathLayer?.props.getColor).toEqual(customLineColor);
     expect(pathLayer?.props.getWidth).toBe(customLineWidth);
@@ -158,19 +158,17 @@ describe('GARSLayer Integration', () => {
     });
 
     // Test at zoom level within range
-    // biome-ignore lint/suspicious/noExplicitAny: Test needs to set internal context
-    (layer as any).context = {
+    layer.context = {
       viewport: createMockViewport(3),
-    };
+    } as Layer['context'];
 
     let sublayers = layer.renderLayers();
     expect(sublayers.length).toBeGreaterThan(0);
 
     // Test at zoom level outside range
-    // biome-ignore lint/suspicious/noExplicitAny: Test needs to set internal context
-    (layer as any).context = {
+    layer.context = {
       viewport: createMockViewport(10),
-    };
+    } as Layer['context'];
 
     sublayers = layer.renderLayers();
     expect(sublayers.length).toBe(0);
@@ -182,14 +180,12 @@ describe('GARSLayer Integration', () => {
       enableInteractivity: false,
     });
 
-    // biome-ignore lint/suspicious/noExplicitAny: Test needs to set internal context
-    (layer as any).context = {
+    layer.context = {
       viewport: createMockViewport(5),
-    };
+    } as Layer['context'];
 
     const sublayers = layer.renderLayers();
-    // biome-ignore lint/suspicious/noExplicitAny: Test needs to access sublayer props
-    const pathLayer = sublayers.find((l) => l.id.includes('lines')) as any;
+    const pathLayer = sublayers.find((l) => l.id.includes('lines'));
 
     expect(pathLayer).toBeDefined();
     expect(pathLayer?.props.pickable).toBe(false);
@@ -201,10 +197,9 @@ describe('GARSLayer Integration', () => {
       showLabels: true,
     });
 
-    // biome-ignore lint/suspicious/noExplicitAny: Test needs to set internal context
-    (layer as any).context = {
+    layer.context = {
       viewport: createMockViewport(5),
-    };
+    } as Layer['context'];
 
     const sublayers = layer.renderLayers();
     // Look for TextLayer specifically (labels sublayer has '-labels-' pattern)
@@ -219,10 +214,9 @@ describe('GARSLayer Integration', () => {
       showLabels: false,
     });
 
-    // biome-ignore lint/suspicious/noExplicitAny: Test needs to set internal context
-    (layer as any).context = {
+    layer.context = {
       viewport: createMockViewport(5),
-    };
+    } as Layer['context'];
 
     const sublayers = layer.renderLayers();
     // Look for TextLayer specifically (labels sublayer has '-labels-' pattern)

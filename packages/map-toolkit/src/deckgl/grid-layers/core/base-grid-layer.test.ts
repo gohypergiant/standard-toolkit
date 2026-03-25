@@ -22,13 +22,17 @@ import type {
 } from './types';
 import { GridCellEvents } from './types';
 import { BaseGridLayer } from './base-grid-layer';
-import type { PickingInfo, UpdateParameters } from '@deck.gl/core';
+import type { PickingInfo, UpdateParameters, Viewport } from '@deck.gl/core';
+import type { PathLayer } from '@deck.gl/layers';
 
 /**
  * Type-safe helper to set layer context and initialize state for testing
  * Avoids using `as any` while still allowing controlled internal access
  */
-function setLayerContext(layer: BaseGridLayer, viewport: any): void {
+function setLayerContext(
+  layer: BaseGridLayer,
+  viewport?: Partial<Viewport>,
+): void {
   Object.defineProperty(layer, 'context', {
     value: { viewport },
     writable: true,
@@ -59,7 +63,6 @@ describe('BaseGridLayer', () => {
 
   // Mock renderer
   const mockRenderer: GridRenderer = {
-    // biome-ignore lint/correctness/noUnusedFunctionParameters: Mock doesn't need to use context
     render: vi.fn(
       (_context: RenderContext): RenderResult => ({
         lines: [
@@ -146,11 +149,10 @@ describe('BaseGridLayer', () => {
     zoom: 3,
     width: 800,
     height: 600,
-    unproject: vi.fn((coords: number[]) => {
-      // Simple mock: return coords as-is for bounds calculation
-      return [coords[0]! / 100, coords[1]! / 100];
+    unproject: vi.fn((coords: [number, number]) => {
+      return [coords[0] / 100, coords[1] / 100];
     }),
-  };
+  } as Partial<Viewport>;
 
   describe('Initialization', () => {
     it('should throw when definition is invalid', () => {
@@ -225,10 +227,9 @@ describe('BaseGridLayer', () => {
       setLayerContext(layer, mockViewport);
 
       const renderedLayers = layer.renderLayers();
-      // biome-ignore lint/suspicious/noExplicitAny: Test needs to access sublayer props
       const pathLayer = renderedLayers.find((l) =>
         l.id.includes('lines-coarse'),
-      ) as any;
+      ) as PathLayer;
 
       expect(pathLayer).toBeDefined();
       // Check that the override color is used

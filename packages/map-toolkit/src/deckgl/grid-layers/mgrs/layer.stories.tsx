@@ -10,10 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import './fiber';
+import '@/deckgl/grid-layers/mgrs/fiber';
 import { useOn } from '@accelint/bus/react';
 import { uuid } from '@accelint/core';
-import { useId, useState } from 'react';
+import { useState } from 'react';
 import { BaseMap } from '@/deckgl/base-map';
 import { withDeckGL } from '@/decorators/deckgl';
 import {

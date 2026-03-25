@@ -13,6 +13,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { GarsLayer } from './';
 import { garsDefinition, GARS_GRID_TYPES } from './definition';
+import type { Color } from '@deck.gl/core';
 
 vi.mock('../core/base-grid-layer', () => ({
   BaseGridLayer: class MockBaseGridLayer {
@@ -31,37 +32,33 @@ describe('GarsLayer', () => {
 
   it('should use garsDefinition', () => {
     const layer = new GarsLayer({ id: 'test' });
-    // biome-ignore lint/suspicious/noExplicitAny: Test needs to access internal props
-    expect((layer as any).props.definition).toBe(garsDefinition);
+    expect(layer.props.definition).toBe(garsDefinition);
   });
 
   it('should map thirtyMinuteStyle to THIRTY_MINUTE override', () => {
     const style = {
-      lineColor: [255, 0, 0, 255] as [number, number, number, number],
+      lineColor: [255, 0, 0, 255] as Color,
       lineWidth: 2,
     };
     const layer = new GarsLayer({ id: 'test', thirtyMinuteStyle: style });
-    // biome-ignore lint/suspicious/noExplicitAny: Test needs to access internal props
-    expect(
-      (layer as any).props.styleOverrides[GARS_GRID_TYPES.THIRTY_MINUTE],
-    ).toBe(style);
+    expect(layer.props.styleOverrides?.[GARS_GRID_TYPES.THIRTY_MINUTE]).toBe(
+      style,
+    );
   });
 
   it('should map fifteenMinuteStyle to FIFTEEN_MINUTE override', () => {
     const style = { lineWidth: 1.5 };
     const layer = new GarsLayer({ id: 'test', fifteenMinuteStyle: style });
-    // biome-ignore lint/suspicious/noExplicitAny: Test needs to access internal props
-    expect(
-      (layer as any).props.styleOverrides[GARS_GRID_TYPES.FIFTEEN_MINUTE],
-    ).toBe(style);
+    expect(layer.props.styleOverrides?.[GARS_GRID_TYPES.FIFTEEN_MINUTE]).toBe(
+      style,
+    );
   });
 
   it('should map fiveMinuteStyle to FIVE_MINUTE override', () => {
     const style = { lineWidth: 1 };
     const layer = new GarsLayer({ id: 'test', fiveMinuteStyle: style });
-    // biome-ignore lint/suspicious/noExplicitAny: Test needs to access internal props
-    expect(
-      (layer as any).props.styleOverrides[GARS_GRID_TYPES.FIVE_MINUTE],
-    ).toBe(style);
+    expect(layer.props.styleOverrides?.[GARS_GRID_TYPES.FIVE_MINUTE]).toBe(
+      style,
+    );
   });
 });

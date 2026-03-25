@@ -15,7 +15,6 @@ import { useOn } from '@accelint/bus/react';
 import { uuid } from '@accelint/core';
 import { useId, useState } from 'react';
 import { BaseMap } from '@/deckgl/base-map';
-import './fiber';
 import { withDeckGL } from '@/decorators/deckgl';
 import {
   type GridCellClickEvent,

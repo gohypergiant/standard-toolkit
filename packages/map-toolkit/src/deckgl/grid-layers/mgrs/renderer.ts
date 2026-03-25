@@ -12,7 +12,6 @@
 
 import { Grids, GridType, GridZones } from '@ngageoint/mgrs-js';
 import type {
-  CellBounds,
   GridRenderer,
   LabelData,
   LineData,
@@ -20,7 +19,6 @@ import type {
   RenderContext,
   RenderResult,
 } from '../core/types';
-import type { Coordinates } from 'maplibre-gl';
 
 /**
  * Maps internal grid type strings to @ngageoint/mgrs-js GridType enum values.

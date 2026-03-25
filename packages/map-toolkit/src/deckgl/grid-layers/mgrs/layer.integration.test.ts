@@ -14,6 +14,8 @@ import { Broadcast } from '@accelint/bus';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { MgrsLayer } from './';
 import { type GridCellEvent, GridCellEvents } from '../core/types';
+import type { Layer } from '@deck.gl/core';
+import type { PathLayer } from '@deck.gl/layers';
 
 /**
  * Create a mock viewport with unproject method
@@ -66,15 +68,15 @@ describe('MGRSLayer Integration', () => {
     unsubscribe = eventBus.on(GridCellEvents.click, clickHandler);
 
     // Set context before rendering
-    // biome-ignore lint/suspicious/noExplicitAny: Test needs to set internal context
-    (layer as any).context = {
+    layer.context = {
       viewport: createMockViewport(5),
-    };
+    } as Layer['context'];
 
     // Verify PathLayer is not pickable (only labels should be)
     const sublayers = layer.renderLayers();
-    // biome-ignore lint/suspicious/noExplicitAny: Test needs to access sublayer props
-    const pathLayer = sublayers.find((l) => l.id.includes('lines')) as any;
+    const pathLayer = sublayers.find((l) =>
+      l.id.includes('lines'),
+    ) as PathLayer;
     expect(pathLayer).toBeDefined();
     expect(pathLayer?.props.pickable).toBe(false);
   });
@@ -94,15 +96,15 @@ describe('MGRSLayer Integration', () => {
     };
 
     // Set context before rendering
-    // biome-ignore lint/suspicious/noExplicitAny: Test needs to set internal context
-    (layer as any).context = {
+    layer.context = {
       viewport: createMockViewport(5),
-    };
+    } as Layer['context'];
 
     // Verify hover handlers are attached
     const sublayers = layer.renderLayers();
-    // biome-ignore lint/suspicious/noExplicitAny: Test needs to access sublayer props
-    const pathLayer = sublayers.find((l) => l.id.includes('lines')) as any;
+    const pathLayer = sublayers.find((l) =>
+      l.id.includes('lines'),
+    ) as PathLayer;
     expect(pathLayer).toBeDefined();
     expect(pathLayer?.props.onHover).toBeDefined();
   });
@@ -125,17 +127,17 @@ describe('MGRSLayer Integration', () => {
     });
 
     // Mock viewport context
-    // biome-ignore lint/suspicious/noExplicitAny: Test needs to set internal context
-    (layer as any).context = {
+    layer.context = {
       viewport: createMockViewport(3),
-    };
+    } as Layer['context'];
 
     const sublayers = layer.renderLayers();
     expect(sublayers.length).toBeGreaterThan(0);
 
     // Verify PathLayer uses custom styles
-    // biome-ignore lint/suspicious/noExplicitAny: Test needs to access sublayer props
-    const pathLayer = sublayers.find((l) => l.id.includes('lines')) as any;
+    const pathLayer = sublayers.find((l) =>
+      l.id.includes('lines'),
+    ) as PathLayer;
     expect(pathLayer).toBeDefined();
     expect(pathLayer?.props.getColor).toEqual(customLineColor);
     expect(pathLayer?.props.getWidth).toBe(customLineWidth);
@@ -156,19 +158,17 @@ describe('MGRSLayer Integration', () => {
     });
 
     // Test at zoom level within range
-    // biome-ignore lint/suspicious/noExplicitAny: Test needs to set internal context
-    (layer as any).context = {
+    layer.context = {
       viewport: createMockViewport(3),
-    };
+    } as Layer['context'];
 
     let sublayers = layer.renderLayers();
     expect(sublayers.length).toBeGreaterThan(0);
 
     // Test at zoom level outside range
-    // biome-ignore lint/suspicious/noExplicitAny: Test needs to set internal context
-    (layer as any).context = {
+    layer.context = {
       viewport: createMockViewport(10),
-    };
+    } as Layer['context'];
 
     sublayers = layer.renderLayers();
     expect(sublayers.length).toBe(0);
@@ -180,20 +180,18 @@ describe('MGRSLayer Integration', () => {
     });
 
     // At low zoom, only GZD should be visible (GZD minZoom is 3)
-    // biome-ignore lint/suspicious/noExplicitAny: Test needs to set internal context
-    (layer as any).context = {
+    layer.context = {
       viewport: createMockViewport(3),
-    };
+    } as Layer['context'];
 
     let sublayers = layer.renderLayers();
     expect(sublayers.length).toBeGreaterThan(0);
     expect(sublayers.some((l) => l.id.includes('gzd'))).toBe(true);
 
     // At medium zoom, multiple grids should be visible (GZD + 100km at zoom 5)
-    // biome-ignore lint/suspicious/noExplicitAny: Test needs to set internal context
-    (layer as any).context = {
+    layer.context = {
       viewport: createMockViewport(5),
-    };
+    } as Layer['context'];
 
     sublayers = layer.renderLayers();
     expect(sublayers.length).toBeGreaterThan(1); // At least 2 grid types (GZD + 100km)
@@ -205,14 +203,14 @@ describe('MGRSLayer Integration', () => {
       enableInteractivity: false,
     });
 
-    // biome-ignore lint/suspicious/noExplicitAny: Test needs to set internal context
-    (layer as any).context = {
+    layer.context = {
       viewport: createMockViewport(5),
-    };
+    } as Layer['context'];
 
     const sublayers = layer.renderLayers();
-    // biome-ignore lint/suspicious/noExplicitAny: Test needs to access sublayer props
-    const pathLayer = sublayers.find((l) => l.id.includes('lines')) as any;
+    const pathLayer = sublayers.find((l) =>
+      l.id.includes('lines'),
+    ) as PathLayer;
 
     expect(pathLayer).toBeDefined();
     expect(pathLayer?.props.pickable).toBe(false);
@@ -224,10 +222,9 @@ describe('MGRSLayer Integration', () => {
       showLabels: true,
     });
 
-    // biome-ignore lint/suspicious/noExplicitAny: Test needs to set internal context
-    (layer as any).context = {
+    layer.context = {
       viewport: createMockViewport(5),
-    };
+    } as Layer['context'];
 
     const sublayers = layer.renderLayers();
     // Look for TextLayer specifically (labels sublayer has '-labels-' pattern)
@@ -242,10 +239,9 @@ describe('MGRSLayer Integration', () => {
       showLabels: false,
     });
 
-    // biome-ignore lint/suspicious/noExplicitAny: Test needs to set internal context
-    (layer as any).context = {
+    layer.context = {
       viewport: createMockViewport(5),
-    };
+    } as Layer['context'];
 
     const sublayers = layer.renderLayers();
     // Look for TextLayer specifically (labels sublayer has '-labels-' pattern)

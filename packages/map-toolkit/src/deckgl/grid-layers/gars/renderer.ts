@@ -11,7 +11,6 @@
  */
 
 import type {
-  CellBounds,
   GridRenderer,
   LabelData,
   LineData,
@@ -74,6 +73,7 @@ export function createGARSRenderer(): GridRenderer {
   grids.enableLabeler(GridType.FIVE_MINUTE);
 
   return {
+    // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: unavoidable here (for now)
     render: (context: RenderContext): RenderResult => {
       const { bounds, zoom, gridType } = context;
 

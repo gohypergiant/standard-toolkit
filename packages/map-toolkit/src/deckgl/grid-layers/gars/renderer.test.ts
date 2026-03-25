@@ -45,13 +45,12 @@ describe('createGARSRenderer', () => {
       getLines: mockGetLines,
       getLabels: mockGetLabels,
     });
-    // biome-ignore lint/suspicious/noExplicitAny: Mock return type doesn't match full Grids shape
     vi.mocked(Grids.create).mockReturnValue({
       getGrid: mockGetGrid,
       setLabelMinZoom: vi.fn(),
       setLabelMaxZoom: vi.fn(),
       enableLabeler: vi.fn(),
-    } as any);
+    } as unknown as Grids);
   });
 
   it('should return empty result for unknown grid type', () => {
