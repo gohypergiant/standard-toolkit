@@ -60,9 +60,9 @@ export class BaseGridLayer extends CompositeLayer<BaseGridLayerProps> {
   /**
    * Type-safe accessor for hovered cell state
    */
-  private getHoveredCell(): string | undefined {
+  private getHoveredCell(): string {
     const state = this.state as { hoveredCell?: string } | undefined;
-    return state?.hoveredCell;
+    return state?.hoveredCell ?? '';
   }
 
   /**
@@ -123,8 +123,7 @@ export class BaseGridLayer extends CompositeLayer<BaseGridLayerProps> {
       return info;
     }
 
-    // Handle hover events
-    if (mode === 'hover' || !mode) {
+    if (mode === 'hover') {
       this.handleHover(info);
     }
 
@@ -154,13 +153,12 @@ export class BaseGridLayer extends CompositeLayer<BaseGridLayerProps> {
    * const layers = layer.renderLayers();
    * ```
    */
-  // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: Orchestration logic is necessarily complex
   override renderLayers(): Layer[] {
     const {
       definition,
       styleOverrides,
-      showLabels = 'true',
-      enableInteractivity = 'false',
+      showLabels = true,
+      enableInteractivity = false,
       zoomRanges: customZoomRanges,
       selectedCell,
     } = this.props;
@@ -169,15 +167,13 @@ export class BaseGridLayer extends CompositeLayer<BaseGridLayerProps> {
       return [];
     }
 
+    const pickable = enableInteractivity !== false;
     const zoom = viewport.zoom;
     const bounds = getViewportBounds(viewport);
 
-    if (!bounds) {
-      return [];
-    }
-
     const layers: Layer[] = [];
     const zoomRanges = customZoomRanges || definition.zoomRanges;
+    const hoveredCell = this.getHoveredCell();
 
     for (const range of zoomRanges) {
       // Check if this grid type is visible at current zoom (inclusive range)
@@ -193,13 +189,17 @@ export class BaseGridLayer extends CompositeLayer<BaseGridLayerProps> {
         gridType: range.type,
       });
 
-      const pickable = enableInteractivity !== false;
-
       // Add polygon layer for cell-wide interaction and hover/select highlighting
       if (pickable && polygons.length > 0) {
-        const hoveredCell = this.getHoveredCell();
         const hoverColor = style.hoverColor;
         const selectedColor = style.selectedColor;
+
+        const fillColorTriggers = [
+          hoveredCell,
+          selectedCell,
+          hoverColor,
+          selectedColor,
+        ];
 
         layers.push(
           new PolygonLayer<PolygonData>({
@@ -218,33 +218,11 @@ export class BaseGridLayer extends CompositeLayer<BaseGridLayerProps> {
             pickable: true,
             wrapLongitude: definition.options?.wrapLongitude ?? false,
             updateTriggers: {
-              getFillColor: [
-                hoveredCell,
-                selectedCell,
-                hoverColor,
-                selectedColor,
-              ],
+              getFillColor: fillColorTriggers,
             },
           }),
         );
       }
-
-      layers.push(
-        new PathLayer<LineData>({
-          id: `${this.id}-lines-${range.key}`,
-          data: lines,
-          getPath: (d) => d.path,
-          getColor: style.lineColor,
-          getWidth: style.lineWidth,
-          widthUnits: 'pixels',
-          pickable: false,
-          wrapLongitude: definition.options?.wrapLongitude ?? false,
-          updateTriggers: {
-            getColor: style.lineColor,
-            getWidth: style.lineWidth,
-          },
-        }),
-      );
 
       // Create TextLayer for labels if enabled and zoom is sufficient
       const labelMinZoom = range.labelMinZoom ?? range.minZoom;
@@ -274,6 +252,23 @@ export class BaseGridLayer extends CompositeLayer<BaseGridLayerProps> {
           }),
         );
       }
+
+      layers.push(
+        new PathLayer<LineData>({
+          id: `${this.id}-lines-${range.key}`,
+          data: lines,
+          getPath: (d) => d.path,
+          getColor: style.lineColor,
+          getWidth: style.lineWidth,
+          widthUnits: 'pixels',
+          pickable: false,
+          wrapLongitude: definition.options?.wrapLongitude ?? false,
+          updateTriggers: {
+            getColor: style.lineColor,
+            getWidth: style.lineWidth,
+          },
+        }),
+      );
     }
 
     return layers;
@@ -303,15 +298,12 @@ export class BaseGridLayer extends CompositeLayer<BaseGridLayerProps> {
       return defaultStyle;
     }
 
-    // Merge default with override
-    return {
-      ...defaultStyle,
-      ...override,
-    };
+    return Object.assign({}, defaultStyle, override);
   }
 
   /**
    * Handles click events on grid cells
+   *
    */
   private handleClick = (info: PickingInfo): void => {
     const cellId = info.object?.cellId;
@@ -332,6 +324,8 @@ export class BaseGridLayer extends CompositeLayer<BaseGridLayerProps> {
 
   /**
    * Handles hover events on grid cells with deduplication
+   * Note: No event is emitted when the cursor leaves all cells (cellId becomes undefined).
+   * Only cell-to-cell transitions emit events.
    */
   private handleHover = (info: PickingInfo): void => {
     const cellId = info.object?.cellId;

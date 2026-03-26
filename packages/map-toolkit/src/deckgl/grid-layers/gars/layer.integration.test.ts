@@ -102,11 +102,12 @@ describe('GARSLayer Integration', () => {
 
     // Verify hover handlers are attached
     const sublayers = layer.renderLayers();
-    const pathLayer = sublayers.find((l) =>
-      l.id.includes('lines'),
-    ) as PathLayer;
-    expect(pathLayer).toBeDefined();
-    expect(pathLayer?.props.onHover).toBeDefined();
+    const polygonLayer = sublayers.find((l) =>
+      l.id.includes('-polygons-'),
+    ) as unknown as Layer;
+    expect(polygonLayer).toBeDefined();
+    expect(polygonLayer?.props.pickable).toBe(true);
+    expect(polygonLayer?.props.onHover).toBeDefined();
   });
 
   it('applies style overrides correctly', () => {

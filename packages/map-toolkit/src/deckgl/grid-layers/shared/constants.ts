@@ -24,7 +24,7 @@ export const DEFAULT_LABEL_COLOR: Color = designTokens.dark.fg.info.hover;
 
 export const DEFAULT_FONT_WEIGHT: string = 'normal';
 
-export const DEFAULT_LABEL_BACKGROUND_COLOR: Color = [255, 255, 255, 15];
+export const DEFAULT_LABEL_BACKGROUND_COLOR: Color = [255, 255, 255, 30];
 
 export const DEFAULT_LABEL_PADDING: [number, number] = [4, 4];
 

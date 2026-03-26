@@ -18,7 +18,7 @@
  *
  * @example
  * ```typescript
- * import '@accelint/map-toolkit/deckglgars/fiber';
+ * import '@accelint/map-toolkit/deckgl/gars/fiber';
  * // <garsLayer definition={garsDefinition} showLabels />
  * ```
  */

@@ -50,7 +50,7 @@ describe('getViewportBounds', () => {
     // worldPixelWidth = 512 * 2^0 = 512; viewport.width (512) >= worldPixelWidth
     const viewport = makeViewport(0, 512, 400, vi.fn());
     const result = getViewportBounds(viewport);
-    expect(result).not.toBeNull();
+    expect(result).toBeDefined();
     expect(vi.mocked(Bounds.bounds)).toHaveBeenCalledWith(
       -180,
       -80,
@@ -69,7 +69,7 @@ describe('getViewportBounds', () => {
 
     const result = getViewportBounds(viewport);
 
-    expect(result).not.toBeNull();
+    expect(result).toBeDefined();
     // minLon = Math.min(-10, 20) = -10, maxLon = Math.max(-10, 20) = 20
     // minLat = Math.max(-80, Math.min(50, 30)) = 30, maxLat = Math.min(84, Math.max(50, 30)) = 50
     expect(vi.mocked(Bounds.bounds)).toHaveBeenCalledWith(
@@ -81,18 +81,20 @@ describe('getViewportBounds', () => {
     );
   });
 
-  it('should return null when unproject returns null', () => {
+  it('should return empty bounds when unproject returns null', () => {
     const unproject = vi.fn().mockReturnValue(null);
     const viewport = makeViewport(7, 800, 600, unproject);
     const result = getViewportBounds(viewport);
-    expect(result).toBeUndefined();
+    // Returns EMPTY_BOUNDS constant (created at module load time)
+    expect(result).toBeDefined();
   });
 
-  it('should return null when unproject values are undefined', () => {
+  it('should return empty bounds when unproject values are undefined', () => {
     const unproject = vi.fn().mockReturnValue([undefined, undefined]);
     const viewport = makeViewport(7, 800, 600, unproject);
     const result = getViewportBounds(viewport);
-    expect(result).toBeUndefined();
+    // Returns EMPTY_BOUNDS constant (created at module load time)
+    expect(result).toBeDefined();
   });
 
   it('should clamp to full longitude range when crossing the antimeridian', () => {
@@ -132,12 +134,40 @@ describe('getViewportBounds', () => {
     );
   });
 
-  it('should return null when unproject throws', () => {
+  it('should return empty bounds when unproject throws', () => {
     const unproject = vi.fn().mockImplementation(() => {
       throw new Error('viewport error');
     });
     const viewport = makeViewport(7, 800, 600, unproject);
     const result = getViewportBounds(viewport);
-    expect(result).toBeUndefined();
+    // Returns EMPTY_BOUNDS constant (created at module load time)
+    expect(result).toBeDefined();
+  });
+
+  it('should return same EMPTY_BOUNDS instance for all error cases', () => {
+    // Test that all error cases return the same constant instance
+    const viewport1 = makeViewport(7, 800, 600, vi.fn().mockReturnValue(null));
+    const viewport2 = makeViewport(
+      7,
+      800,
+      600,
+      vi.fn().mockReturnValue([undefined, undefined]),
+    );
+    const viewport3 = makeViewport(
+      7,
+      800,
+      600,
+      vi.fn().mockImplementation(() => {
+        throw new Error('error');
+      }),
+    );
+
+    const result1 = getViewportBounds(viewport1);
+    const result2 = getViewportBounds(viewport2);
+    const result3 = getViewportBounds(viewport3);
+
+    // All error cases should return the same EMPTY_BOUNDS instance (referential equality)
+    expect(result1).toBe(result2);
+    expect(result2).toBe(result3);
   });
 });

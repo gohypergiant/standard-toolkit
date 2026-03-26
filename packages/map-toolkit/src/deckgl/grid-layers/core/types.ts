@@ -18,7 +18,7 @@ import type { Payload } from '@accelint/bus';
  * Grid type identifier for different precision levels
  */
 export type GridType = string;
-type Coordinate = [longitude: number, latitude: number];
+export type Coordinate = [longitude: number, latitude: number];
 
 /**
  * Zoom range configuration for a specific grid type

@@ -31,7 +31,9 @@ import { Bounds, Unit } from '@ngageoint/grid-js';
  * }
  * ```
  */
-export function getViewportBounds(viewport: Viewport): Bounds | undefined {
+const EMPTY_BOUNDS = Bounds.bounds(0, 0, 0, 0, Unit.DEGREE);
+
+export function getViewportBounds(viewport: Viewport): Bounds {
   try {
     // When the viewport is wide enough to show the entire globe,
     // unproject() only returns a partial longitude range. Detect this by
@@ -47,7 +49,7 @@ export function getViewportBounds(viewport: Viewport): Bounds | undefined {
     const se = viewport.unproject([viewport.width, viewport.height]);
 
     if (!(nw && se)) {
-      return undefined;
+      return EMPTY_BOUNDS;
     }
 
     const nwLon = nw[0] as number | undefined;
@@ -56,7 +58,7 @@ export function getViewportBounds(viewport: Viewport): Bounds | undefined {
     const seLat = se[1] as number | undefined;
 
     if (nwLon == null || nwLat == null || seLon == null || seLat == null) {
-      return undefined;
+      return EMPTY_BOUNDS;
     }
 
     let minLon: number;
@@ -89,6 +91,6 @@ export function getViewportBounds(viewport: Viewport): Bounds | undefined {
 
     return Bounds.bounds(minLon, minLat, maxLon, maxLat, Unit.DEGREE);
   } catch {
-    return undefined;
+    return EMPTY_BOUNDS;
   }
 }

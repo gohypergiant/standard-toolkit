@@ -13,7 +13,7 @@
 import '@/deckgl/grid-layers/gars/fiber';
 import { useOn } from '@accelint/bus/react';
 import { uuid } from '@accelint/core';
-import { useId, useState } from 'react';
+import { useState } from 'react';
 import { BaseMap } from '@/deckgl/base-map';
 import { withDeckGL } from '@/decorators/deckgl';
 import {
@@ -30,6 +30,8 @@ const meta: Meta = {
     layout: 'fullscreen',
   },
 };
+
+const GARS_MAP_ID = uuid();
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -50,7 +52,7 @@ export const Default: Story = {
     },
   },
   render: ({ showLabels }) => {
-    return <garsLayer id={useId()} showLabels={showLabels} />;
+    return <garsLayer id={GARS_MAP_ID} showLabels={showLabels} />;
   },
 };
 
@@ -71,7 +73,7 @@ export const CustomColors: Story = {
   render: ({ showLabels }) => {
     return (
       <garsLayer
-        id={useId()}
+        id={GARS_MAP_ID}
         showLabels={showLabels}
         thirtyMinuteStyle={{
           lineColor: [255, 0, 0, 255],
@@ -95,9 +97,6 @@ export const CustomColors: Story = {
     );
   },
 };
-
-// Stable ID for event story
-const GARS_EVENTS_MAP_ID = uuid();
 
 /**
  * GARS layer with event handling demonstration
@@ -126,7 +125,7 @@ export const Interactive: Story = {
 
     // Log hover enter events
     useOn<GridCellHoverEvent>(GridCellEvents.hover, (event) => {
-      if (event.payload.mapId !== GARS_EVENTS_MAP_ID) {
+      if (event.payload.mapId !== GARS_MAP_ID) {
         return;
       }
       setHoveredCell(event.payload.cellId);
@@ -142,7 +141,7 @@ export const Interactive: Story = {
 
     // Log click events
     useOn<GridCellClickEvent>(GridCellEvents.click, (event) => {
-      if (event.payload.mapId !== GARS_EVENTS_MAP_ID) {
+      if (event.payload.mapId !== GARS_MAP_ID) {
         return;
       }
 
@@ -159,12 +158,12 @@ export const Interactive: Story = {
       <div className='relative h-dvh w-dvw'>
         <BaseMap
           className='absolute inset-0'
-          id={GARS_EVENTS_MAP_ID}
+          id={GARS_MAP_ID}
           initialViewState={{ ...DEFAULT_VIEW_STATE, zoom: 7 }}
         >
           <garsLayer
             id='gars-events'
-            mapId={GARS_EVENTS_MAP_ID}
+            mapId={GARS_MAP_ID}
             showLabels={args.showLabels}
             enableInteractivity={true}
           />

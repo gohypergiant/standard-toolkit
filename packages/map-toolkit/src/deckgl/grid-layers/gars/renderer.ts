@@ -11,6 +11,8 @@
  */
 
 import type {
+  CellBounds,
+  Coordinate,
   GridRenderer,
   LabelData,
   LineData,
@@ -19,6 +21,7 @@ import type {
   RenderResult,
 } from '../core/types';
 import { Grids, GridType } from '@ngageoint/gars-js';
+import { logger } from '../shared/utils';
 
 /**
  * Map our grid type strings to the library's GridType enum
@@ -32,7 +35,6 @@ function mapToLibraryGridType(gridType: string): GridType | undefined {
     case 'FIVE_MINUTE':
       return GridType.FIVE_MINUTE;
     default:
-      // TODO: decide behavior for unknown grid types (throw vs silent skip)
       return undefined;
   }
 }
@@ -106,7 +108,7 @@ export function createGARSRenderer(): GridRenderer {
               [point2.getLongitude(), point2.getLatitude()],
             ];
 
-            const cellId = `${point1.getLongitude().toFixed(4)},${point1.getLatitude().toFixed(4)}`;
+            const cellId = `${point1.getLongitude()},${point1.getLatitude()}`;
 
             lineData.push({
               path,
@@ -129,15 +131,14 @@ export function createGARSRenderer(): GridRenderer {
               const maxLng = cellBounds.getMaxLongitude();
               const maxLat = cellBounds.getMaxLatitude();
 
-              const polygon: PolygonData['polygon'] = [
-                [minLng, minLat], // SW
-                [maxLng, minLat], // SE
-                [maxLng, maxLat], // NE
-                [minLng, maxLat], // NW
-                [minLng, minLat], // Close the polygon
-              ];
+              const sw: Coordinate = [minLng, minLat];
+              const se: Coordinate = [maxLng, minLat];
+              const ne: Coordinate = [maxLng, maxLat];
+              const nw: Coordinate = [minLng, maxLat];
 
-              const boundsObj = {
+              const polygon: PolygonData['polygon'] = [sw, se, ne, nw, sw];
+
+              const bounds: CellBounds = {
                 minLongitude: minLng,
                 minLatitude: minLat,
                 maxLongitude: maxLng,
@@ -145,21 +146,23 @@ export function createGARSRenderer(): GridRenderer {
                 polygon,
               };
 
+              const position: Coordinate = [
+                center.getLongitude(),
+                center.getLatitude(),
+              ];
+
               labelData.push({
                 text: name,
-                position: [center.getLongitude(), center.getLatitude()] as [
-                  number,
-                  number,
-                ],
+                position,
                 cellId: name,
-                bounds: boundsObj,
+                bounds,
               });
 
               // Add polygon data for cell-wide interaction
               polygonData.push({
                 polygon,
                 cellId: name,
-                bounds: boundsObj,
+                bounds,
               });
             }
           }
@@ -171,7 +174,11 @@ export function createGARSRenderer(): GridRenderer {
           polygons: polygonData,
         } as RenderResult;
       } catch (error) {
-        console.error('[GARS Renderer] Error rendering grid:', error);
+        logger.warn(
+          `Failed to render grid type ${gridType}: ${
+            error instanceof Error ? error.message : String(error)
+          }`,
+        );
         return { lines: lineData, labels: labelData, polygons: polygonData };
       }
     },

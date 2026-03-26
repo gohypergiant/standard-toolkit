@@ -12,6 +12,7 @@
 
 import { Grids, GridType, GridZones } from '@ngageoint/mgrs-js';
 import type {
+  Coordinate,
   GridRenderer,
   LabelData,
   LineData,
@@ -19,6 +20,7 @@ import type {
   RenderContext,
   RenderResult,
 } from '../core/types';
+import { logger } from '../shared/utils';
 
 /**
  * Maps internal grid type strings to @ngageoint/mgrs-js GridType enum values.
@@ -26,7 +28,7 @@ import type {
  * @param gridType - Internal grid type identifier (e.g., 'GZD', 'GRID_100KM')
  * @returns Corresponding GridType enum value, or null if not recognized
  */
-function mapToLibraryGridType(gridType: string): GridType | null {
+function mapToLibraryGridType(gridType: string): GridType | undefined {
   switch (gridType) {
     case 'GZD':
       return GridType.GZD;
@@ -37,7 +39,7 @@ function mapToLibraryGridType(gridType: string): GridType | null {
     case 'GRID_1KM':
       return GridType.KILOMETER;
     default:
-      return null;
+      return undefined;
   }
 }
 
@@ -79,7 +81,7 @@ export function createMGRSRenderer(): GridRenderer {
       // Map our grid type to library grid type
       const mgrsGridType = mapToLibraryGridType(gridType);
 
-      if (mgrsGridType === null) {
+      if (!mgrsGridType) {
         return { lines: lineData, labels: labelData, polygons: polygonData };
       }
 
@@ -120,9 +122,10 @@ export function createMGRSRenderer(): GridRenderer {
             let lon2 = point2.getLongitude();
             let lat2 = point2.getLatitude();
 
-            // Clip lines to zone bounds to prevent rendering artifacts at zone edges
-
-            // Skip lines completely outside zone bounds
+            /**
+             * The following is a workaround for a known bug in the library
+             * https://github.com/ngageoint/mgrs-js/issues/6
+             */
             if (
               (lon1 < minLon - epsilon && lon2 < minLon - epsilon) ||
               (lon1 > maxLon + epsilon && lon2 > maxLon + epsilon)
@@ -156,7 +159,7 @@ export function createMGRSRenderer(): GridRenderer {
 
             // Generate unique cell ID from original (unclipped) coordinates.
             // Used for hover/click events and deduplication.
-            const cellId = `${point1.getLongitude().toFixed(4)},${point1.getLatitude().toFixed(4)}`;
+            const cellId = `${point1.getLongitude()},${point1.getLatitude()}`;
 
             lineData.push({
               path,
@@ -184,15 +187,14 @@ export function createMGRSRenderer(): GridRenderer {
               const maxLng = cellBounds.getMaxLongitude();
               const maxLat = cellBounds.getMaxLatitude();
 
-              const polygon: PolygonData['polygon'] = [
-                [minLng, minLat], // SW
-                [maxLng, minLat], // SE
-                [maxLng, maxLat], // NE
-                [minLng, maxLat], // NW
-                [minLng, minLat], // Close the polygon
-              ];
+              const sw: Coordinate = [minLng, minLat];
+              const se: Coordinate = [maxLng, minLat];
+              const ne: Coordinate = [maxLng, maxLat];
+              const nw: Coordinate = [minLng, maxLat];
 
-              const boundsObj = {
+              const polygon: PolygonData['polygon'] = [sw, se, ne, nw, sw];
+
+              const bounds = {
                 minLongitude: minLng,
                 minLatitude: minLat,
                 maxLongitude: maxLng,
@@ -200,21 +202,22 @@ export function createMGRSRenderer(): GridRenderer {
                 polygon,
               };
 
+              const position: Coordinate = [
+                center.getLongitude(),
+                center.getLatitude(),
+              ];
+
               labelData.push({
                 text: name,
-                position: [center.getLongitude(), center.getLatitude()] as [
-                  number,
-                  number,
-                ],
+                position,
                 cellId: name,
-                bounds: boundsObj,
+                bounds,
               });
 
-              // Add polygon data for cell-wide interaction
               polygonData.push({
                 polygon,
                 cellId: name,
-                bounds: boundsObj,
+                bounds,
               });
             }
           }
@@ -226,7 +229,11 @@ export function createMGRSRenderer(): GridRenderer {
           polygons: polygonData,
         } as RenderResult;
       } catch (error) {
-        console.error('[MGRS Renderer] Error rendering grid:', error);
+        logger.warn(
+          `Failed to render grid type ${gridType}: ${
+            error instanceof Error ? error.message : String(error)
+          }`,
+        );
         return { lines: lineData, labels: labelData, polygons: polygonData };
       }
     },

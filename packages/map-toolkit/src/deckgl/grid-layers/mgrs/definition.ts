@@ -28,7 +28,6 @@ export const MGRS_GRID_TYPES = {
   GRID_100KM: 'GRID_100KM',
   GRID_10KM: 'GRID_10KM',
   GRID_1KM: 'GRID_1KM',
-  GRID_1M: 'GRID_1M',
 } as const;
 
 /**

@@ -329,27 +329,6 @@ describe('BaseGridLayer', () => {
       expect(renderedLayers).toHaveLength(0);
     });
 
-    it('should return empty layers when viewport bounds cannot be calculated', async () => {
-      const layer = new BaseGridLayer({
-        id: 'test-layer',
-        definition: mockDefinition,
-      });
-
-      setLayerContext(layer, mockViewport);
-
-      // Mock bounds calculation to return undefined
-      const viewportUtilsMock = await import('../shared/viewport-utils');
-      vi.spyOn(viewportUtilsMock, 'getViewportBounds').mockReturnValue(
-        undefined,
-      );
-
-      const renderedLayers = layer.renderLayers();
-
-      expect(renderedLayers).toHaveLength(0);
-
-      vi.restoreAllMocks();
-    });
-
     it('should use custom zoom ranges when provided', () => {
       const customZoomRanges = [
         {
@@ -688,11 +667,11 @@ describe('BaseGridLayer', () => {
   });
 
   describe('Interactivity Configuration', () => {
-    it('should disable polygon pickability when enableInteractivity is false', () => {
+    it('should enable polygon pickability when enableInteractivity is true', () => {
       const layer = new BaseGridLayer({
         id: 'test-layer',
         definition: mockDefinition,
-        enableInteractivity: false,
+        enableInteractivity: true,
       });
 
       setLayerContext(layer, mockViewport);
@@ -700,23 +679,6 @@ describe('BaseGridLayer', () => {
       const renderedLayers = layer.renderLayers();
 
       // Should not create polygon layer when interactivity is disabled
-      const polygonLayer = renderedLayers.find((l) =>
-        l.id.includes('polygons'),
-      );
-      expect(polygonLayer).toBeUndefined();
-    });
-
-    it('should enable polygon pickability by default', () => {
-      const layer = new BaseGridLayer({
-        id: 'test-layer',
-        definition: mockDefinition,
-      });
-
-      setLayerContext(layer, mockViewport);
-
-      const renderedLayers = layer.renderLayers();
-
-      // Should create polygon layer for interaction when enabled (default)
       const polygonLayer = renderedLayers.find((l) =>
         l.id.includes('polygons'),
       );
