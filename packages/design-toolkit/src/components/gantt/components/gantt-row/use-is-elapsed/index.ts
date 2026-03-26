@@ -10,22 +10,18 @@
  * governing permissions and limitations under the License.
  */
 
-import { GANTT_ROW_ELEMENT_HEIGHT } from '../../constants';
-import { Point, type PointProps } from '../base-elements/point';
-import styles from './styles.module.css';
-import { useIsElapsed } from './use-is-elapsed';
+import { useTemporalDataContext } from '../../../context/temporal-data';
 
-export function Marker(props: PointProps) {
-  const isElapsed = useIsElapsed({ timeMs: props.timeMs });
+type UseIsElapsedProps = {
+  timeMs: number | undefined;
+};
+
+export function useIsElapsed({ timeMs }: UseIsElapsedProps): boolean {
+  const { currentTimeMs } = useTemporalDataContext();
 
   return (
-    <Point
-      className={styles['marker-container']}
-      data-height={GANTT_ROW_ELEMENT_HEIGHT}
-      data-elapsed={isElapsed || undefined}
-      {...props}
-    >
-      <div className={styles['marker-point']} />
-    </Point>
+    timeMs !== undefined &&
+    currentTimeMs !== undefined &&
+    timeMs <= currentTimeMs
   );
 }

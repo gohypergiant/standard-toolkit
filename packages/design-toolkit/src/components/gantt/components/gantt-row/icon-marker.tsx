@@ -11,9 +11,9 @@
  */
 
 import { GANTT_ROW_ELEMENT_HEIGHT } from '../../constants';
-import { useTemporalDataContext } from '../../context/temporal-data';
 import { Point, type PointProps } from '../base-elements/point';
 import styles from './styles.module.css';
+import { useIsElapsed } from './use-is-elapsed';
 import type { PropsWithChildren } from 'react';
 
 type IconMarkerProps = PropsWithChildren<PointProps>;
@@ -23,12 +23,7 @@ export function IconMarker({
   color = 'accent',
   ...rest
 }: IconMarkerProps) {
-  const { currentTimeMs } = useTemporalDataContext();
-
-  const isElapsed =
-    rest.timeMs !== undefined &&
-    currentTimeMs !== undefined &&
-    rest.timeMs <= currentTimeMs;
+  const isElapsed = useIsElapsed({ timeMs: rest.timeMs });
 
   return (
     <Point

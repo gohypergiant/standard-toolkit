@@ -11,22 +11,17 @@
  */
 
 import { GANTT_ROW_ELEMENT_HEIGHT } from '../../constants';
-import { useTemporalDataContext } from '../../context/temporal-data';
 import { Point, type PointProps } from '../base-elements/point';
 import styles from './styles.module.css';
+import { useIsElapsed } from './use-is-elapsed';
 
 type BracketBaseProps = PointProps & {
   direction: 'open' | 'close';
 };
 
 function BracketBase({ direction, ...rest }: BracketBaseProps) {
-  const { currentTimeMs } = useTemporalDataContext();
+  const isElapsed = useIsElapsed({ timeMs: rest.timeMs });
   const rotate = direction === 'open' ? '0' : '180';
-
-  const isElapsed =
-    rest.timeMs !== undefined &&
-    currentTimeMs !== undefined &&
-    rest.timeMs <= currentTimeMs;
 
   return (
     <Point

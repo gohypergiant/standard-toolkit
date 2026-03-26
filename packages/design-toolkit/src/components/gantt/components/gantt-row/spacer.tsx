@@ -10,24 +10,17 @@
  * governing permissions and limitations under the License.
  */
 
-import { useTemporalDataContext } from '../../context/temporal-data';
-import { calculateElapsedPercentage } from '../../utils/helpers';
 import { Range, type RangeProps } from '../base-elements/range';
 import styles from './styles.module.css';
+import { useElapsedPercentage } from './use-elapsed-percentage';
 
 export type SpacerProps = Omit<RangeProps, 'className'>;
 
 export function Spacer(props: SpacerProps) {
-  const { currentTimeMs, renderedRegionBounds } = useTemporalDataContext();
-
-  let elapsedPct = 0;
-  if (currentTimeMs !== undefined) {
-    elapsedPct = calculateElapsedPercentage(
-      currentTimeMs,
-      Math.max(props.startMs, renderedRegionBounds.startMs),
-      Math.min(props.endMs, renderedRegionBounds.endMs),
-    );
-  }
+  const elapsedPct = useElapsedPercentage({
+    startMs: props.startMs,
+    endMs: props.endMs,
+  });
 
   return (
     <Range
