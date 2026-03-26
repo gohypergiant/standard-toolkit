@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -12,7 +12,13 @@
 
 import { createColumnHelper } from '@tanstack/react-table';
 import { useState } from 'react';
+import { Pagination } from '../pagination/index';
+import { TableBody } from './body';
+import { TableCell } from './cell';
+import { TableHeader } from './header';
+import { TableHeaderCell } from './header-cell';
 import { Table } from './index';
+import { TableRow } from './row';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 type Person = {
@@ -108,6 +114,51 @@ const defaultData: Person[] = [
     progress: 60,
   },
 ];
+
+const firstNames = [
+  'Alice',
+  'Bob',
+  'Charlie',
+  'Dave',
+  'Eve',
+  'Frank',
+  'Grace',
+  'Hank',
+  'Ivy',
+  'Jack',
+];
+const lastNames = [
+  'Smith',
+  'Johnson',
+  'Brown',
+  'White',
+  'Green',
+  'Miller',
+  'Davis',
+  'Wilson',
+  'Moore',
+  'Taylor',
+];
+const statuses = ['Single', 'In Relationship', 'Complicated', 'Married'];
+
+function generateData(count: number): Person[] {
+  return Array.from({ length: count }, (_, i) => {
+    const n = i + 1;
+    return {
+      id: `person-${n}`,
+      firstName: `${firstNames[i % firstNames.length]}-${n}`,
+      lastName: `${lastNames[i % lastNames.length]}-${n}`,
+      age: 20 + (i % 40),
+      visits: (i * 7) % 100,
+      status: statuses[i % statuses.length] as string,
+      progress: (i * 13) % 100,
+    };
+  });
+}
+
+const allData = generateData(100);
+const PAGE_SIZE = 10;
+const totalPages = Math.ceil(allData.length / PAGE_SIZE);
 
 const columnHelper = createColumnHelper<Person>();
 
@@ -206,7 +257,43 @@ export const SortableColumns: Story = {
   render: (args) => <Table {...args} key={JSON.stringify(args)} />,
 };
 
+const columnsWithSizing = [
+  columnHelper.accessor('firstName', {
+    id: 'firstName',
+    cell: (info) => info.getValue(),
+    header: () => <span>First Name</span>,
+  }),
+  columnHelper.accessor((row) => row.lastName, {
+    id: 'lastName',
+    cell: (info) => <i>{info.getValue()}</i>,
+    header: () => <span>Last Name</span>,
+  }),
+  columnHelper.accessor('age', {
+    id: 'age',
+    cell: (info) => info.renderValue(),
+    header: () => 'Age',
+    size: 42,
+  }),
+  columnHelper.accessor('visits', {
+    id: 'visits',
+    header: () => <span>Visits</span>,
+    size: 42,
+  }),
+  columnHelper.accessor('status', {
+    id: 'status',
+    header: 'Status',
+  }),
+  columnHelper.accessor('progress', {
+    id: 'progress',
+    header: 'Profile Progress',
+    size: 64,
+  }),
+];
+
 export const ColumnSizing: Story = {
+  args: {
+    fullWidth: true,
+  },
   parameters: {
     docs: {
       description: {
@@ -216,42 +303,14 @@ export const ColumnSizing: Story = {
     },
     layout: 'fullscreen',
   },
-  render: () => {
-    const columnsWithSizing = [
-      columnHelper.accessor('firstName', {
-        id: 'firstName',
-        cell: (info) => info.getValue(),
-        header: () => <span>First Name</span>,
-      }),
-      columnHelper.accessor((row) => row.lastName, {
-        id: 'lastName',
-        cell: (info) => <i>{info.getValue()}</i>,
-        header: () => <span>Last Name</span>,
-      }),
-      columnHelper.accessor('age', {
-        id: 'age',
-        cell: (info) => info.renderValue(),
-        header: () => 'Age',
-        size: 42,
-      }),
-      columnHelper.accessor('visits', {
-        id: 'visits',
-        header: () => <span>Visits</span>,
-        size: 42,
-      }),
-      columnHelper.accessor('status', {
-        id: 'status',
-        header: 'Status',
-      }),
-      columnHelper.accessor('progress', {
-        id: 'progress',
-        header: 'Profile Progress',
-        size: 64,
-      }),
-    ];
-
-    return <Table columns={columnsWithSizing} data={defaultData} fullWidth />;
-  },
+  render: (args) => (
+    <Table
+      {...args}
+      columns={columnsWithSizing}
+      data={defaultData}
+      key={JSON.stringify(args)}
+    />
+  ),
 };
 
 export const InitialRowSelection: Story = {
@@ -263,7 +322,7 @@ export const InitialRowSelection: Story = {
       },
     },
   },
-  render: () => {
+  render: (args) => {
     const [selectedRows, setSelectedRows] = useState<Record<string, boolean>>({
       tanner: true,
       joe: true,
@@ -272,11 +331,10 @@ export const InitialRowSelection: Story = {
     return (
       <div>
         <Table
-          columns={columns}
-          data={defaultData}
-          showCheckbox
+          {...args}
           rowSelection={selectedRows}
           onRowSelectionChange={setSelectedRows}
+          key={JSON.stringify(args)}
         />
         <div style={{ marginTop: '1rem' }}>
           <strong>Selected Row IDs:</strong>
@@ -293,4 +351,99 @@ export const InitialRowSelection: Story = {
       </div>
     );
   },
+};
+
+export const ClientSidePagination: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Client-side pagination. Pass all data and a `pageSize` prop — the Table handles data slicing internally via TanStack `getPaginationRowModel()`. Render `<Pagination>` alongside the Table to control navigation.',
+      },
+    },
+  },
+  render: (args) => {
+    const [page, setPage] = useState(1);
+    return (
+      <div>
+        <Table
+          {...args}
+          data={allData}
+          pageSize={PAGE_SIZE}
+          page={page}
+          onPageChange={setPage}
+          key={JSON.stringify(args)}
+        />
+        <Pagination
+          value={page}
+          total={Math.ceil(allData.length / PAGE_SIZE)}
+          onChange={setPage}
+        />
+      </div>
+    );
+  },
+};
+
+export const PrePaginated: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Simulates server-side pagination where only the current page of data is passed to the Table. Uses `key={page}` to force remount when the page changes, since `useListData` only reads `initialItems` on mount.',
+      },
+    },
+  },
+  render: (args) => {
+    const [page, setPage] = useState(1);
+    const pageData = allData.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
+    return (
+      <div>
+        <Table
+          {...args}
+          data={pageData}
+          key={`${page}-${JSON.stringify(args)}`}
+        />
+        <Pagination value={page} total={totalPages} onChange={setPage} />
+      </div>
+    );
+  },
+};
+
+export const Static: Story = {
+  parameters: {
+    controls: { disable: true },
+    docs: {
+      description: {
+        story:
+          'Manual table composition using sub-components (`TableHeader`, `TableBody`, `TableRow`, `TableHeaderCell`, `TableCell`) for full control over rendering.',
+      },
+    },
+  },
+  render: () => (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHeaderCell>First Name</TableHeaderCell>
+          <TableHeaderCell>Last Name</TableHeaderCell>
+          <TableHeaderCell>Age</TableHeaderCell>
+          <TableHeaderCell>Visits</TableHeaderCell>
+          <TableHeaderCell>Status</TableHeaderCell>
+          <TableHeaderCell>Progress</TableHeaderCell>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {defaultData.map((person) => (
+          <TableRow key={person.id}>
+            <TableCell>{person.firstName}</TableCell>
+            <TableCell>{person.lastName}</TableCell>
+            <TableCell>{person.age}</TableCell>
+            <TableCell>{person.visits}</TableCell>
+            <TableCell>{person.status}</TableCell>
+            <TableCell>{person.progress}%</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  ),
 };

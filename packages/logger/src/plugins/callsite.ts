@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -13,9 +13,14 @@
 import callsites from 'callsites';
 import type { LogLayerPlugin, LogLayerPluginParams } from '@loglayer/plugin';
 
+/** Matches LogLayer log level method names used to locate the log call frame in the stack. */
 const LEVEL_REGEX = /(info|warn|error|debug|trace|fatal)/;
 
-function getCallsite() {
+/**
+ * Resolves the source file location (file:line:column) of the calling log statement
+ * by searching the call stack for the nearest log level method frame.
+ */
+function getCallsite(): string {
   let levelLine = 0;
   const sites = callsites();
 
@@ -23,17 +28,15 @@ function getCallsite() {
     return 'unknown';
   }
 
-  /**
-   * NOTE: callsites can be rather unpredictable as there are many
-   * variables that can change the stack. E.g. if you are in a prod
-   * build vs. dev, if you have sourcemaps enabled or not, if you
-   * are in a server or browser context, etc.
-   *
-   * As such, we need to hunt for two callsites in our stack:
-   * 1. The internal call to the LogLayer method e.g. `.debug()`
-   * 2. The call immediately following the former which is the
-   * callsite we actually care about.
-   */
+  // NOTE: callsites can be rather unpredictable as there are many
+  // variables that can change the stack. E.g. if you are in a prod
+  // build vs. dev, if you have sourcemaps enabled or not, if you
+  // are in a server or browser context, etc.
+  //
+  // As such, we need to hunt for two callsites in our stack:
+  // 1. The internal call to the LogLayer method e.g. `.debug()`
+  // 2. The call immediately following the former which is the
+  //    callsite we actually care about.
   for (let i = 0; i < sites.length; i++) {
     const site = sites[i];
     const name = site?.getFunctionName() || '';
@@ -45,10 +48,15 @@ function getCallsite() {
   }
 
   const site = sites[levelLine + 1];
-  const columnNumber = site?.getColumnNumber();
-  const lineNumber = site?.getLineNumber();
+
+  if (!site) {
+    return 'unknown';
+  }
+
+  const columnNumber = site.getColumnNumber();
+  const lineNumber = site.getLineNumber();
   // NOTE: in bundler environments eval() is often used during dev builds
-  const fileName = site?.isEval() ? site.getEvalOrigin() : site?.getFileName();
+  const fileName = site.isEval() ? site.getEvalOrigin() : site.getFileName();
 
   return `${fileName}:${lineNumber}:${columnNumber}`;
 }
@@ -56,13 +64,13 @@ function getCallsite() {
 /**
  * Options for the callsite tracking plugin.
  */
-export interface CallsitePluginOptions extends LogLayerPluginParams {
+export type CallsitePluginOptions = LogLayerPluginParams & {
   /**
    * Whether the application is running in production.
-   * Reserved for future use.
+   * Reserved for future use — currently has no effect on plugin behavior.
    */
   isProductionEnv: boolean;
-}
+};
 
 /**
  * Creates a LogLayer plugin that tracks and injects source code location into log data.
@@ -71,10 +79,11 @@ export interface CallsitePluginOptions extends LogLayerPluginParams {
  * log call originates, adding a `callSite` property to the log data.
  *
  * @param options - Plugin configuration options
+ * @param options.isProductionEnv - Reserved for future use; currently has no effect
  * @returns A LogLayer plugin instance
  *
  * @example
- * ```ts
+ * ```typescript
  * import { callsitePlugin } from '@accelint/logger/plugins/callsite';
  *
  * const plugin = callsitePlugin({ isProductionEnv: false });

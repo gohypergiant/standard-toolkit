@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -25,28 +25,27 @@ export type BroadcastConfig = {
 };
 
 /**
- * Listener object type.
- *
- * @template P - The payload type for events this listener handles.
- */
-export type Listener<P extends { type: string; payload?: unknown } = Payload> =
-  {
-    /** Unique identifier for this listener. */
-    id: UniqueId;
-
-    /** Whether this listener should be removed after first invocation. */
-    once?: boolean;
-
-    /** The callback function to invoke when the event is received. */
-    callback: (data: P) => void;
-  };
-
-/**
  * Data that can be serialized via the structured clone algorithm.
  *
  * @see https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm
  */
 export type StructuredCloneableData = StructuredCloneable;
+
+/**
+ * Plain payload type used for `extends`
+ *
+ * Use @type Payload instead when defining events
+ */
+export type BasicPayload = {
+  /** The event type identifier. */
+  type: string;
+  /** Optional event data, must be structured-cloneable. */
+  payload?: StructuredCloneableData;
+  /** The ID of the bus instance that emitted this event. */
+  source: UniqueId;
+  /** The ID of the intended recipient bus instance, if targeted. */
+  target?: UniqueId;
+};
 
 /**
  * Listener callback payload type.
@@ -77,19 +76,36 @@ export type Payload<
  * @template T - The specific event type to extract.
  */
 export type ExtractEvent<
-  P extends { type: string; payload?: unknown } = Payload<
-    string,
-    StructuredCloneableData
-  >,
+  P extends BasicPayload = Payload<string, StructuredCloneableData>,
   T extends P['type'] = P['type'],
 > = {
   [K in P['type']]: Extract<P, { type: K }>;
 }[T];
 
 /**
+ * Target audience for an event being emitted: 'all' contexts, 'others' (not self), 'self' only, or a specific context ID.
+ */
+export type EmitTarget = 'all' | 'others' | 'self' | UniqueId;
+
+/**
  * Options for controlling event delivery scope.
  */
 export type EmitOptions = {
-  /** Target audience for the event: 'all' contexts, 'others' (not self), 'self' only, or a specific context ID. */
-  target?: 'all' | 'others' | 'self' | UniqueId;
+  target?: EmitTarget;
+};
+
+/**
+ * Listener object type.
+ *
+ * @template P - The payload type for events this listener handles.
+ */
+export type Listener<P extends BasicPayload = Payload> = {
+  /** Unique identifier for this listener. */
+  id: UniqueId;
+
+  /** Whether this listener should be removed after first invocation. */
+  once?: boolean;
+
+  /** The callback function to invoke when the event is received. */
+  callback: (data: P) => void;
 };

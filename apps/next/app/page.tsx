@@ -18,9 +18,6 @@ import { ActionBarExample } from '~/features/action-bar';
 import { AvatarExample } from '~/features/avatar';
 import { BadgeExample } from '~/features/badge';
 
-// biome-ignore lint/style/useNamingConvention: nextjs convention
-export const experimental_ppr = true;
-
 export default function Page() {
   return (
     <BentoGroup>

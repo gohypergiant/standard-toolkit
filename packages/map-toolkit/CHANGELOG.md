@@ -1,5 +1,130 @@
 # @accelint/map-toolkit
 
+## 3.0.0
+
+### Major Changes
+
+- fa05228: Fix viewport size display to use SI/ICAO-compliant unit symbols instead of uppercased abbreviations. For example, `km` instead of `KM`, `m` instead of `M`. Nautical miles changed from `nm` to `NM` per ICAO/IMO convention.
+
+  ### Breaking changes
+
+  **New peer dependency:** `@accelint/constants` is now required.
+
+  **Removed exports** (from `@accelint/map-toolkit/viewport`):
+  - `DISTANCE_UNIT_ABBREVIATIONS` → use `DISTANCE_UNIT_SYMBOLS` from `@accelint/constants/units`
+  - `DistanceUnitAbbreviation` type → use `DistanceUnitSymbol` from `@accelint/constants/units`
+  - `DistanceUnit` type → use `DistanceUnit` from `@accelint/constants/units`
+  - `SupportedDistanceUnit` type → use `DistanceUnitSymbol` from `@accelint/constants/units`
+  - `getDistanceUnitFromAbbreviation()` → use `DISTANCE_UNIT_BY_SYMBOL[symbol]` from `@accelint/constants/units`
+  - `getDistanceUnitAbbreviation()` → use `DISTANCE_UNIT_SYMBOLS[unit]` from `@accelint/constants/units`
+
+  **Symbol value changes:** Unit symbols are now SI-compliant though nautical miles uses the ICAO/IMO convention of NM. If you were matching on string values, update accordingly:
+  - `'nm'` → `'NM'` (nautical miles)
+
+### Minor Changes
+
+- b3de1bb: Add radius label on hover for circle shapes in `DisplayShapeLayer`. When hovering a circle, the radius is displayed in the configured `unit` (defaults to nautical miles). The label positions relative to the shape's text label: below it when `showLabels` is `'always'` or `'hover'`, and in its place when `showLabels` is `'never'`. Also adds the `unit` prop to `DisplayShapeLayerProps` for configuring distance display units.
+- 0c3f356: Add `duplicateShape()` utility for cloning shapes with a new ID. Supports optional coordinate offset and custom naming. The resolved name is also set as the clone's map label. Includes new `GeoPosition` type for 2D or 3D coordinate tuples and a `DuplicateShape` Storybook story.
+- 1b39e64: Add CoffinCornerExtension for icon selection/hover bracket indicators
+
+  New deck.gl LayerExtension that renders bracket corner indicators around
+  selected and hovered icons via GPU shaders. Includes useCoffinCorner hook
+  for managing selection state, event bus integration, and configurable
+  highlight colors. SymbolLayer fiber type now includes CoffinCornerExtension
+  props by default.
+
+### Patch Changes
+
+- 75fa668: - When using icons for Point shapes, `EditShapeLayer` now displays icon markers during editing instead of plain circles.
+  - `DrawShapeLayer` and `EditShapeLayer` now self-register their fiber dependencies and no longer require manual fiber imports.
+  - `useEditShape()` now exposes `updateFeature` to allow form-based updates before saving edits
+- 17c4b6c: Extend CoffinCornerExtension to support ScatterplotLayer (circle points without icons) alongside IconLayer, and refine DisplayShapeLayer integration.
+  - CoffinCornerExtension now supports ScatterplotLayer with quad expansion and circle-replicating fragment shaders
+  - DisplayShapeLayer skips the highlight outline layer for all Point geometries (coffin corner brackets handle hover/select feedback)
+  - DisplayShapeLayer forwards `highlightColor` as the bracket fill color via a cached tuple to avoid per-render allocations
+  - Stable `DISPLAY_EXTENSIONS` module-level constant prevents unnecessary `getShaders()` re-evaluation
+  - Removed icon-atlas-based coffin corner SVG sprites (replaced by shader SDF rendering)
+
+- Updated dependencies [9a25205]
+- Updated dependencies [fa05228]
+  - @accelint/logger@1.1.0
+  - @accelint/constants@0.3.0
+
+## 2.0.0
+
+### Major Changes
+
+- 7b30771: Add `enableElevation` prop to DisplayShapeLayer for 3D shapes rendering.
+
+  Remove dotted border treatment on shape selection — interactions no longer modify a shape's innate styling.
+
+  Apply material-based brightness effect for hover and selection on all polygon shapes. All shapes brighten their outline color on hover or select (1.4×), with an even brighter combined state when both active (1.7×).
+
+  Add new Selection layer for brightness effect while shape is selected.
+
+  Add optional `maxElevation` property to `StyledFeatureProperties` as the source of truth for Polygon shape elevation. Point and LineString elevation is derived from z coordinates.
+
+  Note: the only breaking change is removal of a redundant type. If you were using `type ShapeFeatureTypeValues` from map-toolkit, replace that with `type ShapeFeatureType`.
+
+### Minor Changes
+
+- d5ac9eb: Update EditShapeLayer to include the ability to pan the map while editing a shape when the spacebar is held.
+- 311d7b6: Upgraded @deck.gl packages to 9.2 and removed shape layer double-click workaround
+
+### Patch Changes
+
+- 5567348: Update logger implementation to prevent singleton pollution.
+- 1106ced: Fix bug where Enter on Save hotkey never unregistered, causing an error on EditShapeLayer remounts.
+- Updated dependencies [3153e74]
+- Updated dependencies [5567348]
+- Updated dependencies [162895c]
+  - @accelint/bus@4.0.0
+  - @accelint/logger@1.0.1
+  - @accelint/core@0.6.0
+  - @accelint/hotkey-manager@2.0.0
+
+## 1.5.0
+
+### Minor Changes
+
+- cae932c: Update circle tooltip to show radius instead of diameter in draw and edit modes.
+
+### Patch Changes
+
+- 9419d41: Fix infinite render loop in BaseMap when navigating in React Strict Mode. The camera store's `createMapStore` now properly handles initial state timing by directly updating existing instances when `setInitialState` is called after the instance already exists, which can occur during React Strict Mode's double-mount behavior.
+- Updated dependencies [ed09ea6]
+  - @accelint/logger@1.0.0
+
+## 1.4.0
+
+### Minor Changes
+
+- 89914b0: Add Enter key hotkey to save shape edits. Pressing Enter while editing a shape now saves the changes and emits the existing `shapes:updated` event, providing an alternative to clicking the Save button.
+- 7503e7e: Add click-to-place editing for Point shapes in EditShapeLayer.
+
+  Point shapes now use a new `point-translate` edit mode that supports two ways to reposition:
+  - **Click anywhere on the map** to instantly move the point to that location
+  - **Drag the point directly** for traditional drag behavior
+
+  This improves UX for points which previously required precise clicking on a very small target area.
+
+### Patch Changes
+
+- 6cb6e17: Enable antialiasing for maplibre to smooth out lines
+- Updated dependencies [58bc0db]
+  - @accelint/geo@0.6.0
+
+## 1.3.0
+
+### Minor Changes
+
+- 58199e5: Updates use-cursor-coordinates to format MGRS and UTM default coordinates to follow a more expected format.
+
+### Patch Changes
+
+- 03c1e39: Add a tweak for the Viewport Resize debounce timing, 500 -> 200, for better visual feedback on updates.
+- 0265877: Fixed error handling in `useCursorCoordinates` hook for coordinates outside UTM/MGRS valid range. UTM and MGRS coordinate systems are only valid between 80°S and 84°N. The hook now returns the default placeholder (`--, --`) when attempting to format polar coordinates in these formats.
+
 ## 1.2.0
 
 ### Minor Changes

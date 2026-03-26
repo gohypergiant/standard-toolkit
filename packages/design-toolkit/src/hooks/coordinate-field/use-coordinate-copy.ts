@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -10,15 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import { getLogger } from '@accelint/logger';
 import { useState } from 'react';
+import { createLoggerDomain } from '@/utils/logger';
 
-const logger = getLogger({
-  enabled: process.env.NODE_ENV !== 'production',
-  level: 'debug',
-  prefix: '[CoordinateField]',
-  pretty: true,
-});
+const logger = createLoggerDomain('[CoordinateField]');
 
 import { getAllCoordinateFormats } from '../../components/coordinate-field/coordinate-utils';
 import type {
@@ -132,7 +127,7 @@ export function useCoordinateCopy({
         }, COPY_FEEDBACK_DURATION_MS),
       );
     } catch (err) {
-      logger.withError(err).warn('Fallback copy to clipboard failed');
+      logger.withError(err).error('Fallback copy to clipboard failed');
     }
 
     // Clean up temporary textarea

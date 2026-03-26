@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -18,8 +18,6 @@ import { processDroppedItems } from './utils';
 import type {
   DragItem,
   DroppableCollectionInsertDropEvent,
-  DroppableCollectionOnItemDropEvent,
-  DroppableCollectionReorderEvent,
   DroppableCollectionRootDropEvent,
   Key,
   Selection,
@@ -53,13 +51,6 @@ export function useTreeState<T>({
           'text/plain': JSON.stringify(node),
         };
       }),
-    onReorder: (e: DroppableCollectionReorderEvent) => {
-      if (e.target.dropPosition === 'before') {
-        setNodes(actions.moveBefore(e.target.key, e.keys));
-      } else {
-        setNodes(actions.moveAfter(e.target.key, e.keys));
-      }
-    },
     onInsert: ({ items, target }: DroppableCollectionInsertDropEvent) => {
       (async () => {
         const processedItems = await processDroppedItems(
@@ -78,25 +69,6 @@ export function useTreeState<T>({
         }
       })();
     },
-    onItemDrop: ({ target, items }: DroppableCollectionOnItemDropEvent) => {
-      (async () => {
-        const targetNode = actions.getNode(target.key);
-        const [item] = items;
-
-        if (
-          target.dropPosition === 'on' &&
-          targetNode &&
-          item &&
-          item.kind !== 'directory'
-        ) {
-          const key = await item.getText('key');
-
-          if (key) {
-            setNodes(actions.moveInto(target.key, new Set([key])));
-          }
-        }
-      })();
-    },
     onRootDrop: ({ items }: DroppableCollectionRootDropEvent) => {
       (async () => {
         const processedItems = await processDroppedItems(
@@ -109,6 +81,18 @@ export function useTreeState<T>({
         );
         setNodes(actions.insertAfter(null, processedItems));
       })();
+    },
+    onMove: (e) => {
+      if (e.target.dropPosition === 'before') {
+        setNodes(actions.moveBefore(e.target.key, e.keys));
+      } else if (e.target.dropPosition === 'after') {
+        setNodes(actions.moveAfter(e.target.key, e.keys));
+      } else if (e.target.dropPosition === 'on') {
+        const targetNode = actions.getNode(e.target.key);
+        if (targetNode) {
+          setNodes(actions.moveInto(e.target.key, e.keys));
+        }
+      }
     },
   };
 

@@ -8,6 +8,8 @@ import * as ComboBoxStories from './combobox-field.stories';
 
 Accessible searchable combobox with dropdown options. Built on React Aria Components with virtualization support and flexible content organization.
 
+Includes a clear button that allows users to quickly clear the input value. The clear button appears when the input has a value and can be triggered by clicking or pressing Escape.
+
 Uses the [Options](?path=/docs/components-options--playground) component system for rendering dropdown items.
 
 ## Example Usage
@@ -88,12 +90,15 @@ Extends [`ComboBox`](https://react-spectrum.adobe.com/react-aria/ComboBox.html#p
 | `description` | `string` | - | Helper text (hidden in small size or when invalid) |
 | `errorMessage` | `string` | - | Error message when invalid |
 | `size` | `'medium' \| 'small'` | `'medium'` | Size variant |
+| `isClearable` | `boolean` | `true` | Show clear button when input has value |
+| `inputValue` | `string` | - | Controlled input value |
+| `defaultInputValue` | `string` | `''` | Initial input value (uncontrolled) |
 | `layoutOptions` | `ListLayoutOptions` | - | Virtualization config (e.g., `{ estimatedRowHeight: 46 }`) |
 | `inputProps` | `InputProps` | - | Props passed to the input element |
 | `defaultItems` | `Iterable<T>` | - | Items for dynamic rendering |
 | `items` | `Iterable<T>` | - | Controlled items |
 | `allowsCustomValue` | `boolean` | `false` | Allow values not in the list |
-| `isReadOnly` | `boolean` | `false` | Readonly state |
+| `isReadOnly` | `boolean` | `false` | Readonly state (hides clear button) |
 | `isDisabled` | `boolean` | `false` | Disabled state |
 | `isRequired` | `boolean` | `false` | Required field |
 | `isInvalid` | `boolean` | - | Invalid state |
@@ -106,6 +111,7 @@ Extends [`ComboBox`](https://react-spectrum.adobe.com/react-aria/ComboBox.html#p
 
 | Key | Description |
 |-----|-------------|
+| `clear` | Clear button styling |
 | `field` | Main field container |
 | `label` | Label styling |
 | `control` | Input and trigger container |
@@ -134,6 +140,8 @@ Context provider for setting default props across multiple ComboBoxField compone
 - Keyboard: Arrow keys to navigate, Enter to select, Escape to close
 - Type-ahead filtering as you type
 - ARIA attributes for screen readers
+- Focus management between input and dropdown
+- Clear button excluded from tab order for streamlined keyboard navigatio
 - Focus management between input and dropdown
 
 ## Implementation Notes

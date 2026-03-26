@@ -212,7 +212,7 @@ describe('useEditShape', () => {
       });
     });
 
-    it('sets translate mode for points', async () => {
+    it('sets point-translate mode for points', async () => {
       const { result } = renderHook(() => useEditShape(mapId));
       const shape = createMockShape({ shape: ShapeFeatureType.Point });
 
@@ -221,7 +221,7 @@ describe('useEditShape', () => {
       });
 
       await waitFor(() => {
-        expect(result.current.editingState?.editMode).toBe('translate');
+        expect(result.current.editingState?.editMode).toBe('point-translate');
       });
     });
 

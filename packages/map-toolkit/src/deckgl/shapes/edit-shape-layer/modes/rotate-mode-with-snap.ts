@@ -12,10 +12,10 @@
 
 import {
   type DraggingEvent,
-  type FeatureCollection,
   ImmutableFeatureCollection,
   type ModeProps,
   RotateMode,
+  type SimpleFeatureCollection,
   type StopDraggingEvent,
 } from '@deck.gl-community/editable-layers';
 import { bearing, centroid, transformRotate } from '@turf/turf';
@@ -95,7 +95,7 @@ export class RotateModeWithSnap extends RotateMode {
    */
   override handleDragging(
     event: DraggingEvent,
-    props: ModeProps<FeatureCollection>,
+    props: ModeProps<SimpleFeatureCollection>,
   ) {
     const snapRotation = props.modeConfig?.snapRotation ?? false;
 
@@ -132,7 +132,7 @@ export class RotateModeWithSnap extends RotateMode {
    */
   override handleStopDragging(
     event: StopDraggingEvent,
-    props: ModeProps<FeatureCollection>,
+    props: ModeProps<SimpleFeatureCollection>,
   ) {
     const snapRotation = props.modeConfig?.snapRotation ?? false;
 
@@ -171,7 +171,7 @@ export class RotateModeWithSnap extends RotateMode {
     startDragPoint: Position,
     currentPoint: Position,
     editType: string,
-    props: ModeProps<FeatureCollection>,
+    props: ModeProps<SimpleFeatureCollection>,
   ) {
     // biome-ignore lint/suspicious/noExplicitAny: Accessing private properties from parent class
     const self = this as any;
@@ -180,8 +180,7 @@ export class RotateModeWithSnap extends RotateMode {
       return null;
     }
 
-    const geometry = self._geometryBeingRotated as FeatureCollection;
-    // @ts-expect-error turf types differ from editable-layers types
+    const geometry = self._geometryBeingRotated as SimpleFeatureCollection;
     const centerFeature = centroid(geometry);
 
     // Calculate the rotation angle (pass centroid Feature to match parent RotateMode)
@@ -194,9 +193,7 @@ export class RotateModeWithSnap extends RotateMode {
     }
 
     // Apply the rotation using turf (use centroid Feature as pivot to match parent)
-    // @ts-expect-error turf types differ from editable-layers types
-    const rotatedFeatures: FeatureCollection = transformRotate(
-      // @ts-expect-error turf types differ from editable-layers types
+    const rotatedFeatures: SimpleFeatureCollection = transformRotate(
       geometry,
       angle,
       {

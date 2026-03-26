@@ -394,6 +394,29 @@ export interface LabelPositionOptions {
   circleLabelOffset?: [number, number];
 }
 
+const DEFAULT_LABEL_OFFSET: [number, number] = [0, 10];
+const DEFAULT_LABEL_VERTICAL: LabelVerticalPosition = 'top';
+const DEFAULT_LABEL_HORIZONTAL: LabelHorizontalPosition = 'center';
+const DEFAULT_COORDINATE_ANCHOR: CardinalLabelCoordinateAnchor = 'bottom';
+
+const TEXT_ANCHOR_MAP: Record<
+  LabelHorizontalPosition,
+  'start' | 'middle' | 'end'
+> = {
+  left: 'start',
+  center: 'middle',
+  right: 'end',
+};
+
+const ALIGNMENT_BASELINE_MAP: Record<
+  LabelVerticalPosition,
+  'top' | 'center' | 'bottom'
+> = {
+  top: 'top',
+  middle: 'center',
+  bottom: 'bottom',
+};
+
 /**
  * Convert vertical/horizontal position to deck.gl textAnchor and alignmentBaseline
  */
@@ -404,29 +427,9 @@ function convertPositionToAnchors(
   textAnchor: 'start' | 'middle' | 'end';
   alignmentBaseline: 'top' | 'center' | 'bottom';
 } {
-  // Map horizontal to textAnchor
-  const textAnchorMap: Record<
-    LabelHorizontalPosition,
-    'start' | 'middle' | 'end'
-  > = {
-    left: 'start',
-    center: 'middle',
-    right: 'end',
-  };
-
-  // Map vertical to alignmentBaseline
-  const alignmentBaselineMap: Record<
-    LabelVerticalPosition,
-    'top' | 'center' | 'bottom'
-  > = {
-    top: 'top',
-    middle: 'center',
-    bottom: 'bottom',
-  };
-
   return {
-    textAnchor: textAnchorMap[horizontal],
-    alignmentBaseline: alignmentBaselineMap[vertical],
+    textAnchor: TEXT_ANCHOR_MAP[horizontal],
+    alignmentBaseline: ALIGNMENT_BASELINE_MAP[vertical],
   };
 }
 
@@ -435,21 +438,21 @@ function convertPositionToAnchors(
  */
 function resolveLabelProperties(
   shapeOffset: [number, number] | undefined,
-  shapeVertical: string | undefined,
-  shapeHorizontal: string | undefined,
+  shapeVertical: LabelVerticalPosition | undefined,
+  shapeHorizontal: LabelHorizontalPosition | undefined,
   defaultOffset: [number, number],
   defaultVertical: LabelVerticalPosition,
   defaultHorizontal: LabelHorizontalPosition,
   optionsOffset?: [number, number],
   optionsVertical?: LabelVerticalPosition,
   optionsHorizontal?: LabelHorizontalPosition,
-) {
-  const vertical = (shapeVertical ??
-    optionsVertical ??
-    defaultVertical) as LabelVerticalPosition;
-  const horizontal = (shapeHorizontal ??
-    optionsHorizontal ??
-    defaultHorizontal) as LabelHorizontalPosition;
+): {
+  pixelOffset: [number, number];
+  textAnchor: 'start' | 'middle' | 'end';
+  alignmentBaseline: 'top' | 'center' | 'bottom';
+} {
+  const vertical = shapeVertical ?? optionsVertical ?? defaultVertical;
+  const horizontal = shapeHorizontal ?? optionsHorizontal ?? defaultHorizontal;
   const pixelOffset = shapeOffset ?? optionsOffset ?? defaultOffset;
 
   const anchors = convertPositionToAnchors(vertical, horizontal);
@@ -466,21 +469,17 @@ function resolveLabelProperties(
 function getPointPosition(
   geometry: Point,
   shapeOffset: [number, number] | undefined,
-  shapeVertical: string | undefined,
-  shapeHorizontal: string | undefined,
+  shapeVertical: LabelVerticalPosition | undefined,
+  shapeHorizontal: LabelHorizontalPosition | undefined,
   options?: LabelPositionOptions,
 ): LabelPosition2d {
-  const defaultOffset: [number, number] = [0, 10];
-  const defaultVertical: LabelVerticalPosition = 'top';
-  const defaultHorizontal: LabelHorizontalPosition = 'center';
-
   const resolved = resolveLabelProperties(
     shapeOffset,
     shapeVertical,
     shapeHorizontal,
-    defaultOffset,
-    defaultVertical,
-    defaultHorizontal,
+    DEFAULT_LABEL_OFFSET,
+    DEFAULT_LABEL_VERTICAL,
+    DEFAULT_LABEL_HORIZONTAL,
     options?.pointLabelOffset,
     options?.pointLabelVerticalAnchor,
     options?.pointLabelHorizontalAnchor,
@@ -502,23 +501,18 @@ function getPointPosition(
 function getLineStringPosition(
   geometry: LineString,
   shapeOffset: [number, number] | undefined,
-  shapeVertical: string | undefined,
-  shapeHorizontal: string | undefined,
+  shapeVertical: LabelVerticalPosition | undefined,
+  shapeHorizontal: LabelHorizontalPosition | undefined,
   shapeCoordinateAnchor: string | undefined,
   options?: LabelPositionOptions,
 ): LabelPosition2d | null {
-  const defaultOffset: [number, number] = [0, 10];
-  const defaultVertical: LabelVerticalPosition = 'top';
-  const defaultHorizontal: LabelHorizontalPosition = 'center';
-  const defaultCoordinateAnchor: CardinalLabelCoordinateAnchor = 'bottom';
-
   const resolved = resolveLabelProperties(
     shapeOffset,
     shapeVertical,
     shapeHorizontal,
-    defaultOffset,
-    defaultVertical,
-    defaultHorizontal,
+    DEFAULT_LABEL_OFFSET,
+    DEFAULT_LABEL_VERTICAL,
+    DEFAULT_LABEL_HORIZONTAL,
     options?.lineStringLabelOffset,
     options?.lineStringLabelVerticalAnchor,
     options?.lineStringLabelHorizontalAnchor,
@@ -527,13 +521,10 @@ function getLineStringPosition(
   // Determine coordinate anchor (priority: shape > options > default)
   const coordinateAnchor = (shapeCoordinateAnchor ??
     options?.lineStringLabelCoordinateAnchor ??
-    defaultCoordinateAnchor) as CardinalLabelCoordinateAnchor;
+    DEFAULT_COORDINATE_ANCHOR) as CardinalLabelCoordinateAnchor;
 
   // Calculate position based on cardinal direction
-  const coordinates = findEdgePoint(
-    geometry.coordinates as number[][],
-    coordinateAnchor,
-  );
+  const coordinates = findEdgePoint(geometry.coordinates, coordinateAnchor);
 
   if (!coordinates) {
     return null;
@@ -558,26 +549,11 @@ function getVertexCoordinate(
 }
 
 /**
- * Check if a vertex should replace the current target based on edge position
- */
-function shouldUpdateEdgeVertex(
-  vertexValue: number,
-  targetValue: number,
-  position: CardinalLabelCoordinateAnchor,
-): boolean {
-  // For top and right, find maximum value
-  // For bottom and left, find minimum value
-  return position === 'top' || position === 'right'
-    ? vertexValue > targetValue
-    : vertexValue < targetValue;
-}
-
-/**
  * Get the coordinate index based on edge position (0 for x/longitude, 1 for y/latitude)
  */
 function getCoordinateIndexForEdgePosition(
   position: CardinalLabelCoordinateAnchor,
-): number {
+): 0 | 1 {
   return position === 'top' || position === 'bottom' ? 1 : 0;
 }
 
@@ -632,13 +608,16 @@ function findEdgePoint(
 
   // Find the vertex with max/min latitude or longitude
   let targetVertex = coordinates[0];
+
+  if (!targetVertex) {
+    return null;
+  }
+
   const coordinateIndex = getCoordinateIndexForEdgePosition(position);
+  const findMax = position === 'top' || position === 'right';
 
   for (const vertex of coordinates) {
     if (!vertex) {
-      continue;
-    }
-    if (!targetVertex) {
       continue;
     }
 
@@ -649,7 +628,11 @@ function findEdgePoint(
       continue;
     }
 
-    if (shouldUpdateEdgeVertex(vertexValue, targetValue, position)) {
+    const shouldUpdate = findMax
+      ? vertexValue > targetValue
+      : vertexValue < targetValue;
+
+    if (shouldUpdate) {
       targetVertex = vertex;
     }
   }
@@ -663,23 +646,18 @@ function findEdgePoint(
 function getCirclePosition(
   ring: number[][] | undefined,
   shapeOffset: [number, number] | undefined,
-  shapeVertical: string | undefined,
-  shapeHorizontal: string | undefined,
+  shapeVertical: LabelVerticalPosition | undefined,
+  shapeHorizontal: LabelHorizontalPosition | undefined,
   shapeCoordinateAnchor: string | undefined,
   options?: LabelPositionOptions,
 ): LabelPosition2d | null {
-  const defaultOffset: [number, number] = [0, 10];
-  const defaultVertical: LabelVerticalPosition = 'top';
-  const defaultHorizontal: LabelHorizontalPosition = 'center';
-  const defaultCoordinateAnchor: CardinalLabelCoordinateAnchor = 'bottom';
-
   const resolved = resolveLabelProperties(
     shapeOffset,
     shapeVertical,
     shapeHorizontal,
-    defaultOffset,
-    defaultVertical,
-    defaultHorizontal,
+    DEFAULT_LABEL_OFFSET,
+    DEFAULT_LABEL_VERTICAL,
+    DEFAULT_LABEL_HORIZONTAL,
     options?.circleLabelOffset,
     options?.circleLabelVerticalAnchor,
     options?.circleLabelHorizontalAnchor,
@@ -688,7 +666,7 @@ function getCirclePosition(
   // Determine coordinate anchor (priority: shape > options > default)
   const coordinateAnchor = (shapeCoordinateAnchor ??
     options?.circleLabelCoordinateAnchor ??
-    defaultCoordinateAnchor) as CardinalLabelCoordinateAnchor;
+    DEFAULT_COORDINATE_ANCHOR) as CardinalLabelCoordinateAnchor;
 
   // Calculate position based on coordinate anchor
   const coordinates = findEdgePoint(ring, coordinateAnchor);
@@ -711,8 +689,8 @@ function getPolygonPosition(
   geometry: Polygon,
   shape: Shape,
   shapeOffset: [number, number] | undefined,
-  shapeVertical: string | undefined,
-  shapeHorizontal: string | undefined,
+  shapeVertical: LabelVerticalPosition | undefined,
+  shapeHorizontal: LabelHorizontalPosition | undefined,
   shapeCoordinateAnchor: string | undefined,
   options?: LabelPositionOptions,
 ): LabelPosition2d | null {
@@ -731,18 +709,13 @@ function getPolygonPosition(
   }
 
   // Regular polygons use cardinal direction positioning
-  const defaultOffset: [number, number] = [0, 10];
-  const defaultVertical: LabelVerticalPosition = 'top';
-  const defaultHorizontal: LabelHorizontalPosition = 'center';
-  const defaultCoordinateAnchor: CardinalLabelCoordinateAnchor = 'bottom';
-
   const resolved = resolveLabelProperties(
     shapeOffset,
     shapeVertical,
     shapeHorizontal,
-    defaultOffset,
-    defaultVertical,
-    defaultHorizontal,
+    DEFAULT_LABEL_OFFSET,
+    DEFAULT_LABEL_VERTICAL,
+    DEFAULT_LABEL_HORIZONTAL,
     options?.polygonLabelOffset,
     options?.polygonLabelVerticalAnchor,
     options?.polygonLabelHorizontalAnchor,
@@ -751,7 +724,7 @@ function getPolygonPosition(
   // Determine coordinate anchor (priority: shape > options > default)
   const coordinateAnchor = (shapeCoordinateAnchor ??
     options?.polygonLabelCoordinateAnchor ??
-    defaultCoordinateAnchor) as CardinalLabelCoordinateAnchor;
+    DEFAULT_COORDINATE_ANCHOR) as CardinalLabelCoordinateAnchor;
 
   // Calculate position based on cardinal direction
   const coordinates = findEdgePoint(ring, coordinateAnchor);
@@ -819,7 +792,7 @@ export function getLabelPosition2d(
   const styleProps = shape.feature.properties?.styleProperties;
 
   // Check if shape has custom label properties
-  const shapeOffset = styleProps?.labelOffset as [number, number] | undefined;
+  const shapeOffset = styleProps?.labelOffset;
   const shapeVertical = styleProps?.labelVerticalAnchor;
   const shapeHorizontal = styleProps?.labelHorizontalAnchor;
   const shapeCoordinateAnchor = styleProps?.labelCoordinateAnchor;
@@ -909,5 +882,5 @@ export function getLabelPosition2d(
  * ```
  */
 export function getLabelText(shape: Shape): string {
-  return (shape.label || shape.name).toUpperCase();
+  return (shape.label ?? shape.name).toUpperCase();
 }

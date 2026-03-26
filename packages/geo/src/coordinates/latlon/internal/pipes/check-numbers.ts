@@ -11,6 +11,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { SYMBOLS } from '..';
 import { pipesResult } from '../pipes';
 import { simpler } from './simpler';
 import type { Tokens } from '../lexer';
@@ -77,6 +78,25 @@ export function checkNumberValues(tokens: Tokens) {
   // which is invalid for other reasons and will be caught elsewhere
   if (!!matches && pattern !== '_--_') {
     return pipesResult(tokens, 'Negative value for non-degrees value found.');
+  }
+
+  if (tokens.includes(SYMBOLS.DIVIDER)) {
+    const divIdx = tokens.indexOf(SYMBOLS.DIVIDER);
+    const halves = [tokens.slice(0, divIdx), tokens.slice(divIdx + 1)];
+
+    for (const half of halves) {
+      const nums = half.filter((t) => /\d/.test(t));
+
+      if (
+        nums.length > 1 &&
+        nums.some((n, i) => i > 0 && Number.parseFloat(n) < 0)
+      ) {
+        return pipesResult(
+          tokens,
+          'Negative value for non-degrees value found.',
+        );
+      }
+    }
   }
 
   return pipesResult(tokens, false);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -19,7 +19,7 @@ import {
   useContextProps,
 } from 'react-aria-components';
 import { Label } from '../label';
-import { RadioContext } from './context';
+import { RadioContext, RadioGroupContext } from './context';
 import styles from './styles.module.css';
 import type { RadioGroupProps } from './types';
 
@@ -46,9 +46,9 @@ import type { RadioGroupProps } from './types';
  * @returns The rendered RadioGroup component.
  */
 export function RadioGroup({ ref, ...props }: RadioGroupProps) {
-  [props, ref] = useContextProps(props, ref ?? null, RadioContext);
+  [props, ref] = useContextProps(props, ref ?? null, RadioGroupContext);
 
-  const { children, classNames, label, ...rest } = props;
+  const { children, classNames, label, labelPosition, ...rest } = props;
 
   return (
     <AriaRadioGroup
@@ -59,7 +59,7 @@ export function RadioGroup({ ref, ...props }: RadioGroupProps) {
       )}
     >
       {composeRenderProps(children, (children, { isDisabled, isRequired }) => (
-        <>
+        <RadioContext value={{ labelPosition }}>
           {label && (
             <Label
               className={clsx(styles.label, classNames?.label)}
@@ -70,7 +70,7 @@ export function RadioGroup({ ref, ...props }: RadioGroupProps) {
             </Label>
           )}
           {children}
-        </>
+        </RadioContext>
       ))}
     </AriaRadioGroup>
   );

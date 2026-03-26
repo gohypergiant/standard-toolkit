@@ -17,9 +17,6 @@ import { RouterProvider } from '~/modules/providers/router';
 import { ThemeProvider } from '~/modules/providers/theme';
 import type { PropsWithChildren } from 'react';
 
-// biome-ignore lint/style/useNamingConvention: nextjs convention
-export const experimental_ppr = true;
-
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang='en' className='font-primary dark'>

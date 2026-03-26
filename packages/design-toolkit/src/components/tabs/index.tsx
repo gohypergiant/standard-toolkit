@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -19,7 +19,8 @@ import {
   composeRenderProps,
   useContextProps,
 } from 'react-aria-components';
-import { TabsContext } from './context';
+import { TabStyleDefaults } from './constants';
+import { TabProvider, TabsContext } from './context';
 import styles from './styles.module.css';
 import type { TabsProps } from './types';
 
@@ -32,6 +33,8 @@ import type { TabsProps } from './types';
  * @param props.ref - Ref to the tabs container element.
  * @param props.children - TabList and TabPanel components.
  * @param props.className - CSS class for the tabs container.
+ * @param props.align - Justification alignment passed down to Tab components. (only applicable when orientation is horizontal)
+ * @param props.flex - Boolean passed down to Tab components. (only applicable when orientation is horizontal)
  * @returns The rendered Tabs component.
  *
  * @example
@@ -49,17 +52,22 @@ import type { TabsProps } from './types';
 export function Tabs({ ref, ...props }: TabsProps) {
   [props, ref] = useContextProps(props, ref ?? null, TabsContext);
 
-  const { children, className, ...rest } = props;
+  const { children, className, align, flex, ...rest } = {
+    ...TabStyleDefaults,
+    ...props,
+  };
 
   return (
-    <AriaTabs
-      {...rest}
-      ref={ref}
-      className={composeRenderProps(className, (className) =>
-        clsx('group/tabs', styles.tabs, className),
-      )}
-    >
-      {children}
-    </AriaTabs>
+    <TabProvider align={align} flex={flex}>
+      <AriaTabs
+        {...rest}
+        ref={ref}
+        className={composeRenderProps(className, (className) =>
+          clsx('group/tabs', styles.tabs, className),
+        )}
+      >
+        {children}
+      </AriaTabs>
+    </TabProvider>
   );
 }

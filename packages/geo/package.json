@@ -1,7 +1,7 @@
 {
   "name": "@accelint/geo",
   "description": "A collection of JavaScript functions for working with coordinates and geospatial data.",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "dependencies": {
@@ -39,6 +39,7 @@
     "./coordinates/latlon/internal/format": "./dist/coordinates/latlon/internal/format.js",
     "./coordinates/latlon/internal/in-range": "./dist/coordinates/latlon/internal/in-range.js",
     "./coordinates/latlon/internal/lexer": "./dist/coordinates/latlon/internal/lexer.js",
+    "./coordinates/latlon/internal/normalize": "./dist/coordinates/latlon/internal/normalize.js",
     "./coordinates/latlon/internal/ordinal": "./dist/coordinates/latlon/internal/ordinal.js",
     "./coordinates/latlon/internal/parse": "./dist/coordinates/latlon/internal/parse.js",
     "./coordinates/latlon/internal/parse-format": "./dist/coordinates/latlon/internal/parse-format.js",
@@ -49,6 +50,7 @@
     "./coordinates/latlon/internal/pipes/fix-dividers": "./dist/coordinates/latlon/internal/pipes/fix-dividers.js",
     "./coordinates/latlon/internal/pipes/genome": "./dist/coordinates/latlon/internal/pipes/genome.js",
     "./coordinates/latlon/internal/pipes/simpler": "./dist/coordinates/latlon/internal/pipes/simpler.js",
+    "./coordinates/latlon/internal/validate": "./dist/coordinates/latlon/internal/validate.js",
     "./coordinates/latlon/internal/violation": "./dist/coordinates/latlon/internal/violation.js",
     "./coordinates/mgrs/parser": "./dist/coordinates/mgrs/parser.js",
     "./coordinates/mgrs/system": "./dist/coordinates/mgrs/system.js",

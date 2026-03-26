@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -15,8 +15,12 @@ export {
   DEFAULT_TEST_STATES,
   INTERACTION_STATES,
 } from '../lib/interactive-states';
+// Screenshot helpers
+export { constrainBodyToContent } from '../lib/screenshot-helpers';
 // Theme mode utilities
 export { insertModeInFilename, THEME_MODES } from '../lib/theme-modes';
+// Virtualizer fixes
+export { fixVirtualizerItemWidths } from '../lib/virtualizer-fixes';
 // Test builders
 export {
   createInteractiveVisualTests,

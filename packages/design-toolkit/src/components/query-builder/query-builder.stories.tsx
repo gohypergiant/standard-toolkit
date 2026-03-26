@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -11,6 +11,7 @@
  */
 
 import { useState } from 'react';
+import { action } from 'storybook/actions';
 import { QueryBuilder } from './';
 import { defaultQuery, fields } from './__fixtures__/example-configuration';
 import type { Meta, StoryObj } from '@storybook/react-vite';
@@ -59,12 +60,18 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: (args) => {
     const [query, setQuery] = useState<RuleGroupType>(defaultQuery);
+    const onQueryChange = action('onQueryChange');
+
+    const handleQueryChange = (newQuery: RuleGroupType) => {
+      onQueryChange(newQuery);
+      setQuery(newQuery);
+    };
 
     return (
       <QueryBuilder
         fields={fields}
         query={query}
-        onQueryChange={setQuery}
+        onQueryChange={handleQueryChange}
         {...args}
       />
     );

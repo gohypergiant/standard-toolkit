@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -10,14 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import { getLogger } from '@accelint/logger';
+import { createLoggerDomain } from '@/utils/logger';
 
-const logger = getLogger({
-  enabled: process.env.NODE_ENV !== 'production',
-  level: 'debug',
-  prefix: '[CoordinateField]',
-  pretty: true,
-});
+const logger = createLoggerDomain('[CoordinateField]');
 
 /**
  * Coordinate Conversion Utilities
@@ -606,7 +601,7 @@ export function convertDDToDisplaySegments(
     return segments;
   } catch (error) {
     logger
-      .withContext({
+      .withMetadata({
         value: String(value),
         format: String(format),
       })
@@ -676,7 +671,7 @@ export function convertDisplaySegmentsToDD(
     };
   } catch (error) {
     logger
-      .withContext({
+      .withMetadata({
         segments: JSON.stringify(segments),
         format: String(format),
       })
@@ -856,7 +851,7 @@ function convertToFormat(
 
     // Log other errors in development
     logger
-      .withContext({
+      .withMetadata({
         value: JSON.stringify(value),
       })
       .withError(error)
@@ -930,7 +925,7 @@ export function getAllCoordinateFormats(
     return result;
   } catch (error) {
     logger
-      .withContext({
+      .withMetadata({
         value: JSON.stringify(validValue),
       })
       .withError(error)
@@ -1052,12 +1047,12 @@ export function parseCoordinatePaste(
     } catch (error) {
       // Log parsing errors in development for debugging
       logger
-        .withContext({
+        .withMetadata({
           pastedText: pastedText.trim(),
           format: String(format),
         })
         .withError(error)
-        .warn(`Failed to parse as ${format}`);
+        .error(`Failed to parse as ${format}`);
       // Continue trying other parsers
     }
   }

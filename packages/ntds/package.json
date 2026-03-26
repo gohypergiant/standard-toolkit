@@ -1,7 +1,7 @@
 {
   "name": "@accelint/ntds",
   "description": "An NTDS-compliant offering of a set of SVG Icon Components with fill color inputs for general usage, and a spritesheet for icons to be used in the COP.",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "devDependencies": {
@@ -12,6 +12,7 @@
     "@types/react-dom": "^19",
     "react": "^19",
     "react-dom": "^19",
+    "rollup-plugin-copy": "^3.5.0",
     "tsdown": "^0.18.0",
     "typescript": "^5.9.3"
   },
@@ -71,7 +72,9 @@
     "./core/torpedo-hostile": "./dist/core/torpedo-hostile.js",
     "./core/torpedo-unknown": "./dist/core/torpedo-unknown.js",
     "./spritesheets/masked": "./dist/spritesheets/masked.js",
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./spritesheets/*.png": "./dist/spritesheets/*.png",
+    "./spritesheets/*.json": "./dist/spritesheets/*.json"
   },
   "files": [
     "./dist/**",
@@ -101,13 +104,10 @@
     "url": "https://github.com/gohypergiant/standard-toolkit"
   },
   "scripts": {
-    "build": "pnpm run build:icons:color && pnpm run build:icons:masked && pnpm run copy && pnpm run license && pnpm run format && pnpm tsdown",
+    "build": "pnpm run build:icons:color && pnpm run build:icons:masked && pnpm run license && pnpm run format && pnpm tsdown",
     "build:icons:color": "pnpm exec smeegl --in ./icons/core --out ./src/core --target REACT",
     "build:icons:masked": "pnpm exec smeegl --in ./icons/masked --out ./src/spritesheets/masked --crc DEC --target SPRITESHEET",
     "constellation-tracker": "pnpm exec constellation-tracker",
-    "copy": "pnpm copy:dir && pnpm copy:spritesheets",
-    "copy:dir": "pnpm exec mkdir -p ./dist/spritesheets",
-    "copy:spritesheets": "pnpm exec cp -pR ./src/spritesheets/*.png ./src/spritesheets/*.json ./dist/spritesheets",
     "dev": "pnpm tsc --watch",
     "format": "pnpm biome format . --write --verbose",
     "format:check": "pnpm biome format . --verbose",

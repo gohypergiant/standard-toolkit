@@ -15,11 +15,27 @@ import { systemDegreesDecimalMinutes } from './latlon/degrees-decimal-minutes/sy
 import { systemDegreesMinutesSeconds } from './latlon/degrees-minutes-seconds/system';
 import {
   type Axes,
+  type CoordinateInput,
+  type CoordinateInternalValue,
+  type CoordinateObject,
   type Errors,
   FORMATS_DEFAULT,
   type Format,
+  isCoordinateTuple,
+  normalizeObjectToLatLon,
   SYMBOLS,
+  tupleToLatLon,
+  validateNumericCoordinate,
 } from './latlon/internal';
+
+export type {
+  CoordinateInput,
+  CoordinateObject,
+  CoordinateTuple,
+  LatLonTuple,
+  LonLatTuple,
+} from './latlon/internal';
+
 import {
   type CoordinateCache,
   createCache,
@@ -44,9 +60,6 @@ type Coordinate = {
   raw: CoordinateInternalValue;
   valid: boolean;
 };
-
-// biome-ignore lint/style/useNamingConvention: consistency with Axes type
-type CoordinateInternalValue = { LAT: number; LON: number };
 
 /**
  * Output a string value of a coordinate using an available system. The
@@ -78,7 +91,7 @@ type Formatter = (f?: Format) => string;
 
 type ToFloatArg = Parameters<CoordinateSystem['toFloat']>[0];
 
-type OutputCache = Record<keyof typeof coordinateSystems, CoordinateCache>;
+type OutputCache = Map<CoordinateSystem, CoordinateCache>;
 
 /**
  * Available coordinate systems for parsing, converting, and formatting geographic coordinates.
@@ -127,6 +140,38 @@ const freezeCoordinate = (
     valid,
   } as Coordinate);
 
+const errorCoordinate = (errors: string[]) =>
+  freezeCoordinate(errors, () => '', {} as CoordinateInternalValue, false);
+
+const createFormatter =
+  (
+    raw: CoordinateInternalValue,
+    cachedValues: OutputCache,
+    initSystem: CoordinateSystem,
+    initFormat: Format,
+  ) =>
+  (system: CoordinateSystem = initSystem, format: Format = initFormat) => {
+    let cache = cachedValues.get(system);
+
+    if (!cache?.[format]) {
+      if (!cache) {
+        cache = {} as CoordinateCache;
+        cachedValues.set(system, cache);
+      }
+
+      cache[format] = system.toFormat(format, [
+        raw[format.slice(0, 3) as Axes],
+        raw[format.slice(3) as Axes],
+      ] as [number, number]);
+    }
+
+    return cache[format];
+  };
+
+type NormalizedResult =
+  | { valid: true; raw: CoordinateInternalValue; cachedValues: OutputCache }
+  | { valid: false; errors: string[] };
+
 /**
  * Create a coordinate object enabling: lexing, parsing, validation, and
  * formatting in alternative systems and formats. The system and format will be
@@ -159,7 +204,7 @@ export function createCoordinate(
   initSystem: CoordinateSystem = coordinateSystems.dd,
   initFormat: Format = FORMATS_DEFAULT,
 ) {
-  return (input: string) => {
+  function normalizeString(input: string): NormalizedResult {
     let tokens: Tokens;
     let errors: Errors;
 
@@ -170,68 +215,93 @@ export function createCoordinate(
         throw errors;
       }
     } catch (errors) {
-      return freezeCoordinate(
-        errors as Coordinate['errors'],
-        () => '',
-        {} as CoordinateInternalValue,
-        false,
-      );
+      return { valid: false, errors: errors as string[] };
     }
 
-    // start with the original value for the original system in the original format
-    // other values will be computed as needed and cached per request
-    const cachedValues = {
-      [initSystem.name]: createCache(
-        initFormat,
-        // because mgrs doesn't have two formats: LATLON v LONLAT
-        initSystem.name === systemMGRS.name ? input : tokens.join(' '),
+    const cachedValues: OutputCache = new Map([
+      [
+        initSystem,
+        createCache(
+          initFormat,
+          initSystem === systemMGRS ? input : tokens.join(' '),
+        ),
+      ],
+    ]);
+
+    const dividerIndex = tokens.indexOf(SYMBOLS.DIVIDER);
+    const raw = {
+      [initFormat.slice(0, 3)]: initSystem.toFloat(
+        tokens.slice(0, dividerIndex) as ToFloatArg,
       ),
-    } as OutputCache;
+      [initFormat.slice(3)]: initSystem.toFloat(
+        tokens.slice(dividerIndex + 1) as ToFloatArg,
+      ),
+    } as CoordinateInternalValue;
 
-    // Create the "internal" representation - Decimal Degrees - for
-    // consistency and ease of computation; all systems expect to
-    // start from a common starting point to reduce complexity.
-    const raw = Object.fromEntries([
-      [
-        initFormat.slice(0, 3),
-        initSystem.toFloat(
-          tokens.slice(0, tokens.indexOf(SYMBOLS.DIVIDER)) as ToFloatArg,
-        ),
-      ],
-      [
-        initFormat.slice(3),
-        initSystem.toFloat(
-          tokens.slice(1 + tokens.indexOf(SYMBOLS.DIVIDER)) as ToFloatArg,
-        ),
-      ],
-    ]) as CoordinateInternalValue;
+    return { valid: true, raw, cachedValues };
+  }
 
-    function to(
-      system: CoordinateSystem = initSystem,
-      format: Format = initFormat,
-    ) {
-      const key = system.name as keyof typeof coordinateSystems;
+  function normalizeNumeric(lat: number, lon: number): NormalizedResult {
+    const errors = validateNumericCoordinate(lat, lon);
 
-      if (!cachedValues[key]?.[format]) {
-        // cache "miss" - fill the missing value in the cache before returning it
+    if (errors.length) {
+      return { valid: false, errors };
+    }
 
-        // update the cache to include the newly computed value
-        cachedValues[key] = {
-          ...cachedValues[key],
-          // use the Format to build the object, correctly pairing the halves of
-          // the coordinate value with their labels
-          [format]: system.toFormat(
-            format,
-            ([format.slice(0, 3), format.slice(3)] as Axes[]).map(
-              (key) => raw[key],
-            ) as [number, number],
-          ),
+    return {
+      valid: true,
+      raw: { LAT: lat, LON: lon },
+      cachedValues: new Map(),
+    };
+  }
+
+  function normalize(input: CoordinateInput): NormalizedResult {
+    if (typeof input === 'string') {
+      return normalizeString(input);
+    }
+
+    if (isCoordinateTuple(input)) {
+      const { lat, lon } = tupleToLatLon(initFormat, input);
+      return normalizeNumeric(lat, lon);
+    }
+
+    if (typeof input === 'object' && input !== null && !Array.isArray(input)) {
+      const result = normalizeObjectToLatLon(input as CoordinateObject);
+
+      if (result === null) {
+        return {
+          valid: false,
+          errors: [
+            '[ERROR] Invalid coordinate object; object must contain valid latitude and longitude properties.',
+          ],
         };
       }
 
-      return cachedValues[key][format];
+      return normalizeNumeric(result.lat, result.lon);
     }
 
-    return freezeCoordinate([] as Coordinate['errors'], to, raw, true);
+    return {
+      valid: false,
+      errors: [
+        '[ERROR] Invalid coordinate input; expected a string, [lat, lon] tuple, or { lat, lon } object.',
+      ],
+    };
+  }
+
+  return (input: CoordinateInput): Coordinate => {
+    const result = normalize(input);
+
+    if (!result.valid) {
+      return errorCoordinate(result.errors);
+    }
+
+    const to = createFormatter(
+      result.raw,
+      result.cachedValues,
+      initSystem,
+      initFormat,
+    );
+
+    return freezeCoordinate([], to, result.raw, true);
   };
 }

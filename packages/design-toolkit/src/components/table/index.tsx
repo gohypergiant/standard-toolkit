@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -16,9 +16,13 @@ import { clsx } from '@accelint/design-foundation/lib/utils';
 import Kebab from '@accelint/icons/kebab';
 import Pin from '@accelint/icons/pin';
 import { useListData } from '@react-stately/data';
+import { useControlledState } from '@react-stately/utils';
 import {
   getCoreRowModel,
+  getPaginationRowModel,
   getSortedRowModel,
+  type OnChangeFn,
+  type PaginationState,
   type Row,
   type RowPinningState,
   type RowSelectionState,
@@ -144,6 +148,10 @@ export function Table<T extends { id: Key }>({
   onColumnReorderChange,
   onRowSelectionChange,
   fullWidth = false,
+  pageSize,
+  page: pageProp,
+  defaultPage = 1,
+  onPageChange,
   ...rest
 }: TableProps<T>) {
   const {
@@ -161,6 +169,30 @@ export function Table<T extends { id: Key }>({
     top: [],
     bottom: [],
   });
+
+  const [currentPage, setCurrentPage] = useControlledState(
+    pageProp,
+    defaultPage,
+    onPageChange,
+  );
+
+  const pagination = useMemo(
+    () =>
+      pageSize != null ? { pageIndex: currentPage - 1, pageSize } : undefined,
+    [currentPage, pageSize],
+  );
+
+  const handlePaginationChange = useCallback<OnChangeFn<PaginationState>>(
+    (updater) => {
+      if (pagination == null) {
+        return;
+      }
+      const next =
+        typeof updater === 'function' ? updater(pagination) : updater;
+      setCurrentPage(next.pageIndex + 1);
+    },
+    [pagination, setCurrentPage],
+  );
 
   /**
    * moveUpSelectedRows moves the selected rows up in the table.
@@ -335,6 +367,7 @@ export function Table<T extends { id: Key }>({
     state: {
       rowSelection,
       rowPinning,
+      ...(pagination != null && { pagination }),
     },
     getRowId: (row, index) => {
       // Use the index as the row ID if no unique identifier is available
@@ -345,8 +378,12 @@ export function Table<T extends { id: Key }>({
     manualSorting: manualSorting,
     onRowSelectionChange: handleRowSelectionChange,
     onRowPinningChange: setRowPinning,
+    onPaginationChange: handlePaginationChange,
     getCoreRowModel: getCoreRowModel<T>(),
     getSortedRowModel: getSortedRowModel<T>(),
+    ...(pageSize != null && {
+      getPaginationRowModel: getPaginationRowModel<T>(),
+    }),
   });
 
   const moveColumnLeft = useCallback(

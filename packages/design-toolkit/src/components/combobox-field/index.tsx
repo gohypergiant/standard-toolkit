@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -13,9 +13,32 @@
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import ChevronDown from '@accelint/icons/chevron-down';
+import { CollectionNode } from '@react-aria/collections';
+import { useControlledState } from '@react-stately/utils';
+import { useCallback, useRef } from 'react';
+
+// Patch CollectionNode.childNodes getter to return an empty array instead of
+// throwing. React 19 dev-mode profiling (logComponentRender → addObjectDiffToProperties)
+// accesses this getter when diffing component props during commitPassiveMountOnFiber.
+// The thrown error prevents useComboBoxState's effect from running, breaking
+// internal state tracking and causing input value resets on every keystroke
+// with static children.
+// https://github.com/adobe/react-spectrum/issues/9405
+if (
+  Object.getOwnPropertyDescriptor(CollectionNode.prototype, 'childNodes')?.get
+) {
+  Object.defineProperty(CollectionNode.prototype, 'childNodes', {
+    get() {
+      return [];
+    },
+    configurable: true,
+  });
+}
+
 import {
   Button,
   ComboBox,
+  type ComboBoxProps,
   composeRenderProps,
   FieldError,
   Input,
@@ -25,6 +48,7 @@ import {
   useContextProps,
   Virtualizer,
 } from 'react-aria-components';
+import { ClearButton } from '../button/__internal__/clear';
 import { Icon } from '../icon';
 import { Label } from '../label';
 import { Options } from '../options';
@@ -68,16 +92,43 @@ export function ComboBoxField<T extends OptionsDataItem>({
     description: descriptionProp,
     errorMessage: errorMessageProp,
     inputProps,
+    inputValue: inputValueProp,
+    defaultInputValue = '',
     label: labelProp,
     layoutOptions,
     menuTrigger = 'focus',
     size = 'medium',
     isInvalid: isInvalidProp,
     isReadOnly = false,
+    isClearable = true,
+    onInputChange,
+    onKeyDown,
     ...rest
   } = props;
+
+  const [inputValue, setInputValue] = useControlledState(
+    inputValueProp,
+    defaultInputValue,
+    onInputChange,
+  );
+
+  const pointerDownInsidePopoverRef = useRef(false);
   const errorMessage = errorMessageProp || null; // Protect against empty string
   const isSmall = size === 'small';
+
+  const handleClear = useCallback(() => {
+    setInputValue('');
+  }, [setInputValue]);
+
+  const handleKeyDown = useCallback<Required<ComboBoxProps<T>>['onKeyDown']>(
+    (event) => {
+      onKeyDown?.(event);
+      if (isClearable && event.key === 'Escape' && inputValue) {
+        handleClear();
+      }
+    },
+    [onKeyDown, isClearable, handleClear, inputValue],
+  );
 
   return (
     <ComboBox<T>
@@ -89,11 +140,13 @@ export function ComboBoxField<T extends OptionsDataItem>({
       menuTrigger={menuTrigger}
       isInvalid={isInvalidProp || (errorMessage ? true : undefined)} // Leave uncontrolled if possible to fallback to validation state
       isReadOnly={isReadOnly}
+      inputValue={inputValue}
+      onInputChange={setInputValue}
+      onKeyDown={handleKeyDown}
       data-size={size}
+      data-empty={!inputValue || null}
     >
-      {(
-        { isDisabled, isInvalid, isRequired }, // Rely on internal state, not props, since state could differ from props
-      ) => {
+      {({ isDisabled, isInvalid, isRequired }) => {
         const shouldShowDescription =
           !isReadOnly && !!descriptionProp && !(isSmall || isInvalid);
 
@@ -120,6 +173,16 @@ export function ComboBoxField<T extends OptionsDataItem>({
                 )}
                 title={inputProps?.value ? String(inputProps?.value) : ''}
               />
+              {!isReadOnly && isClearable && (
+                <ClearButton
+                  className={composeRenderProps(
+                    classNames?.clear,
+                    (className) => clsx(styles.clear, className),
+                  )}
+                  isDisabled={isDisabled}
+                  onPress={handleClear}
+                />
+              )}
               {!isReadOnly && (
                 <Button
                   className={composeRenderProps(
@@ -149,6 +212,16 @@ export function ComboBoxField<T extends OptionsDataItem>({
               {errorMessage}
             </FieldError>
             <Popover
+              onPointerDownCapture={() => {
+                pointerDownInsidePopoverRef.current = true;
+              }}
+              onPointerUpCapture={(e) => {
+                if (!pointerDownInsidePopoverRef.current) {
+                  e.stopPropagation();
+                  e.preventDefault();
+                }
+                pointerDownInsidePopoverRef.current = false;
+              }}
               className={composeRenderProps(classNames?.popover, (className) =>
                 clsx(styles.popover, className),
               )}

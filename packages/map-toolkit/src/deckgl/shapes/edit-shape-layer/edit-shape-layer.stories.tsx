@@ -10,26 +10,32 @@
  * governing permissions and limitations under the License.
  */
 
-import { useOn } from '@accelint/bus/react';
-import { uuid } from '@accelint/core';
+import { useEmit, useOn } from '@accelint/bus/react';
+import { type UniqueId, uuid } from '@accelint/core';
 import { Button } from '@accelint/design-toolkit';
+import { OptionsItem } from '@accelint/design-toolkit/components/options/item';
+import { SelectField } from '@accelint/design-toolkit/components/select-field';
 import { useState } from 'react';
+import { CameraEventTypes } from '@/camera/events';
+import { useMapCamera } from '@/camera/store';
 import { useMapCursor } from '@/map-cursor';
 import { BaseMap } from '../../base-map/index';
 import { mockShapes } from '../__fixtures__/mock-shapes';
-import '../draw-shape-layer/fiber';
+import { mockShapesWithIcons } from '../__fixtures__/mock-shapes-with-icons';
+import type { CameraSetViewEvent, ViewType } from '@/camera/types';
+import '../display-shape-layer/fiber';
 import { useSelectShape } from '../display-shape-layer/use-select-shape';
 import { DrawShapeLayer } from '../draw-shape-layer/index';
 import { useDrawShape } from '../draw-shape-layer/use-draw-shape';
 import { ShapeEvents } from '../shared/events';
 import { ShapeFeatureType } from '../shared/types';
+import { duplicateShape } from '../shared/utils/duplicate-shape';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ShapeHoveredEvent, ShapeSelectedEvent } from '../shared/events';
 import type { Shape } from '../shared/types';
-import '../display-shape-layer/fiber';
 import './fiber';
 import { EditShapeLayer } from './index';
 import { useEditShape } from './use-edit-shape';
-import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta = {
   title: 'DeckGL/Shapes/Edit Shape Layer',
@@ -37,6 +43,25 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+function ViewSelector({ mapId }: { mapId: UniqueId }) {
+  const setView = useEmit<CameraSetViewEvent>(CameraEventTypes.setView);
+  const { cameraState } = useMapCamera(mapId);
+
+  return (
+    <SelectField
+      label='View'
+      value={cameraState.view}
+      onChange={(value) => {
+        setView({ id: mapId, view: value as ViewType });
+      }}
+    >
+      <OptionsItem id='2D'>2D</OptionsItem>
+      <OptionsItem id='2.5D'>2.5D</OptionsItem>
+      <OptionsItem id='3D'>3D</OptionsItem>
+    </SelectField>
+  );
+}
 
 // Use fixture shapes with unique IDs for each story render
 function createSampleShapes(): Shape[] {
@@ -235,6 +260,8 @@ export const BasicEditing: Story = {
             </div>
           </div>
 
+          <ViewSelector mapId={EDIT_MAP_ID} />
+
           {/* Instructions */}
           <div className='rounded-lg bg-surface-contrast-subtle p-s'>
             <p className='mb-xs font-semibold text-body-xs'>Editing Tips:</p>
@@ -244,7 +271,9 @@ export const BasicEditing: Story = {
               <li>Drag vertices to modify geometry</li>
               <li>Click and drag to move the shape</li>
               <li>Shift: hold to scale proportionally</li>
+              <li>Press Enter to save</li>
               <li>Press ESC to cancel</li>
+              <li>Hold Space while editing to pan</li>
             </ul>
           </div>
         </div>
@@ -559,6 +588,307 @@ export const LockedShapes: Story = {
               <li>Locked shapes cannot be edited</li>
               <li>Toggle lock state with the Lock/Unlock button</li>
               <li>Useful for protecting imported or finalized data</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    );
+  },
+};
+
+/**
+ * Duplicate Shape
+ *
+ * Demonstrates programmatic shape duplication using `duplicateShape()`.
+ *
+ * Instructions:
+ * 1. Configure name and offset in the Storybook controls panel
+ * 2. Click a shape on the map to select it
+ * 3. Click "Duplicate" to clone with the configured options
+ * 4. The event log shows each duplication
+ */
+const DUPLICATE_MAP_ID = uuid();
+
+type DuplicateShapeArgs = {
+  /** Custom name for the clone. Defaults to "{original name} (copy)". */
+  name: string;
+  /** Coordinate offset [longitude, latitude] applied to all geometry coordinates. */
+  offset: [number, number];
+};
+
+export const DuplicateShape: StoryObj<DuplicateShapeArgs> = {
+  args: {
+    name: '',
+    offset: [0.5, -0.5],
+  },
+  argTypes: {
+    name: {
+      control: 'text',
+      description:
+        'Custom name for the clone. Leave empty to use default "{name} (copy)".',
+    },
+    offset: {
+      control: 'object',
+      description:
+        'Coordinate offset [longitude, latitude] applied to all geometry coordinates.',
+    },
+  },
+  render: ({ name: customName, offset }) => {
+    const [shapes, setShapes] = useState<Shape[]>(createSampleShapes);
+    const [eventLog, setEventLog] = useState<
+      Array<{ id: string; message: string }>
+    >([]);
+
+    const { requestCursorChange, clearCursor } = useMapCursor(DUPLICATE_MAP_ID);
+
+    const { selectedId, clearSelection } = useSelectShape(DUPLICATE_MAP_ID);
+    const selectedShape = shapes.find((s) => s.id === selectedId) ?? null;
+
+    // Handle hover events for cursor changes
+    useOn<ShapeHoveredEvent>(ShapeEvents.hovered, (event) => {
+      if (event.payload.mapId !== DUPLICATE_MAP_ID) {
+        return;
+      }
+
+      if (event.payload.shapeId) {
+        requestCursorChange('pointer', 'display-shapes');
+      } else {
+        clearCursor('display-shapes');
+      }
+    });
+
+    const handleDuplicate = () => {
+      if (!selectedShape) {
+        return;
+      }
+
+      const options: Parameters<typeof duplicateShape>[1] = {};
+      if (customName) {
+        options.name = customName;
+      }
+      if (offset[0] !== 0 || offset[1] !== 0) {
+        options.offset = offset;
+      }
+
+      const clone = duplicateShape(selectedShape, options);
+      setShapes((prev) => [...prev, clone]);
+      clearSelection();
+      setEventLog((log) => [
+        ...log.slice(-9),
+        {
+          id: `${Date.now()}-duplicated`,
+          message: `Duplicated: "${selectedShape.name}" -> "${clone.name}"${options.offset ? ` (offset: [${offset}])` : ''}`,
+        },
+      ]);
+    };
+
+    const handleDelete = () => {
+      if (selectedShape) {
+        setShapes((prev) => prev.filter((s) => s.id !== selectedShape.id));
+        clearSelection();
+        setEventLog((log) => [
+          ...log.slice(-9),
+          {
+            id: `${Date.now()}-deleted`,
+            message: `Deleted: "${selectedShape.name}"`,
+          },
+        ]);
+      }
+    };
+
+    return (
+      <div className='relative h-dvh w-dvw'>
+        <BaseMap className='absolute inset-0' id={DUPLICATE_MAP_ID}>
+          <displayShapeLayer
+            id='shapes'
+            mapId={DUPLICATE_MAP_ID}
+            data={shapes}
+            showLabels='always'
+            pickable
+            selectedShapeId={selectedId}
+          />
+        </BaseMap>
+
+        <div className='absolute top-l left-l z-10 flex max-h-[calc(100%-2rem)] w-[320px] flex-col gap-l overflow-y-auto rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
+          <p className='font-bold text-header-l'>Duplicate Shapes</p>
+
+          {/* Status indicator */}
+          <div className='rounded-lg bg-info-muted p-s'>
+            <code className='text-body-m'>
+              {selectedShape
+                ? `Selected: ${selectedShape.name}`
+                : 'Click a shape to select'}
+            </code>
+          </div>
+
+          {/* Action buttons */}
+          {selectedShape && (
+            <div className='flex flex-col gap-s'>
+              <Button variant='filled' color='accent' onPress={handleDuplicate}>
+                Duplicate
+              </Button>
+              <Button variant='outline' color='critical' onPress={handleDelete}>
+                Delete
+              </Button>
+            </div>
+          )}
+
+          {/* Event log */}
+          <div className='flex flex-col'>
+            <p className='mb-s font-semibold text-body-s'>
+              Event Log ({shapes.length} shapes)
+            </p>
+            <div className='h-[120px] overflow-y-auto rounded-lg border border-border-default bg-surface-subtle p-s'>
+              {eventLog.length === 0 ? (
+                <p className='text-body-xs text-content-disabled'>
+                  Click a shape, then duplicate it...
+                </p>
+              ) : (
+                eventLog.map((entry) => (
+                  <p key={entry.id} className='mb-xs text-body-xs'>
+                    {entry.message}
+                  </p>
+                ))
+              )}
+            </div>
+          </div>
+
+          {/* Instructions */}
+          <div className='rounded-lg bg-surface-contrast-subtle p-s'>
+            <p className='mb-xs font-semibold text-body-xs'>
+              Duplicate Options:
+            </p>
+            <ul className='list-inside list-disc space-y-xs text-body-xs text-content-secondary'>
+              <li>Click a shape to select it</li>
+              <li>"Duplicate" clones with current control values</li>
+              <li>Set name and offset in the controls panel</li>
+              <li>Offset [0, 0] means no offset (clone in place)</li>
+              <li>Clones inherit shape type, style, and geometry</li>
+              <li>Clones are always unlocked</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    );
+  },
+};
+
+/**
+ * Edit Icon Points
+ *
+ * Demonstrates editing Point shapes that use icon markers instead of scatterplot circles.
+ * When editing, the edit layer should render the icon (not a plain circle).
+ *
+ * Instructions:
+ * 1. Click an icon point on the map to select it
+ * 2. Click "Edit" to start editing
+ * 3. The edit layer should show the icon marker, not a scatterplot circle
+ * 4. Drag the icon to move it
+ * 5. Save or Cancel
+ */
+const ICON_EDIT_MAP_ID = uuid();
+
+function createIconShapes(): Shape[] {
+  return mockShapesWithIcons
+    .filter((s) => s.shape === ShapeFeatureType.Point)
+    .map((shape) => ({
+      ...shape,
+      id: uuid(),
+      lastUpdated: Date.now(),
+    }));
+}
+
+export const EditIconPoints: Story = {
+  render: () => {
+    const [shapes, setShapes] = useState<Shape[]>(createIconShapes);
+
+    const { requestCursorChange, clearCursor } = useMapCursor(ICON_EDIT_MAP_ID);
+    const { selectedId } = useSelectShape(ICON_EDIT_MAP_ID);
+    const selectedShape = shapes.find((s) => s.id === selectedId) ?? null;
+
+    const { edit, save, cancel, isEditing, editingShape } = useEditShape(
+      ICON_EDIT_MAP_ID,
+      {
+        onUpdate: (updatedShape) => {
+          setShapes((prev) =>
+            prev.map((s) => (s.id === updatedShape.id ? updatedShape : s)),
+          );
+        },
+      },
+    );
+
+    useOn<ShapeHoveredEvent>(ShapeEvents.hovered, (event) => {
+      if (event.payload.mapId !== ICON_EDIT_MAP_ID) {
+        return;
+      }
+      if (isEditing) {
+        return;
+      }
+      if (event.payload.shapeId) {
+        requestCursorChange('pointer', 'display-shapes');
+      } else {
+        clearCursor('display-shapes');
+      }
+    });
+
+    return (
+      <div className='relative h-dvh w-dvw'>
+        <BaseMap className='absolute inset-0' id={ICON_EDIT_MAP_ID}>
+          <displayShapeLayer
+            id='shapes'
+            mapId={ICON_EDIT_MAP_ID}
+            data={shapes}
+            showLabels='always'
+            pickable={!isEditing}
+            selectedShapeId={selectedShape?.id ?? editingShape?.id}
+          />
+          <EditShapeLayer mapId={ICON_EDIT_MAP_ID} />
+        </BaseMap>
+
+        <div className='absolute top-l left-l z-10 flex w-[320px] flex-col gap-m rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
+          <p className='font-bold text-header-l'>Edit Icon Points</p>
+
+          <div className='rounded-lg bg-info-muted p-s'>
+            <code className='text-body-s'>
+              {isEditing
+                ? `Editing: ${editingShape?.name}`
+                : selectedShape
+                  ? `Selected: ${selectedShape.name}`
+                  : 'Click an icon point to select'}
+            </code>
+          </div>
+
+          {!isEditing && selectedShape && (
+            <Button
+              variant='filled'
+              color='accent'
+              onPress={() => edit(selectedShape)}
+            >
+              Edit "{selectedShape.name}"
+            </Button>
+          )}
+
+          {isEditing && (
+            <div className='flex gap-s'>
+              <Button variant='filled' color='serious' onPress={save}>
+                Save
+              </Button>
+              <Button variant='outline' color='critical' onPress={cancel}>
+                Cancel
+              </Button>
+            </div>
+          )}
+
+          {/* Instructions */}
+          <div className='rounded-lg bg-surface-contrast-subtle p-s'>
+            <p className='mb-xs font-semibold text-body-xs'>Editing Tips:</p>
+            <ul className='list-inside list-disc space-y-xs text-body-xs text-content-secondary'>
+              <li>Click an icon point to select it</li>
+              <li>Click "Edit" to start editing</li>
+              <li>Drag the icon to move it</li>
+              <li>Edit layer renders the icon marker, not a circle</li>
+              <li>Press Enter to save</li>
+              <li>Press ESC to cancel</li>
             </ul>
           </div>
         </div>

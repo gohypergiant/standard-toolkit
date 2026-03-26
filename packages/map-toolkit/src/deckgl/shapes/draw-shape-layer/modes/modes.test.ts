@@ -10,18 +10,14 @@
  * governing permissions and limitations under the License.
  */
 
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { ShapeFeatureType } from '../../shared/types';
 import { DrawCircleModeWithTooltip } from './draw-circle-mode-with-tooltip';
 import { DrawEllipseModeWithTooltip } from './draw-ellipse-mode-with-tooltip';
 import { DrawLineStringModeWithTooltip } from './draw-line-string-mode-with-tooltip';
 import { DrawPolygonModeWithTooltip } from './draw-polygon-mode-with-tooltip';
 import { DrawRectangleModeWithTooltip } from './draw-rectangle-mode-with-tooltip';
-import {
-  getModeInstance,
-  getViewModeInstance,
-  triggerDoubleClickFinish,
-} from './index';
+import { getModeInstance, getViewModeInstance } from './index';
 
 describe('Draw Mode Classes', () => {
   describe('DrawCircleModeWithTooltip', () => {
@@ -64,11 +60,6 @@ describe('Draw Mode Classes', () => {
 
     it('has handleDoubleClick method for finish workaround', () => {
       expect(typeof mode.handleDoubleClick).toBe('function');
-    });
-
-    it('handleDoubleClick does nothing when no props stored', () => {
-      // Should not throw when called without prior handleClick
-      expect(() => mode.handleDoubleClick()).not.toThrow();
     });
   });
 
@@ -183,44 +174,6 @@ describe('Mode Instance Functions', () => {
       const mode2 = getViewModeInstance();
 
       expect(mode1).toBe(mode2);
-    });
-  });
-
-  describe('triggerDoubleClickFinish', () => {
-    it('calls handleDoubleClick on Polygon mode', () => {
-      const polygonMode = getModeInstance(
-        ShapeFeatureType.Polygon,
-      ) as DrawPolygonModeWithTooltip;
-      const spy = vi.spyOn(polygonMode, 'handleDoubleClick');
-
-      triggerDoubleClickFinish(ShapeFeatureType.Polygon);
-
-      expect(spy).toHaveBeenCalled();
-      spy.mockRestore();
-    });
-
-    it('calls handleDoubleClick on LineString mode', () => {
-      const lineMode = getModeInstance(
-        ShapeFeatureType.LineString,
-      ) as DrawLineStringModeWithTooltip;
-      const spy = vi.spyOn(lineMode, 'handleDoubleClick');
-
-      triggerDoubleClickFinish(ShapeFeatureType.LineString);
-
-      expect(spy).toHaveBeenCalled();
-      spy.mockRestore();
-    });
-
-    it('does not throw for Circle mode (no double-click finish)', () => {
-      expect(() => {
-        triggerDoubleClickFinish(ShapeFeatureType.Circle);
-      }).not.toThrow();
-    });
-
-    it('does not throw for Rectangle mode (no double-click finish)', () => {
-      expect(() => {
-        triggerDoubleClickFinish(ShapeFeatureType.Rectangle);
-      }).not.toThrow();
     });
   });
 });

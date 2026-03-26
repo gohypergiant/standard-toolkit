@@ -13,8 +13,8 @@
 'use client';
 
 import { uuid } from '@accelint/core';
-import { getLogger } from '@accelint/logger';
 import { centroid, distance } from '@turf/turf';
+import { createLoggerDomain } from '@/shared/logger';
 import { DEFAULT_DISTANCE_UNITS } from '@/shared/units';
 import { DEFAULT_STYLE_PROPERTIES } from '../../shared/constants';
 import {
@@ -28,12 +28,7 @@ import {
 } from '../../shared/types';
 import type { Feature, Polygon, Position } from 'geojson';
 
-const logger = getLogger({
-  enabled: process.env.NODE_ENV !== 'production',
-  level: 'warn',
-  prefix: '[FeatureConversion]',
-  pretty: true,
-});
+const logger = createLoggerDomain('[FeatureConversion]');
 
 /**
  * Generate a default name for a shape based on its type.

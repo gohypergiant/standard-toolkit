@@ -10,35 +10,52 @@
  * governing permissions and limitations under the License.
  */
 
-import { getSimplePrettyTerminal } from '@loglayer/transport-simple-pretty-terminal';
-import { ConsoleTransport, LogLayer } from 'loglayer';
+import { OneWayLogLevelManager } from '@loglayer/log-level-manager-one-way';
+import { LogLayer } from 'loglayer';
 import { serializeError } from 'serialize-error';
 import { callsitePlugin } from '../plugins/callsite';
 import { environmentPlugin } from '../plugins/environment';
+import { prettyTransport } from '../transports/pretty';
+import { structuredTransport } from '../transports/structured';
 import type { LoggerOptions } from '../definitions';
 
 /**
  * Initializes and configures a LogLayer instance with default plugins and transports.
  *
- * This function creates a logger with pre-configured callsite tracking, environment detection,
- * and error serialization. It supports both pretty-printed and structured JSON output.
+ * Creates a logger with pre-configured callsite tracking, environment detection,
+ * and error serialization. Supports both pretty-printed and structured JSON output.
+ *
+ * Built-in plugins are applied in this order before any user-supplied plugins:
+ * 1. `callsitePlugin` — injects source file location into every log entry
+ * 2. `environmentPlugin` — injects server/browser context into every log entry
+ *
+ * The returned instance uses a one-way log level manager: the level can only be
+ * raised (made more restrictive) after initialization, never lowered.
  *
  * @param options - Logger configuration options
- * @returns A configured LogLayer instance with all plugins and transports applied
+ * @param options.enabled - Whether logging is active; `false` makes all calls no-ops
+ * @param options.level - Minimum log level to output (default: `'debug'`)
+ * @param options.env - Runtime environment; controls server detection (default: `'development'`)
+ * @param options.pretty - Use pretty console output; `false` emits structured JSON (default: `true`)
+ * @param options.prefix - String prepended to all log messages (default: `''`)
+ * @param options.plugins - Additional plugins applied after the built-in ones
+ * @param options.transports - Custom transports that replace the default console transport; include `prettyTransport` or `structuredTransport` explicitly to keep console output
+ * @param options.groups - Named group configuration for conditional group logging
+ * @returns A configured LogLayer instance
  *
  * @example
  * ```typescript
- * import { bootstrap } from '@accelint/logger/default/bootstrap';
+ * import { bootstrap } from '@accelint/logger';
  *
+ * // Create a logger for a specific module (bypasses the singleton)
  * const logger = bootstrap({
  *   enabled: true,
- *   level: 'info',
- *   env: 'production',
- *   pretty: false,
- *   prefix: '[API]',
+ *   level: 'warn',
+ *   env: process.env.NODE_ENV as 'production' | 'development',
+ *   prefix: '[MyApp]',
  * });
  *
- * logger.info('Server started', { port: 3000 });
+ * logger.withMetadata({ userId: 'u-123' }).warn('Token expiring soon');
  * ```
  */
 export function bootstrap({
@@ -47,38 +64,32 @@ export function bootstrap({
   transports = [],
   level = 'debug',
   env = 'development',
+  groups = {},
   pretty = true,
   prefix = '',
-}: LoggerOptions): LogLayer {
+}: LoggerOptions) {
   const isProductionEnv = env === 'production';
   const isServer = typeof window === 'undefined';
+  const defaultTransport = pretty
+    ? prettyTransport({ level })
+    : structuredTransport({ level });
+  const actualTransports =
+    transports.length > 0 ? transports : defaultTransport;
 
   const instance = new LogLayer({
     errorSerializer: serializeError,
-    transport: [
-      pretty
-        ? getSimplePrettyTerminal({
-            viewMode: 'message-only',
-            level,
-            // NOTE: this gives us a nice balance even on the server
-            runtime: 'browser',
-            includeDataInBrowserConsole: true,
-          })
-        : new ConsoleTransport({
-            level,
-            logger: console,
-            appendObjectData: true,
-          }),
-      ...transports,
-    ],
+    transport: actualTransports,
     plugins: [
       callsitePlugin({ isProductionEnv }),
       environmentPlugin({ isProductionEnv, isServer }),
       ...plugins,
     ],
+    groups,
     enabled,
     prefix,
   });
+
+  instance.withLogLevelManager(new OneWayLogLevelManager());
 
   return instance;
 }

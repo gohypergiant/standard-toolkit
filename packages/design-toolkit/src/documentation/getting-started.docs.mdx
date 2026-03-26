@@ -8,7 +8,6 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 **[https://www.npmjs.com/package/@accelint/design-toolkit](https://www.npmjs.com/package/@accelint/design-toolkit)**
 
-
 ### Add DesignTK
 
 `npm install @accelint/design-toolkit`
@@ -21,7 +20,13 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 ### Install any peer dependencies
 
-See the list of `peerDependencies` for `@accelint/design-toolkit` [here](https://github.com/gohypergiant/standard-toolkit/blob/main/packages/design-toolkit/package.json).
+See the list of `peerDependencies` for `@accelint/design-toolkit` [here](https://github.com/gohypergiant/standard-toolkit/blob/main/packages/design-toolkit/package.json) or run the command
+
+```bash
+$ pnpm info @accelint/design-toolkit peerDependencies
+```
+
+Once you have a list, install all the peer dependencies.
 
 For the React Aria family of dependencies it is required to add them to the `overrides` section of your root `package.json` e.g.:
 
@@ -51,20 +56,41 @@ In order for tailwind to be able to generate the proper styles into your css, yo
 
 ### Tailwind Config
 
-The DTK uses the Tailwind library as the css and styling solution and is listed as a peer dependency for your application. While it is not strictly required that you continue to use this library as your application’s solution, we recommend it. For more information about Tailwind’s usage and best practices inside DTK, [read the docs](https://github.com/gohypergiant/standard-toolkit/blob/main/design-toolkit/components/src/documentation/tailwind.md).
+The DTK uses the Tailwind library as the css and styling solution and is listed as a peer dependency for your application. While it is not strictly required that you continue to use this library as your application’s solution, we recommend it. For more information about Tailwind’s usage and best practices inside DTK, [read the styling guide](?path=/docs/styling-guide--playground).
 
 #### Install all required dependencies
 
 If they are not already installed from the peer dependency step above, install all required dependencies.
 
 ```
-pnpm install tailwindcss tailwind-merge tailwind-variants
+pnpm install tailwindcss @tailwindcss/postcss @accelint/design-foundation @accelint/postcss-tailwind-css-modules
 ```
+
+#### Configure PostCSS
+
+Create a `postcss.config.mjs` file in the root of your project. This configuration is required for Tailwind and the CSS modules plugin to work correctly.
+
+```javascript
+// postcss.config.mjs
+export default {
+  plugins: {
+    '@tailwindcss/postcss': {},
+    '@accelint/postcss-tailwind-css-modules': {},
+  },
+};
+```
+
+Here is an example of the `postcss.config.mjs` file in a Next.js example app: [postcss.config.mjs](https://github.com/gohypergiant/standard-toolkit/blob/main/apps/next/postcss.config.mjs)
+
 #### Add imports to root css file
 
 Make the DTK available to your application by importing the styles into your root css and then sourcing the DTK code for generation. Double check the path to the node modules is correct or it won’t generate the correct styles into your project and you will see style problems.
 
 Here, we will use the `globals.css` file as an example, but you can name your css file whatever you want as long as it is available to your entire project.
+
+And then it can wrap your root component.
+
+**IMPORTANT**: In your root layout file, you must import `globals.css` as the **first import** to ensure styles are loaded in the correct order.
 
 ```css
 // globals.css
@@ -73,6 +99,19 @@ Here, we will use the `globals.css` file as an example, but you can name your cs
 ```
 
 Here is an example of the `globals.css` file in a Nextjs example app: [globals.css](https://github.com/gohypergiant/standard-toolkit/blob/main/apps/next/src/app/globals.css)
+
+#### Set up path aliases
+Add to your package.json the imports property below, with the specific path to include. The `"imports"` field defines [subpath imports](https://nodejs.org/api/packages.html#subpath-imports), which work uniformly across the entire build pipeline, including CSS modules, to allow path aliasing.
+
+```json
+{
+  "imports": {
+    "#globals": "./src/styles/globals.css"
+  }
+}
+```
+
+This allows the *.module.css to `@reference '#globals`';
 
 #### Set up the theme provider
 The Theme Provider is required to be able to toggle between light and dark mode as well as to create overrides to the default theme colors that are exported into Typescript. The Theme Provider is also required to be a client component, so it cannot be imported directly into a server component.
@@ -93,9 +132,11 @@ export function ThemeProvider({ children }: PropsWithChildren) {
 }
 ```
 
-And then it can wrap your root component. Note: if theme state is coming from some persisted store, that will need to be handled from https://tailwindcss.com/docs/dark-mode#with-system-theme-support
+Note: if theme state is coming from some persisted store, that will need to be handled from https://tailwindcss.com/docs/dark-mode#with-system-theme-support
 
 ```tsx
+// CRITICAL: globals.css must be the first import
+import './globals.css';
 import {ThemeProvider} from './theme.tsx';
 
 export default function RootLayout({ children }: PropsWithChildren) {
@@ -108,9 +149,9 @@ export default function RootLayout({ children }: PropsWithChildren) {
     //   );
     <html lang='en' className='font-primary dark'>
       <body className='w-full h-dvh flex flex-col'>
-        <DTKTheme>
+        <ThemeProvider>
           {children}
-        </DTKTheme>
+        </ThemeProvider>
       </body>
     </html>
   );

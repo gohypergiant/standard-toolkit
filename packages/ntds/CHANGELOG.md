@@ -1,5 +1,13 @@
 # @accelint/ntds
 
+## 0.2.5
+
+### Patch Changes
+
+- 1eb7c37: Restored spritesheet asset exports to allow imports such as
+  - '@accelint/ntds/spritesheets/masked.json';
+  - '@accelint/ntds/spritesheets/masked.png';
+
 ## 0.2.4
 
 ### Patch Changes

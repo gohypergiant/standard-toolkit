@@ -13,7 +13,7 @@
 import { Broadcast } from '@accelint/bus';
 import { uuid } from '@accelint/core';
 import { act, renderHook, waitFor } from '@testing-library/react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { MapEvents } from '../../base-map/events';
 import {
   type ShapeDeselectedEvent,
@@ -63,13 +63,13 @@ describe('useSelectShape', () => {
     it('provides setSelectedId function', () => {
       const { result } = renderHook(() => useSelectShape(mapId));
 
-      expect(typeof result.current.setSelectedId).toBe('function');
+      expect(result.current.setSelectedId).toBeTypeOf('function');
     });
 
     it('provides clearSelection function', () => {
       const { result } = renderHook(() => useSelectShape(mapId));
 
-      expect(typeof result.current.clearSelection).toBe('function');
+      expect(result.current.clearSelection).toBeTypeOf('function');
     });
   });
 
@@ -190,11 +190,26 @@ describe('useSelectShape', () => {
   });
 
   describe('map click auto-deselection', () => {
+    let deselectedBus: ReturnType<
+      typeof Broadcast.getInstance<ShapeDeselectedEvent>
+    >;
+    let cleanupBusSpy: () => void;
+
+    beforeEach(() => {
+      deselectedBus = Broadcast.getInstance();
+      cleanupBusSpy = () => undefined;
+    });
+
+    afterEach(() => {
+      cleanupBusSpy();
+    });
+
     it('emits deselected when clicking empty space with selection', async () => {
       const { result } = renderHook(() => useSelectShape(mapId));
-      const deselectedBus = Broadcast.getInstance<ShapeDeselectedEvent>();
       const deselectedSpy = vi.fn();
       deselectedBus.on(ShapeEvents.deselected, deselectedSpy);
+      cleanupBusSpy = () =>
+        deselectedBus.off(ShapeEvents.deselected, deselectedSpy);
 
       // First select a shape
       act(() => {
@@ -221,34 +236,31 @@ describe('useSelectShape', () => {
           }),
         );
       });
-
-      deselectedBus.off(ShapeEvents.deselected, deselectedSpy);
     });
 
     it('does not emit deselected when clicking empty space without selection', async () => {
       renderHook(() => useSelectShape(mapId));
-      const deselectedBus = Broadcast.getInstance<ShapeDeselectedEvent>();
       const deselectedSpy = vi.fn();
       deselectedBus.on(ShapeEvents.deselected, deselectedSpy);
+      cleanupBusSpy = () =>
+        deselectedBus.off(ShapeEvents.deselected, deselectedSpy);
 
       // Click on empty space without any selection
       act(() => {
         mapBus.emit(MapEvents.click, createMockMapClickPayload(mapId, -1));
       });
 
-      // Wait a tick to ensure event processing
-      await new Promise((resolve) => setTimeout(resolve, 10));
-
-      expect(deselectedSpy).not.toHaveBeenCalled();
-
-      deselectedBus.off(ShapeEvents.deselected, deselectedSpy);
+      await waitFor(() => {
+        expect(deselectedSpy).not.toHaveBeenCalled();
+      });
     });
 
     it('does not emit deselected when clicking on a shape (index >= 0)', async () => {
       const { result } = renderHook(() => useSelectShape(mapId));
-      const deselectedBus = Broadcast.getInstance<ShapeDeselectedEvent>();
       const deselectedSpy = vi.fn();
       deselectedBus.on(ShapeEvents.deselected, deselectedSpy);
+      cleanupBusSpy = () =>
+        deselectedBus.off(ShapeEvents.deselected, deselectedSpy);
 
       // First select a shape
       act(() => {
@@ -267,20 +279,18 @@ describe('useSelectShape', () => {
         mapBus.emit(MapEvents.click, createMockMapClickPayload(mapId, 0));
       });
 
-      // Wait a tick to ensure event processing
-      await new Promise((resolve) => setTimeout(resolve, 10));
-
-      expect(deselectedSpy).not.toHaveBeenCalled();
-
-      deselectedBus.off(ShapeEvents.deselected, deselectedSpy);
+      await waitFor(() => {
+        expect(deselectedSpy).not.toHaveBeenCalled();
+      });
     });
 
     it('ignores map clicks for different mapId', async () => {
       const { result } = renderHook(() => useSelectShape(mapId));
-      const deselectedBus = Broadcast.getInstance<ShapeDeselectedEvent>();
       const deselectedSpy = vi.fn();
       const otherMapId = uuid();
       deselectedBus.on(ShapeEvents.deselected, deselectedSpy);
+      cleanupBusSpy = () =>
+        deselectedBus.off(ShapeEvents.deselected, deselectedSpy);
 
       // First select a shape
       act(() => {
@@ -299,16 +309,23 @@ describe('useSelectShape', () => {
         mapBus.emit(MapEvents.click, createMockMapClickPayload(otherMapId, -1));
       });
 
-      // Wait a tick to ensure event processing
-      await new Promise((resolve) => setTimeout(resolve, 10));
-
-      expect(deselectedSpy).not.toHaveBeenCalled();
-
-      deselectedBus.off(ShapeEvents.deselected, deselectedSpy);
+      await waitFor(() => {
+        expect(deselectedSpy).not.toHaveBeenCalled();
+      });
     });
   });
 
   describe('manual control functions', () => {
+    let cleanupBusSpy: () => void;
+
+    beforeEach(() => {
+      cleanupBusSpy = () => undefined;
+    });
+
+    afterEach(() => {
+      cleanupBusSpy();
+    });
+
     it('setSelectedId updates selection directly', () => {
       const { result } = renderHook(() => useSelectShape(mapId));
 
@@ -324,6 +341,8 @@ describe('useSelectShape', () => {
       const deselectedBus = Broadcast.getInstance<ShapeDeselectedEvent>();
       const deselectedSpy = vi.fn();
       deselectedBus.on(ShapeEvents.deselected, deselectedSpy);
+      cleanupBusSpy = () =>
+        deselectedBus.off(ShapeEvents.deselected, deselectedSpy);
 
       act(() => {
         result.current.clearSelection();
@@ -336,8 +355,6 @@ describe('useSelectShape', () => {
           }),
         );
       });
-
-      deselectedBus.off(ShapeEvents.deselected, deselectedSpy);
     });
   });
 });

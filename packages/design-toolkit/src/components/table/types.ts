@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -151,6 +151,27 @@ type ExtendedTableProps<T extends { id: Key }> = {
    * @default false
    */
   fullWidth?: boolean;
+
+  /**
+   * Number of rows per page. Enables built-in pagination when set.
+   */
+  pageSize?: number;
+
+  /**
+   * Controlled current page (1-indexed).
+   */
+  page?: number;
+
+  /**
+   * Uncontrolled default page (1-indexed).
+   * @default 1
+   */
+  defaultPage?: number;
+
+  /**
+   * Callback when the page changes.
+   */
+  onPageChange?: (page: number) => void;
 };
 
 /**

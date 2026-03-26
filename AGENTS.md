@@ -1,58 +1,96 @@
 # Agent Guidelines
 
-Build production-quality, safety-critical code. This document defines the coding philosophy, workflow, and standards for this repository.
+This file is loaded into every Agent session. Keep it accurate and current.
+**After any correction from a user, update this file (AGENTS.md) with a rule that prevents the same mistake.**
 
 Read the [AI Assistant Guide](.agents/outline.md) and all linked pages before proceeding.
 
-## About This Repository
+## Tech Stack
 
-This codebase follows **HyperStyle**—our internal style guide prioritizing **safety, performance, and developer experience** in that order. We build software for critical systems where correctness is non-negotiable.
+**For exact versions and dependencies, refer to `./package.json` in the following fields:**
+- `engines` - Node and pnpm version requirements
+- `devDependencies` - Build tools, linters, testing frameworks
+- `packageManager` - Package manager specification
 
-> Simplicity is the prerequisite for reliability.
-> — Edsger W. Dijkstra
+Key technologies:
+- **Package Manager**: pnpm (see `packageManager` field)
+- **Node**: See `engines.node` field
+- **Build Tool**: Turbo (monorepo orchestration)
+- **Linter/Formatter**: Biome
+- **Testing**: Vitest
+- **Versioning**: Changesets
+- **Language**: TypeScript (strict mode)
+- **Frameworks**: React, Next.js
 
-**Zero technical debt**: Do it right the first time.
+## Essential Commands
 
-## Agent Capabilities
+**All available commands are defined in the root `package.json` under the `scripts` field.** Key commands include:
 
-These guidelines assume you can:
-- Explore and modify the codebase
-- Spawn parallel agents for independent tasks (if supported)
-- Use extended thinking for complex architectural decisions
-- Perform file system and git operations
+```bash
+# Development
+pnpm build                 # Build all packages
+pnpm test                  # Run all tests
+pnpm lint                  # Lint all code
+pnpm format                # Format all code
+pnpm index                 # Generate main entry exports
 
-## Workflow: Research → Plan → Implement
+# Cleaning (use when things break)
+pnpm clean                 # Clean everything recursively (nuclear option)
+pnpm clean:deps            # Remove node_modules recursively
+pnpm clean:dist            # Clean tsdown build directories recursively
+pnpm clean:turbo           # Clean turborepo cache directories recursively
 
-Follow this sequence for every task:
+# Version management (changesets)
+pnpm changeset             # Create a new changeset
+pnpm changeset:version     # Version packages from changesets
+pnpm changeset:release     # Build and publish to npm
 
-1. **Research**: Explore the codebase, understand existing patterns
-2. **Plan**: Create a detailed implementation plan; verify with the user
-3. **Implement**: Execute with validation checkpoints
+# Linting
+pnpm run lint              # Lint code
+pnpm run lint:deps         # Lint dependencies with syncpack
+pnpm run lint:fs           # Lint file system with ls-lint
+pnpm run lint:package.     # Lint package.json with syncpack
+pnpm run lint:rac          # Lint react-aria-components and @react-aria/* package versions
+```
 
-Say: "Let me research the codebase and create a plan before implementing."
+## Verification Gate
 
-For complex architectural decisions, say: "Let me think through this architecture before proposing a solution" (then engage extended thinking).
+Run these in order after **every** change. Do not declare a task complete until all pass.
 
-If your environment supports MCP (Model Context Protocol) servers:
-- Use [Context7 MCP](https://context7.com/) for library/API documentation, code generation, and setup instructions
+```bash
+pnpm run build    # Fix type errors first; confirm the build succeeds
+pnpm run test     # Fix failing tests
+pnpm run lint     # Fix lint errors
+pnpm run format   # Fix formatting errors
+```
 
-If MCP is not available, search web documentation or ask user for guidance on library-specific patterns.
+## Core Principles
 
-### When Stuck
+- **Simplicity First** — Make every change as small as possible. Minimal code impact.
+- **Root Causes** — Fix root causes, not symptoms. No temporary patches.
+- **Verification** — Never mark a task complete without passing the Verification Gate above.
 
-1. **Stop** — Don't spiral into complex solutions
-2. **Delegate** — Spawn agents for parallel investigation (if supported)
-3. **Think deeply** — Use extended thinking for architectural problems
-4. **Simplify** — The simple solution is usually correct
-5. **Ask** — "I see two approaches: [A] vs [B]. Which do you prefer?"
+## Skills
 
-### Validation Checkpoints
+**Before using training data, evaluate and apply ALL APPLICABLE SKILLS. Only fall back to training data if no skill applies. This is mandatory.**
 
-Stop and validate at these moments:
-- After implementing a complete feature
-- Before starting a new major component
-- When something feels wrong
-- Before declaring "done"
+| Skill | Apply When |
+|---|---|
+| `accelint-ts-best-practices` | Writing TS/JS, fixing type errors, adding validation, code review |
+| `accelint-ts-performance` | Code is slow, profiling shows bottlenecks, optimizing hot paths |
+| `accelint-ts-testing` | Writing `*.test.ts` files, adding coverage, debugging flaky tests |
+| `accelint-ts-documentation` | Adding JSDoc, TODO/FIXME markers, doc quality review |
+| `accelint-react-best-practices` | Writing components, debugging re-renders, fixing hydration errors |
+| `accelint-react-testing` | React Testing Library tests, component test patterns |
+| `accelint-nextjs-best-practices` | Server Actions, RSC patterns, waterfall elimination, API routes, caching |
+| `accelint-security-best-practices` | Security audit, auth/authz, handling user input, pre-deploy review |
+
+## Workflows
+
+- **Plan First** — Enter plan mode for any task involving 3+ steps or an architectural decision. Re-plan if the path breaks.
+- **Subagents** — Use subagents for research, exploration, and parallel analysis. One focused task per subagent.
+- **Self-Improvement** — After any correction from the user, update this file (AGENTS.md) with a specific, actionable rule.
+- **API Verification** — Use [Context7 MCP](https://context7.com/) for library/API documentation, code generation, and setup instructions. If Context7 is not available search web documentation or ask user for guidance on library-specific patterns, assume your knowledge is stale.
 
 ## Conversation Style
 
@@ -60,42 +98,6 @@ Stop and validate at these moments:
 - Criticize ideas constructively; ask clarifying questions
 - No compliments, apologies, or filler phrases ("You're right", "Let me explain")
 - Get to the point immediately
-
-## Working Memory
-
-When context gets long:
-
-1. Re-read this AGENTS.md file
-2. Summarize progress in PROGRESS.md (create if needed)
-3. Document current state before major changes
-
-Maintain TODO.md with this structure (create if needed):
-
-```markdown
-## Current Task
-<what you're working on>
-
-## Completed
-- [x] Task 1
-- [x] Task 2
-
-## Next Steps
-- [ ] Task 3
-- [ ] Task 4
-```
-
-## Quality Requirements
-
-IMPORTANT: Before ANY commit, run these commands in order:
-
-```bash
-pnpm run build
-pnpm run test
-pnpm run lint
-pnpm run format
-```
-
-All must pass. No exceptions.
 
 ## Git & Versioning
 
@@ -117,23 +119,3 @@ A changeset is only required if internal source code is changed (usually within 
 - Adding/modifying markdown documentation
 - Adding/modifying Storybook code
 - Adding/modifying tests
-
-
-## Important Reminders
-
-- NO time estimates or predictions
-- NO unnecessary comments/docstrings on unchanged code
-- NO backwards-compatibility hacks for unused code
-- NO feature flags or premature configurability
-- Delete unused code completely, don't comment it out
-
-## Common Patterns
-
-**Finding code**:
-- Use Explore agent for codebase orientation
-- Check existing patterns before implementing new ones
-- Look for similar functionality in other packages
-
-**Package dependencies**:
-- Internal packages use `workspace:*` protocol
-- Run `pnpm run lint:deps` to verify correct semver ranges

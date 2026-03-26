@@ -11,6 +11,10 @@
  */
 
 import {
+  DISTANCE_UNIT_SYMBOLS,
+  type DistanceUnit,
+} from '@accelint/constants/units';
+import {
   type DraggingEvent,
   type FeatureCollection,
   type GeoJsonEditMode,
@@ -19,10 +23,7 @@ import {
   TranslateMode,
 } from '@deck.gl-community/editable-layers';
 import { centroid } from '@turf/turf';
-import {
-  DEFAULT_DISTANCE_UNITS,
-  getDistanceUnitAbbreviation,
-} from '@/shared/units';
+import { DEFAULT_DISTANCE_UNITS } from '@/shared/units';
 import { formatCircleTooltip } from '../../shared/constants';
 import { computeCircleMeasurements } from '../../shared/utils/geometry-measurements';
 import { BaseTransformMode, type HandleMatcher } from './base-transform-mode';
@@ -35,7 +36,7 @@ import type { Feature, Polygon } from 'geojson';
  * This composite mode provides:
  * - **Resize** (ResizeCircleMode): Drag edge to resize from center
  * - **Translation** (TranslateMode): Drag the circle body to move it
- * - **Live tooltip**: Shows diameter and area during resize
+ * - **Live tooltip**: Shows radius and area during resize
  *
  * ## Handle Priority Logic
  * When drag starts, modes are evaluated in this priority order:
@@ -97,11 +98,12 @@ export class CircleTransformMode extends BaseTransformMode {
   }
 
   protected override getDefaultMode(): GeoJsonEditMode {
-    return this.translateMode;
+    // biome-ignore lint/suspicious/noExplicitAny: Library type inconsistency — see HandleMatcher JSDoc in base-transform-mode
+    return this.translateMode as any;
   }
 
   /**
-   * Update the tooltip with circle diameter and area during resize.
+   * Update the tooltip with circle radius and area during resize.
    */
   protected override onDragging(
     event: DraggingEvent,
@@ -114,7 +116,8 @@ export class CircleTransformMode extends BaseTransformMode {
 
     const { mapCoords } = event;
     const distanceUnits =
-      props.modeConfig?.distanceUnits ?? DEFAULT_DISTANCE_UNITS;
+      (props.modeConfig?.distanceUnits as DistanceUnit) ??
+      DEFAULT_DISTANCE_UNITS;
 
     // Get the selected feature to calculate radius from its geometry
     const selectedIndexes = props.selectedIndexes;
@@ -142,17 +145,17 @@ export class CircleTransformMode extends BaseTransformMode {
     const centerFeature = centroid(feature);
     const center = centerFeature.geometry.coordinates as [number, number];
     const firstPoint = coordinates[0] as [number, number];
-    const { diameter, area } = computeCircleMeasurements(
+    const { radius, area } = computeCircleMeasurements(
       center,
       firstPoint,
       distanceUnits,
     );
-    const unitAbbrev = getDistanceUnitAbbreviation(distanceUnits);
+    const unitAbbrev = DISTANCE_UNIT_SYMBOLS[distanceUnits];
 
     // Position tooltip at cursor - offset is applied via getPixelOffset in sublayer props
     this.tooltip = {
       position: mapCoords,
-      text: formatCircleTooltip(diameter, area, unitAbbrev),
+      text: formatCircleTooltip(radius, area, unitAbbrev),
     };
   }
 }

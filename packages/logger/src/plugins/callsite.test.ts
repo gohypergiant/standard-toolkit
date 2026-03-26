@@ -320,7 +320,6 @@ describe('callsitePlugin', () => {
 
       const result = plugin.onBeforeDataOut({ data: {} });
 
-      expect(result.callSite).toBeDefined();
       // When no level found, levelLine = 0, so it uses callsite at index 1
       expect(result).toEqual({
         callSite: '/src/util.ts:20:10',
@@ -417,7 +416,7 @@ describe('callsitePlugin', () => {
       });
     });
 
-    test('should handle stack with only one callsite (out of bounds access)', () => {
+    test('should return unknown when callsite after level method is out of bounds', () => {
       const singleCallsite = {
         getFunctionName: () => 'info',
         getFileName: () => '/src/app.ts',
@@ -433,10 +432,8 @@ describe('callsitePlugin', () => {
 
       const result = plugin.onBeforeDataOut({ data: {} });
 
-      expect(result.callSite).toBeDefined();
-      // levelLine = 0, accessing index 1 (out of bounds) returns undefined
       expect(result).toEqual({
-        callSite: 'undefined:undefined:undefined',
+        callSite: 'unknown',
       });
     });
 

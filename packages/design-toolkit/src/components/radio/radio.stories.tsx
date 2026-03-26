@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -10,44 +10,35 @@
  * governing permissions and limitations under the License.
  */
 
-import { RadioGroup } from './group';
+import { RadioGroup } from './group.tsx';
 import { Radio } from './index';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import type { RadioGroupProps } from './types';
 
 const meta = {
   title: 'Components/Radio',
-  component: RadioGroup,
+  component: Radio,
+  decorators: [
+    (Story) => (
+      <RadioGroup aria-label='Radio story'>
+        <Story />
+      </RadioGroup>
+    ),
+  ],
   args: {
-    orientation: 'vertical',
+    children: 'Radio',
     isDisabled: false,
-    isRequired: false,
-    label: 'Header',
-  },
-  argTypes: {
-    orientation: {
-      control: 'select',
-      options: ['horizontal', 'vertical'],
-    },
+    labelPosition: 'end',
   },
   parameters: {
     controls: {
-      exclude: ['children', 'validationBehavior'],
-    },
-    docs: {
-      subtitle: 'Exclusive selection from a group of options',
+      exclude: ['inputRef', 'validationBehavior'],
     },
   },
-} satisfies Meta<RadioGroupProps>;
+} satisfies Meta<typeof Radio>;
 
 export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default: StoryObj<typeof meta> = {
-  render: ({ children, label, ...args }) => (
-    <RadioGroup label={label} {...args}>
-      <Radio value='1'>Radio text</Radio>
-      <Radio value='2'>Radio text</Radio>
-      <Radio value='3'>Radio text</Radio>
-    </RadioGroup>
-  ),
+export const Default: Story = {
+  render: ({ children, ...args }) => <Radio {...args}>Radio text</Radio>,
 };
