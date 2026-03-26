@@ -20,10 +20,6 @@ type UseElapsedPercentageProps = {
 export function useElapsedPercentage(props: UseElapsedPercentageProps): number {
   const { currentTimeMs, renderedRegionBounds } = useTemporalDataContext();
 
-  if (currentTimeMs === undefined) {
-    return 0;
-  }
-
   const startMs = Math.max(props.startMs, renderedRegionBounds.startMs);
   const endMs = Math.min(props.endMs, renderedRegionBounds.endMs);
 

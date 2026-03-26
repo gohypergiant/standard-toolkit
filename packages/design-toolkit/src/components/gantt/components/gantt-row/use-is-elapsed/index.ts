@@ -19,9 +19,5 @@ type UseIsElapsedProps = {
 export function useIsElapsed({ timeMs }: UseIsElapsedProps): boolean {
   const { currentTimeMs } = useTemporalDataContext();
 
-  return (
-    timeMs !== undefined &&
-    currentTimeMs !== undefined &&
-    timeMs <= currentTimeMs
-  );
+  return timeMs !== undefined && timeMs <= currentTimeMs;
 }
