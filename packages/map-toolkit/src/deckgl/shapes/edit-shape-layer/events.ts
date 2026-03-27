@@ -54,6 +54,8 @@ export const EditShapeEvents = {
   updated: 'shapes:updated',
   /** Editing was canceled */
   canceled: 'shapes:edit-canceled',
+  /** Continuous edit event — fires during drag with editType info */
+  featureEditing: 'shapes:feature-editing',
 } as const;
 
 export type EditShapeEventType =

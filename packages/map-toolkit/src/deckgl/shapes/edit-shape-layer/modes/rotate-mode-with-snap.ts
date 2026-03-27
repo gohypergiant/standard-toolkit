@@ -97,14 +97,6 @@ export class RotateModeWithSnap extends RotateMode {
     event: DraggingEvent,
     props: ModeProps<SimpleFeatureCollection>,
   ) {
-    const snapRotation = props.modeConfig?.snapRotation ?? false;
-
-    // If not snapping, use parent's rotation logic
-    if (!snapRotation) {
-      super.handleDragging(event, props);
-      return;
-    }
-
     // biome-ignore lint/suspicious/noExplicitAny: Accessing private properties from parent class
     const self = this as any;
 
@@ -112,6 +104,9 @@ export class RotateModeWithSnap extends RotateMode {
       return;
     }
 
+    // Always use our custom rotation path (which stores rotationAngle
+    // on the feature properties). Snap is applied inside getRotateActionWithSnap
+    // when snapRotation is enabled.
     const rotateAction = this.getRotateActionWithSnap(
       event.pointerDownMapCoords,
       event.mapCoords,
@@ -134,14 +129,6 @@ export class RotateModeWithSnap extends RotateMode {
     event: StopDraggingEvent,
     props: ModeProps<SimpleFeatureCollection>,
   ) {
-    const snapRotation = props.modeConfig?.snapRotation ?? false;
-
-    // If not snapping, use parent's rotation logic
-    if (!snapRotation) {
-      super.handleStopDragging(event, props);
-      return;
-    }
-
     // biome-ignore lint/suspicious/noExplicitAny: Accessing private properties from parent class
     const self = this as any;
 
@@ -216,8 +203,25 @@ export class RotateModeWithSnap extends RotateMode {
       }
     }
 
+    // Mutate the cloned feature in-place to set/strip rotationAngle.
+    // updatedObj is a fresh clone from ImmutableFeatureCollection.getObject(),
+    // so mutation is safe and avoids .map() + IIFE + destructure allocations
+    // that would otherwise run on every drag frame (~60 calls/sec).
+    const updatedObj = updatedData.getObject();
+    const featureIdx = selectedIndexes[0] ?? 0;
+    const targetFeature = updatedObj.features[featureIdx];
+    if (targetFeature?.properties) {
+      if (editType === 'rotated') {
+        // On completion, strip rotationAngle so consumers detect drag end
+        // via `rotationAngle != null`.
+        delete targetFeature.properties.rotationAngle;
+      } else {
+        targetFeature.properties.rotationAngle = angle;
+      }
+    }
+
     return {
-      updatedData: updatedData.getObject(),
+      updatedData: updatedObj,
       editType,
       editContext: {
         featureIndexes: selectedIndexes,
