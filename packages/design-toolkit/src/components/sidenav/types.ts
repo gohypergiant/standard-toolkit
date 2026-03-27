@@ -42,10 +42,15 @@ export type SidenavProps = ComponentPropsWithRef<'nav'> & {
  * - `classNames.icon` - CSS class for the chevron icon.
  */
 export type SidenavHeaderProps = PropsWithChildren<{
+  /** Custom CSS classes for header sub-elements. */
   classNames?: {
+    /** CSS class for the header container. */
     header?: string;
+    /** CSS class for the toggle button. */
     button?: ButtonProps['className'];
+    /** CSS class for the content container. */
     container?: string;
+    /** CSS class for the chevron icon. */
     icon?: string;
   };
 }>;
@@ -60,10 +65,14 @@ export type SidenavContentProps = ComponentPropsWithRef<'div'>;
  * - `textValue` - Text displayed in tooltip when sidenav is collapsed.
  */
 export type SidenavItemProps = ToggleButtonProps & {
+  /** Custom CSS classes for item sub-elements. */
   classNames?: {
+    /** CSS class for the toggle button. */
     button?: ToggleButtonProps['className'];
+    /** CSS class for the icon. */
     icon?: string;
   };
+  /** Text displayed in tooltip when sidenav is collapsed. */
   textValue?: string;
 };
 
@@ -74,10 +83,14 @@ export type SidenavItemProps = ToggleButtonProps & {
  * - `textValue` - Text displayed in tooltip when sidenav is collapsed.
  */
 export type SidenavLinkProps = LinkProps & {
+  /** Custom CSS classes for link sub-elements. */
   classNames?: {
+    /** CSS class for the link. */
     button?: LinkProps['className'];
+    /** CSS class for the icon. */
     icon?: string;
   };
+  /** Text displayed in tooltip when sidenav is collapsed. Required. */
   textValue: string;
 };
 
@@ -155,17 +168,26 @@ export type SidenavContextValue = {
  * - `classNames.panelContent` - CSS class for panel content wrapper.
  */
 export type SidenavMenuProps = PropsWithChildren & {
+  /** Menu title displayed in header. Required. */
   title: string;
+  /** Icon displayed before the title. Required. */
   icon: React.ReactNode;
+  /** Custom CSS classes for menu sub-elements. */
   classNames?: {
+    /** CSS class for the disclosure container. */
     menu?: DisclosureProps['className'];
+    /** CSS class for the trigger button. */
     button?: ButtonProps['className'];
+    /** CSS class for the chevron icon. */
     icon?: string;
+    /** CSS class for expanded panel. */
     disclosurePanel?: DisclosurePanelProps['className'];
+    /** CSS class for popover panel (collapsed state). */
     popoverPanel?: PopoverProps['className'];
+    /** CSS class for panel content wrapper. */
     panelContent?: string;
   };
 };
 
-/** Props for SidenavMenuItem component. */
+/** Props for SidenavMenuItem component. Extends all ToggleButton props from react-aria-components. */
 export type SidenavMenuItemProps = ToggleButtonProps;

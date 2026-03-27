@@ -93,19 +93,6 @@ Close button that triggers a 'close' action to close the entire drawer.
 | `for` | `UniqueId` | - | Optional drawer ID to close. Defaults to current drawer |
 | `aria-label` | `string` | - | Optional accessible label for the button |
 
-### DrawerTrigger
-
-Controls drawer state or navigates to views.
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `for` | `SimpleEvents \| TargetedEvents \| ChainedEvents` | - | Action or view ID (see below) |
-
-**`for` prop values:**
-- **Simple events** (`'back' | 'clear' | 'close' | 'reset' | UniqueId`): Only work inside a Drawer context. Passing a `UniqueId` pushes that view onto its parent's stack.
-- **Targeted events** (`'open:id' | 'close:id' | 'toggle:id' | 'reset:id'`): Control a specific drawer externally. `open` clears the stack before pushing the new view.
-- **Chained events** (`Array`): Fire multiple events from a single trigger, e.g. `['reset', viewId]` or `` [`open:${tabOneId}`, `open:${tabCId}`] ``.
-
 ### DrawerPanel
 
 Container for the drawer's scrollable content area. Accepts standard `<div>` props.
