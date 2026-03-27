@@ -34,6 +34,17 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta = {
   title: 'DeckGL/Shapes/Draw Shape Layer',
+  argTypes: {
+    unit: {
+      control: { type: 'select' },
+      options: ['km', 'm', 'NM', 'mi', 'ft'],
+      description:
+        'Distance unit for tooltip measurements during drawing (e.g., circle radius).',
+    },
+  },
+  args: {
+    unit: 'km',
+  },
 };
 
 export default meta;
@@ -89,7 +100,7 @@ const DRAW_MAP_ID = uuid();
  * 7. Press ESC or click Cancel to abort drawing
  */
 export const BasicDrawing: Story = {
-  render: () => {
+  render: (args) => {
     const [shapes, setShapes] = useState<Shape[]>([]);
     const [eventLog, setEventLog] = useState<
       Array<{ id: string; message: string }>
@@ -143,7 +154,7 @@ export const BasicDrawing: Story = {
             pickable={false}
           />
           {/* Drawing layer - renders only when actively drawing */}
-          <DrawShapeLayer mapId={DRAW_MAP_ID} />
+          <DrawShapeLayer mapId={DRAW_MAP_ID} unit={args.unit} />
         </BaseMap>
 
         {/* Drawing toolbar */}

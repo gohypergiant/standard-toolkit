@@ -11,7 +11,7 @@
  */
 
 import { uuid } from '@accelint/core';
-import { isCircleShape, isEllipseShape } from '../types';
+import { isCircleShape, isEllipseShape, isWagonWheelShape } from '../types';
 import type { Geometry, Position } from 'geojson';
 import type { GeoPosition, Shape } from '../types';
 
@@ -165,6 +165,16 @@ export function duplicateShape(
       ...properties.ellipseProperties,
       center: offsetPosition(
         properties.ellipseProperties.center,
+        offset,
+      ) as GeoPosition,
+    };
+  }
+
+  if (offset && isWagonWheelShape(shape) && properties.wagonWheelProperties) {
+    properties.wagonWheelProperties = {
+      ...properties.wagonWheelProperties,
+      center: offsetPosition(
+        properties.wagonWheelProperties.center,
         offset,
       ) as GeoPosition,
     };

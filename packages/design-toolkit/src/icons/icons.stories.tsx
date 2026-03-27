@@ -10,12 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Meta, StoryObj } from '@storybook/react-vite';
 import { title } from 'radashi';
 import { useState } from 'react';
 import { Icon } from '../components/icon';
 import { SearchField } from '../components/search-field';
 import { default as catalog } from './catalog';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const formatInput = (input: string) => {
   return input.toLocaleLowerCase().split(' ').join('-');
