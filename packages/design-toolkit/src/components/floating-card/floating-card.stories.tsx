@@ -29,6 +29,7 @@ const panelIds = {
 const meta = {
   title: 'Components/FloatingCard',
   component: FloatingCard,
+  subcomponents: { FloatingCardProvider },
   args: {
     id: panelIds.a,
     title: 'Test FloatingCard',

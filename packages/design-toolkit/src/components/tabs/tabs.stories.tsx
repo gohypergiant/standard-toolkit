@@ -58,6 +58,15 @@ const meta = {
       control: 'select',
       options: ['horizontal', 'vertical'],
     },
+    defaultSelectedKey: {
+      description: 'Initial selected tab key (uncontrolled)',
+    },
+    selectedKey: {
+      description: 'Controlled selected tab key',
+    },
+    onSelectionChange: {
+      description: 'Callback when the selected tab changes',
+    },
   },
   parameters: {
     docs: {

@@ -29,14 +29,30 @@ import type { ReactNode } from 'react';
 const meta = {
   title: 'Components/List',
   component: List,
-  subcomponents: { ListItem },
+  subcomponents: {
+    ListItem,
+    ListItemContent,
+    ListItemDescription,
+    ListItemTitle,
+  },
   args: {
     variant: 'cozy',
+    selectionMode: 'none',
+    isDisabled: false,
   },
   argTypes: {
     variant: {
       control: 'select',
       options: ['cozy', 'compact'],
+    },
+    selectionMode: {
+      control: 'select',
+      options: ['none', 'single', 'multiple'],
+      table: { defaultValue: { summary: 'none' } },
+    },
+    isDisabled: {
+      control: 'boolean',
+      table: { defaultValue: { summary: 'false' } },
     },
   },
 } satisfies Meta<typeof List>;

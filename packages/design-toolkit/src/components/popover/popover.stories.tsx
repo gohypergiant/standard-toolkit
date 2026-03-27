@@ -31,7 +31,12 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 const meta = {
   title: 'Components/Popover',
   component: Popover,
-  subcomponents: { PopoverTitle },
+  subcomponents: {
+    PopoverContent,
+    PopoverFooter,
+    PopoverTitle,
+    PopoverTrigger,
+  },
   args: {
     placement: 'bottom',
     dialogProps: { 'aria-label': 'test dialog' },
@@ -41,6 +46,19 @@ const meta = {
       control: 'select',
       options: ['left', 'right', 'top', 'bottom'],
       table: { defaultValue: { summary: 'bottom' } },
+    },
+    offset: {
+      control: 'number',
+      description: 'Spacing between the trigger and the popover',
+    },
+    crossOffset: {
+      control: 'number',
+      description: 'Offset perpendicular to the placement axis',
+    },
+    shouldFlip: {
+      control: 'boolean',
+      description:
+        'Whether the popover should flip to the opposite side when insufficient space',
     },
   },
 } satisfies Meta<typeof Popover>;

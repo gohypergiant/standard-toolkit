@@ -29,6 +29,7 @@ const ids = {
 const meta = {
   title: 'Components/ViewStack',
   component: ViewStack,
+  subcomponents: { ViewStackTrigger, ViewStackView },
   args: {
     id: ids.stack,
     defaultView: ids.a,

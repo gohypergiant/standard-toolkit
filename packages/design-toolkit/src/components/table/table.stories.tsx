@@ -224,6 +224,22 @@ const meta = {
         options: ['left', 'right'],
       },
     },
+    manualSorting: {
+      control: 'boolean',
+      description:
+        'When true, sorting is handled externally (server-side). getSortedRowModel() is not needed.',
+      table: { defaultValue: { summary: 'false' } },
+    },
+    pageSize: {
+      control: 'number',
+      description:
+        'Number of rows per page. Enables built-in pagination when set.',
+    },
+    defaultPage: {
+      control: 'number',
+      description: 'Uncontrolled default page (1-indexed)',
+      table: { defaultValue: { summary: '1' } },
+    },
   },
   tags: ['autodocs'],
   parameters: {

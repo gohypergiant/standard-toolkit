@@ -19,6 +19,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 const meta = {
   title: 'Components/Hotkey',
   component: Hotkey,
+  subcomponents: { HotkeySet },
 } satisfies Meta<typeof Hotkey>;
 
 export default meta;

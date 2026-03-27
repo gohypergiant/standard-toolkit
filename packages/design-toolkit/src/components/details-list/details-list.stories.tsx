@@ -18,6 +18,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 const meta = {
   title: 'Components/DetailsList',
   component: DetailsList,
+  subcomponents: { DetailsListLabel, DetailsListValue },
   args: {
     align: 'justify',
   },

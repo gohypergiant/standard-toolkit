@@ -20,6 +20,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 const meta = {
   title: 'Components/Hero',
   component: Hero,
+  subcomponents: { HeroSubtitle, HeroTitle },
   args: {
     compact: false,
   },

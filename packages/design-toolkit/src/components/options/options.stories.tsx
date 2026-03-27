@@ -33,6 +33,13 @@ import type { OptionsItemProps } from './types';
 const meta = {
   title: 'Components/Options',
   component: Options,
+  subcomponents: {
+    OptionsItem,
+    OptionsItemContent,
+    OptionsItemDescription,
+    OptionsItemLabel,
+    OptionsSection,
+  },
   args: {
     size: 'large',
     selectionMode: 'none',

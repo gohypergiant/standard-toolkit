@@ -38,6 +38,14 @@ import type { TreeNode } from '@/hooks/use-tree/types';
 const meta = {
   title: 'Components/Tree',
   component: Tree,
+  subcomponents: {
+    TreeItem,
+    TreeItemActions,
+    TreeItemContent,
+    TreeItemDescription,
+    TreeItemLabel,
+    TreeItemPrefixIcon,
+  },
   args: {
     variant: 'cozy',
     showRuleLines: true,

@@ -82,6 +82,12 @@ const meta: Meta<DrawerStoryArgs> = {
         defaultValue: { summary: 'false' },
       },
     },
+    defaultView: {
+      description: 'ID of the view to display initially',
+    },
+    onChange: {
+      description: 'Callback when the active view changes',
+    },
   },
   parameters: {
     layout: 'fullscreen',

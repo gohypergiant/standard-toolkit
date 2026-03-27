@@ -22,6 +22,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 const meta = {
   title: 'Components/Dialog',
   component: Dialog,
+  subcomponents: { DialogContent, DialogFooter, DialogTitle, DialogTrigger },
   args: {
     size: 'small',
     isDismissable: true,

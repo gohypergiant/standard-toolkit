@@ -24,6 +24,7 @@ import type { ChipListProps } from './types';
 const meta = {
   title: 'Components/Chip',
   component: Chip,
+  subcomponents: { ChipList, DeletableChip, SelectableChip },
   args: {
     size: 'medium',
   },
