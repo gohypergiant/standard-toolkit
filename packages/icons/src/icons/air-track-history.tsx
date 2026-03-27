@@ -19,7 +19,7 @@ interface SVGRProps {
   title?: string;
   titleId?: string;
 }
-const SvgTrackHistory = ({
+const SvgAirTrackHistory = ({
   title,
   titleId,
   ...props
@@ -34,20 +34,20 @@ const SvgTrackHistory = ({
     {title ? <title id={titleId}>{title}</title> : null}
     <path
       fill='currentColor'
-      d='m16.621 3.742 1.566-.721-.722 1.565-1.172 2.579a7.412 7.412 0 0 0-5.136 11.305l-.587 1.307-.58-1.43-2.062-5.068-5.068-2.063-1.43-.58 1.534-.688z'
-    />
-    <path
-      fill='currentColor'
       fillRule='evenodd'
-      d='M17.41 19.123a4.631 4.631 0 1 0 0-9.263 4.631 4.631 0 0 0 0 9.263m0 1.39a6.02 6.02 0 1 0 0-12.042 6.02 6.02 0 0 0 0 12.041'
+      d='M14.779 19.405a5 5 0 1 0 0-10 5 5 0 0 0 0 10m0 1.5a6.5 6.5 0 1 0 0-13 6.5 6.5 0 0 0 0 13'
       clipRule='evenodd'
     />
     <path
       fill='currentColor'
+      d='m3.452 3.706 4.945 4.901-2.644 1.527-1.974-.976-1.058.61 2.056 2.34.998 2.95 1.057-.611.142-2.198.767-.443a7.5 7.5 0 0 1 8.302-4.795c.724-.465 1.72-1.721 1.426-2.231-.305-.53-1.999-.256-2.726.163L11.57 6.775l-7.06-3.68z'
+    />
+    <path
+      fill='currentColor'
       fillRule='evenodd'
-      d='m16.319 11.019 1.39.001-.005 3.34 2.554 2.344-.94 1.023-3.004-2.758z'
+      d='m13.601 10.656 1.5.001-.004 3.605 2.757 2.531-1.015 1.105-3.243-2.977z'
       clipRule='evenodd'
     />
   </svg>
 );
-export default SvgTrackHistory;
+export default SvgAirTrackHistory;
