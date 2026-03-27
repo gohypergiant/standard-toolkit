@@ -88,6 +88,10 @@ export function DrawShapeLayer({
   // can compute circle properties in the correct distance unit.
   useEffect(() => {
     setDrawDistanceUnit(actualMapId, unit ?? null);
+
+    return () => {
+      setDrawDistanceUnit(actualMapId, null);
+    };
   }, [actualMapId, unit]);
 
   const activeShapeType = drawingState?.activeShapeType ?? null;
