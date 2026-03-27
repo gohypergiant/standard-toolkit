@@ -12,41 +12,46 @@
 
 'use client';
 import 'client-only';
-import { Suspense, useContext, useEffect, useState } from 'react';
-import { clsx } from 'react-querybuilder';
+import { clsx } from '@accelint/design-foundation/lib/utils';
+import { useContext } from 'react';
 import { CarouselContext } from './context';
 import styles from './style.module.css';
 import type { CarouselViewerProps } from './types';
 
+/**
+ * Displays the full-size media for the currently active carousel item.
+ *
+ * Reads the active item from CarouselContext and renders it as an image.
+ * Supports additional children for overlay content.
+ *
+ * @param props - The viewer props.
+ * @param props.children - Optional overlay content rendered inside the viewer.
+ * @param props.classNames - Custom class names for viewer elements.
+ * @param props.classNames.container - Class name for the viewer container.
+ * @param props.classNames.image - Class name for the displayed image.
+ * @returns The carousel viewer component.
+ *
+ * @example
+ * ```tsx
+ * <CarouselViewer />
+ * ```
+ */
 export function CarouselViewer({
   children,
   classNames,
   ...rest
 }: CarouselViewerProps) {
-  const context = useContext(CarouselContext);
-  const { items, currentPosition } = context;
-  const [currentItem, setCurrentItem] = useState(items[currentPosition]);
-
-  useEffect(() => {
-    if (items[currentPosition]?.uuid !== currentItem?.uuid) {
-      setCurrentItem(items[currentPosition]);
-    }
-  }, [currentPosition, items, currentItem]);
+  const { items, currentPosition } = useContext(CarouselContext);
+  const currentItem = items[currentPosition];
 
   return (
-    <Suspense fallback={<ImageFallback />}>
-      <div className={clsx(styles.viewer, classNames?.container)} {...rest}>
-        <img
-          src={currentItem?.dataUrl}
-          alt={currentItem?.title}
-          className={classNames?.image}
-        />
-        {children}
-      </div>
-    </Suspense>
+    <div className={clsx(styles.viewer, classNames?.container)} {...rest}>
+      <img
+        src={currentItem?.dataUrl}
+        alt={currentItem?.title}
+        className={classNames?.image}
+      />
+      {children}
+    </div>
   );
-}
-
-export function ImageFallback() {
-  return <div>Loading...</div>;
 }

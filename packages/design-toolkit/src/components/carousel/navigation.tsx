@@ -23,14 +23,12 @@ import styles from './style.module.css';
 import type { CarouselControlProps, CarouselNavigationProps } from './types';
 
 /**
- * Renders a navigation button for a carousel.
+ * Internal navigation button shared by CarouselPrevious and CarouselNext.
  *
- * @param {CarouselNavigationProps} props - The props for the CarouselNavigation component.
- * @param {string} props.direction - The direction of the navigation button.
- * @param {Function} props.onClick - The click event handler.
- * @param {boolean} props.isDisabled - Whether the button is disabled.
- * @param {string} props.className - The class name for the navigation button.
- * @return {JSX.Element} The rendered CarouselNavigation component.
+ * @param props - The navigation button props.
+ * @param props.direction - Direction the button navigates ('left' or 'right').
+ * @param props.isDisabled - Whether the button is disabled.
+ * @returns The rendered navigation button.
  */
 function CarouselNavigation({
   direction,
@@ -53,10 +51,18 @@ function CarouselNavigation({
 }
 
 /**
- * Renders a navigation button for a carousel, allowing the user to go to the previous item.
+ * Navigates the carousel to the previous item.
  *
- * @return {JSX.Element} The rendered CarouselPrevious component.
- * @param {string} props.className - The class name for the navigation button.
+ * Automatically disables when at the first item.
+ *
+ * @param props - The control props.
+ * @param props.className - Additional CSS class name.
+ * @returns The previous navigation button.
+ *
+ * @example
+ * ```tsx
+ * <CarouselPrevious />
+ * ```
  */
 export function CarouselPrevious({ className, ...rest }: CarouselControlProps) {
   const context = useContext(CarouselContext);
@@ -70,6 +76,7 @@ export function CarouselPrevious({ className, ...rest }: CarouselControlProps) {
 
   return (
     <CarouselNavigation
+      aria-label='Previous'
       direction='left'
       onClick={onClick}
       isDisabled={currentPosition === 0}
@@ -80,10 +87,18 @@ export function CarouselPrevious({ className, ...rest }: CarouselControlProps) {
 }
 
 /**
- * Renders a navigation button for a carousel, allowing the user to go to the next item.
+ * Navigates the carousel to the next item.
  *
- * @return {JSX.Element} The rendered CarouselNext component.
- * @param {string} props.className - The class name for the navigation button.
+ * Automatically disables when at the last item.
+ *
+ * @param props - The control props.
+ * @param props.className - Additional CSS class name.
+ * @returns The next navigation button.
+ *
+ * @example
+ * ```tsx
+ * <CarouselNext />
+ * ```
  */
 export function CarouselNext({ className, ...rest }: CarouselControlProps) {
   const context = useContext(CarouselContext);
@@ -97,6 +112,7 @@ export function CarouselNext({ className, ...rest }: CarouselControlProps) {
 
   return (
     <CarouselNavigation
+      aria-label='Next'
       direction='right'
       onClick={onClick}
       isDisabled={currentPosition === items.length - 1}

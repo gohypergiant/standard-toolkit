@@ -36,10 +36,6 @@
     @apply outline-accent-primary-bold fg-a11y-on-utility outline-2;
   }
 
-  .select-trigger {
-    @apply w-full;
-  }
-
   .position {
     @apply gap-s flex flex-row items-center;
   }
@@ -47,7 +43,7 @@
 
 @layer components.l2 {
   .thumbnail-gallery-item {
-    @apply bg-transparent p-0;
+    @apply bg-transparent p-0 transition-all duration-200 ease-in-out;
   }
 
   .navigation {

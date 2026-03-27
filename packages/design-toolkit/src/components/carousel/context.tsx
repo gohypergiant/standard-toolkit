@@ -13,37 +13,40 @@
 'use client';
 
 import 'client-only';
-import { createContext } from 'react';
+import { createContext, useMemo } from 'react';
 import type { ProviderProps } from '@/lib/types';
 import type { CarouselProps } from './types';
 
-export const CarouselContext = createContext<
-  CarouselProps & {
-    setCurrentPosition: (position: number) => void;
-    currentPosition: number;
-  }
->({
+/** React context providing carousel state to sub-components. */
+export const CarouselContext = createContext<CarouselProps>({
   currentPosition: 0,
   items: [],
-  setCurrentPosition: () => {
-    return null;
-  },
+  setCurrentPosition: () => undefined,
 });
 
+/**
+ * Provides carousel state to child components via CarouselContext.
+ *
+ * @param props - The provider props.
+ * @param props.children - Child components that consume carousel context.
+ * @param props.items - The carousel data items.
+ * @param props.currentPosition - Zero-based index of the active item.
+ * @param props.setCurrentPosition - Callback to update the active item.
+ * @returns The context provider wrapping children.
+ */
 export function CarouselProvider({
   children,
   items,
   currentPosition,
   setCurrentPosition,
 }: ProviderProps<CarouselProps>) {
+  const value = useMemo(
+    () => ({ currentPosition, items, setCurrentPosition }),
+    [currentPosition, items, setCurrentPosition],
+  );
+
   return (
-    <CarouselContext.Provider
-      value={{
-        currentPosition,
-        items,
-        setCurrentPosition,
-      }}
-    >
+    <CarouselContext.Provider value={value}>
       {children}
     </CarouselContext.Provider>
   );

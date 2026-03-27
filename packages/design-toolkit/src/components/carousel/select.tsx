@@ -20,14 +20,31 @@ import styles from './style.module.css';
 import type { Key } from 'react-aria-components';
 import type { CarouselSelectProps } from './types';
 
+const selectClassNames = {
+  field: styles['select-field'],
+  trigger: styles['select-trigger'],
+};
+
 /**
- * Renders a select field component for the carousel.
+ * Renders a dropdown select for navigating the carousel by item title.
  *
- * @return {JSX.Element} The rendered select field component.
+ * Displays the current item's title and allows the user to jump to any
+ * item in the carousel via a select dropdown.
+ *
+ * @param props - The select props.
+ * @param props.classNames - Custom class names for select elements.
+ * @param props.classNames.field - Class names passed to the SelectField.
+ * @param props.classNames.optionItem - Class names passed to each OptionsItem.
+ * @returns The carousel select component.
+ *
+ * @example
+ * ```tsx
+ * <CarouselSelect />
+ * ```
  */
 export function CarouselSelect({ classNames, ...rest }: CarouselSelectProps) {
-  const context = useContext(CarouselContext);
-  const { items, currentPosition, setCurrentPosition } = context;
+  const { items, currentPosition, setCurrentPosition } =
+    useContext(CarouselContext);
 
   const onChange = (value: Key | null) => {
     const index = items.findIndex((i) => i.uuid === value);
@@ -38,14 +55,11 @@ export function CarouselSelect({ classNames, ...rest }: CarouselSelectProps) {
 
   return (
     <SelectField
-      aria-labelledby='select-field'
+      aria-label='Carousel item select'
       value={items[currentPosition]?.title}
       placeholder={items[currentPosition]?.title}
       onChange={onChange}
-      classNames={{
-        field: styles['select-field'],
-        trigger: styles['select-trigger'],
-      }}
+      classNames={selectClassNames}
       {...rest}
     >
       {items.map((item) => (

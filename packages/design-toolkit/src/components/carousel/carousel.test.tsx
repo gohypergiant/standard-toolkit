@@ -20,93 +20,91 @@ import { CarouselNext, CarouselPrevious } from './navigation';
 import { CarouselPosition } from './position';
 import { CarouselSelect } from './select';
 import { CarouselViewer } from './viewer';
-import type { CarouselProps } from './types';
 
 function setup({
-  children = (
-    <>
-      <CarouselViewer data-testid='viewer' />
-      <CarouselPrevious data-testid='previous' />
-      <CarouselGallery data-testid='gallery' />
-      <CarouselNext data-testid='next' />
-      <CarouselPosition data-testid='position' />
-      <CarouselSelect data-testid='select' />
-    </>
-  ),
   currentPosition = 0,
-  setCurrentPosition = vi.fn(),
-  ...rest
-}: Partial<CarouselProps> = {}) {
-  const result = render(
+  setCurrentPosition = vi.fn<(index: number) => void>(),
+}: {
+  currentPosition?: number;
+  setCurrentPosition?: ReturnType<typeof vi.fn<(index: number) => void>>;
+} = {}) {
+  render(
     <Carousel
       items={CAROUSEL_ITEMS}
       currentPosition={currentPosition}
       setCurrentPosition={setCurrentPosition}
     >
-      {children}
+      <CarouselViewer />
+      <CarouselPrevious />
+      <CarouselGallery />
+      <CarouselNext />
+      <CarouselPosition />
+      <CarouselSelect />
     </Carousel>,
   );
-  return {
-    ...result,
-    ...rest,
-    children,
-  };
+  return { setCurrentPosition };
 }
 
 describe('Carousel', () => {
-  it('renders the carousel with the correct number of items', () => {
+  it('should render all carousel items as thumbnails', () => {
     setup();
-    const gallery = screen.getByTestId('gallery');
-    expect(gallery.childNodes.length).toBe(CAROUSEL_ITEMS.length);
+    const images = screen.getAllByRole('img');
+    // Viewer image + one thumbnail per item
+    expect(images).toHaveLength(CAROUSEL_ITEMS.length + 1);
   });
 
-  it('renders the correct item as the current item', () => {
+  it('should display the first item in the viewer', () => {
     setup();
-    const viewer = screen.getByTestId('viewer');
-    const image = viewer.firstElementChild;
-    expect(image?.getAttribute('src')).toBe(CAROUSEL_ITEMS[0]?.dataUrl);
-    expect(viewer);
+    const images = screen.getAllByRole('img', {
+      name: CAROUSEL_ITEMS[0]?.title,
+    });
+    const viewerImage = images.find(
+      (img) => img.getAttribute('src') === CAROUSEL_ITEMS[0]?.dataUrl,
+    );
+    expect(viewerImage).toBeInTheDocument();
   });
 
-  it('previous is disabled when currentPosition === 0, otherwise enabled', () => {
+  it('should disable the previous button at the start', () => {
     setup();
-    const previousButton = screen.getByTestId('previous');
-    expect(previousButton.getAttribute('data-disabled')).toBe('true');
+    expect(screen.getByRole('button', { name: /previous/i })).toBeDisabled();
   });
 
-  it('previous should be enabled when currentPosition > 0', async () => {
-    const setCurrentPosition = vi.fn();
+  it('should enable and navigate the previous button after the first item', async () => {
+    const user = userEvent.setup();
+    const setCurrentPosition = vi.fn<(index: number) => void>();
     setup({ currentPosition: 1, setCurrentPosition });
-    const previousButton = screen.getByTestId('previous');
-    expect(previousButton.getAttribute('data-disabled')).toBe(null);
-    await userEvent.click(previousButton);
+
+    const previousButton = screen.getByRole('button', { name: /previous/i });
+    expect(previousButton).toBeEnabled();
+    await user.click(previousButton);
     expect(setCurrentPosition).toHaveBeenCalledWith(0);
   });
 
-  it('next is enabled when currentPosition < items.length - 1', () => {
+  it('should enable the next button before the last item', () => {
     setup();
-    const nextButton = screen.getByTestId('next');
-    expect(nextButton.getAttribute('data-disabled')).toBe(null);
+    expect(screen.getByRole('button', { name: /next/i })).toBeEnabled();
   });
 
-  it('next should be disabled when currentPosition === items.length - 1', () => {
+  it('should disable the next button at the end', () => {
     setup({ currentPosition: CAROUSEL_ITEMS.length - 1 });
-    const nextButton = screen.getByTestId('next');
-    expect(nextButton.getAttribute('data-disabled')).toBe('true');
+    expect(screen.getByRole('button', { name: /next/i })).toBeDisabled();
   });
 
-  it('updates the current item when selected from gallery', async () => {
-    const setCurrentPosition = vi.fn();
+  it('should navigate to a thumbnail when clicked', async () => {
+    const user = userEvent.setup();
+    const setCurrentPosition = vi.fn<(index: number) => void>();
     setup({ setCurrentPosition });
-    const gallery = screen.getByTestId('gallery');
-    await userEvent.click(gallery.children[1] as Element);
+
+    await user.click(
+      screen.getByRole('button', { name: CAROUSEL_ITEMS[1]?.title }),
+    );
     expect(setCurrentPosition).toHaveBeenCalledWith(1);
   });
 
-  it('displays correct current position and total item count', () => {
+  it('should display the current position and total count', () => {
     setup({ currentPosition: 1 });
-    const position = screen.getByTestId('position');
-    // Current Position + 1 / total
-    expect(position).toHaveTextContent(`2 / ${CAROUSEL_ITEMS.length}`);
+    expect(
+      screen.getByText(`2 / ${CAROUSEL_ITEMS.length}`),
+    ).toBeInTheDocument();
   });
 });

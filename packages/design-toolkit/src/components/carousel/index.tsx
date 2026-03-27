@@ -15,18 +15,40 @@ import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import { CarouselProvider } from './context';
 import styles from './style.module.css';
-import type { CarouselProps } from './types';
+import type { CarouselData, CarouselProps } from './types';
+
+const EMPTY_ITEMS: CarouselData[] = [];
 
 /**
+ * A compound carousel component for navigating a collection of media items.
  *
- * @param {Object} props - The component props.
- * @param {string} [props.variant='gallery'] - The variant of the carousel.
- * @param {Array} [props.items=[]] - The items to display in the carousel.
- * @param {Object} [props.classNames] - The class names to apply to the carousel.
- * @return {JSX.Element} The carousel component.
+ * Provides carousel state via context to composable sub-components
+ * (CarouselViewer, CarouselGallery, CarouselPrevious, CarouselNext,
+ * CarouselPosition, CarouselSelect).
+ *
+ * @param props - The carousel props.
+ * @param props.items - The carousel data items to display.
+ * @param props.classNames - Custom class names for carousel elements.
+ * @param props.classNames.container - Class name for the outer container.
+ * @param props.children - Carousel sub-components to render.
+ * @param props.currentPosition - Zero-based index of the active item.
+ * @param props.setCurrentPosition - Callback invoked when the active item changes.
+ * @returns The carousel component.
+ *
+ * @example
+ * ```tsx
+ * const [position, setPosition] = useState(0);
+ *
+ * <Carousel items={items} currentPosition={position} setCurrentPosition={setPosition}>
+ *   <CarouselViewer />
+ *   <CarouselPrevious />
+ *   <CarouselGallery />
+ *   <CarouselNext />
+ * </Carousel>
+ * ```
  */
 export function Carousel({
-  items = [],
+  items = EMPTY_ITEMS,
   classNames,
   children,
   currentPosition,

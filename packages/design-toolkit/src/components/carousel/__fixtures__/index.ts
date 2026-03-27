@@ -10,7 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-import { uuid } from '@accelint/core';
 import type { CarouselData } from '../types';
 
 export const CAROUSEL_ITEMS: CarouselData[] = [
@@ -20,7 +19,7 @@ export const CAROUSEL_ITEMS: CarouselData[] = [
     fileName: 'image-1',
     title: 'Image 1',
     thumbnailUrl: 'https://picsum.photos/seed/1/57/32',
-    uuid: uuid(),
+    uuid: '00000000-0000-0000-0000-000000000001',
   },
   {
     dataType: 'image',
@@ -28,7 +27,7 @@ export const CAROUSEL_ITEMS: CarouselData[] = [
     fileName: 'image-2',
     title: 'Image 2',
     thumbnailUrl: 'https://picsum.photos/seed/2/57/33',
-    uuid: uuid(),
+    uuid: '00000000-0000-0000-0000-000000000002',
   },
   {
     dataType: 'image',
@@ -36,7 +35,7 @@ export const CAROUSEL_ITEMS: CarouselData[] = [
     fileName: 'image-3',
     title: 'Image 3',
     thumbnailUrl: 'https://picsum.photos/seed/3/57/34',
-    uuid: uuid(),
+    uuid: '00000000-0000-0000-0000-000000000003',
   },
   {
     dataType: 'image',
@@ -44,7 +43,7 @@ export const CAROUSEL_ITEMS: CarouselData[] = [
     fileName: 'image-4',
     title: 'Image 4',
     thumbnailUrl: 'https://picsum.photos/seed/4/57/32',
-    uuid: uuid(),
+    uuid: '00000000-0000-0000-0000-000000000004',
   },
   {
     dataType: 'image',
@@ -52,7 +51,7 @@ export const CAROUSEL_ITEMS: CarouselData[] = [
     fileName: 'image-5',
     title: 'Image 5',
     thumbnailUrl: 'https://picsum.photos/seed/5/57/33',
-    uuid: uuid(),
+    uuid: '00000000-0000-0000-0000-000000000005',
   },
   {
     dataType: 'image',
@@ -60,7 +59,7 @@ export const CAROUSEL_ITEMS: CarouselData[] = [
     fileName: 'image-6',
     title: 'Image 6',
     thumbnailUrl: 'https://picsum.photos/seed/6/57/34',
-    uuid: uuid(),
+    uuid: '00000000-0000-0000-0000-000000000006',
   },
   {
     dataType: 'image',
@@ -68,7 +67,7 @@ export const CAROUSEL_ITEMS: CarouselData[] = [
     fileName: 'image-7',
     title: 'Image 7',
     thumbnailUrl: 'https://picsum.photos/seed/7/57/32',
-    uuid: uuid(),
+    uuid: '00000000-0000-0000-0000-000000000007',
   },
   {
     dataType: 'image',
@@ -76,7 +75,7 @@ export const CAROUSEL_ITEMS: CarouselData[] = [
     fileName: 'image-8',
     title: 'Image 8',
     thumbnailUrl: 'https://picsum.photos/seed/8/57/33',
-    uuid: uuid(),
+    uuid: '00000000-0000-0000-0000-000000000008',
   },
   {
     dataType: 'image',
@@ -84,6 +83,6 @@ export const CAROUSEL_ITEMS: CarouselData[] = [
     fileName: 'image-9',
     title: 'Image 9',
     thumbnailUrl: 'https://picsum.photos/seed/9/57/34',
-    uuid: uuid(),
+    uuid: '00000000-0000-0000-0000-000000000009',
   },
 ];

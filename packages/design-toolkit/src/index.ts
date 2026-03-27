@@ -82,7 +82,7 @@ export type {
   CarouselSelectProps,
   CarouselViewerProps,
 } from './components/carousel/types';
-export { CarouselViewer, ImageFallback } from './components/carousel/viewer';
+export { CarouselViewer } from './components/carousel/viewer';
 export {
   CheckboxContext,
   CheckboxGroupContext,

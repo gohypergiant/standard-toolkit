@@ -19,10 +19,16 @@ import styles from './style.module.css';
 import type { CarouselControlProps } from './types';
 
 /**
- * Renders the position of the current item in a carousel.
+ * Displays the current position and total item count (e.g. "3 / 9").
  *
- * @return {JSX.Element} The JSX element representing the carousel position.
- * @property {string} className - The class name for carousel position display.
+ * @param props - The position display props.
+ * @param props.className - Additional CSS class name.
+ * @returns The carousel position indicator.
+ *
+ * @example
+ * ```tsx
+ * <CarouselPosition />
+ * ```
  */
 export function CarouselPosition({ className, ...rest }: CarouselControlProps) {
   const context = useContext(CarouselContext);

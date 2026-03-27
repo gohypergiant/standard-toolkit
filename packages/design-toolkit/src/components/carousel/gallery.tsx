@@ -19,9 +19,33 @@ import { CarouselContext } from './context';
 import styles from './style.module.css';
 import type { CarouselGalleryProps } from './types';
 
+/**
+ * Number of visible thumbnail items to keep before the selected item
+ * when scrolling the gallery. This keeps the selected item visually
+ * centered rather than pinned to the leading edge.
+ */
+const VISIBLE_ITEMS_BEFORE_SELECTED = 2;
+
+/**
+ * Renders a horizontally-scrolling strip of thumbnail buttons for carousel navigation.
+ *
+ * Automatically scrolls to keep the selected thumbnail visible. Clicking a
+ * thumbnail navigates the carousel to that item.
+ *
+ * @param props - The gallery props.
+ * @param props.classNames - Custom class names for gallery elements.
+ * @param props.classNames.container - Class name for the gallery container.
+ * @param props.classNames.item - Class name for individual gallery items.
+ * @returns The carousel gallery component.
+ *
+ * @example
+ * ```tsx
+ * <CarouselGallery />
+ * ```
+ */
 export function CarouselGallery({ classNames, ...rest }: CarouselGalleryProps) {
-  const context = useContext(CarouselContext);
-  const { items, currentPosition, setCurrentPosition } = context;
+  const { items, currentPosition, setCurrentPosition } =
+    useContext(CarouselContext);
   const [galleryXOffset, setGalleryXOffset] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -33,26 +57,14 @@ export function CarouselGallery({ classNames, ...rest }: CarouselGalleryProps) {
     const rect = containerRef.current?.children?.[0]?.getBoundingClientRect();
     const { width } = rect || { width: 0 };
 
-    if (
-      currentPosition > 2 &&
-      galleryXOffset !== currentPosition * -width + width * 2
-    ) {
-      setGalleryXOffset(currentPosition * -width + width * 2);
-    } else if (currentPosition <= 2) {
+    if (currentPosition > VISIBLE_ITEMS_BEFORE_SELECTED) {
+      setGalleryXOffset(
+        currentPosition * -width + width * VISIBLE_ITEMS_BEFORE_SELECTED,
+      );
+    } else {
       setGalleryXOffset(0);
     }
-  }, [currentPosition, galleryXOffset]);
-
-  if (!items) {
-    return null;
-  }
-
-  const updatePosition = (index: number) => {
-    if (currentPosition === index) {
-      return;
-    }
-    setCurrentPosition(index);
-  };
+  }, [currentPosition]);
 
   return (
     <div
@@ -67,14 +79,12 @@ export function CarouselGallery({ classNames, ...rest }: CarouselGalleryProps) {
         <Button
           style={{
             translate: `${galleryXOffset}px`,
-            transition: 'all .2s ease',
-            outline:
-              currentPosition === index
-                ? '2px solid var(--fg-accent-primary-bold)'
-                : 'none',
           }}
-          className={styles['thumbnail-gallery-item']}
-          onClick={() => updatePosition(index)}
+          className={clsx(
+            styles['thumbnail-gallery-item'],
+            currentPosition === index && styles.selected,
+          )}
+          onClick={() => setCurrentPosition(index)}
           key={`thumbnail-${item.uuid}`}
           size='small'
           data-id={`thumbnail-id-${item.uuid}`}
