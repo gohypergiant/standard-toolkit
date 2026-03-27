@@ -12,9 +12,21 @@
 
 import { Range, type RangeProps } from '../base-elements/range';
 import styles from './styles.module.css';
+import { useElapsedPercentage } from './use-elapsed-percentage';
 
 export type SpacerProps = Omit<RangeProps, 'className'>;
 
 export function Spacer(props: SpacerProps) {
-  return <Range className={styles['row-spacer']} {...props} />;
+  const elapsedPct = useElapsedPercentage({
+    startMs: props.startMs,
+    endMs: props.endMs,
+  });
+
+  return (
+    <Range
+      className={styles['row-spacer']}
+      data-elapsed-pct={elapsedPct}
+      {...props}
+    />
+  );
 }

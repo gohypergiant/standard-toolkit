@@ -13,6 +13,7 @@
 import { GANTT_ROW_ELEMENT_HEIGHT } from '../../constants';
 import { Point, type PointProps } from '../base-elements/point';
 import styles from './styles.module.css';
+import { useIsElapsed } from './use-is-elapsed';
 import type { PropsWithChildren } from 'react';
 
 type IconMarkerProps = PropsWithChildren<PointProps>;
@@ -22,14 +23,21 @@ export function IconMarker({
   color = 'accent',
   ...rest
 }: IconMarkerProps) {
+  const isElapsed = useIsElapsed({ timeMs: rest.timeMs });
+
   return (
     <Point
       className={styles['marker-container']}
       data-height={GANTT_ROW_ELEMENT_HEIGHT}
+      data-elapsed={isElapsed || undefined}
       color={color}
       {...rest}
     >
-      <span className={styles['marker-icon']} data-color={color}>
+      <span
+        className={styles['marker-icon']}
+        data-color={color}
+        data-elapsed={isElapsed || undefined}
+      >
         {children}
       </span>
     </Point>

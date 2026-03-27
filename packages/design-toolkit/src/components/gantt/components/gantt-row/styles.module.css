@@ -28,27 +28,55 @@
 
   .row-block {
     --block-height: attr(data-height px);
+    --elapsed-pct: attr(data-elapsed-pct %);
+    --bg-color: var(--bg-interactive-muted);
+    --outline-color: var(--outline-interactive);
+    --elapsed-color: var(--bg-interactive-muted);
 
-    @apply rounded-small absolute outline;
+    @apply rounded-small absolute;
     height: var(--block-height);
+    border: 1px solid transparent;
+    background:
+      linear-gradient(
+          to right,
+          var(--elapsed-color) var(--elapsed-pct, 0%),
+          var(--bg-color) var(--elapsed-pct, 0%)
+        )
+        padding-box,
+      linear-gradient(
+          to right,
+          var(--elapsed-color) var(--elapsed-pct, 0%),
+          var(--outline-color) var(--elapsed-pct, 0%)
+        )
+        border-box;
 
     @variant color-accent {
-      @apply bg-accent-primary-muted outline-accent-primary-bold;
+      --bg-color: var(--bg-accent-primary-muted);
+      --outline-color: var(--outline-accent-primary-bold);
     }
 
     @variant color-serious {
-      @apply bg-serious-muted outline-serious-bold;
+      --bg-color: var(--bg-serious-muted);
+      --outline-color: var(--outline-serious-bold);
     }
 
     @variant color-critical {
-      @apply bg-critical-muted outline-critical-bold;
+      --bg-color: var(--bg-critical-muted);
+      --outline-color: var(--outline-critical-bold);
     }
   }
 
   .row-spacer {
-    @apply absolute h-px bg-current;
+    --elapsed-pct: attr(data-elapsed-pct %);
+
+    @apply absolute h-px;
     transform: translateX(var(--translate-x));
     width: var(--width);
+    background: linear-gradient(
+      to right,
+      var(--fg-inverse-muted) var(--elapsed-pct, 0%),
+      currentColor var(--elapsed-pct, 0%)
+    );
 
     @variant color-accent {
       @apply fg-accent-primary-bold;
@@ -69,6 +97,10 @@
     --rotate: attr(data-rotate deg);
     min-height: attr(data-height px);
     transform: translateX(var(--translate-x)) rotate(var(--rotate));
+
+    &[data-elapsed] {
+      @apply fg-inverse-muted;
+    }
 
     &::before {
       @apply bracket-pseudo-base -top-px rotate-45;
@@ -105,6 +137,10 @@
     min-height: attr(data-height px);
     transform: translateX(var(--translate-x));
 
+    &[data-elapsed] {
+      @apply fg-inverse-muted;
+    }
+
     @variant color-accent {
       @apply fg-accent-primary-bold;
     }
@@ -127,6 +163,7 @@
   .marker-icon {
     @apply outline outline-transparent;
     border-radius: 50%;
+    border: 2px solid currentColor;
 
     > * {
       @apply fg-primary-bold;
@@ -134,19 +171,20 @@
       transform: scale(0.6);
     }
 
+    &[data-elapsed] {
+      @apply bg-interactive-muted;
+    }
+
     @variant color-accent {
       @apply bg-accent-primary-muted;
-      border: 2px solid currentColor;
     }
 
     @variant color-serious {
       @apply bg-serious-muted;
-      border: 2px solid currentColor;
     }
 
     @variant color-critical {
       @apply bg-critical-muted;
-      border: 2px solid currentColor;
     }
   }
 }

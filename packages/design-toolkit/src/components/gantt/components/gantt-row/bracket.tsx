@@ -13,12 +13,14 @@
 import { GANTT_ROW_ELEMENT_HEIGHT } from '../../constants';
 import { Point, type PointProps } from '../base-elements/point';
 import styles from './styles.module.css';
+import { useIsElapsed } from './use-is-elapsed';
 
 type BracketBaseProps = PointProps & {
   direction: 'open' | 'close';
 };
 
 function BracketBase({ direction, ...rest }: BracketBaseProps) {
+  const isElapsed = useIsElapsed({ timeMs: rest.timeMs });
   const rotate = direction === 'open' ? '0' : '180';
 
   return (
@@ -26,6 +28,7 @@ function BracketBase({ direction, ...rest }: BracketBaseProps) {
       className={styles['bracket-container']}
       data-rotate={rotate}
       data-height={GANTT_ROW_ELEMENT_HEIGHT}
+      data-elapsed={isElapsed || undefined}
       {...rest}
     >
       <div className={styles.bracket} data-height={GANTT_ROW_ELEMENT_HEIGHT} />

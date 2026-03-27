@@ -13,16 +13,20 @@
 import { GANTT_ROW_ELEMENT_HEIGHT } from '../../constants';
 import { Range, type RangeProps } from '../base-elements/range';
 import styles from './styles.module.css';
+import { useElapsedPercentage } from './use-elapsed-percentage';
 
-export function GanttRowBlock({ id, startMs, endMs, ...rest }: RangeProps) {
+export function GanttRowBlock(props: RangeProps) {
+  const elapsedPct = useElapsedPercentage({
+    startMs: props.startMs,
+    endMs: props.endMs,
+  });
+
   return (
     <Range
-      id={id}
-      startMs={startMs}
-      endMs={endMs}
       data-height={GANTT_ROW_ELEMENT_HEIGHT}
+      data-elapsed-pct={elapsedPct}
       className={styles['row-block']}
-      {...rest}
+      {...props}
     />
   );
 }
