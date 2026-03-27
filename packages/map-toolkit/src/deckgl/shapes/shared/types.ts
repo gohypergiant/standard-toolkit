@@ -37,6 +37,7 @@ export const ShapeFeatureType = {
   Rectangle: 'Rectangle',
   LineString: 'LineString',
   Point: 'Point',
+  WagonWheel: 'WagonWheel',
 } as const;
 
 /** Union of all supported shape feature type string literals. */
@@ -154,11 +155,42 @@ export type EllipseProperties = {
 };
 
 /**
+ * Wagon wheel-specific properties for defining segmented circular airspace.
+ *
+ * A wagon wheel consists of a center point, outer radius, radial spokes
+ * that divide the circle into sectors, and optional range rings that
+ * create concentric bands within the circle.
+ */
+export type WagonWheelProperties = {
+  /** Center point as [longitude, latitude] or [longitude, latitude, elevation] */
+  center: GeoPosition;
+  /** Outer radius of the entire wagon wheel */
+  radius: {
+    /** Radius value */
+    value: number;
+    /** Units for the radius measurement */
+    units: DistanceUnit;
+  };
+  /** Number of spokes (radial dividers). Divides the circle into this many sectors. */
+  spokes: number;
+  /** Orientation in degrees (true north, clockwise) */
+  orientation: number;
+  /** Additional concentric range ring radii inside the outer radius. Each must be less than the outer radius and greater than 0. */
+  rangeRings: Array<{
+    /** Range ring radius value */
+    value: number;
+    /** Units for the measurement */
+    units: DistanceUnit;
+  }>;
+};
+
+/**
  * Properties for styled features.
  *
- * Note: circleProperties and ellipseProperties are optional at the type level
- * but are guaranteed to be present for their respective shape types.
- * Use the type guards (isCircleShape, isEllipseShape) for type narrowing.
+ * Note: circleProperties, ellipseProperties, and wagonWheelProperties are
+ * optional at the type level but are guaranteed to be present for their
+ * respective shape types. Use the type guards (isCircleShape, isEllipseShape,
+ * isWagonWheelShape) for type narrowing.
  */
 export type StyledFeatureProperties = {
   /** Style properties for rendering */
@@ -169,6 +201,8 @@ export type StyledFeatureProperties = {
   circleProperties?: CircleProperties;
   /** Ellipse properties (present for Ellipse shapes) */
   ellipseProperties?: EllipseProperties;
+  /** Wagon wheel properties (present for WagonWheel shapes) */
+  wagonWheelProperties?: WagonWheelProperties;
   /** Minimum elevation in meters (optional) */
   minElevation?: number;
   /** Maximum elevation in meters (optional) */
@@ -191,6 +225,15 @@ export type CircleFeatureProperties = StyledFeatureProperties & {
 export type EllipseFeatureProperties = StyledFeatureProperties & {
   /** Ellipse properties (required for Ellipse shapes) */
   ellipseProperties: EllipseProperties;
+};
+
+/**
+ * Feature properties for WagonWheel shapes (wagonWheelProperties required).
+ * Used by WagonWheelShape for better type narrowing.
+ */
+export type WagonWheelFeatureProperties = StyledFeatureProperties & {
+  /** Wagon wheel properties (required for WagonWheel shapes) */
+  wagonWheelProperties: WagonWheelProperties;
 };
 
 /**
@@ -274,6 +317,14 @@ export type PointShape = BaseShape & {
 };
 
 /**
+ * Wagon wheel shape with required wagonWheelProperties
+ */
+export type WagonWheelShape = BaseShape & {
+  shape: typeof ShapeFeatureType.WagonWheel;
+  feature: StyledFeature & { properties: WagonWheelFeatureProperties };
+};
+
+/**
  * Discriminated union of all shape types.
  *
  * Use this for type narrowing based on shape:
@@ -293,7 +344,8 @@ export type Shape =
   | PolygonShape
   | RectangleShape
   | LineStringShape
-  | PointShape;
+  | PointShape
+  | WagonWheelShape;
 
 /**
  * Alias for StyledFeature (shape feature)
@@ -412,6 +464,24 @@ export function isLineStringShape(shape: Shape): shape is LineStringShape {
  */
 export function isPointShape(shape: Shape): shape is PointShape {
   return shape.shape === ShapeFeatureType.Point;
+}
+
+/**
+ * Type guard for WagonWheel shapes.
+ *
+ * @param shape - The shape to test.
+ * @returns True if shape is a WagonWheelShape.
+ *
+ * @example
+ * ```typescript
+ * if (isWagonWheelShape(shape)) {
+ *   // shape.feature.properties.wagonWheelProperties is available
+ *   const { center, radius, spokes } = shape.feature.properties.wagonWheelProperties;
+ * }
+ * ```
+ */
+export function isWagonWheelShape(shape: Shape): shape is WagonWheelShape {
+  return shape.shape === ShapeFeatureType.WagonWheel;
 }
 
 // =============================================================================

@@ -42,6 +42,7 @@ export {
   isPointShape,
   isPolygonShape,
   isRectangleShape,
+  isWagonWheelShape,
   ShapeFeatureType,
 } from './shared/types';
 // Shape utility exports
@@ -117,5 +118,8 @@ export type {
   StyledFeature,
   StyledFeatureProperties,
   StyleProperties,
+  WagonWheelFeatureProperties,
+  WagonWheelProperties,
+  WagonWheelShape,
 } from './shared/types';
 export type { DuplicateShapeOptions } from './shared/utils/duplicate-shape';

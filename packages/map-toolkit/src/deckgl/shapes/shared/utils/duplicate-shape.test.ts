@@ -22,6 +22,7 @@ import type {
   PolygonShape,
   RectangleShape,
   Shape,
+  WagonWheelShape,
 } from '../types';
 
 // Extract individual shapes from fixtures by type
@@ -39,6 +40,55 @@ const rectangleShape = mockShapes.find(
 const ellipseShape = mockShapes.find(
   (s) => s.shape === 'Ellipse',
 ) as EllipseShape;
+
+/** Inline WagonWheel fixture (not in mock-shapes). */
+const wagonWheelShape: WagonWheelShape = {
+  id: 'ww-1',
+  name: 'Test Wagon Wheel',
+  shape: 'WagonWheel',
+  feature: {
+    type: 'Feature',
+    geometry: {
+      type: 'MultiPolygon',
+      coordinates: [
+        [
+          [
+            [-122.4, 37.81],
+            [-122.4, 37.8],
+            [-122.39, 37.8],
+            [-122.4, 37.81],
+          ],
+        ],
+        [
+          [
+            [-122.4, 37.8],
+            [-122.41, 37.8],
+            [-122.4, 37.79],
+            [-122.4, 37.8],
+          ],
+        ],
+      ],
+    },
+    properties: {
+      shapeId: 'ww-1',
+      styleProperties: {
+        fillColor: [0, 100, 200, 128],
+        lineColor: [0, 0, 0, 255],
+        lineWidth: 2,
+        linePattern: 'solid',
+      },
+      wagonWheelProperties: {
+        center: [-122.4, 37.8],
+        radius: { value: 1, units: 'kilometers' },
+        spokes: 4,
+        orientation: 0,
+        rangeRings: [],
+      },
+    },
+  },
+  lastUpdated: Date.now(),
+  locked: false,
+};
 
 describe('duplicateShape', () => {
   it('should return a shape with a new unique ID', () => {
@@ -386,6 +436,44 @@ describe('duplicateShape', () => {
       expect(cloneProps?.xSemiAxis).toEqual(originalProps.xSemiAxis);
       expect(cloneProps?.ySemiAxis).toEqual(originalProps.ySemiAxis);
       expect(cloneProps?.angle).toBe(originalProps.angle);
+    });
+
+    it('should offset wagonWheelProperties center when duplicating with offset', () => {
+      // Arrange
+      const offset: [number, number] = [0.05, 0.05];
+
+      // Act
+      const clone = duplicateShape(wagonWheelShape, { offset });
+
+      // Assert
+      const originalCenter =
+        wagonWheelShape.feature.properties.wagonWheelProperties.center;
+      const cloneProps = clone.feature.properties.wagonWheelProperties;
+      expect(cloneProps).toBeDefined();
+      expect(cloneProps?.center[0]).toBeCloseTo(originalCenter[0] + offset[0]);
+      expect(cloneProps?.center[1]).toBeCloseTo(originalCenter[1] + offset[1]);
+    });
+
+    it('should preserve wagonWheelProperties radius and spokes when duplicating', () => {
+      // Arrange & Act
+      const clone = duplicateShape(wagonWheelShape);
+
+      // Assert
+      const originalProps =
+        wagonWheelShape.feature.properties.wagonWheelProperties;
+      const cloneProps = clone.feature.properties.wagonWheelProperties;
+      expect(cloneProps?.radius).toEqual(originalProps.radius);
+      expect(cloneProps?.spokes).toBe(originalProps.spokes);
+      expect(cloneProps?.orientation).toBe(originalProps.orientation);
+      expect(cloneProps?.rangeRings).toEqual(originalProps.rangeRings);
+    });
+
+    it('should preserve shape type as WagonWheel when duplicating', () => {
+      // Arrange & Act
+      const clone = duplicateShape(wagonWheelShape);
+
+      // Assert
+      expect(clone.shape).toBe('WagonWheel');
     });
   });
 });
