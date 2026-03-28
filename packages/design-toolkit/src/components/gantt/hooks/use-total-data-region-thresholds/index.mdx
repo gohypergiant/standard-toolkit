@@ -89,8 +89,9 @@ type UseTotalDataRegionThresholdsProps = {
         index is exclusive (intentional since the result of `deriveRenderedSlice` is
         meant to be used within the context of the array `slice` method, hence the
         name).
-      - Use the subscribed `roundedCurrentRowScrollPx` value and the
-        `verticalScrollElement` prop as the function's input arguments.
+      - Use the subscribed `roundedCurrentRowScrollPx` value, the
+        `verticalScrollElement` prop, and the `rowHeightPx` value from the
+        `useGanttContext` hook as the function's input arguments.
     - `renderedRegionBounds` - Value accessed via `useGanttContext` hook.
       - This will be used to calculate the `startMs` and `endMs` of `RenderedRegion`.
     - This derivation should be captured in a separate/dedicated utility function.

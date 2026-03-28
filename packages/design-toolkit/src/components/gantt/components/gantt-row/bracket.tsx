@@ -10,7 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-import { GANTT_ROW_ELEMENT_HEIGHT } from '../../constants';
 import { Point, type PointProps } from '../base-elements/point';
 import styles from './styles.module.css';
 import { useIsElapsed } from './use-is-elapsed';
@@ -27,11 +26,10 @@ function BracketBase({ direction, ...rest }: BracketBaseProps) {
     <Point
       className={styles['bracket-container']}
       data-rotate={rotate}
-      data-height={GANTT_ROW_ELEMENT_HEIGHT}
       data-elapsed={isElapsed || undefined}
       {...rest}
     >
-      <div className={styles.bracket} data-height={GANTT_ROW_ELEMENT_HEIGHT} />
+      <div className={styles.bracket} />
     </Point>
   );
 }

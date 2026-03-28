@@ -23,6 +23,7 @@ import {
   examineThresholds,
   shouldExamineThresholds,
 } from '@/components/gantt/utils/thresholds';
+import { useGanttContext } from '../../context';
 import type { MetThresholdData } from '@/components/gantt/types';
 
 function toThresholdKey(item: MetThresholdData): string {
@@ -86,6 +87,7 @@ export function useTotalDataRegionThresholds({
     onThresholdMet,
     timescale,
   } = useTemporalDataContext();
+  const { rowHeightPx } = useGanttContext();
 
   useEffect(() => {
     // Early return if threshold examination should not proceed
@@ -103,6 +105,7 @@ export function useTotalDataRegionThresholds({
 
     const renderedSlice = deriveRenderedSlice(
       roundedCurrentRowScrollPx,
+      rowHeightPx,
       verticalScrollElement?.clientHeight ?? 0,
     );
 
@@ -142,5 +145,6 @@ export function useTotalDataRegionThresholds({
     timescale,
     roundedCurrentRowScrollPx,
     verticalScrollElement,
+    rowHeightPx,
   ]);
 }

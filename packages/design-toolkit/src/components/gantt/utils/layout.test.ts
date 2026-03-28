@@ -12,7 +12,6 @@
 
 import { describe, expect, it } from 'vitest';
 import {
-  GANTT_ROW_HEIGHT_PX,
   MS_PER_HOUR,
   ROW_VIRTUALIZATION_OVERSCAN,
   TIMELINE_CHUNK_WIDTH,
@@ -158,34 +157,38 @@ describe('deriveTranslateXValue', () => {
   });
 
   describe('deriveRenderedSlice', () => {
+    const rowHeightPx = 40;
+
     it('returns correct start/end when proposed count is odd (no adjustment)', () => {
-      const viewableRegionHeightPx = GANTT_ROW_HEIGHT_PX * 2;
+      const viewableRegionHeightPx = rowHeightPx * 2;
       const scrollPx = 0;
 
       const { start, end } = deriveRenderedSlice(
         scrollPx,
+        rowHeightPx,
         viewableRegionHeightPx,
       );
 
       expect(start).toBe(0);
 
-      expect(end).toBe(viewableRegionHeightPx / GANTT_ROW_HEIGHT_PX + 1);
+      expect(end).toBe(viewableRegionHeightPx / rowHeightPx + 1);
     });
 
     it('returns correct start/end when proposed count is even (adjusted to odd)', () => {
       const expectedStart = 2;
-      const viewableRegionHeightPx = GANTT_ROW_HEIGHT_PX * 3;
-      const scrollPx = GANTT_ROW_HEIGHT_PX * expectedStart + 10;
+      const viewableRegionHeightPx = rowHeightPx * 3;
+      const scrollPx = rowHeightPx * expectedStart + 10;
 
       const { start, end } = deriveRenderedSlice(
         scrollPx,
+        rowHeightPx,
         viewableRegionHeightPx,
       );
 
       expect(start).toBe(expectedStart);
       expect(end).toBe(
         expectedStart +
-          viewableRegionHeightPx / GANTT_ROW_HEIGHT_PX +
+          viewableRegionHeightPx / rowHeightPx +
           ROW_VIRTUALIZATION_OVERSCAN +
           1, // +1 to adjust for even proposed count
       );

@@ -23,6 +23,14 @@ vi.mock('@/components/gantt/context/temporal-data', () => ({
   useTemporalDataContext: vi.fn(),
 }));
 
+vi.mock('@/components/gantt/context', () => ({
+  useGanttContext: vi.fn(),
+}));
+
+import {
+  type GanttContextValue,
+  useGanttContext,
+} from '@/components/gantt/context';
 import { useTemporalDataContext } from '@/components/gantt/context/temporal-data';
 
 vi.mock('@/components/gantt/utils/layout');
@@ -60,6 +68,7 @@ describe('useTotalDataRegionThresholds', () => {
   const mockVerticalScrollElement = {
     clientHeight: 500,
   } as HTMLDivElement;
+  const defaultRowHeightPx = 40;
   const mockRenderedSlice = { start: 2, end: 7 };
   const mockMetThresholds: MetThresholdData[] = [
     {
@@ -75,6 +84,9 @@ describe('useTotalDataRegionThresholds', () => {
     vi.clearAllMocks();
 
     vi.mocked(useTemporalDataContext).mockReturnValue(baseContextValue);
+    vi.mocked(useGanttContext).mockReturnValue({
+      rowHeightPx: defaultRowHeightPx,
+    } as unknown as GanttContextValue);
 
     vi.mocked(layoutUtils.deriveRenderedSlice).mockReturnValue(
       mockRenderedSlice,

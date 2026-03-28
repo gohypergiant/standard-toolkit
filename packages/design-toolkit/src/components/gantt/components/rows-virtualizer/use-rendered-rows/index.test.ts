@@ -14,7 +14,6 @@ import { act, renderHook } from '@testing-library/react';
 import React from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createGanttStoreProvider } from '@/components/gantt/__fixtures__/store-provider';
-import { GANTT_ROW_HEIGHT_PX } from '@/components/gantt/constants';
 import { useGanttStoreApi } from '@/components/gantt/context/store';
 import { deriveRenderedSlice } from '@/components/gantt/utils/layout';
 import { useRenderedRows } from './';
@@ -23,9 +22,27 @@ vi.mock('@/components/gantt/hooks/use-scrollbar-height', () => ({
   useScrollbarHeight: vi.fn(() => 0),
 }));
 
+const mocks = vi.hoisted(() => ({
+  rowHeightPx: 40,
+}));
+
+// Mock useGanttContext to return our test values
 vi.mock('@/components/gantt/context', () => ({
-  useGanttContext: vi.fn().mockReturnValue({
+  GanttContext: {
+    Provider: ({ children }: { children: React.ReactNode }) => children,
+  },
+  useGanttContext: () => ({
     ganttContentElement: null,
+    headerElement: null,
+    rootElement: null,
+    ganttPanelElement: null,
+    timelineContainerElement: null,
+    rowHeightPx: mocks.rowHeightPx,
+    assignTimelineContainerElementRef: vi.fn(),
+    assignHeaderElementRef: vi.fn(),
+    assignRootElementRef: vi.fn(),
+    assignGanttContentElementRef: vi.fn(),
+    assignGanttPanelElementRef: vi.fn(),
   }),
 }));
 
@@ -47,7 +64,7 @@ describe('useRenderedRows', () => {
       { wrapper },
     );
 
-    const expectedHeight = children.length * GANTT_ROW_HEIGHT_PX;
+    const expectedHeight = children.length * mocks.rowHeightPx;
     expect(result.current.height).toBe(expectedHeight);
   });
 
@@ -62,7 +79,7 @@ describe('useRenderedRows', () => {
     );
 
     // Set scroll position in store
-    const scrollPx = GANTT_ROW_HEIGHT_PX * 2; // 80px
+    const scrollPx = mocks.rowHeightPx * 2; // 80px
     act(() => {
       result.current.store.setState({ currentRowScrollPx: scrollPx });
     });
@@ -86,16 +103,20 @@ describe('useRenderedRows', () => {
     );
 
     // Set scroll to render rows starting at index 2
-    const scrollPx = GANTT_ROW_HEIGHT_PX * 2; // 80px
+    const scrollPx = mocks.rowHeightPx * 2; // 80px
     act(() => {
       result.current.store.setState({ currentRowScrollPx: scrollPx });
     });
     rerender();
 
-    const { start } = deriveRenderedSlice(scrollPx, heightPx);
+    const { start } = deriveRenderedSlice(
+      scrollPx,
+      mocks.rowHeightPx,
+      heightPx,
+    );
 
     result.current.hook.renderedRows?.forEach((row, index) => {
-      const expectedTranslateY = GANTT_ROW_HEIGHT_PX * (start + index);
+      const expectedTranslateY = mocks.rowHeightPx * (start + index);
       expect(row.props.style?.transform ?? '').toContain(
         `translateY(${expectedTranslateY}px)`,
       );
@@ -112,7 +133,7 @@ describe('useRenderedRows', () => {
       { wrapper },
     );
 
-    const expectedVirtualizedHeight = children.length * GANTT_ROW_HEIGHT_PX;
+    const expectedVirtualizedHeight = children.length * mocks.rowHeightPx;
     expect(result.current.store.getState().virtualizedHeightPx).toBe(
       expectedVirtualizedHeight,
     );
