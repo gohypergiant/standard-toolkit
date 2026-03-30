@@ -31,6 +31,7 @@ export const GARS_ZOOM_RANGES: GridZoomRange[] = [
     minZoom: 4,
     maxZoom: 20,
     labelMinZoom: 6,
+    labelMaxZoom: 8,
   },
   {
     type: GARS_GRID_TYPES.FIFTEEN_MINUTE,
@@ -38,6 +39,7 @@ export const GARS_ZOOM_RANGES: GridZoomRange[] = [
     minZoom: 8,
     maxZoom: 18,
     labelMinZoom: 8,
+    labelMaxZoom: 11,
   },
   {
     type: GARS_GRID_TYPES.FIVE_MINUTE,

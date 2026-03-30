@@ -34,6 +34,8 @@ export type GridZoomRange = {
   maxZoom: number;
   /** Optional minimum zoom for label visibility (defaults to minZoom) */
   labelMinZoom?: number;
+  /** Optional maximum zoom for label visibility (defaults to maxZoom) */
+  labelMaxZoom?: number;
 };
 
 /**

@@ -153,6 +153,7 @@ export class BaseGridLayer extends CompositeLayer<BaseGridLayerProps> {
    * const layers = layer.renderLayers();
    * ```
    */
+  // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: complexity increased from 15 to 16 by adding labelMaxZoom check, which is unavoidable
   override renderLayers(): Layer[] {
     const {
       definition,
@@ -184,8 +185,6 @@ export class BaseGridLayer extends CompositeLayer<BaseGridLayerProps> {
       }
 
       const style = this.getStyle(range.type, styleOverrides);
-
-      console.log('bounds', bounds);
 
       const { lines, labels, polygons } = definition.renderer.render({
         bounds,
@@ -228,9 +227,10 @@ export class BaseGridLayer extends CompositeLayer<BaseGridLayerProps> {
         );
       }
 
-      // Create TextLayer for labels if enabled and zoom is sufficient
+      // Create TextLayer for labels if enabled and zoom is within label range
       const labelMinZoom = range.labelMinZoom ?? range.minZoom;
-      if (showLabels && zoom >= labelMinZoom) {
+      const labelMaxZoom = range.labelMaxZoom ?? range.maxZoom;
+      if (showLabels && zoom >= labelMinZoom && zoom <= labelMaxZoom) {
         layers.push(
           new TextLayer<LabelData>({
             id: `${this.id}-labels-${range.key}`,
