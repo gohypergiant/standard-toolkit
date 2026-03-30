@@ -11,27 +11,57 @@
  */
 
 import { uuid } from '@accelint/core';
+import {
+  DARK_BASE_MAP_STYLE,
+  LIGHT_BASE_MAP_STYLE,
+} from '../deckgl/base-map/constants';
 import { BaseMap as BaseMapComponent } from '../deckgl/base-map';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-const meta: Meta<typeof BaseMapComponent> = {
+const meta: Meta = {
   title: 'DeckGL/Rubber Band Zoom',
-  component: BaseMapComponent,
 };
 
 export default meta;
-type Story = StoryObj<typeof BaseMapComponent>;
+type Story = StoryObj<typeof meta>;
 
 // Stable id for Storybook story
 const RBZ_HANDLER_STORY_ID = uuid();
 
 export const BasicUsage: Story = {
-  render: () => {
+  args: {
+    enableRbz: true,
+    boxZoom: false,
+    styleUrl: DARK_BASE_MAP_STYLE,
+  },
+  argTypes: {
+    enableRbz: {
+      control: { type: 'boolean' },
+      description:
+        'Enable rubber band zoom (Shift + drag). Disables native box zoom when enabled.',
+    },
+    boxZoom: {
+      control: { type: 'boolean' },
+      description:
+        'Enable native MapLibre box zoom. Automatically false when enableRbz is true.',
+    },
+    styleUrl: {
+      control: { type: 'select' },
+      options: [DARK_BASE_MAP_STYLE, LIGHT_BASE_MAP_STYLE],
+      labels: {
+        [DARK_BASE_MAP_STYLE]: 'Dark Matter',
+        [LIGHT_BASE_MAP_STYLE]: 'Voyager (Light)',
+      },
+    },
+  },
+  render: (args) => {
     return (
       <BaseMapComponent
         className='h-dvh w-dvw'
         id={RBZ_HANDLER_STORY_ID}
-        enableRbz
+        enableRbz={args.enableRbz}
+        boxZoom={args.boxZoom}
+        styleUrl={args.styleUrl}
       />
     );
   },

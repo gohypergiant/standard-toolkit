@@ -187,7 +187,6 @@ export class RbzHandler implements Handler {
    * expensive DOM work here; changes are deferred via `requestAnimationFrame`.
    */
   reset(): void {
-    console.log('RbzHandler reset - clearing state and hiding selection box');
     this._startPos = undefined;
     this._rbzBounds = undefined;
     this._isDrawing = false;
@@ -204,14 +203,6 @@ export class RbzHandler implements Handler {
   }
 
   mousedown(e: MouseEvent, point: Point): void {
-    console.log(
-      'RbzHandler mousedown - enabled:',
-      this._enabled,
-      'button:',
-      e.button,
-      'point:',
-      point,
-    );
     if (!this._enabled || e.button !== 0) {
       return;
     }
@@ -240,7 +231,9 @@ export class RbzHandler implements Handler {
     const p0 = this._startPos;
     const p1 = point;
 
-    this._isDrawing = !p0.equals(p1) && p1.dist(p0) > DISTANCE_THRESHOLD;
+    if (!this._isDrawing) {
+      this._isDrawing = !p0.equals(p1) && p1.dist(p0) > DISTANCE_THRESHOLD;
+    }
 
     const { left, top, width, height } = this._computeBoxGeometry(p0, p1);
 
@@ -257,15 +250,6 @@ export class RbzHandler implements Handler {
       this._rbzBox.style.transform = `translate(${left}px, ${top}px)`;
       this._rbzBox.style.width = `${width}px`;
       this._rbzBox.style.height = `${height}px`;
-
-      console.log(
-        this._rbzBox.style.display,
-        this._rbzBox.style.opacity,
-        this._rbzBox.style.transform,
-        this._rbzBox.style.width,
-        this._rbzBox.style.height,
-        this._rbzBox.style.opacity,
-      );
     });
 
     this._boxIsVisible = true;
@@ -426,14 +410,14 @@ export class RbzHandler implements Handler {
 
   private _suppressScrollZoom(): void {
     if (!this._isSuppressingScrollZoom) {
-      this._map.handlers._handlersById.scrollZoom?.disable();
+      this._map.scrollZoom?.disable();
       this._isSuppressingScrollZoom = true;
     }
   }
 
   private _restoreScrollZoom(): void {
     if (this._isSuppressingScrollZoom) {
-      this._map.handlers._handlersById.scrollZoom?.enable();
+      this._map.scrollZoom?.enable();
       this._isSuppressingScrollZoom = false;
     }
   }

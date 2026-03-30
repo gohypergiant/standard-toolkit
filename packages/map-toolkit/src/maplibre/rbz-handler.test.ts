@@ -55,8 +55,7 @@ function makeMap(containerWidth = 1920, containerHeight = 1080) {
 
   const map = {
     getContainer: () => container,
-    // biome-ignore lint/style/useNamingConvention: mirrors MapLibre's internal handler API
-    handlers: { _handlersById: { scrollZoom } },
+    scrollZoom,
     fitBounds,
     unproject,
   };

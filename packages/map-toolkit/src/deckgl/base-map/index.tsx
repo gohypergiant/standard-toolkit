@@ -405,36 +405,29 @@ export function BaseMap({
     }
     if (enableRbz && mapRef.current) {
       const map = mapRef.current.getMap();
-      console.log('Initializing RbzHandler with map instance:', map);
       rbzRef.current = new RbzHandler(map);
-      console.log(
-        'Adding RbzHandler as custom control to MapLibre map',
-        rbzRef.current,
-      );
+      // _add is a private MapLibre API — no public equivalent exists for registering custom handlers.
+      // Tested against maplibre-gl 5.x. Re-verify on major upgrades.
       map.handlers._add('customRbz', rbzRef.current);
     }
   });
 
   useEffect(() => {
+    if (!enableRbz) {
+      return;
+    }
+
     function handleKeyDown(event: KeyboardEvent): void {
       if (event.key === 'Shift') {
         rbzRef.current?.enable();
-        console.log(
-          'Shift key down - enabling rubber band zoom',
-          rbzRef.current?.isEnabled(),
-          rbzRef.current?.isActive(),
-        );
         mapRef.current?.getMap().dragPan.disable();
       }
     }
 
     function handleKeyUp(event: KeyboardEvent): void {
       if (event.key === 'Shift') {
-        console.log(
-          'Shift key up - disabling rubber band zoom',
-          rbzRef.current,
-        );
         rbzRef.current?.disable();
+        mapRef.current?.getMap().dragPan.enable();
       }
     }
 
@@ -444,12 +437,15 @@ export function BaseMap({
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
       document.removeEventListener('keyup', handleKeyUp);
+      rbzRef.current?.destroy();
     };
-  }, []);
+  }, [enableRbz]);
 
   return (
     <div id={container} className={className}>
-      {enableControlEvents && <MapControls id={id} mapRef={mapRef} />}
+      {enableControlEvents && (
+        <MapControls id={id} mapRef={mapRef} rbzRef={rbzRef} />
+      )}
       <MapProvider id={id}>
         <MapLibre
           key={mapGeneration}
