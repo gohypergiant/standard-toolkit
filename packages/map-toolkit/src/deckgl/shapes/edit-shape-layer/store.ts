@@ -39,18 +39,25 @@ import { Broadcast } from '@accelint/bus';
 import { createMapStore } from '@/shared/create-map-store';
 import { createLoggerDomain } from '@/shared/logger';
 import { MapEvents } from '../../base-map/events';
+import type { DistanceUnit } from '@accelint/constants/units';
 import {
   isCircleShape,
   isEllipseShape,
   isPointShape,
   isRectangleShape,
+  isWagonWheelShape,
 } from '../shared/types';
+import {
+  computeCirclePropertiesFromGeometry,
+  computeCirclePropertiesFromMultiPolygon,
+} from '../shared/utils/geometry-measurements';
 import {
   releaseModeAndCursor,
   requestCursorChange,
   requestModeChange,
 } from '../shared/utils/mode-utils';
 import {
+  COMPLETION_EDIT_TYPES,
   EDIT_CURSOR_MAP,
   EDIT_SHAPE_LAYER_ID,
   EDIT_SHAPE_MODE,
@@ -89,6 +96,7 @@ const DEFAULT_EDITING_STATE: EditingState = {
   editMode: 'view',
   featureBeingEdited: null,
   previousMode: null,
+  lastCompletedEditType: null,
 };
 
 /**
@@ -116,6 +124,9 @@ function getEditModeForShape(shape: Shape): EditMode {
   if (isCircleShape(shape)) {
     return 'circle-transform';
   }
+  if (isWagonWheelShape(shape)) {
+    return 'locked-bounding-transform';
+  }
   if (isEllipseShape(shape) || isRectangleShape(shape)) {
     return 'bounding-transform';
   }
@@ -139,13 +150,34 @@ function startEditing(
     return;
   }
 
-  // Already editing - cancel first
+  // Determine edit mode (can be overridden via options)
+  const editMode = options?.mode ?? getEditModeForShape(shape);
+
+  // When re-entering edit mode for the same shape (e.g. form commit updating
+  // geometry, or Point→MultiPolygon mode transition during creation), update
+  // state in-place without cancel/restart. This avoids a race condition where
+  // releaseModeAndCursor from cancel fires after requestModeChange.
+  if (state.editingShape?.id === shape.id) {
+    const modeChanged = state.editMode !== editMode;
+    setState({
+      editingShape: shape,
+      editMode,
+      featureBeingEdited: shape.feature,
+    });
+    // Only request new mode/cursor if the edit mode actually changed
+    if (modeChanged) {
+      requestModeChange(mapId, EDIT_SHAPE_MODE, EDIT_SHAPE_LAYER_ID);
+      const cursor = EDIT_CURSOR_MAP[editMode];
+      requestCursorChange(mapId, cursor, EDIT_SHAPE_LAYER_ID);
+    }
+    notify();
+    return;
+  }
+
+  // Different shape — cancel current edit first
   if (state.editingShape) {
     cancelEditingInternal(mapId, state, notify, setState);
   }
-
-  // Determine edit mode (can be overridden via options)
-  const editMode = options?.mode ?? getEditModeForShape(shape);
 
   // Update state with new object reference
   setState({
@@ -347,13 +379,47 @@ export function clearEditingState(mapId: UniqueId): void {
 }
 
 /**
+ * Resolve the radius units from a circular shape (Circle or WagonWheel).
+ * Returns `undefined` for non-circular shapes.
+ */
+function getCircularShapeUnits(shape: Shape): DistanceUnit | undefined {
+  if (isCircleShape(shape)) {
+    return shape.feature.properties.circleProperties.radius.units;
+  }
+  if (isWagonWheelShape(shape)) {
+    return shape.feature.properties.wagonWheelProperties.radius.units;
+  }
+  return undefined;
+}
+
+/**
+ * Recompute circle properties from the given feature geometry using the
+ * appropriate computation function for the geometry type.
+ */
+function recomputeCircleProperties(
+  feature: Feature,
+  units: DistanceUnit | undefined,
+): ReturnType<typeof computeCirclePropertiesFromGeometry> {
+  if (feature.geometry.type === 'Polygon') {
+    return computeCirclePropertiesFromGeometry(feature.geometry, units);
+  }
+  if (feature.geometry.type === 'MultiPolygon') {
+    return computeCirclePropertiesFromMultiPolygon(feature.geometry, units);
+  }
+  return undefined;
+}
+
+/**
  * Update the feature currently being edited.
  *
  * Called internally by the layer during drag operations, and also available
  * to consumers via the `useEditShape` hook for form-driven updates.
+ * For circular shapes (Circle, WagonWheel), automatically recomputes
+ * `circleProperties` from the updated geometry.
  *
  * @param mapId - The map instance ID.
- * @param feature - The updated GeoJSON feature to store as the live editing state.
+ * @param feature - The updated GeoJSON feature from the editable layer to store as the live editing state.
+ * @param editType - The edit type string from the editable layer (e.g. 'scaled', 'rotated', 'translated'). Completion types are stored in `lastCompletedEditType`; continuous types clear it.
  *
  * @example
  * ```typescript
@@ -362,8 +428,47 @@ export function clearEditingState(mapId: UniqueId): void {
  * updateFeature(mapId, { ...currentFeature, geometry: newGeometry });
  * ```
  */
-export function updateFeature(mapId: UniqueId, feature: Feature): void {
-  editStore.set(mapId, { featureBeingEdited: feature });
+export function updateFeature(
+  mapId: UniqueId,
+  feature: Feature,
+  editType?: string,
+): void {
+  const state = editStore.get(mapId);
+
+  // Only store completion editTypes (scaled, rotated, translated) —
+  // continuous events fire via RAF and can overwrite due to frame timing.
+  // Clear lastCompletedEditType on continuous events so it doesn't persist.
+  const isCompletion = editType != null && COMPLETION_EDIT_TYPES.has(editType);
+  const lastCompletedEditType = isCompletion ? editType : null;
+
+  // Recompute circleProperties from updated geometry so metadata stays in sync
+  const editingShape = state?.editingShape;
+  if (
+    editingShape &&
+    (isCircleShape(editingShape) || isWagonWheelShape(editingShape))
+  ) {
+    const shapeUnits = getCircularShapeUnits(editingShape);
+    const circleProperties = recomputeCircleProperties(feature, shapeUnits);
+
+    if (circleProperties) {
+      editStore.set(mapId, {
+        featureBeingEdited: {
+          ...feature,
+          properties: {
+            ...feature.properties,
+            circleProperties,
+          },
+        },
+        lastCompletedEditType,
+      });
+      return;
+    }
+  }
+
+  editStore.set(mapId, {
+    featureBeingEdited: feature,
+    lastCompletedEditType,
+  });
 }
 
 /**

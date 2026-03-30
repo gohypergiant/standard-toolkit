@@ -12,8 +12,12 @@
 
 'use client';
 
+import {
+  DISTANCE_UNIT_BY_SYMBOL,
+  type DistanceUnit,
+  type DistanceUnitSymbol,
+} from '@accelint/constants/units';
 import { uuid } from '@accelint/core';
-import { centroid, distance } from '@turf/turf';
 import { createLoggerDomain } from '@/shared/logger';
 import { DEFAULT_DISTANCE_UNITS } from '@/shared/units';
 import { DEFAULT_STYLE_PROPERTIES } from '../../shared/constants';
@@ -26,7 +30,8 @@ import {
   ShapeFeatureType as ShapeFeatureTypeEnum,
   type StyleProperties,
 } from '../../shared/types';
-import type { Feature, Polygon, Position } from 'geojson';
+import { computeCirclePropertiesFromGeometry } from '../../shared/utils/geometry-measurements';
+import type { Feature, Polygon } from 'geojson';
 
 const logger = createLoggerDomain('[FeatureConversion]');
 
@@ -57,93 +62,24 @@ function generateShapeName(shape: ShapeFeatureType): string {
 /**
  * Compute circle properties from a polygon geometry (circle approximation).
  *
- * The EditableGeoJsonLayer creates circles as polygon approximations with multiple
- * vertices arranged in a circular pattern. This function extracts the original circle's
- * center and radius from that polygon approximation.
- *
- * The center is calculated using Turf's centroid function, and the radius is computed
- * as the distance from the center to the first edge point.
+ * Delegates to the shared `computeCirclePropertiesFromGeometry` utility and
+ * adds warning logs when computation fails.
  *
  * @param geometry - Polygon geometry representing a circle approximation
  * @returns Circle properties with center and radius, or undefined if computation fails
- *
- * @example
- * ```typescript
- * import { computeCircleProperties } from '@accelint/map-toolkit/deckgl/shapes/draw-shape-layer/utils/feature-conversion';
- * import type { Polygon } from 'geojson';
- *
- * const polygonGeometry: Polygon = {
- *   type: 'Polygon',
- *   coordinates: [[
- *     [-122.4, 37.8],
- *     [-122.39, 37.81],
- *     // ... more points forming a circle
- *     [-122.4, 37.8], // closing point
- *   ]],
- * };
- *
- * const circleProps = computeCircleProperties(polygonGeometry);
- * // Returns: { center: [-122.395, 37.805], radius: { value: 1.5, units: 'kilometers' } }
- * ```
  */
 function computeCircleProperties(
   geometry: Polygon,
+  units?: DistanceUnit,
 ): CircleProperties | undefined {
-  const coordinates = geometry.coordinates[0];
-  if (!coordinates || coordinates.length < 3) {
+  const result = computeCirclePropertiesFromGeometry(geometry, units);
+  if (!result) {
     logger.warn(
-      'Cannot compute circle properties: polygon has insufficient coordinates',
+      'Cannot compute circle properties: invalid geometry or coordinates',
     );
     return undefined;
   }
-
-  // Calculate center using turf centroid
-  const centerFeature = centroid({
-    type: 'Polygon',
-    coordinates: geometry.coordinates,
-  });
-  const center = centerFeature.geometry.coordinates as [number, number];
-
-  // Validate center coordinates are valid numbers
-  const isCenterValid =
-    Number.isFinite(center[0]) && Number.isFinite(center[1]);
-  if (!isCenterValid) {
-    logger.warn('Cannot compute circle properties: invalid center coordinates');
-    return undefined;
-  }
-
-  // Calculate radius as distance from center to first point
-  const firstPoint = coordinates[0] as Position;
-
-  // Validate first point coordinates
-  const isFirstPointValid =
-    firstPoint &&
-    Number.isFinite(firstPoint[0]) &&
-    Number.isFinite(firstPoint[1]);
-  if (!isFirstPointValid) {
-    logger.warn(
-      'Cannot compute circle properties: invalid edge point coordinates',
-    );
-    return undefined;
-  }
-
-  const radius = distance(center, firstPoint, {
-    units: DEFAULT_DISTANCE_UNITS,
-  });
-
-  // Validate computed radius
-  if (!Number.isFinite(radius) || radius <= 0) {
-    logger.warn('Cannot compute circle properties: invalid radius computed');
-    return undefined;
-  }
-
-  return {
-    center,
-    radius: {
-      value: radius,
-      units: DEFAULT_DISTANCE_UNITS,
-    },
-  };
+  return result;
 }
 
 /**
@@ -255,6 +191,7 @@ function computeEllipseProperties(
  * @param feature - The raw GeoJSON feature from the editable layer
  * @param shape - The type of shape being created
  * @param styleDefaults - Optional style property overrides (colors, line width, etc.)
+ * @param distanceUnit - Optional distance unit symbol (e.g. 'km', 'mi') for computing circle radius. When provided, the circle's radius is measured in this unit instead of the default.
  * @returns A complete Shape object ready for use in DisplayShapeLayer
  *
  * @example Basic usage with polygon
@@ -301,6 +238,7 @@ export function convertFeatureToShape(
   feature: Feature,
   shape: ShapeFeatureType,
   styleDefaults?: Partial<StyleProperties> | null,
+  distanceUnit?: DistanceUnitSymbol | null,
 ): Shape {
   const id = uuid();
   const name = generateShapeName(shape);
@@ -311,13 +249,18 @@ export function convertFeatureToShape(
     ...(styleDefaults ?? {}),
   };
 
+  // Resolve the distance unit from symbol to DistanceUnit name
+  const resolvedUnit: DistanceUnit | undefined = distanceUnit
+    ? (DISTANCE_UNIT_BY_SYMBOL[distanceUnit] as DistanceUnit | undefined)
+    : undefined;
+
   // Compute circle properties if this is a circle
   let circleProperties: CircleProperties | undefined;
   if (
     shape === ShapeFeatureTypeEnum.Circle &&
     feature.geometry.type === 'Polygon'
   ) {
-    circleProperties = computeCircleProperties(feature.geometry);
+    circleProperties = computeCircleProperties(feature.geometry, resolvedUnit);
   }
 
   // Compute ellipse properties if this is an ellipse
