@@ -172,6 +172,8 @@ export class BaseGridLayer extends CompositeLayer<BaseGridLayerProps> {
     const bounds = getViewportBounds(viewport);
 
     const layers: Layer[] = [];
+
+    // TODO: memoize the grid layers based on the current zoom so that we don't have to continually recalculate
     const zoomRanges = customZoomRanges || definition.zoomRanges;
     const hoveredCell = this.getHoveredCell();
 
@@ -182,6 +184,8 @@ export class BaseGridLayer extends CompositeLayer<BaseGridLayerProps> {
       }
 
       const style = this.getStyle(range.type, styleOverrides);
+
+      console.log('bounds', bounds);
 
       const { lines, labels, polygons } = definition.renderer.render({
         bounds,

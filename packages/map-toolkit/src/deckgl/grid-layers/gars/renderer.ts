@@ -117,6 +117,8 @@ export function createGARSRenderer(): GridRenderer {
           }
         }
 
+        // TODO: make these as static as possible so that we don't need to recalculate
+        // Long term we could potentially just export array buffers
         const labels = grid.getLabels(zoom, bounds);
         if (labels) {
           for (const label of labels) {
