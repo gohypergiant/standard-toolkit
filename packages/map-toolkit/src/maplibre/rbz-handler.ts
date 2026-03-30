@@ -187,6 +187,7 @@ export class RbzHandler implements Handler {
    * expensive DOM work here; changes are deferred via `requestAnimationFrame`.
    */
   reset(): void {
+    console.log('RbzHandler reset - clearing state and hiding selection box');
     this._startPos = undefined;
     this._rbzBounds = undefined;
     this._isDrawing = false;
@@ -203,6 +204,14 @@ export class RbzHandler implements Handler {
   }
 
   mousedown(e: MouseEvent, point: Point): void {
+    console.log(
+      'RbzHandler mousedown - enabled:',
+      this._enabled,
+      'button:',
+      e.button,
+      'point:',
+      point,
+    );
     if (!this._enabled || e.button !== 0) {
       return;
     }
@@ -248,6 +257,15 @@ export class RbzHandler implements Handler {
       this._rbzBox.style.transform = `translate(${left}px, ${top}px)`;
       this._rbzBox.style.width = `${width}px`;
       this._rbzBox.style.height = `${height}px`;
+
+      console.log(
+        this._rbzBox.style.display,
+        this._rbzBox.style.opacity,
+        this._rbzBox.style.transform,
+        this._rbzBox.style.width,
+        this._rbzBox.style.height,
+        this._rbzBox.style.opacity,
+      );
     });
 
     this._boxIsVisible = true;
@@ -306,6 +324,8 @@ export class RbzHandler implements Handler {
     const box = document.createElement('div');
 
     box.style.position = 'absolute';
+    box.style.top = '0px';
+    box.style.left = '0px';
     box.style.pointerEvents = 'none';
     box.style.display = 'none';
     box.style.border = `${borderWidth}px solid ${borderColor}`;

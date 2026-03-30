@@ -49,6 +49,10 @@ export type BaseMapProps = DeckglProps & {
    * @default DARK_BASE_MAP_STYLE ('https://tiles.basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json')
    */
   styleUrl?: string;
+  /** Whether to enable box zoom (Shift + drag) on the map. Defaults to true. False if rubber band zoom is enabled. */
+  boxZoom?: boolean;
+  /** Whether to enable rubber band zoom (Shift + drag) on the map. Defaults to false. */
+  enableRbz?: boolean;
 };
 
 /**

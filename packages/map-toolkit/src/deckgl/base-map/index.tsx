@@ -16,13 +16,14 @@ import { useEffectEvent, useEmit } from '@accelint/bus/react';
 import { Deckgl, useDeckgl } from '@deckgl-fiber-renderer/dom';
 import type { PickingInfo, ViewStateChangeParameters } from '@deck.gl/core';
 import 'client-only';
-import { useCallback, useId, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useId, useMemo, useRef } from 'react';
 import {
   Map as MapLibre,
   type MapRef,
   useControl,
   type ViewState,
 } from 'react-map-gl/maplibre';
+import { RbzHandler } from '@/maplibre';
 import { useMapCamera } from '../../camera';
 import { getCursor } from '../../map-cursor/store';
 import { getMapGeneration } from '../../shared/cleanup';
@@ -229,12 +230,15 @@ export function BaseMap({
   onHover,
   onViewStateChange,
   pickingRadius,
+  enableRbz = false,
+  boxZoom = !enableRbz, // Disable box zoom if rubber band zoom is enabled to avoid conflicts
   ...rest
 }: BaseMapProps) {
   const mapGeneration = getMapGeneration(id);
   const deckglInstance = useDeckgl();
   const container = useId();
   const mapRef = useRef<MapRef>(null);
+  const rbzRef = useRef<RbzHandler | null>(null);
 
   const { cameraState, setCameraState } = useMapCamera(id, {
     view: defaultView,
@@ -271,8 +275,9 @@ export function BaseMap({
       projection: cameraState.projection,
       maxPitch: cameraState.view === '2D' ? 0 : 85,
       canvasContextAttributes: CANVAS_CONTEXT_ATTRIBUTES,
+      boxZoom,
     }),
-    [viewState, container, cameraState.projection, cameraState.view],
+    [viewState, container, cameraState.projection, cameraState.view, boxZoom],
   );
 
   const emitClick = useEmit<MapClickEvent>(MapEvents.click);
@@ -398,7 +403,49 @@ export function BaseMap({
         },
       } as ViewStateChangeParameters);
     }
+    if (enableRbz && mapRef.current) {
+      const map = mapRef.current.getMap();
+      console.log('Initializing RbzHandler with map instance:', map);
+      rbzRef.current = new RbzHandler(map);
+      console.log(
+        'Adding RbzHandler as custom control to MapLibre map',
+        rbzRef.current,
+      );
+      map.handlers._add('customRbz', rbzRef.current);
+    }
   });
+
+  useEffect(() => {
+    function handleKeyDown(event: KeyboardEvent): void {
+      if (event.key === 'Shift') {
+        rbzRef.current?.enable();
+        console.log(
+          'Shift key down - enabling rubber band zoom',
+          rbzRef.current?.isEnabled(),
+          rbzRef.current?.isActive(),
+        );
+        mapRef.current?.getMap().dragPan.disable();
+      }
+    }
+
+    function handleKeyUp(event: KeyboardEvent): void {
+      if (event.key === 'Shift') {
+        console.log(
+          'Shift key up - disabling rubber band zoom',
+          rbzRef.current,
+        );
+        rbzRef.current?.disable();
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('keyup', handleKeyUp);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('keyup', handleKeyUp);
+    };
+  }, []);
 
   return (
     <div id={container} className={className}>

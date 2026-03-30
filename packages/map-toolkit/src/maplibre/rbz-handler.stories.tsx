@@ -10,13 +10,29 @@
  * governing permissions and limitations under the License.
  */
 
-export { DEFAULT_VIEW_STATE } from '../shared/constants';
-export { useMapLibre } from './hooks/use-maplibre';
-export {
-  DEFAULT_RBZ_STYLE,
-  type RbzBuffer,
-  RbzHandler,
-  type RbzOptions,
-  type RbzOrigin,
-  type RbzStyleOptions,
-} from './rbz-handler';
+import { uuid } from '@accelint/core';
+import { BaseMap as BaseMapComponent } from '../deckgl/base-map';
+import type { Meta, StoryObj } from '@storybook/react-vite';
+
+const meta: Meta<typeof BaseMapComponent> = {
+  title: 'DeckGL/Rubber Band Zoom',
+  component: BaseMapComponent,
+};
+
+export default meta;
+type Story = StoryObj<typeof BaseMapComponent>;
+
+// Stable id for Storybook story
+const RBZ_HANDLER_STORY_ID = uuid();
+
+export const BasicUsage: Story = {
+  render: () => {
+    return (
+      <BaseMapComponent
+        className='h-dvh w-dvw'
+        id={RBZ_HANDLER_STORY_ID}
+        enableRbz
+      />
+    );
+  },
+};
