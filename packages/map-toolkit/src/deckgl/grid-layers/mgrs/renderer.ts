@@ -81,7 +81,7 @@ export function createMGRSRenderer(): GridRenderer {
       // Map our grid type to library grid type
       const mgrsGridType = mapToLibraryGridType(gridType);
 
-      if (!mgrsGridType) {
+      if (mgrsGridType === undefined) {
         return { lines: lineData, labels: labelData, polygons: polygonData };
       }
 
