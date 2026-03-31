@@ -1,6 +1,6 @@
 # @accelint/design-toolkit
 
-## 10.0.0
+## 9.9.2
 ### Patch Changes
 
 - 8070d19: Add new icons: Stop, JumpToStart, JumpToEnd, MercatorProjection, Wheel, EllipseTool. Rename TrackHistory > AirTrackHistory and add new TrackHistory icon to match CORE design system Figma.
