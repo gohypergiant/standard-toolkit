@@ -26,6 +26,10 @@ const config: StorybookConfig = {
     ${head}
     <link rel="stylesheet" href="./manager.css" />
   `,
+  previewHead: (head) => `
+    ${head}
+    <script src="./js_cols.min.js"></script>
+  `,
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
   addons: [
     getAbsolutePath('@storybook/addon-themes'),

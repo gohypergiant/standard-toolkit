@@ -10,7 +10,7 @@ A read-only deck.gl composite layer for displaying geographic shapes with intera
 
 ## Features
 
-- **Multiple geometry types**: Point, LineString, Polygon, and Circle
+- **Multiple geometry types**: Point, LineString, Polygon, Circle, and WagonWheel (MultiPolygon)
 - **Icon support**: Custom icons for Point geometries via icon atlases
 - **Interactive selection**: Click handling with visual brightness feedback; Points show coffin corners
 - **Hover effects**: Border/outline width increases on hover; fills and curtains brighten via material lighting; Points show coffin corners
@@ -171,7 +171,7 @@ new Deck({
 
 ## Shape Data Structure
 
-`Shape` is a discriminated union of specific shape types (`CircleShape`, `EllipseShape`, `PolygonShape`, `RectangleShape`, `LineStringShape`, `PointShape`). Each shape includes:
+`Shape` is a discriminated union of specific shape types (`CircleShape`, `EllipseShape`, `PolygonShape`, `RectangleShape`, `LineStringShape`, `PointShape`, `WagonWheelShape`). Each shape includes:
 
 ```typescript
 interface BaseShape {
@@ -182,7 +182,7 @@ interface BaseShape {
   /** Optional short display label shown on the map */
   label?: string;
   /** Shape type discriminator */
-  shape: 'Point' | 'LineString' | 'Polygon' | 'Rectangle' | 'Circle' | 'Ellipse';
+  shape: 'Point' | 'LineString' | 'Polygon' | 'Rectangle' | 'Circle' | 'Ellipse' | 'WagonWheel';
   /** GeoJSON feature with geometry and style properties */
   feature: StyledFeature;
   /** Whether shape is locked from editing */
@@ -204,6 +204,7 @@ import {
   isRectangleShape,
   isLineStringShape,
   isPointShape,
+  isWagonWheelShape,
 } from '@accelint/map-toolkit/deckgl/shapes';
 
 function handleShape(shape: Shape) {
