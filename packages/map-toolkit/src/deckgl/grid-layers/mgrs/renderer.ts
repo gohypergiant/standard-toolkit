@@ -227,7 +227,7 @@ export function createMGRSRenderer(): GridRenderer {
           lines: lineData,
           labels: labelData,
           polygons: polygonData,
-        } as RenderResult;
+        };
       } catch (error) {
         logger.warn(
           `Failed to render grid type ${gridType}: ${
