@@ -1,5 +1,30 @@
 # @accelint/map-toolkit
 
+## 3.1.0
+
+### Minor Changes
+
+- 455d760: Add WagonWheel shape type with MultiPolygon geometry support
+  - New `WagonWheel` shape type with center, radius, spokes, orientation, and range rings
+  - New `locked-bounding-transform` edit mode for uniform scaling (maintains circular aspect ratio)
+  - Circle property recomputation during drag for Circle and WagonWheel shapes
+  - Rotation angle tracking on feature properties during rotate drag
+  - MultiPolygon label positioning for wagon wheel shapes
+  - Distance unit support for circle radius computation during drawing
+  - Shape duplication support for WagonWheel (center offset, property preservation)
+
+- bf43090: Add MGRS and GARS coordinate grid layers for deck.gl maps.
+  - Renders military grid reference system (MGRS) global area reference system (GARS)
+  - Configurable precision levels, dynamic zoom-based visibility
+  - Cell labels, and event bus integration for hover/click interactions
+
+- 023e204: Add `minElevation` support for 3D shapes. Polygon-type shapes render as floating slabs between `minElevation` and `maxElevation`. LineString curtains and Point indicator lines drop to `minElevation` instead of ground level.
+- f44059b: Added `HtmlOverlayWidget` for rendering projected React elements as HTML overlays on DeckGL maps.
+  - `HtmlOverlayWidget` — a DeckGL widget that projects React children onto the map viewport using geographic coordinates, with configurable overflow margin, z-index, and support for custom overlay rendering via `onCreateOverlay`/`onRenderOverlay` callbacks.
+  - `HtmlOverlayItem` — a positioning component that uses CSS `transform: translate()` for smooth, jitter-free overlay placement during zoom.
+  - `useHtmlOverlay` — a React hook that manages widget lifecycle and renders overlay content through a React portal, keeping React's reconciliation in control of the overlay DOM.
+  - Pass `widgets` prop through `BaseMap` to DeckGL.
+
 ## 3.0.0
 
 ### Major Changes
