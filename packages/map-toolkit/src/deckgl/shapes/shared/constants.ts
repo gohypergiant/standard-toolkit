@@ -343,4 +343,5 @@ export const COMPLETION_EDIT_TYPES = new Set([
   'scaled',
   'rotated',
   'translated',
+  'resized',
 ]);

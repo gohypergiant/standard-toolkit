@@ -10,14 +10,19 @@
  * governing permissions and limitations under the License.
  */
 
-import { useOn } from '@accelint/bus/react';
-import { uuid } from '@accelint/core';
+import { useEmit, useOn } from '@accelint/bus/react';
+import { type UniqueId, uuid } from '@accelint/core';
 import { Button } from '@accelint/design-toolkit';
+import { OptionsItem } from '@accelint/design-toolkit/components/options/item';
+import { SelectField } from '@accelint/design-toolkit/components/select-field';
 import { useState } from 'react';
+import { CameraEventTypes } from '@/camera/events';
+import { useMapCamera } from '@/camera/store';
 import { useMapCursor } from '@/map-cursor';
 import { BaseMap } from '../../base-map/index';
 import { mockShapes } from '../__fixtures__/mock-shapes';
 import { mockShapesWithIcons } from '../__fixtures__/mock-shapes-with-icons';
+import type { CameraSetViewEvent, ViewType } from '@/camera/types';
 import '../display-shape-layer/fiber';
 import { useSelectShape } from '../display-shape-layer/use-select-shape';
 import { DrawShapeLayer } from '../draw-shape-layer/index';
@@ -38,6 +43,25 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+function ViewSelector({ mapId }: { mapId: UniqueId }) {
+  const setView = useEmit<CameraSetViewEvent>(CameraEventTypes.setView);
+  const { cameraState } = useMapCamera(mapId);
+
+  return (
+    <SelectField
+      label='View'
+      value={cameraState.view}
+      onChange={(value) => {
+        setView({ id: mapId, view: value as ViewType });
+      }}
+    >
+      <OptionsItem id='2D'>2D</OptionsItem>
+      <OptionsItem id='2.5D'>2.5D</OptionsItem>
+      <OptionsItem id='3D'>3D</OptionsItem>
+    </SelectField>
+  );
+}
 
 // Use fixture shapes with unique IDs for each story render
 function createSampleShapes(): Shape[] {
@@ -235,6 +259,8 @@ export const BasicEditing: Story = {
               )}
             </div>
           </div>
+
+          <ViewSelector mapId={EDIT_MAP_ID} />
 
           {/* Instructions */}
           <div className='rounded-lg bg-surface-contrast-subtle p-s'>

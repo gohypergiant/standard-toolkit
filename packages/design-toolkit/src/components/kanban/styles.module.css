@@ -38,6 +38,11 @@
 
     @variant current {
       @apply bg-accent-primary-bold outline-accent-primary-pressed;
+
+      & .cardTitle,
+      & .cardBody {
+        @apply fg-a11y-on-accent;
+      }
     }
 
     @variant dragging {
