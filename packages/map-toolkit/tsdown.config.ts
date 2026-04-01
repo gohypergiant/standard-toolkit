@@ -58,6 +58,8 @@ export default defineConfig({
     'mjolnir.js',
     'react',
     'react-dom',
+    // NOTE: subpath imports are treated uniquely in tsdown so they must be explicitly included
+    'react-dom/client',
     'react-map-gl',
     // NOTE: subpath imports are treated uniquely in tsdown so they must be explicitly included
     'react-map-gl/maplibre',
