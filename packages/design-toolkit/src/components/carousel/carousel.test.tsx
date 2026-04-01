@@ -15,7 +15,7 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
 import { Carousel } from '.';
-import { CAROUSEL_ITEMS, MIXED_CAROUSEL_ITEMS } from './__fixtures__';
+import { CAROUSEL_ITEMS } from './__fixtures__';
 import type { CarouselData } from './types';
 import { CarouselGallery } from './gallery';
 import { CarouselNext, CarouselPrevious } from './navigation';
