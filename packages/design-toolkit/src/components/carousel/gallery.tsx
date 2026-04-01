@@ -13,7 +13,13 @@
 'use client';
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { useContext, useLayoutEffect, useRef, useState } from 'react';
+import {
+  useCallback,
+  useContext,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import { Button } from '../button';
 import { CarouselContext } from './context';
 import styles from './style.module.css';
@@ -52,6 +58,13 @@ export function CarouselGallery({ classNames, ...rest }: CarouselGalleryProps) {
 
   const selectedItem = items[currentPosition];
 
+  const handleItemClick = useCallback(
+    (index: number) => {
+      setCurrentPosition(index);
+    },
+    [setCurrentPosition],
+  );
+
   useLayoutEffect(() => {
     if (!containerRef.current) {
       return;
@@ -87,7 +100,7 @@ export function CarouselGallery({ classNames, ...rest }: CarouselGalleryProps) {
             }}
             isSelected={isSelected}
             className={styles['thumbnail-gallery-item']}
-            onClick={() => setCurrentPosition(index)}
+            onClick={() => handleItemClick(index)}
             key={`thumbnail-${item.id}`}
             size='small'
             color='accent'

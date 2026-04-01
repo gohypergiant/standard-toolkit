@@ -20,11 +20,6 @@ import styles from './style.module.css';
 import type { Key } from 'react-aria-components';
 import type { CarouselSelectProps } from './types';
 
-const selectClassNames = {
-  field: styles['select-field'],
-  trigger: styles['select-trigger'],
-};
-
 /**
  * Renders a dropdown select for navigating the carousel by item title.
  *
