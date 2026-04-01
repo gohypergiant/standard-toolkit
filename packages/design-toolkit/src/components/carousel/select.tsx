@@ -18,6 +18,7 @@ import { SelectField } from '../select-field';
 import { CarouselContext } from './context';
 import type { Key } from 'react-aria-components';
 import type { CarouselSelectProps } from './types';
+import styles from './style.module.css';
 
 /**
  * Renders a dropdown select for navigating the carousel by item title.
@@ -53,7 +54,7 @@ export function CarouselSelect({ classNames, ...rest }: CarouselSelectProps) {
       value={items[currentPosition]?.title}
       placeholder={items[currentPosition]?.title}
       onChange={onChange}
-      classNames={classNames?.select}
+      classNames={{ field: styles['gallery-select'], ...classNames?.select }}
       {...rest}
     >
       {items.map((item) => (

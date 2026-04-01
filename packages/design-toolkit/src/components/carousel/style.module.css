@@ -16,19 +16,24 @@
   .carousel {
     @apply gap-s flex flex-col;
   }
+
   .viewer {
     @apply p-s flex w-full items-center justify-center;
   }
 
-  .viewer > img {
-    @apply w-full;
+  .viewer-item {
+    @apply flex aspect-3/2 h-320 w-full justify-center object-contain;
+
+    &:where([data-media='audio']) {
+      @apply items-center;
+    }
   }
 
   .controls {
     @apply gap-s flex w-full flex-row items-center;
   }
 
-  .thumbnail-gallery-container {
+  .gallery-container {
     @apply gap-x-s flex w-full flex-row overflow-x-hidden py-1;
   }
 
@@ -38,8 +43,8 @@
 }
 
 @layer components.l2 {
-  .thumbnail-gallery-item {
-    @apply flex-shrink-0 bg-transparent p-0 transition-all duration-200 ease-in-out;
+  .gallery-item {
+    @apply aspect-3/2 bg-transparent p-0 transition-all duration-200 ease-in-out;
     height: 32px;
 
     @variant selected {
@@ -47,19 +52,11 @@
     }
   }
 
-  .thumbnail-gallery-item img {
-    @apply h-full w-full object-cover;
-  }
-
   .navigation {
     @apply min-w-[28px];
   }
 
-  .select-field {
-    @apply grow;
-  }
-
-  .select-trigger {
+  .gallery-select {
     @apply w-full;
   }
 }

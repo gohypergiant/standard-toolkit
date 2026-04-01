@@ -83,10 +83,7 @@ export function CarouselGallery({ classNames, ...rest }: CarouselGalleryProps) {
 
   return (
     <div
-      className={clsx(
-        styles['thumbnail-gallery-container'],
-        classNames?.container,
-      )}
+      className={clsx(styles['gallery-container'], classNames?.container)}
       ref={containerRef}
       {...rest}
     >
@@ -98,7 +95,7 @@ export function CarouselGallery({ classNames, ...rest }: CarouselGalleryProps) {
               translate: `${galleryXOffset}px`,
             }}
             isSelected={isSelected}
-            className={styles['thumbnail-gallery-item']}
+            className={styles['gallery-item']}
             onClick={() => handleItemClick(index)}
             key={`thumbnail-${item.id}`}
             size='small'

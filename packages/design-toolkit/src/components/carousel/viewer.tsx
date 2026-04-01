@@ -59,28 +59,21 @@ export function CarouselViewer({
           />
         );
       case 'audio':
-        return (
-          <Audio
-            src={currentItem.dataUrl}
-            title={currentItem.title}
-            classNames={{ container: classNames?.media }}
-          />
-        );
+        return <Audio src={currentItem.dataUrl} title={currentItem.title} />;
       case 'image':
       default:
-        return (
-          <img
-            src={currentItem.dataUrl}
-            alt={currentItem.title}
-            className={classNames?.media}
-          />
-        );
+        return <img src={currentItem.dataUrl} alt={currentItem.title} />;
     }
   };
 
   return (
     <div className={clsx(styles.viewer, classNames?.container)} {...rest}>
-      {renderMedia()}
+      <div
+        className={clsx(classNames?.media, styles['viewer-item'])}
+        data-media={currentItem?.dataType}
+      >
+        {renderMedia()}
+      </div>
       {children}
     </div>
   );
