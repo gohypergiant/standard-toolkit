@@ -14,7 +14,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { Carousel } from '.';
-import { CAROUSEL_ITEMS } from './__fixtures__';
+import { CAROUSEL_ITEMS, MIXED_CAROUSEL_ITEMS } from './__fixtures__';
 import { CarouselGallery } from './gallery';
 import { CarouselNext, CarouselPrevious } from './navigation';
 import { CarouselPosition } from './position';
@@ -106,5 +106,105 @@ describe('Carousel', () => {
     expect(
       screen.getByText(`2 / ${CAROUSEL_ITEMS.length}`),
     ).toBeInTheDocument();
+  });
+
+  it('should render video element when dataType is video', () => {
+    const videoItem = MIXED_CAROUSEL_ITEMS.find(
+      (item) => item.dataType === 'video',
+    );
+    if (!videoItem) throw new Error('No video item in MIXED_CAROUSEL_ITEMS');
+
+    const videoIndex = MIXED_CAROUSEL_ITEMS.indexOf(videoItem);
+    render(
+      <Carousel
+        items={MIXED_CAROUSEL_ITEMS}
+        currentPosition={videoIndex}
+        setCurrentPosition={vi.fn<(index: number) => void>()}
+      >
+        <CarouselViewer />
+      </Carousel>,
+    );
+
+    const videoElement = screen.getByTestId('video-element');
+    expect(videoElement).toBeInTheDocument();
+    const sourceElement = videoElement.querySelector('source');
+    expect(sourceElement).toHaveAttribute('src', videoItem.dataUrl);
+  });
+
+  it('should render audio element when dataType is audio', () => {
+    const audioItem = MIXED_CAROUSEL_ITEMS.find(
+      (item) => item.dataType === 'audio',
+    );
+    if (!audioItem) throw new Error('No audio item in MIXED_CAROUSEL_ITEMS');
+
+    const audioIndex = MIXED_CAROUSEL_ITEMS.indexOf(audioItem);
+    render(
+      <Carousel
+        items={MIXED_CAROUSEL_ITEMS}
+        currentPosition={audioIndex}
+        setCurrentPosition={vi.fn<(index: number) => void>()}
+      >
+        <CarouselViewer />
+      </Carousel>,
+    );
+
+    const audioElement = screen.getByTestId('audio-element');
+    expect(audioElement).toBeInTheDocument();
+    const sourceElement = audioElement.querySelector('source');
+    expect(sourceElement).toHaveAttribute('src', audioItem.dataUrl);
+  });
+
+  it('should render mixed media types correctly', () => {
+    const { rerender } = render(
+      <Carousel
+        items={MIXED_CAROUSEL_ITEMS}
+        currentPosition={0}
+        setCurrentPosition={vi.fn<(index: number) => void>()}
+      >
+        <CarouselViewer />
+      </Carousel>,
+    );
+
+    // Verify first item (image)
+    const imageItem = MIXED_CAROUSEL_ITEMS[0];
+    if (imageItem?.dataType === 'image') {
+      const imageElement = screen.getByRole('img');
+      expect(imageElement).toBeInTheDocument();
+      expect(imageElement).toHaveAttribute('src', imageItem.dataUrl);
+    }
+
+    // Find video index and test
+    const videoIndex = MIXED_CAROUSEL_ITEMS.findIndex(
+      (item) => item.dataType === 'video',
+    );
+    if (videoIndex !== -1) {
+      rerender(
+        <Carousel
+          items={MIXED_CAROUSEL_ITEMS}
+          currentPosition={videoIndex}
+          setCurrentPosition={vi.fn<(index: number) => void>()}
+        >
+          <CarouselViewer />
+        </Carousel>,
+      );
+      expect(screen.getByTestId('video-element')).toBeInTheDocument();
+    }
+
+    // Find audio index and test
+    const audioIndex = MIXED_CAROUSEL_ITEMS.findIndex(
+      (item) => item.dataType === 'audio',
+    );
+    if (audioIndex !== -1) {
+      rerender(
+        <Carousel
+          items={MIXED_CAROUSEL_ITEMS}
+          currentPosition={audioIndex}
+          setCurrentPosition={vi.fn<(index: number) => void>()}
+        >
+          <CarouselViewer />
+        </Carousel>,
+      );
+      expect(screen.getByTestId('audio-element')).toBeInTheDocument();
+    }
   });
 });

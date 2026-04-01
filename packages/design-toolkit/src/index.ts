@@ -74,10 +74,8 @@ export {
 export { CarouselPosition } from './components/carousel/position';
 export { CarouselSelect } from './components/carousel/select';
 export type {
-  CarouselControlProps,
   CarouselData,
   CarouselGalleryProps,
-  CarouselNavigationProps,
   CarouselProps,
   CarouselSelectProps,
   CarouselViewerProps,

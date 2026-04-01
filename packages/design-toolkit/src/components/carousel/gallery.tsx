@@ -18,6 +18,7 @@ import { Button } from '../button';
 import { CarouselContext } from './context';
 import styles from './style.module.css';
 import type { CarouselGalleryProps } from './types';
+import { ToggleButton } from '../button/toggle';
 
 /**
  * Number of visible thumbnail items to keep before the selected item
@@ -49,6 +50,8 @@ export function CarouselGallery({ classNames, ...rest }: CarouselGalleryProps) {
   const [galleryXOffset, setGalleryXOffset] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
 
+  const selectedItem = items[currentPosition];
+
   useEffect(() => {
     if (!containerRef.current) {
       return;
@@ -75,23 +78,25 @@ export function CarouselGallery({ classNames, ...rest }: CarouselGalleryProps) {
       ref={containerRef}
       {...rest}
     >
-      {items.map((item, index) => (
-        <Button
-          style={{
-            translate: `${galleryXOffset}px`,
-          }}
-          className={clsx(
-            styles['thumbnail-gallery-item'],
-            currentPosition === index && styles.selected,
-          )}
-          onClick={() => setCurrentPosition(index)}
-          key={`thumbnail-${item.uuid}`}
-          size='small'
-          data-id={`thumbnail-id-${item.uuid}`}
-        >
-          <img src={item.thumbnailUrl} alt={item.title} />
-        </Button>
-      ))}
+      {items.map((item, index) => {
+        const isSelected = selectedItem && item.id === selectedItem.id;
+        return (
+          <ToggleButton
+            style={{
+              translate: `${galleryXOffset}px`,
+            }}
+            isSelected={isSelected}
+            className={styles['thumbnail-gallery-item']}
+            onClick={() => setCurrentPosition(index)}
+            key={`thumbnail-${item.id}`}
+            size='small'
+            color='accent'
+            data-id={`thumbnail-id-${item.id}`}
+          >
+            <img src={item.thumbnailUrl} alt={item.title} />
+          </ToggleButton>
+        );
+      })}
     </div>
   );
 }

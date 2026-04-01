@@ -14,6 +14,8 @@
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useContext } from 'react';
+import { Audio } from '../audio';
+import { Video } from '../video';
 import { CarouselContext } from './context';
 import styles from './style.module.css';
 import type { CarouselViewerProps } from './types';
@@ -21,14 +23,14 @@ import type { CarouselViewerProps } from './types';
 /**
  * Displays the full-size media for the currently active carousel item.
  *
- * Reads the active item from CarouselContext and renders it as an image.
- * Supports additional children for overlay content.
+ * Reads the active item from CarouselContext and renders it as an image, video, or audio
+ * element based on the item's dataType. Supports additional children for overlay content.
  *
  * @param props - The viewer props.
  * @param props.children - Optional overlay content rendered inside the viewer.
  * @param props.classNames - Custom class names for viewer elements.
  * @param props.classNames.container - Class name for the viewer container.
- * @param props.classNames.image - Class name for the displayed image.
+ * @param props.classNames.media - Class name for the displayed media element (img, video, or audio).
  * @returns The carousel viewer component.
  *
  * @example
@@ -44,13 +46,41 @@ export function CarouselViewer({
   const { items, currentPosition } = useContext(CarouselContext);
   const currentItem = items[currentPosition];
 
+  const renderMedia = () => {
+    if (!currentItem) return null;
+
+    switch (currentItem.dataType) {
+      case 'video':
+        return (
+          <Video
+            src={currentItem.dataUrl}
+            poster={currentItem.thumbnailUrl}
+            classNames={{ container: classNames?.media }}
+          />
+        );
+      case 'audio':
+        return (
+          <Audio
+            src={currentItem.dataUrl}
+            title={currentItem.title}
+            classNames={{ container: classNames?.media }}
+          />
+        );
+      case 'image':
+      default:
+        return (
+          <img
+            src={currentItem.dataUrl}
+            alt={currentItem.title}
+            className={classNames?.media}
+          />
+        );
+    }
+  };
+
   return (
     <div className={clsx(styles.viewer, classNames?.container)} {...rest}>
-      <img
-        src={currentItem?.dataUrl}
-        alt={currentItem?.title}
-        className={classNames?.image}
-      />
+      {renderMedia()}
       {children}
     </div>
   );

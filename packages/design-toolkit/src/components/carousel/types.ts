@@ -14,6 +14,7 @@ import type { UniqueId } from '@accelint/core';
 import type { HTMLAttributes, PropsWithChildren } from 'react';
 import type { OptionsDataItem, OptionsItemProps } from '../options/types';
 import type { SelectFieldProps } from '../select-field/types';
+import type { ButtonProps } from '../button/types';
 
 /**
  * Props for the root Carousel component.
@@ -51,7 +52,7 @@ export type CarouselData = {
   /** URL for the thumbnail image shown in the gallery. */
   thumbnailUrl: string;
   /** Unique identifier for the item. */
-  uuid: UniqueId;
+  id: UniqueId;
 };
 
 /**
@@ -62,37 +63,19 @@ export type CarouselViewerProps = PropsWithChildren & {
   classNames?: {
     /** Class name for the viewer container. */
     container?: string;
-    /** Class name for the displayed image. */
-    image?: string;
+    /** Class name for the displayed media element (img, video, or audio). */
+    media?: string;
   };
-};
-
-/**
- * Props for the internal CarouselNavigation button component.
- */
-export type CarouselNavigationProps = HTMLAttributes<HTMLButtonElement> & {
-  /** Direction the button navigates. */
-  direction: 'left' | 'right';
-  /** Whether the navigation button is disabled. */
-  isDisabled?: boolean;
-};
-
-/**
- * Shared props for carousel control sub-components (Previous, Next, Position).
- */
-export type CarouselControlProps = {
-  /** Additional CSS class name. */
-  className?: string;
 };
 
 /**
  * Props for the CarouselSelect dropdown component.
  */
-export type CarouselSelectProps = CarouselControlProps & {
+export type CarouselSelectProps = Omit<SelectFieldProps, 'classNames'> & {
   /** Custom class names for select elements. */
   classNames?: {
     /** Class names passed to the SelectField. */
-    field?: SelectFieldProps['classNames'];
+    select?: SelectFieldProps['classNames'];
     /** Class names passed to each OptionsItem. */
     optionItem: OptionsItemProps<OptionsDataItem>['classNames'];
   };

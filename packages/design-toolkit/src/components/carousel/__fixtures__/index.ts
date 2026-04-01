@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { uuid } from '@accelint/core';
 import type { CarouselData } from '../types';
 
 export const CAROUSEL_ITEMS: CarouselData[] = [
@@ -19,7 +20,7 @@ export const CAROUSEL_ITEMS: CarouselData[] = [
     fileName: 'image-1',
     title: 'Image 1',
     thumbnailUrl: 'https://picsum.photos/seed/1/57/32',
-    uuid: '00000000-0000-0000-0000-000000000001',
+    id: uuid(),
   },
   {
     dataType: 'image',
@@ -27,7 +28,7 @@ export const CAROUSEL_ITEMS: CarouselData[] = [
     fileName: 'image-2',
     title: 'Image 2',
     thumbnailUrl: 'https://picsum.photos/seed/2/57/33',
-    uuid: '00000000-0000-0000-0000-000000000002',
+    id: uuid(),
   },
   {
     dataType: 'image',
@@ -35,7 +36,7 @@ export const CAROUSEL_ITEMS: CarouselData[] = [
     fileName: 'image-3',
     title: 'Image 3',
     thumbnailUrl: 'https://picsum.photos/seed/3/57/34',
-    uuid: '00000000-0000-0000-0000-000000000003',
+    id: uuid(),
   },
   {
     dataType: 'image',
@@ -43,7 +44,7 @@ export const CAROUSEL_ITEMS: CarouselData[] = [
     fileName: 'image-4',
     title: 'Image 4',
     thumbnailUrl: 'https://picsum.photos/seed/4/57/32',
-    uuid: '00000000-0000-0000-0000-000000000004',
+    id: uuid(),
   },
   {
     dataType: 'image',
@@ -51,7 +52,7 @@ export const CAROUSEL_ITEMS: CarouselData[] = [
     fileName: 'image-5',
     title: 'Image 5',
     thumbnailUrl: 'https://picsum.photos/seed/5/57/33',
-    uuid: '00000000-0000-0000-0000-000000000005',
+    id: uuid(),
   },
   {
     dataType: 'image',
@@ -59,7 +60,7 @@ export const CAROUSEL_ITEMS: CarouselData[] = [
     fileName: 'image-6',
     title: 'Image 6',
     thumbnailUrl: 'https://picsum.photos/seed/6/57/34',
-    uuid: '00000000-0000-0000-0000-000000000006',
+    id: uuid(),
   },
   {
     dataType: 'image',
@@ -67,7 +68,7 @@ export const CAROUSEL_ITEMS: CarouselData[] = [
     fileName: 'image-7',
     title: 'Image 7',
     thumbnailUrl: 'https://picsum.photos/seed/7/57/32',
-    uuid: '00000000-0000-0000-0000-000000000007',
+    id: uuid(),
   },
   {
     dataType: 'image',
@@ -75,7 +76,7 @@ export const CAROUSEL_ITEMS: CarouselData[] = [
     fileName: 'image-8',
     title: 'Image 8',
     thumbnailUrl: 'https://picsum.photos/seed/8/57/33',
-    uuid: '00000000-0000-0000-0000-000000000008',
+    id: uuid(),
   },
   {
     dataType: 'image',
@@ -83,6 +84,57 @@ export const CAROUSEL_ITEMS: CarouselData[] = [
     fileName: 'image-9',
     title: 'Image 9',
     thumbnailUrl: 'https://picsum.photos/seed/9/57/34',
-    uuid: '00000000-0000-0000-0000-000000000009',
+    id: uuid(),
+  },
+];
+
+export const MIXED_CAROUSEL_ITEMS: CarouselData[] = [
+  {
+    dataType: 'image',
+    dataUrl: 'https://picsum.photos/seed/1/434/244',
+    fileName: 'image-1',
+    title: 'Landscape Image',
+    thumbnailUrl: 'https://picsum.photos/seed/1/57/32',
+    id: uuid(),
+  },
+  {
+    dataType: 'video',
+    dataUrl: '/demo.mov',
+    fileName: 'demo.mov',
+    title: 'Beach Drone',
+    thumbnailUrl: '/demo_thumbnail.png',
+    id: uuid(),
+  },
+  {
+    dataType: 'audio',
+    dataUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+    fileName: 'soundhelix-song-1.mp3',
+    title: 'SoundHelix Song 1',
+    thumbnailUrl: 'https://picsum.photos/seed/audio1/57/32',
+    id: uuid(),
+  },
+  {
+    dataType: 'image',
+    dataUrl: 'https://picsum.photos/seed/2/434/240',
+    fileName: 'image-2',
+    title: 'Nature Photo',
+    thumbnailUrl: 'https://picsum.photos/seed/2/57/33',
+    id: uuid(),
+  },
+  {
+    dataType: 'audio',
+    dataUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
+    fileName: 'soundhelix-song-2.mp3',
+    title: 'SoundHelix Song 2',
+    thumbnailUrl: 'https://picsum.photos/seed/audio2/57/33',
+    id: uuid(),
+  },
+  {
+    dataType: 'image',
+    dataUrl: 'https://picsum.photos/seed/3/434/248',
+    fileName: 'image-3',
+    title: 'Architecture',
+    thumbnailUrl: 'https://picsum.photos/seed/3/57/34',
+    id: uuid(),
   },
 ];

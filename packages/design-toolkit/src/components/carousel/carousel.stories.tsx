@@ -12,7 +12,7 @@
 
 import { useState } from 'react';
 import { Carousel } from './';
-import { CAROUSEL_ITEMS } from './__fixtures__';
+import { CAROUSEL_ITEMS, MIXED_CAROUSEL_ITEMS } from './__fixtures__';
 import { CarouselGallery } from './gallery';
 import { CarouselNext, CarouselPrevious } from './navigation';
 import { CarouselPosition } from './position';
@@ -72,6 +72,31 @@ export const WithSelect: Story = {
             <CarouselNext />
           </div>
           <CarouselSelect />
+        </div>
+      </Carousel>
+    );
+  },
+};
+
+export const MixedMedia: Story = {
+  args: {
+    items: MIXED_CAROUSEL_ITEMS,
+  },
+  render: (args) => {
+    const [currentPosition, setCurrentPosition] = useState(0);
+
+    return (
+      <Carousel
+        items={args.items}
+        currentPosition={currentPosition}
+        setCurrentPosition={setCurrentPosition}
+        classNames={{ container: 'max-w-[600px]' }}
+      >
+        <CarouselViewer />
+        <div className='flex w-full flex-row justify-between gap-s'>
+          <CarouselPrevious />
+          <CarouselGallery />
+          <CarouselNext />
         </div>
       </Carousel>
     );

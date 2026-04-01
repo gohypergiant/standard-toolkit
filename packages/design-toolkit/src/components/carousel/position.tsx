@@ -13,10 +13,9 @@
 'use client';
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { useContext } from 'react';
+import { type HTMLAttributes, useContext } from 'react';
 import { CarouselContext } from './context';
 import styles from './style.module.css';
-import type { CarouselControlProps } from './types';
 
 /**
  * Displays the current position and total item count (e.g. "3 / 9").
@@ -30,7 +29,10 @@ import type { CarouselControlProps } from './types';
  * <CarouselPosition />
  * ```
  */
-export function CarouselPosition({ className, ...rest }: CarouselControlProps) {
+export function CarouselPosition({
+  className,
+  ...rest
+}: HTMLAttributes<HTMLDivElement>) {
   const context = useContext(CarouselContext);
   const { currentPosition, items } = context;
   return (

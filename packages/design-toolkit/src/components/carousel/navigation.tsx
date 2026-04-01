@@ -20,35 +20,7 @@ import { Button } from '../button';
 import { Icon } from '../icon';
 import { CarouselContext } from './context';
 import styles from './style.module.css';
-import type { CarouselControlProps, CarouselNavigationProps } from './types';
-
-/**
- * Internal navigation button shared by CarouselPrevious and CarouselNext.
- *
- * @param props - The navigation button props.
- * @param props.direction - Direction the button navigates ('left' or 'right').
- * @param props.isDisabled - Whether the button is disabled.
- * @returns The rendered navigation button.
- */
-function CarouselNavigation({
-  direction,
-  onClick,
-  isDisabled,
-  className,
-  ...rest
-}: CarouselNavigationProps) {
-  return (
-    <Button
-      onClick={onClick}
-      className={clsx(styles.navigation, className)}
-      variant='flat'
-      isDisabled={isDisabled}
-      {...rest}
-    >
-      <Icon>{direction === 'left' ? <ChevronLeft /> : <ChevronRight />}</Icon>
-    </Button>
-  );
-}
+import type { ButtonProps } from '../button/types';
 
 /**
  * Navigates the carousel to the previous item.
@@ -64,9 +36,15 @@ function CarouselNavigation({
  * <CarouselPrevious />
  * ```
  */
-export function CarouselPrevious({ className, ...rest }: CarouselControlProps) {
+export function CarouselPrevious({
+  className,
+  isDisabled,
+  ...rest
+}: ButtonProps) {
   const context = useContext(CarouselContext);
   const { currentPosition, setCurrentPosition } = context;
+
+  const shouldDisablePrevious = currentPosition === 0 || isDisabled;
 
   const onClick = () => {
     if (currentPosition - 1 >= 0) {
@@ -75,14 +53,18 @@ export function CarouselPrevious({ className, ...rest }: CarouselControlProps) {
   };
 
   return (
-    <CarouselNavigation
+    <Button
       aria-label='Previous'
-      direction='left'
       onClick={onClick}
-      isDisabled={currentPosition === 0}
-      className={className}
+      className={clsx(styles.navigation, className)}
+      variant='flat'
+      isDisabled={shouldDisablePrevious}
       {...rest}
-    />
+    >
+      <Icon>
+        <ChevronLeft />
+      </Icon>
+    </Button>
   );
 }
 
@@ -100,9 +82,11 @@ export function CarouselPrevious({ className, ...rest }: CarouselControlProps) {
  * <CarouselNext />
  * ```
  */
-export function CarouselNext({ className, ...rest }: CarouselControlProps) {
+export function CarouselNext({ className, isDisabled, ...rest }: ButtonProps) {
   const context = useContext(CarouselContext);
   const { currentPosition, setCurrentPosition, items } = context;
+
+  const shouldDisableNext = currentPosition === items.length - 1 || isDisabled;
 
   const onClick = () => {
     if (currentPosition + 1 < items.length) {
@@ -111,13 +95,17 @@ export function CarouselNext({ className, ...rest }: CarouselControlProps) {
   };
 
   return (
-    <CarouselNavigation
+    <Button
       aria-label='Next'
-      direction='right'
       onClick={onClick}
-      isDisabled={currentPosition === items.length - 1}
-      className={className}
+      className={clsx(styles.navigation, className)}
+      variant='flat'
+      isDisabled={shouldDisableNext}
       {...rest}
-    />
+    >
+      <Icon>
+        <ChevronRight />
+      </Icon>
+    </Button>
   );
 }

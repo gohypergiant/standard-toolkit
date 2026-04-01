@@ -46,8 +46,8 @@ export function CarouselSelect({ classNames, ...rest }: CarouselSelectProps) {
   const { items, currentPosition, setCurrentPosition } =
     useContext(CarouselContext);
 
-  const onChange = (value: Key | null) => {
-    const index = items.findIndex((i) => i.uuid === value);
+  const onChange = (key: Key | null) => {
+    const index = items.findIndex((i) => i.id === key);
     if (index >= 0) {
       setCurrentPosition(index);
     }
@@ -59,15 +59,15 @@ export function CarouselSelect({ classNames, ...rest }: CarouselSelectProps) {
       value={items[currentPosition]?.title}
       placeholder={items[currentPosition]?.title}
       onChange={onChange}
-      classNames={selectClassNames}
+      classNames={classNames?.select}
       {...rest}
     >
       {items.map((item) => (
         <OptionsItem
           textValue={item.title}
-          key={item.uuid}
+          key={item.id}
           aria-label={item.title}
-          id={item.uuid}
+          id={item.id}
           classNames={classNames?.optionItem}
         >
           {item.title}
