@@ -14,7 +14,6 @@ import type { UniqueId } from '@accelint/core';
 import type { HTMLAttributes, PropsWithChildren } from 'react';
 import type { OptionsDataItem, OptionsItemProps } from '../options/types';
 import type { SelectFieldProps } from '../select-field/types';
-import type { ButtonProps } from '../button/types';
 
 /**
  * Props for the root Carousel component.

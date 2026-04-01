@@ -16,7 +16,6 @@ import { useContext } from 'react';
 import { OptionsItem } from '../options/item';
 import { SelectField } from '../select-field';
 import { CarouselContext } from './context';
-import styles from './style.module.css';
 import type { Key } from 'react-aria-components';
 import type { CarouselSelectProps } from './types';
 

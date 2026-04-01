@@ -20,7 +20,6 @@ import {
   useRef,
   useState,
 } from 'react';
-import { Button } from '../button';
 import { CarouselContext } from './context';
 import styles from './style.module.css';
 import type { CarouselGalleryProps } from './types';
