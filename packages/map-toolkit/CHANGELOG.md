@@ -1,5 +1,11 @@
 # @accelint/map-toolkit
 
+## 3.1.1
+
+### Patch Changes
+
+- 5554161: fix tsdown config for build re: react-dom/client subpath
+
 ## 3.1.0
 
 ### Minor Changes
