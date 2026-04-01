@@ -13,7 +13,7 @@
 'use client';
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useLayoutEffect, useRef, useState } from 'react';
 import { Button } from '../button';
 import { CarouselContext } from './context';
 import styles from './style.module.css';
@@ -52,7 +52,7 @@ export function CarouselGallery({ classNames, ...rest }: CarouselGalleryProps) {
 
   const selectedItem = items[currentPosition];
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!containerRef.current) {
       return;
     }
