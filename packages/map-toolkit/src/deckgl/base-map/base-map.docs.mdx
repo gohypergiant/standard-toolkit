@@ -243,6 +243,22 @@ Callback function triggered when the map is clicked. Receives the full picking i
 
 Callback function triggered when hovering over the map. Receives the full picking info and pointer event.
 
+#### `defaultView?: '2D' | '2.5D' | '3D'`
+
+Initial camera view mode. Defaults to `'2D'`.
+
+#### `initialViewState?: { zoom?: number; latitude?: number; longitude?: number }`
+
+Initial map position. If not provided, falls back to the default view state from `@accelint/map-toolkit` constants.
+
+#### `onViewStateChange?: (params: ViewStateChangeParameters) => void`
+
+Callback fired when the map viewport changes (pan, zoom, rotate). Receives Deck.gl `ViewStateChangeParameters`.
+
+#### `pickingRadius?: number`
+
+Pixel radius for object picking. Creates a detection area around the pointer for pickable objects. Defaults to `PICKING_RADIUS` (5 pixels).
+
 #### `parameters?: Record<string, any>`
 
 WebGL parameters to customize rendering. These will be merged with the default parameters.
@@ -337,7 +353,7 @@ The BaseMap component comes with the following defaults:
 
 ```typescript
 type MapClickPayload = {
-  info: NonFuncPickingInfo; // Modified PickingInfo for serialization
+  info: SerializablePickingInfo; // Modified PickingInfo for serialization
   event: NonFuncMjolnirGestureEvent; // Event with functions omitted for serialization
   id: UniqueId; // The map instance ID
 };
@@ -347,13 +363,13 @@ type MapClickPayload = {
 
 ```typescript
 type MapHoverPayload = {
-  info: NonFuncPickingInfo; // Modified PickingInfo for serialization
+  info: SerializablePickingInfo; // Modified PickingInfo for serialization
   event: NonFuncMjolnirPointerEvent; // Event with functions omitted for serialization
   id: UniqueId; // The map instance ID
 };
 ```
 
-### `NonFuncPickingInfo`
+### `SerializablePickingInfo`
 
 The picking info is modified for serialization through the event bus:
 

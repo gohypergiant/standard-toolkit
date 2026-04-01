@@ -80,6 +80,7 @@
     "./deckgl/base-map/controls": "./dist/deckgl/base-map/controls.js",
     "./deckgl/base-map/events": "./dist/deckgl/base-map/events.js",
     "./deckgl/base-map/provider": "./dist/deckgl/base-map/provider.js",
+    "./deckgl/base-map/serialization": "./dist/deckgl/base-map/serialization.js",
     "./deckgl/base-map/types": "./dist/deckgl/base-map/types.js",
     "./deckgl/extensions": "./dist/deckgl/extensions/index.js",
     "./deckgl/extensions/coffin-corner": "./dist/deckgl/extensions/coffin-corner/index.js",

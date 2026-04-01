@@ -22,7 +22,7 @@ vi.mock('../../maplibre/hooks/use-maplibre', () => ({
 
 describe('BaseMap', () => {
   describe('Rendering', () => {
-    it('renders with className', () => {
+    it('should render with className', () => {
       const id = uuid();
       const { container } = render(
         <BaseMap className='custom-map-class' id={id} />,
@@ -34,12 +34,11 @@ describe('BaseMap', () => {
   });
 
   describe('Props', () => {
-    it('passes id to MapProvider correctly', () => {
+    it('should render without errors when given an id', () => {
       const specificId = uuid();
 
       const { container } = render(<BaseMap id={specificId} />);
 
-      // Verify component renders successfully with the provided id
       expect(container.firstChild).toBeInTheDocument();
     });
   });

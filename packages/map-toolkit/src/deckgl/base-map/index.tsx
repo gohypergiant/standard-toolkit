@@ -16,7 +16,7 @@ import { useEffectEvent, useEmit } from '@accelint/bus/react';
 import { Deckgl, useDeckgl } from '@deckgl-fiber-renderer/dom';
 import type { PickingInfo, ViewStateChangeParameters } from '@deck.gl/core';
 import 'client-only';
-import { useCallback, useId, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useId, useMemo, useRef } from 'react';
 import {
   Map as MapLibre,
   type MapRef,
@@ -31,16 +31,24 @@ import { DARK_BASE_MAP_STYLE, PARAMETERS, PICKING_RADIUS } from './constants';
 import { MapControls } from './controls';
 import { MapEvents } from './events';
 import { MapProvider } from './provider';
-import type { IControl, WebGLContextAttributesWithType } from 'maplibre-gl';
+import { serializeMjolnirEvent, serializePickingInfo } from './serialization';
+import type {
+  IControl,
+  Map as MaplibreMap,
+  WebGLContextAttributesWithType,
+} from 'maplibre-gl';
 import type { MjolnirGestureEvent, MjolnirPointerEvent } from 'mjolnir.js';
 import type {
   BaseMapProps,
   MapClickEvent,
   MapHoverEvent,
   MapViewportEvent,
-  SerializablePickingInfo,
 } from './types';
 
+/** Options object passed to `deck.needsRedraw()` to trigger a synchronous redraw. */
+const CLEAR_REDRAW_FLAGS = { clearRedrawFlags: true } as const;
+
+/** WebGL2 canvas context attributes optimized for map rendering performance. */
 const CANVAS_CONTEXT_ATTRIBUTES: WebGLContextAttributesWithType = {
   antialias: true,
   powerPreference: 'high-performance',
@@ -51,82 +59,6 @@ const CANVAS_CONTEXT_ATTRIBUTES: WebGLContextAttributesWithType = {
 } as const;
 
 /**
- * Serializes PickingInfo for event bus transmission.
- * Omits viewport, layer, and sourceLayer (contain functions) but preserves layer IDs.
- *
- * @param info - The PickingInfo object from Deck.gl
- * @returns Serializable picking info with layer IDs extracted
- */
-function serializePickingInfo(info: PickingInfo): SerializablePickingInfo {
-  const { viewport, layer, sourceLayer, ...infoRest } = info;
-  return {
-    layerId: layer?.id,
-    sourceLayerId: sourceLayer?.id,
-    ...infoRest,
-  };
-}
-
-/**
- * Strips non-serializable properties from MjolnirGestureEvent for event bus transmission.
- * Removes functions, DOM elements, and PointerEvent objects that cannot be cloned.
- *
- * @param event - The MjolnirGestureEvent from Deck.gl
- * @returns Serializable gesture event with non-cloneable properties removed
- */
-function serializeMjolnirEvent(
-  event: MjolnirGestureEvent,
-): Omit<
-  MjolnirGestureEvent,
-  | 'stopPropagation'
-  | 'preventDefault'
-  | 'stopImmediatePropagation'
-  | 'srcEvent'
-  | 'rootElement'
-  | 'target'
-  | 'changedPointers'
-  | 'pointers'
->;
-/**
- * Strips non-serializable properties from MjolnirPointerEvent for event bus transmission.
- * Removes functions and DOM elements that cannot be cloned.
- *
- * @param event - The MjolnirPointerEvent from Deck.gl
- * @returns Serializable pointer event with non-cloneable properties removed
- */
-function serializeMjolnirEvent(
-  event: MjolnirPointerEvent,
-): Omit<
-  MjolnirPointerEvent,
-  | 'stopPropagation'
-  | 'preventDefault'
-  | 'stopImmediatePropagation'
-  | 'srcEvent'
-  | 'rootElement'
-  | 'target'
->;
-function serializeMjolnirEvent(
-  event: MjolnirGestureEvent | MjolnirPointerEvent,
-) {
-  const {
-    stopImmediatePropagation,
-    stopPropagation,
-    preventDefault,
-    srcEvent,
-    rootElement,
-    target,
-    ...rest
-  } = event;
-
-  // Remove pointer arrays if present (only on MjolnirGestureEvent)
-  if ('changedPointers' in rest) {
-    const { changedPointers, pointers, ...gestureRest } = rest;
-    return gestureRest;
-  }
-
-  return rest;
-}
-
-/**
  * Internal component that registers the Deck.gl instance as a MapLibre control.
  * Enables the Deck.gl canvas to render within the MapLibre GL map container.
  *
@@ -135,6 +67,55 @@ function serializeMjolnirEvent(
 function AddDeckglControl() {
   const deckglInstance = useDeckgl();
   useControl(() => deckglInstance as IControl);
+
+  // In interleaved mode, getDeckInstance registers map.on('move', handler)
+  // to keep the deck viewport in sync with MapLibre. However, that handler
+  // self-deregisters if deck.isInitialized is false on the first move event.
+  // MapLibre can fire a 'move' during its own initialization before deck
+  // finishes initializing, permanently killing the viewport sync. This
+  // control re-registers the sync so picking coordinates stay accurate.
+  useControl(() => {
+    let onMapMove: (() => void) | undefined;
+    let mapInstance: MaplibreMap | undefined;
+
+    return {
+      onAdd(map: MaplibreMap) {
+        mapInstance = map;
+        onMapMove = () => {
+          // biome-ignore lint/suspicious/noExplicitAny: accessing private deck.gl property on MapLibre map instance
+          const deck = (map as any).__deck as
+            | {
+                isInitialized: boolean;
+                setProps: (p: Record<string, unknown>) => void;
+                needsRedraw: (o: Record<string, boolean>) => void;
+              }
+            | undefined;
+          if (deck?.isInitialized) {
+            const { lng, lat } = map.getCenter();
+            deck.setProps({
+              viewState: {
+                longitude: ((lng + 540) % 360) - 180,
+                latitude: lat,
+                zoom: map.getZoom(),
+                bearing: map.getBearing(),
+                pitch: map.getPitch(),
+                padding: map.getPadding(),
+                repeat: map.getRenderWorldCopies(),
+              },
+            });
+            deck.needsRedraw(CLEAR_REDRAW_FLAGS);
+          }
+        };
+        map.on('move', onMapMove);
+        return document.createElement('div');
+      },
+      onRemove() {
+        if (mapInstance && onMapMove) {
+          mapInstance.off('move', onMapMove);
+        }
+      },
+    };
+  });
 
   return null;
 }
@@ -156,8 +137,22 @@ function AddDeckglControl() {
  * **Event Bus**: Click and hover events are emitted through the event bus with the `id`
  * included in the payload, allowing multiple map instances to coexist without interference.
  *
- * @param props - Component props including id (required), className, onClick, onHover, and all Deck.gl props
- * @returns A map component with Deck.gl and MapLibre GL integration
+ * @param props - BaseMap component props.
+ * @param props.id - Unique identifier for this map instance, used in event bus payloads and mode management.
+ * @param props.className - CSS class applied to the root container div.
+ * @param props.children - Deck.gl layer components to render within the map.
+ * @param props.controller - Whether Deck.gl controller is enabled (default: true).
+ * @param props.enableControlEvents - Whether to attach keyboard/mouse control event listeners (default: true).
+ * @param props.interleaved - Whether to interleave Deck.gl layers with MapLibre layers (default: true).
+ * @param props.parameters - WebGL parameters merged with base defaults.
+ * @param props.styleUrl - MapLibre style URL (default: dark base map).
+ * @param props.defaultView - Initial camera view mode, '2D' or '3D' (default: '2D').
+ * @param props.initialViewState - Initial map position (zoom, latitude, longitude).
+ * @param props.onClick - Callback fired on map click with PickingInfo and MjolnirGestureEvent.
+ * @param props.onHover - Callback fired on map hover with PickingInfo and MjolnirPointerEvent.
+ * @param props.onViewStateChange - Callback fired when the map viewport changes.
+ * @param props.pickingRadius - Pixel radius for object picking (default: PICKING_RADIUS constant).
+ * @returns A map component with Deck.gl and MapLibre GL integration.
  *
  * @example
  * Basic usage with id (recommended: module-level constant):
@@ -309,9 +304,18 @@ export function BaseMap({
     [emitHover, id, onHover],
   );
 
+  const mergedParameters = useMemo(
+    () => ({ ...PARAMETERS, ...parameters }),
+    [parameters],
+  );
+
   const handleGetCursor = useCallback(() => {
     return getCursor(id);
   }, [id]);
+
+  const handleMapMove = useEffectEvent((evt: { viewState: ViewState }) => {
+    setCameraState(evt.viewState);
+  });
 
   const handleViewStateChange = useEffectEvent(
     (params: ViewStateChangeParameters) => {
@@ -337,24 +341,18 @@ export function BaseMap({
 
       emitViewport({
         id,
-        bounds: viewport?.getBounds(),
+        bounds: viewport.getBounds(),
         latitude,
         longitude,
         zoom,
-        width: viewport?.width ?? 0,
-        height: viewport?.height ?? 0,
+        width: viewport.width ?? 0,
+        height: viewport.height ?? 0,
       });
     },
   );
 
-  const handleResize = useEffectEvent((params) => {
-    // Clear existing timeout
-    if (resizeTimeoutRef.current) {
-      clearTimeout(resizeTimeoutRef.current);
-    }
-
-    // Debounce
-    resizeTimeoutRef.current = setTimeout(() => {
+  const emitAllViewports = useCallback(
+    (dimensionOverride?: { width: number; height: number }) => {
       // @ts-expect-error squirrelly deckglInstance typing
       const viewports = deckglInstance._deck?.getViewports();
       if (!viewports) {
@@ -369,35 +367,38 @@ export function BaseMap({
             zoom: vp.zoom,
             id: vp.id,
             bounds: vp.getBounds(),
-            width: params.width,
-            height: params.height,
+            width: dimensionOverride?.width ?? vp.width,
+            height: dimensionOverride?.height ?? vp.height,
           },
         } as ViewStateChangeParameters);
       }
-    }, 200);
-  });
+    },
+    [deckglInstance, handleViewStateChange],
+  );
+
+  const handleResize = useEffectEvent(
+    (params: { width: number; height: number }) => {
+      if (resizeTimeoutRef.current) {
+        clearTimeout(resizeTimeoutRef.current);
+      }
+
+      resizeTimeoutRef.current = setTimeout(() => {
+        emitAllViewports(params);
+      }, 200);
+    },
+  );
+
+  // Clean up debounce timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (resizeTimeoutRef.current) {
+        clearTimeout(resizeTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const handleLoad = useEffectEvent(() => {
-    //--- force update viewport state once all viewports initialized ---
-    // @ts-expect-error squirrelly deckglInstance typing
-    const viewports = deckglInstance._deck?.getViewports();
-    if (!viewports) {
-      return;
-    }
-    for (const vp of viewports) {
-      handleViewStateChange({
-        viewId: vp.id,
-        viewState: {
-          latitude: vp.latitude,
-          longitude: vp.longitude,
-          zoom: vp.zoom,
-          id: vp.id,
-          bounds: vp.getBounds(),
-          width: vp.width,
-          height: vp.height,
-        },
-      } as ViewStateChangeParameters);
-    }
+    emitAllViewports();
   });
 
   return (
@@ -406,9 +407,7 @@ export function BaseMap({
       <MapProvider id={id}>
         <MapLibre
           key={mapGeneration}
-          onMove={(evt) => {
-            setCameraState(evt.viewState);
-          }}
+          onMove={handleMapMove}
           mapStyle={styleUrl}
           ref={mapRef}
           {...mapOptions}
@@ -428,7 +427,7 @@ export function BaseMap({
             widgets={widgetsProp}
             // @ts-expect-error - DeckglProps parameters type is overly strict for WebGL parameter spreading.
             // The merged object is valid at runtime but TypeScript cannot verify all possible parameter combinations.
-            parameters={{ ...PARAMETERS, ...parameters }}
+            parameters={mergedParameters}
           >
             <AddDeckglControl />
             {children}
