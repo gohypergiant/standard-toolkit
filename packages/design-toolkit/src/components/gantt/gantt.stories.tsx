@@ -19,11 +19,11 @@ import {
   GanttBracketClose,
   GanttBracketOpen,
   GanttContentContainer,
+  GanttContentRow,
   GanttIconMarker,
   GanttMarker,
   GanttPanelContainer,
   GanttPanelRow,
-  GanttRow,
   GanttSpacer,
 } from '.';
 import {
@@ -139,7 +139,7 @@ export const DatasetDriven: Story = {
           </GanttPanelContainer>
           <GanttContentContainer>
             {dataset.rows.map(({ id, elements }) => (
-              <GanttRow key={id}>
+              <GanttContentRow key={id}>
                 {elements.map((element, index) => {
                   switch (element.type) {
                     case 'block': {
@@ -226,7 +226,7 @@ export const DatasetDriven: Story = {
                       return null;
                   }
                 })}
-              </GanttRow>
+              </GanttContentRow>
             ))}
           </GanttContentContainer>
         </Gantt>
@@ -277,7 +277,7 @@ export const Static: Story = {
           </GanttPanelContainer>
 
           <GanttContentContainer>
-            <GanttRow>
+            <GanttContentRow>
               {/* Row 1 elements */}
               <GanttBlock
                 startTimeMs={1769473800000} // Tue Jan 27 — 12:30 AM
@@ -304,9 +304,9 @@ export const Static: Story = {
               />
               <GanttBracketClose timeMs={1769695200000} />{' '}
               {/* Thu Jan 29 — 12:00 PM */}
-            </GanttRow>
+            </GanttContentRow>
 
-            <GanttRow>
+            <GanttContentRow>
               {/* Row 2 elements */}
               <GanttBlock
                 startTimeMs={1769491800000} // Tue Jan 27 — 5:30 AM
@@ -331,7 +331,7 @@ export const Static: Story = {
                   <span>11:30PM-02:30AM</span>
                 </div>
               </GanttBlock>
-            </GanttRow>
+            </GanttContentRow>
           </GanttContentContainer>
         </Gantt>
       </div>

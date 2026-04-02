@@ -14,8 +14,8 @@ A timeline visualization component for displaying time-based events and interval
 - **`GanttPanelContainer`** - Houses metadata panel that aligns with timeline rows
 
 ## Row Components
-- **`GanttRow`** - Displays timeline elements with virtualization support
-- **`GanttPanelRow`** - Displays metadata that corresponds to a `GanttRow`
+- **`GanttContentRow`** - Displays timeline elements with virtualization support
+- **`GanttPanelRow`** - Displays metadata that corresponds to a `GanttContentRow`
 
 ## Timeline Elements
 - **`GanttBlock`** - Time interval displayed as a solid block (can contain `children`)
@@ -37,11 +37,11 @@ import {
   GanttBracketClose,
   GanttBracketOpen,
   GanttContentContainer,
+  GanttContentRow,
   GanttIconMarker,
   GanttMarker,
   GanttPanelContainer,
   GanttPanelRow,
-  GanttRow,
   GanttSpacer,
 } from './';
 
@@ -72,7 +72,7 @@ function BasicGantt() {
         </GanttPanelContainer>
 
         <GanttContentContainer>
-          <GanttRow>
+          <GanttContentRow>
             {/* Row 1 elements */}
             <GanttBlock
               startTimeMs={1769473800000} // Tue Jan 27 — 12:30 AM
@@ -99,9 +99,9 @@ function BasicGantt() {
             />
             <GanttBracketClose timeMs={1769695200000} />{' '}
             {/* Thu Jan 29 — 12:00 PM */}
-          </GanttRow>
+          </GanttContentRow>
 
-          <GanttRow>
+          <GanttContentRow>
             {/* Row 2 elements */}
             <GanttBlock
               startTimeMs={1769491800000} // Tue Jan 27 — 5:30 AM
@@ -126,7 +126,7 @@ function BasicGantt() {
                 <span>11:30PM-02:30AM</span>
               </div>
             </GanttBlock>
-          </GanttRow>
+          </GanttContentRow>
         </GanttContentContainer>
       </Gantt>
     </div>
@@ -174,11 +174,11 @@ import {
   GanttBracketClose,
   GanttBracketOpen,
   GanttContentContainer,
+  GanttContentRow,
   GanttIconMarker,
   GanttMarker,
   GanttPanelContainer,
   GanttPanelRow,
-  GanttRow,
   GanttSpacer,
 } from './';
 
@@ -240,7 +240,7 @@ function DatasetDriven(dataset: Dataset) {
         </GanttPanelContainer>
         <GanttContentContainer>
           {dataset.rows.map(({ id, elements }) => (
-            <GanttRow key={id}>
+            <GanttContentRow key={id}>
               {elements.map((element, index) => {
                 // You may also consider using ts-pattern library
                 // as a switch statement alternative
@@ -330,7 +330,7 @@ function DatasetDriven(dataset: Dataset) {
                     return null;
                 }
               })}
-            </GanttRow>
+            </GanttContentRow>
           ))}
         </GanttContentContainer>
       </Gantt>
@@ -410,7 +410,7 @@ The following components share a common pattern of accepting `children` and prov
 |------|------|---------|-------------|
 | `children` | `ReactNode` | - | Content to render inside the container (required) |
 
-#### `GanttRow` & `GanttPanelRow`
+#### `GanttContentRow` & `GanttPanelRow`
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
@@ -428,9 +428,9 @@ Gantt
 │   ├── GanttPanelRow
 │   └── GanttPanelRow
 └── GanttContentContainer
-    ├── GanttRow
+    ├── GanttContentRow
     │   └── Row elements (e.g., `GanttBlock`, `GanttMarker`, etc.)
-    └── GanttRow
+    └── GanttContentRow
         └── Row elements (e.g., `GanttBlock`, `GanttMarker`, etc.)
 ```
 
@@ -473,7 +473,7 @@ The `startTimeMs` and `endTimeMs` props on the root `Gantt` component are used t
 
 ## Best Practices
 
-- Maintain the same number and order of `GanttPanelRow` and `GanttRow` components
+- Maintain the same number and order of `GanttPanelRow` and `GanttContentRow` components
 - For large datasets (many rows or time spans), use the `thresholdProps` for dynamic data loading
 - Set appropriate time boundaries with `startTimeMs` and `endTimeMs` props on the root `Gantt` component that encompass all your timeline elements (set `startTimeMs` earlier than your earliest element and `endTimeMs` later than your latest element)
 - Choose a `timescale` that provides the right level of detail for your data

@@ -12,14 +12,14 @@
 
 export { GanttContentContainer } from './components/containers/external/gantt-content-container';
 export { GanttPanelContainer } from './components/containers/external/gantt-panel-container';
-export { GanttRow } from './components/gantt-row';
-export { Block as GanttBlock } from './components/gantt-row/block';
+export { GanttContentRow } from './components/content-row';
+export { Block as GanttBlock } from './components/content-row/block';
 export {
   BracketClose as GanttBracketClose,
   BracketOpen as GanttBracketOpen,
-} from './components/gantt-row/bracket';
-export { IconMarker as GanttIconMarker } from './components/gantt-row/icon-marker';
-export { Marker as GanttMarker } from './components/gantt-row/marker';
-export { Spacer as GanttSpacer } from './components/gantt-row/spacer';
+} from './components/content-row/bracket';
+export { IconMarker as GanttIconMarker } from './components/content-row/icon-marker';
+export { Marker as GanttMarker } from './components/content-row/marker';
+export { Spacer as GanttSpacer } from './components/content-row/spacer';
 export { PanelRow as GanttPanelRow } from './components/panel-row';
 export { GanttProvider as Gantt } from './context/index';
