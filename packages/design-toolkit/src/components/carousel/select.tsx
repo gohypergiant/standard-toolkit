@@ -54,7 +54,11 @@ export function CarouselSelect({ classNames, ...rest }: CarouselSelectProps) {
       value={items[currentPosition]?.title}
       placeholder={items[currentPosition]?.title}
       onChange={onChange}
-      classNames={{ field: styles['gallery-select'], ...classNames?.select }}
+      classNames={{
+        field: styles['gallery-select'],
+        trigger: styles['gallery-select'],
+        ...classNames?.select,
+      }}
       {...rest}
     >
       {items.map((item) => (

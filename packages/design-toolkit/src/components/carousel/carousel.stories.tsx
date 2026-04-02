@@ -65,8 +65,8 @@ export const WithSelect: Story = {
         classNames={{ container: 'max-w-[600px]' }}
       >
         <CarouselViewer />
-        <div className='flex flex-row justify-between gap-s'>
-          <div className='flex flex-row gap-s flex-shrink-0'>
+        <div className='flex flex-row justify-between gap-s p-s'>
+          <div className='flex shrink-0 flex-row gap-s'>
             <CarouselPrevious />
             <CarouselPosition />
             <CarouselNext />

@@ -60,7 +60,6 @@ export function CarouselViewer({
         );
       case 'audio':
         return <Audio src={currentItem.dataUrl} title={currentItem.title} />;
-      case 'image':
       default:
         return <img src={currentItem.dataUrl} alt={currentItem.title} />;
     }
