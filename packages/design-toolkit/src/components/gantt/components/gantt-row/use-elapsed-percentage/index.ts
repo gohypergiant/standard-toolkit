@@ -10,14 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
-import { useTemporalDataContext } from '../../../context/temporal-data';
+import { useTemporalDataContext } from '@/components/gantt/context/temporal-data';
+import type { TimeBounds } from '@/components/gantt/types';
 
-type UseElapsedPercentageProps = {
-  startMs: number;
-  endMs: number;
-};
-
-export function useElapsedPercentage(props: UseElapsedPercentageProps): number {
+export function useElapsedPercentage(props: TimeBounds): number {
   const { currentTimeMs, renderedRegionBounds } = useTemporalDataContext();
 
   const startMs = Math.max(props.startMs, renderedRegionBounds.startMs);

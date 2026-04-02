@@ -10,22 +10,28 @@
  * governing permissions and limitations under the License.
  */
 
+import { clsx } from '@accelint/design-foundation/lib/utils';
 import { Range, type RangeProps } from '../base-elements/range';
 import styles from './styles.module.css';
 import { useElapsedPercentage } from './use-elapsed-percentage';
 
-export function Block({ children, id, startMs, endMs, ...rest }: RangeProps) {
+export function Block({
+  children,
+  startTimeMs,
+  endTimeMs,
+  className,
+  ...rest
+}: RangeProps) {
   const elapsedPct = useElapsedPercentage({
-    startMs,
-    endMs,
+    startMs: startTimeMs,
+    endMs: endTimeMs,
   });
 
   return (
     <Range
-      id={id}
-      startMs={startMs}
-      endMs={endMs}
-      className={styles['row-block']}
+      startTimeMs={startTimeMs}
+      endTimeMs={endTimeMs}
+      className={clsx(styles['row-block'], className)}
       data-elapsed-pct={elapsedPct}
       {...rest}
     >

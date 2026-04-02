@@ -10,14 +10,43 @@
  * governing permissions and limitations under the License.
  */
 
+import { useEffect, useState } from 'react';
 import { useGanttContext } from '../../context';
 
 export function useScrollbarHeight() {
   const { ganttContentElement } = useGanttContext();
+  const [scrollbarHeight, setScrollbarHeight] = useState<number>(0);
 
-  if (!ganttContentElement) {
-    return 0;
-  }
+  useEffect(() => {
+    if (!ganttContentElement) {
+      return;
+    }
 
-  return ganttContentElement.offsetHeight - ganttContentElement.clientHeight;
+    const calculateScrollbarHeight = () => {
+      const height =
+        ganttContentElement.offsetHeight - ganttContentElement.clientHeight;
+      setScrollbarHeight(height);
+    };
+
+    // Calculate on mount
+    calculateScrollbarHeight();
+
+    // Set up ResizeObserver to recalculate when dimensions change. This is
+    // needed because the height of ganttContentElement can change following
+    // a re-render. This hook does not access any of the values from
+    // TemporalDataProvider which would affect the height of ganttContentElement,
+    // so a ResizeObserver is used to detect changes.
+    const resizeObserver = new ResizeObserver(() => {
+      calculateScrollbarHeight();
+    });
+
+    resizeObserver.observe(ganttContentElement);
+
+    // Clean up observer on unmount
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [ganttContentElement]);
+
+  return scrollbarHeight;
 }

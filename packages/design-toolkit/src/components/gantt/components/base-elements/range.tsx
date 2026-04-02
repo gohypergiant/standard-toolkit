@@ -17,16 +17,15 @@ import { useRangeElementLayout } from './use-range-element-layout';
 import type { RowElementColorProp } from '@/components/gantt/types';
 
 export type RangeProps = HTMLAttributes<HTMLDivElement> & {
-  id: string;
-  startMs: number;
-  endMs: number;
+  startTimeMs: number;
+  endTimeMs: number;
   color?: RowElementColorProp;
 };
 
 function RangeInner({
   children,
-  startMs,
-  endMs,
+  startTimeMs,
+  endTimeMs,
   color = 'accent',
   ...rest
 }: PropsWithChildren<RangeProps>) {
@@ -35,8 +34,8 @@ function RangeInner({
   useRangeElementLayout({
     element,
     timeBounds: {
-      startMs,
-      endMs,
+      startMs: startTimeMs,
+      endMs: endTimeMs,
     },
   });
 
@@ -53,9 +52,14 @@ function RangeInner({
 
 export function Range(props: PropsWithChildren<RangeProps>) {
   const { renderedRegionBounds } = useTemporalDataContext();
-  const { startMs, endMs } = props;
+  const { startTimeMs, endTimeMs } = props;
 
-  if (!shouldRenderRangeElement(renderedRegionBounds, { startMs, endMs })) {
+  if (
+    !shouldRenderRangeElement(renderedRegionBounds, {
+      startMs: startTimeMs,
+      endMs: endTimeMs,
+    })
+  ) {
     return null;
   }
 

@@ -10,4 +10,16 @@
  * governing permissions and limitations under the License.
  */
 
-export { GanttProvider } from '@/components/gantt/context';
+export { GanttContentContainer } from './components/containers/external/gantt-content-container';
+export { GanttPanelContainer } from './components/containers/external/gantt-panel-container';
+export { GanttRow } from './components/gantt-row';
+export { Block as GanttBlock } from './components/gantt-row/block';
+export {
+  BracketClose as GanttBracketClose,
+  BracketOpen as GanttBracketOpen,
+} from './components/gantt-row/bracket';
+export { IconMarker as GanttIconMarker } from './components/gantt-row/icon-marker';
+export { Marker as GanttMarker } from './components/gantt-row/marker';
+export { Spacer as GanttSpacer } from './components/gantt-row/spacer';
+export { PanelRow as GanttPanelRow } from './components/panel-row';
+export { GanttProvider as Gantt } from './context/index';
