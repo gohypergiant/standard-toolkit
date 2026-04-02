@@ -481,7 +481,7 @@ export function updateFeature(
   // Emit the raw edit event so consumers can react to editType directly
   if (editType != null) {
     editShapeBus.emit(EditShapeEvents.featureEditing, {
-      feature,
+      feature: featureToStore,
       editType,
       mapId,
     } as unknown as FeatureEditingEvent['payload']);
