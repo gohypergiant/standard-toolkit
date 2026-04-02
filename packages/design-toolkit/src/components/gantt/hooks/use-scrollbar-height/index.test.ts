@@ -21,16 +21,20 @@ vi.mock('@/components/gantt/context', () => ({
 import { type GanttContextValue, useGanttContext } from '../../context';
 
 describe('useScrollbarHeight', () => {
-  const observeMock = vi.fn();
-  const disconnectMock = vi.fn();
+  let observeMock: ReturnType<typeof vi.fn>;
+  let disconnectMock: ReturnType<typeof vi.fn>;
   let resizeObserverCallback: ResizeObserverCallback;
-  const mockElement = {
-    offsetHeight: 100,
-    clientHeight: 90,
-    getBoundingClientRect: () => ({ height: 100 }) as DOMRect,
-  } as unknown as HTMLDivElement;
+  let mockElement: HTMLDivElement;
 
   beforeEach(() => {
+    mockElement = {
+      offsetHeight: 100,
+      clientHeight: 90,
+    } as unknown as HTMLDivElement;
+
+    observeMock = vi.fn();
+    disconnectMock = vi.fn();
+
     global.ResizeObserver = class ResizeObserver {
       constructor(callback: ResizeObserverCallback) {
         resizeObserverCallback = callback;
