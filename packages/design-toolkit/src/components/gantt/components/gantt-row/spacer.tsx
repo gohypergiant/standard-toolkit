@@ -18,8 +18,8 @@ export type SpacerProps = Omit<RangeProps, 'className'>;
 
 export function Spacer(props: SpacerProps) {
   const elapsedPct = useElapsedPercentage({
-    startMs: props.startMs,
-    endMs: props.endMs,
+    startMs: props.startTimeMs,
+    endMs: props.endTimeMs,
   });
 
   return (

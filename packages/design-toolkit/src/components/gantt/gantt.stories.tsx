@@ -13,22 +13,25 @@
 import Placeholder from '@accelint/icons/placeholder';
 import { useMemo } from 'react';
 import { Icon } from '../icon';
-import { GanttProvider } from './';
+import {
+  Gantt,
+  GanttBlock,
+  GanttBracketClose,
+  GanttBracketOpen,
+  GanttContentContainer,
+  GanttIconMarker,
+  GanttMarker,
+  GanttPanelContainer,
+  GanttPanelRow,
+  GanttRow,
+  GanttSpacer,
+} from './';
 import {
   CURRENT_TIME_MS,
   DATASET_JAN25_TO_JAN28,
   DATASET_JAN27_TO_JAN30,
   DATASET_JAN29_TO_FEB1,
 } from './__fixtures__';
-import { GanttContentContainer } from './components/containers/external/gantt-content-container';
-import { GanttPanelContainer } from './components/containers/external/gantt-panel-container';
-import { GanttRow } from './components/gantt-row';
-import { Block } from './components/gantt-row/block';
-import { BracketClose, BracketOpen } from './components/gantt-row/bracket';
-import { IconMarker } from './components/gantt-row/icon-marker';
-import { Marker } from './components/gantt-row/marker';
-import { Spacer } from './components/gantt-row/spacer';
-import { PanelRow } from './components/panel-row';
 import { TIMESCALE_OPTIONS } from './constants';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { Timescale } from './types';
@@ -112,7 +115,7 @@ const meta = {
 
     return (
       <div className='h-[480px]'>
-        <GanttProvider
+        <Gantt
           startTimeMs={dataset.startTimeMs}
           endTimeMs={dataset.endTimeMs}
           currentTimeMs={args.currentTimeMs}
@@ -122,7 +125,7 @@ const meta = {
         >
           <GanttPanelContainer>
             {dataset.rows.map(({ id, trackNumber, description }) => (
-              <PanelRow key={id}>
+              <GanttPanelRow key={id}>
                 <div className='fg-primary-bold flex items-center font-display text-body-s'>
                   <span>{trackNumber}</span>
                   {description && (
@@ -131,7 +134,7 @@ const meta = {
                     </span>
                   )}
                 </div>
-              </PanelRow>
+              </GanttPanelRow>
             ))}
           </GanttPanelContainer>
           <GanttContentContainer>
@@ -142,11 +145,11 @@ const meta = {
                     case 'block': {
                       const [startMs, endMs] = element.rangeMs;
                       return (
-                        <Block
+                        <GanttBlock
                           key={`${id}-block-${index}`}
                           id={`${id}-block-${index}`}
-                          startMs={startMs}
-                          endMs={endMs}
+                          startTimeMs={startMs}
+                          endTimeMs={endMs}
                           color={element.color}
                         >
                           {element.color === 'critical' ||
@@ -156,7 +159,7 @@ const meta = {
                               <span>{timestampLabel(startMs, endMs)}</span>
                             </div>
                           ) : null}
-                        </Block>
+                        </GanttBlock>
                       );
                     }
 
@@ -164,11 +167,11 @@ const meta = {
                       const [startMs, endMs] = element.rangeMs;
 
                       return (
-                        <Spacer
+                        <GanttSpacer
                           key={`${id}-spacer-${index}`}
                           id={`${id}-spacer-${index}`}
-                          startMs={startMs}
-                          endMs={endMs}
+                          startTimeMs={startMs}
+                          endTimeMs={endMs}
                           color={element.color}
                         />
                       );
@@ -179,13 +182,13 @@ const meta = {
                       const timeMs = element.timeMs;
 
                       return element.type === 'bracket-close' ? (
-                        <BracketClose
+                        <GanttBracketClose
                           key={`${id}-bracket-close-${index}`}
                           timeMs={timeMs}
                           color={element.color}
                         />
                       ) : (
-                        <BracketOpen
+                        <GanttBracketOpen
                           key={`${id}-bracket-open-${index}`}
                           timeMs={timeMs}
                           color={element.color}
@@ -196,7 +199,7 @@ const meta = {
                     case 'marker': {
                       const timeMs = element.timeMs;
                       return (
-                        <Marker
+                        <GanttMarker
                           key={`${id}-marker-${index}`}
                           timeMs={timeMs}
                           color={element.color}
@@ -207,7 +210,7 @@ const meta = {
                     case 'icon-marker': {
                       const timeMs = element.timeMs;
                       return (
-                        <IconMarker
+                        <GanttIconMarker
                           key={`${id}-icon-marker-${index}`}
                           timeMs={timeMs}
                           color={element.color}
@@ -215,7 +218,7 @@ const meta = {
                           <Icon size='small'>
                             <Placeholder />
                           </Icon>
-                        </IconMarker>
+                        </GanttIconMarker>
                       );
                     }
 
@@ -226,7 +229,7 @@ const meta = {
               </GanttRow>
             ))}
           </GanttContentContainer>
-        </GanttProvider>
+        </Gantt>
       </div>
     );
   },

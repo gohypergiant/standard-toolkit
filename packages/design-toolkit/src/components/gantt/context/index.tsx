@@ -56,7 +56,7 @@ type GanttProviderProps = {
   endTimeMs: number;
   timescale: Timescale;
   currentTimeMs: number;
-  thresholdProps: ThresholdProps;
+  thresholdProps?: ThresholdProps;
   rowHeightPx?: number;
 };
 
