@@ -429,7 +429,7 @@ const {
 | Option | Type | Description |
 |--------|------|-------------|
 | `onUpdate` | `(shape: Shape) => void` | Called when shape edit is saved |
-| `onCancel` | `(shape: Shape) => void` | Called when editing is canceled |
+| `onCancel` | `(shape: Shape) => void` | Called when editing is canceled. Receives the original shape from when editing first started, even if `edit()` was called multiple times with updated versions of the same shape. |
 
 #### Return Values
 
