@@ -433,7 +433,9 @@ describe('edit-shape-layer store', () => {
 
       expect(handler).toHaveBeenCalledWith(
         expect.objectContaining({
-          shape: expect.objectContaining({ name: 'Original' }),
+          payload: expect.objectContaining({
+            shape: expect.objectContaining({ name: 'Original' }),
+          }),
         }),
       );
 
