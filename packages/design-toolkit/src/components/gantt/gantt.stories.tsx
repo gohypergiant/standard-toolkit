@@ -337,7 +337,4 @@ export const Static: Story = {
       </div>
     );
   },
-  parameters: {
-    layout: 'padded',
-  },
 };

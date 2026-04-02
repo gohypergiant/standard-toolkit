@@ -29,6 +29,22 @@ A timeline visualization component for displaying time-based events and interval
 
 ### Basic Display
 ```tsx
+import Placeholder from '@accelint/icons/placeholder';
+import { Icon } from '../icon';
+import {
+  Gantt,
+  GanttBlock,
+  GanttBracketClose,
+  GanttBracketOpen,
+  GanttContentContainer,
+  GanttIconMarker,
+  GanttMarker,
+  GanttPanelContainer,
+  GanttPanelRow,
+  GanttRow,
+  GanttSpacer,
+} from './';
+
 // Define time boundaries
 const startTimeMs = 1769472000000; // Tuesday, Jan 27, 2026 at 12:00 AM UTC
 const endTimeMs = 1769760000000;   // Friday, Jan 30, 2026 at 8:00 AM UTC
@@ -150,13 +166,25 @@ type Dataset = {
 ```
 
 ```tsx
-// Tuesday, Jan 27, 2026 at 12:00 AM UTC
-const startTimeMs = 1769472000000;
-// Friday, Jan 30, 2026 at 8:00 AM UTC
-const endTimeMs = 1769760000000
-// Wed Jan 28, 2026 at 7:00 AM UTC
-const currentTimeMs = 1769583600000;
-const timescale = '1h';
+import Placeholder from '@accelint/icons/placeholder';
+import { Icon } from '../icon';
+import {
+  Gantt,
+  GanttBlock,
+  GanttBracketClose,
+  GanttBracketOpen,
+  GanttContentContainer,
+  GanttIconMarker,
+  GanttMarker,
+  GanttPanelContainer,
+  GanttPanelRow,
+  GanttRow,
+  GanttSpacer,
+} from './';
+
+// Wed Jan 28, 2026 at 22:00 UTC
+const currentTimeMs = 1769637600000;
+const timescale = '2h';
 
 function DatasetDriven(dataset: Dataset) {
   const thresholdProps = useMemo(
@@ -350,7 +378,7 @@ Both `GanttBlock` and `GanttSpacer` share the same props.
 |------|------|---------|-------------|
 | `startTimeMs` | `number` | - | Start timestamp in milliseconds for the element (required) |
 | `endTimeMs` | `number` | - | End timestamp in milliseconds for the element (required) |
-| `color` | `'accent' \| 'critical' \| 'serious' \| 'success' \| 'warning'` | - | Color variant for the element |
+| `color` | `'accent' \| 'critical' \| 'serious' \| 'success' \| 'warning'` | `'accent'` | Color variant for the element |
 | `children` | `ReactNode` | - | Content to render inside the element (only visible in `GanttBlock`) |
 
 ### Bracket Elements (`GanttBracketOpen` & `GanttBracketClose`)
@@ -360,7 +388,7 @@ Both `GanttBracketOpen` and `GanttBracketClose` share the same props.
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `timeMs` | `number` | - | Timestamp in milliseconds for the bracket position (required) |
-| `color` | `'accent' \| 'critical' \| 'serious' \| 'success' \| 'warning'` | - | Color variant for the bracket |
+| `color` | `'accent' \| 'critical' \| 'serious' \| 'success' \| 'warning'` | `'accent'` | Color variant for the bracket |
 
 ### Point-based Elements (`GanttMarker` & `GanttIconMarker`)
 
