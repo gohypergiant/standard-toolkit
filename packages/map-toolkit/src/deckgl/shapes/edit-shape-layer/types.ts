@@ -42,7 +42,10 @@ export type EditMode =
  * State for the editing store
  */
 export type EditingState = {
-  /** Shape currently being edited */
+  /** The original shape captured when editing first started. Preserved across same-ID re-entry
+   *  (e.g. form commits calling edit()) so cancel always reverts to the true pre-edit state. */
+  originalShape: Shape | null;
+  /** Shape currently being edited — updated on every edit() call including re-entry. */
   editingShape: Shape | null;
   /** Current edit mode */
   editMode: EditMode;
