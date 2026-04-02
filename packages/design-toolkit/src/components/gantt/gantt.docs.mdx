@@ -1,0 +1,479 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+
+import * as GanttStories from './gantt.stories';
+
+<Meta of={GanttStories} />
+
+# Gantt
+
+A timeline visualization component for displaying time-based events and intervals. Virtualized along both the horizontal and vertical axes for performance.
+
+## Container Components
+- **`Gantt`** - Root component that manages timeline state, layout, and virtualization
+- **`GanttContentContainer`** - Houses timeline content rows
+- **`GanttPanelContainer`** - Houses metadata panel that aligns with timeline rows
+
+## Row Components
+- **`GanttRow`** - Displays timeline elements with virtualization support
+- **`GanttPanelRow`** - Displays metadata that corresponds to a `GanttRow`
+
+## Timeline Elements
+- **`GanttBlock`** - Time interval displayed as a solid block (can contain `children`)
+- **`GanttSpacer`** - Time interval displayed as a horizontal line
+- **`GanttMarker`** - Vertical line marking a single point in time
+- **`GanttIconMarker`** - Vertical marker with an icon
+- **`GanttBracketOpen`** - Opening bracket for a time interval
+- **`GanttBracketClose`** - Closing bracket for a time interval
+
+## Example Usage
+
+### Basic Display
+```tsx
+import Placeholder from '@accelint/icons/placeholder';
+import { Icon } from '../icon';
+import {
+  Gantt,
+  GanttBlock,
+  GanttBracketClose,
+  GanttBracketOpen,
+  GanttContentContainer,
+  GanttIconMarker,
+  GanttMarker,
+  GanttPanelContainer,
+  GanttPanelRow,
+  GanttRow,
+  GanttSpacer,
+} from './';
+
+// Define time boundaries
+const startTimeMs = 1769472000000; // Tuesday, Jan 27, 2026 at 12:00 AM UTC
+const endTimeMs = 1769760000000;   // Friday, Jan 30, 2026 at 8:00 AM UTC
+const currentTimeMs = 1769583600000; // Wed Jan 28, 2026 at 7:00 AM UTC
+
+function BasicGantt() {
+  return (
+    <div className="h-[160px]">
+      <Gantt
+        startTimeMs={startTimeMs}
+        endTimeMs={endTimeMs}
+        currentTimeMs={currentTimeMs}
+        timescale="1h"
+        rowHeightPx={40}
+      >
+        <GanttPanelContainer>
+          <GanttPanelRow>
+            <span className="fg-primary-bold font-display text-body-s">KC-135</span>
+            <span className="fg-inverse-muted text-body-s">&nbsp;- Aerial Refueling</span>
+          </GanttPanelRow>
+          <GanttPanelRow>
+            <span className="fg-primary-bold font-display text-body-s">F-35</span>
+            <span className="fg-inverse-muted text-body-s">&nbsp;- Early Precision</span>
+          </GanttPanelRow>
+        </GanttPanelContainer>
+
+        <GanttContentContainer>
+          <GanttRow>
+            {/* Row 1 elements */}
+            <GanttBlock
+              startTimeMs={1769473800000} // Tue Jan 27 — 12:30 AM
+              endTimeMs={1769479200000} // Tue Jan 27 — 2:00 AM
+              color='serious'
+            />
+            <GanttSpacer
+              startTimeMs={1769479200000} // Tue Jan 27 — 2:00 AM
+              endTimeMs={1769479500000} // Tue Jan 27 — 2:05 AM
+            />
+            <GanttBlock
+              startTimeMs={1769479500000} // Tue Jan 27 — 2:05 AM
+              endTimeMs={1769481900000} // Tue Jan 27 — 2:45 AM
+            />
+            <GanttMarker
+              timeMs={1769487000000} // Tue Jan 27 — 4:10 AM
+            />
+            <GanttBracketOpen timeMs={1769487300000} />{' '}
+            {/* Tue Jan 27 — 4:15 AM */}
+            <GanttSpacer
+              startTimeMs={1769487300000} // Tue Jan 27 — 4:15 AM
+              endTimeMs={1769695200000} // Thu Jan 29 — 12:00 PM
+              color='critical'
+            />
+            <GanttBracketClose timeMs={1769695200000} />{' '}
+            {/* Thu Jan 29 — 12:00 PM */}
+          </GanttRow>
+
+          <GanttRow>
+            {/* Row 2 elements */}
+            <GanttBlock
+              startTimeMs={1769491800000} // Tue Jan 27 — 5:30 AM
+              endTimeMs={1769497200000}   // Tue Jan 27 — 7:00 AM
+              color="accent"
+            />
+            <GanttIconMarker
+              timeMs={1769564000000} // Wed Jan 28 — 1:45 AM
+              color="serious"
+            >
+              <Icon size="small">
+                <Placeholder />
+              </Icon>
+            </GanttIconMarker>
+            <GanttBlock
+              startTimeMs={1769643000000} // Wed Jan 28 — 11:30 PM
+              endTimeMs={1769653800000}   // Thu Jan 29 — 2:30 AM
+              color="serious"
+            >
+              <div className="flex flex-col text-body-xs">
+                <span>MISSION ENTRY</span>
+                <span>11:30PM-02:30AM</span>
+              </div>
+            </GanttBlock>
+          </GanttRow>
+        </GanttContentContainer>
+      </Gantt>
+    </div>
+  );
+}
+```
+
+<Canvas of={GanttStories.Static} />
+
+### Dataset-driven Display
+Example using these hypothetical dataset typings:
+
+```ts
+type RangeTuple = readonly [startMs: number, endMs: number];
+type RowElementColorProp = 'serious' | 'accent' | 'critical';
+
+type Element =
+  | { type: 'block'; rangeMs: RangeTuple; color?: RowElementColorProp }
+  | { type: 'spacer'; rangeMs: RangeTuple; color?: RowElementColorProp }
+  | { type: 'bracket-open'; timeMs: number; color?: RowElementColorProp }
+  | { type: 'bracket-close'; timeMs: number; color?: RowElementColorProp }
+  | { type: 'marker'; timeMs: number; color?: RowElementColorProp }
+  | { type: 'icon-marker'; timeMs: number; color?: RowElementColorProp };
+
+type Row = {
+  id: string;
+  elements: Element[];
+  trackNumber: string;
+  description?: string;
+};
+
+type Dataset = {
+  startTimeMs: number;
+  endTimeMs: number;
+  rows: Row[];
+};
+```
+
+```tsx
+import Placeholder from '@accelint/icons/placeholder';
+import { Icon } from '../icon';
+import {
+  Gantt,
+  GanttBlock,
+  GanttBracketClose,
+  GanttBracketOpen,
+  GanttContentContainer,
+  GanttIconMarker,
+  GanttMarker,
+  GanttPanelContainer,
+  GanttPanelRow,
+  GanttRow,
+  GanttSpacer,
+} from './';
+
+// Wed Jan 28, 2026 at 22:00 UTC
+const currentTimeMs = 1769637600000;
+const timescale = '2h';
+
+function DatasetDriven(dataset: Dataset) {
+  const thresholdProps = useMemo(
+    () => ({
+      threshold: {
+        timescaleMultipleDistance: 3,
+        rowIndexBoundaryDistance: 2,
+      },
+      onThresholdMet: console.log,
+    }),
+    [],
+  );
+
+  const timestampHour = (timestampMs: number) => {
+    const value = new Date(timestampMs).getUTCHours().toString();
+    return value.length === 1 ? `0${value}` : value;
+  };
+
+  const timestampMinutes = (timestampMs: number) => {
+    const value = new Date(timestampMs).getUTCMinutes().toString();
+    return value.length === 1 ? `0${value}` : value;
+  };
+
+  const timestampLabel = (
+    startTimestampMs: number,
+    endTimestampMs: number,
+  ) => {
+    return `${timestampHour(startTimestampMs)}:${timestampMinutes(startTimestampMs)}--${timestampHour(endTimestampMs)}:${timestampMinutes(endTimestampMs)}`;
+  };
+
+  return (
+    <div className='h-[480px]'>
+      <Gantt
+        startTimeMs={dataset.startTimeMs}
+        endTimeMs={dataset.endTimeMs}
+        currentTimeMs={currentTimeMs}
+        timescale={timescale}
+        thresholdProps={thresholdProps}
+      >
+        <GanttPanelContainer>
+          {dataset.rows.map(({ id, trackNumber, description }) => (
+            <GanttPanelRow key={id}>
+              <div className='fg-primary-bold flex items-center font-display text-body-s'>
+                <span>{trackNumber}</span>
+                {description && (
+                  <span className='fg-inverse-muted'>
+                    &nbsp;- {description}
+                  </span>
+                )}
+              </div>
+            </GanttPanelRow>
+          ))}
+        </GanttPanelContainer>
+        <GanttContentContainer>
+          {dataset.rows.map(({ id, elements }) => (
+            <GanttRow key={id}>
+              {elements.map((element, index) => {
+                // You may also consider using ts-pattern library
+                // as a switch statement alternative
+                // https://github.com/gvergnaud/ts-pattern
+                switch (element.type) {
+                  case 'block': {
+                    const [startMs, endMs] = element.rangeMs;
+                    return (
+                      <GanttBlock
+                        key={`${id}-block-${index}`}
+                        id={`${id}-block-${index}`}
+                        startTimeMs={startMs}
+                        endTimeMs={endMs}
+                        color={element.color}
+                      >
+                        {element.color === 'critical' ||
+                        element.color === 'serious' ? (
+                          <div className='flex flex-col text-body-xs'>
+                            <span>JAMMING ENTRY</span>
+                            <span>{timestampLabel(startMs, endMs)}</span>
+                          </div>
+                        ) : null}
+                      </GanttBlock>
+                    );
+                  }
+
+                  case 'spacer': {
+                    const [startMs, endMs] = element.rangeMs;
+
+                    return (
+                      <GanttSpacer
+                        key={`${id}-spacer-${index}`}
+                        id={`${id}-spacer-${index}`}
+                        startTimeMs={startMs}
+                        endTimeMs={endMs}
+                        color={element.color}
+                      />
+                    );
+                  }
+
+                  case 'bracket-close':
+                  case 'bracket-open': {
+                    const timeMs = element.timeMs;
+
+                    return element.type === 'bracket-close' ? (
+                      <GanttBracketClose
+                        key={`${id}-bracket-close-${index}`}
+                        timeMs={timeMs}
+                        color={element.color}
+                      />
+                    ) : (
+                      <GanttBracketOpen
+                        key={`${id}-bracket-open-${index}`}
+                        timeMs={timeMs}
+                        color={element.color}
+                      />
+                    );
+                  }
+
+                  case 'marker': {
+                    const timeMs = element.timeMs;
+                    return (
+                      <GanttMarker
+                        key={`${id}-marker-${index}`}
+                        timeMs={timeMs}
+                        color={element.color}
+                      />
+                    );
+                  }
+
+                  case 'icon-marker': {
+                    const timeMs = element.timeMs;
+                    return (
+                      <GanttIconMarker
+                        key={`${id}-icon-marker-${index}`}
+                        timeMs={timeMs}
+                        color={element.color}
+                      >
+                        <Icon size='small'>
+                          <Placeholder />
+                        </Icon>
+                      </GanttIconMarker>
+                    );
+                  }
+
+                  default:
+                    return null;
+                }
+              })}
+            </GanttRow>
+          ))}
+        </GanttContentContainer>
+      </Gantt>
+    </div>
+  );
+}
+```
+
+<Canvas of={GanttStories.DatasetDriven} />
+
+## Props
+
+### `Gantt`
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `startTimeMs` | `number` | - | Start timestamp in milliseconds that defines the leftmost boundary of the timeline (required) |
+| `endTimeMs` | `number` | - | End timestamp in milliseconds that defines the rightmost boundary of the timeline (required) |
+| `currentTimeMs` | `number` | - | Current time indicator position in milliseconds |
+| `timescale` | `'15m' \| '30m' \| '1h' \| '2h' \| '4h' \| '8h' \| '12h' \| '1d'` | `'1h'` | Time scale for the timeline |
+| `rowHeightPx` | `number` | `40` | Height of each row in pixels |
+| `thresholdProps` | `object` | - | Optional virtualization threshold configuration |
+
+#### `thresholdProps`
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `threshold.timescaleMultipleDistance` | `number` | Number of timescale units from the timeline boundaries that triggers threshold events (e.g., for data loading) |
+| `threshold.rowIndexBoundaryDistance` | `number` | Number of rows from the visible row boundaries that triggers threshold events |
+| `onThresholdMet` | `(metThresholds: MetThresholdData[]) => void` | Callback fired when rendered region approaches timeline or row boundaries |
+
+##### `MetThresholdData` Object
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `axis` | `'horizontal' \| 'vertical'` | Indicates whether the threshold was met on the time axis or row axis |
+| `direction` | `'start' \| 'end'` | Indicates whether the threshold was met at the beginning or end of the axis |
+| `value` | `number` | The value at which the threshold was met |
+
+### Range-based Elements (`GanttBlock` & `GanttSpacer`)
+
+Both `GanttBlock` and `GanttSpacer` share the same props.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `startTimeMs` | `number` | - | Start timestamp in milliseconds for the element (required) |
+| `endTimeMs` | `number` | - | End timestamp in milliseconds for the element (required) |
+| `color` | `'accent' \| 'critical' \| 'serious' \| 'success' \| 'warning'` | `'accent'` | Color variant for the element |
+| `children` | `ReactNode` | - | Content to render inside the element (only visible in `GanttBlock`) |
+
+### Bracket Elements (`GanttBracketOpen` & `GanttBracketClose`)
+
+Both `GanttBracketOpen` and `GanttBracketClose` share the same props.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `timeMs` | `number` | - | Timestamp in milliseconds for the bracket position (required) |
+| `color` | `'accent' \| 'critical' \| 'serious' \| 'success' \| 'warning'` | `'accent'` | Color variant for the bracket |
+
+### Point-based Elements (`GanttMarker` & `GanttIconMarker`)
+
+Both `GanttMarker` and `GanttIconMarker` share the same base props.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `timeMs` | `number` | - | Timestamp in milliseconds for the marker position (required) |
+| `color` | `'accent' \| 'critical' \| 'serious' \| 'success' \| 'warning'` | `'accent'` | Color variant for the marker |
+| `children` | `ReactNode` | - | Icon element to display in the marker (only visible in `GanttIconMarker`) |
+
+### Container and Row Components
+
+The following components share a common pattern of accepting `children` and providing structure to the Gantt chart.
+
+#### `GanttPanelContainer` & `GanttContentContainer`
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `children` | `ReactNode` | - | Content to render inside the container (required) |
+
+#### `GanttRow` & `GanttPanelRow`
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `children` | `ReactNode` | - | Content to render inside the row (required) |
+
+## Important Notes
+
+### Component Structure
+
+The Gantt chart follows a specific structure that must be maintained:
+
+```
+Gantt
+├── GanttPanelContainer
+│   ├── GanttPanelRow
+│   └── GanttPanelRow
+└── GanttContentContainer
+    ├── GanttRow
+    │   └── Row elements (e.g., `GanttBlock`, `GanttMarker`, etc.)
+    └── GanttRow
+        └── Row elements (e.g., `GanttBlock`, `GanttMarker`, etc.)
+```
+
+### Fixed Row Height
+
+The Gantt layout relies on a shared row height (`rowHeightPx`) so that:
+
+- panel rows align exactly with timeline rows
+- vertical virtualization calculations remain stable
+- scroll synchronization stays pixel-perfect
+
+Row components (`GanttPanelRow`, `GanttBlock`) therefore **do not expand to fit content** and will hide overflow.
+
+When composing row content, treat available vertical space as a fixed container.
+
+### Temporal Position Anchoring
+
+When new data is rendered (determined by changes to `startTimeMs` or `endTimeMs`), the Gantt maintains the user's temporal position:
+
+- **Within range**: If the current scroll position timestamp falls within the new data range, the timeline remains anchored to that same timestamp. Users experience no jump in perceived time position.
+- **Outside range**: If the current timestamp is outside the new data range, the scroll position resets to `startTimeMs`.
+
+This ensures a stable user experience during dynamic data loading scenarios.
+
+### Virtualization
+
+The Gantt component implements virtualization for both vertical and horizontal axes to improve performance when handling large datasets.
+
+#### Vertical Virtualization
+
+The vertical virtualization is implemented using an overscan strategy, where the component renders a few extra rows above and below the visible viewport to ensure smooth scrolling and prevent visual artifacts. The total scrollable height is calculated as `rowHeightPx` multiplied by the total number of rows (plus the height of the horizontal scrollbar). As the user scrolls, the rendered rows reflect the updated scroll position.
+
+#### Horizontal Virtualization
+
+The horizontal virtualization works by dividing the timeline into fixed-width chunks. The component calculates how many chunks are needed to fill the visible viewport, then adds buffer chunks on either side for smooth scrolling. Each chunk's fixed pixel width represents a specific time duration determined by the current `timescale` value.
+
+The rendered region spans from the first chunk's timestamp to the last chunk's timestamp plus its duration. Row elements (`GanttBlock`, `GanttMarker`, etc.) are rendered by comparing their timestamps against this rendered region. Rendering only the row elements that fall within the rendered region ensures efficient performance.
+
+The `startTimeMs` and `endTimeMs` props on the root `Gantt` component are used to determine the entire scrollable region of the component. As the user scrolls, the rendered region changes to reflect the new scroll position.
+
+## Best Practices
+
+- Maintain the same number and order of `GanttPanelRow` and `GanttRow` components
+- For large datasets (many rows or time spans), use the `thresholdProps` for dynamic data loading
+- Set appropriate time boundaries with `startTimeMs` and `endTimeMs` props on the root `Gantt` component that encompass all your timeline elements (set `startTimeMs` earlier than your earliest element and `endTimeMs` later than your latest element)
+- Choose a `timescale` that provides the right level of detail for your data

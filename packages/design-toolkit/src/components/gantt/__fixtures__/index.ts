@@ -16,8 +16,8 @@ import type { RowElementColorProp } from '../types';
 export const DATASET_JAN27_TO_JAN30_START_TIME_MS = 1769472000000;
 
 // Proxy for 'Now' in stories to demonstrate current time indicator
-// Wed Jan 28, 2026 at 7:00 AM UTC
-export const CURRENT_TIME_MS = 1769583600000;
+// Wed Jan 28, 2026 at 22:00 UTC
+export const CURRENT_TIME_MS = 1769637600000;
 
 // Friday, Jan 30, 2026 at 8:00 AM UTC
 export const DATASET_JAN27_TO_JAN30_END_TIME_MS = 1769760000000;
