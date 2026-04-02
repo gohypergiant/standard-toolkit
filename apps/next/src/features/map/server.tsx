@@ -11,18 +11,8 @@
  */
 
 import 'server-only';
-import { uuid } from '@accelint/core'
-import { BaseMap } from '@accelint/map-toolkit/deckgl';
-import { DEFAULT_VIEW_STATE } from '@accelint/map-toolkit/shared/constants';
+import { MapClient } from './client';
 
-const mapId = uuid()
-
-export function MapClient() {
-  return (
-    <BaseMap
-      className='fixed top-xxl left-0 right-0 bottom-0'
-      id={mapId}
-      initialViewState={DEFAULT_VIEW_STATE}
-    />
-  );
+export function MapServer() {
+  return <MapClient />;
 }
