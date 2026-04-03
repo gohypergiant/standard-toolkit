@@ -42,6 +42,7 @@
 'use client';
 
 import type { UniqueId } from '@accelint/core';
+import type { Feature } from 'geojson';
 import type { Shape } from '../shared/types';
 
 /**
@@ -54,6 +55,8 @@ export const EditShapeEvents = {
   updated: 'shapes:updated',
   /** Editing was canceled */
   canceled: 'shapes:edit-canceled',
+  /** Continuous edit event — fires during drag with editType info */
+  featureEditing: 'shapes:feature-editing',
 } as const;
 
 export type EditShapeEventType =
@@ -123,9 +126,34 @@ export type ShapeEditCanceledEvent = {
 };
 
 /**
+ * Payload for shapes:feature-editing event.
+ * Emitted on every edit action (continuous and completion) with the raw editType.
+ */
+export type FeatureEditingPayload = {
+  /** The updated feature geometry */
+  feature: Feature;
+  /** The raw edit type string from editable-layers (e.g. 'scaling', 'scaled', 'rotating', 'rotated', 'translating', 'translated') */
+  editType: string;
+  /** Map instance ID for multi-map event isolation */
+  mapId: UniqueId;
+};
+
+/**
+ * Event payload for shapes:feature-editing
+ * Emitted during continuous drag and on completion with the editType.
+ */
+export type FeatureEditingEvent = {
+  type: 'shapes:feature-editing';
+  payload: FeatureEditingPayload;
+  source: UniqueId;
+  target?: UniqueId;
+};
+
+/**
  * Union of all edit shape event types
  */
 export type EditShapeEvent =
   | ShapeEditingEvent
   | ShapeUpdatedEvent
-  | ShapeEditCanceledEvent;
+  | ShapeEditCanceledEvent
+  | FeatureEditingEvent;

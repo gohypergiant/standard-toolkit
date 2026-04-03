@@ -47,6 +47,9 @@ export default defineConfig({
     '@deckgl-fiber-renderer/shared',
     '@deckgl-fiber-renderer/types',
     '@math.gl/web-mercator',
+    '@ngageoint/gars-js',
+    '@ngageoint/grid-js',
+    '@ngageoint/mgrs-js',
     '@turf/helpers',
     '@turf/turf',
     '@vis.gl/react-maplibre',
@@ -55,6 +58,8 @@ export default defineConfig({
     'mjolnir.js',
     'react',
     'react-dom',
+    // NOTE: subpath imports are treated uniquely in tsdown so they must be explicitly included
+    'react-dom/client',
     'react-map-gl',
     // NOTE: subpath imports are treated uniquely in tsdown so they must be explicitly included
     'react-map-gl/maplibre',

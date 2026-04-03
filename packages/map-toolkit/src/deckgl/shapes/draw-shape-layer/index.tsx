@@ -12,7 +12,7 @@
 
 'use client';
 
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { MapContext } from '../../base-map/provider';
 import {
   DEFAULT_TENTATIVE_COLORS,
@@ -26,6 +26,7 @@ import {
   cancelDrawingFromLayer,
   completeDrawingFromLayer,
   drawStore,
+  setDrawDistanceUnit,
 } from './store';
 import type {
   EditAction,
@@ -82,6 +83,16 @@ export function DrawShapeLayer({
 
   // Subscribe to drawing state using the v2 store API
   const { state: drawingState } = drawStore.use(actualMapId);
+
+  // Sync the unit prop to the draw store so convertFeatureToShape
+  // can compute circle properties in the correct distance unit.
+  useEffect(() => {
+    setDrawDistanceUnit(actualMapId, unit ?? null);
+
+    return () => {
+      setDrawDistanceUnit(actualMapId, null);
+    };
+  }, [actualMapId, unit]);
 
   const activeShapeType = drawingState?.activeShapeType ?? null;
 

@@ -295,7 +295,7 @@ export function EditShapeLayer({
     if (isContinuousEditType(editType) && feature) {
       cancelPendingUpdate();
       const rafId = requestAnimationFrame(() => {
-        updateFeature(actualMapId, feature);
+        updateFeature(actualMapId, feature, editType);
         pendingUpdateRef.current = null;
       });
       pendingUpdateRef.current = { feature, rafId };
@@ -306,7 +306,7 @@ export function EditShapeLayer({
     if (isCompletionEditType(editType)) {
       cancelPendingUpdate();
       if (feature) {
-        updateFeature(actualMapId, feature);
+        updateFeature(actualMapId, feature, editType);
       }
       return;
     }
