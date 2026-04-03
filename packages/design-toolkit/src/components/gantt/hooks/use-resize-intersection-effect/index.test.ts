@@ -13,7 +13,7 @@
 import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { useResizeIntersectionEffect } from './index';
-import type { TimelineChunkObject } from '../../types';
+import type { GanttTimelineChunkObject } from '../../types';
 
 const bumpLayoutTickMock = vi.hoisted(() => vi.fn());
 
@@ -34,7 +34,7 @@ describe('useResizeIntersectionEffect', () => {
 
   const expansionThresholdChunk = { timestampMs: 3000 };
   const contractionThresholdChunk = { timestampMs: 1000 };
-  const timelineChunks: TimelineChunkObject[] = [
+  const timelineChunks: GanttTimelineChunkObject[] = [
     contractionThresholdChunk,
     { timestampMs: 2000 },
     expansionThresholdChunk,

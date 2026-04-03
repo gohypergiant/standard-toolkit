@@ -1,3 +1,4 @@
+// __private-exports
 /*
  * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -23,7 +24,10 @@ import { RootContainer } from '../components/containers/internal';
 import { GANTT_ROW_HEIGHT_PX } from '../constants';
 import { GanttStoreProvider } from './store';
 import { TemporalDataProvider } from './temporal-data';
-import type { ThresholdProps, Timescale } from '@/components/gantt/types';
+import type {
+  GanttThresholdProps,
+  GanttTimescale,
+} from '@/components/gantt/types';
 
 function refAssignmentFactory(
   setter: Dispatch<SetStateAction<HTMLDivElement | null>>,
@@ -54,9 +58,9 @@ export const GanttContext = createContext<GanttContextValue | undefined>(
 type GanttProviderProps = {
   startTimeMs: number;
   endTimeMs: number;
-  timescale: Timescale;
+  timescale: GanttTimescale;
   currentTimeMs: number;
-  thresholdProps?: ThresholdProps;
+  thresholdProps?: GanttThresholdProps;
   rowHeightPx?: number;
 };
 

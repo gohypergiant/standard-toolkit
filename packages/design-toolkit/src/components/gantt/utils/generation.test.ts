@@ -18,7 +18,7 @@ import {
   TIMELINE_CHUNK_WIDTH,
 } from '../constants';
 import { generateTimelineChunks } from './generation';
-import type { TimelineChunkObject } from '../types';
+import type { GanttTimelineChunkObject } from '../types';
 
 describe('generateTimelineChunks', () => {
   describe('empty viewable region', () => {
@@ -72,7 +72,7 @@ describe('generateTimelineChunks', () => {
         msPerPx,
       );
 
-      const firstChunk = result[0] as TimelineChunkObject;
+      const firstChunk = result[0] as GanttTimelineChunkObject;
 
       result.forEach((chunk, index) => {
         const expectedTimestampMs =

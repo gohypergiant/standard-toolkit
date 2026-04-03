@@ -1,3 +1,4 @@
+// __private-exports
 /*
  * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -12,12 +13,12 @@
 
 import { TIMESCALE_MAPPING } from '../constants';
 import type {
-  DerivedThresholdValue,
+  GanttDerivedThresholdValue,
   GanttRegion,
-  MetThresholdData,
-  Threshold,
-  TimeBounds,
-  Timescale,
+  GanttMetThresholdData,
+  GanttThreshold,
+  GanttTimeBounds,
+  GanttTimescale,
 } from '../types';
 
 /**
@@ -25,7 +26,7 @@ import type {
  */
 export function deriveTotalDataRegion(
   totalRowsCount: number,
-  totalBounds: TimeBounds,
+  totalBounds: GanttTimeBounds,
 ): GanttRegion {
   return {
     startMs: totalBounds.startMs,
@@ -40,7 +41,7 @@ export function deriveTotalDataRegion(
  */
 export function deriveRenderedRegion(
   renderedSlice: { start: number; end: number },
-  renderedRegionBounds: TimeBounds,
+  renderedRegionBounds: GanttTimeBounds,
 ): GanttRegion {
   return {
     startMs: renderedRegionBounds.startMs,
@@ -55,10 +56,10 @@ export function deriveRenderedRegion(
  * Returns null if the threshold values are invalid.
  */
 export function deriveTemporalThresholds(
-  threshold: Threshold,
+  threshold: GanttThreshold,
   totalDataRegion: GanttRegion,
-  timescale: Timescale,
-): DerivedThresholdValue | null {
+  timescale: GanttTimescale,
+): GanttDerivedThresholdValue | null {
   if (threshold.timescaleMultipleDistance < 0) {
     return null;
   }
@@ -85,9 +86,9 @@ export function deriveTemporalThresholds(
  * Returns null if the threshold values are invalid.
  */
 export function deriveRowIndexThresholds(
-  threshold: Threshold,
+  threshold: GanttThreshold,
   totalDataRegion: GanttRegion,
-): DerivedThresholdValue | null {
+): GanttDerivedThresholdValue | null {
   if (threshold.rowIndexBoundaryDistance < 0) {
     return null;
   }
@@ -111,14 +112,14 @@ export function deriveRowIndexThresholds(
 /**
  * Examines if any thresholds have been met by comparing the rendered region
  * against the derived threshold values.
- * Returns an array of MetThresholdData objects for thresholds that have been met.
+ * Returns an array of GanttMetThresholdData objects for thresholds that have been met.
  */
 export function examineThresholds(
   renderedRegion: GanttRegion,
-  temporalThresholds: DerivedThresholdValue | null,
-  rowIndexThresholds: DerivedThresholdValue | null,
-): MetThresholdData[] {
-  const metThresholds: MetThresholdData[] = [];
+  temporalThresholds: GanttDerivedThresholdValue | null,
+  rowIndexThresholds: GanttDerivedThresholdValue | null,
+): GanttMetThresholdData[] {
+  const metThresholds: GanttMetThresholdData[] = [];
 
   // Check temporal thresholds if they are valid
   if (temporalThresholds) {
@@ -168,7 +169,7 @@ export function examineThresholds(
 export function shouldExamineThresholds(
   totalRowsCount: number,
   verticalScrollElement: { clientHeight: number } | null,
-  threshold: Threshold | undefined,
+  threshold: GanttThreshold | undefined,
 ): boolean {
   if (!threshold) {
     return false;

@@ -1,3 +1,4 @@
+// __private-exports
 /*
  * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -28,22 +29,22 @@ import {
   getViewableRegionWidth,
 } from '@/components/gantt/utils/helpers';
 import type {
-  MetThresholdData,
-  Threshold,
-  TimeBounds,
-  TimelineChunkObject,
-  Timescale,
+  GanttMetThresholdData,
+  GanttThreshold,
+  GanttTimeBounds,
+  GanttTimelineChunkObject,
+  GanttTimescale,
 } from '@/components/gantt/types';
 
 export type TemporalDataContextValue = {
   msPerPx: number;
-  renderedRegionBounds: TimeBounds;
-  timescale: Timescale;
-  totalBounds: TimeBounds;
-  timelineChunks: TimelineChunkObject[];
-  threshold?: Threshold;
+  renderedRegionBounds: GanttTimeBounds;
+  timescale: GanttTimescale;
+  totalBounds: GanttTimeBounds;
+  timelineChunks: GanttTimelineChunkObject[];
+  threshold?: GanttThreshold;
   currentTimeMs: number;
-  onThresholdMet?: (metThresholds: MetThresholdData[]) => void;
+  onThresholdMet?: (metThresholds: GanttMetThresholdData[]) => void;
 };
 
 export const TemporalDataContext = createContext<
@@ -51,11 +52,11 @@ export const TemporalDataContext = createContext<
 >(undefined);
 
 export type TemporalDataProviderProps = {
-  timescale: Timescale;
-  totalBounds: TimeBounds;
-  threshold?: Threshold;
+  timescale: GanttTimescale;
+  totalBounds: GanttTimeBounds;
+  threshold?: GanttThreshold;
   currentTimeMs: number;
-  onThresholdMet?: (metThresholds: MetThresholdData[]) => void;
+  onThresholdMet?: (metThresholds: GanttMetThresholdData[]) => void;
 };
 
 export function TemporalDataProvider({

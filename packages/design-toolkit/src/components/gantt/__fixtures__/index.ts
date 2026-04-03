@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import type { RowElementColorProp } from '../types';
+import type { GanttRowElementColorProp } from '../types';
 
 // Tuesday, Jan 27, 2026 at 12:00 AM UTC
 export const DATASET_JAN27_TO_JAN30_START_TIME_MS = 1769472000000;
@@ -25,12 +25,12 @@ export const DATASET_JAN27_TO_JAN30_END_TIME_MS = 1769760000000;
 type RangeTuple = readonly [startMs: number, endMs: number];
 
 type Element =
-  | { type: 'block'; rangeMs: RangeTuple; color?: RowElementColorProp }
-  | { type: 'spacer'; rangeMs: RangeTuple; color?: RowElementColorProp }
-  | { type: 'bracket-open'; timeMs: number; color?: RowElementColorProp }
-  | { type: 'bracket-close'; timeMs: number; color?: RowElementColorProp }
-  | { type: 'marker'; timeMs: number; color?: RowElementColorProp }
-  | { type: 'icon-marker'; timeMs: number; color?: RowElementColorProp };
+  | { type: 'block'; rangeMs: RangeTuple; color?: GanttRowElementColorProp }
+  | { type: 'spacer'; rangeMs: RangeTuple; color?: GanttRowElementColorProp }
+  | { type: 'bracket-open'; timeMs: number; color?: GanttRowElementColorProp }
+  | { type: 'bracket-close'; timeMs: number; color?: GanttRowElementColorProp }
+  | { type: 'marker'; timeMs: number; color?: GanttRowElementColorProp }
+  | { type: 'icon-marker'; timeMs: number; color?: GanttRowElementColorProp };
 
 type Row = {
   id: string;

@@ -1,3 +1,4 @@
+// __private-exports
 /*
  * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -11,9 +12,9 @@
  */
 
 import { useTemporalDataContext } from '@/components/gantt/context/temporal-data';
-import type { TimeBounds } from '@/components/gantt/types';
+import type { GanttTimeBounds } from '@/components/gantt/types';
 
-export function useElapsedPercentage(props: TimeBounds): number {
+export function useElapsedPercentage(props: GanttTimeBounds): number {
   const { currentTimeMs, renderedRegionBounds } = useTemporalDataContext();
 
   const startMs = Math.max(props.startMs, renderedRegionBounds.startMs);

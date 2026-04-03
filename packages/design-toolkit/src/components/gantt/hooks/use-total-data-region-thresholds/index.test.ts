@@ -17,7 +17,7 @@ import * as layoutUtils from '@/components/gantt/utils/layout';
 import * as thresholdUtils from '@/components/gantt/utils/thresholds';
 import { useTotalDataRegionThresholds } from './index';
 import type { TemporalDataContextValue } from '@/components/gantt/context/temporal-data';
-import type { MetThresholdData } from '@/components/gantt/types';
+import type { GanttMetThresholdData } from '@/components/gantt/types';
 
 vi.mock('@/components/gantt/context/temporal-data', () => ({
   useTemporalDataContext: vi.fn(),
@@ -70,7 +70,7 @@ describe('useTotalDataRegionThresholds', () => {
   } as HTMLDivElement;
   const defaultRowHeightPx = 40;
   const mockRenderedSlice = { start: 2, end: 7 };
-  const mockMetThresholds: MetThresholdData[] = [
+  const mockMetThresholds: GanttMetThresholdData[] = [
     {
       axis: 'horizontal',
       direction: 'start',
@@ -268,10 +268,10 @@ describe('useTotalDataRegionThresholds', () => {
   });
 
   it('should only call onThresholdMet for newly entered thresholds', () => {
-    const alreadyMet: MetThresholdData[] = [
+    const alreadyMet: GanttMetThresholdData[] = [
       { axis: 'horizontal', direction: 'start', value: 3000 },
     ];
-    const newlyMet: MetThresholdData[] = [
+    const newlyMet: GanttMetThresholdData[] = [
       { axis: 'vertical', direction: 'end', value: 7 },
     ];
 
@@ -303,10 +303,10 @@ describe('useTotalDataRegionThresholds', () => {
   });
 
   it('should call onThresholdMet again when the same axis/direction threshold is met with a new value', () => {
-    const firstMet: MetThresholdData[] = [
+    const firstMet: GanttMetThresholdData[] = [
       { axis: 'horizontal', direction: 'start', value: 3000 },
     ];
-    const changedValue: MetThresholdData[] = [
+    const changedValue: GanttMetThresholdData[] = [
       { axis: 'horizontal', direction: 'start', value: 4000 },
     ];
 

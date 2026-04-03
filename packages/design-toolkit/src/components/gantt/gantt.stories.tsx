@@ -13,19 +13,19 @@
 import Placeholder from '@accelint/icons/placeholder';
 import { useMemo } from 'react';
 import { Icon } from '../icon';
+import { Gantt } from './gantt';
+import { GanttContentContainer } from './components/containers/external/gantt-content-container';
+import { GanttPanelContainer } from './components/containers/external/gantt-panel-container';
+import { GanttContentRow } from './components/content-row';
+import { GanttPanelRow } from './components/panel-row';
+import { GanttBlock } from './components/content-row/block';
+import { GanttSpacer } from './components/content-row/spacer';
+import { GanttMarker } from './components/content-row/marker';
+import { GanttIconMarker } from './components/content-row/icon-marker';
 import {
-  Gantt,
-  GanttBlock,
-  GanttBracketClose,
   GanttBracketOpen,
-  GanttContentContainer,
-  GanttContentRow,
-  GanttIconMarker,
-  GanttMarker,
-  GanttPanelContainer,
-  GanttPanelRow,
-  GanttSpacer,
-} from '.';
+  GanttBracketClose,
+} from './components/content-row/bracket';
 import {
   CURRENT_TIME_MS,
   DATASET_JAN25_TO_JAN28,
@@ -34,7 +34,7 @@ import {
 } from './__fixtures__';
 import { TIMESCALE_OPTIONS } from './constants';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import type { Timescale } from './types';
+import type { GanttTimescale } from './public-types';
 
 const datasetKeys: Record<string, typeof DATASET_JAN27_TO_JAN30> = {
   JAN25_TO_JAN28: DATASET_JAN25_TO_JAN28,
@@ -44,7 +44,7 @@ const datasetKeys: Record<string, typeof DATASET_JAN27_TO_JAN30> = {
 
 type StoryControls = {
   currentTimeMs: number;
-  timescale: Timescale;
+  timescale: GanttTimescale;
   rowHeightPx: string;
   datasetKey: keyof typeof datasetKeys;
 };

@@ -1,3 +1,4 @@
+// __private-exports
 /*
  * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -16,14 +17,14 @@ import { useTemporalDataContext } from '@/components/gantt/context/temporal-data
 import { useLayoutSubscription } from '@/components/gantt/hooks/use-layout-subscription';
 import { type GanttState, selectors } from '@/components/gantt/store';
 import { deriveRangeElementLayout } from '@/components/gantt/utils/layout';
-import type { TimeBounds, Timescale } from '@/components/gantt/types';
+import type { GanttTimeBounds, GanttTimescale } from '@/components/gantt/types';
 
 type UseRangeElementLayoutProps = {
   element: HTMLDivElement | null;
-  timeBounds: TimeBounds;
+  timeBounds: GanttTimeBounds;
 };
 
-const storeSelector = (timescale: Timescale) => (state: GanttState) => [
+const storeSelector = (timescale: GanttTimescale) => (state: GanttState) => [
   selectors.roundedCurrentPositionMs(TIMESCALE_MAPPING[timescale])(state),
   selectors.roundedCurrentRowScrollPx(state),
 ];

@@ -1,3 +1,4 @@
+// __private-exports
 /*
  * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -13,14 +14,14 @@
 import { BUFFERED_CHUNK_COUNT, TIMELINE_CHUNK_WIDTH } from '../constants';
 import { getMsRepresentedInViewableRegion } from './conversions';
 import { roundDateToInterval } from './dates';
-import type { TimelineChunkObject } from '../types';
+import type { GanttTimelineChunkObject } from '../types';
 
 export function generateTimelineChunks(
   currentPositionMs: number,
   viewableRegionWidth: number,
   selectedTimeIntervalMs: number,
   msPerPx: number,
-): TimelineChunkObject[] {
+): GanttTimelineChunkObject[] {
   if (viewableRegionWidth === 0) {
     return [];
   }
@@ -42,7 +43,7 @@ export function generateTimelineChunks(
   roundDateToInterval(workerDate, selectedTimeIntervalMs);
   const roundedMidpointMs = workerDate.getTime();
 
-  const chunks: TimelineChunkObject[] = [];
+  const chunks: GanttTimelineChunkObject[] = [];
 
   for (let i = 0; i < chunksInViewableRegion; i++) {
     const chunkTimestampMs =
