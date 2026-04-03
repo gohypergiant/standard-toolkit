@@ -308,7 +308,7 @@ export function setDrawDistanceUnit(
   mapId: UniqueId,
   unit: DistanceUnitSymbol | null,
 ): void {
-  if (drawStore.exists(mapId)) {
+  if (drawStore.exists(mapId) && drawStore.get(mapId).activeShapeType) {
     drawStore.set(mapId, { distanceUnit: unit });
   }
 }
