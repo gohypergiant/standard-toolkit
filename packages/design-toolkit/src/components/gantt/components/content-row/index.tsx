@@ -14,7 +14,7 @@ import { useGanttContext } from '../../context';
 import styles from './styles.module.css';
 import type { PropsWithChildren } from 'react';
 
-export function GanttRow({ children, ...rest }: PropsWithChildren) {
+export function GanttContentRow({ children, ...rest }: PropsWithChildren) {
   const { rowHeightPx } = useGanttContext();
 
   return (
