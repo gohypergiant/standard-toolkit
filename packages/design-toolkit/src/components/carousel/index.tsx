@@ -28,8 +28,7 @@ const EMPTY_ITEMS: CarouselData[] = [];
  *
  * @param props - The carousel props.
  * @param props.items - The carousel data items to display.
- * @param props.classNames - Custom class names for carousel elements.
- * @param props.classNames.container - Class name for the outer container.
+ * @param props.className - Custom class names for carousel elements.
  * @param props.children - Carousel sub-components to render.
  * @param props.currentPosition - Zero-based index of the active item.
  * @param props.setCurrentPosition - Callback invoked when the active item changes.
@@ -49,7 +48,7 @@ const EMPTY_ITEMS: CarouselData[] = [];
  */
 export function Carousel({
   items = EMPTY_ITEMS,
-  classNames,
+  className,
   children,
   currentPosition,
   setCurrentPosition,
@@ -61,7 +60,7 @@ export function Carousel({
       currentPosition={currentPosition}
       setCurrentPosition={setCurrentPosition}
     >
-      <div className={clsx(styles.carousel, classNames?.container)} {...rest}>
+      <div className={clsx(styles.carousel, className)} {...rest}>
         {children}
       </div>
     </CarouselProvider>

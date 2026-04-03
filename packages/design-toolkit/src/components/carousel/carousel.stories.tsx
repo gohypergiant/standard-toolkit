@@ -40,7 +40,7 @@ export const Default: Story = {
         items={args.items}
         currentPosition={currentPosition}
         setCurrentPosition={setCurrentPosition}
-        classNames={{ container: 'max-w-[600px]' }}
+        className='max-w-[600px]'
       >
         <CarouselViewer />
         <div className='flex w-full flex-row justify-between gap-s'>
@@ -62,7 +62,7 @@ export const WithSelect: Story = {
         items={args.items}
         currentPosition={currentPosition}
         setCurrentPosition={setCurrentPosition}
-        classNames={{ container: 'max-w-[600px]' }}
+        className='max-w-[600px]'
       >
         <CarouselViewer />
         <div className='flex flex-row justify-between gap-s p-s'>
@@ -90,7 +90,7 @@ export const MixedMedia: Story = {
         items={args.items}
         currentPosition={currentPosition}
         setCurrentPosition={setCurrentPosition}
-        classNames={{ container: 'max-w-[600px]' }}
+        className='max-w-[600px]'
       >
         <CarouselViewer />
         <div className='flex w-full flex-row justify-between gap-s'>

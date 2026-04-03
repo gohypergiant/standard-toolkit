@@ -23,11 +23,6 @@ export type CarouselProps = PropsWithChildren<
 > & {
   /** The carousel data items to display. */
   items: CarouselData[];
-  /** Custom class names for carousel elements. */
-  classNames?: {
-    /** Class name for the outer container. */
-    container?: string;
-  };
   /** Zero-based index of the currently active item. */
   currentPosition: number;
   /** Callback invoked when the active item changes. */

@@ -55,8 +55,8 @@ const [currentPosition, setCurrentPosition] = useState(0);
   setCurrentPosition={setCurrentPosition}
 >
   <CarouselViewer />
-  <div className="flex flex-row justify-between gap-s">
-    <div className="flex flex-row gap-s">
+  <div className="flex flex-row justify-between gap-s p-s">
+    <div className="flex shrink-0 flex-row gap-s">
       <CarouselPrevious />
       <CarouselPosition />
       <CarouselNext />
@@ -79,7 +79,7 @@ The root component. Provides carousel state to all sub-components via context.
 | `items` | `CarouselData[]` | `[]` | The media items to display. |
 | `currentPosition` | `number` | - | Zero-based index of the active item. |
 | `setCurrentPosition` | `(index: number) => void` | - | Callback when the active item changes. |
-| `classNames` | `object` | - | Custom class names (see below). |
+| `className` | `string` | - | Additional css styles applied to container |
 | `children` | `ReactNode` | - | Carousel sub-components to render. |
 
 **classNames object:**
@@ -97,7 +97,7 @@ The root component. Provides carousel state to all sub-components via context.
 | `fileName` | `string` | Original file name of the media asset. |
 | `title` | `string` | Display title shown in the gallery and select. |
 | `thumbnailUrl` | `string` | URL for the thumbnail image in the gallery. |
-| `uuid` | `UniqueId` | Unique identifier for the item. |
+| `id` | `UniqueId` | Unique identifier for the item. |
 | `metadata` | `Record<string, unknown>` | Optional metadata associated with the item. |
 
 ### CarouselViewer
@@ -114,7 +114,7 @@ Displays the full-size media for the currently active item.
 | Key | Type | Description |
 |-----|------|-------------|
 | `container` | `string` | Applied to the viewer container. |
-| `image` | `string` | Applied to the displayed image. |
+| `media` | `string` | Applied to the displayed media element (img, video, or audio). |
 
 ### CarouselGallery
 
@@ -131,29 +131,13 @@ A horizontally-scrolling strip of thumbnail buttons. Automatically scrolls to ke
 | `container` | `string` | Applied to the gallery container. |
 | `item` | `string` | Applied to individual gallery items. |
 
-### CarouselPrevious
+### CarouselPrevious, CarouselNext
 
-Navigates to the previous item. Automatically disables at the first item.
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `className` | `string` | - | Additional CSS class name. |
-
-### CarouselNext
-
-Navigates to the next item. Automatically disables at the last item.
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `className` | `string` | - | Additional CSS class name. |
+Navigates to the previous or next item. Automatically disables at the first item. Takes ButtonProps.
 
 ### CarouselPosition
 
-Displays the current position and total count (e.g. "3 / 9").
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `className` | `string` | - | Additional CSS class name. |
+Displays the current position and total count (e.g. "3 / 9"). Takes `HTMLAttributes<HTMLDivElement>` as props
 
 ### CarouselSelect
 
@@ -167,7 +151,7 @@ A [`SelectField`](?path=/docs/components-selectfield--playground) dropdown listi
 
 | Key | Type | Description |
 |-----|------|-------------|
-| `field` | `SelectFieldProps['classNames']` | Passed to the SelectField component. |
+| `select` | `SelectFieldProps['classNames']` | Passed to the SelectField component. |
 | `optionItem` | `OptionsItemProps['classNames']` | Passed to each OptionsItem. |
 
 ## Accessibility
@@ -179,7 +163,7 @@ A [`SelectField`](?path=/docs/components-selectfield--playground) dropdown listi
 
 ## Implementation Notes
 
-- Currently limited to displaying images. Video and audio support may be added in the future.
+- Supports displaying images, videos, and audio files. The viewer automatically renders the appropriate media element based on the item's `dataType`.
 - The carousel state is managed externally via `currentPosition` and `setCurrentPosition` props (controlled component pattern).
 - Sub-components read state from `CarouselContext` and can be composed in any order or layout.
 
