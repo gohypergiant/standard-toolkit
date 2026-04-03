@@ -14,9 +14,9 @@ import { Range, type RangeProps } from '../base-elements/range';
 import styles from './styles.module.css';
 import { useElapsedPercentage } from './use-elapsed-percentage';
 
-export type SpacerProps = Omit<RangeProps, 'className'>;
+export type GanttSpacerProps = Omit<RangeProps, 'className'>;
 
-export function Spacer(props: SpacerProps) {
+export function GanttSpacer(props: GanttSpacerProps) {
   const elapsedPct = useElapsedPercentage({
     startMs: props.startTimeMs,
     endMs: props.endTimeMs,

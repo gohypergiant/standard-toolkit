@@ -15,7 +15,7 @@ import { Point, type PointProps } from '../base-elements/point';
 import styles from './styles.module.css';
 import { useIsElapsed } from './use-is-elapsed';
 
-export function Marker(props: PointProps) {
+export function GanttMarker(props: PointProps) {
   const isElapsed = useIsElapsed({ timeMs: props.timeMs });
 
   return (

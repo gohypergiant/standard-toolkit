@@ -16,13 +16,13 @@ import styles from './styles.module.css';
 import { useIsElapsed } from './use-is-elapsed';
 import type { PropsWithChildren } from 'react';
 
-type IconMarkerProps = PropsWithChildren<PointProps>;
+type GanttIconMarkerProps = PropsWithChildren<PointProps>;
 
-export function IconMarker({
+export function GanttIconMarker({
   children,
   color = 'accent',
   ...rest
-}: IconMarkerProps) {
+}: GanttIconMarkerProps) {
   const isElapsed = useIsElapsed({ timeMs: rest.timeMs });
 
   return (

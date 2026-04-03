@@ -34,10 +34,10 @@ function BracketBase({ direction, ...rest }: BracketBaseProps) {
   );
 }
 
-export function BracketOpen(props: PointProps) {
+export function GanttBracketOpen(props: PointProps) {
   return <BracketBase direction='open' {...props} />;
 }
 
-export function BracketClose(props: PointProps) {
+export function GanttBracketClose(props: PointProps) {
   return <BracketBase direction='close' {...props} />;
 }

@@ -247,6 +247,26 @@ export { FloatingCard } from './components/floating-card';
 export type { FloatingCardProps } from './components/floating-card';
 export { FloatingCardProvider } from './components/floating-card/provider';
 export type { FloatingCardProviderProps } from './components/floating-card/provider';
+export { GanttContentContainer } from './components/gantt/components/containers/external/gantt-content-container';
+export { GanttPanelContainer } from './components/gantt/components/containers/external/gantt-panel-container';
+export { GanttBlock } from './components/gantt/components/content-row/block';
+export {
+  GanttBracketClose,
+  GanttBracketOpen,
+} from './components/gantt/components/content-row/bracket';
+export { GanttIconMarker } from './components/gantt/components/content-row/icon-marker';
+export { GanttContentRow } from './components/gantt/components/content-row';
+export { GanttMarker } from './components/gantt/components/content-row/marker';
+export { GanttSpacer } from './components/gantt/components/content-row/spacer';
+export type { GanttSpacerProps } from './components/gantt/components/content-row/spacer';
+export { GanttPanelRow } from './components/gantt/components/panel-row';
+export { Gantt } from './components/gantt/gantt';
+export type {
+  GanttMetThresholdData,
+  GanttThreshold,
+  GanttThresholdProps,
+  GanttTimescale,
+} from './components/gantt/public-types';
 export { HeroContext } from './components/hero/context';
 export { Hero } from './components/hero';
 export { HeroSubtitle } from './components/hero/subtitle';

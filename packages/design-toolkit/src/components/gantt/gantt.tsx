@@ -10,23 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import { useGanttContext } from '../../context';
-import styles from './styles.module.css';
-import type { PropsWithChildren } from 'react';
+import { GanttProvider } from './context';
 
-export function GanttPanelRow({ children, ...rest }: PropsWithChildren) {
-  const { rowHeightPx } = useGanttContext();
-
-  return (
-    // biome-ignore lint/a11y/useSemanticElements: <parent div role list>
-    <div
-      className={styles.row}
-      role='listitem'
-      data-height={rowHeightPx}
-      // spread props, including virtualizer-augmented style prop, if used
-      {...rest}
-    >
-      {children}
-    </div>
-  );
-}
+/**
+ * Main Gantt component for timeline visualization.
+ */
+export const Gantt = GanttProvider;

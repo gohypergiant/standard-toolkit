@@ -1,3 +1,4 @@
+// __private-exports
 /*
  * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -11,15 +12,15 @@
  */
 
 import { useEffect, useReducer } from 'react';
-import type { TimelineChunkObject } from '../../types';
+import type { GanttTimelineChunkObject } from '../../types';
 
 type UseResizeEffectProps = {
   timelineContainerElement: HTMLDivElement | null;
-  timelineChunks: TimelineChunkObject[];
+  timelineChunks: GanttTimelineChunkObject[];
 };
 
 function getResizeElementsToObserve(
-  timelineChunks: TimelineChunkObject[],
+  timelineChunks: GanttTimelineChunkObject[],
   timelineContainerElement: HTMLDivElement,
 ): [Element | null, Element | null] {
   if (timelineChunks.length < 3) {

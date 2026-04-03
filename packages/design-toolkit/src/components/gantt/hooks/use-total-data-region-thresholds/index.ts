@@ -1,3 +1,4 @@
+// __private-exports
 /*
  * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -24,16 +25,18 @@ import {
   shouldExamineThresholds,
 } from '@/components/gantt/utils/thresholds';
 import { useGanttContext } from '../../context';
-import type { MetThresholdData } from '@/components/gantt/types';
+import type { GanttMetThresholdData } from '@/components/gantt/types';
 
-function toThresholdKey(item: MetThresholdData): string {
+function toThresholdKey(item: GanttMetThresholdData): string {
   return `${item.axis}:${item.direction}:${item.value}`;
 }
 
 function createThresholdProjection() {
   const state = new Set<string>();
 
-  function update(metThresholds: MetThresholdData[]): MetThresholdData[] {
+  function update(
+    metThresholds: GanttMetThresholdData[],
+  ): GanttMetThresholdData[] {
     const newlyEntered = metThresholds.filter(
       (item) => !state.has(toThresholdKey(item)),
     );

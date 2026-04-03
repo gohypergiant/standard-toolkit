@@ -1,3 +1,4 @@
+// __private-exports
 /*
  * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -14,11 +15,11 @@ import { type HTMLAttributes, type PropsWithChildren, useState } from 'react';
 import { useTemporalDataContext } from '@/components/gantt/context/temporal-data';
 import { timestampWithinBounds } from '@/components/gantt/utils/helpers';
 import { usePointElementLayout } from './use-point-element-layout';
-import type { RowElementColorProp } from '@/components/gantt/types';
+import type { GanttRowElementColorProp } from '@/components/gantt/types';
 
 export type PointProps = HTMLAttributes<HTMLDivElement> & {
   timeMs: number;
-  color?: RowElementColorProp;
+  color?: GanttRowElementColorProp;
 };
 
 function PointInner({

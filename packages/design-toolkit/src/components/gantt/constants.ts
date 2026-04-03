@@ -1,3 +1,4 @@
+// __private-exports
 /*
  * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -10,14 +11,18 @@
  * governing permissions and limitations under the License.
  */
 
-import type { HoursTimescale, MinutesTimescale, Timescale } from './types';
+import type {
+  GanttHoursTimescale,
+  GanttMinutesTimescale,
+  GanttTimescale,
+} from './types';
 
 const MS_PER_SECOND = 1000;
 export const MS_PER_MINUTE = MS_PER_SECOND * 60;
 export const MS_PER_HOUR = MS_PER_MINUTE * 60;
 const MS_PER_DAY = MS_PER_HOUR * 24;
 
-export const HOURS_MAPPING: Record<HoursTimescale, number> = {
+export const HOURS_MAPPING: Record<GanttHoursTimescale, number> = {
   '1h': MS_PER_HOUR,
   '2h': MS_PER_HOUR * 2,
   '6h': MS_PER_HOUR * 6,
@@ -25,14 +30,14 @@ export const HOURS_MAPPING: Record<HoursTimescale, number> = {
   '24h': MS_PER_DAY,
 };
 
-export const MINUTES_MAPPING: Record<MinutesTimescale, number> = {
+export const MINUTES_MAPPING: Record<GanttMinutesTimescale, number> = {
   '1m': MS_PER_MINUTE,
   '5m': MS_PER_MINUTE * 5,
   '10m': MS_PER_MINUTE * 10,
   '30m': MS_PER_MINUTE * 30,
 };
 
-export const TIMESCALE_MAPPING: Record<Timescale, number> = {
+export const TIMESCALE_MAPPING: Record<GanttTimescale, number> = {
   ...HOURS_MAPPING,
   ...MINUTES_MAPPING,
 };
@@ -51,7 +56,7 @@ export const GANTT_CONTAINER_TOP_PX = 12;
 export const ROW_VIRTUALIZATION_OVERSCAN = 1;
 export const GANTT_HEADER_HEIGHT_PX = 64;
 
-export const TIMESCALE_OPTIONS: Timescale[] = [
+export const TIMESCALE_OPTIONS: GanttTimescale[] = [
   '1h',
   '2h',
   '6h',

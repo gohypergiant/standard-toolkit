@@ -1,3 +1,4 @@
+// __private-exports
 /*
  * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -11,11 +12,11 @@
  */
 
 import { ROW_VIRTUALIZATION_OVERSCAN } from '../constants';
-import type { TimeBounds, TimelineChunkObject } from '../types';
+import type { GanttTimeBounds, GanttTimelineChunkObject } from '../types';
 
 export function deriveTranslateXValue(
   msPerPx: number,
-  timelineChunks: TimelineChunkObject[],
+  timelineChunks: GanttTimelineChunkObject[],
   currentPositionMs: number,
 ) {
   const firstTimelineChunk = timelineChunks[0];
@@ -31,9 +32,9 @@ export function deriveTranslateXValue(
 }
 
 function deriveElementTranslateX(
-  renderedRegionBounds: TimeBounds,
+  renderedRegionBounds: GanttTimeBounds,
   elementStartMs: number,
-  totalBounds: TimeBounds,
+  totalBounds: GanttTimeBounds,
   msPerPx: number,
 ) {
   const distanceFromTimelineStart =
@@ -53,9 +54,9 @@ export function deriveCurrentTimeTranslateX(
 }
 
 export function deriveRangeElementLayout(
-  renderedRegionBounds: TimeBounds,
-  rangeElementBounds: TimeBounds,
-  totalBounds: TimeBounds,
+  renderedRegionBounds: GanttTimeBounds,
+  rangeElementBounds: GanttTimeBounds,
+  totalBounds: GanttTimeBounds,
   msPerPx: number,
 ) {
   const renderedStartMs = Math.max(
@@ -80,9 +81,9 @@ export function deriveRangeElementLayout(
 }
 
 export function derivePointElementLayout(
-  renderedRegionBounds: TimeBounds,
+  renderedRegionBounds: GanttTimeBounds,
   pointElementMs: number,
-  totalBounds: TimeBounds,
+  totalBounds: GanttTimeBounds,
   msPerPx: number,
 ) {
   const translateX = deriveElementTranslateX(
@@ -121,7 +122,7 @@ export function deriveRenderedSlice(
 export function deriveHorizontalScrollPosition(
   timestampMs: number,
   msPerPx: number,
-  totalBounds: TimeBounds,
+  totalBounds: GanttTimeBounds,
 ): number {
   return (timestampMs - totalBounds.startMs) / msPerPx;
 }

@@ -20,7 +20,7 @@ import {
   examineThresholds,
   shouldExamineThresholds,
 } from './thresholds';
-import type { GanttRegion, Threshold } from '../types';
+import type { GanttRegion, GanttThreshold } from '../types';
 
 describe('deriveTotalDataRegion', () => {
   it('should derive total data region correctly', () => {
@@ -56,7 +56,7 @@ describe('deriveRenderedRegion', () => {
 
 describe('deriveTemporalThresholds', () => {
   it('should derive temporal thresholds correctly', () => {
-    const threshold: Threshold = {
+    const threshold: GanttThreshold = {
       timescaleMultipleDistance: 2,
       rowIndexBoundaryDistance: 1,
     };
@@ -82,7 +82,7 @@ describe('deriveTemporalThresholds', () => {
   });
 
   it('should return null if timescaleMultipleDistance is negative', () => {
-    const threshold: Threshold = {
+    const threshold: GanttThreshold = {
       timescaleMultipleDistance: -1,
       rowIndexBoundaryDistance: 1,
     };
@@ -104,7 +104,7 @@ describe('deriveTemporalThresholds', () => {
   });
 
   it('should return null if derived thresholds are invalid', () => {
-    const threshold: Threshold = {
+    const threshold: GanttThreshold = {
       timescaleMultipleDistance: 10, // Very large value to create invalid thresholds
       rowIndexBoundaryDistance: 1,
     };
@@ -128,7 +128,7 @@ describe('deriveTemporalThresholds', () => {
 
 describe('deriveRowIndexThresholds', () => {
   it('should derive row index thresholds correctly', () => {
-    const threshold: Threshold = {
+    const threshold: GanttThreshold = {
       timescaleMultipleDistance: 2,
       rowIndexBoundaryDistance: 2,
     };
@@ -148,7 +148,7 @@ describe('deriveRowIndexThresholds', () => {
   });
 
   it('should return null if rowIndexBoundaryDistance is negative', () => {
-    const threshold: Threshold = {
+    const threshold: GanttThreshold = {
       timescaleMultipleDistance: 2,
       rowIndexBoundaryDistance: -1,
     };
@@ -165,7 +165,7 @@ describe('deriveRowIndexThresholds', () => {
   });
 
   it('should return null if derived thresholds are invalid', () => {
-    const threshold: Threshold = {
+    const threshold: GanttThreshold = {
       timescaleMultipleDistance: 2,
       rowIndexBoundaryDistance: 10, // Too large for the given data region
     };
@@ -294,7 +294,7 @@ describe('examineThresholds', () => {
 });
 
 describe('shouldExamineThresholds', () => {
-  const validThreshold: Threshold = {
+  const validThreshold: GanttThreshold = {
     timescaleMultipleDistance: 2,
     rowIndexBoundaryDistance: 1,
   };
@@ -341,7 +341,7 @@ describe('shouldExamineThresholds', () => {
   });
 
   it('should return false when threshold values are negative', () => {
-    const negativeThreshold: Threshold = {
+    const negativeThreshold: GanttThreshold = {
       timescaleMultipleDistance: -1,
       rowIndexBoundaryDistance: 1,
     };
@@ -352,7 +352,7 @@ describe('shouldExamineThresholds', () => {
     );
     expect(result).toBe(false);
 
-    const negativeThreshold2: Threshold = {
+    const negativeThreshold2: GanttThreshold = {
       timescaleMultipleDistance: 1,
       rowIndexBoundaryDistance: -1,
     };

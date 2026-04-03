@@ -1,3 +1,4 @@
+// __private-exports
 /*
  * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -11,9 +12,9 @@
  */
 
 import { TIMELINE_CHUNK_WIDTH, TIMESCALE_MAPPING } from '../constants';
-import type { Timescale } from '../types';
+import type { GanttTimescale } from '../types';
 
-export function getMsPerPx(timescale: Timescale) {
+export function getMsPerPx(timescale: GanttTimescale) {
   return TIMESCALE_MAPPING[timescale] / TIMELINE_CHUNK_WIDTH;
 }
 

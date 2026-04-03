@@ -15,7 +15,7 @@ import { Range, type RangeProps } from '../base-elements/range';
 import styles from './styles.module.css';
 import { useElapsedPercentage } from './use-elapsed-percentage';
 
-export function Block({
+export function GanttBlock({
   children,
   startTimeMs,
   endTimeMs,

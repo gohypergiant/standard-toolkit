@@ -1,3 +1,4 @@
+// __private-exports
 /*
  * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -12,31 +13,31 @@
 
 // AI suggested values. Easy values for consumer to
 // specify as prop to Gantt component.
-export type HoursTimescale = '1h' | '2h' | '6h' | '12h' | '24h';
+export type GanttHoursTimescale = '1h' | '2h' | '6h' | '12h' | '24h';
 
-export type MinutesTimescale = '1m' | '5m' | '10m' | '30m';
+export type GanttMinutesTimescale = '1m' | '5m' | '10m' | '30m';
 
-export type Timescale = HoursTimescale | MinutesTimescale;
+export type GanttTimescale = GanttHoursTimescale | GanttMinutesTimescale;
 
-export type TimelineChunkObject = {
+export type GanttTimelineChunkObject = {
   timestampMs: number;
 };
 
-export type TimeBounds = { startMs: number; endMs: number };
+export type GanttTimeBounds = { startMs: number; endMs: number };
 
-export type RowElementColorProp = 'serious' | 'accent' | 'critical';
+export type GanttRowElementColorProp = 'serious' | 'accent' | 'critical';
 
-export type Threshold = {
+export type GanttThreshold = {
   timescaleMultipleDistance: number;
   rowIndexBoundaryDistance: number;
 };
 
-export type DerivedThresholdValue = {
+export type GanttDerivedThresholdValue = {
   start: number;
   end: number;
 };
 
-export type MetThresholdData = {
+export type GanttMetThresholdData = {
   axis: 'horizontal' | 'vertical';
   direction: 'start' | 'end';
   value: number;
@@ -49,7 +50,7 @@ export type GanttRegion = {
   endRowIndex: number;
 };
 
-export type ThresholdProps = {
-  threshold: Threshold;
-  onThresholdMet: (metThresholds: MetThresholdData[]) => void;
+export type GanttThresholdProps = {
+  threshold: GanttThreshold;
+  onThresholdMet: (metThresholds: GanttMetThresholdData[]) => void;
 };

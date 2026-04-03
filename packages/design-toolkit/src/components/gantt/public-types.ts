@@ -10,23 +10,20 @@
  * governing permissions and limitations under the License.
  */
 
-import { useGanttContext } from '../../context';
-import styles from './styles.module.css';
-import type { PropsWithChildren } from 'react';
+import type {
+  GanttTimescale as _GanttTimescale,
+  GanttThreshold as _GanttThreshold,
+  GanttMetThresholdData as _GanttMetThresholdData,
+  GanttThresholdProps as _GanttThresholdProps,
+} from './types';
 
-export function GanttPanelRow({ children, ...rest }: PropsWithChildren) {
-  const { rowHeightPx } = useGanttContext();
-
-  return (
-    // biome-ignore lint/a11y/useSemanticElements: <parent div role list>
-    <div
-      className={styles.row}
-      role='listitem'
-      data-height={rowHeightPx}
-      // spread props, including virtualizer-augmented style prop, if used
-      {...rest}
-    >
-      {children}
-    </div>
-  );
-}
+/**
+ * Public type exports for the Gantt component.
+ *
+ * NOTE: These types are for EXTERNAL consumption only.
+ * Internal gantt files should import directly from './types'.
+ */
+export type GanttTimescale = _GanttTimescale;
+export type GanttThreshold = _GanttThreshold;
+export type GanttMetThresholdData = _GanttMetThresholdData;
+export type GanttThresholdProps = _GanttThresholdProps;

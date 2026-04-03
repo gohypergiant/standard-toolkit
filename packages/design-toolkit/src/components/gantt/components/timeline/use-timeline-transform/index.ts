@@ -1,3 +1,4 @@
+// __private-exports
 /*
  * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -14,12 +15,12 @@ import { type RefObject, useCallback } from 'react';
 import { useLayoutSubscription } from '@/components/gantt/hooks/use-layout-subscription';
 import { selectors } from '@/components/gantt/store';
 import { deriveTranslateXValue } from '@/components/gantt/utils/layout';
-import type { TimelineChunkObject } from '@/components/gantt/types';
+import type { GanttTimelineChunkObject } from '@/components/gantt/types';
 
 type UseTimelineTransformProps = {
   timelineElementRef: RefObject<HTMLDivElement | null>;
   msPerPx: number;
-  timelineChunks: TimelineChunkObject[];
+  timelineChunks: GanttTimelineChunkObject[];
 };
 
 export function useTimelineTransform({

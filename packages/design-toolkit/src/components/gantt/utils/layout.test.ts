@@ -24,7 +24,7 @@ import {
   deriveRenderedSlice,
   deriveTranslateXValue,
 } from './layout';
-import type { TimelineChunkObject } from '../types';
+import type { GanttTimelineChunkObject } from '../types';
 
 describe('deriveTranslateXValue', () => {
   describe('empty timeline chunks', () => {
@@ -40,7 +40,7 @@ describe('deriveTranslateXValue', () => {
     it('should calculate negative translateX when first chunk is before current position', () => {
       const currentPositionMs = 1000;
       const msPerPx = 10;
-      const timelineChunks: TimelineChunkObject[] = [{ timestampMs: 500 }];
+      const timelineChunks: GanttTimelineChunkObject[] = [{ timestampMs: 500 }];
       const result = deriveTranslateXValue(
         msPerPx,
         timelineChunks,
@@ -57,7 +57,7 @@ describe('deriveTranslateXValue', () => {
     it('should calculate translation for 1 hour offset', () => {
       const currentPositionMs = new Date('2026-02-01T13:00:00.000Z').getTime();
       const firstChunkMs = new Date('2026-02-01T12:00:00.000Z').getTime();
-      const timelineChunks: TimelineChunkObject[] = [
+      const timelineChunks: GanttTimelineChunkObject[] = [
         { timestampMs: firstChunkMs },
       ];
 
@@ -76,7 +76,7 @@ describe('deriveTranslateXValue', () => {
       const currentPositionMs = 1001;
       const firstChunkMs = 1000;
       const msPerPx = 1;
-      const timelineChunks: TimelineChunkObject[] = [
+      const timelineChunks: GanttTimelineChunkObject[] = [
         { timestampMs: firstChunkMs },
       ];
 
