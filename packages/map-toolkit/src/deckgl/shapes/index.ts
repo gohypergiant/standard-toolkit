@@ -84,6 +84,8 @@ export type {
 export type {
   EditShapeEvent,
   EditShapeEventType,
+  FeatureEditingEvent,
+  FeatureEditingPayload,
   ShapeEditCanceledEvent,
   ShapeEditingEvent,
   ShapeUpdatedEvent,
