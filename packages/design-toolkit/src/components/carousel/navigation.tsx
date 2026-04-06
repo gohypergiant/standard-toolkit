@@ -23,21 +23,18 @@ import styles from './style.module.css';
 import type { ButtonProps } from '../button/types';
 
 /**
- * Navigates the carousel to the previous item.
- *
- * Automatically disables when at the first item.
+ * Navigates the carousel to the previous item. Automatically disables when at the first item.
+ * Note that it relies on the <Carousel/>
+ * component to supply context and must be used as a child of that component.
  *
  * @param props - The control props.
  * @param props.className - Additional CSS class name.
  * @returns The previous navigation button.
  *
- * @example
- * ```tsx
- * <CarouselPrevious />
- * ```
  */
 export function CarouselPrevious({
   className,
+  variant = 'flat',
   isDisabled,
   ...rest
 }: ButtonProps) {
@@ -54,12 +51,12 @@ export function CarouselPrevious({
 
   return (
     <Button
+      {...rest}
       aria-label='Previous'
       onClick={onClick}
       className={clsx(styles.navigation, className)}
-      variant='flat'
+      variant={variant}
       isDisabled={shouldDisablePrevious}
-      {...rest}
     >
       <Icon>
         <ChevronLeft />
@@ -69,20 +66,20 @@ export function CarouselPrevious({
 }
 
 /**
- * Navigates the carousel to the next item.
- *
- * Automatically disables when at the last item.
+ * Navigates the carousel to the next item. Automatically disables when at the last item.
+ * Note that it relies on the <Carousel/> component to supply context and must be used
+ * as a child of that component.
  *
  * @param props - The control props.
  * @param props.className - Additional CSS class name.
  * @returns The next navigation button.
- *
- * @example
- * ```tsx
- * <CarouselNext />
- * ```
  */
-export function CarouselNext({ className, isDisabled, ...rest }: ButtonProps) {
+export function CarouselNext({
+  className,
+  variant = 'flat',
+  isDisabled,
+  ...rest
+}: ButtonProps) {
   const context = useContext(CarouselContext);
   const { currentPosition, setCurrentPosition, items } = context;
 
@@ -96,12 +93,12 @@ export function CarouselNext({ className, isDisabled, ...rest }: ButtonProps) {
 
   return (
     <Button
+      {...rest}
       aria-label='Next'
       onClick={onClick}
       className={clsx(styles.navigation, className)}
-      variant='flat'
+      variant={variant}
       isDisabled={shouldDisableNext}
-      {...rest}
     >
       <Icon>
         <ChevronRight />

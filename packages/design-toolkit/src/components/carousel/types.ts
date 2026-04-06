@@ -71,14 +71,14 @@ export type CarouselSelectProps = Omit<SelectFieldProps, 'classNames'> & {
     /** Class names passed to the SelectField. */
     select?: SelectFieldProps['classNames'];
     /** Class names passed to each OptionsItem. */
-    optionItem: OptionsItemProps<OptionsDataItem>['classNames'];
+    optionItem?: OptionsItemProps<OptionsDataItem>['classNames'];
   };
 };
 
 /**
  * Props for the CarouselGallery thumbnail strip component.
  */
-export type CarouselGalleryProps = {
+export type CarouselGalleryProps = HTMLAttributes<HTMLDivElement> & {
   /** Custom class names for gallery elements. */
   classNames?: {
     /** Class name for the gallery container. */

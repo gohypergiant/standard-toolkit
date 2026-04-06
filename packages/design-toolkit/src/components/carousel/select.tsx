@@ -19,9 +19,12 @@ import { CarouselContext } from './context';
 import type { Key } from 'react-aria-components';
 import type { CarouselSelectProps } from './types';
 import styles from './style.module.css';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 
 /**
  * Renders a dropdown select for navigating the carousel by item title.
+ * Note that it relies on the <Carousel/> component to supply context and must be used
+ * as a child of that component.
  *
  * Displays the current item's title and allows the user to jump to any
  * item in the carousel via a select dropdown.
@@ -31,11 +34,6 @@ import styles from './style.module.css';
  * @param props.classNames.field - Class names passed to the SelectField.
  * @param props.classNames.optionItem - Class names passed to each OptionsItem.
  * @returns The carousel select component.
- *
- * @example
- * ```tsx
- * <CarouselSelect />
- * ```
  */
 export function CarouselSelect({ classNames, ...rest }: CarouselSelectProps) {
   const { items, currentPosition, setCurrentPosition } =
@@ -50,16 +48,16 @@ export function CarouselSelect({ classNames, ...rest }: CarouselSelectProps) {
 
   return (
     <SelectField
+      {...rest}
       aria-label='Carousel item select'
       value={items[currentPosition]?.title}
       placeholder={items[currentPosition]?.title}
       onChange={onChange}
       classNames={{
-        field: styles['gallery-select'],
-        trigger: styles['gallery-select'],
         ...classNames?.select,
+        field: clsx(styles['gallery-select'], classNames?.select?.field),
+        trigger: clsx(styles['gallery-select'], classNames?.select?.trigger),
       }}
-      {...rest}
     >
       {items.map((item) => (
         <OptionsItem

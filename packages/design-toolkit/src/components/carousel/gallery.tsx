@@ -36,17 +36,14 @@ const VISIBLE_ITEMS_BEFORE_SELECTED = 2;
  * Renders a horizontally-scrolling strip of thumbnail buttons for carousel navigation.
  *
  * Automatically scrolls to keep the selected thumbnail visible. Clicking a
- * thumbnail navigates the carousel to that item.
+ * thumbnail navigates the carousel to that item. Note that it relies on the <Carousel/>
+ * component to supply context and must be used as a child of that component.
  *
  * @param props - The gallery props.
  * @param props.classNames - Custom class names for gallery elements.
  * @param props.classNames.container - Class name for the gallery container.
  * @param props.classNames.item - Class name for individual gallery items.
  * @returns The carousel gallery component.
- *
- * @example
- * ```tsx
- * <CarouselGallery />
  * ```
  */
 export function CarouselGallery({ classNames, ...rest }: CarouselGalleryProps) {
@@ -64,12 +61,13 @@ export function CarouselGallery({ classNames, ...rest }: CarouselGalleryProps) {
     [setCurrentPosition],
   );
 
+  // Calculate scroll position synchronously before browser paint to prevent visual flicker when the gallery scrolls
   useLayoutEffect(() => {
     if (!containerRef.current) {
       return;
     }
 
-    const rect = containerRef.current?.children?.[0]?.getBoundingClientRect();
+    const rect = containerRef.current.children?.[0]?.getBoundingClientRect();
     const { width } = rect || { width: 0 };
 
     if (currentPosition > VISIBLE_ITEMS_BEFORE_SELECTED) {
@@ -83,9 +81,9 @@ export function CarouselGallery({ classNames, ...rest }: CarouselGalleryProps) {
 
   return (
     <div
+      {...rest}
       className={clsx(styles['gallery-container'], classNames?.container)}
       ref={containerRef}
-      {...rest}
     >
       {items.map((item, index) => {
         const isSelected = selectedItem && item.id === selectedItem.id;
@@ -95,7 +93,7 @@ export function CarouselGallery({ classNames, ...rest }: CarouselGalleryProps) {
               translate: `${galleryXOffset}px`,
             }}
             isSelected={isSelected}
-            className={styles['gallery-item']}
+            className={clsx(styles['gallery-item'], classNames?.item)}
             onClick={() => handleItemClick(index)}
             key={`thumbnail-${item.id}`}
             size='small'

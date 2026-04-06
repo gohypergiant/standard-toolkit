@@ -22,6 +22,8 @@ import type { CarouselViewerProps } from './types';
 
 /**
  * Displays the full-size media for the currently active carousel item.
+ * Note that it relies on the <Carousel/> component to supply context and must be used
+ * as a child of that component.
  *
  * Reads the active item from CarouselContext and renders it as an image, video, or audio
  * element based on the item's dataType. Supports additional children for overlay content.
@@ -32,11 +34,6 @@ import type { CarouselViewerProps } from './types';
  * @param props.classNames.container - Class name for the viewer container.
  * @param props.classNames.media - Class name for the displayed media element (img, video, or audio).
  * @returns The carousel viewer component.
- *
- * @example
- * ```tsx
- * <CarouselViewer />
- * ```
  */
 export function CarouselViewer({
   children,

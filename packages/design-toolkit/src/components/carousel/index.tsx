@@ -60,7 +60,7 @@ export function Carousel({
       currentPosition={currentPosition}
       setCurrentPosition={setCurrentPosition}
     >
-      <div className={clsx(styles.carousel, className)} {...rest}>
+      <div {...rest} className={clsx(styles.carousel, className)}>
         {children}
       </div>
     </CarouselProvider>

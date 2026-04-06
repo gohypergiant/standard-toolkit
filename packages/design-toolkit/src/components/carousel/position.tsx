@@ -19,15 +19,12 @@ import styles from './style.module.css';
 
 /**
  * Displays the current position and total item count (e.g. "3 / 9").
+ * Note that it relies on the <Carousel/> component to supply context and must be used
+ * as a child of that component.
  *
  * @param props - The position display props.
  * @param props.className - Additional CSS class name.
  * @returns The carousel position indicator.
- *
- * @example
- * ```tsx
- * <CarouselPosition />
- * ```
  */
 export function CarouselPosition({
   className,
