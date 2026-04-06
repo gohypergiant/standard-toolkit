@@ -44,7 +44,7 @@
 
 @layer components.l2 {
   .gallery-item {
-    @apply aspect-3/2 bg-transparent p-0 transition-all duration-200 ease-in-out;
+    @apply aspect-3/2 rounded-none bg-transparent p-0 transition-all duration-200 ease-in-out;
     height: 32px;
 
     @variant selected {
