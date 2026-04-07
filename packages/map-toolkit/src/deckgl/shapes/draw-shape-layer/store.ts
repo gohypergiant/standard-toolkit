@@ -49,6 +49,7 @@ import {
 } from './constants';
 import { DrawShapeEvents } from './events';
 import { convertFeatureToShape } from './utils/feature-conversion';
+import type { DistanceUnitSymbol } from '@accelint/constants/units';
 import type { UniqueId } from '@accelint/core';
 import type { Feature } from 'geojson';
 import type { MapModeEventType } from '@/map-mode/types';
@@ -70,6 +71,7 @@ const DEFAULT_DRAWING_STATE: DrawingState = {
   tentativeFeature: null,
   styleDefaults: null,
   circleDefaults: null,
+  distanceUnit: null,
 };
 
 /**
@@ -135,9 +137,15 @@ function completeDrawingInternal(
 
   const shapeType = state.activeShapeType;
   const styleDefaults = state.styleDefaults;
+  const distanceUnit = state.distanceUnit;
 
   // Convert feature to Shape
-  const shape = convertFeatureToShape(feature, shapeType, styleDefaults);
+  const shape = convertFeatureToShape(
+    feature,
+    shapeType,
+    styleDefaults,
+    distanceUnit,
+  );
 
   // Reset state with new object reference
   setState({
@@ -145,6 +153,7 @@ function completeDrawingInternal(
     tentativeFeature: null,
     styleDefaults: null,
     circleDefaults: null,
+    distanceUnit: null,
   });
 
   // Release mode and cursor using shared utilities
@@ -182,6 +191,7 @@ function cancelDrawingInternal(
     tentativeFeature: null,
     styleDefaults: null,
     circleDefaults: null,
+    distanceUnit: null,
   });
 
   // Release mode and cursor using shared utilities
@@ -285,6 +295,24 @@ export const drawStore = createMapStore<DrawingState, DrawShapeActions>({
  * }
  * ```
  */
+/**
+ * Set the distance unit for the draw store.
+ *
+ * Called by DrawShapeLayer when its `unit` prop changes so that
+ * `convertFeatureToShape` can compute circle properties in the correct unit.
+ *
+ * @param mapId - The map instance ID to update.
+ * @param unit - The distance unit symbol (e.g. 'km', 'mi'), or null to clear.
+ */
+export function setDrawDistanceUnit(
+  mapId: UniqueId,
+  unit: DistanceUnitSymbol | null,
+): void {
+  if (drawStore.exists(mapId) && drawStore.get(mapId).activeShapeType) {
+    drawStore.set(mapId, { distanceUnit: unit });
+  }
+}
+
 export function getDrawingState(mapId: UniqueId): DrawingState | null {
   if (!drawStore.exists(mapId)) {
     return null;
