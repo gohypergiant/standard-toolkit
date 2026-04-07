@@ -13,7 +13,6 @@
 import { renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createGanttStoreProvider } from '@/components/gantt/__fixtures__/store-provider';
-import * as layoutUtils from '@/components/gantt/utils/layout';
 import * as thresholdUtils from '@/components/gantt/utils/thresholds';
 import { useTotalDataRegionThresholds } from './index';
 import type { TemporalDataContextValue } from '@/components/gantt/context/temporal-data';
@@ -33,19 +32,22 @@ import {
 } from '@/components/gantt/context';
 import { useTemporalDataContext } from '@/components/gantt/context/temporal-data';
 
-vi.mock('@/components/gantt/utils/layout');
+// Only mock the decision functions — let pure derivation functions run with real implementations
 vi.mock('@/components/gantt/utils/thresholds', async () => {
-  const actual = await vi.importActual('@/components/gantt/utils/thresholds');
+  const actual = await vi.importActual<typeof thresholdUtils>(
+    '@/components/gantt/utils/thresholds',
+  );
   return {
     ...actual,
     shouldExamineThresholds: vi.fn(),
-    deriveTotalDataRegion: vi.fn(),
-    deriveRenderedRegion: vi.fn(),
-    deriveTemporalThresholds: vi.fn(),
-    deriveRowIndexThresholds: vi.fn(),
     examineThresholds: vi.fn(),
   };
 });
+
+// Mock deriveRenderedSlice since it depends on DOM measurements
+vi.mock('@/components/gantt/utils/layout', () => ({
+  deriveRenderedSlice: vi.fn(() => ({ start: 2, end: 7 })),
+}));
 
 describe('useTotalDataRegionThresholds', () => {
   const mockTotalBounds = { startMs: 1000, endMs: 10000 };
@@ -69,7 +71,6 @@ describe('useTotalDataRegionThresholds', () => {
     clientHeight: 500,
   } as HTMLDivElement;
   const defaultRowHeightPx = 40;
-  const mockRenderedSlice = { start: 2, end: 7 };
   const mockMetThresholds: GanttMetThresholdData[] = [
     {
       axis: 'horizontal',
@@ -81,38 +82,12 @@ describe('useTotalDataRegionThresholds', () => {
   const wrapper = createGanttStoreProvider({ startTimeMs: 0 });
 
   beforeEach(() => {
-    vi.clearAllMocks();
-
     vi.mocked(useTemporalDataContext).mockReturnValue(baseContextValue);
     vi.mocked(useGanttContext).mockReturnValue({
       rowHeightPx: defaultRowHeightPx,
     } as unknown as GanttContextValue);
 
-    vi.mocked(layoutUtils.deriveRenderedSlice).mockReturnValue(
-      mockRenderedSlice,
-    );
-
     vi.mocked(thresholdUtils.shouldExamineThresholds).mockReturnValue(true);
-    vi.mocked(thresholdUtils.deriveTotalDataRegion).mockReturnValue({
-      startMs: mockTotalBounds.startMs,
-      endMs: mockTotalBounds.endMs,
-      startRowIndex: 0,
-      endRowIndex: 9,
-    });
-    vi.mocked(thresholdUtils.deriveRenderedRegion).mockReturnValue({
-      startMs: mockRenderedRegionBounds.startMs,
-      endMs: mockRenderedRegionBounds.endMs,
-      startRowIndex: mockRenderedSlice.start,
-      endRowIndex: mockRenderedSlice.end - 1,
-    });
-    vi.mocked(thresholdUtils.deriveTemporalThresholds).mockReturnValue({
-      start: 3000,
-      end: 8000,
-    });
-    vi.mocked(thresholdUtils.deriveRowIndexThresholds).mockReturnValue({
-      start: 2,
-      end: 7,
-    });
     vi.mocked(thresholdUtils.examineThresholds).mockReturnValue([]);
   });
 

@@ -11,7 +11,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { type PropsWithChildren, useRef } from 'react';
+import type { PropsWithChildren } from 'react';
 import { GANTT_HEADER_HEIGHT_PX } from '@/components/gantt/constants';
 import { useGanttStore } from '@/components/gantt/context/store';
 import { useRootElementHeight } from '@/components/gantt/hooks/use-root-element-height';
@@ -21,13 +21,11 @@ import styles from '../styles.module.css';
 export function VirtualizedContentHeightContainer({
   children,
 }: PropsWithChildren) {
-  const ref = useRef<HTMLDivElement>(null);
   const virtualizedHeightPx = useGanttStore(selectors.virtualizedHeightPx);
   const rootElementHeight = useRootElementHeight();
 
   return (
     <div
-      ref={ref}
       className={styles['virtualized-content-height']}
       data-height={virtualizedHeightPx + GANTT_HEADER_HEIGHT_PX}
     >

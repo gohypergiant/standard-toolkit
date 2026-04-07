@@ -29,11 +29,11 @@ export function GanttBlock({
 
   return (
     <Range
+      {...rest}
       startTimeMs={startTimeMs}
       endTimeMs={endTimeMs}
       className={clsx(styles['row-block'], className)}
       data-elapsed-pct={elapsedPct}
-      {...rest}
     >
       {children}
     </Range>

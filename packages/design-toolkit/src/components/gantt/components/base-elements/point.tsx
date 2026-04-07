@@ -11,7 +11,12 @@
  * governing permissions and limitations under the License.
  */
 
-import { type HTMLAttributes, type PropsWithChildren, useState } from 'react';
+import {
+  type HTMLAttributes,
+  type PropsWithChildren,
+  useCallback,
+  useState,
+} from 'react';
 import { useTemporalDataContext } from '@/components/gantt/context/temporal-data';
 import { timestampWithinBounds } from '@/components/gantt/utils/helpers';
 import { usePointElementLayout } from './use-point-element-layout';
@@ -35,9 +40,9 @@ function PointInner({
     timeMs,
   });
 
-  const assignElementRef = (node: HTMLDivElement) => {
+  const assignElementRef = useCallback((node: HTMLDivElement | null) => {
     setElement(node);
-  };
+  }, []);
 
   return (
     <div ref={assignElementRef} data-color={color} {...rest}>

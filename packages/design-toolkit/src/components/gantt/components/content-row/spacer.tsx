@@ -24,9 +24,9 @@ export function GanttSpacer(props: GanttSpacerProps) {
 
   return (
     <Range
+      {...props}
       className={styles['row-spacer']}
       data-elapsed-pct={elapsedPct}
-      {...props}
     />
   );
 }

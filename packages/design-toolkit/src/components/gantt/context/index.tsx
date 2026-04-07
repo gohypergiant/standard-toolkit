@@ -13,9 +13,7 @@
 
 import {
   createContext,
-  type Dispatch,
   type PropsWithChildren,
-  type SetStateAction,
   useContext,
   useMemo,
   useState,
@@ -28,14 +26,6 @@ import type {
   GanttThresholdProps,
   GanttTimescale,
 } from '@/components/gantt/types';
-
-function refAssignmentFactory(
-  setter: Dispatch<SetStateAction<HTMLDivElement | null>>,
-) {
-  return (node: HTMLDivElement | null) => {
-    setter(node);
-  };
-}
 
 export type GanttContextValue = {
   timelineContainerElement: HTMLDivElement | null;
@@ -55,7 +45,7 @@ export const GanttContext = createContext<GanttContextValue | undefined>(
   undefined,
 );
 
-type GanttProviderProps = {
+export type GanttProviderProps = {
   startTimeMs: number;
   endTimeMs: number;
   timescale: GanttTimescale;
@@ -84,7 +74,9 @@ export function GanttProvider({
   const [ganttPanelElement, setGanttPanelElement] =
     useState<HTMLDivElement | null>(null);
 
-  const midpointMs = startTimeMs + (endTimeMs - startTimeMs) / 2;
+  const [midpointMs] = useState(
+    () => startTimeMs + (endTimeMs - startTimeMs) / 2,
+  );
 
   const totalBounds = useMemo(
     () => ({
@@ -94,23 +86,13 @@ export function GanttProvider({
     [startTimeMs, endTimeMs],
   );
 
-  const assignTimelineContainerElementRef = refAssignmentFactory(
-    setTimelineContainerElement,
-  );
-  const assignHeaderElementRef = refAssignmentFactory(setHeaderElement);
-  const assignRootElementRef = refAssignmentFactory(setRootElement);
-  const assignGanttContentElementRef = refAssignmentFactory(
-    setGanttContentElement,
-  );
-  const assignGanttPanelElementRef = refAssignmentFactory(setGanttPanelElement);
-
   const value = useMemo(
     () => ({
-      assignTimelineContainerElementRef,
-      assignHeaderElementRef,
-      assignRootElementRef,
-      assignGanttContentElementRef,
-      assignGanttPanelElementRef,
+      assignTimelineContainerElementRef: setTimelineContainerElement,
+      assignHeaderElementRef: setHeaderElement,
+      assignRootElementRef: setRootElement,
+      assignGanttContentElementRef: setGanttContentElement,
+      assignGanttPanelElementRef: setGanttPanelElement,
       timelineContainerElement,
       headerElement,
       rootElement,
@@ -119,11 +101,6 @@ export function GanttProvider({
       rowHeightPx,
     }),
     [
-      assignTimelineContainerElementRef,
-      assignHeaderElementRef,
-      assignRootElementRef,
-      assignGanttContentElementRef,
-      assignGanttPanelElementRef,
       timelineContainerElement,
       headerElement,
       rootElement,

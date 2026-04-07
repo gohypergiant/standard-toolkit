@@ -11,45 +11,44 @@
  * governing permissions and limitations under the License.
  */
 
-import { HOURS_MAPPING, MINUTES_MAPPING } from '../constants';
+import { HOURS_MAPPING, MINUTES_MAPPING, MS_PER_HOUR } from '../constants';
 
-function msToSeconds(valueMs: number) {
-  return valueMs / 1000;
-}
+const MS_PER_SECOND = 1000;
+const MS_PER_DAY = MS_PER_HOUR * 24;
 
-function msToMinutes(valueMs: number) {
-  return msToSeconds(valueMs) / 60;
-}
+const hoursIntervalSet = new Set(Object.values(HOURS_MAPPING));
+const minutesIntervalSet = new Set(Object.values(MINUTES_MAPPING));
 
-function msToHours(valueMs: number) {
-  return msToMinutes(valueMs) / 60;
-}
-
-const hoursIntervals = Object.values(HOURS_MAPPING);
-const minutesIntervals = Object.values(MINUTES_MAPPING);
-
-export function roundDateToInterval(
-  date: Date,
+/**
+ * Rounds a millisecond timestamp down to the nearest interval boundary.
+ * Uses pure integer arithmetic to avoid Date object allocations.
+ */
+export function roundMsToInterval(
+  timestampMs: number,
   selectedTimeIntervalMs: number,
-) {
-  const isHoursInterval = hoursIntervals.includes(selectedTimeIntervalMs);
-  const isMinutesInterval = minutesIntervals.includes(selectedTimeIntervalMs);
+): number {
+  // Zero out sub-second precision (handle negative timestamps correctly)
+  const msRemainder =
+    ((timestampMs % MS_PER_SECOND) + MS_PER_SECOND) % MS_PER_SECOND;
+  const secondAligned = timestampMs - msRemainder;
 
-  if (isHoursInterval) {
-    const hour = date.getUTCHours();
-    const differenceFromInterval = hour % msToHours(selectedTimeIntervalMs);
-
-    date.setUTCHours(hour - differenceFromInterval);
-    date.setUTCMinutes(0);
+  if (minutesIntervalSet.has(selectedTimeIntervalMs)) {
+    const intervalRemainder =
+      ((secondAligned % selectedTimeIntervalMs) + selectedTimeIntervalMs) %
+      selectedTimeIntervalMs;
+    return secondAligned - intervalRemainder;
   }
 
-  if (isMinutesInterval) {
-    const minute = date.getUTCMinutes();
-    const differenceFromInterval = minute % msToMinutes(selectedTimeIntervalMs);
-
-    date.setUTCMinutes(minute - differenceFromInterval);
+  if (hoursIntervalSet.has(selectedTimeIntervalMs)) {
+    // Hours interval — align to interval boundary within the day
+    const msIntoDayRaw = secondAligned % MS_PER_DAY;
+    const msIntoDay =
+      msIntoDayRaw < 0 ? msIntoDayRaw + MS_PER_DAY : msIntoDayRaw;
+    const hourAligned = msIntoDay - (msIntoDay % selectedTimeIntervalMs);
+    return secondAligned - msIntoDay + hourAligned;
   }
 
-  date.setUTCSeconds(0);
-  date.setUTCMilliseconds(0);
+  throw new RangeError(
+    `Unrecognized time interval: ${selectedTimeIntervalMs}ms`,
+  );
 }

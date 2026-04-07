@@ -42,7 +42,7 @@ export const TIMESCALE_MAPPING: Record<GanttTimescale, number> = {
   ...MINUTES_MAPPING,
 };
 
-export const TIMELINE_CHUNK_WIDTH = 80;
+export const TIMELINE_CHUNK_WIDTH_PX = 80;
 
 // Important: This needs to be at least 4 so we have at least
 // one chunk completely out of view on either end of
@@ -51,19 +51,19 @@ export const TIMELINE_CHUNK_WIDTH = 80;
 // of the IntersectionObserver logic.
 export const BUFFERED_CHUNK_COUNT = 4;
 export const GANTT_ROW_HEIGHT_PX = 40;
-export const GANTT_ROW_ELEMENT_HEIGHT = 30;
+export const GANTT_ROW_ELEMENT_HEIGHT_PX = 30;
 export const GANTT_CONTAINER_TOP_PX = 12;
 export const ROW_VIRTUALIZATION_OVERSCAN = 1;
 export const GANTT_HEADER_HEIGHT_PX = 64;
 
 export const TIMESCALE_OPTIONS: GanttTimescale[] = [
+  '1m',
+  '5m',
+  '10m',
+  '30m',
   '1h',
   '2h',
   '6h',
   '12h',
   '24h',
-  '1m',
-  '5m',
-  '10m',
-  '30m',
 ];

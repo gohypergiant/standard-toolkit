@@ -11,7 +11,7 @@
  */
 
 import { renderHook } from '@testing-library/react';
-import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { usePointElementLayout } from '.';
 import type { TemporalDataContextValue } from '@/components/gantt/context/temporal-data';
 
@@ -64,9 +64,10 @@ describe('usePointElementLayout', () => {
   const mockMsPerPx = 10;
 
   beforeEach(() => {
+    capturedCallbackHarness.callback = undefined;
+
     vi.mocked(useLayoutSubscription).mockImplementation(
       ({ callback }: { callback: (ms: number) => void }) => {
-        // Capture callback passed into useLayoutSubscription
         capturedCallbackHarness.callback = callback;
       },
     );
@@ -74,10 +75,6 @@ describe('usePointElementLayout', () => {
     vi.mocked(derivePointElementLayout).mockImplementation(
       mocks.derivePointElementLayout,
     );
-  });
-
-  afterAll(() => {
-    vi.restoreAllMocks();
   });
 
   it('updates element styles when subscription callback runs', () => {

@@ -11,7 +11,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { shallow } from 'zustand/shallow';
 import { useGanttStoreApi } from '../../context/store';
 import type { GanttState } from '../../store';
@@ -26,15 +26,20 @@ export function useLayoutSubscription<T>({
   selector,
 }: UseLayoutSubscriptionProps<T>) {
   const store = useGanttStoreApi();
+  const callbackRef = useRef(callback);
+  callbackRef.current = callback;
+  const selectorRef = useRef(selector);
+  selectorRef.current = selector;
+
   useEffect(() => {
     let animationFrameId: number;
 
     const unsubscribe = store.subscribe(
-      selector,
+      (state) => selectorRef.current(state),
       (value) => {
+        cancelAnimationFrame(animationFrameId);
         animationFrameId = requestAnimationFrame(() => {
-          // Invoke callback whenever the timestamp is changed.
-          callback(value);
+          callbackRef.current(value);
         });
       },
       {
@@ -54,5 +59,5 @@ export function useLayoutSubscription<T>({
       cancelAnimationFrame(animationFrameId);
       unsubscribe();
     };
-  }, [callback, selector, store]);
+  }, [store]);
 }

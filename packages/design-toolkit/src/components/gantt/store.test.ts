@@ -10,15 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { GANTT_ROW_HEIGHT_PX, MS_PER_HOUR } from './constants';
 import { createGanttStore, selectors } from './store';
 
 describe('gantt store', () => {
-  afterEach(() => {
-    vi.clearAllMocks();
-  });
-
   it('initial state is 0 and setCurrentPositionMs updates it', () => {
     const store = createGanttStore({ startTimeMs: 0 });
 

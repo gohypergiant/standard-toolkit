@@ -11,7 +11,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { GANTT_CONTAINER_TOP_PX } from '@/components/gantt/constants';
 import { useTemporalDataContext } from '@/components/gantt/context/temporal-data';
 import { formatTimestampLabel } from '@/components/gantt/utils/formatting';
@@ -29,9 +29,9 @@ function CurrentTimeInner({ currentTimeMs }: { currentTimeMs: number }) {
     indicatorElement: indicatorElementRef.current,
   });
 
-  const assignElementRef = (node: HTMLDivElement) => {
+  const assignElementRef = useCallback((node: HTMLDivElement | null) => {
     setElement(node);
-  };
+  }, []);
 
   return (
     <div
