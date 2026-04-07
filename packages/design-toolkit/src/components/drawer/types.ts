@@ -391,8 +391,6 @@ export type DrawerContextValue = {
   unregister: (view: UniqueId) => void;
   /** The placement of the drawer relative to the viewport. */
   placement: XAxisUnion | YAxisUnion;
-  /** Whether the drawer is currently open. */
-  isOpen: boolean;
 };
 
 /**

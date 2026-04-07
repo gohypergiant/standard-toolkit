@@ -16,7 +16,6 @@ import { clsx } from '@accelint/design-foundation/lib/utils';
 import type { UniqueId } from '@accelint/core';
 import 'client-only';
 import { useCallback, useRef, useState } from 'react';
-import { useEnterExitAnimation } from '@/hooks/use-enter-exit-animation';
 import { ViewStack } from '../view-stack';
 import { useViewStackEmit } from '../view-stack/context';
 import { DrawerContext } from './context';
@@ -84,11 +83,6 @@ export function Drawer({
 
   const viewStackEmit = useViewStackEmit();
 
-  // Handle enter/exit animation states
-  const { isEntering, isExiting } = useEnterExitAnimation(!!activeView, {
-    duration: 200, // matches CSS var --animation-duration-normal
-  });
-
   const handleClose = useCallback(
     (data: DrawerCloseEvent) => {
       if (
@@ -131,7 +125,6 @@ export function Drawer({
         register: (view: UniqueId) => views.current.add(view),
         unregister: (view: UniqueId) => views.current.delete(view),
         placement,
-        isOpen: !!activeView,
       }}
     >
       <ViewStack
@@ -148,10 +141,8 @@ export function Drawer({
           data-open={!!activeView || null}
           data-placement={placement}
           data-size={size}
-          data-entering={isEntering || null}
-          data-exiting={isExiting || null}
         >
-          <div className={styles.drawerInner}>{children}</div>
+          {children}
         </div>
       </ViewStack>
     </DrawerContext.Provider>

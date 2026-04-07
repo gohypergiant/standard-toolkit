@@ -55,7 +55,6 @@
     "dockview-react": "^5.0.0",
     "esbuild-fix-imports-plugin": "^1.0.23",
     "jsdom": "^25.0.1",
-    "motion": "^12.29.2",
     "postcss": "^8.5.6",
     "prettier": "^3.7.4",
     "prettier-plugin-tailwindcss": "^0.7.2",

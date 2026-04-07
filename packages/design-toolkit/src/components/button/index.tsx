@@ -85,7 +85,6 @@ export function Button({ ref, ...props }: ButtonProps) {
     color = 'mono-muted',
     size = 'medium',
     variant = 'filled',
-    isDisabled,
     ...rest
   } = props;
 
@@ -94,7 +93,6 @@ export function Button({ ref, ...props }: ButtonProps) {
       <AriaButton
         {...rest}
         ref={ref}
-        isDisabled={isDisabled}
         className={composeRenderProps(className, (className) =>
           clsx('group/button', styles.button, styles[variant], className),
         )}

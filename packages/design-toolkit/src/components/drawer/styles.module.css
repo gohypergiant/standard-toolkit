@@ -32,7 +32,6 @@
     @apply relative grid h-full w-full;
     grid-template-columns: auto 1fr auto;
     grid-template-rows: auto 1fr auto;
-    overflow: hidden;
 
     @variant push-top {
       --drawer-main-row-start: 2;
@@ -59,97 +58,8 @@
     @apply relative col-(--drawer-main-cols) row-(--drawer-main-rows);
   }
 
-  /* Single keyframe for entrance using CSS variables */
-  @keyframes drawer-enter {
-    from {
-      transform: translate(var(--drawer-enter-x), var(--drawer-enter-y));
-    }
-    to {
-      transform: translate(0, 0);
-    }
-  }
-
-  /* Single keyframe for exit using CSS variables */
-  @keyframes drawer-exit {
-    from {
-      transform: translate(0, 0);
-    }
-    to {
-      transform: translate(var(--drawer-exit-x), var(--drawer-exit-y));
-    }
-  }
-
   .drawer {
     @apply bg-surface-default text-body-m pointer-events-none relative flex flex-col;
-
-    /* CSS variables for animation control */
-    --drawer-enter-x: 0;
-    --drawer-enter-y: 0;
-    --drawer-exit-x: 0;
-    --drawer-exit-y: 0;
-
-    /* Transition as fallback to prevent flicker during state changes */
-    transition: transform var(--animation-duration-normal)
-      var(--animation-easing-standard);
-
-    /* Set animation variables and initial positions based on placement */
-    @variant placement-left {
-      --drawer-enter-x: -100%;
-      --drawer-exit-x: -100%;
-
-      @variant not-open {
-        transform: translateX(-100%);
-      }
-    }
-
-    @variant placement-right {
-      --drawer-enter-x: 100%;
-      --drawer-exit-x: 100%;
-
-      @variant not-open {
-        transform: translateX(100%);
-      }
-    }
-
-    @variant placement-top {
-      --drawer-enter-y: -100%;
-      --drawer-exit-y: -100%;
-
-      @variant not-open {
-        transform: translateY(-100%);
-      }
-    }
-
-    @variant placement-bottom {
-      --drawer-enter-y: 100%;
-      --drawer-exit-y: 100%;
-
-      @variant not-open {
-        transform: translateY(100%);
-      }
-    }
-
-    /* Disable transition when animation is active */
-    @variant entering {
-      transition: none;
-      animation: drawer-enter var(--animation-duration-normal)
-        var(--animation-easing-standard) both;
-    }
-
-    @variant exiting {
-      transition: none;
-      animation: drawer-exit var(--animation-duration-normal)
-        var(--animation-easing-standard) both;
-    }
-
-    /* Open state without animation */
-    @variant open {
-      @variant not-entering {
-        @variant not-exiting {
-          transform: translate(0, 0);
-        }
-      }
-    }
 
     @variant placement-top {
       @apply col-span-full row-start-1 row-end-2;
@@ -217,68 +127,6 @@
 
     & > * {
       @apply pointer-events-auto;
-    }
-  }
-
-  .drawerInner {
-    @apply relative flex flex-col;
-    height: 100%;
-    width: 100%;
-
-    @variant group-placement-left/drawer {
-      @variant group-size-large/drawer {
-        @apply w-(--drawer-size-large);
-      }
-
-      @variant group-size-medium/drawer {
-        @apply w-(--drawer-size-medium);
-      }
-
-      @variant group-size-small/drawer {
-        @apply w-(--drawer-size-small);
-      }
-    }
-
-    @variant group-placement-right/drawer {
-      @variant group-size-large/drawer {
-        @apply w-(--drawer-size-large);
-      }
-
-      @variant group-size-medium/drawer {
-        @apply w-(--drawer-size-medium);
-      }
-
-      @variant group-size-small/drawer {
-        @apply w-(--drawer-size-small);
-      }
-    }
-
-    @variant group-placement-top/drawer {
-      @variant group-size-large/drawer {
-        @apply h-(--drawer-size-large);
-      }
-
-      @variant group-size-medium/drawer {
-        @apply h-(--drawer-size-medium);
-      }
-
-      @variant group-size-small/drawer {
-        @apply h-(--drawer-size-small);
-      }
-    }
-
-    @variant group-placement-bottom/drawer {
-      @variant group-size-large/drawer {
-        @apply h-(--drawer-size-large);
-      }
-
-      @variant group-size-medium/drawer {
-        @apply h-(--drawer-size-medium);
-      }
-
-      @variant group-size-small/drawer {
-        @apply h-(--drawer-size-small);
-      }
     }
   }
 
@@ -357,7 +205,67 @@
   }
 
   .panel {
-    @apply gap-s p-l flex h-full min-h-0 flex-col;
+    @apply gap-s p-l hidden h-full min-h-0 flex-col;
+
+    @variant group-open/drawer {
+      @apply flex;
+    }
+
+    @variant group-placement-left/drawer {
+      @variant group-size-large/drawer {
+        @apply w-(--drawer-size-large);
+      }
+
+      @variant group-size-medium/drawer {
+        @apply w-(--drawer-size-medium);
+      }
+
+      @variant group-size-small/drawer {
+        @apply w-(--drawer-size-small);
+      }
+    }
+
+    @variant group-placement-right/drawer {
+      @variant group-size-large/drawer {
+        @apply w-(--drawer-size-large);
+      }
+
+      @variant group-size-medium/drawer {
+        @apply w-(--drawer-size-medium);
+      }
+
+      @variant group-size-small/drawer {
+        @apply w-(--drawer-size-small);
+      }
+    }
+
+    @variant group-placement-top/drawer {
+      @variant group-size-large/drawer {
+        @apply h-(--drawer-size-large);
+      }
+
+      @variant group-size-medium/drawer {
+        @apply h-(--drawer-size-medium);
+      }
+
+      @variant group-size-small/drawer {
+        @apply h-(--drawer-size-small);
+      }
+    }
+
+    @variant group-placement-bottom/drawer {
+      @variant group-size-large/drawer {
+        @apply h-(--drawer-size-large);
+      }
+
+      @variant group-size-medium/drawer {
+        @apply h-(--drawer-size-medium);
+      }
+
+      @variant group-size-small/drawer {
+        @apply h-(--drawer-size-small);
+      }
+    }
   }
 
   .view {
@@ -392,13 +300,5 @@
 @layer components.l2 {
   .item {
     @apply rounded-medium;
-  }
-
-  /* Accessibility: Respect reduced motion preferences */
-  @media (prefers-reduced-motion: reduce) {
-    .drawer {
-      animation-duration: var(--animation-duration-instant) !important;
-      transition-duration: var(--animation-duration-instant) !important;
-    }
   }
 }

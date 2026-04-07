@@ -10,8 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import type { MediaController } from 'media-chrome/react';
 import type { ComponentProps, ComponentPropsWithRef, ReactNode } from 'react';
+import type { MediaController } from 'media-chrome/react';
 
 export type AudioProps = Omit<
   ComponentPropsWithRef<'audio'>,
