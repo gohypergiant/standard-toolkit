@@ -19,6 +19,7 @@ import { useToastQueue } from '@react-stately/toast';
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { flushSync } from 'react-dom';
 import {
   composeRenderProps,
   type QueuedToast,
@@ -84,6 +85,15 @@ export function NoticeList({
     () =>
       new ToastQueue<NoticeContent>({
         maxVisibleToasts: limit,
+        wrapUpdate(fn) {
+          if ('startViewTransition' in document) {
+            document.startViewTransition(() => {
+              flushSync(fn);
+            });
+          } else {
+            fn();
+          }
+        },
       }),
     [limit],
   );

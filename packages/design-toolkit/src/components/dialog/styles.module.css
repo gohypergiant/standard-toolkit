@@ -19,30 +19,30 @@
     /* Backdrop color using design token */
     background-color: var(--primitive-alpha-black-400);
 
-    /* Backdrop fade animations */
-    &[data-entering] {
-      animation: backdrop-fade-in var(--animation-duration-normal)
-        var(--animation-easing-standard) both;
+    @variant motion-safe {
+      transition: background-color var(--animation-duration-fast)
+        var(--animation-easing-accelerate);
     }
 
-    &[data-exiting] {
-      animation: backdrop-fade-out var(--animation-duration-normal)
-        var(--animation-easing-standard) both;
+    @variant entering {
+      background-color: transparent;
+    }
+
+    @variant exiting {
+      background-color: transparent;
     }
   }
 
   .modal {
     @apply bg-surface-overlay shadow-elevation-overlay flex flex-col justify-center;
 
-    /* Modal scale and fade animations */
-    &[data-entering] {
-      animation: dialog-enter var(--animation-duration-normal)
-        var(--animation-easing-standard) both;
-    }
-
-    &[data-exiting] {
-      animation: dialog-exit var(--animation-duration-normal)
-        var(--animation-easing-standard) both;
+    @variant motion-safe {
+      @variant entering {
+        @apply animate-fade-enter;
+      }
+      @variant exiting {
+        @apply animate-fade-exit;
+      }
     }
 
     @variant group-size-small/dialog {
@@ -106,56 +106,6 @@
 
     @variant group-size-large/dialog {
       @apply mt-xl;
-    }
-  }
-
-  /* Backdrop fade animations */
-  @keyframes backdrop-fade-in {
-    from {
-      background-color: transparent;
-    }
-    to {
-      background-color: var(--primitive-alpha-black-400);
-    }
-  }
-
-  @keyframes backdrop-fade-out {
-    from {
-      background-color: var(--primitive-alpha-black-400);
-    }
-    to {
-      background-color: transparent;
-    }
-  }
-
-  /* Dialog scale and fade animations */
-  @keyframes dialog-enter {
-    from {
-      opacity: 0;
-      transform: scale(0.95);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-
-  @keyframes dialog-exit {
-    from {
-      opacity: 1;
-      transform: scale(1);
-    }
-    to {
-      opacity: 0;
-      transform: scale(0.95);
-    }
-  }
-
-  /* Accessibility: Respect reduced motion preferences */
-  @media (prefers-reduced-motion: reduce) {
-    .overlay,
-    .modal {
-      animation-duration: var(--animation-duration-instant) !important;
     }
   }
 }

@@ -14,92 +14,41 @@
 
 @layer components.l1 {
   .tooltip {
+    --offset: var(--spacing-xxs);
+    --offset-neg: calc(var(--spacing-xxs) * -1);
+
     @apply fg-primary-bold rounded-small bg-surface-overlay px-s py-xs text-body-xs shadow-elevation-overlay flex items-center justify-center text-center wrap-break-word select-none;
     max-width: 160px;
+    transition:
+      transform var(--animation-duration-normal),
+      opacity var(--animation-duration-normal);
 
-    /* Start invisible to prevent flash */
-    opacity: 0;
+    @variant motion-safe {
+      @variant placement-top {
+        --origin: translateY(var(--offset));
+      }
 
-    /* CSS variables for animation control */
-    --tooltip-enter-x: 0;
-    --tooltip-enter-y: 0;
-    --tooltip-exit-x: 0;
-    --tooltip-exit-y: 0;
+      @variant placement-bottom {
+        --origin: translateY(var(--offset-neg));
+      }
 
-    /* Set animation variables and initial position based on placement */
-    &[data-placement^='top'] {
-      --tooltip-enter-y: var(--spacing-s);
-      --tooltip-exit-y: var(--spacing-s);
-      /* Start at the "from" position before animation */
-      transform: translate(0, var(--spacing-s));
-    }
+      @variant placement-left {
+        --origin: translateX(var(--offset));
+      }
 
-    &[data-placement^='bottom'] {
-      --tooltip-enter-y: calc(-1 * var(--spacing-s));
-      --tooltip-exit-y: calc(-1 * var(--spacing-s));
-      /* Start at the "from" position before animation */
-      transform: translate(0, calc(-1 * var(--spacing-s)));
-    }
+      @variant placement-right {
+        --origin: translateX(var(--offset-neg));
+      }
 
-    &[data-placement^='left'] {
-      --tooltip-enter-x: var(--spacing-s);
-      --tooltip-exit-x: var(--spacing-s);
-      /* Start at the "from" position before animation */
-      transform: translate(var(--spacing-s), 0);
-    }
+      @variant entering {
+        transform: var(--origin);
+        opacity: 0;
+      }
 
-    &[data-placement^='right'] {
-      --tooltip-enter-x: calc(-1 * var(--spacing-s));
-      --tooltip-exit-x: calc(-1 * var(--spacing-s));
-      /* Start at the "from" position before animation */
-      transform: translate(calc(-1 * var(--spacing-s)), 0);
-    }
-
-    /* Apply animations based on state */
-    &[data-entering] {
-      animation: tooltip-enter var(--animation-duration-fast)
-        var(--animation-easing-standard) both;
-    }
-
-    &[data-exiting] {
-      animation: tooltip-exit var(--animation-duration-fast)
-        var(--animation-easing-standard) both;
-    }
-
-    &[data-placement]:not([data-entering]):not([data-exiting]) {
-      opacity: 1;
-      transform: translate(0, 0);
-    }
-  }
-
-  /* Single keyframe for entrance using CSS variables */
-  @keyframes tooltip-enter {
-    from {
-      opacity: 0;
-      transform: translate(var(--tooltip-enter-x), var(--tooltip-enter-y));
-    }
-    to {
-      opacity: 1;
-      transform: translate(0, 0);
-    }
-  }
-
-  /* Single keyframe for exit using CSS variables */
-  @keyframes tooltip-exit {
-    from {
-      opacity: 1;
-      transform: translate(0, 0);
-    }
-    to {
-      opacity: 0;
-      transform: translate(var(--tooltip-exit-x), var(--tooltip-exit-y));
-    }
-  }
-
-  /* Accessibility: Respect reduced motion preferences */
-  @media (prefers-reduced-motion: reduce) {
-    .tooltip {
-      animation-duration: var(--animation-duration-instant) !important;
+      @variant exiting {
+        transform: var(--origin);
+        opacity: 0;
+      }
     }
   }
 }

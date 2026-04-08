@@ -13,30 +13,6 @@
 @reference '@accelint/design-foundation/styles';
 
 @layer components.l1 {
-  /* Keyframes for combobox dropdown fade + scale in */
-  @keyframes combobox-fade-scale-in {
-    from {
-      opacity: 0;
-      transform: scale(0.95);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-
-  /* Keyframes for combobox dropdown fade + scale out */
-  @keyframes combobox-fade-scale-out {
-    from {
-      opacity: 1;
-      transform: scale(1);
-    }
-    to {
-      opacity: 0;
-      transform: scale(0.95);
-    }
-  }
-
   .field {
     @apply gap-xs flex flex-col select-none;
   }
@@ -126,16 +102,16 @@
     @apply -ml-s select-none;
     min-width: calc(var(--trigger-width) + (var(--spacing-s) * 2));
 
-    /* Entering animation (fade + scale in) */
-    &[data-entering] {
-      animation: combobox-fade-scale-in var(--animation-duration-normal)
-        var(--animation-easing-decelerate) both;
-    }
+    @variant motion-safe {
+      @variant entering {
+        animation: fade-enter var(--animation-duration-normal)
+          var(--animation-easing-decelerate) both;
+      }
 
-    /* Exiting animation (fade + scale out) */
-    &[data-exiting] {
-      animation: combobox-fade-scale-out var(--animation-duration-fast)
-        var(--animation-easing-accelerate) both;
+      @variant exiting {
+        animation: fade-exit var(--animation-duration-fast)
+          var(--animation-easing-accelerate) both;
+      }
     }
   }
 }

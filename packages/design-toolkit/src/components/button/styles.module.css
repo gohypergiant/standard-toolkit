@@ -16,13 +16,13 @@
   .button {
     @apply rounded-medium flex w-fit shrink-0 cursor-pointer items-center justify-center outline outline-transparent select-none;
 
-    /* Smooth transitions for all interactive states */
-    transition:
-      background-color var(--animation-duration-fast)
-        var(--animation-easing-standard),
-      color var(--animation-duration-fast) var(--animation-easing-standard),
-      outline-color var(--animation-duration-fast)
-        var(--animation-easing-standard);
+    @variant motion-safe {
+      transition:
+        background-color var(--animation-duration-normal)
+          var(--animation-easing-standard),
+        outline-color var(--animation-duration-normal)
+          var(--animation-easing-standard);
+    }
 
     @variant size-large {
       @apply gap-xs px-l py-s text-button-l;
@@ -409,21 +409,16 @@
         @apply fg-disabled outline-interactive-disabled;
       }
     }
-
-    /* Accessibility: Respect reduced motion preferences */
-    @media (prefers-reduced-motion: reduce) {
-      transition-duration: var(--animation-duration-instant);
-    }
   }
 
   .toggle {
-    /* Smooth transitions for all interactive states */
-    transition:
-      background-color var(--animation-duration-fast)
-        var(--animation-easing-standard),
-      color var(--animation-duration-fast) var(--animation-easing-standard),
-      outline-color var(--animation-duration-fast)
-        var(--animation-easing-standard);
+    @variant motion-safe {
+      transition:
+        background-color var(--animation-duration-normal)
+          var(--animation-easing-standard),
+        outline-color var(--animation-duration-normal)
+          var(--animation-easing-standard);
+    }
 
     &.flat {
       @variant color-mono-muted {
@@ -933,11 +928,6 @@
           @apply fg-disabled bg-interactive-disabled outline-interactive-disabled;
         }
       }
-    }
-
-    /* Accessibility: Respect reduced motion preferences */
-    @media (prefers-reduced-motion: reduce) {
-      transition-duration: var(--animation-duration-instant);
     }
   }
 }

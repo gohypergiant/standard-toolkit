@@ -35,11 +35,14 @@
     &:before {
       @apply size-m mr-l block rounded-full bg-(--fg-primary-muted);
       content: '';
-      /* Smooth transition for toggle position and color */
-      transition:
-        margin var(--animation-duration-normal) var(--animation-easing-standard),
-        background-color var(--animation-duration-fast)
-          var(--animation-easing-standard);
+
+      @variant motion-safe {
+        transition:
+          margin var(--animation-duration-normal)
+            var(--animation-easing-standard),
+          background-color var(--animation-duration-fast)
+            var(--animation-easing-standard);
+      }
     }
 
     @variant group-hover/switch {
@@ -116,15 +119,6 @@
 
     @variant group-disabled/switch {
       @apply fg-disabled;
-    }
-  }
-}
-
-@layer components.l2 {
-  /* Accessibility: Respect reduced motion preferences */
-  @media (prefers-reduced-motion: reduce) {
-    .control:before {
-      transition-duration: var(--animation-duration-instant) !important;
     }
   }
 }

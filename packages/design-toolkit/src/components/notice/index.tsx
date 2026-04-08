@@ -14,13 +14,11 @@
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import Cancel from '@accelint/icons/cancel';
-import { useEffect, useState } from 'react';
 import {
   Text,
   UNSTABLE_Toast as Toast,
   UNSTABLE_ToastContent as ToastContent,
 } from 'react-aria-components';
-import { useEnterExitAnimation } from '@/hooks/use-enter-exit-animation';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { NoticeIcon } from './notice-icon';
@@ -82,33 +80,13 @@ export function Notice({
   onSecondaryAction,
   onClose,
 }: NoticeProps) {
-  const [isVisible, setIsVisible] = useState(true);
-
-  // Handle enter/exit animation states
-  const { isEntering, isExiting } = useEnterExitAnimation(isVisible, {
-    duration: 160, // matches CSS var --animation-duration-normal
-    skipInitialMount: false, // Always animate on mount
-  });
-
-  // When exit animation completes, call the actual onClose
-  useEffect(() => {
-    if (!(isVisible || isExiting)) {
-      onClose?.();
-    }
-  }, [isVisible, isExiting, onClose]);
-
-  const handleClose = () => {
-    setIsVisible(false);
-  };
-
   return (
     <Toast
       className={clsx('group/notice', styles.notice, classNames?.notice)}
-      toast={{ key: id, content: message, onClose: handleClose }}
+      toast={{ key: id, content: message, onClose }}
       data-color={color}
       data-size={size}
-      data-entering={isEntering || null}
-      data-exiting={isExiting || null}
+      style={{ viewTransitionName: id }}
     >
       <ToastContent className={clsx(styles.content, classNames?.content)}>
         {!hideIcon && size === 'medium' && (
