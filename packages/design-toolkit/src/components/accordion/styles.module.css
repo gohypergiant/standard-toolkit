@@ -46,7 +46,6 @@
   }
 
   .panel {
-    @apply p-s;
     @apply grid overflow-hidden;
     grid-template-rows: 1fr;
 
@@ -56,6 +55,7 @@
 
     & > * {
       min-height: 0;
+      @apply p-s;
     }
 
     @variant motion-safe {
