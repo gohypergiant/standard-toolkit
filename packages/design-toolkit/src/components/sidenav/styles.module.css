@@ -14,6 +14,7 @@
 
 @layer components.l1 {
   .sidenav {
+    --sidenav-width: 64px;
     @apply fg-primary-bold gap-xs bg-surface-default p-m absolute left-0 row-span-full flex h-full flex-col;
     overflow: hidden;
 
@@ -29,7 +30,7 @@
 
     @variant closed {
       @apply items-center;
-      transform: translateX(calc(-100% + 64px));
+      transform: translateX(calc(-100% + var(--sidenav-width)));
     }
   }
 
