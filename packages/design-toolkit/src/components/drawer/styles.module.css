@@ -61,8 +61,18 @@
   .drawer {
     @apply bg-surface-default text-body-m pointer-events-none relative flex flex-col;
 
+    @variant motion-safe {
+      transition: transform var(--animation-duration-slow)
+        var(--animation-easing-standard);
+    }
+
     @variant placement-top {
       @apply col-span-full row-start-1 row-end-2;
+      transform: translateY(-100%);
+
+      @variant open {
+        transform: translateY(0);
+      }
 
       @variant group-extend-right/layout {
         @apply col-end-3;
@@ -79,6 +89,11 @@
 
     @variant placement-right {
       @apply col-start-3 col-end-4 row-span-full;
+      transform: translateX(100%);
+
+      @variant open {
+        transform: translateX(0);
+      }
 
       @variant group-extend-top/layout {
         @apply row-start-2;
@@ -95,6 +110,11 @@
 
     @variant placement-bottom {
       @apply col-span-full row-start-3 row-end-4;
+      transform: translateY(100%);
+
+      @variant open {
+        transform: translateY(0);
+      }
 
       @variant group-extend-right/layout {
         @apply col-end-3;
@@ -111,6 +131,11 @@
 
     @variant placement-left {
       @apply col-start-1 col-end-2 row-span-full;
+      transform: translateX(-100%);
+
+      @variant open {
+        transform: translateX(0);
+      }
 
       @variant group-extend-top/layout {
         @apply row-start-2;
@@ -205,10 +230,37 @@
   }
 
   .panel {
-    @apply gap-s p-l hidden h-full min-h-0 flex-col;
+    @apply gap-s p-l flex h-full min-h-0 flex-col;
+    opacity: 0;
+    pointer-events: none;
+
+    @variant motion-safe {
+      transition:
+        transform var(--animation-duration-fast)
+          var(--animation-easing-standard),
+        opacity var(--animation-duration-fast) var(--animation-easing-standard);
+    }
+
+    @variant group-placement-left/drawer {
+      transform: translateX(-100%);
+    }
+
+    @variant group-placement-right/drawer {
+      transform: translateX(100%);
+    }
+
+    @variant group-placement-top/drawer {
+      transform: translateY(-100%);
+    }
+
+    @variant group-placement-bottom/drawer {
+      transform: translateY(100%);
+    }
 
     @variant group-open/drawer {
-      @apply flex;
+      opacity: 1;
+      pointer-events: auto;
+      transform: translate(0, 0);
     }
 
     @variant group-placement-left/drawer {
