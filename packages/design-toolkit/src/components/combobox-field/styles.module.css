@@ -126,11 +126,4 @@
       }
     }
   }
-
-  /* Accessibility: Respect reduced motion preferences */
-  @media (prefers-reduced-motion: reduce) {
-    .popover {
-      animation-duration: var(--animation-duration-instant) !important;
-    }
-  }
 }

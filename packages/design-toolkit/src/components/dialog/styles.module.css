@@ -15,8 +15,6 @@
 @layer components.l1 {
   .overlay {
     @apply absolute inset-0 flex items-center justify-center;
-
-    /* Backdrop color using design token */
     background-color: var(--primitive-alpha-black-400);
 
     @variant motion-safe {
