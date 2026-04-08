@@ -103,7 +103,7 @@ export const Default: Story = {
                 <Icon>
                   <Placeholder />
                 </Icon>
-                <Heading>Header</Heading>
+                <Heading>Application Header</Heading>
                 <Text>Secondary Text</Text>
               </SidenavAvatar>
             </SidenavHeader>
@@ -176,7 +176,7 @@ export const Default: Story = {
                       src: 'https://placedog.net/100x100?id=144',
                     }}
                   />
-                  <Heading>Footer</Heading>
+                  <Heading>Application Footer</Heading>
                   <Text>Secondary Text</Text>
                 </SidenavAvatar>
               </SidenavItem>
