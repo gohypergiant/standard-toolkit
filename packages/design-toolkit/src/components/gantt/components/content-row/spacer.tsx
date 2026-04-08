@@ -14,8 +14,10 @@ import { Range, type RangeProps } from '../base-elements/range';
 import styles from './styles.module.css';
 import { useElapsedPercentage } from './use-elapsed-percentage';
 
+/** Props for the GanttSpacer component. Inherits RangeProps except className. */
 export type GanttSpacerProps = Omit<RangeProps, 'className'>;
 
+/** Invisible time-range connector line between visible elements on the timeline. */
 export function GanttSpacer(props: GanttSpacerProps) {
   const elapsedPct = useElapsedPercentage({
     startMs: props.startTimeMs,

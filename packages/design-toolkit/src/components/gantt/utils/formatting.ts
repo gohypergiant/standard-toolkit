@@ -11,8 +11,7 @@
  * governing permissions and limitations under the License.
  */
 
-// These two values can ultimately be configured by the user
-// but for now, we'll stick to hardcoding them here
+// TODO: Make locale and format options configurable via GanttProviderProps
 const DEFAULT_LOCALE = 'en-US';
 const options: Intl.DateTimeFormatOptions = {
   minute: '2-digit',

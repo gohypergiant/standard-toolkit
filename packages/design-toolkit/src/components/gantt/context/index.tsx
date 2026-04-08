@@ -46,11 +46,17 @@ export const GanttContext = createContext<GanttContextValue | undefined>(
 );
 
 export type GanttProviderProps = {
+  /** Start of the total timeline range in epoch milliseconds. */
   startTimeMs: number;
+  /** End of the total timeline range in epoch milliseconds. Must be >= startTimeMs. */
   endTimeMs: number;
+  /** Interval duration controlling timeline tick mark spacing. */
   timescale: GanttTimescale;
+  /** Current time in epoch milliseconds, used for elapsed-state styling. */
   currentTimeMs: number;
+  /** Optional threshold configuration for edge-of-data notifications. */
   thresholdProps?: GanttThresholdProps;
+  /** Height of each row in pixels. @default 40 */
   rowHeightPx?: number;
 };
 
@@ -127,6 +133,7 @@ export function GanttProvider({
   );
 }
 
+/** @throws {Error} If called outside of a GanttProvider. */
 export function useGanttContext() {
   const ctx = useContext(GanttContext);
 

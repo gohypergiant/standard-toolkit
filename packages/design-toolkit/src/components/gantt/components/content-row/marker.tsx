@@ -15,6 +15,7 @@ import { Point, type PointProps } from '../base-elements/point';
 import styles from './styles.module.css';
 import { useIsElapsed } from './use-is-elapsed';
 
+/** Point marker rendered as a vertical line with a dot at a specific timestamp on the timeline. */
 export function GanttMarker(props: PointProps) {
   const isElapsed = useIsElapsed({ timeMs: props.timeMs });
 

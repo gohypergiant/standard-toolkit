@@ -22,6 +22,8 @@ const minutesIntervalSet = new Set(Object.values(MINUTES_MAPPING));
 /**
  * Rounds a millisecond timestamp down to the nearest interval boundary.
  * Uses pure integer arithmetic to avoid Date object allocations.
+ *
+ * @throws {RangeError} If selectedTimeIntervalMs does not match a known interval.
  */
 export function roundMsToInterval(
   timestampMs: number,

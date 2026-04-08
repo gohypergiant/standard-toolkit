@@ -166,6 +166,7 @@ type Dataset = {
 ```
 
 ```tsx
+import { useMemo } from 'react';
 import Placeholder from '@accelint/icons/placeholder';
 import {
   Gantt,
@@ -242,9 +243,6 @@ function DatasetDriven(dataset: Dataset) {
           {dataset.rows.map(({ id, elements }) => (
             <GanttContentRow key={id}>
               {elements.map((element, index) => {
-                // You may also consider using ts-pattern library
-                // as a switch statement alternative
-                // https://github.com/gvergnaud/ts-pattern
                 switch (element.type) {
                   case 'block': {
                     const [startMs, endMs] = element.rangeMs;

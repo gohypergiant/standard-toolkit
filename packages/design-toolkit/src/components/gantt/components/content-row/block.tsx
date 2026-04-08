@@ -15,6 +15,7 @@ import { Range, type RangeProps } from '../base-elements/range';
 import styles from './styles.module.css';
 import { useElapsedPercentage } from './use-elapsed-percentage';
 
+/** Time-range element rendered as a filled bar on the timeline. Supports elapsed-percentage styling and child content. */
 export function GanttBlock({
   children,
   startTimeMs,

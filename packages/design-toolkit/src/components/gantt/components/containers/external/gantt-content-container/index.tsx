@@ -20,6 +20,7 @@ import { useHorizontalScrollUpdate } from '@/components/gantt/hooks/use-horizont
 import styles from '../styles.module.css';
 import type { PropsWithChildren } from 'react';
 
+/** Scrollable content area of the Gantt chart containing the timeline header and virtualized content rows. */
 export function GanttContentContainer({ children }: PropsWithChildren) {
   const { assignGanttContentElementRef } = useGanttContext();
   const { currentTimeMs } = useTemporalDataContext();

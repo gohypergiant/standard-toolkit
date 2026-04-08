@@ -18,6 +18,7 @@ import type { PropsWithChildren } from 'react';
 
 type GanttIconMarkerProps = PropsWithChildren<PointProps>;
 
+/** Point marker that displays a custom icon at a specific timestamp. Pass an icon element as `children`. */
 export function GanttIconMarker({
   children,
   color = 'accent',

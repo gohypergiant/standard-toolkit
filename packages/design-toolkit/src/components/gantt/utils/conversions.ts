@@ -18,6 +18,7 @@ export function getMsPerPx(timescale: GanttTimescale) {
   return TIMESCALE_MAPPING[timescale] / TIMELINE_CHUNK_WIDTH_PX;
 }
 
+/** @throws {RangeError} If endTimeMs < startTimeMs. */
 export function getTotalTimelineMs(startTimeMs: number, endTimeMs: number) {
   if (endTimeMs < startTimeMs) {
     throw new RangeError(

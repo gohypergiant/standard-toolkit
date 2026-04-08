@@ -22,9 +22,13 @@ import { shouldRenderRangeElement } from '@/components/gantt/utils/helpers';
 import { useRangeElementLayout } from './use-range-element-layout';
 import type { GanttRowElementColorProp } from '@/components/gantt/types';
 
+/** Props for range-based Gantt elements (blocks, spacers). */
 export type RangeProps = HTMLAttributes<HTMLDivElement> & {
+  /** Start timestamp in epoch milliseconds for the range element. */
   startTimeMs: number;
+  /** End timestamp in epoch milliseconds for the range element. */
   endTimeMs: number;
+  /** Visual color variant. @default 'accent' */
   color?: GanttRowElementColorProp;
 };
 

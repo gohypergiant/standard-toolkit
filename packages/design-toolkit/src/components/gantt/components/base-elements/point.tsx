@@ -22,8 +22,11 @@ import { timestampWithinBounds } from '@/components/gantt/utils/helpers';
 import { usePointElementLayout } from './use-point-element-layout';
 import type { GanttRowElementColorProp } from '@/components/gantt/types';
 
+/** Props for point-based Gantt elements (markers, brackets). */
 export type PointProps = HTMLAttributes<HTMLDivElement> & {
+  /** Timestamp in epoch milliseconds for the point position on the timeline. */
   timeMs: number;
+  /** Visual color variant. @default 'accent' */
   color?: GanttRowElementColorProp;
 };
 
