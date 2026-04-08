@@ -33,7 +33,7 @@ export function GanttContentContainer({ children }: PropsWithChildren) {
       onScroll={onScroll}
     >
       <ContentHeader>
-        {currentTimeMs != null && <CurrentTime currentTimeMs={currentTimeMs} />}
+        {currentTimeMs && <CurrentTime currentTimeMs={currentTimeMs} />}
         <Timeline />
       </ContentHeader>
       <ContentRowsVirtualizer>{children}</ContentRowsVirtualizer>
