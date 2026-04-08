@@ -1,0 +1,76 @@
+import { Canvas, Meta } from '@storybook/addon-docs/blocks';
+
+import * as AnimationStories from './animation.stories';
+
+<Meta of={AnimationStories} name="Guide" />
+
+# Animation
+
+In mission-critical environments, users operate under time pressure and cognitive load, with high consequence for mistakes. Interfaces must communicate system state, interactivity, and changes clearly and immediately.
+
+Animations and transitions are included in the design system not just for aesthetic purposes, but Instead serve as a functional communication layer that helps operators understand what is interactive, where changes are occurring, and how the system is responding to their actions. Thoughtful motion design reduces cognitive load and supports efficient, confident operation. The design system provides purposeful, minimal motion patterns that support operational clarity while avoiding distraction.
+
+## Why Motion Matters
+
+### Communicating State Change
+Operational software frequently updates in response to user actions or system events. Without motion, these changes can appear sudden or disconnected from the user's action. Motion provides causal feedback. The goal of motion is to clearly connect operator action to result, reducing uncertainty and repeated interactions.
+
+### Confirming Interaction
+In high-stakes workflows, users need immediate confirmation that their action was registered. Motion provides key micro-feedback. Without this feedback, users may click multiple times, question whether the system responded, and even lose confidence in system responsiveness.
+
+### Preserving Orientation
+Many operational interfaces contain layered information, panels, overlays, and progressively disclosed elements. When content appears or disappears instantly, users must mentally reconstruct where information came from or went. Motion preserves spatial continuity by showing where content originated, where it moved, and how it relates to the surrounding interface.
+
+### Guiding Attention
+Operational systems often present dense information environments. Motion can be used sparingly to guide attention to meaningful changes. Motion is used to draw attention only to meaningful events, not decorative effects.
+
+## Duration
+
+Here are the available animation duration tokens:
+
+- **Instant** (`animation-duration-instant`) - Immediate feedback, no visible animation
+- **Fast** (`animation-duration-fast`) - Micro-interactions, hover states, button presses
+- **Normal** (`animation-duration-normal`) - Most UI transitions, panel opens, content reveals
+- **Slow** (`animation-duration-slow`) - Complex layout changes, large panels, page transitions
+
+<Canvas of={AnimationStories.Duration} />
+
+## Easing
+
+Easing curves control acceleration, making animations feel natural and purposeful:
+
+- **Standard** (`animation-easing-standard`): `cubic-bezier(0.4, 0, 0.2, 1)` - Default for most animations, balanced acceleration and deceleration
+- **Decelerate** (`animation-easing-decelerate`): `cubic-bezier(0, 0, 0.2, 1)` - Elements entering the view, starts fast and ends slow
+- **Accelerate** (`animation-easing-accelerate`): `cubic-bezier(0.4, 0, 1, 1)` - Elements leaving the view, starts slow and ends fast
+
+<Canvas of={AnimationStories.Easing} />
+
+## Constraints for Mission-Critical Software
+
+Unlike consumer applications, motion must respect strict operational constraints. Motion in the design system must always be:
+
+### Subtle
+Motion should support comprehension without drawing attention to itself. Users should perceive the information change, not the animation.
+
+### Fast
+Animations must complete quickly so they do not slow workflows. Typical ranges are 80-320ms. Longer animations are avoided.
+
+### Predictable
+Motion should follow consistent patterns across the system. Consistency reduces learning cost.
+
+### Interruptible
+Users must always be able to issue another command, change contexts, or cancel an action. Motion should never block interaction.
+
+### Reduced When Needed
+Operational contexts may include fatigue, motion sensitivity, and high-stress environments, or high stress. The system supports reduced motion modes where appropriate. Use `prefers-reduced-motion` to respect user preferences.
+
+## What Motion Is Not Used For
+
+To maintain operational clarity, the design system explicitly avoids:
+
+- Bounces
+- Elastic effects
+- Dramatic easing
+- Exaggerated motion
+- Slow cinematic transitions
+

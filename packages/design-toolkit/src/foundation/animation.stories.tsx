@@ -16,7 +16,6 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
   title: 'Foundation/Animation',
-  // cspell:ignore autodocs
   tags: ['!autodocs'],
 } satisfies Meta;
 
@@ -165,199 +164,25 @@ const EasingDemo = ({ easing }: { easing: AnimationEasingInfo }) => {
   );
 };
 
-export const Animation: Story = {
+export const Duration: Story = {
   render: () => {
     return (
-      <div className='flex max-w-700 flex-col gap-xxl p-xxl'>
-        {/* Introduction */}
-        <div className='flex flex-col gap-m'>
-          <h1 className='fg-primary-bold text-header-xl'>Animation</h1>
-          <div className='fg-primary-muted flex flex-col gap-m text-body-s'>
-            <p>
-              In mission-critical environments, users operate under time
-              pressure and cognitive load, with high consequence for mistakes.
-              Interfaces must communicate system state, interactivity, and
-              changes clearly and immediately.
-            </p>
-            <p>
-              Animations and transitions are included in the design system not
-              just for aesthetic purposes, but Instead serve as a functional
-              communication layer that helps operators understand what is
-              interactive, where changes are occurring, and how the system is
-              responding to their actions. Thoughtful motion design reduces
-              cognitive load and supports efficient, confident operation. The
-              design system provides purposeful, minimal motion patterns that
-              support operational clarity while avoiding distraction.
-            </p>
-          </div>
-        </div>
+      <div className='flex max-w-700 flex-col gap-xl p-xxl'>
+        {durations.map((duration) => (
+          <DurationDemo key={duration.token} duration={duration} />
+        ))}
+      </div>
+    );
+  },
+};
 
-        {/* Why Motion Matters */}
-        <div className='flex flex-col gap-m'>
-          <h2 className='fg-primary-bold text-header-l'>Why Motion Matters</h2>
-          <div className='fg-primary-muted flex flex-col gap-m text-body-s'>
-            <div>
-              <h3 className='fg-primary-bold mb-xs text-body-m'>
-                Communicating State Change
-              </h3>
-              <p className='mb-xs'>
-                Operational software frequently updates in response to user
-                actions or system events. Without motion, these changes can
-                appear sudden or disconnected from the user's action. Motion
-                provides causal feedback. The goal of motion is to clearly
-                connect operator action to result, reducing uncertainty and
-                repeated interactions.
-              </p>
-            </div>
-
-            <div>
-              <h3 className='fg-primary-bold mb-xs text-body-m'>
-                Confirming Interaction
-              </h3>
-              <p className='mb-xs'>
-                In high-stakes workflows, users need immediate confirmation that
-                their action was registered. Motion provides key micro-feedback.
-                Without this feedback, users may click multiple times, question
-                whether the system responded, and even lose confidence in system
-                responsiveness
-              </p>
-            </div>
-
-            <div>
-              <h3 className='fg-primary-bold mb-xs text-body-m'>
-                Preserving Orientation
-              </h3>
-              <p className='mb-xs'>
-                Many operational interfaces contain layered information, panels,
-                overlays, and progressively disclosed elements. When content
-                appears or disappears instantly, users must mentally reconstruct
-                where information came from or went. Motion preserves spatial
-                continuity by showing where content originated, where it moved,
-                and how it relates to the surrounding interface.
-              </p>
-            </div>
-
-            <div>
-              <h3 className='fg-primary-bold mb-xs text-body-m'>
-                Guiding Attention
-              </h3>
-              <p className='mb-xs'>
-                Operational systems often present dense information
-                environments. Motion can be used sparingly to guide attention to
-                meaningful changes. Motion is used to draw attention only to
-                meaningful events, not decorative effects.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Duration Tokens */}
-        <div className='flex flex-col gap-m'>
-          <h2 className='fg-primary-bold text-header-l'>Duration</h2>
-          <p className='fg-primary-muted text-body-s'>
-            Here are the available animation tokens.
-          </p>
-          <div className='flex flex-col gap-xl'>
-            {durations.map((duration) => (
-              <DurationDemo key={duration.token} duration={duration} />
-            ))}
-          </div>
-        </div>
-
-        {/* Easing Tokens */}
-        <div className='flex flex-col gap-m'>
-          <h2 className='fg-primary-bold text-header-l'>Easing</h2>
-          <p className='fg-primary-muted text-body-s'>
-            Easing curves control acceleration, making animations feel natural
-            and purposeful.
-          </p>
-          <div className='flex flex-col gap-xl'>
-            {easings.map((easing) => (
-              <EasingDemo key={easing.token} easing={easing} />
-            ))}
-          </div>
-        </div>
-
-        {/* Constraints */}
-        <div className='flex flex-col gap-m'>
-          <h2 className='fg-primary-bold text-header-l'>
-            Constraints for Mission-Critical Software
-          </h2>
-          <div className='fg-primary-muted text-body-s'>
-            <p className='mb-m'>
-              Unlike consumer applications, motion must respect strict
-              operational constraints. Motion in the design system must always
-              be:
-            </p>
-          </div>
-          <div className='fg-primary-muted flex flex-col gap-m text-body-s'>
-            <div>
-              <h3 className='fg-primary-bold mb-xs text-body-m'>Subtle</h3>
-              <p>
-                Motion should support comprehension without drawing attention to
-                itself. Users should perceive the information change, not the
-                animation.
-              </p>
-            </div>
-            <div>
-              <h3 className='fg-primary-bold mb-xs text-body-m'>Fast</h3>
-              <p>
-                Animations must complete quickly so they do not slow workflows.
-                Typical ranges are 80-320ms. Longer animations are avoided.
-              </p>
-            </div>
-            <div>
-              <h3 className='fg-primary-bold mb-xs text-body-m'>Predictable</h3>
-              <p>
-                Motion should follow consistent patterns across the system.
-                Consistency reduces learning cost.
-              </p>
-            </div>
-            <div>
-              {/* cspell:ignore Interruptible */}
-              <h3 className='fg-primary-bold mb-xs text-body-m'>
-                Interruptible
-              </h3>
-              <p className='mb-xs'>
-                Users must always be able to issue another command, change
-                contexts, or cancel an action. Motion should never block
-                interaction.
-              </p>
-            </div>
-            <div>
-              <h3 className='fg-primary-bold mb-xs text-body-m'>
-                Reduced When Needed
-              </h3>
-              <p className='mb-xs'>
-                Operational contexts may include fatigue, motion sensitivity,
-                and high-stress environments, or high stress. The system
-                supports reduced motion modes where appropriate. Use{' '}
-                <code className='font-display'>prefers-reduced-motion</code> to
-                respect user preferences.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* What to Avoid */}
-        <div className='flex flex-col gap-m'>
-          <h2 className='fg-primary-bold text-header-l'>
-            What Motion Is Not Used For
-          </h2>
-          <div className='fg-primary-muted text-body-s'>
-            <p className='mb-m'>
-              To maintain operational clarity, the design system explicitly
-              avoids:
-              <ul className='ml-l flex list-disc flex-col gap-xs'>
-                <li>Bounces</li>
-                <li>Elastic effects</li>
-                <li>Dramatic easing</li>
-                <li>Exaggerated motion</li>
-                <li>Slow cinematic transitions</li>
-              </ul>
-            </p>
-          </div>
-        </div>
+export const Easing: Story = {
+  render: () => {
+    return (
+      <div className='flex max-w-700 flex-col gap-xl p-xxl'>
+        {easings.map((easing) => (
+          <EasingDemo key={easing.token} easing={easing} />
+        ))}
       </div>
     );
   },
