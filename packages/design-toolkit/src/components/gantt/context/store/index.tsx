@@ -15,7 +15,6 @@ import {
   createContext,
   type PropsWithChildren,
   useContext,
-  useEffect,
   useState,
 } from 'react';
 import { useStore } from 'zustand';
@@ -34,11 +33,6 @@ export function GanttStoreProvider({
   startTimeMs,
 }: PropsWithChildren<GanttStoreProps>) {
   const [store] = useState(() => createGanttStore({ startTimeMs }));
-
-  // Sync store when startTimeMs prop changes after initial mount
-  useEffect(() => {
-    store.getState().setCurrentPositionMs(startTimeMs);
-  }, [store, startTimeMs]);
 
   return (
     <GanttStoreContext.Provider value={store}>
