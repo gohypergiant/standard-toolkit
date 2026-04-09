@@ -80,9 +80,7 @@ export function GanttProvider({
   const [ganttPanelElement, setGanttPanelElement] =
     useState<HTMLDivElement | null>(null);
 
-  const [midpointMs] = useState(
-    () => startTimeMs + (endTimeMs - startTimeMs) / 2,
-  );
+  const midpointMs = startTimeMs + (endTimeMs - startTimeMs) / 2;
 
   const totalBounds = useMemo(
     () => ({

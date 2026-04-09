@@ -16,8 +16,8 @@ import { HOURS_MAPPING, MINUTES_MAPPING, MS_PER_HOUR } from '../constants';
 const MS_PER_SECOND = 1000;
 const MS_PER_DAY = MS_PER_HOUR * 24;
 
-const hoursIntervalSet = new Set(Object.values(HOURS_MAPPING));
-const minutesIntervalSet = new Set(Object.values(MINUTES_MAPPING));
+const hoursIntervals = Object.values(HOURS_MAPPING);
+const minutesIntervals = Object.values(MINUTES_MAPPING);
 
 /**
  * Rounds a millisecond timestamp down to the nearest interval boundary.
@@ -34,14 +34,14 @@ export function roundMsToInterval(
     ((timestampMs % MS_PER_SECOND) + MS_PER_SECOND) % MS_PER_SECOND;
   const secondAligned = timestampMs - msRemainder;
 
-  if (minutesIntervalSet.has(selectedTimeIntervalMs)) {
+  if (minutesIntervals.includes(selectedTimeIntervalMs)) {
     const intervalRemainder =
       ((secondAligned % selectedTimeIntervalMs) + selectedTimeIntervalMs) %
       selectedTimeIntervalMs;
     return secondAligned - intervalRemainder;
   }
 
-  if (hoursIntervalSet.has(selectedTimeIntervalMs)) {
+  if (hoursIntervals.includes(selectedTimeIntervalMs)) {
     // Hours interval — align to interval boundary within the day
     const msIntoDayRaw = secondAligned % MS_PER_DAY;
     const msIntoDay =

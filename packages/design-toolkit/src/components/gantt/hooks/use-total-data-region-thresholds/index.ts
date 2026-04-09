@@ -41,10 +41,16 @@ function createThresholdProjection() {
     const newlyEntered: GanttMetThresholdData[] = [];
 
     for (let i = 0; i < metThresholds.length; i++) {
-      const key = toThresholdKey(metThresholds[i]);
+      const item = metThresholds[i];
+
+      if (!item) {
+        continue;
+      }
+
+      const key = toThresholdKey(item);
       keys.push(key);
       if (!state.has(key)) {
-        newlyEntered.push(metThresholds[i]);
+        newlyEntered.push(item);
       }
     }
 
