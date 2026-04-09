@@ -62,6 +62,26 @@ export type {
   ToggleButtonStyleVariants,
 } from './components/button/types';
 export {
+  CarouselContext,
+  CarouselProvider,
+} from './components/carousel/context';
+export { CarouselGallery } from './components/carousel/gallery';
+export { Carousel } from './components/carousel';
+export {
+  CarouselNext,
+  CarouselPrevious,
+} from './components/carousel/navigation';
+export { CarouselPosition } from './components/carousel/position';
+export { CarouselSelect } from './components/carousel/select';
+export type {
+  CarouselData,
+  CarouselGalleryProps,
+  CarouselProps,
+  CarouselSelectProps,
+  CarouselViewerProps,
+} from './components/carousel/types';
+export { CarouselViewer } from './components/carousel/viewer';
+export {
   CheckboxContext,
   CheckboxGroupContext,
 } from './components/checkbox/context';
