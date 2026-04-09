@@ -11,8 +11,7 @@
  * governing permissions and limitations under the License.
  */
 
-// These two values can ultimately be configured by the user
-// but for now, we'll stick to hardcoding them here
+// TODO: Make locale and format options configurable via GanttProviderProps
 const DEFAULT_LOCALE = 'en-US';
 const options: Intl.DateTimeFormatOptions = {
   minute: '2-digit',
@@ -23,24 +22,49 @@ const options: Intl.DateTimeFormatOptions = {
   hour12: false,
 };
 
-export function formatTimestampLabel(timestampMs: number) {
-  const formatter = new Intl.DateTimeFormat(DEFAULT_LOCALE, options);
+const formatter = new Intl.DateTimeFormat(DEFAULT_LOCALE, options);
+const labelCache = new Map<number, string>();
 
-  const { minute, hour, day, month } = formatter
-    .formatToParts(timestampMs)
-    .reduce(
-      (acc, part) => {
-        acc[part.type] = part.value;
-        return acc;
-      },
-      {} as Record<Intl.DateTimeFormatPartTypes, string>,
-    );
+export function formatTimestampLabel(timestampMs: number): string {
+  const cached = labelCache.get(timestampMs);
 
-  const shouldRenderDate = hour === '00' && minute === '00';
-
-  if (shouldRenderDate) {
-    return `${day} ${month.toUpperCase()}`;
+  if (cached !== undefined) {
+    return cached;
   }
 
-  return `${hour}:${minute}`;
+  const parts = formatter.formatToParts(timestampMs);
+  let minute = '';
+  let hour = '';
+  let day = '';
+  let month = '';
+
+  for (const part of parts) {
+    switch (part.type) {
+      case 'minute':
+        minute = part.value;
+        break;
+      case 'hour':
+        hour = part.value;
+        break;
+      case 'day':
+        day = part.value;
+        break;
+      case 'month':
+        month = part.value;
+        break;
+    }
+  }
+
+  const label =
+    hour === '00' && minute === '00'
+      ? `${day} ${month.toUpperCase()}`
+      : `${hour}:${minute}`;
+
+  labelCache.set(timestampMs, label);
+
+  if (labelCache.size > 500) {
+    labelCache.clear();
+  }
+
+  return label;
 }

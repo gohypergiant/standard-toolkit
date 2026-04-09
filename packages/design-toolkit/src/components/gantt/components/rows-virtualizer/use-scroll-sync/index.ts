@@ -26,6 +26,7 @@ export function useScrollSync({ horizontalScrollElement }: UseScrollSyncProps) {
   const { ganttContentElement, ganttPanelElement, rootElement } =
     useGanttContext();
   const { totalBounds, msPerPx } = useTemporalDataContext();
+  const { startMs: totalStartMs, endMs: totalEndMs } = totalBounds;
   const store = useGanttStoreApi();
 
   useEffect(() => {
@@ -38,6 +39,7 @@ export function useScrollSync({ horizontalScrollElement }: UseScrollSyncProps) {
     // when another value changes that affects the effective scroll position
     // (like msPerPx which scales the timeline)
     const currentPositionMs = store.getState().currentPositionMs;
+    const bounds = { startMs: totalStartMs, endMs: totalEndMs };
     const resetScrollPosition = () =>
       horizontalScrollElement.scrollTo({
         left: 0,
@@ -47,12 +49,12 @@ export function useScrollSync({ horizontalScrollElement }: UseScrollSyncProps) {
 
     const timestampOutsideDataRange = !timestampWithinBounds(
       currentPositionMs,
-      totalBounds,
+      bounds,
     );
 
     if (timestampOutsideDataRange) {
       resetScrollPosition();
-      store.setState({ currentPositionMs: totalBounds.startMs });
+      store.setState({ currentPositionMs: totalStartMs });
 
       return;
     }
@@ -60,14 +62,15 @@ export function useScrollSync({ horizontalScrollElement }: UseScrollSyncProps) {
     const scrollPosition = deriveHorizontalScrollPosition(
       currentPositionMs,
       msPerPx,
-      totalBounds,
+      bounds,
     );
 
     horizontalScrollElement.scrollTo({
       left: scrollPosition,
     });
   }, [
-    totalBounds,
+    totalStartMs,
+    totalEndMs,
     msPerPx,
     horizontalScrollElement,
     store,

@@ -11,10 +11,11 @@
  * governing permissions and limitations under the License.
  */
 
+import { useCallback, type UIEvent } from 'react';
 import { useGanttContext } from '../../context';
 import { useGanttStore } from '../../context/store';
+import { selectors } from '../../store';
 import { getVerticalScrolledPixels } from '../../utils/helpers';
-import type { UIEvent } from 'react';
 
 type UseVerticalScrollUpdateValue = {
   onScroll: (event: UIEvent<HTMLDivElement>) => void;
@@ -22,17 +23,18 @@ type UseVerticalScrollUpdateValue = {
 
 export function useVerticalScrollUpdate(): UseVerticalScrollUpdateValue {
   const { ganttContentElement, ganttPanelElement } = useGanttContext();
-  const setCurrentRowScrollPx = useGanttStore(
-    (state) => state.setCurrentRowScrollPx,
+  const setCurrentRowScrollPx = useGanttStore(selectors.setCurrentRowScrollPx);
+
+  const onScroll = useCallback(
+    (event: UIEvent<HTMLDivElement>) => {
+      const scrolledPixels = getVerticalScrolledPixels(event);
+
+      setCurrentRowScrollPx(scrolledPixels);
+      ganttPanelElement?.scrollTo({ top: scrolledPixels });
+      ganttContentElement?.scrollTo({ top: scrolledPixels });
+    },
+    [setCurrentRowScrollPx, ganttPanelElement, ganttContentElement],
   );
-
-  const onScroll = (event: UIEvent<HTMLDivElement>) => {
-    const scrolledPixels = getVerticalScrolledPixels(event);
-
-    setCurrentRowScrollPx(scrolledPixels);
-    ganttPanelElement?.scrollTo({ top: scrolledPixels });
-    ganttContentElement?.scrollTo({ top: scrolledPixels });
-  };
 
   return { onScroll };
 }

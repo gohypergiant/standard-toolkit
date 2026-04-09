@@ -11,7 +11,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { TIMELINE_CHUNK_WIDTH } from '../constants';
+import { TIMELINE_CHUNK_WIDTH_PX } from '../constants';
 import type { UIEvent } from 'react';
 import type { GanttTimeBounds, GanttTimelineChunkObject } from '../types';
 
@@ -50,7 +50,7 @@ export function getRenderedRegionBoundsMs(
 
   return {
     startMs: firstMarker.timestampMs,
-    endMs: lastMarker.timestampMs + TIMELINE_CHUNK_WIDTH * msPerPx,
+    endMs: lastMarker.timestampMs + TIMELINE_CHUNK_WIDTH_PX * msPerPx,
   };
 }
 

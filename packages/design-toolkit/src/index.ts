@@ -283,6 +283,8 @@ export { GanttPanelRow } from './components/gantt/components/panel-row';
 export { Gantt } from './components/gantt/gantt';
 export type {
   GanttMetThresholdData,
+  GanttProviderProps,
+  GanttRowElementColorProp,
   GanttThreshold,
   GanttThresholdProps,
   GanttTimescale,

@@ -11,10 +11,11 @@
  * governing permissions and limitations under the License.
  */
 
+import { useCallback, type UIEvent } from 'react';
 import { useGanttStore } from '../../context/store';
 import { useTemporalDataContext } from '../../context/temporal-data';
+import { selectors } from '../../store';
 import { getHorizontalScrolledPixels } from '../../utils/helpers';
-import type { UIEvent } from 'react';
 
 type UseHorizontalScrollUpdateValue = {
   onScroll: (event: UIEvent<HTMLDivElement>) => void;
@@ -22,15 +23,16 @@ type UseHorizontalScrollUpdateValue = {
 
 export function useHorizontalScrollUpdate(): UseHorizontalScrollUpdateValue {
   const { totalBounds, msPerPx } = useTemporalDataContext();
-  const setCurrentPositionMs = useGanttStore(
-    (state) => state.setCurrentPositionMs,
+  const setCurrentPositionMs = useGanttStore(selectors.setCurrentPositionMs);
+
+  const onScroll = useCallback(
+    (event: UIEvent<HTMLDivElement>) => {
+      const scrolledPixels = getHorizontalScrolledPixels(event);
+
+      setCurrentPositionMs(totalBounds.startMs + scrolledPixels * msPerPx);
+    },
+    [totalBounds.startMs, msPerPx, setCurrentPositionMs],
   );
-
-  const onScroll = (event: UIEvent<HTMLDivElement>) => {
-    const scrolledPixels = getHorizontalScrolledPixels(event);
-
-    setCurrentPositionMs(totalBounds.startMs + scrolledPixels * msPerPx);
-  };
 
   return { onScroll };
 }

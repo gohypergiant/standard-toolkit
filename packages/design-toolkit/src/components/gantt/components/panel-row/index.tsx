@@ -14,6 +14,7 @@ import { useGanttContext } from '../../context';
 import styles from './styles.module.css';
 import type { PropsWithChildren } from 'react';
 
+/** Row wrapper for the panel side, typically containing a row label. Paired 1:1 with `GanttContentRow`. */
 export function GanttPanelRow({ children, ...rest }: PropsWithChildren) {
   const { rowHeightPx } = useGanttContext();
 

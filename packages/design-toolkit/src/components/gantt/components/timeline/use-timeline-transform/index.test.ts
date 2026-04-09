@@ -11,7 +11,7 @@
  */
 
 import { renderHook } from '@testing-library/react';
-import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useTimelineTransform } from './';
 import type React from 'react';
 
@@ -47,9 +47,10 @@ describe('useTimelineTransform', () => {
   const capturedCallbackHarness: { callback?: (ms: number) => void } = {};
 
   beforeEach(() => {
+    capturedCallbackHarness.callback = undefined;
+
     vi.mocked(useLayoutSubscription).mockImplementation(
       ({ callback }: { callback: (ms: number) => void }) => {
-        // Capture callback passed into useLayoutSubscription
         capturedCallbackHarness.callback = callback;
       },
     );
@@ -57,10 +58,6 @@ describe('useTimelineTransform', () => {
     vi.mocked(deriveTranslateXValue).mockImplementation(
       mocks.deriveTranslateXValue,
     );
-  });
-
-  afterAll(() => {
-    vi.restoreAllMocks();
   });
 
   it('updates element transform when subscription callback runs', () => {

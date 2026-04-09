@@ -14,6 +14,7 @@ import { useGanttContext } from '../../context';
 import styles from './styles.module.css';
 import type { PropsWithChildren } from 'react';
 
+/** Row wrapper for content-side elements (blocks, markers, spacers, brackets). Paired 1:1 with `GanttPanelRow`. */
 export function GanttContentRow({ children, ...rest }: PropsWithChildren) {
   const { rowHeightPx } = useGanttContext();
 

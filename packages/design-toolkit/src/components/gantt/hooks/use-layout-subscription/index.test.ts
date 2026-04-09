@@ -11,14 +11,12 @@
  */
 
 import { act, renderHook } from '@testing-library/react';
-import { afterAll, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { createGanttStoreProvider } from '../../__fixtures__/store-provider';
 import { useGanttStoreApi } from '../../context/store';
 import { useLayoutSubscription } from './index';
 
 describe('useLayoutSubscription', () => {
-  afterAll(() => vi.restoreAllMocks());
-
   const createRafSpy = () => {
     return vi
       .spyOn(window, 'requestAnimationFrame')

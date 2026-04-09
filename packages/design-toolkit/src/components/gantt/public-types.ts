@@ -15,7 +15,9 @@ import type {
   GanttThreshold as _GanttThreshold,
   GanttMetThresholdData as _GanttMetThresholdData,
   GanttThresholdProps as _GanttThresholdProps,
+  GanttRowElementColorProp as _GanttRowElementColorProp,
 } from './types';
+import type { GanttProviderProps as _GanttProviderProps } from './context';
 
 /**
  * Public type exports for the Gantt component.
@@ -27,3 +29,5 @@ export type GanttTimescale = _GanttTimescale;
 export type GanttThreshold = _GanttThreshold;
 export type GanttMetThresholdData = _GanttMetThresholdData;
 export type GanttThresholdProps = _GanttThresholdProps;
+export type GanttRowElementColorProp = _GanttRowElementColorProp;
+export type GanttProviderProps = _GanttProviderProps;

@@ -42,7 +42,7 @@ export function useTimelineTransform({
 
       timelineElementRef.current.style.transform = `translateX(${translateX}px)`;
     },
-    [timelineElementRef.current, msPerPx, timelineChunks],
+    [msPerPx, timelineChunks],
   );
 
   useLayoutSubscription({

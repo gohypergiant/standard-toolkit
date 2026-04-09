@@ -14,7 +14,7 @@ import { describe, expect, it } from 'vitest';
 import {
   MS_PER_HOUR,
   ROW_VIRTUALIZATION_OVERSCAN,
-  TIMELINE_CHUNK_WIDTH,
+  TIMELINE_CHUNK_WIDTH_PX,
 } from '../constants';
 import {
   deriveCurrentTimeTranslateX,
@@ -52,7 +52,7 @@ describe('deriveTranslateXValue', () => {
   });
 
   describe('realistic scenarios with hours', () => {
-    const msPerPx = MS_PER_HOUR / TIMELINE_CHUNK_WIDTH;
+    const msPerPx = MS_PER_HOUR / TIMELINE_CHUNK_WIDTH_PX;
 
     it('should calculate translation for 1 hour offset', () => {
       const currentPositionMs = new Date('2026-02-01T13:00:00.000Z').getTime();
@@ -67,7 +67,7 @@ describe('deriveTranslateXValue', () => {
         currentPositionMs,
       );
 
-      expect(result).toBe(-TIMELINE_CHUNK_WIDTH);
+      expect(result).toBe(-TIMELINE_CHUNK_WIDTH_PX);
     });
   });
 
@@ -89,217 +89,213 @@ describe('deriveTranslateXValue', () => {
       expect(result).toBe(-1);
     });
   });
+});
 
-  describe('deriveRangeElementLayout', () => {
-    const totalBounds = { startMs: 0, endMs: 5000 };
-    const renderedRegionBounds = { startMs: 1000, endMs: 2000 };
-    const msPerPx = 10;
+describe('deriveRangeElementLayout', () => {
+  const totalBounds = { startMs: 0, endMs: 5000 };
+  const renderedRegionBounds = { startMs: 1000, endMs: 2000 };
+  const msPerPx = 10;
 
-    it('calculates translateX and width for a range fully inside the rendered region', () => {
-      const elementRange = {
-        startMs: 1100,
-        endMs: 1500,
-      };
+  it('calculates translateX and width for a range fully inside the rendered region', () => {
+    const elementRange = {
+      startMs: 1100,
+      endMs: 1500,
+    };
 
-      const { translateX, widthPx } = deriveRangeElementLayout(
+    const { translateX, widthPx } = deriveRangeElementLayout(
+      renderedRegionBounds,
+      elementRange,
+      totalBounds,
+      msPerPx,
+    );
+
+    // 1100 (element start) - 0 (total bounds start) = 1100,
+    // so at 10 ms/px, this would be 110 px translateX
+    expect(translateX).toBe(110);
+    expect(widthPx).toBe(40);
+  });
+
+  it('handles a range that starts before the rendered region', () => {
+    const elementRange = {
+      startMs: 900,
+      endMs: 1500,
+    };
+
+    const { translateX, widthPx } = deriveRangeElementLayout(
+      renderedRegionBounds,
+      elementRange,
+      totalBounds,
+      msPerPx,
+    );
+
+    // 900 (element start) - 0 (total bounds start) = 900
+    // + 100 (offset to account for rendered region starting
+    // at 1000) = 1000 total offset, so at 10 ms/px, this
+    // would be 100 px translateX
+    expect(translateX).toBe(100);
+    expect(widthPx).toBe(50);
+  });
+
+  it('handles a range that ends after the rendered region', () => {
+    const elementRange = {
+      startMs: 1900,
+      endMs: 2200,
+    };
+
+    const { translateX, widthPx } = deriveRangeElementLayout(
+      renderedRegionBounds,
+      elementRange,
+      totalBounds,
+      msPerPx,
+    );
+
+    // 1900 (element start) - 0 (total bounds start) = 1900.
+    // No offset since element starts after rendered region start,
+    // so at 10 ms/px, this would be 190 px translateX
+    expect(translateX).toBe(190);
+    expect(widthPx).toBe(10);
+  });
+});
+
+describe('deriveRenderedSlice', () => {
+  const rowHeightPx = 40;
+
+  it('returns correct start/end when proposed count is odd (no adjustment)', () => {
+    const viewableRegionHeightPx = rowHeightPx * 2;
+    const scrollPx = 0;
+
+    const { start, end } = deriveRenderedSlice(
+      scrollPx,
+      rowHeightPx,
+      viewableRegionHeightPx,
+    );
+
+    expect(start).toBe(0);
+
+    expect(end).toBe(viewableRegionHeightPx / rowHeightPx + 1);
+  });
+
+  it('returns correct start/end when proposed count is even (adjusted to odd)', () => {
+    const expectedStart = 2;
+    const viewableRegionHeightPx = rowHeightPx * 3;
+    const scrollPx = rowHeightPx * expectedStart + 10;
+
+    const { start, end } = deriveRenderedSlice(
+      scrollPx,
+      rowHeightPx,
+      viewableRegionHeightPx,
+    );
+
+    expect(start).toBe(expectedStart);
+    expect(end).toBe(
+      expectedStart +
+        viewableRegionHeightPx / rowHeightPx +
+        ROW_VIRTUALIZATION_OVERSCAN +
+        1, // +1 to adjust for even proposed count
+    );
+  });
+});
+
+describe('derivePointElementLayout', () => {
+  const totalBounds = { startMs: 0, endMs: 5000 };
+  const renderedRegionBounds = { startMs: 1000, endMs: 2000 };
+  const msPerPx = 10;
+  const pointMs = 1500;
+
+  it('calculates correct translateX', () => {
+    expect(
+      derivePointElementLayout(
         renderedRegionBounds,
-        elementRange,
+        pointMs,
         totalBounds,
         msPerPx,
-      );
+      ).translateX,
+    ).toBe(150);
+  });
 
-      // 1100 (element start) - 0 (total bounds start) = 1100,
-      // so at 10 ms/px, this would be 110 px translateX
-      expect(translateX).toBe(110);
-      expect(widthPx).toBe(40);
-    });
+  it('handles point at rendered region start boundary', () => {
+    const boundaryPointMs = renderedRegionBounds.startMs;
 
-    it('handles a range that starts before the rendered region', () => {
-      const elementRange = {
-        startMs: 900,
-        endMs: 1500,
-      };
-
-      const { translateX, widthPx } = deriveRangeElementLayout(
+    expect(
+      derivePointElementLayout(
         renderedRegionBounds,
-        elementRange,
+        boundaryPointMs,
         totalBounds,
         msPerPx,
-      );
+      ).translateX,
+    ).toBe(100); // (1000 - 0) / 10 = 100
+  });
 
-      // 900 (element start) - 0 (total bounds start) = 900
-      // + 100 (offset to account for rendered region starting
-      // at 1000) = 1000 total offset, so at 10 ms/px, this
-      // would be 100 px translateX
-      expect(translateX).toBe(100);
-      expect(widthPx).toBe(50);
-    });
+  it('handles point at rendered region end boundary', () => {
+    const boundaryPointMs = renderedRegionBounds.endMs;
 
-    it('handles a range that ends after the rendered region', () => {
-      const elementRange = {
-        startMs: 1900,
-        endMs: 2200,
-      };
-
-      const { translateX, widthPx } = deriveRangeElementLayout(
+    expect(
+      derivePointElementLayout(
         renderedRegionBounds,
-        elementRange,
+        boundaryPointMs,
         totalBounds,
         msPerPx,
-      );
+      ).translateX,
+    ).toBe(200); // (2000 - 0) / 10 = 200
+  });
+});
 
-      // 1900 (element start) - 0 (total bounds start) = 1900.
-      // No offset since element starts after rendered region start,
-      // so at 10 ms/px, this would be 190 px translateX
-      expect(translateX).toBe(190);
-      expect(widthPx).toBe(10);
-    });
+describe('deriveHorizontalScrollPosition', () => {
+  const totalBounds = { startMs: 1000, endMs: 5000 };
+  const midpointMs = (totalBounds.startMs + totalBounds.endMs) / 2;
+  const msPerPx = 10;
+
+  it.each([
+    ['returns 0 when timestamp is at start bound', totalBounds.startMs, 0],
+    ['calculates position for timestamp at end bound', totalBounds.endMs, 400],
+    ['calculates position for timestamp in middle', midpointMs, 200],
+    ['handles timestamp with fractional pixel result', 1005, 0.5],
+  ])('%s', (_description, timestampMs, expected) => {
+    expect(
+      deriveHorizontalScrollPosition(timestampMs, msPerPx, totalBounds),
+    ).toBe(expected);
+  });
+});
+
+describe('deriveCurrentTimeTranslateX', () => {
+  const msPerPx = 10;
+
+  it('calculates translateX when current time equals current position', () => {
+    const currentTimeMs = 1500;
+    const currentPositionMs = 1500;
+
+    const result = deriveCurrentTimeTranslateX(
+      currentTimeMs,
+      msPerPx,
+      currentPositionMs,
+    );
+
+    expect(result).toBe(0);
   });
 
-  describe('deriveRenderedSlice', () => {
-    const rowHeightPx = 40;
+  it('calculates positive translateX when current time is ahead of current position', () => {
+    const currentTimeMs = 1600;
+    const currentPositionMs = 1500;
 
-    it('returns correct start/end when proposed count is odd (no adjustment)', () => {
-      const viewableRegionHeightPx = rowHeightPx * 2;
-      const scrollPx = 0;
+    const result = deriveCurrentTimeTranslateX(
+      currentTimeMs,
+      msPerPx,
+      currentPositionMs,
+    );
 
-      const { start, end } = deriveRenderedSlice(
-        scrollPx,
-        rowHeightPx,
-        viewableRegionHeightPx,
-      );
-
-      expect(start).toBe(0);
-
-      expect(end).toBe(viewableRegionHeightPx / rowHeightPx + 1);
-    });
-
-    it('returns correct start/end when proposed count is even (adjusted to odd)', () => {
-      const expectedStart = 2;
-      const viewableRegionHeightPx = rowHeightPx * 3;
-      const scrollPx = rowHeightPx * expectedStart + 10;
-
-      const { start, end } = deriveRenderedSlice(
-        scrollPx,
-        rowHeightPx,
-        viewableRegionHeightPx,
-      );
-
-      expect(start).toBe(expectedStart);
-      expect(end).toBe(
-        expectedStart +
-          viewableRegionHeightPx / rowHeightPx +
-          ROW_VIRTUALIZATION_OVERSCAN +
-          1, // +1 to adjust for even proposed count
-      );
-    });
+    expect(result).toBe(10);
   });
 
-  describe('derivePointElementLayout', () => {
-    const totalBounds = { startMs: 0, endMs: 5000 };
-    const renderedRegionBounds = { startMs: 1000, endMs: 2000 };
-    const msPerPx = 10;
-    const pointMs = 1500;
+  it('calculates negative translateX when current time is behind current position', () => {
+    const currentTimeMs = 1400;
+    const currentPositionMs = 1500;
 
-    it('calculates correct translateX', () => {
-      expect(
-        derivePointElementLayout(
-          renderedRegionBounds,
-          pointMs,
-          totalBounds,
-          msPerPx,
-        ).translateX,
-      ).toBe(150);
-    });
+    const result = deriveCurrentTimeTranslateX(
+      currentTimeMs,
+      msPerPx,
+      currentPositionMs,
+    );
 
-    it('handles point at rendered region start boundary', () => {
-      const boundaryPointMs = renderedRegionBounds.startMs;
-
-      expect(
-        derivePointElementLayout(
-          renderedRegionBounds,
-          boundaryPointMs,
-          totalBounds,
-          msPerPx,
-        ).translateX,
-      ).toBe(100); // (1000 - 0) / 10 = 100
-    });
-
-    it('handles point at rendered region end boundary', () => {
-      const boundaryPointMs = renderedRegionBounds.endMs;
-
-      expect(
-        derivePointElementLayout(
-          renderedRegionBounds,
-          boundaryPointMs,
-          totalBounds,
-          msPerPx,
-        ).translateX,
-      ).toBe(200); // (2000 - 0) / 10 = 200
-    });
-  });
-
-  describe('deriveHorizontalScrollPosition', () => {
-    const totalBounds = { startMs: 1000, endMs: 5000 };
-    const midpointMs = (totalBounds.startMs + totalBounds.endMs) / 2;
-    const msPerPx = 10;
-
-    it.each([
-      ['returns 0 when timestamp is at start bound', totalBounds.startMs, 0],
-      [
-        'calculates position for timestamp at end bound',
-        totalBounds.endMs,
-        400,
-      ],
-      ['calculates position for timestamp in middle', midpointMs, 200],
-      ['handles timestamp with fractional pixel result', 1005, 0.5],
-    ])('%s', (_description, timestampMs, expected) => {
-      expect(
-        deriveHorizontalScrollPosition(timestampMs, msPerPx, totalBounds),
-      ).toBe(expected);
-    });
-  });
-
-  describe('deriveCurrentTimeTranslateX', () => {
-    const msPerPx = 10;
-
-    it('calculates translateX when current time equals current position', () => {
-      const currentTimeMs = 1500;
-      const currentPositionMs = 1500;
-
-      const result = deriveCurrentTimeTranslateX(
-        currentTimeMs,
-        msPerPx,
-        currentPositionMs,
-      );
-
-      expect(result).toBe(0);
-    });
-
-    it('calculates positive translateX when current time is ahead of current position', () => {
-      const currentTimeMs = 1600;
-      const currentPositionMs = 1500;
-
-      const result = deriveCurrentTimeTranslateX(
-        currentTimeMs,
-        msPerPx,
-        currentPositionMs,
-      );
-
-      expect(result).toBe(10);
-    });
-
-    it('calculates negative translateX when current time is behind current position', () => {
-      const currentTimeMs = 1400;
-      const currentPositionMs = 1500;
-
-      const result = deriveCurrentTimeTranslateX(
-        currentTimeMs,
-        msPerPx,
-        currentPositionMs,
-      );
-
-      expect(result).toBe(-10);
-    });
+    expect(result).toBe(-10);
   });
 });

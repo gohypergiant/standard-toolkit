@@ -34,10 +34,12 @@ function BracketBase({ direction, ...rest }: BracketBaseProps) {
   );
 }
 
+/** Opening bracket marker at a specific timestamp, indicating the start of a grouped range. */
 export function GanttBracketOpen(props: PointProps) {
   return <BracketBase direction='open' {...props} />;
 }
 
+/** Closing bracket marker at a specific timestamp, indicating the end of a grouped range. */
 export function GanttBracketClose(props: PointProps) {
   return <BracketBase direction='close' {...props} />;
 }

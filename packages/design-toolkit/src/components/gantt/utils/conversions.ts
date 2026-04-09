@@ -11,14 +11,21 @@
  * governing permissions and limitations under the License.
  */
 
-import { TIMELINE_CHUNK_WIDTH, TIMESCALE_MAPPING } from '../constants';
+import { TIMELINE_CHUNK_WIDTH_PX, TIMESCALE_MAPPING } from '../constants';
 import type { GanttTimescale } from '../types';
 
 export function getMsPerPx(timescale: GanttTimescale) {
-  return TIMESCALE_MAPPING[timescale] / TIMELINE_CHUNK_WIDTH;
+  return TIMESCALE_MAPPING[timescale] / TIMELINE_CHUNK_WIDTH_PX;
 }
 
+/** @throws {RangeError} If endTimeMs < startTimeMs. */
 export function getTotalTimelineMs(startTimeMs: number, endTimeMs: number) {
+  if (endTimeMs < startTimeMs) {
+    throw new RangeError(
+      `endTimeMs (${endTimeMs}) must be >= startTimeMs (${startTimeMs})`,
+    );
+  }
+
   return endTimeMs - startTimeMs;
 }
 

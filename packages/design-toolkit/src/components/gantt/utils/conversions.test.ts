@@ -11,7 +11,11 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { MS_PER_HOUR, MS_PER_MINUTE, TIMELINE_CHUNK_WIDTH } from '../constants';
+import {
+  MS_PER_HOUR,
+  MS_PER_MINUTE,
+  TIMELINE_CHUNK_WIDTH_PX,
+} from '../constants';
 import {
   getMsPerPx,
   getMsRepresentedInViewableRegion,
@@ -23,7 +27,7 @@ describe('getMsPerPx', () => {
   it('should calculate milliseconds per pixel for 1 hour timescale', () => {
     const timescale = '1h';
     const result = getMsPerPx(timescale);
-    expect(result).toBe(MS_PER_HOUR / TIMELINE_CHUNK_WIDTH);
+    expect(result).toBe(MS_PER_HOUR / TIMELINE_CHUNK_WIDTH_PX);
   });
 });
 

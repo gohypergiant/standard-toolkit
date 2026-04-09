@@ -11,14 +11,22 @@
  * governing permissions and limitations under the License.
  */
 
-import { type HTMLAttributes, type PropsWithChildren, useState } from 'react';
+import {
+  type HTMLAttributes,
+  type PropsWithChildren,
+  useCallback,
+  useState,
+} from 'react';
 import { useTemporalDataContext } from '@/components/gantt/context/temporal-data';
 import { timestampWithinBounds } from '@/components/gantt/utils/helpers';
 import { usePointElementLayout } from './use-point-element-layout';
 import type { GanttRowElementColorProp } from '@/components/gantt/types';
 
+/** Props for point-based Gantt elements (markers, brackets). */
 export type PointProps = HTMLAttributes<HTMLDivElement> & {
+  /** Timestamp in epoch milliseconds for the point position on the timeline. */
   timeMs: number;
+  /** Visual color variant. @default 'accent' */
   color?: GanttRowElementColorProp;
 };
 
@@ -35,9 +43,9 @@ function PointInner({
     timeMs,
   });
 
-  const assignElementRef = (node: HTMLDivElement) => {
+  const assignElementRef = useCallback((node: HTMLDivElement | null) => {
     setElement(node);
-  };
+  }, []);
 
   return (
     <div ref={assignElementRef} data-color={color} {...rest}>

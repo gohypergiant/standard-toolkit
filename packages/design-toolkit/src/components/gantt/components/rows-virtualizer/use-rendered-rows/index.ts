@@ -45,7 +45,7 @@ const applyVirtualizedRowStyles =
 
 type UseRenderedRowsValue = {
   height: number;
-  renderedRows: ReactElement<JSX.IntrinsicElements['div']>[] | null;
+  renderedRows: ReactElement<JSX.IntrinsicElements['div']>[];
 };
 
 type UseRenderedRowsProps = {
@@ -69,13 +69,18 @@ export function useRenderedRows({
     heightPx,
   );
 
+  const allRows = useMemo(
+    () => Children.toArray(children) as RowChild[],
+    [children],
+  );
+
   const renderedRows = useMemo(
     () =>
       Children.map(
-        Children.toArray(children).slice(start, end) as RowChild[],
+        allRows.slice(start, end),
         applyVirtualizedRowStyles(start, rowHeightPx),
-      ),
-    [children, start, end, rowHeightPx],
+      ) ?? [],
+    [allRows, start, end, rowHeightPx],
   );
 
   const virtualizedHeight = useMemo(

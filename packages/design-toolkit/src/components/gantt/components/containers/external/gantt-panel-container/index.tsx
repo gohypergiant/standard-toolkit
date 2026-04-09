@@ -16,6 +16,7 @@ import { useGanttContext } from '@/components/gantt/context';
 import styles from '../styles.module.css';
 import type { PropsWithChildren } from 'react';
 
+/** Fixed-width side panel of the Gantt chart for row labels, paired alongside `GanttContentContainer`. */
 export function GanttPanelContainer({ children }: PropsWithChildren) {
   const { assignGanttPanelElementRef } = useGanttContext();
 

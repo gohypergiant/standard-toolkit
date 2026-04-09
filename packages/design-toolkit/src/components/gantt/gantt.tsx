@@ -14,5 +14,32 @@ import { GanttProvider } from './context';
 
 /**
  * Main Gantt component for timeline visualization.
+ *
+ * Uses a composition pattern where `Gantt` wraps a panel container
+ * (fixed-width row labels) alongside a content container (scrollable
+ * timeline with virtualized rows).
+ *
+ * @example
+ * ```tsx
+ * <Gantt
+ *   startTimeMs={startMs}
+ *   endTimeMs={endMs}
+ *   timescale="1h"
+ *   currentTimeMs={Date.now()}
+ * >
+ *   <GanttPanelContainer>
+ *     {rows.map((row) => (
+ *       <GanttPanelRow key={row.id}>{row.name}</GanttPanelRow>
+ *     ))}
+ *   </GanttPanelContainer>
+ *   <GanttContentContainer>
+ *     {rows.map((row) => (
+ *       <GanttContentRow key={row.id}>
+ *         <GanttBlock startTimeMs={row.startMs} endTimeMs={row.endMs} />
+ *       </GanttContentRow>
+ *     ))}
+ *   </GanttContentContainer>
+ * </Gantt>
+ * ```
  */
 export const Gantt = GanttProvider;

@@ -13,9 +13,7 @@
 
 import {
   createContext,
-  type Dispatch,
   type PropsWithChildren,
-  type SetStateAction,
   useContext,
   useMemo,
   useState,
@@ -28,14 +26,6 @@ import type {
   GanttThresholdProps,
   GanttTimescale,
 } from '@/components/gantt/types';
-
-function refAssignmentFactory(
-  setter: Dispatch<SetStateAction<HTMLDivElement | null>>,
-) {
-  return (node: HTMLDivElement | null) => {
-    setter(node);
-  };
-}
 
 export type GanttContextValue = {
   timelineContainerElement: HTMLDivElement | null;
@@ -55,12 +45,18 @@ export const GanttContext = createContext<GanttContextValue | undefined>(
   undefined,
 );
 
-type GanttProviderProps = {
+export type GanttProviderProps = {
+  /** Start of the total timeline range in epoch milliseconds. */
   startTimeMs: number;
+  /** End of the total timeline range in epoch milliseconds. Must be >= startTimeMs. */
   endTimeMs: number;
+  /** Interval duration controlling timeline tick mark spacing. */
   timescale: GanttTimescale;
+  /** Current time in epoch milliseconds, used for elapsed-state styling. */
   currentTimeMs: number;
+  /** Optional threshold configuration for edge-of-data notifications. */
   thresholdProps?: GanttThresholdProps;
+  /** Height of each row in pixels. @default 40 */
   rowHeightPx?: number;
 };
 
@@ -94,23 +90,13 @@ export function GanttProvider({
     [startTimeMs, endTimeMs],
   );
 
-  const assignTimelineContainerElementRef = refAssignmentFactory(
-    setTimelineContainerElement,
-  );
-  const assignHeaderElementRef = refAssignmentFactory(setHeaderElement);
-  const assignRootElementRef = refAssignmentFactory(setRootElement);
-  const assignGanttContentElementRef = refAssignmentFactory(
-    setGanttContentElement,
-  );
-  const assignGanttPanelElementRef = refAssignmentFactory(setGanttPanelElement);
-
   const value = useMemo(
     () => ({
-      assignTimelineContainerElementRef,
-      assignHeaderElementRef,
-      assignRootElementRef,
-      assignGanttContentElementRef,
-      assignGanttPanelElementRef,
+      assignTimelineContainerElementRef: setTimelineContainerElement,
+      assignHeaderElementRef: setHeaderElement,
+      assignRootElementRef: setRootElement,
+      assignGanttContentElementRef: setGanttContentElement,
+      assignGanttPanelElementRef: setGanttPanelElement,
       timelineContainerElement,
       headerElement,
       rootElement,
@@ -119,11 +105,6 @@ export function GanttProvider({
       rowHeightPx,
     }),
     [
-      assignTimelineContainerElementRef,
-      assignHeaderElementRef,
-      assignRootElementRef,
-      assignGanttContentElementRef,
-      assignGanttPanelElementRef,
       timelineContainerElement,
       headerElement,
       rootElement,
@@ -150,6 +131,7 @@ export function GanttProvider({
   );
 }
 
+/** @throws {Error} If called outside of a GanttProvider. */
 export function useGanttContext() {
   const ctx = useContext(GanttContext);
 

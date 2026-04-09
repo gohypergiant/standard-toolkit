@@ -11,7 +11,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { TIMELINE_CHUNK_WIDTH } from '../../constants';
+import { TIMELINE_CHUNK_WIDTH_PX } from '../../constants';
 import { formatTimestampLabel } from '../../utils/formatting';
 import styles from '../styles.module.css';
 
@@ -31,7 +31,7 @@ export function TimelineChunk({ timestampMs }: TimelineChunkProps) {
   return (
     <div
       className={styles.chunk}
-      data-width={TIMELINE_CHUNK_WIDTH}
+      data-width={TIMELINE_CHUNK_WIDTH_PX}
       data-timestamp={timestampMs}
     >
       <div className={styles['chunk-label']}>

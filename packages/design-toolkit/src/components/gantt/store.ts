@@ -14,7 +14,7 @@
 import { createStore } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 import { GANTT_ROW_HEIGHT_PX } from './constants';
-import { roundDateToInterval } from './utils/dates';
+import { roundMsToInterval } from './utils/dates';
 
 export type GanttState = {
   currentPositionMs: number;
@@ -32,18 +32,20 @@ export const selectors = {
   currentPositionMs: (state: GanttState) => state.currentPositionMs,
   roundedCurrentPositionMs:
     (selectedTimeIntervalMs: number) => (state: GanttState) => {
-      const workerDate = new Date(state.currentPositionMs);
-
-      roundDateToInterval(workerDate, selectedTimeIntervalMs);
-
-      return workerDate.getTime();
+      return roundMsToInterval(state.currentPositionMs, selectedTimeIntervalMs);
     },
   roundedCurrentRowScrollPx: (state: GanttState) => {
     const scrollPxValue = state.currentRowScrollPx;
 
-    return scrollPxValue - (scrollPxValue % GANTT_ROW_HEIGHT_PX);
+    return (
+      Math.floor(scrollPxValue / GANTT_ROW_HEIGHT_PX) * GANTT_ROW_HEIGHT_PX
+    );
   },
   virtualizedHeightPx: (state: GanttState) => state.virtualizedHeightPx,
+  setCurrentPositionMs: (state: GanttState & GanttActions) =>
+    state.setCurrentPositionMs,
+  setCurrentRowScrollPx: (state: GanttState & GanttActions) =>
+    state.setCurrentRowScrollPx,
 };
 
 export type GanttStoreProps = {

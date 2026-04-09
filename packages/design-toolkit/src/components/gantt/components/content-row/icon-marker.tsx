@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { GANTT_ROW_ELEMENT_HEIGHT } from '../../constants';
+import { GANTT_ROW_ELEMENT_HEIGHT_PX } from '../../constants';
 import { Point, type PointProps } from '../base-elements/point';
 import styles from './styles.module.css';
 import { useIsElapsed } from './use-is-elapsed';
@@ -18,6 +18,7 @@ import type { PropsWithChildren } from 'react';
 
 type GanttIconMarkerProps = PropsWithChildren<PointProps>;
 
+/** Point marker that displays a custom icon at a specific timestamp. Pass an icon element as `children`. */
 export function GanttIconMarker({
   children,
   color = 'accent',
@@ -28,7 +29,7 @@ export function GanttIconMarker({
   return (
     <Point
       className={styles['marker-container']}
-      data-height={GANTT_ROW_ELEMENT_HEIGHT}
+      data-height={GANTT_ROW_ELEMENT_HEIGHT_PX}
       data-elapsed={isElapsed || undefined}
       color={color}
       {...rest}

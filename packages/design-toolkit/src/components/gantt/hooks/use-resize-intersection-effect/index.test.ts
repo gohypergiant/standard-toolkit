@@ -15,18 +15,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { useResizeIntersectionEffect } from './index';
 import type { GanttTimelineChunkObject } from '../../types';
 
-const bumpLayoutTickMock = vi.hoisted(() => vi.fn());
-
-// Mock useReducer to track when dispatch (bumpLayoutTick) is called,
-// verifying layout tick triggers
-vi.mock('react', async () => {
-  const actual = await vi.importActual<typeof import('react')>('react');
-  return {
-    ...actual,
-    useReducer: vi.fn(() => [0, bumpLayoutTickMock]),
-  };
-});
-
 describe('useResizeIntersectionEffect', () => {
   const observeMock = vi.fn();
   const disconnectMock = vi.fn();
@@ -112,7 +100,7 @@ describe('useResizeIntersectionEffect', () => {
     expect(observeMock).toHaveBeenCalledWith(contractionElement);
   });
 
-  it('triggers layout tick when expansion element intersects', () => {
+  it('triggers re-render when expansion element intersects', () => {
     const container = document.createElement('div');
 
     const expansionElement = document.createElement('div');
@@ -130,12 +118,16 @@ describe('useResizeIntersectionEffect', () => {
     container.append(expansionElement, contractionElement);
     document.body.appendChild(container);
 
-    renderHook(() =>
+    let renderCount = 0;
+    renderHook(() => {
+      renderCount++;
       useResizeIntersectionEffect({
         timelineContainerElement: container,
         timelineChunks,
-      }),
-    );
+      });
+    });
+
+    const renderCountAfterMount = renderCount;
 
     act(() => {
       intersectionObserverCallback(
@@ -154,10 +146,10 @@ describe('useResizeIntersectionEffect', () => {
       );
     });
 
-    expect(bumpLayoutTickMock).toHaveBeenCalledTimes(1);
+    expect(renderCount).toBeGreaterThan(renderCountAfterMount);
   });
 
-  it('triggers layout tick when contraction element stops intersecting', () => {
+  it('triggers re-render when contraction element stops intersecting', () => {
     const container = document.createElement('div');
 
     const expansionElement = document.createElement('div');
@@ -169,12 +161,16 @@ describe('useResizeIntersectionEffect', () => {
     container.append(expansionElement, contractionElement);
     document.body.appendChild(container);
 
-    renderHook(() =>
+    let renderCount = 0;
+    renderHook(() => {
+      renderCount++;
       useResizeIntersectionEffect({
         timelineContainerElement: container,
         timelineChunks,
-      }),
-    );
+      });
+    });
+
+    const renderCountAfterMount = renderCount;
 
     act(() => {
       intersectionObserverCallback(
@@ -193,7 +189,7 @@ describe('useResizeIntersectionEffect', () => {
       );
     });
 
-    expect(bumpLayoutTickMock).toHaveBeenCalledTimes(1);
+    expect(renderCount).toBeGreaterThan(renderCountAfterMount);
   });
 
   it('disconnects observer on cleanup', () => {

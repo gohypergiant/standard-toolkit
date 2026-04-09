@@ -15,7 +15,7 @@ import {
   BUFFERED_CHUNK_COUNT,
   MS_PER_HOUR,
   MS_PER_MINUTE,
-  TIMELINE_CHUNK_WIDTH,
+  TIMELINE_CHUNK_WIDTH_PX,
 } from '../constants';
 import { generateTimelineChunks } from './generation';
 import type { GanttTimelineChunkObject } from '../types';
@@ -31,7 +31,7 @@ describe('generateTimelineChunks', () => {
   describe('chunk count calculation', () => {
     it('should generate odd number of chunks for typical viewport', () => {
       const viewableRegionWidth = 1600;
-      const msPerPx = MS_PER_HOUR / TIMELINE_CHUNK_WIDTH;
+      const msPerPx = MS_PER_HOUR / TIMELINE_CHUNK_WIDTH_PX;
       const result = generateTimelineChunks(
         0,
         viewableRegionWidth,
@@ -44,7 +44,7 @@ describe('generateTimelineChunks', () => {
 
     it('should generate enough chunks to fill viewport plus extras', () => {
       const viewableRegionWidth = 800;
-      const msPerPx = MS_PER_HOUR / TIMELINE_CHUNK_WIDTH;
+      const msPerPx = MS_PER_HOUR / TIMELINE_CHUNK_WIDTH_PX;
       const result = generateTimelineChunks(
         0,
         viewableRegionWidth,
@@ -53,14 +53,14 @@ describe('generateTimelineChunks', () => {
       );
 
       const expectedMinChunks =
-        Math.ceil(viewableRegionWidth / TIMELINE_CHUNK_WIDTH) +
+        Math.ceil(viewableRegionWidth / TIMELINE_CHUNK_WIDTH_PX) +
         BUFFERED_CHUNK_COUNT;
       expect(result.length).toBeGreaterThanOrEqual(expectedMinChunks);
     });
   });
 
   describe('chunk positioning with selected time interval', () => {
-    const msPerPx = MS_PER_HOUR / TIMELINE_CHUNK_WIDTH;
+    const msPerPx = MS_PER_HOUR / TIMELINE_CHUNK_WIDTH_PX;
     const viewableRegionWidth = 800;
 
     it('should have evenly spaced chunks by selected time interval', () => {
@@ -83,7 +83,7 @@ describe('generateTimelineChunks', () => {
   });
 
   describe('edge cases', () => {
-    const msPerPx = MS_PER_HOUR / TIMELINE_CHUNK_WIDTH;
+    const msPerPx = MS_PER_HOUR / TIMELINE_CHUNK_WIDTH_PX;
 
     it('should handle very small viewable region', () => {
       const viewableRegionWidth = 10;

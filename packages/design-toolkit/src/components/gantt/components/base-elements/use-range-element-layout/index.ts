@@ -31,6 +31,7 @@ const storeSelector = (timescale: GanttTimescale) => (state: GanttState) => [
 
 export function useRangeElementLayout(props: UseRangeElementLayoutProps) {
   const { timeBounds, element } = props;
+  const { startMs, endMs } = timeBounds;
 
   const { renderedRegionBounds, msPerPx, timescale, totalBounds } =
     useTemporalDataContext();
@@ -42,14 +43,14 @@ export function useRangeElementLayout(props: UseRangeElementLayoutProps) {
 
     const { widthPx, translateX } = deriveRangeElementLayout(
       renderedRegionBounds,
-      timeBounds,
+      { startMs, endMs },
       totalBounds,
       msPerPx,
     );
 
     element.style.width = `${widthPx}px`;
     element.style.transform = `translateX(${translateX}px)`;
-  }, [element, renderedRegionBounds, timeBounds, totalBounds, msPerPx]);
+  }, [element, renderedRegionBounds, startMs, endMs, totalBounds, msPerPx]);
 
   const selector = useMemo(() => storeSelector(timescale), [timescale]);
 

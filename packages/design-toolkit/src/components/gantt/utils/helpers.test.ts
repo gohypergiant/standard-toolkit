@@ -11,7 +11,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { TIMELINE_CHUNK_WIDTH } from '../constants';
+import { TIMELINE_CHUNK_WIDTH_PX } from '../constants';
 import {
   getHorizontalScrolledPixels,
   getRenderedRegionBoundsMs,
@@ -61,7 +61,7 @@ describe('helpers', () => {
       });
     });
 
-    it('computes start and end using TIMELINE_CHUNK_WIDTH and msPerPx', () => {
+    it('computes start and end using TIMELINE_CHUNK_WIDTH_PX and msPerPx', () => {
       const msPerPx = 10;
       const firstMarkerMs = 1000;
       const lastMarkerMs = 1500;
@@ -73,7 +73,7 @@ describe('helpers', () => {
 
       expect(getRenderedRegionBoundsMs(markers, msPerPx)).toEqual({
         startMs: firstMarkerMs,
-        endMs: lastMarkerMs + TIMELINE_CHUNK_WIDTH * msPerPx,
+        endMs: lastMarkerMs + TIMELINE_CHUNK_WIDTH_PX * msPerPx,
       });
     });
   });

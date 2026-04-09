@@ -11,7 +11,7 @@
  */
 
 import { renderHook } from '@testing-library/react';
-import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useCurrentTimeLayout } from '.';
 
 const mocks = vi.hoisted(() => {
@@ -90,7 +90,7 @@ describe('useCurrentTimeLayout', () => {
   };
 
   beforeEach(() => {
-    vi.clearAllMocks();
+    capturedCallbackHarness.callback = undefined;
 
     vi.mocked(useGanttContext).mockReturnValue(mockGanttContextValue);
 
@@ -107,10 +107,6 @@ describe('useCurrentTimeLayout', () => {
     vi.mocked(deriveCurrentTimeTranslateX).mockImplementation(
       mocks.deriveCurrentTimeTranslateX,
     );
-  });
-
-  afterAll(() => {
-    vi.restoreAllMocks();
   });
 
   it('returns labelElementRef', () => {

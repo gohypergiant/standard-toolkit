@@ -16,6 +16,7 @@ import {
   type PropsWithChildren,
   useContext,
   useMemo,
+  useRef,
 } from 'react';
 import { TIMESCALE_MAPPING } from '@/components/gantt/constants';
 import { useGanttContext } from '@/components/gantt/context';
@@ -71,6 +72,9 @@ export function TemporalDataProvider({
   const msPerPx = getMsPerPx(timescale);
   const selectedTimeIntervalMs = TIMESCALE_MAPPING[timescale];
 
+  const onThresholdMetRef = useRef(onThresholdMet);
+  onThresholdMetRef.current = onThresholdMet;
+
   const selector = useMemo(
     () => selectors.roundedCurrentPositionMs(selectedTimeIntervalMs),
     [selectedTimeIntervalMs],
@@ -78,22 +82,35 @@ export function TemporalDataProvider({
 
   const roundedTimestampMs = useGanttStore(selector);
 
-  const timelineChunks = generateTimelineChunks(
-    roundedTimestampMs,
-    getViewableRegionWidth(headerElement),
-    selectedTimeIntervalMs,
-    msPerPx,
+  const viewableRegionWidth = getViewableRegionWidth(headerElement);
+
+  const timelineChunks = useMemo(
+    () =>
+      generateTimelineChunks(
+        roundedTimestampMs,
+        viewableRegionWidth,
+        selectedTimeIntervalMs,
+        msPerPx,
+      ),
+    [roundedTimestampMs, viewableRegionWidth, selectedTimeIntervalMs, msPerPx],
   );
 
-  const renderedRegionBounds = getRenderedRegionBoundsMs(
-    timelineChunks,
-    msPerPx,
+  const renderedRegionBounds = useMemo(
+    () => getRenderedRegionBoundsMs(timelineChunks, msPerPx),
+    [timelineChunks, msPerPx],
   );
 
   useResizeIntersectionEffect({
     timelineContainerElement: headerElement,
     timelineChunks,
   });
+
+  const stableOnThresholdMet = useMemo(
+    () =>
+      (...args: Parameters<NonNullable<typeof onThresholdMet>>) =>
+        onThresholdMetRef.current?.(...args),
+    [],
+  );
 
   const value = useMemo(
     () => ({
@@ -104,7 +121,7 @@ export function TemporalDataProvider({
       totalBounds,
       threshold,
       currentTimeMs,
-      onThresholdMet,
+      onThresholdMet: onThresholdMet ? stableOnThresholdMet : undefined,
     }),
     [
       msPerPx,
@@ -115,6 +132,7 @@ export function TemporalDataProvider({
       threshold,
       currentTimeMs,
       onThresholdMet,
+      stableOnThresholdMet,
     ],
   );
 
