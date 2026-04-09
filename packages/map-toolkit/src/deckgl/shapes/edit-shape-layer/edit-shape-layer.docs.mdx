@@ -10,7 +10,7 @@ A deck.gl layer for interactively editing existing geographic shapes on a map. I
 
 ## Features
 
-- **Multiple geometry types**: Edit Point, LineString, Polygon, Rectangle, Circle, and Ellipse shapes
+- **Multiple geometry types**: Edit Point, LineString, Polygon, Rectangle, Circle, Ellipse, and WagonWheel shapes
 - **Smart mode selection**: Automatically selects the appropriate edit mode based on shape type
 - **Neutral mode handling**: Lets UI components decide how to handle mode change conflicts
 - **Visual reference**: Edit layer renders on top of display layer so users can see original position
@@ -34,6 +34,7 @@ The layer automatically selects the appropriate edit mode based on shape type:
 | **Rectangle** | `bounding-transform` | Drag corner handles to resize, drag body to move, or rotate via handle. Hold Shift for uniform scaling. |
 | **Circle** | `circle-transform` | Drag body to move, drag edge to resize from center |
 | **Ellipse** | `bounding-transform` | Drag to move, corner handles to scale freely, top handle to rotate. Hold Shift for uniform scaling. |
+| **WagonWheel** | `locked-bounding-transform` | Drag to move, corner handles to scale uniformly (always locked aspect ratio), top handle to rotate. Hold Shift while rotating to snap to 45° intervals. |
 
 ## Dependencies
 
@@ -243,6 +244,16 @@ function CircleRadiusInput({ mapId }) {
 7. **Rotate with snap**: Hold **Shift** while rotating to snap to 45° intervals
 8. Click "Save" to confirm changes or "Cancel" (or press ESC) to discard
 
+### WagonWheel
+
+1. Click on a wagon wheel to select it
+2. Click "Edit" to enter edit mode
+3. **Move**: Drag anywhere on the shape body to reposition
+4. **Scale**: Drag corner handles to resize (always maintains circular aspect ratio)
+5. **Rotate**: Drag the top handle to rotate around the center
+6. **Rotate with snap**: Hold **Shift** while rotating to snap to 45° intervals
+7. Click "Save" to confirm changes or "Cancel" (or press ESC) to discard
+
 ### Keyboard Shortcuts
 
 - **ESC**: Cancel current editing and restore original shape
@@ -308,7 +319,7 @@ useOn<ShapeUpdatedEvent>(EditShapeEvents.updated, (event) => {
 
 ### shapes:edit-canceled
 
-Emitted when editing is canceled (ESC key or programmatic cancel):
+Emitted when editing is canceled (ESC key or programmatic cancel). The payload contains the original shape from when editing first started, even if the shape was re-entered with updates during the session:
 
 ```tsx
 import { useOn } from '@accelint/bus/react';
@@ -317,6 +328,25 @@ import { EditShapeEvents } from '@accelint/map-toolkit/deckgl/shapes';
 useOn(EditShapeEvents.canceled, (event) => {
   if (event.payload.mapId !== MAP_ID) return;
   console.log('Edit canceled for:', event.payload.shape.name);
+});
+```
+
+### shapes:feature-editing
+
+Emitted on every edit action during a drag operation and on completion. The `editType` string indicates what kind of edit is happening (e.g. `'scaling'`, `'scaled'`, `'rotating'`, `'rotated'`, `'translating'`, `'translated'`). Continuous types end in `-ing`, completion types are past tense.
+
+```tsx
+import { useOn } from '@accelint/bus/react';
+import { EditShapeEvents, type FeatureEditingEvent } from '@accelint/map-toolkit/deckgl/shapes';
+
+useOn<FeatureEditingEvent>(EditShapeEvents.featureEditing, (event) => {
+  if (event.payload.mapId !== MAP_ID) return;
+  const { feature, editType } = event.payload;
+
+  // React to completion events only
+  if (['scaled', 'rotated', 'translated'].includes(editType)) {
+    console.log('Edit completed:', editType, feature.geometry);
+  }
 });
 ```
 
@@ -399,7 +429,7 @@ const {
 | Option | Type | Description |
 |--------|------|-------------|
 | `onUpdate` | `(shape: Shape) => void` | Called when shape edit is saved |
-| `onCancel` | `(shape: Shape) => void` | Called when editing is canceled |
+| `onCancel` | `(shape: Shape) => void` | Called when editing is canceled. Receives the original shape from when editing first started, even if `edit()` was called multiple times with updated versions of the same shape. |
 
 #### Return Values
 
@@ -432,6 +462,7 @@ Event constants for bus subscriptions:
 | `editing` | `'shapes:editing'` | Editing has started |
 | `updated` | `'shapes:updated'` | Shape edit was saved |
 | `canceled` | `'shapes:edit-canceled'` | Editing was canceled |
+| `featureEditing` | `'shapes:feature-editing'` | Feature geometry changed during editing (fires on every drag and on completion) |
 
 ## Styling
 

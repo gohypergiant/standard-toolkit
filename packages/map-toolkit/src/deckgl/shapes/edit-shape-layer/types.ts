@@ -23,6 +23,7 @@ import type { Shape } from '../shared/types';
  * Edit mode for shape editing
  * - 'view': Not editing, shape is viewable only
  * - 'bounding-transform': Scale/rotate/translate via bounding box handles (ellipses, rectangles)
+ * - 'locked-bounding-transform': Like bounding-transform but scaling always maintains aspect ratio (wagon wheels)
  * - 'vertex-transform': Drag vertices OR scale/rotate/translate (polygons, lines)
  * - 'circle-transform': Drag edge to resize, drag body to translate (circles)
  * - 'translate': Drag to move the shape (generic translation)
@@ -31,6 +32,7 @@ import type { Shape } from '../shared/types';
 export type EditMode =
   | 'view'
   | 'bounding-transform'
+  | 'locked-bounding-transform'
   | 'vertex-transform'
   | 'circle-transform'
   | 'translate'
@@ -40,7 +42,10 @@ export type EditMode =
  * State for the editing store
  */
 export type EditingState = {
-  /** Shape currently being edited */
+  /** The original shape captured when editing first started. Preserved across same-ID re-entry
+   *  (e.g. form commits calling edit()) so cancel always reverts to the true pre-edit state. */
+  originalShape: Shape | null;
+  /** Shape currently being edited — updated on every edit() call including re-entry. */
   editingShape: Shape | null;
   /** Current edit mode */
   editMode: EditMode;
@@ -48,6 +53,8 @@ export type EditingState = {
   featureBeingEdited: Feature | null;
   /** Edit mode to restore after held panning hotkey is released. Null when not panning. */
   previousMode: EditMode | null;
+  /** The most recent completion edit type (e.g. 'scaled', 'rotated', 'translated'). Null during continuous drag events. */
+  lastCompletedEditType: string | null;
 };
 
 /**
@@ -55,12 +62,7 @@ export type EditingState = {
  */
 export type EditShapeOptions = {
   /** Override the default edit mode (auto-detected from shape type by default) */
-  mode?:
-    | 'bounding-transform'
-    | 'vertex-transform'
-    | 'circle-transform'
-    | 'translate'
-    | 'point-translate';
+  mode?: Exclude<EditMode, 'view'>;
 };
 
 /**
@@ -85,7 +87,17 @@ export type UseEditShapeReturn = {
   save: () => void;
   /** Cancel editing and revert to original shape */
   cancel: () => void;
-  /** Update the feature being edited (e.g., from a form). No-op when not editing. */
+  /**
+   * Update the feature geometry mid-edit without restarting the edit session.
+   *
+   * Use this to sync external changes (e.g. form coordinate input) to the map
+   * while the user is still editing. Unlike {@link edit}, this does not cancel
+   * the current session or re-emit editing events.
+   *
+   * No-op when not currently editing.
+   *
+   * @param feature - The updated GeoJSON feature to render on the map.
+   */
   updateFeature: (feature: Feature) => void;
   /** Whether currently in editing mode */
   isEditing: boolean;

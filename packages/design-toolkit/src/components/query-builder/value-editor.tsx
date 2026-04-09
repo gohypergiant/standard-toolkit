@@ -281,9 +281,5 @@ export function ValueEditor(props: ValueEditorProps) {
     );
   }
 
-  return (
-    <div>
-      <Editor {...props} />
-    </div>
-  );
+  return <Editor {...props} />;
 }
