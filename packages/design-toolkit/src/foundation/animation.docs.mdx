@@ -62,7 +62,7 @@ Motion should follow consistent patterns across the system. Consistency reduces 
 Users must always be able to issue another command, change contexts, or cancel an action. Motion should never block interaction.
 
 ### Reduced When Needed
-Operational contexts may include fatigue, motion sensitivity, and high-stress environments, or high stress. The system supports reduced motion modes where appropriate. Use `prefers-reduced-motion` to respect user preferences.
+Operational contexts may include fatigue, motion sensitivity, and high-stress environments, or high stress. The system supports reduced motion modes where appropriate. Use the `prefers-reduced-motion` media query to respect user preferences and disable or minimize animations when users have requested reduced motion in their system settings. See [Tailwind's animation documentation](https://tailwindcss.com/docs/animation#supporting-reduced-motion) for implementation guidance.
 
 ## What Motion Is Not Used For
 
