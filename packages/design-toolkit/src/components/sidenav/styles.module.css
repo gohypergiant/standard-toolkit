@@ -16,7 +16,6 @@
   .sidenav {
     --sidenav-width: 64px;
     @apply fg-primary-bold gap-xs bg-surface-default p-m absolute left-0 row-span-full flex h-full flex-col;
-    overflow: hidden;
 
     @variant motion-safe {
       transition: transform var(--animation-duration-normal)
