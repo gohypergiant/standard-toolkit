@@ -33,13 +33,31 @@ import type {
  *
  * @param options - {@link UseTreeStateOptions}
  * @param options.items - Initial tree node items.
+ * @param options.selectionCascade - Enable cascade selection mode. When true, selecting a parent
+ *   automatically selects all descendants, and parent checkboxes show indeterminate state when
+ *   partially selected. Default: false.
  * @returns {@link UseTreeState} Tree state, actions, and drag-and-drop configuration.
+ *
+ * @example
+ * ```tsx
+ * // Basic tree without cascade
+ * const { nodes, actions } = useTreeState({
+ *   items: myTree,
+ * });
+ *
+ * // Tree with cascade selection (file system-like behavior)
+ * const { nodes, actions } = useTreeState({
+ *   items: fileSystemTree,
+ *   selectionCascade: true,
+ * });
+ * ```
  */
 export function useTreeState<T>({
   items,
+  selectionCascade = false,
 }: UseTreeStateOptions<T>): UseTreeState<T> {
   const [nodes, setNodes] = useState(items);
-  const actions = useTreeActions<T>({ nodes });
+  const actions = useTreeActions<T>({ nodes, selectionCascade });
 
   const dragAndDropConfig: DragAndDropConfig = {
     getItems: (keys: Set<Key>): DragItem[] =>

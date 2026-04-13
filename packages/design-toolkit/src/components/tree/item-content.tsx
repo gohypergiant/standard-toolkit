@@ -47,8 +47,13 @@ import type { TreeItemContentProps } from './types';
  * @returns The rendered TreeItemContent component.
  */
 export function TreeItemContent({ children }: TreeItemContentProps) {
-  const { showVisibility, variant, visibleKeys, onVisibilityChange } =
-    useContext(TreeContext);
+  const {
+    showVisibility,
+    variant,
+    visibleKeys,
+    indeterminateKeys,
+    onVisibilityChange,
+  } = useContext(TreeContext);
   const { isVisible, isViewable, ancestors } = useContext(TreeItemContext);
   const size = variant === 'cozy' ? 'medium' : 'small';
 
@@ -137,6 +142,7 @@ export function TreeItemContent({ children }: TreeItemContentProps) {
                   slot='selection'
                   isSelected={isSelected}
                   isDisabled={isDisabled}
+                  isIndeterminate={indeterminateKeys?.has(id)}
                 />
               )}
               {allowsDragging && (

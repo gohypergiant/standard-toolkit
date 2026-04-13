@@ -142,6 +142,7 @@ export function Tree<T>({
     selectedKeys,
     visibleKeys,
     visibilityComputedKeys,
+    indeterminateKeys,
   } = useMemo(() => {
     const acc = {
       disabledKeys: nodes ? new Set<Key>() : disabledKeysProp,
@@ -149,43 +150,34 @@ export function Tree<T>({
       selectedKeys: nodes ? new Set<Key>() : selectedKeysProp,
       visibleKeys: nodes ? new Set<Key>() : visibleKeysProp,
       visibilityComputedKeys: new Set<Key>(),
+      indeterminateKeys: new Set<Key>(),
     };
 
     if (!nodes) {
       return acc;
     }
 
-    return nodes.reduce(
-      (
-        acc,
-        {
-          key,
-          isDisabled,
-          isExpanded,
-          isSelected,
-          isVisible,
-          isVisibleComputed,
-        },
-      ) => {
-        if (isDisabled) {
-          acc.disabledKeys?.add(key);
-        }
-        if (isExpanded) {
-          acc.expandedKeys?.add(key);
-        }
-        if (isSelected) {
-          acc.selectedKeys?.add(key);
-        }
-        if (isVisible) {
-          acc.visibleKeys?.add(key);
-        }
-        if (isVisibleComputed) {
-          acc.visibilityComputedKeys.add(key);
-        }
-        return acc;
-      },
-      acc,
-    );
+    return nodes.reduce((acc, node) => {
+      if (node.isDisabled) {
+        acc.disabledKeys?.add(node.key);
+      }
+      if (node.isExpanded) {
+        acc.expandedKeys?.add(node.key);
+      }
+      if (node.isSelected) {
+        acc.selectedKeys?.add(node.key);
+      }
+      if (node.isVisible) {
+        acc.visibleKeys?.add(node.key);
+      }
+      if (node.isVisibleComputed) {
+        acc.visibilityComputedKeys.add(node.key);
+      }
+      if (node.isIndeterminate) {
+        acc.indeterminateKeys.add(node.key);
+      }
+      return acc;
+    }, acc);
   }, [
     nodes,
     disabledKeysProp,
@@ -213,6 +205,7 @@ export function Tree<T>({
         variant,
         visibleKeys,
         visibilityComputedKeys,
+        indeterminateKeys,
         isStatic: typeof children !== 'function',
         onVisibilityChange: onVisibilityChange ?? (() => undefined), // TODO: improve
       }}
