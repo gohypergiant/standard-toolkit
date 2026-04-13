@@ -134,6 +134,7 @@ export class RbzHandler implements Handler {
   private _isDrawing: boolean;
   private _isSuppressingScrollZoom: boolean;
   private _boxIsVisible: boolean;
+  private _animationFrameId: number | null;
 
   constructor(map: MaplibreMap, options: RbzOptions = {}) {
     this._map = map;
@@ -150,15 +151,40 @@ export class RbzHandler implements Handler {
     this._isDrawing = false;
     this._isSuppressingScrollZoom = false;
     this._boxIsVisible = false;
+    this._animationFrameId = null;
 
     this._rbzBox = this._createSelectionBox();
     this._map.getContainer().appendChild(this._rbzBox);
   }
 
+  /**
+   * Checks whether the handler is armed and ready to activate on mousedown.
+   *
+   * @returns True if the handler will respond to the next drag gesture, false otherwise.
+   *
+   * @example
+   * ```typescript
+   * if (rbzHandler.isEnabled()) {
+   *   console.log('RBZ will activate on next Shift+drag');
+   * }
+   * ```
+   */
   isEnabled(): boolean {
     return this._enabled;
   }
 
+  /**
+   * Checks whether a rubber-band selection is currently in progress.
+   *
+   * @returns True if user is actively dragging a selection rectangle, false otherwise.
+   *
+   * @example
+   * ```typescript
+   * if (rbzHandler.isActive()) {
+   *   console.log('User is drawing selection box');
+   * }
+   * ```
+   */
   isActive(): boolean {
     return this._isDrawing;
   }
@@ -191,17 +217,33 @@ export class RbzHandler implements Handler {
     this._rbzBounds = undefined;
     this._isDrawing = false;
 
+    // Cancel any pending animation frame
+    if (this._animationFrameId !== null) {
+      cancelAnimationFrame(this._animationFrameId);
+      this._animationFrameId = null;
+    }
+
     if (this._boxIsVisible) {
-      requestAnimationFrame(() => {
+      this._animationFrameId = requestAnimationFrame(() => {
         this._rbzBox.style.display = 'none';
         this._rbzBox.style.transform = 'translate(0px, 0px)';
         this._rbzBox.style.width = '0px';
         this._rbzBox.style.height = '0px';
+        this._animationFrameId = null;
       });
       this._boxIsVisible = false;
     }
   }
 
+  /**
+   * Handles mousedown events to initiate rubber-band selection.
+   * Part of the MapLibre Handler interface - called automatically by the map.
+   *
+   * @param e - The mousedown event from the browser.
+   * @param point - The map-space point where the mousedown occurred.
+   *
+   * @internal
+   */
   mousedown(e: MouseEvent, point: Point): void {
     if (!this._enabled || e.button !== 0) {
       return;
@@ -219,6 +261,15 @@ export class RbzHandler implements Handler {
     this._suppressScrollZoom();
   }
 
+  /**
+   * Handles mousemove events to update the selection rectangle during drag.
+   * Part of the MapLibre Handler interface - called automatically by the map.
+   *
+   * @param _e - The mousemove event from the browser (unused).
+   * @param point - The current map-space point of the mouse cursor.
+   *
+   * @internal
+   */
   mousemove(_e: MouseEvent, point: Point): void {
     if (!this._enabled) {
       return;
@@ -244,17 +295,33 @@ export class RbzHandler implements Handler {
       [left + width, top], // NE: top-right pixel
     ];
 
-    requestAnimationFrame(() => {
+    // Cancel previous frame if mousemove fires faster than 60fps
+    if (this._animationFrameId !== null) {
+      cancelAnimationFrame(this._animationFrameId);
+    }
+
+    this._animationFrameId = requestAnimationFrame(() => {
       this._rbzBox.style.display = 'block';
       this._rbzBox.style.opacity = this._isDrawing ? '1' : '0';
       this._rbzBox.style.transform = `translate(${left}px, ${top}px)`;
       this._rbzBox.style.width = `${width}px`;
       this._rbzBox.style.height = `${height}px`;
+      this._animationFrameId = null;
     });
 
     this._boxIsVisible = true;
   }
 
+  /**
+   * Handles mouseup events to complete the selection and fit viewport to bounds.
+   * Part of the MapLibre Handler interface - called automatically by the map.
+   *
+   * @param e - The mouseup event from the browser.
+   * @param _point - The map-space point where mouseup occurred (unused).
+   * @returns Camera animation instructions for MapLibre, or undefined if no selection made.
+   *
+   * @internal
+   */
   mouseup(e: MouseEvent, _point: Point): HandlerResult | undefined {
     if (!this._enabled || e.button !== 0) {
       return;
@@ -291,6 +358,14 @@ export class RbzHandler implements Handler {
     };
   }
 
+  /**
+   * Handles keydown events to cancel selection with Escape key.
+   * Part of the MapLibre Handler interface - called automatically by the map.
+   *
+   * @param e - The keydown event from the browser.
+   *
+   * @internal
+   */
   keydown(e: KeyboardEvent): void {
     if (!this._enabled) {
       return;
@@ -428,6 +503,10 @@ export class RbzHandler implements Handler {
    */
   destroy(): void {
     this.disable();
+    if (this._animationFrameId !== null) {
+      cancelAnimationFrame(this._animationFrameId);
+      this._animationFrameId = null;
+    }
     this._rbzBox.remove();
   }
 }

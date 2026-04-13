@@ -52,11 +52,11 @@ const CANVAS_CONTEXT_ATTRIBUTES: WebGLContextAttributesWithType = {
 } as const;
 
 /**
- * Serializes PickingInfo for event bus transmission.
+ * Serializes PickingInfo for event bus transmission by removing non-cloneable properties.
  * Omits viewport, layer, and sourceLayer (contain functions) but preserves layer IDs.
  *
- * @param info - The PickingInfo object from Deck.gl
- * @returns Serializable picking info with layer IDs extracted
+ * @param info - The PickingInfo object from Deck.gl.
+ * @returns Serializable picking info with layer IDs extracted.
  */
 function serializePickingInfo(info: PickingInfo): SerializablePickingInfo {
   const { viewport, layer, sourceLayer, ...infoRest } = info;
@@ -68,11 +68,12 @@ function serializePickingInfo(info: PickingInfo): SerializablePickingInfo {
 }
 
 /**
- * Strips non-serializable properties from MjolnirGestureEvent for event bus transmission.
+ * Strips non-serializable properties from Mjolnir events for event bus transmission.
+ * Overloaded to handle both GestureEvent and PointerEvent types.
  * Removes functions, DOM elements, and PointerEvent objects that cannot be cloned.
  *
- * @param event - The MjolnirGestureEvent from Deck.gl
- * @returns Serializable gesture event with non-cloneable properties removed
+ * @param event - The MjolnirGestureEvent from Deck.gl.
+ * @returns Serializable gesture event with non-cloneable properties removed.
  */
 function serializeMjolnirEvent(
   event: MjolnirGestureEvent,
@@ -88,11 +89,12 @@ function serializeMjolnirEvent(
   | 'pointers'
 >;
 /**
- * Strips non-serializable properties from MjolnirPointerEvent for event bus transmission.
+ * Strips non-serializable properties from Mjolnir events for event bus transmission.
+ * Overloaded to handle both GestureEvent and PointerEvent types.
  * Removes functions and DOM elements that cannot be cloned.
  *
- * @param event - The MjolnirPointerEvent from Deck.gl
- * @returns Serializable pointer event with non-cloneable properties removed
+ * @param event - The MjolnirPointerEvent from Deck.gl.
+ * @returns Serializable pointer event with non-cloneable properties removed.
  */
 function serializeMjolnirEvent(
   event: MjolnirPointerEvent,
@@ -161,8 +163,8 @@ function AddDeckglControl() {
  * @returns A map component with Deck.gl and MapLibre GL integration
  *
  * @example
- * Basic usage with id (recommended: module-level constant):
  * ```tsx
+ * // Basic usage with id (recommended: module-level constant)
  * import { BaseMap } from '@accelint/map-toolkit/deckgl';
  * import { View } from '@deckgl-fiber-renderer/dom';
  * import { uuid } from '@accelint/core';
@@ -180,8 +182,8 @@ function AddDeckglControl() {
  * ```
  *
  * @example
- * With map mode and event handlers (module-level constant for sharing):
  * ```tsx
+ * // With map mode and event handlers
  * import { BaseMap } from '@accelint/map-toolkit/deckgl';
  * import { useMapMode } from '@accelint/map-toolkit/map-mode';
  * import { uuid } from '@accelint/core';
@@ -231,7 +233,7 @@ export function BaseMap({
   onViewStateChange,
   pickingRadius,
   enableRbz = false,
-  boxZoom = !enableRbz, // Disable box zoom if rubber band zoom is enabled to avoid conflicts
+  boxZoom: boxZoomProp,
   ...rest
 }: BaseMapProps) {
   const mapGeneration = getMapGeneration(id);
@@ -239,6 +241,9 @@ export function BaseMap({
   const container = useId();
   const mapRef = useRef<MapRef>(null);
   const rbzRef = useRef<RbzHandler | null>(null);
+
+  // Derive boxZoom: disable when RBZ is enabled to avoid conflicts
+  const boxZoom = boxZoomProp ?? !enableRbz;
 
   const { cameraState, setCameraState } = useMapCamera(id, {
     view: defaultView,
@@ -413,19 +418,28 @@ export function BaseMap({
   });
 
   useEffect(() => {
-    if (!enableRbz) {
+    const containerEl = mapRef.current?.getContainer();
+    if (!(enableRbz && containerEl)) {
       return;
     }
 
     function handleKeyDown(event: KeyboardEvent): void {
-      if (event.key === 'Shift') {
+      // Only activate RBZ if the map container has focus (or contains the focused element)
+      if (
+        event.key === 'Shift' &&
+        containerEl?.contains(document.activeElement)
+      ) {
         rbzRef.current?.enable();
         mapRef.current?.getMap().dragPan.disable();
       }
     }
 
     function handleKeyUp(event: KeyboardEvent): void {
-      if (event.key === 'Shift') {
+      // Only deactivate RBZ if this map originally activated it (had focus on keydown)
+      if (
+        event.key === 'Shift' &&
+        containerEl?.contains(document.activeElement)
+      ) {
         rbzRef.current?.disable();
         mapRef.current?.getMap().dragPan.enable();
       }
