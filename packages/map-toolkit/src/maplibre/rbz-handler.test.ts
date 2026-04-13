@@ -47,6 +47,11 @@ function makeMap(containerWidth = 1920, containerHeight = 1080) {
     enable: vi.fn(),
   };
 
+  const dragPan = {
+    disable: vi.fn(),
+    enable: vi.fn(),
+  };
+
   const fitBounds = vi.fn();
   const unproject = vi.fn(([x, y]: [number, number]) => ({
     lng: x / 10,
@@ -56,11 +61,12 @@ function makeMap(containerWidth = 1920, containerHeight = 1080) {
   const map = {
     getContainer: () => container,
     scrollZoom,
+    dragPan,
     fitBounds,
     unproject,
   };
 
-  return { map, container, scrollZoom, fitBounds, unproject };
+  return { map, container, scrollZoom, dragPan, fitBounds, unproject };
 }
 
 function makeMouseEvent(button = 0): MouseEvent {
@@ -74,6 +80,14 @@ function makeKeyEvent(code: string): KeyboardEvent {
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
+
+/**
+ * Dispatches a real KeyboardEvent on `window` to exercise the handler's
+ * global keyboard listeners installed by `startListening()`.
+ */
+function dispatchKey(type: 'keydown' | 'keyup', key: string): void {
+  window.dispatchEvent(new KeyboardEvent(type, { key }));
+}
 
 /**
  * Simulates a complete drag gesture: mousedown → one or more mousemoves → mouseup.
@@ -562,6 +576,58 @@ describe('RbzHandler', () => {
       expect(box.style.width).toBe('200px');
       expect(box.style.height).toBe('50px');
     });
+
+    it('should constrain the rectangle when dragging in a tall direction', async () => {
+      // 1920×1080 viewport; aspectRatioAngle ≈ 29.36°. A tall drag (pointer
+      // angle ≥ threshold) takes the `width = deltaY * aspectRatio` branch.
+      const { map, container } = makeMap(1920, 1080);
+      const handler = new RbzHandler(map as never, {
+        constrainAspectRatio: true,
+      });
+
+      handler.enable();
+      handler.mousedown(makeMouseEvent(), makePoint(100, 100) as never);
+      // deltaX=20, deltaY=200 → pointer angle ≈ 84°, well above threshold
+      handler.mousemove(makeMouseEvent(), makePoint(120, 300) as never);
+
+      await vi.runAllTimersAsync();
+
+      const box = container.children[0] as HTMLElement;
+      const width = Number.parseInt(box.style.width, 10);
+      const height = Number.parseInt(box.style.height, 10);
+
+      // Height is driven by deltaY; width is scaled to match viewport ratio.
+      expect(height).toBe(200);
+      expect(width / height).toBeCloseTo(1920 / 1080, 1);
+    });
+
+    it('should constrain the rectangle when origin is center', async () => {
+      // Center origin doubles width/height symmetrically from the start point.
+      // Aspect ratio should still be preserved.
+      const { map, container } = makeMap(1920, 1080);
+      const handler = new RbzHandler(map as never, {
+        constrainAspectRatio: true,
+        origin: 'center',
+      });
+
+      handler.enable();
+      handler.mousedown(makeMouseEvent(), makePoint(500, 500) as never);
+      // Wide drag: deltaX=200, deltaY=10 → below threshold, width = deltaX
+      handler.mousemove(makeMouseEvent(), makePoint(700, 510) as never);
+
+      await vi.runAllTimersAsync();
+
+      const box = container.children[0] as HTMLElement;
+      const width = Number.parseInt(box.style.width, 10);
+      const height = Number.parseInt(box.style.height, 10);
+
+      // Aspect ratio should match viewport
+      expect(width / height).toBeCloseTo(1920 / 1080, 1);
+      // Center origin places start at the box center
+      expect(box.style.transform).toBe(
+        `translate(${500 - width / 2}px, ${500 - height / 2}px)`,
+      );
+    });
   });
 
   describe('buffer option', () => {
@@ -626,6 +692,154 @@ describe('RbzHandler', () => {
     });
   });
 
+  describe('startListening / stopListening', () => {
+    it('should enable the handler and disable dragPan on Shift keydown after startListening', () => {
+      const { map, dragPan } = makeMap();
+      const handler = new RbzHandler(map as never);
+
+      handler.startListening();
+      dispatchKey('keydown', 'Shift');
+
+      expect(handler.isEnabled()).toBe(true);
+      expect(dragPan.disable).toHaveBeenCalledOnce();
+
+      handler.destroy();
+    });
+
+    it('should disable the handler and re-enable dragPan on Shift keyup', () => {
+      const { map, dragPan } = makeMap();
+      const handler = new RbzHandler(map as never);
+
+      handler.startListening();
+      dispatchKey('keydown', 'Shift');
+      dispatchKey('keyup', 'Shift');
+
+      expect(handler.isEnabled()).toBe(false);
+      expect(dragPan.enable).toHaveBeenCalledOnce();
+
+      handler.destroy();
+    });
+
+    it('should ignore non-Shift keys', () => {
+      const { map, dragPan } = makeMap();
+      const handler = new RbzHandler(map as never);
+
+      handler.startListening();
+      dispatchKey('keydown', 'Control');
+      dispatchKey('keydown', 'a');
+
+      expect(handler.isEnabled()).toBe(false);
+      expect(dragPan.disable).not.toHaveBeenCalled();
+
+      handler.destroy();
+    });
+
+    it('should not respond to Shift after stopListening', () => {
+      const { map, dragPan } = makeMap();
+      const handler = new RbzHandler(map as never);
+
+      handler.startListening();
+      handler.stopListening();
+      dispatchKey('keydown', 'Shift');
+
+      expect(handler.isEnabled()).toBe(false);
+      expect(dragPan.disable).not.toHaveBeenCalled();
+
+      handler.destroy();
+    });
+
+    it('should disable the handler when stopListening is called while active', () => {
+      const { map } = makeMap();
+      const handler = new RbzHandler(map as never);
+
+      handler.startListening();
+      dispatchKey('keydown', 'Shift');
+      expect(handler.isEnabled()).toBe(true);
+
+      handler.stopListening();
+
+      expect(handler.isEnabled()).toBe(false);
+
+      handler.destroy();
+    });
+
+    it('should be idempotent — calling startListening twice attaches listeners once', () => {
+      const { map, dragPan } = makeMap();
+      const handler = new RbzHandler(map as never);
+
+      handler.startListening();
+      handler.startListening();
+      dispatchKey('keydown', 'Shift');
+
+      // If listeners were attached twice, dragPan.disable would be called twice
+      expect(dragPan.disable).toHaveBeenCalledOnce();
+
+      handler.destroy();
+    });
+
+    it('should be idempotent — calling stopListening without startListening is safe', () => {
+      const { map } = makeMap();
+      const handler = new RbzHandler(map as never);
+
+      expect(() => handler.stopListening()).not.toThrow();
+
+      handler.destroy();
+    });
+  });
+
+  describe('shouldActivate option', () => {
+    it('should activate when shouldActivate returns true', () => {
+      const { map, dragPan } = makeMap();
+      const handler = new RbzHandler(map as never, {
+        shouldActivate: () => true,
+      });
+
+      handler.startListening();
+      dispatchKey('keydown', 'Shift');
+
+      expect(handler.isEnabled()).toBe(true);
+      expect(dragPan.disable).toHaveBeenCalledOnce();
+
+      handler.destroy();
+    });
+
+    it('should skip activation when shouldActivate returns false', () => {
+      const { map, dragPan } = makeMap();
+      const handler = new RbzHandler(map as never, {
+        shouldActivate: () => false,
+      });
+
+      handler.startListening();
+      dispatchKey('keydown', 'Shift');
+
+      expect(handler.isEnabled()).toBe(false);
+      expect(dragPan.disable).not.toHaveBeenCalled();
+
+      handler.destroy();
+    });
+
+    it('should check shouldActivate on each Shift press', () => {
+      const { map } = makeMap();
+      let allowed = false;
+      const handler = new RbzHandler(map as never, {
+        shouldActivate: () => allowed,
+      });
+
+      handler.startListening();
+
+      dispatchKey('keydown', 'Shift');
+      expect(handler.isEnabled()).toBe(false);
+
+      dispatchKey('keyup', 'Shift');
+      allowed = true;
+
+      dispatchKey('keydown', 'Shift');
+      expect(handler.isEnabled()).toBe(true);
+
+      handler.destroy();
+    });
+  });
+
   describe('destroy', () => {
     it('should remove the selection box from the container', () => {
       const { map, container } = makeMap();
@@ -646,6 +860,18 @@ describe('RbzHandler', () => {
       handler.destroy();
 
       expect(handler.isEnabled()).toBe(false);
+    });
+
+    it('should stop listening on destroy', () => {
+      const { map, dragPan } = makeMap();
+      const handler = new RbzHandler(map as never);
+
+      handler.startListening();
+      handler.destroy();
+
+      // After destroy, Shift keydown should have no effect
+      dispatchKey('keydown', 'Shift');
+      expect(dragPan.disable).not.toHaveBeenCalled();
     });
   });
 

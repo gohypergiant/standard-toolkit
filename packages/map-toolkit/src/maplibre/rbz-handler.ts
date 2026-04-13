@@ -90,10 +90,17 @@ export type RbzOptions = {
    * should respond to keyboard shortcuts.
    *
    * When omitted, the handler always activates on Shift press.
+   *
+   * Only consulted while {@link RbzHandler.startListening} is active;
+   * direct calls to {@link RbzHandler.enable} bypass this check.
    */
   shouldActivate?: () => boolean;
 };
 
+/**
+ * Default visual style for the RBZ selection rectangle. Applied to any
+ * {@link RbzStyleOptions} properties not overridden via {@link RbzOptions.style}.
+ */
 export const DEFAULT_RBZ_STYLE: RbzStyleOptions = {
   borderColor: '#00B4FF',
   borderWidth: 2,
@@ -120,10 +127,14 @@ export const DEFAULT_RBZ_STYLE: RbzStyleOptions = {
  *   style: { borderColor: '#FF8C00' },
  * });
  *
- * map.addHandler('rbz', rbz);
+ * // Register with MapLibre's handler system (private API; see docs).
+ * map.handlers._add('customRbz', rbz);
  *
- * // Arm for the next drag gesture (e.g. from a hotkey or toolbar button):
- * hotkey.on('b', () => rbz.enable());
+ * // Let the handler manage Shift key + dragPan internally.
+ * rbz.startListening();
+ *
+ * // Clean up when the map is removed.
+ * map.once('remove', () => rbz.destroy());
  * ```
  */
 export class RbzHandler implements Handler {
@@ -145,10 +156,6 @@ export class RbzHandler implements Handler {
   private _animationFrameId: number | null;
   private _isListening: boolean;
 
-  // Bound references for add/removeEventListener
-  private readonly _onKeyDown: (e: KeyboardEvent) => void;
-  private readonly _onKeyUp: (e: KeyboardEvent) => void;
-
   constructor(map: MaplibreMap, options: RbzOptions = {}) {
     this._map = map;
     this._style = { ...DEFAULT_RBZ_STYLE, ...options.style };
@@ -166,9 +173,6 @@ export class RbzHandler implements Handler {
     this._isSuppressingScrollZoom = false;
     this._animationFrameId = null;
     this._isListening = false;
-
-    this._onKeyDown = this._handleKeyDown.bind(this);
-    this._onKeyUp = this._handleKeyUp.bind(this);
 
     this._rbzBox = this._createSelectionBox();
     this._map.getContainer().appendChild(this._rbzBox);
@@ -237,27 +241,33 @@ export class RbzHandler implements Handler {
       return;
     }
     this._isListening = true;
-    window.addEventListener('keydown', this._onKeyDown);
-    window.addEventListener('keyup', this._onKeyUp);
+    window.addEventListener('keydown', this._onWindowKeyDown);
+    window.addEventListener('keyup', this._onWindowKeyUp);
   }
 
   /**
-   * Stops listening for Shift key events and disables the handler if active.
+   * Removes the keyboard listeners installed by {@link startListening} and
+   * disables the handler if armed. Idempotent — safe to call when not
+   * listening. Invoked automatically by {@link destroy}.
    */
   stopListening(): void {
     if (!this._isListening) {
       return;
     }
     this._isListening = false;
-    window.removeEventListener('keydown', this._onKeyDown);
-    window.removeEventListener('keyup', this._onKeyUp);
+    window.removeEventListener('keydown', this._onWindowKeyDown);
+    window.removeEventListener('keyup', this._onWindowKeyUp);
     this.disable();
   }
 
   /**
    * Clears in-progress gesture state and hides the selection rectangle.
-   * Called automatically by MapLibre during camera transitions, so avoid
-   * expensive DOM work here; changes are deferred via `requestAnimationFrame`.
+   * Called automatically by MapLibre during camera transitions.
+   *
+   * DOM writes are synchronous: `reset` can fire multiple times in rapid
+   * succession (e.g. `disable()` → `mouseup()`), and a deferred hide via
+   * `requestAnimationFrame` can end up cancelled mid-flight, leaving the
+   * box visible after the gesture.
    */
   reset(): void {
     this._startPos = undefined;
@@ -376,11 +386,7 @@ export class RbzHandler implements Handler {
     this._restoreScrollZoom();
     this.reset();
 
-    if (!isDrawing) {
-      return;
-    }
-
-    if (!bounds) {
+    if (!(isDrawing && bounds)) {
       return;
     }
 
@@ -465,13 +471,13 @@ export class RbzHandler implements Handler {
     }
 
     if (this._origin === 'center') {
-      const halfWidth = width;
-      const halfHeight = height;
+      // For center origin, input width/height represent half-dimensions;
+      // the box grows symmetrically from the start point.
       return {
-        left: start.x - halfWidth,
-        top: start.y - halfHeight,
-        width: halfWidth * 2,
-        height: halfHeight * 2,
+        left: start.x - width,
+        top: start.y - height,
+        width: width * 2,
+        height: height * 2,
       };
     }
 
@@ -538,7 +544,11 @@ export class RbzHandler implements Handler {
     }
   }
 
-  private _handleKeyDown(e: KeyboardEvent): void {
+  // Arrow properties preserve `this` without explicit binding, so the same
+  // reference can be used for add/removeEventListener on the window.
+  // Distinct from the MapLibre Handler interface's `keydown` method, which
+  // is invoked by the map for in-map keyboard events.
+  private readonly _onWindowKeyDown = (e: KeyboardEvent): void => {
     if (e.key !== 'Shift') {
       return;
     }
@@ -549,16 +559,16 @@ export class RbzHandler implements Handler {
 
     this.enable();
     this._map.dragPan?.disable();
-  }
+  };
 
-  private _handleKeyUp(e: KeyboardEvent): void {
+  private readonly _onWindowKeyUp = (e: KeyboardEvent): void => {
     if (e.key !== 'Shift') {
       return;
     }
 
     this.disable();
     this._map.dragPan?.enable();
-  }
+  };
 
   /**
    * Removes the selection overlay element from the map container and stops

@@ -64,8 +64,12 @@ When `enableRbz` is `true`, `boxZoom` is automatically set to `false` to avoid c
 **How it works with BaseMap:**
 
 1. On map load, BaseMap creates an `RbzHandler` instance and registers it with MapLibre via `map.handlers._add('customRbz', rbzHandler)`.
-2. Global `keydown` and `keyup` listeners watch for the **Shift** key. Pressing Shift calls `rbzHandler.enable()` and disables `dragPan`. Releasing Shift calls `rbzHandler.disable()`.
-3. While Shift is held, drag anywhere on the map to draw the selection rectangle. On mouse release the viewport fits to the selected bounds, and the handler disables itself.
+2. The handler's `startListening()` method installs global `keydown` / `keyup` listeners for the **Shift** key. Pressing Shift arms the handler and disables `dragPan`; releasing Shift disarms it.
+3. For multi-map layouts, BaseMap passes a `shouldActivate` callback that returns `true` only for the most-recently-hovered map, so Shift affects one map at a time.
+4. While Shift is held, drag anywhere on the map to draw the selection rectangle. On mouse release the viewport fits to the selected bounds, and the handler disables itself.
+5. When the map is removed, the handler's `destroy()` method is called automatically via MapLibre's `remove` event.
+
+> **Read once on map load.** The `enableRbz` and `rbzOptions` props are captured during map initialization. Changing them after mount has no effect — to update dynamically, change the map's `key` prop to force a remount.
 
 ### Standalone usage
 
@@ -85,14 +89,38 @@ const rbz = new RbzHandler(map, {
 // Register with MapLibre's handler system
 map.handlers._add('customRbz', rbz);
 
-// Arm the handler — e.g. from a toolbar button or hotkey
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Shift') rbz.enable();
+// Let the handler manage Shift key + dragPan internally
+rbz.startListening();
+
+// When the map is removed, stop listeners and release resources
+map.once('remove', () => rbz.destroy());
+```
+
+If you need a custom activation trigger (e.g. a toolbar button instead of Shift), skip `startListening()` and call `enable()` / `disable()` yourself:
+
+```ts
+const rbz = new RbzHandler(map);
+map.handlers._add('customRbz', rbz);
+
+toolbarButton.addEventListener('click', () => rbz.enable());
+```
+
+### Gating activation in multi-map layouts
+
+If you render multiple maps on the same page, pass a `shouldActivate` callback so only the active map responds to Shift:
+
+```ts
+let activeMapId: string | null = null;
+
+const rbz = new RbzHandler(map, {
+  shouldActivate: () => activeMapId === 'my-map-id',
 });
 
-document.addEventListener('keyup', (e) => {
-  if (e.key === 'Shift') rbz.disable();
+map.on('mouseover', () => {
+  activeMapId = 'my-map-id';
 });
+
+rbz.startListening();
 ```
 
 ### With a geographic buffer
@@ -147,6 +175,16 @@ Arms the handler for one drag gesture. After the gesture completes (or is cancel
 
 Disarms the handler immediately. Restores scroll zoom if it was suppressed, hides the selection rectangle, and clears all in-progress gesture state.
 
+##### `startListening(): void`
+
+Installs global `keydown` / `keyup` listeners on `window` that arm the handler on Shift press and disarm on release. Also toggles `map.dragPan` so panning and RBZ don't conflict. Idempotent — calling multiple times attaches listeners once.
+
+When a `shouldActivate` callback was provided in options, it's checked on each Shift press and the handler only arms when the callback returns `true`.
+
+##### `stopListening(): void`
+
+Removes the keyboard listeners installed by `startListening()` and disables the handler if currently armed. Idempotent — safe to call when not listening. Invoked automatically by `destroy()`.
+
 ##### `isEnabled(): boolean`
 
 Returns `true` when the handler is armed and ready to process mouse events.
@@ -161,7 +199,9 @@ Clears in-progress gesture state and hides the selection rectangle. Called autom
 
 ##### `destroy(): void`
 
-Removes the selection overlay element from the map container and disables the handler. Call this when the handler will no longer be used to avoid leaking DOM nodes.
+Full cleanup: stops keyboard listeners, cancels any pending animation frame, disables the handler, and removes the selection overlay element from the map container. Call this when the handler will no longer be used to avoid leaking DOM nodes and window event listeners.
+
+When used with `BaseMap`, this is called automatically via MapLibre's `remove` event.
 
 ### `RbzOptions`
 
@@ -171,6 +211,7 @@ Removes the selection overlay element from the map container and disables the ha
 | `constrainAspectRatio` | `boolean` | `false` | When `true`, the selection rectangle is locked to the viewport's current aspect ratio. |
 | `buffer` | `RbzBuffer` | — | Geographic buffer to expand the selection area before fitting the viewport. Omit for no buffer. |
 | `style` | `Partial<RbzStyleOptions>` | — | Visual overrides for the selection rectangle. Unspecified properties fall back to `DEFAULT_RBZ_STYLE`. |
+| `shouldActivate` | `() => boolean` | — | Called on each Shift press (when `startListening()` is active). Return `false` to skip activation — useful for gating keyboard shortcuts to a specific map in multi-map layouts. |
 
 ### `RbzBuffer`
 

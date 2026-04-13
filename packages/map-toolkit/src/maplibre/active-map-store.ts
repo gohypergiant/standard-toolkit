@@ -20,7 +20,9 @@ import type { UniqueId } from '@accelint/core';
 let activeMapId: UniqueId | null = null;
 
 export function setActiveMap(id: UniqueId): void {
-  activeMapId = id;
+  if (activeMapId !== id) {
+    activeMapId = id;
+  }
 }
 
 export function isActiveMap(id: UniqueId): boolean {

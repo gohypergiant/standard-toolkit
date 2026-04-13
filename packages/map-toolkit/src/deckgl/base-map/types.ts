@@ -52,9 +52,22 @@ export type BaseMapProps = DeckglProps & {
   styleUrl?: string;
   /** Whether to enable box zoom (Shift + drag) on the map. Defaults to true. False if rubber band zoom is enabled. */
   boxZoom?: boolean;
-  /** Whether to enable rubber band zoom (Shift + drag) on the map. Defaults to false. */
+  /**
+   * Whether to enable rubber band zoom (Shift + drag) on the map.
+   *
+   * @default false
+   * @remarks
+   * Read once on map load; changes after mount have no effect. To toggle RBZ
+   * dynamically, change the map's `key` prop to force a remount.
+   */
   enableRbz?: boolean;
-  /** Configuration options for rubber band zoom. Only applies when enableRbz is true. */
+  /**
+   * Configuration options for rubber band zoom. Only applies when `enableRbz` is true.
+   *
+   * @remarks
+   * Read once on map load; changes after mount have no effect. To update
+   * options dynamically, change the map's `key` prop to force a remount.
+   */
   rbzOptions?: RbzOptions;
 };
 

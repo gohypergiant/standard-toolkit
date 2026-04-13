@@ -14,6 +14,7 @@ A React component that provides a Deck.gl-powered base map with MapLibre GL inte
 - **Event Bus**: Centralized event system for click and hover interactions using `@accelint/bus`
 - **Map Mode Integration**: Automatically creates internal `MapProvider` for map mode state management
 - **Deck.gl Controller**: Interactive map controls with configurable parameters
+- **Rubber Band Zoom**: Opt-in Shift+drag zoom-to-rectangle gesture via `enableRbz` (see [Rubber Band Zoom docs](?path=/docs/deckgl-rubber-band-zoom--docs))
 - **Client-Side Only**: Designed for client-side rendering in React applications
 
 **Important**: BaseMap passes its children to Deck.gl, which only accepts Deck.gl layer components. Regular React UI components (buttons, toolbars, etc.) must be rendered as **siblings** to BaseMap, not children.
@@ -154,25 +155,34 @@ export function MapListener() {
 
 ### Props
 
-The `BaseMap` component extends all `DeckglProps` from `@deckgl-fiber-renderer/types` and includes the following additional props:
+The `BaseMap` component extends all `DeckglProps` from `@deckgl-fiber-renderer/types` and adds the following map-specific props:
 
-#### `id: UniqueId` (required)
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `id` | `UniqueId` | *required* | Unique identifier for this map instance. Used to isolate map mode state between multiple maps. See [Using `id`](#using-id) for recommended patterns. |
+| `className` | `string` | `undefined` | CSS class applied to the map container element. |
+| `defaultView` | `'2D' \| '2.5D' \| '3D'` | `'2D'` | Initial camera perspective. `'2D'` locks pitch at 0; `'2.5D'` and `'3D'` allow tilt up to 85°. |
+| `styleUrl` | `string` | `DARK_BASE_MAP_STYLE` | MapLibre style URL for the base map tiles. See [Base map styles](#base-map-styles). |
+| `enableControlEvents` | `boolean` | `true` | Listen for pan/zoom enable/disable events on the event bus. Set to `false` to skip the event-listener setup when you don't need programmatic camera control. |
+| `boxZoom` | `boolean` | `!enableRbz` | Enable MapLibre's native box zoom gesture (Shift + drag). Defaults to `true`, or `false` when `enableRbz` is `true` (the two gestures conflict). |
+| `enableRbz` | `boolean` | `false` | Enable rubber band zoom. See [Rubber Band Zoom](#rubber-band-zoom). |
+| `rbzOptions` | [`RbzOptions`](?path=/docs/deckgl-rubber-band-zoom--docs) | `undefined` | Configuration for rubber band zoom. Only applies when `enableRbz` is `true`. |
+| `onClick` | `(info: PickingInfo, event: MjolnirGestureEvent) => void` | `undefined` | Fires on map click. Receives the full Deck.gl picking info and Mjolnir gesture event. |
+| `onHover` | `(info: PickingInfo, event: MjolnirPointerEvent) => void` | `undefined` | Fires on map hover. Receives the full Deck.gl picking info and Mjolnir pointer event. |
+| `parameters` | `Record<string, any>` | `{}` | WebGL parameters merged with the defaults. |
 
-Unique identifier for this map instance. Used to isolate map mode state between multiple map instances (e.g., main map vs minimap). This prop is required and should be a UUID generated using `uuid()` from `@accelint/core`.
+#### Using `id`
 
-**Important**: This same `id` must be passed to `useMapMode(id)` in UI components that are rendered as siblings to BaseMap, since UI components cannot be children of BaseMap.
+The same `id` must be passed to `useMapMode(id)` in any UI components rendered as siblings to BaseMap. If the `id` prop changes, BaseMap performs a complete remount — the old store is cleaned up and a new one is created, so frequent ID changes cause performance issues.
 
-**ID Changes**: If the `id` prop changes, BaseMap will perform a complete remount. The old store is properly cleaned up and a new one is created. While this is handled safely, frequent ID changes will cause performance issues due to remounting.
-
-**Recommended Pattern**: Create the `id` as a **module-level constant**. This ensures stability and makes it easy to share across all components:
+**Recommended pattern — module-level constant:**
 
 ```tsx
 import { uuid } from '@accelint/core';
 
-// ✅ BEST - Module-level constant (recommended)
+// ✅ BEST - Module-level constant
 // - Stable across renders and remounts
 // - Easy to import and share across components
-// - No useState/useRef complexity
 const MAIN_MAP_ID = uuid();
 
 export function MapView() {
@@ -185,7 +195,7 @@ export function Toolbar() {
 }
 ```
 
-Alternative patterns (only use if you need dynamic IDs):
+Alternative patterns (only when you need dynamic IDs):
 
 ```tsx
 // ✅ OK - For components that need their own isolated map instance
@@ -201,51 +211,44 @@ function MapView() {
 }
 ```
 
-#### `className?: string`
+#### Base map styles
 
-Optional CSS class name to apply to the map container element.
-
-#### `styleUrl?: string`
-
-MapLibre style URL for the base map tiles. Defaults to `DARK_BASE_MAP_STYLE` (Carto Dark Matter).
+`styleUrl` accepts any MapLibre style JSON URL. The package re-exports two Carto presets:
 
 ```tsx
 import { BaseMap, LIGHT_BASE_MAP_STYLE } from '@accelint/map-toolkit/deckgl';
 
-// Use the light theme
+// Light theme
 <BaseMap id={mapId} styleUrl={LIGHT_BASE_MAP_STYLE}>
   <View id="main" controller />
 </BaseMap>
 
-// Or provide a custom style URL
+// Custom style URL
 <BaseMap id={mapId} styleUrl="https://your-custom-style.json">
   <View id="main" controller />
 </BaseMap>
 ```
 
-#### `enableControlEvents?: boolean`
+#### Rubber Band Zoom
 
-Whether to enable listening for map control events (pan/zoom enable/disable). When `true`, the map will respond to control events emitted via the event bus. Defaults to `true`.
-
-Set to `false` if you don't need programmatic control over pan/zoom and want to skip the event listener setup:
+When `enableRbz` is `true`, BaseMap creates an [`RbzHandler`](?path=/docs/deckgl-rubber-band-zoom--docs) on map load, wires it into MapLibre's handler system, and installs window-level Shift key listeners scoped to the active map. Only the most-recently-hovered map responds to Shift in multi-map layouts.
 
 ```tsx
-<BaseMap id={mapId} enableControlEvents={false}>
-  <View id="main" controller />
-</BaseMap>
+<BaseMap
+  id={mapId}
+  className="h-dvh w-dvw"
+  enableRbz
+  rbzOptions={{
+    origin: 'center',
+    buffer: { amount: 10, unit: 'nauticalmiles' },
+    style: { borderColor: '#FF8C00' },
+  }}
+/>
 ```
 
-#### `onClick?: (info: PickingInfo, event: MjolnirGestureEvent) => void`
+> **`enableRbz` and `rbzOptions` are read once on map load.** Changes after mount have no effect. To toggle or reconfigure dynamically, change the map's `key` prop to force a remount.
 
-Callback function triggered when the map is clicked. Receives the full picking info and gesture event.
-
-#### `onHover?: (info: PickingInfo, event: MjolnirPointerEvent) => void`
-
-Callback function triggered when hovering over the map. Receives the full picking info and pointer event.
-
-#### `parameters?: Record<string, any>`
-
-WebGL parameters to customize rendering. These will be merged with the default parameters.
+See the [Rubber Band Zoom docs](?path=/docs/deckgl-rubber-band-zoom--docs) for the full RBZ API surface.
 
 ### Exported Constants
 
