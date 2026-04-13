@@ -407,4 +407,17 @@ export type ThemeTokens = {
       };
     };
   };
+  animation: {
+    duration: {
+      instant: string;
+      fast: string;
+      normal: string;
+      slow: string;
+    };
+    easing: {
+      standard: string;
+      decelerate: string;
+      accelerate: string;
+    };
+  };
 };
