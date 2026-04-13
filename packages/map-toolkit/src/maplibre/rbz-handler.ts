@@ -84,6 +84,14 @@ export type RbzOptions = {
    * Unspecified properties fall back to {@link DEFAULT_RBZ_STYLE}.
    */
   style?: Partial<RbzStyleOptions>;
+  /**
+   * Called before enabling on Shift press. Return `true` to allow activation,
+   * `false` to skip. Useful for multi-map layouts where only the active map
+   * should respond to keyboard shortcuts.
+   *
+   * When omitted, the handler always activates on Shift press.
+   */
+  shouldActivate?: () => boolean;
 };
 
 export const DEFAULT_RBZ_STYLE: RbzStyleOptions = {
@@ -125,6 +133,7 @@ export class RbzHandler implements Handler {
   private readonly _origin: RbzOrigin;
   private readonly _constrainAspectRatio: boolean;
   private readonly _buffer: RbzBuffer | undefined;
+  private readonly _shouldActivate: (() => boolean) | undefined;
 
   private _enabled: boolean;
   private _startPos: Point | undefined;
@@ -133,8 +142,12 @@ export class RbzHandler implements Handler {
   private _aspectRatioAngle: number;
   private _isDrawing: boolean;
   private _isSuppressingScrollZoom: boolean;
-  private _boxIsVisible: boolean;
   private _animationFrameId: number | null;
+  private _isListening: boolean;
+
+  // Bound references for add/removeEventListener
+  private readonly _onKeyDown: (e: KeyboardEvent) => void;
+  private readonly _onKeyUp: (e: KeyboardEvent) => void;
 
   constructor(map: MaplibreMap, options: RbzOptions = {}) {
     this._map = map;
@@ -142,6 +155,7 @@ export class RbzHandler implements Handler {
     this._origin = options.origin ?? 'topLeft';
     this._constrainAspectRatio = options.constrainAspectRatio ?? false;
     this._buffer = options.buffer;
+    this._shouldActivate = options.shouldActivate;
 
     this._enabled = false;
     this._startPos = undefined;
@@ -150,8 +164,11 @@ export class RbzHandler implements Handler {
     this._aspectRatioAngle = 45;
     this._isDrawing = false;
     this._isSuppressingScrollZoom = false;
-    this._boxIsVisible = false;
     this._animationFrameId = null;
+    this._isListening = false;
+
+    this._onKeyDown = this._handleKeyDown.bind(this);
+    this._onKeyUp = this._handleKeyUp.bind(this);
 
     this._rbzBox = this._createSelectionBox();
     this._map.getContainer().appendChild(this._rbzBox);
@@ -208,6 +225,36 @@ export class RbzHandler implements Handler {
   }
 
   /**
+   * Starts listening for Shift key events on the window to automatically
+   * enable/disable the handler. Manages dragPan state internally.
+   *
+   * When a `shouldActivate` callback was provided in options, it is checked
+   * on each Shift press — the handler only arms if the callback returns `true`.
+   * This supports multi-map layouts where only the active map should respond.
+   */
+  startListening(): void {
+    if (this._isListening) {
+      return;
+    }
+    this._isListening = true;
+    window.addEventListener('keydown', this._onKeyDown);
+    window.addEventListener('keyup', this._onKeyUp);
+  }
+
+  /**
+   * Stops listening for Shift key events and disables the handler if active.
+   */
+  stopListening(): void {
+    if (!this._isListening) {
+      return;
+    }
+    this._isListening = false;
+    window.removeEventListener('keydown', this._onKeyDown);
+    window.removeEventListener('keyup', this._onKeyUp);
+    this.disable();
+  }
+
+  /**
    * Clears in-progress gesture state and hides the selection rectangle.
    * Called automatically by MapLibre during camera transitions, so avoid
    * expensive DOM work here; changes are deferred via `requestAnimationFrame`.
@@ -223,16 +270,12 @@ export class RbzHandler implements Handler {
       this._animationFrameId = null;
     }
 
-    if (this._boxIsVisible) {
-      this._animationFrameId = requestAnimationFrame(() => {
-        this._rbzBox.style.display = 'none';
-        this._rbzBox.style.transform = 'translate(0px, 0px)';
-        this._rbzBox.style.width = '0px';
-        this._rbzBox.style.height = '0px';
-        this._animationFrameId = null;
-      });
-      this._boxIsVisible = false;
-    }
+    // Always hide the box
+    // (reset can be called multiple times during gesture lifecycle)
+    this._rbzBox.style.display = 'none';
+    this._rbzBox.style.transform = 'translate(0px, 0px)';
+    this._rbzBox.style.width = '0px';
+    this._rbzBox.style.height = '0px';
   }
 
   /**
@@ -308,8 +351,6 @@ export class RbzHandler implements Handler {
       this._rbzBox.style.height = `${height}px`;
       this._animationFrameId = null;
     });
-
-    this._boxIsVisible = true;
   }
 
   /**
@@ -497,11 +538,35 @@ export class RbzHandler implements Handler {
     }
   }
 
+  private _handleKeyDown(e: KeyboardEvent): void {
+    if (e.key !== 'Shift') {
+      return;
+    }
+
+    if (this._shouldActivate && !this._shouldActivate()) {
+      return;
+    }
+
+    this.enable();
+    this._map.dragPan?.disable();
+  }
+
+  private _handleKeyUp(e: KeyboardEvent): void {
+    if (e.key !== 'Shift') {
+      return;
+    }
+
+    this.disable();
+    this._map.dragPan?.enable();
+  }
+
   /**
-   * Removes the selection overlay element from the map container.
-   * Call this when the handler will no longer be used to avoid memory leaks.
+   * Removes the selection overlay element from the map container and stops
+   * keyboard listeners. Call this when the handler will no longer be used
+   * to avoid memory leaks.
    */
   destroy(): void {
+    this.stopListening();
     this.disable();
     if (this._animationFrameId !== null) {
       cancelAnimationFrame(this._animationFrameId);

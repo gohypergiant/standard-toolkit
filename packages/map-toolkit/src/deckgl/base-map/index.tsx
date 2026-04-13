@@ -16,7 +16,7 @@ import { useEffectEvent, useEmit } from '@accelint/bus/react';
 import { Deckgl, useDeckgl } from '@deckgl-fiber-renderer/dom';
 import type { PickingInfo, ViewStateChangeParameters } from '@deck.gl/core';
 import 'client-only';
-import { useCallback, useEffect, useId, useMemo, useRef } from 'react';
+import { useCallback, useId, useMemo, useRef } from 'react';
 import {
   Map as MapLibre,
   type MapRef,
@@ -24,6 +24,7 @@ import {
   type ViewState,
 } from 'react-map-gl/maplibre';
 import { RbzHandler } from '@/maplibre';
+import { isActiveMap, setActiveMap } from '@/maplibre/active-map-store';
 import { useMapCamera } from '../../camera';
 import { getCursor } from '../../map-cursor/store';
 import { getMapGeneration } from '../../shared/cleanup';
@@ -233,6 +234,7 @@ export function BaseMap({
   onViewStateChange,
   pickingRadius,
   enableRbz = false,
+  rbzOptions,
   boxZoom: boxZoomProp,
   ...rest
 }: BaseMapProps) {
@@ -307,6 +309,9 @@ export function BaseMap({
 
   const handleHover = useCallback(
     (info: PickingInfo, event: MjolnirPointerEvent) => {
+      // Mark this map as the active instance for keyboard shortcuts (e.g. Shift for RBZ)
+      setActiveMap(id);
+
       // send full pickingInfo and event to user-defined onHover
       onHover?.(info, event);
 
@@ -410,50 +415,25 @@ export function BaseMap({
     }
     if (enableRbz && mapRef.current) {
       const map = mapRef.current.getMap();
-      rbzRef.current = new RbzHandler(map);
+      rbzRef.current = new RbzHandler(map, {
+        ...rbzOptions,
+        shouldActivate: () => isActiveMap(id),
+      });
       // _add is a private MapLibre API — no public equivalent exists for registering custom handlers.
       // Tested against maplibre-gl 5.x. Re-verify on major upgrades.
       map.handlers._add('customRbz', rbzRef.current);
+      rbzRef.current.startListening();
+
+      // Ensure window has focus for keyboard events (critical in iframes like Storybook)
+      window.focus();
+
+      // Clean up when the map is removed
+      map.once('remove', () => {
+        rbzRef.current?.destroy();
+        rbzRef.current = null;
+      });
     }
   });
-
-  useEffect(() => {
-    const containerEl = mapRef.current?.getContainer();
-    if (!(enableRbz && containerEl)) {
-      return;
-    }
-
-    function handleKeyDown(event: KeyboardEvent): void {
-      // Only activate RBZ if the map container has focus (or contains the focused element)
-      if (
-        event.key === 'Shift' &&
-        containerEl?.contains(document.activeElement)
-      ) {
-        rbzRef.current?.enable();
-        mapRef.current?.getMap().dragPan.disable();
-      }
-    }
-
-    function handleKeyUp(event: KeyboardEvent): void {
-      // Only deactivate RBZ if this map originally activated it (had focus on keydown)
-      if (
-        event.key === 'Shift' &&
-        containerEl?.contains(document.activeElement)
-      ) {
-        rbzRef.current?.disable();
-        mapRef.current?.getMap().dragPan.enable();
-      }
-    }
-
-    document.addEventListener('keydown', handleKeyDown);
-    document.addEventListener('keyup', handleKeyUp);
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      document.removeEventListener('keyup', handleKeyUp);
-      rbzRef.current?.destroy();
-    };
-  }, [enableRbz]);
 
   return (
     <div id={container} className={className}>

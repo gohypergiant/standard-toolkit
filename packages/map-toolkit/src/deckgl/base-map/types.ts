@@ -15,6 +15,7 @@ import type { UniqueId } from '@accelint/core';
 import type { PickingInfo } from '@deck.gl/core';
 import type { DeckglProps } from '@deckgl-fiber-renderer/types';
 import type { MjolnirGestureEvent, MjolnirPointerEvent } from 'mjolnir.js';
+import type { RbzOptions } from '@/maplibre/rbz-handler';
 import type { MapEvents } from './events';
 
 /**
@@ -53,6 +54,8 @@ export type BaseMapProps = DeckglProps & {
   boxZoom?: boolean;
   /** Whether to enable rubber band zoom (Shift + drag) on the map. Defaults to false. */
   enableRbz?: boolean;
+  /** Configuration options for rubber band zoom. Only applies when enableRbz is true. */
+  rbzOptions?: RbzOptions;
 };
 
 /**

@@ -16,14 +16,26 @@ import {
   LIGHT_BASE_MAP_STYLE,
 } from '../deckgl/base-map/constants';
 import { BaseMap as BaseMapComponent } from '../deckgl/base-map';
+import type { RbzOrigin } from './rbz-handler';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-const meta: Meta = {
+type StoryArgs = {
+  enableRbz: boolean;
+  boxZoom: boolean;
+  styleUrl: string;
+  origin: RbzOrigin;
+  constrainAspectRatio: boolean;
+  borderColor: string;
+  borderWidth: number;
+  fillColor: string;
+};
+
+const meta: Meta<StoryArgs> = {
   title: 'DeckGL/Rubber Band Zoom',
 };
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<StoryArgs>;
 
 // Stable id for Storybook story
 const RBZ_HANDLER_STORY_ID = uuid();
@@ -33,6 +45,11 @@ export const BasicUsage: Story = {
     enableRbz: true,
     boxZoom: false,
     styleUrl: DARK_BASE_MAP_STYLE,
+    origin: 'topLeft',
+    constrainAspectRatio: false,
+    borderColor: '#00B4FF',
+    borderWidth: 2,
+    fillColor: 'rgba(0, 180, 255, 0.1)',
   },
   argTypes: {
     enableRbz: {
@@ -53,15 +70,68 @@ export const BasicUsage: Story = {
         [LIGHT_BASE_MAP_STYLE]: 'Voyager (Light)',
       },
     },
+    origin: {
+      control: { type: 'radio' },
+      options: ['topLeft', 'center'],
+      description:
+        'Where the rectangle grows from during drag. topLeft anchors at corner, center expands symmetrically.',
+      table: {
+        category: 'RBZ Options',
+      },
+    },
+    constrainAspectRatio: {
+      control: { type: 'boolean' },
+      description:
+        'Lock rectangle to viewport aspect ratio. Prevents letterboxing after fitBounds.',
+      table: {
+        category: 'RBZ Options',
+      },
+    },
+    borderColor: {
+      control: { type: 'color' },
+      description: 'Rectangle border color',
+      table: {
+        category: 'RBZ Style',
+      },
+    },
+    borderWidth: {
+      control: { type: 'range', min: 1, max: 10, step: 1 },
+      description: 'Border width in pixels',
+      table: {
+        category: 'RBZ Style',
+      },
+    },
+    fillColor: {
+      control: { type: 'color' },
+      description: 'Rectangle fill color (include alpha for transparency)',
+      table: {
+        category: 'RBZ Style',
+      },
+    },
   },
   render: (args) => {
+    const rbzOptions = {
+      origin: args.origin,
+      constrainAspectRatio: args.constrainAspectRatio,
+      style: {
+        borderColor: args.borderColor,
+        borderWidth: args.borderWidth,
+        fillColor: args.fillColor,
+      },
+    };
+
+    // Force remount when RBZ options change so the handler is recreated
+    const key = JSON.stringify(rbzOptions);
+
     return (
       <BaseMapComponent
+        key={key}
         className='h-dvh w-dvw'
         id={RBZ_HANDLER_STORY_ID}
         enableRbz={args.enableRbz}
         boxZoom={args.boxZoom}
         styleUrl={args.styleUrl}
+        rbzOptions={rbzOptions}
       />
     );
   },

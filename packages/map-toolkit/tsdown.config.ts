@@ -34,6 +34,7 @@ export default defineConfig({
     // Additional internal files
     '!src/deckgl/shapes/display-shape-layer/shape-label-layer.ts',
     '!src/shared/logger.ts',
+    '!src/maplibre/active-map-store.ts',
   ],
   // NOTE: optionalDependencies must be included here
   // SEE: https://tsdown.dev/options/dependencies#default-behavior
