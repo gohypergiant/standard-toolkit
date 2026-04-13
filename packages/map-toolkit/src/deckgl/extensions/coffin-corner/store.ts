@@ -181,6 +181,11 @@ export const coffinCornerStore = createMapStore<
       const { info } = event.payload;
       const { layerId, selectedId, getEntityId: getId } = get();
 
+      // Guard: skip processing if no layer is configured
+      if (!layerId) {
+        return;
+      }
+
       if (info.layerId === layerId && info.object) {
         const entityId = getId(info.object);
 
@@ -219,6 +224,11 @@ export const coffinCornerStore = createMapStore<
         getEntityId: getId,
         hoveredId: currentHoveredId,
       } = get();
+
+      // Guard: skip processing if no layer is configured
+      if (!layerId) {
+        return;
+      }
 
       const hoveredId =
         info.layerId === layerId && info.object
