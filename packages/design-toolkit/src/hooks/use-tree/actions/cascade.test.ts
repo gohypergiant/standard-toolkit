@@ -127,10 +127,10 @@ describe('Cascade Selection', () => {
       const updated = result.current.onSelectionChange(new Set(['parent']));
 
       expect(updated).toHaveLength(1);
-      expect(updated[0].key).toBe('parent');
-      expect(updated[0].children).toHaveLength(2);
-      expect(updated[0].children?.[0].key).toBe('child1');
-      expect(updated[0].children?.[1].key).toBe('child2');
+      expect(updated[0]?.key).toBe('parent');
+      expect(updated[0]?.children).toHaveLength(2);
+      expect(updated[0]?.children?.[0]?.key).toBe('child1');
+      expect(updated[0]?.children?.[1]?.key).toBe('child2');
     });
   });
 

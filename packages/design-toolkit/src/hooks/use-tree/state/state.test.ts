@@ -68,7 +68,7 @@ describe('useTreeState with cascade selection', () => {
 
       // But should have same structure
       expect(result.current.nodes).toHaveLength(1);
-      expect(result.current.nodes[0].key).toBe('folder');
+      expect(result.current.nodes[0]?.key).toBe('folder');
     });
 
     it('should handle rapid selection changes', () => {
@@ -131,9 +131,9 @@ describe('useTreeState with cascade selection', () => {
       });
 
       expect(result.current.nodes).toHaveLength(1);
-      expect(result.current.nodes[0].children).toHaveLength(2);
-      expect(result.current.nodes[0].children?.[0].key).toBe('file1');
-      expect(result.current.nodes[0].children?.[1].key).toBe('file2');
+      expect(result.current.nodes[0]?.children).toHaveLength(2);
+      expect(result.current.nodes[0]?.children?.[0]?.key).toBe('file1');
+      expect(result.current.nodes[0]?.children?.[1]?.key).toBe('file2');
     });
   });
 
@@ -207,7 +207,7 @@ describe('useTreeState with cascade selection', () => {
       );
 
       expect(dragItems).toHaveLength(3);
-      expect(dragItems[0].key).toBe('folder');
+      expect(dragItems[0]?.key).toBe('folder');
     });
   });
 
