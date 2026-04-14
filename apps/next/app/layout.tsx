@@ -19,7 +19,7 @@ import type { PropsWithChildren } from 'react';
 
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
-    <html lang='en' className='font-primary'>
+    <html lang='en' className='font-primary dark'>
       <body className='w-full h-full p-l top-xxl relative'>
         <RouterProvider>
           <ThemeProvider>

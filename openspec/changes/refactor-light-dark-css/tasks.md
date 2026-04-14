@@ -21,8 +21,8 @@
 
 ## 4. Testing & Verification
 
-- [ ] 4.1 Run Storybook and visually verify all components render correctly in dark mode
-- [ ] 4.2 Test theme toggling works correctly (switches between light and dark)
-- [ ] 4.3 Verify all interactive states (hover, pressed, disabled) display correct colors
+- [x] 4.1 Run Storybook and visually verify all components render correctly in dark mode
+- [x] 4.2 Test theme toggling works correctly (switches between light and dark)
+- [x] 4.3 Verify all interactive states (hover, pressed, disabled) display correct colors
 - [x] 4.4 Measure and document the bundle size reduction of `themes.css` (16.6KB → 11.5KB = 30% reduction; 332 lines → 108 lines = 68% reduction)
 - [x] 4.5 Run the verification gate: `pnpm build && pnpm test && pnpm lint && pnpm format` (passed for design-foundation and design-toolkit packages)
