@@ -14,7 +14,7 @@
 import type { Key } from '@react-types/shared';
 import type { TreeNode } from '../types';
 
-type CacheTreeNode<T> = Omit<TreeNode<T>, 'children'> & {
+export type CacheTreeNode<T> = Omit<TreeNode<T>, 'children'> & {
   children?: Key[];
   isIndeterminate?: boolean;
 };
