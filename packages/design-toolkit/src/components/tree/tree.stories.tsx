@@ -502,12 +502,6 @@ export const CascadeBasic: Story = {
         </div>
 
         <div className='rounded-m bg-container-base p-m'>
-          <p className='fg-default-strong mb-m text-sm'>
-            <strong>Try this:</strong> Click the checkbox next to "Documents" to
-            select all files within it. Notice how all descendants become
-            selected automatically.
-          </p>
-
           <Tree
             {...args}
             items={nodes}
@@ -564,16 +558,6 @@ export const CascadeWithDragAndDrop: Story = {
         </div>
 
         <div className='rounded-m bg-container-base p-m'>
-          <p className='fg-default-strong mb-m text-sm'>
-            <strong>Test cascade + drag-and-drop:</strong>
-            <br />
-            1. Select "Documents" (all children selected)
-            <br />
-            2. Drag "report.pdf" to "Downloads"
-            <br />
-            3. Both parents should update to indeterminate state
-          </p>
-
           <Tree
             {...args}
             items={nodes}
