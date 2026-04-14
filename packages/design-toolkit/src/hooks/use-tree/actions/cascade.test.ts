@@ -339,4 +339,57 @@ describe('Cascade Selection', () => {
       expect(parent?.isIndeterminate).toBe(false);
     });
   });
+
+  describe('Move with cascade (drag-and-drop)', () => {
+    const twoParentTree: TreeNode<unknown>[] = [
+      {
+        key: 'parent1',
+        label: 'Parent 1',
+        children: [{ key: 'child1', label: 'Child 1' }],
+      },
+      {
+        key: 'parent2',
+        label: 'Parent 2',
+        children: [{ key: 'child2', label: 'Child 2' }],
+      },
+    ];
+    it('should clear indeterminate state when selected child is moved out via moveAfter', () => {
+      const { result } = renderHook(() =>
+        useTreeActions({ nodes: simpleTree, selectionCascade: true }),
+      );
+      // Select child1 only — parent becomes indeterminate
+      result.current.onSelectionChange(new Set(['child1']));
+      // Move child1 to root level (after parent)
+      const updated = result.current.moveAfter('parent', new Set(['child1']));
+      const parent = updated.find((n) => n.key === 'parent');
+      // parent now only has child2 (unselected), no longer indeterminate
+      expect(parent?.isIndeterminate).toBe(false);
+      expect(parent?.isSelected).toBe(false);
+    });
+    it('should clear indeterminate state when selected child is moved out via moveBefore', () => {
+      const { result } = renderHook(() =>
+        useTreeActions({ nodes: simpleTree, selectionCascade: true }),
+      );
+      // Select child1 only — parent becomes indeterminate
+      result.current.onSelectionChange(new Set(['child1']));
+      // Move child1 to root level (before parent)
+      const updated = result.current.moveBefore('parent', new Set(['child1']));
+      const parent = updated.find((n) => n.key === 'parent');
+      // parent now only has child2 (unselected), no longer indeterminate
+      expect(parent?.isIndeterminate).toBe(false);
+      expect(parent?.isSelected).toBe(false);
+    });
+    it('should update new parent to indeterminate when a selected child is moved in via moveInto', () => {
+      const { result } = renderHook(() =>
+        useTreeActions({ nodes: twoParentTree, selectionCascade: true }),
+      );
+      // Select child1 — parent1 becomes selected (its only selectable child)
+      result.current.onSelectionChange(new Set(['child1']));
+      // Move child1 into parent2 (which has unselected child2)
+      const updated = result.current.moveInto('parent2', new Set(['child1']));
+      const parent2 = updated.find((n) => n.key === 'parent2');
+      // parent2 now has child1 (selected) and child2 (unselected) → indeterminate
+      expect(parent2?.isIndeterminate).toBe(true);
+    });
+  });
 });
