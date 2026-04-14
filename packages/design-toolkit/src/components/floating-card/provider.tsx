@@ -130,7 +130,7 @@ function FloatingCardContainer(props: Readonly<IDockviewPanelProps>) {
   // so CSS can disable pointer-events on the drag handle.
   useEffect(() => {
     const el = cardRef.current;
-    const container = el?.closest('.dv-resize-container') as HTMLElement | null;
+    const container = el?.closest<HTMLElement>('.dv-resize-container');
 
     if (!container) {
       return;
