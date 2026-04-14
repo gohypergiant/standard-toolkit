@@ -69,6 +69,7 @@ import type { MapEventType } from '../../base-map/types';
 import type { Shape } from '../shared/types';
 import type {
   EditShapeEvent,
+  FeatureEditingEvent,
   ShapeEditCanceledEvent,
   ShapeEditingEvent,
   ShapeUpdatedEvent,
@@ -92,6 +93,7 @@ const mapEventBus = Broadcast.getInstance<MapEventType>();
  * Default editing state
  */
 const DEFAULT_EDITING_STATE: EditingState = {
+  originalShape: null,
   editingShape: null,
   editMode: 'view',
   featureBeingEdited: null,
@@ -157,6 +159,8 @@ function startEditing(
   // geometry, or Point→MultiPolygon mode transition during creation), update
   // state in-place without cancel/restart. This avoids a race condition where
   // releaseModeAndCursor from cancel fires after requestModeChange.
+  // originalShape is intentionally NOT updated here — it preserves the
+  // pre-edit state so cancel always reverts to the true original.
   if (state.editingShape?.id === shape.id) {
     const modeChanged = state.editMode !== editMode;
     setState({
@@ -179,8 +183,9 @@ function startEditing(
     cancelEditingInternal(mapId, state, notify, setState);
   }
 
-  // Update state with new object reference
+  // Update state with new object reference — capture originalShape for cancel revert
   setState({
+    originalShape: shape,
     editingShape: shape,
     editMode,
     featureBeingEdited: shape.feature,
@@ -216,16 +221,16 @@ function saveEditingInternal(
     return null;
   }
 
-  const originalShape = state.editingShape;
   const updatedFeature = state.featureBeingEdited;
 
-  // Create updated shape with new geometry
+  // Create updated shape — use editingShape (most recent) as the base,
+  // merge with the live feature's geometry and properties.
   const updatedShape = {
-    ...originalShape,
+    ...state.editingShape,
     feature: {
       ...updatedFeature,
       properties: {
-        ...originalShape.feature.properties,
+        ...state.editingShape.feature.properties,
         ...updatedFeature.properties,
       },
     },
@@ -234,6 +239,7 @@ function saveEditingInternal(
 
   // Reset state
   setState({
+    originalShape: null,
     editingShape: null,
     editMode: 'view',
     featureBeingEdited: null,
@@ -270,10 +276,14 @@ function cancelEditingInternal(
     return; // Nothing to cancel
   }
 
-  const originalShape = state.editingShape;
+  // Use originalShape (captured at edit start) for reliable revert.
+  // editingShape gets overwritten on same-ID re-entry, but originalShape
+  // is only set once when editing first starts.
+  const shapeToRevert = state.originalShape;
 
   // Reset state
   setState({
+    originalShape: null,
     editingShape: null,
     editMode: 'view',
     featureBeingEdited: null,
@@ -288,7 +298,7 @@ function cancelEditingInternal(
 
   // Emit canceled event
   editShapeBus.emit(EditShapeEvents.canceled, {
-    shape: originalShape,
+    shape: shapeToRevert,
     mapId,
   } as unknown as ShapeEditCanceledEvent['payload']);
 
@@ -330,7 +340,7 @@ export const editStore = createMapStore<EditingState, EditShapeActions>({
 
       // Emit canceled event
       editShapeBus.emit(EditShapeEvents.canceled, {
-        shape: state.editingShape,
+        shape: state.originalShape,
         mapId,
       } as unknown as ShapeEditCanceledEvent['payload']);
     }
@@ -443,6 +453,8 @@ export function updateFeature(
 
   // Recompute circleProperties from updated geometry so metadata stays in sync
   const editingShape = state?.editingShape;
+  let featureToStore: Feature = feature;
+
   if (
     editingShape &&
     (isCircleShape(editingShape) || isWagonWheelShape(editingShape))
@@ -451,24 +463,29 @@ export function updateFeature(
     const circleProperties = recomputeCircleProperties(feature, shapeUnits);
 
     if (circleProperties) {
-      editStore.set(mapId, {
-        featureBeingEdited: {
-          ...feature,
-          properties: {
-            ...feature.properties,
-            circleProperties,
-          },
+      featureToStore = {
+        ...feature,
+        properties: {
+          ...feature.properties,
+          circleProperties,
         },
-        lastCompletedEditType,
-      });
-      return;
+      };
     }
   }
 
   editStore.set(mapId, {
-    featureBeingEdited: feature,
+    featureBeingEdited: featureToStore,
     lastCompletedEditType,
   });
+
+  // Emit the raw edit event so consumers can react to editType directly
+  if (editType != null) {
+    editShapeBus.emit(EditShapeEvents.featureEditing, {
+      feature: featureToStore,
+      editType,
+      mapId,
+    } as unknown as FeatureEditingEvent['payload']);
+  }
 }
 
 /**

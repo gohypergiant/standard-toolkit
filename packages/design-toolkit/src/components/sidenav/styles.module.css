@@ -14,14 +14,22 @@
 
 @layer components.l1 {
   .sidenav {
+    --sidenav-width: 64px;
     @apply fg-primary-bold gap-xs bg-surface-default p-m absolute left-0 row-span-full flex h-full flex-col;
 
-    @variant closed {
-      @apply items-center;
+    @variant motion-safe {
+      transition: transform var(--animation-duration-normal)
+        var(--animation-easing-standard);
     }
 
     @variant group-push-left/layout {
       @apply relative;
+      transform: translateX(0);
+    }
+
+    @variant closed {
+      @apply items-center;
+      transform: translateX(calc(-100% + var(--sidenav-width)));
     }
   }
 
