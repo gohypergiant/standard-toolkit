@@ -16,6 +16,7 @@ import {
   DARK_BASE_MAP_STYLE,
   LIGHT_BASE_MAP_STYLE,
 } from '../deckgl/base-map/constants';
+import type { DistanceUnit } from '@accelint/constants/units';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { RbzOrigin } from './rbz-handler';
 
@@ -25,6 +26,9 @@ type StoryArgs = {
   styleUrl: string;
   origin: RbzOrigin;
   constrainAspectRatio: boolean;
+  bufferEnabled: boolean;
+  bufferAmount: number;
+  bufferUnit: DistanceUnit;
   borderColor: string;
   borderWidth: number;
   fillColor: string;
@@ -47,6 +51,9 @@ export const BasicUsage: Story = {
     styleUrl: DARK_BASE_MAP_STYLE,
     origin: 'topLeft',
     constrainAspectRatio: false,
+    bufferEnabled: false,
+    bufferAmount: 10,
+    bufferUnit: 'nauticalmiles',
     borderColor: '#39b7fa',
     borderWidth: 2,
     fillColor: 'rgba(57, 183, 250, 0.1)',
@@ -87,6 +94,31 @@ export const BasicUsage: Story = {
         category: 'RBZ Options',
       },
     },
+    bufferEnabled: {
+      control: { type: 'boolean' },
+      description:
+        'Apply a geographic buffer to the selection bounds before fitting. Expands the view outward so the selected area is not pressed against the viewport edges.',
+      table: {
+        category: 'RBZ Buffer',
+      },
+    },
+    bufferAmount: {
+      control: { type: 'number', min: 0, step: 1 },
+      description:
+        'Distance to expand each side of the bounds. Ignored when buffer is disabled.',
+      table: {
+        category: 'RBZ Buffer',
+      },
+    },
+    bufferUnit: {
+      control: { type: 'select' },
+      options: ['kilometers', 'meters', 'nauticalmiles', 'miles', 'feet'],
+      description:
+        'Unit for the buffer amount. Ignored when buffer is disabled.',
+      table: {
+        category: 'RBZ Buffer',
+      },
+    },
     borderColor: {
       control: { type: 'color' },
       description: 'Rectangle border color',
@@ -95,7 +127,7 @@ export const BasicUsage: Story = {
       },
     },
     borderWidth: {
-      control: { type: 'range', min: 1, max: 10, step: 1 },
+      control: { type: 'number', min: 1, step: 1 },
       description: 'Border width in pixels',
       table: {
         category: 'RBZ Style',
@@ -113,6 +145,9 @@ export const BasicUsage: Story = {
     const rbzOptions = {
       origin: args.origin,
       constrainAspectRatio: args.constrainAspectRatio,
+      buffer: args.bufferEnabled
+        ? { amount: args.bufferAmount, unit: args.bufferUnit }
+        : undefined,
       style: {
         borderColor: args.borderColor,
         borderWidth: args.borderWidth,
