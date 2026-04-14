@@ -29,6 +29,7 @@ import {
   useMemo,
   useRef,
   useState,
+  useSyncExternalStore,
 } from 'react';
 import { Button } from '../button';
 import { Divider } from '../divider';
@@ -96,9 +97,11 @@ type FloatingCardHeaderProps = {
   /** Callback to close the entire card group */
   closeGroup: () => void;
   /** Toggles pin state for the specified card */
-  togglePinCard: (id: UniqueId) => void;
+  togglePinCard?: (id: UniqueId) => void;
   /** Checks if the specified card is pinned */
-  isPinned: (id: UniqueId) => boolean;
+  isPinned?: (id: UniqueId) => boolean;
+  /** Subscribes to pin state changes; returns an unsubscribe function */
+  subscribeToPinState?: (callback: () => void) => () => void;
   /** Custom action buttons to render in the header */
   headerActions?: FloatingCardHeaderAction[];
 };
@@ -112,9 +115,14 @@ type FloatingCardHeaderProps = {
  * @param props - Dockview panel props containing the card ID.
  */
 function FloatingCardContainer(props: Readonly<IDockviewPanelProps>) {
-  const { addRef, isPinned } = useFloatingCard();
+  const { addRef, isPinned, subscribeToPinState } = useFloatingCard();
   const cardId = props.api.id as UniqueId;
-  const pinned = isPinned(cardId);
+
+  const pinned = useSyncExternalStore(
+    subscribeToPinState,
+    () => isPinned(cardId),
+    () => false,
+  );
 
   const cardRef = useRef<HTMLDivElement | null>(null);
 
@@ -164,6 +172,9 @@ function DefaultLeftHeader({
   );
 }
 
+/** Stable no-op subscribe for useSyncExternalStore when no pin subscription is available. */
+const noopSubscribe = () => () => undefined;
+
 /**
  * Default right header showing optional action buttons and an always-present close button.
  *
@@ -175,8 +186,13 @@ function DefaultRightHeader({
   id,
   togglePinCard,
   isPinned,
+  subscribeToPinState,
 }: Readonly<FloatingCardHeaderProps>) {
-  const pinned = id ? isPinned(id as UniqueId) : false;
+  const pinned = useSyncExternalStore(
+    subscribeToPinState ?? noopSubscribe,
+    () => (id && isPinned ? isPinned(id as UniqueId) : false),
+    () => false,
+  );
 
   return (
     <div className={styles.headerSide}>
@@ -196,8 +212,10 @@ function DefaultRightHeader({
               variant='icon'
               size='small'
               color={pinned ? 'accent' : undefined}
+              aria-label='Pin'
+              aria-pressed={pinned}
               onClick={() => {
-                if (id) {
+                if (id && togglePinCard) {
                   togglePinCard(id as UniqueId);
                 }
               }}
@@ -234,8 +252,9 @@ function DefaultRightHeader({
 type HeaderAdapterOptions = {
   icon?: MaybeFactory<ReactNode>;
   headerActions?: MaybeFactory<FloatingCardHeaderProps['headerActions']>;
-  togglePinCard: (id: UniqueId) => void;
-  isPinned: (id: UniqueId) => boolean;
+  togglePinCard?: (id: UniqueId) => void;
+  isPinned?: (id: UniqueId) => boolean;
+  subscribeToPinState?: (callback: () => void) => () => void;
 };
 
 /**
@@ -291,6 +310,7 @@ function createHeaderAdapter(
         closeGroup={() => props.api.close()}
         togglePinCard={options.togglePinCard}
         isPinned={options.isPinned}
+        subscribeToPinState={options.subscribeToPinState}
       />
     );
   }
@@ -386,7 +406,8 @@ export function FloatingCardProvider({
 }: FloatingCardProviderProps) {
   const [api, setApi] = useState<DockviewApi | null>(null);
   const [cards, setCards] = useState<Record<UniqueId, HTMLDivElement>>({});
-  const [pinnedCards, setPinnedCards] = useState<Set<UniqueId>>(new Set());
+  const pinnedCardsRef = useRef<Set<UniqueId>>(new Set());
+  const pinListenersRef = useRef<Set<() => void>>(new Set());
 
   const closeCard = useCallback(
     (id: UniqueId) => {
@@ -396,21 +417,29 @@ export function FloatingCardProvider({
   );
 
   const togglePinCard = useCallback((id: UniqueId) => {
-    setPinnedCards((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) {
-        next.delete(id);
-      } else {
-        next.add(id);
-      }
-      return next;
-    });
+    const next = new Set(pinnedCardsRef.current);
+    if (next.has(id)) {
+      next.delete(id);
+    } else {
+      next.add(id);
+    }
+    pinnedCardsRef.current = next;
+    for (const listener of pinListenersRef.current) {
+      listener();
+    }
   }, []);
 
   const isPinned = useCallback(
-    (id: UniqueId) => pinnedCards.has(id),
-    [pinnedCards],
+    (id: UniqueId) => pinnedCardsRef.current.has(id),
+    [],
   );
+
+  const subscribeToPinState = useCallback((callback: () => void) => {
+    pinListenersRef.current.add(callback);
+    return () => {
+      pinListenersRef.current.delete(callback);
+    };
+  }, []);
 
   const removeRef = useCallback((view: UniqueId) => {
     setCards((prev) => {
@@ -418,14 +447,14 @@ export function FloatingCardProvider({
       delete newCards[view];
       return newCards;
     });
-    setPinnedCards((prev) => {
-      if (!prev.has(view)) {
-        return prev;
-      }
-      const next = new Set(prev);
+    if (pinnedCardsRef.current.has(view)) {
+      const next = new Set(pinnedCardsRef.current);
       next.delete(view);
-      return next;
-    });
+      pinnedCardsRef.current = next;
+      for (const listener of pinListenersRef.current) {
+        listener();
+      }
+    }
   }, []);
 
   const addRef = useCallback((id: UniqueId, ref: HTMLDivElement | null) => {
@@ -463,19 +492,27 @@ export function FloatingCardProvider({
       closeCard,
       togglePinCard,
       isPinned,
+      subscribeToPinState,
       api,
     }),
-    [cards, closeCard, removeRef, api, addRef, togglePinCard, isPinned],
+    [
+      cards,
+      closeCard,
+      removeRef,
+      api,
+      addRef,
+      togglePinCard,
+      isPinned,
+      subscribeToPinState,
+    ],
   );
 
   const leftAdapter = useMemo(
     () =>
       createHeaderAdapter(DefaultLeftHeader, {
         icon,
-        togglePinCard,
-        isPinned,
       }),
-    [icon, togglePinCard, isPinned],
+    [icon],
   );
 
   const rightAdapter = useMemo(
@@ -484,8 +521,9 @@ export function FloatingCardProvider({
         headerActions,
         togglePinCard,
         isPinned,
+        subscribeToPinState,
       }),
-    [headerActions, togglePinCard, isPinned],
+    [headerActions, togglePinCard, isPinned, subscribeToPinState],
   );
 
   const theme = useMemo(

@@ -10,7 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { act, render } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, expect, it, type Mock, vi } from 'vitest';
 import { FloatingCard } from '.';
 import {
@@ -40,11 +41,20 @@ vi.mock('@accelint/design-toolkit/components/button', () => ({
   Button: ({
     children,
     onClick,
+    'aria-label': ariaLabel,
+    'aria-pressed': ariaPressed,
   }: {
     children: React.ReactNode;
     onClick?: () => void;
+    'aria-label'?: string;
+    'aria-pressed'?: boolean;
   }) => (
-    <button onClick={onClick} type='button'>
+    <button
+      onClick={onClick}
+      type='button'
+      aria-label={ariaLabel}
+      aria-pressed={ariaPressed}
+    >
       {children}
     </button>
   ),
@@ -52,6 +62,10 @@ vi.mock('@accelint/design-toolkit/components/button', () => ({
 
 vi.mock('@accelint/icons/cancel', () => ({
   default: () => <svg data-testid='close-icon' />,
+}));
+
+vi.mock('@accelint/icons/pin', () => ({
+  default: () => <svg data-testid='pin-icon' />,
 }));
 
 // --- Dockview mock setup ---
@@ -91,9 +105,9 @@ function triggerReady(api: MockDockviewApi) {
  */
 function ContextReader({
   onContext,
-}: {
+}: Readonly<{
   onContext: (ctx: FloatingCardContextValue) => void;
-}) {
+}>) {
   const ctx = useFloatingCard();
   onContext(ctx);
   return <div data-testid='context-reader' />;
@@ -122,6 +136,7 @@ describe('FloatingCardContext defaults', () => {
           closeCard: () => undefined,
           togglePinCard: () => undefined,
           isPinned: () => false,
+          subscribeToPinState: () => () => null,
           api: null,
         }}
       >
@@ -434,6 +449,7 @@ describe('FloatingCardContainer', () => {
           closeCard: vi.fn(),
           togglePinCard: vi.fn(),
           isPinned: () => false,
+          subscribeToPinState: () => () => null,
           api: null,
         }}
       >
@@ -531,6 +547,7 @@ describe('header adapters', () => {
           closeCard: () => undefined,
           togglePinCard: () => undefined,
           isPinned: () => false,
+          subscribeToPinState: () => () => undefined,
           api: null,
         }}
       >
@@ -606,6 +623,7 @@ describe('FloatingCard', () => {
       closeCard: vi.fn(),
       togglePinCard: vi.fn(),
       isPinned: () => false,
+      subscribeToPinState: () => () => undefined,
       api,
     };
   }
@@ -945,67 +963,86 @@ describe('multiple FloatingCardProvider instances', () => {
 });
 
 describe('pin functionality', () => {
-  it('should expose togglePinCard and isPinned via context', () => {
-    const { spy, latest } = captureContext();
-
+  it('should render a pin button in the header when "pin" is in headerActions', () => {
     render(
-      <FloatingCardProvider>
-        <ContextReader onContext={spy} />
+      <FloatingCardProvider headerActions={['pin']}>
+        <div />
       </FloatingCardProvider>,
     );
 
-    expect(typeof latest().togglePinCard).toBe('function');
-    expect(typeof latest().isPinned).toBe('function');
+    const RightAdapter =
+      capturedProps.rightHeaderActionsComponent as FunctionComponent<IDockviewHeaderActionsProps>;
+
+    render(
+      <RightAdapter
+        {...makeMockAdapterProps(makeMockActivePanel('panel-1'))}
+      />,
+    );
+
+    expect(screen.getByRole('button', { name: /pin/i })).toBeInTheDocument();
   });
 
-  it('should toggle a card between pinned and unpinned', () => {
-    const { spy, latest } = captureContext();
+  it('should toggle pin active state when pin button is clicked', async () => {
+    const user = userEvent.setup();
 
     render(
-      <FloatingCardProvider>
-        <ContextReader onContext={spy} />
+      <FloatingCardProvider headerActions={['pin']}>
+        <div />
       </FloatingCardProvider>,
     );
 
-    expect(latest().isPinned('card-pin' as UniqueId)).toBe(false);
+    const RightAdapter =
+      capturedProps.rightHeaderActionsComponent as FunctionComponent<IDockviewHeaderActionsProps>;
 
-    act(() => {
-      latest().togglePinCard('card-pin' as UniqueId);
-    });
+    render(
+      <RightAdapter
+        {...makeMockAdapterProps(makeMockActivePanel('panel-1'))}
+      />,
+    );
 
-    expect(latest().isPinned('card-pin' as UniqueId)).toBe(true);
+    const pinButton = screen.getByRole('button', { name: /pin/i });
+    expect(pinButton).toHaveAttribute('aria-pressed', 'false');
 
-    act(() => {
-      latest().togglePinCard('card-pin' as UniqueId);
-    });
+    await user.click(pinButton);
+    expect(pinButton).toHaveAttribute('aria-pressed', 'true');
 
-    expect(latest().isPinned('card-pin' as UniqueId)).toBe(false);
+    await user.click(pinButton);
+    expect(pinButton).toHaveAttribute('aria-pressed', 'false');
   });
 
-  it('should clear pinned state when a card is removed via removeRef', () => {
+  it('should release pin when card is removed via removeRef', async () => {
+    const user = userEvent.setup();
     const { spy, latest } = captureContext();
 
     render(
-      <FloatingCardProvider>
+      <FloatingCardProvider headerActions={['pin']}>
         <ContextReader onContext={spy} />
       </FloatingCardProvider>,
     );
 
-    act(() => {
-      latest().togglePinCard('card-remove' as UniqueId);
-    });
+    const RightAdapter =
+      capturedProps.rightHeaderActionsComponent as FunctionComponent<IDockviewHeaderActionsProps>;
 
-    expect(latest().isPinned('card-remove' as UniqueId)).toBe(true);
+    render(
+      <RightAdapter
+        {...makeMockAdapterProps(makeMockActivePanel('card-remove'))}
+      />,
+    );
+
+    const pinButton = screen.getByRole('button', { name: /pin/i });
+
+    await user.click(pinButton);
+    expect(pinButton).toHaveAttribute('aria-pressed', 'true');
 
     act(() => {
       latest().removeRef('card-remove' as UniqueId);
     });
 
-    expect(latest().isPinned('card-remove' as UniqueId)).toBe(false);
+    expect(pinButton).toHaveAttribute('aria-pressed', 'false');
   });
 
-  it('should clear pinned state when a panel is removed via dockview', () => {
-    const { spy, latest } = captureContext();
+  it('should release pin when card is removed via dockview', async () => {
+    const user = userEvent.setup();
     const mockApi = createMockApi();
     let removePanelCallback: OnDidRemovePanelCallback | undefined;
 
@@ -1017,8 +1054,8 @@ describe('pin functionality', () => {
     );
 
     const { rerender } = render(
-      <FloatingCardProvider>
-        <ContextReader onContext={spy} />
+      <FloatingCardProvider headerActions={['pin']}>
+        <div />
       </FloatingCardProvider>,
     );
 
@@ -1027,21 +1064,29 @@ describe('pin functionality', () => {
     });
 
     rerender(
-      <FloatingCardProvider>
-        <ContextReader onContext={spy} />
+      <FloatingCardProvider headerActions={['pin']}>
+        <div />
       </FloatingCardProvider>,
     );
 
-    act(() => {
-      latest().togglePinCard('pinned-removed' as UniqueId);
-    });
+    const RightAdapter =
+      capturedProps.rightHeaderActionsComponent as FunctionComponent<IDockviewHeaderActionsProps>;
 
-    expect(latest().isPinned('pinned-removed' as UniqueId)).toBe(true);
+    render(
+      <RightAdapter
+        {...makeMockAdapterProps(makeMockActivePanel('pinned-removed'))}
+      />,
+    );
+
+    const pinButton = screen.getByRole('button', { name: /pin/i });
+
+    await user.click(pinButton);
+    expect(pinButton).toHaveAttribute('aria-pressed', 'true');
 
     act(() => {
       removePanelCallback?.({ id: 'pinned-removed' });
     });
 
-    expect(latest().isPinned('pinned-removed' as UniqueId)).toBe(false);
+    expect(pinButton).toHaveAttribute('aria-pressed', 'false');
   });
 });

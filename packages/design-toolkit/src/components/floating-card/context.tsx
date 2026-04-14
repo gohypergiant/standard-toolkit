@@ -40,6 +40,9 @@ export type FloatingCardContextValue = {
   /** Checks if a floating card is currently pinned */
   isPinned: (id: UniqueId) => boolean;
 
+  /** Subscribes to pin state changes; returns an unsubscribe function */
+  subscribeToPinState: (callback: () => void) => () => void;
+
   /** Dockview API instance, null until FloatingCardProvider's onReady fires */
   api: DockviewApi | null;
 };

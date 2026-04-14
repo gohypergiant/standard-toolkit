@@ -220,7 +220,7 @@ export const WithScrollableContent: Story = {
     return (
       <div className='relative h-800 w-600 p-l outline outline-info-bold'>
         <FloatingCardProvider>
-          <FloatingCard id={args.id} title={args.title}>
+          <FloatingCard id={panelIds.a} title={args.title}>
             <div className='flex h-full flex-col items-center justify-start gap-m self-stretch overflow-auto rounded-medium p-m'>
               {Array.from({ length: 20 }, (_, i) => (
                 <p key={i} className='text-sm'>
@@ -248,11 +248,17 @@ function PinnableCardContent() {
 }
 
 export const Pinnable: Story = {
-  render: (args) => {
+  render: () => {
     return (
       <div className='relative h-800 w-600 p-l outline outline-info-bold'>
-        <FloatingCardProvider icon={<Placeholder />} headerActions={['pin']}>
-          <FloatingCard id={args.id} title='Pinnable Card'>
+        <FloatingCardProvider
+          icon={<Placeholder />}
+          headerActions={(id) => (id === panelIds.a ? ['pin'] : [])}
+        >
+          <FloatingCard id={panelIds.a} title='Pinnable Card'>
+            <PinnableCardContent />
+          </FloatingCard>
+          <FloatingCard id={panelIds.b} title='Pinnable Card'>
             <PinnableCardContent />
           </FloatingCard>
         </FloatingCardProvider>
