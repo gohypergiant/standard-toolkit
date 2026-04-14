@@ -11,13 +11,13 @@
  */
 
 import { uuid } from '@accelint/core';
+import { BaseMap as BaseMapComponent } from '../deckgl/base-map';
 import {
   DARK_BASE_MAP_STYLE,
   LIGHT_BASE_MAP_STYLE,
 } from '../deckgl/base-map/constants';
-import { BaseMap as BaseMapComponent } from '../deckgl/base-map';
-import type { RbzOrigin } from './rbz-handler';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { RbzOrigin } from './rbz-handler';
 
 type StoryArgs = {
   enableRbz: boolean;
@@ -47,9 +47,9 @@ export const BasicUsage: Story = {
     styleUrl: DARK_BASE_MAP_STYLE,
     origin: 'topLeft',
     constrainAspectRatio: false,
-    borderColor: '#00B4FF',
+    borderColor: '#39b7fa',
     borderWidth: 2,
-    fillColor: 'rgba(0, 180, 255, 0.1)',
+    fillColor: 'rgba(57, 183, 250, 0.1)',
   },
   argTypes: {
     enableRbz: {
@@ -121,6 +121,8 @@ export const BasicUsage: Story = {
     };
 
     // Force remount when RBZ options change so the handler is recreated
+    // Note: this is only needed to in this story to show different options dynamically
+    // You should not force a remount in an app / rbzOptions are static config options
     const key = JSON.stringify(rbzOptions);
 
     return (

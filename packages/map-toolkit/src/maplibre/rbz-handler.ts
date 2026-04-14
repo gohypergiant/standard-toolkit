@@ -27,13 +27,13 @@ const DISTANCE_THRESHOLD = 3; // pixels
  * Visual style options for the RBZ selection rectangle.
  */
 export type RbzStyleOptions = {
-  /** CSS color string for the rectangle border (e.g. `'#00B4FF'`). */
+  /** CSS color string for the rectangle border (e.g. `'#39b7fa'`). */
   borderColor: string;
   /** Border width in pixels. */
   borderWidth: number;
   /**
    * CSS color string for the rectangle fill.
-   * Include alpha for transparency (e.g. `'rgba(0, 180, 255, 0.1)'`).
+   * Include alpha for transparency (e.g. `'rgba(57, 183, 250, 0.1)'`).
    */
   fillColor: string;
 };
@@ -100,11 +100,21 @@ export type RbzOptions = {
 /**
  * Default visual style for the RBZ selection rectangle. Applied to any
  * {@link RbzStyleOptions} properties not overridden via {@link RbzOptions.style}.
+ *
+ * The values match the `outline-accent-primary-bold` semantic token from
+ * `@accelint/design-foundation` (resolves to `#39b7fa` in the dark theme).
+ * They are hardcoded as static hex/rgba rather than referencing the CSS
+ * custom property because `RbzHandler` writes these values directly to
+ * inline `style` attributes on a DOM element and runs outside React — it
+ * has no access to the component's theme context or computed style. If you
+ * need theme-reactive RBZ colors, read the CSS variable yourself (via
+ * `getComputedStyle`) and pass the resolved value in through
+ * {@link RbzOptions.style}.
  */
 export const DEFAULT_RBZ_STYLE: RbzStyleOptions = {
-  borderColor: '#00B4FF',
+  borderColor: '#39b7fa',
   borderWidth: 2,
-  fillColor: 'rgba(0, 180, 255, 0.1)',
+  fillColor: 'rgba(57, 183, 250, 0.1)',
 };
 
 /**

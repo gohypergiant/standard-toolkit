@@ -137,7 +137,7 @@ describe('RbzHandler', () => {
 
       const box = container.children[0] as HTMLElement;
       // jsdom normalizes hex colors to rgb() in shorthand border property
-      expect(box.style.border).toContain('rgb(0, 180, 255)'); // #00B4FF
+      expect(box.style.border).toContain('rgb(57, 183, 250)'); // #39b7fa
       expect(box.style.border).toContain(`${DEFAULT_RBZ_STYLE.borderWidth}px`);
       expect(box.style.backgroundColor).toBe(DEFAULT_RBZ_STYLE.fillColor);
       expect(box.style.display).toBe('none');

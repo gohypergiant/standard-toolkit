@@ -224,9 +224,9 @@ When used with `BaseMap`, this is called automatically via MapLibre's `remove` e
 
 | Property | Type | Default | Description |
 |---|---|---|---|
-| `borderColor` | `string` | `'#00B4FF'` | CSS color for the rectangle border. |
+| `borderColor` | `string` | `'#39b7fa'` | CSS color for the rectangle border. |
 | `borderWidth` | `number` | `2` | Border width in pixels. |
-| `fillColor` | `string` | `'rgba(0, 180, 255, 0.1)'` | CSS color for the rectangle fill. Use alpha for transparency. |
+| `fillColor` | `string` | `'rgba(57, 183, 250, 0.1)'` | CSS color for the rectangle fill. Use alpha for transparency. |
 
 ### `DEFAULT_RBZ_STYLE`
 
@@ -236,11 +236,15 @@ The default visual style applied to the selection rectangle when no `style` over
 import { DEFAULT_RBZ_STYLE } from '@accelint/map-toolkit/maplibre';
 
 // {
-//   borderColor: '#00B4FF',
+//   borderColor: '#39b7fa',
 //   borderWidth: 2,
-//   fillColor: 'rgba(0, 180, 255, 0.1)',
+//   fillColor: 'rgba(57, 183, 250, 0.1)',
 // }
 ```
+
+The values match the `outline-accent-primary-bold` semantic token from `@accelint/design-foundation` (resolves to `#39b7fa` in the dark theme).
+
+> **Why hardcoded hex instead of the CSS variable?** `RbzHandler` is a plain class that writes colors directly to inline `style` attributes on a DOM element and runs outside React. It has no access to theme context or computed styles at construction time. For theme-reactive colors, resolve the CSS variable at the call site (e.g. `getComputedStyle(document.documentElement).getPropertyValue('--outline-accent-primary-bold')`) and pass the result through `rbzOptions.style`.
 
 ## Gesture Lifecycle
 

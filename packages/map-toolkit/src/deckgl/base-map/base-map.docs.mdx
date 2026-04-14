@@ -167,9 +167,8 @@ The `BaseMap` component extends all `DeckglProps` from `@deckgl-fiber-renderer/t
 | `boxZoom` | `boolean` | `!enableRbz` | Enable MapLibre's native box zoom gesture (Shift + drag). Defaults to `true`, or `false` when `enableRbz` is `true` (the two gestures conflict). |
 | `enableRbz` | `boolean` | `false` | Enable rubber band zoom. See [Rubber Band Zoom](#rubber-band-zoom). |
 | `rbzOptions` | [`RbzOptions`](?path=/docs/deckgl-rubber-band-zoom--docs) | `undefined` | Configuration for rubber band zoom. Only applies when `enableRbz` is `true`. |
-| `onClick` | `(info: PickingInfo, event: MjolnirGestureEvent) => void` | `undefined` | Fires on map click. Receives the full Deck.gl picking info and Mjolnir gesture event. |
-| `onHover` | `(info: PickingInfo, event: MjolnirPointerEvent) => void` | `undefined` | Fires on map hover. Receives the full Deck.gl picking info and Mjolnir pointer event. |
-| `parameters` | `Record<string, any>` | `{}` | WebGL parameters merged with the defaults. |
+
+All `DeckglProps` (including `onClick`, `onHover`, `parameters`, `initialViewState`, `controller`, `widgets`, etc.) are also accepted and forwarded to Deck.gl. See the [Deck.gl documentation](https://deck.gl/docs/api-reference/core/deck) for the full set.
 
 #### Using `id`
 
@@ -213,7 +212,7 @@ function MapView() {
 
 #### Base map styles
 
-`styleUrl` accepts any MapLibre style JSON URL. The package re-exports two Carto presets:
+`styleUrl` accepts any MapLibre style JSON URL. The package re-exports two Carto presets, LIGHT_BASE_MAP_STYLE and DARK_BASE_MAP_STYLE (default):
 
 ```tsx
 import { BaseMap, LIGHT_BASE_MAP_STYLE } from '@accelint/map-toolkit/deckgl';
