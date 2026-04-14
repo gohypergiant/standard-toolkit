@@ -118,6 +118,37 @@ const [selectedKeys, setSelectedKeys] = useState(new Set(['one']));
 </Tree>
 ```
 
+### Cascade Selection
+
+When using dynamic collections with `useTreeState` or `useTreeActions`, you can enable cascade selection mode by setting `selectionCascade: true`. In this mode:
+
+- Selecting a parent automatically selects all its descendants
+- Parent nodes show an indeterminate state when only some children are selected
+- Deselecting a parent deselects all its descendants
+
+```jsx
+import { useTreeState } from '@accelint/design-toolkit';
+
+function MyTreeComponent() {
+  const { nodes, actions } = useTreeState({
+    items: initialTreeData,
+    selectionCascade: true, // Enable cascade selection
+  });
+
+  return (
+    <Tree
+      items={nodes}
+      selectionMode="multiple"
+      onSelectionChange={actions.onSelectionChange}
+    >
+      {(node) => <Node key={node.key} node={node} />}
+    </Tree>
+  );
+}
+```
+
+**Note:** Cascade selection only works with dynamic collections (using the `items` prop and `useTreeState` or `useTreeActions`). It is not supported for static collections.
+
 ## Visibility Control
 
 The Tree component allows controlling which nodes are visible using the `visibleKeys` prop and `onVisibilityChange` callback:
@@ -221,8 +252,11 @@ In this example below, the external data is represented with a `useState` hook b
 import { useTreeActions } from '@accelint/design-toolkit';
 
 function MyTreeComponent() {
-     const [db, setDB] = useState(items);
-    const actions = useTreeActions({ nodes: db });
+    const [db, setDB] = useState(items);
+    const actions = useTreeActions({
+      nodes: db,
+      selectionCascade: true, // Optional: enable cascade selection
+    });
 
     const handleExpansion = (keys: Set<Key>) => {
       setDB(actions.onExpandedChange(keys));
@@ -271,6 +305,7 @@ import { useTreeState } from '@/hooks/use-tree';
 function MyTreeComponent() {
   const { nodes, actions, dragAndDropConfig } = useTreeState({
     items: initialTreeData,
+    selectionCascade: true, // Optional: enable cascade selection
   });
 
   return (
@@ -283,6 +318,11 @@ function MyTreeComponent() {
   );
 }
 ```
+
+The hook accepts:
+
+- **items**: Initial tree data
+- **selectionCascade** (optional): Enable cascade selection mode where selecting a parent automatically selects all descendants
 
 The hook returns:
 
