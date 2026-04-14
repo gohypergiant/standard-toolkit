@@ -30,7 +30,8 @@ type GetEntityId = (item: any) => EntityId;
 
 /** Default accessor — assumes the data item has an `id` property. */
 // biome-ignore lint/suspicious/noExplicitAny: Data type is unknown at store level.
-const defaultGetEntityId: GetEntityId = (item: any) => item.id as EntityId;
+export const defaultGetEntityId: GetEntityId = (item: any) =>
+  item.id as EntityId;
 
 /**
  * State for coffin corner selection and hover.

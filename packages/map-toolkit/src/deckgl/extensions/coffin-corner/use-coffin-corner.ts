@@ -13,7 +13,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { coffinCornerStore } from './store';
+import { coffinCornerStore, defaultGetEntityId } from './store';
 import type { UniqueId } from '@accelint/core';
 import type { EntityId } from './types';
 
@@ -86,17 +86,29 @@ export function useCoffinCorner(
   layerId: string,
   options?: UseCoffinCornerOptions,
 ): UseCoffinCornerReturn {
+  const getEntityId = options?.getEntityId;
+
+  // Seed layerId and getEntityId into the store BEFORE use() subscribes and
+  // sets up the bus. setInitialState writes directly without calling notify(),
+  // so no rerender is triggered. This makes the useEffects below no-ops on
+  // first mount, preventing the startup rerender that broke deck.gl/maplibre sync.
+  if (!coffinCornerStore.exists(mapId)) {
+    coffinCornerStore.setInitialState(mapId, {
+      selectedId: undefined,
+      hoveredId: undefined,
+      layerId,
+      getEntityId: getEntityId ?? defaultGetEntityId,
+    });
+  }
+
   const { state, setSelectedId, deselect, setLayerId, setGetEntityId } =
     coffinCornerStore.use(mapId);
 
-  // Unlike a CompositeLayer, CoffinCornerExtension is a shader-only plugin
-  // with no picking handlers. The store must filter raw map bus events by
-  // layerId to know which clicks/hovers belong to this extension's layer.
+  // Still needed to handle layerId/getEntityId changes after initial mount.
+  // Guarded by equality checks in the store actions, so no-ops when values are unchanged.
   useEffect(() => {
     setLayerId(layerId);
   }, [setLayerId, layerId]);
-
-  const getEntityId = options?.getEntityId;
 
   useEffect(() => {
     if (getEntityId) {
