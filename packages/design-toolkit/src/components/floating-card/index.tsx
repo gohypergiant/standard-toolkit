@@ -17,8 +17,23 @@ import type { UniqueId } from '@accelint/core';
 
 const defaultDimensions = { width: 300, height: 400 } as const;
 
+/**
+ * Props for the FloatingCard component.
+ *
+ * @example
+ * ```tsx
+ * const props: FloatingCardProps = {
+ *   id: 'panel-123' as UniqueId,
+ *   title: 'My Panel',
+ *   isOpen: true,
+ *   initialDimensions: { width: 350, height: 450 }
+ * };
+ * ```
+ */
 export type FloatingCardProps = Readonly<{
+  /** Unique identifier for the floating card */
   id: UniqueId;
+  /** Optional title displayed in the floating card header */
   title?: string;
   /**
    * Controls whether the floating card is rendered.
@@ -48,10 +63,34 @@ export type FloatingCardProps = Readonly<{
  * @param isOpen - Whether the floating card is rendered. Defaults to `true`.
  * @param initialDimensions - Initial width and height of the floating card. Defaults to `{ width: 300, height: 400 }`.
  * @param children - React children to render inside the floating card.
+ * @returns The floating card component (portaled content) or null.
  *
  * @remarks
  * - Requires `FloatingCardProvider` as an ancestor.
  * - The floating card is only rendered if a valid DOM reference exists for the given `id`.
+ *
+ * @example
+ * ```tsx
+ * import { uuid } from '@accelint/core/utility/uuid';
+ *
+ * const cardId = uuid();
+ * const [isOpen, setIsOpen] = useState(true);
+ *
+ * <FloatingCardProvider>
+ *   <FloatingCard
+ *     id={cardId}
+ *     title="Settings Panel"
+ *     isOpen={isOpen}
+ *     initialDimensions={{ width: 400, height: 500 }}
+ *   >
+ *     <SettingsForm />
+ *   </FloatingCard>
+ *
+ *   <button onClick={() => setIsOpen(!isOpen)}>
+ *     Toggle Panel
+ *   </button>
+ * </FloatingCardProvider>
+ * ```
  */
 export function FloatingCard({
   id,
@@ -64,8 +103,9 @@ export function FloatingCard({
 
   const { width, height } = initialDimensions ?? defaultDimensions;
 
+  // Register card with Dockview API when isOpen changes.
+  // Early return if API not ready (Dockview not fully initialized).
   useEffect(() => {
-    // If the API is not available, we cannot register the card. This can happen if Dockview is not fully initialized yet.
     if (!floatingCardContext.api) {
       return;
     }

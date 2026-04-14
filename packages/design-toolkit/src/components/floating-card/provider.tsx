@@ -12,6 +12,7 @@
 
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import CloseIcon from '@accelint/icons/cancel';
+import PinIcon from '@accelint/icons/pin';
 import {
   type DockviewApi,
   DockviewReact,
@@ -26,6 +27,7 @@ import {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 import { Button } from '../button';
@@ -39,42 +41,113 @@ import {
 import styles from './styles.module.css';
 import type { UniqueId } from '@accelint/core/utility/uuid';
 
-/** A value that is either `T` directly, or a function that receives the active card id and returns `T`. */
+/**
+ * A value that can be static or dynamically computed per floating card.
+ *
+ * Enables per-card customization of props by passing a factory function
+ * that receives the card ID and returns the appropriate value.
+ *
+ * @template T - The type of the static value or factory return type.
+ */
 type MaybeFactory<T> = T | ((cardId: string) => T);
 
+/**
+ * Configuration for header action buttons in floating cards.
+ *
+ * Can be a custom button (with icon and onClick), a visual separator ('divider'),
+ * or the built-in pin toggle ('pin').
+ *
+ * @remarks
+ * - Custom buttons: Rendered as icon buttons with your provided onClick handler
+ * - 'divider': Inserts a vertical divider between action groups
+ * - 'pin': Adds built-in pin toggle button (disables dragging when pinned)
+ *
+ * @example
+ * ```tsx
+ * const headerActions: FloatingCardHeaderAction[] = [
+ *   { icon: <SettingsIcon />, onClick: () => openSettings() },
+ *   'divider',
+ *   'pin'
+ * ];
+ * ```
+ */
+export type FloatingCardHeaderAction =
+  | {
+      /** Icon to display in the action button */
+      icon: ReactNode;
+      /** Handler called when the action button is clicked */
+      onClick: () => void;
+    }
+  | 'divider'
+  | 'pin';
+
+/**
+ * Props passed to floating card header components.
+ *
+ * @remarks Internal type used by header adapters to map Dockview props to custom header components.
+ */
 type FloatingCardHeaderProps = {
+  /** ID of the active floating card panel */
   id?: string;
+  /** Title text displayed in the header */
   title?: string;
+  /** Optional icon displayed at the start of the header */
   icon?: ReactNode;
+  /** Callback to close the entire card group */
   closeGroup: () => void;
-  headerActions?: (
-    | {
-        icon: ReactNode;
-        onClick: () => void;
-      }
-    | 'divider'
-  )[];
+  /** Toggles pin state for the specified card */
+  togglePinCard: (id: UniqueId) => void;
+  /** Checks if the specified card is pinned */
+  isPinned: (id: UniqueId) => boolean;
+  /** Custom action buttons to render in the header */
+  headerActions?: FloatingCardHeaderAction[];
 };
 
 /**
  * Internal component that registers a DOM ref for a card container.
- * Used by the floating card engine to mount portal targets.
+ *
+ * Used by the floating card engine to mount portal targets. Also manages
+ * the data-pinned attribute on the resize container to control drag handle visibility.
+ *
+ * @param props - Dockview panel props containing the card ID.
  */
 function FloatingCardContainer(props: Readonly<IDockviewPanelProps>) {
-  const { addRef } = useFloatingCard();
+  const { addRef, isPinned } = useFloatingCard();
+  const cardId = props.api.id as UniqueId;
+  const pinned = isPinned(cardId);
+
+  const cardRef = useRef<HTMLDivElement | null>(null);
 
   const refCallback = useCallback(
     (ref: HTMLDivElement | null) => {
-      addRef(props.api.id as UniqueId, ref);
+      cardRef.current = ref;
+      addRef(cardId, ref);
     },
-    [addRef, props.api.id],
+    [addRef, cardId],
   );
+
+  // Toggle a data-pinned attribute on the ancestor .dv-resize-container
+  // so CSS can disable pointer-events on the drag handle.
+  useEffect(() => {
+    const el = cardRef.current;
+    const container = el?.closest('.dv-resize-container') as HTMLElement | null;
+
+    if (!container) {
+      return;
+    }
+
+    if (pinned) {
+      container.dataset.pinned = '';
+    } else {
+      delete container.dataset.pinned;
+    }
+  }, [pinned]);
 
   return <div className={styles.cardContent} ref={refCallback} />;
 }
 
 /**
- * Default left header showing an optional custom icon (or a placeholder) and the card's title.
+ * Default left header showing an optional custom icon and the card's title.
  */
 function DefaultLeftHeader({
   title,
@@ -93,12 +166,18 @@ function DefaultLeftHeader({
 
 /**
  * Default right header showing optional action buttons and an always-present close button.
+ *
+ * @remarks Handles rendering of 'divider' and 'pin' action types specially.
  */
 function DefaultRightHeader({
   closeGroup,
   headerActions,
   id,
+  togglePinCard,
+  isPinned,
 }: Readonly<FloatingCardHeaderProps>) {
+  const pinned = id ? isPinned(id as UniqueId) : false;
+
   return (
     <div className={styles.headerSide}>
       {headerActions?.map((action, index) => {
@@ -106,6 +185,27 @@ function DefaultRightHeader({
           return (
             // biome-ignore lint/suspicious/noArrayIndexKey: Using index as key is acceptable here because the order of actions is unlikely to change.
             <Divider key={`${id}-divider-${index}`} orientation='vertical' />
+          );
+        }
+        if (action === 'pin') {
+          return (
+            <Button
+              className={styles.pinButton}
+              // biome-ignore lint/suspicious/noArrayIndexKey: Using index as key is acceptable here because the order of actions is unlikely to change.
+              key={`${id}-pin-${index}`}
+              variant='icon'
+              size='small'
+              color={pinned ? 'accent' : undefined}
+              onClick={() => {
+                if (id) {
+                  togglePinCard(id as UniqueId);
+                }
+              }}
+            >
+              <Icon>
+                <PinIcon />
+              </Icon>
+            </Button>
           );
         }
         return (
@@ -134,14 +234,23 @@ function DefaultRightHeader({
 type HeaderAdapterOptions = {
   icon?: MaybeFactory<ReactNode>;
   headerActions?: MaybeFactory<FloatingCardHeaderProps['headerActions']>;
+  togglePinCard: (id: UniqueId) => void;
+  isPinned: (id: UniqueId) => boolean;
 };
 
 /**
- * Creates an adapter component to map Dockview's header action props to our custom header component props.
+ * Creates an adapter component to map Dockview's header action props to custom header component props.
+ *
+ * Handles title change subscriptions and resolves MaybeFactory options (icon, headerActions)
+ * either as static values or by invoking factory functions with the active card ID.
+ *
+ * @param Component - The header component to wrap.
+ * @param options - Configuration options including icon and headerActions (static or factory).
+ * @returns Adapter component compatible with Dockview's header API.
  */
 function createHeaderAdapter(
   Component: FunctionComponent<FloatingCardHeaderProps>,
-  options?: HeaderAdapterOptions,
+  options: HeaderAdapterOptions,
 ): FunctionComponent<IDockviewHeaderActionsProps> {
   function HeaderAdapter(props: Readonly<IDockviewHeaderActionsProps>) {
     const panelId = props.panels[0]?.id ?? '';
@@ -180,6 +289,8 @@ function createHeaderAdapter(
         title={title}
         id={props.activePanel?.id}
         closeGroup={() => props.api.close()}
+        togglePinCard={options.togglePinCard}
+        isPinned={options.isPinned}
       />
     );
   }
@@ -188,6 +299,27 @@ function createHeaderAdapter(
   return HeaderAdapter;
 }
 
+/**
+ * Props for the FloatingCardProvider component.
+ *
+ * Configures default icon and header actions for all floating cards. Both can be
+ * static values or factory functions that receive the card ID for per-card customization.
+ *
+ * @example
+ * ```tsx
+ * <FloatingCardProvider
+ *   icon={<AppIcon />}
+ *   headerActions={(cardId) => {
+ *     if (cardId === 'settings') {
+ *       return [{ icon: <CogIcon />, onClick: openSettings }, 'pin'];
+ *     }
+ *     return ['pin'];
+ *   }}
+ * >
+ *   {children}
+ * </FloatingCardProvider>
+ * ```
+ */
 export type FloatingCardProviderProps = Readonly<
   PropsWithChildren<{
     /**
@@ -197,19 +329,12 @@ export type FloatingCardProviderProps = Readonly<
     icon?: MaybeFactory<ReactNode>;
     /**
      * Optional action buttons rendered in the floating card header before the close button.
-     * Can include dividers to separate groups of actions.
+     * Can include `'divider'` to separate groups and `'pin'` to add a pin toggle button.
      * Can be an array or a function `(cardId: string) => array` to return
      * per-floating card actions.
      */
-    headerActions?: MaybeFactory<
-      (
-        | {
-            icon: ReactNode;
-            onClick: () => void;
-          }
-        | 'divider'
-      )[]
-    >;
+    headerActions?: MaybeFactory<FloatingCardHeaderAction[]>;
+    /** Additional CSS class names for styling */
     className?: string;
   }>
 >;
@@ -221,21 +346,37 @@ const components: Record<string, FunctionComponent<IDockviewPanelProps>> = {
 /**
  * Provides a context and layout area for floating cards within the application.
  *
- * Wraps its children with floating card context and renders a floating card engine instance
- * to manage docking and layout.
+ * Wraps children with floating card context and renders a Dockview instance to manage
+ * docking, dragging, and layout of floating cards.
  *
  * @param props - The props for the FloatingCardProvider component.
  * @param props.children - Child components rendered inside the floating card provider.
- * @param props.icon - Optional icon.
- * @param props.headerActions - Optional actions for the header.
+ * @param props.icon - Optional icon rendered in all card headers (static or factory).
+ * @param props.headerActions - Optional action buttons for card headers (static or factory).
  * @param props.className - Additional CSS class names for styling.
- *
  * @returns The FloatingCardProvider component that manages floating card layout and context.
  *
  * @remarks
- * - Manages registration and unregistration of floating card references.
- * - Exposes `closeCard` via context for child components.
- * - Ensures floating cards are bounded within the viewport.
+ * - Manages registration and cleanup of floating card DOM references
+ * - Exposes closeCard, togglePinCard, and isPinned via context
+ * - Automatically cleans up refs when cards are removed via any path (drag close, group close, API close)
+ * - Cards are bounded within the viewport
+ *
+ * @example
+ * ```tsx
+ * <FloatingCardProvider
+ *   icon={<AppLogo />}
+ *   headerActions={[
+ *     { icon: <SettingsIcon />, onClick: openSettings },
+ *     'divider',
+ *     'pin'
+ *   ]}
+ * >
+ *   <FloatingCard id="panel-1" title="My Panel">
+ *     <div>Panel content</div>
+ *   </FloatingCard>
+ * </FloatingCardProvider>
+ * ```
  */
 export function FloatingCardProvider({
   children,
@@ -245,6 +386,7 @@ export function FloatingCardProvider({
 }: FloatingCardProviderProps) {
   const [api, setApi] = useState<DockviewApi | null>(null);
   const [cards, setCards] = useState<Record<UniqueId, HTMLDivElement>>({});
+  const [pinnedCards, setPinnedCards] = useState<Set<UniqueId>>(new Set());
 
   const closeCard = useCallback(
     (id: UniqueId) => {
@@ -253,11 +395,36 @@ export function FloatingCardProvider({
     [api],
   );
 
+  const togglePinCard = useCallback((id: UniqueId) => {
+    setPinnedCards((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  }, []);
+
+  const isPinned = useCallback(
+    (id: UniqueId) => pinnedCards.has(id),
+    [pinnedCards],
+  );
+
   const removeRef = useCallback((view: UniqueId) => {
     setCards((prev) => {
       const newCards = { ...prev };
       delete newCards[view];
       return newCards;
+    });
+    setPinnedCards((prev) => {
+      if (!prev.has(view)) {
+        return prev;
+      }
+      const next = new Set(prev);
+      next.delete(view);
+      return next;
     });
   }, []);
 
@@ -294,19 +461,31 @@ export function FloatingCardProvider({
       addRef,
       removeRef,
       closeCard,
+      togglePinCard,
+      isPinned,
       api,
     }),
-    [cards, closeCard, removeRef, api, addRef],
+    [cards, closeCard, removeRef, api, addRef, togglePinCard, isPinned],
   );
 
   const leftAdapter = useMemo(
-    () => createHeaderAdapter(DefaultLeftHeader, { icon }),
-    [icon],
+    () =>
+      createHeaderAdapter(DefaultLeftHeader, {
+        icon,
+        togglePinCard,
+        isPinned,
+      }),
+    [icon, togglePinCard, isPinned],
   );
 
   const rightAdapter = useMemo(
-    () => createHeaderAdapter(DefaultRightHeader, { headerActions }),
-    [headerActions],
+    () =>
+      createHeaderAdapter(DefaultRightHeader, {
+        headerActions,
+        togglePinCard,
+        isPinned,
+      }),
+    [headerActions, togglePinCard, isPinned],
   );
 
   const theme = useMemo(

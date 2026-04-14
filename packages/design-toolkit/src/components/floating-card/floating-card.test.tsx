@@ -120,6 +120,8 @@ describe('FloatingCardContext defaults', () => {
           addRef: () => undefined,
           removeRef: () => undefined,
           closeCard: () => undefined,
+          togglePinCard: () => undefined,
+          isPinned: () => false,
           api: null,
         }}
       >
@@ -430,6 +432,8 @@ describe('FloatingCardContainer', () => {
           addRef,
           removeRef: vi.fn(),
           closeCard: vi.fn(),
+          togglePinCard: vi.fn(),
+          isPinned: () => false,
           api: null,
         }}
       >
@@ -519,7 +523,19 @@ describe('header adapters', () => {
       capturedProps.rightHeaderActionsComponent as FunctionComponent<IDockviewHeaderActionsProps>;
 
     const { getAllByRole } = render(
-      <RightAdapter {...makeMockAdapterProps(makeMockActivePanel())} />,
+      <FloatingCardContext.Provider
+        value={{
+          cards: {},
+          addRef: () => undefined,
+          removeRef: () => undefined,
+          closeCard: () => undefined,
+          togglePinCard: () => undefined,
+          isPinned: () => false,
+          api: null,
+        }}
+      >
+        <RightAdapter {...makeMockAdapterProps(makeMockActivePanel())} />
+      </FloatingCardContext.Provider>,
     );
 
     // 3 action buttons + 1 always-present close button
@@ -588,6 +604,8 @@ describe('FloatingCard', () => {
       addRef: vi.fn(),
       removeRef: vi.fn(),
       closeCard: vi.fn(),
+      togglePinCard: vi.fn(),
+      isPinned: () => false,
       api,
     };
   }
@@ -923,5 +941,107 @@ describe('multiple FloatingCardProvider instances', () => {
 
     expect(latest1().cards['card-in-provider-1' as UniqueId]).toBe(div);
     expect(latest2().cards['card-in-provider-1' as UniqueId]).toBeUndefined();
+  });
+});
+
+describe('pin functionality', () => {
+  it('should expose togglePinCard and isPinned via context', () => {
+    const { spy, latest } = captureContext();
+
+    render(
+      <FloatingCardProvider>
+        <ContextReader onContext={spy} />
+      </FloatingCardProvider>,
+    );
+
+    expect(typeof latest().togglePinCard).toBe('function');
+    expect(typeof latest().isPinned).toBe('function');
+  });
+
+  it('should toggle a card between pinned and unpinned', () => {
+    const { spy, latest } = captureContext();
+
+    render(
+      <FloatingCardProvider>
+        <ContextReader onContext={spy} />
+      </FloatingCardProvider>,
+    );
+
+    expect(latest().isPinned('card-pin' as UniqueId)).toBe(false);
+
+    act(() => {
+      latest().togglePinCard('card-pin' as UniqueId);
+    });
+
+    expect(latest().isPinned('card-pin' as UniqueId)).toBe(true);
+
+    act(() => {
+      latest().togglePinCard('card-pin' as UniqueId);
+    });
+
+    expect(latest().isPinned('card-pin' as UniqueId)).toBe(false);
+  });
+
+  it('should clear pinned state when a card is removed via removeRef', () => {
+    const { spy, latest } = captureContext();
+
+    render(
+      <FloatingCardProvider>
+        <ContextReader onContext={spy} />
+      </FloatingCardProvider>,
+    );
+
+    act(() => {
+      latest().togglePinCard('card-remove' as UniqueId);
+    });
+
+    expect(latest().isPinned('card-remove' as UniqueId)).toBe(true);
+
+    act(() => {
+      latest().removeRef('card-remove' as UniqueId);
+    });
+
+    expect(latest().isPinned('card-remove' as UniqueId)).toBe(false);
+  });
+
+  it('should clear pinned state when a panel is removed via dockview', () => {
+    const { spy, latest } = captureContext();
+    const mockApi = createMockApi();
+    let removePanelCallback: OnDidRemovePanelCallback | undefined;
+
+    mockApi.onDidRemovePanel.mockImplementation(
+      (cb: OnDidRemovePanelCallback) => {
+        removePanelCallback = cb;
+        return { dispose: vi.fn() };
+      },
+    );
+
+    const { rerender } = render(
+      <FloatingCardProvider>
+        <ContextReader onContext={spy} />
+      </FloatingCardProvider>,
+    );
+
+    act(() => {
+      triggerReady(mockApi);
+    });
+
+    rerender(
+      <FloatingCardProvider>
+        <ContextReader onContext={spy} />
+      </FloatingCardProvider>,
+    );
+
+    act(() => {
+      latest().togglePinCard('pinned-removed' as UniqueId);
+    });
+
+    expect(latest().isPinned('pinned-removed' as UniqueId)).toBe(true);
+
+    act(() => {
+      removePanelCallback?.({ id: 'pinned-removed' });
+    });
+
+    expect(latest().isPinned('pinned-removed' as UniqueId)).toBe(false);
   });
 });
