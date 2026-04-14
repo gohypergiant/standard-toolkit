@@ -16,7 +16,6 @@ import type { TreeNode } from '../types';
 
 export type CacheTreeNode<T> = Omit<TreeNode<T>, 'children'> & {
   children?: Key[];
-  isIndeterminate?: boolean;
 };
 
 /**
@@ -58,13 +57,7 @@ export class Cache<T> {
         isIndeterminate: false,
         ...rest,
         parentKey,
-        ...(children
-          ? {
-              children: children
-                .map((child) => child.key)
-                .filter((k) => k != null),
-            }
-          : {}),
+        ...(children ? { children: children.map((child) => child.key) } : {}),
       });
 
       if (node.children) {
@@ -72,10 +65,7 @@ export class Cache<T> {
       }
     });
 
-    const cache = {
-      lookup,
-      roots: nodes.map((node) => node.key).filter((key) => key != null),
-    };
+    const cache = { lookup, roots: nodes.map((node) => node.key) };
 
     if (!parentKey) {
       this.cache = cache;
@@ -87,17 +77,13 @@ export class Cache<T> {
 
   protected get(key: Key) {
     if (key == null) {
-      console.error('Attempted to get node with null/undefined key');
-      console.trace();
       throw new Error(`Key is ${key} (null/undefined) - this is invalid`);
     }
 
     const node = this.cache.lookup.get(key);
 
     if (node === undefined) {
-      throw new Error(
-        `Key of ${key} does not exist in tree. Available keys: ${[...this.cache.lookup.keys()].join(', ')}`,
-      );
+      throw new Error(`Key of ${key} does not exist in tree`);
     }
 
     return node;
@@ -172,17 +158,6 @@ export class Cache<T> {
     }
   }
 
-  /**
-   * Get the parent key for a target position
-   */
-  getParentForPosition(
-    target: Key | null,
-    position: 'before' | 'after',
-  ): Key | null {
-    const { parentKey } = this.parentOrSibling(target, position);
-    return parentKey;
-  }
-
   protected parentOrSibling(target: Key | null, position: 'before' | 'after') {
     let index: number;
     let parentKey: Key | null = null;
@@ -213,9 +188,7 @@ export class Cache<T> {
       isVisibleComputed: this.calculateVisibility(key),
     });
 
-    node.children
-      ?.filter((child) => child != null)
-      .map((child) => this.traverse(child));
+    node.children?.map((child) => this.traverse(child));
   }
 
   protected calculateVisibility(key: Key) {
@@ -234,9 +207,7 @@ export class Cache<T> {
   }
 
   protected deriveVisibility() {
-    return this.cache.roots
-      .filter((key) => key != null)
-      .map((key) => this.traverse(key));
+    return this.cache.roots.map((key) => this.traverse(key));
   }
   /**
    * Recursively builds a TreeNode from a key
@@ -246,9 +217,8 @@ export class Cache<T> {
   protected buildNode(key: Key): TreeNode<T> {
     const node = this.get(key);
 
-    const children = (node.children ?? [])
-      .filter((child) => child != null)
-      .reduce((acc: TreeNode<T>[], child) => {
+    const children = (node.children ?? []).reduce(
+      (acc: TreeNode<T>[], child) => {
         const childNode = this.cache.lookup.get(child);
 
         if (childNode && childNode.parentKey === key) {
@@ -256,7 +226,9 @@ export class Cache<T> {
         }
 
         return acc;
-      }, []);
+      },
+      [],
+    );
 
     return {
       ...node,
@@ -277,15 +249,13 @@ export class Cache<T> {
     if (deriveVisible) {
       this.deriveVisibility();
     }
-    return this.cache.roots
-      .filter((key) => key != null)
-      .map((key) => this.buildNode(key));
+    return this.cache.roots.map((key) => this.buildNode(key));
   }
 
   /**
    * CACHE FUNCTIONS
-   * These manage cache operations. No cache operations should ever be done
-   * outside this file.
+   * These are the public functions to manage cache operations. No cache operations should ever be done
+   * outside this file since it risks corruption of the data.
    **/
   getNode(key: Key): TreeNode<T> {
     const node = this.get(key);
@@ -304,31 +274,19 @@ export class Cache<T> {
     return this.cache.lookup.values();
   }
 
-  setNode(key: Key, node: TreeNode<T> | CacheTreeNode<T>) {
-    // Check if children are already Keys (from cache.get) or TreeNode objects (from external calls)
-    let childKeys: Key[] | undefined;
+  getParentForPosition(
+    target: Key | null,
+    position: 'before' | 'after',
+  ): Key | null {
+    const { parentKey } = this.parentOrSibling(target, position);
+    return parentKey;
+  }
 
-    if (node.children && node.children.length > 0) {
-      const firstChild = node.children[0];
-      // If first child is an object with a 'key' property, it's a TreeNode, so extract keys
-      if (
-        typeof firstChild === 'object' &&
-        firstChild != null &&
-        'key' in firstChild
-      ) {
-        childKeys = (node.children as TreeNode<T>[])
-          .map((child) => child.key)
-          .filter((k) => k != null);
-      } else {
-        // Already keys
-        childKeys = (node.children as Key[]).filter((k) => k != null);
-      }
-    }
-
+  setNode(key: Key, node: TreeNode<T>) {
     this.set(key, {
       ...node,
-      ...(childKeys !== undefined ? { children: childKeys } : {}),
-    } as CacheTreeNode<T>);
+      children: (node.children ?? []).map((child) => child.key),
+    });
   }
 
   setAllNodes({ parentKey, children, ...rest }: Partial<TreeNode<T>>) {
@@ -384,9 +342,7 @@ export class Cache<T> {
       parentKey,
       ...(children
         ? {
-            children: children
-              .map((child) => child.key)
-              .filter((k) => k != null),
+            children: children.map((child) => child.key),
           }
         : {}),
     });
@@ -468,7 +424,6 @@ export class Cache<T> {
           break;
         }
 
-        // Update parent
         this.set(parent.key, {
           ...parent,
           isSelected: newState.isSelected,
