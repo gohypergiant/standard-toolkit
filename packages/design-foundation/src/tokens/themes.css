@@ -370,14 +370,10 @@
     var(--primitive-neutral-600, #414245),
     var(--primitive-neutral-300, #c3c5c7)
   );
-  --shadow-elevation-raised: light-dark(
-    var(--shadow-elevation-raised-muted, 0 1px 4px 0 rgba(0 0 0 / 0.16)),
-    var(--shadow-elevation-raised-bold, 0 1px 4px 0 rgba(0 0 0 / 0.8))
-  );
-  --shadow-elevation-overlay: light-dark(
-    var(--shadow-elevation-overlay-muted, 0 8px 24px 0 rgba(0 0 0 / 0.16)),
-    var(--shadow-elevation-overlay-bold, 0 8px 24px 0 rgba(0 0 0 / 0.8))
-  );
+  --shadow-elevation-raised: 0 1px 4px 0
+    light-dark(rgba(0 0 0 / 0.16), rgba(0 0 0 / 0.8));
+  --shadow-elevation-overlay: 0 8px 24px 0
+    light-dark(rgba(0 0 0 / 0.16), rgba(0 0 0 / 0.8));
 }
 
 @layer theme {

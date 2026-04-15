@@ -89,6 +89,88 @@ ${lines}
 }`;
 }
 
+function parseBoxShadow(shadowValue) {
+  // Box-shadow requires special handling because light-dark() only accepts <color> values,
+  // not complete shadow declarations (offset + blur + spread + color).
+  // Spec: https://drafts.csswg.org/css-color-5/#light-dark
+  //
+  // Parse box-shadow: "0 1px 4px 0 rgba(0 0 0 / 0.16)"
+  // Returns: { offsets: "0 1px 4px 0", color: "rgba(0 0 0 / 0.16)" }
+  // Match: offset-x offset-y blur spread color
+  const regex =
+    /^(?<offsets>(?:[\d.]+(?:px|rem|em)?\s+){3,4})\s*(?<color>rgba?\([^)]+\))$/;
+  const match = shadowValue.trim().match(regex);
+
+  if (match?.groups) {
+    return {
+      offsets: match.groups.offsets.trim(),
+      color: match.groups.color.trim(),
+    };
+  }
+
+  return null;
+}
+
+function isShadowToken(varName) {
+  return varName.includes('shadow');
+}
+
+function generateShadowToken(varName, lightFallback, darkFallback) {
+  const lightShadow = parseBoxShadow(lightFallback);
+  const darkShadow = parseBoxShadow(darkFallback);
+
+  if (lightShadow && darkShadow && lightShadow.offsets === darkShadow.offsets) {
+    // Both shadows have the same offsets, use light-dark for color only
+    return `-${varName}: ${lightShadow.offsets} light-dark(${lightShadow.color}, ${darkShadow.color});`;
+  }
+
+  // Fallback: invalid shadow format, return null to use default handling
+  return null;
+}
+
+function generateLightDarkToken(
+  varName,
+  lightValue,
+  lightFallback,
+  darkValue,
+  darkFallback,
+) {
+  return `-${varName}: light-dark(var(${lightValue}, ${lightFallback}), var(${darkValue}, ${darkFallback}));`;
+}
+
+function processTokenValue(
+  tokenKey,
+  lightValue,
+  darkValue,
+  primitives,
+  prefix,
+) {
+  const lightFallback = getTokenFallback(lightValue, primitives);
+  const darkFallback = getTokenFallback(darkValue, primitives);
+  const varName = tokenKey === 'base' ? prefix : `${prefix}-${tokenKey}`;
+
+  // Special handling for box-shadow tokens
+  if (isShadowToken(varName)) {
+    const shadowToken = generateShadowToken(
+      varName,
+      lightFallback,
+      darkFallback,
+    );
+    if (shadowToken) {
+      return shadowToken;
+    }
+  }
+
+  // Default handling for all other tokens
+  return generateLightDarkToken(
+    varName,
+    lightValue,
+    lightFallback,
+    darkValue,
+    darkFallback,
+  );
+}
+
 function generateLightDarkSemantics(
   lightObj,
   darkObj,
@@ -101,13 +183,8 @@ function generateLightDarkSemantics(
     const darkValue = darkObj[tokenKey];
 
     if (typeof lightValue === 'string' && lightValue.startsWith('--')) {
-      const lightFallback = getTokenFallback(lightValue, primitives);
-      const darkFallback = getTokenFallback(darkValue, primitives);
-      // Special case: omit "base" from the variable name
-      const varName = tokenKey === 'base' ? prefix : `${prefix}-${tokenKey}`;
-
       lines.push(
-        `-${varName}: light-dark(var(${lightValue}, ${lightFallback}), var(${darkValue}, ${darkFallback}));`,
+        processTokenValue(tokenKey, lightValue, darkValue, primitives, prefix),
       );
     } else if (typeof lightValue === 'object' && lightValue !== null) {
       lines = lines.concat(
