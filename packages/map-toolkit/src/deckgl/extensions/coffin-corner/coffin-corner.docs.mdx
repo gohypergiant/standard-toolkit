@@ -41,12 +41,13 @@ The original approach used a separate icon atlas (sprite sheet) layer to draw co
 
 ## Architecture
 
-The system has three independent layers. The React hook is a convenience wrapper — you can use the store imperatively for non-React contexts.
+The system has three independent layers plus a non-reactive registry. The React hook is a convenience wrapper — you can use the store and registry imperatively for non-React contexts. Multiple layers per map are supported.
 
 | Layer | Module | Role |
 |-------|--------|------|
-| **React** | `useCoffinCorner(mapId, layerId)` | Reads state, sets `layerId` |
-| **Store** (framework-agnostic) | `coffinCornerStore` | Listens to map bus (click/hover events), emits domain events (selected/deselected), holds `{ selectedId, hoveredId }` |
+| **React** | `useCoffinCorner(mapId, layerId)` | Subscribes to the store, registers the layer's entity-ID accessor with the non-reactive registry, returns `selectedId` / `hoveredId` for the requested layer |
+| **Store** (framework-agnostic) | `coffinCornerStore` | Listens to map bus (click/hover events), emits domain events (selected/deselected/hovered), holds `Map<layerId, { selectedId, hoveredId }>` per map instance |
+| **Registry** (non-reactive) | `registerCoffinCornerLayer` / `unregisterCoffinCornerLayer` | Module-level `Map` that tracks which layers are opted in and their entity-ID accessors. Writes here never trigger store subscribers, so adding a layer does not re-render siblings |
 | **Extension** (pure deck.gl) | `CoffinCornerExtension` | Reads `selectedEntityId` / `hoveredEntityId`, injects SDF shader code into IconLayer/ScatterplotLayer, draws brackets on GPU |
 
 ## API
@@ -108,41 +109,51 @@ React hook that manages coffin corner selection/hover state. Subscribes to map b
 
 ---
 
-### Store (imperative)
+### Store and registry (imperative)
 
-For non-React contexts (orchestrated maps, vanilla JS, etc.), use the store API directly. Everything is exported from `@accelint/map-toolkit/deckgl`.
+For non-React contexts (orchestrated maps, vanilla JS, etc.), use the store API and registry directly. Everything is exported from `@accelint/map-toolkit/deckgl`.
 
 ```ts
 import {
   coffinCornerStore,
+  registerCoffinCornerLayer,
+  unregisterCoffinCornerLayer,
   getSelectedEntityId,
   getHoveredEntityId,
   clearSelection,
 } from '@accelint/map-toolkit/deckgl';
 ```
 
-#### `getSelectedEntityId(mapId)`
+#### `registerCoffinCornerLayer(mapId, layerId, getEntityId)`
 
-Read the selected entity ID for a map instance. Non-reactive (snapshot).
+Register a layer with the non-reactive registry. After this call, click/hover events on that deck.gl layer are routed through the coffin-corner domain events and update the store.
 
-#### `getHoveredEntityId(mapId)`
+Writes are invisible to `useSyncExternalStore` subscribers, so registering a new layer on an already-mounted map does not trigger a re-render of sibling components.
 
-Read the hovered entity ID for a map instance. Non-reactive (snapshot).
+#### `unregisterCoffinCornerLayer(mapId, layerId)`
 
-#### `clearSelection(mapId)`
+Remove a layer's registration. After this call, the bus handlers ignore interactions on that layer. Safe to call during component cleanup.
 
-Clear selection state and clean up the store instance.
+#### `getSelectedEntityId(mapId, layerId)`
+
+Read the selected entity ID for a specific layer on a map instance. Non-reactive (snapshot). Returns `undefined` if nothing is selected.
+
+#### `getHoveredEntityId(mapId, layerId)`
+
+Read the hovered entity ID for a specific layer on a map instance. Non-reactive (snapshot). Returns `undefined` if nothing is hovered.
+
+#### `clearSelection(mapId, layerId?)`
+
+Without a `layerId`, clears the entire store instance for the map. With a `layerId`, clears only that layer's selection and hover state. Useful for tests and teardown.
 
 #### `coffinCornerStore.actions(mapId)`
 
-Get action methods without subscribing to state changes.
+Get action methods without subscribing to state changes. All actions are scoped to a specific layer, so you pass `layerId` at call time.
 
 | Action | Type | Description |
 |--------|------|-------------|
-| `setSelectedId` | `(id: EntityId \| undefined) => void` | Set the selected entity |
-| `deselect` | `() => void` | Clear selection |
-| `setLayerId` | `(layerId: string) => void` | Set which layer to listen for interactions on |
-| `setGetEntityId` | `(fn: GetEntityId) => void` | Set the entity ID accessor |
+| `setSelectedId` | `(layerId: string, id: EntityId \| undefined) => void` | Set the selected entity for a layer |
+| `deselect` | `(layerId: string) => void` | Clear the selection for a layer |
 
 #### `coffinCornerStore.subscribe(mapId)`
 
@@ -154,13 +165,13 @@ Subscribe to state changes. Returns a function that accepts a callback and retur
 
 ### Events
 
-Domain events emitted via `@accelint/bus`:
+Domain events emitted via `@accelint/bus`. Every payload carries a `layerId` so handlers can scope to a specific layer on a map.
 
 | Event | Payload | Description |
 |-------|---------|-------------|
-| `coffin-corner:selected` | `{ selectedId, mapId }` | Entity was selected |
-| `coffin-corner:deselected` | `{ selectedId: undefined, mapId }` | Selection was cleared |
-| `coffin-corner:hovered` | `{ hoveredId, mapId }` | Hover state changed |
+| `coffin-corner:selected` | `{ selectedId, layerId, mapId }` | Entity was selected |
+| `coffin-corner:deselected` | `{ selectedId: undefined, layerId, mapId }` | Selection was cleared |
+| `coffin-corner:hovered` | `{ hoveredId, layerId, mapId }` | Hover state changed |
 
 Access event constants via `CoffinCornerEvents`:
 
@@ -233,12 +244,14 @@ function MyMap() {
 
 ### Imperative (without React)
 
-For orchestrated or non-React map instances. The store and bus have no React dependency.
+For orchestrated or non-React map instances. The store, registry, and bus have no React dependency.
 
 ```ts
 import { uuid } from '@accelint/core';
 import {
   coffinCornerStore,
+  registerCoffinCornerLayer,
+  unregisterCoffinCornerLayer,
   getSelectedEntityId,
   getHoveredEntityId,
   clearSelection,
@@ -246,27 +259,61 @@ import {
 
 // Same ID you pass to your Deck instance / BaseMap
 const mapId = uuid();
+const layerId = 'my-layer';
 
-// Get actions and configure
-const { setSelectedId, setLayerId } = coffinCornerStore.actions(mapId);
-setLayerId('my-layer');
+// Register the layer so the bus handlers know how to extract entity IDs.
+registerCoffinCornerLayer(mapId, layerId, (item) => item.id);
 
-// Subscribe to changes — also wires up bus listeners on first call
+// Subscribe to changes — also wires up bus listeners on first call.
 const unsubscribe = coffinCornerStore.subscribe(mapId)(() => {
   const state = coffinCornerStore.get(mapId);
+  const layer = state.layers.get(layerId);
   // Update layer props, re-render deck.gl, etc.
 });
 
 // Read state imperatively at any time
-const selectedId = getSelectedEntityId(mapId);
-const hoveredId = getHoveredEntityId(mapId);
+const selectedId = getSelectedEntityId(mapId, layerId);
+const hoveredId = getHoveredEntityId(mapId, layerId);
 
-// Mutate state
-setSelectedId('entity-123');
+// Mutate state through the store's actions
+const { setSelectedId, deselect } = coffinCornerStore.actions(mapId);
+setSelectedId(layerId, 'entity-123');
 
 // Cleanup
-clearSelection(mapId);
+deselect(layerId);
+unregisterCoffinCornerLayer(mapId, layerId);
+clearSelection(mapId, layerId); // or clearSelection(mapId) to clear all layers
 unsubscribe();
+```
+
+### Multiple layers on one map
+
+A single map can have any number of registered coffin-corner layers. Each layer maintains its own selection and hover state. Clicking empty space deselects all layers; clicking a new entity on a different layer does not affect other layers' selections.
+
+```tsx
+function MyMap({ mapId }) {
+  const { selectedId: klvSelected } = useCoffinCorner(mapId, 'klv-tracks');
+  const { selectedId: cotSelected } = useCoffinCorner(mapId, 'cot-symbols');
+
+  return (
+    <BaseMap id={mapId}>
+      <symbolLayer
+        id="klv-tracks"
+        data={klvData}
+        pickable
+        extensions={[coffinCornerExtension]}
+        selectedEntityId={klvSelected}
+      />
+      <symbolLayer
+        id="cot-symbols"
+        data={cotData}
+        pickable
+        extensions={[coffinCornerExtension]}
+        selectedEntityId={cotSelected}
+      />
+    </BaseMap>
+  );
+}
 ```
 
 ### Custom entity ID accessor

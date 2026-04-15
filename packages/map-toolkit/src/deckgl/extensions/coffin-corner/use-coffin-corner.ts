@@ -12,7 +12,7 @@
 
 'use client';
 
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import {
   coffinCornerStore,
   defaultGetEntityId,
@@ -102,7 +102,6 @@ export function useCoffinCorner(
   if (!coffinCornerStore.exists(mapId)) {
     coffinCornerStore.setInitialState(mapId, {
       layers: new Map(),
-      mapId,
     });
   }
 
@@ -117,10 +116,19 @@ export function useCoffinCorner(
     };
   }, [mapId, layerId, getEntityId]);
 
+  const boundSetSelectedId = useCallback(
+    (id: EntityId | undefined) => setSelectedId(layerId, id),
+    [setSelectedId, layerId],
+  );
+  const boundDeselect = useCallback(
+    () => deselect(layerId),
+    [deselect, layerId],
+  );
+
   return {
     selectedId: layerState?.selectedId,
     hoveredId: layerState?.hoveredId,
-    setSelectedId: (id: EntityId | undefined) => setSelectedId(layerId, id),
-    deselect: () => deselect(layerId),
+    setSelectedId: boundSetSelectedId,
+    deselect: boundDeselect,
   };
 }

@@ -2,10 +2,31 @@
 "@accelint/map-toolkit": patch
 ---
 
-fix: prevent unnecessary rerenders in useCoffinCorner on mount
+fix: support multiple coffin-corner layers per map without breaking deck.gl/maplibre viewport sync
 
-Two changes work together to eliminate a startup rerender that was breaking deck.gl/maplibre sync:
+`useCoffinCorner` previously stored each layer's `getEntityId` accessor inside
+the reactive store. When a second layer registered, the shared state reference
+changed, triggering `useSyncExternalStore`'s post-commit snapshot-consistency
+check. The resulting mid-mount re-render desynced deck.gl's viewport from
+maplibre's on pan/zoom whenever two or more layers used the hook on the same map.
 
-1. `useCoffinCorner` now seeds `layerId` and `getEntityId` into the store via `setInitialState` before `use()` subscribes and sets up the bus. Because `setInitialState` writes directly without calling `notify()`, no rerender is triggered and the `useEffect`s that previously set these values on first mount become no-ops.
+Layer registration now lives in a non-reactive module-level registry. Reactive
+state holds only `selectedId` and `hoveredId`, which update exclusively via
+genuine user interaction through the map bus. The store is now multi-layer
+aware: `LayerState` is keyed by `layerId` inside a `Map`, and all bus payloads
+carry a `layerId`. Actions and bus handlers receive their owning `mapId` via
+closure rather than storing it in state.
 
-2. The store's `onClick` and `onHover` handlers now guard against processing events when `layerId` is undefined (before the hook mounts or after unmount), matching the pattern from the draw store fix (#968).
+**Breaking changes for direct store consumers:**
+
+- `CoffinCornerSelectedEvent`, `CoffinCornerDeselectedEvent`, and
+  `CoffinCornerHoveredEvent` payloads now include a required `layerId: string`
+  field.
+- `getSelectedEntityId(mapId)` and `getHoveredEntityId(mapId)` now require a
+  `layerId` argument: `getSelectedEntityId(mapId, layerId)`.
+- `clearSelection(mapId)` still clears the whole map; pass an optional
+  `layerId` to clear a single layer's state.
+- The `setLayerId` and `setGetEntityId` store actions are removed — use
+  `useCoffinCorner` (which handles registration) instead.
+
+`useCoffinCorner`'s public API is unchanged.

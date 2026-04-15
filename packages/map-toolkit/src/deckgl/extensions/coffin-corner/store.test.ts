@@ -19,6 +19,8 @@ import {
   coffinCornerStore,
   getHoveredEntityId,
   getSelectedEntityId,
+  registerCoffinCornerLayer,
+  unregisterCoffinCornerLayer,
 } from './store';
 import { CoffinCornerEvents } from './types';
 import type { UniqueId } from '@accelint/core';
@@ -78,20 +80,19 @@ describe('coffin-corner store', () => {
   beforeEach(() => {
     mapId = uuid();
     layerId = 'symbols';
-    // Initialize store state with mapId and a test layer
-    const layers = new Map();
-    layers.set(layerId, {
-      selectedId: undefined,
-      hoveredId: undefined,
-      getEntityId: (item: any) => item.id,
-    });
-    coffinCornerStore.setInitialState(mapId, {
-      layers,
+    // Seed an empty store instance and register the test layer with the
+    // non-reactive registry so bus handlers recognize it — same shape as
+    // what useCoffinCorner does at mount time.
+    coffinCornerStore.setInitialState(mapId, { layers: new Map() });
+    registerCoffinCornerLayer(
       mapId,
-    });
+      layerId,
+      (item: { id: string }) => item.id,
+    );
   });
 
   afterEach(() => {
+    unregisterCoffinCornerLayer(mapId, layerId);
     clearSelection(mapId);
   });
 
@@ -163,7 +164,6 @@ describe('coffin-corner store', () => {
       expect(state).not.toBeNull();
       expect(state?.layers.get(layerId)?.selectedId).toBeUndefined();
       expect(state?.layers.get(layerId)?.hoveredId).toBeUndefined();
-      expect(state?.mapId).toBe(mapId);
     });
   });
 
@@ -302,32 +302,26 @@ describe('coffin-corner store', () => {
     });
   });
 
-  describe('coffinCornerStore.actions().setGetEntityId', () => {
-    it('should update getEntityId in state', () => {
-      const customAccessor = (item: { uid: string }) => item.uid;
-      const { setGetEntityId } = coffinCornerStore.actions(mapId);
-
-      setGetEntityId(layerId, customAccessor);
-
-      const state = coffinCornerStore.get(mapId);
-      expect(state.layers.get(layerId)?.getEntityId).toBe(customAccessor);
-    });
-
-    it('should not trigger update when getEntityId is the same reference', () => {
-      const customAccessor = (item: { uid: string }) => item.uid;
-      const { setGetEntityId } = coffinCornerStore.actions(mapId);
-
-      setGetEntityId(layerId, customAccessor);
-
+  describe('registerCoffinCornerLayer', () => {
+    it('does not notify store subscribers when registering an accessor', () => {
+      // Registration is non-reactive by design — it must never trigger a
+      // re-render, or the mount-cycle notify storm it was built to prevent
+      // would return.
+      const otherLayer = 'other-layer';
       const subscription = coffinCornerStore.subscribe(mapId);
       const callback = vi.fn();
       const unsubscribe = subscription(callback);
       callback.mockClear();
 
-      setGetEntityId(layerId, customAccessor);
+      registerCoffinCornerLayer(
+        mapId,
+        otherLayer,
+        (item: { uid: string }) => item.uid,
+      );
 
       expect(callback).not.toHaveBeenCalled();
 
+      unregisterCoffinCornerLayer(mapId, otherLayer);
       unsubscribe();
     });
   });
@@ -542,8 +536,11 @@ describe('coffin-corner store', () => {
       const callback = vi.fn();
       const unsubscribe = subscription(callback);
 
-      const { setGetEntityId } = coffinCornerStore.actions(mapId);
-      setGetEntityId(layerId, (item: { uid: string }) => item.uid);
+      registerCoffinCornerLayer(
+        mapId,
+        layerId,
+        (item: { uid: string }) => item.uid,
+      );
 
       mapBus.emit(
         MapEvents.click,
@@ -693,8 +690,11 @@ describe('coffin-corner store', () => {
       const callback = vi.fn();
       const unsubscribe = subscription(callback);
 
-      const { setGetEntityId } = coffinCornerStore.actions(mapId);
-      setGetEntityId(layerId, (item: { uid: string }) => item.uid);
+      registerCoffinCornerLayer(
+        mapId,
+        layerId,
+        (item: { uid: string }) => item.uid,
+      );
 
       mapBus.emit(
         MapEvents.hover,

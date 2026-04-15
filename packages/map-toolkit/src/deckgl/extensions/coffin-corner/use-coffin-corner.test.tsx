@@ -15,11 +15,33 @@ import { uuid } from '@accelint/core';
 import { renderHook, waitFor } from '@testing-library/react';
 import { act } from 'react';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { clearSelection, coffinCornerStore } from './store';
+import { MapEvents } from '../../base-map/events';
+import { clearSelection } from './store';
 import { CoffinCornerEvents } from './types';
 import { useCoffinCorner } from './use-coffin-corner';
 import type { UniqueId } from '@accelint/core';
+import type { MapEventType } from '../../base-map/types';
 import type { CoffinCornerEvent } from './types';
+
+/** Minimal MapEvents.hover payload — only the fields the store reads. */
+function createHoverEvent(id: UniqueId, info: Record<string, unknown> = {}) {
+  return {
+    id,
+    info: {
+      index: 0,
+      picked: true,
+      x: 0,
+      y: 0,
+      coordinate: [0, 0],
+      pixel: [0, 0],
+      devicePixel: [0, 0],
+      pixelRatio: 1,
+      color: null,
+      ...info,
+    },
+    event: {} as never,
+  };
+}
 
 describe('useCoffinCorner', () => {
   let mapId: UniqueId;
@@ -166,6 +188,7 @@ describe('useCoffinCorner', () => {
       act(() =>
         bus.emit(CoffinCornerEvents.HOVERED, {
           hoveredId: 'entity-5',
+          layerId: 'symbols',
           mapId: otherMapId,
         }),
       );
@@ -175,48 +198,99 @@ describe('useCoffinCorner', () => {
   });
 
   describe('getEntityId option', () => {
-    it('should forward getEntityId to the store', () => {
+    it('uses custom getEntityId when resolving hovered entity from map hover events', async () => {
       const customAccessor = (item: { uid: string }) => item.uid;
-      renderHook(() =>
+      const mapBus = Broadcast.getInstance<MapEventType>();
+      const { result } = renderHook(() =>
         useCoffinCorner(mapId, 'symbols', { getEntityId: customAccessor }),
       );
 
-      const layer = coffinCornerStore.get(mapId).layers.get(layerId);
-      expect(layer?.getEntityId).toBe(customAccessor);
+      await act(async () => {
+        mapBus.emit(
+          MapEvents.hover,
+          createHoverEvent(mapId, {
+            layerId: 'symbols',
+            object: { uid: 'from-custom-accessor' },
+          }),
+        );
+      });
+
+      expect(result.current.hoveredId).toBe('from-custom-accessor');
     });
 
-    it('should update getEntityId in store when option changes', () => {
+    it('uses the updated getEntityId after the option changes', async () => {
       const accessor1 = (item: { uid: string }) => item.uid;
       const accessor2 = (item: { code: string }) => item.code;
-      const { rerender } = renderHook(
+      const mapBus = Broadcast.getInstance<MapEventType>();
+      const { result, rerender } = renderHook(
         ({ getEntityId }) => useCoffinCorner(mapId, 'symbols', { getEntityId }),
-        { initialProps: { getEntityId: accessor1 } },
+        {
+          initialProps: { getEntityId: accessor1 as (item: unknown) => string },
+        },
       );
 
-      expect(
-        coffinCornerStore.get(mapId).layers.get(layerId)?.getEntityId,
-      ).toBe(accessor1);
+      await act(async () => {
+        mapBus.emit(
+          MapEvents.hover,
+          createHoverEvent(mapId, {
+            layerId: 'symbols',
+            object: { uid: 'via-accessor1' },
+          }),
+        );
+      });
+      expect(result.current.hoveredId).toBe('via-accessor1');
 
-      rerender({ getEntityId: accessor2 });
+      rerender({ getEntityId: accessor2 as (item: unknown) => string });
 
-      expect(
-        coffinCornerStore.get(mapId).layers.get(layerId)?.getEntityId,
-      ).toBe(accessor2);
+      await act(async () => {
+        mapBus.emit(
+          MapEvents.hover,
+          createHoverEvent(mapId, {
+            layerId: 'symbols',
+            object: { code: 'via-accessor2' },
+          }),
+        );
+      });
+      expect(result.current.hoveredId).toBe('via-accessor2');
     });
   });
 
   describe('layerId changes', () => {
-    it('should update layerId in store when prop changes', () => {
-      const { rerender } = renderHook(
-        ({ layerId }) => useCoffinCorner(mapId, layerId),
+    it('routes hover events to the currently-registered layer after a layerId change', async () => {
+      const mapBus = Broadcast.getInstance<MapEventType>();
+      const { result, rerender } = renderHook(
+        ({ layerId }) =>
+          useCoffinCorner(mapId, layerId, {
+            getEntityId: (item: { id: string }) => item.id,
+          }),
         { initialProps: { layerId: 'layer-a' } },
       );
 
-      expect(coffinCornerStore.get(mapId).layers.has('layer-a')).toBe(true);
+      // Hover on layer-a resolves through the current registration.
+      await act(async () => {
+        mapBus.emit(
+          MapEvents.hover,
+          createHoverEvent(mapId, {
+            layerId: 'layer-a',
+            object: { id: 'on-a' },
+          }),
+        );
+      });
+      expect(result.current.hoveredId).toBe('on-a');
 
       rerender({ layerId: 'layer-b' });
 
-      expect(coffinCornerStore.get(mapId).layers.has('layer-b')).toBe(true);
+      // After rerender, the hook watches layer-b and ignores hovers on layer-a.
+      await act(async () => {
+        mapBus.emit(
+          MapEvents.hover,
+          createHoverEvent(mapId, {
+            layerId: 'layer-b',
+            object: { id: 'on-b' },
+          }),
+        );
+      });
+      expect(result.current.hoveredId).toBe('on-b');
     });
   });
 
