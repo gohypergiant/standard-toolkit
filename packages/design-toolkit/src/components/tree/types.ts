@@ -88,6 +88,7 @@ export type TreeContextValue = Required<
   selectedKeys?: Set<Key>;
   visibleKeys?: Set<Key>;
   visibilityComputedKeys?: Set<Key>;
+  indeterminateKeys?: Set<Key>;
   isStatic: boolean;
 };
 
