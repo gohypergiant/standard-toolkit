@@ -14,7 +14,7 @@
 import type { Key } from '@react-types/shared';
 import type { TreeNode } from '../types';
 
-type CacheTreeNode<T> = Omit<TreeNode<T>, 'children'> & {
+export type CacheTreeNode<T> = Omit<TreeNode<T>, 'children'> & {
   children?: Key[];
 };
 
@@ -54,6 +54,7 @@ export class Cache<T> {
         isSelected: false,
         isVisible: false,
         isVisibleComputed: false,
+        isIndeterminate: false,
         ...rest,
         parentKey,
         ...(children ? { children: children.map((child) => child.key) } : {}),
@@ -75,6 +76,10 @@ export class Cache<T> {
   }
 
   protected get(key: Key) {
+    if (key == null) {
+      throw new Error(`Key is ${key} (null/undefined) - this is invalid`);
+    }
+
     const node = this.cache.lookup.get(key);
 
     if (node === undefined) {
@@ -249,8 +254,8 @@ export class Cache<T> {
 
   /**
    * CACHE FUNCTIONS
-   * These manage cache operations. No cache operations should ever be done
-   * outside this file.
+   * These are the public functions to manage cache operations. No cache operations should ever be done
+   * outside this file since it risks corruption of the data.
    **/
   getNode(key: Key): TreeNode<T> {
     const node = this.get(key);
@@ -267,6 +272,14 @@ export class Cache<T> {
 
   getAllNodes() {
     return this.cache.lookup.values();
+  }
+
+  getParentForPosition(
+    target: Key | null,
+    position: 'before' | 'after',
+  ): Key | null {
+    const { parentKey } = this.parentOrSibling(target, position);
+    return parentKey;
   }
 
   setNode(key: Key, node: TreeNode<T>) {
@@ -324,9 +337,14 @@ export class Cache<T> {
       isSelected: false,
       isVisible: false,
       isVisibleComputed: false,
+      isIndeterminate: false,
       ...rest,
       parentKey,
-      ...(children ? { children: children.map((child) => child.key) } : {}),
+      ...(children
+        ? {
+            children: children.map((child) => child.key),
+          }
+        : {}),
     });
 
     node.children?.map((child, i) => this.insertNode(node.key, child, i));
@@ -355,5 +373,187 @@ export class Cache<T> {
     parentKey
       ? this.addToParent(parentKey, key, idx)
       : this.addToRoot(key, idx);
+  }
+
+  /**
+   * Cascade selection down through descendants
+   */
+  cascadeSelection(key: Key, selected: boolean): void {
+    try {
+      const node = this.get(key);
+
+      // Update this node (skip if disabled)
+      if (!node.isDisabled) {
+        this.set(key, {
+          ...node,
+          isSelected: selected,
+          isIndeterminate: false,
+        });
+      }
+
+      // Recurse to children
+      if (node.children) {
+        for (const childKey of node.children) {
+          if (childKey != null) {
+            this.cascadeSelection(childKey, selected);
+          }
+        }
+      }
+    } catch {
+      // Key doesn't exist, skip
+      return;
+    }
+  }
+
+  /**
+   * Bubble up selection state through ancestors
+   */
+  bubbleUpSelection(key: Key): void {
+    try {
+      let current = this.get(key);
+
+      while (current.parentKey) {
+        const parent = this.get(current.parentKey);
+        const newState = this.computeSelectionState(parent);
+
+        // Early termination: if parent state unchanged, ancestors won't change
+        if (
+          parent.isSelected === newState.isSelected &&
+          parent.isIndeterminate === newState.isIndeterminate
+        ) {
+          break;
+        }
+
+        this.set(parent.key, {
+          ...parent,
+          isSelected: newState.isSelected,
+          isIndeterminate: newState.isIndeterminate,
+        });
+
+        current = parent;
+      }
+    } catch {
+      // Key doesn't exist, skip
+      return;
+    }
+  }
+
+  /**
+   * Compute selection state for a node based on its children
+   */
+  private computeSelectionState(node: CacheTreeNode<T>): {
+    isSelected: boolean;
+    isIndeterminate: boolean;
+  } {
+    // Leaf nodes: use their own state
+    if (!node.children || node.children.length === 0) {
+      return {
+        isSelected: node.isSelected ?? false,
+        isIndeterminate: false,
+      };
+    }
+
+    // Get selectable children (exclude disabled)
+    const selectableChildren = node.children
+      .filter((k) => {
+        try {
+          const child = this.get(k);
+          return !child.isDisabled;
+        } catch {
+          return false;
+        }
+      })
+      .map((k) => this.get(k));
+
+    // If all children disabled, treat as leaf
+    if (selectableChildren.length === 0) {
+      return {
+        isSelected: node.isSelected ?? false,
+        isIndeterminate: false,
+      };
+    }
+
+    // Check if all/none/some selected
+    const selectedCount = selectableChildren.filter((c) => c.isSelected).length;
+    const indeterminateCount = selectableChildren.filter(
+      (c) => c.isIndeterminate,
+    ).length;
+
+    // If any child is indeterminate, parent is indeterminate
+    if (indeterminateCount > 0) {
+      return {
+        isSelected: false,
+        isIndeterminate: true,
+      };
+    }
+
+    // All children selected
+    if (selectedCount === selectableChildren.length) {
+      return {
+        isSelected: true,
+        isIndeterminate: false,
+      };
+    }
+
+    // No children selected
+    if (selectedCount === 0) {
+      return {
+        isSelected: false,
+        isIndeterminate: false,
+      };
+    }
+
+    // Some children selected (indeterminate)
+    return {
+      isSelected: false,
+      isIndeterminate: true,
+    };
+  }
+
+  /**
+   * Sync cascade state for parents after a move operation
+   */
+  syncParentsAfterMove(oldParents: Set<Key>, newParent: Key | null): void {
+    // Update old parents (lost children)
+    for (const parentKey of oldParents) {
+      try {
+        const parent = this.get(parentKey);
+        const newState = this.computeSelectionState(parent);
+
+        this.set(parentKey, {
+          ...parent,
+          isSelected: newState.isSelected,
+          isIndeterminate: newState.isIndeterminate,
+        });
+
+        // Bubble up to ancestors
+        if (parent.parentKey) {
+          this.bubbleUpSelection(parentKey);
+        }
+      } catch {
+        // Parent doesn't exist, skip
+      }
+    }
+
+    // Update new parent (gained children)
+    if (newParent) {
+      try {
+        const parent = this.get(newParent);
+        const newState = this.computeSelectionState(parent);
+
+        this.set(newParent, {
+          ...parent,
+          isSelected: newState.isSelected,
+          isIndeterminate: newState.isIndeterminate,
+        });
+
+        // Bubble up to ancestors
+        if (parent.parentKey) {
+          this.bubbleUpSelection(newParent);
+        }
+      } catch {
+        // Parent doesn't exist, skip
+      }
+    }
   }
 }
