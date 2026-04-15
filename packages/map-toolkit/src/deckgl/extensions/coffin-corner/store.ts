@@ -13,7 +13,7 @@
 'use client';
 
 import { Broadcast } from '@accelint/bus';
-import { createMapStore } from '@/shared/create-map-store';
+import { createMapStore, mapDelete, mapSet } from '@/shared/create-map-store';
 import { MapEvents } from '../../base-map/events';
 import { CoffinCornerEvents } from './types';
 import type { UniqueId } from '@accelint/core';
@@ -33,18 +33,72 @@ type GetEntityId = (item: any) => EntityId;
 export const defaultGetEntityId: GetEntityId = (item: any) =>
   item.id as EntityId;
 
+// =============================================================================
+// Non-reactive layer registry
+// =============================================================================
+// Layer registration (getEntityId accessor + "is this layer tracked?") is held
+// OUTSIDE the reactive store. Writing to reactive state during mount — even
+// silently via setInitialState — causes useSyncExternalStore's post-commit
+// snapshot-consistency check to schedule a re-render, which desyncs deck.gl
+// from maplibre's viewport transforms. Plain Map writes are invisible to React.
+
+const layerRegistry = new Map<UniqueId, Map<string, GetEntityId>>();
+
+/** Register (or update) a layer's entity-id accessor. Non-reactive. */
+export function registerCoffinCornerLayer(
+  mapId: UniqueId,
+  layerId: string,
+  getEntityId: GetEntityId,
+): void {
+  let byLayer = layerRegistry.get(mapId);
+  if (!byLayer) {
+    byLayer = new Map();
+    layerRegistry.set(mapId, byLayer);
+  }
+  byLayer.set(layerId, getEntityId);
+}
+
+/** Remove a layer's registration. Non-reactive. */
+export function unregisterCoffinCornerLayer(
+  mapId: UniqueId,
+  layerId: string,
+): void {
+  const byLayer = layerRegistry.get(mapId);
+  if (!byLayer) return;
+  byLayer.delete(layerId);
+  if (byLayer.size === 0) layerRegistry.delete(mapId);
+}
+
+function getRegisteredAccessor(
+  mapId: UniqueId,
+  layerId: string,
+): GetEntityId | undefined {
+  return layerRegistry.get(mapId)?.get(layerId);
+}
+
+function getRegisteredLayerIds(mapId: UniqueId): Iterable<string> {
+  return layerRegistry.get(mapId)?.keys() ?? [];
+}
+
 /**
- * State for coffin corner selection and hover.
+ * State for a single layer's coffin corner selection and hover.
+ * Accessor lives in the non-reactive layerRegistry above.
  */
-type CoffinCornerState = {
+type LayerState = {
   /** Currently selected entity ID, or undefined if nothing is selected. */
   selectedId: EntityId | undefined;
   /** Currently hovered entity ID, or undefined if nothing is hovered. */
   hoveredId: EntityId | undefined;
-  /** deck.gl layer ID used to filter map bus events to only this layer's interactions. */
-  layerId: string | undefined;
-  /** Accessor to extract an entity ID from a picked data item. */
-  getEntityId: GetEntityId;
+};
+
+/**
+ * State for coffin corner - manages multiple layers per map.
+ */
+type CoffinCornerState = {
+  /** Map of layerId -> layer state */
+  layers: Map<string, LayerState>;
+  /** Map ID for filtering map bus events */
+  mapId: UniqueId;
 };
 
 /**
@@ -52,13 +106,9 @@ type CoffinCornerState = {
  */
 type CoffinCornerActions = {
   /** Select an entity by ID (emits domain event). Pass undefined to deselect. */
-  setSelectedId: (id: EntityId | undefined) => void;
+  setSelectedId: (layerId: string, id: EntityId | undefined) => void;
   /** Clear the current selection (emits deselect domain event). */
-  deselect: () => void;
-  /** Set the deck.gl layer ID used to filter map bus events. */
-  setLayerId: (layerId: string) => void;
-  /** Override the entity ID accessor for picked data items. */
-  setGetEntityId: (fn: GetEntityId) => void;
+  deselect: (layerId: string) => void;
 };
 
 const coffinCornerEventBus = Broadcast.getInstance<CoffinCornerEvent>();
@@ -76,27 +126,39 @@ const mapEventBus = Broadcast.getInstance<MapEventType>();
  * const { state, setSelectedId, deselect } = coffinCornerStore.use(mapId);
  * ```
  */
+/**
+ * Get or synthesize an ephemeral layer state entry. Does NOT write to state.
+ */
+function readLayer(state: CoffinCornerState, layerId: string): LayerState {
+  return (
+    state.layers.get(layerId) ?? {
+      selectedId: undefined,
+      hoveredId: undefined,
+    }
+  );
+}
+
 export const coffinCornerStore = createMapStore<
   CoffinCornerState,
   CoffinCornerActions
 >({
   defaultState: {
-    selectedId: undefined,
-    hoveredId: undefined,
-    layerId: undefined,
-    getEntityId: defaultGetEntityId,
+    layers: new Map(),
+    mapId: '' as UniqueId,
   },
 
   // Actions emit domain events rather than calling set() directly.
   // The bus subscriptions below translate events → state, ensuring
   // all state changes are observable by external subscribers.
-  actions: (mapId, { get, set }) => ({
-    setSelectedId: (id: EntityId | undefined) => {
-      const currentId = get().selectedId;
+  actions: (_mapId, { get }) => ({
+    setSelectedId: (layerId: string, id: EntityId | undefined) => {
+      const state = get();
+      const currentId = readLayer(state, layerId).selectedId;
 
       if (id == null && currentId != null) {
         coffinCornerEventBus.emit(CoffinCornerEvents.DESELECTED, {
-          mapId,
+          mapId: state.mapId,
+          layerId,
           selectedId: undefined,
         });
 
@@ -106,44 +168,42 @@ export const coffinCornerStore = createMapStore<
       if (id != null && currentId !== id) {
         coffinCornerEventBus.emit(CoffinCornerEvents.SELECTED, {
           selectedId: id,
-          mapId,
+          layerId,
+          mapId: state.mapId,
         });
 
         return;
       }
     },
 
-    deselect: () => {
+    deselect: (layerId: string) => {
       coffinCornerEventBus.emit(CoffinCornerEvents.DESELECTED, {
-        mapId,
+        mapId: get().mapId,
+        layerId,
         selectedId: undefined,
       });
     },
-
-    setLayerId: (layerId: string) => {
-      if (get().layerId !== layerId) {
-        set({ layerId });
-      }
-    },
-
-    setGetEntityId: (fn: GetEntityId) => {
-      if (get().getEntityId !== fn) {
-        set({ getEntityId: fn });
-      }
-    },
   }),
 
-  bus: (mapId, { get, set }) => {
+  bus: (_mapId, { get, set }) => {
     // Domain events → state
     const onSelected = coffinCornerEventBus.on(
       CoffinCornerEvents.SELECTED,
       (event) => {
-        if (event.payload.mapId !== mapId) {
+        const state = get();
+        if (event.payload.mapId !== state.mapId) {
           return;
         }
 
-        if (get().selectedId !== event.payload.selectedId) {
-          set({ selectedId: event.payload.selectedId });
+        const layerId = event.payload.layerId;
+        if (!layerId) {
+          return;
+        }
+
+        const layer = readLayer(state, layerId);
+        if (layer.selectedId !== event.payload.selectedId) {
+          const newLayer = { ...layer, selectedId: event.payload.selectedId };
+          set({ layers: mapSet(state.layers, layerId, newLayer) });
         }
       },
     );
@@ -151,12 +211,20 @@ export const coffinCornerStore = createMapStore<
     const onDeselected = coffinCornerEventBus.on(
       CoffinCornerEvents.DESELECTED,
       (event) => {
-        if (event.payload.mapId !== mapId) {
+        const state = get();
+        if (event.payload.mapId !== state.mapId) {
           return;
         }
 
-        if (get().selectedId !== undefined) {
-          set({ selectedId: undefined });
+        const layerId = event.payload.layerId;
+        if (!layerId) {
+          return;
+        }
+
+        const layer = state.layers.get(layerId);
+        if (layer && layer.selectedId !== undefined) {
+          const newLayer = { ...layer, selectedId: undefined };
+          set({ layers: mapSet(state.layers, layerId, newLayer) });
         }
       },
     );
@@ -164,83 +232,105 @@ export const coffinCornerStore = createMapStore<
     const onHovered = coffinCornerEventBus.on(
       CoffinCornerEvents.HOVERED,
       (event) => {
-        if (event.payload.mapId !== mapId) {
+        const state = get();
+        if (event.payload.mapId !== state.mapId) {
           return;
         }
-        if (get().hoveredId !== event.payload.hoveredId) {
-          set({ hoveredId: event.payload.hoveredId });
+
+        const layerId = event.payload.layerId;
+        if (!layerId) {
+          return;
+        }
+
+        const layer = readLayer(state, layerId);
+        if (layer.hoveredId !== event.payload.hoveredId) {
+          const newLayer = { ...layer, hoveredId: event.payload.hoveredId };
+          set({ layers: mapSet(state.layers, layerId, newLayer) });
         }
       },
     );
 
     // Map clicks → domain events
     const onClick = mapEventBus.on(MapEvents.click, (event: MapClickEvent) => {
-      if (event.payload.id !== mapId) {
+      const state = get();
+      if (event.payload.id !== state.mapId) {
         return;
       }
 
       const { info } = event.payload;
-      const { layerId, selectedId, getEntityId: getId } = get();
+      const clickedLayerId = info.layerId;
 
-      // Guard: skip processing if no layer is configured
-      if (!layerId) {
+      // If clicking empty space, deselect all currently-selected layers
+      if (info.index === -1) {
+        for (const [layerId, layerState] of state.layers.entries()) {
+          if (layerState.selectedId !== undefined) {
+            coffinCornerEventBus.emit(CoffinCornerEvents.DESELECTED, {
+              mapId: state.mapId,
+              layerId,
+              selectedId: undefined,
+            });
+          }
+        }
         return;
       }
 
-      if (info.layerId === layerId && info.object) {
-        const entityId = getId(info.object);
+      // Check if the clicked layer is registered (via useCoffinCorner)
+      if (!clickedLayerId) {
+        return;
+      }
 
-        if (selectedId === entityId) {
+      const getEntityId = getRegisteredAccessor(state.mapId, clickedLayerId);
+      if (!getEntityId) {
+        return;
+      }
+
+      if (info.object) {
+        const entityId = getEntityId(info.object);
+        const currentSelected = readLayer(state, clickedLayerId).selectedId;
+
+        if (currentSelected === entityId) {
           coffinCornerEventBus.emit(CoffinCornerEvents.DESELECTED, {
-            mapId,
+            mapId: state.mapId,
+            layerId: clickedLayerId,
             selectedId: undefined,
           });
         } else {
           coffinCornerEventBus.emit(CoffinCornerEvents.SELECTED, {
             selectedId: entityId,
-            mapId,
+            layerId: clickedLayerId,
+            mapId: state.mapId,
           });
         }
-
-        return;
-      }
-
-      if (info.index === -1 && selectedId !== undefined) {
-        coffinCornerEventBus.emit(CoffinCornerEvents.DESELECTED, {
-          mapId,
-          selectedId: undefined,
-        });
       }
     });
 
     // Map hovers → domain events
     const onHover = mapEventBus.on(MapEvents.hover, (event: MapHoverEvent) => {
-      if (event.payload.id !== mapId) {
+      const state = get();
+      if (event.payload.id !== state.mapId) {
         return;
       }
 
       const { info } = event.payload;
-      const {
-        layerId,
-        getEntityId: getId,
-        hoveredId: currentHoveredId,
-      } = get();
+      const hoveredLayerId = info.layerId;
 
-      // Guard: skip processing if no layer is configured
-      if (!layerId) {
-        return;
-      }
+      // Walk every registered layer so we can emit an "unhover" event
+      // for a layer when the pointer moves off of it.
+      for (const layerId of getRegisteredLayerIds(state.mapId)) {
+        const accessor = getRegisteredAccessor(state.mapId, layerId);
+        const hoveredId =
+          accessor && hoveredLayerId === layerId && info.object
+            ? accessor(info.object)
+            : undefined;
 
-      const hoveredId =
-        info.layerId === layerId && info.object
-          ? getId(info.object)
-          : undefined;
-
-      if (currentHoveredId !== hoveredId) {
-        coffinCornerEventBus.emit(CoffinCornerEvents.HOVERED, {
-          hoveredId,
-          mapId,
-        });
+        const currentHovered = readLayer(state, layerId).hoveredId;
+        if (currentHovered !== hoveredId) {
+          coffinCornerEventBus.emit(CoffinCornerEvents.HOVERED, {
+            hoveredId,
+            layerId,
+            mapId: state.mapId,
+          });
+        }
       }
     });
 
@@ -262,42 +352,67 @@ export const coffinCornerStore = createMapStore<
  * Get selected entity ID imperatively (non-reactive).
  *
  * @param mapId - The map instance to query.
+ * @param layerId - The deck.gl layer ID.
  * @returns The selected entity ID, or undefined if nothing is selected.
  *
  * @example
  * ```typescript
- * const selectedId = getSelectedEntityId(mapId);
+ * const selectedId = getSelectedEntityId(mapId, 'klv-tracks');
  * ```
  */
-export function getSelectedEntityId(mapId: UniqueId): EntityId | undefined {
-  return coffinCornerStore.get(mapId).selectedId;
+export function getSelectedEntityId(
+  mapId: UniqueId,
+  layerId: string,
+): EntityId | undefined {
+  const state = coffinCornerStore.get(mapId);
+  const layer = state.layers.get(layerId);
+  return layer?.selectedId;
 }
 
 /**
  * Get hovered entity ID imperatively (non-reactive).
  *
  * @param mapId - The map instance to query.
+ * @param layerId - The deck.gl layer ID.
  * @returns The hovered entity ID, or undefined if nothing is hovered.
  *
  * @example
  * ```typescript
- * const hoveredId = getHoveredEntityId(mapId);
+ * const hoveredId = getHoveredEntityId(mapId, 'klv-tracks');
  * ```
  */
-export function getHoveredEntityId(mapId: UniqueId): EntityId | undefined {
-  return coffinCornerStore.get(mapId).hoveredId;
+export function getHoveredEntityId(
+  mapId: UniqueId,
+  layerId: string,
+): EntityId | undefined {
+  const state = coffinCornerStore.get(mapId);
+  const layer = state.layers.get(layerId);
+  return layer?.hoveredId;
 }
 
 /**
  * Clear selection state (for tests/cleanup).
+ * If layerId is provided, clears only that layer's state.
+ * If layerId is omitted, clears all layers for the map.
  *
  * @param mapId - The map instance to clear selection for.
+ * @param layerId - Optional deck.gl layer ID. If omitted, clears entire map state.
  *
  * @example
  * ```typescript
+ * // Clear all layers for a map
  * clearSelection(mapId);
+ *
+ * // Clear specific layer
+ * clearSelection(mapId, 'klv-tracks');
  * ```
  */
-export function clearSelection(mapId: UniqueId): void {
-  coffinCornerStore.clear(mapId);
+export function clearSelection(mapId: UniqueId, layerId?: string): void {
+  if (layerId) {
+    const state = coffinCornerStore.get(mapId);
+    const newLayers = mapDelete(state.layers, layerId);
+    coffinCornerStore.set(mapId, { layers: newLayers });
+  } else {
+    coffinCornerStore.clear(mapId);
+  }
 }

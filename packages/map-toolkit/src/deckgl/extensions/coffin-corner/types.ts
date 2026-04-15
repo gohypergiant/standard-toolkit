@@ -59,22 +59,22 @@ export type CoffinCornerEventType =
 /** Unique identifier for an entity managed by the coffin corner extension. */
 export type EntityId = string | number;
 
-/** Payload emitted when an entity is selected. Contains the selected ID and map instance. */
+/** Payload emitted when an entity is selected. Contains the selected ID, layer ID, and map instance. */
 export type CoffinCornerSelectedEvent = Payload<
   typeof CoffinCornerEvents.SELECTED,
-  { selectedId: EntityId; mapId: UniqueId }
+  { selectedId: EntityId; layerId: string; mapId: UniqueId }
 >;
 
 /** Payload emitted when selection is cleared. */
 export type CoffinCornerDeselectedEvent = Payload<
   typeof CoffinCornerEvents.DESELECTED,
-  { mapId: UniqueId; selectedId: undefined }
+  { mapId: UniqueId; layerId: string; selectedId: undefined }
 >;
 
 /** Payload emitted when the hovered entity changes. `hoveredId` is undefined when hover ends. */
 export type CoffinCornerHoveredEvent = Payload<
   typeof CoffinCornerEvents.HOVERED,
-  { hoveredId?: EntityId; mapId: UniqueId }
+  { hoveredId?: EntityId; layerId: string; mapId: UniqueId }
 >;
 
 /** Union of all coffin corner event payloads for type-safe bus subscription. */

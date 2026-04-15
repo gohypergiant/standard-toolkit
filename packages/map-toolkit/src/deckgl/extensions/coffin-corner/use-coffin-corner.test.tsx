@@ -23,15 +23,17 @@ import type { CoffinCornerEvent } from './types';
 
 describe('useCoffinCorner', () => {
   let mapId: UniqueId;
+  let layerId: string;
   let bus: ReturnType<typeof Broadcast.getInstance<CoffinCornerEvent>>;
 
   beforeEach(() => {
     mapId = uuid();
+    layerId = 'symbols';
     bus = Broadcast.getInstance();
   });
 
   afterEach(() => {
-    clearSelection(mapId);
+    clearSelection(mapId, layerId);
   });
 
   describe('initial state', () => {
@@ -119,6 +121,7 @@ describe('useCoffinCorner', () => {
       act(() =>
         bus.emit(CoffinCornerEvents.HOVERED, {
           hoveredId: 'entity-5',
+          layerId: 'symbols',
           mapId,
         }),
       );
@@ -134,6 +137,7 @@ describe('useCoffinCorner', () => {
       act(() =>
         bus.emit(CoffinCornerEvents.HOVERED, {
           hoveredId: 'entity-5',
+          layerId: 'symbols',
           mapId,
         }),
       );
@@ -145,6 +149,7 @@ describe('useCoffinCorner', () => {
       act(() =>
         bus.emit(CoffinCornerEvents.HOVERED, {
           hoveredId: undefined,
+          layerId: 'symbols',
           mapId,
         }),
       );
@@ -176,8 +181,8 @@ describe('useCoffinCorner', () => {
         useCoffinCorner(mapId, 'symbols', { getEntityId: customAccessor }),
       );
 
-      const state = coffinCornerStore.get(mapId);
-      expect(state.getEntityId).toBe(customAccessor);
+      const layer = coffinCornerStore.get(mapId).layers.get(layerId);
+      expect(layer?.getEntityId).toBe(customAccessor);
     });
 
     it('should update getEntityId in store when option changes', () => {
@@ -188,11 +193,15 @@ describe('useCoffinCorner', () => {
         { initialProps: { getEntityId: accessor1 } },
       );
 
-      expect(coffinCornerStore.get(mapId).getEntityId).toBe(accessor1);
+      expect(
+        coffinCornerStore.get(mapId).layers.get(layerId)?.getEntityId,
+      ).toBe(accessor1);
 
       rerender({ getEntityId: accessor2 });
 
-      expect(coffinCornerStore.get(mapId).getEntityId).toBe(accessor2);
+      expect(
+        coffinCornerStore.get(mapId).layers.get(layerId)?.getEntityId,
+      ).toBe(accessor2);
     });
   });
 
@@ -203,11 +212,11 @@ describe('useCoffinCorner', () => {
         { initialProps: { layerId: 'layer-a' } },
       );
 
-      expect(coffinCornerStore.get(mapId).layerId).toBe('layer-a');
+      expect(coffinCornerStore.get(mapId).layers.has('layer-a')).toBe(true);
 
       rerender({ layerId: 'layer-b' });
 
-      expect(coffinCornerStore.get(mapId).layerId).toBe('layer-b');
+      expect(coffinCornerStore.get(mapId).layers.has('layer-b')).toBe(true);
     });
   });
 

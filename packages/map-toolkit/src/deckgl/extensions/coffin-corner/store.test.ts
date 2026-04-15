@@ -73,9 +73,22 @@ function createHoverEvent(id: UniqueId, info: Record<string, unknown> = {}) {
 
 describe('coffin-corner store', () => {
   let mapId: UniqueId;
+  let layerId: string;
 
   beforeEach(() => {
     mapId = uuid();
+    layerId = 'symbols';
+    // Initialize store state with mapId and a test layer
+    const layers = new Map();
+    layers.set(layerId, {
+      selectedId: undefined,
+      hoveredId: undefined,
+      getEntityId: (item: any) => item.id,
+    });
+    coffinCornerStore.setInitialState(mapId, {
+      layers,
+      mapId,
+    });
   });
 
   afterEach(() => {
@@ -109,7 +122,7 @@ describe('coffin-corner store', () => {
       const unsubscribe = subscription(callback);
       const { setSelectedId } = coffinCornerStore.actions(mapId);
 
-      setSelectedId('entity-1');
+      setSelectedId(layerId, 'entity-1');
 
       expect(callback).toHaveBeenCalled();
 
@@ -126,7 +139,7 @@ describe('coffin-corner store', () => {
       callback.mockClear();
 
       const { setSelectedId } = coffinCornerStore.actions(mapId);
-      setSelectedId('entity-1');
+      setSelectedId(layerId, 'entity-1');
 
       expect(callback).not.toHaveBeenCalled();
     });
@@ -148,9 +161,9 @@ describe('coffin-corner store', () => {
       const snapshot = coffinCornerStore.snapshot(mapId);
       const state = snapshot();
       expect(state).not.toBeNull();
-      expect(state?.selectedId).toBeUndefined();
-      expect(state?.hoveredId).toBeUndefined();
-      expect(state?.layerId).toBeUndefined();
+      expect(state?.layers.get(layerId)?.selectedId).toBeUndefined();
+      expect(state?.layers.get(layerId)?.hoveredId).toBeUndefined();
+      expect(state?.mapId).toBe(mapId);
     });
   });
 
@@ -161,11 +174,11 @@ describe('coffin-corner store', () => {
       bus.on(CoffinCornerEvents.SELECTED, selectedSpy);
 
       const { setSelectedId } = coffinCornerStore.actions(mapId);
-      setSelectedId('entity-1');
+      setSelectedId(layerId, 'entity-1');
 
       expect(selectedSpy).toHaveBeenCalledWith(
         expect.objectContaining({
-          payload: { selectedId: 'entity-1', mapId },
+          payload: { selectedId: 'entity-1', layerId, mapId },
         }),
       );
 
@@ -184,14 +197,14 @@ describe('coffin-corner store', () => {
 
       // First select something (bus listener updates state)
       const { setSelectedId } = coffinCornerStore.actions(mapId);
-      setSelectedId('entity-1');
+      setSelectedId(layerId, 'entity-1');
 
       // Then deselect
-      setSelectedId(undefined);
+      setSelectedId(layerId, undefined);
 
       expect(deselectedSpy).toHaveBeenCalledWith(
         expect.objectContaining({
-          payload: { mapId, selectedId: undefined },
+          payload: { mapId, layerId, selectedId: undefined },
         }),
       );
 
@@ -205,13 +218,13 @@ describe('coffin-corner store', () => {
       bus.on(CoffinCornerEvents.SELECTED, selectedSpy);
 
       const { setSelectedId } = coffinCornerStore.actions(mapId);
-      setSelectedId('entity-1');
-      setSelectedId('entity-2');
+      setSelectedId(layerId, 'entity-1');
+      setSelectedId(layerId, 'entity-2');
 
       expect(selectedSpy).toHaveBeenCalledTimes(2);
       expect(selectedSpy).toHaveBeenLastCalledWith(
         expect.objectContaining({
-          payload: { selectedId: 'entity-2', mapId },
+          payload: { selectedId: 'entity-2', layerId, mapId },
         }),
       );
 
@@ -228,10 +241,10 @@ describe('coffin-corner store', () => {
       const unsubscribe = subscription(callback);
 
       const { setSelectedId } = coffinCornerStore.actions(mapId);
-      setSelectedId('entity-1');
+      setSelectedId(layerId, 'entity-1');
       selectedSpy.mockClear();
 
-      setSelectedId('entity-1');
+      setSelectedId(layerId, 'entity-1');
 
       expect(selectedSpy).not.toHaveBeenCalled();
 
@@ -245,11 +258,11 @@ describe('coffin-corner store', () => {
       bus.on(CoffinCornerEvents.SELECTED, selectedSpy);
 
       const { setSelectedId } = coffinCornerStore.actions(mapId);
-      setSelectedId(0);
+      setSelectedId(layerId, 0);
 
       expect(selectedSpy).toHaveBeenCalledWith(
         expect.objectContaining({
-          payload: { selectedId: 0, mapId },
+          payload: { selectedId: 0, layerId, mapId },
         }),
       );
 
@@ -262,7 +275,7 @@ describe('coffin-corner store', () => {
       bus.on(CoffinCornerEvents.DESELECTED, deselectedSpy);
 
       const { setSelectedId } = coffinCornerStore.actions(mapId);
-      setSelectedId(undefined);
+      setSelectedId(layerId, undefined);
 
       expect(deselectedSpy).not.toHaveBeenCalled();
 
@@ -277,11 +290,11 @@ describe('coffin-corner store', () => {
       bus.on(CoffinCornerEvents.DESELECTED, deselectedSpy);
 
       const { deselect } = coffinCornerStore.actions(mapId);
-      deselect();
+      deselect(layerId);
 
       expect(deselectedSpy).toHaveBeenCalledWith(
         expect.objectContaining({
-          payload: { mapId, selectedId: undefined },
+          payload: { mapId, layerId, selectedId: undefined },
         }),
       );
 
@@ -294,52 +307,24 @@ describe('coffin-corner store', () => {
       const customAccessor = (item: { uid: string }) => item.uid;
       const { setGetEntityId } = coffinCornerStore.actions(mapId);
 
-      setGetEntityId(customAccessor);
+      setGetEntityId(layerId, customAccessor);
 
       const state = coffinCornerStore.get(mapId);
-      expect(state.getEntityId).toBe(customAccessor);
+      expect(state.layers.get(layerId)?.getEntityId).toBe(customAccessor);
     });
 
     it('should not trigger update when getEntityId is the same reference', () => {
       const customAccessor = (item: { uid: string }) => item.uid;
       const { setGetEntityId } = coffinCornerStore.actions(mapId);
 
-      setGetEntityId(customAccessor);
+      setGetEntityId(layerId, customAccessor);
 
       const subscription = coffinCornerStore.subscribe(mapId);
       const callback = vi.fn();
       const unsubscribe = subscription(callback);
       callback.mockClear();
 
-      setGetEntityId(customAccessor);
-
-      expect(callback).not.toHaveBeenCalled();
-
-      unsubscribe();
-    });
-  });
-
-  describe('coffinCornerStore.actions().setLayerId', () => {
-    it('should update layerId in state', () => {
-      const { setLayerId } = coffinCornerStore.actions(mapId);
-
-      setLayerId('my-layer');
-
-      const state = coffinCornerStore.get(mapId);
-      expect(state.layerId).toBe('my-layer');
-    });
-
-    it('should not trigger update when layerId is unchanged', () => {
-      const subscription = coffinCornerStore.subscribe(mapId);
-      const callback = vi.fn();
-      const unsubscribe = subscription(callback);
-
-      const { setLayerId } = coffinCornerStore.actions(mapId);
-
-      setLayerId('my-layer');
-      callback.mockClear();
-
-      setLayerId('my-layer');
+      setGetEntityId(layerId, customAccessor);
 
       expect(callback).not.toHaveBeenCalled();
 
@@ -358,10 +343,13 @@ describe('coffin-corner store', () => {
 
       bus.emit(CoffinCornerEvents.SELECTED, {
         selectedId: 'entity-42',
+        layerId,
         mapId,
       });
 
-      expect(coffinCornerStore.get(mapId).selectedId).toBe('entity-42');
+      expect(coffinCornerStore.get(mapId).layers.get(layerId)?.selectedId).toBe(
+        'entity-42',
+      );
 
       unsubscribe();
     });
@@ -376,18 +364,24 @@ describe('coffin-corner store', () => {
       // Select first
       bus.emit(CoffinCornerEvents.SELECTED, {
         selectedId: 'entity-42',
+        layerId,
         mapId,
       });
 
-      expect(coffinCornerStore.get(mapId).selectedId).toBe('entity-42');
+      expect(coffinCornerStore.get(mapId).layers.get(layerId)?.selectedId).toBe(
+        'entity-42',
+      );
 
       // Deselect
       bus.emit(CoffinCornerEvents.DESELECTED, {
+        layerId,
         mapId,
         selectedId: undefined,
       });
 
-      expect(coffinCornerStore.get(mapId).selectedId).toBeUndefined();
+      expect(
+        coffinCornerStore.get(mapId).layers.get(layerId)?.selectedId,
+      ).toBeUndefined();
 
       unsubscribe();
     });
@@ -401,10 +395,13 @@ describe('coffin-corner store', () => {
 
       bus.emit(CoffinCornerEvents.HOVERED, {
         hoveredId: 'entity-7',
+        layerId,
         mapId,
       });
 
-      expect(coffinCornerStore.get(mapId).hoveredId).toBe('entity-7');
+      expect(coffinCornerStore.get(mapId).layers.get(layerId)?.hoveredId).toBe(
+        'entity-7',
+      );
 
       unsubscribe();
     });
@@ -419,10 +416,13 @@ describe('coffin-corner store', () => {
 
       bus.emit(CoffinCornerEvents.SELECTED, {
         selectedId: 'entity-99',
+        layerId,
         mapId: otherMapId,
       });
 
-      expect(coffinCornerStore.get(mapId).selectedId).toBeUndefined();
+      expect(
+        coffinCornerStore.get(mapId).layers.get(layerId)?.selectedId,
+      ).toBeUndefined();
 
       unsubscribe();
     });
@@ -437,9 +437,6 @@ describe('coffin-corner store', () => {
       const callback = vi.fn();
       const unsubscribe = subscription(callback);
 
-      const { setLayerId } = coffinCornerStore.actions(mapId);
-      setLayerId('symbols');
-
       mapBus.emit(
         MapEvents.click,
         createClickEvent(mapId, {
@@ -448,7 +445,9 @@ describe('coffin-corner store', () => {
         }),
       );
 
-      expect(coffinCornerStore.get(mapId).selectedId).toBe('entity-1');
+      expect(coffinCornerStore.get(mapId).layers.get(layerId)?.selectedId).toBe(
+        'entity-1',
+      );
 
       unsubscribe();
     });
@@ -460,9 +459,6 @@ describe('coffin-corner store', () => {
       const callback = vi.fn();
       const unsubscribe = subscription(callback);
 
-      const { setLayerId } = coffinCornerStore.actions(mapId);
-      setLayerId('symbols');
-
       const clickInfo = createClickEvent(mapId, {
         layerId: 'symbols',
         object: { id: 'entity-1' },
@@ -470,11 +466,15 @@ describe('coffin-corner store', () => {
 
       // First click selects
       mapBus.emit(MapEvents.click, clickInfo);
-      expect(coffinCornerStore.get(mapId).selectedId).toBe('entity-1');
+      expect(coffinCornerStore.get(mapId).layers.get(layerId)?.selectedId).toBe(
+        'entity-1',
+      );
 
       // Second click deselects
       mapBus.emit(MapEvents.click, clickInfo);
-      expect(coffinCornerStore.get(mapId).selectedId).toBeUndefined();
+      expect(
+        coffinCornerStore.get(mapId).layers.get(layerId)?.selectedId,
+      ).toBeUndefined();
 
       unsubscribe();
     });
@@ -486,9 +486,6 @@ describe('coffin-corner store', () => {
       const callback = vi.fn();
       const unsubscribe = subscription(callback);
 
-      const { setLayerId } = coffinCornerStore.actions(mapId);
-      setLayerId('symbols');
-
       // Select something first
       mapBus.emit(
         MapEvents.click,
@@ -498,7 +495,9 @@ describe('coffin-corner store', () => {
         }),
       );
 
-      expect(coffinCornerStore.get(mapId).selectedId).toBe('entity-1');
+      expect(coffinCornerStore.get(mapId).layers.get(layerId)?.selectedId).toBe(
+        'entity-1',
+      );
 
       // Click empty space (index -1, no object)
       mapBus.emit(
@@ -506,7 +505,9 @@ describe('coffin-corner store', () => {
         createClickEvent(mapId, { index: -1, picked: false }),
       );
 
-      expect(coffinCornerStore.get(mapId).selectedId).toBeUndefined();
+      expect(
+        coffinCornerStore.get(mapId).layers.get(layerId)?.selectedId,
+      ).toBeUndefined();
 
       unsubscribe();
     });
@@ -519,9 +520,6 @@ describe('coffin-corner store', () => {
       const callback = vi.fn();
       const unsubscribe = subscription(callback);
 
-      const { setLayerId } = coffinCornerStore.actions(mapId);
-      setLayerId('symbols');
-
       mapBus.emit(
         MapEvents.click,
         createClickEvent(otherMapId, {
@@ -530,7 +528,9 @@ describe('coffin-corner store', () => {
         }),
       );
 
-      expect(coffinCornerStore.get(mapId).selectedId).toBeUndefined();
+      expect(
+        coffinCornerStore.get(mapId).layers.get(layerId)?.selectedId,
+      ).toBeUndefined();
 
       unsubscribe();
     });
@@ -542,9 +542,8 @@ describe('coffin-corner store', () => {
       const callback = vi.fn();
       const unsubscribe = subscription(callback);
 
-      const { setLayerId, setGetEntityId } = coffinCornerStore.actions(mapId);
-      setLayerId('symbols');
-      setGetEntityId((item: { uid: string }) => item.uid);
+      const { setGetEntityId } = coffinCornerStore.actions(mapId);
+      setGetEntityId(layerId, (item: { uid: string }) => item.uid);
 
       mapBus.emit(
         MapEvents.click,
@@ -554,7 +553,9 @@ describe('coffin-corner store', () => {
         }),
       );
 
-      expect(coffinCornerStore.get(mapId).selectedId).toBe('custom-entity');
+      expect(coffinCornerStore.get(mapId).layers.get(layerId)?.selectedId).toBe(
+        'custom-entity',
+      );
 
       unsubscribe();
     });
@@ -566,9 +567,6 @@ describe('coffin-corner store', () => {
       const callback = vi.fn();
       const unsubscribe = subscription(callback);
 
-      const { setLayerId } = coffinCornerStore.actions(mapId);
-      setLayerId('symbols');
-
       mapBus.emit(
         MapEvents.click,
         createClickEvent(mapId, {
@@ -577,7 +575,9 @@ describe('coffin-corner store', () => {
         }),
       );
 
-      expect(coffinCornerStore.get(mapId).selectedId).toBe(0);
+      expect(coffinCornerStore.get(mapId).layers.get(layerId)?.selectedId).toBe(
+        0,
+      );
 
       unsubscribe();
     });
@@ -589,9 +589,6 @@ describe('coffin-corner store', () => {
       const callback = vi.fn();
       const unsubscribe = subscription(callback);
 
-      const { setLayerId } = coffinCornerStore.actions(mapId);
-      setLayerId('symbols');
-
       mapBus.emit(
         MapEvents.click,
         createClickEvent(mapId, {
@@ -600,7 +597,9 @@ describe('coffin-corner store', () => {
         }),
       );
 
-      expect(coffinCornerStore.get(mapId).selectedId).toBeUndefined();
+      expect(
+        coffinCornerStore.get(mapId).layers.get(layerId)?.selectedId,
+      ).toBeUndefined();
 
       unsubscribe();
     });
@@ -615,9 +614,6 @@ describe('coffin-corner store', () => {
       const callback = vi.fn();
       const unsubscribe = subscription(callback);
 
-      const { setLayerId } = coffinCornerStore.actions(mapId);
-      setLayerId('symbols');
-
       // Click empty space without any prior selection
       mapBus.emit(
         MapEvents.click,
@@ -625,7 +621,9 @@ describe('coffin-corner store', () => {
       );
 
       expect(deselectedSpy).not.toHaveBeenCalled();
-      expect(coffinCornerStore.get(mapId).selectedId).toBeUndefined();
+      expect(
+        coffinCornerStore.get(mapId).layers.get(layerId)?.selectedId,
+      ).toBeUndefined();
 
       bus.off(CoffinCornerEvents.DESELECTED, deselectedSpy);
       unsubscribe();
@@ -640,9 +638,6 @@ describe('coffin-corner store', () => {
       const callback = vi.fn();
       const unsubscribe = subscription(callback);
 
-      const { setLayerId } = coffinCornerStore.actions(mapId);
-      setLayerId('symbols');
-
       mapBus.emit(
         MapEvents.hover,
         createHoverEvent(mapId, {
@@ -651,7 +646,9 @@ describe('coffin-corner store', () => {
         }),
       );
 
-      expect(coffinCornerStore.get(mapId).hoveredId).toBe('entity-3');
+      expect(coffinCornerStore.get(mapId).layers.get(layerId)?.hoveredId).toBe(
+        'entity-3',
+      );
 
       unsubscribe();
     });
@@ -663,9 +660,6 @@ describe('coffin-corner store', () => {
       const callback = vi.fn();
       const unsubscribe = subscription(callback);
 
-      const { setLayerId } = coffinCornerStore.actions(mapId);
-      setLayerId('symbols');
-
       // Hover over entity
       mapBus.emit(
         MapEvents.hover,
@@ -675,7 +669,9 @@ describe('coffin-corner store', () => {
         }),
       );
 
-      expect(coffinCornerStore.get(mapId).hoveredId).toBe('entity-3');
+      expect(coffinCornerStore.get(mapId).layers.get(layerId)?.hoveredId).toBe(
+        'entity-3',
+      );
 
       // Hover away (no object)
       mapBus.emit(
@@ -683,7 +679,9 @@ describe('coffin-corner store', () => {
         createHoverEvent(mapId, { index: -1, picked: false }),
       );
 
-      expect(coffinCornerStore.get(mapId).hoveredId).toBeUndefined();
+      expect(
+        coffinCornerStore.get(mapId).layers.get(layerId)?.hoveredId,
+      ).toBeUndefined();
 
       unsubscribe();
     });
@@ -695,9 +693,8 @@ describe('coffin-corner store', () => {
       const callback = vi.fn();
       const unsubscribe = subscription(callback);
 
-      const { setLayerId, setGetEntityId } = coffinCornerStore.actions(mapId);
-      setLayerId('symbols');
-      setGetEntityId((item: { uid: string }) => item.uid);
+      const { setGetEntityId } = coffinCornerStore.actions(mapId);
+      setGetEntityId(layerId, (item: { uid: string }) => item.uid);
 
       mapBus.emit(
         MapEvents.hover,
@@ -707,7 +704,9 @@ describe('coffin-corner store', () => {
         }),
       );
 
-      expect(coffinCornerStore.get(mapId).hoveredId).toBe('hover-entity');
+      expect(coffinCornerStore.get(mapId).layers.get(layerId)?.hoveredId).toBe(
+        'hover-entity',
+      );
 
       unsubscribe();
     });
@@ -720,9 +719,6 @@ describe('coffin-corner store', () => {
       const callback = vi.fn();
       const unsubscribe = subscription(callback);
 
-      const { setLayerId } = coffinCornerStore.actions(mapId);
-      setLayerId('symbols');
-
       mapBus.emit(
         MapEvents.hover,
         createHoverEvent(otherMapId, {
@@ -731,7 +727,9 @@ describe('coffin-corner store', () => {
         }),
       );
 
-      expect(coffinCornerStore.get(mapId).hoveredId).toBeUndefined();
+      expect(
+        coffinCornerStore.get(mapId).layers.get(layerId)?.hoveredId,
+      ).toBeUndefined();
 
       unsubscribe();
     });
@@ -743,9 +741,6 @@ describe('coffin-corner store', () => {
       const callback = vi.fn();
       const unsubscribe = subscription(callback);
 
-      const { setLayerId } = coffinCornerStore.actions(mapId);
-      setLayerId('symbols');
-
       // Hover over matching layer
       mapBus.emit(
         MapEvents.hover,
@@ -755,7 +750,9 @@ describe('coffin-corner store', () => {
         }),
       );
 
-      expect(coffinCornerStore.get(mapId).hoveredId).toBe('entity-3');
+      expect(coffinCornerStore.get(mapId).layers.get(layerId)?.hoveredId).toBe(
+        'entity-3',
+      );
 
       // Hover over a different layer's object
       mapBus.emit(
@@ -766,7 +763,9 @@ describe('coffin-corner store', () => {
         }),
       );
 
-      expect(coffinCornerStore.get(mapId).hoveredId).toBeUndefined();
+      expect(
+        coffinCornerStore.get(mapId).layers.get(layerId)?.hoveredId,
+      ).toBeUndefined();
 
       unsubscribe();
     });
@@ -774,35 +773,44 @@ describe('coffin-corner store', () => {
 
   describe('convenience exports', () => {
     it('should return selectedId via getSelectedEntityId', () => {
-      coffinCornerStore.set(mapId, {
+      const state = coffinCornerStore.get(mapId);
+      const layers = new Map(state.layers);
+      layers.set(layerId, {
         selectedId: 'entity-5',
         hoveredId: undefined,
-        layerId: undefined,
+        getEntityId: (item: any) => item.id,
       });
+      coffinCornerStore.set(mapId, { layers });
 
-      expect(getSelectedEntityId(mapId)).toBe('entity-5');
+      expect(getSelectedEntityId(mapId, layerId)).toBe('entity-5');
     });
 
     it('should return hoveredId via getHoveredEntityId', () => {
-      coffinCornerStore.set(mapId, {
+      const state = coffinCornerStore.get(mapId);
+      const layers = new Map(state.layers);
+      layers.set(layerId, {
         selectedId: undefined,
         hoveredId: 'entity-6',
-        layerId: undefined,
+        getEntityId: (item: any) => item.id,
       });
+      coffinCornerStore.set(mapId, { layers });
 
-      expect(getHoveredEntityId(mapId)).toBe('entity-6');
+      expect(getHoveredEntityId(mapId, layerId)).toBe('entity-6');
     });
 
     it('should clear all state for a mapId via clearSelection', () => {
-      coffinCornerStore.set(mapId, {
+      const state = coffinCornerStore.get(mapId);
+      const layers = new Map(state.layers);
+      layers.set(layerId, {
         selectedId: 'entity-5',
         hoveredId: 'entity-6',
-        layerId: 'symbols',
+        getEntityId: (item: any) => item.id,
       });
+      coffinCornerStore.set(mapId, { layers });
 
-      clearSelection(mapId);
+      clearSelection(mapId, layerId);
 
-      expect(coffinCornerStore.exists(mapId)).toBe(false);
+      expect(coffinCornerStore.get(mapId).layers.has(layerId)).toBe(false);
     });
   });
 

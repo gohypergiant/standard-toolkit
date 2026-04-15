@@ -13,7 +13,12 @@
 'use client';
 
 import { useEffect } from 'react';
-import { coffinCornerStore, defaultGetEntityId } from './store';
+import {
+  coffinCornerStore,
+  defaultGetEntityId,
+  registerCoffinCornerLayer,
+  unregisterCoffinCornerLayer,
+} from './store';
 import type { UniqueId } from '@accelint/core';
 import type { EntityId } from './types';
 
@@ -86,40 +91,36 @@ export function useCoffinCorner(
   layerId: string,
   options?: UseCoffinCornerOptions,
 ): UseCoffinCornerReturn {
-  const getEntityId = options?.getEntityId;
+  const getEntityId = options?.getEntityId ?? defaultGetEntityId;
 
-  // Seed layerId and getEntityId into the store BEFORE use() subscribes and
-  // sets up the bus. setInitialState writes directly without calling notify(),
-  // so no rerender is triggered. This makes the useEffects below no-ops on
-  // first mount, preventing the startup rerender that broke deck.gl/maplibre sync.
+  // Seed the map store on first creation with an empty layers Map so that
+  // coffinCornerStore.use() has something to subscribe to. Once seeded, we
+  // never mutate store state from this hook — registration (tracking which
+  // layers exist and their entity-id accessors) lives in a non-reactive
+  // module-level side table so it can't trigger useSyncExternalStore
+  // snapshot changes that desync deck.gl's viewport from maplibre's on pan/zoom.
   if (!coffinCornerStore.exists(mapId)) {
     coffinCornerStore.setInitialState(mapId, {
-      selectedId: undefined,
-      hoveredId: undefined,
-      layerId,
-      getEntityId: getEntityId ?? defaultGetEntityId,
+      layers: new Map(),
+      mapId,
     });
   }
 
-  const { state, setSelectedId, deselect, setLayerId, setGetEntityId } =
-    coffinCornerStore.use(mapId);
+  const { state, setSelectedId, deselect } = coffinCornerStore.use(mapId);
+  const layerState = state.layers.get(layerId);
 
-  // Still needed to handle layerId/getEntityId changes after initial mount.
-  // Guarded by equality checks in the store actions, so no-ops when values are unchanged.
+  // Non-reactive registration. Plain Map writes — invisible to React.
   useEffect(() => {
-    setLayerId(layerId);
-  }, [setLayerId, layerId]);
-
-  useEffect(() => {
-    if (getEntityId) {
-      setGetEntityId(getEntityId);
-    }
-  }, [setGetEntityId, getEntityId]);
+    registerCoffinCornerLayer(mapId, layerId, getEntityId);
+    return () => {
+      unregisterCoffinCornerLayer(mapId, layerId);
+    };
+  }, [mapId, layerId, getEntityId]);
 
   return {
-    selectedId: state.selectedId,
-    hoveredId: state.hoveredId,
-    setSelectedId,
-    deselect,
+    selectedId: layerState?.selectedId,
+    hoveredId: layerState?.hoveredId,
+    setSelectedId: (id: EntityId | undefined) => setSelectedId(layerId, id),
+    deselect: () => deselect(layerId),
   };
 }
