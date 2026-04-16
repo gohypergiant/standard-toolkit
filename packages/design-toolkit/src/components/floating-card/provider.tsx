@@ -354,6 +354,13 @@ export type FloatingCardProviderProps = Readonly<
      * per-floating card actions.
      */
     headerActions?: MaybeFactory<FloatingCardHeaderAction[]>;
+    /**
+     * Optional set of card IDs that should be pinned when the provider first mounts.
+     *
+     * Like other `initial*` props, this value is only read once at mount time.
+     * Changes after mount have no effect.
+     */
+    initialPinned?: readonly UniqueId[];
     /** Additional CSS class names for styling */
     className?: string;
   }>
@@ -402,11 +409,12 @@ export function FloatingCardProvider({
   children,
   icon,
   headerActions,
+  initialPinned,
   className,
 }: FloatingCardProviderProps) {
   const [api, setApi] = useState<DockviewApi | null>(null);
   const [cards, setCards] = useState<Record<UniqueId, HTMLDivElement>>({});
-  const pinnedCardsRef = useRef<Set<UniqueId>>(new Set());
+  const pinnedCardsRef = useRef<Set<UniqueId>>(new Set(initialPinned));
   const pinListenersRef = useRef<Set<() => void>>(new Set());
 
   const closeCard = useCallback(

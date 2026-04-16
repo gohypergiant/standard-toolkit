@@ -50,6 +50,12 @@ export type FloatingCardProps = Readonly<{
    * @defaultValue { width: 300, height: 400 }
    */
   initialDimensions?: Readonly<{ width: number; height: number }>;
+  /**
+   * Initial position of the floating card panel.
+   *
+   * When provided, sets the x and y coordinates of the floating card.
+   */
+  initialPosition?: Readonly<{ x: number; y: number }>;
 }>;
 
 /**
@@ -62,6 +68,7 @@ export type FloatingCardProps = Readonly<{
  * @param title - Optional title displayed in the floating card header.
  * @param isOpen - Whether the floating card is rendered. Defaults to `true`.
  * @param initialDimensions - Initial width and height of the floating card. Defaults to `{ width: 300, height: 400 }`.
+ * @param initialPosition - Initial x and y coordinates of the floating card.
  * @param children - React children to render inside the floating card.
  * @returns The floating card component (portaled content) or null.
  *
@@ -98,6 +105,7 @@ export function FloatingCard({
   title,
   isOpen = true,
   initialDimensions,
+  initialPosition,
 }: PropsWithChildren<FloatingCardProps>) {
   const floatingCardContext = useFloatingCard();
 
@@ -119,14 +127,22 @@ export function FloatingCard({
         id,
         title,
         component: 'default',
-        floating: { width, height },
+        floating: { width, height, ...initialPosition },
       });
 
       panel.group.locked = 'no-drop-target';
     }
 
     // Cleanup not included here. Cleanup is done at the provider level when the card is removed from the `cards` registry.
-  }, [id, title, isOpen, width, height, floatingCardContext.api]);
+  }, [
+    id,
+    title,
+    isOpen,
+    width,
+    height,
+    initialPosition,
+    floatingCardContext.api,
+  ]);
 
   useEffect(() => {
     const panel = floatingCardContext.api?.getPanel(id);
