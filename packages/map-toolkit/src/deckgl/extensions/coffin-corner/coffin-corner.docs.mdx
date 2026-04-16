@@ -391,6 +391,19 @@ function MultiSelectMap({ mapId }) {
 
 The same pattern works for `hoveredEntityIds` (e.g. previewing entities under a drag-select rectangle).
 
+## Two input paths
+
+The extension has two independent ways to drive bracket state:
+
+1. **Store/hook path** — `useCoffinCorner` subscribes to map bus events, manages selection/hover state in `coffinCornerStore`, and feeds single IDs into the extension via `selectedEntityId` / `hoveredEntityId`. Self-contained — no external state management needed.
+2. **Set path** — External state management (e.g. SelectionManager) passes `selectedEntityIds` / `hoveredEntityIds` Sets directly. No store, no bus, no hook. Supports multiselect and drag-select preview.
+
+These paths don't compose — if both are wired on the same layer, the Set path silently wins (Set props take precedence over single-ID props). Pick one per layer.
+
+**When to use which:**
+- **Store/hook** when you want a self-contained coffin corner experience without external state management. Good for simple maps with single-select.
+- **Set props** when a SelectionManager (or similar) already owns selection policy. Avoids a second source of truth for selection state and gives you multiselect, strategy switching, and group linking for free.
+
 ## Limitations
 
 - **IconLayer and ScatterplotLayer only.** Other layer types (PathLayer, SolidPolygonLayer, etc.) are not supported — the extension returns `null` from `getShaders()` for unsupported types.
