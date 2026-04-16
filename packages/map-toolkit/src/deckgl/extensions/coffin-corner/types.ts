@@ -20,10 +20,36 @@ import type { Rgba255Tuple } from '@accelint/predicates';
  * @template TLayerProps - The host layer's props type to intersect with.
  */
 export type CoffinCornerExtensionProps<TLayerProps = unknown> = {
-  /** The currently selected entity ID. */
+  /** The currently selected entity ID. Ignored when `getIsSelected` is provided. */
   selectedEntityId?: EntityId;
-  /** The currently hovered entity ID. */
+  /** The currently hovered entity ID. Ignored when `getIsHovered` is provided. */
   hoveredEntityId?: EntityId;
+  /**
+   * Accessor that returns `true` when a data item should show selected brackets.
+   * When provided, takes precedence over `selectedEntityId` / `getEntityId`.
+   *
+   * Use `updateTriggers.getIsSelected` to re-evaluate when external state changes
+   * (e.g. a SelectionManager's selected set).
+   *
+   * @example
+   * ```tsx
+   * <SymbolLayer
+   *   extensions={[new CoffinCornerExtension()]}
+   *   getIsSelected={(d) => selected.has(d.id)}
+   *   updateTriggers={{ getIsSelected: selected }}
+   * />
+   * ```
+   */
+  // biome-ignore lint/suspicious/noExplicitAny: Data type is unknown at extension level.
+  getIsSelected?: (item: any) => boolean;
+  /**
+   * Accessor that returns `true` when a data item should show hovered brackets.
+   * When provided, takes precedence over `hoveredEntityId` / `getEntityId`.
+   *
+   * Use `updateTriggers.getIsHovered` to re-evaluate when external state changes.
+   */
+  // biome-ignore lint/suspicious/noExplicitAny: Data type is unknown at extension level.
+  getIsHovered?: (item: any) => boolean;
   /**
    * RGBA color (0-255) for the selected-state bracket fill.
    * Alpha modulates the bracket opacity.
@@ -33,6 +59,7 @@ export type CoffinCornerExtensionProps<TLayerProps = unknown> = {
   /**
    * Accessor to extract an entity ID from a data item. Matched against
    * `selectedEntityId` and `hoveredEntityId` to drive the shader state.
+   * Ignored when `getIsSelected` / `getIsHovered` are provided.
    * @default (item) => item.id
    */
   // biome-ignore lint/suspicious/noExplicitAny: Data type is unknown at extension level.

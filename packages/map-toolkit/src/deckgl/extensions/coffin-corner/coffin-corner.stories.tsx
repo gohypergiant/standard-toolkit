@@ -10,7 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
+import '@/deckgl/symbol-layer/fiber';
 import { uuid } from '@accelint/core';
+import { useCallback, useState } from 'react';
 import { BaseMap } from '@/deckgl/base-map';
 import iconMapping from '../../shapes/__fixtures__/atlas.json';
 import iconAtlas from '../../shapes/__fixtures__/atlas.png';
@@ -18,6 +20,7 @@ import { CoffinCornerExtension } from './coffin-corner-extension';
 import './fiber';
 import { useCoffinCorner } from './use-coffin-corner';
 import type { Rgba255Tuple } from '@accelint/predicates';
+import type { PickingInfo } from '@deck.gl/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const CA_VIEW_STATE = {
@@ -122,6 +125,163 @@ export const Default: Story = {
   },
   render: (args) => (
     <CoffinCornerDemo
+      selectedCoffinCornerColor={args.selectedCoffinCornerColor as Rgba255Tuple}
+    />
+  ),
+};
+
+// -- Accessor-based multi-select story --
+
+const MULTI_MAP_ID = uuid();
+const ICON_LAYER_ID = 'multi-icons';
+const SYMBOL_LAYER_ID = 'multi-symbols';
+
+interface SymbolData {
+  id: number;
+  sidc: string;
+  position: [number, number];
+}
+
+const SYMBOL_DATA: SymbolData[] = [
+  // Sacramento area
+  {
+    id: 101,
+    sidc: '130340000015011300000000000000',
+    position: [-121.49, 38.58],
+  },
+  // Bakersfield
+  {
+    id: 102,
+    sidc: '130540000014080000000000000000',
+    position: [-119.02, 35.37],
+  },
+  // Palm Springs
+  {
+    id: 103,
+    sidc: '130140000011011000000000000000',
+    position: [-116.55, 33.83],
+  },
+  // Redding
+  { id: 104, sidc: 'SNGPEWAM--*****', position: [-122.39, 40.59] },
+  // Eureka
+  {
+    id: 105,
+    sidc: '130610000016480000000000000000',
+    position: [-124.16, 40.8],
+  },
+];
+
+function MultiSelectDemo({
+  selectedCoffinCornerColor,
+}: {
+  selectedCoffinCornerColor: Rgba255Tuple;
+}) {
+  const [selected, setSelected] = useState<Set<number>>(() => new Set());
+  const [hoveredId, setHoveredId] = useState<number | undefined>();
+
+  const handleClick = useCallback((info: PickingInfo) => {
+    if (info.index === -1 || !info.object) {
+      setSelected(new Set());
+      return;
+    }
+
+    const id = (info.object as { id: number }).id;
+
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  }, []);
+
+  const handleHover = useCallback((info: PickingInfo) => {
+    setHoveredId(
+      info.index !== -1 && info.object
+        ? (info.object as { id: number }).id
+        : undefined,
+    );
+  }, []);
+
+  const getIsSelected = useCallback(
+    (d: { id: number }) => selected.has(d.id),
+    [selected],
+  );
+
+  const getIsHovered = useCallback(
+    (d: { id: number }) => d.id === hoveredId,
+    [hoveredId],
+  );
+
+  return (
+    <div className='relative h-dvh w-dvw'>
+      <BaseMap
+        className='absolute inset-0'
+        id={MULTI_MAP_ID}
+        initialViewState={CA_VIEW_STATE}
+        onClick={handleClick}
+        onHover={handleHover}
+      >
+        <iconLayer
+          id={ICON_LAYER_ID}
+          data={ICON_DATA}
+          iconAtlas={iconAtlas}
+          iconMapping={iconMapping}
+          getPosition={(d: unknown) => (d as IconData).position}
+          getIcon={(d: unknown) => (d as IconData).icon}
+          getSize={(d: unknown) => (d as IconData).size}
+          pickable
+          extensions={[coffinCornerExtension]}
+          getIsSelected={getIsSelected}
+          getIsHovered={getIsHovered}
+          updateTriggers={{ getIsSelected: selected, getIsHovered: hoveredId }}
+          selectedCoffinCornerColor={selectedCoffinCornerColor}
+        />
+        <symbolLayer
+          id={SYMBOL_LAYER_ID}
+          data={SYMBOL_DATA}
+          defaultSymbolOptions={{ colorMode: 'Dark', square: true }}
+          pickable
+          extensions={[coffinCornerExtension]}
+          getIsSelected={getIsSelected}
+          getIsHovered={getIsHovered}
+          updateTriggers={{ getIsSelected: selected, getIsHovered: hoveredId }}
+          selectedCoffinCornerColor={selectedCoffinCornerColor}
+        />
+      </BaseMap>
+
+      <div className='absolute top-l left-l z-10 rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
+        <p className='font-bold text-header-l'>Multi-Select Accessor</p>
+        <p className='mt-s text-body-s text-content-secondary'>
+          Click to toggle selection across both layers. Uses{' '}
+          <code>getIsSelected</code> / <code>getIsHovered</code> accessors.
+        </p>
+        {selected.size > 0 && (
+          <p className='mt-s text-body-s text-content-secondary'>
+            Selected: {[...selected].join(', ')}
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export const MultiSelectAccessor: Story = {
+  args: {
+    selectedCoffinCornerColor: [57, 183, 250, 255],
+  },
+  argTypes: {
+    selectedCoffinCornerColor: {
+      control: { type: 'object' },
+      description:
+        'Selected coffin corner color [R, G, B, A] with values 0-255',
+    },
+  },
+  render: (args) => (
+    <MultiSelectDemo
       selectedCoffinCornerColor={args.selectedCoffinCornerColor as Rgba255Tuple}
     />
   ),
