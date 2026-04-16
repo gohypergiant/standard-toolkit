@@ -26,6 +26,7 @@ export const nodeDefaults = {
   isSelected: false,
   isVisible: false,
   isVisibleComputed: false,
+  isIndeterminate: false,
 };
 
 export const defaultTree: TreeNode<Values>[] = [

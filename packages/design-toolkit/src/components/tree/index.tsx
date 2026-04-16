@@ -11,7 +11,7 @@
  */
 'use client';
 
-import { Cache } from '@/hooks/use-tree/actions/cache';
+import { Cache, type CacheTreeNode } from '@/hooks/use-tree/actions/cache';
 import type { Key, Selection } from '@react-types/shared';
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
@@ -40,6 +40,44 @@ const defaultRenderDropIndicator = (target: DropTarget) => {
     />
   );
 };
+
+/**
+ * Helper to collect node state keys from cache tree nodes.
+ * Reduces cognitive complexity by extracting the iteration logic.
+ */
+function collectNodeKeys<T>(
+  nodes: MapIterator<CacheTreeNode<T>>,
+  acc: {
+    disabledKeys?: Set<Key>;
+    expandedKeys?: Set<Key>;
+    selectedKeys?: Set<Key>;
+    visibleKeys?: Set<Key>;
+    visibilityComputedKeys: Set<Key>;
+    indeterminateKeys: Set<Key>;
+  },
+) {
+  for (const node of nodes) {
+    if (node.isDisabled) {
+      acc.disabledKeys?.add(node.key);
+    }
+    if (node.isExpanded) {
+      acc.expandedKeys?.add(node.key);
+    }
+    if (node.isSelected) {
+      acc.selectedKeys?.add(node.key);
+    }
+    if (node.isVisible) {
+      acc.visibleKeys?.add(node.key);
+    }
+    if (node.isVisibleComputed) {
+      acc.visibilityComputedKeys.add(node.key);
+    }
+    if (node.isIndeterminate) {
+      acc.indeterminateKeys.add(node.key);
+    }
+  }
+  return acc;
+}
 
 /**
  * Tree - Hierarchical tree view with selection, visibility, and drag-and-drop
@@ -142,6 +180,7 @@ export function Tree<T>({
     selectedKeys,
     visibleKeys,
     visibilityComputedKeys,
+    indeterminateKeys,
   } = useMemo(() => {
     const acc = {
       disabledKeys: nodes ? new Set<Key>() : disabledKeysProp,
@@ -149,43 +188,14 @@ export function Tree<T>({
       selectedKeys: nodes ? new Set<Key>() : selectedKeysProp,
       visibleKeys: nodes ? new Set<Key>() : visibleKeysProp,
       visibilityComputedKeys: new Set<Key>(),
+      indeterminateKeys: new Set<Key>(),
     };
 
     if (!nodes) {
       return acc;
     }
 
-    return nodes.reduce(
-      (
-        acc,
-        {
-          key,
-          isDisabled,
-          isExpanded,
-          isSelected,
-          isVisible,
-          isVisibleComputed,
-        },
-      ) => {
-        if (isDisabled) {
-          acc.disabledKeys?.add(key);
-        }
-        if (isExpanded) {
-          acc.expandedKeys?.add(key);
-        }
-        if (isSelected) {
-          acc.selectedKeys?.add(key);
-        }
-        if (isVisible) {
-          acc.visibleKeys?.add(key);
-        }
-        if (isVisibleComputed) {
-          acc.visibilityComputedKeys.add(key);
-        }
-        return acc;
-      },
-      acc,
-    );
+    return collectNodeKeys<T>(nodes, acc);
   }, [
     nodes,
     disabledKeysProp,
@@ -213,6 +223,7 @@ export function Tree<T>({
         variant,
         visibleKeys,
         visibilityComputedKeys,
+        indeterminateKeys,
         isStatic: typeof children !== 'function',
         onVisibilityChange: onVisibilityChange ?? (() => undefined), // TODO: improve
       }}
