@@ -2,4 +2,4 @@
 "@accelint/map-toolkit": minor
 ---
 
-Add `selectedEntityIds` prop to CoffinCornerExtension for multiselect support
+Add `selectedEntityIds` and `hoveredEntityIds` Set props to CoffinCornerExtension for multiselect and drag-select preview support
