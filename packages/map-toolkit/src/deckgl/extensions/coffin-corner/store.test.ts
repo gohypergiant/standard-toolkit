@@ -17,6 +17,7 @@ import { MapEvents } from '../../base-map/events';
 import {
   clearSelection,
   coffinCornerStore,
+  defaultGetEntityId,
   getHoveredEntityId,
   getSelectedEntityId,
   registerCoffinCornerLayer,
@@ -778,7 +779,7 @@ describe('coffin-corner store', () => {
       layers.set(layerId, {
         selectedId: 'entity-5',
         hoveredId: undefined,
-        getEntityId: (item: any) => item.id,
+        getEntityId: defaultGetEntityId,
       });
       coffinCornerStore.set(mapId, { layers });
 
@@ -791,7 +792,7 @@ describe('coffin-corner store', () => {
       layers.set(layerId, {
         selectedId: undefined,
         hoveredId: 'entity-6',
-        getEntityId: (item: any) => item.id,
+        getEntityId: defaultGetEntityId,
       });
       coffinCornerStore.set(mapId, { layers });
 
@@ -804,7 +805,7 @@ describe('coffin-corner store', () => {
       layers.set(layerId, {
         selectedId: 'entity-5',
         hoveredId: 'entity-6',
-        getEntityId: (item: any) => item.id,
+        getEntityId: defaultGetEntityId,
       });
       coffinCornerStore.set(mapId, { layers });
 

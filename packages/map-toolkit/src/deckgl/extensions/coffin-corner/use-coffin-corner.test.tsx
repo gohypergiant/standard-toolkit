@@ -198,14 +198,14 @@ describe('useCoffinCorner', () => {
   });
 
   describe('getEntityId option', () => {
-    it('uses custom getEntityId when resolving hovered entity from map hover events', async () => {
+    it('uses custom getEntityId when resolving hovered entity from map hover events', () => {
       const customAccessor = (item: { uid: string }) => item.uid;
       const mapBus = Broadcast.getInstance<MapEventType>();
       const { result } = renderHook(() =>
         useCoffinCorner(mapId, 'symbols', { getEntityId: customAccessor }),
       );
 
-      await act(async () => {
+      act(() => {
         mapBus.emit(
           MapEvents.hover,
           createHoverEvent(mapId, {
@@ -218,7 +218,7 @@ describe('useCoffinCorner', () => {
       expect(result.current.hoveredId).toBe('from-custom-accessor');
     });
 
-    it('uses the updated getEntityId after the option changes', async () => {
+    it('uses the updated getEntityId after the option changes', () => {
       const accessor1 = (item: { uid: string }) => item.uid;
       const accessor2 = (item: { code: string }) => item.code;
       const mapBus = Broadcast.getInstance<MapEventType>();
@@ -229,7 +229,7 @@ describe('useCoffinCorner', () => {
         },
       );
 
-      await act(async () => {
+      act(() => {
         mapBus.emit(
           MapEvents.hover,
           createHoverEvent(mapId, {
@@ -242,7 +242,7 @@ describe('useCoffinCorner', () => {
 
       rerender({ getEntityId: accessor2 as (item: unknown) => string });
 
-      await act(async () => {
+      act(() => {
         mapBus.emit(
           MapEvents.hover,
           createHoverEvent(mapId, {
@@ -256,7 +256,7 @@ describe('useCoffinCorner', () => {
   });
 
   describe('layerId changes', () => {
-    it('routes hover events to the currently-registered layer after a layerId change', async () => {
+    it('routes hover events to the currently-registered layer after a layerId change', () => {
       const mapBus = Broadcast.getInstance<MapEventType>();
       const { result, rerender } = renderHook(
         ({ layerId }) =>
@@ -267,7 +267,7 @@ describe('useCoffinCorner', () => {
       );
 
       // Hover on layer-a resolves through the current registration.
-      await act(async () => {
+      act(() => {
         mapBus.emit(
           MapEvents.hover,
           createHoverEvent(mapId, {
@@ -281,7 +281,7 @@ describe('useCoffinCorner', () => {
       rerender({ layerId: 'layer-b' });
 
       // After rerender, the hook watches layer-b and ignores hovers on layer-a.
-      await act(async () => {
+      act(() => {
         mapBus.emit(
           MapEvents.hover,
           createHoverEvent(mapId, {

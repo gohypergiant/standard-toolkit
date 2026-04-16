@@ -113,9 +113,13 @@ export function unregisterCoffinCornerLayer(
   layerId: string,
 ): void {
   const byLayer = layerRegistry.get(mapId);
-  if (!byLayer) return;
+  if (!byLayer) {
+    return;
+  }
   byLayer.delete(layerId);
-  if (byLayer.size === 0) layerRegistry.delete(mapId);
+  if (byLayer.size === 0) {
+    layerRegistry.delete(mapId);
+  }
 }
 
 function getRegisteredLayers(
@@ -170,6 +174,47 @@ const EMPTY_LAYER: LayerState = Object.freeze({
  */
 function readLayer(state: CoffinCornerState, layerId: string): LayerState {
   return state.layers.get(layerId) ?? EMPTY_LAYER;
+}
+
+/**
+ * Helper: Deselects all currently-selected layers for a map.
+ * Emits DESELECTED events for each layer that had a selection.
+ */
+function deselectAllLayers(mapId: UniqueId, state: CoffinCornerState): void {
+  for (const [layerId, layerState] of state.layers.entries()) {
+    if (layerState.selectedId !== undefined) {
+      coffinCornerEventBus.emit(CoffinCornerEvents.DESELECTED, {
+        mapId,
+        layerId,
+        selectedId: undefined,
+      });
+    }
+  }
+}
+
+/**
+ * Helper: Handles clicking on an entity (object) - toggles selection.
+ * If already selected, deselects. Otherwise, selects the entity.
+ */
+function toggleEntitySelection(
+  mapId: UniqueId,
+  layerId: string,
+  entityId: EntityId,
+  currentSelected: EntityId | undefined,
+): void {
+  if (currentSelected === entityId) {
+    coffinCornerEventBus.emit(CoffinCornerEvents.DESELECTED, {
+      mapId,
+      layerId,
+      selectedId: undefined,
+    });
+  } else {
+    coffinCornerEventBus.emit(CoffinCornerEvents.SELECTED, {
+      selectedId: entityId,
+      layerId,
+      mapId,
+    });
+  }
 }
 
 /**
@@ -310,24 +355,16 @@ export const coffinCornerStore = createMapStore<
       }
 
       const { info } = event.payload;
-      const clickedLayerId = info.layerId;
       const state = get();
 
       // If clicking empty space, deselect all currently-selected layers
       if (info.index === -1) {
-        for (const [layerId, layerState] of state.layers.entries()) {
-          if (layerState.selectedId !== undefined) {
-            coffinCornerEventBus.emit(CoffinCornerEvents.DESELECTED, {
-              mapId,
-              layerId,
-              selectedId: undefined,
-            });
-          }
-        }
+        deselectAllLayers(mapId, state);
         return;
       }
 
       // Check if the clicked layer is registered (via useCoffinCorner)
+      const clickedLayerId = info.layerId;
       if (!clickedLayerId) {
         return;
       }
@@ -337,24 +374,13 @@ export const coffinCornerStore = createMapStore<
         return;
       }
 
-      if (info.object) {
-        const entityId = getEntityId(info.object);
-        const currentSelected = readLayer(state, clickedLayerId).selectedId;
-
-        if (currentSelected === entityId) {
-          coffinCornerEventBus.emit(CoffinCornerEvents.DESELECTED, {
-            mapId,
-            layerId: clickedLayerId,
-            selectedId: undefined,
-          });
-        } else {
-          coffinCornerEventBus.emit(CoffinCornerEvents.SELECTED, {
-            selectedId: entityId,
-            layerId: clickedLayerId,
-            mapId,
-          });
-        }
+      if (!info.object) {
+        return;
       }
+
+      const entityId = getEntityId(info.object);
+      const currentSelected = readLayer(state, clickedLayerId).selectedId;
+      toggleEntitySelection(mapId, clickedLayerId, entityId, currentSelected);
     });
 
     // Map hovers → domain events
