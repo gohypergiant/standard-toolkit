@@ -358,7 +358,7 @@ For multiselect scenarios (e.g. with a SelectionManager), pass a `Set` instead o
 
 ```tsx
 function MultiSelectMap({ mapId }) {
-  const [selected, setSelected] = useState<Set<number>>(() => new Set());
+  const [selected, setSelected] = useState<Set<EntityId>>(() => new Set());
 
   const handleClick = useCallback((info: PickingInfo) => {
     if (!info.object) {

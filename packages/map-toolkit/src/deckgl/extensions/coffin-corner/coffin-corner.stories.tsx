@@ -12,7 +12,7 @@
 
 import '@/deckgl/symbol-layer/fiber';
 import { uuid } from '@accelint/core';
-import { useState, useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { BaseMap } from '@/deckgl/base-map';
 import iconMapping from '../../shapes/__fixtures__/atlas.json';
 import iconAtlas from '../../shapes/__fixtures__/atlas.png';
@@ -22,6 +22,7 @@ import { useCoffinCorner } from './use-coffin-corner';
 import type { Rgba255Tuple } from '@accelint/predicates';
 import type { PickingInfo } from '@deck.gl/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { EntityId } from './types';
 
 const CA_VIEW_STATE = {
   longitude: -119.5,
@@ -176,8 +177,8 @@ function MultiSelectDemo({
 }: {
   selectedCoffinCornerColor: Rgba255Tuple;
 }) {
-  const [selected, setSelected] = useState<Set<number>>(() => new Set());
-  const [hoveredId, setHoveredId] = useState<number | undefined>();
+  const [selected, setSelected] = useState<Set<EntityId>>(() => new Set());
+  const [hoveredId, setHoveredId] = useState<EntityId | undefined>();
 
   const handleClick = useCallback((info: PickingInfo) => {
     if (info.index === -1 || !info.object) {
@@ -185,7 +186,7 @@ function MultiSelectDemo({
       return;
     }
 
-    const id = (info.object as { id: number }).id;
+    const id = (info.object as { id: EntityId }).id;
 
     setSelected((prev) => {
       const next = new Set(prev);
@@ -201,7 +202,7 @@ function MultiSelectDemo({
   const handleHover = useCallback((info: PickingInfo) => {
     setHoveredId(
       info.index !== -1 && info.object
-        ? (info.object as { id: number }).id
+        ? (info.object as { id: EntityId }).id
         : undefined,
     );
   }, []);
