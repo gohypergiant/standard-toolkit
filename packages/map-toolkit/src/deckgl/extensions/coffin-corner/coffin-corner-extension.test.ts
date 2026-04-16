@@ -46,7 +46,6 @@ function createMockLayer(propsOverrides: Record<string, unknown> = {}) {
     state: {
       selectedEntities: new Map<EntityId, number>(),
       hoveredEntities: new Map<EntityId, number>(),
-      accessorSnapshots: new Map(),
     },
     props: propsOverrides,
     getAttributeManager: vi.fn(() => ({ invalidate, addInstanced })),
@@ -161,64 +160,6 @@ describe('CoffinCornerExtension', () => {
       const attribute = { value: new Float32Array(0) };
 
       expect(() => updateFn(attribute, { data: undefined })).not.toThrow();
-    });
-
-    it('should use getIsSelected accessor when provided', () => {
-      const selectedSet = new Set(['entity-a', 'entity-c']);
-      const layer = createMockLayer({
-        getIsSelected: (d: { id: string }) => selectedSet.has(d.id),
-      });
-      extension.initializeState.call(layer);
-
-      const addInstancedCall = layer.addInstanced.mock.calls[0][0];
-      const updateFn = addInstancedCall.instanceSelectedEntity.update;
-
-      const attribute = { value: new Float32Array(3) };
-      const data = [{ id: 'entity-a' }, { id: 'entity-b' }, { id: 'entity-c' }];
-      updateFn(attribute, { data });
-
-      expect(attribute.value[0]).toBe(1);
-      expect(attribute.value[1]).toBe(0);
-      expect(attribute.value[2]).toBe(1);
-    });
-
-    it('should use getIsHovered accessor when provided', () => {
-      const layer = createMockLayer({
-        getIsHovered: (d: { id: string }) => d.id === 'entity-b',
-      });
-      extension.initializeState.call(layer);
-
-      const addInstancedCall = layer.addInstanced.mock.calls[0][0];
-      const updateFn = addInstancedCall.instanceHoveredEntity.update;
-
-      const attribute = { value: new Float32Array(3) };
-      const data = [{ id: 'entity-a' }, { id: 'entity-b' }, { id: 'entity-c' }];
-      updateFn(attribute, { data });
-
-      expect(attribute.value[0]).toBe(0);
-      expect(attribute.value[1]).toBe(1);
-      expect(attribute.value[2]).toBe(0);
-    });
-
-    it('should prefer getIsSelected over selectedEntityId when both provided', () => {
-      const layer = createMockLayer({
-        getIsSelected: (d: { id: string }) => d.id === 'entity-b',
-        selectedEntityId: 'entity-a',
-      });
-      extension.initializeState.call(layer);
-
-      // The ID path would mark entity-a, but accessor should win
-      layer.state.selectedEntities.set('entity-a', 1);
-
-      const addInstancedCall = layer.addInstanced.mock.calls[0][0];
-      const updateFn = addInstancedCall.instanceSelectedEntity.update;
-
-      const attribute = { value: new Float32Array(2) };
-      const data = [{ id: 'entity-a' }, { id: 'entity-b' }];
-      updateFn(attribute, { data });
-
-      expect(attribute.value[0]).toBe(0);
-      expect(attribute.value[1]).toBe(1);
     });
   });
 
@@ -449,94 +390,82 @@ describe('CoffinCornerExtension', () => {
       expect(layer.state.selectedEntities.size).toBe(0);
     });
 
-    it('should invalidate when getIsSelected accessor reference changes', () => {
+    it('should sync selectedEntityIds Set to entity map', () => {
       const layer = createMockLayer();
-      const accessorA = (d: { id: string }) => d.id === 'a';
-      const accessorB = (d: { id: string }) => d.id === 'b';
+      const ids = new Set<EntityId>(['a', 'b', 'c']);
 
       extension.updateState.call(
         layer,
         createMockParams(
-          { getIsSelected: accessorB },
-          { getIsSelected: accessorA },
+          { selectedEntityIds: ids },
+          { selectedEntityIds: undefined },
         ),
       );
 
+      expect(layer.state.selectedEntities.size).toBe(3);
+      expect(layer.state.selectedEntities.get('a')).toBe(1);
+      expect(layer.state.selectedEntities.get('b')).toBe(1);
+      expect(layer.state.selectedEntities.get('c')).toBe(1);
       expect(layer.invalidate).toHaveBeenCalledWith('instanceSelectedEntity');
     });
 
-    it('should invalidate when updateTriggers.getIsSelected changes', () => {
+    it('should replace entity map contents when selectedEntityIds changes', () => {
       const layer = createMockLayer();
-      const accessor = (d: { id: string }) => d.id === 'a';
-      const setV1 = new Set(['a']);
-      const setV2 = new Set(['a', 'b']);
+      const idsV1 = new Set<EntityId>(['a', 'b']);
+      const idsV2 = new Set<EntityId>(['b', 'c']);
 
       extension.updateState.call(
         layer,
         createMockParams(
-          { getIsSelected: accessor, updateTriggers: { getIsSelected: setV2 } },
-          { getIsSelected: accessor, updateTriggers: { getIsSelected: setV1 } },
+          { selectedEntityIds: idsV1 },
+          { selectedEntityIds: undefined },
         ),
       );
 
-      expect(layer.invalidate).toHaveBeenCalledWith('instanceSelectedEntity');
+      extension.updateState.call(
+        layer,
+        createMockParams(
+          { selectedEntityIds: idsV2 },
+          { selectedEntityIds: idsV1 },
+        ),
+      );
+
+      expect(layer.state.selectedEntities.size).toBe(2);
+      expect(layer.state.selectedEntities.has('a')).toBe(false);
+      expect(layer.state.selectedEntities.get('b')).toBe(1);
+      expect(layer.state.selectedEntities.get('c')).toBe(1);
     });
 
-    it('should not invalidate when accessor and trigger are unchanged', () => {
+    it('should not invalidate when selectedEntityIds is same reference', () => {
       const layer = createMockLayer();
-      const accessor = (d: { id: string }) => d.id === 'a';
-      const trigger = new Set(['a']);
+      const ids = new Set<EntityId>(['a']);
 
       extension.updateState.call(
         layer,
         createMockParams(
-          {
-            getIsSelected: accessor,
-            updateTriggers: { getIsSelected: trigger },
-          },
-          {
-            getIsSelected: accessor,
-            updateTriggers: { getIsSelected: trigger },
-          },
+          { selectedEntityIds: ids },
+          { selectedEntityIds: ids },
         ),
       );
 
-      expect(layer.invalidate).not.toHaveBeenCalledWith(
-        'instanceSelectedEntity',
-      );
-    });
-
-    it('should invalidate when getIsHovered accessor reference changes', () => {
-      const layer = createMockLayer();
-      const accessorA = (d: { id: string }) => d.id === 'a';
-      const accessorB = (d: { id: string }) => d.id === 'b';
-
-      extension.updateState.call(
-        layer,
-        createMockParams(
-          { getIsHovered: accessorB },
-          { getIsHovered: accessorA },
-        ),
-      );
-
-      expect(layer.invalidate).toHaveBeenCalledWith('instanceHoveredEntity');
-    });
-
-    it('should skip ID path when accessor is provided', () => {
-      const layer = createMockLayer();
-      const accessor = () => true;
-
-      extension.updateState.call(
-        layer,
-        createMockParams(
-          { getIsSelected: accessor, selectedEntityId: 'entity-1' },
-          { getIsSelected: accessor, selectedEntityId: undefined },
-        ),
-      );
-
-      // Accessor is same ref, so no invalidation — and ID path should be skipped
-      expect(layer.state.selectedEntities.size).toBe(0);
       expect(layer.invalidate).not.toHaveBeenCalled();
+    });
+
+    it('should prefer selectedEntityIds over selectedEntityId', () => {
+      const layer = createMockLayer();
+      const ids = new Set<EntityId>(['a', 'b']);
+
+      extension.updateState.call(
+        layer,
+        createMockParams(
+          { selectedEntityIds: ids, selectedEntityId: 'z' },
+          { selectedEntityIds: undefined, selectedEntityId: undefined },
+        ),
+      );
+
+      expect(layer.state.selectedEntities.size).toBe(2);
+      expect(layer.state.selectedEntities.has('z')).toBe(false);
+      expect(layer.state.selectedEntities.get('a')).toBe(1);
     });
   });
 

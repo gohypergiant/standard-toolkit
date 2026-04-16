@@ -2,4 +2,4 @@
 "@accelint/map-toolkit": minor
 ---
 
-Add getSelectedId and getHoveredId accessors to the useCoffinCorner hook
+Add `selectedEntityIds` prop to CoffinCornerExtension for multiselect support

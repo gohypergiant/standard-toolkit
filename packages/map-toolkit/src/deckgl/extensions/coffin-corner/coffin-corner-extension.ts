@@ -24,16 +24,6 @@ type CoffinCornerLayer = Layer & {
   state: {
     selectedEntities: Map<EntityId, number>;
     hoveredEntities: Map<EntityId, number>;
-    /**
-     * Snapshotted accessors captured at invalidation time.
-     * deck.gl defers attribute recalculation to the next draw call.
-     * By then, `this.props` may reflect a newer state (e.g. hover → unhover
-     * batched in one frame). Storing the accessor at invalidation time ensures
-     * the attribute update callback uses the accessor that triggered the
-     * invalidation, not whatever `this.props` holds at draw time.
-     */
-    // biome-ignore lint/suspicious/noExplicitAny: Data type is unknown at extension level.
-    accessorSnapshots: Map<string, (item: any) => boolean>;
   };
 };
 
@@ -409,51 +399,45 @@ const DEFAULT_SELECTED_CORNER_FILL: Rgba255Tuple = [57, 183, 250, 255];
 const SUPPORTED_LAYERS = [IconLayer, ScatterplotLayer];
 
 /**
- * Sync one attribute's state from either an accessor or a single-entity ID prop.
- *
- * Accessor path: invalidates when the accessor reference or its updateTrigger changes.
- * ID path: maintains the entity map and invalidates on ID change.
+ * Sync a Set of entity IDs into an entity state map. Replaces the full
+ * contents of the map with the new Set on every change.
  */
-function syncAttribute(
-  layer: CoffinCornerLayer,
+function syncEntitySet(
+  entities: Map<EntityId, number>,
+  newIds: ReadonlySet<EntityId> | undefined,
+  oldIds: ReadonlySet<EntityId> | undefined,
   attributeManager: { invalidate: (name: string) => void } | null,
-  opts: {
-    attributeName: string;
-    accessorProp: 'getIsSelected' | 'getIsHovered';
-    // biome-ignore lint/suspicious/noExplicitAny: Accessor data type is unknown at extension level.
-    accessor: ((item: any) => boolean) | undefined;
-    // biome-ignore lint/suspicious/noExplicitAny: Accessor data type is unknown at extension level.
-    oldAccessor: ((item: any) => boolean) | undefined;
-    trigger: unknown;
-    oldTrigger: unknown;
-    entityId: EntityId | undefined;
-    oldEntityId: EntityId | undefined;
-    stateKey: 'selectedEntities' | 'hoveredEntities';
-  },
+  attributeName: string,
 ): void {
-  if (opts.accessor) {
-    // Always snapshot the current accessor so the deferred attribute update
-    // callback uses the accessor that was active at invalidation time.
-    layer.state.accessorSnapshots.set(opts.accessorProp, opts.accessor);
-
-    if (
-      opts.accessor !== opts.oldAccessor ||
-      opts.trigger !== opts.oldTrigger
-    ) {
-      attributeManager?.invalidate(opts.attributeName);
+  if (newIds !== oldIds) {
+    entities.clear();
+    if (newIds) {
+      for (const id of newIds) {
+        entities.set(id, 1);
+      }
     }
-    return;
+    attributeManager?.invalidate(attributeName);
   }
+}
 
-  if (opts.entityId !== opts.oldEntityId) {
-    const entities = layer.state[opts.stateKey];
-    if (opts.oldEntityId != null) {
-      entities.delete(opts.oldEntityId);
+/**
+ * Sync a single entity ID into an entity state map. Adds/removes one entry.
+ */
+function syncEntityId(
+  entities: Map<EntityId, number>,
+  newId: EntityId | undefined,
+  oldId: EntityId | undefined,
+  attributeManager: { invalidate: (name: string) => void } | null,
+  attributeName: string,
+): void {
+  if (newId !== oldId) {
+    if (oldId != null) {
+      entities.delete(oldId);
     }
-    if (opts.entityId != null) {
-      entities.set(opts.entityId, 1);
+    if (newId != null) {
+      entities.set(newId, 1);
     }
-    attributeManager?.invalidate(opts.attributeName);
+    attributeManager?.invalidate(attributeName);
   }
 }
 
@@ -517,9 +501,8 @@ export class CoffinCornerExtension extends LayerExtension {
 
   static override defaultProps = {
     selectedEntityId: { type: 'value', value: undefined },
+    selectedEntityIds: { type: 'value', value: undefined },
     hoveredEntityId: { type: 'value', value: undefined },
-    getIsSelected: { type: 'value', value: undefined },
-    getIsHovered: { type: 'value', value: undefined },
     selectedCoffinCornerColor: {
       type: 'color',
       value: DEFAULT_SELECTED_CORNER_FILL,
@@ -550,87 +533,53 @@ export class CoffinCornerExtension extends LayerExtension {
 
     this.state.selectedEntities = new Map<EntityId, number>();
     this.state.hoveredEntities = new Map<EntityId, number>();
-    this.state.accessorSnapshots = new Map();
 
     const attributeManager = this.getAttributeManager();
     if (!attributeManager) {
       return;
     }
 
-    /** Write GPU attribute values from a boolean accessor (e.g. SelectionManager). */
-    const writeAttributeFromAccessor = (
-      // biome-ignore lint/suspicious/noExplicitAny: Data type is unknown at extension level.
-      accessor: (item: any) => boolean,
-      items: unknown[],
-      value: Float32Array,
-    ) => {
-      for (let i = 0; i < items.length; i++) {
-        value[i] = accessor(items[i]) ? 1 : 0;
-      }
-    };
-
-    /** Write GPU attribute values by looking up entity IDs in a state map. */
-    const writeAttributeFromIdMap = (
-      entities: Map<EntityId, number>,
-      getId: (item: unknown) => EntityId,
-      items: unknown[],
-      value: Float32Array,
-    ) => {
-      for (let i = 0; i < items.length; i++) {
-        value[i] = entities.get(getId(items[i])) ?? 0;
-      }
-    };
-
     const makeUpdateCallback =
-      (
-        stateKey: 'selectedEntities' | 'hoveredEntities',
-        accessorProp: 'getIsSelected' | 'getIsHovered',
-      ) =>
+      (stateKey: 'selectedEntities' | 'hoveredEntities') =>
       (
         attribute: { value: unknown },
         { data }: { data: unknown[] | undefined },
       ) => {
-        // Prefer the snapshotted accessor (captured at invalidation time in
-        // syncAttribute) over this.props. deck.gl defers attribute updates to
-        // the draw phase — by then this.props may reflect a newer state
-        // (e.g. hover→unhover batched in one frame).
-        const snapshot = this.state.accessorSnapshots?.get(accessorProp);
-        const props = this.props as unknown as CoffinCornerExtensionProps;
-        const accessor = snapshot ?? props[accessorProp];
+        const entities = this.state[stateKey];
+        const getId =
+          (this.props as unknown as CoffinCornerExtensionProps).getEntityId ??
+          // biome-ignore lint/suspicious/noExplicitAny: Default accessor assumes item.id exists.
+          ((item: any) => item.id as EntityId);
         const items = data ?? [];
         const value = attribute.value as Float32Array;
 
-        if (accessor) {
-          writeAttributeFromAccessor(accessor, items, value);
-        } else {
-          const getId =
-            props.getEntityId ??
-            // biome-ignore lint/suspicious/noExplicitAny: Default accessor assumes item.id exists.
-            ((item: any) => item.id as EntityId);
-          writeAttributeFromIdMap(this.state[stateKey], getId, items, value);
+        for (let i = 0; i < items.length; i++) {
+          value[i] = entities.get(getId(items[i])) ?? 0;
         }
       };
 
     attributeManager.addInstanced({
       instanceSelectedEntity: {
         size: 1,
-        update: makeUpdateCallback('selectedEntities', 'getIsSelected'),
+        update: makeUpdateCallback('selectedEntities'),
       },
       instanceHoveredEntity: {
         size: 1,
-        update: makeUpdateCallback('hoveredEntities', 'getIsHovered'),
+        update: makeUpdateCallback('hoveredEntities'),
       },
     });
   }
 
   /**
-   * Syncs prop and accessor changes into GPU attributes.
+   * Syncs selection and hover prop changes into the entity state maps
+   * and invalidates the corresponding GPU attributes.
    *
-   * Two paths per attribute (delegated to `syncAttribute`):
-   * - **Accessor path** (`getIsSelected` / `getIsHovered`): invalidates when
-   *   the accessor reference or its `updateTriggers` entry changes.
-   * - **ID path** (`selectedEntityId` / `hoveredEntityId`): maintains internal
-   *   entity maps and invalidates on ID change.
+   * Selection supports two modes:
+   * - **Set path** (`selectedEntityIds`): syncs the full Set to the entity map.
+   *   Takes precedence over the single-ID path.
+   * - **Single-ID path** (`selectedEntityId`): adds/removes one entry.
+   *
+   * Hover uses the single-ID path (`hoveredEntityId`).
    *
    * No-op on unsupported layer types.
    */
@@ -643,36 +592,34 @@ export class CoffinCornerExtension extends LayerExtension {
     }
 
     const attributeManager = this.getAttributeManager();
-    const triggers = params.props.updateTriggers as
-      | Record<string, unknown>
-      | undefined;
-    const oldTriggers = params.oldProps.updateTriggers as
-      | Record<string, unknown>
-      | undefined;
 
-    syncAttribute(this, attributeManager, {
-      attributeName: 'instanceSelectedEntity',
-      accessorProp: 'getIsSelected',
-      accessor: params.props.getIsSelected,
-      oldAccessor: params.oldProps.getIsSelected,
-      trigger: triggers?.getIsSelected,
-      oldTrigger: oldTriggers?.getIsSelected,
-      entityId: params.props.selectedEntityId,
-      oldEntityId: params.oldProps.selectedEntityId,
-      stateKey: 'selectedEntities',
-    });
+    // -- Selection: Set path takes precedence over single-ID --
+    if (params.props.selectedEntityIds) {
+      syncEntitySet(
+        this.state.selectedEntities,
+        params.props.selectedEntityIds,
+        params.oldProps.selectedEntityIds,
+        attributeManager,
+        'instanceSelectedEntity',
+      );
+    } else {
+      syncEntityId(
+        this.state.selectedEntities,
+        params.props.selectedEntityId,
+        params.oldProps.selectedEntityId,
+        attributeManager,
+        'instanceSelectedEntity',
+      );
+    }
 
-    syncAttribute(this, attributeManager, {
-      attributeName: 'instanceHoveredEntity',
-      accessorProp: 'getIsHovered',
-      accessor: params.props.getIsHovered,
-      oldAccessor: params.oldProps.getIsHovered,
-      trigger: triggers?.getIsHovered,
-      oldTrigger: oldTriggers?.getIsHovered,
-      entityId: params.props.hoveredEntityId,
-      oldEntityId: params.oldProps.hoveredEntityId,
-      stateKey: 'hoveredEntities',
-    });
+    // -- Hover (single-ID only) --
+    syncEntityId(
+      this.state.hoveredEntities,
+      params.props.hoveredEntityId,
+      params.oldProps.hoveredEntityId,
+      attributeManager,
+      'instanceHoveredEntity',
+    );
   }
 
   /**

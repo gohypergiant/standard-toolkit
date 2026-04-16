@@ -20,36 +20,27 @@ import type { Rgba255Tuple } from '@accelint/predicates';
  * @template TLayerProps - The host layer's props type to intersect with.
  */
 export type CoffinCornerExtensionProps<TLayerProps = unknown> = {
-  /** The currently selected entity ID. Ignored when `getIsSelected` is provided. */
-  selectedEntityId?: EntityId;
-  /** The currently hovered entity ID. Ignored when `getIsHovered` is provided. */
-  hoveredEntityId?: EntityId;
   /**
-   * Accessor that returns `true` when a data item should show selected brackets.
-   * When provided, takes precedence over `selectedEntityId` / `getEntityId`.
-   *
-   * Use `updateTriggers.getIsSelected` to re-evaluate when external state changes
-   * (e.g. a SelectionManager's selected set).
+   * The currently selected entity ID (single-select).
+   * Ignored when `selectedEntityIds` is provided.
+   */
+  selectedEntityId?: EntityId;
+  /**
+   * Set of currently selected entity IDs (multiselect).
+   * When provided, takes precedence over `selectedEntityId`.
    *
    * @example
    * ```tsx
    * <SymbolLayer
    *   extensions={[new CoffinCornerExtension()]}
-   *   getIsSelected={(d) => selected.has(d.id)}
-   *   updateTriggers={{ getIsSelected: selected }}
+   *   selectedEntityIds={selectedSet}
+   *   hoveredEntityId={hoveredId}
    * />
    * ```
    */
-  // biome-ignore lint/suspicious/noExplicitAny: Data type is unknown at extension level.
-  getIsSelected?: (item: any) => boolean;
-  /**
-   * Accessor that returns `true` when a data item should show hovered brackets.
-   * When provided, takes precedence over `hoveredEntityId` / `getEntityId`.
-   *
-   * Use `updateTriggers.getIsHovered` to re-evaluate when external state changes.
-   */
-  // biome-ignore lint/suspicious/noExplicitAny: Data type is unknown at extension level.
-  getIsHovered?: (item: any) => boolean;
+  selectedEntityIds?: ReadonlySet<EntityId>;
+  /** The currently hovered entity ID. */
+  hoveredEntityId?: EntityId;
   /**
    * RGBA color (0-255) for the selected-state bracket fill.
    * Alpha modulates the bracket opacity.
@@ -58,8 +49,8 @@ export type CoffinCornerExtensionProps<TLayerProps = unknown> = {
   selectedCoffinCornerColor?: Rgba255Tuple;
   /**
    * Accessor to extract an entity ID from a data item. Matched against
-   * `selectedEntityId` and `hoveredEntityId` to drive the shader state.
-   * Ignored when `getIsSelected` / `getIsHovered` are provided.
+   * `selectedEntityId`, `selectedEntityIds`, and `hoveredEntityId` to drive
+   * the shader state.
    * @default (item) => item.id
    */
   // biome-ignore lint/suspicious/noExplicitAny: Data type is unknown at extension level.

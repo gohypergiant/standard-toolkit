@@ -12,7 +12,7 @@
 
 import '@/deckgl/symbol-layer/fiber';
 import { uuid } from '@accelint/core';
-import { useCallback, useState } from 'react';
+import { useState, useCallback } from 'react';
 import { BaseMap } from '@/deckgl/base-map';
 import iconMapping from '../../shapes/__fixtures__/atlas.json';
 import iconAtlas from '../../shapes/__fixtures__/atlas.png';
@@ -206,16 +206,6 @@ function MultiSelectDemo({
     );
   }, []);
 
-  const getIsSelected = useCallback(
-    (d: { id: number }) => selected.has(d.id),
-    [selected],
-  );
-
-  const getIsHovered = useCallback(
-    (d: { id: number }) => d.id === hoveredId,
-    [hoveredId],
-  );
-
   return (
     <div className='relative h-dvh w-dvw'>
       <BaseMap
@@ -235,9 +225,8 @@ function MultiSelectDemo({
           getSize={(d: unknown) => (d as IconData).size}
           pickable
           extensions={[coffinCornerExtension]}
-          getIsSelected={getIsSelected}
-          getIsHovered={getIsHovered}
-          updateTriggers={{ getIsSelected: selected, getIsHovered: hoveredId }}
+          selectedEntityIds={selected}
+          hoveredEntityId={hoveredId}
           selectedCoffinCornerColor={selectedCoffinCornerColor}
         />
         <symbolLayer
@@ -246,18 +235,17 @@ function MultiSelectDemo({
           defaultSymbolOptions={{ colorMode: 'Dark', square: true }}
           pickable
           extensions={[coffinCornerExtension]}
-          getIsSelected={getIsSelected}
-          getIsHovered={getIsHovered}
-          updateTriggers={{ getIsSelected: selected, getIsHovered: hoveredId }}
+          selectedEntityIds={selected}
+          hoveredEntityId={hoveredId}
           selectedCoffinCornerColor={selectedCoffinCornerColor}
         />
       </BaseMap>
 
       <div className='absolute top-l left-l z-10 rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
-        <p className='font-bold text-header-l'>Multi-Select Accessor</p>
+        <p className='font-bold text-header-l'>Multi-Select</p>
         <p className='mt-s text-body-s text-content-secondary'>
           Click to toggle selection across both layers. Uses{' '}
-          <code>getIsSelected</code> / <code>getIsHovered</code> accessors.
+          <code>selectedEntityIds</code> Set prop.
         </p>
         {selected.size > 0 && (
           <p className='mt-s text-body-s text-content-secondary'>
