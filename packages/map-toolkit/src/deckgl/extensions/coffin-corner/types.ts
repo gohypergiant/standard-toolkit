@@ -39,8 +39,16 @@ export type CoffinCornerExtensionProps<TLayerProps = unknown> = {
    * ```
    */
   selectedEntityIds?: ReadonlySet<EntityId>;
-  /** The currently hovered entity ID. */
+  /**
+   * The currently hovered entity ID (single hover).
+   * Ignored when `hoveredEntityIds` is provided.
+   */
   hoveredEntityId?: EntityId;
+  /**
+   * Set of currently hovered entity IDs (e.g. drag-select preview).
+   * When provided, takes precedence over `hoveredEntityId`.
+   */
+  hoveredEntityIds?: ReadonlySet<EntityId>;
   /**
    * RGBA color (0-255) for the selected-state bracket fill.
    * Alpha modulates the bracket opacity.

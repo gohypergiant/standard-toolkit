@@ -467,6 +467,40 @@ describe('CoffinCornerExtension', () => {
       expect(layer.state.selectedEntities.has('z')).toBe(false);
       expect(layer.state.selectedEntities.get('a')).toBe(1);
     });
+
+    it('should sync hoveredEntityIds Set to entity map', () => {
+      const layer = createMockLayer();
+      const ids = new Set<EntityId>(['a', 'b']);
+
+      extension.updateState.call(
+        layer,
+        createMockParams(
+          { hoveredEntityIds: ids },
+          { hoveredEntityIds: undefined },
+        ),
+      );
+
+      expect(layer.state.hoveredEntities.size).toBe(2);
+      expect(layer.state.hoveredEntities.get('a')).toBe(1);
+      expect(layer.state.hoveredEntities.get('b')).toBe(1);
+      expect(layer.invalidate).toHaveBeenCalledWith('instanceHoveredEntity');
+    });
+
+    it('should prefer hoveredEntityIds over hoveredEntityId', () => {
+      const layer = createMockLayer();
+      const ids = new Set<EntityId>(['a', 'b']);
+
+      extension.updateState.call(
+        layer,
+        createMockParams(
+          { hoveredEntityIds: ids, hoveredEntityId: 'z' },
+          { hoveredEntityIds: undefined, hoveredEntityId: undefined },
+        ),
+      );
+
+      expect(layer.state.hoveredEntities.size).toBe(2);
+      expect(layer.state.hoveredEntities.has('z')).toBe(false);
+    });
   });
 
   describe('draw', () => {

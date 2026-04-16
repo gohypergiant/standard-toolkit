@@ -503,6 +503,7 @@ export class CoffinCornerExtension extends LayerExtension {
     selectedEntityId: { type: 'value', value: undefined },
     selectedEntityIds: { type: 'value', value: undefined },
     hoveredEntityId: { type: 'value', value: undefined },
+    hoveredEntityIds: { type: 'value', value: undefined },
     selectedCoffinCornerColor: {
       type: 'color',
       value: DEFAULT_SELECTED_CORNER_FILL,
@@ -612,14 +613,24 @@ export class CoffinCornerExtension extends LayerExtension {
       );
     }
 
-    // -- Hover (single-ID only) --
-    syncEntityId(
-      this.state.hoveredEntities,
-      params.props.hoveredEntityId,
-      params.oldProps.hoveredEntityId,
-      attributeManager,
-      'instanceHoveredEntity',
-    );
+    // -- Hover: Set path takes precedence over single-ID --
+    if (params.props.hoveredEntityIds) {
+      syncEntitySet(
+        this.state.hoveredEntities,
+        params.props.hoveredEntityIds,
+        params.oldProps.hoveredEntityIds,
+        attributeManager,
+        'instanceHoveredEntity',
+      );
+    } else {
+      syncEntityId(
+        this.state.hoveredEntities,
+        params.props.hoveredEntityId,
+        params.oldProps.hoveredEntityId,
+        attributeManager,
+        'instanceHoveredEntity',
+      );
+    }
   }
 
   /**
