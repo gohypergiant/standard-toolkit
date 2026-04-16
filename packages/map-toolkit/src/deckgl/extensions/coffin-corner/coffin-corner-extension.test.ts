@@ -436,6 +436,25 @@ describe('CoffinCornerExtension', () => {
       expect(layer.state.selectedEntities.get('c')).toBe(1);
     });
 
+    it('should clear entity map when selectedEntityIds is an empty Set', () => {
+      const layer = createMockLayer();
+      layer.state.selectedEntities.set('a', 1);
+      layer.state.selectedEntities.set('b', 1);
+
+      const emptySet = new Set<EntityId>();
+
+      extension.updateState.call(
+        layer,
+        createMockParams(
+          { selectedEntityIds: emptySet },
+          { selectedEntityIds: undefined },
+        ),
+      );
+
+      expect(layer.state.selectedEntities.size).toBe(0);
+      expect(layer.invalidate).toHaveBeenCalledWith('instanceSelectedEntity');
+    });
+
     it('should not invalidate when selectedEntityIds is same reference', () => {
       const layer = createMockLayer();
       const ids = new Set<EntityId>(['a']);

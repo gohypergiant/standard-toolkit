@@ -57,8 +57,8 @@ export type CoffinCornerExtensionProps<TLayerProps = unknown> = {
   selectedCoffinCornerColor?: Rgba255Tuple;
   /**
    * Accessor to extract an entity ID from a data item. Matched against
-   * `selectedEntityId`, `selectedEntityIds`, and `hoveredEntityId` to drive
-   * the shader state.
+   * `selectedEntityId`, `selectedEntityIds`, `hoveredEntityId`, and
+   * `hoveredEntityIds` to drive the shader state.
    * @default (item) => item.id
    */
   // biome-ignore lint/suspicious/noExplicitAny: Data type is unknown at extension level.

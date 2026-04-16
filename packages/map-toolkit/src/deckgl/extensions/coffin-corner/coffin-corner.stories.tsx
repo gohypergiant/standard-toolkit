@@ -130,7 +130,7 @@ export const Default: Story = {
   ),
 };
 
-// -- Accessor-based multi-select story --
+// -- Set-based multi-select story --
 
 const MULTI_MAP_ID = uuid();
 const ICON_LAYER_ID = 'multi-icons';
@@ -257,7 +257,7 @@ function MultiSelectDemo({
   );
 }
 
-export const MultiSelectAccessor: Story = {
+export const MultiSelect: Story = {
   args: {
     selectedCoffinCornerColor: [57, 183, 250, 255],
   },

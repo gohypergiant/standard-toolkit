@@ -48,7 +48,7 @@ The system has three independent layers plus a non-reactive registry. The React 
 | **React** | `useCoffinCorner(mapId, layerId)` | Subscribes to the store, registers the layer's entity-ID accessor with the non-reactive registry, returns `selectedId` / `hoveredId` for the requested layer |
 | **Store** (framework-agnostic) | `coffinCornerStore` | Listens to map bus (click/hover events), emits domain events (selected/deselected/hovered), holds `Map<layerId, { selectedId, hoveredId }>` per map instance |
 | **Registry** (non-reactive) | `registerCoffinCornerLayer` / `unregisterCoffinCornerLayer` | Module-level `Map` that tracks which layers are opted in and their entity-ID accessors. Writes here never trigger store subscribers, so adding a layer does not re-render siblings |
-| **Extension** (pure deck.gl) | `CoffinCornerExtension` | Reads `selectedEntityId` / `hoveredEntityId`, injects SDF shader code into IconLayer/ScatterplotLayer, draws brackets on GPU |
+| **Extension** (pure deck.gl) | `CoffinCornerExtension` | Reads `selectedEntityId(s)` / `hoveredEntityId(s)`, injects SDF shader code into IconLayer/ScatterplotLayer, draws brackets on GPU |
 
 ## API
 
@@ -62,8 +62,10 @@ deck.gl `LayerExtension` that injects coffin corner shader code into the host la
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `selectedEntityId` | `EntityId \| undefined` | `undefined` | ID of the selected entity (shows colored brackets + fill) |
-| `hoveredEntityId` | `EntityId \| undefined` | `undefined` | ID of the hovered entity (shows white brackets) |
+| `selectedEntityId` | `EntityId \| undefined` | `undefined` | ID of the selected entity (single-select). Ignored when `selectedEntityIds` is provided. |
+| `selectedEntityIds` | `ReadonlySet<EntityId> \| undefined` | `undefined` | Set of selected entity IDs (multiselect). Takes precedence over `selectedEntityId`. |
+| `hoveredEntityId` | `EntityId \| undefined` | `undefined` | ID of the hovered entity (shows white brackets). Ignored when `hoveredEntityIds` is provided. |
+| `hoveredEntityIds` | `ReadonlySet<EntityId> \| undefined` | `undefined` | Set of hovered entity IDs (e.g. drag-select preview). Takes precedence over `hoveredEntityId`. |
 | `selectedCoffinCornerColor` | `[R, G, B, A]` (0-255) | `[57, 183, 250, 255]` | Bracket fill color when selected |
 | `getEntityId` | `(item: any) => EntityId` | `(item) => item.id` | Accessor to extract entity ID from data items |
 
@@ -349,6 +351,45 @@ Override the default blue (`#39B7FA`) bracket color:
 ```
 
 The alpha channel modulates bracket opacity. `[255, 0, 0, 127]` gives you semi-transparent red brackets.
+
+### Multiselect with `selectedEntityIds`
+
+For multiselect scenarios (e.g. with a SelectionManager), pass a `Set` instead of a single ID. The extension draws brackets on every entity in the Set.
+
+```tsx
+function MultiSelectMap({ mapId }) {
+  const [selected, setSelected] = useState<Set<number>>(() => new Set());
+
+  const handleClick = useCallback((info: PickingInfo) => {
+    if (!info.object) {
+      setSelected(new Set());
+      return;
+    }
+    setSelected((prev) => {
+      const next = new Set(prev);
+      const id = info.object.id;
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }, []);
+
+  return (
+    <BaseMap id={mapId} onClick={handleClick}>
+      <symbolLayer
+        id="symbols"
+        data={data}
+        pickable
+        extensions={[coffinCornerExtension]}
+        selectedEntityIds={selected}
+        hoveredEntityId={hoveredId}
+      />
+    </BaseMap>
+  );
+}
+```
+
+The same pattern works for `hoveredEntityIds` (e.g. previewing entities under a drag-select rectangle).
 
 ## Limitations
 
