@@ -107,51 +107,42 @@ export function FloatingCard({
   initialDimensions,
   initialPosition,
 }: PropsWithChildren<FloatingCardProps>) {
-  const floatingCardContext = useFloatingCard();
+  const { cards, api: floatingCardApi } = useFloatingCard();
 
   const { width, height } = initialDimensions ?? defaultDimensions;
+  const { x, y } = initialPosition ?? {};
 
   // Register card with Dockview API when isOpen changes.
   // Early return if API not ready (Dockview not fully initialized).
   useEffect(() => {
-    if (!floatingCardContext.api) {
+    if (!floatingCardApi) {
       return;
     }
     if (!isOpen) {
-      floatingCardContext.api.getPanel(id)?.api.close();
+      floatingCardApi.getPanel(id)?.api.close();
       return;
     }
 
-    if (!floatingCardContext.api.getPanel(id)) {
-      const panel = floatingCardContext.api.addPanel({
+    if (!floatingCardApi.getPanel(id)) {
+      const panel = floatingCardApi.addPanel({
         id,
         title,
         component: 'default',
-        floating: { width, height, ...initialPosition },
+        floating: { width, height, x, y },
       });
 
       panel.group.locked = 'no-drop-target';
     }
 
     // Cleanup not included here. Cleanup is done at the provider level when the card is removed from the `cards` registry.
-  }, [
-    id,
-    title,
-    isOpen,
-    width,
-    height,
-    initialPosition,
-    floatingCardContext.api,
-  ]);
+  }, [id, title, isOpen, width, height, x, y, floatingCardApi]);
 
   useEffect(() => {
-    const panel = floatingCardContext.api?.getPanel(id);
+    const panel = floatingCardApi?.getPanel(id);
     if (panel) {
       panel.setTitle(title ?? id);
     }
-  }, [title, floatingCardContext.api, id]);
+  }, [title, floatingCardApi, id]);
 
-  return isOpen && floatingCardContext.cards[id]
-    ? createPortal(children, floatingCardContext.cards[id])
-    : null;
+  return isOpen && cards[id] ? createPortal(children, cards[id]) : null;
 }
