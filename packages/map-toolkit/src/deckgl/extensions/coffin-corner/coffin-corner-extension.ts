@@ -12,6 +12,7 @@
 
 import { LayerExtension } from '@deck.gl/core';
 import { IconLayer, ScatterplotLayer } from '@deck.gl/layers';
+import { isSetEqual } from 'radashi';
 import { createLoggerDomain } from '@/shared/logger';
 import type { Rgba255Tuple } from '@accelint/predicates';
 import type { Layer, UpdateParameters } from '@deck.gl/core';
@@ -398,23 +399,18 @@ const DEFAULT_SELECTED_CORNER_FILL: Rgba255Tuple = [57, 183, 250, 255];
 /** Layer types supported by this extension. */
 const SUPPORTED_LAYERS = [IconLayer, ScatterplotLayer];
 
-/** Value equality for two Sets. Returns true if both contain the same elements. */
-function setsEqual(
+/** Value equality for two optional Sets. */
+function entitySetsEqual(
   a: ReadonlySet<EntityId> | undefined,
   b: ReadonlySet<EntityId> | undefined,
 ): boolean {
   if (a === b) {
     return true;
   }
-  if (a == null || b == null || a.size !== b.size) {
+  if (a == null || b == null) {
     return false;
   }
-  for (const id of a) {
-    if (!b.has(id)) {
-      return false;
-    }
-  }
-  return true;
+  return isSetEqual(a as Set<EntityId>, b as Set<EntityId>);
 }
 
 /**
@@ -428,7 +424,7 @@ function syncEntitySet(
   attributeManager: { invalidate: (name: string) => void } | null,
   attributeName: string,
 ): void {
-  if (!setsEqual(newIds, oldIds)) {
+  if (!entitySetsEqual(newIds, oldIds)) {
     entities.clear();
     if (newIds) {
       for (const id of newIds) {

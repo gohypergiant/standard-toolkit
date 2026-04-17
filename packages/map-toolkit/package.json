@@ -49,6 +49,7 @@
     "milsymbol": "^3.0.2",
     "mjolnir.js": "^3.0.0",
     "node-fetch": "^2.6.7",
+    "radashi": "^12.6.2",
     "react": "^19",
     "react-dom": "^19",
     "remark-gfm": "^4.0.1",
@@ -186,6 +187,7 @@
     "maplibre-gl": "^5.7.1",
     "milsymbol": "^3.0.2",
     "mjolnir.js": "^3.0.0",
+    "radashi": "^12.6.2",
     "react-map-gl": "^8.1.0"
   },
   "owner": "default/pathfinder",

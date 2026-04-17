@@ -8,6 +8,20 @@ import * as CoffinCornerStories from './coffin-corner.stories';
 
 A deck.gl layer extension that draws bracket-shaped "coffin corner" indicators around hovered and selected map entities. Works with IconLayer (and subclasses like SymbolLayer) and ScatterplotLayer.
 
+## Dependencies
+
+| Package | Role |
+|---------|------|
+| `@deck.gl/core` | deck.gl layer extension system |
+| `@deck.gl/layers` | IconLayer, ScatterplotLayer support |
+| `radashi` | Value equality for Set comparison (`isSetEqual`) |
+
+**Installation:**
+
+```bash
+pnpm add @accelint/map-toolkit @deck.gl/core @deck.gl/layers radashi
+```
+
 ## Quick Start
 
 ```tsx
