@@ -458,7 +458,7 @@
     "@dnd-kit/utilities": "^3.2.2",
     "@internationalized/date": "~3.12.1",
     "@radix-ui/react-avatar": "^1.1.10",
-    "@react-types/shared": "~3.32.0",
+    "@react-types/shared": "~3.34.0",
     "@tanstack/react-table": "^8.21.3",
     "client-only": "^0.0.1",
     "dockview-react": "^5.0.0",
