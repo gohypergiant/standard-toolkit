@@ -604,6 +604,7 @@ export { TooltipContext } from './components/tooltip/context';
 export { Tooltip } from './components/tooltip';
 export { TooltipTrigger } from './components/tooltip/trigger';
 export type {
+  TooltipFocusableProps,
   TooltipProps,
   TooltipTriggerProps,
 } from './components/tooltip/types';

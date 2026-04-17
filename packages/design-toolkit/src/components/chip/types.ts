@@ -41,7 +41,10 @@ export type ChipListProps<T> = Omit<TagGroupProps, 'children'> &
  *
  * Basic chip with color and size variants, can be used standalone or in a ChipList.
  */
-export type ChipProps = Omit<ComponentPropsWithRef<'div'>, 'size' | 'onClick'> &
+export type ChipProps = Omit<
+  ComponentPropsWithRef<'div'>,
+  'size' | 'onClick' | 'onFocus' | 'onBlur'
+> &
   BaseChipProps & {
     /** Additional CSS class name for styling. */
     className?: string;

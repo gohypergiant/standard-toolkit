@@ -9,11 +9,13 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-import type { ComponentPropsWithRef } from 'react';
+import type { ComponentPropsWithRef, ReactNode, RefAttributes } from 'react';
 import type {
   TooltipProps as AriaTooltipProps,
   TooltipTriggerComponentProps,
 } from 'react-aria-components/Tooltip';
+import type { FocusableProps } from 'react-aria';
+import type { FocusableElement } from '@react-types/shared';
 
 /**
  * Props for the TooltipTrigger component.
@@ -31,3 +33,6 @@ export type TooltipProps = AriaTooltipProps & {
   /** Ref to the parent element for portal positioning. */
   parentRef?: React.RefObject<HTMLElement | null>;
 };
+
+export type TooltipFocusableProps = Omit<FocusableProps, 'children'> &
+  RefAttributes<FocusableElement> & { children?: ReactNode };

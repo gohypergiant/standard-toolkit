@@ -38,7 +38,7 @@ export type OptionsItemProps<T extends OptionsDataItem> = Omit<
   ListBoxItemProps<T>,
   'className'
 > &
-  RefAttributes<T> & {
+  RefAttributes<HTMLDivElement> & {
     /** CSS class names for item elements. */
     classNames?: {
       /** Class name for the item container. */

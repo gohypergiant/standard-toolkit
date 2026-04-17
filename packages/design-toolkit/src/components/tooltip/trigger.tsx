@@ -28,13 +28,9 @@ import { TooltipTrigger as AriaTooltipTrigger } from 'react-aria-components/Tool
 import { useContextProps } from 'react-aria-components/slots';
 import { TooltipContext } from './context';
 import type { FocusableElement } from '@react-types/shared';
-import type { TooltipTriggerProps } from './types';
+import type { TooltipFocusableProps, TooltipTriggerProps } from './types';
 
-function TooltipFocusable({
-  children,
-  ref,
-  ...props
-}: FocusableProps & RefAttributes<FocusableElement>) {
+function TooltipFocusable({ children, ref, ...props }: TooltipFocusableProps) {
   ref = useObjectRef(ref);
 
   const { focusableProps } = useFocusable(props, ref);
