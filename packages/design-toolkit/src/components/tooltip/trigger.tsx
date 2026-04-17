@@ -12,7 +12,7 @@
 'use client';
 
 import 'client-only';
-import { useFocusable, type FocusableProps } from 'react-aria';
+import { useFocusable } from 'react-aria';
 import { mergeProps, useObjectRef } from 'react-aria';
 import { mergeRefs } from 'react-aria/mergeRefs';
 import {
@@ -21,7 +21,6 @@ import {
   type DOMAttributes,
   type ReactElement,
   type ReactNode,
-  type RefAttributes,
   version,
 } from 'react';
 import { TooltipTrigger as AriaTooltipTrigger } from 'react-aria-components/Tooltip';
