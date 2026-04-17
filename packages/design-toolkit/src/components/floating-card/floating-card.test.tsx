@@ -968,7 +968,7 @@ describe('FloatingCard', () => {
       );
     });
 
-    it('should not include x or y in the floating option when initialPosition is omitted', () => {
+    it('should include x and y as undefined in the floating option when initialPosition is omitted', () => {
       const { api } = makeEmptyApi();
       const div = document.createElement('div');
 
@@ -985,13 +985,13 @@ describe('FloatingCard', () => {
       const addPanel = (
         api as unknown as { addPanel: ReturnType<typeof vi.fn> }
       ).addPanel;
-      const floating = addPanel.mock.calls[0][0].floating as Record<
+      const floating = addPanel.mock.calls[0]?.[0].floating as Record<
         string,
         unknown
       >;
 
-      expect(floating).not.toHaveProperty('x');
-      expect(floating).not.toHaveProperty('y');
+      expect(floating).toHaveProperty('x', undefined);
+      expect(floating).toHaveProperty('y', undefined);
     });
   });
 
