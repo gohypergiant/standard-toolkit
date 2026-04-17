@@ -227,7 +227,7 @@ createInteractiveVisualTests({
   variants: sidenavItemVariants,
   states: ['default', 'hover', 'focus', 'pressed', 'disabled'],
   interactionTarget: 'button',
-  waitMs: 200,
+  waitMs: 300,
 });
 
 // ---------------------------------------------------------------------------

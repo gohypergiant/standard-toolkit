@@ -101,6 +101,18 @@
     --trigger-width: initial; /* is inlined by react aria components on render */
     @apply -ml-s select-none;
     min-width: calc(var(--trigger-width) + (var(--spacing-s) * 2));
+
+    @variant motion-safe {
+      @variant entering {
+        animation: fade-enter var(--animation-duration-normal)
+          var(--animation-easing-decelerate) both;
+      }
+
+      @variant exiting {
+        animation: fade-exit var(--animation-duration-fast)
+          var(--animation-easing-accelerate) both;
+      }
+    }
   }
 }
 

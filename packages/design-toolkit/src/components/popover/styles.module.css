@@ -14,8 +14,42 @@
 
 @layer components.l1 {
   .popover {
+    --offset: var(--spacing-xs);
+    --offset-neg: calc(var(--spacing-xs) * -1);
+
     @apply rounded-medium bg-surface-raised p-s outline-static outline;
     max-width: 280px;
+    transition:
+      transform var(--animation-duration-normal),
+      opacity var(--animation-duration-normal);
+
+    @variant motion-safe {
+      @variant placement-top {
+        --origin: translateY(var(--offset));
+      }
+
+      @variant placement-bottom {
+        --origin: translateY(var(--offset-neg));
+      }
+
+      @variant placement-left {
+        --origin: translateX(var(--offset));
+      }
+
+      @variant placement-right {
+        --origin: translateX(var(--offset-neg));
+      }
+
+      @variant entering {
+        transform: var(--origin);
+        opacity: 0;
+      }
+
+      @variant exiting {
+        transform: var(--origin);
+        opacity: 0;
+      }
+    }
   }
 
   .title {

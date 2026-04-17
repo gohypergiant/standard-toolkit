@@ -86,6 +86,7 @@ export function Notice({
       toast={{ key: id, content: message, onClose }}
       data-color={color}
       data-size={size}
+      style={{ viewTransitionName: id }}
     >
       <ToastContent className={clsx(styles.content, classNames?.content)}>
         {!hideIcon && size === 'medium' && (

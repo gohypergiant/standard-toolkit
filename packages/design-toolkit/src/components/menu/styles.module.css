@@ -427,5 +427,17 @@
 
   .popover {
     @apply outline-none;
+
+    @variant motion-safe {
+      @variant entering {
+        animation: fade-enter var(--animation-duration-normal)
+          var(--animation-easing-decelerate) both;
+      }
+
+      @variant exiting {
+        animation: fade-exit var(--animation-duration-fast)
+          var(--animation-easing-accelerate) both;
+      }
+    }
   }
 }
