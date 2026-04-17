@@ -16,13 +16,12 @@ import type { Key, Selection } from '@react-types/shared';
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useMemo } from 'react';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { Tree as AriaTree, type DropTarget } from 'react-aria-components/Tree';
 import {
-  Tree as AriaTree,
-  composeRenderProps,
   DropIndicator,
-  type DropTarget,
   useDragAndDrop,
-} from 'react-aria-components';
+} from 'react-aria-components/useDragAndDrop';
 import { TreeContext } from './context';
 import styles from './styles.module.css';
 import type { TreeProps } from './types';

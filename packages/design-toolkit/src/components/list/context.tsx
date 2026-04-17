@@ -13,7 +13,7 @@
 
 import 'client-only';
 import { createContext, useContext } from 'react';
-import type { ContextValue } from 'react-aria-components';
+import type { ContextValue } from 'react-aria-components/slots';
 import type { ListProps } from './types';
 
 const ListStylesDefaults = {

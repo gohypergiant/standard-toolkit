@@ -13,41 +13,12 @@
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import ChevronDown from '@accelint/icons/chevron-down';
-import { CollectionNode } from '@react-aria/collections';
-import { useControlledState } from '@react-stately/utils';
 import { useCallback, useRef } from 'react';
-
-// Patch CollectionNode.childNodes getter to return an empty array instead of
-// throwing. React 19 dev-mode profiling (logComponentRender → addObjectDiffToProperties)
-// accesses this getter when diffing component props during commitPassiveMountOnFiber.
-// The thrown error prevents useComboBoxState's effect from running, breaking
-// internal state tracking and causing input value resets on every keystroke
-// with static children.
-// https://github.com/adobe/react-spectrum/issues/9405
-if (
-  Object.getOwnPropertyDescriptor(CollectionNode.prototype, 'childNodes')?.get
-) {
-  Object.defineProperty(CollectionNode.prototype, 'childNodes', {
-    get() {
-      return [];
-    },
-    configurable: true,
-  });
-}
-
 import {
-  Button,
   ComboBox,
   type ComboBoxProps,
-  composeRenderProps,
   FieldError,
-  Input,
-  ListLayout,
-  Popover,
-  Text,
-  useContextProps,
-  Virtualizer,
-} from 'react-aria-components';
+} from 'react-aria-components/ComboBox';
 import { ClearButton } from '../button/__internal__/clear';
 import { Icon } from '../icon';
 import { Label } from '../label';
@@ -56,6 +27,14 @@ import { ComboBoxFieldContext } from './context';
 import styles from './styles.module.css';
 import type { OptionsDataItem } from '../options/types';
 import type { ComboBoxFieldProps } from './types';
+import { useControlledState } from 'react-stately/useControlledState';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { useContextProps } from 'react-aria-components/slots';
+import { Input } from 'react-aria-components/Input';
+import { Button } from 'react-aria-components/Button';
+import { Text } from 'react-aria-components/Text';
+import { Popover } from 'react-aria-components/Popover';
+import { Virtualizer, ListLayout } from 'react-aria-components/Virtualizer';
 
 /**
  * ComboBoxField - Accessible searchable combobox with dropdown options

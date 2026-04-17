@@ -17,7 +17,7 @@ import type {
   DateValue,
   FieldErrorProps,
   LabelProps,
-} from 'react-aria-components';
+} from 'react-aria-components/DateField';
 
 /**
  * Props for the DateField component.

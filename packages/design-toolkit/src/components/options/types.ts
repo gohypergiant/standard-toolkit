@@ -16,7 +16,7 @@ import type {
   ListBoxItemProps,
   ListBoxProps,
   ListBoxSectionProps,
-} from 'react-aria-components';
+} from 'react-aria-components/ListBox';
 import type { IconProps } from '../icon/types';
 
 /**

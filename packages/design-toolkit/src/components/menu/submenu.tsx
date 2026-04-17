@@ -13,7 +13,7 @@
 'use client';
 
 import 'client-only';
-import { SubmenuTrigger } from 'react-aria-components';
+import { SubmenuTrigger } from 'react-aria-components/Menu';
 
 /**
  * MenuSubmenu - Trigger for nested submenu flyouts

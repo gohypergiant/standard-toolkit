@@ -12,7 +12,7 @@
 'use client';
 
 import { isUUID, type UniqueId } from '@accelint/core';
-import { Pressable } from '@react-aria/interactions';
+import { Pressable } from 'react-aria';
 import 'client-only';
 import { useContext } from 'react';
 import { ViewStackContext } from '../view-stack/context';

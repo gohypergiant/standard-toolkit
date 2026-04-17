@@ -15,11 +15,11 @@ import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import {
   Dialog as AriaDialog,
-  composeRenderProps,
   Modal,
   ModalOverlay,
-  useContextProps,
-} from 'react-aria-components';
+} from 'react-aria-components/Modal';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { useContextProps } from 'react-aria-components/slots';
 import { PortalProvider } from '@/providers/portal';
 import { DialogContext } from './context';
 import styles from './styles.module.css';

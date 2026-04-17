@@ -13,7 +13,7 @@
 import type { Payload } from '@accelint/bus';
 import type { UniqueId } from '@accelint/core';
 import type { ComponentProps, PropsWithChildren, RefAttributes } from 'react';
-import type { Pressable } from 'react-aria-components';
+import type { Pressable } from 'react-aria-components/Pressable';
 import type { ViewStackEventTypes } from './events';
 
 /**

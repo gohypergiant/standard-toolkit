@@ -12,7 +12,7 @@
 
 import { render, screen } from '@testing-library/react';
 import { createRef, type RefObject } from 'react';
-import { Provider } from 'react-aria-components';
+import { Provider } from 'react-aria-components/slots';
 import { describe, expect, it } from 'vitest';
 import { CoordinateFieldContext } from './context';
 import { CoordinateField } from './index';

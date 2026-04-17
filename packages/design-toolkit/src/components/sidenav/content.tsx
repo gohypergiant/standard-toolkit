@@ -13,7 +13,7 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { Provider } from 'react-aria-components';
+import { Provider } from 'react-aria-components/slots';
 import { DividerContext } from '../divider/context';
 import styles from './styles.module.css';
 import type { SidenavContentProps } from './types';

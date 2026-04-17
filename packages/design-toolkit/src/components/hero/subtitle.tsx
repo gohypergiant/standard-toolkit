@@ -12,7 +12,7 @@
 'use client';
 
 import 'client-only';
-import { Text } from 'react-aria-components';
+import { Text } from 'react-aria-components/Text';
 
 /**
  * HeroSubtitle - Secondary text content for the Hero component.

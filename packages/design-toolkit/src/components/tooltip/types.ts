@@ -13,7 +13,7 @@ import type { ComponentPropsWithRef } from 'react';
 import type {
   TooltipProps as AriaTooltipProps,
   TooltipTriggerComponentProps,
-} from 'react-aria-components';
+} from 'react-aria-components/Tooltip';
 
 /**
  * Props for the TooltipTrigger component.

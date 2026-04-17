@@ -11,14 +11,14 @@
  */
 
 import type { ComponentPropsWithRef, RefAttributes } from 'react';
+import type { Heading } from 'react-aria-components/Heading';
 import type {
   ButtonRenderProps,
-  DisclosureGroupProps,
   DisclosurePanelProps,
   DisclosureProps,
-  Heading,
-} from 'react-aria-components';
+} from 'react-aria-components/Disclosure';
 import type { RenderPropsClassName } from '@/lib/types';
+import type { DisclosureGroupProps } from 'react-aria-components/DisclosureGroup';
 
 /**
  * Style variant options for accordion components.

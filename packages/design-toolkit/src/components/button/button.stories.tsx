@@ -11,7 +11,7 @@
  */
 
 import { Placeholder } from '@accelint/icons';
-import { composeRenderProps } from 'react-aria-components';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 import { Icon } from '../icon';
 import { Button } from './';
 import { LinkButton } from './link';

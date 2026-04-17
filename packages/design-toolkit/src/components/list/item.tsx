@@ -13,7 +13,8 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { composeRenderProps, GridListItem } from 'react-aria-components';
+import { GridListItem } from 'react-aria-components/GridList';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 import { ListItemTitle } from './item-title';
 import styles from './styles.module.css';
 import type { ListItemProps } from './types';

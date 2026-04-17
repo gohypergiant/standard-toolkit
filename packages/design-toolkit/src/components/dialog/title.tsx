@@ -13,7 +13,7 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { Heading, type HeadingProps } from 'react-aria-components';
+import { Heading, type HeadingProps } from 'react-aria-components/Heading';
 import styles from './styles.module.css';
 
 /**

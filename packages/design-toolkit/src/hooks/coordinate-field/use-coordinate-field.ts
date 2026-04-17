@@ -10,14 +10,14 @@
  * governing permissions and limitations under the License.
  */
 
-import { useId } from '@react-aria/utils';
+import { useId } from 'react-aria';
 import { useMemo } from 'react';
 import { useCoordinateCopy } from './use-coordinate-copy';
 import { useCoordinateFieldState } from './use-coordinate-field-state';
 import { useCoordinateFocus } from './use-coordinate-focus';
 import { useCoordinatePaste } from './use-coordinate-paste';
 import { useTimeoutCleanup } from './use-timeout-cleanup';
-import type { ValidationResult } from 'react-aria-components';
+import type { ValidationResult } from 'react-aria-components/TextField';
 import type {
   CoordinateFieldProps,
   CoordinateSystem,

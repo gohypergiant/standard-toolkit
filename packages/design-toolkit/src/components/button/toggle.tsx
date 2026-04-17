@@ -13,15 +13,13 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import {
-  ToggleButton as AriaToggleButton,
-  composeRenderProps,
-  useContextProps,
-} from 'react-aria-components';
+import { ToggleButton as AriaToggleButton } from 'react-aria-components/ToggleButton';
 import { IconProvider } from '../icon/context';
 import { ToggleButtonContext } from './context';
 import styles from './styles.module.css';
 import type { ToggleButtonProps } from './types';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { useContextProps } from 'react-aria-components/slots';
 
 /**
  * ToggleButton - A button component that maintains pressed/unpressed state

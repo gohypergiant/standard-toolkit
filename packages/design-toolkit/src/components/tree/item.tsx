@@ -14,10 +14,8 @@
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useContext } from 'react';
-import {
-  TreeItem as AriaTreeItem,
-  composeRenderProps,
-} from 'react-aria-components';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { TreeItem as AriaTreeItem } from 'react-aria-components/Tree';
 import { TreeContext, TreeItemContext } from './context';
 import styles from './styles.module.css';
 import type { TreeItemProps } from './types';

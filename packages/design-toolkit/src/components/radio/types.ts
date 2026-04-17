@@ -14,7 +14,7 @@ import type { RefAttributes } from 'react';
 import type {
   RadioGroupProps as AriaRadioGroupProps,
   RadioProps as AriaRadioProps,
-} from 'react-aria-components';
+} from 'react-aria-components/RadioGroup';
 import type { LabelProps } from '../label/types';
 
 /**

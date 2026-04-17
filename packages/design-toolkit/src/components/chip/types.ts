@@ -12,11 +12,11 @@
 
 import type { ComponentPropsWithRef, RefAttributes } from 'react';
 import type {
-  ButtonProps,
   TagGroupProps,
   TagListProps,
   TagProps,
-} from 'react-aria-components';
+} from 'react-aria-components/TagGroup';
+import type { ButtonProps } from '../button/types';
 
 type BaseChipProps = {
   color?: 'info' | 'advisory' | 'normal' | 'serious' | 'critical';

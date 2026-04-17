@@ -13,15 +13,13 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { useIsSSR } from '@react-aria/ssr';
+import { useIsSSR } from 'react-aria';
 import { useMemo } from 'react';
-import {
-  Tooltip as AriaTooltip,
-  composeRenderProps,
-} from 'react-aria-components';
+import { Tooltip as AriaTooltip } from 'react-aria-components/Tooltip';
 import { PortalProvider } from '@/providers/portal';
 import styles from './styles.module.css';
 import type { TooltipProps } from './types';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 
 /**
  * Tooltip - Contextual popup for additional information

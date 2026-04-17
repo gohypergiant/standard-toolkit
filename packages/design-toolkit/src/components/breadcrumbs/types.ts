@@ -10,7 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import type { BreadcrumbProps, LinkProps } from 'react-aria-components';
+import type { BreadcrumbProps } from 'react-aria-components/Breadcrumbs';
+import type { LinkProps } from 'react-aria-components/Link';
 
 /**
  * Props for the BreadcrumbItem component.

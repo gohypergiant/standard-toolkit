@@ -11,7 +11,10 @@
  */
 
 import type { ComponentPropsWithRef, RefAttributes } from 'react';
-import type { GridListItemProps, GridListProps } from 'react-aria-components';
+import type {
+  GridListItemProps,
+  GridListProps,
+} from 'react-aria-components/GridList';
 import type { IconProps } from '../icon/types';
 
 /**

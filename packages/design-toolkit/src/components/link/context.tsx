@@ -12,7 +12,7 @@
 'use client';
 
 import 'client-only';
-import { LinkContext } from 'react-aria-components';
+import { LinkContext } from 'react-aria-components/Link';
 import type { ProviderProps } from '@/lib/types';
 import type { LinkProps } from './types';
 
