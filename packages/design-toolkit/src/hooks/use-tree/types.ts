@@ -61,6 +61,13 @@ export type DragAndDropConfig = {
 export type UseTreeStateOptions<T> = {
   /** Initial root items in the tree. If omitted, will return an empty tree. */
   items: TreeNode<T>[];
+  /**
+   * Enable semantic cascade selection mode. When true, selecting a parent
+   * automatically selects all descendants, and parent state reflects children
+   * (selected/indeterminate/unselected). Only works with dynamic collections.
+   * @default false
+   */
+  selectionCascade?: boolean;
 };
 
 /** Return value from the useTreeState hook */
@@ -126,7 +133,10 @@ export type TreeNodeBase<T> = {
   isVisible?: boolean;
 
   /** Computed actual visibility based on ancestors and self visibility **/
-  isVisibleComputed?: boolean; //
+  isVisibleComputed?: boolean;
+
+  /** Computed indeterminate state for cascade selection (some but not all descendants selected) **/
+  isIndeterminate?: boolean;
 };
 
 export type TreeNode<T> = TreeNodeBase<T> & {
@@ -141,6 +151,11 @@ export type TreeNode<T> = TreeNodeBase<T> & {
 export type UseTreeActionsOptions<T> = {
   /** Current tree nodes to operate on */
   nodes: TreeNode<T>[];
+  /**
+   * Enable semantic cascade selection mode.
+   * @default false
+   */
+  selectionCascade?: boolean;
 };
 
 /**
