@@ -1,32 +1,22 @@
 ---
-"@accelint/map-toolkit": patch
+"@accelint/map-toolkit": major
 ---
 
-fix: support multiple coffin-corner layers per map without breaking deck.gl/maplibre viewport sync
+Refactor CoffinCornerExtension to a pure rendering primitive
 
-`useCoffinCorner` previously stored each layer's `getEntityId` accessor inside
-the reactive store. When a second layer registered, the shared state reference
-changed, triggering `useSyncExternalStore`'s post-commit snapshot-consistency
-check. The resulting mid-mount re-render desynced deck.gl's viewport from
-maplibre's on pan/zoom whenever two or more layers used the hook on the same map.
+The coffin corner store (`coffinCornerStore`), hook (`useCoffinCorner`), layer registry, and domain events have been removed. The extension now accepts entity IDs directly as props — selection policy belongs in the consuming application (e.g. via SelectionManager).
 
-Layer registration now lives in a non-reactive module-level registry. Reactive
-state holds only `selectedId` and `hoveredId`, which update exclusively via
-genuine user interaction through the map bus. The store is now multi-layer
-aware: `LayerState` is keyed by `layerId` inside a `Map`, and all bus payloads
-carry a `layerId`. Actions and bus handlers receive their owning `mapId` via
-closure rather than storing it in state.
+**Removed exports:**
+- `useCoffinCorner`, `UseCoffinCornerReturn`, `UseCoffinCornerOptions`
+- `coffinCornerStore`, `clearSelection`, `getSelectedEntityId`, `getHoveredEntityId`
+- `registerCoffinCornerLayer`, `unregisterCoffinCornerLayer`, `defaultGetEntityId`
+- `CoffinCornerEvents`, `CoffinCornerEvent`, `CoffinCornerEventType`
+- `CoffinCornerSelectedEvent`, `CoffinCornerDeselectedEvent`, `CoffinCornerHoveredEvent`
 
-**Breaking changes for direct store consumers:**
+**New props on `CoffinCornerExtension`:**
+- `selectedEntityIds: ReadonlySet<EntityId>` — replaces `selectedEntityId`
+- `hoveredEntityIds: ReadonlySet<EntityId>` — replaces `hoveredEntityId`
 
-- `CoffinCornerSelectedEvent`, `CoffinCornerDeselectedEvent`, and
-  `CoffinCornerHoveredEvent` payloads now include a required `layerId: string`
-  field.
-- `getSelectedEntityId(mapId)` and `getHoveredEntityId(mapId)` now require a
-  `layerId` argument: `getSelectedEntityId(mapId, layerId)`.
-- `clearSelection(mapId)` still clears the whole map; pass an optional
-  `layerId` to clear a single layer's state.
-- The `setLayerId` and `setGetEntityId` store actions are removed — use
-  `useCoffinCorner` (which handles registration) instead.
-
-`useCoffinCorner`'s public API is unchanged.
+**Removed props:**
+- `selectedEntityId` — use `selectedEntityIds` with a Set instead
+- `hoveredEntityId` — use `hoveredEntityIds` with a Set instead

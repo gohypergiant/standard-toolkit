@@ -762,8 +762,12 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       // Coffin corner extension props — the extension is a no-op on non-icon/scatterplot sublayers,
       // so it's safe to include on the GeoJsonLayer directly. deck.gl's extension propagation
       // forwards these props to all sublayers via LayerExtension.getSubLayerProps().
-      selectedEntityId: selectedShapeId,
-      hoveredEntityId,
+      selectedEntityIds: selectedShapeId
+        ? new Set([selectedShapeId])
+        : undefined,
+      hoveredEntityIds: hoveredEntityId
+        ? new Set([hoveredEntityId])
+        : undefined,
       getEntityId: (d: Shape['feature']) => d.properties?.shapeId as ShapeId,
       selectedCoffinCornerColor: this.coffinCornerColor,
 

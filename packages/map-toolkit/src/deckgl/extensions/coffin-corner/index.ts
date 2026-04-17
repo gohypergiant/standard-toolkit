@@ -10,29 +10,5 @@
  * governing permissions and limitations under the License.
  */
 
-// Extension exports
 export { CoffinCornerExtension } from './coffin-corner-extension';
-// Store exports
-export {
-  clearSelection,
-  coffinCornerStore,
-  getHoveredEntityId,
-  getSelectedEntityId,
-} from './store';
-// Event exports
-export { CoffinCornerEvents } from './types';
-// Hook exports
-export {
-  type UseCoffinCornerOptions,
-  type UseCoffinCornerReturn,
-  useCoffinCorner,
-} from './use-coffin-corner';
-export type {
-  CoffinCornerDeselectedEvent,
-  CoffinCornerEvent,
-  CoffinCornerEventType,
-  CoffinCornerExtensionProps,
-  CoffinCornerHoveredEvent,
-  CoffinCornerSelectedEvent,
-  EntityId,
-} from './types';
+export type { CoffinCornerExtensionProps, EntityId } from './types';

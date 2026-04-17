@@ -18,7 +18,6 @@ import iconMapping from '../../shapes/__fixtures__/atlas.json';
 import iconAtlas from '../../shapes/__fixtures__/atlas.png';
 import { CoffinCornerExtension } from './coffin-corner-extension';
 import './fiber';
-import { useCoffinCorner } from './use-coffin-corner';
 import type { Rgba255Tuple } from '@accelint/predicates';
 import type { PickingInfo } from '@deck.gl/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
@@ -69,26 +68,59 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const MAP_ID = uuid();
-const LAYER_ID = 'icons';
 const coffinCornerExtension = new CoffinCornerExtension();
+
+// -- Single-select story --
+
+const DEFAULT_MAP_ID = uuid();
 
 function CoffinCornerDemo({
   selectedCoffinCornerColor,
 }: {
   selectedCoffinCornerColor: Rgba255Tuple;
 }) {
-  const { selectedId, hoveredId } = useCoffinCorner(MAP_ID, LAYER_ID);
+  const [selected, setSelected] = useState<Set<EntityId>>(() => new Set());
+  const [hovered, setHovered] = useState<Set<EntityId>>(() => new Set());
+
+  const handleClick = useCallback((info: PickingInfo) => {
+    if (info.index === -1 || !info.object) {
+      setSelected(new Set());
+      return;
+    }
+
+    const id = (info.object as { id: EntityId }).id;
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        // Single-select: clear previous, add new
+        next.clear();
+        next.add(id);
+      }
+      return next;
+    });
+  }, []);
+
+  const handleHover = useCallback((info: PickingInfo) => {
+    setHovered(
+      info.index !== -1 && info.object
+        ? new Set([(info.object as { id: EntityId }).id])
+        : new Set(),
+    );
+  }, []);
 
   return (
     <div className='relative h-dvh w-dvw'>
       <BaseMap
         className='absolute inset-0'
-        id={MAP_ID}
+        id={DEFAULT_MAP_ID}
         initialViewState={CA_VIEW_STATE}
+        onClick={handleClick}
+        onHover={handleHover}
       >
         <iconLayer
-          id={LAYER_ID}
+          id='icons'
           data={ICON_DATA}
           iconAtlas={iconAtlas}
           iconMapping={iconMapping}
@@ -97,8 +129,8 @@ function CoffinCornerDemo({
           getSize={(d: unknown) => (d as IconData).size}
           pickable
           extensions={[coffinCornerExtension]}
-          selectedEntityId={selectedId}
-          hoveredEntityId={hoveredId}
+          selectedEntityIds={selected}
+          hoveredEntityIds={hovered}
           selectedCoffinCornerColor={selectedCoffinCornerColor}
         />
       </BaseMap>
@@ -134,8 +166,6 @@ export const Default: Story = {
 // -- Set-based multi-select story --
 
 const MULTI_MAP_ID = uuid();
-const ICON_LAYER_ID = 'multi-icons';
-const SYMBOL_LAYER_ID = 'multi-symbols';
 
 interface SymbolData {
   id: number;
@@ -178,7 +208,7 @@ function MultiSelectDemo({
   selectedCoffinCornerColor: Rgba255Tuple;
 }) {
   const [selected, setSelected] = useState<Set<EntityId>>(() => new Set());
-  const [hoveredId, setHoveredId] = useState<EntityId | undefined>();
+  const [hovered, setHovered] = useState<Set<EntityId>>(() => new Set());
 
   const handleClick = useCallback((info: PickingInfo) => {
     if (info.index === -1 || !info.object) {
@@ -200,10 +230,10 @@ function MultiSelectDemo({
   }, []);
 
   const handleHover = useCallback((info: PickingInfo) => {
-    setHoveredId(
+    setHovered(
       info.index !== -1 && info.object
-        ? (info.object as { id: EntityId }).id
-        : undefined,
+        ? new Set([(info.object as { id: EntityId }).id])
+        : new Set(),
     );
   }, []);
 
@@ -217,7 +247,7 @@ function MultiSelectDemo({
         onHover={handleHover}
       >
         <iconLayer
-          id={ICON_LAYER_ID}
+          id='multi-icons'
           data={ICON_DATA}
           iconAtlas={iconAtlas}
           iconMapping={iconMapping}
@@ -227,17 +257,17 @@ function MultiSelectDemo({
           pickable
           extensions={[coffinCornerExtension]}
           selectedEntityIds={selected}
-          hoveredEntityId={hoveredId}
+          hoveredEntityIds={hovered}
           selectedCoffinCornerColor={selectedCoffinCornerColor}
         />
         <symbolLayer
-          id={SYMBOL_LAYER_ID}
+          id='multi-symbols'
           data={SYMBOL_DATA}
           defaultSymbolOptions={{ colorMode: 'Dark', square: true }}
           pickable
           extensions={[coffinCornerExtension]}
           selectedEntityIds={selected}
-          hoveredEntityId={hoveredId}
+          hoveredEntityIds={hovered}
           selectedCoffinCornerColor={selectedCoffinCornerColor}
         />
       </BaseMap>

@@ -398,9 +398,28 @@ const DEFAULT_SELECTED_CORNER_FILL: Rgba255Tuple = [57, 183, 250, 255];
 /** Layer types supported by this extension. */
 const SUPPORTED_LAYERS = [IconLayer, ScatterplotLayer];
 
+/** Value equality for two Sets. Returns true if both contain the same elements. */
+function setsEqual(
+  a: ReadonlySet<EntityId> | undefined,
+  b: ReadonlySet<EntityId> | undefined,
+): boolean {
+  if (a === b) {
+    return true;
+  }
+  if (a == null || b == null || a.size !== b.size) {
+    return false;
+  }
+  for (const id of a) {
+    if (!b.has(id)) {
+      return false;
+    }
+  }
+  return true;
+}
+
 /**
  * Sync a Set of entity IDs into an entity state map. Replaces the full
- * contents of the map with the new Set on every change.
+ * contents of the map when the Set contents change (value equality).
  */
 function syncEntitySet(
   entities: Map<EntityId, number>,
@@ -409,33 +428,12 @@ function syncEntitySet(
   attributeManager: { invalidate: (name: string) => void } | null,
   attributeName: string,
 ): void {
-  if (newIds !== oldIds) {
+  if (!setsEqual(newIds, oldIds)) {
     entities.clear();
     if (newIds) {
       for (const id of newIds) {
         entities.set(id, 1);
       }
-    }
-    attributeManager?.invalidate(attributeName);
-  }
-}
-
-/**
- * Sync a single entity ID into an entity state map. Adds/removes one entry.
- */
-function syncEntityId(
-  entities: Map<EntityId, number>,
-  newId: EntityId | undefined,
-  oldId: EntityId | undefined,
-  attributeManager: { invalidate: (name: string) => void } | null,
-  attributeName: string,
-): void {
-  if (newId !== oldId) {
-    if (oldId != null) {
-      entities.delete(oldId);
-    }
-    if (newId != null) {
-      entities.set(newId, 1);
     }
     attributeManager?.invalidate(attributeName);
   }
@@ -447,9 +445,8 @@ function syncEntityId(
  * deck.gl layer extension that renders bracket-like "coffin corner" indicators
  * around hovered and selected map entities.
  *
- * Driven by explicit `hoveredEntityId` and `selectedEntityId` props rather than
- * deck.gl's built-in autoHighlight. Data objects are identified via the
- * `getEntityId` accessor (defaults to `item => item.id`).
+ * Driven by `selectedEntityIds` and `hoveredEntityIds` Set props. Data objects
+ * are identified via the `getEntityId` accessor (defaults to `item => item.id`).
  *
  * **Supported layer types:**
  * - **IconLayer** (and subclasses like SymbolLayer) — samples `iconsTexture`
@@ -470,8 +467,8 @@ function syncEntityId(
  *   {...props}
  *   pickable
  *   extensions={[new CoffinCornerExtension()]}
- *   selectedEntityId={selectedId}
- *   hoveredEntityId={hoveredId}
+ *   selectedEntityIds={selectedSet}
+ *   hoveredEntityIds={hoveredSet}
  * />
  * ```
  *
@@ -480,19 +477,8 @@ function syncEntityId(
  * new ScatterplotLayer({
  *   extensions: [new CoffinCornerExtension()],
  *   getEntityId: (d) => d.id,
- *   selectedEntityId: selectedId,
- *   hoveredEntityId: hoveredId,
- * })
- * ```
- *
- * @example Custom entity ID accessor (e.g. GeoJSON features)
- * ```typescript
- * new IconLayer({
- *   extensions: [new CoffinCornerExtension()],
- *   getEntityId: (d) => d.properties?.shapeId,
- *   selectedEntityId: selectedShapeId,
- *   hoveredEntityId: hoveredShapeId,
- *   selectedCoffinCornerColor: [255, 0, 0, 255],
+ *   selectedEntityIds: selectedSet,
+ *   hoveredEntityIds: hoveredSet,
  * })
  * ```
  */
@@ -500,9 +486,7 @@ export class CoffinCornerExtension extends LayerExtension {
   static override componentName = 'CoffinCornerExtension';
 
   static override defaultProps = {
-    selectedEntityId: { type: 'value', value: undefined },
     selectedEntityIds: { type: 'value', value: undefined },
-    hoveredEntityId: { type: 'value', value: undefined },
     hoveredEntityIds: { type: 'value', value: undefined },
     selectedCoffinCornerColor: {
       type: 'color',
@@ -572,15 +556,8 @@ export class CoffinCornerExtension extends LayerExtension {
   }
 
   /**
-   * Syncs selection and hover prop changes into the entity state maps
-   * and invalidates the corresponding GPU attributes.
-   *
-   * Selection supports two modes:
-   * - **Set path** (`selectedEntityIds`): syncs the full Set to the entity map.
-   *   Takes precedence over the single-ID path.
-   * - **Single-ID path** (`selectedEntityId`): adds/removes one entry.
-   *
-   * Hover uses the single-ID path (`hoveredEntityId`).
+   * Syncs `selectedEntityIds` and `hoveredEntityIds` prop changes into the
+   * entity state maps and invalidates the corresponding GPU attributes.
    *
    * No-op on unsupported layer types.
    */
@@ -594,43 +571,21 @@ export class CoffinCornerExtension extends LayerExtension {
 
     const attributeManager = this.getAttributeManager();
 
-    // -- Selection: Set path takes precedence over single-ID --
-    if (params.props.selectedEntityIds) {
-      syncEntitySet(
-        this.state.selectedEntities,
-        params.props.selectedEntityIds,
-        params.oldProps.selectedEntityIds,
-        attributeManager,
-        'instanceSelectedEntity',
-      );
-    } else {
-      syncEntityId(
-        this.state.selectedEntities,
-        params.props.selectedEntityId,
-        params.oldProps.selectedEntityId,
-        attributeManager,
-        'instanceSelectedEntity',
-      );
-    }
+    syncEntitySet(
+      this.state.selectedEntities,
+      params.props.selectedEntityIds,
+      params.oldProps.selectedEntityIds,
+      attributeManager,
+      'instanceSelectedEntity',
+    );
 
-    // -- Hover: Set path takes precedence over single-ID --
-    if (params.props.hoveredEntityIds) {
-      syncEntitySet(
-        this.state.hoveredEntities,
-        params.props.hoveredEntityIds,
-        params.oldProps.hoveredEntityIds,
-        attributeManager,
-        'instanceHoveredEntity',
-      );
-    } else {
-      syncEntityId(
-        this.state.hoveredEntities,
-        params.props.hoveredEntityId,
-        params.oldProps.hoveredEntityId,
-        attributeManager,
-        'instanceHoveredEntity',
-      );
-    }
+    syncEntitySet(
+      this.state.hoveredEntities,
+      params.props.hoveredEntityIds,
+      params.oldProps.hoveredEntityIds,
+      attributeManager,
+      'instanceHoveredEntity',
+    );
   }
 
   /**
