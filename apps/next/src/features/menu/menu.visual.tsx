@@ -24,39 +24,11 @@ import {
 } from '@accelint/design-toolkit';
 import Placeholder from '@accelint/icons/placeholder';
 import {
-  getInteractionModality,
-  setInteractionModality,
-} from '@react-aria/interactions';
-import {
   createInteractiveVisualTests,
   createVisualTestScenarios,
   generateVariantMatrix,
 } from '~/visual-regression/vitest';
 import { type MenuScenario, PROP_COMBOS } from './variants';
-
-// Set React Aria's interaction modality to "pointer" before any rendering.
-// This prevents data-focus-visible from being applied when menus auto-focus
-// their first item on open, ensuring VRT screenshots capture pure selection
-// state without focus-visible styling on the first item.
-setInteractionModality('pointer');
-
-/** Block FocusScope's auto-focus on menu items to prevent :focus-visible from
- * firing on open. Interactive VRT tests set keyboard modality before focusing,
- * which both allows the focus through and triggers data-focus-visible correctly.
- *
- * Long story short, shenanigans are required to manage focus state. This is
- * slightly more stable than focusVisible: true
- */
-const originalFocus = HTMLElement.prototype.focus;
-HTMLElement.prototype.focus = function (options?: FocusOptions) {
-  if (
-    this.getAttribute('role')?.startsWith('menuitem') &&
-    getInteractionModality() !== 'keyboard'
-  ) {
-    return;
-  }
-  originalFocus.call(this, options);
-};
 
 function renderScenario(scenario: MenuScenario) {
   switch (scenario.name) {

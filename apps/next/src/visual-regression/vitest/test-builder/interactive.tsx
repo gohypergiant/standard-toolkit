@@ -13,7 +13,6 @@
 import { ThemeProvider } from '@accelint/design-toolkit';
 import clsx from 'clsx';
 import { dash } from 'radashi';
-import { setInteractionModality } from '@react-aria/interactions';
 import { describe, expect, test } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
@@ -76,9 +75,8 @@ async function triggerState(
       // Find the actual focusable element within the container
       const focusTarget = findFocusableElement(element);
       if (focusTarget) {
-        setInteractionModality('keyboard');
-        focusTarget.focus();
-        setInteractionModality('pointer');
+        // @ts-ignore https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/focus
+        focusTarget.focus({ focusVisible: true });
       } else {
         logger.warn(
           `No focusable element found for focus state. Element: ${element.tagName}${element.id ? `#${element.id}` : ''}`,

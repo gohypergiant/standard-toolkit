@@ -21,7 +21,6 @@
     "@dnd-kit/utilities": "^3.2.2",
     "@internationalized/date": "~3.12.1",
     "@radix-ui/react-avatar": "^1.1.10",
-    "@react-aria/interactions": "^3.25.5",
     "@tailwindcss/postcss": "^4.1.17",
     "@tanstack/react-table": "^8.21.3",
     "babel-plugin-react-compiler": "^1.0.0",
