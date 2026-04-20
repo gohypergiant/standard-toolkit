@@ -10,7 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
-import { act, render } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, expect, it, type Mock, vi } from 'vitest';
 import { FloatingCard } from '.';
 import {
@@ -40,11 +41,20 @@ vi.mock('@accelint/design-toolkit/components/button', () => ({
   Button: ({
     children,
     onClick,
+    'aria-label': ariaLabel,
+    'aria-pressed': ariaPressed,
   }: {
     children: React.ReactNode;
     onClick?: () => void;
+    'aria-label'?: string;
+    'aria-pressed'?: boolean;
   }) => (
-    <button onClick={onClick} type='button'>
+    <button
+      onClick={onClick}
+      type='button'
+      aria-label={ariaLabel}
+      aria-pressed={ariaPressed}
+    >
       {children}
     </button>
   ),
@@ -52,6 +62,10 @@ vi.mock('@accelint/design-toolkit/components/button', () => ({
 
 vi.mock('@accelint/icons/cancel', () => ({
   default: () => <svg data-testid='close-icon' />,
+}));
+
+vi.mock('@accelint/icons/pin', () => ({
+  default: () => <svg data-testid='pin-icon' />,
 }));
 
 // --- Dockview mock setup ---
@@ -91,9 +105,9 @@ function triggerReady(api: MockDockviewApi) {
  */
 function ContextReader({
   onContext,
-}: {
+}: Readonly<{
   onContext: (ctx: FloatingCardContextValue) => void;
-}) {
+}>) {
   const ctx = useFloatingCard();
   onContext(ctx);
   return <div data-testid='context-reader' />;
@@ -120,6 +134,9 @@ describe('FloatingCardContext defaults', () => {
           addRef: () => undefined,
           removeRef: () => undefined,
           closeCard: () => undefined,
+          togglePinCard: () => undefined,
+          isPinned: () => false,
+          subscribeToPinState: () => () => null,
           api: null,
         }}
       >
@@ -430,6 +447,9 @@ describe('FloatingCardContainer', () => {
           addRef,
           removeRef: vi.fn(),
           closeCard: vi.fn(),
+          togglePinCard: vi.fn(),
+          isPinned: () => false,
+          subscribeToPinState: () => () => null,
           api: null,
         }}
       >
@@ -519,7 +539,20 @@ describe('header adapters', () => {
       capturedProps.rightHeaderActionsComponent as FunctionComponent<IDockviewHeaderActionsProps>;
 
     const { getAllByRole } = render(
-      <RightAdapter {...makeMockAdapterProps(makeMockActivePanel())} />,
+      <FloatingCardContext.Provider
+        value={{
+          cards: {},
+          addRef: () => undefined,
+          removeRef: () => undefined,
+          closeCard: () => undefined,
+          togglePinCard: () => undefined,
+          isPinned: () => false,
+          subscribeToPinState: () => () => undefined,
+          api: null,
+        }}
+      >
+        <RightAdapter {...makeMockAdapterProps(makeMockActivePanel())} />
+      </FloatingCardContext.Provider>,
     );
 
     // 3 action buttons + 1 always-present close button
@@ -588,6 +621,9 @@ describe('FloatingCard', () => {
       addRef: vi.fn(),
       removeRef: vi.fn(),
       closeCard: vi.fn(),
+      togglePinCard: vi.fn(),
+      isPinned: () => false,
+      subscribeToPinState: () => () => undefined,
       api,
     };
   }
@@ -826,6 +862,139 @@ describe('FloatingCard', () => {
     });
   });
 
+  describe('initialDimensions and initialPosition', () => {
+    it('should pass default dimensions into the floating option when initialDimensions is omitted', () => {
+      const { api } = makeEmptyApi();
+      const div = document.createElement('div');
+
+      render(
+        <FloatingCardContext.Provider
+          value={makeContextValue(api, { 'default-dim-card': div })}
+        >
+          <FloatingCard id={'default-dim-card' as UniqueId} isOpen>
+            content
+          </FloatingCard>
+        </FloatingCardContext.Provider>,
+      );
+
+      expect(
+        (api as unknown as { addPanel: ReturnType<typeof vi.fn> }).addPanel,
+      ).toHaveBeenCalledWith(
+        expect.objectContaining({
+          floating: expect.objectContaining({ width: 300, height: 400 }),
+        }),
+      );
+    });
+
+    it('should pass custom initialDimensions into the floating option', () => {
+      const { api } = makeEmptyApi();
+      const div = document.createElement('div');
+
+      render(
+        <FloatingCardContext.Provider
+          value={makeContextValue(api, { 'custom-dim-card': div })}
+        >
+          <FloatingCard
+            id={'custom-dim-card' as UniqueId}
+            isOpen
+            initialDimensions={{ width: 500, height: 600 }}
+          >
+            content
+          </FloatingCard>
+        </FloatingCardContext.Provider>,
+      );
+
+      expect(
+        (api as unknown as { addPanel: ReturnType<typeof vi.fn> }).addPanel,
+      ).toHaveBeenCalledWith(
+        expect.objectContaining({
+          floating: expect.objectContaining({ width: 500, height: 600 }),
+        }),
+      );
+    });
+
+    it('should pass initialPosition x and y into the floating option when provided', () => {
+      const { api } = makeEmptyApi();
+      const div = document.createElement('div');
+
+      render(
+        <FloatingCardContext.Provider
+          value={makeContextValue(api, { 'pos-card': div })}
+        >
+          <FloatingCard
+            id={'pos-card' as UniqueId}
+            isOpen
+            initialPosition={{ x: 100, y: 200 }}
+          >
+            content
+          </FloatingCard>
+        </FloatingCardContext.Provider>,
+      );
+
+      expect(
+        (api as unknown as { addPanel: ReturnType<typeof vi.fn> }).addPanel,
+      ).toHaveBeenCalledWith(
+        expect.objectContaining({
+          floating: expect.objectContaining({ x: 100, y: 200 }),
+        }),
+      );
+    });
+
+    it('should combine initialDimensions and initialPosition in the floating option', () => {
+      const { api } = makeEmptyApi();
+      const div = document.createElement('div');
+
+      render(
+        <FloatingCardContext.Provider
+          value={makeContextValue(api, { 'combined-card': div })}
+        >
+          <FloatingCard
+            id={'combined-card' as UniqueId}
+            isOpen
+            initialDimensions={{ width: 350, height: 450 }}
+            initialPosition={{ x: 50, y: 75 }}
+          >
+            content
+          </FloatingCard>
+        </FloatingCardContext.Provider>,
+      );
+
+      expect(
+        (api as unknown as { addPanel: ReturnType<typeof vi.fn> }).addPanel,
+      ).toHaveBeenCalledWith(
+        expect.objectContaining({
+          floating: { width: 350, height: 450, x: 50, y: 75 },
+        }),
+      );
+    });
+
+    it('should include x and y as undefined in the floating option when initialPosition is omitted', () => {
+      const { api } = makeEmptyApi();
+      const div = document.createElement('div');
+
+      render(
+        <FloatingCardContext.Provider
+          value={makeContextValue(api, { 'no-pos-card': div })}
+        >
+          <FloatingCard id={'no-pos-card' as UniqueId} isOpen>
+            content
+          </FloatingCard>
+        </FloatingCardContext.Provider>,
+      );
+
+      const addPanel = (
+        api as unknown as { addPanel: ReturnType<typeof vi.fn> }
+      ).addPanel;
+      const floating = addPanel.mock.calls[0]?.[0].floating as Record<
+        string,
+        unknown
+      >;
+
+      expect(floating).toHaveProperty('x', undefined);
+      expect(floating).toHaveProperty('y', undefined);
+    });
+  });
+
   describe('unmount behavior', () => {
     it('should not call panel.api.close() when the component unmounts', () => {
       // The first useEffect has no cleanup — close is the provider\'s responsibility
@@ -923,5 +1092,227 @@ describe('multiple FloatingCardProvider instances', () => {
 
     expect(latest1().cards['card-in-provider-1' as UniqueId]).toBe(div);
     expect(latest2().cards['card-in-provider-1' as UniqueId]).toBeUndefined();
+  });
+});
+
+describe('pin functionality', () => {
+  it('should render a pin button in the header when "pin" is in headerActions', () => {
+    render(
+      <FloatingCardProvider headerActions={['pin']}>
+        <div />
+      </FloatingCardProvider>,
+    );
+
+    const RightAdapter =
+      capturedProps.rightHeaderActionsComponent as FunctionComponent<IDockviewHeaderActionsProps>;
+
+    render(
+      <RightAdapter
+        {...makeMockAdapterProps(makeMockActivePanel('panel-1'))}
+      />,
+    );
+
+    expect(screen.getByRole('button', { name: /pin/i })).toBeInTheDocument();
+  });
+
+  it('should toggle pin active state when pin button is clicked', async () => {
+    const user = userEvent.setup();
+
+    render(
+      <FloatingCardProvider headerActions={['pin']}>
+        <div />
+      </FloatingCardProvider>,
+    );
+
+    const RightAdapter =
+      capturedProps.rightHeaderActionsComponent as FunctionComponent<IDockviewHeaderActionsProps>;
+
+    render(
+      <RightAdapter
+        {...makeMockAdapterProps(makeMockActivePanel('panel-1'))}
+      />,
+    );
+
+    const pinButton = screen.getByRole('button', { name: /pin/i });
+    expect(pinButton).toHaveAttribute('aria-pressed', 'false');
+
+    await user.click(pinButton);
+    expect(pinButton).toHaveAttribute('aria-pressed', 'true');
+
+    await user.click(pinButton);
+    expect(pinButton).toHaveAttribute('aria-pressed', 'false');
+  });
+
+  it('should release pin when card is removed via removeRef', async () => {
+    const user = userEvent.setup();
+    const { spy, latest } = captureContext();
+
+    render(
+      <FloatingCardProvider headerActions={['pin']}>
+        <ContextReader onContext={spy} />
+      </FloatingCardProvider>,
+    );
+
+    const RightAdapter =
+      capturedProps.rightHeaderActionsComponent as FunctionComponent<IDockviewHeaderActionsProps>;
+
+    render(
+      <RightAdapter
+        {...makeMockAdapterProps(makeMockActivePanel('card-remove'))}
+      />,
+    );
+
+    const pinButton = screen.getByRole('button', { name: /pin/i });
+
+    await user.click(pinButton);
+    expect(pinButton).toHaveAttribute('aria-pressed', 'true');
+
+    act(() => {
+      latest().removeRef('card-remove' as UniqueId);
+    });
+
+    expect(pinButton).toHaveAttribute('aria-pressed', 'false');
+  });
+
+  describe('initialPinned', () => {
+    it('should expose initially pinned cards via isPinned in context', () => {
+      const { spy, latest } = captureContext();
+
+      render(
+        <FloatingCardProvider initialPinned={['pre-pinned' as UniqueId]}>
+          <ContextReader onContext={spy} />
+        </FloatingCardProvider>,
+      );
+
+      expect(latest().isPinned('pre-pinned' as UniqueId)).toBe(true);
+      expect(latest().isPinned('not-listed' as UniqueId)).toBe(false);
+    });
+
+    it('should render the pin button as pressed for an initially pinned card', () => {
+      render(
+        <FloatingCardProvider
+          headerActions={['pin']}
+          initialPinned={['pinned-at-start' as UniqueId]}
+        >
+          <div />
+        </FloatingCardProvider>,
+      );
+
+      const RightAdapter =
+        capturedProps.rightHeaderActionsComponent as FunctionComponent<IDockviewHeaderActionsProps>;
+
+      render(
+        <RightAdapter
+          {...makeMockAdapterProps(makeMockActivePanel('pinned-at-start'))}
+        />,
+      );
+
+      expect(screen.getByRole('button', { name: /pin/i })).toHaveAttribute(
+        'aria-pressed',
+        'true',
+      );
+    });
+
+    it('should render the pin button as unpressed for a card not in initialPinned', () => {
+      render(
+        <FloatingCardProvider
+          headerActions={['pin']}
+          initialPinned={['other-card' as UniqueId]}
+        >
+          <div />
+        </FloatingCardProvider>,
+      );
+
+      const RightAdapter =
+        capturedProps.rightHeaderActionsComponent as FunctionComponent<IDockviewHeaderActionsProps>;
+
+      render(
+        <RightAdapter
+          {...makeMockAdapterProps(makeMockActivePanel('not-in-initial'))}
+        />,
+      );
+
+      expect(screen.getByRole('button', { name: /pin/i })).toHaveAttribute(
+        'aria-pressed',
+        'false',
+      );
+    });
+
+    it('should allow toggling an initially pinned card to unpinned', async () => {
+      const user = userEvent.setup();
+
+      render(
+        <FloatingCardProvider
+          headerActions={['pin']}
+          initialPinned={['toggle-initial' as UniqueId]}
+        >
+          <div />
+        </FloatingCardProvider>,
+      );
+
+      const RightAdapter =
+        capturedProps.rightHeaderActionsComponent as FunctionComponent<IDockviewHeaderActionsProps>;
+
+      render(
+        <RightAdapter
+          {...makeMockAdapterProps(makeMockActivePanel('toggle-initial'))}
+        />,
+      );
+
+      const pinButton = screen.getByRole('button', { name: /pin/i });
+      expect(pinButton).toHaveAttribute('aria-pressed', 'true');
+
+      await user.click(pinButton);
+      expect(pinButton).toHaveAttribute('aria-pressed', 'false');
+    });
+  });
+
+  it('should release pin when card is removed via dockview', async () => {
+    const user = userEvent.setup();
+    const mockApi = createMockApi();
+    let removePanelCallback: OnDidRemovePanelCallback | undefined;
+
+    mockApi.onDidRemovePanel.mockImplementation(
+      (cb: OnDidRemovePanelCallback) => {
+        removePanelCallback = cb;
+        return { dispose: vi.fn() };
+      },
+    );
+
+    const { rerender } = render(
+      <FloatingCardProvider headerActions={['pin']}>
+        <div />
+      </FloatingCardProvider>,
+    );
+
+    act(() => {
+      triggerReady(mockApi);
+    });
+
+    rerender(
+      <FloatingCardProvider headerActions={['pin']}>
+        <div />
+      </FloatingCardProvider>,
+    );
+
+    const RightAdapter =
+      capturedProps.rightHeaderActionsComponent as FunctionComponent<IDockviewHeaderActionsProps>;
+
+    render(
+      <RightAdapter
+        {...makeMockAdapterProps(makeMockActivePanel('pinned-removed'))}
+      />,
+    );
+
+    const pinButton = screen.getByRole('button', { name: /pin/i });
+
+    await user.click(pinButton);
+    expect(pinButton).toHaveAttribute('aria-pressed', 'true');
+
+    act(() => {
+      removePanelCallback?.({ id: 'pinned-removed' });
+    });
+
+    expect(pinButton).toHaveAttribute('aria-pressed', 'false');
   });
 });
