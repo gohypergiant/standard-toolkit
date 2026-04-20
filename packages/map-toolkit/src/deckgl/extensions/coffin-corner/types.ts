@@ -10,8 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Payload } from '@accelint/bus';
-import type { UniqueId } from '@accelint/core';
 import type { Rgba255Tuple } from '@accelint/predicates';
 
 /**
@@ -20,10 +18,25 @@ import type { Rgba255Tuple } from '@accelint/predicates';
  * @template TLayerProps - The host layer's props type to intersect with.
  */
 export type CoffinCornerExtensionProps<TLayerProps = unknown> = {
-  /** The currently selected entity ID. */
-  selectedEntityId?: EntityId;
-  /** The currently hovered entity ID. */
-  hoveredEntityId?: EntityId;
+  /**
+   * Set of currently selected entity IDs. The extension draws colored
+   * brackets around every entity in the Set.
+   *
+   * @example
+   * ```tsx
+   * <SymbolLayer
+   *   extensions={[new CoffinCornerExtension()]}
+   *   selectedEntityIds={selectedSet}
+   *   hoveredEntityIds={hoveredSet}
+   * />
+   * ```
+   */
+  selectedEntityIds?: ReadonlySet<EntityId>;
+  /**
+   * Set of currently hovered entity IDs. The extension draws white
+   * brackets with a background fill around every entity in the Set.
+   */
+  hoveredEntityIds?: ReadonlySet<EntityId>;
   /**
    * RGBA color (0-255) for the selected-state bracket fill.
    * Alpha modulates the bracket opacity.
@@ -32,53 +45,12 @@ export type CoffinCornerExtensionProps<TLayerProps = unknown> = {
   selectedCoffinCornerColor?: Rgba255Tuple;
   /**
    * Accessor to extract an entity ID from a data item. Matched against
-   * `selectedEntityId` and `hoveredEntityId` to drive the shader state.
+   * `selectedEntityIds` and `hoveredEntityIds` to drive the shader state.
    * @default (item) => item.id
    */
   // biome-ignore lint/suspicious/noExplicitAny: Data type is unknown at extension level.
   getEntityId?: (item: any) => EntityId;
 } & TLayerProps;
 
-/**
- * Event type constants for coffin corner interactions.
- * Used as keys with the Broadcast event bus.
- */
-export const CoffinCornerEvents = {
-  /** Emitted when an entity is selected (click on a new entity). */
-  SELECTED: 'coffin-corner:selected',
-  /** Emitted when the current selection is cleared. */
-  DESELECTED: 'coffin-corner:deselected',
-  /** Emitted when the hovered entity changes. */
-  HOVERED: 'coffin-corner:hovered',
-} as const;
-
-/** String literal union of all coffin corner event type keys. */
-export type CoffinCornerEventType =
-  (typeof CoffinCornerEvents)[keyof typeof CoffinCornerEvents];
-
 /** Unique identifier for an entity managed by the coffin corner extension. */
 export type EntityId = string | number;
-
-/** Payload emitted when an entity is selected. Contains the selected ID and map instance. */
-export type CoffinCornerSelectedEvent = Payload<
-  typeof CoffinCornerEvents.SELECTED,
-  { selectedId: EntityId; mapId: UniqueId }
->;
-
-/** Payload emitted when selection is cleared. */
-export type CoffinCornerDeselectedEvent = Payload<
-  typeof CoffinCornerEvents.DESELECTED,
-  { mapId: UniqueId; selectedId: undefined }
->;
-
-/** Payload emitted when the hovered entity changes. `hoveredId` is undefined when hover ends. */
-export type CoffinCornerHoveredEvent = Payload<
-  typeof CoffinCornerEvents.HOVERED,
-  { hoveredId?: EntityId; mapId: UniqueId }
->;
-
-/** Union of all coffin corner event payloads for type-safe bus subscription. */
-export type CoffinCornerEvent =
-  | CoffinCornerSelectedEvent
-  | CoffinCornerDeselectedEvent
-  | CoffinCornerHoveredEvent;
