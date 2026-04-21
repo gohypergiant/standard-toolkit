@@ -1,5 +1,28 @@
 # @accelint/design-toolkit
 
+## 10.0.0
+### Minor Changes
+
+- 690fb19: Gantt component implementation feature branch. Makes component available to library consumers.
+- 7042d56: Add semantic cascade selection mode to Tree component. When enabled via `selectionCascade` prop on `useTreeState`, selecting a parent node automatically selects all descendants, and parent checkboxes show indeterminate state when partially selected. Includes performance optimizations for large trees and automatic cascade state synchronization after drag-and-drop operations.
+- 62c5a63: - Adds new design system animation tokens for duration and easing for consistent animation effects
+  - Adds light built-in animation to the following components: Accordion, Button, ComboboxField, Dialog, Drawer, Menu, Notice, Popover, Sidenav, Switch, Tooltip
+  - Guidelines and best practices documentation for using animation
+- 166bc49: Add floating card pinning feature and new placement props.
+  
+  - Cards can be pinned to disable dragging via a `'pin'` header action
+  - `togglePinCard` and `isPinned` added to the floating card context
+  - New `FloatingCardHeaderAction` type supports `'pin'` alongside existing `'divider'` and custom button actions
+  - `FloatingCardProvider` accepts `initialPinned` to pre-pin cards at mount time
+  - `FloatingCard` accepts `initialPosition` (`{ x, y }`) to set the starting coordinates of the panel
+  - `FloatingCard` accepts `initialDimensions` (`{ width, height }`) to set the starting size of the panel (defaults to `300 × 400`)
+- 118174a: Adds the Carousel component. Displays a timeline of navigatable items for display in one central viewing area.
+
+### Patch Changes
+
+- Updated dependencies [62c5a63]
+  - @accelint/design-foundation@3.1.0
+
 ## 9.9.2
 ### Patch Changes
 
