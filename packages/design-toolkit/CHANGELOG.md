@@ -1,6 +1,6 @@
 # @accelint/design-toolkit
 
-## 10.0.0
+## 9.10.0
 ### Minor Changes
 
 - 690fb19: Gantt component implementation feature branch. Makes component available to library consumers.
