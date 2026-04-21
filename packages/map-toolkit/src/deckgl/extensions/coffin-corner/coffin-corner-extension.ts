@@ -12,6 +12,7 @@
 
 import { LayerExtension } from '@deck.gl/core';
 import { IconLayer, ScatterplotLayer } from '@deck.gl/layers';
+import { isSetEqual } from 'radashi';
 import { createLoggerDomain } from '@/shared/logger';
 import type { Rgba255Tuple } from '@accelint/predicates';
 import type { Layer, UpdateParameters } from '@deck.gl/core';
@@ -398,15 +399,50 @@ const DEFAULT_SELECTED_CORNER_FILL: Rgba255Tuple = [57, 183, 250, 255];
 /** Layer types supported by this extension. */
 const SUPPORTED_LAYERS = [IconLayer, ScatterplotLayer];
 
+/** Value equality for two optional Sets. */
+function entitySetsEqual(
+  a: ReadonlySet<EntityId> | undefined,
+  b: ReadonlySet<EntityId> | undefined,
+): boolean {
+  if (a === b) {
+    return true;
+  }
+  if (a == null || b == null) {
+    return false;
+  }
+  return isSetEqual(a as Set<EntityId>, b as Set<EntityId>);
+}
+
+/**
+ * Sync a Set of entity IDs into an entity state map. Replaces the full
+ * contents of the map when the Set contents change (value equality).
+ */
+function syncEntitySet(
+  entities: Map<EntityId, number>,
+  newIds: ReadonlySet<EntityId> | undefined,
+  oldIds: ReadonlySet<EntityId> | undefined,
+  attributeManager: { invalidate: (name: string) => void } | null,
+  attributeName: string,
+): void {
+  if (!entitySetsEqual(newIds, oldIds)) {
+    entities.clear();
+    if (newIds) {
+      for (const id of newIds) {
+        entities.set(id, 1);
+      }
+    }
+    attributeManager?.invalidate(attributeName);
+  }
+}
+
 // -- Extension class --
 
 /**
  * deck.gl layer extension that renders bracket-like "coffin corner" indicators
  * around hovered and selected map entities.
  *
- * Driven by explicit `hoveredEntityId` and `selectedEntityId` props rather than
- * deck.gl's built-in autoHighlight. Data objects are identified via the
- * `getEntityId` accessor (defaults to `item => item.id`).
+ * Driven by `selectedEntityIds` and `hoveredEntityIds` Set props. Data objects
+ * are identified via the `getEntityId` accessor (defaults to `item => item.id`).
  *
  * **Supported layer types:**
  * - **IconLayer** (and subclasses like SymbolLayer) — samples `iconsTexture`
@@ -427,8 +463,8 @@ const SUPPORTED_LAYERS = [IconLayer, ScatterplotLayer];
  *   {...props}
  *   pickable
  *   extensions={[new CoffinCornerExtension()]}
- *   selectedEntityId={selectedId}
- *   hoveredEntityId={hoveredId}
+ *   selectedEntityIds={selectedSet}
+ *   hoveredEntityIds={hoveredSet}
  * />
  * ```
  *
@@ -437,19 +473,8 @@ const SUPPORTED_LAYERS = [IconLayer, ScatterplotLayer];
  * new ScatterplotLayer({
  *   extensions: [new CoffinCornerExtension()],
  *   getEntityId: (d) => d.id,
- *   selectedEntityId: selectedId,
- *   hoveredEntityId: hoveredId,
- * })
- * ```
- *
- * @example Custom entity ID accessor (e.g. GeoJSON features)
- * ```typescript
- * new IconLayer({
- *   extensions: [new CoffinCornerExtension()],
- *   getEntityId: (d) => d.properties?.shapeId,
- *   selectedEntityId: selectedShapeId,
- *   hoveredEntityId: hoveredShapeId,
- *   selectedCoffinCornerColor: [255, 0, 0, 255],
+ *   selectedEntityIds: selectedSet,
+ *   hoveredEntityIds: hoveredSet,
  * })
  * ```
  */
@@ -457,8 +482,8 @@ export class CoffinCornerExtension extends LayerExtension {
   static override componentName = 'CoffinCornerExtension';
 
   static override defaultProps = {
-    selectedEntityId: { type: 'value', value: undefined },
-    hoveredEntityId: { type: 'value', value: undefined },
+    selectedEntityIds: { type: 'value', value: undefined },
+    hoveredEntityIds: { type: 'value', value: undefined },
     selectedCoffinCornerColor: {
       type: 'color',
       value: DEFAULT_SELECTED_CORNER_FILL,
@@ -527,11 +552,10 @@ export class CoffinCornerExtension extends LayerExtension {
   }
 
   /**
-   * Syncs `selectedEntityId` and `hoveredEntityId` prop changes into the
+   * Syncs `selectedEntityIds` and `hoveredEntityIds` prop changes into the
    * entity state maps and invalidates the corresponding GPU attributes.
-   * No-op on unsupported layer types.
    *
-   * @param params - The deck.gl update parameters containing current and previous props.
+   * No-op on unsupported layer types.
    */
   override updateState(
     this: CoffinCornerLayer,
@@ -543,33 +567,21 @@ export class CoffinCornerExtension extends LayerExtension {
 
     const attributeManager = this.getAttributeManager();
 
-    // Selection state
-    const newSelectedId = params.props.selectedEntityId;
-    const oldSelectedId = params.oldProps.selectedEntityId;
-    if (newSelectedId !== oldSelectedId) {
-      const { selectedEntities } = this.state;
-      if (oldSelectedId != null) {
-        selectedEntities.delete(oldSelectedId);
-      }
-      if (newSelectedId != null) {
-        selectedEntities.set(newSelectedId, 1);
-      }
-      attributeManager?.invalidate('instanceSelectedEntity');
-    }
+    syncEntitySet(
+      this.state.selectedEntities,
+      params.props.selectedEntityIds,
+      params.oldProps.selectedEntityIds,
+      attributeManager,
+      'instanceSelectedEntity',
+    );
 
-    // Hover state
-    const newHoveredId = params.props.hoveredEntityId;
-    const oldHoveredId = params.oldProps.hoveredEntityId;
-    if (newHoveredId !== oldHoveredId) {
-      const { hoveredEntities } = this.state;
-      if (oldHoveredId != null) {
-        hoveredEntities.delete(oldHoveredId);
-      }
-      if (newHoveredId != null) {
-        hoveredEntities.set(newHoveredId, 1);
-      }
-      attributeManager?.invalidate('instanceHoveredEntity');
-    }
+    syncEntitySet(
+      this.state.hoveredEntities,
+      params.props.hoveredEntityIds,
+      params.oldProps.hoveredEntityIds,
+      attributeManager,
+      'instanceHoveredEntity',
+    );
   }
 
   /**

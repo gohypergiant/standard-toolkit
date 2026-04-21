@@ -17,8 +17,23 @@ import type { UniqueId } from '@accelint/core';
 
 const defaultDimensions = { width: 300, height: 400 } as const;
 
+/**
+ * Props for the FloatingCard component.
+ *
+ * @example
+ * ```tsx
+ * const props: FloatingCardProps = {
+ *   id: 'panel-123' as UniqueId,
+ *   title: 'My Panel',
+ *   isOpen: true,
+ *   initialDimensions: { width: 350, height: 450 }
+ * };
+ * ```
+ */
 export type FloatingCardProps = Readonly<{
+  /** Unique identifier for the floating card */
   id: UniqueId;
+  /** Optional title displayed in the floating card header */
   title?: string;
   /**
    * Controls whether the floating card is rendered.
@@ -35,6 +50,12 @@ export type FloatingCardProps = Readonly<{
    * @defaultValue { width: 300, height: 400 }
    */
   initialDimensions?: Readonly<{ width: number; height: number }>;
+  /**
+   * Initial position of the floating card panel.
+   *
+   * When provided, sets the x and y coordinates of the floating card.
+   */
+  initialPosition?: Readonly<{ x: number; y: number }>;
 }>;
 
 /**
@@ -47,11 +68,36 @@ export type FloatingCardProps = Readonly<{
  * @param title - Optional title displayed in the floating card header.
  * @param isOpen - Whether the floating card is rendered. Defaults to `true`.
  * @param initialDimensions - Initial width and height of the floating card. Defaults to `{ width: 300, height: 400 }`.
+ * @param initialPosition - Initial x and y coordinates of the floating card.
  * @param children - React children to render inside the floating card.
+ * @returns The floating card component (portaled content) or null.
  *
  * @remarks
  * - Requires `FloatingCardProvider` as an ancestor.
  * - The floating card is only rendered if a valid DOM reference exists for the given `id`.
+ *
+ * @example
+ * ```tsx
+ * import { uuid } from '@accelint/core/utility/uuid';
+ *
+ * const cardId = uuid();
+ * const [isOpen, setIsOpen] = useState(true);
+ *
+ * <FloatingCardProvider>
+ *   <FloatingCard
+ *     id={cardId}
+ *     title="Settings Panel"
+ *     isOpen={isOpen}
+ *     initialDimensions={{ width: 400, height: 500 }}
+ *   >
+ *     <SettingsForm />
+ *   </FloatingCard>
+ *
+ *   <button onClick={() => setIsOpen(!isOpen)}>
+ *     Toggle Panel
+ *   </button>
+ * </FloatingCardProvider>
+ * ```
  */
 export function FloatingCard({
   id,
@@ -59,43 +105,44 @@ export function FloatingCard({
   title,
   isOpen = true,
   initialDimensions,
+  initialPosition,
 }: PropsWithChildren<FloatingCardProps>) {
-  const floatingCardContext = useFloatingCard();
+  const { cards, api: floatingCardApi } = useFloatingCard();
 
   const { width, height } = initialDimensions ?? defaultDimensions;
+  const { x, y } = initialPosition ?? {};
 
+  // Register card with Dockview API when isOpen changes.
+  // Early return if API not ready (Dockview not fully initialized).
   useEffect(() => {
-    // If the API is not available, we cannot register the card. This can happen if Dockview is not fully initialized yet.
-    if (!floatingCardContext.api) {
+    if (!floatingCardApi) {
       return;
     }
     if (!isOpen) {
-      floatingCardContext.api.getPanel(id)?.api.close();
+      floatingCardApi.getPanel(id)?.api.close();
       return;
     }
 
-    if (!floatingCardContext.api.getPanel(id)) {
-      const panel = floatingCardContext.api.addPanel({
+    if (!floatingCardApi.getPanel(id)) {
+      const panel = floatingCardApi.addPanel({
         id,
         title,
         component: 'default',
-        floating: { width, height },
+        floating: { width, height, x, y },
       });
 
       panel.group.locked = 'no-drop-target';
     }
 
     // Cleanup not included here. Cleanup is done at the provider level when the card is removed from the `cards` registry.
-  }, [id, title, isOpen, width, height, floatingCardContext.api]);
+  }, [id, title, isOpen, width, height, x, y, floatingCardApi]);
 
   useEffect(() => {
-    const panel = floatingCardContext.api?.getPanel(id);
+    const panel = floatingCardApi?.getPanel(id);
     if (panel) {
       panel.setTitle(title ?? id);
     }
-  }, [title, floatingCardContext.api, id]);
+  }, [title, floatingCardApi, id]);
 
-  return isOpen && floatingCardContext.cards[id]
-    ? createPortal(children, floatingCardContext.cards[id])
-    : null;
+  return isOpen && cards[id] ? createPortal(children, cards[id]) : null;
 }

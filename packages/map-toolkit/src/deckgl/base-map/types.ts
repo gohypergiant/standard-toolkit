@@ -15,6 +15,7 @@ import type { UniqueId } from '@accelint/core';
 import type { PickingInfo } from '@deck.gl/core';
 import type { DeckglProps } from '@deckgl-fiber-renderer/types';
 import type { MjolnirGestureEvent, MjolnirPointerEvent } from 'mjolnir.js';
+import type { RbzOptions } from '@/maplibre/rbz-handler';
 import type { MapEvents } from './events';
 
 /**
@@ -49,6 +50,25 @@ export type BaseMapProps = DeckglProps & {
    * @default DARK_BASE_MAP_STYLE ('https://tiles.basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json')
    */
   styleUrl?: string;
+  /** Whether to enable box zoom (Shift + drag) on the map. Defaults to true. False if rubber band zoom is enabled. */
+  boxZoom?: boolean;
+  /**
+   * Whether to enable rubber band zoom (Shift + drag) on the map.
+   *
+   * @default false
+   * @remarks
+   * Read once on map load; changes after mount have no effect. To toggle RBZ
+   * dynamically, change the map's `key` prop to force a remount.
+   */
+  enableRbz?: boolean;
+  /**
+   * Configuration options for rubber band zoom. Only applies when `enableRbz` is true.
+   *
+   * @remarks
+   * Read once on map load; changes after mount have no effect. To update
+   * options dynamically, change the map's `key` prop to force a remount.
+   */
+  rbzOptions?: RbzOptions;
 };
 
 /**
