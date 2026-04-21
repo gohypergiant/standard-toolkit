@@ -375,13 +375,3 @@
   --shadow-elevation-overlay: 0 8px 24px 0
     light-dark(rgba(0 0 0 / 0.16), rgba(0 0 0 / 0.8));
 }
-
-@layer theme {
-  @variant dark {
-    color-scheme: dark;
-  }
-
-  @variant light {
-    color-scheme: light;
-  }
-}

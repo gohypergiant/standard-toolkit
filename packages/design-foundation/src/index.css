@@ -60,6 +60,18 @@
 
 @theme {
   --color-current: currentColor;
+
+  @variant dark {
+    * {
+      color-scheme: dark;
+    }
+  }
+
+  @variant light {
+    * {
+      color-scheme: light;
+    }
+  }
 }
 
 @import './variants/variants.css';
