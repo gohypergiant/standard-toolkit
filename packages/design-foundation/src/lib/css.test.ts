@@ -144,7 +144,7 @@ describe('generateScopedClassName', () => {
     });
 
     it('handles very long file paths', () => {
-      const longPath = '/very/long/path/'.repeat(100) + 'file.module.css';
+      const longPath = `${'/very/long/path/'.repeat(100)}file.module.css`;
       const result = generateScopedClassName('className', longPath);
 
       expect(result).toMatch(/^_className_[a-z0-9]{5}$/);
