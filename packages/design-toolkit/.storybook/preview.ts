@@ -32,12 +32,10 @@ const preview: Preview = {
         let theme: ThemeVars;
         if (sbTheme === 'light') {
           theme = themes.light;
-          rootEl.style.colorScheme = 'light';
           rootEl?.classList.remove('dark');
           rootEl?.classList.add('light');
         } else {
           theme = themes.dark;
-          rootEl.style.colorScheme = 'dark';
           rootEl?.classList.remove('light');
           rootEl?.classList.add('dark');
         }
