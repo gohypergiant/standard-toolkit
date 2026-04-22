@@ -9,7 +9,7 @@
 ## 2. Update Theme Provider
 
 - [x] 2.1 Modify the `useEffect` in `ThemeProvider` to set `documentElement.style.colorScheme = mode` instead of toggling CSS classes
-- [x] 2.2 Remove the `classList.remove('dark', 'light')` and `classList.add(mode)` calls
+- [x] 2.2 Keep `classList.remove('dark', 'light')` and `classList.add(mode)` calls alongside `style.colorScheme` for Tailwind variant and Storybook compatibility
 - [x] 2.3 Verify the `useTheme()` hook API remains unchanged (still returns `mode`, `tokens`, `toggleMode`)
 
 ## 3. Regenerate Tokens
@@ -24,5 +24,5 @@
 - [x] 4.1 Run Storybook and visually verify all components render correctly in dark mode
 - [x] 4.2 Test theme toggling works correctly (switches between light and dark)
 - [x] 4.3 Verify all interactive states (hover, pressed, disabled) display correct colors
-- [x] 4.4 Measure and document the bundle size reduction of `themes.css` (16.6KB → 11.5KB = 30% reduction; 332 lines → 108 lines = 68% reduction)
+- [x] 4.4 Measure and document the bundle size reduction of `themes.css` (16.6KB → 12.7KB = 24% reduction; 332 lines → 377 lines — line count increased due to multi-line `light-dark()` formatting enforced by linter, but each token is now defined once instead of twice)
 - [x] 4.5 Run the verification gate: `pnpm build && pnpm test && pnpm lint && pnpm format` (passed for design-foundation and design-toolkit packages)

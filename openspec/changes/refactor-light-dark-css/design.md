@@ -35,22 +35,19 @@ The CSS `light-dark()` function (supported in modern browsers since 2024) allows
 **Alternative considered:** Use CSS custom properties with `@media (prefers-color-scheme)`.
 - **Rejected because:** Less flexible than `color-scheme` property (doesn't support programmatic theme switching as cleanly).
 
-### Decision 2: Switch from CSS classes to color-scheme property
+### Decision 2: Set color-scheme property alongside CSS class toggling
 
-**Rationale:** The `light-dark()` function requires the `color-scheme` CSS property to be set on an ancestor element. This is more semantically correct than using utility classes and provides better integration with browser UI (form controls, scrollbars).
+**Rationale:** The `light-dark()` function requires `color-scheme` to be set on an ancestor element. However, Storybook does not manage the `color-scheme` property reliably. CSS class toggling (`dark`/`light`) must be preserved for Tailwind variant compatibility (`@variant dark`) and backward compatibility with any code that reads those classes.
 
-**Implementation:** Change ThemeProvider from:
+**Implementation:** ThemeProvider sets both:
 ```javascript
+documentElement.style.colorScheme = mode;
+documentElement.classList.remove('dark', 'light');
 documentElement.classList.add(mode);
 ```
 
-To:
-```javascript
-documentElement.style.colorScheme = mode;
-```
-
-**Alternative considered:** Keep class-based approach and use `@media (prefers-color-scheme)` for `light-dark()`.
-- **Rejected because:** Would still require JavaScript to sync classes with color-scheme property, adding complexity.
+**Alternative considered:** Replace class toggling entirely with `color-scheme` property.
+- **Rejected because:** Storybook doesn't manage `color-scheme` reliably, and Tailwind's `@variant dark` responds to the CSS class. Removing classes broke dark mode in Storybook.
 
 ### Decision 3: Remove @theme static empty declarations block
 
@@ -59,20 +56,25 @@ documentElement.style.colorScheme = mode;
 **Alternative considered:** Keep the static block for IDE autocomplete.
 - **Rejected because:** Modern IDEs can derive custom properties from the `:root` definitions. No measurable benefit observed.
 
-### Decision 4: Generate simplified @variant blocks
+### Decision 4: Static @variant blocks in index.css; @theme static in themes.css
 
-**Rationale:** Since tokens are defined once with `light-dark()`, the `@variant` blocks only need to set `color-scheme`. This makes the generated CSS much more readable and maintainable.
+**Rationale:** `themes.css` is a generated file — `@variant` blocks belong in the static `index.css` alongside other Tailwind layer configuration. The `@theme static` block (Tailwind v4 syntax for registering custom properties) is used in `themes.css` rather than `:root`, which is required for Tailwind to recognize the tokens. The `@variant` blocks are scoped to `*` to ensure `color-scheme` propagates to all elements.
 
-**Structure:**
+**Structure in `index.css`:**
 ```css
 @layer theme {
-  :root {
-    --fg-primary: light-dark(var(--light-val), var(--dark-val));
-    /* ...all other tokens */
+  * {
+    @variant dark { color-scheme: dark; }
+    @variant light { color-scheme: light; }
   }
-  
-  @variant dark { color-scheme: dark; }
-  @variant light { color-scheme: light; }
+}
+```
+
+**Structure in generated `themes.css`:**
+```css
+@theme static {
+  --fg-primary: light-dark(var(--light-val), var(--dark-val));
+  /* ...all other tokens */
 }
 ```
 
