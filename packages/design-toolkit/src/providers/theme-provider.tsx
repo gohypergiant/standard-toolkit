@@ -75,12 +75,10 @@ export function ThemeProvider({
   const [mode, setMode] = useState<ThemeMode>(defaultMode ?? 'dark');
 
   useEffect(() => {
-    if (document) {
-      const { documentElement } = document;
-      documentElement.style.colorScheme = mode;
-      documentElement.classList.remove('dark', 'light');
-      documentElement.classList.add(mode);
-    }
+    const { documentElement } = document;
+    documentElement.style.colorScheme = mode;
+    documentElement.classList.remove('dark', 'light');
+    documentElement.classList.add(mode);
   }, [mode]);
 
   const tokens: ContextColorTokens = useMemo(() => {
