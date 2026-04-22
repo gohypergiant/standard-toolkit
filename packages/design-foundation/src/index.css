@@ -60,7 +60,9 @@
 
 @theme {
   --color-current: currentColor;
+}
 
+@layer theme {
   @variant dark {
     * {
       color-scheme: dark;
