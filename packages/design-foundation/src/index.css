@@ -63,14 +63,12 @@
 }
 
 @layer theme {
-  @variant dark {
-    * {
+  * {
+    @variant dark {
       color-scheme: dark;
     }
-  }
 
-  @variant light {
-    * {
+    @variant light {
       color-scheme: light;
     }
   }
