@@ -18,6 +18,7 @@ import { MapEvents } from './events';
 import type { UniqueId } from '@accelint/core';
 import type { RefObject } from 'react';
 import type { MapRef } from 'react-map-gl/maplibre';
+import type { RbzHandler } from '@/maplibre/rbz-handler';
 import type {
   MapDisablePanEvent,
   MapDisableZoomEvent,
@@ -33,6 +34,8 @@ type MapControlsProps = {
   id: UniqueId;
   /** Reference to the MapLibre map instance */
   mapRef: RefObject<MapRef | null>;
+  /** Reference to the RBZ handler instance */
+  rbzRef?: RefObject<RbzHandler | null>;
 };
 
 /**
@@ -41,12 +44,13 @@ type MapControlsProps = {
  * This component is rendered inside BaseMap to wire up event listeners
  * for pan and zoom control events.
  *
- * @param props - Component props
- * @param props.id - Unique identifier for the map instance
- * @param props.mapRef - Reference to the MapLibre map instance
- * @returns null (headless component)
+ * @param props - Component props.
+ * @param props.id - Unique identifier for the map instance.
+ * @param props.mapRef - Reference to the MapLibre map instance.
+ * @param props.rbzRef - Optional reference to the RBZ handler instance.
+ * @returns null (headless component).
  */
-export function MapControls({ id, mapRef }: MapControlsProps) {
+export function MapControls({ id, mapRef, rbzRef }: MapControlsProps) {
   useOn<MapEnablePanEvent>(MapEvents.enablePan, (event) => {
     if (event.payload.id === id) {
       mapRef.current?.getMap().dragPan.enable();
@@ -72,6 +76,7 @@ export function MapControls({ id, mapRef }: MapControlsProps) {
       mapRef.current?.getMap().scrollZoom.disable();
       mapRef.current?.getMap().doubleClickZoom.disable();
       mapRef.current?.getMap().boxZoom.disable();
+      rbzRef?.current?.disable();
     }
   });
 

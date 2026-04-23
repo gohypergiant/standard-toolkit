@@ -79,6 +79,22 @@ export function useTreeActions<T>({
     cache.rebuild(nodes);
   }, [nodes]);
 
+  /** HELPERS **/
+
+  /**
+   * Collects parent keys for a set of nodes before a move operation
+   */
+  function getParents(keys: Set<Key>): Set<Key> {
+    const prevParents = new Set<Key>();
+    for (const key of keys) {
+      const node = cache.getNode(key);
+      if (node.parentKey) {
+        prevParents.add(node.parentKey);
+      }
+    }
+    return prevParents;
+  }
+
   /** CASCADE SELECTION **/
 
   /**
@@ -162,13 +178,7 @@ export function useTreeActions<T>({
     }
 
     // Collect old parents before move
-    const oldParents = new Set<Key>();
-    for (const key of keys) {
-      const node = cache.getNode(key);
-      if (node.parentKey) {
-        oldParents.add(node.parentKey);
-      }
-    }
+    const prevParents = getParents(keys);
 
     // Get new parent before move
     const newParent = cache.getParentForPosition(target, 'after');
@@ -177,7 +187,7 @@ export function useTreeActions<T>({
     cache.moveNodes(target, keys, 'after');
 
     // Sync cascade state
-    cache.syncParentsAfterMove(oldParents, newParent);
+    cache.syncParentsAfterMove(prevParents, newParent);
 
     return cache.toTree();
   }
@@ -189,13 +199,7 @@ export function useTreeActions<T>({
     }
 
     // Collect old parents before move
-    const oldParents = new Set<Key>();
-    for (const key of keys) {
-      const node = cache.getNode(key);
-      if (node.parentKey) {
-        oldParents.add(node.parentKey);
-      }
-    }
+    const prevParents = getParents(keys);
 
     // Get new parent before move
     const newParent = cache.getParentForPosition(target, 'before');
@@ -204,7 +208,7 @@ export function useTreeActions<T>({
     cache.moveNodes(target, keys, 'before');
 
     // Sync cascade state
-    cache.syncParentsAfterMove(oldParents, newParent);
+    cache.syncParentsAfterMove(prevParents, newParent);
 
     return cache.toTree();
   }
@@ -218,13 +222,7 @@ export function useTreeActions<T>({
     }
 
     // Collect old parents before move
-    const oldParents = new Set<Key>();
-    for (const key of keys) {
-      const node = cache.getNode(key);
-      if (node.parentKey) {
-        oldParents.add(node.parentKey);
-      }
-    }
+    const prevParents = getParents(keys);
 
     // Perform move
     for (const key of keys) {
@@ -232,7 +230,7 @@ export function useTreeActions<T>({
     }
 
     // Sync cascade state (target IS the new parent for moveInto)
-    cache.syncParentsAfterMove(oldParents, target);
+    cache.syncParentsAfterMove(prevParents, target);
 
     return cache.toTree();
   }

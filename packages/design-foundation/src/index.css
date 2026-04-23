@@ -62,6 +62,18 @@
   --color-current: currentColor;
 }
 
+@layer theme {
+  * {
+    @variant dark {
+      color-scheme: dark;
+    }
+
+    @variant light {
+      color-scheme: light;
+    }
+  }
+}
+
 @import './variants/variants.css';
 
 @source inline('{motion-safe:}');

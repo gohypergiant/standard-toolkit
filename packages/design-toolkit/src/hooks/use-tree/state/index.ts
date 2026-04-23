@@ -35,19 +35,17 @@ import type {
  * and drag-and-drop configuration. Use this hook when you need a complete tree solution with
  * built-in state management. For stateless transformations, use {@link useTreeActions} instead.
  *
- * @template T - The type of custom values stored in tree nodes (accessed via `node.values`).
- *
- * @param options - Configuration options for the tree state.
- * @param options.items - Initial tree node items to populate the tree.
+ * @param options - {@link UseTreeStateOptions}
+ * @param options.items - Initial tree node items.
  * @param options.selectionCascade - Enable cascade selection mode. When true, selecting a parent
  *   automatically selects all descendants, and parent checkboxes show indeterminate state when
- *   partially selected. Useful for file system or hierarchical permission UIs. Default: false.
- * @returns Tree state object containing current nodes, manipulation actions, and drag-and-drop configuration.
+ *   partially selected. Default: false.
+ * @returns {@link UseTreeState} Tree state, actions, and drag-and-drop configuration.
  *
  * @example
  * ```tsx
  * // Basic tree without cascade
- * const { nodes, actions, dragAndDropConfig } = useTreeState({
+ * const { nodes, actions } = useTreeState({
  *   items: myTree,
  * });
  *
@@ -56,10 +54,6 @@ import type {
  *   items: fileSystemTree,
  *   selectionCascade: true,
  * });
- *
- * // Using actions to manipulate tree
- * actions.expandAll(); // Expand all nodes
- * actions.onSelectionChange(new Set(['node-1', 'node-2'])); // Select specific nodes
  * ```
  */
 export function useTreeState<T>({

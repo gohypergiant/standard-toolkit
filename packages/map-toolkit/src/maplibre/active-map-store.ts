@@ -10,13 +10,21 @@
  * governing permissions and limitations under the License.
  */
 
-export { DEFAULT_VIEW_STATE } from '../shared/constants';
-export { useMapLibre } from './hooks/use-maplibre';
-export {
-  DEFAULT_RBZ_STYLE,
-  type RbzBuffer,
-  RbzHandler,
-  type RbzOptions,
-  type RbzOrigin,
-  type RbzStyleOptions,
-} from './rbz-handler';
+import type { UniqueId } from '@accelint/core';
+
+/**
+ * Tracks which map instance is currently active (last hovered).
+ * Used to gate keyboard shortcuts (e.g. Shift for RBZ) to the correct map
+ * in multi-instance layouts. Read/written imperatively — no React subscription needed.
+ */
+let activeMapId: UniqueId | null = null;
+
+export function setActiveMap(id: UniqueId): void {
+  if (activeMapId !== id) {
+    activeMapId = id;
+  }
+}
+
+export function isActiveMap(id: UniqueId): boolean {
+  return activeMapId === id;
+}

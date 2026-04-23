@@ -361,26 +361,29 @@ import { useTreeActions } from '@accelint/design-toolkit';
 
 function MyTreeComponent() {
   // Your state can come from anywhere
-  const [tree, setTree] = useState(initialData);
+    const [db, setDB] = useState(items);
+    const actions = useTreeActions({
+      nodes: db,
+      selectionCascade: true, // Optional: enable cascade selection
+    });
 
-  const actions = useTreeActions({
-    nodes: tree,
-    selectionCascade: true, // Optional: enable cascade selection
-  });
+    const handleExpansion = (keys: Set<Key>) => {
+      setDB(actions.onExpandedChange(keys));
+    };
+    // ...other handlers
 
-  const handleExpansion = (keys: Set<Key>) => {
-    setTree(actions.onExpandedChange(keys));
-  };
+    return (
+      <>
+        <Tree
+          items={db}
+          onExpandedChange={handleExpansion}
+          aria-label='Stateless Example'
+        >
+          {(node) => <Node key={node.key} node={node} />}
+        </Tree>
+      </>
+    );
 
-  return (
-    <Tree
-      items={tree}
-      onExpandedChange={handleExpansion}
-      aria-label='Tree Example'
-    >
-      {(node) => <Node key={node.key} node={node} />}
-    </Tree>
-  );
 }
 ```
 

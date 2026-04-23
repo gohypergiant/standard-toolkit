@@ -56,5 +56,10 @@
     :global(.dv-void-container) {
       cursor: grab;
     }
+
+    :global(.dv-resize-container[data-pinned]) :global(.dv-void-container) {
+      pointer-events: none;
+      cursor: default;
+    }
   }
 }
