@@ -23,12 +23,40 @@ import {
   MenuTrigger,
 } from '@accelint/design-toolkit';
 import Placeholder from '@accelint/icons/placeholder';
+import { setInteractionModality } from '@react-aria/interactions';
 import {
   createInteractiveVisualTests,
   createVisualTestScenarios,
   generateVariantMatrix,
 } from '~/visual-regression/vitest';
 import { type MenuScenario, PROP_COMBOS } from './variants';
+
+// Set React Aria's interaction modality to "pointer" before any rendering.
+// This prevents data-focus-visible from being applied when menus auto-focus
+// their first item on open, ensuring VRT screenshots capture pure selection
+// state without focus-visible styling on the first item.
+setInteractionModality('pointer');
+
+// Prevent React Aria's FocusScope from focusing menu items. When a menu opens
+// via isOpen, FocusScope auto-focuses the first item, which triggers the native
+// CSS :focus-visible pseudo-class (the browser defaults to keyboard modality in
+// a fresh page). This causes the first selected item to render with focus-visible
+// styling (different background) rather than pure selection styling. Patching
+// focus() to skip menu items prevents :focus-visible from ever matching.
+//
+// The patch allows calls with `focusVisible: true` through so that interactive
+// VRT tests can explicitly trigger focus state via triggerState().
+const originalFocus = HTMLElement.prototype.focus;
+HTMLElement.prototype.focus = function (options?: FocusOptions) {
+  if (
+    this.getAttribute('role')?.startsWith('menuitem') &&
+    // @ts-ignore -- focusVisible is not in TypeScript's FocusOptions type but is a valid browser API
+    !options?.focusVisible
+  ) {
+    return;
+  }
+  originalFocus.call(this, options);
+};
 
 function renderScenario(scenario: MenuScenario) {
   switch (scenario.name) {
