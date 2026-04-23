@@ -14,7 +14,7 @@ import type { DistanceUnitSymbol } from '@accelint/constants/units';
 import type { UniqueId } from '@accelint/core';
 import type { Rgba255Tuple } from '@accelint/predicates';
 import type { CompositeLayerProps } from '@deck.gl/core';
-import type { Shape, ShapeId } from '../shared/types';
+import type { Shape, ShapeFeature, ShapeId } from '../shared/types';
 import type { LabelPositionOptions } from './utils/labels';
 
 // internal
@@ -159,6 +159,12 @@ export type DisplayShapeLayerProps = CompositeLayerProps & {
    * @param shape - The hovered shape, or undefined when hover ends
    */
   onShapeHover?: (shape?: Shape) => void;
+
+  /**
+   * Overrides getFillColor for hoveredShapes
+   * @param feature - The shape feature
+   */
+  getHoverColor?: (feature: ShapeFeature) => Rgba255Tuple;
 
   /**
    * Label display mode for shapes

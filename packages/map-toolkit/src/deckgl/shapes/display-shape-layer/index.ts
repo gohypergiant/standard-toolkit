@@ -619,7 +619,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
    * Stacks with other interaction layers (e.g. selection highlight underneath).
    */
   private renderHoverLayer(features: Shape['feature'][]): GeoJsonLayer[] {
-    const { enableElevation, selectedShapeId } = this.props;
+    const { enableElevation, selectedShapeId, getHoverColor } = this.props;
     const hoverIndex = this.state?.hoverIndex;
 
     // Only render if something is hovered
@@ -651,7 +651,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
         // Styling
         filled: true,
         stroked: false, // Main layer handles strokes; this layer is fill-only
-        getFillColor: getOverlayFillColor,
+        getFillColor: getHoverColor ?? getOverlayFillColor,
 
         // Material brightness scales with interaction state; extrusion only when elevation enabled
         extruded: enableElevation,
