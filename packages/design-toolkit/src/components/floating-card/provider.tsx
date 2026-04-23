@@ -166,7 +166,9 @@ function DefaultLeftHeader({
     <div className={styles.headerSide}>
       {icon ? <Icon size='small'>{icon}</Icon> : null}
       {title && title !== id ? (
-        <div className={styles.headerTitle}>{title}</div>
+        <div className={styles.headerTitleContainer}>
+          <div className={styles.headerTitle}>{title}</div>
+        </div>
       ) : null}
     </div>
   );

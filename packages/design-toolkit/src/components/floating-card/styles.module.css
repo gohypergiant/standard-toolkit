@@ -22,11 +22,18 @@
   }
 
   .headerSide {
-    @apply gap-xs flex h-full items-center;
+    @apply gap-xs relative flex h-full items-center;
   }
 
+  .headerTitleContainer {
+    /** The header title container is set to a width of 0 to maximize the width of the drag handle, which we have no control over (dv-draggable).  */
+    @apply text-header-m pl-xs pointer-events-none h-full w-0;
+  }
+
+  /** The header title is set to a min-width to prevent it from collapsing when the title is long, and truncating the overflow text.  */
+  /** Its width is based on the width of the floating card header via a container query, accounting for the padding and other elements in the header. */
   .headerTitle {
-    @apply text-header-m pl-xs;
+    @apply h-full w-[calc(100cqw-10rem)] truncate align-middle leading-24 @min-[1rem]/floating-card-header:w-[calc(100cqw-10rem)];
   }
 
   .floatingCardProvider {
@@ -48,7 +55,7 @@
 
     :global(.dv-tabs-and-actions-container) {
       --dv-tabs-and-actions-container-height: 32px;
-      @apply p-xs text-header-m;
+      @apply p-xs text-header-m @container/floating-card-header;
     }
     :global(.dv-scrollable) {
       display: none;
