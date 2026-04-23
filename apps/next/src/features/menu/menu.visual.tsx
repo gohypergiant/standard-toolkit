@@ -50,7 +50,7 @@ const originalFocus = HTMLElement.prototype.focus;
 HTMLElement.prototype.focus = function (options?: FocusOptions) {
   if (
     this.getAttribute('role')?.startsWith('menuitem') &&
-    // @ts-ignore -- focusVisible is not in TypeScript's FocusOptions type but is a valid browser API
+    // @ts-ignore -- focusVisible is a valid option https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/focus
     !options?.focusVisible
   ) {
     return;

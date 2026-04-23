@@ -75,7 +75,7 @@ async function triggerState(
       // Find the actual focusable element within the container
       const focusTarget = findFocusableElement(element);
       if (focusTarget) {
-        // @ts-ignore https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/focus
+        // @ts-ignore -- focusVisible is a valid option https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/focus
         focusTarget.focus({ focusVisible: true });
       } else {
         logger.warn(
