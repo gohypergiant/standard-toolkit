@@ -23,6 +23,8 @@ import {
   useControl,
   type ViewState,
 } from 'react-map-gl/maplibre';
+import { RbzHandler } from '@/maplibre';
+import { isActiveMap, setActiveMap } from '@/maplibre/active-map-store';
 import { useMapCamera } from '../../camera';
 import { getCursor } from '../../map-cursor/store';
 import { getMapGeneration } from '../../shared/cleanup';
@@ -51,11 +53,11 @@ const CANVAS_CONTEXT_ATTRIBUTES: WebGLContextAttributesWithType = {
 } as const;
 
 /**
- * Serializes PickingInfo for event bus transmission.
+ * Serializes PickingInfo for event bus transmission by removing non-cloneable properties.
  * Omits viewport, layer, and sourceLayer (contain functions) but preserves layer IDs.
  *
- * @param info - The PickingInfo object from Deck.gl
- * @returns Serializable picking info with layer IDs extracted
+ * @param info - The PickingInfo object from Deck.gl.
+ * @returns Serializable picking info with layer IDs extracted.
  */
 function serializePickingInfo(info: PickingInfo): SerializablePickingInfo {
   const { viewport, layer, sourceLayer, ...infoRest } = info;
@@ -67,11 +69,12 @@ function serializePickingInfo(info: PickingInfo): SerializablePickingInfo {
 }
 
 /**
- * Strips non-serializable properties from MjolnirGestureEvent for event bus transmission.
+ * Strips non-serializable properties from Mjolnir events for event bus transmission.
+ * Overloaded to handle both GestureEvent and PointerEvent types.
  * Removes functions, DOM elements, and PointerEvent objects that cannot be cloned.
  *
- * @param event - The MjolnirGestureEvent from Deck.gl
- * @returns Serializable gesture event with non-cloneable properties removed
+ * @param event - The MjolnirGestureEvent from Deck.gl.
+ * @returns Serializable gesture event with non-cloneable properties removed.
  */
 function serializeMjolnirEvent(
   event: MjolnirGestureEvent,
@@ -87,11 +90,12 @@ function serializeMjolnirEvent(
   | 'pointers'
 >;
 /**
- * Strips non-serializable properties from MjolnirPointerEvent for event bus transmission.
+ * Strips non-serializable properties from Mjolnir events for event bus transmission.
+ * Overloaded to handle both GestureEvent and PointerEvent types.
  * Removes functions and DOM elements that cannot be cloned.
  *
- * @param event - The MjolnirPointerEvent from Deck.gl
- * @returns Serializable pointer event with non-cloneable properties removed
+ * @param event - The MjolnirPointerEvent from Deck.gl.
+ * @returns Serializable pointer event with non-cloneable properties removed.
  */
 function serializeMjolnirEvent(
   event: MjolnirPointerEvent,
@@ -160,8 +164,8 @@ function AddDeckglControl() {
  * @returns A map component with Deck.gl and MapLibre GL integration
  *
  * @example
- * Basic usage with id (recommended: module-level constant):
  * ```tsx
+ * // Basic usage with id (recommended: module-level constant)
  * import { BaseMap } from '@accelint/map-toolkit/deckgl';
  * import { View } from '@deckgl-fiber-renderer/dom';
  * import { uuid } from '@accelint/core';
@@ -179,8 +183,8 @@ function AddDeckglControl() {
  * ```
  *
  * @example
- * With map mode and event handlers (module-level constant for sharing):
  * ```tsx
+ * // With map mode and event handlers
  * import { BaseMap } from '@accelint/map-toolkit/deckgl';
  * import { useMapMode } from '@accelint/map-toolkit/map-mode';
  * import { uuid } from '@accelint/core';
@@ -229,12 +233,19 @@ export function BaseMap({
   onHover,
   onViewStateChange,
   pickingRadius,
+  enableRbz = false,
+  rbzOptions,
+  boxZoom: boxZoomProp,
   ...rest
 }: BaseMapProps) {
   const mapGeneration = getMapGeneration(id);
   const deckglInstance = useDeckgl();
   const container = useId();
   const mapRef = useRef<MapRef>(null);
+  const rbzRef = useRef<RbzHandler | null>(null);
+
+  // Derive boxZoom: disable when RBZ is enabled to avoid conflicts
+  const boxZoom = boxZoomProp ?? !enableRbz;
 
   const { cameraState, setCameraState } = useMapCamera(id, {
     view: defaultView,
@@ -271,8 +282,9 @@ export function BaseMap({
       projection: cameraState.projection,
       maxPitch: cameraState.view === '2D' ? 0 : 85,
       canvasContextAttributes: CANVAS_CONTEXT_ATTRIBUTES,
+      boxZoom,
     }),
-    [viewState, container, cameraState.projection, cameraState.view],
+    [viewState, container, cameraState.projection, cameraState.view, boxZoom],
   );
 
   const emitClick = useEmit<MapClickEvent>(MapEvents.click);
@@ -297,6 +309,9 @@ export function BaseMap({
 
   const handleHover = useCallback(
     (info: PickingInfo, event: MjolnirPointerEvent) => {
+      // Mark this map as the active instance for keyboard shortcuts (e.g. Shift for RBZ)
+      setActiveMap(id);
+
       // send full pickingInfo and event to user-defined onHover
       onHover?.(info, event);
 
@@ -398,11 +413,33 @@ export function BaseMap({
         },
       } as ViewStateChangeParameters);
     }
+    if (enableRbz && mapRef.current) {
+      const map = mapRef.current.getMap();
+      rbzRef.current = new RbzHandler(map, {
+        ...rbzOptions,
+        shouldActivate: () => isActiveMap(id),
+      });
+      // _add is a private MapLibre API — no public equivalent exists for registering custom handlers.
+      // Tested against maplibre-gl 5.x. Re-verify on major upgrades.
+      map.handlers._add('customRbz', rbzRef.current);
+      rbzRef.current.startListening();
+
+      // Ensure window has focus for keyboard events (critical in iframes like Storybook)
+      window.focus();
+
+      // Clean up when the map is removed
+      map.once('remove', () => {
+        rbzRef.current?.destroy();
+        rbzRef.current = null;
+      });
+    }
   });
 
   return (
     <div id={container} className={className}>
-      {enableControlEvents && <MapControls id={id} mapRef={mapRef} />}
+      {enableControlEvents && (
+        <MapControls id={id} mapRef={mapRef} rbzRef={rbzRef} />
+      )}
       <MapProvider id={id}>
         <MapLibre
           key={mapGeneration}

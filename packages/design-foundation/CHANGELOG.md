@@ -1,5 +1,12 @@
 # @accelint/design-toolkit
 
+## 3.1.0
+### Minor Changes
+
+- 62c5a63: - Adds new design system animation tokens for duration and easing for consistent animation effects
+  - Adds light built-in animation to the following components: Accordion, Button, ComboboxField, Dialog, Drawer, Menu, Notice, Popover, Sidenav, Switch, Tooltip
+  - Guidelines and best practices documentation for using animation
+
 ## 3.0.2
 ### Patch Changes
 

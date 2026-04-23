@@ -12,12 +12,13 @@
 
 import '@/deckgl/symbol-layer/fiber';
 import { uuid } from '@accelint/core';
-import { useId } from 'react';
+import { useCallback, useId, useState } from 'react';
 import { BaseMap } from '@/deckgl/base-map';
 import { withDeckGL } from '@/decorators/deckgl';
 import { CoffinCornerExtension } from '../extensions';
-import { useCoffinCorner } from '../extensions/coffin-corner';
+import type { EntityId } from '../extensions/coffin-corner';
 import type { Rgba255Tuple } from '@accelint/predicates';
+import type { PickingInfo } from '@deck.gl/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const MOCK_DATA = [
@@ -158,23 +159,42 @@ function SymbolLayerWithCoffinCornerDemo({
 }: {
   selectedCoffinCornerColor: Rgba255Tuple;
 }) {
-  const layerId = 'symbols';
-  const { selectedId, hoveredId } = useCoffinCorner(
-    COFFIN_CORNER_MAP_ID,
-    layerId,
-  );
+  const [selected, setSelected] = useState<Set<EntityId>>(() => new Set());
+  const [hovered, setHovered] = useState<Set<EntityId>>(() => new Set());
+
+  const handleClick = useCallback((info: PickingInfo) => {
+    if (info.index === -1 || !info.object) {
+      setSelected(new Set());
+      return;
+    }
+    const id = (info.object as { id: EntityId }).id;
+    setSelected((prev) => (prev.has(id) ? new Set() : new Set([id])));
+  }, []);
+
+  const handleHover = useCallback((info: PickingInfo) => {
+    setHovered(
+      info.index !== -1 && info.object
+        ? new Set([(info.object as { id: EntityId }).id])
+        : new Set(),
+    );
+  }, []);
 
   return (
-    <BaseMap className='relative h-dvh w-dvw' id={COFFIN_CORNER_MAP_ID}>
+    <BaseMap
+      className='relative h-dvh w-dvw'
+      id={COFFIN_CORNER_MAP_ID}
+      onClick={handleClick}
+      onHover={handleHover}
+    >
       <symbolLayer
-        id={layerId}
+        id='symbols'
         data={MOCK_DATA}
         defaultSymbolOptions={{
           colorMode: 'Dark',
           square: true,
         }}
-        selectedEntityId={selectedId}
-        hoveredEntityId={hoveredId}
+        selectedEntityIds={selected}
+        hoveredEntityIds={hovered}
         selectedCoffinCornerColor={selectedCoffinCornerColor}
         extensions={[coffinCornerExtension]}
         pickable

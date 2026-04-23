@@ -266,7 +266,10 @@ export type {
 export { FloatingCard } from './components/floating-card';
 export type { FloatingCardProps } from './components/floating-card';
 export { FloatingCardProvider } from './components/floating-card/provider';
-export type { FloatingCardProviderProps } from './components/floating-card/provider';
+export type {
+  FloatingCardHeaderAction,
+  FloatingCardProviderProps,
+} from './components/floating-card/provider';
 export { GanttContentContainer } from './components/gantt/components/containers/external/gantt-content-container';
 export { GanttPanelContainer } from './components/gantt/components/containers/external/gantt-panel-container';
 export { GanttBlock } from './components/gantt/components/content-row/block';

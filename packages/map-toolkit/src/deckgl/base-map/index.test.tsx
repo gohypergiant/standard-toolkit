@@ -21,26 +21,17 @@ vi.mock('../../maplibre/hooks/use-maplibre', () => ({
 }));
 
 describe('BaseMap', () => {
-  describe('Rendering', () => {
-    it('renders with className', () => {
-      const id = uuid();
-      const { container } = render(
-        <BaseMap className='custom-map-class' id={id} />,
-      );
+  it('should render without crashing when given a valid id', () => {
+    const { container } = render(<BaseMap id={uuid()} />);
 
-      const mapContainer = container.querySelector('.custom-map-class');
-      expect(mapContainer).toBeInTheDocument();
-    });
+    expect(container.firstChild).toBeInTheDocument();
   });
 
-  describe('Props', () => {
-    it('passes id to MapProvider correctly', () => {
-      const specificId = uuid();
+  it('should apply className to the root element', () => {
+    const { container } = render(
+      <BaseMap className='custom-map-class' id={uuid()} />,
+    );
 
-      const { container } = render(<BaseMap id={specificId} />);
-
-      // Verify component renders successfully with the provided id
-      expect(container.firstChild).toBeInTheDocument();
-    });
+    expect(container.firstChild).toHaveClass('custom-map-class');
   });
 });
