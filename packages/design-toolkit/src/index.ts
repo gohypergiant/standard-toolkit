@@ -264,12 +264,16 @@ export type {
   FlashcardProps,
 } from './components/flashcard/types';
 export { FloatingCard } from './components/floating-card';
-export type { FloatingCardProps } from './components/floating-card';
 export { FloatingCardProvider } from './components/floating-card/provider';
 export type {
+  FloatingCardContextValue,
   FloatingCardHeaderAction,
+  FloatingCardHeaderProps,
+  FloatingCardProps,
   FloatingCardProviderProps,
-} from './components/floating-card/provider';
+  HeaderAdapterOptions,
+  MaybeFactory,
+} from './components/floating-card/types';
 export { GanttContentContainer } from './components/gantt/components/containers/external/gantt-content-container';
 export { GanttPanelContainer } from './components/gantt/components/containers/external/gantt-panel-container';
 export { GanttBlock } from './components/gantt/components/content-row/block';

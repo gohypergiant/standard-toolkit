@@ -14,11 +14,7 @@ import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, type Mock, vi } from 'vitest';
 import { FloatingCard } from '.';
-import {
-  FloatingCardContext,
-  type FloatingCardContextValue,
-  useFloatingCard,
-} from './context';
+import { FloatingCardContext, useFloatingCard } from './context';
 import { FloatingCardProvider } from './provider';
 import type { UniqueId } from '@accelint/core/utility/uuid';
 import type {
@@ -27,6 +23,7 @@ import type {
   IDockviewPanelProps,
 } from 'dockview-react';
 import type { FunctionComponent } from 'react';
+import type { FloatingCardContextValue } from './types';
 
 // --- Design toolkit component mocks ---
 // Icon and Button import `client-only` which is not compatible with the jsdom
