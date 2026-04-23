@@ -476,11 +476,11 @@ export class Cache<T> {
   /**
    * Updates a node in the cache.
    *
-   * Accepts either TreeNode (with full child objects) or CacheTreeNode (with child keys).
-   * Automatically converts TreeNode children to keys for internal cache storage.
+   * Accepts a TreeNode<T>. Automatically converts TreeNode children to keys for
+   * internal cache storage.
    *
    * @param key - The unique key of the node to update.
-   * @param node - The node data to store (TreeNode or CacheTreeNode).
+   * @param node - The node data to store.
    *
    * @example
    * ```typescript
@@ -507,8 +507,6 @@ export class Cache<T> {
    * Note: `parentKey` and `children` properties are ignored (not applied to nodes).
    *
    * @param props - Partial node properties to apply to all nodes.
-   * @param props.parentKey - Ignored (not applied).
-   * @param props.children - Ignored (not applied).
    *
    * @example
    * ```typescript
