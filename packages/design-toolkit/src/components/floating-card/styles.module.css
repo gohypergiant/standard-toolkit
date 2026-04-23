@@ -33,7 +33,7 @@
   /** The header title is set to a min-width to prevent it from collapsing when the title is long, and truncating the overflow text.  */
   /** Its width is based on the width of the floating card header via a container query, accounting for the padding and other elements in the header. */
   .headerTitle {
-    @apply h-full w-[calc(100cqw-10rem)] truncate align-middle leading-24 @min-[1rem]/floating-card-header:w-[calc(100cqw-10rem)];
+    @apply h-full truncate align-middle leading-24 @min-[1rem]/floating-card-header:w-[calc(100cqw-10rem)];
   }
 
   .floatingCardProvider {
