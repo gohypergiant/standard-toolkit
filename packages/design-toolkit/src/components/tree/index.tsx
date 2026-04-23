@@ -85,6 +85,8 @@ function collectNodeKeys<T>(
  *
  * Supports static or dynamic collections with keyboard navigation and accessibility.
  *
+ * @template T - The type of custom values stored in tree nodes (accessed via `node.values`).
+ *
  * @param props - {@link TreeProps}
  * @param props.children - Tree items or render function for dynamic collections.
  * @param props.className - CSS class for the tree container.
