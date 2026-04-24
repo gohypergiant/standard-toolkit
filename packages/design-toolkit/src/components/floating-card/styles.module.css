@@ -32,10 +32,14 @@
     @apply text-header-m pl-xs pointer-events-none h-full w-0;
   }
 
-  /** The header title is set to a min-width to prevent it from collapsing when the title is long, and truncating the overflow text.  */
-  /** Its width is based on the width of the floating card header via a container query, accounting for the padding and other elements in the header. */
+  /* Explicit width based on the header's container query width so long titles
+     truncate within the header rather than pushing siblings or overflowing.
+     The 10rem reserves space for the leading icon, header padding, gap, and
+     right-side action buttons; adjust when those change.
+     The @min-[1rem]/floating-card-header variant scopes the rule to cases
+     where the named container exists, so cqw never falls back to the viewport. */
   .headerTitle {
-    @apply h-full truncate align-middle leading-24 @min-[1rem]/floating-card-header:w-[calc(100cqw-10rem)];
+    @apply h-full truncate leading-24 @min-[1rem]/floating-card-header:w-[calc(100cqw-10rem)];
   }
 
   .floatingCardProvider {
