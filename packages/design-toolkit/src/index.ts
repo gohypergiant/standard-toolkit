@@ -268,11 +268,8 @@ export { FloatingCardProvider } from './components/floating-card/provider';
 export type {
   FloatingCardContextValue,
   FloatingCardHeaderAction,
-  FloatingCardHeaderProps,
   FloatingCardProps,
   FloatingCardProviderProps,
-  HeaderAdapterOptions,
-  MaybeFactory,
 } from './components/floating-card/types';
 export { GanttContentContainer } from './components/gantt/components/containers/external/gantt-content-container';
 export { GanttPanelContainer } from './components/gantt/components/containers/external/gantt-panel-container';

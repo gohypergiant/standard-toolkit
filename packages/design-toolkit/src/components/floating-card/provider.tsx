@@ -17,7 +17,6 @@ import {
   type DockviewApi,
   DockviewReact,
   type DockviewReadyEvent,
-  type IDockviewHeaderActionsProps,
   type IDockviewPanelProps,
 } from 'dockview-react';
 import {
@@ -34,12 +33,11 @@ import { Divider } from '../divider';
 import { Icon } from '../icon';
 import { FloatingCardContext, useFloatingCard } from './context';
 import styles from './styles.module.css';
+import { createHeaderAdapter, type FloatingCardHeaderProps } from './utils';
 import type { UniqueId } from '@accelint/core/utility/uuid';
 import type {
   FloatingCardContextValue,
-  FloatingCardHeaderProps,
   FloatingCardProviderProps,
-  HeaderAdapterOptions,
 } from './types';
 
 /**
@@ -185,68 +183,6 @@ function DefaultRightHeader({
       </Button>
     </div>
   );
-}
-
-/**
- * Creates an adapter component to map Dockview's header action props to custom header component props.
- *
- * Handles title change subscriptions and resolves MaybeFactory options (icon, headerActions)
- * either as static values or by invoking factory functions with the active card ID.
- *
- * @param Component - The header component to wrap.
- * @param options - Configuration options including icon and headerActions (static or factory).
- * @returns Adapter component compatible with Dockview's header API.
- */
-function createHeaderAdapter(
-  Component: FunctionComponent<FloatingCardHeaderProps>,
-  options: HeaderAdapterOptions,
-): FunctionComponent<IDockviewHeaderActionsProps> {
-  function HeaderAdapter(props: Readonly<IDockviewHeaderActionsProps>) {
-    const panelId = props.panels[0]?.id ?? '';
-    const [title, setTitle] = useState(props.activePanel?.title);
-
-    useEffect(() => {
-      const panel = props.activePanel;
-
-      if (!panel) {
-        return;
-      }
-
-      setTitle(panel.title);
-
-      const disposable = panel.api.onDidTitleChange(() => {
-        setTitle(panel.title);
-      });
-
-      return () => {
-        disposable.dispose();
-      };
-    }, [props.activePanel]);
-    const icon = props.activePanel
-      ? typeof options?.icon === 'function'
-        ? options.icon(panelId)
-        : options?.icon
-      : undefined;
-    const headerActions =
-      typeof options?.headerActions === 'function'
-        ? options.headerActions(panelId)
-        : options?.headerActions;
-    return (
-      <Component
-        icon={icon}
-        headerActions={headerActions}
-        title={title}
-        id={props.activePanel?.id}
-        closeGroup={() => props.api.close()}
-        togglePinCard={options.togglePinCard}
-        isPinned={options.isPinned}
-        subscribeToPinState={options.subscribeToPinState}
-      />
-    );
-  }
-
-  HeaderAdapter.displayName = `HeaderAdapter(${Component.displayName ?? Component.name ?? 'Anonymous'})`;
-  return HeaderAdapter;
 }
 
 const components: Record<string, FunctionComponent<IDockviewPanelProps>> = {

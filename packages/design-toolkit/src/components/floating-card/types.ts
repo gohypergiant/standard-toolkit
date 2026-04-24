@@ -13,16 +13,7 @@
 import type { UniqueId } from '@accelint/core/utility/uuid';
 import type { DockviewApi } from 'dockview-react';
 import type { PropsWithChildren, ReactNode } from 'react';
-
-/**
- * A value that can be static or dynamically computed per floating card.
- *
- * Enables per-card customization of props by passing a factory function
- * that receives the card ID and returns the appropriate value.
- *
- * @template T - The type of the static value or factory return type.
- */
-export type MaybeFactory<T> = T | ((cardId: string) => T);
+import type { MaybeFactory } from './utils';
 
 /**
  * Context value providing floating card management functionality.
@@ -128,30 +119,6 @@ export type FloatingCardHeaderAction =
   | 'pin';
 
 /**
- * Props passed to floating card header components.
- *
- * @remarks Internal type used by header adapters to map Dockview props to custom header components.
- */
-export type FloatingCardHeaderProps = {
-  /** ID of the active floating card panel */
-  id?: string;
-  /** Title text displayed in the header */
-  title?: string;
-  /** Optional icon displayed at the start of the header */
-  icon?: ReactNode;
-  /** Callback to close the entire card group */
-  closeGroup: () => void;
-  /** Toggles pin state for the specified card */
-  togglePinCard?: (id: UniqueId) => void;
-  /** Checks if the specified card is pinned */
-  isPinned?: (id: UniqueId) => boolean;
-  /** Subscribes to pin state changes; returns an unsubscribe function */
-  subscribeToPinState?: (callback: () => void) => () => void;
-  /** Custom action buttons to render in the header */
-  headerActions?: FloatingCardHeaderAction[];
-};
-
-/**
  * Props for the FloatingCardProvider component.
  *
  * Configures default icon and header actions for all floating cards. Both can be
@@ -197,11 +164,3 @@ export type FloatingCardProviderProps = Readonly<
     className?: string;
   }>
 >;
-
-export type HeaderAdapterOptions = {
-  icon?: MaybeFactory<ReactNode>;
-  headerActions?: MaybeFactory<FloatingCardHeaderProps['headerActions']>;
-  togglePinCard?: (id: UniqueId) => void;
-  isPinned?: (id: UniqueId) => boolean;
-  subscribeToPinState?: (callback: () => void) => () => void;
-};

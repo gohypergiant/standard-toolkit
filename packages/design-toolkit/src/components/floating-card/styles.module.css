@@ -22,11 +22,13 @@
   }
 
   .headerSide {
-    @apply gap-xs relative flex h-full items-center;
+    @apply gap-xs flex h-full items-center;
   }
 
+  /* Zero width + pointer-events-none lets the title visually overflow the
+     flex row without consuming drag-handle space or intercepting pointer
+     gestures meant for dockview's drag handle (.dv-void-container). */
   .headerTitleContainer {
-    /** The header title container is set to a width of 0 to maximize the width of the drag handle, which we have no control over (dv-draggable).  */
     @apply text-header-m pl-xs pointer-events-none h-full w-0;
   }
 
