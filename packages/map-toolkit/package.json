@@ -119,6 +119,7 @@
     "./deckgl/shapes/edit-shape-layer/events": "./dist/deckgl/shapes/edit-shape-layer/events.js",
     "./deckgl/shapes/edit-shape-layer/fiber": "./dist/deckgl/shapes/edit-shape-layer/fiber.js",
     "./deckgl/shapes/edit-shape-layer/types": "./dist/deckgl/shapes/edit-shape-layer/types.js",
+    "./deckgl/shapes/edit-shape-layer/use-edit-action-hotkey": "./dist/deckgl/shapes/edit-shape-layer/use-edit-action-hotkey.js",
     "./deckgl/shapes/edit-shape-layer/use-edit-shape": "./dist/deckgl/shapes/edit-shape-layer/use-edit-shape.js",
     "./deckgl/shapes/shared/events": "./dist/deckgl/shapes/shared/events.js",
     "./deckgl/shapes/shared/types": "./dist/deckgl/shapes/shared/types.js",
