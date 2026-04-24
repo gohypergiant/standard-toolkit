@@ -13,50 +13,9 @@
 import { type PropsWithChildren, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useFloatingCard } from './context';
-import type { UniqueId } from '@accelint/core';
+import type { FloatingCardProps } from './types';
 
 const defaultDimensions = { width: 300, height: 400 } as const;
-
-/**
- * Props for the FloatingCard component.
- *
- * @example
- * ```tsx
- * const props: FloatingCardProps = {
- *   id: 'panel-123' as UniqueId,
- *   title: 'My Panel',
- *   isOpen: true,
- *   initialDimensions: { width: 350, height: 450 }
- * };
- * ```
- */
-export type FloatingCardProps = Readonly<{
-  /** Unique identifier for the floating card */
-  id: UniqueId;
-  /** Optional title displayed in the floating card header */
-  title?: string;
-  /**
-   * Controls whether the floating card is rendered.
-   *
-   * When `true`, the card registers with the floating card engine and renders its
-   * children via a portal. When `false`, the card is closed and removed.
-   *
-   * @defaultValue true
-   */
-  isOpen?: boolean;
-  /**
-   * Initial dimensions of the floating card panel.
-   *
-   * @defaultValue { width: 300, height: 400 }
-   */
-  initialDimensions?: Readonly<{ width: number; height: number }>;
-  /**
-   * Initial position of the floating card panel.
-   *
-   * When provided, sets the x and y coordinates of the floating card.
-   */
-  initialPosition?: Readonly<{ x: number; y: number }>;
-}>;
 
 /**
  * Renders its children into a floating card using React portals.
