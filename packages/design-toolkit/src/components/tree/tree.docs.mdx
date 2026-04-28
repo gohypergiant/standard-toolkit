@@ -18,40 +18,7 @@ It is composed of the following components:
 - **TreeItemPrefixIcon** - places and styles the icon that optionally shows before a tree node
 - **TreeItemActions** - container for unique application icons for a tree item
 
-### Static vs Dynamic Collections
-
-The Tree component supports two different collection patterns:
-
-1. **Static Collection**: Hard-coded tree structure using nested TreeItem components.
-2. **Dynamic Collection**: Data-driven tree structure using the `items` prop and a render function
-
-You should use one approach or the other, not both. The component will throw an error if you try to use both approaches simultaneously. The `items` object implies a dynamic collection, but the `expandedKeys` prop is trying to pass in controlled component data. In this example, you would remove the `expandedKeys` and put the `isExpanded` prop on the nodes in your `items` object that you want expanded.
-
-```jsx
-// This will throw an error
-<Tree items={items} expandedKeys={expandedKeys}>
-  {(node) => <Node key={node.key} node={node} />}
-</Tree>
-```
-
-When using dynamic data, let the component manage its state internally or use the state management hooks from the `use-tree` package.
-
-## Basic Example, static data
-The `Tree` can be rendered with either hard-coded static data or with dynamic data from an external source like a database or an API.
-
-```jsx
-<Tree>
-  <TreeItem id='one' textValue='one'>
-    <TreeItemContent>One</TreeItemContent>
-    <TreeItem id='two' textValue='two'>
-      <TreeItemContent>Two</TreeItemContent>
-    </TreeItem>
-  </TreeItem>
-</Tree>
-```
-<Canvas of={TreeStories.StaticCollection} />
-
-## Basic Example, dynamic data
+## Dynamic data example
 
 For dynamic data rendering, the Tree component accepts an `items` array and a render function as children. This pattern is more efficient for trees with many nodes or when the data comes from an external source. When you use a dynamic tree like this with external data, then you include the information about that node -- `isExpanded` or `isDisabled` as a property of that node. In this case, the Tree does NOT keep its own state. It will render the data as passed in.
 
@@ -89,6 +56,44 @@ const Node = ({ node }) => (
   {(node) => <Node key={node.key} node={node} />}
 </Tree>
 ```
+
+<Canvas of={TreeStories.DragAndDrop} />
+
+## Static data example
+The `Tree` can be rendered with either hard-coded static data or with dynamic data from an external source like a database or an API.
+
+```jsx
+<Tree>
+  <TreeItem id='one' textValue='one'>
+    <TreeItemContent>One</TreeItemContent>
+    <TreeItem id='two' textValue='two'>
+      <TreeItemContent>Two</TreeItemContent>
+    </TreeItem>
+  </TreeItem>
+</Tree>
+```
+<Canvas of={TreeStories.StaticCollection} />
+
+### Why use a Static vs a Dynamic Collection?
+
+The Tree component supports two different collection patterns:
+
+1. **Dynamic Collection**: Data-driven tree structure using the `items` prop and a render function. Can employ `useTreeState` and `useTreeActions` for tree operations management.
+2. **Static Collection**: Hard-coded tree structure using nested TreeItem components. This works best if the tree will not contain data that is regularly updated.
+
+You should use one approach or the other, not both. The component will throw an error if you try to use both approaches simultaneously.
+```jsx
+// This will throw an error
+<Tree items={items} expandedKeys={expandedKeys}>
+  {(node) => <Node key={node.key} node={node} />}
+</Tree>
+```
+
+The `items` object implies a dynamic collection, but the `expandedKeys` prop is trying to pass in controlled component data. In the above example, you would remove the `expandedKeys` and put the `isExpanded` prop on the nodes in your `items` object that you want expanded.
+
+
+When using dynamic data, let the component manage its state internally or use the state management hooks from the `use-tree` package.
+
 
 ## Customizing Tree Item Appearance
 
@@ -202,10 +207,10 @@ Use these values to conditionally render or style your tree items based on their
 * **showVisibility** - enables and disables visibility controls
 * **showRuleLines** - controls whether visual rule lines are shown to indicate hierarchy
 * **selectionMode** - manages selection controls, `multiple` and `single` enable selection and `none` will disable
-* **disabledKeys** - Set of keys for disabled tree nodes
-* **expandedKeys** - Set of keys for expanded tree nodes
-* **selectedKeys** - Set of keys for selected tree nodes
-* **visibleKeys** - Set of keys for visible tree nodes
+* **disabledKeys** - set of keys for disabled tree nodes
+* **expandedKeys** - set of keys for expanded tree nodes
+* **selectedKeys** - set of keys for selected tree nodes
+* **visibleKeys** - set of keys for visible tree nodes
 
 ## Selection
 
@@ -542,7 +547,7 @@ function useOptimisticTree(projectId: string) {
         if (currentHistory.length === 0) {
           return currentHistory;
         }
-        
+
         setTree(currentHistory[currentHistory.length - 1]);
         return currentHistory.slice(0, -1);
       });
