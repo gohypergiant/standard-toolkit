@@ -529,10 +529,16 @@ function useOptimisticTree(projectId: string) {
     },
     canUndo: history.length > 0,
     undo: () => {
-      if (history.length > 0) {
-        setTree(history[history.length - 1]);
-        setHistory(history.slice(0, -1));
-      }
+      // Read the latest history atomically so undo works even when
+      // called in rapid succession; setTree is batched in the same tick.
+      setHistory((currentHistory) => {
+        if (currentHistory.length === 0) {
+          return currentHistory;
+        }
+        
+        setTree(currentHistory[currentHistory.length - 1]);
+        return currentHistory.slice(0, -1);
+      });
     },
   };
 }
