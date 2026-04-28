@@ -354,29 +354,18 @@ describe('Cascade Selection', () => {
       },
     ];
 
-    it('should clear indeterminate state when selected child is moved out via moveAfter', () => {
+    it.each([
+      'moveAfter',
+      'moveBefore',
+    ] as const)('should clear indeterminate state when selected child is moved out via %s', (method) => {
       const { result } = renderHook(() =>
         useTreeActions({ nodes: simpleTree, selectionCascade: true }),
       );
       // Select child1 only — parent becomes indeterminate
       result.current.onSelectionChange(new Set(['child1']));
-      // Move child1 to root level (after parent)
-      const updated = result.current.moveAfter('parent', new Set(['child1']));
-      const parent = updated.find((n) => n.key === 'parent');
-      // parent now only has child2 (unselected), no longer indeterminate
-      expect(parent?.isIndeterminate).toBe(false);
-      expect(parent?.isSelected).toBe(false);
-    });
-
-    it('should clear indeterminate state when selected child is moved out via moveBefore', () => {
-      const { result } = renderHook(() =>
-        useTreeActions({ nodes: simpleTree, selectionCascade: true }),
-      );
-      // Select child1 only — parent becomes indeterminate
-      result.current.onSelectionChange(new Set(['child1']));
-      // Move child1 to root level (before parent)
-      const updated = result.current.moveBefore('parent', new Set(['child1']));
-      const parent = updated.find((n) => n.key === 'parent');
+      // Move child1 out from under parent (before or after — both remove it from parent's children)
+      const updated = result.current[method]('parent', new Set(['child1']));
+      const parent = updated.find((node) => node.key === 'parent');
       // parent now only has child2 (unselected), no longer indeterminate
       expect(parent?.isIndeterminate).toBe(false);
       expect(parent?.isSelected).toBe(false);
