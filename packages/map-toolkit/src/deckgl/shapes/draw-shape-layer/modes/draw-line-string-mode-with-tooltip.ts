@@ -143,4 +143,16 @@ export class DrawLineStringModeWithTooltip extends DrawLineStringMode {
   override getTooltips(): Tooltip[] {
     return this.tooltip ? [this.tooltip] : [];
   }
+
+  /**
+   * Reset the click sequence and clear the tooltip together.
+   *
+   * The mode instance is cached and reused across draw sessions, so without
+   * this override `this.tooltip` would persist from one session into the next
+   * and flash before `handlePointerMove` overwrites it.
+   */
+  override resetClickSequence(): void {
+    super.resetClickSequence();
+    this.tooltip = null;
+  }
 }

@@ -125,6 +125,40 @@ describe('Draw Mode Classes', () => {
   });
 });
 
+describe('Tooltip lifecycle', () => {
+  /**
+   * Mode instances are cached and reused across draw sessions, so the
+   * private `tooltip` field would otherwise leak from one session into the
+   * next render frame. The `resetClickSequence` override clears it.
+   *
+   * We poke the private field directly because the alternative (driving a
+   * full `handlePointerMove` cycle with synthetic event/props) tests more
+   * than the override and adds significant setup; the field is the exact
+   * lifecycle state under test.
+   */
+  type WithPrivateTooltip = {
+    tooltip: { position: [number, number]; text: string } | null;
+  };
+
+  it.each([
+    ['Circle', () => new DrawCircleModeWithTooltip()],
+    ['Polygon', () => new DrawPolygonModeWithTooltip()],
+    ['LineString', () => new DrawLineStringModeWithTooltip()],
+    ['Rectangle', () => new DrawRectangleModeWithTooltip()],
+    ['Ellipse', () => new DrawEllipseModeWithTooltip()],
+  ])('%s clears tooltip when click sequence is reset', (_label, factory) => {
+    const mode = factory();
+    const stale = { position: [0, 0] as [number, number], text: 'stale' };
+
+    (mode as unknown as WithPrivateTooltip).tooltip = stale;
+    expect(mode.getTooltips()).toEqual([stale]);
+
+    mode.resetClickSequence();
+
+    expect(mode.getTooltips()).toEqual([]);
+  });
+});
+
 describe('Mode Instance Functions', () => {
   describe('getModeInstance', () => {
     it('returns cached mode instance for Circle', () => {
