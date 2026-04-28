@@ -512,7 +512,7 @@ function useOptimisticTree(projectId: string) {
     } catch (error) {
       // Rollback on error
       setTree(previous);
-      setHistory(history.slice(0, -1));
+      setHistory((history) => history.slice(0, -1));
       throw error;
     }
   };
