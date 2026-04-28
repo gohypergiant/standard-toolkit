@@ -22,10 +22,10 @@ It is composed of the following components:
 
 The Tree component supports two different collection patterns:
 
-1. **Static Collection**: Hard-coded tree structure using nested TreeItem components
+1. **Static Collection**: Hard-coded tree structure using nested TreeItem components.
 2. **Dynamic Collection**: Data-driven tree structure using the `items` prop and a render function
 
-You should use one approach or the other, not both. The component will throw an error if you try to use both approaches simultaneously.
+You should use one approach or the other, not both. The component will throw an error if you try to use both approaches simultaneously. The `items` object implies a dynamic collection, but the `expandedKeys` prop is trying to pass in controlled component data. In this example, you would remove the `expandedKeys` and put the `isExpanded` prop on the nodes in your `items` object that you want expanded.
 
 ```jsx
 // This will throw an error
@@ -53,13 +53,20 @@ The `Tree` can be rendered with either hard-coded static data or with dynamic da
 
 ## Basic Example, dynamic data
 
-For dynamic data rendering, the Tree component accepts an `items` array and a render function as children. This pattern is more efficient for trees with many nodes or when the data comes from an external source.
+For dynamic data rendering, the Tree component accepts an `items` array and a render function as children. This pattern is more efficient for trees with many nodes or when the data comes from an external source. When you use a dynamic tree like this with external data, then you include the information about that node -- `isExpanded` or `isDisabled` as a property of that node. In this case, the Tree does NOT keep it's own state. It will render the data as passed in.
 
-```jsx
-const items = [
+```tsx
+import type { TreeNode } from '@accelint/design-toolkit/hooks/use-tree/types';
+
+type ItemValues = {
+  customProperty: string;
+}
+
+const items: TreeNode<ItemValues>[] = [
   {
     key: 'one',
     label: 'One',
+    isExpanded: true,
     children: [
       {
         key: 'two',

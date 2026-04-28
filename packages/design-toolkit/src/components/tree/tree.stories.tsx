@@ -231,6 +231,15 @@ function Node({ node }: { node: TreeNode<ItemValues> }) {
     </TreeItem>
   );
 }
+const expandedKeys = new Set([]);
+
+export const Default: Story = {
+  render: () => (
+    <Tree items={items} expandedKeys={expandedKeys}>
+      {(node) => <Node key={node.key} node={node} />}
+    </Tree>
+  ),
+};
 
 /**
  * This story is using the optional useTreeState hook, which returns

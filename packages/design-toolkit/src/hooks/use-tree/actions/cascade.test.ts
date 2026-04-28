@@ -353,6 +353,7 @@ describe('Cascade Selection', () => {
         children: [{ key: 'child2', label: 'Child 2' }],
       },
     ];
+
     it('should clear indeterminate state when selected child is moved out via moveAfter', () => {
       const { result } = renderHook(() =>
         useTreeActions({ nodes: simpleTree, selectionCascade: true }),
@@ -366,6 +367,7 @@ describe('Cascade Selection', () => {
       expect(parent?.isIndeterminate).toBe(false);
       expect(parent?.isSelected).toBe(false);
     });
+
     it('should clear indeterminate state when selected child is moved out via moveBefore', () => {
       const { result } = renderHook(() =>
         useTreeActions({ nodes: simpleTree, selectionCascade: true }),
@@ -379,6 +381,7 @@ describe('Cascade Selection', () => {
       expect(parent?.isIndeterminate).toBe(false);
       expect(parent?.isSelected).toBe(false);
     });
+
     it('should update new parent to indeterminate when a selected child is moved in via moveInto', () => {
       const { result } = renderHook(() =>
         useTreeActions({ nodes: twoParentTree, selectionCascade: true }),
