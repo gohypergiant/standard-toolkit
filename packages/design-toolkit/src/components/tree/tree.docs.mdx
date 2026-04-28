@@ -505,7 +505,7 @@ function useOptimisticTree(projectId: string) {
 
     // Optimistic update
     setTree(updated);
-    setHistory([...history, previous]);
+    setHistory((history) => [...history, previous]);
 
     try {
       await serverSync(updated);
