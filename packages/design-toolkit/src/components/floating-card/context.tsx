@@ -12,40 +12,7 @@
  */
 
 import { createContext, useContext } from 'react';
-import type { UniqueId } from '@accelint/core/utility/uuid';
-import type { DockviewApi } from 'dockview-react';
-
-/**
- * Context value providing floating card management functionality.
- *
- * @remarks
- * Exposed via FloatingCardProvider to child components. Use useFloatingCard() hook to access.
- */
-export type FloatingCardContextValue = {
-  /** Registry mapping card IDs to their rendered DOM containers */
-  cards: Record<UniqueId, HTMLDivElement>;
-
-  /** Registers a DOM ref for a card container after it mounts */
-  addRef: (id: UniqueId, ref: HTMLDivElement | null) => void;
-
-  /** Unregisters a card's DOM ref when it's removed */
-  removeRef: (view: UniqueId) => void;
-
-  /** Programmatically closes a floating card by ID */
-  closeCard: (id: UniqueId) => void;
-
-  /** Toggles pin state for a floating card, disabling drag when pinned */
-  togglePinCard: (id: UniqueId) => void;
-
-  /** Checks if a floating card is currently pinned */
-  isPinned: (id: UniqueId) => boolean;
-
-  /** Subscribes to pin state changes; returns an unsubscribe function */
-  subscribeToPinState: (callback: () => void) => () => void;
-
-  /** Dockview API instance, null until FloatingCardProvider's onReady fires */
-  api: DockviewApi | null;
-};
+import type { FloatingCardContextValue } from './types';
 
 export const FloatingCardContext =
   createContext<FloatingCardContextValue | null>(null);
