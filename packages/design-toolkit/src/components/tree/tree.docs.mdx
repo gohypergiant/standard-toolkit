@@ -56,7 +56,7 @@ The `Tree` can be rendered with either hard-coded static data or with dynamic da
 For dynamic data rendering, the Tree component accepts an `items` array and a render function as children. This pattern is more efficient for trees with many nodes or when the data comes from an external source. When you use a dynamic tree like this with external data, then you include the information about that node -- `isExpanded` or `isDisabled` as a property of that node. In this case, the Tree does NOT keep its own state. It will render the data as passed in.
 
 ```tsx
-import type { TreeNode } from '@accelint/design-toolkit/hooks/use-tree/types';
+import type { TreeNode } from '@accelint/design-toolkit';
 
 type ItemValues = {
   customProperty: string;
