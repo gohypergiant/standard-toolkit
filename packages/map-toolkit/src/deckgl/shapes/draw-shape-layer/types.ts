@@ -23,11 +23,23 @@ import type {
 } from '../shared/types';
 
 /**
+ * Shape types the DrawShapeLayer can interactively draw.
+ *
+ * Excludes `WagonWheel`: a wagon wheel is a multipolygon that starts as a
+ * point and grows into a circle-like multipolygon, plus it carries additional
+ * metadata (spokes, orientation, range rings) that a simple draw interaction
+ * can't collect. Wagon wheels are constructed programmatically and edited via
+ * the EditShapeLayer; remove this exclusion if a `DrawWagonWheelMode`
+ * is developed.
+ */
+export type DrawableShapeType = Exclude<ShapeFeatureType, 'WagonWheel'>;
+
+/**
  * State for the drawing store
  */
 export type DrawingState = {
   /** Current shape type being drawn, null when not drawing */
-  activeShapeType: ShapeFeatureType | null;
+  activeShapeType: DrawableShapeType | null;
   /** Tentative feature being drawn (updates in real-time) */
   tentativeFeature: Feature | null;
   /** Default style properties to apply to drawn shapes */
@@ -55,7 +67,7 @@ export type UseDrawShapeOptions = {
   /** Callback when a shape is successfully drawn */
   onCreate?: (shape: Shape) => void;
   /** Callback when drawing is canceled */
-  onCancel?: (shapeType: ShapeFeatureType) => void;
+  onCancel?: (shapeType: DrawableShapeType) => void;
 };
 
 /**
@@ -65,13 +77,13 @@ export type UseDrawShapeReturn = {
   /** Current drawing state (null when not drawing) */
   drawingState: DrawingState | null;
   /** Start drawing a shape type with optional defaults */
-  draw: (shapeType: ShapeFeatureType, options?: DrawShapeOptions) => void;
+  draw: (shapeType: DrawableShapeType, options?: DrawShapeOptions) => void;
   /** Cancel the current drawing operation */
   cancel: () => void;
   /** Whether currently in drawing mode */
   isDrawing: boolean;
   /** The shape type currently being drawn (null if not drawing) */
-  activeShapeType: ShapeFeatureType | null;
+  activeShapeType: DrawableShapeType | null;
 };
 
 /**
@@ -94,6 +106,6 @@ export type DrawShapeLayerProps = {
  * Function type for the draw action
  */
 export type DrawFunction = (
-  shapeType: ShapeFeatureType,
+  shapeType: DrawableShapeType,
   options?: DrawShapeOptions,
 ) => void;
