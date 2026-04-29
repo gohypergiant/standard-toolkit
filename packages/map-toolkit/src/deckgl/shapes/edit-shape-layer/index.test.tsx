@@ -15,14 +15,21 @@ import { render } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { clearEditingState, editStore } from './store';
 import type { UniqueId } from '@accelint/core';
+import type {
+  HotkeyConfig,
+  HotkeyManager,
+  HotkeyOptions,
+} from '@accelint/hotkey-manager';
+import type { Mock } from 'vitest';
 import type { Shape } from '../shared/types';
+import type { EditingState } from './types';
 
-// Track hotkey lifecycle calls
-type MockFn = ReturnType<typeof vi.fn<(...args: unknown[]) => unknown>>;
-let mockBind: MockFn;
-let mockUnbind: MockFn;
-let mockRegisterHotkey: MockFn;
-let mockUnregisterHotkey: MockFn;
+// Typed mocks so `mock.calls` carries the real argument shape and consumers
+// (e.g. findOnKeyUp) can read `.id` and `.onKeyUp` without casts.
+let mockBind: Mock<() => () => void>;
+let mockUnbind: Mock<() => void>;
+let mockRegisterHotkey: Mock<(options: HotkeyOptions) => HotkeyManager>;
+let mockUnregisterHotkey: Mock<(manager: HotkeyManager) => void>;
 
 // Track icon-config calls
 const mockGetIconConfig = vi.fn();
@@ -30,9 +37,9 @@ const mockGetIconLayerProps = vi.fn();
 
 vi.mock('@accelint/hotkey-manager', () => ({
   globalBind: vi.fn(),
-  Keycode: { Enter: 'Enter', Space: 'Space' },
-  registerHotkey: (...args: unknown[]) => mockRegisterHotkey(...args),
-  unregisterHotkey: (...args: unknown[]) => mockUnregisterHotkey(...args),
+  Keycode: { Enter: 'Enter', Escape: 'Escape', Space: 'Space' },
+  registerHotkey: (options: HotkeyOptions) => mockRegisterHotkey(options),
+  unregisterHotkey: (manager: HotkeyManager) => mockUnregisterHotkey(manager),
 }));
 
 vi.mock('../shared/hooks/use-shift-zoom-disable', () => ({
@@ -46,6 +53,21 @@ vi.mock('../display-shape-layer/utils/icon-config', () => ({
 
 // Import after mocks are set up
 const { EditShapeLayer } = await import('./index');
+
+/** Seed the edit store with a minimal active-editing state for `mapId`. */
+function startEditing(
+  mapId: UniqueId,
+  shape: Shape,
+  overrides: Partial<EditingState> = {},
+) {
+  editStore.set(mapId, {
+    editingShape: shape,
+    editMode: 'point-translate',
+    featureBeingEdited: null,
+    previousMode: null,
+    ...overrides,
+  });
+}
 
 /** Create a minimal shape for testing */
 function createTestShape(
@@ -89,7 +111,8 @@ describe('EditShapeLayer', () => {
     mockBind = vi.fn(() => mockUnbind);
     mockRegisterHotkey = vi.fn(() => ({
       id: 'test-hotkey',
-      config: {},
+      // Tests never read `config`; the real shape has required fields we don't care about.
+      config: {} as HotkeyConfig,
       bind: mockBind,
       forceBind: vi.fn(),
       forceUnbind: vi.fn(),
@@ -117,8 +140,8 @@ describe('EditShapeLayer', () => {
       );
     });
 
-    it('should register and bind hotkeys on mount', () => {
-      const { unmount } = render(<EditShapeLayer mapId={mapId} />);
+    it('should wire up the expected hotkeys on mount', () => {
+      render(<EditShapeLayer mapId={mapId} />);
 
       expect(mockRegisterHotkey).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -128,13 +151,17 @@ describe('EditShapeLayer', () => {
       );
       expect(mockRegisterHotkey).toHaveBeenCalledWith(
         expect.objectContaining({
+          id: `cancelEditHotkey-${mapId}`,
+          key: { code: 'Escape' },
+        }),
+      );
+      expect(mockRegisterHotkey).toHaveBeenCalledWith(
+        expect.objectContaining({
           id: `editPanningHotkey-${mapId}`,
           key: { code: 'Space' },
         }),
       );
       expect(mockBind).toHaveBeenCalled();
-
-      unmount();
     });
 
     it('should unbind and unregister hotkeys on unmount', () => {
@@ -165,6 +192,62 @@ describe('EditShapeLayer', () => {
     });
   });
 
+  describe('keyboard shortcuts', () => {
+    /**
+     * Grab the onKeyUp handler the component registered for `hotkeyId`.
+     * Throws if the hotkey isn't registered so tests fail loudly at the
+     * setup boundary rather than silently invoking `undefined?.()`.
+     */
+    function findOnKeyUp(hotkeyId: string): () => void {
+      const match = mockRegisterHotkey.mock.calls.find(
+        ([options]) => options.id === hotkeyId,
+      );
+      if (!match?.[0].onKeyUp) {
+        throw new Error(
+          `No onKeyUp handler registered for hotkey "${hotkeyId}"`,
+        );
+      }
+      // The handler passed by useEditActionHotkey ignores event/key/hotkey
+      // args; narrow HotkeyAction to () => void so tests can invoke it like
+      // a synthetic key-up without fabricating a KeyboardEvent.
+      return match[0].onKeyUp as () => void;
+    }
+
+    it('should save editing when Enter is released while a shape is being edited', () => {
+      const shape = createTestShape();
+      startEditing(mapId, shape, { featureBeingEdited: shape.feature });
+
+      render(<EditShapeLayer mapId={mapId} />);
+
+      findOnKeyUp(`saveEditHotkey-${mapId}`)();
+
+      // Save clears editing state once the session completes.
+      expect(editStore.get(mapId)?.editingShape).toBeNull();
+    });
+
+    it('should cancel editing when Escape is released while a shape is being edited', () => {
+      const shape = createTestShape();
+      startEditing(mapId, shape);
+
+      render(<EditShapeLayer mapId={mapId} />);
+
+      findOnKeyUp(`cancelEditHotkey-${mapId}`)();
+
+      expect(editStore.get(mapId)?.editingShape).toBeNull();
+    });
+
+    it('should no-op on Escape when no shape is being edited', () => {
+      render(<EditShapeLayer mapId={mapId} />);
+
+      const onEscapeUp = findOnKeyUp(`cancelEditHotkey-${mapId}`);
+
+      // Invoking with no active edit should not throw or populate the store.
+      expect(() => onEscapeUp()).not.toThrow();
+      const editingShape = editStore.get(mapId)?.editingShape ?? null;
+      expect(editingShape).toBeNull();
+    });
+  });
+
   describe('icon-point editing', () => {
     it('should call getIconConfig with the editing shape feature', () => {
       const shape = createTestShape({
@@ -174,18 +257,11 @@ describe('EditShapeLayer', () => {
         size: 32,
       });
 
-      editStore.set(mapId, {
-        editingShape: shape,
-        editMode: 'point-translate',
-        featureBeingEdited: null,
-        previousMode: null,
-      });
+      startEditing(mapId, shape);
 
-      const { unmount } = render(<EditShapeLayer mapId={mapId} />);
+      render(<EditShapeLayer mapId={mapId} />);
 
       expect(mockGetIconConfig).toHaveBeenCalledWith([shape.feature]);
-
-      unmount();
     });
 
     it('should call getIconLayerProps when icons are detected', () => {
@@ -206,22 +282,15 @@ describe('EditShapeLayer', () => {
         iconMapping: TEST_MAPPING,
       });
 
-      editStore.set(mapId, {
-        editingShape: shape,
-        editMode: 'point-translate',
-        featureBeingEdited: null,
-        previousMode: null,
-      });
+      startEditing(mapId, shape);
 
-      const { unmount } = render(<EditShapeLayer mapId={mapId} />);
+      render(<EditShapeLayer mapId={mapId} />);
 
       expect(mockGetIconLayerProps).toHaveBeenCalledWith(
         true,
         TEST_ATLAS,
         TEST_MAPPING,
       );
-
-      unmount();
     });
 
     it('should not call getIconLayerProps when no icons are detected', () => {
@@ -229,18 +298,11 @@ describe('EditShapeLayer', () => {
 
       mockGetIconConfig.mockReturnValue({ hasIcons: false });
 
-      editStore.set(mapId, {
-        editingShape: shape,
-        editMode: 'point-translate',
-        featureBeingEdited: null,
-        previousMode: null,
-      });
+      startEditing(mapId, shape);
 
-      const { unmount } = render(<EditShapeLayer mapId={mapId} />);
+      render(<EditShapeLayer mapId={mapId} />);
 
       expect(mockGetIconLayerProps).not.toHaveBeenCalled();
-
-      unmount();
     });
   });
 });
