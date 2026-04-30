@@ -1181,6 +1181,9 @@ importers:
       '@accelint/typescript-config':
         specifier: workspace:*
         version: link:../../tooling/typescript-config
+      '@accelint/vitest-config':
+        specifier: workspace:*
+        version: link:../../tooling/vitest-config
       '@types/node':
         specifier: ^22
         version: 22.19.3
@@ -1193,6 +1196,9 @@ importers:
       tsdown:
         specifier: ^0.18.0
         version: 0.18.1(publint@0.3.16)(typescript@5.9.3)
+      vitest:
+        specifier: ^4.0.15
+        version: 4.0.16(@types/node@22.19.3)(@vitest/browser-playwright@4.0.16)(happy-dom@20.0.11)(jiti@2.6.1)(jsdom@25.0.1)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2)
     optionalDependencies:
       '@tailwindcss/postcss':
         specifier: ^4.1.17
