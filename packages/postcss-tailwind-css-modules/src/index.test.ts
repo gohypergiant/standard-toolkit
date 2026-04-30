@@ -12,10 +12,10 @@
 
 import postcss from 'postcss';
 import { describe, expect, it } from 'vitest';
-import globalGroupPlugin from './index.js';
+import tailwindCssModulesPlugin from './index.js';
 
 function processCSS(input: string, filename = 'test.module.css') {
-  return postcss([globalGroupPlugin()]).process(input, {
+  return postcss([tailwindCssModulesPlugin()]).process(input, {
     from: filename,
   });
 }
@@ -95,6 +95,89 @@ describe('postcss-tailwind-css-modules plugin', () => {
     });
   });
 
+  describe('peer/ class transformation', () => {
+    it('should wrap peer/name class in :global()', () => {
+      const input = '.peer\\/checked { color: blue; }';
+      const result = processCSS(input);
+
+      expect(result.css).toMatchInlineSnapshot(
+        `":global(.peer\\/checked) { color: blue; }"`,
+      );
+    });
+
+    it('should wrap multiple peer/ classes in the same selector', () => {
+      const input = '.peer\\/checked.peer\\/focus { color: green; }';
+      const result = processCSS(input);
+
+      expect(result.css).toMatchInlineSnapshot(
+        `":global(.peer\\/checked):global(.peer\\/focus) { color: green; }"`,
+      );
+    });
+
+    it('should handle peer/ class with dashes', () => {
+      const input = '.peer\\/form-input { }';
+      const result = processCSS(input);
+
+      expect(result.css).toMatchInlineSnapshot(
+        `":global(.peer\\/form-input) { }"`,
+      );
+    });
+
+    it('should handle peer/ class with underscores', () => {
+      const input = '.peer\\/text_field { }';
+      const result = processCSS(input);
+
+      expect(result.css).toMatchInlineSnapshot(
+        `":global(.peer\\/text_field) { }"`,
+      );
+    });
+
+    it('should handle peer/ class with numbers', () => {
+      const input = '.peer\\/option1 { }';
+      const result = processCSS(input);
+
+      expect(result.css).toMatchInlineSnapshot(
+        `":global(.peer\\/option1) { }"`,
+      );
+    });
+
+    it('should handle peer/ classes in complex selectors', () => {
+      const input = '.form .peer\\/checked:hover > .label { }';
+      const result = processCSS(input);
+
+      expect(result.css).toMatchInlineSnapshot(
+        `".form :global(.peer\\/checked):hover > .label { }"`,
+      );
+    });
+
+    it('should handle peer/ classes with pseudo-classes', () => {
+      const input = '.peer\\/checked:focus { }';
+      const result = processCSS(input);
+
+      expect(result.css).toMatchInlineSnapshot(
+        `":global(.peer\\/checked):focus { }"`,
+      );
+    });
+
+    it('should handle peer/ classes with pseudo-elements', () => {
+      const input = '.peer\\/checked::after { }';
+      const result = processCSS(input);
+
+      expect(result.css).toMatchInlineSnapshot(
+        `":global(.peer\\/checked)::after { }"`,
+      );
+    });
+
+    it('should handle mixed group/ and peer/ classes', () => {
+      const input = '.group\\/container .peer\\/checked { }';
+      const result = processCSS(input);
+
+      expect(result.css).toMatchInlineSnapshot(
+        `":global(.group\\/container) :global(.peer\\/checked) { }"`,
+      );
+    });
+  });
+
   describe('file filtering', () => {
     it('should only process .module.css files', () => {
       const input = '.group\\/sidebar { color: red; }';
@@ -139,7 +222,7 @@ describe('postcss-tailwind-css-modules plugin', () => {
     });
   });
 
-  describe('non-group classes', () => {
+  describe('non-group/peer classes', () => {
     it('should not modify regular classes', () => {
       const input = '.regular-class { color: blue; }';
       const result = processCSS(input);
@@ -156,11 +239,25 @@ describe('postcss-tailwind-css-modules plugin', () => {
       expect(result.css).toMatchInlineSnapshot(`".group { color: red; }"`);
     });
 
+    it('should not modify classes that start with peer but do not have forward slash', () => {
+      const input = '.peer { color: green; }';
+      const result = processCSS(input);
+
+      expect(result.css).toMatchInlineSnapshot(`".peer { color: green; }"`);
+    });
+
     it('should not modify classes containing group/', () => {
       const input = '.not-group\\/test { }';
       const result = processCSS(input);
 
       expect(result.css).toMatchInlineSnapshot(`".not-group\\/test { }"`);
+    });
+
+    it('should not modify classes containing peer/', () => {
+      const input = '.not-peer\\/test { }';
+      const result = processCSS(input);
+
+      expect(result.css).toMatchInlineSnapshot(`".not-peer\\/test { }"`);
     });
 
     it('should handle mixed group/ and regular classes', () => {
@@ -169,6 +266,15 @@ describe('postcss-tailwind-css-modules plugin', () => {
 
       expect(result.css).toMatchInlineSnapshot(
         `".regular:global(.group\\/sidebar) { }"`,
+      );
+    });
+
+    it('should handle mixed peer/ and regular classes', () => {
+      const input = '.regular.peer\\/checked { }';
+      const result = processCSS(input);
+
+      expect(result.css).toMatchInlineSnapshot(
+        `".regular:global(.peer\\/checked) { }"`,
       );
     });
   });
@@ -258,11 +364,11 @@ describe('postcss-tailwind-css-modules plugin', () => {
 
   describe('plugin metadata', () => {
     it('should have postcss property set to true', () => {
-      expect(globalGroupPlugin.postcss).toBe(true);
+      expect(tailwindCssModulesPlugin.postcss).toBe(true);
     });
 
     it('should have correct plugin name', () => {
-      const pluginInstance = globalGroupPlugin();
+      const pluginInstance = tailwindCssModulesPlugin();
       expect(pluginInstance.postcssPlugin).toBe(
         '@accelint/postcss-tailwind-css-modules',
       );
