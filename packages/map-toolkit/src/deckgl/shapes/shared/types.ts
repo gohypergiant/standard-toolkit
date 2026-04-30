@@ -26,6 +26,38 @@ import type {
   Point,
   Polygon,
 } from 'geojson';
+import type { StructuredCloneable } from 'type-fest';
+
+/**
+ * Type-level claim that an event payload is structured-cloneable so it
+ * satisfies `@accelint/bus`'s `BasicPayload` constraint.
+ *
+ * @remarks
+ * GeoJSON `Feature` and the `Shape` types built on top of it are *runtime-*
+ * cloneable (no functions, no class instances — just plain data), but they
+ * lack the explicit `[key: string]: StructuredCloneable` index signature that
+ * type-fest's `StructuredCloneable` requires of plain object types. Wrapping
+ * a payload in `BusCloneable<T>` adds the index signature via intersection so
+ * TypeScript accepts the payload at the bus boundary without re-verifying
+ * each named property.
+ *
+ * The bus's strictness is intentional — it catches non-cloneable values like
+ * functions or class instances that would silently break `postMessage`. This
+ * helper bridges the gap between that runtime safety contract and GeoJSON's
+ * type definitions; only apply it to payloads whose contents you've verified
+ * are actually cloneable at runtime.
+ *
+ * @example
+ * ```ts
+ * export type ShapeUpdatedPayload = BusCloneable<{
+ *   shape: Shape;
+ *   mapId: UniqueId;
+ * }>;
+ * ```
+ */
+export type BusCloneable<T> = T & {
+  readonly [key: string]: StructuredCloneable;
+};
 
 /**
  * Supported shape types

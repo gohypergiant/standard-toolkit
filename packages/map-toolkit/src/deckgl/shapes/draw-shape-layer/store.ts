@@ -53,9 +53,14 @@ import type { DistanceUnitSymbol } from '@accelint/constants/units';
 import type { UniqueId } from '@accelint/core';
 import type { Feature } from 'geojson';
 import type { MapModeEventType } from '@/map-mode/types';
-import type { Shape, ShapeFeatureType } from '../shared/types';
+import type { Shape } from '../shared/types';
 import type { DrawShapeEvent, ShapeDrawnEvent } from './events';
-import type { DrawFunction, DrawingState, DrawShapeOptions } from './types';
+import type {
+  DrawableShapeType,
+  DrawFunction,
+  DrawingState,
+  DrawShapeOptions,
+} from './types';
 
 /**
  * Typed event bus instances
@@ -90,7 +95,7 @@ type DrawShapeActions = {
 function startDrawing(
   mapId: UniqueId,
   state: DrawingState,
-  shapeType: ShapeFeatureType,
+  shapeType: DrawableShapeType,
   options: DrawShapeOptions | undefined,
   notify: () => void,
   setState: (updates: Partial<DrawingState>) => void,
@@ -213,7 +218,7 @@ export const drawStore = createMapStore<DrawingState, DrawShapeActions>({
   defaultState: { ...DEFAULT_DRAWING_STATE },
 
   actions: (mapId, { get, set, notify }) => ({
-    draw: (shapeType: ShapeFeatureType, options?: DrawShapeOptions) => {
+    draw: (shapeType: DrawableShapeType, options?: DrawShapeOptions) => {
       startDrawing(mapId, get(), shapeType, options, notify, set);
     },
 
