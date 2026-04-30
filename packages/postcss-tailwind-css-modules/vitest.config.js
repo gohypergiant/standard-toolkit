@@ -11,6 +11,5 @@
  */
 
 import baseConfig from '@accelint/vitest-config/no-dom';
-import { defineConfig, mergeConfig } from 'vitest/config';
 
-export default mergeConfig(baseConfig, defineConfig({}));
+export default baseConfig;

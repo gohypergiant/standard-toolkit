@@ -10,62 +10,69 @@
  * governing permissions and limitations under the License.
  */
 
+import postcss from 'postcss';
 import { describe, expect, it } from 'vitest';
-import postcss, { type Result } from 'postcss';
 import globalGroupPlugin from './index.js';
 
-function processCSS(input: string, filename = 'test.module.css'): Result {
+function processCSS(input: string, filename = 'test.module.css') {
   return postcss([globalGroupPlugin()]).process(input, {
     from: filename,
   });
 }
 
-describe('globalGroupPlugin', () => {
+describe('postcss-tailwind-css-modules plugin', () => {
   describe('group/ class transformation', () => {
     it('should wrap group/name class in :global()', () => {
       const input = '.group\\/sidebar { color: red; }';
       const result = processCSS(input);
 
-      expect(result.css).toBe(':global(.group\\/sidebar) { color: red; }');
+      expect(result.css).toMatchInlineSnapshot(
+        `":global(.group\\/sidebar) { color: red; }"`,
+      );
     });
 
     it('should wrap multiple group/ classes in the same selector', () => {
       const input = '.group\\/header.group\\/nav { color: blue; }';
       const result = processCSS(input);
 
-      expect(result.css).toBe(
-        ':global(.group\\/header):global(.group\\/nav) { color: blue; }',
+      expect(result.css).toMatchInlineSnapshot(
+        `":global(.group\\/header):global(.group\\/nav) { color: blue; }"`,
       );
     });
 
-    it('should handle group/ classes with various naming conventions', () => {
-      const testCases = [
-        {
-          input: '.group\\/sidebar-nav { }',
-          expected: ':global(.group\\/sidebar-nav) { }',
-        },
-        {
-          input: '.group\\/main_content { }',
-          expected: ':global(.group\\/main_content) { }',
-        },
-        {
-          input: '.group\\/item123 { }',
-          expected: ':global(.group\\/item123) { }',
-        },
-      ];
+    it('should handle group/ class with dashes', () => {
+      const input = '.group\\/sidebar-nav { }';
+      const result = processCSS(input);
 
-      for (const { input, expected } of testCases) {
-        const result = processCSS(input);
-        expect(result.css).toBe(expected);
-      }
+      expect(result.css).toMatchInlineSnapshot(
+        `":global(.group\\/sidebar-nav) { }"`,
+      );
+    });
+
+    it('should handle group/ class with underscores', () => {
+      const input = '.group\\/main_content { }';
+      const result = processCSS(input);
+
+      expect(result.css).toMatchInlineSnapshot(
+        `":global(.group\\/main_content) { }"`,
+      );
+    });
+
+    it('should handle group/ class with numbers', () => {
+      const input = '.group\\/item123 { }';
+      const result = processCSS(input);
+
+      expect(result.css).toMatchInlineSnapshot(
+        `":global(.group\\/item123) { }"`,
+      );
     });
 
     it('should handle group/ classes in complex selectors', () => {
       const input = '.container .group\\/sidebar:hover > .item { }';
       const result = processCSS(input);
 
-      expect(result.css).toBe(
-        '.container :global(.group\\/sidebar):hover > .item { }',
+      expect(result.css).toMatchInlineSnapshot(
+        `".container :global(.group\\/sidebar):hover > .item { }"`,
       );
     });
 
@@ -73,14 +80,18 @@ describe('globalGroupPlugin', () => {
       const input = '.group\\/sidebar:hover { }';
       const result = processCSS(input);
 
-      expect(result.css).toBe(':global(.group\\/sidebar):hover { }');
+      expect(result.css).toMatchInlineSnapshot(
+        `":global(.group\\/sidebar):hover { }"`,
+      );
     });
 
     it('should handle group/ classes with pseudo-elements', () => {
       const input = '.group\\/sidebar::before { }';
       const result = processCSS(input);
 
-      expect(result.css).toBe(':global(.group\\/sidebar)::before { }');
+      expect(result.css).toMatchInlineSnapshot(
+        `":global(.group\\/sidebar)::before { }"`,
+      );
     });
   });
 
@@ -89,36 +100,42 @@ describe('globalGroupPlugin', () => {
       const input = '.group\\/sidebar { color: red; }';
 
       const moduleResult = processCSS(input, 'test.module.css');
-      expect(moduleResult.css).toBe(
-        ':global(.group\\/sidebar) { color: red; }',
+      expect(moduleResult.css).toMatchInlineSnapshot(
+        `":global(.group\\/sidebar) { color: red; }"`,
       );
 
       const regularResult = processCSS(input, 'test.css');
-      expect(regularResult.css).toBe('.group\\/sidebar { color: red; }');
+      expect(regularResult.css).toMatchInlineSnapshot(
+        `".group\\/sidebar { color: red; }"`,
+      );
     });
 
-    it('should not process files without .module.css extension', () => {
+    it('should not process .css files', () => {
       const input = '.group\\/sidebar { }';
-      const testCases = [
-        'styles.css',
-        'module.css.map',
-        'test.module.scss',
-        'test.css.module',
-      ];
+      const result = processCSS(input, 'styles.css');
 
-      for (const filename of testCases) {
-        const result = processCSS(input, filename);
-        expect(result.css).toBe(input);
-      }
+      expect(result.css).toMatchInlineSnapshot(`".group\\/sidebar { }"`);
     });
 
-    it('should handle files without source information', () => {
+    it('should not process .css.map files', () => {
       const input = '.group\\/sidebar { }';
-      const result = postcss([globalGroupPlugin()]).process(input, {
-        from: undefined,
-      });
+      const result = processCSS(input, 'module.css.map');
 
-      expect(result.css).toBe(input);
+      expect(result.css).toMatchInlineSnapshot(`".group\\/sidebar { }"`);
+    });
+
+    it('should not process .module.scss files', () => {
+      const input = '.group\\/sidebar { }';
+      const result = processCSS(input, 'test.module.scss');
+
+      expect(result.css).toMatchInlineSnapshot(`".group\\/sidebar { }"`);
+    });
+
+    it('should not process .css.module files', () => {
+      const input = '.group\\/sidebar { }';
+      const result = processCSS(input, 'test.css.module');
+
+      expect(result.css).toMatchInlineSnapshot(`".group\\/sidebar { }"`);
     });
   });
 
@@ -127,28 +144,32 @@ describe('globalGroupPlugin', () => {
       const input = '.regular-class { color: blue; }';
       const result = processCSS(input);
 
-      expect(result.css).toBe(input);
+      expect(result.css).toMatchInlineSnapshot(
+        `".regular-class { color: blue; }"`,
+      );
     });
 
     it('should not modify classes that start with group but do not have forward slash', () => {
       const input = '.group { color: red; }';
       const result = processCSS(input);
 
-      expect(result.css).toBe(input);
+      expect(result.css).toMatchInlineSnapshot(`".group { color: red; }"`);
     });
 
     it('should not modify classes containing group/', () => {
       const input = '.not-group\\/test { }';
       const result = processCSS(input);
 
-      expect(result.css).toBe(input);
+      expect(result.css).toMatchInlineSnapshot(`".not-group\\/test { }"`);
     });
 
     it('should handle mixed group/ and regular classes', () => {
       const input = '.regular.group\\/sidebar { }';
       const result = processCSS(input);
 
-      expect(result.css).toBe('.regular:global(.group\\/sidebar) { }');
+      expect(result.css).toMatchInlineSnapshot(
+        `".regular:global(.group\\/sidebar) { }"`,
+      );
     });
   });
 
@@ -161,17 +182,21 @@ describe('globalGroupPlugin', () => {
       `;
       const result = processCSS(input);
 
-      expect(result.css).toContain(':global(.group\\/sidebar)');
-      expect(result.css).toContain(':global(.group\\/header)');
-      expect(result.css).toContain('.regular { color: green; }');
+      expect(result.css).toMatchInlineSnapshot(`
+        "
+                :global(.group\\/sidebar) { color: red; }
+                :global(.group\\/header) { color: blue; }
+                .regular { color: green; }
+              "
+      `);
     });
 
     it('should handle multiple selectors in a single rule', () => {
       const input = '.group\\/sidebar, .group\\/header { color: red; }';
       const result = processCSS(input);
 
-      expect(result.css).toBe(
-        ':global(.group\\/sidebar),:global( .group\\/header) { color: red; }',
+      expect(result.css).toMatchInlineSnapshot(
+        `":global(.group\\/sidebar),:global( .group\\/header) { color: red; }"`,
       );
     });
   });
@@ -183,14 +208,16 @@ describe('globalGroupPlugin', () => {
         from: 'test.module.css',
       });
 
-      expect(firstPass.css).toBe(':global(.group\\/sidebar) { color: red; }');
+      expect(firstPass.css).toMatchInlineSnapshot(
+        `":global(.group\\/sidebar) { color: red; }"`,
+      );
 
       const secondPass = postcss([globalGroupPlugin()]).process(firstPass.css, {
         from: 'test.module.css',
       });
 
-      expect(secondPass.css).toBe(
-        ':global(:global(.group\\/sidebar)) { color: red; }',
+      expect(secondPass.css).toMatchInlineSnapshot(
+        `":global(:global(.group\\/sidebar)) { color: red; }"`,
       );
     });
   });
@@ -200,7 +227,7 @@ describe('globalGroupPlugin', () => {
       const input = '';
       const result = processCSS(input);
 
-      expect(result.css).toBe('');
+      expect(result.css).toMatchInlineSnapshot(`""`);
     });
 
     it('should handle rules without group/ classes', () => {
@@ -211,7 +238,13 @@ describe('globalGroupPlugin', () => {
       `;
       const result = processCSS(input);
 
-      expect(result.css).toBe(input);
+      expect(result.css).toMatchInlineSnapshot(`
+        "
+                .class1 { color: red; }
+                #id1 { color: blue; }
+                div { color: green; }
+              "
+      `);
     });
 
     it('should handle at-rules', () => {
@@ -222,7 +255,13 @@ describe('globalGroupPlugin', () => {
       `;
       const result = processCSS(input);
 
-      expect(result.css).toContain(':global(.group\\/sidebar)');
+      expect(result.css).toMatchInlineSnapshot(`
+        "
+                @media (min-width: 768px) {
+                  :global(.group\\/sidebar) { color: red; }
+                }
+              "
+      `);
     });
 
     it('should handle keyframes', () => {
@@ -234,15 +273,26 @@ describe('globalGroupPlugin', () => {
       `;
       const result = processCSS(input);
 
-      expect(result.css).toBe(input);
+      expect(result.css).toMatchInlineSnapshot(`
+        "
+                @keyframes slide {
+                  from { transform: translateX(0); }
+                  to { transform: translateX(100px); }
+                }
+              "
+      `);
     });
 
     it('should preserve whitespace and formatting', () => {
       const input = '.group\\/sidebar {\n  color: red;\n  padding: 10px;\n}';
       const result = processCSS(input);
 
-      expect(result.css).toContain('color: red;');
-      expect(result.css).toContain('padding: 10px;');
+      expect(result.css).toMatchInlineSnapshot(`
+        ":global(.group\\/sidebar) {
+          color: red;
+          padding: 10px;
+        }"
+      `);
     });
   });
 
@@ -252,8 +302,8 @@ describe('globalGroupPlugin', () => {
     });
 
     it('should have correct plugin name', () => {
-      const plugin = globalGroupPlugin();
-      expect(plugin.postcssPlugin).toBe(
+      const pluginInstance = globalGroupPlugin();
+      expect(pluginInstance.postcssPlugin).toBe(
         '@accelint/postcss-tailwind-css-modules',
       );
     });
