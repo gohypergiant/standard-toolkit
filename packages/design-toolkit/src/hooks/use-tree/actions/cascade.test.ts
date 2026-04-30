@@ -339,4 +339,49 @@ describe('Cascade Selection', () => {
       expect(parent?.isIndeterminate).toBe(false);
     });
   });
+
+  describe('Move with cascade (drag-and-drop)', () => {
+    const twoParentTree: TreeNode<unknown>[] = [
+      {
+        key: 'parent1',
+        label: 'Parent 1',
+        children: [{ key: 'child1', label: 'Child 1' }],
+      },
+      {
+        key: 'parent2',
+        label: 'Parent 2',
+        children: [{ key: 'child2', label: 'Child 2' }],
+      },
+    ];
+
+    it.each([
+      'moveAfter',
+      'moveBefore',
+    ] as const)('should clear indeterminate state when selected child is moved out via %s', (method) => {
+      const { result } = renderHook(() =>
+        useTreeActions({ nodes: simpleTree, selectionCascade: true }),
+      );
+      // Select child1 only — parent becomes indeterminate
+      result.current.onSelectionChange(new Set(['child1']));
+      // Move child1 out from under parent (before or after — both remove it from parent's children)
+      const updated = result.current[method]('parent', new Set(['child1']));
+      const parent = updated.find((node) => node.key === 'parent');
+      // parent now only has child2 (unselected), no longer indeterminate
+      expect(parent?.isIndeterminate).toBe(false);
+      expect(parent?.isSelected).toBe(false);
+    });
+
+    it('should update new parent to indeterminate when a selected child is moved in via moveInto', () => {
+      const { result } = renderHook(() =>
+        useTreeActions({ nodes: twoParentTree, selectionCascade: true }),
+      );
+      // Select child1 — parent1 becomes selected (its only selectable child)
+      result.current.onSelectionChange(new Set(['child1']));
+      // Move child1 into parent2 (which has unselected child2)
+      const updated = result.current.moveInto('parent2', new Set(['child1']));
+      const parent2 = updated.find((n) => n.key === 'parent2');
+      // parent2 now has child1 (selected) and child2 (unselected) → indeterminate
+      expect(parent2?.isIndeterminate).toBe(true);
+    });
+  });
 });

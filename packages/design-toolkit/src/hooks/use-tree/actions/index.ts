@@ -24,35 +24,48 @@ import type {
 } from '../types';
 
 /**
- * Stateless hook that transforms tree data according to actions
- * it takes in nodes and returns a new version of the tree.
+ * Stateless hook that provides tree transformation operations without managing state.
  *
- * Note: each operation returns the whole tree. Future iterations
- * might want to return only the changed portion of the tree.
+ * Returns pure functions that accept tree nodes and return new transformed tree nodes.
+ * Does not modify the input tree - all operations are immutable transformations.
+ * Each operation returns the complete updated tree structure. Use this hook when you
+ * want to manage tree state yourself, or when integrating with external state management.
+ * For complete state management, use {@link useTreeState} instead.
  *
- * @param options - {@link UseTreeActionsOptions}
- * @param options.nodes - Current tree nodes to operate on.
- * @returns {@link TreeActions} Object containing all tree manipulation functions.
+ * Note: Each operation returns the whole tree. Future iterations might return only
+ * the changed portion of the tree for performance optimization.
+ *
+ * @template T - The type of custom values stored in tree nodes (accessed via `node.values`).
+ *
+ * @param options - Configuration options for tree actions.
+ * @param options.nodes - Current tree nodes to operate on. Used to build internal cache for operations.
+ * @param options.selectionCascade - Enable cascade selection mode. When true, selection operations
+ *   automatically propagate to descendants and update parent indeterminate states. Default: false.
+ * @returns Object containing all tree manipulation functions (insert, move, remove, select, expand, etc.).
  *
  * @example
  * ```tsx
- * const treeActions = useTreeActions({
- *   nodes: [
- *     {
- *       key: 'root',
- *       label: 'Root',
- *       children: [
- *         { key: 'child1', label: 'Child 1' },
- *         { key: 'child2', label: 'Child 2' }
- *       ]
- *     }
- *   ]
- * });
+ * // Basic usage with custom state management
+ * const [tree, setTree] = useState(initialTree);
+ * const actions = useTreeActions({ nodes: tree });
  *
- * // Use tree actions
- * const updatedTree = treeActions.insertAfter('child1', [
+ * // Insert a new node
+ * const updatedTree = actions.insertAfter('child1', [
  *   { key: 'newChild', label: 'New Child' }
  * ]);
+ * setTree(updatedTree);
+ *
+ * // Move nodes
+ * const movedTree = actions.moveInto('parent', new Set(['child1', 'child2']));
+ * setTree(movedTree);
+ *
+ * // Cascade selection
+ * const actionsWithCascade = useTreeActions({
+ *   nodes: tree,
+ *   selectionCascade: true
+ * });
+ * const selectedTree = actionsWithCascade.onSelectionChange(new Set(['parent']));
+ * // All descendants of 'parent' are now selected too
  * ```
  */
 export function useTreeActions<T>({

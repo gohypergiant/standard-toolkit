@@ -17,6 +17,7 @@ import { DrawEllipseModeWithTooltip } from './draw-ellipse-mode-with-tooltip';
 import { DrawLineStringModeWithTooltip } from './draw-line-string-mode-with-tooltip';
 import { DrawPolygonModeWithTooltip } from './draw-polygon-mode-with-tooltip';
 import { DrawRectangleModeWithTooltip } from './draw-rectangle-mode-with-tooltip';
+import type { DrawableShapeType } from '../types';
 
 export { DrawCircleModeWithTooltip } from './draw-circle-mode-with-tooltip';
 export { DrawEllipseModeWithTooltip } from './draw-ellipse-mode-with-tooltip';
@@ -67,8 +68,8 @@ const MODE_INSTANCES = {
  * ```
  */
 export function getModeInstance(
-  shapeType: ShapeFeatureType,
-): (typeof MODE_INSTANCES)[ShapeFeatureType] {
+  shapeType: DrawableShapeType,
+): (typeof MODE_INSTANCES)[DrawableShapeType] {
   return MODE_INSTANCES[shapeType];
 }
 

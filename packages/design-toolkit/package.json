@@ -172,6 +172,8 @@
     "./components/floating-card": "./dist/components/floating-card/index.js",
     "./components/floating-card/context": "./dist/components/floating-card/context.js",
     "./components/floating-card/provider": "./dist/components/floating-card/provider.js",
+    "./components/floating-card/types": "./dist/components/floating-card/types.js",
+    "./components/floating-card/utils": "./dist/components/floating-card/utils.js",
     "./components/gantt/components/base-elements/point": "./dist/components/gantt/components/base-elements/point.js",
     "./components/gantt/components/base-elements/range": "./dist/components/gantt/components/base-elements/range.js",
     "./components/gantt/components/base-elements/use-point-element-layout": "./dist/components/gantt/components/base-elements/use-point-element-layout/index.js",

@@ -94,6 +94,18 @@ export class DrawCircleModeWithTooltip extends DrawCircleFromCenterMode {
   }
 
   /**
+   * Reset the click sequence and clear the tooltip together.
+   *
+   * The mode instance is cached and reused across draw sessions, so without
+   * this override `this.tooltip` would persist from one session into the next
+   * and flash before `handlePointerMove` overwrites it.
+   */
+  override resetClickSequence(): void {
+    super.resetClickSequence();
+    this.tooltip = null;
+  }
+
+  /**
    * Get the current tooltip array for rendering.
    *
    * @returns Array containing the tooltip if one is active, empty array otherwise

@@ -75,6 +75,7 @@ export type {
   ShapeDrawnEvent,
 } from './draw-shape-layer/events';
 export type {
+  DrawableShapeType,
   DrawingState,
   DrawShapeLayerProps,
   DrawShapeOptions,
@@ -101,6 +102,7 @@ export type {
 export type { ShapeEventType } from './shared/events';
 // Shared type exports
 export type {
+  BusCloneable,
   CircleFeatureProperties,
   CircleProperties,
   CircleRadius,

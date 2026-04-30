@@ -43,6 +43,7 @@
  */
 import { ShapeFeatureType } from '../shared/types';
 import type { CSSCursorType } from '@/map-cursor/types';
+import type { DrawableShapeType } from './types';
 
 /**
  * Mode name for the map-mode integration
@@ -61,9 +62,12 @@ export const DRAW_SHAPE_LAYER_ID = 'draw-shape-layer';
 export const DRAW_CURSOR: CSSCursorType = 'crosshair';
 
 /**
- * Cursor mapping for each shape type (all use crosshair)
+ * Cursor mapping for each drawable shape type (all use crosshair).
+ *
+ * `WagonWheel` is intentionally absent — it has no draw mode (see
+ * `DrawableShapeType` in ./types).
  */
-export const DRAW_CURSOR_MAP: Record<ShapeFeatureType, CSSCursorType> = {
+export const DRAW_CURSOR_MAP: Record<DrawableShapeType, CSSCursorType> = {
   [ShapeFeatureType.Point]: DRAW_CURSOR,
   [ShapeFeatureType.LineString]: DRAW_CURSOR,
   [ShapeFeatureType.Polygon]: DRAW_CURSOR,

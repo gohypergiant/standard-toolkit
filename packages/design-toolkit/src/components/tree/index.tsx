@@ -15,7 +15,7 @@ import { Cache, type CacheTreeNode } from '@/hooks/use-tree/actions/cache';
 import type { Key, Selection } from '@react-types/shared';
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 import { Tree as AriaTree, type DropTarget } from 'react-aria-components/Tree';
 import {
@@ -25,6 +25,7 @@ import {
 import { TreeContext } from './context';
 import styles from './styles.module.css';
 import type { TreeProps } from './types';
+import { noop } from '@accelint/core';
 
 const defaultRenderDropIndicator = (target: DropTarget) => {
   const isBetweenItems =
@@ -82,6 +83,8 @@ function collectNodeKeys<T>(
  * Tree - Hierarchical tree view with selection, visibility, and drag-and-drop
  *
  * Supports static or dynamic collections with keyboard navigation and accessibility.
+ *
+ * @template T - The type of custom values stored in tree nodes (accessed via `node.values`).
  *
  * @param props - {@link TreeProps}
  * @param props.children - Tree items or render function for dynamic collections.
@@ -203,13 +206,14 @@ export function Tree<T>({
     visibleKeysProp,
   ]);
 
-  const handleSelectionChange = selectedKeys
-    ? (selection: Selection) => {
-        if (selection !== 'all') {
-          onSelectionChange?.(selection);
-        }
+  const handleSelectionChange = useCallback(
+    (selection: Selection) => {
+      if (selection !== 'all') {
+        onSelectionChange?.(selection);
       }
-    : undefined;
+    },
+    [onSelectionChange],
+  );
 
   return (
     <TreeContext.Provider
@@ -224,7 +228,7 @@ export function Tree<T>({
         visibilityComputedKeys,
         indeterminateKeys,
         isStatic: typeof children !== 'function',
-        onVisibilityChange: onVisibilityChange ?? (() => undefined), // TODO: improve
+        onVisibilityChange: onVisibilityChange ?? noop,
       }}
     >
       <AriaTree
@@ -237,7 +241,7 @@ export function Tree<T>({
         expandedKeys={expandedKeys}
         items={items}
         selectedKeys={selectedKeys}
-        onSelectionChange={handleSelectionChange}
+        onSelectionChange={selectedKeys ? handleSelectionChange : undefined}
         selectionMode={selectionMode}
       >
         {children}

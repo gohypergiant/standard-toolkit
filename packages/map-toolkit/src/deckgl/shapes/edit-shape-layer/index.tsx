@@ -43,6 +43,7 @@ import {
   saveEditingFromLayer,
   updateFeature,
 } from './store';
+import { useEditActionHotkey } from './use-edit-action-hotkey';
 import type {
   EditAction,
   FeatureCollection,
@@ -183,10 +184,6 @@ export function EditShapeLayer({
     rafId: number;
   } | null>(null);
 
-  // Keep a ref to the latest editing state so the hotkey handler can access it
-  const editingStateRef = useRef(editingState);
-  editingStateRef.current = editingState;
-
   // Ensure global hotkey listeners are initialized
   // Safe to call multiple times - globalBind() checks if already bound
   useEffect(() => {
@@ -201,28 +198,27 @@ export function EditShapeLayer({
     }
   }, []);
 
-  // Register Enter key hotkey scoped to this component and map instance.
-  // Handles the full lifecycle: register → bind → unbind → unregister.
-  // Without unregistering on cleanup, remounting throws a duplicate-id error.
-  useEffect(() => {
-    const manager = registerHotkey({
-      id: `saveEditHotkey-${actualMapId}`,
-      key: { code: Keycode.Enter },
-      onKeyUp: () => {
-        if (editingStateRef.current?.editingShape) {
-          cancelPendingUpdate();
-          saveEditingFromLayer(actualMapId);
-        }
-      },
-    });
+  // Save on Enter.
+  useEditActionHotkey({
+    mapId: actualMapId,
+    id: 'saveEditHotkey',
+    keyCode: Keycode.Enter,
+    action: saveEditingFromLayer,
+    cancelPendingUpdate,
+    editingState,
+  });
 
-    const unbind = manager.bind();
-
-    return () => {
-      unbind();
-      unregisterHotkey(manager);
-    };
-  }, [actualMapId, cancelPendingUpdate]);
+  // Cancel on Escape. The editable-layers library only emits `cancelFeature`
+  // for draw modes — transform/translate/rotate/scale modes ignore Escape —
+  // so the edit layer registers its own handler.
+  useEditActionHotkey({
+    mapId: actualMapId,
+    id: 'cancelEditHotkey',
+    keyCode: Keycode.Escape,
+    action: cancelEditingFromLayer,
+    cancelPendingUpdate,
+    editingState,
+  });
 
   // Register Space key for enabling panning while editing shape.
   // NOTE: Low threshold (50ms) enables near-instant panning response on hold.

@@ -57,7 +57,11 @@ export type DragAndDropConfig = {
   onItemDrop?: (e: DroppableCollectionOnItemDropEvent) => void;
 };
 
-/** Options for the useTreeState hook */
+/**
+ * Options for the useTreeState hook.
+ *
+ * @template T - The type of custom values stored in tree nodes (accessed via `node.values`).
+ */
 export type UseTreeStateOptions<T> = {
   /** Initial root items in the tree. If omitted, will return an empty tree. */
   items: TreeNode<T>[];
@@ -70,7 +74,11 @@ export type UseTreeStateOptions<T> = {
   selectionCascade?: boolean;
 };
 
-/** Return value from the useTreeState hook */
+/**
+ * Return value from the useTreeState hook.
+ *
+ * @template T - The type of custom values stored in tree nodes (accessed via `node.values`).
+ */
 export type UseTreeState<T> = {
   /** Current tree nodes */
   nodes: TreeNode<T>[];
@@ -101,7 +109,11 @@ export type UseTreeState<T> = {
   };
 };
 
-/** Array of tree nodes representing tree data */
+/**
+ * Array of tree nodes representing tree data.
+ *
+ * @template T - The type of custom values stored in tree nodes (accessed via `node.values`).
+ */
 export type TreeData<T> = TreeNode<T>[];
 
 /**
@@ -109,6 +121,8 @@ export type TreeData<T> = TreeNode<T>[];
  * to other nodes in the tree.
  * TreeNode properties describe the metadata - state and position of the node.
  * The item property represents the action tree item data.
+ *
+ * @template T - The type of custom values stored in the node (accessed via `node.values`).
  */
 export type TreeNodeBase<T> = {
   /** A unique key for the tree node. */
@@ -139,6 +153,14 @@ export type TreeNodeBase<T> = {
   isIndeterminate?: boolean;
 };
 
+/**
+ * A tree node including parent and child relationships.
+ *
+ * Extends {@link TreeNodeBase} with structural position metadata —
+ * the parent key and nested children — used to represent the full tree hierarchy.
+ *
+ * @template T - The type of custom values stored in the node (accessed via `node.values`).
+ */
 export type TreeNode<T> = TreeNodeBase<T> & {
   /** The key of the parent node. */
   parentKey?: Key | null;
@@ -147,7 +169,11 @@ export type TreeNode<T> = TreeNodeBase<T> & {
   children?: TreeNode<T>[];
 };
 
-/** Options for the useTreeActions hook */
+/**
+ * Options for the useTreeActions hook.
+ *
+ * @template T - The type of custom values stored in tree nodes (accessed via `node.values`).
+ */
 export type UseTreeActionsOptions<T> = {
   /** Current tree nodes to operate on */
   nodes: TreeNode<T>[];
@@ -159,7 +185,9 @@ export type UseTreeActionsOptions<T> = {
 };
 
 /**
- * Stateless collection of transform actions to simplify tree operations
+ * Stateless collection of transform actions to simplify tree operations.
+ *
+ * @template T - The type of custom values stored in tree nodes (accessed via `node.values`).
  */
 export type TreeActions<T> = {
   /**
