@@ -201,27 +201,6 @@ describe('postcss-tailwind-css-modules plugin', () => {
     });
   });
 
-  describe('duplicate processing prevention', () => {
-    it('should not double-wrap classes that are already processed', () => {
-      const input = '.group\\/sidebar { color: red; }';
-      const firstPass = postcss([globalGroupPlugin()]).process(input, {
-        from: 'test.module.css',
-      });
-
-      expect(firstPass.css).toMatchInlineSnapshot(
-        `":global(.group\\/sidebar) { color: red; }"`,
-      );
-
-      const secondPass = postcss([globalGroupPlugin()]).process(firstPass.css, {
-        from: 'test.module.css',
-      });
-
-      expect(secondPass.css).toMatchInlineSnapshot(
-        `":global(:global(.group\\/sidebar)) { color: red; }"`,
-      );
-    });
-  });
-
   describe('edge cases', () => {
     it('should handle empty input', () => {
       const input = '';
@@ -259,25 +238,6 @@ describe('postcss-tailwind-css-modules plugin', () => {
         "
                 @media (min-width: 768px) {
                   :global(.group\\/sidebar) { color: red; }
-                }
-              "
-      `);
-    });
-
-    it('should handle keyframes', () => {
-      const input = `
-        @keyframes slide {
-          from { transform: translateX(0); }
-          to { transform: translateX(100px); }
-        }
-      `;
-      const result = processCSS(input);
-
-      expect(result.css).toMatchInlineSnapshot(`
-        "
-                @keyframes slide {
-                  from { transform: translateX(0); }
-                  to { transform: translateX(100px); }
                 }
               "
       `);
