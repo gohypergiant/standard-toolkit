@@ -64,6 +64,21 @@ pnpm run lint     # Fix lint errors
 pnpm run format   # Fix formatting errors
 ```
 
+### Type checking — don't bypass `pnpm run build`
+
+`packages/map-toolkit` and `packages/design-toolkit` use **solution-style** `tsconfig.json` files (`files: []` plus project references to `tsconfig.dist.json` for source and `tsconfig.dev.json` for tests). Running `pnpm tsc --noEmit -p tsconfig.json` against a solution file silently does nothing and reports clean even when real errors exist.
+
+In those two packages, if you need to run `tsc` directly while iterating, point it at the leaf config:
+
+```bash
+pnpm tsc --noEmit -p tsconfig.dist.json    # Source code only
+pnpm tsc --noEmit -p tsconfig.dev.json     # Tests + storybook
+```
+
+Other packages have a single `tsconfig.json` and `pnpm tsc --noEmit` works as expected.
+
+Either way, prefer `pnpm run build` (which compiles via tsdown and surfaces every error) as the authoritative type-check, in line with the Verification Gate above.
+
 ## Core Principles
 
 - **Simplicity First** — Make every change as small as possible. Minimal code impact.

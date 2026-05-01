@@ -129,7 +129,13 @@ function getEditModeForShape(shape: Shape): EditMode {
   if (isWagonWheelShape(shape)) {
     return 'locked-bounding-transform';
   }
-  if (isEllipseShape(shape) || isRectangleShape(shape)) {
+  if (isRectangleShape(shape)) {
+    // Rectangles use rotation-aware corner-drag scaling so a rotated
+    // rectangle doesn't distort into a parallelogram during scale
+    // (axis-aligned bbox scaling would).
+    return 'rectangle-transform';
+  }
+  if (isEllipseShape(shape)) {
     return 'bounding-transform';
   }
   return 'vertex-transform';

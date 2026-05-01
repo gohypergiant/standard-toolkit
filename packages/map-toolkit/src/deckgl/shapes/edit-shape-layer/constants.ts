@@ -40,6 +40,7 @@ export const EDIT_SHAPE_LAYER_ID = 'edit-shape-layer';
 export const EDIT_CURSOR_MAP: Record<EditMode, CSSCursorType> = {
   view: 'default',
   'bounding-transform': 'crosshair',
+  'rectangle-transform': 'crosshair',
   'locked-bounding-transform': 'crosshair',
   'vertex-transform': 'crosshair',
   'circle-transform': 'crosshair',

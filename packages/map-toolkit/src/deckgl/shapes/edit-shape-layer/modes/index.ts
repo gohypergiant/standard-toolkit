@@ -15,6 +15,7 @@ import { BoundingTransformMode } from './bounding-transform-mode';
 import { CircleTransformMode } from './circle-transform-mode';
 import { LockedBoundingTransformMode } from './locked-bounding-transform-mode';
 import { PointTranslateMode } from './point-translate-mode';
+import { RectangleTransformMode } from './rectangle-transform-mode';
 import { VertexTransformMode } from './vertex-transform-mode';
 import type { EditMode } from '../types';
 
@@ -26,9 +27,15 @@ import type { EditMode } from '../types';
  * causes the EditableGeoJsonLayer to fail with assertion errors.
  *
  * BoundingTransformMode combines ScaleModeWithFreeTransform, RotateMode, and
- * TranslateMode for shapes without vertex editing (ellipses, rectangles),
- * allowing non-uniform scaling plus rotate/translate via bounding box handles.
- * Shows live dimension tooltips during scaling.
+ * TranslateMode for shapes without vertex editing (ellipses), allowing
+ * non-uniform scaling plus rotate/translate via bounding box handles. Shows
+ * live dimension tooltips during scaling.
+ *
+ * RectangleTransformMode mirrors BoundingTransformMode but uses RectangleScaleMode
+ * in place of ScaleModeWithFreeTransform. The replacement places scale handles
+ * at the rectangle's actual rotated corners and projects corner drags onto the
+ * rectangle's local edge directions, so rotated rectangles can be resized
+ * without distorting into a parallelogram.
  *
  * VertexTransformMode combines ModifyMode with ScaleModeWithFreeTransform,
  * RotateMode, and TranslateMode for shapes that support vertex editing
@@ -46,6 +53,7 @@ import type { EditMode } from '../types';
 const EDIT_MODE_INSTANCES = {
   view: new ViewMode(),
   'bounding-transform': new BoundingTransformMode(),
+  'rectangle-transform': new RectangleTransformMode(),
   'locked-bounding-transform': new LockedBoundingTransformMode(),
   'vertex-transform': new VertexTransformMode(),
   'circle-transform': new CircleTransformMode(),
@@ -61,7 +69,8 @@ const EDIT_MODE_INSTANCES = {
  * that occur when creating new mode instances on each render.
  *
  * ## Available Edit Modes
- * - `'bounding-transform'`: For shapes without vertex editing (rectangles, ellipses)
+ * - `'bounding-transform'`: For ellipses (scale via bbox handles + rotate + translate)
+ * - `'rectangle-transform'`: For rectangles (rotation-aware corner-drag scale + rotate + translate)
  * - `'vertex-transform'`: For shapes with vertex editing (polygons, lines)
  * - `'circle-transform'`: For circles (resize from edge + translate)
  * - `'point-translate'`: For points (click to place + drag to move)
