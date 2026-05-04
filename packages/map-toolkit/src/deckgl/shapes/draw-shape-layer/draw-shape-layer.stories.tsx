@@ -29,6 +29,7 @@ import type { ShapeHoveredEvent } from '../shared/events';
 import type { Shape } from '../shared/types';
 import '../display-shape-layer/fiber';
 import { DrawShapeLayer } from './index';
+import type { DrawableShapeType } from './types';
 import { useDrawShape } from './use-draw-shape';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
@@ -376,7 +377,7 @@ export const CustomStyleDefaults: Story = {
       },
     });
 
-    const handleDrawWithColor = (shapeType: ShapeFeatureType) => {
+    const handleDrawWithColor = (shapeType: DrawableShapeType) => {
       draw(shapeType, { styleDefaults: colorStyles[selectedColor] });
     };
 
