@@ -89,38 +89,111 @@ ${lines}
 }`;
 }
 
-function generateEmptyTokens(obj, prefix = '') {
-  let lines = [];
+function parseBoxShadow(shadowValue) {
+  // Box-shadow requires special handling because light-dark() only accepts <color> values,
+  // not complete shadow declarations (offset + blur + spread + color).
+  // Spec: https://drafts.csswg.org/css-color-5/#light-dark
+  //
+  // Parse box-shadow: "0 1px 4px 0 rgba(0 0 0 / 0.16)"
+  // Returns: { offsets: "0 1px 4px 0", color: "rgba(0 0 0 / 0.16)" }
+  // Match: offset-x offset-y blur spread color
+  const regex =
+    /^(?<offsets>(?:[\d.]+(?:px|rem|em)?\s+){3,4})\s*(?<color>rgba?\([^)]+\))$/;
+  const match = shadowValue.trim().match(regex);
 
-  for (const [tokenKey, tokenValue] of Object.entries(obj)) {
-    if (typeof tokenValue === 'string' && tokenValue.startsWith('--')) {
-      // Special case: omit "base" from the variable name
-      const varName = tokenKey === 'base' ? prefix : `${prefix}-${tokenKey}`;
+  if (match?.groups) {
+    return {
+      offsets: match.groups.offsets.trim(),
+      color: match.groups.color.trim(),
+    };
+  }
 
-      lines.push(`-${varName}: ;`);
-    } else if (typeof tokenValue === 'object' && tokenValue !== null) {
-      lines = lines.concat(
-        generateEmptyTokens(tokenValue, `${prefix}-${tokenKey}`),
-      );
+  return null;
+}
+
+function isShadowToken(varName) {
+  return varName.includes('shadow');
+}
+
+function generateShadowToken(varName, lightFallback, darkFallback) {
+  const lightShadow = parseBoxShadow(lightFallback);
+  const darkShadow = parseBoxShadow(darkFallback);
+
+  if (lightShadow && darkShadow && lightShadow.offsets === darkShadow.offsets) {
+    // Both shadows have the same offsets, use light-dark for color only
+    return `-${varName}: ${lightShadow.offsets} light-dark(${lightShadow.color}, ${darkShadow.color});`;
+  }
+
+  // Fallback: invalid shadow format, return null to use default handling
+  return null;
+}
+
+function generateLightDarkToken(
+  varName,
+  lightValue,
+  lightFallback,
+  darkValue,
+  darkFallback,
+) {
+  return `-${varName}: light-dark(var(${lightValue}, ${lightFallback}), var(${darkValue}, ${darkFallback}));`;
+}
+
+function processTokenValue(
+  tokenKey,
+  lightValue,
+  darkValue,
+  primitives,
+  prefix,
+) {
+  const lightFallback = getTokenFallback(lightValue, primitives);
+  const darkFallback = getTokenFallback(darkValue, primitives);
+  const varName = tokenKey === 'base' ? prefix : `${prefix}-${tokenKey}`;
+
+  // Special handling for box-shadow tokens
+  if (isShadowToken(varName)) {
+    const shadowToken = generateShadowToken(
+      varName,
+      lightFallback,
+      darkFallback,
+    );
+    if (shadowToken) {
+      return shadowToken;
     }
   }
 
-  return lines;
+  // Default handling for all other tokens
+  return generateLightDarkToken(
+    varName,
+    lightValue,
+    lightFallback,
+    darkValue,
+    darkFallback,
+  );
 }
 
-function generateSemantics(obj, primitives, prefix = '') {
+function generateLightDarkSemantics(
+  lightObj,
+  darkObj,
+  primitives,
+  prefix = '',
+) {
   let lines = [];
 
-  for (const [tokenKey, tokenValue] of Object.entries(obj)) {
-    if (typeof tokenValue === 'string' && tokenValue.startsWith('--')) {
-      const fallback = getTokenFallback(tokenValue, primitives);
-      // Special case: omit "base" from the variable name
-      const varName = tokenKey === 'base' ? prefix : `${prefix}-${tokenKey}`;
+  for (const [tokenKey, lightValue] of Object.entries(lightObj)) {
+    const darkValue = darkObj[tokenKey];
 
-      lines.push(`-${varName}: var(${tokenValue}, ${fallback});`);
-    } else if (typeof tokenValue === 'object' && tokenValue !== null) {
+    if (typeof lightValue === 'string' && lightValue.startsWith('--')) {
+      lines.push(
+        processTokenValue(tokenKey, lightValue, darkValue, primitives, prefix),
+      );
+    } else if (typeof lightValue === 'object' && lightValue !== null) {
       lines = lines.concat(
-        generateSemantics(tokenValue, primitives, `${prefix}-${tokenKey}`),
+        generateLightDarkSemantics(
+          lightValue,
+          darkValue,
+          primitives,
+          `${prefix}-${tokenKey}`,
+        ),
       );
     }
   }
@@ -132,31 +205,15 @@ function generateThemes(primitiveConfig, semanticConfig) {
   console.log('🔄 Generating themes.css...');
 
   const primitives = flattenTokens(primitiveConfig); // needed for fallbacks
-  const semanticEmpty = generateEmptyTokens(semanticConfig.dark || {});
-  const emptyTokensBlock = `@theme static {
-${semanticEmpty.map((line) => `  ${line}`).join('\n')}
-}`;
 
-  const darkThemeTokens = generateSemantics(
+  const lightDarkTokens = generateLightDarkSemantics(
+    semanticConfig.light || {},
     semanticConfig.dark || {},
     primitives,
   );
-  const lightThemeTokens = generateSemantics(
-    semanticConfig.light || {},
-    primitives,
-  );
-  const semanticColorsBlock = `@layer theme {
-  :root {
-    /** Dark theme **/
-    @variant dark {
-${darkThemeTokens.map((line) => `      ${line}`).join('\n')}
-    }
 
-    /** Light theme **/
-    @variant light {
-${lightThemeTokens.map((line) => `      ${line}`).join('\n')}
-    }
-  }
+  const themeBlock = `@theme static {
+${lightDarkTokens.map((line) => `  ${line}`).join('\n')}
 }`;
 
   return [
@@ -165,8 +222,7 @@ ${lightThemeTokens.map((line) => `      ${line}`).join('\n')}
   Do not edit this file manually.
  */`,
     `@import './tokens.css';`,
-    emptyTokensBlock,
-    semanticColorsBlock,
+    themeBlock,
   ].join('\n\n');
 }
 

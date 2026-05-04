@@ -17,13 +17,10 @@ import {
   type DockviewApi,
   DockviewReact,
   type DockviewReadyEvent,
-  type IDockviewHeaderActionsProps,
   type IDockviewPanelProps,
 } from 'dockview-react';
 import {
   type FunctionComponent,
-  type PropsWithChildren,
-  type ReactNode,
   useCallback,
   useEffect,
   useMemo,
@@ -34,77 +31,14 @@ import {
 import { Button } from '../button';
 import { Divider } from '../divider';
 import { Icon } from '../icon';
-import {
-  FloatingCardContext,
-  type FloatingCardContextValue,
-  useFloatingCard,
-} from './context';
+import { FloatingCardContext, useFloatingCard } from './context';
 import styles from './styles.module.css';
+import { createHeaderAdapter, type FloatingCardHeaderProps } from './utils';
 import type { UniqueId } from '@accelint/core/utility/uuid';
-
-/**
- * A value that can be static or dynamically computed per floating card.
- *
- * Enables per-card customization of props by passing a factory function
- * that receives the card ID and returns the appropriate value.
- *
- * @template T - The type of the static value or factory return type.
- */
-type MaybeFactory<T> = T | ((cardId: string) => T);
-
-/**
- * Configuration for header action buttons in floating cards.
- *
- * Can be a custom button (with icon and onClick), a visual separator ('divider'),
- * or the built-in pin toggle ('pin').
- *
- * @remarks
- * - Custom buttons: Rendered as icon buttons with your provided onClick handler
- * - 'divider': Inserts a vertical divider between action groups
- * - 'pin': Adds built-in pin toggle button (disables dragging when pinned)
- *
- * @example
- * ```tsx
- * const headerActions: FloatingCardHeaderAction[] = [
- *   { icon: <SettingsIcon />, onClick: () => openSettings() },
- *   'divider',
- *   'pin'
- * ];
- * ```
- */
-export type FloatingCardHeaderAction =
-  | {
-      /** Icon to display in the action button */
-      icon: ReactNode;
-      /** Handler called when the action button is clicked */
-      onClick: () => void;
-    }
-  | 'divider'
-  | 'pin';
-
-/**
- * Props passed to floating card header components.
- *
- * @remarks Internal type used by header adapters to map Dockview props to custom header components.
- */
-type FloatingCardHeaderProps = {
-  /** ID of the active floating card panel */
-  id?: string;
-  /** Title text displayed in the header */
-  title?: string;
-  /** Optional icon displayed at the start of the header */
-  icon?: ReactNode;
-  /** Callback to close the entire card group */
-  closeGroup: () => void;
-  /** Toggles pin state for the specified card */
-  togglePinCard?: (id: UniqueId) => void;
-  /** Checks if the specified card is pinned */
-  isPinned?: (id: UniqueId) => boolean;
-  /** Subscribes to pin state changes; returns an unsubscribe function */
-  subscribeToPinState?: (callback: () => void) => () => void;
-  /** Custom action buttons to render in the header */
-  headerActions?: FloatingCardHeaderAction[];
-};
+import type {
+  FloatingCardContextValue,
+  FloatingCardProviderProps,
+} from './types';
 
 /**
  * Internal component that registers a DOM ref for a card container.
@@ -166,7 +100,9 @@ function DefaultLeftHeader({
     <div className={styles.headerSide}>
       {icon ? <Icon size='small'>{icon}</Icon> : null}
       {title && title !== id ? (
-        <div className={styles.headerTitle}>{title}</div>
+        <div className={styles.headerTitleContainer}>
+          <div className={styles.headerTitle}>{title}</div>
+        </div>
       ) : null}
     </div>
   );
@@ -248,123 +184,6 @@ function DefaultRightHeader({
     </div>
   );
 }
-
-type HeaderAdapterOptions = {
-  icon?: MaybeFactory<ReactNode>;
-  headerActions?: MaybeFactory<FloatingCardHeaderProps['headerActions']>;
-  togglePinCard?: (id: UniqueId) => void;
-  isPinned?: (id: UniqueId) => boolean;
-  subscribeToPinState?: (callback: () => void) => () => void;
-};
-
-/**
- * Creates an adapter component to map Dockview's header action props to custom header component props.
- *
- * Handles title change subscriptions and resolves MaybeFactory options (icon, headerActions)
- * either as static values or by invoking factory functions with the active card ID.
- *
- * @param Component - The header component to wrap.
- * @param options - Configuration options including icon and headerActions (static or factory).
- * @returns Adapter component compatible with Dockview's header API.
- */
-function createHeaderAdapter(
-  Component: FunctionComponent<FloatingCardHeaderProps>,
-  options: HeaderAdapterOptions,
-): FunctionComponent<IDockviewHeaderActionsProps> {
-  function HeaderAdapter(props: Readonly<IDockviewHeaderActionsProps>) {
-    const panelId = props.panels[0]?.id ?? '';
-    const [title, setTitle] = useState(props.activePanel?.title);
-
-    useEffect(() => {
-      const panel = props.activePanel;
-
-      if (!panel) {
-        return;
-      }
-
-      setTitle(panel.title);
-
-      const disposable = panel.api.onDidTitleChange(() => {
-        setTitle(panel.title);
-      });
-
-      return () => {
-        disposable.dispose();
-      };
-    }, [props.activePanel]);
-    const icon = props.activePanel
-      ? typeof options?.icon === 'function'
-        ? options.icon(panelId)
-        : options?.icon
-      : undefined;
-    const headerActions =
-      typeof options?.headerActions === 'function'
-        ? options.headerActions(panelId)
-        : options?.headerActions;
-    return (
-      <Component
-        icon={icon}
-        headerActions={headerActions}
-        title={title}
-        id={props.activePanel?.id}
-        closeGroup={() => props.api.close()}
-        togglePinCard={options.togglePinCard}
-        isPinned={options.isPinned}
-        subscribeToPinState={options.subscribeToPinState}
-      />
-    );
-  }
-
-  HeaderAdapter.displayName = `HeaderAdapter(${Component.displayName ?? Component.name ?? 'Anonymous'})`;
-  return HeaderAdapter;
-}
-
-/**
- * Props for the FloatingCardProvider component.
- *
- * Configures default icon and header actions for all floating cards. Both can be
- * static values or factory functions that receive the card ID for per-card customization.
- *
- * @example
- * ```tsx
- * <FloatingCardProvider
- *   icon={<AppIcon />}
- *   headerActions={(cardId) => {
- *     if (cardId === 'settings') {
- *       return [{ icon: <CogIcon />, onClick: openSettings }, 'pin'];
- *     }
- *     return ['pin'];
- *   }}
- * >
- *   {children}
- * </FloatingCardProvider>
- * ```
- */
-export type FloatingCardProviderProps = Readonly<
-  PropsWithChildren<{
-    /**
-     * Optional icon rendered at the very start of the floating card header.
-     * Can be a `ReactNode` or a function `(cardId: string) => ReactNode`.
-     */
-    icon?: MaybeFactory<ReactNode>;
-    /**
-     * Optional action buttons rendered in the floating card header before the close button.
-     * Can include `'divider'` to separate groups and `'pin'` to add a pin toggle button.
-     * Can be an array or a function `(cardId: string) => array` to return
-     * per-floating card actions.
-     */
-    headerActions?: MaybeFactory<FloatingCardHeaderAction[]>;
-    /**
-     * Optional set of card IDs that should be pinned when the provider first mounts.
-     *
-     * Like other `initial*` props, this value is only read once at mount time.
-     * Changes after mount have no effect.
-     */
-    initialPinned?: readonly UniqueId[];
-    /** Additional CSS class names for styling */
-    className?: string;
-  }>
->;
 
 const components: Record<string, FunctionComponent<IDockviewPanelProps>> = {
   default: FloatingCardContainer,

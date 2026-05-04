@@ -29,7 +29,11 @@ import type {
 } from '../types';
 
 /**
- * Stateful tree manager with drag-and-drop, selection, expansion, and visibility controls
+ * Stateful tree manager with drag-and-drop, selection, expansion, and visibility controls.
+ *
+ * Manages tree state internally using React hooks. Returns tree nodes, manipulation actions,
+ * and drag-and-drop configuration. Use this hook when you need a complete tree solution with
+ * built-in state management. For stateless transformations, use {@link useTreeActions} instead.
  *
  * @param options - {@link UseTreeStateOptions}
  * @param options.items - Initial tree node items.

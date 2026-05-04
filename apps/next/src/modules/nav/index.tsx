@@ -10,7 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
+'use client';
+
 import { Link } from '@accelint/design-toolkit/components/link';
+import { Button } from '@accelint/design-toolkit/components/button';
+import { useTheme } from '@accelint/design-toolkit';
 
 const LINKS = [
   { path: '/', label: 'All' },
@@ -37,8 +41,10 @@ const LINKS = [
 ];
 
 export function Nav() {
+  const { mode, toggleMode } = useTheme();
+
   return (
-    <div className='flex flex-row gap-s fixed top-0 left-0 right-0 bg-surface-default p-xs shadow-elevation-raised'>
+    <div className='flex flex-row gap-s fixed top-0 left-0 right-0 bg-surface-default p-xs shadow-elevation-raised items-center'>
       {LINKS.map((link) => {
         return (
           <Link key={link.path} href={link.path}>
@@ -46,6 +52,15 @@ export function Nav() {
           </Link>
         );
       })}
+      <div className='ml-auto'>
+        <Button
+          variant='filled'
+          size='small'
+          onPress={() => toggleMode(mode === 'dark' ? 'light' : 'dark')}
+        >
+          {mode === 'dark' ? '☀️ Light' : '🌙 Dark'}
+        </Button>
+      </div>
     </div>
   );
 }
