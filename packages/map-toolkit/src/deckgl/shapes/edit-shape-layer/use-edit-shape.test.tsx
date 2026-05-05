@@ -238,7 +238,7 @@ describe('useEditShape', () => {
       });
     });
 
-    it('sets bounding-transform mode for ellipses', async () => {
+    it('sets ellipse-transform mode for ellipses', async () => {
       const { result } = renderHook(() => useEditShape(mapId));
       const shape = createMockEllipseShape();
 
@@ -247,9 +247,7 @@ describe('useEditShape', () => {
       });
 
       await waitFor(() => {
-        expect(result.current.editingState?.editMode).toBe(
-          'bounding-transform',
-        );
+        expect(result.current.editingState?.editMode).toBe('ellipse-transform');
       });
     });
 

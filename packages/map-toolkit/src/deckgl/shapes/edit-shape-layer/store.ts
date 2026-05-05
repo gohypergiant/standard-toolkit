@@ -136,7 +136,11 @@ function getEditModeForShape(shape: Shape): EditMode {
     return 'rectangle-transform';
   }
   if (isEllipseShape(shape)) {
-    return 'bounding-transform';
+    // Ellipses use axis-endpoint scaling (handles on the curve at the
+    // major/minor axis endpoints) so a rotated ellipse stays a clean
+    // rotated ellipse during scale (lat/lon-axis-aligned bbox scaling
+    // would stretch it into a non-ellipse).
+    return 'ellipse-transform';
   }
   return 'vertex-transform';
 }

@@ -22,14 +22,136 @@ import {
   type ModeProps,
   TranslateMode,
 } from '@deck.gl-community/editable-layers';
-import { featureCollection } from '@turf/helpers';
 import { DEFAULT_DISTANCE_UNITS } from '@/shared/units';
 import { formatRectangleTooltip } from '../../shared/constants';
 import { computeRectangleMeasurementsFromCorners } from '../../shared/utils/geometry-measurements';
 import { BaseTransformMode, type HandleMatcher } from './base-transform-mode';
 import { RectangleScaleMode } from './rectangle-scale-mode';
 import { RotateModeWithSnap } from './rotate-mode-with-snap';
-import type { Feature, Polygon } from 'geojson';
+import { latToMercatorY, mercatorYToLat } from './mercator';
+import {
+  computePolygonBounds,
+  computeRotateStemTip,
+  filterGuidesForRotation,
+  type PolygonBounds,
+  postProcessTransformGuides,
+} from './transform-mode-guides';
+import type { Feature, Polygon, Position } from 'geojson';
+
+/**
+ * Pick whichever of the rectangle's 4 edges is currently most-northern
+ * (highest mean latitude) and return its midpoint plus the two corner
+ * positions of that edge. The corners let the caller compute the edge's
+ * outward perpendicular for stem orientation. Returns null when the
+ * ring is missing or has fewer than 4 corners.
+ */
+function topEdgeMidpointWithEndpoints(ring: Position[] | undefined): {
+  midpoint: [number, number];
+  start: [number, number];
+  end: [number, number];
+} | null {
+  if (!ring || ring.length < 4) {
+    return null;
+  }
+
+  let best: {
+    midpoint: [number, number];
+    start: [number, number];
+    end: [number, number];
+  } | null = null;
+  let bestLat = Number.NEGATIVE_INFINITY;
+
+  for (let i = 0; i < 4; i++) {
+    const a = ring[i];
+    const b = ring[(i + 1) % 4];
+
+    if (!(a && b)) {
+      continue;
+    }
+
+    const aLon = a[0] as number;
+    const aLat = a[1] as number;
+    const bLon = b[0] as number;
+    const bLat = b[1] as number;
+    const midLat = (aLat + bLat) / 2;
+
+    if (midLat > bestLat) {
+      bestLat = midLat;
+      best = {
+        midpoint: [(aLon + bLon) / 2, midLat],
+        start: [aLon, aLat],
+        end: [bLon, bLat],
+      };
+    }
+  }
+
+  return best;
+}
+
+/**
+ * Compute the rotate-handle stem tip for a rectangle: position the tip
+ * **perpendicular to the most-northern edge** in Mercator space, at the
+ * same visual distance the deck.gl formula would produce when going
+ * straight north. This means the stem rotates with the rectangle —
+ * pointing "up out of the top edge" regardless of how the rectangle is
+ * spun, instead of always pointing toward true north.
+ *
+ * The Mercator-space length is matched to the lat-degree offset that
+ * `computeRotateStemTip` would produce for the same bounds, so an
+ * axis-aligned rectangle's stem visually matches the ellipse's stem.
+ */
+function computePerpendicularStemTip(
+  midpoint: [number, number],
+  edgeStart: [number, number],
+  edgeEnd: [number, number],
+  bounds: PolygonBounds,
+): [number, number] {
+  const baseLat = midpoint[1];
+
+  // Reuse the shared straight-up-tip helper to get the lat-offset, then
+  // convert that to Mercator-y units so we can apply it along an
+  // arbitrary direction without distorting the visual length.
+  const straightTip = computeRotateStemTip(midpoint, bounds);
+  const baseMercY = latToMercatorY(baseLat);
+  const stemLengthMerc = latToMercatorY(straightTip[1]) - baseMercY;
+
+  // Edge direction in Mercator. Mercator x = lon (already), y =
+  // latToMercatorY(lat). The edge is rectangular in Mercator, so this
+  // gives the on-screen edge orientation.
+  const startMercY = latToMercatorY(edgeStart[1]);
+  const endMercY = latToMercatorY(edgeEnd[1]);
+  const edgeDx = edgeEnd[0] - edgeStart[0];
+  const edgeDy = endMercY - startMercY;
+  const edgeLen = Math.hypot(edgeDx, edgeDy);
+
+  if (edgeLen === 0) {
+    // Degenerate edge: fall back to straight-up.
+    return straightTip;
+  }
+
+  // Perpendicular candidate (rotate edge by -90°).
+  let normalX = edgeDy / edgeLen;
+  let normalY = -edgeDx / edgeLen;
+
+  // Ensure outward orientation by checking the dot product with the
+  // vector from rectangle center → midpoint. If the perpendicular points
+  // toward the interior (negative dot), flip it.
+  const centerLon = (bounds.minLon + bounds.maxLon) / 2;
+  const centerLat = (bounds.minLat + bounds.maxLat) / 2;
+  const centerMercY = latToMercatorY(centerLat);
+  const radialX = midpoint[0] - centerLon;
+  const radialY = baseMercY - centerMercY;
+
+  if (radialX * normalX + radialY * normalY < 0) {
+    normalX = -normalX;
+    normalY = -normalY;
+  }
+
+  const tipMercX = midpoint[0] + normalX * stemLengthMerc;
+  const tipMercY = baseMercY + normalY * stemLengthMerc;
+
+  return [tipMercX, mercatorYToLat(tipMercY)];
+}
 
 /**
  * Transform mode for rectangles that preserves rotation through every gesture.
@@ -144,80 +266,45 @@ export class RectangleTransformMode extends BaseTransformMode {
 
   /**
    * Filter duplicate envelope guides emitted by stacked sub-modes and
-   * reposition the rotate handle so it sits on the rectangle's actual top
-   * edge instead of the axis-aligned bbox.
+   * place the rotate handle outside the rectangle's most-northern edge
+   * with a connector stem (Figma/Inkscape pattern).
    *
    * Both ScaleMode and RotateMode emit an envelope as part of their guides;
    * we keep scale's envelope (which now follows the rotated rectangle's
-   * actual outline) and drop rotate's axis-aligned bbox envelope. We also
-   * hide scale handles while a rotation drag is in progress to avoid clutter.
+   * actual outline) and drop rotate's axis-aligned bbox envelope. During
+   * rotation drag, all chrome is dropped via `filterGuidesForRotation` so
+   * only the rotating shape and pivot remain.
    *
-   * RotateMode places the rotate handle at the top-center of the polygon's
-   * lat/lon-axis-aligned bbox, which floats far outside a rotated rectangle.
-   * For rectangles we move the handle onto the midpoint of whichever edge is
-   * currently most-northern (highest mean latitude), so it always sits on
-   * the visually-top edge regardless of how far the rectangle has been spun.
+   * The rotate handle's stem **base** is the midpoint of the
+   * most-northern edge; the **tip** is offset directly north by
+   * `computeRotateStemTip`, which mirrors the deck.gl `RotateMode`
+   * formula. A connector LineString with `mode: 'rotate-stem'` is
+   * appended so the handle reads as "the dot connected to the shape by
+   * a line is the rotate handle".
    */
   override getGuides(
     props: ModeProps<FeatureCollection>,
   ): GuideFeatureCollection {
     const allGuides = super.getGuides(props);
 
-    const rotateHandlePos = this.getRectangleTopEdgeMidpoint(props);
-
-    // biome-ignore lint/suspicious/noExplicitAny: Guide properties vary by mode, accessed defensively
-    const processed: any[] = [];
-    for (const guide of allGuides.features) {
-      // biome-ignore lint/suspicious/noExplicitAny: Guide properties vary by mode, accessed defensively
-      const guideAny = guide as any;
-      const properties = guideAny?.properties ?? {};
-      const guideType = properties.guideType;
-      const editHandleType = properties.editHandleType;
-      const mode = properties.mode;
-
-      // Drop rotate-mode envelope; keep scale-mode envelope (which is the
-      // rectangle's actual outline thanks to RectangleScaleMode.getGuides).
-      if (
-        mode !== 'scale' &&
-        editHandleType === undefined &&
-        guideType === undefined
-      ) {
-        continue;
-      }
-
-      // Hide scale handles while actively rotating.
-      if (this.rotateMode.getIsRotating() && editHandleType === 'scale') {
-        continue;
-      }
-
-      // Reposition the rotate handle onto the rectangle's top edge.
-      if (
-        rotateHandlePos &&
-        editHandleType === 'rotate' &&
-        guideAny?.geometry?.type === 'Point'
-      ) {
-        processed.push({
-          ...guideAny,
-          geometry: { ...guideAny.geometry, coordinates: rotateHandlePos },
-        });
-        continue;
-      }
-
-      processed.push(guide);
+    if (this.rotateMode.getIsRotating()) {
+      return filterGuidesForRotation(allGuides);
     }
 
-    // biome-ignore lint/suspicious/noExplicitAny: turf types mismatch with editable-layers GeoJSON types
-    return featureCollection(processed as any) as any;
+    return postProcessTransformGuides(allGuides, this.computeRotateStem(props));
   }
 
   /**
-   * Midpoint of whichever rectangle edge is currently most-northern (i.e.
-   * has the highest mean latitude). Returns null when no rectangle is
-   * selected.
+   * Compute the rotate-handle stem: the midpoint of the rectangle's
+   * most-northern edge (`base`) and a `tip` positioned **perpendicular
+   * to that edge in Mercator space**, so the stem rotates with the
+   * rectangle instead of always pointing toward true north. Stem length
+   * matches the deck.gl `RotateMode` formula. Returns null when no
+   * rectangle is selected.
    */
-  private getRectangleTopEdgeMidpoint(
+  private computeRotateStem(
     props: ModeProps<FeatureCollection>,
-  ): [number, number] | null {
+  ): { base: [number, number]; tip: [number, number] } | null {
     const selectedIndex = props.selectedIndexes?.[0];
 
     if (selectedIndex === undefined) {
@@ -235,35 +322,26 @@ export class RectangleTransformMode extends BaseTransformMode {
     }
 
     const ring = (feature.geometry as Polygon).coordinates[0];
+    const edge = topEdgeMidpointWithEndpoints(ring);
 
-    if (!ring || ring.length < 4) {
+    if (!edge) {
       return null;
     }
 
-    let bestMidpoint: [number, number] | null = null;
-    let bestLat = Number.NEGATIVE_INFINITY;
+    const bounds = computePolygonBounds(ring);
 
-    for (let i = 0; i < 4; i++) {
-      const a = ring[i];
-      const b = ring[(i + 1) % 4];
-
-      if (!(a && b)) {
-        continue;
-      }
-
-      const aLon = a[0] as number;
-      const aLat = a[1] as number;
-      const bLon = b[0] as number;
-      const bLat = b[1] as number;
-      const midLat = (aLat + bLat) / 2;
-
-      if (midLat > bestLat) {
-        bestLat = midLat;
-        bestMidpoint = [(aLon + bLon) / 2, midLat];
-      }
+    if (!bounds) {
+      return null;
     }
 
-    return bestMidpoint;
+    const tip = computePerpendicularStemTip(
+      edge.midpoint,
+      edge.start,
+      edge.end,
+      bounds,
+    );
+
+    return { base: edge.midpoint, tip };
   }
 
   /**

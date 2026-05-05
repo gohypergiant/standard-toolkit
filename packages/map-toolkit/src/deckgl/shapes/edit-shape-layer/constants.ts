@@ -41,6 +41,7 @@ export const EDIT_CURSOR_MAP: Record<EditMode, CSSCursorType> = {
   view: 'default',
   'bounding-transform': 'crosshair',
   'rectangle-transform': 'crosshair',
+  'ellipse-transform': 'crosshair',
   'locked-bounding-transform': 'crosshair',
   'vertex-transform': 'crosshair',
   'circle-transform': 'crosshair',
@@ -58,9 +59,11 @@ export const DEFAULT_HOTKEY_CONFIG = {
 /**
  * Maps shape types to the `properties.shape` value required by editable-layers modes.
  * - ResizeCircleMode requires `shape: 'Circle'`
- * - ModifyMode lockRectangles requires `shape: 'Rectangle'`
+ * - RectangleScaleMode (rectangle-transform) requires `shape: 'Rectangle'`
+ * - EllipseScaleMode (ellipse-transform) requires `shape: 'Ellipse'`
  */
 export const SHAPE_PROPERTY_MAP: Partial<Record<ShapeFeatureType, string>> = {
   [ShapeFeatureType.Circle]: 'Circle',
   [ShapeFeatureType.Rectangle]: 'Rectangle',
+  [ShapeFeatureType.Ellipse]: 'Ellipse',
 };

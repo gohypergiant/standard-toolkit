@@ -20,41 +20,25 @@ import {
 } from '@deck.gl-community/editable-layers';
 import { featureCollection, point, polygonToLine } from '@turf/turf';
 import { recomputeRectangleCorners } from './rectangle-scale-math';
-import { ScaleModeWithFreeTransform } from './scale-mode-with-free-transform';
-import type { Feature, Point, Polygon, Position } from 'geojson';
+import { ShapeAwareScaleMode } from './shape-aware-scale-mode';
+import type { EditHandleFeature } from './transform-mode-guides';
+import type { Feature, Polygon, Position } from 'geojson';
 
 /**
- * Local mirror of editable-layers' internal `EditHandleFeature` type
- * (defined in its `edit-modes/types.d.ts` but not re-exported from the
- * package entry). Mirrors the runtime shape produced by ScaleMode-style
- * guides so the parent class can consume our cornerHandles unchanged.
- */
-type EditHandleFeature = Feature<
-  Point,
-  {
-    guideType: 'editHandle';
-    editHandleType:
-      | 'existing'
-      | 'intermediate'
-      | 'snap-source'
-      | 'snap-target'
-      | 'scale'
-      | 'rotate';
-    positionIndexes?: number[];
-    featureIndex?: number;
-  }
->;
-
-/**
- * Subclass of `ScaleModeWithFreeTransform` that produces a clean rotated
- * rectangle from a corner drag, instead of distorting it into a parallelogram.
+ * Concrete `ShapeAwareScaleMode` for rectangles. Overrides `getGuides`
+ * to place handles at the rectangle's actual rotated corners and
+ * overrides `tryShapeDrag` with rotation-preserving corner-drag math,
+ * instead of the grandparent `ScaleModeWithFreeTransform`'s
+ * lat/lon-axis-aligned scale which would distort a rotated rectangle
+ * into a parallelogram.
  *
- * The standard `ScaleModeWithFreeTransform` places its scale handles at the
- * lat/lon-axis-aligned bounding box of the polygon and applies axis-aligned
- * scale factors along latitude and longitude. For an axis-aligned rectangle
- * this is correct (the bbox equals the rectangle), but for a rotated
- * rectangle the bbox corners aren't the rectangle's corners and an
- * axis-aligned scale distorts the shape into a parallelogram.
+ * The standard `ScaleModeWithFreeTransform` places its scale handles at
+ * the lat/lon-axis-aligned bounding box of the polygon and applies
+ * axis-aligned scale factors along latitude and longitude. For an
+ * axis-aligned rectangle this is correct (the bbox equals the
+ * rectangle), but for a rotated rectangle the bbox corners aren't the
+ * rectangle's corners and an axis-aligned scale distorts the shape into
+ * a parallelogram.
  *
  * This mode replaces both pieces for rectangle features (those with
  * `properties.shape === 'Rectangle'`):
@@ -65,9 +49,9 @@ type EditHandleFeature = Feature<
  *   directions, so the rectangle invariant is preserved through any
  *   rotation.
  *
- * Non-rectangle features fall through to the standard
- * `ScaleModeWithFreeTransform` behavior, which is correct for shapes whose
- * bbox is meaningful (like ellipses).
+ * Non-rectangle features fall through to `ShapeAwareScaleMode`'s parent
+ * behavior, which is correct for shapes whose bbox is meaningful (like
+ * ellipses, though those now have their own `EllipseScaleMode`).
  *
  * @example
  * ```typescript
@@ -76,7 +60,7 @@ type EditHandleFeature = Feature<
  * const mode = new RectangleScaleMode();
  * ```
  */
-export class RectangleScaleMode extends ScaleModeWithFreeTransform {
+export class RectangleScaleMode extends ShapeAwareScaleMode {
   /**
    * Returns scale guides positioned at the rectangle's actual rotated
    * corners (and an envelope matching the rectangle's outline) instead of
@@ -141,50 +125,11 @@ export class RectangleScaleMode extends ScaleModeWithFreeTransform {
   }
 
   /**
-   * Routes corner drags through `tryRectangleDrag` so rotation-preserving
-   * projection math is applied, and falls back to the parent's standard
-   * scale behavior for non-rectangle features.
+   * Run rectangle-aware drag for the active feature; return true when the
+   * drag was handled, false when the feature isn't a rectangle (so the
+   * caller should defer to the standard scale path).
    */
-  override handleDragging(
-    event: DraggingEvent,
-    props: ModeProps<SimpleFeatureCollection>,
-  ): void {
-    if (!this.tryRectangleDrag(event, 'scaling', props)) {
-      super.handleDragging(event, props);
-    }
-  }
-
-  /**
-   * Finalizes a rectangle-aware drag by emitting the final geometry and
-   * clearing the parent's scratch state and cursor; falls back to the
-   * parent's stop-drag for non-rectangle features.
-   */
-  override handleStopDragging(
-    event: StopDraggingEvent,
-    props: ModeProps<SimpleFeatureCollection>,
-  ): void {
-    if (this.tryRectangleDrag(event, 'scaled', props)) {
-      // biome-ignore lint/suspicious/noExplicitAny: Accessing the parent's protected scratch fields
-      const self = this as any;
-
-      props.onUpdateCursor(null);
-      self._geometryBeingScaled = null;
-      self._selectedEditHandle = null;
-      self._cursor = null;
-      self._isScaling = false;
-
-      return;
-    }
-
-    super.handleStopDragging(event, props);
-  }
-
-  /**
-   * Attempt rectangle-aware drag for the active feature; return true when the
-   * drag was handled, false when the feature isn't a rectangle (so the caller
-   * should defer to the standard scale path).
-   */
-  private tryRectangleDrag(
+  protected override tryShapeDrag(
     event: DraggingEvent | StopDraggingEvent,
     editType: 'scaling' | 'scaled',
     props: ModeProps<SimpleFeatureCollection>,
