@@ -12,8 +12,9 @@
 'use client';
 
 import 'client-only';
-import { useFocusable } from 'react-aria';
-import { mergeProps, useObjectRef } from 'react-aria';
+import { useFocusable } from 'react-aria/useFocusable';
+import { mergeProps } from 'react-aria/mergeProps';
+import { useObjectRef } from 'react-aria/useObjectRef';
 import { mergeRefs } from 'react-aria/mergeRefs';
 import {
   Children,

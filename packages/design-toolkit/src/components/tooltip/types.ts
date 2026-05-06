@@ -14,7 +14,7 @@ import type {
   TooltipProps as AriaTooltipProps,
   TooltipTriggerComponentProps,
 } from 'react-aria-components/Tooltip';
-import type { FocusableProps } from 'react-aria';
+import type { FocusableProps } from 'react-aria/Focusable';
 import type { FocusableElement } from '@react-types/shared';
 
 /**

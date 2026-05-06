@@ -13,7 +13,7 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { useIsSSR } from 'react-aria';
+import { useIsSSR } from 'react-aria/SSRProvider';
 import { useMemo } from 'react';
 import { Tooltip as AriaTooltip } from 'react-aria-components/Tooltip';
 import { PortalProvider } from '@/providers/portal';

@@ -11,7 +11,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { isTextDropItem } from 'react-aria';
+import { isTextDropItem } from 'react-aria/useDrop';
 import type { DropItem, TextDropItem } from '@react-types/shared';
 
 /**
