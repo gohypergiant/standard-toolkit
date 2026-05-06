@@ -14,7 +14,7 @@ import type { RefAttributes } from 'react';
 import type {
   SearchFieldProps as AriaSearchFieldProps,
   InputProps,
-} from 'react-aria-components';
+} from 'react-aria-components/SearchField';
 import type { ButtonProps } from '../button/types';
 import type { IconProps } from '../icon/types';
 

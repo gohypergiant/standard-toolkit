@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { Label } from 'react-aria-components';
+import { Label } from 'react-aria-components/Label';
 import { Table } from '../table';
 import { TableBody } from '../table/body';
 import { TableCell } from '../table/cell';

@@ -18,7 +18,7 @@ import {
   Text,
   UNSTABLE_Toast as Toast,
   UNSTABLE_ToastContent as ToastContent,
-} from 'react-aria-components';
+} from 'react-aria-components/Toast';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { NoticeIcon } from './notice-icon';

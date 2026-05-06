@@ -10,11 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import type {
-  ButtonProps as AriaButtonProps,
-  ToggleButtonProps as AriaToggleButtonProps,
-  LinkProps,
-} from 'react-aria-components';
+import type { ButtonProps as AriaButtonProps } from 'react-aria-components/Button';
+import type { ToggleButtonProps as AriaToggleButtonProps } from 'react-aria-components/ToggleButton';
+import type { LinkProps } from 'react-aria-components/Link';
 import type { AriaAttributesWithRef } from '@/lib/types';
 
 type Variants = 'filled' | 'flat' | 'icon' | 'outline';

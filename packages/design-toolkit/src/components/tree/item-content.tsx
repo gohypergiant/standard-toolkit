@@ -17,7 +17,7 @@ import DragVert from '@accelint/icons/drag-vert';
 import Hide from '@accelint/icons/hide';
 import Show from '@accelint/icons/show';
 import { useContext } from 'react';
-import { TreeItemContent as AriaTreeItemContent } from 'react-aria-components';
+import { TreeItemContent as AriaTreeItemContent } from 'react-aria-components/Tree';
 import { Button } from '../button';
 import { Checkbox } from '../checkbox';
 import { Icon } from '../icon';

@@ -14,12 +14,10 @@ import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import ArrowNortheast from '@accelint/icons/arrow-northeast';
 import { useContext, useRef } from 'react';
-import {
-  composeRenderProps,
-  Link,
-  Provider,
-  TextContext,
-} from 'react-aria-components';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { Link } from 'react-aria-components/Link';
+import { Provider } from 'react-aria-components/slots';
+import { TextContext } from 'react-aria-components/Text';
 import { Icon } from '../icon';
 import { Tooltip } from '../tooltip';
 import { TooltipTrigger } from '../tooltip/trigger';

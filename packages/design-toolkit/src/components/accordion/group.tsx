@@ -13,10 +13,11 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { composeRenderProps, DisclosureGroup } from 'react-aria-components';
+import { DisclosureGroup } from 'react-aria-components/DisclosureGroup';
 import { AccordionContext } from './context';
 import styles from './styles.module.css';
 import type { AccordionGroupProps } from './types';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 
 /**
  * Container component for grouping multiple accordions with shared configuration.

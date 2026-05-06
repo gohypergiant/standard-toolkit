@@ -11,7 +11,7 @@
  */
 
 import type { ComponentPropsWithRef, RefAttributes } from 'react';
-import type { TextProps } from 'react-aria-components';
+import type { TextProps } from 'react-aria-components/Text';
 
 /**
  * Props for the DetailsList component.

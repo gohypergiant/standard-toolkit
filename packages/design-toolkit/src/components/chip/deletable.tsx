@@ -14,11 +14,9 @@
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import CancelFill from '@accelint/icons/cancel-fill';
-import {
-  Tag as AriaTag,
-  composeRenderProps,
-  useContextProps,
-} from 'react-aria-components';
+import { Tag as AriaTag } from 'react-aria-components/TagGroup';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { useContextProps } from 'react-aria-components/slots';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { ChipContext } from './context';

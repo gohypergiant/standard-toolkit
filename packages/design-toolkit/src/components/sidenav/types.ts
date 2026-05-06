@@ -13,15 +13,15 @@
 import type { Payload } from '@accelint/bus';
 import type { UniqueId } from '@accelint/core';
 import type { ComponentPropsWithRef, PropsWithChildren } from 'react';
+import type { ButtonProps } from 'react-aria-components/Button';
 import type {
-  ButtonProps,
   DisclosurePanelProps,
   DisclosureProps,
-  LinkProps,
-  PopoverProps,
-  Pressable,
-  ToggleButtonProps,
-} from 'react-aria-components';
+} from 'react-aria-components/Disclosure';
+import type { LinkProps } from 'react-aria-components/Link';
+import type { PopoverProps } from 'react-aria-components/Popover';
+import type { Pressable } from 'react-aria-components/Pressable';
+import type { ToggleButtonProps } from 'react-aria-components/ToggleButton';
 import type { SidenavEventTypes } from './events';
 
 /**

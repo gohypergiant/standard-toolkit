@@ -50,6 +50,7 @@ const originalFocus = HTMLElement.prototype.focus;
 HTMLElement.prototype.focus = function (options?: FocusOptions) {
   if (
     this.getAttribute('role')?.startsWith('menuitem') &&
+    // @ts-ignore -- focusVisible is a valid option https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/focus
     !options?.focusVisible
   ) {
     return;

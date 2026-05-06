@@ -14,12 +14,10 @@
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useContext, useRef } from 'react';
-import {
-  composeRenderProps,
-  Provider,
-  TextContext,
-  ToggleButton,
-} from 'react-aria-components';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { Provider } from 'react-aria-components/slots';
+import { TextContext } from 'react-aria-components/Text';
+import { ToggleButton } from 'react-aria-components/ToggleButton';
 import { IconContext } from '../icon/context';
 import { Tooltip } from '../tooltip';
 import { TooltipTrigger } from '../tooltip/trigger';

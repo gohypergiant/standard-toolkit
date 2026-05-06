@@ -15,9 +15,9 @@ import type {
   TreeItemContentRenderProps as AriaTreeItemContentRenderProps,
   TreeItemProps as AriaTreeItemProps,
   TreeProps as AriaTreeProps,
-  RenderProps,
-} from 'react-aria-components';
+} from 'react-aria-components/Tree';
 import type { DragAndDropConfig, TreeNode } from '@/hooks/use-tree/types';
+import type { RenderProps } from 'react-aria-components/useRenderProps';
 
 /** Visual density variant for Tree components. */
 export type TreeStyleVariant = 'cozy' | 'compact' | 'crammed';

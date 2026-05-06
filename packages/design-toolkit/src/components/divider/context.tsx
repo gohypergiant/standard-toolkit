@@ -15,7 +15,7 @@
 import type { ProviderProps } from '@/lib/types';
 import 'client-only';
 import { createContext } from 'react';
-import type { ContextValue } from 'react-aria-components';
+import type { ContextValue } from 'react-aria-components/slots';
 import type { DividerProps } from './types';
 
 /**

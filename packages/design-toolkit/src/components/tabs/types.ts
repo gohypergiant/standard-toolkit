@@ -14,7 +14,7 @@ import type { RefAttributes } from 'react';
 import type {
   TabProps as AriaTabProps,
   TabsProps as AriaTabsProps,
-} from 'react-aria-components';
+} from 'react-aria-components/Tabs';
 
 export type TabStyleProps =
   | ({ orientation?: 'horizontal' } & {

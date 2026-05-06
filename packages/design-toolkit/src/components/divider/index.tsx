@@ -15,7 +15,7 @@
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useLayoutEffect, useState } from 'react';
-import { useContextProps } from 'react-aria-components';
+import { useContextProps } from 'react-aria-components/slots';
 import { DividerContext } from './context';
 import styles from './styles.module.css';
 import type { DividerProps } from './types';

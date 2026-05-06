@@ -12,33 +12,25 @@
 'use client';
 
 import 'client-only';
-import {
-  type FocusableProviderProps,
-  useFocusable,
-} from '@react-aria/interactions';
-import { mergeProps, mergeRefs, useObjectRef } from '@react-aria/utils';
+import { useFocusable } from 'react-aria/useFocusable';
+import { mergeProps } from 'react-aria/mergeProps';
+import { useObjectRef } from 'react-aria/useObjectRef';
+import { mergeRefs } from 'react-aria/mergeRefs';
 import {
   Children,
   cloneElement,
   type DOMAttributes,
   type ReactElement,
   type ReactNode,
-  type RefAttributes,
   version,
 } from 'react';
-import {
-  TooltipTrigger as AriaTooltipTrigger,
-  useContextProps,
-} from 'react-aria-components';
+import { TooltipTrigger as AriaTooltipTrigger } from 'react-aria-components/Tooltip';
+import { useContextProps } from 'react-aria-components/slots';
 import { TooltipContext } from './context';
 import type { FocusableElement } from '@react-types/shared';
-import type { TooltipTriggerProps } from './types';
+import type { TooltipFocusableProps, TooltipTriggerProps } from './types';
 
-function TooltipFocusable({
-  children,
-  ref,
-  ...props
-}: FocusableProviderProps & RefAttributes<FocusableElement>) {
+function TooltipFocusable({ children, ref, ...props }: TooltipFocusableProps) {
   ref = useObjectRef(ref);
 
   const { focusableProps } = useFocusable(props, ref);

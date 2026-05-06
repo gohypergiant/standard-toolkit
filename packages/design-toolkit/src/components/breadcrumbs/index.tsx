@@ -17,7 +17,7 @@ import {
   Breadcrumbs as AriaBreadcrumbs,
   type BreadcrumbProps,
   type BreadcrumbsProps,
-} from 'react-aria-components';
+} from 'react-aria-components/Breadcrumbs';
 import styles from './styles.module.css';
 
 /**

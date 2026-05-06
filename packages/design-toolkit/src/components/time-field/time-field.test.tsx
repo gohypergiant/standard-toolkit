@@ -15,7 +15,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import { TimeField } from './';
-import type { TimeValue } from 'react-aria-components';
+import type { TimeValue } from 'react-aria-components/TimeField';
 import type { TimeFieldProps } from './types';
 
 function setup({

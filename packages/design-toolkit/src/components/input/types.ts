@@ -11,7 +11,7 @@
  */
 
 import type { ReactNode, RefAttributes } from 'react';
-import type { InputProps as AriaInputProps } from 'react-aria-components';
+import type { InputProps as AriaInputProps } from 'react-aria-components/Input';
 import type { ButtonProps } from '../button/types';
 
 /**

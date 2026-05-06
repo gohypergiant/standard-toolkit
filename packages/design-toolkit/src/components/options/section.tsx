@@ -11,7 +11,11 @@
  */
 
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { Collection, Header, ListBoxSection } from 'react-aria-components';
+import {
+  Collection,
+  Header,
+  ListBoxSection,
+} from 'react-aria-components/ListBox';
 import styles from './styles.module.css';
 import type { OptionsDataItem, OptionsSectionProps } from './types';
 

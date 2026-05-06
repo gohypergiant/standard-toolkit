@@ -11,11 +11,9 @@
  */
 
 import type { RefAttributes } from 'react';
-import type {
-  FieldErrorProps,
-  TextAreaProps,
-  TextFieldProps,
-} from 'react-aria-components';
+import type { FieldErrorProps } from 'react-aria-components/FieldError';
+import type { TextAreaProps } from 'react-aria-components/TextArea';
+import type { TextFieldProps } from 'react-aria-components/TextField';
 
 /**
  * Props for the TextAreaField component.

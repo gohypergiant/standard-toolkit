@@ -16,7 +16,7 @@ import { clsx } from '@accelint/design-foundation/lib/utils';
 import Check from '@accelint/icons/check';
 import CopyToClipboard from '@accelint/icons/copy-to-clipboard';
 import GlobalShare from '@accelint/icons/global-share';
-import { filterDOMProps } from '@react-aria/utils';
+import { filterDOMProps } from 'react-aria/filterDOMProps';
 import 'client-only';
 import {
   type CSSProperties,
@@ -25,17 +25,16 @@ import {
   useMemo,
   useState,
 } from 'react';
+import { Text as AriaText, TextContext } from 'react-aria-components/Text';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { Provider, useContextProps } from 'react-aria-components/slots';
 import {
-  Text as AriaText,
-  composeRenderProps,
   FieldError,
   FieldErrorContext,
-  GroupContext,
-  LabelContext,
-  Provider,
-  TextContext,
-  useContextProps,
-} from 'react-aria-components';
+} from 'react-aria-components/FieldError';
+import { LabelContext } from 'react-aria-components/Label';
+import { GroupContext } from 'react-aria-components/Group';
+
 import { useCoordinateField } from '../../hooks/coordinate-field';
 import { Button } from '../button';
 import { Dialog } from '../dialog';

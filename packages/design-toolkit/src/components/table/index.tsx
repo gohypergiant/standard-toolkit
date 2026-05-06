@@ -15,8 +15,8 @@ import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import Kebab from '@accelint/icons/kebab';
 import Pin from '@accelint/icons/pin';
-import { useListData } from '@react-stately/data';
-import { useControlledState } from '@react-stately/utils';
+import { useListData } from 'react-stately/useListData';
+import { useControlledState } from 'react-stately/useControlledState';
 import {
   getCoreRowModel,
   getPaginationRowModel,

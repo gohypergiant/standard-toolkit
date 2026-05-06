@@ -11,7 +11,7 @@
  */
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import styles from './styles.module.css';
-import type { TextProps } from 'react-aria-components';
+import type { TextProps } from 'react-aria-components/Text';
 
 /**
  * OptionsItemContent - Container for label and description within an item

@@ -13,9 +13,10 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { composeRenderProps, DisclosurePanel } from 'react-aria-components';
+import { DisclosurePanel } from 'react-aria-components/Disclosure';
 import styles from './styles.module.css';
 import type { AccordionPanelProps } from './types';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 
 /**
  * Content panel component for accordion sections.
