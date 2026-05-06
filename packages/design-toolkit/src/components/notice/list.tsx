@@ -15,7 +15,7 @@
 import { useBus } from '@accelint/bus/react';
 import { uuid } from '@accelint/core';
 import { useToastRegion } from 'react-aria/useToast';
-import { useToastQueue } from 'react-stately';
+import { useToastQueue } from 'react-stately/useToastState';
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useEffect, useMemo, useRef, useState } from 'react';
