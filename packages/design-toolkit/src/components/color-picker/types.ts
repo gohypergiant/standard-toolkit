@@ -15,8 +15,8 @@ import type {
   ColorSwatchPickerItemProps,
   ColorSwatchPickerProps,
   ColorSwatchProps,
-  LabelProps,
-} from 'react-aria-components';
+} from 'react-aria-components/ColorSwatchPicker';
+import type { LabelProps } from 'react-aria-components/Label';
 
 /**
  * Props for the ColorPicker component.

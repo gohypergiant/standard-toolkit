@@ -15,7 +15,7 @@ import type {
   PopoverProps as AriaPopoverProps,
   DialogProps,
   DialogTriggerProps,
-} from 'react-aria-components';
+} from 'react-aria-components/Popover';
 
 /**
  * Props for the PopoverTrigger component.

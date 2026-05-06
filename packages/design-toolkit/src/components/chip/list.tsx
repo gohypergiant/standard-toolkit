@@ -17,9 +17,9 @@ import { createContext } from 'react';
 import {
   TagGroup as AriaTagGroup,
   TagList as AriaTagList,
-  composeRenderProps,
-  useContextProps,
-} from 'react-aria-components';
+} from 'react-aria-components/TagGroup';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { useContextProps } from 'react-aria-components/slots';
 import { ChipContext, ChipProvider } from './context';
 import styles from './styles.module.css';
 import type { ChipListProps } from './types';

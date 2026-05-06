@@ -16,14 +16,11 @@ import ChevronRight from '@accelint/icons/chevron-right';
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useContext } from 'react';
-import {
-  MenuItem as AriaMenuItem,
-  composeRenderProps,
-  DEFAULT_SLOT,
-  KeyboardContext,
-  Provider,
-  Text,
-} from 'react-aria-components';
+import { MenuItem as AriaMenuItem } from 'react-aria-components/Menu';
+import { Text } from 'react-aria-components/Text';
+import { KeyboardContext } from 'react-aria-components/Keyboard';
+import { DEFAULT_SLOT, Provider } from 'react-aria-components/slots';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 import { isSlottedContextValue } from '../../lib/utils';
 import { Icon } from '../icon';
 import { IconContext } from '../icon/context';

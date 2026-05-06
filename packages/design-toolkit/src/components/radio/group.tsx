@@ -13,11 +13,9 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import {
-  RadioGroup as AriaRadioGroup,
-  composeRenderProps,
-  useContextProps,
-} from 'react-aria-components';
+import { RadioGroup as AriaRadioGroup } from 'react-aria-components/RadioGroup';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { useContextProps } from 'react-aria-components/slots';
 import { Label } from '../label';
 import { RadioContext, RadioGroupContext } from './context';
 import styles from './styles.module.css';

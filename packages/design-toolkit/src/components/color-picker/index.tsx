@@ -24,12 +24,12 @@ import {
   ColorSwatch,
   ColorSwatchPicker,
   ColorSwatchPickerItem,
-  composeRenderProps,
   type Color,
-} from 'react-aria-components';
+} from 'react-aria-components/ColorSwatchPicker';
 import { Label } from '../label';
 import styles from './styles.module.css';
 import type { ColorPickerProps } from './types';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 
 /**
  * A color picker component that renders a grid of color swatches for selection.

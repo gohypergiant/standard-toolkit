@@ -10,11 +10,11 @@
  * governing permissions and limitations under the License.
  */
 import type {
-  SliderProps as AriaSliderProps,
   LabelProps,
+  SliderProps as AriaSliderProps,
   SliderThumbProps,
   SliderTrackProps,
-} from 'react-aria-components';
+} from 'react-aria-components/Slider';
 
 /**
  * Marker configuration for a single slider marker.

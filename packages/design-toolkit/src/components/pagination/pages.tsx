@@ -15,7 +15,7 @@
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useContext, useMemo } from 'react';
-import { composeRenderProps } from 'react-aria-components';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 import { ToggleButton } from '../button/toggle';
 import { PaginationContext } from './context';
 import styles from './styles.module.css';

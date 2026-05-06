@@ -11,9 +11,8 @@
  */
 
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { Text } from 'react-aria-components';
+import { Text, type TextProps } from 'react-aria-components/Text';
 import styles from './styles.module.css';
-import type { TextProps } from 'react-aria-components';
 
 /**
  * OptionsItemDescription - Secondary text description for an options item

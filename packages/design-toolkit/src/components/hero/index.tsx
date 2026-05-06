@@ -13,13 +13,10 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import {
-  Header,
-  HeadingContext,
-  Provider,
-  TextContext,
-  useContextProps,
-} from 'react-aria-components';
+import { Header } from 'react-aria-components/Header';
+import { HeadingContext } from 'react-aria-components/Heading';
+import { TextContext } from 'react-aria-components/Text';
+import { Provider, useContextProps } from 'react-aria-components/slots';
 import { IconContext } from '../icon/context';
 import { HeroContext } from './context';
 import styles from './styles.module.css';

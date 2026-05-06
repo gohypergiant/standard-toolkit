@@ -14,14 +14,14 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { useControlledState } from '@react-stately/utils';
+import { useControlledState } from 'react-stately/useControlledState';
 import { type ChangeEvent, useCallback } from 'react';
 import {
   Input as AriaInput,
   InputContext as AriaInputContext,
-  composeRenderProps,
-  useContextProps,
-} from 'react-aria-components';
+} from 'react-aria-components/Input';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { useContextProps } from 'react-aria-components/slots';
 import { ClearButton } from '../button/__internal__/clear';
 import { IconProvider } from '../icon/context';
 import { InputContext } from './context';

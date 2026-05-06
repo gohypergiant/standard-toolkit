@@ -13,7 +13,7 @@
 
 import type { Payload, StructuredCloneableData } from '@accelint/bus';
 import type { UniqueId } from '@accelint/core';
-import type { ToastListProps } from 'react-aria-components';
+import type { ToastListProps } from 'react-aria-components/Toast';
 import type { ButtonProps } from '../button/types';
 import type { NoticeEventTypes } from './events';
 

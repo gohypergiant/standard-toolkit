@@ -15,7 +15,7 @@
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useContext, useRef } from 'react';
-import { composeRenderProps } from 'react-aria-components';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 import { ToggleButton } from '../button/toggle';
 import { Icon } from '../icon';
 import { Tooltip } from '../tooltip';

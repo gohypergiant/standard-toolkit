@@ -13,7 +13,7 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { useControlledState } from '@react-stately/utils';
+import { useControlledState } from 'react-stately/useControlledState';
 import {
   type CSSProperties,
   Fragment,
@@ -22,15 +22,15 @@ import {
   useRef,
   useState,
 } from 'react';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { Input } from 'react-aria-components/Input';
 import {
   Slider as AriaSlider,
-  SliderTrack as AriaSliderTrack,
-  composeRenderProps,
-  Input,
-  Label,
   SliderThumb,
-  Text,
-} from 'react-aria-components';
+  SliderTrack as AriaSliderTrack,
+  Label,
+} from 'react-aria-components/Slider';
+import { Text } from 'react-aria-components/Text';
 import { Tooltip } from '../tooltip';
 import { TooltipTrigger } from '../tooltip/trigger';
 import styles from './styles.module.css';

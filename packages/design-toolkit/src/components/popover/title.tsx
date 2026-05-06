@@ -17,7 +17,7 @@ import { clsx } from '@accelint/design-foundation/lib/utils';
 import {
   Heading as AriaHeading,
   type HeadingProps,
-} from 'react-aria-components';
+} from 'react-aria-components/Heading';
 import styles from './styles.module.css';
 
 /**

@@ -16,7 +16,7 @@ import { useContext } from 'react';
 import { OptionsItem } from '../options/item';
 import { SelectField } from '../select-field';
 import { CarouselContext } from './context';
-import type { Key } from 'react-aria-components';
+import type { Key } from 'react-aria-components/Select';
 import type { CarouselSelectProps } from './types';
 import styles from './style.module.css';
 import { clsx } from '@accelint/design-foundation/lib/utils';

@@ -16,7 +16,7 @@ import { clsx } from '@accelint/design-foundation/lib/utils';
 import { designTokens } from '@accelint/design-foundation/tokens';
 import Person from '@accelint/icons/person';
 import { Fallback, Image, Root } from '@radix-ui/react-avatar';
-import { useContextProps } from 'react-aria-components';
+import { useContextProps } from 'react-aria-components/slots';
 import { BadgeProvider } from '../badge/context';
 import { Icon } from '../icon';
 import { IconProvider } from '../icon/context';

@@ -13,7 +13,7 @@
 'use client';
 
 import { createContext, useContext } from 'react';
-import type { ContextValue } from 'react-aria-components';
+import type { ContextValue } from 'react-aria-components/slots';
 import type { ProviderProps } from '@/lib/types';
 import type { CoordinateFieldProps, CoordinateFieldState } from './types';
 

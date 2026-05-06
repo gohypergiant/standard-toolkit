@@ -12,7 +12,6 @@
 'use client';
 
 import 'client-only';
-import { useUpdateEffect } from '@react-aria/utils';
 import { useRef } from 'react';
 import { Cache } from './cache';
 import type { Key } from '@react-types/shared';
@@ -74,12 +73,6 @@ export function useTreeActions<T>({
   selectionCascade = false,
 }: UseTreeActionsOptions<T>): TreeActions<T> {
   const cache = useRef(new Cache<T>(nodes)).current;
-
-  useUpdateEffect(() => {
-    cache.rebuild(nodes);
-  }, [nodes]);
-
-  /** HELPERS **/
 
   /**
    * Collects parent keys for a set of nodes before a move operation

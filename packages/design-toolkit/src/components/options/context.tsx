@@ -13,7 +13,7 @@
 
 import 'client-only';
 import { createContext } from 'react';
-import type { ContextValue } from 'react-aria-components';
+import type { ContextValue } from 'react-aria-components/slots';
 import type { OptionsDataItem, OptionsProps } from './types';
 
 /** Context for sharing Options props with nested components */

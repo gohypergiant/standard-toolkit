@@ -13,7 +13,7 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { Tooltip } from './';
 import { TooltipTrigger } from './trigger';
-import type { TooltipTriggerComponentProps } from 'react-aria-components';
+import type { TooltipTriggerComponentProps } from 'react-aria-components/Tooltip';
 
 function setup({
   children = 'Foo',

@@ -11,7 +11,7 @@
  */
 
 import type { RefAttributes } from 'react';
-import type { SwitchProps as AriaSwitchProps } from 'react-aria-components';
+import type { SwitchProps as AriaSwitchProps } from 'react-aria-components/Switch';
 
 /**
  * Props for the Switch component.
