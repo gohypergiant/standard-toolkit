@@ -18,7 +18,7 @@ import {
   MenuSection as AriaMenuSection,
   Collection,
   Header,
-} from 'react-aria-components';
+} from 'react-aria-components/Menu';
 import styles from './styles.module.css';
 import type { MenuSectionProps } from './types';
 

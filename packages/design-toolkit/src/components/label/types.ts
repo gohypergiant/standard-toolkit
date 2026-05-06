@@ -11,7 +11,7 @@
  */
 
 import type { RefAttributes } from 'react';
-import type { LabelProps as AriaLabelProps } from 'react-aria-components';
+import type { LabelProps as AriaLabelProps } from 'react-aria-components/Label';
 
 /**
  * Props for the Label component.

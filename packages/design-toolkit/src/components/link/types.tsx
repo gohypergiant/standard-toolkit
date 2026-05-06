@@ -11,7 +11,7 @@
  */
 
 import type { RefAttributes } from 'react';
-import type { LinkProps as AriaLinkProps } from 'react-aria-components';
+import type { LinkProps as AriaLinkProps } from 'react-aria-components/Link';
 
 /**
  * Props for the Link component.

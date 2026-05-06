@@ -11,10 +11,8 @@
  */
 
 import type { RefAttributes } from 'react';
-import type {
-  TextFieldProps as AriaTextFieldProps,
-  FieldErrorProps,
-} from 'react-aria-components';
+import type { FieldErrorProps } from 'react-aria-components/FieldError';
+import type { TextFieldProps as AriaTextFieldProps } from 'react-aria-components/TextField';
 import type { InputProps } from '../input/types';
 import type { LabelProps } from '../label/types';
 

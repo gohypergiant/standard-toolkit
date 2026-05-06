@@ -14,7 +14,7 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { Popover as AriaPopover, Dialog } from 'react-aria-components';
+import { Popover as AriaPopover, Dialog } from 'react-aria-components/Popover';
 import styles from './styles.module.css';
 import type { PopoverProps } from './types';
 

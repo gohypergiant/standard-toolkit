@@ -16,7 +16,7 @@ import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import ChevronRight from '@accelint/icons/chevron-right';
 import { useContext } from 'react';
-import { composeRenderProps } from 'react-aria-components';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { PaginationContext } from './context';

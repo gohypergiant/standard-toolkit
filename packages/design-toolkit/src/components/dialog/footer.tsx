@@ -14,7 +14,7 @@
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import { type ComponentProps, useContext } from 'react';
-import { OverlayTriggerStateContext } from 'react-aria-components';
+import { OverlayTriggerStateContext } from 'react-aria-components/Dialog';
 import { isSlottedContextValue } from '../../lib/utils';
 import { ButtonContext } from '../button/context';
 import { DialogContext } from './context';

@@ -12,10 +12,11 @@
 
 import { useContext } from 'react';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { ComboBoxStateContext, Text } from 'react-aria-components';
+import { ComboBoxStateContext } from 'react-aria-components/ComboBox';
+import { Text } from 'react-aria-components/Text';
 import styles from './styles.module.css';
 import type { ReactNode } from 'react';
-import type { TextProps } from 'react-aria-components';
+import type { TextProps } from 'react-aria-components/Text';
 
 /**
  * OptionsItemLabel - Primary text label for an options item

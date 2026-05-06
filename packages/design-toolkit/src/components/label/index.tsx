@@ -13,7 +13,8 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { Label as AriaLabel, useContextProps } from 'react-aria-components';
+import { Label as AriaLabel } from 'react-aria-components/Label';
+import { useContextProps } from 'react-aria-components/slots';
 import { LabelContext } from './context';
 import styles from './styles.module.css';
 import type { LabelProps } from './types';

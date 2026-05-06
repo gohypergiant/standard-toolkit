@@ -14,7 +14,7 @@
 import 'client-only';
 import { useEmit } from '@accelint/bus/react';
 import { isUUID, type UniqueId } from '@accelint/core';
-import { Pressable } from 'react-aria-components';
+import { Pressable } from 'react-aria-components/Pressable';
 import { SidenavEventTypes } from './events';
 import type { SidenavEvent, SidenavTriggerProps } from './types';
 

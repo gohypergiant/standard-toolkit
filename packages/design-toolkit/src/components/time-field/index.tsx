@@ -14,15 +14,15 @@
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import Time from '@accelint/icons/time';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 import {
   DateInput as AriaDateInput,
-  Text as AriaText,
-  TimeField as AriaTimeField,
-  composeRenderProps,
   DateSegment,
   FieldError,
+  Text as AriaText,
+  TimeField as AriaTimeField,
   type TimeValue,
-} from 'react-aria-components';
+} from 'react-aria-components/TimeField';
 import { Icon } from '../icon';
 import { Label } from '../label';
 import styles from './styles.module.css';

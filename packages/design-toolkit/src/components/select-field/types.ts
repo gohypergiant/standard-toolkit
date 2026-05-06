@@ -11,13 +11,13 @@
  */
 
 import type { RefAttributes } from 'react';
+import type { FieldErrorProps } from 'react-aria-components/FieldError';
+import type { PopoverProps } from 'react-aria-components/Popover';
+import type { SelectProps as AriaSelectProps } from 'react-aria-components/Select';
 import type {
   ListLayoutOptions as AriaListLayoutOptions,
-  SelectProps as AriaSelectProps,
   VirtualizerProps as AriaVirtualizerProps,
-  FieldErrorProps,
-  PopoverProps,
-} from 'react-aria-components';
+} from 'react-aria-components/Virtualizer';
 import type { ButtonProps } from '../button/types';
 import type { LabelProps } from '../label/types';
 

@@ -14,12 +14,15 @@ import type { RefAttributes } from 'react';
 import type {
   ComboBoxProps,
   FieldErrorProps,
-  InputProps,
-  LabelProps,
+} from 'react-aria-components/ComboBox';
+import type { InputProps } from 'react-aria-components/Input';
+import type { LabelProps } from 'react-aria-components/Label';
+import type {
   ListLayoutOptions,
-  PopoverProps,
   VirtualizerProps,
-} from 'react-aria-components';
+} from 'react-aria-components/Virtualizer';
+import type { PopoverProps } from 'react-aria-components/Popover';
+
 import type { ButtonProps } from '../button/types';
 import type { OptionsDataItem, OptionsProps } from '../options/types';
 

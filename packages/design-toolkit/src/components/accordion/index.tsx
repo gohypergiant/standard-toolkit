@@ -13,14 +13,12 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import {
-  composeRenderProps,
-  Disclosure,
-  useContextProps,
-} from 'react-aria-components';
+import { Disclosure } from 'react-aria-components/Disclosure';
 import { AccordionContext } from './context';
 import styles from './styles.module.css';
 import type { AccordionProps } from './types';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { useContextProps } from 'react-aria-components/slots';
 
 /**
  * Accordion - A collapsible content component with expandable sections.

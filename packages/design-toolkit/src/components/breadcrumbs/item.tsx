@@ -14,10 +14,12 @@
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import ChevronRight from '@accelint/icons/chevron-right';
-import { Breadcrumb, composeRenderProps, Link } from 'react-aria-components';
+import { Breadcrumb } from 'react-aria-components/Breadcrumbs';
+import { Link } from 'react-aria-components/Link';
 import { Icon } from '../icon';
 import styles from './styles.module.css';
 import type { BreadcrumbItemProps } from './types';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 
 /**
  * Individual breadcrumb item. Renders as a link when `linkProps` is provided,

@@ -14,11 +14,9 @@ import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import Check from '@accelint/icons/check';
 import Remove from '@accelint/icons/remove';
-import {
-  Checkbox as AriaCheckbox,
-  composeRenderProps,
-  useContextProps,
-} from 'react-aria-components';
+import { Checkbox as AriaCheckbox } from 'react-aria-components/Checkbox';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { useContextProps } from 'react-aria-components/slots';
 import { Icon } from '../icon';
 import { CheckboxContext } from './context';
 import styles from './styles.module.css';

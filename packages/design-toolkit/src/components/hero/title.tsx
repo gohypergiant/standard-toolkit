@@ -12,7 +12,7 @@
 'use client';
 
 import 'client-only';
-import { Heading } from 'react-aria-components';
+import { Heading } from 'react-aria-components/Heading';
 
 /**
  * HeroTitle - Primary heading for the Hero component.

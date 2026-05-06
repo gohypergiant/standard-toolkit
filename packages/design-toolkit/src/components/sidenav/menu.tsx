@@ -15,15 +15,12 @@ import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import ChevronDown from '@accelint/icons/chevron-down';
 import { useContext, useRef } from 'react';
-import {
-  Button,
-  composeRenderProps,
-  DialogTrigger,
-  Disclosure,
-  DisclosurePanel,
-  Heading,
-  Popover,
-} from 'react-aria-components';
+import { Button } from 'react-aria-components/Button';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { DialogTrigger } from 'react-aria-components/Dialog';
+import { Disclosure, DisclosurePanel } from 'react-aria-components/Disclosure';
+import { Heading } from 'react-aria-components/Heading';
+import { Popover } from 'react-aria-components/Popover';
 import { Icon } from '../icon';
 import { Tooltip } from '../tooltip';
 import { TooltipTrigger } from '../tooltip/trigger';

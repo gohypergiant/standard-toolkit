@@ -12,7 +12,7 @@
 'use client';
 
 import 'client-only';
-import { DialogTrigger as AriaDialogTrigger } from 'react-aria-components';
+import { DialogTrigger as AriaDialogTrigger } from 'react-aria-components/Dialog';
 
 /**
  * DialogTrigger - Manages dialog open/close state and trigger behavior.

@@ -13,7 +13,7 @@
 'use client';
 
 import 'client-only';
-import { MenuTrigger as AriaMenuTrigger } from 'react-aria-components';
+import { MenuTrigger as AriaMenuTrigger } from 'react-aria-components/Menu';
 
 /**
  * MenuTrigger - Manages open/close state and anchors menu position

@@ -9,21 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-'use client';
 
-import 'client-only';
-import { createContext } from 'react';
-import type { ContextValue } from 'react-aria-components/slots';
-import type { CheckboxGroupProps, CheckboxProps } from './types';
+import baseConfig from '@accelint/vitest-config/no-dom';
 
-/**
- * React context for sharing CheckboxGroup configuration across components.
- */
-export const CheckboxGroupContext =
-  createContext<ContextValue<CheckboxGroupProps, HTMLDivElement>>(null);
-
-/**
- * React context for sharing Checkbox configuration across components.
- */
-export const CheckboxContext =
-  createContext<ContextValue<CheckboxProps, HTMLLabelElement>>(null);
+export default baseConfig;
