@@ -720,6 +720,55 @@ describe('DisplayShapeLayer', () => {
 
       expect(curtainHoverLayer).toBeInstanceOf(GeoJsonLayer);
     });
+
+    it('uses custom getHoverFillColor for the curtain hover layer', () => {
+      const customColor: [number, number, number, number] = [255, 0, 0, 200];
+      const getHoverFillColor = vi.fn(() => customColor);
+
+      const layer = createTestLayer(
+        {
+          data: [elevatedLineString],
+          enableElevation: true,
+          getHoverFillColor,
+        },
+        { hoverIndex: 0 },
+      );
+      const sublayers = layer.renderLayers();
+      const curtainHoverLayer = sublayers.find((l) =>
+        l.id.includes('elevation-curtain-hover'),
+      ) as GeoJsonLayer;
+      // biome-ignore lint/suspicious/noExplicitAny: accessing internal props for testing
+      const props = curtainHoverLayer.props as any;
+
+      // Curtain layers precompute one color per partition, so the accessor
+      // returns the override directly (not via per-feature invocation).
+      expect(props.getFillColor()).toEqual(customColor);
+      expect(getHoverFillColor).toHaveBeenCalledTimes(1);
+      // Accessor must be in updateTriggers so swapping the prop invalidates
+      expect(props.updateTriggers.getFillColor).toContain(getHoverFillColor);
+    });
+
+    it('uses custom getSelectFillColor for the curtain selected layer', () => {
+      const customColor: [number, number, number, number] = [0, 255, 0, 200];
+      const getSelectFillColor = vi.fn(() => customColor);
+
+      const layer = createTestLayer({
+        data: [elevatedLineString],
+        selectedShapeId: elevatedLineString.id,
+        enableElevation: true,
+        getSelectFillColor,
+      });
+      const sublayers = layer.renderLayers();
+      const curtainSelectedLayer = sublayers.find((l) =>
+        l.id.includes('elevation-curtain-selected'),
+      ) as GeoJsonLayer;
+      // biome-ignore lint/suspicious/noExplicitAny: accessing internal props for testing
+      const props = curtainSelectedLayer.props as any;
+
+      expect(props.getFillColor()).toEqual(customColor);
+      expect(getSelectFillColor).toHaveBeenCalledTimes(1);
+      expect(props.updateTriggers.getFillColor).toContain(getSelectFillColor);
+    });
   });
 
   describe('highlight layer', () => {
@@ -825,8 +874,9 @@ describe('DisplayShapeLayer', () => {
 
       const fillColor = props.getFillColor(props.data[0], { index: 0 });
 
-      // [100, 100, 100, 255] × 1.4 = [140, 140, 140, 255]; alpha unchanged
-      expect(fillColor).toEqual([140, 140, 140, 255]);
+      // RGB: [100, 100, 100] × 1.4 = [140, 140, 140]
+      // Alpha: 255 × ACTIVE_FILL_OPACITY (0.5) = 128 (round-half-up of 127.5)
+      expect(fillColor).toEqual([140, 140, 140, 128]);
     });
 
     it('brightens un-dimmed base color when feature is selected', () => {
@@ -838,7 +888,7 @@ describe('DisplayShapeLayer', () => {
 
       const fillColor = props.getFillColor(props.data[0], { index: 0 });
 
-      expect(fillColor).toEqual([140, 140, 140, 255]);
+      expect(fillColor).toEqual([140, 140, 140, 128]);
     });
 
     it('brightens further when feature is hovered AND selected', () => {
@@ -850,8 +900,9 @@ describe('DisplayShapeLayer', () => {
 
       const fillColor = props.getFillColor(props.data[0], { index: 0 });
 
-      // [100, 100, 100, 255] × 1.7 = [170, 170, 170, 255]
-      expect(fillColor).toEqual([170, 170, 170, 255]);
+      // RGB: [100, 100, 100] × 1.7 = [170, 170, 170]
+      // Alpha: 255 × ACTIVE_FILL_OPACITY (0.5) = 128
+      expect(fillColor).toEqual([170, 170, 170, 128]);
     });
 
     it('uses custom getHoverFillColor when feature is hovered', () => {

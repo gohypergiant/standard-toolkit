@@ -161,12 +161,17 @@ export type DisplayShapeLayerProps = CompositeLayerProps & {
   onShapeHover?: (shape?: Shape) => void;
 
   /**
-   * Custom fill color for the hovered shape. When set, the main layer's fill
-   * accessor returns the value of this function for the hovered feature
-   * instead of the default brightening of the base fill. Effective only on
-   * shapes that actually render a fill (polygons and unstyled points); has no
-   * visual effect on icons or LineStrings. Border brightening and width
-   * changes from the default hover treatment still apply.
+   * Custom fill color for the hovered shape, returned verbatim (the user owns
+   * alpha — no overlay-opacity scaling is applied). When set, replaces the
+   * default brightening on:
+   * - The main layer's fill for polygons (Polygon, Rectangle, Circle, Ellipse,
+   *   WagonWheel) and unstyled Point shapes.
+   * - The curtain wall fill for elevated LineStrings.
+   *
+   * No effect on icon-rendered Points (driven by the icon atlas) or on
+   * non-elevated LineStrings (which have no fill or curtain to render).
+   * Border brightening and width changes from the default hover treatment
+   * still apply.
    *
    * When a shape is both hovered and selected and both overrides are set,
    * `getHoverFillColor` wins.
@@ -177,12 +182,14 @@ export type DisplayShapeLayerProps = CompositeLayerProps & {
   getHoverFillColor?: (feature: ShapeFeature) => Rgba255Tuple;
 
   /**
-   * Custom fill color for the selected shape. When set, the main layer's fill
-   * accessor returns the value of this function for the selected feature
-   * instead of the default brightening of the base fill. Effective only on
-   * shapes that actually render a fill (polygons and unstyled points); has no
-   * visual effect on icons or LineStrings. The selection outline color is
-   * unaffected and is still driven by `highlightColor`.
+   * Custom fill color for the selected shape, returned verbatim. When set,
+   * replaces the default brightening on:
+   * - The main layer's fill for polygons (Polygon, Rectangle, Circle, Ellipse,
+   *   WagonWheel) and unstyled Point shapes.
+   * - The curtain wall fill for elevated LineStrings.
+   *
+   * The selection outline color is unaffected and is still driven by
+   * `highlightColor`.
    *
    * @param feature - The selected shape feature
    * @returns RGBA tuple (0-255 per channel) to use as the fill color
@@ -227,14 +234,24 @@ export type DisplayShapeLayerProps = CompositeLayerProps & {
   highlightColor?: Rgba255Tuple;
 
   /**
-   * When true (default), multiplies fill color alpha by 0.2 (reducing to 20% of original opacity)
-   * for a standard semi-transparent look.
-   * When false, colors are rendered exactly as specified in styleProperties.
+   * When true (default), the layer dims non-active polygon fills by multiplying
+   * their alpha by 0.2 (rendering at 20% of the original opacity). Hovered or
+   * selected features escape the dimming and render at the un-dimmed base color
+   * scaled by `ACTIVE_FILL_OPACITY` (0.5), so the active feature stands out
+   * clearly against its dimmed neighbors.
+   *
+   * When false, all features render at their original alpha and the only visual
+   * difference between active and inactive is the RGB brightening (1.4× / 1.7×).
+   * For shapes with already-saturated base colors, that difference can be
+   * subtle — keep this prop on if you want hover and select states to be
+   * unambiguous.
+   *
    * @default true
    * @example Standard semi-transparent fills
    * ```tsx
    * <DisplayShapeLayer data={shapes} applyBaseOpacity />
-   * // Shape with fillColor [98, 166, 255, 255] renders at alpha 51 (255 × 0.2)
+   * // Inactive shape with fillColor [98, 166, 255, 255] renders at alpha 51 (255 × 0.2)
+   * // Hovered shape renders with brightened RGB at alpha 128 (255 × 0.5)
    * ```
    */
   applyBaseOpacity?: boolean;

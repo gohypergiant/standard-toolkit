@@ -40,7 +40,7 @@ import {
 } from './constants';
 import { createShapeLabelLayer } from './shape-label-layer';
 import {
-  applyOverlayOpacity,
+  applyActiveOpacity,
   brightenColor,
   getHighlightLineWidth,
   getHoverLineWidth,
@@ -91,28 +91,25 @@ const shapeBus = Broadcast.getInstance<ShapeEvent>();
  * ## Features
  * - **Multiple geometry types**: Point, LineString, Polygon, and Circle
  * - **Icon support**: Custom icons for Point geometries via icon atlases
- * - **Interactive selection**: Click handling with brightness overlay on polygon select, optional highlight outline for non-Point shapes (if showHighlight=true). Point geometries use coffin corner brackets instead.
- * - **Hover effects**: Polygon fills brighten via material lighting; outline width increases by 2px on hover
+ * - **Interactive selection**: Click handling with brightness on polygon fills via the main layer's fill accessor, optional highlight outline for non-Point shapes (when `showHighlight` is true). Point geometries use coffin corner brackets instead. The selected fill can be replaced per-feature via `getSelectFillColor`.
+ * - **Hover effects**: Polygon fills brighten via the main layer's fill accessor (replaceable via `getHoverFillColor`); outline width increases by 2px on hover
  * - **Customizable labels**: Flexible label positioning with per-shape or global options
  * - **Style properties**: Full control over colors, border/outline patterns, and opacity
  * - **Event bus integration**: Automatically emits shape events via @accelint/bus
  * - **Multi-map support**: Events include map instance ID for isolation
  *
  * ## Interaction Philosophy
- * Interactions never modify a shape's innate styling. Hover and selection are always
- * additive overlays rendered apart from the main layer using opacity-scaled fill colors
- * and material-based brightness — the base shape is never altered.
+ * Interactions never write back to a shape's innate styling. The active feature's
+ * appearance is computed in the main layer's fill and line accessors per render
+ * based on hover and selection state — the base shape data is unchanged.
  *
  * ## Layer Structure
  * Renders sublayers in this order (bottom to top):
- * 1. **Highlight layer**: Selection outline for non-polygon, non-Point shapes (when showHighlight enabled)
- * 2. **Select layer**: Selection brightness overlay for polygon shapes
- * 3. **Hover layer**: Hover brightness overlay for polygon shapes
- * 4. **Elevation visualization**: Curtains (LineStrings) or wireframes (polygons) — elevation only
- * 5. **Elevation indicators**: Vertical strut lines for elevated non-polygon shapes — elevation only
- * 6. **Main GeoJsonLayer**: Shape geometries with styling and interaction; includes CoffinCornerExtension
- *    which propagates to the icon/scatterplot sublayer for Point hover/select bracket feedback
- * 7. **Label layer**: Text labels (if showLabels enabled)
+ * 1. **Highlight layer**: Selection outline for non-Point shapes (when `showHighlight` is true)
+ * 2. **Elevation visualization**: Curtains (elevated LineStrings) or wireframes (polygons) — elevation only. Curtain hover/select fills are also driven by `getHoverFillColor` / `getSelectFillColor`.
+ * 3. **Elevation indicators**: Vertical strut lines for elevated non-polygon shapes — elevation only
+ * 4. **Main GeoJsonLayer**: Shape geometries with styling and interaction. The fill accessor branches on hover/select state to brighten the active feature (replaceable via `getHoverFillColor` / `getSelectFillColor`). Includes CoffinCornerExtension which propagates to the icon/scatterplot sublayer for Point hover/select bracket feedback.
+ * 5. **Label layer**: Text labels (if showLabels enabled)
  *
  * ## Icon Atlas Constraint
  * When using icons for Point geometries, all shapes in a single layer must share the
@@ -614,17 +611,16 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
 
         // Default brightening path. Use the un-dimmed base color so the
         // active feature reads more vividly than its neighbors (which are at
-        // applyBaseOpacity-reduced alpha).
+        // applyBaseOpacity-reduced alpha), but scale alpha by ACTIVE_FILL_OPACITY
+        // so the result isn't a solid block on top of the basemap.
         if (isHovered && isSelected) {
-          return brightenColor(
-            getFillColor(d),
-            BRIGHTNESS_FACTOR.HOVER_AND_SELECT,
+          return applyActiveOpacity(
+            brightenColor(getFillColor(d), BRIGHTNESS_FACTOR.HOVER_AND_SELECT),
           );
         }
         if (isHovered || isSelected) {
-          return brightenColor(
-            getFillColor(d),
-            BRIGHTNESS_FACTOR.HOVER_OR_SELECT,
+          return applyActiveOpacity(
+            brightenColor(getFillColor(d), BRIGHTNESS_FACTOR.HOVER_OR_SELECT),
           );
         }
 
@@ -941,7 +937,8 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
     allCurtainFeatures: CurtainFeature[],
   ): GeoJsonLayer[] {
     const layers: GeoJsonLayer[] = [];
-    const { selectedShapeId } = this.props;
+    const { selectedShapeId, getHoverFillColor, getSelectFillColor } =
+      this.props;
     const hoverIndex = this.state?.hoverIndex;
 
     const hoveredShapeId =
@@ -971,21 +968,34 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
     }
 
     if (hovered.length > 0) {
-      // All curtain segments in a partition share the same lineColor (same hovered shape).
-      // Precompute once to avoid N allocations in the getFillColor accessor.
-      const hoveredColor = applyOverlayOpacity(
-        brightenColor(
-          (hovered[0] as CurtainFeature).properties.lineColor,
-          BRIGHTNESS_FACTOR.HOVER_OR_SELECT,
-        ),
-      );
+      // All curtain segments in a partition share the same source shape, so a
+      // single precomputed color suffices instead of a per-feature accessor.
+      // Override path: call getHoverFillColor with the original ShapeFeature
+      // and use its return value verbatim (no overlay-opacity scaling — the
+      // user owns alpha). Fallback path: brighten the curtain's line color.
+      const hoveredOverride =
+        getHoverFillColor && hoveredShapeId
+          ? this.resolveOverrideColor(
+              features,
+              hoveredShapeId,
+              getHoverFillColor,
+            )
+          : undefined;
+      const hoveredColor =
+        hoveredOverride ??
+        applyActiveOpacity(
+          brightenColor(
+            (hovered[0] as CurtainFeature).properties.lineColor,
+            BRIGHTNESS_FACTOR.HOVER_OR_SELECT,
+          ),
+        );
       layers.push(
         this.createCurtainGeoJsonLayer(
           'elevation-curtain-hover',
           hovered,
           () => hoveredColor,
           dataTriggers,
-          [features],
+          [features, getHoverFillColor],
         ),
       );
     }
@@ -995,24 +1005,49 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       const factor = isSelectedHovered
         ? BRIGHTNESS_FACTOR.HOVER_AND_SELECT
         : BRIGHTNESS_FACTOR.HOVER_OR_SELECT;
-      const selectedColor = applyOverlayOpacity(
-        brightenColor(
-          (selected[0] as CurtainFeature).properties.lineColor,
-          factor,
-        ),
-      );
+      const selectedOverride =
+        getSelectFillColor && selectedShapeId
+          ? this.resolveOverrideColor(
+              features,
+              selectedShapeId,
+              getSelectFillColor,
+            )
+          : undefined;
+      const selectedColor =
+        selectedOverride ??
+        applyActiveOpacity(
+          brightenColor(
+            (selected[0] as CurtainFeature).properties.lineColor,
+            factor,
+          ),
+        );
       layers.push(
         this.createCurtainGeoJsonLayer(
           'elevation-curtain-selected',
           selected,
           () => selectedColor,
           dataTriggers,
-          [features, isSelectedHovered],
+          [features, isSelectedHovered, getSelectFillColor],
         ),
       );
     }
 
     return layers;
+  }
+
+  /**
+   * Resolve a user-supplied curtain color override by looking up the original
+   * ShapeFeature for the given shapeId and invoking the accessor. Returns
+   * undefined when the lookup fails, so callers fall back to default brightening.
+   */
+  private resolveOverrideColor(
+    features: Shape['feature'][],
+    shapeId: ShapeId,
+    accessor: (feature: Shape['feature']) => Rgba255Tuple,
+  ): Rgba255Tuple | undefined {
+    const idx = this.featuresCache?.shapeIdToIndex.get(shapeId);
+    const originalFeature = idx !== undefined ? features[idx] : undefined;
+    return originalFeature ? accessor(originalFeature) : undefined;
   }
 
   /**

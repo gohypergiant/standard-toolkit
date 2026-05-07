@@ -17,7 +17,7 @@ import {
   HOVER_WIDTH_INCREASE,
 } from '../../shared/constants';
 import { getLineWidth } from '../../shared/utils/style-utils';
-import { OVERLAY_FILL_OPACITY } from '../constants';
+import { ACTIVE_FILL_OPACITY } from '../constants';
 import type { Rgba255Tuple } from '@accelint/predicates';
 import type { StyledFeature } from '../../shared/types';
 
@@ -80,26 +80,27 @@ export function getHighlightLineWidth(feature: StyledFeature): number {
 }
 
 /**
- * Scale the alpha channel of a raw RGBA color by OVERLAY_FILL_OPACITY.
- * Used by interaction overlay layers (hover, select, curtains) to sit at
- * a consistent opacity between the base layer (0.2) and fully solid (1.0).
+ * Scale the alpha channel of a raw RGBA color by ACTIVE_FILL_OPACITY.
+ * Used on the default brightening path for hover and select states (both the
+ * main layer's fill accessor and curtain walls) so the active feature reads
+ * vividly against the dimmed neighbors without rendering fully solid.
  *
  * @param color - RGBA color tuple [r, g, b, a] (0-255)
- * @returns Color with alpha multiplied by OVERLAY_FILL_OPACITY
+ * @returns Color with alpha multiplied by ACTIVE_FILL_OPACITY
  * @example
  * ```typescript
- * applyOverlayOpacity([255, 128, 0, 200]);
- * // → [255, 128, 0, 50]  (200 × 0.25)
+ * applyActiveOpacity([255, 128, 0, 200]);
+ * // → [255, 128, 0, 100]  (200 × 0.5)
  * ```
  */
-export function applyOverlayOpacity(
+export function applyActiveOpacity(
   color: Rgba255Tuple,
 ): [number, number, number, number] {
   return [
     color[0],
     color[1],
     color[2],
-    Math.round(color[3] * OVERLAY_FILL_OPACITY),
+    Math.round(color[3] * ACTIVE_FILL_OPACITY),
   ];
 }
 

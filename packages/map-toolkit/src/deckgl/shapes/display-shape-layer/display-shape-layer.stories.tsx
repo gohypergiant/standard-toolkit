@@ -86,6 +86,9 @@ const SELECT_FILL_PRESETS = {
  * - Click empty space to deselect (emits shapes:deselected via bus)
  * - The selection (and highlight layer if enabled) layer responds to selection state
  * - Selection state can be controlled via the bus from anywhere in the app
+ *
+ * Use the `hoverPreset` and `selectPreset` controls to swap the active feature's
+ * fill color with a static primary, replacing the default 1.4×/1.7× brightening.
  */
 export const BasicDisplayAndEvents: Story = {
   args: {
@@ -692,6 +695,9 @@ function ShapesCameraControls({ mapId }: { mapId: UniqueId }) {
  * - Shapes at different elevations: Circle (13000m), LineString (varying 20000-40000m),
  *   Point (1500m), Polygon (22500m), Rectangle (34000m), Ellipse (43500m)
  * - Full camera controls for interactive exploration
+ * - `hoverPreset` / `selectPreset` controls swap the active feature's fill with
+ *   a static primary, replacing the default 1.4×/1.7× brightening — useful for
+ *   verifying that the override path produces predictable colors on extruded shapes
  */
 const DISPLAY_25D_MAP_ID_INNER = uuid();
 
@@ -795,6 +801,8 @@ export const DisplayShapes25D: Story = {
  * - Shapes render on globe surface with elevation
  * - Tests shapes at various latitudes/longitudes
  * - Verifies GeoJsonLayer auto-adapts to globe projection
+ * - `hoverPreset` / `selectPreset` controls swap the active feature's fill with
+ *   a static primary, replacing the default 1.4×/1.7× brightening
  */
 const DISPLAY_3D_MAP_ID_INNER = uuid();
 

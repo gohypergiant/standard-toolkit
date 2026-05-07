@@ -69,11 +69,13 @@ export const BRIGHTNESS_FACTOR = {
 } as const;
 
 /**
- * Opacity multiplier for interaction overlay layers (hover, select).
- * Applied to the shape's fill alpha — sits between the base opacity (0.2)
- * and full opacity (1.0) so the overlay reads clearly without being too solid.
+ * Opacity multiplier applied to the active feature's fill alpha (hover and
+ * select brightening paths, both polygon fills and curtain walls). Sits
+ * between the dimmed base opacity (`BASE_FILL_OPACITY = 0.2`) and full
+ * opacity, so the active fill stands out without rendering as a solid block
+ * on top of the basemap.
  */
-export const OVERLAY_FILL_OPACITY = 0.25;
+export const ACTIVE_FILL_OPACITY = 0.5;
 
 /** Default elevation in meters — ground level (MSL). Used as the fallback when minElevation is not set. */
 export const DEFAULT_ELEVATION = 0;

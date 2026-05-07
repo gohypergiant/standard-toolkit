@@ -13,7 +13,7 @@ A read-only deck.gl composite layer for displaying geographic shapes with intera
 - **Multiple geometry types**: Point, LineString, Polygon, Circle, and WagonWheel (MultiPolygon)
 - **Icon support**: Custom icons for Point geometries via icon atlases
 - **Interactive selection**: Click handling with visual brightness feedback; Points show coffin corners
-- **Hover effects**: Border/outline width increases on hover; fills and curtains brighten via material lighting; Points show coffin corners
+- **Hover effects**: Border/outline width increases on hover; fills brighten via the main layer's fill accessor (alpha scaled by `ACTIVE_FILL_OPACITY` so the active feature stands out against dimmed neighbors); curtain walls (elevated LineStrings) brighten by the same factor; Points show coffin corners
 - **Customizable labels**: White uppercase text with black outline, flexible positioning, show always/hover/never modes
 - **Style properties**: Full control over colors, border/outline patterns, and opacity
 - **Event bus integration**: Automatically emits shape events via @accelint/bus
@@ -493,8 +493,8 @@ Hover and selection don't write back to a shape's innate styling — the active 
 When a shape is selected via `selectedShapeId`, the layer provides visual indicators:
 
 1. **Line/outline brightness** (all shapes): The shape's border/outline brightens to 1.4× its base color (1.7× when also hovered).
-2. **Fill brightness** (polygon shapes): The shape's fill renders at the un-dimmed base color brightened by 1.4× (1.7× when also hovered), instead of the standard `applyBaseOpacity`-reduced fill. The brightening can be replaced per-feature by [`getSelectFillColor`](#api-reference) and [`getHoverFillColor`](#api-reference) — see [Custom Interaction Colors](#custom-interaction-colors).
-3. **Curtain brightness** (elevated LineString shapes): Curtain walls render at overlay opacity using a brightened version of the shape's line color.
+2. **Fill brightness** (polygon shapes): The shape's fill renders at the un-dimmed base color brightened by 1.4× (1.7× when also hovered), with alpha scaled by `ACTIVE_FILL_OPACITY` (0.5) so it reads vividly without rendering as a solid block. Replaceable per-feature by [`getSelectFillColor`](#api-reference) and [`getHoverFillColor`](#api-reference) — see [Custom Interaction Colors](#custom-interaction-colors).
+3. **Curtain brightness** (elevated LineString shapes): Curtain walls render at `ACTIVE_FILL_OPACITY` (0.5) of the shape's brightened line color. Replaceable per-feature with [`getHoverFillColor`](#api-reference) / [`getSelectFillColor`](#api-reference) — see [Custom Interaction Colors](#custom-interaction-colors).
 4. **Coffin corners** (Point shapes): Bracket-like corners appear with a black outline and a fill color matching `highlightColor` (defaults to turquoise `#28F5BE`). The fill is always fully opaque regardless of the `highlightColor` alpha channel.
 5. **Highlight** (optional, non-Point shapes): A highlight layer underneath with:
 
@@ -539,8 +539,8 @@ The highlight effect can be toggled with the `showHighlight` prop:
 When `pickable={true}`, shapes show hover feedback:
 
 - **All shapes**: Border/outline color brightens to 1.4× its base color (1.7× when also selected)
-- **Polygon shapes**: Fill renders at the un-dimmed base color brightened by 1.4× (1.7× when also selected); replaceable per-feature with [`getHoverFillColor`](#api-reference)
-- **Elevated LineString shapes**: Curtain walls brighten at overlay opacity
+- **Polygon shapes**: Fill renders at the un-dimmed base color brightened by 1.4× (1.7× when also selected), with alpha scaled by `ACTIVE_FILL_OPACITY` (0.5); replaceable per-feature with [`getHoverFillColor`](#api-reference)
+- **Elevated LineString shapes**: Curtain walls brighten by the same factor and alpha; replaceable per-feature with [`getHoverFillColor`](#api-reference)
 - **Non-icon shapes**: Border/outline width increases by 2 pixels
 - **Point shapes**: Coffin corners appear with a white fill and black outline bracket
 
@@ -553,12 +553,12 @@ that brightening with a custom color via per-feature accessor functions:
 ```tsx
 import type { ShapeFeature } from '@accelint/map-toolkit/deckgl/shapes';
 
-// Custom hover color - bright yellow overlay
+// Custom hover fill — bright yellow
 const getHoverFillColor = (feature: ShapeFeature): [number, number, number, number] => {
   return [255, 255, 0, 100]; // Yellow at ~39% opacity
 };
 
-// Custom select color - bright red overlay
+// Custom select fill — bright red
 const getSelectFillColor = (feature: ShapeFeature): [number, number, number, number] => {
   return [255, 0, 0, 128]; // Red at 50% opacity
 };
@@ -589,8 +589,9 @@ const getHoverFillColor = (feature: ShapeFeature): [number, number, number, numb
 
 **Notes**:
 
-- These accessors run for every feature in the layer, but only have a visible effect on shapes that render a fill — that's the **polygon family** (Polygon, Rectangle, Circle, Ellipse, WagonWheel) and unstyled Point shapes. LineStrings have no fill, and Points using icons have their color driven by the icon atlas, so the override is a no-op for those.
-- Only the fill color is replaced. Border brightness and width changes from the default hover/select treatment still apply, and the selection outline color is still driven by [`highlightColor`](#api-reference) — set both if you want full control over selection appearance.
+- These accessors apply to any shape that renders a fill the user can see: the **polygon family** (Polygon, Rectangle, Circle, Ellipse, WagonWheel), unstyled Point shapes, and the curtain walls of **elevated LineStrings** (when `enableElevation` is on). They have no effect on non-elevated LineStrings (no fill, no curtain) or on icon-rendered Points (color driven by the icon atlas).
+- The returned RGBA is used verbatim — the user owns alpha. No overlay-opacity scaling is applied to override colors.
+- Only the fill is replaced. Border brightness and width changes from the default hover/select treatment still apply, and the selection outline color is still driven by [`highlightColor`](#api-reference) — set both if you want full control over selection appearance.
 - When a shape is both hovered and selected and both `getHoverFillColor` and `getSelectFillColor` are set, `getHoverFillColor` wins. Setting only one preserves the default brightening for the other state.
 
 ## 3D Elevation Rendering
@@ -711,10 +712,10 @@ function MapWithElevation() {
 
 Elevation layers respond to hover and selection with color feedback:
 
-- **Hover or Selection**: Curtain walls render at overlay opacity using the shape's line color brightened to 1.4×
-- **Hover + Selection**: Curtain walls render at overlay opacity using the shape's line color brightened to 1.7×
+- **Hover or Selection**: Curtain walls render the shape's line color brightened to 1.4× with alpha scaled by `ACTIVE_FILL_OPACITY` (0.5)
+- **Hover + Selection**: Curtain walls render the shape's line color brightened to 1.7× with alpha scaled by `ACTIVE_FILL_OPACITY` (0.5)
 
-All polygons (2D and extruded) use a material-based hover effect (lighting change) for fill brightness. In 3D, this also compensates for deck.gl's inability to render outlines on extruded polygons.
+All polygon shapes (2D and extruded) brighten their fill on hover or selection via the main layer's `getFillColor` accessor — the fill is rendered at the un-dimmed base color multiplied by `1.4×` (or `1.7×` when both states are active), and the per-feature accessor branches on hover/select state without spawning extra sublayers. For extruded polygons in 3D, this provides the active-feature visual cue that deck.gl's stroked-outline path can't supply on extruded geometry.
 
 ## Event Bus Integration
 
@@ -853,10 +854,10 @@ When using icons for Point geometries, **all shapes in a single DisplayShapeLaye
 | `labelOptions` | `LabelPositionOptions` | `undefined` | Global label positioning options |
 | `highlightColor` | `[number, number, number, number]` | `[40, 245, 190, 100]` | Highlight color RGBA (0-255) |
 | `enableElevation` | `boolean` | `false` | Enable 3D elevation rendering (extrusion, curtains, vertical indicators). See [3D Elevation Rendering](#3d-elevation-rendering). |
-| `applyBaseOpacity` | `boolean` | `true` | Apply 20% opacity multiplier to fill colors for semi-transparent look |
+| `applyBaseOpacity` | `boolean` | `true` | Dim non-active fills to 20% alpha so hover/select features (rendered at 50% alpha by default) stand out. Set `false` to render at innate alpha — the contrast between active and inactive then comes only from RGB brightening, which can read subtle on saturated base colors. |
 | `unit` | `DistanceUnitSymbol` | `'NM'` | Distance unit for measurements (e.g., radius on hover). Supports `'km'`, `'m'`, `'NM'`, `'mi'`, `'ft'`. |
-| `getHoverFillColor` | `(feature: ShapeFeature) => Rgba255Tuple` | `undefined` | Custom fill color for the hovered shape. Replaces the default brightening on the main layer for that feature. See [Custom Interaction Colors](#custom-interaction-colors). |
-| `getSelectFillColor` | `(feature: ShapeFeature) => Rgba255Tuple` | `undefined` | Custom fill color for the selected shape. Replaces the default brightening on the main layer for that feature. See [Custom Interaction Colors](#custom-interaction-colors). |
+| `getHoverFillColor` | `(feature: ShapeFeature) => Rgba255Tuple` | `undefined` | Custom fill color for the hovered shape. Replaces the default brightening on polygon fills, unstyled point fills, and elevated-LineString curtain walls. See [Custom Interaction Colors](#custom-interaction-colors). |
+| `getSelectFillColor` | `(feature: ShapeFeature) => Rgba255Tuple` | `undefined` | Custom fill color for the selected shape. Replaces the default brightening on polygon fills, unstyled point fills, and elevated-LineString curtain walls. See [Custom Interaction Colors](#custom-interaction-colors). |
 
 ### LabelPositionOptions
 
