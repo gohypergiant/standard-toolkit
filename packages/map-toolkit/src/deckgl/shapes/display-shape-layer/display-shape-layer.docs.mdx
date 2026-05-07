@@ -544,6 +544,50 @@ When `pickable={true}`, shapes show hover feedback:
 - **Non-icon shapes**: Border/outline width increases by 2 pixels
 - **Point shapes**: Coffin corners appear with a white fill and black outline bracket
 
+### Custom Interaction Colors
+
+By default, hover and selection states use a brightness overlay effect. You can override this with custom color functions:
+
+```tsx
+import type { ShapeFeature } from '@accelint/map-toolkit/deckgl/shapes';
+
+// Custom hover color - bright yellow overlay
+const getHoverColor = (feature: ShapeFeature): [number, number, number, number] => {
+  return [255, 255, 0, 100]; // Yellow at ~39% opacity
+};
+
+// Custom select color - bright red overlay
+const getSelectColor = (feature: ShapeFeature): [number, number, number, number] => {
+  return [255, 0, 0, 128]; // Red at 50% opacity
+};
+
+<displayShapeLayer
+  id="shapes"
+  data={shapes}
+  selectedShapeId={selectedId}
+  getHoverColor={getHoverColor}
+  getSelectColor={getSelectColor}
+/>
+```
+
+These functions receive the shape's GeoJSON feature, allowing you to derive colors from feature properties:
+
+```tsx
+// Dynamic color based on feature properties
+const getHoverColor = (feature: ShapeFeature): [number, number, number, number] => {
+  const baseColor = feature.properties.styleProperties.fillColor;
+  // Return a brighter version of the base color
+  return [
+    Math.min(255, baseColor[0] * 1.5),
+    Math.min(255, baseColor[1] * 1.5),
+    Math.min(255, baseColor[2] * 1.5),
+    150, // Fixed alpha
+  ];
+};
+```
+
+**Note**: These overrides only affect the fill color of the hover/select overlay layers. Border brightness and width changes still apply as described above.
+
 ## 3D Elevation Rendering
 
 Shapes with elevation render as 3D objects when `enableElevation` is true. Elevation is specified in meters above mean sea level (MSL).
@@ -806,6 +850,8 @@ When using icons for Point geometries, **all shapes in a single DisplayShapeLaye
 | `enableElevation` | `boolean` | `false` | Enable 3D elevation rendering (extrusion, curtains, vertical indicators). See [3D Elevation Rendering](#3d-elevation-rendering). |
 | `applyBaseOpacity` | `boolean` | `true` | Apply 20% opacity multiplier to fill colors for semi-transparent look |
 | `unit` | `DistanceUnitSymbol` | `'NM'` | Distance unit for measurements (e.g., radius on hover). Supports `'km'`, `'m'`, `'NM'`, `'mi'`, `'ft'`. |
+| `getHoverColor` | `(feature: ShapeFeature) => Rgba255Tuple` | `undefined` | Custom fill color function for hovered shapes. Overrides default brightness overlay. |
+| `getSelectColor` | `(feature: ShapeFeature) => Rgba255Tuple` | `undefined` | Custom fill color function for selected shapes. Overrides default brightness overlay. |
 
 ### LabelPositionOptions
 
