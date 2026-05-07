@@ -567,7 +567,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
    * When a shape is both selected and hovered, both layers stack for a brighter combined effect.
    */
   private renderSelectLayer(features: Shape['feature'][]): GeoJsonLayer[] {
-    const { selectedShapeId, enableElevation } = this.props;
+    const { selectedShapeId, enableElevation, getSelectColor } = this.props;
 
     if (!selectedShapeId) {
       return [];
@@ -595,7 +595,7 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
 
         filled: true,
         stroked: false,
-        getFillColor: getOverlayFillColor,
+        getFillColor: getSelectColor ?? getOverlayFillColor,
 
         // Material brightness for selection; extrusion only when elevation enabled
         extruded: enableElevation,

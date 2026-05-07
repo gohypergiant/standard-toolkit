@@ -161,10 +161,16 @@ export type DisplayShapeLayerProps = CompositeLayerProps & {
   onShapeHover?: (shape?: Shape) => void;
 
   /**
-   * Overrides getFillColor for hoveredShapes
+   * Overrides getFillColor for hovered shapes
    * @param feature - The shape feature
    */
   getHoverColor?: (feature: ShapeFeature) => Rgba255Tuple;
+
+  /**
+   * Overrides getFillColor for selected shapes
+   * @param feature - The shape feature
+   */
+  getSelectColor?: (feature: ShapeFeature) => Rgba255Tuple;
 
   /**
    * Label display mode for shapes
