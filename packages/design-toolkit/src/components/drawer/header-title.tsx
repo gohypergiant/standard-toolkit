@@ -11,7 +11,7 @@
  */
 
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { Heading } from 'react-aria-components';
+import { Heading } from 'react-aria-components/Heading';
 import styles from './styles.module.css';
 import type { DrawerTitleProps } from './types';
 

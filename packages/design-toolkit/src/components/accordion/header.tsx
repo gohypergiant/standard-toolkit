@@ -15,7 +15,7 @@ import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import Kebab from '@accelint/icons/kebab';
 import { useContext } from 'react';
-import { Header, Provider } from 'react-aria-components';
+import { Header } from 'react-aria-components/Header';
 import { isSlottedContextValue } from '../../lib/utils';
 import { ButtonContext } from '../button/context';
 import { Icon } from '../icon';
@@ -23,6 +23,7 @@ import { IconContext } from '../icon/context';
 import { AccordionContext } from './context';
 import styles from './styles.module.css';
 import type { AccordionHeaderProps } from './types';
+import { Provider } from 'react-aria-components/slots';
 
 /**
  * Header component for accordion sections.

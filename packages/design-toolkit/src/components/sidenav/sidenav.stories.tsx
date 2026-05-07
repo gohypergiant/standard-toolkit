@@ -13,7 +13,8 @@
 import { uuid } from '@accelint/core';
 import { ExpandLeftPanel, Placeholder } from '@accelint/icons';
 import { type ComponentProps, Fragment, useState } from 'react';
-import { Heading, Text } from 'react-aria-components';
+import { Text } from 'react-aria-components/Text';
+import { Heading } from 'react-aria-components/Heading';
 import { Avatar } from '../avatar';
 import { Button } from '../button';
 import { Divider } from '../divider';

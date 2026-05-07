@@ -14,11 +14,9 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import {
-  Tabs as AriaTabs,
-  composeRenderProps,
-  useContextProps,
-} from 'react-aria-components';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { useContextProps } from 'react-aria-components/slots';
+import { Tabs as AriaTabs } from 'react-aria-components/Tabs';
 import { TabStyleDefaults } from './constants';
 import { TabProvider, TabsContext } from './context';
 import styles from './styles.module.css';

@@ -16,7 +16,7 @@ import type {
   ListBoxItemProps,
   ListBoxProps,
   ListBoxSectionProps,
-} from 'react-aria-components';
+} from 'react-aria-components/ListBox';
 import type { IconProps } from '../icon/types';
 
 /**
@@ -38,7 +38,7 @@ export type OptionsItemProps<T extends OptionsDataItem> = Omit<
   ListBoxItemProps<T>,
   'className'
 > &
-  RefAttributes<T> & {
+  RefAttributes<HTMLDivElement> & {
     /** CSS class names for item elements. */
     classNames?: {
       /** Class name for the item container. */

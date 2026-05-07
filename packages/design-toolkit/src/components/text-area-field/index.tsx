@@ -14,14 +14,12 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import {
-  composeRenderProps,
-  FieldError,
-  Text,
-  TextArea,
-  TextField,
-  useContextProps,
-} from 'react-aria-components';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { FieldError } from 'react-aria-components/FieldError';
+import { useContextProps } from 'react-aria-components/slots';
+import { Text } from 'react-aria-components/Text';
+import { TextArea } from 'react-aria-components/TextArea';
+import { TextField } from 'react-aria-components/TextField';
 import { Label } from '../label';
 import { TextAreaFieldContext } from './context';
 import styles from './styles.module.css';

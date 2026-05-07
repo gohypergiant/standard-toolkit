@@ -14,7 +14,10 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { Separator, type SeparatorProps } from 'react-aria-components';
+import {
+  Separator,
+  type SeparatorProps,
+} from 'react-aria-components/Separator';
 import styles from './styles.module.css';
 
 /**

@@ -11,7 +11,7 @@
  */
 
 import type { ForwardedRef } from 'react';
-import type { ContextValue } from 'react-aria-components';
+import type { ContextValue } from 'react-aria-components/slots';
 
 // Types copied from RAC due to not being exported
 type WithRef<T, E> = T & {

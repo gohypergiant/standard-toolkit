@@ -13,11 +13,9 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import {
-  Tag as AriaTag,
-  composeRenderProps,
-  useContextProps,
-} from 'react-aria-components';
+import { Tag as AriaTag } from 'react-aria-components/TagGroup';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { useContextProps } from 'react-aria-components/slots';
 import { ChipContext } from './context';
 import styles from './styles.module.css';
 import type { SelectableChipProps } from './types';

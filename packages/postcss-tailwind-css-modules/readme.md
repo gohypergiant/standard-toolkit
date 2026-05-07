@@ -1,6 +1,6 @@
 # @accelint/postcss-tailwind-css-modules
 
-A PostCSS plugin that wraps Tailwind CSS `group/` classes in `:global()` pseudo-class to fix compatibility issues with CSS Modules.
+A PostCSS plugin that wraps Tailwind CSS `group/` and `peer/` classes in `:global()` pseudo-class to fix compatibility issues with CSS Modules.
 
 ## Overview
 
@@ -8,10 +8,7 @@ This plugin uses [postcss-selector-parser](https://www.npmjs.com/package/postcss
 
 ## Problem
 
-Tailwind has utilities for [styling based on parent state](https://tailwindcss.com/docs/hover-focus-and-other-states#styling-based-on-parent-state), like `group/` classes. However, these utility classes rely on global classes. Without this plugin, CSS Modules hashes these classes, breaking Tailwind's parent state functionality.
-
-> [!NOTE]  
-> currently the plugin fixes `group/` classes. Future updates can expand the functionality to support other classes that may have a similar problem, like `peer/` classes.
+Tailwind has utilities for [styling based on parent state](https://tailwindcss.com/docs/hover-focus-and-other-states#styling-based-on-parent-state) and [styling based on sibling state](https://tailwindcss.com/docs/hover-focus-and-other-states#styling-based-on-sibling-state). However, these utility classes rely on global classes. Without this plugin, CSS Modules hashes these classes, breaking Tailwind's parent/sibling state functionality.
 
 ## Transformation Examples
 
@@ -76,7 +73,7 @@ export default {
 The plugin:
 
 1. Only processes files ending in `.module.css`
-2. Finds all Tailwind `group/` classes in your CSS selectors
+2. Finds all Tailwind `group/` and `peer/` classes in your CSS selectors
 3. Wraps them in `:global()` pseudo-class to prevent CSS Modules from hashing them
 4. Ensures each rule is transformed only once using symbol-based tracking
 
@@ -84,6 +81,10 @@ The plugin:
 
 ```css
 .group/sidebar {
+  /* styles */
+}
+
+.peer/checked {
   /* styles */
 }
 ```
@@ -94,15 +95,18 @@ The plugin:
 :global(.group/sidebar) {
   /* styles */
 }
+
+:global(.peer/checked) {
+  /* styles */
+}
 ```
 
 ## Supported Classes
 
-Currently, the plugin fixes:
+The plugin wraps the following Tailwind parent state classes:
 
-- `group/` classes (e.g., `group/sidebar`, `group/card`)
-
-Future updates may expand support to other classes with similar issues, like `peer/` classes.
+- `group/` classes
+- `peer/` classes
 
 ## Requirements
 

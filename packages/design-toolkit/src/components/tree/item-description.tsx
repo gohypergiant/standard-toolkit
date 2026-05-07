@@ -12,7 +12,7 @@
 
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useContext } from 'react';
-import { Text, type TextProps } from 'react-aria-components';
+import { Text, type TextProps } from 'react-aria-components/Text';
 import { TreeContext } from './context';
 import styles from './styles.module.css';
 

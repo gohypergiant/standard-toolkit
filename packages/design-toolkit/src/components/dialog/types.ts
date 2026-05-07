@@ -15,7 +15,7 @@ import type {
   DialogProps as AriaDialogProps,
   DialogTriggerProps as AriaDialogTriggerProps,
   ModalOverlayProps,
-} from 'react-aria-components';
+} from 'react-aria-components/Modal';
 
 /**
  * Props for the Dialog component.

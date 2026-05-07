@@ -15,7 +15,7 @@ import { clsx } from '@accelint/design-foundation/lib/utils';
 import { Cancel } from '@accelint/icons';
 import 'client-only';
 import { type ComponentPropsWithRef, useContext } from 'react';
-import { Header } from 'react-aria-components';
+import { Header } from 'react-aria-components/Header';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { ViewStackContext } from '../view-stack/context';

@@ -19,10 +19,10 @@ import {
   DateField as AriaDateField,
   DateInput as AriaDateInput,
   Text as AriaText,
-  composeRenderProps,
   DateSegment,
   FieldError,
-} from 'react-aria-components';
+} from 'react-aria-components/DateField';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 import { Icon } from '../icon';
 import { Label } from '../label';
 import styles from './styles.module.css';

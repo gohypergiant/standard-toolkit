@@ -14,11 +14,11 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 import {
   TabList as AriaTabList,
-  composeRenderProps,
   type TabListProps,
-} from 'react-aria-components';
+} from 'react-aria-components/Tabs';
 import styles from './styles.module.css';
 
 /**

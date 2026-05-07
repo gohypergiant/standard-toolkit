@@ -13,11 +13,9 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import {
-  Switch as AriaSwitch,
-  composeRenderProps,
-  useContextProps,
-} from 'react-aria-components';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { useContextProps } from 'react-aria-components/slots';
+import { Switch as AriaSwitch } from 'react-aria-components/Switch';
 import { SwitchContext } from './context';
 import styles from './styles.module.css';
 import type { SwitchProps } from './types';

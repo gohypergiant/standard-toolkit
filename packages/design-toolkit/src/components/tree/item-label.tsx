@@ -11,7 +11,7 @@
  */
 
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { Text, type TextProps } from 'react-aria-components';
+import { Text, type TextProps } from 'react-aria-components/Text';
 import styles from './styles.module.css';
 
 /**

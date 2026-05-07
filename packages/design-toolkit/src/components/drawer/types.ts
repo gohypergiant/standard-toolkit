@@ -19,7 +19,7 @@ import type {
   ReactElement,
   RefAttributes,
 } from 'react';
-import type { HeadingProps } from 'react-aria-components';
+import type { HeadingProps } from 'react-aria-components/Heading';
 import type { AriaAttributesWithRef } from '@/lib/types';
 import type { ToggleButtonProps } from '../button/types';
 import type { ViewStackEvent } from '../view-stack/types';

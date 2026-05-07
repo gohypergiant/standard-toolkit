@@ -19,7 +19,7 @@ import type {
   Key,
 } from '@react-types/shared';
 import type { ReactElement } from 'react';
-import type { DropTarget, Selection } from 'react-aria-components';
+import type { DropTarget, Selection } from 'react-aria-components/Tree';
 
 /** Configuration for tree drag-and-drop behavior */
 export type DragAndDropConfig = {

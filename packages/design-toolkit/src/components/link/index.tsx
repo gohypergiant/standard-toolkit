@@ -13,12 +13,9 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import {
-  Link as AriaLink,
-  composeRenderProps,
-  LinkContext,
-  useContextProps,
-} from 'react-aria-components';
+import { Link as AriaLink, LinkContext } from 'react-aria-components/Link';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { useContextProps } from 'react-aria-components/slots';
 import styles from './styles.module.css';
 import type { LinkProps } from './types';
 

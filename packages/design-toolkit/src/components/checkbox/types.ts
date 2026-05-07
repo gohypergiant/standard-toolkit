@@ -12,10 +12,8 @@
 
 import type { Orientation } from '@react-types/shared';
 import type { RefAttributes } from 'react';
-import type {
-  CheckboxGroupProps as AriaCheckboxGroupProps,
-  CheckboxProps as AriaCheckboxProps,
-} from 'react-aria-components';
+import type { CheckboxGroupProps as AriaCheckboxGroupProps } from 'react-aria-components/CheckboxGroup';
+import type { CheckboxProps as AriaCheckboxProps } from 'react-aria-components/Checkbox';
 import type { LabelProps } from '../label/types';
 
 /**
