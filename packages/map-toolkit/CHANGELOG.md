@@ -1,5 +1,31 @@
 # @accelint/map-toolkit
 
+## 4.1.0
+
+### Minor Changes
+
+- 5d224fb: Fix rotated ellipses being stretched into non-ellipse shapes during edit. Ellipses now use a new `'ellipse-transform'` edit mode (`EllipseTransformMode` + `EllipseScaleMode`) that places scale handles on the curve at the four axis endpoints (where the major and minor axes meet the boundary), projects axis-endpoint drags onto the dragged axis in Mercator space, and regenerates the polygon parametrically — so a rotated ellipse stays a clean rotated ellipse through any scale gesture. Hold Shift while dragging an axis endpoint to scale both axes uniformly (preserve aspect ratio).
+
+  The rotate handle for ellipses is repositioned outside whichever axis endpoint is currently most-northern, with a short connector stem extending outward along that axis (perpendicular to the curve's tangent at that point). The same connector-stem treatment is also applied to the rectangle rotate handle in this release: rectangles' rotate handle now sits outside the most-northern edge with a stem perpendicular to that edge in Mercator space, replacing the bare on-edge placement that shipped with `'rectangle-transform'`. Both stems use the same fixed geographic length matching `@deck.gl-community`'s `RotateMode` connector formula, so the rotate handles read consistently across rectangle and ellipse at any zoom level.
+
+  **Note for consumers:** the edit-mode value the store assigns to an `EllipseShape` changes from `'bounding-transform'` to `'ellipse-transform'`. If you read `editingState.editMode` and compare against `'bounding-transform'` for an ellipse, update those checks to also accept `'ellipse-transform'` (or rely on `getEditModeForShape` / `useEditShape` to pick the right mode for you).
+
+- 11ac643: Tightened bus event payload types to satisfy `@accelint/bus`'s `StructuredCloneable` constraint, and tightened `useDrawShape().draw()` to reject undrawable shape types.
+  - **Added `BusCloneable<T>`** (re-exported from `@accelint/map-toolkit/deckgl/shapes`): type-level helper that lets event payloads carrying GeoJSON `Feature`/`Shape` data satisfy the bus's `StructuredCloneable` constraint. GeoJSON data is cloneable at runtime but lacks the index signature that type-fest's `StructuredCloneable` requires of plain object types; `BusCloneable<T>` adds that signature via intersection. Use it when defining custom event payloads that carry shape data.
+  - **Added `DrawableShapeType`** (re-exported from `@accelint/map-toolkit/deckgl/shapes`): `Exclude<ShapeFeatureType, 'WagonWheel'>`. Wagon wheels can't be interactively drawn — they need additional metadata (spokes, orientation, range rings) that a draw interaction can't collect, so they're constructed programmatically and edited via the EditShapeLayer.
+  - **Narrowed `useDrawShape().draw()`** parameter from `ShapeFeatureType` to `DrawableShapeType`. This catches the previously unguarded potential runtime crash where `draw('WagonWheel')` would pass `undefined` to deck.gl. Callers that already pass concrete enum values (`ShapeFeatureType.Circle`, etc.) are unaffected; callers passing an arbitrary `ShapeFeatureType` will need to narrow to `DrawableShapeType` or handle the wagon-wheel case separately.
+  - Cleared the related TypeScript errors in `useBus<EditShapeEvent>`, `useBus<DrawShapeEvent>`, and the corresponding broadcast/store sites.
+
+- 5d224fb: Fix rotated rectangles distorting into parallelograms during edit. Rectangles now use a new `'rectangle-transform'` edit mode (`RectangleTransformMode` + `RectangleScaleMode`) that places scale handles at the rectangle's actual rotated corners and projects corner drags onto the rectangle's local edges in Mercator space, so rotation is preserved through any scale gesture. The rotate handle now sits on the rectangle's currently-northern edge midpoint instead of the axis-aligned bbox. Hold Shift while dragging a corner to scale uniformly (preserve aspect ratio) - same Shift behavior as before.
+
+  **Note for consumers:** the edit-mode value the store assigns to a `RectangleShape` changes from `'bounding-transform'` to `'rectangle-transform'`. If you read `editingState.editMode` and compare against `'bounding-transform'` for a rectangle, update those checks to also accept `'rectangle-transform'` (or rely on `getEditModeForShape` / `useEditShape` to pick the right mode for you).
+
+- a23674d: Pressing ESC while editing a shape now cancels editing. Previously the editable-layers library only honored Escape in draw modes — transform/translate/rotate/scale modes ignored it.
+
+### Patch Changes
+
+- b3db30f: Draw shapes layer no longer shows stale tooltip until first mouse event (bug) on subsequent draw actions.
+
 ## 4.0.0
 
 ### Major Changes

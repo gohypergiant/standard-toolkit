@@ -1,5 +1,10 @@
 # @accelint/design-toolkit
 
+## 3.2.0
+### Minor Changes
+
+- 38bc715: Updates design tokens to support the light-dark css function and color-scheme property
+
 ## 3.1.0
 ### Minor Changes
 
