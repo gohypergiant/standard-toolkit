@@ -161,20 +161,31 @@ export type DisplayShapeLayerProps = CompositeLayerProps & {
   onShapeHover?: (shape?: Shape) => void;
 
   /**
-   * Custom fill color for the hover overlay sublayer (polygon shapes only).
-   * When set, replaces the default brightness-based overlay fill. Border
-   * brightening and width changes from the default hover treatment still apply.
+   * Custom fill color for the hovered shape. When set, the main layer's fill
+   * accessor returns the value of this function for the hovered feature
+   * instead of the default brightening of the base fill. Effective only on
+   * shapes that actually render a fill (polygons and unstyled points); has no
+   * visual effect on icons or LineStrings. Border brightening and width
+   * changes from the default hover treatment still apply.
+   *
+   * When a shape is both hovered and selected and both overrides are set,
+   * `getHoverFillColor` wins.
+   *
    * @param feature - The hovered shape feature
-   * @returns RGBA tuple (0-255 per channel) to use as the overlay fill color
+   * @returns RGBA tuple (0-255 per channel) to use as the fill color
    */
   getHoverFillColor?: (feature: ShapeFeature) => Rgba255Tuple;
 
   /**
-   * Custom fill color for the selection overlay sublayer (polygon shapes only).
-   * When set, replaces the default brightness-based overlay fill. The selection
-   * outline (`highlightColor`) is unaffected.
+   * Custom fill color for the selected shape. When set, the main layer's fill
+   * accessor returns the value of this function for the selected feature
+   * instead of the default brightening of the base fill. Effective only on
+   * shapes that actually render a fill (polygons and unstyled points); has no
+   * visual effect on icons or LineStrings. The selection outline color is
+   * unaffected and is still driven by `highlightColor`.
+   *
    * @param feature - The selected shape feature
-   * @returns RGBA tuple (0-255 per channel) to use as the overlay fill color
+   * @returns RGBA tuple (0-255 per channel) to use as the fill color
    */
   getSelectFillColor?: (feature: ShapeFeature) => Rgba255Tuple;
 

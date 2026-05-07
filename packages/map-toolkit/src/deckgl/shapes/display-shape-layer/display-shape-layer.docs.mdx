@@ -488,12 +488,12 @@ Each geometry type has sensible defaults (labels appear below shapes):
 
 ### Visual Feedback
 
-Interactions never modify a shape's innate styling — hover and selection are always additive overlays.
+Hover and selection don't write back to a shape's innate styling — the active feature's appearance is computed in the main layer's accessors per render based on hover and selection state, leaving the underlying shape data untouched.
 
 When a shape is selected via `selectedShapeId`, the layer provides visual indicators:
 
-1. **Line/outline brightness** (all shapes): The shape's border/outline brightens to 1.4× its base color.
-2. **Fill brightness overlay** (polygon shapes): A brightness overlay renders using `MATERIAL_SETTINGS.HOVER_OR_SELECT` lighting. When the selected shape is also hovered, the hover layer stacks on top using `MATERIAL_SETTINGS.HOVER_AND_SELECT` for an even brighter combined effect.
+1. **Line/outline brightness** (all shapes): The shape's border/outline brightens to 1.4× its base color (1.7× when also hovered).
+2. **Fill brightness** (polygon shapes): The shape's fill renders at the un-dimmed base color brightened by 1.4× (1.7× when also hovered), instead of the standard `applyBaseOpacity`-reduced fill. The brightening can be replaced per-feature by [`getSelectFillColor`](#api-reference) and [`getHoverFillColor`](#api-reference) — see [Custom Interaction Colors](#custom-interaction-colors).
 3. **Curtain brightness** (elevated LineString shapes): Curtain walls render at overlay opacity using a brightened version of the shape's line color.
 4. **Coffin corners** (Point shapes): Bracket-like corners appear with a black outline and a fill color matching `highlightColor` (defaults to turquoise `#28F5BE`). The fill is always fully opaque regardless of the `highlightColor` alpha channel.
 5. **Highlight** (optional, non-Point shapes): A highlight layer underneath with:
@@ -538,15 +538,17 @@ The highlight effect can be toggled with the `showHighlight` prop:
 
 When `pickable={true}`, shapes show hover feedback:
 
-- **All shapes**: Border/outline color brightens to 1.4× its base color
-- **Polygon shapes**: Fill brightens via material-based lighting; stacks with any active selection treatment
+- **All shapes**: Border/outline color brightens to 1.4× its base color (1.7× when also selected)
+- **Polygon shapes**: Fill renders at the un-dimmed base color brightened by 1.4× (1.7× when also selected); replaceable per-feature with [`getHoverFillColor`](#api-reference)
 - **Elevated LineString shapes**: Curtain walls brighten at overlay opacity
 - **Non-icon shapes**: Border/outline width increases by 2 pixels
 - **Point shapes**: Coffin corners appear with a white fill and black outline bracket
 
 ### Custom Interaction Colors
 
-By default, hover and selection states use a brightness overlay effect. You can override this with custom color functions:
+By default, the main layer's fill accessor brightens the active feature's
+base color (1.4× when hovered or selected, 1.7× when both). You can replace
+that brightening with a custom color via per-feature accessor functions:
 
 ```tsx
 import type { ShapeFeature } from '@accelint/map-toolkit/deckgl/shapes';
@@ -587,8 +589,9 @@ const getHoverFillColor = (feature: ShapeFeature): [number, number, number, numb
 
 **Notes**:
 
-- These overrides only apply to **polygon shapes** (Polygon, Rectangle, Circle, Ellipse, WagonWheel). Point and LineString shapes have no fill overlay, so the accessors are not invoked for them.
-- Only the overlay fill is replaced. Border brightness and width changes from the default hover/select treatment still apply, and the selection outline color is still driven by [`highlightColor`](#api-reference) — set both if you want full control over selection appearance.
+- These accessors run for every feature in the layer, but only have a visible effect on shapes that render a fill — that's the **polygon family** (Polygon, Rectangle, Circle, Ellipse, WagonWheel) and unstyled Point shapes. LineStrings have no fill, and Points using icons have their color driven by the icon atlas, so the override is a no-op for those.
+- Only the fill color is replaced. Border brightness and width changes from the default hover/select treatment still apply, and the selection outline color is still driven by [`highlightColor`](#api-reference) — set both if you want full control over selection appearance.
+- When a shape is both hovered and selected and both `getHoverFillColor` and `getSelectFillColor` are set, `getHoverFillColor` wins. Setting only one preserves the default brightening for the other state.
 
 ## 3D Elevation Rendering
 
@@ -841,7 +844,7 @@ When using icons for Point geometries, **all shapes in a single DisplayShapeLaye
 | `id` | `string` | *required* | Unique layer ID |
 | `mapId` | `UniqueId` | *required* | Map instance ID for event bus isolation in multi-map scenarios |
 | `data` | `Shape[]` | *required* | Array of shapes to display |
-| `selectedShapeId` | `ShapeId` | `undefined` | Currently selected shape ID for showing the select layer |
+| `selectedShapeId` | `ShapeId` | `undefined` | Currently selected shape ID; drives the brightened fill on the main layer and the optional highlight outline |
 | `onShapeClick` | `(shape: Shape) => void` | `undefined` | Callback when shape is clicked |
 | `onShapeHover` | `(shape: Shape \| null) => void` | `undefined` | Callback when shape is hovered |
 | `pickable` | `boolean` | `true` | Whether shapes are clickable/hoverable |
@@ -852,8 +855,8 @@ When using icons for Point geometries, **all shapes in a single DisplayShapeLaye
 | `enableElevation` | `boolean` | `false` | Enable 3D elevation rendering (extrusion, curtains, vertical indicators). See [3D Elevation Rendering](#3d-elevation-rendering). |
 | `applyBaseOpacity` | `boolean` | `true` | Apply 20% opacity multiplier to fill colors for semi-transparent look |
 | `unit` | `DistanceUnitSymbol` | `'NM'` | Distance unit for measurements (e.g., radius on hover). Supports `'km'`, `'m'`, `'NM'`, `'mi'`, `'ft'`. |
-| `getHoverFillColor` | `(feature: ShapeFeature) => Rgba255Tuple` | `undefined` | Custom fill color for the hover overlay (polygons only). Overrides the default brightness overlay. See [Custom Interaction Colors](#custom-interaction-colors). |
-| `getSelectFillColor` | `(feature: ShapeFeature) => Rgba255Tuple` | `undefined` | Custom fill color for the selection overlay (polygons only). Overrides the default brightness overlay. See [Custom Interaction Colors](#custom-interaction-colors). |
+| `getHoverFillColor` | `(feature: ShapeFeature) => Rgba255Tuple` | `undefined` | Custom fill color for the hovered shape. Replaces the default brightening on the main layer for that feature. See [Custom Interaction Colors](#custom-interaction-colors). |
+| `getSelectFillColor` | `(feature: ShapeFeature) => Rgba255Tuple` | `undefined` | Custom fill color for the selected shape. Replaces the default brightening on the main layer for that feature. See [Custom Interaction Colors](#custom-interaction-colors). |
 
 ### LabelPositionOptions
 

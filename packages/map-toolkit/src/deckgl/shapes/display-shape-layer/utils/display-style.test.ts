@@ -24,7 +24,6 @@ import {
   brightenColor,
   getHighlightLineWidth,
   getHoverLineWidth,
-  getOverlayFillColor,
 } from './display-style';
 import type { StyledFeature } from '../../shared/types';
 
@@ -256,29 +255,6 @@ describe('Display Style Utilities', () => {
 
     it('scales zero alpha to zero', () => {
       const result = applyOverlayOpacity([255, 255, 255, 0]);
-
-      expect(result[3]).toBe(0);
-    });
-  });
-
-  describe('getOverlayFillColor', () => {
-    it('scales alpha by OVERLAY_FILL_OPACITY', () => {
-      const feature = createStyledFeature({ fillColor: [255, 100, 50, 200] });
-
-      const result = getOverlayFillColor(feature);
-
-      expect(result).toEqual([
-        255,
-        100,
-        50,
-        Math.round(200 * OVERLAY_FILL_OPACITY),
-      ]);
-    });
-
-    it('scales zero alpha to zero', () => {
-      const feature = createStyledFeature({ fillColor: [255, 255, 255, 0] });
-
-      const result = getOverlayFillColor(feature);
 
       expect(result[3]).toBe(0);
     });

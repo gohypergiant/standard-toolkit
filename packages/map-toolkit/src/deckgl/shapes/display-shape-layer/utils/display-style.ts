@@ -16,7 +16,7 @@ import {
   HIGHLIGHT_WIDTH_INCREASE,
   HOVER_WIDTH_INCREASE,
 } from '../../shared/constants';
-import { getFillColor, getLineWidth } from '../../shared/utils/style-utils';
+import { getLineWidth } from '../../shared/utils/style-utils';
 import { OVERLAY_FILL_OPACITY } from '../constants';
 import type { Rgba255Tuple } from '@accelint/predicates';
 import type { StyledFeature } from '../../shared/types';
@@ -101,27 +101,6 @@ export function applyOverlayOpacity(
     color[2],
     Math.round(color[3] * OVERLAY_FILL_OPACITY),
   ];
-}
-
-/**
- * Get fill color for interaction overlay layers (hover, select).
- *
- * Returns the shape's fill color with alpha scaled by OVERLAY_FILL_OPACITY —
- * more opaque than the base-opacity main layer but not fully solid, so the
- * material brightness effect reads clearly without looking like a solid block.
- *
- * @param feature - The styled feature
- * @returns RGBA color with alpha multiplied by OVERLAY_FILL_OPACITY
- * @example
- * ```typescript
- * // Feature with fillColor [98, 166, 255, 255]
- * getOverlayFillColor(feature); // → [98, 166, 255, 64]
- * ```
- */
-export function getOverlayFillColor(
-  feature: StyledFeature,
-): [number, number, number, number] {
-  return applyOverlayOpacity(getFillColor(feature));
 }
 
 /**

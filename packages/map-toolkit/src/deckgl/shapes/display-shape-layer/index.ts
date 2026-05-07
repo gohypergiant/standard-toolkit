@@ -44,7 +44,6 @@ import {
   brightenColor,
   getHighlightLineWidth,
   getHoverLineWidth,
-  getOverlayFillColor,
 } from './utils/display-style';
 import {
   buildIndicatorLineData,
@@ -562,126 +561,16 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
   }
 
   /**
-   * Render selection overlay layer for polygon shapes.
-   * Mirrors renderHoverLayer but triggers on selectedShapeId instead of hover.
-   * When a shape is both selected and hovered, both layers stack for a brighter combined effect.
-   */
-  private renderSelectLayer(features: Shape['feature'][]): GeoJsonLayer[] {
-    const { selectedShapeId, enableElevation, getSelectFillColor } = this.props;
-
-    if (!selectedShapeId) {
-      return [];
-    }
-
-    const featureIndex =
-      this.featuresCache?.shapeIdToIndex.get(selectedShapeId);
-
-    const selectedFeature =
-      featureIndex !== undefined ? features[featureIndex] : undefined;
-
-    if (!selectedFeature) {
-      return [];
-    }
-
-    // Only render for polygons — non-polygon shapes have no fill to brighten
-    if (!isPolygonGeometry(selectedFeature.geometry)) {
-      return [];
-    }
-
-    const fillColorAccessor = getSelectFillColor ?? getOverlayFillColor;
-
-    return [
-      new GeoJsonLayer({
-        id: `${this.props.id}-${SHAPE_LAYER_IDS.DISPLAY_SELECTION}`,
-        data: [selectedFeature],
-
-        filled: true,
-        stroked: false,
-        getFillColor: fillColorAccessor,
-
-        // Material brightness for selection; extrusion only when elevation enabled
-        extruded: enableElevation,
-        getElevation: getFeatureExtrusionHeight,
-        material: MATERIAL_SETTINGS.HOVER_OR_SELECT,
-
-        // Behavior
-        pickable: false,
-        updateTriggers: {
-          data: [features, selectedShapeId],
-          // Track resolved accessor (not the raw prop) so toggling
-          // getSelectFillColor on/off invalidates the GPU buffer
-          getFillColor: [features, fillColorAccessor],
-          getElevation: [features],
-        },
-      }),
-    ];
-  }
-
-  /**
-   * Render hover layer for all polygon shapes (2D and 3D).
-   * Overlays the shape's base fill with brighter material lighting.
-   * Stacks with other interaction layers (e.g. selection highlight underneath).
-   */
-  private renderHoverLayer(features: Shape['feature'][]): GeoJsonLayer[] {
-    const { enableElevation, selectedShapeId, getHoverFillColor } = this.props;
-    const hoverIndex = this.state?.hoverIndex;
-
-    // Only render if something is hovered
-    if (hoverIndex === undefined) {
-      return [];
-    }
-
-    const hoveredFeature = features[hoverIndex];
-    if (!hoveredFeature) {
-      return [];
-    }
-
-    // Only render for polygons
-    if (!isPolygonGeometry(hoveredFeature.geometry)) {
-      return [];
-    }
-
-    const isAlsoSelected =
-      hoveredFeature.properties?.shapeId === selectedShapeId;
-    const material = isAlsoSelected
-      ? MATERIAL_SETTINGS.HOVER_AND_SELECT
-      : MATERIAL_SETTINGS.HOVER_OR_SELECT;
-    const fillColorAccessor = getHoverFillColor ?? getOverlayFillColor;
-
-    return [
-      new GeoJsonLayer({
-        id: `${this.props.id}-${SHAPE_LAYER_IDS.DISPLAY}-hover`,
-        data: [hoveredFeature],
-
-        // Styling
-        filled: true,
-        stroked: false, // Main layer handles strokes; this layer is fill-only
-        getFillColor: fillColorAccessor,
-
-        // Material brightness scales with interaction state; extrusion only when elevation enabled
-        extruded: enableElevation,
-        getElevation: getFeatureExtrusionHeight,
-        material,
-
-        // Behavior
-        pickable: false,
-        updateTriggers: {
-          data: [features, hoverIndex],
-          // Track resolved accessor (not the raw prop) so toggling
-          // getHoverFillColor on/off invalidates the GPU buffer
-          getFillColor: [features, fillColorAccessor],
-          getElevation: [features],
-          material: [selectedShapeId, hoverIndex],
-        },
-      }),
-    ];
-  }
-
-  /**
    * Render main shapes layer
    */
   private renderMainLayer(features: Shape['feature'][]): GeoJsonLayer {
-    const { pickable, applyBaseOpacity, selectedShapeId } = this.props;
+    const {
+      pickable,
+      applyBaseOpacity,
+      selectedShapeId,
+      getHoverFillColor,
+      getSelectFillColor,
+    } = this.props;
 
     // Single-pass icon config extraction (O(1) best case with early return)
     const {
@@ -708,7 +597,39 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
       // Styling
       filled: true,
       stroked: true,
-      getFillColor: (d: Shape['feature']) => getFillColor(d, applyBaseOpacity),
+      getFillColor: (d: Shape['feature'], info) => {
+        const isHovered = info?.index === this.state?.hoverIndex;
+        const isSelected = d.properties?.shapeId === selectedShapeId;
+
+        // User overrides take precedence over the default brightening path.
+        // Hover wins when both are set on a hovered+selected shape — the user
+        // is actively pointing at it, so echoing that input reads more clearly
+        // than letting select dominate.
+        if (isHovered && getHoverFillColor) {
+          return getHoverFillColor(d);
+        }
+        if (isSelected && getSelectFillColor) {
+          return getSelectFillColor(d);
+        }
+
+        // Default brightening path. Use the un-dimmed base color so the
+        // active feature reads more vividly than its neighbors (which are at
+        // applyBaseOpacity-reduced alpha).
+        if (isHovered && isSelected) {
+          return brightenColor(
+            getFillColor(d),
+            BRIGHTNESS_FACTOR.HOVER_AND_SELECT,
+          );
+        }
+        if (isHovered || isSelected) {
+          return brightenColor(
+            getFillColor(d),
+            BRIGHTNESS_FACTOR.HOVER_OR_SELECT,
+          );
+        }
+
+        return getFillColor(d, applyBaseOpacity);
+      },
       getLineColor: (d: Shape['feature'], info) => {
         // Read pre-normalized color from cache — avoids normalizeColor allocation per feature per trigger
         const baseColor =
@@ -801,7 +722,14 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
 
       // Update triggers
       updateTriggers: {
-        getFillColor: [features, applyBaseOpacity],
+        getFillColor: [
+          features,
+          applyBaseOpacity,
+          this.state?.hoverIndex,
+          selectedShapeId,
+          getHoverFillColor,
+          getSelectFillColor,
+        ],
         getLineColor: [features, this.state?.hoverIndex, selectedShapeId],
         getLineWidth: [features, this.state?.hoverIndex],
         getDashArray: [features],
@@ -1136,18 +1064,20 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
 
   /**
    * Render all sublayers.
-   * @returns Ordered array of sublayers (highlight, select, hover, elevation, main, labels) from bottom to top.
+   *
+   * Hover and select fill styling is handled inside the main layer's
+   * `getFillColor` accessor (mirroring `getLineColor`) — there are no
+   * separate hover/select fill sublayers. The highlight layer renders the
+   * outline decoration around a selected shape.
+   *
+   * @returns Ordered array of sublayers (highlight, elevation, main, labels) from bottom to top.
    */
   renderLayers(): Layer[] {
     // Compute features once per render cycle for performance
     const features = this.getFeaturesWithId();
     const enableElevation = this.props.enableElevation ?? false;
 
-    const layers: Layer[] = [
-      ...this.renderHighlightLayer(features),
-      ...this.renderSelectLayer(features),
-      ...this.renderHoverLayer(features),
-    ];
+    const layers: Layer[] = [...this.renderHighlightLayer(features)];
 
     // Elevation visualization layers (wireframe for polygons, curtains for lines)
     // These render UNDER the main layer
