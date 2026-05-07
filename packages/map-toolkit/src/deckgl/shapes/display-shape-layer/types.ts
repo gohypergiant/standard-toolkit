@@ -161,16 +161,22 @@ export type DisplayShapeLayerProps = CompositeLayerProps & {
   onShapeHover?: (shape?: Shape) => void;
 
   /**
-   * Overrides getFillColor for hovered shapes
-   * @param feature - The shape feature
+   * Custom fill color for the hover overlay sublayer (polygon shapes only).
+   * When set, replaces the default brightness-based overlay fill. Border
+   * brightening and width changes from the default hover treatment still apply.
+   * @param feature - The hovered shape feature
+   * @returns RGBA tuple (0-255 per channel) to use as the overlay fill color
    */
-  getHoverColor?: (feature: ShapeFeature) => Rgba255Tuple;
+  getHoverFillColor?: (feature: ShapeFeature) => Rgba255Tuple;
 
   /**
-   * Overrides getFillColor for selected shapes
-   * @param feature - The shape feature
+   * Custom fill color for the selection overlay sublayer (polygon shapes only).
+   * When set, replaces the default brightness-based overlay fill. The selection
+   * outline (`highlightColor`) is unaffected.
+   * @param feature - The selected shape feature
+   * @returns RGBA tuple (0-255 per channel) to use as the overlay fill color
    */
-  getSelectColor?: (feature: ShapeFeature) => Rgba255Tuple;
+  getSelectFillColor?: (feature: ShapeFeature) => Rgba255Tuple;
 
   /**
    * Label display mode for shapes

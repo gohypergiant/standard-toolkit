@@ -809,16 +809,16 @@ describe('DisplayShapeLayer', () => {
       expect(hoverLayer).toBeUndefined();
     });
 
-    it('uses custom getHoverColor when provided', () => {
+    it('uses custom getHoverFillColor when provided', () => {
       const customHoverColor: [number, number, number, number] = [
         255, 0, 0, 128,
       ];
-      const getHoverColor = vi.fn(() => customHoverColor);
+      const getHoverFillColor = vi.fn(() => customHoverColor);
 
       const layer = createTestLayer(
         {
           data: [polygonFixture],
-          getHoverColor,
+          getHoverFillColor,
         },
         { hoverIndex: 0 },
       );
@@ -830,7 +830,12 @@ describe('DisplayShapeLayer', () => {
 
       // biome-ignore lint/suspicious/noExplicitAny: accessing internal props for testing
       const props = hoverLayer.props as any;
-      expect(props.getFillColor).toBe(getHoverColor);
+
+      expect(props.getFillColor(polygonFixture)).toEqual(customHoverColor);
+      expect(getHoverFillColor).toHaveBeenCalledWith(polygonFixture);
+      // Accessor must be in updateTriggers so deck.gl invalidates the cached
+      // fill-color buffer when the prop changes (e.g. closure over theme state)
+      expect(props.updateTriggers.getFillColor).toContain(getHoverFillColor);
     });
   });
 
@@ -923,16 +928,16 @@ describe('DisplayShapeLayer', () => {
       expect(selectLayer).toBeInstanceOf(GeoJsonLayer);
     });
 
-    it('uses custom getSelectColor when provided', () => {
+    it('uses custom getSelectFillColor when provided', () => {
       const customSelectColor: [number, number, number, number] = [
         0, 255, 0, 150,
       ];
-      const getSelectColor = vi.fn(() => customSelectColor);
+      const getSelectFillColor = vi.fn(() => customSelectColor);
 
       const layer = createTestLayer({
         data: [polygonFixture],
         selectedShapeId: polygonFixture.id,
-        getSelectColor,
+        getSelectFillColor,
       });
       const sublayers = layer.renderLayers();
 
@@ -942,7 +947,12 @@ describe('DisplayShapeLayer', () => {
 
       // biome-ignore lint/suspicious/noExplicitAny: accessing internal props for testing
       const props = selectLayer.props as any;
-      expect(props.getFillColor).toBe(getSelectColor);
+
+      expect(props.getFillColor(polygonFixture)).toEqual(customSelectColor);
+      expect(getSelectFillColor).toHaveBeenCalledWith(polygonFixture);
+      // Accessor must be in updateTriggers so deck.gl invalidates the cached
+      // fill-color buffer when the prop changes (e.g. closure over theme state)
+      expect(props.updateTriggers.getFillColor).toContain(getSelectFillColor);
     });
   });
 

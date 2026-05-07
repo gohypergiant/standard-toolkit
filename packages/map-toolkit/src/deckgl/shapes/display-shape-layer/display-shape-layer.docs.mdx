@@ -552,12 +552,12 @@ By default, hover and selection states use a brightness overlay effect. You can 
 import type { ShapeFeature } from '@accelint/map-toolkit/deckgl/shapes';
 
 // Custom hover color - bright yellow overlay
-const getHoverColor = (feature: ShapeFeature): [number, number, number, number] => {
+const getHoverFillColor = (feature: ShapeFeature): [number, number, number, number] => {
   return [255, 255, 0, 100]; // Yellow at ~39% opacity
 };
 
 // Custom select color - bright red overlay
-const getSelectColor = (feature: ShapeFeature): [number, number, number, number] => {
+const getSelectFillColor = (feature: ShapeFeature): [number, number, number, number] => {
   return [255, 0, 0, 128]; // Red at 50% opacity
 };
 
@@ -565,8 +565,8 @@ const getSelectColor = (feature: ShapeFeature): [number, number, number, number]
   id="shapes"
   data={shapes}
   selectedShapeId={selectedId}
-  getHoverColor={getHoverColor}
-  getSelectColor={getSelectColor}
+  getHoverFillColor={getHoverFillColor}
+  getSelectFillColor={getSelectFillColor}
 />
 ```
 
@@ -574,7 +574,7 @@ These functions receive the shape's GeoJSON feature, allowing you to derive colo
 
 ```tsx
 // Dynamic color based on feature properties
-const getHoverColor = (feature: ShapeFeature): [number, number, number, number] => {
+const getHoverFillColor = (feature: ShapeFeature): [number, number, number, number] => {
   const baseColor = feature.properties.styleProperties.fillColor;
   // Return a brighter version of the base color
   return [
@@ -586,7 +586,10 @@ const getHoverColor = (feature: ShapeFeature): [number, number, number, number] 
 };
 ```
 
-**Note**: These overrides only affect the fill color of the hover/select overlay layers. Border brightness and width changes still apply as described above.
+**Notes**:
+
+- These overrides only apply to **polygon shapes** (Polygon, Rectangle, Circle, Ellipse, WagonWheel). Point and LineString shapes have no fill overlay, so the accessors are not invoked for them.
+- Only the overlay fill is replaced. Border brightness and width changes from the default hover/select treatment still apply, and the selection outline color is still driven by [`highlightColor`](#api-reference) — set both if you want full control over selection appearance.
 
 ## 3D Elevation Rendering
 
@@ -850,8 +853,8 @@ When using icons for Point geometries, **all shapes in a single DisplayShapeLaye
 | `enableElevation` | `boolean` | `false` | Enable 3D elevation rendering (extrusion, curtains, vertical indicators). See [3D Elevation Rendering](#3d-elevation-rendering). |
 | `applyBaseOpacity` | `boolean` | `true` | Apply 20% opacity multiplier to fill colors for semi-transparent look |
 | `unit` | `DistanceUnitSymbol` | `'NM'` | Distance unit for measurements (e.g., radius on hover). Supports `'km'`, `'m'`, `'NM'`, `'mi'`, `'ft'`. |
-| `getHoverColor` | `(feature: ShapeFeature) => Rgba255Tuple` | `undefined` | Custom fill color function for hovered shapes. Overrides default brightness overlay. |
-| `getSelectColor` | `(feature: ShapeFeature) => Rgba255Tuple` | `undefined` | Custom fill color function for selected shapes. Overrides default brightness overlay. |
+| `getHoverFillColor` | `(feature: ShapeFeature) => Rgba255Tuple` | `undefined` | Custom fill color for the hover overlay (polygons only). Overrides the default brightness overlay. See [Custom Interaction Colors](#custom-interaction-colors). |
+| `getSelectFillColor` | `(feature: ShapeFeature) => Rgba255Tuple` | `undefined` | Custom fill color for the selection overlay (polygons only). Overrides the default brightness overlay. See [Custom Interaction Colors](#custom-interaction-colors). |
 
 ### LabelPositionOptions
 
