@@ -11,11 +11,8 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import {
-  latToMercatorY,
-  mercatorYToLat,
-  recomputeRectangleCorners,
-} from './rectangle-scale-math';
+import { latToMercatorY, mercatorYToLat } from './mercator';
+import { recomputeRectangleCorners } from './rectangle-scale-math';
 import type { Position } from 'geojson';
 
 /**

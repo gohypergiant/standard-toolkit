@@ -10,34 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
+import { latToMercatorY, mercatorYToLat } from './mercator';
 import type { Position } from 'geojson';
-
-/**
- * Convert latitude (degrees) to Web Mercator Y (in degrees of "Mercator-y").
- *
- * Output is dimensionally compatible with longitude in degrees once divided
- * by the appropriate scale, but for our purposes we only need *consistency*
- * with the projection used when the rectangle was authored — so we mix
- * lon-degrees on x with Mercator-y on y. Both `latToMercatorY` calls use
- * the same scale, so projection math is internally consistent.
- *
- * @param lat - Latitude in degrees, clamped to (-89.999999, 89.999999) to
- *   avoid the polar singularities of the Mercator projection.
- * @returns Mercator-y in the same "degree-like" units used by longitude.
- */
-export function latToMercatorY(lat: number): number {
-  const clamped = Math.max(Math.min(lat, 89.999999), -89.999999);
-  const rad = (clamped * Math.PI) / 180;
-
-  return (Math.log(Math.tan(Math.PI / 4 + rad / 2)) * 180) / Math.PI;
-}
-
-/** Inverse of `latToMercatorY`: convert Mercator-y back to latitude in degrees. */
-export function mercatorYToLat(mercY: number): number {
-  const rad = (mercY * Math.PI) / 180;
-
-  return ((2 * Math.atan(Math.exp(rad)) - Math.PI / 2) * 180) / Math.PI;
-}
 
 /**
  * Recompute a rotated rectangle after a corner drag, preserving its rotation.

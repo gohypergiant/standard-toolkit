@@ -316,13 +316,13 @@ describe('edit-shape-layer store', () => {
       expect(editStore.get(mapId)?.editMode).toBe('circle-transform');
     });
 
-    it('sets bounding-transform mode for ellipses', () => {
+    it('sets ellipse-transform mode for ellipses', () => {
       const { edit } = editStore.actions(mapId);
 
       const shape = createMockEllipseShape();
       edit(shape);
 
-      expect(editStore.get(mapId)?.editMode).toBe('bounding-transform');
+      expect(editStore.get(mapId)?.editMode).toBe('ellipse-transform');
     });
 
     it('sets rectangle-transform mode for rectangles', () => {
