@@ -1,6 +1,6 @@
 # @accelint/design-toolkit
 
-## 10.0.0
+## 9.11.0
 ### Minor Changes
 
 - 348cc56: Update react-aria-components and simplify dependencies
