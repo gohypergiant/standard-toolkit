@@ -4,27 +4,56 @@
     "accelint-nextjs-best-practices": {
       "source": "gohypergiant/agent-skills",
       "sourceType": "github",
-      "computedHash": "6a07b7b3e8436d50d3bf10b920deaafc3338bfb31270de14269c262dafa4ae2c"
+      "skillPath": "skills/accelint-nextjs-best-practices/SKILL.md",
+      "computedHash": "cf62a8806d0ca8e67c2be330b9b3e3c675ec6c67acc759dd9816d60855e8cc2b"
+    },
+    "accelint-onboard-agents": {
+      "source": "gohypergiant/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/accelint-onboard-agent/SKILL.md",
+      "computedHash": "31b4a2db414a46f28b3a856f823e0f069d33f068dd46182b196cd4a3eebde12e"
+    },
+    "accelint-onboard-openspec": {
+      "source": "gohypergiant/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/accelint-onboard-openspec/SKILL.md",
+      "computedHash": "a7d5370395052064f766d0a4ea9802bf3c25cce02d7f1e3ed5ebb164f5635bc3"
+    },
+    "accelint-prompt-manager": {
+      "source": "gohypergiant/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/accelint-prompt-manager/SKILL.md",
+      "computedHash": "049adcbca2d23de499e8aa16042fc1c61b909e1ba559d79fc462a49a4abdb598"
+    },
+    "accelint-qrspi-propose": {
+      "source": "gohypergiant/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/accelint-qrspi-propose/SKILL.md",
+      "computedHash": "bd5c3a0b0745efaddde04a3b2a87fed552868187fba18a5bbf17dc541d69cd63"
     },
     "accelint-react-best-practices": {
       "source": "gohypergiant/agent-skills",
       "sourceType": "github",
-      "computedHash": "9e913014b66df6d7c3bff4b22af060231a0f0336d08223c0d9865beae9317c5a"
+      "skillPath": "skills/accelint-react-best-practices/SKILL.md",
+      "computedHash": "121d14afb68517c2e18a6853b344c08939e044b33502320df7d76c7f090c8332"
     },
     "accelint-react-testing": {
       "source": "gohypergiant/agent-skills",
       "sourceType": "github",
-      "computedHash": "2e2e1d68f5abce426529ae470e1d1b90ac4dc0d314ad1c27b3ef9c7d1e3eb502"
+      "skillPath": "skills/accelint-react-testing/SKILL.md",
+      "computedHash": "57966e285d54e4cb1daddffe3168fb5a0f6e5a1f4175fcad26178a95b02f8236"
     },
     "accelint-readme-writer": {
       "source": "gohypergiant/agent-skills",
       "sourceType": "github",
-      "computedHash": "b82d8e3d9fa4274d0ceb461d88b508a8b5f726500c9351dc459e145127405160"
+      "skillPath": "skills/accelint-readme-writer/SKILL.md",
+      "computedHash": "c22b74e8390176312ba0547ca31db9718d0e3c0cf5cef18eb020bad06cdd6e1d"
     },
     "accelint-security-best-practices": {
       "source": "gohypergiant/agent-skills",
       "sourceType": "github",
-      "computedHash": "7e00fcbe4e84561aa19e64a8f091498c996e69a67c1a569d205ebc9286500680"
+      "skillPath": "skills/accelint-security-best-practices/SKILL.md",
+      "computedHash": "1be582275cf516ca4f43e00f2d49c44e0d94c030b5961a39d503d53c2de86b13"
     },
     "accelint-ts-audit-all": {
       "source": "gohypergiant/agent-skills",
@@ -34,22 +63,26 @@
     "accelint-ts-best-practices": {
       "source": "gohypergiant/agent-skills",
       "sourceType": "github",
-      "computedHash": "98954e2f678f1ceae6f900bfc670fb45f9ec3e1fd8ea704d402f97038f69bf65"
+      "skillPath": "skills/accelint-ts-best-practices/SKILL.md",
+      "computedHash": "e7e0cfdbbb3a530e0e5c8f6b46cdd214b037b9dc07c008d60d1f795ca7b511b3"
     },
     "accelint-ts-documentation": {
       "source": "gohypergiant/agent-skills",
       "sourceType": "github",
-      "computedHash": "1a6274a7f334b46be91e44b708e42c3aa3c2e4399136dd3b798d877e8a2eee21"
+      "skillPath": "skills/accelint-ts-documentation/SKILL.md",
+      "computedHash": "320de6e5236f61065a82d1fb71ebfcdd5b5ed4e7d2764a407c05de8e89a13441"
     },
     "accelint-ts-performance": {
       "source": "gohypergiant/agent-skills",
       "sourceType": "github",
-      "computedHash": "cbf0cefa36231ddc26338a6dc7fceaca5c5d49f4f82271ac4b2f52536eb7c532"
+      "skillPath": "skills/accelint-ts-performance/SKILL.md",
+      "computedHash": "b267aacab7ff516f46429f0b0d5fe4d73fc33f750e9bb9dcd0cf60227df41b59"
     },
     "accelint-ts-testing": {
       "source": "gohypergiant/agent-skills",
       "sourceType": "github",
-      "computedHash": "9aadc1431dc626ecf42e3f9d903a3647346e504c577e57237acb056d3ee373d2"
+      "skillPath": "skills/accelint-ts-testing/SKILL.md",
+      "computedHash": "f12959b4420dec47e20becfc6e70d8723347ff0c13a7cb463e1bb9bc6603637d"
     }
   }
 }
