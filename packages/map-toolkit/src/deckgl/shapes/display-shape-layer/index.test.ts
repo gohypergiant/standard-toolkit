@@ -808,6 +808,30 @@ describe('DisplayShapeLayer', () => {
 
       expect(hoverLayer).toBeUndefined();
     });
+
+    it('uses custom getHoverColor when provided', () => {
+      const customHoverColor: [number, number, number, number] = [
+        255, 0, 0, 128,
+      ];
+      const getHoverColor = vi.fn(() => customHoverColor);
+
+      const layer = createTestLayer(
+        {
+          data: [polygonFixture],
+          getHoverColor,
+        },
+        { hoverIndex: 0 },
+      );
+      const sublayers = layer.renderLayers();
+
+      const hoverLayer = sublayers.find(
+        (l) => l.id === `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY}-hover`,
+      ) as GeoJsonLayer;
+
+      // biome-ignore lint/suspicious/noExplicitAny: accessing internal props for testing
+      const props = hoverLayer.props as any;
+      expect(props.getFillColor).toBe(getHoverColor);
+    });
   });
 
   describe('highlight layer', () => {
@@ -897,6 +921,28 @@ describe('DisplayShapeLayer', () => {
       );
 
       expect(selectLayer).toBeInstanceOf(GeoJsonLayer);
+    });
+
+    it('uses custom getSelectColor when provided', () => {
+      const customSelectColor: [number, number, number, number] = [
+        0, 255, 0, 150,
+      ];
+      const getSelectColor = vi.fn(() => customSelectColor);
+
+      const layer = createTestLayer({
+        data: [polygonFixture],
+        selectedShapeId: polygonFixture.id,
+        getSelectColor,
+      });
+      const sublayers = layer.renderLayers();
+
+      const selectLayer = sublayers.find(
+        (l) => l.id === `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY_SELECTION}`,
+      ) as GeoJsonLayer;
+
+      // biome-ignore lint/suspicious/noExplicitAny: accessing internal props for testing
+      const props = selectLayer.props as any;
+      expect(props.getFillColor).toBe(getSelectColor);
     });
   });
 
