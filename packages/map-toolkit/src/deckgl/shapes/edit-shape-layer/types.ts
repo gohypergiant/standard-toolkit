@@ -22,7 +22,11 @@ import type { Shape } from '../shared/types';
 /**
  * Edit mode for shape editing
  * - 'view': Not editing, shape is viewable only
- * - 'bounding-transform': Scale/rotate/translate via bounding box handles (ellipses, rectangles)
+ * - 'bounding-transform': Scale/rotate/translate via bounding box handles (generic axis-bounded shapes)
+ * - 'rectangle-transform': Like bounding-transform but with rectangle-aware scaling that
+ *   preserves rotation when the rectangle has been spun (rectangles)
+ * - 'ellipse-transform': Like bounding-transform but with ellipse-aware scaling that
+ *   preserves rotation, with axis-endpoint handles instead of bbox corners (ellipses)
  * - 'locked-bounding-transform': Like bounding-transform but scaling always maintains aspect ratio (wagon wheels)
  * - 'vertex-transform': Drag vertices OR scale/rotate/translate (polygons, lines)
  * - 'circle-transform': Drag edge to resize, drag body to translate (circles)
@@ -32,6 +36,8 @@ import type { Shape } from '../shared/types';
 export type EditMode =
   | 'view'
   | 'bounding-transform'
+  | 'rectangle-transform'
+  | 'ellipse-transform'
   | 'locked-bounding-transform'
   | 'vertex-transform'
   | 'circle-transform'
