@@ -1,5 +1,17 @@
 # @accelint/design-toolkit
 
+## 9.11.0
+### Minor Changes
+
+- 348cc56: Update react-aria-components and simplify dependencies
+
+### Patch Changes
+
+- 3d1cdbd: Small performance improvements to Tree component and additional documentation
+- 537f9f7: adjusted floating card header styling so that the title does not interfere with the drag handle
+- Updated dependencies [38bc715]
+  - @accelint/design-foundation@3.2.0
+
 ## 9.10.0
 ### Minor Changes
 
