@@ -233,6 +233,85 @@ export const BasicDisplayAndEvents: Story = {
 };
 
 /**
+ * Custom hover and selection fill colors
+ *
+ * Demonstrates `getHoverFillColor` and `getSelectFillColor`, which replace the
+ * default brightness-based overlay on the hover and select sublayers. Pick a
+ * different color for each dropdown to see the hover and select treatments
+ * side-by-side without the visual ambiguity of the default brightness overlay.
+ *
+ * - `default`: no override; the built-in brightness overlay applies
+ * - `red` / `blue` / `yellow`: bold primary, independent of the shape's base fill
+ *
+ * Polygon shapes only (Polygon, Rectangle, Circle, Ellipse, WagonWheel) — the
+ * accessors are not invoked for Point or LineString shapes. The selection
+ * outline is unaffected and still driven by `highlightColor`.
+ */
+const CUSTOM_COLORS_MAP_ID = uuid();
+
+type RgbaTuple = [number, number, number, number];
+
+const HOVER_FILL_PRESETS = {
+  default: undefined,
+  red: (): RgbaTuple => [255, 0, 0, 100],
+  blue: (): RgbaTuple => [0, 100, 255, 100],
+  yellow: (): RgbaTuple => [255, 230, 0, 100],
+} as const;
+
+const SELECT_FILL_PRESETS = {
+  default: undefined,
+  red: (): RgbaTuple => [255, 0, 0, 130],
+  blue: (): RgbaTuple => [0, 100, 255, 130],
+  yellow: (): RgbaTuple => [255, 230, 0, 130],
+} as const;
+
+export const CustomInteractionColors: Story = {
+  args: {
+    hoverPreset: 'yellow',
+    selectPreset: 'red',
+  },
+  argTypes: {
+    hoverPreset: {
+      control: { type: 'select' },
+      options: Object.keys(HOVER_FILL_PRESETS),
+      description: 'Preset for the getHoverFillColor accessor',
+    },
+    selectPreset: {
+      control: { type: 'select' },
+      options: Object.keys(SELECT_FILL_PRESETS),
+      description: 'Preset for the getSelectFillColor accessor',
+    },
+  },
+  render: (args) => {
+    const { selectedId } = useSelectShape(CUSTOM_COLORS_MAP_ID);
+    const getHoverFillColor =
+      HOVER_FILL_PRESETS[args.hoverPreset as keyof typeof HOVER_FILL_PRESETS];
+    const getSelectFillColor =
+      SELECT_FILL_PRESETS[
+        args.selectPreset as keyof typeof SELECT_FILL_PRESETS
+      ];
+
+    return (
+      <div className='relative h-dvh w-dvw'>
+        <BaseMap className='absolute inset-0' id={CUSTOM_COLORS_MAP_ID}>
+          <displayShapeLayer
+            id='custom-colors-shapes'
+            mapId={CUSTOM_COLORS_MAP_ID}
+            data={mockShapes}
+            selectedShapeId={selectedId}
+            showLabels='always'
+            pickable={true}
+            applyBaseOpacity={true}
+            getHoverFillColor={getHoverFillColor}
+            getSelectFillColor={getSelectFillColor}
+          />
+        </BaseMap>
+      </div>
+    );
+  },
+};
+
+/**
  * Label positioning controls
  *
  * Demonstrates full control over label positioning for different geometry types.

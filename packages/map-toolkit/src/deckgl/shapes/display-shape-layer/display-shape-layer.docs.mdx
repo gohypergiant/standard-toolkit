@@ -573,15 +573,14 @@ const getSelectFillColor = (feature: ShapeFeature): [number, number, number, num
 These functions receive the shape's GeoJSON feature, allowing you to derive colors from feature properties:
 
 ```tsx
-// Dynamic color based on feature properties
+// Dynamic color based on feature properties — invert the shape's own fill
 const getHoverFillColor = (feature: ShapeFeature): [number, number, number, number] => {
   const baseColor = feature.properties.styleProperties.fillColor;
-  // Return a brighter version of the base color
   return [
-    Math.min(255, baseColor[0] * 1.5),
-    Math.min(255, baseColor[1] * 1.5),
-    Math.min(255, baseColor[2] * 1.5),
-    150, // Fixed alpha
+    255 - baseColor[0],
+    255 - baseColor[1],
+    255 - baseColor[2],
+    100, // Fixed alpha; coordinate with applyBaseOpacity to taste
   ];
 };
 ```
