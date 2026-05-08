@@ -27,14 +27,6 @@
     &.end {
       @apply flex-row;
     }
-
-    /* react-aria-components calls input.focus() without { preventScroll: true },
-       so toggling inside an overflow-y-auto ancestor scrolls to the 1px hidden
-       input. scroll-margin makes scrollIntoView({block:'nearest'}) treat it as
-       already visible. */
-    & input {
-      scroll-margin: 100vh;
-    }
   }
 
   .control {

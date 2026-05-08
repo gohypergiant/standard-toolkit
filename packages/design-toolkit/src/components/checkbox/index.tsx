@@ -19,6 +19,7 @@ import {
   composeRenderProps,
   useContextProps,
 } from 'react-aria-components';
+import { usePreventFocusScroll } from '../../hooks/use-prevent-focus-scroll';
 import { Icon } from '../icon';
 import { CheckboxContext } from './context';
 import styles from './styles.module.css';
@@ -76,13 +77,14 @@ import type { CheckboxProps } from './types';
  */
 export function Checkbox({ ref, ...props }: CheckboxProps) {
   [props, ref] = useContextProps(props, ref ?? null, CheckboxContext);
+  const refCallback = usePreventFocusScroll(ref);
 
   const { classNames, children, labelPosition = 'end', ...rest } = props;
 
   return (
     <AriaCheckbox
       {...rest}
-      ref={ref}
+      ref={refCallback}
       className={composeRenderProps(classNames?.checkbox, (className) =>
         clsx(
           'group/checkbox',

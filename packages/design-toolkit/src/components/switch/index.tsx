@@ -18,6 +18,7 @@ import {
   composeRenderProps,
   useContextProps,
 } from 'react-aria-components';
+import { usePreventFocusScroll } from '../../hooks/use-prevent-focus-scroll';
 import { SwitchContext } from './context';
 import styles from './styles.module.css';
 import type { SwitchProps } from './types';
@@ -43,13 +44,14 @@ import type { SwitchProps } from './types';
  */
 export function Switch({ ref, ...props }: SwitchProps) {
   [props, ref] = useContextProps(props, ref ?? null, SwitchContext);
+  const refCallback = usePreventFocusScroll(ref);
 
   const { children, classNames, labelPosition = 'end', ...rest } = props;
 
   return (
     <AriaSwitch
       {...rest}
-      ref={ref}
+      ref={refCallback}
       className={composeRenderProps(classNames?.switch, (className) =>
         clsx('group/switch', styles.switch, styles[labelPosition], className),
       )}

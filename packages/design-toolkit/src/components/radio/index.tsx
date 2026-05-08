@@ -18,6 +18,7 @@ import {
   composeRenderProps,
   useContextProps,
 } from 'react-aria-components';
+import { usePreventFocusScroll } from '../../hooks/use-prevent-focus-scroll';
 import { RadioContext } from './context';
 import styles from './styles.module.css';
 import type { RadioProps } from './types';
@@ -42,13 +43,14 @@ import type { RadioProps } from './types';
  */
 export function Radio({ ref, ...props }: RadioProps) {
   [props, ref] = useContextProps(props, ref ?? null, RadioContext);
+  const refCallback = usePreventFocusScroll(ref);
 
   const { classNames, children, labelPosition = 'end', ...rest } = props;
 
   return (
     <AriaRadio
       {...rest}
-      ref={ref}
+      ref={refCallback}
       className={composeRenderProps(classNames?.radio, (className) =>
         clsx(
           'group/radio',

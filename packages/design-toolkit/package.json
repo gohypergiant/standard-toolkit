@@ -431,6 +431,7 @@
     "./hooks/coordinate-field/use-timeout-cleanup": "./dist/hooks/coordinate-field/use-timeout-cleanup.js",
     "./hooks/kanban": "./dist/hooks/kanban/index.js",
     "./hooks/use-frame-delay": "./dist/hooks/use-frame-delay/index.js",
+    "./hooks/use-prevent-focus-scroll": "./dist/hooks/use-prevent-focus-scroll/index.js",
     "./hooks/use-tree/actions": "./dist/hooks/use-tree/actions/index.js",
     "./hooks/use-tree/actions/cache": "./dist/hooks/use-tree/actions/cache.js",
     "./hooks/use-tree/state": "./dist/hooks/use-tree/state/index.js",
