@@ -43,6 +43,9 @@
   "scripts": {
     "audit:docblocks": "pnpm zx scripts/audit-docblocks.mjs",
     "bench": "pnpm turbo run bench",
+    "beta:exit": "pnpm changeset pre exit",
+    "beta:start": "pnpm changeset pre enter beta",
+    "beta:status": "test -f .changeset/pre.json && cat .changeset/pre.json || echo 'Not in prerelease mode'",
     "build": "pnpm turbo run build",
     "build:design-toolkit": "pnpm turbo run build --filter=@accelint/design-toolkit",
     "build:map-toolkit": "pnpm turbo run build --filter=@accelint/map-toolkit",

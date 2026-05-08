@@ -4,11 +4,11 @@
 
 **Deliverable:** Beta scripts functional, can enter/exit prerelease mode locally
 
-- [ ] 1.1 Add beta lifecycle scripts to root package.json (`beta:start`, `beta:exit`, `beta:status`)
-- [ ] 1.2 Test `pnpm beta:start` creates `.changeset/pre.json` with mode "beta"
-- [ ] 1.3 Test `pnpm beta:status` outputs prerelease JSON when in beta mode
-- [ ] 1.4 Test `pnpm beta:exit` removes prerelease mode
-- [ ] 1.5 Test `pnpm beta:status` outputs "Not in prerelease mode" when not in beta
+- [x] 1.1 Add beta lifecycle scripts to root package.json (`beta:start`, `beta:exit`, `beta:status`)
+- [x] 1.2 Test `pnpm beta:start` creates `.changeset/pre.json` with mode "beta"
+- [x] 1.3 Test `pnpm beta:status` outputs prerelease JSON when in beta mode
+- [x] 1.4 Test `pnpm beta:exit` removes prerelease mode
+- [x] 1.5 Test `pnpm beta:status` outputs "Not in prerelease mode" when not in beta
 
 **Test:** Manually run full beta lifecycle locally (start → status → exit) and verify output
 
@@ -16,14 +16,14 @@
 
 **Deliverable:** Beta workflow publishes packages with @beta tag when pushed to beta branches
 
-- [ ] 2.1 Create `.github/workflows/release-beta.yml` based on bikeshed template
-- [ ] 2.2 Configure workflow trigger on `beta/**` branch pattern
-- [ ] 2.3 Add turbo cache strategy step (copy from existing release.yml)
-- [ ] 2.4 Add prerelease mode verification step (check `.changeset/pre.json` exists and mode is "beta")
-- [ ] 2.5 Configure quality checks to run `pnpm run build`
-- [ ] 2.6 Configure changesets action to call `changeset version` directly (NOT npm script to skip constellation-tracker)
-- [ ] 2.7 Configure changesets action to call `changeset publish` with `@beta` tag
-- [ ] 2.8 Add final step showing which packages were published
+- [x] 2.1 Create `.github/workflows/release-beta.yml` based on bikeshed template
+- [x] 2.2 Configure workflow trigger on `beta/**` branch pattern
+- [x] 2.3 Add turbo cache strategy step (copy from existing release.yml)
+- [x] 2.4 Add prerelease mode verification step (check `.changeset/pre.json` exists and mode is "beta")
+- [x] 2.5 Configure quality checks to run `pnpm run build`
+- [x] 2.6 Configure changesets action to call `changeset version` directly (NOT npm script to skip constellation-tracker)
+- [x] 2.7 Configure changesets action to call `changeset publish` with `@beta` tag
+- [x] 2.8 Add final step showing which packages were published
 
 **Test:** Create test beta branch `beta/v10.0`, run `pnpm beta:start`, push, verify workflow runs and creates version PR
 
@@ -47,14 +47,14 @@
 
 **Deliverable:** Manual trigger publishes experimental snapshots with feature-specific tags
 
-- [ ] 4.1 Create `.github/workflows/publish-experimental.yml` based on bikeshed template
-- [ ] 4.2 Configure workflow with `workflow_dispatch` trigger (manual only)
-- [ ] 4.3 Add branch restriction to only run on `experimental/*` branches
-- [ ] 4.4 Add feature name extraction step (from `experimental/<feature>` → `<feature>`)
-- [ ] 4.5 Add quality checks step running `pnpm run build`
-- [ ] 4.6 Add snapshot version step: `changeset version --snapshot <feature>`
-- [ ] 4.7 Add snapshot publish step: `changeset publish --tag <feature>`
-- [ ] 4.8 Capture which packages were published (parse changeset output)
+- [x] 4.1 Create `.github/workflows/publish-experimental.yml` based on bikeshed template
+- [x] 4.2 Configure workflow with `workflow_dispatch` trigger (manual only)
+- [x] 4.3 Add branch restriction to only run on `experimental/*` branches
+- [x] 4.4 Add feature name extraction step (from `experimental/<feature>` → `<feature>`)
+- [x] 4.5 Add quality checks step running `pnpm run build`
+- [x] 4.6 Add snapshot version step: `changeset version --snapshot <feature>`
+- [x] 4.7 Add snapshot publish step: `changeset publish --tag <feature>`
+- [x] 4.8 Capture which packages were published (parse changeset output)
 
 **Test:** Create test experimental branch, manually trigger workflow, verify snapshot version generated
 
@@ -62,13 +62,13 @@
 
 **Deliverable:** Workflow creates/updates PR comments with install instructions for all published packages
 
-- [ ] 5.1 Add PR discovery step (find open PR for current experimental branch)
-- [ ] 5.2 Add step to check for existing "🧪 Experimental Snapshot Published" comment
-- [ ] 5.3 Generate comment body with: package names, versions, publish date, install instructions
-- [ ] 5.4 List ALL published packages in comment (handle monorepo multi-package case)
-- [ ] 5.5 Add experimental warning text to comment
-- [ ] 5.6 Create new comment if none exists, update existing if found
-- [ ] 5.7 Include "Last published" timestamp in comment
+- [x] 5.1 Add PR discovery step (find open PR for current experimental branch)
+- [x] 5.2 Add step to check for existing "🧪 Experimental Snapshot Published" comment
+- [x] 5.3 Generate comment body with: package names, versions, publish date, install instructions
+- [x] 5.4 List ALL published packages in comment (handle monorepo multi-package case)
+- [x] 5.5 Add experimental warning text to comment
+- [x] 5.6 Create new comment if none exists, update existing if found
+- [x] 5.7 Include "Last published" timestamp in comment
 
 **Test:** Trigger experimental publish, verify PR comment created with correct format and all packages listed
 
@@ -92,15 +92,15 @@
 
 **Deliverable:** Daily cron workflow tracks experimental PR age and creates status comments
 
-- [ ] 7.1 Create `.github/workflows/experimental-age-tracker.yml` based on bikeshed template
-- [ ] 7.2 Configure cron trigger for daily 9 AM UTC
-- [ ] 7.3 Add manual `workflow_dispatch` trigger for testing
-- [ ] 7.4 Add step to find all open PRs from `experimental/*` branches
-- [ ] 7.5 Add logic to find "🧪 Experimental Snapshot Published" comment
-- [ ] 7.6 Add date parsing to extract publish date from comment
-- [ ] 7.7 Add age calculation logic (current date - publish date in days)
-- [ ] 7.8 Add warning level assignment (0-13: Active, 14-20: Approaching, 21-27: Urgent, 28+: Overdue)
-- [ ] 7.9 Add deadline calculation (publish date + 28 days)
+- [x] 7.1 Create `.github/workflows/experimental-age-tracker.yml` based on bikeshed template
+- [x] 7.2 Configure cron trigger for daily 9 AM UTC
+- [x] 7.3 Add manual `workflow_dispatch` trigger for testing
+- [x] 7.4 Add step to find all open PRs from `experimental/*` branches
+- [x] 7.5 Add logic to find "🧪 Experimental Snapshot Published" comment
+- [x] 7.6 Add date parsing to extract publish date from comment
+- [x] 7.7 Add age calculation logic (current date - publish date in days)
+- [x] 7.8 Add warning level assignment (0-13: Active, 14-20: Approaching, 21-27: Urgent, 28+: Overdue)
+- [x] 7.9 Add deadline calculation (publish date + 28 days)
 
 **Test:** Manually trigger age tracker, verify it finds experimental PRs
 
@@ -108,14 +108,14 @@
 
 **Deliverable:** Age tracker creates/updates status comments with escalating warnings
 
-- [ ] 8.1 Add logic to check for existing "📊 Experiment Status" comment
-- [ ] 8.2 Generate status comment body with: emoji, status, started date, age, deadline
-- [ ] 8.3 Add "Next Steps" section with guidance based on warning level
-- [ ] 8.4 Add different next steps for active (days remaining) vs overdue (must decide)
-- [ ] 8.5 Add "Last updated" timestamp to comment footer
-- [ ] 8.6 Create new status comment if none exists
-- [ ] 8.7 Update existing status comment if found
-- [ ] 8.8 Handle errors gracefully (skip PR if date unparseable, continue to next)
+- [x] 8.1 Add logic to check for existing "📊 Experiment Status" comment
+- [x] 8.2 Generate status comment body with: emoji, status, started date, age, deadline
+- [x] 8.3 Add "Next Steps" section with guidance based on warning level
+- [x] 8.4 Add different next steps for active (days remaining) vs overdue (must decide)
+- [x] 8.5 Add "Last updated" timestamp to comment footer
+- [x] 8.6 Create new status comment if none exists
+- [x] 8.7 Update existing status comment if found
+- [x] 8.8 Handle errors gracefully (skip PR if date unparseable, continue to next)
 
 **Test:** Manually create test experimental PR with backdated publish comment, trigger age tracker, verify status comment created with correct warning level
 
@@ -138,15 +138,15 @@
 
 **Deliverable:** Complete documentation for both workflows and TSC runbooks
 
-- [ ] 10.1 Create `docs/BETA_RELEASE.md` adapted from bikeshed proposal
-- [ ] 10.2 Update BETA_RELEASE.md with monorepo-specific examples (@accelint/* packages)
-- [ ] 10.3 Add TSC runbook section to BETA_RELEASE.md (start, iterate, exit procedures)
-- [ ] 10.4 Add beta exit sequence documentation (exit on branch, merge to main, main publishes stable)
-- [ ] 10.5 Create `docs/EXPERIMENTAL_RELEASE.md` adapted from bikeshed proposal
-- [ ] 10.6 Update EXPERIMENTAL_RELEASE.md with 1-month time-box and warning schedule
-- [ ] 10.7 Add guidance for focused experiments (1-3 packages max)
-- [ ] 10.8 Document npm dist-tags (@beta and @<feature-name>)
-- [ ] 10.9 Optionally create `.github/PULL_REQUEST_TEMPLATE/experimental.md` template
+- [x] 10.1 Create `docs/BETA_RELEASE.md` adapted from bikeshed proposal
+- [x] 10.2 Update BETA_RELEASE.md with monorepo-specific examples (@accelint/* packages)
+- [x] 10.3 Add TSC runbook section to BETA_RELEASE.md (start, iterate, exit procedures)
+- [x] 10.4 Add beta exit sequence documentation (exit on branch, merge to main, main publishes stable)
+- [x] 10.5 Create `docs/EXPERIMENTAL_RELEASE.md` adapted from bikeshed proposal
+- [x] 10.6 Update EXPERIMENTAL_RELEASE.md with 1-month time-box and warning schedule
+- [x] 10.7 Add guidance for focused experiments (1-3 packages max)
+- [x] 10.8 Document npm dist-tags (@beta and @<feature-name>)
+- [x] 10.9 Optionally create `.github/PULL_REQUEST_TEMPLATE/experimental.md` template
 - [ ] 10.10 Update CONTRIBUTING.md to reference new release channels (optional)
 
 **Test:** Documentation reviewed for accuracy and completeness

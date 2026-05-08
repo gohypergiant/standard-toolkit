@@ -1,0 +1,147 @@
+name: Experimental Age Tracker
+on:
+  schedule:
+    # Run daily at 9 AM UTC
+    - cron: '0 9 * * *'
+  workflow_dispatch:
+jobs:
+  track-age:
+    name: Track Experimental Branch Age
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write # to create/update PR comments
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Track experimental PR ages
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Find all open PRs from experimental/* branches
+            const { data: prs } = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              per_page: 100
+            });
+
+            const experimentalPRs = prs.filter(pr =>
+              pr.head.ref.startsWith('experimental/')
+            );
+
+            console.log(`Found ${experimentalPRs.length} experimental PRs`);
+
+            if (experimentalPRs.length === 0) {
+              console.log('No experimental PRs to track');
+              return;
+            }
+
+            // Process each experimental PR
+            for (const pr of experimentalPRs) {
+              console.log(`\nProcessing PR #${pr.number}: ${pr.title}`);
+
+              try {
+                // Find the publish comment
+                const { data: comments } = await github.rest.issues.listComments({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: pr.number
+                });
+
+                const publishComment = comments.find(comment =>
+                  comment.user.type === 'Bot' &&
+                  comment.body.includes('🧪 Experimental Snapshot Published')
+                );
+
+                if (!publishComment) {
+                  console.log(`  ⚠️  No publish comment found, skipping`);
+                  continue;
+                }
+
+                // Extract publish date from comment
+                const dateMatch = publishComment.body.match(/\*\*Published:\*\*\s+(\d{4}-\d{2}-\d{2})/);
+                if (!dateMatch) {
+                  console.log(`  ⚠️  Could not parse publish date, skipping`);
+                  continue;
+                }
+
+                const publishDate = new Date(dateMatch[1]);
+                const currentDate = new Date();
+                const ageInDays = Math.floor((currentDate - publishDate) / (1000 * 60 * 60 * 24));
+
+                console.log(`  📅 Published: ${dateMatch[1]}`);
+                console.log(`  ⏱️  Age: ${ageInDays} days`);
+
+                // Determine warning level
+                let status, emoji, nextSteps;
+                const deadline = new Date(publishDate);
+                deadline.setDate(deadline.getDate() + 28);
+                const daysRemaining = Math.floor((deadline - currentDate) / (1000 * 60 * 60 * 24));
+
+                if (ageInDays <= 13) {
+                  emoji = 'ℹ️';
+                  status = 'Active';
+                  nextSteps = `You have **${daysRemaining} days remaining** to evaluate this experiment.\n\n- Test the experimental build\n- Gather feedback from users\n- Document findings`;
+                } else if (ageInDays <= 20) {
+                  emoji = '⏰';
+                  status = 'Approaching deadline';
+                  nextSteps = `Deadline approaching in **${daysRemaining} days**.\n\n- Begin decision process: promote or abandon?\n- If promoting, plan full implementation with tests and docs\n- If abandoning, document lessons learned`;
+                } else if (ageInDays <= 27) {
+                  emoji = '⚠️';
+                  status = 'Urgent';
+                  nextSteps = `Only **${daysRemaining} days** until deadline!\n\n- Make decision: promote to main or close experimental PR\n- If promoting, open fresh PR with full quality bar\n- If abandoning, close PR and delete branch`;
+                } else {
+                  emoji = '🚨';
+                  status = 'Overdue - decide now';
+                  nextSteps = `This experiment has exceeded the 1-month time-box.\n\n**Required actions:**\n1. **Promote:** Close this PR, reimplement with full quality bar (tests, docs, review), open fresh PR to main\n2. **Abandon:** Close this PR, delete experimental branch, document why`;
+                }
+
+                console.log(`  ${emoji} Status: ${status}`);
+
+                // Generate status comment
+                const statusCommentBody = `## 📊 Experiment Status
+
+**Status:** ${emoji} ${status}
+**Started:** ${dateMatch[1]}
+**Age:** ${ageInDays} days
+**Deadline:** ${deadline.toISOString().split('T')[0]}
+
+### Next Steps
+${nextSteps}
+
+---
+*Last updated: ${currentDate.toUTCString()}*`;
+
+                // Find existing status comment
+                const statusComment = comments.find(comment =>
+                  comment.user.type === 'Bot' &&
+                  comment.body.includes('📊 Experiment Status')
+                );
+
+                if (statusComment) {
+                  // Update existing status comment
+                  await github.rest.issues.updateComment({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    comment_id: statusComment.id,
+                    body: statusCommentBody
+                  });
+                  console.log(`  ✓ Updated status comment`);
+                } else {
+                  // Create new status comment
+                  await github.rest.issues.createComment({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: pr.number,
+                    body: statusCommentBody
+                  });
+                  console.log(`  ✓ Created status comment`);
+                }
+
+              } catch (error) {
+                console.error(`  ❌ Error processing PR #${pr.number}: ${error.message}`);
+                // Continue to next PR
+              }
+            }
+
+            console.log('\n✓ Age tracking complete');
