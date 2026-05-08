@@ -16,6 +16,7 @@ import type { DistanceUnitSymbol } from '@accelint/constants/units';
 import type { UniqueId } from '@accelint/core';
 import type { KeyOption } from '@accelint/hotkey-manager';
 import type { NonEmptyArray } from '@accelint/hotkey-manager/types/non-empty-array';
+import type { Color } from '@deck.gl/core';
 import type { Feature } from 'geojson';
 import type { Shape } from '../shared/types';
 
@@ -112,6 +113,67 @@ export type UseEditShapeReturn = {
 };
 
 /**
+ * Visual customization for edit-handle dots and the polygon/line bounding
+ * box. All fields are optional — omit any field to fall back to the
+ * package defaults from `shared/constants`.
+ *
+ * Edit handles split into three roles by `editHandleType`:
+ * - `vertex` — circles on the polygon's existing/intermediate points
+ *   (white by default).
+ * - `scale` — corner handles on the bounding box (turquoise by default).
+ * - `rotate` — the dot at the end of the rotation stem (amber by default).
+ *
+ * Each role can be styled independently with its own fill color, outline
+ * color, and radius. The outline width and "show outline" toggle are
+ * single values that apply to all three roles, mirroring the upstream
+ * `editHandlePointStrokeWidth` / `editHandlePointOutline` props (deck.gl
+ * doesn't accept per-handle accessors for those).
+ *
+ * `bboxLineColor`, `bboxLineWidth`, and `bboxDashArray` style only the
+ * polygon/line bounding box; the rotate stem connector and other guide
+ * lines stay solid in the standard line color so the bbox reads as
+ * scaffolding distinct from interactive feedback.
+ */
+export type EditShapeStyle = {
+  /** Fill color for vertex handles (existing + intermediate points). */
+  vertexHandleColor?: Color;
+  /** Fill color for scale corner handles on the bounding box. */
+  scaleHandleColor?: Color;
+  /** Fill color for the rotate handle at the end of the rotate stem. */
+  rotateHandleColor?: Color;
+  /** Outline (stroke) color for vertex handles. */
+  vertexHandleOutlineColor?: Color;
+  /** Outline (stroke) color for scale corner handles. */
+  scaleHandleOutlineColor?: Color;
+  /** Outline (stroke) color for the rotate handle. */
+  rotateHandleOutlineColor?: Color;
+  /** Vertex handle radius in pixels. */
+  vertexHandleRadius?: number;
+  /** Scale corner handle radius in pixels. */
+  scaleHandleRadius?: number;
+  /** Rotate handle radius in pixels. */
+  rotateHandleRadius?: number;
+  /**
+   * Outline thickness in pixels for *all* edit-handle dots. Single value
+   * because the upstream `editHandlePointStrokeWidth` prop doesn't accept
+   * a per-handle-type accessor.
+   */
+  editHandleStrokeWidth?: number;
+  /**
+   * Whether edit handles render with an outline ring. Defaults to `true`
+   * (matches upstream); set to `false` to render handles as solid dots
+   * with no stroke.
+   */
+  editHandleOutline?: boolean;
+  /** Stroke color for the polygon/line bounding box outline. */
+  bboxLineColor?: Color;
+  /** Stroke width in pixels for the polygon/line bounding box outline. */
+  bboxLineWidth?: number;
+  /** Dash pattern `[dashLength, gapLength]` in pixels for the bbox outline. */
+  bboxDashArray?: [number, number];
+};
+
+/**
  * Props for the EditShapeLayer component
  */
 export type EditShapeLayerProps = {
@@ -127,6 +189,12 @@ export type EditShapeLayerProps = {
   unit?: DistanceUnitSymbol;
   /** Configuration for hotkeys in EditShapesLayer */
   hotkeyConfig?: EditShapeHotkeyConfig;
+  /**
+   * Visual customization for edit handles and the bounding box. Each
+   * field is independently overridable; omitted fields use the package
+   * defaults. See {@link EditShapeStyle}.
+   */
+  style?: EditShapeStyle;
 };
 
 /**
