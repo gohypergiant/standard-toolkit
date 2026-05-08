@@ -129,8 +129,18 @@ function getEditModeForShape(shape: Shape): EditMode {
   if (isWagonWheelShape(shape)) {
     return 'locked-bounding-transform';
   }
-  if (isEllipseShape(shape) || isRectangleShape(shape)) {
-    return 'bounding-transform';
+  if (isRectangleShape(shape)) {
+    // Rectangles use rotation-aware corner-drag scaling so a rotated
+    // rectangle doesn't distort into a parallelogram during scale
+    // (axis-aligned bbox scaling would).
+    return 'rectangle-transform';
+  }
+  if (isEllipseShape(shape)) {
+    // Ellipses use axis-endpoint scaling (handles on the curve at the
+    // major/minor axis endpoints) so a rotated ellipse stays a clean
+    // rotated ellipse during scale (lat/lon-axis-aligned bbox scaling
+    // would stretch it into a non-ellipse).
+    return 'ellipse-transform';
   }
   return 'vertex-transform';
 }
