@@ -684,6 +684,7 @@ export type {
   UseFrameDelayOptions,
   UseFrameDelayResult,
 } from './hooks/use-frame-delay';
+export { usePreventFocusScroll } from './hooks/use-prevent-focus-scroll';
 export { useTreeActions } from './hooks/use-tree/actions';
 export { useTreeState } from './hooks/use-tree/state';
 export type {
