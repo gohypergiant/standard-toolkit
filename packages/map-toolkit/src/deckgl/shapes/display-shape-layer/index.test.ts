@@ -123,11 +123,11 @@ describe('DisplayShapeLayer', () => {
       expect(sublayers.length).toBe(1);
       expect(sublayers[0]).toBeInstanceOf(GeoJsonLayer);
 
-      // Now simulate hovering over first shape
+      // Now simulate hovering over first shape — main layer + hover label
       initializeLayerWithState(layer, { hoverIndex: 0 });
       sublayers = layer.renderLayers();
 
-      expect(sublayers.length).toBe(3);
+      expect(sublayers.length).toBe(2);
       const labelLayer = sublayers.find(
         (l) => l.id === `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY_LABELS}`,
       );
@@ -153,57 +153,20 @@ describe('DisplayShapeLayer', () => {
       });
       const sublayers = layer.renderLayers();
 
-      expect(sublayers.length).toBe(3);
+      expect(sublayers.length).toBe(2);
 
       const highlightLayer = sublayers.find(
         (l) => l.id === `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY_HIGHLIGHT}`,
-      );
-      const selectLayer = sublayers.find(
-        (l) => l.id === `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY_SELECTION}`,
       );
       const mainLayer = sublayers.find(
         (l) => l.id === `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY}`,
       );
 
       expect(highlightLayer).toBeInstanceOf(GeoJsonLayer);
-      expect(selectLayer).toBeInstanceOf(GeoJsonLayer);
       expect(mainLayer).toBeInstanceOf(GeoJsonLayer);
     });
 
     it('does not render highlight layer when selectedShapeId does not match any shape', () => {
-      const layer = createTestLayer({
-        data: [polygonFixture],
-        selectedShapeId: 'non-existent-id',
-      });
-      const sublayers = layer.renderLayers();
-
-      expect(sublayers.length).toBe(1);
-      expect(sublayers[0].id).toBe(
-        `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY}`,
-      );
-    });
-
-    it('renders select layer when selectedShapeId is provided', () => {
-      const layer = createTestLayer({
-        data: [polygonFixture],
-        selectedShapeId: polygonFixture.id,
-      });
-      const sublayers = layer.renderLayers();
-
-      expect(sublayers.length).toBe(2);
-
-      const selectLayer = sublayers.find(
-        (l) => l.id === `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY_SELECTION}`,
-      );
-      const mainLayer = sublayers.find(
-        (l) => l.id === `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY}`,
-      );
-
-      expect(selectLayer).toBeInstanceOf(GeoJsonLayer);
-      expect(mainLayer).toBeInstanceOf(GeoJsonLayer);
-    });
-
-    it('does not render select layer when selectedShapeId does not match any shape', () => {
       const layer = createTestLayer({
         data: [polygonFixture],
         selectedShapeId: 'non-existent-id',
@@ -336,7 +299,7 @@ describe('DisplayShapeLayer', () => {
         } as never,
         mode: 'query',
         sourceLayer: {
-          id: `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY_SELECTION}`,
+          id: `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY_HIGHLIGHT}`,
         },
       });
 
@@ -757,80 +720,54 @@ describe('DisplayShapeLayer', () => {
 
       expect(curtainHoverLayer).toBeInstanceOf(GeoJsonLayer);
     });
-  });
 
-  describe('hover layer', () => {
-    it('renders hover layer for extruded polygon when hovered', () => {
-      const layer = createTestLayer(
-        { data: [elevatedPolygon], enableElevation: true },
-        { hoverIndex: 0 },
-      );
-      const sublayers = layer.renderLayers();
-
-      const hoverLayer = sublayers.find(
-        (l) => l.id === `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY}-hover`,
-      );
-
-      expect(hoverLayer).toBeInstanceOf(GeoJsonLayer);
-      // biome-ignore lint/suspicious/noExplicitAny: accessing internal props for testing
-      const props = (hoverLayer as GeoJsonLayer).props as any;
-      expect(props.extruded).toBe(true);
-      expect(props.material).toEqual(MATERIAL_SETTINGS.HOVER_OR_SELECT);
-    });
-
-    it('renders hover layer when enableElevation is false (2D hover)', () => {
-      const layer = createTestLayer(
-        { data: [elevatedPolygon], enableElevation: false },
-        { hoverIndex: 0 },
-      );
-      const sublayers = layer.renderLayers();
-
-      const hoverLayer = sublayers.find(
-        (l) => l.id === `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY}-hover`,
-      );
-
-      expect(hoverLayer).toBeInstanceOf(GeoJsonLayer);
-      const props = (hoverLayer as GeoJsonLayer).props;
-      expect(props.extruded).toBe(false);
-      expect(props.material).toEqual(MATERIAL_SETTINGS.HOVER_OR_SELECT);
-    });
-
-    it('does not render hover layer for non-polygon shapes', () => {
-      const layer = createTestLayer(
-        { data: [elevatedLineString], enableElevation: true },
-        { hoverIndex: 0 },
-      );
-      const sublayers = layer.renderLayers();
-
-      const hoverLayer = sublayers.find(
-        (l) => l.id === `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY}-hover`,
-      );
-
-      expect(hoverLayer).toBeUndefined();
-    });
-
-    it('uses custom getHoverColor when provided', () => {
-      const customHoverColor: [number, number, number, number] = [
-        255, 0, 0, 128,
-      ];
-      const getHoverColor = vi.fn(() => customHoverColor);
+    it('uses custom getHoverFillColor for the curtain hover layer', () => {
+      const customColor: [number, number, number, number] = [255, 0, 0, 200];
+      const getHoverFillColor = vi.fn(() => customColor);
 
       const layer = createTestLayer(
         {
-          data: [polygonFixture],
-          getHoverColor,
+          data: [elevatedLineString],
+          enableElevation: true,
+          getHoverFillColor,
         },
         { hoverIndex: 0 },
       );
       const sublayers = layer.renderLayers();
-
-      const hoverLayer = sublayers.find(
-        (l) => l.id === `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY}-hover`,
+      const curtainHoverLayer = sublayers.find((l) =>
+        l.id.includes('elevation-curtain-hover'),
       ) as GeoJsonLayer;
-
       // biome-ignore lint/suspicious/noExplicitAny: accessing internal props for testing
-      const props = hoverLayer.props as any;
-      expect(props.getFillColor).toBe(getHoverColor);
+      const props = curtainHoverLayer.props as any;
+
+      // Curtain layers precompute one color per partition, so the accessor
+      // returns the override directly (not via per-feature invocation).
+      expect(props.getFillColor()).toEqual(customColor);
+      expect(getHoverFillColor).toHaveBeenCalledTimes(1);
+      // Accessor must be in updateTriggers so swapping the prop invalidates
+      expect(props.updateTriggers.getFillColor).toContain(getHoverFillColor);
+    });
+
+    it('uses custom getSelectFillColor for the curtain selected layer', () => {
+      const customColor: [number, number, number, number] = [0, 255, 0, 200];
+      const getSelectFillColor = vi.fn(() => customColor);
+
+      const layer = createTestLayer({
+        data: [elevatedLineString],
+        selectedShapeId: elevatedLineString.id,
+        enableElevation: true,
+        getSelectFillColor,
+      });
+      const sublayers = layer.renderLayers();
+      const curtainSelectedLayer = sublayers.find((l) =>
+        l.id.includes('elevation-curtain-selected'),
+      ) as GeoJsonLayer;
+      // biome-ignore lint/suspicious/noExplicitAny: accessing internal props for testing
+      const props = curtainSelectedLayer.props as any;
+
+      expect(props.getFillColor()).toEqual(customColor);
+      expect(getSelectFillColor).toHaveBeenCalledTimes(1);
+      expect(props.updateTriggers.getFillColor).toContain(getSelectFillColor);
     });
   });
 
@@ -892,81 +829,156 @@ describe('DisplayShapeLayer', () => {
     });
   });
 
-  describe('select layer', () => {
-    it('renders select layer for elevated polygon when enableElevation is true', () => {
-      const layer = createTestLayer({
-        data: [elevatedPolygon],
-        selectedShapeId: elevatedPolygon.id,
-        enableElevation: true,
-      });
+  describe('main layer fill color', () => {
+    // Use a non-saturated base color so brightening produces visibly distinct
+    // values (white clamps to 255 regardless of factor). Cast through unknown
+    // because spreading the Shape discriminated union loses the variant tag.
+    const grayPolygon = {
+      ...polygonFixture,
+      feature: {
+        ...polygonFixture.feature,
+        properties: {
+          ...polygonFixture.feature.properties,
+          styleProperties: {
+            ...polygonFixture.feature.properties.styleProperties,
+            fillColor: [100, 100, 100, 255],
+          },
+        },
+      },
+    } as unknown as Shape;
+
+    function getMainLayerProps(layer: DisplayShapeLayer) {
       const sublayers = layer.renderLayers();
-
-      const selectLayer = sublayers.find(
-        (l) => l.id === `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY_SELECTION}`,
-      );
-
-      expect(selectLayer).toBeInstanceOf(GeoJsonLayer);
-    });
-
-    it('renders select layer for polygon when enableElevation is false', () => {
-      const layer = createTestLayer({
-        data: [polygonFixture],
-        selectedShapeId: polygonFixture.id,
-        enableElevation: false,
-      });
-      const sublayers = layer.renderLayers();
-
-      const selectLayer = sublayers.find(
-        (l) => l.id === `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY_SELECTION}`,
-      );
-
-      expect(selectLayer).toBeInstanceOf(GeoJsonLayer);
-    });
-
-    it('uses custom getSelectColor when provided', () => {
-      const customSelectColor: [number, number, number, number] = [
-        0, 255, 0, 150,
-      ];
-      const getSelectColor = vi.fn(() => customSelectColor);
-
-      const layer = createTestLayer({
-        data: [polygonFixture],
-        selectedShapeId: polygonFixture.id,
-        getSelectColor,
-      });
-      const sublayers = layer.renderLayers();
-
-      const selectLayer = sublayers.find(
-        (l) => l.id === `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY_SELECTION}`,
-      ) as GeoJsonLayer;
-
-      // biome-ignore lint/suspicious/noExplicitAny: accessing internal props for testing
-      const props = selectLayer.props as any;
-      expect(props.getFillColor).toBe(getSelectColor);
-    });
-  });
-
-  describe('selection fill color', () => {
-    it('does not modify fill color for selected elevated polygon', () => {
-      const layer = createTestLayer({
-        data: [elevatedPolygon],
-        selectedShapeId: elevatedPolygon.id,
-        enableElevation: true,
-      });
-      const sublayers = layer.renderLayers();
-
       const mainLayer = sublayers.find(
         (l) => l.id === `${TEST_LAYER_ID}-${SHAPE_LAYER_IDS.DISPLAY}`,
       ) as GeoJsonLayer;
       // biome-ignore lint/suspicious/noExplicitAny: accessing internal props for testing
-      const props = mainLayer.props as any;
-      const feature = props.data[0];
+      return mainLayer.props as any;
+    }
 
-      const fillColor = props.getFillColor(feature);
+    it('returns base color with applyBaseOpacity in neutral state', () => {
+      const layer = createTestLayer({ data: [polygonFixture] });
+      const props = getMainLayerProps(layer);
 
-      // Selection no longer modifies fill — innate shape styling is preserved
-      // Base: [255, 255, 255, 255] → with applyBaseOpacity alpha = round(255 * 0.2) = 51
+      // props.data is the layer's augmented features with shapeId set to the
+      // parent Shape's id; selection state checks against this, not the raw fixture.
+      const fillColor = props.getFillColor(props.data[0], { index: 0 });
+
+      // [255, 255, 255, 255] × 0.2 alpha = [255, 255, 255, 51]
       expect(fillColor).toEqual([255, 255, 255, 51]);
+    });
+
+    it('brightens un-dimmed base color when feature is hovered', () => {
+      const layer = createTestLayer({ data: [grayPolygon] }, { hoverIndex: 0 });
+      const props = getMainLayerProps(layer);
+
+      const fillColor = props.getFillColor(props.data[0], { index: 0 });
+
+      // RGB: [100, 100, 100] × 1.4 = [140, 140, 140]
+      // Alpha: 255 × ACTIVE_FILL_OPACITY (0.5) = 128 (round-half-up of 127.5)
+      expect(fillColor).toEqual([140, 140, 140, 128]);
+    });
+
+    it('brightens un-dimmed base color when feature is selected', () => {
+      const layer = createTestLayer({
+        data: [grayPolygon],
+        selectedShapeId: grayPolygon.id,
+      });
+      const props = getMainLayerProps(layer);
+
+      const fillColor = props.getFillColor(props.data[0], { index: 0 });
+
+      expect(fillColor).toEqual([140, 140, 140, 128]);
+    });
+
+    it('brightens further when feature is hovered AND selected', () => {
+      const layer = createTestLayer(
+        { data: [grayPolygon], selectedShapeId: grayPolygon.id },
+        { hoverIndex: 0 },
+      );
+      const props = getMainLayerProps(layer);
+
+      const fillColor = props.getFillColor(props.data[0], { index: 0 });
+
+      // RGB: [100, 100, 100] × 1.7 = [170, 170, 170]
+      // Alpha: 255 × ACTIVE_FILL_OPACITY (0.5) = 128
+      expect(fillColor).toEqual([170, 170, 170, 128]);
+    });
+
+    it('uses custom getHoverFillColor when feature is hovered', () => {
+      const customColor: [number, number, number, number] = [255, 0, 0, 200];
+      const getHoverFillColor = vi.fn(() => customColor);
+
+      const layer = createTestLayer(
+        { data: [polygonFixture], getHoverFillColor },
+        { hoverIndex: 0 },
+      );
+      const props = getMainLayerProps(layer);
+      const augmentedFeature = props.data[0];
+
+      const fillColor = props.getFillColor(augmentedFeature, { index: 0 });
+
+      expect(fillColor).toEqual(customColor);
+      expect(getHoverFillColor).toHaveBeenCalledWith(augmentedFeature);
+    });
+
+    it('uses custom getSelectFillColor when feature is selected', () => {
+      const customColor: [number, number, number, number] = [0, 255, 0, 200];
+      const getSelectFillColor = vi.fn(() => customColor);
+
+      const layer = createTestLayer({
+        data: [polygonFixture],
+        selectedShapeId: polygonFixture.id,
+        getSelectFillColor,
+      });
+      const props = getMainLayerProps(layer);
+      const augmentedFeature = props.data[0];
+
+      const fillColor = props.getFillColor(augmentedFeature, { index: 0 });
+
+      expect(fillColor).toEqual(customColor);
+      expect(getSelectFillColor).toHaveBeenCalledWith(augmentedFeature);
+    });
+
+    it('hover override wins over select override when both states are active', () => {
+      const hoverColor: [number, number, number, number] = [255, 0, 0, 200];
+      const selectColor: [number, number, number, number] = [0, 255, 0, 200];
+      const getHoverFillColor = vi.fn(() => hoverColor);
+      const getSelectFillColor = vi.fn(() => selectColor);
+
+      const layer = createTestLayer(
+        {
+          data: [polygonFixture],
+          selectedShapeId: polygonFixture.id,
+          getHoverFillColor,
+          getSelectFillColor,
+        },
+        { hoverIndex: 0 },
+      );
+      const props = getMainLayerProps(layer);
+
+      const fillColor = props.getFillColor(props.data[0], { index: 0 });
+
+      expect(fillColor).toEqual(hoverColor);
+    });
+
+    it('includes interaction state and override props in updateTriggers', () => {
+      const getHoverFillColor = vi.fn();
+      const getSelectFillColor = vi.fn();
+
+      const layer = createTestLayer({
+        data: [polygonFixture],
+        selectedShapeId: polygonFixture.id,
+        getHoverFillColor,
+        getSelectFillColor,
+      });
+      const props = getMainLayerProps(layer);
+
+      // Buffer must invalidate when any of these change so deck.gl re-runs
+      // the accessor on hover/select transitions and prop swaps
+      expect(props.updateTriggers.getFillColor).toContain(getHoverFillColor);
+      expect(props.updateTriggers.getFillColor).toContain(getSelectFillColor);
+      expect(props.updateTriggers.getFillColor).toContain(polygonFixture.id);
     });
   });
 
