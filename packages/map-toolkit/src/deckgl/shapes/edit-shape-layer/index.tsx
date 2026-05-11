@@ -51,7 +51,7 @@ import {
   SHAPE_PROPERTY_MAP,
 } from './constants';
 import { getEditModeInstance } from './modes';
-import { VERTEX_BBOX_MODE } from './modes/vertex-transform-mode';
+import { VERTEX_BBOX_MODE } from './modes/utils/vertex-bbox-chrome';
 import {
   cancelEditingFromLayer,
   disableEditPanning,

@@ -130,9 +130,11 @@ function readDragContext(self: ScaleModePrivate): DragContext | null {
 
 /**
  * Walk a GeoJSON geometry, applying `transformCoord` to each position.
- * Mirrors the parent's `scaleGeometry` shape so the oriented-bounding-box-aware path
- * supports the same geometry kinds (Point, LineString, Polygon, and
- * their Multi* variants).
+ * Only `Polygon` and `LineString` are reachable here — `VertexTransformMode`
+ * opens this path for those two geometry types only — so we don't carry
+ * the `Point` / `MultiPoint` / `MultiLineString` / `MultiPolygon` branches
+ * the parent's `scaleGeometry` covers. Any other geometry type falls
+ * through unchanged.
  */
 function scaleGeometryCoords(
   // biome-ignore lint/suspicious/noExplicitAny: geometry types vary; we dispatch on type below
@@ -141,27 +143,16 @@ function scaleGeometryCoords(
   // biome-ignore lint/suspicious/noExplicitAny: returns the same geometry shape we received
 ): any {
   switch (geometry.type) {
-    case 'Point':
-      return { ...geometry, coordinates: transformCoord(geometry.coordinates) };
     case 'LineString':
-    case 'MultiPoint':
       return {
         ...geometry,
         coordinates: geometry.coordinates.map(transformCoord),
       };
     case 'Polygon':
-    case 'MultiLineString':
       return {
         ...geometry,
         coordinates: geometry.coordinates.map((ring: Position[]) =>
           ring.map(transformCoord),
-        ),
-      };
-    case 'MultiPolygon':
-      return {
-        ...geometry,
-        coordinates: geometry.coordinates.map((polygon: Position[][]) =>
-          polygon.map((ring: Position[]) => ring.map(transformCoord)),
         ),
       };
     default:
