@@ -30,15 +30,22 @@ export const VERTEX_BBOX_MODE = 'vertex-bbox';
  * box. Inherits each scale handle's `properties` (which include
  * `positionIndexes`) from the matching `existingScaleHandles` entry so
  * ScaleMode's `_getOppositeScaleHandle` lookup keeps working.
+ *
+ * Returns the full chrome `features` for the guide collection plus a
+ * separate `scaleHandles` array of the four corner handles in iteration
+ * order — callers that patch ScaleMode's `_cornerGuidePoints` cache reuse
+ * these directly instead of re-scanning `features` for `editHandleType:
+ * 'scale'` Points each frame.
  */
 function buildBoundingBoxChrome(
   boundingBox: OrientedBoundingBox,
   existingRotateHandle: Feature<GeoPoint> | undefined,
   existingScaleHandles: Feature<GeoPoint>[],
-): Feature[] {
-  const result: Feature[] = [];
+): { features: Feature[]; scaleHandles: Feature<GeoPoint>[] } {
+  const features: Feature[] = [];
+  const scaleHandles: Feature<GeoPoint>[] = [];
 
-  result.push(
+  features.push(
     lineString(
       [
         boundingBox.bottomLeft,
@@ -76,14 +83,16 @@ function buildBoundingBoxChrome(
       positionIndex < 0 ||
       positionIndex >= 4
     ) {
-      result.push(handle);
+      features.push(handle);
       continue;
     }
 
     const corner = cornersByIndex[positionIndex];
 
     if (corner) {
-      result.push(point(corner, properties) as Feature<GeoPoint>);
+      const positioned = point(corner, properties) as Feature<GeoPoint>;
+      features.push(positioned);
+      scaleHandles.push(positioned);
     }
   }
 
@@ -91,16 +100,16 @@ function buildBoundingBoxChrome(
     // biome-ignore lint/suspicious/noExplicitAny: properties shape varies
     const rotateProps = (existingRotateHandle.properties ?? {}) as any;
 
-    result.push(point(boundingBox.stemTip, rotateProps) as Feature<GeoPoint>);
+    features.push(point(boundingBox.stemTip, rotateProps) as Feature<GeoPoint>);
 
-    result.push(
+    features.push(
       lineString([boundingBox.stemBase, boundingBox.stemTip], {
         mode: 'rotate-stem',
       }) as Feature<LineString>,
     );
   }
 
-  return result;
+  return { features, scaleHandles };
 }
 
 /**
@@ -179,12 +188,18 @@ export function isRotateChromeFeature(feature: Feature): boolean {
  * Replace the rotate-mode emitted bbox + scale handles + rotate handle
  * + stem connector with oriented bounding box-based versions. Other guides (vertex
  * handles, intermediate handles, etc.) pass through unchanged.
+ *
+ * Returns the modified guide collection (`features`) plus the four
+ * corner scale handles that were repositioned to the oriented bounding
+ * box. The handles are surfaced separately so the caller can patch
+ * `ScaleMode._cornerGuidePoints` without re-scanning the guide
+ * collection on the hot path.
  */
 export function replaceRotateChromeWithBoundingBox(
   features: Feature[],
   boundingBox: OrientedBoundingBox,
-): Feature[] {
-  const scaleHandles: Feature<GeoPoint>[] = [];
+): { features: Feature[]; scaleHandles: Feature<GeoPoint>[] } {
+  const existingScaleHandles: Feature<GeoPoint>[] = [];
   let rotateHandle: Feature<GeoPoint> | undefined;
   const passthrough: Feature[] = [];
 
@@ -194,7 +209,7 @@ export function replaceRotateChromeWithBoundingBox(
     const isPoint = feature.geometry.type === 'Point';
 
     if (editHandleType === 'scale' && isPoint) {
-      scaleHandles.push(feature as Feature<GeoPoint>);
+      existingScaleHandles.push(feature as Feature<GeoPoint>);
       continue;
     }
 
@@ -210,14 +225,18 @@ export function replaceRotateChromeWithBoundingBox(
     passthrough.push(feature);
   }
 
+  const built = buildBoundingBoxChrome(
+    boundingBox,
+    rotateHandle,
+    existingScaleHandles,
+  );
+
   // Push chrome features into `passthrough` in place rather than
   // returning a spread-merged array — saves one array allocation per
   // `getGuides` frame.
-  passthrough.push(
-    ...buildBoundingBoxChrome(boundingBox, rotateHandle, scaleHandles),
-  );
+  passthrough.push(...built.features);
 
-  return passthrough;
+  return { features: passthrough, scaleHandles: built.scaleHandles };
 }
 
 /**
@@ -254,28 +273,19 @@ export function boundingBoxToScaleHandles(
  * sees the handle) rather than the axis-aligned bounding box corner ScaleMode computed
  * internally. Required because ScaleMode's drag origin comes from
  * those cached points, not from the visible feature collection.
+ *
+ * Pass the `scaleHandles` array returned by
+ * {@link replaceRotateChromeWithBoundingBox} directly — the caller
+ * already produced these as part of building the chrome, so this is a
+ * straight assignment with no per-frame scan.
  */
 export function syncScaleModeCornerCache(
   scaleMode: ScaleModeWithFreeTransform,
-  features: Feature[],
+  scaleHandles: Feature<GeoPoint>[],
 ): void {
-  const boundingBoxScaleHandles: Feature<GeoPoint>[] = [];
-
-  for (const feature of features) {
-    // biome-ignore lint/suspicious/noExplicitAny: properties shape varies
-    const properties = (feature.properties ?? {}) as any;
-
-    if (
-      properties.editHandleType === 'scale' &&
-      feature.geometry.type === 'Point'
-    ) {
-      boundingBoxScaleHandles.push(feature as Feature<GeoPoint>);
-    }
-  }
-
-  if (boundingBoxScaleHandles.length !== 4) {
+  if (scaleHandles.length !== 4) {
     return;
   }
 
-  scaleModePrivate(scaleMode)._cornerGuidePoints = boundingBoxScaleHandles;
+  scaleModePrivate(scaleMode)._cornerGuidePoints = scaleHandles;
 }

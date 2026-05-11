@@ -16,55 +16,7 @@ import type {
 } from '@deck.gl-community/editable-layers';
 import type { Feature } from 'geojson';
 import { BBOX_ORIENTATION_CONFIG_KEY } from '../oriented-scale-mode';
-
-/**
- * Single-slot cache keyed on `shapeId`. Holds one entry; re-seeds when the
- * key changes; clears explicitly on session boundary. The lock module's
- * mechanism for tracking per-shape state across frames.
- */
-class SessionCache<TValue> {
-  private entry: { shapeId: string; value: TValue } | null = null;
-
-  /** Read the entry if it matches `shapeId`, or seed a fresh one. */
-  getOrInit(shapeId: string | undefined, seed: () => TValue): TValue | null {
-    if (shapeId === undefined) {
-      return null;
-    }
-
-    if (this.entry?.shapeId === shapeId) {
-      return this.entry.value;
-    }
-
-    this.entry = { shapeId, value: seed() };
-
-    return this.entry.value;
-  }
-
-  /** Mutate the entry in place if it matches `shapeId`. No-op otherwise. */
-  update(shapeId: string, mutator: (value: TValue) => void): void {
-    if (this.entry?.shapeId === shapeId) {
-      mutator(this.entry.value);
-    }
-  }
-
-  /**
-   * Read without seeding. When `shapeId` is provided, returns `null`
-   * unless the entry matches. When omitted, returns the current entry
-   * regardless of key — used by `decorateProps` which doesn't have a
-   * shapeId at the call site.
-   */
-  peek(shapeId?: string): TValue | null {
-    if (shapeId !== undefined && this.entry?.shapeId !== shapeId) {
-      return null;
-    }
-
-    return this.entry?.value ?? null;
-  }
-
-  reset(): void {
-    this.entry = null;
-  }
-}
+import { SessionCache } from './session-cache';
 
 /**
  * Snapshot-on-enter, clear-on-exit lock. Captures a value on the first
@@ -239,6 +191,12 @@ export class OrientationLock<TBoundingBox> {
     };
   }
 
+  /**
+   * Clear the entire session state — cumulative rotation angle, in-flight
+   * rotation delta, and scale-drag bounding-box snapshot. Called by the
+   * React layer when the editing shape ID changes so a freshly-opened
+   * shape starts at `angleDeg === 0` with no leftover scale lock.
+   */
   reset(): void {
     this.orientation.reset();
     this.scaleLock.reset();

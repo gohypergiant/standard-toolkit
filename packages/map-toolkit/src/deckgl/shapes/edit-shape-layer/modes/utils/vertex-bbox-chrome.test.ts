@@ -21,10 +21,28 @@ import {
 } from './vertex-bbox-chrome';
 import type { OrientedBoundingBox } from './vertex-bbox-math';
 
+/**
+ * Subset of the `editable-layers` guide-feature `properties` shape that
+ * the chrome utilities under test inspect. Tighter than `any` so tests
+ * fail at compile time when an unexpected property name slips in (and so
+ * editor tooling helps when fleshing out new fixtures).
+ */
+type TestGuideProperties = {
+  guideType?: 'editHandle';
+  editHandleType?:
+    | 'existing'
+    | 'intermediate'
+    | 'scale'
+    | 'rotate'
+    | 'snap-source'
+    | 'snap-target';
+  mode?: 'scale' | 'rotate-stem' | 'vertex-bbox';
+  positionIndexes?: number[];
+};
+
 function pointGuide(
   coord: [number, number],
-  // biome-ignore lint/suspicious/noExplicitAny: test factory accepts arbitrary guide property shapes
-  properties: any,
+  properties: TestGuideProperties,
 ): Feature<GeoPoint> {
   return {
     type: 'Feature',
@@ -35,8 +53,7 @@ function pointGuide(
 
 function lineGuide(
   coords: [number, number][],
-  // biome-ignore lint/suspicious/noExplicitAny: test factory accepts arbitrary guide property shapes
-  properties: any,
+  properties: TestGuideProperties,
 ): Feature<LineString> {
   return {
     type: 'Feature',
@@ -116,68 +133,67 @@ describe('filterVertexGuides', () => {
 });
 
 describe('isRotateChromeFeature', () => {
-  it('should return true for a 5-coordinate closed LineString with no mode or editHandleType', () => {
-    const bboxOutline = lineGuide(
-      [
-        [-1, -1],
-        [1, -1],
-        [1, 1],
-        [-1, 1],
-        [-1, -1],
-      ],
-      {},
-    );
-
-    expect(isRotateChromeFeature(bboxOutline)).toBe(true);
-  });
-
-  it('should return true for a 2-coordinate stem connector with no mode or editHandleType', () => {
-    const stemConnector = lineGuide(
-      [
-        [0, 1],
-        [0, 1.5],
-      ],
-      {},
-    );
-
-    expect(isRotateChromeFeature(stemConnector)).toBe(true);
-  });
-
-  it("should return true for a Point with editHandleType 'rotate'", () => {
-    const rotateHandle = pointGuide([0, 1.5], { editHandleType: 'rotate' });
-
-    expect(isRotateChromeFeature(rotateHandle)).toBe(true);
-  });
-
-  it("should return false for a Point with editHandleType 'scale'", () => {
-    const scaleHandle = pointGuide([1, 1], { editHandleType: 'scale' });
-
-    expect(isRotateChromeFeature(scaleHandle)).toBe(false);
-  });
-
-  it("should return false for our own rotate-stem connector (mode='rotate-stem')", () => {
-    const ourStem = lineGuide(
-      [
-        [0, 1],
-        [0, 1.5],
-      ],
-      { mode: 'rotate-stem' },
-    );
-
-    expect(isRotateChromeFeature(ourStem)).toBe(false);
-  });
-
-  it('should return false for a LineString with the wrong coordinate count', () => {
-    const oddLine = lineGuide(
-      [
-        [0, 0],
-        [1, 0],
-        [1, 1],
-      ],
-      {},
-    );
-
-    expect(isRotateChromeFeature(oddLine)).toBe(false);
+  it.each([
+    {
+      label: '5-coord closed LineString with no mode/editHandleType',
+      feature: lineGuide(
+        [
+          [-1, -1],
+          [1, -1],
+          [1, 1],
+          [-1, 1],
+          [-1, -1],
+        ],
+        {},
+      ),
+      expected: true,
+    },
+    {
+      label: '2-coord stem connector with no mode/editHandleType',
+      feature: lineGuide(
+        [
+          [0, 1],
+          [0, 1.5],
+        ],
+        {},
+      ),
+      expected: true,
+    },
+    {
+      label: "Point with editHandleType 'rotate'",
+      feature: pointGuide([0, 1.5], { editHandleType: 'rotate' }),
+      expected: true,
+    },
+    {
+      label: "Point with editHandleType 'scale'",
+      feature: pointGuide([1, 1], { editHandleType: 'scale' }),
+      expected: false,
+    },
+    {
+      label: "our own rotate-stem connector (mode='rotate-stem')",
+      feature: lineGuide(
+        [
+          [0, 1],
+          [0, 1.5],
+        ],
+        { mode: 'rotate-stem' },
+      ),
+      expected: false,
+    },
+    {
+      label: 'LineString with the wrong coordinate count',
+      feature: lineGuide(
+        [
+          [0, 0],
+          [1, 0],
+          [1, 1],
+        ],
+        {},
+      ),
+      expected: false,
+    },
+  ])('should classify $label as $expected', ({ feature, expected }) => {
+    expect(isRotateChromeFeature(feature)).toBe(expected);
   });
 });
 
@@ -238,16 +254,17 @@ describe('replaceRotateChromeWithBoundingBox', () => {
       editHandleType: 'existing',
     });
 
-    const result = replaceRotateChromeWithBoundingBox(
-      [
-        rotateModeBboxLine,
-        rotateModeStem,
-        rotateHandle,
-        ...scaleHandles,
-        vertexHandle,
-      ],
-      makeBoundingBox(),
-    );
+    const { features: result, scaleHandles: cornerHandles } =
+      replaceRotateChromeWithBoundingBox(
+        [
+          rotateModeBboxLine,
+          rotateModeStem,
+          rotateHandle,
+          ...scaleHandles,
+          vertexHandle,
+        ],
+        makeBoundingBox(),
+      );
 
     // Pass-through: vertex handle survives.
     expect(result).toContain(vertexHandle);
@@ -289,6 +306,11 @@ describe('replaceRotateChromeWithBoundingBox', () => {
       (newScaleHandles[2] as Feature<GeoPoint>).geometry.coordinates,
     ).toEqual([1, 1]);
 
+    // The same four corner handles are surfaced separately so callers
+    // can patch the scale-mode corner cache without re-scanning.
+    expect(cornerHandles).toHaveLength(4);
+    expect(cornerHandles).toEqual(newScaleHandles);
+
     // One rotate handle Point at the stem tip.
     const newRotateHandles = result.filter(
       (feature) =>
@@ -309,11 +331,11 @@ describe('replaceRotateChromeWithBoundingBox', () => {
       positionIndexes: [7],
     });
 
-    const result = replaceRotateChromeWithBoundingBox(
-      [oddHandle],
-      makeBoundingBox(),
-    );
+    const { features: result, scaleHandles: cornerHandles } =
+      replaceRotateChromeWithBoundingBox([oddHandle], makeBoundingBox());
 
     expect(result).toContain(oddHandle);
+    // Out-of-range positionIndex doesn't become a corner handle.
+    expect(cornerHandles).toHaveLength(0);
   });
 });

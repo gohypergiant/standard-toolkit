@@ -28,6 +28,7 @@ import { computeRectangleMeasurementsFromCorners } from '../../shared/utils/geom
 import { BaseTransformMode, type HandleMatcher } from './base-transform-mode';
 import { RectangleScaleMode } from './rectangle-scale-mode';
 import { RotateModeWithSnap } from './rotate-mode-with-snap';
+import { SessionCache } from './utils/session-cache';
 import { latToMercatorY, mercatorYToLat } from './utils/mercator';
 import {
   computePolygonBounds,
@@ -240,7 +241,7 @@ export class RectangleTransformMode extends BaseTransformMode {
    * {@link resetLockedAnchor} (called from the edit layer when the
    * editing shape ID changes).
    */
-  private lockedAnchor: { shapeId: string; edgeIndex: number } | null = null;
+  private anchorCache = new SessionCache<number>();
 
   /**
    * Constructs the composite mode by instantiating its three sub-modes
@@ -349,7 +350,7 @@ export class RectangleTransformMode extends BaseTransformMode {
    * for the freshly-opened shape.
    */
   resetLockedAnchor(): void {
-    this.lockedAnchor = null;
+    this.anchorCache.reset();
   }
 
   /**
@@ -432,14 +433,20 @@ export class RectangleTransformMode extends BaseTransformMode {
       return pickNorthernmostEdgeIndex(ring);
     }
 
-    if (this.lockedAnchor && this.lockedAnchor.shapeId === shapeId) {
-      return this.lockedAnchor.edgeIndex;
+    const cached = this.anchorCache.peek(shapeId);
+
+    if (cached !== null) {
+      return cached;
     }
 
+    // First call for this shapeId (or fresh after reset). Only lock when
+    // we have a meaningful index — if `pickNorthernmostEdgeIndex` returns
+    // null (degenerate / not-yet-ready ring), leave the cache empty and
+    // retry on a future frame instead of caching the null.
     const edgeIndex = pickNorthernmostEdgeIndex(ring);
 
     if (edgeIndex !== null) {
-      this.lockedAnchor = { shapeId, edgeIndex };
+      this.anchorCache.set(shapeId, edgeIndex);
     }
 
     return edgeIndex;

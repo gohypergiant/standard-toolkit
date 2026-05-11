@@ -39,7 +39,8 @@ map-toolkit/edit-shape-layer/modes
     ├── mercator.ts                  (lat ↔ Mercator-y helpers)
     ├── orientation-lock.ts          (per-session rotation accumulator + scale-drag snapshot)
     ├── rectangle-scale-math.ts      (rotated-rectangle corner reconstruction)
-    ├── scale-mode-internals.ts      (typed cast to ScaleMode's private fields)
+    ├── scale-mode-internals.ts     (typed cast to ScaleMode's private fields)
+    ├── session-cache.ts             (shape-id-keyed single-slot cache shared by transform modes)
     ├── transform-mode-guides.ts     (rotate-stem geometry + guide post-processing)
     ├── vertex-bbox-chrome.ts        (oriented-bounding-box chrome for polygons/lines)
     └── vertex-bbox-math.ts          (oriented-bounding-box computation for polygons/lines)
@@ -159,11 +160,11 @@ This provides a better UX for points since they have a very small surface area f
 
 2. **Scale-drag oriented-bounding-box snapshot.** At the start of a scale drag, the lock snapshots the oriented bounding box. The snapshot is used to patch `ScaleMode`'s private `_cornerGuidePoints` so the scale-origin lookup anchors at a fixed world position even as the polygon's centroid drifts under non-uniform scaling. Without the snapshot, the origin drifts each frame and the scale formula explodes.
 
-Internally composed of three primitives (kept private to the module):
+Internally composed of three primitives:
 
-- `SessionCache<T>` — shape-id-keyed value cache; re-seeds on shape change.
-- `TransientLock<T>` — snapshot-on-enter / clear-on-exit for the scale drag.
-- `TransitionDetector<T>` — set→unset edge detection for the deck.gl transient rotation property.
+- `SessionCache<T>` — shape-id-keyed value cache; re-seeds on shape change. Lives in `utils/session-cache.ts` and is also used directly by `EllipseTransformMode` (for the locked axis-endpoint index) and `RectangleTransformMode` (for the locked edge index).
+- `TransientLock<T>` — snapshot-on-enter / clear-on-exit for the scale drag. Module-private to `orientation-lock.ts`.
+- `TransitionDetector<T>` — set→unset edge detection for the deck.gl transient rotation property. Module-private to `orientation-lock.ts`.
 
 The lock is **generic over the bounding-box type** so its boundary tests can use a sentinel value instead of constructing a real `OrientedBoundingBox`.
 

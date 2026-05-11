@@ -34,6 +34,7 @@ import {
 } from './ellipse-scale-mode';
 import { latToMercatorY, mercatorYToLat } from './utils/mercator';
 import { RotateModeWithSnap } from './rotate-mode-with-snap';
+import { SessionCache } from './utils/session-cache';
 import {
   computePolygonBounds,
   computeRotateStemTip,
@@ -207,7 +208,7 @@ export class EllipseTransformMode extends BaseTransformMode {
    * session boundary by {@link resetLockedAnchor} (called from the edit
    * layer when the editing shape ID changes).
    */
-  private lockedAnchor: { shapeId: string; axisIndex: number } | null = null;
+  private anchorCache = new SessionCache<number>();
 
   /**
    * Constructs the composite mode by instantiating its three sub-modes
@@ -316,7 +317,7 @@ export class EllipseTransformMode extends BaseTransformMode {
    * for the freshly-opened shape.
    */
   resetLockedAnchor(): void {
-    this.lockedAnchor = null;
+    this.anchorCache.reset();
   }
 
   /**
@@ -388,18 +389,11 @@ export class EllipseTransformMode extends BaseTransformMode {
         ? feature.properties.shapeId
         : undefined;
 
-    if (shapeId === undefined) {
-      return pickNorthernmostAxisIndex(info);
-    }
-
-    if (this.lockedAnchor && this.lockedAnchor.shapeId === shapeId) {
-      return this.lockedAnchor.axisIndex;
-    }
-
-    const axisIndex = pickNorthernmostAxisIndex(info);
-    this.lockedAnchor = { shapeId, axisIndex };
-
-    return axisIndex;
+    return (
+      this.anchorCache.getOrInit(shapeId, () =>
+        pickNorthernmostAxisIndex(info),
+      ) ?? pickNorthernmostAxisIndex(info)
+    );
   }
 
   /**

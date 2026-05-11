@@ -416,84 +416,86 @@ describe('OrientationLock', () => {
     expect(snapshot.lockedBoundingBox).toBeNull();
   });
 
-  it('decorateProps should return the same props reference when angle is zero', () => {
-    const lock = new OrientationLock<TestBox>();
-    const props = {
-      modeConfig: { foo: 'bar' },
-    } as unknown as ModeProps<FeatureCollection>;
+  describe('decorateProps', () => {
+    it('should return the same props reference when angle is zero', () => {
+      const lock = new OrientationLock<TestBox>();
+      const props = {
+        modeConfig: { foo: 'bar' },
+      } as unknown as ModeProps<FeatureCollection>;
 
-    const decorated = lock.decorateProps(props);
+      const decorated = lock.decorateProps(props);
 
-    expect(decorated).toBe(props);
-  });
-
-  it('decorateProps should write the angle into modeConfig when non-zero', () => {
-    const { lock, computeBoundingBox } = setup();
-
-    lock.observe({
-      feature: makeFeature({ shapeId: 'shape-a', rotationAngle: 30 }),
-      isScaling: false,
-      computeBoundingBox,
-    });
-    lock.observe({
-      feature: makeFeature({ shapeId: 'shape-a' }),
-      isScaling: false,
-      computeBoundingBox,
+      expect(decorated).toBe(props);
     });
 
-    const props = {
-      modeConfig: {},
-    } as unknown as ModeProps<FeatureCollection>;
+    it('should write the angle into modeConfig when non-zero', () => {
+      const { lock, computeBoundingBox } = setup();
 
-    const decorated = lock.decorateProps(props);
+      lock.observe({
+        feature: makeFeature({ shapeId: 'shape-a', rotationAngle: 30 }),
+        isScaling: false,
+        computeBoundingBox,
+      });
+      lock.observe({
+        feature: makeFeature({ shapeId: 'shape-a' }),
+        isScaling: false,
+        computeBoundingBox,
+      });
 
-    expect(decorated).not.toBe(props);
-    expect(decorated.modeConfig?.[BBOX_ORIENTATION_CONFIG_KEY]).toBe(30);
-  });
+      const props = {
+        modeConfig: {},
+      } as unknown as ModeProps<FeatureCollection>;
 
-  it('decorateProps should preserve other modeConfig keys', () => {
-    const { lock, computeBoundingBox } = setup();
+      const decorated = lock.decorateProps(props);
 
-    lock.observe({
-      feature: makeFeature({ shapeId: 'shape-a', rotationAngle: 30 }),
-      isScaling: false,
-      computeBoundingBox,
-    });
-    lock.observe({
-      feature: makeFeature({ shapeId: 'shape-a' }),
-      isScaling: false,
-      computeBoundingBox,
-    });
-
-    const props = {
-      modeConfig: { lockScaling: true, foo: 42 },
-    } as unknown as ModeProps<FeatureCollection>;
-
-    const decorated = lock.decorateProps(props);
-
-    expect(decorated.modeConfig?.lockScaling).toBe(true);
-    expect(decorated.modeConfig?.foo).toBe(42);
-    expect(decorated.modeConfig?.[BBOX_ORIENTATION_CONFIG_KEY]).toBe(30);
-  });
-
-  it('decorateProps should handle props with no modeConfig', () => {
-    const { lock, computeBoundingBox } = setup();
-
-    lock.observe({
-      feature: makeFeature({ shapeId: 'shape-a', rotationAngle: 30 }),
-      isScaling: false,
-      computeBoundingBox,
-    });
-    lock.observe({
-      feature: makeFeature({ shapeId: 'shape-a' }),
-      isScaling: false,
-      computeBoundingBox,
+      expect(decorated).not.toBe(props);
+      expect(decorated.modeConfig?.[BBOX_ORIENTATION_CONFIG_KEY]).toBe(30);
     });
 
-    const props = {} as unknown as ModeProps<FeatureCollection>;
+    it('should preserve other modeConfig keys', () => {
+      const { lock, computeBoundingBox } = setup();
 
-    const decorated = lock.decorateProps(props);
+      lock.observe({
+        feature: makeFeature({ shapeId: 'shape-a', rotationAngle: 30 }),
+        isScaling: false,
+        computeBoundingBox,
+      });
+      lock.observe({
+        feature: makeFeature({ shapeId: 'shape-a' }),
+        isScaling: false,
+        computeBoundingBox,
+      });
 
-    expect(decorated.modeConfig?.[BBOX_ORIENTATION_CONFIG_KEY]).toBe(30);
+      const props = {
+        modeConfig: { lockScaling: true, foo: 42 },
+      } as unknown as ModeProps<FeatureCollection>;
+
+      const decorated = lock.decorateProps(props);
+
+      expect(decorated.modeConfig?.lockScaling).toBe(true);
+      expect(decorated.modeConfig?.foo).toBe(42);
+      expect(decorated.modeConfig?.[BBOX_ORIENTATION_CONFIG_KEY]).toBe(30);
+    });
+
+    it('should handle props with no modeConfig', () => {
+      const { lock, computeBoundingBox } = setup();
+
+      lock.observe({
+        feature: makeFeature({ shapeId: 'shape-a', rotationAngle: 30 }),
+        isScaling: false,
+        computeBoundingBox,
+      });
+      lock.observe({
+        feature: makeFeature({ shapeId: 'shape-a' }),
+        isScaling: false,
+        computeBoundingBox,
+      });
+
+      const props = {} as unknown as ModeProps<FeatureCollection>;
+
+      const decorated = lock.decorateProps(props);
+
+      expect(decorated.modeConfig?.[BBOX_ORIENTATION_CONFIG_KEY]).toBe(30);
+    });
   });
 });

@@ -28,6 +28,7 @@ import { OrientedScaleMode } from './oriented-scale-mode';
 import { RotateModeWithSnap } from './rotate-mode-with-snap';
 import { OrientationLock } from './utils/orientation-lock';
 import { scaleModePrivate } from './utils/scale-mode-internals';
+import type { Point as GeoPoint } from 'geojson';
 import {
   boundingBoxToScaleHandles,
   filterVertexGuides,
@@ -312,11 +313,9 @@ export class VertexTransformMode extends BaseTransformMode {
       return featureCollection(filteredGuides as any) as any;
     }
 
-    const replaced = replaceRotateChromeWithBoundingBox(
-      filteredGuides,
-      boundingBox,
-    );
-    this.syncCornerCacheForScale(replaced, lockedBoundingBox);
+    const { features: replaced, scaleHandles } =
+      replaceRotateChromeWithBoundingBox(filteredGuides, boundingBox);
+    this.syncCornerCacheForScale(scaleHandles, lockedBoundingBox);
 
     // biome-ignore lint/suspicious/noExplicitAny: turf/editable-layers GeoJSON types mismatch
     return featureCollection(replaced as any) as any;
@@ -337,7 +336,7 @@ export class VertexTransformMode extends BaseTransformMode {
    *   visible bbox).
    */
   private syncCornerCacheForScale(
-    replaced: Feature[],
+    scaleHandles: Feature<GeoPoint>[],
     lockedBoundingBox: OrientedBoundingBox | null,
   ): void {
     if (lockedBoundingBox) {
@@ -347,6 +346,6 @@ export class VertexTransformMode extends BaseTransformMode {
       return;
     }
 
-    syncScaleModeCornerCache(this.scaleMode, replaced);
+    syncScaleModeCornerCache(this.scaleMode, scaleHandles);
   }
 }

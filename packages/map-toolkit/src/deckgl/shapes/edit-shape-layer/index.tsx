@@ -134,51 +134,6 @@ function toFeatureCollection(
 }
 
 /**
- * EditShapeLayer - A React component for editing existing shapes on the map.
- *
- * This component wraps the EditableGeoJsonLayer from @deck.gl-community/editable-layers
- * and integrates with the map-mode and map-cursor systems for proper coordination.
- *
- * Key features:
- * - Renders only when actively editing (returns null otherwise)
- * - Uses cached mode instances to prevent deck.gl assertion errors
- * - Integrates with the editing store for state management
- * - Neutral mode authorization (lets UI decide how to handle mode conflicts)
- * - Each shape type uses a dedicated edit mode (rectangle, ellipse,
- *   polygon/line, circle, point), wired up in `modes/index.ts`
- * - Fill colors render at 20% opacity; edit handles are split into
- *   three roles (vertex / scale / rotate) with distinct default colors
- * - Visual customization via the `style` prop (see {@link EditShapeStyle})
- * - Live dimension/area tooltips during editing
- * - requestAnimationFrame() batching for smooth drag performance
- *
- * ## Fiber Registration
- * Unlike `DisplayShapeLayer` (a deck.gl layer class), `EditShapeLayer` is a React
- * component that handles its own fiber registration internally. You do **not** need to
- * import `edit-shape-layer/fiber` — but you **do** still need to import
- * `display-shape-layer/fiber` if you use `<displayShapeLayer>` in the same tree.
- *
- * @example
- * ```tsx
- * function Map({ mapId }) {
- *   const { editingShape } = useEditShape(mapId);
- *
- *   return (
- *     <BaseMap id={mapId}>
- *       <displayShapeLayer
- *         data={shapes}
- *         mapId={mapId}
- *         selectedShapeId={editingShape?.id}
- *       />
- *       <EditShapeLayer mapId={mapId} />
- *     </BaseMap>
- *   );
- * }
- * ```
- *
- * @throws {Error} Throws if neither `mapId` prop nor `MapProvider` context is available.
- */
-/**
  * Fill in defaults for any field of `style` the caller didn't specify,
  * pulling from the package constants. Returned shape is the same as
  * `EditShapeStyle` but with every field required, so the rest of the
@@ -252,12 +207,65 @@ type EditShapeAccessors = {
  * handle roles). Module-scope so the body never escapes V8's inline
  * cache when the closure values change.
  */
+/**
+ * One bundle per edit-handle role (`vertex` is the fallback for
+ * `'existing'` / `'intermediate'` and any unrecognized `editHandleType`).
+ * Bundling lets the three handle-point accessors share role resolution
+ * via a single closure instead of repeating the `editHandleType ===
+ * 'scale' ? X : editHandleType === 'rotate' ? Y : Z` cascade.
+ */
+type HandleRoleStyle = {
+  color: Color;
+  outlineColor: Color;
+  radius: number;
+};
+
+/**
+ * Hoisted to module scope to avoid per-frame allocation. deck.gl calls
+ * `guidesGetDashArray` once per guide feature per render; returning a
+ * shared reference for the non-bbox case keeps the accessor allocation-
+ * free.
+ */
+const NO_DASH_ARRAY: [number, number] = [0, 0];
+
 function buildEditShapeAccessors(args: {
   resolvedStyle: Required<EditShapeStyle>;
   lineColor: Color;
   shapeLineWidth: number;
 }): EditShapeAccessors {
   const { resolvedStyle, lineColor, shapeLineWidth } = args;
+
+  // Build the three role bundles once per accessor-bundle construction
+  // (i.e. once per useMemo dep change). The three handle-point accessors
+  // close over these stable references, so per-feature-per-frame
+  // accessor calls do a 2-comparison lookup instead of allocating a
+  // fresh `{ color, outlineColor, radius }` object each time.
+  const scaleRole: HandleRoleStyle = {
+    color: resolvedStyle.scaleHandleColor,
+    outlineColor: resolvedStyle.scaleHandleOutlineColor,
+    radius: resolvedStyle.scaleHandleRadius,
+  };
+  const rotateRole: HandleRoleStyle = {
+    color: resolvedStyle.rotateHandleColor,
+    outlineColor: resolvedStyle.rotateHandleOutlineColor,
+    radius: resolvedStyle.rotateHandleRadius,
+  };
+  const vertexRole: HandleRoleStyle = {
+    color: resolvedStyle.vertexHandleColor,
+    outlineColor: resolvedStyle.vertexHandleOutlineColor,
+    radius: resolvedStyle.vertexHandleRadius,
+  };
+  const roleFor = (editHandleType: unknown): HandleRoleStyle => {
+    if (editHandleType === 'scale') {
+      return scaleRole;
+    }
+
+    if (editHandleType === 'rotate') {
+      return rotateRole;
+    }
+
+    return vertexRole;
+  };
 
   return {
     // biome-ignore lint/suspicious/noExplicitAny: deck.gl feature shape varies
@@ -271,52 +279,19 @@ function buildEditShapeAccessors(args: {
         ? resolvedStyle.bboxLineWidth
         : shapeLineWidth,
     // biome-ignore lint/suspicious/noExplicitAny: deck.gl feature shape varies
-    editHandlePointColor: (feature: any): Color => {
-      const editHandleType = feature?.properties?.editHandleType;
-
-      if (editHandleType === 'scale') {
-        return resolvedStyle.scaleHandleColor;
-      }
-
-      if (editHandleType === 'rotate') {
-        return resolvedStyle.rotateHandleColor;
-      }
-
-      return resolvedStyle.vertexHandleColor;
-    },
+    editHandlePointColor: (feature: any): Color =>
+      roleFor(feature?.properties?.editHandleType).color,
     // biome-ignore lint/suspicious/noExplicitAny: deck.gl feature shape varies
-    editHandlePointOutlineColor: (feature: any): Color => {
-      const editHandleType = feature?.properties?.editHandleType;
-
-      if (editHandleType === 'scale') {
-        return resolvedStyle.scaleHandleOutlineColor;
-      }
-
-      if (editHandleType === 'rotate') {
-        return resolvedStyle.rotateHandleOutlineColor;
-      }
-
-      return resolvedStyle.vertexHandleOutlineColor;
-    },
+    editHandlePointOutlineColor: (feature: any): Color =>
+      roleFor(feature?.properties?.editHandleType).outlineColor,
     // biome-ignore lint/suspicious/noExplicitAny: deck.gl feature shape varies
-    editHandlePointRadius: (feature: any): number => {
-      const editHandleType = feature?.properties?.editHandleType;
-
-      if (editHandleType === 'scale') {
-        return resolvedStyle.scaleHandleRadius;
-      }
-
-      if (editHandleType === 'rotate') {
-        return resolvedStyle.rotateHandleRadius;
-      }
-
-      return resolvedStyle.vertexHandleRadius;
-    },
+    editHandlePointRadius: (feature: any): number =>
+      roleFor(feature?.properties?.editHandleType).radius,
     // biome-ignore lint/suspicious/noExplicitAny: deck.gl feature shape varies
     guidesGetDashArray: (feature: any): [number, number] =>
       feature?.properties?.mode === VERTEX_BBOX_MODE
         ? resolvedStyle.bboxDashArray
-        : [0, 0],
+        : NO_DASH_ARRAY,
   };
 }
 
@@ -358,6 +333,51 @@ function buildEditShapeSubLayerProps(args: {
   };
 }
 
+/**
+ * EditShapeLayer - A React component for editing existing shapes on the map.
+ *
+ * This component wraps the EditableGeoJsonLayer from @deck.gl-community/editable-layers
+ * and integrates with the map-mode and map-cursor systems for proper coordination.
+ *
+ * Key features:
+ * - Renders only when actively editing (returns null otherwise)
+ * - Uses cached mode instances to prevent deck.gl assertion errors
+ * - Integrates with the editing store for state management
+ * - Neutral mode authorization (lets UI decide how to handle mode conflicts)
+ * - Each shape type uses a dedicated edit mode (rectangle, ellipse,
+ *   polygon/line, circle, point), wired up in `modes/index.ts`
+ * - Fill colors render at 20% opacity; edit handles are split into
+ *   three roles (vertex / scale / rotate) with distinct default colors
+ * - Visual customization via the `style` prop (see {@link EditShapeStyle})
+ * - Live dimension/area tooltips during editing
+ * - requestAnimationFrame() batching for smooth drag performance
+ *
+ * ## Fiber Registration
+ * Unlike `DisplayShapeLayer` (a deck.gl layer class), `EditShapeLayer` is a React
+ * component that handles its own fiber registration internally. You do **not** need to
+ * import `edit-shape-layer/fiber` — but you **do** still need to import
+ * `display-shape-layer/fiber` if you use `<displayShapeLayer>` in the same tree.
+ *
+ * @example
+ * ```tsx
+ * function Map({ mapId }) {
+ *   const { editingShape } = useEditShape(mapId);
+ *
+ *   return (
+ *     <BaseMap id={mapId}>
+ *       <displayShapeLayer
+ *         data={shapes}
+ *         mapId={mapId}
+ *         selectedShapeId={editingShape?.id}
+ *       />
+ *       <EditShapeLayer mapId={mapId} />
+ *     </BaseMap>
+ *   );
+ * }
+ * ```
+ *
+ * @throws {Error} Throws if neither `mapId` prop nor `MapProvider` context is available.
+ */
 export function EditShapeLayer({
   id = EDIT_SHAPE_LAYER_ID,
   mapId,
@@ -456,7 +476,7 @@ export function EditShapeLayer({
       unbind();
       unregisterHotkey(manager);
     };
-  }, [actualMapId, hotkeyConfig]);
+  }, [actualMapId, hotkeyConfig.panning]);
 
   // Disable zoom while Shift is held during editing
   // This prevents boxZoom (Shift+drag) from interfering with Shift modifier constraints
@@ -552,6 +572,51 @@ export function EditShapeLayer({
     ],
   );
 
+  // Stable edit-event handler. Wrapped in `useCallback` so deck.gl's
+  // prop-diff doesn't see a fresh function reference each render —
+  // consistent with the memoization story for the accessor bundle and
+  // sub-layer props above. The only closure inputs are `actualMapId`
+  // (stable for the component's lifetime) and `cancelPendingUpdate`
+  // (already memoized), so the callback's identity is stable across
+  // renders.
+  const handleEdit = useCallback(
+    ({ updatedData, editType }: EditAction<FeatureCollection>) => {
+      // Single cast at the library boundary: editable-layers Feature is
+      // structurally compatible with geojson Feature but typed differently.
+      const feature = updatedData.features[0] as Feature | undefined;
+
+      // Continuous events (during drag): batch with RAF for smooth performance.
+      if (isContinuousEditType(editType) && feature) {
+        cancelPendingUpdate();
+        const rafId = requestAnimationFrame(() => {
+          updateFeature(actualMapId, feature, editType);
+          pendingUpdateRef.current = null;
+        });
+        pendingUpdateRef.current = { feature, rafId };
+
+        return;
+      }
+
+      // Completion events (drag end): update immediately.
+      if (isCompletionEditType(editType)) {
+        cancelPendingUpdate();
+
+        if (feature) {
+          updateFeature(actualMapId, feature, editType);
+        }
+
+        return;
+      }
+
+      // ESC key cancellation.
+      if (editType === 'cancelFeature') {
+        cancelPendingUpdate();
+        cancelEditingFromLayer(actualMapId);
+      }
+    },
+    [actualMapId, cancelPendingUpdate],
+  );
+
   // If not editing, return null (don't render the editable layer)
   if (!(editingState && editingShape)) {
     return null;
@@ -565,45 +630,6 @@ export function EditShapeLayer({
   // Use the live feature being edited, or fall back to original shape
   const featureToRender = featureBeingEdited ?? editingShape.feature;
   const data = toFeatureCollection(featureToRender, editingShape.shape);
-
-  // Handle edit events from EditableGeoJsonLayer
-  const handleEdit = ({
-    updatedData,
-    editType,
-  }: EditAction<FeatureCollection>) => {
-    // Single cast at the library boundary: editable-layers Feature is structurally
-    // compatible with geojson Feature but typed differently
-    const feature = updatedData.features[0] as Feature | undefined;
-
-    // Continuous events (during drag): batch with RAF for smooth performance
-    if (isContinuousEditType(editType) && feature) {
-      cancelPendingUpdate();
-      const rafId = requestAnimationFrame(() => {
-        updateFeature(actualMapId, feature, editType);
-        pendingUpdateRef.current = null;
-      });
-      pendingUpdateRef.current = { feature, rafId };
-
-      return;
-    }
-
-    // Completion events (drag end): update immediately
-    if (isCompletionEditType(editType)) {
-      cancelPendingUpdate();
-
-      if (feature) {
-        updateFeature(actualMapId, feature, editType);
-      }
-
-      return;
-    }
-
-    // ESC key cancellation
-    if (editType === 'cancelFeature') {
-      cancelPendingUpdate();
-      cancelEditingFromLayer(actualMapId);
-    }
-  };
 
   return (
     <editableGeoJsonLayer
