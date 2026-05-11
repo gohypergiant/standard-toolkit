@@ -18,7 +18,7 @@ import {
   registerHotkey,
   unregisterHotkey,
 } from '@accelint/hotkey-manager';
-import { useCallback, useContext, useEffect, useRef } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useRef } from 'react';
 import { MapContext } from '../../base-map/provider';
 import { DASH_EXTENSION } from '../display-shape-layer/constants';
 import {
@@ -144,8 +144,11 @@ function toFeatureCollection(
  * - Uses cached mode instances to prevent deck.gl assertion errors
  * - Integrates with the editing store for state management
  * - Neutral mode authorization (lets UI decide how to handle mode conflicts)
- * - Circles use ResizeCircleMode with tooltip, other shapes use ModifyMode
- * - Fill colors rendered at 20% opacity, edit handles are white
+ * - Each shape type uses a dedicated edit mode (rectangle, ellipse,
+ *   polygon/line, circle, point), wired up in `modes/index.ts`
+ * - Fill colors render at 20% opacity; edit handles are split into
+ *   three roles (vertex / scale / rotate) with distinct default colors
+ * - Visual customization via the `style` prop (see {@link EditShapeStyle})
  * - Live dimension/area tooltips during editing
  * - requestAnimationFrame() batching for smooth drag performance
  *
@@ -179,9 +182,13 @@ function toFeatureCollection(
  * Fill in defaults for any field of `style` the caller didn't specify,
  * pulling from the package constants. Returned shape is the same as
  * `EditShapeStyle` but with every field required, so the rest of the
- * layer code can read fields directly without per-field `??`.
+ * layer code can read fields directly without per-field `??`. The
+ * explicit `Required<EditShapeStyle>` annotation also fails compilation
+ * if a new field is added to `EditShapeStyle` without a default here.
  */
-function resolveEditShapeStyle(style: EditShapeStyle | undefined) {
+function resolveEditShapeStyle(
+  style: EditShapeStyle | undefined,
+): Required<EditShapeStyle> {
   return {
     vertexHandleColor: style?.vertexHandleColor ?? DEFAULT_EDIT_HANDLE_COLOR,
     scaleHandleColor: style?.scaleHandleColor ?? SCALE_HANDLE_COLOR,
@@ -204,6 +211,153 @@ function resolveEditShapeStyle(style: EditShapeStyle | undefined) {
   };
 }
 
+/**
+ * Sentinel value passed to deck.gl color accessors on renders that
+ * happen *before* a shape is open for editing — the component
+ * short-circuits to `return null` in that case, so this color never
+ * reaches the GPU. It exists only to keep the surrounding `useMemo`
+ * inputs typed as `Color` (vs `Color | null`) so the memos and their
+ * deps stay simple and JIT-stable.
+ */
+const EMPTY_COLOR: Color = [0, 0, 0, 0];
+
+/**
+ * Bundle of per-feature accessor functions handed to
+ * `<editableGeoJsonLayer>`. Keeping them in a single object means the
+ * `useMemo` that owns them has one stable identity per dep change — all
+ * six accessors get a fresh reference together when (and only when) one
+ * of the underlying inputs changes, instead of each fluctuating
+ * independently and forcing N separate sub-layer prop diffs in deck.gl.
+ */
+type EditShapeAccessors = {
+  // biome-ignore lint/suspicious/noExplicitAny: deck.gl feature shape varies
+  tentativeLineColor: (feature: any) => Color;
+  // biome-ignore lint/suspicious/noExplicitAny: deck.gl feature shape varies
+  tentativeLineWidth: (feature: any) => number;
+  // biome-ignore lint/suspicious/noExplicitAny: deck.gl feature shape varies
+  editHandlePointColor: (feature: any) => Color;
+  // biome-ignore lint/suspicious/noExplicitAny: deck.gl feature shape varies
+  editHandlePointOutlineColor: (feature: any) => Color;
+  // biome-ignore lint/suspicious/noExplicitAny: deck.gl feature shape varies
+  editHandlePointRadius: (feature: any) => number;
+  // biome-ignore lint/suspicious/noExplicitAny: deck.gl feature shape varies
+  guidesGetDashArray: (feature: any) => [number, number];
+};
+
+/**
+ * Build the six per-feature accessor functions deck.gl reads off the
+ * editable layer. Each one closes over the resolved style + a handful
+ * of feature-derived values, and dispatches on `feature.properties`
+ * (`mode` for bbox vs. shape lines, `editHandleType` for the three
+ * handle roles). Module-scope so the body never escapes V8's inline
+ * cache when the closure values change.
+ */
+function buildEditShapeAccessors(args: {
+  resolvedStyle: Required<EditShapeStyle>;
+  lineColor: Color;
+  shapeLineWidth: number;
+}): EditShapeAccessors {
+  const { resolvedStyle, lineColor, shapeLineWidth } = args;
+
+  return {
+    // biome-ignore lint/suspicious/noExplicitAny: deck.gl feature shape varies
+    tentativeLineColor: (feature: any): Color =>
+      feature?.properties?.mode === VERTEX_BBOX_MODE
+        ? resolvedStyle.bboxLineColor
+        : lineColor,
+    // biome-ignore lint/suspicious/noExplicitAny: deck.gl feature shape varies
+    tentativeLineWidth: (feature: any): number =>
+      feature?.properties?.mode === VERTEX_BBOX_MODE
+        ? resolvedStyle.bboxLineWidth
+        : shapeLineWidth,
+    // biome-ignore lint/suspicious/noExplicitAny: deck.gl feature shape varies
+    editHandlePointColor: (feature: any): Color => {
+      const editHandleType = feature?.properties?.editHandleType;
+
+      if (editHandleType === 'scale') {
+        return resolvedStyle.scaleHandleColor;
+      }
+
+      if (editHandleType === 'rotate') {
+        return resolvedStyle.rotateHandleColor;
+      }
+
+      return resolvedStyle.vertexHandleColor;
+    },
+    // biome-ignore lint/suspicious/noExplicitAny: deck.gl feature shape varies
+    editHandlePointOutlineColor: (feature: any): Color => {
+      const editHandleType = feature?.properties?.editHandleType;
+
+      if (editHandleType === 'scale') {
+        return resolvedStyle.scaleHandleOutlineColor;
+      }
+
+      if (editHandleType === 'rotate') {
+        return resolvedStyle.rotateHandleOutlineColor;
+      }
+
+      return resolvedStyle.vertexHandleOutlineColor;
+    },
+    // biome-ignore lint/suspicious/noExplicitAny: deck.gl feature shape varies
+    editHandlePointRadius: (feature: any): number => {
+      const editHandleType = feature?.properties?.editHandleType;
+
+      if (editHandleType === 'scale') {
+        return resolvedStyle.scaleHandleRadius;
+      }
+
+      if (editHandleType === 'rotate') {
+        return resolvedStyle.rotateHandleRadius;
+      }
+
+      return resolvedStyle.vertexHandleRadius;
+    },
+    // biome-ignore lint/suspicious/noExplicitAny: deck.gl feature shape varies
+    guidesGetDashArray: (feature: any): [number, number] =>
+      feature?.properties?.mode === VERTEX_BBOX_MODE
+        ? resolvedStyle.bboxDashArray
+        : [0, 0],
+  };
+}
+
+/**
+ * Build the merged `_subLayerProps` object passed to
+ * `<editableGeoJsonLayer>`. Combines the default tooltip + edit-handle
+ * sub-layer configs with the oriented-bounding-box dash extension for the guides layer
+ * and optional icon-point overrides when the shape uses icon points.
+ */
+function buildEditShapeSubLayerProps(args: {
+  // biome-ignore lint/suspicious/noExplicitAny: deck.gl sub-layer prop bag
+  defaults: any;
+  hasIcons: boolean;
+  // biome-ignore lint/suspicious/noExplicitAny: icon atlas / mapping types vary
+  iconAtlas: any;
+  // biome-ignore lint/suspicious/noExplicitAny: icon atlas / mapping types vary
+  iconMapping: any;
+  // biome-ignore lint/suspicious/noExplicitAny: deck.gl feature shape varies
+  guidesGetDashArray: (feature: any) => [number, number];
+  // biome-ignore lint/suspicious/noExplicitAny: deck.gl sub-layer prop bag is loose
+}): any {
+  const { defaults, hasIcons, iconAtlas, iconMapping, guidesGetDashArray } =
+    args;
+
+  return {
+    ...defaults,
+    guides: {
+      extensions: [DASH_EXTENSION],
+      getDashArray: guidesGetDashArray,
+    },
+    ...(hasIcons
+      ? {
+          geojson: {
+            pointType: 'icon' as const,
+            ...getIconLayerProps(hasIcons, iconAtlas, iconMapping),
+          },
+        }
+      : {}),
+  };
+}
+
 export function EditShapeLayer({
   id = EDIT_SHAPE_LAYER_ID,
   mapId,
@@ -211,7 +365,11 @@ export function EditShapeLayer({
   hotkeyConfig = DEFAULT_HOTKEY_CONFIG,
   style,
 }: EditShapeLayerProps) {
-  const resolvedStyle = resolveEditShapeStyle(style);
+  // Resolve style defaults once per `style` prop reference. deck.gl
+  // sub-layer prop diffs are reference-equality based, so a fresh
+  // resolved object on every render would defeat the memoized accessor
+  // bundle below (each accessor closes over `resolvedStyle` fields).
+  const resolvedStyle = useMemo(() => resolveEditShapeStyle(style), [style]);
 
   // Get mapId from context if not provided
   const contextId = useContext(MapContext);
@@ -314,7 +472,9 @@ export function EditShapeLayer({
     if (!editingShapeId) {
       return;
     }
+
     const mode = getEditModeInstance(editingState?.editMode ?? 'view');
+
     if (
       'resetLockedAnchor' in mode &&
       typeof (mode as { resetLockedAnchor?: () => void }).resetLockedAnchor ===
@@ -333,12 +493,71 @@ export function EditShapeLayer({
     };
   }, []);
 
+  // Hooks below must run on every render to keep React's call-order
+  // contract. The early "no editing shape, render nothing" branch
+  // happens *after* all hooks; we derive editing-feature inputs with
+  // safe fallbacks here so the memos receive defined values even when
+  // there's nothing to render.
+  const editingShape = editingState?.editingShape ?? null;
+  const editingFeature = editingShape?.feature ?? null;
+  // Memoize style/config inputs keyed on `editingFeature` identity so
+  // the `accessors` and `subLayerProps` memos below see stable
+  // references. Without these, `getFillColor` / `getLineColor` /
+  // `getIconConfig` return fresh `[r,g,b,a]` arrays + object literals
+  // every render and the downstream memos invalidate on every parent
+  // re-render — defeating the layer-prop stability they were added for.
+  const fillColor = useMemo(
+    () => (editingFeature ? getFillColor(editingFeature, true) : EMPTY_COLOR),
+    [editingFeature],
+  );
+  const lineColor = useMemo(
+    () => (editingFeature ? getLineColor(editingFeature) : EMPTY_COLOR),
+    [editingFeature],
+  );
+  const shapeLineWidth = editingFeature ? getLineWidth(editingFeature) : 0;
+  const iconConfig = useMemo(
+    () => getIconConfig(editingFeature ? [editingFeature] : []),
+    [editingFeature],
+  );
+  const defaultProps = getDefaultEditableLayerProps(unit);
+
+  // Memoize accessors and sub-layer props as one stable bundle each.
+  // deck.gl diffs prop accessors by reference identity, so a fresh
+  // closure per render makes the underlying GeoJsonLayer rebuild
+  // attribute buffers even when the resolved values would be identical.
+  const accessors = useMemo(
+    () =>
+      buildEditShapeAccessors({
+        resolvedStyle,
+        lineColor,
+        shapeLineWidth,
+      }),
+    [resolvedStyle, lineColor, shapeLineWidth],
+  );
+  const subLayerProps = useMemo(
+    () =>
+      buildEditShapeSubLayerProps({
+        defaults: defaultProps._subLayerProps,
+        hasIcons: iconConfig.hasIcons,
+        iconAtlas: iconConfig.atlas,
+        iconMapping: iconConfig.mapping,
+        guidesGetDashArray: accessors.guidesGetDashArray,
+      }),
+    [
+      defaultProps._subLayerProps,
+      iconConfig.hasIcons,
+      iconConfig.atlas,
+      iconConfig.mapping,
+      accessors.guidesGetDashArray,
+    ],
+  );
+
   // If not editing, return null (don't render the editable layer)
-  if (!editingState?.editingShape) {
+  if (!(editingState && editingShape)) {
     return null;
   }
 
-  const { editingShape, editMode, featureBeingEdited } = editingState;
+  const { editMode, featureBeingEdited } = editingState;
 
   // Get the cached mode instance
   const mode = getEditModeInstance(editMode);
@@ -364,15 +583,18 @@ export function EditShapeLayer({
         pendingUpdateRef.current = null;
       });
       pendingUpdateRef.current = { feature, rafId };
+
       return;
     }
 
     // Completion events (drag end): update immediately
     if (isCompletionEditType(editType)) {
       cancelPendingUpdate();
+
       if (feature) {
         updateFeature(actualMapId, feature, editType);
       }
+
       return;
     }
 
@@ -381,119 +603,6 @@ export function EditShapeLayer({
       cancelPendingUpdate();
       cancelEditingFromLayer(actualMapId);
     }
-  };
-
-  // Get colors from the shape's existing style properties with base opacity applied
-  const fillColor = getFillColor(editingShape.feature, true);
-  const lineColor = getLineColor(editingShape.feature);
-
-  // Auto-detect icon config from the editing shape's style properties.
-  // EditableGeoJsonLayer only proxies a fixed set of props to its inner GeoJsonLayer,
-  // so icon props must be injected via _subLayerProps targeting the 'geojson' sub-layer.
-  const {
-    hasIcons,
-    atlas: iconAtlas,
-    mapping: iconMapping,
-  } = getIconConfig([editingShape.feature]);
-  const defaultProps = getDefaultEditableLayerProps(unit);
-
-  // Per-feature line color: muted look for the polygon/line bounding box
-  // (tagged `mode: VERTEX_BBOX_MODE` by VertexTransformMode), original
-  // line color for everything else. Other shape types don't tag features
-  // with this `mode`, so they fall through to `lineColor` unchanged.
-  // biome-ignore lint/suspicious/noExplicitAny: deck.gl accessor receives mixed feature shapes
-  const tentativeLineColor = (feature: any): Color => {
-    if (feature?.properties?.mode === VERTEX_BBOX_MODE) {
-      return resolvedStyle.bboxLineColor;
-    }
-    return lineColor;
-  };
-
-  // Per-feature line width: bounding-box outline width is independent of
-  // the shape's own line width so users can mute/emphasize the bbox
-  // independently.
-  // biome-ignore lint/suspicious/noExplicitAny: deck.gl accessor receives mixed feature shapes
-  const tentativeLineWidth = (feature: any): number => {
-    if (feature?.properties?.mode === VERTEX_BBOX_MODE) {
-      return resolvedStyle.bboxLineWidth;
-    }
-    return getLineWidth(editingShape.feature);
-  };
-
-  // Per-feature edit-handle fill: distinct colors for the three handle
-  // roles (vertex / scale / rotate). Each role can be overridden via
-  // `style` on the layer; this accessor resolves whichever fill the
-  // caller specified or the package default if not.
-  // biome-ignore lint/suspicious/noExplicitAny: deck.gl accessor receives mixed feature shapes
-  const editHandlePointColor = (feature: any): Color => {
-    const editHandleType = feature?.properties?.editHandleType;
-    if (editHandleType === 'scale') {
-      return resolvedStyle.scaleHandleColor;
-    }
-    if (editHandleType === 'rotate') {
-      return resolvedStyle.rotateHandleColor;
-    }
-    return resolvedStyle.vertexHandleColor;
-  };
-
-  // Per-feature edit-handle outline color: same role split as the fill
-  // accessor above. Drawn as the ring around each handle dot when
-  // `editHandleOutline` is `true`.
-  // biome-ignore lint/suspicious/noExplicitAny: deck.gl accessor receives mixed feature shapes
-  const editHandlePointOutlineColor = (feature: any): Color => {
-    const editHandleType = feature?.properties?.editHandleType;
-    if (editHandleType === 'scale') {
-      return resolvedStyle.scaleHandleOutlineColor;
-    }
-    if (editHandleType === 'rotate') {
-      return resolvedStyle.rotateHandleOutlineColor;
-    }
-    return resolvedStyle.vertexHandleOutlineColor;
-  };
-
-  // Per-feature edit-handle radius (pixels): each role can be sized
-  // independently so e.g. the rotate handle can be made larger than the
-  // vertex handles for emphasis.
-  // biome-ignore lint/suspicious/noExplicitAny: deck.gl accessor receives mixed feature shapes
-  const editHandlePointRadius = (feature: any): number => {
-    const editHandleType = feature?.properties?.editHandleType;
-    if (editHandleType === 'scale') {
-      return resolvedStyle.scaleHandleRadius;
-    }
-    if (editHandleType === 'rotate') {
-      return resolvedStyle.rotateHandleRadius;
-    }
-    return resolvedStyle.vertexHandleRadius;
-  };
-
-  // Dash the bounding box outline only; other guide LineStrings (rotate
-  // stem connector, etc.) stay solid. PathStyleExtension reads
-  // `getDashArray` on the linestrings sub-layer of the guides
-  // GeoJsonLayer.
-  // biome-ignore lint/suspicious/noExplicitAny: deck.gl accessor receives mixed feature shapes
-  const guidesGetDashArray = (feature: any): [number, number] => {
-    if (feature?.properties?.mode === VERTEX_BBOX_MODE) {
-      return resolvedStyle.bboxDashArray;
-    }
-    return [0, 0];
-  };
-
-  const guidesSubLayerProps = {
-    extensions: [DASH_EXTENSION],
-    getDashArray: guidesGetDashArray,
-  };
-
-  const subLayerProps = {
-    ...defaultProps._subLayerProps,
-    guides: guidesSubLayerProps,
-    ...(hasIcons
-      ? {
-          geojson: {
-            pointType: 'icon' as const,
-            ...getIconLayerProps(hasIcons, iconAtlas, iconMapping),
-          },
-        }
-      : {}),
   };
 
   return (
@@ -507,11 +616,11 @@ export function EditShapeLayer({
       getLineColor={lineColor}
       getTentativeFillColor={fillColor}
       {...defaultProps}
-      getTentativeLineColor={tentativeLineColor}
-      getTentativeLineWidth={tentativeLineWidth}
-      getEditHandlePointColor={editHandlePointColor}
-      getEditHandlePointOutlineColor={editHandlePointOutlineColor}
-      getEditHandlePointRadius={editHandlePointRadius}
+      getTentativeLineColor={accessors.tentativeLineColor}
+      getTentativeLineWidth={accessors.tentativeLineWidth}
+      getEditHandlePointColor={accessors.editHandlePointColor}
+      getEditHandlePointOutlineColor={accessors.editHandlePointOutlineColor}
+      getEditHandlePointRadius={accessors.editHandlePointRadius}
       editHandlePointStrokeWidth={resolvedStyle.editHandleStrokeWidth}
       editHandlePointOutline={resolvedStyle.editHandleOutline}
       _subLayerProps={subLayerProps}

@@ -29,9 +29,9 @@ import {
 import {
   type EllipseAxisHandle,
   recomputeEllipseScaleFactors,
-} from './ellipse-scale-math';
+} from './utils/ellipse-scale-math';
 import { ShapeAwareScaleMode } from './shape-aware-scale-mode';
-import type { EditHandleFeature } from './transform-mode-guides';
+import type { EditHandleFeature } from './utils/transform-mode-guides';
 import type { DistanceUnit } from '@accelint/constants/units';
 import type { Feature, Polygon, Position } from 'geojson';
 

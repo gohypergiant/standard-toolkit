@@ -19,9 +19,9 @@ import {
   type StopDraggingEvent,
 } from '@deck.gl-community/editable-layers';
 import { featureCollection, point, polygonToLine } from '@turf/turf';
-import { recomputeRectangleCorners } from './rectangle-scale-math';
+import { recomputeRectangleCorners } from './utils/rectangle-scale-math';
 import { ShapeAwareScaleMode } from './shape-aware-scale-mode';
-import type { EditHandleFeature } from './transform-mode-guides';
+import type { EditHandleFeature } from './utils/transform-mode-guides';
 import type { Feature, Polygon, Position } from 'geojson';
 
 /**
@@ -91,6 +91,7 @@ export class RectangleScaleMode extends ShapeAwareScaleMode {
     // matches the polygon ring order so the inherited `_getOppositeScaleHandle`
     // logic ((idx + 2) % 4) still picks the diagonally-opposite corner.
     const cornerHandles: EditHandleFeature[] = [];
+
     for (let i = 0; i < 4; i++) {
       const corner = ring[i];
 

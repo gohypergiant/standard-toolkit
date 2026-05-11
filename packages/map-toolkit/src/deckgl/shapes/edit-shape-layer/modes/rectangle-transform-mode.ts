@@ -28,19 +28,27 @@ import { computeRectangleMeasurementsFromCorners } from '../../shared/utils/geom
 import { BaseTransformMode, type HandleMatcher } from './base-transform-mode';
 import { RectangleScaleMode } from './rectangle-scale-mode';
 import { RotateModeWithSnap } from './rotate-mode-with-snap';
-import { latToMercatorY, mercatorYToLat } from './mercator';
+import { latToMercatorY, mercatorYToLat } from './utils/mercator';
 import {
   computePolygonBounds,
   computeRotateStemTip,
   filterGuidesForRotation,
   type PolygonBounds,
   postProcessTransformGuides,
-} from './transform-mode-guides';
+} from './utils/transform-mode-guides';
 import type { Feature, Polygon, Position } from 'geojson';
 
+/**
+ * One edge of the rectangle's ring, returned by
+ * {@link edgeMidpointWithEndpoints}. Used to position the rotate-stem
+ * and compute its perpendicular direction.
+ */
 type EdgeMidpointWithEndpoints = {
+  /** Midpoint of the edge, in lon/lat. */
   midpoint: [number, number];
+  /** Edge start corner, in lon/lat. */
   start: [number, number];
+  /** Edge end corner, in lon/lat. */
   end: [number, number];
 };
 
@@ -205,10 +213,10 @@ function computePerpendicularStemTip(
  * 3. Anywhere else on the shape → translation
  *
  * ## When to use
- * Use this mode for `RectangleShape`. Other axis-bounded shapes (like
- * ellipses) should continue to use `BoundingTransformMode`, where the
- * lat/lon-axis-aligned bbox-corner scaling is correct because an ellipse is
- * rotationally symmetric about its axes.
+ * Use this mode for `RectangleShape`. Other axis-bounded shapes have
+ * their own dedicated modes: ellipses use `EllipseTransformMode`,
+ * wagon wheels use `LockedBoundingTransformMode`, and arbitrary
+ * polygons/lines use `VertexTransformMode`.
  *
  * @example
  * ```typescript

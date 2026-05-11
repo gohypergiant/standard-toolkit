@@ -32,7 +32,7 @@ import {
   type EllipseInfo,
   readEllipseInfo,
 } from './ellipse-scale-mode';
-import { latToMercatorY, mercatorYToLat } from './mercator';
+import { latToMercatorY, mercatorYToLat } from './utils/mercator';
 import { RotateModeWithSnap } from './rotate-mode-with-snap';
 import {
   computePolygonBounds,
@@ -40,45 +40,47 @@ import {
   filterGuidesForRotation,
   type PolygonBounds,
   postProcessTransformGuides,
-} from './transform-mode-guides';
+} from './utils/transform-mode-guides';
 import type { Feature, Polygon } from 'geojson';
 
 /**
- * The four axis endpoints of an ellipse, indexed in the order:
+ * Compute a single axis endpoint at `axisIndex`, where the four
+ * endpoints are indexed in the order:
  * `0 = +ySemi` (bearing `angle`), `1 = +xSemi` (bearing `angle + 90`),
  * `2 = -ySemi` (bearing `angle + 180`), `3 = -xSemi` (bearing
- * `angle + 270`). Used as a stable index when locking the rotate handle
- * to a particular endpoint for the duration of an edit session.
+ * `angle + 270`).
+ *
+ * Pulled out of the full-endpoints helper so per-frame consumers (the
+ * rotate-stem path that already knows which index it wants via the
+ * shape-level lock) avoid running `rhumbDestination` three extra times
+ * just to discard three of the results.
  */
-function computeAxisEndpoints(info: EllipseInfo): [number, number][] {
+function computeAxisEndpointAt(
+  info: EllipseInfo,
+  axisIndex: number,
+): [number, number] {
   const center2D: [number, number] = [
     info.center[0] as number,
     info.center[1] as number,
   ];
-  const distanceOptions = { units: info.units };
+  // Even indices (0, 2) live on the ySemi axis; odd indices (1, 3) on
+  // the xSemi axis. Each step around the indices adds 90° of bearing.
+  const semiValue = axisIndex % 2 === 0 ? info.ySemiValue : info.xSemiValue;
+  const bearing = info.angle + axisIndex * 90;
 
-  return [
-    rhumbDestination(center2D, info.ySemiValue, info.angle, distanceOptions)
-      .geometry.coordinates as [number, number],
-    rhumbDestination(
-      center2D,
-      info.xSemiValue,
-      info.angle + 90,
-      distanceOptions,
-    ).geometry.coordinates as [number, number],
-    rhumbDestination(
-      center2D,
-      info.ySemiValue,
-      info.angle + 180,
-      distanceOptions,
-    ).geometry.coordinates as [number, number],
-    rhumbDestination(
-      center2D,
-      info.xSemiValue,
-      info.angle + 270,
-      distanceOptions,
-    ).geometry.coordinates as [number, number],
-  ];
+  return rhumbDestination(center2D, semiValue, bearing, {
+    units: info.units,
+  }).geometry.coordinates as [number, number];
+}
+
+/**
+ * Compute all four axis endpoints. Used when we need to compare across
+ * endpoints (e.g. picking the most-northern one at edit-session start);
+ * for the hot-path "read just one by known index" case prefer
+ * {@link computeAxisEndpointAt}.
+ */
+function computeAxisEndpoints(info: EllipseInfo): [number, number][] {
+  return [0, 1, 2, 3].map((index) => computeAxisEndpointAt(info, index));
 }
 
 /**
@@ -107,7 +109,7 @@ function pickNorthernmostAxisIndex(info: EllipseInfo): number {
 
 /**
  * Build the rotate-handle stem rooted at a specific axis endpoint
- * (selected by `axisIndex`, see {@link computeAxisEndpoints}). Stem
+ * (selected by `axisIndex`, see {@link computeAxisEndpointAt}). Stem
  * direction is outward along the radial from center to the endpoint
  * (= perpendicular to the ellipse's tangent there), and length matches
  * the deck.gl `RotateMode` formula in Mercator-space distance. Falls
@@ -118,8 +120,11 @@ function computeAxisStem(
   bounds: PolygonBounds,
   axisIndex: number,
 ): { base: [number, number]; tip: [number, number] } {
-  const endpoints = computeAxisEndpoints(info);
-  const base = (endpoints[axisIndex] ?? endpoints[0]) as [number, number];
+  // Compute just the one endpoint we need rather than all four —
+  // `rhumbDestination` allocates a Point Feature on each call, and this
+  // function runs every render frame.
+  const safeIndex = axisIndex >= 0 && axisIndex < 4 ? axisIndex : 0;
+  const base = computeAxisEndpointAt(info, safeIndex);
 
   const center2D: [number, number] = [
     info.center[0] as number,
@@ -193,7 +198,7 @@ export class EllipseTransformMode extends BaseTransformMode {
   private rotateMode: RotateModeWithSnap;
   /**
    * Locked rotate-handle anchor for the current edit session: the index
-   * of the axis endpoint (0–3, see {@link computeAxisEndpoints}) chosen
+   * of the axis endpoint (0–3, see {@link computeAxisEndpointAt}) chosen
    * the first time `getGuides` runs for a given shape. Locking by
    * `shapeId` keeps the handle attached to the same shape-local point
    * for the whole edit session — the handle starts on the geographic
@@ -360,6 +365,7 @@ export class EllipseTransformMode extends BaseTransformMode {
     }
 
     const axisIndex = this.getOrLockAxisIndex(feature, info);
+
     return computeAxisStem(info, bounds, axisIndex);
   }
 
@@ -392,6 +398,7 @@ export class EllipseTransformMode extends BaseTransformMode {
 
     const axisIndex = pickNorthernmostAxisIndex(info);
     this.lockedAnchor = { shapeId, axisIndex };
+
     return axisIndex;
   }
 

@@ -10,14 +10,18 @@
  * governing permissions and limitations under the License.
  */
 
+import { centroid as turfCentroid } from '@turf/turf';
+import {
+  type ScaleModePrivate,
+  scaleModePrivate,
+} from './utils/scale-mode-internals';
+import { ScaleModeWithFreeTransform } from './scale-mode-with-free-transform';
 import type {
   DraggingEvent,
   ModeProps,
   SimpleFeatureCollection,
   StopDraggingEvent,
 } from '@deck.gl-community/editable-layers';
-import { centroid as turfCentroid } from '@turf/turf';
-import { ScaleModeWithFreeTransform } from './scale-mode-with-free-transform';
 import type { Position } from 'geojson';
 
 /**
@@ -39,135 +43,48 @@ const NEAR_ZERO = 1e-7;
  * centroid); when missing or zero, the parent's world-axis behavior is
  * used unchanged.
  */
-const BBOX_ORIENTATION_CONFIG_KEY = 'bboxOrientationAngle';
+export const BBOX_ORIENTATION_CONFIG_KEY = 'bboxOrientationAngle';
 
 /**
- * Extends `ScaleModeWithFreeTransform` with oriented-bounding-box
- * scaling for rotated polygons and lines.
- *
- * Plain world-axis non-uniform scaling distorts a rotated polygon —
- * dragging a corner along world X stretches the polygon along world X,
- * which after the rotation has a component along the polygon's local Y
- * too, so the shape visibly shears (a square becomes a parallelogram,
- * thin polygons collapse to slivers). This subclass projects the cursor
- * positions and the polygon's vertices into the polygon's *local* frame
- * (un-rotated by `bboxOrientationAngle` around the polygon's turf
- * centroid), computes scale factors there, applies them along the
- * polygon's local axes, and re-projects to world. The OBB stays a clean
- * rotated rectangle around a coherently scaled polygon, matching the
- * approach `RectangleScaleMode` uses for rotated rectangles.
- *
- * Falls through to the parent's behavior when:
- * - `modeConfig.bboxOrientationAngle` is missing or zero (unrotated
- *   polygon — world axes ARE the local axes), or
- * - `modeConfig.lockScaling` is true (uniform scale is rotation-invariant
- *   so the parent's world-frame uniform formula gives the right result).
+ * Drag-start invariants captured the first frame `OrientedScaleMode`
+ * routes to its oriented-bounding-box-aware path. All four fields are constant for the
+ * lifetime of a single drag gesture (geometry is the snapshot ScaleMode
+ * captures at start, origin is the diagonal-opposite oriented bounding box corner, and
+ * the centroid + rotation come from the polygon's pre-drag orientation),
+ * so recomputing them per pointer-move frame is wasted work.
  */
-export class OrientedScaleMode extends ScaleModeWithFreeTransform {
-  override handleDragging(
-    event: DraggingEvent,
-    props: ModeProps<SimpleFeatureCollection>,
-  ): void {
-    if (!shouldUseOrientedPath(props)) {
-      super.handleDragging(event, props);
-      return;
-    }
-    this.handleOrientedDrag(event, props, 'scaling');
-  }
+type DragSnapshot = {
+  geometry: SimpleFeatureCollection;
+  origin: Position;
+  centroid: [number, number];
+  cos: number;
+  sin: number;
+};
 
-  override handleStopDragging(
-    event: StopDraggingEvent,
-    props: ModeProps<SimpleFeatureCollection>,
-  ): void {
-    if (!shouldUseOrientedPath(props)) {
-      super.handleStopDragging(event, props);
-      return;
-    }
-    this.handleOrientedDrag(event, props, 'scaled');
-  }
+/**
+ * Bundle of "we're mid-drag and have everything we need" state pulled
+ * out of `ScaleMode`'s private fields. Returns `null` if the drag isn't
+ * active or one of the required pieces is missing — the caller exits
+ * early in that case.
+ */
+type DragContext = {
+  origin: Position;
+  geometry: SimpleFeatureCollection;
+};
 
-  /**
-   * Run a single non-uniform scale step in the polygon's local frame
-   * and emit the resulting `scaling` / `scaled` edit action. Mirrors
-   * the parent's flow (capture origin from the diagonal-opposite scale
-   * handle, snapshot geometry, compute factors, transform vertices,
-   * call `onEdit`) but every step happens after un-rotating into the
-   * local frame.
-   */
-  private handleOrientedDrag(
-    event: DraggingEvent | StopDraggingEvent,
-    props: ModeProps<SimpleFeatureCollection>,
-    editType: 'scaling' | 'scaled',
-  ): void {
-    // biome-ignore lint/suspicious/noExplicitAny: ScaleMode private state
-    const self = this as any;
+/**
+ * Read the cumulative rotation angle the parent transform mode piped
+ * through `modeConfig`. Strictly type-guards: a missing / non-number /
+ * non-finite value short-circuits to `0` so the consumer can route to
+ * the parent's world-axis path without the oriented-bounding-box-aware code touching a
+ * potentially-`NaN` matrix.
+ */
+function readOrientationAngle(
+  props: ModeProps<SimpleFeatureCollection>,
+): number {
+  const raw = props.modeConfig?.[BBOX_ORIENTATION_CONFIG_KEY];
 
-    if (!self._isScaling) {
-      return;
-    }
-
-    const oppositeHandle = self._getOppositeScaleHandle(
-      self._selectedEditHandle,
-    );
-    if (!oppositeHandle) {
-      return;
-    }
-    const geometry = self._geometryBeingScaled as
-      | SimpleFeatureCollection
-      | undefined;
-    if (!geometry) {
-      return;
-    }
-
-    const angleDeg = props.modeConfig?.[BBOX_ORIENTATION_CONFIG_KEY] as number;
-    const origin = oppositeHandle.geometry.coordinates as Position;
-    // biome-ignore lint/suspicious/noExplicitAny: turf type variance
-    const centroid = turfCentroid(geometry as any).geometry.coordinates as [
-      number,
-      number,
-    ];
-
-    const transforms = createLocalTransforms(centroid, angleDeg);
-
-    const startLocal = transforms.toLocal(event.pointerDownMapCoords);
-    const currentLocal = transforms.toLocal(event.mapCoords);
-    const originLocal = transforms.toLocal(origin);
-
-    const factors = computeLocalScaleFactors(
-      startLocal,
-      currentLocal,
-      originLocal,
-    );
-
-    const scaledFeatures = applyOrientedScale(
-      geometry,
-      factors,
-      originLocal,
-      transforms,
-    );
-
-    const updatedData = self._getUpdatedData(props, scaledFeatures);
-
-    props.onEdit({
-      updatedData,
-      editType,
-      editContext: {
-        featureIndexes: props.selectedIndexes,
-      },
-    });
-
-    if (editType === 'scaled') {
-      props.onUpdateCursor(null);
-      self._geometryBeingScaled = null;
-      self._selectedEditHandle = null;
-      self._cursor = null;
-      self._isScaling = false;
-      return;
-    }
-
-    props.onUpdateCursor(self._cursor);
-    event.cancelPan();
-  }
+  return typeof raw === 'number' && Number.isFinite(raw) ? raw : 0;
 }
 
 /**
@@ -179,112 +96,41 @@ export class OrientedScaleMode extends ScaleModeWithFreeTransform {
 function shouldUseOrientedPath(
   props: ModeProps<SimpleFeatureCollection>,
 ): boolean {
-  const angleDeg = props.modeConfig?.[BBOX_ORIENTATION_CONFIG_KEY] as
-    | number
-    | undefined;
   const lockScaling = Boolean(props.modeConfig?.lockScaling);
-  return Boolean(angleDeg) && !lockScaling;
-}
 
-type LocalTransforms = {
-  toLocal: (worldPosition: Position) => [number, number];
-  fromLocal: (localPosition: [number, number]) => [number, number];
-};
-
-/**
- * Build the world↔local transform pair for the polygon's local frame
- * at the given centroid and compass-degree rotation angle. Compass
- * convention matches `turfTransformRotate` and the
- * `vertex-transform-mode` oriented-bounding-box math: positive angle
- * rotates north→east. The forward (world→local) transform is the
- * inverse of the layer's `+angleDeg` rotation, so it un-rotates the
- * polygon into a frame where the bounding box is axis-aligned.
- */
-function createLocalTransforms(
-  centroid: [number, number],
-  angleDeg: number,
-): LocalTransforms {
-  const angleRad = (angleDeg * Math.PI) / 180;
-  const cos = Math.cos(angleRad);
-  const sin = Math.sin(angleRad);
-
-  return {
-    toLocal: (worldPosition) => {
-      const deltaX = (worldPosition[0] as number) - centroid[0];
-      const deltaY = (worldPosition[1] as number) - centroid[1];
-      // Inverse of compass-positive rotation by angleDeg.
-      return [deltaX * cos - deltaY * sin, deltaX * sin + deltaY * cos];
-    },
-    fromLocal: (localPosition) => [
-      localPosition[0] * cos + localPosition[1] * sin + centroid[0],
-      -localPosition[0] * sin + localPosition[1] * cos + centroid[1],
-    ],
-  };
+  return readOrientationAngle(props) !== 0 && !lockScaling;
 }
 
 /**
- * Compute X/Y scale factors in the polygon's local frame, mirroring
- * the parent's per-axis ratio formula but on the un-rotated coordinates.
- * Clamps to {@link MIN_SCALE} to prevent polygon collapse / inversion;
- * defaults a near-zero start delta to scale 1 (no change on that axis).
+ * Validate ScaleMode's private drag state and return the drag origin
+ * (= world-frame opposite oriented bounding box corner) and the drag-start geometry. The
+ * cast through `any` is the same boundary every helper in this file
+ * accepts to talk to ScaleMode's private fields.
  */
-function computeLocalScaleFactors(
-  startLocal: [number, number],
-  currentLocal: [number, number],
-  originLocal: [number, number],
-): { scaleX: number; scaleY: number } {
-  const startDx = startLocal[0] - originLocal[0];
-  const startDy = startLocal[1] - originLocal[1];
-  const currentDx = currentLocal[0] - originLocal[0];
-  const currentDy = currentLocal[1] - originLocal[1];
+function readDragContext(self: ScaleModePrivate): DragContext | null {
+  if (!self._isScaling) {
+    return null;
+  }
 
-  const rawScaleX = Math.abs(startDx) > NEAR_ZERO ? currentDx / startDx : 1;
-  const rawScaleY = Math.abs(startDy) > NEAR_ZERO ? currentDy / startDy : 1;
+  const oppositeHandle = self._getOppositeScaleHandle(self._selectedEditHandle);
+
+  if (!oppositeHandle) {
+    return null;
+  }
+
+  if (!self._geometryBeingScaled) {
+    return null;
+  }
 
   return {
-    scaleX: Math.max(rawScaleX, MIN_SCALE),
-    scaleY: Math.max(rawScaleY, MIN_SCALE),
-  };
-}
-
-/**
- * Apply non-uniform scaling to every coordinate in `geometry`, with the
- * scale evaluated in the polygon's local frame and anchored at
- * `originLocal`. Each coordinate round-trips world → local → scaled →
- * world; the resulting polygon stays oriented at the same rotation
- * angle as before (since rotations and uniform translations compose
- * linearly with the local-frame scale).
- */
-function applyOrientedScale(
-  geometry: SimpleFeatureCollection,
-  factors: { scaleX: number; scaleY: number },
-  originLocal: [number, number],
-  transforms: LocalTransforms,
-): SimpleFeatureCollection {
-  const scaleCoord = (coord: Position): Position => {
-    const local = transforms.toLocal(coord);
-    const scaled: [number, number] = [
-      originLocal[0] + (local[0] - originLocal[0]) * factors.scaleX,
-      originLocal[1] + (local[1] - originLocal[1]) * factors.scaleY,
-    ];
-    return transforms.fromLocal(scaled);
-  };
-
-  const scaledFeatures = geometry.features.map((feature) => ({
-    ...feature,
-    geometry: scaleGeometryCoords(feature.geometry, scaleCoord),
-  }));
-
-  return {
-    type: 'FeatureCollection',
-    // biome-ignore lint/suspicious/noExplicitAny: feature-type variance across geometry kinds
-    features: scaledFeatures as any,
+    origin: oppositeHandle.geometry.coordinates as Position,
+    geometry: self._geometryBeingScaled,
   };
 }
 
 /**
  * Walk a GeoJSON geometry, applying `transformCoord` to each position.
- * Mirrors the parent's `scaleGeometry` shape so the OBB-aware path
+ * Mirrors the parent's `scaleGeometry` shape so the oriented-bounding-box-aware path
  * supports the same geometry kinds (Point, LineString, Polygon, and
  * their Multi* variants).
  */
@@ -324,7 +170,283 @@ function scaleGeometryCoords(
 }
 
 /**
- * Re-export so `VertexTransformMode` can use the same key when it pipes
- * the rotation angle through `modeConfig`.
+ * Apply non-uniform scaling to every coordinate in `geometry`, with the
+ * scale evaluated in the polygon's local frame and anchored at
+ * `(originLocalX, originLocalY)`. The hot path here inlines the
+ * world → local → scaled → world round-trip with primitive math, so
+ * each vertex allocates exactly one `[number, number]` tuple (the
+ * return value) instead of three intermediates. For a 100-vertex
+ * polygon at 60fps that drops from ~18 000 short-lived arrays per
+ * second to ~6 000.
  */
-export { BBOX_ORIENTATION_CONFIG_KEY };
+function applyOrientedScale(
+  geometry: SimpleFeatureCollection,
+  scaleX: number,
+  scaleY: number,
+  originLocalX: number,
+  originLocalY: number,
+  centroid: [number, number],
+  cos: number,
+  sin: number,
+): SimpleFeatureCollection {
+  const scaleCoord = (coord: Position): Position => {
+    // World → local (un-rotate around centroid).
+    const deltaX = (coord[0] as number) - centroid[0];
+    const deltaY = (coord[1] as number) - centroid[1];
+    const localX = deltaX * cos - deltaY * sin;
+    const localY = deltaX * sin + deltaY * cos;
+    // Scale around localOrigin.
+    const scaledX = originLocalX + (localX - originLocalX) * scaleX;
+    const scaledY = originLocalY + (localY - originLocalY) * scaleY;
+    // Local → world.
+    return [
+      scaledX * cos + scaledY * sin + centroid[0],
+      -scaledX * sin + scaledY * cos + centroid[1],
+    ];
+  };
+
+  const scaledFeatures = geometry.features.map((feature) => ({
+    ...feature,
+    geometry: scaleGeometryCoords(feature.geometry, scaleCoord),
+  }));
+
+  return {
+    type: 'FeatureCollection',
+    // biome-ignore lint/suspicious/noExplicitAny: feature-type variance across geometry kinds
+    features: scaledFeatures as any,
+  };
+}
+
+/**
+ * Project drag positions into the polygon's local frame, derive the
+ * per-axis scale factors, and apply them to every coordinate of the
+ * snapshot geometry. The returned feature collection is what
+ * `onEdit('scaling' | 'scaled', ...)` receives; the parent's
+ * `_getUpdatedData` then merges it into the editable-layer state.
+ */
+function computeScaledFeatures(
+  snapshot: DragSnapshot,
+  event: DraggingEvent | StopDraggingEvent,
+): SimpleFeatureCollection {
+  const { centroid, cos, sin } = snapshot;
+
+  // Un-rotate the three world positions we care about (drag start,
+  // current cursor, scale origin) into the polygon's local frame. Math
+  // is inlined here instead of behind a closure to keep the hot path
+  // allocation-free.
+  const originLocalX =
+    ((snapshot.origin[0] as number) - centroid[0]) * cos -
+    ((snapshot.origin[1] as number) - centroid[1]) * sin;
+  const originLocalY =
+    ((snapshot.origin[0] as number) - centroid[0]) * sin +
+    ((snapshot.origin[1] as number) - centroid[1]) * cos;
+  const startWorldDx = (event.pointerDownMapCoords[0] as number) - centroid[0];
+  const startWorldDy = (event.pointerDownMapCoords[1] as number) - centroid[1];
+  const startLocalX = startWorldDx * cos - startWorldDy * sin;
+  const startLocalY = startWorldDx * sin + startWorldDy * cos;
+  const currentWorldDx = (event.mapCoords[0] as number) - centroid[0];
+  const currentWorldDy = (event.mapCoords[1] as number) - centroid[1];
+  const currentLocalX = currentWorldDx * cos - currentWorldDy * sin;
+  const currentLocalY = currentWorldDx * sin + currentWorldDy * cos;
+
+  const startDeltaX = startLocalX - originLocalX;
+  const startDeltaY = startLocalY - originLocalY;
+  const currentDeltaX = currentLocalX - originLocalX;
+  const currentDeltaY = currentLocalY - originLocalY;
+
+  const rawScaleX =
+    Math.abs(startDeltaX) > NEAR_ZERO ? currentDeltaX / startDeltaX : 1;
+  const rawScaleY =
+    Math.abs(startDeltaY) > NEAR_ZERO ? currentDeltaY / startDeltaY : 1;
+  const scaleX = Math.max(rawScaleX, MIN_SCALE);
+  const scaleY = Math.max(rawScaleY, MIN_SCALE);
+
+  return applyOrientedScale(
+    snapshot.geometry,
+    scaleX,
+    scaleY,
+    originLocalX,
+    originLocalY,
+    centroid,
+    cos,
+    sin,
+  );
+}
+
+/**
+ * Clear the ScaleMode-private fields that mark a drag as in-progress.
+ * Mirrors the parent's `resetScaleState` cleanup so a follow-up gesture
+ * starts from a known empty state.
+ */
+function resetScaleState(
+  self: ScaleModePrivate,
+  props: ModeProps<SimpleFeatureCollection>,
+): void {
+  props.onUpdateCursor(null);
+  self._geometryBeingScaled = null;
+  self._selectedEditHandle = null;
+  self._cursor = null;
+  self._isScaling = false;
+}
+
+/**
+ * Extends `ScaleModeWithFreeTransform` with oriented-bounding-box
+ * scaling for rotated polygons and lines.
+ *
+ * Plain world-axis non-uniform scaling distorts a rotated polygon —
+ * dragging a corner along world X stretches the polygon along world X,
+ * which after the rotation has a component along the polygon's local Y
+ * too, so the shape visibly shears (a square becomes a parallelogram,
+ * thin polygons collapse to slivers). This subclass projects the cursor
+ * positions and the polygon's vertices into the polygon's *local* frame
+ * (un-rotated by `bboxOrientationAngle` around the polygon's turf
+ * centroid), computes scale factors there, applies them along the
+ * polygon's local axes, and re-projects to world. The oriented bounding box stays a clean
+ * rotated rectangle around a coherently scaled polygon, matching the
+ * approach `RectangleScaleMode` uses for rotated rectangles.
+ *
+ * Falls through to the parent's behavior when:
+ * - `modeConfig.bboxOrientationAngle` is missing or zero (unrotated
+ *   polygon — world axes ARE the local axes), or
+ * - `modeConfig.lockScaling` is true (uniform scale is rotation-invariant
+ *   so the parent's world-frame uniform formula gives the right result).
+ *
+ * ## Drag-start caching
+ *
+ * `dragSnapshot` caches the four invariants (geometry, origin, centroid,
+ * cos/sin) on the first oriented-bounding-box-aware frame of a drag and reuses them for
+ * the remainder of the gesture. Pointer-move events fire ~60×/sec and
+ * `turfCentroid` walks every coordinate; without the cache that walk
+ * happens on every frame against an unchanging geometry. The cache is
+ * cleared on drag start (parent path) and drag stop.
+ *
+ * @example
+ * ```typescript
+ * import { OrientedScaleMode } from '@accelint/map-toolkit/deckgl/shapes/edit-shape-layer/modes/oriented-scale-mode';
+ *
+ * // Composed inside VertexTransformMode; pipe the bbox orientation
+ * // angle through `modeConfig.bboxOrientationAngle` to switch to the
+ * // oriented-bounding-box-aware scaling path.
+ * const mode = new OrientedScaleMode();
+ * ```
+ */
+export class OrientedScaleMode extends ScaleModeWithFreeTransform {
+  private dragSnapshot: DragSnapshot | null = null;
+
+  override handleDragging(
+    event: DraggingEvent,
+    props: ModeProps<SimpleFeatureCollection>,
+  ): void {
+    if (!shouldUseOrientedPath(props)) {
+      this.dragSnapshot = null;
+      super.handleDragging(event, props);
+
+      return;
+    }
+
+    const snapshot = this.ensureDragSnapshot(props);
+
+    if (!snapshot) {
+      return;
+    }
+
+    this.runOrientedDrag(event, props, 'scaling', snapshot);
+  }
+
+  override handleStopDragging(
+    event: StopDraggingEvent,
+    props: ModeProps<SimpleFeatureCollection>,
+  ): void {
+    const snapshot = this.dragSnapshot;
+    this.dragSnapshot = null;
+
+    if (!shouldUseOrientedPath(props)) {
+      super.handleStopDragging(event, props);
+
+      return;
+    }
+
+    if (!snapshot) {
+      return;
+    }
+
+    this.runOrientedDrag(event, props, 'scaled', snapshot);
+  }
+
+  /**
+   * Lazily capture the drag-start snapshot. Returns the cached value if
+   * one exists; otherwise reads ScaleMode's private drag state, computes
+   * the centroid and cos/sin once, and caches the bundle for the rest of
+   * the drag.
+   */
+  private ensureDragSnapshot(
+    props: ModeProps<SimpleFeatureCollection>,
+  ): DragSnapshot | null {
+    if (this.dragSnapshot) {
+      return this.dragSnapshot;
+    }
+
+    const self = scaleModePrivate(this);
+    const context = readDragContext(self);
+
+    if (!context) {
+      return null;
+    }
+
+    const angleDeg = readOrientationAngle(props);
+    // biome-ignore lint/suspicious/noExplicitAny: turf type variance
+    const turfCoords = turfCentroid(context.geometry as any).geometry
+      .coordinates as [number, number];
+    const angleRad = (angleDeg * Math.PI) / 180;
+    this.dragSnapshot = {
+      geometry: context.geometry,
+      origin: context.origin,
+      centroid: turfCoords,
+      cos: Math.cos(angleRad),
+      sin: Math.sin(angleRad),
+    };
+
+    return this.dragSnapshot;
+  }
+
+  /**
+   * Run a single non-uniform scale step in the polygon's local frame
+   * and emit the resulting `scaling` / `scaled` edit action. Reuses the
+   * cached drag-start snapshot rather than recomputing the centroid /
+   * cos / sin each frame.
+   */
+  private runOrientedDrag(
+    event: DraggingEvent | StopDraggingEvent,
+    props: ModeProps<SimpleFeatureCollection>,
+    editType: 'scaling' | 'scaled',
+    snapshot: DragSnapshot,
+  ): void {
+    const self = scaleModePrivate(this);
+
+    const scaledFeatures = computeScaledFeatures(snapshot, event);
+    const updatedData = self._getUpdatedData(props, scaledFeatures);
+
+    props.onEdit({
+      updatedData,
+      editType,
+      editContext: {
+        featureIndexes: props.selectedIndexes,
+      },
+    });
+
+    if (editType === 'scaled') {
+      resetScaleState(self, props);
+
+      return;
+    }
+
+    props.onUpdateCursor(self._cursor);
+    // `cancelPan` is only present on `DraggingEvent`; `StopDraggingEvent`
+    // doesn't need it (the drag is already ending). The runtime `in`
+    // check is a structural type-narrow rather than an editType branch,
+    // so it stays robust if upstream re-shapes the event types.
+    if ('cancelPan' in event) {
+      event.cancelPan();
+    }
+  }
+}

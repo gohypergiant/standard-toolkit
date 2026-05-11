@@ -24,14 +24,13 @@ import {
 import { featureCollection, lineString, point } from '@turf/helpers';
 import { centroid as turfCentroid, distance as turfDistance } from '@turf/turf';
 import { BaseTransformMode, type HandleMatcher } from './base-transform-mode';
-import {
-  BBOX_ORIENTATION_CONFIG_KEY,
-  OrientedScaleMode,
-} from './oriented-scale-mode';
+import { OrientationLock } from './utils/orientation-lock';
+import { OrientedScaleMode } from './oriented-scale-mode';
 import { RotateModeWithSnap } from './rotate-mode-with-snap';
+import { scaleModePrivate } from './utils/scale-mode-internals';
+import { STEM_LENGTH_DIVISOR } from './utils/transform-mode-guides';
 import type {
   Feature,
-  FeatureCollection as GeoFeatureCollection,
   Point as GeoPoint,
   LineString,
   Polygon,
@@ -61,14 +60,6 @@ const BBOX_BUFFER_RATIO = 0.03;
 export const VERTEX_BBOX_MODE = 'vertex-bbox';
 
 /**
- * Stem-length divisor mirroring deck.gl `RotateMode`'s formula
- * (`longestEdgeKm / 1000`). We treat the local-frame longest side as if
- * it were lat-degrees so an axis-aligned bbox produces a stem visually
- * matching the rectangle/ellipse stems.
- */
-const STEM_LENGTH_DIVISOR = 1000;
-
-/**
  * Oriented bounding box for a polygon/line, expressed as four world-frame
  * corners (in shape-local order: bottomLeft, bottomRight, topRight,
  * topLeft) plus the world-frame stem base and tip for placing the rotate
@@ -96,11 +87,14 @@ type OrientedBoundingBox = {
 function getShapeVertices(feature: Feature): Position[] | null {
   if (feature.geometry.type === 'Polygon') {
     const ring = (feature.geometry as Polygon).coordinates[0];
+
     return Array.isArray(ring) ? (ring as Position[]) : null;
   }
+
   if (feature.geometry.type === 'LineString') {
     return (feature.geometry as LineString).coordinates as Position[];
   }
+
   return null;
 }
 
@@ -110,17 +104,19 @@ function getShapeVertices(feature: Feature): Position[] | null {
  * oriented bounding box to un-rotate around a slightly different point
  * than the shape was rotated around, which over multiple rotations
  * drifts the bounding box off the shape's "natural" edge.
+ *
+ * Calls `turfCentroid` directly on the feature — `turfCentroid` accepts
+ * `Feature | FeatureCollection`, so the previous one-element FC wrapper
+ * was a per-frame allocation that bought nothing.
  */
 function polygonCentroid(feature: Feature): [number, number] | null {
-  const collection = featureCollection([
-    feature,
-    // biome-ignore lint/suspicious/noExplicitAny: turf and editable-layers GeoJSON types differ
-  ] as any) as GeoFeatureCollection;
   // biome-ignore lint/suspicious/noExplicitAny: turf type variance
-  const coords = turfCentroid(collection as any).geometry.coordinates;
+  const coords = turfCentroid(feature as any).geometry.coordinates;
+
   if (typeof coords[0] !== 'number' || typeof coords[1] !== 'number') {
     return null;
   }
+
   return [coords[0], coords[1]];
 }
 
@@ -148,20 +144,25 @@ function localAxisAlignedBounds(
     if (!vertex) {
       continue;
     }
+
     const deltaX = (vertex[0] as number) - centroid[0];
     const deltaY = (vertex[1] as number) - centroid[1];
     // Inverse of compass-positive (CW) rotation by angleDeg.
     const localX = deltaX * cos - deltaY * sin;
     const localY = deltaX * sin + deltaY * cos;
+
     if (localX < minX) {
       minX = localX;
     }
+
     if (localX > maxX) {
       maxX = localX;
     }
+
     if (localY < minY) {
       minY = localY;
     }
+
     if (localY > maxY) {
       maxY = localY;
     }
@@ -170,6 +171,85 @@ function localAxisAlignedBounds(
   return Number.isFinite(minX) && Number.isFinite(minY)
     ? { minX, maxX, minY, maxY }
     : null;
+}
+
+/**
+ * Inflate a local-frame axis-aligned bounding box outward by
+ * {@link BBOX_BUFFER_RATIO} of its longest side. Pulled out of
+ * `computeOrientedBoundingBox` for clarity — the buffer is the only
+ * place callers need to tune the gap between the shape's vertices and
+ * its bbox handles.
+ */
+function inflateLocalBounds(localBounds: {
+  minX: number;
+  maxX: number;
+  minY: number;
+  maxY: number;
+}): { minX: number; maxX: number; minY: number; maxY: number } {
+  const longestSide = Math.max(
+    localBounds.maxX - localBounds.minX,
+    localBounds.maxY - localBounds.minY,
+  );
+  const buffer = longestSide * BBOX_BUFFER_RATIO;
+
+  return {
+    minX: localBounds.minX - buffer,
+    maxX: localBounds.maxX + buffer,
+    minY: localBounds.minY - buffer,
+    maxY: localBounds.maxY + buffer,
+  };
+}
+
+/**
+ * Compass-positive (CW) rotation from the polygon's local frame back to
+ * world coordinates:
+ * `(localX, localY) → (localX·cos + localY·sin, −localX·sin + localY·cos)`.
+ * With `α = 90°`: local +Y (north) maps to world +X (east), matching
+ * `turfTransformRotate`.
+ */
+function localPointToWorld(
+  localX: number,
+  localY: number,
+  centroid: [number, number],
+  cos: number,
+  sin: number,
+): Position {
+  return [
+    localX * cos + localY * sin + centroid[0],
+    -localX * sin + localY * cos + centroid[1],
+  ];
+}
+
+/**
+ * Project the buffered local-frame bounds back to world coordinates and
+ * place the rotate-stem above the top edge. Stem length matches deck.gl
+ * `RotateMode`'s `longestEdgeKm / 1000` formula — computed on
+ * world-frame corners via `turfDistance` so it produces the same km
+ * value the axis-aligned bounding box version would.
+ */
+function buildOrientedBoundingBox(
+  buffered: { minX: number; maxX: number; minY: number; maxY: number },
+  localToWorld: (localX: number, localY: number) => Position,
+): OrientedBoundingBox {
+  const { minX, maxX, minY, maxY } = buffered;
+  const topMidX = (minX + maxX) / 2;
+  const bottomLeft = localToWorld(minX, minY);
+  const bottomRight = localToWorld(maxX, minY);
+  const topRight = localToWorld(maxX, maxY);
+  const topLeft = localToWorld(minX, maxY);
+
+  const widthKm = turfDistance(bottomLeft as Position, bottomRight as Position);
+  const heightKm = turfDistance(bottomLeft as Position, topLeft as Position);
+  const stemLengthDeg = Math.max(widthKm, heightKm) / STEM_LENGTH_DIVISOR;
+
+  return {
+    bottomLeft,
+    bottomRight,
+    topRight,
+    topLeft,
+    stemBase: localToWorld(topMidX, maxY),
+    stemTip: localToWorld(topMidX, maxY + stemLengthDeg),
+  };
 }
 
 /**
@@ -203,10 +283,13 @@ function computeOrientedBoundingBox(
   angleDeg: number,
 ): OrientedBoundingBox | null {
   const vertices = getShapeVertices(feature);
+
   if (!vertices || vertices.length < 2) {
     return null;
   }
+
   const centroid = polygonCentroid(feature);
+
   if (!centroid) {
     return null;
   }
@@ -216,51 +299,16 @@ function computeOrientedBoundingBox(
   const sin = Math.sin(angleRad);
 
   const localBounds = localAxisAlignedBounds(vertices, centroid, cos, sin);
+
   if (!localBounds) {
     return null;
   }
 
-  const longestSide = Math.max(
-    localBounds.maxX - localBounds.minX,
-    localBounds.maxY - localBounds.minY,
-  );
-  const buffer = longestSide * BBOX_BUFFER_RATIO;
-  const minX = localBounds.minX - buffer;
-  const maxX = localBounds.maxX + buffer;
-  const minY = localBounds.minY - buffer;
-  const maxY = localBounds.maxY + buffer;
+  const buffered = inflateLocalBounds(localBounds);
+  const localToWorld = (localX: number, localY: number): Position =>
+    localPointToWorld(localX, localY, centroid, cos, sin);
 
-  // Compass-positive (CW) rotation:
-  // `(localX, localY) → (localX·cos + localY·sin, −localX·sin + localY·cos)`.
-  // For example with α = 90°: local +Y (north) maps to world +X (east),
-  // matching turfTransformRotate.
-  const localToWorld = (localX: number, localY: number): Position => [
-    localX * cos + localY * sin + centroid[0],
-    -localX * sin + localY * cos + centroid[1],
-  ];
-
-  const topMidX = (minX + maxX) / 2;
-  const bottomLeft = localToWorld(minX, minY);
-  const bottomRight = localToWorld(maxX, minY);
-  const topRight = localToWorld(maxX, maxY);
-  const topLeft = localToWorld(minX, maxY);
-
-  // Match deck.gl RotateMode's stem length in lat-degrees: longest
-  // bbox edge in km, divided by STEM_LENGTH_DIVISOR (1000), treated as
-  // a lat-degree offset. Computing on world-frame corners gives the
-  // same km value the axis-aligned bounding box version would.
-  const widthKm = turfDistance(bottomLeft as Position, bottomRight as Position);
-  const heightKm = turfDistance(bottomLeft as Position, topLeft as Position);
-  const stemLengthDeg = Math.max(widthKm, heightKm) / STEM_LENGTH_DIVISOR;
-
-  return {
-    bottomLeft,
-    bottomRight,
-    topRight,
-    topLeft,
-    stemBase: localToWorld(topMidX, maxY),
-    stemTip: localToWorld(topMidX, maxY + stemLengthDeg),
-  };
+  return buildOrientedBoundingBox(buffered, localToWorld);
 }
 
 /**
@@ -302,12 +350,14 @@ function buildBoundingBoxChrome(
     boundingBox.topRight,
     boundingBox.topLeft,
   ];
+
   for (const handle of existingScaleHandles) {
     // biome-ignore lint/suspicious/noExplicitAny: properties shape varies
     const properties = (handle.properties ?? {}) as any;
     const positionIndex = Array.isArray(properties.positionIndexes)
       ? (properties.positionIndexes[0] as number | undefined)
       : undefined;
+
     if (
       positionIndex === undefined ||
       positionIndex < 0 ||
@@ -316,7 +366,9 @@ function buildBoundingBoxChrome(
       result.push(handle);
       continue;
     }
+
     const corner = cornersByIndex[positionIndex];
+
     if (corner) {
       result.push(point(corner, properties) as Feature<GeoPoint>);
     }
@@ -325,7 +377,9 @@ function buildBoundingBoxChrome(
   if (existingRotateHandle) {
     // biome-ignore lint/suspicious/noExplicitAny: properties shape varies
     const rotateProps = (existingRotateHandle.properties ?? {}) as any;
+
     result.push(point(boundingBox.stemTip, rotateProps) as Feature<GeoPoint>);
+
     result.push(
       lineString([boundingBox.stemBase, boundingBox.stemTip], {
         mode: 'rotate-stem',
@@ -334,6 +388,183 @@ function buildBoundingBoxChrome(
   }
 
   return result;
+}
+
+/**
+ * Apply the existing scale-envelope filter and rectangle vertex-handle
+ * filter. Returns the filtered guide list; the oriented bounding box replacement happens
+ * in a separate step.
+ */
+function filterVertexGuides(
+  features: Feature[],
+  isRectangle: boolean,
+  isRotating: boolean,
+): Feature[] {
+  return features.filter((guide) => {
+    // biome-ignore lint/suspicious/noExplicitAny: Guide properties vary by mode
+    const properties = (guide.properties ?? {}) as any;
+    const editHandleType = properties.editHandleType;
+    const guideType = properties.guideType;
+    const mode = properties.mode;
+
+    // Three "filter out" rules: rectangles hide their vertex handles to
+    // preserve right angles, the scale envelope is always dropped (we
+    // emit our own oriented bounding box instead), and scale corner
+    // handles are hidden during a rotation drag.
+    const drop =
+      (isRectangle &&
+        guideType === 'editHandle' &&
+        editHandleType === 'existing') ||
+      mode === 'scale' ||
+      (isRotating && editHandleType === 'scale');
+
+    return !drop;
+  });
+}
+
+/**
+ * `true` if `feature` is a rotate-mode-emitted bbox outline or stem
+ * connector LineString that the oriented bounding box chrome will replace. Both come
+ * through with no `editHandleType`, no `mode`, and either 5 coords
+ * (closed bbox ring) or 2 coords (connector).
+ */
+function isRotateModeChromeLine(feature: Feature): boolean {
+  // The geometry-type guard is kept separate because the rest of the
+  // function depends on the LineString narrowing.
+  if (feature.geometry.type !== 'LineString') {
+    return false;
+  }
+
+  // biome-ignore lint/suspicious/noExplicitAny: properties shape varies
+  const properties = (feature.properties ?? {}) as any;
+  const coords = (feature.geometry as LineString).coordinates;
+
+  return (
+    properties.editHandleType === undefined &&
+    properties.mode === undefined &&
+    (coords.length === 5 || coords.length === 2)
+  );
+}
+
+/**
+ * `true` if `feature` is any of the rotate-mode-emitted bbox chrome
+ * pieces (bbox outline LineString, stem connector LineString, or the
+ * rotate-handle Point). Used to strip the chrome during a rotation drag
+ * so only the rotating shape and centroid pivot remain visible.
+ */
+function isRotateChromeFeature(feature: Feature): boolean {
+  // biome-ignore lint/suspicious/noExplicitAny: properties shape varies
+  const editHandleType = (feature.properties as any)?.editHandleType;
+
+  return (
+    isRotateModeChromeLine(feature) ||
+    (editHandleType === 'rotate' && feature.geometry.type === 'Point')
+  );
+}
+
+/**
+ * Replace the rotate-mode emitted bbox + scale handles + rotate handle
+ * + stem connector with oriented bounding box-based versions. Other guides (vertex
+ * handles, intermediate handles, etc.) pass through unchanged.
+ */
+function replaceRotateChromeWithBoundingBox(
+  features: Feature[],
+  boundingBox: OrientedBoundingBox,
+): Feature[] {
+  const scaleHandles: Feature<GeoPoint>[] = [];
+  let rotateHandle: Feature<GeoPoint> | undefined;
+  const passthrough: Feature[] = [];
+
+  for (const feature of features) {
+    // biome-ignore lint/suspicious/noExplicitAny: properties shape varies
+    const editHandleType = (feature.properties as any)?.editHandleType;
+    const isPoint = feature.geometry.type === 'Point';
+
+    if (editHandleType === 'scale' && isPoint) {
+      scaleHandles.push(feature as Feature<GeoPoint>);
+      continue;
+    }
+
+    if (editHandleType === 'rotate' && isPoint) {
+      rotateHandle = feature as Feature<GeoPoint>;
+      continue;
+    }
+
+    if (isRotateModeChromeLine(feature)) {
+      continue;
+    }
+
+    passthrough.push(feature);
+  }
+
+  // Push chrome features into `passthrough` in place rather than
+  // returning a spread-merged array — saves one array allocation per
+  // `getGuides` frame.
+  passthrough.push(
+    ...buildBoundingBoxChrome(boundingBox, rotateHandle, scaleHandles),
+  );
+
+  return passthrough;
+}
+
+/**
+ * Build a fresh set of scale-corner handle Points (one per oriented bounding box corner,
+ * `positionIndexes` 0..3) suitable for assigning to ScaleMode's private
+ * `_cornerGuidePoints`. Used to lock the corner cache to the
+ * drag-start oriented bounding box during a scale gesture so its drag-origin lookup
+ * stays at a fixed world position.
+ */
+function boundingBoxToScaleHandles(
+  boundingBox: OrientedBoundingBox,
+): Feature<GeoPoint>[] {
+  const corners: Position[] = [
+    boundingBox.bottomLeft,
+    boundingBox.bottomRight,
+    boundingBox.topRight,
+    boundingBox.topLeft,
+  ];
+
+  return corners.map(
+    (corner, index) =>
+      point(corner, {
+        guideType: 'editHandle',
+        editHandleType: 'scale',
+        positionIndexes: [index],
+      }) as Feature<GeoPoint>,
+  );
+}
+
+/**
+ * Reach into ScaleMode's private `_cornerGuidePoints` and sync it with
+ * the oriented bounding box-positioned scale handles so its `_getOppositeScaleHandle`
+ * lookup returns the diagonally-opposite oriented bounding box corner (where the user
+ * sees the handle) rather than the axis-aligned bounding box corner ScaleMode computed
+ * internally. Required because ScaleMode's drag origin comes from
+ * those cached points, not from the visible feature collection.
+ */
+function syncScaleModeCornerCache(
+  scaleMode: OrientedScaleMode,
+  features: Feature[],
+): void {
+  const boundingBoxScaleHandles: Feature<GeoPoint>[] = [];
+
+  for (const feature of features) {
+    // biome-ignore lint/suspicious/noExplicitAny: properties shape varies
+    const properties = (feature.properties ?? {}) as any;
+
+    if (
+      properties.editHandleType === 'scale' &&
+      feature.geometry.type === 'Point'
+    ) {
+      boundingBoxScaleHandles.push(feature as Feature<GeoPoint>);
+    }
+  }
+
+  if (boundingBoxScaleHandles.length !== 4) {
+    return;
+  }
+
+  scaleModePrivate(scaleMode)._cornerGuidePoints = boundingBoxScaleHandles;
 }
 
 /**
@@ -366,13 +597,15 @@ function buildBoundingBoxChrome(
  *
  * ## Tooltips
  * This mode does not show live measurement tooltips during editing because arbitrary
- * polygons don't have well-defined dimensions. Use BoundingTransformMode for shapes
- * like rectangles and ellipses where dimension tooltips are useful.
+ * polygons don't have well-defined dimensions. The dedicated
+ * `RectangleTransformMode` and `EllipseTransformMode` show dimension
+ * tooltips during scale drags.
  *
  * ## Rectangle Special Handling
- * For rectangles, vertex handles are hidden to preserve rotation and right angles.
- * Only scale/rotate/translate handles are shown. Consider using BoundingTransformMode
- * directly for rectangles if vertex editing should never be available.
+ * If a rectangle ever reaches this mode (legacy fallback — rectangles
+ * normally use `RectangleTransformMode`), vertex handles are hidden to
+ * preserve rotation and right angles. Only scale/rotate/translate
+ * handles are shown.
  *
  * @example
  * ```typescript
@@ -397,34 +630,14 @@ export class VertexTransformMode extends BaseTransformMode {
   private scaleMode: OrientedScaleMode;
   private rotateMode: RotateModeWithSnap;
   /**
-   * Cumulative rotation (degrees) applied to the bbox since the current
-   * edit session started. Polygons and lines have no persisted rotation
-   * angle, so we accumulate the deltas observed via `RotateMode`'s
-   * transient `properties.rotationAngle` and use the running total to
-   * orient the bbox in the polygon's local frame instead of snapping
-   * the bbox back to axis-aligned (north) after each rotation.
-   *
-   * Reset on edit-session boundary by {@link resetLockedAnchor}.
+   * Tracks the cumulative session rotation angle (polygons and lines
+   * have no persisted rotation, so deltas observed via deck.gl's
+   * transient `properties.rotationAngle` are accumulated here) and the
+   * scale-drag oriented-bounding-box snapshot (frozen on the first scale
+   * frame so the corner-origin cache stays stable as the polygon
+   * scales).
    */
-  private bboxOrientation: { shapeId: string; angleDeg: number } | null = null;
-  /**
-   * Last `properties.rotationAngle` seen on the editing feature.
-   * `RotateMode` sets this during a drag and deletes it on completion;
-   * we detect the set→unset transition to know when to accumulate the
-   * final delta into {@link bboxOrientation}.
-   */
-  private lastSeenRotationDelta: number | undefined;
-  /**
-   * Snapshot of the oriented bounding box at the start of a scale drag, captured the first
-   * frame `ScaleMode._isScaling` flips to true and held until the drag
-   * ends. Used to keep `ScaleMode._cornerGuidePoints[opposite]` (the
-   * scale origin) at a stable world position throughout the drag —
-   * without locking, recomputing the oriented bounding box each frame from the live
-   * (already-scaled) polygon shifts the centroid and therefore the
-   * opposite corner, which feeds back into the scale formula and makes
-   * the polygon "fly across the screen" once the scale grows past ~2x.
-   */
-  private lockedScaleBoundingBox: OrientedBoundingBox | null = null;
+  private orientationLock = new OrientationLock<OrientedBoundingBox>();
 
   constructor() {
     const modifyMode = new ModifyMode();
@@ -495,42 +708,30 @@ export class VertexTransformMode extends BaseTransformMode {
     event: DraggingEvent,
     props: ModeProps<FeatureCollection>,
   ): void {
-    super.handleDragging(
-      event,
-      withOrientationConfig(props, this.bboxOrientation),
-    );
+    super.handleDragging(event, this.orientationLock.decorateProps(props));
   }
 
   override handleStartDragging(
     event: StartDraggingEvent,
     props: ModeProps<FeatureCollection>,
   ): void {
-    super.handleStartDragging(
-      event,
-      withOrientationConfig(props, this.bboxOrientation),
-    );
+    super.handleStartDragging(event, this.orientationLock.decorateProps(props));
   }
 
   override handleStopDragging(
     event: StopDraggingEvent,
     props: ModeProps<FeatureCollection>,
   ): void {
-    super.handleStopDragging(
-      event,
-      withOrientationConfig(props, this.bboxOrientation),
-    );
+    super.handleStopDragging(event, this.orientationLock.decorateProps(props));
   }
 
   /**
-   * Clear the cumulative rotation lock. The edit layer calls this when
-   * the editing shape ID changes (a new edit session begins) so the
-   * bbox starts axis-aligned (`angleDeg = 0`) for the freshly-opened
-   * shape.
+   * Clear the orientation lock. The edit layer calls this when the
+   * editing shape ID changes (a new edit session begins) so the bbox
+   * starts axis-aligned (`angleDeg = 0`) for the freshly-opened shape.
    */
   resetLockedAnchor(): void {
-    this.bboxOrientation = null;
-    this.lastSeenRotationDelta = undefined;
-    this.lockedScaleBoundingBox = null;
+    this.orientationLock.reset();
   }
 
   /**
@@ -557,19 +758,19 @@ export class VertexTransformMode extends BaseTransformMode {
     props: ModeProps<FeatureCollection>,
   ): GuideFeatureCollection {
     const allGuides = super.getGuides(props);
-
     const feature = props.data.features[0];
     const isRectangle = feature?.properties?.shape === 'Rectangle';
     const isRotating = this.rotateMode.getIsRotating();
-    // biome-ignore lint/suspicious/noExplicitAny: ScaleMode._isScaling is private upstream
-    const isScaling = Boolean((this.scaleMode as any)._isScaling);
+    const isScaling = scaleModePrivate(this.scaleMode)._isScaling;
 
-    // Track rotation gesture completion to accumulate cumulative rotation
-    // for the bbox orientation. RotateMode sets `rotationAngle` during the
-    // drag and deletes it on completion; we accumulate at the set→unset
-    // transition.
-    this.updateBboxOrientation(feature);
-    this.maintainScaleBoundingBoxLock(isScaling, feature);
+    const { angleDeg, lockedBoundingBox } = this.orientationLock.observe({
+      feature,
+      isScaling,
+      computeBoundingBox: (deg) =>
+        !isRectangle && feature
+          ? computeOrientedBoundingBox(feature, deg)
+          : null,
+    });
 
     const filteredGuides = filterVertexGuides(
       allGuides.features as Feature[],
@@ -577,8 +778,47 @@ export class VertexTransformMode extends BaseTransformMode {
       isRotating,
     );
 
-    // During a rotation drag, drop the bbox chrome entirely so only the
-    // live shape and centroid pivot remain visible.
+    return this.buildGuideOutput({
+      filteredGuides,
+      feature,
+      isRectangle,
+      isRotating,
+      angleDeg,
+      lockedBoundingBox,
+    });
+  }
+
+  /**
+   * Decide which guide collection to render given the current gesture
+   * state, and (as a side effect on the scale path) sync ScaleMode's
+   * private corner cache so its drag math anchors at the oriented bounding box corner the
+   * user actually sees. Three top-level branches:
+   *
+   * - **Rotating** — drop the bbox chrome entirely so only the live
+   *   shape and centroid pivot remain visible.
+   * - **No oriented bounding box available** — rectangle fallback, missing feature, or
+   *   degenerate vertices. Return the un-modified filtered guides.
+   * - **Default** — emit the oriented-bounding-box-based chrome and patch
+   *   `_cornerGuidePoints` (locked to drag-start corners during scale,
+   *   live corners otherwise).
+   */
+  private buildGuideOutput(args: {
+    filteredGuides: Feature[];
+    feature: Feature | undefined;
+    isRectangle: boolean;
+    isRotating: boolean;
+    angleDeg: number;
+    lockedBoundingBox: OrientedBoundingBox | null;
+  }): GuideFeatureCollection {
+    const {
+      filteredGuides,
+      feature,
+      isRectangle,
+      isRotating,
+      angleDeg,
+      lockedBoundingBox,
+    } = args;
+
     if (isRotating) {
       const stripped = filteredGuides.filter(
         (guide) => !isRotateChromeFeature(guide),
@@ -587,14 +827,8 @@ export class VertexTransformMode extends BaseTransformMode {
       return featureCollection(stripped as any) as any;
     }
 
-    // Three fall-through-to-filtered-guides cases collapsed below:
-    //   1. Rectangles — `vertex-transform` is only a fallback for legacy
-    //      rectangles; the dedicated rectangle-transform mode handles
-    //      them otherwise, and we leave the existing axis-aligned chrome
-    //      alone here.
-    //   2. No feature — defensive guard.
-    //   3. Bounding-box computation failed (degenerate vertices, etc.).
-    const angleDeg = this.bboxOrientation?.angleDeg ?? 0;
+    // Rectangle fallback / no feature / degenerate vertices all
+    // produce no oriented bounding box; we return the un-modified filtered guides.
     const boundingBox =
       !isRectangle && feature
         ? computeOrientedBoundingBox(feature, angleDeg)
@@ -609,273 +843,37 @@ export class VertexTransformMode extends BaseTransformMode {
       filteredGuides,
       boundingBox,
     );
-
-    // ScaleMode looks up the diagonally-opposite corner from its private
-    // `_cornerGuidePoints` cache to derive the scale origin. Keep that
-    // cache pointing at the oriented bounding box corners the user actually sees:
-    //   - During a scale drag, lock to the *drag-start* oriented bounding box so origin
-    //     stays fixed even as the polygon's centroid drifts under
-    //     non-uniform world-axis scaling — without locking, the origin
-    //     shifts each frame and the scale formula explodes.
-    //   - Otherwise, sync to the *live* oriented bounding box so the cache reflects what
-    //     the user sees (handles match positions on the visible bbox).
-    if (isScaling && this.lockedScaleBoundingBox) {
-      // biome-ignore lint/suspicious/noExplicitAny: ScaleMode._cornerGuidePoints is private upstream
-      (this.scaleMode as any)._cornerGuidePoints = boundingBoxToScaleHandles(
-        this.lockedScaleBoundingBox,
-      );
-    } else {
-      syncScaleModeCornerCache(this.scaleMode, replaced);
-    }
+    this.syncCornerCacheForScale(replaced, lockedBoundingBox);
 
     // biome-ignore lint/suspicious/noExplicitAny: turf/editable-layers GeoJSON types mismatch
     return featureCollection(replaced as any) as any;
   }
 
   /**
-   * Capture the oriented bounding box on the first frame of a scale drag, and clear it
-   * the moment the drag ends. The captured oriented bounding box is used as the locked
-   * source for `ScaleMode._cornerGuidePoints` while the drag is in
-   * progress, keeping the diagonal-opposite (= scale origin) at a
-   * stable world position even as the polygon's centroid drifts.
+   * Keep `ScaleMode._cornerGuidePoints` pointing at the oriented bounding
+   * box corners the user actually sees so its diagonal-opposite lookup
+   * returns a coherent scale origin:
+   *
+   * - During a scale drag (`lockedBoundingBox` non-null), use the
+   *   drag-start oriented bounding box so the origin stays fixed even
+   *   as the polygon's centroid drifts under non-uniform world-axis
+   *   scaling — without locking, the origin shifts each frame and the
+   *   scale formula explodes.
+   * - Otherwise, sync to the *live* oriented bounding box so the cache
+   *   reflects what the user sees (handles match positions on the
+   *   visible bbox).
    */
-  private maintainScaleBoundingBoxLock(
-    isScaling: boolean,
-    feature: Feature | undefined,
+  private syncCornerCacheForScale(
+    replaced: Feature[],
+    lockedBoundingBox: OrientedBoundingBox | null,
   ): void {
-    if (!isScaling) {
-      this.lockedScaleBoundingBox = null;
-      return;
-    }
-    if (this.lockedScaleBoundingBox || !feature) {
-      return;
-    }
-    const angleDeg = this.bboxOrientation?.angleDeg ?? 0;
-    this.lockedScaleBoundingBox = computeOrientedBoundingBox(feature, angleDeg);
-  }
+    if (lockedBoundingBox) {
+      scaleModePrivate(this.scaleMode)._cornerGuidePoints =
+        boundingBoxToScaleHandles(lockedBoundingBox);
 
-  /**
-   * Track `feature.properties.rotationAngle` across frames. Initialize
-   * the orientation lock when a new shape enters editing; on each
-   * set→unset transition (rotation gesture completion), accumulate the
-   * last seen delta so the bbox's stored angle matches the polygon's
-   * cumulative rotation since session start.
-   */
-  private updateBboxOrientation(feature: Feature | undefined): void {
-    const shapeId =
-      typeof feature?.properties?.shapeId === 'string'
-        ? feature.properties.shapeId
-        : undefined;
-    const liveDelta =
-      typeof feature?.properties?.rotationAngle === 'number'
-        ? (feature.properties.rotationAngle as number)
-        : undefined;
-
-    if (shapeId === undefined) {
-      this.lastSeenRotationDelta = liveDelta;
       return;
     }
 
-    if (!this.bboxOrientation || this.bboxOrientation.shapeId !== shapeId) {
-      this.bboxOrientation = { shapeId, angleDeg: 0 };
-    }
-
-    // Set→unset transition: rotation just ended, accumulate the final
-    // delta into our running total.
-    if (
-      this.lastSeenRotationDelta !== undefined &&
-      liveDelta === undefined &&
-      this.bboxOrientation
-    ) {
-      this.bboxOrientation.angleDeg += this.lastSeenRotationDelta;
-    }
-    this.lastSeenRotationDelta = liveDelta;
+    syncScaleModeCornerCache(this.scaleMode, replaced);
   }
-}
-
-/**
- * Apply the existing scale-envelope filter and rectangle vertex-handle
- * filter. Returns the filtered guide list; the oriented bounding box replacement happens
- * in a separate step.
- */
-function filterVertexGuides(
-  features: Feature[],
-  isRectangle: boolean,
-  isRotating: boolean,
-): Feature[] {
-  return features.filter((guide) => {
-    // biome-ignore lint/suspicious/noExplicitAny: Guide properties vary by mode
-    const properties = (guide.properties ?? {}) as any;
-    const editHandleType = properties.editHandleType;
-    const guideType = properties.guideType;
-    const mode = properties.mode;
-
-    // Three "filter out" rules: rectangles hide their vertex handles to
-    // preserve right angles, the scale envelope is always dropped (we
-    // emit our own oriented bounding box instead), and scale corner
-    // handles are hidden during a rotation drag.
-    const drop =
-      (isRectangle &&
-        guideType === 'editHandle' &&
-        editHandleType === 'existing') ||
-      mode === 'scale' ||
-      (isRotating && editHandleType === 'scale');
-
-    return !drop;
-  });
-}
-
-/**
- * Wrap `props` so its `modeConfig` carries the cumulative rotation angle
- * for the currently-edited shape. `OrientedScaleMode` reads the value to
- * choose between local-frame and world-frame scaling. Returns the
- * original `props` reference unchanged when there's no rotation lock —
- * keeps the no-op path allocation-free for the common case.
- */
-function withOrientationConfig(
-  props: ModeProps<FeatureCollection>,
-  bboxOrientation: { shapeId: string; angleDeg: number } | null,
-): ModeProps<FeatureCollection> {
-  if (!bboxOrientation || bboxOrientation.angleDeg === 0) {
-    return props;
-  }
-  return {
-    ...props,
-    modeConfig: {
-      ...props.modeConfig,
-      [BBOX_ORIENTATION_CONFIG_KEY]: bboxOrientation.angleDeg,
-    },
-  };
-}
-
-/**
- * `true` if `feature` is any of the rotate-mode-emitted bbox chrome
- * pieces (bbox outline LineString, stem connector LineString, or the
- * rotate-handle Point). Used to strip the chrome during a rotation drag
- * so only the rotating shape and centroid pivot remain visible.
- */
-function isRotateChromeFeature(feature: Feature): boolean {
-  // biome-ignore lint/suspicious/noExplicitAny: properties shape varies
-  const editHandleType = (feature.properties as any)?.editHandleType;
-  return (
-    isRotateModeChromeLine(feature) ||
-    (editHandleType === 'rotate' && feature.geometry.type === 'Point')
-  );
-}
-
-/**
- * `true` if `feature` is a rotate-mode-emitted bbox outline or stem
- * connector LineString that the oriented bounding box chrome will replace. Both come
- * through with no `editHandleType`, no `mode`, and either 5 coords
- * (closed bbox ring) or 2 coords (connector).
- */
-function isRotateModeChromeLine(feature: Feature): boolean {
-  // The geometry-type guard is kept separate because the rest of the
-  // function depends on the LineString narrowing.
-  if (feature.geometry.type !== 'LineString') {
-    return false;
-  }
-  // biome-ignore lint/suspicious/noExplicitAny: properties shape varies
-  const properties = (feature.properties ?? {}) as any;
-  const coords = (feature.geometry as LineString).coordinates;
-  return (
-    properties.editHandleType === undefined &&
-    properties.mode === undefined &&
-    (coords.length === 5 || coords.length === 2)
-  );
-}
-
-/**
- * Replace the rotate-mode emitted bbox + scale handles + rotate handle
- * + stem connector with oriented bounding box-based versions. Other guides (vertex
- * handles, intermediate handles, etc.) pass through unchanged.
- */
-function replaceRotateChromeWithBoundingBox(
-  features: Feature[],
-  boundingBox: OrientedBoundingBox,
-): Feature[] {
-  const scaleHandles: Feature<GeoPoint>[] = [];
-  let rotateHandle: Feature<GeoPoint> | undefined;
-  const passthrough: Feature[] = [];
-
-  for (const feature of features) {
-    // biome-ignore lint/suspicious/noExplicitAny: properties shape varies
-    const editHandleType = (feature.properties as any)?.editHandleType;
-    const isPoint = feature.geometry.type === 'Point';
-
-    if (editHandleType === 'scale' && isPoint) {
-      scaleHandles.push(feature as Feature<GeoPoint>);
-      continue;
-    }
-    if (editHandleType === 'rotate' && isPoint) {
-      rotateHandle = feature as Feature<GeoPoint>;
-      continue;
-    }
-    if (isRotateModeChromeLine(feature)) {
-      continue;
-    }
-
-    passthrough.push(feature);
-  }
-
-  return [
-    ...passthrough,
-    ...buildBoundingBoxChrome(boundingBox, rotateHandle, scaleHandles),
-  ];
-}
-
-/**
- * Build a fresh set of scale-corner handle Points (one per oriented bounding box corner,
- * `positionIndexes` 0..3) suitable for assigning to ScaleMode's private
- * `_cornerGuidePoints`. Used to lock the corner cache to the
- * drag-start oriented bounding box during a scale gesture so its drag-origin lookup
- * stays at a fixed world position.
- */
-function boundingBoxToScaleHandles(
-  boundingBox: OrientedBoundingBox,
-): Feature<GeoPoint>[] {
-  const corners: Position[] = [
-    boundingBox.bottomLeft,
-    boundingBox.bottomRight,
-    boundingBox.topRight,
-    boundingBox.topLeft,
-  ];
-  return corners.map(
-    (corner, index) =>
-      point(corner, {
-        guideType: 'editHandle',
-        editHandleType: 'scale',
-        positionIndexes: [index],
-      }) as Feature<GeoPoint>,
-  );
-}
-
-/**
- * Reach into ScaleMode's private `_cornerGuidePoints` and sync it with
- * the oriented bounding box-positioned scale handles so its `_getOppositeScaleHandle`
- * lookup returns the diagonally-opposite oriented bounding box corner (where the user
- * sees the handle) rather than the axis-aligned bounding box corner ScaleMode computed
- * internally. Required because ScaleMode's drag origin comes from
- * those cached points, not from the visible feature collection.
- */
-function syncScaleModeCornerCache(
-  scaleMode: OrientedScaleMode,
-  features: Feature[],
-): void {
-  const boundingBoxScaleHandles: Feature<GeoPoint>[] = [];
-  for (const feature of features) {
-    // biome-ignore lint/suspicious/noExplicitAny: properties shape varies
-    const properties = (feature.properties ?? {}) as any;
-    if (
-      properties.editHandleType === 'scale' &&
-      feature.geometry.type === 'Point'
-    ) {
-      boundingBoxScaleHandles.push(feature as Feature<GeoPoint>);
-    }
-  }
-  if (boundingBoxScaleHandles.length !== 4) {
-    return;
-  }
-  // biome-ignore lint/suspicious/noExplicitAny: accessing inherited private from ScaleMode
-  (scaleMode as any)._cornerGuidePoints = boundingBoxScaleHandles;
 }

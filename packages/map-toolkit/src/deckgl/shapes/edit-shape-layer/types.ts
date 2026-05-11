@@ -117,11 +117,15 @@ export type UseEditShapeReturn = {
  * box. All fields are optional — omit any field to fall back to the
  * package defaults from `shared/constants`.
  *
- * Edit handles split into three roles by `editHandleType`:
- * - `vertex` — circles on the polygon's existing/intermediate points
- *   (white by default).
- * - `scale` — corner handles on the bounding box (turquoise by default).
- * - `rotate` — the dot at the end of the rotation stem (amber by default).
+ * Edit handles split into three **roles** the layer recognizes from
+ * deck.gl's `editHandleType` field:
+ * - **vertex** — `editHandleType` of `'existing'` or `'intermediate'`
+ *   (circles on the polygon's points; white by default). Also the
+ *   fallback role for any unrecognized `editHandleType`.
+ * - **scale** — `editHandleType` of `'scale'` (corner handles on the
+ *   bounding box; turquoise by default).
+ * - **rotate** — `editHandleType` of `'rotate'` (the dot at the end of
+ *   the rotation stem; amber by default).
  *
  * Each role can be styled independently with its own fill color, outline
  * color, and radius. The outline width and "show outline" toggle are
