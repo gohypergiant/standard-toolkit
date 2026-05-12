@@ -46,7 +46,6 @@ pnpm add @accelint/map-toolkit @accelint/bus @deck.gl/core @deckgl-fiber-rendere
 
 ```typescript
 import { BaseMap } from '@accelint/map-toolkit/deckgl';
-import { View } from '@deckgl-fiber-renderer/dom';
 import { uuid } from '@accelint/core';
 
 // Module-level constant for stability
@@ -55,7 +54,6 @@ const MAIN_MAP_ID = uuid();
 export function MapView() {
   return (
     <BaseMap id={MAIN_MAP_ID} className="w-full h-full">
-      <View id="main" controller />
       {/* Add your Deck.gl layers here */}
     </BaseMap>
   );
@@ -69,7 +67,6 @@ UI components (toolbars, buttons, etc.) should be rendered as **siblings** to Ba
 ```typescript
 import { BaseMap } from '@accelint/map-toolkit/deckgl';
 import { useMapMode } from '@accelint/map-toolkit/map-mode';
-import { View } from '@deckgl-fiber-renderer/dom';
 import { uuid } from '@accelint/core';
 
 // Module-level constant shared across components
@@ -92,7 +89,6 @@ export function InteractiveMap() {
   return (
     <div className="relative w-full h-full">
       <BaseMap id={MAIN_MAP_ID} className="absolute inset-0">
-        <View id="main" controller />
         {/* Only Deck.gl layers as children */}
       </BaseMap>
       <Toolbar />
@@ -127,9 +123,7 @@ export function InteractiveMap() {
       className="w-full h-full"
       onClick={handleClick}
       onHover={handleHover}
-    >
-      <View id="main" controller />
-    </BaseMap>
+    />
   );
 }
 ```
@@ -167,6 +161,7 @@ The `BaseMap` component extends all `DeckglProps` from `@deckgl-fiber-renderer/t
 | `boxZoom` | `boolean` | `!enableRbz` | Enable MapLibre's native box zoom gesture (Shift + drag). Defaults to `true`, or `false` when `enableRbz` is `true` (the two gestures conflict). |
 | `enableRbz` | `boolean` | `false` | Enable rubber band zoom. See [Rubber Band Zoom](#rubber-band-zoom). |
 | `rbzOptions` | [`RbzOptions`](?path=/docs/deckgl-rubber-band-zoom--docs) | `undefined` | Configuration for rubber band zoom. Only applies when `enableRbz` is `true`. |
+| `mapLibreOptions` | [`MapLibreOptions`](#forwarding-maplibre-options) | `undefined` | Additional MapLibre `MapOptions` forwarded to the underlying map (e.g. `transformRequest`, `maxBounds`, `minZoom`, `maxZoom`, `locale`, `interactive`, `cooperativeGestures`). Locked keys are stripped. |
 
 All `DeckglProps` (including `onClick`, `onHover`, `parameters`, `initialViewState`, `controller`, `widgets`, etc.) are also accepted and forwarded to Deck.gl. See the [Deck.gl documentation](https://deck.gl/docs/api-reference/core/deck) for the full set.
 
@@ -218,14 +213,10 @@ function MapView() {
 import { BaseMap, LIGHT_BASE_MAP_STYLE } from '@accelint/map-toolkit/deckgl';
 
 // Light theme
-<BaseMap id={mapId} styleUrl={LIGHT_BASE_MAP_STYLE}>
-  <View id="main" controller />
-</BaseMap>
+<BaseMap id={mapId} styleUrl={LIGHT_BASE_MAP_STYLE} />
 
 // Custom style URL
-<BaseMap id={mapId} styleUrl="https://your-custom-style.json">
-  <View id="main" controller />
-</BaseMap>
+<BaseMap id={mapId} styleUrl="https://your-custom-style.json" />
 ```
 
 #### Rubber Band Zoom
@@ -248,6 +239,47 @@ When `enableRbz` is `true`, BaseMap creates an [`RbzHandler`](?path=/docs/deckgl
 > **`enableRbz` and `rbzOptions` are read once on map load.** Changes after mount have no effect. To toggle or reconfigure dynamically, change the map's `key` prop to force a remount.
 
 See the [Rubber Band Zoom docs](?path=/docs/deckgl-rubber-band-zoom--docs) for the full RBZ API surface.
+
+#### Forwarding MapLibre options
+
+`mapLibreOptions` forwards arbitrary MapLibre options to the underlying map — anything not in the [Stripped keys](#stripped-keys) list below is passed straight through. The type is `MapLibreOptions` (exported from `@accelint/map-toolkit/deckgl`), which is `Partial<MapOptions>` with BaseMap-managed keys omitted. Defaults BaseMap sets (e.g. `attributionControl: { compact: true }`) can be overridden by including the same key.
+
+The most common use is `transformRequest` for rewriting tile URLs through a proxy, adding auth headers, or resolving `mapbox://` URIs against a self-hosted Mapbox-compatible service:
+
+```tsx
+import { BaseMap } from '@accelint/map-toolkit/deckgl';
+
+<BaseMap
+  id={MAIN_MAP_ID}
+  styleUrl={MAPBOX_STYLE_URL}
+  mapLibreOptions={{
+    transformRequest: (url, resourceType) => {
+      if (url.startsWith('mapbox://')) {
+        return {
+          url: url.replace('mapbox://', 'https://tiles.internal.example.com/'),
+        };
+      }
+      return { url };
+    },
+    maxBounds: [[-130, 20], [-60, 55]],
+    minZoom: 2,
+    maxZoom: 18,
+    locale: { 'AttributionControl.ToggleAttribution': 'Toggle attribution' },
+    cooperativeGestures: true,
+  }}
+/>
+```
+
+##### Stripped keys
+
+The following keys are silently removed before being applied to MapLibre. They're either derived from BaseMap's camera/view state, required by Deck.gl picking/interaction, already exposed as dedicated BaseMap props, or unsupported by the underlying `react-map-gl` wrapper:
+
+- Camera/view state: `container`, `center`, `bounds`, `fitBoundsOptions`, `zoom`, `pitch`, `bearing`, `projection`, `maxPitch`
+- Locked gestures (reserved for Deck.gl picking and the camera state machine): `doubleClickZoom`, `dragRotate`, `pitchWithRotate`, `rollEnabled`
+- Locked rendering config: `canvasContextAttributes`
+- Already a dedicated BaseMap prop: `boxZoom` (use the `boxZoom` prop), `style` (use `styleUrl`)
+
+If you need to override one of these, use the corresponding BaseMap prop or file an issue describing the use case.
 
 ### Exported Constants
 
@@ -301,7 +333,7 @@ Event names for map interactions:
 
 ## Children Components
 
-**Important**: BaseMap passes its children directly to Deck.gl's rendering engine, which only accepts Deck.gl layer components (e.g., `<View>`, `<ScatterplotLayer>`, etc.).
+**Important**: BaseMap passes its children directly to Deck.gl's rendering engine, which only accepts Deck.gl layer components (e.g., `<ScatterplotLayer>`, `<symbolLayer>`, etc.).
 
 **Do NOT** render regular React UI components (buttons, divs, toolbars, etc.) as children of BaseMap. Doing so will result in errors like "Text nodes are not supported."
 
@@ -311,7 +343,6 @@ Event names for map interactions:
 // ✅ Correct - UI as siblings
 <div className="relative w-full h-full">
   <BaseMap id={mapId} className="absolute inset-0">
-    <View id="main" controller />
     {/* Only Deck.gl layers */}
   </BaseMap>
   <Toolbar /> {/* Sibling to BaseMap */}
