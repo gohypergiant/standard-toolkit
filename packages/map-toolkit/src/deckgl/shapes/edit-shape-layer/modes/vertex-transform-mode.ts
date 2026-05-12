@@ -22,13 +22,11 @@ import {
   TranslateMode,
 } from '@deck.gl-community/editable-layers';
 import { featureCollection } from '@turf/helpers';
-import type { Feature } from 'geojson';
 import { BaseTransformMode, type HandleMatcher } from './base-transform-mode';
 import { OrientedScaleMode } from './oriented-scale-mode';
 import { RotateModeWithSnap } from './rotate-mode-with-snap';
 import { OrientationLock } from './utils/orientation-lock';
 import { scaleModePrivate } from './utils/scale-mode-internals';
-import type { Point as GeoPoint } from 'geojson';
 import {
   boundingBoxToScaleHandles,
   filterVertexGuides,
@@ -40,6 +38,7 @@ import {
   computeOrientedBoundingBox,
   type OrientedBoundingBox,
 } from './utils/vertex-bbox-math';
+import type { Feature, Point as GeoPoint } from 'geojson';
 
 /**
  * Transform mode for shapes that support vertex editing (polygons and lines).

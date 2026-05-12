@@ -10,14 +10,14 @@
  * governing permissions and limitations under the License.
  */
 
+import { describe, expect, it } from 'vitest';
+import { BBOX_ORIENTATION_CONFIG_KEY } from '../oriented-scale-mode';
+import { OrientationLock } from './orientation-lock';
 import type {
   FeatureCollection,
   ModeProps,
 } from '@deck.gl-community/editable-layers';
 import type { Feature, Point } from 'geojson';
-import { describe, expect, it } from 'vitest';
-import { OrientationLock } from './orientation-lock';
-import { BBOX_ORIENTATION_CONFIG_KEY } from '../oriented-scale-mode';
 
 /**
  * Sentinel bounding-box type for the generic parameter. The lock never

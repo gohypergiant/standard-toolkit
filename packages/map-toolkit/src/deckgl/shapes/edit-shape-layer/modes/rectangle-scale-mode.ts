@@ -19,10 +19,10 @@ import {
   type StopDraggingEvent,
 } from '@deck.gl-community/editable-layers';
 import { featureCollection, point, polygonToLine } from '@turf/turf';
-import { recomputeRectangleCorners } from './utils/rectangle-scale-math';
 import { ShapeAwareScaleMode } from './shape-aware-scale-mode';
-import type { EditHandleFeature } from './utils/transform-mode-guides';
+import { recomputeRectangleCorners } from './utils/rectangle-scale-math';
 import type { Feature, Polygon, Position } from 'geojson';
+import type { EditHandleFeature } from './utils/transform-mode-guides';
 
 /**
  * Concrete `ShapeAwareScaleMode` for rectangles. Overrides `getGuides`

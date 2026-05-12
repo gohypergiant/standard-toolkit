@@ -22,8 +22,8 @@ import { useMapCursor } from '@/map-cursor';
 import { BaseMap } from '../../base-map/index';
 import { mockShapes } from '../__fixtures__/mock-shapes';
 import { mockShapesWithIcons } from '../__fixtures__/mock-shapes-with-icons';
-import type { CameraSetViewEvent, ViewType } from '@/camera/types';
 import type { Color } from '@deck.gl/core';
+import type { CameraSetViewEvent, ViewType } from '@/camera/types';
 import '../display-shape-layer/fiber';
 import { useSelectShape } from '../display-shape-layer/use-select-shape';
 import { DrawShapeLayer } from '../draw-shape-layer/index';
@@ -36,8 +36,8 @@ import type { ShapeHoveredEvent, ShapeSelectedEvent } from '../shared/events';
 import type { Shape } from '../shared/types';
 import './fiber';
 import { EditShapeLayer } from './index';
-import type { EditShapeStyle } from './types';
 import { useEditShape } from './use-edit-shape';
+import type { EditShapeStyle } from './types';
 
 const meta: Meta = {
   title: 'DeckGL/Shapes/Edit Shape Layer',

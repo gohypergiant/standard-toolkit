@@ -10,9 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Feature, LineString, Point, Polygon } from 'geojson';
 import { describe, expect, it } from 'vitest';
 import { computeOrientedBoundingBox } from './vertex-bbox-math';
+import type { Feature, LineString, Point, Polygon } from 'geojson';
 
 const BUFFER_RATIO = 0.03;
 
@@ -83,20 +83,27 @@ describe('computeOrientedBoundingBox', () => {
 
   it('should produce a buffered axis-aligned box at angle 0', () => {
     const result = computeOrientedBoundingBox(makeUnitSquare(), 0);
-    // Buffer = longestSide (= 2) × 0.03 = 0.06, applied outward on each
-    // side. At angle 0 the un-rotate-then-rotate round-trip is identity,
-    // so the world-frame corners are the world bbox shifted outward by
-    // the buffer.
+    // Buffer = longestSide (= 2 in local Mercator) × 0.03 ≈ 0.06, applied
+    // outward on each side. At angle 0 the un-rotate-then-rotate
+    // round-trip is identity in Mercator space, so the world-frame
+    // corners are the world bbox shifted outward by the buffer.
+    //
+    // Precision is relaxed from 6 to 3 decimals because the OBB now
+    // operates in Mercator space (`latToMercatorY` is non-linear). For a
+    // 1°-tall square at the equator that round-trip introduces a ~3e-6
+    // y-axis deviation, and the buffer (3% of the longest *local*
+    // dimension) scales with the Mercator-y span, so the x-axis bounds
+    // pick up the same ~3e-6 deviation indirectly.
     const expectedExtent = 1 + 2 * BUFFER_RATIO;
 
-    expect(result?.bottomLeft[0]).toBeCloseTo(-expectedExtent, 6);
-    expect(result?.bottomLeft[1]).toBeCloseTo(-expectedExtent, 6);
-    expect(result?.bottomRight[0]).toBeCloseTo(expectedExtent, 6);
-    expect(result?.bottomRight[1]).toBeCloseTo(-expectedExtent, 6);
-    expect(result?.topRight[0]).toBeCloseTo(expectedExtent, 6);
-    expect(result?.topRight[1]).toBeCloseTo(expectedExtent, 6);
-    expect(result?.topLeft[0]).toBeCloseTo(-expectedExtent, 6);
-    expect(result?.topLeft[1]).toBeCloseTo(expectedExtent, 6);
+    expect(result?.bottomLeft[0]).toBeCloseTo(-expectedExtent, 3);
+    expect(result?.bottomLeft[1]).toBeCloseTo(-expectedExtent, 3);
+    expect(result?.bottomRight[0]).toBeCloseTo(expectedExtent, 3);
+    expect(result?.bottomRight[1]).toBeCloseTo(-expectedExtent, 3);
+    expect(result?.topRight[0]).toBeCloseTo(expectedExtent, 3);
+    expect(result?.topRight[1]).toBeCloseTo(expectedExtent, 3);
+    expect(result?.topLeft[0]).toBeCloseTo(-expectedExtent, 3);
+    expect(result?.topLeft[1]).toBeCloseTo(expectedExtent, 3);
   });
 
   it('should place the stem above the top edge at angle 0', () => {
@@ -104,7 +111,8 @@ describe('computeOrientedBoundingBox', () => {
     const topEdgeY = 1 + 2 * BUFFER_RATIO;
 
     expect(result?.stemBase[0]).toBeCloseTo(0, 6);
-    expect(result?.stemBase[1]).toBeCloseTo(topEdgeY, 6);
+    // Precision relaxed — see note in the buffered-axis-aligned test.
+    expect(result?.stemBase[1]).toBeCloseTo(topEdgeY, 3);
     expect(result?.stemTip[0]).toBeCloseTo(0, 6);
     // Stem tip is *above* the top edge (greater latitude).
     expect(result?.stemTip[1]).toBeGreaterThan(result?.stemBase[1] ?? 0);
@@ -120,10 +128,14 @@ describe('computeOrientedBoundingBox', () => {
     //                       −localX·sin α + localY·cos α)
     // With α = 90°: (lx, ly) → (ly, -lx). So the world position that
     // was at +X in the un-rotated box appears at -Y after rotation.
-    expect(ninety?.bottomLeft[0]).toBeCloseTo(zero?.bottomLeft[1] ?? 0, 6);
-    expect(ninety?.bottomLeft[1]).toBeCloseTo(-(zero?.bottomLeft[0] ?? 0), 6);
-    expect(ninety?.topRight[0]).toBeCloseTo(zero?.topRight[1] ?? 0, 6);
-    expect(ninety?.topRight[1]).toBeCloseTo(-(zero?.topRight[0] ?? 0), 6);
+    //
+    // Comparing across angles round-trips through `mercatorYToLat`
+    // twice in different directions, so the y-axis deviation compounds
+    // to ~1e-5. Precision relaxed accordingly.
+    expect(ninety?.bottomLeft[0]).toBeCloseTo(zero?.bottomLeft[1] ?? 0, 3);
+    expect(ninety?.bottomLeft[1]).toBeCloseTo(-(zero?.bottomLeft[0] ?? 0), 3);
+    expect(ninety?.topRight[0]).toBeCloseTo(zero?.topRight[1] ?? 0, 3);
+    expect(ninety?.topRight[1]).toBeCloseTo(-(zero?.topRight[0] ?? 0), 3);
   });
 
   it('should produce equivalent corners at angle 0 and angle 360', () => {

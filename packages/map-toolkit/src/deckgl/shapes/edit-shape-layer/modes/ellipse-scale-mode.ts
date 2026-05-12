@@ -19,21 +19,21 @@ import {
   type StopDraggingEvent,
 } from '@deck.gl-community/editable-layers';
 import {
-  bearing as turfBearing,
-  ellipse as turfEllipse,
   featureCollection,
   point,
   polygonToLine,
   rhumbDestination,
+  bearing as turfBearing,
+  ellipse as turfEllipse,
 } from '@turf/turf';
+import { ShapeAwareScaleMode } from './shape-aware-scale-mode';
 import {
   type EllipseAxisHandle,
   recomputeEllipseScaleFactors,
 } from './utils/ellipse-scale-math';
-import { ShapeAwareScaleMode } from './shape-aware-scale-mode';
-import type { EditHandleFeature } from './utils/transform-mode-guides';
 import type { DistanceUnit } from '@accelint/constants/units';
 import type { Feature, Polygon, Position } from 'geojson';
+import type { EditHandleFeature } from './utils/transform-mode-guides';
 
 /**
  * Number of vertices used when regenerating the ellipse polygon. Matches

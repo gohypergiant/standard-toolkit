@@ -24,7 +24,7 @@ map-toolkit/edit-shape-layer/modes
 │   ├── ShapeAwareScaleMode (abstract — for modes that need shape-aware geometry)
 │   │   ├── RectangleScaleMode (rotation-aware corner drag for rectangles)
 │   │   └── EllipseScaleMode (axis-endpoint handles + Mercator projection)
-│   └── OrientedScaleMode (local-frame non-uniform scaling for rotated polygons/lines)
+│   └── OrientedScaleMode (Mercator local-frame non-uniform scaling for rotated polygons/lines)
 ├── RotateModeWithSnap extends RotateMode (leaf)
 ├── PointTranslateMode extends GeoJsonEditMode (composite, click-to-place semantics)
 ├── BaseTransformMode extends CompositeMode (composite base)
@@ -43,7 +43,7 @@ map-toolkit/edit-shape-layer/modes
     ├── session-cache.ts             (shape-id-keyed single-slot cache shared by transform modes)
     ├── transform-mode-guides.ts     (rotate-stem geometry + guide post-processing)
     ├── vertex-bbox-chrome.ts        (oriented-bounding-box chrome for polygons/lines)
-    └── vertex-bbox-math.ts          (oriented-bounding-box computation for polygons/lines)
+    └── vertex-bbox-math.ts          (oriented-bounding-box computation for polygons/lines, Mercator-space)
 ```
 
 ## Leaf Modes
@@ -71,7 +71,7 @@ Places scale handles on the ellipse curve at the four axis endpoints (where the 
 
 ### OrientedScaleMode
 
-Extends `ScaleModeWithFreeTransform` for **rotated polygons and lines**. Receives the cumulative session rotation angle via `modeConfig.bboxOrientationAngle` (piped in by `VertexTransformMode`'s `OrientationLock`) and runs the non-uniform scale in the polygon's *local* frame — un-rotates every vertex around the polygon centroid, scales along local X/Y, re-rotates. Falls back to the parent's world-axis behavior when the angle is zero or `lockScaling` is true (uniform scale is rotation-invariant).
+Extends `ScaleModeWithFreeTransform` for **rotated polygons and lines**. Receives the cumulative session rotation angle via `modeConfig.bboxOrientationAngle` (piped in by `VertexTransformMode`'s `OrientationLock`) and runs the non-uniform scale in the polygon's *local Mercator* frame — projects each vertex to Mercator-y, un-rotates around the Mercator-projected centroid, scales along local X/Y, re-rotates, and projects Mercator-y back to lat at the boundary. Doing the scale in Mercator (rather than raw lat/lon) keeps the polygon aligned with the Mercator-true bounding box `vertex-bbox-math` produces and matches the projection deck.gl renders into — same convention as `RectangleScaleMode` and `EllipseScaleMode`. Falls back to the parent's world-axis behavior when the angle is zero or `lockScaling` is true (uniform scale is rotation-invariant).
 
 ### RotateModeWithSnap
 

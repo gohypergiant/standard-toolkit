@@ -10,15 +10,15 @@
  * governing permissions and limitations under the License.
  */
 
-import type { Feature, Point as GeoPoint, LineString } from 'geojson';
 import { describe, expect, it } from 'vitest';
 import {
-  VERTEX_BBOX_MODE,
   boundingBoxToScaleHandles,
   filterVertexGuides,
   isRotateChromeFeature,
   replaceRotateChromeWithBoundingBox,
+  VERTEX_BBOX_MODE,
 } from './vertex-bbox-chrome';
+import type { Feature, Point as GeoPoint, LineString } from 'geojson';
 import type { OrientedBoundingBox } from './vertex-bbox-math';
 
 /**

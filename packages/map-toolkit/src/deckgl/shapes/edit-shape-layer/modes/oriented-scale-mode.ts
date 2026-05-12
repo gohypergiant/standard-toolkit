@@ -11,11 +11,12 @@
  */
 
 import { centroid as turfCentroid } from '@turf/turf';
+import { ScaleModeWithFreeTransform } from './scale-mode-with-free-transform';
+import { latToMercatorY, mercatorYToLat } from './utils/mercator';
 import {
   type ScaleModePrivate,
   scaleModePrivate,
 } from './utils/scale-mode-internals';
-import { ScaleModeWithFreeTransform } from './scale-mode-with-free-transform';
 import type {
   DraggingEvent,
   ModeProps,
@@ -47,11 +48,18 @@ export const BBOX_ORIENTATION_CONFIG_KEY = 'bboxOrientationAngle';
 
 /**
  * Drag-start invariants captured the first frame `OrientedScaleMode`
- * routes to its oriented-bounding-box-aware path. All four fields are constant for the
- * lifetime of a single drag gesture (geometry is the snapshot ScaleMode
- * captures at start, origin is the diagonal-opposite oriented bounding box corner, and
- * the centroid + rotation come from the polygon's pre-drag orientation),
- * so recomputing them per pointer-move frame is wasted work.
+ * routes to its oriented-bounding-box-aware path. All four fields are
+ * constant for the lifetime of a single drag gesture so recomputing
+ * them per pointer-move frame is wasted work.
+ *
+ * - `geometry`: the snapshot `ScaleMode` captures at start.
+ * - `origin`: the diagonal-opposite oriented bounding box corner (lat/lon).
+ * - `centroid`: the polygon's centroid **projected to Mercator** (x = lon,
+ *   y = `latToMercatorY(lat)`). All scale math runs in the Mercator
+ *   frame to match the projection deck.gl renders into and stay aligned
+ *   with the Mercator-true bounding box `vertex-bbox-math` produces.
+ * - `cos` / `sin`: pre-computed rotation matrix coefficients for the
+ *   cumulative session angle.
  */
 type DragSnapshot = {
   geometry: SimpleFeatureCollection;
@@ -176,24 +184,26 @@ function applyOrientedScale(
   scaleY: number,
   originLocalX: number,
   originLocalY: number,
-  centroid: [number, number],
+  centroidMerc: [number, number],
   cos: number,
   sin: number,
 ): SimpleFeatureCollection {
   const scaleCoord = (coord: Position): Position => {
-    // World → local (un-rotate around centroid).
-    const deltaX = (coord[0] as number) - centroid[0];
-    const deltaY = (coord[1] as number) - centroid[1];
+    // Project to Mercator, then world → local (un-rotate around the
+    // Mercator centroid).
+    const coordMercY = latToMercatorY(coord[1] as number);
+    const deltaX = (coord[0] as number) - centroidMerc[0];
+    const deltaY = coordMercY - centroidMerc[1];
     const localX = deltaX * cos - deltaY * sin;
     const localY = deltaX * sin + deltaY * cos;
-    // Scale around localOrigin.
+    // Scale around localOrigin in the Mercator-local frame.
     const scaledX = originLocalX + (localX - originLocalX) * scaleX;
     const scaledY = originLocalY + (localY - originLocalY) * scaleY;
-    // Local → world.
-    return [
-      scaledX * cos + scaledY * sin + centroid[0],
-      -scaledX * sin + scaledY * cos + centroid[1],
-    ];
+    // Local → Mercator world, then back to lat/lon for the GeoJSON output.
+    const worldMercX = scaledX * cos + scaledY * sin + centroidMerc[0];
+    const worldMercY = -scaledX * sin + scaledY * cos + centroidMerc[1];
+
+    return [worldMercX, mercatorYToLat(worldMercY)];
   };
 
   const scaledFeatures = geometry.features.map((feature) => ({
@@ -219,24 +229,28 @@ function computeScaledFeatures(
   snapshot: DragSnapshot,
   event: DraggingEvent | StopDraggingEvent,
 ): SimpleFeatureCollection {
-  const { centroid, cos, sin } = snapshot;
+  const { centroid: centroidMerc, cos, sin } = snapshot;
 
   // Un-rotate the three world positions we care about (drag start,
-  // current cursor, scale origin) into the polygon's local frame. Math
-  // is inlined here instead of behind a closure to keep the hot path
-  // allocation-free.
-  const originLocalX =
-    ((snapshot.origin[0] as number) - centroid[0]) * cos -
-    ((snapshot.origin[1] as number) - centroid[1]) * sin;
-  const originLocalY =
-    ((snapshot.origin[0] as number) - centroid[0]) * sin +
-    ((snapshot.origin[1] as number) - centroid[1]) * cos;
-  const startWorldDx = (event.pointerDownMapCoords[0] as number) - centroid[0];
-  const startWorldDy = (event.pointerDownMapCoords[1] as number) - centroid[1];
+  // current cursor, scale origin) into the polygon's local Mercator
+  // frame. The y-coordinate of each is projected through `latToMercatorY`
+  // before subtracting the Mercator centroid. Math is inlined here
+  // instead of behind a closure to keep the hot path allocation-free.
+  const originMercY = latToMercatorY(snapshot.origin[1] as number);
+  const startMercY = latToMercatorY(event.pointerDownMapCoords[1] as number);
+  const currentMercY = latToMercatorY(event.mapCoords[1] as number);
+
+  const originDx = (snapshot.origin[0] as number) - centroidMerc[0];
+  const originDy = originMercY - centroidMerc[1];
+  const originLocalX = originDx * cos - originDy * sin;
+  const originLocalY = originDx * sin + originDy * cos;
+  const startWorldDx =
+    (event.pointerDownMapCoords[0] as number) - centroidMerc[0];
+  const startWorldDy = startMercY - centroidMerc[1];
   const startLocalX = startWorldDx * cos - startWorldDy * sin;
   const startLocalY = startWorldDx * sin + startWorldDy * cos;
-  const currentWorldDx = (event.mapCoords[0] as number) - centroid[0];
-  const currentWorldDy = (event.mapCoords[1] as number) - centroid[1];
+  const currentWorldDx = (event.mapCoords[0] as number) - centroidMerc[0];
+  const currentWorldDy = currentMercY - centroidMerc[1];
   const currentLocalX = currentWorldDx * cos - currentWorldDy * sin;
   const currentLocalY = currentWorldDx * sin + currentWorldDy * cos;
 
@@ -258,7 +272,7 @@ function computeScaledFeatures(
     scaleY,
     originLocalX,
     originLocalY,
-    centroid,
+    centroidMerc,
     cos,
     sin,
   );
@@ -291,10 +305,20 @@ function resetScaleState(
  * thin polygons collapse to slivers). This subclass projects the cursor
  * positions and the polygon's vertices into the polygon's *local* frame
  * (un-rotated by `bboxOrientationAngle` around the polygon's turf
- * centroid), computes scale factors there, applies them along the
- * polygon's local axes, and re-projects to world. The oriented bounding box stays a clean
- * rotated rectangle around a coherently scaled polygon, matching the
- * approach `RectangleScaleMode` uses for rotated rectangles.
+ * centroid projected to Mercator), computes scale factors there, applies
+ * them along the polygon's local axes, and re-projects through Mercator
+ * back to lat/lon. The oriented bounding box stays a clean rotated
+ * rectangle around a coherently scaled polygon, matching the approach
+ * `RectangleScaleMode` uses for rotated rectangles.
+ *
+ * All scale math runs in **Web Mercator** (x = lon, y =
+ * `latToMercatorY(lat)`) so the polygon scales in the same projection
+ * deck.gl renders into and stays aligned with the Mercator-true bounding
+ * box `vertex-bbox-math` produces. Doing the math in raw lat/lon would
+ * make the polygon drift away from the visible bbox corners at
+ * non-equator latitudes (the bbox is a Mercator-true rectangle on
+ * screen; a lat/lon-Euclidean scale would scale the polygon along
+ * different axes than the bbox is drawn along).
  *
  * Falls through to the parent's behavior when:
  * - `modeConfig.bboxOrientationAngle` is missing or zero (unrotated
@@ -389,10 +413,19 @@ export class OrientedScaleMode extends ScaleModeWithFreeTransform {
     const turfCoords = turfCentroid(context.geometry as any).geometry
       .coordinates as [number, number];
     const angleRad = (angleDeg * Math.PI) / 180;
+    // Project the lat/lon centroid to Mercator. All un-rotate / re-rotate
+    // / scale math runs in the Mercator frame so the polygon scales
+    // consistently with the Mercator-true bounding box rendered by
+    // `vertex-bbox-math` — same convention `RectangleScaleMode` and
+    // `EllipseScaleMode` already use.
+    const centroidMerc: [number, number] = [
+      turfCoords[0],
+      latToMercatorY(turfCoords[1]),
+    ];
     this.dragSnapshot = {
       geometry: context.geometry,
       origin: context.origin,
-      centroid: turfCoords,
+      centroid: centroidMerc,
       cos: Math.cos(angleRad),
       sin: Math.sin(angleRad),
     };

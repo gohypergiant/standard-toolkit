@@ -11,9 +11,9 @@
  */
 
 import { lineString, point } from '@turf/helpers';
+import { scaleModePrivate } from './scale-mode-internals';
 import type { Feature, Point as GeoPoint, LineString, Position } from 'geojson';
 import type { ScaleModeWithFreeTransform } from '../scale-mode-with-free-transform';
-import { scaleModePrivate } from './scale-mode-internals';
 import type { OrientedBoundingBox } from './vertex-bbox-math';
 
 /**

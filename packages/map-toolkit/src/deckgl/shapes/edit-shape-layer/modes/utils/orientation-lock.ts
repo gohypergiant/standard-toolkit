@@ -10,13 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
+import { BBOX_ORIENTATION_CONFIG_KEY } from '../oriented-scale-mode';
+import { SessionCache } from './session-cache';
 import type {
   FeatureCollection,
   ModeProps,
 } from '@deck.gl-community/editable-layers';
 import type { Feature } from 'geojson';
-import { BBOX_ORIENTATION_CONFIG_KEY } from '../oriented-scale-mode';
-import { SessionCache } from './session-cache';
 
 /**
  * Snapshot-on-enter, clear-on-exit lock. Captures a value on the first

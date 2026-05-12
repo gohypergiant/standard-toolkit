@@ -28,8 +28,8 @@ import { computeRectangleMeasurementsFromCorners } from '../../shared/utils/geom
 import { BaseTransformMode, type HandleMatcher } from './base-transform-mode';
 import { RectangleScaleMode } from './rectangle-scale-mode';
 import { RotateModeWithSnap } from './rotate-mode-with-snap';
-import { SessionCache } from './utils/session-cache';
 import { latToMercatorY, mercatorYToLat } from './utils/mercator';
+import { SessionCache } from './utils/session-cache';
 import {
   computePolygonBounds,
   computeRotateStemTip,
