@@ -44,30 +44,15 @@ export const DEFAULT_DISPLAY_PROPS = {
 };
 
 /**
- * Material settings for lighting effects on polygon shapes.
- * Controls fill brightness for hover and selection overlay layers.
- * Keys mirror BRIGHTNESS_FACTOR for consistency.
+ * Material settings for lighting on polygon shapes.
+ * The main layer uses NORMAL for all features; hover/select brightening is
+ * handled via the fill-color accessor, not material variation.
  */
 export const MATERIAL_SETTINGS = {
-  // Normal state - standard lighting
   NORMAL: {
     ambient: 0.35,
     diffuse: 0.6,
     shininess: 32,
-    specularColor: [255, 255, 255] as [number, number, number],
-  },
-  // Hovered or selected (single active state)
-  HOVER_OR_SELECT: {
-    ambient: 0.6,
-    diffuse: 0.8,
-    shininess: 64,
-    specularColor: [255, 255, 255] as [number, number, number],
-  },
-  // Hovered and selected simultaneously - brighter
-  HOVER_AND_SELECT: {
-    ambient: 0.75,
-    diffuse: 0.95,
-    shininess: 80,
     specularColor: [255, 255, 255] as [number, number, number],
   },
 } as const;
@@ -84,11 +69,13 @@ export const BRIGHTNESS_FACTOR = {
 } as const;
 
 /**
- * Opacity multiplier for interaction overlay layers (hover, select).
- * Applied to the shape's fill alpha — sits between the base opacity (0.2)
- * and full opacity (1.0) so the overlay reads clearly without being too solid.
+ * Opacity multiplier applied to the active feature's fill alpha (hover and
+ * select brightening paths, both polygon fills and curtain walls). Sits
+ * between the dimmed base opacity (`BASE_FILL_OPACITY = 0.2`) and full
+ * opacity, so the active fill stands out without rendering as a solid block
+ * on top of the basemap.
  */
-export const OVERLAY_FILL_OPACITY = 0.25;
+export const ACTIVE_FILL_OPACITY = 0.5;
 
 /** Default elevation in meters — ground level (MSL). Used as the fallback when minElevation is not set. */
 export const DEFAULT_ELEVATION = 0;
