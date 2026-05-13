@@ -33,12 +33,18 @@ import { DARK_BASE_MAP_STYLE, PARAMETERS, PICKING_RADIUS } from './constants';
 import { MapControls } from './controls';
 import { MapEvents } from './events';
 import { MapProvider } from './provider';
-import type { IControl, WebGLContextAttributesWithType } from 'maplibre-gl';
+import { LOCKED_MAP_LIBRE_OPTION_KEYS } from './types';
+import type {
+  IControl,
+  MapOptions,
+  WebGLContextAttributesWithType,
+} from 'maplibre-gl';
 import type { MjolnirGestureEvent, MjolnirPointerEvent } from 'mjolnir.js';
 import type {
   BaseMapProps,
   MapClickEvent,
   MapHoverEvent,
+  MapLibreOptions,
   MapViewportEvent,
   SerializablePickingInfo,
 } from './types';
@@ -52,6 +58,39 @@ const CANVAS_CONTEXT_ATTRIBUTES: WebGLContextAttributesWithType = {
   contextType: 'webgl2',
 } as const;
 
+const DEFAULT_ATTRIBUTION_CONTROL: MapOptions['attributionControl'] = {
+  compact: true,
+};
+
+const LOCKED_MAP_LIBRE_OPTION_KEY_SET: ReadonlySet<string> = new Set(
+  LOCKED_MAP_LIBRE_OPTION_KEYS,
+);
+
+/**
+ * Removes locked keys from `mapLibreOptions` before they reach the underlying
+ * MapLibre instance. Locked keys are either derived from BaseMap's camera/view
+ * state, required by Deck.gl picking/interaction, or already exposed as
+ * dedicated BaseMap props.
+ *
+ * @internal Exported solely for unit testing. Not part of the public API.
+ */
+export function stripLockedMapLibreOptions(
+  options: MapLibreOptions | undefined,
+): MapLibreOptions {
+  if (!options) {
+    return {};
+  }
+  const result: Record<string, unknown> = {};
+
+  for (const [key, value] of Object.entries(options)) {
+    if (!LOCKED_MAP_LIBRE_OPTION_KEY_SET.has(key)) {
+      result[key] = value;
+    }
+  }
+
+  return result as MapLibreOptions;
+}
+
 /**
  * Serializes PickingInfo for event bus transmission by removing non-cloneable properties.
  * Omits viewport, layer, and sourceLayer (contain functions) but preserves layer IDs.
@@ -61,6 +100,7 @@ const CANVAS_CONTEXT_ATTRIBUTES: WebGLContextAttributesWithType = {
  */
 function serializePickingInfo(info: PickingInfo): SerializablePickingInfo {
   const { viewport, layer, sourceLayer, ...infoRest } = info;
+
   return {
     layerId: layer?.id,
     sourceLayerId: sourceLayer?.id,
@@ -124,6 +164,7 @@ function serializeMjolnirEvent(
   // Remove pointer arrays if present (only on MjolnirGestureEvent)
   if ('changedPointers' in rest) {
     const { changedPointers, pointers, ...gestureRest } = rest;
+
     return gestureRest;
   }
 
@@ -167,18 +208,13 @@ function AddDeckglControl() {
  * ```tsx
  * // Basic usage with id (recommended: module-level constant)
  * import { BaseMap } from '@accelint/map-toolkit/deckgl';
- * import { View } from '@deckgl-fiber-renderer/dom';
  * import { uuid } from '@accelint/core';
  *
  * // Create id at module level for stability and easy sharing
  * const MAIN_MAP_ID = uuid();
  *
  * export function MapView() {
- *   return (
- *     <BaseMap className="w-full h-full" id={MAIN_MAP_ID}>
- *       <View id="main" controller />
- *     </BaseMap>
- *   );
+ *   return <BaseMap className="w-full h-full" id={MAIN_MAP_ID} />;
  * }
  * ```
  *
@@ -207,9 +243,11 @@ function AddDeckglControl() {
  *
  *   return (
  *     <div className="relative w-full h-full">
- *       <BaseMap className="absolute inset-0" id={MAIN_MAP_ID} onClick={handleClick}>
- *         <View id="main" controller />
- *       </BaseMap>
+ *       <BaseMap
+ *         className="absolute inset-0"
+ *         id={MAIN_MAP_ID}
+ *         onClick={handleClick}
+ *       />
  *       <Toolbar />
  *     </div>
  *   );
@@ -236,6 +274,7 @@ export function BaseMap({
   enableRbz = false,
   rbzOptions,
   boxZoom: boxZoomProp,
+  mapLibreOptions,
   ...rest
 }: BaseMapProps) {
   const mapGeneration = getMapGeneration(id);
@@ -265,9 +304,16 @@ export function BaseMap({
     [cameraState],
   );
 
-  // Memoize MapLibre options to avoid creating new object on every render
+  const filteredMapLibreOptions = useMemo(
+    () => stripLockedMapLibreOptions(mapLibreOptions),
+    [mapLibreOptions],
+  );
+
+  // Spread order: default → consumer overrides → locked keys (last wins).
   const mapOptions = useMemo(
     () => ({
+      attributionControl: DEFAULT_ATTRIBUTION_CONTROL,
+      ...filteredMapLibreOptions,
       container,
       zoom: viewState.zoom,
       pitch: viewState.pitch,
@@ -278,13 +324,19 @@ export function BaseMap({
       dragRotate: false,
       pitchWithRotate: false,
       rollEnabled: false,
-      attributionControl: { compact: true },
       projection: cameraState.projection,
       maxPitch: cameraState.view === '2D' ? 0 : 85,
       canvasContextAttributes: CANVAS_CONTEXT_ATTRIBUTES,
       boxZoom,
     }),
-    [viewState, container, cameraState.projection, cameraState.view, boxZoom],
+    [
+      viewState,
+      container,
+      cameraState.projection,
+      cameraState.view,
+      boxZoom,
+      filteredMapLibreOptions,
+    ],
   );
 
   const emitClick = useEmit<MapClickEvent>(MapEvents.click);

@@ -46,6 +46,7 @@ export type {
   MapEventType,
   MapHoverEvent,
   MapHoverPayload,
+  MapLibreOptions,
 } from './base-map/types';
 export type {
   CoffinCornerExtensionProps,

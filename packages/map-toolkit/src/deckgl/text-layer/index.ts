@@ -76,7 +76,6 @@ export interface TextLayerProps<TData = unknown>
  * ```tsx
  * import '@accelint/map-toolkit/deckgl/text-layer/fiber';
  * import { BaseMap } from '@accelint/map-toolkit/deckgl';
- * import { View } from '@deckgl-fiber-renderer/dom';
  *
  * function MapWithLabels() {
  *   const cities = [
@@ -86,7 +85,6 @@ export interface TextLayerProps<TData = unknown>
  *
  *   return (
  *     <BaseMap id="map" className="w-full h-full">
- *       <View id="main" controller />
  *       <textLayer
  *         id="city-labels"
  *         data={cities}

@@ -14,9 +14,63 @@ import type { Payload } from '@accelint/bus';
 import type { UniqueId } from '@accelint/core';
 import type { PickingInfo } from '@deck.gl/core';
 import type { DeckglProps } from '@deckgl-fiber-renderer/types';
+import type { MapOptions } from 'maplibre-gl';
 import type { MjolnirGestureEvent, MjolnirPointerEvent } from 'mjolnir.js';
 import type { RbzOptions } from '@/maplibre/rbz-handler';
 import type { MapEvents } from './events';
+
+/**
+ * Keys on `MapOptions` that BaseMap manages internally and will silently strip
+ * from `mapLibreOptions`. These are either derived from BaseMap's camera/view
+ * state machine, locked to enforce Deck.gl picking and interaction guarantees,
+ * already exposed as a first-class BaseMap prop, or omitted by react-map-gl's
+ * underlying `MapInitOptions` type and therefore never reach MapLibre.
+ *
+ * Authoritative source: the array below is the single source of truth used
+ * both at runtime by `stripLockedMapLibreOptions` and at the type level via
+ * `LockedMapLibreOptionKey`. The `satisfies` clause guarantees every entry is
+ * a real `MapOptions` key.
+ */
+export const LOCKED_MAP_LIBRE_OPTION_KEYS = [
+  'container',
+  'style',
+  'center',
+  'bounds',
+  'fitBoundsOptions',
+  'zoom',
+  'pitch',
+  'bearing',
+  'projection',
+  'maxPitch',
+  'canvasContextAttributes',
+  'doubleClickZoom',
+  'dragRotate',
+  'pitchWithRotate',
+  'rollEnabled',
+  'boxZoom',
+] as const satisfies readonly (keyof MapOptions)[];
+
+/**
+ * Union of `MapOptions` keys that BaseMap manages internally and strips from
+ * `mapLibreOptions` before forwarding to MapLibre. Derived from
+ * {@link LOCKED_MAP_LIBRE_OPTION_KEYS} — see that constant's JSDoc for the
+ * rationale behind each locked key.
+ */
+export type LockedMapLibreOptionKey =
+  (typeof LOCKED_MAP_LIBRE_OPTION_KEYS)[number];
+
+/**
+ * Additional MapLibre `MapOptions` forwarded to the underlying map. Keys in
+ * `LockedMapLibreOptionKey` are stripped before being applied; everything
+ * else is spread onto the map instance.
+ *
+ * Defaults that BaseMap sets (e.g. `attributionControl: { compact: true }`)
+ * can be overridden by setting the corresponding key here.
+ */
+export type MapLibreOptions = Omit<
+  Partial<MapOptions>,
+  LockedMapLibreOptionKey
+>;
 
 /**
  * Props for the BaseMap component.
@@ -69,6 +123,34 @@ export type BaseMapProps = DeckglProps & {
    * options dynamically, change the map's `key` prop to force a remount.
    */
   rbzOptions?: RbzOptions;
+  /**
+   * Additional MapLibre `MapOptions` forwarded to the underlying map
+   * (e.g. `transformRequest`, `maxBounds`, `minZoom`, `maxZoom`, `locale`,
+   * `interactive`, `cooperativeGestures`). Keys BaseMap manages internally —
+   * camera/view state, controller-locked gestures (`doubleClickZoom`,
+   * `dragRotate`, `pitchWithRotate`, `rollEnabled`), the WebGL context, and
+   * keys already exposed as dedicated props (`boxZoom`, `styleUrl`) — are
+   * stripped before being applied.
+   *
+   * @example
+   * ```tsx
+   * <BaseMap
+   *   id={MAIN_MAP_ID}
+   *   styleUrl={MAPBOX_STYLE_URL}
+   *   mapLibreOptions={{
+   *     transformRequest: (url, resourceType) => {
+   *       if (url.startsWith('mapbox://')) {
+   *         return { url: url.replace('mapbox://', 'https://tiles.internal.example.com/') };
+   *       }
+   *       return { url };
+   *     },
+   *     maxBounds: [[-130, 20], [-60, 55]],
+   *     locale: { 'AttributionControl.ToggleAttribution': 'Toggle attribution' },
+   *   }}
+   * />
+   * ```
+   */
+  mapLibreOptions?: MapLibreOptions;
 };
 
 /**
