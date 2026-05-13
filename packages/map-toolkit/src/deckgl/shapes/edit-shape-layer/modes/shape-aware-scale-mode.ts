@@ -10,13 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
+import { ScaleModeWithFreeTransform } from './scale-mode-with-free-transform';
 import type {
   DraggingEvent,
   ModeProps,
   SimpleFeatureCollection,
   StopDraggingEvent,
 } from '@deck.gl-community/editable-layers';
-import { ScaleModeWithFreeTransform } from './scale-mode-with-free-transform';
 
 /**
  * Abstract base class for scale modes that handle a specific shape type

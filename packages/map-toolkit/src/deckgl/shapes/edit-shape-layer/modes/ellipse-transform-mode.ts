@@ -28,80 +28,110 @@ import { formatRectangleTooltip } from '../../shared/constants';
 import { computeRectangleMeasurementsFromCorners } from '../../shared/utils/geometry-measurements';
 import { BaseTransformMode, type HandleMatcher } from './base-transform-mode';
 import {
-  EllipseScaleMode,
   type EllipseInfo,
+  EllipseScaleMode,
   readEllipseInfo,
 } from './ellipse-scale-mode';
-import { latToMercatorY, mercatorYToLat } from './mercator';
 import { RotateModeWithSnap } from './rotate-mode-with-snap';
+import { latToMercatorY, mercatorYToLat } from './utils/mercator';
+import { SessionCache } from './utils/session-cache';
 import {
   computePolygonBounds,
   computeRotateStemTip,
   filterGuidesForRotation,
   type PolygonBounds,
   postProcessTransformGuides,
-} from './transform-mode-guides';
+} from './utils/transform-mode-guides';
 import type { Feature, Polygon } from 'geojson';
 
 /**
- * Compute the rotate-handle stem from whichever of the four axis-endpoint
- * scale handles is currently most-northern. Stem direction is outward
- * along that axis (which is perpendicular to the ellipse curve's tangent
- * at the endpoint), and length matches the deck.gl `RotateMode` formula
- * in Mercator-space distance. Falls back to the shared straight-north
- * tip if the axis direction degenerates.
+ * Compute a single axis endpoint at `axisIndex`, where the four
+ * endpoints are indexed in the order:
+ * `0 = +ySemi` (bearing `angle`), `1 = +xSemi` (bearing `angle + 90`),
+ * `2 = -ySemi` (bearing `angle + 180`), `3 = -xSemi` (bearing
+ * `angle + 270`).
  *
- * Mirrors the rectangle's "stem comes off the most-northern edge"
- * behavior: as the ellipse rotates, the stem's base hops between the four
- * axis endpoints to always sit on whichever one is currently on top.
+ * Pulled out of the full-endpoints helper so per-frame consumers (the
+ * rotate-stem path that already knows which index it wants via the
+ * shape-level lock) avoid running `rhumbDestination` three extra times
+ * just to discard three of the results.
  */
-function computeNorthernmostAxisStem(
+function computeAxisEndpointAt(
   info: EllipseInfo,
-  bounds: PolygonBounds,
-): { base: [number, number]; tip: [number, number] } {
+  axisIndex: number,
+): [number, number] {
   const center2D: [number, number] = [
     info.center[0] as number,
     info.center[1] as number,
   ];
-  const distanceOptions = { units: info.units };
+  // Even indices (0, 2) live on the ySemi axis; odd indices (1, 3) on
+  // the xSemi axis. Each step around the indices adds 90° of bearing.
+  const semiValue = axisIndex % 2 === 0 ? info.ySemiValue : info.xSemiValue;
+  const bearing = info.angle + axisIndex * 90;
 
-  // turf's ellipse convention: ySemi at compass bearing `angle`, xSemi
-  // at `angle + 90`. Compute all four axis endpoints.
-  const candidates: [number, number][] = [
-    rhumbDestination(center2D, info.ySemiValue, info.angle, distanceOptions)
-      .geometry.coordinates as [number, number],
-    rhumbDestination(
-      center2D,
-      info.xSemiValue,
-      info.angle + 90,
-      distanceOptions,
-    ).geometry.coordinates as [number, number],
-    rhumbDestination(
-      center2D,
-      info.ySemiValue,
-      info.angle + 180,
-      distanceOptions,
-    ).geometry.coordinates as [number, number],
-    rhumbDestination(
-      center2D,
-      info.xSemiValue,
-      info.angle + 270,
-      distanceOptions,
-    ).geometry.coordinates as [number, number],
-  ];
+  return rhumbDestination(center2D, semiValue, bearing, {
+    units: info.units,
+  }).geometry.coordinates as [number, number];
+}
 
-  let base = candidates[0] as [number, number];
-  for (const candidate of candidates) {
-    if (candidate[1] > base[1]) {
-      base = candidate;
+/**
+ * Compute all four axis endpoints. Used when we need to compare across
+ * endpoints (e.g. picking the most-northern one at edit-session start);
+ * for the hot-path "read just one by known index" case prefer
+ * {@link computeAxisEndpointAt}.
+ */
+function computeAxisEndpoints(info: EllipseInfo): [number, number][] {
+  return [0, 1, 2, 3].map((index) => computeAxisEndpointAt(info, index));
+}
+
+/**
+ * Pick the index (0–3) of the most-northern axis endpoint. Used at
+ * edit-session start to lock the rotate handle to whichever endpoint
+ * is currently on top; the handle then stays attached to that
+ * shape-local endpoint for the rest of the session, even after rotations
+ * move it off the geographic top.
+ */
+function pickNorthernmostAxisIndex(info: EllipseInfo): number {
+  const endpoints = computeAxisEndpoints(info);
+  let bestIndex = 0;
+  let bestLat = Number.NEGATIVE_INFINITY;
+
+  for (let i = 0; i < endpoints.length; i++) {
+    const candidate = endpoints[i];
+
+    if (candidate && candidate[1] > bestLat) {
+      bestLat = candidate[1];
+      bestIndex = i;
     }
   }
 
-  // Stem direction in Mercator: outward along the radial from center to
-  // the chosen endpoint (= perpendicular to the ellipse's tangent at that
-  // point, since axes meet the curve at right angles). Stem length
-  // matches the deck.gl formula in Mercator-y units to preserve
-  // on-screen consistency.
+  return bestIndex;
+}
+
+/**
+ * Build the rotate-handle stem rooted at a specific axis endpoint
+ * (selected by `axisIndex`, see {@link computeAxisEndpointAt}). Stem
+ * direction is outward along the radial from center to the endpoint
+ * (= perpendicular to the ellipse's tangent there), and length matches
+ * the deck.gl `RotateMode` formula in Mercator-space distance. Falls
+ * back to the shared straight-north tip if the radial degenerates.
+ */
+function computeAxisStem(
+  info: EllipseInfo,
+  bounds: PolygonBounds,
+  axisIndex: number,
+): { base: [number, number]; tip: [number, number] } {
+  // Compute just the one endpoint we need rather than all four —
+  // `rhumbDestination` allocates a Point Feature on each call, and this
+  // function runs every render frame.
+  const safeIndex = axisIndex >= 0 && axisIndex < 4 ? axisIndex : 0;
+  const base = computeAxisEndpointAt(info, safeIndex);
+
+  const center2D: [number, number] = [
+    info.center[0] as number,
+    info.center[1] as number,
+  ];
+
   const baseMercY = latToMercatorY(base[1]);
   const centerMercY = latToMercatorY(center2D[1]);
   const dirX = base[0] - center2D[0];
@@ -109,7 +139,6 @@ function computeNorthernmostAxisStem(
   const dirLen = Math.hypot(dirX, dirY);
 
   if (dirLen === 0) {
-    // Degenerate axis (zero-length) — fall back to straight north.
     return { base, tip: computeRotateStemTip(base, bounds) };
   }
 
@@ -168,6 +197,18 @@ export class EllipseTransformMode extends BaseTransformMode {
   private translateMode: TranslateMode;
   private scaleMode: EllipseScaleMode;
   private rotateMode: RotateModeWithSnap;
+  /**
+   * Locked rotate-handle anchor for the current edit session: the index
+   * of the axis endpoint (0–3, see {@link computeAxisEndpointAt}) chosen
+   * the first time `getGuides` runs for a given shape. Locking by
+   * `shapeId` keeps the handle attached to the same shape-local point
+   * for the whole edit session — the handle starts on the geographic
+   * top and rides along with subsequent rotations rather than hopping
+   * to the new most-northern endpoint after each gesture. Reset on
+   * session boundary by {@link resetLockedAnchor} (called from the edit
+   * layer when the editing shape ID changes).
+   */
+  private anchorCache = new SessionCache<number>();
 
   /**
    * Constructs the composite mode by instantiating its three sub-modes
@@ -240,8 +281,8 @@ export class EllipseTransformMode extends BaseTransformMode {
 
   /**
    * Filter duplicate envelope guides emitted by stacked sub-modes and
-   * reposition the rotate handle to sit just above the ellipse's topmost
-   * curve point with a short connector stem (Figma/Inkscape pattern).
+   * place the rotate handle outside whichever of the ellipse's four
+   * axis endpoints is currently most-northern, with a connector stem.
    *
    * Both ScaleMode and RotateMode emit an envelope as part of their guides;
    * we keep scale's envelope (which is the ellipse's actual outline thanks
@@ -249,13 +290,13 @@ export class EllipseTransformMode extends BaseTransformMode {
    * envelope. During rotation drag, all chrome is dropped via
    * `filterGuidesForRotation` so only the rotating shape and pivot remain.
    *
-   * The rotate handle is repositioned to `(topmostVertex.lat + offset)`
-   * where `offset` is a small fraction of the polygon's lat span. A
-   * `LineString` connector with `mode: 'rotate-stem'` is appended so the
-   * handle reads as "the dot connected to the shape by a line is the
-   * rotate handle". The offset keeps the handle visually distinct from
-   * the +ySemi scale handle even when the ellipse is axis-aligned (where
-   * the topmost vertex coincides with the +ySemi axis endpoint).
+   * The handle's stem **base** is the most-northern axis endpoint; the
+   * **tip** is offset outward along the radial from center. A connector
+   * LineString with `mode: 'rotate-stem'` is appended so the handle
+   * reads as "the dot connected to the shape by a line is the rotate
+   * handle". The handle reappears at the new geographic top after each
+   * rotation completes, matching the user expectation that the rotate
+   * stem always sits at the visual top of the shape.
    */
   override getGuides(
     props: ModeProps<FeatureCollection>,
@@ -270,14 +311,24 @@ export class EllipseTransformMode extends BaseTransformMode {
   }
 
   /**
+   * Clear the session-locked rotate-anchor cache. The edit layer calls
+   * this when the editing shape ID changes (a new edit session begins),
+   * so the handle re-locks to whichever endpoint is currently most-northern
+   * for the freshly-opened shape.
+   */
+  resetLockedAnchor(): void {
+    this.anchorCache.reset();
+  }
+
+  /**
    * Compute the rotate-handle stem for the ellipse:
-   * - **Base** is whichever of the four axis-endpoint scale handles is
-   *   currently most-northern. As the ellipse rotates, the stem's base
-   *   hops between the four endpoints — mirroring the rectangle's
-   *   "stem comes off the most-northern edge" behavior.
-   * - **Tip** is offset outward along the radial from center to the
-   *   chosen endpoint (= perpendicular to the ellipse's tangent at that
-   *   point, since the ellipse axes meet the curve at right angles).
+   * - **Base** is the locked axis endpoint for this edit session. The
+   *   first call after the lock is cleared picks whichever of the four
+   *   endpoints is currently most-northern; subsequent calls reuse that
+   *   choice so the handle stays attached to the same shape-local point
+   *   while the user rotates.
+   * - **Tip** is offset outward along the radial from center to that
+   *   endpoint (= perpendicular to the ellipse's tangent there).
    * - **Length** matches the deck.gl `RotateMode` connector formula in
    *   Mercator-space distance, so the stem stays visually consistent with
    *   the rectangle's stem.
@@ -314,7 +365,35 @@ export class EllipseTransformMode extends BaseTransformMode {
       return null;
     }
 
-    return computeNorthernmostAxisStem(info, bounds);
+    const axisIndex = this.getOrLockAxisIndex(feature, info);
+
+    return computeAxisStem(info, bounds, axisIndex);
+  }
+
+  /**
+   * Return the locked axis-endpoint index for this edit session, locking
+   * a fresh choice if none is cached. The cache is keyed by the shape's
+   * stable `properties.shapeId` so it survives transforms (which produce
+   * new feature objects) but resets when {@link resetLockedAnchor} runs
+   * at session boundary. If a feature has no `shapeId` (legacy or test
+   * fixtures), fall back to recomputing the most-northern endpoint each
+   * frame — at worst the handle hops, which preserves the prior behavior.
+   */
+  private getOrLockAxisIndex(
+    // biome-ignore lint/suspicious/noExplicitAny: feature properties shape varies
+    feature: { properties?: any },
+    info: EllipseInfo,
+  ): number {
+    const shapeId =
+      typeof feature.properties?.shapeId === 'string'
+        ? feature.properties.shapeId
+        : undefined;
+
+    return (
+      this.anchorCache.getOrInit(shapeId, () =>
+        pickNorthernmostAxisIndex(info),
+      ) ?? pickNorthernmostAxisIndex(info)
+    );
   }
 
   /**

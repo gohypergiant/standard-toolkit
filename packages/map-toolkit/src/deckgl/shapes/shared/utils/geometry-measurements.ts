@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
-import { center as turfCenter, distance } from '@turf/turf';
+import { distance, center as turfCenter } from '@turf/turf';
 import { DEFAULT_DISTANCE_UNITS } from '@/shared/units';
 import type { DistanceUnit } from '@accelint/constants/units';
 import type { MultiPolygon, Polygon } from 'geojson';

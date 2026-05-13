@@ -46,7 +46,7 @@ export type EditHandleFeature = Feature<
  * `@deck.gl-community/editable-layers`'s `RotateMode` so our stems feel
  * the same as the parent's bbox→handle connector at any zoom level.
  */
-const STEM_LENGTH_DIVISOR = 1000;
+export const STEM_LENGTH_DIVISOR = 1000;
 
 /**
  * Lat/lon bounding box of a polygon ring plus its topmost vertex.
@@ -94,12 +94,15 @@ export function computePolygonBounds(
       maxLat = lat;
       topVertex = [lon, lat];
     }
+
     if (lat < minLat) {
       minLat = lat;
     }
+
     if (lon > maxLon) {
       maxLon = lon;
     }
+
     if (lon < minLon) {
       minLon = lon;
     }
@@ -252,6 +255,7 @@ export function filterGuidesForRotation(
     if (editHandleType === 'scale') {
       continue;
     }
+
     if (geometryType !== 'Point') {
       continue;
     }

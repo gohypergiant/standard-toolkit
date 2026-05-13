@@ -11,17 +11,34 @@
  */
 
 import {
+  type DraggingEvent,
   type FeatureCollection,
   type GeoJsonEditMode,
   type GuideFeatureCollection,
   type ModeProps,
   ModifyMode,
+  type StartDraggingEvent,
+  type StopDraggingEvent,
   TranslateMode,
 } from '@deck.gl-community/editable-layers';
 import { featureCollection } from '@turf/helpers';
 import { BaseTransformMode, type HandleMatcher } from './base-transform-mode';
+import { OrientedScaleMode } from './oriented-scale-mode';
 import { RotateModeWithSnap } from './rotate-mode-with-snap';
-import { ScaleModeWithFreeTransform } from './scale-mode-with-free-transform';
+import { OrientationLock } from './utils/orientation-lock';
+import { scaleModePrivate } from './utils/scale-mode-internals';
+import {
+  boundingBoxToScaleHandles,
+  filterVertexGuides,
+  isRotateChromeFeature,
+  replaceRotateChromeWithBoundingBox,
+  syncScaleModeCornerCache,
+} from './utils/vertex-bbox-chrome';
+import {
+  computeOrientedBoundingBox,
+  type OrientedBoundingBox,
+} from './utils/vertex-bbox-math';
+import type { Feature, Point as GeoPoint } from 'geojson';
 
 /**
  * Transform mode for shapes that support vertex editing (polygons and lines).
@@ -33,7 +50,7 @@ import { ScaleModeWithFreeTransform } from './scale-mode-with-free-transform';
  * This composite mode provides:
  * - **Vertex editing** (ModifyMode): Drag vertices to reshape the geometry
  * - **Translation** (TranslateMode): Drag the shape to move it
- * - **Scaling** (ScaleModeWithFreeTransform): Drag corner handles to resize
+ * - **Scaling** (OrientedScaleMode): Drag corner handles to resize
  *   - Default: Non-uniform scaling (can stretch/squish)
  *   - With Shift: Uniform scaling (maintains aspect ratio)
  * - **Rotation** (RotateModeWithSnap): Drag top handle to rotate
@@ -53,13 +70,15 @@ import { ScaleModeWithFreeTransform } from './scale-mode-with-free-transform';
  *
  * ## Tooltips
  * This mode does not show live measurement tooltips during editing because arbitrary
- * polygons don't have well-defined dimensions. Use BoundingTransformMode for shapes
- * like rectangles and ellipses where dimension tooltips are useful.
+ * polygons don't have well-defined dimensions. The dedicated
+ * `RectangleTransformMode` and `EllipseTransformMode` show dimension
+ * tooltips during scale drags.
  *
  * ## Rectangle Special Handling
- * For rectangles, vertex handles are hidden to preserve rotation and right angles.
- * Only scale/rotate/translate handles are shown. Consider using BoundingTransformMode
- * directly for rectangles if vertex editing should never be available.
+ * If a rectangle ever reaches this mode (legacy fallback — rectangles
+ * normally use `RectangleTransformMode`), vertex handles are hidden to
+ * preserve rotation and right angles. Only scale/rotate/translate
+ * handles are shown.
  *
  * @example
  * ```typescript
@@ -81,13 +100,22 @@ import { ScaleModeWithFreeTransform } from './scale-mode-with-free-transform';
 export class VertexTransformMode extends BaseTransformMode {
   private modifyMode: ModifyMode;
   private translateMode: TranslateMode;
-  private scaleMode: ScaleModeWithFreeTransform;
+  private scaleMode: OrientedScaleMode;
   private rotateMode: RotateModeWithSnap;
+  /**
+   * Tracks the cumulative session rotation angle (polygons and lines
+   * have no persisted rotation, so deltas observed via deck.gl's
+   * transient `properties.rotationAngle` are accumulated here) and the
+   * scale-drag oriented-bounding-box snapshot (frozen on the first scale
+   * frame so the corner-origin cache stays stable as the polygon
+   * scales).
+   */
+  private orientationLock = new OrientationLock<OrientedBoundingBox>();
 
   constructor() {
     const modifyMode = new ModifyMode();
     const translateMode = new TranslateMode();
-    const scaleMode = new ScaleModeWithFreeTransform();
+    const scaleMode = new OrientedScaleMode();
     const rotateMode = new RotateModeWithSnap();
 
     // Order matters: first mode to handle the event wins
@@ -141,55 +169,182 @@ export class VertexTransformMode extends BaseTransformMode {
   }
 
   /**
-   * Override getGuides to filter duplicate envelope guides and handle rectangles.
+   * Forward drag events to the active sub-mode with the cumulative
+   * rotation angle injected into `modeConfig`. `OrientedScaleMode` reads
+   * this to do non-uniform scaling in the polygon's local frame instead
+   * of world axes — without it, dragging a corner of a *rotated* polygon
+   * shears the shape (the polygon's local axes are no longer aligned
+   * with world X/Y, so a world-axis stretch has a component along both
+   * local axes). Other sub-modes ignore the field.
+   */
+  override handleDragging(
+    event: DraggingEvent,
+    props: ModeProps<FeatureCollection>,
+  ): void {
+    super.handleDragging(event, this.orientationLock.decorateProps(props));
+  }
+
+  override handleStartDragging(
+    event: StartDraggingEvent,
+    props: ModeProps<FeatureCollection>,
+  ): void {
+    super.handleStartDragging(event, this.orientationLock.decorateProps(props));
+  }
+
+  override handleStopDragging(
+    event: StopDraggingEvent,
+    props: ModeProps<FeatureCollection>,
+  ): void {
+    super.handleStopDragging(event, this.orientationLock.decorateProps(props));
+  }
+
+  /**
+   * Clear the orientation lock. The edit layer calls this when the
+   * editing shape ID changes (a new edit session begins) so the bbox
+   * starts axis-aligned (`angleDeg = 0`) for the freshly-opened shape.
+   */
+  resetLockedAnchor(): void {
+    this.orientationLock.reset();
+  }
+
+  /**
+   * Override getGuides to filter duplicate envelope guides, handle
+   * rectangles, and replace the rotate-mode chrome with an oriented
+   * bounding box that rotates with the polygon's cumulative
+   * rotation since edit-session start.
    *
    * Both ScaleMode and RotateMode render the same bounding box envelope.
-   * We keep scale's envelope and filter rotate's duplicate.
-   * We also hide scale handles while rotating to avoid visual clutter.
+   * We keep scale's envelope (for filtering) and filter rotate's duplicate.
+   * Scale handles are hidden during rotation to avoid visual clutter.
    *
-   * For rectangles, we hide vertex handles because vertex editing would distort
-   * the shape or force axis-alignment. Rectangles should use scale handles only.
+   * For rectangles, vertex handles are hidden because vertex editing
+   * would distort the shape or force axis-alignment. Rectangles should
+   * use scale handles only.
+   *
+   * The bbox is intentionally hidden during a rotation drag — we drop
+   * all rotate-mode chrome (including our oriented bounding box replacement) while
+   * `getIsRotating()` is true so the user sees only the rotating shape
+   * and the centroid pivot. The oriented bounding box chrome reappears at the new
+   * orientation when the gesture ends.
    */
   override getGuides(
     props: ModeProps<FeatureCollection>,
   ): GuideFeatureCollection {
-    // Get guides from all modes (base class handles pick filtering)
     const allGuides = super.getGuides(props);
+    const feature = props.data.features[0];
+    const isRectangle = feature?.properties?.shape === 'Rectangle';
+    const isRotating = this.rotateMode.getIsRotating();
+    const isScaling = scaleModePrivate(this.scaleMode)._isScaling;
 
-    // Check if we're editing a rectangle - rectangles have shape: 'Rectangle' property
-    const isRectangle =
-      props.data.features[0]?.properties?.shape === 'Rectangle';
-
-    // biome-ignore lint/suspicious/noExplicitAny: Guide properties vary by mode, safely accessing with optional chaining
-    const filteredGuides = allGuides.features.filter((guide: any) => {
-      const properties = guide.properties || {};
-      const editHandleType = properties.editHandleType;
-      const guideType = properties.guideType;
-      const mode = properties.mode;
-
-      // Both scale and rotate modes have the same enveloping box as a guide - only need one
-      const guidesToFilterOut: string[] = [mode as string];
-
-      // Do not render scaling edit handles if rotating
-      if (this.rotateMode.getIsRotating()) {
-        guidesToFilterOut.push(editHandleType as string);
-      }
-
-      // For rectangles, hide ModifyMode vertex handles (editHandleType: 'existing')
-      // Rectangles should only use scale handles for resizing to preserve rotation
-      // Vertex editing would either distort the shape or force axis-alignment
-      if (
-        isRectangle &&
-        guideType === 'editHandle' &&
-        editHandleType === 'existing'
-      ) {
-        return false;
-      }
-
-      return !guidesToFilterOut.includes('scale');
+    const { angleDeg, lockedBoundingBox } = this.orientationLock.observe({
+      feature,
+      isScaling,
+      computeBoundingBox: (deg) =>
+        !isRectangle && feature
+          ? computeOrientedBoundingBox(feature, deg)
+          : null,
     });
 
-    // biome-ignore lint/suspicious/noExplicitAny: turf types mismatch with editable-layers GeoJSON types
-    return featureCollection(filteredGuides as any) as any;
+    const filteredGuides = filterVertexGuides(
+      allGuides.features as Feature[],
+      isRectangle,
+      isRotating,
+    );
+
+    return this.buildGuideOutput({
+      filteredGuides,
+      feature,
+      isRectangle,
+      isRotating,
+      angleDeg,
+      lockedBoundingBox,
+    });
+  }
+
+  /**
+   * Decide which guide collection to render given the current gesture
+   * state, and (as a side effect on the scale path) sync ScaleMode's
+   * private corner cache so its drag math anchors at the oriented bounding box corner the
+   * user actually sees. Three top-level branches:
+   *
+   * - **Rotating** — drop the bbox chrome entirely so only the live
+   *   shape and centroid pivot remain visible.
+   * - **No oriented bounding box available** — rectangle fallback, missing feature, or
+   *   degenerate vertices. Return the un-modified filtered guides.
+   * - **Default** — emit the oriented-bounding-box-based chrome and patch
+   *   `_cornerGuidePoints` (locked to drag-start corners during scale,
+   *   live corners otherwise).
+   */
+  private buildGuideOutput(args: {
+    filteredGuides: Feature[];
+    feature: Feature | undefined;
+    isRectangle: boolean;
+    isRotating: boolean;
+    angleDeg: number;
+    lockedBoundingBox: OrientedBoundingBox | null;
+  }): GuideFeatureCollection {
+    const {
+      filteredGuides,
+      feature,
+      isRectangle,
+      isRotating,
+      angleDeg,
+      lockedBoundingBox,
+    } = args;
+
+    if (isRotating) {
+      const stripped = filteredGuides.filter(
+        (guide) => !isRotateChromeFeature(guide),
+      );
+      // biome-ignore lint/suspicious/noExplicitAny: turf/editable-layers GeoJSON types mismatch
+      return featureCollection(stripped as any) as any;
+    }
+
+    // Rectangle fallback / no feature / degenerate vertices all
+    // produce no oriented bounding box; we return the un-modified filtered guides.
+    const boundingBox =
+      !isRectangle && feature
+        ? computeOrientedBoundingBox(feature, angleDeg)
+        : null;
+
+    if (!boundingBox) {
+      // biome-ignore lint/suspicious/noExplicitAny: turf/editable-layers GeoJSON types mismatch
+      return featureCollection(filteredGuides as any) as any;
+    }
+
+    const { features: replaced, scaleHandles } =
+      replaceRotateChromeWithBoundingBox(filteredGuides, boundingBox);
+    this.syncCornerCacheForScale(scaleHandles, lockedBoundingBox);
+
+    // biome-ignore lint/suspicious/noExplicitAny: turf/editable-layers GeoJSON types mismatch
+    return featureCollection(replaced as any) as any;
+  }
+
+  /**
+   * Keep `ScaleMode._cornerGuidePoints` pointing at the oriented bounding
+   * box corners the user actually sees so its diagonal-opposite lookup
+   * returns a coherent scale origin:
+   *
+   * - During a scale drag (`lockedBoundingBox` non-null), use the
+   *   drag-start oriented bounding box so the origin stays fixed even
+   *   as the polygon's centroid drifts under non-uniform world-axis
+   *   scaling — without locking, the origin shifts each frame and the
+   *   scale formula explodes.
+   * - Otherwise, sync to the *live* oriented bounding box so the cache
+   *   reflects what the user sees (handles match positions on the
+   *   visible bbox).
+   */
+  private syncCornerCacheForScale(
+    scaleHandles: Feature<GeoPoint>[],
+    lockedBoundingBox: OrientedBoundingBox | null,
+  ): void {
+    if (lockedBoundingBox) {
+      scaleModePrivate(this.scaleMode)._cornerGuidePoints =
+        boundingBoxToScaleHandles(lockedBoundingBox);
+
+      return;
+    }
+
+    syncScaleModeCornerCache(this.scaleMode, scaleHandles);
   }
 }

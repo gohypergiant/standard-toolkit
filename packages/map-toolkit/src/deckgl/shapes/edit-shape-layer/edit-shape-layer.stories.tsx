@@ -15,13 +15,14 @@ import { type UniqueId, uuid } from '@accelint/core';
 import { Button } from '@accelint/design-toolkit';
 import { OptionsItem } from '@accelint/design-toolkit/components/options/item';
 import { SelectField } from '@accelint/design-toolkit/components/select-field';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { CameraEventTypes } from '@/camera/events';
 import { useMapCamera } from '@/camera/store';
 import { useMapCursor } from '@/map-cursor';
 import { BaseMap } from '../../base-map/index';
 import { mockShapes } from '../__fixtures__/mock-shapes';
 import { mockShapesWithIcons } from '../__fixtures__/mock-shapes-with-icons';
+import type { Color } from '@deck.gl/core';
 import type { CameraSetViewEvent, ViewType } from '@/camera/types';
 import '../display-shape-layer/fiber';
 import { useSelectShape } from '../display-shape-layer/use-select-shape';
@@ -36,6 +37,7 @@ import type { Shape } from '../shared/types';
 import './fiber';
 import { EditShapeLayer } from './index';
 import { useEditShape } from './use-edit-shape';
+import type { EditShapeStyle } from './types';
 
 const meta: Meta = {
   title: 'DeckGL/Shapes/Edit Shape Layer',
@@ -72,6 +74,193 @@ function createSampleShapes(): Shape[] {
   }));
 }
 
+/**
+ * Convert a Storybook color-control value (hex `#rrggbb` / `#rrggbbaa` /
+ * shorthand `#rgb`, or `rgb()` / `rgba()`) into a deck.gl `Color` tuple.
+ * Storybook's color picker can produce either format depending on the
+ * picker mode the user selects.
+ */
+function parseCssColor(value: string): Color {
+  if (value.startsWith('#')) {
+    const hex = value.slice(1);
+
+    if (hex.length === 3) {
+      const r = Number.parseInt(hex.charAt(0) + hex.charAt(0), 16);
+      const g = Number.parseInt(hex.charAt(1) + hex.charAt(1), 16);
+      const b = Number.parseInt(hex.charAt(2) + hex.charAt(2), 16);
+
+      return [r, g, b, 255];
+    }
+
+    if (hex.length === 6 || hex.length === 8) {
+      const r = Number.parseInt(hex.slice(0, 2), 16);
+      const g = Number.parseInt(hex.slice(2, 4), 16);
+      const b = Number.parseInt(hex.slice(4, 6), 16);
+      const a = hex.length === 8 ? Number.parseInt(hex.slice(6, 8), 16) : 255;
+
+      return [r, g, b, a];
+    }
+  }
+
+  const rgbMatch = value.match(/^rgba?\(([^)]+)\)$/);
+
+  if (rgbMatch?.[1]) {
+    const parts = rgbMatch[1].split(',').map((s) => s.trim());
+    const r = Number(parts[0]);
+    const g = Number(parts[1]);
+    const b = Number(parts[2]);
+    const a = parts[3] !== undefined ? Math.round(Number(parts[3]) * 255) : 255;
+
+    return [r, g, b, a];
+  }
+
+  return [0, 0, 0, 255];
+}
+
+/**
+ * Storybook-friendly mirror of `EditShapeStyle`: color fields are CSS
+ * strings (so the `color` control's picker works) and the dash array is
+ * split into separate length / gap number controls. {@link buildEditShapeStyleFromArgs}
+ * converts back into the deck.gl-shaped object the layer expects.
+ */
+type EditShapeStyleArgs = {
+  vertexHandleColor: string;
+  scaleHandleColor: string;
+  rotateHandleColor: string;
+  vertexHandleOutlineColor: string;
+  scaleHandleOutlineColor: string;
+  rotateHandleOutlineColor: string;
+  vertexHandleRadius: number;
+  scaleHandleRadius: number;
+  rotateHandleRadius: number;
+  editHandleStrokeWidth: number;
+  editHandleOutline: boolean;
+  bboxLineColor: string;
+  bboxLineWidth: number;
+  bboxDashLength: number;
+  bboxDashGap: number;
+};
+
+function buildEditShapeStyleFromArgs(args: EditShapeStyleArgs): EditShapeStyle {
+  return {
+    vertexHandleColor: parseCssColor(args.vertexHandleColor),
+    scaleHandleColor: parseCssColor(args.scaleHandleColor),
+    rotateHandleColor: parseCssColor(args.rotateHandleColor),
+    vertexHandleOutlineColor: parseCssColor(args.vertexHandleOutlineColor),
+    scaleHandleOutlineColor: parseCssColor(args.scaleHandleOutlineColor),
+    rotateHandleOutlineColor: parseCssColor(args.rotateHandleOutlineColor),
+    vertexHandleRadius: args.vertexHandleRadius,
+    scaleHandleRadius: args.scaleHandleRadius,
+    rotateHandleRadius: args.rotateHandleRadius,
+    editHandleStrokeWidth: args.editHandleStrokeWidth,
+    editHandleOutline: args.editHandleOutline,
+    bboxLineColor: parseCssColor(args.bboxLineColor),
+    bboxLineWidth: args.bboxLineWidth,
+    bboxDashArray: [args.bboxDashLength, args.bboxDashGap],
+  };
+}
+
+/**
+ * Default args matching the package's built-in defaults so the
+ * Storybook controls open showing the actual ship-state styling.
+ */
+const DEFAULT_STYLE_ARGS: EditShapeStyleArgs = {
+  vertexHandleColor: '#ffffff',
+  scaleHandleColor: '#40e0d0',
+  rotateHandleColor: '#ffbf00',
+  vertexHandleOutlineColor: '#ffffff',
+  scaleHandleOutlineColor: '#ffffff',
+  rotateHandleOutlineColor: '#ffffff',
+  vertexHandleRadius: 6,
+  scaleHandleRadius: 6,
+  rotateHandleRadius: 6,
+  editHandleStrokeWidth: 2,
+  editHandleOutline: true,
+  bboxLineColor: '#a0a8b0',
+  bboxLineWidth: 1,
+  bboxDashLength: 8,
+  bboxDashGap: 4,
+};
+
+const EDIT_SHAPE_STYLE_ARG_TYPES = {
+  vertexHandleColor: {
+    control: { type: 'color' } as const,
+    table: { category: 'Vertex Handle' },
+    description: "Fill color for vertex handles ('existing' / 'intermediate').",
+  },
+  vertexHandleOutlineColor: {
+    control: { type: 'color' } as const,
+    table: { category: 'Vertex Handle' },
+    description: 'Outline color for vertex handles.',
+  },
+  vertexHandleRadius: {
+    control: { type: 'number', min: 1, max: 20, step: 1 } as const,
+    table: { category: 'Vertex Handle' },
+    description: 'Vertex handle radius in pixels.',
+  },
+  scaleHandleColor: {
+    control: { type: 'color' } as const,
+    table: { category: 'Scale Handle' },
+    description: 'Fill color for scale corner handles on the bounding box.',
+  },
+  scaleHandleOutlineColor: {
+    control: { type: 'color' } as const,
+    table: { category: 'Scale Handle' },
+    description: 'Outline color for scale corner handles.',
+  },
+  scaleHandleRadius: {
+    control: { type: 'number', min: 1, max: 20, step: 1 } as const,
+    table: { category: 'Scale Handle' },
+    description: 'Scale corner handle radius in pixels.',
+  },
+  rotateHandleColor: {
+    control: { type: 'color' } as const,
+    table: { category: 'Rotate Handle' },
+    description: 'Fill color for the rotate handle (end of the rotate stem).',
+  },
+  rotateHandleOutlineColor: {
+    control: { type: 'color' } as const,
+    table: { category: 'Rotate Handle' },
+    description: 'Outline color for the rotate handle.',
+  },
+  rotateHandleRadius: {
+    control: { type: 'number', min: 1, max: 20, step: 1 } as const,
+    table: { category: 'Rotate Handle' },
+    description: 'Rotate handle radius in pixels.',
+  },
+  editHandleStrokeWidth: {
+    control: { type: 'number', min: 0, max: 10, step: 1 } as const,
+    table: { category: 'Handle Stroke' },
+    description:
+      'Outline thickness in pixels (shared across all handle roles — upstream prop does not accept a per-role accessor).',
+  },
+  editHandleOutline: {
+    control: { type: 'boolean' } as const,
+    table: { category: 'Handle Stroke' },
+    description: 'Whether edit handles render with an outline ring.',
+  },
+  bboxLineColor: {
+    control: { type: 'color' } as const,
+    table: { category: 'Bounding Box (polygon / line)' },
+    description: 'Stroke color for the polygon / line bounding box outline.',
+  },
+  bboxLineWidth: {
+    control: { type: 'number', min: 0, max: 10, step: 0.5 } as const,
+    table: { category: 'Bounding Box (polygon / line)' },
+    description: 'Stroke width in pixels for the bounding box outline.',
+  },
+  bboxDashLength: {
+    control: { type: 'number', min: 0, max: 50, step: 1 } as const,
+    table: { category: 'Bounding Box (polygon / line)' },
+    description: 'Dash length in pixels for the bounding box outline.',
+  },
+  bboxDashGap: {
+    control: { type: 'number', min: 0, max: 50, step: 1 } as const,
+    table: { category: 'Bounding Box (polygon / line)' },
+    description: 'Gap length in pixels between dashes.',
+  },
+} as const;
+
 // Stable ID for Storybook
 const EDIT_MAP_ID = uuid();
 
@@ -91,8 +280,14 @@ const EDIT_MAP_ID = uuid();
  * 3. Drag vertices to modify the shape geometry
  * 4. Click "Save" to keep changes or "Cancel" to revert
  */
-export const BasicEditing: Story = {
-  render: () => {
+export const BasicEditing: StoryObj<EditShapeStyleArgs> = {
+  args: DEFAULT_STYLE_ARGS,
+  argTypes: EDIT_SHAPE_STYLE_ARG_TYPES,
+  render: (args) => {
+    const editShapeStyle = useMemo(
+      () => buildEditShapeStyleFromArgs(args),
+      [args],
+    );
     const [shapes, setShapes] = useState<Shape[]>(createSampleShapes);
     const [eventLog, setEventLog] = useState<
       Array<{ id: string; message: string }>
@@ -196,7 +391,7 @@ export const BasicEditing: Story = {
             selectedShapeId={selectedShape?.id ?? editingShape?.id}
           />
           {/* Edit layer - renders only when actively editing */}
-          <EditShapeLayer mapId={EDIT_MAP_ID} />
+          <EditShapeLayer mapId={EDIT_MAP_ID} style={editShapeStyle} />
         </BaseMap>
 
         {/* Editing toolbar */}
