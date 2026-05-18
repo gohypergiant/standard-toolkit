@@ -1,5 +1,68 @@
 # @accelint/map-toolkit
 
+## 5.0.0
+
+### Major Changes
+
+- c9952a6: **Breaking:** Reworks how `DisplayShapeLayer` renders hover and select fill states. The behavior of `selectedShapeId`, hover state, and the `DISPLAY_SELECTION` / `DISPLAY-hover` sublayer ids has changed. Adds optional accessor props for overriding the fill color of the active feature.
+
+  ### Breaking changes
+  - **Removed `SHAPE_LAYER_IDS.DISPLAY_SELECTION`.** The selection-overlay sublayer no longer exists, and its id is no longer exported from `@accelint/map-toolkit/deckgl/shapes`. Any code that referenced this constant for picking-info filtering, layer-id matching, or debug overlays must be updated. The hover sublayer (which had no exported constant; its id was `${layerId}-${SHAPE_LAYER_IDS.DISPLAY}-hover`) is also gone.
+  - **Default fill-color rendering for selected and hovered shapes changed.** Previously the active feature's fill was produced by stacking a separate overlay sublayer on top of the main fill, with material-based lighting brightening the result on 3D extruded shapes. Now the main layer's `getFillColor` accessor returns a brightened color directly per feature, mirroring the existing `getLineColor` behavior. Pixel-level output differs in four ways:
+    - No more alpha-blending stack (the active feature's color is the literal RGBA returned by the accessor; it isn't blended through the dimmed main fill).
+    - No more 3D material-lighting variation across surface normals — extruded side faces no longer pick up extra brightness at oblique angles.
+    - The brightening factor (`1.4×` for "hovered or selected", `1.7×` for "both") is applied to the un-dimmed base color rather than the `applyBaseOpacity`-reduced base, so active features read more vividly against their dimmed neighbors.
+    - The active fill's alpha is scaled by a new `ACTIVE_FILL_OPACITY` constant (0.5). Curtain wall hover/select previously used `OVERLAY_FILL_OPACITY` (0.25) — bumped to 0.5 so polygon and curtain active states share the same opacity, and so the active feature reads more vividly without rendering as a solid block on top of the basemap. The internal helper `applyOverlayOpacity` was renamed to `applyActiveOpacity` and `OVERLAY_FILL_OPACITY` to `ACTIVE_FILL_OPACITY` to reflect the new role; both were internal-only.
+
+  ### Migration
+  - Replace any `SHAPE_LAYER_IDS.DISPLAY_SELECTION` reference with `SHAPE_LAYER_IDS.DISPLAY_HIGHLIGHT` (if you wanted the selection outline) or `SHAPE_LAYER_IDS.DISPLAY` (if you wanted the layer the active feature now lives on). If you were filtering picking events by sublayer id, the active-fill case is now handled by the main layer.
+  - If you had visual regression snapshots or color-sensitive tests on selected/hovered shapes, regenerate them. The new colors are intentional and should read more clearly, but they are different.
+  - If you depended on the 3D material-lighting cue specifically, set `getHoverFillColor` / `getSelectFillColor` to a brighter color of your choosing, or file an issue describing the use case.
+
+  ### Added
+  - **`getHoverFillColor`** prop: `(feature: ShapeFeature) => Rgba255Tuple`. When set, replaces the default brightening on the hovered feature for: polygon fills, unstyled point fills, and the curtain wall fill of elevated LineStrings (when `enableElevation` is on). The returned RGBA is used verbatim — no overlay-opacity scaling. No effect on icon-rendered points or non-elevated LineStrings.
+  - **`getSelectFillColor`** prop: same shape and reach, applied when a feature is selected. The selection outline color is unaffected and is still driven by `highlightColor`.
+  - When a shape is both hovered and selected and both overrides are set, `getHoverFillColor` wins.
+
+### Minor Changes
+
+- 999bfbf: Adds a `mapLibreOptions` prop to `BaseMap` that forwards additional MapLibre `MapOptions` (e.g. `transformRequest`, `maxBounds`, `minZoom`/`maxZoom`, `locale`, `interactive`, `cooperativeGestures`) to the underlying map instance.
+
+  The most common use is `transformRequest` for rewriting tile URLs through a proxy, adding auth headers, or resolving `mapbox://` URIs against a self-hosted Mapbox-compatible service.
+
+  ```tsx
+  <BaseMap
+    id={MAIN_MAP_ID}
+    styleUrl={MAPBOX_STYLE_URL}
+    mapLibreOptions={{
+      transformRequest: (url) =>
+        url.startsWith("mapbox://")
+          ? {
+              url: url.replace(
+                "mapbox://",
+                "https://tiles.internal.example.com/",
+              ),
+            }
+          : { url },
+      maxBounds: [
+        [-130, 20],
+        [-60, 55],
+      ],
+      cooperativeGestures: true,
+    }}
+  />
+  ```
+
+  Keys BaseMap manages internally are silently stripped before being applied: camera/view state (`container`, `center`, `bounds`, `fitBoundsOptions`, `zoom`, `pitch`, `bearing`, `projection`, `maxPitch`), gestures reserved for Deck.gl picking and the camera state machine (`doubleClickZoom`, `dragRotate`, `pitchWithRotate`, `rollEnabled`), the WebGL context (`canvasContextAttributes`), and keys already exposed as dedicated BaseMap props (`boxZoom`, `style`).
+
+- 3fe824d: Refresh the bounding-box and rotation-handle visuals for shape editing.
+  - Rotation handles for rectangles and ellipses now lock to the most-northern edge / axis endpoint at edit-session start and stay attached to that shape-local point through every gesture in the session — the handle starts on the visible top of the shape and rides along with rotations rather than hopping back to the new geographic top after each rotate. The lock resets when a different shape is opened for editing.
+  - The polygon and line bounding box now renders with a dashed, muted line and a small outward buffer between the box and the shape so vertex handles and scale handles can't visually overlap. Scale corner handles, the rotate handle, and vertex handles each use a distinct color (turquoise / amber / white) so the three affordances are easy to tell apart.
+  - The polygon and line bounding box now stays aligned with the shape across rotations — it tracks cumulative rotation since edit-session start and renders as an oriented bounding box rotated to match, instead of snapping back to a north-aligned bounding box after each rotate. Non-uniform scaling on a rotated polygon/line now operates in the polygon's local frame, so dragging a corner stretches the shape along its own axes rather than world X/Y (which previously sheared rotated polygons into slivers).
+  - `EditShapeLayer` now accepts a `style` prop covering the full edit-handle and bounding-box surface — fill color, outline color, and radius for each of the three handle roles (`vertex`, `scale`, `rotate`), plus `editHandleStrokeWidth`, `editHandleOutline`, `bboxLineColor`, `bboxLineWidth`, and `bboxDashArray`. Each field is independently overridable; omitted fields use the package defaults.
+
+  **Note for maintainers:** The oriented-bounding-box rotation/scale work reaches into `@deck.gl-community/editable-layers`' private `ScaleMode` fields (`_isScaling`, `_cornerGuidePoints`, `_selectedEditHandle`, `_geometryBeingScaled`, `_getOppositeScaleHandle`, `_getUpdatedData`, `_cursor`) to keep the scale origin stable through a rotated drag. The cast boundary is centralized in `modes/utils/scale-mode-internals.ts`, but the field names are pinned to the current upstream internals. If `@deck.gl-community/editable-layers` renames or removes any of these, the oriented scaling features break silently (TypeScript can't help — the contract is defined locally, not upstream). Treat any minor-version bump of that dependency as a behavioral regression risk and verify polygon/line rotate+scale manually.
+
 ## 4.1.0
 
 ### Minor Changes
