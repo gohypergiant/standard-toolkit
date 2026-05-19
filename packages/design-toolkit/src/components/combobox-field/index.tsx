@@ -26,7 +26,7 @@ import { Options } from '../options';
 import { ComboBoxFieldContext } from './context';
 import styles from './styles.module.css';
 import type { OptionsDataItem } from '../options/types';
-import type { ComboBoxFieldProps } from './types';
+import type { ComboBoxFieldProps, SelectionMode } from './types';
 import { useControlledState } from 'react-stately/useControlledState';
 import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 import { useContextProps } from 'react-aria-components/slots';
@@ -110,7 +110,7 @@ export function ComboBoxField<T extends OptionsDataItem>({
   );
 
   return (
-    <ComboBox<T>
+    <ComboBox<T, SelectionMode>
       {...rest}
       ref={ref}
       className={composeRenderProps(classNames?.field, (className) =>

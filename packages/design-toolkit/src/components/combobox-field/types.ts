@@ -22,17 +22,17 @@ import type {
   VirtualizerProps,
 } from 'react-aria-components/Virtualizer';
 import type { PopoverProps } from 'react-aria-components/Popover';
-
 import type { ButtonProps } from '../button/types';
 import type { OptionsDataItem, OptionsProps } from '../options/types';
 
+export type SelectionMode = 'single' | 'multiple';
 /**
  * Props for the ComboBoxField component.
  *
  * Extends ComboBox props with virtualization, styling, and field configuration.
  */
 export type ComboBoxFieldProps<T extends OptionsDataItem> = Omit<
-  ComboBoxProps<T>,
+  ComboBoxProps<T, SelectionMode>,
   'children' | 'className'
 > &
   Pick<VirtualizerProps<ListLayoutOptions>, 'layoutOptions'> &

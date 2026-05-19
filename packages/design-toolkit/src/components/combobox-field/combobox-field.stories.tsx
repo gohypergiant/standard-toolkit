@@ -12,6 +12,14 @@
 
 import Placeholder from '@accelint/icons/placeholder';
 import { type ReactNode, useState } from 'react';
+import {
+  ComboBox,
+  Input,
+  Label,
+  ListBox,
+  ListBoxItem,
+  Popover,
+} from 'react-aria-components';
 import { DeferredCollection } from '../deferred-collection';
 import { Icon } from '../icon';
 import { OptionsItem } from '../options/item';
@@ -20,8 +28,11 @@ import { OptionsItemDescription } from '../options/item-description';
 import { OptionsItemLabel } from '../options/item-label';
 import { OptionsSection } from '../options/section';
 import { Skeleton } from '../skeleton';
+import { DeletableChip } from '../chip/deletable';
+import { ChipList } from '../chip/list';
 import { ComboBoxField } from './';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { Key } from '@react-types/shared';
 
 const meta = {
   title: 'Components/ComboBoxField',
@@ -381,4 +392,80 @@ export const Readonly: Story = {
       )}
     </ComboBoxField>
   ),
+};
+
+export const MultipleSelection: Story = {
+  args: {
+    label: 'States',
+    inputProps: {
+      placeholder: 'Select a state',
+    },
+  },
+  render: ({ children, ...args }) => {
+    const [values, setValues] = useState<Key[]>([]);
+
+    const handleChange = (keys: Key | Key[] | null): void => {
+      if (keys === null) {
+        setValues([]);
+        return;
+      }
+      setValues(Array.isArray(keys) ? keys : [keys]);
+    };
+
+    const selectedItems = values
+      .map((key) => items.find((s) => s.id === key))
+      .filter((s): s is CustomOptionsItem => s != null);
+
+    return (
+      <div className='w-320'>
+        <div className='min-h-75'>
+          {values.length > 0 && (
+            <div className='space-y-s'>
+              <div className='fg-primary-muted text-body-s'>
+                Selected ({values.length}):
+              </div>
+              <ChipList
+                items={selectedItems}
+                onRemove={(keys) => {
+                  const keysSet = new Set(keys);
+                  setValues((prev) =>
+                    prev.filter((k) => !keysSet.has(k as Key)),
+                  );
+                }}
+              >
+                {(state) => (
+                  <DeletableChip id={state.id}>{state.name}</DeletableChip>
+                )}
+              </ChipList>
+            </div>
+          )}
+        </div>
+
+        <ComboBoxField<CustomOptionsItem>
+          {...args}
+          selectionMode='multiple'
+          defaultItems={items}
+          onChange={handleChange}
+        >
+          {(item) => (
+            <OptionsItem
+              key={item.id}
+              textValue={item.name}
+              isDisabled={item.isDisabled}
+            >
+              {item.prefixIcon && <Icon>{item.prefixIcon}</Icon>}
+              <OptionsItemContent>
+                <OptionsItemLabel>{item.name}</OptionsItemLabel>
+                {item.description && (
+                  <OptionsItemDescription>
+                    {item.description}
+                  </OptionsItemDescription>
+                )}
+              </OptionsItemContent>
+            </OptionsItem>
+          )}
+        </ComboBoxField>
+      </div>
+    );
+  },
 };

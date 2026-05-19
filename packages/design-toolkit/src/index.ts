@@ -124,7 +124,10 @@ export {
   ComboBoxFieldProvider,
 } from './components/combobox-field/context';
 export { ComboBoxField } from './components/combobox-field';
-export type { ComboBoxFieldProps } from './components/combobox-field/types';
+export type {
+  ComboBoxFieldProps,
+  SelectionMode,
+} from './components/combobox-field/types';
 export {
   CoordinateFieldContext,
   CoordinateFieldProvider,
