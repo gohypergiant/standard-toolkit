@@ -311,10 +311,12 @@ export function BaseMap({
 
   // Spread order: default → consumer overrides → locked keys (last wins).
   //
-  // Don't add MapLibre options here whose setter requires `isStyleLoaded()`
-  // (e.g. setProjection, setLight, setTerrain, setSky). react-map-gl applies
-  // prop diffs before `style.load`, which those setters reject. Sync them via
-  // the post-load pattern used for `projection` below.
+  // Don't add `projection` here. react-map-gl's `_updateSettings` iterates
+  // its `settingNames` list (which includes `projection`) on every `setProps`
+  // call and invokes each setter unconditionally - bypassing the style-load
+  // guard on its `_updateStyleComponents` path. maplibre's `setProjection`
+  // then throws "Style is not done loading." Sync via the post-load pattern
+  // below - same approach as `useMapLibre` uses for the same setter.
   const mapOptions = useMemo(
     () => ({
       attributionControl: DEFAULT_ATTRIBUTION_CONTROL,
