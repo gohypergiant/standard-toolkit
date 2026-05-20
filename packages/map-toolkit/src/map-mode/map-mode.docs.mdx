@@ -130,7 +130,7 @@ type MapModeOwners = 'drawing-toolbar-id' | 'details-panel-id'
 
 function DrawingToolbar() {
   // Use the shared id to access the map mode state
-  const { mode, requestModeChange } = useMapMode<MyModes, MyModeOwners>(MAIN_MAP_ID);
+  const { mode, requestModeChange } = useMapMode<MapModes, MapModeOwners>(MAIN_MAP_ID);
 
   const handleDrawingMode = () => {
     requestModeChange('drawing', 'drawing-toolbar-id');
