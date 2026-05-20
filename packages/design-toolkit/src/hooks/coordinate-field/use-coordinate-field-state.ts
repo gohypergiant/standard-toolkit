@@ -249,7 +249,18 @@ export function useCoordinateFieldState({
 
   const handleSegmentChange = (index: number, newValue: string) => {
     const updatedValues = [...segmentValues];
-    updatedValues[index] = newValue;
+
+    // Normalize MGRS letter inputs (Band/Grid): uppercase only
+    if (
+      format === 'mgrs' &&
+      (index === 1 || index === 2) &&
+      /^[a-zA-Z]+$/.test(newValue)
+    ) {
+      updatedValues[index] = newValue.toUpperCase();
+    } else {
+      updatedValues[index] = newValue;
+    }
+
     setSegmentValues(updatedValues);
 
     if (areAllSegmentsFilled(updatedValues)) {
