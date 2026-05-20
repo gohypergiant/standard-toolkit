@@ -310,6 +310,11 @@ export function BaseMap({
   );
 
   // Spread order: default → consumer overrides → locked keys (last wins).
+  //
+  // Don't add MapLibre options here whose setter requires `isStyleLoaded()`
+  // (e.g. setProjection, setLight, setTerrain, setSky). react-map-gl applies
+  // prop diffs before `style.load`, which those setters reject. Sync them via
+  // the post-load pattern used for `projection` below.
   const mapOptions = useMemo(
     () => ({
       attributionControl: DEFAULT_ATTRIBUTION_CONTROL,
@@ -331,17 +336,15 @@ export function BaseMap({
     [viewState, container, cameraState.view, boxZoom, filteredMapLibreOptions],
   );
 
-  // Sync `cameraState.projection` to subsequent map state. The initial value
-  // is applied from `handleMapLoad` (MapLibre's `onLoad`) — by then the style
-  // has loaded and `setProjection` is safe. We don't pass `projection` as a
-  // prop to `<MapLibre>` because react-map-gl applies it via `setProjection`
-  // before `style.load`, which MapLibre rejects with "Style is not done
-  // loading."
+  // `setProjection` throws if called before the style is loaded. Initial
+  // application happens in `handleMapLoad`; this effect syncs later changes.
   useEffect(() => {
     const map = mapRef.current?.getMap();
+
     if (!map?.isStyleLoaded()) {
       return;
     }
+
     map.setProjection({ type: cameraState.projection });
   }, [cameraState.projection]);
 
@@ -450,8 +453,7 @@ export function BaseMap({
     }, 200);
   });
 
-  // Fired by react-map-gl when MapLibre's `load` event fires (after
-  // `style.load`). This is the first point at which `setProjection` is safe.
+  // First point at which `setProjection` is safe (after `style.load`).
   const handleMapLoad = useEffectEvent(() => {
     mapRef.current?.getMap().setProjection({ type: cameraState.projection });
   });
