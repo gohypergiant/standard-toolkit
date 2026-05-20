@@ -38,6 +38,12 @@ export type UseMapModeReturn<TMode = string, TOwner = string> = {
  * providing concurrent-safe mode state updates. Uses a fan-out pattern where
  * a single bus listener per map instance notifies N React component subscribers.
  *
+ * @typeParam TMode - String union of mode names the caller intends to use. `'default'`
+ *   is always added to the returned `mode` type. The narrowing is advisory — the
+ *   underlying store accepts any string, so values arriving from other bus
+ *   participants are not validated against this union.
+ * @typeParam TOwner - String union of owner ids the caller intends to use when
+ *   calling `requestModeChange`. Same advisory caveat as `TMode`.
  * @param id - Optional map instance ID. If not provided, will use the ID from `MapContext`.
  * @returns The current map mode and requestModeChange function
  * @throws Error if no `id` is provided and hook is used outside of `MapProvider`
@@ -66,6 +72,20 @@ export type UseMapModeReturn<TMode = string, TOwner = string> = {
  *   return <button onClick={() => requestModeChange('default', 'external')}>
  *     Reset to Default (current: {mode})
  *   </button>;
+ * }
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // Narrow mode and owner types at the call site
+ * type Mode = 'drawing' | 'measuring';
+ * type Owner = 'drawing-toolbar' | 'details-panel';
+ *
+ * function DrawingToolbar({ mapId }: { mapId: UniqueId }) {
+ *   const { mode, requestModeChange } = useMapMode<Mode, Owner>(mapId);
+ *   // mode: 'drawing' | 'measuring' | 'default'
+ *   // requestModeChange rejects strings outside the Mode / Owner unions
+ *   return <button onClick={() => requestModeChange('drawing', 'drawing-toolbar')}>Draw</button>;
  * }
  * ```
  */
