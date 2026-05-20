@@ -12,14 +12,6 @@
 
 import Placeholder from '@accelint/icons/placeholder';
 import { type ReactNode, useState } from 'react';
-import {
-  ComboBox,
-  Input,
-  Label,
-  ListBox,
-  ListBoxItem,
-  Popover,
-} from 'react-aria-components';
 import { DeferredCollection } from '../deferred-collection';
 import { Icon } from '../icon';
 import { OptionsItem } from '../options/item';
