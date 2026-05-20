@@ -125,8 +125,9 @@ import { uuid } from '@accelint/core';
 
 // Module-level constant shared across components
 const MAIN_MAP_ID = uuid();
-type MapModes = 'drawing' | 'measuring'
-type MapModeOwners = 'drawing-toolbar-id' | 'details-panel-id'
+// `'default'` is always included in `mode`'s type — no need to list it here
+type MapModes = 'drawing' | 'measuring';
+type MapModeOwners = 'drawing-toolbar-id' | 'details-panel-id';
 
 function DrawingToolbar() {
   // Use the shared id to access the map mode state

@@ -50,7 +50,8 @@ import type { MapModeEventType, ModeChangeDecisionPayload } from './types';
 
 const logger = createLoggerDomain('[MapMode]');
 
-export const DEFAULT_MODE = 'default';
+export const DEFAULT_MODE = 'default' as const;
+export type DefaultMode = typeof DEFAULT_MODE;
 
 /**
  * Typed event bus instance for map mode events.

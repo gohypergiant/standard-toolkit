@@ -14,17 +14,21 @@
 import 'client-only';
 import { useContext, useMemo } from 'react';
 import { MapContext } from '../deckgl/base-map/provider';
-import { type DEFAULT_MODE, modeStore } from './store';
+import { modeStore } from './store';
 import type { UniqueId } from '@accelint/core';
+import type { DefaultMode } from './store';
 
 /**
- * Return value for the useMapMode hook
+ * Return value for the useMapMode hook.
+ *
+ * @typeParam TMode - String union of mode names the caller intends to use. `'default'` is always included.
+ * @typeParam TOwner - String union of owner ids the caller intends to use.
  */
-export type UseMapModeReturn<UserMode, UserOwner> = {
+export type UseMapModeReturn<TMode = string, TOwner = string> = {
   /** The current active map mode */
-  mode: UserMode;
+  mode: TMode;
   /** Function to request a mode change with ownership */
-  requestModeChange: (desiredMode: UserMode, requestOwner: UserOwner) => void;
+  requestModeChange: (desiredMode: TMode, requestOwner: TOwner) => void;
 };
 
 /**
@@ -65,9 +69,10 @@ export type UseMapModeReturn<UserMode, UserOwner> = {
  * }
  * ```
  */
-export function useMapMode<UserMode extends string, UserOwner extends string>(
-  id?: UniqueId,
-): UseMapModeReturn<UserMode | typeof DEFAULT_MODE, UserOwner> {
+export function useMapMode<
+  TMode extends string = string,
+  TOwner extends string = string,
+>(id?: UniqueId): UseMapModeReturn<TMode | DefaultMode, TOwner> {
   const contextId = useContext(MapContext);
   const actualId = id ?? contextId;
 
@@ -83,15 +88,14 @@ export function useMapMode<UserMode extends string, UserOwner extends string>(
   // Get actions separately (stable reference)
   const { requestModeChange } = modeStore.actions(actualId);
 
-  // Memoize the return value to prevent unnecessary re-renders
+  // Generics are advisory: the store accepts any string, so these casts narrow
+  // the surface for callers but don't validate values arriving from the bus.
   return useMemo(
-    () => ({
-      mode: mode as UserMode | typeof DEFAULT_MODE,
-      requestModeChange: requestModeChange as (
-        desiredMode: UserMode | typeof DEFAULT_MODE,
-        requestOwner: UserOwner,
-      ) => void,
-    }),
+    () =>
+      ({ mode, requestModeChange }) as UseMapModeReturn<
+        TMode | DefaultMode,
+        TOwner
+      >,
     [mode, requestModeChange],
   );
 }
