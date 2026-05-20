@@ -75,11 +75,15 @@
       }
 
       @variant group-extend-right/layout {
-        @apply col-end-3;
+        @variant group-has-[[data-placement=right][data-open]]/layout {
+          @apply col-end-3;
+        }
       }
 
       @variant group-extend-left/layout {
-        @apply col-start-2;
+        @variant group-has-[[data-placement=left][data-open]]/layout {
+          @apply col-start-2;
+        }
       }
 
       @variant group-data-[extend=bottom]/layout {
@@ -96,11 +100,15 @@
       }
 
       @variant group-extend-top/layout {
-        @apply row-start-2;
+        @variant group-has-[[data-placement=top][data-open]]/layout {
+          @apply row-start-2;
+        }
       }
 
       @variant group-extend-bottom/layout {
-        @apply row-end-3;
+        @variant group-has-[[data-placement=bottom][data-open]]/layout {
+          @apply row-end-3;
+        }
       }
 
       @variant group-data-[extend=left]/layout {
@@ -117,11 +125,15 @@
       }
 
       @variant group-extend-right/layout {
-        @apply col-end-3;
+        @variant group-has-[[data-placement=right][data-open]]/layout {
+          @apply col-end-3;
+        }
       }
 
       @variant group-extend-left/layout {
-        @apply col-start-2;
+        @variant group-has-[[data-placement=left][data-open]]/layout {
+          @apply col-start-2;
+        }
       }
 
       @variant group-data-[extend=top]/layout {
@@ -138,11 +150,15 @@
       }
 
       @variant group-extend-top/layout {
-        @apply row-start-2;
+        @variant group-has-[[data-placement=top][data-open]]/layout {
+          @apply row-start-2;
+        }
       }
 
       @variant group-extend-bottom/layout {
-        @apply row-end-3;
+        @variant group-has-[[data-placement=bottom][data-open]]/layout {
+          @apply row-end-3;
+        }
       }
 
       @variant group-data-[extend=right]/layout {
