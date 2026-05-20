@@ -64,6 +64,8 @@ export interface UseCoordinateFieldStateResult {
   editableSegmentConfigs: SegmentConfig[];
   /** Handle change of a single segment */
   handleSegmentChange: (index: number, newValue: string) => void;
+  /** Handle blur event for a segment */
+  handleSegmentBlur: (index: number) => void;
   /** Set all segment values at once */
   setSegmentValues: (values: string[]) => void;
   /** Set validation errors */
@@ -272,6 +274,18 @@ export function useCoordinateFieldState({
     }
   };
 
+  const handleSegmentBlur = (index: number) => {
+    // MGRS zone field: add leading zero to single-digit values on blur
+    if (format === 'mgrs' && index === 0) {
+      const currentVal = segmentValues[0];
+      if (currentVal && currentVal.length === 1 && /^\d$/.test(currentVal)) {
+        const updatedValues = [...segmentValues];
+        updatedValues[0] = `0${currentVal}`;
+        setSegmentValues(updatedValues);
+      }
+    }
+  };
+
   const applyPastedCoordinate = (pastedValue: CoordinateValue) => {
     // Clear any pending validation when applying pasted coordinate
     clearValidationTimeout();
@@ -308,6 +322,7 @@ export function useCoordinateFieldState({
     segmentConfigs,
     editableSegmentConfigs,
     handleSegmentChange,
+    handleSegmentBlur,
     setSegmentValues,
     setValidationErrors,
     effectiveErrorMessage,
