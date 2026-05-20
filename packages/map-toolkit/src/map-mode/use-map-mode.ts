@@ -14,17 +14,17 @@
 import 'client-only';
 import { useContext, useMemo } from 'react';
 import { MapContext } from '../deckgl/base-map/provider';
-import { modeStore } from './store';
+import { type DEFAULT_MODE, modeStore } from './store';
 import type { UniqueId } from '@accelint/core';
 
 /**
  * Return value for the useMapMode hook
  */
-export type UseMapModeReturn = {
+export type UseMapModeReturn<UserMode, UserOwner> = {
   /** The current active map mode */
-  mode: string;
+  mode: UserMode;
   /** Function to request a mode change with ownership */
-  requestModeChange: (desiredMode: string, requestOwner: string) => void;
+  requestModeChange: (desiredMode: UserMode, requestOwner: UserOwner) => void;
 };
 
 /**
@@ -65,7 +65,9 @@ export type UseMapModeReturn = {
  * }
  * ```
  */
-export function useMapMode(id?: UniqueId): UseMapModeReturn {
+export function useMapMode<UserMode extends string, UserOwner extends string>(
+  id?: UniqueId,
+): UseMapModeReturn<UserMode | typeof DEFAULT_MODE, UserOwner> {
   const contextId = useContext(MapContext);
   const actualId = id ?? contextId;
 
@@ -84,8 +86,11 @@ export function useMapMode(id?: UniqueId): UseMapModeReturn {
   // Memoize the return value to prevent unnecessary re-renders
   return useMemo(
     () => ({
-      mode,
-      requestModeChange,
+      mode: mode as UserMode | typeof DEFAULT_MODE,
+      requestModeChange: requestModeChange as (
+        desiredMode: UserMode | typeof DEFAULT_MODE,
+        requestOwner: UserOwner,
+      ) => void,
     }),
     [mode, requestModeChange],
   );
