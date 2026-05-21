@@ -11,6 +11,8 @@ env:
 jobs:
   publish-experimental:
     name: Publish Experimental Snapshot
+    # Only allow on experimental/* branches
+    if: startsWith(github.ref, 'refs/heads/experimental/')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -32,17 +34,6 @@ jobs:
             echo "## 🚀 Production Mode" >> $GITHUB_STEP_SUMMARY
             echo "This workflow will publish packages to npm registry." >> $GITHUB_STEP_SUMMARY
           fi
-
-      # Enforce experimental/* branch pattern
-      - name: Verify experimental branch
-        run: |
-          BRANCH_NAME="${GITHUB_REF#refs/heads/}"
-          if [[ ! "$BRANCH_NAME" =~ ^experimental/ ]]; then
-            echo "Error: This workflow only runs on experimental/* branches"
-            echo "Current branch: $BRANCH_NAME"
-            exit 1
-          fi
-          echo "✓ Running on experimental branch: $BRANCH_NAME"
 
       # Extract feature name from branch (experimental/<feature> → <feature>)
       - name: Extract feature name
