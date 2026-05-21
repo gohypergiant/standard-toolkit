@@ -99,18 +99,20 @@ jobs:
                 console.log(`  ${emoji} Status: ${status}`);
 
                 // Generate status comment
-                const statusCommentBody = `## 📊 Experiment Status
-
-**Status:** ${emoji} ${status}
-**Started:** ${dateMatch[1]}
-**Age:** ${ageInDays} days
-**Deadline:** ${deadline.toISOString().split('T')[0]}
-
-### Next Steps
-${nextSteps}
-
----
-*Last updated: ${currentDate.toUTCString()}*`;
+                const statusCommentBody = [
+                  '## 📊 Experiment Status',
+                  '',
+                  `**Status:** ${emoji} ${status}`,
+                  `**Started:** ${dateMatch[1]}`,
+                  `**Age:** ${ageInDays} days`,
+                  `**Deadline:** ${deadline.toISOString().split('T')[0]}`,
+                  '',
+                  '### Next Steps',
+                  nextSteps,
+                  '',
+                  '---',
+                  `*Last updated: ${currentDate.toUTCString()}*`
+                ].join('\n');
 
                 // Find existing status comment
                 const statusComment = comments.find(comment =>
