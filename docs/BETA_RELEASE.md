@@ -217,9 +217,9 @@ Main-first development is still encouraged for features, but urgent beta fixes c
 
 **Steps:**
 1. Verify `.changeset/pre.json` exists with mode "beta"
-2. Run quality checks: `pnpm run build`
+2. Run quality checks: build, lint, and test
 3. Version packages: `pnpm changeset version` (direct call, skips constellation-tracker)
-4. Publish packages: `pnpm changeset publish --tag beta`
+4. Publish packages: `changeset:publish-beta`
 
 **Fails if:**
 - `.changeset/pre.json` missing (run `pnpm beta:start`)
