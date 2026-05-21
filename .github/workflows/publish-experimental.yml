@@ -78,7 +78,6 @@ jobs:
 
       - run: pnpm install
 
-      # Quality checks (minimal: build + types)
       - name: Build all packages
         run: pnpm run build
 
@@ -94,81 +93,27 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       # Snapshot versioning and publishing
-      - name: Version snapshot packages
+      - name: Version snapshot
+        id: version
         run: |
-          echo "## 📦 Snapshot Versioning" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          pnpm changeset version --snapshot ${{ steps.feature.outputs.name }} 2>&1 | tee version-output.txt
-          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-          cat version-output.txt >> $GITHUB_STEP_SUMMARY
-          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          pnpm changeset version --snapshot ${{ steps.feature.outputs.name }}
 
-      - name: Publish snapshot packages
+          # Capture the version that was set
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Publish snapshot
         if: ${{ !inputs.dry_run }}
-        id: publish
         run: |
-          pnpm changeset publish --tag ${{ steps.feature.outputs.name }} 2>&1 | tee publish-output.txt
-          echo "output<<EOF" >> $GITHUB_OUTPUT
-          cat publish-output.txt >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          pnpm changeset publish --tag ${{ steps.feature.outputs.name }}
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Dry-run publish
         if: ${{ inputs.dry_run }}
-        id: publish_dryrun
         run: |
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "## 🧪 Dry-Run Publish" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          pnpm changeset publish --tag ${{ steps.feature.outputs.name }} --dry-run 2>&1 | tee publish-output.txt
-          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-          cat publish-output.txt >> $GITHUB_STEP_SUMMARY
-          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-          echo "output<<EOF" >> $GITHUB_OUTPUT
-          cat publish-output.txt >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-
-      # Parse published packages from changeset output
-      - name: Parse published packages
-        id: packages
-        run: |
-          # Extract package names and versions from publish output
-          PACKAGES=$(grep -E '🦋  success packages published successfully:' publish-output.txt -A 100 | grep -E '^🦋  ' | grep -v 'success' || echo "")
-
-          # Create JSON array of published packages
-          if [ -z "$PACKAGES" ]; then
-            echo "list=[]" >> $GITHUB_OUTPUT
-          else
-            PACKAGE_JSON="["
-            while IFS= read -r line; do
-              # Extract package name and version from lines like "🦋  @accelint/design-toolkit@9.11.0-experimental-dark-mode-20260507"
-              if [[ "$line" =~ 🦋[[:space:]]+(@[^@]+)@([^[:space:]]+) ]]; then
-                PKG_NAME="${BASH_REMATCH[1]}"
-                PKG_VERSION="${BASH_REMATCH[2]}"
-                PACKAGE_JSON="$PACKAGE_JSON{\"name\":\"$PKG_NAME\",\"version\":\"$PKG_VERSION\"},"
-              fi
-            done <<< "$PACKAGES"
-            PACKAGE_JSON="${PACKAGE_JSON%,}]"
-            echo "list=$PACKAGE_JSON" >> $GITHUB_OUTPUT
-          fi
-
-          # Add summary
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "## 📋 Package Summary" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          if [ -z "$PACKAGES" ]; then
-            echo "No packages to publish" >> $GITHUB_STEP_SUMMARY
-          else
-            while IFS= read -r line; do
-              if [[ "$line" =~ 🦋[[:space:]]+(@[^@]+)@([^[:space:]]+) ]]; then
-                PKG_NAME="${BASH_REMATCH[1]}"
-                PKG_VERSION="${BASH_REMATCH[2]}"
-                echo "- \`$PKG_NAME@$PKG_VERSION\`" >> $GITHUB_STEP_SUMMARY
-              fi
-            done <<< "$PACKAGES"
-          fi
+          pnpm changeset publish --tag ${{ steps.feature.outputs.name }} --dry-run
 
       # Find associated PR
       - name: Find PR for this branch
@@ -188,55 +133,38 @@ jobs:
             }
             return null;
 
-      # Create or update PR comment with install instructions
+      # Create or update PR comment
       - name: Create or update PR comment
         if: steps.pr.outputs.result != 'null' && !inputs.dry_run
         uses: actions/github-script@v7
-        env:
-          PACKAGES: ${{ steps.packages.outputs.list }}
-          FEATURE_NAME: ${{ steps.feature.outputs.name }}
         with:
           script: |
             const prNumber = ${{ steps.pr.outputs.result }};
-            const packages = JSON.parse(process.env.PACKAGES);
-            const featureName = process.env.FEATURE_NAME;
+            const featureName = '${{ steps.feature.outputs.name }}';
+            const version = '${{ steps.version.outputs.version }}';
             const publishDate = new Date().toISOString().split('T')[0];
-
-            if (packages.length === 0) {
-              console.log('No packages published, skipping PR comment');
-              return;
-            }
-
-            // Generate install instructions for all published packages
-            const installInstructions = packages.map(pkg =>
-              `npm install ${pkg.name}@${featureName}`
-            ).join('\n');
-
-            const packageList = packages.map(pkg =>
-              `- \`${pkg.name}@${pkg.version}\``
-            ).join('\n');
 
             const commentBody = `## 🧪 Experimental Snapshot Published
 
-            **Feature:** \`${featureName}\`
+            **Feature tag:** \`${featureName}\`
+            **Version:** \`${version}\`
             **Published:** ${publishDate}
 
-            ### Published Packages
-            ${packageList}
-
             ### Installation
+            Install any toolkit package using the experimental tag:
             \`\`\`bash
-            ${installInstructions}
+            npm install @accelint/design-toolkit@${featureName}
+            npm install @accelint/map-toolkit@${featureName}
             \`\`\`
 
-            ### ⚠️ Experimental Warning
-            This is an experimental build for testing and feedback only. It:
-            - May have incomplete features or breaking changes
-            - Is not production-ready
-            - Will not be maintained long-term
-            - Has a 1-month time-box for evaluation
+            ### ⚠️ Experimental Release Warning
+            This is a proof-of-concept release with a **2-week shelf life**.
+            - APIs may change without notice
+            - Feature may be abandoned
+            - Do NOT use in production
 
-            **Last published:** ${new Date().toUTCString()}`;
+            ---
+            *Last published: ${new Date().toISOString()}*`;
 
             // Find existing comment
             const { data: comments } = await github.rest.issues.listComments({
@@ -251,57 +179,17 @@ jobs:
             );
 
             if (botComment) {
-              // Update existing comment
               await github.rest.issues.updateComment({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 comment_id: botComment.id,
                 body: commentBody
               });
-              console.log('Updated existing PR comment');
             } else {
-              // Create new comment
               await github.rest.issues.createComment({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: prNumber,
                 body: commentBody
               });
-              console.log('Created new PR comment');
             }
-
-      # Dry-run PR comment simulation
-      - name: Simulate PR comment (dry-run)
-        if: steps.pr.outputs.result != 'null' && inputs.dry_run
-        uses: actions/github-script@v7
-        env:
-          PACKAGES: ${{ steps.packages.outputs.list }}
-          FEATURE_NAME: ${{ steps.feature.outputs.name }}
-        with:
-          script: |
-            const packages = JSON.parse(process.env.PACKAGES);
-            const featureName = process.env.FEATURE_NAME;
-
-            core.summary.addHeading('PR Comment Preview (Dry-Run)', 2);
-            core.summary.addRaw('\n');
-            core.summary.addRaw('The following comment would be posted/updated on the PR:\n\n');
-            core.summary.addCodeBlock(`
-            ## 🧪 Experimental Snapshot Published
-
-            **Feature:** ${featureName}
-            **Published:** ${new Date().toISOString().split('T')[0]}
-
-            ### Published Packages
-            ${packages.map(pkg => `- \`${pkg.name}@${pkg.version}\``).join('\n')}
-
-            ### Installation
-            \`\`\`bash
-            ${packages.map(pkg => `npm install ${pkg.name}@${featureName}`).join('\n')}
-            \`\`\`
-
-            ### ⚠️ Experimental Warning
-            This is an experimental build for testing and feedback only.
-            `, 'markdown');
-            await core.summary.write();
-
-            console.log('Dry-run: Would post/update PR comment on PR #' + ${{ steps.pr.outputs.result }});
