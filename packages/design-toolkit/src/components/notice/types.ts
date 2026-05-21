@@ -13,6 +13,7 @@
 
 import type { Payload, StructuredCloneableData } from '@accelint/bus';
 import type { UniqueId } from '@accelint/core';
+import type { ComponentType, ReactElement, ReactNode } from 'react';
 import type { ToastListProps } from 'react-aria-components/Toast';
 import type { ButtonProps } from '../button/types';
 import type { NoticeEventTypes } from './events';
@@ -126,6 +127,8 @@ export type NoticeProps = Omit<
   };
   /** Whether to hide the status icon. */
   hideIcon?: boolean;
+  /** Override the default icon */
+  iconOverride?: ReactNode;
   /** Whether to show the close button. */
   showClose?: boolean;
   /** Whether to close the notice when an action button is pressed. */

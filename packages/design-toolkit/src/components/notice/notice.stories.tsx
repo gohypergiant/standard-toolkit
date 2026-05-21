@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 
+import { Check } from '@accelint/icons';
 import { Notice } from './';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
@@ -34,6 +35,10 @@ const meta: Meta<typeof Notice> = {
 export default meta;
 
 export const Default: StoryObj<typeof Notice> = {};
+
+export const Custom: StoryObj<typeof Notice> = {
+  render: (args) => <Notice {...args} iconOverride={<Check />} />,
+};
 
 export const ButtonEvents: StoryObj<typeof Notice> = {
   render: (args) => (

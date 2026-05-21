@@ -73,6 +73,7 @@ export function Notice({
   primary,
   secondary,
   hideIcon,
+  iconOverride,
   showClose,
   shouldCloseOnAction,
   size = 'medium',
@@ -80,6 +81,9 @@ export function Notice({
   onSecondaryAction,
   onClose,
 }: NoticeProps) {
+  const showOverrideIcon = iconOverride && size === 'medium';
+  const showIcon = !hideIcon && size === 'medium' && !iconOverride;
+
   return (
     <Toast
       className={clsx('group/notice', styles.notice, classNames?.notice)}
@@ -89,9 +93,12 @@ export function Notice({
       style={{ viewTransitionName: id }}
     >
       <ToastContent className={clsx(styles.content, classNames?.content)}>
-        {!hideIcon && size === 'medium' && (
-          <NoticeIcon color={color} size={size} />
+        {showOverrideIcon && (
+          <Icon color={color} size='medium'>
+            {iconOverride}
+          </Icon>
         )}
+        {showIcon && <NoticeIcon color={color} size={size} />}
         <Text
           slot='description'
           className={clsx(styles.message, classNames?.message)}

@@ -46,6 +46,20 @@ A notification component for displaying temporary messages, alerts, and user fee
 />
 ```
 
+## With Custom Icon
+
+<Canvas of={NoticeStories.Custom} />
+
+```tsx
+import { Check } from '@accelint/icons';
+
+<Notice
+  id="7a3b6dfd-6596-472c-af1a-06d433958705"
+  message="This is a custom notice message"
+  iconOverride={<Check />}
+/>
+```
+
 ## Props
 
 | Prop | Type | Default | Description |
@@ -57,6 +71,7 @@ A notification component for displaying temporary messages, alerts, and user fee
 | `primary` | `ButtonProps` | - | Primary action button config |
 | `secondary` | `ButtonProps` | - | Secondary action button config |
 | `hideIcon` | `boolean` | `false` | Whether to hide the icon |
+| `iconOverride` | `icon` | `undefined` | Icon to override default icons |
 | `showClose` | `boolean` | `false` | Whether to show close button |
 | `shouldCloseOnAction` | `boolean` | `false` | Close on action press |
 | `onPrimaryAction` | `() => void` | - | Primary button callback |
