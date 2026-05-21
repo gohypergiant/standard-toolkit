@@ -58,10 +58,13 @@ jobs:
                   continue;
                 }
 
-                // Extract publish date from comment
-                const dateMatch = publishComment.body.match(/\*\*Published:\*\*\s+(\d{4}-\d{2}-\d{2})/);
+                // Extract first-published date from comment. We deliberately read
+                // **First published** (set once on initial publish) rather than
+                // **Last published**, so the 1-month time-box does not reset every
+                // time the author republishes a snapshot.
+                const dateMatch = publishComment.body.match(/\*\*First published:\*\*\s+(\d{4}-\d{2}-\d{2})/);
                 if (!dateMatch) {
-                  console.log(`  ⚠️  Could not parse publish date, skipping`);
+                  console.log(`  ⚠️  Could not parse first-published date, skipping`);
                   continue;
                 }
 
@@ -69,7 +72,7 @@ jobs:
                 const currentDate = new Date();
                 const ageInDays = Math.floor((currentDate - publishDate) / (1000 * 60 * 60 * 24));
 
-                console.log(`  📅 Published: ${dateMatch[1]}`);
+                console.log(`  📅 First published: ${dateMatch[1]}`);
                 console.log(`  ⏱️  Age: ${ageInDays} days`);
 
                 // Determine warning level
