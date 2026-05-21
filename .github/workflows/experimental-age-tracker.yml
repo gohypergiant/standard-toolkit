@@ -56,7 +56,7 @@ jobs:
 
                 if (runs.workflow_runs.length === 0) {
                   console.log(`  ⚠️  No successful publish runs found.`);
-                  ageInDays = 0;
+                  ageInDays = 'N/A';
                   dateStr = 'Not published';
                 } else {
                   const firstRun = runs.workflow_runs
@@ -113,7 +113,7 @@ jobs:
                   '',
                   `**Status:** ${emoji} ${status}`,
                   `**Published:** ${dateStr}`,
-                  `**Age:** ${`${ageInDays} days`}`,
+                  `**Age In Days:** ${ageInDays}`,
                   `**Deadline:** ${deadline ? deadline.toISOString().split('T')[0] : 'Countdown clock not started.'}`,
                   '',
                   '### Next Steps',
