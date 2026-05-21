@@ -8,7 +8,7 @@ on:
       dry_run:
         description: 'Dry-run mode (skip npm publish, show what would happen)'
         type: boolean
-        default: false
+        default: true
 env:
   TURBO_TELEMETRY_DISABLED: 1
 concurrency: ${{ github.workflow }}-${{ github.ref }}
