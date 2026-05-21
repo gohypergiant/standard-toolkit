@@ -81,6 +81,12 @@ jobs:
       - name: Build all packages
         run: pnpm run build
 
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Test
+        run: pnpm run test
+
       - name: Creating .npmrc
         run: |
           cat << EOF > "$HOME/.npmrc"
