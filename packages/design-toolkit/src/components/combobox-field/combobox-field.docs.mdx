@@ -79,6 +79,21 @@ Uses the [Options](?path=/docs/components-options--playground) component system 
 ```
 <Canvas of={ComboBoxStories.Readonly} />
 
+### Multiple Selection with Chips
+```tsx
+<ComboBoxField selectionMode="multiple" defaultItems={items} onChange={handleChange}>
+  {(item) => (
+    <OptionsItem key={item.id} textValue={item.name}>
+      <OptionsItemLabel>{item.name}</OptionsItemLabel>
+    </OptionsItem>
+  )}
+</ComboBoxField>
+```
+
+When `selectionMode="multiple"` is set, users can select multiple items from the dropdown. Display selected items as deletable chips using `ChipList` and `DeletableChip` components. Handle the `onChange` callback to track selections, and use `ChipList`'s `onRemove` to allow users to remove individual selections.
+
+<Canvas of={ComboBoxStories.MultipleSelection} />
+
 ## Sizes
 
 | Size | Description |
