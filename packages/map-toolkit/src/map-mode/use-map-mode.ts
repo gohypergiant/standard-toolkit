@@ -21,14 +21,14 @@ import type { DefaultMode } from './store';
 /**
  * Return value for the useMapMode hook.
  *
- * @typeParam TMode - String union of mode names the caller intends to use. `'default'` is always included.
- * @typeParam TOwner - String union of owner ids the caller intends to use.
+ * @typeParam Mode - String union of mode names the caller intends to use. `'default'` is always included.
+ * @typeParam Owner - String union of owner ids the caller intends to use.
  */
-export type UseMapModeReturn<TMode = string, TOwner = string> = {
+export type UseMapModeReturn<Mode = string, Owner = string> = {
   /** The current active map mode */
-  mode: TMode;
+  mode: Mode;
   /** Function to request a mode change with ownership */
-  requestModeChange: (desiredMode: TMode, requestOwner: TOwner) => void;
+  requestModeChange: (desiredMode: Mode, requestOwner: Owner) => void;
 };
 
 /**
@@ -38,12 +38,12 @@ export type UseMapModeReturn<TMode = string, TOwner = string> = {
  * providing concurrent-safe mode state updates. Uses a fan-out pattern where
  * a single bus listener per map instance notifies N React component subscribers.
  *
- * @typeParam TMode - String union of mode names the caller intends to use. `'default'`
+ * @typeParam Mode - String union of mode names the caller intends to use. `'default'`
  *   is always added to the returned `mode` type. The narrowing is advisory — the
  *   underlying store accepts any string, so values arriving from other bus
  *   participants are not validated against this union.
- * @typeParam TOwner - String union of owner ids the caller intends to use when
- *   calling `requestModeChange`. Same advisory caveat as `TMode`.
+ * @typeParam Owner - String union of owner ids the caller intends to use when
+ *   calling `requestModeChange`. Same advisory caveat as `Mode`.
  * @param id - Optional map instance ID. If not provided, will use the ID from `MapContext`.
  * @returns The current map mode and requestModeChange function
  * @throws Error if no `id` is provided and hook is used outside of `MapProvider`
@@ -90,9 +90,9 @@ export type UseMapModeReturn<TMode = string, TOwner = string> = {
  * ```
  */
 export function useMapMode<
-  TMode extends string = string,
-  TOwner extends string = string,
->(id?: UniqueId): UseMapModeReturn<TMode | DefaultMode, TOwner> {
+  Mode extends string = string,
+  Owner extends string = string,
+>(id?: UniqueId): UseMapModeReturn<Mode | DefaultMode, Owner> {
   const contextId = useContext(MapContext);
   const actualId = id ?? contextId;
 
@@ -113,8 +113,8 @@ export function useMapMode<
   return useMemo(
     () =>
       ({ mode, requestModeChange }) as UseMapModeReturn<
-        TMode | DefaultMode,
-        TOwner
+        Mode | DefaultMode,
+        Owner
       >,
     [mode, requestModeChange],
   );

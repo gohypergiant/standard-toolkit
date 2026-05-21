@@ -394,7 +394,7 @@ export function App() {
 
 ## React API Reference
 
-### `useMapMode<TMode, TOwner>(id?)`
+### `useMapMode<Mode, Owner>(id?)`
 
 Hook to access map mode state. **For UI components (buttons, toolbars, etc.)**, you should pass the `id` parameter since they must be rendered as siblings to `BaseMap`, not children.
 
@@ -402,13 +402,13 @@ The two optional type parameters let you narrow `mode` and the arguments to `req
 
 #### Type Parameters
 
-##### `TMode extends string` (default `string`)
+##### `Mode extends string` (default `string`)
 
 String union of mode names the caller intends to use. `'default'` is always added to the returned `mode` type, so you don't list it yourself. The narrowing is advisory — the underlying store accepts any string, so values arriving from other bus participants aren't runtime-validated against this union.
 
-##### `TOwner extends string` (default `string`)
+##### `Owner extends string` (default `string`)
 
-String union of owner ids the caller intends to use when calling `requestModeChange`. Same advisory caveat as `TMode`.
+String union of owner ids the caller intends to use when calling `requestModeChange`. Same advisory caveat as `Mode`.
 
 #### Parameters
 
@@ -420,15 +420,15 @@ The map ID to access. **Recommended**: Always pass this parameter for UI compone
 
 ```tsx
 {
-  mode: TMode | 'default';                     // Current mode
+  mode: Mode | 'default';                     // Current mode
   requestModeChange: (                         // Request a mode change
-    desiredMode: TMode | 'default',
-    requestOwner: TOwner,
+    desiredMode: Mode | 'default',
+    requestOwner: Owner,
   ) => void;
 }
 ```
 
-When called without explicit type parameters, both `TMode` and `TOwner` default to `string`, matching the pre-generics signature.
+When called without explicit type parameters, both `Mode` and `Owner` default to `string`, matching the pre-generics signature.
 
 #### Throws
 
