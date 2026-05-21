@@ -1,6 +1,5 @@
 name: Publish Experimental Snapshot
 on:
-  push:
   workflow_dispatch:
     inputs:
       dry_run:

@@ -80,22 +80,26 @@ jobs:
                 // Determine status based on age
                 let emoji, status, nextSteps;
 
-                if (ageInDays > 27) {
-                  emoji = '🚨';
-                  status = 'Overdue! - time to make a decision';
-                  nextSteps = `This experiment has exceeded the 1-month time-box.\n\n**Required actions:**\n1. **Promote:** Close this PR, reimplement with full quality bar (tests, docs, review), open fresh PR to main\n2. **Abandon:** Close this PR, delete experimental branch, document why`;
-                } else if (ageInDays <= 13) {
-                  emoji = 'ℹ️';
-                  status = 'Active';
-                  nextSteps = `You have **${daysRemaining} days remaining** to evaluate this experiment.\n\n- Test the experimental build\n- Gather feedback from users\n- Document findings`;
-                } else if (ageInDays <= 20) {
-                  emoji = '⏰';
-                  status = 'Approaching deadline';
-                  nextSteps = `Deadline approaching in **${daysRemaining} days**.\n\n- Begin decision process: promote or abandon?\n- If promoting, plan full implementation with tests and docs\n- If abandoning, document lessons learned`;
-                } else {
+                if (ageInDays === 'N/A') {
                   emoji = '⚠️';
                   status = 'Unpublished';
                   nextSteps = `Once you publish, you will have a month for experimentation. Do not use your experiment in a production environment.`;
+                } else if (ageInDays > 27) {
+                  emoji = '🚨';
+                  status = 'Overdue! - time to make a decision';
+                  nextSteps = `This experiment has exceeded the 1-month time-box.\n\n**Required actions:**\n1. **Promote:** Close this PR, reimplement with full quality bar (tests, docs, review), open fresh PR to main\n2. **Abandon:** Close this PR, delete experimental branch, document why`;
+                } else if (ageInDays >= 20) {
+                  emoji = '⏰';
+                  status = 'Approaching deadline';
+                  nextSteps = `Deadline approaching in **${daysRemaining} days**.\n\n- Begin decision process: promote or abandon?\n- If promoting, plan full implementation with tests and docs\n- If abandoning, document lessons learned`;
+                } else if (ageInDays >= 13) {
+                  emoji = '⏰';
+                  status = 'Active';
+                  nextSteps = `You are two weeks in! You have **${daysRemaining} days remaining** to evaluate this experiment.`;
+                } else {
+                  emoji = 'ℹ️';
+                  status = 'Active';
+                  nextSteps = `You have **${daysRemaining} days remaining** to evaluate this experiment.\n\n- Test the experimental build\n- Gather feedback from users\n- Document findings`;
                 }
 
                 console.log(`  ${emoji} Status: ${status}`);
