@@ -63,6 +63,8 @@ export const CameraEventTypes = {
   setZoom: `${CameraEventNamespace}:setZoom`,
   setRotation: `${CameraEventNamespace}:setRotation`,
   setPitch: `${CameraEventNamespace}:setPitch`,
+  modRotation: `${CameraEventNamespace}:modRotation`,
+  modPitch: `${CameraEventNamespace}:modPitch`,
   setCenter: `${CameraEventNamespace}:setCenter`,
   fitBounds: `${CameraEventNamespace}:fitBounds`,
   reset: `${CameraEventNamespace}:reset`,

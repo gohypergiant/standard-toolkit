@@ -397,6 +397,34 @@ export const cameraStore = createMapStore<CameraState, CameraActions>({
       },
     );
 
+    const unsubModRotation = cameraBus.on(
+      CameraEventTypes.modRotation,
+      ({ payload }) => {
+        if (payload.id !== mapId) {
+          return;
+        }
+
+        const state = get();
+        if (state.view !== '3D') {
+          replace({ ...state, rotation: state.rotation + payload.delta });
+        }
+      },
+    );
+
+    const unsubModPitch = cameraBus.on(
+      CameraEventTypes.modPitch,
+      ({ payload }) => {
+        if (payload.id !== mapId) {
+          return;
+        }
+
+        const state = get();
+        if (state.view === '2.5D') {
+          replace({ ...state, pitch: state.pitch + payload.delta });
+        }
+      },
+    );
+
     return () => {
       unsubReset();
       unsubSetCenter();
@@ -406,6 +434,8 @@ export const cameraStore = createMapStore<CameraState, CameraActions>({
       unsubSetZoom();
       unsubSetRotation();
       unsubSetPitch();
+      unsubModRotation();
+      unsubModPitch();
     };
   },
 

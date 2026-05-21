@@ -81,6 +81,53 @@ describe('useMapCamera', () => {
     expect(result.current.cameraState.pitch).not.toEqual(60);
   });
 
+  it('should modify pitch by delta in 2.5D view', () => {
+    const { result } = renderHook(() => useMapCamera(testid, { view: '2.5D' }));
+    expect(result.current.cameraState.pitch).toEqual(45); // Default pitch for 2.5D
+    act(() => {
+      bus.emit(CameraEventTypes.modPitch, {
+        id: testid,
+        delta: 15,
+      });
+    });
+    expect(result.current.cameraState.pitch).toEqual(60);
+  });
+
+  it('should modify pitch by negative delta in 2.5D view', () => {
+    const { result } = renderHook(() =>
+      useMapCamera(testid, { view: '2.5D', pitch: 60 }),
+    );
+    act(() => {
+      bus.emit(CameraEventTypes.modPitch, {
+        id: testid,
+        delta: -20,
+      });
+    });
+    expect(result.current.cameraState.pitch).toEqual(40);
+  });
+
+  it('should not modify pitch in 2D view', () => {
+    const { result } = renderHook(() => useMapCamera(testid, { view: '2D' }));
+    act(() => {
+      bus.emit(CameraEventTypes.modPitch, {
+        id: testid,
+        delta: 45,
+      });
+    });
+    expect(result.current.cameraState.pitch).toEqual(0);
+  });
+
+  it('should not modify pitch in 3D view', () => {
+    const { result } = renderHook(() => useMapCamera(testid, { view: '3D' }));
+    act(() => {
+      bus.emit(CameraEventTypes.modPitch, {
+        id: testid,
+        delta: 45,
+      });
+    });
+    expect(result.current.cameraState.pitch).toEqual(0);
+  });
+
   it('should update rotation', () => {
     const { result } = renderHook(() => useMapCamera(testid));
     act(() => {
@@ -90,6 +137,39 @@ describe('useMapCamera', () => {
       });
     });
     expect(result.current.cameraState.rotation).toEqual(45);
+  });
+
+  it('should modify rotation by delta', () => {
+    const { result } = renderHook(() => useMapCamera(testid, { rotation: 30 }));
+    act(() => {
+      bus.emit(CameraEventTypes.modRotation, {
+        id: testid,
+        delta: 15,
+      });
+    });
+    expect(result.current.cameraState.rotation).toEqual(45);
+  });
+
+  it('should modify rotation by negative delta', () => {
+    const { result } = renderHook(() => useMapCamera(testid, { rotation: 90 }));
+    act(() => {
+      bus.emit(CameraEventTypes.modRotation, {
+        id: testid,
+        delta: -30,
+      });
+    });
+    expect(result.current.cameraState.rotation).toEqual(60);
+  });
+
+  it('should not modify rotation in 3D view', () => {
+    const { result } = renderHook(() => useMapCamera(testid, { view: '3D' }));
+    act(() => {
+      bus.emit(CameraEventTypes.modRotation, {
+        id: testid,
+        delta: 45,
+      });
+    });
+    expect(result.current.cameraState.rotation).toEqual(0);
   });
 
   it('should update projection', () => {

@@ -160,6 +160,22 @@ export type CameraSetPitchEvent = Payload<
 >;
 
 /**
+ * Event type for modifying camera rotation angle by a delta.
+ */
+export type CameraModRotationEvent = Payload<
+  typeof CameraEventTypes.modRotation,
+  { id: UniqueId; delta: number }
+>;
+
+/**
+ * Event type for modifying camera pitch angle by a delta.
+ */
+export type CameraModPitchEvent = Payload<
+  typeof CameraEventTypes.modPitch,
+  { id: UniqueId; delta: number }
+>;
+
+/**
  * Event type for resetting camera to initial state.
  */
 export type CameraResetEvent = Payload<
@@ -188,4 +204,6 @@ export type CameraEvent =
   | CameraSetZoomEvent
   | CameraSetRotationEvent
   | CameraSetPitchEvent
+  | CameraModRotationEvent
+  | CameraModPitchEvent
   | CameraResetEvent;
