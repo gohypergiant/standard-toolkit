@@ -172,6 +172,24 @@ describe('useMapCamera', () => {
     expect(result.current.cameraState.rotation).toEqual(0);
   });
 
+  it('should expose modRotation action via hook', () => {
+    const { result } = renderHook(() => useMapCamera(testid, { rotation: 10 }));
+    act(() => {
+      result.current.modRotation(20);
+    });
+    expect(result.current.cameraState.rotation).toEqual(30);
+  });
+
+  it('should expose modPitch action via hook', () => {
+    const { result } = renderHook(() =>
+      useMapCamera(testid, { view: '2.5D', pitch: 30 }),
+    );
+    act(() => {
+      result.current.modPitch(10);
+    });
+    expect(result.current.cameraState.pitch).toEqual(40);
+  });
+
   it('should update projection', () => {
     const { result } = renderHook(() => useMapCamera(testid));
     act(() => {

@@ -90,6 +90,10 @@ export type CameraState = CameraState2D | CameraState3D | CameraState2Point5D;
 type CameraActions = {
   /** Update camera state directly */
   setCameraState: (state: Partial<CameraState>) => void;
+  /** Modify pitch by delta (only in 2.5D view) */
+  modPitch: (delta: number) => void;
+  /** Modify rotation by delta (not in 3D view) */
+  modRotation: (delta: number) => void;
 };
 
 /**
@@ -228,11 +232,17 @@ const DEFAULT_CAMERA_STATE: CameraState = {
 export const cameraStore = createMapStore<CameraState, CameraActions>({
   defaultState: DEFAULT_CAMERA_STATE,
 
-  actions: (_mapId, { get, replace }) => ({
+  actions: (mapId, { get, replace }) => ({
     setCameraState: (updates: Partial<CameraState>) => {
       const currentState = get();
       // Use buildCameraState to ensure proper discriminated union type
       replace(buildCameraState({ ...currentState, ...updates }));
+    },
+    modPitch: (delta: number) => {
+      cameraBus.emit(CameraEventTypes.modPitch, { id: mapId, delta });
+    },
+    modRotation: (delta: number) => {
+      cameraBus.emit(CameraEventTypes.modRotation, { id: mapId, delta });
     },
   }),
 
@@ -520,6 +530,8 @@ export function useMapCamera(
 ): {
   cameraState: CameraState;
   setCameraState: (state: Partial<CameraState>) => void;
+  modPitch: (delta: number) => void;
+  modRotation: (delta: number) => void;
 } {
   // Initialize BEFORE subscribing to ensure first render has correct state.
   // This prevents MapLibre from rendering at default (0,0,0) and firing onMove
@@ -529,9 +541,10 @@ export function useMapCamera(
     initializeCameraState(mapId, initialCameraState);
   }
 
-  const { state, setCameraState } = cameraStore.use(mapId);
+  const { state, setCameraState, modPitch, modRotation } =
+    cameraStore.use(mapId);
 
-  return { cameraState: state, setCameraState };
+  return { cameraState: state, setCameraState, modPitch, modRotation };
 }
 
 /**
