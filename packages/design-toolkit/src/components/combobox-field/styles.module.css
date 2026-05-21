@@ -18,7 +18,7 @@
   }
 
   .control {
-    @apply rounded-medium px-s py-xs fg-primary-bold outline-interactive gap-xs relative flex items-center outline;
+    @apply rounded-medium px-s py-xs fg-primary-bold outline-interactive gap-xs flex items-center outline;
 
     @variant placeholder {
       @apply fg-primary-muted;
@@ -118,12 +118,20 @@
 
 @layer components.l2 {
   .clear {
-    @apply absolute hidden;
-    right: var(--icon-size-l);
+    @apply pointer-events-none invisible;
 
     @variant group-focus-within/combobox-field {
       @variant group-not-data-empty/combobox-field {
-        @apply flex;
+        @apply pointer-events-auto visible;
+      }
+    }
+  }
+
+  .input {
+    @variant group-not-focus-within/combobox-field {
+      @variant group-data-empty/combobox-field {
+        margin-right: calc((var(--icon-size-s) + var(--spacing-xs)) * -1);
+        padding-right: calc(var(--icon-size-s) + var(--spacing-xs));
       }
     }
   }
