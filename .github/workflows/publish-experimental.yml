@@ -50,6 +50,16 @@ jobs:
         run: |
           BRANCH_NAME="${GITHUB_REF#refs/heads/}"
           FEATURE_NAME="${BRANCH_NAME#experimental/}"
+
+          # Validate feature name. It flows into shell args and becomes an npm
+          # dist-tag, so restrict to a conservative slug pattern.
+          if [[ ! "$FEATURE_NAME" =~ ^[a-z][a-z0-9-]*$ ]]; then
+            echo "Error: feature name '$FEATURE_NAME' must match ^[a-z][a-z0-9-]*$"
+            echo "       (lowercase letters, digits, and hyphens; must start with a letter)"
+            exit 1
+          fi
+
+
           echo "name=$FEATURE_NAME" >> $GITHUB_OUTPUT
           echo "✓ Feature name: $FEATURE_NAME"
           echo "" >> $GITHUB_STEP_SUMMARY
@@ -81,10 +91,13 @@ jobs:
       - name: Build all packages
         run: pnpm run build
 
+      - name: Lint
+        run: pnpm run lint
+
       - name: Creating .npmrc
         run: |
-          cat << EOF > "$HOME/.npmrc"
-            //registry.npmjs.org/:_authToken=$NPM_TOKEN
+          cat <<EOF > "$HOME/.npmrc"
+          //registry.npmjs.org/:_authToken=$NPM_TOKEN
           EOF
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
