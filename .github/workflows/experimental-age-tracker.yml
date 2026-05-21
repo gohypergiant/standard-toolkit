@@ -56,7 +56,8 @@ jobs:
 
                 if (runs.workflow_runs.length === 0) {
                   console.log(`  ⚠️  No successful publish runs found.`);
-                  dateStr = 'Unknown';
+                  ageInDays = 0;
+                  dateStr = 'Not published';
                 } else {
                   const firstRun = runs.workflow_runs
                     .sort((a, b) => new Date(a.created_at) - new Date(b.created_at))[0];
@@ -111,9 +112,9 @@ jobs:
                   '## 📊 Experiment Status',
                   '',
                   `**Status:** ${emoji} ${status}`,
-                  `**Started:** ${dateStr}`,
-                  `**Age:** ${ageInDays === 999 ? 'Unknown' : `${ageInDays} days`}`,
-                  `**Deadline:** ${deadline ? deadline.toISOString().split('T')[0] : 'Unknown'}`,
+                  `**Published:** ${dateStr}`,
+                  `**Age:** ${`${ageInDays} days`}`,
+                  `**Deadline:** ${deadline ? deadline.toISOString().split('T')[0] : 'Countdown clock not started.'}`,
                   '',
                   '### Next Steps',
                   nextSteps,
