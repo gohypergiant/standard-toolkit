@@ -41,47 +41,56 @@ jobs:
               console.log(`\nProcessing PR #${pr.number}: ${pr.title}`);
 
               try {
-                // Find the publish comment
-                const { data: comments } = await github.rest.issues.listComments({
+                // Query workflow runs to find first successful publish
+                const { data: runs } = await github.rest.actions.listWorkflowRuns({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
-                  issue_number: pr.number
+                  workflow_id: 'publish-experimental.yml',
+                  branch: pr.head.ref,
+                  status: 'success',
+                  per_page: 100
                 });
 
-                const publishComment = comments.find(comment =>
-                  comment.user.type === 'Bot' &&
-                  comment.body.includes('🧪 Experimental Snapshot Published')
-                );
+                if (runs.workflow_runs.length === 0) {
+                  console.log(`  ⚠️  No successful publish runs found, marking as overdue`);
+                  // Treat as overdue if we can't determine age
+                  const currentDate = new Date();
+                  const ageInDays = 999; // Force overdue status
+                  const publishDate = null;
+                  const dateStr = 'Unknown';
+                } else {
+                  // Sort by created_at ascending and take first run
+                  const sortedRuns = runs.workflow_runs.sort((a, b) =>
+                    new Date(a.created_at) - new Date(b.created_at)
+                  );
+                  const firstRun = sortedRuns[0];
+                  var publishDate = new Date(firstRun.created_at);
+                  var dateStr = publishDate.toISOString().split('T')[0];
 
-                if (!publishComment) {
-                  console.log(`  ⚠️  No publish comment found, skipping`);
-                  continue;
+                  const currentDate = new Date();
+                  var ageInDays = Math.floor((currentDate - publishDate) / (1000 * 60 * 60 * 24));
+
+                  console.log(`  📅 First published: ${dateStr}`);
+                  console.log(`  ⏱️  Age: ${ageInDays} days`);
                 }
-
-                // Extract first-published date from comment. We deliberately read
-                // **First published** (set once on initial publish) rather than
-                // **Last published**, so the 1-month time-box does not reset every
-                // time the author republishes a snapshot.
-                const dateMatch = publishComment.body.match(/\*\*First published:\*\*\s+(\d{4}-\d{2}-\d{2})/);
-                if (!dateMatch) {
-                  console.log(`  ⚠️  Could not parse first-published date, skipping`);
-                  continue;
-                }
-
-                const publishDate = new Date(dateMatch[1]);
-                const currentDate = new Date();
-                const ageInDays = Math.floor((currentDate - publishDate) / (1000 * 60 * 60 * 24));
-
-                console.log(`  📅 First published: ${dateMatch[1]}`);
-                console.log(`  ⏱️  Age: ${ageInDays} days`);
 
                 // Determine warning level
-                let status, emoji, nextSteps;
-                const deadline = new Date(publishDate);
-                deadline.setDate(deadline.getDate() + 28);
-                const daysRemaining = Math.floor((deadline - currentDate) / (1000 * 60 * 60 * 24));
+                let status, emoji, nextSteps, deadline, daysRemaining;
 
-                if (ageInDays <= 13) {
+                if (ageInDays === 999) {
+                  // No publish date found - mark as overdue
+                  emoji = '🚨';
+                  status = 'Overdue - decide now';
+                  nextSteps = `Unable to determine publish date (no successful workflow runs found).\n\n**Required actions:**\n1. **Promote:** Close this PR, reimplement with full quality bar (tests, docs, review), open fresh PR to main\n2. **Abandon:** Close this PR, delete experimental branch, document why`;
+                  deadline = null;
+                  daysRemaining = 0;
+                } else {
+                  deadline = new Date(publishDate);
+                  deadline.setDate(deadline.getDate() + 28);
+                  daysRemaining = Math.floor((deadline - currentDate) / (1000 * 60 * 60 * 24));
+                }
+
+                if (ageInDays !== 999 && ageInDays <= 13) {
                   emoji = 'ℹ️';
                   status = 'Active';
                   nextSteps = `You have **${daysRemaining} days remaining** to evaluate this experiment.\n\n- Test the experimental build\n- Gather feedback from users\n- Document findings`;
@@ -101,14 +110,21 @@ jobs:
 
                 console.log(`  ${emoji} Status: ${status}`);
 
+                // Fetch comments for status tracking
+                const { data: comments } = await github.rest.issues.listComments({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: pr.number
+                });
+
                 // Generate status comment
                 const statusCommentBody = [
                   '## 📊 Experiment Status',
                   '',
                   `**Status:** ${emoji} ${status}`,
-                  `**Started:** ${dateMatch[1]}`,
-                  `**Age:** ${ageInDays} days`,
-                  `**Deadline:** ${deadline.toISOString().split('T')[0]}`,
+                  `**Started:** ${dateStr}`,
+                  `**Age:** ${ageInDays === 999 ? 'Unknown' : `${ageInDays} days`}`,
+                  `**Deadline:** ${deadline ? deadline.toISOString().split('T')[0] : 'Unknown'}`,
                   '',
                   '### Next Steps',
                   nextSteps,
