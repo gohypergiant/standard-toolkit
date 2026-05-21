@@ -1,6 +1,6 @@
 ![Hypergiant an Accelint company](assets/banner.jpg)
 
-# Development Toolkit (DevTK)
+# Standard Toolkit
 
 A "standard library" for web applications in the [Accelint](https://accelint.com) family of systems.
 
@@ -17,7 +17,7 @@ Read the [contributing](CONTRIBUTING.md) guidelines file if you are interested i
 
 ## ✨ Versioning
 
-DevTK follows [Semver](https://semver.org/) for versioning of packages to enable consumers to trust what is changing between versions.
+Standard Toolkit follows [Semver](https://semver.org/) for versioning of packages to enable consumers to trust what is changing between versions.
 
 Given a version number MAJOR.MINOR.PATCH, the meanings of each number changing follows these guidelines:
 
