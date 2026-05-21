@@ -25,7 +25,7 @@ jobs:
         with:
           fetch-depth: 2
 
-      # Show run mode
+      # Show run mode, dry run will be removed once workflow is validated
       - name: Check run mode
         run: |
           if [ "${{ inputs.dry_run }}" == "true" ]; then
@@ -99,9 +99,9 @@ jobs:
         id: changesets
         if: ${{ !inputs.dry_run }}
         with:
-          # Call changeset commands directly (skip constellation-tracker for beta)
+          # Call changeset command directly (skips constellation-tracker for beta)
           version: pnpm changeset version
-          publish: pnpm changeset publish --tag beta
+          publish: changeset:release-beta
           commit: 'build: version beta packages'
           title: 'Changeset Action: Version Beta Packages + Publish'
         env:
