@@ -23,6 +23,8 @@ Use experimental releases when:
 - Production-ready code (target main directly)
 - Long-term feature development (use feature branches + main)
 
+While these experiments will be available for import via npm, they should be used judiciously and only for serious exploration. If you simply need a quick change to an existing library, consider using a [patch](https://pnpm.io/cli/patch) instead.
+
 ## Experimental Workflow
 
 ### 1. Create Experimental Branch
@@ -30,10 +32,10 @@ Use experimental releases when:
 ```bash
 git checkout main
 git pull origin main
-git checkout -b experimental/dark-mode
+git checkout -b experimental/<my-feature-name>
 ```
 
-Branch naming: `experimental/<feature-name>` (lowercase, hyphens)
+Branch naming: `experimental/<my-feature-name>` (lowercase, hyphens). Note that in order for publication to work correctly, your branch must start with "experimental/". 
 
 ### 2. Implement Minimal API Sketch
 
@@ -57,7 +59,7 @@ Focus on:
 Open a draft PR against `main` for tracking only:
 
 ```bash
-git push origin experimental/dark-mode
+git push origin experimental/<my-feature-name>
 # Open draft PR on GitHub
 ```
 
@@ -73,10 +75,10 @@ git push origin experimental/dark-mode
 4. Click "Run workflow"
 
 The workflow will:
-- Extract feature name from branch (`experimental/dark-mode` → `dark-mode`)
+- Extract feature name from branch (`experimental/<my-feature-name>` → `<my-feature-name>`)
 - Run quality checks (build + types + lint)
-- Version packages with snapshot: `9.11.0-experimental-dark-mode-<timestamp>`
-- Publish to npm with `@dark-mode` tag
+- Version packages with snapshot: `9.11.0-experimental-<my-feature-name>-<timestamp>`
+- Publish to npm with `@<my-feature-name>` tag
 - Create/update PR comment with install instructions
 
 **PR Comment Example:**
@@ -84,16 +86,16 @@ The workflow will:
 ```markdown
 ## 🧪 Experimental Snapshot Published
 
-**Feature:** `dark-mode`
+**Feature:** `<my-feature-name>`
 **Published:** 2026-05-07
 
 ### Published Packages
-- `@accelint/design-toolkit@9.11.0-experimental-dark-mode-20260507120000`
-- `@accelint/design-foundation@3.2.0-experimental-dark-mode-20260507120000`
+- `@accelint/design-toolkit@9.11.0-experimental-<my-feature-name>-20260507120000`
+- `@accelint/design-foundation@3.2.0-experimental-<my-feature-name>-20260507120000`
 
 ### Installation
-npm install @accelint/design-toolkit@dark-mode
-npm install @accelint/design-foundation@dark-mode
+npm install @accelint/design-toolkit@<my-feature-name>
+npm install @accelint/design-foundation@<my-feature-name>
 
 ### ⚠️ Experimental Warning
 This is an experimental build for testing and feedback only...
@@ -101,10 +103,10 @@ This is an experimental build for testing and feedback only...
 
 ### 5. Gather Feedback
 
-Share the `@<feature-name>` tag with stakeholders:
+Share the `@<my-feature-name>` tag with stakeholders:
 
 ```bash
-npm install @accelint/design-toolkit@dark-mode
+npm install @accelint/design-toolkit@<my-feature-name>
 ```
 
 **Age Tracking:** Automated workflow runs daily to track experiment age:
@@ -126,7 +128,7 @@ After validation (max 1 month), choose one:
 3. Reimplement with full quality bar on a fresh branch:
    ```bash
    git checkout main
-   git checkout -b feat/dark-mode
+   git checkout -b feat/<my-feature-name>
    # Reimplement with tests + docs + review
    ```
 4. Open fresh PR to main with full code review
@@ -140,8 +142,8 @@ After validation (max 1 month), choose one:
 3. Document lessons learned in PR comments or team notes
 
 ```bash
-git branch -D experimental/dark-mode
-git push origin --delete experimental/dark-mode
+git branch -D experimental/<my-feature-name>
+git push origin --delete experimental/<my-feature-name>
 ```
 
 ## Key Principles
@@ -176,7 +178,7 @@ Experimental publishes use snapshot versioning (`changeset version --snapshot`):
 ### Focused Experiments (1-3 Packages)
 
 Keep experiments focused:
-- ✅ **Good:** `experimental/dark-mode` affecting 2-3 UI packages
+- ✅ **Good:** `experimental/<my-feature-name>` affecting 2-3 UI packages
 - ❌ **Bad:** `experimental/rewrite-everything` affecting 15 packages
 
 Large-scale changes should target main directly with proper planning.
@@ -185,12 +187,12 @@ Large-scale changes should target main directly with proper planning.
 
 **Install latest experimental version:**
 ```bash
-npm install @accelint/design-toolkit@dark-mode
+npm install @accelint/design-toolkit@<my-feature-name>
 ```
 
 **Check available experimental versions:**
 ```bash
-npm view @accelint/design-toolkit versions | grep experimental-dark-mode
+npm view @accelint/design-toolkit versions | grep experimental-<my-feature-name>
 ```
 
 ## Version Format
@@ -198,7 +200,7 @@ npm view @accelint/design-toolkit versions | grep experimental-dark-mode
 ```
 <base-version>-experimental-<feature>-<timestamp>
 
-Example: 9.11.0-experimental-dark-mode-20260507120000
+Example: 9.11.0-experimental-<my-feature-name>-20260507120000
 ```
 
 - `base-version`: Current main branch version
@@ -218,7 +220,7 @@ npm dist-tag ls @accelint/design-toolkit
 # Example output:
 # latest: 9.11.0
 # beta: 9.11.0-beta.2
-# dark-mode: 9.11.0-experimental-dark-mode-20260507120000
+# <my-feature-name>: 9.11.0-experimental-<my-feature-name>-20260507120000
 ```
 
 ## Age Tracker Details

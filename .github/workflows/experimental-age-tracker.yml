@@ -51,46 +51,43 @@ jobs:
                   per_page: 100
                 });
 
+                // Calculate age from first successful publish
+                let ageInDays, publishDate, dateStr;
+
                 if (runs.workflow_runs.length === 0) {
                   console.log(`  ⚠️  No successful publish runs found, marking as overdue`);
-                  // Treat as overdue if we can't determine age
-                  const currentDate = new Date();
-                  const ageInDays = 999; // Force overdue status
-                  const publishDate = null;
-                  const dateStr = 'Unknown';
+                  ageInDays = 999; // Force overdue status
+                  publishDate = null;
+                  dateStr = 'Unknown';
                 } else {
-                  // Sort by created_at ascending and take first run
-                  const sortedRuns = runs.workflow_runs.sort((a, b) =>
-                    new Date(a.created_at) - new Date(b.created_at)
-                  );
-                  const firstRun = sortedRuns[0];
-                  var publishDate = new Date(firstRun.created_at);
-                  var dateStr = publishDate.toISOString().split('T')[0];
+                  const firstRun = runs.workflow_runs
+                    .sort((a, b) => new Date(a.created_at) - new Date(b.created_at))[0];
+
+                  publishDate = new Date(firstRun.created_at);
+                  dateStr = publishDate.toISOString().split('T')[0];
 
                   const currentDate = new Date();
-                  var ageInDays = Math.floor((currentDate - publishDate) / (1000 * 60 * 60 * 24));
+                  ageInDays = Math.floor((currentDate - publishDate) / (1000 * 60 * 60 * 24));
 
                   console.log(`  📅 First published: ${dateStr}`);
                   console.log(`  ⏱️  Age: ${ageInDays} days`);
                 }
 
-                // Determine warning level
-                let status, emoji, nextSteps, deadline, daysRemaining;
+                // Calculate deadline and remaining time
+                const currentDate = new Date();
+                const deadline = publishDate ? new Date(publishDate.getTime() + 28 * 24 * 60 * 60 * 1000) : null;
+                const daysRemaining = deadline ? Math.floor((deadline - currentDate) / (1000 * 60 * 60 * 24)) : 0;
 
-                if (ageInDays === 999) {
-                  // No publish date found - mark as overdue
+                // Determine status based on age
+                let emoji, status, nextSteps;
+
+                if (ageInDays === 999 || ageInDays > 27) {
                   emoji = '🚨';
-                  status = 'Overdue - decide now';
-                  nextSteps = `Unable to determine publish date (no successful workflow runs found).\n\n**Required actions:**\n1. **Promote:** Close this PR, reimplement with full quality bar (tests, docs, review), open fresh PR to main\n2. **Abandon:** Close this PR, delete experimental branch, document why`;
-                  deadline = null;
-                  daysRemaining = 0;
-                } else {
-                  deadline = new Date(publishDate);
-                  deadline.setDate(deadline.getDate() + 28);
-                  daysRemaining = Math.floor((deadline - currentDate) / (1000 * 60 * 60 * 24));
-                }
-
-                if (ageInDays !== 999 && ageInDays <= 13) {
+                  status = 'Overdue! - time to make a decision';
+                  nextSteps = ageInDays === 999
+                    ? `Unable to determine publish date (no successful workflow runs found).\n\n**Required actions:**\n1. **Promote:** Close this PR, reimplement with full quality bar (tests, docs, review), open fresh PR to main\n2. **Abandon:** Close this PR, delete experimental branch, document why`
+                    : `This experiment has exceeded the 1-month time-box.\n\n**Required actions:**\n1. **Promote:** Close this PR, reimplement with full quality bar (tests, docs, review), open fresh PR to main\n2. **Abandon:** Close this PR, delete experimental branch, document why`;
+                } else if (ageInDays <= 13) {
                   emoji = 'ℹ️';
                   status = 'Active';
                   nextSteps = `You have **${daysRemaining} days remaining** to evaluate this experiment.\n\n- Test the experimental build\n- Gather feedback from users\n- Document findings`;
@@ -98,14 +95,10 @@ jobs:
                   emoji = '⏰';
                   status = 'Approaching deadline';
                   nextSteps = `Deadline approaching in **${daysRemaining} days**.\n\n- Begin decision process: promote or abandon?\n- If promoting, plan full implementation with tests and docs\n- If abandoning, document lessons learned`;
-                } else if (ageInDays <= 27) {
+                } else {
                   emoji = '⚠️';
                   status = 'Urgent';
                   nextSteps = `Only **${daysRemaining} days** until deadline!\n\n- Make decision: promote to main or close experimental PR\n- If promoting, open fresh PR with full quality bar\n- If abandoning, close PR and delete branch`;
-                } else {
-                  emoji = '🚨';
-                  status = 'Overdue - decide now';
-                  nextSteps = `This experiment has exceeded the 1-month time-box.\n\n**Required actions:**\n1. **Promote:** Close this PR, reimplement with full quality bar (tests, docs, review), open fresh PR to main\n2. **Abandon:** Close this PR, delete experimental branch, document why`;
                 }
 
                 console.log(`  ${emoji} Status: ${status}`);
