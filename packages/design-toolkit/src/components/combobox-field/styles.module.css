@@ -18,7 +18,7 @@
   }
 
   .control {
-    @apply rounded-medium px-s py-xs fg-primary-bold outline-interactive gap-xs flex items-center outline;
+    @apply rounded-medium px-s py-xs fg-primary-bold outline-interactive gap-xs relative flex items-center outline;
 
     @variant placeholder {
       @apply fg-primary-muted;
@@ -118,11 +118,12 @@
 
 @layer components.l2 {
   .clear {
-    @apply invisible;
+    @apply absolute hidden;
+    right: var(--icon-size-l);
 
     @variant group-focus-within/combobox-field {
       @variant group-not-data-empty/combobox-field {
-        @apply visible;
+        @apply flex;
       }
     }
   }
