@@ -267,15 +267,12 @@ export function useCoordinateFieldState({
       // Clear any pending validation timeout
       clearValidationTimeout();
 
-      // Capture segment values at timeout creation to detect stale validation
+      // Capture segment values at timeout creation
       const capturedValues = [...updatedValues];
 
       // Debounce validation by 400ms when all segments are full
       const timeoutId = setTimeout(() => {
-        // Only validate if segments haven't changed since timeout was set
-        if (JSON.stringify(segmentValues) === JSON.stringify(capturedValues)) {
-          validateAndUpdateCoordinate(capturedValues);
-        }
+        validateAndUpdateCoordinate(capturedValues);
         validationTimeoutRef.current = null;
       }, 400);
 
