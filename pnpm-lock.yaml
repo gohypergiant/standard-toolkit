@@ -7,11 +7,6 @@ settings:
 overrides:
   '@internationalized/date': ~3.12.1
 
-patchedDependencies:
-  geodesy@2.4.0:
-    hash: d27c3c936c58464e87583d02d6bdca8ddf8cbabca6e6fb818cc968eb89bd7747
-    path: patches/geodesy@2.4.0.patch
-
 importers:
 
   .:
@@ -727,7 +722,7 @@ importers:
         version: 2.2.8
       geodesy:
         specifier: ^2.4.0
-        version: 2.4.0(patch_hash=d27c3c936c58464e87583d02d6bdca8ddf8cbabca6e6fb818cc968eb89bd7747)
+        version: 2.4.0
     devDependencies:
       '@accelint/typescript-config':
         specifier: workspace:*
@@ -12889,7 +12884,7 @@ snapshots:
 
   gensync@1.0.0-beta.2: {}
 
-  geodesy@2.4.0(patch_hash=d27c3c936c58464e87583d02d6bdca8ddf8cbabca6e6fb818cc968eb89bd7747): {}
+  geodesy@2.4.0: {}
 
   geojson-equality-ts@1.0.2:
     dependencies:
