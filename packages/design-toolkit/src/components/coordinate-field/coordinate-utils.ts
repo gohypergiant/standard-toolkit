@@ -598,7 +598,6 @@ export function convertDDToDisplaySegments(
         return null;
     }
 
-    console.log({ coordString });
     // Parse the formatted string to extract individual segment values
     // This is the circular part: geo formatted it, now we parse it back apart
     // Necessary because geo doesn't expose the components directly
