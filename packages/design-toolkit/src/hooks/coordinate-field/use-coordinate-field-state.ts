@@ -64,6 +64,8 @@ export interface UseCoordinateFieldStateResult {
   editableSegmentConfigs: SegmentConfig[];
   /** Handle change of a single segment */
   handleSegmentChange: (index: number, newValue: string) => void;
+  /** Handle blur event for a segment */
+  handleSegmentBlur: (index: number) => void;
   /** Set all segment values at once */
   setSegmentValues: (values: string[]) => void;
   /** Set validation errors */
@@ -247,16 +249,30 @@ export function useCoordinateFieldState({
 
   const handleSegmentChange = (index: number, newValue: string) => {
     const updatedValues = [...segmentValues];
-    updatedValues[index] = newValue;
+
+    // Normalize MGRS letter inputs (Band/Grid): uppercase only
+    if (
+      format === 'mgrs' &&
+      (index === 1 || index === 2) &&
+      /^[a-zA-Z]+$/.test(newValue)
+    ) {
+      updatedValues[index] = newValue.toUpperCase();
+    } else {
+      updatedValues[index] = newValue;
+    }
+
     setSegmentValues(updatedValues);
 
     if (areAllSegmentsFilled(updatedValues)) {
       // Clear any pending validation timeout
       clearValidationTimeout();
 
+      // Capture segment values at timeout creation
+      const capturedValues = [...updatedValues];
+
       // Debounce validation by 400ms when all segments are full
       const timeoutId = setTimeout(() => {
-        validateAndUpdateCoordinate(updatedValues);
+        validateAndUpdateCoordinate(capturedValues);
         validationTimeoutRef.current = null;
       }, 400);
 
@@ -268,6 +284,18 @@ export function useCoordinateFieldState({
       setValidationErrors([]);
       if (currentValue !== null) {
         handleChange(null);
+      }
+    }
+  };
+
+  const handleSegmentBlur = (index: number) => {
+    // MGRS zone field: add leading zero to single-digit values on blur
+    if (format === 'mgrs' && index === 0) {
+      const currentVal = segmentValues[0];
+      if (currentVal && currentVal.length === 1 && /^\d$/.test(currentVal)) {
+        const updatedValues = [...segmentValues];
+        updatedValues[0] = currentVal.padStart(2, '0');
+        setSegmentValues(updatedValues);
       }
     }
   };
@@ -308,6 +336,7 @@ export function useCoordinateFieldState({
     segmentConfigs,
     editableSegmentConfigs,
     handleSegmentChange,
+    handleSegmentBlur,
     setSegmentValues,
     setValidationErrors,
     effectiveErrorMessage,
