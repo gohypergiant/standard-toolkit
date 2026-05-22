@@ -14,6 +14,7 @@
     "@accelint/geo": "workspace:*",
     "@accelint/hotkey-manager": "workspace:*",
     "@accelint/logger": "workspace:*",
+    "@accelint/math": "workspace:*",
     "@accelint/postcss-tailwind-css-modules": "workspace:*",
     "@accelint/predicates": "workspace:*",
     "@accelint/smeegl": "workspace:*",
@@ -200,6 +201,7 @@
     "@accelint/geo": "workspace:*",
     "@accelint/hotkey-manager": "workspace:*",
     "@accelint/logger": "workspace:*",
+    "@accelint/math": "workspace:*",
     "@types/geojson": "^7946.0.14",
     "react": "^19"
   },

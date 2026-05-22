@@ -32,13 +32,21 @@
  */
 
 import { Broadcast } from '@accelint/bus';
+import { clamp } from '@accelint/math';
 import { fitBounds } from '@math.gl/web-mercator';
+import { bearingToAzimuth } from '@turf/helpers';
 import { createMapStore } from '../shared/create-map-store';
 import { CameraEventTypes } from './events';
 import type { UniqueId } from '@accelint/core';
 import type { CameraEvent, ProjectionType, ViewType } from './types';
 
 const cameraBus = Broadcast.getInstance<CameraEvent>();
+
+/**
+ * MapLibre pitch range constants (0-85 degrees)
+ */
+const MIN_PITCH = 0;
+const MAX_PITCH = 85;
 
 /**
  * Camera state for 2D view
@@ -91,9 +99,9 @@ type CameraActions = {
   /** Update camera state directly */
   setCameraState: (state: Partial<CameraState>) => void;
   /** Modify pitch by delta (only in 2.5D view) */
-  modPitch: (delta: number) => void;
+  pitchBy: (delta: number) => void;
   /** Modify rotation by delta (not in 3D view) */
-  modRotation: (delta: number) => void;
+  rotateBy: (delta: number) => void;
 };
 
 /**
@@ -238,11 +246,11 @@ export const cameraStore = createMapStore<CameraState, CameraActions>({
       // Use buildCameraState to ensure proper discriminated union type
       replace(buildCameraState({ ...currentState, ...updates }));
     },
-    modPitch: (delta: number) => {
-      cameraBus.emit(CameraEventTypes.modPitch, { id: mapId, delta });
+    pitchBy: (delta: number) => {
+      cameraBus.emit(CameraEventTypes.pitchBy, { id: mapId, delta });
     },
-    modRotation: (delta: number) => {
-      cameraBus.emit(CameraEventTypes.modRotation, { id: mapId, delta });
+    rotateBy: (delta: number) => {
+      cameraBus.emit(CameraEventTypes.rotateBy, { id: mapId, delta });
     },
   }),
 
@@ -407,8 +415,8 @@ export const cameraStore = createMapStore<CameraState, CameraActions>({
       },
     );
 
-    const unsubModRotation = cameraBus.on(
-      CameraEventTypes.modRotation,
+    const unsubRotateBy = cameraBus.on(
+      CameraEventTypes.rotateBy,
       ({ payload }) => {
         if (payload.id !== mapId) {
           return;
@@ -416,13 +424,14 @@ export const cameraStore = createMapStore<CameraState, CameraActions>({
 
         const state = get();
         if (state.view !== '3D') {
-          replace({ ...state, rotation: state.rotation + payload.delta });
+          const newRotation = bearingToAzimuth(state.rotation + payload.delta);
+          replace({ ...state, rotation: newRotation });
         }
       },
     );
 
-    const unsubModPitch = cameraBus.on(
-      CameraEventTypes.modPitch,
+    const unsubPitchBy = cameraBus.on(
+      CameraEventTypes.pitchBy,
       ({ payload }) => {
         if (payload.id !== mapId) {
           return;
@@ -430,7 +439,12 @@ export const cameraStore = createMapStore<CameraState, CameraActions>({
 
         const state = get();
         if (state.view === '2.5D') {
-          replace({ ...state, pitch: state.pitch + payload.delta });
+          const newPitch = clamp(
+            MIN_PITCH,
+            MAX_PITCH,
+            state.pitch + payload.delta,
+          );
+          replace({ ...state, pitch: newPitch });
         }
       },
     );
@@ -444,8 +458,8 @@ export const cameraStore = createMapStore<CameraState, CameraActions>({
       unsubSetZoom();
       unsubSetRotation();
       unsubSetPitch();
-      unsubModRotation();
-      unsubModPitch();
+      unsubRotateBy();
+      unsubPitchBy();
     };
   },
 
@@ -530,8 +544,8 @@ export function useMapCamera(
 ): {
   cameraState: CameraState;
   setCameraState: (state: Partial<CameraState>) => void;
-  modPitch: (delta: number) => void;
-  modRotation: (delta: number) => void;
+  pitchBy: (delta: number) => void;
+  rotateBy: (delta: number) => void;
 } {
   // Initialize BEFORE subscribing to ensure first render has correct state.
   // This prevents MapLibre from rendering at default (0,0,0) and firing onMove
@@ -541,10 +555,9 @@ export function useMapCamera(
     initializeCameraState(mapId, initialCameraState);
   }
 
-  const { state, setCameraState, modPitch, modRotation } =
-    cameraStore.use(mapId);
+  const { state, setCameraState, pitchBy, rotateBy } = cameraStore.use(mapId);
 
-  return { cameraState: state, setCameraState, modPitch, modRotation };
+  return { cameraState: state, setCameraState, pitchBy, rotateBy };
 }
 
 /**

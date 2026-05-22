@@ -85,7 +85,7 @@ describe('useMapCamera', () => {
     const { result } = renderHook(() => useMapCamera(testid, { view: '2.5D' }));
     expect(result.current.cameraState.pitch).toEqual(45); // Default pitch for 2.5D
     act(() => {
-      bus.emit(CameraEventTypes.modPitch, {
+      bus.emit(CameraEventTypes.pitchBy, {
         id: testid,
         delta: 15,
       });
@@ -98,7 +98,7 @@ describe('useMapCamera', () => {
       useMapCamera(testid, { view: '2.5D', pitch: 60 }),
     );
     act(() => {
-      bus.emit(CameraEventTypes.modPitch, {
+      bus.emit(CameraEventTypes.pitchBy, {
         id: testid,
         delta: -20,
       });
@@ -109,7 +109,7 @@ describe('useMapCamera', () => {
   it('should not modify pitch in 2D view', () => {
     const { result } = renderHook(() => useMapCamera(testid, { view: '2D' }));
     act(() => {
-      bus.emit(CameraEventTypes.modPitch, {
+      bus.emit(CameraEventTypes.pitchBy, {
         id: testid,
         delta: 45,
       });
@@ -120,7 +120,7 @@ describe('useMapCamera', () => {
   it('should not modify pitch in 3D view', () => {
     const { result } = renderHook(() => useMapCamera(testid, { view: '3D' }));
     act(() => {
-      bus.emit(CameraEventTypes.modPitch, {
+      bus.emit(CameraEventTypes.pitchBy, {
         id: testid,
         delta: 45,
       });
@@ -142,7 +142,7 @@ describe('useMapCamera', () => {
   it('should modify rotation by delta', () => {
     const { result } = renderHook(() => useMapCamera(testid, { rotation: 30 }));
     act(() => {
-      bus.emit(CameraEventTypes.modRotation, {
+      bus.emit(CameraEventTypes.rotateBy, {
         id: testid,
         delta: 15,
       });
@@ -153,7 +153,7 @@ describe('useMapCamera', () => {
   it('should modify rotation by negative delta', () => {
     const { result } = renderHook(() => useMapCamera(testid, { rotation: 90 }));
     act(() => {
-      bus.emit(CameraEventTypes.modRotation, {
+      bus.emit(CameraEventTypes.rotateBy, {
         id: testid,
         delta: -30,
       });
@@ -164,7 +164,7 @@ describe('useMapCamera', () => {
   it('should not modify rotation in 3D view', () => {
     const { result } = renderHook(() => useMapCamera(testid, { view: '3D' }));
     act(() => {
-      bus.emit(CameraEventTypes.modRotation, {
+      bus.emit(CameraEventTypes.rotateBy, {
         id: testid,
         delta: 45,
       });
@@ -172,22 +172,104 @@ describe('useMapCamera', () => {
     expect(result.current.cameraState.rotation).toEqual(0);
   });
 
-  it('should expose modRotation action via hook', () => {
+  it('should expose rotateBy action via hook', () => {
     const { result } = renderHook(() => useMapCamera(testid, { rotation: 10 }));
     act(() => {
-      result.current.modRotation(20);
+      result.current.rotateBy(20);
     });
     expect(result.current.cameraState.rotation).toEqual(30);
   });
 
-  it('should expose modPitch action via hook', () => {
+  it('should expose pitchBy action via hook', () => {
     const { result } = renderHook(() =>
       useMapCamera(testid, { view: '2.5D', pitch: 30 }),
     );
     act(() => {
-      result.current.modPitch(10);
+      result.current.pitchBy(10);
     });
     expect(result.current.cameraState.pitch).toEqual(40);
+  });
+
+  describe('pitchBy clamping', () => {
+    it('should clamp pitch at lower bound (0°)', () => {
+      const { result } = renderHook(() =>
+        useMapCamera(testid, { view: '2.5D', pitch: 5 }),
+      );
+      act(() => {
+        bus.emit(CameraEventTypes.pitchBy, {
+          id: testid,
+          delta: -10,
+        });
+      });
+      expect(result.current.cameraState.pitch).toEqual(0);
+    });
+
+    it('should clamp pitch at upper bound (85°)', () => {
+      const { result } = renderHook(() =>
+        useMapCamera(testid, { view: '2.5D', pitch: 80 }),
+      );
+      act(() => {
+        bus.emit(CameraEventTypes.pitchBy, {
+          id: testid,
+          delta: 20,
+        });
+      });
+      expect(result.current.cameraState.pitch).toEqual(85);
+    });
+  });
+
+  describe('rotateBy normalization', () => {
+    it('should normalize rotation wrapping positive (360° → 0°)', () => {
+      const { result } = renderHook(() =>
+        useMapCamera(testid, { rotation: 350 }),
+      );
+      act(() => {
+        bus.emit(CameraEventTypes.rotateBy, {
+          id: testid,
+          delta: 20,
+        });
+      });
+      expect(result.current.cameraState.rotation).toEqual(10);
+    });
+
+    it('should normalize rotation wrapping negative (-10° → 350°)', () => {
+      const { result } = renderHook(() =>
+        useMapCamera(testid, { rotation: 5 }),
+      );
+      act(() => {
+        bus.emit(CameraEventTypes.rotateBy, {
+          id: testid,
+          delta: -15,
+        });
+      });
+      expect(result.current.cameraState.rotation).toEqual(350);
+    });
+
+    it('should normalize rotation with large positive values (720° → 0°)', () => {
+      const { result } = renderHook(() =>
+        useMapCamera(testid, { rotation: 0 }),
+      );
+      act(() => {
+        bus.emit(CameraEventTypes.rotateBy, {
+          id: testid,
+          delta: 720,
+        });
+      });
+      expect(result.current.cameraState.rotation).toEqual(0);
+    });
+
+    it('should normalize rotation with large negative values (-370° → 350°)', () => {
+      const { result } = renderHook(() =>
+        useMapCamera(testid, { rotation: 0 }),
+      );
+      act(() => {
+        bus.emit(CameraEventTypes.rotateBy, {
+          id: testid,
+          delta: -370,
+        });
+      });
+      expect(result.current.cameraState.rotation).toEqual(350);
+    });
   });
 
   it('should update projection', () => {

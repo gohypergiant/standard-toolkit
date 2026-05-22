@@ -282,6 +282,39 @@ bus.emit(CameraEventTypes.setPitch, {
 });
 ```
 
+### pitchBy
+
+Modify the pitch angle by a delta value. Only works in 2.5D mode. The result is automatically clamped to MapLibre's supported range of 0-85 degrees.
+
+```tsx
+bus.emit(CameraEventTypes.pitchBy, {
+  id: instanceId,
+  delta: 10, // increase pitch by 10 degrees
+});
+
+// Clamping example: if current pitch is 80°, delta of 20 results in 85° (clamped)
+bus.emit(CameraEventTypes.pitchBy, {
+  id: instanceId,
+  delta: -100, // if current pitch is 30°, results in 0° (clamped at minimum)
+});
+```
+
+### rotateBy
+
+Modify the rotation angle by a delta value. Only works in 2D and 2.5D modes. The result is automatically normalized to the 0-360 degree range.
+
+```tsx
+bus.emit(CameraEventTypes.rotateBy, {
+  id: instanceId,
+  delta: 45, // rotate by 45 degrees
+});
+
+// Normalization examples:
+// Current rotation 350° + delta 20° = 10° (wrapped around)
+// Current rotation 5° + delta -15° = 350° (wrapped around)
+// Current rotation 0° + delta 720° = 0° (full rotations normalized)
+```
+
 ### reset
 
 Reset the camera to initial state, with optional preservation of zoom, pitch, or rotation.
@@ -317,6 +350,8 @@ function useMapCamera(
 ): {
   cameraState: CameraState;
   setCameraState: (state: Partial<CameraState>) => void;
+  pitchBy: (delta: number) => void;
+  rotateBy: (delta: number) => void;
 }
 ```
 
@@ -347,11 +382,15 @@ Optional initial camera state. Only used on first call for this mapId. If not pr
 {
   cameraState: CameraState;
   setCameraState: (state: Partial<CameraState>) => void;
+  pitchBy: (delta: number) => void;
+  rotateBy: (delta: number) => void;
 }
 ```
 
 - `cameraState`: Current camera state object
 - `setCameraState`: Function to manually update camera state (advanced use case)
+- `pitchBy`: Modify pitch by a delta value (clamped to 0-85°, only in 2.5D mode)
+- `rotateBy`: Modify rotation by a delta value (normalized to 0-360°, only in 2D/2.5D modes)
 
 ## View Modes
 
