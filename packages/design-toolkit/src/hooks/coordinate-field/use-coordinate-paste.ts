@@ -155,8 +155,11 @@ export function useCoordinatePaste({
     let normalized = input.toUpperCase();
 
     // Add leading zero to single-digit grid zones
-    // Pattern: single digit followed by letter at start (with optional space)
-    normalized = normalized.replace(/^(\d)([A-Z])/, '0$1$2');
+    const match = normalized.match(/^(\d)([A-Z])/);
+
+    if (match?.[1]) {
+      normalized = match[1].padStart(2, '0') + normalized.slice(1);
+    }
 
     return normalized;
   };

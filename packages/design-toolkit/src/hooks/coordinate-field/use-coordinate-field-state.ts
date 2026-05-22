@@ -297,7 +297,7 @@ export function useCoordinateFieldState({
       const currentVal = segmentValues[0];
       if (currentVal && currentVal.length === 1 && /^\d$/.test(currentVal)) {
         const updatedValues = [...segmentValues];
-        updatedValues[0] = `0${currentVal}`;
+        updatedValues[0] = currentVal.padStart(2, '0');
         setSegmentValues(updatedValues);
       }
     }
