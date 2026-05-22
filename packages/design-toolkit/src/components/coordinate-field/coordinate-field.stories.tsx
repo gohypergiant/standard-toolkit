@@ -381,77 +381,11 @@ export const DegreesMinutesSeconds: Story = {
  * - Paste "6r yp 12345 67890" normalizes to "06R YP 12345 67890"
  */
 export const MGRS: Story = {
-  render: () => {
-    const [value, setValue] = useState<CoordinateValue | null>(null);
-    const [lastPasted, setLastPasted] = useState<string>('');
-
-    return (
-      <div className='flex flex-col gap-m'>
-        <div
-          onPasteCapture={(e: React.ClipboardEvent) => {
-            const raw = e.clipboardData?.getData('text/plain') || '';
-            if (raw) {
-              setLastPasted(raw);
-            }
-          }}
-        >
-          <CoordinateField
-            label='MGRS Format with Auto-Normalization'
-            description='Try typing "6rYP1234567890" or paste "6r yp 12345 67890"'
-            format='mgrs'
-            value={value || undefined}
-            onChange={(newValue: CoordinateValue | null) => {
-              setValue(newValue);
-              setLastPasted(''); // Clear on manual change
-            }}
-          />
-        </div>
-
-        {lastPasted && (
-          <div className='fg-primary-muted rounded border border-outline-neutral bg-surface-primary p-s text-body-s'>
-            <div className='mb-xs font-semibold'>Paste Normalization:</div>
-            <div className='space-y-2xs'>
-              <div className='flex gap-xs'>
-                <span className='font-bold'>Raw paste:</span>
-                <span className='font-mono'>{lastPasted}</span>
-              </div>
-              <div className='flex gap-xs'>
-                <span className='font-bold'>Normalized:</span>
-                <span className='font-mono'>
-                  {lastPasted.toUpperCase().replace(/^(\d)([A-Z])/, '0$1$2')}
-                </span>
-              </div>
-            </div>
-          </div>
-        )}
-
-        <div className='fg-primary-muted rounded border border-outline-neutral bg-surface-primary p-s text-body-s'>
-          <div className='mb-xs font-semibold'>Test Examples:</div>
-          <ul className='list-inside list-disc space-y-2xs'>
-            <li>Type "6" in zone field, then blur → auto-pads to "06"</li>
-            <li>Type "r" in band field → auto-converts to "R"</li>
-            <li>
-              Paste "6r yp 12345 67890" → normalizes to "06R YP 12345 67890"
-            </li>
-            <li>
-              Paste "6ryp1234567890" (compact) → normalizes to "06RYP1234567890"
-            </li>
-          </ul>
-        </div>
-
-        {value && (
-          <div className='fg-primary-muted rounded border border-outline-neutral bg-surface-primary p-s text-body-s'>
-            <div className='mb-xs font-semibold'>Parsed Value (DD):</div>
-            <div>Latitude: {value.lat.toFixed(6)}°</div>
-            <div>Longitude: {value.lon.toFixed(6)}°</div>
-          </div>
-        )}
-      </div>
-    );
+  args: {
+    format: 'mgrs',
+    description: 'Example: 18T WL 80654 06346 (New York City)',
   },
-  parameters: {
-    controls: { disable: true },
-  },
+  render: (args) => <CoordinateField {...args} />,
 };
 
 /**
