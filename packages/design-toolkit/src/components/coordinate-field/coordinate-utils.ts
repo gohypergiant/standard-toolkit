@@ -571,6 +571,10 @@ export function convertDDToDisplaySegments(
       return null;
     }
 
+    // we're resetting the value in the created `coord` to preserve DD precision
+    coord.raw.LAT = value.lat;
+    coord.raw.LON = value.lon;
+
     // Format the coordinate using geo package formatters
     // These return complete coordinate strings (e.g., "40 42.768 N / 74 0.36 W")
     let coordString: string;
@@ -594,6 +598,7 @@ export function convertDDToDisplaySegments(
         return null;
     }
 
+    console.log({ coordString });
     // Parse the formatted string to extract individual segment values
     // This is the circular part: geo formatted it, now we parse it back apart
     // Necessary because geo doesn't expose the components directly
