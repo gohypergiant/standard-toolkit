@@ -1,0 +1,195 @@
+name: Publish Experimental Snapshot
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry-run mode (skip npm publish, show what would happen)'
+        type: boolean
+        default: true
+env:
+  TURBO_TELEMETRY_DISABLED: 1
+jobs:
+  publish-experimental:
+    name: Publish Experimental Snapshot
+    # Only allow on experimental/* branches
+    if: startsWith(github.ref, 'refs/heads/experimental/')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write # to create/update PR comments
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      # Show run mode
+      - name: Check run mode
+        run: |
+          if [ "${{ inputs.dry_run }}" == "true" ]; then
+            echo "🧪 DRY-RUN MODE: Will simulate publish without uploading to npm"
+            echo "## 🧪 Dry-Run Mode Enabled" >> $GITHUB_STEP_SUMMARY
+            echo "This workflow will show what would be published without actually publishing to npm." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "🚀 PRODUCTION MODE: Will publish to npm registry"
+            echo "## 🚀 Production Mode" >> $GITHUB_STEP_SUMMARY
+            echo "This workflow will publish packages to npm registry." >> $GITHUB_STEP_SUMMARY
+          fi
+
+      # Extract feature name from branch (experimental/<feature> → <feature>)
+      - name: Extract feature name
+        id: feature
+        run: |
+          BRANCH_NAME="${GITHUB_REF#refs/heads/}"
+          FEATURE_NAME="${BRANCH_NAME#experimental/}"
+
+          # Validate feature name. It flows into shell args and becomes an npm
+          # dist-tag, so restrict to a conservative slug pattern.
+          if [[ ! "$FEATURE_NAME" =~ ^[a-z][a-z0-9-]*$ ]]; then
+            echo "Error: feature name '$FEATURE_NAME' must match ^[a-z][a-z0-9-]*$"
+            echo "       (lowercase letters, digits, and hyphens; must start with a letter)"
+            exit 1
+          fi
+
+
+          echo "name=$FEATURE_NAME" >> $GITHUB_OUTPUT
+          echo "✓ Feature name: $FEATURE_NAME"
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Experimental Configuration" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch:** \`$BRANCH_NAME\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Feature:** \`$FEATURE_NAME\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **npm tag:** \`@$FEATURE_NAME\`" >> $GITHUB_STEP_SUMMARY
+
+      - uses: actions/cache@v4
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-turbo-
+
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - uses: actions/setup-node@v6
+        with:
+          registry-url: 'https://registry.npmjs.org'
+          node-version-file: 'package.json'
+          cache: 'pnpm'
+
+      - run: pnpm install
+
+      - name: Build all packages
+        run: pnpm run build
+
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Creating .npmrc
+        run: |
+          cat <<EOF > "$HOME/.npmrc"
+          //registry.npmjs.org/:_authToken=$NPM_TOKEN
+          EOF
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      # Snapshot versioning and publishing
+      - name: Version snapshot
+        id: version
+        run: |
+          pnpm changeset version --snapshot ${{ steps.feature.outputs.name }}
+
+          # Capture the version that was set
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Publish snapshot
+        if: ${{ !inputs.dry_run }}
+        run: |
+          pnpm changeset publish --tag ${{ steps.feature.outputs.name }}
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Dry-run publish
+        if: ${{ inputs.dry_run }}
+        run: |
+          pnpm changeset publish --tag ${{ steps.feature.outputs.name }} --dry-run
+
+      # Find associated PR
+      - name: Find PR for this branch
+        id: pr
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const branch = context.ref.replace('refs/heads/', '');
+            const { data: prs } = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              head: `${context.repo.owner}:${branch}`,
+              state: 'open'
+            });
+            if (prs.length > 0) {
+              return prs[0].number;
+            }
+            return null;
+
+      # Create or update PR comment
+      - name: Create or update PR comment
+        if: steps.pr.outputs.result != 'null' && !inputs.dry_run
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prNumber = ${{ steps.pr.outputs.result }};
+            const featureName = '${{ steps.feature.outputs.name }}';
+            const version = '${{ steps.version.outputs.version }}';
+            const publishDate = new Date().toISOString().split('T')[0];
+
+            const commentBody = `## 🧪 Experimental Snapshot Published
+
+            **Feature tag:** \`${featureName}\`
+            **Version:** \`${version}\`
+            **Published:** ${publishDate}
+
+            ### Installation
+            Install any toolkit package using the experimental tag:
+            \`\`\`bash
+            npm install @accelint/design-toolkit@${featureName}
+            npm install @accelint/map-toolkit@${featureName}
+            \`\`\`
+
+            ### ⚠️ Experimental Release Warning
+            This is a proof-of-concept release with a **2-week shelf life**.
+            - APIs may change without notice
+            - Feature may be abandoned
+            - Do NOT use in production
+
+            ---
+            *Last published: ${new Date().toISOString()}*`;
+
+            // Find existing comment
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber
+            });
+
+            const botComment = comments.find(comment =>
+              comment.user.type === 'Bot' &&
+              comment.body.includes('🧪 Experimental Snapshot Published')
+            );
+
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: commentBody
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                body: commentBody
+              });
+            }
