@@ -151,13 +151,12 @@ export function useCoordinatePaste({
    * normalizeMgrsInput("6ryp1234567890")    // → "06RYP1234567890"
    */
   const normalizeMgrsInput = (input: string): string => {
-    // Convert to uppercase
     let normalized = input.toUpperCase();
 
-    // Add leading zero to single-digit grid zones
     const match = normalized.match(/^(\d)([A-Z])/);
 
     if (match?.[1]) {
+      // Add leading zero to single-digit grid zones
       normalized = match[1].padStart(2, '0') + normalized.slice(1);
     }
 
