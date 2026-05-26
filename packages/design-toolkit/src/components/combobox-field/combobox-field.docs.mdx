@@ -18,8 +18,8 @@ Uses the [Options](?path=/docs/components-options--playground) component system 
 ```tsx
 <ComboBoxField defaultItems={items} label="Select animal">
   {(item) => (
-    <OptionsItem 
-      key={item.id} 
+    <OptionsItem
+      key={item.id}
       textValue={item.name}  // Required for filtering to work
     >
       <Icon>{item.prefixIcon}</Icon>
@@ -78,21 +78,6 @@ Uses the [Options](?path=/docs/components-options--playground) component system 
 </ComboBoxField>
 ```
 <Canvas of={ComboBoxStories.Readonly} />
-
-### Multiple Selection with Chips
-```tsx
-<ComboBoxField selectionMode="multiple" defaultItems={items} onChange={handleChange}>
-  {(item) => (
-    <OptionsItem key={item.id} textValue={item.name}>
-      <OptionsItemLabel>{item.name}</OptionsItemLabel>
-    </OptionsItem>
-  )}
-</ComboBoxField>
-```
-
-When `selectionMode="multiple"` is set, users can select multiple items from the dropdown. Display selected items as deletable chips using `ChipList` and `DeletableChip` components. Handle the `onChange` callback to track selections, and use `ChipList`'s `onRemove` to allow users to remove individual selections.
-
-<Canvas of={ComboBoxStories.MultipleSelection} />
 
 ## Sizes
 
@@ -292,7 +277,7 @@ const items = [
    <div style={{ overflow: 'hidden' }}>
      <ComboBoxField defaultItems={items}>...</ComboBoxField>
    </div>
-   
+
    // ✅ Allow overflow or use portal
    <div style={{ overflow: 'visible' }}>
      <ComboBoxField defaultItems={items}>...</ComboBoxField>
@@ -305,7 +290,7 @@ const items = [
    ```tsx
    // ❌ Won't open on focus/click
    <ComboBoxField menuTrigger="manual" defaultItems={items}>...</ComboBoxField>
-   
+
    // ✅ Opens on focus (default)
    <ComboBoxField defaultItems={items}>...</ComboBoxField>
    // or explicitly:
@@ -333,7 +318,7 @@ const items = [
 <ComboBoxField inputValue={value} />
 
 // ✅ Controlled with handler
-<ComboBoxField 
+<ComboBoxField
   inputValue={value}
   onInputChange={setValue}
 />
