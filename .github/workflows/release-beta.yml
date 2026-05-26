@@ -1,0 +1,168 @@
+name: Beta Release
+on:
+  push:
+    branches:
+      - 'beta/**'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry-run mode (skip npm publish, show what would happen)'
+        type: boolean
+        default: true
+env:
+  TURBO_TELEMETRY_DISABLED: 1
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+jobs:
+  release-beta:
+    name: Beta Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # to create release (changesets/action)
+      pull-requests: write # to post issue comments (changesets/action)
+      issues: write # to create pull request (changesets/action)
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 2
+
+      # Show run mode, dry run will be removed once workflow is validated
+      - name: Check run mode
+        run: |
+          if [ "${{ inputs.dry_run }}" == "true" ]; then
+            echo "🧪 DRY-RUN MODE: Will simulate publish without uploading to npm"
+            echo "## 🧪 Dry-Run Mode Enabled" >> $GITHUB_STEP_SUMMARY
+            echo "This workflow will show what would be published without actually publishing to npm." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "🚀 PRODUCTION MODE: Will publish to npm registry"
+            echo "## 🚀 Production Mode" >> $GITHUB_STEP_SUMMARY
+            echo "This workflow will publish packages to npm registry." >> $GITHUB_STEP_SUMMARY
+          fi
+
+      # Verify prerelease mode before proceeding
+      - name: Verify beta prerelease mode
+        run: |
+          if [ ! -f .changeset/pre.json ]; then
+            echo "Error: .changeset/pre.json not found"
+            echo "Run 'pnpm beta:start' to enter beta prerelease mode"
+            exit 1
+          fi
+          MODE=$(jq -r '.mode' .changeset/pre.json)
+          TAG=$(jq -r '.tag' .changeset/pre.json)
+          if [ "$MODE" != "pre" ] || [ "$TAG" != "beta" ]; then
+            echo "Error: Prerelease mode is '$MODE' with tag '$TAG', expected mode 'pre' with tag 'beta'"
+            exit 1
+          fi
+          echo "✓ Beta prerelease mode verified"
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Prerelease Configuration" >> $GITHUB_STEP_SUMMARY
+          echo "- **Mode:** \`$MODE\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Tag:** \`$TAG\`" >> $GITHUB_STEP_SUMMARY
+
+      - uses: actions/cache@v4
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-turbo-
+
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - uses: actions/setup-node@v6
+        with:
+          registry-url: 'https://registry.npmjs.org'
+          node-version-file: 'package.json'
+          cache: 'pnpm'
+
+      - run: pnpm install
+
+      # Quality checks
+      - name: Build all packages
+        run: pnpm run build
+
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Test
+        run: pnpm run test
+
+      - name: Creating .npmrc
+        run: |
+          cat <<EOF > "$HOME/.npmrc"
+          //registry.npmjs.org/:_authToken=$NPM_TOKEN
+          EOF
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - uses: changesets/action@v1
+        id: changesets
+        if: ${{ !inputs.dry_run }}
+        with:
+          # Call changeset command directly (skips constellation-tracker for beta)
+          version: pnpm changeset version
+          publish: changeset:release-beta
+          commit: 'build: version beta packages'
+          title: 'Changeset Action: Version Beta Packages + Publish'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      # Dry-run alternative: show what would be published
+      - name: Dry-run publish
+        if: ${{ inputs.dry_run }}
+        run: |
+          echo "## 📦 Dry-Run Publish Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Show what would be versioned
+          echo "### Version Changes" >> $GITHUB_STEP_SUMMARY
+          pnpm changeset version --snapshot dry-run 2>&1 | tee version-output.txt || true
+
+          # Parse and display version changes
+          if [ -f version-output.txt ]; then
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            cat version-output.txt >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          # Show what would be published (dry-run)
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Packages That Would Be Published" >> $GITHUB_STEP_SUMMARY
+          pnpm changeset publish --tag beta --dry-run 2>&1 | tee publish-output.txt
+
+          # Parse packages from output
+          if [ -f publish-output.txt ]; then
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+            cat publish-output.txt >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          # Extract package list for summary
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**npm dist-tag:** \`@beta\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Installation (if published):**" >> $GITHUB_STEP_SUMMARY
+          grep -E "🦋  @accelint/" publish-output.txt | sed 's/🦋  //' | while read pkg; do
+            PKG_NAME=$(echo $pkg | cut -d'@' -f1-2)
+            echo "\`\`\`bash" >> $GITHUB_STEP_SUMMARY
+            echo "npm install ${PKG_NAME}@beta" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          done || true
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "💡 **To publish for real:** Run this workflow again with dry-run unchecked" >> $GITHUB_STEP_SUMMARY
+
+      - name: Show published packages
+        if: steps.changesets.outputs.published == 'true' && !inputs.dry_run
+        run: |
+          echo "✓ Beta packages published successfully"
+          echo "Published packages: ${{ steps.changesets.outputs.publishedPackages }}"
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## ✅ Published Successfully" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Packages published to npm with \`@beta\` tag:**" >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.changesets.outputs.publishedPackages }}" >> $GITHUB_STEP_SUMMARY

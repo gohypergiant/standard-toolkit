@@ -571,6 +571,10 @@ export function convertDDToDisplaySegments(
       return null;
     }
 
+    // we're resetting the value in the created `coord` to preserve DD precision
+    coord.raw.LAT = value.lat;
+    coord.raw.LON = value.lon;
+
     // Format the coordinate using geo package formatters
     // These return complete coordinate strings (e.g., "40 42.768 N / 74 0.36 W")
     let coordString: string;

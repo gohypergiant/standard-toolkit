@@ -344,6 +344,7 @@ export function CoordinateField({ ref, ...props }: CoordinateFieldProps) {
                       }
                       onBlur={() => {
                         focus.setFocusedSegmentIndex(-1);
+                        state.handleSegmentBlur?.(editableIndex);
                         state.flushPendingValidation();
                       }}
                       onKeyDown={(e) =>
