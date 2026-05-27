@@ -1,5 +1,11 @@
 # @accelint/ntds
 
+## 0.2.6-beta.0
+
+### Patch Changes
+
+- 9cd8c14: testing out changesets in beta releases
+
 ## 0.2.5
 
 ### Patch Changes

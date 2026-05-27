@@ -1,5 +1,15 @@
 # @accelint/design-toolkit
 
+## 9.12.0-beta.0
+### Minor Changes
+
+- 9cd8c14: testing out changesets in beta releases
+- 27295c8: Fixed layout issue with drawer
+
+### Patch Changes
+
+- 0e8dbfc: Fixed MGRS coordinates input behavior. Also, enhanced some of the UX with the function
+
 ## 9.11.0
 ### Minor Changes
 

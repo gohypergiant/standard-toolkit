@@ -32,5 +32,9 @@
     "@accelint/typescript-config": "0.1.4",
     "@accelint/vitest-config": "0.1.6"
   },
-  "changesets": []
+  "changesets": [
+    "cold-apes-float",
+    "fuzzy-boxes-draw",
+    "small-corners-refuse"
+  ]
 }

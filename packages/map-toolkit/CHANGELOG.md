@@ -1,5 +1,11 @@
 # @accelint/map-toolkit
 
+## 5.0.1-beta.0
+
+### Patch Changes
+
+- 9cd8c14: testing out changesets in beta releases
+
 ## 5.0.0
 
 ### Major Changes
