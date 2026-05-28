@@ -255,22 +255,9 @@ const items = [
 
 **Common causes:**
 
-1. **Parent has `overflow: hidden`** - The dropdown (popover) uses absolute positioning and gets clipped.
-   ```tsx
-   // ❌ Dropdown gets clipped
-   <div style={{ overflow: 'hidden' }}>
-     <ComboBoxField defaultItems={items}>...</ComboBoxField>
-   </div>
+1. **Z-index stacking context issue** - Another element is covering the dropdown. Check if parent elements have `z-index` that creates a stacking context.
 
-   // ✅ Allow overflow or use portal
-   <div style={{ overflow: 'visible' }}>
-     <ComboBoxField defaultItems={items}>...</ComboBoxField>
-   </div>
-   ```
-
-2. **Z-index stacking context issue** - Another element is covering the dropdown. Check if parent elements have `z-index` that creates a stacking context.
-
-3. **menuTrigger set to "manual"** - The dropdown won't open automatically.
+2. **menuTrigger set to "manual"** - The dropdown won't open automatically.
    ```tsx
    // ❌ Won't open on focus/click
    <ComboBoxField menuTrigger="manual" defaultItems={items}>...</ComboBoxField>
@@ -281,7 +268,7 @@ const items = [
    <ComboBoxField menuTrigger="focus" defaultItems={items}>...</ComboBoxField>
    ```
 
-4. **No items to show** - If `defaultItems` is empty or all items are filtered out, the dropdown may not open.
+3. **No items to show** - If `defaultItems` is empty or all items are filtered out, the dropdown may not open.
 
 ### Nothing renders
 **Problem:** The dropdown is empty or items don't appear.
