@@ -143,10 +143,10 @@ Context provider for setting default props across multiple ComboBoxField compone
 
 ## Usage Patterns
 
-ComboBoxField supports two distinct patterns for rendering items:
+You can provide items two ways, and React Aria's filtering behavior depends on whether the collection is uncontrolled or controlled.
 
-### Dynamic Items (Recommended)
-Use `defaultItems` or `items` with a render function. React Aria handles filtering automatically.
+Dynamic items (recommended)
+Pass `defaultItems` with a render function. React Aria filters the list automatically as the user types.
 
 ```tsx
 // ✅ Filtering works automatically
@@ -161,11 +161,12 @@ Use `defaultItems` or `items` with a render function. React Aria handles filteri
 
 **Key requirements:**
 - Each item must have an `id` field
-- Each `OptionsItem` must have a `textValue` prop for filtering to work
+- Each `OptionsItem` must have a `textValue` prop so React Aria knows what text to match against
 - Don't forget the React `key` prop in your render function
 
 ### Static Items
-Render `OptionsItem` children directly. You must handle filtering manually.
+### Static items
+Render `OptionsItem` children directly. React Aria still filters these automatically by each item's `textValue`.
 
 ```tsx
 // ⚠️ No automatic filtering - you control the children
@@ -175,6 +176,9 @@ Render `OptionsItem` children directly. You must handle filtering manually.
   <OptionsItem textValue="Bird">Bird</OptionsItem>
 </ComboBoxField>
 ```
+
+### Controlled filtering
+Use the `items` prop (instead of `defaultItems`) when you want to filter the list yourself, for example async search or custom match logic. React Aria renders exactly the items you pass and does **not** filter them, so update the list from `onInputChange`.
 
 ## Common Issues
 
@@ -196,30 +200,10 @@ Render `OptionsItem` children directly. You must handle filtering manually.
 ```
 
 ### TypeScript errors about item type
-**Problem:** TypeScript complains your items don't match `OptionsDataItem`.
+**Problem:** TypeScript complains your items don't satisfy the `ComboBoxField<T>` constraint.
 
-**Solution:** `OptionsDataItem` is just a suggested base type. Your items only need an `id` field. The `name` field is optional - use whatever fields you need.
+**Solution:** `ComboBoxField<T extends OptionsDataItem>` requires every item to have an `id` (`string | number`) and a `name` (`string`). Add any other fields you need on top of those.
 
-```tsx
-// Your custom item type
-interface Animal {
-  id: number;
-  species: string;  // Not "name" - that's fine!
-  habitat?: string;
-}
-
-// Works perfectly
-<ComboBoxField<Animal> defaultItems={animals}>
-  {(item) => (
-    <OptionsItem key={item.id} textValue={item.species}>
-      <OptionsItemLabel>{item.species}</OptionsItemLabel>
-      {item.habitat && (
-        <OptionsItemDescription>{item.habitat}</OptionsItemDescription>
-      )}
-    </OptionsItem>
-  )}
-</ComboBoxField>
-```
 
 ### React key warnings
 **Problem:** Console shows "Each child in a list should have a unique key prop".
@@ -338,7 +322,7 @@ const items = [
 - Wraps `ComboBox` from react-aria-components with `Virtualizer` for large lists
 - Uses the [Options](?path=/docs/components-options--playground) component system for dropdown content
 - Supports both static children and dynamic `defaultItems`/`items` rendering
-- React Aria handles filtering automatically when using `defaultItems` - matches input against each item's `textValue`
+- React Aria filters uncontrolled collections (`defaultItems` or static children) automatically against each item's `textValue`; pass the `items` prop to filter the list yourself
 
 **Related:**
 - [React Aria ComboBox](https://react-spectrum.adobe.com/react-aria/ComboBox.html)
