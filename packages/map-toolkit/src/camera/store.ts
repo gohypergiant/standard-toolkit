@@ -426,7 +426,7 @@ export const cameraStore = createMapStore<CameraState, CameraActions>({
     const unsubRotateBy = cameraBus.on(
       CameraEventTypes.rotateBy,
       ({ payload }) => {
-        if (payload.id !== mapId || !Number.isFinite(payload.delta) {
+        if (payload.id !== mapId || !Number.isFinite(payload.delta)) {
           return;
         }
 
@@ -441,7 +441,7 @@ export const cameraStore = createMapStore<CameraState, CameraActions>({
     const unsubPitchBy = cameraBus.on(
       CameraEventTypes.pitchBy,
       ({ payload }) => {
-        if (payload.id !== mapId || !Number.isFinite(payload.delta) {
+        if (payload.id !== mapId || !Number.isFinite(payload.delta)) {
           return;
         }
 
