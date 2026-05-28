@@ -441,7 +441,7 @@ export const cameraStore = createMapStore<CameraState, CameraActions>({
     const unsubPitchBy = cameraBus.on(
       CameraEventTypes.pitchBy,
       ({ payload }) => {
-        if (payload.id !== mapId) {
+        if (payload.id !== mapId || !Number.isFinite(payload.delta) {
           return;
         }
 
