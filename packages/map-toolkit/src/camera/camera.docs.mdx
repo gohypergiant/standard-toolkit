@@ -459,7 +459,18 @@ const handleClick = () => {
   });
 };
 ```
+### Relative Adjustments
 
+The hook also returns `pitchBy` and `rotateBy` actions for nudging the camera by a delta, without computing the absolute target yourself. These apply the same constraints as the events: `rotateBy` is ignored in 3D and normalizes to 0-360°, `pitchBy` only applies in 2.5D and clamps to 0-85°.
+
+```tsx
+const { pitchBy, rotateBy } = useMapCamera(MAP_ID);
+
+// Tilt up 10° (clamped at 85°)
+const handleTiltUp = () => pitchBy(10);
+
+// Rotate 15° clockwise (wraps past 360°)
+const handleRotateRight = () => rotateBy(15);
 ## Performance
 
 ### Fan-Out Pattern
