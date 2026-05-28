@@ -2,4 +2,4 @@
 "@accelint/design-toolkit": patch
 ---
 
-Fixes push layout bug with drawer. Instead of pushing content out of the way, push incorrectly and permanently occupied layout space.
+Fix Drawer push layout: closed drawers no longer permanently reserve layout space. Each drawer's grid track collapses when closed and expands only when open, so content is pushed aside only while a drawer is open.

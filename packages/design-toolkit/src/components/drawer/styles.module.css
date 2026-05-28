@@ -66,52 +66,44 @@
       --drawer-main-col-start: 2;
     }
 
-    @variant has-[[data-placement=left][data-open]] {
-      @variant has-size-large {
-        --drawer-left-size: var(--drawer-size-large);
-      }
-      @variant has-size-medium {
-        --drawer-left-size: var(--drawer-size-medium);
-      }
-      @variant has-size-small {
-        --drawer-left-size: var(--drawer-size-small);
-      }
+    @variant has-[[data-placement=left][data-open][data-size=large]] {
+      --drawer-left-size: var(--drawer-size-large);
+    }
+    @variant has-[[data-placement=left][data-open][data-size=medium]] {
+      --drawer-left-size: var(--drawer-size-medium);
+    }
+    @variant has-[[data-placement=left][data-open][data-size=small]] {
+      --drawer-left-size: var(--drawer-size-small);
     }
 
-    @variant has-[[data-placement=right][data-open]] {
-      @variant has-size-large {
-        --drawer-right-size: var(--drawer-size-large);
-      }
-      @variant has-size-medium {
-        --drawer-right-size: var(--drawer-size-medium);
-      }
-      @variant has-size-small {
-        --drawer-right-size: var(--drawer-size-small);
-      }
+    @variant has-[[data-placement=right][data-open][data-size=large]] {
+      --drawer-right-size: var(--drawer-size-large);
+    }
+    @variant has-[[data-placement=right][data-open][data-size=medium]] {
+      --drawer-right-size: var(--drawer-size-medium);
+    }
+    @variant has-[[data-placement=right][data-open][data-size=small]] {
+      --drawer-right-size: var(--drawer-size-small);
     }
 
-    @variant has-[[data-placement=top][data-open]] {
-      @variant has-size-large {
-        --drawer-top-size: var(--drawer-size-large);
-      }
-      @variant has-size-medium {
-        --drawer-top-size: var(--drawer-size-medium);
-      }
-      @variant has-size-small {
-        --drawer-top-size: var(--drawer-size-small);
-      }
+    @variant has-[[data-placement=top][data-open][data-size=large]] {
+      --drawer-top-size: var(--drawer-size-large);
+    }
+    @variant has-[[data-placement=top][data-open][data-size=medium]] {
+      --drawer-top-size: var(--drawer-size-medium);
+    }
+    @variant has-[[data-placement=top][data-open][data-size=small]] {
+      --drawer-top-size: var(--drawer-size-small);
     }
 
-    @variant has-[[data-placement=bottom][data-open]] {
-      @variant has-size-large {
-        --drawer-bottom-size: var(--drawer-size-large);
-      }
-      @variant has-size-medium {
-        --drawer-bottom-size: var(--drawer-size-medium);
-      }
-      @variant has-size-small {
-        --drawer-bottom-size: var(--drawer-size-small);
-      }
+    @variant has-[[data-placement=bottom][data-open][data-size=large]] {
+      --drawer-bottom-size: var(--drawer-size-large);
+    }
+    @variant has-[[data-placement=bottom][data-open][data-size=medium]] {
+      --drawer-bottom-size: var(--drawer-size-medium);
+    }
+    @variant has-[[data-placement=bottom][data-open][data-size=small]] {
+      --drawer-bottom-size: var(--drawer-size-small);
     }
   }
 
@@ -268,7 +260,7 @@
   }
 
   .panel {
-    @apply gap-s p-l flex hidden h-full min-h-0 flex-col overflow-hidden;
+    @apply gap-s p-l hidden h-full min-h-0 flex-col overflow-hidden;
 
     @variant group-open/drawer {
       @apply flex;
