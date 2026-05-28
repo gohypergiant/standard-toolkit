@@ -216,6 +216,45 @@ describe('useMapCamera', () => {
       });
       expect(result.current.cameraState.pitch).toEqual(85);
     });
+
+    it('should ignore Infinity delta', () => {
+      const { result } = renderHook(() =>
+        useMapCamera(testid, { view: '2.5D', pitch: 45 }),
+      );
+      act(() => {
+        bus.emit(CameraEventTypes.pitchBy, {
+          id: testid,
+          delta: Number.POSITIVE_INFINITY,
+        });
+      });
+      expect(result.current.cameraState.pitch).toEqual(45);
+    });
+
+    it('should ignore negative Infinity delta', () => {
+      const { result } = renderHook(() =>
+        useMapCamera(testid, { view: '2.5D', pitch: 45 }),
+      );
+      act(() => {
+        bus.emit(CameraEventTypes.pitchBy, {
+          id: testid,
+          delta: Number.NEGATIVE_INFINITY,
+        });
+      });
+      expect(result.current.cameraState.pitch).toEqual(45);
+    });
+
+    it('should ignore NaN delta', () => {
+      const { result } = renderHook(() =>
+        useMapCamera(testid, { view: '2.5D', pitch: 45 }),
+      );
+      act(() => {
+        bus.emit(CameraEventTypes.pitchBy, {
+          id: testid,
+          delta: Number.NaN,
+        });
+      });
+      expect(result.current.cameraState.pitch).toEqual(45);
+    });
   });
 
   describe('rotateBy normalization', () => {
@@ -269,6 +308,45 @@ describe('useMapCamera', () => {
         });
       });
       expect(result.current.cameraState.rotation).toEqual(350);
+    });
+
+    it('should ignore Infinity delta', () => {
+      const { result } = renderHook(() =>
+        useMapCamera(testid, { rotation: 30 }),
+      );
+      act(() => {
+        bus.emit(CameraEventTypes.rotateBy, {
+          id: testid,
+          delta: Number.POSITIVE_INFINITY,
+        });
+      });
+      expect(result.current.cameraState.rotation).toEqual(30);
+    });
+
+    it('should ignore negative Infinity delta', () => {
+      const { result } = renderHook(() =>
+        useMapCamera(testid, { rotation: 30 }),
+      );
+      act(() => {
+        bus.emit(CameraEventTypes.rotateBy, {
+          id: testid,
+          delta: Number.NEGATIVE_INFINITY,
+        });
+      });
+      expect(result.current.cameraState.rotation).toEqual(30);
+    });
+
+    it('should ignore NaN delta', () => {
+      const { result } = renderHook(() =>
+        useMapCamera(testid, { rotation: 30 }),
+      );
+      act(() => {
+        bus.emit(CameraEventTypes.rotateBy, {
+          id: testid,
+          delta: Number.NaN,
+        });
+      });
+      expect(result.current.cameraState.rotation).toEqual(30);
     });
   });
 
