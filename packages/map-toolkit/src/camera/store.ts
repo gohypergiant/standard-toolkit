@@ -240,17 +240,25 @@ const DEFAULT_CAMERA_STATE: CameraState = {
 export const cameraStore = createMapStore<CameraState, CameraActions>({
   defaultState: DEFAULT_CAMERA_STATE,
 
-  actions: (mapId, { get, replace }) => ({
+  actions: (_mapId, { get, replace }) => ({
     setCameraState: (updates: Partial<CameraState>) => {
       const currentState = get();
       // Use buildCameraState to ensure proper discriminated union type
       replace(buildCameraState({ ...currentState, ...updates }));
     },
     pitchBy: (delta: number) => {
-      cameraBus.emit(CameraEventTypes.pitchBy, { id: mapId, delta });
+      const state = get();
+      if (state.view === '2.5D') {
+        const newPitch = clamp(MIN_PITCH, MAX_PITCH, state.pitch + delta);
+        replace({ ...state, pitch: newPitch });
+      }
     },
     rotateBy: (delta: number) => {
-      cameraBus.emit(CameraEventTypes.rotateBy, { id: mapId, delta });
+      const state = get();
+      if (state.view !== '3D') {
+        const newRotation = bearingToAzimuth(state.rotation + delta);
+        replace({ ...state, rotation: newRotation });
+      }
     },
   }),
 
