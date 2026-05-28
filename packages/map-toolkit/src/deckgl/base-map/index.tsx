@@ -16,7 +16,7 @@ import { useEffectEvent, useEmit } from '@accelint/bus/react';
 import { Deckgl, useDeckgl } from '@deckgl-fiber-renderer/dom';
 import type { PickingInfo, ViewStateChangeParameters } from '@deck.gl/core';
 import 'client-only';
-import { useCallback, useId, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useId, useMemo, useRef } from 'react';
 import {
   Map as MapLibre,
   type MapRef,
@@ -310,6 +310,13 @@ export function BaseMap({
   );
 
   // Spread order: default → consumer overrides → locked keys (last wins).
+  //
+  // Don't add `projection` here. react-map-gl's `_updateSettings` iterates
+  // its `settingNames` list (which includes `projection`) on every `setProps`
+  // call and invokes each setter unconditionally - bypassing the style-load
+  // guard on its `_updateStyleComponents` path. maplibre's `setProjection`
+  // then throws "Style is not done loading." Sync via the post-load pattern
+  // below - same approach as `useMapLibre` uses for the same setter.
   const mapOptions = useMemo(
     () => ({
       attributionControl: DEFAULT_ATTRIBUTION_CONTROL,
@@ -324,20 +331,24 @@ export function BaseMap({
       dragRotate: false,
       pitchWithRotate: false,
       rollEnabled: false,
-      projection: cameraState.projection,
       maxPitch: cameraState.view === '2D' ? 0 : 85,
       canvasContextAttributes: CANVAS_CONTEXT_ATTRIBUTES,
       boxZoom,
     }),
-    [
-      viewState,
-      container,
-      cameraState.projection,
-      cameraState.view,
-      boxZoom,
-      filteredMapLibreOptions,
-    ],
+    [viewState, container, cameraState.view, boxZoom, filteredMapLibreOptions],
   );
+
+  // `setProjection` throws if called before the style is loaded. Initial
+  // application happens in `handleMapLoad`; this effect syncs later changes.
+  useEffect(() => {
+    const map = mapRef.current?.getMap();
+
+    if (!map?.isStyleLoaded()) {
+      return;
+    }
+
+    map.setProjection({ type: cameraState.projection });
+  }, [cameraState.projection]);
 
   const emitClick = useEmit<MapClickEvent>(MapEvents.click);
   const emitHover = useEmit<MapHoverEvent>(MapEvents.hover);
@@ -444,6 +455,11 @@ export function BaseMap({
     }, 200);
   });
 
+  // First point at which `setProjection` is safe (after `style.load`).
+  const handleMapLoad = useEffectEvent(() => {
+    mapRef.current?.getMap().setProjection({ type: cameraState.projection });
+  });
+
   const handleLoad = useEffectEvent(() => {
     //--- force update viewport state once all viewports initialized ---
     // @ts-expect-error squirrelly deckglInstance typing
@@ -498,6 +514,7 @@ export function BaseMap({
           onMove={(evt) => {
             setCameraState(evt.viewState);
           }}
+          onLoad={handleMapLoad}
           mapStyle={styleUrl}
           ref={mapRef}
           {...mapOptions}
