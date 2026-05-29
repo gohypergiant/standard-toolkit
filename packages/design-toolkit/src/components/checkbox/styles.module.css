@@ -31,6 +31,8 @@
 
   .checkbox {
     @apply gap-m flex cursor-pointer items-center;
+    scroll-margin: 0 !important;
+    scroll-padding: 0 !important;
 
     &.labelStart {
       .label {
