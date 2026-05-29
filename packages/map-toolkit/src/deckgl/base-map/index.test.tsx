@@ -11,31 +11,110 @@
  */
 
 import { uuid } from '@accelint/core';
-import { render } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { act, render, screen } from '@testing-library/react';
+import { beforeEach, describe, expect, it, type Mock, vi } from 'vitest';
 import { BaseMap, stripLockedMapLibreOptions } from './index';
 import { LOCKED_MAP_LIBRE_OPTION_KEYS } from './types';
 import type { MapOptions } from 'maplibre-gl';
 import type { MapLibreOptions } from './types';
 
-// Mock MapLibre hook since it requires browser APIs
-vi.mock('../../maplibre/hooks/use-maplibre', () => ({
-  useMapLibre: vi.fn(),
+interface FakeMap {
+  setProjection: Mock;
+  isStyleLoaded: Mock;
+}
+
+function createFakeMap(): FakeMap {
+  return {
+    setProjection: vi.fn(),
+    isStyleLoaded: vi.fn().mockReturnValue(false),
+  };
+}
+
+let activeMap: FakeMap | null = null;
+let capturedOnLoad: (() => void) | undefined;
+
+function useFakeMap(map: FakeMap): void {
+  activeMap = map;
+}
+
+function fireMapLoad(): void {
+  capturedOnLoad?.();
+}
+
+// Mock react-map-gl/maplibre so tests can drive the MapLibre lifecycle
+// (ref population + onLoad event) without a real WebGL context.
+vi.mock('react-map-gl/maplibre', () => ({
+  Map: ({
+    children,
+    onLoad,
+    ref,
+  }: {
+    children?: React.ReactNode;
+    onLoad?: () => void;
+    ref?: { current: unknown };
+  }) => {
+    if (ref && typeof ref === 'object') {
+      ref.current = { getMap: () => activeMap };
+    }
+    capturedOnLoad = onLoad;
+
+    return <div data-testid='maplibre-mock'>{children}</div>;
+  },
+  useControl: vi.fn(),
 }));
+
+beforeEach(() => {
+  activeMap = null;
+  capturedOnLoad = undefined;
+});
 
 describe('BaseMap', () => {
   it('should render without crashing when given a valid id', () => {
-    const { container } = render(<BaseMap id={uuid()} />);
+    useFakeMap(createFakeMap());
 
-    expect(container.firstChild).toBeInTheDocument();
+    render(<BaseMap id={uuid()} />);
+
+    expect(screen.getByTestId('maplibre-mock')).toBeInTheDocument();
   });
 
-  it('should apply className to the root element', () => {
-    const { container } = render(
-      <BaseMap className='custom-map-class' id={uuid()} />,
-    );
+  it('should apply className to the wrapping element', () => {
+    useFakeMap(createFakeMap());
 
-    expect(container.firstChild).toHaveClass('custom-map-class');
+    render(<BaseMap className='custom-map-class' id={uuid()} />);
+
+    const map = screen.getByTestId('maplibre-mock');
+
+    expect(map.closest('.custom-map-class')).not.toBeNull();
+  });
+
+  it('should apply globe projection after MapLibre style loads when defaultView is 3D', () => {
+    const fakeMap = createFakeMap();
+    useFakeMap(fakeMap);
+
+    render(<BaseMap id={uuid()} defaultView='3D' />);
+
+    expect(fakeMap.setProjection).not.toHaveBeenCalled();
+
+    act(() => {
+      fakeMap.isStyleLoaded.mockReturnValue(true);
+      fireMapLoad();
+    });
+
+    expect(fakeMap.setProjection).toHaveBeenCalledWith({ type: 'globe' });
+  });
+
+  it('should apply mercator projection after MapLibre style loads when defaultView is 2D', () => {
+    const fakeMap = createFakeMap();
+    useFakeMap(fakeMap);
+
+    render(<BaseMap id={uuid()} defaultView='2D' />);
+
+    act(() => {
+      fakeMap.isStyleLoaded.mockReturnValue(true);
+      fireMapLoad();
+    });
+
+    expect(fakeMap.setProjection).toHaveBeenCalledWith({ type: 'mercator' });
   });
 });
 
