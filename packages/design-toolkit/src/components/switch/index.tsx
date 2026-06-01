@@ -13,10 +13,10 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { useCallback, useRef } from 'react';
 import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 import { useContextProps } from 'react-aria-components/slots';
 import { Switch as AriaSwitch } from 'react-aria-components/Switch';
+import { usePreventScrollFocus } from '../../hooks/use-prevent-scroll-focus';
 import { SwitchContext } from './context';
 import styles from './styles.module.css';
 import type { SwitchProps } from './types';
@@ -44,36 +44,7 @@ export function Switch({ ref, ...props }: SwitchProps) {
   [props, ref] = useContextProps(props, ref ?? null, SwitchContext);
 
   const { children, classNames, labelPosition = 'end', ...rest } = props;
-  const internalRef = useRef<HTMLLabelElement>(null);
-
-  const handleRef = useCallback(
-    (node: HTMLLabelElement | null) => {
-      internalRef.current = node;
-      if (typeof ref === 'function') {
-        ref(node);
-      } else if (ref) {
-        ref.current = node;
-      }
-
-      if (node) {
-        // Override focus on the switch label element
-        const originalFocus = node.focus;
-        node.focus = function (options?: FocusOptions) {
-          originalFocus.call(this, { ...options, preventScroll: true });
-        };
-
-        // Also override focus on any input elements inside
-        const inputs = node.querySelectorAll('input');
-        inputs.forEach((input) => {
-          const originalInputFocus = input.focus;
-          input.focus = function (options?: FocusOptions) {
-            originalInputFocus.call(this, { ...options, preventScroll: true });
-          };
-        });
-      }
-    },
-    [ref],
-  );
+  const handleRef = usePreventScrollFocus(ref);
 
   return (
     <AriaSwitch

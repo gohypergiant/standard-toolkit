@@ -14,10 +14,10 @@ import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import Check from '@accelint/icons/check';
 import Remove from '@accelint/icons/remove';
-import { useCallback, useRef } from 'react';
 import { Checkbox as AriaCheckbox } from 'react-aria-components/Checkbox';
 import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 import { useContextProps } from 'react-aria-components/slots';
+import { usePreventScrollFocus } from '../../hooks/use-prevent-scroll-focus';
 import { Icon } from '../icon';
 import { CheckboxContext } from './context';
 import styles from './styles.module.css';
@@ -77,42 +77,12 @@ export function Checkbox({ ref, ...props }: CheckboxProps) {
   [props, ref] = useContextProps(props, ref ?? null, CheckboxContext);
 
   const { classNames, children, labelPosition = 'end', ...rest } = props;
-  const internalRef = useRef<HTMLLabelElement>(null);
-
-  const handleRef = useCallback(
-    (node: HTMLLabelElement | null) => {
-      internalRef.current = node;
-      if (typeof ref === 'function') {
-        ref(node);
-      } else if (ref) {
-        ref.current = node;
-      }
-
-      if (node) {
-        // Override focus on the checkbox label element
-        const originalFocus = node.focus;
-        node.focus = function (options?: FocusOptions) {
-          originalFocus.call(this, { ...options, preventScroll: true });
-        };
-
-        // Also override focus on any input elements inside
-        const inputs = node.querySelectorAll('input');
-        inputs.forEach((input) => {
-          const originalInputFocus = input.focus;
-          input.focus = function (options?: FocusOptions) {
-            originalInputFocus.call(this, { ...options, preventScroll: true });
-          };
-        });
-      }
-    },
-    [ref],
-  );
+  const handleRef = usePreventScrollFocus(ref);
 
   return (
     <AriaCheckbox
       {...rest}
       ref={handleRef}
-      preventFocusOnPress
       className={composeRenderProps(classNames?.checkbox, (className) =>
         clsx(
           'group/checkbox',
