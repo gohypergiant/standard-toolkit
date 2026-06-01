@@ -19,6 +19,11 @@
     --drawer-size-medium: 200px;
     --drawer-size-large: 400px;
 
+    --drawer-left-size: 0px;
+    --drawer-right-size: 0px;
+    --drawer-top-size: 0px;
+    --drawer-bottom-size: 0px;
+
     --drawer-main-row-start: 1;
     --drawer-main-col-end: 4;
     --drawer-main-row-end: 4;
@@ -30,8 +35,16 @@
       var(--drawer-main-row-end);
 
     @apply relative grid h-full w-full overflow-hidden;
-    grid-template-columns: auto 1fr auto;
-    grid-template-rows: auto 1fr auto;
+    grid-template-columns: var(--drawer-left-size) 1fr var(--drawer-right-size);
+    grid-template-rows: var(--drawer-top-size) 1fr var(--drawer-bottom-size);
+
+    @variant motion-safe {
+      transition:
+        grid-template-columns var(--animation-duration-slow)
+          var(--animation-easing-standard),
+        grid-template-rows var(--animation-duration-slow)
+          var(--animation-easing-standard);
+    }
 
     @variant push-top {
       --drawer-main-row-start: 2;
@@ -52,6 +65,46 @@
     @variant has-[.group\/sidenav] {
       --drawer-main-col-start: 2;
     }
+
+    @variant has-[[data-placement=left][data-open][data-size=large]] {
+      --drawer-left-size: var(--drawer-size-large);
+    }
+    @variant has-[[data-placement=left][data-open][data-size=medium]] {
+      --drawer-left-size: var(--drawer-size-medium);
+    }
+    @variant has-[[data-placement=left][data-open][data-size=small]] {
+      --drawer-left-size: var(--drawer-size-small);
+    }
+
+    @variant has-[[data-placement=right][data-open][data-size=large]] {
+      --drawer-right-size: var(--drawer-size-large);
+    }
+    @variant has-[[data-placement=right][data-open][data-size=medium]] {
+      --drawer-right-size: var(--drawer-size-medium);
+    }
+    @variant has-[[data-placement=right][data-open][data-size=small]] {
+      --drawer-right-size: var(--drawer-size-small);
+    }
+
+    @variant has-[[data-placement=top][data-open][data-size=large]] {
+      --drawer-top-size: var(--drawer-size-large);
+    }
+    @variant has-[[data-placement=top][data-open][data-size=medium]] {
+      --drawer-top-size: var(--drawer-size-medium);
+    }
+    @variant has-[[data-placement=top][data-open][data-size=small]] {
+      --drawer-top-size: var(--drawer-size-small);
+    }
+
+    @variant has-[[data-placement=bottom][data-open][data-size=large]] {
+      --drawer-bottom-size: var(--drawer-size-large);
+    }
+    @variant has-[[data-placement=bottom][data-open][data-size=medium]] {
+      --drawer-bottom-size: var(--drawer-size-medium);
+    }
+    @variant has-[[data-placement=bottom][data-open][data-size=small]] {
+      --drawer-bottom-size: var(--drawer-size-small);
+    }
   }
 
   .main {
@@ -60,30 +113,18 @@
 
   .drawer {
     @apply bg-surface-default text-body-m pointer-events-none relative flex flex-col;
-
-    @variant motion-safe {
-      transition: transform var(--animation-duration-slow)
-        var(--animation-easing-standard);
-    }
+    min-width: 0;
+    min-height: 0;
 
     @variant placement-top {
       @apply col-span-full row-start-1 row-end-2;
-      transform: translateY(-100%);
-
-      @variant open {
-        transform: translateY(0);
-      }
 
       @variant group-extend-right/layout {
-        @variant group-has-[[data-placement=right][data-open]]/layout {
-          @apply col-end-3;
-        }
+        @apply col-end-3;
       }
 
       @variant group-extend-left/layout {
-        @variant group-has-[[data-placement=left][data-open]]/layout {
-          @apply col-start-2;
-        }
+        @apply col-start-2;
       }
 
       @variant group-data-[extend=bottom]/layout {
@@ -93,22 +134,13 @@
 
     @variant placement-right {
       @apply col-start-3 col-end-4 row-span-full;
-      transform: translateX(100%);
-
-      @variant open {
-        transform: translateX(0);
-      }
 
       @variant group-extend-top/layout {
-        @variant group-has-[[data-placement=top][data-open]]/layout {
-          @apply row-start-2;
-        }
+        @apply row-start-2;
       }
 
       @variant group-extend-bottom/layout {
-        @variant group-has-[[data-placement=bottom][data-open]]/layout {
-          @apply row-end-3;
-        }
+        @apply row-end-3;
       }
 
       @variant group-data-[extend=left]/layout {
@@ -118,22 +150,13 @@
 
     @variant placement-bottom {
       @apply col-span-full row-start-3 row-end-4;
-      transform: translateY(100%);
-
-      @variant open {
-        transform: translateY(0);
-      }
 
       @variant group-extend-right/layout {
-        @variant group-has-[[data-placement=right][data-open]]/layout {
-          @apply col-end-3;
-        }
+        @apply col-end-3;
       }
 
       @variant group-extend-left/layout {
-        @variant group-has-[[data-placement=left][data-open]]/layout {
-          @apply col-start-2;
-        }
+        @apply col-start-2;
       }
 
       @variant group-data-[extend=top]/layout {
@@ -143,22 +166,13 @@
 
     @variant placement-left {
       @apply col-start-1 col-end-2 row-span-full;
-      transform: translateX(-100%);
-
-      @variant open {
-        transform: translateX(0);
-      }
 
       @variant group-extend-top/layout {
-        @variant group-has-[[data-placement=top][data-open]]/layout {
-          @apply row-start-2;
-        }
+        @apply row-start-2;
       }
 
       @variant group-extend-bottom/layout {
-        @variant group-has-[[data-placement=bottom][data-open]]/layout {
-          @apply row-end-3;
-        }
+        @apply row-end-3;
       }
 
       @variant group-data-[extend=right]/layout {
@@ -246,97 +260,10 @@
   }
 
   .panel {
-    @apply gap-s p-l flex h-full min-h-0 flex-col;
-    opacity: 0;
-    pointer-events: none;
-    visibility: hidden;
-
-    @variant motion-safe {
-      transition:
-        transform var(--animation-duration-fast)
-          var(--animation-easing-standard),
-        opacity var(--animation-duration-fast) var(--animation-easing-standard),
-        visibility 0s var(--animation-duration-fast);
-    }
-
-    @variant group-placement-left/drawer {
-      transform: translateX(-100%);
-    }
-
-    @variant group-placement-right/drawer {
-      transform: translateX(100%);
-    }
-
-    @variant group-placement-top/drawer {
-      transform: translateY(-100%);
-    }
-
-    @variant group-placement-bottom/drawer {
-      transform: translateY(100%);
-    }
+    @apply gap-s p-l hidden h-full min-h-0 flex-col overflow-hidden;
 
     @variant group-open/drawer {
-      opacity: 1;
-      pointer-events: auto;
-      visibility: visible;
-      transform: translate(0, 0);
-      transition-delay: 0s;
-    }
-
-    @variant group-placement-left/drawer {
-      @variant group-size-large/drawer {
-        @apply w-(--drawer-size-large);
-      }
-
-      @variant group-size-medium/drawer {
-        @apply w-(--drawer-size-medium);
-      }
-
-      @variant group-size-small/drawer {
-        @apply w-(--drawer-size-small);
-      }
-    }
-
-    @variant group-placement-right/drawer {
-      @variant group-size-large/drawer {
-        @apply w-(--drawer-size-large);
-      }
-
-      @variant group-size-medium/drawer {
-        @apply w-(--drawer-size-medium);
-      }
-
-      @variant group-size-small/drawer {
-        @apply w-(--drawer-size-small);
-      }
-    }
-
-    @variant group-placement-top/drawer {
-      @variant group-size-large/drawer {
-        @apply h-(--drawer-size-large);
-      }
-
-      @variant group-size-medium/drawer {
-        @apply h-(--drawer-size-medium);
-      }
-
-      @variant group-size-small/drawer {
-        @apply h-(--drawer-size-small);
-      }
-    }
-
-    @variant group-placement-bottom/drawer {
-      @variant group-size-large/drawer {
-        @apply h-(--drawer-size-large);
-      }
-
-      @variant group-size-medium/drawer {
-        @apply h-(--drawer-size-medium);
-      }
-
-      @variant group-size-small/drawer {
-        @apply h-(--drawer-size-small);
-      }
+      @apply flex;
     }
   }
 
