@@ -1,13 +1,11 @@
 # @accelint/design-toolkit
 
-## 9.12.0
-### Minor Changes
-
-- 27295c8: Fixed layout issue with drawer
+## 9.11.1
 
 ### Patch Changes
 
 - bf5c161: Fix Drawer push layout: closed drawers no longer permanently reserve layout space. Each drawer's grid track collapses when closed and expands only when open, so content is pushed aside only while a drawer is open.
+- 27295c8: Fixed layout issue with drawer
 - ce8f3b2: Fix ComboBoxField clear button: clicking where the hidden clear button sits now focuses the input and opens the dropdown instead of doing nothing.
 - 0e8dbfc: Fixed MGRS coordinates input behavior. Also, enhanced some of the UX with the function
 
