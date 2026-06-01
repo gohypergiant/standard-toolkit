@@ -1,5 +1,15 @@
 # @accelint/map-toolkit
 
+## 5.1.0
+
+### Minor Changes
+
+- 384b42f: Adds optional type generics (`Mode`, `Owner`) to `useMapMode` for narrowing the `mode` value and `requestModeChange` arguments. `UseMapModeReturn` is now generic as well (defaults preserve existing behavior).
+
+### Patch Changes
+
+- 8dc37e9: Fix `BaseMap` runtime error "Style is not done loading." when `defaultView='3D'` (globe projection). Projection is now applied via `setProjection` after MapLibre's style has loaded, instead of being passed as the initial `projection` prop to `react-map-gl/maplibre`.
+
 ## 5.0.0
 
 ### Major Changes
