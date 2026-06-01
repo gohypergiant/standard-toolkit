@@ -1,0 +1,47 @@
+{
+  "name": "@apps/docs",
+  "version": "0.0.0",
+  "dependencies": {
+    "@accelint/design-foundation": "workspace:*",
+    "@accelint/design-toolkit": "workspace:*",
+    "@accelint/icons": "workspace:*",
+    "@accelint/postcss-tailwind-css-modules": "workspace:*",
+    "@internationalized/date": "~3.12.1",
+    "@radix-ui/react-avatar": "^1.1.10",
+    "@react-aria/interactions": "^3.25.5",
+    "@tailwindcss/postcss": "^4.1.17",
+    "@types/mdx": "^2.0.13",
+    "client-only": "^0.0.1",
+    "clsx": "^2.1.1",
+    "fumadocs-core": "^16.9.2",
+    "fumadocs-mdx": "^15.0.9",
+    "fumadocs-ui": "^16.9.2",
+    "next": "^16",
+    "postcss": "^8.5.6",
+    "react": "^19",
+    "react-aria": "~3.48.0",
+    "react-aria-components": "~1.17.0",
+    "react-dom": "^19",
+    "react-stately": "~3.46.0",
+    "server-only": "^0.0.1",
+    "tailwindcss": "^4.3.0"
+  },
+  "devDependencies": {
+    "@accelint/biome-config": "workspace:*",
+    "@accelint/typescript-config": "workspace:*",
+    "@react-types/shared": "~3.34.0",
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "babel-plugin-react-compiler": "^1.0.0",
+    "typescript": "^5.9.3"
+  },
+  "private": true,
+  "scripts": {
+    "build": "NODE_ENV=production next build",
+    "dev": "NODE_ENV=development next dev",
+    "license": "pnpm zx ../../scripts/license.mjs",
+    "start": "NODE_ENV=production next start"
+  },
+  "type": "module"
+}

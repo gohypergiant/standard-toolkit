@@ -4,11 +4,13 @@ description: Generate and maintain TypeScript/React API reference documentation 
 compatibility:
   required_permissions:
     - Read: "**/.claude/skills/accelint-api-docs/references/*.md"
-    - Write: "colocated to source files (same directory as source)"
+    - Write: "apps/docs/content/ (or custom outputDir)"
     - Bash: "git hash-object (for SHA tracking, optional)"
   graceful_degradation:
     - "Without Bash: skips source_sha/doc_sha fields, uses file mtimes"
     - "Without Read: cannot load reference examples, structure may vary"
+  parameters:
+    - outputDir: "Output directory (default: apps/docs/content)"
 ---
 
 # API Documentation Generation
@@ -95,6 +97,11 @@ Pattern match from these examples—they demonstrate the target quality level.
 
 When the user asks to document a file, follow this workflow.
 
+### Parameters
+
+- `outputDir` (optional): Directory to write generated docs. Default: `apps/docs/content`
+- If provided as argument or from context, use it; otherwise use default
+
 ### Step-by-Step Process
 
 **1. Read and analyze the source**
@@ -102,13 +109,21 @@ When the user asks to document a file, follow this workflow.
    - Read any colocated test files (`*.test.ts`, `*.test.tsx`)
    - Read existing documentation if present (`.md`, `.docs.mdx`, `README.md`)
 
-**2. Classify exports**
+**2. Detect package section**
+   - Extract package name from source path (e.g., `packages/logger/` → `logger`)
+   - Map to section using these rules:
+     - `design-foundation`, `design-toolkit`, `map-toolkit` → `toolkits/`
+     - `postcss-tailwind-css-modules`, `biome-config`, `eslint-config`, `prettier-config`, `smeegl`, `typescript-config`, `vitest-config` → `tooling/`
+     - All other packages → `packages/`
+   - Strip `@accelint/` scope if present (e.g., `@accelint/logger` → `logger`)
+
+**3. Classify exports**
    - Identify all exported entities
    - Classify each: Function, Component, Hook, Class, Constant
    - Skip internal exports (prefixed with `_`, marked `@internal`, in `/internal/` directories)
    - For multi-export files, ask: "Document: [All] [EntityName only] [Custom selection]"
 
-**3. Load matching reference example**
+**4. Load matching reference example**
    - Function → read `references/example-function.md`
    - Component → read `references/example-component.md`
    - Hook → read `references/example-hook.md`
@@ -144,10 +159,16 @@ When the user asks to document a file, follow this workflow.
    - Convert bare URLs to markdown links
    - Check that examples have descriptive names
 
-**7. Write colocated file**
-   - Single export: `index.md` alongside `index.ts`
-   - Multi-export: `index.md` with H2 sections per entity
-   - Alternative: User can manually split to `index.entityName.md` later
+**7. Determine output path and write file**
+   - Compute output path: `{outputDir}/{section}/{package-name}/api/{relative-path}`
+   - Preserve source directory structure within `api/` subdirectory
+   - Examples:
+     - `packages/logger/src/index.ts` → `apps/docs/content/packages/logger/api/index.md`
+     - `packages/logger/src/plugins/callsite.ts` → `apps/docs/content/packages/logger/api/plugins/callsite.md`
+     - `toolkits/design-toolkit/src/Button.tsx` → `apps/docs/content/toolkits/design-toolkit/api/Button.md`
+   - Create directories if they don't exist (use mkdir -p)
+   - Single export: Write to computed path
+   - Multi-export: Write single file with H2 sections per entity
 
 **8. Update tracking file**
    - Append or update entry in `/ACCELINT_API_DOCS_MAPPING.md`

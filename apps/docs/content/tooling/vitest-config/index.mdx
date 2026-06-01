@@ -1,0 +1,39 @@
+---
+title: Vitest Config
+description: Shared Vitest configuration for unit and integration testing
+---
+
+# Vitest Config
+
+Shared Vitest configuration for unit and integration testing with TypeScript support.
+
+## Installation
+
+```bash
+pnpm add -D @accelint/vitest-config
+```
+
+## Usage
+
+Extend this configuration in your `vitest.config.ts`:
+
+```typescript
+import { defineConfig } from 'vitest/config';
+import baseConfig from '@accelint/vitest-config';
+
+export default defineConfig({
+  ...baseConfig,
+  // Your custom config
+});
+```
+
+## Features
+
+- TypeScript support
+- Coverage configuration
+- Test environment setup
+- Performance optimizations
+
+## Source Code
+
+View the [source code on GitHub](https://github.com/gohypergiant/standard-toolkit/tree/main/tooling/vitest-config).

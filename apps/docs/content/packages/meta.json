@@ -1,0 +1,20 @@
+{
+  "title": "Packages",
+  "pages": [
+    "bus",
+    "constants",
+    "core",
+    "dataset",
+    "formatters",
+    "geo",
+    "hotkey-manager",
+    "icons",
+    "logger",
+    "math",
+    "ntds",
+    "predicates",
+    "temporal",
+    "web-worker",
+    "websocket"
+  ]
+}

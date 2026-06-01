@@ -1,0 +1,17 @@
+/* @import 'tailwindcss'; */
+@import '@accelint/design-foundation/styles';
+@import "fumadocs-ui/style.css";
+
+@layer theme {
+  :root {
+    /* overrides */
+
+    @variant light {
+      /* overrides */
+    }
+
+    @variant dark {
+      /* overrides */
+    }
+  }
+}

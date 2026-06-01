@@ -1,0 +1,41 @@
+---
+title: TypeScript Config
+description: Shared TypeScript configurations for different project types
+---
+
+# TypeScript Config
+
+Shared TypeScript configurations for different project types including libraries, Next.js apps, and more.
+
+## Installation
+
+```bash
+pnpm add -D @accelint/typescript-config
+```
+
+## Usage
+
+Extend the appropriate configuration in your `tsconfig.json`:
+
+```json
+{
+  "extends": "@accelint/typescript-config/base.json"
+}
+```
+
+Available configurations:
+- `base.json` - Base configuration for all projects
+- `library.json` - For library packages
+- `nextjs.json` - For Next.js applications
+- `react.json` - For React applications
+
+## Features
+
+- Strict type checking
+- Path aliases and module resolution
+- Optimized compiler options
+- Project reference support
+
+## Source Code
+
+View the [source code on GitHub](https://github.com/gohypergiant/standard-toolkit/tree/main/tooling/typescript-config).
