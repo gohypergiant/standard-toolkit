@@ -65,7 +65,10 @@ export function usePreventScrollFocus<T extends HTMLElement = HTMLLabelElement>(
           try {
             const originalInputFocus = input.focus;
             input.focus = function (options?: FocusOptions) {
-              originalInputFocus.call(this, { ...options, preventScroll: true });
+              originalInputFocus.call(this, {
+                ...options,
+                preventScroll: true,
+              });
             };
           } catch {
             // In test environments (jsdom), focus is read-only and cannot be overridden
