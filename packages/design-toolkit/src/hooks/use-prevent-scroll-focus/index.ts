@@ -49,19 +49,27 @@ export function usePreventScrollFocus<T extends HTMLElement = HTMLLabelElement>(
       }
 
       if (node) {
-        // Override focus on the element
-        const originalFocus = node.focus;
-        node.focus = function (options?: FocusOptions) {
-          originalFocus.call(this, { ...options, preventScroll: true });
-        };
+        // Override focus on the element (skip in test environments where focus is read-only)
+        try {
+          const originalFocus = node.focus;
+          node.focus = function (options?: FocusOptions) {
+            originalFocus.call(this, { ...options, preventScroll: true });
+          };
+        } catch {
+          // In test environments (jsdom), focus is read-only and cannot be overridden
+        }
 
         // Also override focus on any input elements inside
         const inputs = node.querySelectorAll('input');
         inputs.forEach((input) => {
-          const originalInputFocus = input.focus;
-          input.focus = function (options?: FocusOptions) {
-            originalInputFocus.call(this, { ...options, preventScroll: true });
-          };
+          try {
+            const originalInputFocus = input.focus;
+            input.focus = function (options?: FocusOptions) {
+              originalInputFocus.call(this, { ...options, preventScroll: true });
+            };
+          } catch {
+            // In test environments (jsdom), focus is read-only and cannot be overridden
+          }
         });
       }
     },
