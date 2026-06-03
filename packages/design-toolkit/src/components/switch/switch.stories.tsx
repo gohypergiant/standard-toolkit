@@ -37,8 +37,17 @@ export const Default: Story = {
 
 export const ScrollPreventionTest: Story = {
   render: () => (
-    <div style={{ height: '400px', overflow: 'auto', border: '2px solid #ccc', padding: '20px' }}>
-      <p>Scroll down and click switches - the viewport should not jump or scroll</p>
+    <div
+      style={{
+        height: '400px',
+        overflow: 'auto',
+        border: '2px solid #ccc',
+        padding: '20px',
+      }}
+    >
+      <p>
+        Scroll down and click switches - the viewport should not jump or scroll
+      </p>
       <div style={{ height: '200px' }} />
       {Array.from({ length: 20 }, (_, i) => (
         <div key={i} style={{ marginBottom: '20px' }}>
@@ -51,7 +60,8 @@ export const ScrollPreventionTest: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Tests that clicking switches does not cause unwanted scroll-into-view behavior. Scroll within the container and click switches - the viewport should remain stable.',
+        story:
+          'Tests that clicking switches does not cause unwanted scroll-into-view behavior. Scroll within the container and click switches - the viewport should remain stable.',
       },
     },
   },
