@@ -27,9 +27,11 @@ Use beta releases when:
 ### Starting a Beta Series
 
 **Prerequisites:**
-- Features are complete on `main` branch
-- All tests pass, documentation complete
-- TSC approval obtained
+- Full test suite passes
+- Code review completed
+- Documentation written
+- Features integrated and working together
+- No known critical bugs
 
 **Steps:**
 
@@ -280,7 +282,7 @@ The `@latest` tag always points to the most recent stable version.
 
 ## Best Practices
 
-1. **Time-box beta cycles:** Target 1-2 weeks for validation
+1. **Time-box beta cycles:** Target 1-2 weeks for validation to avoid drift from main line
 2. **Communicate clearly:** Announce beta releases to early adopters
 3. **Document changes:** Use changeset files to explain what changed and why
 4. **Monitor feedback:** Track issues and PRs against beta branch
