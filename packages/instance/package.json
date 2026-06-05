@@ -1,0 +1,76 @@
+{
+  "name": "@accelint/instance",
+  "description": "A window and module instancing library with cross tab migration vis event bus",
+  "version": "0.0.0",
+  "author": "https://hypergiant.com",
+  "$schema": "https://json.schemastore.org/package",
+  "devDependencies": {
+    "@accelint/bus": "workspace:*",
+    "@accelint/core": "workspace:*",
+    "@accelint/typescript-config": "workspace:*",
+    "@accelint/vitest-config": "workspace:*",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "tsdown": "^0.18.0",
+    "type-fest": "^5.3.1",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.15"
+  },
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=10"
+  },
+  "exports": {
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "./dist/**",
+    "./catalog-info.yaml",
+    "./CHANGELOG.md",
+    "./package.json",
+    "./README.md"
+  ],
+  "keywords": [
+    "dev-tk",
+    "tooling"
+  ],
+  "license": "Apache-2.0",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "optionalDependencies": {
+    "react": "^19"
+  },
+  "owner": "default/pathfinder",
+  "peerDependencies": {
+    "@accelint/bus": "workspace:*",
+    "@accelint/core": "workspace:*"
+  },
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gohypergiant/standard-toolkit"
+  },
+  "scripts": {
+    "bench": "pnpm vitest bench --run --dir src",
+    "build": "pnpm tsdown",
+    "constellation-tracker": "pnpm exec constellation-tracker",
+    "dev": "pnpm tsc --watch",
+    "format": "pnpm biome format . --write --verbose",
+    "format:check": "pnpm biome format . --verbose",
+    "index": "pnpm zx ../../scripts/indexer.mjs packages/instance",
+    "license": "pnpm zx ../../scripts/license.mjs",
+    "lint": "pnpm biome lint . --verbose",
+    "lint:package": "pnpm publint",
+    "test": "pnpm vitest --dir=src",
+    "test:watch": "pnpm vitest --dir=src --watch"
+  },
+  "sideEffects": false,
+  "subPath": "packages/instance",
+  "title": "Accelint Instance",
+  "type": "module",
+  "types": "./dist/index.d.ts"
+}
