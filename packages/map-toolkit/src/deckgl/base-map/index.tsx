@@ -16,7 +16,14 @@ import { useEffectEvent, useEmit } from '@accelint/bus/react';
 import { Deckgl, useDeckgl } from '@deckgl-fiber-renderer/dom';
 import type { PickingInfo, ViewStateChangeParameters } from '@deck.gl/core';
 import 'client-only';
-import { useCallback, useEffect, useId, useMemo, useRef } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   Map as MapLibre,
   type MapRef,
@@ -282,6 +289,7 @@ export function BaseMap({
   const container = useId();
   const mapRef = useRef<MapRef>(null);
   const rbzRef = useRef<RbzHandler | null>(null);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   // Derive boxZoom: disable when RBZ is enabled to avoid conflicts
   const boxZoom = boxZoomProp ?? !enableRbz;
@@ -317,16 +325,11 @@ export function BaseMap({
   // guard on its `_updateStyleComponents` path. maplibre's `setProjection`
   // then throws "Style is not done loading." Sync via the post-load pattern
   // below - same approach as `useMapLibre` uses for the same setter.
-  const mapOptions = useMemo(
-    () => ({
+  const mapOptions = useMemo(() => {
+    const options = {
       attributionControl: DEFAULT_ATTRIBUTION_CONTROL,
       ...filteredMapLibreOptions,
       container,
-      zoom: viewState.zoom,
-      pitch: viewState.pitch,
-      bearing: viewState.bearing,
-      latitude: viewState.latitude,
-      longitude: viewState.longitude,
       doubleClickZoom: false,
       dragRotate: false,
       pitchWithRotate: false,
@@ -334,9 +337,31 @@ export function BaseMap({
       maxPitch: cameraState.view === '2D' ? 0 : 85,
       canvasContextAttributes: CANVAS_CONTEXT_ATTRIBUTES,
       boxZoom,
-    }),
-    [viewState, container, cameraState.view, boxZoom, filteredMapLibreOptions],
-  );
+    };
+
+    // Only include camera position if not transitioning
+    // Check both isTransitioning and transitionDuration to avoid React timing issue
+    // where cameraState updates before isTransitioning becomes true
+    if (!(isTransitioning || cameraState.transitionDuration)) {
+      Object.assign(options, {
+        zoom: viewState.zoom,
+        pitch: viewState.pitch,
+        bearing: viewState.bearing,
+        latitude: viewState.latitude,
+        longitude: viewState.longitude,
+      });
+    }
+
+    return options;
+  }, [
+    viewState,
+    container,
+    cameraState.view,
+    cameraState.transitionDuration,
+    boxZoom,
+    filteredMapLibreOptions,
+    isTransitioning,
+  ]);
 
   // `setProjection` throws if called before the style is loaded. Initial
   // application happens in `handleMapLoad`; this effect syncs later changes.
@@ -349,6 +374,60 @@ export function BaseMap({
 
     map.setProjection({ type: cameraState.projection });
   }, [cameraState.projection]);
+
+  // Use MapLibre's easeTo for smooth transitions
+  useEffect(() => {
+    if (cameraState.transitionDuration && mapRef.current && !isTransitioning) {
+      setIsTransitioning(true);
+      const map = mapRef.current.getMap
+        ? mapRef.current.getMap()
+        : mapRef.current;
+
+      map.easeTo({
+        center: [cameraState.longitude, cameraState.latitude],
+        zoom: cameraState.zoom,
+        bearing: cameraState.rotation,
+        pitch: cameraState.pitch,
+        duration: cameraState.transitionDuration,
+        easing: (t) => {
+          switch (cameraState.transitionEasing) {
+            case 'ease-in':
+              return t * t;
+            case 'ease-out':
+              return t * (2 - t);
+            case 'ease-in-out':
+              return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+            case 'linear':
+              return t;
+            default:
+              return t * (2 - t);
+          }
+        },
+      });
+
+      // Clear transition properties after animation completes
+      setTimeout(() => {
+        setIsTransitioning(false);
+        setCameraState({
+          latitude: cameraState.latitude,
+          longitude: cameraState.longitude,
+          zoom: cameraState.zoom,
+          pitch: cameraState.pitch,
+          rotation: cameraState.rotation,
+        });
+      }, cameraState.transitionDuration + 50);
+    }
+  }, [
+    cameraState.transitionDuration,
+    cameraState.latitude,
+    cameraState.longitude,
+    cameraState.zoom,
+    cameraState.pitch,
+    cameraState.rotation,
+    cameraState.transitionEasing,
+    setCameraState,
+    isTransitioning,
+  ]);
 
   const emitClick = useEmit<MapClickEvent>(MapEvents.click);
   const emitHover = useEmit<MapHoverEvent>(MapEvents.hover);

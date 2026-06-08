@@ -51,6 +51,8 @@ type CameraState2D = {
   rotation: number;
   projection: 'mercator';
   view: '2D';
+  transitionDuration?: number;
+  transitionEasing?: 'linear' | 'ease-in' | 'ease-out' | 'ease-in-out';
 };
 
 /**
@@ -64,6 +66,8 @@ type CameraState3D = {
   rotation: number;
   projection: 'globe';
   view: '3D';
+  transitionDuration?: number;
+  transitionEasing?: 'linear' | 'ease-in' | 'ease-out' | 'ease-in-out';
 };
 
 /**
@@ -77,6 +81,8 @@ type CameraState2Point5D = {
   rotation: number;
   projection: 'mercator';
   view: '2.5D';
+  transitionDuration?: number;
+  transitionEasing?: 'linear' | 'ease-in' | 'ease-out' | 'ease-in-out';
 };
 
 /**
@@ -269,16 +275,24 @@ export const cameraStore = createMapStore<CameraState, CameraActions>({
         }
 
         const state = get();
-        replace(
-          buildCameraState({
-            ...state,
-            latitude: payload.latitude,
-            longitude: payload.longitude,
-            zoom: payload.zoom ?? state.zoom,
-            rotation: payload.heading ?? state.rotation,
-            pitch: payload.pitch ?? state.pitch,
-          }),
-        );
+        const newState = buildCameraState({
+          ...state,
+          latitude: payload.latitude,
+          longitude: payload.longitude,
+          zoom: payload.zoom ?? state.zoom,
+          rotation: payload.heading ?? state.rotation,
+          pitch: payload.pitch ?? state.pitch,
+        });
+
+        // Pass through transition properties if provided
+        if (payload.transitionDuration) {
+          newState.transitionDuration = payload.transitionDuration;
+        }
+        if (payload.transitionEasing) {
+          newState.transitionEasing = payload.transitionEasing;
+        }
+
+        replace(newState);
       },
     );
 

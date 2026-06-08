@@ -48,6 +48,10 @@ export type CameraSetCenterPayload = {
   heading?: number;
   /** Optional pitch angle */
   pitch?: number;
+  /** Optional transition duration in milliseconds */
+  transitionDuration?: number;
+  /** Optional transition easing function */
+  transitionEasing?: 'linear' | 'ease-in' | 'ease-out' | 'ease-in-out';
 };
 
 /**
