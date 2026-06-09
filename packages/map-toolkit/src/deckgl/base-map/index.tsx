@@ -404,7 +404,9 @@ export function BaseMap({
         },
       });
 
-      // Clear transition properties after animation completes
+      // Clear transition properties after animation completes to ensure subsequent
+      // transitions trigger properly. Without clearing, the useEffect won't fire on
+      // the next setCenter call if transitionDuration/transitionEasing remain unchanged.
       setTimeout(() => {
         setIsTransitioning(false);
         setCameraState({
