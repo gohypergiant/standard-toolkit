@@ -339,9 +339,8 @@ export function BaseMap({
       boxZoom,
     };
 
-    // Only include camera position if not transitioning
-    // Check both isTransitioning and transitionDuration to avoid React timing issue
-    // where cameraState updates before isTransitioning becomes true
+    // Only include camera position when NOT transitioning
+    // Let MapLibre's easeTo fully control the camera during transitions
     if (!(isTransitioning || cameraState.transitionDuration)) {
       Object.assign(options, {
         zoom: viewState.zoom,

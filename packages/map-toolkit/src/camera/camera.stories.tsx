@@ -175,10 +175,10 @@ const TRANSITION_STORY_ID = uuid();
 
 const LOCATIONS = [
   { name: 'New York', lat: 40.7128, lng: -74.006, zoom: 12 },
-  { name: 'London', lat: 51.5074, lng: -0.1278, zoom: 12 },
-  { name: 'Tokyo', lat: 35.6762, lng: 139.6503, zoom: 12 },
-  { name: 'Sydney', lat: -33.8688, lng: 151.2093, zoom: 12 },
-  { name: 'Rio de Janeiro', lat: -22.9068, lng: -43.1729, zoom: 11 },
+  { name: 'Los Angeles', lat: 34.0522, lng: -118.2437, zoom: 12 },
+  { name: 'Chicago', lat: 41.8781, lng: -87.6298, zoom: 12 },
+  { name: 'Miami', lat: 25.7617, lng: -80.1918, zoom: 12 },
+  { name: 'Seattle', lat: 47.6062, lng: -122.3321, zoom: 12 },
 ];
 
 function TransitionToolbar() {
@@ -205,7 +205,7 @@ function TransitionToolbar() {
   return (
     <div className='absolute top-l left-l flex w-[300px] flex-col gap-m rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
       <p className='font-bold text-header-l'>Smooth Camera Transitions</p>
-      <p className='text-body-s text-(--fg-primary-muted)'>
+      <p className='text-(--fg-primary-muted) text-body-s'>
         Click locations to see animated camera movements
       </p>
 
@@ -228,26 +228,26 @@ function TransitionToolbar() {
 
       <div className='flex flex-col gap-s'>
         <p className='font-semibold text-body-m'>
-          Easing Functions (to London)
+          Easing Functions (to Chicago)
         </p>
         <Button
           variant='outlined'
           color='accent-primary'
-          onPress={() => flyToLocation(51.5074, -0.1278, 12, 3000, 'linear')}
+          onPress={() => flyToLocation(41.8781, -87.6298, 12, 3000, 'linear')}
         >
           Linear (3s)
         </Button>
         <Button
           variant='outlined'
           color='accent-primary'
-          onPress={() => flyToLocation(51.5074, -0.1278, 12, 3000, 'ease-in')}
+          onPress={() => flyToLocation(41.8781, -87.6298, 12, 3000, 'ease-in')}
         >
           Ease In (3s)
         </Button>
         <Button
           variant='outlined'
           color='accent-primary'
-          onPress={() => flyToLocation(51.5074, -0.1278, 12, 3000, 'ease-out')}
+          onPress={() => flyToLocation(41.8781, -87.6298, 12, 3000, 'ease-out')}
         >
           Ease Out (3s)
         </Button>
@@ -255,7 +255,7 @@ function TransitionToolbar() {
           variant='outlined'
           color='accent-primary'
           onPress={() =>
-            flyToLocation(51.5074, -0.1278, 12, 3000, 'ease-in-out')
+            flyToLocation(41.8781, -87.6298, 12, 3000, 'ease-in-out')
           }
         >
           Ease In-Out (3s)
