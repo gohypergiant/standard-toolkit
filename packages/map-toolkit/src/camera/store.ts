@@ -217,12 +217,16 @@ function buildCameraState(partial?: CameraStateInput): CameraState {
     } satisfies CameraState2D;
   }
 
-  // Add optional transition properties if provided
+  // Always handle transition properties - either set or clear them
   if (partial?.transitionDuration !== undefined) {
     state.transitionDuration = partial.transitionDuration;
+  } else {
+    delete state.transitionDuration;
   }
   if (partial?.transitionEasing !== undefined) {
     state.transitionEasing = partial.transitionEasing;
+  } else {
+    delete state.transitionEasing;
   }
 
   return state;

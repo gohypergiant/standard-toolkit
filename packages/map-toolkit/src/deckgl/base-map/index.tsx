@@ -413,6 +413,8 @@ export function BaseMap({
           zoom: cameraState.zoom,
           pitch: cameraState.pitch,
           rotation: cameraState.rotation,
+          transitionDuration: undefined,
+          transitionEasing: undefined,
         });
       }, cameraState.transitionDuration + 50);
     }
