@@ -127,6 +127,8 @@ type CameraStateInput = {
   rotation?: number;
   projection?: ProjectionType;
   view?: ViewType;
+  transitionDuration?: number;
+  transitionEasing?: 'linear' | 'ease-in' | 'ease-out' | 'ease-in-out';
 };
 
 /**
@@ -177,9 +179,12 @@ function buildCameraState(partial?: CameraStateInput): CameraState {
   const is3D = partial?.view === '3D' || partial?.projection === 'globe';
   const is2Point5D = partial?.view === '2.5D';
 
+  // Build base state for the appropriate view type
+  let state: CameraState;
+
   if (is3D) {
     // 3D view: globe projection, no pitch, no rotation
-    return {
+    state = {
       latitude,
       longitude,
       zoom,
@@ -188,11 +193,9 @@ function buildCameraState(partial?: CameraStateInput): CameraState {
       projection: 'globe',
       view: '3D',
     } satisfies CameraState3D;
-  }
-
-  if (is2Point5D) {
+  } else if (is2Point5D) {
     // 2.5D view: mercator projection, variable pitch
-    return {
+    state = {
       latitude,
       longitude,
       zoom,
@@ -201,18 +204,28 @@ function buildCameraState(partial?: CameraStateInput): CameraState {
       projection: 'mercator',
       view: '2.5D',
     } satisfies CameraState2Point5D;
+  } else {
+    // Default: 2D view, mercator projection, no pitch
+    state = {
+      latitude,
+      longitude,
+      zoom,
+      pitch: 0,
+      rotation,
+      projection: 'mercator',
+      view: '2D',
+    } satisfies CameraState2D;
   }
 
-  // Default: 2D view, mercator projection, no pitch
-  return {
-    latitude,
-    longitude,
-    zoom,
-    pitch: 0,
-    rotation,
-    projection: 'mercator',
-    view: '2D',
-  } satisfies CameraState2D;
+  // Add optional transition properties if provided
+  if (partial?.transitionDuration !== undefined) {
+    state.transitionDuration = partial.transitionDuration;
+  }
+  if (partial?.transitionEasing !== undefined) {
+    state.transitionEasing = partial.transitionEasing;
+  }
+
+  return state;
 }
 
 /**
@@ -282,15 +295,9 @@ export const cameraStore = createMapStore<CameraState, CameraActions>({
           zoom: payload.zoom ?? state.zoom,
           rotation: payload.heading ?? state.rotation,
           pitch: payload.pitch ?? state.pitch,
+          transitionDuration: payload.transitionDuration,
+          transitionEasing: payload.transitionEasing,
         });
-
-        // Pass through transition properties if provided
-        if (payload.transitionDuration) {
-          newState.transitionDuration = payload.transitionDuration;
-        }
-        if (payload.transitionEasing) {
-          newState.transitionEasing = payload.transitionEasing;
-        }
 
         replace(newState);
       },
