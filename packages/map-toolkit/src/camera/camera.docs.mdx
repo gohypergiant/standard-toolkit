@@ -672,7 +672,9 @@ function FlyToLocation({ mapId }: { mapId: UniqueId }) {
 
 **Alternative: Using animation libraries**
 
-You can also create transitions with animation libraries like react-spring:
+You can also create transitions with animation libraries like react-spring, but note that this approach has significant performance downsides:
+
+> ⚠️ **Performance Warning**: Animation libraries like react-spring update camera position on every frame via React state and event bus emissions, running entirely on the CPU. This creates overhead from frequent re-renders and event processing. The built-in `transitionDuration`/`transitionEasing` approach is recommended as it uses MapLibre's GPU-accelerated `easeTo` method, which performs animations on the GPU without triggering React re-renders.
 
 ```tsx
 import { useSpring } from 'react-spring';
