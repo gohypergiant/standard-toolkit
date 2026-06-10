@@ -639,10 +639,43 @@ function SyncedMaps() {
 
 ### Animated Camera Transitions
 
-Create smooth camera transitions with animation libraries:
+Create smooth camera transitions using the built-in `transitionDuration` and `transitionEasing` properties. This approach leverages MapLibre's GPU-accelerated `easeTo` method for optimal performance:
 
 ```tsx
-import { useSpring, animated } from 'react-spring';
+import { useEmit } from '@accelint/bus/react';
+import { CameraEventTypes } from '@accelint/map-toolkit/camera';
+import type { CameraSetCenterEvent } from '@accelint/map-toolkit/camera';
+
+function FlyToLocation({ mapId }: { mapId: UniqueId }) {
+  const setCenter = useEmit<CameraSetCenterEvent>(CameraEventTypes.setCenter);
+
+  const flyToSanFrancisco = () => {
+    setCenter({
+      id: mapId,
+      latitude: 37.7749,
+      longitude: -122.4194,
+      zoom: 12,
+      transitionDuration: 2000, // milliseconds
+      transitionEasing: 'ease-out', // 'linear' | 'ease-in' | 'ease-out' | 'ease-in-out'
+    });
+  };
+
+  return <button onClick={flyToSanFrancisco}>Fly to San Francisco</button>;
+}
+```
+
+**Available easing functions:**
+- `linear` - Constant speed throughout
+- `ease-in` - Starts slow, accelerates
+- `ease-out` - Starts fast, decelerates (default)
+- `ease-in-out` - Slow start and end, fast middle
+
+**Alternative: Using animation libraries**
+
+You can also create transitions with animation libraries like react-spring:
+
+```tsx
+import { useSpring } from 'react-spring';
 import { Broadcast } from '@accelint/bus';
 import { CameraEventTypes } from '@accelint/map-toolkit/camera';
 
