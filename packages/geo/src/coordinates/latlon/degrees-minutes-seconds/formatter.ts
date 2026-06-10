@@ -31,12 +31,23 @@ import { createFormatter } from '../internal/format';
  * ```
  */
 const toDegreesMinutesSeconds = (num: number): string => {
-  const degrees = Math.floor(Math.abs(num));
+  let degrees = Math.floor(Math.abs(num));
   const minutesFull = (Math.abs(num) - degrees) * 60;
-  const minutes = Math.floor(minutesFull);
-  const seconds = ((minutesFull - minutes) * 60).toFixed(2);
+  let minutes = Math.floor(minutesFull);
+  let seconds = Number(((minutesFull - minutes) * 60).toFixed(2));
 
-  return `${degrees}° ${minutes}' ${seconds}″`;
+  // Rounding can produce 60 seconds (e.g. 40.9999999 -> 40° 59' 60.00″);
+  // carry into minutes (and degrees) so the output stays a valid coordinate.
+  if (seconds >= 60) {
+    minutes += 1;
+    seconds = 0;
+  }
+  if (minutes >= 60) {
+    degrees += 1;
+    minutes = 0;
+  }
+
+  return `${degrees}° ${minutes}' ${seconds.toFixed(2)}″`;
 };
 
 /**
