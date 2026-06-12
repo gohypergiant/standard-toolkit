@@ -36,10 +36,8 @@ const toDegreesDecimalMinutes = (num: number): string => {
 
   // Rounding can produce 60 minutes (e.g. 40.9999995 -> 40° 60.0000');
   // carry into degrees so the output stays a valid coordinate.
-  if (minutes >= 60) {
-    degrees += 1;
-    minutes = 0;
-  }
+  degrees += Math.floor(minutes / 60);
+  minutes %= 60;
 
   return `${degrees}° ${minutes.toFixed(4)}'`;
 };
