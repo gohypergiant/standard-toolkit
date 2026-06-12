@@ -77,10 +77,33 @@ describe('Pagination', () => {
     expect(screen.getByRole('navigation').children).toHaveLength(2);
   });
 
-  it('should show empty component on currentPage > pageCount', () => {
-    setup({ value: 6, total: 5, onChange: vi.fn() });
+  it('should clamp to the last page when currentPage exceeds pageCount', () => {
+    const { onChange } = setup({ value: 6, total: 5, onChange: vi.fn() });
 
-    expect(screen.getByRole('navigation').children).toHaveLength(2);
+    // Clamped to page 5: the full pagination renders and stays usable
+    expect(screen.getByRole('navigation').children).toHaveLength(7);
+    expect(screen.getByRole('button', { name: '5' })).toHaveAttribute(
+      'aria-current',
+      'page',
+    );
+    expect(screen.getByLabelText('Previous page')).not.toBeDisabled();
+    expect(onChange).toHaveBeenCalledWith(5);
+  });
+
+  it('should recover when total shrinks below the current page', () => {
+    const { rerender } = render(<Pagination defaultValue={4} total={4} />);
+
+    expect(screen.getByRole('button', { name: '4' })).toBeInTheDocument();
+
+    rerender(<Pagination defaultValue={4} total={2} />);
+
+    // Previously this stranded the page out of range: every page button
+    // unmounted and Prev AND Next disabled with no way to recover.
+    expect(screen.getByRole('button', { name: '2' })).toHaveAttribute(
+      'aria-current',
+      'page',
+    );
+    expect(screen.getByLabelText('Previous page')).not.toBeDisabled();
   });
 
   describe('getPaginationRange()', () => {

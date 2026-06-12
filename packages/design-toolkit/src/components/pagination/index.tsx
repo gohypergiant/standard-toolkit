@@ -14,6 +14,7 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
+import { useEffect } from 'react';
 import { useControlledState } from 'react-stately/useControlledState';
 import { PaginationContext } from './context';
 import { PaginationNext } from './next';
@@ -55,12 +56,27 @@ export function Pagination({
 }: PaginationProps) {
   const [page, setPage] = useControlledState(value, defaultValue, onChange);
 
+  /*
+   * Clamp to `total` so a shrinking page count (refetch, filter change) can't
+   * strand the page out of range — out-of-range state disabled Prev AND Next
+   * and unmounted every page button, leaving no way to recover.
+   */
+  const effectivePage = total > 0 ? Math.min(page, total) : page;
+
+  useEffect(() => {
+    if (total > 0 && page > total) {
+      setPage(total);
+    }
+  }, [total, page, setPage]);
+
   return (
-    <PaginationContext.Provider value={{ page, total, isLoading, setPage }}>
+    <PaginationContext.Provider
+      value={{ page: effectivePage, total, isLoading, setPage }}
+    >
       <nav
         {...rest}
         className={clsx(styles.container, classNames?.container)}
-        aria-label={`Page ${page} of ${total}`}
+        aria-label={`Page ${effectivePage} of ${total}`}
       >
         {children || (
           <>
