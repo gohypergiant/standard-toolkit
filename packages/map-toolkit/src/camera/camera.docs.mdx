@@ -212,7 +212,7 @@ bus.emit(CameraEventTypes.fitBounds, {
 Change the camera view mode (2D, 2.5D, or 3D). This automatically adjusts projection and pitch/rotation constraints.
 
 ```tsx
-// Switch to 2.5D view (sets pitch to 45°)
+// Switch to 2.5D view (sets pitch to 60°)
 bus.emit(CameraEventTypes.setView, {
   id: instanceId,
   view: '2.5D',
@@ -278,7 +278,7 @@ Set the pitch (tilt) angle. Only works in 2.5D mode with Mercator projection.
 ```tsx
 bus.emit(CameraEventTypes.setPitch, {
   id: instanceId,
-  pitch: 45, // 0-85 degrees (typically 0-65 for best UX)
+  pitch: 60, // 0-85 degrees
 });
 ```
 
@@ -369,7 +369,7 @@ Traditional flat map view with rotation enabled.
 Tilted perspective view for depth perception.
 
 - **Projection**: Mercator
-- **Pitch**: 0-65° (defaults to 45°)
+- **Pitch**: 0-85° (defaults to 60°)
 - **Rotation**: 0-360°
 - **Use Cases**: Urban planning, terrain visualization, building visualization
 
@@ -463,7 +463,7 @@ console.log(cameraState);
 
 When changing views or projections, certain properties are automatically adjusted:
 
-- **2D → 2.5D**: Pitch set to 45°
+- **2D → 2.5D**: Pitch set to 60°
 - **2D → 3D**: Projection changed to 'globe', rotation reset to 0°
 - **3D → 2D**: Projection changed to 'mercator', pitch reset to 0°
 - **Setting Globe Projection**: View automatically set to '3D'

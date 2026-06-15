@@ -32,6 +32,7 @@ function createFakeMap(): FakeMap {
 
 let activeMap: FakeMap | null = null;
 let capturedOnLoad: (() => void) | undefined;
+let capturedMapProps: Record<string, unknown> | undefined;
 
 function useFakeMap(map: FakeMap): void {
   activeMap = map;
@@ -48,15 +49,17 @@ vi.mock('react-map-gl/maplibre', () => ({
     children,
     onLoad,
     ref,
+    ...rest
   }: {
     children?: React.ReactNode;
     onLoad?: () => void;
     ref?: { current: unknown };
-  }) => {
+  } & Record<string, unknown>) => {
     if (ref && typeof ref === 'object') {
       ref.current = { getMap: () => activeMap };
     }
     capturedOnLoad = onLoad;
+    capturedMapProps = rest;
 
     return <div data-testid='maplibre-mock'>{children}</div>;
   },
@@ -66,6 +69,7 @@ vi.mock('react-map-gl/maplibre', () => ({
 beforeEach(() => {
   activeMap = null;
   capturedOnLoad = undefined;
+  capturedMapProps = undefined;
 });
 
 describe('BaseMap', () => {
@@ -115,6 +119,51 @@ describe('BaseMap', () => {
     });
 
     expect(fakeMap.setProjection).toHaveBeenCalledWith({ type: 'mercator' });
+  });
+
+  describe('mouse pitch/rotate gating by view', () => {
+    // Only 2.5D permits mouse-driven rotate/pitch; 2D stays flat and 3D is a
+    // fixed-orientation globe. `pitchWithRotate` is a constructor-only option
+    // (react-map-gl never re-applies it), so it stays true in every view and is
+    // inert outside 2.5D because the rotate handler + maxPitch are disabled there.
+    it.each([
+      {
+        view: '2D' as const,
+        expected: {
+          dragRotate: false,
+          pitchWithRotate: true,
+          touchPitch: false,
+          maxPitch: 0,
+        },
+      },
+      {
+        view: '2.5D' as const,
+        expected: {
+          dragRotate: true,
+          pitchWithRotate: true,
+          touchPitch: true,
+          maxPitch: 85,
+        },
+      },
+      {
+        view: '3D' as const,
+        expected: {
+          dragRotate: false,
+          pitchWithRotate: true,
+          touchPitch: false,
+          maxPitch: 0,
+        },
+      },
+    ])('gates the rotate/pitch handlers and maxPitch for the $view view', ({
+      view,
+      expected,
+    }) => {
+      useFakeMap(createFakeMap());
+
+      render(<BaseMap id={uuid()} defaultView={view} />);
+
+      expect(capturedMapProps).toMatchObject(expected);
+    });
   });
 });
 

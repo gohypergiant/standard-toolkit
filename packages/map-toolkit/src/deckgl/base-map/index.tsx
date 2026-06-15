@@ -29,6 +29,7 @@ import { useMapCamera } from '../../camera';
 import { getCursor } from '../../map-cursor/store';
 import { getMapGeneration } from '../../shared/cleanup';
 import { DEFAULT_VIEW_STATE } from '../../shared/constants';
+import { applyRotatePitchSensitivity } from './apply-rotate-pitch-sensitivity';
 import { DARK_BASE_MAP_STYLE, PARAMETERS, PICKING_RADIUS } from './constants';
 import { MapControls } from './controls';
 import { MapEvents } from './events';
@@ -317,6 +318,9 @@ export function BaseMap({
   // guard on its `_updateStyleComponents` path. maplibre's `setProjection`
   // then throws "Style is not done loading." Sync via the post-load pattern
   // below - same approach as `useMapLibre` uses for the same setter.
+  // 2.5D is the only view that permits mouse-driven pitch + rotation.
+  const allowTilt = cameraState.view === '2.5D';
+
   const mapOptions = useMemo(
     () => ({
       attributionControl: DEFAULT_ATTRIBUTION_CONTROL,
@@ -328,14 +332,27 @@ export function BaseMap({
       latitude: viewState.latitude,
       longitude: viewState.longitude,
       doubleClickZoom: false,
-      dragRotate: false,
-      pitchWithRotate: false,
+      // Mouse/touch pitch + rotation is only meaningful in 2.5D: the camera
+      // store locks 2D to pitch:0 and treats 3D (globe) as fixed-orientation
+      // (pitch:0, rotation:0). Right-drag (left-drag stays pan) rotates+pitches;
+      // we gate the right-drag/touch handlers + maxPitch to 2.5D so 2D stays flat
+      // and 3D stays stable.
+      //
+      // react-map-gl reactively re-applies `dragRotate`, `touchPitch` (handlers)
+      // and `maxPitch` (a setting) when `cameraState.view` flips WITHOUT remounting
+      // the map. But `pitchWithRotate` is a constructor-only option it never
+      // re-applies, so it must be set true up front or right-drag would rotate the
+      // bearing without ever tilting. It's harmless in 2D/3D because `dragRotate`
+      // is disabled and `maxPitch` is 0 there, so no pitch can occur regardless.
+      dragRotate: allowTilt,
+      pitchWithRotate: true,
+      touchPitch: allowTilt,
       rollEnabled: false,
-      maxPitch: cameraState.view === '2D' ? 0 : 85,
+      maxPitch: allowTilt ? 85 : 0,
       canvasContextAttributes: CANVAS_CONTEXT_ATTRIBUTES,
       boxZoom,
     }),
-    [viewState, container, cameraState.view, boxZoom, filteredMapLibreOptions],
+    [viewState, container, allowTilt, boxZoom, filteredMapLibreOptions],
   );
 
   // `setProjection` throws if called before the style is loaded. Initial
@@ -457,7 +474,14 @@ export function BaseMap({
 
   // First point at which `setProjection` is safe (after `style.load`).
   const handleMapLoad = useEffectEvent(() => {
-    mapRef.current?.getMap().setProjection({ type: cameraState.projection });
+    const map = mapRef.current?.getMap();
+    if (!map) {
+      return;
+    }
+    map.setProjection({ type: cameraState.projection });
+    // Soften MapLibre's right-drag rotate/pitch, which is overly sensitive by
+    // default. Applied once on load against the freshly-built handlers.
+    applyRotatePitchSensitivity(map);
   });
 
   const handleLoad = useEffectEvent(() => {
@@ -512,7 +536,13 @@ export function BaseMap({
         <MapLibre
           key={mapGeneration}
           onMove={(evt) => {
-            setCameraState(evt.viewState);
+            // MapLibre reports heading as `bearing`, but the camera store keys on
+            // `rotation` (and `buildCameraState` ignores `bearing`). Without this
+            // remap, a right-drag rotation is dropped on the round-trip and the
+            // viewState memo pushes the stale `rotation` back to the map, snapping
+            // the bearing back. Pitch is unaffected since it's named the same.
+            const { bearing, ...rest } = evt.viewState;
+            setCameraState({ ...rest, rotation: bearing });
           }}
           onLoad={handleMapLoad}
           mapStyle={styleUrl}

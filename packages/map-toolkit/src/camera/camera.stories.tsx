@@ -93,7 +93,7 @@ function CameraToolbar() {
           value={cameraState.pitch}
           isDisabled={cameraState.view !== '2.5D'}
           minValue={0}
-          maxValue={65}
+          maxValue={85}
           layout='stack'
           onChange={(value) => {
             typeof value === 'number'

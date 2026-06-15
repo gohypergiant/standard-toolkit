@@ -15,6 +15,7 @@ A React component that provides a Deck.gl-powered base map with MapLibre GL inte
 - **Map Mode Integration**: Automatically creates internal `MapProvider` for map mode state management
 - **Deck.gl Controller**: Interactive map controls with configurable parameters
 - **Rubber Band Zoom**: Opt-in Shift+drag zoom-to-rectangle gesture via `enableRbz` (see [Rubber Band Zoom docs](?path=/docs/deckgl-rubber-band-zoom--docs))
+- **Tilt & Rotate**: In the `'2.5D'` view, right-drag rotates the bearing and pitches the camera (left-drag still pans); dampened from MapLibre's default sensitivity for finer control
 - **Client-Side Only**: Designed for client-side rendering in React applications
 
 **Important**: BaseMap passes its children to Deck.gl, which only accepts Deck.gl layer components. Regular React UI components (buttons, toolbars, etc.) must be rendered as **siblings** to BaseMap, not children.
@@ -155,7 +156,7 @@ The `BaseMap` component extends all `DeckglProps` from `@deckgl-fiber-renderer/t
 |------|------|---------|-------------|
 | `id` | `UniqueId` | *required* | Unique identifier for this map instance. Used to isolate map mode state between multiple maps. See [Using `id`](#using-id) for recommended patterns. |
 | `className` | `string` | `undefined` | CSS class applied to the map container element. |
-| `defaultView` | `'2D' \| '2.5D' \| '3D'` | `'2D'` | Initial camera perspective. `'2D'` locks pitch at 0; `'2.5D'` and `'3D'` allow tilt up to 85°. |
+| `defaultView` | `'2D' \| '2.5D' \| '3D'` | `'2D'` | Initial camera perspective. `'2D'` locks pitch at 0 (rotation allowed); `'2.5D'` enables mouse rotate + pitch (right-drag) up to 85°; `'3D'` is a fixed-orientation globe (pitch and rotation locked). |
 | `styleUrl` | `string` | `DARK_BASE_MAP_STYLE` | MapLibre style URL for the base map tiles. See [Base map styles](#base-map-styles). |
 | `enableControlEvents` | `boolean` | `true` | Listen for pan/zoom enable/disable events on the event bus. Set to `false` to skip the event-listener setup when you don't need programmatic camera control. |
 | `boxZoom` | `boolean` | `!enableRbz` | Enable MapLibre's native box zoom gesture (Shift + drag). Defaults to `true`, or `false` when `enableRbz` is `true` (the two gestures conflict). |
@@ -360,7 +361,7 @@ The BaseMap component comes with the following defaults:
 
 - **Map Style**: [Carto Dark Matter](https://tiles.basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json)
 - **Initial View State**: Configured from `@accelint/map-toolkit` constants
-- **Controller**: Interactive with double-click zoom, drag rotate, pitch rotate, and roll disabled
+- **Controller**: Interactive with double-click zoom and roll disabled. Mouse drag-rotate and pitch (right-drag) are enabled only in the `'2.5D'` view; `'2D'` stays flat and `'3D'` keeps a fixed globe orientation
 - **Device Pixels**: Disabled for performance
 - **Interleaved Rendering**: Enabled
 

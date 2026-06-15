@@ -151,7 +151,7 @@ type CameraStateInput = {
  *   zoom: 12,
  *   view: '2.5D',
  * });
- * // Result: { ..., view: '2.5D', projection: 'mercator', pitch: 45 }
+ * // Result: { ..., view: '2.5D', projection: 'mercator', pitch: 60 }
  *
  * // Build 3D state
  * const state3D = buildCameraState({
@@ -190,7 +190,7 @@ function buildCameraState(partial?: CameraStateInput): CameraState {
       latitude,
       longitude,
       zoom,
-      pitch: partial?.pitch ?? 45,
+      pitch: partial?.pitch ?? 60,
       rotation,
       projection: 'mercator',
       view: '2.5D',
@@ -351,7 +351,7 @@ export const cameraStore = createMapStore<CameraState, CameraActions>({
         }
 
         if (payload.view === '2.5D') {
-          newState.pitch = 45;
+          newState.pitch = 60;
         }
         replace(newState);
       },
