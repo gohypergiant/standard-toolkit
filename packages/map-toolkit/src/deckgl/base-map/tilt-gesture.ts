@@ -29,9 +29,20 @@ export type TiltGesture = {
 };
 
 /**
+ * The camera's rotation/pitch at the moment a tilt drag started. The gesture's
+ * cumulative delta is applied on top of this, so each new drag continues from
+ * the current camera angle instead of snapping to an absolute derived from the
+ * (per-gesture, resets-to-zero) delta.
+ */
+export type TiltBaseline = {
+  rotation: number;
+  pitch: number;
+};
+
+/**
  * The camera changes a tilt gesture maps to. `promoteToTilt` is true when a flat
  * 2D view should switch to 2.5D first (so pitch can apply); `rotation`/`pitch`
- * are absolute target angles derived from the drag offset.
+ * are absolute target angles (baseline + scaled drag offset).
  */
 export type TiltCommand = {
   promoteToTilt: boolean;
@@ -59,11 +70,13 @@ export function isTiltGesture(gesture: TiltGesture): boolean {
 
 /**
  * Translate a tilt gesture into the camera rotation/pitch it should produce,
- * given the current view. Returns `null` for non-tilt gestures (plain pans) so
- * the caller leaves the camera untouched.
+ * given the current view and the camera angles captured when this drag started.
+ * Returns `null` for non-tilt gestures (plain pans) so the caller leaves the
+ * camera untouched.
  *
- * `deltaX`/`deltaY` are cumulative offsets from the drag start, so the resulting
- * angles track the gesture; they are scaled by `sensitivity` for a gentler feel.
+ * `deltaX`/`deltaY` are cumulative offsets from the drag start (they reset to ~0
+ * each new gesture), so the scaled delta is added to `baseline` — each drag
+ * continues from the current camera angle rather than snapping to an absolute.
  * Pitch is negated so dragging up tilts the camera up. The camera store applies
  * its own view constraints (it ignores rotation in 3D and pitch outside 2.5D),
  * so this stays a pure mapping.
@@ -71,22 +84,25 @@ export function isTiltGesture(gesture: TiltGesture): boolean {
  * @param gesture - The drag gesture (buttons, modifier, cumulative deltas).
  * @param view - The current camera view mode.
  * @param sensitivity - Degrees per pixel of drag (pass {@link MOUSE_TILT_SENSITIVITY} for the default feel).
+ * @param baseline - Camera rotation/pitch captured when this drag started.
  * @returns The camera command, or `null` if the gesture is not a tilt.
  *
  * @example
  * ```typescript
  * const command = tiltCommandFor(
  *   { rightButton: true, deltaX: 40, deltaY: -120, ctrlKey: false },
- *   '2D',
+ *   '2.5D',
  *   MOUSE_TILT_SENSITIVITY,
+ *   { rotation: 0, pitch: 30 },
  * );
- * // → { promoteToTilt: true, rotation: 20, pitch: 60 }
+ * // → { promoteToTilt: false, rotation: 20, pitch: 90 } (30 + 60)
  * ```
  */
 export function tiltCommandFor(
   gesture: TiltGesture,
   view: ViewType,
   sensitivity: number,
+  baseline: TiltBaseline,
 ): TiltCommand | null {
   if (!isTiltGesture(gesture)) {
     return null;
@@ -95,7 +111,7 @@ export function tiltCommandFor(
   return {
     promoteToTilt: view === '2D',
     // `+ 0` normalizes a `-0` (from negating `deltaY: 0`) to `0`.
-    rotation: gesture.deltaX * sensitivity + 0,
-    pitch: -gesture.deltaY * sensitivity + 0,
+    rotation: baseline.rotation + gesture.deltaX * sensitivity + 0,
+    pitch: baseline.pitch - gesture.deltaY * sensitivity + 0,
   };
 }
