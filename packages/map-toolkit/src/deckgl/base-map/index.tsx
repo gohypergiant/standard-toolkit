@@ -26,14 +26,15 @@ import {
 import { RbzHandler } from '@/maplibre';
 import { isActiveMap, setActiveMap } from '@/maplibre/active-map-store';
 import { useMapCamera } from '../../camera';
+import { CameraEventTypes } from '../../camera/events';
 import { getCursor } from '../../map-cursor/store';
 import { getMapGeneration } from '../../shared/cleanup';
 import { DEFAULT_VIEW_STATE } from '../../shared/constants';
-import { applyRotatePitchSensitivity } from './apply-rotate-pitch-sensitivity';
 import { DARK_BASE_MAP_STYLE, PARAMETERS, PICKING_RADIUS } from './constants';
 import { MapControls } from './controls';
 import { MapEvents } from './events';
 import { MapProvider } from './provider';
+import { MOUSE_TILT_SENSITIVITY, tiltCommandFor } from './tilt-gesture';
 import { LOCKED_MAP_LIBRE_OPTION_KEYS } from './types';
 import type {
   IControl,
@@ -41,6 +42,11 @@ import type {
   WebGLContextAttributesWithType,
 } from 'maplibre-gl';
 import type { MjolnirGestureEvent, MjolnirPointerEvent } from 'mjolnir.js';
+import type {
+  CameraSetPitchEvent,
+  CameraSetRotationEvent,
+  CameraSetViewEvent,
+} from '../../camera/types';
 import type {
   BaseMapProps,
   MapClickEvent,
@@ -270,6 +276,7 @@ export function BaseMap({
   initialViewState,
   onClick,
   onHover,
+  onDrag,
   onViewStateChange,
   pickingRadius,
   enableRbz = false,
@@ -318,7 +325,9 @@ export function BaseMap({
   // guard on its `_updateStyleComponents` path. maplibre's `setProjection`
   // then throws "Style is not done loading." Sync via the post-load pattern
   // below - same approach as `useMapLibre` uses for the same setter.
-  // 2.5D is the only view that permits mouse-driven pitch + rotation.
+  // 2.5D is the only view that permits pitch (the camera store locks 2D and 3D
+  // to pitch:0). `maxPitch` must allow the store-driven pitch through in 2.5D;
+  // MapLibre clamps an applied `pitch` to `maxPitch`.
   const allowTilt = cameraState.view === '2.5D';
 
   const mapOptions = useMemo(
@@ -332,21 +341,13 @@ export function BaseMap({
       latitude: viewState.latitude,
       longitude: viewState.longitude,
       doubleClickZoom: false,
-      // Mouse/touch pitch + rotation is only meaningful in 2.5D: the camera
-      // store locks 2D to pitch:0 and treats 3D (globe) as fixed-orientation
-      // (pitch:0, rotation:0). Right-drag (left-drag stays pan) rotates+pitches;
-      // we gate the right-drag/touch handlers + maxPitch to 2.5D so 2D stays flat
-      // and 3D stays stable.
-      //
-      // react-map-gl reactively re-applies `dragRotate`, `touchPitch` (handlers)
-      // and `maxPitch` (a setting) when `cameraState.view` flips WITHOUT remounting
-      // the map. But `pitchWithRotate` is a constructor-only option it never
-      // re-applies, so it must be set true up front or right-drag would rotate the
-      // bearing without ever tilting. It's harmless in 2D/3D because `dragRotate`
-      // is disabled and `maxPitch` is 0 there, so no pitch can occur regardless.
-      dragRotate: allowTilt,
-      pitchWithRotate: true,
-      touchPitch: allowTilt,
+      // MapLibre's own rotate/pitch handlers stay disabled. Rotation and pitch
+      // are driven through the camera store from the `onDrag` handler below
+      // (right-drag / ctrl+left-drag), so the camera stays the single source of
+      // truth and sensitivity is a simple delta multiplier — no reaching into
+      // MapLibre's handler internals.
+      dragRotate: false,
+      pitchWithRotate: false,
       rollEnabled: false,
       maxPitch: allowTilt ? 85 : 0,
       canvasContextAttributes: CANVAS_CONTEXT_ATTRIBUTES,
@@ -370,6 +371,11 @@ export function BaseMap({
   const emitClick = useEmit<MapClickEvent>(MapEvents.click);
   const emitHover = useEmit<MapHoverEvent>(MapEvents.hover);
   const emitViewport = useEmit<MapViewportEvent>(MapEvents.viewport);
+  const emitSetView = useEmit<CameraSetViewEvent>(CameraEventTypes.setView);
+  const emitSetRotation = useEmit<CameraSetRotationEvent>(
+    CameraEventTypes.setRotation,
+  );
+  const emitSetPitch = useEmit<CameraSetPitchEvent>(CameraEventTypes.setPitch);
 
   const resizeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -402,6 +408,52 @@ export function BaseMap({
       });
     },
     [emitHover, id, onHover],
+  );
+
+  const handleDrag = useCallback(
+    (info: PickingInfo, event: MjolnirGestureEvent) => {
+      // send full pickingInfo and event to user-defined onDrag first
+      onDrag?.(info, event);
+
+      // Right-drag (or ctrl + left-drag) rotates + pitches the camera; plain
+      // left-drag stays a pan. The camera store is driven directly so it remains
+      // the single source of truth — MapLibre's own rotate/pitch handlers are off.
+      const command = tiltCommandFor(
+        {
+          leftButton: event.leftButton,
+          rightButton: event.rightButton,
+          deltaX: event.deltaX,
+          deltaY: event.deltaY,
+          ctrlKey: event.srcEvent.ctrlKey,
+        },
+        cameraState.view,
+        MOUSE_TILT_SENSITIVITY,
+      );
+
+      if (!command) {
+        return;
+      }
+
+      const applyTilt = () => {
+        emitSetRotation({ id, rotation: command.rotation });
+        emitSetPitch({ id, pitch: command.pitch });
+      };
+
+      if (command.promoteToTilt) {
+        // Promote a flat 2D view to 2.5D so pitch can apply. The view flip raises
+        // `maxPitch` from 0 to 85, but that only reaches MapLibre on the next
+        // render — applying pitch in the same tick would be clamped back to 0
+        // (the first tilt frame would be lost). Defer the rotation/pitch to a
+        // microtask so it lands after the promote has rendered.
+        emitSetView({ id, view: '2.5D' });
+        queueMicrotask(applyTilt);
+        return;
+      }
+
+      // Already tiltable (the steady state of a continuous drag): apply now.
+      applyTilt();
+    },
+    [cameraState.view, emitSetPitch, emitSetRotation, emitSetView, id, onDrag],
   );
 
   const handleGetCursor = useCallback(() => {
@@ -474,14 +526,7 @@ export function BaseMap({
 
   // First point at which `setProjection` is safe (after `style.load`).
   const handleMapLoad = useEffectEvent(() => {
-    const map = mapRef.current?.getMap();
-    if (!map) {
-      return;
-    }
-    map.setProjection({ type: cameraState.projection });
-    // Soften MapLibre's right-drag rotate/pitch, which is overly sensitive by
-    // default. Applied once on load against the freshly-built handlers.
-    applyRotatePitchSensitivity(map);
+    mapRef.current?.getMap().setProjection({ type: cameraState.projection });
   });
 
   const handleLoad = useEffectEvent(() => {
@@ -558,6 +603,7 @@ export function BaseMap({
             onClick={handleClick}
             pickingRadius={pickingRadius ?? PICKING_RADIUS}
             onHover={handleHover}
+            onDrag={handleDrag}
             onLoad={handleLoad}
             onResize={handleResize}
             onViewStateChange={handleViewStateChange}

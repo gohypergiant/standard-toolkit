@@ -122,47 +122,27 @@ describe('BaseMap', () => {
   });
 
   describe('mouse pitch/rotate gating by view', () => {
-    // Only 2.5D permits mouse-driven rotate/pitch; 2D stays flat and 3D is a
-    // fixed-orientation globe. `pitchWithRotate` is a constructor-only option
-    // (react-map-gl never re-applies it), so it stays true in every view and is
-    // inert outside 2.5D because the rotate handler + maxPitch are disabled there.
+    // MapLibre's own rotate/pitch handlers stay disabled in every view — the
+    // camera is driven through the store from the deck.gl `onDrag` handler. Only
+    // `maxPitch` varies by view: it opens to 85° in 2.5D (so the store-driven
+    // pitch can apply) and stays clamped to 0 in flat 2D and fixed-orientation 3D.
     it.each([
-      {
-        view: '2D' as const,
-        expected: {
-          dragRotate: false,
-          pitchWithRotate: true,
-          touchPitch: false,
-          maxPitch: 0,
-        },
-      },
-      {
-        view: '2.5D' as const,
-        expected: {
-          dragRotate: true,
-          pitchWithRotate: true,
-          touchPitch: true,
-          maxPitch: 85,
-        },
-      },
-      {
-        view: '3D' as const,
-        expected: {
-          dragRotate: false,
-          pitchWithRotate: true,
-          touchPitch: false,
-          maxPitch: 0,
-        },
-      },
-    ])('gates the rotate/pitch handlers and maxPitch for the $view view', ({
+      { view: '2D' as const, maxPitch: 0 },
+      { view: '2.5D' as const, maxPitch: 85 },
+      { view: '3D' as const, maxPitch: 0 },
+    ])('keeps MapLibre rotate/pitch off and sets maxPitch for the $view view', ({
       view,
-      expected,
+      maxPitch,
     }) => {
       useFakeMap(createFakeMap());
 
       render(<BaseMap id={uuid()} defaultView={view} />);
 
-      expect(capturedMapProps).toMatchObject(expected);
+      expect(capturedMapProps).toMatchObject({
+        dragRotate: false,
+        pitchWithRotate: false,
+        maxPitch,
+      });
     });
   });
 });

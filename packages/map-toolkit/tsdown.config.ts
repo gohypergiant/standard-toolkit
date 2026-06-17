@@ -35,6 +35,7 @@ export default defineConfig({
     '!src/deckgl/shapes/display-shape-layer/shape-label-layer.ts',
     '!src/shared/logger.ts',
     '!src/maplibre/active-map-store.ts',
+    '!src/deckgl/base-map/tilt-gesture.ts',
   ],
   // NOTE: optionalDependencies must be included here
   // SEE: https://tsdown.dev/options/dependencies#default-behavior
