@@ -12,10 +12,20 @@
 
 import { uuid } from '@accelint/core';
 import { act, render, screen } from '@testing-library/react';
-import { beforeEach, describe, expect, it, type Mock, vi } from 'vitest';
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  type Mock,
+  vi,
+} from 'vitest';
+import { cameraStore, clearCameraState } from '../../camera/store';
 import { BaseMap, stripLockedMapLibreOptions } from './index';
 import { LOCKED_MAP_LIBRE_OPTION_KEYS } from './types';
 import type { MapOptions } from 'maplibre-gl';
+import type { MjolnirGestureEvent } from 'mjolnir.js';
 import type { MapLibreOptions } from './types';
 
 interface FakeMap {
@@ -30,9 +40,16 @@ function createFakeMap(): FakeMap {
   };
 }
 
+type DragHandler = (info: unknown, event: MjolnirGestureEvent) => void;
+
 let activeMap: FakeMap | null = null;
 let capturedOnLoad: (() => void) | undefined;
 let capturedMapProps: Record<string, unknown> | undefined;
+let capturedDragHandlers: {
+  onDragStart?: DragHandler;
+  onDrag?: DragHandler;
+  onDragEnd?: DragHandler;
+} = {};
 
 function useFakeMap(map: FakeMap): void {
   activeMap = map;
@@ -66,10 +83,32 @@ vi.mock('react-map-gl/maplibre', () => ({
   useControl: vi.fn(),
 }));
 
+// Mock the deck.gl fiber renderer so tests can drive the drag lifecycle
+// (onDragStart/onDrag/onDragEnd) without a real Deck.gl/WebGL instance.
+vi.mock('@deckgl-fiber-renderer/dom', () => ({
+  Deckgl: ({
+    children,
+    onDragStart,
+    onDrag,
+    onDragEnd,
+  }: {
+    children?: React.ReactNode;
+    onDragStart?: DragHandler;
+    onDrag?: DragHandler;
+    onDragEnd?: DragHandler;
+  }) => {
+    capturedDragHandlers = { onDragStart, onDrag, onDragEnd };
+
+    return <div data-testid='deckgl-mock'>{children}</div>;
+  },
+  useDeckgl: () => ({}),
+}));
+
 beforeEach(() => {
   activeMap = null;
   capturedOnLoad = undefined;
   capturedMapProps = undefined;
+  capturedDragHandlers = {};
 });
 
 describe('BaseMap', () => {
@@ -119,6 +158,159 @@ describe('BaseMap', () => {
     });
 
     expect(fakeMap.setProjection).toHaveBeenCalledWith({ type: 'mercator' });
+  });
+
+  describe('mouse tilt drag orchestration', () => {
+    // Build the minimal gesture-event shape the tilt handlers read: buttons,
+    // cumulative deltas, and the modifier on the wrapped `srcEvent`.
+    function tiltEvent(
+      overrides: Partial<{
+        leftButton: boolean;
+        rightButton: boolean;
+        deltaX: number;
+        deltaY: number;
+        ctrlKey: boolean;
+      }> = {},
+    ): MjolnirGestureEvent {
+      const {
+        leftButton = false,
+        rightButton = false,
+        deltaX = 0,
+        deltaY = 0,
+        ctrlKey = false,
+      } = overrides;
+
+      return {
+        leftButton,
+        rightButton,
+        deltaX,
+        deltaY,
+        srcEvent: { ctrlKey },
+      } as unknown as MjolnirGestureEvent;
+    }
+
+    // Run any frame the drag handler scheduled. The handlers coalesce camera
+    // updates into a `requestAnimationFrame`, so a drag has no effect until a
+    // frame fires; faking it keeps the test synchronous and deterministic.
+    let scheduledFrame: FrameRequestCallback | null = null;
+
+    beforeEach(() => {
+      scheduledFrame = null;
+      vi.spyOn(window, 'requestAnimationFrame').mockImplementation((cb) => {
+        scheduledFrame = cb;
+
+        return 1;
+      });
+      vi.spyOn(window, 'cancelAnimationFrame').mockImplementation(() => {
+        scheduledFrame = null;
+      });
+    });
+
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
+
+    function runScheduledFrame(): void {
+      act(() => {
+        scheduledFrame?.(performance.now());
+      });
+    }
+
+    it('promotes a flat 2D view to 2.5D on a right-drag tilt', () => {
+      const id = uuid();
+      useFakeMap(createFakeMap());
+
+      render(<BaseMap id={id} defaultView='2D' />);
+
+      act(() => {
+        capturedDragHandlers.onDragStart?.(
+          {},
+          tiltEvent({ rightButton: true }),
+        );
+      });
+
+      expect(cameraStore.get(id).view).toBe('2.5D');
+
+      clearCameraState(id);
+    });
+
+    it('rotates and pitches the camera on a right-drag, applied on the next frame', () => {
+      const id = uuid();
+      useFakeMap(createFakeMap());
+
+      render(<BaseMap id={id} defaultView='2.5D' />);
+
+      // 2.5D initializes at pitch 60, so the drag continues from that baseline.
+      act(() => {
+        capturedDragHandlers.onDragStart?.(
+          {},
+          tiltEvent({ rightButton: true }),
+        );
+        // rotation 0 + 40 * 0.5 = 20; pitch 60 - (-30 * 0.5) = 75
+        capturedDragHandlers.onDrag?.(
+          {},
+          tiltEvent({ rightButton: true, deltaX: 40, deltaY: -30 }),
+        );
+      });
+
+      // Nothing applied until the coalescing frame fires.
+      expect(cameraStore.get(id).rotation).toBe(0);
+
+      runScheduledFrame();
+
+      expect(cameraStore.get(id).rotation).toBe(20);
+      expect(cameraStore.get(id).pitch).toBe(75);
+
+      clearCameraState(id);
+    });
+
+    it('leaves the camera untouched on a plain left-drag pan', () => {
+      const id = uuid();
+      useFakeMap(createFakeMap());
+
+      render(<BaseMap id={id} defaultView='2.5D' />);
+
+      act(() => {
+        capturedDragHandlers.onDragStart?.({}, tiltEvent({ leftButton: true }));
+        capturedDragHandlers.onDrag?.(
+          {},
+          tiltEvent({ leftButton: true, deltaX: 40, deltaY: -30 }),
+        );
+      });
+      runScheduledFrame();
+
+      expect(cameraStore.get(id).rotation).toBe(0);
+      expect(cameraStore.get(id).view).toBe('2.5D');
+
+      clearCameraState(id);
+    });
+
+    it('flushes the last pending angle on drag end even if no frame fired', () => {
+      const id = uuid();
+      useFakeMap(createFakeMap());
+
+      render(<BaseMap id={id} defaultView='2.5D' />);
+
+      act(() => {
+        capturedDragHandlers.onDragStart?.(
+          {},
+          tiltEvent({ rightButton: true }),
+        );
+        capturedDragHandlers.onDrag?.(
+          {},
+          tiltEvent({ rightButton: true, deltaX: 20, deltaY: 0 }),
+        );
+        // End the drag before the scheduled frame runs; the flush must still land.
+        capturedDragHandlers.onDragEnd?.(
+          {},
+          tiltEvent({ rightButton: true, deltaX: 20, deltaY: 0 }),
+        );
+      });
+
+      expect(cameraStore.get(id).rotation).toBe(10);
+
+      clearCameraState(id);
+    });
   });
 
   describe('mouse pitch/rotate gating by view', () => {

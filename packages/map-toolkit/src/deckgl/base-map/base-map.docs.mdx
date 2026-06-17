@@ -15,7 +15,7 @@ A React component that provides a Deck.gl-powered base map with MapLibre GL inte
 - **Map Mode Integration**: Automatically creates internal `MapProvider` for map mode state management
 - **Deck.gl Controller**: Interactive map controls with configurable parameters
 - **Rubber Band Zoom**: Opt-in Shift+drag zoom-to-rectangle gesture via `enableRbz` (see [Rubber Band Zoom docs](?path=/docs/deckgl-rubber-band-zoom--docs))
-- **Tilt & Rotate**: Right-drag (or ctrl + left-drag) rotates the bearing and pitches the camera, driven through the camera store (left-drag still pans). A tilt gesture in flat `'2D'` auto-promotes the view to `'2.5D'`
+- **Tilt & Rotate**: Right-drag (or ctrl + left-drag) rotates the bearing and pitches the camera, driven through the camera store (left-drag still pans). A tilt gesture in flat `'2D'` auto-promotes the view to `'2.5D'` and tilts smoothly from the current pitch (0° in 2D) — it does not jump to the 60° default that an explicit view switch applies. Each new drag continues from the current angle, and pitch is bounded to 0-85°
 - **Client-Side Only**: Designed for client-side rendering in React applications
 
 **Important**: BaseMap passes its children to Deck.gl, which only accepts Deck.gl layer components. Regular React UI components (buttons, toolbars, etc.) must be rendered as **siblings** to BaseMap, not children.

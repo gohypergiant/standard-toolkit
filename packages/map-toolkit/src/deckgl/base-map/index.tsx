@@ -39,6 +39,7 @@ import {
   isTiltGesture,
   MOUSE_TILT_SENSITIVITY,
   type TiltBaseline,
+  type TiltGesture,
   tiltCommandFor,
 } from './tilt-gesture';
 import { LOCKED_MAP_LIBRE_OPTION_KEYS } from './types';
@@ -181,6 +182,24 @@ function serializeMjolnirEvent(
 }
 
 /**
+ * Projects a Deck.gl gesture event onto the {@link TiltGesture} shape the tilt
+ * handlers need: the mouse buttons, cumulative drag deltas, and the modifier
+ * key (which lives on the wrapped `srcEvent`, not the gesture event itself).
+ *
+ * @param event - The Deck.gl/Mjolnir gesture event from `onDragStart`/`onDrag`.
+ * @returns The button + delta + modifier subset used to classify and map the drag.
+ */
+function toTiltGesture(event: MjolnirGestureEvent): TiltGesture {
+  return {
+    leftButton: event.leftButton,
+    rightButton: event.rightButton,
+    deltaX: event.deltaX,
+    deltaY: event.deltaY,
+    ctrlKey: event.srcEvent.ctrlKey,
+  };
+}
+
+/**
  * Internal component that registers the Deck.gl instance as a MapLibre control.
  * Enables the Deck.gl canvas to render within the MapLibre GL map container.
  *
@@ -307,9 +326,7 @@ export function BaseMap({
   // instead stash the newest target and let one rAF coalesce them into a single
   // `setCameraState` per frame — the same one-repaint-per-frame cadence
   // MapLibre's own handlers use.
-  const pendingTiltRef = useRef<{ rotation: number; pitch: number } | null>(
-    null,
-  );
+  const pendingTiltRef = useRef<TiltBaseline | null>(null);
   const tiltFrameRef = useRef<number | null>(null);
 
   // Derive boxZoom: disable when RBZ is enabled to avoid conflicts
@@ -436,7 +453,18 @@ export function BaseMap({
     [emitHover, id, onHover],
   );
 
-  const handleDragStart = useCallback(
+  // Apply the latest coalesced tilt target (if any) to the camera and clear it.
+  // Shared by the rAF callback (per-frame) and `handleDragEnd` (final flush).
+  const flushPendingTilt = useEffectEvent(() => {
+    const pending = pendingTiltRef.current;
+
+    if (pending) {
+      setCameraState({ rotation: pending.rotation, pitch: pending.pitch });
+      pendingTiltRef.current = null;
+    }
+  });
+
+  const handleDragStart = useEffectEvent(
     (info: PickingInfo, event: MjolnirGestureEvent) => {
       // send full pickingInfo and event to user-defined onDragStart first
       onDragStart?.(info, event);
@@ -444,15 +472,7 @@ export function BaseMap({
       // Right-drag (or ctrl + left-drag) rotates + pitches the camera; plain
       // left-drag stays a pan. The camera store is driven directly so it remains
       // the single source of truth — MapLibre's own rotate/pitch handlers are off.
-      const isTilt = isTiltGesture({
-        leftButton: event.leftButton,
-        rightButton: event.rightButton,
-        deltaX: event.deltaX,
-        deltaY: event.deltaY,
-        ctrlKey: event.srcEvent.ctrlKey,
-      });
-
-      if (!isTilt) {
+      if (!isTiltGesture(toTiltGesture(event))) {
         return;
       }
 
@@ -475,10 +495,9 @@ export function BaseMap({
         emitSetView({ id, view: '2.5D' });
       }
     },
-    [emitSetView, id, onDragStart],
   );
 
-  const handleDrag = useCallback(
+  const handleDrag = useEffectEvent(
     (info: PickingInfo, event: MjolnirGestureEvent) => {
       // send full pickingInfo and event to user-defined onDrag first
       onDrag?.(info, event);
@@ -490,50 +509,28 @@ export function BaseMap({
       }
 
       const command = tiltCommandFor(
-        {
-          leftButton: event.leftButton,
-          rightButton: event.rightButton,
-          deltaX: event.deltaX,
-          deltaY: event.deltaY,
-          ctrlKey: event.srcEvent.ctrlKey,
-        },
-        cameraStore.get(id).view,
+        toTiltGesture(event),
         MOUSE_TILT_SENSITIVITY,
         tiltBaselineRef.current,
       );
-
-      if (!command) {
-        return;
-      }
 
       // Coalesce to one camera update per animation frame. Record the newest
       // target and, if no frame is already scheduled, schedule one. The rAF
       // callback applies whatever the latest target is and clears the handle, so
       // a burst of pointermoves within a frame collapses to a single
       // `setCameraState` (one MapLibre repaint) instead of one per event.
-      pendingTiltRef.current = {
-        rotation: command.rotation,
-        pitch: command.pitch,
-      };
+      pendingTiltRef.current = command;
 
       if (tiltFrameRef.current === null) {
         tiltFrameRef.current = requestAnimationFrame(() => {
           tiltFrameRef.current = null;
-
-          const pending = pendingTiltRef.current;
-          if (pending) {
-            setCameraState({
-              rotation: pending.rotation,
-              pitch: pending.pitch,
-            });
-          }
+          flushPendingTilt();
         });
       }
     },
-    [id, onDrag, setCameraState],
   );
 
-  const handleDragEnd = useCallback(
+  const handleDragEnd = useEffectEvent(
     (info: PickingInfo, event: MjolnirGestureEvent) => {
       // send full pickingInfo and event to user-defined onDragEnd first
       onDragEnd?.(info, event);
@@ -546,15 +543,9 @@ export function BaseMap({
         tiltFrameRef.current = null;
       }
 
-      const pending = pendingTiltRef.current;
-      if (pending) {
-        setCameraState({ rotation: pending.rotation, pitch: pending.pitch });
-        pendingTiltRef.current = null;
-      }
-
+      flushPendingTilt();
       tiltBaselineRef.current = null;
     },
-    [onDragEnd, setCameraState],
   );
 
   const handleGetCursor = useCallback(() => {

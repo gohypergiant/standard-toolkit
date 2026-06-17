@@ -167,7 +167,7 @@ const { cameraState } = useMapCamera(MAP_ID, {
   latitude: 38.9072,
   longitude: -77.0369,
   zoom: 10,
-  pitch: 45,
+  pitch: 60,
   rotation: 0,
   projection: 'mercator',
   view: '2.5D',
@@ -262,7 +262,7 @@ bus.emit(CameraEventTypes.setZoom, {
 
 ### setRotation
 
-Set the rotation angle (bearing/heading). Only works in 2D and 2.5D modes.
+Set the rotation angle (bearing/heading). Only works in 2D and 2.5D modes. A right-drag / Ctrl + left-drag on a `BaseMap` emits this event too (see [Mouse Camera Control](#mouse-camera-control)).
 
 ```tsx
 bus.emit(CameraEventTypes.setRotation, {
@@ -273,7 +273,7 @@ bus.emit(CameraEventTypes.setRotation, {
 
 ### setPitch
 
-Set the pitch (tilt) angle. Only works in 2.5D mode with Mercator projection.
+Set the pitch (tilt) angle. Only works in 2.5D mode with Mercator projection. A right-drag / Ctrl + left-drag on a `BaseMap` emits this event too (see [Mouse Camera Control](#mouse-camera-control)).
 
 ```tsx
 bus.emit(CameraEventTypes.setPitch, {
@@ -382,6 +382,16 @@ Globe view for world-scale visualization.
 - **Rotation**: Fixed at 0°
 - **Use Cases**: Global data visualization, satellite imagery, flight paths
 
+### Mouse Camera Control
+
+On a `BaseMap`, the mouse drives rotation and pitch directly through the camera store (the same `setRotation`/`setPitch` events you can emit programmatically):
+
+- **Right-drag** (or **Ctrl + left-drag**): rotate and pitch the camera.
+- **Left-drag**: pan, as usual.
+- **Tilting in a flat 2D view** auto-promotes the view to 2.5D so pitch can apply. The tilt continues from the current pitch (0° in 2D), growing smoothly with the drag — it does not jump to the 60° default that an explicit `setView('2.5D')` would apply.
+
+Each drag continues from the camera's current angle rather than resetting, and pitch is clamped to the 0-85° range. See the BaseMap docs for wiring details.
+
 ## Multiple Camera Instances
 
 You can manage multiple independent cameras by using different instance IDs:
@@ -471,13 +481,13 @@ When changing views or projections, certain properties are automatically adjuste
 
 ### Pitch and Rotation Constraints
 
-Pitch can only be set in 2.5D mode. Rotation can only be set in 2D and 2.5D modes. Both are ignored in 3D mode:
+Pitch applies in 2.5D mode. Rotation applies in 2D and 2.5D modes. Both are ignored in 3D mode. A mouse tilt gesture (see [Mouse Camera Control](#mouse-camera-control)) auto-promotes a 2D view to 2.5D before applying pitch, so you don't have to switch views first:
 
 ```tsx
 // This works (2.5D view with Mercator projection)
 bus.emit(CameraEventTypes.setPitch, {
   id: instanceId,
-  pitch: 45,
+  pitch: 60,
 });
 
 // This works (2D/2.5D view)

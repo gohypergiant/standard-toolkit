@@ -47,99 +47,73 @@ describe('isTiltGesture', () => {
 describe('tiltCommandFor', () => {
   const zeroBaseline = { rotation: 0, pitch: 0 };
 
-  it('returns null for a plain left-drag pan', () => {
+  it.each([
+    {
+      label: 'maps deltaX to scaled rotation and negates deltaY for pitch',
+      gesture: { rightButton: true, deltaX: 40, deltaY: -120, ctrlKey: false },
+      sensitivity: MOUSE_TILT_SENSITIVITY,
+      baseline: zeroBaseline,
+      // 40 * 0.5 = 20 rotation; -(-120) * 0.5 = 60 pitch
+      expected: { rotation: 20, pitch: 60 },
+    },
+    {
+      label: 'honors a custom sensitivity multiplier',
+      gesture: { rightButton: true, deltaX: 100, deltaY: -100, ctrlKey: false },
+      sensitivity: 0.25,
+      baseline: zeroBaseline,
+      expected: { rotation: 25, pitch: 25 },
+    },
+    {
+      label: 'treats ctrl + left-drag as a tilt gesture',
+      gesture: { leftButton: true, deltaX: 20, deltaY: 0, ctrlKey: true },
+      sensitivity: MOUSE_TILT_SENSITIVITY,
+      baseline: zeroBaseline,
+      expected: { rotation: 10, pitch: 0 },
+    },
+    {
+      // Second tilt drag: delta starts near zero again, but the camera is
+      // already pitched to 45° / rotated 30°. The command must build on that
+      // baseline instead of snapping back to zero.
+      label: 'continues from the baseline so a new drag does not snap to zero',
+      gesture: { rightButton: true, deltaX: 10, deltaY: -20, ctrlKey: false },
+      sensitivity: MOUSE_TILT_SENSITIVITY,
+      baseline: { rotation: 30, pitch: 45 },
+      // rotation 30 + 10*0.5 = 35; pitch 45 + (-(-20)*0.5) = 55
+      expected: { rotation: 35, pitch: 55 },
+    },
+    {
+      label: 'holds the current angle when a new drag has zero delta',
+      gesture: { rightButton: true, deltaX: 0, deltaY: 0, ctrlKey: false },
+      sensitivity: MOUSE_TILT_SENSITIVITY,
+      baseline: { rotation: 30, pitch: 45 },
+      expected: { rotation: 30, pitch: 45 },
+    },
+  ])('$label', ({ gesture, sensitivity, baseline, expected }) => {
+    expect(tiltCommandFor(gesture, sensitivity, baseline)).toEqual(expected);
+  });
+
+  it('leaves pitch unclamped so the camera store owns the bound', () => {
+    // A long upward drag pushes pitch past MapLibre's 85° render limit; the pure
+    // mapping passes it straight through (clamping is the camera store's job).
     const command = tiltCommandFor(
-      { leftButton: true, deltaX: 50, deltaY: 50, ctrlKey: false },
-      '2.5D',
+      { rightButton: true, deltaX: 0, deltaY: -240, ctrlKey: false },
       MOUSE_TILT_SENSITIVITY,
       zeroBaseline,
     );
 
-    expect(command).toBeNull();
+    expect(command.pitch).toBe(120);
   });
 
-  it('promotes a flat 2D view to 2.5D on a right-drag tilt', () => {
+  it('normalizes a zero-delta tilt to +0, never -0', () => {
+    // Negating `deltaY: 0` yields `-0`; the mapping must return a clean `0` so a
+    // zero-delta frame does not leak `-0` into the camera state.
     const command = tiltCommandFor(
       { rightButton: true, deltaX: 0, deltaY: 0, ctrlKey: false },
-      '2D',
       MOUSE_TILT_SENSITIVITY,
       zeroBaseline,
     );
 
-    expect(command).toEqual({ promoteToTilt: true, rotation: 0, pitch: 0 });
-  });
-
-  it('does not promote when already in 2.5D', () => {
-    const command = tiltCommandFor(
-      { rightButton: true, deltaX: 0, deltaY: 0, ctrlKey: false },
-      '2.5D',
-      MOUSE_TILT_SENSITIVITY,
-      zeroBaseline,
-    );
-
-    expect(command?.promoteToTilt).toBe(false);
-  });
-
-  it('maps deltaX to scaled rotation and negates deltaY for pitch', () => {
-    const command = tiltCommandFor(
-      { rightButton: true, deltaX: 40, deltaY: -120, ctrlKey: false },
-      '2.5D',
-      MOUSE_TILT_SENSITIVITY,
-      zeroBaseline,
-    );
-
-    // 40 * 0.5 = 20 rotation; -(-120) * 0.5 = 60 pitch
-    expect(command).toEqual({
-      promoteToTilt: false,
-      rotation: 40 * MOUSE_TILT_SENSITIVITY,
-      pitch: 60,
-    });
-  });
-
-  it('honors a custom sensitivity multiplier', () => {
-    const command = tiltCommandFor(
-      { rightButton: true, deltaX: 100, deltaY: -100, ctrlKey: false },
-      '2.5D',
-      0.25,
-      zeroBaseline,
-    );
-
-    expect(command).toEqual({ promoteToTilt: false, rotation: 25, pitch: 25 });
-  });
-
-  it('treats ctrl + left-drag as a tilt gesture', () => {
-    const command = tiltCommandFor(
-      { leftButton: true, deltaX: 20, deltaY: 0, ctrlKey: true },
-      '2.5D',
-      MOUSE_TILT_SENSITIVITY,
-      zeroBaseline,
-    );
-
-    expect(command).toEqual({ promoteToTilt: false, rotation: 10, pitch: 0 });
-  });
-
-  it('continues from the baseline so a new drag does not snap to zero', () => {
-    // Second tilt drag: delta starts near zero again, but the camera is already
-    // pitched to 45° / rotated 30°. The command must build on that baseline.
-    const command = tiltCommandFor(
-      { rightButton: true, deltaX: 10, deltaY: -20, ctrlKey: false },
-      '2.5D',
-      MOUSE_TILT_SENSITIVITY,
-      { rotation: 30, pitch: 45 },
-    );
-
-    // rotation 30 + 10*0.5 = 35; pitch 45 + (-(-20)*0.5) = 45 + 10 = 55
-    expect(command).toEqual({ promoteToTilt: false, rotation: 35, pitch: 55 });
-  });
-
-  it('holds the current angle when a new drag has zero delta (no snap)', () => {
-    const command = tiltCommandFor(
-      { rightButton: true, deltaX: 0, deltaY: 0, ctrlKey: false },
-      '2.5D',
-      MOUSE_TILT_SENSITIVITY,
-      { rotation: 30, pitch: 45 },
-    );
-
-    expect(command).toEqual({ promoteToTilt: false, rotation: 30, pitch: 45 });
+    expect(Object.is(command.pitch, 0)).toBe(true);
+    expect(Object.is(command.rotation, 0)).toBe(true);
   });
 });

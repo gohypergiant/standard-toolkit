@@ -32,6 +32,7 @@
  */
 
 import { Broadcast } from '@accelint/bus';
+import { clamp } from '@accelint/math';
 import { fitBounds } from '@math.gl/web-mercator';
 import { createMapStore } from '../shared/create-map-store';
 import { CameraEventTypes } from './events';
@@ -111,6 +112,14 @@ const initialStateCache = new Map<UniqueId, CameraStateInput>();
 const initializedInstances = new Set<UniqueId>();
 
 /**
+ * Maximum pitch (degrees) the camera can tilt to in 2.5D, matching MapLibre's
+ * `maxPitch`. Pitch is clamped to `[0, MAX_PITCH]` so the stored value never
+ * exceeds what the renderer can honor — a mouse tilt drag that overshoots
+ * stores the clamped angle, not the raw drag value.
+ */
+const MAX_PITCH = 85;
+
+/**
  * Input type for building camera state - simpler than union type
  */
 type CameraStateInput = {
@@ -185,12 +194,12 @@ function buildCameraState(partial?: CameraStateInput): CameraState {
   }
 
   if (is2Point5D) {
-    // 2.5D view: mercator projection, variable pitch
+    // 2.5D view: mercator projection, variable pitch clamped to [0, MAX_PITCH].
     return {
       latitude,
       longitude,
       zoom,
-      pitch: partial?.pitch ?? 60,
+      pitch: clamp(0, MAX_PITCH, partial?.pitch ?? 60),
       rotation,
       projection: 'mercator',
       view: '2.5D',
@@ -392,7 +401,7 @@ export const cameraStore = createMapStore<CameraState, CameraActions>({
 
         const state = get();
         if (state.view === '2.5D') {
-          replace({ ...state, pitch: payload.pitch });
+          replace({ ...state, pitch: clamp(0, MAX_PITCH, payload.pitch) });
         }
       },
     );
