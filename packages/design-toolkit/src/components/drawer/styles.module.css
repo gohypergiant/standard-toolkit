@@ -19,6 +19,14 @@
     --drawer-size-medium: 200px;
     --drawer-size-large: 400px;
 
+    /*
+     * Sidenav grid track sizes. The layout needs these at .layout scope so the
+     * `has-[.group/sidenav]` rules below can read them; the sidenav's own
+     * `--sidenav-width` declaration is scoped to .sidenav and not visible here.
+     */
+    --sidenav-width: 64px;
+    --sidenav-width-open: 240px;
+
     --drawer-left-size: 0px;
     --drawer-right-size: 0px;
     --drawer-top-size: 0px;
@@ -62,8 +70,18 @@
       --drawer-main-col-start: 2;
     }
 
+    /*
+     * Sidenav: reserve a left column sized to the rail. Without this the grid
+     * track defaults to 0px (since #1015 removed the auto-sized track) and the
+     * sidenav — which sets its own width — overflows into main's column.
+     */
     @variant has-[.group\/sidenav] {
       --drawer-main-col-start: 2;
+      --drawer-left-size: var(--sidenav-width);
+    }
+
+    @variant has-[.group\/sidenav[data-open]] {
+      --drawer-left-size: var(--sidenav-width-open);
     }
 
     @variant has-[[data-placement=left][data-open][data-size=large]] {
