@@ -673,11 +673,14 @@ export function BaseMap({
         <MapLibre
           key={mapGeneration}
           onMove={(evt) => {
-            // MapLibre reports heading as `bearing`, but the camera store keys on
-            // `rotation` (and `buildCameraState` ignores `bearing`). Without this
-            // remap, a right-drag rotation is dropped on the round-trip and the
-            // viewState memo pushes the stale `rotation` back to the map, snapping
-            // the bearing back. Pitch is unaffected since it's named the same.
+            // Runs on EVERY MapLibre move (drag, zoom, inertial pan, flyTo/easeTo,
+            // programmatic setBearing) — not just tilt drags. That breadth is
+            // intended: `onMove` is MapLibre's authoritative "the camera moved"
+            // event, so any heading change must flow back to the store, which is
+            // the single source of truth. The store keys on `rotation` while
+            // MapLibre reports it as `bearing`, so we remap here; without it the
+            // `viewState` memo would push a stale `rotation` back and snap the
+            // bearing. Pitch is unaffected since it's named the same.
             const { bearing, ...rest } = evt.viewState;
             setCameraState({ ...rest, rotation: bearing });
           }}

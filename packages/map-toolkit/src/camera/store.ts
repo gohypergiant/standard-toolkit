@@ -113,11 +113,21 @@ const initializedInstances = new Set<UniqueId>();
 
 /**
  * Maximum pitch (degrees) the camera can tilt to in 2.5D, matching MapLibre's
- * `maxPitch`. Pitch is clamped to `[0, MAX_PITCH]` so the stored value never
- * exceeds what the renderer can honor — a mouse tilt drag that overshoots
- * stores the clamped angle, not the raw drag value.
+ * `maxPitch`. The camera store clamps pitch to `[0, MAX_PITCH]`, so a stored
+ * value never exceeds what the renderer can honor — a mouse tilt drag that
+ * overshoots stores the clamped angle, not the raw drag value.
+ *
+ * Exported so consumers can bound their own pitch UI (e.g. a slider's max)
+ * to the value the camera accepts, instead of hardcoding `85`.
+ *
+ * @example
+ * ```tsx
+ * import { MAX_PITCH } from '@accelint/map-toolkit/camera';
+ *
+ * <Slider minValue={0} maxValue={MAX_PITCH} value={pitch} />;
+ * ```
  */
-const MAX_PITCH = 85;
+export const MAX_PITCH = 85;
 
 /**
  * Input type for building camera state - simpler than union type
