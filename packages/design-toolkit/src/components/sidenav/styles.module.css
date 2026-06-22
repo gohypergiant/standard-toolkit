@@ -30,17 +30,6 @@
     @variant group-push-left/layout {
       @apply relative;
       transform: translateX(0);
-
-      /*
-       * Push keeps the nav in the layout flow, so the overlay translate can't
-       * reveal a fixed rail. Pin the collapsed width to --sidenav-width so the
-       * collapsed rail matches overlay mode and stays themeable from one
-       * variable. (Declared after `closed` so push's translateX(0) wins and the
-       * relative nav isn't shifted.)
-       */
-      @variant closed {
-        width: var(--sidenav-width);
-      }
     }
   }
 
