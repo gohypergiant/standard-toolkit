@@ -74,7 +74,7 @@
     }
 
     .heading {
-      @apply fg-primary-bold text-body-m text-left;
+      @apply fg-primary-bold text-body-m text-left normal-case;
       grid-area: heading;
     }
 
@@ -84,8 +84,14 @@
     }
   }
 
+  /*
+   * Section labels (e.g. "Title A", "External" — the DEFAULT_SLOT headings
+   * inside SidenavContent) render uppercase per the design system. Headings
+   * routed to the menu/panel/avatar contexts opt out via `text-transform: none`
+   * in their own nested `.heading` rules below.
+   */
   .heading {
-    @apply text-body-xs;
+    @apply text-body-xs uppercase;
   }
 
   .item {
@@ -172,7 +178,7 @@
     @apply text-body-s relative;
 
     .heading {
-      @apply text-body-s flex-1 text-left;
+      @apply text-body-s flex-1 text-left normal-case;
     }
 
     .item {
@@ -256,7 +262,7 @@
     @apply fg-primary-bold rounded-medium bg-surface-raised outline-static outline;
 
     .heading {
-      @apply rounded-t-medium bg-surface-overlay px-m py-s text-body-s;
+      @apply rounded-t-medium bg-surface-overlay px-m py-s text-body-s normal-case;
     }
 
     .content {
@@ -305,15 +311,8 @@
   }
 
   .transient {
-    /*
-     * `hidden!` is intentional: the `closed` variant wraps its condition in
-     * `:where()` (zero specificity), so this rule ties with `.icon`'s own
-     * `display: block` and loses on source order for icon children (e.g. the
-     * SidenavLink external-link arrow and the SidenavHeader collapse chevron).
-     * `!important` guarantees the hide wins for any child type when collapsed.
-     */
     @variant group-closed/sidenav {
-      @apply hidden!;
+      @apply hidden;
     }
   }
 }
