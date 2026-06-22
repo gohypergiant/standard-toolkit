@@ -13,7 +13,13 @@
 import { centroid as turfCentroid, distance as turfDistance } from '@turf/turf';
 import { latToMercatorY, mercatorYToLat } from './mercator';
 import { STEM_LENGTH_DIVISOR } from './transform-mode-guides';
-import type { Feature, LineString, Polygon, Position } from 'geojson';
+import type {
+  Feature,
+  LineString,
+  MultiPolygon,
+  Polygon,
+  Position,
+} from 'geojson';
 
 /**
  * Outward buffer applied to the rotate-mode bounding box for polygon and
@@ -50,9 +56,11 @@ export type OrientedBoundingBox = {
  * Return the vertex array for a feature we'll wrap with an oriented
  * bounding box: the outer ring of a Polygon (still includes the closing
  * duplicate vertex; that's fine for the local axis-aligned bounds and
- * matches turfCentroid's behavior) or the coordinate array of a
- * LineString. Other geometry types fall through to `null` so we leave
- * the rotate-mode chrome unmodified.
+ * matches turfCentroid's behavior), the coordinate array of a
+ * LineString, or the concatenated outer rings of every polygon in a
+ * MultiPolygon (so wagon-wheel-style multi-sector shapes get a bbox that
+ * encloses the whole shape). Other geometry types fall through to `null`
+ * so we leave the rotate-mode chrome unmodified.
  */
 function getShapeVertices(feature: Feature): Position[] | null {
   if (feature.geometry.type === 'Polygon') {
@@ -65,7 +73,32 @@ function getShapeVertices(feature: Feature): Position[] | null {
     return (feature.geometry as LineString).coordinates as Position[];
   }
 
+  if (feature.geometry.type === 'MultiPolygon') {
+    return collectMultiPolygonOuterVertices(feature.geometry as MultiPolygon);
+  }
+
   return null;
+}
+
+/**
+ * Flatten the outer ring of every polygon in a MultiPolygon into a single
+ * vertex list, so the oriented bounding box encloses the whole shape (e.g. a
+ * wagon wheel's many sector polygons). Returns null when no vertices exist.
+ */
+function collectMultiPolygonOuterVertices(
+  geometry: MultiPolygon,
+): Position[] | null {
+  const vertices: Position[] = [];
+
+  for (const polygon of geometry.coordinates) {
+    const ring = polygon[0];
+
+    if (Array.isArray(ring)) {
+      vertices.push(...(ring as Position[]));
+    }
+  }
+
+  return vertices.length > 0 ? vertices : null;
 }
 
 /**
