@@ -15,6 +15,8 @@
 @layer components.l1 {
   .switch {
     @apply gap-s flex cursor-pointer items-center;
+    scroll-margin: 0 !important;
+    scroll-padding: 0 !important;
 
     @variant disabled {
       @apply cursor-not-allowed;

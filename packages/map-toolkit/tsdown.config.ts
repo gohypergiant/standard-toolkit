@@ -51,6 +51,11 @@ export default defineConfig({
     '@ngageoint/gars-js',
     '@ngageoint/grid-js',
     '@ngageoint/mgrs-js',
+    // `radashi` is an optionalDependency, so keep it external instead of letting
+    // `unbundle` inline it. Bundling rewrites the import to a `node_modules/.pnpm/…`
+    // store path, which some bundlers (e.g. Turbopack) reject as an invalid
+    // symlink; a bare `radashi` specifier resolves cleanly from the consumer.
+    'radashi',
     '@turf/helpers',
     '@turf/turf',
     '@vis.gl/react-maplibre',

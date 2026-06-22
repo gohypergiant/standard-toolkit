@@ -268,14 +268,19 @@ function buildEditShapeAccessors(args: {
   };
 
   return {
+    // The oriented-bbox outline (`vertex-bbox`) and the rotate-handle connector
+    // (`rotate-stem`) are both edit chrome, so they take the muted bbox styling
+    // rather than the shape's own line color/width.
     // biome-ignore lint/suspicious/noExplicitAny: deck.gl feature shape varies
     tentativeLineColor: (feature: any): Color =>
-      feature?.properties?.mode === VERTEX_BBOX_MODE
+      feature?.properties?.mode === VERTEX_BBOX_MODE ||
+      feature?.properties?.mode === 'rotate-stem'
         ? resolvedStyle.bboxLineColor
         : lineColor,
     // biome-ignore lint/suspicious/noExplicitAny: deck.gl feature shape varies
     tentativeLineWidth: (feature: any): number =>
-      feature?.properties?.mode === VERTEX_BBOX_MODE
+      feature?.properties?.mode === VERTEX_BBOX_MODE ||
+      feature?.properties?.mode === 'rotate-stem'
         ? resolvedStyle.bboxLineWidth
         : shapeLineWidth,
     // biome-ignore lint/suspicious/noExplicitAny: deck.gl feature shape varies
