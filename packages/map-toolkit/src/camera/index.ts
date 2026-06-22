@@ -15,6 +15,7 @@ export {
   type CameraState,
   cameraStore,
   clearCameraState,
+  MAX_PITCH,
   useMapCamera,
 } from './store';
 export type {
