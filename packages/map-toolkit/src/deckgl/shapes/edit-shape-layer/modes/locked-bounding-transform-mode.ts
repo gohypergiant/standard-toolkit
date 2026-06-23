@@ -25,8 +25,7 @@ import { RotateModeWithSnap } from './rotate-mode-with-snap';
 import { ScaleModeWithFreeTransform } from './scale-mode-with-free-transform';
 import {
   filterVertexGuides,
-  isRotateChromeFeature,
-  replaceRotateChromeWithBoundingBox,
+  resolveBoundingBoxGuides,
 } from './utils/vertex-bbox-chrome';
 import { computeOrientedBoundingBox } from './utils/vertex-bbox-math';
 import type { Feature } from 'geojson';
@@ -136,39 +135,27 @@ export class LockedBoundingTransformMode extends BaseTransformMode {
     // scale handles during rotation — same as VertexTransformMode. Without
     // this the raw scale envelope passes through untagged and the edit layer
     // renders it in the shape's line color (a second, undashed bounding box).
-    // `isRectangle` is false here: wagon wheels are the only locked-bounding
-    // shape and they don't hide vertex handles.
+    // Wagon wheels are the only locked-bounding shape and they don't hide
+    // vertex handles, so the rectangle vertex-handle filter never applies here.
+    const isRectangle = false;
     const filtered = filterVertexGuides(
       allGuides.features as Feature[],
-      false,
+      isRectangle,
       isRotating,
     );
-
-    if (isRotating) {
-      const stripped = filtered.filter(
-        (guide) => !isRotateChromeFeature(guide),
-      );
-
-      // biome-ignore lint/suspicious/noExplicitAny: turf/editable-layers GeoJSON types mismatch
-      return featureCollection(stripped as any) as any;
-    }
 
     // angle 0 — locked scaling keeps the shape axis-aligned, so the buffered
     // bounding box is simply the shape's lat/lon extent.
     const boundingBox = feature ? computeOrientedBoundingBox(feature, 0) : null;
 
-    if (!boundingBox) {
-      // biome-ignore lint/suspicious/noExplicitAny: turf/editable-layers GeoJSON types mismatch
-      return featureCollection(filtered as any) as any;
-    }
-
-    const { features: replaced } = replaceRotateChromeWithBoundingBox(
+    const { features } = resolveBoundingBoxGuides(
       filtered,
       boundingBox,
+      isRotating,
     );
 
     // biome-ignore lint/suspicious/noExplicitAny: turf/editable-layers GeoJSON types mismatch
-    return featureCollection(replaced as any) as any;
+    return featureCollection(features as any) as any;
   }
 
   /** Inject lockScaling into props.modeConfig. */

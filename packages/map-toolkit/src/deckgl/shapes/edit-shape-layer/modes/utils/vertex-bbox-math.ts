@@ -58,9 +58,10 @@ export type OrientedBoundingBox = {
  * duplicate vertex; that's fine for the local axis-aligned bounds and
  * matches turfCentroid's behavior), the coordinate array of a
  * LineString, or the concatenated outer rings of every polygon in a
- * MultiPolygon (so wagon-wheel-style multi-sector shapes get a bbox that
- * encloses the whole shape). Other geometry types fall through to `null`
- * so we leave the rotate-mode chrome unmodified.
+ * MultiPolygon (closing duplicates included, harmless for bounds; so
+ * wagon-wheel-style multi-sector shapes get a bbox that encloses the whole
+ * shape). Other geometry types fall through to `null` so we leave the
+ * rotate-mode chrome unmodified.
  */
 function getShapeVertices(feature: Feature): Position[] | null {
   if (feature.geometry.type === 'Polygon') {
@@ -84,6 +85,10 @@ function getShapeVertices(feature: Feature): Position[] | null {
  * Flatten the outer ring of every polygon in a MultiPolygon into a single
  * vertex list, so the oriented bounding box encloses the whole shape (e.g. a
  * wagon wheel's many sector polygons). Returns null when no vertices exist.
+ *
+ * Runs per `getGuides` frame: a wagon wheel can have dozens of sector rings
+ * of 60-120 vertices each, so each ring is appended with a plain loop rather
+ * than `push(...ring)` to avoid materializing a large variadic argument list.
  */
 function collectMultiPolygonOuterVertices(
   geometry: MultiPolygon,
@@ -94,7 +99,9 @@ function collectMultiPolygonOuterVertices(
     const ring = polygon[0];
 
     if (Array.isArray(ring)) {
-      vertices.push(...(ring as Position[]));
+      for (const vertex of ring as Position[]) {
+        vertices.push(vertex);
+      }
     }
   }
 
