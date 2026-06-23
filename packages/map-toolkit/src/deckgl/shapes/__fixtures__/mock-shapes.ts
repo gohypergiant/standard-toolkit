@@ -405,8 +405,8 @@ export const mockShapes: Shape[] = [
         },
         maxElevation: 0,
         styleProperties: {
-          fillColor: [255, 255, 255, 255],
-          lineColor: [136, 138, 143, 255],
+          fillColor: [98, 166, 255, 128],
+          lineColor: [98, 166, 255, 255],
           lineWidth: 2,
           linePattern: 'solid',
         },
