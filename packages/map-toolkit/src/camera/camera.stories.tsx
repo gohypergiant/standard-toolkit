@@ -18,7 +18,7 @@ import { SelectField } from '@accelint/design-toolkit/components/select-field';
 import { Slider } from '@accelint/design-toolkit/components/slider';
 import { BaseMap } from '../deckgl/base-map';
 import { CameraEventTypes } from './events';
-import { useMapCamera } from './store';
+import { MAX_PITCH, useMapCamera } from './store';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type {
   CameraResetEvent,
@@ -93,7 +93,7 @@ function CameraToolbar() {
           value={cameraState.pitch}
           isDisabled={cameraState.view !== '2.5D'}
           minValue={0}
-          maxValue={65}
+          maxValue={MAX_PITCH}
           layout='stack'
           onChange={(value) => {
             typeof value === 'number'
