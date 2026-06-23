@@ -24,6 +24,7 @@ import { BaseTransformMode, type HandleMatcher } from './base-transform-mode';
 import { RotateModeWithSnap } from './rotate-mode-with-snap';
 import { ScaleModeWithFreeTransform } from './scale-mode-with-free-transform';
 import {
+  filterVertexGuides,
   isRotateChromeFeature,
   replaceRotateChromeWithBoundingBox,
 } from './utils/vertex-bbox-chrome';
@@ -129,8 +130,22 @@ export class LockedBoundingTransformMode extends BaseTransformMode {
     const allGuides = super.getGuides(props);
     const feature = props.data.features[0] as Feature | undefined;
 
-    if (this.rotateMode.getIsRotating()) {
-      const stripped = (allGuides.features as Feature[]).filter(
+    const isRotating = this.rotateMode.getIsRotating();
+
+    // Drop the child ScaleMode's own envelope (`mode === 'scale'`) and its
+    // scale handles during rotation — same as VertexTransformMode. Without
+    // this the raw scale envelope passes through untagged and the edit layer
+    // renders it in the shape's line color (a second, undashed bounding box).
+    // `isRectangle` is false here: wagon wheels are the only locked-bounding
+    // shape and they don't hide vertex handles.
+    const filtered = filterVertexGuides(
+      allGuides.features as Feature[],
+      false,
+      isRotating,
+    );
+
+    if (isRotating) {
+      const stripped = filtered.filter(
         (guide) => !isRotateChromeFeature(guide),
       );
 
@@ -143,11 +158,12 @@ export class LockedBoundingTransformMode extends BaseTransformMode {
     const boundingBox = feature ? computeOrientedBoundingBox(feature, 0) : null;
 
     if (!boundingBox) {
-      return allGuides;
+      // biome-ignore lint/suspicious/noExplicitAny: turf/editable-layers GeoJSON types mismatch
+      return featureCollection(filtered as any) as any;
     }
 
     const { features: replaced } = replaceRotateChromeWithBoundingBox(
-      allGuides.features as Feature[],
+      filtered,
       boundingBox,
     );
 
