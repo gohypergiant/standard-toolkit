@@ -10,17 +10,15 @@
  * governing permissions and limitations under the License.
  */
 
-import 'server-only';
-import { FormsExampleClient } from './client';
-import { ErrorComponent } from './error';
-import { LoadingComponent } from './loading';
+import { Suspense } from 'react';
+import type { PropsWithChildren } from 'react';
 
-export function FormsExample() {
-  return (
-    <ErrorComponent>
-      <LoadingComponent>
-        <FormsExampleClient />
-      </LoadingComponent>
-    </ErrorComponent>
-  );
+export function Fallback() {
+  return <div>Loading...</div>;
+}
+
+export function LoadingComponent(props: PropsWithChildren) {
+  const { children } = props;
+
+  return <Suspense fallback={<Fallback />}>{children}</Suspense>;
 }
