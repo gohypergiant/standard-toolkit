@@ -33,6 +33,8 @@ import {
 import { RbzHandler } from '@/maplibre';
 import { isActiveMap, setActiveMap } from '@/maplibre/active-map-store';
 import { useMapCamera } from '../../camera';
+import { CameraEventTypes } from '../../camera/events';
+import { cameraStore } from '../../camera/store';
 import { getCursor } from '../../map-cursor/store';
 import { getMapGeneration } from '../../shared/cleanup';
 import { DEFAULT_VIEW_STATE } from '../../shared/constants';
@@ -40,6 +42,13 @@ import { DARK_BASE_MAP_STYLE, PARAMETERS, PICKING_RADIUS } from './constants';
 import { MapControls } from './controls';
 import { MapEvents } from './events';
 import { MapProvider } from './provider';
+import {
+  isTiltGesture,
+  MOUSE_TILT_SENSITIVITY,
+  type TiltBaseline,
+  type TiltGesture,
+  tiltCommandFor,
+} from './tilt-gesture';
 import { LOCKED_MAP_LIBRE_OPTION_KEYS } from './types';
 import type {
   IControl,
@@ -47,6 +56,7 @@ import type {
   WebGLContextAttributesWithType,
 } from 'maplibre-gl';
 import type { MjolnirGestureEvent, MjolnirPointerEvent } from 'mjolnir.js';
+import type { CameraSetViewEvent } from '../../camera/types';
 import type {
   BaseMapProps,
   MapClickEvent,
@@ -179,6 +189,24 @@ function serializeMjolnirEvent(
 }
 
 /**
+ * Projects a Deck.gl gesture event onto the {@link TiltGesture} shape the tilt
+ * handlers need: the mouse buttons, cumulative drag deltas, and the modifier
+ * key (which lives on the wrapped `srcEvent`, not the gesture event itself).
+ *
+ * @param event - The Deck.gl/Mjolnir gesture event from `onDragStart`/`onDrag`.
+ * @returns The button + delta + modifier subset used to classify and map the drag.
+ */
+function toTiltGesture(event: MjolnirGestureEvent): TiltGesture {
+  return {
+    leftButton: event.leftButton,
+    rightButton: event.rightButton,
+    deltaX: event.deltaX,
+    deltaY: event.deltaY,
+    ctrlKey: event.srcEvent.ctrlKey,
+  };
+}
+
+/**
  * Internal component that registers the Deck.gl instance as a MapLibre control.
  * Enables the Deck.gl canvas to render within the MapLibre GL map container.
  *
@@ -276,6 +304,9 @@ export function BaseMap({
   initialViewState,
   onClick,
   onHover,
+  onDragStart,
+  onDrag,
+  onDragEnd,
   onViewStateChange,
   pickingRadius,
   enableRbz = false,
@@ -290,6 +321,21 @@ export function BaseMap({
   const mapRef = useRef<MapRef>(null);
   const rbzRef = useRef<RbzHandler | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  // Camera rotation/pitch captured at the start of a tilt drag; the gesture's
+  // (per-drag, resets-to-zero) delta is applied on top so each new drag
+  // continues from the current angle instead of snapping to an absolute.
+  // Captured in `handleDragStart`, cleared in `handleDragEnd`; non-null only
+  // while a tilt drag is in flight.
+  const tiltBaselineRef = useRef<TiltBaseline | null>(null);
+  // Latest rotation/pitch a drag frame wants applied, plus the rAF handle that
+  // will apply it. `onDrag` fires once per raw pointermove (often several per
+  // animation frame); writing the camera on each one forces a MapLibre repaint
+  // per event and starves the next pointermove, which is the drag stutter. We
+  // instead stash the newest target and let one rAF coalesce them into a single
+  // `setCameraState` per frame — the same one-repaint-per-frame cadence
+  // MapLibre's own handlers use.
+  const pendingTiltRef = useRef<TiltBaseline | null>(null);
+  const tiltFrameRef = useRef<number | null>(null);
 
   // Derive boxZoom: disable when RBZ is enabled to avoid conflicts
   const boxZoom = boxZoomProp ?? !enableRbz;
@@ -325,16 +371,26 @@ export function BaseMap({
   // guard on its `_updateStyleComponents` path. maplibre's `setProjection`
   // then throws "Style is not done loading." Sync via the post-load pattern
   // below - same approach as `useMapLibre` uses for the same setter.
+  // 2.5D is the only view that permits pitch (the camera store locks 2D and 3D
+  // to pitch:0). `maxPitch` must allow the store-driven pitch through in 2.5D;
+  // MapLibre clamps an applied `pitch` to `maxPitch`.
+  const allowTilt = cameraState.view === '2.5D';
+
   const mapOptions = useMemo(() => {
     const options = {
       attributionControl: DEFAULT_ATTRIBUTION_CONTROL,
       ...filteredMapLibreOptions,
       container,
       doubleClickZoom: false,
+      // MapLibre's own rotate/pitch handlers stay disabled. Rotation and pitch
+      // are driven through the camera store from the `onDrag` handler below
+      // (right-drag / ctrl+left-drag), so the camera stays the single source of
+      // truth and sensitivity is a simple delta multiplier — no reaching into
+      // MapLibre's handler internals.
       dragRotate: false,
       pitchWithRotate: false,
       rollEnabled: false,
-      maxPitch: cameraState.view === '2D' ? 0 : 85,
+      maxPitch: allowTilt ? 85 : 0,
       canvasContextAttributes: CANVAS_CONTEXT_ATTRIBUTES,
       boxZoom,
     };
@@ -355,12 +411,22 @@ export function BaseMap({
   }, [
     viewState,
     container,
+    allowTilt,
     cameraState.view,
     cameraState.transitionDuration,
     boxZoom,
     filteredMapLibreOptions,
     isTransitioning,
   ]);
+
+  // Cancel a scheduled tilt frame if the map unmounts mid-drag.
+  useEffect(() => {
+    return () => {
+      if (tiltFrameRef.current !== null) {
+        cancelAnimationFrame(tiltFrameRef.current);
+      }
+    };
+  }, []);
 
   // `setProjection` throws if called before the style is loaded. Initial
   // application happens in `handleMapLoad`; this effect syncs later changes.
@@ -435,6 +501,7 @@ export function BaseMap({
   const emitClick = useEmit<MapClickEvent>(MapEvents.click);
   const emitHover = useEmit<MapHoverEvent>(MapEvents.hover);
   const emitViewport = useEmit<MapViewportEvent>(MapEvents.viewport);
+  const emitSetView = useEmit<CameraSetViewEvent>(CameraEventTypes.setView);
 
   const resizeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -467,6 +534,101 @@ export function BaseMap({
       });
     },
     [emitHover, id, onHover],
+  );
+
+  // Apply the latest coalesced tilt target (if any) to the camera and clear it.
+  // Shared by the rAF callback (per-frame) and `handleDragEnd` (final flush).
+  const flushPendingTilt = useEffectEvent(() => {
+    const pending = pendingTiltRef.current;
+
+    if (pending) {
+      setCameraState({ rotation: pending.rotation, pitch: pending.pitch });
+      pendingTiltRef.current = null;
+    }
+  });
+
+  const handleDragStart = useEffectEvent(
+    (info: PickingInfo, event: MjolnirGestureEvent) => {
+      // send full pickingInfo and event to user-defined onDragStart first
+      onDragStart?.(info, event);
+
+      // Right-drag (or ctrl + left-drag) rotates + pitches the camera; plain
+      // left-drag stays a pan. The camera store is driven directly so it remains
+      // the single source of truth — MapLibre's own rotate/pitch handlers are off.
+      if (!isTiltGesture(toTiltGesture(event))) {
+        return;
+      }
+
+      // Capture the baseline once, here, from the live store — `onDragStart`
+      // fires exactly once per gesture, so each new drag continues from the
+      // current camera angle instead of snapping to an absolute derived from the
+      // (per-gesture, resets-to-zero) drag delta. Reading the store rather than
+      // the render closure avoids a stale `cameraState` when the bus has updated
+      // the camera without re-rendering BaseMap.
+      const liveCamera = cameraStore.get(id);
+      tiltBaselineRef.current = {
+        rotation: liveCamera.rotation,
+        pitch: liveCamera.pitch,
+      };
+
+      // Promote a flat 2D view to 2.5D so pitch can apply. Doing it here (not in
+      // `handleDrag`) gives the view flip — which raises `maxPitch` from 0 to 85
+      // — a full frame to reach MapLibre before the first tilt delta arrives.
+      if (liveCamera.view === '2D') {
+        emitSetView({ id, view: '2.5D' });
+      }
+    },
+  );
+
+  const handleDrag = useEffectEvent(
+    (info: PickingInfo, event: MjolnirGestureEvent) => {
+      // send full pickingInfo and event to user-defined onDrag first
+      onDrag?.(info, event);
+
+      // No baseline means `handleDragStart` classified this as a pan, not a
+      // tilt; leave the camera untouched.
+      if (!tiltBaselineRef.current) {
+        return;
+      }
+
+      const command = tiltCommandFor(
+        toTiltGesture(event),
+        MOUSE_TILT_SENSITIVITY,
+        tiltBaselineRef.current,
+      );
+
+      // Coalesce to one camera update per animation frame. Record the newest
+      // target and, if no frame is already scheduled, schedule one. The rAF
+      // callback applies whatever the latest target is and clears the handle, so
+      // a burst of pointermoves within a frame collapses to a single
+      // `setCameraState` (one MapLibre repaint) instead of one per event.
+      pendingTiltRef.current = command;
+
+      if (tiltFrameRef.current === null) {
+        tiltFrameRef.current = requestAnimationFrame(() => {
+          tiltFrameRef.current = null;
+          flushPendingTilt();
+        });
+      }
+    },
+  );
+
+  const handleDragEnd = useEffectEvent(
+    (info: PickingInfo, event: MjolnirGestureEvent) => {
+      // send full pickingInfo and event to user-defined onDragEnd first
+      onDragEnd?.(info, event);
+
+      // Flush the last pending target so the camera lands exactly where the drag
+      // ended (a frame may have been scheduled but not yet fired), then cancel
+      // the pending frame and drop the baseline so the next gesture re-captures.
+      if (tiltFrameRef.current !== null) {
+        cancelAnimationFrame(tiltFrameRef.current);
+        tiltFrameRef.current = null;
+      }
+
+      flushPendingTilt();
+      tiltBaselineRef.current = null;
+    },
   );
 
   const handleGetCursor = useCallback(() => {
@@ -594,7 +756,16 @@ export function BaseMap({
         <MapLibre
           key={mapGeneration}
           onMove={(evt) => {
-            setCameraState(evt.viewState);
+            // Runs on EVERY MapLibre move (drag, zoom, inertial pan, flyTo/easeTo,
+            // programmatic setBearing) — not just tilt drags. That breadth is
+            // intended: `onMove` is MapLibre's authoritative "the camera moved"
+            // event, so any heading change must flow back to the store, which is
+            // the single source of truth. The store keys on `rotation` while
+            // MapLibre reports it as `bearing`, so we remap here; without it the
+            // `viewState` memo would push a stale `rotation` back and snap the
+            // bearing. Pitch is unaffected since it's named the same.
+            const { bearing, ...rest } = evt.viewState;
+            setCameraState({ ...rest, rotation: bearing });
           }}
           onLoad={handleMapLoad}
           mapStyle={styleUrl}
@@ -610,6 +781,9 @@ export function BaseMap({
             onClick={handleClick}
             pickingRadius={pickingRadius ?? PICKING_RADIUS}
             onHover={handleHover}
+            onDragStart={handleDragStart}
+            onDrag={handleDrag}
+            onDragEnd={handleDragEnd}
             onLoad={handleLoad}
             onResize={handleResize}
             onViewStateChange={handleViewStateChange}

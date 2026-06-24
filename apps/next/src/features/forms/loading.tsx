@@ -10,24 +10,15 @@
  * governing permissions and limitations under the License.
  */
 
-export { CameraEventNamespace, CameraEventTypes } from './events';
-export {
-  type CameraState,
-  cameraStore,
-  clearCameraState,
-  MAX_PITCH,
-  useMapCamera,
-} from './store';
-export type {
-  CameraEvent,
-  CameraFitBoundsEvent,
-  CameraResetEvent,
-  CameraSetCenterEvent,
-  CameraSetPitchEvent,
-  CameraSetProjectionEvent,
-  CameraSetRotationEvent,
-  CameraSetViewEvent,
-  CameraSetZoomEvent,
-  ProjectionType,
-  ViewType,
-} from './types';
+import { Suspense } from 'react';
+import type { PropsWithChildren } from 'react';
+
+export function Fallback() {
+  return <div>Loading...</div>;
+}
+
+export function LoadingComponent(props: PropsWithChildren) {
+  const { children } = props;
+
+  return <Suspense fallback={<Fallback />}>{children}</Suspense>;
+}

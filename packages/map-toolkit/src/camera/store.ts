@@ -32,6 +32,7 @@
  */
 
 import { Broadcast } from '@accelint/bus';
+import { clamp } from '@accelint/math';
 import { fitBounds } from '@math.gl/web-mercator';
 import { createMapStore } from '../shared/create-map-store';
 import { CameraEventTypes } from './events';
@@ -117,6 +118,24 @@ const initialStateCache = new Map<UniqueId, CameraStateInput>();
 const initializedInstances = new Set<UniqueId>();
 
 /**
+ * Maximum pitch (degrees) the camera can tilt to in 2.5D, matching MapLibre's
+ * `maxPitch`. The camera store clamps pitch to `[0, MAX_PITCH]`, so a stored
+ * value never exceeds what the renderer can honor — a mouse tilt drag that
+ * overshoots stores the clamped angle, not the raw drag value.
+ *
+ * Exported so consumers can bound their own pitch UI (e.g. a slider's max)
+ * to the value the camera accepts, instead of hardcoding `85`.
+ *
+ * @example
+ * ```tsx
+ * import { MAX_PITCH } from '@accelint/map-toolkit/camera';
+ *
+ * <Slider minValue={0} maxValue={MAX_PITCH} value={pitch} />;
+ * ```
+ */
+export const MAX_PITCH = 85;
+
+/**
  * Input type for building camera state - simpler than union type
  */
 type CameraStateInput = {
@@ -159,7 +178,7 @@ type CameraStateInput = {
  *   zoom: 12,
  *   view: '2.5D',
  * });
- * // Result: { ..., view: '2.5D', projection: 'mercator', pitch: 45 }
+ * // Result: { ..., view: '2.5D', projection: 'mercator', pitch: 60 }
  *
  * // Build 3D state
  * const state3D = buildCameraState({
@@ -194,12 +213,12 @@ function buildCameraState(partial?: CameraStateInput): CameraState {
       view: '3D',
     } satisfies CameraState3D;
   } else if (is2Point5D) {
-    // 2.5D view: mercator projection, variable pitch
+    // 2.5D view: mercator projection, variable pitch clamped to [0, MAX_PITCH].
     state = {
       latitude,
       longitude,
       zoom,
-      pitch: partial?.pitch ?? 45,
+      pitch: clamp(0, MAX_PITCH, partial?.pitch ?? 60),
       rotation,
       projection: 'mercator',
       view: '2.5D',
@@ -373,7 +392,7 @@ export const cameraStore = createMapStore<CameraState, CameraActions>({
         }
 
         if (payload.view === '2.5D') {
-          newState.pitch = 45;
+          newState.pitch = 60;
         }
         replace(newState);
       },
@@ -414,7 +433,7 @@ export const cameraStore = createMapStore<CameraState, CameraActions>({
 
         const state = get();
         if (state.view === '2.5D') {
-          replace({ ...state, pitch: payload.pitch });
+          replace({ ...state, pitch: clamp(0, MAX_PITCH, payload.pitch) });
         }
       },
     );

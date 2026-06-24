@@ -10,6 +10,8 @@
  * governing permissions and limitations under the License.
  */
 
+import { clamp } from '@accelint/math';
+
 /**
  * Web Mercator projection helpers used by edit-shape-layer math modules.
  *
@@ -38,10 +40,7 @@ const MAX_MERCATOR_LATITUDE = 89.999999;
  * @returns Mercator-y in the same "degree-like" units used by longitude.
  */
 export function latToMercatorY(lat: number): number {
-  const clamped = Math.max(
-    Math.min(lat, MAX_MERCATOR_LATITUDE),
-    -MAX_MERCATOR_LATITUDE,
-  );
+  const clamped = clamp(-MAX_MERCATOR_LATITUDE, MAX_MERCATOR_LATITUDE, lat);
   const rad = (clamped * Math.PI) / 180;
 
   return (Math.log(Math.tan(Math.PI / 4 + rad / 2)) * 180) / Math.PI;

@@ -911,6 +911,9 @@ importers:
       '@accelint/logger':
         specifier: workspace:*
         version: link:../logger
+      '@accelint/math':
+        specifier: workspace:*
+        version: link:../math
       '@accelint/postcss-tailwind-css-modules':
         specifier: workspace:*
         version: link:../postcss-tailwind-css-modules
