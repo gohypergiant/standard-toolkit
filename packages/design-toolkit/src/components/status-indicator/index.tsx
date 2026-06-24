@@ -15,7 +15,7 @@ import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import styles from './styles.module.css';
 import type { StatusIndicatorProps } from './types';
-import { Label } from '../label';
+import { Label } from 'react-aria-components/Label';
 
 /**
  * StatusIndicator - A component for displaying connection/service status information
