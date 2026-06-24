@@ -406,7 +406,7 @@
       }
 
       @variant disabled {
-        @apply fg-disabled outline-interactive-disabled bg-interactive-disabled outline-2;
+        @apply fg-disabled outline-interactive-disabled pointer-events-none;
       }
     }
   }
