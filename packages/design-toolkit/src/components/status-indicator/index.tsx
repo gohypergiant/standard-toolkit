@@ -55,7 +55,7 @@ export function StatusIndicator({
   if (textValue) {
     return (
       <div className='flex items-center gap-s'>
-        <div className='min-w-m flex justify-center'>{statusIcon}</div>
+        <div className='flex min-w-m justify-center'>{statusIcon}</div>
         <Label>{textValue}</Label>
       </div>
     );
