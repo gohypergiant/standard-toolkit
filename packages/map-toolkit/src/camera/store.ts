@@ -37,7 +37,12 @@ import { fitBounds } from '@math.gl/web-mercator';
 import { createMapStore } from '../shared/create-map-store';
 import { CameraEventTypes } from './events';
 import type { UniqueId } from '@accelint/core';
-import type { CameraEvent, ProjectionType, ViewType } from './types';
+import type {
+  CameraEvent,
+  ProjectionType,
+  TransitionEasing,
+  ViewType,
+} from './types';
 
 const cameraBus = Broadcast.getInstance<CameraEvent>();
 
@@ -52,6 +57,8 @@ type CameraState2D = {
   rotation: number;
   projection: 'mercator';
   view: '2D';
+  transitionDuration?: number;
+  transitionEasing?: TransitionEasing;
 };
 
 /**
@@ -65,6 +72,8 @@ type CameraState3D = {
   rotation: number;
   projection: 'globe';
   view: '3D';
+  transitionDuration?: number;
+  transitionEasing?: TransitionEasing;
 };
 
 /**
@@ -78,6 +87,8 @@ type CameraState2Point5D = {
   rotation: number;
   projection: 'mercator';
   view: '2.5D';
+  transitionDuration?: number;
+  transitionEasing?: TransitionEasing;
 };
 
 /**
@@ -140,6 +151,8 @@ type CameraStateInput = {
   rotation?: number;
   projection?: ProjectionType;
   view?: ViewType;
+  transitionDuration?: number;
+  transitionEasing?: TransitionEasing;
 };
 
 /**
@@ -190,9 +203,12 @@ function buildCameraState(partial?: CameraStateInput): CameraState {
   const is3D = partial?.view === '3D' || partial?.projection === 'globe';
   const is2Point5D = partial?.view === '2.5D';
 
+  // Build base state for the appropriate view type
+  let state: CameraState;
+
   if (is3D) {
     // 3D view: globe projection, no pitch, no rotation
-    return {
+    state = {
       latitude,
       longitude,
       zoom,
@@ -201,11 +217,9 @@ function buildCameraState(partial?: CameraStateInput): CameraState {
       projection: 'globe',
       view: '3D',
     } satisfies CameraState3D;
-  }
-
-  if (is2Point5D) {
+  } else if (is2Point5D) {
     // 2.5D view: mercator projection, variable pitch clamped to [0, MAX_PITCH].
-    return {
+    state = {
       latitude,
       longitude,
       zoom,
@@ -214,18 +228,29 @@ function buildCameraState(partial?: CameraStateInput): CameraState {
       projection: 'mercator',
       view: '2.5D',
     } satisfies CameraState2Point5D;
+  } else {
+    // Default: 2D view, mercator projection, no pitch
+    state = {
+      latitude,
+      longitude,
+      zoom,
+      pitch: 0,
+      rotation,
+      projection: 'mercator',
+      view: '2D',
+    } satisfies CameraState2D;
   }
 
-  // Default: 2D view, mercator projection, no pitch
-  return {
-    latitude,
-    longitude,
-    zoom,
-    pitch: 0,
-    rotation,
-    projection: 'mercator',
-    view: '2D',
-  } satisfies CameraState2D;
+  // Always handle transition properties - either set or clear them
+  if (partial?.transitionDuration !== undefined) {
+    state.transitionDuration = partial.transitionDuration;
+  }
+
+  if (partial?.transitionEasing !== undefined) {
+    state.transitionEasing = partial.transitionEasing;
+  }
+
+  return state;
 }
 
 /**
@@ -288,16 +313,18 @@ export const cameraStore = createMapStore<CameraState, CameraActions>({
         }
 
         const state = get();
-        replace(
-          buildCameraState({
-            ...state,
-            latitude: payload.latitude,
-            longitude: payload.longitude,
-            zoom: payload.zoom ?? state.zoom,
-            rotation: payload.heading ?? state.rotation,
-            pitch: payload.pitch ?? state.pitch,
-          }),
-        );
+        const newState = buildCameraState({
+          ...state,
+          latitude: payload.latitude,
+          longitude: payload.longitude,
+          zoom: payload.zoom ?? state.zoom,
+          rotation: payload.heading ?? state.rotation,
+          pitch: payload.pitch ?? state.pitch,
+          transitionDuration: payload.transitionDuration,
+          transitionEasing: payload.transitionEasing,
+        });
+
+        replace(newState);
       },
     );
 

@@ -16,7 +16,14 @@ import { useEffectEvent, useEmit } from '@accelint/bus/react';
 import { Deckgl, useDeckgl } from '@deckgl-fiber-renderer/dom';
 import type { PickingInfo, ViewStateChangeParameters } from '@deck.gl/core';
 import 'client-only';
-import { useCallback, useEffect, useId, useMemo, useRef } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   Map as MapLibre,
   type MapRef,
@@ -313,6 +320,7 @@ export function BaseMap({
   const container = useId();
   const mapRef = useRef<MapRef>(null);
   const rbzRef = useRef<RbzHandler | null>(null);
+  const [isTransitioning, setIsTransitioning] = useState(false);
   // Camera rotation/pitch captured at the start of a tilt drag; the gesture's
   // (per-drag, resets-to-zero) delta is applied on top so each new drag
   // continues from the current angle instead of snapping to an absolute.
@@ -368,16 +376,11 @@ export function BaseMap({
   // MapLibre clamps an applied `pitch` to `maxPitch`.
   const allowTilt = cameraState.view === '2.5D';
 
-  const mapOptions = useMemo(
-    () => ({
+  const mapOptions = useMemo(() => {
+    const options = {
       attributionControl: DEFAULT_ATTRIBUTION_CONTROL,
       ...filteredMapLibreOptions,
       container,
-      zoom: viewState.zoom,
-      pitch: viewState.pitch,
-      bearing: viewState.bearing,
-      latitude: viewState.latitude,
-      longitude: viewState.longitude,
       doubleClickZoom: false,
       // MapLibre's own rotate/pitch handlers stay disabled. Rotation and pitch
       // are driven through the camera store from the `onDrag` handler below
@@ -390,9 +393,31 @@ export function BaseMap({
       maxPitch: allowTilt ? 85 : 0,
       canvasContextAttributes: CANVAS_CONTEXT_ATTRIBUTES,
       boxZoom,
-    }),
-    [viewState, container, allowTilt, boxZoom, filteredMapLibreOptions],
-  );
+    };
+
+    // Only include camera position when NOT transitioning
+    // Let MapLibre's easeTo fully control the camera during transitions
+    if (!(isTransitioning || cameraState.transitionDuration)) {
+      Object.assign(options, {
+        zoom: viewState.zoom,
+        pitch: viewState.pitch,
+        bearing: viewState.bearing,
+        latitude: viewState.latitude,
+        longitude: viewState.longitude,
+      });
+    }
+
+    return options;
+  }, [
+    viewState,
+    container,
+    allowTilt,
+    cameraState.view,
+    cameraState.transitionDuration,
+    boxZoom,
+    filteredMapLibreOptions,
+    isTransitioning,
+  ]);
 
   // Cancel a scheduled tilt frame if the map unmounts mid-drag.
   useEffect(() => {
@@ -414,6 +439,68 @@ export function BaseMap({
 
     map.setProjection({ type: cameraState.projection });
   }, [cameraState.projection]);
+
+  // Use MapLibre's easeTo for smooth transitions
+  useEffect(() => {
+    if (cameraState.transitionDuration && mapRef.current && !isTransitioning) {
+      setIsTransitioning(true);
+      const map = mapRef.current.getMap
+        ? mapRef.current.getMap()
+        : mapRef.current;
+
+      // Clear transition properties when the animation completes. Using moveend
+      // ensures we wait for the actual animation to finish rather than guessing
+      // with setTimeout. This handles interruptions correctly (user drag cancels
+      // the animation and immediately fires moveend).
+      const handleMoveEnd = () => {
+        setIsTransitioning(false);
+        setCameraState({
+          latitude: cameraState.latitude,
+          longitude: cameraState.longitude,
+          zoom: cameraState.zoom,
+          pitch: cameraState.pitch,
+          rotation: cameraState.rotation,
+          transitionDuration: undefined,
+          transitionEasing: undefined,
+        });
+        map.off('moveend', handleMoveEnd);
+      };
+
+      map.once('moveend', handleMoveEnd);
+
+      map.easeTo({
+        center: [cameraState.longitude, cameraState.latitude],
+        zoom: cameraState.zoom,
+        bearing: cameraState.rotation,
+        pitch: cameraState.pitch,
+        duration: cameraState.transitionDuration,
+        easing: (t) => {
+          switch (cameraState.transitionEasing) {
+            case 'ease-in':
+              return t * t;
+            case 'ease-out':
+              return t * (2 - t);
+            case 'ease-in-out':
+              return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+            case 'linear':
+              return t;
+            default:
+              return t * (2 - t);
+          }
+        },
+      });
+    }
+  }, [
+    cameraState.transitionDuration,
+    cameraState.latitude,
+    cameraState.longitude,
+    cameraState.zoom,
+    cameraState.pitch,
+    cameraState.rotation,
+    cameraState.transitionEasing,
+    setCameraState,
+    isTransitioning,
+  ]);
 
   const emitClick = useEmit<MapClickEvent>(MapEvents.click);
   const emitHover = useEmit<MapHoverEvent>(MapEvents.hover);
