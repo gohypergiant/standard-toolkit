@@ -16,6 +16,7 @@ import { useOn } from '@accelint/bus/react';
 import { MapEvents } from '@accelint/map-toolkit/deckgl';
 import { useEffect } from 'react';
 import type { Payload } from '@accelint/bus';
+import type { MapClickEvent } from '@accelint/map-toolkit/deckgl';
 
 export type MapTestViewport = {
   latitude: number;
@@ -71,6 +72,10 @@ const EMPTY_HANDLE: MapTestHandle = {
  * (see its deck `onLoad` handler), so the first event doubles as the
  * "deck + maplibre ready" signal, and every later event reflects camera moves.
  *
+ * It also mirrors the most recent click pick (emitted on `map:click`) onto
+ * `lastPick`, so any route that drops layers into the shared map gets pick
+ * assertions for free without wiring its own `onClick`.
+ *
  * This renders nothing and is harmless in any build; it only sets a window
  * property. It exists for the example app's integration suite — not production.
  */
@@ -88,6 +93,20 @@ export function MapTestBridge() {
       ready: true,
       viewport: event.payload,
       viewportCount: current.viewportCount + 1,
+    };
+  });
+
+  useOn<MapClickEvent>(MapEvents.click, (event) => {
+    const current = window.__mapTest ?? EMPTY_HANDLE;
+    const { info } = event.payload;
+
+    window.__mapTest = {
+      ...current,
+      lastPick: {
+        layerId: info.layerId ?? null,
+        objectId: (info.object as { id?: string | number })?.id ?? null,
+        index: info.index,
+      },
     };
   });
 

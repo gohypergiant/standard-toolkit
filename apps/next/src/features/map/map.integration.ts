@@ -11,11 +11,7 @@
  */
 
 import { expect, test } from '@playwright/test';
-// Type-only import pulls in the `Window.__mapTest` global augmentation that the
-// bridge declares, so `page.evaluate` callbacks below are fully typed.
-import type {} from './test-bridge';
 
-// MapLibre renders the (interleaved) deck.gl scene into this canvas.
 const MAP_CANVAS = 'canvas.maplibregl-canvas';
 
 async function waitForMapReady(page: import('@playwright/test').Page) {

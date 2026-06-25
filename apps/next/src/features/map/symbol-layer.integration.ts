@@ -11,9 +11,6 @@
  */
 
 import { expect, test } from '@playwright/test';
-// Type-only import pulls in the `Window.__mapTest` global augmentation (incl.
-// `lastPick`) declared by the bridge, so `page.evaluate` callbacks are typed.
-import type {} from './test-bridge';
 
 const MAP_CANVAS = 'canvas.maplibregl-canvas';
 

@@ -13,18 +13,8 @@
 'use client';
 
 import '@accelint/map-toolkit/deckgl/symbol-layer/fiber';
-import { uuid } from '@accelint/core';
-import { BaseMap } from '@accelint/map-toolkit/deckgl';
 import { DEFAULT_VIEW_STATE } from '@accelint/map-toolkit/shared/constants';
-import { MapTestBridge } from '~/features/map/test-bridge';
-import type { PickingInfo } from '@deck.gl/core';
-
-// NOTE: `<symbolLayer>` is registered at runtime by the fiber side-effect import
-// above, but its JSX type augmentation doesn't reach this app's global `JSX`
-// namespace, so tsc flags it. Harmless — `next build` ignores type errors.
-// TODO: type `<symbolLayer>` properly.
-
-const mapId = uuid();
+import { MapExample } from '~/features/map';
 
 /**
  * Symbols spread across the map, plus one pinned to the initial view center
@@ -56,36 +46,13 @@ const SYMBOL_DATA = [
 
 export default function Page() {
   return (
-    <>
-      <BaseMap
-        className='fixed inset-0'
-        id={mapId}
-        initialViewState={DEFAULT_VIEW_STATE}
-        onClick={(info: PickingInfo) => {
-          if (!window.__mapTest) {
-            window.__mapTest = {
-              ready: false,
-              viewport: null,
-              viewportCount: 0,
-              lastPick: null,
-            };
-          }
-
-          window.__mapTest.lastPick = {
-            layerId: info.layer?.id ?? null,
-            objectId: (info.object as { id?: string | number })?.id ?? null,
-            index: info.index,
-          };
-        }}
-      >
-        <symbolLayer
-          id='symbols'
-          data={SYMBOL_DATA}
-          defaultSymbolOptions={{ colorMode: 'Dark', square: true }}
-          pickable
-        />
-      </BaseMap>
-      <MapTestBridge />
-    </>
+    <MapExample>
+      <symbolLayer
+        id='symbols'
+        data={SYMBOL_DATA}
+        defaultSymbolOptions={{ colorMode: 'Dark', square: true }}
+        pickable
+      />
+    </MapExample>
   );
 }
