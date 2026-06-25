@@ -27,10 +27,22 @@ export type MapTestViewport = {
   id: string;
 };
 
+/** Minimal, structured-cloneable snapshot of a picked feature. */
+export type MapTestPick = {
+  /** id of the deck.gl (sub)layer that was picked, if any. */
+  layerId: string | null;
+  /** `id` of the picked datum, if the click hit a feature. */
+  objectId: string | number | null;
+  /** Picked object index within the layer, or -1 when nothing was hit. */
+  index: number;
+};
+
 export type MapTestHandle = {
   ready: boolean;
   viewport: MapTestViewport | null;
   viewportCount: number;
+  /** Most recent click pick, populated by routes that wire BaseMap `onClick`. */
+  lastPick: MapTestPick | null;
 };
 
 declare global {
@@ -47,6 +59,7 @@ const EMPTY_HANDLE: MapTestHandle = {
   ready: false,
   viewport: null,
   viewportCount: 0,
+  lastPick: null,
 };
 
 /**
@@ -71,6 +84,7 @@ export function MapTestBridge() {
     const current = window.__mapTest ?? EMPTY_HANDLE;
 
     window.__mapTest = {
+      ...current,
       ready: true,
       viewport: event.payload,
       viewportCount: current.viewportCount + 1,
