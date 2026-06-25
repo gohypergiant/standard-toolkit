@@ -52,8 +52,6 @@ declare global {
   }
 }
 
-// Mirrors map-toolkit's (non-exported) MapViewportEvent, built from the public
-// `MapEvents.viewport` name and the bus `Payload` shape so the bus generics line up.
 type MapViewportBusEvent = Payload<typeof MapEvents.viewport, MapTestViewport>;
 
 const EMPTY_HANDLE: MapTestHandle = {
