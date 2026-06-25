@@ -12,6 +12,7 @@
 
 'use client';
 
+import type { DistanceUnit } from '@accelint/constants/units';
 import type { UniqueId } from '@accelint/core';
 import type { Color } from '@deck.gl/core';
 import type {
@@ -25,7 +26,38 @@ import type {
   Point,
   Polygon,
 } from 'geojson';
-import type { DistanceUnit } from '@/shared/units';
+import type { StructuredCloneable } from 'type-fest';
+
+/**
+ * Type-level claim that an event payload is structured-cloneable so it
+ * satisfies `@accelint/bus`'s `BasicPayload` constraint.
+ *
+ * @remarks
+ * GeoJSON `Feature` and the `Shape` types built on top of it are *runtime-*
+ * cloneable (no functions, no class instances — just plain data), but they
+ * lack the explicit `[key: string]: StructuredCloneable` index signature that
+ * type-fest's `StructuredCloneable` requires of plain object types. Wrapping
+ * a payload in `BusCloneable<T>` adds the index signature via intersection so
+ * TypeScript accepts the payload at the bus boundary without re-verifying
+ * each named property.
+ *
+ * The bus's strictness is intentional — it catches non-cloneable values like
+ * functions or class instances that would silently break `postMessage`. This
+ * helper bridges the gap between that runtime safety contract and GeoJSON's
+ * type definitions; only apply it to payloads whose contents you've verified
+ * are actually cloneable at runtime.
+ *
+ * @example
+ * ```ts
+ * export type ShapeUpdatedPayload = BusCloneable<{
+ *   shape: Shape;
+ *   mapId: UniqueId;
+ * }>;
+ * ```
+ */
+export type BusCloneable<T> = T & {
+  readonly [key: string]: StructuredCloneable;
+};
 
 /**
  * Supported shape types
@@ -37,6 +69,7 @@ export const ShapeFeatureType = {
   Rectangle: 'Rectangle',
   LineString: 'LineString',
   Point: 'Point',
+  WagonWheel: 'WagonWheel',
 } as const;
 
 /** Union of all supported shape feature type string literals. */
@@ -105,12 +138,20 @@ export type StyleProperties = {
 };
 
 /**
+ * Geographic position as [longitude, latitude] with optional elevation.
+ *
+ * Similar to GeoJSON's `Position` (`number[]`) but with stricter typing
+ * that guarantees at least two elements.
+ */
+export type GeoPosition = [number, number] | [number, number, number];
+
+/**
  * Circle-specific properties for precise rendering
  * Stored alongside the polygon approximation
  */
 export type CircleProperties = {
   /** Center point as [longitude, latitude] or [longitude, latitude, elevation] */
-  center: [number, number, number?];
+  center: GeoPosition;
   /** Radius with value and units */
   radius: {
     /** Radius value */
@@ -126,7 +167,7 @@ export type CircleProperties = {
  */
 export type EllipseProperties = {
   /** Center point as [longitude, latitude] or [longitude, latitude, elevation] */
-  center: [number, number, number?];
+  center: GeoPosition;
   /** X semi-axis (horizontal radius) with value and units */
   xSemiAxis: {
     /** X semi-axis value */
@@ -146,11 +187,42 @@ export type EllipseProperties = {
 };
 
 /**
+ * Wagon wheel-specific properties for defining segmented circular airspace.
+ *
+ * A wagon wheel consists of a center point, outer radius, radial spokes
+ * that divide the circle into sectors, and optional range rings that
+ * create concentric bands within the circle.
+ */
+export type WagonWheelProperties = {
+  /** Center point as [longitude, latitude] or [longitude, latitude, elevation] */
+  center: GeoPosition;
+  /** Outer radius of the entire wagon wheel */
+  radius: {
+    /** Radius value */
+    value: number;
+    /** Units for the radius measurement */
+    units: DistanceUnit;
+  };
+  /** Number of spokes (radial dividers). Divides the circle into this many sectors. */
+  spokes: number;
+  /** Orientation in degrees (true north, clockwise) */
+  orientation: number;
+  /** Additional concentric range ring radii inside the outer radius. Each must be less than the outer radius and greater than 0. */
+  rangeRings: Array<{
+    /** Range ring radius value */
+    value: number;
+    /** Units for the measurement */
+    units: DistanceUnit;
+  }>;
+};
+
+/**
  * Properties for styled features.
  *
- * Note: circleProperties and ellipseProperties are optional at the type level
- * but are guaranteed to be present for their respective shape types.
- * Use the type guards (isCircleShape, isEllipseShape) for type narrowing.
+ * Note: circleProperties, ellipseProperties, and wagonWheelProperties are
+ * optional at the type level but are guaranteed to be present for their
+ * respective shape types. Use the type guards (isCircleShape, isEllipseShape,
+ * isWagonWheelShape) for type narrowing.
  */
 export type StyledFeatureProperties = {
   /** Style properties for rendering */
@@ -161,6 +233,8 @@ export type StyledFeatureProperties = {
   circleProperties?: CircleProperties;
   /** Ellipse properties (present for Ellipse shapes) */
   ellipseProperties?: EllipseProperties;
+  /** Wagon wheel properties (present for WagonWheel shapes) */
+  wagonWheelProperties?: WagonWheelProperties;
   /** Minimum elevation in meters (optional) */
   minElevation?: number;
   /** Maximum elevation in meters (optional) */
@@ -183,6 +257,15 @@ export type CircleFeatureProperties = StyledFeatureProperties & {
 export type EllipseFeatureProperties = StyledFeatureProperties & {
   /** Ellipse properties (required for Ellipse shapes) */
   ellipseProperties: EllipseProperties;
+};
+
+/**
+ * Feature properties for WagonWheel shapes (wagonWheelProperties required).
+ * Used by WagonWheelShape for better type narrowing.
+ */
+export type WagonWheelFeatureProperties = StyledFeatureProperties & {
+  /** Wagon wheel properties (required for WagonWheel shapes) */
+  wagonWheelProperties: WagonWheelProperties;
 };
 
 /**
@@ -266,6 +349,14 @@ export type PointShape = BaseShape & {
 };
 
 /**
+ * Wagon wheel shape with required wagonWheelProperties
+ */
+export type WagonWheelShape = BaseShape & {
+  shape: typeof ShapeFeatureType.WagonWheel;
+  feature: StyledFeature & { properties: WagonWheelFeatureProperties };
+};
+
+/**
  * Discriminated union of all shape types.
  *
  * Use this for type narrowing based on shape:
@@ -285,7 +376,8 @@ export type Shape =
   | PolygonShape
   | RectangleShape
   | LineStringShape
-  | PointShape;
+  | PointShape
+  | WagonWheelShape;
 
 /**
  * Alias for StyledFeature (shape feature)
@@ -404,6 +496,24 @@ export function isLineStringShape(shape: Shape): shape is LineStringShape {
  */
 export function isPointShape(shape: Shape): shape is PointShape {
   return shape.shape === ShapeFeatureType.Point;
+}
+
+/**
+ * Type guard for WagonWheel shapes.
+ *
+ * @param shape - The shape to test.
+ * @returns True if shape is a WagonWheelShape.
+ *
+ * @example
+ * ```typescript
+ * if (isWagonWheelShape(shape)) {
+ *   // shape.feature.properties.wagonWheelProperties is available
+ *   const { center, radius, spokes } = shape.feature.properties.wagonWheelProperties;
+ * }
+ * ```
+ */
+export function isWagonWheelShape(shape: Shape): shape is WagonWheelShape {
+  return shape.shape === ShapeFeatureType.WagonWheel;
 }
 
 // =============================================================================

@@ -10,7 +10,7 @@ A deck.gl layer for interactively editing existing geographic shapes on a map. I
 
 ## Features
 
-- **Multiple geometry types**: Edit Point, LineString, Polygon, Rectangle, Circle, and Ellipse shapes
+- **Multiple geometry types**: Edit Point, LineString, Polygon, Rectangle, Circle, Ellipse, and WagonWheel shapes
 - **Smart mode selection**: Automatically selects the appropriate edit mode based on shape type
 - **Neutral mode handling**: Lets UI components decide how to handle mode change conflicts
 - **Visual reference**: Edit layer renders on top of display layer so users can see original position
@@ -29,11 +29,16 @@ The layer automatically selects the appropriate edit mode based on shape type:
 | Shape Type | Edit Mode | Behavior |
 |------------|-----------|----------|
 | **Point** | `point-translate` | Click anywhere on the map to reposition, OR drag the point directly |
-| **LineString** | `vertex-transform` | Drag vertices to reshape, OR scale/rotate/translate the entire shape |
-| **Polygon** | `vertex-transform` | Drag vertices to reshape, OR scale/rotate/translate the entire shape |
-| **Rectangle** | `bounding-transform` | Drag corner handles to resize, drag body to move, or rotate via handle. Hold Shift for uniform scaling. |
+| **LineString** | `vertex-transform` | Drag vertices to reshape, OR scale/rotate/translate the entire shape. The bounding box rotates with the shape and is shown dashed; non-uniform scale operates in the shape's local frame. |
+| **Polygon** | `vertex-transform` | Drag vertices to reshape, OR scale/rotate/translate the entire shape. The bounding box rotates with the shape and is shown dashed; non-uniform scale operates in the shape's local frame. |
+| **Rectangle** | `rectangle-transform` | Drag the rotated corner handles to resize without distorting the rectangle. Drag body to move. Drag the rotate handle to rotate. Hold Shift for uniform scaling. |
 | **Circle** | `circle-transform` | Drag body to move, drag edge to resize from center |
-| **Ellipse** | `bounding-transform` | Drag to move, corner handles to scale freely, top handle to rotate. Hold Shift for uniform scaling. |
+| **Ellipse** | `ellipse-transform` | Drag the axis-endpoint handles to resize while keeping the shape elliptical. Drag body to move. Drag the rotate handle to rotate. Hold Shift for uniform scaling. |
+| **WagonWheel** | `locked-bounding-transform` | Drag to move, corner handles to scale uniformly (always locked aspect ratio), top handle to rotate. Hold Shift while rotating to snap to 45° intervals. |
+
+### Rotation Handle Anchoring
+
+For Rectangle, Ellipse, Polygon, and LineString shapes, the rotation handle locks to the most-northern edge / axis endpoint at the start of an edit session and stays attached to that shape-local point through every subsequent gesture. The handle starts on the visible top of the shape and rides along with rotations rather than hopping to whichever side becomes most-northern after each rotation. The lock resets when a different shape is opened for editing.
 
 ## Dependencies
 
@@ -55,6 +60,12 @@ npm install @accelint/map-toolkit @accelint/bus @accelint/core @deck.gl/core @de
 pnpm add @accelint/map-toolkit @accelint/bus @accelint/core @deck.gl/core @deck.gl-community/editable-layers @deckgl-fiber-renderer/dom react
 ```
 
+## Fiber Registration
+
+`EditShapeLayer` is a **React component** (not a deck.gl layer class), so it handles its own fiber registration internally. You do **not** need to import `edit-shape-layer/fiber`.
+
+However, you **do** still need to import `display-shape-layer/fiber` if you use `<displayShapeLayer>` alongside it — because `DisplayShapeLayer` is a deck.gl layer class that requires explicit fiber registration from the consumer.
+
 ## Basic Usage
 
 ### With useEditShape Hook (Recommended)
@@ -63,7 +74,6 @@ The easiest way to use EditShapeLayer is with the `useEditShape` hook, which man
 
 ```tsx
 import { BaseMap } from '@accelint/map-toolkit/deckgl/base-map';
-import '@accelint/map-toolkit/deckgl/shapes/edit-shape-layer/fiber';
 import '@accelint/map-toolkit/deckgl/shapes/display-shape-layer/fiber';
 import {
   DisplayShapeLayer,
@@ -143,6 +153,49 @@ function MapWithEditing() {
 }
 ```
 
+### Updating the Feature from a Form
+
+Use `updateFeature` to push changes from a form (e.g., a radius input) into the editing state. The map updates in real time and the changes are included when the user saves.
+
+```tsx
+import { useEditShape } from '@accelint/map-toolkit/deckgl/shapes';
+import { circle } from '@turf/turf';
+
+function CircleRadiusInput({ mapId }) {
+  const { editingState, updateFeature } = useEditShape(mapId);
+  const feature = editingState?.featureBeingEdited;
+  const circleProps = feature?.properties?.circleProperties;
+
+  if (!circleProps) return null;
+
+  const handleRadiusChange = (e) => {
+    const newRadius = Number(e.target.value);
+    // Rebuild circle geometry from center + new radius
+    const newGeometry = circle(circleProps.center, newRadius, {
+      steps: 64,
+    }).geometry;
+
+    updateFeature({
+      ...feature,
+      geometry: newGeometry,
+    });
+  };
+
+  return (
+    <label>
+      Radius (km)
+      <input
+        type="number"
+        value={circleProps.radius.value.toFixed(2)}
+        onChange={handleRadiusChange}
+      />
+    </label>
+  );
+}
+```
+
+`updateFeature` is a no-op when no shape is being edited.
+
 ## Editing Instructions
 
 ### Point
@@ -194,6 +247,16 @@ function MapWithEditing() {
 6. **Rotate**: Drag the top handle to rotate around the center
 7. **Rotate with snap**: Hold **Shift** while rotating to snap to 45° intervals
 8. Click "Save" to confirm changes or "Cancel" (or press ESC) to discard
+
+### WagonWheel
+
+1. Click on a wagon wheel to select it
+2. Click "Edit" to enter edit mode
+3. **Move**: Drag anywhere on the shape body to reposition
+4. **Scale**: Drag corner handles to resize (always maintains circular aspect ratio)
+5. **Rotate**: Drag the top handle to rotate around the center
+6. **Rotate with snap**: Hold **Shift** while rotating to snap to 45° intervals
+7. Click "Save" to confirm changes or "Cancel" (or press ESC) to discard
 
 ### Keyboard Shortcuts
 
@@ -260,7 +323,7 @@ useOn<ShapeUpdatedEvent>(EditShapeEvents.updated, (event) => {
 
 ### shapes:edit-canceled
 
-Emitted when editing is canceled (ESC key or programmatic cancel):
+Emitted when editing is canceled (ESC key or programmatic cancel). The payload contains the original shape from when editing first started, even if the shape was re-entered with updates during the session:
 
 ```tsx
 import { useOn } from '@accelint/bus/react';
@@ -269,6 +332,25 @@ import { EditShapeEvents } from '@accelint/map-toolkit/deckgl/shapes';
 useOn(EditShapeEvents.canceled, (event) => {
   if (event.payload.mapId !== MAP_ID) return;
   console.log('Edit canceled for:', event.payload.shape.name);
+});
+```
+
+### shapes:feature-editing
+
+Emitted on every edit action during a drag operation and on completion. The `editType` string indicates what kind of edit is happening (e.g. `'scaling'`, `'scaled'`, `'rotating'`, `'rotated'`, `'translating'`, `'translated'`). Continuous types end in `-ing`, completion types are past tense.
+
+```tsx
+import { useOn } from '@accelint/bus/react';
+import { EditShapeEvents, type FeatureEditingEvent } from '@accelint/map-toolkit/deckgl/shapes';
+
+useOn<FeatureEditingEvent>(EditShapeEvents.featureEditing, (event) => {
+  if (event.payload.mapId !== MAP_ID) return;
+  const { feature, editType } = event.payload;
+
+  // React to completion events only
+  if (['scaled', 'rotated', 'translated'].includes(editType)) {
+    console.log('Edit completed:', editType, feature.geometry);
+  }
 });
 ```
 
@@ -314,14 +396,53 @@ console.log('Current cursor:', cursor);
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `id` | `string` | `'edit-shape-layer'` | Unique layer ID |
-| `mapId` | `UniqueId` | Context ID | Map instance ID for multi-map isolation |
-| `unit` | `DistanceUnitAbbreviation` | `'km'` | Distance unit for tooltip measurements (supports `'km'`, `'mi'`, `'m'`, `'ft'`, `'nm'`) |
+| `mapId` | `UniqueId` | Context-provided mapId | Map instance ID for multi-map isolation |
+| `unit` | `DistanceUnitSymbol` | `'km'` | Distance unit for tooltip measurements (supports `'km'`, `'mi'`, `'m'`, `'ft'`, `'NM'`) |
 | `hotkeyConfig` | `EditShapeHotkeyConfig` | `{ panning: { code: Keycode.Space } }` | Keycode overrides for hotkeys specific to EditShapeLayer. |
+| `style` | `EditShapeStyle` | See defaults below | Visual customization for edit handles and the bounding box (polygons, lines, and wagon wheels). Each field is independently overridable; omitted fields use the package defaults. |
 
 ### EditShapeHotkeyConfig
 | Prop | Type | Description |
 |------|------|-------------|
 |`panning`| `Keycode \| NonEmptyArray<Keycode>` | Hotkey to enable panning while in edit mode.
+
+### EditShapeStyle
+
+Edit handles split into three **roles**, each with its own color, outline color, and radius:
+
+- **vertex** — applies to `editHandleType` `'existing'` and `'intermediate'` (the circles on the polygon's actual points). Defaults to white.
+- **scale** — applies to `editHandleType` `'scale'` (the corner handles on the bounding box). Defaults to turquoise.
+- **rotate** — applies to `editHandleType` `'rotate'` (the dot at the end of the rotate stem). Defaults to amber.
+
+The bounding box for polygons, lines, and wagon wheels has its own line color, line width, and dash array — separate from other guide lines so the bbox reads as scaffolding distinct from interactive feedback.
+
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `vertexHandleColor` | `Color` | `[255, 255, 255, 255]` | Fill color for vertex handles (`existing` + `intermediate`). |
+| `scaleHandleColor` | `Color` | turquoise | Fill color for scale corner handles. |
+| `rotateHandleColor` | `Color` | amber | Fill color for the rotate handle. |
+| `vertexHandleOutlineColor` | `Color` | `[255, 255, 255, 255]` | Outline color for vertex handles. |
+| `scaleHandleOutlineColor` | `Color` | `[255, 255, 255, 255]` | Outline color for scale corner handles. |
+| `rotateHandleOutlineColor` | `Color` | `[255, 255, 255, 255]` | Outline color for the rotate handle. |
+| `vertexHandleRadius` | `number` | `6` | Vertex handle radius in pixels. |
+| `scaleHandleRadius` | `number` | `6` | Scale corner handle radius in pixels. |
+| `rotateHandleRadius` | `number` | `6` | Rotate handle radius in pixels. |
+| `editHandleStrokeWidth` | `number` | `2` | Outline thickness in pixels (single value — the upstream `editHandlePointStrokeWidth` prop doesn't accept a per-role accessor). |
+| `editHandleOutline` | `boolean` | `true` | Whether edit handles render with an outline ring. Set to `false` for solid dots with no stroke. |
+| `bboxLineColor` | `Color` | muted | Stroke color for the bounding box outline (polygons, lines, and wagon wheels). |
+| `bboxLineWidth` | `number` | `1` | Stroke width in pixels for the bounding box outline. |
+| `bboxDashArray` | `[number, number]` | `[8, 4]` | Dash pattern `[dashLength, gapLength]` in pixels for the bbox outline. |
+
+```tsx
+<EditShapeLayer
+  mapId={MAP_ID}
+  style={{
+    scaleHandleColor: [0, 200, 255, 255],
+    rotateHandleColor: [255, 180, 0, 255],
+    bboxDashArray: [12, 6],
+  }}
+/>
+```
 
 ### useEditShape Hook
 
@@ -332,6 +453,7 @@ const {
   edit,
   save,
   cancel,
+  updateFeature,
   isEditing,
   editingShape,
   editingState,
@@ -350,7 +472,7 @@ const {
 | Option | Type | Description |
 |--------|------|-------------|
 | `onUpdate` | `(shape: Shape) => void` | Called when shape edit is saved |
-| `onCancel` | `(shape: Shape) => void` | Called when editing is canceled |
+| `onCancel` | `(shape: Shape) => void` | Called when editing is canceled. Receives the original shape from when editing first started, even if `edit()` was called multiple times with updated versions of the same shape. |
 
 #### Return Values
 
@@ -359,6 +481,7 @@ const {
 | `edit` | `(shape: Shape, options?: EditShapeOptions) => void` | Start editing a shape (no-op if shape is locked) |
 | `save` | `() => void` | Save current edits |
 | `cancel` | `() => void` | Cancel editing and restore original |
+| `updateFeature` | `(feature: Feature) => void` | Update the feature being edited (e.g., from a form). Only applies while editing. |
 | `isEditing` | `boolean` | Whether currently editing |
 | `editingShape` | `Shape \| null` | Shape currently being edited |
 | `editingState` | `EditingState \| null` | Full editing state object |
@@ -371,7 +494,7 @@ Options passed to the `edit()` function:
 
 | Option | Type | Description |
 |--------|------|-------------|
-| `mode` | `'bounding-transform' \| 'vertex-transform' \| 'circle-transform' \| 'point-translate' \| 'translate'` | Override the automatic mode selection |
+| `mode` | `'bounding-transform' \| 'rectangle-transform' \| 'ellipse-transform' \| 'locked-bounding-transform' \| 'vertex-transform' \| 'circle-transform' \| 'point-translate' \| 'translate'` | Override the automatic mode selection |
 
 ### EditShapeEvents
 
@@ -382,6 +505,7 @@ Event constants for bus subscriptions:
 | `editing` | `'shapes:editing'` | Editing has started |
 | `updated` | `'shapes:updated'` | Shape edit was saved |
 | `canceled` | `'shapes:edit-canceled'` | Editing was canceled |
+| `featureEditing` | `'shapes:feature-editing'` | Feature geometry changed during editing (fires on every drag and on completion) |
 
 ## Styling
 
@@ -392,9 +516,42 @@ During editing, the layer uses the shape's existing style properties with adjust
 | Fill Color | `shape.feature.properties.styleProperties.fillColor` | Rendered at 20% opacity for translucent appearance |
 | Line Color | `shape.feature.properties.styleProperties.lineColor` | Full opacity |
 
-Edit handles (vertices) are displayed as:
-- White filled circles
-- White outline for visibility against various backgrounds
+Edit handles split into three roles, each with its own default styling:
+
+| Role | Applies to | Default fill |
+|------|------------|--------------|
+| **vertex** | `editHandleType` `'existing'` or `'intermediate'` (and any unrecognized type) | White |
+| **scale** | `editHandleType` `'scale'` (bounding-box corner handles) | Turquoise |
+| **rotate** | `editHandleType` `'rotate'` (the rotate-stem dot) | Amber |
+
+The bounding box for polygons, lines, and wagon wheels renders as a dashed line in a muted color, with a small outward buffer between the box and the shape's handles so they don't visually overlap. Override any of this via the `style` prop — see [EditShapeStyle](#editshapestyle).
+
+## Duplicating Shapes
+
+Clone an existing shape with a new ID using `duplicateShape`. The clone preserves geometry, styling, and shape-specific properties (circle radius, ellipse axes, etc.).
+
+```tsx
+import { duplicateShape } from '@accelint/map-toolkit/deckgl/shapes';
+
+// Clone in place
+const clone = duplicateShape(selectedShape);
+setShapes(prev => [...prev, clone]);
+
+// Clone with an offset so it doesn't overlap the original
+const clone = duplicateShape(selectedShape, { offset: [0.05, 0.05] });
+
+// Clone with a custom name
+const clone = duplicateShape(selectedShape, { name: 'Backup Zone' });
+```
+
+### DuplicateShapeOptions
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `name` | `string` | `"{original name} (copy)"` | Custom name for the cloned shape |
+| `offset` | `[number, number]` | — | Coordinate offset `[longitude, latitude]` applied to all geometry coordinates |
+
+The clone always gets a new UUID, `locked: false`, and a fresh `lastUpdated` timestamp. The resolved name (either the custom name or the default `"{original name} (copy)"`) is also applied as the clone's `label`, which is what appears on the map. For circles and ellipses, the center point in shape-specific properties is also offset.
 
 ## Examples
 
@@ -403,6 +560,8 @@ See the Storybook stories for interactive examples:
 - **BasicEditing**: Edit polygon, rectangle, and line shapes
 - **CombinedDrawAndEdit**: Drawing new shapes and editing existing ones
 - **LockedShapes**: Demonstrates locked shape behavior with lock/unlock toggle
+- **DuplicateShape**: Clone shapes with optional offset and custom naming
+- **EditIconPoints**: Edit Point shapes that have icon markers
 
 ## For Developers
 

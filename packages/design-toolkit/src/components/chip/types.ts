@@ -12,11 +12,11 @@
 
 import type { ComponentPropsWithRef, RefAttributes } from 'react';
 import type {
-  ButtonProps,
   TagGroupProps,
   TagListProps,
   TagProps,
-} from 'react-aria-components';
+} from 'react-aria-components/TagGroup';
+import type { ButtonProps } from '../button/types';
 
 type BaseChipProps = {
   color?: 'info' | 'advisory' | 'normal' | 'serious' | 'critical';
@@ -41,7 +41,10 @@ export type ChipListProps<T> = Omit<TagGroupProps, 'children'> &
  *
  * Basic chip with color and size variants, can be used standalone or in a ChipList.
  */
-export type ChipProps = Omit<ComponentPropsWithRef<'div'>, 'size' | 'onClick'> &
+export type ChipProps = Omit<
+  ComponentPropsWithRef<'div'>,
+  'size' | 'onClick' | 'onFocus' | 'onBlur'
+> &
   BaseChipProps & {
     /** Additional CSS class name for styling. */
     className?: string;

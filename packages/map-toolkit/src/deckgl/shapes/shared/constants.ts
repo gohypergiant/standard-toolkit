@@ -24,7 +24,6 @@ export const SHAPE_LAYER_IDS = {
   DISPLAY: 'DISPLAY_SHAPES',
   DISPLAY_HIGHLIGHT: 'DISPLAY_SHAPES::Highlight',
   DISPLAY_LABELS: 'DISPLAY_SHAPES::Labels',
-  DISPLAY_SELECTION: 'DISPLAY_SHAPES::Selection',
 } as const;
 
 /**
@@ -128,6 +127,58 @@ export const DEFAULT_EDIT_HANDLE_COLOR: Color = [255, 255, 255, 255];
  * Edit handle outline color (dark for contrast)
  */
 export const DEFAULT_EDIT_HANDLE_OUTLINE_COLOR: Color = [0, 0, 0, 200];
+
+/**
+ * Color for scale corner handles on the polygon/line bounding box.
+ * Distinct from the white vertex handles so a polygon vertex sitting at
+ * a bbox corner reads as two separate things rather than one merged dot.
+ */
+export const SCALE_HANDLE_COLOR: Color = [40, 245, 190, 220];
+
+/**
+ * Color for the rotate handle. Warm amber so it reads as a different
+ * affordance from the (cool turquoise) scale corner handles and the
+ * (white) vertex handles, which is important because rotating vs.
+ * scaling are easy to mistake for each other when the rotate handle
+ * sits near a scale handle.
+ */
+export const ROTATE_HANDLE_COLOR: Color = [255, 188, 71, 230];
+
+/**
+ * Muted color for the polygon/line bounding box outline. Read as
+ * "scaffolding" rather than as part of the shape itself — lower alpha
+ * neutral gray with a hint of the highlight tint.
+ */
+export const VERTEX_BBOX_LINE_COLOR: Color = [200, 200, 210, 140];
+
+/**
+ * Dash pattern for the polygon/line bounding box outline (in pixels:
+ * `[dash, gap]`). Tighter than the standard dashed line pattern so the
+ * box reads clearly as scaffolding without dominating the view.
+ */
+export const VERTEX_BBOX_DASH_ARRAY: [number, number] = [6, 4];
+
+/**
+ * Default stroke width (in pixels) for the polygon/line bounding box
+ * outline. Mirrors deck.gl's default tentative line width but slightly
+ * thinner so the bbox reads as scaffolding rather than as primary
+ * geometry.
+ */
+export const DEFAULT_VERTEX_BBOX_LINE_WIDTH = 2;
+
+/**
+ * Default radius (in pixels) for an edit-handle dot (vertex, scale, or
+ * rotate). Matches the upstream EditableGeoJsonLayer default; can be
+ * overridden per-handle-type via {@link EditShapeStyle}.
+ */
+export const DEFAULT_EDIT_HANDLE_RADIUS = 6;
+
+/**
+ * Default outline thickness (in pixels) for the edit-handle dot's ring.
+ * Single value applies to all handle types — upstream
+ * `editHandlePointStrokeWidth` doesn't take a per-handle accessor.
+ */
+export const DEFAULT_EDIT_HANDLE_STROKE_WIDTH = 2;
 
 /**
  * Empty feature collection for initializing editable layers
@@ -343,4 +394,5 @@ export const COMPLETION_EDIT_TYPES = new Set([
   'scaled',
   'rotated',
   'translated',
+  'resized',
 ]);

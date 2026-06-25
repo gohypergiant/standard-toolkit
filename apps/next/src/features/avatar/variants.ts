@@ -18,51 +18,57 @@ export type AvatarVariant = Pick<AvatarProps, 'size' | 'imageProps'> & {
   hasFallback?: boolean;
 };
 
+const VALID_IMAGE = './woof.jpg';
+
+const BROKEN_IMAGE =
+  // Invalid data URI — fails synchronously, Radix Avatar shows fallback immediately
+  'data:image/png;base64,invalid';
+
 export const PROP_COMBOS: AvatarVariant[] = [
   {
     size: 'small',
-    imageProps: { alt: 'Dog', src: 'https://placedog.net/100x100?id=144' },
+    imageProps: { alt: 'User avatar', src: VALID_IMAGE },
   },
   {
     size: 'medium',
-    imageProps: { alt: 'Dog', src: 'https://placedog.net/100x100?id=144' },
+    imageProps: { alt: 'User avatar', src: VALID_IMAGE },
   },
   {
     size: 'small',
-    imageProps: { alt: 'Dog', src: 'https://placedog.net/100x100?id=144' },
+    imageProps: { alt: 'User avatar', src: VALID_IMAGE },
     hasBadge: true,
   },
   {
     size: 'medium',
-    imageProps: { alt: 'Dog', src: 'https://placedog.net/100x100?id=144' },
+    imageProps: { alt: 'User avatar', src: VALID_IMAGE },
     hasBadge: true,
   },
   {
     size: 'small',
-    imageProps: { alt: 'Dog', src: 'https://placedog.net/100x100?id=144' },
+    imageProps: { alt: 'User avatar', src: VALID_IMAGE },
     hasLabel: true,
   },
   {
     size: 'medium',
-    imageProps: { alt: 'Dog', src: 'https://placedog.net/100x100?id=144' },
+    imageProps: { alt: 'User avatar', src: VALID_IMAGE },
     hasLabel: true,
   },
   {
     size: 'small',
-    imageProps: { alt: 'User icon', src: 'http://broken-url.com/avatar.jpg' },
+    imageProps: { alt: 'User icon', src: BROKEN_IMAGE },
   },
   {
     size: 'medium',
-    imageProps: { alt: 'User icon', src: 'http://broken-url.com/avatar.jpg' },
+    imageProps: { alt: 'User icon', src: BROKEN_IMAGE },
   },
   {
     size: 'small',
-    imageProps: { alt: 'User icon', src: 'http://broken-url.com/avatar.jpg' },
+    imageProps: { alt: 'User icon', src: BROKEN_IMAGE },
     hasFallback: true,
   },
   {
     size: 'medium',
-    imageProps: { alt: 'User icon', src: 'http://broken-url.com/avatar.jpg' },
+    imageProps: { alt: 'User icon', src: BROKEN_IMAGE },
     hasFallback: true,
   },
 ];

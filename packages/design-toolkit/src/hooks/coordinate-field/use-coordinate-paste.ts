@@ -136,6 +136,33 @@ export function useCoordinatePaste({
     setShowDisambiguationModal(true);
   };
 
+  /**
+   * Normalizes MGRS coordinate input to a standard format.
+   *
+   * - Converts all letters to uppercase
+   * - Adds leading zero to single-digit grid zones (e.g., "6R" → "06R")
+   * - Handles both spaced ("6R YP 12345 67890") and compact ("6RYP1234567890") formats
+   *
+   * @param input - Raw MGRS coordinate string
+   * @returns Normalized MGRS coordinate string
+   *
+   * @example
+   * normalizeMgrsInput("6r yp 12345 67890") // → "06R YP 12345 67890"
+   * normalizeMgrsInput("6ryp1234567890")    // → "06RYP1234567890"
+   */
+  const normalizeMgrsInput = (input: string): string => {
+    let normalized = input.toUpperCase();
+
+    const match = normalized.match(/^(\d)([A-Z])/);
+
+    if (match?.[1]) {
+      // Add leading zero to single-digit grid zones
+      normalized = match[1].padStart(2, '0') + normalized.slice(1);
+    }
+
+    return normalized;
+  };
+
   const handleCoordinatePaste = (pastedText: string) => {
     const allMatches = parseCoordinatePaste(pastedText);
 
@@ -155,10 +182,14 @@ export function useCoordinatePaste({
   };
 
   const handleInputPaste = (e: React.ClipboardEvent<HTMLDivElement>) => {
-    const pastedText = e.clipboardData?.getData('text/plain');
-    if (pastedText && isCompleteCoordinate(pastedText)) {
-      e.preventDefault();
-      handleCoordinatePaste(pastedText);
+    const rawPastedText = e.clipboardData?.getData('text/plain');
+    if (rawPastedText) {
+      const pastedText = normalizeMgrsInput(rawPastedText);
+
+      if (isCompleteCoordinate(pastedText)) {
+        e.preventDefault();
+        handleCoordinatePaste(pastedText);
+      }
     }
   };
 

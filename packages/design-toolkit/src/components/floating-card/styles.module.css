@@ -25,8 +25,21 @@
     @apply gap-xs flex h-full items-center;
   }
 
+  /* Zero width + pointer-events-none lets the title visually overflow the
+     flex row without consuming drag-handle space or intercepting pointer
+     gestures meant for dockview's drag handle (.dv-void-container). */
+  .headerTitleContainer {
+    @apply text-header-m pl-xs pointer-events-none h-full w-0;
+  }
+
+  /* Explicit width based on the header's container query width so long titles
+     truncate within the header rather than pushing siblings or overflowing.
+     The 10rem reserves space for the leading icon, header padding, gap, and
+     right-side action buttons; adjust when those change.
+     The @min-[1rem]/floating-card-header variant scopes the rule to cases
+     where the named container exists, so cqw never falls back to the viewport. */
   .headerTitle {
-    @apply text-header-m pl-4;
+    @apply h-full truncate leading-24 @min-[1rem]/floating-card-header:w-[calc(100cqw-10rem)];
   }
 
   .floatingCardProvider {
@@ -48,13 +61,18 @@
 
     :global(.dv-tabs-and-actions-container) {
       --dv-tabs-and-actions-container-height: 32px;
-      @apply p-xs text-header-m;
+      @apply p-xs text-header-m @container/floating-card-header;
     }
     :global(.dv-scrollable) {
       display: none;
     }
     :global(.dv-void-container) {
       cursor: grab;
+    }
+
+    :global(.dv-resize-container[data-pinned]) :global(.dv-void-container) {
+      pointer-events: none;
+      cursor: default;
     }
   }
 }

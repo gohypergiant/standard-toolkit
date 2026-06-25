@@ -18,7 +18,7 @@ import {
   Text,
   UNSTABLE_Toast as Toast,
   UNSTABLE_ToastContent as ToastContent,
-} from 'react-aria-components';
+} from 'react-aria-components/Toast';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { NoticeIcon } from './notice-icon';
@@ -86,6 +86,7 @@ export function Notice({
       toast={{ key: id, content: message, onClose }}
       data-color={color}
       data-size={size}
+      style={{ viewTransitionName: id }}
     >
       <ToastContent className={clsx(styles.content, classNames?.content)}>
         {!hideIcon && size === 'medium' && (

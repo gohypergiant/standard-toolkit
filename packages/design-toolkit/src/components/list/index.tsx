@@ -13,11 +13,9 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import {
-  composeRenderProps,
-  GridList,
-  useContextProps,
-} from 'react-aria-components';
+import { GridList } from 'react-aria-components/GridList';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { useContextProps } from 'react-aria-components/slots';
 import { IconProvider } from '../icon/context';
 import { ListContext } from './context';
 import styles from './styles.module.css';

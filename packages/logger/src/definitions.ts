@@ -33,8 +33,9 @@ export type LoggerOptions = {
    */
   plugins?: LogLayerPlugin[];
   /**
-   * Additional log transports for custom log destinations.
-   * These are applied alongside the default console transport.
+   * Custom transports that replace the default console transport.
+   * When provided, the default transport is not used. Include `prettyTransport`
+   * or `structuredTransport` explicitly to keep console output alongside your custom transport.
    * Reference: https://loglayer.dev/configuration.html#transport-configuration
    */
   transports?: LogLayerTransport[];

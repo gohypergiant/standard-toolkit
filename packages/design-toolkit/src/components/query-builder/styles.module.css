@@ -87,10 +87,13 @@
   }
 
   .fields,
-  .value,
   .operators {
     @variant group-size-small/combobox-field {
       max-width: 250px;
     }
+  }
+
+  .value {
+    max-width: 250px;
   }
 }

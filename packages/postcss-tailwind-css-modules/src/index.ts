@@ -13,7 +13,7 @@
 import parser, { type ClassName, type Root } from 'postcss-selector-parser';
 import type { Plugin, Rule } from 'postcss';
 
-const PROCESSED = Symbol('global-group-class-processed');
+const PROCESSED = Symbol('global-class-processed');
 
 /**
  * Extended Rule interface with processed tracking.
@@ -26,16 +26,16 @@ interface ProcessedRule extends Rule {
 }
 
 /**
- * PostCSS plugin that wraps Tailwind CSS `group/` classes in `:global()` pseudo-class.
+ * PostCSS plugin that wraps Tailwind CSS `group/` and `peer/` classes in `:global()` pseudo-class.
  *
- * This plugin solves issues with Tailwind's parent state utilities (like `group/`)
+ * This plugin solves issues with Tailwind's parent state utilities (like `group/` and `peer/`)
  * when used with CSS Modules. Without this plugin, CSS Modules hashes these classes,
  * breaking Tailwind's parent state functionality.
  *
  * The plugin only processes files ending in `.module.css` and ensures each rule is
  * transformed only once using a symbol-based marker.
  *
- * @returns A PostCSS plugin instance configured to transform group classes.
+ * @returns A PostCSS plugin instance configured to transform group and peer classes.
  *
  * @example
  * ```typescript
@@ -50,17 +50,26 @@ interface ProcessedRule extends Rule {
  *
  * @example
  * ```typescript
- * // Transformation example
+ * // Transformation examples
  * // Input:  .group/sidebar { }
  * // Output: :global(.group/sidebar) { }
+ * //
+ * // Input:  .peer/checked { }
+ * // Output: :global(.peer/checked) { }
  * ```
  */
-const globalGroupPlugin = (): Plugin => {
+const tailwindCssModulesPlugin = (): Plugin => {
   const transform = parser((selectors: Root) => {
     selectors.walkClasses((currentClassNode: ClassName) => {
-      if (!currentClassNode.value.startsWith('group/')) {
+      if (
+        !(
+          currentClassNode.value.startsWith('group/') ||
+          currentClassNode.value.startsWith('peer/')
+        )
+      ) {
         return;
       }
+
       const globalWrapped = parser
         .pseudo({
           value: ':global',
@@ -92,6 +101,6 @@ const globalGroupPlugin = (): Plugin => {
   };
 };
 
-globalGroupPlugin.postcss = true;
+tailwindCssModulesPlugin.postcss = true;
 
-export default globalGroupPlugin;
+export default tailwindCssModulesPlugin;

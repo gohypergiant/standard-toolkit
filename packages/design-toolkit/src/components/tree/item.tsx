@@ -13,11 +13,9 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { useContext } from 'react';
-import {
-  TreeItem as AriaTreeItem,
-  composeRenderProps,
-} from 'react-aria-components';
+import { useContext, useMemo } from 'react';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { TreeItem as AriaTreeItem } from 'react-aria-components/Tree';
 import { TreeContext, TreeItemContext } from './context';
 import styles from './styles.module.css';
 import type { TreeItemProps } from './types';
@@ -55,14 +53,17 @@ export function TreeItem({ className, id, ...rest }: TreeItemProps) {
     (isStatic && ancestors.every((key) => visibleKeys?.has(key)));
   const isVisible = visibleKeys?.has(id);
 
+  const contextValue = useMemo(
+    () => ({
+      isVisible,
+      isViewable,
+      ancestors: [...ancestors, id],
+    }),
+    [isVisible, isViewable, ancestors, id],
+  );
+
   return (
-    <TreeItemContext.Provider
-      value={{
-        isVisible,
-        isViewable,
-        ancestors: [...ancestors, id],
-      }}
-    >
+    <TreeItemContext.Provider value={contextValue}>
       <AriaTreeItem
         {...rest}
         id={id}

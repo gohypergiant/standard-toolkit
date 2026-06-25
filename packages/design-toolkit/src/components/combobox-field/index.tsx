@@ -13,21 +13,12 @@
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import ChevronDown from '@accelint/icons/chevron-down';
-import { useControlledState } from '@react-stately/utils';
-import { useCallback } from 'react';
+import { useCallback, useRef } from 'react';
 import {
-  Button,
   ComboBox,
   type ComboBoxProps,
-  composeRenderProps,
   FieldError,
-  Input,
-  ListLayout,
-  Popover,
-  Text,
-  useContextProps,
-  Virtualizer,
-} from 'react-aria-components';
+} from 'react-aria-components/ComboBox';
 import { ClearButton } from '../button/__internal__/clear';
 import { Icon } from '../icon';
 import { Label } from '../label';
@@ -36,6 +27,14 @@ import { ComboBoxFieldContext } from './context';
 import styles from './styles.module.css';
 import type { OptionsDataItem } from '../options/types';
 import type { ComboBoxFieldProps } from './types';
+import { useControlledState } from 'react-stately/useControlledState';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { useContextProps } from 'react-aria-components/slots';
+import { Input } from 'react-aria-components/Input';
+import { Button } from 'react-aria-components/Button';
+import { Text } from 'react-aria-components/Text';
+import { Popover } from 'react-aria-components/Popover';
+import { Virtualizer, ListLayout } from 'react-aria-components/Virtualizer';
 
 /**
  * ComboBoxField - Accessible searchable combobox with dropdown options
@@ -92,6 +91,7 @@ export function ComboBoxField<T extends OptionsDataItem>({
     onInputChange,
   );
 
+  const pointerDownInsidePopoverRef = useRef(false);
   const errorMessage = errorMessageProp || null; // Protect against empty string
   const isSmall = size === 'small';
 
@@ -191,6 +191,16 @@ export function ComboBoxField<T extends OptionsDataItem>({
               {errorMessage}
             </FieldError>
             <Popover
+              onPointerDownCapture={() => {
+                pointerDownInsidePopoverRef.current = true;
+              }}
+              onPointerUpCapture={(e) => {
+                if (!pointerDownInsidePopoverRef.current) {
+                  e.stopPropagation();
+                  e.preventDefault();
+                }
+                pointerDownInsidePopoverRef.current = false;
+              }}
               className={composeRenderProps(classNames?.popover, (className) =>
                 clsx(styles.popover, className),
               )}

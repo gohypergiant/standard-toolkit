@@ -15,7 +15,7 @@ import { useState } from 'react';
 import {
   ListLayout as AriaListLayout,
   Virtualizer as AriaVirtualizer,
-} from 'react-aria-components';
+} from 'react-aria-components/Virtualizer';
 import { DeferredCollection } from '../deferred-collection';
 import { Icon } from '../icon';
 import { Skeleton } from '../skeleton';
@@ -27,7 +27,7 @@ import { OptionsItemLabel } from './item-label';
 import { OptionsSection } from './section';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ReactNode } from 'react';
-import type { Selection } from 'react-aria-components';
+import type { Selection } from 'react-aria-components/ListBox';
 import type { OptionsItemProps } from './types';
 
 const meta = {

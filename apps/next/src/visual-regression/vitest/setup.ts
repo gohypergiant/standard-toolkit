@@ -30,6 +30,7 @@ style.innerHTML = `
   animation-delay: 0s !important;
   transition-duration: 0s !important;
   transition-delay: 0s !important;
+  view-transition-name: none !important;
 }
 `;
 document.head.appendChild(style);

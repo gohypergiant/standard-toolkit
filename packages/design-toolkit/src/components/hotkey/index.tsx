@@ -14,7 +14,8 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { Keyboard, useContextProps } from 'react-aria-components';
+import { Keyboard } from 'react-aria-components/Keyboard';
+import { useContextProps } from 'react-aria-components/slots';
 import { HotkeyContext } from './context';
 import styles from './styles.module.css';
 import type { HotkeyProps } from './types';

@@ -13,14 +13,14 @@
 'use client';
 
 import 'client-only';
-import { Pressable } from '@react-aria/interactions';
+import { Pressable } from 'react-aria/Pressable';
 import {
   Children,
   type DOMAttributes,
   type ReactElement,
   type ReactNode,
 } from 'react';
-import { DialogTrigger } from 'react-aria-components';
+import { DialogTrigger } from 'react-aria-components/Dialog';
 import type { FocusableElement } from '@react-types/shared';
 import type { PopoverTriggerProps } from './types';
 

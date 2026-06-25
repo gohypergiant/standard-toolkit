@@ -14,11 +14,10 @@ import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import Check from '@accelint/icons/check';
 import Remove from '@accelint/icons/remove';
-import {
-  Checkbox as AriaCheckbox,
-  composeRenderProps,
-  useContextProps,
-} from 'react-aria-components';
+import { Checkbox as AriaCheckbox } from 'react-aria-components/Checkbox';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { useContextProps } from 'react-aria-components/slots';
+import { usePreventScrollFocus } from '../../hooks/use-prevent-scroll-focus';
 import { Icon } from '../icon';
 import { CheckboxContext } from './context';
 import styles from './styles.module.css';
@@ -78,11 +77,12 @@ export function Checkbox({ ref, ...props }: CheckboxProps) {
   [props, ref] = useContextProps(props, ref ?? null, CheckboxContext);
 
   const { classNames, children, labelPosition = 'end', ...rest } = props;
+  const handleRef = usePreventScrollFocus(ref);
 
   return (
     <AriaCheckbox
       {...rest}
-      ref={ref}
+      ref={handleRef}
       className={composeRenderProps(classNames?.checkbox, (className) =>
         clsx(
           'group/checkbox',

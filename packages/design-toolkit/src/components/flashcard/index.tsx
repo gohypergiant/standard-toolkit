@@ -14,7 +14,8 @@
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import 'client-only';
 import { createContext, useContext } from 'react';
-import { Heading, Text } from 'react-aria-components';
+import { Heading } from 'react-aria-components/Heading';
+import { Text } from 'react-aria-components/Text';
 import { DetailsList } from '../details-list';
 import { DetailsListLabel } from '../details-list/label';
 import { DetailsListValue } from '../details-list/value';

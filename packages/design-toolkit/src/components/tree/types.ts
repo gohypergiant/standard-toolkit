@@ -15,15 +15,17 @@ import type {
   TreeItemContentRenderProps as AriaTreeItemContentRenderProps,
   TreeItemProps as AriaTreeItemProps,
   TreeProps as AriaTreeProps,
-  RenderProps,
-} from 'react-aria-components';
+} from 'react-aria-components/Tree';
 import type { DragAndDropConfig, TreeNode } from '@/hooks/use-tree/types';
+import type { RenderProps } from 'react-aria-components/useRenderProps';
 
 /** Visual density variant for Tree components. */
 export type TreeStyleVariant = 'cozy' | 'compact' | 'crammed';
 
 /**
  * Props for the Tree component.
+ *
+ * @template T - The type of custom values stored in tree nodes (accessed via `node.values`).
  */
 export type TreeProps<T> = Omit<
   AriaTreeProps<TreeNode<T>>,
@@ -56,6 +58,10 @@ export type TreeItemProps = Omit<AriaTreeItemProps, 'id'> & {
 
 /**
  * Props for the TreeItemContent component.
+ *
+ * The `children` prop accepts either a ReactNode or a render function
+ * receiving {@link TreeItemContentRenderProps} — use the render function form
+ * to access `isVisible`, `isViewable`, and `variant` from context.
  */
 export type TreeItemContentProps = Pick<
   RenderProps<TreeItemContentRenderProps>,
@@ -83,11 +89,19 @@ export type TreeContextValue = Required<
     'showRuleLines' | 'showVisibility' | 'variant' | 'onVisibilityChange'
   >
 > & {
+  /** Keys of items explicitly disabled. */
   disabledKeys?: Set<Key>;
+  /** Keys of items currently expanded. */
   expandedKeys?: Set<Key>;
+  /** Keys of items currently selected. */
   selectedKeys?: Set<Key>;
+  /** Keys of items whose own `isVisible` flag is true. */
   visibleKeys?: Set<Key>;
+  /** Keys of items that are visible after accounting for ancestor visibility. */
   visibilityComputedKeys?: Set<Key>;
+  /** Keys of items in an indeterminate selection state (cascade mode only). */
+  indeterminateKeys?: Set<Key>;
+  /** Whether the tree uses a static (hard-coded) rather than dynamic (data-driven) collection. */
   isStatic: boolean;
 };
 

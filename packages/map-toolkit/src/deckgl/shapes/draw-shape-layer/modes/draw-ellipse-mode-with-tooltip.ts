@@ -11,6 +11,10 @@
  */
 
 import {
+  DISTANCE_UNIT_SYMBOLS,
+  type DistanceUnit,
+} from '@accelint/constants/units';
+import {
   DrawEllipseUsingThreePointsMode,
   type FeatureCollection,
   type ModeProps,
@@ -18,10 +22,7 @@ import {
   type Tooltip,
 } from '@deck.gl-community/editable-layers';
 import { type Coord, distance } from '@turf/turf';
-import {
-  DEFAULT_DISTANCE_UNITS,
-  getDistanceUnitAbbreviation,
-} from '@/shared/units';
+import { DEFAULT_DISTANCE_UNITS } from '@/shared/units';
 import {
   formatDistanceTooltip,
   formatEllipseTooltip,
@@ -82,8 +83,9 @@ export class DrawEllipseModeWithTooltip extends DrawEllipseUsingThreePointsMode 
 
     const { mapCoords } = event;
     const distanceUnits =
-      props.modeConfig?.distanceUnits ?? DEFAULT_DISTANCE_UNITS;
-    const unitAbbrev = getDistanceUnitAbbreviation(distanceUnits);
+      (props.modeConfig?.distanceUnits as DistanceUnit) ??
+      DEFAULT_DISTANCE_UNITS;
+    const unitAbbrev = DISTANCE_UNIT_SYMBOLS[distanceUnits];
     const tooltipPosition = mapCoords;
 
     if (clickSequence.length === 1) {
@@ -143,5 +145,17 @@ export class DrawEllipseModeWithTooltip extends DrawEllipseUsingThreePointsMode 
    */
   override getTooltips(): Tooltip[] {
     return this.tooltip ? [this.tooltip] : [];
+  }
+
+  /**
+   * Reset the click sequence and clear the tooltip together.
+   *
+   * The mode instance is cached and reused across draw sessions, so without
+   * this override `this.tooltip` would persist from one session into the next
+   * and flash before `handlePointerMove` overwrites it.
+   */
+  override resetClickSequence(): void {
+    super.resetClickSequence();
+    this.tooltip = null;
   }
 }

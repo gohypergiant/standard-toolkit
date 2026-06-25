@@ -13,6 +13,10 @@
 @reference '@accelint/design-foundation/styles';
 
 @layer components.l1 {
+  .field {
+    @apply gap-xs flex flex-col;
+  }
+
   .value {
     @apply font-display flex grow items-center;
 
@@ -55,7 +59,7 @@
     @apply justify-between;
 
     @variant size-medium {
-      @apply py-xs;
+      @apply py-xxs;
       min-width: 220px;
     }
 

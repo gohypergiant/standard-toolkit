@@ -13,13 +13,11 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import {
-  TextField as AriaTextField,
-  composeRenderProps,
-  FieldError,
-  Text,
-  useContextProps,
-} from 'react-aria-components';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { FieldError } from 'react-aria-components/FieldError';
+import { useContextProps } from 'react-aria-components/slots';
+import { Text } from 'react-aria-components/Text';
+import { TextField as AriaTextField } from 'react-aria-components/TextField';
 import { Input } from '../input';
 import { Label } from '../label';
 import { TextFieldContext } from './context';

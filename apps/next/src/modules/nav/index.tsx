@@ -10,9 +10,36 @@
  * governing permissions and limitations under the License.
  */
 
-import { Link } from '@accelint/design-toolkit/components/link';
+'use client';
 
-const LINKS = [
+import { uuid } from '@accelint/core';
+import {
+  Sidenav,
+  SidenavHeader,
+  SidenavContent,
+  SidenavFooter,
+  SidenavAvatar,
+  SidenavLink,
+  SidenavTrigger,
+  SidenavItem,
+  SidenavMenu,
+  Icon,
+  Button,
+} from '@accelint/design-toolkit';
+import { useTheme } from '@accelint/design-toolkit';
+import {
+  Brightness,
+  ExpandLeftPanel,
+  Grid,
+  Waffle,
+  GlobalShare,
+  Newspaper,
+} from '@accelint/icons';
+import { Text } from 'react-aria-components';
+import { Heading } from 'react-aria-components';
+import { useRouter } from 'next/navigation';
+
+const COMPONENTS = [
   { path: '/', label: 'All' },
   { path: '/accordion', label: 'Accordion' },
   { path: '/accordion-group', label: 'Accordion Group' },
@@ -23,6 +50,7 @@ const LINKS = [
   { path: '/button', label: 'Button' },
   { path: '/classification-badge', label: 'Classification Badge' },
   { path: '/classification-banner', label: 'Classification Banner' },
+  { path: '/color-picker', label: 'Color Picker' },
   { path: '/dialog/client', label: 'Dialog' },
   { path: '/divider', label: 'Divider' },
   { path: '/drawer', label: 'Drawer' },
@@ -30,21 +58,86 @@ const LINKS = [
   { path: '/hero', label: 'Hero' },
   { path: '/label', label: 'Label' },
   { path: '/link', label: 'Link' },
-  { path: '/map', label: 'Map' },
   { path: '/notice', label: 'Notice' },
   { path: '/tooltip', label: 'Tooltip' },
 ];
 
-export function Nav() {
+export const NAV_ID = uuid();
+
+export function NavTrigger() {
   return (
-    <div className='flex flex-row gap-s fixed top-0 left-0 right-0 bg-surface-default p-xs shadow-elevation-raised'>
-      {LINKS.map((link) => {
-        return (
-          <Link key={link.path} href={link.path}>
-            {link.label}
-          </Link>
-        );
-      })}
-    </div>
+    <SidenavTrigger for={NAV_ID}>
+      <Button variant='icon' size='large'>
+        <Icon>
+          <ExpandLeftPanel />
+        </Icon>
+      </Button>
+    </SidenavTrigger>
+  );
+}
+
+export function Nav() {
+  const { mode, toggleMode } = useTheme();
+  const router = useRouter();
+
+  return (
+    <Sidenav id={NAV_ID}>
+      <SidenavHeader>
+        <SidenavAvatar>
+          <Icon>
+            <Waffle />
+          </Icon>
+          <Heading>App Examples</Heading>
+          <Text>QA Review</Text>
+        </SidenavAvatar>
+      </SidenavHeader>
+      <SidenavContent>
+        <SidenavMenu
+          icon={
+            <Icon>
+              <Grid />
+            </Icon>
+          }
+          title='Components'
+        >
+          {COMPONENTS.map((link) => (
+            <SidenavLink
+              key={link.path}
+              href={link.path}
+              textValue={link.label}
+            >
+              <Text>{link.label}</Text>
+            </SidenavLink>
+          ))}
+        </SidenavMenu>
+        <SidenavItem
+          key='Map'
+          textValue='Map'
+          onPress={() => router.push('/map')}
+        >
+          <Icon>
+            <GlobalShare />
+          </Icon>
+          <Text>Map</Text>
+        </SidenavItem>
+        <SidenavItem textValue='Forms' onPress={() => router.push('/forms')}>
+          <Icon>
+            <Newspaper />
+          </Icon>
+          <Text>Forms</Text>
+        </SidenavItem>
+      </SidenavContent>
+      <SidenavFooter>
+        <SidenavItem
+          textValue={mode === 'dark' ? 'Light Mode' : 'Dark Mode'}
+          onPress={() => toggleMode(mode === 'dark' ? 'light' : 'dark')}
+        >
+          <Icon>
+            <Brightness />
+          </Icon>
+          <Text>{mode === 'dark' ? '☀️ Light' : '🌙 Dark'}</Text>
+        </SidenavItem>
+      </SidenavFooter>
+    </Sidenav>
   );
 }

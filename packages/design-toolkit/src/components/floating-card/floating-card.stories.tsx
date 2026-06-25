@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Hypergiant Galactic Systems Inc. All rights reserved.
+ * Copyright 2026 Hypergiant Galactic Systems Inc. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at https://www.apache.org/licenses/LICENSE-2.0
@@ -64,7 +64,7 @@ export const WithHeaderActions: Story = {
           headerActions={[
             {
               icon: <span className='text-lg'>⚙️</span>,
-              onPress: () => alert('Action clicked'),
+              onClick: () => alert('Action clicked'),
             },
           ]}
         >
@@ -156,21 +156,21 @@ export const WithHeaderActionDividers: Story = {
           headerActions={[
             {
               icon: <span>📌</span>,
-              onPress: () => alert('Pin clicked'),
+              onClick: () => alert('Pin clicked'),
             },
             {
               icon: <span className='text-lg'>🔗</span>,
-              onPress: () => alert('Share clicked'),
+              onClick: () => alert('Share clicked'),
             },
             'divider',
             {
               icon: <span className='text-lg'>⚙️</span>,
-              onPress: () => alert('Settings clicked'),
+              onClick: () => alert('Settings clicked'),
             },
             'divider',
             {
               icon: <span className='text-lg'>🗑️</span>,
-              onPress: () => alert('Delete clicked'),
+              onClick: () => alert('Delete clicked'),
             },
           ]}
         >
@@ -193,7 +193,7 @@ export const ControlledVisibility: Story = {
       <div className='relative h-800 w-600 p-l outline outline-info-bold'>
         <div className='absolute top-0 left-0 z-50 p-m'>
           <Button
-            onPress={() => setIsOpen(!isOpen)}
+            onClick={() => setIsOpen(!isOpen)}
             className='rounded border border-interactive-default bg-base-surface px-m py-s font-semibold text-sm hover:bg-base-surface-hover'
           >
             {isOpen ? 'Close Card' : 'Open Card'}
@@ -220,7 +220,7 @@ export const WithScrollableContent: Story = {
     return (
       <div className='relative h-800 w-600 p-l outline outline-info-bold'>
         <FloatingCardProvider>
-          <FloatingCard id={args.id} title={args.title}>
+          <FloatingCard id={panelIds.a} title={args.title}>
             <div className='flex h-full flex-col items-center justify-start gap-m self-stretch overflow-auto rounded-medium p-m'>
               {Array.from({ length: 20 }, (_, i) => (
                 <p key={i} className='text-sm'>
@@ -228,6 +228,38 @@ export const WithScrollableContent: Story = {
                 </p>
               ))}
             </div>
+          </FloatingCard>
+        </FloatingCardProvider>
+      </div>
+    );
+  },
+};
+
+function PinnableCardContent() {
+  return (
+    <div className='flex h-full flex-col items-center justify-center gap-m self-stretch rounded-medium bg-base-surface p-m outline outline-dashed outline-1 outline-interactive-hover'>
+      <div className='font-semibold text-sm'>Pinnable Card</div>
+      <p className='text-base-text-secondary text-xs'>
+        Click the pin button in the header — dragging will be disabled while
+        pinned.
+      </p>
+    </div>
+  );
+}
+
+export const Pinnable: Story = {
+  render: () => {
+    return (
+      <div className='relative h-800 w-600 p-l outline outline-info-bold'>
+        <FloatingCardProvider
+          icon={<Placeholder />}
+          headerActions={(id) => (id === panelIds.a ? ['pin'] : [])}
+        >
+          <FloatingCard id={panelIds.a} title='Pinnable Card'>
+            <PinnableCardContent />
+          </FloatingCard>
+          <FloatingCard id={panelIds.b} title='Pinnable Card'>
+            <PinnableCardContent />
           </FloatingCard>
         </FloatingCardProvider>
       </div>

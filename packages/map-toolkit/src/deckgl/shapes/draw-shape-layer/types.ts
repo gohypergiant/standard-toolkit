@@ -12,9 +12,9 @@
 
 'use client';
 
+import type { DistanceUnitSymbol } from '@accelint/constants/units';
 import type { UniqueId } from '@accelint/core';
 import type { Feature } from 'geojson';
-import type { DistanceUnitAbbreviation } from '@/shared/units';
 import type {
   CircleProperties,
   Shape,
@@ -23,17 +23,31 @@ import type {
 } from '../shared/types';
 
 /**
+ * Shape types the DrawShapeLayer can interactively draw.
+ *
+ * Excludes `WagonWheel`: a wagon wheel is a multipolygon that starts as a
+ * point and grows into a circle-like multipolygon, plus it carries additional
+ * metadata (spokes, orientation, range rings) that a simple draw interaction
+ * can't collect. Wagon wheels are constructed programmatically and edited via
+ * the EditShapeLayer; remove this exclusion if a `DrawWagonWheelMode`
+ * is developed.
+ */
+export type DrawableShapeType = Exclude<ShapeFeatureType, 'WagonWheel'>;
+
+/**
  * State for the drawing store
  */
 export type DrawingState = {
   /** Current shape type being drawn, null when not drawing */
-  activeShapeType: ShapeFeatureType | null;
+  activeShapeType: DrawableShapeType | null;
   /** Tentative feature being drawn (updates in real-time) */
   tentativeFeature: Feature | null;
   /** Default style properties to apply to drawn shapes */
   styleDefaults: Partial<StyleProperties> | null;
   /** Default circle properties (for Circle shapes) */
   circleDefaults: Partial<CircleProperties> | null;
+  /** Distance unit symbol from the layer prop, used for circle radius computation */
+  distanceUnit: DistanceUnitSymbol | null;
 };
 
 /**
@@ -53,7 +67,7 @@ export type UseDrawShapeOptions = {
   /** Callback when a shape is successfully drawn */
   onCreate?: (shape: Shape) => void;
   /** Callback when drawing is canceled */
-  onCancel?: (shapeType: ShapeFeatureType) => void;
+  onCancel?: (shapeType: DrawableShapeType) => void;
 };
 
 /**
@@ -63,13 +77,13 @@ export type UseDrawShapeReturn = {
   /** Current drawing state (null when not drawing) */
   drawingState: DrawingState | null;
   /** Start drawing a shape type with optional defaults */
-  draw: (shapeType: ShapeFeatureType, options?: DrawShapeOptions) => void;
+  draw: (shapeType: DrawableShapeType, options?: DrawShapeOptions) => void;
   /** Cancel the current drawing operation */
   cancel: () => void;
   /** Whether currently in drawing mode */
   isDrawing: boolean;
   /** The shape type currently being drawn (null if not drawing) */
-  activeShapeType: ShapeFeatureType | null;
+  activeShapeType: DrawableShapeType | null;
 };
 
 /**
@@ -85,13 +99,13 @@ export type DrawShapeLayerProps = {
    */
   mapId?: UniqueId;
   /** Distance unit for tooltip measurements (defaults to 'km') */
-  unit?: DistanceUnitAbbreviation;
+  unit?: DistanceUnitSymbol;
 };
 
 /**
  * Function type for the draw action
  */
 export type DrawFunction = (
-  shapeType: ShapeFeatureType,
+  shapeType: DrawableShapeType,
   options?: DrawShapeOptions,
 ) => void;

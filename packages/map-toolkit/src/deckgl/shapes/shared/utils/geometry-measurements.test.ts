@@ -10,13 +10,17 @@
  * governing permissions and limitations under the License.
  */
 
+import { circle } from '@turf/turf';
 import { describe, expect, it } from 'vitest';
 import {
   computeCircleMeasurements,
+  computeCirclePropertiesFromGeometry,
+  computeCirclePropertiesFromMultiPolygon,
   computeEllipseMeasurementsFromAxes,
   computeEllipseMeasurementsFromPolygon,
   computeRectangleMeasurementsFromCorners,
 } from './geometry-measurements';
+import type { MultiPolygon, Polygon } from 'geojson';
 
 describe('geometry-measurements', () => {
   describe('computeCircleMeasurements', () => {
@@ -456,6 +460,167 @@ describe('geometry-measurements', () => {
 
       expect(result.width).toBeGreaterThan(0);
       expect(result.height).toBeGreaterThan(0);
+    });
+  });
+
+  describe('computeCirclePropertiesFromGeometry', () => {
+    it('should compute center and radius from a valid circle polygon', () => {
+      // Arrange
+      const center: [number, number] = [-122.4, 37.8];
+      const radiusKm = 1;
+      const geometry = circle(center, radiusKm, { steps: 64 }).geometry;
+
+      // Act
+      const result = computeCirclePropertiesFromGeometry(geometry);
+
+      // Assert
+      expect(result).toBeDefined();
+      expect(result?.center[0]).toBeCloseTo(center[0], 1);
+      expect(result?.center[1]).toBeCloseTo(center[1], 1);
+      expect(result?.radius.value).toBeCloseTo(radiusKm, 1);
+      expect(result?.radius.units).toBe('kilometers');
+    });
+
+    it('should use the provided distance units', () => {
+      // Arrange
+      const geometry = circle([-122.4, 37.8], 1, { steps: 64 }).geometry;
+
+      // Act
+      const result = computeCirclePropertiesFromGeometry(geometry, 'miles');
+
+      // Assert
+      expect(result).toBeDefined();
+      expect(result?.radius.units).toBe('miles');
+    });
+
+    it('should return undefined for polygon with insufficient coordinates', () => {
+      // Arrange
+      const geometry: Polygon = {
+        type: 'Polygon',
+        coordinates: [
+          [
+            [0, 0],
+            [1, 1],
+          ],
+        ],
+      };
+
+      // Act
+      const result = computeCirclePropertiesFromGeometry(geometry);
+
+      // Assert
+      expect(result).toBeUndefined();
+    });
+
+    it('should return undefined for empty coordinate ring', () => {
+      // Arrange
+      const geometry: Polygon = {
+        type: 'Polygon',
+        coordinates: [[]],
+      };
+
+      // Act
+      const result = computeCirclePropertiesFromGeometry(geometry);
+
+      // Assert
+      expect(result).toBeUndefined();
+    });
+
+    it('should return undefined when coordinates array is missing', () => {
+      // Arrange — polygon with no outer ring
+      const geometry: Polygon = {
+        type: 'Polygon',
+        coordinates: [],
+      };
+
+      // Act
+      const result = computeCirclePropertiesFromGeometry(geometry);
+
+      // Assert
+      expect(result).toBeUndefined();
+    });
+  });
+
+  describe('computeCirclePropertiesFromMultiPolygon', () => {
+    it('should compute center and radius from a valid MultiPolygon', () => {
+      // Arrange — build a MultiPolygon from two half-circle sectors
+      const center: [number, number] = [-122.4, 37.8];
+      const radiusKm = 1;
+      const fullCircle = circle(center, radiusKm, { steps: 64 });
+      const ring = fullCircle.geometry.coordinates[0];
+      if (!ring || ring.length < 3) {
+        throw new Error('Test setup: turf circle produced invalid ring');
+      }
+      const half = Math.floor(ring.length / 2);
+      const firstPoint = ring[0] ?? center;
+      const halfPoint = ring[half] ?? center;
+
+      const geometry: MultiPolygon = {
+        type: 'MultiPolygon',
+        coordinates: [
+          [[...ring.slice(0, half + 1), center, firstPoint]],
+          [[...ring.slice(half), center, halfPoint]],
+        ],
+      };
+
+      // Act
+      const result = computeCirclePropertiesFromMultiPolygon(geometry);
+
+      // Assert
+      expect(result).toBeDefined();
+      expect(result?.center[0]).toBeCloseTo(center[0], 1);
+      expect(result?.center[1]).toBeCloseTo(center[1], 1);
+      expect(result?.radius.value).toBeCloseTo(radiusKm, 0);
+      expect(result?.radius.units).toBe('kilometers');
+    });
+
+    it('should use the provided distance units', () => {
+      // Arrange
+      const fullCircle = circle([-122.4, 37.8], 1, { steps: 32 });
+      const geometry: MultiPolygon = {
+        type: 'MultiPolygon',
+        coordinates: [fullCircle.geometry.coordinates],
+      };
+
+      // Act
+      const result = computeCirclePropertiesFromMultiPolygon(geometry, 'miles');
+
+      // Assert
+      expect(result).toBeDefined();
+      expect(result?.radius.units).toBe('miles');
+    });
+
+    it('should return undefined for empty MultiPolygon', () => {
+      // Arrange
+      const geometry: MultiPolygon = {
+        type: 'MultiPolygon',
+        coordinates: [],
+      };
+
+      // Act
+      const result = computeCirclePropertiesFromMultiPolygon(geometry);
+
+      // Assert
+      expect(result).toBeUndefined();
+    });
+
+    it('should skip polygons with missing outer rings', () => {
+      // Arrange — one polygon with ring, one without
+      const fullCircle = circle([-122.4, 37.8], 1, { steps: 32 });
+      const geometry: MultiPolygon = {
+        type: 'MultiPolygon',
+        coordinates: [
+          fullCircle.geometry.coordinates,
+          [], // empty polygon (no rings)
+        ],
+      };
+
+      // Act
+      const result = computeCirclePropertiesFromMultiPolygon(geometry);
+
+      // Assert — should still compute from the valid polygon
+      expect(result).toBeDefined();
+      expect(result?.radius.value).toBeGreaterThan(0);
     });
   });
 });

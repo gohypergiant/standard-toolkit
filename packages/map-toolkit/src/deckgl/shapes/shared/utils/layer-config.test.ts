@@ -19,7 +19,7 @@ import { getDefaultEditableLayerProps } from './layer-config';
 
 describe('layer-config', () => {
   describe('getDefaultEditableLayerProps', () => {
-    it('should return default distance units when no abbreviation is provided', () => {
+    it('should return default distance units when no symbol is provided', () => {
       const result = getDefaultEditableLayerProps();
 
       expect(result.modeConfig.distanceUnits).toBe('kilometers');
@@ -35,22 +35,22 @@ describe('layer-config', () => {
       ['km', 'kilometers'],
       ['mi', 'miles'],
       ['m', 'meters'],
-      ['nm', 'nauticalmiles'],
+      ['NM', 'nauticalmiles'],
       ['ft', 'feet'],
-    ] as const)('should resolve abbreviation "%s" to "%s"', (abbrev, expected) => {
+    ] as const)('should resolve symbol "%s" to "%s"', (abbrev, expected) => {
       const result = getDefaultEditableLayerProps(abbrev);
 
       expect(result.modeConfig.distanceUnits).toBe(expected);
     });
 
-    it('should return cached result for repeated calls with same abbreviation', () => {
+    it('should return cached result for repeated calls with same symbol', () => {
       const result1 = getDefaultEditableLayerProps('km');
       const result2 = getDefaultEditableLayerProps('km');
 
       expect(result1).toBe(result2);
     });
 
-    it('should return new result when abbreviation changes', () => {
+    it('should return new result when symbol changes', () => {
       const result1 = getDefaultEditableLayerProps('km');
       const result2 = getDefaultEditableLayerProps('mi');
 

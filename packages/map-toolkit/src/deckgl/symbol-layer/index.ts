@@ -106,7 +106,6 @@ const defaultProps: DefaultProps<SymbolLayerProps> = {
  * ```tsx
  * import '@accelint/map-toolkit/deckgl/symbol-layer/fiber';
  * import { BaseMap } from '@accelint/map-toolkit/deckgl';
- * import { View } from '@deckgl-fiber-renderer/dom';
  *
  * function MilitaryMap() {
  *   const units = [
@@ -116,7 +115,6 @@ const defaultProps: DefaultProps<SymbolLayerProps> = {
  *
  *   return (
  *     <BaseMap id="map" className="w-full h-full">
- *       <View id="main" controller />
  *       <symbolLayer
  *         id="military-units"
  *         data={units}

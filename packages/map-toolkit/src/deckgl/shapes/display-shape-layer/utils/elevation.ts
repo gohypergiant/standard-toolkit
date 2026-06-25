@@ -12,6 +12,7 @@
 
 'use client';
 
+import { createLoggerDomain } from '@/shared/logger';
 import {
   isGeometryCollectionType,
   isLineGeometry,
@@ -24,7 +25,7 @@ import {
   isPolygonType,
 } from '../../shared/types';
 import { getLineColor } from '../../shared/utils/style-utils';
-import { BRIGHTNESS_FACTOR } from '../constants';
+import { BRIGHTNESS_FACTOR, DEFAULT_ELEVATION } from '../constants';
 import { brightenColor } from './display-style';
 import type { Rgba255Tuple } from '@accelint/predicates';
 import type { Shape, ShapeId } from '../../shared/types';
@@ -34,9 +35,14 @@ import type {
   LineSegment,
 } from '../types';
 
+const logger = createLoggerDomain('[Elevation]');
+
 // =============================================================================
 // Coordinate Helpers
 // =============================================================================
+
+// GeoJSON nesting is at most 4 levels deep (MultiPolygon → Polygon → Ring → Position)
+const MAX_COORDINATE_DEPTH = 5;
 
 /**
  * Extract elevation from 3D coordinates.
@@ -52,9 +58,6 @@ import type {
  * getElevationFromCoordinates([10, 20]); // 0
  * ```
  */
-// GeoJSON nesting is at most 4 levels deep (MultiPolygon → Polygon → Ring → Position)
-const MAX_COORDINATE_DEPTH = 5;
-
 export function getElevationFromCoordinates(coordinates: unknown): number {
   let current = coordinates;
   let depth = 0;
@@ -111,6 +114,56 @@ export function getFeatureElevation(feature: Shape['feature']): number {
 }
 
 /**
+ * Get the minimum elevation (floor) from a feature's properties.
+ * Returns 0 when not set, meaning shapes render from ground level.
+ *
+ * @param feature - The GeoJSON feature
+ * @returns The minimum elevation in meters, or 0
+ *
+ * @example
+ * ```typescript
+ * const minElev = getFeatureMinElevation(feature);
+ * // 0 when unset, or the minElevation property value
+ * ```
+ */
+export function getFeatureMinElevation(feature: Shape['feature']): number {
+  return feature.properties?.minElevation ?? DEFAULT_ELEVATION;
+}
+
+/**
+ * Get the extrusion height for a feature (maxElevation - minElevation).
+ * This is the value to pass to deck.gl's `getElevation` accessor when
+ * coordinate Z is set to minElevation, so the top face renders at maxElevation.
+ *
+ * Clamped to 0 because deck.gl renders negative extrusion as inverted
+ * geometry (extruding downward from the base face).
+ *
+ * @param feature - The GeoJSON feature
+ * @returns The extrusion height in meters, minimum 0
+ *
+ * @example
+ * ```typescript
+ * // Feature with minElevation: 10000, maxElevation: 33000
+ * const height = getFeatureExtrusionHeight(feature); // 23000
+ * ```
+ */
+export function getFeatureExtrusionHeight(feature: Shape['feature']): number {
+  const max = getFeatureElevation(feature);
+  const min = getFeatureMinElevation(feature);
+  const height = max - min;
+
+  if (height < 0) {
+    logger.warn(
+      `minElevation (${min}) exceeds maxElevation (${max}) for shape "${feature.properties?.shapeId ?? 'unknown'}". Clamping extrusion height to 0.`,
+    );
+
+    return 0;
+  }
+
+  return height;
+}
+
+/**
  * Extract [lon, lat] from a coordinate array if valid.
  */
 function extractLonLat(
@@ -151,15 +204,16 @@ function getRepresentativeCoordinate(
 // Line Segment Builders
 // =============================================================================
 
-/** Create a vertical line segment from ground to an elevated position. */
+/** Create a vertical line segment from base elevation to an elevated position. */
 function createVerticalSegment(
   lon: number,
   lat: number,
   elevation: number,
   color: Rgba255Tuple,
+  baseElevation: number,
 ): LineSegment {
   return {
-    source: [lon, lat, 0] as [number, number, number],
+    source: [lon, lat, baseElevation] as [number, number, number],
     target: [lon, lat, elevation] as [number, number, number],
     color,
   };
@@ -169,8 +223,10 @@ function createVerticalSegment(
 function processCoordinates(
   coordinates: number[][],
   color: Rgba255Tuple,
+  baseElevation?: number,
 ): LineSegment[] {
   const segments: LineSegment[] = [];
+  const base = baseElevation ?? DEFAULT_ELEVATION;
 
   for (const coord of coordinates) {
     const [lon, lat, elevation] = coord;
@@ -178,9 +234,9 @@ function processCoordinates(
       lon !== undefined &&
       lat !== undefined &&
       elevation !== undefined &&
-      elevation > 0
+      elevation > base
     ) {
-      segments.push(createVerticalSegment(lon, lat, elevation, color));
+      segments.push(createVerticalSegment(lon, lat, elevation, color, base));
     }
   }
 
@@ -192,20 +248,23 @@ function processCoordinates(
  *
  * @param geometry - The feature geometry
  * @param color - RGBA color for the line segments
- * @returns Array of line segments from ground to elevated positions
+ * @param baseElevation - The base elevation for segments (ground when undefined)
+ * @returns Array of line segments from base elevation to elevated positions
  *
  * @example
  * ```typescript
  * const segments = createElevationLineSegments(
  *   feature.geometry,
  *   [255, 255, 255, 255],
+ *   5000, // segments start at 5000m instead of ground
  * );
- * // Each segment has { source: [lon, lat, 0], target: [lon, lat, elevation], color }
+ * // Each segment has { source: [lon, lat, baseElevation], target: [lon, lat, elevation], color }
  * ```
  */
 export function createElevationLineSegments(
   geometry: Shape['feature']['geometry'],
   color: Rgba255Tuple,
+  baseElevation?: number,
 ): LineSegment[] {
   // Skip GeometryCollection
   if (isGeometryCollectionType(geometry)) {
@@ -214,7 +273,11 @@ export function createElevationLineSegments(
 
   if (isLineStringType(geometry)) {
     // Create vertical lines at EACH coordinate to form a "curtain"
-    return processCoordinates(geometry.coordinates as number[][], color);
+    return processCoordinates(
+      geometry.coordinates as number[][],
+      color,
+      baseElevation,
+    );
   }
 
   if (isMultiLineStringType(geometry)) {
@@ -222,7 +285,7 @@ export function createElevationLineSegments(
     const allSegments: LineSegment[] = [];
     const lines = geometry.coordinates as number[][][];
     for (const line of lines) {
-      for (const segment of processCoordinates(line, color)) {
+      for (const segment of processCoordinates(line, color, baseElevation)) {
         allSegments.push(segment);
       }
     }
@@ -230,12 +293,13 @@ export function createElevationLineSegments(
   }
 
   // For Point and MultiPoint, use single representative coordinate
+  const base = baseElevation ?? DEFAULT_ELEVATION;
   const coords = getRepresentativeCoordinate(geometry);
   if (coords) {
     const [lon, lat] = coords;
     const elevation = getElevationFromCoordinates(geometry.coordinates);
-    if (elevation > 0) {
-      return [createVerticalSegment(lon, lat, elevation, color)];
+    if (elevation > base) {
+      return [createVerticalSegment(lon, lat, elevation, color, base)];
     }
   }
 
@@ -302,6 +366,7 @@ export function classifyElevatedFeatures(
  * @param fillColor - RGBA fill color for the curtain
  * @param lineColor - RGBA line color for the curtain
  * @param shapeId - Optional shape ID for picking correlation
+ * @param baseElevation - The base (floor) elevation for curtain bottoms (default 0)
  * @returns Array of curtain polygon features
  *
  * @example
@@ -311,6 +376,7 @@ export function classifyElevatedFeatures(
  *   [98, 166, 255, 51],
  *   [98, 166, 255, 255],
  *   'shape-1',
+ *   2000, // curtain bottoms at 2000m instead of ground
  * );
  * ```
  */
@@ -319,8 +385,10 @@ export function createCurtainPolygonsFromLine(
   fillColor: Rgba255Tuple,
   lineColor: Rgba255Tuple,
   shapeId?: ShapeId,
+  baseElevation?: number,
 ): CurtainFeature[] {
   const polygons: CurtainFeature[] = [];
+  const base = baseElevation ?? DEFAULT_ELEVATION;
 
   // Create vertical polygon for each pair of consecutive coordinates
   for (let i = 0; i < coordinates.length - 1; i++) {
@@ -344,8 +412,8 @@ export function createCurtainPolygonsFromLine(
       continue;
     }
 
-    // Skip if both points are at ground level
-    if (elev1 === 0 && elev2 === 0) {
+    // Skip if both points are at or below base elevation
+    if (elev1 <= base && elev2 <= base) {
       continue;
     }
 
@@ -353,11 +421,11 @@ export function createCurtainPolygonsFromLine(
     // Winding order: counter-clockwise when viewed from outside
     // Bottom-left -> Bottom-right -> Top-right -> Top-left -> Bottom-left (closing)
     const ring: number[][] = [
-      [lon1, lat1, 0], // Bottom left (ground)
-      [lon2, lat2, 0], // Bottom right (ground)
+      [lon1, lat1, base], // Bottom left (base)
+      [lon2, lat2, base], // Bottom right (base)
       [lon2, lat2, elev2], // Top right (elevated)
       [lon1, lat1, elev1], // Top left (elevated)
-      [lon1, lat1, 0], // Close the ring
+      [lon1, lat1, base], // Close the ring
     ];
 
     polygons.push({
@@ -401,6 +469,7 @@ export function createCurtainPolygonFeatures(
     const { geometry } = feature;
     const lineColorRGBA = getLineColor(feature);
     const shapeId = feature.properties?.shapeId;
+    const baseElevation = getFeatureMinElevation(feature);
 
     // Create fill color with base opacity (same as polygon fills)
     const fillColor: Rgba255Tuple = applyBaseOpacity
@@ -427,6 +496,7 @@ export function createCurtainPolygonFeatures(
         fillColor,
         lineColorRGBA,
         shapeId,
+        baseElevation,
       )) {
         curtainFeatures.push(polygon);
       }
@@ -439,6 +509,55 @@ export function createCurtainPolygonFeatures(
 // =============================================================================
 // Coordinate Projection
 // =============================================================================
+
+/** Strip Z coordinate, keeping only [lon, lat]. */
+const stripZ = ([lon, lat]: number[]): [number, number] =>
+  [lon, lat] as [number, number];
+
+/**
+ * Remap all coordinates in a feature's geometry using a transform function.
+ * Handles LineString, MultiLineString, Polygon, MultiPolygon.
+ * Returns the original feature for unhandled types (Point, MultiPoint, GeometryCollection).
+ */
+function remapFeatureCoordinates(
+  feature: Shape['feature'],
+  transform: (coord: number[]) => number[],
+): Shape['feature'] {
+  const { geometry } = feature;
+
+  if (isLineStringType(geometry)) {
+    return {
+      ...feature,
+      geometry: {
+        ...geometry,
+        coordinates: (geometry.coordinates as number[][]).map(transform),
+      },
+    };
+  }
+  if (isMultiLineStringType(geometry) || isPolygonType(geometry)) {
+    return {
+      ...feature,
+      geometry: {
+        ...geometry,
+        coordinates: (geometry.coordinates as number[][][]).map((ring) =>
+          ring.map(transform),
+        ),
+      },
+    };
+  }
+  if (isMultiPolygonType(geometry)) {
+    return {
+      ...feature,
+      geometry: {
+        ...geometry,
+        coordinates: (geometry.coordinates as number[][][][]).map((polygon) =>
+          polygon.map((ring) => ring.map(transform)),
+        ),
+      },
+    };
+  }
+  return feature;
+}
 
 /**
  * Returns a copy of a feature with Z coordinates stripped from its geometry.
@@ -463,45 +582,46 @@ export function createCurtainPolygonFeatures(
  * // flat.geometry.coordinates: [[[lon, lat], [lon, lat], ...]]
  * ```
  */
-
-const stripZ = ([lon, lat]: number[]) => [lon, lat] as [number, number];
-
 export function flattenFeatureTo2D(
   feature: Shape['feature'],
 ): Shape['feature'] {
-  const { geometry } = feature;
-  if (isLineStringType(geometry)) {
-    return {
-      ...feature,
-      geometry: {
-        ...geometry,
-        coordinates: (geometry.coordinates as number[][]).map(stripZ),
-      },
-    };
+  return remapFeatureCoordinates(feature, stripZ);
+}
+
+/**
+ * Project a feature's coordinates to a given base elevation.
+ * Sets Z coordinate to `baseElevation` for all vertices.
+ *
+ * Used for elevated polygon geometries: deck.gl's SolidPolygonLayer renders
+ * the base face at coordinate Z and extrudes upward by `getElevation`.
+ * Setting Z = minElevation and getElevation = maxElevation - minElevation
+ * produces a floating slab from minElevation to maxElevation.
+ *
+ * When `baseElevation` is 0 this is equivalent to `flattenFeatureTo2D`.
+ *
+ * @param feature - The feature to project
+ * @param baseElevation - The Z value to set on all coordinates
+ * @returns A new feature with coordinates at the given base elevation
+ *
+ * @example
+ * ```typescript
+ * // Project polygon vertices to minElevation so deck.gl extrudes from there
+ * const projected = projectFeatureToBaseElevation(feature, 10000);
+ * // All coordinates now have Z = 10000
+ * ```
+ */
+export function projectFeatureToBaseElevation(
+  feature: Shape['feature'],
+  baseElevation: number,
+): Shape['feature'] {
+  if (baseElevation === DEFAULT_ELEVATION) {
+    return flattenFeatureTo2D(feature);
   }
-  if (isMultiLineStringType(geometry) || isPolygonType(geometry)) {
-    return {
-      ...feature,
-      geometry: {
-        ...geometry,
-        coordinates: (geometry.coordinates as number[][][]).map((ring) =>
-          ring.map(stripZ),
-        ),
-      },
-    };
-  }
-  if (isMultiPolygonType(geometry)) {
-    return {
-      ...feature,
-      geometry: {
-        ...geometry,
-        coordinates: (geometry.coordinates as number[][][][]).map((polygon) =>
-          polygon.map((ring) => ring.map(stripZ)),
-        ),
-      },
-    };
-  }
-  return feature;
+
+  return remapFeatureCoordinates(
+    feature,
+    ([lon, lat]) => [lon, lat, baseElevation] as [number, number, number],
+  );
 }
 
 /**
@@ -565,7 +685,7 @@ export function partitionCurtains(
  *   selectedShapeId,
  *   hoverIndex,
  * );
- * // Each segment: { source: [lon, lat, 0], target: [lon, lat, elevation], color: [r, g, b, a] }
+ * // Each segment: { source: [lon, lat, baseElevation], target: [lon, lat, elevation], color: [r, g, b, a] }
  * ```
  */
 export function buildIndicatorLineData(
@@ -585,6 +705,7 @@ export function buildIndicatorLineData(
     const shapeId = feature.properties?.shapeId;
     const isSelected = shapeId != null && shapeId === selectedShapeId;
     const isHovered = shapeId != null && shapeId === hoveredFeatureShapeId;
+    const baseElevation = getFeatureMinElevation(feature);
 
     const base = getLineColor(feature);
     const factor =
@@ -593,7 +714,11 @@ export function buildIndicatorLineData(
         : BRIGHTNESS_FACTOR.HOVER_OR_SELECT;
     const color = isSelected || isHovered ? brightenColor(base, factor) : base;
 
-    for (const segment of createElevationLineSegments(geometry, color)) {
+    for (const segment of createElevationLineSegments(
+      geometry,
+      color,
+      baseElevation,
+    )) {
       lineData.push(segment);
     }
   }

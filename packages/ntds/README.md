@@ -64,7 +64,7 @@ import {
 
 ## Background
 
-This package contains two sets of output: a spritesheet for icons for the CBC2 COP, and a core set of colorable React SVG Components.
+This package contains two sets of output: a spritesheet for icons for use in a deckgl IconLayer, and a core set of colorable React SVG Components.
 
 ### Spritesheet
 

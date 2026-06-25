@@ -19,6 +19,19 @@
     --drawer-size-medium: 200px;
     --drawer-size-large: 400px;
 
+    /*
+     * Sidenav grid track sizes. The layout needs these at .layout scope so the
+     * `has-[.group/sidenav]` rules below can read them; the sidenav's own
+     * `--sidenav-width` declaration is scoped to .sidenav and not visible here.
+     */
+    --sidenav-width: 64px;
+    --sidenav-width-open: 240px;
+
+    --drawer-left-size: 0px;
+    --drawer-right-size: 0px;
+    --drawer-top-size: 0px;
+    --drawer-bottom-size: 0px;
+
     --drawer-main-row-start: 1;
     --drawer-main-col-end: 4;
     --drawer-main-row-end: 4;
@@ -29,9 +42,17 @@
     --drawer-main-rows: var(--drawer-main-row-start) /
       var(--drawer-main-row-end);
 
-    @apply relative grid h-full w-full;
-    grid-template-columns: auto 1fr auto;
-    grid-template-rows: auto 1fr auto;
+    @apply relative grid h-full w-full overflow-hidden;
+    grid-template-columns: var(--drawer-left-size) 1fr var(--drawer-right-size);
+    grid-template-rows: var(--drawer-top-size) 1fr var(--drawer-bottom-size);
+
+    @variant motion-safe {
+      transition:
+        grid-template-columns var(--animation-duration-slow)
+          var(--animation-easing-standard),
+        grid-template-rows var(--animation-duration-slow)
+          var(--animation-easing-standard);
+    }
 
     @variant push-top {
       --drawer-main-row-start: 2;
@@ -49,8 +70,58 @@
       --drawer-main-col-start: 2;
     }
 
+    /*
+     * Sidenav: reserve a left column sized to the rail. Without this the grid
+     * track defaults to 0px (since #1015 removed the auto-sized track) and the
+     * sidenav — which sets its own width — overflows into main's column.
+     */
     @variant has-[.group\/sidenav] {
       --drawer-main-col-start: 2;
+      --drawer-left-size: var(--sidenav-width);
+    }
+
+    @variant has-[.group\/sidenav[data-open]] {
+      --drawer-left-size: var(--sidenav-width-open);
+    }
+
+    @variant has-[[data-placement=left][data-open][data-size=large]] {
+      --drawer-left-size: var(--drawer-size-large);
+    }
+    @variant has-[[data-placement=left][data-open][data-size=medium]] {
+      --drawer-left-size: var(--drawer-size-medium);
+    }
+    @variant has-[[data-placement=left][data-open][data-size=small]] {
+      --drawer-left-size: var(--drawer-size-small);
+    }
+
+    @variant has-[[data-placement=right][data-open][data-size=large]] {
+      --drawer-right-size: var(--drawer-size-large);
+    }
+    @variant has-[[data-placement=right][data-open][data-size=medium]] {
+      --drawer-right-size: var(--drawer-size-medium);
+    }
+    @variant has-[[data-placement=right][data-open][data-size=small]] {
+      --drawer-right-size: var(--drawer-size-small);
+    }
+
+    @variant has-[[data-placement=top][data-open][data-size=large]] {
+      --drawer-top-size: var(--drawer-size-large);
+    }
+    @variant has-[[data-placement=top][data-open][data-size=medium]] {
+      --drawer-top-size: var(--drawer-size-medium);
+    }
+    @variant has-[[data-placement=top][data-open][data-size=small]] {
+      --drawer-top-size: var(--drawer-size-small);
+    }
+
+    @variant has-[[data-placement=bottom][data-open][data-size=large]] {
+      --drawer-bottom-size: var(--drawer-size-large);
+    }
+    @variant has-[[data-placement=bottom][data-open][data-size=medium]] {
+      --drawer-bottom-size: var(--drawer-size-medium);
+    }
+    @variant has-[[data-placement=bottom][data-open][data-size=small]] {
+      --drawer-bottom-size: var(--drawer-size-small);
     }
   }
 
@@ -60,6 +131,8 @@
 
   .drawer {
     @apply bg-surface-default text-body-m pointer-events-none relative flex flex-col;
+    min-width: 0;
+    min-height: 0;
 
     @variant placement-top {
       @apply col-span-full row-start-1 row-end-2;
@@ -205,66 +278,10 @@
   }
 
   .panel {
-    @apply gap-s p-l hidden h-full min-h-0 flex-col;
+    @apply gap-s p-l hidden h-full min-h-0 flex-col overflow-hidden;
 
     @variant group-open/drawer {
       @apply flex;
-    }
-
-    @variant group-placement-left/drawer {
-      @variant group-size-large/drawer {
-        @apply w-(--drawer-size-large);
-      }
-
-      @variant group-size-medium/drawer {
-        @apply w-(--drawer-size-medium);
-      }
-
-      @variant group-size-small/drawer {
-        @apply w-(--drawer-size-small);
-      }
-    }
-
-    @variant group-placement-right/drawer {
-      @variant group-size-large/drawer {
-        @apply w-(--drawer-size-large);
-      }
-
-      @variant group-size-medium/drawer {
-        @apply w-(--drawer-size-medium);
-      }
-
-      @variant group-size-small/drawer {
-        @apply w-(--drawer-size-small);
-      }
-    }
-
-    @variant group-placement-top/drawer {
-      @variant group-size-large/drawer {
-        @apply h-(--drawer-size-large);
-      }
-
-      @variant group-size-medium/drawer {
-        @apply h-(--drawer-size-medium);
-      }
-
-      @variant group-size-small/drawer {
-        @apply h-(--drawer-size-small);
-      }
-    }
-
-    @variant group-placement-bottom/drawer {
-      @variant group-size-large/drawer {
-        @apply h-(--drawer-size-large);
-      }
-
-      @variant group-size-medium/drawer {
-        @apply h-(--drawer-size-medium);
-      }
-
-      @variant group-size-small/drawer {
-        @apply h-(--drawer-size-small);
-      }
     }
   }
 

@@ -16,11 +16,9 @@ import type {
   RefAttributes,
   SetStateAction,
 } from 'react';
-import type {
-  TextFieldProps as AriaTextFieldProps,
-  FieldErrorProps,
-  LabelProps,
-} from 'react-aria-components';
+import type { TextFieldProps as AriaTextFieldProps } from 'react-aria-components/TextField';
+import type { FieldErrorProps } from 'react-aria-components/FieldError';
+import type { LabelProps } from 'react-aria-components/Label';
 
 /**
  * Supported coordinate systems for display and input
@@ -276,4 +274,10 @@ export type CoordinateFieldProps = Omit<
      *   - Paste errors: `{ pastedText: string }`
      */
     onError?: (message: string, context?: Record<string, unknown>) => void;
+
+    /**
+     * Tooltip text for the format button
+     * @default 'View/copy other formats'
+     */
+    formatButtonTooltip?: string;
   };

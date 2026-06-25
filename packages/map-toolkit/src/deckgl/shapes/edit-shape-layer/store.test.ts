@@ -26,7 +26,7 @@ import {
   enableEditPanning,
   getEditingState,
   saveEditingFromLayer,
-  updateFeatureFromLayer,
+  updateFeature,
 } from './store';
 import type { UniqueId } from '@accelint/core';
 import type { Shape } from '../shared/types';
@@ -195,6 +195,7 @@ describe('edit-shape-layer store', () => {
       const snapshot = editStore.snapshot(mapId);
       const state = snapshot();
       expect(state).not.toBeNull();
+      expect(state?.originalShape).toBeNull();
       expect(state?.editingShape).toBeNull();
       expect(state?.editMode).toBe('view');
       expect(state?.featureBeingEdited).toBeNull();
@@ -204,6 +205,7 @@ describe('edit-shape-layer store', () => {
   describe('editStore.serverSnapshot', () => {
     it('server snapshot returns default state', () => {
       const serverSnapshot = editStore.serverSnapshot();
+      expect(serverSnapshot.originalShape).toBeNull();
       expect(serverSnapshot.editingShape).toBeNull();
       expect(serverSnapshot.editMode).toBe('view');
     });
@@ -228,8 +230,26 @@ describe('edit-shape-layer store', () => {
       edit(shape);
 
       const state = editStore.get(mapId);
+      expect(state?.originalShape).toEqual(shape);
       expect(state?.editingShape).toEqual(shape);
       expect(state?.featureBeingEdited).toEqual(shape.feature);
+    });
+
+    it('re-entry for same shape preserves originalShape', () => {
+      const { edit } = editStore.actions(mapId);
+
+      const shape = createMockShape({ name: 'Original' });
+      edit(shape);
+
+      expect(editStore.get(mapId)?.originalShape?.name).toBe('Original');
+
+      // Re-enter with updated version of the same shape
+      const updated = { ...shape, name: 'Updated' };
+      edit(updated);
+
+      // editingShape updates but originalShape stays as captured at first edit
+      expect(editStore.get(mapId)?.editingShape?.name).toBe('Updated');
+      expect(editStore.get(mapId)?.originalShape?.name).toBe('Original');
     });
 
     it('edit cancels existing editing before starting new one', () => {
@@ -296,16 +316,16 @@ describe('edit-shape-layer store', () => {
       expect(editStore.get(mapId)?.editMode).toBe('circle-transform');
     });
 
-    it('sets bounding-transform mode for ellipses', () => {
+    it('sets ellipse-transform mode for ellipses', () => {
       const { edit } = editStore.actions(mapId);
 
       const shape = createMockEllipseShape();
       edit(shape);
 
-      expect(editStore.get(mapId)?.editMode).toBe('bounding-transform');
+      expect(editStore.get(mapId)?.editMode).toBe('ellipse-transform');
     });
 
-    it('sets bounding-transform mode for rectangles', () => {
+    it('sets rectangle-transform mode for rectangles', () => {
       const { edit } = editStore.actions(mapId);
 
       const shape = createMockShape({
@@ -315,7 +335,7 @@ describe('edit-shape-layer store', () => {
       });
       edit(shape);
 
-      expect(editStore.get(mapId)?.editMode).toBe('bounding-transform');
+      expect(editStore.get(mapId)?.editMode).toBe('rectangle-transform');
     });
 
     it('sets point-translate mode for points', () => {
@@ -357,6 +377,7 @@ describe('edit-shape-layer store', () => {
       expect(editStore.get(mapId)?.editingShape).not.toBeNull();
 
       save();
+      expect(editStore.get(mapId)?.originalShape).toBeNull();
       expect(editStore.get(mapId)?.editingShape).toBeNull();
       expect(editStore.get(mapId)?.editMode).toBe('view');
     });
@@ -390,8 +411,35 @@ describe('edit-shape-layer store', () => {
       expect(editStore.get(mapId)?.editingShape).not.toBeNull();
 
       cancel();
+      expect(editStore.get(mapId)?.originalShape).toBeNull();
       expect(editStore.get(mapId)?.editingShape).toBeNull();
       expect(editStore.get(mapId)?.editMode).toBe('view');
+    });
+
+    it('cancel emits the original shape, not the re-entered shape', () => {
+      const { edit, cancel } = editStore.actions(mapId);
+      const bus = Broadcast.getInstance();
+
+      const shape = createMockShape({ name: 'Original' });
+      edit(shape);
+
+      // Re-enter with updated shape
+      edit({ ...shape, name: 'Updated' });
+
+      const handler = vi.fn();
+      bus.on(EditShapeEvents.canceled, handler);
+
+      cancel();
+
+      expect(handler).toHaveBeenCalledWith(
+        expect.objectContaining({
+          payload: expect.objectContaining({
+            shape: expect.objectContaining({ name: 'Original' }),
+          }),
+        }),
+      );
+
+      bus.off(EditShapeEvents.canceled, handler);
     });
 
     it('cancel does nothing when not editing', () => {
@@ -426,7 +474,7 @@ describe('edit-shape-layer store', () => {
         },
       };
 
-      updateFeatureFromLayer(mapId, updatedFeature);
+      updateFeature(mapId, updatedFeature);
 
       expect(editStore.get(mapId)?.featureBeingEdited).toEqual(updatedFeature);
     });

@@ -42,8 +42,11 @@ export {
   isPointShape,
   isPolygonShape,
   isRectangleShape,
+  isWagonWheelShape,
   ShapeFeatureType,
 } from './shared/types';
+// Shape utility exports
+export { duplicateShape } from './shared/utils/duplicate-shape';
 // Style utility exports
 export {
   getDashArray,
@@ -72,6 +75,7 @@ export type {
   ShapeDrawnEvent,
 } from './draw-shape-layer/events';
 export type {
+  DrawableShapeType,
   DrawingState,
   DrawShapeLayerProps,
   DrawShapeOptions,
@@ -81,6 +85,8 @@ export type {
 export type {
   EditShapeEvent,
   EditShapeEventType,
+  FeatureEditingEvent,
+  FeatureEditingPayload,
   ShapeEditCanceledEvent,
   ShapeEditingEvent,
   ShapeUpdatedEvent,
@@ -96,6 +102,7 @@ export type {
 export type { ShapeEventType } from './shared/events';
 // Shared type exports
 export type {
+  BusCloneable,
   CircleFeatureProperties,
   CircleProperties,
   CircleRadius,
@@ -103,6 +110,7 @@ export type {
   EllipseFeatureProperties,
   EllipseProperties,
   EllipseShape,
+  GeoPosition,
   LineStringShape,
   PointShape,
   PolygonShape,
@@ -114,4 +122,8 @@ export type {
   StyledFeature,
   StyledFeatureProperties,
   StyleProperties,
+  WagonWheelFeatureProperties,
+  WagonWheelProperties,
+  WagonWheelShape,
 } from './shared/types';
+export type { DuplicateShapeOptions } from './shared/utils/duplicate-shape';

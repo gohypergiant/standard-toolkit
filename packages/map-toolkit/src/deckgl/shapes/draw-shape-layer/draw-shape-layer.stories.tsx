@@ -10,30 +10,65 @@
  * governing permissions and limitations under the License.
  */
 
-import { useOn } from '@accelint/bus/react';
-import { uuid } from '@accelint/core';
+import { useEmit, useOn } from '@accelint/bus/react';
+import { type UniqueId, uuid } from '@accelint/core';
 import { Button } from '@accelint/design-toolkit';
+import { OptionsItem } from '@accelint/design-toolkit/components/options/item';
+import { SelectField } from '@accelint/design-toolkit/components/select-field';
 import { useState } from 'react';
+import { CameraEventTypes } from '@/camera/events';
+import { useMapCamera } from '@/camera/store';
 import { useMapCursor } from '@/map-cursor';
 import { BaseMap } from '../../base-map/index';
 import { mockShapes } from '../__fixtures__/mock-shapes';
 import { useSelectShape } from '../display-shape-layer/use-select-shape';
 import { ShapeEvents } from '../shared/events';
 import { ShapeFeatureType } from '../shared/types';
+import type { CameraSetViewEvent, ViewType } from '@/camera/types';
 import type { ShapeHoveredEvent } from '../shared/events';
 import type { Shape } from '../shared/types';
 import '../display-shape-layer/fiber';
-import './fiber';
 import { DrawShapeLayer } from './index';
+import type { DrawableShapeType } from './types';
 import { useDrawShape } from './use-draw-shape';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta = {
   title: 'DeckGL/Shapes/Draw Shape Layer',
+  argTypes: {
+    unit: {
+      control: { type: 'select' },
+      options: ['km', 'm', 'NM', 'mi', 'ft'],
+      description:
+        'Distance unit for tooltip measurements during drawing (e.g., circle radius).',
+    },
+  },
+  args: {
+    unit: 'km',
+  },
 };
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+function ViewSelector({ mapId }: { mapId: UniqueId }) {
+  const setView = useEmit<CameraSetViewEvent>(CameraEventTypes.setView);
+  const { cameraState } = useMapCamera(mapId);
+
+  return (
+    <SelectField
+      label='View'
+      value={cameraState.view}
+      onChange={(value) => {
+        setView({ id: mapId, view: value as ViewType });
+      }}
+    >
+      <OptionsItem id='2D'>2D</OptionsItem>
+      <OptionsItem id='2.5D'>2.5D</OptionsItem>
+      <OptionsItem id='3D'>3D</OptionsItem>
+    </SelectField>
+  );
+}
 
 // Use fixture shapes with unique IDs for each story render
 function createSampleShapes(): Shape[] {
@@ -66,7 +101,7 @@ const DRAW_MAP_ID = uuid();
  * 7. Press ESC or click Cancel to abort drawing
  */
 export const BasicDrawing: Story = {
-  render: () => {
+  render: (args) => {
     const [shapes, setShapes] = useState<Shape[]>([]);
     const [eventLog, setEventLog] = useState<
       Array<{ id: string; message: string }>
@@ -120,7 +155,7 @@ export const BasicDrawing: Story = {
             pickable={false}
           />
           {/* Drawing layer - renders only when actively drawing */}
-          <DrawShapeLayer mapId={DRAW_MAP_ID} />
+          <DrawShapeLayer mapId={DRAW_MAP_ID} unit={args.unit} />
         </BaseMap>
 
         {/* Drawing toolbar */}
@@ -283,6 +318,8 @@ export const BasicDrawing: Story = {
             </div>
           </div>
 
+          <ViewSelector mapId={DRAW_MAP_ID} />
+
           {/* Instructions */}
           <div className='rounded-lg bg-surface-contrast-subtle p-s'>
             <p className='mb-xs font-semibold text-body-xs'>Drawing Tips:</p>
@@ -340,7 +377,7 @@ export const CustomStyleDefaults: Story = {
       },
     });
 
-    const handleDrawWithColor = (shapeType: ShapeFeatureType) => {
+    const handleDrawWithColor = (shapeType: DrawableShapeType) => {
       draw(shapeType, { styleDefaults: colorStyles[selectedColor] });
     };
 

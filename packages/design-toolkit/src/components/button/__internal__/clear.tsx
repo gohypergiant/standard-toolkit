@@ -19,10 +19,10 @@ import CancelFill from '@accelint/icons/cancel-fill';
 import {
   type ButtonProps as AriaButtonProps,
   Button,
-  composeRenderProps,
-} from 'react-aria-components';
+} from 'react-aria-components/Button';
 import { Icon } from '../../icon';
 import styles from './styles.module.css';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 
 /**
  * ClearButton - Internal-only button for clearing input values
@@ -44,6 +44,7 @@ export function ClearButton({ className, ...rest }: ClearButtonProps) {
   return (
     <Button
       {...rest}
+      slot={null}
       excludeFromTabOrder
       className={composeRenderProps(className, (className) =>
         clsx(styles.clearButton, className),

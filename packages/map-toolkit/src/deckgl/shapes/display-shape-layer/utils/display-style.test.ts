@@ -18,13 +18,12 @@ import {
   getLineColor,
   getLineWidth,
 } from '../../shared/utils/style-utils';
-import { OVERLAY_FILL_OPACITY } from '../constants';
+import { ACTIVE_FILL_OPACITY } from '../constants';
 import {
-  applyOverlayOpacity,
+  applyActiveOpacity,
   brightenColor,
   getHighlightLineWidth,
   getHoverLineWidth,
-  getOverlayFillColor,
 } from './display-style';
 import type { StyledFeature } from '../../shared/types';
 
@@ -242,43 +241,20 @@ describe('Display Style Utilities', () => {
     });
   });
 
-  describe('applyOverlayOpacity', () => {
-    it('scales alpha by OVERLAY_FILL_OPACITY', () => {
-      const result = applyOverlayOpacity([255, 100, 50, 200]);
+  describe('applyActiveOpacity', () => {
+    it('scales alpha by ACTIVE_FILL_OPACITY', () => {
+      const result = applyActiveOpacity([255, 100, 50, 200]);
 
       expect(result).toEqual([
         255,
         100,
         50,
-        Math.round(200 * OVERLAY_FILL_OPACITY),
+        Math.round(200 * ACTIVE_FILL_OPACITY),
       ]);
     });
 
     it('scales zero alpha to zero', () => {
-      const result = applyOverlayOpacity([255, 255, 255, 0]);
-
-      expect(result[3]).toBe(0);
-    });
-  });
-
-  describe('getOverlayFillColor', () => {
-    it('scales alpha by OVERLAY_FILL_OPACITY', () => {
-      const feature = createStyledFeature({ fillColor: [255, 100, 50, 200] });
-
-      const result = getOverlayFillColor(feature);
-
-      expect(result).toEqual([
-        255,
-        100,
-        50,
-        Math.round(200 * OVERLAY_FILL_OPACITY),
-      ]);
-    });
-
-    it('scales zero alpha to zero', () => {
-      const feature = createStyledFeature({ fillColor: [255, 255, 255, 0] });
-
-      const result = getOverlayFillColor(feature);
+      const result = applyActiveOpacity([255, 255, 255, 0]);
 
       expect(result[3]).toBe(0);
     });

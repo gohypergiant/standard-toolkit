@@ -18,7 +18,7 @@ import type {
   PopoverProps as AriaPopoverProps,
   TextProps as AriaTextProps,
   PopoverProps,
-} from 'react-aria-components';
+} from 'react-aria-components/Menu';
 import type { IconProps } from '../icon/types';
 
 /**

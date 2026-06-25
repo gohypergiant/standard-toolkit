@@ -15,6 +15,7 @@ export {
   type CameraState,
   cameraStore,
   clearCameraState,
+  MAX_PITCH,
   useMapCamera,
 } from './store';
 export type {
@@ -28,5 +29,6 @@ export type {
   CameraSetViewEvent,
   CameraSetZoomEvent,
   ProjectionType,
+  TransitionEasing,
   ViewType,
 } from './types';

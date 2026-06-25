@@ -41,6 +41,12 @@ npm install @accelint/map-toolkit @accelint/bus @accelint/core @deck.gl/core @de
 pnpm add @accelint/map-toolkit @accelint/bus @accelint/core @deck.gl/core @deck.gl-community/editable-layers @deckgl-fiber-renderer/dom @turf/turf react
 ```
 
+## Fiber Registration
+
+`DrawShapeLayer` is a **React component** (not a deck.gl layer class), so it handles its own fiber registration internally. You do **not** need to import `draw-shape-layer/fiber`.
+
+However, you **do** still need to import `display-shape-layer/fiber` if you use `<displayShapeLayer>` alongside it — because `DisplayShapeLayer` is a deck.gl layer class that requires explicit fiber registration from the consumer.
+
 ## Basic Usage
 
 ### With useDrawShape Hook (Recommended)
@@ -49,7 +55,6 @@ The easiest way to use DrawShapeLayer is with the `useDrawShape` hook, which man
 
 ```tsx
 import { BaseMap } from '@accelint/map-toolkit/deckgl/base-map';
-import '@accelint/map-toolkit/deckgl/shapes/draw-shape-layer/fiber';
 import '@accelint/map-toolkit/deckgl/shapes/display-shape-layer/fiber';
 import { DrawShapeLayer } from '@accelint/map-toolkit/deckgl/shapes/draw-shape-layer';
 import { useDrawShape } from '@accelint/map-toolkit/deckgl/shapes/draw-shape-layer/use-draw-shape';
@@ -161,7 +166,7 @@ DrawShapeLayer displays real-time tooltips during drawing:
 Distance units default to kilometers (`'km'`) but can be configured via the `unit` prop:
 
 ```tsx
-<DrawShapeLayer mapId={MAP_ID} unit="nm" />  // nautical miles
+<DrawShapeLayer mapId={MAP_ID} unit="NM" />  // nautical miles
 <DrawShapeLayer mapId={MAP_ID} unit="mi" />  // miles
 ```
 
@@ -241,8 +246,8 @@ console.log('Current cursor:', cursor);
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `id` | `string` | `'draw-shape-layer'` | Unique layer ID |
-| `mapId` | `UniqueId` | *required* | Map instance ID for multi-map isolation |
-| `unit` | `'km' \| 'm' \| 'nm' \| 'mi' \| 'ft'` | `'km'` | Distance unit for tooltip measurements |
+| `mapId` | `UniqueId` | Context-provided mapId | Map instance ID for multi-map isolation |
+| `unit` | `DistanceUnitSymbol` | `'km'` | Distance unit for tooltip measurements (supports `'km'`, `'m'`, `'NM'`, `'mi'`, `'ft'`) |
 
 ### useDrawShape Hook
 

@@ -145,12 +145,12 @@ const itemsWithSections: CustomOptionsItem[] = [
     name: 'African Birds',
     children: [
       {
-        id: 6,
+        id: 7,
         prefixIcon: <Placeholder />,
         name: 'Lilac-breasted roller',
       },
       {
-        id: 7,
+        id: 8,
         prefixIcon: <Placeholder />,
         name: 'Hornbill',
       },

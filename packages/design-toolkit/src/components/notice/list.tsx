@@ -14,19 +14,19 @@
 
 import { useBus } from '@accelint/bus/react';
 import { uuid } from '@accelint/core';
-import { useToastRegion } from '@react-aria/toast';
-import { useToastQueue } from '@react-stately/toast';
+import { useToastRegion } from 'react-aria/useToast';
+import { useToastQueue } from 'react-stately/useToastState';
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { flushSync } from 'react-dom';
 import {
-  composeRenderProps,
   type QueuedToast,
   UNSTABLE_ToastList as ToastList,
   UNSTABLE_ToastQueue as ToastQueue,
   UNSTABLE_ToastRegion as ToastRegion,
   UNSTABLE_ToastStateContext as ToastStateContext,
-} from 'react-aria-components';
+} from 'react-aria-components/Toast';
 import { Button } from '../button';
 import { Notice } from './';
 import { NoticeEventTypes } from './events';
@@ -39,6 +39,7 @@ import type {
   NoticeListProps,
   NoticeQueueEvent,
 } from './types';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
 
 /**
  * NoticeList - Queue manager for displaying multiple notices
@@ -81,7 +82,19 @@ export function NoticeList({
   ...rest
 }: NoticeListProps) {
   const queue = useMemo(
-    () => new ToastQueue<NoticeContent>({ maxVisibleToasts: limit }),
+    () =>
+      new ToastQueue<NoticeContent>({
+        maxVisibleToasts: limit,
+        wrapUpdate(fn) {
+          if ('startViewTransition' in document) {
+            document.startViewTransition(() => {
+              flushSync(fn);
+            });
+          } else {
+            fn();
+          }
+        },
+      }),
     [limit],
   );
   const state = useToastQueue(queue);
@@ -98,13 +111,13 @@ export function NoticeList({
   const emitClose = useEmit(NoticeEventTypes.close);
 
   useOn(NoticeEventTypes.queue, (data) => {
-    if ((id && data.payload.target === id) || !id) {
-      const timeout = defaultTimeout ?? data.payload.timeout;
+    if (id ? data.payload.target === id : !data.payload.target) {
+      const timeout = data.payload.timeout ?? defaultTimeout;
       queue.add(
         {
           ...data.payload,
           id: data.payload.id || uuid(),
-          color: defaultColor || data.payload.color,
+          color: data.payload.color || defaultColor,
         },
         {
           timeout,
@@ -133,11 +146,13 @@ export function NoticeList({
     }
   });
 
-  useEffect(() => {
-    queue.subscribe(() => {
-      setHasNotices(queue.visibleToasts.length > 0);
-    });
-  });
+  useEffect(
+    () =>
+      queue.subscribe(() => {
+        setHasNotices(queue.visibleToasts.length > 0);
+      }),
+    [queue],
+  );
 
   const children = (
     <>
@@ -148,7 +163,7 @@ export function NoticeList({
             (className) => className ?? '',
           )}
           variant='outline'
-          onPress={queue.clear}
+          onPress={() => queue.clear()}
         >
           Clear All
         </Button>

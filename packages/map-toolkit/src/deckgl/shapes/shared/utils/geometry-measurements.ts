@@ -10,8 +10,11 @@
  * governing permissions and limitations under the License.
  */
 
-import { distance } from '@turf/turf';
-import type { DistanceUnit } from '@/shared/units';
+import { distance, center as turfCenter } from '@turf/turf';
+import { DEFAULT_DISTANCE_UNITS } from '@/shared/units';
+import type { DistanceUnit } from '@accelint/constants/units';
+import type { MultiPolygon, Polygon } from 'geojson';
+import type { CircleProperties } from '../types';
 
 /**
  * Circle measurement result containing radius, diameter, and area.
@@ -217,5 +220,147 @@ export function computeEllipseMeasurementsFromPolygon(
     majorAxis,
     minorAxis,
     area,
+  };
+}
+
+/**
+ * Compute circle properties (center and radius) from a polygon geometry.
+ *
+ * Calculates the centroid of the polygon as the center, then measures the
+ * geodesic distance from center to the first vertex as the radius.
+ * Returns `undefined` if the geometry has insufficient coordinates or
+ * produces invalid measurements.
+ *
+ * @param geometry - Polygon geometry representing a circle.
+ * @returns Circle properties with center and radius, or `undefined` if invalid.
+ *
+ * @example
+ * ```typescript
+ * const props = computeCirclePropertiesFromGeometry(feature.geometry);
+ * if (props) {
+ *   console.log(props.center, props.radius.value, props.radius.units);
+ * }
+ * ```
+ */
+export function computeCirclePropertiesFromGeometry(
+  geometry: Polygon,
+  units: DistanceUnit = DEFAULT_DISTANCE_UNITS,
+): CircleProperties | undefined {
+  const coordinates = geometry.coordinates[0];
+  if (!coordinates || coordinates.length < 3) {
+    return undefined;
+  }
+
+  // Use turfCenter (bbox center) to match ResizeCircleMode's center computation.
+  // This ensures the center stays stable during resize operations.
+  const centerFeature = turfCenter({
+    type: 'Polygon',
+    coordinates: geometry.coordinates,
+  });
+  const center = centerFeature.geometry.coordinates as [number, number];
+
+  if (!(Number.isFinite(center[0]) && Number.isFinite(center[1]))) {
+    return undefined;
+  }
+
+  const firstPoint = coordinates[0] as [number, number];
+  if (!(Number.isFinite(firstPoint[0]) && Number.isFinite(firstPoint[1]))) {
+    return undefined;
+  }
+
+  const options = { units };
+  const radius = distance(center, firstPoint, options);
+
+  if (!Number.isFinite(radius) || radius <= 0) {
+    return undefined;
+  }
+
+  return {
+    center,
+    radius: {
+      value: radius,
+      units,
+    },
+  };
+}
+
+/**
+ * Find the maximum geodesic distance from a center point to any outer-ring
+ * vertex across all polygons in a MultiPolygon.
+ */
+function findMaxRadius(
+  center: [number, number],
+  coordinates: MultiPolygon['coordinates'],
+  units: DistanceUnit,
+): number {
+  // Hoist options outside both loops to avoid allocating a new object per vertex
+  const options = { units };
+  let maxRadius = 0;
+  for (const polygon of coordinates) {
+    const ring = polygon[0];
+    if (!ring) {
+      continue;
+    }
+    for (const coord of ring) {
+      const point = coord as [number, number];
+      if (!(Number.isFinite(point[0]) && Number.isFinite(point[1]))) {
+        continue;
+      }
+      const d = distance(center, point, options);
+      if (d > maxRadius) {
+        maxRadius = d;
+      }
+    }
+  }
+  return maxRadius;
+}
+
+/**
+ * Compute circle properties (center and radius) from a MultiPolygon geometry.
+ *
+ * Uses the bounding box center as the center point and the maximum geodesic
+ * distance from center to any outer-ring vertex as the radius. Designed for
+ * wagon wheel shapes where the MultiPolygon represents segmented circular geometry.
+ *
+ * @param geometry - MultiPolygon geometry representing a circular shape.
+ * @param units - Distance units for the radius measurement.
+ * @returns Circle properties with center and radius, or `undefined` if invalid.
+ *
+ * @example
+ * ```typescript
+ * const props = computeCirclePropertiesFromMultiPolygon(feature.geometry, 'kilometers');
+ * if (props) {
+ *   console.log(props.center, props.radius.value, props.radius.units);
+ * }
+ * ```
+ */
+export function computeCirclePropertiesFromMultiPolygon(
+  geometry: MultiPolygon,
+  units: DistanceUnit = DEFAULT_DISTANCE_UNITS,
+): CircleProperties | undefined {
+  if (geometry.coordinates.length === 0) {
+    return undefined;
+  }
+
+  // Use turfCenter (bbox center) for consistency with the Polygon version
+  const centerFeature = turfCenter({
+    type: 'MultiPolygon',
+    coordinates: geometry.coordinates,
+  });
+  const center = centerFeature.geometry.coordinates as [number, number];
+
+  if (!(Number.isFinite(center[0]) && Number.isFinite(center[1]))) {
+    return undefined;
+  }
+
+  const maxRadius = findMaxRadius(center, geometry.coordinates, units);
+
+  if (!Number.isFinite(maxRadius) || maxRadius <= 0) {
+    return undefined;
+  }
+
+  return {
+    center,
+    radius: { value: maxRadius, units },
   };
 }

@@ -5,6 +5,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 ### All Release Notes
 [All releases and complete changelog](https://github.com/gohypergiant/standard-toolkit/releases?q=design-toolkit&expanded=true)
 
+* [Upgrade to v9.11](#v9_11)
 * [Upgrade to v9.1](#v9_1)
 * [Upgrade to v9](#v9)
 * [Upgrade to v8](#v8)
@@ -13,6 +14,44 @@ import { Meta } from '@storybook/addon-docs/blocks';
 * [Upgrade to v5](#v5)
 
 These guides explain how to migrate from Design Toolkit prior versions. If you are migrating from a major release multiple versions behind, note that you will have to make all the changes accumulated through each major release.
+
+<hr />
+<a id="v9_11"></a>
+# Upgrade to v9.11
+
+This upgrades the version of react-aria-components to [1.17.0](https://react-aria.adobe.com/releases/v1-17-0). In this version, they have [simplified their dependencies](https://react-aria.adobe.com/releases/v1-17-0#dependency-consolidation) which means that we can, too.
+
+### Update Peer Dependencies
+In order to take advantage of this in your own application, when upgrading you should remove any `@react-aria/*` and `@react-stately/*` dependencies and consolidate imports to just `react-aria` and `react-stately`. Sub-path imports will help keep your bundle size manageable. These are the peer dependency versions.
+```
+"react-aria": "~3.48.0",
+"react-aria-components": "~1.17.0",
+"react-stately": "~3.46.0",
+```
+
+### Simplify Overrides
+You should be able to remove all or most of your dependency overrides if you previously applied them. Depending on the specifics of the application, you might still have overrides for supporting libraries. For example, an `@internationalized/date` override might still be required:
+
+```
+  "pnpm": {
+    "overrides": {
+      "@internationalized/date": "~3.12.1"
+    }
+  },
+```
+
+### Using sub-path imports
+
+react-aria-components 1.17.0 introduces sub-path imports. Instead of importing everything from the main entry point, you can import from a component-specific sub-path. The main entry point still works — this is an optional optimization that gives you smaller bundles without relying on tree-shaking and faster builds and test runs.
+
+```typescript
+// Before
+import { Menu, MenuItem, Popover } from 'react-aria-components';
+
+// After
+import { Menu, MenuItem } from 'react-aria-components/Menu';
+import { Popover } from 'react-aria-components/Popover';
+```
 
 <hr />
 <a id="v9_1"></a>

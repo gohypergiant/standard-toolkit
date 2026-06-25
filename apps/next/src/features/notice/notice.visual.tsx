@@ -32,5 +32,6 @@ createVisualTestScenarios(
     name: `${color} variants`,
     render: () => <NoticeColorVariants color={color} />,
     screenshotName: `notice-${color}.png`,
+    waitMs: 300,
   })),
 );

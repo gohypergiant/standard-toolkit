@@ -13,36 +13,20 @@
 /**
  * Edit Shape Events
  *
- * Note on event payload structure:
- * These events define explicit payload types rather than using the `Payload<T, P>` helper
- * from @accelint/bus. This is because the `Shape` type contains GeoJSON `Feature` objects
- * from the `geojson` package, which don't satisfy TypeScript's `StructuredCloneable` type
- * constraint used by the bus.
- *
- * The issue: `StructuredCloneable` (from type-fest) requires objects to have an index
- * signature `[key: string]: StructuredCloneable`, but GeoJSON interfaces define strict
- * property types without index signatures. At runtime, GeoJSON data IS structurally
- * cloneable (can be passed through postMessage, stored in IndexedDB, etc.), but
- * TypeScript can't verify this statically.
- *
- * Events that only contain primitive values (like ShapeId, mapId) can use the `Payload`
- * helper directly - see shared/events.ts for examples.
- *
- * When emitting these events via the bus, use type assertions:
- * @example
- * ```typescript
- * bus.emit('shapes:updated', {
- *   type: 'shapes:updated',
- *   payload: { shape, mapId },
- *   source: componentId,
- * } as unknown as Payload);
- * ```
+ * Payload types are wrapped with `BusCloneable<T>` (see shared/types.ts) so the
+ * bus's `StructuredCloneable` constraint is satisfied for `Shape`/`Feature`
+ * fields. GeoJSON data is cloneable at runtime, but type-fest's
+ * `StructuredCloneable` requires an index signature that GeoJSON types lack —
+ * `BusCloneable` adds that signature via intersection. Events that only carry
+ * primitives can use the `Payload<T, P>` helper from `@accelint/bus` directly
+ * (see shared/events.ts for examples).
  */
 
 'use client';
 
 import type { UniqueId } from '@accelint/core';
-import type { Shape } from '../shared/types';
+import type { Feature } from 'geojson';
+import type { BusCloneable, Shape } from '../shared/types';
 
 /**
  * Edit shape lifecycle events
@@ -54,6 +38,8 @@ export const EditShapeEvents = {
   updated: 'shapes:updated',
   /** Editing was canceled */
   canceled: 'shapes:edit-canceled',
+  /** Continuous edit event — fires during drag with editType info */
+  featureEditing: 'shapes:feature-editing',
 } as const;
 
 export type EditShapeEventType =
@@ -62,12 +48,12 @@ export type EditShapeEventType =
 /**
  * Payload for shapes:editing event.
  */
-export type ShapeEditingPayload = {
+export type ShapeEditingPayload = BusCloneable<{
   /** The shape being edited */
   shape: Shape;
   /** Map instance ID for multi-map event isolation */
   mapId: UniqueId;
-};
+}>;
 
 /**
  * Event payload for shapes:editing
@@ -83,12 +69,12 @@ export type ShapeEditingEvent = {
 /**
  * Payload for shapes:updated event.
  */
-export type ShapeUpdatedPayload = {
+export type ShapeUpdatedPayload = BusCloneable<{
   /** The updated shape with new geometry */
   shape: Shape;
   /** Map instance ID for multi-map event isolation */
   mapId: UniqueId;
-};
+}>;
 
 /**
  * Event payload for shapes:updated
@@ -104,12 +90,12 @@ export type ShapeUpdatedEvent = {
 /**
  * Payload for shapes:edit-canceled event.
  */
-export type ShapeEditCanceledPayload = {
+export type ShapeEditCanceledPayload = BusCloneable<{
   /** The shape that was being edited (original, unchanged) */
   shape: Shape;
   /** Map instance ID for multi-map event isolation */
   mapId: UniqueId;
-};
+}>;
 
 /**
  * Event payload for shapes:edit-canceled
@@ -123,9 +109,34 @@ export type ShapeEditCanceledEvent = {
 };
 
 /**
+ * Payload for shapes:feature-editing event.
+ * Emitted on every edit action (continuous and completion) with the raw editType.
+ */
+export type FeatureEditingPayload = BusCloneable<{
+  /** The updated feature geometry */
+  feature: Feature;
+  /** The raw edit type string from editable-layers (e.g. 'scaling', 'scaled', 'rotating', 'rotated', 'translating', 'translated') */
+  editType: string;
+  /** Map instance ID for multi-map event isolation */
+  mapId: UniqueId;
+}>;
+
+/**
+ * Event payload for shapes:feature-editing
+ * Emitted during continuous drag and on completion with the editType.
+ */
+export type FeatureEditingEvent = {
+  type: 'shapes:feature-editing';
+  payload: FeatureEditingPayload;
+  source: UniqueId;
+  target?: UniqueId;
+};
+
+/**
  * Union of all edit shape event types
  */
 export type EditShapeEvent =
   | ShapeEditingEvent
   | ShapeUpdatedEvent
-  | ShapeEditCanceledEvent;
+  | ShapeEditCanceledEvent
+  | FeatureEditingEvent;

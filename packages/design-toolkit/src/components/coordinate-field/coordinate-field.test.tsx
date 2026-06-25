@@ -676,6 +676,61 @@ describe('CoordinateField', () => {
           expect(errorText).toBeInTheDocument();
         });
       });
+
+      function ControlledCoordinateField() {
+        const [value, setValue] = useState<CoordinateValue | null>(newYorkCity);
+        return (
+          <CoordinateField
+            label='Location'
+            format='dd'
+            value={value}
+            onChange={setValue}
+          />
+        );
+      }
+
+      it('keeps other segments intact when one segment is cleared in controlled mode', async () => {
+        const user = userEvent.setup();
+        render(<ControlledCoordinateField />);
+
+        const latInput = screen.getByLabelText('Latitude') as HTMLInputElement;
+        const lonInput = screen.getByLabelText('Longitude') as HTMLInputElement;
+
+        expect(latInput.value).toBe('40.7128');
+        expect(lonInput.value).toBe('-74.006');
+
+        // Emptying one segment emits onChange(null); the parent echoing null
+        // back must not wipe the other segment.
+        await user.clear(latInput);
+
+        await waitFor(() => {
+          expect(latInput.value).toBe('');
+        });
+        expect(lonInput.value).toBe('-74.006');
+      });
+
+      it('keeps the validation error visible in controlled mode', async () => {
+        const user = userEvent.setup();
+        render(<ControlledCoordinateField />);
+
+        const latInput = screen.getByLabelText('Latitude');
+
+        // 95 is out of range; validation emits onChange(null) — the echo must
+        // not clear the error or the entered segments.
+        await user.clear(latInput);
+        await user.type(latInput, '95');
+
+        await waitFor(() => {
+          expect(
+            screen.getByText('Invalid coordinate value'),
+          ).toBeInTheDocument();
+        });
+
+        expect((latInput as HTMLInputElement).value).toBe('95');
+        expect(
+          screen.getByText('Invalid coordinate value'),
+        ).toBeInTheDocument();
+      });
     });
 
     describe('Component Integration - Uncontrolled Mode', () => {

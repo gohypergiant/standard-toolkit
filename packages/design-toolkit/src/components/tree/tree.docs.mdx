@@ -18,48 +18,22 @@ It is composed of the following components:
 - **TreeItemPrefixIcon** - places and styles the icon that optionally shows before a tree node
 - **TreeItemActions** - container for unique application icons for a tree item
 
-### Static vs Dynamic Collections
+## Dynamic data example
 
-The Tree component supports two different collection patterns:
+For dynamic data rendering, the Tree component accepts an `items` array and a render function as children. This pattern is more efficient for trees with many nodes or when the data comes from an external source. When you use a dynamic tree like this with external data, then you include the information about that node -- `isExpanded` or `isDisabled` as a property of that node. In this case, the Tree does NOT keep its own state. It will render the data as passed in.
 
-1. **Static Collection**: Hard-coded tree structure using nested TreeItem components
-2. **Dynamic Collection**: Data-driven tree structure using the `items` prop and a render function
+```tsx
+import type { TreeNode } from '@accelint/design-toolkit';
 
-You should use one approach or the other, not both. The component will throw an error if you try to use both approaches simultaneously.
+type ItemValues = {
+  customProperty: string;
+}
 
-```jsx
-// This will throw an error
-<Tree items={items} expandedKeys={expandedKeys}>
-  {(node) => <Node key={node.key} node={node} />}
-</Tree>
-```
-
-When using dynamic data, let the component manage its state internally or use the state management hooks from the `use-tree` package.
-
-## Basic Example, static data
-The `Tree` can be rendered with either hard-coded static data or with dynamic data from an external source like a database or an API.
-
-```jsx
-<Tree>
-  <TreeItem id='one' textValue='one'>
-    <TreeItemContent>One</TreeItemContent>
-    <TreeItem id='two' textValue='two'>
-      <TreeItemContent>Two</TreeItemContent>
-    </TreeItem>
-  </TreeItem>
-</Tree>
-```
-<Canvas of={TreeStories.StaticCollection} />
-
-## Basic Example, dynamic data
-
-For dynamic data rendering, the Tree component accepts an `items` array and a render function as children. This pattern is more efficient for trees with many nodes or when the data comes from an external source.
-
-```jsx
-const items = [
+const items: TreeNode<ItemValues>[] = [
   {
     key: 'one',
     label: 'One',
+    isExpanded: true,
     children: [
       {
         key: 'two',
@@ -83,16 +57,158 @@ const Node = ({ node }) => (
 </Tree>
 ```
 
+<Canvas of={TreeStories.DragAndDrop} />
+
+## Static data example
+The `Tree` can be rendered with either hard-coded static data or with dynamic data from an external source like a database or an API.
+
+```jsx
+<Tree>
+  <TreeItem id='one' textValue='one'>
+    <TreeItemContent>One</TreeItemContent>
+    <TreeItem id='two' textValue='two'>
+      <TreeItemContent>Two</TreeItemContent>
+    </TreeItem>
+  </TreeItem>
+</Tree>
+```
+<Canvas of={TreeStories.StaticCollection} />
+
+### Why use a Static vs a Dynamic Collection?
+
+The Tree component supports two different collection patterns:
+
+1. **Dynamic Collection**: Data-driven tree structure using the `items` prop and a render function. Can employ `useTreeState` and `useTreeActions` for tree operations management.
+2. **Static Collection**: Hard-coded tree structure using nested TreeItem components. This works best if the tree will not contain data that is regularly updated.
+
+You should use one approach or the other, not both. The component will throw an error if you try to use both approaches simultaneously.
+```jsx
+// This will throw an error
+<Tree items={items} expandedKeys={expandedKeys}>
+  {(node) => <Node key={node.key} node={node} />}
+</Tree>
+```
+
+The `items` object implies a dynamic collection, but the `expandedKeys` prop is trying to pass in controlled component data. In the above example, you would remove the `expandedKeys` and put the `isExpanded` prop on the nodes in your `items` object that you want expanded.
+
+When using dynamic data, let the component manage its state internally or use the state management hooks from the `use-tree` package.
+
+## Customizing Tree Item Appearance
+
+The Tree component supports rich customization through the generic `TreeNode<T>` type. You can extend tree nodes with application-specific data that controls how each item is rendered.
+
+### Defining Custom Values
+
+The `TreeNode` type accepts a generic parameter for custom values:
+
+```typescript
+type ItemValues = {
+  iconPrefix?: ReactNode;
+  description?: string;
+  hasWarning?: boolean;
+};
+```
+
+These custom values are then available in your tree data:
+
+```jsx
+const items: TreeNode<ItemValues>[] = [
+  {
+    key: 'blue-jay',
+    label: 'Blue jay',
+    values: {
+      description: 'cyanocitta cristata',
+      iconPrefix: <Placeholder />,
+      hasWarning: true,
+    },
+  },
+];
+```
+
+### Using Custom Values in Node Rendering
+
+Access custom values in your `Node` component to render additional UI elements:
+
+```jsx
+function Node({ node }: { node: TreeNode<ItemValues> }) {
+  const { values, isDisabled } = node;
+
+  return (
+    <TreeItem id={node.key} textValue={node.label} isDisabled={isDisabled}>
+      <TreeItemContent>
+        {({ variant, isViewable, isVisible }) => {
+          const size = variant === 'cozy' ? 'medium' : 'small';
+          return (
+            <>
+              {/* Custom prefix icon */}
+              {values?.iconPrefix && (
+                <TreeItemPrefixIcon>{values.iconPrefix}</TreeItemPrefixIcon>
+              )}
+
+              {/* Main label */}
+              <TreeItemLabel>{node.label}</TreeItemLabel>
+
+              {/* Optional description */}
+              {values?.description && (
+                <TreeItemDescription>{values.description}</TreeItemDescription>
+              )}
+
+              {/* Custom actions based on node state and values */}
+              <TreeItemActions>
+                {isDisabled && (
+                  <Icon size={size}>
+                    <LockFill />
+                  </Icon>
+                )}
+                {values?.hasWarning && (
+                  <Icon className='fg-serious-bold'>
+                    <Warning />
+                  </Icon>
+                )}
+                <Button
+                  size={size}
+                  variant='icon'
+                  isDisabled={!(isViewable && isVisible)}
+                >
+                  <Icon>
+                    <CenterOn />
+                  </Icon>
+                </Button>
+              </TreeItemActions>
+            </>
+          );
+        }}
+      </TreeItemContent>
+      {node.children?.map((child) => (
+        <Node key={child.key} node={child} />
+      ))}
+    </TreeItem>
+  );
+}
+```
+
+### TreeItemContent Render Props
+
+The `TreeItemContent` component provides render props that give you access to the current tree state:
+
+- **variant**: Current size variant (`'cozy'`, `'compact'`, or `'crammed'`)
+- **isViewable**: Whether the visibility toggle is enabled
+- **isVisible**: Whether the node is currently visible
+- **isDisabled**: Whether the node is disabled
+- **isSelected**: Whether the node is selected
+
+Use these values to conditionally render or style your tree items based on their state.
+
 ## Variants and Common Props
 
 * **variant** - changes display size, accepts `cozy`, `compact` or `crammed`
 * **showVisibility** - enables and disables visibility controls
 * **showRuleLines** - controls whether visual rule lines are shown to indicate hierarchy
 * **selectionMode** - manages selection controls, `multiple` and `single` enable selection and `none` will disable
-* **disabledKeys** - Set of keys for disabled tree nodes
-* **expandedKeys** - Set of keys for expanded tree nodes
-* **selectedKeys** - Set of keys for selected tree nodes
-* **visibleKeys** - Set of keys for visible tree nodes
+* **disabledKeys** - set of keys for disabled tree nodes
+* **expandedKeys** - set of keys for expanded tree nodes
+* **selectedKeys** - set of keys for selected tree nodes
+* **visibleKeys** - set of keys for visible tree nodes
 
 ## Selection
 
@@ -117,6 +233,37 @@ const [selectedKeys, setSelectedKeys] = useState(new Set(['one']));
   {/* Tree content */}
 </Tree>
 ```
+
+### Cascade Selection
+
+When using dynamic collections with `useTreeState` or `useTreeActions`, you can enable cascade selection mode by setting `selectionCascade: true`. In this mode:
+
+- Selecting a parent automatically selects all its descendants
+- Parent nodes show an indeterminate state when only some children are selected
+- Deselecting a parent deselects all its descendants
+
+```jsx
+import { useTreeState } from '@accelint/design-toolkit';
+
+function MyTreeComponent() {
+  const { nodes, actions } = useTreeState({
+    items: initialTreeData,
+    selectionCascade: true, // Enable cascade selection
+  });
+
+  return (
+    <Tree
+      items={nodes}
+      selectionMode="multiple"
+      onSelectionChange={actions.onSelectionChange}
+    >
+      {(node) => <Node key={node.key} node={node} />}
+    </Tree>
+  );
+}
+```
+
+**Note:** Cascade selection only works with dynamic collections (using the `items` prop and `useTreeState` or `useTreeActions`). It is not supported for static collections.
 
 ## Visibility Control
 
@@ -213,16 +360,22 @@ type TreeNode<T> = {
 
 ## useTreeActions
 
-The `useTreeActions` hook provides a stateless set of utility functions for manipulating tree data to simplify tree operations. It's particularly useful when working with complex tree structures that require advanced operations like inserting, removing, or moving nodes. Each method in the hook takes a tree as a parameter and returns the updated tree -- no state is stored and no side effects occur so the data "source of truth" remains the external tree data source.
+The `useTreeActions` hook provides **stateless, pure functions** for manipulating tree data. It's a low-level primitive that works with any state management solution—local state, TanStack Query, Zustand, Redux, or direct API calls. Each method takes the current tree as input and returns a new tree with the changes applied. **No state is stored internally**, so your application maintains full control over the data source.
 
-In this example below, the external data is represented with a `useState` hook but typically you would use an external call with TanStack Query or other data fetching libraries.
+This design makes `useTreeActions` ideal for building custom tree state hooks tailored to your application's specific needs.
+
+### Basic Usage
 
 ```jsx
 import { useTreeActions } from '@accelint/design-toolkit';
 
 function MyTreeComponent() {
-     const [db, setDB] = useState(items);
-    const actions = useTreeActions({ nodes: db });
+  // Your state can come from anywhere
+    const [db, setDB] = useState(items);
+    const actions = useTreeActions({
+      nodes: db,
+      selectionCascade: true, // Optional: enable cascade selection
+    });
 
     const handleExpansion = (keys: Set<Key>) => {
       setDB(actions.onExpandedChange(keys));
@@ -244,8 +397,13 @@ function MyTreeComponent() {
 }
 ```
 
-The `actions` object provides the following methods:
+### Available Methods
 
+The `actions` object provides primitive tree operations:
+
+- **onExpandedChange**: Update expansion state from Tree callbacks
+- **onSelectionChange**: Update selection state from Tree callbacks
+- **onVisibilityChange**: Update visibility state from Tree callbacks
 - **insertInto**: Insert nodes as children of a target node
 - **insertBefore**: Insert nodes before a target node
 - **insertAfter**: Insert nodes after a target node
@@ -261,9 +419,152 @@ The `actions` object provides the following methods:
 - **revealAll**: Make all nodes visible
 - **hideAll**: Make all nodes hidden
 
+### Using Individual Operations
+
+Here are examples of using specific tree operations:
+
+```jsx
+// Add a new node as a child
+const handleAddChild = (parentKey: Key) => {
+  const newNode = {
+    key: generateId(),
+    label: 'New Item',
+  };
+  setTree(actions.insertInto(parentKey, [newNode]));
+};
+
+// Remove selected nodes
+const handleDelete = (keysToRemove: Key[]) => {
+  setTree(actions.remove(keysToRemove));
+};
+
+// Update a node's label
+const handleRename = (key: Key, newLabel: string) => {
+  setTree(actions.updateNode(key, { label: newLabel }));
+};
+
+// Move nodes to a new parent
+const handleMove = (draggedKeys: Key[], targetKey: Key) => {
+  setTree(actions.moveInto(targetKey, draggedKeys));
+};
+```
+
+### Building Custom State Hooks
+
+The real power of `useTreeActions` is building custom hooks that integrate with your application's state management:
+
+#### Example: TanStack Query Integration
+
+```jsx
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useTreeActions } from '@accelint/design-toolkit';
+
+function useProjectTree(projectId: string) {
+  const queryClient = useQueryClient();
+
+  // Fetch tree from server
+  const { data: tree = [] } = useQuery({
+    queryKey: ['project-tree', projectId],
+    queryFn: () => fetchProjectTree(projectId),
+  });
+
+  const actions = useTreeActions({ nodes: tree });
+
+  // Mutations that persist to server
+  const updateMutation = useMutation({
+    mutationFn: (updatedTree: TreeNode[]) =>
+      saveProjectTree(projectId, updatedTree),
+    onSuccess: (updatedTree) => {
+      queryClient.setQueryData(['project-tree', projectId], updatedTree);
+    },
+  });
+
+  return {
+    tree,
+    actions: {
+      ...actions,
+      // Override methods to persist changes
+      onExpandedChange: (keys: Set<Key>) => {
+        const updated = actions.onExpandedChange(keys);
+        updateMutation.mutate(updated);
+      },
+      remove: (keys: Key[]) => {
+        const updated = actions.remove(keys);
+        updateMutation.mutate(updated);
+      },
+      // ... wrap other methods as needed
+    },
+  };
+}
+```
+
+#### Example: With Optimistic Updates and Rollback
+
+```jsx
+function useOptimisticTree(projectId: string) {
+  const [tree, setTree] = useState([]);
+  const [history, setHistory] = useState<TreeNode[][]>([]);
+  const actions = useTreeActions({ nodes: tree });
+
+  const applyChange = async (
+    updateFn: () => TreeNode[],
+    serverSync: (tree: TreeNode[]) => Promise<void>
+  ) => {
+    const previous = tree;
+    const updated = updateFn();
+
+    // Optimistic update
+    setTree(updated);
+    setHistory((history) => [...history, previous]);
+
+    try {
+      await serverSync(updated);
+    } catch (error) {
+      // Rollback on error
+      setTree(previous);
+      setHistory((history) => history.slice(0, -1));
+      throw error;
+    }
+  };
+
+  return {
+    tree,
+    actions: {
+      onExpandedChange: (keys: Set<Key>) =>
+        applyChange(
+          () => actions.onExpandedChange(keys),
+          (tree) => api.updateTree(projectId, tree)
+        ),
+      // ... wrap other methods with optimistic updates
+    },
+    canUndo: history.length > 0,
+    undo: () => {
+      // Read the latest history atomically so undo works even when
+      // called in rapid succession; setTree is batched in the same tick.
+      setHistory((currentHistory) => {
+        if (currentHistory.length === 0) {
+          return currentHistory;
+        }
+
+        setTree(currentHistory[currentHistory.length - 1]);
+        return currentHistory.slice(0, -1);
+      });
+    },
+  };
+}
+```
+
+### Key Principles
+
+- **Stateless**: `useTreeActions` doesn't manage state—it transforms data
+- **Pure functions**: Same input always produces the same output
+- **Composable**: Build your own abstractions on top of these primitives
+- **Framework agnostic**: Works with any state management solution
+- **No side effects**: You control when and how changes are persisted
+
 # useTreeState
 
-The `useTreeState` hook provides an optional complete state management solution for tree data. It manages expansion, selection, and visibility states, and provides actions for manipulating the tree. Under the hood, it is just a thin wrapper around the `useTreeActions` hook to simplify management of tree state.
+The `useTreeState` hook provides an optional complete state management solution for tree data. It manages expansion, selection, and visibility states, and provides actions for manipulating the tree. Under the hood, it is just a thin wrapper around the `useTreeActions` hook to simplify management of tree state. Appropriate for less complex tree state management.
 
 ```jsx
 import { useTreeState } from '@/hooks/use-tree';
@@ -271,6 +572,7 @@ import { useTreeState } from '@/hooks/use-tree';
 function MyTreeComponent() {
   const { nodes, actions, dragAndDropConfig } = useTreeState({
     items: initialTreeData,
+    selectionCascade: true, // Optional: enable cascade selection
   });
 
   return (
@@ -283,6 +585,11 @@ function MyTreeComponent() {
   );
 }
 ```
+
+The hook accepts:
+
+- **items**: Initial tree data
+- **selectionCascade** (optional): Enable cascade selection mode where selecting a parent automatically selects all descendants
 
 The hook returns:
 

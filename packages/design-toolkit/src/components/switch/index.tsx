@@ -13,11 +13,10 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import {
-  Switch as AriaSwitch,
-  composeRenderProps,
-  useContextProps,
-} from 'react-aria-components';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { useContextProps } from 'react-aria-components/slots';
+import { Switch as AriaSwitch } from 'react-aria-components/Switch';
+import { usePreventScrollFocus } from '../../hooks/use-prevent-scroll-focus';
 import { SwitchContext } from './context';
 import styles from './styles.module.css';
 import type { SwitchProps } from './types';
@@ -45,11 +44,12 @@ export function Switch({ ref, ...props }: SwitchProps) {
   [props, ref] = useContextProps(props, ref ?? null, SwitchContext);
 
   const { children, classNames, labelPosition = 'end', ...rest } = props;
+  const handleRef = usePreventScrollFocus(ref);
 
   return (
     <AriaSwitch
       {...rest}
-      ref={ref}
+      ref={handleRef}
       className={composeRenderProps(classNames?.switch, (className) =>
         clsx('group/switch', styles.switch, styles[labelPosition], className),
       )}

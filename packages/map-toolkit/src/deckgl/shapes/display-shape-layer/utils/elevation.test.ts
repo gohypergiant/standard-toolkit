@@ -11,6 +11,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
+import { mockShapes3D } from '../../__fixtures__/mock-shapes-3d';
 import { BRIGHTNESS_FACTOR } from '../constants';
 import { brightenColor } from './display-style';
 import {
@@ -22,7 +23,10 @@ import {
   flattenFeatureTo2D,
   getElevationFromCoordinates,
   getFeatureElevation,
+  getFeatureExtrusionHeight,
+  getFeatureMinElevation,
   partitionCurtains,
+  projectFeatureToBaseElevation,
 } from './elevation';
 import type { Color } from '@deck.gl/core';
 import type { Shape, ShapeId } from '../../shared/types';
@@ -47,6 +51,11 @@ const COORDS = {
   linePartialGround: [
     [10, 20, 0],
     [11, 21, 5000],
+  ] as number[][],
+  /** LineString with vertices above a minElevation floor */
+  lineWithMinElevation: [
+    [10, 20, 20000],
+    [11, 21, 30000],
   ] as number[][],
   polygonRing3D: [
     [0, 0, 5000],
@@ -73,6 +82,7 @@ const COORDS = {
 function createFeature(
   geometry: Shape['feature']['geometry'],
   lineColor: Color = BASE_COLOR,
+  elevationProps?: { minElevation?: number; maxElevation?: number },
 ): Shape['feature'] {
   return {
     type: 'Feature',
@@ -84,6 +94,7 @@ function createFeature(
         linePattern: 'solid',
       },
       shapeId: 'test-shape',
+      ...elevationProps,
     },
     geometry,
   } as Shape['feature'];
@@ -186,6 +197,69 @@ describe('Elevation Utilities', () => {
     });
   });
 
+  describe('getFeatureMinElevation', () => {
+    it('returns 0 when minElevation is not set', () => {
+      const feature = createFeature({
+        type: 'Polygon',
+        coordinates: [COORDS.polygonRing2D],
+      });
+
+      expect(getFeatureMinElevation(feature)).toBe(0);
+    });
+
+    it('returns minElevation from properties', () => {
+      const feature = createFeature(
+        { type: 'Polygon', coordinates: [COORDS.polygonRing2D] },
+        BASE_COLOR,
+        { minElevation: 10000, maxElevation: 33000 },
+      );
+
+      expect(getFeatureMinElevation(feature)).toBe(10000);
+    });
+  });
+
+  describe('getFeatureExtrusionHeight', () => {
+    it('returns maxElevation when minElevation is not set', () => {
+      const feature = createFeature(
+        { type: 'Polygon', coordinates: [COORDS.polygonRing2D] },
+        BASE_COLOR,
+        { maxElevation: 33000 },
+      );
+
+      expect(getFeatureExtrusionHeight(feature)).toBe(33000);
+    });
+
+    it('returns maxElevation minus minElevation', () => {
+      const feature = createFeature(
+        { type: 'Polygon', coordinates: [COORDS.polygonRing2D] },
+        BASE_COLOR,
+        { minElevation: 10000, maxElevation: 33000 },
+      );
+
+      expect(getFeatureExtrusionHeight(feature)).toBe(23000);
+    });
+
+    it('returns 0 when maxElevation equals minElevation', () => {
+      const feature = createFeature(
+        { type: 'Polygon', coordinates: [COORDS.polygonRing2D] },
+        BASE_COLOR,
+        { minElevation: 5000, maxElevation: 5000 },
+      );
+
+      expect(getFeatureExtrusionHeight(feature)).toBe(0);
+    });
+
+    it('clamps to 0 when minElevation exceeds maxElevation', () => {
+      const feature = createFeature(
+        { type: 'Polygon', coordinates: [COORDS.polygonRing2D] },
+        BASE_COLOR,
+        { minElevation: 40000, maxElevation: 33000 },
+      );
+
+      expect(getFeatureExtrusionHeight(feature)).toBe(0);
+    });
+  });
+
   describe('createElevationLineSegments', () => {
     it('creates vertical segment for Point with elevation', () => {
       const geometry = { type: 'Point', coordinates: COORDS.point3D };
@@ -267,6 +341,67 @@ describe('Elevation Utilities', () => {
       );
 
       expect(segments).toHaveLength(3);
+    });
+
+    it('creates segment for MultiPoint using first coordinate', () => {
+      const geometry = {
+        type: 'MultiPoint',
+        coordinates: [
+          [10, 20, 5000],
+          [11, 21, 6000],
+        ],
+      };
+
+      const segments = createElevationLineSegments(
+        geometry as Shape['feature']['geometry'],
+        WHITE,
+      );
+
+      expect(segments).toHaveLength(1);
+      expect(segments[0]).toEqual({
+        source: [10, 20, 0],
+        target: [10, 20, 5000],
+        color: WHITE,
+      });
+    });
+
+    it('uses baseElevation for segment source Z', () => {
+      const geometry = {
+        type: 'LineString',
+        coordinates: COORDS.lineWithMinElevation,
+      };
+
+      const segments = createElevationLineSegments(
+        geometry as Shape['feature']['geometry'],
+        WHITE,
+        10000,
+      );
+
+      expect(segments).toHaveLength(2);
+      expect(segments[0]?.source).toEqual([10, 20, 10000]);
+      expect(segments[0]?.target).toEqual([10, 20, 20000]);
+      expect(segments[1]?.source).toEqual([11, 21, 10000]);
+      expect(segments[1]?.target).toEqual([11, 21, 30000]);
+    });
+
+    it('skips coordinates at or below baseElevation', () => {
+      const geometry = {
+        type: 'LineString',
+        coordinates: [
+          [10, 20, 5000],
+          [11, 21, 20000],
+        ],
+      };
+
+      const segments = createElevationLineSegments(
+        geometry as Shape['feature']['geometry'],
+        WHITE,
+        10000,
+      );
+
+      // First coord (5000) is below baseElevation (10000), skipped
+      expect(segments).toHaveLength(1);
+      expect(segments[0]?.target).toEqual([11, 21, 20000]);
     });
   });
 
@@ -385,6 +520,43 @@ describe('Elevation Utilities', () => {
 
       expect(curtains).toEqual([]);
     });
+
+    it('uses baseElevation for curtain bottom Z', () => {
+      const curtains = createCurtainPolygonsFromLine(
+        COORDS.lineWithMinElevation,
+        ZERO_COLOR,
+        ZERO_COLOR,
+        undefined,
+        10000,
+      );
+
+      expect(curtains).toHaveLength(1);
+      const ring = curtains[0]?.geometry.coordinates[0];
+      expect(ring?.[0]).toEqual([10, 20, 10000]); // Bottom left at baseElevation
+      expect(ring?.[1]).toEqual([11, 21, 10000]); // Bottom right at baseElevation
+      expect(ring?.[2]).toEqual([11, 21, 30000]); // Top right at vertex elevation
+      expect(ring?.[3]).toEqual([10, 20, 20000]); // Top left at vertex elevation
+      expect(ring?.[4]).toEqual([10, 20, 10000]); // Close at baseElevation
+    });
+
+    it('skips pairs where both points are at or below baseElevation', () => {
+      const coordinates = [
+        [10, 20, 5000],
+        [11, 21, 8000],
+        [12, 22, 20000],
+      ];
+
+      const curtains = createCurtainPolygonsFromLine(
+        coordinates,
+        ZERO_COLOR,
+        ZERO_COLOR,
+        undefined,
+        10000,
+      );
+
+      // First pair both below base (5000, 8000 <= 10000), second pair has one above
+      expect(curtains).toHaveLength(1);
+    });
   });
 
   describe('createCurtainPolygonFeatures', () => {
@@ -439,6 +611,22 @@ describe('Elevation Utilities', () => {
 
       // One curtain per consecutive pair per line: 1 + 1 = 2
       expect(curtains).toHaveLength(2);
+    });
+
+    it('uses minElevation from feature properties as curtain base', () => {
+      const feature = createFeature(
+        { type: 'LineString', coordinates: COORDS.lineWithMinElevation },
+        BASE_COLOR,
+        { minElevation: 10000 },
+      );
+
+      const curtains = createCurtainPolygonFeatures([feature], true);
+
+      expect(curtains).toHaveLength(1);
+      const ring = curtains[0]?.geometry.coordinates[0];
+      // Bottom vertices at minElevation, not ground
+      expect(ring?.[0]).toEqual([10, 20, 10000]);
+      expect(ring?.[1]).toEqual([11, 21, 10000]);
     });
   });
 
@@ -531,6 +719,54 @@ describe('Elevation Utilities', () => {
       expect(result.properties).toBe(feature.properties);
     });
 
+    it('strips Z from MultiPolygon coordinates', () => {
+      const feature = createFeature({
+        type: 'MultiPolygon',
+        coordinates: [
+          [
+            [
+              [0, 0, 5000],
+              [1, 0, 5000],
+              [1, 1, 5000],
+              [0, 0, 5000],
+            ],
+          ],
+          [
+            [
+              [2, 2, 6000],
+              [3, 2, 6000],
+              [3, 3, 6000],
+              [2, 2, 6000],
+            ],
+          ],
+        ],
+      });
+
+      const result = flattenFeatureTo2D(feature);
+
+      expect(result.geometry.type).toBe('MultiPolygon');
+      const coords = (result.geometry as { coordinates: number[][][][] })
+        .coordinates;
+      expect(coords).toEqual([
+        [
+          [
+            [0, 0],
+            [1, 0],
+            [1, 1],
+            [0, 0],
+          ],
+        ],
+        [
+          [
+            [2, 2],
+            [3, 2],
+            [3, 3],
+            [2, 2],
+          ],
+        ],
+      ]);
+    });
+
     it('returns 2D coordinates for already-2D LineString', () => {
       const feature = createFeature({
         type: 'LineString',
@@ -548,6 +784,111 @@ describe('Elevation Utilities', () => {
         [10, 20],
         [11, 21],
       ]);
+    });
+  });
+
+  describe('projectFeatureToBaseElevation', () => {
+    it('delegates to flattenFeatureTo2D when baseElevation is 0', () => {
+      const feature = createFeature({
+        type: 'Polygon',
+        coordinates: [COORDS.polygonRing3D],
+      });
+
+      const result = projectFeatureToBaseElevation(feature, 0);
+
+      const coords = (result.geometry as { coordinates: number[][][] })
+        .coordinates;
+      expect(coords).toEqual([COORDS.polygonRing2D]);
+    });
+
+    it('sets Z to baseElevation for Polygon', () => {
+      const feature = createFeature({
+        type: 'Polygon',
+        coordinates: [COORDS.polygonRing3D],
+      });
+
+      const result = projectFeatureToBaseElevation(feature, 10000);
+
+      const coords = (result.geometry as { coordinates: number[][][] })
+        .coordinates;
+      expect(coords).toEqual([
+        [
+          [0, 0, 10000],
+          [1, 0, 10000],
+          [1, 1, 10000],
+          [0, 0, 10000],
+        ],
+      ]);
+    });
+
+    it('sets Z to baseElevation for LineString', () => {
+      const feature = createFeature({
+        type: 'LineString',
+        coordinates: COORDS.line3D,
+      });
+
+      const result = projectFeatureToBaseElevation(feature, 3000);
+
+      const coords = (result.geometry as { coordinates: number[][] })
+        .coordinates;
+      expect(coords).toEqual([
+        [10, 20, 3000],
+        [11, 21, 3000],
+      ]);
+    });
+
+    it('sets Z to baseElevation for MultiPolygon', () => {
+      const feature = createFeature({
+        type: 'MultiPolygon',
+        coordinates: [
+          [
+            [
+              [0, 0, 5000],
+              [1, 0, 5000],
+              [1, 1, 5000],
+              [0, 0, 5000],
+            ],
+          ],
+        ],
+      });
+
+      const result = projectFeatureToBaseElevation(feature, 10000);
+
+      const coords = (result.geometry as { coordinates: number[][][][] })
+        .coordinates;
+      expect(coords).toEqual([
+        [
+          [
+            [0, 0, 10000],
+            [1, 0, 10000],
+            [1, 1, 10000],
+            [0, 0, 10000],
+          ],
+        ],
+      ]);
+    });
+
+    it('returns same reference for Point (unaffected)', () => {
+      const feature = createFeature({
+        type: 'Point',
+        coordinates: COORDS.point3D,
+      });
+
+      const result = projectFeatureToBaseElevation(feature, 5000);
+
+      expect(result).toBe(feature);
+    });
+
+    it('preserves feature properties', () => {
+      const feature = createFeature(
+        { type: 'Polygon', coordinates: [COORDS.polygonRing3D] },
+        BASE_COLOR,
+        { minElevation: 10000, maxElevation: 33000 },
+      );
+
+      const result = projectFeatureToBaseElevation(feature, 10000);
+
+      expect(result.properties).toBe(feature.properties);
     });
   });
 
@@ -601,10 +942,14 @@ describe('Elevation Utilities', () => {
   });
 
   describe('buildIndicatorLineData', () => {
-    const pointFeature = createFeature(
-      { type: 'Point', coordinates: COORDS.point3D },
-      BASE_COLOR,
-    );
+    // Use the Point fixture from mock-shapes-3d (index 2)
+    // biome-ignore lint/style/noNonNullAssertion: test fixture access with known index
+    const mockPointShape = mockShapes3D[2]!;
+    const pointFeature = mockPointShape.feature;
+    const pointCoords = (pointFeature.geometry as { coordinates: number[] })
+      .coordinates;
+    const pointLineColor = pointFeature.properties.styleProperties
+      .lineColor as [number, number, number, number];
 
     it('returns empty array for empty input', () => {
       const result = buildIndicatorLineData([], [], undefined, undefined);
@@ -621,9 +966,9 @@ describe('Elevation Utilities', () => {
       );
 
       expect(result).toHaveLength(1);
-      expect(result[0]?.source).toEqual([10, 20, 0]);
-      expect(result[0]?.target).toEqual([10, 20, 5000]);
-      expect(result[0]?.color).toEqual(BASE_COLOR);
+      expect(result[0]?.source).toEqual([pointCoords[0], pointCoords[1], 0]);
+      expect(result[0]?.target).toEqual(pointCoords);
+      expect(result[0]?.color).toEqual(pointLineColor);
     });
 
     it('brightens color when feature is selected', () => {
@@ -636,10 +981,7 @@ describe('Elevation Utilities', () => {
 
       expect(result).toHaveLength(1);
       expect(result[0]?.color).toEqual(
-        brightenColor(
-          BASE_COLOR as [number, number, number, number],
-          BRIGHTNESS_FACTOR.HOVER_OR_SELECT,
-        ),
+        brightenColor(pointLineColor, BRIGHTNESS_FACTOR.HOVER_OR_SELECT),
       );
     });
 
@@ -653,10 +995,7 @@ describe('Elevation Utilities', () => {
 
       expect(result).toHaveLength(1);
       expect(result[0]?.color).toEqual(
-        brightenColor(
-          BASE_COLOR as [number, number, number, number],
-          BRIGHTNESS_FACTOR.HOVER_OR_SELECT,
-        ),
+        brightenColor(pointLineColor, BRIGHTNESS_FACTOR.HOVER_OR_SELECT),
       );
     });
 
@@ -670,10 +1009,7 @@ describe('Elevation Utilities', () => {
 
       expect(result).toHaveLength(1);
       expect(result[0]?.color).toEqual(
-        brightenColor(
-          BASE_COLOR as [number, number, number, number],
-          BRIGHTNESS_FACTOR.HOVER_AND_SELECT,
-        ),
+        brightenColor(pointLineColor, BRIGHTNESS_FACTOR.HOVER_AND_SELECT),
       );
     });
 
@@ -691,6 +1027,27 @@ describe('Elevation Utilities', () => {
       );
 
       expect(result).toHaveLength(2);
+    });
+
+    it('uses minElevation as segment source Z', () => {
+      const lineFeature = createFeature(
+        { type: 'LineString', coordinates: COORDS.lineWithMinElevation },
+        BASE_COLOR,
+        { minElevation: 10000 },
+      );
+
+      const result = buildIndicatorLineData(
+        [lineFeature],
+        [lineFeature],
+        undefined,
+        undefined,
+      );
+
+      expect(result).toHaveLength(2);
+      expect(result[0]?.source).toEqual([10, 20, 10000]);
+      expect(result[0]?.target).toEqual([10, 20, 20000]);
+      expect(result[1]?.source).toEqual([11, 21, 10000]);
+      expect(result[1]?.target).toEqual([11, 21, 30000]);
     });
   });
 });

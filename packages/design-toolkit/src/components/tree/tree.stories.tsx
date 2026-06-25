@@ -121,10 +121,21 @@ const items: TreeNode<ItemValues>[] = [
         },
       },
       {
+        key: 'coopers-hawk',
+        parentKey: 'north-american-birds',
+        label: "Cooper's Hawk",
+        isDisabled: true,
+        isVisible: false,
+        values: {
+          description: 'Astur cooperii',
+          iconPrefix: <Placeholder />,
+        },
+      },
+      {
         key: 'black-capped-chickadee',
         parentKey: 'north-american-birds',
         label: 'Black-capped chickadee',
-        isDisabled: true,
+        isDisabled: false,
         isVisible: false,
         values: {
           description: 'Poecile atricapillus',
@@ -404,6 +415,163 @@ export const StaticCollection: Story = {
           </TreeItem>
         </TreeItem>
       </Tree>
+    );
+  },
+};
+
+const fileSystemData: TreeNode<ItemValues>[] = [
+  {
+    key: 'documents',
+    label: 'Documents',
+    isExpanded: true,
+    values: { iconPrefix: <Placeholder /> },
+    children: [
+      {
+        key: 'work',
+        label: 'Work',
+        isExpanded: true,
+        values: { iconPrefix: <Placeholder /> },
+        children: [
+          {
+            key: 'report.pdf',
+            label: 'Report.pdf',
+            values: { iconPrefix: <Placeholder />, description: '2.4 MB' },
+          },
+          {
+            key: 'presentation.pptx',
+            label: 'Presentation.pptx',
+            values: { iconPrefix: <Placeholder />, description: '5.1 MB' },
+          },
+        ],
+      },
+      {
+        key: 'personal',
+        label: 'Personal',
+        isExpanded: true,
+        values: { iconPrefix: <Placeholder /> },
+        children: [
+          {
+            key: 'vacation.jpg',
+            label: 'Vacation.jpg',
+            values: { iconPrefix: <Placeholder />, description: '1.8 MB' },
+          },
+          {
+            key: 'notes.txt',
+            label: 'Notes.txt',
+            values: { iconPrefix: <Placeholder />, description: '12 KB' },
+          },
+        ],
+      },
+    ],
+  },
+  {
+    key: 'downloads',
+    label: 'Downloads',
+    isExpanded: true,
+    values: { iconPrefix: <Placeholder /> },
+    children: [
+      {
+        key: 'installer.dmg',
+        label: 'Installer.dmg',
+        values: { iconPrefix: <Placeholder />, description: '145 MB' },
+      },
+    ],
+  },
+];
+
+/**
+ * Basic cascade selection - selecting a parent automatically selects all descendants.
+ * Try clicking the "Documents" folder checkbox to select all files within it.
+ */
+export const CascadeBasic: Story = {
+  render: (args) => {
+    const { nodes, actions } = useTreeState({
+      items: fileSystemData,
+      selectionCascade: true,
+    });
+
+    return (
+      <div className='flex flex-col gap-m'>
+        <div className='flex items-center gap-m'>
+          <Button size='small' variant='flat' onPress={actions.selectAll}>
+            Select All
+          </Button>
+          <Button size='small' variant='flat' onPress={actions.unselectAll}>
+            Unselect All
+          </Button>
+        </div>
+
+        <div className='rounded-m bg-container-base p-m'>
+          <Tree
+            {...args}
+            items={nodes}
+            style={{ width: '500px' }}
+            onExpandedChange={actions.onExpandedChange}
+            onSelectionChange={actions.onSelectionChange}
+            onVisibilityChange={actions.onVisibilityChange}
+            aria-label='Cascade Selection Example'
+          >
+            {(node) => <Node key={node.key} node={node} />}
+          </Tree>
+        </div>
+      </div>
+    );
+  },
+};
+
+/**
+ * Cascade selection with drag-and-drop enabled.
+ * Test how cascade state updates when moving selected items between parents.
+ *
+ * Try this:
+ * 1. Select "Documents" (all children become selected)
+ * 2. Drag "report.pdf" to "Downloads"
+ * 3. Notice how "Documents" becomes indeterminate (some children moved away)
+ * 4. Notice how "Downloads" becomes indeterminate (gained a selected child)
+ */
+export const CascadeWithDragAndDrop: Story = {
+  render: (args) => {
+    const { nodes, dragAndDropConfig, actions } = useTreeState({
+      items: fileSystemData,
+      selectionCascade: true,
+    });
+
+    return (
+      <div className='flex flex-col gap-m'>
+        <div className='flex items-center gap-m'>
+          <Button size='small' variant='flat' onPress={actions.selectAll}>
+            Select All
+          </Button>
+          <Button size='small' variant='flat' onPress={actions.unselectAll}>
+            Unselect All
+          </Button>
+          <Button size='small' variant='icon' onPress={actions.expandAll}>
+            <Icon>
+              <ExpandAll />
+            </Icon>
+          </Button>
+          <Button size='small' variant='icon' onPress={actions.collapseAll}>
+            <Icon>
+              <CollapseAll />
+            </Icon>
+          </Button>
+        </div>
+
+        <div className='rounded-m bg-container-base p-m'>
+          <Tree
+            {...args}
+            items={nodes}
+            dragAndDropConfig={dragAndDropConfig}
+            style={{ width: '500px' }}
+            onExpandedChange={actions.onExpandedChange}
+            onSelectionChange={actions.onSelectionChange}
+            onVisibilityChange={actions.onVisibilityChange}
+            aria-label='Cascade with Drag and Drop'
+          >
+            {(node) => <Node key={node.key} node={node} />}
+          </Tree>
+        </div>
+      </div>
     );
   },
 };

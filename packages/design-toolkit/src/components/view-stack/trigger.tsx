@@ -14,7 +14,7 @@
 import 'client-only';
 import { isUUID, type UniqueId } from '@accelint/core';
 import { useContext } from 'react';
-import { Pressable } from 'react-aria-components';
+import { Pressable } from 'react-aria-components/Pressable';
 import { useViewStackEmit, ViewStackContext } from './context';
 import type { ViewStackTriggerProps } from './types';
 

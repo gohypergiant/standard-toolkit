@@ -34,10 +34,17 @@ export type SemVerVersion = `${string}.${string}.${string}`;
  * - **`'VTS'`**: Vector Tile Service - High performance, pre-processed tiles
  * - **`'WMS'`**: Web Map Service - Raster tiles with feature information
  * - **`'WFS'`**: Web Feature Service - Vector feature data with query capabilities
+ * - **`'REST'`**: RESTful Service - Generic resource-oriented endpoints providing spatial data via HTTP
  * - **`'FS'`**: File System - Static files, local uploads, CDN-hosted data
  * - **`'Unknown'`**: Fallback for unrecognized or pending service detection
  */
-export type LayerServiceType = 'VTS' | 'WMS' | 'WFS' | 'FS' | 'Unknown';
+export type LayerServiceType =
+  | 'VTS'
+  | 'WMS'
+  | 'WFS'
+  | 'REST'
+  | 'FS'
+  | 'Unknown';
 
 /**
  * Supported data formats for dataset responses and processing.
@@ -602,7 +609,8 @@ export type LayerDataset<
 
 /**
  * Filesystem-sourced GeoJSON dataset.
- * @example File uploads, local data imports
+ * @template ExtensionType - Extension type for the dataset presentations.
+ * @remarks File uploads, local data imports
  */
 export type GeoJsonFSDataset<ExtensionType = ''> = LayerDataset<
   'GEOJSON',
@@ -612,7 +620,8 @@ export type GeoJsonFSDataset<ExtensionType = ''> = LayerDataset<
 
 /**
  * GeoJSON dataset from unknown/unspecified source.
- * @example Legacy datasets, third-party integrations
+ * @template ExtensionType - Extension type for the dataset presentations.
+ * @remarks Legacy datasets, third-party integrations
  */
 export type GeoJsonUnknownDataset<ExtensionType = ''> = LayerDataset<
   'GEOJSON',
@@ -622,7 +631,8 @@ export type GeoJsonUnknownDataset<ExtensionType = ''> = LayerDataset<
 
 /**
  * Vector Tile Service GeoJSON dataset.
- * @example Mapbox Vector Tiles, custom tile servers
+ * @template ExtensionType - Extension type for the dataset presentations.
+ * @remarks Mapbox Vector Tiles, custom tile servers
  */
 export type GeoJsonVTSDataset<ExtensionType = ''> = LayerDataset<
   'GEOJSON',
@@ -632,7 +642,8 @@ export type GeoJsonVTSDataset<ExtensionType = ''> = LayerDataset<
 
 /**
  * Web Feature Service GeoJSON dataset.
- * @example OGC WFS endpoints, PostGIS through GeoServer
+ * @template ExtensionType - Extension type for the dataset presentations.
+ * @remarks OGC WFS endpoints, PostGIS through GeoServer
  */
 export type GeoJsonWFSDataset<ExtensionType = ''> = LayerDataset<
   'GEOJSON',
@@ -642,7 +653,8 @@ export type GeoJsonWFSDataset<ExtensionType = ''> = LayerDataset<
 
 /**
  * Web Map Service GeoJSON dataset.
- * @example Raster tiles with feature information
+ * @template ExtensionType - Extension type for the dataset presentations.
+ * @remarks Raster tiles with feature information
  */
 export type GeoJsonWMSDataset<ExtensionType = ''> = LayerDataset<
   'GEOJSON',
@@ -651,8 +663,20 @@ export type GeoJsonWMSDataset<ExtensionType = ''> = LayerDataset<
 >;
 
 /**
+ * RESTful API GeoJSON dataset.
+ * @template ExtensionType - Extension type for the dataset presentations.
+ * @remarks REST API endpoints serving GeoJSON feature collections
+ */
+export type GeoJsonRESTDataset<ExtensionType = ''> = LayerDataset<
+  'GEOJSON',
+  'REST',
+  ExtensionType
+>;
+
+/**
  * Filesystem-sourced Arrow dataset.
- * @example Parquet files, Arrow IPC files
+ * @template ExtensionType - Extension type for the dataset presentations.
+ * @remarks Parquet files, Arrow IPC files
  */
 export type ArrowFSDataset<ExtensionType = ''> = LayerDataset<
   'ARROW',
@@ -662,7 +686,8 @@ export type ArrowFSDataset<ExtensionType = ''> = LayerDataset<
 
 /**
  * Arrow dataset from unknown/unspecified source.
- * @example Legacy columnar data, migration scenarios
+ * @template ExtensionType - Extension type for the dataset presentations.
+ * @remarks Legacy columnar data, migration scenarios
  */
 export type ArrowUnknownDataset<ExtensionType = ''> = LayerDataset<
   'ARROW',
@@ -672,7 +697,8 @@ export type ArrowUnknownDataset<ExtensionType = ''> = LayerDataset<
 
 /**
  * Vector Tile Service Arrow dataset.
- * @example High-performance columnar vector tiles
+ * @template ExtensionType - Extension type for the dataset presentations.
+ * @remarks High-performance columnar vector tiles
  */
 export type ArrowVTSDataset<ExtensionType = ''> = LayerDataset<
   'ARROW',
@@ -682,7 +708,8 @@ export type ArrowVTSDataset<ExtensionType = ''> = LayerDataset<
 
 /**
  * Web Feature Service Arrow dataset.
- * @example Modern WFS implementations with Arrow support
+ * @template ExtensionType - Extension type for the dataset presentations.
+ * @remarks Modern WFS implementations with Arrow support
  */
 export type ArrowWFSDataset<ExtensionType = ''> = LayerDataset<
   'ARROW',
@@ -692,7 +719,8 @@ export type ArrowWFSDataset<ExtensionType = ''> = LayerDataset<
 
 /**
  * Web Map Service Arrow dataset.
- * @example Hybrid raster/vector services with columnar data
+ * @template ExtensionType - Extension type for the dataset presentations.
+ * @remarks Hybrid raster/vector services with columnar data
  */
 export type ArrowWMSDataset<ExtensionType = ''> = LayerDataset<
   'ARROW',
@@ -701,8 +729,20 @@ export type ArrowWMSDataset<ExtensionType = ''> = LayerDataset<
 >;
 
 /**
+ * RESTful API Arrow dataset.
+ * @template ExtensionType - Extension type for the dataset presentations.
+ * @remarks REST API endpoints serving columnar Arrow data
+ */
+export type ArrowRESTDataset<ExtensionType = ''> = LayerDataset<
+  'ARROW',
+  'REST',
+  ExtensionType
+>;
+
+/**
  * Filesystem dataset with unknown data format.
- * @example Format detection pending, unsupported file types
+ * @template ExtensionType - Extension type for the dataset presentations.
+ * @remarks Format detection pending, unsupported file types
  */
 export type UnknownFSDataset<ExtensionType = ''> = LayerDataset<
   'Unknown',
@@ -712,7 +752,8 @@ export type UnknownFSDataset<ExtensionType = ''> = LayerDataset<
 
 /**
  * Dataset with both unknown source and data format.
- * @example Temporary import states, error conditions
+ * @template ExtensionType - Extension type for the dataset presentations.
+ * @remarks Temporary import states, error conditions
  */
 export type UnknownUnknownDataset<ExtensionType = ''> = LayerDataset<
   'Unknown',
@@ -722,7 +763,8 @@ export type UnknownUnknownDataset<ExtensionType = ''> = LayerDataset<
 
 /**
  * Vector Tile Service dataset with unknown data format.
- * @example Custom tile formats, experimental protocols
+ * @template ExtensionType - Extension type for the dataset presentations.
+ * @remarks Custom tile formats, experimental protocols
  */
 export type UnknownVTSDataset<ExtensionType = ''> = LayerDataset<
   'Unknown',
@@ -732,7 +774,8 @@ export type UnknownVTSDataset<ExtensionType = ''> = LayerDataset<
 
 /**
  * Web Feature Service dataset with unknown data format.
- * @example Non-standard WFS responses
+ * @template ExtensionType - Extension type for the dataset presentations.
+ * @remarks Non-standard WFS responses
  */
 export type UnknownWFSDataset<ExtensionType = ''> = LayerDataset<
   'Unknown',
@@ -742,11 +785,23 @@ export type UnknownWFSDataset<ExtensionType = ''> = LayerDataset<
 
 /**
  * Web Map Service dataset with unknown data format.
- * @example Custom WMS implementations
+ * @template ExtensionType - Extension type for the dataset presentations.
+ * @remarks Custom WMS implementations
  */
 export type UnknownWMSDataset<ExtensionType = ''> = LayerDataset<
   'Unknown',
   'WMS',
+  ExtensionType
+>;
+
+/**
+ * RESTful API dataset with unknown data format.
+ * @template ExtensionType - Extension type for the dataset presentations.
+ * @remarks Custom REST API responses, format detection pending
+ */
+export type UnknownRESTDataset<ExtensionType = ''> = LayerDataset<
+  'Unknown',
+  'REST',
   ExtensionType
 >;
 
@@ -756,6 +811,7 @@ export type UnknownWMSDataset<ExtensionType = ''> = LayerDataset<
 
 /**
  * Union of all Vector Tile Service dataset variants.
+ * @template ExtensionType - Extension type for the dataset presentations.
  */
 export type AnyVTSDataset<ExtensionType = string> =
   | GeoJsonVTSDataset<ExtensionType>
@@ -764,6 +820,7 @@ export type AnyVTSDataset<ExtensionType = string> =
 
 /**
  * Union of all unknown service type dataset variants.
+ * @template ExtensionType - Extension type for the dataset presentations.
  */
 export type AnyUnknownDataset<ExtensionType = string> =
   | GeoJsonUnknownDataset<ExtensionType>
@@ -772,6 +829,7 @@ export type AnyUnknownDataset<ExtensionType = string> =
 
 /**
  * Union of all Web Feature Service dataset variants.
+ * @template ExtensionType - Extension type for the dataset presentations.
  */
 export type AnyWFSDataset<ExtensionType = string> =
   | GeoJsonWFSDataset<ExtensionType>
@@ -780,6 +838,7 @@ export type AnyWFSDataset<ExtensionType = string> =
 
 /**
  * Union of all Web Map Service dataset variants.
+ * @template ExtensionType - Extension type for the dataset presentations.
  */
 export type AnyWMSDataset<ExtensionType = string> =
   | GeoJsonWMSDataset<ExtensionType>
@@ -787,7 +846,17 @@ export type AnyWMSDataset<ExtensionType = string> =
   | UnknownWMSDataset<ExtensionType>;
 
 /**
+ * Union of all RESTful API dataset variants.
+ * @template ExtensionType - Extension type for the dataset presentations.
+ */
+export type AnyRESTDataset<ExtensionType = string> =
+  | GeoJsonRESTDataset<ExtensionType>
+  | ArrowRESTDataset<ExtensionType>
+  | UnknownRESTDataset<ExtensionType>;
+
+/**
  * Union of all filesystem dataset variants.
+ * @template ExtensionType - Extension type for the dataset presentations.
  */
 export type AnyFSDataset<ExtensionType = string> =
   | GeoJsonFSDataset<ExtensionType>
@@ -800,37 +869,44 @@ export type AnyFSDataset<ExtensionType = string> =
 
 /**
  * Union of all Apache Arrow dataset variants.
+ * @template ExtensionType - Extension type for the dataset presentations.
  */
 export type AnyArrowDataset<ExtensionType = string> =
   | ArrowFSDataset<ExtensionType>
   | ArrowUnknownDataset<ExtensionType>
   | ArrowVTSDataset<ExtensionType>
   | ArrowWFSDataset<ExtensionType>
-  | ArrowWMSDataset<ExtensionType>;
+  | ArrowWMSDataset<ExtensionType>
+  | ArrowRESTDataset<ExtensionType>;
 
 /**
  * Union of all GeoJSON dataset variants.
+ * @template ExtensionType - Extension type for the dataset presentations.
  */
 export type AnyGeoJsonDataset<ExtensionType = string> =
   | GeoJsonFSDataset<ExtensionType>
   | GeoJsonUnknownDataset<ExtensionType>
   | GeoJsonVTSDataset<ExtensionType>
   | GeoJsonWFSDataset<ExtensionType>
-  | GeoJsonWMSDataset<ExtensionType>;
+  | GeoJsonWMSDataset<ExtensionType>
+  | GeoJsonRESTDataset<ExtensionType>;
 
 /**
  * Union of all unknown data type dataset variants.
+ * @template ExtensionType - Extension type for the dataset presentations.
  */
 export type AnyUnknownDataDataset<ExtensionType = string> =
   | UnknownFSDataset<ExtensionType>
   | UnknownUnknownDataset<ExtensionType>
   | UnknownVTSDataset<ExtensionType>
   | UnknownWFSDataset<ExtensionType>
-  | UnknownWMSDataset<ExtensionType>;
+  | UnknownWMSDataset<ExtensionType>
+  | UnknownRESTDataset<ExtensionType>;
 
 /**
  * Complete union of all possible dataset type combinations.
  * Use for generic dataset handling where specific type constraints are not required.
+ * @template ExtensionType - Extension type for the dataset presentations.
  */
 export type AnyDataset<ExtensionType = string> =
   | ArrowFSDataset<ExtensionType>
@@ -838,13 +914,16 @@ export type AnyDataset<ExtensionType = string> =
   | ArrowVTSDataset<ExtensionType>
   | ArrowWFSDataset<ExtensionType>
   | ArrowWMSDataset<ExtensionType>
+  | ArrowRESTDataset<ExtensionType>
   | GeoJsonFSDataset<ExtensionType>
   | GeoJsonUnknownDataset<ExtensionType>
   | GeoJsonVTSDataset<ExtensionType>
   | GeoJsonWFSDataset<ExtensionType>
   | GeoJsonWMSDataset<ExtensionType>
+  | GeoJsonRESTDataset<ExtensionType>
   | UnknownFSDataset<ExtensionType>
   | UnknownUnknownDataset<ExtensionType>
   | UnknownVTSDataset<ExtensionType>
   | UnknownWFSDataset<ExtensionType>
-  | UnknownWMSDataset<ExtensionType>;
+  | UnknownWMSDataset<ExtensionType>
+  | UnknownRESTDataset<ExtensionType>;

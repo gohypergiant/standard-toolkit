@@ -13,15 +13,13 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import {
-  CheckboxGroup as AriaCheckboxGroup,
-  composeRenderProps,
-  useContextProps,
-} from 'react-aria-components';
+import { CheckboxGroup as AriaCheckboxGroup } from 'react-aria-components/CheckboxGroup';
 import { Label } from '../label';
 import { CheckboxContext, CheckboxGroupContext } from './context';
 import styles from './styles.module.css';
 import type { CheckboxGroupProps } from './types';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { useContextProps } from 'react-aria-components/slots';
 
 /**
  * Groups multiple checkboxes with shared state and configuration.

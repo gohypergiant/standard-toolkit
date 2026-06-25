@@ -367,13 +367,18 @@ export const DegreesMinutesSeconds: Story = {
  * Example: 18T WL 80654 06346 (New York City)
  *
  * Segments:
- * - Zone: 1-60 (2 digits)
- * - Band: C-X, excluding I and O (1 letter)
- * - Grid 100km: 2 letters (A-Z, excluding I and O)
+ * - Zone: 1-60 (2 digits) - auto-pads single digits on blur (e.g., "6" → "06")
+ * - Band: C-X, excluding I and O (1 letter) - auto-uppercases
+ * - Grid 100km: 2 letters (A-Z, excluding I and O) - auto-uppercases
  * - Easting: 5 digits (can be 1-5 based on precision)
  * - Northing: 5 digits (can be 1-5 based on precision)
  *
  * Total: 5 editable segments
+ *
+ * Features:
+ * - Typing or pasting lowercase letters auto-converts to uppercase
+ * - Single-digit zone (e.g., "6") gets leading zero on blur ("06")
+ * - Paste "6r yp 12345 67890" normalizes to "06R YP 12345 67890"
  */
 export const MGRS: Story = {
   args: {

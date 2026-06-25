@@ -10,7 +10,7 @@ The `StatusIndicator` component renders a small, non-interactive visual indicato
 
 It is composed of a single element:
 
-- **StatusIndicator** — a `span` that renders a status “dot” via styling and a `data-status` attribute.
+- **StatusIndicator** — a `span` that renders a status “dot” via styling and a `data-status` attribute. To pair it with text, you can either compose with the `StatusIndicator` component or use the `textValue` prop.
 
 ## Example usage
 
@@ -24,11 +24,20 @@ It is composed of a single element:
 // Poor status
 <StatusIndicator status="poor" />
 
+// Pending status
+<StatusIndicator status="pending" />
+
+// Unknown status
+<StatusIndicator status="unknown" />
+
 // With custom styling hook
 <StatusIndicator
   status="good"
   className="ring-2 ring-offset-2"
 />
+
+// With label
+<StatusIndicator status="good" textValue="Status Normal"/>
 ```
 
 ## Statuses
@@ -40,19 +49,23 @@ degraded — partial issues / warning state
 
 poor — unhealthy / critical state
 
+pending - waiting for information
+
+unknown - self-explanatory
+
 Note: The visual treatment for each status is defined in the component’s CSS module (styles.module.css) using data-status variants.
 
 <Canvas of={StatusIndicatorStories.Demo} />
 
 ## Props
 
-| Prop        | Type                             | Default  | Description                                                 |
-| ----------- | -------------------------------- | -------- | ----------------------------------------------------------- |
-| `status`    | `'good' \| 'degraded' \| 'poor'` | `'good'` | The status to display; applied as `data-status` for styling |
-| `className` | `string`                         | —        | Custom CSS class for the status indicator                   |
+| Prop        | Type                                                       | Default     | Description                                                 |
+| ----------- | ---------------------------------------------------------- | ----------- | ----------------------------------------------------------- |
+| `status`    | `'good' \| 'degraded' \| 'poor' \| 'pending' \| 'unknown'` | `'good'`    | The status to display; applied as `data-status` for styling |
+| `textValue` | `string`                                                   | `undefined` | Displays a label if it is present                           |
+| `className` | `string`                                                   | —           | Custom CSS class for the status indicator                   |
 
 Extends standard HTML `<span>` props.
-
 
 ## Accessibility
 StatusIndicator is presentational and does not provide its own accessible name. If the status meaning must be announced to assistive tech, wrap or annotate it in the parent context, for example:

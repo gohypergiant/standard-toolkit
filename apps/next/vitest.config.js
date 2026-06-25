@@ -73,6 +73,14 @@ export default mergeConfig(
               }),
               instances: [{ browser: 'chromium' }],
               viewport: { width: 1280, height: 720 },
+              expect: {
+                toMatchScreenshot: {
+                  comparatorName: 'pixelmatch',
+                  comparatorOptions: {
+                    alpha: 0.5,
+                  },
+                },
+              },
             },
             setupFiles: ['./src/visual-regression/vitest/setup.ts'],
           },

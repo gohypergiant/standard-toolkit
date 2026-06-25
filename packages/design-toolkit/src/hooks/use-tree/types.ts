@@ -19,7 +19,7 @@ import type {
   Key,
 } from '@react-types/shared';
 import type { ReactElement } from 'react';
-import type { DropTarget, Selection } from 'react-aria-components';
+import type { DropTarget, Selection } from 'react-aria-components/Tree';
 
 /** Configuration for tree drag-and-drop behavior */
 export type DragAndDropConfig = {
@@ -57,13 +57,28 @@ export type DragAndDropConfig = {
   onItemDrop?: (e: DroppableCollectionOnItemDropEvent) => void;
 };
 
-/** Options for the useTreeState hook */
+/**
+ * Options for the useTreeState hook.
+ *
+ * @template T - The type of custom values stored in tree nodes (accessed via `node.values`).
+ */
 export type UseTreeStateOptions<T> = {
   /** Initial root items in the tree. If omitted, will return an empty tree. */
   items: TreeNode<T>[];
+  /**
+   * Enable semantic cascade selection mode. When true, selecting a parent
+   * automatically selects all descendants, and parent state reflects children
+   * (selected/indeterminate/unselected). Only works with dynamic collections.
+   * @default false
+   */
+  selectionCascade?: boolean;
 };
 
-/** Return value from the useTreeState hook */
+/**
+ * Return value from the useTreeState hook.
+ *
+ * @template T - The type of custom values stored in tree nodes (accessed via `node.values`).
+ */
 export type UseTreeState<T> = {
   /** Current tree nodes */
   nodes: TreeNode<T>[];
@@ -94,7 +109,11 @@ export type UseTreeState<T> = {
   };
 };
 
-/** Array of tree nodes representing tree data */
+/**
+ * Array of tree nodes representing tree data.
+ *
+ * @template T - The type of custom values stored in tree nodes (accessed via `node.values`).
+ */
 export type TreeData<T> = TreeNode<T>[];
 
 /**
@@ -102,6 +121,8 @@ export type TreeData<T> = TreeNode<T>[];
  * to other nodes in the tree.
  * TreeNode properties describe the metadata - state and position of the node.
  * The item property represents the action tree item data.
+ *
+ * @template T - The type of custom values stored in the node (accessed via `node.values`).
  */
 export type TreeNodeBase<T> = {
   /** A unique key for the tree node. */
@@ -126,9 +147,20 @@ export type TreeNodeBase<T> = {
   isVisible?: boolean;
 
   /** Computed actual visibility based on ancestors and self visibility **/
-  isVisibleComputed?: boolean; //
+  isVisibleComputed?: boolean;
+
+  /** Computed indeterminate state for cascade selection (some but not all descendants selected) **/
+  isIndeterminate?: boolean;
 };
 
+/**
+ * A tree node including parent and child relationships.
+ *
+ * Extends {@link TreeNodeBase} with structural position metadata —
+ * the parent key and nested children — used to represent the full tree hierarchy.
+ *
+ * @template T - The type of custom values stored in the node (accessed via `node.values`).
+ */
 export type TreeNode<T> = TreeNodeBase<T> & {
   /** The key of the parent node. */
   parentKey?: Key | null;
@@ -137,14 +169,25 @@ export type TreeNode<T> = TreeNodeBase<T> & {
   children?: TreeNode<T>[];
 };
 
-/** Options for the useTreeActions hook */
+/**
+ * Options for the useTreeActions hook.
+ *
+ * @template T - The type of custom values stored in tree nodes (accessed via `node.values`).
+ */
 export type UseTreeActionsOptions<T> = {
   /** Current tree nodes to operate on */
   nodes: TreeNode<T>[];
+  /**
+   * Enable semantic cascade selection mode.
+   * @default false
+   */
+  selectionCascade?: boolean;
 };
 
 /**
- * Stateless collection of transform actions to simplify tree operations
+ * Stateless collection of transform actions to simplify tree operations.
+ *
+ * @template T - The type of custom values stored in tree nodes (accessed via `node.values`).
  */
 export type TreeActions<T> = {
   /**

@@ -39,18 +39,25 @@ import { Broadcast } from '@accelint/bus';
 import { createMapStore } from '@/shared/create-map-store';
 import { createLoggerDomain } from '@/shared/logger';
 import { MapEvents } from '../../base-map/events';
+import type { DistanceUnit } from '@accelint/constants/units';
 import {
   isCircleShape,
   isEllipseShape,
   isPointShape,
   isRectangleShape,
+  isWagonWheelShape,
 } from '../shared/types';
+import {
+  computeCirclePropertiesFromGeometry,
+  computeCirclePropertiesFromMultiPolygon,
+} from '../shared/utils/geometry-measurements';
 import {
   releaseModeAndCursor,
   requestCursorChange,
   requestModeChange,
 } from '../shared/utils/mode-utils';
 import {
+  COMPLETION_EDIT_TYPES,
   EDIT_CURSOR_MAP,
   EDIT_SHAPE_LAYER_ID,
   EDIT_SHAPE_MODE,
@@ -62,6 +69,7 @@ import type { MapEventType } from '../../base-map/types';
 import type { Shape } from '../shared/types';
 import type {
   EditShapeEvent,
+  FeatureEditingEvent,
   ShapeEditCanceledEvent,
   ShapeEditingEvent,
   ShapeUpdatedEvent,
@@ -85,10 +93,12 @@ const mapEventBus = Broadcast.getInstance<MapEventType>();
  * Default editing state
  */
 const DEFAULT_EDITING_STATE: EditingState = {
+  originalShape: null,
   editingShape: null,
   editMode: 'view',
   featureBeingEdited: null,
   previousMode: null,
+  lastCompletedEditType: null,
 };
 
 /**
@@ -116,8 +126,21 @@ function getEditModeForShape(shape: Shape): EditMode {
   if (isCircleShape(shape)) {
     return 'circle-transform';
   }
-  if (isEllipseShape(shape) || isRectangleShape(shape)) {
-    return 'bounding-transform';
+  if (isWagonWheelShape(shape)) {
+    return 'locked-bounding-transform';
+  }
+  if (isRectangleShape(shape)) {
+    // Rectangles use rotation-aware corner-drag scaling so a rotated
+    // rectangle doesn't distort into a parallelogram during scale
+    // (axis-aligned bbox scaling would).
+    return 'rectangle-transform';
+  }
+  if (isEllipseShape(shape)) {
+    // Ellipses use axis-endpoint scaling (handles on the curve at the
+    // major/minor axis endpoints) so a rotated ellipse stays a clean
+    // rotated ellipse during scale (lat/lon-axis-aligned bbox scaling
+    // would stretch it into a non-ellipse).
+    return 'ellipse-transform';
   }
   return 'vertex-transform';
 }
@@ -139,16 +162,40 @@ function startEditing(
     return;
   }
 
-  // Already editing - cancel first
+  // Determine edit mode (can be overridden via options)
+  const editMode = options?.mode ?? getEditModeForShape(shape);
+
+  // When re-entering edit mode for the same shape (e.g. form commit updating
+  // geometry, or Point→MultiPolygon mode transition during creation), update
+  // state in-place without cancel/restart. This avoids a race condition where
+  // releaseModeAndCursor from cancel fires after requestModeChange.
+  // originalShape is intentionally NOT updated here — it preserves the
+  // pre-edit state so cancel always reverts to the true original.
+  if (state.editingShape?.id === shape.id) {
+    const modeChanged = state.editMode !== editMode;
+    setState({
+      editingShape: shape,
+      editMode,
+      featureBeingEdited: shape.feature,
+    });
+    // Only request new mode/cursor if the edit mode actually changed
+    if (modeChanged) {
+      requestModeChange(mapId, EDIT_SHAPE_MODE, EDIT_SHAPE_LAYER_ID);
+      const cursor = EDIT_CURSOR_MAP[editMode];
+      requestCursorChange(mapId, cursor, EDIT_SHAPE_LAYER_ID);
+    }
+    notify();
+    return;
+  }
+
+  // Different shape — cancel current edit first
   if (state.editingShape) {
     cancelEditingInternal(mapId, state, notify, setState);
   }
 
-  // Determine edit mode (can be overridden via options)
-  const editMode = options?.mode ?? getEditModeForShape(shape);
-
-  // Update state with new object reference
+  // Update state with new object reference — capture originalShape for cancel revert
   setState({
+    originalShape: shape,
     editingShape: shape,
     editMode,
     featureBeingEdited: shape.feature,
@@ -184,16 +231,16 @@ function saveEditingInternal(
     return null;
   }
 
-  const originalShape = state.editingShape;
   const updatedFeature = state.featureBeingEdited;
 
-  // Create updated shape with new geometry
+  // Create updated shape — use editingShape (most recent) as the base,
+  // merge with the live feature's geometry and properties.
   const updatedShape = {
-    ...originalShape,
+    ...state.editingShape,
     feature: {
       ...updatedFeature,
       properties: {
-        ...originalShape.feature.properties,
+        ...state.editingShape.feature.properties,
         ...updatedFeature.properties,
       },
     },
@@ -202,6 +249,7 @@ function saveEditingInternal(
 
   // Reset state
   setState({
+    originalShape: null,
     editingShape: null,
     editMode: 'view',
     featureBeingEdited: null,
@@ -238,10 +286,14 @@ function cancelEditingInternal(
     return; // Nothing to cancel
   }
 
-  const originalShape = state.editingShape;
+  // Use originalShape (captured at edit start) for reliable revert.
+  // editingShape gets overwritten on same-ID re-entry, but originalShape
+  // is only set once when editing first starts.
+  const shapeToRevert = state.originalShape;
 
   // Reset state
   setState({
+    originalShape: null,
     editingShape: null,
     editMode: 'view',
     featureBeingEdited: null,
@@ -256,7 +308,7 @@ function cancelEditingInternal(
 
   // Emit canceled event
   editShapeBus.emit(EditShapeEvents.canceled, {
-    shape: originalShape,
+    shape: shapeToRevert,
     mapId,
   } as unknown as ShapeEditCanceledEvent['payload']);
 
@@ -298,7 +350,7 @@ export const editStore = createMapStore<EditingState, EditShapeActions>({
 
       // Emit canceled event
       editShapeBus.emit(EditShapeEvents.canceled, {
-        shape: state.editingShape,
+        shape: state.originalShape,
         mapId,
       } as unknown as ShapeEditCanceledEvent['payload']);
     }
@@ -347,15 +399,103 @@ export function clearEditingState(mapId: UniqueId): void {
 }
 
 /**
- * Update feature from the layer component (called during drag operations)
- * @param mapId - The map instance ID.
- * @param feature - The updated GeoJSON feature from the editable layer.
+ * Resolve the radius units from a circular shape (Circle or WagonWheel).
+ * Returns `undefined` for non-circular shapes.
  */
-export function updateFeatureFromLayer(
+function getCircularShapeUnits(shape: Shape): DistanceUnit | undefined {
+  if (isCircleShape(shape)) {
+    return shape.feature.properties.circleProperties.radius.units;
+  }
+  if (isWagonWheelShape(shape)) {
+    return shape.feature.properties.wagonWheelProperties.radius.units;
+  }
+  return undefined;
+}
+
+/**
+ * Recompute circle properties from the given feature geometry using the
+ * appropriate computation function for the geometry type.
+ */
+function recomputeCircleProperties(
+  feature: Feature,
+  units: DistanceUnit | undefined,
+): ReturnType<typeof computeCirclePropertiesFromGeometry> {
+  if (feature.geometry.type === 'Polygon') {
+    return computeCirclePropertiesFromGeometry(feature.geometry, units);
+  }
+  if (feature.geometry.type === 'MultiPolygon') {
+    return computeCirclePropertiesFromMultiPolygon(feature.geometry, units);
+  }
+  return undefined;
+}
+
+/**
+ * Update the feature currently being edited.
+ *
+ * Called internally by the layer during drag operations, and also available
+ * to consumers via the `useEditShape` hook for form-driven updates.
+ * For circular shapes (Circle, WagonWheel), automatically recomputes
+ * `circleProperties` from the updated geometry.
+ *
+ * @param mapId - The map instance ID.
+ * @param feature - The updated GeoJSON feature from the editable layer to store as the live editing state.
+ * @param editType - The edit type string from the editable layer (e.g. 'scaled', 'rotated', 'translated'). Completion types are stored in `lastCompletedEditType`; continuous types clear it.
+ *
+ * @example
+ * ```typescript
+ * // From a form input handler
+ * const newGeometry = circle(center, radius, { units: 'kilometers' }).geometry;
+ * updateFeature(mapId, { ...currentFeature, geometry: newGeometry });
+ * ```
+ */
+export function updateFeature(
   mapId: UniqueId,
   feature: Feature,
+  editType?: string,
 ): void {
-  editStore.set(mapId, { featureBeingEdited: feature });
+  const state = editStore.get(mapId);
+
+  // Only store completion editTypes (scaled, rotated, translated) —
+  // continuous events fire via RAF and can overwrite due to frame timing.
+  // Clear lastCompletedEditType on continuous events so it doesn't persist.
+  const isCompletion = editType != null && COMPLETION_EDIT_TYPES.has(editType);
+  const lastCompletedEditType = isCompletion ? editType : null;
+
+  // Recompute circleProperties from updated geometry so metadata stays in sync
+  const editingShape = state?.editingShape;
+  let featureToStore: Feature = feature;
+
+  if (
+    editingShape &&
+    (isCircleShape(editingShape) || isWagonWheelShape(editingShape))
+  ) {
+    const shapeUnits = getCircularShapeUnits(editingShape);
+    const circleProperties = recomputeCircleProperties(feature, shapeUnits);
+
+    if (circleProperties) {
+      featureToStore = {
+        ...feature,
+        properties: {
+          ...feature.properties,
+          circleProperties,
+        },
+      };
+    }
+  }
+
+  editStore.set(mapId, {
+    featureBeingEdited: featureToStore,
+    lastCompletedEditType,
+  });
+
+  // Emit the raw edit event so consumers can react to editType directly
+  if (editType != null) {
+    editShapeBus.emit(EditShapeEvents.featureEditing, {
+      feature: featureToStore,
+      editType,
+      mapId,
+    } as unknown as FeatureEditingEvent['payload']);
+  }
 }
 
 /**

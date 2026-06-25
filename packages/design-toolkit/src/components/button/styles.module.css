@@ -16,6 +16,14 @@
   .button {
     @apply rounded-medium flex w-fit shrink-0 cursor-pointer items-center justify-center outline outline-transparent select-none;
 
+    @variant motion-safe {
+      transition:
+        background-color var(--animation-duration-normal)
+          var(--animation-easing-standard),
+        outline-color var(--animation-duration-normal)
+          var(--animation-easing-standard);
+    }
+
     @variant size-large {
       @apply gap-xs px-l py-s text-button-l;
       min-width: 96px;
@@ -398,12 +406,20 @@
       }
 
       @variant disabled {
-        @apply fg-disabled outline-interactive-disabled;
+        @apply fg-disabled outline-interactive-disabled pointer-events-none;
       }
     }
   }
 
   .toggle {
+    @variant motion-safe {
+      transition:
+        background-color var(--animation-duration-normal)
+          var(--animation-easing-standard),
+        outline-color var(--animation-duration-normal)
+          var(--animation-easing-standard);
+    }
+
     &.flat {
       @variant color-mono-muted {
         @apply fg-primary-muted bg-transparent;

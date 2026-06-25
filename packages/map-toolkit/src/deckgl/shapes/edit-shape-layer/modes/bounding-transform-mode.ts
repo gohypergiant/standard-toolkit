@@ -11,6 +11,10 @@
  */
 
 import {
+  DISTANCE_UNIT_SYMBOLS,
+  type DistanceUnit,
+} from '@accelint/constants/units';
+import {
   type DraggingEvent,
   type FeatureCollection,
   type GeoJsonEditMode,
@@ -19,10 +23,7 @@ import {
   TranslateMode,
 } from '@deck.gl-community/editable-layers';
 import { featureCollection } from '@turf/helpers';
-import {
-  DEFAULT_DISTANCE_UNITS,
-  getDistanceUnitAbbreviation,
-} from '@/shared/units';
+import { DEFAULT_DISTANCE_UNITS } from '@/shared/units';
 import {
   formatEllipseTooltip,
   formatRectangleTooltip,
@@ -188,7 +189,8 @@ export class BoundingTransformMode extends BaseTransformMode {
   ) {
     const { mapCoords } = event;
     const distanceUnits =
-      props.modeConfig?.distanceUnits ?? DEFAULT_DISTANCE_UNITS;
+      (props.modeConfig?.distanceUnits as DistanceUnit) ??
+      DEFAULT_DISTANCE_UNITS;
 
     // Get the selected feature
     const selectedIndexes = props.selectedIndexes;
@@ -216,7 +218,7 @@ export class BoundingTransformMode extends BaseTransformMode {
     const isRectangle = feature.properties?.shape === 'Rectangle';
 
     let text: string;
-    const unitAbbrev = getDistanceUnitAbbreviation(distanceUnits);
+    const unitAbbrev = DISTANCE_UNIT_SYMBOLS[distanceUnits];
 
     if (isRectangle) {
       // Rectangle: calculate width and height from corners

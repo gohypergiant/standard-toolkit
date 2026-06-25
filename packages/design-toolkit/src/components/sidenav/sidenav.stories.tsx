@@ -10,10 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
+import { useEmit } from '@accelint/bus/react';
 import { uuid } from '@accelint/core';
 import { ExpandLeftPanel, Placeholder } from '@accelint/icons';
-import { type ComponentProps, Fragment, useState } from 'react';
-import { Heading, Text } from 'react-aria-components';
+import { type ComponentProps, Fragment, useEffect, useState } from 'react';
+import { Text } from 'react-aria-components/Text';
+import { Heading } from 'react-aria-components/Heading';
 import { Avatar } from '../avatar';
 import { Button } from '../button';
 import { Divider } from '../divider';
@@ -22,6 +24,7 @@ import { DrawerLayoutMain } from '../drawer/layout-main';
 import { Icon } from '../icon';
 import { SidenavAvatar } from './avatar';
 import { SidenavContent } from './content';
+import { SidenavEventTypes } from './events';
 import { SidenavFooter } from './footer';
 import { SidenavHeader } from './header';
 import { Sidenav } from './index';
@@ -30,7 +33,9 @@ import { SidenavLink } from './link';
 import { SidenavMenu } from './menu';
 import { SidenavMenuItem } from './menu-item';
 import { SidenavTrigger } from './trigger';
+import type { UniqueId } from '@accelint/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { SidenavOpenEvent } from './types';
 
 // TODO: more work is needed to clean up the types for easier adoption of Storybook patterns
 // this story has a mix of controls from different components
@@ -182,6 +187,97 @@ export const Default: Story = {
               </SidenavItem>
             </SidenavFooter>
           </Sidenav>
+        </DrawerLayout>
+      </div>
+    );
+  },
+};
+
+/** Emits `Sidenav:open` once on mount so the story renders expanded. */
+function OpenOnMount({ for: id }: { for: UniqueId }) {
+  const emit = useEmit<SidenavOpenEvent>(SidenavEventTypes.open);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: emit once on mount
+  useEffect(() => {
+    emit({ id });
+  }, []);
+
+  return null;
+}
+
+/**
+ * Regression coverage for two Sidenav fixes:
+ *
+ * 1. **Heading case** — all headings (the `SidenavMenu` title "The Watch", the
+ *    "Navigation" section heading, and avatar headings) render verbatim instead
+ *    of forced uppercase.
+ * 2. **Collapsed transient icons** — collapse the rail (click the trigger in
+ *    the top bar) and the `SidenavLink` external-link arrow and the
+ *    `SidenavHeader` chevron disappear instead of leaking into the rail.
+ *
+ * Starts expanded so the title case is immediately visible; toggle closed to
+ * verify the icons hide.
+ */
+export const TitleCaseAndCollapsedIcons: Story = {
+  render: () => {
+    const navId = uuid();
+
+    return (
+      <div className='h-screen bg-surface-raised text-default-light'>
+        <DrawerLayout push='left'>
+          <DrawerLayoutMain>
+            <nav className='flex items-center bg-surface-default p-m'>
+              <SidenavTrigger for={navId}>
+                <Button variant='icon' size='large'>
+                  <Icon>
+                    <ExpandLeftPanel />
+                  </Icon>
+                </Button>
+              </SidenavTrigger>
+            </nav>
+          </DrawerLayoutMain>
+          <Sidenav id={navId}>
+            <SidenavHeader>
+              <SidenavAvatar>
+                <Icon>
+                  <Placeholder />
+                </Icon>
+                <Heading>Application Header</Heading>
+                <Text>Secondary Text</Text>
+              </SidenavAvatar>
+            </SidenavHeader>
+            <SidenavContent>
+              <Heading>Navigation</Heading>
+              <SidenavLink
+                href='https://example.com'
+                target='_blank'
+                textValue='Tools & Training'
+              >
+                <Icon>
+                  <Placeholder />
+                </Icon>
+                <Text>Tools & Training</Text>
+              </SidenavLink>
+              <Divider />
+              <Heading>Menu</Heading>
+              <SidenavMenu
+                icon={
+                  <Icon>
+                    <Placeholder />
+                  </Icon>
+                }
+                title='The Watch'
+              >
+                <SidenavMenuItem>
+                  <Text>Sub item</Text>
+                </SidenavMenuItem>
+                <SidenavMenuItem>
+                  <Text>Sub item</Text>
+                </SidenavMenuItem>
+              </SidenavMenu>
+            </SidenavContent>
+          </Sidenav>
+          <OpenOnMount for={navId} />
         </DrawerLayout>
       </div>
     );

@@ -13,8 +13,27 @@
 @reference '@accelint/design-foundation/styles';
 
 @layer components.l1 {
+  @keyframes notice-enter {
+    from {
+      opacity: 0;
+      transform: translateY(-1rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes notice-exit {
+    to {
+      opacity: 0;
+      transform: translateY(-1rem);
+    }
+  }
+
   .notice {
     @apply fg-primary-bold rounded-medium text-body-s shadow-elevation-overlay flex outline;
+    view-transition-class: notice;
 
     @variant size-small {
       @apply gap-m p-s flex-col flex-wrap;
@@ -55,6 +74,14 @@
     @variant color-critical {
       @apply color-critical:bg-critical-muted color-critical:outline-critical-bold;
     }
+  }
+
+  ::view-transition-old(.notice):only-child {
+    animation: notice-exit var(--animation-duration-fast) ease-in;
+  }
+
+  ::view-transition-new(.notice):only-child {
+    animation: notice-enter var(--animation-duration-fast) ease-out;
   }
 
   .content {

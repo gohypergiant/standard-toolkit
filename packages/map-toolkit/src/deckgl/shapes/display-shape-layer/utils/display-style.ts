@@ -12,12 +12,13 @@
 
 'use client';
 
+import { clamp } from '@accelint/math';
 import {
   HIGHLIGHT_WIDTH_INCREASE,
   HOVER_WIDTH_INCREASE,
 } from '../../shared/constants';
-import { getFillColor, getLineWidth } from '../../shared/utils/style-utils';
-import { OVERLAY_FILL_OPACITY } from '../constants';
+import { getLineWidth } from '../../shared/utils/style-utils';
+import { ACTIVE_FILL_OPACITY } from '../constants';
 import type { Rgba255Tuple } from '@accelint/predicates';
 import type { StyledFeature } from '../../shared/types';
 
@@ -80,48 +81,28 @@ export function getHighlightLineWidth(feature: StyledFeature): number {
 }
 
 /**
- * Scale the alpha channel of a raw RGBA color by OVERLAY_FILL_OPACITY.
- * Used by interaction overlay layers (hover, select, curtains) to sit at
- * a consistent opacity between the base layer (0.2) and fully solid (1.0).
+ * Scale the alpha channel of a raw RGBA color by ACTIVE_FILL_OPACITY.
+ * Used on the default brightening path for hover and select states (both the
+ * main layer's fill accessor and curtain walls) so the active feature reads
+ * vividly against the dimmed neighbors without rendering fully solid.
  *
  * @param color - RGBA color tuple [r, g, b, a] (0-255)
- * @returns Color with alpha multiplied by OVERLAY_FILL_OPACITY
+ * @returns Color with alpha multiplied by ACTIVE_FILL_OPACITY
  * @example
  * ```typescript
- * applyOverlayOpacity([255, 128, 0, 200]);
- * // → [255, 128, 0, 50]  (200 × 0.25)
+ * applyActiveOpacity([255, 128, 0, 200]);
+ * // → [255, 128, 0, 100]  (200 × 0.5)
  * ```
  */
-export function applyOverlayOpacity(
+export function applyActiveOpacity(
   color: Rgba255Tuple,
 ): [number, number, number, number] {
   return [
     color[0],
     color[1],
     color[2],
-    Math.round(color[3] * OVERLAY_FILL_OPACITY),
+    Math.round(color[3] * ACTIVE_FILL_OPACITY),
   ];
-}
-
-/**
- * Get fill color for interaction overlay layers (hover, select).
- *
- * Returns the shape's fill color with alpha scaled by OVERLAY_FILL_OPACITY —
- * more opaque than the base-opacity main layer but not fully solid, so the
- * material brightness effect reads clearly without looking like a solid block.
- *
- * @param feature - The styled feature
- * @returns RGBA color with alpha multiplied by OVERLAY_FILL_OPACITY
- * @example
- * ```typescript
- * // Feature with fillColor [98, 166, 255, 255]
- * getOverlayFillColor(feature); // → [98, 166, 255, 64]
- * ```
- */
-export function getOverlayFillColor(
-  feature: StyledFeature,
-): [number, number, number, number] {
-  return applyOverlayOpacity(getFillColor(feature));
 }
 
 /**
@@ -143,9 +124,9 @@ export function brightenColor(
   factor: number,
 ): [number, number, number, number] {
   return [
-    Math.min(255, Math.round(color[0] * factor)),
-    Math.min(255, Math.round(color[1] * factor)),
-    Math.min(255, Math.round(color[2] * factor)),
+    clamp(0, 255, Math.round(color[0] * factor)),
+    clamp(0, 255, Math.round(color[1] * factor)),
+    clamp(0, 255, Math.round(color[2] * factor)),
     color[3],
   ];
 }

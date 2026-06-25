@@ -13,11 +13,9 @@
 
 import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import {
-  composeRenderProps,
-  ListBox,
-  useContextProps,
-} from 'react-aria-components';
+import { ListBox } from 'react-aria-components/ListBox';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { useContextProps } from 'react-aria-components/slots';
 import { OptionsContext } from './context';
 import styles from './styles.module.css';
 import type { OptionsDataItem, OptionsProps } from './types';

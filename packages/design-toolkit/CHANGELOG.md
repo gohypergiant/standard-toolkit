@@ -1,5 +1,111 @@
 # @accelint/design-toolkit
 
+## 9.11.3
+### Patch Changes
+
+- a76da93: Fix `CoordinateField` in controlled mode wiping all segments during edits. Emptying one segment (or entering an invalid coordinate) emits `onChange(null)`; when the parent echoed that `null` back into the `value` prop, the field re-synced from it and cleared every segment and any just-set validation error. The field now recognizes echoes of its own `onChange` emissions and leaves in-progress edits and validation errors intact.
+- 7dd620f: Fix four `NoticeList` bugs:
+  
+  - "Clear All" no longer throws (`queue.clear` was passed unbound, so `this` was `undefined` and clicking the button raised a TypeError without clearing anything).
+  - Per-notice `timeout` and `color` now take precedence over the list-level `defaultTimeout`/`defaultColor`, matching the documented behavior ("defaults for notices without explicit timeout/color"). Previously the list-level values silently overrode every notice.
+  - A `NoticeList` without an `id` no longer consumes notices that were explicitly targeted at another list, which previously caused targeted notices to render twice (once in the targeted list and once in every untargeted list).
+  - The internal queue subscription is now registered once with proper cleanup. Previously a new subscription was added on every render and never removed, leaking listeners for the life of the page.
+- 4b85982: Fix four `Sidenav` visual bugs:
+  
+  - `Sidenav` headings (`SidenavMenu` titles, the closed-state popover title, `SidenavAvatar` headings, and `SidenavContent` section headings) no longer render forced uppercase — heading content now renders verbatim.
+  - The `SidenavLink` external-link arrow (and the `SidenavHeader` collapse chevron) now hide reliably when the sidenav is collapsed. The `__transient` collapsed-state hide previously tied on specificity with `Icon`'s own `display`, leaking icons into the collapsed rail; it is now forced so it applies uniformly to text and icon children.
+  - The expanded `SidenavMenu` trigger title now uses `body-s` (12px), matching its own collapsed-state popover title and sibling nav items, instead of the smaller `body-xs` (10px) section-label size it previously inherited.
+  - The collapsed rail now honors `--sidenav-width` in push layouts (`DrawerLayout push`), matching overlay mode. Previously `--sidenav-width` only affected overlay mode (via the collapse transform) and push-mode rails were content-driven, so the collapsed width was inconsistent between the two layouts and not themeable in push mode.
+- Updated dependencies [a76da93]
+  - @accelint/geo@0.6.1
+
+## 9.11.2
+### Patch Changes
+
+- e2dce9f: Fix checkbox and switch scroll-into-view behavior. Prevents browser from automatically scrolling when clicking checkboxes or switches by overriding focus() to use preventScroll option.
+
+## 9.11.1
+
+### Patch Changes
+
+- bf5c161: Fix Drawer push layout: closed drawers no longer permanently reserve layout space. Each drawer's grid track collapses when closed and expands only when open, so content is pushed aside only while a drawer is open.
+- 27295c8: Fixed layout issue with drawer
+- ce8f3b2: Fix ComboBoxField clear button: clicking where the hidden clear button sits now focuses the input and opens the dropdown instead of doing nothing.
+- 0e8dbfc: Fixed MGRS coordinates input behavior. Also, enhanced some of the UX with the function
+
+## 9.11.0
+### Minor Changes
+
+- 348cc56: Update react-aria-components and simplify dependencies
+
+### Patch Changes
+
+- 3d1cdbd: Small performance improvements to Tree component and additional documentation
+- 537f9f7: adjusted floating card header styling so that the title does not interfere with the drag handle
+- Updated dependencies [38bc715]
+  - @accelint/design-foundation@3.2.0
+
+## 9.10.0
+### Minor Changes
+
+- 690fb19: Gantt component implementation feature branch. Makes component available to library consumers.
+- 7042d56: Add semantic cascade selection mode to Tree component. When enabled via `selectionCascade` prop on `useTreeState`, selecting a parent node automatically selects all descendants, and parent checkboxes show indeterminate state when partially selected. Includes performance optimizations for large trees and automatic cascade state synchronization after drag-and-drop operations.
+- 62c5a63: - Adds new design system animation tokens for duration and easing for consistent animation effects
+  - Adds light built-in animation to the following components: Accordion, Button, ComboboxField, Dialog, Drawer, Menu, Notice, Popover, Sidenav, Switch, Tooltip
+  - Guidelines and best practices documentation for using animation
+- 166bc49: Add floating card pinning feature and new placement props.
+  
+  - Cards can be pinned to disable dragging via a `'pin'` header action
+  - `togglePinCard` and `isPinned` added to the floating card context
+  - New `FloatingCardHeaderAction` type supports `'pin'` alongside existing `'divider'` and custom button actions
+  - `FloatingCardProvider` accepts `initialPinned` to pre-pin cards at mount time
+  - `FloatingCard` accepts `initialPosition` (`{ x, y }`) to set the starting coordinates of the panel
+  - `FloatingCard` accepts `initialDimensions` (`{ width, height }`) to set the starting size of the panel (defaults to `300 × 400`)
+- 118174a: Adds the Carousel component. Displays a timeline of navigatable items for display in one central viewing area.
+
+### Patch Changes
+
+- Updated dependencies [62c5a63]
+  - @accelint/design-foundation@3.1.0
+
+## 9.9.2
+### Patch Changes
+
+- 8070d19: Add new icons: Stop, JumpToStart, JumpToEnd, MercatorProjection, Wheel, EllipseTool. Rename TrackHistory > AirTrackHistory and add new TrackHistory icon to match CORE design system Figma.
+- Updated dependencies [8070d19]
+  - @accelint/icons@3.0.0
+
+## 9.9.1
+### Patch Changes
+
+- e7f0e42: Addresses a number of bugs in the Tree component
+  - Change the way Tree lines are drawn to be more accurate
+  - Fix text color for disabled Tree items
+  - Ensure checkbox can be seen on hover
+  - Reduce aggressive indentation of children
+  - Fix "visibility" button regression
+  - Create a more obvious visual signal for dropping between Tree items
+  - Enable all drag and drop reordering
+
+## 9.9.0
+### Minor Changes
+
+- 6d1c73e: Add label and isRequired prop to color picker component
+- 3407a27: Update the color picker values to accept RGBA values
+- a3a9650: Fix combobox select and clear issues. Add matched text highlighting to OptionsItemLabel when used inside a ComboBox, controllable via `highlight` prop (defaults to `true`).
+
+### Patch Changes
+
+- e2e4f72: Fix native date/time input icon color for dark mode
+- 9a3e62e: Fix color picker outline cutoffs
+- f62aaf1: Fix floating card header padding token
+- 1e97115: Add tooltip to the coordinate field format menu button
+- Updated dependencies [9a25205]
+  - @accelint/logger@1.1.0
+  - @accelint/converters@2.0.0
+  - @accelint/design-foundation@3.0.2
+  - @accelint/predicates@0.5.2
+
 ## 9.8.0
 
 ### Minor Changes

@@ -18,8 +18,6 @@ import { processDroppedItems } from './utils';
 import type {
   DragItem,
   DroppableCollectionInsertDropEvent,
-  DroppableCollectionOnItemDropEvent,
-  DroppableCollectionReorderEvent,
   DroppableCollectionRootDropEvent,
   Key,
   Selection,
@@ -31,17 +29,39 @@ import type {
 } from '../types';
 
 /**
- * Stateful tree manager with drag-and-drop, selection, expansion, and visibility controls
+ * Stateful tree manager with drag-and-drop, selection, expansion, and visibility controls.
+ *
+ * Manages tree state internally using React hooks. Returns tree nodes, manipulation actions,
+ * and drag-and-drop configuration. Use this hook when you need a complete tree solution with
+ * built-in state management. For stateless transformations, use {@link useTreeActions} instead.
  *
  * @param options - {@link UseTreeStateOptions}
  * @param options.items - Initial tree node items.
+ * @param options.selectionCascade - Enable cascade selection mode. When true, selecting a parent
+ *   automatically selects all descendants, and parent checkboxes show indeterminate state when
+ *   partially selected. Default: false.
  * @returns {@link UseTreeState} Tree state, actions, and drag-and-drop configuration.
+ *
+ * @example
+ * ```tsx
+ * // Basic tree without cascade
+ * const { nodes, actions } = useTreeState({
+ *   items: myTree,
+ * });
+ *
+ * // Tree with cascade selection (file system-like behavior)
+ * const { nodes, actions } = useTreeState({
+ *   items: fileSystemTree,
+ *   selectionCascade: true,
+ * });
+ * ```
  */
 export function useTreeState<T>({
   items,
+  selectionCascade = false,
 }: UseTreeStateOptions<T>): UseTreeState<T> {
   const [nodes, setNodes] = useState(items);
-  const actions = useTreeActions<T>({ nodes });
+  const actions = useTreeActions<T>({ nodes, selectionCascade });
 
   const dragAndDropConfig: DragAndDropConfig = {
     getItems: (keys: Set<Key>): DragItem[] =>
@@ -53,13 +73,6 @@ export function useTreeState<T>({
           'text/plain': JSON.stringify(node),
         };
       }),
-    onReorder: (e: DroppableCollectionReorderEvent) => {
-      if (e.target.dropPosition === 'before') {
-        setNodes(actions.moveBefore(e.target.key, e.keys));
-      } else {
-        setNodes(actions.moveAfter(e.target.key, e.keys));
-      }
-    },
     onInsert: ({ items, target }: DroppableCollectionInsertDropEvent) => {
       (async () => {
         const processedItems = await processDroppedItems(
@@ -78,25 +91,6 @@ export function useTreeState<T>({
         }
       })();
     },
-    onItemDrop: ({ target, items }: DroppableCollectionOnItemDropEvent) => {
-      (async () => {
-        const targetNode = actions.getNode(target.key);
-        const [item] = items;
-
-        if (
-          target.dropPosition === 'on' &&
-          targetNode &&
-          item &&
-          item.kind !== 'directory'
-        ) {
-          const key = await item.getText('key');
-
-          if (key) {
-            setNodes(actions.moveInto(target.key, new Set([key])));
-          }
-        }
-      })();
-    },
     onRootDrop: ({ items }: DroppableCollectionRootDropEvent) => {
       (async () => {
         const processedItems = await processDroppedItems(
@@ -109,6 +103,18 @@ export function useTreeState<T>({
         );
         setNodes(actions.insertAfter(null, processedItems));
       })();
+    },
+    onMove: (e) => {
+      if (e.target.dropPosition === 'before') {
+        setNodes(actions.moveBefore(e.target.key, e.keys));
+      } else if (e.target.dropPosition === 'after') {
+        setNodes(actions.moveAfter(e.target.key, e.keys));
+      } else if (e.target.dropPosition === 'on') {
+        const targetNode = actions.getNode(e.target.key);
+        if (targetNode) {
+          setNodes(actions.moveInto(e.target.key, e.keys));
+        }
+      }
     },
   };
 

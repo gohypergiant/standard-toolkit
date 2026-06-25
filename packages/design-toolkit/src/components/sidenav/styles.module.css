@@ -14,14 +14,22 @@
 
 @layer components.l1 {
   .sidenav {
-    @apply fg-a11y-on-accent gap-xs bg-surface-default p-m absolute left-0 row-span-full flex h-full flex-col;
+    --sidenav-width: 64px;
+    @apply fg-primary-bold gap-xs bg-surface-default p-m absolute left-0 row-span-full flex h-full flex-col;
+
+    @variant motion-safe {
+      transition: transform var(--animation-duration-normal)
+        var(--animation-easing-standard);
+    }
 
     @variant closed {
       @apply items-center;
+      transform: translateX(calc(-100% + var(--sidenav-width)));
     }
 
     @variant group-push-left/layout {
       @apply relative;
+      transform: translateX(0);
     }
   }
 
@@ -55,7 +63,7 @@
     }
 
     .heading {
-      @apply fg-primary-bold text-body-m text-left;
+      @apply fg-primary-bold text-body-m text-left normal-case;
       grid-area: heading;
     }
 
@@ -65,6 +73,12 @@
     }
   }
 
+  /*
+   * Section labels (e.g. "Title A", "External" — the DEFAULT_SLOT headings
+   * inside SidenavContent) render uppercase per the design system. Headings
+   * routed to the menu/panel/avatar contexts opt out via `text-transform: none`
+   * in their own nested `.heading` rules below.
+   */
   .heading {
     @apply text-body-xs uppercase;
   }
@@ -81,11 +95,11 @@
     }
 
     @variant pressed {
-      @apply bg-accent-primary-pressed;
+      @apply fg-a11y-on-accent bg-accent-primary-pressed;
     }
 
     @variant selected {
-      @apply bg-accent-primary-bold;
+      @apply fg-a11y-on-accent bg-accent-primary-bold;
 
       @variant hover {
         @apply bg-accent-primary-hover;
@@ -97,6 +111,10 @@
 
       @variant pressed {
         @apply bg-accent-primary-pressed;
+      }
+
+      @variant disabled {
+        @apply fg-a11y-on-accent;
       }
     }
 
@@ -129,7 +147,7 @@
     }
 
     @variant pressed {
-      @apply bg-accent-primary-pressed;
+      @apply fg-a11y-on-accent bg-accent-primary-pressed;
     }
 
     @variant disabled {
@@ -149,7 +167,7 @@
     @apply text-body-s relative;
 
     .heading {
-      @apply flex-1 text-left;
+      @apply text-body-s flex-1 text-left normal-case;
     }
 
     .item {
@@ -164,11 +182,11 @@
       }
 
       @variant pressed {
-        @apply bg-accent-primary-pressed;
+        @apply fg-a11y-on-accent bg-accent-primary-pressed;
       }
 
       @variant selected {
-        @apply bg-accent-primary-bold;
+        @apply fg-a11y-on-accent bg-accent-primary-bold;
 
         @variant hover {
           @apply bg-accent-primary-hover;
@@ -180,6 +198,10 @@
 
         @variant pressed {
           @apply bg-accent-primary-pressed;
+        }
+
+        @variant disabled {
+          @apply fg-a11y-on-accent;
         }
       }
 
@@ -229,7 +251,7 @@
     @apply fg-primary-bold rounded-medium bg-surface-raised outline-static outline;
 
     .heading {
-      @apply rounded-t-medium bg-surface-overlay px-m py-s text-body-s;
+      @apply rounded-t-medium bg-surface-overlay px-m py-s text-body-s normal-case;
     }
 
     .content {
@@ -248,11 +270,11 @@
       }
 
       @variant pressed {
-        @apply bg-accent-primary-pressed;
+        @apply fg-a11y-on-accent bg-accent-primary-pressed;
       }
 
       @variant selected {
-        @apply bg-accent-primary-bold;
+        @apply fg-a11y-on-accent bg-accent-primary-bold;
 
         @variant hover {
           @apply bg-accent-primary-hover;
@@ -264,6 +286,10 @@
 
         @variant pressed {
           @apply bg-accent-primary-pressed;
+        }
+
+        @variant disabled {
+          @apply fg-a11y-on-accent;
         }
       }
 

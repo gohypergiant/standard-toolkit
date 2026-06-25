@@ -46,10 +46,21 @@
   }
 
   .panel {
-    @apply p-s;
+    @apply grid overflow-hidden;
+    grid-template-rows: 1fr;
 
     @variant aria-hidden {
-      @apply hidden;
+      grid-template-rows: 0fr;
+    }
+
+    & > * {
+      min-height: 0;
+      @apply p-s;
+    }
+
+    @variant motion-safe {
+      transition: grid-template-rows var(--animation-duration-normal)
+        var(--animation-easing-standard);
     }
   }
 
@@ -58,6 +69,11 @@
 
     @variant group-expanded/accordion {
       @apply rotate-180;
+    }
+
+    @variant motion-safe {
+      transition: transform var(--animation-duration-normal)
+        var(--animation-easing-standard);
     }
   }
 }
@@ -70,7 +86,7 @@
   }
 
   .trigger {
-    @apply w-full justify-start px-0 select-none;
+    @apply w-full justify-start px-0 transition-none select-none;
 
     &.cozy {
       @apply gap-s text-header-m;

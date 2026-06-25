@@ -10,16 +10,16 @@ A read-only deck.gl composite layer for displaying geographic shapes with intera
 
 ## Features
 
-- **Multiple geometry types**: Point, LineString, Polygon, and Circle
+- **Multiple geometry types**: Point, LineString, Polygon, Circle, and WagonWheel (MultiPolygon)
 - **Icon support**: Custom icons for Point geometries via icon atlases
-- **Interactive selection**: Click handling with visual brightness feedback; Points with icons show coffin corners
-- **Hover effects**: Border/outline width increases on hover; fills and curtains brighten via material lighting; Points with icons show coffin corners
+- **Interactive selection**: Click handling with visual brightness feedback; Points show coffin corners
+- **Hover effects**: Border/outline width increases on hover; fills brighten via the main layer's fill accessor (alpha scaled by `ACTIVE_FILL_OPACITY` so the active feature stands out against dimmed neighbors); curtain walls (elevated LineStrings) brighten by the same factor; Points show coffin corners
 - **Customizable labels**: White uppercase text with black outline, flexible positioning, show always/hover/never modes
 - **Style properties**: Full control over colors, border/outline patterns, and opacity
 - **Event bus integration**: Automatically emits shape events via @accelint/bus
 - **Multi-map support**: Events include map instance ID for isolation
 - **Cursor integration**: Works with map-cursor for hover cursor changes
-- **3D elevation rendering**: Extruded polygons, filled curtains for LineStrings, and vertical indicator lines for elevated points
+- **3D elevation rendering**: Extruded polygons (ground-anchored or floating slabs via `minElevation`), filled curtains for LineStrings, and vertical indicator lines for elevated points
 
 ## Dependencies
 
@@ -171,7 +171,7 @@ new Deck({
 
 ## Shape Data Structure
 
-`Shape` is a discriminated union of specific shape types (`CircleShape`, `EllipseShape`, `PolygonShape`, `RectangleShape`, `LineStringShape`, `PointShape`). Each shape includes:
+`Shape` is a discriminated union of specific shape types (`CircleShape`, `EllipseShape`, `PolygonShape`, `RectangleShape`, `LineStringShape`, `PointShape`, `WagonWheelShape`). Each shape includes:
 
 ```typescript
 interface BaseShape {
@@ -182,7 +182,7 @@ interface BaseShape {
   /** Optional short display label shown on the map */
   label?: string;
   /** Shape type discriminator */
-  shape: 'Point' | 'LineString' | 'Polygon' | 'Rectangle' | 'Circle' | 'Ellipse';
+  shape: 'Point' | 'LineString' | 'Polygon' | 'Rectangle' | 'Circle' | 'Ellipse' | 'WagonWheel';
   /** GeoJSON feature with geometry and style properties */
   feature: StyledFeature;
   /** Whether shape is locked from editing */
@@ -204,6 +204,7 @@ import {
   isRectangleShape,
   isLineStringShape,
   isPointShape,
+  isWagonWheelShape,
 } from '@accelint/map-toolkit/deckgl/shapes';
 
 function handleShape(shape: Shape) {
@@ -302,6 +303,21 @@ interface StyleProperties {
 ```
 
 **Note**: By default, fill colors have a 20% opacity multiplier applied for the standard semi-transparent look. Set `applyBaseOpacity={false}` to render colors exactly as specified.
+
+### Elevation Properties
+
+In addition to `styleProperties`, the feature's `properties` object supports optional elevation fields for 3D rendering. See [3D Elevation Rendering](#3d-elevation-rendering) for details.
+
+```typescript
+interface StyledFeatureProperties {
+  styleProperties: StyleProperties;
+  /** Minimum elevation in meters — the floor of the shape (default 0) */
+  minElevation?: number;
+  /** Maximum elevation in meters — the ceiling of the shape */
+  maxElevation?: number;
+  // ... circleProperties, ellipseProperties, shapeId, etc.
+}
+```
 
 ## Custom Icons for Points
 
@@ -472,15 +488,15 @@ Each geometry type has sensible defaults (labels appear below shapes):
 
 ### Visual Feedback
 
-Interactions never modify a shape's innate styling — hover and selection are always additive overlays.
+Hover and selection don't write back to a shape's innate styling — the active feature's appearance is computed in the main layer's accessors per render based on hover and selection state, leaving the underlying shape data untouched.
 
 When a shape is selected via `selectedShapeId`, the layer provides visual indicators:
 
-1. **Line/outline brightness** (all shapes): The shape's border/outline brightens to 1.4× its base color.
-2. **Fill brightness overlay** (polygon shapes): A brightness overlay renders using `MATERIAL_SETTINGS.HOVER_OR_SELECT` lighting. When the selected shape is also hovered, the hover layer stacks on top using `MATERIAL_SETTINGS.HOVER_AND_SELECT` for an even brighter combined effect.
-3. **Curtain brightness** (elevated LineString shapes): Curtain walls render at overlay opacity using a brightened version of the shape's line color.
-4. **Coffin corners** (Point shapes with icons): Bracket-like corners appear with a blue fill. These are not currently customizable.
-5. **Highlight** (optional, non-icon-Point shapes): A highlight layer underneath with:
+1. **Line/outline brightness** (all shapes): The shape's border/outline brightens to 1.4× its base color (1.7× when also hovered).
+2. **Fill brightness** (polygon shapes): The shape's fill renders at the un-dimmed base color brightened by 1.4× (1.7× when also hovered), with alpha scaled by `ACTIVE_FILL_OPACITY` (0.5) so it reads vividly without rendering as a solid block. Replaceable per-feature by [`getSelectFillColor`](#api-reference) and [`getHoverFillColor`](#api-reference) — see [Custom Interaction Colors](#custom-interaction-colors).
+3. **Curtain brightness** (elevated LineString shapes): Curtain walls render at `ACTIVE_FILL_OPACITY` (0.5) of the shape's brightened line color. Replaceable per-feature with [`getHoverFillColor`](#api-reference) / [`getSelectFillColor`](#api-reference) — see [Custom Interaction Colors](#custom-interaction-colors).
+4. **Coffin corners** (Point shapes): Bracket-like corners appear with a black outline and a fill color matching `highlightColor` (defaults to turquoise `#28F5BE`). The fill is always fully opaque regardless of the `highlightColor` alpha channel.
+5. **Highlight** (optional, non-Point shapes): A highlight layer underneath with:
 
    - Increased border/outline width (+5 pixels)
    - Custom highlight color (default: turquoise at ~39% opacity)
@@ -522,11 +538,61 @@ The highlight effect can be toggled with the `showHighlight` prop:
 
 When `pickable={true}`, shapes show hover feedback:
 
-- **All shapes**: Border/outline color brightens to 1.4× its base color
-- **Polygon shapes**: Fill brightens via material-based lighting; stacks with any active selection treatment
-- **Elevated LineString shapes**: Curtain walls brighten at overlay opacity
+- **All shapes**: Border/outline color brightens to 1.4× its base color (1.7× when also selected)
+- **Polygon shapes**: Fill renders at the un-dimmed base color brightened by 1.4× (1.7× when also selected), with alpha scaled by `ACTIVE_FILL_OPACITY` (0.5); replaceable per-feature with [`getHoverFillColor`](#api-reference)
+- **Elevated LineString shapes**: Curtain walls brighten by the same factor and alpha; replaceable per-feature with [`getHoverFillColor`](#api-reference)
 - **Non-icon shapes**: Border/outline width increases by 2 pixels
-- **Point shapes with icons**: Coffin corners appear with a white fill and black outline
+- **Point shapes**: Coffin corners appear with a white fill and black outline bracket
+
+### Custom Interaction Colors
+
+By default, the main layer's fill accessor brightens the active feature's
+base color (1.4× when hovered or selected, 1.7× when both). You can replace
+that brightening with a custom color via per-feature accessor functions:
+
+```tsx
+import type { ShapeFeature } from '@accelint/map-toolkit/deckgl/shapes';
+
+// Custom hover fill — bright yellow
+const getHoverFillColor = (feature: ShapeFeature): [number, number, number, number] => {
+  return [255, 255, 0, 100]; // Yellow at ~39% opacity
+};
+
+// Custom select fill — bright red
+const getSelectFillColor = (feature: ShapeFeature): [number, number, number, number] => {
+  return [255, 0, 0, 128]; // Red at 50% opacity
+};
+
+<displayShapeLayer
+  id="shapes"
+  data={shapes}
+  selectedShapeId={selectedId}
+  getHoverFillColor={getHoverFillColor}
+  getSelectFillColor={getSelectFillColor}
+/>
+```
+
+These functions receive the shape's GeoJSON feature, allowing you to derive colors from feature properties:
+
+```tsx
+// Dynamic color based on feature properties — invert the shape's own fill
+const getHoverFillColor = (feature: ShapeFeature): [number, number, number, number] => {
+  const baseColor = feature.properties.styleProperties.fillColor;
+  return [
+    255 - baseColor[0],
+    255 - baseColor[1],
+    255 - baseColor[2],
+    100, // Fixed alpha; coordinate with applyBaseOpacity to taste
+  ];
+};
+```
+
+**Notes**:
+
+- These accessors apply to any shape that renders a fill the user can see: the **polygon family** (Polygon, Rectangle, Circle, Ellipse, WagonWheel), unstyled Point shapes, and the curtain walls of **elevated LineStrings** (when `enableElevation` is on). They have no effect on non-elevated LineStrings (no fill, no curtain) or on icon-rendered Points (color driven by the icon atlas).
+- The returned RGBA is used verbatim — the user owns alpha. No overlay-opacity scaling is applied to override colors.
+- Only the fill is replaced. Border brightness and width changes from the default hover/select treatment still apply, and the selection outline color is still driven by [`highlightColor`](#api-reference) — set both if you want full control over selection appearance.
+- When a shape is both hovered and selected and both `getHoverFillColor` and `getSelectFillColor` are set, `getHoverFillColor` wins. Setting only one preserves the default brightening for the other state.
 
 ## 3D Elevation Rendering
 
@@ -540,9 +606,9 @@ Each geometry type gets a different 3D treatment:
 
 | Geometry | Elevation Source | 3D Behavior |
 |----------|-----------------|-------------|
-| **Polygon / Rectangle / Circle / Ellipse** | `maxElevation` property on `StyledFeatureProperties` | Extruded upward from the ground to `maxElevation`. Z coordinates in geometry are ignored. |
-| **LineString** | Per-vertex Z coordinates | Filled curtain walls drop from the line down to the ground |
-| **Point** | Z coordinate | Vertical indicator line drops from the point down to the ground |
+| **Polygon / Rectangle / Circle / Ellipse** | `minElevation` and `maxElevation` on `StyledFeatureProperties` | Extruded from `minElevation` (default 0) to `maxElevation`. When `minElevation` > 0, renders as a floating slab. Z coordinates in geometry are projected to `minElevation`. |
+| **LineString** | Per-vertex Z coordinates + optional `minElevation` | Filled curtain walls drop from each vertex down to `minElevation` (default 0) |
+| **Point** | Z coordinate + optional `minElevation` | Vertical indicator line drops from the point down to `minElevation` (default 0) |
 
 ### Elevation Data
 
@@ -572,7 +638,7 @@ const line = {
   // ...
 };
 
-// Polygon at 22500m elevation via maxElevation (Z coordinates optional)
+// Polygon extruded from ground to 22500m
 const polygon = {
   type: 'Feature',
   geometry: {
@@ -590,7 +656,31 @@ const polygon = {
     maxElevation: 22500,
   },
 };
+
+// Floating slab: polygon rendered between 10000m and 33000m
+const floatingSlab = {
+  type: 'Feature',
+  geometry: {
+    type: 'Polygon',
+    coordinates: [[
+      [-118.3, 34.0],
+      [-118.2, 34.0],
+      [-118.2, 34.1],
+      [-118.3, 34.1],
+      [-118.3, 34.0],
+    ]],
+  },
+  properties: {
+    styleProperties: { /* ... */ },
+    minElevation: 10000,
+    maxElevation: 33000,
+  },
+};
 ```
+
+When `minElevation` is set, the layer projects all coordinate Z values to `minElevation` and uses `maxElevation - minElevation` as the extrusion height. This produces a slab floating between `minElevation` and `maxElevation`. When `minElevation` is 0 (the default), the shape extrudes from the ground as before.
+
+For **LineStrings** and **Points**, `minElevation` controls where curtain walls and indicator lines bottom out. Without it, they drop to the ground (Z = 0).
 
 ### Tying Elevation to Camera View
 
@@ -622,10 +712,10 @@ function MapWithElevation() {
 
 Elevation layers respond to hover and selection with color feedback:
 
-- **Hover or Selection**: Curtain walls render at overlay opacity using the shape's line color brightened to 1.4×
-- **Hover + Selection**: Curtain walls render at overlay opacity using the shape's line color brightened to 1.7×
+- **Hover or Selection**: Curtain walls render the shape's line color brightened to 1.4× with alpha scaled by `ACTIVE_FILL_OPACITY` (0.5)
+- **Hover + Selection**: Curtain walls render the shape's line color brightened to 1.7× with alpha scaled by `ACTIVE_FILL_OPACITY` (0.5)
 
-All polygons (2D and extruded) use a material-based hover effect (lighting change) for fill brightness. In 3D, this also compensates for deck.gl's inability to render outlines on extruded polygons.
+All polygon shapes (2D and extruded) brighten their fill on hover or selection via the main layer's `getFillColor` accessor — the fill is rendered at the un-dimmed base color multiplied by `1.4×` (or `1.7×` when both states are active), and the per-feature accessor branches on hover/select state without spawning extra sublayers. For extruded polygons in 3D, this provides the active-feature visual cue that deck.gl's stroked-outline path can't supply on extruded geometry.
 
 ## Event Bus Integration
 
@@ -755,7 +845,7 @@ When using icons for Point geometries, **all shapes in a single DisplayShapeLaye
 | `id` | `string` | *required* | Unique layer ID |
 | `mapId` | `UniqueId` | *required* | Map instance ID for event bus isolation in multi-map scenarios |
 | `data` | `Shape[]` | *required* | Array of shapes to display |
-| `selectedShapeId` | `ShapeId` | `undefined` | Currently selected shape ID for showing the select layer |
+| `selectedShapeId` | `ShapeId` | `undefined` | Currently selected shape ID; drives the brightened fill on the main layer and the optional highlight outline |
 | `onShapeClick` | `(shape: Shape) => void` | `undefined` | Callback when shape is clicked |
 | `onShapeHover` | `(shape: Shape \| null) => void` | `undefined` | Callback when shape is hovered |
 | `pickable` | `boolean` | `true` | Whether shapes are clickable/hoverable |
@@ -764,7 +854,10 @@ When using icons for Point geometries, **all shapes in a single DisplayShapeLaye
 | `labelOptions` | `LabelPositionOptions` | `undefined` | Global label positioning options |
 | `highlightColor` | `[number, number, number, number]` | `[40, 245, 190, 100]` | Highlight color RGBA (0-255) |
 | `enableElevation` | `boolean` | `false` | Enable 3D elevation rendering (extrusion, curtains, vertical indicators). See [3D Elevation Rendering](#3d-elevation-rendering). |
-| `applyBaseOpacity` | `boolean` | `true` | Apply 20% opacity multiplier to fill colors for semi-transparent look |
+| `applyBaseOpacity` | `boolean` | `true` | Dim non-active fills to 20% alpha so hover/select features (rendered at 50% alpha by default) stand out. Set `false` to render at innate alpha — the contrast between active and inactive then comes only from RGB brightening, which can read subtle on saturated base colors. |
+| `unit` | `DistanceUnitSymbol` | `'NM'` | Distance unit for measurements (e.g., radius on hover). Supports `'km'`, `'m'`, `'NM'`, `'mi'`, `'ft'`. |
+| `getHoverFillColor` | `(feature: ShapeFeature) => Rgba255Tuple` | `undefined` | Custom fill color for the hovered shape. Replaces the default brightening on polygon fills, unstyled point fills, and elevated-LineString curtain walls. See [Custom Interaction Colors](#custom-interaction-colors). |
+| `getSelectFillColor` | `(feature: ShapeFeature) => Rgba255Tuple` | `undefined` | Custom fill color for the selected shape. Replaces the default brightening on polygon fills, unstyled point fills, and elevated-LineString curtain walls. See [Custom Interaction Colors](#custom-interaction-colors). |
 
 ### LabelPositionOptions
 

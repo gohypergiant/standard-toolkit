@@ -13,7 +13,10 @@
 import { TranslateMode, ViewMode } from '@deck.gl-community/editable-layers';
 import { BoundingTransformMode } from './bounding-transform-mode';
 import { CircleTransformMode } from './circle-transform-mode';
+import { EllipseTransformMode } from './ellipse-transform-mode';
+import { LockedBoundingTransformMode } from './locked-bounding-transform-mode';
 import { PointTranslateMode } from './point-translate-mode';
+import { RectangleTransformMode } from './rectangle-transform-mode';
 import { VertexTransformMode } from './vertex-transform-mode';
 import type { EditMode } from '../types';
 
@@ -25,9 +28,23 @@ import type { EditMode } from '../types';
  * causes the EditableGeoJsonLayer to fail with assertion errors.
  *
  * BoundingTransformMode combines ScaleModeWithFreeTransform, RotateMode, and
- * TranslateMode for shapes without vertex editing (ellipses, rectangles),
- * allowing non-uniform scaling plus rotate/translate via bounding box handles.
- * Shows live dimension tooltips during scaling.
+ * TranslateMode for generic axis-bounded shapes, allowing non-uniform scaling
+ * plus rotate/translate via bounding box handles. Shows live dimension
+ * tooltips during scaling. Most concrete shapes use a more specific subclass
+ * — see RectangleTransformMode and EllipseTransformMode below.
+ *
+ * RectangleTransformMode mirrors BoundingTransformMode but uses RectangleScaleMode
+ * in place of ScaleModeWithFreeTransform. The replacement places scale handles
+ * at the rectangle's actual rotated corners and projects corner drags onto the
+ * rectangle's local edge directions, so rotated rectangles can be resized
+ * without distorting into a parallelogram.
+ *
+ * EllipseTransformMode mirrors BoundingTransformMode but uses EllipseScaleMode
+ * in place of ScaleModeWithFreeTransform. Scale handles sit on the ellipse
+ * curve at the four axis endpoints (where the major and minor axes meet the
+ * boundary); each drag projects the cursor onto the dragged axis in Mercator
+ * space and regenerates the polygon parametrically, so rotated ellipses stay
+ * a clean rotated ellipse rather than being stretched into a non-ellipse.
  *
  * VertexTransformMode combines ModifyMode with ScaleModeWithFreeTransform,
  * RotateMode, and TranslateMode for shapes that support vertex editing
@@ -45,6 +62,9 @@ import type { EditMode } from '../types';
 const EDIT_MODE_INSTANCES = {
   view: new ViewMode(),
   'bounding-transform': new BoundingTransformMode(),
+  'rectangle-transform': new RectangleTransformMode(),
+  'ellipse-transform': new EllipseTransformMode(),
+  'locked-bounding-transform': new LockedBoundingTransformMode(),
   'vertex-transform': new VertexTransformMode(),
   'circle-transform': new CircleTransformMode(),
   translate: new TranslateMode(),
@@ -59,7 +79,9 @@ const EDIT_MODE_INSTANCES = {
  * that occur when creating new mode instances on each render.
  *
  * ## Available Edit Modes
- * - `'bounding-transform'`: For shapes without vertex editing (rectangles, ellipses)
+ * - `'bounding-transform'`: Generic axis-bounded fallback (scale via bbox handles + rotate + translate)
+ * - `'rectangle-transform'`: For rectangles (rotation-aware corner-drag scale + rotate + translate)
+ * - `'ellipse-transform'`: For ellipses (axis-endpoint scale handles + rotate + translate)
  * - `'vertex-transform'`: For shapes with vertex editing (polygons, lines)
  * - `'circle-transform'`: For circles (resize from edge + translate)
  * - `'point-translate'`: For points (click to place + drag to move)

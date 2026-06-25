@@ -17,15 +17,14 @@ import ChevronDown from '@accelint/icons/chevron-down';
 import {
   Button as AriaButton,
   Select as AriaSelect,
-  composeRenderProps,
   FieldError,
-  ListLayout,
   Popover,
   SelectValue,
   Text,
-  useContextProps,
-  Virtualizer,
-} from 'react-aria-components';
+} from 'react-aria-components/Select';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { useContextProps } from 'react-aria-components/slots';
+import { ListLayout, Virtualizer } from 'react-aria-components/Virtualizer';
 import { Button } from '../button';
 import { Icon } from '../icon';
 import { Label } from '../label';

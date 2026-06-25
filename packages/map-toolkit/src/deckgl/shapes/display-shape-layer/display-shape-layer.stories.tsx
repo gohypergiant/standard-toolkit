@@ -57,6 +57,27 @@ type Story = StoryObj<typeof meta>;
 const DISPLAY_MAP_ID = uuid();
 const WITH_ICONS_MAP_ID = uuid();
 
+type RgbaTuple = [number, number, number, number];
+
+/**
+ * Preset accessors for the `getHoverFillColor` / `getSelectFillColor` props.
+ * `default` resolves to `undefined`, which leaves the layer's built-in
+ * 1.4×/1.7× brightening of the base fill in place.
+ */
+const HOVER_FILL_PRESETS = {
+  default: undefined,
+  red: (): RgbaTuple => [255, 0, 0, 100],
+  blue: (): RgbaTuple => [0, 100, 255, 100],
+  yellow: (): RgbaTuple => [255, 230, 0, 100],
+} as const;
+
+const SELECT_FILL_PRESETS = {
+  default: undefined,
+  red: (): RgbaTuple => [255, 0, 0, 130],
+  blue: (): RgbaTuple => [0, 100, 255, 130],
+  yellow: (): RgbaTuple => [255, 230, 0, 130],
+} as const;
+
 /**
  * Basic display of shapes with all types
  *
@@ -65,6 +86,9 @@ const WITH_ICONS_MAP_ID = uuid();
  * - Click empty space to deselect (emits shapes:deselected via bus)
  * - The selection (and highlight layer if enabled) layer responds to selection state
  * - Selection state can be controlled via the bus from anywhere in the app
+ *
+ * Use the `hoverPreset` and `selectPreset` controls to swap the active feature's
+ * fill color with a static primary, replacing the default 1.4×/1.7× brightening.
  */
 export const BasicDisplayAndEvents: Story = {
   args: {
@@ -73,6 +97,9 @@ export const BasicDisplayAndEvents: Story = {
     applyBaseOpacity: true,
     showHighlight: false,
     highlightColor: [...HIGHLIGHT_COLOR_TUPLE],
+    unit: 'NM',
+    hoverPreset: 'default',
+    selectPreset: 'default',
   },
   argTypes: {
     showLabels: {
@@ -99,6 +126,24 @@ export const BasicDisplayAndEvents: Story = {
       control: { type: 'object' },
       description: 'Highlight color [R, G, B, A] with values 0-255',
     },
+    unit: {
+      control: { type: 'select' },
+      options: ['km', 'm', 'NM', 'mi', 'ft'],
+      description:
+        'Distance unit for measurements (e.g., radius on hover). Hover over the circle to see it.',
+    },
+    hoverPreset: {
+      control: { type: 'select' },
+      options: Object.keys(HOVER_FILL_PRESETS),
+      description:
+        'Preset for getHoverFillColor. `default` keeps the built-in 1.4× brightening of the base fill; the others replace it with a static primary.',
+    },
+    selectPreset: {
+      control: { type: 'select' },
+      options: Object.keys(SELECT_FILL_PRESETS),
+      description:
+        'Preset for getSelectFillColor. `default` keeps the built-in 1.4× brightening of the base fill; the others replace it with a static primary.',
+    },
   },
   render: (args) => {
     // useSelectShape handles selection, deselection, and click-away deselection
@@ -119,6 +164,13 @@ export const BasicDisplayAndEvents: Story = {
       number,
       number,
     ];
+
+    const getHoverFillColor =
+      HOVER_FILL_PRESETS[args.hoverPreset as keyof typeof HOVER_FILL_PRESETS];
+    const getSelectFillColor =
+      SELECT_FILL_PRESETS[
+        args.selectPreset as keyof typeof SELECT_FILL_PRESETS
+      ];
 
     // Log selection events for demonstration purposes
     useOn<ShapeSelectedEvent>(ShapeEvents.selected, (event) => {
@@ -190,6 +242,9 @@ export const BasicDisplayAndEvents: Story = {
             applyBaseOpacity={args.applyBaseOpacity}
             showHighlight={args.showHighlight}
             highlightColor={highlightColor}
+            unit={args.unit}
+            getHoverFillColor={getHoverFillColor}
+            getSelectFillColor={getSelectFillColor}
           />
         </BaseMap>
 
@@ -640,6 +695,9 @@ function ShapesCameraControls({ mapId }: { mapId: UniqueId }) {
  * - Shapes at different elevations: Circle (13000m), LineString (varying 20000-40000m),
  *   Point (1500m), Polygon (22500m), Rectangle (34000m), Ellipse (43500m)
  * - Full camera controls for interactive exploration
+ * - `hoverPreset` / `selectPreset` controls swap the active feature's fill with
+ *   a static primary, replacing the default 1.4×/1.7× brightening — useful for
+ *   verifying that the override path produces predictable colors on extruded shapes
  */
 const DISPLAY_25D_MAP_ID_INNER = uuid();
 
@@ -647,6 +705,8 @@ export const DisplayShapes25D: Story = {
   args: {
     showHighlight: false,
     highlightColor: [...HIGHLIGHT_COLOR_TUPLE],
+    hoverPreset: 'default',
+    selectPreset: 'default',
   },
   argTypes: {
     showHighlight: {
@@ -656,6 +716,18 @@ export const DisplayShapes25D: Story = {
     highlightColor: {
       control: { type: 'object' },
       description: 'Highlight color [R, G, B, A] with values 0-255',
+    },
+    hoverPreset: {
+      control: { type: 'select' },
+      options: Object.keys(HOVER_FILL_PRESETS),
+      description:
+        'Preset for getHoverFillColor. `default` keeps the built-in 1.4× brightening of the base fill; the others replace it with a static primary.',
+    },
+    selectPreset: {
+      control: { type: 'select' },
+      options: Object.keys(SELECT_FILL_PRESETS),
+      description:
+        'Preset for getSelectFillColor. `default` keeps the built-in 1.4× brightening of the base fill; the others replace it with a static primary.',
     },
   },
   render: (args) => {
@@ -671,6 +743,13 @@ export const DisplayShapes25D: Story = {
       number,
       number,
     ];
+
+    const getHoverFillColor =
+      HOVER_FILL_PRESETS[args.hoverPreset as keyof typeof HOVER_FILL_PRESETS];
+    const getSelectFillColor =
+      SELECT_FILL_PRESETS[
+        args.selectPreset as keyof typeof SELECT_FILL_PRESETS
+      ];
 
     // Handle hover events for cursor changes
     useOn<ShapeHoveredEvent>(ShapeEvents.hovered, (event) => {
@@ -702,6 +781,8 @@ export const DisplayShapes25D: Story = {
             enableElevation={cameraState.view !== '2D'}
             showHighlight={args.showHighlight}
             highlightColor={highlightColor}
+            getHoverFillColor={getHoverFillColor}
+            getSelectFillColor={getSelectFillColor}
           />
         </BaseMap>
 
@@ -720,6 +801,8 @@ export const DisplayShapes25D: Story = {
  * - Shapes render on globe surface with elevation
  * - Tests shapes at various latitudes/longitudes
  * - Verifies GeoJsonLayer auto-adapts to globe projection
+ * - `hoverPreset` / `selectPreset` controls swap the active feature's fill with
+ *   a static primary, replacing the default 1.4×/1.7× brightening
  */
 const DISPLAY_3D_MAP_ID_INNER = uuid();
 
@@ -727,6 +810,8 @@ export const DisplayShapes3D: Story = {
   args: {
     showHighlight: false,
     highlightColor: [...HIGHLIGHT_COLOR_TUPLE],
+    hoverPreset: 'default',
+    selectPreset: 'default',
   },
   argTypes: {
     showHighlight: {
@@ -736,6 +821,18 @@ export const DisplayShapes3D: Story = {
     highlightColor: {
       control: { type: 'object' },
       description: 'Highlight color [R, G, B, A] with values 0-255',
+    },
+    hoverPreset: {
+      control: { type: 'select' },
+      options: Object.keys(HOVER_FILL_PRESETS),
+      description:
+        'Preset for getHoverFillColor. `default` keeps the built-in 1.4× brightening of the base fill; the others replace it with a static primary.',
+    },
+    selectPreset: {
+      control: { type: 'select' },
+      options: Object.keys(SELECT_FILL_PRESETS),
+      description:
+        'Preset for getSelectFillColor. `default` keeps the built-in 1.4× brightening of the base fill; the others replace it with a static primary.',
     },
   },
   render: (args) => {
@@ -750,6 +847,13 @@ export const DisplayShapes3D: Story = {
       number,
       number,
     ];
+
+    const getHoverFillColor =
+      HOVER_FILL_PRESETS[args.hoverPreset as keyof typeof HOVER_FILL_PRESETS];
+    const getSelectFillColor =
+      SELECT_FILL_PRESETS[
+        args.selectPreset as keyof typeof SELECT_FILL_PRESETS
+      ];
 
     // Handle hover events for cursor changes
     useOn<ShapeHoveredEvent>(ShapeEvents.hovered, (event) => {
@@ -781,6 +885,8 @@ export const DisplayShapes3D: Story = {
             enableElevation={true}
             showHighlight={args.showHighlight}
             highlightColor={highlightColor}
+            getHoverFillColor={getHoverFillColor}
+            getSelectFillColor={getSelectFillColor}
           />
         </BaseMap>
       </div>

@@ -19,10 +19,10 @@ import Search from '@accelint/icons/search';
 import {
   SearchField as AriaSearchField,
   Button,
-  composeRenderProps,
   Input,
-  useContextProps,
-} from 'react-aria-components';
+} from 'react-aria-components/SearchField';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { useContextProps } from 'react-aria-components/slots';
 import { Icon } from '../icon';
 import { IconProvider } from '../icon/context';
 import { SearchFieldContext } from './context';

@@ -10,7 +10,8 @@
  * governing permissions and limitations under the License.
  */
 import { clsx } from '@accelint/design-foundation/lib/utils';
-import { composeRenderProps, ToggleButton } from 'react-aria-components';
+import { composeRenderProps } from 'react-aria-components/composeRenderProps';
+import { ToggleButton } from 'react-aria-components/ToggleButton';
 import styles from './styles.module.css';
 import type { SidenavMenuItemProps } from './types';
 

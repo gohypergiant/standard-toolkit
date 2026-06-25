@@ -233,13 +233,14 @@
     @apply absolute flex flex-col items-center;
 
     @variant group-orientation-horizontal/slider {
-      @apply -translate-x-1/2;
       left: calc(var(--marker-percent) * 1%);
+      translate: calc(-1 * var(--marker-percent) * 1%) 0;
     }
 
     @variant group-orientation-vertical/slider {
-      @apply -translate-y-1/2 flex-row;
+      @apply flex-row;
       bottom: calc(var(--marker-percent) * 1%);
+      translate: 0 calc(var(--marker-percent) * 1%);
     }
   }
 
