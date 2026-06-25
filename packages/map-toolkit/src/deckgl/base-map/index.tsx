@@ -448,6 +448,26 @@ export function BaseMap({
         ? mapRef.current.getMap()
         : mapRef.current;
 
+      // Clear transition properties when the animation completes. Using moveend
+      // ensures we wait for the actual animation to finish rather than guessing
+      // with setTimeout. This handles interruptions correctly (user drag cancels
+      // the animation and immediately fires moveend).
+      const handleMoveEnd = () => {
+        setIsTransitioning(false);
+        setCameraState({
+          latitude: cameraState.latitude,
+          longitude: cameraState.longitude,
+          zoom: cameraState.zoom,
+          pitch: cameraState.pitch,
+          rotation: cameraState.rotation,
+          transitionDuration: undefined,
+          transitionEasing: undefined,
+        });
+        map.off('moveend', handleMoveEnd);
+      };
+
+      map.once('moveend', handleMoveEnd);
+
       map.easeTo({
         center: [cameraState.longitude, cameraState.latitude],
         zoom: cameraState.zoom,
@@ -469,22 +489,6 @@ export function BaseMap({
           }
         },
       });
-
-      // Clear transition properties after animation completes to ensure subsequent
-      // transitions trigger properly. Without clearing, the useEffect won't fire on
-      // the next setCenter call if transitionDuration/transitionEasing remain unchanged.
-      setTimeout(() => {
-        setIsTransitioning(false);
-        setCameraState({
-          latitude: cameraState.latitude,
-          longitude: cameraState.longitude,
-          zoom: cameraState.zoom,
-          pitch: cameraState.pitch,
-          rotation: cameraState.rotation,
-          transitionDuration: undefined,
-          transitionEasing: undefined,
-        });
-      }, cameraState.transitionDuration + 50);
     }
   }, [
     cameraState.transitionDuration,

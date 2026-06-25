@@ -29,5 +29,6 @@ export type {
   CameraSetViewEvent,
   CameraSetZoomEvent,
   ProjectionType,
+  TransitionEasing,
   ViewType,
 } from './types';

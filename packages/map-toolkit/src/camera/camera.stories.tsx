@@ -28,6 +28,7 @@ import type {
   CameraSetRotationEvent,
   CameraSetViewEvent,
   CameraSetZoomEvent,
+  TransitionEasing,
   ProjectionType,
   ViewType,
 } from './types';
@@ -174,11 +175,11 @@ export const BasicUsage: Story = {
 const TRANSITION_STORY_ID = uuid();
 
 const LOCATIONS = [
-  { name: 'New York', lat: 40.7128, lng: -74.006, zoom: 12 },
-  { name: 'Los Angeles', lat: 34.0522, lng: -118.2437, zoom: 12 },
-  { name: 'Chicago', lat: 41.8781, lng: -87.6298, zoom: 12 },
-  { name: 'Miami', lat: 25.7617, lng: -80.1918, zoom: 12 },
-  { name: 'Seattle', lat: 47.6062, lng: -122.3321, zoom: 12 },
+  { name: 'New York', lat: 40.7128, lng: -74.006, zoom: 6 },
+  { name: 'Los Angeles', lat: 34.0522, lng: -118.2437, zoom: 6 },
+  { name: 'Chicago', lat: 41.8781, lng: -87.6298, zoom: 6 },
+  { name: 'Miami', lat: 25.7617, lng: -80.1918, zoom: 6 },
+  { name: 'Seattle', lat: 47.6062, lng: -122.3321, zoom: 6 },
 ];
 
 function TransitionToolbar() {
@@ -190,7 +191,7 @@ function TransitionToolbar() {
     lng: number,
     zoom: number,
     duration: number,
-    easing: 'linear' | 'ease-in' | 'ease-out' | 'ease-in-out',
+    easing: TransitionEasing,
   ) => {
     setCenter({
       id: TRANSITION_STORY_ID,
@@ -210,14 +211,14 @@ function TransitionToolbar() {
       </p>
 
       <div className='flex flex-col gap-s'>
-        <p className='font-semibold text-body-m'>Locations (2s, ease-out)</p>
+        <p className='font-semibold text-body-m'>Locations (2s, linear)</p>
         {LOCATIONS.map((loc) => (
           <Button
             key={loc.name}
             variant='outlined'
             color='mono-muted'
             onPress={() =>
-              flyToLocation(loc.lat, loc.lng, loc.zoom, 2000, 'ease-out')
+              flyToLocation(loc.lat, loc.lng, loc.zoom, 2000, 'linear')
             }
             className='w-full'
           >

@@ -33,6 +33,20 @@ export type ProjectionType = 'mercator' | 'globe';
 export type ViewType = '2D' | '2.5D' | '3D';
 
 /**
+ * Easing functions for camera transitions.
+ *
+ * - `linear`: Constant speed throughout the transition
+ * - `ease-in`: Slow start, accelerating toward the end
+ * - `ease-out`: Fast start, decelerating toward the end
+ * - `ease-in-out`: Slow start and end, faster in the middle
+ */
+export type TransitionEasing =
+  | 'linear'
+  | 'ease-in'
+  | 'ease-out'
+  | 'ease-in-out';
+
+/**
  * Payload for setting camera center position.
  */
 export type CameraSetCenterPayload = {
@@ -51,7 +65,7 @@ export type CameraSetCenterPayload = {
   /** Optional transition duration in milliseconds */
   transitionDuration?: number;
   /** Optional transition easing function */
-  transitionEasing?: 'linear' | 'ease-in' | 'ease-out' | 'ease-in-out';
+  transitionEasing?: TransitionEasing;
 };
 
 /**

@@ -37,7 +37,12 @@ import { fitBounds } from '@math.gl/web-mercator';
 import { createMapStore } from '../shared/create-map-store';
 import { CameraEventTypes } from './events';
 import type { UniqueId } from '@accelint/core';
-import type { CameraEvent, ProjectionType, ViewType } from './types';
+import type {
+  CameraEvent,
+  ProjectionType,
+  TransitionEasing,
+  ViewType,
+} from './types';
 
 const cameraBus = Broadcast.getInstance<CameraEvent>();
 
@@ -53,7 +58,7 @@ type CameraState2D = {
   projection: 'mercator';
   view: '2D';
   transitionDuration?: number;
-  transitionEasing?: 'linear' | 'ease-in' | 'ease-out' | 'ease-in-out';
+  transitionEasing?: TransitionEasing;
 };
 
 /**
@@ -68,7 +73,7 @@ type CameraState3D = {
   projection: 'globe';
   view: '3D';
   transitionDuration?: number;
-  transitionEasing?: 'linear' | 'ease-in' | 'ease-out' | 'ease-in-out';
+  transitionEasing?: TransitionEasing;
 };
 
 /**
@@ -83,7 +88,7 @@ type CameraState2Point5D = {
   projection: 'mercator';
   view: '2.5D';
   transitionDuration?: number;
-  transitionEasing?: 'linear' | 'ease-in' | 'ease-out' | 'ease-in-out';
+  transitionEasing?: TransitionEasing;
 };
 
 /**
@@ -147,7 +152,7 @@ type CameraStateInput = {
   projection?: ProjectionType;
   view?: ViewType;
   transitionDuration?: number;
-  transitionEasing?: 'linear' | 'ease-in' | 'ease-out' | 'ease-in-out';
+  transitionEasing?: TransitionEasing;
 };
 
 /**
