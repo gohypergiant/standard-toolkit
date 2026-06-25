@@ -173,13 +173,14 @@ export const BasicUsage: Story = {
 };
 
 const TRANSITION_STORY_ID = uuid();
+const TRANSITION_ZOOM = 6;
 
 const LOCATIONS = [
-  { name: 'New York', lat: 40.7128, lng: -74.006, zoom: 6 },
-  { name: 'Los Angeles', lat: 34.0522, lng: -118.2437, zoom: 6 },
-  { name: 'Chicago', lat: 41.8781, lng: -87.6298, zoom: 6 },
-  { name: 'Miami', lat: 25.7617, lng: -80.1918, zoom: 6 },
-  { name: 'Seattle', lat: 47.6062, lng: -122.3321, zoom: 6 },
+  { name: 'New York', lat: 40.7128, lng: -74.006, zoom: TRANSITION_ZOOM },
+  { name: 'Los Angeles', lat: 34.0522, lng: -118.2437, zoom: TRANSITION_ZOOM },
+  { name: 'Chicago', lat: 41.8781, lng: -87.6298, zoom: TRANSITION_ZOOM },
+  { name: 'Miami', lat: 25.7617, lng: -80.1918, zoom: TRANSITION_ZOOM },
+  { name: 'Seattle', lat: 47.6062, lng: -122.3321, zoom: TRANSITION_ZOOM },
 ];
 
 function TransitionToolbar() {
@@ -234,21 +235,27 @@ function TransitionToolbar() {
         <Button
           variant='outlined'
           color='accent-primary'
-          onPress={() => flyToLocation(41.8781, -87.6298, 12, 3000, 'linear')}
+          onPress={() =>
+            flyToLocation(41.8781, -87.6298, TRANSITION_ZOOM, 3000, 'linear')
+          }
         >
           Linear (3s)
         </Button>
         <Button
           variant='outlined'
           color='accent-primary'
-          onPress={() => flyToLocation(41.8781, -87.6298, 12, 3000, 'ease-in')}
+          onPress={() =>
+            flyToLocation(41.8781, -87.6298, TRANSITION_ZOOM, 3000, 'ease-in')
+          }
         >
           Ease In (3s)
         </Button>
         <Button
           variant='outlined'
           color='accent-primary'
-          onPress={() => flyToLocation(41.8781, -87.6298, 12, 3000, 'ease-out')}
+          onPress={() =>
+            flyToLocation(41.8781, -87.6298, TRANSITION_ZOOM, 3000, 'ease-out')
+          }
         >
           Ease Out (3s)
         </Button>
@@ -256,7 +263,13 @@ function TransitionToolbar() {
           variant='outlined'
           color='accent-primary'
           onPress={() =>
-            flyToLocation(41.8781, -87.6298, 12, 3000, 'ease-in-out')
+            flyToLocation(
+              41.8781,
+              -87.6298,
+              TRANSITION_ZOOM,
+              3000,
+              'ease-in-out',
+            )
           }
         >
           Ease In-Out (3s)
