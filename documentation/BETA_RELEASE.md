@@ -26,6 +26,8 @@ Use beta releases when:
 
 ### Starting a Beta Series
 
+There should be only one beta branch active at a time.
+
 **Prerequisites:**
 - Full test suite passes
 - Code review completed
@@ -135,7 +137,7 @@ git push origin beta/v10.0
 5. **Main branch's release workflow publishes stable versions:**
    The existing `.github/workflows/release.yml` automatically publishes packages with `@latest` tag.
 
-6. **Clean up:**
+6. **Clean up: delete beta branch**
    ```bash
    git branch -d beta/v10.0
    git push origin --delete beta/v10.0
