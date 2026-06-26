@@ -84,6 +84,8 @@
     "memlab:report": "npx tsx src/memlab/scripts/generate-report.ts",
     "start": "NODE_ENV=production next start",
     "test": "pnpm vitest --project=unit",
+    "test:integration": "playwright test",
+    "test:integration:headed": "playwright test --headed",
     "visual": "vitest --project=visual --run --no-coverage",
     "visual:update": "vitest --project=visual --run --update --no-coverage"
   },

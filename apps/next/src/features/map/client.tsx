@@ -10,19 +10,38 @@
  * governing permissions and limitations under the License.
  */
 
-import 'server-only';
-import { uuid } from '@accelint/core'
+'use client';
+
+import 'client-only';
+import { uuid } from '@accelint/core';
 import { BaseMap } from '@accelint/map-toolkit/deckgl';
 import { DEFAULT_VIEW_STATE } from '@accelint/map-toolkit/shared/constants';
+import { MapTestBridge } from './test-bridge';
+import type { ReactNode } from 'react';
+import { clsx } from '@accelint/design-foundation/lib/utils';
 
-const mapId = uuid()
+export type MapClientProps = {
+  children?: ReactNode;
+  className?: string;
+};
 
-export function MapClient() {
+const mapId = uuid();
+
+export function MapClient({
+  children,
+  className,
+}: MapClientProps) {
+
   return (
-    <BaseMap
-      className='fixed top-xxl left-0 right-0 bottom-0'
-      id={mapId}
-      initialViewState={DEFAULT_VIEW_STATE}
-    />
+    <>
+      <BaseMap
+        className={clsx(className, 'fixed top-xxl left-0 right-0 bottom-0')}
+        id={mapId}
+        initialViewState={DEFAULT_VIEW_STATE}
+      >
+        {children}
+      </BaseMap>
+      <MapTestBridge />
+    </>
   );
 }
