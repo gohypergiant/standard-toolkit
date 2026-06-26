@@ -107,9 +107,21 @@ importers:
       '@deck.gl/core':
         specifier: ~9.2
         version: 9.2.10
+      '@deck.gl/layers':
+        specifier: ~9.2
+        version: 9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))
       '@deckgl-fiber-renderer/dom':
-        specifier: ^1.4.0
-        version: 1.4.0(33730d2c1e0221955caf5c1b28046743)
+        specifier: ^2.0.1
+        version: 2.0.1(ee29996881be5487e63b5f5c4ab30ce4)
+      '@deckgl-fiber-renderer/reconciler':
+        specifier: ^2.0.1
+        version: 2.0.1(ee29996881be5487e63b5f5c4ab30ce4)
+      '@deckgl-fiber-renderer/shared':
+        specifier: ^2.0.1
+        version: 2.0.1(@deck.gl/core@9.2.10)(@deck.gl/mapbox@9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@types/react@19.2.7)(immer@11.0.1)(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))
+      '@deckgl-fiber-renderer/types':
+        specifier: ^2.0.1
+        version: 2.0.1(0198b39424cc7edf8d6af0b38477a582)
       '@dnd-kit/core':
         specifier: ^6.3.1
         version: 6.3.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -1018,14 +1030,17 @@ importers:
         specifier: ~9.2
         version: 9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))
       '@deckgl-fiber-renderer/dom':
-        specifier: ^1.4.0
-        version: 1.4.0(ee29996881be5487e63b5f5c4ab30ce4)
+        specifier: ^2.0.1
+        version: 2.0.1(ee29996881be5487e63b5f5c4ab30ce4)
+      '@deckgl-fiber-renderer/reconciler':
+        specifier: ^2.0.1
+        version: 2.0.1(ee29996881be5487e63b5f5c4ab30ce4)
       '@deckgl-fiber-renderer/shared':
-        specifier: ^1.4.0
-        version: 1.4.0(@deck.gl/core@9.2.10)(@deck.gl/mapbox@9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@types/react@19.2.7)(immer@11.0.1)(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))
+        specifier: ^2.0.1
+        version: 2.0.1(@deck.gl/core@9.2.10)(@deck.gl/mapbox@9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@types/react@19.2.7)(immer@11.0.1)(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))
       '@deckgl-fiber-renderer/types':
-        specifier: ^1.4.0
-        version: 1.4.0(0198b39424cc7edf8d6af0b38477a582)
+        specifier: ^2.0.1
+        version: 2.0.1(0198b39424cc7edf8d6af0b38477a582)
       '@math.gl/web-mercator':
         specifier: ^4.1.0
         version: 4.1.0
@@ -1678,39 +1693,44 @@ packages:
       '@deck.gl/core': ~9.2.0
       '@luma.gl/core': ~9.2.4
 
-  '@deckgl-fiber-renderer/dom@1.4.0':
-    resolution: {integrity: sha512-t3bkgCo7d91O5Y+mo/Fdvsnnz9A1I/Iij+Dfu0capLrXioa7MxjUOmmfZiia/MrPM308aM8eE3ODQE4JWQjZkw==}
+  '@deckgl-fiber-renderer/dom@2.0.1':
+    resolution: {integrity: sha512-j4NPt8AJ8HPxIOb1DeBU3yoL17VkRDT8bOO43bA8IUArX30sfIlVMKxMSTWNHcAu+zFG3NdVQ3MyaU8oLef7ug==}
     peerDependencies:
+      '@deck.gl/core': '>=9.1'
+      '@deck.gl/geo-layers': '>=9.1'
+      '@deck.gl/layers': '>=9.1'
+      '@deck.gl/mapbox': '>=9.1'
+      '@deck.gl/mesh-layers': '>=9.1'
       react: ^19
       react-dom: ^19
 
-  '@deckgl-fiber-renderer/reconciler@1.4.0':
-    resolution: {integrity: sha512-p0ioK72bOJNWE6VPJZYt3iBOjzZGRLxqkO4PXnECSWDrCV4O+V8Vy9evWbjt6Co5BfqzNRLTb9QQPQT6UYCTMA==}
+  '@deckgl-fiber-renderer/reconciler@2.0.1':
+    resolution: {integrity: sha512-DyFsFZTmkML2sb3KLDGjotZ3p0GLr65JjD0fA+e/EkL1VgRZltGzjL7f3rYfsVN6J61oDB2+IE9YprcYT8UYsA==}
     peerDependencies:
-      '@deck.gl/core': ^9.1.0
-      '@deck.gl/geo-layers': ^9.1.0
-      '@deck.gl/layers': ^9.1.0
-      '@deck.gl/mapbox': ^9.1.0
-      '@deck.gl/mesh-layers': ^9.1.0
+      '@deck.gl/core': '>=9.1'
+      '@deck.gl/geo-layers': '>=9.1'
+      '@deck.gl/layers': '>=9.1'
+      '@deck.gl/mapbox': '>=9.1'
+      '@deck.gl/mesh-layers': '>=9.1'
       react: ^19
       react-dom: ^19
 
-  '@deckgl-fiber-renderer/shared@1.4.0':
-    resolution: {integrity: sha512-/dqM6a0MP8p+5pWOfcGndRI1SPamzs5WQWzaHxMC1QZ2lYTK0GCTd49Wfg8X8jEcb8vJw6Xc1Itp7fK/RYtwFA==}
+  '@deckgl-fiber-renderer/shared@2.0.1':
+    resolution: {integrity: sha512-raXbH+n9851nWKHA7fX6cbAx7Apje0Yib9dgU3ALVQtd5buq2GcMjqgTB66WPw7seH09Ev+B39/pSDbMNGrrbA==}
     peerDependencies:
-      '@deck.gl/core': ^9.1.0
-      '@deck.gl/mapbox': ^9.1.0
+      '@deck.gl/core': '>=9.1'
+      '@deck.gl/mapbox': '>=9.1'
 
-  '@deckgl-fiber-renderer/types@1.4.0':
-    resolution: {integrity: sha512-ob5EnGfCrGphDVEh3pxkPOr6m30xj+9RXnlKdZY7D2Ov9q4F+7EYykbm0Ux+m9qgA7QvSHLZ8wwmSEP3lSL6xg==}
+  '@deckgl-fiber-renderer/types@2.0.1':
+    resolution: {integrity: sha512-Tgbe9U8buH9c6SDZYBgWMcOSkVbWLJ38ipZqqX71647CmH8zbj4yfaJdku2rMF9csPrFE+Zkkz7OLbHw0AxSbw==}
     peerDependencies:
-      '@deck.gl/core': ^9.1.0
-      '@deck.gl/geo-layers': ^9.1.0
-      '@deck.gl/layers': ^9.1.0
-      '@deck.gl/mapbox': ^9.1.0
-      '@deck.gl/mesh-layers': ^9.1.0
-      '@types/react': ^19.0.0
-      '@types/react-dom': ^19.0.0
+      '@deck.gl/core': '>=9.1'
+      '@deck.gl/geo-layers': '>=9.1'
+      '@deck.gl/layers': '>=9.1'
+      '@deck.gl/mapbox': '>=9.1'
+      '@deck.gl/mesh-layers': '>=9.1'
+      '@types/react': ^19
+      '@types/react-dom': ^19
 
   '@discoveryjs/json-ext@0.5.7':
     resolution: {integrity: sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==}
@@ -2487,10 +2507,6 @@ packages:
     peerDependencies:
       '@loaders.gl/core': ^4.3.0
 
-  '@loglayer/context-manager@1.1.6':
-    resolution: {integrity: sha512-kntdCN9MtNctoMpDBMk9D1begChINbdYJNso5YLB0bbKNIy819rKfarSn7Xmtcq0aBxFUHPp04wj6XnvWseFOQ==}
-    engines: {node: '>=18'}
-
   '@loglayer/context-manager@2.0.2':
     resolution: {integrity: sha512-IVt/iqACGw2GnucKOpyJ69MbGQSRzsArOwsTNMuOAfzm36zTphGIH4K7g7lhRvcd2jY0dZzvWA6tCqannpgXXg==}
     engines: {node: '>=18'}
@@ -2503,16 +2519,8 @@ packages:
     resolution: {integrity: sha512-hq6hjkXzrYyz0DwYUqizP0hS3jhPl5S/7U33Cd0EPbfLmDjYWzzcM0mQKUdtBi6qNX4DAPpag3oBGytB2zmghg==}
     engines: {node: '>=18'}
 
-  '@loglayer/plugin@2.1.6':
-    resolution: {integrity: sha512-jZWnExpiYl+BefpiZC34/Finuu9fucxkPfz6re0xF1cUSOmZjy3fGeQtB+zVFYQz7mf6bWbN8dn5z22cH+Hdug==}
-    engines: {node: '>=18'}
-
   '@loglayer/plugin@3.0.2':
     resolution: {integrity: sha512-ghIYpuPw/Q0jdlr7ErkaySfsSCsIigwIb1lvR5qhZrz3oEqGotDFZzhgU1YeO7BacA042ygv/xww3Ip3ROokeg==}
-    engines: {node: '>=18'}
-
-  '@loglayer/shared@2.5.3':
-    resolution: {integrity: sha512-KT8ic1wWstCKOjZNR6Vqpk9rK7PPx/QPjGhfqePGYjo6l9R94mSHry+zdtYjIrIPvQHbnzsp/wd6lj6IvD3MvQ==}
     engines: {node: '>=18'}
 
   '@loglayer/shared@4.1.0':
@@ -2521,10 +2529,6 @@ packages:
 
   '@loglayer/transport-simple-pretty-terminal@3.0.2':
     resolution: {integrity: sha512-XD5xA0mbf103DXSgtFoDb5UGv/JNUIEMgv9DxVnnOhE7+h8Gf7Wjvz+e/8IvlBFJ0ouep8lTKfz7yENpQi3XUQ==}
-
-  '@loglayer/transport@2.3.4':
-    resolution: {integrity: sha512-SHvaex987nfqV9hNj/KEMEnE7SwtDa5YwxqXbZNEtWDSWimn6agHyce73/qJC86GVrtOJmLj2HMii9JdKeZozw==}
-    engines: {node: '>=18'}
 
   '@loglayer/transport@3.0.2':
     resolution: {integrity: sha512-5t0lj/ibQQxGPpghNta8u10zl8owU0my/i2fHF/LdcCAtpw/IHblmpKSgOzdH9XE19Ub/i0VYj0JrFrFv8/NXw==}
@@ -5867,10 +5871,6 @@ packages:
     resolution: {integrity: sha512-i24m8rpwhmPIS4zscNzK6MSEhk0DUWa/8iYQWxhffV8jkI4Phvs3F+quL5xvS0gdQR0FyTCMMH33Y78dDTzzIw==}
     engines: {node: '>=18'}
 
-  loglayer@6.10.0:
-    resolution: {integrity: sha512-EOxAzIiyzmfdXjCiwLWzPl9Syxt2ds+8w4tkdeC3TzSXnKzPcD4dc6vh8JRBO37BE6kiQhXWXrxJMqZ0BWi1fQ==}
-    engines: {node: '>=18'}
-
   loglayer@9.1.0:
     resolution: {integrity: sha512-KFCtoydUtfshszDMIEMa180MMT4jDgBz7FkkO0r3mLDzOkfqGUCbtH9DRszK/pEPrG7999FXfBsyv4DNhvmrag==}
     engines: {node: '>=18'}
@@ -6658,11 +6658,11 @@ packages:
       sequelize:
         optional: true
 
-  react-reconciler@0.31.0:
-    resolution: {integrity: sha512-7Ob7Z+URmesIsIVRjnLoDGwBEG/tVitidU0nMsqX/eeJaLY89RISO/10ERe0MqmzuKUUB1rmY+h1itMbUHg9BQ==}
+  react-reconciler@0.33.0:
+    resolution: {integrity: sha512-KetWRytFv1epdpJc3J4G75I4WrplZE5jOL7Yq0p34+OVOKF4Se7WrdIdVC45XsSSmUTlht2FM/fM1FZb1mfQeA==}
     engines: {node: '>=0.10.0'}
     peerDependencies:
-      react: ^19.0.0
+      react: ^19.2.0
 
   react-redux@9.2.0:
     resolution: {integrity: sha512-ROY9fvHhwOD9ySfrF0wmvu//bKCQ6AeZZq1nJNtbDC+kk5DuSuNX/n6YWYF/SYy7bSba4D4FSz8DJeKY/S/r+g==}
@@ -6858,9 +6858,6 @@ packages:
   saxes@6.0.0:
     resolution: {integrity: sha512-xAg7SOnEhrm5zI3puOOKyy1OMcMlIJZYNJY7xLBwSze0UjhPLnWfj2GF2EpT0jmzaJKIWKHLsaSSajf35bcYnA==}
     engines: {node: '>=v12.22.7'}
-
-  scheduler@0.25.0:
-    resolution: {integrity: sha512-xFVuu11jh+xcO7JOAGJNOXld8/TcEHK/4CituBUeUb5hqxJLj9YuemAEuvm9gQ/+pgXYfbQuqAkiYu+u7YEsNA==}
 
   scheduler@0.27.0:
     resolution: {integrity: sha512-eNv+WrVbKu1f3vbYJT/xtiF5syA5HPIMtf9IgY/nKg0sWqzAUEvqY/xm7OcZc/qafLx/iO9FgOmeSAp4v5ti/Q==}
@@ -7522,6 +7519,15 @@ packages:
 
   urlpattern-polyfill@10.0.0:
     resolution: {integrity: sha512-H/A06tKD7sS1O1X2SshBVeA5FLycRpjqiBeqGKmBwBDBy28EnRjORxTNe269KSSr5un5qyWi1iL61wLxpd+ZOg==}
+
+  use-isomorphic-layout-effect@1.2.1:
+    resolution: {integrity: sha512-tpZZ+EX0gaghDAiFR37hj5MgY6ZN55kLiPkJsKxBMZ6GZdOSPJXiOzPM984oPYZ5AnehYx5WQp1+ME8I/P/pRA==}
+    peerDependencies:
+      '@types/react': '*'
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
 
   use-sync-external-store@1.6.0:
     resolution: {integrity: sha512-Pp6GSwGP/NrPIrxVFAIkOQeyw8lFenOHijQWkUTrDvrF4ALqylP2C/KCkeS9dpUM3KvYRQhna5vt7IL95+ZQ9w==}
@@ -8367,110 +8373,58 @@ snapshots:
       preact: 10.28.2
     optional: true
 
-  '@deckgl-fiber-renderer/dom@1.4.0(33730d2c1e0221955caf5c1b28046743)':
-    dependencies:
-      '@deckgl-fiber-renderer/reconciler': 1.4.0(33730d2c1e0221955caf5c1b28046743)
-      '@deckgl-fiber-renderer/shared': 1.4.0(@deck.gl/core@9.2.10)(@deck.gl/mapbox@9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@types/react@19.2.7)(react@19.2.3)
-      '@deckgl-fiber-renderer/types': 1.4.0(0198b39424cc7edf8d6af0b38477a582)
-      client-only: 0.0.1
-      its-fine: 2.0.0(@types/react@19.2.7)(react@19.2.3)
-      react: 19.2.3
-      react-dom: 19.2.3(react@19.2.3)
-    transitivePeerDependencies:
-      - '@deck.gl/core'
-      - '@deck.gl/geo-layers'
-      - '@deck.gl/layers'
-      - '@deck.gl/mapbox'
-      - '@deck.gl/mesh-layers'
-      - '@types/react'
-      - '@types/react-dom'
-      - immer
-      - use-sync-external-store
-
-  '@deckgl-fiber-renderer/dom@1.4.0(ee29996881be5487e63b5f5c4ab30ce4)':
-    dependencies:
-      '@deckgl-fiber-renderer/reconciler': 1.4.0(ee29996881be5487e63b5f5c4ab30ce4)
-      '@deckgl-fiber-renderer/shared': 1.4.0(@deck.gl/core@9.2.10)(@deck.gl/mapbox@9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@types/react@19.2.7)(immer@11.0.1)(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))
-      '@deckgl-fiber-renderer/types': 1.4.0(0198b39424cc7edf8d6af0b38477a582)
-      client-only: 0.0.1
-      its-fine: 2.0.0(@types/react@19.2.7)(react@19.2.3)
-      react: 19.2.3
-      react-dom: 19.2.3(react@19.2.3)
-    transitivePeerDependencies:
-      - '@deck.gl/core'
-      - '@deck.gl/geo-layers'
-      - '@deck.gl/layers'
-      - '@deck.gl/mapbox'
-      - '@deck.gl/mesh-layers'
-      - '@types/react'
-      - '@types/react-dom'
-      - immer
-      - use-sync-external-store
-    optional: true
-
-  '@deckgl-fiber-renderer/reconciler@1.4.0(33730d2c1e0221955caf5c1b28046743)':
+  '@deckgl-fiber-renderer/dom@2.0.1(ee29996881be5487e63b5f5c4ab30ce4)':
     dependencies:
       '@deck.gl/core': 9.2.10
       '@deck.gl/geo-layers': 9.1.14(@deck.gl/core@9.2.10)(@deck.gl/extensions@9.2.9(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))))(@deck.gl/layers@9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))))(@deck.gl/mesh-layers@9.1.14(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))))(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))
       '@deck.gl/layers': 9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))
       '@deck.gl/mapbox': 9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6)
       '@deck.gl/mesh-layers': 9.1.14(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))
-      '@deckgl-fiber-renderer/shared': 1.4.0(@deck.gl/core@9.2.10)(@deck.gl/mapbox@9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@types/react@19.2.7)(react@19.2.3)
-      '@deckgl-fiber-renderer/types': 1.4.0(0198b39424cc7edf8d6af0b38477a582)
+      '@deckgl-fiber-renderer/reconciler': 2.0.1(ee29996881be5487e63b5f5c4ab30ce4)
+      '@deckgl-fiber-renderer/shared': 2.0.1(@deck.gl/core@9.2.10)(@deck.gl/mapbox@9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@types/react@19.2.7)(immer@11.0.1)(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))
+      '@deckgl-fiber-renderer/types': 2.0.1(0198b39424cc7edf8d6af0b38477a582)
+      client-only: 0.0.1
+      its-fine: 2.0.0(@types/react@19.2.7)(react@19.2.3)
       react: 19.2.3
       react-dom: 19.2.3(react@19.2.3)
-      react-reconciler: 0.31.0(react@19.2.3)
+      use-isomorphic-layout-effect: 1.2.1(@types/react@19.2.7)(react@19.2.3)
     transitivePeerDependencies:
       - '@types/react'
       - '@types/react-dom'
       - immer
       - use-sync-external-store
 
-  '@deckgl-fiber-renderer/reconciler@1.4.0(ee29996881be5487e63b5f5c4ab30ce4)':
+  '@deckgl-fiber-renderer/reconciler@2.0.1(ee29996881be5487e63b5f5c4ab30ce4)':
     dependencies:
       '@deck.gl/core': 9.2.10
       '@deck.gl/geo-layers': 9.1.14(@deck.gl/core@9.2.10)(@deck.gl/extensions@9.2.9(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))))(@deck.gl/layers@9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))))(@deck.gl/mesh-layers@9.1.14(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))))(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))
       '@deck.gl/layers': 9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))
       '@deck.gl/mapbox': 9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6)
       '@deck.gl/mesh-layers': 9.1.14(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))
-      '@deckgl-fiber-renderer/shared': 1.4.0(@deck.gl/core@9.2.10)(@deck.gl/mapbox@9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@types/react@19.2.7)(immer@11.0.1)(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))
-      '@deckgl-fiber-renderer/types': 1.4.0(0198b39424cc7edf8d6af0b38477a582)
+      '@deckgl-fiber-renderer/shared': 2.0.1(@deck.gl/core@9.2.10)(@deck.gl/mapbox@9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@types/react@19.2.7)(immer@11.0.1)(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))
+      '@deckgl-fiber-renderer/types': 2.0.1(0198b39424cc7edf8d6af0b38477a582)
       react: 19.2.3
       react-dom: 19.2.3(react@19.2.3)
-      react-reconciler: 0.31.0(react@19.2.3)
+      react-reconciler: 0.33.0(react@19.2.3)
     transitivePeerDependencies:
       - '@types/react'
       - '@types/react-dom'
       - immer
       - use-sync-external-store
-    optional: true
 
-  '@deckgl-fiber-renderer/shared@1.4.0(@deck.gl/core@9.2.10)(@deck.gl/mapbox@9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@types/react@19.2.7)(immer@11.0.1)(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))':
+  '@deckgl-fiber-renderer/shared@2.0.1(@deck.gl/core@9.2.10)(@deck.gl/mapbox@9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@types/react@19.2.7)(immer@11.0.1)(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))':
     dependencies:
       '@deck.gl/core': 9.2.10
       '@deck.gl/mapbox': 9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6)
-      loglayer: 6.10.0
+      loglayer: 9.1.0
       zustand: 5.0.9(@types/react@19.2.7)(immer@11.0.1)(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))
     transitivePeerDependencies:
       - '@types/react'
       - immer
       - react
       - use-sync-external-store
-    optional: true
 
-  '@deckgl-fiber-renderer/shared@1.4.0(@deck.gl/core@9.2.10)(@deck.gl/mapbox@9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6))(@types/react@19.2.7)(react@19.2.3)':
-    dependencies:
-      '@deck.gl/core': 9.2.10
-      '@deck.gl/mapbox': 9.1.14(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6)
-      loglayer: 6.10.0
-      zustand: 5.0.9(@types/react@19.2.7)(react@19.2.3)
-    transitivePeerDependencies:
-      - '@types/react'
-      - immer
-      - react
-      - use-sync-external-store
-
-  '@deckgl-fiber-renderer/types@1.4.0(0198b39424cc7edf8d6af0b38477a582)':
+  '@deckgl-fiber-renderer/types@2.0.1(0198b39424cc7edf8d6af0b38477a582)':
     dependencies:
       '@deck.gl/core': 9.2.10
       '@deck.gl/geo-layers': 9.1.14(@deck.gl/core@9.2.10)(@deck.gl/extensions@9.2.9(@deck.gl/core@9.2.10)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))))(@deck.gl/layers@9.2.9(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))))(@deck.gl/mesh-layers@9.1.14(@deck.gl/core@9.2.10)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))))(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))
@@ -9157,10 +9111,6 @@ snapshots:
       jszip: 3.10.1
       md5: 2.3.0
 
-  '@loglayer/context-manager@1.1.6':
-    dependencies:
-      '@loglayer/shared': 2.5.3
-
   '@loglayer/context-manager@2.0.2':
     dependencies:
       '@loglayer/shared': 4.1.0
@@ -9173,15 +9123,9 @@ snapshots:
     dependencies:
       '@loglayer/shared': 4.1.0
 
-  '@loglayer/plugin@2.1.6':
-    dependencies:
-      '@loglayer/shared': 2.5.3
-
   '@loglayer/plugin@3.0.2':
     dependencies:
       '@loglayer/shared': 4.1.0
-
-  '@loglayer/shared@2.5.3': {}
 
   '@loglayer/shared@4.1.0': {}
 
@@ -9191,10 +9135,6 @@ snapshots:
       chalk: 5.6.2
       date-fns: 4.1.0
       sprintf-js: 1.1.3
-
-  '@loglayer/transport@2.3.4':
-    dependencies:
-      '@loglayer/shared': 2.5.3
 
   '@loglayer/transport@3.0.2':
     dependencies:
@@ -13559,13 +13499,6 @@ snapshots:
       chalk: 5.6.2
       is-unicode-supported: 1.3.0
 
-  loglayer@6.10.0:
-    dependencies:
-      '@loglayer/context-manager': 1.1.6
-      '@loglayer/plugin': 2.1.6
-      '@loglayer/shared': 2.5.3
-      '@loglayer/transport': 2.3.4
-
   loglayer@9.1.0:
     dependencies:
       '@loglayer/context-manager': 2.0.2
@@ -14511,10 +14444,10 @@ snapshots:
       - '@types/react'
       - redux
 
-  react-reconciler@0.31.0(react@19.2.3):
+  react-reconciler@0.33.0(react@19.2.3):
     dependencies:
       react: 19.2.3
-      scheduler: 0.25.0
+      scheduler: 0.27.0
 
   react-redux@9.2.0(@types/react@19.2.7)(react@19.2.3)(redux@5.0.1):
     dependencies:
@@ -14782,8 +14715,6 @@ snapshots:
   saxes@6.0.0:
     dependencies:
       xmlchars: 2.2.0
-
-  scheduler@0.25.0: {}
 
   scheduler@0.27.0: {}
 
@@ -15540,6 +15471,12 @@ snapshots:
 
   urlpattern-polyfill@10.0.0: {}
 
+  use-isomorphic-layout-effect@1.2.1(@types/react@19.2.7)(react@19.2.3):
+    dependencies:
+      react: 19.2.3
+    optionalDependencies:
+      '@types/react': 19.2.7
+
   use-sync-external-store@1.6.0(react@19.2.3):
     dependencies:
       react: 19.2.3
@@ -15874,11 +15811,6 @@ snapshots:
       immer: 11.0.1
       react: 19.2.3
       use-sync-external-store: 1.6.0(react@19.2.3)
-
-  zustand@5.0.9(@types/react@19.2.7)(react@19.2.3):
-    optionalDependencies:
-      '@types/react': 19.2.7
-      react: 19.2.3
 
   zwitch@2.0.4: {}
 

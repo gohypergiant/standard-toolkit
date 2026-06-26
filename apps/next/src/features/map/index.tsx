@@ -13,13 +13,13 @@
 import 'server-only';
 import { ErrorComponent } from './error';
 import { LoadingComponent } from './loading';
-import { MapClient } from './server';
+import { MapServer } from './server';
 
 export function MapExample() {
   return (
     <ErrorComponent>
       <LoadingComponent>
-        <MapClient />
+        <MapServer />
       </LoadingComponent>
     </ErrorComponent>
   );
