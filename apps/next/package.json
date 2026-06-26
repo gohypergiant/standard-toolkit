@@ -52,7 +52,7 @@
     "@memlab/core": "^1.1.43",
     "@memlab/heap-analysis": "^1.0.40",
     "@next/bundle-analyzer": "^16.1.6",
-    "@playwright/test": "^1.49.0",
+    "@playwright/test": "^1.61.1",
     "@react-types/shared": "~3.34.0",
     "@tailwindcss/vite": "^4.1.18",
     "@testing-library/dom": "^10.4.1",
