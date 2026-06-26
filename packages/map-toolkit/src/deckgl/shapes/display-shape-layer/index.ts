@@ -686,9 +686,10 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
 
       // Swap the icon point sublayer for a MaskedIconLayer so point icons recolor
       // their maskable region in real time from the shape's fillColor. The
-      // sublayer carries its own MaskedCoffinCornerExtension (so brackets
-      // composite over the recolored icon) plus the coffin-corner selection props
-      // re-set, since overriding `extensions` drops the parent-propagated ones.
+      // sublayer re-attaches the CoffinCornerExtension (which auto-composites its
+      // brackets over the recolored icon for a masked-icon host) plus the
+      // coffin-corner selection props, since overriding `extensions` drops the
+      // parent-propagated ones.
       ...(hasIcons
         ? {
             // biome-ignore lint/style/useNamingConvention: deck.gl's sublayer-override prop.

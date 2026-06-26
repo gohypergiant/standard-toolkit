@@ -11,5 +11,4 @@
  */
 
 export { CoffinCornerExtension } from './coffin-corner-extension';
-export { MaskedCoffinCornerExtension } from './masked-coffin-corner-extension';
 export type { CoffinCornerExtensionProps, EntityId } from './types';

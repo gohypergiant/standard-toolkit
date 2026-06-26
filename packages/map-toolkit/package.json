@@ -87,7 +87,6 @@
     "./deckgl/extensions": "./dist/deckgl/extensions/index.js",
     "./deckgl/extensions/coffin-corner": "./dist/deckgl/extensions/coffin-corner/index.js",
     "./deckgl/extensions/coffin-corner/coffin-corner-extension": "./dist/deckgl/extensions/coffin-corner/coffin-corner-extension.js",
-    "./deckgl/extensions/coffin-corner/masked-coffin-corner-extension": "./dist/deckgl/extensions/coffin-corner/masked-coffin-corner-extension.js",
     "./deckgl/extensions/coffin-corner/types": "./dist/deckgl/extensions/coffin-corner/types.js",
     "./deckgl/grid-layers": "./dist/deckgl/grid-layers/index.js",
     "./deckgl/grid-layers/core/base-grid-layer": "./dist/deckgl/grid-layers/core/base-grid-layer.js",

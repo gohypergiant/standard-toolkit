@@ -44,17 +44,17 @@ new MaskedIconLayer({
 
 ## Selection & hover brackets
 
-Pair the layer with `MaskedCoffinCornerExtension` (not the plain `CoffinCornerExtension`) so the selection/hover brackets composite over the **recolored** icon. A plain `CoffinCornerExtension` samples the raw texel and would show the unreplaced match color (pink) under the brackets.
+Pair the layer with `CoffinCornerExtension` for selection/hover brackets. On a `MaskedIconLayer` host it automatically composites its brackets over the **recolored** icon (it detects the masked-icon layer and applies the color replacement first), so you don't get the unreplaced match color (pink) showing under the brackets.
 
 ```tsx
 import {
   MaskedIconLayer,
-  MaskedCoffinCornerExtension,
+  CoffinCornerExtension,
 } from '@accelint/map-toolkit/deckgl';
 
 new MaskedIconLayer({
   // ...icon + getFillColor props...
-  extensions: [new MaskedCoffinCornerExtension()],
+  extensions: [new CoffinCornerExtension()],
   selectedEntityIds: selectedSet,
   hoveredEntityIds: hoveredSet,
 });

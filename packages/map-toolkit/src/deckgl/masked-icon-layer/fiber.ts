@@ -24,8 +24,8 @@ declare global {
         /**
          * A Deck.gl Fiber layer that recolors each icon's maskable region in
          * real time from a per-instance `getFillColor`, without a separate atlas
-         * per color. Pair with `MaskedCoffinCornerExtension` for selection and
-         * hover brackets that composite over the recolored icon.
+         * per color. Pair with `CoffinCornerExtension` for selection and hover
+         * brackets that composite over the recolored icon.
          *
          * @example
          * ```tsx

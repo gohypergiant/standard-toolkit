@@ -24,12 +24,12 @@
  *
  * The function is *declared* by {@link MaskedIconLayer}'s fragment shader (this
  * constant is inlined there) and *called* both from that shader's `main` and
- * from `MaskedCoffinCornerExtension`'s injected `fs:#main-start` — which compiles
- * into the same program, so the replacement math has a single source of truth.
- * It depends on the `maskedIcon` uniform block (see `masked-icon-uniforms.ts`)
- * and the `vFillColor` / `vClicked` varyings emitted by the masked-icon vertex
- * shader, plus deck.gl's `picking_vRGBcolor_Avalid` — all of which a
- * MaskedIconLayer host provides.
+ * from the `CoffinCornerExtension`'s masked `fs:#main-start` injection — which
+ * compiles into the same program, so the replacement math has a single source of
+ * truth. It depends on the `maskedIcon` uniform block (see
+ * `masked-icon-uniforms.ts`) and the `vFillColor` / `vClicked` varyings emitted
+ * by the masked-icon vertex shader, plus deck.gl's `picking_vRGBcolor_Avalid` —
+ * all of which a MaskedIconLayer host provides.
  *
  * @remarks
  * `MASKED_ICON_EDGE_TOLERANCE` is how far (in normalized 0..1 RGB space) a texel

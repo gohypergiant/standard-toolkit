@@ -16,7 +16,7 @@ import { MaskedIconLayer } from '../../../masked-icon-layer';
 import { DEFAULT_COLORS } from '../../shared/constants';
 import { getFillColor, getLineColor } from '../../shared/utils/style-utils';
 import type { Rgba255Tuple } from '@accelint/predicates';
-import { MAP_INTERACTION, MASKED_COFFIN_CORNER_EXTENSION } from '../constants';
+import { COFFIN_CORNER_EXTENSION, MAP_INTERACTION } from '../constants';
 import type { Shape, ShapeId } from '../../shared/types';
 
 /** Icon mapping entry describing position and dimensions within an atlas. */
@@ -171,8 +171,9 @@ type MaskedIconSelectionConfig = {
  * tint) so icons WITHOUT a maskable region render exactly as before — the
  * masking only affects pixels matching the layer's `matchColor`.
  *
- * Selection/hover is conveyed purely by the {@link MaskedCoffinCornerExtension}
- * brackets (not by recoloring the icon body). Because this override replaces the
+ * Selection/hover is conveyed purely by the {@link CoffinCornerExtension}
+ * brackets (which auto-composite over the recolored icon for a MaskedIconLayer
+ * host), not by recoloring the icon body. Because this override replaces the
  * propagated `extensions` for the icon sublayer, the coffin-corner selection
  * props (`selectedEntityIds`/`hoveredEntityIds`/`getEntityId`/
  * `selectedCoffinCornerColor`) are re-set here so they still reach the sublayer.
@@ -199,7 +200,7 @@ export function getMaskedIconSubLayerProps({
       feature?.properties ? getLineColor(feature) : DEFAULT_COLORS.line,
     // Selection/hover comes from the coffin-corner brackets, re-set here because
     // overriding `extensions` drops the parent-propagated coffin-corner props.
-    extensions: [MASKED_COFFIN_CORNER_EXTENSION],
+    extensions: [COFFIN_CORNER_EXTENSION],
     selectedEntityIds: selectedShapeId ? new Set([selectedShapeId]) : undefined,
     hoveredEntityIds: hoveredEntityId ? new Set([hoveredEntityId]) : undefined,
     getEntityId: (feature: Shape['feature']) =>

@@ -17,10 +17,7 @@ export {
   PARAMETERS,
 } from './base-map/constants';
 export { MapEvents, MapEventsNamespace } from './base-map/events';
-export {
-  CoffinCornerExtension,
-  MaskedCoffinCornerExtension,
-} from './extensions/coffin-corner';
+export { CoffinCornerExtension } from './extensions/coffin-corner';
 export {
   MaskedIconLayer,
   type MaskedIconLayerProps,

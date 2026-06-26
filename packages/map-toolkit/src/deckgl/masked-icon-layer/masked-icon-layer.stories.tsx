@@ -12,9 +12,9 @@
 
 import { uuid } from '@accelint/core';
 import { ColorPicker } from '@accelint/design-toolkit/components/color-picker';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { BaseMap } from '@/deckgl/base-map';
-import { MaskedCoffinCornerExtension } from '../extensions/coffin-corner/masked-coffin-corner-extension';
+import { CoffinCornerExtension } from '../extensions/coffin-corner';
 import { MARKER, MARKER_MASKED } from '../shapes/__fixtures__/atlas';
 import iconMapping from '../shapes/__fixtures__/atlas.json';
 import iconAtlas from '../shapes/__fixtures__/atlas.png';
@@ -24,6 +24,7 @@ import type { Rgba255Tuple } from '@accelint/predicates';
 import type { PickingInfo } from '@deck.gl/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { EntityId } from '../extensions/coffin-corner';
+import { Divider } from '@accelint/design-toolkit';
 
 /** The react-aria Color the swatch picker hands to `onChange`. */
 type PickerColor = Parameters<NonNullable<ColorPickerProps['onChange']>>[0];
@@ -46,7 +47,7 @@ const CA_VIEW_STATE = {
   zoom: 5.5,
 };
 
-const maskedCoffinCornerExtension = new MaskedCoffinCornerExtension();
+const coffinCornerExtension = new CoffinCornerExtension();
 
 const DEFAULT_FILL: Rgba255Tuple = [98, 166, 255, 255]; // blue (#62a6ff)
 
@@ -67,7 +68,7 @@ interface IconData {
 }
 
 const ICON_DATA: IconData[] = [
-  // Maskable markers — their pink region recolors to the chosen fill.
+  // Maskable markers — each recolors independently from its own fill.
   { id: 1, position: [-122.45, 37.78], icon: MARKER_MASKED },
   { id: 2, position: [-121.49, 38.58], icon: MARKER_MASKED },
   { id: 3, position: [-119.77, 36.74], icon: MARKER_MASKED },
@@ -75,6 +76,14 @@ const ICON_DATA: IconData[] = [
   // Plain (white) marker with no maskable region — should render unchanged.
   { id: 5, position: [-117.16, 32.72], icon: MARKER },
 ];
+
+/** Per-icon starting fill, so the layer shows different colors per instance. */
+const INITIAL_FILLS: Record<number, Rgba255Tuple> = {
+  1: [98, 166, 255, 255], // blue
+  2: [48, 210, 126, 255], // green
+  3: [252, 164, 0, 255], // orange
+  4: [212, 35, 29, 255], // red
+};
 
 /** Convert the picker's react-aria Color to an [r, g, b, a] tuple. */
 function ariaColorToRgba(color: PickerColor): Rgba255Tuple {
@@ -88,27 +97,21 @@ function ariaColorToRgba(color: PickerColor): Rgba255Tuple {
 }
 
 function MaskedIconDemo() {
-  const [fill, setFill] = useState<Rgba255Tuple>(DEFAULT_FILL);
-  const [selected, setSelected] = useState<Set<EntityId>>(() => new Set());
+  // Per-icon fill colors keyed by id — proves the layer recolors each instance
+  // independently rather than tinting the whole layer one color.
+  const [fills, setFills] =
+    useState<Record<number, Rgba255Tuple>>(INITIAL_FILLS);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
   const [hovered, setHovered] = useState<Set<EntityId>>(() => new Set());
 
   const handleClick = useCallback((info: PickingInfo) => {
     if (info.index === -1 || !info.object) {
-      setSelected(new Set());
+      setSelectedId(null);
       return;
     }
 
     const id = (info.object as IconData).id;
-    setSelected((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) {
-        next.delete(id);
-      } else {
-        next.clear();
-        next.add(id);
-      }
-      return next;
-    });
+    setSelectedId((prev) => (prev === id ? null : id));
   }, []);
 
   const handleHover = useCallback((info: PickingInfo) => {
@@ -118,6 +121,14 @@ function MaskedIconDemo() {
         : new Set(),
     );
   }, []);
+
+  const selected = useMemo(
+    () => (selectedId === null ? new Set<EntityId>() : new Set([selectedId])),
+    [selectedId],
+  );
+
+  const selectedFill =
+    selectedId === null ? DEFAULT_FILL : (fills[selectedId] ?? DEFAULT_FILL);
 
   return (
     <div className='relative h-dvh w-dvw'>
@@ -138,9 +149,11 @@ function MaskedIconDemo() {
           getSize={48}
           billboard
           pickable
-          getFillColor={() => fill}
-          updateTriggers={{ getFillColor: [fill] }}
-          extensions={[maskedCoffinCornerExtension]}
+          getFillColor={(d: unknown) =>
+            fills[(d as IconData).id] ?? DEFAULT_FILL
+          }
+          updateTriggers={{ getFillColor: [fills] }}
+          extensions={[coffinCornerExtension]}
           getEntityId={(d: unknown) => (d as IconData).id}
           selectedEntityIds={selected}
           hoveredEntityIds={hovered}
@@ -150,17 +163,32 @@ function MaskedIconDemo() {
       <div className='absolute top-l left-l z-10 flex w-[360px] flex-col gap-m rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
         <p className='font-bold text-header-l'>Masked Icon Layer</p>
         <p className='text-body-s text-content-secondary'>
-          The pink marker region recolors to the chosen fill in real time. The
-          white marker has no maskable region and is unchanged. Click an icon to
-          select, hover for a preview — brackets composite over the recolored
-          icon.
+          Each pink marker recolors independently from its own fill - they start
+          in different colors. The white marker has no maskable region and is
+          unchanged.
         </p>
+        <p className='text-body-s text-content-secondary'>
+          Click a marker to select it, then pick a color to recolor only that
+          one. Hover for a preview; brackets composite over the recolored icon.
+        </p>
+        <Divider />
         <ColorPicker
-          label='Icon fill'
+          label={
+            selectedId === null
+              ? 'Icon fill (select a marker)'
+              : `Icon fill — marker ${selectedId}`
+          }
           isRequired
-          value={fill}
+          isDisabled={selectedId === null}
+          value={selectedFill}
           items={FILL_SWATCHES}
-          onChange={(color) => setFill(ariaColorToRgba(color))}
+          onChange={(color) => {
+            if (selectedId === null) {
+              return;
+            }
+            const next = ariaColorToRgba(color);
+            setFills((prev) => ({ ...prev, [selectedId]: next }));
+          }}
         />
       </div>
     </div>

@@ -331,11 +331,39 @@ describe('CoffinCornerExtension', () => {
       expect(shaders).toBeNull();
     });
 
-    it('samples the icon texture in the icon main-start injection', () => {
+    it('samples the icon texture in the plain icon main-start injection', () => {
       const layer = createMockLayer();
 
       const shaders = extension.getShaders.call(layer, extension);
 
+      expect(shaders?.inject['fs:#main-start']).toContain(
+        'texture(iconsTexture, vTextureCoords)',
+      );
+      // A plain IconLayer host must NOT get the masked color replacement.
+      expect(shaders?.inject['fs:#main-start']).not.toContain(
+        'maskedIcon_replace',
+      );
+    });
+
+    it('uses the masked main-start for a MaskedIconLayer host', () => {
+      // A MaskedIconLayer is an IconLayer subclass identified by its layerName.
+      // Mock a constructor that passes `instanceof IconLayer` but reports the
+      // masked layerName, so the extension selects the masked shader path.
+      function MaskedIconLayer() {
+        // Stand-in constructor; only its prototype chain + layerName matter.
+      }
+      MaskedIconLayer.prototype = Object.create(IconLayer.prototype);
+      // biome-ignore lint/suspicious/noExplicitAny: deck.gl static layerName.
+      (MaskedIconLayer as any).layerName = 'MaskedIconLayer';
+      MaskedIconLayer.prototype.constructor = MaskedIconLayer;
+
+      // biome-ignore lint/suspicious/noExplicitAny: minimal masked-host mock.
+      const layer = Object.create(MaskedIconLayer.prototype) as any;
+
+      const shaders = extension.getShaders.call(layer, extension);
+
+      // The masked path applies the color replacement before compositing.
+      expect(shaders?.inject['fs:#main-start']).toContain('maskedIcon_replace');
       expect(shaders?.inject['fs:#main-start']).toContain(
         'texture(iconsTexture, vTextureCoords)',
       );

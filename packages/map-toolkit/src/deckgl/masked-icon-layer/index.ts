@@ -104,9 +104,8 @@ function normalizeColor(color: Color): number[] {
  * renders exactly like a plain `IconLayer`.
  *
  * To draw selection/hover brackets over the recolored icon, pair this layer with
- * the `MaskedCoffinCornerExtension`, which composites its brackets on top of the
- * masked color (a plain `CoffinCornerExtension` would sample the raw texel and
- * show the unreplaced match color under the brackets).
+ * `CoffinCornerExtension` — on a masked-icon host it automatically composites its
+ * brackets on top of the masked color rather than the raw match color.
  *
  * @example
  * ```tsx
