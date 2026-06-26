@@ -85,6 +85,7 @@
     "start": "NODE_ENV=production next start",
     "test": "pnpm vitest --project=unit",
     "visual": "vitest --project=visual --run --no-coverage",
+    "visual:debug": "vitest --project=visual --watch --no-coverage --browser.ui --browser.headless=false",
     "visual:update": "vitest --project=visual --run --update --no-coverage"
   },
   "type": "module"
