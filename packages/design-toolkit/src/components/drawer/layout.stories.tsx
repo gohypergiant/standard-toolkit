@@ -280,3 +280,117 @@ export const Default: Story = {
     </div>
   ),
 };
+
+export const MixedSizes: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Four drawers open at once, each with a different `size`. Every edge sizes its own grid track independently, so the large left drawer and small right drawer render at their own widths with no cross-talk between edges.',
+      },
+    },
+  },
+  render: () => (
+    <div className='h-screen w-full'>
+      <DrawerLayout extend='left right' push='left right top bottom'>
+        <DrawerLayoutMain>
+          <div className='flex h-full items-center justify-center bg-surface-overlay'>
+            <p>Main content is pushed by each open drawer.</p>
+          </div>
+        </DrawerLayoutMain>
+
+        <Drawer
+          id={ids.left.drawer}
+          className='bg-[#ffd90087]'
+          placement='left'
+          size='large'
+          defaultView={ids.left.views.a}
+        >
+          <DrawerMenu position='center'>
+            <DrawerMenuItem toggle for={ids.left.views.a} textValue='Left'>
+              <ChevronRight className='fg-primary-bold cursor-pointer group-open/drawer:rotate-180' />
+            </DrawerMenuItem>
+          </DrawerMenu>
+          <DrawerPanel>
+            <DrawerView id={ids.left.views.a}>
+              <DrawerHeader>
+                <DrawerHeaderTitle>Left (large)</DrawerHeaderTitle>
+                <DrawerClose for={ids.left.views.a} />
+              </DrawerHeader>
+              <DrawerContent>Large drawer</DrawerContent>
+            </DrawerView>
+          </DrawerPanel>
+        </Drawer>
+
+        <Drawer
+          id={ids.right.drawer}
+          className='bg-[#00800084]'
+          placement='right'
+          size='small'
+          defaultView={ids.right.views.a}
+        >
+          <DrawerMenu position='center'>
+            <DrawerMenuItem toggle for={ids.right.views.a} textValue='Right'>
+              <ChevronLeft className='fg-primary-bold cursor-pointer group-open/drawer:rotate-180' />
+            </DrawerMenuItem>
+          </DrawerMenu>
+          <DrawerPanel>
+            <DrawerView id={ids.right.views.a}>
+              <DrawerHeader>
+                <DrawerHeaderTitle>Right (small)</DrawerHeaderTitle>
+                <DrawerClose for={ids.right.views.a} />
+              </DrawerHeader>
+              <DrawerContent>Small drawer</DrawerContent>
+            </DrawerView>
+          </DrawerPanel>
+        </Drawer>
+
+        <Drawer
+          id={ids.top.drawer}
+          className='bg-[#ff00008b]'
+          placement='top'
+          size='medium'
+          defaultView={ids.top.views.a}
+        >
+          <DrawerMenu position='center'>
+            <DrawerMenuItem toggle for={ids.top.views.a} textValue='Top'>
+              <ChevronDown className='fg-primary-bold cursor-pointer group-open/drawer:rotate-180' />
+            </DrawerMenuItem>
+          </DrawerMenu>
+          <DrawerPanel>
+            <DrawerView id={ids.top.views.a}>
+              <DrawerHeader>
+                <DrawerHeaderTitle>Top (medium)</DrawerHeaderTitle>
+                <DrawerClose for={ids.top.views.a} />
+              </DrawerHeader>
+              <DrawerContent>Medium drawer</DrawerContent>
+            </DrawerView>
+          </DrawerPanel>
+        </Drawer>
+
+        <Drawer
+          id={ids.bottom.drawer}
+          className='bg-[#0000ff8a]'
+          placement='bottom'
+          size='large'
+          defaultView={ids.bottom.views.a}
+        >
+          <DrawerMenu position='center'>
+            <DrawerMenuItem toggle for={ids.bottom.views.a} textValue='Bottom'>
+              <ChevronUp className='fg-primary-bold cursor-pointer group-open/drawer:rotate-180' />
+            </DrawerMenuItem>
+          </DrawerMenu>
+          <DrawerPanel>
+            <DrawerView id={ids.bottom.views.a}>
+              <DrawerHeader>
+                <DrawerHeaderTitle>Bottom (large)</DrawerHeaderTitle>
+                <DrawerClose for={ids.bottom.views.a} />
+              </DrawerHeader>
+              <DrawerContent>Large drawer</DrawerContent>
+            </DrawerView>
+          </DrawerPanel>
+        </Drawer>
+      </DrawerLayout>
+    </div>
+  ),
+};

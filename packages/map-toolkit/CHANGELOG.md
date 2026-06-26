@@ -1,5 +1,35 @@
 # @accelint/map-toolkit
 
+## 5.2.1
+
+### Patch Changes
+
+- 149d975: Align wagon wheel bounding box style with line and polygon.
+- 5f1207f: Add smooth camera transitions to map setCenter. Supports transitionDuration and transitionEasing properties in CameraSetCenterEvent payload for animated camera movements using MapLibre's easeTo method.
+
+## 5.2.0
+
+### Minor Changes
+
+- fdea8e2: 2.5D view now allows right click & drag to pitch and rotate the camera. default pitch was updated to 60 degrees instead of 45 degrees. The pitch is overridable via the `pitch` property when initializing camera state (`initializeCameraState`) or by emitting a `setPitch` event while in 2.5D. Pitch is clamped to the renderable range, and the maximum is exported as the `MAX_PITCH` constant from `@accelint/map-toolkit/camera` so consumers can bound their own pitch UI without hardcoding the value.
+
+### Patch Changes
+
+- 0b97542: Fix the rotate-handle connector stem inheriting the shape's line color while editing. The `rotate-stem` guide is edit chrome, so it now renders with the bounding-box line color/width (`bboxLineColor`/`bboxLineWidth`) like the bounding box itself, independent of the shape's own `lineColor`.
+- 9b38ec2: Mark `radashi` as external in the build instead of bundling it. With `unbundle` on, the optional `radashi` dependency was inlined and its import rewritten to a `node_modules/.pnpm/radashi@…/…` store path. Bundlers that reject pnpm store paths (e.g. Turbopack) failed to resolve every `@accelint/map-toolkit` subpath with an "Invalid symlink" error in consuming apps. `radashi` is already an `optionalDependency`, so emitting a bare `radashi` specifier resolves cleanly from the consumer's `node_modules`.
+- Updated dependencies [a76da93]
+  - @accelint/geo@0.6.1
+
+## 5.1.0
+
+### Minor Changes
+
+- 384b42f: Adds optional type generics (`Mode`, `Owner`) to `useMapMode` for narrowing the `mode` value and `requestModeChange` arguments. `UseMapModeReturn` is now generic as well (defaults preserve existing behavior).
+
+### Patch Changes
+
+- 8dc37e9: Fix `BaseMap` runtime error "Style is not done loading." when `defaultView='3D'` (globe projection). Projection is now applied via `setProjection` after MapLibre's style has loaded, instead of being passed as the initial `projection` prop to `react-map-gl/maplibre`.
+
 ## 5.0.0
 
 ### Major Changes

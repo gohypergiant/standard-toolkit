@@ -11,7 +11,9 @@
  */
 
 import { Broadcast } from '@accelint/bus';
+import { uuid } from '@accelint/core';
 import { act, render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { NoticeEventTypes } from './events';
 import { NoticeList } from './list';
@@ -51,6 +53,88 @@ describe('NoticeList', () => {
     await waitFor(() => {
       expect(screen.queryByText('Hello 3')).not.toBeInTheDocument();
     });
+  });
+
+  it('should clear all notices when "Clear All" is pressed', async () => {
+    const user = userEvent.setup();
+    setup({ hideClearAll: false });
+
+    act(() => {
+      bus.emit(NoticeEventTypes.queue, { message: 'Notice 1' });
+      bus.emit(NoticeEventTypes.queue, { message: 'Notice 2' });
+    });
+
+    expect(await screen.findByText('Notice 1')).toBeInTheDocument();
+    expect(await screen.findByText('Notice 2')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Clear All' }));
+
+    await waitFor(() => {
+      expect(screen.queryByText('Notice 1')).not.toBeInTheDocument();
+      expect(screen.queryByText('Notice 2')).not.toBeInTheDocument();
+    });
+  });
+
+  it('should prefer the notice color over defaultColor', async () => {
+    setup({ defaultColor: 'info' });
+
+    act(() => {
+      bus.emit(NoticeEventTypes.queue, {
+        message: 'Critical notice',
+        color: 'critical',
+      });
+    });
+
+    const notice = (await screen.findByText('Critical notice')).closest(
+      '[data-color]',
+    );
+    expect(notice).toHaveAttribute('data-color', 'critical');
+  });
+
+  it('should apply defaultColor when the notice has no color', async () => {
+    setup({ defaultColor: 'advisory' });
+
+    act(() => {
+      bus.emit(NoticeEventTypes.queue, { message: 'Default color notice' });
+    });
+
+    const notice = (await screen.findByText('Default color notice')).closest(
+      '[data-color]',
+    );
+    expect(notice).toHaveAttribute('data-color', 'advisory');
+  });
+
+  it('should ignore notices targeted at another list when it has no id', async () => {
+    setup({});
+
+    act(() => {
+      bus.emit(NoticeEventTypes.queue, {
+        message: 'Targeted elsewhere',
+        target: uuid(),
+      });
+      bus.emit(NoticeEventTypes.queue, { message: 'Untargeted' });
+    });
+
+    expect(await screen.findByText('Untargeted')).toBeInTheDocument();
+    expect(screen.queryByText('Targeted elsewhere')).not.toBeInTheDocument();
+  });
+
+  it('should only receive notices targeted at its own id', async () => {
+    const id = uuid();
+    setup({ id });
+
+    act(() => {
+      bus.emit(NoticeEventTypes.queue, {
+        message: 'Untargeted',
+        target: undefined,
+      });
+      bus.emit(NoticeEventTypes.queue, { message: 'Mine', target: id });
+      bus.emit(NoticeEventTypes.queue, { message: 'Other', target: uuid() });
+    });
+
+    expect(await screen.findByText('Mine')).toBeInTheDocument();
+    expect(screen.queryByText('Untargeted')).not.toBeInTheDocument();
+    expect(screen.queryByText('Other')).not.toBeInTheDocument();
   });
 
   describe('auto-dismiss behavior', () => {

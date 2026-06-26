@@ -18,15 +18,17 @@ import { SelectField } from '@accelint/design-toolkit/components/select-field';
 import { Slider } from '@accelint/design-toolkit/components/slider';
 import { BaseMap } from '../deckgl/base-map';
 import { CameraEventTypes } from './events';
-import { useMapCamera } from './store';
+import { MAX_PITCH, useMapCamera } from './store';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type {
   CameraResetEvent,
+  CameraSetCenterEvent,
   CameraSetPitchEvent,
   CameraSetProjectionEvent,
   CameraSetRotationEvent,
   CameraSetViewEvent,
   CameraSetZoomEvent,
+  TransitionEasing,
   ProjectionType,
   ViewType,
 } from './types';
@@ -93,7 +95,7 @@ function CameraToolbar() {
           value={cameraState.pitch}
           isDisabled={cameraState.view !== '2.5D'}
           minValue={0}
-          maxValue={65}
+          maxValue={MAX_PITCH}
           layout='stack'
           onChange={(value) => {
             typeof value === 'number'
@@ -167,5 +169,140 @@ export const BasicUsage: Story = {
         <CameraToolbar />
       </div>
     );
+  },
+};
+
+const TRANSITION_STORY_ID = uuid();
+const TRANSITION_ZOOM = 6;
+
+const LOCATIONS = [
+  { name: 'New York', lat: 40.7128, lng: -74.006, zoom: TRANSITION_ZOOM },
+  { name: 'Los Angeles', lat: 34.0522, lng: -118.2437, zoom: TRANSITION_ZOOM },
+  { name: 'Chicago', lat: 41.8781, lng: -87.6298, zoom: TRANSITION_ZOOM },
+  { name: 'Miami', lat: 25.7617, lng: -80.1918, zoom: TRANSITION_ZOOM },
+  { name: 'Seattle', lat: 47.6062, lng: -122.3321, zoom: TRANSITION_ZOOM },
+];
+
+function TransitionToolbar() {
+  const setCenter = useEmit<CameraSetCenterEvent>(CameraEventTypes.setCenter);
+  const { cameraState } = useMapCamera(TRANSITION_STORY_ID);
+
+  const flyToLocation = (
+    lat: number,
+    lng: number,
+    zoom: number,
+    duration: number,
+    easing: TransitionEasing,
+  ) => {
+    setCenter({
+      id: TRANSITION_STORY_ID,
+      latitude: lat,
+      longitude: lng,
+      zoom,
+      transitionDuration: duration,
+      transitionEasing: easing,
+    });
+  };
+
+  return (
+    <div className='absolute top-l left-l flex w-[300px] flex-col gap-m rounded-lg bg-surface-default p-l shadow-elevation-overlay'>
+      <p className='font-bold text-header-l'>Smooth Camera Transitions</p>
+      <p className='text-(--fg-primary-muted) text-body-s'>
+        Click locations to see animated camera movements
+      </p>
+
+      <div className='flex flex-col gap-s'>
+        <p className='font-semibold text-body-m'>Locations (2s, linear)</p>
+        {LOCATIONS.map((loc) => (
+          <Button
+            key={loc.name}
+            variant='outlined'
+            color='mono-muted'
+            onPress={() =>
+              flyToLocation(loc.lat, loc.lng, loc.zoom, 2000, 'linear')
+            }
+            className='w-full'
+          >
+            {loc.name}
+          </Button>
+        ))}
+      </div>
+
+      <div className='flex flex-col gap-s'>
+        <p className='font-semibold text-body-m'>
+          Easing Functions (to Chicago)
+        </p>
+        <Button
+          variant='outlined'
+          color='accent-primary'
+          onPress={() =>
+            flyToLocation(41.8781, -87.6298, TRANSITION_ZOOM, 3000, 'linear')
+          }
+        >
+          Linear (3s)
+        </Button>
+        <Button
+          variant='outlined'
+          color='accent-primary'
+          onPress={() =>
+            flyToLocation(41.8781, -87.6298, TRANSITION_ZOOM, 3000, 'ease-in')
+          }
+        >
+          Ease In (3s)
+        </Button>
+        <Button
+          variant='outlined'
+          color='accent-primary'
+          onPress={() =>
+            flyToLocation(41.8781, -87.6298, TRANSITION_ZOOM, 3000, 'ease-out')
+          }
+        >
+          Ease Out (3s)
+        </Button>
+        <Button
+          variant='outlined'
+          color='accent-primary'
+          onPress={() =>
+            flyToLocation(
+              41.8781,
+              -87.6298,
+              TRANSITION_ZOOM,
+              3000,
+              'ease-in-out',
+            )
+          }
+        >
+          Ease In-Out (3s)
+        </Button>
+      </div>
+
+      <div className='rounded-md bg-surface-muted p-s text-body-xs'>
+        <p>
+          <strong>Current Position:</strong>
+        </p>
+        <p>Lat: {cameraState.latitude.toFixed(4)}</p>
+        <p>Lng: {cameraState.longitude.toFixed(4)}</p>
+        <p>Zoom: {cameraState.zoom.toFixed(2)}</p>
+      </div>
+    </div>
+  );
+}
+
+export const SmoothTransitions: Story = {
+  render: function Render() {
+    return (
+      <div className='relative h-dvh w-dvw'>
+        <BaseMap className='absolute inset-0' id={TRANSITION_STORY_ID} />
+        <TransitionToolbar />
+      </div>
+    );
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Demonstrates smooth camera transitions using transitionDuration and transitionEasing properties. Click locations to fly to them with animated camera movements, or test different easing functions.',
+      },
+    },
   },
 };

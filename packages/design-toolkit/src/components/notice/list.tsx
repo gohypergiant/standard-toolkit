@@ -111,13 +111,13 @@ export function NoticeList({
   const emitClose = useEmit(NoticeEventTypes.close);
 
   useOn(NoticeEventTypes.queue, (data) => {
-    if ((id && data.payload.target === id) || !id) {
-      const timeout = defaultTimeout ?? data.payload.timeout;
+    if (id ? data.payload.target === id : !data.payload.target) {
+      const timeout = data.payload.timeout ?? defaultTimeout;
       queue.add(
         {
           ...data.payload,
           id: data.payload.id || uuid(),
-          color: defaultColor || data.payload.color,
+          color: data.payload.color || defaultColor,
         },
         {
           timeout,
@@ -146,11 +146,13 @@ export function NoticeList({
     }
   });
 
-  useEffect(() => {
-    queue.subscribe(() => {
-      setHasNotices(queue.visibleToasts.length > 0);
-    });
-  });
+  useEffect(
+    () =>
+      queue.subscribe(() => {
+        setHasNotices(queue.visibleToasts.length > 0);
+      }),
+    [queue],
+  );
 
   const children = (
     <>
@@ -161,7 +163,7 @@ export function NoticeList({
             (className) => className ?? '',
           )}
           variant='outline'
-          onPress={queue.clear}
+          onPress={() => queue.clear()}
         >
           Clear All
         </Button>

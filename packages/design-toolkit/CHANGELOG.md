@@ -1,5 +1,48 @@
 # @accelint/design-toolkit
 
+## 9.12.0
+### Minor Changes
+
+- 00ce792: Adds new status options to StatusIndicator component: unknown and pending. Also adds a convenience option for adding a label.
+
+### Patch Changes
+
+- 7af5e73: Remove hover state from disabled outline button
+- b6b1064: changes SelectField component to be consistent height with other inputs
+
+## 9.11.3
+### Patch Changes
+
+- a76da93: Fix `CoordinateField` in controlled mode wiping all segments during edits. Emptying one segment (or entering an invalid coordinate) emits `onChange(null)`; when the parent echoed that `null` back into the `value` prop, the field re-synced from it and cleared every segment and any just-set validation error. The field now recognizes echoes of its own `onChange` emissions and leaves in-progress edits and validation errors intact.
+- 7dd620f: Fix four `NoticeList` bugs:
+  
+  - "Clear All" no longer throws (`queue.clear` was passed unbound, so `this` was `undefined` and clicking the button raised a TypeError without clearing anything).
+  - Per-notice `timeout` and `color` now take precedence over the list-level `defaultTimeout`/`defaultColor`, matching the documented behavior ("defaults for notices without explicit timeout/color"). Previously the list-level values silently overrode every notice.
+  - A `NoticeList` without an `id` no longer consumes notices that were explicitly targeted at another list, which previously caused targeted notices to render twice (once in the targeted list and once in every untargeted list).
+  - The internal queue subscription is now registered once with proper cleanup. Previously a new subscription was added on every render and never removed, leaking listeners for the life of the page.
+- 4b85982: Fix four `Sidenav` visual bugs:
+  
+  - `Sidenav` headings (`SidenavMenu` titles, the closed-state popover title, `SidenavAvatar` headings, and `SidenavContent` section headings) no longer render forced uppercase — heading content now renders verbatim.
+  - The `SidenavLink` external-link arrow (and the `SidenavHeader` collapse chevron) now hide reliably when the sidenav is collapsed. The `__transient` collapsed-state hide previously tied on specificity with `Icon`'s own `display`, leaking icons into the collapsed rail; it is now forced so it applies uniformly to text and icon children.
+  - The expanded `SidenavMenu` trigger title now uses `body-s` (12px), matching its own collapsed-state popover title and sibling nav items, instead of the smaller `body-xs` (10px) section-label size it previously inherited.
+  - The collapsed rail now honors `--sidenav-width` in push layouts (`DrawerLayout push`), matching overlay mode. Previously `--sidenav-width` only affected overlay mode (via the collapse transform) and push-mode rails were content-driven, so the collapsed width was inconsistent between the two layouts and not themeable in push mode.
+- Updated dependencies [a76da93]
+  - @accelint/geo@0.6.1
+
+## 9.11.2
+### Patch Changes
+
+- e2dce9f: Fix checkbox and switch scroll-into-view behavior. Prevents browser from automatically scrolling when clicking checkboxes or switches by overriding focus() to use preventScroll option.
+
+## 9.11.1
+
+### Patch Changes
+
+- bf5c161: Fix Drawer push layout: closed drawers no longer permanently reserve layout space. Each drawer's grid track collapses when closed and expands only when open, so content is pushed aside only while a drawer is open.
+- 27295c8: Fixed layout issue with drawer
+- ce8f3b2: Fix ComboBoxField clear button: clicking where the hidden clear button sits now focuses the input and opens the dropdown instead of doing nothing.
+- 0e8dbfc: Fixed MGRS coordinates input behavior. Also, enhanced some of the UX with the function
+
 ## 9.11.0
 ### Minor Changes
 

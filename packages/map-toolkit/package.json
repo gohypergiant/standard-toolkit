@@ -1,7 +1,7 @@
 {
   "name": "@accelint/map-toolkit",
   "description": "A collection of components and utilities to simplify visualizing and working with geospatial data.",
-  "version": "5.0.0",
+  "version": "5.2.1",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "devDependencies": {
@@ -14,6 +14,7 @@
     "@accelint/geo": "workspace:*",
     "@accelint/hotkey-manager": "workspace:*",
     "@accelint/logger": "workspace:*",
+    "@accelint/math": "workspace:*",
     "@accelint/postcss-tailwind-css-modules": "workspace:*",
     "@accelint/predicates": "workspace:*",
     "@accelint/smeegl": "workspace:*",
@@ -200,6 +201,7 @@
     "@accelint/geo": "workspace:*",
     "@accelint/hotkey-manager": "workspace:*",
     "@accelint/logger": "workspace:*",
+    "@accelint/math": "workspace:*",
     "@types/geojson": "^7946.0.14",
     "react": "^19"
   },

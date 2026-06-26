@@ -53,6 +53,8 @@ const STATUSES: StatusIndicatorProps['status'][] = [
   'good',
   'degraded',
   'poor',
+  'pending',
+  'unknown',
 ] as const;
 
 // made this story for documentation only; hence the !dev tag
@@ -86,9 +88,12 @@ export const Default: Story = {
 
 export const WithLabel: Story = {
   render: () => (
-    <div className='flex items-center gap-s'>
-      <StatusIndicator status='good' />
-      <Label>System online</Label>
+    <div className='flex flex-col gap-s'>
+      <StatusIndicator status='good' textValue='System online' />
+      <StatusIndicator status='degraded' textValue='Degraded connectivity' />
+      <StatusIndicator status='poor' textValue='Poor connectivity' />
+      <StatusIndicator status='pending' textValue='Standby' />
+      <StatusIndicator status='unknown' textValue='Off' />
     </div>
   ),
 };

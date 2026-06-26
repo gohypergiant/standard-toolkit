@@ -10,16 +10,20 @@
  * governing permissions and limitations under the License.
  */
 
-import 'server-only';
 import { ErrorComponent } from './error';
 import { LoadingComponent } from './loading';
-import { MapClient } from './server';
+import { MapClient } from './client';
+import type { ReactNode } from 'react';
 
-export function MapExample() {
+export type MapExampleProps = {
+  children?: ReactNode;
+};
+
+export function MapExample({ children }: MapExampleProps) {
   return (
     <ErrorComponent>
       <LoadingComponent>
-        <MapClient />
+        <MapClient>{children}</MapClient>
       </LoadingComponent>
     </ErrorComponent>
   );

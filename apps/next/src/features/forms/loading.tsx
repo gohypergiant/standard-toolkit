@@ -10,19 +10,15 @@
  * governing permissions and limitations under the License.
  */
 
-import 'server-only';
-import { uuid } from '@accelint/core'
-import { BaseMap } from '@accelint/map-toolkit/deckgl';
-import { DEFAULT_VIEW_STATE } from '@accelint/map-toolkit/shared/constants';
+import { Suspense } from 'react';
+import type { PropsWithChildren } from 'react';
 
-const mapId = uuid()
+export function Fallback() {
+  return <div>Loading...</div>;
+}
 
-export function MapClient() {
-  return (
-    <BaseMap
-      className='fixed top-xxl left-0 right-0 bottom-0'
-      id={mapId}
-      initialViewState={DEFAULT_VIEW_STATE}
-    />
-  );
+export function LoadingComponent(props: PropsWithChildren) {
+  const { children } = props;
+
+  return <Suspense fallback={<Fallback />}>{children}</Suspense>;
 }

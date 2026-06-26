@@ -125,10 +125,13 @@ import { uuid } from '@accelint/core';
 
 // Module-level constant shared across components
 const MAIN_MAP_ID = uuid();
+// `'default'` is always included in `mode`'s type — no need to list it here
+type MapModes = 'drawing' | 'measuring';
+type MapModeOwners = 'drawing-toolbar-id' | 'details-panel-id';
 
 function DrawingToolbar() {
   // Use the shared id to access the map mode state
-  const { mode, requestModeChange } = useMapMode(MAIN_MAP_ID);
+  const { mode, requestModeChange } = useMapMode<MapModes, MapModeOwners>(MAIN_MAP_ID);
 
   const handleDrawingMode = () => {
     requestModeChange('drawing', 'drawing-toolbar-id');
@@ -391,9 +394,21 @@ export function App() {
 
 ## React API Reference
 
-### `useMapMode(id?)`
+### `useMapMode<Mode, Owner>(id?)`
 
 Hook to access map mode state. **For UI components (buttons, toolbars, etc.)**, you should pass the `id` parameter since they must be rendered as siblings to `BaseMap`, not children.
+
+The two optional type parameters let you narrow `mode` and the arguments to `requestModeChange` at the call site. Both default to `string`, so existing untyped callers keep working unchanged.
+
+#### Type Parameters
+
+##### `Mode extends string` (default `string`)
+
+String union of mode names the caller intends to use. `'default'` is always added to the returned `mode` type, so you don't list it yourself. The narrowing is advisory — the underlying store accepts any string, so values arriving from other bus participants aren't runtime-validated against this union.
+
+##### `Owner extends string` (default `string`)
+
+String union of owner ids the caller intends to use when calling `requestModeChange`. Same advisory caveat as `Mode`.
 
 #### Parameters
 
@@ -405,13 +420,15 @@ The map ID to access. **Recommended**: Always pass this parameter for UI compone
 
 ```tsx
 {
-  mode: string;                    // Current mode
-  requestModeChange: (             // Request a mode change
-    desiredMode: string,
-    requestOwner: string
+  mode: Mode | 'default';                     // Current mode
+  requestModeChange: (                         // Request a mode change
+    desiredMode: Mode | 'default',
+    requestOwner: Owner,
   ) => void;
 }
 ```
+
+When called without explicit type parameters, both `Mode` and `Owner` default to `string`, matching the pre-generics signature.
 
 #### Throws
 
@@ -423,12 +440,16 @@ The map ID to access. **Recommended**: Always pass this parameter for UI compone
 **UI components as siblings (recommended pattern):**
 
 ```tsx
+type Mode = 'drawing' | 'measuring';
+type Owner = 'toolbar' | 'details-panel';
+
 function App() {
   const mapId = uuid();
 
   function MapToolbar() {
-    // Pass mapId since this is a sibling to BaseMap
-    const { mode, requestModeChange } = useMapMode(mapId);
+    // Pass mapId since this is a sibling to BaseMap. Generics narrow the
+    // accepted modes and owners — wrong strings fail at the type level.
+    const { mode, requestModeChange } = useMapMode<Mode, Owner>(mapId);
 
     return (
       <div className="absolute top-4 left-4">

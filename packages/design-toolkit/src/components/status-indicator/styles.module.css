@@ -30,5 +30,13 @@
       /* isosceles triangle */
       clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
     }
+
+    @variant data-[status=pending] {
+      @apply outline-accent-primary-bold size-s rounded-full bg-transparent outline-2;
+    }
+
+    @variant data-[status=unknown] {
+      @apply size-s rounded-full bg-(--fg-info-bold);
+    }
   }
 }

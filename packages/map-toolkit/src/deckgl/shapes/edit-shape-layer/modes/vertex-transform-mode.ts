@@ -30,8 +30,7 @@ import { scaleModePrivate } from './utils/scale-mode-internals';
 import {
   boundingBoxToScaleHandles,
   filterVertexGuides,
-  isRotateChromeFeature,
-  replaceRotateChromeWithBoundingBox,
+  resolveBoundingBoxGuides,
   syncScaleModeCornerCache,
 } from './utils/vertex-bbox-chrome';
 import {
@@ -292,32 +291,28 @@ export class VertexTransformMode extends BaseTransformMode {
       lockedBoundingBox,
     } = args;
 
-    if (isRotating) {
-      const stripped = filteredGuides.filter(
-        (guide) => !isRotateChromeFeature(guide),
-      );
-      // biome-ignore lint/suspicious/noExplicitAny: turf/editable-layers GeoJSON types mismatch
-      return featureCollection(stripped as any) as any;
-    }
-
     // Rectangle fallback / no feature / degenerate vertices all
-    // produce no oriented bounding box; we return the un-modified filtered guides.
+    // produce no oriented bounding box; the shared resolver then returns the
+    // filtered guides unchanged.
     const boundingBox =
       !isRectangle && feature
         ? computeOrientedBoundingBox(feature, angleDeg)
         : null;
 
-    if (!boundingBox) {
-      // biome-ignore lint/suspicious/noExplicitAny: turf/editable-layers GeoJSON types mismatch
-      return featureCollection(filteredGuides as any) as any;
+    const { features, scaleHandles } = resolveBoundingBoxGuides(
+      filteredGuides,
+      boundingBox,
+      isRotating,
+    );
+
+    // Sync the corner cache only when the bbox chrome was actually rebuilt
+    // (default branch: not rotating, oriented bounding box present).
+    if (!isRotating && boundingBox) {
+      this.syncCornerCacheForScale(scaleHandles, lockedBoundingBox);
     }
 
-    const { features: replaced, scaleHandles } =
-      replaceRotateChromeWithBoundingBox(filteredGuides, boundingBox);
-    this.syncCornerCacheForScale(scaleHandles, lockedBoundingBox);
-
     // biome-ignore lint/suspicious/noExplicitAny: turf/editable-layers GeoJSON types mismatch
-    return featureCollection(replaced as any) as any;
+    return featureCollection(features as any) as any;
   }
 
   /**

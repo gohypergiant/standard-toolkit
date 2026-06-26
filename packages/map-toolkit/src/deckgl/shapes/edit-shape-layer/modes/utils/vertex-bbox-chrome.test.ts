@@ -16,6 +16,7 @@ import {
   filterVertexGuides,
   isRotateChromeFeature,
   replaceRotateChromeWithBoundingBox,
+  resolveBoundingBoxGuides,
   VERTEX_BBOX_MODE,
 } from './vertex-bbox-chrome';
 import type { Feature, Point as GeoPoint, LineString } from 'geojson';
@@ -337,5 +338,91 @@ describe('replaceRotateChromeWithBoundingBox', () => {
     expect(result).toContain(oddHandle);
     // Out-of-range positionIndex doesn't become a corner handle.
     expect(cornerHandles).toHaveLength(0);
+  });
+});
+
+describe('resolveBoundingBoxGuides', () => {
+  it('should strip rotate chrome and ignore the bounding box while rotating', () => {
+    const rotateModeBboxLine = lineGuide(
+      [
+        [-5, -5],
+        [5, -5],
+        [5, 5],
+        [-5, 5],
+        [-5, -5],
+      ],
+      {},
+    );
+    const vertexHandle = pointGuide([0.5, 0.5], {
+      guideType: 'editHandle',
+      editHandleType: 'existing',
+    });
+
+    const { features, scaleHandles } = resolveBoundingBoxGuides(
+      [rotateModeBboxLine, vertexHandle],
+      makeBoundingBox(),
+      true,
+    );
+
+    // The rotate-mode bbox line is stripped; the unrelated vertex handle stays.
+    expect(features).toEqual([vertexHandle]);
+    // Rotating never repositions corner handles.
+    expect(scaleHandles).toEqual([]);
+  });
+
+  it('should return the filtered guides unchanged when there is no bounding box', () => {
+    const vertexHandle = pointGuide([0.5, 0.5], {
+      guideType: 'editHandle',
+      editHandleType: 'existing',
+    });
+    const filtered = [vertexHandle];
+
+    const { features, scaleHandles } = resolveBoundingBoxGuides(
+      filtered,
+      null,
+      false,
+    );
+
+    expect(features).toBe(filtered);
+    expect(scaleHandles).toEqual([]);
+  });
+
+  it('should replace rotate chrome with bounding box chrome in the default branch', () => {
+    const rotateModeBboxLine = lineGuide(
+      [
+        [-5, -5],
+        [5, -5],
+        [5, 5],
+        [-5, 5],
+        [-5, -5],
+      ],
+      {},
+    );
+    const scaleHandlesInput = [0, 1, 2, 3].map((index) =>
+      pointGuide([0, 0], {
+        guideType: 'editHandle',
+        editHandleType: 'scale',
+        positionIndexes: [index],
+      }),
+    );
+
+    const { features, scaleHandles } = resolveBoundingBoxGuides(
+      [rotateModeBboxLine, ...scaleHandlesInput],
+      makeBoundingBox(),
+      false,
+    );
+
+    // Raw rotate-mode line is gone; a tagged bbox outline replaces it.
+    expect(features).not.toContain(rotateModeBboxLine);
+
+    const bboxOutlines = features.filter(
+      (feature) =>
+        feature.geometry.type === 'LineString' &&
+        feature.properties?.mode === VERTEX_BBOX_MODE,
+    );
+
+    expect(bboxOutlines).toHaveLength(1);
+    // The four corner handles are surfaced for the caller's cache sync.
+    expect(scaleHandles).toHaveLength(4);
   });
 });
