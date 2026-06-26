@@ -13,6 +13,7 @@
 'use client';
 import { PathStyleExtension } from '@deck.gl/extensions';
 import { CoffinCornerExtension } from '../../extensions/coffin-corner/coffin-corner-extension';
+import { MaskedCoffinCornerExtension } from '../../extensions/coffin-corner/masked-coffin-corner-extension';
 import { DEFAULT_COLORS } from '../shared/constants';
 import type { Rgba255Tuple } from '@accelint/predicates';
 
@@ -84,6 +85,13 @@ export const DEFAULT_ELEVATION = 0;
 export const DASH_EXTENSION = new PathStyleExtension({ dash: true });
 
 export const COFFIN_CORNER_EXTENSION = new CoffinCornerExtension();
+
+/**
+ * MaskedCoffinCornerExtension used on the swapped-in MaskedIconLayer point
+ * sublayer so the selection/hover brackets composite over the recolored icon.
+ * Stable reference for the same reason as {@link COFFIN_CORNER_EXTENSION}.
+ */
+export const MASKED_COFFIN_CORNER_EXTENSION = new MaskedCoffinCornerExtension();
 
 /** Stable extensions array for GeoJsonLayer — avoids new reference per render triggering getShaders() re-evaluation. */
 export const DISPLAY_EXTENSIONS = [DASH_EXTENSION, COFFIN_CORNER_EXTENSION];

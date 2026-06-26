@@ -16,4 +16,5 @@
  */
 
 export const MARKER = 'marker';
+export const MARKER_MASKED = 'marker-masked';
 export const MARKER_SERIOUS = 'marker-serious';
