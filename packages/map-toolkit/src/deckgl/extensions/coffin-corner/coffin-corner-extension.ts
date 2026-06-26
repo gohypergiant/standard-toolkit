@@ -230,36 +230,23 @@ vec4 coffinCorner_composite(
 // -- Layer-specific fragment shader main-start injections --
 
 /**
- * IconLayer fragment declarations: the shared SDF functions plus the
- * overridable base-color hook.
+ * IconLayer `fs:#main-start` — samples `iconsTexture` to get the base icon
+ * color, then composites brackets over it.
  *
- * The bracket math runs at `fs:#main-start` — before IconLayer's own
- * `if (a < icon.alphaCutoff) discard;` — so the brackets render over the
- * transparent parts of the icon quad too. That ordering means the extension
- * cannot read the host's final `fragColor` (it doesn't exist yet); it must
- * produce the base color the brackets sit on itself.
+ * The bracket math runs at `fs:#main-start` (inside `main`, before IconLayer's
+ * `if (a < icon.alphaCutoff) discard;`) so the brackets render over the
+ * transparent parts of the icon quad too. It samples the texture itself rather
+ * than reading the host's final `fragColor` (which doesn't exist yet) and
+ * early-returns, bypassing the host's own `main` body.
  *
- * `coffinCorner_iconBaseColor` is that base color. The default samples
- * `iconsTexture` (matching plain IconLayer). An IconLayer *subclass* whose
- * fragment shader transforms the sampled texel — e.g. replacing a match color
- * with a per-instance fill — can preserve that transformation under the
- * brackets by defining `COFFIN_CORNER_HAS_CUSTOM_ICON_BASE_COLOR` and supplying
- * its own `coffinCorner_iconBaseColor` (see {@link CoffinCornerExtension} docs).
- * The guard keeps the default from colliding with the override.
- */
-const ICON_FS_DECL = /* glsl */ `\
-${FS_DECL}
-#ifndef COFFIN_CORNER_HAS_CUSTOM_ICON_BASE_COLOR
-vec4 coffinCorner_iconBaseColor(vec2 textureCoords) {
-  return texture(iconsTexture, textureCoords);
-}
-#endif
-`;
-
-/**
- * IconLayer `fs:#main-start` — derives the base icon color via the
- * `coffinCorner_iconBaseColor` hook, then composites brackets over it.
- * References IconLayer-specific varyings: `vTextureCoords`, `uv`.
+ * A `MaskedIconLayer` host instead uses {@link MASKED_ICON_FS_MAIN_START}, which
+ * applies the color replacement to the sampled texel first. (Both must run at
+ * `fs:#main-start`, not `fs:#decl`: `fs:#decl` injections are assembled *before*
+ * the layer's own shader source, so a `#decl` function cannot reference
+ * `iconsTexture` or the masked-icon helpers, which are declared later.)
+ *
+ * References IconLayer-specific uniforms/varyings: `iconsTexture`,
+ * `vTextureCoords`, `uv`.
  */
 const ICON_FS_MAIN_START = /* glsl */ `\
   geometry.uv = uv; // uv = texture coordinate on the icon quad (ranges -1 to 1, center is 0,0)
@@ -286,9 +273,8 @@ const ICON_FS_MAIN_START = /* glsl */ `\
     float fillAlpha = 1.0 - smoothstep(0.0, antiAlias, cornerDist);
 
     if (insideBox) {
-      // Base color from the overridable hook — the raw texel by default, or a
-      // subclass's color-replaced texel when overridden.
-      vec4 baseColor = coffinCorner_iconBaseColor(vTextureCoords);
+      // Sample icon texture (iconsTexture and vTextureCoords are provided by IconLayer's shader)
+      vec4 baseColor = texture(iconsTexture, vTextureCoords);
 
       fragColor = coffinCorner_composite(baseColor, isHovered, isSelected, strokeAlpha, fillAlpha);
       DECKGL_FILTER_COLOR(fragColor, geometry);
@@ -401,10 +387,65 @@ const ICON_SHADERS = {
   inject: {
     'vs:#decl': VS_DECL,
     'vs:#main-end': VS_MAIN_END,
-    'fs:#decl': ICON_FS_DECL,
+    'fs:#decl': FS_DECL,
     'fs:#main-start': ICON_FS_MAIN_START,
   },
 };
+
+/**
+ * IconLayer `fs:#main-start` for a `MaskedIconLayer` host. Identical to
+ * {@link ICON_FS_MAIN_START} except the sampled texel is run through
+ * `maskedIcon_replace` before the brackets composite, so the brackets sit on the
+ * recolored icon instead of the raw match color.
+ *
+ * References `maskedIcon_replace` + `iconsTexture`, which only a MaskedIconLayer
+ * host supplies. Lives at `fs:#main-start` (inside `main`) — `fs:#decl`
+ * injections assemble before the layer's own shader, where those symbols aren't
+ * yet declared.
+ */
+const MASKED_ICON_FS_MAIN_START = /* glsl */ `\
+  geometry.uv = uv;
+  bool isHovered = vInstanceHoveredEntity > 0.5;
+  bool isSelected = vInstanceSelectedEntity > 0.5;
+
+  if (isHovered || isSelected) {
+    vec2 bracketPos = uv * 0.5;
+    bool insideBox = max(abs(bracketPos.x), abs(bracketPos.y)) < 0.5;
+    float cornerDist = coffinCorner_allCorners(bracketPos, 0.26, 0.07);
+    float strokeWidth = 0.026;
+    float antiAlias = fwidth(cornerDist);
+    float strokeAlpha = 1.0 - smoothstep(0.0, antiAlias, cornerDist + strokeWidth);
+    float fillAlpha = 1.0 - smoothstep(0.0, antiAlias, cornerDist);
+
+    if (insideBox) {
+      // Apply the masked-icon color replacement before compositing brackets, so
+      // the recolored icon shows beneath them (not the raw match color).
+      vec4 baseColor = maskedIcon_replace(texture(iconsTexture, vTextureCoords));
+
+      fragColor = coffinCorner_composite(baseColor, isHovered, isSelected, strokeAlpha, fillAlpha);
+      DECKGL_FILTER_COLOR(fragColor, geometry);
+      return;
+    }
+  }
+`;
+
+/** IconLayer shader config variant for a MaskedIconLayer host. */
+const MASKED_ICON_SHADERS = {
+  modules: [coffinCornerModule],
+  inject: {
+    'vs:#decl': VS_DECL,
+    'vs:#main-end': VS_MAIN_END,
+    'fs:#decl': FS_DECL,
+    'fs:#main-start': MASKED_ICON_FS_MAIN_START,
+  },
+};
+
+/**
+ * Duck-typed `layerName` of `MaskedIconLayer`. Checked here (instead of an
+ * `instanceof` import) so the generic extension stays decoupled from the
+ * masked-icon layer module while still selecting the masked shader path for it.
+ */
+const MASKED_ICON_LAYER_NAME = 'MaskedIconLayer';
 
 /**
  * Shader injection config for ScatterplotLayer.
@@ -506,44 +547,9 @@ function syncEntitySet(
  * })
  * ```
  *
- * **Custom icon base color (IconLayer subclasses):** The bracket math runs at
- * `fs:#main-start`, before IconLayer's `discard`, so the extension produces the
- * base color the brackets sit on rather than reading the host's final
- * `fragColor`. By default that base color is `texture(iconsTexture, …)`. If your
- * IconLayer subclass transforms the sampled texel (e.g. replacing a match color
- * with a per-instance fill), override the `coffinCorner_iconBaseColor` hook so
- * the transform is preserved under the brackets — instead of duplicating the
- * whole bracket shader. Define `COFFIN_CORNER_HAS_CUSTOM_ICON_BASE_COLOR` to
- * suppress the default and supply your own implementation:
- *
- * @example Overriding the icon base color in a subclass
- * ```typescript
- * class MaskedCoffinCornerExtension extends CoffinCornerExtension {
- *   static override componentName = 'MaskedCoffinCornerExtension';
- *
- *   override getShaders(this: Layer) {
- *     const shaders = super.getShaders(this);
- *     if (!shaders) return null;
- *
- *     return {
- *       ...shaders,
- *       inject: {
- *         ...shaders.inject,
- *         // Prepend the guard + override; the guard suppresses the default
- *         // coffinCorner_iconBaseColor while keeping the shared SDF decls.
- *         'fs:#decl': `\
- * #define COFFIN_CORNER_HAS_CUSTOM_ICON_BASE_COLOR
- * vec4 coffinCorner_iconBaseColor(vec2 textureCoords) {
- *   vec4 texel = texture(iconsTexture, textureCoords);
- *   // ...replace matchColor with the per-instance fill...
- *   return texel;
- * }
- * ${shaders.inject['fs:#decl']}`,
- *       },
- *     };
- *   }
- * }
- * ```
+ * On a `MaskedIconLayer` host this extension automatically composites its
+ * brackets over the recolored icon (rather than the raw match color) — no
+ * separate extension is needed.
  */
 export class CoffinCornerExtension extends LayerExtension {
   static override componentName = 'CoffinCornerExtension';
@@ -678,8 +684,10 @@ export class CoffinCornerExtension extends LayerExtension {
 
   /**
    * Returns the appropriate shader injection config based on the host layer type.
-   * IconLayer gets texture-sampling shaders; ScatterplotLayer gets circle-replicating shaders.
-   * Returns null for unsupported layer types to skip shader injection.
+   * ScatterplotLayer gets circle-replicating shaders. A `MaskedIconLayer` host
+   * gets the masked icon shaders (brackets composite over the recolored icon);
+   * any other IconLayer gets the plain texture-sampling shaders. Returns null for
+   * unsupported layer types to skip shader injection.
    *
    * @returns The vertex/fragment shader injection config and uniform module, or null.
    */
@@ -688,7 +696,12 @@ export class CoffinCornerExtension extends LayerExtension {
       return SCATTERPLOT_SHADERS;
     }
     if (this instanceof IconLayer) {
-      return ICON_SHADERS;
+      // Duck-type the masked-icon layer by name to keep this generic extension
+      // decoupled from that layer module.
+      const layerName = (this.constructor as typeof Layer).layerName;
+      return layerName === MASKED_ICON_LAYER_NAME
+        ? MASKED_ICON_SHADERS
+        : ICON_SHADERS;
     }
     return null;
   }

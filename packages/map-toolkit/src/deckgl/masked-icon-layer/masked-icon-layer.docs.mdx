@@ -1,0 +1,74 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+import * as MaskedIconLayerStories from './masked-icon-layer.stories';
+
+<Meta of={MaskedIconLayerStories} />
+
+# Masked Icon Layer
+
+An `IconLayer` that recolors each icon's "maskable" region in real time without needing a separate icon atlas per color. Pixels in the icon texture matching `matchColor` (default pink `#FF69B4`) are replaced with a per-instance color; every other pixel passes through unchanged, so an icon without a maskable region renders exactly like a plain `IconLayer`.
+
+## Dependencies
+
+| Package | Role |
+|---------|------|
+| `@deck.gl/core` | deck.gl layer/accessor system |
+| `@deck.gl/layers` | `IconLayer` base class |
+| `@luma.gl/shadertools` | `maskedIcon` uniform shader module |
+
+**Installation:**
+
+```bash
+pnpm add @accelint/map-toolkit @deck.gl/core @deck.gl/layers
+```
+
+## Quick Start
+
+```tsx
+import { MaskedIconLayer } from '@accelint/map-toolkit/deckgl';
+
+new MaskedIconLayer({
+  id: 'points',
+  data,
+  iconAtlas,
+  iconMapping,
+  getPosition: (d) => d.position,
+  getIcon: () => 'marker',
+  getSize: 32,
+  billboard: true,
+  pickable: true,
+  // The icon's maskable (matchColor) region recolors to this per instance.
+  getFillColor: (d) => d.color,
+});
+```
+
+## Selection & hover brackets
+
+Pair the layer with `CoffinCornerExtension` for selection/hover brackets. On a `MaskedIconLayer` host it automatically composites its brackets over the **recolored** icon (it detects the masked-icon layer and applies the color replacement first), so you don't get the unreplaced match color (pink) showing under the brackets.
+
+```tsx
+import {
+  MaskedIconLayer,
+  CoffinCornerExtension,
+} from '@accelint/map-toolkit/deckgl';
+
+new MaskedIconLayer({
+  // ...icon + getFillColor props...
+  extensions: [new CoffinCornerExtension()],
+  selectedEntityIds: selectedSet,
+  hoveredEntityIds: hoveredSet,
+});
+```
+
+## Props
+
+In addition to all `IconLayer` props:
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `matchColor` | `Color` | `[255, 105, 180, 1]` | The pixel color the mask matches and replaces. |
+| `ignoreColor` | `Color` | `[0, 0, 0, 1]` | Color blended toward for near-matches of `matchColor`. |
+| `hoverColor` | `Color` | `[255, 255, 255, 1]` | Replacement color while hovered (picking buffer). |
+| `clickColor` | `Color` | `[40, 245, 190, 1]` | Replacement color while clicked (`getClicked`). |
+| `getFillColor` | `Accessor<Color>` | `[150, 150, 150, 1]` | Per-instance replacement color when neither hovered nor clicked. |
+| `getClicked` | `Accessor<boolean>` | `false` | Per-instance flag selecting `clickColor` over `getFillColor`. |
