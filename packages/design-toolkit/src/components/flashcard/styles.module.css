@@ -23,6 +23,10 @@
     @apply mb-s bg-surface-muted p-s flex flex-col;
   }
 
+  .loading {
+    @apply mb-s bg-surface-muted p-s gap-s flex flex-col;
+  }
+
   .header {
     @apply fg-primary-bold text-body-m;
   }
