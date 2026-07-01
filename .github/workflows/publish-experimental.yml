@@ -1,11 +1,7 @@
 name: Publish Experimental Snapshot
 on:
   workflow_dispatch:
-    inputs:
-      dry_run:
-        description: 'Dry-run mode (skip npm publish, show what would happen)'
-        type: boolean
-        default: true
+
 env:
   TURBO_TELEMETRY_DISABLED: 1
 jobs:
@@ -20,20 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
         with:
-          fetch-depth: 0
-
-      # Show run mode
-      - name: Check run mode
-        run: |
-          if [ "${{ inputs.dry_run }}" == "true" ]; then
-            echo "🧪 DRY-RUN MODE: Will simulate publish without uploading to npm"
-            echo "## 🧪 Dry-Run Mode Enabled" >> $GITHUB_STEP_SUMMARY
-            echo "This workflow will show what would be published without actually publishing to npm." >> $GITHUB_STEP_SUMMARY
-          else
-            echo "🚀 PRODUCTION MODE: Will publish to npm registry"
-            echo "## 🚀 Production Mode" >> $GITHUB_STEP_SUMMARY
-            echo "This workflow will publish packages to npm registry." >> $GITHUB_STEP_SUMMARY
-          fi
+          fetch-depth: 2
 
       # Extract feature name from branch (experimental/<feature> → <feature>)
       - name: Extract feature name
@@ -103,17 +86,11 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Publish snapshot
-        if: ${{ !inputs.dry_run }}
         run: |
           pnpm changeset publish --tag ${{ steps.feature.outputs.name }}
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Dry-run publish
-        if: ${{ inputs.dry_run }}
-        run: |
-          pnpm changeset publish --tag ${{ steps.feature.outputs.name }} --dry-run
 
       # Find associated PR
       - name: Find PR for this branch
@@ -135,7 +112,7 @@ jobs:
 
       # Create or update PR comment
       - name: Create or update PR comment
-        if: steps.pr.outputs.result != 'null' && !inputs.dry_run
+        if: steps.pr.outputs.result != 'null'
         uses: actions/github-script@v7
         with:
           script: |
