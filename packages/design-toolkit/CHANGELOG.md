@@ -1,5 +1,11 @@
 # @accelint/design-toolkit
 
+## 9.12.1
+### Patch Changes
+
+- 884b370: - Add space to loading skeleton of flashcard
+  - Add space to the TimeField when rendering AM/PM
+
 ## 9.12.0
 ### Minor Changes
 
