@@ -5,6 +5,10 @@ This file is loaded into every Agent session. Keep it accurate and current.
 
 Read the [AI Assistant Guide](.agents/outline.md) and all linked pages before proceeding.
 
+## System Architecture
+
+For technical architecture details (components, deployment, data stores, tech stack), see [ARCHITECTURE.md](./ARCHITECTURE.md).
+
 ## Tech Stack
 
 **For exact versions and dependencies, refer to `./package.json` in the following fields:**
