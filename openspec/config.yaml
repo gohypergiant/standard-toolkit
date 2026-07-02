@@ -1,20 +1,298 @@
 schema: spec-driven
 
-# Project context (optional)
-# This is shown to AI when creating artifacts.
-# Add your tech stack, conventions, style guides, domain knowledge, etc.
-# Example:
-#   context: |
-#     Tech stack: TypeScript, React, Node.js
-#     We use conventional commits
-#     Domain: e-commerce platform
+# Project Context
+# Injected into every AI-generated artifact (proposal, design, spec, tasks).
+# Facts only, no opinions. Behavioral rules live in AGENTS.md.
 
-# Per-artifact rules (optional)
-# Add custom rules for specific artifacts.
-# Example:
-#   rules:
-#     proposal:
-#       - Keep proposals under 500 words
-#       - Always include a "Non-goals" section
-#     tasks:
-#       - Break tasks into chunks of max 2 hours
+context: |
+  # ═══════════════════════════════════════════════════════════════════════════
+  # STACK FACTS
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  ## Project Identity
+  standard-toolkit (@accelint/developer-toolkit) — Accelint's open-source
+  monorepo of shared TypeScript/React packages for defense/C2 applications,
+  published publicly to npm under the @accelint scope.
+  Monorepo: pnpm workspaces (apps/*, packages/*, tooling/*) — 1 app
+  (apps/next demo), 20 packages, 8 tooling packages.
+  Build orchestration: Turbo (turbo.json; build dependsOn ^index, ^build).
+  Package manager: pnpm 10.25 (Node >=22); public npm registry.
+
+  ## Tech Stack
+  - Runtime:            Node.js 22+ (ESM-only, "type": "module")
+  - Language:           TypeScript strict + noUncheckedIndexedAccess,
+                        noImplicitOverride, verbatimModuleSyntax,
+                        isolatedModules; exactOptionalPropertyTypes NOT set.
+                        Shared presets in @accelint/typescript-config
+                        (tsc/bundler × dom/no-dom × app/library variants)
+  - Frameworks:         React 19; Next.js 16 with React Compiler (apps/next)
+  - Key Libraries:      react-aria-components ~1.17 + react-aria ~3.48
+                        (design-toolkit); deck.gl ~9.2 + maplibre-gl ^5.7 +
+                        @vis.gl/react-maplibre (map-toolkit); Tailwind CSS v4;
+                        @tanstack/react-table, dockview-react, milsymbol, turf
+  - Data Layer:         No databases. Geospatial data formats: coordinates
+                        (DD/DDM/DMS/MGRS), GeoJSON via turf, tile coords;
+                        @accelint/dataset for type-safe geospatial config
+  - Testing:            Vitest 4 via shared @accelint/vitest-config
+                        (istanbul coverage; clearMocks/mockReset/restoreMocks
+                        all true); @testing-library/react + user-event +
+                        jest-dom; fast-check (packages/predicates); Playwright
+                        integration + MemLab memory tests (apps/next)
+  - Linting/Formatting: Biome 2 (shared @accelint/biome-config); ls-lint
+                        (kebab-case files enforced); syncpack (dep
+                        consistency); publint (package.json correctness);
+                        lefthook pre-commit runs format + license + index
+  - Build Tools:        tsdown (ESM-only, dts, unbundle, treeshake) for
+                        libraries; next build for apps/next; generated barrel
+                        index.ts via `pnpm index` turbo task
+  - CI/CD:              GitHub Actions — ci.yml (build/format/lint/test),
+                        release.yml (changesets action → npm), release-beta,
+                        visual-regression (Playwright/Chromium), memlab,
+                        coverage-comment, security (TruffleHog)
+  - Versioning:         Changesets (access public, baseBranch main);
+                        beta prerelease mode via beta:start/beta:exit;
+                        constellation-tracker updates catalog-info.yaml on
+                        version (skipped for beta)
+
+  ## Architecture Patterns
+  - Organisation: package-per-concern monorepo. design-toolkit uses
+    component-family directories (components/button/ with index.tsx, variant
+    files, context.tsx, styles.module.css, types.ts, colocated tests/stories);
+    map-toolkit is feature/domain-based (deckgl/, camera/, map-mode/,
+    viewport/, cursor-coordinates/); utility packages are
+    function-per-directory (converters/src/hex/index.ts + index.test.ts)
+  - Shared code:  cross-package reuse happens via workspace packages
+    (@accelint/core, constants, predicates…), not a shared/ directory
+  - Path aliases: @/* → ./src/* in design-toolkit and map-toolkit;
+    ~/* → ./src/* in apps/next; none in shared presets
+  - Solution-style tsconfigs: design-toolkit and map-toolkit use
+    tsconfig.json (files [], references) pointing to tsconfig.dist.json
+    (source) and tsconfig.dev.json (tests/stories) — never type-check
+    against the solution file directly
+  - Generated barrels: package root src/index.ts files are GENERATED
+    (`pnpm index`); never edit them by hand. Nested index.ts barrels are
+    hand-curated public API surfaces
+  - Key patterns: react-aria-components composition (useContextProps,
+    composeRenderProps, slotted contexts, data-* attributes for styling);
+    CSS Modules + Tailwind @layer/@apply/@variant (NOT tailwind-variants or
+    cva); event-bus decoupling via @accelint/bus with namespaced events
+    ("namespace:action", e.g. "map-mode:change:request") and useOn/useEmit
+    React hooks; deck.gl layers exported as components paired with hooks
+    (DisplayShapeLayer + useSelectShape); ownership-based mode store with
+    request/authorize/decision/changed event lifecycle (map-mode/store.ts);
+    client components start with 'use client' + import 'client-only'
+  - Authoritative docs: .agents/outline.md → ecosystem.md, react.md,
+    components.md define component-authoring rules (note: components.md
+    mentions styles.ts/Tailwind Variants — stale; styles.module.css with
+    @layer is ground truth)
+
+  ## Domain Concepts
+  - NTDS symbols: Naval Tactical Data System map glyphs as SVG React
+    components keyed by platform × affiliation (SvgAirFriend,
+    SvgSurfaceHostile) with affiliation color tokens (NTDS_COLOR_HOSTILE…)
+  - Bearing/range: compass direction (degrees from north) and distance to a
+    point — tactical readout. Caution: in packages/geo, "bearing" means the
+    hemisphere letter (N/S/E/W) of a coordinate, not azimuth
+  - Coordinate systems: packages/geo parses/formats lat-lon in Decimal
+    Degrees, Degrees-Decimal-Minutes, Degrees-Minutes-Seconds, and MGRS via
+    composable RegExp patterning
+  - Event bus: @accelint/bus Broadcast singleton over BroadcastChannel with
+    typed payloads; the app-wide decoupling mechanism between map features,
+    UI, and workers
+  - Map layers & modes: deck.gl overlay layers (shape display/draw/edit,
+    symbol, text, grid) coordinated with interaction modes, cursor, and
+    viewport state through bus events
+  - Design foundation/toolkit: design-foundation provides tokens and Tailwind
+    theme; design-toolkit provides RAC-based components styled via CSS
+    Modules against those tokens
+
+  ## Performance Targets
+  - Map rendering: 60fps — deck.gl layer updates and interactions must fit
+    the 16.67ms frame budget
+  - Bundle size: published libraries must stay tree-shakeable — ESM-only
+    tsdown builds, unbundled output, heavy deps (deck.gl, maplibre, react)
+    kept external
+  - Memory: no leaks in design components — enforced by MemLab CI workflow
+  - No other formal targets; judge case-by-case
+
+  ### TypeScript/JavaScript Performance
+  - Hot paths:    deck.gl layer accessors/update triggers, geo coordinate
+                  parsing/formatting, bus event dispatch, predicates/
+                  converters/formatters utilities (called per-feature,
+                  per-frame)
+  - Frame budget: 60fps = 16.67ms for map interactions
+  - Constraints:  bounded iteration, O(n) or better in per-frame code
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # PATTERNS TO FOLLOW
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  ## Code Patterns
+  - Exports:         Named exports only — default exports are banned.
+                     Flat named exports (LinkButton), never dot-notation
+                     subcomponents (Button.Link)
+  - Naming:          kebab-case files (ls-lint enforced; variant files omit
+                     the family prefix: button/link.tsx not button-link.tsx);
+                     PascalCase components WITH family prefix (LinkButton,
+                     MenuItem); useXxx hooks in use-xxx.ts files;
+                     SCREAMING_SNAKE_CASE constants; PascalCase types in
+                     colocated types.ts
+  - Components:      `export function` declarations, never arrow functions,
+                     no displayName
+  - Error handling:  throw new Error with JSDoc @throws {Error}; no
+                     Result/Either convention
+  - Constants:       `as const` objects, never `enum`
+  - Classes:         prefer functions unless state management or extending
+                     an existing class (e.g. deck.gl layer extensions)
+  - Return values:   zero values (empty array, '', 0) instead of
+                     null/undefined
+  - Type safety:     avoid `any` (use `unknown`/generics); `type` over
+                     `interface`
+  - Immutability:    prefer `const`, immutable data, pure functions (tag
+                     pure functions with JSDoc `@remarks pure function`)
+  - Documentation:   comprehensive JSDoc on all exports — @param (incl.
+                     props.x), @returns, @throws, @example fenced blocks
+  - License header:  every source file carries the 11-line Apache-2.0
+                     Hypergiant header (auto-applied by the turbo license
+                     task; don't fight it)
+  - Order:           define before use — types → constants → functions
+  - Parameter order: data-last; curry when the same leading params recur
+  - Client code:     'use client' + import 'client-only' at the top of
+                     client component files
+
+  ## Architecture Patterns
+  - Bus events: define a namespaced event map + Namespace constant per
+    feature (MapModeEvents / 'map-mode'); event names are
+    `namespace:action` template literals
+  - RAC composition: wrap react-aria-components primitives, inject context
+    via useContextProps, style via data attributes + composeRenderProps
+  - Styling: styles.module.css with @reference '@accelint/design-foundation/
+    styles' and @layer components.l1 — never tailwind-variants/cva
+  - Private modules: mark internal files with a leading // __private-exports
+    comment or __internal__/ directory
+
+  ## Testing Patterns
+  - Pattern:        AAA (Arrange, Act, Assert)
+  - Property-based: fast-check for predicates/parsers/converters — use
+                    fc.assert(fc.property(...)) with `examples` for known
+                    regressions
+  - Test scope:     never test library internals; never export internals to
+                    test them; never mock own pure functions
+  - Structure:      describe/it with explicit vitest imports (describe, it,
+                    expect, vi) even where globals are on
+  - File location:  co-located *.test.ts / *.test.tsx next to source —
+                    never __tests__/ directories
+  - Test doubles:   real implementation > fakes > stubs > spies > mocks;
+                    shared BroadcastChannel mock at
+                    @accelint/vitest-config/mocks/broadcast-channel;
+                    mock cleanup is automatic (clearMocks/mockReset/
+                    restoreMocks all true in shared config)
+  - Fixtures:       local setup() helper functions returning render props;
+                    it.each template-literal tables for parameterized cases
+  - Assertions:     strict matchers (toBe, toEqual, toBeInTheDocument) —
+                    never toBeTruthy/toBeDefined
+  - Nesting:        max 2 describe levels
+  - Verification:   run the full gate — pnpm build, test, lint, format;
+                    in design-toolkit/map-toolkit use tsconfig.dev.json for
+                    direct tsc on tests (solution tsconfig.json is a no-op)
+  - React tests:    @testing-library/react with userEvent over fireEvent;
+                    query priority role > label > testid
+  - Benchmarks:     vitest bench (*.bench.ts) via `pnpm bench`
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # PATTERNS TO AVOID
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  ## Code Anti-Patterns
+  - Using `any` instead of `unknown` or generics
+  - Using `enum` instead of `as const` objects
+  - Using `interface` when `type` works
+  - Returning null/undefined instead of zero values
+  - Deep nesting instead of early returns
+  - Default exports or dot-notation subcomponents (Button.Link)
+  - Arrow-function components or displayName assignments
+  - File names with the family prefix (button-link.tsx)
+  - Editing generated src/index.ts barrels by hand (run `pnpm index`)
+  - design-foundation vite/webpack/css lib helpers — @deprecated; use
+    @accelint/postcss-tailwind-css-modules instead
+  - tailwind-variants / cva for component styling — use CSS Modules @layer
+  - Depending on stub modules (formatters bearing/azimuth/altitude,
+    converters azimuth-to-cardinal are TODO placeholders)
+  - React: mutating props/children, relying on child order instead of keys,
+    inline callbacks/objects to memoized children, controlled↔uncontrolled
+    switches, syncing props to state, one context for unrelated values
+
+  ## Performance Anti-Patterns
+  - Chaining array methods in hot paths — use a single reduce pass
+  - Array.includes() for repeated lookups — use Set.has()
+  - Recomputing constants inside loops — hoist invariants
+  - Unbounded loops or queues
+  - try/catch in hot paths (V8 can't inline)
+  - Per-frame allocations in deck.gl accessors/updateTriggers — reuse
+    arrays/objects; unstable updateTriggers cause full layer re-evaluation
+
+  ## Testing Anti-Patterns
+  - Testing library internals
+  - Exporting internals just to test them
+  - Loose assertions (toBeTruthy, toBeDefined)
+  - describe nesting >2 levels
+  - Testing implementation details instead of behavior
+  - Hand-rolling BroadcastChannel mocks (use the shared one)
+
+  ## Documentation Anti-Patterns
+  - Missing JSDoc on exported functions/types
+  - Documenting HOW instead of WHAT/WHY
+  - Vague markers (// TODO: fix this) — state the concrete action
+  - Trusting .agents/components.md on styling (styles.ts/Tailwind Variants
+    references are stale — CSS Modules is ground truth)
+
+# ═══════════════════════════════════════════════════════════════════════════
+# PER-ARTIFACT RULES
+# ═══════════════════════════════════════════════════════════════════════════
+
+rules:
+  proposal:
+    # QRSPI: Scope definition, not a plan.
+    - State the requirement or ticket driving this change
+    - Define scope boundaries — explicitly list what is OUT of scope
+    - Keep under 100 lines (tight and focused)
+    - Flag any breaking change to a published package's public API and its semver implication
+    - List every workspace package touched and known downstream dependents within the monorepo
+    - State the expected changeset bump (major/minor/patch) or why no changeset is needed (docs/tests/storybook-only changes need none)
+
+  design:
+    # QRSPI: The "brain surgery" checkpoint — reviewed before any code is written.
+    - 'Start with "Current State": what the code does today, key files, entry points, relevant data flows'
+    - '"Desired End State": what changes after this work, what stays the same'
+    - '"Patterns to Follow": ONLY if specific files/functions to reference exist for this change''s domain'
+    - '"Patterns to Avoid": ONLY if specific anti-patterns apply to this change'
+    - '"Open Questions": genuine uncertainties requiring human input. If none, state explicitly "No unresolved questions."'
+    - '"Resolved Decisions": numbered (Decision 1, Decision 2…) with Choice, Rationale, Alternatives Considered'
+    - Use ASCII diagrams for data flows, state machines, architecture
+    - Designs touching design-toolkit must address accessibility (react-aria patterns, keyboard, screen reader)
+    - Designs touching map-toolkit hot paths must include a performance implications section with frame-budget analysis
+    - Component designs must state which Storybook stories will demonstrate the change
+    - Keep under 250 lines total
+
+  tasks:
+    # QRSPI: Vertical slicing for early failure detection.
+    - Order as vertical slices — each task delivers a testable end-to-end path
+    - Do NOT group by architectural layer unless explicitly justified in the task description
+    - 'Each task MUST include an explicit "Test:" line describing what to verify before proceeding to the next task'
+    - Prefer 3–5 major slices; more than 5 suggests scope is too large
+    - Max 2 hours per task; break larger work into subtasks
+    - 'Tag each task with the affected package as [PKG:name], e.g. [PKG:map-toolkit]'
+    - Call out inter-task dependencies explicitly
+    - Final task of every change must run the verification gate (pnpm build, test, lint, format) and create the changeset if source changed
+
+  specs:
+    - Use Given/When/Then for behaviour specifications
+    - Include concrete example data relevant to the domain (coordinates, bearings, NTDS affiliations, bus event payloads)
+    - Document edge cases explicitly (invalid coordinates, zero values, antimeridian/pole crossings where relevant)
+
+# ═══════════════════════════════════════════════════════════════════════════
+# RELATED DOCUMENTATION
+# ═══════════════════════════════════════════════════════════════════════════
+# - AGENTS.md: agent behavior rules, verification gate, workflow procedures
+# - README.md: installation and usage
+# - .agents/outline.md: AI assistant guide → ecosystem.md, react.md, components.md
