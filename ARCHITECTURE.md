@@ -27,7 +27,7 @@ standard-toolkit/
 │   ├── math/                    # Basic math functions
 │   ├── temporal/                # Date/time parsing, formatting, timers
 │   ├── logger/                  # Logging with callsite tracking
-│   ├── worker/                  # Web Worker helpers
+│   ├── web-worker/              # Web Worker helpers (@accelint/worker)
 │   ├── websocket/               # WebSocket helpers
 │   ├── hotkey-manager/          # Keyboard shortcut management
 │   └── postcss-tailwind-css-modules/  # PostCSS plugin fixing Tailwind + CSS Modules interop
