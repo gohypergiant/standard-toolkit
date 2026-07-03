@@ -4,6 +4,10 @@
   "version": "0.1.9",
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
+  "dependencies": {
+    "@accelint/constants": "^0.3.0",
+    "@accelint/math": "^0.1.9"
+  },
   "devDependencies": {
     "@accelint/typescript-config": "workspace:*",
     "@accelint/vitest-config": "workspace:*",

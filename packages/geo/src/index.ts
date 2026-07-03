@@ -47,3 +47,5 @@ export {
 } from './coordinates/latlon/internal/validate';
 export { parseMGRS } from './coordinates/mgrs/parser';
 export { parseUTM } from './coordinates/utm/parser';
+export { bearing } from './geodesy/bearing';
+export { distance } from './geodesy/distance';

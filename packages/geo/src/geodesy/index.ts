@@ -10,11 +10,5 @@
  * governing permissions and limitations under the License.
  */
 
-/**
- * THIS IS A GENERATED FILE. DO NOT ALTER DIRECTLY.
- */
-
-// biome-ignore-all assist/source/organizeImports: This comment is used to prevent the biome tool from altering the import statements in this file.
-
-export { formatBearing, formatDistance } from './bearing';
-export { formatM1, formatM2, formatM3A, formatM4, formatM5 } from './iff';
+export { bearing } from './bearing';
+export { distance } from './distance';

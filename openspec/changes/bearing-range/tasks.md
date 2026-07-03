@@ -2,26 +2,26 @@
 
 ## 1. Geodesy Functions in @accelint/geo [PKG:geo]
 
-- [ ] 1.1 Add `bearing(pointA: [number, number], pointB: [number, number]): number` function using geodesy's `LatLonSpherical.initialBearingTo()`
+- [x] 1.1 Add `bearing(pointA: [number, number], pointB: [number, number]): number` function using geodesy's `LatLonSpherical.initialBearingTo()`
   - Input: two [lon, lat] coordinate pairs
   - Output: initial bearing in degrees (0-360)
   - Handle antipodal points and antimeridian crossing correctly
   - Add JSDoc with @param, @returns, @example
   - Test: Unit tests with known coordinate pairs (north, northeast, southwest), antipodal points, antimeridian crossing, zero-distance edge case
 
-- [ ] 1.2 Add `distance(pointA: [number, number], pointB: [number, number]): number` function using geodesy's `LatLonSpherical.distanceTo()`
+- [x] 1.2 Add `distance(pointA: [number, number], pointB: [number, number]): number` function using geodesy's `LatLonSpherical.distanceTo()`
   - Input: two [lon, lat] coordinate pairs
   - Output: great-circle distance in meters
   - Add JSDoc with @param, @returns, @example
   - Test: Unit tests with known distances, antipodal points, zero-distance edge case
 
-- [ ] 1.3 Export from package barrel and update package.json exports
+- [x] 1.3 Export from package barrel and update package.json exports
   - Add to `src/index.ts` (regenerate via `pnpm index` after adding functions)
   - Test: Import and use functions in a test consumer module
 
 ## 2. Bearing Formatter in @accelint/formatters [PKG:formatters]
 
-- [ ] 2.1 Implement `formatBearing(degrees: number): string` in `src/bearing/index.ts`
+- [x] 2.1 Implement `formatBearing(degrees: number): string` in `src/bearing/index.ts`
   - Replace "NOT IMPLEMENTED" stub
   - Normalize negative and >360 values using modulo: `(degrees % 360 + 360) % 360`
   - Round to integer using `@accelint/math/round`
@@ -30,7 +30,7 @@
   - Add JSDoc with @param, @returns, @example
   - Test: Unit tests for positive bearing (45 → "045°"), negative bearing (-10 → "350°"), zero (0 → "000°"), large bearing (370 → "010°")
 
-- [ ] 2.2 Add `formatDistance(meters: number, units: DistanceUnit | DistanceUnit[]): string` helper function
+- [x] 2.2 Add `formatDistance(meters: number, units: DistanceUnit | DistanceUnit[]): string` helper function
   - Accept meters and target unit(s) from `@accelint/constants/units`
   - Convert meters to kilometers (÷1000) or nautical miles (÷1852)
   - Format with 1 decimal place
@@ -42,13 +42,13 @@
 
 ## 3. BaseMap Drag Events [PKG:map-toolkit]
 
-- [ ] 3.1 Add drag event types to `src/base-map/events.ts`
+- [x] 3.1 Add drag event types to `src/base-map/events.ts`
   - Add `dragStart`, `drag`, `dragEnd` constants to `MapEvents`
   - Define `MapDragEvent` type with `{ id: string, coordinate: [number, number], shiftKey: boolean, ctrlKey: boolean, altKey: boolean }`
   - Update `MapEventPayloads` type map
   - Test: Type-check compiles without errors
 
-- [ ] 3.2 Emit drag events from BaseMap handlers in `src/base-map/base-map.tsx`
+- [x] 3.2 Emit drag events from BaseMap handlers in `src/base-map/base-map.tsx`
   - In `handleDragStart`: after calling user callback, emit `MapEvents.dragStart` with `{ id, coordinate: info.coordinate, shiftKey, ctrlKey, altKey }`
   - In `handleDrag`: emit `MapEvents.drag`
   - In `handleDragEnd`: emit `MapEvents.dragEnd`
@@ -57,13 +57,13 @@
 
 ## 4. Measurement Store and Hook [PKG:map-toolkit]
 
-- [ ] 4.1 Create measurement store in `src/deckgl/measurement-layer/store.ts`
+- [x] 4.1 Create measurement store in `src/deckgl/measurement-layer/store.ts`
   - Define `MeasurementState` type: `{ pointA: [number, number] | null, pointB: [number, number] | null, isMeasuring: boolean }`
   - Define `MeasurementActions` type: `{ start: (pointA: [number, number]) => void, updateEnd: (pointB: [number, number]) => void, complete: () => void, clear: () => void }`
   - Use `createMapStore<MeasurementState, MeasurementActions>(defaultState, actions)`
   - Test: Unit tests for store actions (start sets pointA, updateEnd sets pointB, clear resets state)
 
-- [ ] 4.2 Implement `useMeasurement(mapId?: string)` hook in `src/deckgl/measurement-layer/use-measurement.ts`
+- [x] 4.2 Implement `useMeasurement(mapId?: string)` hook in `src/deckgl/measurement-layer/use-measurement.ts`
   - Subscribe to `map:dragStart`, `map:drag`, `map:dragEnd` events via `useOn`
   - Check `requiresModifier` prop against event modifier keys (if set, only proceed when modifier is pressed)
   - On dragStart: call `store.start(coordinate)`, emit `measurement:start`, emit `map:disablePan`
@@ -76,7 +76,7 @@
 
 ## 5. MeasurementLayer Composite Layer [PKG:map-toolkit]
 
-- [ ] 5.1 Implement `MeasurementLayer` in `src/deckgl/measurement-layer/measurement-layer.ts`
+- [x] 5.1 Implement `MeasurementLayer` in `src/deckgl/measurement-layer/measurement-layer.ts`
   - Extend `CompositeLayer<MeasurementLayerProps>`
   - Props: `{ pointA, pointB, showLabel, getLabel, units, lineColor, endpointColor }`
   - `static override layerName = 'MeasurementLayer'`
@@ -88,19 +88,19 @@
   - Add comprehensive JSDoc
   - Test: Unit tests for renderLayers output (verify PathLayer, ScatterplotLayer, TextLayer sublayers exist with correct props), test showLabel=false hides TextLayer, test custom getLabel override
 
-- [ ] 5.2 Add fiber registration in `src/deckgl/measurement-layer/fiber.ts`
+- [x] 5.2 Add fiber registration in `src/deckgl/measurement-layer/fiber.ts`
   - Import `MeasurementLayer` and call `extend({ MeasurementLayer })`
   - Add JSX intrinsic declaration: `declare global { namespace JSX { interface IntrinsicElements { measurementLayer: ... } } }`
   - Test: Render `<measurementLayer pointA={[10, 20]} pointB={[11, 21]} />` in a test, verify it renders without errors
 
-- [ ] 5.3 Update package.json exports for measurement-layer
+- [x] 5.3 Update package.json exports for measurement-layer
   - Add `"./deckgl/measurement-layer"`, `"./deckgl/measurement-layer/fiber"`, `"./deckgl/measurement-layer/types"` exports
   - Add fiber side-effect to `sideEffects` array
   - Test: Import each export path in a test module, verify no import errors
 
 ## 6. MeasurementTool Convenience Component [PKG:map-toolkit]
 
-- [ ] 6.1 Implement `MeasurementTool` component in `src/deckgl/measurement-layer/measurement-tool.tsx`
+- [x] 6.1 Implement `MeasurementTool` component in `src/deckgl/measurement-layer/measurement-tool.tsx`
   - Props: `{ mapId?, showLabel?, units?, requiresModifier?, getLabel?, lineColor?, endpointColor? }`
   - Call `useMeasurement(mapId)` hook with requiresModifier
   - Render `MeasurementLayer` with hook state (pointA, pointB) and forwarded style props
@@ -110,7 +110,7 @@
 
 ## 7. Storybook Story and Documentation [PKG:map-toolkit]
 
-- [ ] 7.1 Create `src/deckgl/measurement-layer/measurement-layer.stories.tsx`
+- [x] 7.1 Create `src/deckgl/measurement-layer/measurement-layer.stories.tsx`
   - Story 1: "Default Measurement" — drag to measure with dual units (km + NM)
   - Story 2: "Single Unit (Kilometers)" — `units='kilometers'`
   - Story 3: "Modifier Key Required" — `requiresModifier='shift'`, instructions to hold Shift
@@ -118,13 +118,13 @@
   - Story 5: "Direct Layer Usage" — render `<measurementLayer>` via fiber with static pointA/pointB
   - Test: Visual regression test with Playwright (capture screenshot of measurement readout)
 
-- [ ] 7.2 Add JSDoc examples to all exported functions/components
+- [x] 7.2 Add JSDoc examples to all exported functions/components
   - Ensure bearing(), distance(), formatBearing(), formatDistance(), MeasurementLayer, useMeasurement, MeasurementTool all have @example blocks
   - Test: Run `pnpm run audit:docblocks` (non-blocking pre-push check)
 
 ## 8. Integration Tests and Multi-Instance Isolation [PKG:map-toolkit]
 
-- [ ] 8.1 Add integration test for multi-instance isolation in `src/deckgl/measurement-layer/measurement-layer.integration.test.ts`
+- [x] 8.1 Add integration test for multi-instance isolation in `src/deckgl/measurement-layer/measurement-layer.integration.test.ts`
   - Render two BaseMap instances with different mapIds ('alpha', 'beta')
   - Add MeasurementTool to each with respective mapId
   - Trigger drag events on 'alpha' map, verify only 'alpha' measurement updates
@@ -132,7 +132,7 @@
   - Verify per-mapId store isolation
   - Test: Assertions verify state isolation (useMeasurement('alpha') returns different values than useMeasurement('beta'))
 
-- [ ] 8.2 Add pan suppression integration test
+- [x] 8.2 Add pan suppression integration test
   - Render BaseMap with MeasurementTool
   - Start measurement drag
   - Verify `map:disablePan` event emitted
@@ -142,7 +142,7 @@
 
 ## 9. Verification Gate and Changesets [ALL PACKAGES]
 
-- [ ] 9.1 Run full verification gate
+- [x] 9.1 Run full verification gate
   - Run `pnpm build` from root — fix any type errors (use tsconfig.dist.json for map-toolkit type-checking if needed)
   - Run `pnpm test` — ensure all new tests pass
   - Run `pnpm lint` — fix any lint errors
@@ -150,7 +150,7 @@
   - Run `pnpm index` — regenerate barrel exports
   - Test: All commands pass without errors
 
-- [ ] 9.2 Create changesets for affected packages
+- [x] 9.2 Create changesets for affected packages
   - Run `pnpm changeset` for @accelint/geo (minor bump: new bearing/distance functions)
   - Run `pnpm changeset` for @accelint/formatters (minor bump: implemented formatBearing)
   - Run `pnpm changeset` for @accelint/map-toolkit (minor bump: new MeasurementLayer + useMeasurement + MeasurementTool)
