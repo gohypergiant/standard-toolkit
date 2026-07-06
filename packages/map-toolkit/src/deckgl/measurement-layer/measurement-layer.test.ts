@@ -13,7 +13,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { MeasurementLayer } from './measurement-layer';
 import type { MeasurementLayerProps } from './types';
-import type { Layer } from '@deck.gl/core';
 
 // Mock external dependencies that are not relevant to unit-testing renderLayers output
 vi.mock('@accelint/geo/geodesy', () => ({

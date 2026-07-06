@@ -140,7 +140,7 @@ export function MeasurementTool({
     requiresModifier,
   );
 
-  if (!isMeasuring || !pointA || !pointB) {
+  if (!(isMeasuring && pointA && pointB)) {
     return null;
   }
 
