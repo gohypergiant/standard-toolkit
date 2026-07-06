@@ -5,8 +5,8 @@
   "author": "https://hypergiant.com",
   "$schema": "https://json.schemastore.org/package",
   "dependencies": {
-    "@accelint/constants": "^0.3.0",
-    "@accelint/math": "^0.1.9"
+    "@accelint/constants": "workspace:*",
+    "@accelint/math": "workspace:*"
   },
   "devDependencies": {
     "@accelint/typescript-config": "workspace:*",
