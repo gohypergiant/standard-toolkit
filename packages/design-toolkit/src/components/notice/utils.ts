@@ -17,6 +17,27 @@ import { isEqual } from 'radashi';
 import type { NoticeContent, NoticeDequeueEvent } from './types';
 
 /**
+ * Checks if a payload matches metadata on a notice.
+ * Used for filtering notices during dequeue operations.
+ *
+ * @param payload - Object with key-value pairs to match against.
+ * @param metadata - Metadata object from a notice to check.
+ * @returns True if all payload entries match corresponding metadata entries.
+ */
+export function matchesMetadata(
+  payload: Record<string, unknown>,
+  metadata?: Record<string, unknown>,
+) {
+  if (!metadata) {
+    return false;
+  }
+
+  return Object.entries(payload).every(
+    ([key, value]) => key in metadata && isEqual(metadata[key], value),
+  );
+}
+
+/**
  * Checks if a dequeue payload matches a notice's content.
  * Supports filtering by top-level fields (id, color, target) and nested metadata.
  *
@@ -43,20 +64,10 @@ export function matchesDequeueFilter(
     return false;
   }
 
-  const dequeueMetadata = dequeuePayload.metadata;
-  const noticeMetadata = noticeContent.metadata;
-
-  // Match metadata fields (partial deep match)
-  if (!dequeueMetadata) {
+  // Match metadata fields using existing matchesMetadata logic
+  if (!dequeuePayload.metadata) {
     return true;
   }
 
-  if (!noticeMetadata) {
-    return false;
-  }
-
-  return Object.entries(dequeueMetadata).every(
-    ([key, value]) =>
-      key in noticeMetadata && isEqual(noticeMetadata[key], value),
-  );
+  return matchesMetadata(dequeuePayload.metadata, noticeContent.metadata);
 }

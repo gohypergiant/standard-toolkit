@@ -12,8 +12,45 @@
 
 import { uuid } from '@accelint/core';
 import { describe, expect, it } from 'vitest';
-import { matchesDequeueFilter } from './utils';
+import { matchesDequeueFilter, matchesMetadata } from './utils';
 import type { NoticeContent } from './types';
+
+describe('matchesMetadata', () => {
+  it('should match when all payload entries are in metadata', () => {
+    const payload = { operation: 'upload', batchId: 'batch-1' };
+    const metadata = { operation: 'upload', batchId: 'batch-1', extra: 'data' };
+    expect(matchesMetadata(payload, metadata)).toBe(true);
+  });
+
+  it('should not match when metadata is undefined', () => {
+    const payload = { operation: 'upload' };
+    expect(matchesMetadata(payload, undefined)).toBe(false);
+  });
+
+  it('should not match when a payload entry is missing from metadata', () => {
+    const payload = { operation: 'upload', batchId: 'batch-1' };
+    const metadata = { operation: 'upload' };
+    expect(matchesMetadata(payload, metadata)).toBe(false);
+  });
+
+  it('should not match when a payload entry has a different value', () => {
+    const payload = { operation: 'upload' };
+    const metadata = { operation: 'download' };
+    expect(matchesMetadata(payload, metadata)).toBe(false);
+  });
+
+  it('should match with nested objects using deep equality', () => {
+    const payload = { config: { retries: 3, timeout: 1000 } };
+    const metadata = { config: { retries: 3, timeout: 1000 } };
+    expect(matchesMetadata(payload, metadata)).toBe(true);
+  });
+
+  it('should not match with different nested objects', () => {
+    const payload = { config: { retries: 3, timeout: 1000 } };
+    const metadata = { config: { retries: 5, timeout: 1000 } };
+    expect(matchesMetadata(payload, metadata)).toBe(false);
+  });
+});
 
 describe('matchesDequeueFilter', () => {
   const baseNotice: NoticeContent = {
