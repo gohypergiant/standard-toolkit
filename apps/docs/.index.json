@@ -1,0 +1,142 @@
+{
+  "version": "1.0",
+  "generated": "2026-07-13T00:00:00Z",
+  "entries": [
+    {
+      "source": "packages/logger/src/default/bootstrap.ts",
+      "doc": "packages/logger/src/default/bootstrap.md",
+      "entities": ["bootstrap"],
+      "source_sha": "6b82165aa9393f8001b3830d745495efe20f7cfa",
+      "doc_sha": "54886955cc187e2d01f85fed9edf7b89fb5815df",
+      "updated": "2026-05-28T00:00:00Z"
+    },
+    {
+      "source": "packages/logger/src/default/index.ts",
+      "doc": "packages/logger/src/default/index.md",
+      "entities": ["getLogger"],
+      "source_sha": "5d8f26d3627b503804e9b8a7cdeb0a9590b09439",
+      "doc_sha": "f6c45d5bec118b5874c81dd6a7fb0d06ac4d98f7",
+      "updated": "2026-05-28T00:00:00Z"
+    },
+    {
+      "source": "packages/logger/src/definitions.ts",
+      "doc": "packages/logger/src/definitions.md",
+      "entities": ["DEBUG", "ERROR", "FATAL", "INFO", "TRACE", "WARN"],
+      "source_sha": "8c730bafc8068e25285e695c913ebefcfa3c344d",
+      "doc_sha": "b5d57cff347c725cd461ce346d213e1308798cf4",
+      "updated": "2026-05-28T00:00:00Z"
+    },
+    {
+      "source": "packages/logger/src/plugins/callsite.ts",
+      "doc": "packages/logger/src/plugins/callsite.md",
+      "entities": ["callsitePlugin"],
+      "source_sha": "2c791d5f027d5dd85ede507bd567d7324c87793d",
+      "doc_sha": "c04b0c7b0d9117d6a0d791fdc5dd5496cbb54e4b",
+      "updated": "2026-05-28T00:00:00Z"
+    },
+    {
+      "source": "packages/logger/src/plugins/environment.ts",
+      "doc": "packages/logger/src/plugins/environment.md",
+      "entities": ["environmentPlugin"],
+      "source_sha": "c50b933870c4c7e1eae79048fb135ccf7faf9166",
+      "doc_sha": "d7a57d0ca7c2c9b9f349780989ac3a455094e0e2",
+      "updated": "2026-05-28T00:00:00Z"
+    },
+    {
+      "source": "packages/logger/src/transports/pretty.ts",
+      "doc": "packages/logger/src/transports/pretty.md",
+      "entities": ["prettyTransport"],
+      "source_sha": "b10bcd365cf46b823f3374af702cca7f13c5698f",
+      "doc_sha": "c65f32eab42935f4351b5ca8ea924419c8a0a2b9",
+      "updated": "2026-05-28T00:00:00Z"
+    },
+    {
+      "source": "packages/logger/src/transports/structured.ts",
+      "doc": "packages/logger/src/transports/structured.md",
+      "entities": ["structuredTransport"],
+      "source_sha": "b987461bdab33a6d2c5563c2936d4b0dba79b026",
+      "doc_sha": "1e55c9476f8a17c47a2fab878bde6504738add78",
+      "updated": "2026-05-28T00:00:00Z"
+    },
+    {
+      "source": "packages/math/src/clamp/index.ts",
+      "doc": "packages/math/src/clamp/index.md",
+      "entities": ["clamp"],
+      "source_sha": "af9d41f2cbd80d93eaf752583b987219960c4daa",
+      "doc_sha": "faea60c716c7cee3d6a9e5ab7eb2458ba0e499ff",
+      "updated": "2026-05-28T00:00:00Z"
+    },
+    {
+      "source": "packages/math/src/random/index.ts",
+      "doc": "packages/math/src/random/index.md",
+      "entities": ["random", "randomInt"],
+      "source_sha": "4db721b2f40ef197ee2668fc6433a84625a8788a",
+      "doc_sha": "a6ec4e7670110a74b6d360758d42198d57e8c56b",
+      "updated": "2026-05-28T00:00:00Z"
+    },
+    {
+      "source": "packages/math/src/round/index.ts",
+      "doc": "packages/math/src/round/index.md",
+      "entities": ["round"],
+      "source_sha": "c5f26f19f5ca2227af188e1bd1eaa23060f6e38e",
+      "doc_sha": "320814ad8e72c60399e78426d686ba104833306d",
+      "updated": "2026-05-28T00:00:00Z"
+    },
+    {
+      "source": "packages/constants/src/color/index.ts",
+      "doc": "packages/constants/src/color/index.md",
+      "entities": ["CSS_RGBA_LEGACY_REGEX", "CSS_RGBA_MODERN_REGEX", "HEX_REGEX"],
+      "source_sha": "d6cb28551a341a293027f2084e6e7f5c6c5cd467",
+      "doc_sha": "bd48abdf53be28ece4e0030f6729fc6614e737ad",
+      "updated": "2026-05-28T00:00:00Z"
+    },
+    {
+      "source": "packages/constants/src/coordinates/index.ts",
+      "doc": "packages/constants/src/coordinates/index.md",
+      "entities": ["DEFAULT_COORDINATE"],
+      "source_sha": "baa1663be9d9bdbd5724b463df1021593f219c76",
+      "doc_sha": "abf269842093bddb005298c5de98d07b68a8f270",
+      "updated": "2026-05-28T00:00:00Z"
+    },
+    {
+      "source": "packages/constants/src/units/index.ts",
+      "doc": "packages/constants/src/units/index.md",
+      "entities": ["DISTANCE_UNIT_SYMBOLS", "DISTANCE_UNIT_BY_SYMBOL"],
+      "source_sha": "2eb2aeec378a8df693295660d015c4968dd924a5",
+      "doc_sha": "58c216d536fc0d2fa5d840a617b213553bbf9b61",
+      "updated": "2026-05-28T00:00:00Z"
+    },
+    {
+      "source": "packages/design-toolkit/src/components/menu/index.tsx",
+      "doc": "packages/design-toolkit/src/components/menu/index.md",
+      "entities": ["Menu", "MenuItem", "MenuItemLabel", "MenuItemDescription", "MenuSection", "MenuSeparator", "MenuTrigger", "MenuSubmenu"],
+      "source_sha": "6d3f2ffa271fa4d98a9a78af4cf953ed76546ebb",
+      "doc_sha": "c1a63127d69e08d51c27dc38ba414375af6be844",
+      "updated": "2026-05-28T00:00:00Z"
+    },
+    {
+      "source": "packages/bus/src/index.ts",
+      "doc": "apps/docs/content/packages/bus/api/index.md",
+      "entities": ["Broadcast", "Payload", "Types", "Constants"],
+      "source_sha": "3a165d8f4fcefdb569e96058bba87c59250d0703",
+      "doc_sha": "pending",
+      "updated": "2026-05-28T00:00:00Z"
+    },
+    {
+      "source": "packages/bus/src/broadcast/index.ts",
+      "doc": "apps/docs/content/packages/bus/api/broadcast/index.md",
+      "entities": ["Broadcast"],
+      "source_sha": "d4f39c5b2f8706ff3676f6dfa60b6649188cd63b",
+      "doc_sha": "pending",
+      "updated": "2026-05-28T00:00:00Z"
+    },
+    {
+      "source": "packages/bus/src/react/index.ts",
+      "doc": "apps/docs/content/packages/bus/api/react/index.md",
+      "entities": ["useBus", "useEmit", "useOn", "useOnce"],
+      "source_sha": "6cf16682b1af2f7746e609f7cf851e728670dd9e",
+      "doc_sha": "pending",
+      "updated": "2026-05-28T00:00:00Z"
+    }
+  ]
+}

@@ -48,11 +48,11 @@ Before merging PRs that change public APIs:
 # 2. Validate all docs
 /accelint-api-docs --validate . --strict
 
-# 3. Check mapping file
-git diff ACCELINT_API_DOCS_MAPPING.md
+# 3. Check index file
+git diff apps/docs/.index.json
 
 # 4. Commit docs with code
-git add packages/**/*.md ACCELINT_API_DOCS_MAPPING.md
+git add apps/docs/content/**/*.mdx apps/docs/.index.json
 git commit -m "docs: update API reference for X"
 ```
 

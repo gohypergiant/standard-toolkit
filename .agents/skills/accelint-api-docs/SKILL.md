@@ -106,15 +106,18 @@ When the user asks to document a file, follow this workflow.
 
 **1. Read and analyze the source**
    - Read the source file completely
-   - Read any colocated test files (`*.test.ts`, `*.test.tsx`)
+   - Read any colocated test files (`*.test.ts`, `*.test.tsx`) for usage examples
+   - Exclude test files and directories from documentation output:
+     - Skip `*.test.ts`, `*.test.tsx` files
+     - Skip `__tests__/`, `__mocks__/` directories
    - Read existing documentation if present (`.md`, `.docs.mdx`, `README.md`)
 
 **2. Detect package section**
    - Extract package name from source path (e.g., `packages/logger/` → `logger`)
    - Map to section using these rules:
-     - `design-foundation`, `design-toolkit`, `map-toolkit` → `toolkits/`
+     - `design-toolkit`, `map-toolkit` → `toolkits/`
      - `postcss-tailwind-css-modules`, `biome-config`, `eslint-config`, `prettier-config`, `smeegl`, `typescript-config`, `vitest-config` → `tooling/`
-     - All other packages → `packages/`
+     - All other packages (including `design-foundation`) → `packages/`
    - Strip `@accelint/` scope if present (e.g., `@accelint/logger` → `logger`)
 
 **3. Classify exports**
@@ -160,20 +163,22 @@ When the user asks to document a file, follow this workflow.
    - Check that examples have descriptive names
 
 **7. Determine output path and write file**
-   - Compute output path: `{outputDir}/{section}/{package-name}/api/{relative-path}`
-   - Preserve source directory structure within `api/` subdirectory
+   - Compute output path: `{outputDir}/{section}/{package-name}/{relative-path}.mdx`
+   - Preserve source directory structure directly (no `/api/` subdirectory)
    - Examples:
-     - `packages/logger/src/index.ts` → `apps/docs/content/packages/logger/api/index.md`
-     - `packages/logger/src/plugins/callsite.ts` → `apps/docs/content/packages/logger/api/plugins/callsite.md`
-     - `toolkits/design-toolkit/src/Button.tsx` → `apps/docs/content/toolkits/design-toolkit/api/Button.md`
+     - `packages/logger/src/index.ts` → `apps/docs/content/packages/logger/index.mdx`
+     - `packages/logger/src/plugins/callsite.ts` → `apps/docs/content/packages/logger/plugins/callsite.mdx`
+     - `toolkits/design-toolkit/src/Button.tsx` → `apps/docs/content/toolkits/design-toolkit/Button.mdx`
    - Create directories if they don't exist (use mkdir -p)
    - Single export: Write to computed path
    - Multi-export: Write single file with H2 sections per entity
 
-**8. Update tracking file**
-   - Append or update entry in `/ACCELINT_API_DOCS_MAPPING.md`
-   - Format: `| source/path.ts | doc/path.md | entities | source_sha | doc_sha | date |`
-   - Keep table sorted by source path for clean diffs
+**8. Update tracking index**
+   - Read `apps/docs/.index.json`
+   - Update or append entry with: source, doc, entities, source_sha, doc_sha, updated (ISO 8601 timestamp)
+   - Update `generated` timestamp to current time
+   - Write back to `apps/docs/.index.json`
+   - Keep entries sorted by source path for clean diffs
 
 ---
 
@@ -190,8 +195,8 @@ When the user asks to update docs after code changes, follow this workflow.
    ```
 
 **2. Lookup affected docs**
-   - Read `/ACCELINT_API_DOCS_MAPPING.md`
-   - Find docs where `source` matches changed files
+   - Read `apps/docs/.index.json`
+   - Find entries where `source` matches changed files
    - Validate mapping (detect moved/deleted files)
 
 **3. For each stale doc:**
