@@ -16,6 +16,7 @@
     "@ls-lint/ls-lint": "^2.3.1",
     "@swc/core": "^1.15.3",
     "lefthook": "^2.0.11",
+    "openwiki": "^0.1.1",
     "publint": "^0.3.16",
     "rimraf": "^6.1.2",
     "syncpack": "^14.0.0-alpha.32",
@@ -33,7 +34,17 @@
   "pnpm": {
     "overrides": {
       "@internationalized/date": "~3.12.1"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "@parcel/watcher",
+      "@swc/core",
+      "better-sqlite3",
+      "esbuild",
+      "lefthook",
+      "puppeteer",
+      "sharp",
+      "sleep"
+    ]
   },
   "private": true,
   "repository": {
