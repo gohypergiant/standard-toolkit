@@ -1,0 +1,236 @@
+---
+title: TextField
+description: Single-line text input with integrated label, description, and validation.
+source: packages/design-toolkit/src/components/text-field/index.tsx
+source_sha: 61190e9e44f0e0f96b593e6a52cf7f0de26f1080
+doc_sha: e2cd091eaa5d69e6b9cd47c87482da9fbf424d4e
+deprecated: false
+updated: 2026-07-13
+---
+
+# TextField
+
+Single-line text input with integrated label, description, and validation.
+
+## Usage
+
+```tsx
+import { TextField } from '@accelint/design-toolkit';
+
+export function MyForm() {
+  return (
+    <TextField
+      label="Email"
+      type="email"
+      description="We'll never share your email"
+      onChange={(value) => console.log(value)}
+    />
+  );
+}
+```
+
+## Reference
+
+```typescript
+interface TextFieldProps extends Omit<AriaTextFieldProps, 'children' | 'className' | 'type' | 'pattern'> {
+  label?: string;
+  description?: string;
+  errorMessage?: string;
+  size?: 'medium' | 'small';
+  inputProps?: InputProps;
+  classNames?: {
+    field?: AriaTextFieldProps['className'];
+    label?: LabelProps['className'];
+    input?: InputProps['classNames'];
+    description?: string;
+    error?: FieldErrorProps['className'];
+  };
+}
+```
+
+### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `label` | `string` | - | No |
+| `description` | `string` | - | No |
+| `errorMessage` | `string` | - | No |
+| `size` | `'medium' \| 'small'` | `'medium'` | No |
+| `inputProps` | `InputProps` | - | No |
+| `classNames` | `TextFieldClassNames` | - | No |
+| `isInvalid` | `boolean` | `false` | No |
+| `isDisabled` | `boolean` | `false` | No |
+| `isRequired` | `boolean` | `false` | No |
+
+#### `label`
+
+Label text displayed above the input. Automatically associates with the input for accessibility. Hidden when `size="small"`.
+
+#### `description`
+
+Helper text displayed below the input. Hidden when `size="small"` or when the field is invalid.
+
+#### `errorMessage`
+
+Error message displayed when validation fails. Automatically sets `isInvalid` to `true` when provided.
+
+#### `size`
+
+Controls field sizing and visibility of label and description:
+- `medium` - Standard size with visible label and description (default)
+- `small` - Compact size, hides label and description
+
+#### `inputProps`
+
+Props passed directly to the underlying `Input` component, including:
+- `placeholder` - Placeholder text
+- `type` - HTML input type (text, email, password, etc.)
+- `autoComplete` - Browser autocomplete hint
+- `maxLength` - Maximum character length
+
+See [Input](../input/index.md) for full props reference.
+
+#### `classNames`
+
+Custom CSS class names for field elements:
+- `field` - Container element
+- `label` - Label element
+- `input` - Input element (supports nested classNames)
+- `description` - Description text element
+- `error` - Error message element
+
+### Inherited Props
+
+TextField inherits all props from React Aria's `TextField` component, including:
+- `value` / `defaultValue` - Controlled/uncontrolled value
+- `onChange` - Called when value changes (receives string)
+- `onBlur` / `onFocus` - Focus event handlers
+- `validate` - Custom validation function
+- `name` - Form field name
+
+See [React Aria TextField](https://react-spectrum.adobe.com/react-aria/TextField.html) for full API reference.
+
+## Examples
+
+### Example: Basic text field
+
+```tsx
+import { TextField } from '@accelint/design-toolkit';
+
+<TextField
+  label="Username"
+  placeholder="Enter username"
+  onChange={(value) => setUsername(value)}
+/>
+```
+
+### Example: Email with validation
+
+```tsx
+import { TextField } from '@accelint/design-toolkit';
+
+<TextField
+  label="Email"
+  type="email"
+  description="We'll never share your email"
+  validate={(value) => {
+    if (!value.includes('@')) {
+      return 'Please enter a valid email';
+    }
+  }}
+/>
+```
+
+### Example: Required field
+
+```tsx
+import { TextField } from '@accelint/design-toolkit';
+
+<TextField
+  label="Full Name"
+  isRequired
+  errorMessage="Name is required"
+/>
+```
+
+### Example: Disabled state
+
+```tsx
+import { TextField } from '@accelint/design-toolkit';
+
+<TextField
+  label="Account ID"
+  value="12345"
+  isDisabled
+  description="Cannot be changed"
+/>
+```
+
+### Example: Small size variant
+
+```tsx
+import { TextField } from '@accelint/design-toolkit';
+
+<TextField
+  size="small"
+  placeholder="Search..."
+  inputProps={{ type: 'search' }}
+/>
+```
+
+> **Good to know:** The `small` size hides the label and description to create a compact input. Always provide a `placeholder` for context.
+
+### Example: Password with error
+
+```tsx
+import { TextField } from '@accelint/design-toolkit';
+
+<TextField
+  label="Password"
+  type="password"
+  isInvalid
+  errorMessage="Password must be at least 8 characters"
+/>
+```
+
+### Example: Controlled value
+
+```tsx
+import { useState } from 'react';
+import { TextField } from '@accelint/design-toolkit';
+
+export function ControlledExample() {
+  const [value, setValue] = useState('');
+
+  return (
+    <TextField
+      label="Message"
+      value={value}
+      onChange={setValue}
+      description={`${value.length} characters`}
+    />
+  );
+}
+```
+
+### Example: Custom styling
+
+```tsx
+import { TextField } from '@accelint/design-toolkit';
+
+<TextField
+  label="Custom Field"
+  classNames={{
+    field: 'mb-4',
+    label: 'font-bold',
+    input: { sizer: 'rounded-lg' },
+    error: 'text-sm',
+  }}
+/>
+```
+
+## Related
+
+- [Input](../input/index.md) - Underlying input component
+- [Label](../label/index.md) - Label component with required indicator
+- [TextAreaField](../text-area-field/index.md) - Multi-line text input

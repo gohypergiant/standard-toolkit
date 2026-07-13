@@ -1,0 +1,133 @@
+---
+title: validateInput
+description: Validate glob pattern and input directory parameters, ensuring only one input method is provided.
+source: tooling/smeegl/src/validate-input.ts
+source_sha: e08a16f78eb7a7c8b18a44a8c9a5c83e0e5e23ec
+doc_sha: 5a08e24e95db44f3f37ef14fc8c04dab2c6c42e3
+deprecated: false
+updated: 2026-07-13
+---
+
+# validateInput
+
+Validate glob pattern and input directory parameters, ensuring only one input method is provided and that inputs meet requirements.
+
+## Usage
+
+```typescript
+import { validateInput } from '@accelint/smeegl/validate-input';
+
+// Valid: using glob pattern
+validateInput('src/icons/**/*.svg', null);
+
+// Valid: using input directory
+validateInput(null, './icons');
+
+// Invalid: both provided (exits process)
+validateInput('**/*.svg', './icons'); // Error: Both glob pattern and input directory provided
+```
+
+## Reference
+
+```typescript
+function validateInput(
+  glob: string | null,
+  inputPath: string | null
+): void
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `glob` | `string \| null` | Glob pattern for matching SVG files. Should end with `.svg`. Cannot use `~/` prefix. |
+| `inputPath` | `string \| null` | Directory path to scan for SVG files. Must exist on the filesystem. |
+
+### Returns
+
+Returns `void`. Exits the process with `process.exit(1)` if validation fails.
+
+## Examples
+
+### Example: Valid glob pattern
+
+```typescript
+import { validateInput } from '@accelint/smeegl/validate-input';
+
+// Valid glob patterns
+validateInput('src/icons/**/*.svg', null);
+validateInput('/absolute/path/icons/**/*.svg', null);
+```
+
+### Example: Valid input directory
+
+```typescript
+import { validateInput } from '@accelint/smeegl/validate-input';
+
+// Valid directory paths
+validateInput(null, './src/icons');
+validateInput(null, '/absolute/path/icons');
+```
+
+### Example: Validation errors
+
+```typescript
+import { validateInput } from '@accelint/smeegl/validate-input';
+
+// Error: Both provided
+validateInput('**/*.svg', './icons');
+// Output: Error: Both glob pattern and input directory provided; Please use only one
+// Process exits with code 1
+
+// Error: Neither provided
+validateInput(null, null);
+// Output: Error: No glob pattern or input directory provided
+// Process exits with code 1
+
+// Error: Tilde in glob pattern
+validateInput('~/icons/**/*.svg', null);
+// Output: Error: Please expand the glob pattern to an absolute path before running this command.
+// Process exits with code 1
+
+// Warning: Missing .svg extension
+validateInput('icons/**/*', null);
+// Output: Warning: The glob pattern should end with .svg for best results
+// Continues execution
+
+// Error: Directory doesn't exist
+validateInput(null, './nonexistent');
+// Output: Error: The specified input directory does not exist
+// Process exits with code 1
+```
+
+## Validation Rules
+
+### Mutual Exclusivity
+- **Cannot provide both** glob and inputPath
+- **Must provide one** of glob or inputPath
+
+### Glob Pattern Rules
+- **Should end with `.svg`** (warning if missing)
+- **Cannot start with `~/`** (tilde expansion not supported)
+- Use absolute paths or relative paths starting with `./` or `../`
+
+### Input Directory Rules
+- **Must exist** on the filesystem
+- Checked with `fs.existsSync()`
+
+> **Good to know:** This function calls `process.exit(1)` on validation failure. Use it in CLI contexts, not in library code where you need to handle errors programmatically.
+
+## Error Messages
+
+| Condition | Message | Exit Code |
+|-----------|---------|-----------|
+| Both glob and inputPath provided | "Error: Both glob pattern and input directory provided; Please use only one" | 1 |
+| Neither provided | "Error: No glob pattern or input directory provided" | 1 |
+| Glob starts with `~/` | "Error: Please expand the glob pattern to an absolute path before running this command." | 1 |
+| Directory doesn't exist | "Error: The specified input directory does not exist" | 1 |
+| Glob missing `.svg` | "Warning: The glob pattern should end with .svg for best results" | None (warning) |
+
+## Related
+
+- [smeegl](./lib.mdx) - Main entry point that uses validation
+- [findSprites](./utils/find-sprites.mdx) - Find sprites after validation passes

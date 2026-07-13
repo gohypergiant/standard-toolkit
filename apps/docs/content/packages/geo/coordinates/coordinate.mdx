@@ -1,0 +1,250 @@
+---
+title: Coordinate System
+description: Parse, validate, convert, and format geographic coordinates across multiple notation systems.
+source: packages/geo/src/coordinates/coordinate.ts
+source_sha: 5f856088f6fa15afce2d4948feb777d6fc5ce60f
+doc_sha: 71b6229b5f2c6e841091e4ba75b4db6c9ed38024
+deprecated: false
+updated: 2026-07-13
+---
+
+# Coordinate System
+
+Parse, validate, convert, and format geographic coordinates across multiple notation systems including Decimal Degrees, Degrees Decimal Minutes, Degrees Minutes Seconds, MGRS, and UTM.
+
+## coordinateSystems
+
+Available coordinate systems for parsing, converting, and formatting geographic coordinates.
+
+### Usage
+
+```typescript
+import { coordinateSystems, createCoordinate } from '@accelint/geo';
+
+// Create a coordinate parser for Decimal Degrees
+const create = createCoordinate(coordinateSystems.dd, 'LATLON');
+const coord = create('40.7128 / -74.0060');
+```
+
+### Reference
+
+```typescript
+const coordinateSystems: {
+  readonly dd: CoordinateSystem;
+  readonly ddm: CoordinateSystem;
+  readonly dms: CoordinateSystem;
+  readonly mgrs: CoordinateSystem;
+  readonly utm: CoordinateSystem;
+};
+```
+
+Provides five coordinate notation systems:
+- `dd` - Decimal Degrees (e.g., 40.7128° N)
+- `ddm` - Degrees Decimal Minutes (e.g., 40° 42.768' N)
+- `dms` - Degrees Minutes Seconds (e.g., 40° 42' 46" N)
+- `mgrs` - Military Grid Reference System (e.g., 18T WL 80000 00000)
+- `utm` - Universal Transverse Mercator (e.g., 18 N 585628 4511322)
+
+### Examples
+
+#### Example: Using Decimal Degrees
+
+```typescript
+import { coordinateSystems, createCoordinate } from '@accelint/geo';
+
+const create = createCoordinate(coordinateSystems.dd, 'LATLON');
+const coord = create('40.7128 / -74.0060');
+
+coord.dd();    // '40.7128 N / 74.006 W'
+coord.dms();   // '40 42 46.08 N / 74 0 21.6 W'
+```
+
+#### Example: Using MGRS
+
+```typescript
+import { coordinateSystems, createCoordinate } from '@accelint/geo';
+
+const createMGRS = createCoordinate(coordinateSystems.mgrs);
+const coord = createMGRS('18T WL 80000 00000');
+
+coord.mgrs();  // '18T WL 80000 00000'
+coord.dd();    // Converts to Decimal Degrees
+```
+
+#### Example: Using UTM
+
+```typescript
+import { coordinateSystems, createCoordinate } from '@accelint/geo';
+
+const createUTM = createCoordinate(coordinateSystems.utm, 'LATLON');
+const coord = createUTM('18 N 585628 4511322');
+
+coord.utm();   // '18N 585628 4511322'
+coord.dd();    // '40.74839601188732 N / 73.98570490632135 W'
+```
+
+## createCoordinate
+
+Creates a coordinate object enabling lexing, parsing, validation, and formatting across multiple coordinate systems.
+
+### Usage
+
+```typescript
+import { createCoordinate, coordinateSystems } from '@accelint/geo';
+
+// Create with default Decimal Degrees and LATLON format
+const create = createCoordinate();
+const coord = create('40.7128 / -74.0060');
+
+coord.dd();    // '40.7128 N / 74.006 W'
+coord.dms();   // '40 42 46.08 N / 74 0 21.6 W'
+```
+
+### Reference
+
+```typescript
+function createCoordinate(
+  initSystem?: CoordinateSystem,
+  initFormat?: 'LATLON' | 'LONLAT'
+): (input: CoordinateInput) => Coordinate
+
+type CoordinateInput = 
+  | string
+  | [number, number]
+  | CoordinateObject
+
+interface CoordinateObject {
+  lat?: number;
+  latitude?: number;
+  LAT?: number;
+  LATITUDE?: number;
+  lon?: number;
+  longitude?: number;
+  LON?: number;
+  LONGITUDE?: number;
+}
+
+interface Coordinate {
+  dd(format?: 'LATLON' | 'LONLAT'): string;
+  ddm(format?: 'LATLON' | 'LONLAT'): string;
+  dms(format?: 'LATLON' | 'LONLAT'): string;
+  mgrs(format?: 'LATLON' | 'LONLAT'): string;
+  utm(format?: 'LATLON' | 'LONLAT'): string;
+  errors: string[];
+  raw: { LAT: number; LON: number };
+  valid: boolean;
+}
+```
+
+### Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `initSystem` | `CoordinateSystem` | `coordinateSystems.dd` | Coordinate system to use for parsing (dd, ddm, dms, mgrs, or utm) |
+| `initFormat` | `'LATLON' \| 'LONLAT'` | `'LATLON'` | Coordinate format ordering |
+
+### Returns
+
+Returns a function that accepts coordinate input (string, tuple, or object) and returns a `Coordinate` object with formatters and validation state.
+
+### Examples
+
+#### Example: Parsing string coordinates
+
+```typescript
+import { createCoordinate, coordinateSystems } from '@accelint/geo';
+
+const create = createCoordinate(coordinateSystems.dd, 'LATLON');
+const coord = create('40.7128 / -74.0060');
+
+coord.valid;   // true
+coord.dd();    // '40.7128 N / 74.006 W'
+coord.dms();   // '40 42 46.08 N / 74 0 21.6 W'
+```
+
+#### Example: Parsing numeric tuples
+
+```typescript
+import { createCoordinate } from '@accelint/geo';
+
+const create = createCoordinate();
+const coord = create([40.7128, -74.0060]);
+
+coord.valid;   // true
+coord.raw;     // { LAT: 40.7128, LON: -74.0060 }
+```
+
+#### Example: Parsing coordinate objects
+
+```typescript
+import { createCoordinate } from '@accelint/geo';
+
+const create = createCoordinate();
+const coord = create({ lat: 40.7128, lon: -74.0060 });
+
+coord.valid;   // true
+coord.dd();    // '40.7128 N / 74.006 W'
+```
+
+#### Example: Converting between formats
+
+```typescript
+import { createCoordinate, coordinateSystems } from '@accelint/geo';
+
+const create = createCoordinate(coordinateSystems.ddm, 'LONLAT');
+const coord = create('-74 0.36 / 40 42.768');
+
+// Convert to different format ordering
+coord.ddm('LATLON');  // '40 42.768 N / 74 0.36 W'
+```
+
+#### Example: Converting between systems
+
+```typescript
+import { createCoordinate, coordinateSystems } from '@accelint/geo';
+
+const create = createCoordinate(coordinateSystems.dd, 'LATLON');
+const coord = create('89.765432109 / 123.456789012');
+
+// Original format honored
+coord.dd();    // '89.765432109 N / 123.456789012 E'
+coord.ddm();   // '89 45.92592654 N / 123 27.40734072 E'
+coord.dms();   // '89 45 55.5555924 N / 123 27 24.4404432 E'
+
+// Change format to LONLAT
+coord.dms('LONLAT');  // '123 27 24.4404432 E / 89 45 55.5555924 N'
+```
+
+#### Example: Error handling
+
+```typescript
+import { createCoordinate } from '@accelint/geo';
+
+const create = createCoordinate();
+const coord = create('91 / 0');  // Invalid latitude
+
+coord.valid;   // false
+coord.errors;  // ['[ERROR] Degrees value (91) exceeds max value (90).']
+```
+
+#### Example: LONLAT format ordering
+
+```typescript
+import { createCoordinate, coordinateSystems } from '@accelint/geo';
+
+const create = createCoordinate(coordinateSystems.dd, 'LONLAT');
+const coord = create('90.5 W / 45.5 N');
+
+coord.raw;     // { LAT: 45.5, LON: -90.5 }
+```
+
+> **Good to know:** The original coordinate system and format are preserved without conversion to prevent rounding errors. All alternative values are computed from a common internal representation in Decimal Degrees.
+
+> **Good to know:** Coordinate objects support case-insensitive keys: `lat`/`LAT`/`latitude`/`LATITUDE` and `lon`/`LON`/`longitude`/`LONGITUDE`.
+
+## Related
+
+- [formatDecimalDegrees](./latlon/decimal-degrees/formatter.md) - Format coordinates in Decimal Degrees notation
+- [parseDecimalDegrees](./latlon/decimal-degrees/parser.md) - Parse Decimal Degrees coordinate strings
+- [parseMGRS](./mgrs/parser.md) - Parse Military Grid Reference System coordinates
+- [parseUTM](./utm/parser.md) - Parse Universal Transverse Mercator coordinates

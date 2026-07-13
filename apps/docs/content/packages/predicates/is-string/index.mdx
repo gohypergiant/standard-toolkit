@@ -1,0 +1,113 @@
+---
+title: isString
+description: Type guard that determines if a value is a string (primitive or String object)
+source: packages/predicates/src/is-string/index.ts
+source_sha: 3fe9b6a36909e697cec99cbeaa02d41db8d91c3f
+doc_sha: 87ed21fb41c77fa429ed0f442d757242f9c2ff63
+deprecated: false
+updated: 2026-07-13
+---
+
+# isString
+
+Type guard that determines if a value is a string, including both primitive strings and String object instances.
+
+## Usage
+
+```typescript
+import { isString } from '@accelint/predicates/is-string';
+
+isString('hello');           // true
+isString(new String('hi'));  // true
+isString(123);               // false
+isString(null);              // false
+```
+
+## Reference
+
+```typescript
+function isString(val: unknown): val is string
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `val` | `unknown` | Value to check |
+
+### Returns
+
+Type guard that narrows the type to `string`. Returns `true` for both primitive strings and String object instances.
+
+## Examples
+
+### Example: Type narrowing for string operations
+
+```typescript
+import { isString } from '@accelint/predicates/is-string';
+
+function processValue(val: unknown) {
+  if (isString(val)) {
+    // TypeScript knows val is string here
+    return val.toUpperCase();
+  }
+  throw new Error('Expected string');
+}
+
+processValue('hello');       // "HELLO"
+processValue(new String('hi')); // "HI"
+processValue(123);           // Error: Expected string
+```
+
+### Example: Filtering mixed arrays
+
+```typescript
+import { isString } from '@accelint/predicates/is-string';
+
+const mixed = ['hello', 42, 'world', null, undefined, true, 'test'];
+const strings = mixed.filter(isString);
+// ['hello', 'world', 'test']
+```
+
+### Example: Safe string concatenation
+
+```typescript
+import { isString } from '@accelint/predicates/is-string';
+
+function safeConcat(...values: unknown[]): string {
+  const strings = values.filter(isString);
+  return strings.join(' ');
+}
+
+safeConcat('Hello', 'world', 123, null, '!');
+// "Hello world !"
+```
+
+### Example: Validating object properties
+
+```typescript
+import { isString } from '@accelint/predicates/is-string';
+
+interface Config {
+  name: unknown;
+  path: unknown;
+}
+
+function validateConfig(config: Config): config is { name: string; path: string } {
+  return isString(config.name) && isString(config.path);
+}
+
+const config = { name: 'app', path: '/home/user' };
+if (validateConfig(config)) {
+  // TypeScript knows name and path are strings
+  console.log(config.name.toUpperCase());
+}
+```
+
+> **Good to know:** This predicate returns `true` for both `typeof val === 'string'` (primitive) and `val instanceof String` (object wrapper). Most JavaScript code uses primitive strings, but this predicate handles both cases.
+
+## Related
+
+- [isNumber](../is-number/index.md) - Type guard for number values
+- [isNothing](../is-nothing/index.md) - Check for null or undefined values
+- [isSomething](../is-something/index.md) - Check for non-null/undefined values

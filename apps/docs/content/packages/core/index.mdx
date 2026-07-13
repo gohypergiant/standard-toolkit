@@ -1,11 +1,20 @@
 ---
-title: Core
-description: Core utilities and helpers for TypeScript applications
+title: "@accelint/core"
+description: Functional programming utilities for JavaScript/TypeScript including array operations, composition, safe enums, and more.
+source: packages/core/src/index.ts
+source_sha: 0cedef929d482b815f7ea13a3b82472f9df48f42
+doc_sha: 71d8409d62478365fbb054f6ef63fce53399dbd4
+deprecated: false
+updated: 2026-07-13
 ---
 
-# Core
+# @accelint/core
 
-Essential core utilities and helper functions for TypeScript applications.
+Functional programming utilities for JavaScript/TypeScript including array operations, composition, safe enums, and more.
+
+## Overview
+
+`@accelint/core` provides a collection of pure, curried utility functions following functional programming principles. All functions are tree-shakeable and designed for composition.
 
 ## Installation
 
@@ -13,18 +22,234 @@ Essential core utilities and helper functions for TypeScript applications.
 pnpm add @accelint/core
 ```
 
-## Features
+## Main Export
 
-- Function utilities (compose, pipe, memoize)
-- Object manipulation helpers
-- Array utilities
-- Type guards and assertions
-- Full TypeScript support
+```typescript
+import { map, filter, pipe } from '@accelint/core';
 
-## Getting Started
+// Or import from subpaths for better tree-shaking
+import { map } from '@accelint/core/array/map';
+import { pipe } from '@accelint/core/composition/pipe';
+```
 
-Detailed documentation coming soon.
+## Categories
 
-## Source Code
+### Array Functions
 
-View the [source code on GitHub](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/core).
+Curried array manipulation functions that never mutate the original array:
+
+- **[map](./array/map/index.md)** - Transform array elements
+- **[filter](./array/filter/index.md)** - Filter elements by predicate
+- **[reduce](./array/reduce/index.md)** - Reduce array to single value
+- **[find](./array/find/index.md)** - Find first matching element
+- **[every](./array/every/index.md)** - Test if all elements pass
+- **[some](./array/some/index.md)** - Test if any element passes
+- **[concat](./array/concat/index.md)** - Concatenate arrays
+- `findIndex`, `findLast`, `findLastIndex`, `includes`, `indexOf`, `push`, `reduceRight`, `reverse`, `shift`, `slice`, `unshift`
+
+### Composition Functions
+
+Function composition and currying utilities:
+
+- **[pipe](./composition/pipe/index.md)** - Compose functions left-to-right
+- **[compose](./composition/compose/index.md)** - Compose functions right-to-left
+- **[autoCurry](./composition/curry/index.md)** - Transform function to accept partial application
+
+### Combinators
+
+Fundamental functional programming primitives:
+
+- `identity` - Returns input unchanged
+- `constant` - Returns constant value ignoring input
+- `apply` - Apply function to arguments
+- `applyTo` - Apply value to function
+- `fork` - Apply multiple functions to same input
+- `composition` - Compose two functions
+- `inverseConstant` - Returns input ignoring constant
+
+### Logical Operators
+
+Functional alternatives to logical operators:
+
+- `and`, `or`, `not`, `xor` - Boolean logic operations
+- `nand`, `nor` - Negated logic operations
+- `equality` - Curried equality comparison
+- `nullishOr` - Nullish coalescing operator
+
+### SafeEnum
+
+Type-safe enum pattern avoiding TypeScript enum pitfalls:
+
+- **[SafeEnum](./safe-enum/safe-enum/index.md)** - Type for creating safe enums
+- **[getSafeEnumValues](./safe-enum/get-safe-enum-values/index.md)** - Extract enum values as array
+- `IsLiteralEnum` - Type guard for literal enums
+- `ValidEnumStructures` - Base constraint for enums
+
+### Object Manipulation
+
+Immutable object transformation utilities:
+
+- `lens` - Functional lens for deep property access
+- `get`, `set` - Get/set values using lenses
+- `prop`, `property` - Property accessor functions
+- `assoc`, `associate` - Associate values with keys
+- `composeLens`, `lensProp`, `lensOptionalProp` - Lens composition
+
+### Iterables
+
+Functional approaches to iteration:
+
+- `createIterable` - Create custom iterables
+- `range` - Generate number ranges
+
+### Utility Functions
+
+General-purpose utilities:
+
+- `lookup` - Safe property lookup
+- `noop` - No-operation function
+- `once` - Execute function only once
+- `tap` - Tap into pipeline for side effects
+- `uuid` - Generate UUIDs
+- `isUUID` - Validate UUID format
+
+## Design Principles
+
+### Currying
+
+All functions are curried for easy partial application and composition:
+
+```typescript
+import { map, filter, pipe } from '@accelint/core';
+
+// Partial application
+const double = map((x: number) => x * 2);
+double([1, 2, 3]); // [2, 4, 6]
+
+// Composition
+const processNumbers = pipe(
+  filter((x: number) => x > 0),
+  map((x: number) => x * 2)
+);
+
+processNumbers([-1, 0, 1, 2]); // [2, 4]
+```
+
+### Purity
+
+All functions are pure with no side effects:
+
+```typescript
+import { map } from '@accelint/core';
+
+const original = [1, 2, 3];
+const doubled = map((x: number) => x * 2)(original);
+
+console.log(original); // [1, 2, 3] - unchanged
+console.log(doubled);  // [2, 4, 6] - new array
+```
+
+### Type Safety
+
+Full TypeScript support with precise type inference:
+
+```typescript
+import { pipe } from '@accelint/core/composition/pipe';
+
+// Types flow through the pipeline
+const transform = pipe(
+  (x: number) => x * 2,        // number => number
+  (x: number) => x.toString(), // number => string
+  (x: string) => x.length      // string => number
+);
+
+const result: number = transform(5); // Type: number
+```
+
+## Examples
+
+### Example: Data transformation pipeline
+
+```typescript
+import { pipe } from '@accelint/core/composition/pipe';
+import { filter } from '@accelint/core/array/filter';
+import { map } from '@accelint/core/array/map';
+import { reduce } from '@accelint/core/array/reduce';
+
+interface Product {
+  name: string;
+  price: number;
+  inStock: boolean;
+}
+
+const products: Product[] = [
+  { name: 'Widget', price: 10, inStock: true },
+  { name: 'Gadget', price: 20, inStock: false },
+  { name: 'Doohickey', price: 15, inStock: true }
+];
+
+const totalInStockValue = pipe(
+  filter((p: Product) => p.inStock),
+  map((p: Product) => p.price),
+  reduce((sum: number, price: number) => sum + price)(0)
+);
+
+totalInStockValue(products); // 25
+```
+
+### Example: Safe enum usage
+
+```typescript
+import type { SafeEnum } from '@accelint/core/safe-enum/safe-enum';
+import { getSafeEnumValues } from '@accelint/core/safe-enum/get-safe-enum-values';
+
+export const UserRole = Object.freeze({
+  Admin: 'admin',
+  Editor: 'editor',
+  Viewer: 'viewer',
+} as const);
+
+export type UserRole = SafeEnum<typeof UserRole>;
+
+function hasPermission(role: UserRole, action: string): boolean {
+  if (role === UserRole.Admin) return true;
+  if (role === UserRole.Editor && action === 'edit') return true;
+  return false;
+}
+
+// Validate user input
+const validRoles = getSafeEnumValues(UserRole);
+function isValidRole(input: string): input is UserRole {
+  return validRoles.includes(input as UserRole);
+}
+```
+
+### Example: Function composition
+
+```typescript
+import { pipe } from '@accelint/core/composition/pipe';
+import { autoCurry } from '@accelint/core/composition/curry';
+
+// Build a flexible greeting function
+const greet = autoCurry(
+  (greeting: string, name: string, punctuation: string) =>
+    `${greeting}, ${name}${punctuation}`
+);
+
+const hello = greet('Hello');
+const helloWorld = hello('World');
+
+helloWorld('!'); // "Hello, World!"
+helloWorld('?'); // "Hello, World?"
+```
+
+## Related Packages
+
+- `@accelint/converters` - Type conversion utilities
+- `@accelint/math` - Mathematical operations
+- `@accelint/temporal` - Time and date utilities
+- `@accelint/bus` - Event bus system
+
+## License
+
+Apache-2.0

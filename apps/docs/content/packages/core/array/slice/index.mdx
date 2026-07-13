@@ -1,0 +1,113 @@
+---
+title: slice
+description: Returns a new array containing elements between start and end indices
+source: packages/core/src/array/slice/index.ts
+source_sha: 935ecde7265a85ea38a3ebc8f5018f04646fc361
+doc_sha: cc997e6a55f2e2c422b9f5539c365563756ca40b
+deprecated: false
+updated: 2026-07-13
+---
+
+# slice
+
+Returns a new array containing elements between `start` (inclusive) and `end` (exclusive) indices from the original array.
+
+## Usage
+
+```typescript
+import { slice } from '@accelint/core';
+
+// Extract middle elements
+const middle = slice(1)(4)([1, 2, 3, 4, 5, 6]);
+// [2, 3, 4]
+
+// Partial application
+const firstThree = slice(0)(3);
+firstThree([1, 2, 3, 4, 5]); // [1, 2, 3]
+```
+
+## Reference
+
+```typescript
+function slice(
+  start: number
+): (end: number) => <T>(arr: T[]) => T[]
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `start` | `number` | The index to start at (inclusive). |
+| `end` | `number` | The index to end at (exclusive). |
+
+### Returns
+
+Returns a curried function that accepts an end index, which returns another function that accepts an array and returns the sliced portion.
+
+## Examples
+
+### Example: Extracting portions
+
+```typescript
+import { slice } from '@accelint/core';
+
+const data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+slice(0)(5)(data); // [1, 2, 3, 4, 5]
+slice(5)(10)(data); // [6, 7, 8, 9, 10]
+slice(2)(7)(data); // [3, 4, 5, 6, 7]
+```
+
+### Example: Bounds handling
+
+```typescript
+import { slice } from '@accelint/core';
+
+const numbers = [1, 2, 3, 4, 5];
+
+// End beyond array length
+slice(0)(100)(numbers); // [1, 2, 3, 4, 5]
+
+// Start and end beyond length
+slice(10)(20)(numbers); // []
+```
+
+### Example: Pagination pattern
+
+```typescript
+import { slice } from '@accelint/core';
+
+const items = Array.from({ length: 100 }, (_, i) => i + 1);
+
+const getPage = (pageNumber: number, pageSize: number) => {
+  const start = pageNumber * pageSize;
+  const end = start + pageSize;
+  return slice(start)(end);
+};
+
+getPage(0, 10)(items); // [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+getPage(1, 10)(items); // [11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+```
+
+### Example: Composing with other functions
+
+```typescript
+import { slice, map, pipe } from '@accelint/core';
+
+const processMiddle = pipe(
+  slice(2)(5),
+  map((x: number) => x * 2)
+);
+
+processMiddle([1, 2, 3, 4, 5, 6, 7]);
+// [6, 8, 10] (elements [3, 4, 5] doubled)
+```
+
+> **Good to know:** If `end` exceeds the array length, the slice will include all elements from `start` to the end of the array.
+
+## Related
+
+- [concat](../concat/index.md) - Concatenate arrays
+- [filter](../filter/index.md) - Filter elements by predicate
+- [map](../map/index.md) - Transform array elements

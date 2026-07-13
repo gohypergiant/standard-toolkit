@@ -1,0 +1,208 @@
+---
+title: Pattern Matching Predicates
+description: Curried predicates for testing strings against patterns and regular expressions
+source: packages/predicates/src/is-like/index.ts
+source_sha: a04717bad9378529000e73cb9b152bb6f8fabf2a
+doc_sha: 5e8d2f7a9c3b6e1d4f9a8c2e5b7d3a6f1c9e4b8d
+deprecated: false
+updated: 2026-07-13
+---
+
+# Pattern Matching Predicates
+
+Curried predicate functions for testing strings against patterns or regular expressions.
+
+## Usage
+
+```typescript
+import { isLike, isNotLike } from '@accelint/predicates';
+
+const isEmail = isLike(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
+isEmail('user@example.com'); // true
+isEmail('invalid-email');    // false
+
+const isNotEmail = isNotLike(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
+isNotEmail('invalid-email');    // true
+isNotEmail('user@example.com'); // false
+```
+
+## isLike
+
+Creates a predicate that determines if a string matches a given pattern or regular expression.
+
+### Reference
+
+```typescript
+function isLike(pattern: string | RegExp): (input: string) => boolean
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `pattern` | `string \| RegExp` | Pattern to match (strings are converted to RegExp) |
+
+#### Returns
+
+Curried function that accepts a string and returns `true` if it matches the pattern.
+
+### Examples
+
+#### Example: Email validation
+
+```typescript
+import { isLike } from '@accelint/predicates';
+
+const isEmail = isLike(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
+
+isEmail('user@example.com'); // true
+isEmail('invalid-email');    // false
+isEmail('user@domain.co.uk'); // true
+```
+
+#### Example: File extension filtering
+
+```typescript
+import { isLike } from '@accelint/predicates';
+
+const isScriptFile = isLike(/\.(js|ts|jsx|tsx)$/);
+
+const files = ['app.js', 'style.css', 'main.ts', 'README.md'];
+const scripts = files.filter(isScriptFile);
+// ['app.js', 'main.ts']
+```
+
+#### Example: URL validation
+
+```typescript
+import { isLike } from '@accelint/predicates';
+
+const isHttpUrl = isLike(/^https?:\/\/.+/);
+
+isHttpUrl('https://example.com'); // true
+isHttpUrl('http://example.com');  // true
+isHttpUrl('ftp://example.com');   // false
+```
+
+#### Example: Phone number pattern
+
+```typescript
+import { isLike } from '@accelint/predicates';
+
+const isPhoneNumber = isLike(/^\d{3}-\d{3}-\d{4}$/);
+
+isPhoneNumber('555-123-4567'); // true
+isPhoneNumber('555.123.4567'); // false
+isPhoneNumber('5551234567');   // false
+```
+
+#### Example: Using string patterns
+
+```typescript
+import { isLike } from '@accelint/predicates';
+
+// String patterns are converted to RegExp
+const hasNumbers = isLike('[0-9]');
+
+hasNumbers('abc123'); // true
+hasNumbers('abcdef'); // false
+```
+
+## isNotLike
+
+Creates a predicate that determines if a string does **not** match a given pattern or regular expression.
+
+### Reference
+
+```typescript
+function isNotLike(pattern: string | RegExp): (input: string) => boolean
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `pattern` | `string \| RegExp` | Pattern to match (strings are converted to RegExp) |
+
+#### Returns
+
+Curried function that accepts a string and returns `true` if it does **not** match the pattern.
+
+### Examples
+
+#### Example: Excluding test files
+
+```typescript
+import { isNotLike } from '@accelint/predicates';
+
+const isNotTestFile = isNotLike(/\.test\.(js|ts)$/);
+
+const files = ['app.js', 'app.test.js', 'utils.ts', 'utils.test.ts'];
+const sourceFiles = files.filter(isNotTestFile);
+// ['app.js', 'utils.ts']
+```
+
+#### Example: Filtering non-numeric strings
+
+```typescript
+import { isNotLike } from '@accelint/predicates';
+
+const hasNoNumbers = isNotLike(/\d/);
+
+const items = ['abc', '123', 'def', 'a1b2'];
+const textOnly = items.filter(hasNoNumbers);
+// ['abc', 'def']
+```
+
+#### Example: Excluding special characters
+
+```typescript
+import { isNotLike } from '@accelint/predicates';
+
+const hasNoSpecialChars = isNotLike(/[^a-zA-Z0-9]/);
+
+function isValidUsername(name: string): boolean {
+  return hasNoSpecialChars(name) && name.length >= 3;
+}
+
+isValidUsername('john123');   // true
+isValidUsername('john@123');  // false
+isValidUsername('jd');        // false
+```
+
+## Real-World Example: File processing pipeline
+
+```typescript
+import { isLike, isNotLike } from '@accelint/predicates';
+
+const isSourceFile = isLike(/\.(ts|tsx)$/);
+const isNotTestFile = isNotLike(/\.(test|spec)\.(ts|tsx)$/);
+const isNotConfigFile = isNotLike(/^(tsconfig|vite\.config|vitest\.config)/);
+
+function getSourceFiles(files: string[]): string[] {
+  return files
+    .filter(isSourceFile)
+    .filter(isNotTestFile)
+    .filter(isNotConfigFile);
+}
+
+const allFiles = [
+  'src/app.ts',
+  'src/app.test.ts',
+  'src/utils.ts',
+  'tsconfig.json',
+  'vite.config.ts'
+];
+
+const sources = getSourceFiles(allFiles);
+// ['src/app.ts', 'src/utils.ts']
+```
+
+> **Good to know:** When passing strings as patterns, they are converted to `RegExp` using `new RegExp(pattern)`. Use `RegExp` objects directly for better control over flags like case-insensitivity (`/pattern/i`).
+
+## Related
+
+- [doesStartWith](../does-start-with/index.md) - Check string prefix
+- [doesEndWith](../does-end-with/index.md) - Check string suffix
+- [isString](../is-string/index.md) - Type guard for strings
+- [isIn](../is-in/index.md) - Array membership check

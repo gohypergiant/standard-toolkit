@@ -1,0 +1,290 @@
+---
+title: Sidenav
+description: Collapsible side navigation panel with hierarchical menu structure and event-based control
+source: packages/design-toolkit/src/components/sidenav/index.tsx
+source_sha: bad1800683207c9689af6ee4f5548eb400de8a5e
+doc_sha: 7438995af1201737427941f2c3bbdca43829c61e
+deprecated: false
+updated: 2026-07-13
+---
+
+# Sidenav
+
+Collapsible side navigation panel with hierarchical menu structure, headers, avatars, and event-based control intended for use inside DrawerLayout.
+
+## Usage
+
+```tsx
+import {
+  Sidenav,
+  SidenavHeader,
+  SidenavContent,
+  SidenavItem,
+  Icon,
+  DrawerLayout,
+  DrawerLayoutMain
+} from '@accelint/design-toolkit';
+import { Home, Settings } from '@accelint/icons';
+
+export function AppNav() {
+  return (
+    <DrawerLayout push="left">
+      <DrawerLayoutMain>
+        <p>Main content</p>
+      </DrawerLayoutMain>
+      
+      <Sidenav id="main-nav">
+        <SidenavContent>
+          <SidenavItem>
+            <Icon><Home /></Icon>
+            <Text>Home</Text>
+          </SidenavItem>
+          <SidenavItem>
+            <Icon><Settings /></Icon>
+            <Text>Settings</Text>
+          </SidenavItem>
+        </SidenavContent>
+      </Sidenav>
+    </DrawerLayout>
+  );
+}
+```
+
+## Reference
+
+```typescript
+interface SidenavProps {
+  id: UniqueId;
+  children: React.ReactNode;
+  className?: string;
+  isHiddenWhenClosed?: boolean;
+}
+```
+
+### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `id` | `UniqueId` | - | Yes |
+| `children` | `React.ReactNode` | - | Yes |
+| `className` | `string` | - | No |
+| `isHiddenWhenClosed` | `boolean` | `false` | No |
+
+#### `id`
+
+Unique identifier for the sidenav. Used for event-based control from triggers and other components.
+
+#### `isHiddenWhenClosed`
+
+When `true`, the sidenav element is removed from the DOM when closed. When `false`, the sidenav remains in the DOM but visually collapses.
+
+## Examples
+
+### Example: Basic sidenav with items
+
+```tsx
+import { Sidenav, SidenavContent, SidenavItem, Icon, Text } from '@accelint/design-toolkit';
+import { Home, Settings, Profile } from '@accelint/icons';
+
+<Sidenav id="nav">
+  <SidenavContent>
+    <SidenavItem>
+      <Icon><Home /></Icon>
+      <Text>Home</Text>
+    </SidenavItem>
+    <SidenavItem isSelected>
+      <Icon><Settings /></Icon>
+      <Text>Settings</Text>
+    </SidenavItem>
+    <SidenavItem>
+      <Icon><Profile /></Icon>
+      <Text>Profile</Text>
+    </SidenavItem>
+  </SidenavContent>
+</Sidenav>
+```
+
+### Example: With header and footer
+
+```tsx
+import {
+  Sidenav,
+  SidenavHeader,
+  SidenavContent,
+  SidenavFooter,
+  SidenavAvatar,
+  SidenavItem,
+  Heading,
+  Text,
+  Icon
+} from '@accelint/design-toolkit';
+import { AppLogo, Home, User } from '@accelint/icons';
+
+<Sidenav id="nav">
+  <SidenavHeader>
+    <SidenavAvatar>
+      <Icon><AppLogo /></Icon>
+      <Heading>My Application</Heading>
+      <Text>v1.0.0</Text>
+    </SidenavAvatar>
+  </SidenavHeader>
+
+  <SidenavContent>
+    <SidenavItem>
+      <Icon><Home /></Icon>
+      <Text>Home</Text>
+    </SidenavItem>
+  </SidenavContent>
+
+  <SidenavFooter>
+    <SidenavAvatar>
+      <Icon><User /></Icon>
+      <Heading>John Doe</Heading>
+      <Text>john@example.com</Text>
+    </SidenavAvatar>
+  </SidenavFooter>
+</Sidenav>
+```
+
+### Example: Nested menu
+
+```tsx
+import {
+  Sidenav,
+  SidenavContent,
+  SidenavMenu,
+  SidenavMenuItem,
+  SidenavItem,
+  Icon,
+  Text,
+  Heading,
+  Divider
+} from '@accelint/design-toolkit';
+import { Home, Settings, Menu } from '@accelint/icons';
+
+<Sidenav id="nav">
+  <SidenavContent>
+    <Heading>Navigation</Heading>
+    
+    <SidenavItem>
+      <Icon><Home /></Icon>
+      <Text>Home</Text>
+    </SidenavItem>
+    
+    <Divider />
+    
+    <SidenavMenu title="More Options" icon={<Icon><Menu /></Icon>}>
+      <SidenavMenuItem>
+        <Text>Sub Item 1</Text>
+      </SidenavMenuItem>
+      <SidenavMenuItem>
+        <Text>Sub Item 2</Text>
+      </SidenavMenuItem>
+    </SidenavMenu>
+    
+    <Divider />
+    
+    <SidenavItem>
+      <Icon><Settings /></Icon>
+      <Text>Settings</Text>
+    </SidenavItem>
+  </SidenavContent>
+</Sidenav>
+```
+
+### Example: With toggle trigger
+
+```tsx
+import {
+  Sidenav,
+  SidenavTrigger,
+  SidenavContent,
+  SidenavItem,
+  DrawerLayout,
+  DrawerLayoutMain,
+  Button,
+  Icon,
+  Text
+} from '@accelint/design-toolkit';
+import { Menu, Home } from '@accelint/icons';
+
+<DrawerLayout push="left">
+  <DrawerLayoutMain>
+    <SidenavTrigger>
+      <Button variant="icon">
+        <Icon><Menu /></Icon>
+      </Button>
+    </SidenavTrigger>
+  </DrawerLayoutMain>
+
+  <Sidenav id="main-nav">
+    <SidenavContent>
+      <SidenavItem>
+        <Icon><Home /></Icon>
+        <Text>Home</Text>
+      </SidenavItem>
+    </SidenavContent>
+  </Sidenav>
+</DrawerLayout>
+```
+
+### Example: Hidden when closed
+
+```tsx
+import { Sidenav, SidenavContent, SidenavItem } from '@accelint/design-toolkit';
+
+<Sidenav id="nav" isHiddenWhenClosed>
+  <SidenavContent>
+    <SidenavItem>
+      <Text>This nav is removed from DOM when closed</Text>
+    </SidenavItem>
+  </SidenavContent>
+</Sidenav>
+```
+
+## Event System
+
+Sidenav responds to global events for programmatic control:
+
+### Event Types
+
+- `Sidenav:open` - Opens the sidenav (payload: `{ id }`)
+- `Sidenav:close` - Closes the sidenav (payload: `{ id }`)
+- `Sidenav:toggle` - Toggles open/closed state (payload: `{ id }`)
+
+```tsx
+import { emit } from '@accelint/bus';
+import { SidenavEventTypes } from '@accelint/design-toolkit';
+
+// Open sidenav
+emit({ type: SidenavEventTypes.open, payload: { id: 'main-nav' } });
+
+// Close sidenav
+emit({ type: SidenavEventTypes.close, payload: { id: 'main-nav' } });
+
+// Toggle sidenav
+emit({ type: SidenavEventTypes.toggle, payload: { id: 'main-nav' } });
+```
+
+## Multi-Part Structure
+
+Sidenav is composed of several sub-components:
+
+- **Sidenav** - Root container with event handling
+- **SidenavHeader** - Header section for branding or app info
+- **SidenavContent** - Scrollable navigation items area
+- **SidenavFooter** - Footer section for user info or actions
+- **SidenavAvatar** - Avatar display with icon and text
+- **SidenavItem** - Individual navigation item
+- **SidenavMenu** - Collapsible sub-menu container
+- **SidenavMenuItem** - Item within a sub-menu
+- **SidenavTrigger** - Button to control sidenav open/close
+
+> **Good to know:** Sidenav is designed to work within `DrawerLayout` for proper push/overlay behavior. Use `SidenavTrigger` for consistent event-based control.
+
+## Related
+
+- [SidenavItem](./item.mdx) - Navigation item component
+- [SidenavMenu](./menu.mdx) - Collapsible sub-menu
+- [SidenavTrigger](./trigger.mdx) - Control trigger
+- [DrawerLayout](../drawer/layout.mdx) - Layout container for drawers and sidenavs

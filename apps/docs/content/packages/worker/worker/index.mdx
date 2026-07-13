@@ -1,0 +1,412 @@
+---
+title: Web Worker Utilities
+description: Type-safe Web Worker communication with automatic message handling and lifecycle management
+source: packages/web-worker/src/worker/index.ts
+source_sha: 08d9f3e37baaf88f7d7b0c3a0e03e9b17930fe29
+doc_sha: 88777f332270567a88c1c53e6a5c099248d15c0a
+deprecated: false
+updated: 2026-07-13
+---
+
+# Web Worker Utilities
+
+Type-safe Web Worker communication with automatic message handling and lifecycle management.
+
+## create
+
+Creates a type-safe interface for communicating with a Web Worker or SharedWorker.
+
+### Usage
+
+```typescript
+import { create } from '@accelint/worker';
+
+// Define the worker's function signatures
+type WorkerFunctions = {
+  add: (a: number, b: number) => number;
+  processData: (data: string[]) => string;
+};
+
+// Create a worker interface
+const worker = create<WorkerFunctions>(
+  () => new Worker(new URL('./my-worker.ts', import.meta.url))
+);
+
+// Call worker functions with type safety
+const sum = await worker.run('add', 5, 3); // Returns: 8
+const result = await worker.run('processData', ['a', 'b', 'c']);
+
+// Clean up when done
+worker.destroy();
+```
+
+### Reference
+
+```typescript
+function create<Functions extends Actions>(
+  createFn: () => Worker | SharedWorker,
+): {
+  run: <FunctionName extends keyof Functions, FunctionCall extends Functions[FunctionName]>(
+    functionName: FunctionName,
+    ...args: Parameters<FunctionCall>
+  ) => Promise<ReturnType<FunctionCall>>;
+  destroy: () => void;
+  instance: Worker | SharedWorker;
+}
+```
+
+#### Type Parameters
+
+- `Functions` - An object type mapping function names to their signatures
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `createFn` | `() => Worker \| SharedWorker` | Factory function that creates and returns a Worker or SharedWorker instance |
+
+#### Returns
+
+Returns an object with three properties:
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `run` | `<FunctionName, FunctionCall>(functionName, ...args) => Promise<ReturnType<FunctionCall>>` | Execute worker functions with type-safe parameters and return values |
+| `destroy` | `() => void` | Terminate the worker and clean up event listeners |
+| `instance` | `Worker \| SharedWorker` | The underlying Worker or SharedWorker instance |
+
+The `run` method uses an event emitter internally to match requests with responses, providing a promise-based API for worker communication.
+
+### Examples
+
+#### Example: Using with SharedWorker
+
+```typescript
+import { create } from '@accelint/worker';
+
+type SharedFunctions = {
+  getState: () => Record<string, unknown>;
+  setState: (key: string, value: unknown) => void;
+};
+
+const sharedWorker = create<SharedFunctions>(
+  () => new SharedWorker(new URL('./shared-worker.ts', import.meta.url))
+);
+
+await sharedWorker.run('setState', 'count', 42);
+const state = await sharedWorker.run('getState');
+```
+
+#### Example: Heavy computation offloading
+
+```typescript
+import { create } from '@accelint/worker';
+
+type ComputeWorker = {
+  fibonacci: (n: number) => number;
+  factorial: (n: number) => number;
+};
+
+const computeWorker = create<ComputeWorker>(
+  () => new Worker(new URL('./compute-worker.ts', import.meta.url))
+);
+
+// Offload CPU-intensive tasks
+const fib40 = await computeWorker.run('fibonacci', 40);
+const fact20 = await computeWorker.run('factorial', 20);
+
+// Clean up when done
+computeWorker.destroy();
+```
+
+#### Example: Processing large datasets
+
+```typescript
+import { create } from '@accelint/worker';
+
+type DataWorker = {
+  processCSV: (csv: string) => Record<string, unknown>[];
+  filterData: (data: unknown[], predicate: string) => unknown[];
+};
+
+const dataWorker = create<DataWorker>(
+  () => new Worker(new URL('./data-worker.ts', import.meta.url))
+);
+
+const csvContent = await fetch('/data.csv').then(r => r.text());
+const parsed = await dataWorker.run('processCSV', csvContent);
+const filtered = await dataWorker.run('filterData', parsed, 'active === true');
+```
+
+#### Example: Error handling
+
+```typescript
+import { create } from '@accelint/worker';
+
+type WorkerFunctions = {
+  riskyOperation: (data: string) => string;
+};
+
+const worker = create<WorkerFunctions>(
+  () => new Worker(new URL('./worker.ts', import.meta.url))
+);
+
+try {
+  const result = await worker.run('riskyOperation', 'input');
+  console.log('Success:', result);
+} catch (error) {
+  console.error('Worker error:', error);
+}
+```
+
+> **Good to know:** The worker instance is set to `undefined` after calling `destroy()`. Attempting to call `run()` after destruction will return a rejected promise with "Worker terminated".
+
+---
+
+## expose
+
+Exposes a set of functions to be called from the main thread.
+
+### Usage
+
+```typescript
+// my-worker.ts - Regular Worker
+import { expose } from '@accelint/worker/worker';
+import type { Action } from '@accelint/worker';
+
+expose({
+  add: async (a: number, b: number): Promise<Action<number>> => {
+    return [a + b, []];
+  },
+  multiply: async (a: number, b: number): Promise<Action<number>> => {
+    return [a * b, []];
+  },
+  processBuffer: async (buffer: ArrayBuffer): Promise<Action<ArrayBuffer>> => {
+    // Process the buffer
+    const result = new ArrayBuffer(buffer.byteLength);
+    // ... processing logic ...
+    // Return with transferable to avoid copying
+    return [result, [result]];
+  }
+});
+```
+
+### Reference
+
+```typescript
+function expose(
+  actions: Actions,
+  shared?: boolean
+): void
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `actions` | `Record<string, (...args: any[]) => any>` | Object mapping function names to their implementations. Each function can return either a direct value or an Action tuple [value, transferables]. |
+| `shared` | `boolean` | Whether this is a SharedWorker. Defaults to false. |
+
+#### Returns
+
+Returns `void`. This function sets up message listeners and does not return a value.
+
+### Examples
+
+#### Example: SharedWorker with shared state
+
+```typescript
+// shared-worker.ts
+import { expose } from '@accelint/worker/worker';
+import type { Action } from '@accelint/worker';
+
+const state: Record<string, unknown> = {};
+
+expose({
+  getState: async (): Promise<Action<Record<string, unknown>>> => {
+    return [state, []];
+  },
+  setState: async (key: string, value: unknown): Promise<Action<void>> => {
+    state[key] = value;
+    return [undefined, []];
+  }
+}, true); // Note: second parameter is true for SharedWorker
+```
+
+#### Example: Using transferable objects
+
+```typescript
+// buffer-worker.ts
+import { expose } from '@accelint/worker/worker';
+import type { Action } from '@accelint/worker';
+
+expose({
+  processBuffer: async (buffer: ArrayBuffer): Promise<Action<ArrayBuffer>> => {
+    const result = new ArrayBuffer(buffer.byteLength);
+    const view = new Uint8Array(result);
+    const sourceView = new Uint8Array(buffer);
+
+    for (let i = 0; i < sourceView.length; i++) {
+      view[i] = sourceView[i] * 2;
+    }
+
+    // Return with transferable to avoid copying
+    return [result, [result]];
+  }
+});
+```
+
+#### Example: Void actions
+
+```typescript
+// logger-worker.ts
+import { expose } from '@accelint/worker/worker';
+import type { Action } from '@accelint/worker';
+
+expose({
+  log: async (message: string): Promise<Action<void>> => {
+    console.log('[Worker]', message);
+    // Void actions don't need to return data
+    return [undefined, []];
+  },
+  clearCache: async (): Promise<Action<void>> => {
+    // Clear internal cache
+    return [undefined, []];
+  }
+});
+```
+
+#### Example: Error handling in worker
+
+```typescript
+// worker.ts
+import { expose } from '@accelint/worker/worker';
+import type { Action } from '@accelint/worker';
+
+expose({
+  parseJSON: async (jsonString: string): Promise<Action<unknown>> => {
+    try {
+      const parsed = JSON.parse(jsonString);
+      return [parsed, []];
+    } catch (error) {
+      // Errors are automatically caught and sent to main thread
+      throw new Error(`Invalid JSON: ${error.message}`);
+    }
+  }
+});
+```
+
+#### Example: Image processing
+
+```typescript
+// image-worker.ts
+import { expose } from '@accelint/worker/worker';
+import type { Action } from '@accelint/worker';
+
+expose({
+  applyGrayscale: async (imageData: ImageData): Promise<Action<ImageData>> => {
+    const data = imageData.data;
+    for (let i = 0; i < data.length; i += 4) {
+      const avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
+      data[i] = avg;     // R
+      data[i + 1] = avg; // G
+      data[i + 2] = avg; // B
+    }
+    return [imageData, []];
+  }
+});
+```
+
+> **Good to know:** The `expose` function automatically handles message routing, error propagation, and supports both regular Workers and SharedWorkers. For SharedWorkers, it listens for `connect` events and routes messages through the port.
+
+---
+
+## Action
+
+Represents an action result with optional transferable objects.
+
+### Usage
+
+```typescript
+import type { Action } from '@accelint/worker';
+
+// Simple value with no transferables
+const result: Action<string> = ['hello', []];
+
+// ArrayBuffer with transferable
+const buffer = new ArrayBuffer(1024);
+const result: Action<ArrayBuffer> = [buffer, [buffer]];
+```
+
+### Reference
+
+```typescript
+type Action<T> = [T, Transferable[]];
+```
+
+This type is a tuple containing:
+1. The return value of type `T`
+2. An array of transferable objects (like `ArrayBuffer`, `MessagePort`) that can be efficiently transferred to the main thread without copying
+
+#### Type Parameters
+
+- `T` - The type of the return value
+
+### Examples
+
+#### Example: Simple value
+
+```typescript
+import type { Action } from '@accelint/worker';
+
+async function getMessage(): Promise<Action<string>> {
+  return ['Hello, World!', []];
+}
+```
+
+#### Example: Multiple transferables
+
+```typescript
+import type { Action } from '@accelint/worker';
+
+async function createBuffers(): Promise<Action<ArrayBuffer[]>> {
+  const buffer1 = new ArrayBuffer(512);
+  const buffer2 = new ArrayBuffer(1024);
+  
+  // Transfer both buffers
+  return [[buffer1, buffer2], [buffer1, buffer2]];
+}
+```
+
+#### Example: ImageData with underlying buffer
+
+```typescript
+import type { Action } from '@accelint/worker';
+
+async function processImage(imageData: ImageData): Promise<Action<ImageData>> {
+  // Process imageData...
+  
+  // Transfer the underlying ArrayBuffer
+  return [imageData, [imageData.data.buffer]];
+}
+```
+
+#### Example: Void return type
+
+```typescript
+import type { Action } from '@accelint/worker';
+
+async function logMessage(message: string): Promise<Action<void>> {
+  console.log(message);
+  return [undefined, []];
+}
+```
+
+> **Good to know:** Transferable objects can only be transferred once. After transfer, the original reference becomes detached and cannot be used in the worker. This zero-copy transfer is much more efficient than cloning for large data structures.
+
+## Related
+
+- [mitt](https://github.com/developit/mitt) - Event emitter used internally for message routing
+- [Web Workers API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API) - MDN documentation
+- [SharedWorker API](https://developer.mozilla.org/en-US/docs/Web/API/SharedWorker) - MDN documentation
+- [Transferable Objects](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Transferable_objects) - MDN documentation

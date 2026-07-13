@@ -1,0 +1,161 @@
+---
+title: zxyToBbox
+description: Convert map tile coordinates to geographic bounding box
+source: packages/converters/src/zxy-to-bbox/index.ts
+source_sha: b901230c108c3798f91ecddcb71470b3bad99a8a
+doc_sha: a020be5e97957f279f25d1938be00dcfe872881f
+deprecated: false
+updated: 2026-07-13
+---
+
+# zxyToBbox
+
+Converts a slippy map tile (z, x, y) to a geographic bounding box (west, south, east, north).
+
+## Usage
+
+```typescript
+import { zxyToBbox } from '@accelint/converters/zxy-to-bbox';
+
+const bbox = zxyToBbox([8, 71, 96]);
+// [west, south, east, north]
+```
+
+## Reference
+
+```typescript
+function zxyToBbox(tile: ZxyTuple): BoundingBoxTuple
+
+type ZxyTuple = [z: number, x: number, y: number]
+type BoundingBoxTuple = [
+  west: number,   // left longitude
+  south: number,  // bottom latitude
+  east: number,   // right longitude
+  north: number   // top latitude
+]
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `tile` | `ZxyTuple` | A tuple containing [z, x, y] tile coordinates following the slippy map tilenames convention. |
+
+### Returns
+
+Returns a BoundingBoxTuple `[west, south, east, north]` representing the geographic bounds of the tile in decimal degrees.
+
+## Examples
+
+### Example: Basic tile conversion
+
+```typescript
+import { zxyToBbox } from '@accelint/converters/zxy-to-bbox';
+
+// Zoom level 8, tile (71, 96)
+const bbox = zxyToBbox([8, 71, 96]);
+console.log(bbox);
+// [west, south, east, north] in decimal degrees
+```
+
+### Example: Web map tile integration
+
+```typescript
+import { zxyToBbox } from '@accelint/converters/zxy-to-bbox';
+
+// Get bounds for a tile at zoom 12
+const zoom = 12;
+const tileX = 1234;
+const tileY = 5678;
+
+const [west, south, east, north] = zxyToBbox([zoom, tileX, tileY]);
+
+console.log(`Tile bounds:`);
+console.log(`  West: ${west}°`);
+console.log(`  South: ${south}°`);
+console.log(`  East: ${east}°`);
+console.log(`  North: ${north}°`);
+```
+
+### Example: Tile viewport calculation
+
+```typescript
+import { zxyToBbox } from '@accelint/converters/zxy-to-bbox';
+
+interface TileViewport {
+  zoom: number;
+  tileX: number;
+  tileY: number;
+  bounds: {
+    west: number;
+    south: number;
+    east: number;
+    north: number;
+  };
+}
+
+function getTileViewport(
+  zoom: number,
+  tileX: number,
+  tileY: number
+): TileViewport {
+  const [west, south, east, north] = zxyToBbox([zoom, tileX, tileY]);
+  
+  return {
+    zoom,
+    tileX,
+    tileY,
+    bounds: { west, south, east, north }
+  };
+}
+
+const viewport = getTileViewport(10, 512, 768);
+console.log(viewport);
+```
+
+### Example: Batch tile processing
+
+```typescript
+import { zxyToBbox } from '@accelint/converters/zxy-to-bbox';
+
+// Get bounds for multiple tiles
+const tiles = [
+  [8, 71, 96],
+  [8, 72, 96],
+  [8, 71, 97],
+  [8, 72, 97]
+] as const;
+
+const bounds = tiles.map(tile => ({
+  tile,
+  bbox: zxyToBbox(tile)
+}));
+
+console.log(bounds);
+```
+
+### Example: Checking if point is in tile
+
+```typescript
+import { zxyToBbox } from '@accelint/converters/zxy-to-bbox';
+
+function isPointInTile(
+  lon: number,
+  lat: number,
+  tile: readonly [number, number, number]
+): boolean {
+  const [west, south, east, north] = zxyToBbox(tile);
+  
+  return lon >= west && lon <= east && lat >= south && lat <= north;
+}
+
+const tile = [10, 512, 768] as const;
+console.log(isPointInTile(-122.4194, 37.7749, tile));
+// true if San Francisco is in this tile
+```
+
+> **Good to know:** This function follows the [OpenStreetMap slippy map tilenames convention](https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames). Tile coordinates use a top-left origin, while geographic coordinates use bottom-left (south-west). The function handles the coordinate system conversion automatically.
+
+## Related
+
+- [Slippy map tilenames (OSM Wiki)](https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames)

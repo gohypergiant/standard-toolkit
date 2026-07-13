@@ -1,0 +1,376 @@
+---
+title: CSS RGBA Converters
+description: Convert between CSS rgba formats and RGBA 0-255 tuples
+source: packages/converters/src/css-rgba/index.ts
+source_sha: fa151112dacce74e9b1f7de18682728b6f5e2b52
+doc_sha: 94df17a9f7417ba74e46e99ffa36702536c86caf
+deprecated: false
+updated: 2026-07-13
+---
+
+# CSS RGBA Converters
+
+Convert between CSS rgba formats (strings, tuples, objects) and RGBA 0-255 tuples. Supports CSS Color Module Level 4 spec including legacy and modern syntax.
+
+## cssRgbaStringToRgba255Tuple
+
+Parse a CSS rgba/rgb string to a Rgba255Tuple.
+
+### Usage
+
+```typescript
+import { cssRgbaStringToRgba255Tuple } from '@accelint/converters/css-rgba';
+
+// Legacy comma-separated syntax
+const color = cssRgbaStringToRgba255Tuple('rgba(255, 128, 64, 0.5)');
+// [255, 128, 64, 128]
+
+// Modern space-separated syntax
+const modernColor = cssRgbaStringToRgba255Tuple('rgb(255 128 64 / 50%)');
+// [255, 128, 64, 128]
+```
+
+### Reference
+
+```typescript
+function cssRgbaStringToRgba255Tuple(css: string): Rgba255Tuple
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `css` | `string` | The CSS string to parse. Supports legacy comma-separated and modern space-separated syntax. |
+
+#### Returns
+
+Returns a Rgba255Tuple `[r, g, b, a]` where all values are 0-255.
+
+#### Throws
+
+Throws `Error` if:
+- The CSS string is invalid
+- Values are out of range
+- RGB values mix integers and percentages
+
+### Examples
+
+#### Example: Legacy comma-separated syntax
+
+```typescript
+import { cssRgbaStringToRgba255Tuple } from '@accelint/converters/css-rgba';
+
+const color = cssRgbaStringToRgba255Tuple('rgba(255, 128, 64, 0.5)');
+console.log(color);
+// [255, 128, 64, 128]
+
+const rgb = cssRgbaStringToRgba255Tuple('rgb(255, 128, 64)');
+console.log(rgb);
+// [255, 128, 64, 255]
+```
+
+#### Example: Modern space-separated syntax
+
+```typescript
+import { cssRgbaStringToRgba255Tuple } from '@accelint/converters/css-rgba';
+
+const color = cssRgbaStringToRgba255Tuple('rgb(255 128 64)');
+console.log(color);
+// [255, 128, 64, 255]
+
+const colorWithAlpha = cssRgbaStringToRgba255Tuple('rgb(255 128 64 / 0.5)');
+console.log(colorWithAlpha);
+// [255, 128, 64, 128]
+```
+
+#### Example: Percentage values
+
+```typescript
+import { cssRgbaStringToRgba255Tuple } from '@accelint/converters/css-rgba';
+
+// RGB percentages
+const color = cssRgbaStringToRgba255Tuple('rgb(100% 50% 25%)');
+console.log(color);
+// [255, 128, 64, 255]
+
+// Alpha percentage
+const colorWithAlpha = cssRgbaStringToRgba255Tuple('rgba(255, 128, 64, 50%)');
+console.log(colorWithAlpha);
+// [255, 128, 64, 128]
+```
+
+> **Good to know:** RGB values must all be integers or all be percentages—no mixing. Alpha can be decimal (0-1) or percentage (0-100%) regardless of RGB format. If alpha is omitted, it defaults to 255 (fully opaque).
+
+## rgba255TupleToCssRgbaString
+
+Convert a Rgba255Tuple to a CSS rgba string.
+
+### Usage
+
+```typescript
+import { rgba255TupleToCssRgbaString } from '@accelint/converters/css-rgba';
+
+const cssString = rgba255TupleToCssRgbaString([255, 128, 64, 128]);
+// "rgba(255, 128, 64, 0.5)"
+```
+
+### Reference
+
+```typescript
+function rgba255TupleToCssRgbaString(color: Rgba255Tuple): string
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `color` | `Rgba255Tuple` | The Rgba255Tuple [r, g, b, a] where all values are 0-255. |
+
+#### Returns
+
+Returns a CSS rgba string using legacy comma-separated syntax (e.g., "rgba(255, 128, 64, 0.5)").
+
+### Examples
+
+#### Example: Basic conversion
+
+```typescript
+import { rgba255TupleToCssRgbaString } from '@accelint/converters/css-rgba';
+
+const cssString = rgba255TupleToCssRgbaString([255, 128, 64, 255]);
+console.log(cssString);
+// "rgba(255, 128, 64, 1)"
+```
+
+#### Example: With alpha transparency
+
+```typescript
+import { rgba255TupleToCssRgbaString } from '@accelint/converters/css-rgba';
+
+const cssString = rgba255TupleToCssRgbaString([255, 128, 64, 128]);
+console.log(cssString);
+// "rgba(255, 128, 64, 0.5)"
+```
+
+## cssRgbaTupleToRgba255Tuple
+
+Parse a CSS rgba tuple to a Rgba255Tuple.
+
+### Usage
+
+```typescript
+import { cssRgbaTupleToRgba255Tuple } from '@accelint/converters/css-rgba';
+
+// CSS rgba tuple has alpha in 0-1 range
+const rgba255 = cssRgbaTupleToRgba255Tuple([255, 128, 64, 0.5]);
+// [255, 128, 64, 128]
+```
+
+### Reference
+
+```typescript
+function cssRgbaTupleToRgba255Tuple(tuple: CssRgbaTuple): Rgba255Tuple
+
+type CssRgbaTuple = readonly [
+  r: number, // 0-255
+  g: number, // 0-255
+  b: number, // 0-255
+  a: number, // 0-1
+]
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `tuple` | `CssRgbaTuple` | The CSS rgba tuple [r, g, b, a] where RGB are 0-255 and alpha is 0-1. |
+
+#### Returns
+
+Returns a Rgba255Tuple `[r, g, b, a]` where all values are 0-255.
+
+#### Throws
+
+Throws `Error` if the tuple is invalid or values are out of range.
+
+### Examples
+
+#### Example: Converting CSS tuple format
+
+```typescript
+import { cssRgbaTupleToRgba255Tuple } from '@accelint/converters/css-rgba';
+
+// CSS format: RGB 0-255, alpha 0-1
+const cssFormat = [255, 128, 64, 0.5] as const;
+const rgba255 = cssRgbaTupleToRgba255Tuple(cssFormat);
+console.log(rgba255);
+// [255, 128, 64, 128]
+```
+
+> **Good to know:** CSS rgba tuples use 0-1 for alpha (matching CSS standard) while Rgba255Tuple uses 0-255 for all channels. This function converts alpha from 0-1 to 0-255.
+
+## rgba255TupleToCssRgbaTuple
+
+Convert a Rgba255Tuple to a CSS rgba tuple.
+
+### Usage
+
+```typescript
+import { rgba255TupleToCssRgbaTuple } from '@accelint/converters/css-rgba';
+
+const cssTuple = rgba255TupleToCssRgbaTuple([255, 128, 64, 128]);
+// [255, 128, 64, 0.5019607843137255]
+```
+
+### Reference
+
+```typescript
+function rgba255TupleToCssRgbaTuple(color: Rgba255Tuple): CssRgbaTuple
+
+type CssRgbaTuple = readonly [
+  r: number, // 0-255
+  g: number, // 0-255
+  b: number, // 0-255
+  a: number, // 0-1
+]
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `color` | `Rgba255Tuple` | The Rgba255Tuple [r, g, b, a] where all values are 0-255. |
+
+#### Returns
+
+Returns a CSS rgba tuple `[r, g, b, a]` where RGB are 0-255 and alpha is 0-1.
+
+### Examples
+
+#### Example: Converting to CSS tuple format
+
+```typescript
+import { rgba255TupleToCssRgbaTuple } from '@accelint/converters/css-rgba';
+
+const rgba255 = [255, 128, 64, 128] as const;
+const cssTuple = rgba255TupleToCssRgbaTuple(rgba255);
+console.log(cssTuple);
+// [255, 128, 64, 0.5019607843137255]
+```
+
+## cssRgbaObjectToRgba255Tuple
+
+Convert a CssRgbaObject to a Rgba255Tuple.
+
+### Usage
+
+```typescript
+import { cssRgbaObjectToRgba255Tuple } from '@accelint/converters/css-rgba';
+
+const rgba255 = cssRgbaObjectToRgba255Tuple({
+  r: 255,
+  g: 128,
+  b: 64,
+  a: 0.5
+});
+// [255, 128, 64, 128]
+```
+
+### Reference
+
+```typescript
+function cssRgbaObjectToRgba255Tuple(obj: CssRgbaObject): Rgba255Tuple
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `obj` | `CssRgbaObject` | The CssRgbaObject {r, g, b, a} where RGB are 0-255 and alpha is 0-1. |
+
+#### Returns
+
+Returns a Rgba255Tuple `[r, g, b, a]` where all values are 0-255.
+
+#### Throws
+
+Throws `Error` if any values are out of range.
+
+### Examples
+
+#### Example: Converting object format
+
+```typescript
+import { cssRgbaObjectToRgba255Tuple } from '@accelint/converters/css-rgba';
+
+const cssObject = { r: 255, g: 128, b: 64, a: 1 };
+const rgba255 = cssRgbaObjectToRgba255Tuple(cssObject);
+console.log(rgba255);
+// [255, 128, 64, 255]
+```
+
+## rgba255TupleToCssRgbaObject
+
+Convert a Rgba255Tuple to a CssRgbaObject.
+
+### Usage
+
+```typescript
+import { rgba255TupleToCssRgbaObject } from '@accelint/converters/css-rgba';
+
+const cssObject = rgba255TupleToCssRgbaObject([255, 128, 64, 128]);
+// { r: 255, g: 128, b: 64, a: 0.5019607843137255 }
+```
+
+### Reference
+
+```typescript
+function rgba255TupleToCssRgbaObject(color: Rgba255Tuple): CssRgbaObject
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `color` | `Rgba255Tuple` | The Rgba255Tuple [r, g, b, a] where all values are 0-255. |
+
+#### Returns
+
+Returns a CssRgbaObject `{r, g, b, a}` where RGB are 0-255 and alpha is 0-1.
+
+### Examples
+
+#### Example: Converting to object format
+
+```typescript
+import { rgba255TupleToCssRgbaObject } from '@accelint/converters/css-rgba';
+
+const rgba255 = [255, 128, 64, 255] as const;
+const cssObject = rgba255TupleToCssRgbaObject(rgba255);
+console.log(cssObject);
+// { r: 255, g: 128, b: 64, a: 1 }
+```
+
+#### Example: Round-trip conversion
+
+```typescript
+import {
+  cssRgbaObjectToRgba255Tuple,
+  rgba255TupleToCssRgbaObject
+} from '@accelint/converters/css-rgba';
+
+const original = { r: 255, g: 128, b: 64, a: 0.5 };
+const tuple = cssRgbaObjectToRgba255Tuple(original);
+const converted = rgba255TupleToCssRgbaObject(tuple);
+
+console.log(converted.r === original.r); // true
+console.log(converted.g === original.g); // true
+console.log(converted.b === original.b); // true
+console.log(Math.abs(converted.a - original.a) < 0.01); // true (floating point precision)
+```
+
+## Related
+
+- [hexToRgba255Tuple](../hex/index.md) - Parse hex color strings
+- [rgba255TupleToHex](../hex/index.md) - Convert to hex strings
+- [glslToRgba255Tuple](../glsl/index.md) - Convert from GLSL normalized colors

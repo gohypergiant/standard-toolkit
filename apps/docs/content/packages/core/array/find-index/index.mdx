@@ -1,0 +1,102 @@
+---
+title: findIndex
+description: Returns the index of the first element in an array that satisfies a predicate function
+source: packages/core/src/array/find-index/index.ts
+source_sha: ffad5fcc4c6f596109ae9003eede7957d064b44f
+doc_sha: 82f42e47827c15770715bd0cb4456aa1a57e9167
+deprecated: false
+updated: 2026-07-13
+---
+
+# findIndex
+
+Returns the index of the first element in an array that satisfies a predicate function. Returns `-1` if no element matches.
+
+## Usage
+
+```typescript
+import { findIndex } from '@accelint/core';
+
+// Find index of first even number
+const firstEvenIndex = findIndex((x: number) => x % 2 === 0)([1, 2, 3, 4, 5]);
+// 1
+
+// Partial application
+const findNegative = findIndex((x: number) => x < 0);
+findNegative([5, 10, -3, 8]); // 2
+```
+
+## Reference
+
+```typescript
+function findIndex<T>(
+  predicate: (element: T, index: number) => boolean
+): (arr: T[]) => number
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `predicate` | `(element: T, index: number) => boolean` | Function called for each element until it returns `true`. Receives the element and its index. |
+
+### Returns
+
+Returns a curried function that accepts an array and returns the index of the first matching element, or `-1` if no match is found.
+
+### Type Parameters
+
+- `T` - The type of elements in the array
+
+## Examples
+
+### Example: Finding by property value
+
+```typescript
+import { findIndex } from '@accelint/core';
+
+interface Product {
+  id: number;
+  name: string;
+  inStock: boolean;
+}
+
+const products: Product[] = [
+  { id: 1, name: 'Laptop', inStock: false },
+  { id: 2, name: 'Mouse', inStock: true },
+  { id: 3, name: 'Keyboard', inStock: true }
+];
+
+const firstInStockIndex = findIndex((p: Product) => p.inStock)(products);
+// 1
+```
+
+### Example: Using index parameter
+
+```typescript
+import { findIndex } from '@accelint/core';
+
+// Find first element greater than its index
+const data = [0, 0, 5, 2, 10];
+const index = findIndex((value: number, idx: number) => value > idx)(data);
+// 2 (value 5 > index 2)
+```
+
+### Example: Element not found
+
+```typescript
+import { findIndex } from '@accelint/core';
+
+const numbers = [1, 3, 5, 7, 9];
+const evenIndex = findIndex((x: number) => x % 2 === 0)(numbers);
+// -1 (no even numbers found)
+```
+
+> **Good to know:** The predicate is called only until a matching element is found. Once found, iteration stops immediately and the index is returned.
+
+## Related
+
+- [find](../find/index.md) - Find the first matching element
+- [findLastIndex](../find-last-index/index.md) - Find index from the end of array
+- [indexOf](../index-of/index.md) - Find index by value equality
+- [filter](../filter/index.md) - Find all matching elements

@@ -1,0 +1,187 @@
+---
+title: no-dom
+description: Base Vitest configuration for Node.js and non-DOM testing
+source: tooling/vitest-config/no-dom.js
+source_sha: 30690e739754780eeec71a96203c069b7adf0c4b
+doc_sha: 870de1183b620b348cf64b2689284e8f7ea73b86
+deprecated: false
+updated: 2026-07-13
+---
+
+# no-dom
+
+Base Vitest configuration for testing Node.js code and libraries without DOM dependencies. Includes TypeScript path resolution, Istanbul coverage, and sensible test defaults.
+
+## Usage
+
+```typescript
+import { defineConfig, mergeConfig } from 'vitest/config';
+import baseConfig from '@accelint/vitest-config/no-dom';
+
+export default mergeConfig(
+  baseConfig,
+  defineConfig({
+    test: {
+      // Your custom test configuration
+    },
+  }),
+);
+```
+
+## Reference
+
+```javascript
+export default defineConfig({
+  plugins: [tsconfigPaths()],
+  test: {
+    watch: false,
+    coverage: {
+      provider: 'istanbul',
+      reporter: ['json', 'json-summary', 'lcov', 'text'],
+      reportsDirectory: './coverage',
+      enabled: true,
+      clean: true,
+      passWithNoTests: true,
+    },
+    clearMocks: true,
+    mockReset: true,
+    restoreMocks: true,
+    passWithNoTests: true,
+  },
+});
+```
+
+### Plugins
+
+| Plugin | Purpose |
+|--------|---------|
+| `vite-tsconfig-paths` | Resolves TypeScript path aliases from `tsconfig.json` |
+
+### Test Configuration
+
+| Setting | Value | Description |
+|---------|-------|-------------|
+| `watch` | `false` | Disables watch mode (run once) |
+| `clearMocks` | `true` | Clears mock calls between tests |
+| `mockReset` | `true` | Resets mock implementations between tests |
+| `restoreMocks` | `true` | Restores original implementations after tests |
+| `passWithNoTests` | `true` | Succeeds when no test files found |
+
+### Coverage Configuration
+
+| Setting | Value | Description |
+|---------|-------|-------------|
+| `provider` | `'istanbul'` | Uses Istanbul coverage provider |
+| `reporter` | `['json', 'json-summary', 'lcov', 'text']` | Generates multiple coverage formats |
+| `reportsDirectory` | `'./coverage'` | Output directory for coverage reports |
+| `enabled` | `true` | Coverage enabled by default |
+| `clean` | `true` | Clears previous coverage before running |
+| `passWithNoTests` | `true` | Coverage passes when no tests exist |
+
+## Examples
+
+### Example: Simple re-export
+
+For projects that don't need custom configuration:
+
+```typescript
+// vitest.config.ts
+export { default } from '@accelint/vitest-config/no-dom';
+```
+
+### Example: Library testing with custom paths
+
+```typescript
+import { defineConfig, mergeConfig } from 'vitest/config';
+import baseConfig from '@accelint/vitest-config/no-dom';
+
+export default mergeConfig(
+  baseConfig,
+  defineConfig({
+    test: {
+      include: ['src/**/*.test.ts'],
+      exclude: ['**/node_modules/**', '**/dist/**'],
+    },
+  }),
+);
+```
+
+### Example: Adding coverage thresholds
+
+```typescript
+import { defineConfig, mergeConfig } from 'vitest/config';
+import baseConfig from '@accelint/vitest-config/no-dom';
+
+export default mergeConfig(
+  baseConfig,
+  defineConfig({
+    test: {
+      coverage: {
+        thresholds: {
+          lines: 80,
+          functions: 80,
+          branches: 80,
+          statements: 80,
+        },
+        exclude: [
+          '**/*.config.*',
+          '**/mocks/**',
+          '**/*.test.ts',
+        ],
+      },
+    },
+  }),
+);
+```
+
+### Example: TypeScript path resolution
+
+With this `tsconfig.json`:
+
+```json
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@utils/*": ["./src/utils/*"]
+    }
+  }
+}
+```
+
+Paths resolve automatically in tests:
+
+```typescript
+import { helper } from '@/utils/helper';
+import { format } from '@utils/format';
+
+describe('helper', () => {
+  it('works with path aliases', () => {
+    expect(helper()).toBeDefined();
+  });
+});
+```
+
+### Example: Running tests
+
+```bash
+# Run tests once
+vitest run
+
+# Run with UI
+vitest --ui
+
+# Run with coverage
+vitest run --coverage
+
+# Watch mode (overrides config)
+vitest
+```
+
+> **Good to know:** The no-dom configuration is the foundation for the [dom](./dom.md) preset. Use this preset for Node.js libraries, utilities, and backend code. For React components or browser APIs, use the [dom](./dom.md) preset instead.
+
+## Related
+
+- [dom](./dom.md) - Extended configuration with React plugin
+- [mockBroadcastChannel](./mocks/broadcast-channel.md) - Mock for BroadcastChannel API

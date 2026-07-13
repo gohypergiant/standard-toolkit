@@ -1,0 +1,248 @@
+---
+title: TimeField
+description: A time input component with segmented editing for hours, minutes, and seconds
+source: packages/design-toolkit/src/components/time-field/index.tsx
+source_sha: 44464fcbadf3bdcf027e179a7261d68f018ecad9
+doc_sha: 664a5c28b1984643fe80a52552bacf30a1366221
+deprecated: false
+updated: 2026-07-13
+---
+
+# TimeField
+
+A time input component with segmented editing, providing accessible time input with separate segments for hours, minutes, and seconds. Includes time icon, validation states, configurable granularity, and support for both 12-hour and 24-hour formats with keyboard navigation between segments.
+
+## Usage
+
+```tsx
+import { TimeField } from '@accelint/design-toolkit';
+
+export function MyForm() {
+  return <TimeField label="Start time" granularity="minute" />;
+}
+```
+
+## Reference
+
+```typescript
+interface TimeFieldProps<T extends TimeValue> {
+  label?: string;
+  description?: string;
+  errorMessage?: string;
+  size?: 'small' | 'medium';
+  granularity?: 'hour' | 'minute' | 'second';
+  hourCycle?: 12 | 24;
+  shouldForceLeadingZeros?: boolean;
+  isDisabled?: boolean;
+  isInvalid?: boolean;
+  isRequired?: boolean;
+  isReadOnly?: boolean;
+  value?: T;
+  defaultValue?: T;
+  onChange?: (value: T) => void;
+  classNames?: {
+    field?: string;
+    label?: string;
+    control?: string;
+    input?: string;
+    segment?: string;
+    description?: string;
+    error?: string;
+  };
+  inputProps?: Omit<DateInputProps, 'children' | 'className'>;
+}
+```
+
+### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `label` | `string` | - | No |
+| `description` | `string` | - | No |
+| `errorMessage` | `string` | - | No |
+| `size` | `'small' \| 'medium'` | `'medium'` | No |
+| `granularity` | `'hour' \| 'minute' \| 'second'` | `'second'` | No |
+| `hourCycle` | `12 \| 24` | `24` | No |
+| `shouldForceLeadingZeros` | `boolean` | `true` | No |
+| `isDisabled` | `boolean` | `false` | No |
+| `isInvalid` | `boolean` | `false` | No |
+| `isRequired` | `boolean` | `false` | No |
+| `isReadOnly` | `boolean` | `false` | No |
+| `value` | `TimeValue` | - | No |
+| `defaultValue` | `TimeValue` | - | No |
+| `onChange` | `(value: TimeValue) => void` | - | No |
+| `classNames` | `object` | - | No |
+| `inputProps` | `DateInputProps` | - | No |
+
+#### `granularity`
+
+Controls which time segments are displayed:
+- `hour` - Only hour segment
+- `minute` - Hour and minute segments
+- `second` - Hour, minute, and second segments (default)
+
+#### `hourCycle`
+
+Controls whether to use 12-hour or 24-hour time format:
+- `12` - 12-hour format with AM/PM
+- `24` - 24-hour format (default)
+
+#### `size`
+
+Controls the visual size of the time field:
+- `medium` - Default size with time icon and full label
+- `small` - Compact size without time icon or visible label (label used for aria-label only)
+
+#### `shouldForceLeadingZeros`
+
+Whether to force leading zeros in time segments. For example, `09:05:03` vs `9:5:3`.
+
+#### `classNames`
+
+Custom class names for sub-elements:
+- `field` - The outer field container
+- `label` - The label element
+- `control` - The control wrapper containing icon and input
+- `input` - The time input element
+- `segment` - Individual time segments (hour, minute, second, dayPeriod)
+- `description` - The description text
+- `error` - The error message element
+
+### Inherited Props
+
+TimeField inherits all props from React Aria's `TimeField` component, including:
+- `minValue` - Minimum allowed time
+- `maxValue` - Maximum allowed time
+- `placeholderValue` - Placeholder time shown when empty
+
+See [React Aria TimeField](https://react-spectrum.adobe.com/react-aria/TimeField.html) for full API reference.
+
+## Examples
+
+### Example: Basic time field
+
+```tsx
+import { TimeField } from '@accelint/design-toolkit';
+
+<TimeField label="Meeting Time" granularity="minute" />
+```
+
+### Example: 12-hour format
+
+```tsx
+import { TimeField } from '@accelint/design-toolkit';
+
+<TimeField
+  label="Appointment Time"
+  hourCycle={12}
+  granularity="minute"
+/>
+```
+
+### Example: Controlled value
+
+```tsx
+import { TimeField } from '@accelint/design-toolkit';
+import { parseTime } from '@internationalized/date';
+import { useState } from 'react';
+
+export function ControlledTimeField() {
+  const [time, setTime] = useState(parseTime('14:30:00'));
+
+  return (
+    <TimeField
+      label="Selected Time"
+      value={time}
+      onChange={setTime}
+      granularity="minute"
+    />
+  );
+}
+```
+
+### Example: Hour only
+
+```tsx
+import { TimeField } from '@accelint/design-toolkit';
+
+<TimeField
+  label="Hour"
+  granularity="hour"
+/>
+```
+
+### Example: Required with validation
+
+```tsx
+import { TimeField } from '@accelint/design-toolkit';
+import { parseTime } from '@internationalized/date';
+
+<TimeField
+  label="Office Hours"
+  isRequired
+  minValue={parseTime('09:00:00')}
+  maxValue={parseTime('17:00:00')}
+  errorMessage="Please select a time between 9 AM and 5 PM"
+/>
+```
+
+### Example: Compact size
+
+```tsx
+import { TimeField } from '@accelint/design-toolkit';
+
+<TimeField
+  label="Time"
+  size="small"
+  granularity="minute"
+/>
+```
+
+> **Good to know:** In `small` size, the label is not visually displayed but is used for the `aria-label` attribute for accessibility.
+
+### Example: Read-only state
+
+```tsx
+import { TimeField } from '@accelint/design-toolkit';
+import { parseTime } from '@internationalized/date';
+
+<TimeField
+  label="Scheduled At"
+  value={parseTime('14:30:00')}
+  isReadOnly
+  granularity="minute"
+/>
+```
+
+### Example: With description and error
+
+```tsx
+import { TimeField } from '@accelint/design-toolkit';
+import { useState } from 'react';
+
+export function ValidatedTimeField() {
+  const [isInvalid, setIsInvalid] = useState(false);
+
+  return (
+    <TimeField
+      label="Delivery Time"
+      description="Select a time for delivery"
+      granularity="minute"
+      isInvalid={isInvalid}
+      errorMessage={isInvalid ? 'Time must be between 9 AM and 5 PM' : undefined}
+      onChange={(value) => {
+        // Validate time
+        setIsInvalid(value.hour < 9 || value.hour >= 17);
+      }}
+    />
+  );
+}
+```
+
+> **Good to know:** The TimeField automatically appends "Z" to indicate UTC timezone in the display.
+
+## Related
+
+- [DateField](../date-field/index.md) - Date input with segmented editing
+- [Label](../label/index.md) - Label component used internally
+- [Icon](../icon/index.md) - Icon component for time icon

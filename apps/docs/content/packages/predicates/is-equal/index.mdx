@@ -1,0 +1,211 @@
+---
+title: Comparison Predicates
+description: Curried predicates for numeric and string comparison operations
+source: packages/predicates/src/is-equal/index.ts
+source_sha: dc5cdee83db775ee88aa2e4cffa1bd0d39663cba
+doc_sha: 0c856f8a6ba209c0047a006e3d8b731dc5b62ef0
+deprecated: false
+updated: 2026-07-13
+---
+
+# Comparison Predicates
+
+Curried predicate functions for comparing values using JavaScript's comparison operators. All functions work with both numbers and strings.
+
+## Usage
+
+```typescript
+import {
+  isEqual,
+  isNotEqual,
+  isGreater,
+  isGreaterEqual,
+  isLesser,
+  isLesserEqual
+} from '@accelint/predicates';
+
+const isZero = isEqual(0);
+const isAdult = isGreaterEqual(18);
+const isBelowLimit = isLesser(100);
+
+isZero(0);         // true
+isAdult(21);       // true
+isBelowLimit(50);  // true
+```
+
+## isEqual
+
+Creates a predicate that determines if a value is strictly equal to a reference value.
+
+### Reference
+
+```typescript
+function isEqual<T>(reference: T): (value: T) => boolean
+```
+
+### Examples
+
+```typescript
+import { isEqual } from '@accelint/predicates';
+
+const isZero = isEqual(0);
+isZero(0);   // true
+isZero('0'); // false (strict equality)
+
+// Array filtering
+const numbers = [1, 2, 3, 2, 4];
+const twos = numbers.filter(isEqual(2)); // [2, 2]
+```
+
+## isNotEqual
+
+Creates a predicate that determines if a value is **not** strictly equal to a reference value.
+
+### Reference
+
+```typescript
+function isNotEqual<T>(reference: T): (value: T) => boolean
+```
+
+### Examples
+
+```typescript
+import { isNotEqual } from '@accelint/predicates';
+
+const isNotZero = isNotEqual(0);
+isNotZero(5);  // true
+isNotZero(0);  // false
+
+// Removing null values
+const values = [1, null, 2, null, 3];
+const nonNull = values.filter(isNotEqual(null)); // [1, 2, 3]
+```
+
+## isGreater
+
+Creates a predicate that determines if a value is greater than a threshold.
+
+### Reference
+
+```typescript
+function isGreater<T extends number | string>(threshold: T): (value: T) => boolean
+```
+
+### Examples
+
+```typescript
+import { isGreater } from '@accelint/predicates';
+
+const isGreaterThan10 = isGreater(10);
+isGreaterThan10(15); // true
+isGreaterThan10(5);  // false
+
+// String comparison (lexicographic)
+const isAfterM = isGreater('M');
+isAfterM('Z'); // true
+isAfterM('A'); // false
+
+// Array filtering
+const numbers = [1, 5, 10, 15, 20];
+const greaterThan10 = numbers.filter(isGreater(10)); // [15, 20]
+```
+
+## isGreaterEqual
+
+Creates a predicate that determines if a value is greater than or equal to a threshold.
+
+### Reference
+
+```typescript
+function isGreaterEqual<T extends number | string>(threshold: T): (value: T) => boolean
+```
+
+### Examples
+
+```typescript
+import { isGreaterEqual } from '@accelint/predicates';
+
+const isAtLeast18 = isGreaterEqual(18);
+isAtLeast18(21); // true
+isAtLeast18(18); // true (inclusive)
+isAtLeast18(16); // false
+
+// Passing grade filter
+const scores = [45, 78, 92, 65, 88];
+const passing = scores.filter(isGreaterEqual(70)); // [78, 92, 88]
+```
+
+## isLesser
+
+Creates a predicate that determines if a value is less than a threshold.
+
+### Reference
+
+```typescript
+function isLesser<T extends number | string>(threshold: T): (value: T) => boolean
+```
+
+### Examples
+
+```typescript
+import { isLesser } from '@accelint/predicates';
+
+const isBelowLimit = isLesser(100);
+isBelowLimit(50);  // true
+isBelowLimit(150); // false
+
+// Temperature filtering
+const temperatures = [15, 25, 35, 45];
+const cool = temperatures.filter(isLesser(30)); // [15, 25]
+```
+
+## isLesserEqual
+
+Creates a predicate that determines if a value is less than or equal to a threshold.
+
+### Reference
+
+```typescript
+function isLesserEqual<T extends number | string>(threshold: T): (value: T) => boolean
+```
+
+### Examples
+
+```typescript
+import { isLesserEqual } from '@accelint/predicates';
+
+const isAtMost100 = isLesserEqual(100);
+isAtMost100(50);  // true
+isAtMost100(100); // true (inclusive)
+isAtMost100(150); // false
+
+// Age filtering
+const ages = [16, 18, 21, 25, 30];
+const underAge = ages.filter(isLesserEqual(20)); // [16, 18]
+```
+
+## Combined Example: Range Validation
+
+```typescript
+import { isGreaterEqual, isLesserEqual } from '@accelint/predicates';
+import { andFn } from '@accelint/core';
+
+// Create a range validator by composing predicates
+const isBetween0And100 = andFn(
+  isGreaterEqual(0),
+  isLesserEqual(100)
+);
+
+isBetween0And100(50);  // true
+isBetween0And100(150); // false
+isBetween0And100(-10); // false
+```
+
+> **Good to know:** String comparisons use lexicographic ordering. For case-insensitive comparisons, convert strings to the same case before applying predicates.
+
+## Related
+
+- [isBetween](../is-between/index.md) - Check if value is in a range (inclusive)
+- [isNotBetween](../is-not-between/index.md) - Check if value is outside a range
+- [isIn](../is-in/index.md) - Check if value exists in an array
+- [isNotIn](../is-not-in/index.md) - Check if value doesn't exist in an array

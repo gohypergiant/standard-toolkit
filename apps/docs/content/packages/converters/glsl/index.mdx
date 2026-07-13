@@ -1,0 +1,181 @@
+---
+title: GLSL Color Converters
+description: Convert between GLSL normalized colors (0-1) and RGBA 0-255 tuples
+source: packages/converters/src/glsl/index.ts
+source_sha: ff34b0e96f1ccb9e4469552484c34e9c4565046b
+doc_sha: 047916cc54c78c78d46d2478cb549007e9f75512
+deprecated: false
+updated: 2026-07-13
+---
+
+# GLSL Color Converters
+
+Convert between GLSL normalized color format (0-1 range) and RGBA 0-255 tuples. Used for WebGL shader integration and deck.gl compatibility.
+
+## rgba255TupleToGlsl
+
+Convert a Rgba255Tuple from deck.gl format (0-255) to GLSL format (0-1).
+
+### Usage
+
+```typescript
+import { rgba255TupleToGlsl } from '@accelint/converters/glsl';
+
+const glslColor = rgba255TupleToGlsl([255, 128, 64, 255]);
+// [1, 0.5019607843137255, 0.25098039215686274, 1]
+```
+
+### Reference
+
+```typescript
+function rgba255TupleToGlsl(color: Rgba255Tuple): GlslRgbaTuple
+
+type GlslRgbaTuple = readonly [
+  r: number, // 0-1
+  g: number, // 0-1
+  b: number, // 0-1
+  a: number, // 0-1
+]
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `color` | `Rgba255Tuple` | The Rgba255Tuple [r, g, b, a] where all values are 0-255. |
+
+#### Returns
+
+Returns a GlslRgbaTuple `[r, g, b, a]` where all values are normalized to 0-1.
+
+### Examples
+
+#### Example: Basic conversion
+
+```typescript
+import { rgba255TupleToGlsl } from '@accelint/converters/glsl';
+
+const rgba255 = [255, 128, 64, 255] as const;
+const glsl = rgba255TupleToGlsl(rgba255);
+console.log(glsl);
+// [1, 0.5019607843137255, 0.25098039215686274, 1]
+```
+
+#### Example: Using in WebGL shader
+
+```typescript
+import { rgba255TupleToGlsl } from '@accelint/converters/glsl';
+
+const color = [255, 128, 64, 255] as const;
+const [r, g, b, a] = rgba255TupleToGlsl(color);
+
+// Pass to shader uniform
+gl.uniform4f(colorUniformLocation, r, g, b, a);
+```
+
+#### Example: With deck.gl layers
+
+```typescript
+import { rgba255TupleToGlsl } from '@accelint/converters/glsl';
+import { ScatterplotLayer } from '@deck.gl/layers';
+
+const deckColor = [255, 128, 64, 255] as const;
+const glslColor = rgba255TupleToGlsl(deckColor);
+
+// Use in custom shader
+const layer = new ScatterplotLayer({
+  data: points,
+  getFillColor: d => deckColor, // deck.gl uses 0-255
+  getLineColor: glslColor, // Custom shader uses 0-1
+  updateTriggers: {
+    getLineColor: glslColor
+  }
+});
+```
+
+> **Good to know:** GLSL shaders expect colors in 0-1 range. This function normalizes by dividing each channel by 255. Precision is preserved with full floating point values.
+
+## glslToRgba255Tuple
+
+Convert a GlslRgbaTuple from GLSL format (0-1) to deck.gl format (0-255).
+
+### Usage
+
+```typescript
+import { glslToRgba255Tuple } from '@accelint/converters/glsl';
+
+const rgba255 = glslToRgba255Tuple([1, 0.5, 0.25, 1]);
+// [255, 128, 64, 255]
+```
+
+### Reference
+
+```typescript
+function glslToRgba255Tuple(color: GlslRgbaTuple): Rgba255Tuple
+
+type GlslRgbaTuple = readonly [
+  r: number, // 0-1
+  g: number, // 0-1
+  b: number, // 0-1
+  a: number, // 0-1
+]
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `color` | `GlslRgbaTuple` | The GlslRgbaTuple [r, g, b, a] where all values are 0-1. |
+
+#### Returns
+
+Returns a Rgba255Tuple `[r, g, b, a]` where all values are clamped to 0-255 and rounded.
+
+### Examples
+
+#### Example: Basic conversion
+
+```typescript
+import { glslToRgba255Tuple } from '@accelint/converters/glsl';
+
+const glsl = [1, 0.5, 0.25, 1] as const;
+const rgba255 = glslToRgba255Tuple(glsl);
+console.log(rgba255);
+// [255, 128, 64, 255]
+```
+
+#### Example: Handling out-of-range values
+
+```typescript
+import { glslToRgba255Tuple } from '@accelint/converters/glsl';
+
+// Values are clamped to 0-1 range before conversion
+const glsl = [1.5, -0.2, 0.5, 0.8] as const;
+const rgba255 = glslToRgba255Tuple(glsl);
+console.log(rgba255);
+// [255, 0, 128, 204]
+```
+
+#### Example: Round-trip conversion
+
+```typescript
+import {
+  rgba255TupleToGlsl,
+  glslToRgba255Tuple
+} from '@accelint/converters/glsl';
+
+const original = [255, 128, 64, 255] as const;
+const glsl = rgba255TupleToGlsl(original);
+const converted = glslToRgba255Tuple(glsl);
+
+console.log(converted);
+// [255, 128, 64, 255] (matches original)
+```
+
+> **Good to know:** Values are clamped to 0-1 range before conversion and rounded to nearest integer. This prevents invalid RGB values from out-of-range GLSL colors.
+
+## Related
+
+- [hexToRgba255Tuple](../hex/index.md) - Parse hex color strings
+- [cssRgbaStringToRgba255Tuple](../css-rgba/index.md) - Parse CSS rgba strings
+- [rgba255TupleToHex](../hex/index.md) - Convert to hex strings

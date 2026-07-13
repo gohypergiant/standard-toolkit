@@ -5,6 +5,7 @@
     "constants",
     "core",
     "dataset",
+    "design-foundation",
     "formatters",
     "geo",
     "hotkey-manager",

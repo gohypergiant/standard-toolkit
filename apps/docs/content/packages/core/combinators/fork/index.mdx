@@ -1,0 +1,162 @@
+---
+title: fork
+description: Passes a value through two functions and combines their results
+source: packages/core/src/combinators/fork/index.ts
+source_sha: 277b7926aaaca22d1832802ac8da3c98228732a0
+doc_sha: 8b74ada1ceea0694645b7786edec67e6b77c6cbc
+deprecated: false
+updated: 2026-07-13
+---
+
+# fork
+
+Passes a value through two different functions and combines their results with a binary function. Also known as the Phi (Φ) combinator in lambda calculus.
+
+## Usage
+
+```typescript
+import { fork } from '@accelint/core';
+
+// Fork a value through two functions
+const result = fork((x: number) => (y: number) => x + y)
+  ((x: number) => x + 3)
+  ((x: number) => x - 2)
+  (9);
+// 19 (9+3=12, 9-2=7, 12+7=19)
+
+// Partial application
+const computeSum = fork((x: number) => (y: number) => x + y);
+computeSum((x: number) => x * 2)((x: number) => x + 1)(5);
+// 16 (5*2=10, 5+1=6, 10+6=16)
+```
+
+## Reference
+
+```typescript
+function fork<A, B, C>(
+  a: (x: A) => (y: B) => C
+): <D>(b: (x: D) => A) => (c: (x: D) => B) => (d: D) => C
+```
+
+Lambda calculus: `λabcd.a(bd)(cd)`  
+Type signature: `fork :: (a → b → c) → (d → a) → (d → b) → d → c`
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `a` | `(x: A) => (y: B) => C` | The binary function that combines the results. |
+| `b` | `(x: D) => A` | The first function to apply to the value. |
+| `c` | `(x: D) => B` | The second function to apply to the value. |
+| `d` | `D` | The value to fork through both functions. |
+
+### Returns
+
+Returns the result of `a(b(d))(c(d))`.
+
+### Type Parameters
+
+- `A` - The return type of function `b` and first input to `a`
+- `B` - The return type of function `c` and second input to `a`
+- `C` - The return type of the combining function `a`
+- `D` - The type of the input value
+
+## Examples
+
+### Example: Computing statistics
+
+```typescript
+import { fork } from '@accelint/core';
+
+const stats = fork((sum: number) => (count: number) => ({
+  sum,
+  count,
+  average: count > 0 ? sum / count : 0
+}));
+
+const computeStats = (numbers: number[]) =>
+  stats
+    ((arr: number[]) => arr.reduce((a, b) => a + b, 0))
+    ((arr: number[]) => arr.length)
+    (numbers);
+
+computeStats([1, 2, 3, 4, 5]);
+// { sum: 15, count: 5, average: 3 }
+```
+
+### Example: Validation with multiple rules
+
+```typescript
+import { fork } from '@accelint/core';
+
+interface ValidationResult {
+  hasMinLength: boolean;
+  hasMaxLength: boolean;
+  isValid: boolean;
+}
+
+const validateString = fork((min: boolean) => (max: boolean): ValidationResult => ({
+  hasMinLength: min,
+  hasMaxLength: max,
+  isValid: min && max
+}));
+
+const validate = validateString
+  ((s: string) => s.length >= 3)
+  ((s: string) => s.length <= 10);
+
+validate('hi'); // { hasMinLength: false, hasMaxLength: true, isValid: false }
+validate('hello'); // { hasMinLength: true, hasMaxLength: true, isValid: true }
+```
+
+### Example: Parallel transformations
+
+```typescript
+import { fork } from '@accelint/core';
+
+interface User {
+  firstName: string;
+  lastName: string;
+}
+
+const formatUser = fork((first: string) => (last: string) => `${first} ${last}`);
+
+const getFormattedName = formatUser
+  ((u: User) => u.firstName.toUpperCase())
+  ((u: User) => u.lastName.toUpperCase());
+
+getFormattedName({ firstName: 'john', lastName: 'doe' });
+// 'JOHN DOE'
+```
+
+### Example: Combining calculations
+
+```typescript
+import { fork } from '@accelint/core';
+
+const calculateDiscount = fork((price: number) => (discount: number) => price * (1 - discount));
+
+interface Product {
+  price: number;
+  category: string;
+}
+
+const getCategoryDiscount = (category: string): number => {
+  return category === 'electronics' ? 0.1 : 0.05;
+};
+
+const applyDiscount = calculateDiscount
+  ((p: Product) => p.price)
+  ((p: Product) => getCategoryDiscount(p.category));
+
+applyDiscount({ price: 100, category: 'electronics' });
+// 90 (10% discount)
+```
+
+> **Good to know:** The fork combinator is useful when you need to apply multiple transformations to the same input and combine their results. It avoids recomputing the input or storing intermediate values.
+
+## Related
+
+- [composition](../composition/index.md) - Compose two functions
+- [apply](../apply/index.md) - Apply function to value
+- [pipe](../../composition/pipe/index.md) - Compose functions left-to-right

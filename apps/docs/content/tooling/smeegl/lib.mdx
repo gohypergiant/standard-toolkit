@@ -1,0 +1,171 @@
+---
+title: smeegl
+description: Generate spritesheets or React SVG components from SVG files using glob patterns or directory scanning.
+source: tooling/smeegl/src/lib.ts
+source_sha: fa85d7df22f60dce567e6e2a6487564cfdaccf37
+doc_sha: ea3c654aae3cecc2e7b7cfa75007c240713a5bb0
+deprecated: false
+updated: 2026-07-13
+---
+
+# smeegl
+
+Generate spritesheets or React SVG components from SVG files using glob patterns or directory scanning.
+
+## Usage
+
+```typescript
+import { smeegl } from '@accelint/smeegl/lib';
+
+// Generate a spritesheet
+await smeegl(
+  process.cwd(),           // Root path
+  '**/*.svg',              // Glob pattern
+  './atlas',               // Output directory
+  'spreet',                // Spreet binary path
+  null,                    // No CRC mode
+  './icons',               // Input directory
+  './atlas',               // Output path
+  'SPRITESHEET'            // Target type
+);
+
+// Generate React components
+await smeegl(
+  process.cwd(),
+  '**/*.svg',
+  './components',
+  'spreet',
+  null,
+  './icons',
+  './components',
+  'REACT'
+);
+```
+
+## Reference
+
+```typescript
+async function smeegl(
+  rootPath: string,
+  glob: string,
+  out: string,
+  spreet?: string,
+  crcMode?: CrcType | null,
+  inOpt?: string,
+  outOpt?: string,
+  target?: TargetType
+): Promise<void>
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `rootPath` | `string` | Root directory path for resolving relative paths. Typically `process.cwd()`. |
+| `glob` | `string` | Glob pattern to match SVG files (e.g., `**/*.svg`). Can be blank if `inOpt` is provided. |
+| `out` | `string` | Output directory path. Defaults to `./atlas` if empty. |
+| `spreet` | `string` (optional) | Path to spreet binary. Defaults to `'spreet'` (assumes installed globally). |
+| `crcMode` | `CrcType \| null` (optional) | Enable CRC32 naming for sprites: `'DEC'` or `'HEX'`. Default: `null` (disabled). |
+| `inOpt` | `string` (optional) | Input directory to scan for SVG files. Alternative to glob pattern. Default: `''`. |
+| `outOpt` | `string` (optional) | Override output path. Takes precedence over `out`. Default: `''`. |
+| `target` | `TargetType` (optional) | Output type: `'SPRITESHEET'` or `'REACT'`. Default: `'SPRITESHEET'`. |
+
+### Returns
+
+Returns a `Promise<void>` that resolves when generation completes.
+
+### Type Parameters
+
+```typescript
+type CrcType = 'DEC' | 'HEX';
+type TargetType = 'SPRITESHEET' | 'REACT';
+```
+
+## Examples
+
+### Example: Generate spritesheet from directory
+
+```typescript
+import { smeegl } from '@accelint/smeegl/lib';
+
+await smeegl(
+  process.cwd(),
+  '',                    // No glob pattern
+  './output/atlas',
+  undefined,             // Use default spreet
+  null,                  // No CRC naming
+  './src/icons',         // Scan this directory
+  undefined,
+  'SPRITESHEET'
+);
+```
+
+This generates three files:
+- `atlas.json` - Sprite index with coordinates
+- `atlas.png` - Packed spritesheet image
+- `atlas.ts` - TypeScript constants for sprite names
+
+### Example: Generate React components
+
+```typescript
+import { smeegl } from '@accelint/smeegl/lib';
+
+await smeegl(
+  process.cwd(),
+  '',
+  './components',
+  undefined,
+  null,
+  './assets/icons',
+  undefined,
+  'REACT'
+);
+```
+
+Generates React SVG components:
+- `SvgIconName.tsx` - Individual component files
+- `index.ts` - Barrel export
+
+### Example: Using glob pattern with CRC naming
+
+```typescript
+import { smeegl } from '@accelint/smeegl/lib';
+
+await smeegl(
+  process.cwd(),
+  'src/icons/**/*.svg',   // Glob pattern
+  './atlas',
+  'spreet',
+  'HEX',                  // Use hexadecimal CRC32
+  '',                     // No input directory (using glob)
+  './atlas',
+  'SPRITESHEET'
+);
+```
+
+Sprite names will be converted to CRC32 hexadecimal values in the output.
+
+### Example: Using custom spreet binary
+
+```typescript
+import { smeegl } from '@accelint/smeegl/lib';
+
+await smeegl(
+  process.cwd(),
+  '**/*.svg',
+  './atlas',
+  './bin/spreet',         // Custom spreet binary path
+  null,
+  './icons',
+  undefined,
+  'SPRITESHEET'
+);
+```
+
+> **Good to know:** You must provide either a glob pattern or an input directory, but not both. Use glob for pattern matching across directories, or input directory for scanning all SVG files in a folder.
+
+## Related
+
+- [buildSpritesheet](./build-spritesheet.mdx) - Generate spritesheet files
+- [buildReactFiles](./build-react-files.mdx) - Generate React components
+- [validateInput](./validate-input.mdx) - Validate input parameters

@@ -1,0 +1,117 @@
+---
+title: filter
+description: Returns a copy of the given array containing only elements that satisfy the predicate.
+source: packages/core/src/array/filter/index.ts
+source_sha: 5b59e552e10f3e0fe4c5fddd9c70933a11563523
+doc_sha: 4ed5795a66e8e21bcea402ef4bd9706b10500809
+deprecated: false
+updated: 2026-07-13
+---
+
+# filter
+
+Returns a copy of the given array containing only elements that satisfy the predicate.
+
+## Usage
+
+```typescript
+import { filter } from '@accelint/core/array/filter';
+
+// Basic usage - filter even numbers
+const evens = filter((x: number) => x % 2 === 0)([1, 2, 3, 4, 5]);
+// [2, 4]
+
+// Partial application
+const isEven = filter((x: number) => x % 2 === 0);
+isEven([1, 2, 3, 4, 5]); // [2, 4]
+```
+
+## Reference
+
+```typescript
+function filter<T>(
+  predicate: (element: T, index: number) => boolean
+): (arr: T[]) => T[]
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `predicate` | `(element: T, index: number) => boolean` | Function called for each element. Returns `true` to keep the element, `false` to exclude it. Receives the element and its index. |
+
+### Returns
+
+Returns a curried function that accepts an array and returns a new array containing only elements that satisfy the predicate.
+
+### Type Parameters
+
+- `T` - The type of elements in the array
+
+## Examples
+
+### Example: Filtering objects
+
+```typescript
+import { filter } from '@accelint/core/array/filter';
+
+interface User {
+  id: number;
+  active: boolean;
+}
+
+const users: User[] = [
+  { id: 1, active: true },
+  { id: 2, active: false },
+  { id: 3, active: true }
+];
+
+const activeUsers = filter((user: User) => user.active)(users);
+// [{ id: 1, active: true }, { id: 3, active: true }]
+```
+
+### Example: Using index parameter
+
+```typescript
+import { filter } from '@accelint/core/array/filter';
+
+// Keep only even-indexed elements
+const evenIndexed = filter((_: string, index: number) => index % 2 === 0);
+evenIndexed(['a', 'b', 'c', 'd', 'e']);
+// ['a', 'c', 'e']
+```
+
+### Example: Filtering null/undefined values
+
+```typescript
+import { filter } from '@accelint/core/array/filter';
+
+const values = [1, null, 2, undefined, 3];
+const defined = filter((x: number | null | undefined) => x != null)(values);
+// [1, 2, 3]
+```
+
+### Example: Composing with map
+
+```typescript
+import { filter } from '@accelint/core/array/filter';
+import { map } from '@accelint/core/array/map';
+import { pipe } from '@accelint/core/composition/pipe';
+
+const processNumbers = pipe(
+  filter((x: number) => x > 0),
+  map((x: number) => x * 2)
+);
+
+processNumbers([-2, -1, 0, 1, 2, 3]);
+// [2, 4, 6]
+```
+
+> **Good to know:** The predicate function is called for every element in the array until the end is reached. The original array is not modified—a new array is always returned. This is a pure function with no side effects.
+
+## Related
+
+- [map](../map/index.md) - Transform array elements
+- [find](../find/index.md) - Find first element matching predicate
+- [every](../every/index.md) - Test if all elements pass predicate
+- [some](../some/index.md) - Test if any element passes predicate

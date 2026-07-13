@@ -1,0 +1,143 @@
+---
+title: reduceRight
+description: Reduces an array from right to left using an accumulator function
+source: packages/core/src/array/reduce-right/index.ts
+source_sha: 6ad01f84f476ab0cd474a00ea015093564e2755e
+doc_sha: 4da08d26c3b57aadc43b7a0d9769616e218762d3
+deprecated: false
+updated: 2026-07-13
+---
+
+# reduceRight
+
+Calls the accumulator function with each element of an array, starting from the last element and moving toward the first. Returns the final accumulated result.
+
+## Usage
+
+```typescript
+import { reduceRight } from '@accelint/core';
+
+// Concatenate from right to left
+const reversed = reduceRight((acc: string, s: string) => `${acc}${s}`)('')(['a', 'b', 'c', 'd', 'e']);
+// 'edcba'
+
+// Partial application
+const sumFromRight = reduceRight((acc: number, n: number) => acc + n)(0);
+sumFromRight([1, 2, 3, 4, 5]); // 15
+```
+
+## Reference
+
+```typescript
+function reduceRight<T, R>(
+  fn: (accumulator: R, element: T) => R
+): (initVal: R) => (arr: T[]) => R
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `fn` | `(accumulator: R, element: T) => R` | The accumulator function called for each element. Receives the accumulated value and current element. |
+| `initVal` | `R` | The initial value of the accumulation. |
+
+### Returns
+
+Returns a curried function that accepts an initial value, which returns another function that accepts an array and returns the final accumulated result.
+
+### Type Parameters
+
+- `T` - The type of elements in the array
+- `R` - The type of the accumulated result
+
+## Examples
+
+### Example: Building strings from right
+
+```typescript
+import { reduceRight } from '@accelint/core';
+
+const words = ['world', 'hello'];
+const sentence = reduceRight((acc: string, word: string) => 
+  acc ? `${acc} ${word}` : word
+)('')(words);
+// 'hello world'
+```
+
+### Example: Flattening nested arrays
+
+```typescript
+import { reduceRight } from '@accelint/core';
+
+const nested = [[1, 2], [3, 4], [5, 6]];
+const flattened = reduceRight((acc: number[], arr: number[]) => 
+  [...arr, ...acc]
+)([])(nested);
+// [5, 6, 3, 4, 1, 2]
+```
+
+### Example: Building object from right
+
+```typescript
+import { reduceRight } from '@accelint/core';
+
+interface Item {
+  key: string;
+  value: number;
+}
+
+const items: Item[] = [
+  { key: 'a', value: 1 },
+  { key: 'b', value: 2 },
+  { key: 'a', value: 3 } // Overwrites first 'a'
+];
+
+const toObject = reduceRight((acc: Record<string, number>, item: Item) => ({
+  ...acc,
+  [item.key]: item.value
+}))({})(items);
+// { b: 2, a: 1 } (first 'a' wins because we iterate from right)
+```
+
+### Example: Composing functions from right
+
+```typescript
+import { reduceRight } from '@accelint/core';
+
+type UnaryFn<T> = (x: T) => T;
+
+const composeFunctions = <T>(fns: UnaryFn<T>[]) =>
+  reduceRight((composed: UnaryFn<T>, fn: UnaryFn<T>) => 
+    (x: T) => composed(fn(x))
+  )((x: T) => x)(fns);
+
+const add1 = (x: number) => x + 1;
+const mult2 = (x: number) => x * 2;
+
+const composed = composeFunctions([add1, mult2]);
+composed(5); // 11 (mult2(5) = 10, then add1(10) = 11)
+```
+
+### Example: Difference from reduce
+
+```typescript
+import { reduce, reduceRight } from '@accelint/core';
+
+const data = ['a', 'b', 'c'];
+
+// reduce: left to right
+reduce((acc: string, s: string) => `${acc}${s}`)('')(data);
+// 'abc'
+
+// reduceRight: right to left
+reduceRight((acc: string, s: string) => `${acc}${s}`)('')(data);
+// 'cba'
+```
+
+> **Good to know:** The accumulator function receives parameters in the same order as `reduce` (accumulator first, element second), but the array is processed from right to left.
+
+## Related
+
+- [reduce](../reduce/index.md) - Reduce from left to right
+- [reverse](../reverse/index.md) - Reverse array order
+- [map](../map/index.md) - Transform array elements

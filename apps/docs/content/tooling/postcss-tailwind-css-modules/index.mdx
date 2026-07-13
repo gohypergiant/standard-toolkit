@@ -1,29 +1,131 @@
 ---
-title: PostCSS Tailwind CSS Modules
-description: PostCSS plugin for using Tailwind CSS with CSS Modules
+title: tailwindCssModulesPlugin
+description: PostCSS plugin that wraps Tailwind CSS group/ and peer/ classes in :global() pseudo-class for CSS Modules compatibility
+source: packages/postcss-tailwind-css-modules/src/index.ts
+source_sha: bdd0f75f631b52a4661629978351874c424fb901
+doc_sha: 8850b5cf4ce0136c4daba13f671de5f3d7ff4ec1
+deprecated: false
+updated: 2026-07-13
 ---
 
-# PostCSS Tailwind CSS Modules
+# tailwindCssModulesPlugin
 
-A PostCSS plugin that enables using Tailwind CSS utilities within CSS Modules.
+PostCSS plugin that wraps Tailwind CSS `group/` and `peer/` classes in `:global()` pseudo-class to fix compatibility issues with CSS Modules.
 
-## Installation
+## Usage
 
-```bash
-pnpm add -D @accelint/postcss-tailwind-css-modules
+```typescript
+// postcss.config.js
+export default {
+  plugins: {
+    '@tailwindcss/postcss': {},
+    '@accelint/postcss-tailwind-css-modules': {},
+  },
+};
 ```
 
-## Features
+## Reference
 
-- Tailwind CSS integration with CSS Modules
-- Automatic utility class composition
-- Type-safe class names with TypeScript
-- Build-time optimization
+```typescript
+function tailwindCssModulesPlugin(): Plugin
+```
 
-## Getting Started
+### Returns
 
-Detailed documentation coming soon.
+Returns a PostCSS plugin instance configured to transform `group/` and `peer/` classes.
 
-## Source Code
+The plugin:
+- Only processes files ending in `.module.css`
+- Wraps Tailwind `group/` and `peer/` classes in `:global()` pseudo-class
+- Prevents duplicate transformations using symbol-based tracking
 
-View the [source code on GitHub](https://github.com/gohypergiant/standard-toolkit/tree/main/tooling/postcss-tailwind-css-modules).
+### Plugin Behavior
+
+The plugin automatically identifies and transforms selectors containing:
+- Classes starting with `group/` (e.g., `group/sidebar`, `group/header`)
+- Classes starting with `peer/` (e.g., `peer/checked`, `peer/focus`)
+
+## Examples
+
+### Example: Basic configuration with Turbo and Webpack
+
+```javascript
+// postcss.config.js
+export default {
+  plugins: {
+    '@tailwindcss/postcss': {},
+    '@accelint/postcss-tailwind-css-modules': {},
+  },
+};
+```
+
+### Example: Configuration with Vite
+
+```javascript
+// postcss.config.js
+export default {
+  plugins: {
+    '@accelint/postcss-tailwind-css-modules': {},
+  },
+};
+```
+
+> **Good to know:** When using Vite, the Tailwind Vite plugin handles Tailwind's PostCSS processing, so you only need this plugin in your PostCSS config. Do not use array syntax (`plugins: ['...']`) as it will cause errors with Vite—use the object syntax shown above.
+
+### Example: CSS transformation
+
+**Input:**
+```css
+/* styles.module.css */
+.group/sidebar {
+  color: red;
+}
+
+.peer/checked {
+  color: blue;
+}
+```
+
+**Output:**
+```css
+:global(.group/sidebar) {
+  color: red;
+}
+
+:global(.peer/checked) {
+  color: blue;
+}
+```
+
+### Example: Complex selectors
+
+The plugin handles complex selectors including pseudo-classes, pseudo-elements, and descendant selectors:
+
+```css
+/* Input */
+.container .group/sidebar:hover > .item { }
+.peer/checked:focus::after { }
+
+/* Output */
+.container :global(.group/sidebar):hover > .item { }
+:global(.peer/checked):focus::after { }
+```
+
+### Example: Multiple classes in one selector
+
+```css
+/* Input */
+.group/header.group/nav { }
+
+/* Output */
+:global(.group/header):global(.group/nav) { }
+```
+
+> **Good to know:** The plugin only transforms classes that start with `group/` or `peer/` followed by a forward slash. Classes like `.group` or `.peer` (without the slash) are not transformed. Regular CSS Modules classes in the same selector remain unaffected.
+
+## Related
+
+- [PostCSS Documentation](https://postcss.org/)
+- [postcss-selector-parser](https://www.npmjs.com/package/postcss-selector-parser) - Used internally for selector transformation
+- [Tailwind CSS - Parent State](https://tailwindcss.com/docs/hover-focus-and-other-states#styling-based-on-parent-state)
+- [Tailwind CSS - Sibling State](https://tailwindcss.com/docs/hover-focus-and-other-states#styling-based-on-sibling-state)

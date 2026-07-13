@@ -1,0 +1,198 @@
+---
+title: Timer Utilities
+description: Low-level utilities for clock-aligned timing calculations
+source: packages/temporal/src/timers/utils.ts
+source_sha: d7f47f79824309c5b98a6e996dac8954b3add3f4
+doc_sha: 533dcc9333ea700d45cc92377abd8dec64738eb8
+deprecated: false
+updated: 2026-07-13
+---
+
+# Timer Utilities
+
+Low-level utilities used internally by clock-aligned timers. These functions calculate time remainders and schedule callbacks at precise clock boundaries.
+
+## remainder
+
+Calculates the remaining time until the next interval boundary based on the current time.
+
+### Usage
+
+```typescript
+import { remainder } from '@accelint/temporal/timers/utils';
+
+const msUntilNextSecond = remainder(1000);
+console.log(msUntilNextSecond); // e.g., 347ms
+```
+
+### Reference
+
+```typescript
+function remainder(interval: number): number
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `interval` | `number` | The interval duration in milliseconds. |
+
+#### Returns
+
+Returns the number of milliseconds remaining until the current time aligns with the next multiple of the specified interval.
+
+### Examples
+
+#### Example: Calculate time until next second
+
+```typescript
+import { remainder } from '@accelint/temporal/timers/utils';
+
+const msLeft = remainder(1000);
+console.log(`${msLeft}ms until next second`);
+// Output: "347ms until next second" (example value)
+```
+
+#### Example: Custom interval boundaries
+
+```typescript
+import { remainder } from '@accelint/temporal/timers/utils';
+
+// Calculate time until next 5-second boundary
+const msUntilNext5Seconds = remainder(5000);
+console.log(`${msUntilNext5Seconds}ms until next 5-second mark`);
+
+// Calculate time until next 250ms boundary
+const msUntilNextQuarterSecond = remainder(250);
+console.log(`${msUntilNextQuarterSecond}ms until next quarter second`);
+```
+
+#### Example: Synchronizing multiple timers
+
+```typescript
+import { remainder } from '@accelint/temporal/timers/utils';
+
+function syncTimers(intervals: number[]) {
+  return intervals.map(interval => ({
+    interval,
+    msUntilNext: remainder(interval),
+  }));
+}
+
+const timings = syncTimers([1000, 500, 250]);
+console.log(timings);
+// [
+//   { interval: 1000, msUntilNext: 347 },
+//   { interval: 500, msUntilNext: 347 },
+//   { interval: 250, msUntilNext: 97 }
+// ]
+```
+
+> **Good to know:** This function uses `Date.now() % interval` to calculate the current position within an interval cycle. At exact interval boundaries (when `Date.now() % interval === 0`), it returns the full interval value. For zero or NaN intervals, the function returns NaN. For negative intervals, it returns negative values.
+
+---
+
+## callNextSecond
+
+Executes a callback precisely at the start of the next clock second (when milliseconds are 0).
+
+### Usage
+
+```typescript
+import { callNextSecond } from '@accelint/temporal/timers/utils';
+
+callNextSecond(() => {
+  console.log('Executed at second boundary');
+});
+```
+
+### Reference
+
+```typescript
+function callNextSecond(callback: () => void): void
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `callback` | `() => void` | Function to execute at the next second boundary. |
+
+#### Returns
+
+This function does not return a value. The timeout is automatically cleared after execution.
+
+### Examples
+
+#### Example: Synchronize action to clock seconds
+
+```typescript
+import { callNextSecond } from '@accelint/temporal/timers/utils';
+
+callNextSecond(() => {
+  const now = new Date();
+  console.log(`Milliseconds: ${now.getMilliseconds()}`);
+  // Always outputs: "Milliseconds: 0" (or very close to 0)
+});
+```
+
+#### Example: Start animation at second boundary
+
+```typescript
+import { callNextSecond } from '@accelint/temporal/timers/utils';
+
+function startAnimationOnSecond(element: HTMLElement) {
+  callNextSecond(() => {
+    element.classList.add('animate');
+    console.log('Animation started at:', new Date().toISOString());
+  });
+}
+
+startAnimationOnSecond(document.getElementById('box'));
+```
+
+#### Example: Coordinate multiple actions
+
+```typescript
+import { callNextSecond } from '@accelint/temporal/timers/utils';
+
+async function coordinatedStart(tasks: Array<() => void>) {
+  callNextSecond(() => {
+    console.log('Starting all tasks at:', new Date().toISOString());
+    tasks.forEach(task => task());
+  });
+}
+
+await coordinatedStart([
+  () => console.log('Task 1'),
+  () => console.log('Task 2'),
+  () => console.log('Task 3'),
+]);
+// All tasks execute simultaneously at the next second boundary
+```
+
+#### Example: Building a synchronized interval
+
+```typescript
+import { callNextSecond } from '@accelint/temporal/timers/utils';
+
+function customClockInterval(cb: () => void, ms: number) {
+  callNextSecond(() => {
+    cb(); // First execution at second boundary
+    
+    // Subsequent executions
+    setInterval(cb, ms);
+  });
+}
+
+customClockInterval(() => {
+  console.log('Tick');
+}, 1000);
+```
+
+> **Good to know:** This function calculates the delay using the `remainder` function with a 1000ms interval. It executes exactly once and automatically clears its timeout. If the callback throws an error, it propagates to the caller—there is no built-in error handling. When exactly on a second boundary (`Date.now() % 1000 === 0`), it waits a full second.
+
+## Related
+
+- [setClockInterval](./index.md#setclockinterval) - Repeat callback at intervals, aligned to clock seconds
+- [setClockTimeout](./index.md#setclocktimeout) - Execute callback once after delay, aligned to clock seconds

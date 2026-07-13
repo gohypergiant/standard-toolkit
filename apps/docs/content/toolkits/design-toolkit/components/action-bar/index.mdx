@@ -1,0 +1,160 @@
+---
+title: ActionBar
+description: Container for icon action buttons with consistent spacing and alignment, commonly used in toolbars and command interfaces.
+source: packages/design-toolkit/src/components/action-bar/index.tsx
+source_sha: dee471fbe0b4ca75690029a9ffad63874b1e154a
+doc_sha: 9f5a0f102dfc23b60d5c949aca4f01124b15278a
+deprecated: false
+updated: 2026-07-13
+---
+
+# ActionBar
+
+Container for icon action buttons with consistent spacing and alignment, commonly used in toolbars and command interfaces.
+
+## Usage
+
+```tsx
+import { ActionBar, Button, Icon } from '@accelint/design-toolkit';
+import { Copy, Delete } from '@accelint/icons';
+
+export function MyComponent() {
+  return (
+    <ActionBar>
+      <Button><Icon><Copy /></Icon></Button>
+      <Button><Icon><Delete /></Icon></Button>
+    </ActionBar>
+  );
+}
+```
+
+## Reference
+
+```typescript
+interface ActionBarProps extends HTMLAttributes<HTMLDivElement> {
+  elevation?: 'flat' | 'overlay' | 'raised';
+  size?: 'medium' | 'small';
+  children?: React.ReactNode;
+  className?: string;
+}
+```
+
+### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `elevation` | `'flat' \| 'overlay' \| 'raised'` | `'overlay'` | No |
+| `size` | `'medium' \| 'small'` | `'medium'` | No |
+| `children` | `React.ReactNode` | - | Yes |
+| `className` | `string` | - | No |
+
+#### `elevation`
+
+Visual elevation style for the action bar:
+- `flat` - No shadow, embedded appearance for use within panels or cards
+- `overlay` - Subtle shadow, floating appearance (default)
+- `raised` - Prominent shadow for primary toolbars
+
+#### `size`
+
+Controls the size of action buttons within the bar. The ActionBar automatically applies `variant="icon"` to all child Button and ToggleButton components through context.
+
+## Examples
+
+### Example: Basic action bar
+
+```tsx
+import { ActionBar, Button, Icon } from '@accelint/design-toolkit';
+import { Copy, Paste, Cut } from '@accelint/icons';
+
+<ActionBar>
+  <Button onPress={() => console.log('Copy')}>
+    <Icon><Copy /></Icon>
+  </Button>
+  <Button onPress={() => console.log('Paste')}>
+    <Icon><Paste /></Icon>
+  </Button>
+  <Button onPress={() => console.log('Cut')}>
+    <Icon><Cut /></Icon>
+  </Button>
+</ActionBar>
+```
+
+### Example: Text editor toolbar
+
+```tsx
+import { ActionBar, ToggleButton, Icon } from '@accelint/design-toolkit';
+import { Bold, Italic, Underline } from '@accelint/icons';
+
+<ActionBar>
+  <ToggleButton>
+    <Icon><Bold /></Icon>
+  </ToggleButton>
+  <ToggleButton>
+    <Icon><Italic /></Icon>
+  </ToggleButton>
+  <ToggleButton>
+    <Icon><Underline /></Icon>
+  </ToggleButton>
+</ActionBar>
+```
+
+### Example: Flat elevation
+
+```tsx
+import { ActionBar, Button, Icon } from '@accelint/design-toolkit';
+import { Settings, Help } from '@accelint/icons';
+
+<ActionBar elevation="flat">
+  <Button><Icon><Settings /></Icon></Button>
+  <Button><Icon><Help /></Icon></Button>
+</ActionBar>
+```
+
+### Example: Raised elevation
+
+```tsx
+import { ActionBar, Button, Icon } from '@accelint/design-toolkit';
+import { Save, Upload, Download } from '@accelint/icons';
+
+<ActionBar elevation="raised">
+  <Button><Icon><Save /></Icon></Button>
+  <Button><Icon><Upload /></Icon></Button>
+  <Button><Icon><Download /></Icon></Button>
+</ActionBar>
+```
+
+### Example: Small size
+
+```tsx
+import { ActionBar, Button, Icon } from '@accelint/design-toolkit';
+import { Zoom In, ZoomOut } from '@accelint/icons';
+
+<ActionBar size="small">
+  <Button><Icon><ZoomIn /></Icon></Button>
+  <Button><Icon><ZoomOut /></Icon></Button>
+</ActionBar>
+```
+
+### Example: With accessibility labels
+
+```tsx
+import { ActionBar, Button, Icon } from '@accelint/design-toolkit';
+import { Copy, Delete } from '@accelint/icons';
+
+<ActionBar>
+  <Button aria-label="Copy to clipboard">
+    <Icon><Copy /></Icon>
+  </Button>
+  <Button aria-label="Delete item">
+    <Icon><Delete /></Icon>
+  </Button>
+</ActionBar>
+```
+
+> **Good to know:** Always provide `aria-label` props on icon-only buttons to ensure accessibility for screen reader users.
+
+## Related
+
+- [Button](../button/index.md) - Button component for actions
+- [Icon](../icon/index.md) - Icon component for visual indicators

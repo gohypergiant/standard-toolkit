@@ -1,0 +1,306 @@
+---
+title: SearchField
+description: Search input with integrated search icon, loading state, and clear button.
+source: packages/design-toolkit/src/components/search-field/index.tsx
+source_sha: d3e6d0d33bb1c98463519d29b7e642c55ab259b7
+doc_sha: b51f30ed17c8329fd0fd7a57200133b345e99635
+deprecated: false
+updated: 2026-07-13
+---
+
+# SearchField
+
+Search input with integrated search icon, loading state, and clear button.
+
+## Usage
+
+```tsx
+import { SearchField } from '@accelint/design-toolkit';
+
+export function MyComponent() {
+  return (
+    <SearchField
+      placeholder="Search items..."
+      onChange={(value) => setQuery(value)}
+    />
+  );
+}
+```
+
+## Reference
+
+```typescript
+interface SearchFieldProps extends Omit<AriaSearchFieldProps, 'className' | 'pattern' | 'type'> {
+  variant?: 'filled' | 'outline';
+  isLoading?: boolean;
+  inputProps?: Omit<InputProps, 'type'>;
+  classNames?: {
+    field?: AriaSearchFieldProps['className'];
+    input?: InputProps['className'];
+    clear?: ButtonProps['className'];
+    loading?: IconProps['className'];
+    search?: IconProps['className'];
+  };
+}
+```
+
+### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `variant` | `'filled' \| 'outline'` | `'outline'` | No |
+| `isLoading` | `boolean` | `false` | No |
+| `inputProps` | `InputProps` | - | No |
+| `classNames` | `SearchFieldClassNames` | - | No |
+| `value` | `string` | - | No |
+| `defaultValue` | `string` | - | No |
+| `onChange` | `(value: string) => void` | - | No |
+| `onSubmit` | `(value: string) => void` | - | No |
+| `isDisabled` | `boolean` | `false` | No |
+
+#### `variant`
+
+Visual style variant:
+- `outline` - Border with transparent background (default)
+- `filled` - Solid background with subtle border
+
+#### `isLoading`
+
+Displays a loading spinner instead of the clear button when `true`. Useful for showing async search progress.
+
+#### `inputProps`
+
+Props passed directly to the underlying `Input` component, including:
+- `placeholder` - Placeholder text
+- `autoComplete` - Browser autocomplete hint
+- `maxLength` - Maximum character length
+
+#### `classNames`
+
+Custom CSS class names for search field elements:
+- `field` - Container element
+- `input` - Input element
+- `clear` - Clear button element
+- `loading` - Loading spinner icon element
+- `search` - Search icon element
+
+### Inherited Props
+
+SearchField inherits all props from React Aria's `SearchField` component, including:
+- `value` / `defaultValue` - Controlled/uncontrolled value
+- `onChange` - Called when value changes (receives string)
+- `onSubmit` - Called when Enter is pressed or search is submitted
+- `onClear` - Called when clear button is pressed
+- `isDisabled` - Disables the search field
+
+See [React Aria SearchField](https://react-spectrum.adobe.com/react-aria/SearchField.html) for full API reference.
+
+## Examples
+
+### Example: Basic search field
+
+```tsx
+import { SearchField } from '@accelint/design-toolkit';
+
+<SearchField
+  placeholder="Search..."
+  onChange={(value) => setQuery(value)}
+/>
+```
+
+### Example: Filled variant
+
+```tsx
+import { SearchField } from '@accelint/design-toolkit';
+
+<SearchField
+  variant="filled"
+  placeholder="Search products..."
+  onChange={(value) => handleSearch(value)}
+/>
+```
+
+### Example: With loading state
+
+```tsx
+import { useState } from 'react';
+import { SearchField } from '@accelint/design-toolkit';
+
+export function AsyncSearch() {
+  const [query, setQuery] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSearch = async (value: string) => {
+    setQuery(value);
+    setIsLoading(true);
+    
+    try {
+      const results = await searchApi(value);
+      setResults(results);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <SearchField
+      value={query}
+      onChange={handleSearch}
+      isLoading={isLoading}
+      placeholder="Search..."
+    />
+  );
+}
+```
+
+### Example: With submit handler
+
+```tsx
+import { SearchField } from '@accelint/design-toolkit';
+
+<SearchField
+  placeholder="Search..."
+  onSubmit={(value) => {
+    console.log('Searching for:', value);
+    performSearch(value);
+  }}
+/>
+```
+
+> **Good to know:** `onSubmit` is called when the user presses Enter or clicks a submit button. Use this for explicit search actions.
+
+### Example: Controlled search
+
+```tsx
+import { useState } from 'react';
+import { SearchField } from '@accelint/design-toolkit';
+
+export function ControlledSearch() {
+  const [query, setQuery] = useState('');
+
+  return (
+    <>
+      <SearchField
+        value={query}
+        onChange={setQuery}
+        placeholder="Type to search..."
+      />
+      <p>Current query: {query}</p>
+    </>
+  );
+}
+```
+
+### Example: With clear handler
+
+```tsx
+import { SearchField } from '@accelint/design-toolkit';
+
+<SearchField
+  placeholder="Search..."
+  onChange={(value) => setQuery(value)}
+  onClear={() => {
+    console.log('Search cleared');
+    resetResults();
+  }}
+/>
+```
+
+### Example: Disabled state
+
+```tsx
+import { SearchField } from '@accelint/design-toolkit';
+
+<SearchField
+  placeholder="Search disabled"
+  isDisabled
+/>
+```
+
+### Example: With aria-label
+
+```tsx
+import { SearchField } from '@accelint/design-toolkit';
+
+<SearchField
+  aria-label="Search products"
+  placeholder="Enter product name..."
+/>
+```
+
+> **Good to know:** Always provide an `aria-label` or visible label for accessibility.
+
+### Example: Debounced search
+
+```tsx
+import { useState, useEffect } from 'react';
+import { SearchField } from '@accelint/design-toolkit';
+
+export function DebouncedSearch() {
+  const [query, setQuery] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (!query) return;
+
+    const timeoutId = setTimeout(async () => {
+      setIsLoading(true);
+      try {
+        await performSearch(query);
+      } finally {
+        setIsLoading(false);
+      }
+    }, 300);
+
+    return () => clearTimeout(timeoutId);
+  }, [query]);
+
+  return (
+    <SearchField
+      value={query}
+      onChange={setQuery}
+      isLoading={isLoading}
+      placeholder="Type to search..."
+    />
+  );
+}
+```
+
+### Example: Custom styling
+
+```tsx
+import { SearchField } from '@accelint/design-toolkit';
+
+<SearchField
+  variant="filled"
+  classNames={{
+    field: 'rounded-full',
+    input: 'text-lg',
+    search: 'text-blue-500',
+    clear: 'hover:bg-red-100',
+  }}
+  placeholder="Custom search..."
+/>
+```
+
+### Example: Search with icon customization
+
+```tsx
+import { SearchField } from '@accelint/design-toolkit';
+
+<SearchField
+  placeholder="Search..."
+  classNames={{
+    search: 'text-primary',
+    loading: 'text-blue-500 animate-spin',
+  }}
+  isLoading={isSearching}
+/>
+```
+
+## Related
+
+- [TextField](../text-field/index.md) - Single-line text input
+- [Input](../input/index.md) - Base input component
+- [Icon](../icon/index.md) - Icon component for search and clear icons
+- [ComboBoxField](../combobox-field/index.md) - Searchable select with autocomplete

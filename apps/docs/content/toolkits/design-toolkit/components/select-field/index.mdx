@@ -1,0 +1,282 @@
+---
+title: SelectField
+description: Dropdown select with integrated label, description, validation, and virtualized rendering for large datasets.
+source: packages/design-toolkit/src/components/select-field/index.tsx
+source_sha: 6d1bc566856925b82aae67a000bec3cda1725b56
+doc_sha: 7e06cf622483c04e237763215507873b69e36567
+deprecated: false
+updated: 2026-07-13
+---
+
+# SelectField
+
+Dropdown select with integrated label, description, validation, and virtualized rendering for large datasets.
+
+## Usage
+
+```tsx
+import { SelectField, OptionsItem } from '@accelint/design-toolkit';
+
+export function MyForm() {
+  return (
+    <SelectField label="Country" onSelectionChange={(key) => setCountry(key)}>
+      <OptionsItem id="us">United States</OptionsItem>
+      <OptionsItem id="ca">Canada</OptionsItem>
+      <OptionsItem id="mx">Mexico</OptionsItem>
+    </SelectField>
+  );
+}
+```
+
+## Reference
+
+```typescript
+interface SelectFieldProps extends Omit<AriaSelectProps, 'className'> {
+  label?: string;
+  description?: string;
+  errorMessage?: string;
+  size?: 'medium' | 'small';
+  isReadOnly?: boolean;
+  layoutOptions?: ListLayoutOptions;
+  classNames?: {
+    field?: string;
+    label?: LabelProps['className'];
+    trigger?: ButtonProps['className'];
+    value?: string;
+    description?: string;
+    error?: FieldErrorProps['className'];
+    popover?: PopoverProps['className'];
+  };
+}
+```
+
+### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `label` | `string` | - | No |
+| `description` | `string` | - | No |
+| `errorMessage` | `string` | - | No |
+| `size` | `'medium' \| 'small'` | `'medium'` | No |
+| `isReadOnly` | `boolean` | `false` | No |
+| `layoutOptions` | `ListLayoutOptions` | - | No |
+| `classNames` | `SelectFieldClassNames` | - | No |
+| `isInvalid` | `boolean` | `false` | No |
+| `isDisabled` | `boolean` | `false` | No |
+| `isRequired` | `boolean` | `false` | No |
+
+#### `label`
+
+Label text displayed above the select trigger. Automatically associates with the select for accessibility. Hidden when `size="small"`.
+
+#### `description`
+
+Helper text displayed below the select trigger. Hidden when `size="small"`, `isReadOnly`, or when the field is invalid.
+
+#### `errorMessage`
+
+Error message displayed when validation fails. Automatically sets `isInvalid` to `true` when provided.
+
+#### `size`
+
+Controls field sizing and visibility of label and description:
+- `medium` - Standard size with visible label and description (default)
+- `small` - Compact size, hides label and description
+
+#### `isReadOnly`
+
+Displays the selected value without allowing dropdown interaction. Useful for read-only forms or disabled states where you want to show the current value.
+
+#### `layoutOptions`
+
+Virtualizer layout options for rendering large lists efficiently. Enables rendering thousands of options without performance degradation.
+
+```typescript
+layoutOptions={{
+  estimatedRowHeight: 40,
+}}
+```
+
+#### `classNames`
+
+Custom CSS class names for select elements:
+- `field` - Container element
+- `label` - Label element
+- `trigger` - Trigger button element
+- `value` - Selected value display element
+- `description` - Description text element
+- `error` - Error message element
+- `popover` - Dropdown popover element
+
+### Inherited Props
+
+SelectField inherits all props from React Aria's `Select` component, including:
+- `selectedKey` / `defaultSelectedKey` - Controlled/uncontrolled selection
+- `onSelectionChange` - Called when selection changes (receives key)
+- `disabledKeys` - Array of disabled option keys
+- `items` - Collection items for dynamic rendering
+- `onOpenChange` - Called when dropdown opens/closes
+
+See [React Aria Select](https://react-spectrum.adobe.com/react-aria/Select.html) for full API reference.
+
+## Examples
+
+### Example: Basic select
+
+```tsx
+import { SelectField, OptionsItem } from '@accelint/design-toolkit';
+
+<SelectField label="Fruit" placeholder="Select a fruit">
+  <OptionsItem id="apple">Apple</OptionsItem>
+  <OptionsItem id="banana">Banana</OptionsItem>
+  <OptionsItem id="orange">Orange</OptionsItem>
+</SelectField>
+```
+
+### Example: With description
+
+```tsx
+import { SelectField, OptionsItem } from '@accelint/design-toolkit';
+
+<SelectField
+  label="Timezone"
+  description="Select your local timezone"
+  onSelectionChange={(key) => setTimezone(key)}
+>
+  <OptionsItem id="pst">Pacific Standard Time</OptionsItem>
+  <OptionsItem id="mst">Mountain Standard Time</OptionsItem>
+  <OptionsItem id="est">Eastern Standard Time</OptionsItem>
+</SelectField>
+```
+
+### Example: Required with validation
+
+```tsx
+import { SelectField, OptionsItem } from '@accelint/design-toolkit';
+
+<SelectField
+  label="Country"
+  isRequired
+  isInvalid={!selectedCountry}
+  errorMessage="Please select a country"
+>
+  <OptionsItem id="us">United States</OptionsItem>
+  <OptionsItem id="ca">Canada</OptionsItem>
+  <OptionsItem id="mx">Mexico</OptionsItem>
+</SelectField>
+```
+
+### Example: Disabled options
+
+```tsx
+import { SelectField, OptionsItem } from '@accelint/design-toolkit';
+
+<SelectField label="Status" disabledKeys={['pending']}>
+  <OptionsItem id="active">Active</OptionsItem>
+  <OptionsItem id="pending">Pending (unavailable)</OptionsItem>
+  <OptionsItem id="completed">Completed</OptionsItem>
+</SelectField>
+```
+
+### Example: Read-only display
+
+```tsx
+import { SelectField, OptionsItem } from '@accelint/design-toolkit';
+
+<SelectField
+  label="Account Type"
+  selectedKey="premium"
+  isReadOnly
+>
+  <OptionsItem id="free">Free</OptionsItem>
+  <OptionsItem id="premium">Premium</OptionsItem>
+  <OptionsItem id="enterprise">Enterprise</OptionsItem>
+</SelectField>
+```
+
+> **Good to know:** Read-only mode displays the selected value without allowing interaction. Use `isDisabled` if you want to indicate the field is temporarily unavailable.
+
+### Example: Small size variant
+
+```tsx
+import { SelectField, OptionsItem } from '@accelint/design-toolkit';
+
+<SelectField size="small" placeholder="Filter by status...">
+  <OptionsItem id="all">All</OptionsItem>
+  <OptionsItem id="active">Active</OptionsItem>
+  <OptionsItem id="archived">Archived</OptionsItem>
+</SelectField>
+```
+
+### Example: Rich options with descriptions
+
+```tsx
+import { SelectField, OptionsItem, OptionsItemLabel, OptionsItemDescription } from '@accelint/design-toolkit';
+
+<SelectField label="Plan">
+  <OptionsItem id="free">
+    <OptionsItemLabel>Free</OptionsItemLabel>
+    <OptionsItemDescription>Perfect for getting started</OptionsItemDescription>
+  </OptionsItem>
+  <OptionsItem id="pro">
+    <OptionsItemLabel>Pro</OptionsItemLabel>
+    <OptionsItemDescription>For professional use</OptionsItemDescription>
+  </OptionsItem>
+  <OptionsItem id="enterprise">
+    <OptionsItemLabel>Enterprise</OptionsItemLabel>
+    <OptionsItemDescription>Advanced features and support</OptionsItemDescription>
+  </OptionsItem>
+</SelectField>
+```
+
+### Example: Virtualized large list
+
+```tsx
+import { SelectField, OptionsItem } from '@accelint/design-toolkit';
+
+const countries = [...]; // 200+ countries
+
+<SelectField
+  label="Country"
+  items={countries}
+  layoutOptions={{ estimatedRowHeight: 40 }}
+>
+  {(country) => (
+    <OptionsItem id={country.code}>
+      {country.name}
+    </OptionsItem>
+  )}
+</SelectField>
+```
+
+> **Good to know:** Virtualization automatically renders only visible items, enabling smooth scrolling through thousands of options.
+
+### Example: Controlled selection
+
+```tsx
+import { useState } from 'react';
+import { SelectField, OptionsItem } from '@accelint/design-toolkit';
+
+export function ControlledExample() {
+  const [selected, setSelected] = useState('apple');
+
+  return (
+    <SelectField
+      label="Fruit"
+      selectedKey={selected}
+      onSelectionChange={setSelected}
+    >
+      <OptionsItem id="apple">Apple</OptionsItem>
+      <OptionsItem id="banana">Banana</OptionsItem>
+      <OptionsItem id="orange">Orange</OptionsItem>
+    </SelectField>
+  );
+}
+```
+
+## Related
+
+- [OptionsItem](../options/item.md) - Select option component
+- [OptionsItemLabel](../options/item-label.md) - Option label component
+- [OptionsItemDescription](../options/item-description.md) - Option description component
+- [ComboBoxField](../combobox-field/index.md) - Searchable select with autocomplete

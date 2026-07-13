@@ -1,0 +1,197 @@
+---
+title: NTDS Color Constants
+description: Standard NTDS color values for entity affiliation classification
+source: packages/ntds/src/constants.ts
+source_sha: 2afe4edb087acbdddfa133120a153f7cb4d8fe91
+doc_sha: 8d36f334d1d6a0f12c09f0e11cb02b0630cc0db9
+deprecated: false
+updated: 2026-07-13
+---
+
+# NTDS Color Constants
+
+Standard NTDS (Naval Tactical Data System) color values used for classifying and displaying entity affiliations in tactical displays.
+
+## Usage
+
+```typescript
+import {
+  NTDS_COLOR_FRIEND,
+  NTDS_COLOR_HOSTILE,
+  NTDS_COLOR_UNKNOWN,
+} from '@accelint/ntds/constants';
+
+function EntityIcon({ affiliation }) {
+  const color = affiliation === 'friend' 
+    ? NTDS_COLOR_FRIEND 
+    : NTDS_COLOR_HOSTILE;
+  
+  return <SvgAirFriend fill={color} />;
+}
+```
+
+## Reference
+
+### NTDS_COLOR_ASSUMED_FRIEND
+
+```typescript
+const NTDS_COLOR_ASSUMED_FRIEND: '#0E8F37';
+```
+
+Green color indicating units that are likely friendly based on available intelligence but not definitively confirmed.
+
+**Value:** `#0E8F37`
+
+### NTDS_COLOR_FRIEND
+
+```typescript
+const NTDS_COLOR_FRIEND: '#1484F4';
+```
+
+Blue color indicating units that are confirmed as friendly forces.
+
+**Value:** `#1484F4`
+
+### NTDS_COLOR_HOSTILE
+
+```typescript
+const NTDS_COLOR_HOSTILE: '#FF0033';
+```
+
+Red color indicating units that are confirmed as hostile or enemy forces.
+
+**Value:** `#FF0033`
+
+### NTDS_COLOR_NEUTRAL
+
+```typescript
+const NTDS_COLOR_NEUTRAL: '#5B137A';
+```
+
+Purple color indicating units that are confirmed as neutral, neither friendly nor hostile.
+
+**Value:** `#5B137A`
+
+### NTDS_COLOR_PENDING
+
+```typescript
+const NTDS_COLOR_PENDING: '#404040';
+```
+
+Dark gray color indicating units whose status is pending classification or awaiting further information.
+
+**Value:** `#404040`
+
+### NTDS_COLOR_SUSPECT
+
+```typescript
+const NTDS_COLOR_SUSPECT: '#FFAD38';
+```
+
+Orange color indicating units that are suspected to be hostile but not yet confirmed.
+
+**Value:** `#FFAD38`
+
+### NTDS_COLOR_UNKNOWN
+
+```typescript
+const NTDS_COLOR_UNKNOWN: '#EDDA0A';
+```
+
+Yellow color indicating units whose affiliation or status is completely unknown.
+
+**Value:** `#EDDA0A`
+
+## Examples
+
+### Example: Dynamic color selection
+
+```typescript
+import {
+  NTDS_COLOR_FRIEND,
+  NTDS_COLOR_HOSTILE,
+  NTDS_COLOR_NEUTRAL,
+  NTDS_COLOR_UNKNOWN,
+} from '@accelint/ntds/constants';
+
+type Affiliation = 'friend' | 'hostile' | 'neutral' | 'unknown';
+
+function getAffiliationColor(affiliation: Affiliation): string {
+  switch (affiliation) {
+    case 'friend':
+      return NTDS_COLOR_FRIEND;
+    case 'hostile':
+      return NTDS_COLOR_HOSTILE;
+    case 'neutral':
+      return NTDS_COLOR_NEUTRAL;
+    case 'unknown':
+      return NTDS_COLOR_UNKNOWN;
+  }
+}
+```
+
+### Example: Color mapping for all classifications
+
+```typescript
+import {
+  NTDS_COLOR_ASSUMED_FRIEND,
+  NTDS_COLOR_FRIEND,
+  NTDS_COLOR_HOSTILE,
+  NTDS_COLOR_NEUTRAL,
+  NTDS_COLOR_PENDING,
+  NTDS_COLOR_SUSPECT,
+  NTDS_COLOR_UNKNOWN,
+} from '@accelint/ntds/constants';
+
+const AFFILIATION_COLORS = {
+  assumedFriend: NTDS_COLOR_ASSUMED_FRIEND,
+  friend: NTDS_COLOR_FRIEND,
+  hostile: NTDS_COLOR_HOSTILE,
+  neutral: NTDS_COLOR_NEUTRAL,
+  pending: NTDS_COLOR_PENDING,
+  suspect: NTDS_COLOR_SUSPECT,
+  unknown: NTDS_COLOR_UNKNOWN,
+} as const;
+```
+
+### Example: Using with NTDS icons
+
+```typescript
+import { NTDS_COLOR_HOSTILE } from '@accelint/ntds/constants';
+import { SvgAirHostile } from '@accelint/ntds/core/air-hostile';
+
+function HostileAircraft() {
+  return (
+    <SvgAirHostile 
+      fill={NTDS_COLOR_HOSTILE}
+      width={32}
+      height={32}
+    />
+  );
+}
+```
+
+### Example: CSS custom properties
+
+```typescript
+import { NTDS_COLOR_FRIEND, NTDS_COLOR_HOSTILE } from '@accelint/ntds/constants';
+
+const styles = {
+  '--color-friend': NTDS_COLOR_FRIEND,
+  '--color-hostile': NTDS_COLOR_HOSTILE,
+} as React.CSSProperties;
+
+function TacticalDisplay() {
+  return (
+    <div style={styles}>
+      {/* Elements can reference CSS vars */}
+    </div>
+  );
+}
+```
+
+## Related
+
+- [SvgAirFriend](./core/air-friend.mdx) - Friendly air entity icon component
+- [SvgAirHostile](./core/air-hostile.mdx) - Hostile air entity icon component
+- [Spritesheet Constants](./spritesheets/masked.mdx) - Spritesheet ID constants for COP usage

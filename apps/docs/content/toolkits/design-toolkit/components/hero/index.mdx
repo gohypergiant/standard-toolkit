@@ -1,0 +1,189 @@
+---
+title: Hero
+description: Versatile component that displays an icon alongside primary and secondary content with automatic layout organization
+source: packages/design-toolkit/src/components/hero/index.tsx
+source_sha: f78b001737703bafe2b70bfac1e9afdf6eb85da2
+doc_sha: dc374d72842be8ceed2366600f20713d3d1add58
+deprecated: false
+updated: 2026-07-13
+---
+
+# Hero
+
+Versatile component that displays an icon alongside primary and secondary content with automatic layout organization supporting both stacked and grid layouts.
+
+## Usage
+
+```tsx
+import { Hero, HeroTitle, HeroSubtitle, Icon } from '@accelint/design-toolkit';
+import { Placeholder } from '@accelint/icons';
+
+export function PageHeader() {
+  return (
+    <Hero>
+      <Icon><Placeholder /></Icon>
+      <HeroTitle>Primary Title</HeroTitle>
+      <HeroSubtitle>Secondary information</HeroSubtitle>
+    </Hero>
+  );
+}
+```
+
+## Reference
+
+```typescript
+interface HeroProps {
+  children: React.ReactNode;
+  classNames?: {
+    hero?: string;
+    icon?: string;
+    title?: string;
+    subtitle?: string;
+  };
+  compact?: boolean;
+}
+```
+
+### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `children` | `React.ReactNode` | - | Yes |
+| `classNames` | `object` | - | No |
+| `compact` | `boolean` | `false` | No |
+
+#### `children`
+
+Child components are automatically organized by type:
+- **Icon** - Only one allowed, displayed prominently
+- **HeroTitle** - Only one allowed, primary heading
+- **HeroSubtitle** - Any number allowed, secondary content
+
+#### `classNames`
+
+Custom CSS classes for Hero sub-elements:
+- `hero` - Root container
+- `icon` - Icon wrapper
+- `title` - Title heading
+- `subtitle` - Subtitle text elements
+
+#### `compact`
+
+Controls layout mode:
+- `false` - Stack layout with vertical arrangement and larger icon (default)
+- `true` - Grid layout with horizontal arrangement and smaller icon
+
+## Examples
+
+### Example: Basic hero with icon and content
+
+```tsx
+import { Hero, HeroTitle, HeroSubtitle, Icon } from '@accelint/design-toolkit';
+import { Settings } from '@accelint/icons';
+
+<Hero>
+  <Icon><Settings /></Icon>
+  <HeroTitle>Settings</HeroTitle>
+  <HeroSubtitle>Manage your application preferences</HeroSubtitle>
+</Hero>
+```
+
+### Example: Compact grid layout
+
+```tsx
+import { Hero, HeroTitle, HeroSubtitle, Icon } from '@accelint/design-toolkit';
+import { User } from '@accelint/icons';
+
+<Hero compact>
+  <Icon><User /></Icon>
+  <HeroTitle>Profile</HeroTitle>
+  <HeroSubtitle>View and edit your profile information</HeroSubtitle>
+</Hero>
+```
+
+### Example: Multiple subtitle lines
+
+```tsx
+import { Hero, HeroTitle, HeroSubtitle, Icon } from '@accelint/design-toolkit';
+import { Dashboard } from '@accelint/icons';
+
+<Hero>
+  <Icon><Dashboard /></Icon>
+  <HeroTitle>Dashboard</HeroTitle>
+  <HeroSubtitle>Welcome back, John Doe</HeroSubtitle>
+  <HeroSubtitle>Last login: 2 hours ago</HeroSubtitle>
+</Hero>
+```
+
+### Example: Custom styling
+
+```tsx
+import { Hero, HeroTitle, HeroSubtitle, Icon } from '@accelint/design-toolkit';
+import { Info } from '@accelint/icons';
+
+<Hero
+  classNames={{
+    hero: 'bg-blue-50 p-4 rounded',
+    title: 'text-blue-900',
+    subtitle: 'text-blue-700'
+  }}
+>
+  <Icon><Info /></Icon>
+  <HeroTitle>Information</HeroTitle>
+  <HeroSubtitle>Important details about your account</HeroSubtitle>
+</Hero>
+```
+
+### Example: Without icon
+
+```tsx
+import { Hero, HeroTitle, HeroSubtitle } from '@accelint/design-toolkit';
+
+<Hero>
+  <HeroTitle>Text Only Header</HeroTitle>
+  <HeroSubtitle>No icon required for simple headers</HeroSubtitle>
+</Hero>
+```
+
+## Layout Modes
+
+### Stack Layout (default)
+
+Vertical arrangement with larger icon:
+```
+┌─────────────┐
+│    [Icon]   │
+│   (large)   │
+├─────────────┤
+│   Title     │
+├─────────────┤
+│  Subtitle   │
+└─────────────┘
+```
+
+### Grid Layout (compact)
+
+Horizontal arrangement with smaller icon:
+```
+┌──────┬────────────┐
+│      │   Title    │
+│[Icon]├────────────┤
+│      │  Subtitle  │
+└──────┴────────────┘
+```
+
+## Multi-Part Structure
+
+Hero is composed of several sub-components:
+
+- **Hero** - Root container with layout management
+- **HeroTitle** - Primary heading (automatically uses h2)
+- **HeroSubtitle** - Secondary content (can have multiple)
+
+> **Good to know:** Hero automatically provides context for Icon sizing and Heading level, so you don't need to specify these props manually.
+
+## Related
+
+- [HeroTitle](./title.mdx) - Primary heading component
+- [HeroSubtitle](./subtitle.mdx) - Secondary content component
+- [Icon](../icon/index.mdx) - Icon component with automatic sizing

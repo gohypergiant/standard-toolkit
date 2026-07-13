@@ -1,0 +1,249 @@
+---
+title: getLogger
+description: Returns a singleton LogLayer logger instance with automatic configuration
+source: packages/logger/src/default/index.ts
+source_sha: 5d8f26d3627b503804e9b8a7cdeb0a9590b09439
+doc_sha: ed4f5ff1514b5c3fe98b5765cbe67436713e65b8
+deprecated: false
+updated: 2026-07-13
+---
+
+# getLogger
+
+Returns a singleton LogLayer logger instance with automatic configuration.
+
+## Usage
+
+```typescript
+import { getLogger } from '@accelint/logger';
+
+const logger = getLogger({
+  enabled: true,
+  env: process.env.NODE_ENV as 'production' | 'development',
+  level: 'info',
+  prefix: '[MyApp]',
+});
+
+logger.info('Application started');
+logger.withMetadata({ userId: 123 }).warn('Token expiring soon');
+```
+
+## Reference
+
+```typescript
+function getLogger(opts: LoggerOptions): LogLayer
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `opts` | `LoggerOptions` | Logger configuration options |
+| `opts.enabled` | `boolean` | Whether logging is active; `false` makes all calls no-ops |
+| `opts.level` | `LogLevel` | Minimum log level to output (default: `'debug'`) |
+| `opts.env` | `'production' \| 'development'` | Runtime environment; controls server detection (default: `'development'`) |
+| `opts.pretty` | `boolean` | Use pretty console output; `false` emits structured JSON (default: `true`) |
+| `opts.prefix` | `string` | String prepended to all log messages (default: `''`) |
+| `opts.plugins` | `LogLayerPlugin[]` | Additional plugins applied after the built-in ones |
+| `opts.transports` | `LogLayerTransport[]` | Custom transports that replace the default console transport |
+| `opts.groups` | `LogGroupsConfig` | Named group configuration for conditional group logging |
+
+### Returns
+
+Returns a configured LogLayer instance with the following built-in features:
+
+- **Callsite tracking** - Adds source file location to every log entry
+- **Environment detection** - Adds server/browser context to every log entry
+- **Error serialization** - Automatically serializes Error objects via serialize-error
+- **One-way log level manager** - Log level can only be raised (made more restrictive) after initialization
+
+> **Good to know:** This function implements the singleton pattern. The first call creates and configures the logger with the provided options. All subsequent calls return the same instance and ignore new options. If you need multiple independent logger instances, use [`bootstrap`](./bootstrap.md) directly.
+
+## Examples
+
+### Example: Basic application logger
+
+```typescript
+import { getLogger } from '@accelint/logger';
+
+const logger = getLogger({
+  enabled: true,
+  env: process.env.NODE_ENV as 'production' | 'development',
+  level: 'info',
+  prefix: '[API]',
+});
+
+logger.info('Server listening', { port: 3000 });
+logger.error('Request failed', { statusCode: 500, path: '/api/users' });
+```
+
+### Example: Development logger with debug output
+
+```typescript
+import { getLogger, DEBUG } from '@accelint/logger';
+
+const logger = getLogger({
+  enabled: true,
+  level: DEBUG,
+  env: 'development',
+  pretty: true,
+});
+
+logger.debug('Request received', {
+  method: 'POST',
+  path: '/api/auth/login',
+  headers: { 'content-type': 'application/json' },
+});
+```
+
+### Example: Production logger with structured JSON
+
+```typescript
+import { getLogger, WARN } from '@accelint/logger';
+
+const logger = getLogger({
+  enabled: true,
+  level: WARN,
+  env: 'production',
+  pretty: false, // Outputs JSON for log aggregation
+});
+
+logger.warn('High memory usage', {
+  memoryUsage: process.memoryUsage(),
+  threshold: 0.8,
+});
+```
+
+### Example: Logger with metadata context
+
+```typescript
+import { getLogger } from '@accelint/logger';
+
+const logger = getLogger({ enabled: true });
+
+// Add context that persists across log calls
+const requestLogger = logger.withMetadata({
+  requestId: 'req_abc123',
+  userId: 'usr_456',
+});
+
+requestLogger.info('Processing request');
+requestLogger.info('Request completed');
+// Both logs include requestId and userId
+```
+
+### Example: Disabling logging entirely
+
+```typescript
+import { getLogger } from '@accelint/logger';
+
+const logger = getLogger({
+  enabled: false, // All log calls become no-ops
+  level: 'debug',
+});
+
+logger.info('This will not log');
+logger.error('Neither will this');
+```
+
+### Example: Custom plugins
+
+```typescript
+import { getLogger } from '@accelint/logger';
+import type { LogLayerPlugin } from '@loglayer/shared';
+
+const performancePlugin: LogLayerPlugin = {
+  id: 'performance',
+  onBeforeDataOut({ data }) {
+    return {
+      ...data,
+      timestamp: Date.now(),
+      memory: process.memoryUsage().heapUsed,
+    };
+  },
+};
+
+const logger = getLogger({
+  enabled: true,
+  plugins: [performancePlugin],
+});
+
+logger.info('Custom plugin data included in every log');
+```
+
+### Example: Multiple custom transports
+
+```typescript
+import { getLogger, prettyTransport, structuredTransport } from '@accelint/logger';
+
+// Log to console (pretty) and JSON (for log aggregation)
+const logger = getLogger({
+  enabled: true,
+  transports: [
+    prettyTransport({ level: 'debug' }),
+    structuredTransport({ level: 'info' }),
+  ],
+});
+
+logger.debug('Only in pretty console');
+logger.info('In both pretty console and JSON');
+```
+
+### Example: Log groups for conditional logging
+
+```typescript
+import { getLogger } from '@accelint/logger';
+
+const logger = getLogger({
+  enabled: true,
+  groups: {
+    database: { enabled: true },
+    cache: { enabled: true },
+    network: { enabled: false }, // Network logs disabled
+  },
+});
+
+logger.withGroup('database').info('Query executed'); // Logs
+logger.withGroup('cache').info('Cache hit'); // Logs
+logger.withGroup('network').info('HTTP request'); // Does not log
+```
+
+### Example: Singleton behavior
+
+```typescript
+import { getLogger } from '@accelint/logger';
+
+// First call: creates logger with these options
+const logger1 = getLogger({ enabled: true, level: 'debug' });
+
+// Second call: returns same instance, ignores new options
+const logger2 = getLogger({ enabled: true, level: 'error' });
+
+console.log(logger1 === logger2); // true
+// Both references point to the same logger instance configured with level: 'debug'
+```
+
+### Example: Module-specific prefix
+
+```typescript
+import { getLogger } from '@accelint/logger';
+
+const logger = getLogger({
+  enabled: true,
+  prefix: '[AuthService]',
+});
+
+logger.info('User authenticated'); // [AuthService] User authenticated
+logger.error('Authentication failed'); // [AuthService] Authentication failed
+```
+
+> **Good to know:** The logger automatically includes callsite information (file:line:column) in the log data, making it easy to trace where log calls originate. This feature uses the `callsitePlugin` which is enabled by default.
+
+## Related
+
+- [bootstrap](./bootstrap.md) - Create independent logger instances (bypasses singleton)
+- [callsitePlugin](../plugins/callsite.md) - Source location tracking
+- [environmentPlugin](../plugins/environment.md) - Server/browser context
+- [prettyTransport](../transports/pretty.md) - Pretty console output
+- [structuredTransport](../transports/structured.md) - JSON output
+- [LogLayer Configuration](https://loglayer.dev/configuration.html) - Upstream documentation

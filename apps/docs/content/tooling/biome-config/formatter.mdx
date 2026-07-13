@@ -1,0 +1,314 @@
+---
+title: Formatter Configuration
+description: Consistent code formatting settings for JavaScript, TypeScript, and JSON files
+source: tooling/biome-config/formatter.json
+source_sha: 1a0375e23e1e660d3f41b8bd0824d222525dc0ce
+doc_sha: 4e71c26a070a31239a5b91098bcc68d547b8a44a
+deprecated: false
+updated: 2026-07-13
+---
+
+# Formatter Configuration
+
+Consistent code formatting settings for JavaScript, TypeScript, and JSON files.
+
+## Usage
+
+Import the formatter configuration in your `biome.json`:
+
+```json
+{
+  "$schema": "https://biomejs.dev/schemas/2.3.8/schema.json",
+  "extends": ["@accelint/biome-config/formatter"]
+}
+```
+
+## General Settings
+
+### Indentation
+
+- **Style**: Spaces
+- **Width**: 2 spaces
+
+```typescript
+// ✅ Formatted output
+function example() {
+  return {
+    nested: {
+      value: 'two-space indentation'
+    }
+  };
+}
+```
+
+### Line Width
+
+- **Maximum**: 80 characters
+- Helps maintain readability and enables side-by-side diffs
+
+```typescript
+// ✅ Within line width
+const message = 'Short message';
+
+// ✅ Long lines are wrapped
+const longMessage =
+  'This is a very long message that exceeds 80 characters and will be wrapped';
+```
+
+### Line Endings
+
+- **Style**: LF (Unix-style)
+- Ensures consistent line endings across platforms
+
+### Attribute Position
+
+- **Setting**: Auto
+- Automatically determines optimal JSX attribute positioning
+
+### Format With Errors
+
+- **Enabled**: false
+- Prevents formatting files with syntax errors
+
+## JavaScript/TypeScript Settings
+
+### Semicolons
+
+- **Style**: Always
+- Explicit semicolons prevent ASI edge cases
+
+```typescript
+// ✅ Explicit semicolons
+const value = 42;
+return value;
+
+// ❌ Would be formatted with semicolons
+const value = 42
+return value
+```
+
+### Quote Style
+
+- **JavaScript/TypeScript**: Single quotes
+- **JSX**: Single quotes
+
+```typescript
+// ✅ Single quotes
+const message = 'Hello world';
+const name = 'John';
+
+// ✅ JSX with single quotes
+<Button label='Click me' />
+```
+
+### Quote Properties
+
+- **Style**: As needed
+- Quotes object properties only when required
+
+```typescript
+// ✅ Unquoted when possible
+const config = {
+  apiKey: 'key',
+  maxRetries: 3
+};
+
+// ✅ Quoted when necessary
+const config = {
+  'api-key': 'key',
+  'max-retries': 3
+};
+```
+
+### Trailing Commas
+
+- **Style**: All
+- Includes trailing commas in arrays, objects, and function parameters
+
+```typescript
+// ✅ Trailing commas
+const items = [
+  'first',
+  'second',
+  'third',
+];
+
+const config = {
+  apiKey: 'key',
+  timeout: 1000,
+};
+
+function example(
+  param1: string,
+  param2: number,
+) {
+  // ...
+}
+```
+
+### Arrow Parentheses
+
+- **Style**: Always
+- Always include parentheses around arrow function parameters
+
+```typescript
+// ✅ Always parentheses
+const double = (x) => x * 2;
+const identity = (x) => x;
+
+// ❌ Would be formatted with parentheses
+const double = x => x * 2;
+```
+
+### Bracket Spacing
+
+- **Enabled**: true
+- Adds spaces inside object literal braces
+
+```typescript
+// ✅ Spacing enabled
+const config = { apiKey: 'key', timeout: 1000 };
+
+// ❌ Without spacing
+const config = {apiKey: 'key', timeout: 1000};
+```
+
+### Bracket Same Line
+
+- **Enabled**: false
+- Places closing JSX bracket on new line
+
+```tsx
+// ✅ Bracket on new line
+<Component
+  prop1='value1'
+  prop2='value2'
+>
+  Content
+</Component>
+
+// ❌ Bracket on same line
+<Component
+  prop1='value1'
+  prop2='value2'>
+  Content
+</Component>
+```
+
+## JSON Settings
+
+### Parser Options
+
+- **Allow Comments**: false
+- **Allow Trailing Commas**: false
+
+Enforces strict JSON standards for interoperability.
+
+```json
+{
+  "name": "package",
+  "version": "1.0.0"
+}
+```
+
+### Trailing Commas
+
+- **Style**: None
+- No trailing commas in JSON files
+
+```json
+{
+  "dependencies": {
+    "react": "^18.0.0"
+  }
+}
+```
+
+## Example: Before and After
+
+### Before Formatting
+
+```typescript
+const config={apiKey:"key",maxRetries:3,timeout:5000}
+
+function fetchData(url,options)
+{
+return fetch(url,{...options,headers:{'Content-Type':'application/json'}})
+.then(response=>response.json())
+}
+
+const items=['first','second','third']
+```
+
+### After Formatting
+
+```typescript
+const config = { apiKey: 'key', maxRetries: 3, timeout: 5000 };
+
+function fetchData(url, options) {
+  return fetch(url, {
+    ...options,
+    headers: { 'Content-Type': 'application/json' },
+  }).then((response) => response.json());
+}
+
+const items = ['first', 'second', 'third'];
+```
+
+## Customization
+
+Override formatting settings in your `biome.json`:
+
+```json
+{
+  "extends": ["@accelint/biome-config/formatter"],
+  "formatter": {
+    "lineWidth": 100,
+    "indentWidth": 4
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "double",
+      "trailingCommas": "es5"
+    }
+  }
+}
+```
+
+## Editor Integration
+
+### Format on Save
+
+Configure your editor to format on save:
+
+**VSCode** (`.vscode/settings.json`):
+```json
+{
+  "editor.defaultFormatter": "biomejs.biome",
+  "editor.formatOnSave": true
+}
+```
+
+### Format Selection
+
+Most editors support formatting a selection. Check your editor's Biome integration documentation.
+
+## CLI Usage
+
+```bash
+# Format all files
+pnpm biome format --write .
+
+# Check formatting without changes
+pnpm biome format .
+
+# Format specific files
+pnpm biome format --write src/**/*.ts
+```
+
+## Related
+
+- [Biome Formatter](https://biomejs.dev/formatter/)
+- [Linter Configuration](./linter)
+- [Analyzer Configuration](./analyzer)
+- [Prettier Configuration](../prettier-config)

@@ -1,0 +1,162 @@
+---
+title: createIterable
+description: Creates an iterable iterator object from a callback function
+source: packages/core/src/iterable/create-iterable/index.ts
+source_sha: ede5f65230c970fff2c933c28b2b3821b3c5f1ba
+doc_sha: 60cfbe83bb02d2b9e434bd93c94f95f5a05c8b4b
+deprecated: false
+updated: 2026-07-13
+---
+
+# createIterable
+
+Creates an iterable iterator object with a custom callback as the `next` method. Enables building custom iterators that work with `for...of` loops and spread syntax.
+
+## Usage
+
+```typescript
+import { createIterable } from '@accelint/core';
+
+// Simple counter iterator
+let count = 0;
+const counter = createIterable(() =>
+  count < 3 ? { value: count++, done: false } : { value: undefined, done: true }
+);
+
+for (const num of counter) {
+  console.log(num); // 0, 1, 2
+}
+```
+
+## Reference
+
+```typescript
+function createIterable<T>(
+  iterCb: () => IteratorResult<T>
+): IterableIterator<T>
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `iterCb` | `() => IteratorResult<T>` | The callback function called for each iteration. Returns `{ value: T, done: false }` to yield a value, or `{ value: T \| undefined, done: true }` to end iteration. |
+
+### Returns
+
+Returns an iterable iterator object that can be used with `for...of` loops, spread syntax, and other iteration protocols.
+
+### Type Parameters
+
+- `T` - The type of values yielded by the iterator
+
+## Examples
+
+### Example: Finite sequence
+
+```typescript
+import { createIterable } from '@accelint/core';
+
+const countdown = (from: number) => {
+  let current = from;
+  return createIterable(() => {
+    if (current >= 0) {
+      return { value: current--, done: false };
+    }
+    return { value: undefined, done: true };
+  });
+};
+
+const sequence = countdown(3);
+[...sequence]; // [3, 2, 1, 0]
+```
+
+### Example: Custom data structure iteration
+
+```typescript
+import { createIterable } from '@accelint/core';
+
+interface LinkedNode<T> {
+  value: T;
+  next: LinkedNode<T> | null;
+}
+
+function iterateList<T>(head: LinkedNode<T> | null) {
+  let current = head;
+  
+  return createIterable(() => {
+    if (current === null) {
+      return { value: undefined, done: true };
+    }
+    
+    const value = current.value;
+    current = current.next;
+    return { value, done: false };
+  });
+}
+
+const list = {
+  value: 1,
+  next: { value: 2, next: { value: 3, next: null } }
+};
+
+[...iterateList(list)]; // [1, 2, 3]
+```
+
+### Example: Infinite sequence with early termination
+
+```typescript
+import { createIterable } from '@accelint/core';
+
+const fibonacci = () => {
+  let a = 0, b = 1;
+  
+  return createIterable(() => {
+    const value = a;
+    [a, b] = [b, a + b];
+    return { value, done: false }; // Never done - infinite sequence
+  });
+};
+
+// Take first 10 fibonacci numbers
+const fib = fibonacci();
+const first10 = [];
+for (const num of fib) {
+  if (first10.length >= 10) break;
+  first10.push(num);
+}
+// [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
+```
+
+### Example: Async-style iteration (synchronous)
+
+```typescript
+import { createIterable } from '@accelint/core';
+
+function* generateIds() {
+  let id = 1;
+  while (true) yield id++;
+}
+
+const idGenerator = generateIds();
+
+const getNextIds = (count: number) => {
+  const ids: number[] = [];
+  return createIterable(() => {
+    if (ids.length < count) {
+      return { value: idGenerator.next().value as number, done: false };
+    }
+    return { value: undefined, done: true };
+  });
+};
+
+[...getNextIds(5)]; // [1, 2, 3, 4, 5]
+```
+
+> **Good to know:** The callback function captures state via closure. For infinite sequences, the iterator never returns `done: true`. Use early breaks or limits to prevent infinite loops.
+
+## Related
+
+- [range](../range/index.md) - Create numeric range iterator
+- [map](../../array/map/index.md) - Transform array elements
+- [reduce](../../array/reduce/index.md) - Reduce array to single value

@@ -1,0 +1,325 @@
+---
+title: NTDS SVG Icon Components
+description: React SVG components for NTDS tactical symbols with customizable fill colors
+source: packages/ntds/src/core/*.tsx
+source_sha: dac866492a280115c6880b7279431d67223c0396
+doc_sha: 623d010484be61e36d1e8d46279b95e6ece96430
+deprecated: false
+updated: 2026-07-13
+---
+
+# NTDS SVG Icon Components
+
+React SVG icon components representing NTDS (Naval Tactical Data System) tactical symbols for military entities. Each component renders a 24×24 SVG with customizable fill color and accessibility support.
+
+## Usage
+
+```tsx
+import { SvgAirFriend } from '@accelint/ntds/core/air-friend';
+import { NTDS_COLOR_FRIEND } from '@accelint/ntds/constants';
+
+function TacticalDisplay() {
+  return (
+    <SvgAirFriend 
+      fill={NTDS_COLOR_FRIEND}
+      width={32}
+      height={32}
+      title="Friendly Aircraft"
+    />
+  );
+}
+```
+
+## Reference
+
+All NTDS SVG components share a common interface:
+
+```typescript
+interface Props {
+  title?: string;
+  titleId?: string;
+}
+
+type SvgComponent = (props: SVGProps<SVGSVGElement> & Props) => JSX.Element;
+```
+
+### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `fill` | `string` | `#FF69B4` | No |
+| `width` | `number \| string` | `24` | No |
+| `height` | `number \| string` | `24` | No |
+| `title` | `string` | - | No |
+| `titleId` | `string` | - | No |
+| `className` | `string` | - | No |
+| `style` | `CSSProperties` | - | No |
+
+#### `fill`
+
+Color value for the SVG path fills. Defaults to hot pink (`#FF69B4`) as a visual indicator that fill should be explicitly set.
+
+Use with NTDS color constants for proper affiliation colors:
+- `NTDS_COLOR_FRIEND` - Blue for friendly entities
+- `NTDS_COLOR_HOSTILE` - Red for hostile entities
+- `NTDS_COLOR_UNKNOWN` - Yellow for unknown entities
+- And other NTDS standard colors
+
+#### `title`
+
+Accessible title for screen readers. When provided, the SVG element includes an `aria-labelledby` attribute referencing the title.
+
+> **Good to know:** Always provide a `title` prop when the icon conveys important information, especially in interactive contexts.
+
+#### `titleId`
+
+Custom ID for the `<title>` element. Defaults to automatic ID generation if not provided. Useful for ensuring unique IDs when multiple instances exist on the page.
+
+### Inherited Props
+
+All components accept standard SVGSVGElement props including:
+- `className` - CSS class name
+- `style` - Inline styles
+- `onClick` - Click handler
+- `onMouseEnter` / `onMouseLeave` - Mouse events
+- `aria-*` - Additional ARIA attributes
+
+## Available Components
+
+### Air Entities
+
+| Component | Import Path | Description |
+|-----------|-------------|-------------|
+| `SvgAirFriend` | `@accelint/ntds/core/air-friend` | Friendly aircraft |
+| `SvgAirHostile` | `@accelint/ntds/core/air-hostile` | Hostile aircraft |
+| `SvgAirUnknown` | `@accelint/ntds/core/air-unknown` | Unknown aircraft |
+| `SvgAirBaseFriend` | `@accelint/ntds/core/air-base-friend` | Friendly air base |
+| `SvgAirBaseHostile` | `@accelint/ntds/core/air-base-hostile` | Hostile air base |
+| `SvgAirBaseUnknown` | `@accelint/ntds/core/air-base-unknown` | Unknown air base |
+| `SvgAirGroupFriend` | `@accelint/ntds/core/air-group-friend` | Friendly air group |
+| `SvgAirGroupHostile` | `@accelint/ntds/core/air-group-hostile` | Hostile air group |
+| `SvgAirGroupUnknown` | `@accelint/ntds/core/air-group-unknown` | Unknown air group |
+| `SvgHelicopterFriend` | `@accelint/ntds/core/helicopter-friend` | Friendly helicopter |
+| `SvgHelicopterHostile` | `@accelint/ntds/core/helicopter-hostile` | Hostile helicopter |
+| `SvgHelicopterUnknown` | `@accelint/ntds/core/helicopter-unknown` | Unknown helicopter |
+
+### Surface Entities
+
+| Component | Import Path | Description |
+|-----------|-------------|-------------|
+| `SvgSurfaceFriend` | `@accelint/ntds/core/surface-friend` | Friendly surface unit |
+| `SvgSurfaceHostile` | `@accelint/ntds/core/surface-hostile` | Hostile surface unit |
+| `SvgSurfaceUnknown` | `@accelint/ntds/core/surface-unknown` | Unknown surface unit |
+| `SvgSurfaceGroupFriend` | `@accelint/ntds/core/surface-group-friend` | Friendly surface group |
+| `SvgSurfaceGroupHostile` | `@accelint/ntds/core/surface-group-hostile` | Hostile surface group |
+| `SvgSurfaceGroupUnknown` | `@accelint/ntds/core/surface-group-unknown` | Unknown surface group |
+| `SvgCarrierFriend` | `@accelint/ntds/core/carrier-friend` | Friendly carrier |
+| `SvgCarrierHostile` | `@accelint/ntds/core/carrier-hostile` | Hostile carrier |
+| `SvgCarrierUnknown` | `@accelint/ntds/core/carrier-unknown` | Unknown carrier |
+
+### Subsurface Entities
+
+| Component | Import Path | Description |
+|-----------|-------------|-------------|
+| `SvgSubSurfaceFriend` | `@accelint/ntds/core/sub-surface-friend` | Friendly submarine |
+| `SvgSubSurfaceHostile` | `@accelint/ntds/core/sub-surface-hostile` | Hostile submarine |
+| `SvgSubSurfaceUnknown` | `@accelint/ntds/core/sub-surface-unknown` | Unknown submarine |
+| `SvgSubGroupFriend` | `@accelint/ntds/core/sub-group-friend` | Friendly submarine group |
+| `SvgSubGroupHostile` | `@accelint/ntds/core/sub-group-hostile` | Hostile submarine group |
+| `SvgSubGroupUnknown` | `@accelint/ntds/core/sub-group-unknown` | Unknown submarine group |
+
+### Land Entities
+
+| Component | Import Path | Description |
+|-----------|-------------|-------------|
+| `SvgLandFriend` | `@accelint/ntds/core/land-friend` | Friendly land unit |
+| `SvgLandHostile` | `@accelint/ntds/core/land-hostile` | Hostile land unit |
+| `SvgLandUnknown` | `@accelint/ntds/core/land-unknown` | Unknown land unit |
+| `SvgBaseFriend` | `@accelint/ntds/core/base-friend` | Friendly base |
+| `SvgBaseHostile` | `@accelint/ntds/core/base-hostile` | Hostile base |
+| `SvgBaseUnknown` | `@accelint/ntds/core/base-unknown` | Unknown base |
+
+### Weapons & Ordnance
+
+| Component | Import Path | Description |
+|-----------|-------------|-------------|
+| `SvgMissileFriend` | `@accelint/ntds/core/missile-friend` | Friendly missile |
+| `SvgMissileHostile` | `@accelint/ntds/core/missile-hostile` | Hostile missile |
+| `SvgMissileUnknown` | `@accelint/ntds/core/missile-unknown` | Unknown missile |
+| `SvgTorpedoFriend` | `@accelint/ntds/core/torpedo-friend` | Friendly torpedo |
+| `SvgTorpedoHostile` | `@accelint/ntds/core/torpedo-hostile` | Hostile torpedo |
+| `SvgTorpedoUnknown` | `@accelint/ntds/core/torpedo-unknown` | Unknown torpedo |
+| `SvgTarget` | `@accelint/ntds/core/target` | Target designator |
+| `SvgSam` | `@accelint/ntds/core/sam` | Surface-to-air missile site |
+| `SvgMineField` | `@accelint/ntds/core/mine-field` | Mine field |
+
+### Infrastructure & Facilities
+
+| Component | Import Path | Description |
+|-----------|-------------|-------------|
+| `SvgPort` | `@accelint/ntds/core/port` | Port facility |
+| `SvgRunway` | `@accelint/ntds/core/runway` | Runway |
+| `SvgStructure` | `@accelint/ntds/core/structure` | Generic structure |
+| `SvgPol` | `@accelint/ntds/core/pol` | Petroleum, oils, and lubricants facility |
+| `SvgCommunications` | `@accelint/ntds/core/communications` | Communications facility |
+
+## Examples
+
+### Example: Entity with standard color
+
+```tsx
+import { SvgAirFriend } from '@accelint/ntds/core/air-friend';
+import { NTDS_COLOR_FRIEND } from '@accelint/ntds/constants';
+
+function FriendlyAircraft() {
+  return (
+    <SvgAirFriend 
+      fill={NTDS_COLOR_FRIEND}
+      title="Friendly F-16"
+    />
+  );
+}
+```
+
+### Example: Dynamic affiliation rendering
+
+```tsx
+import { NTDS_COLOR_FRIEND, NTDS_COLOR_HOSTILE } from '@accelint/ntds/constants';
+import { SvgAirFriend } from '@accelint/ntds/core/air-friend';
+import { SvgAirHostile } from '@accelint/ntds/core/air-hostile';
+
+type Entity = {
+  id: string;
+  affiliation: 'friend' | 'hostile';
+};
+
+function EntityIcon({ entity }: { entity: Entity }) {
+  if (entity.affiliation === 'hostile') {
+    return (
+      <SvgAirHostile 
+        fill={NTDS_COLOR_HOSTILE}
+        title={`Hostile aircraft ${entity.id}`}
+      />
+    );
+  }
+  
+  return (
+    <SvgAirFriend 
+      fill={NTDS_COLOR_FRIEND}
+      title={`Friendly aircraft ${entity.id}`}
+    />
+  );
+}
+```
+
+### Example: Custom sizing
+
+```tsx
+import { SvgSurfaceFriend } from '@accelint/ntds/core/surface-friend';
+import { NTDS_COLOR_FRIEND } from '@accelint/ntds/constants';
+
+function LargeShipIcon() {
+  return (
+    <SvgSurfaceFriend 
+      fill={NTDS_COLOR_FRIEND}
+      width={48}
+      height={48}
+      title="USS Enterprise"
+    />
+  );
+}
+```
+
+### Example: Interactive icon with events
+
+```tsx
+import { SvgHelicopterFriend } from '@accelint/ntds/core/helicopter-friend';
+import { NTDS_COLOR_FRIEND } from '@accelint/ntds/constants';
+
+function InteractiveHelicopter({ onSelect }) {
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <SvgHelicopterFriend
+      fill={isHovered ? '#00A0FF' : NTDS_COLOR_FRIEND}
+      width={32}
+      height={32}
+      title="Helicopter Unit 12"
+      onClick={onSelect}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      style={{ cursor: 'pointer', transition: 'fill 0.2s' }}
+    />
+  );
+}
+```
+
+### Example: Multiple entities on tactical map
+
+```tsx
+import { SvgAirFriend } from '@accelint/ntds/core/air-friend';
+import { SvgSurfaceHostile } from '@accelint/ntds/core/surface-hostile';
+import { SvgSubSurfaceUnknown } from '@accelint/ntds/core/sub-surface-unknown';
+import {
+  NTDS_COLOR_FRIEND,
+  NTDS_COLOR_HOSTILE,
+  NTDS_COLOR_UNKNOWN,
+} from '@accelint/ntds/constants';
+
+function TacticalMap({ entities }) {
+  return (
+    <svg width={800} height={600}>
+      {entities.map((entity) => {
+        const Icon = getIconComponent(entity.type, entity.affiliation);
+        const color = getAffiliationColor(entity.affiliation);
+        
+        return (
+          <g key={entity.id} transform={`translate(${entity.x}, ${entity.y})`}>
+            <Icon 
+              fill={color}
+              title={entity.callsign}
+            />
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+```
+
+### Example: All affiliation states
+
+```tsx
+import { SvgMissileFriend } from '@accelint/ntds/core/missile-friend';
+import { SvgMissileHostile } from '@accelint/ntds/core/missile-hostile';
+import { SvgMissileUnknown } from '@accelint/ntds/core/missile-unknown';
+import {
+  NTDS_COLOR_FRIEND,
+  NTDS_COLOR_HOSTILE,
+  NTDS_COLOR_UNKNOWN,
+} from '@accelint/ntds/constants';
+
+function MissileLegend() {
+  return (
+    <div className="legend">
+      <div>
+        <SvgMissileFriend fill={NTDS_COLOR_FRIEND} />
+        <span>Friendly</span>
+      </div>
+      <div>
+        <SvgMissileHostile fill={NTDS_COLOR_HOSTILE} />
+        <span>Hostile</span>
+      </div>
+      <div>
+        <SvgMissileUnknown fill={NTDS_COLOR_UNKNOWN} />
+        <span>Unknown</span>
+      </div>
+    </div>
+  );
+}
+```
+
+## Related
+
+- [NTDS Color Constants](../constants.mdx) - Standard NTDS affiliation colors
+- [Spritesheet Constants](../spritesheets/masked.mdx) - Spritesheet IDs for COP rendering

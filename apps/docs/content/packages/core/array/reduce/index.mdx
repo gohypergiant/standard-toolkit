@@ -1,0 +1,123 @@
+---
+title: reduce
+description: Calls the accumulator with each element of the given array, starting with the first element, and returns the final accumulated result.
+source: packages/core/src/array/reduce/index.ts
+source_sha: 3f1b18cde51c067e7a43244ec32b2ec8dbbc36a9
+doc_sha: f7bfdb1ee083c62714d9252aaebf9bc7d77056e7
+deprecated: false
+updated: 2026-07-13
+---
+
+# reduce
+
+Calls the accumulator with each element of the given array, starting with the first element, and returns the final accumulated result.
+
+## Usage
+
+```typescript
+import { reduce } from '@accelint/core/array/reduce';
+
+// Basic usage - sum numbers
+const sum = reduce((total: number, n: number) => total + n)(0)([1, 2, 3, 4, 5]);
+// 15
+
+// Partial application
+const sumNumbers = reduce((total: number, n: number) => total + n)(0);
+sumNumbers([1, 2, 3]); // 6
+```
+
+## Reference
+
+```typescript
+function reduce<T, R>(
+  fn: (accumulator: R, element: T) => R
+): (initVal: R) => (arr: T[]) => R
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `fn` | `(accumulator: R, element: T) => R` | Accumulator function called for each element. Receives the accumulator and current element, returns the new accumulator value. |
+
+### Returns
+
+Returns a curried function that first accepts an initial value, then accepts an array, and finally returns the accumulated result.
+
+### Type Parameters
+
+- `T` - The type of array elements
+- `R` - The type of the accumulator and return value
+
+## Examples
+
+### Example: Building an object from array
+
+```typescript
+import { reduce } from '@accelint/core/array/reduce';
+
+interface User {
+  id: number;
+  name: string;
+}
+
+const users: User[] = [
+  { id: 1, name: 'Alice' },
+  { id: 2, name: 'Bob' }
+];
+
+const userById = reduce(
+  (acc: Record<number, User>, user: User) => {
+    acc[user.id] = user;
+    return acc;
+  }
+)({} as Record<number, User>)(users);
+// { 1: { id: 1, name: 'Alice' }, 2: { id: 2, name: 'Bob' } }
+```
+
+### Example: Flattening arrays
+
+```typescript
+import { reduce } from '@accelint/core/array/reduce';
+
+const nested = [[1, 2], [3, 4], [5]];
+const flat = reduce(
+  (acc: number[], arr: number[]) => acc.concat(arr)
+)([])(nested);
+// [1, 2, 3, 4, 5]
+```
+
+### Example: Counting occurrences
+
+```typescript
+import { reduce } from '@accelint/core/array/reduce';
+
+const words = ['apple', 'banana', 'apple', 'cherry', 'banana', 'apple'];
+const counts = reduce(
+  (acc: Record<string, number>, word: string) => {
+    acc[word] = (acc[word] || 0) + 1;
+    return acc;
+  }
+)({} as Record<string, number>)(words);
+// { apple: 3, banana: 2, cherry: 1 }
+```
+
+### Example: Finding max value
+
+```typescript
+import { reduce } from '@accelint/core/array/reduce';
+
+const numbers = [5, 2, 9, 1, 7];
+const max = reduce(
+  (acc: number, n: number) => Math.max(acc, n)
+)(-Infinity)(numbers);
+// 9
+```
+
+> **Good to know:** The accumulator function is called for every element in the array, left to right. The initial value is crucial—choose it carefully based on your accumulation logic. This is a pure function with no side effects.
+
+## Related
+
+- [map](../map/index.md) - Transform array elements
+- [filter](../filter/index.md) - Filter array elements by predicate
+- [reduce-right](../reduce-right/index.md) - Reduce array from right to left

@@ -1,0 +1,100 @@
+---
+title: findLast
+description: Returns the last element in an array that satisfies a predicate function
+source: packages/core/src/array/find-last/index.ts
+source_sha: cc348e11eef1228caf9dd77db75eafd25b5f18fb
+doc_sha: b0c9906c0d9ad6cbf200f192b054315dc05f4f51
+deprecated: false
+updated: 2026-07-13
+---
+
+# findLast
+
+Returns the last element in an array that satisfies a predicate function, searching from the end. Returns `null` if no element matches.
+
+## Usage
+
+```typescript
+import { findLast } from '@accelint/core';
+
+// Find last even number
+const lastEven = findLast((x: number) => x % 2 === 0)([1, 2, 3, 4, 5]);
+// 4
+
+// Partial application
+const findLastNegative = findLast((x: number) => x < 0);
+findLastNegative([5, -3, 10, -8]); // -8
+```
+
+## Reference
+
+```typescript
+function findLast<T>(
+  predicate: (element: T, index: number) => boolean
+): (arr: T[]) => T | null
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `predicate` | `(element: T, index: number) => boolean` | Function called for each element from the end until it returns `true`. Receives the element and its index. |
+
+### Returns
+
+Returns a curried function that accepts an array and returns the last matching element, or `null` if no match is found.
+
+### Type Parameters
+
+- `T` - The type of elements in the array
+
+## Examples
+
+### Example: Finding last occurrence
+
+```typescript
+import { findLast } from '@accelint/core';
+
+const data = [1, 2, 3, 2, 1];
+const lastTwo = findLast((x: number) => x === 2)(data);
+// 2 (finds the second occurrence)
+```
+
+### Example: Finding by complex condition
+
+```typescript
+import { findLast } from '@accelint/core';
+
+interface Order {
+  id: number;
+  status: 'pending' | 'completed' | 'cancelled';
+  amount: number;
+}
+
+const orders: Order[] = [
+  { id: 1, status: 'completed', amount: 100 },
+  { id: 2, status: 'pending', amount: 50 },
+  { id: 3, status: 'completed', amount: 200 }
+];
+
+const lastCompleted = findLast((o: Order) => o.status === 'completed')(orders);
+// { id: 3, status: 'completed', amount: 200 }
+```
+
+### Example: No match returns null
+
+```typescript
+import { findLast } from '@accelint/core';
+
+const numbers = [1, 3, 5, 7, 9];
+const lastEven = findLast((x: number) => x % 2 === 0)(numbers);
+// null
+```
+
+> **Good to know:** The search starts from the end of the array and moves backward. The predicate is called only until a matching element is found, then iteration stops immediately.
+
+## Related
+
+- [find](../find/index.md) - Find the first matching element
+- [findLastIndex](../find-last-index/index.md) - Find the index of the last matching element
+- [filter](../filter/index.md) - Find all matching elements

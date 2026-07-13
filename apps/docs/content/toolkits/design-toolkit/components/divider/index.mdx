@@ -1,0 +1,167 @@
+---
+title: Divider
+description: A visual separator component with horizontal and vertical orientations
+source: packages/design-toolkit/src/components/divider/index.tsx
+source_sha: e2a4915d3092376bc5526d6873b163b56c77401a
+doc_sha: 43c9a11b932fcbbd83e8d9c0f51eff5fabd36435
+deprecated: false
+updated: 2026-07-13
+---
+
+# Divider
+
+A visual separator component for creating clear boundaries between content sections. Supports both horizontal and vertical orientations with automatic flexbox detection.
+
+## Usage
+
+```tsx
+import { Divider } from '@accelint/design-toolkit';
+
+export function MyLayout() {
+  return (
+    <div>
+      <section>Content above</section>
+      <Divider />
+      <section>Content below</section>
+    </div>
+  );
+}
+```
+
+## Reference
+
+```typescript
+interface DividerProps {
+  orientation?: 'horizontal' | 'vertical';
+  className?: string;
+}
+```
+
+### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | No |
+| `className` | `string` | - | No |
+
+#### `orientation`
+
+Controls the divider's orientation:
+- `horizontal` - Horizontal line separator (default)
+- `vertical` - Vertical line separator
+
+> **Good to know:** The Divider automatically detects when its parent uses flexbox layout and adjusts its stretching behavior accordingly for proper sizing in vertical orientation.
+
+## Examples
+
+### Example: Basic horizontal divider
+
+```tsx
+import { Divider } from '@accelint/design-toolkit';
+
+<div>
+  <p>First paragraph</p>
+  <Divider />
+  <p>Second paragraph</p>
+</div>
+```
+
+### Example: Vertical divider
+
+```tsx
+import { Divider } from '@accelint/design-toolkit';
+
+<div className="flex items-center gap-4">
+  <span>Left content</span>
+  <Divider orientation="vertical" />
+  <span>Right content</span>
+</div>
+```
+
+### Example: In a navigation bar
+
+```tsx
+import { Divider } from '@accelint/design-toolkit';
+
+<nav className="flex items-center gap-4">
+  <a href="/home">Home</a>
+  <Divider orientation="vertical" />
+  <a href="/about">About</a>
+  <Divider orientation="vertical" />
+  <a href="/contact">Contact</a>
+</nav>
+```
+
+### Example: Sectioning content
+
+```tsx
+import { Divider } from '@accelint/design-toolkit';
+
+<article>
+  <header>
+    <h1>Article Title</h1>
+  </header>
+  <Divider />
+  <section>
+    <h2>Introduction</h2>
+    <p>Content here...</p>
+  </section>
+  <Divider />
+  <section>
+    <h2>Main Content</h2>
+    <p>More content...</p>
+  </section>
+  <Divider />
+  <footer>
+    <p>Article footer</p>
+  </footer>
+</article>
+```
+
+### Example: Custom styled divider
+
+```tsx
+import { Divider } from '@accelint/design-toolkit';
+
+<Divider className="border-t-2 border-dashed border-blue-500 my-8" />
+```
+
+### Example: In a card layout
+
+```tsx
+import { Divider } from '@accelint/design-toolkit';
+
+<div className="card">
+  <div className="card-header">
+    <h3>Card Title</h3>
+  </div>
+  <Divider />
+  <div className="card-body">
+    <p>Card content goes here</p>
+  </div>
+  <Divider />
+  <div className="card-footer">
+    <button>Action</button>
+  </div>
+</div>
+```
+
+### Example: Flex container with vertical dividers
+
+```tsx
+import { Divider } from '@accelint/design-toolkit';
+
+<div className="flex h-64">
+  <div className="flex-1 p-4">Column 1</div>
+  <Divider orientation="vertical" />
+  <div className="flex-1 p-4">Column 2</div>
+  <Divider orientation="vertical" />
+  <div className="flex-1 p-4">Column 3</div>
+</div>
+```
+
+> **Good to know:** When a Divider with `orientation="vertical"` is placed in a flex container, it automatically detects the flexbox layout and adjusts its height to stretch appropriately.
+
+## Related
+
+- [Menu](../menu/index.md) - Menu component that uses dividers for separating groups

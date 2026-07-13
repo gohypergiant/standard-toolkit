@@ -1,0 +1,364 @@
+---
+title: Table
+description: A configurable data table component with sorting, selection, row actions, and pagination
+source: packages/design-toolkit/src/components/table/index.tsx
+source_sha: 64cbc01cd2b212f8139249ca03762baa8c48ef73
+doc_sha: 6f34a5ef05e34c363ef815edd2082a6a700a9d74
+deprecated: false
+updated: 2026-07-13
+---
+
+# Table
+
+A configurable data table component with sorting, selection, row actions, and pagination. Supports data-driven mode with TanStack Table column definitions or static mode with subcomponents.
+
+## Usage
+
+```tsx
+import { Table } from '@accelint/design-toolkit';
+
+const columns = [
+  { accessorKey: 'name', header: 'Name' },
+  { accessorKey: 'email', header: 'Email' },
+];
+
+const data = [
+  { id: '1', name: 'John Doe', email: 'john@example.com' },
+  { id: '2', name: 'Jane Smith', email: 'jane@example.com' },
+];
+
+export function MyTable() {
+  return <Table columns={columns} data={data} enableSorting showCheckbox />;
+}
+```
+
+## Reference
+
+```typescript
+interface TableProps<T extends { id: Key }> {
+  columns: ColumnDef<T>[];
+  data: T[];
+  showCheckbox?: boolean;
+  rowSelection?: RowSelectionState;
+  kebabPosition?: 'left' | 'right';
+  persistRowKebabMenu?: boolean;
+  persistHeaderKebabMenu?: boolean;
+  persistNumerals?: boolean;
+  enableSorting?: boolean;
+  enableColumnReordering?: boolean;
+  enableRowActions?: boolean;
+  manualSorting?: boolean;
+  fullWidth?: boolean;
+  pageSize?: number;
+  page?: number;
+  defaultPage?: number;
+  onSortChange?: (columnId: string, sortDirection: 'asc' | 'desc' | null) => void;
+  onColumnReorderChange?: (index: number) => void;
+  onRowSelectionChange?: (updaterOrValue: RowSelectionState | ((old: RowSelectionState) => RowSelectionState)) => void;
+  onPageChange?: (page: number) => void;
+}
+```
+
+### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `columns` | `ColumnDef<T>[]` | - | Yes |
+| `data` | `T[]` | - | Yes |
+| `showCheckbox` | `boolean` | `false` | No |
+| `rowSelection` | `RowSelectionState` | `{}` | No |
+| `kebabPosition` | `'left' \| 'right'` | `'right'` | No |
+| `persistRowKebabMenu` | `boolean` | `true` | No |
+| `persistHeaderKebabMenu` | `boolean` | `true` | No |
+| `persistNumerals` | `boolean` | `false` | No |
+| `enableSorting` | `boolean` | `true` | No |
+| `enableColumnReordering` | `boolean` | `true` | No |
+| `enableRowActions` | `boolean` | `true` | No |
+| `manualSorting` | `boolean` | `false` | No |
+| `fullWidth` | `boolean` | `false` | No |
+| `pageSize` | `number` | - | No |
+| `page` | `number` | - | No |
+| `defaultPage` | `number` | `1` | No |
+| `onSortChange` | `function` | - | No |
+| `onColumnReorderChange` | `function` | - | No |
+| `onRowSelectionChange` | `function` | - | No |
+| `onPageChange` | `function` | - | No |
+
+#### `columns`
+
+Array of TanStack Table column definitions. Each column defines how to access and display data:
+
+```typescript
+{
+  accessorKey: 'fieldName',  // Field to access in data object
+  header: 'Display Name',    // Column header text
+  cell: ({ row }) => <CustomCell value={row.original.field} />,  // Optional custom cell renderer
+}
+```
+
+#### `data`
+
+Array of data objects. Each object must have a unique `id` property of type `string` or `number`.
+
+#### `showCheckbox`
+
+When `true`, displays a checkbox column for row selection. The header checkbox selects/deselects all rows.
+
+#### `rowSelection`
+
+Initial row selection state. An object mapping row IDs to their selection state:
+
+```typescript
+{ 'row-1': true, 'row-2': true }  // Rows 1 and 2 are selected
+```
+
+#### `kebabPosition`
+
+Controls where the row action menu (kebab menu) appears:
+- `left` - Before data columns
+- `right` - After data columns (default)
+
+#### `persistRowKebabMenu`
+
+When `true`, the row kebab menu is always visible. When `false`, only visible on row hover.
+
+#### `persistHeaderKebabMenu`
+
+When `true`, the header kebab menu is always visible. When `false`, only visible on hover.
+
+#### `persistNumerals`
+
+When `true`, row number column is always visible. When `false`, only visible on row hover.
+
+#### `enableSorting`
+
+Enables column sorting. Click column headers to sort ascending/descending.
+
+#### `enableColumnReordering`
+
+Enables column reordering through the header kebab menu.
+
+#### `enableRowActions`
+
+Enables row actions through the kebab menu, including:
+- Pin/unpin row
+- Move row up/down
+
+#### `manualSorting`
+
+When `true`, assumes data is already sorted (for server-side sorting). Disables client-side sorting.
+
+#### `fullWidth`
+
+When `true`, applies `w-full table-fixed` classes for full-width table with fixed layout.
+
+#### `pageSize`
+
+Number of rows per page. Enables built-in pagination when set.
+
+#### `page` / `defaultPage`
+
+Controlled and uncontrolled page number (1-indexed). Use `page` with `onPageChange` for controlled pagination, or `defaultPage` for uncontrolled.
+
+### Row Actions
+
+The kebab menu provides these actions for each row:
+- **Pin/Unpin** - Pin row to top of table
+- **Move Up** - Move row up one position (disabled for pinned rows and first row)
+- **Move Down** - Move row down one position (disabled for pinned rows and last row)
+
+When rows are selected via checkboxes, move actions apply to all selected rows.
+
+## Examples
+
+### Example: Basic table with sorting
+
+```tsx
+import { Table } from '@accelint/design-toolkit';
+
+const columns = [
+  { accessorKey: 'name', header: 'Name' },
+  { accessorKey: 'role', header: 'Role' },
+  { accessorKey: 'status', header: 'Status' },
+];
+
+const data = [
+  { id: '1', name: 'Alice', role: 'Engineer', status: 'Active' },
+  { id: '2', name: 'Bob', role: 'Designer', status: 'Active' },
+  { id: '3', name: 'Carol', role: 'Manager', status: 'Inactive' },
+];
+
+<Table columns={columns} data={data} enableSorting />
+```
+
+### Example: Table with checkboxes and row selection
+
+```tsx
+import { Table } from '@accelint/design-toolkit';
+import { useState } from 'react';
+
+export function SelectableTable() {
+  const [selection, setSelection] = useState({});
+
+  const columns = [
+    { accessorKey: 'name', header: 'Name' },
+    { accessorKey: 'email', header: 'Email' },
+  ];
+
+  const data = [
+    { id: '1', name: 'John Doe', email: 'john@example.com' },
+    { id: '2', name: 'Jane Smith', email: 'jane@example.com' },
+  ];
+
+  return (
+    <Table
+      columns={columns}
+      data={data}
+      showCheckbox
+      rowSelection={selection}
+      onRowSelectionChange={setSelection}
+    />
+  );
+}
+```
+
+### Example: Full-width table with pagination
+
+```tsx
+import { Table } from '@accelint/design-toolkit';
+import { useState } from 'react';
+
+export function PaginatedTable() {
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const columns = [
+    { accessorKey: 'id', header: 'ID' },
+    { accessorKey: 'name', header: 'Name' },
+  ];
+
+  const data = Array.from({ length: 50 }, (_, i) => ({
+    id: `${i + 1}`,
+    name: `Item ${i + 1}`,
+  }));
+
+  return (
+    <Table
+      columns={columns}
+      data={data}
+      fullWidth
+      pageSize={10}
+      page={currentPage}
+      onPageChange={setCurrentPage}
+    />
+  );
+}
+```
+
+### Example: Server-side sorting
+
+```tsx
+import { Table } from '@accelint/design-toolkit';
+import { useState } from 'react';
+
+export function ServerSortedTable() {
+  const [sortColumn, setSortColumn] = useState<string>('');
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc' | null>(null);
+
+  const columns = [
+    { accessorKey: 'name', header: 'Name' },
+    { accessorKey: 'date', header: 'Date' },
+  ];
+
+  const handleSortChange = (columnId: string, direction: 'asc' | 'desc' | null) => {
+    setSortColumn(columnId);
+    setSortDirection(direction);
+    // Fetch sorted data from server
+    fetchSortedData(columnId, direction);
+  };
+
+  return (
+    <Table
+      columns={columns}
+      data={data}
+      manualSorting
+      onSortChange={handleSortChange}
+    />
+  );
+}
+```
+
+### Example: Custom cell renderer
+
+```tsx
+import { Table } from '@accelint/design-toolkit';
+import { Badge } from '@accelint/design-toolkit';
+
+const columns = [
+  { accessorKey: 'name', header: 'Name' },
+  {
+    accessorKey: 'status',
+    header: 'Status',
+    cell: ({ row }) => (
+      <Badge color={row.original.status === 'active' ? 'success' : 'muted'}>
+        {row.original.status}
+      </Badge>
+    ),
+  },
+];
+
+const data = [
+  { id: '1', name: 'Project A', status: 'active' },
+  { id: '2', name: 'Project B', status: 'inactive' },
+];
+
+<Table columns={columns} data={data} />
+```
+
+### Example: Left-positioned kebab menu
+
+```tsx
+import { Table } from '@accelint/design-toolkit';
+
+<Table
+  columns={columns}
+  data={data}
+  kebabPosition="left"
+  enableRowActions
+/>
+```
+
+### Example: Minimal row chrome
+
+```tsx
+import { Table } from '@accelint/design-toolkit';
+
+<Table
+  columns={columns}
+  data={data}
+  persistRowKebabMenu={false}
+  persistNumerals={false}
+/>
+```
+
+> **Good to know:** When `persistRowKebabMenu` and `persistNumerals` are `false`, these elements only appear on row hover, creating a cleaner visual appearance.
+
+### Example: Disable specific features
+
+```tsx
+import { Table } from '@accelint/design-toolkit';
+
+<Table
+  columns={columns}
+  data={data}
+  enableSorting={false}
+  enableColumnReordering={false}
+  enableRowActions={false}
+/>
+```
+
+## Related
+
+- [Button](../button/index.md) - Used for row action triggers
+- [Checkbox](../checkbox/index.md) - Used for row selection
+- [Menu](../menu/index.md) - Used for row and column actions
+- [Icon](../icon/index.md) - Used for action icons

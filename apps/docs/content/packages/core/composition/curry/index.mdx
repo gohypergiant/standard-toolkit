@@ -1,0 +1,117 @@
+---
+title: autoCurry
+description: Transforms a function to accept arguments one at a time or in groups, enabling flexible partial application.
+source: packages/core/src/composition/curry/index.ts
+source_sha: 68ac1efb06c5eee4185a0bc80326fb17e97bc033
+doc_sha: d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0
+deprecated: false
+updated: 2026-07-13
+---
+
+# autoCurry
+
+Transforms a function to accept arguments one at a time or in groups, enabling flexible partial application.
+
+## Usage
+
+```typescript
+import { autoCurry } from '@accelint/core/composition/curry';
+
+// Basic usage
+const add = (a: number, b: number, c: number) => a + b + c;
+const curried = autoCurry(add);
+
+// All equivalent ways to call it
+curried(1)(2)(3);     // 6
+curried(1, 2)(3);     // 6
+curried(1)(2, 3);     // 6
+curried(1, 2, 3);     // 6
+```
+
+## Reference
+
+```typescript
+function autoCurry<T extends (...args: any[]) => any>(
+  fn: T
+): Curried<Parameters<T>, ReturnType<T>>
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `fn` | Function | The function to curry. Can have any number of parameters. |
+
+### Returns
+
+Returns a curried version that can accept arguments one at a time or in any grouping until all parameters are satisfied.
+
+### Type Parameters
+
+- `T` - The function type being curried
+- `Parameters<T>` - The parameter types of the function
+- `ReturnType<T>` - The return type of the function
+
+## Examples
+
+### Example: Partial application
+
+```typescript
+import { autoCurry } from '@accelint/core/composition/curry';
+
+const multiply = (a: number, b: number, c: number) => a * b * c;
+const curried = autoCurry(multiply);
+
+// Create specialized functions
+const double = curried(2);
+const doubleAndTriple = double(3);
+
+doubleAndTriple(5); // 30 (2 * 3 * 5)
+```
+
+### Example: Building configuration functions
+
+```typescript
+import { autoCurry } from '@accelint/core/composition/curry';
+
+const createConfig = (env: string, debug: boolean, port: number) => ({
+  environment: env,
+  debug,
+  port
+});
+
+const curried = autoCurry(createConfig);
+
+// Create environment-specific builders
+const prodConfig = curried('production')(false);
+prodConfig(8080); // { environment: 'production', debug: false, port: 8080 }
+
+const devConfig = curried('development', true);
+devConfig(3000); // { environment: 'development', debug: true, port: 3000 }
+```
+
+### Example: Event handler builders
+
+```typescript
+import { autoCurry } from '@accelint/core/composition/curry';
+
+const logEvent = (level: string, category: string, message: string) => {
+  console.log(`[${level}] ${category}: ${message}`);
+};
+
+const curried = autoCurry(logEvent);
+
+// Create specialized loggers
+const errorLog = curried('ERROR');
+const errorAuth = errorLog('AUTH');
+
+errorAuth('Login failed'); // [ERROR] AUTH: Login failed
+```
+
+> **Good to know:** Unlike manual currying (which requires strict one-argument-at-a-time application), `autoCurry` is flexible and accepts any number of arguments at each step until all parameters are satisfied. The function executes once all required arguments are provided.
+
+## Related
+
+- [pipe](../pipe/index.md) - Compose functions left-to-right
+- [compose](../compose/index.md) - Compose functions right-to-left
+- [map](../../array/map/index.md) - Pre-curried array transformation

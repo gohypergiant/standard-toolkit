@@ -1,0 +1,313 @@
+---
+title: Carousel
+description: A compound carousel component for navigating a collection of media items with composable sub-components.
+source: packages/design-toolkit/src/components/carousel/index.tsx
+source_sha: e48121ae123919b831aabaf6dfffa826ed32a114
+doc_sha: 8f3f4e58358d0040fc61ac96b7ebf4f34dc85ec0
+deprecated: false
+updated: 2026-07-13
+---
+
+# Carousel
+
+A compound carousel component for navigating a collection of media items with composable sub-components.
+
+## Usage
+
+```tsx
+import { useState } from 'react';
+import {
+  Carousel,
+  CarouselViewer,
+  CarouselGallery,
+  CarouselPrevious,
+  CarouselNext,
+  CarouselPosition,
+  CarouselSelect
+} from '@accelint/design-toolkit';
+
+const items = [
+  {
+    id: '1',
+    dataType: 'image',
+    dataUrl: '/images/photo1.jpg',
+    thumbnailUrl: '/images/thumb1.jpg',
+    title: 'Sunset',
+    fileName: 'photo1.jpg'
+  },
+  // ... more items
+];
+
+export function Gallery() {
+  const [position, setPosition] = useState(0);
+
+  return (
+    <Carousel
+      items={items}
+      currentPosition={position}
+      setCurrentPosition={setPosition}
+    >
+      <CarouselViewer />
+      <CarouselPrevious />
+      <CarouselGallery />
+      <CarouselNext />
+      <CarouselPosition />
+    </Carousel>
+  );
+}
+```
+
+## Reference
+
+```typescript
+interface CarouselProps extends HTMLAttributes<HTMLDivElement> {
+  items: CarouselData[];
+  currentPosition: number;
+  setCurrentPosition: (index: number) => void;
+  children?: React.ReactNode;
+  className?: string;
+}
+
+interface CarouselData {
+  dataType: 'image' | 'video' | 'audio';
+  dataUrl: string;
+  fileName: string;
+  metadata?: Record<string, unknown>;
+  title: string;
+  thumbnailUrl: string;
+  id: UniqueId;
+}
+```
+
+### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `items` | `CarouselData[]` | `[]` | Yes |
+| `currentPosition` | `number` | - | Yes |
+| `setCurrentPosition` | `(index: number) => void` | - | Yes |
+| `children` | `React.ReactNode` | - | No |
+| `className` | `string` | - | No |
+
+#### `items`
+
+Array of carousel data items to display. Each item must have:
+- `dataType` - Media type: `'image'`, `'video'`, or `'audio'`
+- `dataUrl` - URL for the full-size media displayed in the viewer
+- `thumbnailUrl` - URL for the thumbnail shown in the gallery
+- `title` - Display title for the item
+- `fileName` - Original file name of the media asset
+- `id` - Unique identifier (string or number)
+- `metadata` - Optional additional data
+
+#### `currentPosition`
+
+Zero-based index of the currently active item. Controls which item is displayed in the viewer and selected in the gallery.
+
+#### `setCurrentPosition`
+
+Callback invoked when the active item changes through user interaction (clicking thumbnails, navigation buttons, or select dropdown).
+
+#### `children`
+
+Composable sub-components to render. Available sub-components:
+- `CarouselViewer` - Displays the full-size media
+- `CarouselGallery` - Thumbnail strip for navigation
+- `CarouselPrevious` / `CarouselNext` - Navigation buttons
+- `CarouselPosition` - Position indicator (e.g., "3 / 9")
+- `CarouselSelect` - Dropdown select for jumping to items
+
+## Examples
+
+### Example: Image carousel
+
+```tsx
+import { useState } from 'react';
+import {
+  Carousel,
+  CarouselViewer,
+  CarouselGallery,
+  CarouselPrevious,
+  CarouselNext
+} from '@accelint/design-toolkit';
+
+const images = [
+  {
+    id: '1',
+    dataType: 'image',
+    dataUrl: '/photos/sunset.jpg',
+    thumbnailUrl: '/photos/sunset-thumb.jpg',
+    title: 'Golden Sunset',
+    fileName: 'sunset.jpg'
+  },
+  {
+    id: '2',
+    dataType: 'image',
+    dataUrl: '/photos/mountains.jpg',
+    thumbnailUrl: '/photos/mountains-thumb.jpg',
+    title: 'Mountain Range',
+    fileName: 'mountains.jpg'
+  }
+];
+
+export function ImageGallery() {
+  const [position, setPosition] = useState(0);
+
+  return (
+    <Carousel
+      items={images}
+      currentPosition={position}
+      setCurrentPosition={setPosition}
+    >
+      <CarouselViewer />
+      <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+        <CarouselPrevious />
+        <CarouselGallery />
+        <CarouselNext />
+      </div>
+    </Carousel>
+  );
+}
+```
+
+### Example: Mixed media carousel
+
+```tsx
+import { useState } from 'react';
+import {
+  Carousel,
+  CarouselViewer,
+  CarouselSelect,
+  CarouselPosition
+} from '@accelint/design-toolkit';
+
+const mediaItems = [
+  {
+    id: '1',
+    dataType: 'video',
+    dataUrl: '/videos/demo.mp4',
+    thumbnailUrl: '/videos/demo-poster.jpg',
+    title: 'Product Demo',
+    fileName: 'demo.mp4'
+  },
+  {
+    id: '2',
+    dataType: 'audio',
+    dataUrl: '/audio/podcast.mp3',
+    thumbnailUrl: '/audio/podcast-cover.jpg',
+    title: 'Episode 42',
+    fileName: 'podcast.mp3'
+  },
+  {
+    id: '3',
+    dataType: 'image',
+    dataUrl: '/images/diagram.png',
+    thumbnailUrl: '/images/diagram-thumb.png',
+    title: 'Architecture Diagram',
+    fileName: 'diagram.png'
+  }
+];
+
+export function MediaGallery() {
+  const [position, setPosition] = useState(0);
+
+  return (
+    <Carousel
+      items={mediaItems}
+      currentPosition={position}
+      setCurrentPosition={setPosition}
+    >
+      <CarouselViewer />
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <CarouselSelect />
+        <CarouselPosition />
+      </div>
+    </Carousel>
+  );
+}
+```
+
+### Example: With custom controls overlay
+
+```tsx
+import { useState } from 'react';
+import {
+  Carousel,
+  CarouselViewer,
+  CarouselPrevious,
+  CarouselNext,
+  CarouselPosition
+} from '@accelint/design-toolkit';
+
+export function OverlayGallery({ items }) {
+  const [position, setPosition] = useState(0);
+
+  return (
+    <Carousel
+      items={items}
+      currentPosition={position}
+      setCurrentPosition={setPosition}
+    >
+      <CarouselViewer>
+        {/* Overlay controls positioned absolutely inside viewer */}
+        <div style={{ 
+          position: 'absolute',
+          bottom: '1rem',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          display: 'flex',
+          gap: '0.5rem',
+          alignItems: 'center'
+        }}>
+          <CarouselPrevious />
+          <CarouselPosition />
+          <CarouselNext />
+        </div>
+      </CarouselViewer>
+    </Carousel>
+  );
+}
+```
+
+### Example: Controlled from parent
+
+```tsx
+import { useState } from 'react';
+import { Carousel, CarouselViewer, Button } from '@accelint/design-toolkit';
+
+export function ControlledCarousel({ items }) {
+  const [position, setPosition] = useState(0);
+
+  const jumpToFirst = () => setPosition(0);
+  const jumpToLast = () => setPosition(items.length - 1);
+
+  return (
+    <div>
+      <Carousel
+        items={items}
+        currentPosition={position}
+        setCurrentPosition={setPosition}
+      >
+        <CarouselViewer />
+      </Carousel>
+      
+      <div style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem' }}>
+        <Button onClick={jumpToFirst}>First</Button>
+        <Button onClick={jumpToLast}>Last</Button>
+      </div>
+    </div>
+  );
+}
+```
+
+> **Good to know:** The Carousel component manages state through context. All sub-components must be rendered as children of the Carousel to access carousel state and callbacks.
+
+## Related
+
+- [CarouselViewer](./viewer.mdx) - Displays the full-size media for the active item
+- [CarouselGallery](./gallery.mdx) - Horizontal thumbnail strip for navigation
+- [CarouselPrevious / CarouselNext](./navigation.mdx) - Navigation buttons
+- [CarouselPosition](./position.mdx) - Current position indicator
+- [CarouselSelect](./select.mdx) - Dropdown select for jumping to items
+- [Video](../video/index.mdx) - Video component used by CarouselViewer
+- [Audio](../audio/index.mdx) - Audio component used by CarouselViewer

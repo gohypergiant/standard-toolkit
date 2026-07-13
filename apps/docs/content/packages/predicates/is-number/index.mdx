@@ -1,0 +1,280 @@
+---
+title: Number Predicates
+description: Type guards for validating numbers and numeric values including finite checks
+source: packages/predicates/src/is-number/index.ts
+source_sha: 939c8208851b253fa1f1fe35ae1bd4c33cad1180
+doc_sha: fb3e2a1d93641ad12968f0be8519e936fddd35b7
+deprecated: false
+updated: 2026-07-13
+---
+
+# Number Predicates
+
+Type guards for validating numbers and numeric values with support for finite checks, string parsing, and special numeric values.
+
+## Usage
+
+```typescript
+import {
+  isNumber,
+  isFiniteNumber,
+  isNumeric,
+  isFiniteNumeric
+} from '@accelint/predicates/is-number';
+
+// Basic number validation
+isNumber(123);           // true
+isNumber(Infinity);      // true
+isNumber(NaN);           // true
+isNumber('123');         // false
+
+// Finite numbers only
+isFiniteNumber(123);     // true
+isFiniteNumber(Infinity); // false
+isFiniteNumber(NaN);     // false
+
+// Numeric strings accepted
+isNumeric('123');        // true
+isNumeric('Infinity');   // true
+isFiniteNumeric('123');  // true
+isFiniteNumeric('Infinity'); // false
+```
+
+## isNumber
+
+Determines if a value is a number type, including Infinities and NaN.
+
+### Reference
+
+```typescript
+function isNumber(val: unknown): val is number
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `val` | `unknown` | Value to check |
+
+#### Returns
+
+Type guard that narrows the type to `number`. Returns `true` for all number values including `Infinity`, `-Infinity`, and `NaN`.
+
+### Examples
+
+#### Example: Type narrowing with numbers
+
+```typescript
+import { isNumber } from '@accelint/predicates/is-number';
+
+function processValue(val: unknown) {
+  if (isNumber(val)) {
+    // TypeScript knows val is number here
+    return val.toFixed(2);
+  }
+  throw new Error('Expected number');
+}
+
+processValue(1.23);  // "1.23"
+processValue(Infinity); // "Infinity"
+processValue('123'); // Error: Expected number
+```
+
+#### Example: Filtering arrays
+
+```typescript
+import { isNumber } from '@accelint/predicates/is-number';
+
+const mixed = [1, '2', 3, null, 4, undefined, NaN];
+const numbers = mixed.filter(isNumber);
+// [1, 3, 4, NaN]
+```
+
+> **Good to know:** This predicate includes `NaN` and infinities. Use `isFiniteNumber` to exclude these special values.
+
+## isFiniteNumber
+
+Determines if a value is a finite number, excluding Infinities, NaN, and strings.
+
+### Reference
+
+```typescript
+function isFiniteNumber(val: unknown): val is number
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `val` | `unknown` | Value to check |
+
+#### Returns
+
+Type guard that narrows to `number`. Returns `true` only for finite numeric values.
+
+### Examples
+
+#### Example: Validating calculation results
+
+```typescript
+import { isFiniteNumber } from '@accelint/predicates/is-number';
+
+function safeDivide(a: number, b: number) {
+  const result = a / b;
+  
+  if (isFiniteNumber(result)) {
+    return result;
+  }
+  
+  throw new Error('Division resulted in non-finite value');
+}
+
+safeDivide(10, 2);  // 5
+safeDivide(10, 0);  // Error: Division resulted in non-finite value
+```
+
+#### Example: Filtering valid coordinates
+
+```typescript
+import { isFiniteNumber } from '@accelint/predicates/is-number';
+
+const coordinates = [
+  { x: 10, y: 20 },
+  { x: NaN, y: 30 },
+  { x: Infinity, y: 40 },
+  { x: 15, y: 25 }
+];
+
+const valid = coordinates.filter(coord => 
+  isFiniteNumber(coord.x) && isFiniteNumber(coord.y)
+);
+// [{ x: 10, y: 20 }, { x: 15, y: 25 }]
+```
+
+## isNumeric
+
+Determines if a value is a number or a string that parses to a number, including special values.
+
+### Reference
+
+```typescript
+function isNumeric(val: unknown): val is number
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `val` | `unknown` | Value to check |
+
+#### Returns
+
+Type guard narrowing to `number`. Accepts numeric strings including `'Infinity'`, `'-Infinity'`, and `'NaN'`.
+
+### Examples
+
+#### Example: Parsing user input
+
+```typescript
+import { isNumeric } from '@accelint/predicates/is-number';
+
+function parseUserInput(input: unknown): number {
+  if (isNumeric(input)) {
+    return typeof input === 'string' ? parseFloat(input) : input;
+  }
+  throw new Error('Not a numeric value');
+}
+
+parseUserInput(123);         // 123
+parseUserInput('456');       // 456
+parseUserInput('Infinity');  // Infinity
+parseUserInput('hello');     // Error: Not a numeric value
+```
+
+#### Example: Validating form fields
+
+```typescript
+import { isNumeric } from '@accelint/predicates/is-number';
+
+const formData = {
+  age: '25',
+  height: '175.5',
+  weight: 'invalid'
+};
+
+const validFields = Object.entries(formData)
+  .filter(([_, value]) => isNumeric(value))
+  .map(([key, value]) => [key, parseFloat(value as string)]);
+// [['age', 25], ['height', 175.5]]
+```
+
+## isFiniteNumeric
+
+Determines if a value is a finite number or a string that parses to a finite number.
+
+### Reference
+
+```typescript
+function isFiniteNumeric(val: unknown): val is number
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `val` | `unknown` | Value to check |
+
+#### Returns
+
+Type guard narrowing to `number`. Excludes infinities and NaN, but accepts valid numeric strings.
+
+### Examples
+
+#### Example: Safe numeric parsing
+
+```typescript
+import { isFiniteNumeric } from '@accelint/predicates/is-number';
+
+function safeParseNumber(input: unknown): number | null {
+  if (isFiniteNumeric(input)) {
+    return typeof input === 'string' ? parseFloat(input) : input;
+  }
+  return null;
+}
+
+safeParseNumber('42');        // 42
+safeParseNumber(123);         // 123
+safeParseNumber('Infinity');  // null
+safeParseNumber('hello');     // null
+```
+
+#### Example: Validating measurement data
+
+```typescript
+import { isFiniteNumeric } from '@accelint/predicates/is-number';
+
+interface Measurement {
+  value: unknown;
+  unit: string;
+}
+
+function validateMeasurements(measurements: Measurement[]) {
+  return measurements.filter(m => isFiniteNumeric(m.value));
+}
+
+const data = [
+  { value: '25.5', unit: 'cm' },
+  { value: Infinity, unit: 'cm' },
+  { value: '30', unit: 'cm' },
+  { value: 'N/A', unit: 'cm' }
+];
+
+const valid = validateMeasurements(data);
+// [{ value: '25.5', unit: 'cm' }, { value: '30', unit: 'cm' }]
+```
+
+## Related
+
+- [isString](../is-string/index.md) - Type guard for string values
+- [isFiniteNumeric](#isfiniteNumeric) - Finite number or numeric string validator
+- [isNothing](../is-nothing/index.md) - Check for null or undefined values

@@ -1,0 +1,182 @@
+---
+title: associate
+description: Immutably set object properties with shallow or deep cloning
+source: object/associate/index.ts
+source_sha: 4200015e20da48cc7dfa68e00678bd7d1efc2323
+doc_sha: 1cd4833037ef9a25b438ff93b6d5c2df8f4d9a36
+deprecated: false
+updated: 2026-07-13
+---
+
+# associate
+
+Immutably set object properties, returning a new copy with the updated value. Provides both shallow (`associate`) and deep (`associateDeep`) cloning variants.
+
+## Usage
+
+```typescript
+import { associate, associateDeep, assoc, assocDeep } from '@accelint/core';
+
+const person = {
+  name: 'Alice',
+  address: {
+    city: 'New York',
+    street: '123 Main St'
+  }
+};
+
+// Shallow copy
+const updated = associate(person)('name')('Bob');
+// { name: 'Bob', address: { city: 'New York', street: '123 Main St' } }
+// Note: address reference is shared
+
+// Deep copy
+const deepUpdated = associateDeep(person)('address')({
+  city: 'Austin',
+  street: '987 Sample St'
+});
+// { name: 'Alice', address: { city: 'Austin', street: '987 Sample St' } }
+// Note: address is a new object
+```
+
+## Reference
+
+### associate
+
+```typescript
+function associate<T extends object>(
+  obj: T
+): <K extends keyof T>(prop: K) => (val: T[K]) => T
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `obj` | `T extends object` | The object to update |
+
+#### Returns
+
+Returns a curried function that accepts a property name, then accepts a value, returning a new shallow copy of the object with the updated property.
+
+#### Type Parameters
+
+- `T` - The type of the input object
+- `K` - The property key type
+
+#### Aliases
+
+- `assoc` - Shorter alias for `associate`
+
+### associateDeep
+
+```typescript
+function associateDeep<T extends object>(
+  obj: T
+): <K extends keyof T>(prop: K) => (val: T[K]) => T
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `obj` | `T extends object` | The object to update |
+
+#### Returns
+
+Returns a curried function that accepts a property name, then accepts a value, returning a new deep copy of the object with the updated property.
+
+Uses `structuredClone()` internally for deep cloning.
+
+#### Aliases
+
+- `assocDeep` - Shorter alias for `associateDeep`
+
+## Examples
+
+### Example: Updating nested state
+
+```typescript
+import { associate } from '@accelint/core';
+
+const state = {
+  user: { id: 1, name: 'Alice' },
+  settings: { theme: 'dark' }
+};
+
+// Create updater for user property
+const setUser = associate(state)('user');
+
+const newState = setUser({ id: 1, name: 'Bob' });
+// { user: { id: 1, name: 'Bob' }, settings: { theme: 'dark' } }
+```
+
+### Example: Partial application for reusable setters
+
+```typescript
+import { associateDeep } from '@accelint/core';
+
+interface Config {
+  apiKey: string;
+  endpoint: string;
+  timeout: number;
+}
+
+const config: Config = {
+  apiKey: 'abc123',
+  endpoint: 'https://api.example.com',
+  timeout: 5000
+};
+
+// Create reusable setter
+const updateTimeout = associateDeep(config)('timeout');
+
+updateTimeout(10000);
+// { apiKey: 'abc123', endpoint: 'https://api.example.com', timeout: 10000 }
+```
+
+### Example: Shallow vs deep cloning
+
+```typescript
+import { associate, associateDeep } from '@accelint/core';
+
+const original = {
+  data: { values: [1, 2, 3] },
+  meta: { count: 3 }
+};
+
+// Shallow: nested objects are shared
+const shallow = associate(original)('meta')({ count: 5 });
+original.data === shallow.data; // true (same reference)
+
+// Deep: nested objects are cloned
+const deep = associateDeep(original)('meta')({ count: 5 });
+original.data === deep.data; // false (different reference)
+```
+
+### Example: Composing with pipe
+
+```typescript
+import { pipe, associateDeep } from '@accelint/core';
+
+interface User {
+  name: string;
+  email: string;
+  active: boolean;
+}
+
+const updateUser = pipe(
+  associateDeep<User>({ name: '', email: '', active: false })('name'),
+  (user) => associateDeep(user)('active')(true)
+);
+
+updateUser('Alice');
+// { name: 'Alice', email: '', active: true }
+```
+
+> **Good to know:** `associate` creates a shallow copy using spread (`{ ...obj }`), while `associateDeep` uses `structuredClone()` for full deep cloning. Use shallow for performance when nested objects don't need independent copies. Use deep when you need complete immutability.
+
+## Related
+
+- [property](../property/index.md) - Get object property values
+- [lens](../lens/index.md) - Functional lens for getting and setting nested values

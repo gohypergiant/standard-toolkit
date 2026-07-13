@@ -1,0 +1,131 @@
+---
+title: dom
+description: Vitest configuration for React components and DOM testing
+source: tooling/vitest-config/dom.js
+source_sha: d00b33c76fb880a9175a250ce39171a5d8223c0b
+doc_sha: 763ecce6e7ed001b3488523bd1c1117edad814b1
+deprecated: false
+updated: 2026-07-13
+---
+
+# dom
+
+Vitest configuration preset for testing React components and DOM-dependent code. Extends the base configuration with React plugin support.
+
+## Usage
+
+```typescript
+import { defineConfig, mergeConfig } from 'vitest/config';
+import baseConfig from '@accelint/vitest-config/dom';
+
+export default mergeConfig(
+  baseConfig,
+  defineConfig({
+    test: {
+      globals: true,
+      environment: 'jsdom',
+    },
+  }),
+);
+```
+
+## Reference
+
+```javascript
+export default mergeConfig(
+  base,
+  defineConfig({
+    plugins: [react()],
+  }),
+);
+```
+
+The DOM configuration merges the [no-dom](./no-dom.md) base configuration with the React plugin from `@vitejs/plugin-react`.
+
+### Included Plugins
+
+| Plugin | Purpose |
+|--------|---------|
+| `@vitejs/plugin-react` | Enables React Fast Refresh and JSX transformation |
+| `vite-tsconfig-paths` | Resolves TypeScript path aliases (inherited from base) |
+
+### Configuration Settings
+
+All settings from [no-dom](./no-dom.md) plus:
+- React Fast Refresh for component hot reloading
+- JSX transformation for `.tsx` files
+- Automatic React import injection
+
+## Examples
+
+### Example: Simple re-export
+
+For projects that don't need custom configuration:
+
+```typescript
+// vitest.config.ts
+export { default } from '@accelint/vitest-config/dom';
+```
+
+### Example: React component testing with jsdom
+
+```typescript
+import { defineConfig, mergeConfig } from 'vitest/config';
+import baseConfig from '@accelint/vitest-config/dom';
+
+export default mergeConfig(
+  baseConfig,
+  defineConfig({
+    test: {
+      globals: true,
+      environment: 'jsdom',
+      setupFiles: ['./tests/setup.ts'],
+    },
+  }),
+);
+```
+
+### Example: Adding custom React plugin options
+
+```typescript
+import react from '@vitejs/plugin-react';
+import { defineConfig, mergeConfig } from 'vitest/config';
+import baseConfig from '@accelint/vitest-config/no-dom';
+
+// Use no-dom as base and add React with custom options
+export default mergeConfig(
+  baseConfig,
+  defineConfig({
+    plugins: [
+      react({
+        jsxRuntime: 'automatic',
+        babel: {
+          plugins: ['babel-plugin-styled-components'],
+        },
+      }),
+    ],
+  }),
+);
+```
+
+### Example: Component test with React Testing Library
+
+```typescript
+import { render, screen } from '@testing-library/react';
+import { describe, it, expect } from 'vitest';
+import { Button } from './Button';
+
+describe('Button', () => {
+  it('renders children correctly', () => {
+    render(<Button>Click me</Button>);
+    expect(screen.getByRole('button')).toHaveTextContent('Click me');
+  });
+});
+```
+
+> **Good to know:** The DOM configuration inherits all settings from the [no-dom](./no-dom.md) base configuration, including coverage, TypeScript paths, and mock behavior. Use this preset when testing React components or browser APIs.
+
+## Related
+
+- [no-dom](./no-dom.md) - Base Vitest configuration without React
+- [mockBroadcastChannel](./mocks/broadcast-channel.md) - Mock for BroadcastChannel API

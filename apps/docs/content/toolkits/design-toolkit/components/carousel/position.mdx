@@ -1,0 +1,125 @@
+---
+title: CarouselPosition
+description: Displays the current position and total item count in a carousel.
+source: packages/design-toolkit/src/components/carousel/position.tsx
+source_sha: 65d9c5629a96fec9a95cecba723e9c54d5b3d841
+doc_sha: 0c7e0e11a7d9595e280530fb7d240ebfcd677cb0
+deprecated: false
+updated: 2026-07-13
+---
+
+# CarouselPosition
+
+Displays the current position and total item count (e.g., "3 / 9").
+
+## Usage
+
+```tsx
+import { Carousel, CarouselPosition } from '@accelint/design-toolkit';
+
+export function Gallery({ items, position, setPosition }) {
+  return (
+    <Carousel items={items} currentPosition={position} setCurrentPosition={setPosition}>
+      <CarouselPosition />
+    </Carousel>
+  );
+}
+```
+
+## Reference
+
+```typescript
+interface CarouselPositionProps extends HTMLAttributes<HTMLDivElement> {
+  className?: string;
+}
+```
+
+### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `className` | `string` | - | No |
+
+Accepts all standard HTML div attributes in addition to `className`.
+
+### Display Format
+
+Renders as: `{currentPosition + 1} / {totalItems}`
+
+Position is 1-indexed for display (user-friendly numbering starting at 1).
+
+## Examples
+
+### Example: Basic position indicator
+
+```tsx
+import {
+  Carousel,
+  CarouselViewer,
+  CarouselPosition
+} from '@accelint/design-toolkit';
+
+<Carousel items={items} currentPosition={position} setCurrentPosition={setPosition}>
+  <CarouselViewer />
+  <CarouselPosition />
+</Carousel>
+```
+
+### Example: Positioned as overlay
+
+```tsx
+import {
+  Carousel,
+  CarouselViewer,
+  CarouselPosition
+} from '@accelint/design-toolkit';
+
+<Carousel items={items} currentPosition={position} setCurrentPosition={setPosition}>
+  <CarouselViewer>
+    <div style={{ position: 'absolute', top: '1rem', right: '1rem' }}>
+      <CarouselPosition />
+    </div>
+  </CarouselViewer>
+</Carousel>
+```
+
+### Example: With navigation controls
+
+```tsx
+import {
+  Carousel,
+  CarouselViewer,
+  CarouselPrevious,
+  CarouselNext,
+  CarouselPosition
+} from '@accelint/design-toolkit';
+
+<Carousel items={items} currentPosition={position} setCurrentPosition={setPosition}>
+  <CarouselViewer />
+  <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', alignItems: 'center' }}>
+    <CarouselPrevious />
+    <CarouselPosition />
+    <CarouselNext />
+  </div>
+</Carousel>
+```
+
+### Example: Custom styling
+
+```tsx
+import { Carousel, CarouselPosition } from '@accelint/design-toolkit';
+
+<Carousel items={items} currentPosition={position} setCurrentPosition={setPosition}>
+  <CarouselPosition
+    className="text-sm font-semibold text-gray-700"
+    style={{ padding: '0.5rem 1rem', backgroundColor: 'rgba(255,255,255,0.9)', borderRadius: '9999px' }}
+  />
+</Carousel>
+```
+
+> **Good to know:** Position is displayed with 1-based indexing (first item shows as "1 / N") for better user experience, though the internal `currentPosition` prop uses 0-based indexing.
+
+## Related
+
+- [Carousel](./index.mdx) - Parent carousel component
+- [CarouselSelect](./select.mdx) - Dropdown navigation alternative

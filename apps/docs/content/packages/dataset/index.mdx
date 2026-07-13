@@ -1,11 +1,16 @@
 ---
 title: Dataset
-description: Data manipulation utilities for working with collections and datasets
+description: Type-safe dataset configuration with lens-based accessors and validation for spatial data integration
+source: packages/dataset/src/index.ts
+source_sha: 0072aaa45bb164912d54b4529945a71b21647496
+doc_sha: 657b6f15f1765fb3fdd7f53d0c0dd70a08dd464c
+deprecated: false
+updated: 2026-07-13
 ---
 
 # Dataset
 
-Utilities for manipulating and transforming datasets and collections.
+Type-safe dataset configuration with lens-based accessors and validation for spatial data integration. Provides TypeScript types, lens utilities, and Zod validation for configuring datasets that integrate with multiple service protocols (WFS, WMS, VTS, REST, FS) and data formats (GeoJSON, Apache Arrow).
 
 ## Installation
 
@@ -13,18 +18,327 @@ Utilities for manipulating and transforming datasets and collections.
 pnpm add @accelint/dataset
 ```
 
+## Usage
+
+```typescript
+import {
+  // Type definitions
+  type AnyDataset,
+  type GeoJsonWFSDataset,
+  type LayerDatasetMetadata,
+  
+  // Lens accessors
+  datasetId,
+  datasetName,
+  datasetTable,
+  datasetServiceUrls,
+  datasetGeometryProperty,
+  
+  // Validation
+  validateDatasetConfig,
+  anyDatasetSchema,
+} from '@accelint/dataset';
+
+// Define a dataset with type safety
+const dataset: GeoJsonWFSDataset = {
+  id: 'weather-stations',
+  level: 'generated',
+  visible: true,
+  mutatable: false,
+  name: 'Weather Stations',
+  description: 'Real-time weather monitoring stations',
+  serviceType: 'WFS',
+  dataType: 'GEOJSON',
+  presentationTypes: { temperature: ['icon', 'point'] },
+  fields: [
+    {
+      id: 'temp',
+      visible: true,
+      nullable: false,
+      type: 'f32',
+      label: 'Temperature (°C)',
+    },
+  ],
+  metadata: {
+    table: 'weather_stations',
+    serviceUrls: ['https://api.weather.gov/geoserver/wfs'],
+    geometryProperty: 'location',
+    defaultFields: ['station_id', 'temp', 'location'],
+  },
+};
+
+// Extract properties using lenses
+const id = datasetId(dataset);
+const name = datasetName(dataset);
+const tableName = datasetTable(dataset);
+
+// Validate dataset configuration
+const validatedDataset = validateDatasetConfig(rawConfig);
+```
+
 ## Features
 
-- Dataset filtering and transformation
-- Aggregation and grouping operations
-- Data validation utilities
-- Immutable update helpers
-- Full TypeScript support
+### Type Safety
 
-## Getting Started
+Comprehensive TypeScript types covering all dataset configurations:
+- **Service Types**: WFS, WMS, VTS, REST, FS, Unknown
+- **Data Formats**: GeoJSON, Apache Arrow, Unknown
+- **Field Types**: Primitives, temporal types, geometry types
+- **Discriminated Unions**: Type-safe handling of different dataset combinations
 
-Detailed documentation coming soon.
+### Lens-Based Accessors
 
-## Source Code
+Functional lens utilities for extracting dataset properties:
+- **Root Properties**: id, name, description, visibility, mutability
+- **Service Configuration**: serviceType, dataType, serviceUrls, serviceVersion
+- **Metadata Properties**: table, geometryProperty, zoom levels, batch size
+- **Composed Lenses**: Navigate dataset → metadata → property in one call
+- **Type-Safe Generics**: Compile-time property key validation
 
-View the [source code on GitHub](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/dataset).
+### Validation
+
+Zod-based schema validation with formatted error messages:
+- **Schema Validation**: Comprehensive anyDatasetSchema
+- **Field Validation**: All field types, availableValues, nullability
+- **Metadata Validation**: Required/optional properties, format constraints
+- **Error Formatting**: Full property paths for debugging
+- **Curried Validators**: Reusable validation functions
+
+## Package Structure
+
+### [Types](./types/datasets.mdx)
+
+Complete TypeScript type definitions for datasets, fields, and metadata. Includes:
+- `LayerDataset<DataType, ServiceType, ExtensionType>` - Generic dataset type
+- `AnyDataset`, `AnyWFSDataset`, `AnyGeoJsonDataset` - Union types
+- `LayerDatasetField`, `LayerDatasetMetadata` - Configuration types
+- Concrete types for all service/data combinations
+
+### [Lenses](./lenses.mdx)
+
+Lens-based accessors for type-safe property extraction. Includes:
+- **Root Property Lenses**: `datasetId`, `datasetName`, `datasetServiceType`
+- **Metadata Lenses**: `metaDataTable`, `metaDataServiceUrls`, `metaDataBackend`
+- **Composed Lenses**: `datasetTable`, `datasetServiceUrls`, `datasetGeometryProperty`
+- **Generic Lenses**: `datasetIdProperty<T>`, `datasetGeometryProperty<T>`
+
+### [Validation](./validation.mdx)
+
+Zod schema validation with error formatting. Includes:
+- `anyDatasetSchema` - Complete dataset validation schema
+- `validateDatasetConfig` - Pre-configured dataset validator
+- `validateSchema<T>` - Curried validation function for any schema
+
+## Core Concepts
+
+### Dataset Configuration
+
+A dataset combines service integration with data specification:
+
+```typescript
+type LayerDataset<DataType, ServiceType, ExtensionType> = {
+  // Identification
+  id: string;
+  name: string;
+  description: string;
+  
+  // Service integration
+  readonly serviceType: ServiceType;
+  readonly dataType: DataType;
+  
+  // Visualization
+  presentationTypes: Record<string, LayerType[]>;
+  
+  // Schema
+  fields: LayerDatasetField[];
+  
+  // Service metadata
+  metadata: LayerDatasetMetadata;
+}
+```
+
+### Service Types
+
+Datasets support multiple service protocols:
+- **VTS** - Vector Tile Service (pre-processed tiles)
+- **WFS** - Web Feature Service (query-capable vector data)
+- **WMS** - Web Map Service (raster tiles)
+- **REST** - RESTful API endpoints
+- **FS** - File System (local/CDN files)
+- **Unknown** - Fallback for unrecognized sources
+
+### Data Formats
+
+Datasets support multiple data formats:
+- **GEOJSON** - RFC 7946 JSON format (universal, human-readable)
+- **ARROW** - Apache Arrow columnar format (high performance)
+- **Unknown** - Format detection pending or unsupported
+
+### Metadata Configuration
+
+Metadata contains service-specific configuration:
+
+```typescript
+type LayerDatasetMetadata = {
+  // Required
+  table: string;
+  geometryProperty: string;
+  defaultFields: string[];
+  
+  // Service integration
+  serviceUrls?: string[];
+  serviceVersion?: SemVerVersion;
+  backend?: string;
+  vendorParams?: Record<string, unknown>;
+  
+  // Rendering
+  minZoom?: number;
+  maxZoom?: number;
+  positionFormat?: 'XY' | 'XYZ';
+  
+  // Performance
+  maxRequests?: number;
+  refetchInterval?: number;
+  batchSize?: number;
+  
+  // Querying
+  filterDialect?: 'cql' | 'gml';
+}
+```
+
+## Examples
+
+### Example: Complete dataset configuration
+
+```typescript
+import type { GeoJsonWFSDataset } from '@accelint/dataset';
+
+const dataset: GeoJsonWFSDataset = {
+  id: 'earthquake-data-2024',
+  level: 'generated',
+  visible: true,
+  mutatable: false,
+  name: 'Recent Earthquakes',
+  description: 'Earthquake events from the last 30 days',
+  serviceType: 'WFS',
+  dataType: 'GEOJSON',
+  presentationTypes: {
+    magnitude: ['point', 'icon'],
+    depth: ['point'],
+  },
+  fields: [
+    {
+      id: 'magnitude',
+      visible: true,
+      nullable: false,
+      type: 'f32',
+      label: 'Magnitude',
+    },
+    {
+      id: 'depth',
+      visible: true,
+      nullable: false,
+      type: 'f32',
+      label: 'Depth (km)',
+    },
+    {
+      id: 'region',
+      visible: true,
+      nullable: true,
+      type: 'str',
+      label: 'Region',
+    },
+  ],
+  metadata: {
+    table: 'earthquakes',
+    serviceUrls: ['https://earthquake.usgs.gov/geoserver/wfs'],
+    serviceVersion: '2.0.0',
+    backend: 'geoserver',
+    vendorParams: {
+      viewparams: 'minMagnitude:3.0',
+    },
+    geometryProperty: 'location',
+    idProperty: 'event_id',
+    minZoom: 2,
+    maxZoom: 18,
+    positionFormat: 'XYZ',
+    defaultFields: ['event_id', 'magnitude', 'depth', 'location'],
+    filterDialect: 'cql',
+  },
+};
+```
+
+### Example: Using lenses for property extraction
+
+```typescript
+import {
+  datasetName,
+  datasetServiceUrls,
+  datasetTable,
+  datasetDefaultFields,
+  datasetGeometryProperty,
+} from '@accelint/dataset';
+
+function buildQueryUrl(dataset: AnyDataset): string {
+  const urls = datasetServiceUrls(dataset);
+  const table = datasetTable(dataset);
+  const fields = datasetDefaultFields(dataset);
+  
+  const baseUrl = urls?.[0] || '';
+  const params = new URLSearchParams({
+    typeName: table,
+    propertyName: fields.join(','),
+  });
+  
+  return `${baseUrl}?${params}`;
+}
+
+type Feature = { id: number; geom: Point };
+const geomKey = datasetGeometryProperty<Feature>(dataset);
+const coordinates = feature[geomKey];
+```
+
+### Example: Validating dataset configurations
+
+```typescript
+import { validateDatasetConfig } from '@accelint/dataset';
+
+async function loadDataset(id: string) {
+  const response = await fetch(`/api/datasets/${id}`);
+  const rawData = await response.json();
+  
+  try {
+    const dataset = validateDatasetConfig(rawData);
+    return { success: true, dataset };
+  } catch (error) {
+    console.error('Validation failed:', error.message);
+    return { success: false, error: error.message };
+  }
+}
+```
+
+### Example: Type-safe dataset handling
+
+```typescript
+import type { AnyDataset, AnyArrowDataset } from '@accelint/dataset';
+
+function isArrowDataset(dataset: AnyDataset): dataset is AnyArrowDataset {
+  return dataset.dataType === 'ARROW';
+}
+
+function selectParser(dataset: AnyDataset) {
+  if (isArrowDataset(dataset)) {
+    // TypeScript knows this is AnyArrowDataset
+    return new ArrowParser({ batchSize: dataset.metadata.batchSize });
+  }
+  return new GeoJsonParser();
+}
+```
+
+> **Good to know:** The package uses functional lenses from `@accelint/core` for immutable property access. All lens functions are pure and return new values without modifying inputs. The type system enforces valid service/data type combinations at compile time through generic constraints.
+
+## Related
+
+- [@accelint/core](../core/index.mdx) - Lens utilities (lensProp, composeLens, get)
+- [Zod Documentation](https://zod.dev/) - Schema validation library
+- [Deck.gl Documentation](https://deck.gl/) - Visualization layer reference

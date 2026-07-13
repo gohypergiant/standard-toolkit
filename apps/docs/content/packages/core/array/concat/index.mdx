@@ -1,0 +1,91 @@
+---
+title: concat
+description: Concatenate two arrays together into a new array.
+source: packages/core/src/array/concat/index.ts
+source_sha: b9d62928b16591c9b96d402d10cd1da7da5b2b4b
+doc_sha: c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0
+deprecated: false
+updated: 2026-07-13
+---
+
+# concat
+
+Concatenate two arrays together into a new array.
+
+## Usage
+
+```typescript
+import { concat } from '@accelint/core/array/concat';
+
+// Basic usage
+const combined = concat([1, 2, 3])([4, 5, 6]);
+// [1, 2, 3, 4, 5, 6]
+
+// Partial application
+const appendTo123 = concat([1, 2, 3]);
+appendTo123([4, 5]); // [1, 2, 3, 4, 5]
+```
+
+## Reference
+
+```typescript
+function concat<T>(
+  concatable: T[]
+): (newValue: T[]) => T[]
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `concatable` | `T[]` | The first array (will be at the beginning of result). |
+
+### Returns
+
+Returns a curried function that accepts a second array and returns a new array with all elements from both arrays.
+
+### Type Parameters
+
+- `T` - The type of elements in both arrays
+
+## Examples
+
+### Example: Merging arrays of objects
+
+```typescript
+import { concat } from '@accelint/core/array/concat';
+
+interface Item {
+  id: number;
+  name: string;
+}
+
+const first: Item[] = [{ id: 1, name: 'A' }];
+const second: Item[] = [{ id: 2, name: 'B' }];
+
+const merged = concat(first)(second);
+// [{ id: 1, name: 'A' }, { id: 2, name: 'B' }]
+```
+
+### Example: Building arrays incrementally
+
+```typescript
+import { concat } from '@accelint/core/array/concat';
+import { pipe } from '@accelint/core/composition/pipe';
+
+const buildArray = pipe(
+  concat([1, 2]),
+  concat([3, 4])
+);
+
+buildArray([5, 6]);
+// [3, 4, 1, 2, 5, 6]
+```
+
+> **Good to know:** The original arrays are not modified—a new array is always returned. Elements are copied, not deeply cloned. This is a pure function with no side effects.
+
+## Related
+
+- [push](../push/index.md) - Add element to end of array
+- [unshift](../unshift/index.md) - Add element to start of array
+- [slice](../slice/index.md) - Extract portion of array

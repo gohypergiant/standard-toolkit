@@ -1,41 +1,263 @@
 ---
-title: TypeScript Config
-description: Shared TypeScript configurations for different project types
+title: "@accelint/typescript-config"
+description: Shared TypeScript configurations for strict, production-ready type checking across various project types and build targets.
+source: tooling/typescript-config/package.json
+source_sha: bee19329f6b1797ca4eee05d5370e514c9aef13b
+doc_sha: cd2b24fada690e86d5a6f391fee20dd28fc4ce78
+deprecated: false
+updated: 2026-07-13
 ---
 
-# TypeScript Config
+# @accelint/typescript-config
 
-Shared TypeScript configurations for different project types including libraries, Next.js apps, and more.
+Shared TypeScript configurations for strict, production-ready type checking across various project types and build targets.
 
-## Installation
+## Usage
+
+Install the package and extend the appropriate configuration in your `tsconfig.json`:
 
 ```bash
 pnpm add -D @accelint/typescript-config
 ```
 
-## Usage
-
-Extend the appropriate configuration in your `tsconfig.json`:
-
 ```json
 {
-  "extends": "@accelint/typescript-config/base.json"
+  "extends": "@accelint/typescript-config/bundler/dom/app",
+  "compilerOptions": {
+    "outDir": "./dist"
+  },
+  "include": ["src"]
 }
 ```
 
-Available configurations:
-- `base.json` - Base configuration for all projects
-- `library.json` - For library packages
-- `nextjs.json` - For Next.js applications
-- `react.json` - For React applications
+## Reference
 
-## Features
+### Available Configurations
 
-- Strict type checking
-- Path aliases and module resolution
-- Optimized compiler options
-- Project reference support
+The package provides configurations organized by build tool and environment:
 
-## Source Code
+#### TSC Configurations
 
-View the [source code on GitHub](https://github.com/gohypergiant/standard-toolkit/tree/main/tooling/typescript-config).
+For projects using TypeScript Compiler directly:
+
+**DOM (Browser) Environments:**
+- `@accelint/typescript-config/tsc/dom/app` - Web applications
+- `@accelint/typescript-config/tsc/dom/library` - Standalone libraries
+- `@accelint/typescript-config/tsc/dom/library-monorepo` - Libraries in monorepos
+
+**No-DOM (Node.js) Environments:**
+- `@accelint/typescript-config/tsc/no-dom/app` - Node.js applications
+- `@accelint/typescript-config/tsc/no-dom/library` - Node.js libraries
+- `@accelint/typescript-config/tsc/no-dom/library-monorepo` - Node.js libraries in monorepos
+
+#### Bundler Configurations
+
+For projects using bundlers (Vite, Webpack, etc.):
+
+**DOM (Browser) Environments:**
+- `@accelint/typescript-config/bundler/dom` - Web applications
+- `@accelint/typescript-config/bundler/dom/app` - Same as above
+- `@accelint/typescript-config/bundler/dom/library` - Libraries with bundlers
+- `@accelint/typescript-config/bundler/dom/library-monorepo` - Monorepo libraries with bundlers
+
+**No-DOM (Node.js) Environments:**
+- `@accelint/typescript-config/bundler/no-dom` - Node.js with bundlers
+- `@accelint/typescript-config/bundler/no-dom/app` - Same as above
+- `@accelint/typescript-config/bundler/no-dom/library` - Node.js libraries with bundlers
+- `@accelint/typescript-config/bundler/no-dom/library-monorepo` - Monorepo Node.js libraries with bundlers
+
+### Core Compiler Options
+
+All configurations share these strict settings:
+
+```typescript
+{
+  "strict": true,                      // Enable all strict type checking
+  "noUncheckedIndexedAccess": true,   // Array/index access returns T | undefined
+  "noImplicitOverride": true,          // Require explicit override keyword
+  "esModuleInterop": true,             // Enable CommonJS/ESM interop
+  "skipLibCheck": true,                // Skip type checking of declaration files
+  "target": "es2022",                  // Target ES2022 runtime
+  "allowJs": true,                     // Allow JavaScript files
+  "resolveJsonModule": true,           // Import JSON files
+  "moduleDetection": "force",          // Force module detection
+  "isolatedModules": true,             // Each file can be transpiled independently
+  "verbatimModuleSyntax": true         // Preserve import/export syntax
+}
+```
+
+### Configuration Differences
+
+#### TSC vs Bundler
+
+**TSC configurations** are for projects that:
+- Use `tsc` for compilation
+- Need full type checking and declaration generation
+- Output JavaScript files directly
+- Settings: `module: "esnext"`, `moduleResolution: "bundler"`, `sourceMap: true`
+
+**Bundler configurations** are for projects that:
+- Use Vite, Webpack, or similar bundlers
+- Only need type checking (bundler handles compilation)
+- Have more relaxed module resolution
+- Settings: `module: "preserve"`, `noEmit: true`
+
+#### DOM vs No-DOM
+
+**DOM configurations** include:
+- Browser-specific type definitions
+- Libraries: `["es2023", "dom", "dom.iterable"]` (TSC) or `["es2022", "dom", "dom.iterable"]` (Bundler)
+
+**No-DOM configurations** are for:
+- Node.js applications and server-side code
+- Libraries: `["es2023"]` (TSC) or `["es2022"]` (Bundler)
+
+#### App vs Library vs Library-Monorepo
+
+**App configurations:**
+- Optimized for applications (not meant to be published)
+- No declaration generation
+- Fast compilation
+
+**Library configurations:**
+- Include `declaration: true` for type definition generation
+- Strict settings for publishable packages
+- Type safety for consumers
+
+**Library-Monorepo configurations:**
+- Support for composite projects
+- Enable incremental builds
+- Optimized for monorepo tooling
+
+> **Good to know:** Choose configurations based on your build tool (tsc vs bundler), environment (DOM vs no-DOM), and project type (app, library, or library-monorepo). TSC configurations use `module: "esnext"` with `moduleResolution: "bundler"`, while bundler configurations use `module: "preserve"` with `noEmit: true`.
+
+## Examples
+
+### Example: React application with Vite
+
+```json
+{
+  "extends": "@accelint/typescript-config/bundler/dom/app",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["src"]
+}
+```
+
+### Example: Node.js application with tsc
+
+```json
+{
+  "extends": "@accelint/typescript-config/tsc/no-dom/app",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src"
+  },
+  "include": ["src"],
+  "exclude": ["**/*.test.ts"]
+}
+```
+
+### Example: Publishable library
+
+```json
+{
+  "extends": "@accelint/typescript-config/tsc/dom/library",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "declarationDir": "./dist/types",
+    "rootDir": "./src"
+  },
+  "include": ["src"]
+}
+```
+
+### Example: Monorepo package
+
+```json
+{
+  "extends": "@accelint/typescript-config/tsc/dom/library-monorepo",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "composite": true
+  },
+  "include": ["src"]
+}
+```
+
+### Example: Next.js application
+
+```json
+{
+  "extends": "@accelint/typescript-config/bundler/dom/app",
+  "compilerOptions": {
+    "jsx": "preserve",
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
+}
+```
+
+### Example: CLI tool (Node.js)
+
+```json
+{
+  "extends": "@accelint/typescript-config/tsc/no-dom/app",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext"
+  },
+  "include": ["src"]
+}
+```
+
+### Example: Custom path aliases
+
+```json
+{
+  "extends": "@accelint/typescript-config/bundler/dom/app",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@components/*": ["./src/components/*"],
+      "@utils/*": ["./src/utils/*"]
+    }
+  },
+  "include": ["src"]
+}
+```
+
+### Example: Dual package (ESM + CommonJS)
+
+```json
+{
+  "extends": "@accelint/typescript-config/tsc/no-dom/library",
+  "compilerOptions": {
+    "outDir": "./dist/esm",
+    "module": "esnext",
+    "declaration": true,
+    "declarationMap": true
+  },
+  "include": ["src"]
+}
+```
+
+## Related
+
+- [TypeScript Documentation](https://www.typescriptlang.org/docs/) - Official TypeScript docs
+- [TSConfig Reference](https://www.typescriptlang.org/tsconfig) - Complete compiler options reference
+- [@accelint/biome-config](../biome-config/index.mdx) - Shared Biome configuration

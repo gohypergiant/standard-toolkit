@@ -1,0 +1,434 @@
+---
+title: BaseMap
+description: Deck.gl-powered base map with MapLibre GL integration, event bus coordination, and mode management.
+source: packages/map-toolkit/src/deckgl/base-map/index.tsx
+source_sha: 5449737bbb4f30acbd8cb71d09ebaf8a87387a86
+doc_sha: 81e93a81ca8b4c32480ed4d62c343a755840375f
+deprecated: false
+updated: 2026-07-13
+---
+
+# BaseMap
+
+A React component that provides a Deck.gl-powered base map with MapLibre GL integration.
+
+Serves as the foundation for building interactive map applications with support for click and hover events through a centralized event bus. Integrates Deck.gl for 3D visualizations with MapLibre GL for base map tiles.
+
+## Usage
+
+```tsx
+import { BaseMap } from '@accelint/map-toolkit/deckgl';
+import { uuid } from '@accelint/core';
+
+// Create id at module level for stability and easy sharing
+const MAIN_MAP_ID = uuid();
+
+export function MapView() {
+  return <BaseMap className="w-full h-full" id={MAIN_MAP_ID} />;
+}
+```
+
+## Reference
+
+```typescript
+interface BaseMapProps extends DeckglProps {
+  // Required
+  id: UniqueId;
+  
+  // Layout
+  className?: string;
+  
+  // Map configuration
+  defaultView?: '2D' | '2.5D' | '3D';
+  styleUrl?: string;
+  initialViewState?: Partial<ViewState>;
+  mapLibreOptions?: MapLibreOptions;
+  
+  // Interaction
+  enableControlEvents?: boolean;
+  boxZoom?: boolean;
+  enableRbz?: boolean;
+  rbzOptions?: RbzOptions;
+  
+  // Event handlers
+  onClick?: (info: PickingInfo, event: MjolnirGestureEvent) => void;
+  onHover?: (info: PickingInfo, event: MjolnirPointerEvent) => void;
+  onViewStateChange?: (params: ViewStateChangeParameters) => void;
+  
+  // All Deck.gl props (controller, parameters, layers, etc.)
+}
+```
+
+### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `id` | `UniqueId` | - | **Yes** |
+| `className` | `string` | - | No |
+| `children` | `React.ReactNode` | - | No |
+| `defaultView` | `'2D' \| '2.5D' \| '3D'` | `'2D'` | No |
+| `styleUrl` | `string` | Dark Matter style | No |
+| `initialViewState` | `Partial<ViewState>` | `{ zoom: 2, lat: 0, lon: 0 }` | No |
+| `enableControlEvents` | `boolean` | `true` | No |
+| `boxZoom` | `boolean` | `true` (unless RBZ enabled) | No |
+| `enableRbz` | `boolean` | `false` | No |
+| `rbzOptions` | `RbzOptions` | - | No |
+| `onClick` | `(info, event) => void` | - | No |
+| `onHover` | `(info, event) => void` | - | No |
+| `onViewStateChange` | `(params) => void` | - | No |
+| `mapLibreOptions` | `MapLibreOptions` | - | No |
+
+#### `id`
+
+**Required.** Unique identifier for this map instance. Used to isolate map mode state between multiple map instances (e.g., main map vs minimap).
+
+Must be a UUID generated using `uuid()` from `@accelint/core`. Should be a module-level constant for stability and easy sharing with `useMapMode()`.
+
+#### `defaultView`
+
+Initial view mode for the map:
+- `'2D'` - Flat map with no pitch (default)
+- `'2.5D'` - Slight pitch for depth perception
+- `'3D'` - Full 3D navigation with pitch and rotation
+
+#### `styleUrl`
+
+MapLibre style URL for base map tiles. Defaults to Carto's Dark Matter style.
+
+Common options:
+- `'https://tiles.basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json'` (default)
+- `'https://tiles.basemaps.cartocdn.com/gl/positron-gl-style/style.json'` (light)
+- Custom Mapbox or MapLibre style URLs
+
+#### `enableRbz` & `rbzOptions`
+
+Enable rubber band zoom (Shift + drag to select area for zoom). Automatically disables `boxZoom` when enabled.
+
+**Important:** These options are read once on map load. To change dynamically, update the map's `key` prop to force a remount.
+
+```typescript
+type RbzOptions = {
+  fillColor?: string;
+  strokeColor?: string;
+  strokeWidth?: number;
+  shouldActivate?: () => boolean;
+};
+```
+
+#### `mapLibreOptions`
+
+Additional MapLibre `MapOptions` forwarded to the underlying map (e.g., `transformRequest`, `maxBounds`, `minZoom`, `maxZoom`).
+
+Keys BaseMap manages internally are stripped:
+- Camera/view state: `center`, `zoom`, `pitch`, `bearing`, `projection`, `bounds`, `fitBoundsOptions`
+- Controller gestures: `doubleClickZoom`, `dragRotate`, `pitchWithRotate`, `rollEnabled`, `boxZoom`
+- WebGL context: `canvasContextAttributes`
+- Already exposed props: `style`, `container`, `maxPitch`
+
+### Map Mode Integration
+
+BaseMap automatically creates a `MapProvider` internally, setting up map mode state management for this instance.
+
+**Children vs Siblings:**
+- **Children**: Only Deck.gl layer components can be children. They use `useMapMode()` without parameters (context-based).
+- **Siblings**: UI components (buttons, toolbars) must be siblings and pass `id` to `useMapMode(id)`.
+
+```tsx
+// ✅ Correct: Deck.gl layer as child
+<BaseMap id={mapId}>
+  <ScatterplotLayer {...props} />
+</BaseMap>
+
+// ✅ Correct: UI as sibling
+<>
+  <Toolbar mapId={mapId} />
+  <BaseMap id={mapId} />
+</>
+
+// ❌ Wrong: UI as child
+<BaseMap id={mapId}>
+  <Toolbar /> {/* Won't render - not a Deck.gl layer */}
+</BaseMap>
+```
+
+### Event Bus
+
+Click, hover, and viewport events are emitted through the event bus with `id` included in the payload, allowing multiple map instances to coexist without interference.
+
+```typescript
+// Events
+MapEvents.click    // MapClickEvent
+MapEvents.hover    // MapHoverEvent
+MapEvents.viewport // MapViewportEvent
+
+// Control events
+MapEvents.enablePan
+MapEvents.disablePan
+MapEvents.enableZoom
+MapEvents.disableZoom
+```
+
+### Inherited Props
+
+BaseMap inherits all props from Deck.gl's `DeckglProps`, including:
+- `controller` - Enable/disable map controls
+- `interleaved` - Interleaved rendering with MapLibre
+- `parameters` - WebGL parameters
+- `widgets` - Deck.gl widgets
+- `useDevicePixels` - High-DPI rendering
+- `pickingRadius` - Picking tolerance in pixels
+
+See [Deck.gl Documentation](https://deck.gl/docs/api-reference/core/deck) for full API.
+
+## Examples
+
+### Example: Basic map with id
+
+```tsx
+import { BaseMap } from '@accelint/map-toolkit/deckgl';
+import { uuid } from '@accelint/core';
+
+// Module-level constant for stability
+const MAIN_MAP_ID = uuid();
+
+export function SimpleMap() {
+  return (
+    <div className="w-full h-screen">
+      <BaseMap id={MAIN_MAP_ID} className="w-full h-full" />
+    </div>
+  );
+}
+```
+
+### Example: With event handlers and mode management
+
+```tsx
+import { BaseMap } from '@accelint/map-toolkit/deckgl';
+import { useMapMode } from '@accelint/map-toolkit/map-mode';
+import { uuid } from '@accelint/core';
+import type { PickingInfo } from '@deck.gl/core';
+import type { MjolnirGestureEvent } from 'mjolnir.js';
+
+const MAIN_MAP_ID = uuid();
+
+function Toolbar() {
+  const { mode, requestModeChange } = useMapMode(MAIN_MAP_ID);
+  
+  return (
+    <div className="absolute top-4 left-4 z-10">
+      <button onClick={() => requestModeChange('default', 'toolbar')}>
+        Navigate
+      </button>
+      <button onClick={() => requestModeChange('drawing', 'toolbar')}>
+        Draw
+      </button>
+      <div>Current mode: {mode}</div>
+    </div>
+  );
+}
+
+export function InteractiveMap() {
+  const handleClick = (info: PickingInfo, event: MjolnirGestureEvent) => {
+    if (info.object) {
+      console.log('Clicked:', info.object);
+    }
+  };
+  
+  const handleHover = (info: PickingInfo) => {
+    console.log('Hovering:', info.coordinate);
+  };
+  
+  return (
+    <div className="relative w-full h-screen">
+      <Toolbar />
+      <BaseMap
+        id={MAIN_MAP_ID}
+        className="w-full h-full"
+        onClick={handleClick}
+        onHover={handleHover}
+      />
+    </div>
+  );
+}
+```
+
+### Example: With custom initial view
+
+```tsx
+import { BaseMap } from '@accelint/map-toolkit/deckgl';
+import { uuid } from '@accelint/core';
+
+const MAP_ID = uuid();
+
+export function CenteredMap() {
+  return (
+    <BaseMap
+      id={MAP_ID}
+      className="w-full h-full"
+      defaultView="2.5D"
+      initialViewState={{
+        latitude: 37.7749,
+        longitude: -122.4194,
+        zoom: 12,
+      }}
+    />
+  );
+}
+```
+
+### Example: With Deck.gl layers
+
+```tsx
+import { BaseMap } from '@accelint/map-toolkit/deckgl';
+import { ScatterplotLayer } from '@deck.gl/layers';
+import { uuid } from '@accelint/core';
+
+const MAP_ID = uuid();
+
+const data = [
+  { position: [-122.4, 37.8], name: 'San Francisco' },
+  { position: [-74.0, 40.7], name: 'New York' },
+];
+
+export function MapWithLayers() {
+  return (
+    <BaseMap id={MAP_ID} className="w-full h-full">
+      <ScatterplotLayer
+        id="cities"
+        data={data}
+        getPosition={(d) => d.position}
+        getRadius={10000}
+        getFillColor={[255, 0, 0]}
+      />
+    </BaseMap>
+  );
+}
+```
+
+### Example: Listening to viewport changes
+
+```tsx
+import { useOn } from '@accelint/bus/react';
+import { MapEvents } from '@accelint/map-toolkit/deckgl';
+import type { MapViewportEvent } from '@accelint/map-toolkit/deckgl';
+import { BaseMap } from '@accelint/map-toolkit/deckgl';
+import { uuid } from '@accelint/core';
+
+const MAP_ID = uuid();
+
+function ViewportLogger() {
+  useOn<MapViewportEvent>(MapEvents.viewport, (event) => {
+    if (event.payload.id === MAP_ID) {
+      console.log('Viewport:', {
+        zoom: event.payload.zoom,
+        bounds: event.payload.bounds,
+        center: [event.payload.latitude, event.payload.longitude],
+      });
+    }
+  });
+  
+  return null;
+}
+
+export function TrackedMap() {
+  return (
+    <>
+      <ViewportLogger />
+      <BaseMap id={MAP_ID} className="w-full h-full" />
+    </>
+  );
+}
+```
+
+### Example: Multiple map instances
+
+```tsx
+import { BaseMap } from '@accelint/map-toolkit/deckgl';
+import { uuid } from '@accelint/core';
+
+const MAIN_MAP_ID = uuid();
+const MINI_MAP_ID = uuid();
+
+export function DualMapView() {
+  return (
+    <div className="flex h-screen">
+      <div className="flex-1">
+        <BaseMap id={MAIN_MAP_ID} className="w-full h-full" />
+      </div>
+      <div className="w-64">
+        <BaseMap
+          id={MINI_MAP_ID}
+          className="w-full h-full"
+          initialViewState={{ zoom: 0 }}
+        />
+      </div>
+    </div>
+  );
+}
+```
+
+### Example: With rubber band zoom
+
+```tsx
+import { BaseMap } from '@accelint/map-toolkit/deckgl';
+import { uuid } from '@accelint/core';
+
+const MAP_ID = uuid();
+
+export function RbzMap() {
+  return (
+    <BaseMap
+      id={MAP_ID}
+      className="w-full h-full"
+      enableRbz={true}
+      rbzOptions={{
+        fillColor: 'rgba(0, 120, 255, 0.1)',
+        strokeColor: '#0078ff',
+        strokeWidth: 2,
+      }}
+    />
+  );
+}
+```
+
+> **Good to know:** When `enableRbz` is true, `boxZoom` is automatically disabled to prevent gesture conflicts.
+
+### Example: Custom MapLibre options
+
+```tsx
+import { BaseMap } from '@accelint/map-toolkit/deckgl';
+import { uuid } from '@accelint/core';
+
+const MAP_ID = uuid();
+
+export function RestrictedMap() {
+  return (
+    <BaseMap
+      id={MAP_ID}
+      className="w-full h-full"
+      mapLibreOptions={{
+        maxBounds: [[-130, 20], [-60, 55]], // Restrict to US
+        minZoom: 4,
+        maxZoom: 18,
+        transformRequest: (url, resourceType) => {
+          // Add auth headers for custom tile server
+          if (url.startsWith('https://tiles.example.com/')) {
+            return {
+              url,
+              headers: { Authorization: `Bearer ${token}` },
+            };
+          }
+          return { url };
+        },
+      }}
+    />
+  );
+}
+```
+
+## Related
+
+- [useMapMode](../map-mode/index.mdx) - Access map mode state within or outside BaseMap
+- [useMapCursor](../map-cursor/index.mdx) - Coordinate cursor styles across features
+- [useMapCamera](../camera/index.mdx) - Control camera position and view state
+- [@accelint/bus](../../../packages/bus/index.mdx) - Event bus for map event coordination

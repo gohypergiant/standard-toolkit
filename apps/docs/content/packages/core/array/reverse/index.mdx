@@ -1,0 +1,128 @@
+---
+title: reverse
+description: Returns a new array with elements in reversed order
+source: packages/core/src/array/reverse/index.ts
+source_sha: 88b84b4aa21644c8d5d14960d72eb604e3cf892d
+doc_sha: 4d65b4e03543bdb3e7ae2b68c1dad82c938be987
+deprecated: false
+updated: 2026-07-13
+---
+
+# reverse
+
+Returns a new array with the order of elements reversed. Does not mutate the original array.
+
+## Usage
+
+```typescript
+import { reverse } from '@accelint/core';
+
+// Reverse an array
+const reversed = reverse([1, 2, 3, 4, 5]);
+// [5, 4, 3, 2, 1]
+```
+
+## Reference
+
+```typescript
+function reverse<T>(
+  arr: T[]
+): T[]
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `arr` | `T[]` | The array to reverse. |
+
+### Returns
+
+Returns a new array with elements in reversed order.
+
+### Type Parameters
+
+- `T` - The type of elements in the array
+
+## Examples
+
+### Example: Reversing different types
+
+```typescript
+import { reverse } from '@accelint/core';
+
+const numbers = reverse([1, 2, 3, 4, 5]);
+// [5, 4, 3, 2, 1]
+
+const strings = reverse(['a', 'b', 'c']);
+// ['c', 'b', 'a']
+```
+
+### Example: Original array unchanged
+
+```typescript
+import { reverse } from '@accelint/core';
+
+const original = [1, 2, 3];
+const reversed = reverse(original);
+
+console.log(original); // [1, 2, 3]
+console.log(reversed); // [3, 2, 1]
+```
+
+### Example: Processing in reverse order
+
+```typescript
+import { reverse } from '@accelint/core';
+
+interface Event {
+  id: number;
+  timestamp: Date;
+}
+
+const events: Event[] = [
+  { id: 1, timestamp: new Date('2026-07-13T10:00:00') },
+  { id: 2, timestamp: new Date('2026-07-13T11:00:00') },
+  { id: 3, timestamp: new Date('2026-07-13T12:00:00') }
+];
+
+// Show most recent first
+const recentFirst = reverse(events);
+// [{ id: 3, ... }, { id: 2, ... }, { id: 1, ... }]
+```
+
+### Example: Composing with other functions
+
+```typescript
+import { reverse, map, pipe } from '@accelint/core';
+
+const processInReverse = pipe(
+  reverse,
+  map((x: number) => x * 2)
+);
+
+processInReverse([1, 2, 3, 4]);
+// [8, 6, 4, 2]
+```
+
+### Example: Palindrome check
+
+```typescript
+import { reverse } from '@accelint/core';
+
+function isPalindrome(arr: number[]): boolean {
+  const reversed = reverse(arr);
+  return arr.every((val, idx) => val === reversed[idx]);
+}
+
+isPalindrome([1, 2, 3, 2, 1]); // true
+isPalindrome([1, 2, 3, 4, 5]); // false
+```
+
+> **Good to know:** This is a pure function that always returns a new array. The original array is never modified.
+
+## Related
+
+- [slice](../slice/index.md) - Extract portion of array
+- [map](../map/index.md) - Transform array elements
+- [reduceRight](../reduce-right/index.md) - Reduce from right to left

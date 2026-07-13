@@ -1,0 +1,238 @@
+---
+title: List
+description: Flexible grid list component for selectable items with rich content including labels, descriptions, icons, and actions
+source: packages/design-toolkit/src/components/list/index.tsx
+source_sha: 165bd674e7a134adf23529577449d757caf00508
+doc_sha: 1d63db6a7dcdd511249e3da7ba2a1eaee9a2898c
+deprecated: false
+updated: 2026-07-13
+---
+
+# List
+
+Flexible grid list component for selectable items with rich content, selection support, and keyboard navigation.
+
+## Usage
+
+```tsx
+import { List, ListItem, ListItemContent, ListItemTitle } from '@accelint/design-toolkit';
+
+export function FileList() {
+  return (
+    <List aria-label="Files">
+      <ListItem>
+        <ListItemContent>
+          <ListItemTitle>Document.pdf</ListItemTitle>
+        </ListItemContent>
+      </ListItem>
+      <ListItem>
+        <ListItemContent>
+          <ListItemTitle>Spreadsheet.xlsx</ListItemTitle>
+        </ListItemContent>
+      </ListItem>
+    </List>
+  );
+}
+```
+
+## Reference
+
+```typescript
+interface ListProps<T> {
+  children: React.ReactNode | ((item: T) => React.ReactNode);
+  className?: string;
+  variant?: 'cozy' | 'compact' | 'crammed';
+  selectionMode?: 'none' | 'single' | 'multiple';
+  'aria-label': string;
+}
+```
+
+### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `children` | `React.ReactNode \| ((item: T) => React.ReactNode)` | - | Yes |
+| `className` | `string` | - | No |
+| `variant` | `'cozy' \| 'compact' \| 'crammed'` | `'cozy'` | No |
+| `selectionMode` | `'none' \| 'single' \| 'multiple'` | - | No |
+| `aria-label` | `string` | - | Yes |
+
+#### `variant`
+
+Visual density variant that controls spacing and sizing:
+- `cozy` - Default comfortable spacing with large icons
+- `compact` - Reduced spacing for denser layouts
+- `crammed` - Minimal spacing for maximum density with small icons
+
+The `variant` automatically sizes nested `Icon` components via context.
+
+#### `selectionMode`
+
+Controls item selection behavior:
+- `none` - No selection allowed (default)
+- `single` - Only one item can be selected
+- `multiple` - Multiple items can be selected
+
+#### `aria-label`
+
+Required accessible label for the list. Describes the list's purpose to screen readers.
+
+## Examples
+
+### Example: Basic list with items
+
+```tsx
+import { List, ListItem, ListItemContent, ListItemTitle } from '@accelint/design-toolkit';
+
+<List aria-label="Tasks">
+  <ListItem>
+    <ListItemContent>
+      <ListItemTitle>Complete documentation</ListItemTitle>
+    </ListItemContent>
+  </ListItem>
+  <ListItem>
+    <ListItemContent>
+      <ListItemTitle>Review pull requests</ListItemTitle>
+    </ListItemContent>
+  </ListItem>
+</List>
+```
+
+### Example: List with descriptions and icons
+
+```tsx
+import { List, ListItem, ListItemContent, ListItemTitle, ListItemDescription, Icon } from '@accelint/design-toolkit';
+import { File, Folder } from '@accelint/icons';
+
+<List aria-label="Files" variant="cozy">
+  <ListItem>
+    <Icon><Folder /></Icon>
+    <ListItemContent>
+      <ListItemTitle>Projects</ListItemTitle>
+      <ListItemDescription>24 items</ListItemDescription>
+    </ListItemContent>
+  </ListItem>
+  <ListItem>
+    <Icon><File /></Icon>
+    <ListItemContent>
+      <ListItemTitle>README.md</ListItemTitle>
+      <ListItemDescription>2.4 KB</ListItemDescription>
+    </ListItemContent>
+  </ListItem>
+</List>
+```
+
+### Example: Selectable list
+
+```tsx
+import { List, ListItem, ListItemContent, ListItemTitle } from '@accelint/design-toolkit';
+import { useState } from 'react';
+
+function SelectableFileList() {
+  const [selected, setSelected] = useState(new Set());
+
+  return (
+    <List
+      aria-label="Files"
+      selectionMode="multiple"
+      selectedKeys={selected}
+      onSelectionChange={setSelected}
+    >
+      <ListItem id="file1">
+        <ListItemContent>
+          <ListItemTitle>File 1.txt</ListItemTitle>
+        </ListItemContent>
+      </ListItem>
+      <ListItem id="file2">
+        <ListItemContent>
+          <ListItemTitle>File 2.txt</ListItemTitle>
+        </ListItemContent>
+      </ListItem>
+    </List>
+  );
+}
+```
+
+### Example: Compact variant
+
+```tsx
+import { List, ListItem, ListItemContent, ListItemTitle } from '@accelint/design-toolkit';
+
+<List aria-label="Compact list" variant="compact">
+  <ListItem>
+    <ListItemContent>
+      <ListItemTitle>Compact Item 1</ListItemTitle>
+    </ListItemContent>
+  </ListItem>
+  <ListItem>
+    <ListItemContent>
+      <ListItemTitle>Compact Item 2</ListItemTitle>
+    </ListItemContent>
+  </ListItem>
+</List>
+```
+
+### Example: Dynamic list with data
+
+```tsx
+import { List, ListItem, ListItemContent, ListItemTitle } from '@accelint/design-toolkit';
+
+const files = [
+  { id: '1', name: 'Document.pdf', size: '1.2 MB' },
+  { id: '2', name: 'Image.png', size: '3.4 MB' },
+  { id: '3', name: 'Video.mp4', size: '24.5 MB' },
+];
+
+<List items={files} aria-label="Files">
+  {(file) => (
+    <ListItem id={file.id}>
+      <ListItemContent>
+        <ListItemTitle>{file.name}</ListItemTitle>
+        <ListItemDescription>{file.size}</ListItemDescription>
+      </ListItemContent>
+    </ListItem>
+  )}
+</List>
+```
+
+### Example: List with actions
+
+```tsx
+import { List, ListItem, ListItemContent, ListItemTitle, ListItemActions, Button } from '@accelint/design-toolkit';
+import { Delete, Edit } from '@accelint/icons';
+
+<List aria-label="Tasks with actions">
+  <ListItem>
+    <ListItemContent>
+      <ListItemTitle>Task 1</ListItemTitle>
+    </ListItemContent>
+    <ListItemActions>
+      <Button variant="icon" aria-label="Edit">
+        <Icon><Edit /></Icon>
+      </Button>
+      <Button variant="icon" aria-label="Delete">
+        <Icon><Delete /></Icon>
+      </Button>
+    </ListItemActions>
+  </ListItem>
+</List>
+```
+
+## Multi-Part Structure
+
+List is composed of several sub-components:
+
+- **List** - Root container with selection and keyboard navigation
+- **ListItem** - Individual list item
+- **ListItemContent** - Content wrapper for titles and descriptions
+- **ListItemTitle** - Primary text label
+- **ListItemDescription** - Secondary description text
+- **ListItemActions** - Action buttons visible on hover/focus
+
+> **Good to know:** List must have an explicit height constraint. Wrap it in a container with defined dimensions or use utility classes like `h-[400px]`.
+
+## Related
+
+- [ListItem](./item.mdx) - Individual list item component
+- [ListItemContent](./item-content.mdx) - Content wrapper
+- [Icon](../icon/index.mdx) - Icon component with automatic sizing

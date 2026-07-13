@@ -1,0 +1,156 @@
+---
+title: equality
+description: Logical equality (XNOR) for values and function results
+source: logical/equality/index.ts
+source_sha: 7cfaa6ac18905f4146bcf1203eb33917a9c64039
+doc_sha: dd011b7db6ffe6bfa02e1600666adc587ad7589b
+deprecated: false
+updated: 2026-07-13
+---
+
+# equality
+
+Logical equality (XNOR) for values and function results. Returns `true` if both operands are strictly equal using `===`.
+
+## Usage
+
+```typescript
+import { equality, equalityFn } from '@accelint/core';
+
+// Value-based equality
+equality(4)(4);
+// true
+
+equality(4)(8);
+// false
+
+// Function-based equality
+const getLength = (arr: unknown[]) => arr.length;
+const getSum = (arr: number[]) => arr.reduce((a, b) => a + b, 0);
+
+equalityFn(getLength)(getSum)([1, 2, 3]);
+// false (3 !== 6)
+
+equalityFn(getLength)(getSum)([1, 1, 1]);
+// true (3 === 3)
+```
+
+## Reference
+
+### equality
+
+```typescript
+function equality(a: unknown): (b: unknown) => boolean
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `a` | `unknown` | The first value to compare |
+
+#### Returns
+
+Returns a curried function that accepts a second value and returns `true` if both values are strictly equal (`===`), `false` otherwise.
+
+### equalityFn
+
+```typescript
+function equalityFn<T>(
+  a: (x: T) => unknown
+): (b: (x: T) => unknown) => (c: T) => boolean
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `a` | `(x: T) => unknown` | The first function to evaluate |
+
+#### Returns
+
+Returns a curried function that accepts a second function, then accepts a value to pass to both functions, returning `true` if both function results are strictly equal, `false` otherwise.
+
+#### Type Parameters
+
+- `T` - The type of the input value passed to both functions
+
+## Examples
+
+### Example: Creating equality predicates
+
+```typescript
+import { equality } from '@accelint/core';
+
+const isZero = equality(0);
+
+isZero(0);
+// true
+
+isZero(1);
+// false
+```
+
+### Example: Comparing function results
+
+```typescript
+import { equalityFn } from '@accelint/core';
+
+const getFirstChar = (s: string) => s[0];
+const getLastChar = (s: string) => s[s.length - 1];
+
+// Check if string is a palindrome (single character case)
+const isPalindrome = equalityFn(getFirstChar)(getLastChar);
+
+isPalindrome('a');
+// true
+
+isPalindrome('abc');
+// false
+```
+
+### Example: Validation with modulo
+
+```typescript
+import { equalityFn } from '@accelint/core';
+
+const mod2 = (x: number) => x % 2;
+const mod3 = (x: number) => x % 3;
+
+// Check if remainders are equal
+const hasSameRemainder = equalityFn(mod2)(mod3);
+
+hasSameRemainder(6);
+// true (0 === 0)
+
+hasSameRemainder(5);
+// false (1 !== 2)
+```
+
+### Example: Logical biconditional
+
+```typescript
+import { equality } from '@accelint/core';
+
+// Logical XNOR (exclusive NOR)
+// Returns true when both are true OR both are false
+const xnor = (a: boolean, b: boolean) => equality(a)(b);
+
+xnor(true, true);
+// true
+
+xnor(false, false);
+// true
+
+xnor(true, false);
+// false
+```
+
+> **Good to know:** `equality` uses strict equality (`===`), so objects and arrays are compared by reference, not by value. For deep equality, use a dedicated deep equality function.
+
+## Related
+
+- [xor](../xor/index.md) - Logical exclusive OR (opposite of equality)
+- [and](../and/index.md) - Logical conjunction (&&)
+- [or](../or/index.md) - Logical disjunction (||)
+- [not](../not/index.md) - Logical negation (!)

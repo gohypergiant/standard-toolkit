@@ -1,0 +1,157 @@
+---
+title: range
+description: Creates an iterator that yields numbers from start to end (inclusive)
+source: packages/core/src/iterable/range/index.ts
+source_sha: e4cbab69162dfc24a22c37419bae9417ea4d7e7b
+doc_sha: d2507ccb51bfaa2213860fe502d7eef4cd8e4783
+deprecated: false
+updated: 2026-07-13
+---
+
+# range
+
+Creates an iterator that yields numbers from `start` to `end` (both inclusive). Useful for generating numeric sequences without creating intermediate arrays.
+
+## Usage
+
+```typescript
+import { range } from '@accelint/core';
+
+// Iterate from 1 to 10
+for (const n of range(1, 10)) {
+  console.log(n);
+}
+// 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+
+// Convert to array
+const rangeArr = [...range(1, 5)];
+// [1, 2, 3, 4, 5]
+```
+
+## Reference
+
+```typescript
+function range(
+  start: number,
+  end: number
+): IterableIterator<number>
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `start` | `number` | The start of the range (inclusive). |
+| `end` | `number` | The end of the range (inclusive). |
+
+### Returns
+
+Returns an iterable iterator that yields numbers from `start` to `end`.
+
+## Examples
+
+### Example: Basic numeric sequences
+
+```typescript
+import { range } from '@accelint/core';
+
+[...range(1, 5)]; // [1, 2, 3, 4, 5]
+[...range(0, 3)]; // [0, 1, 2, 3]
+[...range(10, 15)]; // [10, 11, 12, 13, 14, 15]
+```
+
+### Example: Single element range
+
+```typescript
+import { range } from '@accelint/core';
+
+[...range(5, 5)]; // [5]
+```
+
+### Example: Memory-efficient iteration
+
+```typescript
+import { range } from '@accelint/core';
+
+// Instead of creating an array with 1 million elements
+// const arr = Array.from({ length: 1000000 }, (_, i) => i);
+
+// Use range to iterate without allocating the array
+let sum = 0;
+for (const n of range(0, 999999)) {
+  sum += n;
+}
+// Iterates efficiently without creating a large array
+```
+
+### Example: Generating test data
+
+```typescript
+import { range } from '@accelint/core';
+
+interface User {
+  id: number;
+  name: string;
+}
+
+const generateUsers = (count: number): User[] => {
+  const users: User[] = [];
+  for (const id of range(1, count)) {
+    users.push({ id, name: `User ${id}` });
+  }
+  return users;
+};
+
+generateUsers(3);
+// [
+//   { id: 1, name: 'User 1' },
+//   { id: 2, name: 'User 2' },
+//   { id: 3, name: 'User 3' }
+// ]
+```
+
+### Example: Pagination indices
+
+```typescript
+import { range } from '@accelint/core';
+
+const pageSize = 10;
+const totalItems = 47;
+const totalPages = Math.ceil(totalItems / pageSize);
+
+const pageNumbers = [...range(1, totalPages)];
+// [1, 2, 3, 4, 5]
+```
+
+### Example: Composing with array operations
+
+```typescript
+import { range } from '@accelint/core';
+
+// Map over range
+const squares = [...range(1, 5)].map(n => n * n);
+// [1, 4, 9, 16, 25]
+
+// Filter range
+const evenNumbers = [...range(1, 10)].filter(n => n % 2 === 0);
+// [2, 4, 6, 8, 10]
+```
+
+### Example: Reverse ranges
+
+```typescript
+import { range, reverse } from '@accelint/core';
+
+// range doesn't support descending directly
+// Use reverse to get descending order
+const descending = reverse([...range(1, 5)]);
+// [5, 4, 3, 2, 1]
+```
+
+> **Good to know:** Both `start` and `end` are inclusive. For descending ranges, first create an ascending range then reverse it. The iterator is lazy and only generates values as needed.
+
+## Related
+
+- [createIterable](../create-iterable/index.md) - Create custom iterators
+- [map](../../array/map/index.md) - Transform array elements
+- [reverse](../../array/reverse/index.md) - Reverse array order

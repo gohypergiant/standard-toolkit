@@ -1,0 +1,139 @@
+---
+title: Label
+description: A semantic label component for form elements with automatic required/optional state handling
+source: packages/design-toolkit/src/components/label/index.tsx
+source_sha: 9badd0573f8b222446cd4d21d610099a973d9b6c
+doc_sha: 0b9dc24967f6837c421f4d018d46fab3bec76056
+deprecated: false
+updated: 2026-07-13
+---
+
+# Label
+
+A semantic label component for form elements with automatic handling of required/optional states. Integrates with React Aria form components to ensure proper accessibility and screen reader support.
+
+## Usage
+
+```tsx
+import { Label } from '@accelint/design-toolkit';
+
+export function MyForm() {
+  return <Label>Username</Label>;
+}
+```
+
+## Reference
+
+```typescript
+interface LabelProps {
+  children: React.ReactNode;
+  className?: string;
+  isDisabled?: boolean;
+  isRequired?: boolean;
+}
+```
+
+### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `children` | `React.ReactNode` | - | Yes |
+| `className` | `string` | - | No |
+| `isDisabled` | `boolean` | `false` | No |
+| `isRequired` | `boolean` | `false` | No |
+
+#### `isRequired`
+
+Controls the required/optional indicator:
+- When `true`: No text is appended (assumes required fields don't need explicit indication)
+- When `false`: Appends " (optional)" to the label text
+
+#### `isDisabled`
+
+Sets the label to a disabled visual state, typically used when the associated form control is disabled.
+
+### Inherited Props
+
+Label inherits all props from React Aria's `Label` component, including:
+- `htmlFor` - Associates label with a form control by ID
+- `id` - Unique identifier for the label
+
+See [React Aria Label](https://react-spectrum.adobe.com/react-aria/Label.html) for full API reference.
+
+## Examples
+
+### Example: Basic label
+
+```tsx
+import { Label } from '@accelint/design-toolkit';
+
+<Label>Username</Label>
+```
+
+### Example: Required field
+
+```tsx
+import { Label } from '@accelint/design-toolkit';
+
+<Label isRequired>Email Address</Label>
+```
+
+> **Good to know:** When `isRequired` is `true`, the label displays only the text without any suffix. The design philosophy is that required fields should be unmarked, while optional fields are explicitly indicated.
+
+### Example: Optional field
+
+```tsx
+import { Label } from '@accelint/design-toolkit';
+
+<Label>Phone Number</Label>
+```
+
+This automatically appends " (optional)" to indicate the field is not required.
+
+### Example: Disabled label
+
+```tsx
+import { Label } from '@accelint/design-toolkit';
+
+<Label isDisabled>Inactive Field</Label>
+```
+
+### Example: With TextField
+
+```tsx
+import { Label, TextField } from '@accelint/design-toolkit';
+
+<TextField label="Email" isRequired>
+  <Label isRequired>Email</Label>
+  <Input type="email" />
+</TextField>
+```
+
+> **Good to know:** Most form components like `TextField`, `DateField`, and `SelectField` use Label internally, so you typically don't need to render it directly.
+
+### Example: Custom styling
+
+```tsx
+import { Label } from '@accelint/design-toolkit';
+
+<Label className="text-lg font-bold text-blue-600">
+  Custom Styled Label
+</Label>
+```
+
+### Example: Explicitly associated with input
+
+```tsx
+import { Label } from '@accelint/design-toolkit';
+
+<div>
+  <Label htmlFor="email-input" isRequired>Email</Label>
+  <input id="email-input" type="email" />
+</div>
+```
+
+## Related
+
+- [TextField](../text-field/index.md) - Text input with built-in label
+- [DateField](../date-field/index.md) - Date input with built-in label
+- [SelectField](../select-field/index.md) - Select input with built-in label

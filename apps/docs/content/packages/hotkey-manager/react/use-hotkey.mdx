@@ -1,0 +1,214 @@
+---
+title: useHotkey
+description: React hook that automatically binds a HotkeyManager on mount and unbinds on unmount
+source: packages/hotkey-manager/src/react/use-hotkey.ts
+source_sha: 4e4d8a3bfc1c8e822f1bf886f72eccbae3fe41bd
+doc_sha: 636ff2707c6c47b26f440af3cfc857b6d0a747b9
+deprecated: false
+updated: 2026-07-13
+---
+
+# useHotkey
+
+React hook that automatically binds a HotkeyManager on mount and unbinds on unmount.
+
+## Usage
+
+```tsx
+import { registerHotkey, Keycode } from '@accelint/hotkey-manager';
+import { useHotkey } from '@accelint/hotkey-manager/react';
+
+const saveHotkey = registerHotkey({
+  key: { code: Keycode.KeyS, meta: true },
+  onKeyUp: () => console.log('Save triggered'),
+});
+
+function Editor() {
+  useHotkey(saveHotkey);
+  return <textarea />;
+}
+```
+
+## useHotkey
+
+Binds a hotkey manager when the component mounts and automatically unbinds when it unmounts.
+
+### Reference
+
+```typescript
+function useHotkey(manager: HotkeyManager): void
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `manager` | `HotkeyManager` | The hotkey manager returned by `registerHotkey`. |
+
+### Examples
+
+#### Example: Component-scoped hotkey
+
+```tsx
+import { registerHotkey, Keycode } from '@accelint/hotkey-manager';
+import { useHotkey } from '@accelint/hotkey-manager/react';
+
+const escapeHotkey = registerHotkey({
+  key: { code: Keycode.Escape },
+  onKeyUp: () => console.log('Escape pressed'),
+});
+
+function Modal() {
+  useHotkey(escapeHotkey);
+  return <div className="modal">Press Escape to close</div>;
+}
+```
+
+#### Example: Multiple hotkeys in one component
+
+```tsx
+import { registerHotkey, Keycode } from '@accelint/hotkey-manager';
+import { useHotkey } from '@accelint/hotkey-manager/react';
+
+const saveHotkey = registerHotkey({
+  key: { code: Keycode.KeyS, ctrl: true, autoMacStyle: true },
+  onKeyUp: () => save(),
+});
+
+const undoHotkey = registerHotkey({
+  key: { code: Keycode.KeyZ, ctrl: true, autoMacStyle: true },
+  onKeyUp: () => undo(),
+});
+
+function Editor() {
+  useHotkey(saveHotkey);
+  useHotkey(undoHotkey);
+  return <textarea />;
+}
+```
+
+#### Example: Conditional hotkey binding
+
+```tsx
+import { registerHotkey, Keycode } from '@accelint/hotkey-manager';
+import { useHotkey } from '@accelint/hotkey-manager/react';
+import { useState } from 'react';
+
+const submitHotkey = registerHotkey({
+  key: { code: Keycode.Enter, ctrl: true },
+  onKeyUp: () => submit(),
+});
+
+function Form() {
+  const [isEnabled, setIsEnabled] = useState(true);
+
+  // Only bind when enabled
+  if (isEnabled) {
+    useHotkey(submitHotkey);
+  }
+
+  return <form>...</form>;
+}
+```
+
+> **Good to know:** The hotkey manager is automatically bound on mount and unbound on unmount. If the same manager is used in multiple components, ref-counting ensures it remains active until all components unmount.
+
+#### Example: Dynamic hotkey creation
+
+```tsx
+import { registerHotkey, Keycode } from '@accelint/hotkey-manager';
+import { useHotkey } from '@accelint/hotkey-manager/react';
+import { useMemo } from 'react';
+
+function SearchModal({ onClose }: { onClose: () => void }) {
+  const closeHotkey = useMemo(
+    () =>
+      registerHotkey({
+        key: { code: Keycode.Escape },
+        onKeyUp: onClose,
+      }),
+    [onClose],
+  );
+
+  useHotkey(closeHotkey);
+
+  return <div>Search...</div>;
+}
+```
+
+## createUseHotkey
+
+Creates a custom React hook from a HotkeyManager for module-level usage. Useful when you want to define the hotkey at module scope and use it as a reusable hook.
+
+### Reference
+
+```typescript
+function createUseHotkey(manager: HotkeyManager): () => void
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `manager` | `HotkeyManager` | The hotkey manager to wrap. |
+
+### Returns
+
+Returns a React hook function that binds the hotkey on mount.
+
+### Examples
+
+#### Example: Module-level hotkey definition
+
+```tsx
+import { registerHotkey, Keycode } from '@accelint/hotkey-manager';
+import { createUseHotkey } from '@accelint/hotkey-manager/react';
+
+// Define at module scope
+const helpHotkey = registerHotkey({
+  key: { code: Keycode.Slash, shift: true },
+  onKeyUp: () => openHelp(),
+});
+
+// Create a custom hook
+const useHelpHotkey = createUseHotkey(helpHotkey);
+
+// Use in any component
+function App() {
+  useHelpHotkey();
+  return <div>Press ? for help</div>;
+}
+```
+
+#### Example: Shared hotkey across components
+
+```tsx
+import { registerHotkey, Keycode } from '@accelint/hotkey-manager';
+import { createUseHotkey } from '@accelint/hotkey-manager/react';
+
+const paletteHotkey = registerHotkey({
+  key: { code: Keycode.KeyP, ctrl: true, shift: true },
+  onKeyUp: () => openCommandPalette(),
+});
+
+export const useCommandPalette = createUseHotkey(paletteHotkey);
+
+// Use in multiple components
+function Layout() {
+  useCommandPalette();
+  return <div>Layout</div>;
+}
+
+function Editor() {
+  useCommandPalette();
+  return <textarea />;
+}
+```
+
+> **Good to know:** `createUseHotkey` is ideal for library authors distributing hotkey hooks. The manager is captured in a stable closure, eliminating the need to pass it through dependencies.
+
+## Related
+
+- [registerHotkey](../index.md#registerhotkey) - Register a keyboard shortcut
+- [globalBind](../index.md#globalbind) - Bind global event listeners
+- [HotkeyManager](../index.md#registerhotkey) - Type definition and API reference

@@ -1,0 +1,158 @@
+---
+title: CarouselSelect
+description: Dropdown select component for jumping to carousel items by title.
+source: packages/design-toolkit/src/components/carousel/select.tsx
+source_sha: d0a78678a239fdfaa9e9913c3bad4dcabe01fda6
+doc_sha: 225f06f5f54eb8a58430b864e00c6df06df14b9d
+deprecated: false
+updated: 2026-07-13
+---
+
+# CarouselSelect
+
+Dropdown select component for navigating the carousel by item title.
+
+## Usage
+
+```tsx
+import { Carousel, CarouselSelect } from '@accelint/design-toolkit';
+
+export function Gallery({ items, position, setPosition }) {
+  return (
+    <Carousel items={items} currentPosition={position} setCurrentPosition={setPosition}>
+      <CarouselSelect />
+    </Carousel>
+  );
+}
+```
+
+## Reference
+
+```typescript
+interface CarouselSelectProps extends Omit<SelectFieldProps, 'classNames'> {
+  classNames?: {
+    select?: SelectFieldProps['classNames'];
+    optionItem?: OptionsItemProps<OptionsDataItem>['classNames'];
+  };
+}
+```
+
+### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `classNames` | `{ select?: object; optionItem?: object }` | - | No |
+
+Inherits all props from `SelectField` except `value`, `onChange`, and `placeholder` (managed internally).
+
+#### `classNames.select`
+
+Class names passed through to the underlying `SelectField` component. Supports all `SelectField` class name slots (field, trigger, popover, etc.).
+
+#### `classNames.optionItem`
+
+Class names passed to each `OptionsItem` rendered in the dropdown.
+
+### Behavior
+
+- Displays the current item's title in the trigger
+- Opens a dropdown showing all item titles
+- Clicking an item navigates to that position
+- Automatically updates when `currentPosition` changes
+- Uses item `id` as the selection key
+
+## Examples
+
+### Example: Basic select
+
+```tsx
+import {
+  Carousel,
+  CarouselViewer,
+  CarouselSelect
+} from '@accelint/design-toolkit';
+
+<Carousel items={items} currentPosition={position} setCurrentPosition={setPosition}>
+  <CarouselViewer />
+  <CarouselSelect />
+</Carousel>
+```
+
+### Example: With position indicator
+
+```tsx
+import {
+  Carousel,
+  CarouselViewer,
+  CarouselSelect,
+  CarouselPosition
+} from '@accelint/design-toolkit';
+
+<Carousel items={items} currentPosition={position} setCurrentPosition={setPosition}>
+  <CarouselViewer />
+  <div style={{ display: 'flex', gap: '1rem', justifyContent: 'space-between' }}>
+    <CarouselSelect />
+    <CarouselPosition />
+  </div>
+</Carousel>
+```
+
+### Example: Custom styling
+
+```tsx
+import { Carousel, CarouselSelect } from '@accelint/design-toolkit';
+
+<Carousel items={items} currentPosition={position} setCurrentPosition={setPosition}>
+  <CarouselSelect
+    classNames={{
+      select: {
+        trigger: 'min-w-64 bg-white shadow-md',
+        popover: 'max-h-96'
+      },
+      optionItem: {
+        item: 'text-sm'
+      }
+    }}
+  />
+</Carousel>
+```
+
+### Example: Full carousel with all controls
+
+```tsx
+import {
+  Carousel,
+  CarouselViewer,
+  CarouselGallery,
+  CarouselPrevious,
+  CarouselNext,
+  CarouselSelect,
+  CarouselPosition
+} from '@accelint/design-toolkit';
+
+<Carousel items={items} currentPosition={position} setCurrentPosition={setPosition}>
+  <CarouselViewer />
+  
+  {/* Top controls */}
+  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
+    <CarouselSelect />
+    <CarouselPosition />
+  </div>
+  
+  {/* Bottom navigation */}
+  <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+    <CarouselPrevious />
+    <CarouselGallery />
+    <CarouselNext />
+  </div>
+</Carousel>
+```
+
+> **Good to know:** The select uses the item's `title` property for display and its `id` for the selection key. Ensure each item has a unique `id` and descriptive `title`.
+
+## Related
+
+- [Carousel](./index.mdx) - Parent carousel component
+- [SelectField](../select-field/index.mdx) - Base select component
+- [OptionsItem](../options/item.mdx) - Option item component
+- [CarouselPosition](./position.mdx) - Alternative position indicator

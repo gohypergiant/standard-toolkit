@@ -1,0 +1,183 @@
+---
+title: Hex Color Converters
+description: Convert between hex color strings and RGBA 0-255 tuples
+source: packages/converters/src/hex/index.ts
+source_sha: 3a4dd417a36a5ebf10a98aec73b0288af2326f9c
+doc_sha: 32d9287856eb4a486a9b701ce227e1188fa4c348
+deprecated: false
+updated: 2026-07-13
+---
+
+# Hex Color Converters
+
+Convert between hex color strings and RGBA 0-255 tuples with support for all standard hex formats.
+
+## hexToRgba255Tuple
+
+Parse a hex color string to a Rgba255Tuple.
+
+### Usage
+
+```typescript
+import { hexToRgba255Tuple } from '@accelint/converters/hex';
+
+// 6-character hex
+const color = hexToRgba255Tuple('#FF8040');
+// [255, 128, 64, 255]
+
+// 3-character shorthand
+const shortColor = hexToRgba255Tuple('#F84');
+// [255, 136, 68, 255]
+```
+
+### Reference
+
+```typescript
+function hexToRgba255Tuple(hex: string): Rgba255Tuple
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `hex` | `string` | The hex string to parse. Supports "#RGB", "#RGBA", "#RRGGBB", "#RRGGBBAA". Hash is optional. |
+
+#### Returns
+
+Returns a Rgba255Tuple `[r, g, b, a]` where all values are 0-255.
+
+#### Throws
+
+Throws `Error` if the hex string is invalid.
+
+### Examples
+
+#### Example: Standard 6-character hex
+
+```typescript
+import { hexToRgba255Tuple } from '@accelint/converters/hex';
+
+const color = hexToRgba255Tuple('#FF8040');
+console.log(color);
+// [255, 128, 64, 255]
+```
+
+#### Example: 3-character shorthand
+
+```typescript
+import { hexToRgba255Tuple } from '@accelint/converters/hex';
+
+// Each digit doubles: #F84 → #FF8844
+const color = hexToRgba255Tuple('#F84');
+console.log(color);
+// [255, 136, 68, 255]
+```
+
+#### Example: With alpha channel
+
+```typescript
+import { hexToRgba255Tuple } from '@accelint/converters/hex';
+
+// 8-character hex includes alpha
+const color = hexToRgba255Tuple('#FF804080');
+console.log(color);
+// [255, 128, 64, 128]
+
+// 4-character shorthand with alpha
+const shortColor = hexToRgba255Tuple('#F840');
+console.log(shortColor);
+// [255, 136, 68, 0]
+```
+
+#### Example: Without hash prefix
+
+```typescript
+import { hexToRgba255Tuple } from '@accelint/converters/hex';
+
+// Hash is optional
+const color = hexToRgba255Tuple('FF8040');
+console.log(color);
+// [255, 128, 64, 255]
+```
+
+> **Good to know:** 3-character hex values are expanded by doubling each digit (#RGB → #RRGGBB). 4-character hex values include alpha (#RGBA → #RRGGBBAA). If no alpha is specified, it defaults to 255 (fully opaque).
+
+## rgba255TupleToHex
+
+Convert a Rgba255Tuple to a hex string.
+
+### Usage
+
+```typescript
+import { rgba255TupleToHex } from '@accelint/converters/hex';
+
+// Convert to hex without alpha
+const hex = rgba255TupleToHex([255, 128, 64, 255]);
+// "#FF8040"
+
+// Include alpha channel
+const hexWithAlpha = rgba255TupleToHex([255, 128, 64, 128], true);
+// "#FF804080"
+```
+
+### Reference
+
+```typescript
+function rgba255TupleToHex(
+  color: Rgba255Tuple,
+  includeAlpha?: boolean
+): string
+```
+
+#### Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `color` | `Rgba255Tuple` | - | The Rgba255Tuple [r, g, b, a] where all values are 0-255. |
+| `includeAlpha` | `boolean` | `false` | Whether to include alpha channel in output. |
+
+#### Returns
+
+Returns a hex string (e.g., "#FF8040" or "#FF804080").
+
+### Examples
+
+#### Example: Basic conversion
+
+```typescript
+import { rgba255TupleToHex } from '@accelint/converters/hex';
+
+const hex = rgba255TupleToHex([255, 128, 64, 255]);
+console.log(hex);
+// "#FF8040"
+```
+
+#### Example: Including alpha channel
+
+```typescript
+import { rgba255TupleToHex } from '@accelint/converters/hex';
+
+const hexWithAlpha = rgba255TupleToHex([255, 128, 64, 128], true);
+console.log(hexWithAlpha);
+// "#FF804080"
+```
+
+#### Example: Round-trip conversion
+
+```typescript
+import { hexToRgba255Tuple, rgba255TupleToHex } from '@accelint/converters/hex';
+
+const original = '#FF8040';
+const tuple = hexToRgba255Tuple(original);
+const converted = rgba255TupleToHex(tuple);
+console.log(converted === original);
+// true
+```
+
+> **Good to know:** By default, the alpha channel is omitted from the output. Set `includeAlpha: true` to include it. All hex values are uppercase.
+
+## Related
+
+- [cssRgbaStringToRgba255Tuple](../css-rgba/index.md) - Parse CSS rgba strings
+- [rgba255TupleToCssRgbaString](../css-rgba/index.md) - Convert to CSS rgba strings
+- [glslToRgba255Tuple](../glsl/index.md) - Convert from GLSL normalized colors

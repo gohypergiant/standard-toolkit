@@ -1,0 +1,179 @@
+---
+title: Checkbox
+description: A form control for binary or multiple selection with group support and indeterminate state
+source: packages/design-toolkit/src/components/checkbox/index.tsx
+source_sha: 28570e10ae713a87d4f98edee53cb571b8f0e2b0
+doc_sha: 76a46cc9060371a63b4c792663d9ef1f2e4f3f0c
+deprecated: false
+updated: 2026-07-13
+---
+
+# Checkbox
+
+A form control for binary or multiple selection with group support and indeterminate state.
+
+## Usage
+
+```tsx
+import { Checkbox } from '@accelint/design-toolkit';
+
+export function MyComponent() {
+  return (
+    <Checkbox>
+      Accept terms and conditions
+    </Checkbox>
+  );
+}
+```
+
+## Reference
+
+```typescript
+interface CheckboxProps extends AriaCheckboxProps {
+  classNames?: {
+    checkbox?: string;
+    control?: string;
+    label?: string;
+  };
+  labelPosition?: 'start' | 'end';
+  children?: React.ReactNode;
+}
+```
+
+### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `children` | `React.ReactNode` | - | No |
+| `isSelected` | `boolean` | `false` | No |
+| `isIndeterminate` | `boolean` | `false` | No |
+| `isDisabled` | `boolean` | `false` | No |
+| `labelPosition` | `'start' \| 'end'` | `'end'` | No |
+| `value` | `string` | - | No |
+| `onChange` | `(isSelected: boolean) => void` | - | No |
+| `classNames` | `object` | - | No |
+
+#### `isIndeterminate`
+
+When `true`, displays a minus icon indicating partial selection. Commonly used for "select all" checkboxes when only some items are selected.
+
+#### `labelPosition`
+
+Controls whether the label appears before (`start`) or after (`end`) the checkbox control. Default is `end` (label on the right).
+
+#### `classNames`
+
+Granular styling control:
+- `checkbox` - The outer label wrapper
+- `control` - The checkbox indicator box
+- `label` - The label text wrapper
+
+### Inherited Props
+
+Checkbox inherits all props from React Aria's `Checkbox` component, including:
+- `isSelected` - Whether the checkbox is checked
+- `isDisabled` - Whether the checkbox is disabled
+- `isReadOnly` - Whether the checkbox is read-only
+- `value` - Value for the checkbox (used in groups)
+- `onChange` - Called when selection changes
+
+See [React Aria Checkbox](https://react-spectrum.adobe.com/react-aria/Checkbox.html) for full API reference.
+
+## Examples
+
+### Example: Basic checkbox
+
+```tsx
+import { Checkbox } from '@accelint/design-toolkit';
+
+<Checkbox>
+  Accept terms and conditions
+</Checkbox>
+```
+
+### Example: Controlled checkbox
+
+```tsx
+import { Checkbox } from '@accelint/design-toolkit';
+import { useState } from 'react';
+
+function MyComponent() {
+  const [isSelected, setIsSelected] = useState(false);
+  
+  return (
+    <Checkbox 
+      isSelected={isSelected} 
+      onChange={setIsSelected}
+    >
+      Receive notifications
+    </Checkbox>
+  );
+}
+```
+
+### Example: Checkbox group
+
+```tsx
+import { CheckboxGroup, Checkbox } from '@accelint/design-toolkit';
+
+<CheckboxGroup label="Select preferences">
+  <Checkbox value="notifications">Email notifications</Checkbox>
+  <Checkbox value="marketing">Marketing emails</Checkbox>
+  <Checkbox value="updates">Product updates</Checkbox>
+</CheckboxGroup>
+```
+
+### Example: Indeterminate state
+
+```tsx
+import { Checkbox } from '@accelint/design-toolkit';
+
+<Checkbox isIndeterminate>
+  Select all items (3 of 10 selected)
+</Checkbox>
+```
+
+### Example: Disabled checkbox
+
+```tsx
+import { Checkbox } from '@accelint/design-toolkit';
+
+<Checkbox isDisabled>
+  Unavailable option
+</Checkbox>
+```
+
+### Example: Label position
+
+```tsx
+import { Checkbox } from '@accelint/design-toolkit';
+
+<>
+  <Checkbox labelPosition="start">Label before control</Checkbox>
+  <Checkbox labelPosition="end">Label after control</Checkbox>
+</>
+```
+
+### Example: Custom styling
+
+```tsx
+import { Checkbox } from '@accelint/design-toolkit';
+
+<Checkbox
+  classNames={{
+    checkbox: 'gap-4',
+    control: 'border-2 border-accent',
+    label: 'font-bold'
+  }}
+>
+  Styled checkbox
+</Checkbox>
+```
+
+> **Good to know:** The indeterminate state is purely visual and does not affect the checkbox's value. It's typically used to indicate partial selection in a group.
+
+## Related
+
+- [CheckboxGroup](./group.md) - Group multiple checkboxes together
+- [Radio](../radio/index.md) - Radio button component for single selection
+- [Switch](../switch/index.md) - Toggle switch for binary states

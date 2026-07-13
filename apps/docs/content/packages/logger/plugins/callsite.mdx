@@ -1,0 +1,198 @@
+---
+title: callsitePlugin
+description: Tracks and injects source code location into log data
+source: packages/logger/src/plugins/callsite.ts
+source_sha: 2c791d5f027d5dd85ede507bd567d7324c87793d
+doc_sha: add8ed3c8e5efbbb9710af83eb5a5ee6457bb00a
+deprecated: false
+updated: 2026-07-13
+---
+
+# callsitePlugin
+
+Tracks and injects source code location into log data.
+
+## Usage
+
+```typescript
+import { callsitePlugin } from '@accelint/logger/plugins/callsite';
+
+const plugin = callsitePlugin({ isProductionEnv: false });
+// Log output will include: callSite: "src/services/user.ts:42:5"
+```
+
+## Reference
+
+```typescript
+function callsitePlugin(options: CallsitePluginOptions): LogLayerPlugin
+
+type CallsitePluginOptions = LogLayerPluginParams & {
+  isProductionEnv: boolean;
+}
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `options` | `CallsitePluginOptions` | Plugin configuration options |
+| `options.isProductionEnv` | `boolean` | Reserved for future use; currently has no effect |
+| `options.id` | `string` | Optional plugin ID |
+| `options.disabled` | `boolean` | Optional flag to disable the plugin |
+
+### Returns
+
+Returns a LogLayer plugin instance that automatically captures file, line number, and column where each log call originates, adding a `callSite` property to the log data.
+
+### How It Works
+
+The plugin analyzes the JavaScript call stack to locate the frame where the log method (`.info()`, `.error()`, etc.) was called. It then extracts:
+- File path (or eval origin in bundled environments)
+- Line number
+- Column number
+
+The result is formatted as `file:line:column` and included in every log entry.
+
+> **Good to know:** This plugin is enabled by default in both `getLogger` and `bootstrap`. The callsite resolution handles various runtime environments including development builds with sourcemaps, production bundles, server contexts, and browser contexts.
+
+## Examples
+
+### Example: Basic callsite tracking
+
+```typescript
+import { bootstrap, callsitePlugin } from '@accelint/logger';
+
+const logger = bootstrap({
+  enabled: true,
+  plugins: [callsitePlugin({ isProductionEnv: false })],
+});
+
+logger.info('User logged in');
+// Output includes: { callSite: "src/auth/login.ts:23:8", message: "User logged in" }
+```
+
+### Example: Development vs. production
+
+```typescript
+import { bootstrap, callsitePlugin } from '@accelint/logger';
+
+const isProduction = process.env.NODE_ENV === 'production';
+
+const logger = bootstrap({
+  enabled: true,
+  plugins: [callsitePlugin({ isProductionEnv: isProduction })],
+});
+
+logger.error('Something went wrong');
+// callSite helps trace the exact source location in both environments
+```
+
+### Example: Disabling callsite tracking
+
+```typescript
+import { bootstrap, callsitePlugin } from '@accelint/logger';
+
+const logger = bootstrap({
+  enabled: true,
+  plugins: [
+    callsitePlugin({
+      isProductionEnv: false,
+      disabled: true, // Disable callsite tracking
+    }),
+  ],
+});
+
+logger.info('No callSite in output');
+```
+
+### Example: Custom plugin ID
+
+```typescript
+import { bootstrap, callsitePlugin } from '@accelint/logger';
+
+const logger = bootstrap({
+  enabled: true,
+  plugins: [
+    callsitePlugin({
+      id: 'my-callsite-tracker',
+      isProductionEnv: false,
+    }),
+  ],
+});
+```
+
+### Example: Callsite in structured logs
+
+```typescript
+import { bootstrap, callsitePlugin } from '@accelint/logger';
+
+const logger = bootstrap({
+  enabled: true,
+  pretty: false, // JSON output
+  plugins: [callsitePlugin({ isProductionEnv: false })],
+});
+
+logger.error('Database connection failed', { error: new Error('timeout') });
+// JSON output:
+// {
+//   "level": "error",
+//   "message": "Database connection failed",
+//   "callSite": "src/db/connection.ts:67:12",
+//   "error": { ... },
+//   "server": true
+// }
+```
+
+### Example: Tracing errors across modules
+
+```typescript
+// src/services/payment.ts
+import { getLogger } from '@accelint/logger';
+
+const logger = getLogger({ enabled: true });
+
+export function processPayment(amount: number) {
+  logger.info('Processing payment', { amount });
+  // callSite: "src/services/payment.ts:8:10"
+  
+  if (amount <= 0) {
+    logger.error('Invalid amount', { amount });
+    // callSite: "src/services/payment.ts:12:12"
+    throw new Error('Amount must be positive');
+  }
+}
+```
+
+### Example: Combining with other plugins
+
+```typescript
+import { bootstrap, callsitePlugin } from '@accelint/logger';
+import type { LogLayerPlugin } from '@loglayer/shared';
+
+const timestampPlugin: LogLayerPlugin = {
+  id: 'timestamp',
+  onBeforeDataOut({ data }) {
+    return { ...data, timestamp: Date.now() };
+  },
+};
+
+const logger = bootstrap({
+  enabled: true,
+  plugins: [
+    callsitePlugin({ isProductionEnv: false }),
+    timestampPlugin,
+  ],
+});
+
+logger.info('Multiple plugins active');
+// Output includes: { callSite: "...", timestamp: 1234567890, ... }
+```
+
+> **Good to know:** Callsite resolution is implemented using the [callsites](https://www.npmjs.com/package/callsites) package. It searches the stack for frames matching log level method names (`info`, `warn`, `error`, etc.) and returns the frame immediately following, which represents the actual call location.
+
+## Related
+
+- [environmentPlugin](./environment.md) - Adds server/browser context
+- [getLogger](../default/index.md) - Includes callsitePlugin by default
+- [bootstrap](../default/bootstrap.md) - Includes callsitePlugin by default
+- [LogLayer Plugin System](https://loglayer.dev/configuration.html#plugin-system) - Upstream documentation

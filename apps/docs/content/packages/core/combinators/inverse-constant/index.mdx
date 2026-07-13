@@ -1,0 +1,144 @@
+---
+title: inverseConstant
+description: Returns the second of two arguments, ignoring the first
+source: packages/core/src/combinators/inverse-constant/index.ts
+source_sha: 6603a80a0f8d3c214ad3f71c89218d934ff532ff
+doc_sha: aa93b2006db0091268d9f68d6478f224a70ad87b
+deprecated: false
+updated: 2026-07-13
+---
+
+# inverseConstant
+
+Takes two arguments and always returns the second, ignoring the first. Corresponds to the encoding of `false` in lambda calculus. Inverse of `constant`. Also known as the KI combinator.
+
+## Usage
+
+```typescript
+import { inverseConstant } from '@accelint/core';
+
+// Always returns second argument
+const result = inverseConstant(1)(2);
+// 2
+
+// Partial application
+const ignoreFirst = inverseConstant('ignored');
+ignoreFirst(10); // 10
+ignoreFirst('hello'); // 'hello'
+```
+
+## Reference
+
+```typescript
+function inverseConstant<A>(
+  _: A
+): <B>(b: B) => B
+```
+
+Lambda calculus: `λab.b`  
+Type signature: `inverseConstant :: a → b → b`
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `_` | `A` | The value to ignore. |
+| `b` | `B` | The value to return. |
+
+### Returns
+
+Returns the second argument, regardless of the first.
+
+### Type Parameters
+
+- `A` - The type of the ignored value
+- `B` - The type of the returned value
+
+## Examples
+
+### Example: Boolean logic (false encoding)
+
+```typescript
+import { constant, inverseConstant } from '@accelint/core';
+
+// In lambda calculus, inverseConstant represents "false"
+const ifThenElse = <T>(condition: boolean) =>
+  condition ? constant<T> : inverseConstant<T>;
+
+const chooseFirst = ifThenElse<number>(true);
+chooseFirst(10)(20); // 10
+
+const chooseSecond = ifThenElse<number>(false);
+chooseSecond(10)(20); // 20
+```
+
+### Example: Fallback values
+
+```typescript
+import { inverseConstant } from '@accelint/core';
+
+const useFallback = inverseConstant(null);
+
+useFallback('default'); // 'default'
+useFallback(42); // 42
+```
+
+### Example: Ignoring side effects
+
+```typescript
+import { inverseConstant } from '@accelint/core';
+
+function performAction<T>(
+  action: () => void,
+  value: T
+): T {
+  return inverseConstant(action())(value);
+}
+
+let called = false;
+const result = performAction(() => { called = true; }, 42);
+// called: true
+// result: 42
+```
+
+### Example: Pipeline with discarded steps
+
+```typescript
+import { inverseConstant } from '@accelint/core';
+
+interface Logger {
+  log: (message: string) => void;
+}
+
+const logger: Logger = {
+  log: (msg) => console.log(msg)
+};
+
+// Log but return original value
+const logAndReturn = <T>(message: string) => (value: T): T =>
+  inverseConstant(logger.log(message))(value);
+
+const process = logAndReturn('Processing...');
+process(42); // Logs "Processing..." and returns 42
+```
+
+### Example: Default second argument
+
+```typescript
+import { inverseConstant } from '@accelint/core';
+
+// Create a function that always uses the second argument
+const alwaysSecond = <T>() => inverseConstant<unknown, T>(undefined);
+
+const getSecond = alwaysSecond<string>();
+getSecond(123)('hello'); // 'hello'
+getSecond({ a: 1 })('world'); // 'world'
+```
+
+> **Good to know:** This combinator is the dual of [constant](../constant/index.md) and represents the boolean value `false` in lambda calculus. It's useful for ignoring the first argument while preserving the second.
+
+## Related
+
+- [constant](../constant/index.md) - Return first argument (true)
+- [identity](../identity/index.md) - Return value unchanged
+- [noop](../../utility/noop/index.md) - No-operation function

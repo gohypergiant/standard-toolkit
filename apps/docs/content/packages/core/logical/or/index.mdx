@@ -1,0 +1,155 @@
+---
+title: or
+description: Logical disjunction (||) for values and function results
+source: logical/or/index.ts
+source_sha: 59f48ddb3fd9494bed2757d8b312817b9a54cf2d
+doc_sha: a8a676fd5a1994d3d479ccd3ccb6117afcf62305
+deprecated: false
+updated: 2026-07-13
+---
+
+# or
+
+Logical disjunction (||) for values and function results. Provides value-based and function-based disjunction operators, including swapped variants.
+
+## Usage
+
+```typescript
+import { or, orFn, swappedOr, swappedOrFn } from '@accelint/core';
+
+// Value-based disjunction
+or(true)(0);
+// true
+
+or(false)(false);
+// false
+
+// Function-based disjunction
+const isEmpty = (s: string) => s.length === 0;
+const isWhitespace = (s: string) => s.trim().length === 0;
+
+orFn(isEmpty)(isWhitespace)("  ");
+// true
+
+// Swapped variants evaluate right operand first
+swappedOr(0)(true);
+// true
+```
+
+## Reference
+
+### or
+
+```typescript
+function or<A>(a: A): <B>(b: B) => boolean
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `a` | `A` | The first value to evaluate |
+
+#### Returns
+
+Returns a curried function that accepts a second value and returns `true` if either value is truthy, `false` otherwise.
+
+### orFn
+
+```typescript
+function orFn<T, A>(
+  a: (x: T) => A
+): <B>(b: (y: T) => B) => (c: T) => boolean
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `a` | `(x: T) => A` | The first function to evaluate |
+
+#### Returns
+
+Returns a curried function that accepts a second function, then accepts a value to pass to both functions, returning `true` if either function result is truthy, `false` otherwise.
+
+### swappedOr
+
+```typescript
+function swappedOr<A>(a: A): <B>(b: B) => boolean
+```
+
+Evaluates `b || a` instead of `a || b`.
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `a` | `A` | The fallback value |
+
+#### Returns
+
+Returns a curried function that accepts a value and returns `true` if that value OR the first value is truthy.
+
+### swappedOrFn
+
+```typescript
+function swappedOrFn<T, A>(
+  a: (x: T) => A
+): <B>(b: (y: T) => B) => (c: T) => boolean
+```
+
+Evaluates `b(x) || a(x)` instead of `a(x) || b(x)`.
+
+## Examples
+
+### Example: Default values
+
+```typescript
+import { or } from '@accelint/core';
+
+const getUserName = (user: { name?: string }) => 
+  or(user.name)("Anonymous");
+// Returns user.name if truthy, otherwise "Anonymous"
+```
+
+### Example: Combining validation rules
+
+```typescript
+import { orFn } from '@accelint/core';
+
+const isAdmin = (user: User) => user.role === 'admin';
+const isModerator = (user: User) => user.role === 'moderator';
+
+const canModerate = orFn(isAdmin)(isModerator);
+
+canModerate({ role: 'admin' });
+// true
+
+canModerate({ role: 'user' });
+// false
+```
+
+### Example: Swapped evaluation order
+
+```typescript
+import { swappedOr } from '@accelint/core';
+
+// Useful when you want to check the second argument first
+const hasValue = swappedOr("default");
+
+hasValue(null);
+// "default"
+
+hasValue("custom");
+// "custom"
+```
+
+> **Good to know:** All variants convert their operands to boolean values using `Boolean()`, so they work with any truthy/falsy values. The swapped variants are useful when the evaluation order matters semantically.
+
+## Related
+
+- [and](../and/index.md) - Logical conjunction (&&)
+- [not](../not/index.md) - Logical negation (!)
+- [nor](../nor/index.md) - Logical NOR (!(a || b))
+- [xor](../xor/index.md) - Logical exclusive OR
+- [nullish-or](../nullish-or/index.md) - Nullish coalescing (??)

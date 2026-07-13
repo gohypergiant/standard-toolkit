@@ -1,0 +1,293 @@
+---
+title: lens
+description: Functional lenses for composable get/set operations on nested data
+source: object/lens/index.ts
+source_sha: 804a42ff6bb6e0ac98ed61a0e5a692fd7381f2c5
+doc_sha: 799cff80d0afef644d41463a1c5a02711fb95252
+deprecated: false
+updated: 2026-07-13
+---
+
+# lens
+
+Functional lenses for composable get/set operations on nested data structures. Lenses provide a principled way to focus on and manipulate specific properties within complex objects.
+
+## Usage
+
+```typescript
+import { lens, get, set, lensProp, composeLens } from '@accelint/core';
+
+interface Person {
+  name: string;
+  address: {
+    city: string;
+    street: string;
+  };
+}
+
+const person: Person = {
+  name: 'Alice',
+  address: {
+    city: 'New York',
+    street: '123 Main St'
+  }
+};
+
+// Create a simple lens
+const nameLens = lensProp<Person>()('name');
+
+get(nameLens)(person);
+// 'Alice'
+
+const updated = set(nameLens)('Bob')(person);
+// { name: 'Bob', address: { ... } }
+
+// Compose lenses for nested access
+const addressLens = lensProp<Person>()('address');
+const cityLens = lensProp<Address>()('city');
+const personCityLens = composeLens(addressLens, cityLens);
+
+get(personCityLens)(person);
+// 'New York'
+```
+
+## Reference
+
+### lens
+
+```typescript
+function lens<T, V>(
+  getter: (source: T) => V,
+  setter: (source: T) => (value: V) => T
+): Lens<T, V>
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `getter` | `(source: T) => V` | Function to extract the focused value |
+| `setter` | `(source: T) => (value: V) => T` | Curried function to update the focused value immutably |
+
+#### Returns
+
+Returns a `Lens<T, V>` object with `get` and `set` functions.
+
+#### Type Parameters
+
+- `T` - The type of the object being inspected
+- `V` - The type of the property value
+
+### Lens Type
+
+```typescript
+type Lens<T, V> = {
+  get: (source: T) => V;
+  set: (source: T) => (value: V) => T;
+};
+```
+
+### composeLens
+
+```typescript
+function composeLens<A, B, C>(
+  ab: Lens<A, B>,
+  bc: Lens<B, C>
+): Lens<A, C>
+```
+
+Compose two lenses together. Given a lens `A ⭢ B` and a lens `B ⭢ C`, produces a lens `A ⭢ C`.
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `ab` | `Lens<A, B>` | The lens from A to B |
+| `bc` | `Lens<B, C>` | The lens from B to C |
+
+#### Returns
+
+Returns a composed lens from A to C.
+
+### get
+
+```typescript
+function get<T, V>(lensVal: Lens<T, V>): (obj: T) => V
+```
+
+Wrapper function to access the `get` of a lens with the given object.
+
+### set
+
+```typescript
+function set<T, V>(lensVal: Lens<T, V>): (value: V) => (obj: T) => T
+```
+
+Wrapper function to access the `set` of a lens with the given object.
+
+### lensProp
+
+```typescript
+function lensProp<T extends object>(): <K extends keyof T>(prop: K) => Lens<T, T[K]>
+```
+
+Short-hand to create a simple get/set lens for a property.
+
+### lensOptionalProp
+
+```typescript
+function lensOptionalProp<T extends object>(): <K extends keyof T>(prop: K) => Lens<T, T[K] | undefined>
+```
+
+Short-hand to create an optional get/set lens for a property.
+
+## Examples
+
+### Example: Basic lens creation
+
+```typescript
+import { lens, property, associateDeep } from '@accelint/core';
+
+interface User {
+  id: number;
+  email: string;
+}
+
+const emailLens = lens(
+  (user: User) => property(user)('email'),
+  (user) => (email) => associateDeep(user)('email')(email)
+);
+
+const user = { id: 1, email: 'old@example.com' };
+
+emailLens.get(user);
+// 'old@example.com'
+
+emailLens.set(user)('new@example.com');
+// { id: 1, email: 'new@example.com' }
+```
+
+### Example: Composing nested lenses
+
+```typescript
+import { lensProp, composeLens, get, set } from '@accelint/core';
+
+interface Address {
+  city: string;
+  zipCode: string;
+}
+
+interface Person {
+  name: string;
+  address: Address;
+}
+
+const addressLens = lensProp<Person>()('address');
+const cityLens = lensProp<Address>()('city');
+
+// Compose to access nested city
+const personCityLens = composeLens(addressLens, cityLens);
+
+const person: Person = {
+  name: 'Alice',
+  address: { city: 'New York', zipCode: '10001' }
+};
+
+get(personCityLens)(person);
+// 'New York'
+
+set(personCityLens)('San Francisco')(person);
+// { name: 'Alice', address: { city: 'San Francisco', zipCode: '10001' } }
+```
+
+### Example: Lens laws (SetGet, GetSet, SetSet)
+
+```typescript
+import { lensProp } from '@accelint/core';
+
+interface User {
+  name: string;
+}
+
+const nameLens = lensProp<User>()('name');
+const user = { name: 'Alice' };
+
+// Law 1: SetGet - Getting after setting returns the set value
+nameLens.get(nameLens.set(user)('Bob'));
+// 'Bob'
+
+// Law 2: GetSet - Setting with the current value doesn't change the object
+nameLens.set(user)(nameLens.get(user));
+// { name: 'Alice' } (structurally equal to user)
+
+// Law 3: SetSet - Setting twice is same as setting once with the final value
+nameLens.set(nameLens.set(user)('Bob'))('Charlie');
+// Equivalent to:
+nameLens.set(user)('Charlie');
+```
+
+### Example: Multiple lens composition
+
+```typescript
+import { lensProp, composeLens, get } from '@accelint/core';
+
+interface City { name: string; }
+interface Address { city: City; }
+interface Person { address: Address; }
+interface User { profile: Person; }
+
+const user: User = {
+  profile: {
+    address: {
+      city: { name: 'Boston' }
+    }
+  }
+};
+
+const profileLens = lensProp<User>()('profile');
+const addressLens = lensProp<Person>()('address');
+const cityLens = lensProp<Address>()('city');
+const cityNameLens = lensProp<City>()('name');
+
+// Compose all the way down
+const userCityNameLens = composeLens(
+  composeLens(
+    composeLens(profileLens, addressLens),
+    cityLens
+  ),
+  cityNameLens
+);
+
+get(userCityNameLens)(user);
+// 'Boston'
+```
+
+### Example: Optional property lenses
+
+```typescript
+import { lensOptionalProp, get } from '@accelint/core';
+
+interface User {
+  name: string;
+  email?: string;
+}
+
+const emailLens = lensOptionalProp<User>()('email');
+
+const withEmail = { name: 'Alice', email: 'alice@example.com' };
+const withoutEmail = { name: 'Bob' };
+
+get(emailLens)(withEmail);
+// 'alice@example.com'
+
+get(emailLens)(withoutEmail);
+// undefined
+```
+
+> **Good to know:** Lenses satisfy three laws: SetGet (get after set returns the set value), GetSet (set with current value doesn't change object), and SetSet (setting twice is same as setting once). All lens operations use deep cloning via `associateDeep`, ensuring immutability.
+
+## Related
+
+- [property](../property/index.md) - Get object property values
+- [associate](../associate/index.md) - Immutably set object properties
+- [compose](../../composition/compose/index.md) - Function composition

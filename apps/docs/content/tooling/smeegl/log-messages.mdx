@@ -1,0 +1,171 @@
+---
+title: log-messages
+description: Logging utility functions for displaying success and warning messages with optional spinner integration.
+source: tooling/smeegl/src/log-messages.ts
+source_sha: 5a9f4f98f7c8c4e4e0f2f6f4a8b6c4e4e0f2f6f4
+doc_sha: b8d37ceb37c1f6e7a95d4f8e6b2c4a5e3d1f2a4c
+deprecated: false
+updated: 2026-07-13
+---
+
+# log-messages
+
+Logging utility functions for displaying success and warning messages with optional spinner integration.
+
+## Usage
+
+```typescript
+import { logMsg, logWarning } from '@accelint/smeegl/log-messages';
+import ora from 'ora';
+
+const spinner = ora('Processing...');
+
+// Log success message
+logMsg('Processing complete', spinner);
+
+// Log warning message
+logWarning('File already exists, skipping', spinner);
+
+// Without spinner
+logMsg('Operation successful', null);
+```
+
+## Reference
+
+### logMsg
+
+```typescript
+function logMsg(
+  msg: string,
+  spinner: Ora | null | undefined
+): void
+```
+
+Logs a success message. With a spinner, updates the spinner text and shows a success indicator. Without a spinner, logs to console with a checkmark prefix.
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `msg` | `string` | The message to log. |
+| `spinner` | `Ora \| null \| undefined` | Optional ora spinner instance. If provided, uses spinner's success state. |
+
+### logWarning
+
+```typescript
+function logWarning(
+  msg: string,
+  spinner: Ora | null | undefined
+): void
+```
+
+Logs a warning message. With a spinner, updates the spinner text and shows a warning indicator. Without a spinner, logs to console with a warning emoji prefix.
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `msg` | `string` | The warning message to log. |
+| `spinner` | `Ora \| null \| undefined` | Optional ora spinner instance. If provided, uses spinner's warn state. |
+
+## Examples
+
+### Example: Using with spinner
+
+```typescript
+import { logMsg, logWarning } from '@accelint/smeegl/log-messages';
+import ora from 'ora';
+
+async function processFiles() {
+  const spinner = ora('Finding files').start();
+
+  // ... file search logic ...
+
+  logMsg('Found 42 files', spinner);
+
+  spinner.text = 'Processing files';
+  spinner.start();
+
+  // ... processing logic ...
+
+  logWarning('Skipped 3 invalid files', spinner);
+  logMsg('Successfully processed 39 files', spinner);
+}
+```
+
+### Example: Console-only logging
+
+```typescript
+import { logMsg, logWarning } from '@accelint/smeegl/log-messages';
+
+function validateConfig(config: unknown) {
+  if (!config) {
+    logWarning('Config is empty, using defaults', null);
+    // Output: ⚠️ Config is empty, using defaults
+  }
+
+  logMsg('Configuration validated', null);
+  // Output: ✅ Configuration validated
+}
+```
+
+### Example: Conditional spinner usage
+
+```typescript
+import { logMsg } from '@accelint/smeegl/log-messages';
+import ora from 'ora';
+
+function log(message: string, useSpinner: boolean) {
+  const spinner = useSpinner ? ora().start() : null;
+  logMsg(message, spinner);
+}
+
+// With spinner
+log('Processing...', true);
+
+// Without spinner
+log('Done', false);
+```
+
+### Example: Multiple messages with single spinner
+
+```typescript
+import { logMsg, logWarning } from '@accelint/smeegl/log-messages';
+import ora from 'ora';
+
+async function build() {
+  const spinner = ora();
+
+  spinner.text = 'Compiling TypeScript';
+  spinner.start();
+  await compileTypeScript();
+  logMsg('TypeScript compiled', spinner);
+
+  spinner.text = 'Bundling assets';
+  spinner.start();
+  await bundleAssets();
+  logWarning('Some assets were already bundled', spinner);
+
+  spinner.text = 'Copying files';
+  spinner.start();
+  await copyFiles();
+  logMsg('Build complete', spinner);
+}
+```
+
+> **Good to know:** When a spinner is provided, the function calls `spinner.start()` before showing the message. This ensures the spinner is active even if it was previously stopped.
+
+## Output Format
+
+### With Spinner
+- `logMsg`: Updates spinner with success state (green checkmark)
+- `logWarning`: Updates spinner with warning state (yellow warning icon)
+
+### Without Spinner
+- `logMsg`: `✅ {message}`
+- `logWarning`: `⚠️ {message}`
+
+## Related
+
+- [buildSpritesheet](./build-spritesheet.mdx) - Uses logging for build progress
+- [buildReactFiles](./build-react-files.mdx) - Uses logging for generation progress

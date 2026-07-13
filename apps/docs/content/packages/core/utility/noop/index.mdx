@@ -1,0 +1,136 @@
+---
+title: noop
+description: No-operation function that does nothing
+source: utility/noop/index.ts
+source_sha: 7ef929581634cf77050472a55a1aa0ad5bcdb661
+doc_sha: 7d7c865a44d98df558cfa7c7134dc43785afb1e0
+deprecated: false
+updated: 2026-07-13
+---
+
+# noop
+
+A no-operation function that does nothing and returns nothing.
+
+## Usage
+
+```typescript
+import { noop } from '@accelint/core';
+
+// Does nothing
+noop();
+
+// Accepts any argument but ignores it
+noop('ignored');
+noop(42);
+noop({ data: 'also ignored' });
+```
+
+## Reference
+
+```typescript
+function noop(_x?: unknown): void
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `_x` | `unknown \| undefined` | Optional parameter that is ignored |
+
+### Returns
+
+Returns `void` (nothing).
+
+## Examples
+
+### Example: Placeholder callback
+
+```typescript
+import { noop } from '@accelint/core';
+
+function fetchData(
+  url: string,
+  onSuccess: (data: unknown) => void = noop,
+  onError: (error: Error) => void = noop
+) {
+  fetch(url)
+    .then(onSuccess)
+    .catch(onError);
+}
+
+// Use without callbacks
+fetchData('https://api.example.com/data');
+```
+
+### Example: Disabling logging
+
+```typescript
+import { noop } from '@accelint/core';
+
+const logger = process.env.NODE_ENV === 'production' 
+  ? noop 
+  : console.log;
+
+logger('Debug message'); // Logged in dev, silent in prod
+```
+
+### Example: Optional event handlers
+
+```typescript
+import { noop } from '@accelint/core';
+
+interface ButtonProps {
+  onClick?: () => void;
+  onHover?: () => void;
+}
+
+function Button({ onClick = noop, onHover = noop }: ButtonProps) {
+  return (
+    <button 
+      onClick={onClick} 
+      onMouseEnter={onHover}
+    >
+      Click Me
+    </button>
+  );
+}
+```
+
+### Example: Testing with stubbed functions
+
+```typescript
+import { noop } from '@accelint/core';
+
+function processData(
+  data: unknown[],
+  onProgress: (percent: number) => void = noop
+) {
+  for (let i = 0; i < data.length; i++) {
+    // Process data...
+    onProgress((i / data.length) * 100);
+  }
+}
+
+// Test without progress callback
+processData([1, 2, 3]); // No errors, progress updates ignored
+```
+
+### Example: Conditional operations
+
+```typescript
+import { noop } from '@accelint/core';
+
+const debug = process.env.DEBUG === 'true'
+  ? console.log.bind(console)
+  : noop;
+
+debug('This appears only when DEBUG=true');
+```
+
+> **Good to know:** `noop` is useful as a default value for optional callback parameters, allowing callers to omit callbacks without requiring `undefined` checks. It's also commonly used to disable logging or other side effects in production builds.
+
+## Related
+
+- [identity](../../combinators/identity/index.md) - Returns its input unchanged
+- [tap](../tap/index.md) - Execute a function but return the original value

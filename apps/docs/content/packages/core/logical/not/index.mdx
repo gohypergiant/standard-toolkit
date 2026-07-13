@@ -1,0 +1,135 @@
+---
+title: not
+description: Logical negation (!) for values and function results
+source: logical/not/index.ts
+source_sha: a0282ac5345b1d87f90e3f0fb623fc049027ca58
+doc_sha: 8e81906ca96289995b84779bf76ac48be3dec779
+deprecated: false
+updated: 2026-07-13
+---
+
+# not
+
+Logical negation (!) for values and function results.
+
+## Usage
+
+```typescript
+import { not, notFn } from '@accelint/core';
+
+// Value negation
+not(true);
+// false
+
+not(0);
+// true
+
+// Function result negation
+const isEven = (x: number) => x % 2 === 0;
+const isOdd = notFn(isEven);
+
+isOdd(4);
+// false
+
+isOdd(5);
+// true
+```
+
+## Reference
+
+### not
+
+```typescript
+function not<T>(x: T): boolean
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `x` | `T` | The value to negate |
+
+#### Returns
+
+Returns the negated boolean value of the input.
+
+#### Type Parameters
+
+- `T` - The type of the input value
+
+### notFn
+
+```typescript
+function notFn<T>(a: (x: T) => unknown): (b: T) => boolean
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `a` | `(x: T) => unknown` | The function whose result to negate |
+
+#### Returns
+
+Returns a function that accepts a value, passes it to the given function, and returns the negated boolean result.
+
+#### Type Parameters
+
+- `T` - The type of the input value passed to the function
+
+## Examples
+
+### Example: Creating inverse predicates
+
+```typescript
+import { notFn } from '@accelint/core';
+
+const isEmpty = (arr: unknown[]) => arr.length === 0;
+const hasItems = notFn(isEmpty);
+
+hasItems([1, 2, 3]);
+// true
+
+hasItems([]);
+// false
+```
+
+### Example: Filtering with negation
+
+```typescript
+import { notFn, filter } from '@accelint/core';
+
+const isNull = (x: unknown) => x === null;
+const notNull = notFn(isNull);
+
+filter(notNull)([1, null, 2, null, 3]);
+// [1, 2, 3]
+```
+
+### Example: Boolean conversion
+
+```typescript
+import { not } from '@accelint/core';
+
+// All falsy values become true
+not(0);        // true
+not('');       // true
+not(null);     // true
+not(undefined);// true
+not(false);    // true
+
+// All truthy values become false
+not(1);        // false
+not('hello');  // false
+not({});       // false
+not([]);       // false
+```
+
+> **Good to know:** `not` and `notFn` use JavaScript's standard truthiness evaluation. The value is first converted to a boolean before negation.
+
+## Related
+
+- [and](../and/index.md) - Logical conjunction (&&)
+- [or](../or/index.md) - Logical disjunction (||)
+- [nand](../nand/index.md) - Logical NAND (!(a && b))
+- [nor](../nor/index.md) - Logical NOR (!(a || b))

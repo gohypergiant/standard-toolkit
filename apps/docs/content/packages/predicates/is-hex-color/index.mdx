@@ -1,0 +1,216 @@
+---
+title: Color Format Predicates
+description: Type guards for validating color formats including hex, CSS RGBA, and tuple formats
+source: packages/predicates/src/is-hex-color/index.ts
+source_sha: 6fcefa9066602e68ac2ed28f0a90ef2e34afb5a0
+doc_sha: 516767a20e19021f9e2bb0555258130b4f5338be
+deprecated: false
+updated: 2026-07-13
+---
+
+# Color Format Predicates
+
+Type guards for validating various color format representations used in web and graphics applications.
+
+## Usage
+
+```typescript
+import {
+  isHexColor,
+  isCssRgbaString,
+  isCssRgbaObject,
+  isRgba255Tuple,
+  isValid255Channel
+} from '@accelint/predicates';
+
+isHexColor('#FF8040');          // true
+isCssRgbaString('rgba(255, 128, 64, 0.5)'); // true
+isCssRgbaObject({ r: 255, g: 128, b: 64, a: 1 }); // true
+isRgba255Tuple([255, 128, 64, 255]); // true
+isValid255Channel(128);         // true
+```
+
+## isHexColor
+
+Validates hex color strings with optional alpha channel.
+
+### Reference
+
+```typescript
+function isHexColor(value: unknown): value is string
+```
+
+Supports formats: `#RGB`, `#RGBA`, `#RRGGBB`, `#RRGGBBAA` (hash optional)
+
+### Examples
+
+```typescript
+import { isHexColor } from '@accelint/predicates/is-hex-color';
+
+isHexColor('#FF8040');    // true
+isHexColor('#F84');       // true
+isHexColor('FF8040');     // true (hash optional)
+isHexColor('#FF8040FF');  // true (with alpha)
+isHexColor('rgb(255, 128, 64)'); // false
+```
+
+## isCssRgbaString
+
+Validates CSS rgb/rgba string format (legacy and modern syntax).
+
+### Reference
+
+```typescript
+function isCssRgbaString(value: unknown): value is string
+```
+
+Supports:
+- Legacy: `rgb(255, 128, 64)`, `rgba(255, 128, 64, 0.5)`
+- Modern: `rgb(255 128 64)`, `rgb(255 128 64 / 0.5)`
+
+### Examples
+
+```typescript
+import { isCssRgbaString } from '@accelint/predicates/is-css-rgba-string';
+
+// Legacy syntax
+isCssRgbaString('rgba(255, 128, 64, 0.5)'); // true
+isCssRgbaString('rgb(255, 128, 64)');       // true
+
+// Modern syntax (CSS Color Module Level 4)
+isCssRgbaString('rgb(255 128 64 / 50%)');   // true
+isCssRgbaString('rgb(255 128 64)');         // true
+
+isCssRgbaString('#FF8040');                 // false
+```
+
+## isCssRgbaObject
+
+Validates CSS-style RGBA color object (React Aria Components format).
+
+### Reference
+
+```typescript
+type CssRgbaObject = {
+  readonly r: number; // 0-255
+  readonly g: number; // 0-255
+  readonly b: number; // 0-255
+  readonly a: number; // 0-1
+};
+
+function isCssRgbaObject(value: unknown): value is CssRgbaObject
+```
+
+RGB channels: 0-255, Alpha channel: 0-1
+
+### Examples
+
+```typescript
+import { isCssRgbaObject } from '@accelint/predicates/is-css-rgba-object';
+
+isCssRgbaObject({ r: 255, g: 128, b: 64, a: 1 });    // true
+isCssRgbaObject({ r: 255, g: 128, b: 64, a: 0.5 });  // true
+isCssRgbaObject({ r: 255, g: 128, b: 64 });          // false (missing alpha)
+isCssRgbaObject([255, 128, 64, 255]);                // false (array, not object)
+isCssRgbaObject({ r: 256, g: 128, b: 64, a: 1 });    // false (r out of range)
+```
+
+## isRgba255Tuple
+
+Validates RGBA tuple where all channels are 0-255 (deck.gl format).
+
+### Reference
+
+```typescript
+type Rgba255Tuple = readonly [
+  r: number, // 0-255
+  g: number, // 0-255
+  b: number, // 0-255
+  a: number, // 0-255
+];
+
+function isRgba255Tuple(value: unknown): value is Rgba255Tuple
+```
+
+### Examples
+
+```typescript
+import { isRgba255Tuple } from '@accelint/predicates/is-rgba-255-tuple';
+
+isRgba255Tuple([255, 128, 64, 255]);  // true
+isRgba255Tuple([255, 128, 64, 128]);  // true (alpha as 0-255)
+isRgba255Tuple([255, 128, 64]);       // false (missing alpha)
+isRgba255Tuple('rgba(255, 128, 64, 1)'); // false (string, not tuple)
+isRgba255Tuple([256, 128, 64, 255]);  // false (r out of range)
+```
+
+## isValid255Channel
+
+Validates a single color channel value (0-255).
+
+### Reference
+
+```typescript
+function isValid255Channel(n: number): boolean
+```
+
+### Examples
+
+```typescript
+import { isValid255Channel } from '@accelint/predicates/is-valid-255-channel';
+
+isValid255Channel(0);    // true
+isValid255Channel(128);  // true
+isValid255Channel(255);  // true
+isValid255Channel(256);  // false
+isValid255Channel(-1);   // false
+isValid255Channel(NaN);  // false
+```
+
+## Real-World Example: Color format conversion
+
+```typescript
+import {
+  isHexColor,
+  isCssRgbaString,
+  isCssRgbaObject,
+  isRgba255Tuple
+} from '@accelint/predicates';
+
+type ColorInput = string | CssRgbaObject | Rgba255Tuple;
+
+function normalizeColor(color: ColorInput): CssRgbaObject {
+  if (isCssRgbaObject(color)) {
+    return color;
+  }
+  
+  if (isRgba255Tuple(color)) {
+    return {
+      r: color[0],
+      g: color[1],
+      b: color[2],
+      a: color[3] / 255 // Convert 0-255 to 0-1
+    };
+  }
+  
+  if (isHexColor(color)) {
+    // Parse hex and return CssRgbaObject
+    // Implementation omitted for brevity
+  }
+  
+  if (isCssRgbaString(color)) {
+    // Parse CSS string and return CssRgbaObject
+    // Implementation omitted for brevity
+  }
+  
+  throw new Error('Invalid color format');
+}
+```
+
+> **Good to know:** `isCssRgbaObject` uses alpha 0-1, while `isRgba255Tuple` uses alpha 0-255. This matches React Aria Components (0-1) and deck.gl (0-255) conventions respectively.
+
+## Related
+
+- [isString](../is-string/index.md) - Type guard for strings
+- [isNumber](../is-number/index.md) - Type guard for numbers
+- [isValid255Channel](#isvalid255channel) - Channel validation helper

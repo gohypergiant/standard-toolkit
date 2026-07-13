@@ -1,0 +1,299 @@
+---
+title: bootstrap
+description: Initializes and configures a LogLayer instance with default plugins and transports
+source: packages/logger/src/default/bootstrap.ts
+source_sha: 6b82165aa9393f8001b3830d745495efe20f7cfa
+doc_sha: 4ac0f4fa726a4424a680be7b71f5858fc8ffcf65
+deprecated: false
+updated: 2026-07-13
+---
+
+# bootstrap
+
+Initializes and configures a LogLayer instance with default plugins and transports.
+
+## Usage
+
+```typescript
+import { bootstrap } from '@accelint/logger';
+
+// Create an independent logger instance
+const logger = bootstrap({
+  enabled: true,
+  level: 'warn',
+  env: process.env.NODE_ENV as 'production' | 'development',
+  prefix: '[MyModule]',
+});
+
+logger.withMetadata({ requestId: 'req_123' }).warn('Token expiring soon');
+```
+
+## Reference
+
+```typescript
+function bootstrap(options: LoggerOptions): LogLayer
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `options` | `LoggerOptions` | Logger configuration options |
+| `options.enabled` | `boolean` | Whether logging is active; `false` makes all calls no-ops |
+| `options.level` | `LogLevel` | Minimum log level to output (default: `'debug'`) |
+| `options.env` | `'production' \| 'development'` | Runtime environment; controls server detection (default: `'development'`) |
+| `options.pretty` | `boolean` | Use pretty console output; `false` emits structured JSON (default: `true`) |
+| `options.prefix` | `string` | String prepended to all log messages (default: `''`) |
+| `options.plugins` | `LogLayerPlugin[]` | Additional plugins applied after the built-in ones |
+| `options.transports` | `LogLayerTransport[]` | Custom transports that replace the default console transport |
+| `options.groups` | `LogGroupsConfig` | Named group configuration for conditional group logging |
+
+### Returns
+
+Returns a configured LogLayer instance.
+
+Built-in plugins are applied in this order before any user-supplied plugins:
+1. `callsitePlugin` — injects source file location into every log entry
+2. `environmentPlugin` — injects server/browser context into every log entry
+
+The returned instance uses a one-way log level manager: the level can only be raised (made more restrictive) after initialization, never lowered.
+
+> **Good to know:** Unlike [`getLogger`](./index.md), `bootstrap` creates a new logger instance on every call. Use `bootstrap` when you need multiple independent loggers with different configurations, or when you want to avoid the singleton pattern.
+
+## Examples
+
+### Example: Module-specific logger
+
+```typescript
+import { bootstrap } from '@accelint/logger';
+
+// Create a dedicated logger for a specific module
+const dbLogger = bootstrap({
+  enabled: true,
+  level: 'debug',
+  prefix: '[Database]',
+});
+
+const cacheLogger = bootstrap({
+  enabled: true,
+  level: 'info',
+  prefix: '[Cache]',
+});
+
+dbLogger.debug('Query executed', { duration: 42 });
+cacheLogger.info('Cache miss', { key: 'user:123' });
+```
+
+### Example: Testing with isolated logger
+
+```typescript
+import { bootstrap } from '@accelint/logger';
+import { describe, test, expect } from 'vitest';
+
+describe('Payment service', () => {
+  test('should log payment success', () => {
+    // Create isolated logger for this test
+    const logger = bootstrap({
+      enabled: true,
+      level: 'info',
+    });
+
+    processPayment(logger);
+    
+    // Test logger output without affecting other tests
+  });
+});
+```
+
+### Example: Production logger with structured JSON
+
+```typescript
+import { bootstrap } from '@accelint/logger';
+
+const logger = bootstrap({
+  enabled: true,
+  level: 'warn',
+  env: 'production',
+  pretty: false, // JSON output for log aggregation
+});
+
+logger.error('Payment failed', {
+  orderId: 'ord_abc123',
+  error: new Error('Insufficient funds'),
+});
+```
+
+### Example: Custom transport for external logging service
+
+```typescript
+import { bootstrap } from '@accelint/logger';
+import type { LogLayerTransport } from '@loglayer/shared';
+
+const externalTransport: LogLayerTransport = {
+  log(level, message, data) {
+    // Send logs to external service
+    fetch('https://logs.example.com/ingest', {
+      method: 'POST',
+      body: JSON.stringify({ level, message, data }),
+    });
+  },
+};
+
+const logger = bootstrap({
+  enabled: true,
+  transports: [externalTransport],
+});
+
+logger.info('External logging enabled');
+```
+
+### Example: Environment-specific configuration
+
+```typescript
+import { bootstrap } from '@accelint/logger';
+
+const isDevelopment = process.env.NODE_ENV === 'development';
+
+const logger = bootstrap({
+  enabled: true,
+  level: isDevelopment ? 'debug' : 'warn',
+  env: isDevelopment ? 'development' : 'production',
+  pretty: isDevelopment,
+  prefix: isDevelopment ? '[Dev]' : '',
+});
+
+logger.debug('Development-only debug log');
+logger.warn('This logs in all environments');
+```
+
+### Example: Multiple transports
+
+```typescript
+import { bootstrap, prettyTransport, structuredTransport } from '@accelint/logger';
+
+const logger = bootstrap({
+  enabled: true,
+  transports: [
+    prettyTransport({ level: 'debug' }),
+    structuredTransport({ level: 'warn' }),
+  ],
+});
+
+logger.debug('Pretty console only');
+logger.warn('Both pretty console and JSON');
+logger.error('Both pretty console and JSON');
+```
+
+### Example: Custom plugins for request tracking
+
+```typescript
+import { bootstrap } from '@accelint/logger';
+import type { LogLayerPlugin } from '@loglayer/shared';
+
+let requestCounter = 0;
+
+const requestIdPlugin: LogLayerPlugin = {
+  id: 'request-id',
+  onBeforeDataOut({ data }) {
+    return {
+      ...data,
+      requestId: `req_${++requestCounter}`,
+    };
+  },
+};
+
+const logger = bootstrap({
+  enabled: true,
+  plugins: [requestIdPlugin],
+});
+
+logger.info('First request');  // requestId: req_1
+logger.info('Second request'); // requestId: req_2
+```
+
+### Example: Disabling plugins for minimal overhead
+
+```typescript
+import { bootstrap } from '@accelint/logger';
+
+// Create logger with only essential features
+const minimalLogger = bootstrap({
+  enabled: true,
+  plugins: [], // No user plugins (built-in plugins still run)
+});
+
+// For even lower overhead, disable logging entirely
+const noOpLogger = bootstrap({
+  enabled: false, // All log calls become no-ops
+});
+```
+
+### Example: Log groups for feature flags
+
+```typescript
+import { bootstrap } from '@accelint/logger';
+
+const logger = bootstrap({
+  enabled: true,
+  groups: {
+    'feature-x': { enabled: true },
+    'feature-y': { enabled: false },
+    'experiment-z': { enabled: true },
+  },
+});
+
+logger.withGroup('feature-x').info('Feature X is active');
+logger.withGroup('feature-y').info('This will not log');
+logger.withGroup('experiment-z').debug('Experiment Z running');
+```
+
+### Example: Server-side rendering logger
+
+```typescript
+import { bootstrap } from '@accelint/logger';
+
+const isServer = typeof window === 'undefined';
+
+const logger = bootstrap({
+  enabled: true,
+  env: isServer ? 'production' : 'development',
+  pretty: !isServer, // Pretty in browser, JSON on server
+  prefix: isServer ? '[Server]' : '[Client]',
+});
+
+logger.info('Rendering component');
+// [Server] Rendering component (on server)
+// [Client] Rendering component (in browser)
+```
+
+### Example: One-way log level restriction
+
+```typescript
+import { bootstrap, WARN, ERROR } from '@accelint/logger';
+
+const logger = bootstrap({
+  enabled: true,
+  level: WARN,
+});
+
+logger.warn('This logs');
+
+// Raise the level to ERROR (more restrictive)
+logger.setLogLevel(ERROR);
+
+logger.warn('This no longer logs');
+logger.error('This still logs');
+
+// Attempting to lower to WARN would be ignored (one-way manager)
+```
+
+> **Good to know:** `bootstrap` is the foundation of `getLogger`. While `getLogger` implements singleton pattern for application-wide logging, `bootstrap` gives you full control to create as many independent logger instances as needed.
+
+## Related
+
+- [getLogger](./index.md) - Singleton logger factory
+- [callsitePlugin](../plugins/callsite.md) - Source location tracking
+- [environmentPlugin](../plugins/environment.md) - Server/browser context
+- [prettyTransport](../transports/pretty.md) - Pretty console output
+- [structuredTransport](../transports/structured.md) - JSON output
+- [LogLayer Plugin System](https://loglayer.dev/configuration.html#plugin-system) - Upstream documentation

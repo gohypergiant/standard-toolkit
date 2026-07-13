@@ -1,0 +1,212 @@
+---
+title: Input
+description: A flexible text input component with enhanced features including auto-sizing and clear functionality
+source: packages/design-toolkit/src/components/input/index.tsx
+source_sha: 1309572c47d78d67a1a571ec2b637cc99e0300c9
+doc_sha: 0d3fa31594b3d1cec4d5441057ef6bbe6c41dcfa
+deprecated: false
+updated: 2026-07-13
+---
+
+# Input
+
+A flexible text input component with enhanced features including auto-sizing, clear functionality, and integrated validation states.
+
+## Usage
+
+```tsx
+import { Input } from '@accelint/design-toolkit';
+
+export function MyComponent() {
+  return <Input placeholder="Enter text..." />;
+}
+```
+
+## Reference
+
+```typescript
+interface InputProps extends AriaInputProps {
+  classNames?: {
+    container?: string;
+    sizer?: string;
+    input?: string;
+    clear?: string;
+    prefix?: string;
+    suffix?: string;
+  };
+  autoSize?: boolean;
+  prefix?: ReactNode;
+  size?: 'medium' | 'small';
+  suffix?: ReactNode;
+  isClearable?: boolean;
+  isInvalid?: boolean;
+}
+```
+
+### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `placeholder` | `string` | - | No |
+| `value` | `string` | - | No |
+| `defaultValue` | `string` | `''` | No |
+| `size` | `'small' \| 'medium'` | `'medium'` | No |
+| `isClearable` | `boolean` | `true` | No |
+| `isInvalid` | `boolean` | `false` | No |
+| `autoSize` | `boolean` | `false` | No |
+| `prefix` | `ReactNode` | - | No |
+| `suffix` | `ReactNode` | - | No |
+| `classNames` | `object` | - | No |
+| `disabled` | `boolean` | `false` | No |
+| `readOnly` | `boolean` | `false` | No |
+| `required` | `boolean` | `false` | No |
+| `type` | `string` | `'text'` | No |
+| `onChange` | `(e: ChangeEvent<HTMLInputElement>) => void` | - | No |
+
+#### `size`
+
+Controls input padding and font size:
+- `small` - Compact size for space-constrained layouts
+- `medium` - Default size for most use cases
+
+#### `isClearable`
+
+When `true`, displays a clear button (×) when the input has a value. The button can be pressed to clear the input. Pressing Escape also clears the input when `isClearable` is enabled.
+
+#### `autoSize`
+
+When `true`, the input automatically adjusts its width based on content length. Useful for inline editing scenarios where the input should expand/contract with text.
+
+#### `prefix` and `suffix`
+
+Display content before or after the input. Commonly used for icons, labels, or units:
+
+```tsx
+<Input prefix={<Icon><Search /></Icon>} placeholder="Search..." />
+<Input suffix="kg" type="number" />
+```
+
+#### `classNames`
+
+Granular control over styling for each subcomponent:
+- `container` - Outer wrapper
+- `sizer` - Internal sizing wrapper
+- `input` - The input element itself
+- `clear` - Clear button
+- `prefix` - Prefix content wrapper
+- `suffix` - Suffix content wrapper
+
+### Inherited Props
+
+Input inherits all props from React Aria's `Input` component. See [React Aria Input](https://react-spectrum.adobe.com/react-aria/TextField.html) for additional props.
+
+## Examples
+
+### Example: Basic input
+
+```tsx
+import { Input } from '@accelint/design-toolkit';
+
+<Input placeholder="Enter your name" />
+```
+
+### Example: Controlled input
+
+```tsx
+import { Input } from '@accelint/design-toolkit';
+import { useState } from 'react';
+
+function MyComponent() {
+  const [value, setValue] = useState('');
+  
+  return (
+    <Input
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
+      placeholder="Type something..."
+    />
+  );
+}
+```
+
+### Example: Input with prefix icon
+
+```tsx
+import { Input, Icon } from '@accelint/design-toolkit';
+import { Search } from '@accelint/icons';
+
+<Input
+  prefix={<Icon><Search /></Icon>}
+  placeholder="Search..."
+/>
+```
+
+### Example: Input with suffix unit
+
+```tsx
+import { Input } from '@accelint/design-toolkit';
+
+<Input
+  type="number"
+  suffix="kg"
+  placeholder="Enter weight"
+/>
+```
+
+### Example: Auto-sizing input
+
+```tsx
+import { Input } from '@accelint/design-toolkit';
+
+<Input
+  autoSize
+  defaultValue="This input grows with content"
+  placeholder="Type here..."
+/>
+```
+
+### Example: Non-clearable input
+
+```tsx
+import { Input } from '@accelint/design-toolkit';
+
+<Input
+  isClearable={false}
+  defaultValue="Cannot clear this"
+/>
+```
+
+### Example: Invalid state
+
+```tsx
+import { Input } from '@accelint/design-toolkit';
+
+<Input
+  isInvalid
+  defaultValue="invalid@"
+  placeholder="Enter email"
+/>
+```
+
+### Example: Custom styling with classNames
+
+```tsx
+import { Input } from '@accelint/design-toolkit';
+
+<Input
+  classNames={{
+    container: 'border-2 border-accent',
+    input: 'font-mono',
+    clear: 'text-critical'
+  }}
+  placeholder="Styled input"
+/>
+```
+
+> **Good to know:** When `readOnly` is true, the clear button is hidden even if `isClearable` is true.
+
+## Related
+
+- [TextField](../text-field/index.md) - Complete form field with label and validation
+- [SearchField](../search-field/index.md) - Specialized input for search functionality
+- [Icon](../icon/index.md) - Icon component for prefix/suffix content

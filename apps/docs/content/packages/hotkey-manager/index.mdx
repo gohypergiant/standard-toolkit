@@ -1,30 +1,747 @@
 ---
 title: Hotkey Manager
-description: Keyboard shortcut management for web applications
+description: Framework-agnostic keyboard shortcut management with ref-counted bindings and platform-aware key handling
+source: packages/hotkey-manager/src/index.ts
+source_sha: 4ef2054b93f09d0ea3cff77bcfd643812d6e3008
+doc_sha: d194abd235f20016aaba593776a75a253d76dd27
+deprecated: false
+updated: 2026-07-13
 ---
 
 # Hotkey Manager
 
-A flexible keyboard shortcut management system for web applications with conflict detection and platform-aware shortcuts.
+Framework-agnostic keyboard shortcut management with ref-counted bindings and platform-aware key handling.
 
-## Installation
+## Usage
 
-```bash
-pnpm add @accelint/hotkey-manager
+```typescript
+import { registerHotkey, globalBind, Keycode } from '@accelint/hotkey-manager';
+
+// Bind global listeners once
+globalBind();
+
+// Register a save hotkey (Cmd+S on Mac, Ctrl+S elsewhere)
+const saveHotkey = registerHotkey({
+  key: {
+    code: Keycode.KeyS,
+    ctrl: true,
+    autoMacStyle: true,
+  },
+  onKeyUp: () => console.log('Save triggered'),
+});
+
+// Activate the hotkey
+const unbind = saveHotkey.bind();
+
+// Later, clean up
+unbind();
 ```
 
-## Features
+## globalBind
 
-- Cross-platform hotkey support (Mac/Windows/Linux)
-- Conflict detection and resolution
-- Hotkey scope management
-- TypeScript support with type-safe shortcut definitions
-- React hooks for easy integration
+Binds keyboard event listeners to the global window object. Safe to call on the server (no-op if not in browser). Only binds once—subsequent calls are ignored until `globalUnbind` is called.
 
-## Getting Started
+### Usage
 
-Detailed documentation coming soon.
+```typescript
+import { globalBind } from '@accelint/hotkey-manager';
 
-## Source Code
+// Call once at application startup
+globalBind();
+```
 
-View the [source code on GitHub](https://github.com/gohypergiant/standard-toolkit/tree/main/packages/hotkey-manager).
+### Reference
+
+```typescript
+function globalBind(): void
+```
+
+Attaches `keydown` and `keyup` listeners to `window`. Tracks binding state internally to prevent duplicate listeners.
+
+### Examples
+
+#### Example: Initialize in app entry point
+
+```typescript
+import { globalBind } from '@accelint/hotkey-manager';
+
+// In your main.ts or App.tsx
+globalBind();
+```
+
+#### Example: Conditional binding in framework apps
+
+```typescript
+import { globalBind } from '@accelint/hotkey-manager';
+import { useEffect } from 'react';
+
+function App() {
+  useEffect(() => {
+    globalBind();
+  }, []);
+
+  return <div>My App</div>;
+}
+```
+
+> **Good to know:** `globalBind` is idempotent—calling it multiple times has no effect until `globalUnbind` is called. It's safe to call on the server; it will silently return.
+
+## globalUnbind
+
+Unbinds keyboard event listeners from the global window object. Safe to call on the server (no-op if not in browser).
+
+### Usage
+
+```typescript
+import { globalUnbind } from '@accelint/hotkey-manager';
+
+// Remove global listeners
+globalUnbind();
+```
+
+### Reference
+
+```typescript
+function globalUnbind(): void
+```
+
+Removes `keydown` and `keyup` listeners from `window`. Only removes listeners if they were previously bound via `globalBind`.
+
+### Examples
+
+#### Example: Cleanup on app unmount
+
+```typescript
+import { globalBind, globalUnbind } from '@accelint/hotkey-manager';
+import { useEffect } from 'react';
+
+function App() {
+  useEffect(() => {
+    globalBind();
+    return () => globalUnbind();
+  }, []);
+
+  return <div>My App</div>;
+}
+```
+
+#### Example: Toggle hotkeys on/off
+
+```typescript
+import { globalBind, globalUnbind } from '@accelint/hotkey-manager';
+
+function enableHotkeys() {
+  globalBind();
+}
+
+function disableHotkeys() {
+  globalUnbind();
+}
+```
+
+> **Good to know:** `globalUnbind` only removes listeners if `globalBind` was called first. It's safe to call multiple times.
+
+## registerHotkey
+
+Registers a keyboard shortcut and returns a manager object to control its activation. Supports single keys, modifier combinations, and chord sequences.
+
+### Usage
+
+```typescript
+import { registerHotkey, Keycode } from '@accelint/hotkey-manager';
+
+const saveHotkey = registerHotkey({
+  key: {
+    code: Keycode.KeyS,
+    meta: true,
+  },
+  onKeyUp: () => console.log('Saved'),
+});
+
+// Activate the hotkey
+const unbind = saveHotkey.bind();
+```
+
+### Reference
+
+```typescript
+function registerHotkey(options: HotkeyOptions): HotkeyManager
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `options` | `HotkeyOptions` | Hotkey configuration including key combination(s) and event handlers. |
+
+#### `HotkeyOptions`
+
+```typescript
+type HotkeyOptions = {
+  key: KeyOption | KeyOption[];
+  id?: string;
+  triggerOnInput?: boolean;
+} & RequireAtLeastOne<{
+  onKeyDown?: HotkeyAction;
+  onKeyUp?: HotkeyAction;
+}>;
+```
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `key` | `KeyOption \| KeyOption[]` | - | Single key combination or array for chord sequences. |
+| `id` | `string` | auto-generated | Optional unique identifier for the hotkey. |
+| `triggerOnInput` | `boolean` | `false` | Whether to trigger when focused on input elements. |
+| `onKeyDown` | `HotkeyAction` | - | Handler called on keydown. |
+| `onKeyUp` | `HotkeyAction` | - | Handler called on keyup. |
+
+At least one of `onKeyDown` or `onKeyUp` must be provided.
+
+#### `KeyOption`
+
+```typescript
+type KeyOption = {
+  code: Keycode;
+  ctrl?: boolean;
+  alt?: boolean;
+  shift?: boolean;
+  meta?: boolean;
+  autoMacStyle?: boolean;
+};
+```
+
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `code` | `Keycode` | - | The primary key code (use `Keycode` enum). |
+| `ctrl` | `boolean` | `false` | Require Control key. |
+| `alt` | `boolean` | `false` | Require Alt/Option key. |
+| `shift` | `boolean` | `false` | Require Shift key. |
+| `meta` | `boolean` | `false` | Require Command (Mac) or Windows key. |
+| `autoMacStyle` | `boolean` | `false` | On Mac, swap `ctrl` to `meta` and vice versa. |
+
+### Returns
+
+Returns a `HotkeyManager` object:
+
+```typescript
+type HotkeyManager = {
+  id: HotkeyId;
+  config: HotkeyConfig;
+  bind(): CleanupFunction;
+  forceBind(): CleanupFunction;
+  forceUnbind(): void;
+  readonly isBound: boolean;
+};
+```
+
+| Property | Description |
+|----------|-------------|
+| `id` | Unique identifier for the hotkey. |
+| `config` | Full normalized configuration. |
+| `bind()` | Activate with ref-counting. Returns cleanup function. |
+| `forceBind()` | Force activation, ignoring ref-counting. Returns cleanup function. |
+| `forceUnbind()` | Force deactivation, clearing all activations. |
+| `isBound` | Whether the hotkey is currently active. |
+
+### Examples
+
+#### Example: Basic keyboard shortcut
+
+```typescript
+import { registerHotkey, Keycode } from '@accelint/hotkey-manager';
+
+const escapeHotkey = registerHotkey({
+  key: { code: Keycode.Escape },
+  onKeyUp: () => closeModal(),
+});
+
+const unbind = escapeHotkey.bind();
+```
+
+#### Example: Modifier key combinations
+
+```typescript
+import { registerHotkey, Keycode } from '@accelint/hotkey-manager';
+
+// Ctrl+Shift+P for command palette
+const paletteHotkey = registerHotkey({
+  key: {
+    code: Keycode.KeyP,
+    ctrl: true,
+    shift: true,
+  },
+  onKeyUp: () => openCommandPalette(),
+});
+```
+
+#### Example: Platform-aware shortcuts with autoMacStyle
+
+```typescript
+import { registerHotkey, Keycode } from '@accelint/hotkey-manager';
+
+// Ctrl+S on Windows/Linux, Cmd+S on Mac
+const saveHotkey = registerHotkey({
+  key: {
+    code: Keycode.KeyS,
+    ctrl: true,
+    autoMacStyle: true, // Swaps to Cmd on Mac
+  },
+  onKeyUp: () => save(),
+});
+```
+
+#### Example: Chord sequences (multi-key combinations)
+
+```typescript
+import { registerHotkey, Keycode } from '@accelint/hotkey-manager';
+
+// Vim-style "g d" (go to definition)
+const gotoDefHotkey = registerHotkey({
+  key: [
+    { code: Keycode.KeyG },
+    { code: Keycode.KeyD },
+  ],
+  onKeyUp: () => goToDefinition(),
+});
+```
+
+#### Example: Ref-counted binding
+
+```typescript
+import { registerHotkey, Keycode } from '@accelint/hotkey-manager';
+
+const hotkey = registerHotkey({
+  key: { code: Keycode.KeyA },
+  onKeyUp: () => console.log('A pressed'),
+});
+
+// Multiple components can bind the same hotkey
+const unbind1 = hotkey.bind();
+const unbind2 = hotkey.bind();
+
+// Hotkey remains active until all bindings are cleaned up
+unbind1();
+console.log(hotkey.isBound); // true
+unbind2();
+console.log(hotkey.isBound); // false
+```
+
+#### Example: Force binding and unbinding
+
+```typescript
+import { registerHotkey, Keycode } from '@accelint/hotkey-manager';
+
+const hotkey = registerHotkey({
+  key: { code: Keycode.KeyB },
+  onKeyUp: () => console.log('B pressed'),
+});
+
+hotkey.bind();
+hotkey.bind();
+console.log(hotkey.isBound); // true
+
+// Force unbind clears all activations immediately
+hotkey.forceUnbind();
+console.log(hotkey.isBound); // false
+```
+
+#### Example: Trigger on input fields
+
+```typescript
+import { registerHotkey, Keycode } from '@accelint/hotkey-manager';
+
+// Escape works even when focused on input
+const cancelHotkey = registerHotkey({
+  key: { code: Keycode.Escape },
+  triggerOnInput: true,
+  onKeyUp: () => cancelForm(),
+});
+```
+
+#### Example: Both keydown and keyup handlers
+
+```typescript
+import { registerHotkey, Keycode } from '@accelint/hotkey-manager';
+
+const spaceHotkey = registerHotkey({
+  key: { code: Keycode.Space },
+  onKeyDown: () => console.log('Space pressed'),
+  onKeyUp: () => console.log('Space released'),
+});
+```
+
+> **Good to know:** Hotkeys are registered globally but only active when bound. Use `bind()` for ref-counted activation suitable for component lifecycles, or `forceBind()` for imperative control.
+
+## unregisterHotkey
+
+Unregisters a hotkey, removing it from the internal registry. Accepts a hotkey ID, config, or manager object.
+
+### Usage
+
+```typescript
+import { registerHotkey, unregisterHotkey, Keycode } from '@accelint/hotkey-manager';
+
+const hotkey = registerHotkey({
+  key: { code: Keycode.KeyA },
+  onKeyUp: () => console.log('A pressed'),
+});
+
+// Unregister by manager
+unregisterHotkey(hotkey);
+```
+
+### Reference
+
+```typescript
+function unregisterHotkey(id: HotkeyId): void
+function unregisterHotkey(config: HotkeyConfig): void
+function unregisterHotkey(manager: HotkeyManager): void
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `id` | `HotkeyId` | The hotkey identifier string. |
+| `config` | `HotkeyConfig` | The full hotkey configuration object. |
+| `manager` | `HotkeyManager` | The hotkey manager returned by `registerHotkey`. |
+
+### Examples
+
+#### Example: Unregister by manager
+
+```typescript
+import { registerHotkey, unregisterHotkey, Keycode } from '@accelint/hotkey-manager';
+
+const hotkey = registerHotkey({
+  key: { code: Keycode.KeyA },
+  onKeyUp: () => console.log('A pressed'),
+});
+
+unregisterHotkey(hotkey);
+```
+
+#### Example: Unregister by ID
+
+```typescript
+import { registerHotkey, unregisterHotkey, Keycode } from '@accelint/hotkey-manager';
+
+const hotkey = registerHotkey({
+  id: 'my-custom-hotkey',
+  key: { code: Keycode.KeyA },
+  onKeyUp: () => console.log('A pressed'),
+});
+
+unregisterHotkey('my-custom-hotkey');
+```
+
+> **Good to know:** Unregistering a hotkey automatically unbinds it. Any existing cleanup functions will still work but will be no-ops.
+
+## Keycode
+
+Frozen object containing standard KeyboardEvent code values. Provides type-safe access to all keyboard codes.
+
+### Usage
+
+```typescript
+import { Keycode, registerHotkey } from '@accelint/hotkey-manager';
+
+const hotkey = registerHotkey({
+  key: {
+    code: Keycode.KeyS,
+    meta: true,
+  },
+  onKeyUp: () => console.log('Save triggered'),
+});
+```
+
+### Reference
+
+```typescript
+const Keycode: {
+  readonly KeyA: 'KeyA';
+  readonly KeyB: 'KeyB';
+  // ... all keys
+}
+
+type Keycode = SafeEnum<typeof Keycode>;
+```
+
+### Available Values
+
+**Letter keys:** `KeyA` through `KeyZ`
+
+**Number keys:** `Digit0` through `Digit9`
+
+**Function keys:** `F1` through `F12`
+
+**Arrow keys:** `ArrowLeft`, `ArrowRight`, `ArrowUp`, `ArrowDown`
+
+**Modifier keys:**
+- `ShiftLeft`, `ShiftRight`
+- `ControlLeft`, `ControlRight`
+- `AltLeft`, `AltRight`
+- `MetaLeft`, `MetaRight`
+
+**Navigation keys:** `Home`, `End`, `PageUp`, `PageDown`, `Insert`, `Delete`
+
+**Special keys:** `Enter`, `Escape`, `Tab`, `Space`, `Backspace`, `Backquote`, `CapsLock`
+
+**Punctuation:** `Slash`, `IntlBackslash`, `Equal`, `Minus`, `BracketLeft`, `BracketRight`, `Quote`, `Semicolon`
+
+**Numpad keys:**
+- `Numpad0` through `Numpad9`
+- `NumpadAdd`, `NumpadSubtract`, `NumpadMultiply`, `NumpadDivide`
+- `NumpadDecimal`, `NumpadEnter`, `NumpadEqual`, `NumpadComma`
+- `NumLock`
+
+**Media keys:** `AudioVolumeUp`, `AudioVolumeDown`, `AudioVolumeMute`
+
+**International:** `IntlYen`, `IntlRo`
+
+### Examples
+
+#### Example: Arrow key navigation
+
+```typescript
+import { Keycode, registerHotkey } from '@accelint/hotkey-manager';
+
+const navigation = [
+  registerHotkey({
+    key: { code: Keycode.ArrowUp },
+    onKeyUp: () => moveFocusUp(),
+  }),
+  registerHotkey({
+    key: { code: Keycode.ArrowDown },
+    onKeyUp: () => moveFocusDown(),
+  }),
+];
+```
+
+#### Example: Function keys
+
+```typescript
+import { Keycode, registerHotkey } from '@accelint/hotkey-manager';
+
+const f2Hotkey = registerHotkey({
+  key: { code: Keycode.F2 },
+  onKeyUp: () => startRename(),
+});
+```
+
+> **Good to know:** These values match the standard [KeyboardEvent.code](https://developer.mozilla.org/en-US/docs/Web/API/UI_Events/Keyboard_event_code_values) specification. Use `code` rather than `key` for reliable cross-keyboard layout detection.
+
+## isMac
+
+Boolean constant that is `true` when running client-side on macOS, `false` otherwise.
+
+### Usage
+
+```typescript
+import { isMac } from '@accelint/hotkey-manager';
+
+if (isMac) {
+  console.log('Show ⌘ symbol');
+} else {
+  console.log('Show Ctrl key');
+}
+```
+
+### Reference
+
+```typescript
+const isMac: boolean
+```
+
+Detects macOS by checking `window.navigator.userAgent` for "Mac". Returns `false` on the server.
+
+### Examples
+
+#### Example: Platform-specific UI hints
+
+```typescript
+import { isMac } from '@accelint/hotkey-manager';
+
+function ShortcutHint() {
+  return (
+    <span>
+      {isMac ? '⌘' : 'Ctrl'} + S to save
+    </span>
+  );
+}
+```
+
+#### Example: Conditional hotkey registration
+
+```typescript
+import { isMac, registerHotkey, Keycode } from '@accelint/hotkey-manager';
+
+const hotkey = registerHotkey({
+  key: {
+    code: Keycode.KeyS,
+    ...(isMac ? { meta: true } : { ctrl: true }),
+  },
+  onKeyUp: () => save(),
+});
+```
+
+> **Good to know:** Use `autoMacStyle: true` in your hotkey configuration for automatic platform handling instead of manually checking `isMac`.
+
+## keyToId
+
+Converts a key combination to a standard internal identifier string. Handles `autoMacStyle` transformation on macOS.
+
+### Usage
+
+```typescript
+import { keyToId } from '@accelint/hotkey-manager';
+
+const id = keyToId({
+  code: 'KeyS',
+  ctrl: true,
+  alt: false,
+  shift: false,
+  meta: false,
+  autoMacStyle: false,
+  id: '',
+});
+// "KeyS|no-alt|ctrl|no-meta|no-shift"
+```
+
+### Reference
+
+```typescript
+function keyToId(key: KeyCombination): KeyCombinationId
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `key` | `KeyCombination` | Key combination object with code and modifier flags. |
+
+### Returns
+
+Returns a pipe-delimited string identifier in the format:
+`{code}|{alt}|{ctrl}|{meta}|{shift}`
+
+### Examples
+
+#### Example: Generate key identifier
+
+```typescript
+import { keyToId, Keycode } from '@accelint/hotkey-manager';
+
+const id = keyToId({
+  code: Keycode.KeyA,
+  ctrl: true,
+  alt: false,
+  shift: true,
+  meta: false,
+  autoMacStyle: false,
+  id: '',
+});
+console.log(id); // "KeyA|no-alt|ctrl|no-meta|shift"
+```
+
+#### Example: Platform-aware ID with autoMacStyle
+
+```typescript
+import { keyToId, Keycode, isMac } from '@accelint/hotkey-manager';
+
+const id = keyToId({
+  code: Keycode.KeyS,
+  ctrl: true,
+  alt: false,
+  shift: false,
+  meta: false,
+  autoMacStyle: true,
+  id: '',
+});
+
+// On Mac: "KeyS|no-alt|no-ctrl|meta|no-shift"
+// On Windows/Linux: "KeyS|no-alt|ctrl|no-meta|no-shift"
+```
+
+> **Good to know:** This function is used internally by `registerHotkey`. You typically don't need to call it directly unless building custom hotkey abstractions.
+
+## keyToString
+
+Converts a key combination to a human-readable string representation with modifier symbols.
+
+### Usage
+
+```typescript
+import { keyToString } from '@accelint/hotkey-manager';
+
+const str = keyToString({
+  code: 'KeyS',
+  ctrl: false,
+  alt: false,
+  shift: false,
+  meta: true,
+  autoMacStyle: false,
+  id: '',
+});
+// "[Win/⌘] + [KeyS]"
+```
+
+### Reference
+
+```typescript
+function keyToString(key: KeyCombination): string
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `key` | `KeyCombination` | Key combination object with code and modifier flags. |
+
+### Returns
+
+Returns a human-readable string like `"[CTRL] + [SHIFT] + [KeyA]"`.
+
+### Examples
+
+#### Example: Display hotkey hint
+
+```typescript
+import { keyToString, Keycode } from '@accelint/hotkey-manager';
+
+const hotkey = {
+  code: Keycode.KeyS,
+  ctrl: true,
+  alt: false,
+  shift: true,
+  meta: false,
+  autoMacStyle: false,
+  id: '',
+};
+
+console.log(keyToString(hotkey));
+// "[CTRL] + [SHIFT] + [KeyS]"
+```
+
+#### Example: Generate tooltip text
+
+```typescript
+import { keyToString, registerHotkey, Keycode } from '@accelint/hotkey-manager';
+
+const saveHotkey = registerHotkey({
+  key: {
+    code: Keycode.KeyS,
+    ctrl: true,
+  },
+  onKeyUp: () => save(),
+});
+
+const tooltipText = `Save file: ${keyToString(saveHotkey.config.key[0])}`;
+```
+
+> **Good to know:** This function is primarily for debugging and user-facing displays. The output format is not customizable—it always uses the pattern `[MODIFIER] + [KEY]`.
+
+## Related
+
+- [useHotkey](./react/use-hotkey.md) - React hook for binding hotkeys in components
+- [KeyboardEvent.code](https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/code) - MDN documentation for keyboard codes

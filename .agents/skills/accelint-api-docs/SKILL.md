@@ -140,29 +140,38 @@ When the user asks to document a file, follow this workflow.
    - Name examples by use case ("Example: Filtering null values")
    - Keep prose concise—show code first, explain after
 
-**5. Add frontmatter with dual-SHA tracking**
+**5. Compute source_sha before generating content**
+   - Run `git hash-object <source-file>` to get the current source file hash
+   - Store this value to use in frontmatter
+
+**6. Generate markdown content with frontmatter**
+   - Follow the reference example structure exactly
+   - Extract information from source (don't infer or hallucinate)
+   - Use direct imperative voice ("Returns the filtered array")
+   - Name examples by use case ("Example: Filtering null values")
+   - Keep prose concise—show code first, explain after
+   - Add frontmatter at the top:
    ```yaml
    ---
    title: EntityName
    description: One sentence describing what it does
    source: relative/path/to/source.ts
-   source_sha: <git hash of source file>
-   doc_sha: <hash of this doc content>
+   source_sha: <value from step 5>
+   doc_sha: pending
    deprecated: false
    updated: YYYY-MM-DD
    ---
    ```
-   - `source_sha`: Run `git hash-object <source-file>` to get current hash
-   - `doc_sha`: Generate hash of markdown content (excluding frontmatter)
-   - `deprecated`: Auto-detect from `@deprecated` JSDoc tag
+   - Set `deprecated: true` if source has `@deprecated` JSDoc tag
+   - Set `doc_sha: pending` as a placeholder (will be computed after writing)
 
-**6. Validate markdown quality**
+**7. Validate markdown quality**
    - Fix heading hierarchy (should start with H1)
    - Add language tags to code fences
    - Convert bare URLs to markdown links
    - Check that examples have descriptive names
 
-**7. Determine output path and write file**
+**8. Write file and compute doc_sha**
    - Compute output path: `{outputDir}/{section}/{package-name}/{relative-path}.mdx`
    - Preserve source directory structure directly (no `/api/` subdirectory)
    - Examples:
@@ -172,10 +181,17 @@ When the user asks to document a file, follow this workflow.
    - Create directories if they don't exist (use mkdir -p)
    - Single export: Write to computed path
    - Multi-export: Write single file with H2 sections per entity
+   - **IMMEDIATELY after writing**, compute `doc_sha`:
+     ```bash
+     # Extract content after frontmatter, hash it
+     awk '/^---$/{if(++count==2){flag=1;next}}flag' <output-file> | git hash-object --stdin
+     ```
+   - Update the file's frontmatter, replacing `doc_sha: pending` with the computed hash
 
-**8. Update tracking index**
+**9. Update tracking index**
    - Read `apps/docs/.index.json`
    - Update or append entry with: source, doc, entities, source_sha, doc_sha, updated (ISO 8601 timestamp)
+   - Use the computed `doc_sha` from step 8 (NOT "pending")
    - Update `generated` timestamp to current time
    - Write back to `apps/docs/.index.json`
    - Keep entries sorted by source path for clean diffs

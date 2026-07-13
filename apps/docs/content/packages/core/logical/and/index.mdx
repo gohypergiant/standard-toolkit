@@ -1,0 +1,140 @@
+---
+title: and
+description: Logical conjunction (&&) for values and function results
+source: logical/and/index.ts
+source_sha: e7722db39c22047e1a2acd54256d71b99246352b
+doc_sha: 472a2f62ef07ac64e05338306e25311c4b96cdea
+deprecated: false
+updated: 2026-07-13
+---
+
+# and
+
+Logical conjunction (&&) for values and function results. Provides both value-based and function-based conjunction operators.
+
+## Usage
+
+```typescript
+import { and, andFn } from '@accelint/core';
+
+// Value-based conjunction
+and(true)(1);
+// true
+
+and(true)(0);
+// false
+
+// Function-based conjunction
+const isPositive = (x: number) => x > 0;
+const isLessThan10 = (x: number) => x < 10;
+
+andFn(isPositive)(isLessThan10)(5);
+// true
+
+andFn(isPositive)(isLessThan10)(15);
+// false
+```
+
+## Reference
+
+### and
+
+```typescript
+function and<A>(a: A): <B>(b: B) => boolean
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `a` | `A` | The first value to compare |
+
+#### Returns
+
+Returns a curried function that accepts a second value and returns `true` if both values are truthy, `false` otherwise.
+
+#### Type Parameters
+
+- `A` - The type of the first input value
+- `B` - The type of the second input value
+
+### andFn
+
+```typescript
+function andFn<T, A>(
+  a: (x: T) => A
+): <B>(b: (y: T) => B) => (c: T) => boolean
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `a` | `(x: T) => A` | The first function to evaluate |
+
+#### Returns
+
+Returns a curried function that accepts a second function, then accepts a value to pass to both functions, returning `true` if both function results are truthy, `false` otherwise.
+
+#### Type Parameters
+
+- `T` - The type of the input value passed to both functions
+- `A` - The return type of the first function
+- `B` - The return type of the second function
+
+## Examples
+
+### Example: Validating conditions
+
+```typescript
+import { and } from '@accelint/core';
+
+const hasValue = (value: string | null) => value !== null;
+const isNonEmpty = (value: string) => value.length > 0;
+
+// Both conditions must be true
+const value = "hello";
+const isValid = and(hasValue(value))(isNonEmpty(value));
+// true
+```
+
+### Example: Combining predicates
+
+```typescript
+import { andFn } from '@accelint/core';
+
+const isEven = (x: number) => x % 2 === 0;
+const isPositive = (x: number) => x > 0;
+
+const isEvenAndPositive = andFn(isEven)(isPositive);
+
+isEvenAndPositive(4);
+// true
+
+isEvenAndPositive(-4);
+// false
+
+isEvenAndPositive(3);
+// false
+```
+
+### Example: Partial application
+
+```typescript
+import { and } from '@accelint/core';
+
+// Create a reusable validator
+const isEnabled = and(true);
+
+isEnabled(someCondition);
+// true if someCondition is truthy
+```
+
+> **Good to know:** Both `and` and `andFn` convert their operands to boolean values using `Boolean()`, so they work with any truthy/falsy values.
+
+## Related
+
+- [or](../or/index.md) - Logical disjunction (||)
+- [not](../not/index.md) - Logical negation (!)
+- [nand](../nand/index.md) - Logical NAND (!(a && b))
+- [xor](../xor/index.md) - Logical exclusive OR

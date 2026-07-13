@@ -1,0 +1,236 @@
+---
+title: Tooltip
+description: Contextual popup for additional information on hover or focus
+source: packages/design-toolkit/src/components/tooltip/index.tsx
+source_sha: 4a7a7397d04aabac553dfc9bce11f719b49112d2
+doc_sha: c5e54a59b1be2c1b7e8b9f31d5fcee7a62a89d34
+deprecated: false
+updated: 2026-07-13
+---
+
+# Tooltip
+
+Contextual popup that displays on hover or focus with automatic positioning and accessibility support.
+
+## Usage
+
+```tsx
+import { Tooltip, TooltipTrigger, Button } from '@accelint/design-toolkit';
+
+export function MyComponent() {
+  return (
+    <TooltipTrigger>
+      <Button>Hover me</Button>
+      <Tooltip>Additional information</Tooltip>
+    </TooltipTrigger>
+  );
+}
+```
+
+## Reference
+
+```typescript
+interface TooltipProps extends AriaTooltipProps {
+  children?: React.ReactNode;
+  parentRef?: RefObject<HTMLElement | null>;
+  className?: string;
+  offset?: number;
+  placement?: 'top' | 'bottom' | 'left' | 'right' | 'top start' | 'top end' | 'bottom start' | 'bottom end';
+}
+```
+
+### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `children` | `React.ReactNode` | - | Yes |
+| `placement` | `'top' \| 'bottom' \| 'left' \| 'right' \| ...` | `'bottom'` | No |
+| `offset` | `number` | `5` | No |
+| `className` | `string` | - | No |
+| `parentRef` | `RefObject<HTMLElement \| null>` | - | No |
+
+#### `placement`
+
+Controls where the tooltip appears relative to the trigger element. Supports basic positions and alignment modifiers.
+
+#### `offset`
+
+Distance in pixels between the tooltip and its trigger element.
+
+#### `parentRef`
+
+Reference to a parent element for portal rendering. When provided, the tooltip renders into the specified container instead of document body.
+
+### Inherited Props
+
+Tooltip inherits props from React Aria's `Tooltip`, including:
+- `isEntering` - Whether tooltip is entering (for animations)
+- `isExiting` - Whether tooltip is exiting (for animations)
+
+See [React Aria Tooltip](https://react-spectrum.adobe.com/react-aria/Tooltip.html) for full API reference.
+
+## Sub-components
+
+### TooltipTrigger
+
+Wrapper that manages tooltip display on hover or focus. Provides delay and timing controls.
+
+```tsx
+<TooltipTrigger delay={500}>
+  <Button>Trigger</Button>
+  <Tooltip>Content</Tooltip>
+</TooltipTrigger>
+```
+
+#### TooltipTrigger Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `delay` | `number` | `250` | No |
+| `closeDelay` | `number` | `0` | No |
+
+- `delay` - Delay in milliseconds before showing the tooltip on hover/focus
+- `closeDelay` - Delay in milliseconds before hiding the tooltip
+
+## Examples
+
+### Example: Basic tooltip
+
+```tsx
+import { Tooltip, TooltipTrigger, Button } from '@accelint/design-toolkit';
+
+<TooltipTrigger>
+  <Button>Save</Button>
+  <Tooltip>Save your changes</Tooltip>
+</TooltipTrigger>
+```
+
+### Example: Tooltip with icon
+
+```tsx
+import { Tooltip, TooltipTrigger, Icon } from '@accelint/design-toolkit';
+import { Information } from '@accelint/icons';
+
+<TooltipTrigger>
+  <Icon className="fg-primary-bold h-xl w-xl">
+    <Information />
+  </Icon>
+  <Tooltip>Additional information about this feature</Tooltip>
+</TooltipTrigger>
+```
+
+### Example: Long tooltip text
+
+```tsx
+import { Tooltip, TooltipTrigger } from '@accelint/design-toolkit';
+
+<TooltipTrigger>
+  <span className="fg-primary-bold">More Info</span>
+  <Tooltip>
+    A floating label used to explain an element or provide additional context
+  </Tooltip>
+</TooltipTrigger>
+```
+
+### Example: Different placements
+
+```tsx
+import { Tooltip, TooltipTrigger, Button } from '@accelint/design-toolkit';
+
+<div className="flex gap-m">
+  <TooltipTrigger>
+    <Button>Top</Button>
+    <Tooltip placement="top">Appears above</Tooltip>
+  </TooltipTrigger>
+
+  <TooltipTrigger>
+    <Button>Bottom</Button>
+    <Tooltip placement="bottom">Appears below</Tooltip>
+  </TooltipTrigger>
+
+  <TooltipTrigger>
+    <Button>Left</Button>
+    <Tooltip placement="left">Appears to the left</Tooltip>
+  </TooltipTrigger>
+
+  <TooltipTrigger>
+    <Button>Right</Button>
+    <Tooltip placement="right">Appears to the right</Tooltip>
+  </TooltipTrigger>
+</div>
+```
+
+### Example: Custom delay
+
+```tsx
+import { Tooltip, TooltipTrigger, Button } from '@accelint/design-toolkit';
+
+<TooltipTrigger delay={1000} closeDelay={500}>
+  <Button>Slow Tooltip</Button>
+  <Tooltip>This tooltip appears after 1 second</Tooltip>
+</TooltipTrigger>
+```
+
+### Example: Custom offset
+
+```tsx
+import { Tooltip, TooltipTrigger, Button } from '@accelint/design-toolkit';
+
+<TooltipTrigger>
+  <Button>More Space</Button>
+  <Tooltip offset={15}>
+    This tooltip has increased spacing from the trigger
+  </Tooltip>
+</TooltipTrigger>
+```
+
+### Example: Tooltip with custom styling
+
+```tsx
+import { Tooltip, TooltipTrigger, Button } from '@accelint/design-toolkit';
+
+<TooltipTrigger>
+  <Button>Styled Tooltip</Button>
+  <Tooltip className="bg-critical-bold fg-white border-critical-subtle">
+    Critical warning information
+  </Tooltip>
+</TooltipTrigger>
+```
+
+### Example: Tooltip on disabled button
+
+```tsx
+import { Tooltip, TooltipTrigger, Button } from '@accelint/design-toolkit';
+
+<TooltipTrigger>
+  <div>
+    <Button isDisabled>Disabled Action</Button>
+  </div>
+  <Tooltip>This action is currently unavailable</Tooltip>
+</TooltipTrigger>
+```
+
+> **Good to know:** Wrap disabled elements in a `<div>` to ensure the tooltip trigger works, since disabled elements don't fire pointer events.
+
+### Example: Icon button with tooltip
+
+```tsx
+import { Tooltip, TooltipTrigger, Button, Icon } from '@accelint/design-toolkit';
+import { Settings } from '@accelint/icons';
+
+<TooltipTrigger>
+  <Button variant="icon" aria-label="Settings">
+    <Icon><Settings /></Icon>
+  </Button>
+  <Tooltip>Open Settings</Tooltip>
+</TooltipTrigger>
+```
+
+> **Good to know:** Always provide both `aria-label` on icon buttons AND a tooltip for the best accessibility. The `aria-label` is for screen readers, while the tooltip helps sighted users.
+
+## Related
+
+- [Popover](../popover/index.md) - Non-modal overlay for interactive content
+- [Dialog](../dialog/index.md) - Modal overlay for critical interactions
+- [Button](../button/index.md) - Common trigger element for tooltips
+- [Icon](../icon/index.md) - Common tooltip trigger for information indicators

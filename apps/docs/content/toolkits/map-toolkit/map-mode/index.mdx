@@ -1,0 +1,310 @@
+---
+title: Map Mode
+description: Coordinate and manage map interaction modes across multiple features with approval-based ownership.
+source: packages/map-toolkit/src/map-mode/index.ts
+source_sha: b0d871531800e241bb51ecff20542ce612bf74a8
+doc_sha: 23c244a1b62c06e39db06214117aec6c41c832c2
+deprecated: false
+updated: 2026-07-13
+---
+
+# Map Mode
+
+Coordinate and manage map interaction modes across multiple features with approval-based ownership.
+
+## Usage
+
+```tsx
+import { useMapMode } from '@accelint/map-toolkit/map-mode';
+import type { UniqueId } from '@accelint/core';
+
+// Inside MapProvider (Deck.gl layer component)
+function CustomLayer() {
+  const { mode, requestModeChange } = useMapMode();
+  
+  return mode === 'editing' ? <EditableLayer /> : <ReadOnlyLayer />;
+}
+
+// Outside MapProvider (UI control)
+function ModeControl({ mapId }: { mapId: UniqueId }) {
+  const { mode, requestModeChange } = useMapMode(mapId);
+  
+  return (
+    <button onClick={() => requestModeChange('drawing', 'toolbar')}>
+      Switch to Drawing Mode
+    </button>
+  );
+}
+```
+
+## Reference
+
+### `useMapMode(id?: UniqueId): UseMapModeReturn`
+
+Hook to access the map mode state and actions. Uses `useSyncExternalStore` for concurrent-safe updates with a fan-out pattern where one bus listener per map notifies N React subscribers.
+
+#### Parameters
+
+- `id` (optional) - Map instance ID. If omitted, uses `MapContext` (requires being within `MapProvider`).
+
+#### Returns
+
+```typescript
+type UseMapModeReturn = {
+  mode: string;
+  requestModeChange: (desiredMode: string, requestOwner: string) => void;
+};
+```
+
+- `mode` - Current active map mode string
+- `requestModeChange` - Function to request mode change with ownership
+
+#### Throws
+
+Error if no `id` is provided and hook is used outside `MapProvider`.
+
+### Events
+
+Map mode uses an event-driven approval flow for coordinating mode changes:
+
+#### `MapModeEvents.changeRequest`
+
+Emitted when a component requests a mode change.
+
+```typescript
+type ModeChangeRequestPayload = {
+  desiredMode: string;
+  owner: string;
+  id: UniqueId;
+};
+```
+
+#### `MapModeEvents.changeAuthorization`
+
+Sent to current mode owner to approve/reject the request.
+
+```typescript
+type ModeChangeAuthorizationPayload = {
+  authId: string;
+  desiredMode: string;
+  currentMode: string;
+  id: UniqueId;
+};
+```
+
+#### `MapModeEvents.changeDecision`
+
+Response from current owner approving or rejecting the change.
+
+```typescript
+type ModeChangeDecisionPayload = {
+  authId: string;
+  approved: boolean;
+  owner: string;
+  reason?: string;
+  id: UniqueId;
+};
+```
+
+#### `MapModeEvents.changed`
+
+Emitted when mode successfully changes.
+
+```typescript
+type ModeChangedPayload = {
+  previousMode: string;
+  currentMode: string;
+  id: UniqueId;
+};
+```
+
+### Store Functions
+
+```typescript
+// Get current mode and owner
+getMode(id: UniqueId): string;
+getCurrentModeOwner(id: UniqueId): string;
+
+// Clear state for cleanup
+clearMapModeState(id: UniqueId): void;
+
+// Low-level store access
+modeStore.useSelector(id: UniqueId, selector: (state) => T): T;
+modeStore.actions(id: UniqueId): { requestModeChange };
+```
+
+## Examples
+
+### Example: Toolbar with multiple mode buttons
+
+```tsx
+import { useMapMode } from '@accelint/map-toolkit/map-mode';
+import type { UniqueId } from '@accelint/core';
+
+function MapToolbar({ mapId }: { mapId: UniqueId }) {
+  const { mode, requestModeChange } = useMapMode(mapId);
+  
+  const modes = [
+    { id: 'default', label: 'Navigate' },
+    { id: 'drawing', label: 'Draw' },
+    { id: 'editing', label: 'Edit' },
+    { id: 'measuring', label: 'Measure' },
+  ];
+  
+  return (
+    <div className="flex gap-2">
+      {modes.map((m) => (
+        <button
+          key={m.id}
+          disabled={mode === m.id}
+          onClick={() => requestModeChange(m.id, 'toolbar')}
+        >
+          {m.label} {mode === m.id && '✓'}
+        </button>
+      ))}
+    </div>
+  );
+}
+```
+
+### Example: Conditionally rendering layer based on mode
+
+```tsx
+import { useMapMode } from '@accelint/map-toolkit/map-mode';
+import { ScatterplotLayer } from '@deck.gl/layers';
+
+function ConditionalLayer() {
+  const { mode } = useMapMode();
+  
+  // Only render when in specific mode
+  if (mode !== 'analysis') {
+    return null;
+  }
+  
+  return (
+    <ScatterplotLayer
+      id="analysis-points"
+      data={analysisData}
+      getPosition={(d) => d.position}
+      getRadius={5}
+    />
+  );
+}
+```
+
+### Example: Listening to mode changes with event bus
+
+```tsx
+import { useOn } from '@accelint/bus/react';
+import { MapModeEvents } from '@accelint/map-toolkit/map-mode';
+import type { ModeChangedEvent } from '@accelint/map-toolkit/map-mode';
+
+function ModeLogger({ mapId }: { mapId: UniqueId }) {
+  useOn<ModeChangedEvent>(MapModeEvents.changed, (event) => {
+    if (event.payload.id === mapId) {
+      console.log(
+        `Mode changed: ${event.payload.previousMode} → ${event.payload.currentMode}`
+      );
+    }
+  });
+  
+  return null;
+}
+```
+
+### Example: Implementing approval logic
+
+```tsx
+import { useEffect } from 'react';
+import { useOn, useEmit } from '@accelint/bus/react';
+import { MapModeEvents } from '@accelint/map-toolkit/map-mode';
+import type {
+  ModeChangeAuthorizationEvent,
+  ModeChangeDecisionPayload,
+} from '@accelint/map-toolkit/map-mode';
+
+function DrawingModeOwner({ mapId, ownerId }: Props) {
+  const emitDecision = useEmit<ModeChangeDecisionPayload>(
+    MapModeEvents.changeDecision
+  );
+  
+  useOn<ModeChangeAuthorizationEvent>(
+    MapModeEvents.changeAuthorization,
+    (event) => {
+      if (event.payload.id !== mapId) return;
+      
+      // Only respond if we own the current mode
+      if (event.payload.currentMode !== 'drawing') return;
+      
+      // Check if we have unsaved changes
+      const hasUnsavedChanges = checkForUnsavedChanges();
+      
+      if (hasUnsavedChanges) {
+        // Reject the mode change
+        emitDecision({
+          authId: event.payload.authId,
+          approved: false,
+          owner: ownerId,
+          reason: 'Unsaved changes in drawing mode',
+          id: mapId,
+        });
+      } else {
+        // Approve the mode change
+        emitDecision({
+          authId: event.payload.authId,
+          approved: true,
+          owner: ownerId,
+          id: mapId,
+        });
+      }
+    }
+  );
+  
+  return null;
+}
+```
+
+### Example: Multiple map instances
+
+```tsx
+import { BaseMap } from '@accelint/map-toolkit/deckgl';
+import { useMapMode } from '@accelint/map-toolkit/map-mode';
+import { uuid } from '@accelint/core';
+
+const MAP_1_ID = uuid();
+const MAP_2_ID = uuid();
+
+function SharedToolbar() {
+  const map1 = useMapMode(MAP_1_ID);
+  const map2 = useMapMode(MAP_2_ID);
+  
+  return (
+    <div>
+      <button onClick={() => map1.requestModeChange('editing', 'toolbar')}>
+        Edit Map 1 (current: {map1.mode})
+      </button>
+      <button onClick={() => map2.requestModeChange('editing', 'toolbar')}>
+        Edit Map 2 (current: {map2.mode})
+      </button>
+    </div>
+  );
+}
+
+export function DualMapView() {
+  return (
+    <>
+      <SharedToolbar />
+      <BaseMap id={MAP_1_ID} className="w-1/2 h-full" />
+      <BaseMap id={MAP_2_ID} className="w-1/2 h-full" />
+    </>
+  );
+}
+```
+
+> **Good to know:** Each map instance maintains independent mode state. Use shared IDs at module level to coordinate between UI controls and map instances.
+
+## Related
+
+- [BaseMap](../deckgl/base-map/index.mdx) - Automatically creates MapProvider for mode management
+- [useMapCursor](../map-cursor/index.mdx) - Manage cursor styles coordinated with map modes
+- [@accelint/bus](../../../packages/bus/index.mdx) - Event bus used for mode coordination

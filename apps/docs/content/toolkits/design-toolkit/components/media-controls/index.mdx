@@ -1,0 +1,316 @@
+---
+title: MediaControls
+description: Container for media playback controls with support for play, seek, volume, and time display
+source: packages/design-toolkit/src/components/media-controls/index.tsx
+source_sha: 14222a28e67242d857f35175f28f295ac9187213
+doc_sha: 1ed6dde1b11df15d608b395372afa6ab126457a0
+deprecated: false
+updated: 2026-07-13
+---
+
+# MediaControls
+
+Container for media playback controls that composes sub-components into a cohesive control bar. Must be used within a MediaProvider context from media-chrome.
+
+## Usage
+
+```tsx
+import { MediaProvider, MediaControls, PlayButton, TimeDisplay, TimeRange } from '@accelint/design-toolkit';
+
+export function VideoPlayer() {
+  return (
+    <MediaProvider>
+      <video slot="media" src="/video.mp4" />
+      
+      <MediaControls>
+        <PlayButton />
+        <TimeDisplay mode="current" />
+        <TimeRange />
+        <TimeDisplay mode="duration" />
+      </MediaControls>
+    </MediaProvider>
+  );
+}
+```
+
+## Reference
+
+```typescript
+interface MediaControlsProps {
+  children: React.ReactNode;
+  className?: string;
+  classNames?: {
+    container?: string;
+  };
+  isDisabled?: boolean;
+}
+```
+
+### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `children` | `React.ReactNode` | - | Yes |
+| `className` | `string` | - | No |
+| `classNames` | `{ container?: string }` | - | No |
+| `isDisabled` | `boolean` | `false` | No |
+
+#### `children`
+
+Media control sub-components to compose into the control bar. Common components include:
+- `PlayButton` - Play/pause toggle
+- `SeekButton` - Skip forward/backward
+- `TimeDisplay` - Current time or duration
+- `TimeRange` - Seek slider
+- `MuteButton` - Mute/unmute toggle
+- `VolumeSlider` - Volume control
+- `PlaybackRateButton` - Playback speed selector
+
+#### `isDisabled`
+
+When `true`, disables all child controls via context. Useful for loading states or when media is unavailable.
+
+#### `classNames`
+
+Custom CSS classes for sub-elements:
+- `container` - Root container element
+
+## Examples
+
+### Example: Basic video controls
+
+```tsx
+import {
+  MediaProvider,
+  MediaControls,
+  PlayButton,
+  TimeDisplay,
+  TimeRange,
+  MuteButton
+} from '@accelint/design-toolkit';
+
+<MediaProvider>
+  <video slot="media" src="/video.mp4" />
+  
+  <MediaControls>
+    <PlayButton />
+    <TimeDisplay mode="current" />
+    <TimeRange />
+    <TimeDisplay mode="duration" />
+    <MuteButton />
+  </MediaControls>
+</MediaProvider>
+```
+
+### Example: Audio player with seek controls
+
+```tsx
+import {
+  MediaProvider,
+  MediaControls,
+  SeekButton,
+  PlayButton,
+  TimeDisplay,
+  PlaybackRateButton
+} from '@accelint/design-toolkit';
+
+<MediaProvider>
+  <audio slot="media" src="/audio.mp3" />
+  
+  <MediaControls>
+    <SeekButton direction="backward" seekOffset={15} />
+    <PlayButton />
+    <SeekButton direction="forward" seekOffset={15} />
+    <TimeDisplay mode="current" />
+    <PlaybackRateButton rates={[0.5, 1, 1.5, 2]} />
+  </MediaControls>
+</MediaProvider>
+```
+
+### Example: Full-featured video player
+
+```tsx
+import {
+  MediaProvider,
+  MediaControls,
+  PlayButton,
+  SeekButton,
+  TimeDisplay,
+  TimeRange,
+  MuteButton,
+  VolumeSlider,
+  PlaybackRateButton,
+  FullscreenButton
+} from '@accelint/design-toolkit';
+
+<MediaProvider>
+  <video slot="media" src="/video.mp4" />
+  
+  <MediaControls>
+    <PlayButton />
+    <SeekButton direction="backward" seekOffset={10} />
+    <SeekButton direction="forward" seekOffset={10} />
+    <TimeDisplay mode="current" />
+    <TimeRange />
+    <TimeDisplay mode="duration" />
+    <MuteButton />
+    <VolumeSlider />
+    <PlaybackRateButton rates={[0.5, 0.75, 1, 1.25, 1.5, 2]} />
+    <FullscreenButton />
+  </MediaControls>
+</MediaProvider>
+```
+
+### Example: Disabled controls
+
+```tsx
+import { MediaProvider, MediaControls, PlayButton, TimeRange } from '@accelint/design-toolkit';
+
+<MediaProvider>
+  <video slot="media" src="/video.mp4" />
+  
+  <MediaControls isDisabled>
+    <PlayButton />
+    <TimeRange />
+  </MediaControls>
+</MediaProvider>
+```
+
+### Example: Custom styled controls
+
+```tsx
+import { MediaProvider, MediaControls, PlayButton, TimeRange } from '@accelint/design-toolkit';
+
+<MediaProvider>
+  <video slot="media" src="/video.mp4" />
+  
+  <MediaControls
+    className="bg-gray-900 rounded-lg p-2"
+    classNames={{ container: 'gap-4' }}
+  >
+    <PlayButton />
+    <TimeRange />
+  </MediaControls>
+</MediaProvider>
+```
+
+### Example: Minimal audio controls
+
+```tsx
+import { MediaProvider, MediaControls, PlayButton, TimeDisplay } from '@accelint/design-toolkit';
+
+<MediaProvider>
+  <audio slot="media" src="/audio.mp3" />
+  
+  <MediaControls>
+    <PlayButton />
+    <TimeDisplay mode="current" />
+  </MediaControls>
+</MediaProvider>
+```
+
+### Example: Podcast player
+
+```tsx
+import {
+  MediaProvider,
+  MediaControls,
+  SeekButton,
+  PlayButton,
+  TimeDisplay,
+  TimeRange,
+  PlaybackRateButton
+} from '@accelint/design-toolkit';
+
+<MediaProvider>
+  <audio slot="media" src="/podcast.mp3" />
+  
+  <MediaControls>
+    <SeekButton direction="backward" seekOffset={30} />
+    <PlayButton />
+    <SeekButton direction="forward" seekOffset={30} />
+    <div className="flex-1">
+      <TimeRange />
+      <div className="flex justify-between text-sm">
+        <TimeDisplay mode="current" />
+        <TimeDisplay mode="duration" />
+      </div>
+    </div>
+    <PlaybackRateButton rates={[1, 1.25, 1.5, 1.75, 2]} />
+  </MediaControls>
+</MediaProvider>
+```
+
+## Control Components
+
+MediaControls works with these sub-components:
+
+- **PlayButton** - Play/pause toggle button
+- **SeekButton** - Skip forward or backward by seconds
+- **TimeDisplay** - Show current time or duration
+- **TimeRange** - Seek slider for scrubbing
+- **MuteButton** - Mute/unmute toggle
+- **VolumeSlider** - Volume control slider
+- **PlaybackRateButton** - Playback speed selector
+- **FullscreenButton** - Fullscreen toggle
+
+All control components automatically connect to the media element via MediaProvider context.
+
+## Requirements
+
+### MediaProvider
+
+MediaControls must be used within a `MediaProvider` from media-chrome:
+
+```tsx
+import { MediaProvider } from '@accelint/design-toolkit';
+
+<MediaProvider>
+  <video slot="media" src="/video.mp4" />
+  <MediaControls>
+    {/* controls */}
+  </MediaControls>
+</MediaProvider>
+```
+
+The component will throw an error if used outside this context.
+
+### Media Element
+
+The `MediaProvider` requires a media element (audio or video) with `slot="media"`:
+
+```tsx
+<MediaProvider>
+  <video slot="media" src="/video.mp4" />
+  {/* or */}
+  <audio slot="media" src="/audio.mp3" />
+  
+  <MediaControls>{/* controls */}</MediaControls>
+</MediaProvider>
+```
+
+## Behavior
+
+### Context Propagation
+
+MediaControls provides context to child components via `MediaControlsProvider`, propagating:
+- `isDisabled` state to all child controls
+- Media state from MediaProvider (play/pause, time, volume, etc.)
+
+### Automatic State Binding
+
+Control components automatically bind to media state:
+- **PlayButton** reflects playing/paused state
+- **TimeDisplay** updates with current time
+- **TimeRange** reflects and controls playback position
+- **MuteButton** reflects muted state
+- **VolumeSlider** reflects and controls volume level
+
+> **Good to know:** MediaControls uses media-chrome under the hood for robust media state management and accessibility features.
+
+## Related
+
+- [PlayButton](./play-button.mdx) - Play/pause control
+- [TimeRange](./time-range.mdx) - Seek slider
+- [MediaProvider](./provider.mdx) - Required context provider
+- [media-chrome](https://www.media-chrome.org/) - Underlying media controls library

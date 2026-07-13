@@ -1,0 +1,349 @@
+---
+title: Viewport
+description: Manages viewport state (bounds, lat/lon, zoom, dimensions) per map instance with automatic updates from map events.
+source: packages/map-toolkit/src/viewport/index.tsx
+source_sha: 84808792af8f9686570192cdeb35852aa99824d8
+doc_sha: f98c8022fb9ed7a46b454bc5884aee73b6869646
+deprecated: false
+updated: 2026-07-13
+---
+
+# Viewport
+
+Manages viewport state (bounds, lat/lon, zoom, dimensions) per map instance with automatic updates from map events.
+
+## viewportStore
+
+Global store managing viewport state for all map instances. Automatically subscribes to `MapEvents.viewport` bus events.
+
+### Usage
+
+```tsx
+import { viewportStore } from '@accelint/map-toolkit/viewport';
+
+function MapInfo({ mapId }: { mapId: string }) {
+  const { state } = viewportStore.use(mapId);
+  
+  return (
+    <div>
+      Lat: {state.latitude.toFixed(2)}, Lon: {state.longitude.toFixed(2)}
+    </div>
+  );
+}
+```
+
+### Reference
+
+```typescript
+const viewportStore: MapStore<ViewportState, ViewportActions>;
+
+interface ViewportState {
+  id: UniqueId;
+  bounds?: [minLon: number, minLat: number, maxLon: number, maxLat: number];
+  latitude: number;
+  longitude: number;
+  zoom: number;
+  width: number;
+  height: number;
+}
+```
+
+State is read-only and updated automatically from map events. Uninitialized values use `NaN` for lat/lon/zoom and `undefined` for bounds.
+
+## useMapViewport
+
+Hook to subscribe to viewport state changes for a specific map.
+
+### Usage
+
+```tsx
+import { useMapViewport } from '@accelint/map-toolkit/viewport';
+
+function MapInfo({ mapId }: { mapId: string }) {
+  const viewport = useMapViewport(mapId);
+  
+  return (
+    <div>
+      Lat: {viewport.latitude.toFixed(2)}, 
+      Lon: {viewport.longitude.toFixed(2)}, 
+      Zoom: {viewport.zoom}
+    </div>
+  );
+}
+```
+
+### Reference
+
+```typescript
+function useMapViewport(mapId: UniqueId): ViewportState
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `mapId` | `UniqueId` | Unique identifier for the map instance |
+
+#### Returns
+
+Returns current viewport state including bounds, latitude, longitude, zoom, width, and height. Returns default state with `NaN` values if viewport not yet initialized.
+
+### Examples
+
+#### Example: Displaying viewport coordinates
+
+```tsx
+import { useMapViewport } from '@accelint/map-toolkit/viewport';
+
+function CoordinateDisplay({ mapId }: { mapId: string }) {
+  const { latitude, longitude } = useMapViewport(mapId);
+  
+  if (Number.isNaN(latitude) || Number.isNaN(longitude)) {
+    return <div>Loading viewport...</div>;
+  }
+  
+  return (
+    <div>
+      Position: {latitude.toFixed(4)}°, {longitude.toFixed(4)}°
+    </div>
+  );
+}
+```
+
+#### Example: Checking viewport bounds
+
+```tsx
+import { useMapViewport } from '@accelint/map-toolkit/viewport';
+
+function BoundsDisplay({ mapId }: { mapId: string }) {
+  const { bounds } = useMapViewport(mapId);
+  
+  if (!bounds) {
+    return <div>No bounds available</div>;
+  }
+  
+  const [minLon, minLat, maxLon, maxLat] = bounds;
+  return (
+    <div>
+      Bounds: [{minLon.toFixed(2)}, {minLat.toFixed(2)}] to 
+      [{maxLon.toFixed(2)}, {maxLat.toFixed(2)}]
+    </div>
+  );
+}
+```
+
+## ViewportSize
+
+Component displaying the current viewport bounds in a specified unit.
+
+### Usage
+
+```tsx
+import { ViewportSize } from '@accelint/map-toolkit/viewport';
+
+function MapFooter({ mapId }: { mapId: string }) {
+  return (
+    <footer>
+      <ViewportSize instanceId={mapId} />
+    </footer>
+  );
+}
+```
+
+### Reference
+
+```typescript
+interface ViewportSizeProps extends ComponentPropsWithRef<'span'> {
+  instanceId: UniqueId;
+  unit?: DistanceUnitSymbol;
+}
+```
+
+#### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `instanceId` | `UniqueId` | - | Yes |
+| `unit` | `'km' \| 'm' \| 'NM' \| 'mi' \| 'ft'` | `'NM'` | No |
+| `className` | `string` | - | No |
+
+Inherits all standard `<span>` HTML attributes.
+
+### Examples
+
+#### Example: Basic usage with default nautical miles
+
+```tsx
+import { ViewportSize } from '@accelint/map-toolkit/viewport';
+
+<ViewportSize instanceId={mapId} />
+// Renders: "660 x 1,801 NM"
+```
+
+#### Example: Custom unit and styling
+
+```tsx
+import { ViewportSize } from '@accelint/map-toolkit/viewport';
+
+<ViewportSize
+  instanceId={mapId}
+  unit="km"
+  className="text-sm text-gray-600"
+/>
+// Renders: "1,223 x 3,339 km"
+```
+
+#### Example: Multiple units in a dashboard
+
+```tsx
+import { ViewportSize } from '@accelint/map-toolkit/viewport';
+
+function ViewportMetrics({ mapId }: { mapId: string }) {
+  return (
+    <div>
+      <div>Nautical: <ViewportSize instanceId={mapId} unit="NM" /></div>
+      <div>Metric: <ViewportSize instanceId={mapId} unit="km" /></div>
+      <div>Imperial: <ViewportSize instanceId={mapId} unit="mi" /></div>
+    </div>
+  );
+}
+```
+
+> **Good to know:** ViewportSize displays `-- x -- {unit}` when the viewport is not yet initialized or has invalid bounds.
+
+## getViewportSize
+
+Calculates and formats viewport dimensions in a specified unit.
+
+### Usage
+
+```typescript
+import { getViewportSize } from '@accelint/map-toolkit/viewport';
+
+const size = getViewportSize({
+  bounds: [-82, 22, -71, 52],
+  zoom: 5,
+  width: 800,
+  height: 600,
+  unit: 'NM'
+});
+// Returns "612 x 459 NM"
+```
+
+### Reference
+
+```typescript
+function getViewportSize(args: GetViewportSizeArgs): string
+
+interface GetViewportSizeArgs {
+  bounds?: [minLon: number, minLat: number, maxLon: number, maxLat: number];
+  zoom: number;
+  width: number;
+  height: number;
+  unit?: DistanceUnitSymbol;
+  formatter?: Intl.NumberFormat;
+}
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `bounds` | `[number, number, number, number]` | Geographic bounds [minLon, minLat, maxLon, maxLat] |
+| `zoom` | `number` | Map zoom level for meters-per-pixel calculation |
+| `width` | `number` | Viewport width in pixels |
+| `height` | `number` | Viewport height in pixels |
+| `unit` | `DistanceUnitSymbol` | Unit symbol: `'km' \| 'm' \| 'NM' \| 'mi' \| 'ft'`. Defaults to `'NM'` |
+| `formatter` | `Intl.NumberFormat` | Number formatter for localization. Defaults to `en-US` |
+
+#### Returns
+
+Returns formatted string like `"660 x 1,801 NM"` or `"-- x -- {unit}"` if inputs are invalid.
+
+### Examples
+
+#### Example: Calculating viewport size in different units
+
+```typescript
+import { getViewportSize } from '@accelint/map-toolkit/viewport';
+
+const args = {
+  bounds: [-82, 22, -71, 52],
+  zoom: 5,
+  width: 800,
+  height: 600
+};
+
+getViewportSize({ ...args, unit: 'NM' }); // "612 x 459 NM"
+getViewportSize({ ...args, unit: 'km' }); // "1,134 x 851 km"
+getViewportSize({ ...args, unit: 'mi' }); // "705 x 529 mi"
+```
+
+#### Example: Custom number formatting
+
+```typescript
+import { getViewportSize } from '@accelint/map-toolkit/viewport';
+
+const formatter = new Intl.NumberFormat('de-DE');
+
+getViewportSize({
+  bounds: [-82, 22, -71, 52],
+  zoom: 5,
+  width: 800,
+  height: 600,
+  unit: 'km',
+  formatter
+});
+// Returns "1.134 x 851 km" (German formatting)
+```
+
+#### Example: Handling cross-antimeridian bounds
+
+```typescript
+import { getViewportSize } from '@accelint/map-toolkit/viewport';
+
+// Pacific view crossing 180° meridian
+getViewportSize({
+  bounds: [170, 50, -170, 60],
+  zoom: 4,
+  width: 1024,
+  height: 768,
+  unit: 'NM'
+});
+// Returns accurate calculation despite longitude wrap
+```
+
+> **Good to know:** The calculation uses the Web Mercator projection formula with zoom level and pixel dimensions, providing stable results without edge cases from bounds-based calculations.
+
+## clearViewportState
+
+Manually clears viewport state for a specific map instance.
+
+### Usage
+
+```typescript
+import { clearViewportState } from '@accelint/map-toolkit/viewport';
+
+// Cleanup when unmounting
+clearViewportState(mapId);
+```
+
+### Reference
+
+```typescript
+function clearViewportState(mapId: UniqueId): void
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `mapId` | `UniqueId` | The unique identifier for the map instance to clear |
+
+> **Good to know:** This is typically not needed as cleanup happens automatically when all subscribers unmount. Use this only for manual cleanup in edge cases.
+
+## Related
+
+- [BaseMap](../deckgl/base-map/index.md) - Map component that emits viewport events
+- [MapEvents](../deckgl/base-map/events.md) - Event types including viewport updates
+- [createMapStore](../shared/create-map-store.md) - Underlying store pattern used by viewport

@@ -1,0 +1,200 @@
+---
+title: property
+description: Get object property values with array index support
+source: object/property/index.ts
+source_sha: 80681430b7199b205e1cdbb38c62ce2fe3b529c8
+doc_sha: 520b238ee1693b0b689899e7d541ca9a7adfd0a6
+deprecated: false
+updated: 2026-07-13
+---
+
+# property
+
+Get object property values with array index support. Provides both required (`property`) and optional (`optionalProperty`) variants.
+
+## Usage
+
+```typescript
+import { property, optionalProperty, prop, optionalProp } from '@accelint/core';
+
+const person = {
+  name: 'Alice',
+  address: {
+    city: 'New York'
+  }
+};
+
+// Required property access
+property(person)('name');
+// 'Alice'
+
+// Optional property access
+optionalProperty(person)('address');
+// { city: 'New York' }
+
+optionalProperty(undefined)('address');
+// undefined
+
+// Array index support
+const arr = [1, 2, 3];
+property(arr)(0);
+// 1
+```
+
+## Reference
+
+### property
+
+```typescript
+function property<T extends object>(
+  obj: T
+): <K extends keyof T>(prop: K) => T[K]
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `obj` | `T extends object` | The object to get the value from |
+
+#### Returns
+
+Returns a curried function that accepts a property name and returns the value of that property.
+
+#### Type Parameters
+
+- `T` - The type of the input object
+- `K` - The property key type
+
+#### Aliases
+
+- `prop` - Shorter alias for `property`
+
+### optionalProperty
+
+```typescript
+function optionalProperty<T extends object>(
+  obj?: T
+): <K extends keyof T>(prop: K) => T[K] | undefined
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `obj` | `T \| undefined` | The possibly undefined object |
+
+#### Returns
+
+Returns a curried function that accepts a property name and returns the value of that property, or `undefined` if the object is nullish.
+
+#### Aliases
+
+- `optionalProp` - Shorter alias for `optionalProperty`
+
+## Examples
+
+### Example: Extracting nested values
+
+```typescript
+import { property } from '@accelint/core';
+
+interface User {
+  profile: {
+    email: string;
+    phone?: string;
+  };
+}
+
+const user: User = {
+  profile: {
+    email: 'alice@example.com'
+  }
+};
+
+const getProfile = property(user);
+getProfile('profile');
+// { email: 'alice@example.com' }
+```
+
+### Example: Array index access
+
+```typescript
+import { property } from '@accelint/core';
+
+const colors = ['red', 'green', 'blue'];
+
+const getColor = property(colors);
+getColor(0); // 'red'
+getColor(1); // 'green'
+getColor(2); // 'blue'
+
+// Uses Array.prototype.at() internally, so negative indices work
+property(colors)(-1); // 'blue'
+```
+
+### Example: Safe optional access
+
+```typescript
+import { optionalProperty } from '@accelint/core';
+
+interface Config {
+  apiKey?: string;
+  endpoint: string;
+}
+
+const config: Config | undefined = loadConfig();
+
+// Safe access without runtime errors
+const apiKey = optionalProperty(config)('apiKey');
+// string | undefined
+```
+
+### Example: Composing with map
+
+```typescript
+import { property, map } from '@accelint/core';
+
+interface Product {
+  name: string;
+  price: number;
+}
+
+const products: Product[] = [
+  { name: 'Widget', price: 9.99 },
+  { name: 'Gadget', price: 19.99 }
+];
+
+// Extract all names
+const names = map((p: Product) => property(p)('name'))(products);
+// ['Widget', 'Gadget']
+```
+
+### Example: Creating property getters
+
+```typescript
+import { property } from '@accelint/core';
+
+interface User {
+  id: number;
+  name: string;
+  email: string;
+}
+
+// Create reusable getters
+const getId = <T extends { id: number }>(obj: T) => property(obj)('id');
+const getName = <T extends { name: string }>(obj: T) => property(obj)('name');
+
+const user: User = { id: 1, name: 'Alice', email: 'alice@example.com' };
+
+getId(user);   // 1
+getName(user); // 'Alice'
+```
+
+> **Good to know:** When used with arrays, `property` detects numeric indices and uses `Array.prototype.at()` for access, which supports negative indices. For objects, it uses standard bracket notation.
+
+## Related
+
+- [associate](../associate/index.md) - Immutably set object properties
+- [lens](../lens/index.md) - Functional lens for getting and setting nested values
+- [optionalProperty](../property/index.md) - Optional property access

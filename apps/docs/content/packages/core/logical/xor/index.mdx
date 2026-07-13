@@ -1,0 +1,136 @@
+---
+title: xor
+description: Logical exclusive OR for values and function results
+source: logical/xor/index.ts
+source_sha: 11f7ff5c6ee166e62d083f1d7d4ba752cdbaccb2
+doc_sha: 7bae07b69524feb5f92aaea78eaf837628b0783c
+deprecated: false
+updated: 2026-07-13
+---
+
+# xor
+
+Logical exclusive OR (XOR) for values and function results. Returns `true` if exactly one operand is truthy.
+
+## Usage
+
+```typescript
+import { xor, xorFn } from '@accelint/core';
+
+// Value-based XOR
+xor(true)(false);
+// true
+
+xor(true)(true);
+// false
+
+xor(false)(false);
+// false
+
+// Function-based XOR
+const isEven = (x: number) => x % 2 === 0;
+const isDivisibleBy3 = (x: number) => x % 3 === 0;
+
+xorFn(isEven)(isDivisibleBy3)(6);
+// false (both true)
+
+xorFn(isEven)(isDivisibleBy3)(4);
+// true (only first is true)
+```
+
+## Reference
+
+### xor
+
+```typescript
+function xor(a: unknown): (b: unknown) => boolean
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `a` | `unknown` | The first value to compare |
+
+#### Returns
+
+Returns a curried function that accepts a second value and returns `true` if exactly one value is truthy, `false` otherwise.
+
+### xorFn
+
+```typescript
+function xorFn<T>(
+  a: (x: T) => unknown
+): (b: (x: T) => unknown) => (c: T) => boolean
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `a` | `(x: T) => unknown` | The first function to evaluate |
+
+#### Returns
+
+Returns a curried function that accepts a second function, then accepts a value to pass to both functions, returning `true` if exactly one function result is truthy, `false` otherwise.
+
+#### Type Parameters
+
+- `T` - The type of the input value passed to both functions
+
+## Examples
+
+### Example: Toggle logic
+
+```typescript
+import { xor } from '@accelint/core';
+
+const hasPermissionA = true;
+const hasPermissionB = false;
+
+// User must have exactly one permission (not both, not neither)
+const isValid = xor(hasPermissionA)(hasPermissionB);
+// true
+```
+
+### Example: Validation with mutually exclusive conditions
+
+```typescript
+import { xorFn } from '@accelint/core';
+
+const hasEmail = (user: User) => Boolean(user.email);
+const hasPhone = (user: User) => Boolean(user.phone);
+
+// User must have either email OR phone, but not both
+const hasValidContact = xorFn(hasEmail)(hasPhone);
+
+hasValidContact({ email: 'test@example.com', phone: null });
+// true
+
+hasValidContact({ email: 'test@example.com', phone: '555-0100' });
+// false (has both)
+
+hasValidContact({ email: null, phone: null });
+// false (has neither)
+```
+
+### Example: Bitwise XOR truth table
+
+```typescript
+import { xor } from '@accelint/core';
+
+// XOR truth table
+xor(false)(false); // false
+xor(false)(true);  // true
+xor(true)(false);  // true
+xor(true)(true);   // false
+```
+
+> **Good to know:** XOR converts operands to boolean values before comparison. It returns `true` only when the operands have different truthiness—one is truthy and the other is falsy.
+
+## Related
+
+- [and](../and/index.md) - Logical conjunction (&&)
+- [or](../or/index.md) - Logical disjunction (||)
+- [not](../not/index.md) - Logical negation (!)
+- [equality](../equality/index.md) - Logical equality (XNOR)

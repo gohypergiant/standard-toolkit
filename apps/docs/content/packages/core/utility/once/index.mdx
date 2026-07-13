@@ -1,0 +1,176 @@
+---
+title: once
+description: Ensure a function is only called once
+source: utility/once/index.ts
+source_sha: 879ac94c015c8878fa8a82733fc377637c82896a
+doc_sha: bcbca2d45ab492111b28c6b0936ce61e2b046991
+deprecated: false
+updated: 2026-07-13
+---
+
+# once
+
+Ensure a function is only called once. Subsequent calls are ignored.
+
+## Usage
+
+```typescript
+import { once } from '@accelint/core';
+
+let count = 0;
+const increment = () => { count++; };
+const incrementOnce = once(increment);
+
+incrementOnce(); // count = 1
+incrementOnce(); // count = 1 (not called again)
+incrementOnce(); // count = 1 (still not called)
+```
+
+## Reference
+
+```typescript
+function once<T extends (...args: any[]) => any>(
+  fn: T
+): (...args: Parameters<T>) => void
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `fn` | `T extends Function` | The function to call once |
+
+### Returns
+
+Returns a wrapped function that executes only on the first call. Subsequent calls do nothing.
+
+### Type Parameters
+
+- `T` - The type of the function to wrap
+
+## Examples
+
+### Example: Initialization function
+
+```typescript
+import { once } from '@accelint/core';
+
+const initializeDatabase = once(() => {
+  console.log('Connecting to database...');
+  // Expensive initialization
+});
+
+// First call executes
+initializeDatabase(); // Logs: "Connecting to database..."
+
+// Subsequent calls do nothing
+initializeDatabase(); // No output
+initializeDatabase(); // No output
+```
+
+### Example: Event listener setup
+
+```typescript
+import { once } from '@accelint/core';
+
+const setupEventListeners = once(() => {
+  window.addEventListener('resize', handleResize);
+  window.addEventListener('scroll', handleScroll);
+  console.log('Event listeners attached');
+});
+
+// Safe to call multiple times
+setupEventListeners(); // Listeners attached
+setupEventListeners(); // No duplicate listeners
+```
+
+### Example: Singleton pattern
+
+```typescript
+import { once } from '@accelint/core';
+
+class Service {
+  constructor() {
+    console.log('Service initialized');
+  }
+}
+
+let instance: Service;
+const createInstance = once(() => {
+  instance = new Service();
+});
+
+createInstance(); // Logs: "Service initialized"
+createInstance(); // No output, instance already created
+```
+
+### Example: With parameters
+
+```typescript
+import { once } from '@accelint/core';
+
+let globalValue = 10;
+
+const addToGlobal = (n: number) => {
+  globalValue += n;
+  console.log(`Added ${n}, total: ${globalValue}`);
+};
+
+const addOnce = once(addToGlobal);
+
+addOnce(5);  // Logs: "Added 5, total: 15"
+addOnce(10); // No output (not called)
+addOnce(20); // No output (not called)
+
+console.log(globalValue); // 15
+```
+
+### Example: Cleanup on unmount
+
+```typescript
+import { once } from '@accelint/core';
+
+function useEffect(cleanup: () => void) {
+  // Ensure cleanup only runs once
+  const cleanupOnce = once(cleanup);
+  
+  return () => {
+    cleanupOnce();
+  };
+}
+
+const unmount = useEffect(() => {
+  console.log('Cleaning up resources');
+  // Remove event listeners, close connections, etc.
+});
+
+unmount(); // Logs: "Cleaning up resources"
+unmount(); // No output
+```
+
+### Example: Logging warning once
+
+```typescript
+import { once } from '@accelint/core';
+
+const warnDeprecated = once((feature: string) => {
+  console.warn(`DEPRECATED: ${feature} will be removed in the next version`);
+});
+
+function oldApi() {
+  warnDeprecated('oldApi');
+  // Implementation...
+}
+
+oldApi(); // Logs warning
+oldApi(); // No warning
+oldApi(); // No warning
+```
+
+> **Good to know:** The wrapped function ignores all parameters on subsequent calls. Only the first invocation receives and uses the arguments. Use `once` for initialization, setup, or operations that should never repeat.
+
+## Related
+
+- [tap](../tap/index.md) - Execute a function but return the original value
+- [noop](../noop/index.md) - No-operation function
+- [identity](../../combinators/identity/index.md) - Returns its input unchanged

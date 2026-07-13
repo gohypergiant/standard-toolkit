@@ -1,0 +1,174 @@
+---
+title: lookup
+description: Table lookup with optional default fallback
+source: utility/lookup/index.ts
+source_sha: 6307456507a77e826395c1582f325c4ca5a14eaf
+doc_sha: 82c8162851d024ad774e012626cb48887cd511ba
+deprecated: false
+updated: 2026-07-13
+---
+
+# lookup
+
+Create a lookup function from a record object with optional default fallback for missing keys.
+
+## Usage
+
+```typescript
+import { lookup } from '@accelint/core';
+
+const colorTable = {
+  red: '#FF0000',
+  green: '#00FF00',
+  blue: '#0000FF'
+};
+
+// Basic lookup
+const getColor = lookup(colorTable);
+getColor('red');
+// '#FF0000'
+
+// With default fallback
+const getColorSafe = lookup(colorTable, (x) => x ?? '#000000');
+getColorSafe('purple');
+// '#000000'
+```
+
+## Reference
+
+```typescript
+function lookup<A extends Record<string | number | symbol, unknown>, B extends (...args: any[]) => any>(
+  obj: A,
+  def?: B
+): <C extends keyof A>(prop: string | number | symbol) => A[C]
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `obj` | `A extends Record<...>` | The lookup table object |
+| `def` | `B \| undefined` | Optional function to handle default values when lookup returns `undefined` |
+
+### Returns
+
+Returns a function that accepts a key and returns the looked-up value, optionally processed by the default function.
+
+### Type Parameters
+
+- `A` - The type of the record used as a lookup table
+- `B` - The type of the default function
+- `C` - The key type for the lookup
+
+## Examples
+
+### Example: Simple lookup table
+
+```typescript
+import { lookup } from '@accelint/core';
+
+const statusCodes = {
+  200: 'OK',
+  404: 'Not Found',
+  500: 'Internal Server Error'
+};
+
+const getStatus = lookup(statusCodes);
+
+getStatus(200);
+// 'OK'
+
+getStatus(404);
+// 'Not Found'
+```
+
+### Example: Lookup with default fallback
+
+```typescript
+import { lookup } from '@accelint/core';
+
+const priorities = {
+  high: 1,
+  medium: 2,
+  low: 3
+};
+
+// Fallback to medium priority for unknown values
+const getPriority = lookup(priorities, (x) => x ?? 2);
+
+getPriority('high');
+// 1
+
+getPriority('critical'); // Not in table
+// 2 (default)
+```
+
+### Example: Color lookup with RGBA arrays
+
+```typescript
+import { lookup } from '@accelint/core';
+
+const colorTable = {
+  FOO: [0, 0, 255, 155],
+  BAR: [255, 0, 255, 155],
+  FIZZ: [230, 0, 0, 155],
+  BUZZ: [0, 128, 0, 155]
+};
+
+// Default to gray for unknown colors
+const colorLookup = lookup(colorTable, (x) => x ?? [128, 128, 128, 155]);
+
+colorLookup('FOO');
+// [0, 0, 255, 155]
+
+colorLookup('UNKNOWN');
+// [128, 128, 128, 155]
+```
+
+### Example: Configuration lookup
+
+```typescript
+import { lookup } from '@accelint/core';
+
+const envConfig = {
+  development: { apiUrl: 'http://localhost:3000', debug: true },
+  staging: { apiUrl: 'https://staging.example.com', debug: true },
+  production: { apiUrl: 'https://api.example.com', debug: false }
+};
+
+const getConfig = lookup(
+  envConfig,
+  () => envConfig.development // Default to dev config
+);
+
+getConfig('production');
+// { apiUrl: 'https://api.example.com', debug: false }
+
+getConfig('unknown');
+// { apiUrl: 'http://localhost:3000', debug: true }
+```
+
+### Example: Using with map
+
+```typescript
+import { lookup, map } from '@accelint/core';
+
+const rolePermissions = {
+  admin: ['read', 'write', 'delete'],
+  editor: ['read', 'write'],
+  viewer: ['read']
+};
+
+const getPermissions = lookup(rolePermissions, (x) => x ?? []);
+
+const roles = ['admin', 'viewer', 'guest'];
+const permissions = map(getPermissions)(roles);
+// [['read', 'write', 'delete'], ['read'], []]
+```
+
+> **Good to know:** If no default function is provided, the lookup uses the `identity` function, which returns the value as-is (including `undefined` for missing keys). Provide a default function to handle missing keys gracefully.
+
+## Related
+
+- [property](../../object/property/index.md) - Get object property values
+- [identity](../../combinators/identity/index.md) - Identity combinator

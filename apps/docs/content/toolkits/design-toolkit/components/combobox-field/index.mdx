@@ -1,0 +1,334 @@
+---
+title: ComboBoxField
+description: Searchable select with autocomplete, virtualized rendering, and integrated form field features.
+source: packages/design-toolkit/src/components/combobox-field/index.tsx
+source_sha: 394fc67a7ab1dba2d8eb86b74220f3325dcd86a8
+doc_sha: 6d7fe6811849bb02b058e96436bd17872e3484f3
+deprecated: false
+updated: 2026-07-13
+---
+
+# ComboBoxField
+
+Searchable select with autocomplete, virtualized rendering, and integrated form field features.
+
+## Usage
+
+```tsx
+import { ComboBoxField, OptionsItem } from '@accelint/design-toolkit';
+
+export function MyForm() {
+  const countries = [
+    { id: 'us', name: 'United States' },
+    { id: 'ca', name: 'Canada' },
+    { id: 'mx', name: 'Mexico' },
+  ];
+
+  return (
+    <ComboBoxField label="Country" defaultItems={countries}>
+      {(item) => <OptionsItem>{item.name}</OptionsItem>}
+    </ComboBoxField>
+  );
+}
+```
+
+## Reference
+
+```typescript
+interface ComboBoxFieldProps<T extends OptionsDataItem> extends Omit<ComboBoxProps<T>, 'children' | 'className'> {
+  label?: string;
+  description?: string;
+  errorMessage?: string;
+  size?: 'small' | 'medium';
+  isClearable?: boolean;
+  isReadOnly?: boolean;
+  inputProps?: Omit<InputProps, 'className'>;
+  layoutOptions?: ListLayoutOptions;
+  classNames?: {
+    field?: ComboBoxProps<T>['className'];
+    label?: LabelProps['className'];
+    control?: string;
+    input?: InputProps['className'];
+    clear?: ButtonProps['className'];
+    trigger?: ButtonProps['className'];
+    description?: string;
+    error?: FieldErrorProps['className'];
+    popover?: PopoverProps['className'];
+  };
+}
+```
+
+### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `label` | `string` | - | No |
+| `description` | `string` | - | No |
+| `errorMessage` | `string` | - | No |
+| `size` | `'small' \| 'medium'` | `'medium'` | No |
+| `isClearable` | `boolean` | `true` | No |
+| `isReadOnly` | `boolean` | `false` | No |
+| `menuTrigger` | `'focus' \| 'input' \| 'manual'` | `'focus'` | No |
+| `inputValue` | `string` | - | No |
+| `defaultInputValue` | `string` | `''` | No |
+| `onInputChange` | `(value: string) => void` | - | No |
+| `layoutOptions` | `ListLayoutOptions` | - | No |
+
+#### `label`
+
+Label text displayed above the combobox. Automatically associates with the input for accessibility. Hidden when `size="small"`.
+
+#### `description`
+
+Helper text displayed below the combobox. Hidden when `size="small"`, `isReadOnly`, or when the field is invalid.
+
+#### `errorMessage`
+
+Error message displayed when validation fails. Automatically sets `isInvalid` to `true` when provided.
+
+#### `size`
+
+Controls field sizing and visibility of label and description:
+- `medium` - Standard size with visible label and description (default)
+- `small` - Compact size, hides label and description
+
+#### `isClearable`
+
+Shows a clear button (X icon) when the input has a value. Pressing Escape also clears the input when `isClearable` is `true`. Not shown when `isReadOnly` is `true`.
+
+#### `isReadOnly`
+
+Displays the selected value without allowing dropdown interaction or input editing. Hides the trigger button and clear button.
+
+#### `menuTrigger`
+
+Controls when the dropdown menu opens:
+- `focus` - Opens on focus (default)
+- `input` - Opens only when typing
+- `manual` - Opens only when trigger button is clicked
+
+#### `inputValue` / `defaultInputValue`
+
+Controls the text input value independently from the selected option. Useful for autocomplete scenarios where users can type custom values.
+
+#### `layoutOptions`
+
+Virtualizer layout options for rendering large lists efficiently:
+
+```typescript
+layoutOptions={{
+  estimatedRowHeight: 40,
+}}
+```
+
+### Inherited Props
+
+ComboBoxField inherits all props from React Aria's `ComboBox` component, including:
+- `selectedKey` / `defaultSelectedKey` - Controlled/uncontrolled selection
+- `onSelectionChange` - Called when selection changes (receives key)
+- `items` / `defaultItems` - Collection items for dynamic rendering
+- `allowsCustomValue` - Allows freeform text entry
+- `disabledKeys` - Array of disabled option keys
+
+See [React Aria ComboBox](https://react-spectrum.adobe.com/react-aria/ComboBox.html) for full API reference.
+
+## Examples
+
+### Example: Basic combobox
+
+```tsx
+import { ComboBoxField, OptionsItem } from '@accelint/design-toolkit';
+
+const fruits = [
+  { id: 'apple', name: 'Apple' },
+  { id: 'banana', name: 'Banana' },
+  { id: 'orange', name: 'Orange' },
+];
+
+<ComboBoxField label="Fruit" defaultItems={fruits}>
+  {(item) => <OptionsItem>{item.name}</OptionsItem>}
+</ComboBoxField>
+```
+
+### Example: With description
+
+```tsx
+import { ComboBoxField, OptionsItem } from '@accelint/design-toolkit';
+
+<ComboBoxField
+  label="Timezone"
+  description="Select your local timezone"
+  defaultItems={timezones}
+>
+  {(item) => <OptionsItem>{item.name}</OptionsItem>}
+</ComboBoxField>
+```
+
+### Example: Required with validation
+
+```tsx
+import { ComboBoxField, OptionsItem } from '@accelint/design-toolkit';
+
+<ComboBoxField
+  label="Country"
+  isRequired
+  errorMessage={!selectedCountry ? 'Please select a country' : undefined}
+  defaultItems={countries}
+>
+  {(item) => <OptionsItem>{item.name}</OptionsItem>}
+</ComboBoxField>
+```
+
+### Example: Read-only display
+
+```tsx
+import { ComboBoxField, OptionsItem } from '@accelint/design-toolkit';
+
+<ComboBoxField
+  label="Account Type"
+  selectedKey="premium"
+  isReadOnly
+  defaultItems={accountTypes}
+>
+  {(item) => <OptionsItem>{item.name}</OptionsItem>}
+</ComboBoxField>
+```
+
+> **Good to know:** Read-only mode displays the selected value without interaction. Use `isDisabled` for temporarily unavailable fields.
+
+### Example: Small size variant
+
+```tsx
+import { ComboBoxField, OptionsItem } from '@accelint/design-toolkit';
+
+<ComboBoxField
+  size="small"
+  placeholder="Filter..."
+  defaultItems={filters}
+>
+  {(item) => <OptionsItem>{item.name}</OptionsItem>}
+</ComboBoxField>
+```
+
+### Example: Allow custom values
+
+```tsx
+import { ComboBoxField, OptionsItem } from '@accelint/design-toolkit';
+
+<ComboBoxField
+  label="Email"
+  allowsCustomValue
+  defaultItems={recentEmails}
+>
+  {(item) => <OptionsItem>{item.email}</OptionsItem>}
+</ComboBoxField>
+```
+
+### Example: Rich options with descriptions
+
+```tsx
+import { ComboBoxField, OptionsItem, OptionsItemLabel, OptionsItemDescription } from '@accelint/design-toolkit';
+
+<ComboBoxField label="Plan" defaultItems={plans}>
+  {(plan) => (
+    <OptionsItem textValue={plan.name}>
+      <OptionsItemLabel>{plan.name}</OptionsItemLabel>
+      <OptionsItemDescription>{plan.description}</OptionsItemDescription>
+    </OptionsItem>
+  )}
+</ComboBoxField>
+```
+
+### Example: Controlled input value
+
+```tsx
+import { useState } from 'react';
+import { ComboBoxField, OptionsItem } from '@accelint/design-toolkit';
+
+export function ControlledExample() {
+  const [inputValue, setInputValue] = useState('');
+  const [selectedKey, setSelectedKey] = useState(null);
+
+  return (
+    <ComboBoxField
+      label="Search"
+      inputValue={inputValue}
+      onInputChange={setInputValue}
+      selectedKey={selectedKey}
+      onSelectionChange={setSelectedKey}
+      defaultItems={items}
+    >
+      {(item) => <OptionsItem>{item.name}</OptionsItem>}
+    </ComboBoxField>
+  );
+}
+```
+
+### Example: Menu trigger on input
+
+```tsx
+import { ComboBoxField, OptionsItem } from '@accelint/design-toolkit';
+
+<ComboBoxField
+  label="Country"
+  menuTrigger="input"
+  placeholder="Start typing..."
+  defaultItems={countries}
+>
+  {(item) => <OptionsItem>{item.name}</OptionsItem>}
+</ComboBoxField>
+```
+
+> **Good to know:** `menuTrigger="input"` only opens the dropdown when the user types, useful for search-heavy interfaces.
+
+### Example: Virtualized large list
+
+```tsx
+import { ComboBoxField, OptionsItem } from '@accelint/design-toolkit';
+
+const countries = [...]; // 200+ countries
+
+<ComboBoxField
+  label="Country"
+  items={countries}
+  layoutOptions={{ estimatedRowHeight: 40 }}
+>
+  {(country) => <OptionsItem>{country.name}</OptionsItem>}
+</ComboBoxField>
+```
+
+### Example: Disabled options
+
+```tsx
+import { ComboBoxField, OptionsItem } from '@accelint/design-toolkit';
+
+<ComboBoxField
+  label="Status"
+  disabledKeys={['pending']}
+  defaultItems={statuses}
+>
+  {(item) => <OptionsItem>{item.name}</OptionsItem>}
+</ComboBoxField>
+```
+
+### Example: Without clear button
+
+```tsx
+import { ComboBoxField, OptionsItem } from '@accelint/design-toolkit';
+
+<ComboBoxField
+  label="Priority"
+  isClearable={false}
+  defaultItems={priorities}
+>
+  {(item) => <OptionsItem>{item.name}</OptionsItem>}
+</ComboBoxField>
+```
+
+## Related
+
+- [SelectField](../select-field/index.md) - Non-searchable select dropdown
+- [SearchField](../search-field/index.md) - Search input without options
+- [OptionsItem](../options/item.md) - Combobox option component
+- [OptionsItemLabel](../options/item-label.md) - Option label component
+- [OptionsItemDescription](../options/item-description.md) - Option description component

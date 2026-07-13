@@ -1,0 +1,324 @@
+---
+title: Dialog
+description: A modal dialog component for important content and interactions
+source: packages/design-toolkit/src/components/dialog/index.tsx
+source_sha: d81b19b6817d343234b330036b1389a46144e63c
+doc_sha: 70e6461769f033f4e9e2f01d3444a88da6e142d3
+deprecated: false
+updated: 2026-07-13
+---
+
+# Dialog
+
+A modal dialog component for important content and interactions with accessible focus management, backdrop handling, and keyboard navigation.
+
+## Usage
+
+```tsx
+import { Dialog, DialogTrigger, DialogTitle, DialogContent, DialogFooter, Button } from '@accelint/design-toolkit';
+
+export function MyComponent() {
+  return (
+    <DialogTrigger>
+      <Button>Open Dialog</Button>
+      <Dialog>
+        <DialogTitle>Confirm Action</DialogTitle>
+        <DialogContent>
+          <p>Are you sure you want to continue?</p>
+        </DialogContent>
+        <DialogFooter>
+          <Button variant="flat">Cancel</Button>
+          <Button>Confirm</Button>
+        </DialogFooter>
+      </Dialog>
+    </DialogTrigger>
+  );
+}
+```
+
+## Reference
+
+```typescript
+interface DialogProps extends Omit<ModalOverlayProps, 'children' | 'className'> {
+  children?: React.ReactNode | ((opts: { close: () => void }) => React.ReactNode);
+  classNames?: {
+    overlay?: string;
+    modal?: string;
+    dialog?: string;
+  };
+  parentRef?: RefObject<HTMLElement | null>;
+  size?: 'small' | 'large';
+  isDismissable?: boolean;
+  isKeyboardDismissDisabled?: boolean;
+}
+```
+
+### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `children` | `React.ReactNode \| ((opts: { close: () => void }) => React.ReactNode)` | - | Yes |
+| `size` | `'small' \| 'large'` | `'small'` | No |
+| `classNames` | `{ overlay?: string; modal?: string; dialog?: string }` | - | No |
+| `parentRef` | `RefObject<HTMLElement \| null>` | - | No |
+| `isDismissable` | `boolean` | `true` | No |
+| `isKeyboardDismissDisabled` | `boolean` | `false` | No |
+
+#### `size`
+
+Controls the width and padding of the dialog:
+- `small` - Compact width, suitable for simple confirmations and short forms
+- `large` - Wider width, suitable for complex forms and detailed content
+
+#### `children`
+
+Can be static React elements or a render function that receives a `close` callback for programmatic dismissal.
+
+#### `classNames`
+
+Custom class names for styling sub-elements:
+- `overlay` - The backdrop behind the dialog
+- `modal` - The modal container
+- `dialog` - The dialog content wrapper
+
+#### `parentRef`
+
+Reference to a parent element for portal rendering. When provided, the dialog renders into the specified container instead of document body.
+
+#### `isDismissable`
+
+When `true`, clicking the backdrop or pressing Escape closes the dialog. Set to `false` for critical dialogs that require explicit user action.
+
+### Inherited Props
+
+Dialog inherits props from React Aria's `ModalOverlay`, including:
+- `onOpenChange` - Called when dialog opens or closes
+- `isOpen` - Controlled open state (use with `DialogTrigger`)
+
+See [React Aria Modal](https://react-spectrum.adobe.com/react-aria/Modal.html) for full API reference.
+
+## Sub-components
+
+### DialogTrigger
+
+Manages dialog open/close state and trigger behavior.
+
+```tsx
+<DialogTrigger>
+  <Button>Open</Button>
+  <Dialog>...</Dialog>
+</DialogTrigger>
+```
+
+### DialogTitle
+
+Semantic heading element for dialog titles. Renders as `<h2>` with proper accessibility attributes.
+
+```tsx
+<DialogTitle>Confirm Action</DialogTitle>
+```
+
+### DialogContent
+
+Wrapper for the main dialog content with appropriate spacing and styling.
+
+```tsx
+<DialogContent>
+  <p>Your content goes here...</p>
+</DialogContent>
+```
+
+### DialogFooter
+
+Container for dialog action buttons. Automatically sizes child Button components based on dialog size and wires up default close behavior.
+
+```tsx
+<DialogFooter>
+  <Button variant="flat">Cancel</Button>
+  <Button>Confirm</Button>
+</DialogFooter>
+```
+
+## Examples
+
+### Example: Basic confirmation dialog
+
+```tsx
+import { Dialog, DialogTrigger, DialogTitle, DialogContent, DialogFooter, Button } from '@accelint/design-toolkit';
+
+<DialogTrigger>
+  <Button color="critical">Delete Account</Button>
+  <Dialog>
+    <DialogTitle>Delete Account</DialogTitle>
+    <DialogContent>
+      <p>This action cannot be undone. Are you sure you want to delete your account?</p>
+    </DialogContent>
+    <DialogFooter>
+      <Button variant="flat">Cancel</Button>
+      <Button color="critical">Delete</Button>
+    </DialogFooter>
+  </Dialog>
+</DialogTrigger>
+```
+
+### Example: Large dialog with form
+
+```tsx
+import { Dialog, DialogTrigger, DialogTitle, DialogContent, DialogFooter, Button, TextField } from '@accelint/design-toolkit';
+
+<DialogTrigger>
+  <Button>Edit Profile</Button>
+  <Dialog size="large">
+    <DialogTitle>Edit Profile</DialogTitle>
+    <DialogContent>
+      <TextField label="Full Name" defaultValue="John Doe" />
+      <TextField label="Email" type="email" defaultValue="john@example.com" />
+      <TextField label="Bio" defaultValue="..." />
+    </DialogContent>
+    <DialogFooter>
+      <Button variant="flat">Cancel</Button>
+      <Button>Save Changes</Button>
+    </DialogFooter>
+  </Dialog>
+</DialogTrigger>
+```
+
+### Example: Using close callback
+
+```tsx
+import { Dialog, DialogTrigger, DialogTitle, DialogContent, DialogFooter, Button } from '@accelint/design-toolkit';
+
+<DialogTrigger>
+  <Button>Show Dialog</Button>
+  <Dialog>
+    {({ close }) => (
+      <>
+        <DialogTitle>Custom Close Behavior</DialogTitle>
+        <DialogContent>
+          <p>You can access the close function directly.</p>
+        </DialogContent>
+        <DialogFooter>
+          <Button onPress={() => {
+            console.log('Custom logic here');
+            close();
+          }}>
+            Close with Custom Logic
+          </Button>
+        </DialogFooter>
+      </>
+    )}
+  </Dialog>
+</DialogTrigger>
+```
+
+### Example: Non-dismissable dialog
+
+```tsx
+import { Dialog, DialogTrigger, DialogTitle, DialogContent, DialogFooter, Button } from '@accelint/design-toolkit';
+
+<DialogTrigger>
+  <Button>Start Process</Button>
+  <Dialog isDismissable={false}>
+    <DialogTitle>Processing...</DialogTitle>
+    <DialogContent>
+      <p>This dialog cannot be dismissed until the process completes.</p>
+    </DialogContent>
+    <DialogFooter>
+      <Button>Complete</Button>
+    </DialogFooter>
+  </Dialog>
+</DialogTrigger>
+```
+
+> **Good to know:** When `isDismissable={false}`, users cannot close the dialog by clicking the backdrop or pressing Escape. Always provide an explicit action button to close the dialog.
+
+### Example: Controlled dialog state
+
+```tsx
+import { useState } from 'react';
+import { Dialog, DialogTrigger, DialogTitle, DialogContent, DialogFooter, Button } from '@accelint/design-toolkit';
+
+function ControlledDialog() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <Button onPress={() => setOpen(true)}>Open Dialog</Button>
+      <DialogTrigger isOpen={open} onOpenChange={setOpen}>
+        <Button isDisabled>Trigger (Disabled)</Button>
+        <Dialog>
+          <DialogTitle>Controlled Dialog</DialogTitle>
+          <DialogContent>
+            <p>This dialog is controlled by external state.</p>
+          </DialogContent>
+          <DialogFooter>
+            <Button>Close</Button>
+          </DialogFooter>
+        </Dialog>
+      </DialogTrigger>
+    </>
+  );
+}
+```
+
+### Example: Custom portal target
+
+```tsx
+import { useRef } from 'react';
+import { Dialog, DialogTrigger, DialogTitle, DialogContent, DialogFooter, Button } from '@accelint/design-toolkit';
+
+function PortalDialog() {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  return (
+    <div className="flex">
+      <div>
+        <DialogTrigger>
+          <Button>Open Dialog</Button>
+          <Dialog parentRef={containerRef}>
+            <DialogTitle>Local Portal</DialogTitle>
+            <DialogContent>
+              <p>This dialog renders into a custom container.</p>
+            </DialogContent>
+            <DialogFooter>
+              <Button>Close</Button>
+            </DialogFooter>
+          </Dialog>
+        </DialogTrigger>
+      </div>
+      <div ref={containerRef} className="relative" />
+    </div>
+  );
+}
+```
+
+### Example: Custom styling
+
+```tsx
+import { Dialog, DialogTrigger, DialogTitle, DialogContent, DialogFooter, Button } from '@accelint/design-toolkit';
+
+<DialogTrigger>
+  <Button>Open Styled Dialog</Button>
+  <Dialog
+    classNames={{
+      overlay: 'bg-black/80',
+      modal: 'backdrop-blur-sm',
+      dialog: 'border-2 border-primary shadow-2xl'
+    }}
+  >
+    <DialogTitle>Custom Styled</DialogTitle>
+    <DialogContent>
+      <p>This dialog has custom styling applied.</p>
+    </DialogContent>
+    <DialogFooter>
+      <Button>Close</Button>
+    </DialogFooter>
+  </Dialog>
+</DialogTrigger>
+```
+
+## Related
+
+- [Button](../button/index.md) - Primary action component used in dialog triggers and footers
+- [TextField](../text-field/index.md) - Form input component for dialog content
+- [Popover](../popover/index.md) - Non-modal overlay for contextual content

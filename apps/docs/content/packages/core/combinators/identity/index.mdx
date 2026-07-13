@@ -1,0 +1,142 @@
+---
+title: identity
+description: Returns the value that was used as its argument, unchanged
+source: packages/core/src/combinators/identity/index.ts
+source_sha: f19ac10b84d4a721ea44973ffecda766007b0ec8
+doc_sha: 0da9704c6348a4329705bd23c7ea72299bc5ccdb
+deprecated: false
+updated: 2026-07-13
+---
+
+# identity
+
+Mathematical identity function. Returns the value that was used as its argument, unchanged. Also known as the I combinator in lambda calculus.
+
+## Usage
+
+```typescript
+import { identity } from '@accelint/core';
+
+// Returns the same value
+identity(4); // 4
+identity('hello'); // 'hello'
+identity([1, 2, 3]); // [1, 2, 3]
+```
+
+## Reference
+
+```typescript
+function identity<A>(x: A): A
+```
+
+Lambda calculus: `λa.a`  
+Type signature: `identity :: a → a`
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `x` | `A` | The value to return. |
+
+### Returns
+
+Returns the input value unchanged.
+
+### Type Parameters
+
+- `A` - The type of the input and output value
+
+## Examples
+
+### Example: Default mapping function
+
+```typescript
+import { identity, map } from '@accelint/core';
+
+const numbers = [1, 2, 3, 4, 5];
+
+// Identity mapping - returns a shallow copy
+const copy = map(identity)(numbers);
+// [1, 2, 3, 4, 5]
+```
+
+### Example: Filtering with identity
+
+```typescript
+import { identity, filter } from '@accelint/core';
+
+const mixed: (number | null | undefined)[] = [1, null, 2, undefined, 3, 0, 4];
+
+// Filter truthy values
+const truthy = filter(identity)(mixed);
+// [1, 2, 3, 4] (removes null, undefined, and 0)
+```
+
+### Example: Function composition identity
+
+```typescript
+import { identity, pipe } from '@accelint/core';
+
+// Identity is the neutral element for composition
+const double = (x: number) => x * 2;
+
+// compose(identity, f) === f
+pipe(identity, double)(5); // 10
+pipe(double, identity)(5); // 10
+```
+
+### Example: Conditional transformation
+
+```typescript
+import { identity } from '@accelint/core';
+
+function transform<T>(
+  value: T,
+  shouldTransform: boolean,
+  transformer: (v: T) => T
+): T {
+  return shouldTransform ? transformer(value) : identity(value);
+}
+
+transform(10, true, (x) => x * 2); // 20
+transform(10, false, (x) => x * 2); // 10
+```
+
+### Example: Type assertions
+
+```typescript
+import { identity } from '@accelint/core';
+
+// Identity can help with type narrowing
+const value: unknown = 'hello';
+
+// Type assertion
+const str = identity(value as string);
+// str: string
+```
+
+### Example: Placeholder function
+
+```typescript
+import { identity } from '@accelint/core';
+
+interface Config {
+  transform?: <T>(value: T) => T;
+}
+
+const config: Config = {
+  // Use identity as default transform (no-op)
+  transform: identity
+};
+
+const result = config.transform?.(42) ?? 42;
+// 42
+```
+
+> **Good to know:** The identity function is the neutral element for function composition. It's often used as a default or placeholder when a transformation function is optional, or for type-level operations.
+
+## Related
+
+- [constant](../constant/index.md) - Return first argument
+- [noop](../../utility/noop/index.md) - No-operation function
+- [tap](../../utility/tap/index.md) - Execute side effect and return value

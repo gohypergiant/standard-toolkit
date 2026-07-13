@@ -1,0 +1,127 @@
+---
+title: getSafeEnumValues
+description: Extracts the values from a SafeEnum as a frozen array with proper typing.
+source: packages/core/src/safe-enum/get-safe-enum-values/index.ts
+source_sha: c5628cfcc00805f122cccd2a2a337287639a6ef5
+doc_sha: f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0
+deprecated: false
+updated: 2026-07-13
+---
+
+# getSafeEnumValues
+
+Extracts the values from a SafeEnum as a frozen array with proper typing.
+
+## Usage
+
+```typescript
+import { getSafeEnumValues } from '@accelint/core/safe-enum/get-safe-enum-values';
+
+const Status = Object.freeze({
+  Active: 'active',
+  Inactive: 'inactive',
+  Pending: 'pending',
+} as const);
+
+const values = getSafeEnumValues(Status);
+// ['active', 'inactive', 'pending']
+```
+
+## Reference
+
+```typescript
+function getSafeEnumValues<TSafeEnum extends ValidEnumStructures>(
+  safeEnum: TSafeEnum
+): readonly [SafeEnum<TSafeEnum>, ...SafeEnum<TSafeEnum>[]]
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `safeEnum` | `ValidEnumStructures` | The frozen enum object to extract values from |
+
+### Returns
+
+Returns a frozen array containing all enum values with proper non-empty array typing.
+
+### Type Parameters
+
+- `TSafeEnum` - The enum object type extending ValidEnumStructures
+- Return type is `readonly [Value, ...Value[]]` - a non-empty readonly tuple
+
+## Examples
+
+### Example: Validating user input
+
+```typescript
+import { getSafeEnumValues } from '@accelint/core/safe-enum/get-safe-enum-values';
+import type { SafeEnum } from '@accelint/core/safe-enum/safe-enum';
+
+const Role = Object.freeze({
+  Admin: 'admin',
+  User: 'user',
+  Guest: 'guest',
+} as const);
+
+type Role = SafeEnum<typeof Role>;
+
+const validRoles = getSafeEnumValues(Role);
+
+function isValidRole(input: string): input is Role {
+  return validRoles.includes(input as Role);
+}
+
+isValidRole('admin'); // true
+isValidRole('invalid'); // false
+```
+
+### Example: Building select options
+
+```typescript
+import { getSafeEnumValues } from '@accelint/core/safe-enum/get-safe-enum-values';
+
+const Priority = Object.freeze({
+  Low: 'low',
+  Medium: 'medium',
+  High: 'high',
+  Urgent: 'urgent',
+} as const);
+
+const priorities = getSafeEnumValues(Priority);
+
+const options = priorities.map(value => ({
+  value,
+  label: value.charAt(0).toUpperCase() + value.slice(1)
+}));
+// [
+//   { value: 'low', label: 'Low' },
+//   { value: 'medium', label: 'Medium' },
+//   ...
+// ]
+```
+
+### Example: Iterating over enum values
+
+```typescript
+import { getSafeEnumValues } from '@accelint/core/safe-enum/get-safe-enum-values';
+
+const Status = Object.freeze({
+  Draft: 'draft',
+  Published: 'published',
+  Archived: 'archived',
+} as const);
+
+const statuses = getSafeEnumValues(Status);
+
+for (const status of statuses) {
+  console.log(`Processing status: ${status}`);
+}
+```
+
+> **Good to know:** The returned array is frozen (immutable) to prevent accidental modification. Type inference ensures the array is typed as non-empty. Use this function when you need runtime access to enum values, such as for validation, iteration, or building UI elements.
+
+## Related
+
+- [SafeEnum](../safe-enum/index.md) - Type-safe enum pattern
+- [isLiteralEnum](../is-literal-enum/index.md) - Type guard for literal enums

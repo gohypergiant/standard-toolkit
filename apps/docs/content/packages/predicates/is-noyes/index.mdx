@@ -1,0 +1,313 @@
+---
+title: Boolean-like Value Predicates
+description: Predicates for testing truthy/falsy variants including yes/no, on/off, and true/false
+source: packages/predicates/src/is-noyes/index.ts
+source_sha: fe2498c113096c579fd622b46ec8fffa44411821
+doc_sha: 8f2e4d9c6b1a5f3e7d2b9a4c8f1e5d3b6a9c2f7e
+deprecated: false
+updated: 2026-07-13
+---
+
+# Boolean-like Value Predicates
+
+Case-insensitive predicates for testing boolean-like string and numeric values. Useful for parsing configuration files, form inputs, and API responses.
+
+## Usage
+
+```typescript
+import {
+  isTrue,
+  isFalse,
+  isYes,
+  isNo,
+  isOn,
+  isOff,
+  isAnyTruthy,
+  isAnyFalsy
+} from '@accelint/predicates/is-noyes';
+
+isTrue(1);          // true
+isTrue('true');     // true
+isYes('yes');       // true
+isOn('on');         // true
+
+isFalse(0);         // true
+isFalse('false');   // true
+isNo('no');         // true
+isOff('off');       // true
+
+isAnyTruthy('yes'); // true
+isAnyFalsy('off');  // true
+```
+
+## Value Lists
+
+### True Values
+`['1', 'true']`
+
+### False Values
+`['', '0', 'false', 'nan', 'null', 'undefined']`
+
+### Yes Values
+`['y', 'yes', '1', 'true']`
+
+### No Values  
+`['n', 'no', '', '0', 'false', 'nan', 'null', 'undefined']`
+
+### On Values
+`['on', '1', 'true']`
+
+### Off Values
+`['off', '', '0', 'false', 'nan', 'null', 'undefined']`
+
+## isTrue
+
+Tests if a value matches the true values list.
+
+### Reference
+
+```typescript
+function isTrue(val: unknown): boolean
+```
+
+### Examples
+
+```typescript
+import { isTrue } from '@accelint/predicates/is-noyes';
+
+isTrue(1);       // true
+isTrue('1');     // true
+isTrue('true');  // true
+isTrue('TRUE');  // true (case-insensitive)
+isTrue(true);    // true
+isTrue(0);       // false
+isTrue('yes');   // false (use isYes for this)
+```
+
+## isFalse
+
+Tests if a value matches the false values list.
+
+### Reference
+
+```typescript
+function isFalse(val: unknown): boolean
+```
+
+### Examples
+
+```typescript
+import { isFalse } from '@accelint/predicates/is-noyes';
+
+isFalse(0);         // true
+isFalse('0');       // true
+isFalse('');        // true
+isFalse('false');   // true
+isFalse('FALSE');   // true
+isFalse('null');    // true
+isFalse(1);         // false
+```
+
+## isYes
+
+Tests if a value matches the yes values list.
+
+### Reference
+
+```typescript
+function isYes(val: unknown): boolean
+```
+
+### Examples
+
+```typescript
+import { isYes } from '@accelint/predicates/is-noyes';
+
+isYes('yes');    // true
+isYes('YES');    // true
+isYes('y');      // true
+isYes('Y');      // true
+isYes(1);        // true
+isYes('true');   // true
+isYes('no');     // false
+```
+
+## isNo
+
+Tests if a value matches the no values list.
+
+### Reference
+
+```typescript
+function isNo(val: unknown): boolean
+```
+
+### Examples
+
+```typescript
+import { isNo } from '@accelint/predicates/is-noyes';
+
+isNo('no');       // true
+isNo('NO');       // true
+isNo('n');        // true
+isNo('N');        // true
+isNo(0);          // true
+isNo('');         // true
+isNo('false');    // true
+isNo('yes');      // false
+```
+
+## isOn
+
+Tests if a value matches the on values list.
+
+### Reference
+
+```typescript
+function isOn(val: unknown): boolean
+```
+
+### Examples
+
+```typescript
+import { isOn } from '@accelint/predicates/is-noyes';
+
+isOn('on');      // true
+isOn('ON');      // true
+isOn(1);         // true
+isOn('true');    // true
+isOn('off');     // false
+isOn(0);         // false
+```
+
+## isOff
+
+Tests if a value matches the off values list.
+
+### Reference
+
+```typescript
+function isOff(val: unknown): boolean
+```
+
+### Examples
+
+```typescript
+import { isOff } from '@accelint/predicates/is-noyes';
+
+isOff('off');     // true
+isOff('OFF');     // true
+isOff(0);         // true
+isOff('');        // true
+isOff('false');   // true
+isOff('on');      // false
+```
+
+## isAnyTruthy
+
+Tests if a value matches any truthy variant (true, yes, or on).
+
+### Reference
+
+```typescript
+function isAnyTruthy(val: unknown): boolean
+```
+
+### Examples
+
+```typescript
+import { isAnyTruthy } from '@accelint/predicates/is-noyes';
+
+isAnyTruthy(1);       // true
+isAnyTruthy('true');  // true
+isAnyTruthy('yes');   // true
+isAnyTruthy('on');    // true
+isAnyTruthy(0);       // false
+isAnyTruthy('off');   // false
+```
+
+## isAnyFalsy
+
+Tests if a value matches any falsy variant (false, no, or off).
+
+### Reference
+
+```typescript
+function isAnyFalsy(val: unknown): boolean
+```
+
+### Examples
+
+```typescript
+import { isAnyFalsy } from '@accelint/predicates/is-noyes';
+
+isAnyFalsy(0);        // true
+isAnyFalsy('false');  // true
+isAnyFalsy('no');     // true
+isAnyFalsy('off');    // true
+isAnyFalsy(1);        // false
+isAnyFalsy('yes');    // false
+```
+
+## Real-World Examples
+
+### Example: Parsing environment variables
+
+```typescript
+import { isAnyTruthy } from '@accelint/predicates/is-noyes';
+
+const DEBUG = process.env.DEBUG;
+const isDebugMode = isAnyTruthy(DEBUG);
+
+if (isDebugMode) {
+  console.log('Debug mode enabled');
+}
+
+// Works with: DEBUG=1, DEBUG=true, DEBUG=yes, DEBUG=on
+```
+
+### Example: Feature flag validation
+
+```typescript
+import { isOn, isOff } from '@accelint/predicates/is-noyes';
+
+interface FeatureFlags {
+  newUI: string;
+  betaFeatures: string;
+}
+
+function parseFeatureFlags(flags: FeatureFlags) {
+  return {
+    newUI: isOn(flags.newUI),
+    betaFeatures: isOn(flags.betaFeatures)
+  };
+}
+
+const flags = parseFeatureFlags({ newUI: 'on', betaFeatures: 'off' });
+// { newUI: true, betaFeatures: false }
+```
+
+### Example: Form checkbox parsing
+
+```typescript
+import { isYes, isNo } from '@accelint/predicates/is-noyes';
+
+function parseFormData(data: Record<string, string>) {
+  return {
+    newsletter: isYes(data.newsletter),
+    notifications: !isNo(data.notifications)
+  };
+}
+
+const form = { newsletter: 'yes', notifications: '' };
+const parsed = parseFormData(form);
+// { newsletter: true, notifications: false }
+```
+
+> **Good to know:** All comparisons are case-insensitive and trim whitespace. These predicates are more lenient than `toBoolean` from `@accelint/converters` — use converters for strict boolean coercion.
+
+## Related
+
+- [isNothing](../is-nothing/index.md) - Check for null or undefined
+- [isSomething](../is-something/index.md) - Check for defined values
+- [isString](../is-string/index.md) - Type guard for strings

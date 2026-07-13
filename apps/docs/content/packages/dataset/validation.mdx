@@ -1,0 +1,295 @@
+---
+title: Dataset Validation
+description: Zod-based validation for dataset configurations with formatted error messages
+source: packages/dataset/src/validation.ts
+source_sha: 34400f87e6627a9af7bac8719bb8748d1ef20dc6
+doc_sha: a10858e2b920c98f635f19715ab8f200ff1eaa48
+deprecated: false
+updated: 2026-07-13
+---
+
+# Dataset Validation
+
+Zod-based validation for dataset configurations with formatted error messages. Provides schema validation for all dataset types and field configurations.
+
+## Usage
+
+```typescript
+import { validateDatasetConfig, validateSchema, anyDatasetSchema } from '@accelint/dataset';
+
+// Validate a dataset configuration
+const dataset = validateDatasetConfig(rawConfig);
+
+// Create reusable validators for any schema
+const validateCustom = validateSchema(customSchema);
+const result = validateCustom(data);
+```
+
+## Reference
+
+### anyDatasetSchema
+
+```typescript
+const anyDatasetSchema: z.ZodObject<{
+  id: z.ZodString;
+  level: z.ZodEnum<['generated', 'user']>;
+  visible: z.ZodBoolean;
+  mutatable: z.ZodBoolean;
+  name: z.ZodString;
+  description: z.ZodString;
+  serviceType: z.ZodEnum<['VTS', 'WMS', 'WFS', 'FS', 'Unknown']>;
+  dataType: z.ZodEnum<['GEOJSON', 'ARROW', 'Unknown']>;
+  presentationTypes: z.ZodRecord<z.ZodString, z.ZodNullable<z.ZodArray<...>>>;
+  fields: z.ZodArray<z.ZodObject<...>>;
+  metadata: z.ZodObject<...>;
+}>
+```
+
+Complete Zod schema for validating dataset configurations. Validates structure, enums, types, and nested metadata.
+
+**Supported service types:** `'VTS'` | `'WMS'` | `'WFS'` | `'FS'` | `'REST'` | `'Unknown'`
+
+**Supported data types:** `'GEOJSON'` | `'ARROW'` | `'Unknown'`
+
+**Field types:** `'bool'`, `'date'`, `'datetime'`, `'f32'`, `'f64'`, `'i32'`, `'i64'`, `'linestring'`, `'multilinestring'`, `'multipoint'`, `'multipolygon'`, `'point'`, `'polygon'`, `'str'`, `'time'`
+
+**Metadata validation includes:**
+- Required: `table`, `geometryProperty`, `defaultFields`
+- Optional: `serviceUrls`, `serviceVersion`, `serviceLayer`, `backend`, `vendorParams`, `idProperty`, `minZoom`, `maxZoom`, `positionFormat`, `maxRequests`, `refetchInterval`, `batchSize`, `filterDialect`
+- Version format: Must be `x.y.z` semver format
+- Position format: `'XY'` | `'XYZ'`
+- Filter dialect: `'cql'` | `'gml'`
+
+### validateSchema
+
+```typescript
+function validateSchema<T>(schema: z.ZodType<T>): (data: unknown) => T
+```
+
+Curried validation function for any Zod schema with consistent error handling.
+
+**Type Parameters:**
+- `T` - The expected output type after successful validation
+
+**Parameters:**
+- `schema` - Zod schema to validate against
+
+**Returns:** Function that accepts data and returns validated result
+
+**Throws:** Error with formatted path and message details
+
+Provides consistent error formatting across all validation operations. Error messages include full property paths for easy debugging.
+
+### validateDatasetConfig
+
+```typescript
+function validateDatasetConfig(data: unknown): AnyDataset
+```
+
+Pre-configured validator for dataset configurations. Convenience export that pre-applies `anyDatasetSchema` to the `validateSchema` function.
+
+**Parameters:**
+- `data` - Raw dataset configuration to validate
+
+**Returns:** Validated `AnyDataset` object
+
+**Throws:** Error with formatted validation errors
+
+## Examples
+
+### Example: Validating dataset from API response
+
+```typescript
+import { validateDatasetConfig } from '@accelint/dataset';
+
+async function fetchDataset(id: string) {
+  const response = await fetch(`/api/datasets/${id}`);
+  const rawData = await response.json();
+
+  try {
+    const dataset = validateDatasetConfig(rawData);
+    return { success: true, dataset };
+  } catch (error) {
+    console.error('Invalid dataset:', error.message);
+    return { success: false, error: error.message };
+  }
+}
+```
+
+### Example: Validating user-uploaded configuration
+
+```typescript
+import { validateDatasetConfig } from '@accelint/dataset';
+
+function handleFileUpload(file: File) {
+  const reader = new FileReader();
+
+  reader.onload = (e) => {
+    try {
+      const rawConfig = JSON.parse(e.target?.result as string);
+      const validDataset = validateDatasetConfig(rawConfig);
+
+      console.log('Valid dataset:', validDataset.name);
+      saveDataset(validDataset);
+    } catch (error) {
+      showError(`Invalid configuration: ${error.message}`);
+    }
+  };
+
+  reader.readAsText(file);
+}
+```
+
+### Example: Creating reusable validators
+
+```typescript
+import { validateSchema } from '@accelint/dataset';
+import { z } from 'zod';
+
+// Define custom schemas
+const userSchema = z.object({
+  name: z.string(),
+  age: z.number(),
+  email: z.string().email(),
+});
+
+const configSchema = z.object({
+  apiKey: z.string(),
+  timeout: z.number().min(1000),
+  retries: z.number().max(5),
+});
+
+// Create validators
+const validateUser = validateSchema(userSchema);
+const validateConfig = validateSchema(configSchema);
+
+// Use validators multiple times
+const user1 = validateUser(rawUserData1);
+const user2 = validateUser(rawUserData2);
+const config = validateConfig(rawConfigData);
+```
+
+### Example: Handling validation errors gracefully
+
+```typescript
+import { validateDatasetConfig } from '@accelint/dataset';
+
+function processDatasets(rawDatasets: unknown[]) {
+  const results = rawDatasets.map((raw, index) => {
+    try {
+      const dataset = validateDatasetConfig(raw);
+      return { index, status: 'valid', dataset };
+    } catch (error) {
+      return {
+        index,
+        status: 'invalid',
+        errors: error.message.split('\n').filter(Boolean),
+      };
+    }
+  });
+
+  const valid = results.filter(r => r.status === 'valid');
+  const invalid = results.filter(r => r.status === 'invalid');
+
+  console.log(`Validated ${valid.length} datasets`);
+  console.log(`Rejected ${invalid.length} datasets`);
+
+  return { valid, invalid };
+}
+```
+
+### Example: Validating partial updates
+
+```typescript
+import { validateSchema } from '@accelint/dataset';
+import { z } from 'zod';
+import { anyDatasetSchema } from '@accelint/dataset';
+
+// Create schema for partial updates
+const datasetUpdateSchema = anyDatasetSchema.partial();
+const validateUpdate = validateSchema(datasetUpdateSchema);
+
+function updateDataset(existingDataset: AnyDataset, updates: unknown) {
+  // Validate the updates
+  const validUpdates = validateUpdate(updates);
+
+  // Merge with existing dataset
+  const updated = { ...existingDataset, ...validUpdates };
+
+  // Validate complete dataset
+  return validateDatasetConfig(updated);
+}
+```
+
+### Example: Custom validation with refinements
+
+```typescript
+import { validateSchema } from '@accelint/dataset';
+import { z } from 'zod';
+
+const datasetWithBusinessRules = z.object({
+  id: z.string(),
+  name: z.string().min(3, 'Name must be at least 3 characters'),
+  visible: z.boolean(),
+  metadata: z.object({
+    table: z.string(),
+    geometryProperty: z.string(),
+    defaultFields: z.array(z.string()).min(1, 'At least one field required'),
+  }),
+}).refine(
+  (data) => {
+    // Business rule: geometry property must be in default fields
+    return data.metadata.defaultFields.includes(data.metadata.geometryProperty);
+  },
+  {
+    message: 'geometryProperty must be included in defaultFields',
+    path: ['metadata', 'geometryProperty'],
+  }
+);
+
+const validateWithRules = validateSchema(datasetWithBusinessRules);
+```
+
+### Example: Batch validation with error collection
+
+```typescript
+import { validateDatasetConfig } from '@accelint/dataset';
+
+function validateBatch(rawDatasets: unknown[]) {
+  const errors: Array<{ index: number; id: string; errors: string[] }> = [];
+  const validated: AnyDataset[] = [];
+
+  for (const [index, raw] of rawDatasets.entries()) {
+    try {
+      const dataset = validateDatasetConfig(raw);
+      validated.push(dataset);
+    } catch (error) {
+      errors.push({
+        index,
+        id: (raw as any)?.id || 'unknown',
+        errors: error.message
+          .split('\n')
+          .filter((line: string) => line.trim()),
+      });
+    }
+  }
+
+  return {
+    validated,
+    errors,
+    summary: {
+      total: rawDatasets.length,
+      valid: validated.length,
+      invalid: errors.length,
+    },
+  };
+}
+```
+
+> **Good to know:** The validation functions throw errors on invalid data. Always wrap validation calls in try-catch blocks when handling user input or API responses. Error messages include full property paths (e.g., `metadata.serviceVersion: Invalid version: must be x.y.z`) for precise debugging.
+
+## Related
+
+- [types/datasets](./types/datasets.mdx) - Dataset type definitions
+- [lenses](./lenses.mdx) - Lens-based property accessors
+- [Zod Documentation](https://zod.dev/) - Schema validation library

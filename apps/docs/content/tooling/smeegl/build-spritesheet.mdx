@@ -1,0 +1,173 @@
+---
+title: buildSpritesheet
+description: Generate spritesheet files (JSON, PNG, and TypeScript constants) from SVG sprites.
+source: tooling/smeegl/src/build-spritesheet.ts
+source_sha: 05ec682fb78e6e8bc8f5fbe89b5cb0bfed2ba0eb
+doc_sha: 4b1e3aa44d8e1f97d27aa90e0a25c2b78a9743c3
+deprecated: false
+updated: 2026-07-13
+---
+
+# buildSpritesheet
+
+Generate spritesheet files (JSON, PNG, and TypeScript constants) from SVG sprites using the spreet tool.
+
+## Usage
+
+```typescript
+import { buildSpritesheet } from '@accelint/smeegl/build-spritesheet';
+import { findSprites } from '@accelint/smeegl/utils/find-sprites';
+
+// First find sprites
+const findResult = await findSprites('**/*.svg', './icons', process.cwd(), tmpDir);
+
+// Then build spritesheet
+await buildSpritesheet(
+  findResult,        // Result from findSprites
+  'HEX',            // CRC naming mode
+  'spreet',         // Spreet binary path
+  './output/atlas'  // Output path
+);
+```
+
+## Reference
+
+```typescript
+async function buildSpritesheet(
+  findSpriteResult: FindSpritesResult,
+  crcMode: CrcType | null,
+  cmd: string,
+  out: string
+): Promise<void>
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `findSpriteResult` | `FindSpritesResult` | Result from `findSprites` containing sprite metadata and temp directory path. |
+| `crcMode` | `CrcType \| null` | Enable CRC32 naming: `'DEC'` (decimal) or `'HEX'` (hexadecimal). `null` disables CRC naming. |
+| `cmd` | `string` | Path or command name for the spreet binary (e.g., `'spreet'` or `'./bin/spreet'`). |
+| `out` | `string` | Output path without extension. Generates `{out}.json`, `{out}.png`, and `{out}.ts`. |
+
+### Returns
+
+Returns a `Promise<void>`. The function orchestrates the spritesheet generation pipeline and handles cleanup automatically.
+
+### Type Parameters
+
+```typescript
+type CrcType = 'DEC' | 'HEX';
+type FindSpritesResult = Result<FindSpritesOutput, ErrorPath>;
+```
+
+## Examples
+
+### Example: Generate spritesheet with default naming
+
+```typescript
+import { buildSpritesheet } from '@accelint/smeegl/build-spritesheet';
+import { findSprites } from '@accelint/smeegl/utils/find-sprites';
+import { makeTempDirectory } from '@accelint/smeegl/utils/make-temp-directory';
+
+const tmpDir = await makeTempDirectory();
+const findResult = await findSprites('**/*.svg', './icons', process.cwd(), tmpDir);
+
+await buildSpritesheet(
+  findResult,
+  null,              // Use original sprite names
+  'spreet',
+  './atlas'
+);
+
+// Output files:
+// - atlas.json (sprite coordinates)
+// - atlas.png (packed image)
+// - atlas.ts (TypeScript constants)
+```
+
+### Example: Generate with CRC32 hexadecimal naming
+
+```typescript
+import { buildSpritesheet } from '@accelint/smeegl/build-spritesheet';
+
+await buildSpritesheet(
+  findResult,
+  'HEX',             // Convert names to hex CRC32
+  'spreet',
+  './atlas'
+);
+
+// atlas.ts exports:
+// export const SPRITE_A1B2C3D4 = 'a1b2c3d4';
+```
+
+### Example: Using custom spreet binary
+
+```typescript
+import { buildSpritesheet } from '@accelint/smeegl/build-spritesheet';
+
+await buildSpritesheet(
+  findResult,
+  null,
+  '/usr/local/bin/spreet',  // Custom binary path
+  './output/sprites'
+);
+```
+
+### Example: Complete workflow
+
+```typescript
+import { buildSpritesheet } from '@accelint/smeegl/build-spritesheet';
+import { findSprites } from '@accelint/smeegl/utils/find-sprites';
+import { makeTempDirectory } from '@accelint/smeegl/utils/make-temp-directory';
+
+async function generateSprites() {
+  const tmpDir = await makeTempDirectory();
+  
+  const findResult = await findSprites(
+    '',                  // No glob
+    './src/assets/icons',
+    process.cwd(),
+    tmpDir
+  );
+
+  await buildSpritesheet(
+    findResult,
+    null,
+    'spreet',
+    './public/atlas'
+  );
+  
+  console.log('Spritesheet generated successfully!');
+}
+```
+
+> **Good to know:** The function automatically handles temporary directory cleanup on success or failure. The spreet binary must be installed and accessible at the specified path.
+
+## Output Files
+
+### atlas.json
+Sprite index file with coordinates:
+```json
+{
+  "arrow": {"height": 48, "pixelRatio": 2, "width": 48, "x": 0, "y": 0},
+  "arrow-down": {"height": 48, "pixelRatio": 2, "width": 48, "x": 0, "y": 48}
+}
+```
+
+### atlas.png
+Packed spritesheet image containing all sprites.
+
+### atlas.ts
+TypeScript constants for sprite names:
+```typescript
+export const ARROW = 'arrow';
+export const ARROW_DOWN = 'arrow-down';
+```
+
+## Related
+
+- [buildReactFiles](./build-react-files.mdx) - Generate React SVG components
+- [findSprites](./utils/find-sprites.mdx) - Find and catalog SVG files
+- [makeTempDirectory](./utils/make-temp-directory.mdx) - Create temporary working directory

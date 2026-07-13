@@ -28,6 +28,7 @@ storybook-static
 # ide files
 *.iml
 .idea
+.pi/tasks/
 
 # MemLab - Generated artifacts (don't commit)
 */memlab/reports/*.json

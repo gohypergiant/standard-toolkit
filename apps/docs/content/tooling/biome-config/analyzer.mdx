@@ -1,0 +1,277 @@
+---
+title: Analyzer Configuration
+description: Code analysis settings for import organization and maintainability
+source: tooling/biome-config/analyzer.json
+source_sha: bf8c851054f6e0df293f29fad268bec98484489b
+doc_sha: 632390f142fcd7ed974681fc469ffa4f1483f8eb
+deprecated: false
+updated: 2026-07-13
+---
+
+# Analyzer Configuration
+
+Code analysis settings for import organization and better maintainability.
+
+## Usage
+
+Import the analyzer configuration in your `biome.json`:
+
+```json
+{
+  "$schema": "https://biomejs.dev/schemas/2.3.8/schema.json",
+  "extends": ["@accelint/biome-config/analyzer"]
+}
+```
+
+## Features
+
+### Import Organization
+
+Automatically organizes imports when using Biome's source actions.
+
+#### Configuration
+
+- **Level**: On (enabled)
+- **Type Imports Grouping**: false (types are not grouped separately)
+
+#### Behavior
+
+Organizes imports alphabetically within their categories without separating type imports:
+
+```typescript
+// Before organization
+import { useEffect } from 'react';
+import type { User } from './types';
+import { formatDate } from './utils';
+import { useState } from 'react';
+import type { Config } from './config';
+
+// After organization
+import { useEffect, useState } from 'react';
+import type { Config } from './config';
+import type { User } from './types';
+import { formatDate } from './utils';
+```
+
+### Editor Integration
+
+#### VSCode
+
+Configure automatic import organization on save in `.vscode/settings.json`:
+
+```json
+{
+  "editor.codeActionsOnSave": {
+    "source.organizeImports.biome": "explicit"
+  }
+}
+```
+
+#### On Demand
+
+Trigger import organization through your editor's code actions menu (usually Cmd+. or Ctrl+.).
+
+### CLI Usage
+
+Organize imports using the Biome CLI:
+
+```bash
+# Check and fix all files
+pnpm biome check --write .
+
+# Fix specific files
+pnpm biome check --write src/**/*.ts
+```
+
+The `check` command runs all enabled checks including import organization.
+
+## Import Organization Rules
+
+### Grouping
+
+Imports are organized into groups:
+
+1. **External dependencies** (node_modules)
+2. **Internal absolute imports** (using path aliases)
+3. **Relative imports** (./  and ../)
+
+```typescript
+// ✅ Organized imports
+import { useState, useEffect } from 'react';
+import { formatISO } from 'date-fns';
+
+import { useAuth } from '@/hooks/useAuth';
+import type { User } from '@/types';
+
+import { formatDate } from './utils';
+import { Button } from './Button';
+```
+
+### Sorting
+
+Within each group, imports are sorted:
+
+1. **Side-effect imports** (no specifiers)
+2. **Named imports** (alphabetically by module)
+3. **Type imports** (not separated, mixed with value imports)
+
+```typescript
+// ✅ Sorted within group
+import './styles.css';
+
+import { Button } from './components/Button';
+import { Input } from './components/Input';
+import type { Theme } from './components/types';
+import { formatDate, parseDate } from './utils';
+```
+
+### Combining Imports
+
+Imports from the same module are automatically combined:
+
+```typescript
+// ❌ Before
+import { useState } from 'react';
+import { useEffect } from 'react';
+import type { FC } from 'react';
+
+// ✅ After
+import { useEffect, useState } from 'react';
+import type { FC } from 'react';
+```
+
+## Customization
+
+### Separate Type Imports
+
+Enable type import grouping in your `biome.json`:
+
+```json
+{
+  "extends": ["@accelint/biome-config/analyzer"],
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": {
+          "level": "on",
+          "options": {
+            "groups": [{ "type": true }]
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+With type grouping enabled:
+
+```typescript
+// Type imports grouped separately
+import { useState, useEffect } from 'react';
+
+import type { FC, ReactNode } from 'react';
+import type { User } from './types';
+```
+
+### Disable Import Organization
+
+Disable for specific files using overrides:
+
+```json
+{
+  "extends": ["@accelint/biome-config/analyzer"],
+  "overrides": [
+    {
+      "include": ["**/*.test.ts"],
+      "assist": {
+        "actions": {
+          "source": {
+            "organizeImports": {
+              "level": "off"
+            }
+          }
+        }
+      }
+    }
+  ]
+}
+```
+
+## Example: Before and After
+
+### Before Organization
+
+```typescript
+import { formatDate } from './utils';
+import type { User } from './types';
+import { Button } from './components/Button';
+import { useEffect, useState } from 'react';
+import type { Config } from './config';
+import { Input } from './components/Input';
+import './styles.css';
+```
+
+### After Organization
+
+```typescript
+import { useEffect, useState } from 'react';
+
+import './styles.css';
+
+import { Button } from './components/Button';
+import { Input } from './components/Input';
+import type { Config } from './config';
+import type { User } from './types';
+import { formatDate } from './utils';
+```
+
+## Integration with Linter
+
+The analyzer works alongside the linter configuration. When both are enabled:
+
+1. **Linter** catches `noUnusedImports` violations
+2. **Analyzer** removes unused imports automatically
+3. **Linter** validates import order and grouping
+
+```json
+{
+  "extends": [
+    "@accelint/biome-config/linter",
+    "@accelint/biome-config/analyzer"
+  ]
+}
+```
+
+## Troubleshooting
+
+### Imports Not Organizing
+
+Ensure source actions are enabled in your editor:
+
+**VSCode**:
+```json
+{
+  "editor.codeActionsOnSave": {
+    "source.organizeImports.biome": "explicit"
+  }
+}
+```
+
+### Conflicting with Other Tools
+
+If using multiple import organizers (e.g., ESLint, TypeScript), disable them to prevent conflicts:
+
+```json
+{
+  "eslint.codeActionsOnSave.rules": null,
+  "typescript.preferences.organizeImportsOnSave": false
+}
+```
+
+## Related
+
+- [Biome Assist Actions](https://biomejs.dev/analyzer/)
+- [Linter Configuration](./linter)
+- [Formatter Configuration](./formatter)
+- [ESLint Configuration](../eslint-config)

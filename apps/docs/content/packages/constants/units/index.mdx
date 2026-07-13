@@ -1,0 +1,256 @@
+---
+title: Distance Unit Constants
+description: SI-compliant display symbols for distance units and bidirectional mapping between unit names and symbols.
+source: packages/constants/src/units/index.ts
+source_sha: 2eb2aeec378a8df693295660d015c4968dd924a5
+doc_sha: e000914e941ee88121c83c6ec5f0675870ba8ed8
+deprecated: false
+updated: 2026-07-13
+---
+
+# Distance Unit Constants
+
+SI-compliant display symbols for distance units and bidirectional mapping between unit names and symbols.
+
+## Usage
+
+```typescript
+import { 
+  DISTANCE_UNIT_SYMBOLS, 
+  DISTANCE_UNIT_BY_SYMBOL,
+  type DistanceUnit,
+  type DistanceUnitSymbol,
+} from '@accelint/constants/units';
+
+// Get display symbol for a unit
+const symbol = DISTANCE_UNIT_SYMBOLS.kilometers; // 'km'
+
+// Get unit name from display symbol
+const unit = DISTANCE_UNIT_BY_SYMBOL['km']; // 'kilometers'
+
+// Format distance with correct symbol
+const distance = 42.195;
+const label = `${distance} ${DISTANCE_UNIT_SYMBOLS.kilometers}`; // '42.195 km'
+```
+
+## Reference
+
+### DISTANCE_UNIT_SYMBOLS
+
+```typescript
+const DISTANCE_UNIT_SYMBOLS: {
+  readonly kilometers: 'km';
+  readonly meters: 'm';
+  readonly nauticalmiles: 'NM';
+  readonly miles: 'mi';
+  readonly feet: 'ft';
+};
+```
+
+Maps Turf.js-compatible unit names to their correct display symbols per the International System of Units (SI) and international standards.
+
+**Key distinctions from informal abbreviations:**
+- `km` not `KM` - SI uses lowercase k for kilo prefix, lowercase m for meters
+- `m` not `M` - SI uppercase M is the mega prefix, not meters
+- `NM` for nautical miles - ICAO/IMO aviation/maritime convention
+- `mi` and `ft` - Not SI units but follow conventional lowercase
+
+**Available units:**
+- `kilometers` → `'km'` (SI unit)
+- `meters` → `'m'` (SI unit)
+- `nauticalmiles` → `'NM'` (ICAO/IMO standard)
+- `miles` → `'mi'` (Imperial unit)
+- `feet` → `'ft'` (Imperial unit)
+
+### DISTANCE_UNIT_BY_SYMBOL
+
+```typescript
+const DISTANCE_UNIT_BY_SYMBOL: Record<DistanceUnitSymbol, DistanceUnit>;
+```
+
+Reverse lookup map from display symbol to Turf.js unit name.
+
+```typescript
+DISTANCE_UNIT_BY_SYMBOL['km']  // 'kilometers'
+DISTANCE_UNIT_BY_SYMBOL['m']   // 'meters'
+DISTANCE_UNIT_BY_SYMBOL['NM']  // 'nauticalmiles'
+DISTANCE_UNIT_BY_SYMBOL['mi']  // 'miles'
+DISTANCE_UNIT_BY_SYMBOL['ft']  // 'feet'
+```
+
+### DistanceUnit
+
+```typescript
+type DistanceUnit = 'kilometers' | 'meters' | 'nauticalmiles' | 'miles' | 'feet';
+```
+
+Turf.js-compatible unit names for distance calculations.
+
+### DistanceUnitSymbol
+
+```typescript
+type DistanceUnitSymbol = 'km' | 'm' | 'NM' | 'mi' | 'ft';
+```
+
+Display symbol for a distance unit.
+
+> **Good to know:** These symbols follow SI conventions where applicable. Using the correct symbol (lowercase `km` not uppercase `KM`) matters for scientific accuracy and internationalization.
+
+## Examples
+
+### Example: Formatting distance with correct symbols
+
+```typescript
+import { DISTANCE_UNIT_SYMBOLS } from '@accelint/constants/units';
+
+function formatDistance(value: number, unit: keyof typeof DISTANCE_UNIT_SYMBOLS): string {
+  const symbol = DISTANCE_UNIT_SYMBOLS[unit];
+  return `${value.toFixed(2)} ${symbol}`;
+}
+
+formatDistance(42.195, 'kilometers');   // '42.19 km'
+formatDistance(26.219, 'miles');        // '26.22 mi'
+formatDistance(1852, 'meters');         // '1852.00 m'
+formatDistance(22.24, 'nauticalmiles'); // '22.24 NM'
+```
+
+### Example: Parsing user input with symbol lookup
+
+```typescript
+import { DISTANCE_UNIT_BY_SYMBOL, type DistanceUnitSymbol } from '@accelint/constants/units';
+
+function parseDistance(input: string): { value: number; unit: string } | null {
+  const match = input.match(/^([\d.]+)\s*([a-zA-Z]+)$/);
+  if (!match) return null;
+
+  const [, valueStr, symbolStr] = match;
+  const value = parseFloat(valueStr);
+  const symbol = symbolStr as DistanceUnitSymbol;
+  const unit = DISTANCE_UNIT_BY_SYMBOL[symbol];
+
+  return unit ? { value, unit } : null;
+}
+
+parseDistance('100 km');  // { value: 100, unit: 'kilometers' }
+parseDistance('5.5 mi');  // { value: 5.5, unit: 'miles' }
+parseDistance('1852 m');  // { value: 1852, unit: 'meters' }
+parseDistance('10 NM');   // { value: 10, unit: 'nauticalmiles' }
+parseDistance('100 KM');  // null (incorrect case)
+```
+
+### Example: Unit converter with Turf.js
+
+```typescript
+import { DISTANCE_UNIT_SYMBOLS, type DistanceUnit } from '@accelint/constants/units';
+import { convertLength } from '@turf/helpers';
+
+function convertDistance(
+  value: number,
+  from: DistanceUnit,
+  to: DistanceUnit,
+): string {
+  const converted = convertLength(value, from, to);
+  const symbol = DISTANCE_UNIT_SYMBOLS[to];
+  return `${converted.toFixed(2)} ${symbol}`;
+}
+
+convertDistance(1, 'kilometers', 'meters');       // '1000.00 m'
+convertDistance(1, 'miles', 'kilometers');        // '1.61 km'
+convertDistance(1, 'nauticalmiles', 'kilometers'); // '1.85 km'
+```
+
+### Example: Distance unit selector UI
+
+```typescript
+import { DISTANCE_UNIT_SYMBOLS, type DistanceUnit } from '@accelint/constants/units';
+
+function DistanceUnitSelect({ value, onChange }: {
+  value: DistanceUnit;
+  onChange: (unit: DistanceUnit) => void;
+}) {
+  return (
+    <select 
+      value={value} 
+      onChange={(e) => onChange(e.target.value as DistanceUnit)}
+    >
+      {Object.entries(DISTANCE_UNIT_SYMBOLS).map(([unit, symbol]) => (
+        <option key={unit} value={unit}>
+          {symbol}
+        </option>
+      ))}
+    </select>
+  );
+}
+```
+
+### Example: Aviation distance calculator
+
+```typescript
+import { 
+  DISTANCE_UNIT_SYMBOLS, 
+  DISTANCE_UNIT_BY_SYMBOL 
+} from '@accelint/constants/units';
+import { distance } from '@turf/distance';
+
+function calculateFlightDistance(
+  from: [number, number],
+  to: [number, number],
+): string {
+  // Aviation uses nautical miles
+  const nm = distance(from, to, { units: 'nauticalmiles' });
+  const symbol = DISTANCE_UNIT_SYMBOLS.nauticalmiles;
+  return `${nm.toFixed(1)} ${symbol}`;
+}
+
+calculateFlightDistance([40.7128, -74.0060], [51.5074, -0.1278]);
+// "3000.5 NM" (New York to London)
+```
+
+### Example: Type-safe unit validation
+
+```typescript
+import { 
+  DISTANCE_UNIT_SYMBOLS,
+  type DistanceUnit,
+  type DistanceUnitSymbol,
+} from '@accelint/constants/units';
+
+function isValidUnit(unit: string): unit is DistanceUnit {
+  return unit in DISTANCE_UNIT_SYMBOLS;
+}
+
+function isValidSymbol(symbol: string): symbol is DistanceUnitSymbol {
+  return Object.values(DISTANCE_UNIT_SYMBOLS).includes(symbol as DistanceUnitSymbol);
+}
+
+isValidUnit('kilometers');  // true
+isValidUnit('invalid');     // false
+isValidSymbol('km');        // true
+isValidSymbol('KM');        // false
+```
+
+### Example: Map viewport labeling
+
+```typescript
+import { DISTANCE_UNIT_SYMBOLS } from '@accelint/constants/units';
+
+interface ViewportScale {
+  width: number;
+  height: number;
+  unit: keyof typeof DISTANCE_UNIT_SYMBOLS;
+}
+
+function formatViewport(scale: ViewportScale): string {
+  const symbol = DISTANCE_UNIT_SYMBOLS[scale.unit];
+  return `Viewport: ${scale.width} × ${scale.height} ${symbol}`;
+}
+
+formatViewport({ width: 600, height: 400, unit: 'nauticalmiles' });
+// "Viewport: 600 × 400 NM"
+```
+
+## Related
+
+- [International System of Units (SI)](https://en.wikipedia.org/wiki/International_System_of_Units) - SI unit standards
+- [@turf/helpers](https://turfjs.org/docs/api/helpers) - Turf.js unit conversion utilities
+- [ICAO standards](https://www.icao.int/) - Aviation unit conventions

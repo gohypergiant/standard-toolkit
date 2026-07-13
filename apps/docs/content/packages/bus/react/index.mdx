@@ -1,0 +1,450 @@
+---
+title: React Hooks
+description: React hooks for type-safe event bus integration including useBus, useEmit, useOn, and useOnce.
+source: packages/bus/src/react/index.ts
+source_sha: 6cf16682b1af2f7746e609f7cf851e728670dd9e
+doc_sha: f0d9a25ca17a15cdca15c2a521b43c26496887ef
+deprecated: false
+updated: 2026-07-13
+---
+
+# React Hooks
+
+React hooks for type-safe event bus integration including `useBus`, `useEmit`, `useOn`, and `useOnce`.
+
+## useBus
+
+Convenience wrapper providing type-safe event bus hooks for emitting and listening to events across your application.
+
+### Usage
+
+```typescript
+import { useBus, Payload } from '@accelint/bus';
+
+type MyEvents =
+  | Payload<'user:login', { userId: string }>
+  | Payload<'user:logout'>;
+
+function MyComponent() {
+  const { useEmit, useOn } = useBus<MyEvents>();
+
+  const emitLogin = useEmit('user:login');
+  useOn('user:logout', (event) => {
+    console.log('User logged out');
+  });
+
+  return (
+    <button onClick={() => emitLogin({ userId: '123' })}>
+      Login
+    </button>
+  );
+}
+```
+
+### Reference
+
+```typescript
+function useBus<Events extends BasicPayload>(
+  options?: EmitOptions | null
+): {
+  useEmit: <Type extends Events['type']>(
+    type: Type,
+    options?: EmitOptions | null
+  ) => EmitFunction;
+  useOn: <Type extends Events['type']>(
+    type: Type,
+    callback: (data: ExtractEvent<Events, Type>) => void
+  ) => void;
+  useOnce: <Type extends Events['type']>(
+    type: Type,
+    callback: (data: ExtractEvent<Events, Type>) => void
+  ) => void;
+}
+```
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `options` | `EmitOptions \| null` | Optional global emit options applied to all events. Can include `target` to scope delivery. |
+
+**Returns:** An object containing three type-safe hooks: `useEmit`, `useOn`, and `useOnce`
+
+**Type Parameters:**
+
+- `Events` - Union type of all event payloads handled by this bus. Should be a union of `Payload<type, data>` types.
+
+### Examples
+
+#### Example: Simple event communication
+
+```typescript
+import { useBus, Payload } from '@accelint/bus';
+
+type AppEvents = Payload<'theme:changed', { theme: 'light' | 'dark' }>;
+
+function ThemeToggle() {
+  const { useEmit } = useBus<AppEvents>();
+  const emitThemeChange = useEmit('theme:changed');
+
+  return (
+    <button onClick={() => emitThemeChange({ theme: 'dark' })}>
+      Dark Mode
+    </button>
+  );
+}
+
+function ThemeListener() {
+  const { useOn } = useBus<AppEvents>();
+
+  useOn('theme:changed', (event) => {
+    document.body.className = event.payload.theme;
+  });
+
+  return null;
+}
+```
+
+#### Example: Events without payload
+
+```typescript
+import { useBus, Payload } from '@accelint/bus';
+
+type NavigationEvents = Payload<'nav:back'>;
+
+function BackButton() {
+  const { useEmit } = useBus<NavigationEvents>();
+  const goBack = useEmit('nav:back');
+
+  // No payload required for events without data
+  return <button onClick={() => goBack()}>Back</button>;
+}
+```
+
+#### Example: Targeting specific instances
+
+```typescript
+import { useBus, Payload } from '@accelint/bus';
+
+type NotificationEvents = Payload<'notify', { message: string }>;
+
+function Notifier() {
+  const { useEmit } = useBus<NotificationEvents>({
+    target: 'others' // Don't emit to self
+  });
+
+  const notify = useEmit('notify');
+
+  return (
+    <button onClick={() => notify({ message: 'Hello other tabs!' })}>
+      Notify Others
+    </button>
+  );
+}
+```
+
+#### Example: Multiple event types
+
+```typescript
+import { useBus, Payload } from '@accelint/bus';
+
+type AppEvents =
+  | Payload<'user:login', { userId: string; username: string }>
+  | Payload<'user:logout'>
+  | Payload<'data:updated', { id: string }>;
+
+function AppEventHandler() {
+  const { useOn } = useBus<AppEvents>();
+
+  useOn('user:login', (event) => {
+    console.log(`Welcome ${event.payload.username}`);
+  });
+
+  useOn('user:logout', () => {
+    console.log('Goodbye');
+  });
+
+  useOn('data:updated', (event) => {
+    console.log(`Data ${event.payload.id} updated`);
+  });
+
+  return null;
+}
+```
+
+> **Good to know:** All three hooks (`useEmit`, `useOn`, `useOnce`) returned by `useBus` share the same underlying `Broadcast` singleton instance, ensuring events are delivered across all components using the same event types.
+
+---
+
+## useEmit
+
+React hook to enable render-safe emitting of events with type-safe payloads.
+
+### Usage
+
+```typescript
+import { useEmit, Payload } from '@accelint/bus';
+
+type MyEvents = Payload<'user:login', { userId: string }>;
+
+function LoginButton() {
+  const emitLogin = useEmit<MyEvents, 'user:login'>('user:login');
+
+  return (
+    <button onClick={() => emitLogin({ userId: '123' })}>
+      Login
+    </button>
+  );
+}
+```
+
+### Reference
+
+```typescript
+function useEmit<
+  Events extends BasicPayload,
+  Type extends Events['type']
+>(
+  type: Type,
+  options?: EmitOptions | null
+): EmitFunction
+```
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `type` | `Type extends Events['type']` | Event type, one of the event types in the union |
+| `options` | `EmitOptions \| null` | Optional emit options applied to all emits of this event |
+
+**Returns:** Callback that accepts the payload corresponding to the event type. The callback also accepts options parameter for per-call configuration.
+
+**Type Parameters:**
+
+- `Events` - Union of event types
+- `Type` - Type of event
+
+### Examples
+
+#### Example: Emitting with payload
+
+```typescript
+import { useEmit, Payload } from '@accelint/bus';
+
+type MyEvents = Payload<'map:click', { x: number; y: number }>;
+
+function MapComponent() {
+  const emitMapClick = useEmit<MyEvents, 'map:click'>('map:click');
+
+  const handleClick = (x: number, y: number) => {
+    emitMapClick({ x, y });
+  };
+
+  return <div onClick={(e) => handleClick(e.clientX, e.clientY)} />;
+}
+```
+
+#### Example: Event-specific options
+
+```typescript
+import { useEmit, Payload } from '@accelint/bus';
+
+type MyEvents = Payload<'notification', { message: string }>;
+
+function NotificationSender() {
+  const emitNotification = useEmit<MyEvents, 'notification'>(
+    'notification',
+    { target: 'others' } // Always send to other instances
+  );
+
+  return (
+    <button onClick={() => emitNotification({ message: 'Hi!' })}>
+      Notify Others
+    </button>
+  );
+}
+```
+
+---
+
+## useOn
+
+React hook to attach event bus listener with type-safe callback.
+
+### Usage
+
+```typescript
+import { useOn, Payload } from '@accelint/bus';
+
+type MyEvents = Payload<'user:login', { userId: string }>;
+
+function UserWatcher() {
+  useOn<MyEvents, 'user:login'>('user:login', (event) => {
+    console.log('User logged in:', event.payload.userId);
+  });
+
+  return null;
+}
+```
+
+### Reference
+
+```typescript
+function useOn<
+  Events extends BasicPayload,
+  Type extends Events['type']
+>(
+  type: Type,
+  callback: (data: ExtractEvent<Events, Type>) => void
+): void
+```
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `type` | `Type extends Events['type']` | Event type |
+| `callback` | `(data: ExtractEvent<Events, Type>) => void` | Handler that matches event type and receives corresponding payload |
+
+**Type Parameters:**
+
+- `Events` - Union of event types
+- `Type` - Type of event
+
+### Examples
+
+#### Example: Listening to events
+
+```typescript
+import { useOn, Payload } from '@accelint/bus';
+
+type MyEvents = Payload<'cart:updated', { itemCount: number }>;
+
+function CartBadge() {
+  const [count, setCount] = React.useState(0);
+
+  useOn<MyEvents, 'cart:updated'>('cart:updated', (event) => {
+    setCount(event.payload.itemCount);
+  });
+
+  return <span className="badge">{count}</span>;
+}
+```
+
+#### Example: Multiple listeners
+
+```typescript
+import { useOn, Payload } from '@accelint/bus';
+
+type AppEvents =
+  | Payload<'user:login', { userId: string }>
+  | Payload<'user:logout'>;
+
+function AuthMonitor() {
+  useOn<AppEvents, 'user:login'>('user:login', (event) => {
+    console.log('Login:', event.payload.userId);
+  });
+
+  useOn<AppEvents, 'user:logout'>('user:logout', () => {
+    console.log('Logout');
+  });
+
+  return null;
+}
+```
+
+> **Good to know:** The listener is automatically cleaned up when the component unmounts. The callback is stable and won't cause re-subscriptions when it changes.
+
+---
+
+## useOnce
+
+React hook to attach event bus listener with type-safe callback that executes only once.
+
+### Usage
+
+```typescript
+import { useOnce, Payload } from '@accelint/bus';
+
+type MyEvents = Payload<'user:login', { userId: string }>;
+
+function FirstLoginDetector() {
+  useOnce<MyEvents, 'user:login'>('user:login', (event) => {
+    console.log('First login detected:', event.payload.userId);
+  });
+
+  return null;
+}
+```
+
+### Reference
+
+```typescript
+function useOnce<
+  Events extends BasicPayload,
+  Type extends Events['type']
+>(
+  type: Type,
+  callback: (data: ExtractEvent<Events, Type>) => void
+): void
+```
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `type` | `Type extends Events['type']` | Event type |
+| `callback` | `(data: ExtractEvent<Events, Type>) => void` | Handler that matches event type and receives corresponding payload |
+
+**Type Parameters:**
+
+- `Events` - Union of event types
+- `Type` - Type of event
+
+### Examples
+
+#### Example: One-time initialization
+
+```typescript
+import { useOnce, Payload } from '@accelint/bus';
+
+type InitEvents = Payload<'app:ready'>;
+
+function OnboardingTour() {
+  const [show, setShow] = React.useState(false);
+
+  useOnce<InitEvents, 'app:ready'>('app:ready', () => {
+    setShow(true); // Only shows on first app:ready event
+  });
+
+  return show ? <div>Welcome!</div> : null;
+}
+```
+
+#### Example: Feature flag activation
+
+```typescript
+import { useOnce, Payload } from '@accelint/bus';
+
+type FeatureEvents = Payload<'feature:enabled', { feature: string }>;
+
+function FeatureDetector() {
+  const [enabled, setEnabled] = React.useState(false);
+
+  useOnce<FeatureEvents, 'feature:enabled'>('feature:enabled', (event) => {
+    if (event.payload.feature === 'dark-mode') {
+      setEnabled(true);
+    }
+  });
+
+  return enabled ? <div>Dark mode available!</div> : null;
+}
+```
+
+> **Good to know:** The callback is only invoked for the first matching event after the component mounts. Subsequent events are ignored. The listener is cleaned up after firing or when the component unmounts.
+
+## Related
+
+- [Broadcast](../broadcast/index.md) - Underlying event bus class
+- [Payload](../types.md#payload) - Type helper for defining events
+- [EmitOptions](../types.md#emitoptions) - Options for controlling event delivery
