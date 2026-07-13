@@ -698,6 +698,13 @@ importers:
         version: 4.2.1
 
   packages/formatters:
+    dependencies:
+      '@accelint/constants':
+        specifier: workspace:*
+        version: link:../constants
+      '@accelint/math':
+        specifier: workspace:*
+        version: link:../math
     devDependencies:
       '@accelint/typescript-config':
         specifier: workspace:*
@@ -902,6 +909,9 @@ importers:
       '@accelint/design-toolkit':
         specifier: workspace:*
         version: link:../design-toolkit
+      '@accelint/formatters':
+        specifier: workspace:*
+        version: link:../formatters
       '@accelint/geo':
         specifier: workspace:*
         version: link:../geo
@@ -4443,6 +4453,7 @@ packages:
   basic-ftp@5.0.5:
     resolution: {integrity: sha512-4Bcg1P8xhUuqcii/S0Z9wiHIrQVPMermM1any+MX5GeGD7faD3/msQUDGLol9wOcz4/jbg/WJnGqoJF6LiBdtg==}
     engines: {node: '>=10.0.0'}
+    deprecated: Security vulnerability fixed in 5.2.0, please upgrade
 
   better-opn@3.0.2:
     resolution: {integrity: sha512-aVNobHnJqLiUelTaHat9DZ1qM2w0C0Eym4LPI/3JxOnSokGVdsl1T1kN7TFvsEAD8G47A6VKQ0TVHqbBnYMJlQ==}
@@ -7541,6 +7552,7 @@ packages:
 
   uuid@9.0.0:
     resolution: {integrity: sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==}
+    deprecated: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
     hasBin: true
 
   vfile-message@4.0.3:

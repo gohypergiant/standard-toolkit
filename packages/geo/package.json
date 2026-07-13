@@ -56,6 +56,9 @@
     "./coordinates/mgrs/system": "./dist/coordinates/mgrs/system.js",
     "./coordinates/utm/parser": "./dist/coordinates/utm/parser.js",
     "./coordinates/utm/system": "./dist/coordinates/utm/system.js",
+    "./geodesy": "./dist/geodesy/index.js",
+    "./geodesy/bearing": "./dist/geodesy/bearing.js",
+    "./geodesy/distance": "./dist/geodesy/distance.js",
     "./patterning": "./dist/patterning.js",
     "./package.json": "./package.json"
   },

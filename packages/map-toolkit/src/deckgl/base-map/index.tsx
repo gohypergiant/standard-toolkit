@@ -60,6 +60,9 @@ import type { CameraSetViewEvent } from '../../camera/types';
 import type {
   BaseMapProps,
   MapClickEvent,
+  MapDragEndEvent,
+  MapDragEvent,
+  MapDragStartEvent,
   MapHoverEvent,
   MapLibreOptions,
   MapViewportEvent,
@@ -506,6 +509,9 @@ export function BaseMap({
   const emitHover = useEmit<MapHoverEvent>(MapEvents.hover);
   const emitViewport = useEmit<MapViewportEvent>(MapEvents.viewport);
   const emitSetView = useEmit<CameraSetViewEvent>(CameraEventTypes.setView);
+  const emitDragStart = useEmit<MapDragStartEvent>(MapEvents.dragStart);
+  const emitDrag = useEmit<MapDragEvent>(MapEvents.drag);
+  const emitDragEnd = useEmit<MapDragEndEvent>(MapEvents.dragEnd);
 
   const resizeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -556,6 +562,17 @@ export function BaseMap({
       // send full pickingInfo and event to user-defined onDragStart first
       onDragStart?.(info, event);
 
+      // Emit drag start event to the bus with coordinate and modifier key state
+      if (info.coordinate) {
+        emitDragStart({
+          id,
+          coordinate: [info.coordinate[0], info.coordinate[1]],
+          shiftKey: event.srcEvent.shiftKey,
+          ctrlKey: event.srcEvent.ctrlKey,
+          altKey: event.srcEvent.altKey,
+        });
+      }
+
       // Right-drag (or ctrl + left-drag) rotates + pitches the camera; plain
       // left-drag stays a pan. The camera store is driven directly so it remains
       // the single source of truth — MapLibre's own rotate/pitch handlers are off.
@@ -589,6 +606,17 @@ export function BaseMap({
       // send full pickingInfo and event to user-defined onDrag first
       onDrag?.(info, event);
 
+      // Emit drag event to the bus with coordinate and modifier key state
+      if (info.coordinate) {
+        emitDrag({
+          id,
+          coordinate: [info.coordinate[0], info.coordinate[1]],
+          shiftKey: event.srcEvent.shiftKey,
+          ctrlKey: event.srcEvent.ctrlKey,
+          altKey: event.srcEvent.altKey,
+        });
+      }
+
       // No baseline means `handleDragStart` classified this as a pan, not a
       // tilt; leave the camera untouched.
       if (!tiltBaselineRef.current) {
@@ -621,6 +649,17 @@ export function BaseMap({
     (info: PickingInfo, event: MjolnirGestureEvent) => {
       // send full pickingInfo and event to user-defined onDragEnd first
       onDragEnd?.(info, event);
+
+      // Emit drag end event to the bus with coordinate and modifier key state
+      if (info.coordinate) {
+        emitDragEnd({
+          id,
+          coordinate: [info.coordinate[0], info.coordinate[1]],
+          shiftKey: event.srcEvent.shiftKey,
+          ctrlKey: event.srcEvent.ctrlKey,
+          altKey: event.srcEvent.altKey,
+        });
+      }
 
       // Flush the last pending target so the camera lands exactly where the drag
       // ended (a frame may have been scheduled but not yet fired), then cancel
