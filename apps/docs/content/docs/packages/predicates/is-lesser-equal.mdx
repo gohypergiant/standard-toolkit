@@ -1,0 +1,45 @@
+---
+title: "isLesserEqual"
+description: Curried predicate that determines if a value is less than or equal to a threshold
+source: packages/predicates/src/is-lesser-equal/index.ts
+source_sha: dc5cdee83db775ee88aa2e4cffa1bd0d39663cba
+doc_sha: 0c856f8a6ba209c0047a006e3d8b731dc5b62ef0
+deprecated: false
+updated: 2026-07-13
+---
+
+# isLesserEqual
+
+Creates a predicate that determines if a value is less than or equal to a threshold.
+
+## Reference
+
+```typescript
+function isLesserEqual<T extends number | string>(threshold: T): (value: T) => boolean
+```
+
+## Examples
+
+```typescript
+import { isLesserEqual } from '@accelint/predicates';
+
+const isAtMost100 = isLesserEqual(100);
+isAtMost100(50);  // true
+isAtMost100(100); // true (inclusive)
+isAtMost100(150); // false
+
+// Age filtering
+const ages = [16, 18, 21, 25, 30];
+const underAge = ages.filter(isLesserEqual(20)); // [16, 18]
+```
+
+> **Good to know:** The threshold is inclusive. Use `isLesser` for exclusive comparison.
+
+## Related
+
+- [isLesser](./is-lesser) - Check if value is less than threshold (exclusive)
+- [isGreaterEqual](./is-greater-equal) - Check if value is greater than or equal to threshold
+- [isGreater](./is-greater) - Check if value is greater than threshold
+- [isEqual](./is-equal) - Check if value is equal to reference
+- [isNotEqual](./is-not-equal) - Check if value is not equal to reference
+- [isBetween](./is-between) - Check if value is in a range (inclusive)

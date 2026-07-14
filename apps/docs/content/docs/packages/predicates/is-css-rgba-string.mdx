@@ -1,0 +1,100 @@
+---
+title: isCssRgbaString
+description: Type guard for validating CSS rgb/rgba string format (legacy and modern syntax)
+source: packages/predicates/src/is-css-rgba-string/index.ts
+source_sha: 6fcefa9066602e68ac2ed28f0a90ef2e34afb5a0
+doc_sha: 516767a20e19021f9e2bb0555258130b4f5338be
+deprecated: false
+updated: 2026-07-13
+---
+
+# isCssRgbaString
+
+Validates CSS rgb/rgba string format (legacy and modern syntax).
+
+## Usage
+
+```typescript
+import { isCssRgbaString } from '@accelint/predicates/is-css-rgba-string';
+
+// Legacy syntax
+isCssRgbaString('rgba(255, 128, 64, 0.5)'); // true
+isCssRgbaString('rgb(255, 128, 64)');       // true
+
+// Modern syntax (CSS Color Module Level 4)
+isCssRgbaString('rgb(255 128 64 / 50%)');   // true
+isCssRgbaString('rgb(255 128 64)');         // true
+
+isCssRgbaString('#FF8040');                 // false
+```
+
+## Reference
+
+```typescript
+function isCssRgbaString(value: unknown): value is string
+```
+
+Supports:
+- Legacy: `rgb(255, 128, 64)`, `rgba(255, 128, 64, 0.5)`
+- Modern: `rgb(255 128 64)`, `rgb(255 128 64 / 0.5)`
+
+## Examples
+
+```typescript
+import { isCssRgbaString } from '@accelint/predicates/is-css-rgba-string';
+
+// Legacy comma-separated syntax
+isCssRgbaString('rgb(255, 128, 64)');       // true
+isCssRgbaString('rgba(255, 128, 64, 0.5)'); // true
+isCssRgbaString('rgba(255, 128, 64, 1)');   // true
+
+// Modern space-separated syntax (CSS Color Module Level 4)
+isCssRgbaString('rgb(255 128 64)');         // true
+isCssRgbaString('rgb(255 128 64 / 0.5)');   // true
+isCssRgbaString('rgb(255 128 64 / 50%)');   // true
+
+// Whitespace variations
+isCssRgbaString('rgb( 255 , 128 , 64 )');   // true
+isCssRgbaString('rgb(255  128  64)');       // true
+
+// Invalid formats
+isCssRgbaString('#FF8040');                 // false
+isCssRgbaString('hsl(30, 100%, 50%)');      // false
+isCssRgbaString('255, 128, 64');            // false (missing rgb())
+```
+
+## Real-World Example: CSS color string parser
+
+```typescript
+import { isCssRgbaString } from '@accelint/predicates/is-css-rgba-string';
+
+function parseCssColor(value: unknown): { r: number; g: number; b: number; a: number } | null {
+  if (!isCssRgbaString(value)) {
+    return null;
+  }
+  
+  // Extract numbers from the CSS string
+  const match = value.match(/rgba?\(([^)]+)\)/);
+  if (!match) return null;
+  
+  const parts = match[1].split(/[,\s/]+/).map(Number);
+  
+  return {
+    r: parts[0] ?? 0,
+    g: parts[1] ?? 0,
+    b: parts[2] ?? 0,
+    a: parts[3] ?? 1
+  };
+}
+
+parseCssColor('rgba(255, 128, 64, 0.5)'); // { r: 255, g: 128, b: 64, a: 0.5 }
+```
+
+> **Good to know:** This predicate supports both legacy comma-separated and modern space-separated CSS color syntax.
+
+## Related
+
+- [isHexColor](./is-hex-color) - Type guard for hex color strings
+- [isCssRgbaObject](./is-css-rgba-object) - Type guard for CSS RGBA objects
+- [isRgba255Tuple](./is-rgba-255-tuple) - Type guard for RGBA tuples
+- [isString](./is-string) - Type guard for strings

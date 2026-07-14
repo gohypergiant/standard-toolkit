@@ -1,0 +1,45 @@
+---
+title: "isNotEqual"
+description: Curried predicate that determines if a value is not strictly equal to a reference value
+source: packages/predicates/src/is-not-equal/index.ts
+source_sha: dc5cdee83db775ee88aa2e4cffa1bd0d39663cba
+doc_sha: 0c856f8a6ba209c0047a006e3d8b731dc5b62ef0
+deprecated: false
+updated: 2026-07-13
+---
+
+# isNotEqual
+
+Creates a predicate that determines if a value is **not** strictly equal to a reference value.
+
+## Reference
+
+```typescript
+function isNotEqual<T>(reference: T): (value: T) => boolean
+```
+
+## Examples
+
+```typescript
+import { isNotEqual } from '@accelint/predicates';
+
+const isNotZero = isNotEqual(0);
+isNotZero(5);  // true
+isNotZero(0);  // false
+
+// Removing null values
+const values = [1, null, 2, null, 3];
+const nonNull = values.filter(isNotEqual(null)); // [1, 2, 3]
+```
+
+> **Good to know:** This uses strict inequality (`!==`). For filtering arrays, this is more efficient than using `!isEqual(x)`.
+
+## Related
+
+- [isEqual](./is-equal) - Check if value is equal to reference
+- [isGreater](./is-greater) - Check if value is greater than threshold
+- [isGreaterEqual](./is-greater-equal) - Check if value is greater than or equal to threshold
+- [isLesser](./is-lesser) - Check if value is less than threshold
+- [isLesserEqual](./is-lesser-equal) - Check if value is less than or equal to threshold
+- [isIn](./is-in) - Check if value exists in an array
+- [isNotIn](./is-not-in) - Check if value doesn't exist in an array

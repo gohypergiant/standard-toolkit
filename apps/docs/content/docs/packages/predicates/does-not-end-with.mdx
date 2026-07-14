@@ -1,0 +1,64 @@
+---
+title: "doesNotEndWith"
+description: Curried predicate for testing if strings do not end with a specific suffix
+source: packages/predicates/src/does-not-end-with/index.ts
+source_sha: d87ca7a1207018b6543932bf06c7edcbb7998726
+doc_sha: 6d4c9f3e8b2a7d1f5c9e4b8a2d7f3e6c1b5a8d2f
+deprecated: false
+updated: 2026-07-13
+---
+
+# doesNotEndWith
+
+Creates a predicate function that determines if a string does **not** end with a specific suffix.
+
+## Usage
+
+```typescript
+import { doesNotEndWith } from '@accelint/predicates';
+
+const isNotBackup = doesNotEndWith('.bak');
+const files = ['data.json', 'data.json.bak', 'config.yaml', 'config.yaml.bak'];
+const active = files.filter(isNotBackup);
+// ['data.json', 'config.yaml']
+```
+
+## Reference
+
+```typescript
+function doesNotEndWith(suffix: string): (input: string) => boolean
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `suffix` | `string` | The substring to use as the suffix |
+
+### Returns
+
+Curried function that accepts a string and returns `true` if it does **not** end with the suffix.
+
+## Examples
+
+### Example: Excluding backup files
+
+```typescript
+import { doesNotEndWith } from '@accelint/predicates';
+
+const isNotBackup = doesNotEndWith('.bak');
+const files = ['data.json', 'data.json.bak', 'config.yaml', 'config.yaml.bak'];
+const active = files.filter(isNotBackup);
+// ['data.json', 'config.yaml']
+```
+
+> **Good to know:** Comparisons are case-sensitive. Use native String methods like `.toLowerCase()` before applying this predicate if case-insensitive matching is needed.
+
+## Related
+
+- [doesEndWith](./does-end-with) - Positive version of this function
+- [doesStartWith](./does-start-with) - Check if string starts with prefix
+- [doesNotStartWith](./does-not-start-with) - Check if string does not start with prefix
+- [isLike](../is-like/index.md) - Pattern matching with RegExp
+- [isNotLike](../is-not-like/index.md) - Negated pattern matching
+- [isString](../is-string/index.md) - Type guard for strings

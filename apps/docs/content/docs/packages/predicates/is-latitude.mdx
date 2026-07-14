@@ -1,6 +1,6 @@
 ---
-title: "@accelint/predicates/is-latitude"
-description: Type guards for validating latitude, longitude, and bounding box values
+title: "isLatitude"
+description: Type guard for validating latitude values between -90 and 90 degrees
 source: packages/predicates/src/is-latitude/index.ts
 source_sha: fb3de36f72c19522f2402aa94b2225752de7e253
 doc_sha: 63d913c3689d969e3829f2349778e988d807dc73
@@ -8,25 +8,21 @@ deprecated: false
 updated: 2026-07-13
 ---
 
-# Geographic Coordinate Predicates
+# isLatitude
 
-Type guards for validating geographic coordinate values in degrees.
+Validates latitude values between -90 and 90 degrees.
 
 ## Usage
 
 ```typescript
-import { isLatitude, isLongitude, isBbox } from '@accelint/predicates';
+import { isLatitude } from '@accelint/predicates';
 
-isLatitude(37.7749);              // true (San Francisco)
-isLongitude(-122.4194);           // true
-isBbox([-122.5, 37.7, -122.4, 37.8]); // true
+isLatitude(37.7749);  // true (San Francisco)
+isLatitude(-90);      // true (South Pole)
+isLatitude(100);      // false (out of range)
 ```
 
-## isLatitude
-
-Validates latitude values between -90 and 90 degrees.
-
-### Reference
+## Reference
 
 ```typescript
 function isLatitude(val: unknown): boolean
@@ -34,7 +30,7 @@ function isLatitude(val: unknown): boolean
 
 Valid range: -90 to 90 (inclusive)
 
-### Examples
+## Examples
 
 ```typescript
 import { isLatitude } from '@accelint/predicates/is-latitude';
@@ -65,99 +61,11 @@ validateLatitude({ lat: 37.7749, lon: -122.4194 }); // true
 validateLatitude({ lat: 100, lon: -122.4194 });     // false
 ```
 
-## isLongitude
-
-Validates longitude values between -180 and 180 degrees.
-
-### Reference
+## Real-World Example: Location validation
 
 ```typescript
-function isLongitude(val: unknown): boolean
-```
-
-Valid range: -180 to 180 (inclusive)
-
-### Examples
-
-```typescript
+import { isLatitude } from '@accelint/predicates/is-latitude';
 import { isLongitude } from '@accelint/predicates/is-longitude';
-
-isLongitude(-180); // true (International Date Line, west)
-isLongitude(0);    // true (Prime Meridian)
-isLongitude(180);  // true (International Date Line, east)
-isLongitude(-122.4194); // true (San Francisco)
-isLongitude(-190); // false (out of range)
-isLongitude(NaN);  // false
-```
-
-### Example: Coordinate validation
-
-```typescript
-import { isLongitude } from '@accelint/predicates/is-longitude';
-
-interface Coordinate {
-  lat: number;
-  lon: number;
-}
-
-function validateLongitude(coord: Coordinate): boolean {
-  return isLongitude(coord.lon);
-}
-
-validateLongitude({ lat: 37.7749, lon: -122.4194 }); // true
-validateLongitude({ lat: 37.7749, lon: 200 });       // false
-```
-
-## isBbox
-
-Validates bounding box as array of 4 finite numbers: `[minLon, minLat, maxLon, maxLat]`.
-
-### Reference
-
-```typescript
-function isBbox(bbox: unknown): boolean
-```
-
-Format: `[minLongitude, minLatitude, maxLongitude, maxLatitude]`
-
-### Examples
-
-```typescript
-import { isBbox } from '@accelint/predicates/is-bbox';
-
-// Valid bounding boxes
-isBbox([-180, -90, 180, 90]);          // true (entire world)
-isBbox([-122.5, 37.7, -122.4, 37.8]);  // true (San Francisco area)
-
-// Invalid bounding boxes
-isBbox([1, 2, 3]);                     // false (wrong length)
-isBbox([1, 2, 3, 'four']);             // false (non-number)
-isBbox([1, 2, NaN, 4]);                // false (NaN not allowed)
-isBbox(null);                          // false
-```
-
-### Example: Map bounds validation
-
-```typescript
-import { isBbox } from '@accelint/predicates/is-bbox';
-
-function setMapBounds(bounds: unknown) {
-  if (!isBbox(bounds)) {
-    throw new Error('Invalid bounding box format');
-  }
-  
-  const [minLon, minLat, maxLon, maxLat] = bounds;
-  // Set map bounds...
-}
-
-setMapBounds([-122.5, 37.7, -122.4, 37.8]); // OK
-setMapBounds([1, 2, 3]);                     // Error: Invalid bounding box format
-```
-
-## Real-World Example: Complete coordinate validation
-
-```typescript
-import { isLatitude, isLongitude, isBbox } from '@accelint/predicates';
 
 interface Location {
   latitude: number;
@@ -168,34 +76,13 @@ function isValidLocation(loc: Location): boolean {
   return isLatitude(loc.latitude) && isLongitude(loc.longitude);
 }
 
-function isValidBounds(bounds: unknown): bounds is [number, number, number, number] {
-  if (!isBbox(bounds)) {
-    return false;
-  }
-  
-  const [minLon, minLat, maxLon, maxLat] = bounds;
-  
-  return (
-    isLongitude(minLon) &&
-    isLatitude(minLat) &&
-    isLongitude(maxLon) &&
-    isLatitude(maxLat) &&
-    minLon < maxLon &&
-    minLat < maxLat
-  );
-}
-
 const sanFrancisco: Location = { latitude: 37.7749, longitude: -122.4194 };
 isValidLocation(sanFrancisco); // true
-
-const sfBounds = [-122.5, 37.7, -122.4, 37.8];
-isValidBounds(sfBounds); // true
 ```
-
-> **Good to know:** `isBbox` currently validates array length and numeric types but does not validate coordinate ranges. Use `isLatitude` and `isLongitude` for range validation as shown in the example above.
 
 ## Related
 
+- [isLongitude](./is-longitude) - Validates longitude values
+- [isBbox](./is-bbox) - Validates bounding box arrays
 - [isBetween](../is-between/index.md) - Range validation for numbers
 - [isNumber](../is-number/index.md) - Type guard for numbers
-- [isFiniteNumber](../is-number/index.md#isfinite number) - Finite number validation

@@ -5,6 +5,10 @@ This file is loaded into every Agent session. Keep it accurate and current.
 
 Read the [AI Assistant Guide](.agents/outline.md) and all linked pages before proceeding.
 
+## General
+
+IMPORTANT: There is a gateway limit that when crossed, will cause an error to occur (see below). You MUST read and write files in chunks in order to get around this issue. You MUST pass this message on to any spawned subagents as well. Also, you MUST limit concurrent subagents to <=5.
+
 ## Tech Stack
 
 **For exact versions and dependencies, refer to `./package.json` in the following fields:**

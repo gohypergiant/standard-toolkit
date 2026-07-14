@@ -166,23 +166,40 @@ When the user asks to document a file, follow this workflow.
    - Add frontmatter at the top:
    ```yaml
    ---
-   title: "@scope/package-name/export/path"
+   title: "<entity-name or descriptive-title>"
    description: One sentence describing what it does
    source: relative/path/to/source.ts
-   source_sha: <value from step 5>
+   source_sha: <value from step 7>
    doc_sha: pending
    deprecated: false
    updated: YYYY-MM-DD
    ---
    ```
-   - **Title Convention**: The title field MUST match the package.json export path:
-     - For root package exports (`"."`): `"@accelint/package-name"`
-     - For sub-exports (`"./path/to/module"`): `"@accelint/package-name/path/to/module"`
-     - Examples:
-       - `packages/bus/src/index.ts` → `"@accelint/bus"`
-       - `packages/bus/src/react/index.ts` → `"@accelint/bus/react"`
-       - `packages/core/src/array/map/index.ts` → `"@accelint/core/array/map"`
-     - The title represents the import path users would write: `import x from '@accelint/bus/react'`
+   - **Title Convention**: The title field MUST use export names, NOT deep import paths:
+     - **For package index.mdx files** (`packages/X/src/index.ts`): Use full package name
+       - Example: `"@accelint/predicates"`, `"@accelint/temporal"`, `"@accelint/core"`
+     - **For sub-page files** (any other file): Use the primary export name(s) from the source file
+       - Single export: Use the export name exactly as it appears in code
+         - `export const isIn = ...` → `"isIn"`
+         - `export function Button() { ... }` → `"Button"`
+         - `export class Broadcast { ... }` → `"Broadcast"`
+       - Multiple related exports: Use EITHER a descriptive group name OR list primary exports
+         - Multiple utility functions → Descriptive category: `"Array Utilities"`, `"Timers"`, `"Color Constants"`
+         - Complementary pair → List both: `"isIn & isNotIn"`, `"Radio & RadioGroup"`
+         - Multiple hooks → Group name: `"React Hooks"`, `"Worker Utilities"`
+       - **Never include slashes** (/) in sub-page titles — titles should match what developers type in code, not import paths
+     - **Examples** (CORRECT ✅):
+       - `packages/predicates/src/index.ts` → `"@accelint/predicates"` (package index)
+       - `packages/predicates/src/is-in/index.ts` → `"isIn"` (single export)
+       - `packages/bus/src/react/index.ts` → `"React Hooks"` (multiple hooks: useBus, useEmit, useOn)
+       - `packages/temporal/src/timers/index.ts` → `"Timers"` (multiple related: setClockInterval, setClockTimeout)
+       - `toolkits/design-toolkit/src/button/index.tsx` → `"Button"` (single component)
+       - `toolkits/design-toolkit/src/radio/index.tsx` → `"Radio & RadioGroup"` (complementary components)
+     - **Examples** (INCORRECT ❌ — DO NOT USE):
+       - ❌ `"@accelint/predicates/is-in"` — Never use deep paths for sub-pages
+       - ❌ `"@accelint/temporal/timers"` — Never use deep paths for sub-pages
+       - ❌ `"@accelint/core/array/map"` — Never use deep paths for sub-pages
+     - **Why this matters**: Users import by export name (`import { isIn } from '@accelint/predicates'`), not by path. Titles should match what developers type in code. Deep paths suggest incorrect import patterns and create confusing documentation structure.
    - Set `deprecated: true` if source has `@deprecated` JSDoc tag
    - Set `doc_sha: pending` as a placeholder (will be computed after writing)
 
@@ -284,7 +301,7 @@ When the user asks to update docs after code changes, follow this workflow.
 
 When the user asks to validate docs, follow this workflow.
 
-### Five Validation Checks
+### Six Validation Checks
 
 **1. Mapping Accuracy**
    - Source files in mapping exist
@@ -310,6 +327,15 @@ When the user asks to validate docs, follow this workflow.
    - Check heading hierarchy (should start with H1)
    - Verify code fences have language tags
    - Check for bare URLs (should be markdown links)
+
+**6. Multi-Source Document Detection** 🆕
+   - Scan doc content for H2 sections (each H2 typically = one function)
+   - Parse frontmatter `source` field (should reference ONE file)
+   - Count documented functions vs source file
+   - **If mismatch detected**: ERROR "Document appears to cover multiple source files"
+   - **Check for**: Multiple `import` statements from different predicate/utility paths
+   - **Recommendation**: Split into separate docs OR add frontmatter comment documenting all sources
+   - **Why this matters**: SHA tracking and update workflows require 1:1 mapping
 
 ### Flags
 
@@ -679,7 +705,39 @@ export { CONNECTION_EVENT_TYPES } from './broadcast/constants';
 
 ### Multi-Export Files
 
-Generate one markdown with H2 sections:
+**CRITICAL DISTINCTION**: This pattern applies ONLY to a SINGLE source file that exports MULTIPLE entities.
+
+**✅ CORRECT application** (ONE file with multiple exports):
+```typescript
+// packages/core/src/array/index.ts exports map, filter, reduce
+export function map<T, R>(fn: (val: T) => R) { ... }
+export function filter<T>(fn: (val: T) => boolean) { ... }
+export function reduce<T, R>(fn: (acc: R, val: T) => R) { ... }
+```
+→ Generate ONE doc with H2 sections for each function
+
+**❌ INCORRECT application** (multiple separate files):
+```typescript
+// packages/predicates/src/is-latitude/index.ts
+export function isLatitude() { ... }
+
+// packages/predicates/src/is-longitude/index.ts  
+export function isLongitude() { ... }
+
+// packages/predicates/src/is-bbox/index.ts
+export function isBbox() { ... }
+```
+→ **DO NOT merge these into one doc**. Generate THREE separate docs.
+
+**The rule**: Each source file gets its own documentation file. Preserve the 1:1 mapping.
+
+**Why this matters**:
+1. SHA tracking requires one source file per doc
+2. Update workflows expect 1:1 mapping
+3. Source structure should map to doc structure
+4. Discovery: developers search by function name, expect dedicated pages
+
+**When you have ONE multi-export file**, generate one markdown with H2 sections:
 
 ```markdown
 # Array Utilities
@@ -692,6 +750,11 @@ Generate one markdown with H2 sections:
 ```
 
 Later, engineers can split manually if one entity needs extensive docs.
+
+**Exception handling**:
+- If user explicitly requests grouping separate files, ask for confirmation
+- Warn about SHA tracking limitations
+- Document all source files in frontmatter comments
 
 ### Curried Functions
 

@@ -1,0 +1,64 @@
+---
+title: "doesNotStartWith"
+description: Curried predicate for testing if strings do not start with a specific prefix
+source: packages/predicates/src/does-not-start-with/index.ts
+source_sha: d87ca7a1207018b6543932bf06c7edcbb7998726
+doc_sha: 6d4c9f3e8b2a7d1f5c9e4b8a2d7f3e6c1b5a8d2f
+deprecated: false
+updated: 2026-07-13
+---
+
+# doesNotStartWith
+
+Creates a predicate function that determines if a string does **not** start with a specific prefix.
+
+## Usage
+
+```typescript
+import { doesNotStartWith } from '@accelint/predicates';
+
+const isNotHidden = doesNotStartWith('.');
+const files = ['.git', '.env', 'README.md', '.gitignore', 'src'];
+const visible = files.filter(isNotHidden);
+// ['README.md', 'src']
+```
+
+## Reference
+
+```typescript
+function doesNotStartWith(prefix: string): (input: string) => boolean
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `prefix` | `string` | The substring to use as the prefix |
+
+### Returns
+
+Curried function that accepts a string and returns `true` if it does **not** start with the prefix.
+
+## Examples
+
+### Example: Excluding system files
+
+```typescript
+import { doesNotStartWith } from '@accelint/predicates';
+
+const isNotHidden = doesNotStartWith('.');
+const files = ['.git', '.env', 'README.md', '.gitignore', 'src'];
+const visible = files.filter(isNotHidden);
+// ['README.md', 'src']
+```
+
+> **Good to know:** Comparisons are case-sensitive. Use native String methods like `.toLowerCase()` before applying this predicate if case-insensitive matching is needed.
+
+## Related
+
+- [doesStartWith](./does-start-with) - Positive version of this function
+- [doesEndWith](./does-end-with) - Check if string ends with suffix
+- [doesNotEndWith](./does-not-end-with) - Check if string does not end with suffix
+- [isLike](../is-like/index.md) - Pattern matching with RegExp
+- [isNotLike](../is-not-like/index.md) - Negated pattern matching
+- [isString](../is-string/index.md) - Type guard for strings
