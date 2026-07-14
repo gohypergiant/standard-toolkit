@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated": "2026-07-14T19:24:13.561331Z",
+  "generated": "2026-07-14T19:29:32.000Z",
   "entries": [
     {
       "source": "packages/bus/src/broadcast/index.ts",
@@ -1622,13 +1622,13 @@
     },
     {
       "source": "tooling/typescript-config/package.json",
-      "doc": "apps/docs/content/tooling/typescript-config/index.mdx",
+      "doc": "apps/docs/content/docs/tooling/typescript-config/index.mdx",
       "entities": [
         "@accelint/typescript-config"
       ],
       "source_sha": "bee19329f6b1797ca4eee05d5370e514c9aef13b",
-      "doc_sha": "cd2b24fada690e86d5a6f391fee20dd28fc4ce78",
-      "updated": "2026-07-13T14:15:28.619012Z"
+      "doc_sha": "57c016167acbd17022576236b3bc54f7de583aba",
+      "updated": "2026-07-14T19:29:32.000Z"
     },
     {
       "source": "tooling/vitest-config/dom.js",
@@ -1670,6 +1670,38 @@
       "source_sha": "d11bf0c9cd595573047ade6929a6c0028564db50",
       "doc_sha": "d7ed0a930d5d094287327879fa194e5187eb2646",
       "updated": "2026-07-14T19:16:28.575Z"
+    },
+    {
+      "source": "tooling/typescript-config/tsc",
+      "doc": "apps/docs/content/docs/tooling/typescript-config/tsc.mdx",
+      "entities": [
+        "tsc/dom/app",
+        "tsc/dom/library",
+        "tsc/dom/library-monorepo",
+        "tsc/no-dom/app",
+        "tsc/no-dom/library",
+        "tsc/no-dom/library-monorepo"
+      ],
+      "source_sha": "bee19329f6b1797ca4eee05d5370e514c9aef13b",
+      "doc_sha": "d73cc206dd8bd6a0a6725de5dde6bf38e2e2ed48",
+      "updated": "2026-07-14T19:29:32.000Z"
+    },
+    {
+      "source": "tooling/typescript-config/bundler",
+      "doc": "apps/docs/content/docs/tooling/typescript-config/bundler.mdx",
+      "entities": [
+        "bundler/dom",
+        "bundler/dom/app",
+        "bundler/dom/library",
+        "bundler/dom/library-monorepo",
+        "bundler/no-dom",
+        "bundler/no-dom/app",
+        "bundler/no-dom/library",
+        "bundler/no-dom/library-monorepo"
+      ],
+      "source_sha": "bee19329f6b1797ca4eee05d5370e514c9aef13b",
+      "doc_sha": "308b86fa61a0fcb894e86dcb4b86640582c71615",
+      "updated": "2026-07-14T19:29:32.000Z"
     }
   ]
 }

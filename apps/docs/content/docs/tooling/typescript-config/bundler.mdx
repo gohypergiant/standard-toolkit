@@ -1,0 +1,454 @@
+---
+title: "Bundler Configurations"
+description: TypeScript configurations for projects that use Vite, Webpack, esbuild, or other bundlers for compilation.
+source: tooling/typescript-config/bundler
+source_sha: bee19329f6b1797ca4eee05d5370e514c9aef13b
+doc_sha: 308b86fa61a0fcb894e86dcb4b86640582c71615
+deprecated: false
+updated: 2026-07-14
+---
+
+## Usage
+
+Use bundler configurations when your project:
+- Uses Vite, Webpack, esbuild, Rollup, or similar bundlers
+- Only needs TypeScript for type checking (bundler handles compilation)
+- Doesn't output JavaScript from `tsc`
+- Wants faster type checking (no emit)
+
+```json
+{
+  "extends": "@accelint/typescript-config/bundler/dom/app",
+  "compilerOptions": {
+    "jsx": "react-jsx"
+  },
+  "include": ["src"]
+}
+```
+
+## Available Configurations
+
+### DOM (Browser) Environments
+
+#### `bundler/dom` (alias: `bundler/dom/app`)
+
+For web applications using bundlers.
+
+```json
+{
+  "extends": "@accelint/typescript-config/bundler/dom"
+}
+```
+
+**Key settings:**
+- `module: "preserve"` - Preserves import/export syntax for bundler
+- `noEmit: true` - No JavaScript output (bundler handles this)
+- `lib: ["es2022", "dom", "dom.iterable"]` - Browser APIs available
+
+**Use for:** Vite apps, Webpack apps, React/Vue/Svelte projects
+
+> **Good to know:** `bundler/dom` and `bundler/dom/app` point to the same configuration file. Use whichever path is clearer in your project.
+
+#### `bundler/dom/library`
+
+For browser libraries compiled by bundlers.
+
+```json
+{
+  "extends": "@accelint/typescript-config/bundler/dom/library"
+}
+```
+
+**Key settings:**
+- Same as `bundler/dom` plus:
+- `declaration: true` - Generates `.d.ts` files (even with `noEmit`)
+- Type-only output for consumers
+
+**Use for:** React component libraries built with Vite, UI kits with Rollup
+
+#### `bundler/dom/library-monorepo`
+
+For browser libraries within a monorepo using bundlers.
+
+```json
+{
+  "extends": "@accelint/typescript-config/bundler/dom/library-monorepo"
+}
+```
+
+**Key settings:**
+- Same as `bundler/dom/library` plus:
+- `composite: true` - Enables project references
+- `incremental: true` - Faster rebuilds
+
+**Use for:** Design systems, component libraries in monorepos
+
+### No-DOM (Node.js) Environments
+
+#### `bundler/no-dom` (alias: `bundler/no-dom/app`)
+
+For Node.js applications using bundlers.
+
+```json
+{
+  "extends": "@accelint/typescript-config/bundler/no-dom"
+}
+```
+
+**Key settings:**
+- `module: "preserve"` - Preserves import/export syntax
+- `noEmit: true` - No JavaScript output
+- `lib: ["es2022"]` - No DOM types (Node.js only)
+
+**Use for:** Node.js apps bundled with esbuild, serverless functions
+
+> **Good to know:** `bundler/no-dom` and `bundler/no-dom/app` point to the same configuration file.
+
+#### `bundler/no-dom/library`
+
+For Node.js libraries compiled by bundlers.
+
+```json
+{
+  "extends": "@accelint/typescript-config/bundler/no-dom/library"
+}
+```
+
+**Key settings:**
+- Same as `bundler/no-dom` plus:
+- `declaration: true` - Generates `.d.ts` files
+
+**Use for:** Node.js packages built with bundlers
+
+#### `bundler/no-dom/library-monorepo`
+
+For Node.js libraries within a monorepo using bundlers.
+
+```json
+{
+  "extends": "@accelint/typescript-config/bundler/no-dom/library-monorepo"
+}
+```
+
+**Key settings:**
+- Same as `bundler/no-dom/library` plus:
+- `composite: true` - Enables project references
+- `incremental: true` - Faster rebuilds
+
+**Use for:** Backend monorepo packages, shared utilities built with bundlers
+
+## Key Compiler Options
+
+All bundler configurations include:
+
+```json
+{
+  "compilerOptions": {
+    "module": "preserve",
+    "noEmit": true
+  }
+}
+```
+
+| Option | Value | Reason |
+|--------|-------|--------|
+| `module` | `"preserve"` | Preserves ESM syntax for bundler to handle |
+| `noEmit` | `true` | No JS output - bundler compiles, tsc only type checks |
+
+> **Good to know:** `module: "preserve"` is a TypeScript 5.4+ option that preserves your exact import/export syntax, letting the bundler handle module transformation. This is faster than `tsc` emitting JavaScript.
+
+## Examples
+
+### Example: Vite + React application
+
+```json
+{
+  "extends": "@accelint/typescript-config/bundler/dom/app",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["src"]
+}
+```
+
+**package.json scripts:**
+```json
+{
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview"
+  }
+}
+```
+
+### Example: Next.js application
+
+```json
+{
+  "extends": "@accelint/typescript-config/bundler/dom/app",
+  "compilerOptions": {
+    "jsx": "preserve",
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
+}
+```
+
+### Example: Svelte + Vite application
+
+```json
+{
+  "extends": "@accelint/typescript-config/bundler/dom/app",
+  "compilerOptions": {
+    "types": ["vite/client"]
+  },
+  "include": ["src/**/*.ts", "src/**/*.svelte"],
+  "exclude": ["node_modules"]
+}
+```
+
+### Example: React component library (tsup)
+
+```json
+{
+  "extends": "@accelint/typescript-config/bundler/dom/library",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "outDir": "./dist",
+    "declarationDir": "./dist/types"
+  },
+  "include": ["src"]
+}
+```
+
+**tsup.config.ts:**
+```typescript
+import { defineConfig } from 'tsup';
+
+export default defineConfig({
+  entry: ['src/index.ts'],
+  format: ['esm', 'cjs'],
+  dts: false, // TypeScript handles .d.ts via declaration: true
+  splitting: false,
+  sourcemap: true,
+  clean: true,
+});
+```
+
+### Example: Node.js serverless function (esbuild)
+
+```json
+{
+  "extends": "@accelint/typescript-config/bundler/no-dom/app",
+  "compilerOptions": {
+    "types": ["node"]
+  },
+  "include": ["src"]
+}
+```
+
+**esbuild command:**
+```bash
+esbuild src/index.ts --bundle --platform=node --outfile=dist/index.js
+```
+
+### Example: Monorepo component library (Vite)
+
+```json
+{
+  "extends": "@accelint/typescript-config/bundler/dom/library-monorepo",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "composite": true,
+    "outDir": "./dist",
+    "declarationDir": "./dist/types"
+  },
+  "include": ["src"],
+  "references": [
+    { "path": "../design-tokens" },
+    { "path": "../utils" }
+  ]
+}
+```
+
+### Example: Webpack + TypeScript
+
+```json
+{
+  "extends": "@accelint/typescript-config/bundler/dom/app",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@components/*": ["src/components/*"],
+      "@utils/*": ["src/utils/*"]
+    }
+  },
+  "include": ["src"]
+}
+```
+
+**webpack.config.js:**
+```javascript
+module.exports = {
+  module: {
+    rules: [
+      {
+        test: /\.tsx?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/,
+      },
+    ],
+  },
+  resolve: {
+    extensions: ['.tsx', '.ts', '.js'],
+  },
+};
+```
+
+### Example: Astro project
+
+```json
+{
+  "extends": "@accelint/typescript-config/bundler/dom/app",
+  "compilerOptions": {
+    "jsx": "preserve",
+    "types": ["astro/client"]
+  },
+  "include": ["src/**/*"],
+  "exclude": ["dist", "node_modules"]
+}
+```
+
+## Common Overrides
+
+### Enable Type-Only Declarations
+
+For libraries that need `.d.ts` files but use a bundler:
+
+```json
+{
+  "extends": "@accelint/typescript-config/bundler/dom/library",
+  "compilerOptions": {
+    "declaration": true,
+    "declarationDir": "./dist/types",
+    "emitDeclarationOnly": true
+  }
+}
+```
+
+### Add Custom Path Aliases
+
+```json
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@components/*": ["./src/components/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@hooks/*": ["./src/hooks/*"]
+    }
+  }
+}
+```
+
+**Vite config** (must mirror paths):
+```typescript
+import { defineConfig } from 'vite';
+import path from 'path';
+
+export default defineConfig({
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+      '@components': path.resolve(__dirname, './src/components'),
+      '@utils': path.resolve(__dirname, './src/utils'),
+      '@hooks': path.resolve(__dirname, './src/hooks'),
+    },
+  },
+});
+```
+
+### Configure JSX
+
+For React 17+ (automatic runtime):
+```json
+{
+  "compilerOptions": {
+    "jsx": "react-jsx"
+  }
+}
+```
+
+For React <17 (classic runtime):
+```json
+{
+  "compilerOptions": {
+    "jsx": "react"
+  }
+}
+```
+
+For Preact:
+```json
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact"
+  }
+}
+```
+
+### Add Bundler-Specific Types
+
+For Vite:
+```json
+{
+  "compilerOptions": {
+    "types": ["vite/client"]
+  }
+}
+```
+
+For Webpack:
+```json
+{
+  "compilerOptions": {
+    "types": ["webpack-env"]
+  }
+}
+```
+
+## Bundler vs TSC: When to Use Each
+
+| Scenario | Use Bundler Config | Use TSC Config |
+|----------|-------------------|----------------|
+| Vite/Webpack project | ✅ Yes | ❌ No |
+| Need `.d.ts` files for npm package | ⚠️ Yes (library variant) | ✅ Yes (preferred) |
+| Fast type checking only | ✅ Yes | ❌ No |
+| Compile to multiple module formats | ❌ No | ✅ Yes |
+| Next.js / Astro / SvelteKit | ✅ Yes | ❌ No |
+| Pure Node.js CLI (no bundler) | ❌ No | ✅ Yes |
+| Monorepo with incremental builds | ✅ Either (use library-monorepo) | ✅ Either |
+
+> **Good to know:** Bundler configs are faster for type checking because `noEmit: true` skips JavaScript generation. However, TSC configs give you more control over output formats and declaration files.
+
+## Related
+
+- [TSC Configurations](./tsc.mdx) - For projects using TypeScript Compiler directly
+- [Overview](./) - Decision guide and core options
+- [Vite Configuration](https://vitejs.dev/config/) - Vite official docs
+- [Webpack TypeScript Guide](https://webpack.js.org/guides/typescript/) - Webpack integration

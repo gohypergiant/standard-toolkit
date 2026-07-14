@@ -1,0 +1,8 @@
+{
+  "title": "TypeScript Config",
+  "pages": [
+    "index",
+    "tsc",
+    "bundler"
+  ]
+}
