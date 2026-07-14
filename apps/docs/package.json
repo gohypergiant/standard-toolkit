@@ -1,47 +1,33 @@
 {
   "name": "@apps/docs",
-  "version": "0.0.0",
-  "dependencies": {
-    "@accelint/design-foundation": "workspace:*",
-    "@accelint/design-toolkit": "workspace:*",
-    "@accelint/icons": "workspace:*",
-    "@accelint/postcss-tailwind-css-modules": "workspace:*",
-    "@internationalized/date": "~3.12.1",
-    "@radix-ui/react-avatar": "^1.1.10",
-    "@react-aria/interactions": "^3.25.5",
-    "@tailwindcss/postcss": "^4.1.17",
-    "@types/mdx": "^2.0.13",
-    "client-only": "^0.0.1",
-    "clsx": "^2.1.1",
-    "fumadocs-core": "^16.11.4",
-    "fumadocs-mdx": "^15.1.1",
-    "fumadocs-ui": "^16.11.4",
-    "next": "^16.2.10",
-    "postcss": "^8.5.6",
-    "react": "^19",
-    "react-aria": "~3.48.0",
-    "react-aria-components": "~1.17.0",
-    "react-dom": "^19",
-    "react-stately": "~3.46.0",
-    "server-only": "^0.0.1",
-    "tailwindcss": "^4.3.0"
-  },
-  "devDependencies": {
-    "@accelint/biome-config": "workspace:*",
-    "@accelint/typescript-config": "workspace:*",
-    "@react-types/shared": "~3.34.0",
-    "@types/node": "^22",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "babel-plugin-react-compiler": "^1.0.0",
-    "typescript": "^5.9.3"
-  },
+  "version": "0.0.5",
   "private": true,
   "scripts": {
-    "build": "NODE_ENV=production next build",
-    "dev": "NODE_ENV=development next dev",
-    "license": "pnpm zx ../../scripts/license.mjs",
-    "start": "NODE_ENV=production next start"
+    "build": "next build",
+    "dev": "next dev",
+    "start": "next start",
+    "types:check": "fumadocs-mdx && next typegen && tsc --noEmit",
+    "postinstall": "fumadocs-mdx"
   },
-  "type": "module"
+  "dependencies": {
+    "cnfast": "^0.0.8",
+    "fumadocs-core": "16.11.4",
+    "fumadocs-mdx": "15.1.1",
+    "fumadocs-ui": "npm:@fumadocs/base-ui@16.11.4",
+    "lucide-react": "^1.24.0",
+    "next": "16.2.10",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.2",
+    "@types/mdx": "^2.0.14",
+    "@types/node": "^26.1.1",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "babel-plugin-react-compiler": "^1.0.0",
+    "postcss": "^8.5.17",
+    "tailwindcss": "^4.3.2",
+    "typescript": "^6.0.3"
+  }
 }
