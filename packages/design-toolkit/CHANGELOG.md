@@ -1,5 +1,15 @@
 # @accelint/design-toolkit
 
+## 9.12.0
+### Minor Changes
+
+- 00ce792: Adds new status options to StatusIndicator component: unknown and pending. Also adds a convenience option for adding a label.
+
+### Patch Changes
+
+- 7af5e73: Remove hover state from disabled outline button
+- b6b1064: changes SelectField component to be consistent height with other inputs
+
 ## 9.11.3
 ### Patch Changes
 

@@ -440,7 +440,10 @@ export type {
   NoticeProps,
   NoticeQueueEvent,
 } from './components/notice/types';
-export { matchesMetadata } from './components/notice/utils';
+export {
+  matchesDequeueFilter,
+  matchesMetadata,
+} from './components/notice/utils';
 export { OptionsContext } from './components/options/context';
 export { Options } from './components/options';
 export { OptionsItemContent } from './components/options/item-content';
