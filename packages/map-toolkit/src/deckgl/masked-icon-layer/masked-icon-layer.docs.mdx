@@ -6,7 +6,7 @@ import * as MaskedIconLayerStories from './masked-icon-layer.stories';
 
 # Masked Icon Layer
 
-An `IconLayer` that recolors each icon's "maskable" region in real time without needing a separate icon atlas per color. Pixels in the icon texture matching `matchColor` (default pink `#FF69B4`) are replaced with a per-instance color; every other pixel passes through unchanged, so an icon without a maskable region renders exactly like a plain `IconLayer`.
+An `IconLayer` that recolors each icon's "maskable" region in real time without needing a separate icon atlas per color. Pixels in the icon texture matching `matchColor` (default pink `#FF69B4`) are replaced with a per-instance color, and pixels near `matchColor` blend toward `ignoreColor`; every other pixel passes through unchanged, so an icon without a maskable region renders exactly like a plain `IconLayer`.
 
 ## Dependencies
 
@@ -14,12 +14,13 @@ An `IconLayer` that recolors each icon's "maskable" region in real time without 
 |---------|------|
 | `@deck.gl/core` | deck.gl layer/accessor system |
 | `@deck.gl/layers` | `IconLayer` base class |
-| `@luma.gl/shadertools` | `maskedIcon` uniform shader module |
+| `@deck.gl/extensions` | `CoffinCornerExtension` (selection/hover brackets) |
+| `@luma.gl/shadertools` | GLSL shader modules for color replacement |
 
 **Installation:**
 
 ```bash
-pnpm add @accelint/map-toolkit @deck.gl/core @deck.gl/layers
+pnpm add @accelint/map-toolkit @deck.gl/core @deck.gl/layers @deck.gl/extensions @luma.gl/shadertools
 ```
 
 ## Quick Start

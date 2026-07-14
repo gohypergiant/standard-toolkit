@@ -61,25 +61,38 @@ Core principles:
 Run these in order after **every** change. Do not declare a task complete until all pass.
 
 ```bash
-pnpm run build    # Fix type errors first; confirm the build succeeds
-pnpm run test     # Fix failing tests
-pnpm run lint     # Fix lint errors
-pnpm run format   # Fix formatting errors
+pnpm run build                           # Bundle (tsdown) — does NOT typecheck
+pnpm tsc --noEmit -p tsconfig.dist.json  # Authoritative typecheck (ships)
+pnpm run test                            # Fix failing tests
+pnpm run lint                            # Fix lint errors
+pnpm run format                          # Fix formatting errors
 ```
 
-**Type checking — don't bypass `pnpm run build`.** `packages/map-toolkit`
-and `packages/design-toolkit` use solution-style `tsconfig.json` files
-(`files: []` + project references). Running `tsc --noEmit -p tsconfig.json`
-against them silently does nothing and reports clean even when real errors
-exist. If you need direct `tsc` there, point at the leaf config:
+**Type checking — `pnpm run build` does NOT typecheck.** In `packages/map-toolkit`
+and `packages/design-toolkit`, `pnpm run build` runs tsdown (an esbuild-based
+bundler) that strips types and exits `0` even when real type errors exist — a
+green build is not a green typecheck. These packages also use solution-style
+`tsconfig.json` files (`files: []` + project references), so running
+`tsc --noEmit -p tsconfig.json` against the root silently does nothing and
+reports clean even when real errors exist. The authoritative typecheck is the
+leaf config:
 
 ```bash
-pnpm tsc --noEmit -p tsconfig.dist.json    # Source code only
+pnpm tsc --noEmit -p tsconfig.dist.json    # Source that ships (the gate that matters)
 pnpm tsc --noEmit -p tsconfig.dev.json     # Tests + storybook
 ```
 
-Other packages have a single `tsconfig.json` and `pnpm tsc --noEmit` works
-as expected. Either way, `pnpm run build` is the authoritative type-check.
+Other packages have a single `tsconfig.json` and `pnpm tsc --noEmit` works as
+expected. For map-toolkit/design-toolkit, the leaf-config `tsc` is the
+authoritative type gate — not `pnpm run build`.
+
+**Test-file type errors are low-priority.** The gate that matters is
+`tsconfig.dist.json` (source that ships). Type mismatches under
+`tsconfig.dev.json` — especially in `*.test.ts(x)` — often come from awkward
+third-party generics (e.g. deck.gl accessors) that are painful to satisfy while
+the test passes fine at runtime and never ships. Don't block completion or
+churn the tests to silence them; fix a test type error when it's your own
+regression or a quick win, otherwise note it and move on.
 
 ### Pre-Commit
 

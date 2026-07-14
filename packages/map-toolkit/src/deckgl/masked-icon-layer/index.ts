@@ -22,6 +22,8 @@ import type { Accessor, Color, DefaultProps } from '@deck.gl/core';
 /**
  * Props for {@link MaskedIconLayer}, extending {@link IconLayerProps} with the
  * color-masking accessors and uniforms.
+ *
+ * @template DataT - The per-datum record type accessors receive.
  */
 export type MaskedIconLayerProps<DataT = unknown> = IconLayerProps<DataT> & {
   /**
@@ -77,19 +79,20 @@ const defaultProps: DefaultProps<MaskedIconLayerProps> = {
   getClicked: { type: 'accessor', value: false },
 };
 
-/** Ensure a color tuple has an alpha channel. */
-function addAlpha(color: Color): Color {
-  if (color.length === 4) {
-    return color;
-  }
-
-  const [r, g, b] = color;
-  return [r ?? 0, g ?? 0, b ?? 0, 255];
-}
-
-/** Normalize a color tuple's channels from 0–255 to 0–1 for the GPU. */
-function normalizeColor(color: Color): number[] {
-  return addAlpha(color).map((channel) => channel / 255);
+/**
+ * Scale a color tuple's channels from 0–255 to 0–1 for the GPU, defaulting a
+ * missing alpha channel to fully opaque.
+ *
+ * @param color - RGB or RGBA tuple in 0–255.
+ * @returns The channels as an RGBA tuple scaled to 0–1.
+ */
+function toGlColor(color: Color): number[] {
+  return [
+    (color[0] ?? 0) / 255,
+    (color[1] ?? 0) / 255,
+    (color[2] ?? 0) / 255,
+    (color[3] ?? 255) / 255,
+  ];
 }
 
 /**
@@ -106,6 +109,8 @@ function normalizeColor(color: Color): number[] {
  * To draw selection/hover brackets over the recolored icon, pair this layer with
  * `CoffinCornerExtension` — on a masked-icon host it automatically composites its
  * brackets on top of the masked color rather than the raw match color.
+ *
+ * @template DataT - The per-datum record type; defaults to unknown.
  *
  * @example
  * ```tsx
@@ -131,6 +136,20 @@ export class MaskedIconLayer<DataT = unknown> extends IconLayer<
 > {
   static override defaultProps = defaultProps;
   static override layerName = 'MaskedIconLayer';
+
+  /**
+   * Cached normalized uniform, keyed on the raw color-prop references it was
+   * derived from so `draw()` can skip re-normalizing unchanged colors.
+   */
+  private maskedIconUniforms?: {
+    sources: {
+      matchColor: Color;
+      ignoreColor: Color;
+      hoverColor: Color;
+      clickColor: Color;
+    };
+    uniforms: MaskedIconShaderProps;
+  };
 
   override initializeState() {
     super.initializeState();
@@ -169,19 +188,48 @@ export class MaskedIconLayer<DataT = unknown> extends IconLayer<
     };
   }
 
-  override draw(opts: Record<string, unknown>) {
+  override draw(opts: { uniforms: Record<string, unknown> }) {
+    this.setShaderModuleProps({ maskedIcon: this.getMaskedIconUniforms() });
+
+    super.draw(opts);
+  }
+
+  /**
+   * The normalized `maskedIcon` uniform, recomputed only when a color prop
+   * changes. `draw()` runs every frame, so normalizing four static colors and
+   * allocating a fresh uniform object each call is pure per-frame waste — cache
+   * it against the raw prop references and rebuild only on a mismatch.
+   *
+   * @returns The cached, normalized `maskedIcon` uniform props.
+   */
+  private getMaskedIconUniforms(): MaskedIconShaderProps {
     const { matchColor, ignoreColor, hoverColor, clickColor } = this
       .props as Required<MaskedIconLayerProps<DataT>>;
 
-    const maskedIcon: MaskedIconShaderProps = {
-      matchColor: normalizeColor(matchColor),
-      ignoreColor: normalizeColor(ignoreColor),
-      hoverColor: normalizeColor(hoverColor),
-      clickColor: normalizeColor(clickColor),
+    const cache = this.maskedIconUniforms;
+
+    if (
+      cache &&
+      cache.sources.matchColor === matchColor &&
+      cache.sources.ignoreColor === ignoreColor &&
+      cache.sources.hoverColor === hoverColor &&
+      cache.sources.clickColor === clickColor
+    ) {
+      return cache.uniforms;
+    }
+
+    const fresh = {
+      sources: { matchColor, ignoreColor, hoverColor, clickColor },
+      uniforms: {
+        matchColor: toGlColor(matchColor),
+        ignoreColor: toGlColor(ignoreColor),
+        hoverColor: toGlColor(hoverColor),
+        clickColor: toGlColor(clickColor),
+      },
     };
 
-    this.setShaderModuleProps({ maskedIcon });
+    this.maskedIconUniforms = fresh;
 
-    super.draw(opts);
+    return fresh.uniforms;
   }
 }

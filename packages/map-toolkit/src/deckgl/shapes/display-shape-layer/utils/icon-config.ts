@@ -15,9 +15,8 @@
 import { MaskedIconLayer } from '../../../masked-icon-layer';
 import { DEFAULT_COLORS } from '../../shared/constants';
 import { getFillColor, getLineColor } from '../../shared/utils/style-utils';
-import type { Rgba255Tuple } from '@accelint/predicates';
-import { COFFIN_CORNER_EXTENSION, MAP_INTERACTION } from '../constants';
-import type { Shape, ShapeId } from '../../shared/types';
+import { MAP_INTERACTION } from '../constants';
+import type { Shape } from '../../shared/types';
 
 /** Icon mapping entry describing position and dimensions within an atlas. */
 type IconMappingEntry = {
@@ -150,18 +149,6 @@ export function getIconUpdateTriggers(
   };
 }
 
-/** Parameters needed to wire selection/hover onto the masked icon sublayer. */
-type MaskedIconSelectionConfig = {
-  /** Currently selected shape id, if any. */
-  selectedShapeId: ShapeId | undefined;
-  /** Currently hovered point entity id, if any. */
-  hoveredEntityId: ShapeId | undefined;
-  /** Coffin-corner bracket color for the selected shape. */
-  coffinCornerColor: Rgba255Tuple;
-  /** Features array, for the fill-color update trigger. */
-  features: Shape['feature'][];
-};
-
 /**
  * Build the `_subLayerProps['points-icon']` override that swaps the GeoJsonLayer's
  * icon sublayer for a {@link MaskedIconLayer}, so point icons recolor their
@@ -171,22 +158,17 @@ type MaskedIconSelectionConfig = {
  * tint) so icons WITHOUT a maskable region render exactly as before — the
  * masking only affects pixels matching the layer's `matchColor`.
  *
- * Selection/hover is conveyed purely by the {@link CoffinCornerExtension}
- * brackets (which auto-composite over the recolored icon for a MaskedIconLayer
- * host), not by recoloring the icon body. Because this override replaces the
- * propagated `extensions` for the icon sublayer, the coffin-corner selection
- * props (`selectedEntityIds`/`hoveredEntityIds`/`getEntityId`/
- * `selectedCoffinCornerColor`) are re-set here so they still reach the sublayer.
+ * Only the sublayer `type` and its fill accessors are overridden here; the
+ * `CoffinCornerExtension` and its selection/hover props keep flowing from the
+ * parent GeoJsonLayer's propagated `extensions`, so selection brackets need no
+ * re-wiring on the swapped-in sublayer.
  *
- * @param config - selected/hovered ids, coffin color, and features for triggers
+ * @param features - Features array, for the fill-color update triggers.
  * @returns props object for `_subLayerProps['points-icon']`
  */
-export function getMaskedIconSubLayerProps({
-  selectedShapeId,
-  hoveredEntityId,
-  coffinCornerColor,
-  features,
-}: MaskedIconSelectionConfig): Record<string, unknown> {
+export function getMaskedIconSubLayerProps(
+  features: Shape['feature'][],
+): Record<string, unknown> {
   // deck.gl invokes these on the icon-point sublayer's data, which is not always
   // the wrapped source feature — guard `properties` access (mirroring
   // getIconLayerProps) so a bare geometry object doesn't throw.
@@ -198,14 +180,6 @@ export function getMaskedIconSubLayerProps({
     // Preserve the whole-glyph tint for icons with no maskable region.
     getColor: (feature: Shape['feature']) =>
       feature?.properties ? getLineColor(feature) : DEFAULT_COLORS.line,
-    // Selection/hover comes from the coffin-corner brackets, re-set here because
-    // overriding `extensions` drops the parent-propagated coffin-corner props.
-    extensions: [COFFIN_CORNER_EXTENSION],
-    selectedEntityIds: selectedShapeId ? new Set([selectedShapeId]) : undefined,
-    hoveredEntityIds: hoveredEntityId ? new Set([hoveredEntityId]) : undefined,
-    getEntityId: (feature: Shape['feature']) =>
-      feature?.properties?.shapeId as ShapeId,
-    selectedCoffinCornerColor: coffinCornerColor,
     updateTriggers: {
       getFillColor: [features],
       getColor: [features],

@@ -429,13 +429,14 @@ const MASKED_ICON_FS_MAIN_START = /* glsl */ `\
   }
 `;
 
-/** IconLayer shader config variant for a MaskedIconLayer host. */
+/**
+ * IconLayer shader config variant for a MaskedIconLayer host — identical to
+ * {@link ICON_SHADERS} but for the masked `fs:#main-start` injection.
+ */
 const MASKED_ICON_SHADERS = {
-  modules: [coffinCornerModule],
+  ...ICON_SHADERS,
   inject: {
-    'vs:#decl': VS_DECL,
-    'vs:#main-end': VS_MAIN_END,
-    'fs:#decl': FS_DECL,
+    ...ICON_SHADERS.inject,
     'fs:#main-start': MASKED_ICON_FS_MAIN_START,
   },
 };

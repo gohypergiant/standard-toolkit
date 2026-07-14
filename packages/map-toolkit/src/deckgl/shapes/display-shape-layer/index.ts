@@ -686,20 +686,14 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
 
       // Swap the icon point sublayer for a MaskedIconLayer so point icons recolor
       // their maskable region in real time from the shape's fillColor. The
-      // sublayer re-attaches the CoffinCornerExtension (which auto-composites its
-      // brackets over the recolored icon for a masked-icon host) plus the
-      // coffin-corner selection props, since overriding `extensions` drops the
-      // parent-propagated ones.
+      // CoffinCornerExtension and its selection props keep propagating from the
+      // parent GeoJsonLayer's `extensions`, so the swap only overrides the
+      // sublayer type and fill accessors.
       ...(hasIcons
         ? {
             // biome-ignore lint/style/useNamingConvention: deck.gl's sublayer-override prop.
             _subLayerProps: {
-              'points-icon': getMaskedIconSubLayerProps({
-                selectedShapeId,
-                hoveredEntityId,
-                coffinCornerColor: this.coffinCornerColor,
-                features,
-              }),
+              'points-icon': getMaskedIconSubLayerProps(features),
             },
           }
         : {}),

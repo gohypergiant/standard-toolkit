@@ -20,11 +20,11 @@ import iconMapping from '../shapes/__fixtures__/atlas.json';
 import iconAtlas from '../shapes/__fixtures__/atlas.png';
 import type { ColorPickerProps } from '@accelint/design-toolkit/components/color-picker/types';
 import './fiber';
+import { Divider } from '@accelint/design-toolkit';
 import type { Rgba255Tuple } from '@accelint/predicates';
 import type { PickingInfo } from '@deck.gl/core';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { EntityId } from '../extensions/coffin-corner';
-import { Divider } from '@accelint/design-toolkit';
 
 /** The react-aria Color the swatch picker hands to `onChange`. */
 type PickerColor = Parameters<NonNullable<ColorPickerProps['onChange']>>[0];
@@ -179,7 +179,6 @@ function MaskedIconDemo() {
               : `Icon fill — marker ${selectedId}`
           }
           isRequired
-          isDisabled={selectedId === null}
           value={selectedFill}
           items={FILL_SWATCHES}
           onChange={(color) => {
