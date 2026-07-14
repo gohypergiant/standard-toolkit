@@ -33,6 +33,7 @@ Generate and maintain comprehensive markdown API documentation for TypeScript/Re
 - [SHA Tracking System](#sha-tracking-system)
 - [Writing Style Rules](#writing-style-rules)
 - [Internal Export Handling](#internal-export-handling)
+- [Fumadocs Folder Structure Rules](#fumadocs-folder-structure-rules)
 
 **Advanced Topics:**
 - CI/CD integration → [ci-cd.md](references/ci-cd.md)
@@ -198,8 +199,18 @@ When the user asks to document a file, follow this workflow.
      - `packages/logger/src/index.ts` → `apps/docs/content/packages/logger/index.mdx`
      - `packages/logger/src/plugins/callsite.ts` → `apps/docs/content/packages/logger/plugins/callsite.mdx`
      - `toolkits/design-toolkit/src/Button.tsx` → `apps/docs/content/toolkits/design-toolkit/Button.mdx`
+   - **IMPORTANT: Fumadocs Folder Conventions**
+     - Fumadocs treats folders as navigation dropdowns
+     - **ONLY create folders when there are MULTIPLE child pages** (2+ .mdx files)
+     - **For single pages, use flat .mdx files** (NOT folder/index.mdx)
+     - ❌ **Bad**: `packages/bus/broadcast/index.mdx` (creates empty dropdown)
+     - ✅ **Good**: `packages/bus/broadcast.mdx` (creates direct page link)
+     - Exception: Packages with sub-modules (like `core/array/`, `core/logical/`) should use folders when they have an overview page PLUS multiple child pages
+     - Before creating a folder, count documentation pages that will be generated:
+       - If count === 1: create flat .mdx file at parent level
+       - If count >= 2: create folder with index.mdx overview + child pages
    - Create directories if they don't exist (use mkdir -p)
-   - Single export: Write to computed path
+   - Single export: Write to computed path following fumadocs conventions
    - Multi-export: Write single file with H2 sections per entity
    - **IMMEDIATELY after writing**, compute `doc_sha`:
      ```bash
@@ -454,6 +465,133 @@ Types and interfaces are NOT documented as standalone entities. Rationale:
 - LSP provides inline type information
 - TypeScript definition files already document types
 - Reduces scope, keeps skill focused on executable APIs
+
+---
+
+## Fumadocs Folder Structure Rules
+
+**Critical Rule**: Only create folders when there are multiple child pages. Fumadocs treats folders as navigation dropdowns.
+
+### The Problem
+
+Fumadocs automatically converts folder structures into navigation:
+- **Folder with multiple files** → Creates dropdown menu with child pages (desired)
+- **Folder with single index.mdx** → Creates empty dropdown with just the folder page (undesired)
+- **Flat .mdx file** → Creates direct page link (desired for single pages)
+
+### Decision Rules
+
+**Before generating documentation for a package/module:**
+
+1. **Count how many documentation pages will be generated**
+   - Count exported entities that will become pages
+   - Don't count the package overview (index.mdx)
+   
+2. **Apply the folder rule:**
+   - **If 0-1 child pages**: Use flat file structure
+   - **If 2+ child pages**: Use folder structure with index.mdx overview
+
+### Examples
+
+✅ **Good: Flat structure for single pages**
+```
+packages/bus/
+├── index.mdx          # Package overview
+├── broadcast.mdx      # Single export - flat file
+└── react.mdx          # Single export - flat file
+```
+
+❌ **Bad: Empty dropdowns**
+```
+packages/bus/
+├── index.mdx
+├── broadcast/
+│   └── index.mdx      # Only file - creates empty "broadcast" dropdown
+└── react/
+    └── index.mdx      # Only file - creates empty "react" dropdown
+```
+
+✅ **Good: Folder with multiple children**
+```
+packages/core/array/
+├── index.mdx          # Overview of array utilities
+├── map.mdx            # Child page 1
+├── filter.mdx         # Child page 2
+├── reduce.mdx         # Child page 3
+└── find.mdx           # Child page 4
+```
+This creates a useful "array" dropdown with 5 pages total.
+
+✅ **Good: Single-page package**
+```
+packages/
+└── icons.mdx          # NOT icons/index.mdx
+```
+
+### Source-to-Doc Path Mapping
+
+**Rule**: Strip `/src/` from source path, count child pages, then apply folder rule.
+
+**Examples:**
+
+1. **Single export package** (`@accelint/icons`)
+   - Source: `packages/icons/src/index.ts` (only exports Icon component)
+   - Doc path: `packages/icons.mdx` (flat file, no folder)
+   
+2. **Package with multiple sibling exports** (`@accelint/bus`)
+   - Source: `packages/bus/src/index.ts` (exports Broadcast)
+   - Source: `packages/bus/src/react/index.ts` (exports useBroadcast)
+   - Doc paths:
+     - `packages/bus/index.mdx` (overview)
+     - `packages/bus/broadcast.mdx` (flat file)
+     - `packages/bus/react.mdx` (flat file)
+   - **NOT** `packages/bus/broadcast/index.mdx`
+
+3. **Package with sub-module having multiple exports** (`@accelint/core/array`)
+   - Source: `packages/core/src/array/map.ts`
+   - Source: `packages/core/src/array/filter.ts`
+   - Source: `packages/core/src/array/reduce.ts`
+   - Doc paths:
+     - `packages/core/index.mdx` (core package overview)
+     - `packages/core/array/index.mdx` (array sub-module overview)
+     - `packages/core/array/map.mdx` (child page)
+     - `packages/core/array/filter.mdx` (child page)
+     - `packages/core/array/reduce.mdx` (child page)
+   - This creates a valid dropdown because array/ has 3+ child pages
+
+4. **Package with nested single export** (`@accelint/map-toolkit/deckgl`)
+   - Source: `toolkits/map-toolkit/src/deckgl/base-map.tsx` (only file in deckgl/)
+   - Doc path: `toolkits/map-toolkit/deckgl/base-map.mdx` (flat file)
+   - **NOT** `toolkits/map-toolkit/deckgl/base-map/index.mdx`
+
+### Implementation Checklist
+
+When generating docs:
+
+- [ ] Count exports before creating folder structure
+- [ ] If package has 1 export total → flat file at package level
+- [ ] If sub-module has 1 export → flat file at sub-module level  
+- [ ] If sub-module has 2+ exports → folder with index + children
+- [ ] Never create folder/index.mdx for single pages
+- [ ] Apply rules recursively at every nesting level
+
+### Verification
+
+After generation, check that no empty dropdowns exist:
+
+```bash
+find apps/docs/content/docs/{tooling,packages,toolkits} -type d -exec sh -c '
+  count=$(find "$1" -maxdepth 1 -name "*.mdx" | wc -l)
+  if [ "$count" -eq 1 ]; then
+    index="$1/index.mdx"
+    if [ -f "$index" ]; then
+      echo "ERROR: Single-file folder: $1"
+    fi
+  fi
+' sh {} \;
+```
+
+Should return no output if structure is correct.
 
 ---
 
