@@ -1,0 +1,220 @@
+---
+title: "@accelint/smeegl"
+description: CLI tool to create spritesheets and React Components from SVG files
+source: tooling/smeegl/package.json
+source_sha: 42f97c48a3f97aba9cfd8b414104c6e13cc38d9c
+doc_sha: 2bee37ab365619ca1fd022d4363e5b1c1c1a6aec
+deprecated: false
+updated: 2026-07-14
+---
+
+## Installation
+
+### Prerequisites
+
+The [spreet](https://github.com/flother/spreet) utility is required. Install via:
+
+```bash
+# Homebrew
+brew install flother/taps/spreet
+
+# Cargo
+cargo install spreet
+```
+
+For other installation methods, see the [official instructions](https://github.com/flother/spreet?tab=readme-ov-file#installation).
+
+### Install smeegl
+
+```bash
+# Global installation
+npm install -g @accelint/smeegl
+
+# Local installation
+pnpm install @accelint/smeegl
+```
+
+## Usage
+
+```bash
+# Generate spritesheet from directory
+smeegl --in ~/icons --out ~/atlas --target SPRITESHEET
+
+# Generate React components from directory
+smeegl --in ~/icons --out ~/components --target REACT
+
+# Use glob pattern (no ~/ support)
+smeegl --glob "/Users/me/icons/**/*.svg" --out ~/atlas --target SPRITESHEET
+```
+
+### CLI Options
+
+| Option | Description | Choices | Default |
+|--------|-------------|---------|---------|
+| `--target` | Output type | `SPRITESHEET`, `REACT` | `SPRITESHEET` |
+| `--in` | Input directory path | | |
+| `--out` | Output directory path | | `./atlas` |
+| `--glob` | SVG glob pattern | | |
+| `--crc` | Convert sprite names to CRC32 | `DEC`, `HEX` | |
+| `--spreet` | Path to spreet binary | | `spreet` |
+
+## Output Formats
+
+### Spritesheet Output
+
+Generates three files:
+
+**1. atlas.png** - Sprite atlas texture
+
+**2. atlas.json** - Sprite index with coordinates
+
+```json
+{
+  "arrow": {"height": 48, "pixelRatio": 2, "width": 48, "x": 0, "y": 0},
+  "arrow-down": {"height": 48, "pixelRatio": 2, "width": 48, "x": 0, "y": 48}
+}
+```
+
+**3. atlas.ts** - TypeScript constants
+
+```typescript
+export const ARROW = 'arrow'
+export const ARROW_DOWN = 'arrow-down'
+```
+
+### React Component Output
+
+Generates a folder of React SVG components with TypeScript types:
+
+```tsx
+// arrow.tsx
+export const SvgArrow = ({
+  title,
+  titleId,
+  ...props
+}: SVGProps<SVGSVGElement> & Props) => {
+  const { fill } = props;
+  const fillColor = fill ?? '#FF69B4'
+  const hasTitle = typeof title === 'string' && Boolean(title.trim());
+
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24">
+      {hasTitle && <title id={titleId}>{title}</title>}
+      <path d="..." fill={fillColor} />
+    </svg>
+  )
+};
+```
+
+```typescript
+// index.ts
+export { SvgArrow } from './arrow';
+export { SvgArrowDown } from './arrow-down';
+```
+
+## File Naming Rules
+
+### Character Normalization
+
+- **Constants file**: `CONSTANT_CASE` (e.g., `ARROW_DOWN`)
+- **Index file**: `snake_case` (e.g., `arrow_down`)
+- Directory separators and spaces → single underscore `_`
+- Parentheses are removed
+
+### Directory Structure Handling
+
+**Flat directory** (no subfolders):
+
+```
+icons/
+├── a.svg
+└── b.svg
+```
+
+```typescript
+export const A = 'a'
+export const B = 'b'
+```
+
+**Nested directories**:
+
+```
+icons/
+├── group1/
+│   ├── a.svg
+│   └── b.svg
+└── group2/
+    ├── c.svg
+    └── d.svg
+```
+
+```typescript
+export const GROUP1_A = 'group1_a'
+export const GROUP1_B = 'group1_b'
+export const GROUP2_C = 'group2_c'
+export const GROUP2_D = 'group2_d'
+```
+
+## Programmatic Usage
+
+The core functions are also available as a library for programmatic usage. See the individual API pages for details:
+
+- [buildSpritesheet](./build-spritesheet.mdx) - Generate spritesheet files programmatically
+- [buildReactFiles](./build-react-files.mdx) - Generate React components programmatically
+
+## SVG Requirements
+
+For React component generation:
+
+- Icons should use a single fill color
+- Fill colors (except `none`) are replaced with component prop
+- Default fill: `#FF69B4` (can be overridden)
+- SVG attributes are converted from `kebab-case` to `camelCase`
+- `<title>` element added for accessibility
+
+## Examples
+
+### Example 1: Generate Deck.gl Spritesheet
+
+```bash
+smeegl \
+  --in ~/design-system/icons \
+  --out ~/app/public/sprites/ui \
+  --target SPRITESHEET
+```
+
+### Example 2: Generate React Icon Library
+
+```bash
+smeegl \
+  --in ~/figma-exports/icons \
+  --out ~/app/src/components/icons \
+  --target REACT
+```
+
+### Example 3: Use Glob with CRC Names
+
+```bash
+smeegl \
+  --glob "/Users/me/assets/**/*.svg" \
+  --out ~/sprites/hashed \
+  --target SPRITESHEET \
+  --crc HEX
+```
+
+### Example 4: Custom Spreet Binary
+
+```bash
+smeegl \
+  --in ~/icons \
+  --out ~/atlas \
+  --spreet ./bin/spreet-custom
+```
+
+## Related
+
+- [buildSpritesheet](./build-spritesheet.mdx) - Spritesheet generation core
+- [buildReactFiles](./build-react-files.mdx) - React component generation core
+- [smeegl](./lib.mdx) - Programmatic API
+- [validateInput](./validate-input.mdx) - Input validation utilities
+- [logMsg](./log-messages.mdx) - Logging utilities

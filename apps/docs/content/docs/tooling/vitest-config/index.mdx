@@ -1,0 +1,96 @@
+---
+title: "@accelint/vitest-config"
+description: Shared Vitest configuration presets with coverage, TypeScript paths, and React support for browser and Node.js testing
+source: tooling/vitest-config/package.json
+source_sha: d11bf0c9cd595573047ade6929a6c0028564db50
+doc_sha: 7dad6ad1027c3a643100471980faee426f5b1852
+deprecated: false
+updated: 2026-07-14
+---
+
+Shared [Vitest](https://vitest.dev/) configuration used across Accelint projects. Provides standardized testing setup with coverage, TypeScript path support, and React integration.
+
+## Installation
+
+```bash
+pnpm add -D @accelint/vitest-config
+```
+
+## Available Configurations
+
+| Export | Description |
+|--------|-------------|
+| [dom](./dom.mdx) | React/browser testing with React plugin enabled |
+| [no-dom](./no-dom.mdx) | Node.js testing without React dependencies |
+| [mocks/broadcast-channel](./mocks/broadcast-channel.mdx) | Mock implementation of BroadcastChannel API |
+
+## Features
+
+- **Pre-configured Coverage**: Istanbul provider with JSON, LCOV, and text reporters
+- **TypeScript Path Resolution**: Automatic tsconfig path alias support via vite-tsconfig-paths
+- **React Integration**: DOM preset includes @vitejs/plugin-react
+- **Mock Auto-reset**: Automatic mock clearing and restoration between tests
+- **Zero Watch Mode**: Tests run once by default (override with `--watch`)
+
+## Quick Start
+
+### React Component Testing
+
+```typescript
+import { defineConfig, mergeConfig } from 'vitest/config';
+import baseConfig from '@accelint/vitest-config/dom';
+
+export default mergeConfig(
+  baseConfig,
+  defineConfig({
+    test: {
+      globals: true,
+      environment: 'jsdom',
+    },
+  }),
+);
+```
+
+### Node.js Library Testing
+
+```typescript
+import { defineConfig, mergeConfig } from 'vitest/config';
+import baseConfig from '@accelint/vitest-config/no-dom';
+
+export default mergeConfig(
+  baseConfig,
+  defineConfig({
+    test: {
+      // Your custom test config
+    },
+  }),
+);
+```
+
+### Simple Re-export
+
+If you don't need custom configuration:
+
+```typescript
+export { default } from '@accelint/vitest-config/dom';
+```
+
+## Package Scripts
+
+Add these scripts to your `package.json`:
+
+```json
+{
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
+  }
+}
+```
+
+## Related
+
+- [Vitest Documentation](https://vitest.dev)
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react)
+- [vite-tsconfig-paths](https://github.com/aleclarson/vite-tsconfig-paths)

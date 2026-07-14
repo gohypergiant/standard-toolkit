@@ -125,7 +125,27 @@ When the user asks to document a file, follow this workflow.
      - All other packages (including `design-foundation`) → `packages/`
    - Strip `@accelint/` scope if present (e.g., `@accelint/logger` → `logger`)
 
-**3. Detect barrel export vs composed API**
+**3. Check for existing documentation locations (CRITICAL)**
+   - **BEFORE computing output paths, check if documentation already exists in a different location**
+   - Read `apps/docs/.index.json` and search for entries matching the source file
+   - If found, use the EXISTING doc path from the index, do NOT create a new path
+   - **Common scenario**: Documentation may exist in `apps/docs/content/docs/{section}/` rather than `apps/docs/content/{section}/`
+   - **Why this matters**: Fumadocs may have a `docs/` subdirectory convention that you must respect
+   - **Steps**:
+     1. Read `apps/docs/.index.json`
+     2. Find entry where `source` matches your target source file
+     3. If found: Use the `doc` path from that entry (this is the correct location)
+     4. If not found: Check filesystem for existing docs:
+        - Try `apps/docs/content/docs/{section}/{package-name}/` first
+        - Then try `apps/docs/content/{section}/{package-name}/`
+        - Use whichever exists, or default to what `.index.json` uses for other files in same section
+     5. List existing files in the chosen directory to understand the structure
+   - **Never create a parallel documentation tree** in a different location if docs already exist
+   - **Example mistake to avoid**:
+     - ❌ Creating `apps/docs/content/tooling/vitest-config/` when docs exist at `apps/docs/content/docs/tooling/vitest-config/`
+     - ✅ Check `.index.json`, see existing entries use `apps/docs/content/docs/tooling/`, use that path
+
+**4. Detect barrel export vs composed API**
    - **Barrel export**: File only contains re-export statements (`export { X } from './path'`)
    - **Composed API**: File contains actual implementation (classes, functions, orchestration)
    - For root `index.ts` files:
@@ -135,13 +155,13 @@ When the user asks to document a file, follow this workflow.
      - Barrel: `packages/constants/src/index.ts` (just re-exports from sub-modules)
      - Composed: `packages/bus/src/index.ts` (exports Broadcast class with orchestration)
 
-**4. Classify exports**
+**5. Classify exports**
    - Identify all exported entities
    - Classify each: Function, Component, Hook, Class, Constant
    - Skip internal exports (prefixed with `_`, marked `@internal`, in `/internal/` directories)
    - For multi-export files, ask: "Document: [All] [EntityName only] [Custom selection]"
 
-**5. Load matching reference example**
+**6. Load matching reference example**
    - Function → read `references/example-function.md`
    - Component → read `references/example-component.md`
    - Hook → read `references/example-hook.md`
@@ -149,18 +169,18 @@ When the user asks to document a file, follow this workflow.
    - Constant → read `references/example-constant.md`
    - Barrel export → read `references/example-barrel-export.md`
 
-**6. Generate markdown content**
+**7. Generate markdown content**
    - Follow the reference example structure exactly
    - Extract information from source (don't infer or hallucinate)
    - Use direct imperative voice ("Returns the filtered array")
    - Name examples by use case ("Example: Filtering null values")
    - Keep prose concise—show code first, explain after
 
-**7. Compute source_sha before generating content**
+**8. Compute source_sha before generating content**
    - Run `git hash-object <source-file>` to get the current source file hash
    - Store this value to use in frontmatter
 
-**8. Generate markdown content with frontmatter**
+**9. Generate markdown content with frontmatter**
    - Follow the reference example structure exactly
    - Extract information from source (don't infer or hallucinate)
    - Use direct imperative voice ("Returns the filtered array")
@@ -206,14 +226,14 @@ When the user asks to document a file, follow this workflow.
    - Set `deprecated: true` if source has `@deprecated` JSDoc tag
    - Set `doc_sha: pending` as a placeholder (will be computed after writing)
 
-**9. Validate markdown quality**
+**10. Validate markdown quality**
    - Body should start with H2 (##), NOT H1 (#) - frontmatter title becomes the page H1
    - Do not include duplicate description paragraph after frontmatter - frontmatter description is rendered in page header
    - Add language tags to code fences
    - Convert bare URLs to markdown links
    - Check that examples have descriptive names
 
-**10. Write file and compute doc_sha**
+**11. Write file and compute doc_sha**
    - Compute output path: `{outputDir}/{section}/{package-name}/{relative-path}.mdx`
    - Preserve source directory structure directly (no `/api/` subdirectory)
    - Examples:
@@ -240,7 +260,7 @@ When the user asks to document a file, follow this workflow.
      ```
    - Update the file's frontmatter, replacing `doc_sha: pending` with the computed hash
 
-**11. Update or create meta.json for parent directory**
+**12. Update or create meta.json for parent directory**
    - **CRITICAL**: Fumadocs requires explicit `meta.json` files to include flat `.mdx` files in navigation
    - After writing the documentation file, check the parent directory for a `meta.json` file
    - Get parent directory: `dirname <output-file>`
@@ -274,12 +294,12 @@ When the user asks to document a file, follow this workflow.
      - Nested folders: Use capitalized folder name
    - **Important**: Without this step, flat `.mdx` files won't appear in sidebar navigation
 
-**12. Update tracking index**
+**13. Update tracking index**
 
-**12. Update tracking index**
+**13. Update tracking index**
    - Read `apps/docs/.index.json`
    - Update or append entry with: source, doc, entities, source_sha, doc_sha, updated (ISO 8601 timestamp)
-   - Use the computed `doc_sha` from step 10 (NOT "pending")
+   - Use the computed `doc_sha` from step 11 (NOT "pending")
    - Update `generated` timestamp to current time
    - Write back to `apps/docs/.index.json`
    - Keep entries sorted by source path for clean diffs

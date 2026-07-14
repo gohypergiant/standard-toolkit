@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated": "2026-07-14T13:38:06.000Z",
+  "generated": "2026-07-14T19:24:13.561331Z",
   "entries": [
     {
       "source": "packages/bus/src/broadcast/index.ts",
@@ -1570,8 +1570,18 @@
       "updated": "2026-07-13T18:10:21.136Z"
     },
     {
+      "source": "tooling/smeegl/package.json",
+      "doc": "apps/docs/content/docs/tooling/smeegl/index.mdx",
+      "entities": [
+        "@accelint/smeegl"
+      ],
+      "source_sha": "42f97c48a3f97aba9cfd8b414104c6e13cc38d9c",
+      "doc_sha": "2bee37ab365619ca1fd022d4363e5b1c1c1a6aec",
+      "updated": "2026-07-14T19:24:13.000Z"
+    },
+    {
       "source": "tooling/smeegl/src/build-react-files.ts",
-      "doc": "apps/docs/content/tooling/smeegl/build-react-files.mdx",
+      "doc": "apps/docs/content/docs/tooling/smeegl/build-react-files.mdx",
       "entities": [
         "buildReactFiles"
       ],
@@ -1581,7 +1591,7 @@
     },
     {
       "source": "tooling/smeegl/src/build-spritesheet.ts",
-      "doc": "apps/docs/content/tooling/smeegl/build-spritesheet.mdx",
+      "doc": "apps/docs/content/docs/tooling/smeegl/build-spritesheet.mdx",
       "entities": [
         "buildSpritesheet"
       ],
@@ -1590,18 +1600,8 @@
       "updated": "2026-07-13T19:00:00.000Z"
     },
     {
-      "source": "tooling/smeegl/src/lib.ts",
-      "doc": "apps/docs/content/tooling/smeegl/lib.mdx",
-      "entities": [
-        "smeegl"
-      ],
-      "source_sha": "fa85d7df22f60dce567e6e2a6487564cfdaccf37",
-      "doc_sha": "ea3c654aae3cecc2e7b7cfa75007c240713a5bb0",
-      "updated": "2026-07-13T19:00:00.000Z"
-    },
-    {
       "source": "tooling/smeegl/src/log-messages.ts",
-      "doc": "apps/docs/content/tooling/smeegl/log-messages.mdx",
+      "doc": "apps/docs/content/docs/tooling/smeegl/log-messages.mdx",
       "entities": [
         "logMsg",
         "logWarning"
@@ -1612,7 +1612,7 @@
     },
     {
       "source": "tooling/smeegl/src/validate-input.ts",
-      "doc": "apps/docs/content/tooling/smeegl/validate-input.mdx",
+      "doc": "apps/docs/content/docs/tooling/smeegl/validate-input.mdx",
       "entities": [
         "validateInput"
       ],
@@ -1637,8 +1637,8 @@
         "dom"
       ],
       "source_sha": "d00b33c76fb880a9175a250ce39171a5d8223c0b",
-      "doc_sha": "763ecce6e7ed001b3488523bd1c1117edad814b1",
-      "updated": "2026-07-13T21:00:00.000Z"
+      "doc_sha": "694bae74450034c6e42489a617c6d534555fec52",
+      "updated": "2026-07-14T19:16:28.576Z"
     },
     {
       "source": "tooling/vitest-config/mocks/broadcast-channel.ts",
@@ -1648,8 +1648,8 @@
         "resetMockBroadcastChannel"
       ],
       "source_sha": "50cc6c58d502562339da8546cbf5953866db9fa3",
-      "doc_sha": "76c1f63191f034e806a3c3915d7e1174193353ea",
-      "updated": "2026-07-13T21:00:00.000Z"
+      "doc_sha": "337f180a20780531d27a4aad57742b849b01f66a",
+      "updated": "2026-07-14T19:16:28.576Z"
     },
     {
       "source": "tooling/vitest-config/no-dom.js",
@@ -1658,8 +1658,18 @@
         "no-dom"
       ],
       "source_sha": "30690e739754780eeec71a96203c069b7adf0c4b",
-      "doc_sha": "870de1183b620b348cf64b2689284e8f7ea73b86",
-      "updated": "2026-07-13T21:00:00.000Z"
+      "doc_sha": "a290da7fd66af07bc2dc6ec9cb1baa22b880004b",
+      "updated": "2026-07-14T19:16:28.576Z"
+    },
+    {
+      "source": "tooling/vitest-config/package.json",
+      "doc": "apps/docs/content/tooling/vitest-config/index.mdx",
+      "entities": [
+        "@accelint/vitest-config"
+      ],
+      "source_sha": "d11bf0c9cd595573047ade6929a6c0028564db50",
+      "doc_sha": "d7ed0a930d5d094287327879fa194e5187eb2646",
+      "updated": "2026-07-14T19:16:28.575Z"
     }
   ]
 }
