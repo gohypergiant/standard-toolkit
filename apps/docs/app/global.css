@@ -10,20 +10,20 @@
  * governing permissions and limitations under the License.
  */
 
-/* @import 'tailwindcss'; */
-@import '@accelint/design-foundation/styles';
+@import 'tailwindcss';
+/* @import 'fumadocs-ui/css/neutral.css'; */
+/* @import 'fumadocs-ui/css/preset.css'; */
 @import "fumadocs-ui/style.css";
 
-@layer theme {
+/* @layer theme {
   :root {
-    /* overrides */
 
     @variant light {
-      /* overrides */
+      
     }
 
     @variant dark {
-      /* overrides */
+      
     }
   }
-}
+} */
