@@ -1,7 +1,3 @@
-# Keycode
-
-Common keycodes for keyboard events following the standard KeyboardEvent code values.
-
 ## Usage
 
 ```typescript

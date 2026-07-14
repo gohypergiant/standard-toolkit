@@ -82,14 +82,17 @@ All generated content is editable markdown. Engineers can freely customize—you
 ### How to Use Reference Examples
 
 **Match these aspects:**
-- Section structure: Usage → Reference → Examples → Related
+- Section structure: ## Usage → ## Reference → ## Examples → ## Related
 - Voice and tone: direct, imperative, no preamble
 - Code-first approach: show usage before explaining
+- Body starts with ## (H2), never # (H1) - frontmatter title/description provide the H1
 
 **Adapt these aspects:**
 - Depth based on API complexity
 - Number of examples based on use cases
 - Level of detail in reference section
+
+**CRITICAL**: Reference examples have been updated to remove duplicate H1/description from the body. All reference files now start directly with `## Usage` (or `## Installation` for barrel exports). The frontmatter `title` and `description` fields are the single source of truth - they are rendered by the docs framework as the page H1 and intro text. Never add an H1 or duplicate description in the body.
 
 Pattern match from these examples—they demonstrate the target quality level.
 
@@ -204,7 +207,8 @@ When the user asks to document a file, follow this workflow.
    - Set `doc_sha: pending` as a placeholder (will be computed after writing)
 
 **9. Validate markdown quality**
-   - Fix heading hierarchy (should start with H1)
+   - Body should start with H2 (##), NOT H1 (#) - frontmatter title becomes the page H1
+   - Do not include duplicate description paragraph after frontmatter - frontmatter description is rendered in page header
    - Add language tags to code fences
    - Convert bare URLs to markdown links
    - Check that examples have descriptive names
@@ -324,7 +328,8 @@ When the user asks to validate docs, follow this workflow.
    - Error if any missing
 
 **5. Structural Issues**
-   - Check heading hierarchy (should start with H1)
+   - Body should start with H2 (##), NOT H1 (#) - frontmatter title becomes the page H1
+   - Verify body does NOT contain duplicate description paragraph (frontmatter description is rendered in page header)
    - Verify code fences have language tags
    - Check for bare URLs (should be markdown links)
 
@@ -442,12 +447,13 @@ Follow these patterns from the reference examples:
 ### Common Sections Structure
 
 **All entity types:**
-- H1: Entity name
-- Opening: One sentence description
-- Usage: Minimal working example
-- Reference: Type signatures, parameters, returns
-- Examples: Named by use case
-- Related: Auto-generated from imports + manual additions
+- **Frontmatter** (title, description, source, etc.) - rendered as page H1 and meta description
+- **## Usage** - Minimal working example (body starts here, NO H1 in body)
+- **## Reference** - Type signatures, parameters, returns
+- **## Examples** - Named by use case ("### Example: Use case name")
+- **## Related** - Auto-generated from imports + manual additions
+
+**IMPORTANT**: Do NOT include an H1 (`#`) or duplicate description paragraph in the body. The frontmatter `title` and `description` fields are rendered by the docs framework as the page H1 and intro text. Body content should start immediately with `## Usage`.
 
 **Components:**
 - Props table with Type, Default, Required columns
@@ -659,13 +665,22 @@ import * as Stories from './Button.stories';
 
 ## Deprecation Handling
 
-Auto-detect `@deprecated` JSDoc tags and generate:
+Auto-detect `@deprecated` JSDoc tags and generate a callout at the start of the body (after frontmatter):
 
 ```markdown
-# oldMap
+---
+title: "oldMap"
+description: Legacy map implementation
+deprecated: true
+---
 
 > **Deprecated**: This function is deprecated since v2.0.0. Use [map](../map/index.md) instead.
+
+## Usage
+...
 ```
+
+**IMPORTANT**: No H1 in body - frontmatter title becomes the page H1. Deprecation notice appears before `## Usage`.
 
 Set `deprecated: true` in frontmatter.
 
@@ -737,10 +752,14 @@ export function isBbox() { ... }
 3. Source structure should map to doc structure
 4. Discovery: developers search by function name, expect dedicated pages
 
-**When you have ONE multi-export file**, generate one markdown with H2 sections:
+**When you have ONE multi-export file**, generate one markdown with ## (H2) sections for each export:
 
 ```markdown
-# Array Utilities
+---
+title: "Array Utilities"
+description: Functional array operations
+source: packages/core/src/array/index.ts
+---
 
 ## map
 {Documentation for map}
@@ -748,6 +767,8 @@ export function isBbox() { ... }
 ## filter
 {Documentation for filter}
 ```
+
+**IMPORTANT**: No H1 in body - frontmatter title becomes the page H1. Body starts with `## map` (H2).
 
 Later, engineers can split manually if one entity needs extensive docs.
 

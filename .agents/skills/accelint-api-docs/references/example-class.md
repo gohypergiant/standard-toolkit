@@ -1,7 +1,3 @@
-# Broadcast
-
-Event bus for emitting and listening to events across browser contexts using the BroadcastChannel API.
-
 ## Usage
 
 ```typescript

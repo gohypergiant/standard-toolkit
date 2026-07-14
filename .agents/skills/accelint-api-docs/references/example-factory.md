@@ -1,7 +1,3 @@
-# createButton
-
-Factory function that returns a customized Button component.
-
 ## Usage
 
 ```typescript

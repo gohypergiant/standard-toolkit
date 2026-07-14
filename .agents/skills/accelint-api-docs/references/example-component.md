@@ -1,7 +1,3 @@
-# Button
-
-A versatile interactive button component with multiple variants, sizes, and states.
-
 ## Usage
 
 ```tsx

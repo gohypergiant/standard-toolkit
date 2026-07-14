@@ -1,7 +1,3 @@
-# map
-
-Maps over an array, calling the mapping function for each element and returning a new array of results.
-
 ## Usage
 
 ```typescript

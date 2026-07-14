@@ -1,7 +1,3 @@
-# useBus
-
-Convenience wrapper providing type-safe event bus hooks for emitting and listening to events across your application.
-
 ## Usage
 
 ```typescript
