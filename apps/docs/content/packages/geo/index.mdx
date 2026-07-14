@@ -1,0 +1,47 @@
+---
+title: "@accelint/geo"
+description: A collection of JavaScript functions for working with coordinates and geospatial data.
+source: packages/geo/src/index.ts
+source_sha: 5886f7407bc66cfef28a4e4b589b2d08e60fadba
+doc_sha: 4f1c75b0e4f53f1e535e5250d6fbaa7a3e500e3f
+deprecated: false
+updated: 2026-07-14
+---
+
+# Geo
+
+A collection of JavaScript functions for working with coordinates and geospatial data.
+
+## Installation
+
+```bash
+pnpm add @accelint/geo
+```
+
+## Usage
+
+```typescript
+// Import coordinate utilities
+import { createCoordinate, coordinateSystems } from '@accelint/geo';
+
+// Import formatters and parsers
+import { formatDecimalDegrees, parseDecimalDegrees } from '@accelint/geo';
+import { parseMGRS, parseUTM } from '@accelint/geo';
+```
+
+## Available Exports
+
+| Export Path | Description |
+|-------------|-------------|
+| [coordinates/coordinate](./coordinates/coordinate.md) | Parse, validate, convert, and format geographic coordinates across multiple notation systems |
+| [coordinates/latlon/decimal-degrees](./coordinates/latlon/decimal-degrees/) | Format and parse latitude/longitude in decimal degrees notation |
+| [coordinates/latlon/degrees-decimal-minutes](./coordinates/latlon/degrees-decimal-minutes/) | Format and parse coordinates in degrees decimal minutes notation |
+| [coordinates/latlon/degrees-minutes-seconds](./coordinates/latlon/degrees-minutes-seconds/) | Format and parse coordinates in degrees minutes seconds notation |
+| [coordinates/mgrs/parser](./coordinates/mgrs/parser.md) | Parse Military Grid Reference System (MGRS) coordinate strings |
+| [coordinates/utm/parser](./coordinates/utm/parser.md) | Parse Universal Transverse Mercator (UTM) coordinate strings |
+
+## Related
+
+- [@accelint/constants](../constants/index.md) - Coordinate constants and defaults
+- [@accelint/predicates](../predicates/index.md) - Coordinate validation predicates
+- [GitHub Repository](https://github.com/gohypergiant/standard-toolkit) - Source code

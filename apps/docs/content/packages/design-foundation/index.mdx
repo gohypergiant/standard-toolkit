@@ -1,0 +1,48 @@
+---
+title: "@accelint/design-foundation"
+description: An open-source design library to serve as part of the entire ecosystem of UX for Accelint.
+source: packages/design-foundation
+doc_sha: 206591f3200ae57f4e50402dcedeaad293fc116f
+deprecated: false
+updated: 2026-07-14
+---
+
+# Design Foundation
+
+An open-source design library to serve as part of the entire ecosystem of UX for Accelint.
+
+## Installation
+
+```bash
+pnpm add @accelint/design-foundation
+```
+
+## Usage
+
+```typescript
+// Import design tokens
+import { tokens } from '@accelint/design-foundation/tokens';
+
+// Import CSS utilities
+import { css } from '@accelint/design-foundation/lib/css';
+import { utils } from '@accelint/design-foundation/lib/utils';
+```
+
+```css
+/* Import styles */
+@import '@accelint/design-foundation/styles';
+```
+
+## Available Exports
+
+| Export Path | Description |
+|-------------|-------------|
+| [tokens](./tokens/index.md) | Complete design token system including colors, typography, spacing, shadows, and animations |
+| [lib/css](./lib/css.md) | CSS utilities and helpers |
+| [lib/utils](./lib/utils.md) | JavaScript utility functions for design tokens |
+| styles | Core CSS styles and variables |
+
+## Related
+
+- [@accelint/design-toolkit](../../toolkits/design-toolkit/index.md) - React component library
+- [GitHub Repository](https://github.com/gohypergiant/standard-toolkit) - Source code

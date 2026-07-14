@@ -69,13 +69,14 @@ All generated content is editable markdown. Engineers can freely customize—you
 
 ## How Reference Examples Work
 
-**Reference examples over templates.** This skill uses 5 gold-standard examples showing both structure AND writing style:
+**Reference examples over templates.** This skill uses 6 gold-standard examples showing both structure AND writing style:
 
 - `references/example-function.md` - Curried functions with generics
 - `references/example-component.md` - React components with multi-part patterns
 - `references/example-hook.md` - Type-safe hooks with generics
 - `references/example-class.md` - Classes with singleton patterns
 - `references/example-constant.md` - Frozen object patterns (SafeEnum)
+- `references/example-barrel-export.md` - Barrel export landing pages (lightweight navigation)
 
 ### How to Use Reference Examples
 
@@ -120,31 +121,42 @@ When the user asks to document a file, follow this workflow.
      - All other packages (including `design-foundation`) → `packages/`
    - Strip `@accelint/` scope if present (e.g., `@accelint/logger` → `logger`)
 
-**3. Classify exports**
+**3. Detect barrel export vs composed API**
+   - **Barrel export**: File only contains re-export statements (`export { X } from './path'`)
+   - **Composed API**: File contains actual implementation (classes, functions, orchestration)
+   - For root `index.ts` files:
+     - If barrel export → generate lightweight landing page (see Barrel Export Detection)
+     - If composed API → generate comprehensive documentation (see Common Patterns)
+   - **Examples**:
+     - Barrel: `packages/constants/src/index.ts` (just re-exports from sub-modules)
+     - Composed: `packages/bus/src/index.ts` (exports Broadcast class with orchestration)
+
+**4. Classify exports**
    - Identify all exported entities
    - Classify each: Function, Component, Hook, Class, Constant
    - Skip internal exports (prefixed with `_`, marked `@internal`, in `/internal/` directories)
    - For multi-export files, ask: "Document: [All] [EntityName only] [Custom selection]"
 
-**4. Load matching reference example**
+**5. Load matching reference example**
    - Function → read `references/example-function.md`
    - Component → read `references/example-component.md`
    - Hook → read `references/example-hook.md`
    - Class → read `references/example-class.md`
    - Constant → read `references/example-constant.md`
+   - Barrel export → read `references/example-barrel-export.md`
 
-**4. Generate markdown content**
+**6. Generate markdown content**
    - Follow the reference example structure exactly
    - Extract information from source (don't infer or hallucinate)
    - Use direct imperative voice ("Returns the filtered array")
    - Name examples by use case ("Example: Filtering null values")
    - Keep prose concise—show code first, explain after
 
-**5. Compute source_sha before generating content**
+**7. Compute source_sha before generating content**
    - Run `git hash-object <source-file>` to get the current source file hash
    - Store this value to use in frontmatter
 
-**6. Generate markdown content with frontmatter**
+**8. Generate markdown content with frontmatter**
    - Follow the reference example structure exactly
    - Extract information from source (don't infer or hallucinate)
    - Use direct imperative voice ("Returns the filtered array")
@@ -153,7 +165,7 @@ When the user asks to document a file, follow this workflow.
    - Add frontmatter at the top:
    ```yaml
    ---
-   title: EntityName
+   title: "@scope/package-name/export/path"
    description: One sentence describing what it does
    source: relative/path/to/source.ts
    source_sha: <value from step 5>
@@ -162,16 +174,24 @@ When the user asks to document a file, follow this workflow.
    updated: YYYY-MM-DD
    ---
    ```
+   - **Title Convention**: The title field MUST match the package.json export path:
+     - For root package exports (`"."`): `"@accelint/package-name"`
+     - For sub-exports (`"./path/to/module"`): `"@accelint/package-name/path/to/module"`
+     - Examples:
+       - `packages/bus/src/index.ts` → `"@accelint/bus"`
+       - `packages/bus/src/react/index.ts` → `"@accelint/bus/react"`
+       - `packages/core/src/array/map/index.ts` → `"@accelint/core/array/map"`
+     - The title represents the import path users would write: `import x from '@accelint/bus/react'`
    - Set `deprecated: true` if source has `@deprecated` JSDoc tag
    - Set `doc_sha: pending` as a placeholder (will be computed after writing)
 
-**7. Validate markdown quality**
+**9. Validate markdown quality**
    - Fix heading hierarchy (should start with H1)
    - Add language tags to code fences
    - Convert bare URLs to markdown links
    - Check that examples have descriptive names
 
-**8. Write file and compute doc_sha**
+**10. Write file and compute doc_sha**
    - Compute output path: `{outputDir}/{section}/{package-name}/{relative-path}.mdx`
    - Preserve source directory structure directly (no `/api/` subdirectory)
    - Examples:
@@ -188,7 +208,7 @@ When the user asks to document a file, follow this workflow.
      ```
    - Update the file's frontmatter, replacing `doc_sha: pending` with the computed hash
 
-**9. Update tracking index**
+**11. Update tracking index**
    - Read `apps/docs/.index.json`
    - Update or append entry with: source, doc, entities, source_sha, doc_sha, updated (ISO 8601 timestamp)
    - Use the computed `doc_sha` from step 8 (NOT "pending")
@@ -484,6 +504,36 @@ Auto-detect `@deprecated` JSDoc tags and generate:
 ```
 
 Set `deprecated: true` in frontmatter.
+
+---
+
+## Barrel Export Detection
+
+**Barrel exports** are root `index.ts` files that only re-export from sub-modules:
+
+```typescript
+// Barrel export - just re-exports
+export { CSS_RGBA_LEGACY_REGEX } from './color';
+export { DEFAULT_COORDINATE } from './coordinates';
+```
+
+**Composed APIs** contain orchestration logic or implementation:
+
+```typescript
+// Composed API - has implementation
+export { Broadcast } from './broadcast';  // Class with logic
+export { CONNECTION_EVENT_TYPES } from './broadcast/constants';
+```
+
+### Detection Algorithm
+
+1. Read source file
+2. Strip comments, imports, type exports
+3. Check if all remaining exports are re-export statements (`export { X } from './path'`)
+4. If yes AND file is a root `index.ts` → **barrel export** (use `references/example-barrel-export.md`)
+5. If no OR contains implementation → **composed API** or regular entity (use appropriate reference)
+
+**When ambiguous:** Ask user: "This looks like a [barrel export / composed API]. Generate [landing page / full docs]?"
 
 ---
 

@@ -1,0 +1,42 @@
+---
+title: "@accelint/temporal"
+description: A lightweight JavaScript library offering a collection of simple temporal functions for parsing, formatting, manipulating dates and times, and specialty timers.
+source: packages/temporal/src/index.ts
+source_sha: 1e3378dc7784991cf3b569b888d9ddc92b20d0a1
+doc_sha: 606677c7e8787741cdac718e1dc2241ace933ab1
+deprecated: false
+updated: 2026-07-14
+---
+
+# Temporal
+
+A lightweight JavaScript library offering a collection of simple temporal functions for parsing, formatting, manipulating dates and times, and specialty timers.
+
+## Installation
+
+```bash
+pnpm add @accelint/temporal
+```
+
+## Usage
+
+```typescript
+// Import from root (all exports)
+import { setClockInterval, setClockTimeout } from '@accelint/temporal';
+
+// Import from sub-modules
+import { setClockInterval, setClockTimeout } from '@accelint/temporal/timers';
+import { remainder, callNextSecond } from '@accelint/temporal/timers/utils';
+```
+
+## Available Exports
+
+| Export Path | Description |
+|-------------|-------------|
+| [timers](./timers/index.md) | setTimeout and setInterval replacements that align execution to clock boundaries |
+| [timers/utils](./timers/utils.md) | Utility functions for temporal calculations and clock-aligned execution |
+
+## Related
+
+- [@accelint/core](../core/index.md) - Core functional utilities
+- [GitHub Repository](https://github.com/gohypergiant/standard-toolkit) - Source code

@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "generated": "2026-07-13T20:13:38.800Z",
+  "generated": "2026-07-14T13:38:06.000Z",
   "entries": [
     {
       "source": "packages/bus/src/broadcast/index.ts",
@@ -69,6 +69,21 @@
       "updated": "2026-07-13T18:24:03.000Z"
     },
     {
+      "source": "packages/constants/src/index.ts",
+      "doc": "apps/docs/content/packages/constants/index.mdx",
+      "entities": [
+        "CSS_RGBA_LEGACY_REGEX",
+        "CSS_RGBA_MODERN_REGEX",
+        "HEX_REGEX",
+        "DEFAULT_COORDINATE",
+        "DISTANCE_UNIT_BY_SYMBOL",
+        "DISTANCE_UNIT_SYMBOLS"
+      ],
+      "source_sha": "a812b45e237396de1f53bca79ccd4ab237ff0f6f",
+      "doc_sha": "4c057fcbb0de75d679dd2e75accb2e5e59ad70b4",
+      "updated": "2026-07-14T13:30:46.3NZ"
+    },
+    {
       "source": "packages/constants/src/units/index.ts",
       "doc": "apps/docs/content/packages/constants/units/index.mdx",
       "entities": [
@@ -125,6 +140,28 @@
       "source_sha": "3a4dd417a36a5ebf10a98aec73b0288af2326f9c",
       "doc_sha": "32d9287856eb4a486a9b701ce227e1188fa4c348",
       "updated": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "source": "packages/converters/src/index.ts",
+      "doc": "apps/docs/content/packages/converters/index.mdx",
+      "entities": [
+        "booleanToNumber",
+        "cssRgbaObjectToRgba255Tuple",
+        "cssRgbaStringToRgba255Tuple",
+        "cssRgbaTupleToRgba255Tuple",
+        "rgba255TupleToCssRgbaObject",
+        "rgba255TupleToCssRgbaString",
+        "rgba255TupleToCssRgbaTuple",
+        "glslToRgba255Tuple",
+        "rgba255TupleToGlsl",
+        "hexToRgba255Tuple",
+        "rgba255TupleToHex",
+        "toBoolean",
+        "zxyToBbox"
+      ],
+      "source_sha": "4d087869282a5ba6e5392fcf5d3d1e5b94c4e125",
+      "doc_sha": "987553f9f2e465ce000d569c5da5d7e967522b3a",
+      "updated": "2026-07-14T13:38:06.000Z"
     },
     {
       "source": "packages/converters/src/to-boolean/index.ts",
@@ -479,6 +516,19 @@
       "updated": "2026-07-13T00:00:00.000Z"
     },
     {
+      "source": "packages/design-foundation",
+      "doc": "apps/docs/content/packages/design-foundation/index.mdx",
+      "entities": [
+        "tokens",
+        "lib/css",
+        "lib/utils",
+        "styles"
+      ],
+      "source_sha": "",
+      "doc_sha": "206591f3200ae57f4e50402dcedeaad293fc116f",
+      "updated": "2026-07-14T13:37:19.000Z"
+    },
+    {
       "source": "packages/design-foundation/src/lib/utils.ts",
       "doc": "apps/docs/content/packages/design-foundation/lib/utils.mdx",
       "entities": [
@@ -580,6 +630,20 @@
       "updated": "2026-07-13T00:00:00.000Z"
     },
     {
+      "source": "packages/formatters/src/index.ts",
+      "doc": "apps/docs/content/packages/formatters/index.mdx",
+      "entities": [
+        "formatM1",
+        "formatM2",
+        "formatM3A",
+        "formatM4",
+        "formatM5"
+      ],
+      "source_sha": "7c23c79457c772768b2077efeefb86ba8df3f0c6",
+      "doc_sha": "ea47c50cd3929dd32d0b13aaec76eeab024c64dd",
+      "updated": "2026-07-14T13:37:19.000Z"
+    },
+    {
       "source": "packages/geo/src/coordinates/coordinate.ts",
       "doc": "apps/docs/content/packages/geo/coordinates/coordinate.mdx",
       "entities": [
@@ -649,6 +713,25 @@
       "source_sha": "ad05873ac274fea7337184e00b0e1244e93ac411",
       "doc_sha": "d65b9e6f4810e6f13de240dc92a3663c5eb94f79",
       "updated": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "source": "packages/geo/src/index.ts",
+      "doc": "apps/docs/content/packages/geo/index.mdx",
+      "entities": [
+        "coordinateSystems",
+        "createCoordinate",
+        "formatDecimalDegrees",
+        "parseDecimalDegrees",
+        "formatDegreesDecimalMinutes",
+        "parseDegreesDecimalMinutes",
+        "formatDegreesMinutesSeconds",
+        "parseDegreesMinutesSeconds",
+        "parseMGRS",
+        "parseUTM"
+      ],
+      "source_sha": "5886f7407bc66cfef28a4e4b589b2d08e60fadba",
+      "doc_sha": "4f1c75b0e4f53f1e535e5250d6fbaa7a3e500e3f",
+      "updated": "2026-07-14T13:34:24.000Z"
     },
     {
       "source": "packages/hotkey-manager/src/index.ts",
@@ -1076,6 +1159,19 @@
       "updated": "2026-07-13T19:57:15.3NZ"
     },
     {
+      "source": "packages/math/src/index.ts",
+      "doc": "apps/docs/content/packages/math/index.mdx",
+      "entities": [
+        "clamp",
+        "random",
+        "randomInt",
+        "round"
+      ],
+      "source_sha": "2fde7042d193f22ca9eb29527a4576100c1ae7c7",
+      "doc_sha": "f54a69c530aca053043232bce3d0bf587b879975",
+      "updated": "2026-07-14T13:34:24.000Z"
+    },
+    {
       "source": "packages/math/src/random/index.ts",
       "doc": "apps/docs/content/packages/math/random/index.mdx",
       "entities": [
@@ -1375,6 +1471,19 @@
       "source_sha": "bdd0f75f631b52a4661629978351874c424fb901",
       "doc_sha": "8850b5cf4ce0136c4daba13f671de5f3d7ff4ec1",
       "updated": "2026-07-13T00:00:00.000Z"
+    },
+    {
+      "source": "packages/temporal/src/index.ts",
+      "doc": "apps/docs/content/packages/temporal/index.mdx",
+      "entities": [
+        "setClockInterval",
+        "setClockTimeout",
+        "callNextSecond",
+        "remainder"
+      ],
+      "source_sha": "1e3378dc7784991cf3b569b888d9ddc92b20d0a1",
+      "doc_sha": "606677c7e8787741cdac718e1dc2241ace933ab1",
+      "updated": "2026-07-14T13:34:24.000Z"
     },
     {
       "source": "packages/temporal/src/timers/index.ts",

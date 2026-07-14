@@ -1,0 +1,44 @@
+---
+title: "@accelint/math"
+description: A simple, lightweight JavaScript library that provides a collection of basic mathematical functions.
+source: packages/math/src/index.ts
+source_sha: 2fde7042d193f22ca9eb29527a4576100c1ae7c7
+doc_sha: f54a69c530aca053043232bce3d0bf587b879975
+deprecated: false
+updated: 2026-07-14
+---
+
+# Math
+
+A simple, lightweight JavaScript library that provides a collection of basic mathematical functions.
+
+## Installation
+
+```bash
+pnpm add @accelint/math
+```
+
+## Usage
+
+```typescript
+// Import from root (all exports)
+import { clamp, random, randomInt, round } from '@accelint/math';
+
+// Import from sub-modules
+import { clamp } from '@accelint/math/clamp';
+import { random, randomInt } from '@accelint/math/random';
+import { round } from '@accelint/math/round';
+```
+
+## Available Exports
+
+| Export Path | Description |
+|-------------|-------------|
+| [clamp](./clamp/index.md) | Clamps a number within the specified bounds |
+| [random](./random/index.md) | Generate random numbers and integers within specified bounds |
+| [round](./round/index.md) | Rounds a number to a specified precision |
+
+## Related
+
+- [@accelint/core](../core/index.md) - Core functional utilities
+- [GitHub Repository](https://github.com/gohypergiant/standard-toolkit) - Source code

@@ -1,0 +1,40 @@
+---
+title: "@accelint/formatters"
+description: A set of useful formatting functions for enhancing readability and consistency in your applications.
+source: packages/formatters/src/index.ts
+source_sha: 7c23c79457c772768b2077efeefb86ba8df3f0c6
+doc_sha: ea47c50cd3929dd32d0b13aaec76eeab024c64dd
+deprecated: false
+updated: 2026-07-14
+---
+
+# Formatters
+
+A set of useful formatting functions for enhancing readability and consistency in your applications.
+
+## Installation
+
+```bash
+pnpm add @accelint/formatters
+```
+
+## Usage
+
+```typescript
+// Import from root (all exports)
+import { formatM1, formatM2, formatM3A, formatM4, formatM5 } from '@accelint/formatters';
+
+// Import from sub-modules
+import { formatM1 } from '@accelint/formatters/iff';
+```
+
+## Available Exports
+
+| Export Path | Description |
+|-------------|-------------|
+| [iff](./iff/index.md) | Format IFF (Identification Friend or Foe) transponder mode codes with proper zero-padding |
+
+## Related
+
+- [@accelint/converters](../converters/index.md) - Format conversion utilities
+- [GitHub Repository](https://github.com/gohypergiant/standard-toolkit) - Source code
