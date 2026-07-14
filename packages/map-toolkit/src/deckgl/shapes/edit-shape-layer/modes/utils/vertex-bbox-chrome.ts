@@ -240,6 +240,44 @@ export function replaceRotateChromeWithBoundingBox(
 }
 
 /**
+ * Resolve the final guide list from already-scale-filtered guides, applying
+ * the three-way branch both `VertexTransformMode` and
+ * `LockedBoundingTransformMode` share:
+ *
+ * - **Rotating** — strip the rotate chrome so only the live shape and
+ *   centroid pivot remain.
+ * - **No oriented bounding box** (rectangle fallback, missing feature, or
+ *   degenerate vertices) — return the filtered guides unchanged.
+ * - **Default** — replace the rotate-mode chrome with the oriented
+ *   bounding box chrome.
+ *
+ * Returns the final `features` plus the repositioned corner `scaleHandles`
+ * (empty unless the default branch ran) so callers that patch
+ * `ScaleMode._cornerGuidePoints` can sync without re-scanning. The caller
+ * owns computing `boundingBox` (the angle and rectangle rules differ per
+ * mode) and any corner-cache side effect.
+ */
+export function resolveBoundingBoxGuides(
+  filteredGuides: Feature[],
+  boundingBox: OrientedBoundingBox | null,
+  isRotating: boolean,
+): { features: Feature[]; scaleHandles: Feature<GeoPoint>[] } {
+  if (isRotating) {
+    const stripped = filteredGuides.filter(
+      (guide) => !isRotateChromeFeature(guide),
+    );
+
+    return { features: stripped, scaleHandles: [] };
+  }
+
+  if (!boundingBox) {
+    return { features: filteredGuides, scaleHandles: [] };
+  }
+
+  return replaceRotateChromeWithBoundingBox(filteredGuides, boundingBox);
+}
+
+/**
  * Build a fresh set of scale-corner handle Points (one per oriented bounding box corner,
  * `positionIndexes` 0..3) suitable for assigning to ScaleMode's private
  * `_cornerGuidePoints`. Used to lock the corner cache to the

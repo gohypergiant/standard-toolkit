@@ -50,11 +50,21 @@ The workflow:
 Run visual tests locally to verify changes before pushing:
 
 ```bash
-pnpm visual        # Run all visual tests once
-pnpm visual:update # Update baseline screenshots locally
+pnpm --filter @apps/next run visual        # Run all visual tests once
+pnpm --filter @apps/next run visual:update # Update baseline screenshots locally
 ```
 
 **Note:** Local baselines may differ from CI due to OS/font rendering. Always use the GitHub Action for authoritative baseline updates.
+
+If you want to debug the tests locally and be able to inspect the DOM and elements that get generated locally, you can run
+
+```bash
+pnpm --filter @apps/next run visual:debug # Run visual tests in watch mode with the browser UI
+pnpm --filter @apps/next run visual:debug flashcard.visual # Run a single test to inspect it
+```
+
+This launches the tests in a real, non-headless Chromium window (`--browser.headless=false`) with the Vitest browser UI (`--browser.ui`) in watch mode. Because the browser stays open, you can open the dev console (DevTools) and inspect the live DOM, the actual classes applied to each element, and the computed styles for the rendered components. This is the fastest way to confirm whether a class is present in the markup and whether its CSS rule was generated and applied. Combined with a `debugger` statement in a test, the run will pause so you can step through and examine the DOM at the moment the screenshot is taken.
+
 
 ## Choosing a Test Function
 

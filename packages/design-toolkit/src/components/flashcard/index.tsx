@@ -99,7 +99,7 @@ export function FlashcardHero(props: FlashcardComponentProps) {
 
   if (isLoading) {
     return (
-      <div {...rest} className={clsx(styles.hero, className, 'gap-s')}>
+      <div {...rest} className={clsx(styles.loading, className)}>
         <Skeleton className={styles.skeleton} data-testid='hero-skeleton' />
         <Skeleton className={clsx(styles.skeleton, styles.half)} />
       </div>

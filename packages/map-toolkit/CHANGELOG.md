@@ -1,5 +1,12 @@
 # @accelint/map-toolkit
 
+## 5.2.1
+
+### Patch Changes
+
+- 149d975: Align wagon wheel bounding box style with line and polygon.
+- 5f1207f: Add smooth camera transitions to map setCenter. Supports transitionDuration and transitionEasing properties in CameraSetCenterEvent payload for animated camera movements using MapLibre's easeTo method.
+
 ## 5.2.0
 
 ### Minor Changes

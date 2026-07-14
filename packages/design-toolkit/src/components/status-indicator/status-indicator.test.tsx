@@ -31,6 +31,8 @@ const VALID_STATUSES: StatusIndicatorProps['status'][] = [
   'good',
   'degraded',
   'poor',
+  'pending',
+  'unknown',
 ] as const;
 
 describe('StatusIndicator', () => {
@@ -48,5 +50,22 @@ describe('StatusIndicator', () => {
 
     const indicator = screen.getByTestId('status-good-icon');
     expect(indicator).toHaveClass(customClass);
+  });
+
+  it('should render textValue when provided', () => {
+    const textValue = 'Connection stable';
+    setup({ status: 'good', textValue });
+
+    const label = screen.getByText(textValue);
+    expect(label).toBeInTheDocument();
+  });
+
+  it('should not render textValue wrapper when textValue is not provided', () => {
+    setup({ status: 'good' });
+
+    const label = screen.queryByRole('label');
+
+    expect(label).not.toBeInTheDocument();
+    expect(label).toBeNull();
   });
 });

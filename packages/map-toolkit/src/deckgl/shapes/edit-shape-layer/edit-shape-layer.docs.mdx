@@ -399,7 +399,7 @@ console.log('Current cursor:', cursor);
 | `mapId` | `UniqueId` | Context-provided mapId | Map instance ID for multi-map isolation |
 | `unit` | `DistanceUnitSymbol` | `'km'` | Distance unit for tooltip measurements (supports `'km'`, `'mi'`, `'m'`, `'ft'`, `'NM'`) |
 | `hotkeyConfig` | `EditShapeHotkeyConfig` | `{ panning: { code: Keycode.Space } }` | Keycode overrides for hotkeys specific to EditShapeLayer. |
-| `style` | `EditShapeStyle` | See defaults below | Visual customization for edit handles and the polygon/line bounding box. Each field is independently overridable; omitted fields use the package defaults. |
+| `style` | `EditShapeStyle` | See defaults below | Visual customization for edit handles and the bounding box (polygons, lines, and wagon wheels). Each field is independently overridable; omitted fields use the package defaults. |
 
 ### EditShapeHotkeyConfig
 | Prop | Type | Description |
@@ -414,7 +414,7 @@ Edit handles split into three **roles**, each with its own color, outline color,
 - **scale** — applies to `editHandleType` `'scale'` (the corner handles on the bounding box). Defaults to turquoise.
 - **rotate** — applies to `editHandleType` `'rotate'` (the dot at the end of the rotate stem). Defaults to amber.
 
-The polygon/line bounding box has its own line color, line width, and dash array — separate from other guide lines so the bbox reads as scaffolding distinct from interactive feedback.
+The bounding box for polygons, lines, and wagon wheels has its own line color, line width, and dash array — separate from other guide lines so the bbox reads as scaffolding distinct from interactive feedback.
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
@@ -429,7 +429,7 @@ The polygon/line bounding box has its own line color, line width, and dash array
 | `rotateHandleRadius` | `number` | `6` | Rotate handle radius in pixels. |
 | `editHandleStrokeWidth` | `number` | `2` | Outline thickness in pixels (single value — the upstream `editHandlePointStrokeWidth` prop doesn't accept a per-role accessor). |
 | `editHandleOutline` | `boolean` | `true` | Whether edit handles render with an outline ring. Set to `false` for solid dots with no stroke. |
-| `bboxLineColor` | `Color` | muted | Stroke color for the polygon/line bounding box outline. |
+| `bboxLineColor` | `Color` | muted | Stroke color for the bounding box outline (polygons, lines, and wagon wheels). |
 | `bboxLineWidth` | `number` | `1` | Stroke width in pixels for the bounding box outline. |
 | `bboxDashArray` | `[number, number]` | `[8, 4]` | Dash pattern `[dashLength, gapLength]` in pixels for the bbox outline. |
 
@@ -524,7 +524,7 @@ Edit handles split into three roles, each with its own default styling:
 | **scale** | `editHandleType` `'scale'` (bounding-box corner handles) | Turquoise |
 | **rotate** | `editHandleType` `'rotate'` (the rotate-stem dot) | Amber |
 
-The polygon/line bounding box renders as a dashed line in a muted color, with a small outward buffer between the box and the shape's vertex handles so they don't visually overlap. Override any of this via the `style` prop — see [EditShapeStyle](#editshapestyle).
+The bounding box for polygons, lines, and wagon wheels renders as a dashed line in a muted color, with a small outward buffer between the box and the shape's handles so they don't visually overlap. Override any of this via the `style` prop — see [EditShapeStyle](#editshapestyle).
 
 ## Duplicating Shapes
 

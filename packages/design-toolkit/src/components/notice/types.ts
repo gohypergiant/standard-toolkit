@@ -107,10 +107,7 @@ export type NoticeListProps = {
 /**
  * Props for the Notice component.
  */
-export type NoticeProps = Omit<
-  NoticeContent,
-  'metadata' | 'timeout' | 'target'
-> & {
+export type NoticeProps = Omit<NoticeContent, 'timeout' | 'target'> & {
   /** Unique identifier for the notice. */
   id: UniqueId;
   /** CSS class names for notice elements. */
@@ -132,10 +129,10 @@ export type NoticeProps = Omit<
   shouldCloseOnAction?: boolean;
   /** Size variant for the notice. */
   size?: 'small' | 'medium';
-  /** Callback when primary action button is pressed. */
-  onPrimaryAction?: () => void;
-  /** Callback when secondary action button is pressed. */
-  onSecondaryAction?: () => void;
+  /** Callback when primary action button is pressed. Receives metadata for context. */
+  onPrimaryAction?: (metadata?: NoticeContent['metadata']) => void;
+  /** Callback when secondary action button is pressed. Receives metadata for context. */
+  onSecondaryAction?: (metadata?: NoticeContent['metadata']) => void;
   /** Callback when the notice is closed. */
   onClose?: () => void;
 };
@@ -170,5 +167,5 @@ export type NoticeActionEvent = Payload<
   | typeof NoticeEventTypes.actionPrimary
   | typeof NoticeEventTypes.actionSecondary
   | typeof NoticeEventTypes.close,
-  { id: UniqueId }
+  { id: UniqueId; metadata?: Record<string, StructuredCloneableData> }
 >;

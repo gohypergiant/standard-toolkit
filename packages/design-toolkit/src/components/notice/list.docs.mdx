@@ -111,13 +111,13 @@ emit({
 
 The NoticeList uses an event bus for queue management.
 
-| Event | Description |
-|-------|-------------|
-| `queue` | Add a notice to the queue |
-| `dequeue` | Remove a notice from the queue |
-| `actionPrimary` | Primary button was pressed |
-| `actionSecondary` | Secondary button was pressed |
-| `close` | Close button was pressed |
+| Event | Description | Payload |
+|-------|-------------|---------|
+| `queue` | Add a notice to the queue | `{ id?, message, color?, primary?, secondary?, metadata?, timeout?, target? }` |
+| `dequeue` | Remove notice(s) from the queue | `{ id?, color?, target?, metadata? }` |
+| `actionPrimary` | Primary button was pressed | `{ id, metadata? }` |
+| `actionSecondary` | Secondary button was pressed | `{ id, metadata? }` |
+| `close` | Close button was pressed | `{ id, metadata? }` |
 
 ## Queue Management
 
@@ -157,7 +157,57 @@ emit({
   color: "info",
   metadata: { fileId: "123", userId: "user-456" }
 });
+
+// Notice with action buttons and metadata
+emit({
+  message: "Layer failed to load",
+  primary: { children: "Center On" },
+  metadata: { layerId: "layer-123", geometry: featureCollection }
+});
 ```
+
+### Handling Action Events with Metadata
+
+Action events include metadata so you can handle button clicks with full context:
+
+```tsx
+import { useEmit, useOn } from '@accelint/bus/react';
+import { NoticeEventTypes } from './events';
+
+function MapComponent() {
+  const centerOn = useCenterOn();
+  const emit = useEmit(NoticeEventTypes.queue);
+
+  // Emit a notice with metadata and action button
+  const showLayerError = (layer) => {
+    emit({
+      message: `Layer "${layer.name}" failed to load`,
+      color: "critical",
+      primary: { children: "Center On" },
+      metadata: { 
+        layerId: layer.id,
+        geometry: layer.geometry 
+      }
+    });
+  };
+
+  // Handle primary action clicks - metadata is passed in the event
+  useOn(NoticeEventTypes.actionPrimary, (event) => {
+    const { metadata } = event.payload;
+    
+    if (metadata?.geometry) {
+      centerOn({
+        geometry: metadata.geometry,
+        zoomTo: true
+      });
+    }
+  });
+
+  return <NoticeList id="map-notices" placement="top right" />;
+}
+```
+
+**Note:** `NoticeList` uses event-driven architecture. You cannot pass `onPrimaryAction` directly as a prop - instead, use `useOn` to listen for action events on the bus.
 
 ### Removing Notices
 ```tsx

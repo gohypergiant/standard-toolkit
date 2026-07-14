@@ -31,7 +31,7 @@ import { Button } from '../button';
 import { Notice } from './';
 import { NoticeEventTypes } from './events';
 import styles from './styles.module.css';
-import { matchesMetadata } from './utils';
+import { matchesDequeueFilter } from './utils';
 import type {
   NoticeActionEvent,
   NoticeContent,
@@ -134,7 +134,7 @@ export function NoticeList({
     const queuedNotices = queue.queue;
 
     const dequeue = queuedNotices.filter((toast: QueuedToast<NoticeContent>) =>
-      matchesMetadata(data.payload, toast.content),
+      matchesDequeueFilter(data.payload, toast.content),
     );
 
     if (dequeue.length && dequeue.length === queuedNotices.length) {
@@ -186,14 +186,25 @@ export function NoticeList({
             }
             classNames={classNames?.notice}
             size={size}
-            onPrimaryAction={() => emitActionPrimary({ id: toast.content.id })}
+            onPrimaryAction={() =>
+              emitActionPrimary({
+                id: toast.content.id,
+                metadata: toast.content.metadata,
+              })
+            }
             onSecondaryAction={() =>
-              emitActionSecondary({ id: toast.content.id })
+              emitActionSecondary({
+                id: toast.content.id,
+                metadata: toast.content.metadata,
+              })
             }
             onClose={() => {
               toast.onClose?.();
               queue.close(toast.key);
-              emitClose({ id: toast.content.id });
+              emitClose({
+                id: toast.content.id,
+                metadata: toast.content.metadata,
+              });
             }}
           />
         )}
