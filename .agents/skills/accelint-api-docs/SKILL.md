@@ -240,10 +240,46 @@ When the user asks to document a file, follow this workflow.
      ```
    - Update the file's frontmatter, replacing `doc_sha: pending` with the computed hash
 
-**11. Update tracking index**
+**11. Update or create meta.json for parent directory**
+   - **CRITICAL**: Fumadocs requires explicit `meta.json` files to include flat `.mdx` files in navigation
+   - After writing the documentation file, check the parent directory for a `meta.json` file
+   - Get parent directory: `dirname <output-file>`
+   - List all items (folders and flat .mdx files) in parent directory:
+     ```bash
+     # List folders (directories)
+     find <parent-dir> -maxdepth 1 -type d ! -name '.' ! -name '..' -exec basename {} \;
+     # List flat .mdx files (remove .mdx extension)
+     find <parent-dir> -maxdepth 1 -name '*.mdx' -type f -exec basename {} .mdx \;
+     ```
+   - Sort items alphabetically
+   - Check if `meta.json` exists in parent directory:
+     - **If exists**: Read it, verify all items are in `pages` array, add missing items alphabetically
+     - **If not exists**: Create new `meta.json` with all items in alphabetical order
+   - Format:
+     ```json
+     {
+       "title": "<Section Title>",
+       "pages": [
+         "item1",
+         "item2",
+         "flat-file",
+         "item3"
+       ]
+     }
+     ```
+   - **Title mapping**:
+     - `packages/` → "Packages"
+     - `toolkits/` → "Toolkits"
+     - `tooling/` → "Tooling"
+     - Nested folders: Use capitalized folder name
+   - **Important**: Without this step, flat `.mdx` files won't appear in sidebar navigation
+
+**12. Update tracking index**
+
+**12. Update tracking index**
    - Read `apps/docs/.index.json`
    - Update or append entry with: source, doc, entities, source_sha, doc_sha, updated (ISO 8601 timestamp)
-   - Use the computed `doc_sha` from step 8 (NOT "pending")
+   - Use the computed `doc_sha` from step 10 (NOT "pending")
    - Update `generated` timestamp to current time
    - Write back to `apps/docs/.index.json`
    - Keep entries sorted by source path for clean diffs

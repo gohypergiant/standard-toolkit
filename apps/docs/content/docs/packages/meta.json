@@ -3,6 +3,7 @@
   "pages": [
     "bus",
     "constants",
+    "converters",
     "core",
     "dataset",
     "design-foundation",
@@ -15,7 +16,6 @@
     "ntds",
     "predicates",
     "temporal",
-    "web-worker",
-    "websocket"
+    "worker"
   ]
 }
