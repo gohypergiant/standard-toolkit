@@ -59,6 +59,7 @@ import {
   getIconConfig,
   getIconLayerProps,
   getIconUpdateTriggers,
+  getMaskedIconSubLayerProps,
 } from './utils/icon-config';
 import { getLabelPosition2d } from './utils/labels';
 import { getRadiusLabelText } from './utils/radius-label';
@@ -682,6 +683,20 @@ export class DisplayShapeLayer extends CompositeLayer<DisplayShapeLayerProps> {
 
       // Icon configuration (only used if pointType includes 'icon')
       ...getIconLayerProps(hasIcons, iconAtlas, iconMapping),
+
+      // Swap the icon point sublayer for a MaskedIconLayer so point icons recolor
+      // their maskable region in real time from the shape's fillColor. The
+      // CoffinCornerExtension and its selection props keep propagating from the
+      // parent GeoJsonLayer's `extensions`, so the swap only overrides the
+      // sublayer type and fill accessors.
+      ...(hasIcons
+        ? {
+            // biome-ignore lint/style/useNamingConvention: deck.gl's sublayer-override prop.
+            _subLayerProps: {
+              'points-icon': getMaskedIconSubLayerProps(features),
+            },
+          }
+        : {}),
 
       // Coffin corner extension props — the extension is a no-op on non-icon/scatterplot sublayers,
       // so it's safe to include on the GeoJsonLayer directly. deck.gl's extension propagation

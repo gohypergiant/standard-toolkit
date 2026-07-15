@@ -31,6 +31,12 @@ export default defineConfig({
     // Exclude internal implementation details from extensions (not part of public API)
     '!src/deckgl/extensions/**/store.ts',
     '!src/deckgl/extensions/coffin-corner/fiber.ts',
+    // Exclude masked-icon-layer shader internals (not part of public API — only
+    // the MaskedIconLayer class and its fiber binding are public)
+    '!src/deckgl/masked-icon-layer/masked-icon-glsl.ts',
+    '!src/deckgl/masked-icon-layer/masked-icon-layer-fragment.glsl.ts',
+    '!src/deckgl/masked-icon-layer/masked-icon-layer-vertex.glsl.ts',
+    '!src/deckgl/masked-icon-layer/masked-icon-uniforms.ts',
     // Additional internal files
     '!src/deckgl/shapes/display-shape-layer/shape-label-layer.ts',
     '!src/shared/logger.ts',

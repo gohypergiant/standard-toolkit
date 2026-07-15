@@ -1026,6 +1026,9 @@ importers:
       '@deckgl-fiber-renderer/types':
         specifier: ^1.4.0
         version: 1.4.0(0198b39424cc7edf8d6af0b38477a582)
+      '@luma.gl/shadertools':
+        specifier: ^9.2
+        version: 9.2.6(@luma.gl/core@9.2.6)
       '@math.gl/web-mercator':
         specifier: ^4.1.0
         version: 4.1.0

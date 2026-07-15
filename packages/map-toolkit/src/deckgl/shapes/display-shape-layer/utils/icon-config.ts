@@ -12,7 +12,9 @@
 
 'use client';
 
-import { getLineColor } from '../../shared/utils/style-utils';
+import { MaskedIconLayer } from '../../../masked-icon-layer';
+import { DEFAULT_COLORS } from '../../shared/constants';
+import { getFillColor, getLineColor } from '../../shared/utils/style-utils';
 import { MAP_INTERACTION } from '../constants';
 import type { Shape } from '../../shared/types';
 
@@ -144,5 +146,43 @@ export function getIconUpdateTriggers(
     getIconSize: [features],
     getIconColor: [features],
     getIconPixelOffset: [features],
+  };
+}
+
+/**
+ * Build the `_subLayerProps['points-icon']` override that swaps the GeoJsonLayer's
+ * icon sublayer for a {@link MaskedIconLayer}, so point icons recolor their
+ * maskable region in real time from each shape's `styleProperties.fillColor`.
+ *
+ * `getColor` is kept wired to `getLineColor` (deck.gl IconLayer's whole-glyph
+ * tint) so icons WITHOUT a maskable region render exactly as before — the
+ * masking only affects pixels matching the layer's `matchColor`.
+ *
+ * Only the sublayer `type` and its fill accessors are overridden here; the
+ * `CoffinCornerExtension` and its selection/hover props keep flowing from the
+ * parent GeoJsonLayer's propagated `extensions`, so selection brackets need no
+ * re-wiring on the swapped-in sublayer.
+ *
+ * @param features - Features array, for the fill-color update triggers.
+ * @returns props object for `_subLayerProps['points-icon']`
+ */
+export function getMaskedIconSubLayerProps(
+  features: Shape['feature'][],
+): Record<string, unknown> {
+  // deck.gl invokes these on the icon-point sublayer's data, which is not always
+  // the wrapped source feature — guard `properties` access (mirroring
+  // getIconLayerProps) so a bare geometry object doesn't throw.
+  return {
+    type: MaskedIconLayer,
+    // Per-instance maskable fill from the shape's fill color.
+    getFillColor: (feature: Shape['feature']) =>
+      feature?.properties ? getFillColor(feature) : DEFAULT_COLORS.fill,
+    // Preserve the whole-glyph tint for icons with no maskable region.
+    getColor: (feature: Shape['feature']) =>
+      feature?.properties ? getLineColor(feature) : DEFAULT_COLORS.line,
+    updateTriggers: {
+      getFillColor: [features],
+      getColor: [features],
+    },
   };
 }

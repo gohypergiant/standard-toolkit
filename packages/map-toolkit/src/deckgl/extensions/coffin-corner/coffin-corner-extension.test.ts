@@ -12,6 +12,7 @@
 
 import { IconLayer } from '@deck.gl/layers';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { MaskedIconLayer } from '../../masked-icon-layer';
 import { CoffinCornerExtension } from './coffin-corner-extension';
 import type { Rgba255Tuple } from '@accelint/predicates';
 import type { EntityId } from './types';
@@ -331,21 +332,34 @@ describe('CoffinCornerExtension', () => {
       expect(shaders).toBeNull();
     });
 
-    it('exposes an overridable icon base-color hook guarded by a define', () => {
-      // IconLayer subclasses that re-color the sampled texel override
-      // `coffinCorner_iconBaseColor`; the `#ifndef` guard lets them suppress the
-      // default. This contract is part of the extension's public surface, so the
-      // hook name, guard macro, and the default texture sample must all be present.
+    it('samples the icon texture in the plain icon main-start injection', () => {
       const layer = createMockLayer();
 
       const shaders = extension.getShaders.call(layer, extension);
-      const fsDecl = shaders?.inject['fs:#decl'] ?? '';
 
-      expect(fsDecl).toContain('coffinCorner_iconBaseColor');
-      expect(fsDecl).toContain('COFFIN_CORNER_HAS_CUSTOM_ICON_BASE_COLOR');
-      expect(fsDecl).toContain('texture(iconsTexture, textureCoords)');
       expect(shaders?.inject['fs:#main-start']).toContain(
-        'coffinCorner_iconBaseColor(vTextureCoords)',
+        'texture(iconsTexture, vTextureCoords)',
+      );
+      // A plain IconLayer host must NOT get the masked color replacement.
+      expect(shaders?.inject['fs:#main-start']).not.toContain(
+        'maskedIcon_replace',
+      );
+    });
+
+    it('uses the masked main-start for a MaskedIconLayer host', () => {
+      // Source the masked-host identity from the real MaskedIconLayer (an
+      // IconLayer subclass) so the duck-typed layerName can't silently drift
+      // from production. A bare prototype instance is enough — the extension
+      // only reads the prototype chain + static layerName, not layer state.
+      // biome-ignore lint/suspicious/noExplicitAny: minimal masked-host mock.
+      const layer = Object.create(MaskedIconLayer.prototype) as any;
+
+      const shaders = extension.getShaders.call(layer, extension);
+
+      // The masked path applies the color replacement before compositing.
+      expect(shaders?.inject['fs:#main-start']).toContain('maskedIcon_replace');
+      expect(shaders?.inject['fs:#main-start']).toContain(
+        'texture(iconsTexture, vTextureCoords)',
       );
     });
   });

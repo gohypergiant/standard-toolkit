@@ -83,6 +83,12 @@ export const DEFAULT_ELEVATION = 0;
 /** Reusable deck.gl PathStyleExtension enabling dash patterns on GeoJsonLayer lines. */
 export const DASH_EXTENSION = new PathStyleExtension({ dash: true });
 
+/**
+ * Shared CoffinCornerExtension for shape display. Auto-composites its brackets
+ * over the recolored icon on the swapped-in MaskedIconLayer point sublayer (and
+ * works unchanged on circle/icon sublayers). Stable reference to avoid a new
+ * reference per render re-triggering `getShaders()`.
+ */
 export const COFFIN_CORNER_EXTENSION = new CoffinCornerExtension();
 
 /** Stable extensions array for GeoJsonLayer — avoids new reference per render triggering getShaders() re-evaluation. */

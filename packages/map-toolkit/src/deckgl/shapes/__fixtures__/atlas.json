@@ -1,10 +1,17 @@
 {
   "marker": { "height": 64, "pixelRatio": 2, "width": 64, "x": 0, "y": 0 },
-  "marker-serious": {
+  "marker-masked": {
     "height": 64,
     "pixelRatio": 2,
     "width": 64,
     "x": 64,
     "y": 0
+  },
+  "marker-serious": {
+    "height": 64,
+    "pixelRatio": 2,
+    "width": 64,
+    "x": 0,
+    "y": 64
   }
 }
