@@ -17,11 +17,26 @@
 // biome-ignore-all assist/source/organizeImports: This comment is used to prevent the biome tool from altering the import statements in this file.
 
 export { coordinateSystems, createCoordinate } from './coordinates/coordinate';
-export { formatDecimalDegrees } from './coordinates/latlon/decimal-degrees/formatter';
+export {
+  DECIMAL_DEGREES_PRECISION,
+  formatDecimalDegrees,
+  toDecimalDegreesParts,
+} from './coordinates/latlon/decimal-degrees/formatter';
+export type { DecimalDegreesParts } from './coordinates/latlon/decimal-degrees/formatter';
 export { parseDecimalDegrees } from './coordinates/latlon/decimal-degrees/parser';
-export { formatDegreesDecimalMinutes } from './coordinates/latlon/degrees-decimal-minutes/formatter';
+export {
+  DDM_PRECISION,
+  formatDegreesDecimalMinutes,
+  toDdmParts,
+} from './coordinates/latlon/degrees-decimal-minutes/formatter';
+export type { DdmParts } from './coordinates/latlon/degrees-decimal-minutes/formatter';
 export { parseDegreesDecimalMinutes } from './coordinates/latlon/degrees-decimal-minutes/parser';
-export { formatDegreesMinutesSeconds } from './coordinates/latlon/degrees-minutes-seconds/formatter';
+export {
+  DMS_PRECISION,
+  formatDegreesMinutesSeconds,
+  toDmsParts,
+} from './coordinates/latlon/degrees-minutes-seconds/formatter';
+export type { DmsParts } from './coordinates/latlon/degrees-minutes-seconds/formatter';
 export { parseDegreesMinutesSeconds } from './coordinates/latlon/degrees-minutes-seconds/parser';
 export { createFormatter } from './coordinates/latlon/internal/format';
 export type { FormatOptions } from './coordinates/latlon/internal/format';
@@ -39,11 +54,25 @@ export type {
   LatLonTuple,
   LonLatTuple,
 } from './coordinates/latlon/internal/normalize';
-export { getOrdinal } from './coordinates/latlon/internal/ordinal';
+export {
+  getHemisphere,
+  getOrdinal,
+} from './coordinates/latlon/internal/ordinal';
+export type { Axis, Hemisphere } from './coordinates/latlon/internal/ordinal';
 export {
   isFiniteNumber,
   validateNumericCoordinate,
   validateSignedRange,
 } from './coordinates/latlon/internal/validate';
 export { parseMGRS } from './coordinates/mgrs/parser';
+export { toMgrsParts } from './coordinates/mgrs/parts';
+export type { MgrsParts } from './coordinates/mgrs/parts';
 export { parseUTM } from './coordinates/utm/parser';
+export {
+  GRID_LATITUDE_MAX,
+  GRID_LATITUDE_MIN,
+  isOnEasternAntimeridian,
+  isWithinGridBand,
+  toUtmParts,
+} from './coordinates/utm/parts';
+export type { GridPartsResult, UtmParts } from './coordinates/utm/parts';

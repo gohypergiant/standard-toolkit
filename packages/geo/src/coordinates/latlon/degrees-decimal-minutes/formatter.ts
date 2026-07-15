@@ -11,35 +11,86 @@
  */
 
 import { createFormatter } from '../internal/format';
+import { type Axis, getHemisphere, type Hemisphere } from '../internal/ordinal';
+
+/** Default number of decimal places for degrees-decimal-minutes formatting. */
+export const DDM_PRECISION = 4;
 
 /**
- * Converts a coordinate value to degrees decimal minutes format.
+ * Structured degrees-decimal-minutes parts for a single signed coordinate value.
  *
- * @param num - The coordinate value to format.
- * @returns Formatted coordinate string with degrees and decimal minutes (e.g., "45° 30.1234'").
+ * `degrees` and `minutes` are non-negative; carry keeps `minutes` below `60`.
+ * The signed value is recoverable from the axis and `hemisphere`.
+ */
+export type DdmParts = {
+  degrees: number;
+  minutes: number;
+  hemisphere: Hemisphere;
+};
+
+/**
+ * Converts a single signed coordinate value into degrees-decimal-minutes parts.
+ *
+ * Applies the minutes carry (`60′ → +1°`) after rounding so `minutes` never
+ * reaches `60`, then attaches the hemisphere letter for the axis.
+ *
+ * @param value - The signed coordinate value.
+ * @param axis - Whether the value is a latitude (`'lat'`) or longitude (`'lon'`).
+ * @param precision - Decimal places for the minutes (default `4`).
+ * @returns The `{ degrees, minutes, hemisphere }` parts object.
+ *
+ * @remarks pure function
  *
  * @example
  * ```typescript
- * toDegreesDecimalMinutes(45.5);
- * // '45° 30.0000''
- * ```
- *
- * @example
- * ```typescript
- * toDegreesDecimalMinutes(-122.4194);
- * // '122° 25.1640''
+ * toDdmParts(12.576, 'lat');
+ * // { degrees: 12, minutes: 34.56, hemisphere: 'N' }
  * ```
  */
-const toDegreesDecimalMinutes = (num: number): string => {
-  let degrees = Math.floor(Math.abs(num));
-  let minutes = Number(((Math.abs(num) - degrees) * 60).toFixed(4));
+export const toDdmParts = (
+  value: number,
+  axis: Axis,
+  precision: number = DDM_PRECISION,
+): DdmParts => {
+  const magnitude = Math.abs(value);
+  let degrees = Math.floor(magnitude);
+  let minutes = Number(((magnitude - degrees) * 60).toFixed(precision));
 
   // Rounding can produce 60 minutes (e.g. 40.9999995 -> 40° 60.0000');
   // carry into degrees so the output stays a valid coordinate.
   degrees += Math.floor(minutes / 60);
   minutes %= 60;
 
-  return `${degrees}° ${minutes.toFixed(4)}'`;
+  return {
+    degrees,
+    minutes,
+    hemisphere: getHemisphere(value, axis),
+  };
+};
+
+/**
+ * Converts a coordinate value to degrees decimal minutes format.
+ *
+ * @param num - The coordinate value to format.
+ * @param axis - Whether the value is a latitude (`'lat'`) or longitude (`'lon'`).
+ * @returns Formatted coordinate string with degrees and decimal minutes (e.g., "45° 30.1234'").
+ *
+ * @example
+ * ```typescript
+ * toDegreesDecimalMinutes(45.5, 'lat');
+ * // '45° 30.0000''
+ * ```
+ *
+ * @example
+ * ```typescript
+ * toDegreesDecimalMinutes(-122.4194, 'lon');
+ * // '122° 25.1640''
+ * ```
+ */
+const toDegreesDecimalMinutes = (num: number, axis: Axis): string => {
+  const { degrees, minutes } = toDdmParts(num, axis);
+
+  return `${degrees}° ${minutes.toFixed(DDM_PRECISION)}'`;
 };
 
 /**

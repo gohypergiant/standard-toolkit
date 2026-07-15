@@ -94,8 +94,15 @@ context: |
     point — tactical readout. Caution: in packages/geo, "bearing" means the
     hemisphere letter (N/S/E/W) of a coordinate, not azimuth
   - Coordinate systems: packages/geo parses/formats lat-lon in Decimal
-    Degrees, Degrees-Decimal-Minutes, Degrees-Minutes-Seconds, and MGRS via
-    composable RegExp patterning
+    Degrees, Degrees-Decimal-Minutes, Degrees-Minutes-Seconds, MGRS, and UTM
+    via composable RegExp patterning. Alongside the string formatters, geo
+    exposes a structured parts layer the string formatters compose over:
+    per-axis toDecimalDegreesParts/toDdmParts/toDmsParts (numeric
+    degrees/minutes/seconds + hemisphere letter) and grid
+    toMgrsParts/toUtmParts, which return a discriminated
+    { ok:true, value } | { ok:false, reason:'out-of-range' } for the
+    inclusive 80°S–84°N band. Consumers branch on the typed result instead of
+    string-matching geodesy error text
   - Event bus: @accelint/bus Broadcast singleton over BroadcastChannel with
     typed payloads; the app-wide decoupling mechanism between map features,
     UI, and workers

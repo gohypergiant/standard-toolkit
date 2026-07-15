@@ -21,16 +21,18 @@ import {
 } from '.';
 import { coordinateSystems } from './coordinates/coordinate';
 import { EXHAUSTIVE_ERRORS } from './coordinates/latlon/internal/exhaustive-errors';
+import { toMgrsParts } from './coordinates/mgrs/parts';
 import { parseUTM } from './coordinates/utm/parser';
+import { toUtmParts } from './coordinates/utm/parts';
 import type { Format } from './coordinates/latlon/internal';
 
 describe('creating a coordinate object', () => {
   it.each`
-    system                    | format      | input                          | dd                                           | ddm                                         | dms                                               | mgrs
-    ${coordinateSystems.dd}   | ${'LONLAT'} | ${'12.3456 E / 67.8901 N'}     | ${'12.3456 E / 67.8901 N'}                   | ${'12 20.736 E / 67 53.406 N'}              | ${'12 20 44.16 E / 67 53 24.36 N'}                | ${'33W UR 88535 33004'}
-    ${coordinateSystems.ddm}  | ${'LATLON'} | ${'11 33.02 N / 3 1.2 W'}      | ${'3.02 W / 11.550333333 N'}                 | ${'3 1.2 W / 11 33.02 N'}                   | ${'3 1 12 W / 11 33 1.1999988 N'}                 | ${'30P VT 97819 76831'}
-    ${coordinateSystems.dms}  | ${'LATLON'} | ${'11 22 33.44 N / 3 2 1.1 W'} | ${'3.033638889 W / 11.375955556 N'}          | ${'3 2.01833334 W / 11 22.55733336 N'}      | ${'3 2 1.1 W / 11 22 33.44 N'}                    | ${'30P VT 96329 57549'}
-    ${coordinateSystems.mgrs} | ${'LATLON'} | ${'30U WB 85358 69660'}        | ${'1.7790080009934 W / 51.17199279600467 N'} | ${'1 46.7404800596 W / 51 10.3195677603 N'} | ${'1 46 44.4288035762 W / 51 10 19.1740656168 N'} | ${'30U WB 85358 69660'}
+    system                    | format      | input                          | dd                                           | ddm                                         | dms                                               | mgrs                    | utm
+    ${coordinateSystems.dd}   | ${'LONLAT'} | ${'12.3456 E / 67.8901 N'}     | ${'12.3456 E / 67.8901 N'}                   | ${'12 20.736 E / 67 53.406 N'}              | ${'12 20 44.16 E / 67 53 24.36 N'}                | ${'33W UR 88535 33004'} | ${'33N 388536 7533004'}
+    ${coordinateSystems.ddm}  | ${'LATLON'} | ${'11 33.02 N / 3 1.2 W'}      | ${'3.02 W / 11.550333333 N'}                 | ${'3 1.2 W / 11 33.02 N'}                   | ${'3 1 12 W / 11 33 1.1999988 N'}                 | ${'30P VT 97819 76831'} | ${'30N 497819 1276831'}
+    ${coordinateSystems.dms}  | ${'LATLON'} | ${'11 22 33.44 N / 3 2 1.1 W'} | ${'3.033638889 W / 11.375955556 N'}          | ${'3 2.01833334 W / 11 22.55733336 N'}      | ${'3 2 1.1 W / 11 22 33.44 N'}                    | ${'30P VT 96329 57549'} | ${'30N 496330 1257550'}
+    ${coordinateSystems.mgrs} | ${'LATLON'} | ${'30U WB 85358 69660'}        | ${'1.7790080009934 W / 51.17199279600467 N'} | ${'1 46.7404800596 W / 51 10.3195677603 N'} | ${'1 46 44.4288035762 W / 51 10 19.1740656168 N'} | ${'30U WB 85358 69660'} | ${'30N 585358 5669660'}
   `(
     'should create a coordinate in the $system.name system using the $format format',
     ({ format, input, system, ...expected }) => {
@@ -58,10 +60,114 @@ describe('creating a coordinate object', () => {
       );
 
       expect(coord.mgrs()).toBe(expected.mgrs);
+      expect(coord.utm()).toBe(expected.utm);
+    },
+  );
+
+  // MGRS/UTM are valid across 80°S–84°N inclusive. geodesy 2.4.0 threw a
+  // RangeError at the exact edges (too-strict northing bounds at 84°N; a
+  // float-precision band lookup at 80°S); both are fixed by the geodesy patch
+  // (patches/geodesy@2.4.0.patch, back-porting the upstream master fixes).
+  it.each`
+    label     | input           | mgrs                    | utm
+    ${'84°N'} | ${'84 N / 0 E'} | ${'31X DP 65005 29005'} | ${'31N 465005 9329005'}
+    ${'80°S'} | ${'80 S / 0 E'} | ${'31C DM 41867 16915'} | ${'31S 441868 1116915'}
+  `(
+    'converts the latitude boundary $label to MGRS/UTM without throwing',
+    ({ input, mgrs, utm }) => {
+      const coord = createCoordinate(coordinateSystems.dd, 'LATLON')(input);
+
+      expect(coord.valid).toBe(true);
+      expect(coord.mgrs()).toBe(mgrs);
+      expect(coord.utm()).toBe(utm);
     },
   );
 
   const create = createCoordinate(coordinateSystems.dd, 'LATLON');
+
+  describe('grid parts (toUtmParts / toMgrsParts)', () => {
+    it('returns UTM parts for an in-band coordinate', () => {
+      expect(toUtmParts([38.8977, -77.0365])).toStrictEqual({
+        ok: true,
+        value: {
+          zone: 18,
+          hemisphere: 'N',
+          easting: 323394,
+          northing: 4307396,
+        },
+      });
+    });
+
+    it('returns MGRS parts for an in-band coordinate', () => {
+      const result = toMgrsParts([38.8977, -77.0365]);
+
+      expect(result.ok).toBe(true);
+
+      // biome-ignore lint/suspicious/noExplicitAny: narrowed by the assertion above
+      const { value } = result as any;
+
+      expect(value.zone).toBe(18);
+      expect(value.band).toBe('S');
+      expect(value.e100k).toBe('U');
+      expect(value.n100k).toBe('J');
+    });
+
+    // 80°S and 84°N are inclusive edges of the UTM/MGRS grid band.
+    it.each`
+      label     | lat
+      ${'84°N'} | ${84}
+      ${'80°S'} | ${-80}
+    `('accepts the inclusive boundary $label', ({ lat }) => {
+      expect(toUtmParts([lat, 0]).ok).toBe(true);
+      expect(toMgrsParts([lat, 0]).ok).toBe(true);
+    });
+
+    // Just past either edge falls outside the projected grid.
+    it.each`
+      label          | lat
+      ${'past 84°N'} | ${84.0001}
+      ${'past 80°S'} | ${-80.0001}
+    `('rejects $label as out-of-range', ({ lat }) => {
+      expect(toUtmParts([lat, 0])).toStrictEqual({
+        ok: false,
+        reason: 'out-of-range',
+      });
+      expect(toMgrsParts([lat, 0])).toStrictEqual({
+        ok: false,
+        reason: 'out-of-range',
+      });
+    });
+
+    it('rejects non-finite input as out-of-range', () => {
+      expect(toUtmParts([Number.NaN, 0]).ok).toBe(false);
+      expect(toMgrsParts([0, Number.POSITIVE_INFINITY]).ok).toBe(false);
+    });
+
+    // At exactly +180° the UTM zone formula yields the nonexistent zone 61,
+    // which geodesy throws on; the guard converts that to a typed result
+    // instead of an exception.
+    it('rejects the +180° antimeridian as out-of-range', () => {
+      expect(toUtmParts([0, 180])).toStrictEqual({
+        ok: false,
+        reason: 'out-of-range',
+      });
+      expect(toMgrsParts([0, 180])).toStrictEqual({
+        ok: false,
+        reason: 'out-of-range',
+      });
+    });
+
+    // Only +180° is excluded; -180° and longitudes just short of +180° still
+    // project normally, so existing output for those is unchanged.
+    it.each`
+      label                  | lon
+      ${'-180° (west edge)'} | ${-180}
+      ${'just under +180°'}  | ${179.999}
+    `('keeps $label a valid grid reference', ({ lon }) => {
+      expect(toUtmParts([0, lon]).ok).toBe(true);
+      expect(toMgrsParts([0, lon]).ok).toBe(true);
+    });
+  });
 
   it('should NOT create a coordinate; invalid coordinate input', () => {
     const coord = create('');

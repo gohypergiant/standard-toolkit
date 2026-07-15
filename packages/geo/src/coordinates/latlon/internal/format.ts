@@ -12,7 +12,7 @@
 
 // __private-exports
 
-import { getOrdinal } from './ordinal';
+import { type Axis, getOrdinal } from './ordinal';
 
 export interface FormatOptions {
   prefix: string;
@@ -42,13 +42,13 @@ export interface FormatOptions {
  * ```
  */
 export const createFormatter =
-  (fn: (coord: number, withOrdinal?: boolean) => string) =>
+  (fn: (coord: number, axis: Axis, withOrdinal?: boolean) => string) =>
   (coordinates: [number, number], config?: FormatOptions): string => {
     const [latitude, longitude] = coordinates;
     const latOrdinal = `${config?.withOrdinal ? ` ${getOrdinal(latitude, true)}` : ''}`;
     const lonOrdinal = `${config?.withOrdinal ? ` ${getOrdinal(longitude, false)}` : ''}`;
-    const lat = fn(latitude, config?.withOrdinal);
-    const lon = fn(longitude, config?.withOrdinal);
+    const lat = fn(latitude, 'lat', config?.withOrdinal);
+    const lon = fn(longitude, 'lon', config?.withOrdinal);
     const prefix = config?.prefix ?? '';
     const suffix = config?.suffix ?? '';
     const separator = config?.separator ?? ', ';
