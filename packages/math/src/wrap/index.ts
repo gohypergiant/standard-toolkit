@@ -14,13 +14,6 @@
  * Wraps a number into the half-open range `[min, max)`, cycling values that
  * fall outside it back around rather than clamping them to the edge.
  *
- * Unlike {@link clamp}, which pins out-of-range values to `min`/`max`, this
- * treats the range as circular: a value past `max` re-enters at `min`, and one
- * below `min` re-enters just under `max`. Handles negative and multi-revolution
- * inputs (JavaScript's `%` returns the dividend's sign, so the raw modulo alone
- * would leave `-90` negative). Common for angles (`wrap(0, 360, angle)`) and
- * longitudes (`wrap(-180, 180, lon)`).
- *
  * @param min - The inclusive lower bound of the range.
  * @param max - The exclusive upper bound of the range.
  * @param value - The number value to wrap into the given range.
@@ -28,7 +21,15 @@
  *
  * @throws {RangeError} Throws if min >= max.
  *
- * @remarks pure function
+ * @remarks
+ * Pure function.
+ *
+ * Unlike {@link clamp}, which pins out-of-range values to `min`/`max`, this
+ * treats the range as circular: a value past `max` re-enters at `min`, and one
+ * below `min` re-enters just under `max`. Handles negative and multi-revolution
+ * inputs (JavaScript's `%` returns the dividend's sign, so the raw modulo alone
+ * would leave `-90` negative). Common for angles (`wrap(0, 360, angle)`) and
+ * longitudes (`wrap(-180, 180, lon)`).
  *
  * @example
  * ```typescript
@@ -40,9 +41,9 @@
  * const value = wrap(360, 0, 10); // RangeError
  * ```
  */
-export function wrap(min: number, max: number, value: number) {
+export function wrap(min: number, max: number, value: number): number {
   if (min >= max) {
-    throw new RangeError('min exceeded max');
+    throw new RangeError('min must be less than max');
   }
 
   const range = max - min;

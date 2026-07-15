@@ -15,19 +15,22 @@ import { wrap } from './';
 
 describe('wrap', () => {
   it.each`
-    min     | max    | value   | expected | scenario
-    ${0}    | ${360} | ${10}   | ${10}    | ${'returns value already within an angle range'}
-    ${0}    | ${360} | ${370}  | ${10}    | ${'wraps a value past max back to min'}
-    ${0}    | ${360} | ${-90}  | ${270}   | ${'wraps a negative value up into range'}
-    ${0}    | ${360} | ${720}  | ${0}     | ${'wraps a multi-revolution value to min'}
-    ${0}    | ${360} | ${0}    | ${0}     | ${'returns min unchanged (inclusive lower bound)'}
-    ${0}    | ${360} | ${360}  | ${0}     | ${'wraps max to min (exclusive upper bound)'}
-    ${-180} | ${180} | ${45}   | ${45}    | ${'returns a longitude already within range'}
-    ${-180} | ${180} | ${190}  | ${-170}  | ${'wraps a longitude past the antimeridian'}
-    ${-180} | ${180} | ${-180} | ${-180}  | ${'returns the inclusive min longitude unchanged'}
-    ${-180} | ${180} | ${180}  | ${-180}  | ${'wraps the exclusive max longitude to min'}
-    ${-180} | ${180} | ${540}  | ${-180}  | ${'wraps a multi-revolution longitude'}
-    ${-180} | ${180} | ${-541} | ${179}   | ${'wraps a large negative longitude'}
+    min     | max    | value    | expected | scenario
+    ${0}    | ${360} | ${10}    | ${10}    | ${'returns value already within an angle range'}
+    ${0}    | ${360} | ${370}   | ${10}    | ${'wraps a value past max back to min'}
+    ${0}    | ${360} | ${-90}   | ${270}   | ${'wraps a negative value up into range'}
+    ${0}    | ${360} | ${720}   | ${0}     | ${'wraps a multi-revolution value to min'}
+    ${0}    | ${360} | ${0}     | ${0}     | ${'returns min unchanged (inclusive lower bound)'}
+    ${0}    | ${360} | ${360}   | ${0}     | ${'wraps max to min (exclusive upper bound)'}
+    ${-180} | ${180} | ${45}    | ${45}    | ${'returns a longitude already within range'}
+    ${-180} | ${180} | ${190}   | ${-170}  | ${'wraps a longitude past the antimeridian'}
+    ${-180} | ${180} | ${-180}  | ${-180}  | ${'returns the inclusive min longitude unchanged'}
+    ${-180} | ${180} | ${180}   | ${-180}  | ${'wraps the exclusive max longitude to min'}
+    ${-180} | ${180} | ${540}   | ${-180}  | ${'wraps a multi-revolution longitude'}
+    ${-180} | ${180} | ${-541}  | ${179}   | ${'wraps a large negative longitude'}
+    ${0}    | ${360} | ${370.5} | ${10.5}  | ${'preserves the fractional part when wrapping'}
+    ${0}    | ${360} | ${-0.5}  | ${359.5} | ${'preserves the fraction while correcting a negative value'}
+    ${1}    | ${5}   | ${7}     | ${3}     | ${'wraps into a range whose min is non-zero'}
   `('should $scenario', ({ min, max, value, expected }) => {
     const result = wrap(min, max, value);
 
@@ -35,10 +38,10 @@ describe('wrap', () => {
   });
 
   it('should throw RangeError when min equals max', () => {
-    expect(() => wrap(0, 0, 5)).toThrow('min exceeded max');
+    expect(() => wrap(0, 0, 5)).toThrow('min must be less than max');
   });
 
   it('should throw RangeError when min exceeds max', () => {
-    expect(() => wrap(360, 0, 10)).toThrow('min exceeded max');
+    expect(() => wrap(360, 0, 10)).toThrow('min must be less than max');
   });
 });
