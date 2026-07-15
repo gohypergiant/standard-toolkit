@@ -1,5 +1,11 @@
 # @accelint/ntds
 
+## 0.2.6
+
+### Patch Changes
+
+- 144b2c5: Documentation adjustment.
+
 ## 0.2.5
 
 ### Patch Changes

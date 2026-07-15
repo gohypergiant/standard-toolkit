@@ -81,6 +81,17 @@ describe('useMapCamera', () => {
     expect(result.current.cameraState.pitch).not.toEqual(60);
   });
 
+  it('should clamp pitch to the 85 maximum in 2.5D', () => {
+    const { result } = renderHook(() => useMapCamera(testid, { view: '2.5D' }));
+    act(() => {
+      bus.emit(CameraEventTypes.setPitch, {
+        id: testid,
+        pitch: 120,
+      });
+    });
+    expect(result.current.cameraState.pitch).toEqual(85);
+  });
+
   it('should update rotation', () => {
     const { result } = renderHook(() => useMapCamera(testid));
     act(() => {

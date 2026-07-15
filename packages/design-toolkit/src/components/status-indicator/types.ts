@@ -13,5 +13,6 @@
 import type { ComponentPropsWithRef } from 'react';
 
 export type StatusIndicatorProps = ComponentPropsWithRef<'span'> & {
-  status?: 'good' | 'degraded' | 'poor';
+  status?: 'good' | 'degraded' | 'poor' | 'pending' | 'unknown';
+  textValue?: string;
 };

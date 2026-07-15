@@ -18,7 +18,10 @@ Uses the [Options](?path=/docs/components-options--playground) component system 
 ```tsx
 <ComboBoxField defaultItems={items} label="Select animal">
   {(item) => (
-    <OptionsItem key={item.id} textValue={item.name}>
+    <OptionsItem
+      key={item.id}
+      textValue={item.name}  // Required for filtering to work
+    >
       <Icon>{item.prefixIcon}</Icon>
       <OptionsItemContent>
         <OptionsItemLabel>{item.name}</OptionsItemLabel>
@@ -29,6 +32,8 @@ Uses the [Options](?path=/docs/components-options--playground) component system 
 </ComboBoxField>
 ```
 <Canvas of={ComboBoxStories.Default} />
+
+> **Important:** Always include `textValue` on each `OptionsItem` when using `defaultItems`. This enables React Aria's built-in filtering.
 
 ### With Sections
 ```tsx
@@ -136,18 +141,175 @@ Context provider for setting default props across multiple ComboBoxField compone
 </ComboBoxFieldProvider>
 ```
 
+## Usage Patterns
+
+You can provide items two ways, and React Aria's filtering behavior depends on whether the collection is uncontrolled or controlled.
+
+Dynamic items (recommended)
+Pass `defaultItems` with a render function. React Aria filters the list automatically as the user types.
+
+```tsx
+// ✅ Filtering works automatically
+<ComboBoxField defaultItems={items}>
+  {(item) => (
+    <OptionsItem key={item.id} textValue={item.name}>
+      <OptionsItemLabel>{item.name}</OptionsItemLabel>
+    </OptionsItem>
+  )}
+</ComboBoxField>
+```
+
+**Key requirements:**
+- Each item must have an `id` field
+- Each `OptionsItem` must have a `textValue` prop so React Aria knows what text to match against
+- Don't forget the React `key` prop in your render function
+
+### Static Items
+### Static items
+Render `OptionsItem` children directly. React Aria still filters these automatically by each item's `textValue`.
+
+```tsx
+// ⚠️ No automatic filtering - you control the children
+<ComboBoxField>
+  <OptionsItem textValue="Cat">Cat</OptionsItem>
+  <OptionsItem textValue="Dog">Dog</OptionsItem>
+  <OptionsItem textValue="Bird">Bird</OptionsItem>
+</ComboBoxField>
+```
+
+### Controlled filtering
+Use the `items` prop (instead of `defaultItems`) when you want to filter the list yourself, for example async search or custom match logic. React Aria renders exactly the items you pass and does **not** filter them, so update the list from `onInputChange`.
+
+## Common Issues
+
+### Filtering doesn't work
+**Problem:** You type in the combobox but items don't filter.
+
+**Solution:** Add the `textValue` prop to each `OptionsItem`. This tells React Aria what text to match against.
+
+```tsx
+// ❌ Filtering broken - no textValue
+<OptionsItem key={item.id}>
+  {item.name}
+</OptionsItem>
+
+// ✅ Filtering works
+<OptionsItem key={item.id} textValue={item.name}>
+  {item.name}
+</OptionsItem>
+```
+
+### TypeScript errors about item type
+**Problem:** TypeScript complains your items don't satisfy the `ComboBoxField<T>` constraint.
+
+**Solution:** `ComboBoxField<T extends OptionsDataItem>` requires every item to have an `id` (`string | number`) and a `name` (`string`). Add any other fields you need on top of those.
+
+
+### React key warnings
+**Problem:** Console shows "Each child in a list should have a unique key prop".
+
+**Solution:** Add `key={item.id}` to your `OptionsItem` in the render function.
+
+```tsx
+// ❌ Missing key
+<ComboBoxField defaultItems={items}>
+  {(item) => <OptionsItem textValue={item.name}>...</OptionsItem>}
+</ComboBoxField>
+
+// ✅ With key
+<ComboBoxField defaultItems={items}>
+  {(item) => <OptionsItem key={item.id} textValue={item.name}>...</OptionsItem>}
+</ComboBoxField>
+```
+
+### Selection or keyboard navigation broken
+**Problem:** Selecting items behaves strangely, or keyboard navigation jumps unexpectedly.
+
+**Solution:** All item `id` values must be unique across the entire list. React Aria uses these IDs for selection and focus management.
+
+```tsx
+// ❌ Duplicate IDs cause unpredictable behavior
+const items = [
+  { id: 1, name: 'Cat' },
+  { id: 1, name: 'Dog' },  // Duplicate ID!
+  { id: 2, name: 'Bird' },
+];
+
+// ✅ All IDs are unique
+const items = [
+  { id: 1, name: 'Cat' },
+  { id: 2, name: 'Dog' },
+  { id: 3, name: 'Bird' },
+];
+
+// ✅ String IDs work too
+const items = [
+  { id: 'cat', name: 'Cat' },
+  { id: 'dog', name: 'Dog' },
+  { id: 'bird', name: 'Bird' },
+];
+```
+
+### Dropdown doesn't show at all
+**Problem:** Clicking or focusing the field doesn't open the dropdown.
+
+**Common causes:**
+
+1. **Z-index stacking context issue** - Another element is covering the dropdown. Check if parent elements have `z-index` that creates a stacking context.
+
+2. **menuTrigger set to "manual"** - The dropdown won't open automatically.
+   ```tsx
+   // ❌ Won't open on focus/click
+   <ComboBoxField menuTrigger="manual" defaultItems={items}>...</ComboBoxField>
+
+   // ✅ Opens on focus (default)
+   <ComboBoxField defaultItems={items}>...</ComboBoxField>
+   // or explicitly:
+   <ComboBoxField menuTrigger="focus" defaultItems={items}>...</ComboBoxField>
+   ```
+
+3. **No items to show** - If `defaultItems` is empty or all items are filtered out, the dropdown may not open.
+
+### Nothing renders
+**Problem:** The dropdown is empty or items don't appear.
+
+**Checklist:**
+- Using `defaultItems`? Make sure each item has an `id` field
+- Using static children? Make sure they're direct `OptionsItem` or `OptionsSection` elements
+- Check browser console for React/TypeScript errors
+- Verify your items array isn't empty
+
+### Controlled value not updating
+**Problem:** You're setting `inputValue` but it doesn't change.
+
+**Solution:** When using controlled mode, you must handle `onInputChange` and update your state.
+
+```tsx
+// ❌ Controlled but no handler - input appears frozen
+<ComboBoxField inputValue={value} />
+
+// ✅ Controlled with handler
+<ComboBoxField
+  inputValue={value}
+  onInputChange={setValue}
+/>
+
+// ✅ Or use uncontrolled mode
+<ComboBoxField defaultInputValue={initialValue} />
+```
+
 ## Accessibility
 - Keyboard: Arrow keys to navigate, Enter to select, Escape to close
 - Type-ahead filtering as you type
 - ARIA attributes for screen readers
 - Focus management between input and dropdown
-- Clear button excluded from tab order for streamlined keyboard navigatio
-- Focus management between input and dropdown
+- Clear button excluded from tab order for streamlined keyboard navigation
 
 ## Implementation Notes
 - Wraps `ComboBox` from react-aria-components with `Virtualizer` for large lists
 - Uses the [Options](?path=/docs/components-options--playground) component system for dropdown content
 - Supports both static children and dynamic `defaultItems`/`items` rendering
+- React Aria filters uncontrolled collections (`defaultItems` or static children) automatically against each item's `textValue`; pass the `items` prop to filter the list yourself
 
 **Related:**
 - [React Aria ComboBox](https://react-spectrum.adobe.com/react-aria/ComboBox.html)

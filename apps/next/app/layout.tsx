@@ -12,19 +12,30 @@
 // NOTE: !! this must be first import
 import './globals.css';
 import 'server-only';
-import { Nav } from '~/modules/nav';
+import { Nav, NavTrigger } from '~/modules/nav';
 import { RouterProvider } from '~/modules/providers/router';
 import { ThemeProvider } from '~/modules/providers/theme';
+import { DrawerLayout } from '@accelint/design-toolkit/components/drawer/layout';
+import { DrawerLayoutMain } from '@accelint/design-toolkit/components/drawer/layout-main';
 import type { PropsWithChildren } from 'react';
 
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang='en' className='font-primary dark'>
-      <body className='w-full h-full p-l top-xxl relative'>
+      <body className='w-full h-full'>
         <RouterProvider>
           <ThemeProvider>
-            {children}
-            <Nav />
+            <div className='h-screen bg-surface-raised text-default-light'>
+            <DrawerLayout push='left'>
+              <DrawerLayoutMain>
+                <div className='flex items-center bg-surface-default p-m'>
+                  <NavTrigger />
+                </div>
+                {children}
+              </DrawerLayoutMain>
+              <Nav />
+            </DrawerLayout>
+            </div>
           </ThemeProvider>
         </RouterProvider>
       </body>

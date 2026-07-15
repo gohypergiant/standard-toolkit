@@ -31,10 +31,15 @@ import { createFormatter } from '../internal/format';
  * ```
  */
 const toDegreesDecimalMinutes = (num: number): string => {
-  const degrees = Math.floor(Math.abs(num));
-  const minutes = ((Math.abs(num) - degrees) * 60).toFixed(4);
+  let degrees = Math.floor(Math.abs(num));
+  let minutes = Number(((Math.abs(num) - degrees) * 60).toFixed(4));
 
-  return `${degrees}° ${minutes}'`;
+  // Rounding can produce 60 minutes (e.g. 40.9999995 -> 40° 60.0000');
+  // carry into degrees so the output stays a valid coordinate.
+  degrees += Math.floor(minutes / 60);
+  minutes %= 60;
+
+  return `${degrees}° ${minutes.toFixed(4)}'`;
 };
 
 /**

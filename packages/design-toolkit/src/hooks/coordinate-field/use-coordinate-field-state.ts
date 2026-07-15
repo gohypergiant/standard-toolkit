@@ -141,6 +141,10 @@ export function useCoordinateFieldState({
   );
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const validationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  // Last value emitted via onChange; `undefined` means nothing emitted yet.
+  const lastEmittedValueRef = useRef<CoordinateValue | null | undefined>(
+    undefined,
+  );
 
   const currentValue = value !== undefined ? value : internalValue;
 
@@ -152,6 +156,7 @@ export function useCoordinateFieldState({
   };
 
   const handleChange = (newValue: CoordinateValue | null) => {
+    lastEmittedValueRef.current = newValue;
     if (value === undefined) {
       setInternalValue(newValue);
     }
@@ -207,7 +212,27 @@ export function useCoordinateFieldState({
   }, [format, value, internalValue, convertValueToSegmentsOrClear]);
 
   useEffect(() => {
-    if (value !== undefined) {
+    if (value === undefined) {
+      return;
+    }
+
+    /*
+     * Skip re-syncing when the controlled `value` is just the echo of our own
+     * onChange (the parent storing what we emitted). Without this guard, the
+     * `handleChange(null)` fired for an in-progress edit (one segment emptied,
+     * or an invalid entry) comes straight back and wipes every segment and any
+     * validation error that was just set.
+     */
+    const lastEmitted = lastEmittedValueRef.current;
+    const isEchoOfEmit =
+      lastEmitted !== undefined &&
+      (value === lastEmitted ||
+        (value !== null &&
+          lastEmitted !== null &&
+          value.lat === lastEmitted.lat &&
+          value.lon === lastEmitted.lon));
+
+    if (!isEchoOfEmit) {
       convertValueToSegmentsOrClear(value);
     }
   }, [value, convertValueToSegmentsOrClear]);

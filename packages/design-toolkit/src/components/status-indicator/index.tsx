@@ -15,30 +15,35 @@ import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import styles from './styles.module.css';
 import type { StatusIndicatorProps } from './types';
+import { Label } from 'react-aria-components/Label';
 
 /**
  * StatusIndicator - A component for displaying connection/service status information
  *
  * Provides a purely presentational component to allow users to display the status of something.
- * Only 'good,' 'degraded,', and 'poor' statuses are being supported.
+ * Supports 'good', 'degraded', 'poor', 'unknown', and 'pending' statuses.
  *
  * @param props - {@link StatusIndicatorProps}
- * @param props.status - The status to display (good, degraded, or poor)
+ * @param props.status - The status to display
+ * @param props.textValue - Optional label to display next to the status icon
  * @returns The rendered StatusIndicator component.
  *
  * @example
  * ```tsx
  * // Basic status indicator
  * <StatusIndicator status="good" />
+ *
+ * // With label
+ * <StatusIndicator status="degraded" textValue="Connection unstable" />
  * ```
  */
-
 export function StatusIndicator({
   className,
   status = 'good',
+  textValue,
   ...rest
 }: StatusIndicatorProps) {
-  return (
+  const statusIcon = (
     <span
       {...rest}
       className={clsx(styles.icon, className)}
@@ -46,4 +51,15 @@ export function StatusIndicator({
       data-testid={`status-${status}-icon`}
     />
   );
+
+  if (textValue) {
+    return (
+      <div className='flex items-center gap-s'>
+        <div className='flex min-w-m justify-center'>{statusIcon}</div>
+        <Label>{textValue}</Label>
+      </div>
+    );
+  }
+
+  return statusIcon;
 }

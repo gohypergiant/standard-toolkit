@@ -167,7 +167,7 @@ const { cameraState } = useMapCamera(MAP_ID, {
   latitude: 38.9072,
   longitude: -77.0369,
   zoom: 10,
-  pitch: 45,
+  pitch: 60,
   rotation: 0,
   projection: 'mercator',
   view: '2.5D',
@@ -212,7 +212,7 @@ bus.emit(CameraEventTypes.fitBounds, {
 Change the camera view mode (2D, 2.5D, or 3D). This automatically adjusts projection and pitch/rotation constraints.
 
 ```tsx
-// Switch to 2.5D view (sets pitch to 45°)
+// Switch to 2.5D view (sets pitch to 60°)
 bus.emit(CameraEventTypes.setView, {
   id: instanceId,
   view: '2.5D',
@@ -262,7 +262,7 @@ bus.emit(CameraEventTypes.setZoom, {
 
 ### setRotation
 
-Set the rotation angle (bearing/heading). Only works in 2D and 2.5D modes.
+Set the rotation angle (bearing/heading). Only works in 2D and 2.5D modes. A right-drag / Ctrl + left-drag on a `BaseMap` emits this event too (see [Mouse Camera Control](#mouse-camera-control)).
 
 ```tsx
 bus.emit(CameraEventTypes.setRotation, {
@@ -273,12 +273,12 @@ bus.emit(CameraEventTypes.setRotation, {
 
 ### setPitch
 
-Set the pitch (tilt) angle. Only works in 2.5D mode with Mercator projection.
+Set the pitch (tilt) angle. Only works in 2.5D mode with Mercator projection. A right-drag / Ctrl + left-drag on a `BaseMap` emits this event too (see [Mouse Camera Control](#mouse-camera-control)).
 
 ```tsx
 bus.emit(CameraEventTypes.setPitch, {
   id: instanceId,
-  pitch: 45, // 0-85 degrees (typically 0-65 for best UX)
+  pitch: 60, // 0-85 degrees
 });
 ```
 
@@ -369,7 +369,7 @@ Traditional flat map view with rotation enabled.
 Tilted perspective view for depth perception.
 
 - **Projection**: Mercator
-- **Pitch**: 0-65° (defaults to 45°)
+- **Pitch**: 0-85° (defaults to 60°)
 - **Rotation**: 0-360°
 - **Use Cases**: Urban planning, terrain visualization, building visualization
 
@@ -381,6 +381,16 @@ Globe view for world-scale visualization.
 - **Pitch**: Fixed at 0°
 - **Rotation**: Fixed at 0°
 - **Use Cases**: Global data visualization, satellite imagery, flight paths
+
+### Mouse Camera Control
+
+On a `BaseMap`, the mouse drives rotation and pitch directly through the camera store (the same `setRotation`/`setPitch` events you can emit programmatically):
+
+- **Right-drag** (or **Ctrl + left-drag**): rotate and pitch the camera.
+- **Left-drag**: pan, as usual.
+- **Tilting in a flat 2D view** auto-promotes the view to 2.5D so pitch can apply. The tilt continues from the current pitch (0° in 2D), growing smoothly with the drag — it does not jump to the 60° default that an explicit `setView('2.5D')` would apply.
+
+Each drag continues from the camera's current angle rather than resetting, and pitch is clamped to the 0-85° range. See the BaseMap docs for wiring details.
 
 ## Multiple Camera Instances
 
@@ -463,7 +473,7 @@ console.log(cameraState);
 
 When changing views or projections, certain properties are automatically adjusted:
 
-- **2D → 2.5D**: Pitch set to 45°
+- **2D → 2.5D**: Pitch set to 60°
 - **2D → 3D**: Projection changed to 'globe', rotation reset to 0°
 - **3D → 2D**: Projection changed to 'mercator', pitch reset to 0°
 - **Setting Globe Projection**: View automatically set to '3D'
@@ -471,13 +481,13 @@ When changing views or projections, certain properties are automatically adjuste
 
 ### Pitch and Rotation Constraints
 
-Pitch can only be set in 2.5D mode. Rotation can only be set in 2D and 2.5D modes. Both are ignored in 3D mode:
+Pitch applies in 2.5D mode. Rotation applies in 2D and 2.5D modes. Both are ignored in 3D mode. A mouse tilt gesture (see [Mouse Camera Control](#mouse-camera-control)) auto-promotes a 2D view to 2.5D before applying pitch, so you don't have to switch views first:
 
 ```tsx
 // This works (2.5D view with Mercator projection)
 bus.emit(CameraEventTypes.setPitch, {
   id: instanceId,
-  pitch: 45,
+  pitch: 60,
 });
 
 // This works (2D/2.5D view)
@@ -639,10 +649,45 @@ function SyncedMaps() {
 
 ### Animated Camera Transitions
 
-Create smooth camera transitions with animation libraries:
+Create smooth camera transitions using the built-in `transitionDuration` and `transitionEasing` properties. This approach leverages MapLibre's GPU-accelerated `easeTo` method for optimal performance:
 
 ```tsx
-import { useSpring, animated } from 'react-spring';
+import { useEmit } from '@accelint/bus/react';
+import { CameraEventTypes } from '@accelint/map-toolkit/camera';
+import type { CameraSetCenterEvent } from '@accelint/map-toolkit/camera';
+
+function FlyToLocation({ mapId }: { mapId: UniqueId }) {
+  const setCenter = useEmit<CameraSetCenterEvent>(CameraEventTypes.setCenter);
+
+  const flyToSanFrancisco = () => {
+    setCenter({
+      id: mapId,
+      latitude: 37.7749,
+      longitude: -122.4194,
+      zoom: 12,
+      transitionDuration: 2000, // milliseconds
+      transitionEasing: 'ease-out', // 'linear' | 'ease-in' | 'ease-out' | 'ease-in-out'
+    });
+  };
+
+  return <button onClick={flyToSanFrancisco}>Fly to San Francisco</button>;
+}
+```
+
+**Available easing functions:**
+- `linear` - Constant speed throughout
+- `ease-in` - Starts slow, accelerates
+- `ease-out` - Starts fast, decelerates (default)
+- `ease-in-out` - Slow start and end, fast middle
+
+**Alternative: Using animation libraries**
+
+You can also create transitions with animation libraries like react-spring, but note that this approach has significant performance downsides:
+
+> ⚠️ **Performance Warning**: Animation libraries like react-spring update camera position on every frame via React state and event bus emissions, running entirely on the CPU. This creates overhead from frequent re-renders and event processing. The built-in `transitionDuration`/`transitionEasing` approach is recommended as it uses MapLibre's GPU-accelerated `easeTo` method, which performs animations on the GPU without triggering React re-renders.
+
+```tsx
+import { useSpring } from 'react-spring';
 import { Broadcast } from '@accelint/bus';
 import { CameraEventTypes } from '@accelint/map-toolkit/camera';
 

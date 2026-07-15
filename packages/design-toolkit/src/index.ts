@@ -440,7 +440,10 @@ export type {
   NoticeProps,
   NoticeQueueEvent,
 } from './components/notice/types';
-export { matchesMetadata } from './components/notice/utils';
+export {
+  matchesDequeueFilter,
+  matchesMetadata,
+} from './components/notice/utils';
 export { OptionsContext } from './components/options/context';
 export { Options } from './components/options';
 export { OptionsItemContent } from './components/options/item-content';
@@ -685,6 +688,7 @@ export type {
   UseFrameDelayOptions,
   UseFrameDelayResult,
 } from './hooks/use-frame-delay';
+export { usePreventScrollFocus } from './hooks/use-prevent-scroll-focus';
 export { useTreeActions } from './hooks/use-tree/actions';
 export { useTreeState } from './hooks/use-tree/state';
 export type {

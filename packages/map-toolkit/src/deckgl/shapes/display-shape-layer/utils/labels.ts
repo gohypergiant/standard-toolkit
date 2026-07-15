@@ -55,6 +55,7 @@
 
 'use client';
 
+import { clamp } from '@accelint/math';
 import { isCircleShape, isWagonWheelShape } from '../../shared/types';
 import type { LineString, MultiPolygon, Point, Polygon } from 'geojson';
 import type { Shape } from '../../shared/types';
@@ -94,7 +95,7 @@ export function interpolatePoint(
   end: [number, number],
   ratio: number,
 ): [number, number] {
-  const clampedRatio = Math.max(0, Math.min(1, ratio));
+  const clampedRatio = clamp(0, 1, ratio);
   return [
     start[0] + (end[0] - start[0]) * clampedRatio,
     start[1] + (end[1] - start[1]) * clampedRatio,

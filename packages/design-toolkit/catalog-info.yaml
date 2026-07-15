@@ -12,7 +12,7 @@ metadata:
     Dependencies:
 
     accelint_biome-config@1.1.0, accelint_bus@4.0.0, accelint_converters@1.0.1,
-    accelint_core@0.6.0, accelint_design-foundation@3.2.0, accelint_geo@0.6.0,
+    accelint_core@0.6.0, accelint_design-foundation@3.2.0, accelint_geo@0.6.1,
     accelint_icons@3.0.0, accelint_logger@1.1.0,
     accelint_postcss-tailwind-css-modules@1.1.0, accelint_predicates@0.5.2,
     accelint_prettier-config@0.2.1, accelint_temporal@0.1.4,
@@ -20,7 +20,7 @@ metadata:
   annotations:
     backstage.io/edit-url: https://github.com/gohypergiant/standard-toolkit/blob/main/packages/design-toolkit/catalog-info.yaml
     backstage.io/techdocs-ref: dir:.
-    package/version: 9.11.0
+    package/version: 9.12.0
     github.com/project-slug: gohypergiant/standard-toolkit
   links:
     - url: https://github.com/gohypergiant/standard-toolkit/tree/main/packages/design-toolkit

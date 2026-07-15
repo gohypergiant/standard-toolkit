@@ -50,7 +50,23 @@ import type { MapModeEventType, ModeChangeDecisionPayload } from './types';
 
 const logger = createLoggerDomain('[MapMode]');
 
-const DEFAULT_MODE = 'default';
+/**
+ * Mode name a map instance carries when no owner has claimed a mode.
+ * `as const` locks the literal so it can be referenced as a type via `DefaultMode`.
+ *
+ * @internal Not re-exported from the package barrel — callers should change
+ *   modes through `useMapMode` / `requestModeChange` rather than referencing
+ *   this constant directly.
+ */
+export const DEFAULT_MODE = 'default' as const;
+
+/**
+ * Type alias for the always-present default mode literal. Used in
+ * `UseMapModeReturn` to ensure `'default'` is part of `mode`'s type.
+ *
+ * @internal Not re-exported from the package barrel.
+ */
+export type DefaultMode = typeof DEFAULT_MODE;
 
 /**
  * Typed event bus instance for map mode events.

@@ -31,7 +31,7 @@ import { Button } from '../button';
 import { Notice } from './';
 import { NoticeEventTypes } from './events';
 import styles from './styles.module.css';
-import { matchesMetadata } from './utils';
+import { matchesDequeueFilter } from './utils';
 import type {
   NoticeActionEvent,
   NoticeContent,
@@ -111,13 +111,13 @@ export function NoticeList({
   const emitClose = useEmit(NoticeEventTypes.close);
 
   useOn(NoticeEventTypes.queue, (data) => {
-    if ((id && data.payload.target === id) || !id) {
-      const timeout = defaultTimeout ?? data.payload.timeout;
+    if (id ? data.payload.target === id : !data.payload.target) {
+      const timeout = data.payload.timeout ?? defaultTimeout;
       queue.add(
         {
           ...data.payload,
           id: data.payload.id || uuid(),
-          color: defaultColor || data.payload.color,
+          color: data.payload.color || defaultColor,
         },
         {
           timeout,
@@ -134,7 +134,7 @@ export function NoticeList({
     const queuedNotices = queue.queue;
 
     const dequeue = queuedNotices.filter((toast: QueuedToast<NoticeContent>) =>
-      matchesMetadata(data.payload, toast.content),
+      matchesDequeueFilter(data.payload, toast.content),
     );
 
     if (dequeue.length && dequeue.length === queuedNotices.length) {
@@ -146,11 +146,13 @@ export function NoticeList({
     }
   });
 
-  useEffect(() => {
-    queue.subscribe(() => {
-      setHasNotices(queue.visibleToasts.length > 0);
-    });
-  });
+  useEffect(
+    () =>
+      queue.subscribe(() => {
+        setHasNotices(queue.visibleToasts.length > 0);
+      }),
+    [queue],
+  );
 
   const children = (
     <>
@@ -161,7 +163,7 @@ export function NoticeList({
             (className) => className ?? '',
           )}
           variant='outline'
-          onPress={queue.clear}
+          onPress={() => queue.clear()}
         >
           Clear All
         </Button>
@@ -184,14 +186,25 @@ export function NoticeList({
             }
             classNames={classNames?.notice}
             size={size}
-            onPrimaryAction={() => emitActionPrimary({ id: toast.content.id })}
+            onPrimaryAction={() =>
+              emitActionPrimary({
+                id: toast.content.id,
+                metadata: toast.content.metadata,
+              })
+            }
             onSecondaryAction={() =>
-              emitActionSecondary({ id: toast.content.id })
+              emitActionSecondary({
+                id: toast.content.id,
+                metadata: toast.content.metadata,
+              })
             }
             onClose={() => {
               toast.onClose?.();
               queue.close(toast.key);
-              emitClose({ id: toast.content.id });
+              emitClose({
+                id: toast.content.id,
+                metadata: toast.content.metadata,
+              });
             }}
           />
         )}

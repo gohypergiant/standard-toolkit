@@ -12,6 +12,7 @@
 
 'use client';
 
+import { clamp } from '@accelint/math';
 import {
   HIGHLIGHT_WIDTH_INCREASE,
   HOVER_WIDTH_INCREASE,
@@ -123,9 +124,9 @@ export function brightenColor(
   factor: number,
 ): [number, number, number, number] {
   return [
-    Math.min(255, Math.round(color[0] * factor)),
-    Math.min(255, Math.round(color[1] * factor)),
-    Math.min(255, Math.round(color[2] * factor)),
+    clamp(0, 255, Math.round(color[0] * factor)),
+    clamp(0, 255, Math.round(color[1] * factor)),
+    clamp(0, 255, Math.round(color[2] * factor)),
     color[3],
   ];
 }
