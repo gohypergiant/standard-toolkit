@@ -35,3 +35,6 @@ export async function getLLMText(page: (typeof source)['$inferPage']) {
 
 ${processed}`;
 }
+
+export type Page = (typeof source)['$inferPage'];
+export type Meta = (typeof source)['$inferMeta'];
