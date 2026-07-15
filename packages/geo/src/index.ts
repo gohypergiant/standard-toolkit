@@ -38,7 +38,10 @@ export {
 } from './coordinates/latlon/degrees-minutes-seconds/formatter';
 export type { DmsParts } from './coordinates/latlon/degrees-minutes-seconds/formatter';
 export { parseDegreesMinutesSeconds } from './coordinates/latlon/degrees-minutes-seconds/parser';
-export { createFormatter } from './coordinates/latlon/internal/format';
+export {
+  createFormatter,
+  formatCoordinateSystem,
+} from './coordinates/latlon/internal/format';
 export type { FormatOptions } from './coordinates/latlon/internal/format';
 export {
   isCoordinateObject,
