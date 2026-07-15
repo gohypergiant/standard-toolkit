@@ -1,0 +1,120 @@
+---
+title: "isNotBetween"
+description: Creates a predicate that determines if a number is not between two bounds (exclusive of range)
+source: packages/predicates/src/is-not-between/index.ts
+source_sha: e9785342e2d09473747aa4a7a2c271f0d5c125f6
+doc_sha: 393e0b5001d56962df3f9df49da7430bea9a9540
+deprecated: false
+updated: 2026-07-14
+---
+
+Creates a curried predicate function that determines if a number is not between two bounds (exclusive of range).
+
+## Usage
+
+```typescript
+import { isNotBetween } from '@accelint/predicates';
+
+const isOutOfRange = isNotBetween([10, 90]);
+isOutOfRange(5);   // true (below range)
+isOutOfRange(95);  // true (above range)
+isOutOfRange(50);  // false (within range)
+isOutOfRange(10);  // false (on boundary, inclusive)
+
+// Order doesn't matter
+const isOutlier = isNotBetween([90, 10]);
+isOutlier(5); // true
+```
+
+## Reference
+
+```typescript
+function isNotBetween(bounds: [number, number]): (value: number) => boolean
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `bounds` | `[number, number]` | Tuple containing lower and upper bounds (order doesn't matter) |
+
+### Returns
+
+Curried function that accepts a number and returns `true` if the number is not between the bounds, `false` otherwise.
+
+### Implementation
+
+This predicate is implemented as the negation of `isBetween` using functional composition:
+
+```typescript
+import { compose, not } from '@accelint/core';
+import { isBetween } from '../is-between';
+
+export const isNotBetween = (bounds: [number, number]) =>
+  compose(not, isBetween(bounds));
+```
+
+## Examples
+
+### Example: Detecting outliers
+
+```typescript
+import { isNotBetween } from '@accelint/predicates';
+
+const scores = [5, 25, 75, 95, 105];
+const outliers = scores.filter(isNotBetween([0, 100]));
+// [105]
+```
+
+### Example: Validating exclusion zones
+
+```typescript
+import { isNotBetween } from '@accelint/predicates';
+
+const isOutsideRestrictedZone = isNotBetween([100, 200]);
+
+function canAccessArea(position: number): boolean {
+  return isOutsideRestrictedZone(position);
+}
+
+canAccessArea(50);   // true (before restricted zone)
+canAccessArea(150);  // false (inside restricted zone)
+canAccessArea(250);  // true (after restricted zone)
+```
+
+### Example: Filtering invalid data
+
+```typescript
+import { isNotBetween } from '@accelint/predicates';
+
+const temperatures = [-100, -5, 15, 25, 35, 150];
+const normalRange = isNotBetween([-50, 50]);
+const abnormalReadings = temperatures.filter(normalRange);
+// [-100, 150]
+```
+
+### Example: Business rule validation
+
+```typescript
+import { isNotBetween } from '@accelint/predicates';
+
+const isWeekend = isNotBetween([1, 5]); // Mon=1, Fri=5
+
+function isBusinessDay(dayOfWeek: number): boolean {
+  // Returns false for Sat (6) and Sun (0)
+  return !isWeekend(dayOfWeek);
+}
+
+isBusinessDay(3);  // true (Wednesday)
+isBusinessDay(6);  // false (Saturday)
+```
+
+> **Good to know:** Like `isBetween`, the bounds are automatically sorted, so order doesn't matter. The check is inclusive on both ends, meaning values exactly on the boundaries are considered "between" and will return `false`.
+
+## Related
+
+- [isBetween](../is-between/index.md) - Opposite check: value is within the range
+- [isGreater](../is-greater/index.md) - Check if value is greater than threshold
+- [isLesser](../is-lesser/index.md) - Check if value is less than threshold
+- [isNotEqual](../is-not-equal/index.md) - Strict inequality comparison
+- [isNotIn](../is-not-in/index.md) - Array exclusion predicate

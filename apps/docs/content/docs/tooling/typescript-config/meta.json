@@ -1,8 +1,7 @@
 {
-  "title": "TypeScript Config",
+  "title": "@accelint/typescript-config",
   "pages": [
     "index",
-    "tsc",
-    "bundler"
+    "..."
   ]
 }

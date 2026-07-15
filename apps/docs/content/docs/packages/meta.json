@@ -1,21 +1,6 @@
 {
   "title": "Packages",
   "pages": [
-    "bus",
-    "constants",
-    "converters",
-    "core",
-    "dataset",
-    "design-foundation",
-    "formatters",
-    "geo",
-    "hotkey-manager",
-    "icons",
-    "logger",
-    "math",
-    "ntds",
-    "predicates",
-    "temporal",
-    "worker"
+    "..."
   ]
 }

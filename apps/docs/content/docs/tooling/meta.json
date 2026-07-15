@@ -1,12 +1,6 @@
 {
   "title": "Tooling",
   "pages": [
-    "postcss-tailwind-css-modules",
-    "biome-config",
-    "eslint-config",
-    "prettier-config",
-    "smeegl",
-    "typescript-config",
-    "vitest-config"
+    "..."
   ]
 }

@@ -3,7 +3,7 @@ title: dom
 description: Vitest configuration for React components and DOM testing
 source: tooling/vitest-config/dom.js
 source_sha: d00b33c76fb880a9175a250ce39171a5d8223c0b
-doc_sha: 763ecce6e7ed001b3488523bd1c1117edad814b1
+doc_sha: 165009f9331a8792ee65c03d17b8639f9bc5160d
 deprecated: false
 updated: 2026-07-13
 ---
@@ -38,7 +38,7 @@ export default mergeConfig(
 );
 ```
 
-The DOM configuration merges the [no-dom](./no-dom.md) base configuration with the React plugin from `@vitejs/plugin-react`.
+The DOM configuration merges the [no-dom](./no-dom.mdx) base configuration with the React plugin from `@vitejs/plugin-react`.
 
 ### Included Plugins
 
@@ -49,7 +49,7 @@ The DOM configuration merges the [no-dom](./no-dom.md) base configuration with t
 
 ### Configuration Settings
 
-All settings from [no-dom](./no-dom.md) plus:
+All settings from [no-dom](./no-dom.mdx) plus:
 - React Fast Refresh for component hot reloading
 - JSX transformation for `.tsx` files
 - Automatic React import injection
@@ -121,9 +121,9 @@ describe('Button', () => {
 });
 ```
 
-> **Good to know:** The DOM configuration inherits all settings from the [no-dom](./no-dom.md) base configuration, including coverage, TypeScript paths, and mock behavior. Use this preset when testing React components or browser APIs.
+> **Good to know:** The DOM configuration inherits all settings from the [no-dom](./no-dom.mdx) base configuration, including coverage, TypeScript paths, and mock behavior. Use this preset when testing React components or browser APIs.
 
 ## Related
 
-- [no-dom](./no-dom.md) - Base Vitest configuration without React
-- [mockBroadcastChannel](./mocks/broadcast-channel.md) - Mock for BroadcastChannel API
+- [no-dom](./no-dom.mdx) - Base Vitest configuration without React
+- [mockBroadcastChannel](./mocks/broadcast-channel.mdx) - Mock for BroadcastChannel API

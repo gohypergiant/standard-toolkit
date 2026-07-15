@@ -1,20 +1,20 @@
 {
   "version": "1.0",
-  "generated": "2026-07-14T19:29:32.000Z",
+  "generated": "2026-07-14T20:37:58.3NZ",
   "entries": [
     {
       "source": "packages/bus/src/broadcast/index.ts",
-      "doc": "apps/docs/content/packages/bus/broadcast/index.mdx",
+      "doc": "apps/docs/content/docs/packages/bus/broadcast.mdx",
       "entities": [
         "Broadcast"
       ],
       "source_sha": "d4f39c5b2f8706ff3676f6dfa60b6649188cd63b",
-      "doc_sha": "49362f7fd049c99cefb47c3ee90fccff3e9dca34",
-      "updated": "2026-07-13T00:00:00.000Z"
+      "doc_sha": "7caf4628bf07f70f5b5e3b77f653f0e969ddb1ca",
+      "updated": "2026-07-14T19:53:27.000Z"
     },
     {
       "source": "packages/bus/src/index.ts",
-      "doc": "apps/docs/content/packages/bus/index.mdx",
+      "doc": "apps/docs/content/docs/packages/bus/index.mdx",
       "entities": [
         "Broadcast",
         "Payload",
@@ -30,12 +30,12 @@
         "StructuredCloneableData"
       ],
       "source_sha": "3a165d8f4fcefdb569e96058bba87c59250d0703",
-      "doc_sha": "1bbb4599c0450094f2e5a7ebb6e530d2716ec103",
-      "updated": "2026-07-13T00:00:00.000Z"
+      "doc_sha": "1ad198c4fd3a1e26a71522a436415be70a88ca5c",
+      "updated": "2026-07-14T19:53:27.000Z"
     },
     {
       "source": "packages/bus/src/react/index.ts",
-      "doc": "apps/docs/content/packages/bus/react/index.mdx",
+      "doc": "apps/docs/content/docs/packages/bus/react.mdx",
       "entities": [
         "useBus",
         "useEmit",
@@ -43,34 +43,34 @@
         "useOnce"
       ],
       "source_sha": "6cf16682b1af2f7746e609f7cf851e728670dd9e",
-      "doc_sha": "f0d9a25ca17a15cdca15c2a521b43c26496887ef",
-      "updated": "2026-07-13T00:00:00.000Z"
+      "doc_sha": "8959fc6c3b44880cc6a391e331c860769998fd90",
+      "updated": "2026-07-14T19:53:27.000Z"
     },
     {
       "source": "packages/constants/src/color/index.ts",
-      "doc": "apps/docs/content/packages/constants/color/index.mdx",
+      "doc": "apps/docs/content/docs/packages/constants/color.mdx",
       "entities": [
         "CSS_RGBA_LEGACY_REGEX",
         "CSS_RGBA_MODERN_REGEX",
         "HEX_REGEX"
       ],
       "source_sha": "d6cb28551a341a293027f2084e6e7f5c6c5cd467",
-      "doc_sha": "98237eb4089e03c74e4d0fa8f873b4b797e97c69",
-      "updated": "2026-07-13T18:24:03.000Z"
+      "doc_sha": "b6d51078a88222cfea127a64fe3d37333179fcdc",
+      "updated": "2026-07-14T20:01:26.000Z"
     },
     {
       "source": "packages/constants/src/coordinates/index.ts",
-      "doc": "apps/docs/content/packages/constants/coordinates/index.mdx",
+      "doc": "apps/docs/content/docs/packages/constants/coordinates.mdx",
       "entities": [
         "DEFAULT_COORDINATE"
       ],
       "source_sha": "baa1663be9d9bdbd5724b463df1021593f219c76",
-      "doc_sha": "580e5b00e09f456ee66d25f1a6794e6477781c29",
-      "updated": "2026-07-13T18:24:03.000Z"
+      "doc_sha": "927aa1f57e17f0206efad2407135e13297fc3776",
+      "updated": "2026-07-14T20:01:26.000Z"
     },
     {
       "source": "packages/constants/src/index.ts",
-      "doc": "apps/docs/content/packages/constants/index.mdx",
+      "doc": "apps/docs/content/docs/packages/constants/index.mdx",
       "entities": [
         "CSS_RGBA_LEGACY_REGEX",
         "CSS_RGBA_MODERN_REGEX",
@@ -80,33 +80,33 @@
         "DISTANCE_UNIT_SYMBOLS"
       ],
       "source_sha": "a812b45e237396de1f53bca79ccd4ab237ff0f6f",
-      "doc_sha": "4c057fcbb0de75d679dd2e75accb2e5e59ad70b4",
-      "updated": "2026-07-14T13:30:46.3NZ"
+      "doc_sha": "85805f3c599bbdd1b4a34f3bd74feb73bd4707fe",
+      "updated": "2026-07-14T20:02:01.000Z"
     },
     {
       "source": "packages/constants/src/units/index.ts",
-      "doc": "apps/docs/content/packages/constants/units/index.mdx",
+      "doc": "apps/docs/content/docs/packages/constants/units.mdx",
       "entities": [
         "DISTANCE_UNIT_SYMBOLS",
         "DISTANCE_UNIT_BY_SYMBOL"
       ],
       "source_sha": "2eb2aeec378a8df693295660d015c4968dd924a5",
-      "doc_sha": "e000914e941ee88121c83c6ec5f0675870ba8ed8",
-      "updated": "2026-07-13T18:24:03.000Z"
+      "doc_sha": "e97a752c0c0110c3956293da24fcf4cdc80b46e1",
+      "updated": "2026-07-14T20:01:26.000Z"
     },
     {
       "source": "packages/converters/src/boolean-to-number/index.ts",
-      "doc": "apps/docs/content/packages/converters/boolean-to-number/index.mdx",
+      "doc": "apps/docs/content/docs/packages/converters/boolean-to-number.mdx",
       "entities": [
         "booleanToNumber"
       ],
       "source_sha": "1ff38c1a14139141fb79a47dae8e6452b117844b",
-      "doc_sha": "89cae5b7af65235af7553a4ab3c7e21a7225c3c2",
-      "updated": "2026-07-13T00:00:00.000Z"
+      "doc_sha": "9be08a636c115076c83ee263b744f17fbfb70687",
+      "updated": "2026-07-14T20:00:00.000Z"
     },
     {
       "source": "packages/converters/src/css-rgba/index.ts",
-      "doc": "apps/docs/content/packages/converters/css-rgba/index.mdx",
+      "doc": "apps/docs/content/docs/packages/converters/css-rgba.mdx",
       "entities": [
         "cssRgbaObjectToRgba255Tuple",
         "cssRgbaStringToRgba255Tuple",
@@ -116,34 +116,34 @@
         "rgba255TupleToCssRgbaTuple"
       ],
       "source_sha": "fa151112dacce74e9b1f7de18682728b6f5e2b52",
-      "doc_sha": "94df17a9f7417ba74e46e99ffa36702536c86caf",
-      "updated": "2026-07-13T00:00:00.000Z"
+      "doc_sha": "305a07fb20343c9c9aa1ad1db622b3c9ecdabab0",
+      "updated": "2026-07-14T20:00:00.000Z"
     },
     {
       "source": "packages/converters/src/glsl/index.ts",
-      "doc": "apps/docs/content/packages/converters/glsl/index.mdx",
+      "doc": "apps/docs/content/docs/packages/converters/glsl.mdx",
       "entities": [
         "glslToRgba255Tuple",
         "rgba255TupleToGlsl"
       ],
       "source_sha": "ff34b0e96f1ccb9e4469552484c34e9c4565046b",
-      "doc_sha": "047916cc54c78c78d46d2478cb549007e9f75512",
-      "updated": "2026-07-13T00:00:00.000Z"
+      "doc_sha": "6abd7a9bf9691298c14f809ad41e3154c2b6b3ae",
+      "updated": "2026-07-14T20:00:00.000Z"
     },
     {
       "source": "packages/converters/src/hex/index.ts",
-      "doc": "apps/docs/content/packages/converters/hex/index.mdx",
+      "doc": "apps/docs/content/docs/packages/converters/hex.mdx",
       "entities": [
         "hexToRgba255Tuple",
         "rgba255TupleToHex"
       ],
       "source_sha": "3a4dd417a36a5ebf10a98aec73b0288af2326f9c",
-      "doc_sha": "32d9287856eb4a486a9b701ce227e1188fa4c348",
-      "updated": "2026-07-13T00:00:00.000Z"
+      "doc_sha": "ba9ed0f6fbc27ca377ce46f9d5ab52ce3a9fc173",
+      "updated": "2026-07-14T20:00:00.000Z"
     },
     {
       "source": "packages/converters/src/index.ts",
-      "doc": "apps/docs/content/packages/converters/index.mdx",
+      "doc": "apps/docs/content/docs/packages/converters/index.mdx",
       "entities": [
         "booleanToNumber",
         "cssRgbaObjectToRgba255Tuple",
@@ -160,28 +160,28 @@
         "zxyToBbox"
       ],
       "source_sha": "4d087869282a5ba6e5392fcf5d3d1e5b94c4e125",
-      "doc_sha": "987553f9f2e465ce000d569c5da5d7e967522b3a",
-      "updated": "2026-07-14T13:38:06.000Z"
+      "doc_sha": "d650a775d89ac643c4879d06163b6e1477f933ca",
+      "updated": "2026-07-14T20:00:00.000Z"
     },
     {
       "source": "packages/converters/src/to-boolean/index.ts",
-      "doc": "apps/docs/content/packages/converters/to-boolean/index.mdx",
+      "doc": "apps/docs/content/docs/packages/converters/to-boolean.mdx",
       "entities": [
         "toBoolean"
       ],
       "source_sha": "036a730d7f37943d5d0a957c9a40a3eda5404d7b",
-      "doc_sha": "ffdd02546a453208722c77d2d3477208a8c99238",
-      "updated": "2026-07-13T00:00:00.000Z"
+      "doc_sha": "b3acb64cf880023696c0170a8738905d460f9db6",
+      "updated": "2026-07-14T20:00:00.000Z"
     },
     {
       "source": "packages/converters/src/zxy-to-bbox/index.ts",
-      "doc": "apps/docs/content/packages/converters/zxy-to-bbox/index.mdx",
+      "doc": "apps/docs/content/docs/packages/converters/zxy-to-bbox.mdx",
       "entities": [
         "zxyToBbox"
       ],
       "source_sha": "b901230c108c3798f91ecddcb71470b3bad99a8a",
-      "doc_sha": "a020be5e97957f279f25d1938be00dcfe872881f",
-      "updated": "2026-07-13T00:00:00.000Z"
+      "doc_sha": "e94eae2be5d200039f1bef8438d81f9c733a9029",
+      "updated": "2026-07-14T20:00:00.000Z"
     },
     {
       "source": "packages/core/src/array/concat/index.ts",
@@ -517,7 +517,7 @@
     },
     {
       "source": "packages/design-foundation",
-      "doc": "apps/docs/content/packages/design-foundation/index.mdx",
+      "doc": "apps/docs/content/docs/packages/design-foundation/index.mdx",
       "entities": [
         "tokens",
         "lib/css",
@@ -525,28 +525,28 @@
         "styles"
       ],
       "source_sha": "",
-      "doc_sha": "206591f3200ae57f4e50402dcedeaad293fc116f",
-      "updated": "2026-07-14T13:37:19.000Z"
+      "doc_sha": "636352ba87620093b123e82492fb1e4c64cee88a",
+      "updated": "2026-07-14T20:08:58.000Z"
     },
     {
       "source": "packages/design-foundation/src/lib/utils.ts",
-      "doc": "apps/docs/content/packages/design-foundation/lib/utils.mdx",
+      "doc": "apps/docs/content/docs/packages/design-foundation/lib/utils.mdx",
       "entities": [
         "clsx"
       ],
       "source_sha": "4b2374afa10f0ffcda4f17ecc5b04c3fa85a12a4",
-      "doc_sha": "86237fcd4b1428d59d076491b0fcfb02deaa6b5c",
-      "updated": "2026-07-13T00:00:00.000Z"
+      "doc_sha": "5b61fe2bcc5db0ada5345ff86c67fe65f77dec81",
+      "updated": "2026-07-14T20:08:58.000Z"
     },
     {
       "source": "packages/design-foundation/src/tokens/index.ts",
-      "doc": "apps/docs/content/packages/design-foundation/tokens/index.mdx",
+      "doc": "apps/docs/content/docs/packages/design-foundation/tokens.mdx",
       "entities": [
         "designTokens"
       ],
       "source_sha": "a93e7390ae7880416ac71ee6c3d84edc0aed68bf",
-      "doc_sha": "4f73830a17e41967c0df5ba746b273c35291e46d",
-      "updated": "2026-07-13T00:00:00.000Z"
+      "doc_sha": "4c6daf7f05711589e310cc048af563833cea3ad9",
+      "updated": "2026-07-14T20:08:58.000Z"
     },
     {
       "source": "packages/design-toolkit/src/components/badge/index.tsx",
@@ -617,7 +617,7 @@
     },
     {
       "source": "packages/formatters/src/iff/index.ts",
-      "doc": "apps/docs/content/packages/formatters/iff/index.mdx",
+      "doc": "apps/docs/content/docs/packages/formatters/iff.mdx",
       "entities": [
         "formatM1",
         "formatM2",
@@ -626,12 +626,12 @@
         "formatM5"
       ],
       "source_sha": "b99fc37b50bdbb7feefad5aa41ba6d9bf4dfb429",
-      "doc_sha": "651708995eb9030222922fb9aa9e62a0ee7cd68a",
-      "updated": "2026-07-13T00:00:00.000Z"
+      "doc_sha": "e4c349228292141c7c201c77c46c43afef29e20a",
+      "updated": "2026-07-14T20:30:00.000Z"
     },
     {
       "source": "packages/formatters/src/index.ts",
-      "doc": "apps/docs/content/packages/formatters/index.mdx",
+      "doc": "apps/docs/content/docs/packages/formatters/index.mdx",
       "entities": [
         "formatM1",
         "formatM2",
@@ -640,12 +640,12 @@
         "formatM5"
       ],
       "source_sha": "7c23c79457c772768b2077efeefb86ba8df3f0c6",
-      "doc_sha": "ea47c50cd3929dd32d0b13aaec76eeab024c64dd",
-      "updated": "2026-07-14T13:37:19.000Z"
+      "doc_sha": "43b1a1ed76987aa6685b6d129c658897c4f3455a",
+      "updated": "2026-07-14T20:30:00.000Z"
     },
     {
       "source": "packages/geo/src/coordinates/coordinate.ts",
-      "doc": "apps/docs/content/packages/geo/coordinates/coordinate.mdx",
+      "doc": "apps/docs/content/docs/packages/geo/coordinates/coordinate.mdx",
       "entities": [
         "coordinateSystems",
         "createCoordinate"
@@ -656,7 +656,7 @@
     },
     {
       "source": "packages/geo/src/coordinates/latlon/decimal-degrees/formatter.ts",
-      "doc": "apps/docs/content/packages/geo/coordinates/latlon/decimal-degrees/formatter.mdx",
+      "doc": "apps/docs/content/docs/packages/geo/coordinates/latlon/decimal-degrees/formatter.mdx",
       "entities": [
         "formatDecimalDegrees"
       ],
@@ -666,7 +666,7 @@
     },
     {
       "source": "packages/geo/src/coordinates/latlon/decimal-degrees/parser.ts",
-      "doc": "apps/docs/content/packages/geo/coordinates/latlon/decimal-degrees/parser.mdx",
+      "doc": "apps/docs/content/docs/packages/geo/coordinates/latlon/decimal-degrees/parser.mdx",
       "entities": [
         "parseDecimalDegrees"
       ],
@@ -676,7 +676,7 @@
     },
     {
       "source": "packages/geo/src/coordinates/latlon/degrees-decimal-minutes/formatter.ts",
-      "doc": "apps/docs/content/packages/geo/coordinates/latlon/degrees-decimal-minutes/formatter.mdx",
+      "doc": "apps/docs/content/docs/packages/geo/coordinates/latlon/degrees-decimal-minutes/formatter.mdx",
       "entities": [
         "formatDegreesDecimalMinutes"
       ],
@@ -685,8 +685,18 @@
       "updated": "2026-07-13T00:00:00.000Z"
     },
     {
+      "source": "packages/geo/src/coordinates/latlon/degrees-decimal-minutes/parser.ts",
+      "doc": "apps/docs/content/docs/packages/geo/coordinates/latlon/degrees-decimal-minutes/parser.mdx",
+      "entities": [
+        "parseDegreesDecimalMinutes"
+      ],
+      "source_sha": "b67fb93807ca5b2135aaedc4721f412f7d94baa1",
+      "doc_sha": "6bd11bac0ef5ae7b0e0e5bf279c25842447823c7",
+      "updated": "2026-07-14T20:14:29.423Z"
+    },
+    {
       "source": "packages/geo/src/coordinates/latlon/degrees-minutes-seconds/formatter.ts",
-      "doc": "apps/docs/content/packages/geo/coordinates/latlon/degrees-minutes-seconds/formatter.mdx",
+      "doc": "apps/docs/content/docs/packages/geo/coordinates/latlon/degrees-minutes-seconds/formatter.mdx",
       "entities": [
         "formatDegreesMinutesSeconds"
       ],
@@ -695,8 +705,18 @@
       "updated": "2026-07-13T00:00:00.000Z"
     },
     {
+      "source": "packages/geo/src/coordinates/latlon/degrees-minutes-seconds/parser.ts",
+      "doc": "apps/docs/content/docs/packages/geo/coordinates/latlon/degrees-minutes-seconds/parser.mdx",
+      "entities": [
+        "parseDegreesMinutesSeconds"
+      ],
+      "source_sha": "1f613f8737155eab93ca9939e1e18092a096ad63",
+      "doc_sha": "fd64320a79a9cd73bedf58c5f31b197c509aada6",
+      "updated": "2026-07-14T20:14:29.425Z"
+    },
+    {
       "source": "packages/geo/src/coordinates/mgrs/parser.ts",
-      "doc": "apps/docs/content/packages/geo/coordinates/mgrs/parser.mdx",
+      "doc": "apps/docs/content/docs/packages/geo/coordinates/mgrs/parser.mdx",
       "entities": [
         "parseMGRS"
       ],
@@ -706,7 +726,7 @@
     },
     {
       "source": "packages/geo/src/coordinates/utm/parser.ts",
-      "doc": "apps/docs/content/packages/geo/coordinates/utm/parser.mdx",
+      "doc": "apps/docs/content/docs/packages/geo/coordinates/utm/parser.mdx",
       "entities": [
         "parseUTM"
       ],
@@ -716,7 +736,7 @@
     },
     {
       "source": "packages/geo/src/index.ts",
-      "doc": "apps/docs/content/packages/geo/index.mdx",
+      "doc": "apps/docs/content/docs/packages/geo/index.mdx",
       "entities": [
         "coordinateSystems",
         "createCoordinate",
@@ -735,7 +755,7 @@
     },
     {
       "source": "packages/hotkey-manager/src/index.ts",
-      "doc": "apps/docs/content/packages/hotkey-manager/index.mdx",
+      "doc": "apps/docs/content/docs/packages/hotkey-manager/index.mdx",
       "entities": [
         "globalBind",
         "globalUnbind",
@@ -747,23 +767,23 @@
         "keyToString"
       ],
       "source_sha": "4ef2054b93f09d0ea3cff77bcfd643812d6e3008",
-      "doc_sha": "d194abd235f20016aaba593776a75a253d76dd27",
-      "updated": "2026-07-13T00:00:00.000Z"
+      "doc_sha": "d62dd83ac06e7422b07c76d8045a68f20f19f0db",
+      "updated": "2026-07-14T16:16:19.614Z"
     },
     {
       "source": "packages/hotkey-manager/src/react/use-hotkey.ts",
-      "doc": "apps/docs/content/packages/hotkey-manager/react/use-hotkey.mdx",
+      "doc": "apps/docs/content/docs/packages/hotkey-manager/react.mdx",
       "entities": [
         "useHotkey",
         "createUseHotkey"
       ],
       "source_sha": "4e4d8a3bfc1c8e822f1bf886f72eccbae3fe41bd",
-      "doc_sha": "636ff2707c6c47b26f440af3cfc857b6d0a747b9",
-      "updated": "2026-07-13T00:00:00.000Z"
+      "doc_sha": "ef97376accbc55ff292621b5bccbc61bcd1db1cf",
+      "updated": "2026-07-14T16:16:11.295Z"
     },
     {
       "source": "packages/icons/src/icons/index.ts",
-      "doc": "apps/docs/content/packages/icons/index.mdx",
+      "doc": "apps/docs/content/docs/packages/icons.mdx",
       "entities": [
         "AddFill",
         "AddToList",
@@ -1008,12 +1028,12 @@
         "ZoomTo"
       ],
       "source_sha": "0a221be83da6dbee5658d8ab9d2b0c39848ac749",
-      "doc_sha": "bf191be1c002fe08028a5957cae8a8b05797db40",
-      "updated": "2026-07-13T00:00:00.000Z"
+      "doc_sha": "7a2054dbc908823f6d705c75e3e74fee170b426d",
+      "updated": "2026-07-14T20:18:47.3NZ"
     },
     {
       "source": "packages/logger/src/default/bootstrap.ts",
-      "doc": "apps/docs/content/packages/logger/default/bootstrap.mdx",
+      "doc": "apps/docs/content/docs/packages/logger/default/bootstrap.mdx",
       "entities": [
         "bootstrap"
       ],
@@ -1023,7 +1043,7 @@
     },
     {
       "source": "packages/logger/src/default/index.ts",
-      "doc": "apps/docs/content/packages/logger/default/index.mdx",
+      "doc": "apps/docs/content/docs/packages/logger/default/index.mdx",
       "entities": [
         "getLogger"
       ],
@@ -1033,7 +1053,7 @@
     },
     {
       "source": "packages/logger/src/definitions.ts",
-      "doc": "apps/docs/content/packages/logger/definitions.mdx",
+      "doc": "apps/docs/content/docs/packages/logger/definitions.mdx",
       "entities": [
         "DEBUG",
         "ERROR",
@@ -1050,7 +1070,7 @@
     },
     {
       "source": "packages/logger/src/index.ts",
-      "doc": "apps/docs/content/packages/logger/index.mdx",
+      "doc": "apps/docs/content/docs/packages/logger/index.mdx",
       "entities": [
         "getLogger",
         "bootstrap",
@@ -1071,7 +1091,7 @@
     },
     {
       "source": "packages/logger/src/plugins/callsite.ts",
-      "doc": "apps/docs/content/packages/logger/plugins/callsite.mdx",
+      "doc": "apps/docs/content/docs/packages/logger/plugins/callsite.mdx",
       "entities": [
         "callsitePlugin"
       ],
@@ -1081,7 +1101,7 @@
     },
     {
       "source": "packages/logger/src/plugins/environment.ts",
-      "doc": "apps/docs/content/packages/logger/plugins/environment.mdx",
+      "doc": "apps/docs/content/docs/packages/logger/plugins/environment.mdx",
       "entities": [
         "environmentPlugin"
       ],
@@ -1091,7 +1111,7 @@
     },
     {
       "source": "packages/logger/src/transports/pretty.ts",
-      "doc": "apps/docs/content/packages/logger/transports/pretty.mdx",
+      "doc": "apps/docs/content/docs/packages/logger/transports/pretty.mdx",
       "entities": [
         "prettyTransport"
       ],
@@ -1101,7 +1121,7 @@
     },
     {
       "source": "packages/logger/src/transports/structured.ts",
-      "doc": "apps/docs/content/packages/logger/transports/structured.mdx",
+      "doc": "apps/docs/content/docs/packages/logger/transports/structured.mdx",
       "entities": [
         "structuredTransport"
       ],
@@ -1150,17 +1170,17 @@
     },
     {
       "source": "packages/math/src/clamp/index.ts",
-      "doc": "apps/docs/content/packages/math/clamp/index.mdx",
+      "doc": "apps/docs/content/docs/packages/math/clamp.mdx",
       "entities": [
         "clamp"
       ],
       "source_sha": "af9d41f2cbd80d93eaf752583b987219960c4daa",
-      "doc_sha": "faea60c716c7cee3d6a9e5ab7eb2458ba0e499ff",
-      "updated": "2026-07-13T19:57:15.3NZ"
+      "doc_sha": "27f1b59fca22fad2155d833d43a00a28cdd0748e",
+      "updated": "2026-07-14T20:45:00.000Z"
     },
     {
       "source": "packages/math/src/index.ts",
-      "doc": "apps/docs/content/packages/math/index.mdx",
+      "doc": "apps/docs/content/docs/packages/math/index.mdx",
       "entities": [
         "clamp",
         "random",
@@ -1168,29 +1188,29 @@
         "round"
       ],
       "source_sha": "2fde7042d193f22ca9eb29527a4576100c1ae7c7",
-      "doc_sha": "f54a69c530aca053043232bce3d0bf587b879975",
-      "updated": "2026-07-14T13:34:24.000Z"
+      "doc_sha": "c48a9361232869b5c57fed108135850bf156c0bc",
+      "updated": "2026-07-14T20:45:00.000Z"
     },
     {
       "source": "packages/math/src/random/index.ts",
-      "doc": "apps/docs/content/packages/math/random/index.mdx",
+      "doc": "apps/docs/content/docs/packages/math/random.mdx",
       "entities": [
         "random",
         "randomInt"
       ],
       "source_sha": "4db721b2f40ef197ee2668fc6433a84625a8788a",
-      "doc_sha": "fad47cb00e8882c554d2b218c178f71fa3bbc77f",
-      "updated": "2026-07-13T19:57:15.3NZ"
+      "doc_sha": "1a362bb9d490ec85117f6e5591b023d29301e47e",
+      "updated": "2026-07-14T20:45:00.000Z"
     },
     {
       "source": "packages/math/src/round/index.ts",
-      "doc": "apps/docs/content/packages/math/round/index.mdx",
+      "doc": "apps/docs/content/docs/packages/math/round.mdx",
       "entities": [
         "round"
       ],
       "source_sha": "c5f26f19f5ca2227af188e1bd1eaa23060f6e38e",
-      "doc_sha": "320814ad8e72c60399e78426d686ba104833306d",
-      "updated": "2026-07-13T19:57:15.3NZ"
+      "doc_sha": "38ab1b0f03e852c05c82710691e6e9a1dd7e2f10",
+      "updated": "2026-07-14T20:45:00.000Z"
     },
     {
       "source": "packages/ntds/src/constants.ts",
@@ -1464,17 +1484,367 @@
     },
     {
       "source": "packages/postcss-tailwind-css-modules/src/index.ts",
-      "doc": "apps/docs/content/tooling/postcss-tailwind-css-modules/index.mdx",
+      "doc": "apps/docs/content/docs/tooling/postcss-tailwind-css-modules.mdx",
       "entities": [
         "tailwindCssModulesPlugin"
       ],
       "source_sha": "bdd0f75f631b52a4661629978351874c424fb901",
-      "doc_sha": "8850b5cf4ce0136c4daba13f671de5f3d7ff4ec1",
-      "updated": "2026-07-13T00:00:00.000Z"
+      "doc_sha": "558f28e9af732293e009baebcc005d99e35fb17f",
+      "updated": "2026-07-14T20:28:49.3NZ"
+    },
+    {
+      "source": "packages/predicates/src/does-end-with/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/does-end-with.mdx",
+      "entities": [
+        "doesEndWith"
+      ],
+      "source_sha": "50741ca2a98d704dc6b3fadfe7ea0d3465ae97c6",
+      "doc_sha": "8cfe3f7b8dc2bf345996f4337572a65549696eec",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/does-not-end-with/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/does-not-end-with.mdx",
+      "entities": [
+        "doesNotEndWith"
+      ],
+      "source_sha": "d87763b126bd53bcf3270c8f3df00c14c0e59687",
+      "doc_sha": "8f2f94c1a32af48df9b63afb7f8a8645c02143df",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/does-not-start-with/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/does-not-start-with.mdx",
+      "entities": [
+        "doesNotStartWith"
+      ],
+      "source_sha": "860f82887783f456b65ffad9fe4621ee3c967f66",
+      "doc_sha": "dab13b727b0494dfce91cb25f241a18a5edc5be1",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/does-start-with/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/does-start-with.mdx",
+      "entities": [
+        "doesStartWith"
+      ],
+      "source_sha": "d87ca7a1207018b6543932bf06c7edcbb7998726",
+      "doc_sha": "554932d341f0aea9e210bdf6763cd6c57165b1b2",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/index.mdx",
+      "entities": [
+        "doesEndWith",
+        "doesNotEndWith",
+        "doesNotStartWith",
+        "doesStartWith",
+        "isBbox",
+        "isBetween",
+        "isCssRgbaObject",
+        "isCssRgbaString",
+        "isEqual",
+        "isGreater",
+        "isGreaterEqual",
+        "isHexColor",
+        "isIn",
+        "isLatitude",
+        "isLesser",
+        "isLesserEqual",
+        "isLike",
+        "isLongitude",
+        "isNotBetween",
+        "isNotEqual",
+        "isNotIn",
+        "isNotLike",
+        "isNothing",
+        "isAnyFalsy",
+        "isAnyTruthy",
+        "isFalse",
+        "isNo",
+        "isOff",
+        "isOn",
+        "isTrue",
+        "isYes",
+        "isFiniteNumber",
+        "isFiniteNumeric",
+        "isNumber",
+        "isNumeric",
+        "isRgba255Tuple",
+        "isSomething",
+        "isString",
+        "isValid255Channel",
+        "isSharedWorker",
+        "isWorker"
+      ],
+      "source_sha": "4962ea46ccfda0335fb41c639234623d552ae144",
+      "doc_sha": "e403524f644e25bc2412fe38bf8d3588c2f404a5",
+      "updated": "2026-07-14T20:31:22.582Z"
+    },
+    {
+      "source": "packages/predicates/src/is-bbox/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-bbox.mdx",
+      "entities": [
+        "isBbox"
+      ],
+      "source_sha": "23e65a07aede11c88c659e4d5f8a7d53148387c9",
+      "doc_sha": "91d8f9dad718fe707e45456a810ae90c88242750",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-between/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-between.mdx",
+      "entities": [
+        "isBetween"
+      ],
+      "source_sha": "a27723beec4cf1da328a37bd171300dfcbf97f4d",
+      "doc_sha": "01558fa2855997cf2a4239af275bc3b312491852",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-css-rgba-object/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-css-rgba-object.mdx",
+      "entities": [
+        "isCssRgbaObject"
+      ],
+      "source_sha": "ee86bf1366bc1f8a97d78ef4e01e1c7107ece814",
+      "doc_sha": "e686a467b329297cb51cbfa0eee69b56787f6e0b",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-css-rgba-string/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-css-rgba-string.mdx",
+      "entities": [
+        "isCssRgbaString"
+      ],
+      "source_sha": "d685277b36ae2602cc4b54f274c6273d19705916",
+      "doc_sha": "f4838a64be2403d96ba0a0d2a0b3eac02fd13ed8",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-equal/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-equal.mdx",
+      "entities": [
+        "isEqual"
+      ],
+      "source_sha": "dc5cdee83db775ee88aa2e4cffa1bd0d39663cba",
+      "doc_sha": "35fc5247662a3eae7b0ffcb8c080b3d7b812612a",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-greater-equal/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-greater-equal.mdx",
+      "entities": [
+        "isGreaterEqual"
+      ],
+      "source_sha": "a5e3b9b32fe1d80082b1157be7e3abf5875f3d61",
+      "doc_sha": "a309a7a9193cd74c8daf89f0786393857a42256d",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-greater/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-greater.mdx",
+      "entities": [
+        "isGreater"
+      ],
+      "source_sha": "a220fa651724df8a2d8ef194e8d890cd71f1884a",
+      "doc_sha": "9e5a9aed68c0b2a797da54fe11030721a2dde12a",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-hex-color/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-hex-color.mdx",
+      "entities": [
+        "isHexColor"
+      ],
+      "source_sha": "6fcefa9066602e68ac2ed28f0a90ef2e34afb5a0",
+      "doc_sha": "8d07dc0d38d737c6df876bc62f6637b20f6aaee8",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-in/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-in.mdx",
+      "entities": [
+        "isIn"
+      ],
+      "source_sha": "ae92ee8da776d4f34ce1ba73e6063154f3ce800a",
+      "doc_sha": "916b40bdf44426f40213dd8ada5df8fed0bf9289",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-latitude/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-latitude.mdx",
+      "entities": [
+        "isLatitude"
+      ],
+      "source_sha": "fb3de36f72c19522f2402aa94b2225752de7e253",
+      "doc_sha": "6aebe160841604b46ee6cf2b2fc64163ac63a7d7",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-lesser-equal/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-lesser-equal.mdx",
+      "entities": [
+        "isLesserEqual"
+      ],
+      "source_sha": "abf8af6e1c6b2ba795e09525ddee96ccc4b14e98",
+      "doc_sha": "e77514a2dff3db82839064e28b29027b03abd2d0",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-lesser/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-lesser.mdx",
+      "entities": [
+        "isLesser"
+      ],
+      "source_sha": "e14455d782d4791af4c262bd12dcfe7bb908b1e7",
+      "doc_sha": "f4e1046165b304a521098734a0139c6c77472d1a",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-like/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-like.mdx",
+      "entities": [
+        "isLike"
+      ],
+      "source_sha": "a04717bad9378529000e73cb9b152bb6f8fabf2a",
+      "doc_sha": "ea37330cd486a1876c382e270bca19121da2b26f",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-longitude/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-longitude.mdx",
+      "entities": [
+        "isLongitude"
+      ],
+      "source_sha": "b23acfa0c7a24a4571d7c551c97d42b6f2e1bf9d",
+      "doc_sha": "057dd676383fdd14378dd8d85cae05486724340b",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-not-between/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-not-between.mdx",
+      "entities": [
+        "isNotBetween"
+      ],
+      "source_sha": "e9785342e2d09473747aa4a7a2c271f0d5c125f6",
+      "doc_sha": "393e0b5001d56962df3f9df49da7430bea9a9540",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-not-equal/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-not-equal.mdx",
+      "entities": [
+        "isNotEqual"
+      ],
+      "source_sha": "37226ded6285328bd4c15ca07d90dbca0be4d062",
+      "doc_sha": "b51c6d85d830220998980acbf44354a400dffdeb",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-not-in/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-not-in.mdx",
+      "entities": [
+        "isNotIn"
+      ],
+      "source_sha": "d79400d77e1ee40129d998b73502d9e069a375bd",
+      "doc_sha": "e8d98faf3c6e88f58c31b371daa3470858938a8e",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-not-like/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-not-like.mdx",
+      "entities": [
+        "isNotLike"
+      ],
+      "source_sha": "2096b65496150ff363194a0b048a6712e3ddd5c9",
+      "doc_sha": "198db86fe6cb47eac9a32c0214e6e2e80bacb285",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-nothing/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-nothing.mdx",
+      "entities": [
+        "isNothing"
+      ],
+      "source_sha": "17bac92915e535cfe59a317fe31bef56d10a77ba",
+      "doc_sha": "bde95e9aa615319f5cde4ae119df487510a59e68",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-noyes/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-noyes.mdx",
+      "entities": [
+        "Boolean Predicates"
+      ],
+      "source_sha": "fe2498c113096c579fd622b46ec8fffa44411821",
+      "doc_sha": "a7411fe73929a8d924b3b3446f2cd04c422a0ad9",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-number/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-number.mdx",
+      "entities": [
+        "Number Predicates"
+      ],
+      "source_sha": "939c8208851b253fa1f1fe35ae1bd4c33cad1180",
+      "doc_sha": "cfd21bceb1950f07ecc8b6b4eda7e4144305ffd7",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-rgba-255-tuple/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-rgba-255-tuple.mdx",
+      "entities": [
+        "isRgba255Tuple"
+      ],
+      "source_sha": "a0051278a2818952bd7ef3b68ba779a3e763fbee",
+      "doc_sha": "3ebc8ca7e5e4c936bdda080436e3345c8f522d72",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-something/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-something.mdx",
+      "entities": [
+        "isSomething"
+      ],
+      "source_sha": "549ba6a454cf667bc13f8ee2e827a7fd2e0abd9e",
+      "doc_sha": "a462cb3fe92e61020f877986f49a34f8e4233629",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-string/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-string.mdx",
+      "entities": [
+        "isString"
+      ],
+      "source_sha": "3fe9b6a36909e697cec99cbeaa02d41db8d91c3f",
+      "doc_sha": "c61cace95db2eeb7ea0fb4e6f04041b259b9640a",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-valid-255-channel/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-valid-255-channel.mdx",
+      "entities": [
+        "isValid255Channel"
+      ],
+      "source_sha": "397171214b8f4e28254c2b79b49ca5250af8ff90",
+      "doc_sha": "d9c53fe2c72661bc24c8bb745bdd52f44e303770",
+      "updated": "2026-07-14T20:31:10.503Z"
+    },
+    {
+      "source": "packages/predicates/src/is-worker/index.ts",
+      "doc": "apps/docs/content/docs/packages/predicates/is-worker.mdx",
+      "entities": [
+        "Worker Predicates"
+      ],
+      "source_sha": "f5624274cd5c4f7e2ff7e9ee0093a7f0a4d5b870",
+      "doc_sha": "e6dbafe12ce0b4576b3ee080ba924c5b88b784a7",
+      "updated": "2026-07-14T20:31:10.503Z"
     },
     {
       "source": "packages/temporal/src/index.ts",
-      "doc": "apps/docs/content/packages/temporal/index.mdx",
+      "doc": "apps/docs/content/docs/packages/temporal/index.mdx",
       "entities": [
         "setClockInterval",
         "setClockTimeout",
@@ -1483,91 +1853,109 @@
       ],
       "source_sha": "1e3378dc7784991cf3b569b888d9ddc92b20d0a1",
       "doc_sha": "606677c7e8787741cdac718e1dc2241ace933ab1",
-      "updated": "2026-07-14T13:34:24.000Z"
+      "updated": "2026-07-14T20:31:22.582Z"
     },
     {
       "source": "packages/temporal/src/timers/index.ts",
-      "doc": "apps/docs/content/packages/temporal/timers/index.mdx",
+      "doc": "apps/docs/content/docs/packages/temporal/timers/index.mdx",
       "entities": [
         "setClockInterval",
         "setClockTimeout"
       ],
       "source_sha": "58e85118ec419fd5bc2eb25635f26ebb45f7b269",
-      "doc_sha": "e9b501c5653406b6c1b0089bcfaf32dee527e99d",
-      "updated": "2026-07-13T00:00:00.000Z"
+      "doc_sha": "a52cfde4871de0b130bf3be2b523e5b9eebda914",
+      "updated": "2026-07-14T20:31:22.582Z"
     },
     {
       "source": "packages/temporal/src/timers/utils.ts",
-      "doc": "apps/docs/content/packages/temporal/timers/utils.mdx",
+      "doc": "apps/docs/content/docs/packages/temporal/timers/utils.mdx",
       "entities": [
         "remainder",
         "callNextSecond"
       ],
       "source_sha": "d7f47f79824309c5b98a6e996dac8954b3add3f4",
-      "doc_sha": "533dcc9333ea700d45cc92377abd8dec64738eb8",
-      "updated": "2026-07-13T00:00:00.000Z"
+      "doc_sha": "b800b2e94a8ba75f1392feb348c76fc72a10ace8",
+      "updated": "2026-07-14T20:31:22.582Z"
     },
     {
       "source": "packages/web-worker/src/worker/index.ts",
-      "doc": "apps/docs/content/packages/worker/worker/index.mdx",
+      "doc": "apps/docs/content/docs/packages/worker.mdx",
       "entities": [
         "create",
         "expose",
         "Action"
       ],
       "source_sha": "08d9f3e37baaf88f7d7b0c3a0e03e9b17930fe29",
-      "doc_sha": "88777f332270567a88c1c53e6a5c099248d15c0a",
-      "updated": "2026-07-13T00:00:00.000Z"
+      "doc_sha": "b119bb485f91ddae5c95a22f4bc77c7ab142a336",
+      "updated": "2026-07-14T20:36:01.3NZ"
+    },
+    {
+      "source": "packages/websocket/src/index.ts",
+      "doc": "apps/docs/content/docs/packages/websocket/index.mdx",
+      "entities": [],
+      "source_sha": "7fbccbbbad290cfce003cbbc98a6857a30211764",
+      "doc_sha": "11f0c0810a411e7cc25db3c5040435094c068be3",
+      "updated": "2026-07-14T20:37:00.000Z"
     },
     {
       "source": "tooling/biome-config/analyzer.json",
-      "doc": "apps/docs/content/tooling/biome-config/analyzer.mdx",
+      "doc": "apps/docs/content/docs/tooling/biome-config/analyzer.mdx",
       "entities": [
         "analyzer"
       ],
       "source_sha": "bf8c851054f6e0df293f29fad268bec98484489b",
-      "doc_sha": "632390f142fcd7ed974681fc469ffa4f1483f8eb",
-      "updated": "2026-07-13T18:08:20.000Z"
+      "doc_sha": "2ea84bc23ebb52e7a99e83e5983c02548a25b0a6",
+      "updated": "2026-07-14T19:45:00.000Z"
     },
     {
       "source": "tooling/biome-config/formatter.json",
-      "doc": "apps/docs/content/tooling/biome-config/formatter.mdx",
+      "doc": "apps/docs/content/docs/tooling/biome-config/formatter.mdx",
       "entities": [
         "formatter"
       ],
       "source_sha": "1a0375e23e1e660d3f41b8bd0824d222525dc0ce",
-      "doc_sha": "4e71c26a070a31239a5b91098bcc68d547b8a44a",
-      "updated": "2026-07-13T18:08:20.000Z"
+      "doc_sha": "e5bfc01fee1282628ee7f41fa3e04943491c42e2",
+      "updated": "2026-07-14T19:45:00.000Z"
     },
     {
       "source": "tooling/biome-config/linter.json",
-      "doc": "apps/docs/content/tooling/biome-config/linter.mdx",
+      "doc": "apps/docs/content/docs/tooling/biome-config/linter.mdx",
       "entities": [
         "linter"
       ],
       "source_sha": "a61a1d060dac4cf5e0304f316b3395dd47d8536f",
-      "doc_sha": "7eff13fd3f1719bf365288648a3e754ad6ac9c9e",
-      "updated": "2026-07-13T18:08:20.000Z"
+      "doc_sha": "797877889993728261df83cfdf71a9cd6ad6b56f",
+      "updated": "2026-07-14T19:45:00.000Z"
     },
     {
       "source": "tooling/biome-config/package.json",
-      "doc": "apps/docs/content/tooling/biome-config/index.mdx",
+      "doc": "apps/docs/content/docs/tooling/biome-config/index.mdx",
       "entities": [
         "@accelint/biome-config"
       ],
       "source_sha": "f9a42b09e0c10d44c29fdb83d7d93b8da0247fb0",
-      "doc_sha": "73cb6d6a51b0a4af59d0a671e42ed217658f8b53",
-      "updated": "2026-07-13T18:08:20.000Z"
+      "doc_sha": "843fe2010a31b5910495dce98d1525dbd87ad67b",
+      "updated": "2026-07-14T19:45:00.000Z"
+    },
+    {
+      "source": "tooling/eslint-config/package.json",
+      "doc": "apps/docs/content/docs/tooling/eslint-config.mdx",
+      "entities": [
+        "@accelint/eslint-config"
+      ],
+      "source_sha": "27b5f260b4f15e9e0f01d5e1ad2b41dd411a34e6",
+      "doc_sha": "ae45ecef6d6ebe048965f88b184581701c7bdad4",
+      "updated": "2026-07-14T00:00:00.000Z"
     },
     {
       "source": "tooling/prettier-config/prettier.config.js",
-      "doc": "apps/docs/content/tooling/prettier-config/index.mdx",
+      "doc": "apps/docs/content/docs/tooling/prettier-config.mdx",
       "entities": [
         "config"
       ],
       "source_sha": "53c7908e5a5c8faaad0a546c239524c18097e3e9",
-      "doc_sha": "c898549fcf48bf9174e2042c55deaf2b320387d9",
-      "updated": "2026-07-13T18:10:21.136Z"
+      "doc_sha": "de9c3af8b1aa20d48e0ed15cec5b36967a5814ba",
+      "updated": "2026-07-14T19:49:10.000Z"
     },
     {
       "source": "tooling/smeegl/package.json",
@@ -1600,6 +1988,16 @@
       "updated": "2026-07-13T19:00:00.000Z"
     },
     {
+      "source": "tooling/smeegl/src/lib.ts",
+      "doc": "apps/docs/content/docs/tooling/smeegl/lib.mdx",
+      "entities": [
+        "smeegl"
+      ],
+      "source_sha": "fa85d7df22f60dce567e6e2a6487564cfdaccf37",
+      "doc_sha": "01081dbd4fe4d6c9eec34e211a63af3f72589b2e",
+      "updated": "2026-07-14T20:00:00.000Z"
+    },
+    {
       "source": "tooling/smeegl/src/log-messages.ts",
       "doc": "apps/docs/content/docs/tooling/smeegl/log-messages.mdx",
       "entities": [
@@ -1621,6 +2019,23 @@
       "updated": "2026-07-13T19:00:00.000Z"
     },
     {
+      "source": "tooling/typescript-config/bundler",
+      "doc": "apps/docs/content/docs/tooling/typescript-config/bundler.mdx",
+      "entities": [
+        "bundler/dom",
+        "bundler/dom/app",
+        "bundler/dom/library",
+        "bundler/dom/library-monorepo",
+        "bundler/no-dom",
+        "bundler/no-dom/app",
+        "bundler/no-dom/library",
+        "bundler/no-dom/library-monorepo"
+      ],
+      "source_sha": "bee19329f6b1797ca4eee05d5370e514c9aef13b",
+      "doc_sha": "308b86fa61a0fcb894e86dcb4b86640582c71615",
+      "updated": "2026-07-14T19:29:32.000Z"
+    },
+    {
       "source": "tooling/typescript-config/package.json",
       "doc": "apps/docs/content/docs/tooling/typescript-config/index.mdx",
       "entities": [
@@ -1629,47 +2044,6 @@
       "source_sha": "bee19329f6b1797ca4eee05d5370e514c9aef13b",
       "doc_sha": "57c016167acbd17022576236b3bc54f7de583aba",
       "updated": "2026-07-14T19:29:32.000Z"
-    },
-    {
-      "source": "tooling/vitest-config/dom.js",
-      "doc": "apps/docs/content/tooling/vitest-config/dom.mdx",
-      "entities": [
-        "dom"
-      ],
-      "source_sha": "d00b33c76fb880a9175a250ce39171a5d8223c0b",
-      "doc_sha": "694bae74450034c6e42489a617c6d534555fec52",
-      "updated": "2026-07-14T19:16:28.576Z"
-    },
-    {
-      "source": "tooling/vitest-config/mocks/broadcast-channel.ts",
-      "doc": "apps/docs/content/tooling/vitest-config/mocks/broadcast-channel.mdx",
-      "entities": [
-        "mockBroadcastChannel",
-        "resetMockBroadcastChannel"
-      ],
-      "source_sha": "50cc6c58d502562339da8546cbf5953866db9fa3",
-      "doc_sha": "337f180a20780531d27a4aad57742b849b01f66a",
-      "updated": "2026-07-14T19:16:28.576Z"
-    },
-    {
-      "source": "tooling/vitest-config/no-dom.js",
-      "doc": "apps/docs/content/tooling/vitest-config/no-dom.mdx",
-      "entities": [
-        "no-dom"
-      ],
-      "source_sha": "30690e739754780eeec71a96203c069b7adf0c4b",
-      "doc_sha": "a290da7fd66af07bc2dc6ec9cb1baa22b880004b",
-      "updated": "2026-07-14T19:16:28.576Z"
-    },
-    {
-      "source": "tooling/vitest-config/package.json",
-      "doc": "apps/docs/content/tooling/vitest-config/index.mdx",
-      "entities": [
-        "@accelint/vitest-config"
-      ],
-      "source_sha": "d11bf0c9cd595573047ade6929a6c0028564db50",
-      "doc_sha": "d7ed0a930d5d094287327879fa194e5187eb2646",
-      "updated": "2026-07-14T19:16:28.575Z"
     },
     {
       "source": "tooling/typescript-config/tsc",
@@ -1687,21 +2061,45 @@
       "updated": "2026-07-14T19:29:32.000Z"
     },
     {
-      "source": "tooling/typescript-config/bundler",
-      "doc": "apps/docs/content/docs/tooling/typescript-config/bundler.mdx",
+      "source": "tooling/vitest-config/dom.js",
+      "doc": "apps/docs/content/docs/tooling/vitest-config/dom.mdx",
       "entities": [
-        "bundler/dom",
-        "bundler/dom/app",
-        "bundler/dom/library",
-        "bundler/dom/library-monorepo",
-        "bundler/no-dom",
-        "bundler/no-dom/app",
-        "bundler/no-dom/library",
-        "bundler/no-dom/library-monorepo"
+        "dom"
       ],
-      "source_sha": "bee19329f6b1797ca4eee05d5370e514c9aef13b",
-      "doc_sha": "308b86fa61a0fcb894e86dcb4b86640582c71615",
-      "updated": "2026-07-14T19:29:32.000Z"
+      "source_sha": "d00b33c76fb880a9175a250ce39171a5d8223c0b",
+      "doc_sha": "165009f9331a8792ee65c03d17b8639f9bc5160d",
+      "updated": "2026-07-14T00:00:00.000Z"
+    },
+    {
+      "source": "tooling/vitest-config/mocks/broadcast-channel.ts",
+      "doc": "apps/docs/content/docs/tooling/vitest-config/mocks/broadcast-channel.mdx",
+      "entities": [
+        "mockBroadcastChannel",
+        "resetMockBroadcastChannel"
+      ],
+      "source_sha": "50cc6c58d502562339da8546cbf5953866db9fa3",
+      "doc_sha": "8ba774565cdf23d43b90ac112f97fb72990ef12d",
+      "updated": "2026-07-14T00:00:00.000Z"
+    },
+    {
+      "source": "tooling/vitest-config/no-dom.js",
+      "doc": "apps/docs/content/docs/tooling/vitest-config/no-dom.mdx",
+      "entities": [
+        "no-dom"
+      ],
+      "source_sha": "30690e739754780eeec71a96203c069b7adf0c4b",
+      "doc_sha": "1ddf92045bf6993713ec135ba614aa36e78db96f",
+      "updated": "2026-07-14T00:00:00.000Z"
+    },
+    {
+      "source": "tooling/vitest-config/package.json",
+      "doc": "apps/docs/content/docs/tooling/vitest-config/index.mdx",
+      "entities": [
+        "@accelint/vitest-config"
+      ],
+      "source_sha": "d11bf0c9cd595573047ade6929a6c0028564db50",
+      "doc_sha": "7dad6ad1027c3a643100471980faee426f5b1852",
+      "updated": "2026-07-14T00:00:00.000Z"
     }
   ]
 }
