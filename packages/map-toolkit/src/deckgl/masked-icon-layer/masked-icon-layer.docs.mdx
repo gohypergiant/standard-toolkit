@@ -73,3 +73,9 @@ In addition to all `IconLayer` props:
 | `clickColor` | `Color` | `[40, 245, 190, 1]` | Replacement color while clicked (`getClicked`). |
 | `getFillColor` | `Accessor<Color>` | `[150, 150, 150, 1]` | Per-instance replacement color when neither hovered nor clicked. |
 | `getClicked` | `Accessor<boolean>` | `false` | Per-instance flag selecting `clickColor` over `getFillColor`. |
+
+> **Note:** `clickColor` only takes effect when `getClicked` returns `true` for
+> an instance. `DisplayShapeLayer`'s point-icon sublayer does not set
+> `getClicked` — it conveys selection through `CoffinCornerExtension` brackets
+> rather than recoloring the icon body — so `clickColor` has no effect there.
+> Set `getClicked` yourself when using `MaskedIconLayer` directly to enable it.
