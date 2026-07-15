@@ -14,6 +14,7 @@
 import { LatLon } from 'geodesy/utm';
 import { type Compass, type Format, SYMBOL_PATTERNS } from '../latlon/internal';
 import { parseUTM } from './parser';
+import { formatUtmParts, toUtmParts } from './parts';
 import type { CoordinateSystem } from '../latlon/internal/coordinate-system';
 
 /**
@@ -56,16 +57,14 @@ export const systemUTM: CoordinateSystem = {
       [format.slice(3), right],
     ]) as Record<'LAT' | 'LON', number>;
 
-    const latlon = new LatLon(LAT, LON);
-    const utm = latlon.toUtm();
+    const result = toUtmParts([LAT, LON]);
 
-    // Format UTM coordinates manually to ensure correct format
-    // Expected format: "18N 585628 4511644" (zone hemisphere easting northing)
-    const zone = utm.zone.toString().padStart(2, '0');
-    const hemisphere = utm.hemisphere;
-    const easting = Math.round(utm.easting).toString();
-    const northing = Math.round(utm.northing).toString();
+    if (!result.ok) {
+      // Surface geodesy's own RangeError for coordinates outside the UTM
+      // grid band, preserving the pre-refactor throwing behavior.
+      return new LatLon(LAT, LON).toUtm().toString();
+    }
 
-    return `${zone}${hemisphere} ${easting} ${northing}`;
+    return formatUtmParts(result.value);
   },
 };

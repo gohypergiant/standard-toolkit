@@ -11,13 +11,8 @@
  * governing permissions and limitations under the License.
  */
 
-import {
-  BEARINGS,
-  type Compass,
-  type Format,
-  SYMBOL_PATTERNS,
-  SYMBOLS,
-} from '../internal';
+import { type Compass, type Format, SYMBOL_PATTERNS } from '../internal';
+import { formatCoordinateSystem } from '../internal/format';
 import { parseDegreesMinutesSeconds } from './parser';
 import type { CoordinateSystem } from '../internal/coordinate-system';
 
@@ -75,17 +70,14 @@ export const systemDegreesMinutesSeconds: CoordinateSystem = {
     );
   },
 
-  toFormat(format: Format, [left, right]: [number, number]) {
-    return [left, right]
-      .map((num, index) => {
-        const abs = Math.abs(num);
-        const deg = Math.floor(abs);
-        const rem = (abs - deg) * 60;
-        const min = Math.floor(rem);
-        const sec = Number.parseFloat(((rem - min) * 60).toFixed(10));
+  toFormat(format: Format, coordinates: [number, number]) {
+    return formatCoordinateSystem(format, coordinates, (abs) => {
+      const deg = Math.floor(abs);
+      const rem = (abs - deg) * 60;
+      const min = Math.floor(rem);
+      const sec = Number.parseFloat(((rem - min) * 60).toFixed(10));
 
-        return `${deg} ${min} ${sec} ${BEARINGS[format][index as 0 | 1][+(num < 0)]}`;
-      })
-      .join(` ${SYMBOLS.DIVIDER} `);
+      return `${deg} ${min} ${sec}`;
+    });
   },
 };

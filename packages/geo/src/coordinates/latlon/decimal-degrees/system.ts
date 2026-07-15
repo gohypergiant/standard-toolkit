@@ -11,13 +11,8 @@
  * governing permissions and limitations under the License.
  */
 
-import {
-  BEARINGS,
-  type Compass,
-  type Format,
-  SYMBOL_PATTERNS,
-  SYMBOLS,
-} from '../internal';
+import { type Compass, type Format, SYMBOL_PATTERNS } from '../internal';
+import { formatCoordinateSystem } from '../internal/format';
 import { parseDecimalDegrees } from './parser';
 import type { CoordinateSystem } from '../internal/coordinate-system';
 
@@ -66,12 +61,7 @@ export const systemDecimalDegrees: CoordinateSystem = {
     );
   },
 
-  toFormat(format: Format, [left, right]: [number, number]) {
-    return [left, right]
-      .map(
-        (num, index) =>
-          `${Math.abs(num)} ${BEARINGS[format][index as 0 | 1][+(num < 0)]}`,
-      )
-      .join(` ${SYMBOLS.DIVIDER} `);
+  toFormat(format: Format, coordinates: [number, number]) {
+    return formatCoordinateSystem(format, coordinates, (abs) => `${abs}`);
   },
 };

@@ -11,21 +11,20 @@
  */
 
 import {
-  coordinateSystems,
-  createCoordinate,
   formatDecimalDegrees,
   formatDegreesDecimalMinutes,
   formatDegreesMinutesSeconds,
+  formatMgrsParts,
+  formatUtmParts,
+  toMgrsParts,
+  toUtmParts,
 } from '@accelint/geo';
-import { createLoggerDomain } from '@/shared/logger';
 import {
   DEFAULT_MGRS_UTM_COORDS,
   LONGITUDE_RANGE,
   MAX_LONGITUDE,
 } from './constants';
 import type { CoordinateFormatTypes } from './types';
-
-const logger = createLoggerDomain('[formatCoordinate]');
 
 /**
  * Normalizes longitude to the -180 to 180 range.
@@ -62,16 +61,17 @@ export function normalizeLongitude(lon: number): number {
  * @returns Formatted coordinate string
  *
  * @remarks
- * **UTM/MGRS limitations:** UTM and MGRS are only valid between 80°S and 84°N.
- * Coordinates outside that range return the placeholder `--, --`
- * ({@link DEFAULT_MGRS_UTM_COORDS}). DD, DDM, and DMS work at all latitudes.
+ * **UTM/MGRS limitations:** UTM and MGRS are only valid from 80°S to 84°N
+ * inclusive. Coordinates outside that range return the placeholder
+ * `--- -- ---- ----` ({@link DEFAULT_MGRS_UTM_COORDS}). DD, DDM, and DMS work
+ * at all latitudes.
  *
  * @example
  * ```ts
  * import { formatCoordinate } from '@accelint/map-toolkit/cursor-coordinates';
  *
- * formatCoordinate([-122.4194, 37.7749], 'mgrs'); // '10S EG 51810 90261'
- * formatCoordinate([-122.4194, 37.7749], 'dd');   // '37.774900 N / 122.419400 W'
+ * formatCoordinate([-122.4194, 37.7749], 'mgrs'); // '10S EG 51130 80998'
+ * formatCoordinate([-122.4194, 37.7749], 'dd');   // '37.774900° N / 122.419400° W'
  * ```
  */
 export function formatCoordinate(
@@ -104,40 +104,27 @@ export function formatCoordinate(
         prefix: '',
         suffix: '',
       });
-    case 'mgrs':
+    case 'mgrs': {
+      // The geo grid parts own the 80°S–84°N inclusive boundary and reject
+      // non-finite input; an out-of-range result maps to the placeholder.
+      const result = toMgrsParts(latLon);
+
+      if (!result.ok) {
+        return DEFAULT_MGRS_UTM_COORDS;
+      }
+
+      return formatMgrsParts(result.value);
+    }
     case 'utm': {
-      // UTM and MGRS are only valid between 80°S and 84°N
-      // Use createCoordinate for grid-based formats
-      // Input format: "lon E / lat N" for LONLAT (matching geo package DD tests)
-      // Limit to 10 decimal places (geo parser max) and avoid floating point precision issues
-      const lat = latLon[0];
-      const lon = latLon[1];
+      // The geo grid parts own the 80°S–84°N inclusive boundary and reject
+      // non-finite input; an out-of-range result maps to the placeholder.
+      const result = toUtmParts(latLon);
 
-      // Check if coordinate is within valid UTM/MGRS range
-      if (lat < -80 || lat > 84) {
+      if (!result.ok) {
         return DEFAULT_MGRS_UTM_COORDS;
       }
 
-      const latOrdinal = lat >= 0 ? 'N' : 'S';
-      const lonOrdinal = lon >= 0 ? 'E' : 'W';
-      // Use LONLAT format: longitude first, then latitude
-      // toFixed(10) ensures we stay within the parser's regex limits
-      const formattedInput = `${Math.abs(lon).toFixed(10)} ${lonOrdinal} / ${Math.abs(lat).toFixed(10)} ${latOrdinal}`;
-
-      const geoCoord = createCoordinate(
-        coordinateSystems.dd,
-        'LONLAT',
-      )(formattedInput);
-
-      // Validate the coordinate was created successfully
-      if (!geoCoord.valid) {
-        logger.error(
-          `Failed to create coordinate for ${format}: ${geoCoord.errors.join(', ')}`,
-        );
-        return DEFAULT_MGRS_UTM_COORDS;
-      }
-
-      return geoCoord[format]();
+      return formatUtmParts(result.value);
     }
   }
 }
