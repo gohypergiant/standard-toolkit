@@ -9,6 +9,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const items = await Promise.all(
     source.getPages().map(async (page) => {
       if (page.type !== 'docs') return;
+      // @ts-expect-error fumadoc type issue
       const { lastModified } = await page.data.load();
 
       return {
