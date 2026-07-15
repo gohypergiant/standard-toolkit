@@ -197,10 +197,6 @@ pnpm lint                  # Lint all code
 pnpm format                # Format all code
 pnpm index                 # Generate main entry exports
 
-# Documentation
-pnpm --filter @accelint/api-docs run generate  # Regenerate API docs for all packages
-# Or for specific package: pnpm exec claude-code --skill accelint-api-docs -- <package-path>
-
 # Cleaning (use when things break)
 pnpm clean                 # Clean everything recursively (nuclear option)
 pnpm clean:deps            # Remove node_modules recursively
