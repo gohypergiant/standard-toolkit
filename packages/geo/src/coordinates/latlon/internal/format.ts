@@ -12,6 +12,7 @@
 
 // __private-exports
 
+import { BEARINGS, type Format, SYMBOLS } from '.';
 import { type Axis, getHemisphere } from './ordinal';
 
 export type FormatOptions = {
@@ -20,6 +21,42 @@ export type FormatOptions = {
   separator: string;
   withOrdinal?: boolean;
 };
+
+/**
+ * Shared scaffold for a `CoordinateSystem`'s `toFormat` round-trip string.
+ *
+ * This is the loss-less internal representation `createCoordinate(...).dd()` /
+ * `.ddm()` / `.dms()` returns — deliberately distinct from the display
+ * formatters in each system's `formatter.ts`. The `to*Parts` / `format*`
+ * functions round and carry to a fixed precision for human display; this path
+ * keeps full precision and applies **no** carry so a value survives a
+ * format → parse → float round-trip unchanged. The two must not be merged.
+ *
+ * Owns the parts every system's `toFormat` shares — the `[lat, lon]` map, the
+ * ` / ` divider join, and the signed → `N`/`S`/`E`/`W` direction lookup — and
+ * defers only the per-axis magnitude rendering (which is all that differs
+ * between DD, DDM, and DMS) to `renderMagnitude`.
+ *
+ * @param format - Axis ordering (`'LATLON'` or `'LONLAT'`).
+ * @param coordinates - Signed `[left, right]` values in the given ordering.
+ * @param renderMagnitude - Renders the space-separated magnitude components of
+ *   one axis (e.g. `"37 46.494"` for DDM) from its absolute value.
+ * @returns The joined round-trip string, e.g. `"37 46.494 N / 122 25.164 W"`.
+ *
+ * @remarks pure function
+ */
+export const formatCoordinateSystem = (
+  format: Format,
+  [left, right]: [number, number],
+  renderMagnitude: (magnitude: number) => string,
+): string =>
+  [left, right]
+    .map((value, index) => {
+      const direction = BEARINGS[format][index as 0 | 1][+(value < 0)];
+
+      return `${renderMagnitude(Math.abs(value))} ${direction}`;
+    })
+    .join(` ${SYMBOLS.DIVIDER} `);
 
 /**
  * Creates a coordinate formatter function from a coordinate conversion function.

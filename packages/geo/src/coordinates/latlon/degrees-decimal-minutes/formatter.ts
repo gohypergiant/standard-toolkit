@@ -34,6 +34,13 @@ export type DdmParts = {
  * Applies the minutes carry (`60′ → +1°`) after rounding so `minutes` never
  * reaches `60`, then attaches the hemisphere letter for the axis.
  *
+ * This is the display path: it rounds to `precision` and carries. The
+ * lossless round-trip representation returned by `createCoordinate(...).ddm()`
+ * lives separately in `degrees-decimal-minutes/system.ts` (`toFormat`, via the
+ * shared `formatCoordinateSystem`), which keeps full precision and applies no
+ * carry so a value survives format → parse unchanged. The two are
+ * intentionally not shared — do not route one through the other.
+ *
  * @param value - The signed coordinate value.
  * @param axis - Whether the value is a latitude (`'lat'`) or longitude (`'lon'`).
  * @param precision - Decimal places for the minutes (default `4`).
