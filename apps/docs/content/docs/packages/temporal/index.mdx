@@ -1,11 +1,11 @@
 ---
 title: "Overview"
-description: A lightweight JavaScript library offering a collection of simple temporal functions for parsing, formatting, manipulating dates and times, and specialty timers.
+description: "@accelint/temporal provides temporal utilities for JavaScript applications. The library focuses on clock-aligned timing operations that synchronize with system clock boundaries, preventing drift in repeated timer operations."
 source: packages/temporal/src/index.ts
 source_sha: 1e3378dc7784991cf3b569b888d9ddc92b20d0a1
-doc_sha: 606677c7e8787741cdac718e1dc2241ace933ab1
+doc_sha: 4dc753a1efca6f1e10806ce44681042c546f65fa
 deprecated: false
-updated: 2026-07-14
+updated: 2025-01-14
 ---
 
 ## Installation
@@ -22,17 +22,60 @@ import { setClockInterval, setClockTimeout } from '@accelint/temporal';
 
 // Import from sub-modules
 import { setClockInterval, setClockTimeout } from '@accelint/temporal/timers';
-import { remainder, callNextSecond } from '@accelint/temporal/timers/utils';
 ```
 
 ## Available Exports
 
-| Export Path | Description |
-|-------------|-------------|
-| [timers](./timers/index.md) | setTimeout and setInterval replacements that align execution to clock boundaries |
-| [timers/utils](./timers/utils.md) | Utility functions for temporal calculations and clock-aligned execution |
+### Timers
+
+| Function | Description |
+|----------|-------------|
+| [setClockInterval](./set-clock-interval.mdx) | Execute a callback repeatedly at specified intervals, starting at the next clock second boundary |
+| [setClockTimeout](./set-clock-timeout.mdx) | Execute a callback once after a specified delay, starting from the next clock second boundary |
+
+## Examples
+
+### Example: Clock display
+
+```typescript
+import { setClockInterval } from '@accelint/temporal';
+
+function startClock(element: HTMLElement) {
+  const cleanup = setClockInterval(() => {
+    element.textContent = new Date().toLocaleTimeString();
+  }, 1000);
+  
+  return cleanup;
+}
+
+// Start the clock
+const cleanup = startClock(document.getElementById('clock'));
+
+// Stop when done
+cleanup();
+```
+
+### Example: Scheduled task
+
+```typescript
+import { setClockTimeout } from '@accelint/temporal';
+
+function scheduleNotification(message: string, delayMs: number) {
+  const cleanup = setClockTimeout(() => {
+    console.log(message);
+  }, delayMs);
+  
+  return cleanup;
+}
+
+// Schedule for 5 seconds from next clock second
+const cancel = scheduleNotification('Task complete!', 5000);
+
+// Cancel if needed
+cancel();
+```
 
 ## Related
 
-- [@accelint/core](../core/index.md) - Core functional utilities
+- [@accelint/core](../core/index.mdx) - Core functional utilities
 - [GitHub Repository](https://github.com/gohypergiant/standard-toolkit) - Source code

@@ -1,9 +1,131 @@
 ---
 title: "setClockInterval"
-description: TODO
-source: pending
-source_sha: pending
-doc_sha: pending
+description: Execute a callback repeatedly at specified intervals, starting at the next clock second boundary
+source: packages/temporal/src/timers/index.ts
+source_sha: 58e85118ec419fd5bc2eb25635f26ebb45f7b269
+doc_sha: dcd66c6f332b9b0b3f512cb3b70a078a7285eb4a
 deprecated: false
-updated: 2026-07-14
+updated: 2025-01-14
 ---
+
+## Usage
+
+```typescript
+import { setClockInterval } from '@accelint/temporal';
+
+const cleanup = setClockInterval(() => {
+  console.log('Tick:', new Date().toISOString());
+}, 1000);
+
+// Later, stop the interval
+cleanup();
+```
+
+## Reference
+
+```typescript
+function setClockInterval(
+  cb: () => void,
+  ms: number
+): () => void
+```
+
+Executes a callback repeatedly at a specified interval, aligned to clock second boundaries. Unlike standard `setInterval`, this function waits until the next clock second before starting, then automatically corrects for any execution drift on each iteration.
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `cb` | `() => void` | Callback function to execute at the next clock second, then repeatedly after each interval. |
+| `ms` | `number` | Time in milliseconds between callback executions. |
+
+### Returns
+
+Returns a cleanup function that clears the interval when called. Safe to call multiple times.
+
+## Examples
+
+### Example: Updating a clock display
+
+```typescript
+import { setClockInterval } from '@accelint/temporal';
+
+function updateClock(element: HTMLElement) {
+  const cleanup = setClockInterval(() => {
+    element.textContent = new Date().toLocaleTimeString();
+  }, 1000);
+  
+  return cleanup;
+}
+
+const cleanup = updateClock(document.getElementById('clock'));
+// Updates every second, synchronized to system clock
+```
+
+### Example: Polling API with drift correction
+
+```typescript
+import { setClockInterval } from '@accelint/temporal';
+
+async function pollEndpoint(url: string, intervalMs: number) {
+  const cleanup = setClockInterval(async () => {
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      console.log('Polled data:', data);
+    } catch (error) {
+      console.error('Poll failed:', error);
+    }
+  }, intervalMs);
+  
+  return cleanup;
+}
+
+const cleanup = await pollEndpoint('/api/status', 5000);
+// Polls every 5 seconds, correcting for any execution drift
+```
+
+### Example: Animation frame synchronization
+
+```typescript
+import { setClockInterval } from '@accelint/temporal';
+
+function animateCounter(element: HTMLElement, interval: number) {
+  let count = 0;
+  
+  const cleanup = setClockInterval(() => {
+    count++;
+    element.textContent = String(count);
+  }, interval);
+  
+  return cleanup;
+}
+
+const cleanup = animateCounter(document.getElementById('counter'), 250);
+// Increments counter every 250ms, aligned to clock boundaries
+```
+
+### Example: Drift correction demonstration
+
+```typescript
+import { setClockInterval } from '@accelint/temporal';
+
+let lastTime = Date.now();
+const cleanup = setClockInterval(() => {
+  const now = Date.now();
+  const elapsed = now - lastTime;
+  console.log(`Elapsed: ${elapsed}ms`);
+  lastTime = now;
+}, 1000);
+
+// Output stays consistent at ~1000ms despite callback execution time
+// Standard setInterval would accumulate drift over time
+```
+
+> **Good to know:** The first callback execution happens at the next clock second boundary, not immediately. For immediate execution, use standard `setInterval`. The interval automatically corrects for drift by recalculating the delay on each iteration using internal timing utilities.
+
+## Related
+
+- [setClockTimeout](./set-clock-timeout.mdx) - Execute callback once after delay
+- [callNextSecond](./timers/utils.md#callnextsecond) - Execute callback at next clock second
+- [remainder](./timers/utils.md#remainder) - Calculate time until next interval boundary
