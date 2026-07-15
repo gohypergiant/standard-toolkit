@@ -1,4 +1,4 @@
-export const appName = 'Lyntris Dev Toolkit';
+export const appName = 'Standard Toolkit';
 export const docsRoute = '/docs';
 export const docsImageRoute = '/og/docs';
 export const docsContentRoute = '/llms.mdx/docs';
