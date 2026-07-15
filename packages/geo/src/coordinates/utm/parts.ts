@@ -11,7 +11,7 @@
  */
 
 import { LatLon } from 'geodesy/utm';
-import { validateNumericCoordinate } from '../latlon/internal';
+import { isValidNumericCoordinate } from '../latlon/internal';
 
 /**
  * Lowest latitude (degrees) the UTM/MGRS grid is defined for, inclusive.
@@ -80,6 +80,25 @@ export const isWithinGridBand = (lat: number): boolean =>
 export const isOnEasternAntimeridian = (lon: number): boolean => lon === 180;
 
 /**
+ * Reports whether a signed `[lat, lon]` coordinate can be projected to a UTM
+ * zone (and therefore to MGRS).
+ *
+ * A coordinate is projectable when it is finite and in range, its latitude is
+ * within the inclusive `80°S`–`84°N` grid band, and it does not sit on the
+ * `+180°` antimeridian singularity. This is the single validity gate shared by
+ * {@link toUtmParts} and {@link toMgrsParts}.
+ *
+ * @param coordinate - Signed `[latitude, longitude]` tuple.
+ * @returns `true` when the coordinate projects to a grid reference.
+ *
+ * @remarks pure function
+ */
+export const isGridProjectable = ([lat, lon]: [number, number]): boolean =>
+  isValidNumericCoordinate(lat, lon) &&
+  isWithinGridBand(lat) &&
+  !isOnEasternAntimeridian(lon);
+
+/**
  * Converts a signed `[lat, lon]` coordinate into UTM grid parts.
  *
  * Reads the geodesy `Utm` fields directly and rounds `easting`/`northing` to
@@ -109,11 +128,7 @@ export const toUtmParts = ([lat, lon]: [
   number,
   number,
 ]): GridPartsResult<UtmParts> => {
-  if (
-    validateNumericCoordinate(lat, lon).length ||
-    !isWithinGridBand(lat) ||
-    isOnEasternAntimeridian(lon)
-  ) {
+  if (!isGridProjectable([lat, lon])) {
     return { ok: false, reason: 'out-of-range' };
   }
 
@@ -129,3 +144,30 @@ export const toUtmParts = ([lat, lon]: [
     },
   };
 };
+
+/**
+ * Renders UTM grid parts as their canonical coordinate string.
+ *
+ * Left-pads the zone to two digits and joins zone+hemisphere, easting, and
+ * northing with single spaces, matching geodesy's `Utm.toString()` output.
+ * `easting`/`northing` are already the rounded integer metres `toUtmParts`
+ * yields, so no further rounding is applied here.
+ *
+ * @param parts - The UTM grid parts to render.
+ * @returns The canonical UTM string, e.g. `"18N 323394 4307396"`.
+ *
+ * @remarks pure function
+ *
+ * @example
+ * ```typescript
+ * formatUtmParts({ zone: 18, hemisphere: 'N', easting: 323394, northing: 4307396 });
+ * // '18N 323394 4307396'
+ * ```
+ */
+export const formatUtmParts = ({
+  zone,
+  hemisphere,
+  easting,
+  northing,
+}: UtmParts): string =>
+  `${zone.toString().padStart(2, '0')}${hemisphere} ${easting} ${northing}`;

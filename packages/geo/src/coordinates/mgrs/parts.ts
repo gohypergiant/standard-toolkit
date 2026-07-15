@@ -11,12 +11,7 @@
  */
 
 import { LatLon } from 'geodesy/mgrs';
-import { validateNumericCoordinate } from '../latlon/internal';
-import {
-  type GridPartsResult,
-  isOnEasternAntimeridian,
-  isWithinGridBand,
-} from '../utm/parts';
+import { type GridPartsResult, isGridProjectable } from '../utm/parts';
 
 /**
  * Structured MGRS grid parts for a signed `[lat, lon]` coordinate.
@@ -63,11 +58,7 @@ export const toMgrsParts = ([lat, lon]: [
   number,
   number,
 ]): GridPartsResult<MgrsParts> => {
-  if (
-    validateNumericCoordinate(lat, lon).length ||
-    !isWithinGridBand(lat) ||
-    isOnEasternAntimeridian(lon)
-  ) {
+  if (!isGridProjectable([lat, lon])) {
     return { ok: false, reason: 'out-of-range' };
   }
 
@@ -84,4 +75,38 @@ export const toMgrsParts = ([lat, lon]: [
       northing: mgrs.northing,
     },
   };
+};
+
+/**
+ * Renders MGRS grid parts as their canonical coordinate string.
+ *
+ * Mirrors geodesy's `Mgrs.toString(10)`: floors the within-square metres,
+ * left-pads the zone to two digits and easting/northing to five, and joins the
+ * zone+band, the `e100k`/`n100k` grid-square pair, and the padded metres with
+ * single spaces.
+ *
+ * @param parts - The MGRS grid parts to render.
+ * @returns The canonical MGRS string, e.g. `"18S UJ 23394 07396"`.
+ *
+ * @remarks pure function
+ *
+ * @example
+ * ```typescript
+ * formatMgrsParts({ zone: 18, band: 'S', e100k: 'U', n100k: 'J', easting: 23394, northing: 7396 });
+ * // '18S UJ 23394 07396'
+ * ```
+ */
+export const formatMgrsParts = ({
+  zone,
+  band,
+  e100k,
+  n100k,
+  easting,
+  northing,
+}: MgrsParts): string => {
+  const zonePadded = zone.toString().padStart(2, '0');
+  const eastingPadded = Math.floor(easting).toString().padStart(5, '0');
+  const northingPadded = Math.floor(northing).toString().padStart(5, '0');
+
+  return `${zonePadded}${band} ${e100k}${n100k} ${eastingPadded} ${northingPadded}`;
 };

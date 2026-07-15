@@ -61,8 +61,8 @@ function buildRawCoordinate(coord: [number, number] | null): RawCoordinate {
  * @throws {Error} When no id is provided and hook is used outside MapProvider context
  *
  * @remarks
- * **UTM/MGRS Limitations:** UTM and MGRS coordinate systems are only valid between 80°S and 84°N.
- * Coordinates outside this range (e.g., polar regions) will display the default placeholder `--, --`.
+ * **UTM/MGRS Limitations:** UTM and MGRS coordinate systems are only valid from 80°S to 84°N inclusive.
+ * Coordinates outside this range (e.g., polar regions) will display the default placeholder `--- -- ---- ----`.
  * Other formats (DD, DDM, DMS) work correctly at all latitudes.
  *
  * @example

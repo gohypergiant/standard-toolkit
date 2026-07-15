@@ -71,7 +71,7 @@ export const toDdmParts = (
 /**
  * Converts a coordinate value to degrees decimal minutes format.
  *
- * @param num - The coordinate value to format.
+ * @param value - The coordinate value to format.
  * @param axis - Whether the value is a latitude (`'lat'`) or longitude (`'lon'`).
  * @returns Formatted coordinate string with degrees and decimal minutes (e.g., "45° 30.1234'").
  *
@@ -87,8 +87,8 @@ export const toDdmParts = (
  * // '122° 25.1640''
  * ```
  */
-const toDegreesDecimalMinutes = (num: number, axis: Axis): string => {
-  const { degrees, minutes } = toDdmParts(num, axis);
+const toDegreesDecimalMinutes = (value: number, axis: Axis): string => {
+  const { degrees, minutes } = toDdmParts(value, axis);
 
   return `${degrees}° ${minutes.toFixed(DDM_PRECISION)}'`;
 };

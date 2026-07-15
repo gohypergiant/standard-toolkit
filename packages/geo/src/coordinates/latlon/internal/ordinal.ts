@@ -54,9 +54,15 @@ export const getHemisphere = (value: number, axis: Axis): Hemisphere => {
 /**
  * Gets the ordinal direction (N/S/E/W) for a coordinate value.
  *
- * @param num - The coordinate value (positive or negative).
+ * Retained as the established public API. Adapts {@link getHemisphere} — which
+ * owns the `>= 0` convention — to a boolean axis and the wider `string` return
+ * its existing callers expect.
+ *
+ * @param value - The coordinate value (positive or negative).
  * @param isLatitude - Whether this is a latitude coordinate (true) or longitude (false).
  * @returns Ordinal direction character: 'N', 'S', 'E', or 'W'.
+ *
+ * @remarks pure function
  *
  * @example
  * ```typescript
@@ -69,16 +75,6 @@ export const getHemisphere = (value: number, axis: Axis): Hemisphere => {
  * getOrdinal(-122.4194, false);
  * // 'W'
  * ```
- *
- * @example
- * ```typescript
- * getOrdinal(-45, true);
- * // 'S'
- * ```
  */
-export const getOrdinal = (num: number, isLatitude: boolean): string => {
-  if (isLatitude) {
-    return num >= 0 ? 'N' : 'S';
-  }
-  return num >= 0 ? 'E' : 'W';
-};
+export const getOrdinal = (value: number, isLatitude: boolean): string =>
+  getHemisphere(value, isLatitude ? 'lat' : 'lon');

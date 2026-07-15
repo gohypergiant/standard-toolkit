@@ -78,6 +78,12 @@ describe('toDmsParts', () => {
   it('keeps seconds and minutes below 60 at an explicit precision override', () => {
     const parts = toDmsParts(40.99999999, 'lat', 4);
 
+    expect(parts).toEqual({
+      degrees: 41,
+      minutes: 0,
+      seconds: 0,
+      hemisphere: 'N',
+    });
     expect(parts.seconds).toBeLessThan(60);
     expect(parts.minutes).toBeLessThan(60);
   });

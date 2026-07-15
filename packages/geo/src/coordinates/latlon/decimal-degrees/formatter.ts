@@ -63,7 +63,7 @@ export const toDecimalDegreesParts = (
 /**
  * Converts a coordinate value to decimal degrees format.
  *
- * @param num - The coordinate value to format.
+ * @param value - The coordinate value to format.
  * @param axis - Whether the value is a latitude (`'lat'`) or longitude (`'lon'`).
  * @param withOrdinal - Whether to use absolute value (when ordinal directions are shown separately).
  * @returns Formatted coordinate string with degree symbol and 6 decimal places.
@@ -81,14 +81,14 @@ export const toDecimalDegreesParts = (
  * ```
  */
 const toDecimalDegrees = (
-  num: number,
+  value: number,
   axis: Axis,
   withOrdinal?: boolean,
 ): string => {
-  const { degrees } = toDecimalDegreesParts(num, axis);
-  const value = withOrdinal || num >= 0 ? degrees : -degrees;
+  const { degrees } = toDecimalDegreesParts(value, axis);
+  const signed = withOrdinal || value >= 0 ? degrees : -degrees;
 
-  return `${value.toFixed(DECIMAL_DEGREES_PRECISION)}°`;
+  return `${signed.toFixed(DECIMAL_DEGREES_PRECISION)}°`;
 };
 
 /**

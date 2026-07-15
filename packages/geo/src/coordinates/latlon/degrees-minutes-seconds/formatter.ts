@@ -79,7 +79,7 @@ export const toDmsParts = (
 /**
  * Converts a coordinate value to degrees minutes seconds format.
  *
- * @param num - The coordinate value to format.
+ * @param value - The coordinate value to format.
  * @param axis - Whether the value is a latitude (`'lat'`) or longitude (`'lon'`).
  * @returns Formatted coordinate string with degrees, minutes, and seconds (e.g., "45° 30' 15.23″").
  *
@@ -95,8 +95,8 @@ export const toDmsParts = (
  * // '122° 25' 9.84″'
  * ```
  */
-const toDegreesMinutesSeconds = (num: number, axis: Axis): string => {
-  const { degrees, minutes, seconds } = toDmsParts(num, axis);
+const toDegreesMinutesSeconds = (value: number, axis: Axis): string => {
+  const { degrees, minutes, seconds } = toDmsParts(value, axis);
 
   return `${degrees}° ${minutes}' ${seconds.toFixed(DMS_PRECISION)}″`;
 };

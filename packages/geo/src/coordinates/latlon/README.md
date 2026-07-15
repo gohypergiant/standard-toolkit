@@ -22,7 +22,7 @@ Two coordinate ordering formats are supported:
 - **Parsing** - Convert coordinate strings to numeric values with comprehensive error validation
 - **Formatting** - Convert numeric coordinates to formatted strings with customizable separators and ordinal directions
 - **Conversion** - Transform between coordinate notation systems while preserving accuracy
-- **Error Handling** - Detailed error messages for out-of-range values, malformed input, and ambiguous coordinate groupings
+- **Error Handling** - Detailed error messages for out-of-range values, malformed input, and ambiguous coordinate groupings during parsing
 
 ## Parsing Stages
 

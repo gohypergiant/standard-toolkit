@@ -14,7 +14,7 @@
 import { LatLon } from 'geodesy/mgrs';
 import { type Compass, type Format, SYMBOL_PATTERNS } from '../latlon/internal';
 import { parseMGRS } from './parser';
-import { toMgrsParts } from './parts';
+import { formatMgrsParts, toMgrsParts } from './parts';
 import type { CoordinateSystem } from '../latlon/internal/coordinate-system';
 
 /**
@@ -70,20 +70,11 @@ export const systemMGRS: CoordinateSystem = {
     const result = toMgrsParts([LAT, LON]);
 
     if (!result.ok) {
-      // Preserve the pre-refactor behavior of surfacing the geodesy
-      // RangeError for latitudes outside the MGRS grid band.
-      new LatLon(LAT, LON).toUtm().toMgrs();
-      throw new RangeError(`latitude ‘${LAT}’ outside UTM limits`);
+      // Surface geodesy's own RangeError for coordinates outside the MGRS
+      // grid band, preserving the pre-refactor throwing behavior.
+      return new LatLon(LAT, LON).toUtm().toMgrs().toString();
     }
 
-    const { zone, band, e100k, n100k, easting, northing } = result.value;
-
-    // Mirror geodesy Mgrs.toString(10): floor the within-square metres and
-    // left-pad zone to 2 digits and easting/northing to 5.
-    const zonePadded = zone.toString().padStart(2, '0');
-    const eastingPadded = Math.floor(easting).toString().padStart(5, '0');
-    const northingPadded = Math.floor(northing).toString().padStart(5, '0');
-
-    return `${zonePadded}${band} ${e100k}${n100k} ${eastingPadded} ${northingPadded}`;
+    return formatMgrsParts(result.value);
   },
 };

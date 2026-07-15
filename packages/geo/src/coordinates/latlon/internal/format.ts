@@ -12,14 +12,14 @@
 
 // __private-exports
 
-import { type Axis, getOrdinal } from './ordinal';
+import { type Axis, getHemisphere } from './ordinal';
 
-export interface FormatOptions {
+export type FormatOptions = {
   prefix: string;
   suffix: string;
   separator: string;
   withOrdinal?: boolean;
-}
+};
 
 /**
  * Creates a coordinate formatter function from a coordinate conversion function.
@@ -45,13 +45,17 @@ export const createFormatter =
   (fn: (coord: number, axis: Axis, withOrdinal?: boolean) => string) =>
   (coordinates: [number, number], config?: FormatOptions): string => {
     const [latitude, longitude] = coordinates;
-    const latOrdinal = `${config?.withOrdinal ? ` ${getOrdinal(latitude, true)}` : ''}`;
-    const lonOrdinal = `${config?.withOrdinal ? ` ${getOrdinal(longitude, false)}` : ''}`;
-    const lat = fn(latitude, 'lat', config?.withOrdinal);
-    const lon = fn(longitude, 'lon', config?.withOrdinal);
+    const latOrdinal = config?.withOrdinal
+      ? ` ${getHemisphere(latitude, 'lat')}`
+      : '';
+    const lonOrdinal = config?.withOrdinal
+      ? ` ${getHemisphere(longitude, 'lon')}`
+      : '';
+    const latValue = fn(latitude, 'lat', config?.withOrdinal);
+    const lonValue = fn(longitude, 'lon', config?.withOrdinal);
     const prefix = config?.prefix ?? '';
     const suffix = config?.suffix ?? '';
     const separator = config?.separator ?? ', ';
 
-    return `${prefix}${lat}${latOrdinal}${separator}${lon}${lonOrdinal}${suffix}`;
+    return `${prefix}${latValue}${latOrdinal}${separator}${lonValue}${lonOrdinal}${suffix}`;
   };

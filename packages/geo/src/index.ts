@@ -61,16 +61,19 @@ export {
 export type { Axis, Hemisphere } from './coordinates/latlon/internal/ordinal';
 export {
   isFiniteNumber,
+  isValidNumericCoordinate,
   validateNumericCoordinate,
   validateSignedRange,
 } from './coordinates/latlon/internal/validate';
 export { parseMGRS } from './coordinates/mgrs/parser';
-export { toMgrsParts } from './coordinates/mgrs/parts';
+export { formatMgrsParts, toMgrsParts } from './coordinates/mgrs/parts';
 export type { MgrsParts } from './coordinates/mgrs/parts';
 export { parseUTM } from './coordinates/utm/parser';
 export {
   GRID_LATITUDE_MAX,
   GRID_LATITUDE_MIN,
+  formatUtmParts,
+  isGridProjectable,
   isOnEasternAntimeridian,
   isWithinGridBand,
   toUtmParts,

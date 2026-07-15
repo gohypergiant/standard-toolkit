@@ -14,6 +14,8 @@ import {
   formatDecimalDegrees,
   formatDegreesDecimalMinutes,
   formatDegreesMinutesSeconds,
+  formatMgrsParts,
+  formatUtmParts,
   toMgrsParts,
   toUtmParts,
 } from '@accelint/geo';
@@ -59,16 +61,17 @@ export function normalizeLongitude(lon: number): number {
  * @returns Formatted coordinate string
  *
  * @remarks
- * **UTM/MGRS limitations:** UTM and MGRS are only valid between 80°S and 84°N.
- * Coordinates outside that range return the placeholder `--, --`
- * ({@link DEFAULT_MGRS_UTM_COORDS}). DD, DDM, and DMS work at all latitudes.
+ * **UTM/MGRS limitations:** UTM and MGRS are only valid from 80°S to 84°N
+ * inclusive. Coordinates outside that range return the placeholder
+ * `--- -- ---- ----` ({@link DEFAULT_MGRS_UTM_COORDS}). DD, DDM, and DMS work
+ * at all latitudes.
  *
  * @example
  * ```ts
  * import { formatCoordinate } from '@accelint/map-toolkit/cursor-coordinates';
  *
- * formatCoordinate([-122.4194, 37.7749], 'mgrs'); // '10S EG 51810 90261'
- * formatCoordinate([-122.4194, 37.7749], 'dd');   // '37.774900 N / 122.419400 W'
+ * formatCoordinate([-122.4194, 37.7749], 'mgrs'); // '10S EG 51130 80998'
+ * formatCoordinate([-122.4194, 37.7749], 'dd');   // '37.774900° N / 122.419400° W'
  * ```
  */
 export function formatCoordinate(
@@ -110,15 +113,7 @@ export function formatCoordinate(
         return DEFAULT_MGRS_UTM_COORDS;
       }
 
-      const { zone, band, e100k, n100k, easting, northing } = result.value;
-
-      // Mirror the geo MGRS string renderer: 2-digit zone, floored
-      // within-square metres left-padded to 5 digits.
-      const zonePadded = zone.toString().padStart(2, '0');
-      const eastingPadded = Math.floor(easting).toString().padStart(5, '0');
-      const northingPadded = Math.floor(northing).toString().padStart(5, '0');
-
-      return `${zonePadded}${band} ${e100k}${n100k} ${eastingPadded} ${northingPadded}`;
+      return formatMgrsParts(result.value);
     }
     case 'utm': {
       // The geo grid parts own the 80°S–84°N inclusive boundary and reject
@@ -129,11 +124,7 @@ export function formatCoordinate(
         return DEFAULT_MGRS_UTM_COORDS;
       }
 
-      const { zone, hemisphere, easting, northing } = result.value;
-
-      // Mirror the geo UTM string renderer: 2-digit zone + hemisphere, then
-      // the rounded integer easting/northing metres.
-      return `${zone.toString().padStart(2, '0')}${hemisphere} ${easting} ${northing}`;
+      return formatUtmParts(result.value);
     }
   }
 }
