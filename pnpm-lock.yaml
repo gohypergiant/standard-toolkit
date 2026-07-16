@@ -93,10 +93,10 @@ importers:
         specifier: ^16.2
         version: 16.2.10(@playwright/test@1.61.1)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       react:
-        specifier: ^19
+        specifier: ^19.2
         version: 19.2.3
       react-dom:
-        specifier: ^19
+        specifier: ^19.2
         version: 19.2.3(react@19.2.3)
     devDependencies:
       '@tailwindcss/postcss':
@@ -118,8 +118,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       postcss:
-        specifier: ^8.5.6
-        version: 8.5.6
+        specifier: ^8.5.19
+        version: 8.5.19
       tailwindcss:
         specifier: ^4.3.3
         version: 4.3.3
@@ -11684,7 +11684,7 @@ snapshots:
       '@alloc/quick-lru': 5.2.0
       '@tailwindcss/node': 4.1.18
       '@tailwindcss/oxide': 4.1.18
-      postcss: 8.5.6
+      postcss: 8.5.19
       tailwindcss: 4.1.18
 
   '@tailwindcss/postcss@4.3.3':
@@ -17972,7 +17972,7 @@ snapshots:
       esbuild: 0.27.2
       fdir: 6.5.0(picomatch@4.0.3)
       picomatch: 4.0.3
-      postcss: 8.5.6
+      postcss: 8.5.19
       rollup: 4.53.5
       tinyglobby: 0.2.15
     optionalDependencies:
@@ -17989,7 +17989,7 @@ snapshots:
       esbuild: 0.27.2
       fdir: 6.5.0(picomatch@4.0.3)
       picomatch: 4.0.3
-      postcss: 8.5.6
+      postcss: 8.5.19
       rollup: 4.53.5
       tinyglobby: 0.2.15
     optionalDependencies:

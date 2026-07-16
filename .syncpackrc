@@ -58,7 +58,7 @@
       "pinVersion": "workspace:*"
     },
     {
-      "dependencies": ["next", "tailwindcss", "@tailwindcss/postcss"],
+      "dependencies": ["next", "postcss", "react", "react-dom", "tailwindcss", "@tailwindcss/postcss"],
       "label": "Allow version flexibility in docs app",
       "packages": ["@apps/docs"],
       "isIgnored": true

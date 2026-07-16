@@ -7,7 +7,7 @@ const config = {
   reactStrictMode: true,
   cacheComponents: false,
   poweredByHeader: false,
-  reactCompiler: true,
+  reactCompiler: false,
 };
 
 export default withMDX(config);

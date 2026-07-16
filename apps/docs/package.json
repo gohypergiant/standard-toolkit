@@ -9,8 +9,8 @@
     "fumadocs-ui": "npm:@fumadocs/base-ui@^16.11.5",
     "lucide-react": "^1.24.0",
     "next": "^16.2",
-    "react": "^19",
-    "react-dom": "^19"
+    "react": "^19.2",
+    "react-dom": "^19.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.3",
@@ -19,7 +19,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "babel-plugin-react-compiler": "^1.0.0",
-    "postcss": "^8.5.6",
+    "postcss": "^8.5.19",
     "tailwindcss": "^4.3.3",
     "typescript": "^5.9.3"
   },
