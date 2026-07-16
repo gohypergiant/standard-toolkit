@@ -38,3 +38,4 @@ apps/next/test-results/
 
 # Agent audits
 .agents/audit/*
+apps/docs/next-env.d.ts
