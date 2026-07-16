@@ -16,7 +16,7 @@
       ],
       "label": "By default all packages have minor semver range",
       "packages": [
-        "**"
+       "**"
       ],
       "range": "^"
     },
@@ -56,6 +56,12 @@
         "**"
       ],
       "pinVersion": "workspace:*"
+    },
+    {
+      "dependencies": ["next", "postcss", "react", "react-dom", "tailwindcss", "@tailwindcss/postcss"],
+      "label": "Allow version flexibility in docs app",
+      "packages": ["@apps/docs"],
+      "isIgnored": true
     },
     {
       "dependencies": ["react", "react-dom", "@types/react", "@types/react-dom"],

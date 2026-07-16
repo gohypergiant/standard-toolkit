@@ -1,0 +1,178 @@
+---
+title: buildReactFiles
+description: Generate React SVG components from SVG files with type-safe props and customizable fill colors.
+source: tooling/smeegl/src/build-react-files.ts
+source_sha: 9c0e1c7f3f4d04f5d0aa15e85b9af5b3d746c6df
+doc_sha: 8d69873efc8ae14343b5fb1c6fb6abcc35a18f97
+deprecated: false
+updated: 2026-07-13
+---
+
+## Usage
+
+```typescript
+import { buildReactFiles } from '@accelint/smeegl/build-react-files';
+import { findSprites } from '@accelint/smeegl/utils/find-sprites';
+
+// First find sprites
+const findResult = await findSprites('**/*.svg', './icons', process.cwd(), tmpDir);
+
+// Generate React components
+buildReactFiles(
+  findResult,
+  './icons',           // Input directory
+  './components/svg'   // Output directory
+);
+```
+
+## Reference
+
+```typescript
+function buildReactFiles(
+  findSpriteResult: FindSpritesResult,
+  inputPath: string,
+  outputPath: string
+): void
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `findSpriteResult` | `FindSpritesResult` | Result from `findSprites` containing sprite metadata. |
+| `inputPath` | `string` | Original input directory path, used for determining component naming prefixes. |
+| `outputPath` | `string` | Directory where React component files will be written. Created if it doesn't exist. |
+
+### Returns
+
+Returns `void`. Components are written to the file system synchronously.
+
+### Type Parameters
+
+```typescript
+type FindSpritesResult = Result<FindSpritesOutput, ErrorPath>;
+```
+
+## Examples
+
+### Example: Generate components from directory
+
+```typescript
+import { buildReactFiles } from '@accelint/smeegl/build-react-files';
+import { findSprites } from '@accelint/smeegl/utils/find-sprites';
+import { makeTempDirectory } from '@accelint/smeegl/utils/make-temp-directory';
+
+const tmpDir = await makeTempDirectory();
+const findResult = await findSprites('', './assets/icons', process.cwd(), tmpDir);
+
+buildReactFiles(
+  findResult,
+  './assets/icons',
+  './src/components/icons'
+);
+
+// Output:
+// - SvgArrow.tsx
+// - SvgArrowDown.tsx
+// - index.ts (barrel export)
+```
+
+### Example: Component structure
+
+Generated components follow this pattern:
+
+```tsx
+// SvgArrow.tsx
+import type { SVGProps } from 'react';
+
+interface Props {
+  title?: string;
+  titleId?: string;
+}
+
+export const SvgArrow = ({
+  title,
+  titleId,
+  ...props
+}: SVGProps<SVGSVGElement> & Props) => {
+  const { fill } = props;
+  const fillColor = fill ?? '#FF69B4';
+  const hasTitle = typeof title === 'string' && Boolean(title.trim());
+
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+      {hasTitle && <title id={titleId}>{title}</title>}
+      <path d="M19.9997 4L..." fill={fillColor} />
+    </svg>
+  );
+};
+```
+
+### Example: Using generated components
+
+```tsx
+import { SvgArrow, SvgArrowDown } from './components/icons';
+
+function App() {
+  return (
+    <div>
+      <SvgArrow fill="#3b82f6" title="Navigate forward" />
+      <SvgArrowDown fill="currentColor" />
+    </div>
+  );
+}
+```
+
+### Example: Nested directory structure
+
+```typescript
+import { buildReactFiles } from '@accelint/smeegl/build-react-files';
+
+// Input structure:
+//   ./icons/
+//     ui/arrow.svg
+//     ui/chevron.svg
+//     social/github.svg
+
+buildReactFiles(findResult, './icons', './components');
+
+// Output:
+// - SvgUiArrow.tsx
+// - SvgUiChevron.tsx
+// - SvgSocialGithub.tsx
+// - index.ts
+```
+
+> **Good to know:** The function assumes SVG files have a single fill color set to `#FF69B4` or any non-`none` value, which will be replaced with the component's `fill` prop. SVG attributes are automatically converted from kebab-case to camelCase.
+
+## Generated Files
+
+### Component Files
+Each SVG generates a TypeScript React component with:
+- TypeScript strict mode support
+- SVG props inheritance
+- Optional `title` and `titleId` for accessibility
+- Customizable `fill` color (defaults to `#FF69B4`)
+
+### index.ts
+Barrel export file:
+```typescript
+export { SvgArrow } from './arrow';
+export { SvgArrowDown } from './arrow-down';
+```
+
+## Component Naming
+
+Components are named using PascalCase with "Svg" prefix:
+- `arrow.svg` → `SvgArrow`
+- `arrow-down.svg` → `SvgArrowDown`
+- `ui/arrow.svg` → `SvgUiArrow`
+
+Parent directory names are included when present to ensure unique component names.
+
+## Related
+
+- [buildSpritesheet](./build-spritesheet.mdx) - Generate spritesheet files
+- [findSprites](./utils/find-sprites.mdx) - Find and catalog SVG files
+- [mergeSvgIntoReactTemplate](./utils/merge-svg-into-react-template.mdx) - SVG to React transformation
+- [pascalCase](./utils/pascal-case.mdx) - Component name formatting

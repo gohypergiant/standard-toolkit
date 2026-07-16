@@ -1,0 +1,180 @@
+---
+title: Link
+description: Accessible anchor/link component with optional visited state tracking
+source: packages/design-toolkit/src/components/link/index.tsx
+source_sha: 623647e92d1ab4fd3d0fcf509577186b851cfbc1
+doc_sha: 549ce74eaada6540b65c1d3e220fea702fa07a3d
+deprecated: false
+updated: 2026-07-13
+---
+
+## Usage
+
+```tsx
+import { Link } from '@accelint/design-toolkit';
+
+export function MyNav() {
+  return <Link href="/dashboard">Go to Dashboard</Link>;
+}
+```
+
+## Reference
+
+```typescript
+interface LinkProps {
+  href: string;
+  children: React.ReactNode;
+  className?: string;
+  allowsVisited?: boolean;
+  isVisited?: boolean;
+}
+```
+
+### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `href` | `string` | - | Yes |
+| `children` | `React.ReactNode` | - | Yes |
+| `className` | `string` | - | No |
+| `allowsVisited` | `boolean` | `false` | No |
+| `isVisited` | `boolean` | `false` | No |
+
+#### `allowsVisited`
+
+When `true`, enables visited state styling. Must be combined with `isVisited` to actually apply visited styles.
+
+#### `isVisited`
+
+Controls whether the link displays in a visited state. Only takes effect when `allowsVisited` is also `true`.
+
+### Inherited Props
+
+Link inherits all props from React Aria's `Link` component, including:
+- `target` - Specifies where to open the linked document (`_blank`, `_self`, etc.)
+- `rel` - Relationship between current and linked document
+- `download` - Prompts to download the linked URL
+- `isDisabled` - Disables the link
+
+See [React Aria Link](https://react-spectrum.adobe.com/react-aria/Link.html) for full API reference.
+
+## Examples
+
+### Example: Basic internal link
+
+```tsx
+import { Link } from '@accelint/design-toolkit';
+
+<Link href="/about">About Us</Link>
+```
+
+### Example: External link
+
+```tsx
+import { Link } from '@accelint/design-toolkit';
+
+<Link href="https://example.com" target="_blank" rel="noopener noreferrer">
+  Visit Example
+</Link>
+```
+
+> **Good to know:** When using `target="_blank"`, always include `rel="noopener noreferrer"` for security.
+
+### Example: Link with visited state
+
+```tsx
+import { Link } from '@accelint/design-toolkit';
+import { useState } from 'react';
+
+export function VisitedLink() {
+  const [visited, setVisited] = useState(false);
+
+  return (
+    <Link
+      href="/page"
+      allowsVisited
+      isVisited={visited}
+      onPress={() => setVisited(true)}
+    >
+      Click to visit
+    </Link>
+  );
+}
+```
+
+### Example: Disabled link
+
+```tsx
+import { Link } from '@accelint/design-toolkit';
+
+<Link href="/unavailable" isDisabled>
+  Coming Soon
+</Link>
+```
+
+### Example: Link with icon
+
+```tsx
+import { Link, Icon } from '@accelint/design-toolkit';
+import { ExternalLink } from '@accelint/icons';
+
+<Link href="https://example.com" target="_blank" rel="noopener noreferrer">
+  Visit Site
+  <Icon size="small">
+    <ExternalLink />
+  </Icon>
+</Link>
+```
+
+### Example: Download link
+
+```tsx
+import { Link } from '@accelint/design-toolkit';
+
+<Link href="/files/document.pdf" download>
+  Download PDF
+</Link>
+```
+
+### Example: Navigation link with custom styling
+
+```tsx
+import { Link } from '@accelint/design-toolkit';
+
+<Link
+  href="/dashboard"
+  className="font-bold text-blue-600 hover:text-blue-800 underline"
+>
+  Dashboard
+</Link>
+```
+
+### Example: Router integration
+
+```tsx
+import { Link } from '@accelint/design-toolkit';
+import { useNavigate } from 'react-router-dom';
+
+export function RouterLink() {
+  const navigate = useNavigate();
+
+  return (
+    <Link
+      href="/profile"
+      onPress={(e) => {
+        e.preventDefault();
+        navigate('/profile');
+      }}
+    >
+      View Profile
+    </Link>
+  );
+}
+```
+
+> **Good to know:** The Link component uses `onPress` from React Aria, which handles both mouse clicks and keyboard activation (Enter/Space), providing better accessibility than `onClick`.
+
+## Related
+
+- [Button](../button/index.md) - Button component for actions
+- [Icon](../icon/index.md) - Icon component for link decorations

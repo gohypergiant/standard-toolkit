@@ -1,0 +1,575 @@
+---
+title: Types
+description: TypeScript type definitions for spatial dataset configurations with service integration
+source: packages/dataset/src/types/datasets.ts
+source_sha: 01475fb2fd39a32d49facd468e94adce96ec4841
+doc_sha: b28c8cb0d6dc09f9f351352939aa4daf166d7f04
+deprecated: false
+updated: 2026-07-13
+---
+
+## Usage
+
+```typescript
+import type {
+  AnyDataset,
+  LayerDataset,
+  GeoJsonWFSDataset,
+  ArrowRESTDataset,
+  LayerDatasetMetadata,
+  LayerDatasetField,
+} from '@accelint/dataset';
+
+// Use specific dataset types for type safety
+const wfsDataset: GeoJsonWFSDataset = {
+  id: 'weather-stations',
+  level: 'generated',
+  visible: true,
+  mutatable: false,
+  name: 'Weather Stations',
+  description: 'Real-time weather monitoring stations',
+  serviceType: 'WFS',
+  dataType: 'GEOJSON',
+  presentationTypes: { temperature: ['icon', 'point'] },
+  fields: [],
+  metadata: {
+    table: 'weather_stations',
+    geometryProperty: 'location',
+    defaultFields: ['id', 'temp', 'location'],
+  },
+};
+
+// Use AnyDataset for generic handling
+function processDataset(dataset: AnyDataset) {
+  // Works with any dataset type
+}
+```
+
+## Reference
+
+### Core Types
+
+#### LayerDataset
+
+```typescript
+type LayerDataset<
+  DataType extends LayerDataType,
+  ServiceType extends LayerServiceType,
+  ExtensionType = ''
+>
+```
+
+Core dataset configuration combining service integration and data specification. Generic type with compile-time validation of service/data type combinations.
+
+**Type Parameters:**
+- `DataType` - Must extend `LayerDataType` (`'GEOJSON'` | `'ARROW'` | `'Unknown'`)
+- `ServiceType` - Must extend `LayerServiceType` (`'VTS'` | `'WMS'` | `'WFS'` | `'REST'` | `'FS'` | `'Unknown'`)
+- `ExtensionType` - String union of available visual extension types (default: `''`)
+
+**Properties:**
+- `id: string` - Unique dataset identifier
+- `level: 'generated' | 'user'` - Dataset provenance indicator
+- `visible: boolean` - Initial visibility state
+- `mutatable: boolean` - Mutability flag for dataset modifications
+- `name: string` - Human-readable dataset name
+- `description: string` - Detailed dataset description
+- `readonly serviceType: ServiceType` - Service integration type
+- `readonly dataType: DataType` - Expected response data format
+- `presentationTypes: Record<string, (LayerConfigType | ExtensionType)[] | null>` - Available presentation modes per field
+- `fields: LayerDatasetField[]` - Complete field schema
+- `metadata: LayerDatasetMetadata` - Service integration and rendering metadata
+
+#### LayerServiceType
+
+```typescript
+type LayerServiceType = 'VTS' | 'WMS' | 'WFS' | 'REST' | 'FS' | 'Unknown'
+```
+
+Service protocols supported for dataset integration.
+
+- **`'VTS'`** - Vector Tile Service (high performance, pre-processed tiles)
+- **`'WMS'`** - Web Map Service (raster tiles with feature information)
+- **`'WFS'`** - Web Feature Service (vector feature data with query capabilities)
+- **`'REST'`** - RESTful Service (generic resource-oriented endpoints)
+- **`'FS'`** - File System (static files, local uploads, CDN-hosted data)
+- **`'Unknown'`** - Fallback for unrecognized or pending service detection
+
+#### LayerDataType
+
+```typescript
+type LayerDataType = 'GEOJSON' | 'ARROW' | 'Unknown'
+```
+
+Supported data formats for dataset responses and processing.
+
+- **`'GEOJSON'`** - RFC 7946 compliant JSON format, universally supported, human-readable
+- **`'ARROW'`** - Apache Arrow columnar format, high performance, efficient memory usage
+- **`'Unknown'`** - Format detection pending, error state, or unsupported formats
+
+#### LayerConfigType
+
+```typescript
+type LayerConfigType = 'icon' | 'point' | 'path' | 'polygon' | 'raster'
+```
+
+Built-in layer types for Deck.gl visualization layers.
+
+- **`'icon'`** - MaskedIconLayer for point data with custom symbols
+- **`'point'`** - ScatterplotLayer for simple circular point visualization
+- **`'path'`** - PathLayer for line/polyline data
+- **`'polygon'`** - PolygonLayer for filled area shapes
+- **`'raster'`** - Raster layer for image-based rendering
+
+Custom layer types can be added via extension without modifying this core type.
+
+#### SemVerVersion
+
+```typescript
+type SemVerVersion = `${string}.${string}.${string}`
+```
+
+Supported semver style protocol versions for WMS/WFS service endpoints.
+
+Version selection affects available request parameters, response formats, spatial reference system support, query capabilities, and performance characteristics.
+
+#### FilterDialect
+
+```typescript
+type FilterDialect = 'cql' | 'gml'
+```
+
+Query language dialect for server-side spatial filtering operations.
+
+- **`'cql'`** - Common Query Language (ECQL), text-based syntax (e.g., `temperature > 20 AND status = 'active'`)
+- **`'gml'`** - OGC Filter Encoding, XML-based GML format
+
+### Field Configuration
+
+#### LayerDatasetField
+
+```typescript
+type LayerDatasetField = {
+  id: string;
+  visible: boolean;
+  nullable: boolean;
+  type: LayerDatasetFieldTypes;
+  label: string;
+  availableValues?: { name: string; label: string }[];
+}
+```
+
+Configuration for a single field within a dataset. Defines field metadata, visibility, and data constraints.
+
+**Properties:**
+- `id` - Unique identifier for this field
+- `visible` - Controls field visibility in filter UI components
+- `nullable` - Whether this field accepts null/undefined values
+- `type` - Data type specification (see `LayerDatasetFieldTypes`)
+- `label` - Human-readable display name
+- `availableValues` - Predefined options for select/dropdown components (optional)
+
+#### LayerDatasetFieldTypes
+
+```typescript
+type LayerDatasetFieldTypes =
+  | 'bool' | 'date' | 'datetime' | 'f32' | 'f64'
+  | 'i32' | 'i64' | 'linestring' | 'multilinestring'
+  | 'multipoint' | 'multipolygon' | 'point'
+  | 'polygon' | 'str' | 'time'
+```
+
+Supported data types for layer dataset fields.
+
+**Primitive types:** `bool`, `i32`, `i64`, `str`, `f32`, `f64`
+
+**Temporal types:** `date`, `datetime`, `time`
+
+**Geometry types:** `point`, `multipoint`, `linestring`, `multilinestring`, `polygon`, `multipolygon`
+
+### Metadata Configuration
+
+#### LayerDatasetMetadata
+
+```typescript
+type LayerDatasetMetadata = {
+  table: string;
+  serviceUrls?: string[];
+  serviceVersion?: SemVerVersion;
+  backend?: string;
+  vendorParams?: Record<string, unknown>;
+  serviceLayer?: string;
+  idProperty?: string;
+  geometryProperty: string;
+  minZoom?: number;
+  maxZoom?: number;
+  positionFormat?: 'XYZ' | 'XY';
+  maxRequests?: number;
+  refetchInterval?: number;
+  defaultFields: string[];
+  batchSize?: number;
+  filterDialect?: FilterDialect;
+}
+```
+
+Metadata configuration for dataset service integration and rendering. Contains service endpoint information, zoom constraints, and field specifications.
+
+**Required Properties:**
+- `table` - Original database table name
+- `geometryProperty` - Primary geometry field name
+- `defaultFields` - Essential fields for client-side operations
+
+**Optional Properties:**
+- `serviceUrls` - List of service endpoint URL templates
+- `serviceVersion` - Geoserver service version override
+- `backend` - Backend implementation identifier (e.g., `'geoserver'`, `'mapserver'`)
+- `vendorParams` - Backend-specific vendor parameters
+- `serviceLayer` - Layer identifier for service requests
+- `idProperty` - Unique feature identifier property name
+- `minZoom` / `maxZoom` - Zoom level constraints
+- `positionFormat` - Coordinate system format (`'XY'` or `'XYZ'`)
+- `maxRequests` - Concurrent request limit (default: 6)
+- `refetchInterval` - Data refresh interval in milliseconds
+- `batchSize` - Batch size for Arrow data requests (default: 10000)
+- `filterDialect` - Filter expression dialect (default: `'cql'`)
+
+### Concrete Dataset Types
+
+#### GeoJSON Dataset Variants
+
+```typescript
+type GeoJsonFSDataset<ExtensionType = ''> = LayerDataset<'GEOJSON', 'FS', ExtensionType>
+type GeoJsonUnknownDataset<ExtensionType = ''> = LayerDataset<'GEOJSON', 'Unknown', ExtensionType>
+type GeoJsonVTSDataset<ExtensionType = ''> = LayerDataset<'GEOJSON', 'VTS', ExtensionType>
+type GeoJsonWFSDataset<ExtensionType = ''> = LayerDataset<'GEOJSON', 'WFS', ExtensionType>
+type GeoJsonWMSDataset<ExtensionType = ''> = LayerDataset<'GEOJSON', 'WMS', ExtensionType>
+type GeoJsonRESTDataset<ExtensionType = ''> = LayerDataset<'GEOJSON', 'REST', ExtensionType>
+```
+
+Specific GeoJSON dataset types for each service protocol.
+
+#### Arrow Dataset Variants
+
+```typescript
+type ArrowFSDataset<ExtensionType = ''> = LayerDataset<'ARROW', 'FS', ExtensionType>
+type ArrowUnknownDataset<ExtensionType = ''> = LayerDataset<'ARROW', 'Unknown', ExtensionType>
+type ArrowVTSDataset<ExtensionType = ''> = LayerDataset<'ARROW', 'VTS', ExtensionType>
+type ArrowWFSDataset<ExtensionType = ''> = LayerDataset<'ARROW', 'WFS', ExtensionType>
+type ArrowWMSDataset<ExtensionType = ''> = LayerDataset<'ARROW', 'WMS', ExtensionType>
+type ArrowRESTDataset<ExtensionType = ''> = LayerDataset<'ARROW', 'REST', ExtensionType>
+```
+
+Specific Arrow dataset types for each service protocol.
+
+#### Unknown Data Type Variants
+
+```typescript
+type UnknownFSDataset<ExtensionType = ''> = LayerDataset<'Unknown', 'FS', ExtensionType>
+type UnknownUnknownDataset<ExtensionType = ''> = LayerDataset<'Unknown', 'Unknown', ExtensionType>
+type UnknownVTSDataset<ExtensionType = ''> = LayerDataset<'Unknown', 'VTS', ExtensionType>
+type UnknownWFSDataset<ExtensionType = ''> = LayerDataset<'Unknown', 'WFS', ExtensionType>
+type UnknownWMSDataset<ExtensionType = ''> = LayerDataset<'Unknown', 'WMS', ExtensionType>
+type UnknownRESTDataset<ExtensionType = ''> = LayerDataset<'Unknown', 'REST', ExtensionType>
+```
+
+Dataset types with unknown data format (format detection pending, error states, unsupported formats).
+
+### Union Types
+
+#### Service Type Unions
+
+```typescript
+type AnyVTSDataset<ExtensionType = string> = 
+  | GeoJsonVTSDataset<ExtensionType>
+  | ArrowVTSDataset<ExtensionType>
+  | UnknownVTSDataset<ExtensionType>
+
+type AnyWFSDataset<ExtensionType = string> = 
+  | GeoJsonWFSDataset<ExtensionType>
+  | ArrowWFSDataset<ExtensionType>
+  | UnknownWFSDataset<ExtensionType>
+
+type AnyWMSDataset<ExtensionType = string> = 
+  | GeoJsonWMSDataset<ExtensionType>
+  | ArrowWMSDataset<ExtensionType>
+  | UnknownWMSDataset<ExtensionType>
+
+type AnyRESTDataset<ExtensionType = string> = 
+  | GeoJsonRESTDataset<ExtensionType>
+  | ArrowRESTDataset<ExtensionType>
+  | UnknownRESTDataset<ExtensionType>
+
+type AnyFSDataset<ExtensionType = string> = 
+  | GeoJsonFSDataset<ExtensionType>
+  | ArrowFSDataset<ExtensionType>
+  | UnknownFSDataset<ExtensionType>
+
+type AnyUnknownDataset<ExtensionType = string> = 
+  | GeoJsonUnknownDataset<ExtensionType>
+  | ArrowUnknownDataset<ExtensionType>
+  | UnknownUnknownDataset<ExtensionType>
+```
+
+Unions grouping datasets by service type, accepting any data format.
+
+#### Data Type Unions
+
+```typescript
+type AnyGeoJsonDataset<ExtensionType = string> = 
+  | GeoJsonFSDataset<ExtensionType>
+  | GeoJsonUnknownDataset<ExtensionType>
+  | GeoJsonVTSDataset<ExtensionType>
+  | GeoJsonWFSDataset<ExtensionType>
+  | GeoJsonWMSDataset<ExtensionType>
+  | GeoJsonRESTDataset<ExtensionType>
+
+type AnyArrowDataset<ExtensionType = string> = 
+  | ArrowFSDataset<ExtensionType>
+  | ArrowUnknownDataset<ExtensionType>
+  | ArrowVTSDataset<ExtensionType>
+  | ArrowWFSDataset<ExtensionType>
+  | ArrowWMSDataset<ExtensionType>
+  | ArrowRESTDataset<ExtensionType>
+
+type AnyUnknownDataDataset<ExtensionType = string> = 
+  | UnknownFSDataset<ExtensionType>
+  | UnknownUnknownDataset<ExtensionType>
+  | UnknownVTSDataset<ExtensionType>
+  | UnknownWFSDataset<ExtensionType>
+  | UnknownWMSDataset<ExtensionType>
+  | UnknownRESTDataset<ExtensionType>
+```
+
+Unions grouping datasets by data format, accepting any service type.
+
+#### AnyDataset
+
+```typescript
+type AnyDataset<ExtensionType = string> = 
+  | AnyArrowDataset<ExtensionType>
+  | AnyGeoJsonDataset<ExtensionType>
+  | AnyUnknownDataDataset<ExtensionType>
+```
+
+Complete union of all possible dataset type combinations. Use for generic dataset handling where specific type constraints are not required.
+
+## Examples
+
+### Example: Defining a WFS dataset
+
+```typescript
+import type { GeoJsonWFSDataset } from '@accelint/dataset';
+
+const weatherDataset: GeoJsonWFSDataset = {
+  id: 'weather-stations-2024',
+  level: 'generated',
+  visible: true,
+  mutatable: false,
+  name: 'Weather Stations',
+  description: 'Real-time weather monitoring stations across the region',
+  serviceType: 'WFS',
+  dataType: 'GEOJSON',
+  presentationTypes: {
+    temperature: ['icon', 'point'],
+    humidity: ['point'],
+  },
+  fields: [
+    {
+      id: 'temp',
+      visible: true,
+      nullable: false,
+      type: 'f32',
+      label: 'Temperature (°C)',
+    },
+    {
+      id: 'humidity',
+      visible: true,
+      nullable: false,
+      type: 'f32',
+      label: 'Humidity (%)',
+    },
+    {
+      id: 'status',
+      visible: true,
+      nullable: true,
+      type: 'str',
+      label: 'Status',
+      availableValues: [
+        { name: 'active', label: 'Active' },
+        { name: 'inactive', label: 'Inactive' },
+      ],
+    },
+  ],
+  metadata: {
+    table: 'weather_stations',
+    serviceUrls: ['https://api.weather.gov/geoserver/wfs'],
+    serviceVersion: '2.0.0',
+    backend: 'geoserver',
+    vendorParams: {
+      formatOptions: 'includeFids:false;batchSize:10000',
+    },
+    geometryProperty: 'location',
+    idProperty: 'station_id',
+    minZoom: 5,
+    maxZoom: 18,
+    defaultFields: ['station_id', 'temp', 'humidity', 'location'],
+    filterDialect: 'cql',
+  },
+};
+```
+
+### Example: Type-safe dataset handling with discriminated unions
+
+```typescript
+import type { AnyDataset } from '@accelint/dataset';
+
+function getDataSourceLabel(dataset: AnyDataset): string {
+  switch (dataset.serviceType) {
+    case 'WFS':
+      return 'Web Feature Service';
+    case 'WMS':
+      return 'Web Map Service';
+    case 'VTS':
+      return 'Vector Tile Service';
+    case 'REST':
+      return 'REST API';
+    case 'FS':
+      return 'File System';
+    case 'Unknown':
+      return 'Unknown Source';
+  }
+}
+
+function getFormatLabel(dataset: AnyDataset): string {
+  switch (dataset.dataType) {
+    case 'GEOJSON':
+      return 'GeoJSON';
+    case 'ARROW':
+      return 'Apache Arrow';
+    case 'Unknown':
+      return 'Unknown Format';
+  }
+}
+```
+
+### Example: Generic dataset processing
+
+```typescript
+import type { AnyDataset, AnyWFSDataset } from '@accelint/dataset';
+
+function isWFSDataset(dataset: AnyDataset): dataset is AnyWFSDataset {
+  return dataset.serviceType === 'WFS';
+}
+
+function processDataset(dataset: AnyDataset) {
+  if (isWFSDataset(dataset)) {
+    // TypeScript knows this is AnyWFSDataset
+    const version = dataset.metadata.serviceVersion || '2.0.0';
+    console.log(`Processing WFS ${version} dataset`);
+  }
+}
+```
+
+### Example: Building metadata with optional properties
+
+```typescript
+import type { LayerDatasetMetadata } from '@accelint/dataset';
+
+function createMetadata(
+  table: string,
+  geometryProperty: string,
+  defaultFields: string[],
+  options?: {
+    serviceUrls?: string[];
+    backend?: string;
+    minZoom?: number;
+    maxZoom?: number;
+  }
+): LayerDatasetMetadata {
+  return {
+    table,
+    geometryProperty,
+    defaultFields,
+    ...options,
+  };
+}
+
+const metadata = createMetadata(
+  'cities',
+  'geom',
+  ['id', 'name', 'geom'],
+  {
+    serviceUrls: ['https://geoserver.example.com/wfs'],
+    backend: 'geoserver',
+    minZoom: 3,
+    maxZoom: 15,
+  }
+);
+```
+
+### Example: Field configuration with available values
+
+```typescript
+import type { LayerDatasetField } from '@accelint/dataset';
+
+const statusField: LayerDatasetField = {
+  id: 'status',
+  visible: true,
+  nullable: true,
+  type: 'str',
+  label: 'Status',
+  availableValues: [
+    { name: 'active', label: 'Active' },
+    { name: 'inactive', label: 'Inactive' },
+    { name: 'pending', label: 'Pending Review' },
+    { name: 'archived', label: 'Archived' },
+  ],
+};
+
+const temperatureField: LayerDatasetField = {
+  id: 'temp_celsius',
+  visible: true,
+  nullable: false,
+  type: 'f32',
+  label: 'Temperature (°C)',
+};
+```
+
+### Example: Extension types for custom layers
+
+```typescript
+import type { LayerDataset } from '@accelint/dataset';
+
+// Define custom extension types
+type CustomLayerTypes = 'heatmap' | 'contour' | '3d-surface';
+
+// Use with dataset type
+type CustomGeoJsonWFS = LayerDataset<'GEOJSON', 'WFS', CustomLayerTypes>;
+
+const customDataset: CustomGeoJsonWFS = {
+  id: 'elevation-data',
+  level: 'generated',
+  visible: true,
+  mutatable: false,
+  name: 'Elevation Data',
+  description: 'Terrain elevation with custom visualizations',
+  serviceType: 'WFS',
+  dataType: 'GEOJSON',
+  presentationTypes: {
+    elevation: ['heatmap', 'contour', '3d-surface', 'polygon'],
+  },
+  fields: [],
+  metadata: {
+    table: 'elevation',
+    geometryProperty: 'geom',
+    defaultFields: ['elevation', 'geom'],
+  },
+};
+```
+
+> **Good to know:** The type system uses generics to enforce valid service/data type combinations at compile time. The `readonly` modifiers on `serviceType` and `dataType` prevent accidental mutation after creation. Union types like `AnyDataset` provide flexibility for generic handling while specific types like `GeoJsonWFSDataset` enable precise type checking.
+
+## Related
+
+- [lenses](../lenses.mdx) - Lens-based property accessors
+- [validation](../validation.mdx) - Zod schema validation for datasets
+- [Deck.gl Layer Documentation](https://deck.gl/docs/api-reference/layers) - Visualization layer reference

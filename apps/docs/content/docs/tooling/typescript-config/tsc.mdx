@@ -1,0 +1,330 @@
+---
+title: "TSC Configurations"
+description: TypeScript Compiler configurations for projects that use tsc for compilation and declaration file generation.
+source: tooling/typescript-config/tsc
+source_sha: bee19329f6b1797ca4eee05d5370e514c9aef13b
+doc_sha: d73cc206dd8bd6a0a6725de5dde6bf38e2e2ed48
+deprecated: false
+updated: 2026-07-14
+---
+
+## Usage
+
+Use TSC configurations when your project:
+- Compiles TypeScript with `tsc` directly
+- Outputs JavaScript files to a `dist/` folder
+- Generates declaration files (`.d.ts`) for consumers
+- Doesn't use a bundler (Vite, Webpack, etc.)
+
+```json
+{
+  "extends": "@accelint/typescript-config/tsc/dom/app",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src"
+  },
+  "include": ["src"]
+}
+```
+
+## Available Configurations
+
+### DOM (Browser) Environments
+
+#### `tsc/dom/app`
+
+For web applications compiled with tsc.
+
+```json
+{
+  "extends": "@accelint/typescript-config/tsc/dom/app"
+}
+```
+
+**Key settings:**
+- `module: "esnext"` - ESNext module system
+- `moduleResolution: "bundler"` - Modern module resolution
+- `lib: ["es2023", "dom", "dom.iterable"]` - Browser APIs available
+- `sourceMap: true` - Generates source maps
+- No declaration file generation (apps don't need `.d.ts` files)
+
+**Use for:** Single-page applications, web apps, browser-based tools
+
+#### `tsc/dom/library`
+
+For standalone libraries targeting the browser.
+
+```json
+{
+  "extends": "@accelint/typescript-config/tsc/dom/library"
+}
+```
+
+**Key settings:**
+- Same as `tsc/dom/app` plus:
+- `declaration: true` - Generates `.d.ts` files
+- `declarationMap: true` - Generates `.d.ts.map` files
+
+**Use for:** npm packages, UI component libraries, browser SDKs
+
+#### `tsc/dom/library-monorepo`
+
+For browser libraries within a monorepo.
+
+```json
+{
+  "extends": "@accelint/typescript-config/tsc/dom/library-monorepo"
+}
+```
+
+**Key settings:**
+- Same as `tsc/dom/library` plus:
+- `composite: true` - Enables project references
+- `incremental: true` - Faster rebuilds
+
+**Use for:** Packages in a pnpm/yarn/npm workspace, Turborepo projects
+
+### No-DOM (Node.js) Environments
+
+#### `tsc/no-dom/app`
+
+For Node.js applications compiled with tsc.
+
+```json
+{
+  "extends": "@accelint/typescript-config/tsc/no-dom/app"
+}
+```
+
+**Key settings:**
+- `module: "esnext"` - ESNext module system
+- `moduleResolution: "bundler"` - Modern module resolution
+- `lib: ["es2023"]` - No DOM types (Node.js only)
+- `sourceMap: true` - Generates source maps
+- No declaration file generation
+
+**Use for:** Express servers, CLI tools, backend services, scripts
+
+#### `tsc/no-dom/library`
+
+For standalone Node.js libraries.
+
+```json
+{
+  "extends": "@accelint/typescript-config/tsc/no-dom/library"
+}
+```
+
+**Key settings:**
+- Same as `tsc/no-dom/app` plus:
+- `declaration: true` - Generates `.d.ts` files
+- `declarationMap: true` - Generates `.d.ts.map` files
+
+**Use for:** npm packages for Node.js, backend SDKs, utility libraries
+
+#### `tsc/no-dom/library-monorepo`
+
+For Node.js libraries within a monorepo.
+
+```json
+{
+  "extends": "@accelint/typescript-config/tsc/no-dom/library-monorepo"
+}
+```
+
+**Key settings:**
+- Same as `tsc/no-dom/library` plus:
+- `composite: true` - Enables project references
+- `incremental: true` - Faster rebuilds
+
+**Use for:** Backend packages in a monorepo, shared utilities, microservices
+
+## Key Compiler Options
+
+All TSC configurations include:
+
+```json
+{
+  "compilerOptions": {
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "sourceMap": true
+  }
+}
+```
+
+| Option | Value | Reason |
+|--------|-------|--------|
+| `module` | `"esnext"` | Modern ESM output with latest features |
+| `moduleResolution` | `"bundler"` | Handles package.json `exports` correctly |
+| `sourceMap` | `true` | Enables debugging in original TypeScript |
+
+> **Good to know:** TSC configurations use `moduleResolution: "bundler"` (not `"node"` or `"nodenext"`) because it correctly handles modern `package.json` export maps and is more lenient with import extensions.
+
+## Examples
+
+### Example: Express API server
+
+```json
+{
+  "extends": "@accelint/typescript-config/tsc/no-dom/app",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src"
+  },
+  "include": ["src"],
+  "exclude": ["**/*.test.ts"]
+}
+```
+
+### Example: React component library (publishable)
+
+```json
+{
+  "extends": "@accelint/typescript-config/tsc/dom/library",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "declarationDir": "./dist/types",
+    "jsx": "react-jsx"
+  },
+  "include": ["src"]
+}
+```
+
+### Example: CLI tool with Node.js
+
+```json
+{
+  "extends": "@accelint/typescript-config/tsc/no-dom/app",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext"
+  },
+  "include": ["src"]
+}
+```
+
+### Example: Monorepo utility package
+
+```json
+{
+  "extends": "@accelint/typescript-config/tsc/no-dom/library-monorepo",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "composite": true,
+    "rootDir": "./src"
+  },
+  "include": ["src"],
+  "references": [
+    { "path": "../logger" },
+    { "path": "../core" }
+  ]
+}
+```
+
+### Example: Dual ESM/CommonJS package
+
+For a library that supports both ESM and CommonJS:
+
+**tsconfig.json** (ESM build):
+```json
+{
+  "extends": "@accelint/typescript-config/tsc/no-dom/library",
+  "compilerOptions": {
+    "outDir": "./dist/esm",
+    "module": "esnext",
+    "declaration": true,
+    "declarationDir": "./dist/types"
+  },
+  "include": ["src"]
+}
+```
+
+**tsconfig.cjs.json** (CJS build):
+```json
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist/cjs",
+    "module": "commonjs",
+    "declaration": false
+  }
+}
+```
+
+### Example: Browser SDK with custom paths
+
+```json
+{
+  "extends": "@accelint/typescript-config/tsc/dom/library",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "declarationDir": "./dist/types",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@utils/*": ["./src/utils/*"]
+    }
+  },
+  "include": ["src"]
+}
+```
+
+## Common Overrides
+
+### Change Module System
+
+Override for Node.js native ESM:
+
+```json
+{
+  "extends": "@accelint/typescript-config/tsc/no-dom/app",
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext"
+  }
+}
+```
+
+### Add JSX Support
+
+For React projects:
+
+```json
+{
+  "compilerOptions": {
+    "jsx": "react-jsx"  // React 17+ automatic runtime
+  }
+}
+```
+
+For Preact:
+
+```json
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact"
+  }
+}
+```
+
+### Configure Declaration Output
+
+```json
+{
+  "compilerOptions": {
+    "declaration": true,
+    "declarationDir": "./types",
+    "declarationMap": true,
+    "emitDeclarationOnly": false
+  }
+}
+```
+
+## Related
+
+- [Bundler Configurations](./bundler.mdx) - For Vite, Webpack, esbuild projects
+- [Overview](./) - Decision guide and core options
+- [TypeScript Compiler Options](https://www.typescriptlang.org/tsconfig) - Official reference

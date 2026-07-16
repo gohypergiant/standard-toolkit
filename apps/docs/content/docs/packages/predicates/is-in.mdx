@@ -1,0 +1,114 @@
+---
+title: "isIn"
+description: Curried predicate for testing if a value exists in an array using strict equality
+source: packages/predicates/src/is-in/index.ts
+source_sha: ae92ee8da776d4f34ce1ba73e6063154f3ce800a
+doc_sha: 2f9c8b5e7d3a6f1c4e9b2d8a5f7c3e1b9d4a6f8c
+deprecated: false
+updated: 2026-07-14
+---
+
+Creates a predicate that determines if a value exists in a given array.
+
+## Usage
+
+```typescript
+import { isIn } from '@accelint/predicates';
+
+const isValidStatus = isIn(['pending', 'approved', 'rejected']);
+isValidStatus('pending');  // true
+isValidStatus('unknown');  // false
+```
+
+## Reference
+
+```typescript
+function isIn<T>(array: T[]): (value: T) => boolean
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `array` | `T[]` | Array to search within |
+
+### Returns
+
+Curried function that accepts a value and returns `true` if the value exists in the array (using strict equality).
+
+## Examples
+
+### Example: Status validation
+
+```typescript
+import { isIn } from '@accelint/predicates';
+
+const VALID_STATUSES = ['draft', 'published', 'archived'];
+const isValidStatus = isIn(VALID_STATUSES);
+
+function validatePost(status: string): boolean {
+  return isValidStatus(status);
+}
+
+validatePost('published'); // true
+validatePost('deleted');   // false
+```
+
+### Example: Permission checking
+
+```typescript
+import { isIn } from '@accelint/predicates';
+
+const userPermissions = ['read', 'write', 'delete'];
+const hasPermission = isIn(userPermissions);
+
+hasPermission('read');   // true
+hasPermission('admin');  // false
+```
+
+### Example: Filtering valid IDs
+
+```typescript
+import { isIn } from '@accelint/predicates';
+
+const allowedIds = [101, 102, 103, 104];
+const isAllowedId = isIn(allowedIds);
+
+const requestIds = [101, 105, 102, 106];
+const validRequests = requestIds.filter(isAllowedId);
+// [101, 102]
+```
+
+## Real-World Example: Role-based access control
+
+```typescript
+import { isIn, isNotIn } from '@accelint/predicates';
+
+const ADMIN_ROLES = ['admin', 'super-admin'];
+const RESTRICTED_ACTIONS = ['delete-user', 'modify-permissions'];
+
+const isAdmin = isIn(ADMIN_ROLES);
+const isNotRestricted = isNotIn(RESTRICTED_ACTIONS);
+
+function canPerformAction(userRole: string, action: string): boolean {
+  if (isAdmin(userRole)) {
+    return true; // Admins can do anything
+  }
+  
+  return isNotRestricted(action);
+}
+
+canPerformAction('admin', 'delete-user');     // true
+canPerformAction('user', 'view-dashboard');   // true
+canPerformAction('user', 'delete-user');      // false
+```
+
+> **Good to know:** This predicate uses `Array.prototype.includes()` internally, which uses strict equality (`===`). For deep equality or custom comparison logic, use a different approach or preprocess your data.
+
+## Related
+
+- [isNotIn](../is-not-in/index.md) - Inverse array membership predicate
+- [isEqual](../is-equal/index.md) - Strict equality comparison
+- [isNotEqual](../is-not-equal/index.md) - Strict inequality comparison
+- [isBetween](../is-between/index.md) - Range membership for numbers
+- [isLike](../is-like/index.md) - Pattern matching with RegExp

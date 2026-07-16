@@ -1,0 +1,117 @@
+---
+title: "isBetween"
+description: Creates a predicate that determines if a number is between two bounds (inclusive)
+source: packages/predicates/src/is-between/index.ts
+source_sha: a27723beec4cf1da328a37bd171300dfcbf97f4d
+doc_sha: c8f5a2d7b6e9f1c3a4d8e2b7f5a9c1d6e3b8f4a7
+deprecated: false
+updated: 2026-07-13
+---
+
+Creates a curried predicate function that determines if a number is between two bounds (inclusive).
+
+## Usage
+
+```typescript
+import { isBetween } from '@accelint/predicates';
+
+const isValidScore = isBetween([0, 100]);
+isValidScore(89);   // true
+isValidScore(150);  // false
+isValidScore(0);    // true (inclusive)
+isValidScore(100);  // true (inclusive)
+
+// Order doesn't matter
+const isInRange = isBetween([100, 0]);
+isInRange(50); // true
+```
+
+## Reference
+
+```typescript
+function isBetween(bounds: [number, number]): (value: number) => boolean
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `bounds` | `[number, number]` | Tuple containing lower and upper bounds (order doesn't matter) |
+
+### Returns
+
+Curried function that accepts a number and returns `true` if the number is between the bounds (inclusive), `false` otherwise.
+
+## Examples
+
+### Example: Validating user input
+
+```typescript
+import { isBetween } from '@accelint/predicates';
+
+const isValidAge = isBetween([0, 120]);
+const isValidPercentage = isBetween([0, 100]);
+
+function validateInput(age: number, score: number): boolean {
+  return isValidAge(age) && isValidPercentage(score);
+}
+
+validateInput(25, 85);  // true
+validateInput(150, 85); // false
+validateInput(25, 150); // false
+```
+
+### Example: Filtering arrays
+
+```typescript
+import { isBetween } from '@accelint/predicates';
+
+const temperatures = [-5, 15, 25, 35, 45];
+const comfortable = temperatures.filter(isBetween([18, 28]));
+// [25]
+```
+
+### Example: Validating geographic coordinates (with other predicates)
+
+```typescript
+import { isBetween } from '@accelint/predicates';
+
+const isValidLatitude = isBetween([-90, 90]);
+const isValidLongitude = isBetween([-180, 180]);
+
+function isValidCoordinate(lat: number, lon: number): boolean {
+  return isValidLatitude(lat) && isValidLongitude(lon);
+}
+
+isValidCoordinate(37.7749, -122.4194);  // true (San Francisco)
+isValidCoordinate(100, 200);             // false
+```
+
+### Example: Range validation for sliders
+
+```typescript
+import { isBetween } from '@accelint/predicates';
+
+const isValidVolume = isBetween([0, 100]);
+const isValidBrightness = isBetween([0, 100]);
+
+function updateSettings(volume: number, brightness: number) {
+  if (!isValidVolume(volume)) {
+    throw new Error(`Volume must be between 0 and 100, got ${volume}`);
+  }
+  if (!isValidBrightness(brightness)) {
+    throw new Error(`Brightness must be between 0 and 100, got ${brightness}`);
+  }
+  // Update settings...
+}
+```
+
+> **Good to know:** The bounds are automatically sorted, so `isBetween([100, 0])` and `isBetween([0, 100])` are equivalent. The check is inclusive on both ends (`>=` lower and `<=` upper).
+
+## Related
+
+- [isNotBetween](../is-not-between/index.md) - Opposite check: value is outside the range
+- [isGreater](../is-greater/index.md) - Check if value is greater than threshold
+- [isLesser](../is-lesser/index.md) - Check if value is less than threshold
+- [isGreaterEqual](../is-greater-equal/index.md) - Check if value is greater than or equal to threshold
+- [isLesserEqual](../is-lesser-equal/index.md) - Check if value is less than or equal to threshold

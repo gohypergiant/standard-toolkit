@@ -1,0 +1,88 @@
+---
+title: "Overview"
+description: A collection of components and utilities to simplify visualizing and working with geospatial data.
+source: packages/map-toolkit/package.json
+source_sha: c9f67585d0f68822ae83122549b7de8a3c1a05f5
+doc_sha: dc45c28e52b5e9854475074d46983ebc5cf25030
+deprecated: false
+updated: 2026-07-14
+---
+
+## Installation
+
+```bash
+pnpm add @accelint/map-toolkit
+```
+
+## Overview
+
+The Map Toolkit provides React components and utilities for building interactive geospatial applications. Built on top of Deck.gl and MapLibre GL, it offers a comprehensive set of tools for:
+
+- **Base Maps** - Deck.gl-powered maps with MapLibre GL integration
+- **State Management** - Coordinated camera, cursor, and mode management
+- **Visualization Layers** - Symbol layers, grid layers (GARS, MGRS), and shape drawing
+- **Interactive Tools** - Drawing, editing, and selecting shapes
+- **Widgets** - HTML overlay system for custom UI elements
+
+## Main Entry Points
+
+| Export Path | Description |
+|-------------|-------------|
+| [camera](./camera.mdx) | Camera state management and coordinate system operations |
+| [cursor-coordinates](./cursor-coordinates.mdx) | Track and format cursor coordinates in multiple systems |
+| [deckgl](./deckgl/index.mdx) | Deck.gl base map, layers, extensions, and widgets |
+| [map-cursor](./map-cursor.mdx) | Cursor state management and custom cursor icons |
+| [map-mode](./map-mode.mdx) | Map interaction mode management (pan, draw, select, etc.) |
+| [maplibre](./maplibre.mdx) | MapLibre GL integration and custom handlers |
+| [viewport](./viewport.mdx) | Viewport state management and responsive sizing |
+
+## Quick Start
+
+```tsx
+import { BaseMap } from '@accelint/map-toolkit/deckgl';
+import { useCamera } from '@accelint/map-toolkit/camera';
+import { uuid } from '@accelint/core';
+
+const MAP_ID = uuid();
+
+export function MapView() {
+  // Access camera state
+  const camera = useCamera(MAP_ID);
+  
+  return (
+    <div className="relative w-full h-screen">
+      <BaseMap id={MAP_ID} className="w-full h-full" />
+      
+      {/* Display current coordinates */}
+      <div className="absolute top-4 left-4 bg-white p-2 rounded shadow">
+        Lat: {camera.latitude.toFixed(4)}, 
+        Lon: {camera.longitude.toFixed(4)}, 
+        Zoom: {camera.zoom.toFixed(2)}
+      </div>
+    </div>
+  );
+}
+```
+
+## Architecture
+
+The toolkit uses a **centralized event bus pattern** for coordinating state across components:
+
+1. **Event Bus** - All map interactions flow through `@accelint/bus`
+2. **Stores** - Each subsystem (camera, cursor, mode) maintains its own store
+3. **Hooks** - React hooks subscribe to store updates and emit events
+4. **Components** - Map components emit and respond to events
+
+This architecture enables:
+- Multiple map instances with isolated state
+- Coordinated interactions across components
+- Custom UI that responds to map state changes
+- Easy integration with existing event-driven systems
+
+## Related
+
+- [@accelint/bus](../packages/bus/index.mdx) - Event bus for component coordination
+- [@accelint/hotkey-manager](../packages/hotkey-manager/index.mdx) - Keyboard shortcut management
+- [@accelint/geo](../packages/geo/index.mdx) - Geographic coordinate utilities
+- [Deck.gl Documentation](https://deck.gl) - Official Deck.gl docs
+- [MapLibre GL Documentation](https://maplibre.org) - Official MapLibre GL docs

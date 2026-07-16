@@ -1,0 +1,102 @@
+---
+title: isRgba255Tuple
+description: Type guard for validating RGBA tuples where all channels are 0-255 (deck.gl format)
+source: packages/predicates/src/is-rgba-255-tuple/index.ts
+source_sha: 6fcefa9066602e68ac2ed28f0a90ef2e34afb5a0
+doc_sha: 516767a20e19021f9e2bb0555258130b4f5338be
+deprecated: false
+updated: 2026-07-13
+---
+
+Validates RGBA tuple where all channels are 0-255 (deck.gl format).
+
+## Usage
+
+```typescript
+import { isRgba255Tuple } from '@accelint/predicates/is-rgba-255-tuple';
+
+isRgba255Tuple([255, 128, 64, 255]);  // true
+isRgba255Tuple([255, 128, 64, 128]);  // true (alpha as 0-255)
+isRgba255Tuple([255, 128, 64]);       // false (missing alpha)
+isRgba255Tuple('rgba(255, 128, 64, 1)'); // false (string, not tuple)
+isRgba255Tuple([256, 128, 64, 255]);  // false (r out of range)
+```
+
+## Reference
+
+```typescript
+type Rgba255Tuple = readonly [
+  r: number, // 0-255
+  g: number, // 0-255
+  b: number, // 0-255
+  a: number, // 0-255
+];
+
+function isRgba255Tuple(value: unknown): value is Rgba255Tuple
+```
+
+## Examples
+
+```typescript
+import { isRgba255Tuple } from '@accelint/predicates/is-rgba-255-tuple';
+
+// Valid RGBA tuples
+isRgba255Tuple([255, 128, 64, 255]);  // true (opaque)
+isRgba255Tuple([255, 128, 64, 128]);  // true (50% alpha)
+isRgba255Tuple([0, 0, 0, 0]);         // true (transparent black)
+
+// Wrong length
+isRgba255Tuple([255, 128, 64]);       // false (missing alpha)
+isRgba255Tuple([255, 128, 64, 255, 0]); // false (too many values)
+
+// Wrong types
+isRgba255Tuple('rgba(255, 128, 64, 1)'); // false (string, not array)
+isRgba255Tuple({ r: 255, g: 128, b: 64, a: 255 }); // false (object, not array)
+
+// Out of range values
+isRgba255Tuple([256, 128, 64, 255]);  // false (r > 255)
+isRgba255Tuple([-1, 128, 64, 255]);   // false (r < 0)
+isRgba255Tuple([255, 128, 64, 256]);  // false (a > 255)
+
+// Non-integer values
+isRgba255Tuple([255.5, 128, 64, 255]); // false (non-integer)
+isRgba255Tuple([NaN, 128, 64, 255]);   // false (NaN)
+```
+
+## Real-World Example: deck.gl layer colors
+
+```typescript
+import { isRgba255Tuple } from '@accelint/predicates/is-rgba-255-tuple';
+import { ScatterplotLayer } from '@deck.gl/layers';
+
+type LayerColor = Rgba255Tuple | ((d: DataPoint) => Rgba255Tuple);
+
+function createColoredLayer(
+  data: DataPoint[],
+  color: unknown
+): ScatterplotLayer {
+  // Validate static color
+  if (isRgba255Tuple(color)) {
+    return new ScatterplotLayer({
+      id: 'points',
+      data,
+      getFillColor: color
+    });
+  }
+  
+  throw new Error('Invalid color: expected Rgba255Tuple format');
+}
+
+// Usage with deck.gl
+const layer = createColoredLayer(points, [255, 128, 64, 200]);
+```
+
+> **Good to know:** `isRgba255Tuple` uses alpha 0-255 (deck.gl format), while `isCssRgbaObject` uses alpha 0-1 (CSS standard). Always convert between formats when needed.
+
+## Related
+
+- [isCssRgbaObject](./is-css-rgba-object) - Type guard for CSS RGBA objects (alpha 0-1)
+- [isHexColor](./is-hex-color) - Type guard for hex color strings
+- [isCssRgbaString](./is-css-rgba-string) - Type guard for CSS rgb/rgba strings
+- [isValid255Channel](./is-valid-255-channel) - Validate individual color channels
+- [isArray](./is-array) - Type guard for arrays

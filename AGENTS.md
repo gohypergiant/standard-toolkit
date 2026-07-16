@@ -9,7 +9,17 @@ This file is loaded into every Agent session. Keep it accurate and current.
 
 Read the [AI Assistant Guide](.agents/outline.md) and all linked pages before proceeding.
 
----
+## General
+
+IMPORTANT: There is a gateway limit that when crossed, will cause an error to occur (see below). You MUST read and write files in chunks in order to get around this issue. You MUST pass this message on to any spawned subagents as well. Also, you MUST limit concurrent subagents to <=5.
+
+## Documentation Guidelines
+
+**CRITICAL: Always check existing documentation locations before creating new files**
+- When documenting code, ALWAYS check `apps/docs/.index.json` first to find existing doc paths
+- Never create parallel documentation trees (e.g., `apps/docs/content/tooling/` when docs exist in `apps/docs/content/docs/tooling/`)
+- Use the `accelint-api-docs` skill which has explicit instructions for checking existing locations (Step 3)
+- If unsure about doc location, list existing files in the target section before writing new ones
 
 ## Role & Identity
 

@@ -1,0 +1,202 @@
+---
+title: Avatar
+description: Displays a user's profile image with automatic fallback support and badge overlay
+source: packages/design-toolkit/src/components/avatar/index.tsx
+source_sha: 03fb9b887ca3e4d210a1d897483f733f574f71be
+doc_sha: a66fca611620805c4eb6c3738bb0bebc7df15707
+deprecated: false
+updated: 2026-07-13
+---
+
+Displays a user's profile image with automatic fallback support. Built on Radix UI Avatar with support for custom fallbacks, status badges, and multiple sizes.
+
+## Usage
+
+```tsx
+import { Avatar } from '@accelint/design-toolkit';
+
+export function UserProfile() {
+  return <Avatar imageProps={{ src: '/user.jpg', alt: 'User Name' }} />;
+}
+```
+
+## Reference
+
+```typescript
+interface AvatarProps {
+  imageProps?: { src: string; alt: string };
+  fallbackProps?: { children?: React.ReactNode };
+  size?: 'medium' | 'small';
+  children?: React.ReactNode;
+  classNames?: {
+    avatar?: string;
+    image?: string;
+    fallback?: string;
+    content?: string;
+  };
+}
+```
+
+### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `imageProps` | `{ src: string; alt: string }` | - | No |
+| `fallbackProps` | `{ children?: React.ReactNode }` | - | No |
+| `size` | `'medium' \| 'small'` | `'medium'` | No |
+| `children` | `React.ReactNode` | - | No |
+| `classNames` | `object` | - | No |
+
+#### `imageProps`
+
+Props passed to the underlying image element. Must include `src` for the image URL and `alt` for accessibility.
+
+#### `fallbackProps`
+
+Props for the fallback element displayed when the image fails to load. If `children` is not provided, defaults to a person icon.
+
+#### `size`
+
+Controls the visual size of the avatar:
+- `medium` - Default size (larger)
+- `small` - Compact size
+
+#### `children`
+
+Optional content to overlay on the avatar, typically a Badge component for status indicators or notification counts.
+
+#### `classNames`
+
+Custom class names for sub-elements:
+- `avatar` - The root element
+- `image` - The image element
+- `fallback` - The fallback element
+- `content` - The content wrapper for children
+
+### Inherited Props
+
+Avatar inherits props from Radix UI's Avatar component. See [Radix UI Avatar](https://www.radix-ui.com/primitives/docs/components/avatar) for additional options.
+
+## Examples
+
+### Example: Basic avatar with image
+
+```tsx
+import { Avatar } from '@accelint/design-toolkit';
+
+<Avatar imageProps={{ src: '/avatars/alice.jpg', alt: 'Alice Johnson' }} />
+```
+
+### Example: Avatar with initials fallback
+
+```tsx
+import { Avatar } from '@accelint/design-toolkit';
+
+<Avatar
+  imageProps={{ src: '/avatars/bob.jpg', alt: 'Bob Smith' }}
+  fallbackProps={{ children: 'BS' }}
+/>
+```
+
+### Example: Small avatar
+
+```tsx
+import { Avatar } from '@accelint/design-toolkit';
+
+<Avatar
+  size="small"
+  imageProps={{ src: '/avatars/carol.jpg', alt: 'Carol White' }}
+/>
+```
+
+### Example: Avatar with status badge
+
+```tsx
+import { Avatar, Badge } from '@accelint/design-toolkit';
+
+<Avatar imageProps={{ src: '/avatars/dave.jpg', alt: 'Dave Brown' }}>
+  <Badge color="critical">3</Badge>
+</Avatar>
+```
+
+### Example: Avatar with online status
+
+```tsx
+import { Avatar, Badge } from '@accelint/design-toolkit';
+
+<Avatar imageProps={{ src: '/avatars/eve.jpg', alt: 'Eve Davis' }}>
+  <Badge color="success" />
+</Avatar>
+```
+
+### Example: Avatar without image (icon fallback)
+
+```tsx
+import { Avatar } from '@accelint/design-toolkit';
+
+<Avatar fallbackProps={{ children: undefined }} />
+```
+
+This displays the default person icon when no image is provided.
+
+### Example: Avatar with custom icon fallback
+
+```tsx
+import { Avatar, Icon } from '@accelint/design-toolkit';
+import { Star } from '@accelint/icons';
+
+<Avatar
+  imageProps={{ src: '/broken-image.jpg', alt: 'User' }}
+  fallbackProps={{
+    children: (
+      <Icon>
+        <Star />
+      </Icon>
+    ),
+  }}
+/>
+```
+
+### Example: Custom styled avatar
+
+```tsx
+import { Avatar } from '@accelint/design-toolkit';
+
+<Avatar
+  imageProps={{ src: '/avatars/user.jpg', alt: 'User' }}
+  classNames={{
+    avatar: 'ring-2 ring-blue-500 ring-offset-2',
+    image: 'object-cover',
+  }}
+/>
+```
+
+### Example: Avatar list
+
+```tsx
+import { Avatar } from '@accelint/design-toolkit';
+
+const users = [
+  { id: 1, name: 'Alice', avatar: '/avatars/alice.jpg' },
+  { id: 2, name: 'Bob', avatar: '/avatars/bob.jpg' },
+  { id: 3, name: 'Carol', avatar: '/avatars/carol.jpg' },
+];
+
+<div className="flex -space-x-2">
+  {users.map((user) => (
+    <Avatar
+      key={user.id}
+      size="small"
+      imageProps={{ src: user.avatar, alt: user.name }}
+      classNames={{ avatar: 'ring-2 ring-white' }}
+    />
+  ))}
+</div>
+```
+
+> **Good to know:** The Avatar component automatically handles image loading errors and displays the fallback. If no fallback children are provided, a person icon is shown by default.
+
+## Related
+
+- [Badge](../badge/index.md) - Badge component for status overlays
+- [Icon](../icon/index.md) - Icon component used in fallback

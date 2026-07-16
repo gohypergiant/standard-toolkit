@@ -1,0 +1,91 @@
+---
+title: "isSomething"
+description: Type guard that determines if a value is not null or undefined
+source: packages/predicates/src/is-something/index.ts
+source_sha: 549ba6a454cf667bc13f8ee2e827a7fd2e0abd9e
+doc_sha: 9d7e5c1b82f57c3a9e4d6b8f2a1c5e7d3f9b4a6c
+deprecated: false
+updated: 2026-07-13
+---
+
+## Usage
+
+```typescript
+import { isSomething } from '@accelint/predicates/is-something';
+
+isSomething(0);          // true
+isSomething('');         // true
+isSomething(false);      // true
+isSomething(null);       // false
+isSomething(undefined);  // false
+```
+
+## Reference
+
+```typescript
+function isSomething(val: unknown): boolean
+```
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `val` | `unknown` | Value to check |
+
+### Returns
+
+Returns `true` if the value is not `null` or `undefined`, `false` otherwise.
+
+## Examples
+
+### Example: Happy path validation
+
+```typescript
+import { isSomething } from '@accelint/predicates/is-something';
+
+function processUser(user: User | null | undefined) {
+  if (isSomething(user)) {
+    // Happy path - safe to use user
+    console.log(user.name);
+    return;
+  }
+  
+  console.log('No user provided');
+}
+```
+
+### Example: Filtering arrays
+
+```typescript
+import { isSomething } from '@accelint/predicates/is-something';
+
+const values = [1, null, 2, undefined, 3, 0, ''];
+const defined = values.filter(isSomething);
+// [1, 2, 3, 0, '']
+```
+
+### Example: Type narrowing for optional properties
+
+```typescript
+import { isSomething } from '@accelint/predicates/is-something';
+
+interface Config {
+  apiKey?: string;
+  timeout?: number;
+}
+
+function validateConfig(config: Config) {
+  const hasApiKey = isSomething(config.apiKey);
+  const hasTimeout = isSomething(config.timeout);
+  
+  return hasApiKey && hasTimeout;
+}
+```
+
+> **Good to know:** This is a composed function using `compose(not, isNothing)`, demonstrating functional composition. Falsy values like `0`, `''`, and `false` return `true` because they are defined values.
+
+## Related
+
+- [isNothing](../is-nothing/index.md) - Opposite check: value is null or undefined
+- [isString](../is-string/index.md) - Check if value is a string
+- [isNumber](../is-number/index.md) - Check if value is a number

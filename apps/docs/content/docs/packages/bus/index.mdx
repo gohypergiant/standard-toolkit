@@ -1,0 +1,440 @@
+---
+title: "Overview"
+description: The @accelint/bus package provides a type-safe event bus for emitting and listening to events across browser contexts (tabs, windows, iframes). It's built on top of the native BroadcastChannel API and includes React hooks for seamless integration.
+source: packages/bus/src/index.ts
+source_sha: 3a165d8f4fcefdb569e96058bba87c59250d0703
+doc_sha: 1ad198c4fd3a1e26a71522a436415be70a88ca5c
+deprecated: false
+updated: 2026-07-13
+---
+
+## Installation
+
+```bash
+pnpm add @accelint/bus
+```
+
+## Quick Start
+
+### Basic Usage
+
+```typescript
+import { Broadcast, Payload } from '@accelint/bus';
+
+// Define your event types
+type AppEvents =
+  | Payload<'user:login', { userId: string }>
+  | Payload<'user:logout'>;
+
+// Get the singleton instance
+const bus = Broadcast.getInstance<AppEvents>();
+
+// Listen for events
+bus.on('user:login', (event) => {
+  console.log('User logged in:', event.payload.userId);
+});
+
+// Emit events
+bus.emit('user:login', { userId: '123' });
+```
+
+### React Usage
+
+```typescript
+import { useBus, Payload } from '@accelint/bus';
+
+type MyEvents = Payload<'notification', { message: string }>;
+
+function NotificationComponent() {
+  const { useEmit, useOn } = useBus<MyEvents>();
+  
+  const notify = useEmit('notification');
+  
+  useOn('notification', (event) => {
+    alert(event.payload.message);
+  });
+
+  return (
+    <button onClick={() => notify({ message: 'Hello!' })}>
+      Send Notification
+    </button>
+  );
+}
+```
+
+## Core Concepts
+
+### Event Types with Payload
+
+Use the `Payload` type helper to define your events:
+
+```typescript
+import type { Payload } from '@accelint/bus';
+
+// Event with payload
+type UserLoginEvent = Payload<'user:login', { userId: string; username: string }>;
+
+// Event without payload
+type UserLogoutEvent = Payload<'user:logout'>;
+
+// Union of all events
+type AppEvents = UserLoginEvent | UserLogoutEvent;
+```
+
+### Singleton Pattern
+
+`Broadcast` uses a singleton pattern to ensure all parts of your application share the same event bus instance:
+
+```typescript
+import { Broadcast } from '@accelint/bus';
+
+const bus1 = Broadcast.getInstance();
+const bus2 = Broadcast.getInstance();
+
+console.log(bus1 === bus2); // true
+```
+
+### Event Targeting
+
+Control where events are delivered using the `target` option:
+
+```typescript
+import { Broadcast, Payload } from '@accelint/bus';
+
+type Events = Payload<'sync', { data: unknown }>;
+const bus = Broadcast.getInstance<Events>();
+
+// Emit to self only (default)
+bus.emit('sync', { data: {} });
+
+// Emit to all including self
+bus.emit('sync', { data: {} }, { target: 'all' });
+
+// Emit to all others (not self)
+bus.emit('sync', { data: {} }, { target: 'others' });
+
+// Emit to specific instance by ID
+bus.emit('sync', { data: {} }, { target: 'some-uuid' });
+```
+
+### Structured Clone Algorithm
+
+Events are serialized using the [structured clone algorithm](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm). This means:
+
+**✅ Supported:**
+- Primitives (string, number, boolean)
+- Objects and arrays
+- Date, RegExp, Map, Set
+- ArrayBuffer, TypedArrays
+- Blob, File
+
+**❌ Not supported:**
+- Functions
+- DOM nodes
+- Symbols
+- Prototypes (objects are cloned without their class)
+
+```typescript
+// ✅ Good
+bus.emit('data', { values: [1, 2, 3], date: new Date() });
+
+// ❌ Bad - functions cannot be cloned
+bus.emit('data', { callback: () => {} }); // Error
+```
+
+## API Reference
+
+### Classes
+
+- [Broadcast](./broadcast/index.md) - Core event bus class
+
+### React Hooks
+
+- [useBus](./react/index.md#usebus) - Main hook returning type-safe emit/on/once hooks
+- [useEmit](./react/index.md#useemit) - Emit events from React components
+- [useOn](./react/index.md#useon) - Listen to events in React components
+- [useOnce](./react/index.md#useonce) - Listen to events once in React components
+
+### Types
+
+#### Payload
+
+```typescript
+type Payload<
+  T extends string = string,
+  P extends StructuredCloneableData = undefined
+> = P extends undefined
+  ? { type: T; source: UniqueId; target?: UniqueId }
+  : { type: T; payload: P; source: UniqueId; target?: UniqueId };
+```
+
+Type helper for defining event payloads. Use this to create your event type unions.
+
+#### BroadcastConfig
+
+```typescript
+type BroadcastConfig = {
+  channelName: string;
+  debug?: boolean;
+};
+```
+
+Configuration object for Broadcast instances.
+
+#### EmitOptions
+
+```typescript
+type EmitOptions = {
+  target?: EmitTarget;
+};
+```
+
+Options for controlling event delivery.
+
+#### EmitTarget
+
+```typescript
+type EmitTarget = 'all' | 'others' | 'self' | UniqueId;
+```
+
+Target audience for event emission:
+- `'self'` - Only this instance (default)
+- `'all'` - All instances including self
+- `'others'` - All instances except self
+- `UniqueId` - Specific instance by ID
+
+#### ExtractEvent
+
+```typescript
+type ExtractEvent<
+  P extends BasicPayload,
+  T extends P['type']
+> = Extract<P, { type: T }>;
+```
+
+Utility type to extract a specific event from a payload union by its type.
+
+### Constants
+
+#### DEFAULT_CONFIG
+
+```typescript
+const DEFAULT_CONFIG: BroadcastConfig = {
+  channelName: '@accelint/bus',
+  debug: false,
+};
+```
+
+Default configuration used when creating Broadcast instances.
+
+#### DEFAULT_TARGET
+
+```typescript
+const DEFAULT_TARGET: EmitTarget = 'self';
+```
+
+Default target for event emission. Events are sent to the emitting instance only by default.
+
+#### CONNECTION_EVENT_TYPES
+
+```typescript
+const CONNECTION_EVENT_TYPES = {
+  echo: '__ECHO__',
+  ping: '__PING__',
+  stop: '__STOP__',
+} as const;
+```
+
+Internal event types used for discovering and tracking connected bus instances. These events have no payload and use source/target metadata for communication.
+
+## Examples
+
+### Example: Cross-tab synchronization
+
+```typescript
+import { Broadcast, Payload } from '@accelint/bus';
+
+type SyncEvents = Payload<'state:changed', { userId: string; theme: string }>;
+
+const bus = Broadcast.getInstance<SyncEvents>();
+
+// Listen for state changes from other tabs
+bus.on('state:changed', (event) => {
+  localStorage.setItem('theme', event.payload.theme);
+  document.body.className = event.payload.theme;
+});
+
+// Notify other tabs when state changes
+function updateTheme(theme: string) {
+  localStorage.setItem('theme', theme);
+  bus.emit('state:changed', 
+    { userId: getCurrentUserId(), theme },
+    { target: 'others' }
+  );
+}
+```
+
+### Example: React global notifications
+
+```typescript
+import { useBus, Payload } from '@accelint/bus';
+
+type NotificationEvents = Payload<'notify', { 
+  level: 'info' | 'warning' | 'error';
+  message: string;
+}>;
+
+function NotificationProvider({ children }) {
+  const [notifications, setNotifications] = React.useState([]);
+  const { useOn } = useBus<NotificationEvents>();
+
+  useOn('notify', (event) => {
+    setNotifications(prev => [...prev, event.payload]);
+  });
+
+  return (
+    <>
+      {children}
+      <NotificationList items={notifications} />
+    </>
+  );
+}
+
+function SomeComponent() {
+  const { useEmit } = useBus<NotificationEvents>();
+  const notify = useEmit('notify');
+
+  const handleError = () => {
+    notify({ level: 'error', message: 'Something went wrong!' });
+  };
+
+  return <button onClick={handleError}>Trigger Error</button>;
+}
+```
+
+### Example: Feature flag propagation
+
+```typescript
+import { Broadcast, Payload } from '@accelint/bus';
+
+type FeatureEvents = Payload<'feature:toggled', { 
+  feature: string; 
+  enabled: boolean;
+}>;
+
+const bus = Broadcast.getInstance<FeatureEvents>();
+
+// Listen for feature toggle events
+bus.on('feature:toggled', (event) => {
+  updateFeatureFlag(event.payload.feature, event.payload.enabled);
+  reloadAffectedComponents();
+});
+
+// Admin panel toggles feature
+function toggleFeature(feature: string, enabled: boolean) {
+  updateFeatureFlag(feature, enabled);
+  
+  // Notify all tabs including this one
+  bus.emit('feature:toggled', { feature, enabled }, { target: 'all' });
+}
+```
+
+### Example: Instance discovery
+
+```typescript
+import { Broadcast, CONNECTION_EVENT_TYPES } from '@accelint/bus';
+
+const bus = Broadcast.getInstance();
+
+// Track connected instances
+bus.on(CONNECTION_EVENT_TYPES.ping, ({ source }) => {
+  console.log(`Instance ${source} is pinging`);
+});
+
+bus.on(CONNECTION_EVENT_TYPES.echo, ({ source }) => {
+  console.log(`Instance ${source} responded`);
+});
+
+bus.on(CONNECTION_EVENT_TYPES.stop, ({ source }) => {
+  console.log(`Instance ${source} disconnected`);
+});
+
+// Discover all instances
+bus.ping();
+
+// Check connected instances after responses arrive
+setTimeout(() => {
+  console.log(`Total connected: ${bus.connected.size}`);
+}, 100);
+```
+
+## Best Practices
+
+### Define event types centrally
+
+Create a single source of truth for your event types:
+
+```typescript
+// events.ts
+import type { Payload } from '@accelint/bus';
+
+export type AppEvents =
+  | Payload<'user:login', { userId: string }>
+  | Payload<'user:logout'>
+  | Payload<'theme:changed', { theme: string }>
+  | Payload<'data:updated', { id: string }>;
+```
+
+### Use descriptive event names
+
+Follow a namespace pattern for event names:
+
+```typescript
+// ✅ Good - namespace:action pattern
+'user:login'
+'cart:updated'
+'settings:changed'
+
+// ❌ Avoid - too generic
+'login'
+'update'
+'change'
+```
+
+### Clean up listeners
+
+Always clean up event listeners when they're no longer needed:
+
+```typescript
+// Manual cleanup
+const unsubscribe = bus.on('some-event', handler);
+// Later...
+unsubscribe();
+
+// Or use once() for single-use listeners
+bus.once('init:complete', () => {
+  console.log('Initialized');
+});
+```
+
+### Target appropriately
+
+Choose the right target for your use case:
+
+```typescript
+// User action in one tab should update all tabs
+bus.emit('cart:updated', data, { target: 'all' });
+
+// Background sync shouldn't trigger in the tab that initiated it
+bus.emit('sync:complete', data, { target: 'others' });
+
+// Local state change only affects current tab
+bus.emit('ui:expanded', data); // default target: 'self'
+```
+
+## Related
+
+- [Broadcast](./broadcast/index.md) - Core event bus class
+- [React Hooks](./react/index.md) - React integration
+- [BroadcastChannel API](https://developer.mozilla.org/en-US/docs/Web/API/BroadcastChannel) - Underlying browser API
+- [Structured Clone Algorithm](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm) - Payload serialization

@@ -1,0 +1,334 @@
+---
+title: "designTokens"
+description: Complete design token system including colors, typography, spacing, shadows, and animations
+source: packages/design-foundation/src/tokens/index.ts
+source_sha: a93e7390ae7880416ac71ee6c3d84edc0aed68bf
+doc_sha: 4c6daf7f05711589e310cc048af563833cea3ad9
+deprecated: false
+updated: 2026-07-14
+---
+
+Complete design token system providing colors, typography, spacing, radius, shadows, and animations as deck.gl-compatible RGBA tuples and numeric values.
+
+## Usage
+
+```typescript
+import { designTokens } from '@accelint/design-foundation/tokens';
+import { ScatterplotLayer } from '@deck.gl/layers';
+
+// Use semantic tokens for themed colors
+const layer = new ScatterplotLayer({
+  id: 'points',
+  data,
+  // Colors in deck.gl RGBA format: [R, G, B, A] all 0-255
+  getFillColor: designTokens.dark.bg.accent.primary.bold,
+  // [0, 79, 126, 255]
+});
+
+// Access primitive colors
+const brandColor = designTokens.primitive.accent.primary['700'];
+// [0, 79, 126, 255]
+
+// Use spacing and typography tokens
+const padding = designTokens.spacing.m; // 12
+const fontSize = designTokens.typography.size.body.m; // 14
+```
+
+## Reference
+
+```typescript
+const designTokens: ThemeTokens
+```
+
+Frozen object containing the complete design token system. All color values use deck.gl RGBA format with alpha channel 0-255.
+
+### Token Structure
+
+**Theme Tokens** (`dark`, `light`):
+- `bg` - Background colors (surface, interactive, accent, utility states)
+- `fg` - Foreground/text colors (primary, inverse, accent, utility states)
+- `outline` - Border and outline colors (static, interactive, accent, utility states)
+- `shadow` - Box shadow definitions (elevation.raised, elevation.overlay)
+
+**Primitive Tokens** (`primitive`):
+- `neutral` - Grayscale palette (`'50'` through `'950'`)
+- `alpha` - Transparent black/white overlays (`'100'` through `'500'`)
+- `accent` - Brand colors (primary, secondary, tertiary)
+- `utility` - Semantic colors (info, advisory, normal, serious, critical)
+- `on` - Colors for text on colored backgrounds
+
+**Domain Tokens** (`domain`):
+- `classification` - Security classification colors
+- `roe` - Rules of engagement status colors
+
+**Typography Tokens** (`typography`):
+- `height` - Line heights for header/body/button (xxl, xl, l, m, s, xs, xxs)
+- `size` - Font sizes for header/body/button
+- `spacing` - Letter spacing for header/body/button
+- `weight` - Font weights for header/body/button
+
+**Spacing Tokens** (`spacing`):
+- Standard spacing scale: `'0'`, `base`, `none`, `xxs`, `xs`, `s`, `m`, `l`, `xl`, `xxl`, `oversized`
+
+**Radius Tokens** (`radius`):
+- Border radius values: `none`, `small`, `medium`, `large`, `round`
+
+**Shadow Tokens** (`shadow`):
+- Elevation shadows: `elevation.default`, `elevation.overlay.bold/muted`, `elevation.raised.bold/muted`
+
+**Animation Tokens** (`animation`):
+- `duration` - Timing values: `instant`, `fast`, `normal`, `slow`
+- `easing` - Cubic bezier curves: `standard`, `decelerate`, `accelerate`
+
+### Color Format
+
+All colors use **deck.gl RGBA format**: `[R, G, B, A]` where all channels are 0-255.
+
+This differs from CSS rgba where alpha is 0-1. For CSS usage, import the generated CSS variables instead (see Related section).
+
+> **Good to know:** The design token system ensures consistency between CSS and JavaScript. All tokens are generated from a single source of truth in `primitive.json` and `semantic.json`. When importing `designTokens` directly, you must specify the theme (`dark` or `light`) explicitly. For React components that need theme-aware tokens, use the `useTheme()` hook from `@accelint/design-foundation` instead.
+
+## Examples
+
+### Example: Using semantic colors in deck.gl
+
+```typescript
+import { designTokens } from '@accelint/design-foundation/tokens';
+import { ScatterplotLayer } from '@deck.gl/layers';
+
+const layer = new ScatterplotLayer({
+  id: 'status-points',
+  data: statusData,
+  getFillColor: (d) => {
+    switch (d.status) {
+      case 'normal':
+        return designTokens.dark.bg.normal.bold;
+      case 'warning':
+        return designTokens.dark.bg.serious.bold;
+      case 'critical':
+        return designTokens.dark.bg.critical.bold;
+      default:
+        return designTokens.dark.bg.info.bold;
+    }
+  },
+  getLineColor: designTokens.dark.outline.static,
+  radiusScale: designTokens.spacing.s,
+});
+```
+
+### Example: Themed color palette selection
+
+```typescript
+import { designTokens } from '@accelint/design-foundation/tokens';
+
+function getThemeColors(theme: 'dark' | 'light') {
+  const tokens = designTokens[theme];
+  
+  return {
+    background: tokens.bg.surface.default,
+    foreground: tokens.fg.primary.bold,
+    accent: tokens.bg.accent.primary.bold,
+    border: tokens.outline.static,
+  };
+}
+
+// Dark theme
+const darkColors = getThemeColors('dark');
+// {
+//   background: [21, 21, 23, 255],
+//   foreground: [255, 255, 255, 255],
+//   accent: [0, 79, 126, 255],
+//   border: [65, 66, 69, 255],
+// }
+```
+
+### Example: Using primitive colors for data visualization
+
+```typescript
+import { designTokens } from '@accelint/design-foundation/tokens';
+
+// Create a categorical color scale
+const categoryColors = [
+  designTokens.primitive.accent.primary['500'],
+  designTokens.primitive.accent.secondary['500'],
+  designTokens.primitive.accent.tertiary['500'],
+  designTokens.primitive.utility.advisory['500'],
+  designTokens.primitive.utility.normal['500'],
+];
+
+// Use in chart
+const chartData = categories.map((category, index) => ({
+  category,
+  color: categoryColors[index % categoryColors.length],
+}));
+```
+
+### Example: Domain-specific colors
+
+```typescript
+import { designTokens } from '@accelint/design-foundation/tokens';
+
+function getClassificationColor(level: string) {
+  const colors = designTokens.domain.classification;
+  
+  switch (level.toUpperCase()) {
+    case 'UNCLASS':
+      return colors.unclass;
+    case 'CUI':
+      return colors.cui;
+    case 'CONFIDENTIAL':
+      return colors.confidential;
+    case 'SECRET':
+      return colors.secret;
+    case 'TOP SECRET':
+      return colors['top-secret'];
+    case 'TS/SCI':
+      return colors['ts-sci'];
+    default:
+      return colors.missing;
+  }
+}
+
+// ROE status colors
+function getRoeColor(status: string) {
+  const colors = designTokens.domain.roe;
+  
+  const statusMap = {
+    pending: colors.pending,
+    friend: colors.friend,
+    'assumed-friend': colors['assumed-friend'],
+    neutral: colors.neutral,
+    unknown: colors.unknown,
+    suspect: colors.suspect,
+    hostile: colors.hostile,
+  };
+  
+  return statusMap[status] || colors['no-statement'];
+}
+```
+
+### Example: Typography scale
+
+```typescript
+import { designTokens } from '@accelint/design-foundation/tokens';
+
+const typography = designTokens.typography;
+
+// Generate text style objects
+const headerStyles = {
+  xxl: {
+    fontSize: typography.size.header.xxl,      // 32
+    lineHeight: typography.height.header.xxl,  // 40
+    fontWeight: typography.weight.header.xxl,  // 500
+    letterSpacing: typography.spacing.header.xxl, // 0
+  },
+  xl: {
+    fontSize: typography.size.header.xl,
+    lineHeight: typography.height.header.xl,
+    fontWeight: typography.weight.header.xl,
+    letterSpacing: typography.spacing.header.xl,
+  },
+  // ... more sizes
+};
+
+// Use in canvas rendering
+function drawText(ctx: CanvasRenderingContext2D, text: string, size: 'xxl' | 'xl' | 'l') {
+  const style = headerStyles[size];
+  ctx.font = `${style.fontWeight} ${style.fontSize}px Roboto Flex`;
+  ctx.letterSpacing = `${style.letterSpacing}px`;
+  ctx.fillText(text, 0, 0);
+}
+```
+
+### Example: Spacing and layout
+
+```typescript
+import { designTokens } from '@accelint/design-foundation/tokens';
+
+const spacing = designTokens.spacing;
+
+// Create a layout grid
+const layoutConfig = {
+  padding: spacing.l,        // 16
+  gap: spacing.m,            // 12
+  margin: spacing.xl,        // 24
+  buttonSpacing: spacing.s,  // 8
+};
+
+// Use in WebGL/Canvas positioning
+function positionElements(elements: Element[]) {
+  let y = layoutConfig.margin;
+  
+  for (const element of elements) {
+    element.y = y;
+    y += element.height + layoutConfig.gap;
+  }
+}
+```
+
+### Example: Border radius for shapes
+
+```typescript
+import { designTokens } from '@accelint/design-foundation/tokens';
+
+const radius = designTokens.radius;
+
+// Use in canvas drawing
+function drawRoundedRect(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  cornerRadius: 'small' | 'medium' | 'large' | 'round'
+) {
+  const r = radius[cornerRadius];
+  
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + width - r, y);
+  ctx.arcTo(x + width, y, x + width, y + r, r);
+  ctx.lineTo(x + width, y + height - r);
+  ctx.arcTo(x + width, y + height, x + width - r, y + height, r);
+  ctx.lineTo(x + r, y + height);
+  ctx.arcTo(x, y + height, x, y + height - r, r);
+  ctx.lineTo(x, y + r);
+  ctx.arcTo(x, y, x + r, y, r);
+  ctx.closePath();
+}
+```
+
+### Example: Animation timing
+
+```typescript
+import { designTokens } from '@accelint/design-foundation/tokens';
+
+const animation = designTokens.animation;
+
+// Use in GSAP or custom animation
+function animateElement(element: HTMLElement) {
+  element.style.transition = `all ${animation.duration.normal} ${animation.easing.standard}`;
+}
+
+// Keyframe timing
+const keyframes = {
+  fast: parseInt(animation.duration.fast),     // 80ms
+  normal: parseInt(animation.duration.normal), // 160ms
+  slow: parseInt(animation.duration.slow),     // 320ms
+};
+
+// Easing curves for canvas animations
+const easingFunctions = {
+  standard: parseEasing(animation.easing.standard),
+  decelerate: parseEasing(animation.easing.decelerate),
+  accelerate: parseEasing(animation.easing.accelerate),
+};
+```
+
+## Related
+
+- [ThemeTokens](../types/index.md) - TypeScript type definitions for design tokens
+- [Design Tokens README](https://github.com/gohypergiant/standard-toolkit/blob/main/packages/design-foundation/src/tokens/README.md) - Token generation system documentation
+- [useTheme hook](../../design-toolkit/hooks/use-theme/index.md) - React hook for theme-aware tokens
+- [tokens.css](https://github.com/gohypergiant/standard-toolkit/blob/main/packages/design-foundation/src/tokens/tokens.css) - Generated CSS variables for CSS-based styling
+- [deck.gl Color Format](https://deck.gl/docs/developer-guide/using-layers#colors) - deck.gl RGBA format documentation

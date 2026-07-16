@@ -1,0 +1,282 @@
+---
+title: TextAreaField
+description: Multi-line text input with integrated label, description, and validation.
+source: packages/design-toolkit/src/components/text-area-field/index.tsx
+source_sha: 70a9f91d800b919280c43690b38c4226f4848d21
+doc_sha: 9e323dca986f3d3533958d5456556a353eeda105
+deprecated: false
+updated: 2026-07-13
+---
+
+## Usage
+
+```tsx
+import { TextAreaField } from '@accelint/design-toolkit';
+
+export function MyForm() {
+  return (
+    <TextAreaField
+      label="Description"
+      placeholder="Enter a detailed description..."
+      onChange={(value) => setDescription(value)}
+    />
+  );
+}
+```
+
+## Reference
+
+```typescript
+interface TextAreaFieldProps extends Omit<TextFieldProps, 'children' | 'className'> {
+  label?: string;
+  description?: string;
+  errorMessage?: string;
+  size?: 'medium' | 'small';
+  inputProps?: Omit<TextAreaProps, 'className'>;
+  classNames?: {
+    field?: TextFieldProps['className'];
+    label?: string;
+    input?: TextAreaProps['className'];
+    description?: string;
+    error?: FieldErrorProps['className'];
+  };
+}
+```
+
+### Props
+
+| Prop | Type | Default | Required |
+|------|------|---------|----------|
+| `label` | `string` | - | No |
+| `description` | `string` | - | No |
+| `errorMessage` | `string` | - | No |
+| `size` | `'medium' \| 'small'` | `'medium'` | No |
+| `inputProps` | `TextAreaProps` | - | No |
+| `classNames` | `TextAreaFieldClassNames` | - | No |
+| `isInvalid` | `boolean` | `false` | No |
+| `isDisabled` | `boolean` | `false` | No |
+| `isRequired` | `boolean` | `false` | No |
+
+#### `label`
+
+Label text displayed above the textarea. Automatically associates with the input for accessibility. Hidden when `size="small"`.
+
+#### `description`
+
+Helper text displayed below the textarea. Hidden when `size="small"` or when the field is invalid.
+
+#### `errorMessage`
+
+Error message displayed when validation fails. Automatically sets `isInvalid` to `true` when provided.
+
+#### `size`
+
+Controls field sizing and visibility of label and description:
+- `medium` - Standard size with visible label and description (default)
+- `small` - Compact size, hides label and description
+
+#### `inputProps`
+
+Props passed directly to the underlying `TextArea` component, including:
+- `placeholder` - Placeholder text
+- `rows` - Number of visible text rows
+- `maxLength` - Maximum character length
+- `autoResize` - Auto-resize to fit content
+
+#### `classNames`
+
+Custom CSS class names for field elements:
+- `field` - Container element
+- `label` - Label element
+- `input` - TextArea element
+- `description` - Description text element
+- `error` - Error message element
+
+### Inherited Props
+
+TextAreaField inherits all props from React Aria's `TextField` component, including:
+- `value` / `defaultValue` - Controlled/uncontrolled value
+- `onChange` - Called when value changes (receives string)
+- `onBlur` / `onFocus` - Focus event handlers
+- `validate` - Custom validation function
+- `name` - Form field name
+
+See [React Aria TextField](https://react-spectrum.adobe.com/react-aria/TextField.html) for full API reference.
+
+## Examples
+
+### Example: Basic textarea
+
+```tsx
+import { TextAreaField } from '@accelint/design-toolkit';
+
+<TextAreaField
+  label="Comments"
+  placeholder="Add your comments here..."
+  onChange={(value) => setComments(value)}
+/>
+```
+
+### Example: With description
+
+```tsx
+import { TextAreaField } from '@accelint/design-toolkit';
+
+<TextAreaField
+  label="Bio"
+  description="Tell us about yourself (max 500 characters)"
+  inputProps={{ maxLength: 500 }}
+/>
+```
+
+### Example: Required field with validation
+
+```tsx
+import { TextAreaField } from '@accelint/design-toolkit';
+
+<TextAreaField
+  label="Feedback"
+  isRequired
+  validate={(value) => {
+    if (value.length < 10) {
+      return 'Feedback must be at least 10 characters';
+    }
+  }}
+/>
+```
+
+### Example: With error message
+
+```tsx
+import { TextAreaField } from '@accelint/design-toolkit';
+
+<TextAreaField
+  label="Message"
+  isInvalid
+  errorMessage="Message cannot be empty"
+/>
+```
+
+### Example: Disabled state
+
+```tsx
+import { TextAreaField } from '@accelint/design-toolkit';
+
+<TextAreaField
+  label="System log"
+  value={logContent}
+  isDisabled
+  description="Read-only system log"
+/>
+```
+
+### Example: Custom rows
+
+```tsx
+import { TextAreaField } from '@accelint/design-toolkit';
+
+<TextAreaField
+  label="Code snippet"
+  inputProps={{ rows: 10 }}
+  placeholder="Paste your code here..."
+/>
+```
+
+### Example: Small size variant
+
+```tsx
+import { TextAreaField } from '@accelint/design-toolkit';
+
+<TextAreaField
+  size="small"
+  placeholder="Quick note..."
+  inputProps={{ rows: 3 }}
+/>
+```
+
+> **Good to know:** The `small` size hides the label and description to create a compact textarea. Always provide a `placeholder` for context.
+
+### Example: Controlled value
+
+```tsx
+import { useState } from 'react';
+import { TextAreaField } from '@accelint/design-toolkit';
+
+export function ControlledExample() {
+  const [value, setValue] = useState('');
+
+  return (
+    <TextAreaField
+      label="Notes"
+      value={value}
+      onChange={setValue}
+      description={`${value.length} characters`}
+    />
+  );
+}
+```
+
+### Example: Character counter
+
+```tsx
+import { useState } from 'react';
+import { TextAreaField } from '@accelint/design-toolkit';
+
+export function CharacterCounter() {
+  const [value, setValue] = useState('');
+  const maxLength = 280;
+
+  return (
+    <TextAreaField
+      label="Tweet"
+      value={value}
+      onChange={setValue}
+      inputProps={{ maxLength }}
+      description={`${value.length}/${maxLength} characters`}
+    />
+  );
+}
+```
+
+### Example: With validation
+
+```tsx
+import { TextAreaField } from '@accelint/design-toolkit';
+
+<TextAreaField
+  label="Description"
+  validate={(value) => {
+    if (!value.trim()) {
+      return 'Description is required';
+    }
+    if (value.length < 20) {
+      return 'Description must be at least 20 characters';
+    }
+    if (value.length > 500) {
+      return 'Description must be less than 500 characters';
+    }
+  }}
+/>
+```
+
+### Example: Custom styling
+
+```tsx
+import { TextAreaField } from '@accelint/design-toolkit';
+
+<TextAreaField
+  label="Custom Field"
+  classNames={{
+    field: 'mb-4',
+    label: 'font-bold',
+    input: 'rounded-lg min-h-32',
+    error: 'text-sm',
+  }}
+/>
+```
+
+## Related
+
+- [TextField](../text-field/index.md) - Single-line text input
+- [Label](../label/index.md) - Label component with required indicator
+- [Input](../input/index.md) - Base input component

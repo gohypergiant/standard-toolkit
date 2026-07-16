@@ -1,0 +1,291 @@
+---
+title: Cursor Coordinates
+description: Hook for tracking and displaying formatted cursor coordinates on map components with support for multiple coordinate systems.
+source: packages/map-toolkit/src/cursor-coordinates/index.ts
+source_sha: 23c48117032b726ec308418eaa73b6803eb73f8a
+doc_sha: cfccc4633414d2657476a96bab9f8aa936ba7c60
+deprecated: false
+updated: 2026-07-13
+---
+
+Hook for tracking and displaying formatted cursor coordinates on map components with support for multiple coordinate systems including Decimal Degrees, DMS, MGRS, and UTM.
+
+## useCursorCoordinates
+
+Tracks and formats cursor hover position coordinates on a map in real-time.
+
+### Usage
+
+```tsx
+import { useCursorCoordinates } from '@accelint/map-toolkit/cursor-coordinates';
+
+function CoordinateDisplay({ mapId }: { mapId: string }) {
+  const { formattedCoord, setFormat } = useCursorCoordinates(mapId);
+
+  return (
+    <div>
+      <select onChange={(e) => setFormat(e.target.value as CoordinateFormatTypes)}>
+        <option value="dd">Decimal Degrees</option>
+        <option value="dms">Degrees Minutes Seconds</option>
+        <option value="mgrs">MGRS</option>
+      </select>
+      <div>{formattedCoord}</div>
+    </div>
+  );
+}
+```
+
+### Reference
+
+```typescript
+function useCursorCoordinates(
+  id?: UniqueId,
+  options?: UseCursorCoordinatesOptions
+): UseCursorCoordinatesReturn
+
+interface UseCursorCoordinatesOptions {
+  formatter?: CoordinateFormatter;
+}
+
+interface UseCursorCoordinatesReturn {
+  formattedCoord: string;
+  setFormat: (format: CoordinateFormatTypes) => void;
+  rawCoord: RawCoordinate;
+  currentFormat: CoordinateFormatTypes;
+}
+
+type CoordinateFormatTypes = 'dd' | 'ddm' | 'dms' | 'mgrs' | 'utm';
+
+type RawCoordinate = {
+  longitude: number;
+  latitude: number;
+} | null;
+```
+
+#### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `id` | `UniqueId` | Optional map instance ID. If not provided, uses ID from MapProvider context |
+| `options` | `UseCursorCoordinatesOptions` | Optional configuration |
+
+#### Options
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `formatter` | `CoordinateFormatter` | Custom formatter function that overrides built-in format |
+
+#### Returns
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `formattedCoord` | `string` | Formatted coordinate string using current format or custom formatter |
+| `setFormat` | `(format: CoordinateFormatTypes) => void` | Function to change coordinate format system |
+| `rawCoord` | `RawCoordinate` | Raw coordinate data (longitude/latitude) or null |
+| `currentFormat` | `CoordinateFormatTypes` | Current active format type |
+
+### Examples
+
+#### Example: Basic coordinate display
+
+```tsx
+import { useCursorCoordinates } from '@accelint/map-toolkit/cursor-coordinates';
+
+function CoordinateDisplay({ mapId }: { mapId: string }) {
+  const { formattedCoord } = useCursorCoordinates(mapId);
+
+  return <div>{formattedCoord}</div>;
+}
+// Displays: "45.500000° N / 30.250000° E" (default DD format)
+```
+
+#### Example: Format selector
+
+```tsx
+import { useCursorCoordinates } from '@accelint/map-toolkit/cursor-coordinates';
+import type { CoordinateFormatTypes } from '@accelint/map-toolkit/cursor-coordinates';
+
+function CoordinateSelector({ mapId }: { mapId: string }) {
+  const { formattedCoord, setFormat, currentFormat } = useCursorCoordinates(mapId);
+
+  return (
+    <div>
+      <select 
+        value={currentFormat}
+        onChange={(e) => setFormat(e.target.value as CoordinateFormatTypes)}
+      >
+        <option value="dd">Decimal Degrees</option>
+        <option value="ddm">Degrees Decimal Minutes</option>
+        <option value="dms">Degrees Minutes Seconds</option>
+        <option value="mgrs">MGRS</option>
+        <option value="utm">UTM</option>
+      </select>
+      <div>{formattedCoord}</div>
+    </div>
+  );
+}
+```
+
+#### Example: Custom formatter
+
+```tsx
+import { useCursorCoordinates } from '@accelint/map-toolkit/cursor-coordinates';
+
+function CustomCoordinateDisplay({ mapId }: { mapId: string }) {
+  const { formattedCoord } = useCursorCoordinates(mapId, {
+    formatter: (coord) =>
+      `Lat: ${coord.latitude.toFixed(6)}° Lng: ${coord.longitude.toFixed(6)}°`,
+  });
+
+  return <div>{formattedCoord}</div>;
+}
+// Displays: "Lat: 45.500000° Lng: 30.250000°"
+```
+
+#### Example: Accessing raw coordinates
+
+```tsx
+import { useCursorCoordinates } from '@accelint/map-toolkit/cursor-coordinates';
+
+function RawCoordinateDisplay({ mapId }: { mapId: string }) {
+  const { rawCoord } = useCursorCoordinates(mapId);
+
+  if (!rawCoord) {
+    return <div>Move cursor over map</div>;
+  }
+
+  return (
+    <div>
+      <div>Longitude: {rawCoord.longitude.toFixed(6)}°</div>
+      <div>Latitude: {rawCoord.latitude.toFixed(6)}°</div>
+    </div>
+  );
+}
+```
+
+#### Example: Within MapProvider context
+
+```tsx
+import { useCursorCoordinates } from '@accelint/map-toolkit/cursor-coordinates';
+import { MapProvider } from '@accelint/map-toolkit/deckgl/base-map';
+
+function CoordinateWidget() {
+  // No need to pass mapId when inside MapProvider
+  const { formattedCoord } = useCursorCoordinates();
+  return <div>{formattedCoord}</div>;
+}
+
+function App() {
+  return (
+    <MapProvider mapId="map-1">
+      <CoordinateWidget />
+    </MapProvider>
+  );
+}
+```
+
+> **Good to know:** UTM and MGRS coordinate systems are only valid between 80°S and 84°N. Coordinates outside this range (e.g., polar regions) will display the default placeholder `-- / --`. Other formats (DD, DDM, DMS) work correctly at all latitudes.
+
+#### Example: Error handling for custom formatter
+
+```tsx
+import { useCursorCoordinates } from '@accelint/map-toolkit/cursor-coordinates';
+
+function SafeCoordinateDisplay({ mapId }: { mapId: string }) {
+  const { formattedCoord } = useCursorCoordinates(mapId, {
+    formatter: (coord) => {
+      // Custom formatter errors are caught and logged
+      // Falls back to default placeholder
+      if (coord.latitude > 90) {
+        throw new Error('Invalid latitude');
+      }
+      return `${coord.latitude}, ${coord.longitude}`;
+    },
+  });
+
+  return <div>{formattedCoord}</div>;
+}
+```
+
+## CoordinateFormatTypes
+
+Supported coordinate format types for displaying map coordinates.
+
+### Reference
+
+```typescript
+type CoordinateFormatTypes = 'dd' | 'ddm' | 'dms' | 'mgrs' | 'utm';
+```
+
+- `'dd'` - Decimal Degrees (e.g., "45.500000° N / 30.250000° E")
+- `'ddm'` - Degrees Decimal Minutes (e.g., "45° 30.0000' N / 30° 15.0000' E")
+- `'dms'` - Degrees Minutes Seconds (e.g., "45° 30' 0.00" N / 30° 15' 0.00" E")
+- `'mgrs'` - Military Grid Reference System (e.g., "31U DQ 48251 11932")
+- `'utm'` - Universal Transverse Mercator (e.g., "31N 448251 5411932")
+
+### Precision
+
+Each format uses precision matching the CoordinateField component:
+- DD: 6 decimal places
+- DDM: 4 decimal places for minutes
+- DMS: 2 decimal places for seconds
+
+## cursorCoordinateStore
+
+Global store managing cursor coordinate state for all map instances.
+
+### Usage
+
+```tsx
+import { cursorCoordinateStore } from '@accelint/map-toolkit/cursor-coordinates';
+
+function CoordinateInfo({ mapId }: { mapId: string }) {
+  const { state, setFormat } = cursorCoordinateStore.use(mapId);
+  
+  return (
+    <div>
+      Format: {state.format}
+      Coordinate: {state.coordinate?.join(', ') ?? 'None'}
+    </div>
+  );
+}
+```
+
+### Reference
+
+```typescript
+const cursorCoordinateStore: MapStore<CursorCoordinateState, CursorCoordinateActions>;
+
+interface CursorCoordinateState {
+  coordinate: [number, number] | null;
+  format: CoordinateFormatTypes;
+}
+```
+
+State is updated automatically from map hover events via the broadcast bus.
+
+## clearCursorCoordinateState
+
+Manually clears cursor coordinate state for a specific map instance.
+
+### Usage
+
+```typescript
+import { clearCursorCoordinateState } from '@accelint/map-toolkit/cursor-coordinates';
+
+clearCursorCoordinateState('map-1');
+```
+
+### Reference
+
+```typescript
+function clearCursorCoordinateState(mapId: UniqueId): void
+```
+
+> **Good to know:** Cleanup happens automatically when all subscribers unmount. Use this only for manual cleanup in tests or when dynamically destroying map instances.
+
+## Related
+
+- [Viewport](../viewport/index.md) - Viewport state management
+- [MapEvents](../deckgl/base-map/events.md) - Event types including hover events
+- [createMapStore](../shared/create-map-store.md) - Underlying store pattern
