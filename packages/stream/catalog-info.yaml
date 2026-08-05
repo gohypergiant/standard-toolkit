@@ -1,0 +1,35 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: accelint_stream
+  title: Accelint Stream
+  description: >-
+    TanStack-Query-style caching for held-open stream connections (SSE and
+    WebSocket): framework-agnostic core, React hooks at
+    @accelint/stream/react.
+
+
+    Dependencies:
+
+    accelint_typescript-config@0.1.4, accelint_vitest-config@0.1.6
+  annotations:
+    backstage.io/edit-url: https://github.com/gohypergiant/standard-toolkit/blob/main/packages/stream/catalog-info.yaml
+    backstage.io/techdocs-ref: dir:.
+    package/version: 0.1.0
+    github.com/project-slug: gohypergiant/standard-toolkit
+  links:
+    - url: https://github.com/gohypergiant/standard-toolkit/tree/main/packages/stream
+      title: Documentation
+      icon: docs
+      type: documentation
+  tags:
+    - dev-tk
+    - tooling
+spec:
+  type: library
+  lifecycle: experimental
+  owner: group:default/pathfinder
+  dependsOn:
+    - component:accelint_typescript-config
+    - component:accelint_vitest-config

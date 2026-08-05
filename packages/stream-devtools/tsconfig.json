@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "@accelint/typescript-config/tsc/dom/library",
+  "include": ["./src"],
+  "exclude": [
+    "node_modules",
+    "**/*.bench.ts",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.test-d.ts"
+  ],
+  "compilerOptions": {
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js",
+    "lib": ["ESNext", "DOM"],
+    "rootDir": "src",
+    "outDir": "dist",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+}
