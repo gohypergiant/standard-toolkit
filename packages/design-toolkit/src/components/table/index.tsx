@@ -15,20 +15,18 @@ import 'client-only';
 import { clsx } from '@accelint/design-foundation/lib/utils';
 import Kebab from '@accelint/icons/kebab';
 import Pin from '@accelint/icons/pin';
-import { useListData } from 'react-stately/useListData';
-import { useControlledState } from 'react-stately/useControlledState';
 import {
-  getCoreRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
+  type ColumnDef,
   type OnChangeFn,
   type PaginationState,
   type Row,
+  type RowData,
   type RowPinningState,
   type RowSelectionState,
-  useReactTable,
+  useTable,
 } from '@tanstack/react-table';
 import { useCallback, useContext, useMemo, useState } from 'react';
+import { useControlledState } from 'react-stately/useControlledState';
 import { Button } from '../button';
 import { Checkbox } from '../checkbox';
 import { Icon } from '../icon';
@@ -38,9 +36,12 @@ import { MenuSeparator } from '../menu/separator';
 import { MenuTrigger } from '../menu/trigger';
 import { TableBody } from './body';
 import { TableContext } from './context';
+import { tableFeatures } from './features';
 import { TableHeader } from './header';
 import styles from './styles.module.css';
 import type { Key } from '@react-types/shared';
+import type { TableFeatures } from './features';
+import type { RowOrderingState } from './row-ordering-feature';
 import type { TableProps } from './types';
 
 // This width is for columns in the table that provide features:
@@ -50,22 +51,15 @@ import type { TableProps } from './types';
 // These columns should not need to grow with table width
 const META_COLUMN_WIDTH = 32;
 
-type RowActionsMenuProps<T> = {
-  row: Row<T>;
-  rows: Row<T>[];
-  moveRowsDown: (row: Row<T>, rows: Row<T>[]) => void;
-  moveRowsUp: (row: Row<T>, rows: Row<T>[]) => void;
+type RowActionsMenuProps<T extends RowData> = {
+  row: Row<TableFeatures, T>;
 };
 
-function RowActionsMenu<T>({
-  moveRowsDown,
-  moveRowsUp,
-  row,
-  rows,
-}: RowActionsMenuProps<T>) {
+function RowActionsMenu<T extends RowData>({ row }: RowActionsMenuProps<T>) {
   const { enableRowActions, persistRowKebabMenu } = useContext(TableContext);
   const isPinned = !!row.getIsPinned();
   const hideRowKebab = !persistRowKebabMenu;
+  const rowCount = row.table.getRowModel().rows.length;
 
   return (
     enableRowActions && (
@@ -82,14 +76,14 @@ function RowActionsMenu<T>({
             </MenuItem>
             <MenuSeparator />
             <MenuItem
-              onAction={() => moveRowsUp(row, rows)}
+              onAction={() => row.moveUp()}
               isDisabled={isPinned || row.index === 0}
             >
               Move Up
             </MenuItem>
             <MenuItem
-              onAction={() => moveRowsDown(row, rows)}
-              isDisabled={isPinned || row.index === rows.length - 1}
+              onAction={() => row.moveDown()}
+              isDisabled={isPinned || row.index === rowCount - 1}
             >
               Move Down
             </MenuItem>
@@ -154,13 +148,55 @@ export function Table<T extends { id: Key }>({
   onPageChange,
   ...rest
 }: TableProps<T>) {
-  const {
-    items: data,
-    moveAfter,
-    moveBefore,
-  } = useListData({
-    initialItems: dataProp,
-  });
+  // Only the manual row order is state (owned by the table's
+  // rowOrderingFeature, mirrored here); row content stays owned by the data
+  // prop so external updates (polling, refetch) flow through without remount.
+  const [rowOrdering, setRowOrdering] = useState<RowOrderingState>([]);
+
+  const data = useMemo(() => {
+    const items = dataProp ?? [];
+
+    if (!rowOrdering.length) {
+      return items;
+    }
+
+    // rowOrdering holds positions, not sort keys: place ranked rows straight
+    // into their slot and append the rest in natural order — O(n), no sort
+    const rank = new Map<string, number>();
+    rowOrdering.forEach((id, index) => {
+      rank.set(id, index);
+    });
+
+    const slots = new Array<T | undefined>(rowOrdering.length);
+    const unranked: T[] = [];
+
+    for (const item of items) {
+      const slot = rank.get(String(item.id));
+
+      // duplicate ids fall through to unranked
+      if (slot === undefined || slots[slot] !== undefined) {
+        unranked.push(item);
+      } else {
+        slots[slot] = item;
+      }
+    }
+
+    const ordered: T[] = [];
+
+    // stale ids (rows no longer in data) leave holes; skip them
+    for (const slot of slots) {
+      if (slot !== undefined) {
+        ordered.push(slot);
+      }
+    }
+
+    for (const item of unranked) {
+      ordered.push(item);
+    }
+
+    return ordered;
+  }, [dataProp, rowOrdering]);
+
   const [rowSelection, setRowSelection] = useState<RowSelectionState>(
     rowSelectionProp ?? {},
   );
@@ -195,86 +231,18 @@ export function Table<T extends { id: Key }>({
   );
 
   /**
-   * moveUpSelectedRows moves the selected rows up in the table.
-   * It finds the first selected row, determines its index,
-   * and moves it before the previous row if it exists.
-   */
-  const moveRowsUp = useCallback(
-    (row: Row<T>, rows: Row<T>[]) => {
-      const isSelected = rowSelection[row.id];
-      const rowsToMove = isSelected
-        ? rows.filter(({ id }) => rowSelection[id])
-        : [row];
-      const firstRowToMove = rowsToMove[0];
-
-      if (!firstRowToMove || firstRowToMove.index === 0) {
-        return;
-      }
-
-      const prevRowId = rows[firstRowToMove.index - 1]?.id;
-
-      if (!prevRowId) {
-        return;
-      }
-
-      moveBefore(
-        prevRowId,
-        rowsToMove.map(({ id }) => id),
-      );
-    },
-    [rowSelection, moveBefore],
-  );
-
-  /**
-   * moveDownRows moves the selected or active rows down in the table.
-   * It finds the last selected row, determines its index,
-   * and moves it after the next row if it exists.
-   */
-  const moveRowsDown = useCallback(
-    (row: Row<T>, rows: Row<T>[]) => {
-      const isSelected = rowSelection[row.id];
-      const rowsToMove = isSelected
-        ? rows.filter(({ id }) => rowSelection[id])
-        : [row];
-      const lastRowToMove = rowsToMove[rowsToMove.length - 1];
-
-      if (!lastRowToMove || lastRowToMove.index === rows.length - 1) {
-        return;
-      }
-
-      const nextRowId = rows[lastRowToMove.index + 1]?.id;
-
-      if (!nextRowId) {
-        return;
-      }
-
-      moveAfter(
-        nextRowId,
-        rowsToMove.map(({ id }) => id),
-      );
-    },
-    [rowSelection, moveAfter],
-  );
-
-  /**
    * actionColumn defines the actions available in the kebab menu for each row.
-   * It includes options to move the row up or down in the table.
+   * It includes options to move the row up or down in the table. Moves go
+   * through the table's rowOrderingFeature APIs, which are identity-stable, so
+   * this column def never has to be recreated.
    */
-  // biome-ignore lint/correctness/useExhaustiveDependencies: can of worms to fix ticket added
-  const actionColumn: NonNullable<typeof columnsProp>[number] = useMemo(
+  const actionColumn: ColumnDef<TableFeatures, T, unknown> = useMemo(
     () => ({
       id: 'kebab',
-      cell: ({ row }) => (
-        <RowActionsMenu
-          moveRowsUp={moveRowsUp}
-          moveRowsDown={moveRowsDown}
-          row={row}
-          rows={getRowModel().rows}
-        />
-      ),
+      cell: ({ row }) => <RowActionsMenu row={row} />,
       size: META_COLUMN_WIDTH,
     }),
-    [moveRowsUp, moveRowsDown],
+    [],
   );
 
   /**
@@ -283,7 +251,7 @@ export function Table<T extends { id: Key }>({
    * The kebab menu position can be set to 'left' or 'right'.
    * If showCheckbox is true, a checkbox column is added.
    */
-  const columns = useMemo<NonNullable<typeof columnsProp>>(
+  const columns = useMemo<ColumnDef<TableFeatures, T, unknown>[]>(
     () => [
       {
         id: 'numeral',
@@ -304,7 +272,11 @@ export function Table<T extends { id: Key }>({
               header: ({ table }) => (
                 <Checkbox
                   isSelected={table.getIsAllRowsSelected()}
-                  isIndeterminate={table.getIsSomeRowsSelected()}
+                  // v9: getIsSomeRowsSelected stays true at full selection
+                  isIndeterminate={
+                    table.getIsSomeRowsSelected() &&
+                    !table.getIsAllRowsSelected()
+                  }
                   onChange={table.toggleAllRowsSelected}
                 />
               ),
@@ -312,12 +284,13 @@ export function Table<T extends { id: Key }>({
                 <Checkbox
                   isSelected={row.getIsSelected()}
                   isIndeterminate={row.getIsSomeSelected()}
-                  onChange={row.toggleSelected}
+                  // v9 row methods are prototype-shared; keep the receiver
+                  onChange={(isSelected) => row.toggleSelected(isSelected)}
                 />
               ),
               size: META_COLUMN_WIDTH,
             },
-          ] satisfies NonNullable<typeof columnsProp>)
+          ] satisfies ColumnDef<TableFeatures, T, unknown>[])
         : []),
       ...(kebabPosition === 'left' ? [actionColumn] : []),
       ...(columnsProp ?? []),
@@ -354,9 +327,9 @@ export function Table<T extends { id: Key }>({
     getTopRows,
     getCenterRows,
     getBottomRows,
-    getRowModel,
     setColumnOrder,
-  } = useReactTable<T>({
+  } = useTable({
+    features: tableFeatures,
     data,
     columns,
     enableSorting,
@@ -367,6 +340,7 @@ export function Table<T extends { id: Key }>({
     state: {
       rowSelection,
       rowPinning,
+      rowOrdering,
       ...(pagination != null && { pagination }),
     },
     getRowId: (row, index) => {
@@ -376,14 +350,12 @@ export function Table<T extends { id: Key }>({
     enableRowSelection: true,
     enableRowPinning: true,
     manualSorting: manualSorting,
+    // no pageSize → paginated row model passes rows through untouched
+    manualPagination: pagination == null,
     onRowSelectionChange: handleRowSelectionChange,
     onRowPinningChange: setRowPinning,
+    onRowOrderingChange: setRowOrdering,
     onPaginationChange: handlePaginationChange,
-    getCoreRowModel: getCoreRowModel<T>(),
-    getSortedRowModel: getSortedRowModel<T>(),
-    ...(pageSize != null && {
-      getPaginationRowModel: getPaginationRowModel<T>(),
-    }),
   });
 
   const moveColumnLeft = useCallback(

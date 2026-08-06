@@ -12,6 +12,7 @@
  */
 
 import { TableHeaderCell } from './header-cell';
+import type { RowData } from '@tanstack/react-table';
 import type { TableHeaderProps } from './types';
 
 /**
@@ -33,7 +34,7 @@ import type { TableHeaderProps } from './types';
  * @param props.columnSelection - Currently selected column ID.
  * @returns The rendered TableHeader component.
  */
-export function TableHeader<T>({
+export function TableHeader<T extends RowData>({
   ref,
   children,
   className,

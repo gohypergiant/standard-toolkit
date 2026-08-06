@@ -15,7 +15,7 @@ import { clsx } from '@accelint/design-foundation/lib/utils';
 import ArrowDown from '@accelint/icons/arrow-down';
 import ArrowUp from '@accelint/icons/arrow-up';
 import Kebab from '@accelint/icons/kebab';
-import { flexRender, type Header } from '@tanstack/react-table';
+import { flexRender, type Header, type RowData } from '@tanstack/react-table';
 import { useContext, useState } from 'react';
 import { Button } from '../button';
 import { Icon } from '../icon';
@@ -30,9 +30,14 @@ import {
 } from './constants/table';
 import { TableContext } from './context';
 import styles from './styles.module.css';
+import type { TableFeatures } from './features';
 import type { TableHeaderCellProps } from './types';
 
-function HeaderCellMenu<T>({ header }: { header: Header<T, unknown> }) {
+function HeaderCellMenu<T extends RowData>({
+  header,
+}: {
+  header: Header<TableFeatures, T, unknown>;
+}) {
   const {
     enableColumnReordering,
     enableSorting,
@@ -164,7 +169,7 @@ function HeaderCellMenu<T>({ header }: { header: Header<T, unknown> }) {
  * @param props.header - TanStack table header object.
  * @returns The rendered TableHeaderCell component.
  */
-export function TableHeaderCell<T>({
+export function TableHeaderCell<T extends RowData>({
   ref,
   children,
   className,
