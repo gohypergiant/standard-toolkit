@@ -55,14 +55,24 @@ export interface RowOrderingTableApis {
 export interface RowOrderingRowApis {
   /**
    * Moves this row — or every selected row when this row is selected — up one
-   * place in display order.
+   * place in display order, past the nearest unpinned row.
    */
   moveUp: () => void;
   /**
    * Moves this row — or every selected row when this row is selected — down
-   * one place in display order.
+   * one place in display order, past the nearest unpinned row.
    */
   moveDown: () => void;
+  /**
+   * Whether an unpinned row exists above to move past. False when this row is
+   * pinned.
+   */
+  getCanMoveUp: () => boolean;
+  /**
+   * Whether an unpinned row exists below to move past. False when this row is
+   * pinned.
+   */
+  getCanMoveDown: () => boolean;
 }
 
 declare module '@tanstack/react-table' {
@@ -141,6 +151,59 @@ function tableMoveRows<TFeatures extends TableFeatures, TData extends RowData>(
   tableSetRowOrdering(table, remaining);
 }
 
+// structural read: getIsPinned only exists when rowPinningFeature is on
+function isPinnedRow<TFeatures extends TableFeatures, TData extends RowData>(
+  row: Row<TFeatures, TData>,
+) {
+  return Boolean(
+    (row as { getIsPinned?: () => false | 'top' | 'bottom' }).getIsPinned?.(),
+  );
+}
+
+/**
+ * Nearest unpinned row scanning outward from fromIndex. Pinned rows render in
+ * their own regions, so they are not part of the orderable sequence — moving
+ * relative to one has no visible effect.
+ */
+function findUnpinnedNeighbor<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(rows: Row<TFeatures, TData>[], fromIndex: number, direction: -1 | 1) {
+  for (
+    let index = fromIndex + direction;
+    index >= 0 && index < rows.length;
+    index += direction
+  ) {
+    const candidate = rows[index];
+
+    if (candidate && !isPinnedRow(candidate)) {
+      return candidate;
+    }
+  }
+
+  return undefined;
+}
+
+function rowGetCanMoveUp<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>, row: Row<TFeatures, TData>) {
+  return (
+    !isPinnedRow(row) &&
+    findUnpinnedNeighbor(table.getRowModel().rows, row.index, -1) !== undefined
+  );
+}
+
+function rowGetCanMoveDown<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>, row: Row<TFeatures, TData>) {
+  return (
+    !isPinnedRow(row) &&
+    findUnpinnedNeighbor(table.getRowModel().rows, row.index, 1) !== undefined
+  );
+}
+
 /**
  * Gathers the rows a move applies to: every selected row when the acted-on
  * row is selected, otherwise just the acted-on row.
@@ -166,23 +229,28 @@ function tableMoveRowsUp<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>, row: Row<TFeatures, TData>) {
-  const { rows, rowsToMove } = getRowsToMove(table, row);
-  const firstRowToMove = rowsToMove[0];
-
-  if (!firstRowToMove || firstRowToMove.index === 0) {
+  // pinned rows render in their own region; moving one is visually inert
+  if (isPinnedRow(row)) {
     return;
   }
 
-  const prevRowId = rows[firstRowToMove.index - 1]?.id;
+  const { rows, rowsToMove } = getRowsToMove(table, row);
+  const firstRowToMove = rowsToMove[0];
 
-  if (!prevRowId) {
+  if (!firstRowToMove) {
+    return;
+  }
+
+  const target = findUnpinnedNeighbor(rows, firstRowToMove.index, -1);
+
+  if (!target) {
     return;
   }
 
   tableMoveRows(
     table,
     rowsToMove.map(({ id }) => id),
-    prevRowId,
+    target.id,
     'before',
   );
 }
@@ -191,23 +259,28 @@ function tableMoveRowsDown<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>, row: Row<TFeatures, TData>) {
-  const { rows, rowsToMove } = getRowsToMove(table, row);
-  const lastRowToMove = rowsToMove[rowsToMove.length - 1];
-
-  if (!lastRowToMove || lastRowToMove.index === rows.length - 1) {
+  // pinned rows render in their own region; moving one is visually inert
+  if (isPinnedRow(row)) {
     return;
   }
 
-  const nextRowId = rows[lastRowToMove.index + 1]?.id;
+  const { rows, rowsToMove } = getRowsToMove(table, row);
+  const lastRowToMove = rowsToMove[rowsToMove.length - 1];
 
-  if (!nextRowId) {
+  if (!lastRowToMove) {
+    return;
+  }
+
+  const target = findUnpinnedNeighbor(rows, lastRowToMove.index, 1);
+
+  if (!target) {
     return;
   }
 
   tableMoveRows(
     table,
     rowsToMove.map(({ id }) => id),
-    nextRowId,
+    target.id,
     'after',
   );
 }
@@ -252,6 +325,14 @@ export const rowOrderingFeature: TableFeature = {
       // biome-ignore lint/style/useNamingConvention: assignPrototypeAPIs derives the method name from the row_ prefix
       row_moveDown: {
         fn: (row: Row<TFeatures, TData>) => tableMoveRowsDown(table, row),
+      },
+      // biome-ignore lint/style/useNamingConvention: assignPrototypeAPIs derives the method name from the row_ prefix
+      row_getCanMoveUp: {
+        fn: (row: Row<TFeatures, TData>) => rowGetCanMoveUp(table, row),
+      },
+      // biome-ignore lint/style/useNamingConvention: assignPrototypeAPIs derives the method name from the row_ prefix
+      row_getCanMoveDown: {
+        fn: (row: Row<TFeatures, TData>) => rowGetCanMoveDown(table, row),
       },
     });
   },

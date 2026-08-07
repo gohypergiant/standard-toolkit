@@ -136,6 +136,119 @@ describe('Table data updates', () => {
     ]);
   });
 
+  it('should move a row up via the kebab menu', async () => {
+    const data = [
+      { id: 'a', name: 'alpha' },
+      { id: 'b', name: 'bravo' },
+      { id: 'c', name: 'charlie' },
+    ];
+    render(<Table columns={personColumns} data={data} enableSorting={false} />);
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'row 2 actions' }),
+    );
+    await userEvent.click(screen.getByText('Move Up'));
+
+    expect(dataRowNames()).toEqual(['bravo', 'alpha', 'charlie']);
+  });
+
+  it('should not move the first row up', async () => {
+    const data = [
+      { id: 'a', name: 'alpha' },
+      { id: 'b', name: 'bravo' },
+    ];
+    render(<Table columns={personColumns} data={data} enableSorting={false} />);
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'row 1 actions' }),
+    );
+    // Move Up is disabled for the first row; clicking it must be a no-op.
+    // The menu stays open (and aria-hides the table), so close it to assert.
+    await userEvent.click(screen.getByText('Move Up'));
+    await userEvent.keyboard('{Escape}');
+
+    expect(dataRowNames()).toEqual(['alpha', 'bravo']);
+  });
+
+  it('should disable Move Up when only pinned rows are above', async () => {
+    const data = [
+      { id: 'a', name: 'alpha' },
+      { id: 'b', name: 'bravo' },
+      { id: 'c', name: 'charlie' },
+    ];
+    render(<Table columns={personColumns} data={data} enableSorting={false} />);
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'row 1 actions' }),
+    );
+    await userEvent.click(screen.getByText('Pin'));
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'row 2 actions' }),
+    );
+
+    // DTK Menu items render as menuitemradio; the popover also mounts
+    // asynchronously after the previous menu's exit, hence findByRole
+    expect(
+      await screen.findByRole('menuitemradio', { name: 'Move Up' }),
+    ).toHaveAttribute('aria-disabled', 'true');
+    expect(
+      screen.getByRole('menuitemradio', { name: 'Move Down' }),
+    ).not.toHaveAttribute('aria-disabled');
+  });
+
+  it('should skip pinned neighbors when moving', async () => {
+    const data = [
+      { id: 'a', name: 'alpha' },
+      { id: 'b', name: 'bravo' },
+      { id: 'c', name: 'charlie' },
+    ];
+    render(<Table columns={personColumns} data={data} enableSorting={false} />);
+
+    // pin bravo, then move charlie up: charlie skips pinned bravo and lands
+    // above alpha (bravo renders first, in the pinned region)
+    await userEvent.click(
+      screen.getByRole('button', { name: 'row 2 actions' }),
+    );
+    await userEvent.click(screen.getByText('Pin'));
+
+    await userEvent.click(
+      screen.getByRole('button', { name: 'row 3 actions' }),
+    );
+    await userEvent.click(screen.getByText('Move Up'));
+
+    expect(dataRowNames()).toEqual(['bravo', 'charlie', 'alpha']);
+  });
+
+  it('should move selected rows as a group', async () => {
+    const data = [
+      { id: 'a', name: 'alpha' },
+      { id: 'b', name: 'bravo' },
+      { id: 'c', name: 'charlie' },
+    ];
+    render(
+      <Table
+        columns={personColumns}
+        data={data}
+        enableSorting={false}
+        showCheckbox
+      />,
+    );
+
+    // select alpha and bravo (checkbox 0 is the header select-all)
+    const checkboxes = screen.getAllByRole('checkbox');
+    await userEvent.click(checkboxes[1] as HTMLElement);
+    await userEvent.click(checkboxes[2] as HTMLElement);
+
+    // acting on a selected row moves the whole selection below charlie
+    await userEvent.click(
+      screen.getByRole('button', { name: 'row 1 actions' }),
+    );
+    await userEvent.click(screen.getByText('Move Down'));
+
+    expect(dataRowNames()).toEqual(['charlie', 'alpha', 'bravo']);
+  });
+
   it('should keep an open row menu open across data updates', async () => {
     const data = [
       { id: 'a', name: 'alpha' },

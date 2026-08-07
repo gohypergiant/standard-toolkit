@@ -5,6 +5,7 @@ import { Meta } from '@storybook/addon-docs/blocks';
 ### All Release Notes
 [All releases and complete changelog](https://github.com/gohypergiant/standard-toolkit/releases?q=design-toolkit&expanded=true)
 
+* [Upgrade to v10](#v10)
 * [Upgrade to v9.11](#v9_11)
 * [Upgrade to v9.1](#v9_1)
 * [Upgrade to v9](#v9)
@@ -14,6 +15,49 @@ import { Meta } from '@storybook/addon-docs/blocks';
 * [Upgrade to v5](#v5)
 
 These guides explain how to migrate from Design Toolkit prior versions. If you are migrating from a major release multiple versions behind, note that you will have to make all the changes accumulated through each major release.
+
+<hr />
+<a id="v10"></a>
+# Upgrade to v10
+
+## Breaking Change: TanStack Table v9
+
+The `Table` component now runs on [TanStack Table v9](https://tanstack.com/table/latest/docs/framework/react/guide/migrating). The link covers the full v8 → v9 API migration; the TLDR for Design Toolkit consumers is:
+
+### 1. Update the peer dependency
+
+```json
+"@tanstack/react-table": "^9.0.0",
+```
+
+### 2. Build columns with `createTableColumnHelper`
+
+Column definitions are now typed against the Table's feature set. Replace TanStack's `createColumnHelper<TData>()` with the Design Toolkit's pre-bound helper:
+
+```typescript
+// Before
+import { createColumnHelper } from '@tanstack/react-table';
+const columnHelper = createColumnHelper<Person>();
+
+// After
+import { createTableColumnHelper } from '@accelint/design-toolkit';
+const columnHelper = createTableColumnHelper<Person>();
+```
+
+If you reference TanStack types directly, pass the exported `TableFeatures` type as the first generic — e.g. `ColumnDef<TableFeatures, TData, TValue>`, `CellContext<TableFeatures, TData, TValue>`.
+
+### 3. Update selection state types
+
+TanStack's `RowSelectionState` is now `Record<string, true>`; update any `Record<string, boolean>` selection state accordingly.
+
+### 4. Keep column defs referentially stable
+
+TanStack v9 renders function `cell`/`header` renderers as React components, so a column definition recreated on each render remounts its cells on each render (resetting open menus, focus, and other cell state). Define columns at module scope or memoize them with stable dependencies.
+
+## Improvements
+
+* The Table now reflects `data` prop changes without a remount (e.g. polling or refetching) — the `key` remount workaround is no longer necessary.
+* Manual row ordering is a TanStack custom feature (`rowOrderingFeature`, exported): `table.setRowOrdering`, `row.moveUp()` / `row.moveDown()`, and `row.getCanMoveUp()` / `row.getCanMoveDown()`. Moves skip pinned rows, and open row menus survive live data updates.
 
 <hr />
 <a id="v9_11"></a>

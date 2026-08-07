@@ -59,7 +59,6 @@ function RowActionsMenu<T extends RowData>({ row }: RowActionsMenuProps<T>) {
   const { enableRowActions, persistRowKebabMenu } = useContext(TableContext);
   const isPinned = !!row.getIsPinned();
   const hideRowKebab = !persistRowKebabMenu;
-  const rowCount = row.table.getRowModel().rows.length;
 
   return (
     enableRowActions && (
@@ -77,13 +76,13 @@ function RowActionsMenu<T extends RowData>({ row }: RowActionsMenuProps<T>) {
             <MenuSeparator />
             <MenuItem
               onAction={() => row.moveUp()}
-              isDisabled={isPinned || row.index === 0}
+              isDisabled={!row.getCanMoveUp()}
             >
               Move Up
             </MenuItem>
             <MenuItem
               onAction={() => row.moveDown()}
-              isDisabled={isPinned || row.index === rowCount - 1}
+              isDisabled={!row.getCanMoveDown()}
             >
               Move Down
             </MenuItem>
