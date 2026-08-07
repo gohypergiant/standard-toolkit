@@ -10,12 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
-import { createColumnHelper } from '@tanstack/react-table';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useState } from 'react';
 import { describe, expect, it } from 'vitest';
 import { Pagination } from '../pagination/index';
+import { createTableColumnHelper } from './features';
 import { Table } from './index';
 
 type Person = {
@@ -24,7 +24,7 @@ type Person = {
   lastName: string;
 };
 
-const columnHelper = createColumnHelper<Person>();
+const columnHelper = createTableColumnHelper<Person>();
 
 const columns = [
   columnHelper.accessor('firstName', {
@@ -149,7 +149,7 @@ function PrePaginatedTable() {
 
   return (
     <>
-      <Table key={page} columns={columns} data={pageData} />
+      <Table columns={columns} data={pageData} />
       <Pagination
         value={page}
         total={Math.ceil(allData.length / PAGE_SIZE)}
