@@ -23,7 +23,7 @@
     "@radix-ui/react-avatar": "^1.1.10",
     "@react-aria/interactions": "^3.25.5",
     "@tailwindcss/postcss": "^4.1.17",
-    "@tanstack/react-table": "^8.21.3",
+    "@tanstack/react-table": "^9.0.0",
     "babel-plugin-react-compiler": "^1.0.0",
     "client-only": "^0.0.1",
     "clsx": "^2.1.1",

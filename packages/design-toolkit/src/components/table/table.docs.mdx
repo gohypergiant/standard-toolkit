@@ -112,13 +112,13 @@ const [page, setPage] = useState(1);
 
 ### Server-side Pagination
 
-For server-side (pre-paginated) data, manage page state externally and pass only the current page's data. Use `key={page}` on the Table to force a remount when the page changes.
+For server-side (pre-paginated) data, manage page state externally and pass only the current page's data. The Table reflects `data` prop changes directly.
 
 ```tsx
 const [page, setPage] = useState(1);
 const pageData = allData.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
-<Table key={page} columns={columns} data={pageData} />
+<Table columns={columns} data={pageData} />
 <Pagination value={page} total={totalPages} onChange={setPage} />
 ```
 

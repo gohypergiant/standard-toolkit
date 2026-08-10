@@ -567,7 +567,20 @@ export type {
   SortDirectionState,
 } from './components/table/constants/table';
 export { TableContext } from './components/table/context';
+export {
+  createTableColumnHelper,
+  tableFeatures,
+} from './components/table/features';
+export type { TableFeatures } from './components/table/features';
 export { Table } from './components/table';
+export { rowOrderingFeature } from './components/table/row-ordering-feature';
+export type {
+  RowOrderingRowApis,
+  RowOrderingState,
+  RowOrderingTableApis,
+  RowOrderingTableOptions,
+  RowOrderingTableState,
+} from './components/table/row-ordering-feature';
 export type {
   TableBodyProps,
   TableCellProps,
