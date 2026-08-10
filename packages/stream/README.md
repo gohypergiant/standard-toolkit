@@ -42,25 +42,109 @@ loaded unless imported.
 | Transport (`EventSource`/`WebSocket`, held open) | `queryFn` fetch (runs, then done) | **The one difference** — see below |
 | `gcTime` linger | `gcTime` linger | Unobserved entries survive briefly for instant re-attach |
 
-## Lifecycle
+## Relationships
 
-- **Construction is side-effect free.** Building a `Stream` (or rendering a
-  hook) opens nothing. The connection starts when the first observer
-  subscribes (React commit) — the same lazy pattern as TanStack Query only
+```mermaid
+flowchart LR
+    subgraph React
+        A[Component A] --> HA["useSSEStream({ streamKey: K })"]
+        B[Component B] --> HB["useSSEStream({ streamKey: K })"]
+    end
+    HA --> OA[StreamObserver A]
+    HB --> OB[StreamObserver B]
+    subgraph StreamClient
+        C["StreamCache (Map by streamHash)"]
+    end
+    OA -- "cache.build(K)" --> C
+    OB -- "cache.build(K)" --> C
+    C --> S["Stream for K<br/>(state: data, status)"]
+    S --> T["ONE shared transport<br/>(EventSourceTransport | WebSocketTransport)"]
+    T -- "held-open connection" --> SV[(Server)]
+    SV -- "raw frames" --> T
+    T -- "decodeFn(raw) → data | error | ignore" --> S
+```
+
+Two components, same `streamKey` → two observers, **one** `Stream`, **one**
+socket. Exactly like two `useQuery(K)` calls sharing one cached query — except
+the shared thing is a live connection.
+
+## Lifecycle: mount → connect → message
+
+```mermaid
+sequenceDiagram
+    participant Comp as Component
+    participant Hook as useSSEStream
+    participant Obs as StreamObserver
+    participant Cache as StreamCache
+    participant Str as Stream
+    participant T as Transport (SSE here)
+
+    Comp->>Hook: render
+    Hook->>Obs: new StreamObserver(options)
+    Obs->>Cache: build(streamKey, uri, { decodeFn, gcTime, transport })
+    Note over Str: get existing or create Stream for this streamHash
+    Comp->>Hook: commit (useSyncExternalStore subscribes)
+    Hook->>Obs: subscribe
+    Obs->>Str: addObserver(observer)
+    Note over Str: FIRST observer triggers the lazy connect
+    Str->>T: createTransport('sse', uri) → EventSource opens, held open
+    T-->>Str: onOpen
+    Str-->>Obs: status connected → onOpen()
+    Obs-->>Comp: re-render (isConnected true)
+    T-->>Str: onMessage(raw text frame)
+    Note over Str: decodeFn(raw) → data | error | ignore<br/>data: structural sharing on state.data<br/>error: status → error, onError fires<br/>ignore: dropped
+    Str-->>Obs: state update + data fan-out
+    Obs-->>Comp: re-render (data) + onMessage(payload)
+```
+
+Key points:
+
+- **Render is side-effect free.** Creating the observer and building the
+  `Stream` opens nothing. The connection starts when the first observer
+  *subscribes* (React commit) — the same lazy pattern as TanStack Query only
   fetching when a query gains an active observer. SSR renders never connect.
-- **`gcTime` linger:** when the last observer detaches, the connection stays
-  open for `gcTime` (default **30 seconds** in the browser — not TanStack's
-  5 minutes, because a lingering stream holds an *open server connection*,
-  not inert cached data). An observer returning within the window re-attaches
-  to the same live socket — StrictMode double-mounts, Suspense blips, and
-  quick route hops are free. `gcTime` ratchets up across observers (longest
-  wins); `Infinity` disables gc; explicit removal is immediate.
-- **Streams are event emitters, not state replicators.** `onMessage` fires
-  for every frame, even payloads identical to the previous one. `data`, by
-  contrast, uses structural sharing (`replaceEqualDeep`) so an identical
-  payload keeps the same reference and doesn't re-render consumers.
-- **No "stale data" concept.** A live connection is never stale, so
+- **`onMessage` fires for every message, even identical payloads.**
+  `state.data` uses structural sharing (`replaceEqualDeep`, same as TanStack
+  Query) so re-renders stay cheap, but SSE sources are *event emitters, not
+  state replicators* — a repeated payload is still a new event. The event
+  callback fires, but the component won't re-render if `data` reference is
+  unchanged.
+
+## Lifecycle: unmount → linger → gc (or re-attach)
+
+```mermaid
+flowchart TB
+    Start([Start]) --> Observed
+    Observed -->|last observer leaves| Lingering
+    Lingering -->|observer returns| Observed
+    Lingering -->|gcTime expires| Removed
+    Observed -->|explicit remove| Removed
+    Removed -->|hook remounts| Observed
+    Removed --> End([End])
+```
+
+This is TanStack Query's `gcTime` model verbatim: timer armed at creation and
+on last-observer-removed, disarmed on observer-added, explicit removal
+immediate. It makes StrictMode's dev-mode mount→unmount→mount, Suspense blips,
+and quick route hops **free**: the returning observer picks up the same live
+socket instead of tearing it down and reconnecting.
+
+## Where the mental model differs from TanStack Query
+
+A query's `queryFn` runs, resolves, and is *done* — caching its result is
+pure win. A stream's transport connection is a **standing resource**: while
+it is open, the server holds a socket and keeps sending. Consequences:
+
+- **Lingering costs the server, not just client memory.** That is why the
+  default `gcTime` is **30 seconds**, not TanStack's 5 minutes. Override per
+  hook (`gcTime: 60_000`); the longest requested linger wins (ratchets up,
+  `Infinity` disables gc) — same semantics as TanStack Query.
+- **There is no "stale data" concept.** A live connection is never stale, so
   `staleTime` has no analog. The connection either exists or it doesn't.
+- **`retry()` is the manual reconnect** (the browser's `EventSource` stops
+  auto-reconnecting after fatal errors). It always works: if the stream was
+  externally removed, retry re-resolves against the cache and opens a fresh
+  connection.
 
 ## Transports
 
@@ -68,8 +152,8 @@ loaded unless imported.
   (tuned by the server's `retry:` field).
 - **WebSocket (`useWebSocketStream`)** — the browser never reconnects on its
   own, so the transport retries with doubling backoff (1s → 15s cap, reset
-  on a successful open). `uri` accepts http(s):// (auto-converted to
-  ws(s)://) or explicit ws(s)://. There is no client-side liveness watchdog
+  on a successful open). `uri` accepts `http(s)://` (auto-converted to
+  `ws(s)://`) or explicit `ws(s)://`. There is no client-side liveness watchdog
   (browsers cannot send WS pings) — WS endpoints must heartbeat like the
   SSE ones.
 
