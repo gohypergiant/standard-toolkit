@@ -52,6 +52,10 @@
     --dv-group-view-background-color: transparent;
     --dv-tabs-and-actions-container-background-color: var(--bg-surface-default);
     --dv-floating-box-shadow: var(--shadow-elevation-overlay-bold);
+    /* Dockview sizes the header from this rather than from content, so it has
+       to be restated whenever the p-xs padding or text-header-m line height
+       below change. There is no semantic height token for it. */
+    --dv-tabs-and-actions-container-height: 32px;
     :global(.dv-groupview) {
       --dv-group-view-background-color: var(--bg-surface-default);
       @apply pointer-events-auto;
@@ -64,20 +68,14 @@
       @apply rounded-large pointer-events-auto;
     }
 
-    /* Dockview sizes the header from this variable rather than from content, so
-       it has to be restated whenever the p-xs padding or text-header-m line
-       height below change. There is no semantic height token for it. */
     :global(.dv-tabs-and-actions-container) {
-      --dv-tabs-and-actions-container-height: 32px;
       @apply p-xs text-header-m @container/floating-card-header;
     }
     :global(.dv-scrollable) {
       display: none;
     }
-    :global(.dv-void-container) {
-      cursor: grab;
-    }
-
+    /* Dockview already sets `cursor: grab` on the void container when it is the
+       drag handle; only the pinned state needs overriding. */
     :global(.dv-resize-container[data-pinned]) :global(.dv-void-container) {
       pointer-events: none;
       cursor: default;

@@ -19,6 +19,14 @@ import { FloatingCardProvider } from './provider';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ReactNode } from 'react';
 
+function CardContent({ children }: Readonly<{ children: ReactNode }>) {
+  return (
+    <div className='flex h-full flex-col items-center justify-center gap-m self-stretch rounded-medium bg-base-surface p-m outline outline-dashed outline-1 outline-interactive-hover'>
+      <p className='text-base-text-secondary text-xs'>{children}</p>
+    </div>
+  );
+}
+
 const panelIds = {
   a: uuid(),
   b: uuid(),
@@ -84,34 +92,58 @@ export const WithHeaderActions: Story = {
   },
 };
 
+export const Pinnable: Story = {
+  render: () => {
+    return (
+      <div className='relative h-800 w-600 p-l outline outline-info-bold'>
+        <FloatingCardProvider icon={<Placeholder />} headerActions={['pin']}>
+          <FloatingCard id={panelIds.a} title='Pinnable Card'>
+            <CardContent>
+              Click the pin button in the header — dragging will be disabled
+              while pinned.
+            </CardContent>
+          </FloatingCard>
+        </FloatingCardProvider>
+      </div>
+    );
+  },
+};
+
 export const MultipleCards: Story = {
   render: () => {
     return (
       <div className='relative h-1000 w-600 p-l outline outline-info-bold'>
-        <FloatingCardProvider>
-          <FloatingCard id={panelIds.a} title='Card A'>
-            <div className='flex h-full flex-col items-center justify-center gap-m self-stretch rounded-medium bg-base-surface p-m outline outline-dashed outline-1 outline-interactive-hover'>
-              <div className='font-semibold text-sm'>Card A</div>
-              <p className='text-base-text-secondary text-xs'>
-                Draggable floating panel
-              </p>
-            </div>
+        <FloatingCardProvider
+          icon={<Placeholder />}
+          headerActions={(id) => (id === panelIds.a ? ['pin'] : [])}
+        >
+          <FloatingCard
+            id={panelIds.a}
+            title='Card A'
+            initialPosition={{ x: 24, y: 24 }}
+          >
+            <CardContent>
+              The header actions factory matched this card's id, so it has a pin
+              button.
+            </CardContent>
           </FloatingCard>
-          <FloatingCard id={panelIds.b} title='Card B'>
-            <div className='flex h-full flex-col items-center justify-center gap-m self-stretch rounded-medium bg-base-surface p-m outline outline-dashed outline-1 outline-interactive-hover'>
-              <div className='font-semibold text-sm'>Card B</div>
-              <p className='text-base-text-secondary text-xs'>
-                Another independent card
-              </p>
-            </div>
+          <FloatingCard
+            id={panelIds.b}
+            title='Card B'
+            initialPosition={{ x: 132, y: 260 }}
+          >
+            <CardContent>
+              The same factory returned no actions for this card.
+            </CardContent>
           </FloatingCard>
-          <FloatingCard id={panelIds.c} title='Card C'>
-            <div className='flex h-full flex-col items-center justify-center gap-m self-stretch rounded-medium bg-base-surface p-m outline outline-dashed outline-1 outline-interactive-hover'>
-              <div className='font-semibold text-sm'>Card C</div>
-              <p className='text-base-text-secondary text-xs'>
-                Try dragging us around!
-              </p>
-            </div>
+          <FloatingCard
+            id={panelIds.c}
+            title='Card C'
+            initialPosition={{ x: 240, y: 496 }}
+          >
+            <CardContent>
+              Each card is independently draggable and resizable.
+            </CardContent>
           </FloatingCard>
         </FloatingCardProvider>
       </div>
@@ -229,67 +261,6 @@ export const WithScrollableContent: Story = {
                 </p>
               ))}
             </div>
-          </FloatingCard>
-        </FloatingCardProvider>
-      </div>
-    );
-  },
-};
-
-function CardContent({
-  title,
-  children,
-}: Readonly<{ title: string; children: ReactNode }>) {
-  return (
-    <div className='flex h-full flex-col items-center justify-center gap-m self-stretch rounded-medium bg-base-surface p-m outline outline-dashed outline-interactive-hover'>
-      <div className='font-semibold text-sm'>{title}</div>
-      <p className='text-base-text-secondary text-xs'>{children}</p>
-    </div>
-  );
-}
-
-export const Pinnable: Story = {
-  render: () => {
-    return (
-      <div className='relative h-800 w-600 p-l outline outline-info-bold'>
-        <FloatingCardProvider icon={<Placeholder />} headerActions={['pin']}>
-          <FloatingCard id={panelIds.a} title='Pinnable Card'>
-            <CardContent title='Pinnable Card'>
-              Click the pin button in the header — dragging will be disabled
-              while pinned.
-            </CardContent>
-          </FloatingCard>
-        </FloatingCardProvider>
-      </div>
-    );
-  },
-};
-
-export const PerCardHeaderActions: Story = {
-  render: () => {
-    return (
-      <div className='relative h-800 w-600 p-l outline outline-info-bold'>
-        <FloatingCardProvider
-          icon={<Placeholder />}
-          headerActions={(id) => (id === panelIds.a ? ['pin'] : [])}
-        >
-          <FloatingCard
-            id={panelIds.a}
-            title='Pinnable'
-            initialPosition={{ x: 24, y: 24 }}
-          >
-            <CardContent title='Pinnable'>
-              This card's id matched, so it received a pin button.
-            </CardContent>
-          </FloatingCard>
-          <FloatingCard
-            id={panelIds.b}
-            title='No Actions'
-            initialPosition={{ x: 132, y: 300 }}
-          >
-            <CardContent title='No Actions'>
-              The same factory returned an empty list for this card.
-            </CardContent>
           </FloatingCard>
         </FloatingCardProvider>
       </div>

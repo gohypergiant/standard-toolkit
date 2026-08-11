@@ -81,30 +81,22 @@ The `'pin'` action adds a toggle that locks a card in place — a pinned card ca
 
 <Canvas of={FloatingCardStories.Pinnable} />
 
-### Per-Card Header Actions
+### Multiple Cards
 
-Both `icon` and `headerActions` accept a factory function that receives the card ID, so each card can have its own header configuration.
+Multiple floating cards can coexist within the same provider, each independently draggable and resizable. Give each one an `initialPosition` so they do not all open on the same spot.
+
+Both `icon` and `headerActions` accept a factory function that receives the card ID, so each card can have its own header configuration — below, only Card A gets a pin button.
 
 ```tsx
 <FloatingCardProvider
-  headerActions={(cardId) => (cardId === settingsId ? ['pin'] : [])}
+  headerActions={(cardId) => (cardId === idA ? ['pin'] : [])}
 >
-  <FloatingCard id={settingsId} title="Pinnable">Has a pin button</FloatingCard>
-  <FloatingCard id={otherId} title="No Actions">Close button only</FloatingCard>
-</FloatingCardProvider>
-```
-
-<Canvas of={FloatingCardStories.PerCardHeaderActions} />
-
-### Multiple Cards
-
-Multiple floating cards can coexist within the same provider. Each card is independently draggable and resizable.
-
-```tsx
-<FloatingCardProvider>
-  <FloatingCard id={idA} title="Card A">Content A</FloatingCard>
-  <FloatingCard id={idB} title="Card B">Content B</FloatingCard>
-  <FloatingCard id={idC} title="Card C">Content C</FloatingCard>
+  <FloatingCard id={idA} title="Card A" initialPosition={{ x: 24, y: 24 }}>
+    Has a pin button
+  </FloatingCard>
+  <FloatingCard id={idB} title="Card B" initialPosition={{ x: 132, y: 260 }}>
+    Close button only
+  </FloatingCard>
 </FloatingCardProvider>
 ```
 
@@ -260,7 +252,7 @@ Returns the provider's context value. Throws if called outside a `FloatingCardPr
 - Cards are dragged by the empty space in the header; pinning a card disables that drag surface
 - Stale card refs are automatically cleaned up when panels are removed via any path (drag close, API close, etc.)
 - Header adapters map dockview's internal props to the custom header components
-- Requires the `@accelint/design-toolkit/styles` import described in [Setup](#setup); dockview's structural CSS is loaded in the `components.l1` cascade layer so Design Toolkit styles take precedence
+- Dockview's structural CSS loads in the `components.l1` cascade layer, so Design Toolkit styles take precedence over it without specificity overrides
 
 ## Related
 

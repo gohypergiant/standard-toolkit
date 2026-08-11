@@ -41,10 +41,19 @@ import type {
 } from './types';
 
 /**
+ * Dockview's wrapper around a floating group. Styling reaches for it in
+ * styles.module.css, and the pin behavior tags it with `data-pinned` so that CSS
+ * can stop the drag handle inside it from accepting pointer events. Both sides
+ * have to be updated together if dockview renames it.
+ */
+const RESIZE_CONTAINER_SELECTOR = '.dv-resize-container';
+
+/**
  * Internal component that registers a DOM ref for a card container.
  *
  * Used by the floating card engine to mount portal targets. Also manages
- * the data-pinned attribute on the resize container to control drag handle visibility.
+ * the data-pinned attribute on the resize container, which stops the drag
+ * handle from accepting pointer events while a card is pinned.
  *
  * @param props - Dockview panel props containing the card ID.
  */
@@ -68,11 +77,11 @@ function FloatingCardContainer(props: Readonly<IDockviewPanelProps>) {
     [addRef, cardId],
   );
 
-  // Toggle a data-pinned attribute on the ancestor .dv-resize-container
-  // so CSS can disable pointer-events on the drag handle.
+  // Toggle a data-pinned attribute on the ancestor resize container so CSS can
+  // disable pointer-events on the drag handle.
   useEffect(() => {
     const el = cardRef.current;
-    const container = el?.closest<HTMLElement>('.dv-resize-container');
+    const container = el?.closest<HTMLElement>(RESIZE_CONTAINER_SELECTOR);
 
     if (!container) {
       return;
@@ -142,7 +151,6 @@ function DefaultRightHeader({
         if (action === 'pin') {
           return (
             <Button
-              className={styles.pinButton}
               // biome-ignore lint/suspicious/noArrayIndexKey: Using index as key is acceptable here because the order of actions is unlikely to change.
               key={`${id}-pin-${index}`}
               variant='icon'
@@ -373,12 +381,10 @@ export function FloatingCardProvider({
         <DockviewReact
           locked
           floatingGroupBounds={'boundedWithinViewport'}
-          // Dockview's default handle is a separate title bar rendered above
-          // the header. 'tabbar' keeps the header's empty space
-          // (`.dv-void-container`) as the drag surface, which both styles.module.css
-          // and the pinning behavior target -- pinning disables dragging through
-          // the `[data-pinned] .dv-void-container` rule there. Changing this
-          // silently stops pinning from blocking drags.
+          // 'tabbar' keeps the header's `.dv-void-container` as the drag
+          // surface; the `[data-pinned]` rule in styles.module.css disables it.
+          // Dockview's default instead renders a separate title bar, which
+          // would leave pinning unable to block dragging.
           floatingGroupDragHandle='tabbar'
           components={components}
           prefixHeaderActionsComponent={leftAdapter}
