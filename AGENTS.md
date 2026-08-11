@@ -34,6 +34,10 @@ Core principles:
 - **Simplicity First** — Make every change as small as possible. Minimal code impact.
 - **Root Causes** — Fix root causes, not symptoms. No temporary patches.
 - **Verification** — Never mark a task complete without passing the Verification Gate below.
+- **Component CSS Boundaries** — If a Design Toolkit integration requires
+  third-party global structural CSS, expose it through a documented,
+  component-specific stylesheet entrypoint. Do not import global vendor styles
+  from TypeScript, TSX, or a CSS Module.
 
 ---
 

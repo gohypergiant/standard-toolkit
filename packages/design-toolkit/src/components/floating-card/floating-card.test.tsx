@@ -162,6 +162,16 @@ describe('FloatingCardContext defaults', () => {
 });
 
 describe('PanelProvider', () => {
+  it('should preserve tab-bar dragging for floating groups', () => {
+    render(
+      <FloatingCardProvider>
+        <div />
+      </FloatingCardProvider>,
+    );
+
+    expect(capturedProps.floatingGroupDragHandle).toBe('tabbar');
+  });
+
   describe('header component passthrough', () => {
     it('should provide default header adapters when no custom components are given', () => {
       render(

@@ -41,7 +41,13 @@ export default defineConfig({
   treeshake: true,
   platform: 'neutral',
   minify: false,
-  exports: true,
+  exports: {
+    customExports(pkg) {
+      pkg['./components/floating-card/styles.css'] =
+        './dist/components/floating-card/styles.css';
+      return pkg;
+    },
+  },
   external: [
     // we just copy css files manually
     /\.css$/,

@@ -371,6 +371,7 @@ export function FloatingCardProvider({
         <DockviewReact
           locked
           floatingGroupBounds={'boundedWithinViewport'}
+          floatingGroupDragHandle='tabbar'
           components={components}
           prefixHeaderActionsComponent={leftAdapter}
           rightHeaderActionsComponent={rightAdapter}

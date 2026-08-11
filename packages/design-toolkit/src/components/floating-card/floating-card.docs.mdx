@@ -8,6 +8,14 @@ import * as FloatingCardStories from './floating-card.stories';
 
 Draggable, resizable floating panels rendered via React portals. Built on top of [dockview](https://dockview.dev/) to provide a lightweight windowing system for overlay content such as detail views, inspectors, and contextual tooling.
 
+## Setup
+
+Import the FloatingCard structural stylesheet once from your application's global stylesheet:
+
+```css
+@import '@accelint/design-toolkit/components/floating-card/styles.css';
+```
+
 Components:
 - **FloatingCard** - Portal-based card that registers with the floating card engine
 - **FloatingCardProvider** - Context provider that manages card layout, lifecycle, and the dockview instance
