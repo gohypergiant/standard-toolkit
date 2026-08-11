@@ -41,7 +41,15 @@ export default defineConfig({
   treeshake: true,
   platform: 'neutral',
   minify: false,
-  exports: true,
+  exports: {
+    // CSS is copied rather than bundled, so tsdown does not discover it as an
+    // entry. Add the global stylesheet export by hand.
+    customExports(exports) {
+      exports['./styles'] = './dist/styles.css';
+
+      return exports;
+    },
+  },
   external: [
     // we just copy css files manually
     /\.css$/,

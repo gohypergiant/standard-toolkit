@@ -251,14 +251,8 @@ export const Pinnable: Story = {
   render: () => {
     return (
       <div className='relative h-800 w-600 p-l outline outline-info-bold'>
-        <FloatingCardProvider
-          icon={<Placeholder />}
-          headerActions={(id) => (id === panelIds.a ? ['pin'] : [])}
-        >
+        <FloatingCardProvider icon={<Placeholder />} headerActions={['pin']}>
           <FloatingCard id={panelIds.a} title='Pinnable Card'>
-            <PinnableCardContent />
-          </FloatingCard>
-          <FloatingCard id={panelIds.b} title='Pinnable Card'>
             <PinnableCardContent />
           </FloatingCard>
         </FloatingCardProvider>

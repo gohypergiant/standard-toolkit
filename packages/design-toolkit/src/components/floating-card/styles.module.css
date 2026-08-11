@@ -42,19 +42,23 @@
     @apply h-full truncate leading-24 @min-[1rem]/floating-card-header:w-[calc(100cqw-10rem)];
   }
 
+  /* Dockview applies the theme class to its root `.dv-shell`. Floating groups
+     are rendered into `.dv-floating-overlay-host`, which is a sibling of the
+     grid rather than a descendant of `.dv-dockview`, so theme variables have to
+     be declared here (on the shell) to reach both subtrees. */
   .floatingCardProvider {
     @apply absolute inset-0;
-    :global(.dv-dockview) {
-      --dv-group-view-background-color: transparent;
-      --dv-tabs-and-actions-container-background-color: var(
-        --bg-surface-default
-      );
-      --dv-floating-box-shadow: var(--shadow-elevation-overlay-bold);
-    }
+    --dv-group-view-background-color: transparent;
+    --dv-tabs-and-actions-container-background-color: var(--bg-surface-default);
+    --dv-floating-box-shadow: var(--shadow-elevation-overlay-bold);
     :global(.dv-groupview) {
       --dv-group-view-background-color: var(--bg-surface-default);
       @apply pointer-events-auto;
     }
+    /* Leave dockview's own `position: absolute` alone -- it anchors floating
+       groups against the overlay host, and forcing `relative` makes `left` and
+       `right` resolve as flow offsets instead, throwing the card across the
+       container mid-drag. */
     :global(.dv-resize-container) {
       @apply rounded-large pointer-events-auto;
     }

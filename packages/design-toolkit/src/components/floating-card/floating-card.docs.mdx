@@ -12,6 +12,21 @@ Components:
 - **FloatingCard** - Portal-based card that registers with the floating card engine
 - **FloatingCardProvider** - Context provider that manages card layout, lifecycle, and the dockview instance
 
+## Setup
+
+FloatingCard relies on dockview's structural CSS, which dockview no longer
+injects on its own. Import the Design Toolkit stylesheet once in your global
+CSS, alongside the design foundation styles:
+
+```css
+@import '@accelint/design-foundation/styles';
+@import '@accelint/design-toolkit/styles';
+```
+
+Without this import the cards mount but render unpositioned and unstyled.
+
+`dockview-react` is a peer dependency and must be installed at `^8.0.0`.
+
 ## Example Usage
 
 ### Basic
