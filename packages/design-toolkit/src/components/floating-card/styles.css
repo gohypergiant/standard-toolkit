@@ -11,8 +11,8 @@
  */
 
 /*
- * Dockview 7+ no longer injects its own stylesheet, so its structural CSS has
- * to be loaded by the application. It is imported into components.l1 -- the
+ * Dockview no longer injects its own stylesheet, so its structural CSS has to
+ * be loaded by the application. It is imported into components.l1 -- the
  * lowest component layer -- so that every DTK component style, including
  * FloatingCard's own styles.module.css (components.l3), wins over it without
  * needing specificity hacks or !important.

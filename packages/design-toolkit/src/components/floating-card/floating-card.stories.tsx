@@ -17,6 +17,7 @@ import { Button } from '../button';
 import { FloatingCard } from './index';
 import { FloatingCardProvider } from './provider';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { ReactNode } from 'react';
 
 const panelIds = {
   a: uuid(),
@@ -235,14 +236,14 @@ export const WithScrollableContent: Story = {
   },
 };
 
-function PinnableCardContent() {
+function CardContent({
+  title,
+  children,
+}: Readonly<{ title: string; children: ReactNode }>) {
   return (
-    <div className='flex h-full flex-col items-center justify-center gap-m self-stretch rounded-medium bg-base-surface p-m outline outline-dashed outline-1 outline-interactive-hover'>
-      <div className='font-semibold text-sm'>Pinnable Card</div>
-      <p className='text-base-text-secondary text-xs'>
-        Click the pin button in the header — dragging will be disabled while
-        pinned.
-      </p>
+    <div className='flex h-full flex-col items-center justify-center gap-m self-stretch rounded-medium bg-base-surface p-m outline outline-dashed outline-interactive-hover'>
+      <div className='font-semibold text-sm'>{title}</div>
+      <p className='text-base-text-secondary text-xs'>{children}</p>
     </div>
   );
 }
@@ -253,7 +254,42 @@ export const Pinnable: Story = {
       <div className='relative h-800 w-600 p-l outline outline-info-bold'>
         <FloatingCardProvider icon={<Placeholder />} headerActions={['pin']}>
           <FloatingCard id={panelIds.a} title='Pinnable Card'>
-            <PinnableCardContent />
+            <CardContent title='Pinnable Card'>
+              Click the pin button in the header — dragging will be disabled
+              while pinned.
+            </CardContent>
+          </FloatingCard>
+        </FloatingCardProvider>
+      </div>
+    );
+  },
+};
+
+export const PerCardHeaderActions: Story = {
+  render: () => {
+    return (
+      <div className='relative h-800 w-600 p-l outline outline-info-bold'>
+        <FloatingCardProvider
+          icon={<Placeholder />}
+          headerActions={(id) => (id === panelIds.a ? ['pin'] : [])}
+        >
+          <FloatingCard
+            id={panelIds.a}
+            title='Pinnable'
+            initialPosition={{ x: 24, y: 24 }}
+          >
+            <CardContent title='Pinnable'>
+              This card's id matched, so it received a pin button.
+            </CardContent>
+          </FloatingCard>
+          <FloatingCard
+            id={panelIds.b}
+            title='No Actions'
+            initialPosition={{ x: 132, y: 300 }}
+          >
+            <CardContent title='No Actions'>
+              The same factory returned an empty list for this card.
+            </CardContent>
           </FloatingCard>
         </FloatingCardProvider>
       </div>

@@ -207,6 +207,8 @@ const components: Record<string, FunctionComponent<IDockviewPanelProps>> = {
  * - Exposes closeCard, togglePinCard, and isPinned via context
  * - Automatically cleans up refs when cards are removed via any path (drag close, group close, API close)
  * - Cards are bounded within the viewport
+ * - Cards are dragged by the empty space in their header rather than dockview's
+ *   default floating title bar; pinning a card disables that drag surface
  *
  * @example
  * ```tsx
@@ -371,6 +373,12 @@ export function FloatingCardProvider({
         <DockviewReact
           locked
           floatingGroupBounds={'boundedWithinViewport'}
+          // Dockview's default handle is a separate title bar rendered above
+          // the header. 'tabbar' keeps the header's empty space
+          // (`.dv-void-container`) as the drag surface, which both styles.module.css
+          // and the pinning behavior target -- pinning disables dragging through
+          // the `[data-pinned] .dv-void-container` rule there. Changing this
+          // silently stops pinning from blocking drags.
           floatingGroupDragHandle='tabbar'
           components={components}
           prefixHeaderActionsComponent={leftAdapter}

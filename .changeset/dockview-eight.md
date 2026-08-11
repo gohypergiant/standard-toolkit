@@ -5,8 +5,8 @@
 Upgrade the `dockview-react` peer dependency from `^5.0.0` to `^8.0.0` and add
 a global stylesheet export.
 
-Dockview 7 stopped injecting its own stylesheet, so its structural CSS now has
-to be loaded by the application. `FloatingCard` needs that CSS to render.
+Dockview no longer injects its own stylesheet, so its structural CSS now has to
+be loaded by the application. `FloatingCard` needs that CSS to render.
 
 BREAKING CHANGES for `FloatingCard` consumers:
 
